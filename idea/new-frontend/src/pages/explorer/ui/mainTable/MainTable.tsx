@@ -4,8 +4,9 @@ import { FrameSystemEventRecord } from '@polkadot/types/lookup';
 import clsx from 'clsx';
 
 import { IdeaEvent } from 'entities/explorer';
+import { Placeholder } from 'entities/placeholder';
+import { ReactComponent as MainTablePlaceholderSVG } from 'shared/assets/images/placeholders/blockMainTablePlaceholder.svg';
 
-import { BlockTablePlaceholder } from '../blockTablePlaceholder';
 import { Row } from '../row';
 import commonStyles from '../Explorer.module.scss';
 import styles from './MainTable.module.scss';
@@ -13,11 +14,13 @@ import styles from './MainTable.module.scss';
 type Props = {
   extrinsics: Extrinsic[] | undefined;
   eventRecords: Vec<FrameSystemEventRecord> | undefined;
-  isLoading: boolean;
+  error: string;
 };
 
-const MainTable = ({ extrinsics, eventRecords, isLoading }: Props) => {
+const MainTable = ({ extrinsics, eventRecords, error }: Props) => {
   const isAnyExtrinsic = extrinsics && extrinsics.length > 0;
+  const isListEmpty = extrinsics?.length === 0;
+
   const headerClassName = clsx(commonStyles.header, styles.header);
 
   const getExtrinsicEvents = (index: number) =>
@@ -40,13 +43,15 @@ const MainTable = ({ extrinsics, eventRecords, isLoading }: Props) => {
         <span className={commonStyles.alignRight}>Signer</span>
       </header>
       <div className={commonStyles.body}>
-        {isLoading ? (
-          <BlockTablePlaceholder />
+        {isAnyExtrinsic ? (
+          getRows()
         ) : (
-          <>
-            {isAnyExtrinsic && getRows()}
-            {!isAnyExtrinsic && <p className={commonStyles.message}>No extrinsics available.</p>}
-          </>
+          <Placeholder
+            block={<MainTablePlaceholderSVG />}
+            title="There is no events yet"
+            description={error || 'The list is empty while there are no events'}
+            isEmpty={isListEmpty || !!error}
+          />
         )}
       </div>
     </div>

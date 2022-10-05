@@ -1,6 +1,8 @@
 @use '@gear-js/ui/headings' as *;
 @use '@gear-js/ui/variables' as *;
 @use 'shared/assets/styles/variables' as shared;
+@use 'shared/assets/styles/animations' as *;
+@use 'shared/assets/styles/mixins' as *;
 
 .explorer {
   display: grid;
@@ -58,10 +60,21 @@
 }
 
 .body {
+  @include childrenMargin(16px);
   border-radius: $borderRadius;
   overflow: hidden;
+  position: relative;
 }
 
 .alignRight {
   text-align: right;
+}
+
+.placeholder {
+  @include loading;
+  position: relative;
+
+  svg {
+    width: 100%;
+  }
 }

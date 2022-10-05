@@ -5,7 +5,8 @@
 }
 
 .number {
-  white-space: nowrap;
+  display: flex;
+  position: relative;
 
   > *:first-child {
     margin-right: 10px;

@@ -3,17 +3,19 @@ import { Block } from '@polkadot/types/interfaces';
 import clsx from 'clsx';
 
 import { ReactComponent as CodeSVG } from 'shared/assets/images/actions/code.svg';
+import { ReactComponent as SummaryPlaceholderSVG } from 'shared/assets/images/placeholders/blockSummaryPlaceholder.svg';
+import { ReactComponent as NumberPlaceholderSVG } from 'shared/assets/images/placeholders/blockNumberPlaceholder.svg';
 
-import { BlockTablePlaceholder } from '../blockTablePlaceholder';
+import { Placeholder } from 'entities/placeholder';
 import commonStyles from '../Explorer.module.scss';
 import styles from './Summary.module.scss';
 
 type Props = {
   block: Block | undefined;
-  isLoading: boolean;
+  isError: boolean;
 };
 
-const Summary = ({ block, isLoading }: Props) => {
+const Summary = ({ block, isError }: Props) => {
   const { header, hash } = block || {};
   const { number, parentHash, extrinsicsRoot, stateRoot } = header || {};
 
@@ -26,7 +28,7 @@ const Summary = ({ block, isLoading }: Props) => {
       <header className={headerClassName}>
         <span className={styles.number}>
           <CodeSVG />
-          {number?.toHuman()}
+          {number ? number.toHuman() : <Placeholder block={<NumberPlaceholderSVG />} isEmpty={isError} />}
         </span>
         <span>Hash</span>
         <span>Parent</span>
@@ -34,9 +36,7 @@ const Summary = ({ block, isLoading }: Props) => {
         <span>State</span>
       </header>
       <div className={commonStyles.body}>
-        {isLoading ? (
-          <BlockTablePlaceholder />
-        ) : (
+        {block ? (
           <div className={rowClassName}>
             <span />
             <span>{hash?.toHuman()}</span>
@@ -46,6 +46,8 @@ const Summary = ({ block, isLoading }: Props) => {
             <span>{extrinsicsRoot?.toHuman()}</span>
             <span>{stateRoot?.toHuman()}</span>
           </div>
+        ) : (
+          <Placeholder block={<SummaryPlaceholderSVG />} isEmpty={isError} />
         )}
       </div>
     </div>

@@ -1,4 +1,5 @@
 @use '@gear-js/ui/variables' as *;
+@use 'shared/assets/styles/mixins' as *;
 
 .header {
   margin-bottom: 20px;
@@ -10,4 +11,9 @@
 .message {
   margin-top: 24px;
   font-size: $fontSizeMedium;
+}
+
+.main {
+  @include childrenMargin(16px);
+  position: relative;
 }

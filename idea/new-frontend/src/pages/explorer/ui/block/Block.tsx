@@ -19,6 +19,8 @@ const Block = () => {
   const { blockId } = useParams() as Params;
 
   const [error, setError] = useState('');
+  const isError = !!error;
+
   const [block, setBlock] = useState<DotBlock>();
   const [eventRecords, setEventRecords] = useState<EventRecords>();
 
@@ -47,15 +49,11 @@ const Block = () => {
     }
   }, [api, blockId]);
 
-  if (error) return <p className={styles.message}>Something went wrong. {error}</p>;
-
-  const isLoading = !block || !eventRecords;
-
   return (
     <div className={styles.block}>
-      <Summary block={block} isLoading={isLoading} />
-      <MainTable extrinsics={block?.extrinsics} eventRecords={eventRecords} isLoading={isLoading} />
-      <System eventRecords={eventRecords} isLoading={isLoading} />
+      <Summary block={block} isError={isError} />
+      <MainTable extrinsics={block?.extrinsics} eventRecords={eventRecords} error={error} />
+      <System eventRecords={eventRecords} isError={isError} />
     </div>
   );
 };

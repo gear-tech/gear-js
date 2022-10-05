@@ -6,15 +6,15 @@ import { EmptyContent } from 'shared/ui/emptyContent';
 import styles from './Placeholder.module.scss';
 
 type Props = {
-  title: string;
   block: ReactNode;
   isEmpty: boolean;
+  title?: string;
   children?: ReactNode;
-  blocksCount: number;
+  blocksCount?: number;
   description?: string;
 };
 
-const Placeholder = ({ title, block, isEmpty, children, blocksCount, description }: Props) => {
+const Placeholder = ({ title, block, isEmpty, children, blocksCount = 1, description }: Props) => {
   const loaderClasses = clsx(styles.block, !isEmpty && styles.loading);
 
   const renderBlocks = () => {

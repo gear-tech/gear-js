@@ -6,6 +6,10 @@
   @include customSimplebar;
   height: calc($contentHeight - toRem(42.6) - $marginMedium);
 
+  :global(.simplebar-content) {
+    @include childrenMargin(16px);
+  }
+
   &.noOverflow {
     overflow: hidden;
   }
