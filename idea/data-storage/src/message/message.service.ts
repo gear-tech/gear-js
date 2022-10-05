@@ -10,7 +10,6 @@ import {
 import { Message } from '../database/entities';
 import { ProgramService } from '../program/program.service';
 import { MessageNotFound } from '../common/errors';
-import { sleep } from '../utils/sleep';
 import { MessageRepo } from './message.repo';
 import { MessageEntryPoint, MessageReadReason, ProgramStatus } from '../common/enums';
 import { MessageDispatchedDataInput } from './types/message-dispatched-data.input';

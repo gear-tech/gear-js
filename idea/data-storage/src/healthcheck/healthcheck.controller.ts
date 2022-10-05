@@ -1,5 +1,4 @@
-import { Controller, Get, HttpCode, Res } from '@nestjs/common';
-import { Response } from 'express';
+import { Controller, Get, HttpCode } from '@nestjs/common';
 
 const status = {
   kafka: false,
