@@ -2225,14 +2225,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:^0.25.7":
-  version: 0.25.7
-  resolution: "@gear-js/api@npm:0.25.7"
+"@gear-js/api@npm:^0.25.8":
+  version: 0.25.8
+  resolution: "@gear-js/api@npm:0.25.8"
   peerDependencies:
     "@polkadot/api": ^9.3.3
     "@polkadot/wasm-crypto": ^6.3.1
     rxjs: ^7.5.5
-  checksum: de29e0768c226f4f22c69252822dc7cb22315c94ed9cf531c9f1d38f80ab0525f9a3ba26d6c4bcf8a06f704f3fe9c07e05025b10b07a08e3c1bb3110449e0013
+  checksum: 8ed56d5705dc80441bd5a480e48377b54f018e26b90931cabf837a64e96f0544827c7f180e7b5cec3c1b189e6c7b2201fafb764e2041c0eb4320592c12e8ae5f
   languageName: node
   linkType: hard
 
@@ -2831,7 +2831,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/upload-dapp-chain@workspace:apps/upload-dapp-chain"
   dependencies:
-    "@gear-js/api": ^0.25.7
+    "@gear-js/api": ^0.25.8
     "@nestjs/axios": ^0.1.0
     "@nestjs/cli": ^8.0.0
     "@nestjs/common": ^8.0.0
