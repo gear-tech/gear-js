@@ -154,7 +154,7 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment api-gateway postgres gear-node vara-node -n $KUBE_NAMESPACE
+          args: rollout restart deployment api-gateway postgres postgres-vara gear-node vara-node -n $KUBE_NAMESPACE
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
