@@ -16,7 +16,7 @@ export { useMessage } from './useMessage';
 export { useCodeUpload } from './useCodeUpload';
 export { useMessageClaim } from './useMessageClaim';
 export { useProgramActions } from './useProgramActions';
-export { useMetadataUplaod } from './useMetadataUpload';
+export { useMetadataUpload } from './useMetadataUpload';
 export { useBalanceTransfer } from './useBalanceTransfer';
 export { useEventSubscriptions } from './useEventSubscriptions';
 export { useSidebarNodes } from './useSidebarNodes';

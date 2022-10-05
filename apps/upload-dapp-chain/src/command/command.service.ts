@@ -32,6 +32,7 @@ export class CommandService {
     try {
       const meta = await getWasmMetadata(metaWasmBuff);
       const value = uploadProgramInput.value ? uploadProgramInput.value : undefined;
+      const increaseCalculatedGasToTwentyPercent = 1.2;
 
       const gas = await this.gearApi.program.calculateGas.initUpload(
         sourceId,
@@ -44,14 +45,14 @@ export class CommandService {
 
       const program = {
         code: optWasmBuff,
-        gasLimit: gas.min_limit,
+        gasLimit: gas.min_limit.muln(increaseCalculatedGasToTwentyPercent),
         value,
         initPayload: payload,
       };
 
       const data = this.gearApi.program.upload(program, meta);
       const status = checkInitProgram(this.gearApi, data.programId)
-        .catch(error => console.error("___CHECK_INIT_PROGRAM_ERROR___", error));
+        .catch(error => console.error("_________CHECK_INIT_PROGRAM_ERROR_________", error));
 
       await sendTransaction(data.extrinsic, account, "MessageEnqueued");
 
@@ -64,10 +65,10 @@ export class CommandService {
         optWasmBase64: optWasmBuff.toString("base64"),
       };
     } catch (error) {
+      this.logger.error("_________UPLOAD_PROGRAM_ERROR_________");
       console.log("____>optWasmBuff", optWasmBuff);
       console.log("____>metaWasmBuff", metaWasmBuff);
       console.log(error);
-      this.logger.error(error);
     }
   }
 
@@ -83,6 +84,7 @@ export class CommandService {
       const buff = Buffer.from(uploadedProgram.metaWasmBase64, "base64");
       const meta = await getWasmMetadata(buff);
       const value = sendMessageInput.value ? sendMessageInput.value : undefined;
+      const increaseCalculatedGasToTwentyPercent = 1.2;
 
       const gas = await this.gearApi.program.calculateGas.handle(
         sourceId,
@@ -96,7 +98,7 @@ export class CommandService {
       const message: IMessageSendOptions = {
         destination: uploadedProgram.programId as Hex,
         payload,
-        gasLimit: gas.min_limit,
+        gasLimit: gas.min_limit.muln(increaseCalculatedGasToTwentyPercent),
         value,
       };
 
@@ -104,8 +106,8 @@ export class CommandService {
 
       await sendTransaction(extrinsic, account, "MessageEnqueued");
     } catch (error) {
+      this.logger.error("_________SEND_MESSAGE_ERROR_________");
       console.error(error);
-      this.logger.error(error);
     }
   }
 
@@ -139,10 +141,10 @@ export class CommandService {
 
       return result;
     } catch (error) {
+      this.logger.error("_________UPLOAD_CODE_ERROR_________");
       console.log("____>optWasmBuff", optWasmBuff);
       console.log("____>metaWasmBuff", metaWasmBuff);
       console.log(error);
-      this.logger.error(error);
 
       result.codeHash = generateCodeId(optWasmBuff);
       return result;

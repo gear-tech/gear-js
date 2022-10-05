@@ -69,7 +69,7 @@ export class BotService {
 
       return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
     } catch (error) {
-      this.logger.error("_____________________uploadDapps_____________________");
+      this.logger.error("_________UPLOAD_DAPPS_ERROR_________");
       console.log(error);
     }
   }
@@ -106,7 +106,7 @@ export class BotService {
 
       return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
     } catch (error) {
-      this.logger.error("_____________________uploadDapp_____________________");
+      this.logger.error("_________UPLOAD_DAPP_ERROR_________");
       console.log(error);
     }
   }
@@ -144,7 +144,7 @@ export class BotService {
 
       return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
     } catch (error) {
-      this.logger.error("_____________________uploadCode_____________________");
+      this.logger.error("_________UPLOAD_CODE_ERROR_________");
       console.log(error);
     }
   }
@@ -194,7 +194,7 @@ export class BotService {
         return this.commandService.uploadCode(uploadProgramData);
       }
     } catch (error) {
-      this.logger.error("_____________________handleCommand_____________________");
+      this.logger.error("_________HANDLE_COMMAND_________");
       console.log(error);
     }
   }
