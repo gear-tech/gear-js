@@ -71,7 +71,7 @@ describe('select tests', () => {
     const select = screen.getByRole('combobox');
 
     expect(select).toHaveClass(styles.light, styles.large);
-    expect(select).not.toHaveClass(styles.dark, styles.normal, styles.block);
+    expect(select).not.toHaveClass(styles.dark, styles.normal);
   });
 
   it('renders textarea with error', () => {
@@ -93,10 +93,13 @@ describe('select tests', () => {
   });
 
   it('renders block select', () => {
-    render(<Select options={initOptions} block />);
+    const { rerender } = render(<Select options={initOptions} />);
 
-    const select = screen.getByRole('combobox');
+    const inputWrapper = screen.getByTestId('inputWrapper');
+    expect(inputWrapper).not.toHaveClass(styles.block);
 
-    expect(select).toHaveClass(styles.block);
+    rerender(<Select options={initOptions} block />);
+
+    expect(inputWrapper).toHaveClass(styles.block);
   });
 });

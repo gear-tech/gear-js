@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 import clsx from 'clsx';
 import { Gap } from '../../../types';
-import styles from './InputWrapper.module.scss';
 import { Tooltip } from '../../Tooltip/Tooltip';
+import styles from './InputWrapper.module.scss';
 
 type Props = {
   id: string;
@@ -15,10 +15,35 @@ type Props = {
   gap?: Gap;
   disabled?: boolean;
   tooltip?: string;
+  block?: boolean;
+  type?: 'input' | 'textarea';
 };
 
-const InputWrapper = ({ id, children, className, label, error, direction, size, gap, disabled, tooltip }: Props) => {
-  const wrapperClassName = clsx(styles.wrapper, className, disabled && 'disabled', label && styles[direction]);
+const InputWrapper = (props: Props) => {
+  const {
+    id,
+    children,
+    className,
+    label,
+    error,
+    direction,
+    size,
+    gap,
+    disabled,
+    tooltip,
+    block,
+    type = 'input',
+  } = props;
+
+  const wrapperClassName = clsx(
+    styles.wrapper,
+    className,
+    disabled && 'disabled',
+    label && styles[direction],
+    block && styles.block,
+    styles[type],
+  );
+
   const labelWrapperClassName = clsx(styles.labelWrapper, styles[size], styles[direction]);
 
   const getLabelGap = (gap: Gap) => {

@@ -96,7 +96,7 @@ describe('textarea tests', () => {
     const wrapper = screen.getByTestId('wrapper');
 
     expect(wrapper).toHaveClass(styles.light, styles.large);
-    expect(wrapper).not.toHaveClass(styles.dark, styles.normal, styles.block);
+    expect(wrapper).not.toHaveClass(styles.dark, styles.normal);
   });
 
   it('renders textarea with error', () => {
@@ -118,10 +118,13 @@ describe('textarea tests', () => {
   });
 
   it('renders block textarea', () => {
-    render(<Textarea label="label" block />);
+    const { rerender } = render(<Textarea label="label" />);
 
-    const wrapper = screen.getByTestId('wrapper');
+    const inputWrapper = screen.getByTestId('inputWrapper');
+    expect(inputWrapper).not.toHaveClass(styles.block);
 
-    expect(wrapper).toHaveClass(styles.block);
+    rerender(<Textarea label="label" block />);
+
+    expect(inputWrapper).toHaveClass(styles.block);
   });
 });

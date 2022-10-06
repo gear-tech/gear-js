@@ -126,7 +126,7 @@ describe('input tests', () => {
     const wrapper = screen.getByTestId('wrapper');
 
     expect(wrapper).toHaveClass(styles.light, styles.large);
-    expect(wrapper).not.toHaveClass(styles.dark, styles.normal, styles.block);
+    expect(wrapper).not.toHaveClass(styles.dark, styles.normal);
   });
 
   it('renders input with error', () => {
@@ -148,10 +148,13 @@ describe('input tests', () => {
   });
 
   it('renders block input', () => {
-    render(<Input label="label" block />);
+    const { rerender } = render(<Input label="label" />);
 
-    const wrapper = screen.getByTestId('wrapper');
+    const inputWrapper = screen.getByTestId('inputWrapper');
+    expect(inputWrapper).not.toHaveClass(styles.block);
 
-    expect(wrapper).toHaveClass(styles.block);
+    rerender(<Input label="label" block />);
+
+    expect(inputWrapper).toHaveClass(styles.block);
   });
 });
