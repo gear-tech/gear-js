@@ -18,21 +18,21 @@
 
     &.x {
       &.input {
-        grid-template-columns: auto $inputWidth;
+        grid-template-columns: auto minmax(0, $inputWidth);
       }
 
       &.textarea {
-        grid-template-columns: auto $textareaWidth;
+        grid-template-columns: auto minmax(0, $textareaWidth);
       }
     }
 
     &.y {
       &.input {
-        grid-template-columns: $inputWidth;
+        grid-template-columns: minmax(0, $inputWidth);
       }
 
       &.textarea {
-        grid-template-columns: $textareaWidth;
+        grid-template-columns: minmax(0, $textareaWidth);
       }
     }
   }
