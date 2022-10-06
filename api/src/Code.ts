@@ -8,7 +8,7 @@ import { GearTransaction } from './Transaction';
 
 export class GearCode extends GearTransaction {
   /**
-   * Submit code without initialization
+   * ### Submit code without initialization
    * @param code
    * @returns Code hash
    */
@@ -24,9 +24,8 @@ export class GearCode extends GearTransaction {
   }
 
   /**
-   * Check that codeId exists on chain
+   * ### Check that codeId exists on chain
    * @param codeId
-   * @returns
    */
   async exists(codeId: string) {
     const codeMetadata = (await this._api.query.gearProgram.metadataStorage(codeId)) as Option<CodeMetadata>;
@@ -34,21 +33,31 @@ export class GearCode extends GearTransaction {
   }
 
   /**
-   * Get code storage
+   * ### Get code storage
    * @param codeId
-   * @returns
    */
   async storage(codeId: Hex): Promise<CodeStorage> {
     return this._api.query.gearProgram.codeStorage(codeId) as unknown as CodeStorage;
   }
 
   /**
-   * Get static pages of code
+   * ### Get static pages of code
    * @param codeId
-   * @returns
    */
   async staticPages(codeId: Hex): Promise<number | null> {
     const storage = await this.storage(codeId);
     return storage.isSome ? storage.unwrap().staticPages.toNumber() : null;
+  }
+
+  /**
+   * ### Get all ids of codes uploaded on connected chain
+   * @returns array of code ids uploaded on chain
+   */
+  async all(): Promise<Hex[]> {
+    const keyPrefix = this._api.query.gearProgram.metadataStorage.keyPrefix();
+    const codeMetadata = await this._api.rpc.state.getKeys(keyPrefix);
+    const codeIds = codeMetadata.map((key) => '0x' + key.toHex().slice(keyPrefix.length)) as Hex[];
+
+    return codeIds;
   }
 }
