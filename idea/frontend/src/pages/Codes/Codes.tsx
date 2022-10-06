@@ -63,7 +63,7 @@ const Codes = () => {
   return (
     <div>
       <div className={layoutStyles.topPagination}>
-        <span className={layoutStyles.caption}>Total results: {isDevChain() ? codesCount : filteredCodes?.length}</span>
+        <span className={layoutStyles.caption}>Total results: {isDevChain() ? filteredCodes?.length : codesCount}</span>
         {!isDevChain() && <Pagination page={page} pagesAmount={codesCount || 1} />}
       </div>
       <SearchForm placeholder="Find code" />
