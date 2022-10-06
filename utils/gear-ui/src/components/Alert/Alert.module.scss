@@ -12,8 +12,9 @@
 
 .alert {
   padding: 15px;
-  background-color: #2b2b2e;
+  background-color: #202022;
   border-radius: $borderRadius;
+  border: $borderModal;
   box-shadow: 0px 3px 5px 0px #00000033, 0px 1px 18px 0px #0000001f, 0px 6px 10px 0px #00000024;
 }
 
