@@ -20,12 +20,12 @@ const Main = () => {
 
   const setMessageType = () => setContentType(ContentType.Message);
 
-  const setUplaodData = useCallback((type: ContentType | null, file: File | null) => {
+  const setUploadData = useCallback((type: ContentType | null, file: File | null) => {
     setContentType(type);
     setDroppedFile(file);
   }, []);
 
-  const resetUploadData = useCallback(() => setUplaodData(null, null), [setUplaodData]);
+  const resetUploadData = useCallback(() => setUploadData(null, null), [setUploadData]);
 
   const getContent = () => {
     switch (contentType) {
@@ -53,9 +53,9 @@ const Main = () => {
       ) : (
         <DndProvider backend={HTML5Backend}>
           <div className={styles.upload}>
-            <DropTarget type={ContentType.Program} onUpload={setUplaodData} />
+            <DropTarget type={ContentType.Program} onUpload={setUploadData} />
             <MessageSide onClick={setMessageType} />
-            <DropTarget type={ContentType.Code} onUpload={setUplaodData} />
+            <DropTarget type={ContentType.Code} onUpload={setUploadData} />
           </div>
         </DndProvider>
       )}

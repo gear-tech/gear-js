@@ -10,7 +10,7 @@ import { isDevChain } from 'helpers';
 import { uploadLocalMetadata } from 'services/LocalDBService';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 
-const useMetadataUplaod = () => {
+const useMetadataUpload = () => {
   const alert = useAlert();
   const { account } = useAccount();
   const { showModal } = useModal();
@@ -106,4 +106,4 @@ const useMetadataUplaod = () => {
   return uploadMetadata;
 };
 
-export { useMetadataUplaod };
+export { useMetadataUpload };
