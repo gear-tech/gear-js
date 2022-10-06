@@ -77,3 +77,9 @@ describe('Blocks', () => {
     expect(blockNumber.toNumber()).toBe(1);
   });
 });
+
+describe('Runtime consts', () => {
+  test('blockGasLimit', () => {
+    expect(api.blockGasLimit).not.toBeUndefined();
+  });
+});

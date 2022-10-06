@@ -387,6 +387,19 @@ const state = await gearApi.programState.read(programId, metaWasm, inputValue);
 ```
 </details>
 
+### Get ids of all uploaded codes
+
+To get all ids of uploaded codes use `api.code.all` method. It returns array of code ids
+
+<details>
+<summary>Example</summary>
+
+```javascript
+const codeIds = await gearApi.code.all();
+console.log(codeIds);
+```
+</details>
+
 ### Mailbox
 The mailbox contains messages that are waiting for user action.
 #### Read
