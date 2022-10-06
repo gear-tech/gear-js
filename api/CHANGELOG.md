@@ -1,3 +1,11 @@
+## 0.25.9
+_10/06/2022_
+
+https://github.com/gear-tech/gear-js/pull/1023
+### Changes
+
+- Add method to get all code ids existed on chain
+
 ## 0.25.8
 _10/03/2022_
 
