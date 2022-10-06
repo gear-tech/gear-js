@@ -14,6 +14,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  font-weight: 600;
   color: $textColor;
   border-radius: 24px;
 
@@ -34,8 +35,6 @@
 .large {
   padding: 16px 32px;
   font-size: 14px;
-  font-weight: 600;
-  line-height: 16px;
 
   .icon {
     margin-right: 10px;
@@ -45,8 +44,6 @@
 .medium {
   padding: 12px 24px;
   font-size: 14px;
-  font-weight: 600;
-  line-height: 16px;
 
   .icon {
     margin-right: 10px;
@@ -56,8 +53,6 @@
 .small {
   padding: 6px 16px;
   font-size: 12px;
-  font-weight: 500;
-  line-height: 12px;
 
   .icon {
     margin-right: 6px;
