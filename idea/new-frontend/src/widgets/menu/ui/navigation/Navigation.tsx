@@ -1,6 +1,4 @@
 import { routes } from 'shared/config';
-import { Indicator } from 'shared/ui/indicator';
-import { ReactComponent as IdeSVG } from 'shared/assets/images/menu/ide.svg';
 import { ReactComponent as HomeSVG } from 'shared/assets/images/menu/home.svg';
 import { ReactComponent as CodesSVG } from 'shared/assets/images/menu/codes.svg';
 import { ReactComponent as MailboxSVG } from 'shared/assets/images/menu/mailbox.svg';
@@ -23,11 +21,8 @@ const Navigation = ({ isOpen }: Props) => (
     <NavigationItem to={routes.codes} icon={<CodesSVG />} text="Codes" isFullWidth={isOpen} />
     <NavigationItem to={routes.messages} icon={<MessagesSVG />} text="Messages" isFullWidth={isOpen} />
     <NavigationItem to={routes.explorer} icon={<ExplorerSVG />} text="Explorer" isFullWidth={isOpen} />
-    <NavigationItem to={routes.editor} icon={<IdeSVG />} text="IDE" isFullWidth={isOpen} />
     <AppExamplesLink isFullWidth={isOpen} />
-    <NavigationItem to={routes.mailbox} icon={<MailboxSVG />} text="Mailbox" isFullWidth={isOpen}>
-      <Indicator value={24} />
-    </NavigationItem>
+    <NavigationItem to={routes.mailbox} icon={<MailboxSVG />} text="Mailbox" isFullWidth={isOpen} />
   </nav>
 );
 
