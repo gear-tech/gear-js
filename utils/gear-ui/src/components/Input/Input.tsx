@@ -82,4 +82,5 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
   );
 });
 
-export { Input, Props as InputProps, styles as inputStyles };
+export { Input, styles as inputStyles };
+export type { Props as InputProps };

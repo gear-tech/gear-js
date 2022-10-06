@@ -46,4 +46,5 @@ const InputWrapper = ({ id, children, className, label, error, direction, size, 
   );
 };
 
-export { InputWrapper, Props as InputWrapperProps, styles as inputWrapperStyles };
+export { InputWrapper, styles as inputWrapperStyles };
+export type { Props as InputWrapperProps };

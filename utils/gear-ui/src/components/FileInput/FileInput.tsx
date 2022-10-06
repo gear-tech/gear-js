@@ -94,4 +94,5 @@ const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInput
   );
 });
 
-export { FileInput, Props as FileInputProps, styles as fileInputStyles };
+export { FileInput, styles as fileInputStyles };
+export type { Props as FileInputProps };

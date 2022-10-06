@@ -1,11 +1,7 @@
-import { InputWrapper, InputWrapperProps, inputWrapperStyles } from './InputWrapper';
-import { TooltipWrapper, TooltipWrapperProps, TooltipWrapperStyles } from './TooltipWrapper';
+import { InputWrapper, inputWrapperStyles } from './InputWrapper';
+import type { InputWrapperProps } from './InputWrapper';
+import { TooltipWrapper, TooltipWrapperStyles } from './TooltipWrapper';
+import type { TooltipWrapperProps } from './TooltipWrapper';
 
-export {
-  InputWrapper,
-  InputWrapperProps,
-  inputWrapperStyles,
-  TooltipWrapper,
-  TooltipWrapperProps,
-  TooltipWrapperStyles,
-};
+export { InputWrapper, inputWrapperStyles, TooltipWrapper, TooltipWrapperStyles };
+export type { InputWrapperProps, TooltipWrapperProps };

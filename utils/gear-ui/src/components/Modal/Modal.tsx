@@ -50,4 +50,5 @@ const Modal = ({ heading, close, children, className }: Props) => {
   return root ? createPortal(component, root) : null;
 };
 
-export { Modal, Props as ModalProps, styles as modalStyles };
+export { Modal, styles as modalStyles };
+export type { Props as ModalProps };

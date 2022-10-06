@@ -73,4 +73,5 @@ const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAr
   );
 });
 
-export { Textarea, Props as TextareaProps, styles as textareaStyles };
+export { Textarea, styles as textareaStyles };
+export type { Props as TextareaProps };
