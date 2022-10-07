@@ -3,11 +3,41 @@
 
 .wrapper {
   @extend %headingFont;
-  width: 100%;
-  display: grid;
+
+  &.block {
+    width: 100%;
+    display: grid;
+
+    &.x {
+      grid-template-columns: auto 1fr;
+    }
+  }
+
+  &:not(.block) {
+    display: inline-grid;
+
+    &.x {
+      &.input {
+        grid-template-columns: auto minmax(0, $inputWidth);
+      }
+
+      &.textarea {
+        grid-template-columns: auto minmax(0, $textareaWidth);
+      }
+    }
+
+    &.y {
+      &.input {
+        grid-template-columns: minmax(0, $inputWidth);
+      }
+
+      &.textarea {
+        grid-template-columns: minmax(0, $textareaWidth);
+      }
+    }
+  }
 
   &.x {
-    grid-template-columns: auto 1fr;
     gap: 16px;
   }
 

@@ -16,10 +16,6 @@
   &.readOnly {
     @extend %readOnlyInputWrapper;
   }
-
-  &:not(.block) {
-    max-width: 600px;
-  }
 }
 
 .textarea {

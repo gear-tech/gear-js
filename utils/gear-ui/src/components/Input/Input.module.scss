@@ -7,10 +7,6 @@
   &.readOnly {
     @extend %readOnlyInputWrapper;
   }
-
-  &:not(.block) {
-    max-width: 450px;
-  }
 }
 
 .resets {

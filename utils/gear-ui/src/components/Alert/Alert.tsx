@@ -20,4 +20,5 @@ function Alert({ alert, close }: Props) {
   );
 }
 
-export { Alert, Props as AlertProps, styles as alertStyles };
+export { Alert, styles as alertStyles };
+export type { Props as AlertProps };
