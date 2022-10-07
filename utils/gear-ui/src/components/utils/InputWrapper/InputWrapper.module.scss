@@ -26,7 +26,8 @@
       }
     }
 
-    &.y {
+    &:not(.x) {
+      // not .x cuz without label there's no direction
       &.input {
         grid-template-columns: minmax(0, $inputWidth);
       }
