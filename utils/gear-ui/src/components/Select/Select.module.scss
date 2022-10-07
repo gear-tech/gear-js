@@ -30,4 +30,8 @@
   &.light {
     @include arrow(true);
   }
+
+  &:not(.block) {
+    max-width: $inputWidth;
+  }
 }

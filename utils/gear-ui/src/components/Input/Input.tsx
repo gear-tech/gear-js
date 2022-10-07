@@ -38,6 +38,7 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
     styles[size],
     styles[color],
     error && styles.error,
+    block && styles.block,
   );
 
   const inputClassName = clsx(styles.input, styles[color]);
@@ -55,8 +56,7 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
       size={size}
       gap={gap}
       disabled={disabled}
-      tooltip={tooltip}
-      block={block}>
+      tooltip={tooltip}>
       <div className={wrapperClassName} data-testid="wrapper">
         {icon && <img src={icon} alt="input icon" className={styles.icon} />}
         <input

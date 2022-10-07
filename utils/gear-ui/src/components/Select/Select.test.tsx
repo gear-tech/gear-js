@@ -93,13 +93,10 @@ describe('select tests', () => {
   });
 
   it('renders block select', () => {
-    const { rerender } = render(<Select options={initOptions} />);
+    render(<Select options={initOptions} block />);
 
-    const inputWrapper = screen.getByTestId('inputWrapper');
-    expect(inputWrapper).not.toHaveClass(styles.block);
+    const select = screen.getByRole('combobox');
 
-    rerender(<Select options={initOptions} block />);
-
-    expect(inputWrapper).toHaveClass(styles.block);
+    expect(select).toHaveClass(styles.block);
   });
 });

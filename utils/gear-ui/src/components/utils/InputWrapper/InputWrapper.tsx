@@ -15,35 +15,12 @@ type Props = {
   gap?: Gap;
   disabled?: boolean;
   tooltip?: string;
-  block?: boolean;
-  type?: 'input' | 'textarea';
 };
 
 const InputWrapper = (props: Props) => {
-  const {
-    id,
-    children,
-    className,
-    label,
-    error,
-    direction,
-    size,
-    gap,
-    disabled,
-    tooltip,
-    block,
-    type = 'input',
-  } = props;
+  const { id, children, className, label, error, direction, size, gap, disabled, tooltip } = props;
 
-  const wrapperClassName = clsx(
-    styles.wrapper,
-    className,
-    disabled && 'disabled',
-    label && styles[direction],
-    block && styles.block,
-    styles[type],
-  );
-
+  const wrapperClassName = clsx(styles.wrapper, className, disabled && 'disabled', label && styles[direction]);
   const labelWrapperClassName = clsx(styles.labelWrapper, styles[size], styles[direction]);
 
   const getLabelGap = (gap: Gap) => {
