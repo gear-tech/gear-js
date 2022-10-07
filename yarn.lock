@@ -2214,14 +2214,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:^0.25.6":
-  version: 0.25.7
-  resolution: "@gear-js/api@npm:0.25.7"
+"@gear-js/api@npm:^0.25.9":
+  version: 0.25.9
+  resolution: "@gear-js/api@npm:0.25.9"
   peerDependencies:
     "@polkadot/api": ^9.3.3
     "@polkadot/wasm-crypto": ^6.3.1
     rxjs: ^7.5.5
-  checksum: de29e0768c226f4f22c69252822dc7cb22315c94ed9cf531c9f1d38f80ab0525f9a3ba26d6c4bcf8a06f704f3fe9c07e05025b10b07a08e3c1bb3110449e0013
+  checksum: 9cb510adca8e2ea246b5ac23cfb4e11a1e7ef36692a2ad2b0bc126cee5df7251e1d4445734b4f3e382b80df4b1cfd316a696deb8adbc0a485d4562d9e15ebe29
   languageName: node
   linkType: hard
 
@@ -2630,16 +2630,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/react-hooks@npm:^0.3.2":
-  version: 0.3.2
-  resolution: "@gear-js/react-hooks@npm:0.3.2"
+"@gear-js/react-hooks@npm:^0.3.4":
+  version: 0.3.4
+  resolution: "@gear-js/react-hooks@npm:0.3.4"
   peerDependencies:
-    "@gear-js/api": ^0.25.6
+    "@gear-js/api": ^0.25.9
     "@polkadot/extension-dapp": ^0.43.2
     react: ">=17.0.2"
     react-dom: ">=17.0.2"
     react-transition-group: ^4.4.2
-  checksum: c668efe52d10ba7617b7607684477c3d76103af3c5302653f2134c4526c426b94110feda3e7dd6f9efaa1a93a5af0f3f06472d41025a73bd41bcfd9c8484aa49
+  checksum: 82c953a6b2cb1beaef26185344c474db7a78a1ffc7f19ca7f217c3f6ca26d1372440116376542c59b65a64956efe40d4b298a40adc2f8b5567616b04b2c0afc5
   languageName: node
   linkType: hard
 
@@ -2771,13 +2771,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/ui@npm:^0.5.6":
-  version: 0.5.6
-  resolution: "@gear-js/ui@npm:0.5.6"
+"@gear-js/ui@npm:^0.5.9":
+  version: 0.5.9
+  resolution: "@gear-js/ui@npm:0.5.9"
   peerDependencies:
     react: 18.2.0
     sass: 1.49.9
-  checksum: dce9fd3ff72ba2ece0b23227677d0a3346b22adee3b32ee09c87815c2ff1a9b052798f2c7a0870029dffb38a545e2965faf3d70957cd01a962e6640c63627fa3
+  checksum: 1b0b966360ff5700e293f37453f97f77a2d7bb8bd4246e22122105a6dca10e512cb0f89a971ffcac5a26444d1831127a03ef5a4aa5c1250ee5ebf6e228b1d3d3
   languageName: node
   linkType: hard
 
@@ -18463,9 +18463,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "new-frontend@workspace:idea/new-frontend"
   dependencies:
-    "@gear-js/api": ^0.25.6
-    "@gear-js/react-hooks": ^0.3.2
-    "@gear-js/ui": ^0.5.6
+    "@gear-js/api": ^0.25.9
+    "@gear-js/react-hooks": ^0.3.4
+    "@gear-js/ui": ^0.5.9
     "@hcaptcha/react-hcaptcha": ^1.4.4
     "@mantine/form": ^5.4.0
     "@polkadot/api": ^9.3.3
