@@ -93,9 +93,10 @@ export class BotController {
     ctx.reply(res);
   }
 
-  @Command("updateWorkflowProgramsData")
-  public async updateProgramUrls(ctx: Context): Promise<void> {
-    const res = await this.botService.updateWorkflowProgramsData(ctx.from.id);
+  @Command("updateWasmUrlsWorkflow")
+  public async updateWasmUrlsWorkflow(ctx: Context): Promise<void> {
+    const res = await this.botService.updateWasmUrlsWorkflow(ctx.from.id);
+
     ctx.reply(JSON.stringify(res));
   }
 

@@ -183,7 +183,7 @@ export class BotService {
     }
   }
 
-  public async updateWorkflowProgramsData(userId: number): Promise<string> {
+  public async updateWasmUrlsWorkflow(userId: number): Promise<string> {
     if (await this.userService.isAdmin(String(userId))) {
       try {
         await updateProgramDataByReleaseRepo();
