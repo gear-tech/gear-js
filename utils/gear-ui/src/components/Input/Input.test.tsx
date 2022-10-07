@@ -1,4 +1,4 @@
-import { findByText, fireEvent, getByRole, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { Input } from './Input';
 import styles from './Input.module.scss';
 
@@ -148,13 +148,10 @@ describe('input tests', () => {
   });
 
   it('renders block input', () => {
-    const { rerender } = render(<Input label="label" />);
+    render(<Input label="label" block />);
 
-    const inputWrapper = screen.getByTestId('inputWrapper');
-    expect(inputWrapper).not.toHaveClass(styles.block);
+    const wrapper = screen.getByTestId('wrapper');
 
-    rerender(<Input label="label" block />);
-
-    expect(inputWrapper).toHaveClass(styles.block);
+    expect(wrapper).toHaveClass(styles.block);
   });
 });

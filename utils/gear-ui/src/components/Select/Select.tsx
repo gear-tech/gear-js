@@ -26,7 +26,13 @@ const Select = forwardRef((props: Props, ref: ForwardedRef<HTMLSelectElement>) =
 
   const { disabled } = attrs;
 
-  const selectClassName = clsx(styles.select, styles[color], styles[size], error && styles.error);
+  const selectClassName = clsx(
+    styles.select,
+    styles[color],
+    styles[size],
+    error && styles.error,
+    block && styles.block,
+  );
 
   const id = useId();
 
@@ -42,8 +48,7 @@ const Select = forwardRef((props: Props, ref: ForwardedRef<HTMLSelectElement>) =
       size={size}
       gap={gap}
       disabled={disabled}
-      tooltip={tooltip}
-      block={block}>
+      tooltip={tooltip}>
       <select id={id} className={selectClassName} ref={ref} {...attrs}>
         {getOptions()}
       </select>

@@ -118,13 +118,10 @@ describe('textarea tests', () => {
   });
 
   it('renders block textarea', () => {
-    const { rerender } = render(<Textarea label="label" />);
+    render(<Textarea label="label" block />);
 
-    const inputWrapper = screen.getByTestId('inputWrapper');
-    expect(inputWrapper).not.toHaveClass(styles.block);
+    const wrapper = screen.getByTestId('wrapper');
 
-    rerender(<Textarea label="label" block />);
-
-    expect(inputWrapper).toHaveClass(styles.block);
+    expect(wrapper).toHaveClass(styles.block);
   });
 });

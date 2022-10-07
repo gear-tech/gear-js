@@ -3,42 +3,11 @@
 
 .wrapper {
   @extend %headingFont;
-
-  &.block {
-    width: 100%;
-    display: grid;
-
-    &.x {
-      grid-template-columns: auto 1fr;
-    }
-  }
-
-  &:not(.block) {
-    display: inline-grid;
-
-    &.x {
-      &.input {
-        grid-template-columns: auto minmax(0, $inputWidth);
-      }
-
-      &.textarea {
-        grid-template-columns: auto minmax(0, $textareaWidth);
-      }
-    }
-
-    &:not(.x) {
-      // not .x cuz without label there's no direction
-      &.input {
-        grid-template-columns: minmax(0, $inputWidth);
-      }
-
-      &.textarea {
-        grid-template-columns: minmax(0, $textareaWidth);
-      }
-    }
-  }
+  width: 100%;
+  display: grid;
 
   &.x {
+    grid-template-columns: auto 1fr;
     gap: 16px;
   }
 

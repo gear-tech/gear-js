@@ -31,6 +31,7 @@ const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAr
     styles[color],
     styles[size],
     error && styles.error,
+    block && styles.block,
   );
 
   const textareaClassName = clsx(styles.textarea, styles[color]);
@@ -40,7 +41,6 @@ const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAr
 
   return (
     <InputWrapper
-      type="textarea"
       id={id}
       className={className}
       label={label}
@@ -49,8 +49,7 @@ const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAr
       size={size}
       gap={gap}
       disabled={disabled}
-      tooltip={tooltip}
-      block={block}>
+      tooltip={tooltip}>
       <div className={wrapperClassName} data-testid="wrapper">
         <textarea
           id={id}

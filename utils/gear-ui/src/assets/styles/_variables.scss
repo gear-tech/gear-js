@@ -44,4 +44,6 @@ $textareaWidth: 600px;
 
 //
 
-$borderModal: 2px solid rgba($successColor, 0.5);
+$borderModalWidth: 2px;
+$borderModalColor: rgba($successColor, 0.5);
+$borderModal: $borderModalWidth solid $borderModalColor;
