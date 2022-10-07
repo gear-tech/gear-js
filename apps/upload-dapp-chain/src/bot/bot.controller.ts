@@ -18,10 +18,10 @@ export class BotController {
 
     @Command("start")
     public async start(ctx: Context): Promise<void> {
-      ctx.reply("hello there! Welcome to 📢😎 Gear upload dapp telegram bot.");
+      ctx.reply("hello there! Welcome to 📢😎 Gear upload dapp chain telegram bot.");
       ctx.reply("commands", Markup
         .keyboard([
-          ["/commands", "😎 Popular"],
+          ["/commands"],
         ])
         .oneTime()
         .resize());
@@ -62,6 +62,21 @@ export class BotController {
 
       ctx.reply(res);
     }
+
+  @Command("uploadCodes")
+  public async uploadCodes(ctx: Context): Promise<void> {
+    // @ts-ignore
+    const res = await this.botService.uploadCodes(ctx.from.id, ctx.message.text);
+
+    if (Array.isArray(res)) {
+      for (const uploadDapp of res) {
+        ctx.reply(JSON.stringify(uploadDapp));
+      }
+      return;
+    }
+
+    ctx.reply(res);
+  }
 
   @Command("uploadCode")
   public async uploadCode(ctx: Context): Promise<void> {

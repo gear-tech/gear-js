@@ -18,4 +18,6 @@ interface UploadProgramResult extends Program {
     optWasmBase64: string
 }
 
-export { UploadProgramInput, SendMessageInput, UploadProgramResult, SubmitCodeInput };
+type UploadCodesResult = UploadProgramResult;
+
+export { UploadProgramInput, SendMessageInput, UploadProgramResult, SubmitCodeInput, UploadCodesResult };

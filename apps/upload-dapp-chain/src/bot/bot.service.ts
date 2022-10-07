@@ -7,7 +7,7 @@ import { UserService } from "../user/user.service";
 import { UserRepo } from "../user/user.repo";
 import { getTgCommands, updateProgramDataByReleaseRepo } from "../common/helpers";
 import { getWorkflowCommands } from "../common/helpers/get-workflow-commands";
-import { SendMessageInput, UploadProgramResult } from "../command/types";
+import { SendMessageInput, UploadCodesResult, UploadProgramResult } from "../command/types";
 import { getUploadProgramData } from "../common/helpers/get-upload-program-data";
 import { DappData } from "../dapp-data/entities/dapp-data.entity";
 import { FlowCommand, Payload } from "../common/types";
@@ -37,7 +37,7 @@ export class BotService {
       }
 
       await this.userService.creatUser({ id, role: Role.DEV });
-      return "User successfully register";
+      return "✅ User successfully register";
     }
 
     return TBErrorMessage.ACCESS_DENIED;
@@ -60,9 +60,10 @@ export class BotService {
     }
 
     for (const commandInfo of workflow) {
-      const uploadedProgram = await this.handleCommand(commandInfo, uploadedPrograms);
-
-      if (uploadedProgram) uploadedPrograms.push(uploadedProgram);
+      if (commandInfo.command !== "uploadCode") {
+        const uploadedProgram = await this.handleCommand(commandInfo, uploadedPrograms);
+        if (uploadedProgram) uploadedPrograms.push(uploadedProgram);
+      }
     }
     try {
       const dapps = await this.dappDataService.createDappsData(uploadedPrograms);
@@ -71,6 +72,35 @@ export class BotService {
     } catch (error) {
       this.logger.error("_________UPLOAD_DAPPS_ERROR_________");
       console.log(error);
+
+      return JSON.stringify(error);
+    }
+  }
+
+  public async uploadCodes(userId: number): Promise<DappData[] | string> {
+    const workflow = getWorkflowCommands();
+    const uploadedCodes: UploadCodesResult[] = [];
+
+    if (!await this.userService.validate(String(userId))) {
+      return TBErrorMessage.ACCESS_DENIED;
+    }
+
+    for (const commandInfo of workflow) {
+      if (commandInfo.command === "uploadCode") {
+        const uploadCode = await this.handleCommand(commandInfo, uploadedCodes);
+        if (uploadCode) uploadedCodes.push(uploadCode);
+      }
+    }
+
+    try {
+      const dapps = await this.dappDataService.createDappsData(uploadedCodes);
+
+      return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
+    } catch (error) {
+      this.logger.error("_________UPLOAD_CODES_ERROR_________");
+      console.log(error);
+
+      return JSON.stringify(error);
     }
   }
 
@@ -108,6 +138,8 @@ export class BotService {
     } catch (error) {
       this.logger.error("_________UPLOAD_DAPP_ERROR_________");
       console.log(error);
+
+      return JSON.stringify(error);
     }
   }
 
@@ -146,6 +178,8 @@ export class BotService {
     } catch (error) {
       this.logger.error("_________UPLOAD_CODE_ERROR_________");
       console.log(error);
+
+      return JSON.stringify(error);
     }
   }
 
@@ -154,10 +188,11 @@ export class BotService {
       try {
         await updateProgramDataByReleaseRepo();
 
-        return "✅ Successfully updated programs META__OPT.wasm download urls";
+        return "✅ Successfully updated programs meta.wasm and opt.wasm download urls";
       } catch (error) {
         this.logger.error("_________UPDATE_WORKFLOW_PROGRAMS_DATA_ERROR_________");
         console.log(error);
+
         return JSON.stringify(error);
       }
     }

@@ -113,6 +113,14 @@ workflow:
     program: 4
   - command: uploadProgram
     program: 5
+  - command: uploadCode
+    program: 6
+  - command: uploadCode
+    program: 7
+  - command: uploadCode
+    program: 8
+  - command: uploadCode
+    program: 9
 workflowSingleDapp:
   nft:
     actions:
