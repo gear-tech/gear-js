@@ -24,10 +24,10 @@ import { Result } from './types';
 import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
 import { MetadataService } from '../metadata/metadata.service';
-import { FormResponse } from '../middleware/form-response.middleware';
+import { FormResponse } from '../decorator/form-response.decorator';
 import { CodeService } from '../code/code.service';
 import { kafkaEventMap } from '../common/kafka-event.map';
-import { SERVICE_DATA } from '../common/service-data';
+import { KafkaNetworkData } from '../common/kafka-network-data';
 import { ProducerService } from '../producer/producer.service';
 
 @Injectable()
@@ -47,15 +47,7 @@ export class ConsumerService {
 
   @FormResponse
   async allPrograms(params: GetAllProgramsParams): Result<GetAllProgramsResult> {
-    if (params.owner) {
-      return await this.programService.getAllUserPrograms(params as GetAllUserProgramsParams);
-    }
     return await this.programService.getAllPrograms(params);
-  }
-
-  @FormResponse
-  async allUserPrograms(params: GetAllUserProgramsParams): Result<GetAllProgramsResult> {
-    return await this.programService.getAllUserPrograms(params);
   }
 
   @FormResponse
@@ -90,9 +82,8 @@ export class ConsumerService {
 
   @FormResponse
   async servicesPartition(): Promise<void> {
-    const params = { partition: SERVICE_DATA.partition, genesis: SERVICE_DATA.genesis };
-
-    await this.producerService.sendByTopic(KAFKA_TOPICS.SERVICES_PARTITION, params);
+    const params = { ...KafkaNetworkData };
+    await this.producerService.sendByTopic(`${KAFKA_TOPICS.SERVICES_PARTITION}.reply`, params);
   }
 
   async servicePartitionGet(params: Message): Result<void> {

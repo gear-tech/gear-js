@@ -45,9 +45,9 @@ export class MessageRepo {
     });
   }
 
-  public async get(id: string): Promise<Message> {
+  public async get(id: string, genesis: string): Promise<Message> {
     return this.messageRepo.findOne({
-      where: { id },
+      where: { id, genesis },
     });
   }
 

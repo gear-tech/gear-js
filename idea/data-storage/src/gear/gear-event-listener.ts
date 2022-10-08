@@ -13,12 +13,12 @@ import { HandleExtrinsicsDataInput } from './types';
 import { Code, Message, Program } from '../database/entities';
 import { CodeStatus, MessageEntryPoint, MessageType, ProgramStatus } from '../common/enums';
 import { CodeRepo } from '../code/code.repo';
-import { UpdateCodeInput } from '../code/types';
+import { CodeChangedInput, UpdateCodeInput } from '../code/types';
 import { changeStatus } from '../healthcheck/healthcheck.controller';
 import { ProgramRepo } from '../program/program.repo';
 import { CreateProgramInput } from '../program/types';
 import configuration from '../config/configuration';
-import { SERVICE_DATA } from '../common/service-data';
+import { KafkaNetworkData } from '../common/kafka-network-data';
 import { ProducerService } from '../producer/producer.service';
 
 const { gear } = configuration();
@@ -43,7 +43,7 @@ export class GearEventListener {
       await this.connectGearNode();
       const unsub = await this.listener();
 
-      await this.producerService.getKafkaPartitionService();
+      await this.producerService.setKafkaNetworkData();
 
       await new Promise((resolve) => {
         this.gearApi.on('error', (error) => {
@@ -53,7 +53,7 @@ export class GearEventListener {
         });
       });
 
-      console.log('_________RECONNECTION_NODE__________');
+      this.logger.log('⚙️ 📡 Reconnection node');
     }
   }
 
@@ -69,7 +69,7 @@ export class GearEventListener {
 
       this.logger.log(`⚙️ Connected to ${chain} with genesis ${genesis}`);
 
-      SERVICE_DATA.genesis = genesis;
+      KafkaNetworkData.genesis = genesis;
 
       changeStatus('gearWSProvider');
     } catch (error) {
@@ -141,6 +141,10 @@ export class GearEventListener {
       [Keys.UserMessageRead]: async () => {
         await this.messageService.updateReadStatus(id, payload.reason);
       },
+      [Keys.CodeChanged]: async () => {
+        const codeChangedInput: CodeChangedInput = { ...payload };
+        await this.codeService.updateCodes([codeChangedInput]);
+      },
       [Keys.DatabaseWiped]: async () => {
         await Promise.all([
           this.messageService.deleteRecords(genesis),
@@ -153,7 +157,7 @@ export class GearEventListener {
     try {
       method in eventsMethod && (await eventsMethod[method]());
     } catch (error) {
-      this.logger.error('_________HANDLE_EVENTS_ERROR_________');
+      this.logger.error('Handle events error');
       console.log(error);
     }
   }
@@ -189,7 +193,7 @@ export class GearEventListener {
           value,
           timestamp: new Date(timestamp),
           genesis,
-          program: await this.programRepository.get(eventData.destination.toHex()),
+          program: await this.programRepository.get(eventData.destination.toHex(), genesis),
         });
 
         createMessagesDBType = [...createMessagesDBType, messageDBType];
@@ -198,7 +202,7 @@ export class GearEventListener {
       try {
         if (createMessagesDBType.length >= 1) await this.messageService.createMessages(createMessagesDBType);
       } catch (error) {
-        this.logger.error('_________HANDLE_EXTRINSICS_ERROR_________');
+        this.logger.error('Handle extrinsics error');
         console.log(error);
       }
     }
@@ -223,10 +227,10 @@ export class GearEventListener {
 
         try {
           const codeId = await this.gearApi.program.codeHash(destination.toHex());
-          code = await this.codeRepository.get(codeId);
+          code = await this.codeRepository.get(codeId, genesis);
         } catch (error) {
-          console.log('_________CODE_NOT_EXISTED_ERROR_________');
-          console.log('_________CODE_DESTINATION>', destination.toHex());
+          this.logger.error('Code not exists error');
+          console.log('Code destination', destination.toHex());
           code = null;
         }
 
@@ -246,7 +250,7 @@ export class GearEventListener {
     try {
       return this.programService.createPrograms(createProgramsInput);
     } catch (error) {
-      this.logger.error('_________CREATE_PROGRAMS_ERROR_________');
+      this.logger.error('Create programs error');
       console.log(error);
     }
 
@@ -284,7 +288,7 @@ export class GearEventListener {
     try {
       return this.codeService.updateCodes(updateCodesInput);
     } catch (error){
-      this.logger.error('_________CREATE_CODES_ERROR__________');
+      this.logger.error('Create codes error');
       console.log(error);
     }
   }

@@ -4,7 +4,6 @@ import {
   FindMessageParams,
   GetMessagesParams,
   IMessage,
-  UpdateMessageData,
 } from '@gear-js/common';
 
 import { Message } from '../database/entities';
@@ -57,23 +56,11 @@ export class MessageService {
       }
 
       if (statuses[messageId] === 'Failed') {
-        const message = await this.messageRepository.get(messageId);
+        const message = await this.messageRepository.get(messageId, genesis);
         if (message.entry === MessageEntryPoint.INIT) {
           await this.programService.setStatus(message.destination, genesis, ProgramStatus.INIT_FAILED);
         }
       }
-    }
-  }
-
-  public async updateMessagesData(updateMessagesParams: UpdateMessageData[]): Promise<void> {
-    const promises = updateMessagesParams.map((updateMessageData) => {
-      return this.updateMessage(updateMessageData);
-    });
-
-    try {
-      await Promise.all(promises);
-    } catch (error) {
-      this.logger.error(error);
     }
   }
 
@@ -88,10 +75,5 @@ export class MessageService {
   public async deleteRecords(genesis: string): Promise<void> {
     const messages = await this.messageRepository.listByGenesis(genesis);
     await this.messageRepository.remove(messages);
-  }
-
-  private async updateMessage(updateMessageData: UpdateMessageData): Promise<void> {
-    const { messageId, genesis, ...data } = updateMessageData;
-    await this.messageRepository.update({ id: messageId, genesis }, { ...data });
   }
 }

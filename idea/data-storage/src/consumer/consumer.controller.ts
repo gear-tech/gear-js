@@ -16,7 +16,7 @@ import {
 import { Message } from 'kafkajs';
 
 import { ConsumerService } from './consumer.service';
-import { KafkaMessagePartition } from '../middleware/kafka-message-partition.middleware';
+import { KafkaMessagePartition } from '../decorator/kafka-message-partition.decorator';
 
 @Controller()
 export class ConsumerController {
@@ -33,13 +33,6 @@ export class ConsumerController {
   @KafkaMessagePartition
   async allPrograms(@Payload() payload: KafkaPayload<GetAllProgramsParams>): Promise<string> {
     const result = await this.consumerService.allPrograms(payload.value);
-    return JSON.stringify(result);
-  }
-
-  @MessagePattern(KAFKA_TOPICS.PROGRAM_ALL_USER)
-  @KafkaMessagePartition
-  async allUserPrograms(@Payload() payload: KafkaPayload<GetAllUserProgramsParams>): Promise<string> {
-    const result = await this.consumerService.allUserPrograms(payload.value);
     return JSON.stringify(result);
   }
 

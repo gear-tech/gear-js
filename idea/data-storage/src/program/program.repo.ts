@@ -50,7 +50,7 @@ export class ProgramRepo {
   }
 
   public async listPaginationByGenesis(params: GetAllProgramsParams): Promise<[Program[], number]> {
-    const { genesis, query, limit, offset } = params;
+    const { genesis, query, limit, offset, owner } = params;
     return this.programRepo.findAndCount({
       where: sqlWhereWithILike({ genesis }, query, ['id', 'title', 'name']),
       take: limit || PAGINATION_LIMIT,
@@ -74,9 +74,9 @@ export class ProgramRepo {
     return this.programRepo.remove(programs);
   }
 
-  public async get(id: string): Promise<Program> {
+  public async get(id: string, genesis: string): Promise<Program> {
     return this.programRepo.findOne({
-      where: { id }
+      where: { id, genesis }
     });
   }
 }

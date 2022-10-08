@@ -38,9 +38,9 @@ export class CodeRepo {
     });
   }
 
-  public async get(id: string): Promise<Code> {
+  public async get(id: string, genesis: string): Promise<Code> {
     return this.codeRepo.findOne({
-      where: { id }
+      where: { id, genesis }
     });
   }
 

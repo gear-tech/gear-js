@@ -5,7 +5,7 @@ import { GetAllCodeParams, GetAllCodeResult, GetCodeParams } from '@gear-js/comm
 import { Code } from '../database/entities';
 import { CodeRepo } from './code.repo';
 import { CodeNotFound } from '../common/errors';
-import { UpdateCodeInput } from './types';
+import { CodeChangedInput, UpdateCodeInput } from './types';
 
 @Injectable()
 export class CodeService {
@@ -29,7 +29,7 @@ export class CodeService {
     return code;
   }
 
-  public async updateCodes(updateCodesInput: UpdateCodeInput[]): Promise<Code[]> {
+  public async updateCodes(updateCodesInput: UpdateCodeInput[] | CodeChangedInput[]): Promise<Code[]> {
     let updateCodes = [];
 
     for(const updateCodeInput of updateCodesInput){
@@ -56,7 +56,7 @@ export class CodeService {
     try {
       return this.codeRepository.save(updateCodes);
     } catch (error) {
-      this.logger.error('_________UPDATE_CODES_ERROR_________');
+      this.logger.error('Update codes error');
       console.log(error);
     }
   }

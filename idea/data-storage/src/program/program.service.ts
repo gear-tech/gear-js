@@ -4,7 +4,6 @@ import {
   FindProgramParams,
   GetAllProgramsParams,
   GetAllProgramsResult,
-  GetAllUserProgramsParams,
   IProgram,
 } from '@gear-js/common';
 
@@ -18,6 +17,14 @@ import { ProgramStatus } from '../common/enums';
 export class ProgramService {
   private logger: Logger = new Logger('ProgramService');
   constructor(private programRepository: ProgramRepo) {}
+
+  public async getAllPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
+    const [programs, total] = await this.programRepository.listPaginationByGenesis(params);
+    return {
+      programs,
+      count: total,
+    };
+  }
 
   public async createPrograms(createProgramsInput: CreateProgramInput[]): Promise<Program[]> {
 
@@ -57,22 +64,6 @@ export class ProgramService {
       console.log(error);
       this.logger.error(error);
     }
-  }
-
-  public async getAllUserPrograms(params: GetAllUserProgramsParams): Promise<GetAllProgramsResult> {
-    const [programs, total] = await this.programRepository.listByOwnerAndGenesis(params);
-    return {
-      programs,
-      count: total,
-    };
-  }
-
-  public async getAllPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
-    const [programs, total] = await this.programRepository.listPaginationByGenesis(params);
-    return {
-      programs,
-      count: total,
-    };
   }
 
   public async findProgram(params: FindProgramParams): Promise<Program> {

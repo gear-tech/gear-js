@@ -1,6 +1,7 @@
 import { Hex } from '@gear-js/api';
+import { BaseDataInput } from '../../gear/types';
 
-export interface UserMessageSentInput {
+export interface UserMessageSentInput extends BaseDataInput {
   id: Hex;
   destination: Hex;
   source: Hex;

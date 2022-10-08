@@ -1,5 +1,11 @@
 import { Keys } from '@gear-js/common';
-import { MessagesDispatchedData, ProgramChangedData, UserMessageReadData, UserMessageSentData } from '@gear-js/api';
+import {
+  CodeChangedData,
+  MessagesDispatchedData,
+  ProgramChangedData,
+  UserMessageReadData,
+  UserMessageSentData,
+} from '@gear-js/api';
 
 import { GenericEventData } from '@polkadot/types';
 import { getMessageReadStatus } from './get-message-read-status';
@@ -7,8 +13,9 @@ import { UserMessageSentInput } from '../../message/types/user-message-sent.inpu
 import { UserMessageReadInput } from '../../message/types/user-message-read.input';
 import { ProgramChangedInput } from '../../program/types/program-changed.input';
 import { MessageDispatchedDataInput } from '../../message/types/message-dispatched-data.input';
-import { MessageStatus } from '../enums';
+import { CodeStatus, MessageStatus } from '../enums';
 import { GearEventPayload } from '../types';
+import { CodeChangedInput } from '../../code/types';
 
 function userMessageSentPayload(data: UserMessageSentData): UserMessageSentInput {
   const { id, source, destination, payload, value, reply } = data.message;
@@ -30,9 +37,7 @@ function userMessageReadPayload(data: UserMessageReadData): UserMessageReadInput
   };
 }
 
-function programChangedPayload(
-  data: ProgramChangedData,
-): ProgramChangedInput | null {
+function programChangedPayload(data: ProgramChangedData): ProgramChangedInput | null {
   const { id, change } = data;
   if (change.isActive || change.isInactive) {
     return {
@@ -43,9 +48,18 @@ function programChangedPayload(
   return null;
 }
 
-function messagesDispatchedPayload(
-  data: MessagesDispatchedData,
-): MessageDispatchedDataInput | null {
+function codeChangedPayload(data: CodeChangedData): CodeChangedInput | null {
+  const { id, change } = data;
+  const status = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
+  const expiration = change.isActive ? change.asActive.expiration.toHuman() : null;
+
+  if (!status) {
+    return null;
+  }
+  return {  id: id.toHex(), status, expiration };
+}
+
+function messagesDispatchedPayload(data: MessagesDispatchedData): MessageDispatchedDataInput | null {
   const { statuses } = data;
   if (statuses.size > 0) {
     return {  statuses: statuses.toHuman() as { [key: string]: MessageStatus } };
@@ -55,7 +69,7 @@ function messagesDispatchedPayload(
 
 export function getPayloadByGearEvent (method: string, data: GenericEventData): GearEventPayload {
   const payloads = {
-    [Keys.UserMessageSent]: (data: UserMessageSentData):UserMessageSentInput => {
+    [Keys.UserMessageSent]: (data: UserMessageSentData): UserMessageSentInput => {
       return userMessageSentPayload(data);
     },
     [Keys.UserMessageRead]: (data: UserMessageReadData): UserMessageReadInput => {
@@ -66,6 +80,9 @@ export function getPayloadByGearEvent (method: string, data: GenericEventData): 
     },
     [Keys.MessagesDispatched]: (data: MessagesDispatchedData): MessageDispatchedDataInput => {
       return messagesDispatchedPayload(data);
+    },
+    [Keys.CodeChanged]: (data: CodeChangedData): CodeChangedInput | null => {
+      return codeChangedPayload(data);
     },
     [Keys.DatabaseWiped]: () => {
       return {};
