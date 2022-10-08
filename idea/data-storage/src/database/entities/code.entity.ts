@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { BaseEntity } from './base.entity';
 import { Program } from './program.entity';
@@ -7,7 +7,10 @@ import { CodeStatus } from '../../common/enums';
 
 @Entity()
 export class Code extends BaseEntity {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn('uuid')
+    _id: string;
+
+  @Column()
     id: string;
 
   @Column()

@@ -1,4 +1,12 @@
-import { Column, Entity, JoinColumn, Index, PrimaryColumn, OneToMany, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  Index,
+  OneToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { IProgram } from '@gear-js/common';
 
 import { BaseEntity } from './base.entity';
@@ -9,7 +17,10 @@ import { ProgramStatus } from '../../common/enums';
 
 @Entity()
 export class Program extends BaseEntity implements IProgram {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn('uuid')
+    _id: string;
+
+  @Column()
     id: string;
 
   @Index()
