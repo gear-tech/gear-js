@@ -3,7 +3,7 @@ import { Request, Response, Router } from 'express';
 import { apiGatewayService } from '../../services/api-gateway.service';
 import { apiGatewayLogger } from '../../common/api-gateway.logger';
 import { testBalanceMiddleware } from '../../middleware';
-import { checkGenesisMiddleware } from '../../middleware/check-genesis.middleware';
+import { checkGenesisMiddleware } from '../../middleware';
 
 export const apiGatewayRouter = Router({});
 
