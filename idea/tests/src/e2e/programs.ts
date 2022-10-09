@@ -25,6 +25,7 @@ export async function getProgramData(genesis: string, programId: string): Promis
   expect(response).to.have.own.property('result');
   expect(response.result).to.have.all.keys(
     'id',
+    '_id',
     'blockHash',
     'genesis',
     'owner',

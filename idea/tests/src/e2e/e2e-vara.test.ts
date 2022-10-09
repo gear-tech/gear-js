@@ -8,6 +8,7 @@ import { sleep } from '../utils';
 import { getAllMessages, getMessageData, getMessagePayload } from './messages';
 import { getCodeData, getListCode } from './code';
 import base from '../config/base';
+import { networkDataAvailable } from './network-data-available';
 
 let genesis: Hex;
 let prepared: IPrepared;
@@ -92,5 +93,11 @@ describe('VARA_NODE code methods', () => {
     const codeIndex = 0;
     const codeId = Array.from(prepared.collectionCode.keys())[codeIndex];
     expect(await getCodeData(genesis, codeId)).toBeTruthy();
+  });
+});
+
+describe('VARA_NODE networkDataAvailable method (depends on connection node)', () => {
+  test('networkData.available request', async () => {
+    expect(await networkDataAvailable(genesis)).toBeTruthy();
   });
 });

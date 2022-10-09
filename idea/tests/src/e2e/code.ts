@@ -17,6 +17,7 @@ async function getCodeData(genesis: string, codeId: Hex) {
   expect(response).to.have.own.property('result');
   expect(response.result).to.have.all.keys([
     'id',
+    '_id',
     'name',
     'status',
     'expiration',

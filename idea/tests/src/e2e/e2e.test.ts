@@ -9,6 +9,7 @@ import { getAllMessages, getMessageData, getMessagePayload } from './messages';
 import { getTestBalance, testBalanceAvailable } from './testBalance';
 import { getCodeData, getListCode } from './code';
 import base from '../config/base';
+import { networkDataAvailable } from './network-data-available';
 
 let genesis: Hex;
 let prepared: IPrepared;
@@ -102,5 +103,11 @@ describe('testBalance', () => {
   });
   test('testBalance.available request', async () => {
     expect(await testBalanceAvailable(genesis)).toBeTruthy();
+  });
+});
+
+describe('networkDataAvailable method (depends on connection node)', () => {
+  test('networkData.available request', async () => {
+    expect(await networkDataAvailable(genesis)).toBeTruthy();
   });
 });
