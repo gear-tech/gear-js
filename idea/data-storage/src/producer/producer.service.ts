@@ -29,7 +29,10 @@ export class ProducerService {
       kafka_correlationId: correlationId,
     } };
 
-    await this.sendByTopic(`${KAFKA_TOPICS.SERVICE_PARTITION_GET}.reply`, message);
+    await this.kafkaProducer.send({
+      topic: `${KAFKA_TOPICS.SERVICE_PARTITION_GET}.reply`,
+      messages: [message],
+    });
 
     let topicEvent;
     const res: Promise<any> = new Promise((resolve) => (topicEvent = resolve));
