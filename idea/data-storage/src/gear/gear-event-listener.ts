@@ -81,9 +81,9 @@ export class GearEventListener {
   private listen() {
     return this.api.derive.chain.subscribeNewBlocks(async (block) => {
       const blockHash = block.createdAtHash.toHex();
-      const timestamp = await this.api.blocks.getBlockTimestamp(block);
+      const timestamp = (await this.api.blocks.getBlockTimestamp(block)).toNumber();
 
-      await this.handleExtrinsics(block);
+      await this.handleExtrinsics(block, timestamp);
 
       for (const {
         event: { data, method },
@@ -143,15 +143,14 @@ export class GearEventListener {
     }
   }
 
-  private async handleExtrinsics(block: SignedBlockExtended) {
+  private async handleExtrinsics(block: SignedBlockExtended, ts: number) {
     const status = this.api.createType('ExtrinsicStatus', { finalized: block.createdAtHash });
-    const ts = await this.api.blocks.getBlockTimestamp(block);
 
-    await this.handleCodeExtrinsics(block, status, ts.toNumber());
+    await this.handleCodeExtrinsics(block, status, ts);
 
-    await this.handleProgramExtrinsics(block, status, ts.toNumber());
+    await this.handleProgramExtrinsics(block, status, ts);
 
-    await this.handleMessageExtrinsics(block, status, ts.toNumber());
+    await this.handleMessageExtrinsics(block, status, ts);
   }
 
   private async handleMessageExtrinsics(block: SignedBlockExtended, status: ExtrinsicStatus, timestamp: number) {
@@ -233,11 +232,15 @@ export class GearEventListener {
     const codes: UpdateCodeInput[] = [];
 
     for (const tx of extrinsics) {
+      const event = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
+        this.api.events.gear.CodeChanged.is(event),
+      );
+
+      if (!event) continue;
+
       const {
         data: { id, change },
-      } = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
-        this.api.events.gear.CodeChanged.is(event),
-      ).event as CodeChanged;
+      } = event.event as CodeChanged;
 
       const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
 
