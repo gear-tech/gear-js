@@ -40,7 +40,7 @@ async function bootstrap() {
       consumer: {
         groupId: kafka.groupId,
       },
-      producer:{ }
+      producer: {},
     },
   });
 
@@ -54,7 +54,7 @@ async function bootstrap() {
   await app.listen(healthcheck.port);
 
   const gearEventListener = app.get(GearEventListener);
-  await gearEventListener.listen();
+  await gearEventListener.run();
 }
 
 bootstrap();

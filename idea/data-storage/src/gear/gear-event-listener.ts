@@ -1,16 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CodeChangedData, GearApi, MessageEnqueuedData } from '@gear-js/api';
+import { CodeChanged, GearApi, Hex, MessageEnqueued } from '@gear-js/api';
 import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
+import { ExtrinsicStatus } from '@polkadot/types/interfaces';
+import { SignedBlockExtended } from '@polkadot/api-derive/types';
 import { Keys } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
 
 import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
 import { CodeService } from '../code/code.service';
-import { getPayloadByGearEvent, getUpdateMessageData } from '../common/helpers';
-import { HandleExtrinsicsDataInput } from './types';
-import { Code, Message, Program } from '../database/entities';
+import { getPayloadByGearEvent, getPayloadAndValue } from '../common/helpers';
+import { Message } from '../database/entities';
 import { CodeStatus, MessageEntryPoint, MessageType, ProgramStatus } from '../common/enums';
 import { CodeRepo } from '../code/code.repo';
 import { CodeChangedInput, UpdateCodeInput } from '../code/types';
@@ -26,7 +27,8 @@ const { gear } = configuration();
 @Injectable()
 export class GearEventListener {
   private logger: Logger = new Logger('GearEventListener');
-  private gearApi: GearApi;
+  private api: GearApi;
+  private genesis: Hex;
 
   constructor(
     private programService: ProgramService,
@@ -37,16 +39,16 @@ export class GearEventListener {
     private producerService: ProducerService,
   ) {}
 
-  public async listen() {
+  public async run() {
     // eslint-disable-next-line no-constant-condition
     while (true) {
       await this.connectGearNode();
-      const unsub = await this.listener();
+      const unsub = await this.listen();
 
       await this.producerService.setKafkaNetworkData();
 
       await new Promise((resolve) => {
-        this.gearApi.on('error', (error) => {
+        this.api.on('error', (error) => {
           unsub();
           changeStatus('gearWSProvider');
           resolve(error);
@@ -57,19 +59,18 @@ export class GearEventListener {
     }
   }
 
-  private async connectGearNode(): Promise<void>{
+  private async connectGearNode(): Promise<void> {
     try {
-      this.gearApi = await GearApi.create({
+      this.api = await GearApi.create({
         providerAddress: gear.wsProvider,
         throwOnConnect: true,
       });
 
-      const chain = await this.gearApi.chain();
-      const genesis = this.gearApi.genesisHash.toHex();
+      this.genesis = this.api.genesisHash.toHex();
 
-      this.logger.log(`⚙️ Connected to ${chain} with genesis ${genesis}`);
+      this.logger.log(`⚙️ Connected to ${this.api.runtimeChain} with genesis ${this.genesis}`);
 
-      KafkaNetworkData.genesis = genesis;
+      KafkaNetworkData.genesis = this.genesis;
 
       changeStatus('gearWSProvider');
     } catch (error) {
@@ -77,44 +78,24 @@ export class GearEventListener {
     }
   }
 
-  private async listener() {
-    const gearApi = this.gearApi;
-    const genesis = gearApi.genesisHash.toHex();
+  private listen() {
+    return this.api.derive.chain.subscribeNewBlocks(async (block) => {
+      const blockHash = block.createdAtHash.toHex();
+      const timestamp = await this.api.blocks.getBlockTimestamp(block);
 
-    return gearApi.query.system.events(async (events) => {
-      const blockHash = events.createdAtHash!.toHex();
+      await this.handleExtrinsics(block);
 
-      const [blockTimestamp, block, extrinsicStatus] = await Promise.all([
-        gearApi.blocks.getBlockTimestamp(blockHash),
-        gearApi.blocks.get(blockHash),
-        gearApi.createType('ExtrinsicStatus', { finalized: blockHash }),
-      ]);
-
-      const base = {
-        genesis,
-        blockHash,
-        timestamp: blockTimestamp.toNumber(),
-      };
-
-      await this.handleExtrinsics({
-        genesis,
-        events,
-        status: extrinsicStatus,
-        signedBlock: block,
-        timestamp: blockTimestamp.toNumber(),
-        blockHash,
-      });
-
-      for (const { event: { data, method } } of events) {
+      for (const {
+        event: { data, method },
+      } of block.events) {
         try {
           const payload = getPayloadByGearEvent(method, data as GenericEventData);
           if (payload !== null) {
-            await this.handleEvents(method, { ...payload, ...base });
+            await this.handleEvents(method, { ...payload, blockHash, timestamp, genesis: this.genesis });
           }
         } catch (error) {
           console.error(error);
           this.logger.warn({ method, data: data.toHuman() });
-          this.logger.error('_________END_ERROR_________');
         }
       }
     });
@@ -162,134 +143,114 @@ export class GearEventListener {
     }
   }
 
-  private async handleExtrinsics(handleExtrinsicsData: HandleExtrinsicsDataInput): Promise<void> {
-    const { signedBlock, events, status, genesis, timestamp, blockHash } = handleExtrinsicsData;
+  private async handleExtrinsics(block: SignedBlockExtended) {
+    const status = this.api.createType('ExtrinsicStatus', { finalized: block.createdAtHash });
+    const ts = await this.api.blocks.getBlockTimestamp(block);
 
-    await this.createCodes(handleExtrinsicsData);
-    await this.createPrograms(handleExtrinsicsData);
+    await this.handleCodeExtrinsics(block, status, ts.toNumber());
 
-    const txMethods = ['sendMessage', 'uploadProgram', 'createProgram', 'sendReply'];
-    const extrinsics = signedBlock.block.extrinsics.filter(({ method: { method } }) => txMethods.includes(method));
+    await this.handleProgramExtrinsics(block, status, ts.toNumber());
 
-    for (const { hash, args, method: { method }, } of extrinsics) {
-      let createMessagesDBType = [];
+    await this.handleMessageExtrinsics(block, status, ts.toNumber());
+  }
 
-      const filteredEvents = filterEvents(hash, signedBlock, events, status).events!.find(
-        ({ event: { method } }) => method === Keys.MessageEnqueued,
-      );
+  private async handleMessageExtrinsics(block: SignedBlockExtended, status: ExtrinsicStatus, timestamp: number) {
+    const txMethods = ['sendMessage', 'sendReply', 'uploadProgram', 'createProgram'];
+    const extrinsics = block.block.extrinsics.filter(({ method: { method } }) => txMethods.includes(method));
 
-      if (filteredEvents) {
-        const eventData = filteredEvents.event.data as MessageEnqueuedData;
+    if (extrinsics.length === 0) return;
 
-        const [payload, value] = getUpdateMessageData(args, method);
+    const messages: Message[] = [];
 
-        const messageDBType = plainToClass(Message, {
-          id: eventData.id.toHex(),
-          destination: eventData.destination.toHex(),
-          source: eventData.source.toHex(),
-          entry: eventData.entry.isInit ? MessageEntryPoint.INIT : eventData.entry.isHandle
-            ? MessageEntryPoint.HANDLE : MessageEntryPoint.REPLY,
+    for (const tx of extrinsics) {
+      const {
+        data: { id, source, destination, entry },
+      } = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
+        this.api.events.gear.MessageEnqueued.is(event),
+      ).event as MessageEnqueued;
+
+      const [payload, value] = getPayloadAndValue(tx.args, tx.method.method);
+
+      messages.push(
+        plainToClass(Message, {
+          id: id.toHex(),
+          destination: destination.toHex(),
+          source: source.toHex(),
           payload,
           value,
           timestamp: new Date(timestamp),
-          genesis,
-          program: await this.programRepository.get(eventData.destination.toHex(), genesis),
-        });
-
-        createMessagesDBType = [...createMessagesDBType, messageDBType];
-      }
-
-      try {
-        if (createMessagesDBType.length >= 1) await this.messageService.createMessages(createMessagesDBType);
-      } catch (error) {
-        this.logger.error('Handle extrinsics error');
-        console.log(error);
-      }
+          genesis: this.genesis,
+          program: await this.programRepository.get(destination.toHex(), this.genesis),
+          type: MessageType.ENQUEUED,
+          entry: entry.isInit
+            ? MessageEntryPoint.INIT
+            : entry.isHandle
+              ? MessageEntryPoint.HANDLE
+              : MessageEntryPoint.REPLY,
+        }),
+      );
     }
+    return this.messageService.createMessages(messages);
   }
 
-  private async createPrograms(handleExtrinsicsData: HandleExtrinsicsDataInput): Promise<Program[]> {
-    const { signedBlock, events, status, genesis, timestamp, blockHash } = handleExtrinsicsData;
+  private async handleProgramExtrinsics(block: SignedBlockExtended, status: ExtrinsicStatus, timestamp: number) {
+    const txMethods = ['uploadProgram', 'createProgram'];
+    const extrinsics = block.block.extrinsics.filter(({ method: { method } }) => txMethods.includes(method));
 
-    const extrinsics = signedBlock.block.extrinsics.filter(({ method: { method } }) =>
-      ['uploadProgram', 'createProgram'].includes(method),
-    );
-    let createProgramsInput = [];
+    if (extrinsics.length === 0) return;
 
-    for (const extrinsic of extrinsics) {
-      const filteredEvents = filterEvents(extrinsic.hash, signedBlock, events, status).events!.find(
-        ({ event: { method } }) => method === Keys.MessageEnqueued,
-      );
+    const programs: CreateProgramInput[] = [];
 
-      if (filteredEvents) {
-        const { source, destination } = filteredEvents.event.data as MessageEnqueuedData;
-        let code;
+    for (const tx of extrinsics) {
+      const {
+        data: { source, destination },
+      } = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
+        this.api.events.gear.MessageEnqueued.is(event),
+      ).event as MessageEnqueued;
 
-        try {
-          const codeId = await this.gearApi.program.codeHash(destination.toHex());
-          code = await this.codeRepository.get(codeId, genesis);
-        } catch (error) {
-          this.logger.error('Code not exists error');
-          console.log('Code destination', destination.toHex());
-          code = null;
-        }
+      const codeId = await this.api.program.codeHash(destination.toHex());
+      const code = await this.codeRepository.get(codeId, this.genesis);
 
-        const createProgramInput: CreateProgramInput = {
-          id: destination.toHex(),
-          owner: source.toHex(),
-          genesis,
-          timestamp,
-          blockHash,
-          code
-        };
-
-        createProgramsInput = [...createProgramsInput, createProgramInput];
-      }
+      programs.push({
+        owner: source.toHex(),
+        id: destination.toHex(),
+        blockHash: block.createdAtHash.toHex(),
+        timestamp,
+        code,
+        genesis: this.genesis,
+      });
     }
 
-    try {
-      return this.programService.createPrograms(createProgramsInput);
-    } catch (error) {
-      this.logger.error('Create programs error');
-      console.log(error);
-    }
-
+    return this.programService.createPrograms(programs);
   }
 
-  private async createCodes(handleExtrinsicsData: HandleExtrinsicsDataInput): Promise<Code[]> {
-    const { signedBlock, events, status, genesis, timestamp, blockHash } = handleExtrinsicsData;
+  private async handleCodeExtrinsics(block: SignedBlockExtended, status: ExtrinsicStatus, timestamp: number) {
+    const txMethods = ['uploadProgram', 'uploadCode'];
+    const extrinsics = block.block.extrinsics.filter(({ method: { method } }) => txMethods.includes(method));
 
-    const extrinsics = signedBlock.block.extrinsics.filter(({ method: { method } }) =>
-      ['uploadCode', 'uploadProgram'].includes(method),
-    );
-    let updateCodesInput = [];
+    if (extrinsics.length === 0) return;
 
-    for (const extrinsic of extrinsics) {
-      const filteredEvents = filterEvents(extrinsic.hash, signedBlock, events, status).events!.find(
-        ({ event: { method } }) => method === Keys.CodeChanged,
-      );
+    const codes: UpdateCodeInput[] = [];
 
-      if (filteredEvents) {
-        const { change, id } = filteredEvents.event.data as CodeChangedData;
+    for (const tx of extrinsics) {
+      const {
+        data: { id, change },
+      } = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
+        this.api.events.gear.CodeChanged.is(event),
+      ).event as CodeChanged;
 
-        const updateCodeInput: UpdateCodeInput = {
-          id: id.toHex(),
-          genesis,
-          status: change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null,
-          timestamp,
-          blockHash,
-          expiration: change.isActive ? (change.asActive.expiration.toHuman() as number) : null,
-        };
+      const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
 
-        updateCodesInput = [...updateCodesInput, updateCodeInput];
-      }
+      codes.push({
+        id: id.toHex(),
+        genesis: this.genesis,
+        status: codeStatus,
+        timestamp,
+        blockHash: block.createdAtHash.toHex(),
+        expiration: change.isActive ? change.asActive.expiration.toString() : null,
+      });
     }
 
-    try {
-      return this.codeService.updateCodes(updateCodesInput);
-    } catch (error){
-      this.logger.error('Create codes error');
-      console.log(error);
-    }
+    return this.codeService.updateCodes(codes);
   }
 }

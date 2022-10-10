@@ -6,5 +6,5 @@ export interface UpdateCodeInput {
   genesis: string;
   timestamp: number;
   blockHash: string;
-  expiration?: number | null;
+  expiration?: string | null;
 }
