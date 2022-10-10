@@ -23,13 +23,9 @@ async function sendByTopic(
 }
 
 function createMessageBody(topic: string, params: KafkaParams, correlationId?: string): Message {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //@ts-ignore
   const sendMessagePartition = servicesPartitionMap.get(params.genesis);
   const result: Message = { value: transformToSting(params), headers: {} };
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //@ts-ignore
   if(params.genesis && sendMessagePartition) {
     result.partition = Number(sendMessagePartition);
   }

@@ -38,8 +38,10 @@ export class ProducerService {
     const res: Promise<any> = new Promise((resolve) => (topicEvent = resolve));
     kafkaEventMap.set(correlationId, topicEvent);
 
-    const kafkaNetworkPartition = await res;
+    const kafkaNetworkData = await res;
 
-    if(kafkaNetworkPartition !== null) KafkaNetworkData.partition = Number(kafkaNetworkPartition);
+    if(kafkaNetworkData.routingPartition !== null) {
+      KafkaNetworkData.partition = Number(kafkaNetworkData.routingPartition);
+    }
   }
 }

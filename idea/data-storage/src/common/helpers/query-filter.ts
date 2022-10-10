@@ -1,4 +1,4 @@
-import { In } from 'typeorm';
+import { Between, In } from 'typeorm';
 
 export function queryFilter(
   strictParams: {[key: string]: string},
@@ -8,8 +8,9 @@ export function queryFilter(
   let queryBodyList:Record<string, unknown>[] = [];
   const { query, ...queryParamsWithoutSearch } = queryParams;
 
-  const isIncludeSearch = query && query.length > 0;
+  const isIncludeSearchByTitle = query && query.length > 0;
   const isIncludeQueryParams = Object.keys(queryParamsWithoutSearch).length >= 1;
+  const isIncludeSearchByDates = ['fromDate', 'toDate'].every(key => Object.keys(queryParams).includes(key));
 
   const queryBody: {[key: string]: unknown} = { ...strictParams };
 
@@ -23,18 +24,29 @@ export function queryFilter(
         queryBody[queryKey] = queryValue;
       }
     }
-  } else {
-    queryBodyList = [queryBody];
   }
 
+  if(isIncludeSearchByDates) {
+    const fromDate = queryParamsWithoutSearch['fromDate'] as string;
+    const toDate = queryParamsWithoutSearch['toDate'] as string;
 
-  if(isIncludeSearch) {
+    queryBody['timestamp'] = Between(
+      new Date(fromDate),
+      new Date(toDate)
+    );
+  }
+
+  if(isIncludeSearchByTitle) {
     for(const param of searchParams){
       const queryBody: {[key: string]: unknown} = { ...strictParams };
 
       queryBody[param] = query;
       queryBodyList = [...queryBodyList, queryBody];
     }
+  }
+
+  if(isIncludeQueryParams && !isIncludeSearchByTitle) {
+    queryBodyList = [queryBody];
   }
 
   return queryBodyList;

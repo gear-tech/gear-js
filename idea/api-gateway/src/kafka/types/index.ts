@@ -3,15 +3,18 @@ import {
   FindMessageParams,
   FindProgramParams,
   GetAllProgramsParams,
-  GetAllProgramsResult,
   GetAllUserProgramsParams,
   GetIncomingMessagesParams,
   GetMessagesParams,
   GetMetaParams,
   GetOutgoingMessagesParams,
   GetTestBalanceParams,
-  ProgramDataResult,
 } from '@gear-js/common';
+
+interface NetworkKafkaPartition {
+  routingPartition: string;
+  genesis?: string;
+}
 
 export type KafkaParams =
   | AddMetaParams
@@ -24,6 +27,4 @@ export type KafkaParams =
   | GetOutgoingMessagesParams
   | GetTestBalanceParams
   | GetAllUserProgramsParams
-  | GetAllProgramsResult
-  | ProgramDataResult
-  | string
+  | NetworkKafkaPartition

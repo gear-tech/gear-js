@@ -1,5 +1,5 @@
-import { getServicesPartition } from './get-services-partition';
+import { networkKafkaPartitions } from './network-kafka-partitions';
 import { sendServicePartition } from './send-service-partition';
 import { setServicePartition } from './set-service-partition';
 
-export { getServicesPartition, sendServicePartition, setServicePartition };
+export { networkKafkaPartitions, sendServicePartition, setServicePartition };

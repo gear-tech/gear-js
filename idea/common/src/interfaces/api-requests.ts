@@ -17,6 +17,9 @@ interface GetOutgoingMessagesParams extends IGenesis, IPaginationParams, Pick<IM
 interface GetAllProgramsParams extends IGenesis, IPaginationParams, SearchParam {
   publicKeyRaw?: string;
   owner?: string;
+  fromDate?: string;
+  toDate?: string;
+  status?: string | string[];
 }
 
 interface GetAllCodeParams extends IGenesis, IPaginationParams, SearchParam {}
@@ -60,7 +63,7 @@ interface IRpcRequest {
   jsonrpc: '2.0';
   id: number;
   method: string;
-  params?:
+  params:
     | FindProgramParams
     | GetAllProgramsParams
     | AddMetaParams

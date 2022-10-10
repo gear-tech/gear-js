@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Program } from '../database/entities';
-import { GetAllProgramsParams, GetAllUserProgramsParams } from '@gear-js/common';
+import { GetAllProgramsParams } from '@gear-js/common';
 import { sqlWhereWithILike } from '../utils/sql-where-with-ilike';
 import { PAGINATION_LIMIT } from '../common/constants';
 
@@ -33,19 +33,6 @@ export class ProgramRepo {
         owner,
       },
       relations: ['meta', 'messages', 'code'],
-    });
-  }
-
-  public async listByOwnerAndGenesis(params: GetAllUserProgramsParams): Promise<[Program[], number]> {
-    const { genesis, owner, query, limit, offset } = params;
-    return this.programRepo.findAndCount({
-      where: sqlWhereWithILike({ genesis, owner }, query, ['id', 'title', 'name']),
-      take: limit || PAGINATION_LIMIT,
-      skip: offset || 0,
-      relations: ['meta', 'messages', 'code'],
-      order: {
-        timestamp: 'DESC',
-      },
     });
   }
 

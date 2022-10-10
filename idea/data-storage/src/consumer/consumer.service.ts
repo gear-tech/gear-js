@@ -9,7 +9,6 @@ import {
   GetAllCodeResult,
   GetAllProgramsParams,
   GetAllProgramsResult,
-  GetAllUserProgramsParams,
   GetCodeParams,
   GetMessagesParams,
   GetMetaParams,
@@ -90,7 +89,7 @@ export class ConsumerService {
     const correlationId = params.headers.kafka_correlationId.toString();
     const resultFromService = kafkaEventMap.get(correlationId);
 
-    if (resultFromService) await resultFromService(JSON.parse(params.value.toString()));
+    if (resultFromService) await resultFromService(params.value);
     kafkaEventMap.delete(correlationId);
   }
 }
