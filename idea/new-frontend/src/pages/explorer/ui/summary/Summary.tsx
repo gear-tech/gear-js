@@ -28,7 +28,7 @@ const Summary = ({ block, isError }: Props) => {
       <header className={headerClassName}>
         <span className={styles.number}>
           <CodeSVG />
-          {number ? number.toHuman() : <Placeholder block={<NumberPlaceholderSVG />} isEmpty={isError} />}
+          {number ? number.toString() : <Placeholder block={<NumberPlaceholderSVG />} isEmpty={isError} />}
         </span>
         <span>Hash</span>
         <span>Parent</span>
@@ -39,12 +39,12 @@ const Summary = ({ block, isError }: Props) => {
         {block ? (
           <div className={rowClassName}>
             <span />
-            <span>{hash?.toHuman()}</span>
+            <span>{hash?.toString()}</span>
             <Link to={parentPath} className={styles.link}>
-              {parentHash?.toHuman()}
+              {parentHash?.toString()}
             </Link>
-            <span>{extrinsicsRoot?.toHuman()}</span>
-            <span>{stateRoot?.toHuman()}</span>
+            <span>{extrinsicsRoot?.toString()}</span>
+            <span>{stateRoot?.toString()}</span>
           </div>
         ) : (
           <Placeholder block={<SummaryPlaceholderSVG />} isEmpty={isError} />
