@@ -2,6 +2,7 @@
 @use 'shared/assets/styles/_mixins.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
 @use 'shared/assets/styles/_animations.scss' as *;
+@use '@gear-js/ui/headings' as *;
 
 .nodeInfoButton {
   @include childrenMargin($margin, right);
@@ -11,11 +12,11 @@
   justify-content: flex-start;
   width: calc(100% - toRem(8));
   padding: toRem(12) toRem(12) toRem(12) toRem(25);
-  background: rgba($gray300, .05);
-  box-shadow: inset 0px 1px 0px rgba($textColor, .05);
+  background: rgba($gray300, 0.05);
+  box-shadow: inset 0px 1px 0px rgba($textColor, 0.05);
   border-radius: 0px 8px 8px 0px;
   min-height: toRem(58);
-  
+
   &.fullWidth {
     padding-left: toRem(34);
   }
@@ -56,14 +57,16 @@
   .otherInfo {
     text-align: left;
   }
-  
+
   .chain {
-    font-family: 'Kanit';
+    @extend %headingFont;
     font-weight: 500;
     margin-bottom: 2px;
   }
 
   .otherInfo {
+    font-family: 'Poppins';
+    font-size: 12px;
     font-weight: 300;
   }
 }
