@@ -66,7 +66,6 @@ enum TransactionStatus {
 enum RpcMethods {
   GetProgram = 'program.data',
   GetAllPrograms = 'program.all',
-  GetUserPrograms = 'program.all.user',
   AddMetadata = 'program.meta.add',
   GetMetadata = 'program.meta.get',
   GetMessage = 'message.data',

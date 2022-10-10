@@ -7,6 +7,6 @@ import { FetchProgramsParams, ProgramPaginationModel } from './types';
 const fetchProgram = (id: string) => rpcService.callRPC<IProgram>(RpcMethods.GetProgram, { id });
 
 const fetchPrograms = (params: FetchProgramsParams) =>
-  rpcService.callRPC<ProgramPaginationModel>(RpcMethods.GetUserPrograms, params);
+  rpcService.callRPC<ProgramPaginationModel>(RpcMethods.GetAllPrograms, params);
 
 export { fetchProgram, fetchPrograms };

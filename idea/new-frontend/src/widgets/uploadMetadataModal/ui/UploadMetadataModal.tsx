@@ -24,7 +24,7 @@ const UploadMetadataModal = ({ onClose, onAbort, onConfirm }: Props) => {
   };
 
   return (
-    <Modal heading="Upload metadata" className={styles.modalContent} close={handleClose}>
+    <Modal heading="Upload metadata" className={styles.modalContent} size="large" close={handleClose}>
       <h4 className={styles.contentHeading}>
         Uploading metadata into the backend is necessary for further interaction with the program
       </h4>
