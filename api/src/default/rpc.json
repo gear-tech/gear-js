@@ -109,6 +109,11 @@
         ],
         "type": "GasInfo"
       }
+    },
+    "chainSpec_unstable": {
+      "chainName": { "params": [], "type": "String" },
+      "properties": { "params": [], "type": "String" },
+      "genesisHash": { "params": [], "type": "H256" }
     }
   }
 }
