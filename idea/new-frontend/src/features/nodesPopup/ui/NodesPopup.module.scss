@@ -1,7 +1,8 @@
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_mixins.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
-@use 'shared/assets/styles/_animations.scss' as *;
+@use 'shared/assets/styles/shared' as *;
+@use 'shared/assets/styles/mixins' as *;
+@use 'shared/assets/styles/variables' as *;
+@use 'shared/assets/styles/animations' as *;
+@use '@gear-js/ui/variables' as *;
 
 $popupWidth: 305px;
 
@@ -18,6 +19,7 @@ $popupWidth: 305px;
   box-shadow: inset 0px 1px 0px $gray005;
   border-radius: 16px;
   height: 630px;
+  border: $borderModal;
 
   &.loading {
     @include loading();
@@ -45,7 +47,6 @@ $popupWidth: 305px;
     font-weight: 600;
     font-size: toRem(24);
     line-height: toRem(31);
-    color: $textColor;
     margin-bottom: $marginMedium;
   }
 

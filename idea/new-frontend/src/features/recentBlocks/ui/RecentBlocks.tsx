@@ -60,10 +60,12 @@ const RecentBlocks = () => {
     isOpen && styles.rotated,
   );
 
+  const blocksClasses = clsx(styles.recentBlocks, isOpen && styles.open);
+
   return (
     <div className={styles.recentBlocksWrapper}>
       <CSSTransition in={isOpen} timeout={AnimationTimeout.Default}>
-        <section ref={sectionRef} className={styles.recentBlocks}>
+        <section ref={sectionRef} className={blocksClasses}>
           <div className={styles.content}>
             <Graph blocks={blocks} className={styles.graph} />
             <div className={styles.blockInfo}>
