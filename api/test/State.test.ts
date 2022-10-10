@@ -1,7 +1,7 @@
 import { GearApi, getWasmMetadata } from '../src';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { checkInit, getAccount, sleep } from './utilsFunctions';
+import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { GEAR_EXAMPLES_WASM_DIR, TARGET } from './config';
 import { Hex } from '../src/types';
 
@@ -29,7 +29,7 @@ beforeAll(async () => {
     gasLimit: 2_000_000_000,
   }).programId;
   let initStatus = checkInit(api, syscalls_test.id);
-  api.program.signAndSend(alice, () => {});
+  await sendTransaction(api.program, alice, 'MessageEnqueued');
   expect(await initStatus()).toBe('success');
 
   demo_meta_test.id = api.program.upload(
