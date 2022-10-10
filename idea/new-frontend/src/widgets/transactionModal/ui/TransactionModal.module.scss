@@ -8,8 +8,7 @@
   line-height: 25px;
 }
 
-.modalContent { 
-  width: 630px;
+.modalContent {
   text-align: center;
 }
 
@@ -20,7 +19,7 @@
   margin-bottom: 10px;
 
   .headingName {
-    color: #F79420EB;
+    color: #f79420eb;
   }
 }
 
@@ -32,12 +31,12 @@
 
 .contentTransactionInfo {
   position: relative;
-  border: 1px dashed #3D3D3D;
+  border: 1px dashed #3d3d3d;
   margin: 25px 0 20px 14px;
   padding: 15px 30px 17px;
   border-radius: $borderRadius;
   background-color: $bgColor;
-  
+
   .infoIcon {
     position: absolute;
     top: 50%;
@@ -52,7 +51,7 @@
     font-weight: 500;
     line-height: 21px;
 
-    &:not(:last-child){
+    &:not(:last-child) {
       margin-bottom: 5px;
     }
 
@@ -61,14 +60,14 @@
       color: $textColorSecondary;
       margin-right: 5px;
       text-align: left;
-    } 
+    }
 
     .participantValue {
       color: $textColor;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-    } 
+    }
   }
 }
 
@@ -78,6 +77,6 @@
   display: flex;
 
   .actionButton {
-    flex: 1 1 50%; 
+    flex: 1 1 50%;
   }
 }

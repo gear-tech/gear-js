@@ -32,7 +32,7 @@ const TransactionModal = (props: Props) => {
   };
 
   return (
-    <Modal heading="Transaction details" className={styles.modalContent} close={handleClose}>
+    <Modal heading="Transaction details" className={styles.modalContent} size="large" close={handleClose}>
       <h4 className={styles.contentHeading}>
         Sending transaction <span className={styles.headingName}>{name}</span>
       </h4>
