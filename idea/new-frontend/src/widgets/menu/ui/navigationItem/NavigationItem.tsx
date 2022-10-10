@@ -13,8 +13,8 @@ type Props = NavLinkProps & {
   isFullWidth: boolean;
 };
 
-const NavigationItem = ({ to, icon, text, children, isFullWidth }: Props) => (
-  <NavLink to={to} className={styles.navLink}>
+const NavigationItem = ({ to, icon, text, children, isFullWidth, end }: Props) => (
+  <NavLink to={to} className={styles.navLink} end={end}>
     <span className={styles.icon}>{icon}</span>
     <CSSTransition in={isFullWidth} timeout={AnimationTimeout.Default}>
       <div className={styles.linkContent}>
