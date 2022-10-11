@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CodeChanged, GearApi, Hex, MessageEnqueued } from '@gear-js/api';
+import { CodeChanged, GearApi, Hex, MessageEnqueued, MessageEnqueuedData } from '@gear-js/api';
 import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
@@ -26,7 +26,7 @@ const { gear } = configuration();
 
 @Injectable()
 export class GearEventListener {
-  private logger: Logger = new Logger('GearEventListener');
+  private logger: Logger = new Logger(GearEventListener.name);
   private api: GearApi;
   private genesis: Hex;
 
@@ -156,104 +156,110 @@ export class GearEventListener {
   private async handleMessageExtrinsics(block: SignedBlockExtended, status: ExtrinsicStatus, timestamp: number) {
     const txMethods = ['sendMessage', 'sendReply', 'uploadProgram', 'createProgram'];
     const extrinsics = block.block.extrinsics.filter(({ method: { method } }) => txMethods.includes(method));
-
-    if (extrinsics.length === 0) return;
-
     const messages: Message[] = [];
 
-    for (const tx of extrinsics) {
-      const {
-        data: { id, source, destination, entry },
-      } = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
-        this.api.events.gear.MessageEnqueued.is(event),
-      ).event as MessageEnqueued;
+    if (extrinsics.length >= 1) {
 
-      const [payload, value] = getPayloadAndValue(tx.args, tx.method.method);
+      for (const tx of extrinsics) {
+        const {
+          data: { id, source, destination, entry },
+        } = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
+          this.api.events.gear.MessageEnqueued.is(event),
+        ).event as MessageEnqueued;
 
-      messages.push(
-        plainToClass(Message, {
-          id: id.toHex(),
-          destination: destination.toHex(),
-          source: source.toHex(),
-          payload,
-          value,
-          timestamp: new Date(timestamp),
-          genesis: this.genesis,
-          program: await this.programRepository.get(destination.toHex(), this.genesis),
-          type: MessageType.ENQUEUED,
-          entry: entry.isInit
-            ? MessageEntryPoint.INIT
-            : entry.isHandle
-              ? MessageEntryPoint.HANDLE
-              : MessageEntryPoint.REPLY,
-        }),
-      );
+        const [payload, value] = getPayloadAndValue(tx.args, tx.method.method);
+
+        messages.push(
+          plainToClass(Message, {
+            id: id.toHex(),
+            destination: destination.toHex(),
+            source: source.toHex(),
+            payload,
+            value,
+            timestamp: new Date(timestamp),
+            genesis: this.genesis,
+            program: await this.programRepository.get(destination.toHex(), this.genesis),
+            type: MessageType.ENQUEUED,
+            entry: entry.isInit
+              ? MessageEntryPoint.INIT
+              : entry.isHandle
+                ? MessageEntryPoint.HANDLE
+                : MessageEntryPoint.REPLY,
+          }),
+        );
+      }
     }
-    return this.messageService.createMessages(messages);
+
+    if(messages.length >= 1) await this.messageService.createMessages(messages);
   }
 
   private async handleProgramExtrinsics(block: SignedBlockExtended, status: ExtrinsicStatus, timestamp: number) {
     const txMethods = ['uploadProgram', 'createProgram'];
     const extrinsics = block.block.extrinsics.filter(({ method: { method } }) => txMethods.includes(method));
-
-    if (extrinsics.length === 0) return;
-
     const programs: CreateProgramInput[] = [];
 
-    for (const tx of extrinsics) {
-      const {
-        data: { source, destination },
-      } = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
-        this.api.events.gear.MessageEnqueued.is(event),
-      ).event as MessageEnqueued;
+    if (extrinsics.length >= 1)  {
+      for (const tx of extrinsics) {
+        const {
+          data: { source, destination },
+        } = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
+          this.api.events.gear.MessageEnqueued.is(event),
+        ).event as MessageEnqueued;
 
-      const codeId = await this.api.program.codeHash(destination.toHex());
-      const code = await this.codeRepository.get(codeId, this.genesis);
+        let code;
 
-      programs.push({
-        owner: source.toHex(),
-        id: destination.toHex(),
-        blockHash: block.createdAtHash.toHex(),
-        timestamp,
-        code,
-        genesis: this.genesis,
-      });
+        try {
+          const codeId = await this.api.program.codeHash(destination.toHex());
+          code = await this.codeRepository.get(codeId, this.genesis);
+        } catch (error) {
+          this.logger.error('Code not exists error');
+          console.log('Code destination', destination.toHex());
+          code = null;
+        }
+
+        programs.push({
+          owner: source.toHex(),
+          id: destination.toHex(),
+          blockHash: block.createdAtHash.toHex(),
+          timestamp,
+          code,
+          genesis: this.genesis,
+        });
+      }
     }
 
-    return this.programService.createPrograms(programs);
+    if(programs.length >= 1) await this.programService.createPrograms(programs);
   }
 
   private async handleCodeExtrinsics(block: SignedBlockExtended, status: ExtrinsicStatus, timestamp: number) {
     const txMethods = ['uploadProgram', 'uploadCode'];
     const extrinsics = block.block.extrinsics.filter(({ method: { method } }) => txMethods.includes(method));
-
-    if (extrinsics.length === 0) return;
-
     const codes: UpdateCodeInput[] = [];
 
-    for (const tx of extrinsics) {
-      const event = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
-        this.api.events.gear.CodeChanged.is(event),
-      );
+    if (extrinsics.length >= 1) {
 
-      if (!event) continue;
+      for (const tx of extrinsics) {
+        const event = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
+          this.api.events.gear.CodeChanged.is(event),
+        );
 
-      const {
-        data: { id, change },
-      } = event.event as CodeChanged;
+        if (event) {
+          const { data: { id, change } } = event.event as CodeChanged;
 
-      const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
+          const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
 
-      codes.push({
-        id: id.toHex(),
-        genesis: this.genesis,
-        status: codeStatus,
-        timestamp,
-        blockHash: block.createdAtHash.toHex(),
-        expiration: change.isActive ? change.asActive.expiration.toString() : null,
-      });
+          codes.push({
+            id: id.toHex(),
+            genesis: this.genesis,
+            status: codeStatus,
+            timestamp,
+            blockHash: block.createdAtHash.toHex(),
+            expiration: change.isActive ? change.asActive.expiration.toString() : null,
+          });
+        }
+      }
     }
 
-    return this.codeService.updateCodes(codes);
+    if(codes.length >= 1) await this.codeService.updateCodes(codes);
   }
 }

@@ -6,6 +6,7 @@ import { Program } from '../database/entities';
 import { GetAllProgramsParams } from '@gear-js/common';
 import { sqlWhereWithILike } from '../utils/sql-where-with-ilike';
 import { PAGINATION_LIMIT } from '../common/constants';
+import { queryFilter } from '../common/helpers';
 
 @Injectable()
 export class ProgramRepo {
@@ -37,9 +38,12 @@ export class ProgramRepo {
   }
 
   public async listPaginationByGenesis(params: GetAllProgramsParams): Promise<[Program[], number]> {
-    const { genesis, query, limit, offset, owner } = params;
+    const { genesis, query, limit, offset, owner, toDate, fromDate, status } = params;
     return this.programRepo.findAndCount({
-      where: sqlWhereWithILike({ genesis }, query, ['id', 'title', 'name']),
+      where: queryFilter(
+        { genesis },
+        { query, owner, fromDate, toDate, status },
+        ['id', 'title', 'name']),
       take: limit || PAGINATION_LIMIT,
       skip: offset || 0,
       relations: ['meta', 'messages', 'code'],

@@ -7,6 +7,7 @@ import { Code } from '../database/entities';
 import { sqlWhereWithILike } from '../utils/sql-where-with-ilike';
 import { PAGINATION_LIMIT } from '../common/constants';
 import { CodeStatus } from '../common/enums';
+import { queryFilter } from '../common/helpers';
 
 @Injectable()
 export class CodeRepo {
@@ -27,9 +28,12 @@ export class CodeRepo {
   }
 
   public async listPaginationByGenesis(params: GetAllCodeParams): Promise<[Code[], number]> {
-    const { genesis, query, limit, offset } = params;
+    const { genesis, query, limit, offset, name, toDate, fromDate } = params;
     return this.codeRepo.findAndCount({
-      where: sqlWhereWithILike({ genesis, status: CodeStatus.ACTIVE }, query, ['id', 'name']),
+      where: queryFilter(
+        { genesis, status: CodeStatus.ACTIVE },
+        { query, name, toDate, fromDate },
+        ['id', 'name']),
       take: limit || PAGINATION_LIMIT,
       skip: offset || 0,
       order: {

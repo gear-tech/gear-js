@@ -6,7 +6,6 @@ import {
   FindProgramParams,
   GetAllCodeParams,
   GetAllProgramsParams,
-  GetAllUserProgramsParams,
   GetCodeParams,
   GetMessagesParams,
   GetMetaParams,

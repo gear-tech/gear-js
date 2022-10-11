@@ -15,7 +15,7 @@ import { MessageDispatchedDataInput } from './types/message-dispatched-data.inpu
 
 @Injectable()
 export class MessageService {
-  private logger: Logger = new Logger('MessageService');
+  private logger: Logger = new Logger(MessageService.name);
 
   constructor(private messageRepository: MessageRepo, private programService: ProgramService) {}
 

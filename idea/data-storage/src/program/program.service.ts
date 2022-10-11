@@ -15,7 +15,7 @@ import { ProgramStatus } from '../common/enums';
 
 @Injectable()
 export class ProgramService {
-  private logger: Logger = new Logger('ProgramService');
+  private logger: Logger = new Logger(ProgramService.name);
   constructor(private programRepository: ProgramRepo) {}
 
   public async getAllPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {

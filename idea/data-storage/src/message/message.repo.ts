@@ -4,9 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { GetMessagesParams } from '@gear-js/common';
 
 import { Message } from '../database/entities';
-import { sqlWhereWithILike } from '../utils/sql-where-with-ilike';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { PAGINATION_LIMIT } from '../common/constants';
+import { queryFilter } from '../common/helpers';
 
 @Injectable()
 export class MessageRepo {
@@ -16,7 +16,7 @@ export class MessageRepo {
   ) {}
 
   public async listByIdAndSourceAndDestination(params: GetMessagesParams): Promise<[Message[], number]> {
-    const { genesis, source, query, destination, limit, offset } = params;
+    const { genesis, source, query, destination, limit, offset, toDate, fromDate } = params;
     const strictParams = { genesis };
     if (source) {
       strictParams['source'] = source;
@@ -25,7 +25,10 @@ export class MessageRepo {
       strictParams['destination'] = destination;
     }
     return this.messageRepo.findAndCount({
-      where: sqlWhereWithILike(strictParams, query, ['id', 'source', 'destination']),
+      where: queryFilter(
+        strictParams,
+        { query, toDate, fromDate },
+        ['id', 'source', 'destination']),
       take: limit || PAGINATION_LIMIT,
       skip: offset || 0,
       relations: ['program'],

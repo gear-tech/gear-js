@@ -9,7 +9,7 @@ import { CodeChangedInput, UpdateCodeInput } from './types';
 
 @Injectable()
 export class CodeService {
-  private logger: Logger = new Logger('CodeService');
+  private logger: Logger = new Logger(CodeService.name);
   constructor(private codeRepository: CodeRepo) {}
 
   public async getAllCode(params: GetAllCodeParams): Promise<GetAllCodeResult> {

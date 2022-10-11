@@ -4,13 +4,14 @@ export function queryFilter(
   strictParams: {[key: string]: string},
   queryParams: {[key: string]: string | string[]},
   searchParams: string[]
-): Record<string, unknown>[]{
+): Record<string, unknown>[] | Record<string, unknown> {
   let queryBodyList:Record<string, unknown>[] = [];
-  const { query, ...queryParamsWithoutSearch } = queryParams;
+  const { query, fromDate, toDate, ...queryParamsWithoutSearch } = queryParams;
 
   const isIncludeSearchByTitle = query && query.length > 0;
-  const isIncludeQueryParams = Object.keys(queryParamsWithoutSearch).length >= 1;
-  const isIncludeSearchByDates = ['fromDate', 'toDate'].every(key => Object.keys(queryParams).includes(key));
+  const isIncludeQueryParams = Object.keys(queryParamsWithoutSearch).length >= 1
+    && Object.values(queryParamsWithoutSearch).filter(Boolean).length >= 1;
+  const isIncludeSearchByDates = fromDate && toDate;
 
   const queryBody: {[key: string]: unknown} = { ...strictParams };
 
@@ -27,12 +28,12 @@ export function queryFilter(
   }
 
   if(isIncludeSearchByDates) {
-    const fromDate = queryParamsWithoutSearch['fromDate'] as string;
-    const toDate = queryParamsWithoutSearch['toDate'] as string;
+    const from = fromDate as string;
+    const to = toDate as string;
 
     queryBody['timestamp'] = Between(
-      new Date(fromDate),
-      new Date(toDate)
+      new Date(from),
+      new Date(to)
     );
   }
 
@@ -45,8 +46,8 @@ export function queryFilter(
     }
   }
 
-  if(isIncludeQueryParams && !isIncludeSearchByTitle) {
-    queryBodyList = [queryBody];
+  if(queryBodyList.length === 0) {
+    return queryBody;
   }
 
   return queryBodyList;
