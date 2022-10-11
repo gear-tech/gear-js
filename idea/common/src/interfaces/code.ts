@@ -1,10 +1,11 @@
 import { CodeStatus } from '../enums';
 
 interface ICode {
+  _id: string;
   id: string;
   name: string;
   status: CodeStatus;
-  expiration?: number | null;
+  expiration?: string | null;
 }
 
 interface ICodeChangedData {

@@ -6,6 +6,8 @@ import { IProgram } from './program';
 interface GetMessagesParams extends IGenesis, IPaginationParams, SearchParam {
   destination?: string;
   source?: string;
+  fromDate?: string;
+  toDate?: string;
 }
 
 interface FindMessageParams extends IGenesis, Pick<IMessage, 'id'> {}
@@ -22,7 +24,11 @@ interface GetAllProgramsParams extends IGenesis, IPaginationParams, SearchParam 
   status?: string | string[];
 }
 
-interface GetAllCodeParams extends IGenesis, IPaginationParams, SearchParam {}
+interface GetAllCodeParams extends IGenesis, IPaginationParams, SearchParam {
+  name?: string;
+  fromDate?: string;
+  toDate?: string;
+}
 
 interface GetAllUserProgramsParams extends IGenesis, IPaginationParams, Pick<IProgram, 'owner'>, SearchParam {}
 
