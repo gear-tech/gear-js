@@ -39,7 +39,7 @@ export default (
     gr_wait_for: () => {},
     gr_wake: () => {},
     gr_exit_code: () => {},
-    gr_msg_id: () => {},
+    gr_message_id: () => {},
     gr_read: (at: number, len: number, dest: number) => {
       new Uint8Array(memory.buffer).set(inputValue.slice(at, len), dest);
     },
