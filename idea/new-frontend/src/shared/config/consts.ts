@@ -36,8 +36,8 @@ enum LocalStorage {
   Account = 'account',
   Genesis = 'genesis',
   NewUser = 'new_user',
-  PublicKeyRaw = 'public_key_raw',
   HideWelcomeBanner = 'hide_welcome_banner',
+  Wallet = 'wallet',
 }
 
 enum GasMethod {

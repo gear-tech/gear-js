@@ -1,66 +1,105 @@
-import { useCallback } from 'react';
-import { useAlert, useAccount } from '@gear-js/react-hooks';
+import { useAccount } from '@gear-js/react-hooks';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { decodeAddress } from '@gear-js/api';
 import { Button, Modal } from '@gear-js/ui';
+import { useEffect, useState } from 'react';
+import clsx from 'clsx';
 
 import { ModalProps } from 'entities/modal';
 import { LocalStorage } from 'shared/config';
 import logoutSVG from 'shared/assets/images/actions/logout.svg';
+import arrowSVG from 'shared/assets/images/actions/arrowLeft.svg';
 
-import styles from './AccountsModal.module.scss';
+import { useExtensions, useWallet } from '../hooks';
 import { AccountList } from './accountList';
+import { Wallets } from './wallets';
+import { Empty } from './empty';
+import styles from './AccountsModal.module.scss';
 
 type Props = ModalProps & {
   accounts?: InjectedAccountWithMeta[];
 };
 
 const AccountsModal = ({ accounts, onClose }: Props) => {
-  const alert = useAlert();
   const { logout, switchAccount, account } = useAccount();
+  const { wallet, walletId, switchWallet, resetWallet } = useWallet();
+  const extensions = useExtensions();
 
-  const handleLogout = () => {
+  const [isWalletSelection, setIsWalletSelection] = useState(!wallet);
+
+  const toggleWalletSelection = () => setIsWalletSelection((prevValue) => !prevValue);
+  const enableWalletSelection = () => setIsWalletSelection(true);
+  const disableWalletSelection = () => setIsWalletSelection(false);
+
+  const handleLogoutClick = () => {
     logout();
-
-    localStorage.removeItem(LocalStorage.PublicKeyRaw);
-
     onClose();
   };
 
-  const selectAccount = useCallback(
-    (newAccount: InjectedAccountWithMeta) => {
+  const handleAccountClick = (newAccount: InjectedAccountWithMeta) => {
+    if (walletId) {
       switchAccount(newAccount);
-
-      localStorage.setItem(LocalStorage.PublicKeyRaw, decodeAddress(newAccount.address));
-
+      localStorage.setItem(LocalStorage.Wallet, walletId);
       onClose();
+    }
+  };
 
-      alert.success('Account successfully changed');
-    },
+  useEffect(() => {
+    if (walletId) {
+      disableWalletSelection();
+    } else {
+      enableWalletSelection();
+    }
+  }, [walletId]);
+
+  useEffect(() => {
+    if (extensions) {
+      const isChosenExtensionExists = extensions.some((ext) => ext.name === walletId);
+
+      if (!isChosenExtensionExists) resetWallet();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [onClose],
-  );
+  }, [extensions]);
+
+  const modalClassName = clsx(styles.modal, !accounts && styles.empty);
+  const heading = isWalletSelection ? 'Choose Wallet' : 'Connect account';
 
   return (
-    <Modal heading="Connect Account" close={onClose}>
-      {accounts ? (
+    <Modal heading={heading} close={onClose} className={modalClassName}>
+      {extensions ? (
         <>
-          <AccountList list={accounts} address={account?.address} toggleAccount={selectAccount} />
-          <Button
-            icon={logoutSVG}
-            text="Logout"
-            color="transparent"
-            className={styles.logoutButton}
-            onClick={handleLogout}
-          />
+          {isWalletSelection && (
+            <Wallets selectedWalletId={walletId} onWalletClick={switchWallet} extensions={extensions} />
+          )}
+          {!isWalletSelection && (
+            <AccountList
+              list={accounts!.filter(({ meta }) => meta.source === walletId)}
+              address={account?.address}
+              toggleAccount={handleAccountClick}
+            />
+          )}
+
+          <footer className={styles.footer}>
+            {wallet && (
+              <Button
+                icon={isWalletSelection ? arrowSVG : wallet.icon}
+                text={isWalletSelection ? 'Back' : wallet.name}
+                color="transparent"
+                onClick={toggleWalletSelection}
+                disabled={!wallet}
+              />
+            )}
+
+            <Button
+              icon={logoutSVG}
+              text="Logout"
+              color="transparent"
+              className={styles.logoutButton}
+              onClick={handleLogoutClick}
+            />
+          </footer>
         </>
       ) : (
-        <p className={styles.message}>
-          Polkadot extension was not found or disabled. Please{' '}
-          <a href="https://polkadot.js.org/extension/" target="_blank" rel="noreferrer">
-            install it
-          </a>
-        </p>
+        <Empty />
       )}
     </Modal>
   );
