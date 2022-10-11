@@ -1,3 +1,11 @@
+## 0.26.1
+_10/11/2022_
+
+https://github.com/gear-tech/gear-js/pull/1031
+### Changes
+
+- Rename `gr_msg_id` syscall to `gr_message_id`
+- 
 ## 0.26.0
 _10/06/2022_
 
