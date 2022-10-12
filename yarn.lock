@@ -2223,7 +2223,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.25.9, @gear-js/api@npm:^0.25.2, @gear-js/api@npm:^0.25.6, @gear-js/api@npm:^0.25.7":
+"@gear-js/api@npm:0.26.1, @gear-js/api@npm:^0.26.1":
+  version: 0.26.1
+  resolution: "@gear-js/api@npm:0.26.1"
+  peerDependencies:
+    "@polkadot/api": ^9.5.1
+    "@polkadot/wasm-crypto": ^6.3.1
+    rxjs: ^7.5.5
+  checksum: 78b4bf879f0a55ba77dc9daf69b69dc92d0424320ecae0d00fabea4e64c9bc70e8ec0f28727dd44a50f1c8706a246e5b6903009accbf2b0b2490b6a079143fb1
+  languageName: node
+  linkType: hard
+
+"@gear-js/api@npm:^0.25.2, @gear-js/api@npm:^0.25.6, @gear-js/api@npm:^0.25.7":
   version: 0.25.9
   resolution: "@gear-js/api@npm:0.25.9"
   peerDependencies:
@@ -2238,14 +2249,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/auction@workspace:apps/auction"
   dependencies:
-    "@gear-js/api": ^0.25.6
-    "@gear-js/react-hooks": ^0.3.2
+    "@gear-js/api": ^0.26.1
+    "@gear-js/react-hooks": ^0.3.5
     "@gear-js/ui": ^0.4.0
     "@mantine/form": ^4.2.12
-    "@polkadot/api": ^9.3.3
+    "@polkadot/api": ^9.5.1
     "@polkadot/extension-dapp": ^0.43.3
     "@polkadot/react-identicon": ^2.8.2
-    "@polkadot/types": ^9.3.3
+    "@polkadot/types": ^9.5.1
     "@polkadot/util": ^9.7.2
     "@polkadot/wasm-crypto": ^6.3.1
     "@testing-library/jest-dom": ^5.16.4
@@ -2347,14 +2358,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/escrow@workspace:apps/escrow"
   dependencies:
-    "@gear-js/api": ^0.25.6
-    "@gear-js/react-hooks": ^0.3.2
+    "@gear-js/api": ^0.26.1
+    "@gear-js/react-hooks": ^0.3.5
     "@gear-js/ui": ^0.4.0
     "@mantine/form": ^4.2.12
-    "@polkadot/api": ^9.3.3
+    "@polkadot/api": ^9.5.1
     "@polkadot/extension-dapp": ^0.43.3
     "@polkadot/react-identicon": ^2.7.2
-    "@polkadot/types": ^9.3.3
+    "@polkadot/types": ^9.5.1
     "@polkadot/util": ^9.7.2
     "@polkadot/wasm-crypto": ^6.3.1
     "@testing-library/jest-dom": ^5.16.4
@@ -2422,15 +2433,15 @@ __metadata:
   resolution: "@gear-js/frontend@workspace:idea/frontend"
   dependencies:
     "@craco/craco": 6.4.3
-    "@gear-js/api": 0.25.9
-    "@gear-js/react-hooks": ^0.3.4
+    "@gear-js/api": 0.26.1
+    "@gear-js/react-hooks": ^0.3.5
     "@gear-js/ui": 0.4.0
     "@hcaptcha/react-hcaptcha": 1.2.0
     "@monaco-editor/react": 4.4.2
-    "@polkadot/api": ^9.3.3
+    "@polkadot/api": ^9.5.1
     "@polkadot/extension-dapp": 0.43.2
     "@polkadot/react-identicon": 2.0.1
-    "@polkadot/types": ^9.3.3
+    "@polkadot/types": ^9.5.1
     "@polkadot/wasm-crypto": ^6.2.3
     "@testing-library/jest-dom": 5.16.4
     "@testing-library/react": 12.1.5
@@ -2494,14 +2505,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/lottery@workspace:apps/lottery"
   dependencies:
-    "@gear-js/api": ^0.25.6
-    "@gear-js/react-hooks": ^0.3.2
+    "@gear-js/api": ^0.26.1
+    "@gear-js/react-hooks": ^0.3.5
     "@gear-js/ui": ^0.4.0
     "@mantine/form": ^4.2.9
-    "@polkadot/api": ^9.3.3
+    "@polkadot/api": ^9.5.1
     "@polkadot/extension-dapp": ^0.43.3
     "@polkadot/react-identicon": ^2.4.1
-    "@polkadot/types": ^9.3.3
+    "@polkadot/types": ^9.5.1
     "@polkadot/util": ^9.7.2
     "@polkadot/wasm-crypto": ^6.3.1
     "@testing-library/jest-dom": ^5.16.4
@@ -2539,13 +2550,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/marketplace@workspace:apps/marketplace"
   dependencies:
-    "@gear-js/api": ^0.25.6
-    "@gear-js/react-hooks": ^0.3.2
+    "@gear-js/api": ^0.26.1
+    "@gear-js/react-hooks": ^0.3.5
     "@gear-js/ui": ^0.4.0
-    "@polkadot/api": ^9.3.3
+    "@polkadot/api": ^9.5.1
     "@polkadot/extension-dapp": ^0.43.3
     "@polkadot/react-identicon": ^2.6.2
-    "@polkadot/types": ^9.3.3
+    "@polkadot/types": ^9.5.1
     "@polkadot/wasm-crypto": ^6.3.1
     "@testing-library/jest-dom": ^5.16.4
     "@testing-library/react": ^13.3.0
@@ -2584,13 +2595,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/nft@workspace:apps/nft"
   dependencies:
-    "@gear-js/api": ^0.25.6
-    "@gear-js/react-hooks": ^0.3.2
+    "@gear-js/api": ^0.26.1
+    "@gear-js/react-hooks": ^0.3.5
     "@gear-js/ui": ^0.4.0
-    "@polkadot/api": ^9.3.3
+    "@polkadot/api": ^9.5.1
     "@polkadot/extension-dapp": ^0.43.2
     "@polkadot/react-identicon": ^2.2.1
-    "@polkadot/types": ^9.3.3
+    "@polkadot/types": ^9.5.1
     "@polkadot/util": ^9.7.2
     "@polkadot/wasm-crypto": ^6.3.1
     "@testing-library/jest-dom": ^5.16.4
@@ -2639,7 +2650,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/react-hooks@npm:^0.3.2, @gear-js/react-hooks@npm:^0.3.4":
+"@gear-js/react-hooks@npm:^0.3.2":
   version: 0.3.4
   resolution: "@gear-js/react-hooks@npm:0.3.4"
   peerDependencies:
@@ -2649,6 +2660,19 @@ __metadata:
     react-dom: ">=17.0.2"
     react-transition-group: ^4.4.2
   checksum: 82c953a6b2cb1beaef26185344c474db7a78a1ffc7f19ca7f217c3f6ca26d1372440116376542c59b65a64956efe40d4b298a40adc2f8b5567616b04b2c0afc5
+  languageName: node
+  linkType: hard
+
+"@gear-js/react-hooks@npm:^0.3.5":
+  version: 0.3.5
+  resolution: "@gear-js/react-hooks@npm:0.3.5"
+  peerDependencies:
+    "@gear-js/api": ^0.26.1
+    "@polkadot/extension-dapp": ^0.43.2
+    react: ">=17.0.2"
+    react-dom: ">=17.0.2"
+    react-transition-group: ^4.4.2
+  checksum: 3cb798c40b3972809574fa24bb1f035ac2a798c3abf5f1532d4fce792ecd3b9be7d55dee1d0e6e4f4d1c1f662bc42711fc55059afe76075e499be2cf6432e62c
   languageName: node
   linkType: hard
 
@@ -2747,13 +2771,13 @@ __metadata:
   resolution: "@gear-js/supply-chain@workspace:apps/supply-chain"
   dependencies:
     "@gear-js/api": ^0.25.6
-    "@gear-js/react-hooks": ^0.3.2
+    "@gear-js/react-hooks": ^0.3.5
     "@gear-js/ui": ^0.4.0
     "@mantine/form": ^4.2.12
-    "@polkadot/api": ^9.3.3
+    "@polkadot/api": ^9.5.1
     "@polkadot/extension-dapp": ^0.43.3
     "@polkadot/react-identicon": ^2.9.3
-    "@polkadot/types": ^9.3.3
+    "@polkadot/types": ^9.5.1
     "@polkadot/util": ^9.7.2
     "@polkadot/wasm-crypto": ^6.3.1
     "@testing-library/jest-dom": ^5.16.4
@@ -4470,7 +4494,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/api@npm:9.5.1, @polkadot/api@npm:^9.2.2, @polkadot/api@npm:^9.2.4, @polkadot/api@npm:^9.3.3, @polkadot/api@npm:^9.4.1, @polkadot/api@npm:^9.4.2":
+"@polkadot/api@npm:9.5.1, @polkadot/api@npm:^9.2.2, @polkadot/api@npm:^9.2.4, @polkadot/api@npm:^9.4.1, @polkadot/api@npm:^9.4.2, @polkadot/api@npm:^9.5.1":
   version: 9.5.1
   resolution: "@polkadot/api@npm:9.5.1"
   dependencies:
@@ -5110,7 +5134,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/types@npm:9.5.1, @polkadot/types@npm:^9.2.2, @polkadot/types@npm:^9.2.3, @polkadot/types@npm:^9.3.3, @polkadot/types@npm:^9.4.1":
+"@polkadot/types@npm:9.5.1, @polkadot/types@npm:^9.2.2, @polkadot/types@npm:^9.2.3, @polkadot/types@npm:^9.4.1, @polkadot/types@npm:^9.5.1":
   version: 9.5.1
   resolution: "@polkadot/types@npm:9.5.1"
   dependencies:
