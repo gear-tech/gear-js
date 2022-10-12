@@ -10,10 +10,13 @@ type Props = {
   close: () => void;
   children?: ReactNode;
   className?: string;
+  size?: 'normal' | 'large';
 };
 
-const Modal = ({ heading, close, children, className }: Props) => {
+const Modal = ({ heading, close, children, className, size = 'normal' }: Props) => {
   const [root, setRoot] = useState<HTMLDivElement>();
+
+  const modalClassName = clsx(styles.modal, styles[size]);
   const bodyClassName = clsx(styles.body, className);
 
   const handleOverlayClick = ({ target, currentTarget }: MouseEvent) => {
@@ -33,7 +36,7 @@ const Modal = ({ heading, close, children, className }: Props) => {
 
   const component = (
     <div className={styles.overlay} onClick={handleOverlayClick} data-testid="overlay">
-      <div className={styles.modal} data-testid="modal">
+      <div className={modalClassName} data-testid="modal">
         <header className={styles.header}>
           <h3 className={styles.heading}>{heading}</h3>
           <Button icon={icon} color="transparent" onClick={close} />
@@ -50,4 +53,5 @@ const Modal = ({ heading, close, children, className }: Props) => {
   return root ? createPortal(component, root) : null;
 };
 
-export { Modal, Props as ModalProps, styles as modalStyles };
+export { Modal, styles as modalStyles };
+export type { Props as ModalProps };

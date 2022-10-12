@@ -19,4 +19,4 @@ type Props = {
   close: () => void;
 };
 
-export { Props };
+export type { Props };

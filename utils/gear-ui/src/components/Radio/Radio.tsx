@@ -18,4 +18,5 @@ const Radio = forwardRef(({ label, className, ...attrs }: Props, ref: ForwardedR
   );
 });
 
-export { Radio, Props as RadioProps, styles as radioStyles };
+export { Radio, styles as radioStyles };
+export type { Props as RadioProps };

@@ -40,6 +40,7 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
     error && styles.error,
     block && styles.block,
   );
+
   const inputClassName = clsx(styles.input, styles[color]);
 
   const { clearButton, inputRef } = useClearButton(forwardedRef, color);
@@ -82,4 +83,5 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
   );
 });
 
-export { Input, Props as InputProps, styles as inputStyles };
+export { Input, styles as inputStyles };
+export type { Props as InputProps };
