@@ -18,7 +18,7 @@ afterAll(async () => {
   await sleep(2000);
 });
 
-describe('DebugMode', () => {
+describe.skip('DebugMode', () => {
   const debug = new DebugMode(api);
 
   test('enable debug mode', async () => {
