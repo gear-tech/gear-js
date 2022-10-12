@@ -54,7 +54,7 @@ jobs:
 
       - name: Prepare
         run: |
-          wget -O ./gear-node https://github.com/gear-tech/gear/releases/download/build/gear
+          wget -O ./gear https://github.com/gear-tech/gear/releases/download/build/gear
           chmod +x gear
           nohup ./gear --dev --execution=wasm --tmp --unsafe-ws-external --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
  
