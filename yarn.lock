@@ -2770,7 +2770,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/supply-chain@workspace:apps/supply-chain"
   dependencies:
-    "@gear-js/api": ^0.25.6
+    "@gear-js/api": ^0.26.1
     "@gear-js/react-hooks": ^0.3.5
     "@gear-js/ui": ^0.4.0
     "@mantine/form": ^4.2.12
