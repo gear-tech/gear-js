@@ -74,7 +74,7 @@ describe('Program service', () => {
     expect(mockProgramRepository.getByIdAndGenesis).toHaveBeenCalled();
   });
 
-  it('should successfully get programs and called getAllUserProgram method', async () => {
+  it('should successfully get programs by owner and called getAllPrograms method', async () => {
     const { genesis, owner } = PROGRAM_DB_MOCK[1];
     const getAllUserProgramParamsInput: GetAllUserProgramsParams = {
       genesis,
@@ -82,11 +82,11 @@ describe('Program service', () => {
       limit: 1,
       owner,
     };
-    const result = await programService.getAllUserPrograms(getAllUserProgramParamsInput);
+    const result = await programService.getAllPrograms(getAllUserProgramParamsInput);
     expect.arrayContaining(result.programs);
     expect(result.programs[0].owner).toEqual(owner);
     expect(result.programs[0].genesis).toEqual(genesis);
-    expect(mockProgramRepository.listByOwnerAndGenesis).toHaveBeenCalled();
+    expect(mockProgramRepository.listPaginationByGenesis).toHaveBeenCalled();
   });
 
   it('should successfully get programs and called getAllPrograms method', async () => {

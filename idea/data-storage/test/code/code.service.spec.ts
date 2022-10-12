@@ -1,6 +1,5 @@
 import { Test } from '@nestjs/testing';
 import { GetAllCodeParams, GetCodeParams } from '@gear-js/common';
-import { UpdateResult } from 'typeorm';
 
 import { Code } from '../../src/database/entities';
 import { mockCodeRepository } from '../mock/code/code-repository.mock';
@@ -36,13 +35,14 @@ describe('Code service', () => {
       timestamp: 0,
       blockHash: '0x0000000000000000',
       status: CodeStatus.ACTIVE,
-      expiration: 111,
+      expiration: '111',
     };
 
     const codes = await codeService.updateCodes([updateCodeInput]);
 
     expect(codes[0].id).toEqual(updateCodeInput.id);
     expect(codes[0].status).toEqual(updateCodeInput.status);
+    expect(codes[0].expiration).toEqual(updateCodeInput.expiration);
     expect(mockCodeRepository.save).toHaveBeenCalled();
   });
 
