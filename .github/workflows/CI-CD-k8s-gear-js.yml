@@ -244,36 +244,36 @@ jobs:
             REACT_APP_DEFAULT_NODES_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
             REACT_APP_HCAPTCHA_SITE_KEY=${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
 
-#  build-data-storage-image-prod:
-#    runs-on: ubuntu-latest
-#    if: contains(github.event.head_commit.message, 'idea-release')
-#    needs: [tag-prod-version]
-#    permissions:
-#      contents: read
-#      packages: write
+  build-data-storage-image-prod:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, 'idea-release')
+    needs: [tag-prod-version]
+    permissions:
+      contents: read
+      packages: write
 
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v2
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-#      - name: Log in to the github container registry
-#        uses: docker/login-action@master
-#        with:
-#          registry: ${{ env.REGISTRY }}
-#          username: ${{ github.actor }}
-#          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-#      - name: Build and push Data Storage Docker image
-#        uses: docker/build-push-action@master
-#        with:
-#          file: idea/data-storage/Dockerfile
-#          push: true
-#          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-data-storage:prod
-
+      - name: Build and push Data Storage Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: idea/data-storage/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-data-storage:prod
 
   build-api-gateway-image-prod:
     runs-on: ubuntu-latest
-    needs: [wait-previous-run]
+    if: contains(github.event.head_commit.message, 'idea-release')
+    needs: [tag-prod-version]
     permissions:
       contents: read
       packages: write
@@ -295,7 +295,7 @@ jobs:
           file: idea/api-gateway/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:prod
-          
+
   build-event-listeners-image-prod:
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.message, 'idea-release')
@@ -315,7 +315,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Events Listeners Docker image
+      - name: Build and push Events Listener Docker image
         uses: docker/build-push-action@master
         with:
           file: idea/events-listener/Dockerfile
@@ -351,11 +351,11 @@ jobs:
   deploy-to-k8s-prod:
     needs:
       [
+        build-frontend-image-prod,
+        build-data-storage-image-prod,
+        build-api-gateway-image-prod,
         build-event-listeners-image-prod,
         build-test-balance-image-prod,
-        build-api-gateway-image-prod,
-        build-frontend-image-prod
-        
       ]
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.message, 'idea-release')
@@ -371,9 +371,8 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-#          args: rollout restart deployment api-gateway data-storage frontend-nginx test-balance-workshop-node test-balance-testnet-node events-listener-workshop-node events-listener-rpc-testnet events-listener-vara-testnet -n prod-gear-js
-          args: rollout restart deployment api-gateway frontend-nginx events-listener-workshop-node events-listener-rpc-testnet events-listener-vara-testnet -n prod-gear-js
-          
+          args: rollout restart deployment api-gateway data-storage frontend-nginx test-balance-workshop-node test-balance-testnet-node events-listener-workshop-node events-listener-rpc-testnet events-listener-vara-testnet -n prod-gear-js
+
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
