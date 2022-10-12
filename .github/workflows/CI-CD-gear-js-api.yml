@@ -50,6 +50,7 @@ jobs:
       - name: Build test programs
         run: |
           cd api/test/programs
+          cargo update
           cargo build --release
 
       - name: Prepare
