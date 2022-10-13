@@ -22,6 +22,7 @@ export const JSONRPC_ERRORS = {
   TestBalanceIsUnavailable: {
     name: 'TestBalanceIsUnavailable',
     code: -32605,
+    message: 'Service for getting a test balance is unavailable on this network',
   },
   ServiceIsNotAvaiable: {
     name: 'ServiceIsNotAvaiable',
