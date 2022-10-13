@@ -1,12 +1,19 @@
 import { GearApi, Hex } from '@gear-js/api';
 import { waitReady } from '@polkadot/wasm-crypto';
 
-import { checkInitStatus, getAllPrograms, getMeta, getProgramData, uploadMeta } from './programs';
+import {
+  checkInitStatus,
+  getAllPrograms, getAllProgramsByDates,
+  getAllProgramsByOwner, getAllProgramsByStatus,
+  getMeta,
+  getProgramData,
+  uploadMeta,
+} from './programs';
 import { processPrepare } from '../prepare';
-import { IPrepared, IPreparedProgram } from '../interfaces';
+import { IPrepared, IPreparedProgram, IPreparedPrograms } from '../interfaces';
 import { sleep } from '../utils';
-import { getAllMessages, getMessageData, getMessagePayload } from './messages';
-import { getCodeData, getListCode } from './code';
+import { getAllMessages, getMessageData, getMessagePayload, getMessagesByDates } from './messages';
+import { getCodeData, getCodes, getCodesByDates } from './code';
 import base from '../config/base';
 import { networkDataAvailable } from './network-data-available';
 
@@ -36,6 +43,23 @@ afterAll(async () => {
 describe('VARA_NODE program methods', () => {
   test('program.all request', async () => {
     expect(await getAllPrograms(genesis, Object.keys(prepared.programs) as Hex[])).toBeTruthy();
+  });
+
+  test('program.all by owner request', async () => {
+    expect(await getAllProgramsByOwner(genesis, prepared.programs as IPreparedPrograms)).toBeTruthy();
+  });
+
+  test('program.all by status (active) request', async () => {
+    expect(await getAllProgramsByStatus(genesis, 'active')).toBeTruthy();
+  });
+
+  test('program.all by status (init_failed) request', async () => {
+    expect(await getAllProgramsByStatus(genesis, 'init_failed')).toBeTruthy();
+  });
+
+  test('program.all by dates request', async () => {
+    const now = new Date();
+    expect(await getAllProgramsByDates(genesis, now)).toBeTruthy();
   });
 
   test('program.meta.add request', async () => {
@@ -73,6 +97,11 @@ describe('VARA_NODE message methods', () => {
     expect(await getAllMessages(genesis, messages)).toBeTruthy();
   });
 
+  test('message.all by dates request', async () => {
+    const now = new Date();
+    expect(await getMessagesByDates(genesis, now)).toBeTruthy();
+  });
+
   test('message.data request', async () => {
     for (const message of prepared.messages.log) {
       expect(await getMessageData(genesis, message[0])).toBeTruthy();
@@ -86,7 +115,12 @@ describe('VARA_NODE message methods', () => {
 describe('VARA_NODE code methods', () => {
   test('code.all request', async () => {
     const codeIds = Array.from(prepared.collectionCode.keys());
-    expect(await getListCode(genesis, codeIds)).toBeTruthy();
+    expect(await getCodes(genesis, codeIds)).toBeTruthy();
+  });
+
+  test('code.all by dates request', async () => {
+    const now = new Date();
+    expect(await getCodesByDates(genesis, now)).toBeTruthy();
   });
 
   test('code.data request', async () => {

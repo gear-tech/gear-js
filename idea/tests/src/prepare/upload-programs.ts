@@ -59,6 +59,7 @@ export async function uploadPrograms(
       ...programs[program],
       name: program,
       messageId: uploadedProgram.id,
+      owner: uploadedProgram.source,
     };
   }
   await sleep();

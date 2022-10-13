@@ -5,7 +5,7 @@ import { readFileSync } from 'fs';
 
 import request from './request';
 import accounts from '../config/accounts';
-import { IPreparedProgram, Passed } from '../interfaces';
+import { IPreparedProgram, IPreparedPrograms, Passed } from '../interfaces';
 
 export async function getAllPrograms(genesis: string, expected: Hex[]): Promise<Passed> {
   const response = await request('program.all', { genesis });
@@ -17,6 +17,60 @@ export async function getAllPrograms(genesis: string, expected: Hex[]): Promise<
     .forEach((programId: Hex) => {
       expect(expected).to.contains(programId);
     });
+  return true;
+}
+
+export async function getAllProgramsByOwner(genesis: string, programs: IPreparedPrograms): Promise<Passed> {
+  const keyList = Object.keys(programs);
+  const owner = programs[keyList[0]].owner;
+
+  const ownerList = Object.keys(programs).map(key => programs[key]).map(program => program.owner);
+
+  const response = await request('program.all', { genesis, owner });
+  expect(response).to.have.own.property('result');
+  expect(response.result.count).to.eq(keyList.length);
+
+  response.result.programs
+    .map((program: any) => program.owner)
+    .forEach((programOwner: Hex) => {
+      expect(ownerList).to.contains(programOwner);
+    });
+  return true;
+}
+
+export async function getAllProgramsByStatus(genesis: string, status: string): Promise<Passed> {
+  const response = await request('program.all', { genesis, status });
+  expect(response).to.have.own.property('result');
+
+  response.result.programs
+    .map((program: any) => program.status)
+    .forEach((programStatus: string) => {
+      expect(status).to.equal(programStatus);
+    });
+  return true;
+}
+
+export async function getAllProgramsByDates(genesis: string, date: Date): Promise<Passed> {
+  const fromDate = new Date(date);
+  fromDate.setMinutes(fromDate.getMinutes() - 5);
+
+  const toDate = new Date(date);
+  toDate.setMinutes(toDate.getMinutes() + 5);
+
+  const response = await request('program.all', { genesis, fromDate, toDate });
+
+  const isValidProgramsDate = response.result.programs.reduce((arr, program: any) => {
+    const createdProgramDate = new Date(program.timestamp);
+    if(createdProgramDate > fromDate && createdProgramDate < toDate) {
+      arr.push(true);
+    } else {
+      arr.push(false);
+    }
+  }, []);
+
+  expect(response).to.have.own.property('result');
+  expect(isValidProgramsDate.every(el => el === true)).to.equal(true);
+
   return true;
 }
 
