@@ -28,6 +28,8 @@ export async function getMessagesByDates(genesis: string, date: Date): Promise<P
     } else {
       arr.push(false);
     }
+
+    return arr;
   }, []);
 
   expect(response).to.have.own.property('result');

@@ -29,6 +29,8 @@ async function getCodesByDates(genesis: string, date: Date): Promise<Passed> {
     } else {
       arr.push(false);
     }
+
+    return arr;
   }, []);
 
   expect(response).to.have.own.property('result');

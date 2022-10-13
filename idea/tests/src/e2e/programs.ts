@@ -66,6 +66,8 @@ export async function getAllProgramsByDates(genesis: string, date: Date): Promis
     } else {
       arr.push(false);
     }
+
+    return arr;
   }, []);
 
   expect(response).to.have.own.property('result');
