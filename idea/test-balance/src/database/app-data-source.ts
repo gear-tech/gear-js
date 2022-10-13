@@ -14,3 +14,7 @@ export const AppDataSource = new DataSource({
   entities: [TransferBalance],
   migrations: [],
 });
+
+export async function connectToDB(): Promise<void> {
+  await AppDataSource.initialize();
+}

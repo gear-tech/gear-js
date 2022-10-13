@@ -2,8 +2,8 @@ import express from 'express';
 
 import config from './config/configuration';
 
-import { changeStatus, healthcheckRouter } from './routes/healthcheck/healthcheck.router';
-import { dbCreateConnection } from './database/db-create-connection';
+import { changeStatus, healthcheckRouter } from './routes/healthcheck.router';
+import { connectToDB } from './database/app-data-source';
 import { gearService } from './gear';
 import { kafkaCreateConnection } from './kafka/kafka-create-connection';
 
@@ -14,7 +14,7 @@ const port = config.healthcheck.port;
 app.use('/health', healthcheckRouter);
 
 const startApp = async () => {
-  await dbCreateConnection();
+  await connectToDB();
   changeStatus('database');
   await gearService.connect();
   changeStatus('ws');

@@ -1,11 +1,12 @@
-import { GearApi, GearKeyring, TransferData } from '@gear-js/api';
+import { GearApi, TransferData } from '@gear-js/api';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { BN } from '@polkadot/util';
 import { initLogger } from '@gear-js/common';
 
 import config from '../config/configuration';
 import { ResponseTransferBalance } from './types';
-import { transferService } from '../services/transfer/transfer.service';
+import { transferService } from '../services/transfer.service';
+import { createAccount } from './utils';
 
 let gearApi: GearApi;
 let accountGR: KeyringPair;
@@ -30,13 +31,9 @@ async function connect() {
   });
   logger.info(`Connected to ${await gearApi.chain()} with genesis ${getGenesisHash()}`);
 
-  const [account, rootAccountByGearKeyring] = await Promise.all([
-    GearKeyring.fromSeed(config.gear.accountSeed),
-    setRootAccountSeedByGearKeyring(),
-  ]);
+  accountGR = await createAccount(config.gear.accountSeed);
+  rootAccountGR = await createAccount(config.gear.rootAccountSeed);
 
-  accountGR = account;
-  rootAccountGR = rootAccountByGearKeyring;
   accountBalanceGR = new BN(config.gear.accountBalance);
   balanceToTransferGR = new BN(config.gear.balanceToTransfer);
 
@@ -75,15 +72,6 @@ async function transfer(from: KeyringPair = accountGR, to: string, balance: BN):
       });
     });
   });
-}
-
-async function setRootAccountSeedByGearKeyring(): Promise<KeyringPair> {
-  const envVar = config.gear.rootAccountSeed;
-  if (envVar === '//Alice') {
-    return GearKeyring.fromSuri('//Alice');
-  } else {
-    return GearKeyring.fromSeed(config.gear.rootAccountSeed);
-  }
 }
 
 async function isSmallAccountBalance(): Promise<boolean> {
