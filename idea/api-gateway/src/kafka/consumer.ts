@@ -13,6 +13,7 @@ export const consumer = initKafka.consumer({ groupId: configKafka.groupId });
 async function connect(): Promise<void> {
   await consumer.connect();
 }
+
 async function run(): Promise<void> {
   await consumer.run({
     eachMessage: async ({ message, topic }) => {
@@ -32,14 +33,17 @@ async function subscribeConsumerTopics(topics: string[]): Promise<void> {
 }
 
 async function messageProcessing(message: KafkaMessage, topic: string): Promise<void> {
-  if (topic !== `${KAFKA_TOPICS.TEST_BALANCE_GENESIS_API}.reply`) {
+  if (topic !== `${KAFKA_TOPICS.TEST_BALANCE_GENESIS}.reply`) {
     const correlationId = message.headers.kafka_correlationId.toString();
     const resultFromService = kafkaEventMap.get(correlationId);
-    if (resultFromService) await resultFromService(JSON.parse(message.value.toString()));
+
+    if (resultFromService) resultFromService(JSON.parse(message.value.toString()));
+
     deleteKafkaEvent(correlationId);
   } else {
     const genesisHash = message.value.toString();
     genesisHashesCollection.add(genesisHash);
+    console.log(`Received genesis: ${genesisHash}`);
   }
 }
 

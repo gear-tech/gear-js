@@ -33,6 +33,7 @@ async function messageProcessing(message: KafkaMessage, topic: string): Promise<
   if (error) {
     return { error };
   }
+  console.log(`Request`, payload);
 
   if (payload.genesis === gearService.getGenesisHash()) {
     await transferBalanceProcess(message, payload);

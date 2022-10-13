@@ -11,7 +11,6 @@ export const AppDataSource = new DataSource({
   password: config.db.password,
   database: config.db.name,
   synchronize: true,
-  logging: true,
   entities: [TransferBalance],
   migrations: [],
 });
