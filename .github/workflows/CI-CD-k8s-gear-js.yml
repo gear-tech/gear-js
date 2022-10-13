@@ -2,7 +2,7 @@ name: Deploy Gear-js to k8s stage/prod
 
 on:
   push:
-    branches: ['main', 'do-fix-test-balance']
+    branches: ['main']
     paths:
       - idea/api-gateway/**
       - idea/data-storage/**
@@ -187,7 +187,7 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment api-gateway data-storage frontend-nginx test-balance-workshop-node test-balance-testnet-node events-listener-workshop-node events-listener-rpc-testnet -n dev-1
+          args: rollout restart deployment api-gateway data-storage frontend-nginx test-balance-workshop-node events-listener-workshop-node events-listener-rpc-testnet -n dev-1
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
