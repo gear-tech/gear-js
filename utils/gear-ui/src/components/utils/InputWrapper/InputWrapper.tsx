@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 import clsx from 'clsx';
 import { Gap } from '../../../types';
-import styles from './InputWrapper.module.scss';
 import { Tooltip } from '../../Tooltip/Tooltip';
+import styles from './InputWrapper.module.scss';
 
 type Props = {
   id: string;
@@ -17,7 +17,9 @@ type Props = {
   tooltip?: string;
 };
 
-const InputWrapper = ({ id, children, className, label, error, direction, size, gap, disabled, tooltip }: Props) => {
+const InputWrapper = (props: Props) => {
+  const { id, children, className, label, error, direction, size, gap, disabled, tooltip } = props;
+
   const wrapperClassName = clsx(styles.wrapper, className, disabled && 'disabled', label && styles[direction]);
   const labelWrapperClassName = clsx(styles.labelWrapper, styles[size], styles[direction]);
 
@@ -46,4 +48,5 @@ const InputWrapper = ({ id, children, className, label, error, direction, size, 
   );
 };
 
-export { InputWrapper, Props as InputWrapperProps, styles as inputWrapperStyles };
+export { InputWrapper, styles as inputWrapperStyles };
+export type { Props as InputWrapperProps };

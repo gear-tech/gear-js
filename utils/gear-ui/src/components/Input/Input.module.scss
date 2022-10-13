@@ -9,7 +9,7 @@
   }
 
   &:not(.block) {
-    max-width: 450px;
+    max-width: $inputWidth;
   }
 }
 

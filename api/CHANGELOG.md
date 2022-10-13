@@ -1,3 +1,35 @@
+## 0.26.1
+_10/11/2022_
+
+https://github.com/gear-tech/gear-js/pull/1031
+### Changes
+
+- Rename `gr_msg_id` syscall to `gr_message_id`
+- 
+## 0.26.0
+_10/06/2022_
+
+https://github.com/gear-tech/gear-js/pull/1030
+### Changes
+
+- Bump @polkadot/api to 9.5.1
+
+## 0.25.9
+_10/06/2022_
+
+https://github.com/gear-tech/gear-js/pull/1023
+### Changes
+
+- Add method to get all code ids existed on chain
+
+## 0.25.8
+_10/03/2022_
+
+https://github.com/gear-tech/gear-js/pull/1012
+### Changes
+
+- Add new syscalls
+
 ## 0.25.7
 _09/17/2022_
 

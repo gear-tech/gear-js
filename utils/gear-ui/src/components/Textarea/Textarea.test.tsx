@@ -96,7 +96,7 @@ describe('textarea tests', () => {
     const wrapper = screen.getByTestId('wrapper');
 
     expect(wrapper).toHaveClass(styles.light, styles.large);
-    expect(wrapper).not.toHaveClass(styles.dark, styles.normal, styles.block);
+    expect(wrapper).not.toHaveClass(styles.dark, styles.normal);
   });
 
   it('renders textarea with error', () => {

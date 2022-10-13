@@ -56,4 +56,5 @@ const Select = forwardRef((props: Props, ref: ForwardedRef<HTMLSelectElement>) =
   );
 });
 
-export { Select, Props as SelectProps, styles as selectStyles };
+export { Select, styles as selectStyles };
+export type { Props as SelectProps };

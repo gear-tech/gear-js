@@ -40,7 +40,7 @@ const CodeItem = memo(({ code }: Props) => {
         </Tooltip>
       </div>
       <span className={styles.codeHash}>{codeId}</span>
-      <span className={styles.timestamp}>{formatDate(timestamp)}</span>
+      {timestamp && <span className={styles.timestamp}>{formatDate(timestamp)}</span>}
     </>
   );
 });

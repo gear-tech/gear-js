@@ -1,3 +1,5 @@
-import { InputWrapper, InputWrapperProps, inputWrapperStyles } from './InputWrapper';
+import { InputWrapper, inputWrapperStyles } from './InputWrapper';
+import type { InputWrapperProps } from './InputWrapper';
 
-export { InputWrapper, InputWrapperProps, inputWrapperStyles };
+export { InputWrapper, inputWrapperStyles };
+export type { InputWrapperProps };

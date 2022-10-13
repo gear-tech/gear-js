@@ -1,3 +1,5 @@
-const genesisHashesCollection = new Set<string>();
+export const genesisHashesCollection = new Set<string>();
 
-export { genesisHashesCollection };
+export function isValidGenesis(genesis: string): boolean {
+  return genesisHashesCollection.has(genesis);
+}

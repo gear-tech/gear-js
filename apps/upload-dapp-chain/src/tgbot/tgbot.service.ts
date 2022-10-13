@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 
 import { CommandService } from "../command/command.service";
 import { DappDataService } from "../dapp-data/dapp-data.service";
@@ -15,6 +15,7 @@ import { getUploadProgramByName } from "../common/helpers/get-upload-program-by-
 
 @Injectable()
 export class TgbotService {
+  private logger: Logger = new Logger("TgbotService");
   constructor(
       private commandService: CommandService,
       private dappDataService: DappDataService,
@@ -63,10 +64,16 @@ export class TgbotService {
 
       if (uploadedProgram) uploadedPrograms.push(uploadedProgram);
     }
+    try {
+      const dapps = await this.dappDataService.createDappsData(uploadedPrograms);
 
-    const dapps = await this.dappDataService.createDappsData(uploadedPrograms);
+      console.log("________>dapps", dapps);
 
-    return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
+      return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
+    } catch (error) {
+      this.logger.error("_________UPLOAD_DAPPS_ERROR_________");
+      console.log(error);
+    }
   }
 
   public async uploadDapp(userId: number, commandArguments: string): Promise<DappData[] | string> {
@@ -96,9 +103,16 @@ export class TgbotService {
       if (uploadedProgram) uploadedPrograms.push(uploadedProgram);
     }
 
-    const dapps = await this.dappDataService.createDappsData(uploadedPrograms);
+    try {
+      const dapps = await this.dappDataService.createDappsData(uploadedPrograms);
 
-    return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
+      console.log("________>", dapps);
+
+      return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
+    } catch (error) {
+      this.logger.error("_________UPLOAD_DAPP_ERROR_________");
+      console.log(error);
+    }
   }
 
   public async uploadCode(userId: number, commandArguments: string): Promise<DappData[] | string> {
@@ -129,9 +143,14 @@ export class TgbotService {
       if (uploadedProgram) uploadedPrograms.push(uploadedProgram);
     }
 
-    const dapps = await this.dappDataService.createDappsData(uploadedPrograms);
+    try {
+      const dapps = await this.dappDataService.createDappsData(uploadedPrograms);
 
-    return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
+      return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
+    } catch (error) {
+      this.logger.error("_________UPLOAD_CODE_ERROR_________");
+      console.log(error);
+    }
   }
 
   private async handleCommand(
@@ -163,6 +182,7 @@ export class TgbotService {
         return this.commandService.uploadCode(uploadProgramData);
       }
     } catch (error) {
+      this.logger.error("_________HANDLE_COMMAND_________");
       console.log(error);
     }
   }

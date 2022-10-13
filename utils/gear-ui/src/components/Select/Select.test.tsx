@@ -71,7 +71,7 @@ describe('select tests', () => {
     const select = screen.getByRole('combobox');
 
     expect(select).toHaveClass(styles.light, styles.large);
-    expect(select).not.toHaveClass(styles.dark, styles.normal, styles.block);
+    expect(select).not.toHaveClass(styles.dark, styles.normal);
   });
 
   it('renders textarea with error', () => {

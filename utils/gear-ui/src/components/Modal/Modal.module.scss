@@ -13,33 +13,48 @@
   align-items: center;
   padding: 0 32px;
   background-color: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(15px);
+  backdrop-filter: blur(7.5px);
   z-index: 10;
 }
 
 .modal {
   width: 100%;
-  max-width: 400px;
   filter: drop-shadow(0px 4px 4px #00000040);
+
+  &.normal {
+    max-width: 400px;
+  }
+
+  &.large {
+    max-width: 560px;
+  }
 }
 
 .header {
+  // border on .header and .body instead of .modal,
+  // cuz otherwise .modal should have overflow: hidden
+  // and we can't cuz modal can have tooltip inside
   display: flex;
   justify-content: space-between;
-  padding: 17px 24px 22px;
+  padding: 17px 32px 22px;
   background-color: #222225;
-  border-radius: 16px 16px 0 0;
-  border-bottom: 1px solid #000;
+  border-left: $borderModal;
+  border-right: $borderModal;
+  border-top: $borderModal;
+  border-radius: $borderRadiusMedium $borderRadiusMedium 0 0;
 }
 
 .body {
   padding: 32px;
   background-color: #29292b;
-  border-radius: 0 0 20px 20px;
+  border-left: $borderModal;
+  border-right: $borderModal;
+  border-bottom: $borderModal;
+  border-radius: 0 0 $borderRadiusMedium $borderRadiusMedium;
 }
 
 .heading {
-  @extend %h5;
+  @extend %h4;
   margin-right: 16px;
   color: rgba(#fff, 0.8);
   text-align: center;

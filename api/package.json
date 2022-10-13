@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/api",
-  "version": "0.25.7",
+  "version": "0.26.1",
   "description": "A JavaScript library that provides functionality to connect GEAR Component APIs.",
   "main": "cjs/index.js",
   "module": "index.js",
@@ -22,8 +22,8 @@
   ],
   "scripts": {
     "test": "jest --runInBand",
-    "prebuild": "rm -rf lib",
-    "build": "rollup --config rollup.config.js",
+    "test:only": "jest --testPathPattern",
+    "build": "rm -rf lib && rollup --config rollup.config.js",
     "lint": "eslint . --ext .ts --ignore-pattern lib/ --ignore-pattern node_modules/",
     "lint:fix": "eslint --fix . --ext .ts --ignore-pattern lib/ --ignore-pattern node_modules/"
   },
@@ -46,7 +46,7 @@
   },
   "license": "GPL-3.0",
   "peerDependencies": {
-    "@polkadot/api": "^9.3.3",
+    "@polkadot/api": "^9.5.1",
     "@polkadot/wasm-crypto": "^6.3.1",
     "rxjs": "^7.5.5"
   },
