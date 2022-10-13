@@ -7,8 +7,9 @@ import config from '../config/configuration';
 import { ResponseTransferBalance } from './types';
 import { transferService } from '../services/transfer.service';
 import { createAccount } from './utils';
+import { changeStatus } from '../routes/healthcheck.router';
 
-let gearApi: GearApi;
+let api: GearApi;
 let accountGR: KeyringPair;
 let rootAccountGR: KeyringPair;
 let accountBalanceGR: BN;
@@ -17,19 +18,9 @@ let balanceToTransferGR: BN;
 const logger = initLogger('TEST_BALANCE_GEAR');
 
 async function connect() {
-  gearApi = await GearApi.create({ providerAddress: config.gear.providerAddress });
-  gearApi.on('error', () => {
-    GearApi.create({ providerAddress: config.gear.providerAddress }).then(
-      (newApi) => {
-        gearApi = newApi;
-      },
-      (error) => {
-        logger.error(`Could not reconnect error: ${error}`);
-        throw error;
-      },
-    );
-  });
-  logger.info(`Connected to ${await gearApi.chain()} with genesis ${getGenesisHash()}`);
+  api = await GearApi.create({ providerAddress: config.gear.providerAddress });
+  changeStatus('ws');
+  logger.info(`Connected to ${await api.chain()} with genesis ${getGenesisHash()}`);
 
   accountGR = await createAccount(config.gear.accountSeed);
   rootAccountGR = await createAccount(config.gear.rootAccountSeed);
@@ -40,6 +31,13 @@ async function connect() {
   if (await isSmallAccountBalance()) {
     await transferBalance(accountGR.address, rootAccountGR, accountBalanceGR);
   }
+
+  return new Promise((resolve) =>
+    api.on('error', (error) => {
+      changeStatus('ws');
+      resolve(error);
+    }),
+  );
 }
 
 async function transferBalance(
@@ -60,9 +58,9 @@ async function transferBalance(
 }
 
 async function transfer(from: KeyringPair = accountGR, to: string, balance: BN): Promise<TransferData> {
-  gearApi.balance.transfer(to, balance);
+  api.balance.transfer(to, balance);
   return new Promise((resolve, reject) => {
-    gearApi.balance.signAndSend(from, ({ events }) => {
+    api.balance.signAndSend(from, ({ events }) => {
       events.forEach(({ event: { method, data } }) => {
         if (method === 'Transfer') {
           resolve(data as TransferData);
@@ -75,7 +73,7 @@ async function transfer(from: KeyringPair = accountGR, to: string, balance: BN):
 }
 
 async function isSmallAccountBalance(): Promise<boolean> {
-  const balance = await gearApi.balance.findOut(accountGR.address);
+  const balance = await api.balance.findOut(accountGR.address);
   if (balance.lt(accountBalanceGR)) {
     return true;
   }
@@ -83,7 +81,7 @@ async function isSmallAccountBalance(): Promise<boolean> {
 }
 
 function getGenesisHash(): string {
-  return gearApi.genesisHash.toHex();
+  return api.genesisHash.toHex();
 }
 
 export const gearService = { connect, getGenesisHash, transferBalance };
