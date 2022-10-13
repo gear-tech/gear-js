@@ -8,7 +8,7 @@ const checkEnv = (envName: string) => {
   return env;
 };
 
-export default () => ({
+export default {
   server: {
     port: parseInt('PORT', 10) || 3000,
     captchaSecret: checkEnv('CAPTCH_SECRET'),
@@ -25,5 +25,5 @@ export default () => ({
   // every 1 hour "0 * * * *"
   cron: {
     time: process.env.CRON_TIME || '0 * * * *',
-  }
-});
+  },
+};
