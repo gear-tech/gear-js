@@ -3,7 +3,6 @@ import { Message } from 'kafkajs';
 
 import { initKafka } from './init-kafka';
 import { KafkaParams } from './types';
-import { transformToSting } from '../utils';
 
 const producer = initKafka.producer();
 
@@ -14,7 +13,8 @@ async function connect(): Promise<void> {
 async function sendByTopic(
   topic: API_METHODS | string,
   params: KafkaParams | string,
-  correlationId?: string): Promise<void> {
+  correlationId?: string,
+): Promise<void> {
   await producer.send({
     topic,
     messages: [createMessageBody(topic, params, correlationId)],
@@ -22,10 +22,10 @@ async function sendByTopic(
 }
 
 function createMessageBody(topic: string, params: KafkaParams | string, correlationId?: string): Message {
-  const result: Message = { value: transformToSting(params), headers: {} };
+  const result: Message = { value: JSON.stringify(params), headers: {} };
 
   if (correlationId) {
-    result.headers = {  kafka_correlationId: correlationId,   kafka_replyTopic: `${topic}.reply` };
+    result.headers = { kafka_correlationId: correlationId, kafka_replyTopic: `${topic}.reply` };
   }
 
   return result;

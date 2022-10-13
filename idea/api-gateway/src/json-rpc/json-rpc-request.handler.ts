@@ -1,9 +1,10 @@
 import { API_METHODS, IRpcRequest, IRpcResponse, JSONRPC_ERRORS } from '@gear-js/common';
 
-import { getResponse, isValidGenesis } from '../utils';
+import { getResponse } from '../utils';
 import { API_GATEWAY } from '../common/constant';
 import { jsonRpcHandler } from './json-rpc.handler';
 import { apiGatewayLogger } from '../common/api-gateway.logger';
+import { isValidGenesis } from '../common/genesis-hashes-collection';
 
 async function jsonRpcRequestHandler(
   rpcBodyRequest: IRpcRequest | IRpcRequest[],
@@ -25,7 +26,9 @@ async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
   }
 
   if (procedure.method === API_METHODS.TEST_BALANCE_AVAILABLE) {
-    const { params: { genesis } } = procedure;
+    const {
+      params: { genesis },
+    } = procedure;
     return getResponse(procedure, null, isValidGenesis(genesis));
   }
 

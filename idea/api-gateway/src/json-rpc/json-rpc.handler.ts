@@ -8,7 +8,7 @@ import { RpcResponse } from './types';
 
 async function handleKafkaEventByTopic(topic: API_METHODS, params: KafkaParams): Promise<RpcResponse> {
   const correlationId: string = nanoid(6);
-  await kafkaProducer.sendByTopic(topic, params, correlationId,);
+  await kafkaProducer.sendByTopic(topic, params, correlationId);
 
   let topicEvent;
   const res: Promise<RpcResponse> = new Promise((resolve) => (topicEvent = resolve));
