@@ -8,7 +8,8 @@ async function verifyTestBalanceRequest(body: IRpcRequest) {
   if (body.method === API_METHODS.TEST_BALANCE_GET) {
     if (!body.params?.genesis || !isValidGenesis(body.params.genesis)) {
       return JSONRPC_ERRORS.TestBalanceIsUnavailable.name;
-    } else if (!body.params?.['token'] || (await verifyCaptcha(body.params['token']))) {
+    }
+    if (!body.params?.['token'] || !(await verifyCaptcha(body.params['token']))) {
       return JSONRPC_ERRORS.Forbidden.name;
     }
   }
