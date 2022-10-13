@@ -1,7 +1,3 @@
-FROM ghcr.io/gear-tech/node:latest
-MAINTAINER GEAR
-
-
 FROM debian:stable-slim
 MAINTAINER GEAR
 WORKDIR opt
