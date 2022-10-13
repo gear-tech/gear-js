@@ -1,9 +1,7 @@
 import { API_METHODS, IRpcRequest, IRpcResponse, JSONRPC_ERRORS } from '@gear-js/common';
 
 import { getResponse } from '../utils';
-import { API_GATEWAY } from '../common/constant';
 import { jsonRpcHandler } from './json-rpc.handler';
-import { apiGatewayLogger } from '../common/api-gateway.logger';
 import { isValidGenesis } from '../common/genesis-hashes-collection';
 
 async function jsonRpcRequestHandler(
@@ -20,19 +18,16 @@ async function jsonRpcRequestHandler(
 }
 
 async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
-  if (!isExistJsonRpcMethod(procedure.method)) {
-    apiGatewayLogger.error(`${API_GATEWAY}:${JSON.stringify(JSONRPC_ERRORS.MethodNotFound)}`);
+  const { method, params } = procedure;
+
+  if (!isExistJsonRpcMethod(method)) {
     return getResponse(procedure, JSONRPC_ERRORS.MethodNotFound.name);
   }
 
-  if (procedure.method === API_METHODS.TEST_BALANCE_AVAILABLE) {
-    const {
-      params: { genesis },
-    } = procedure;
-    return getResponse(procedure, null, isValidGenesis(genesis));
+  if (method === API_METHODS.TEST_BALANCE_AVAILABLE) {
+    return getResponse(procedure, null, isValidGenesis(params.genesis));
   }
 
-  const { method, params } = procedure;
   const { error, result } = await jsonRpcHandler(method as API_METHODS, params);
   return getResponse(procedure, error, result);
 }

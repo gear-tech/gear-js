@@ -12,6 +12,7 @@ async function handleKafkaEventByTopic(topic: API_METHODS, params: KafkaParams):
 
   let topicEvent;
   const res: Promise<RpcResponse> = new Promise((resolve) => (topicEvent = resolve));
+
   kafkaEventMap.set(correlationId, topicEvent);
   return res;
 }
