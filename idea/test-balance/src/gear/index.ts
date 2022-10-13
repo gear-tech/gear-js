@@ -8,6 +8,7 @@ import { ResponseTransferBalance } from './types';
 import { transferService } from '../services/transfer.service';
 import { createAccount } from './utils';
 import { changeStatus } from '../routes/healthcheck.router';
+import { sendGenesis } from '../common/send-genesis';
 
 let api: GearApi;
 let accountGR: KeyringPair;
@@ -19,25 +20,40 @@ const logger = initLogger('TEST_BALANCE_GEAR');
 
 async function connect() {
   api = await GearApi.create({ providerAddress: config.gear.providerAddress });
-  changeStatus('ws');
   logger.info(`Connected to ${await api.chain()} with genesis ${getGenesisHash()}`);
-
-  accountGR = await createAccount(config.gear.accountSeed);
-  rootAccountGR = await createAccount(config.gear.rootAccountSeed);
-
-  accountBalanceGR = new BN(config.gear.accountBalance);
-  balanceToTransferGR = new BN(config.gear.balanceToTransfer);
+  changeStatus('ws');
 
   if (await isSmallAccountBalance()) {
     await transferBalance(accountGR.address, rootAccountGR, accountBalanceGR);
   }
+}
 
-  return new Promise((resolve) =>
-    api.on('error', (error) => {
-      changeStatus('ws');
-      resolve(error);
-    }),
-  );
+async function init(connectionEstablishedCb: () => void) {
+  accountGR = await createAccount(config.gear.accountSeed);
+  rootAccountGR = await createAccount(config.gear.rootAccountSeed);
+  accountBalanceGR = new BN(config.gear.accountBalance);
+  balanceToTransferGR = new BN(config.gear.balanceToTransfer);
+  let onInit = true;
+
+  while (true) {
+    await connect();
+
+    if (onInit) {
+      connectionEstablishedCb();
+      onInit = false;
+    } else {
+      sendGenesis();
+    }
+
+    await new Promise((resolve) =>
+      api.on('error', (error) => {
+        console.log(error);
+        changeStatus('ws');
+        resolve(error);
+      }),
+    );
+    console.log('Reconnecting...');
+  }
 }
 
 async function transferBalance(
@@ -84,4 +100,4 @@ function getGenesisHash(): string {
   return api.genesisHash.toHex();
 }
 
-export const gearService = { connect, getGenesisHash, transferBalance };
+export const gearService = { init, getGenesisHash, transferBalance };
