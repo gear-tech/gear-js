@@ -2212,18 +2212,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:0.25.9, @gear-js/api@npm:^0.25.2, @gear-js/api@npm:^0.25.6, @gear-js/api@npm:^0.25.7":
-  version: 0.25.9
-  resolution: "@gear-js/api@npm:0.25.9"
-  peerDependencies:
-    "@polkadot/api": ^9.3.3
-    "@polkadot/wasm-crypto": ^6.3.1
-    rxjs: ^7.5.5
-  checksum: 9cb510adca8e2ea246b5ac23cfb4e11a1e7ef36692a2ad2b0bc126cee5df7251e1d4445734b4f3e382b80df4b1cfd316a696deb8adbc0a485d4562d9e15ebe29
-  languageName: node
-  linkType: hard
-
-"@gear-js/api@npm:^0.26.0, @gear-js/api@npm:^0.26.1":
+"@gear-js/api@npm:0.26.1, @gear-js/api@npm:^0.26.1":
   version: 0.26.1
   resolution: "@gear-js/api@npm:0.26.1"
   peerDependencies:
@@ -2234,18 +2223,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gear-js/api@npm:^0.25.2, @gear-js/api@npm:^0.25.6":
+  version: 0.25.9
+  resolution: "@gear-js/api@npm:0.25.9"
+  peerDependencies:
+    "@polkadot/api": ^9.3.3
+    "@polkadot/wasm-crypto": ^6.3.1
+    rxjs: ^7.5.5
+  checksum: 9cb510adca8e2ea246b5ac23cfb4e11a1e7ef36692a2ad2b0bc126cee5df7251e1d4445734b4f3e382b80df4b1cfd316a696deb8adbc0a485d4562d9e15ebe29
+  languageName: node
+  linkType: hard
+
 "@gear-js/auction@workspace:apps/auction":
   version: 0.0.0-use.local
   resolution: "@gear-js/auction@workspace:apps/auction"
   dependencies:
-    "@gear-js/api": ^0.25.6
-    "@gear-js/react-hooks": ^0.3.2
+    "@gear-js/api": ^0.26.1
+    "@gear-js/react-hooks": ^0.3.5
     "@gear-js/ui": ^0.4.0
     "@mantine/form": ^4.2.12
-    "@polkadot/api": ^9.3.3
+    "@polkadot/api": ^9.5.1
     "@polkadot/extension-dapp": ^0.43.3
     "@polkadot/react-identicon": ^2.8.2
-    "@polkadot/types": ^9.3.3
+    "@polkadot/types": ^9.5.1
     "@polkadot/util": ^9.7.2
     "@polkadot/wasm-crypto": ^6.3.1
     "@testing-library/jest-dom": ^5.16.4
@@ -2298,7 +2298,7 @@ __metadata:
     "@babel/plugin-transform-modules-commonjs": 7.18.6
     "@babel/plugin-transform-typescript": 7.18.12
     "@babel/preset-typescript": 7.18.6
-    "@gear-js/api": ^0.26.0
+    "@gear-js/api": 0.26.1
     "@gear-js/common": "workspace:^"
     "@nestjs/cli": 8.2.8
     "@nestjs/common": 8.4.7
@@ -2349,14 +2349,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/escrow@workspace:apps/escrow"
   dependencies:
-    "@gear-js/api": ^0.25.6
-    "@gear-js/react-hooks": ^0.3.2
+    "@gear-js/api": ^0.26.1
+    "@gear-js/react-hooks": ^0.3.5
     "@gear-js/ui": ^0.4.0
     "@mantine/form": ^4.2.12
-    "@polkadot/api": ^9.3.3
+    "@polkadot/api": ^9.5.1
     "@polkadot/extension-dapp": ^0.43.3
     "@polkadot/react-identicon": ^2.7.2
-    "@polkadot/types": ^9.3.3
+    "@polkadot/types": ^9.5.1
     "@polkadot/util": ^9.7.2
     "@polkadot/wasm-crypto": ^6.3.1
     "@testing-library/jest-dom": ^5.16.4
@@ -2397,15 +2397,15 @@ __metadata:
   resolution: "@gear-js/frontend@workspace:idea/frontend"
   dependencies:
     "@craco/craco": 6.4.3
-    "@gear-js/api": 0.25.9
-    "@gear-js/react-hooks": ^0.3.4
+    "@gear-js/api": 0.26.1
+    "@gear-js/react-hooks": ^0.3.5
     "@gear-js/ui": 0.4.0
     "@hcaptcha/react-hcaptcha": 1.2.0
     "@monaco-editor/react": 4.4.2
-    "@polkadot/api": ^9.3.3
+    "@polkadot/api": ^9.5.1
     "@polkadot/extension-dapp": 0.43.2
     "@polkadot/react-identicon": 2.0.1
-    "@polkadot/types": ^9.3.3
+    "@polkadot/types": ^9.5.1
     "@polkadot/wasm-crypto": ^6.2.3
     "@testing-library/jest-dom": 5.16.4
     "@testing-library/react": 12.1.5
@@ -2469,14 +2469,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/lottery@workspace:apps/lottery"
   dependencies:
-    "@gear-js/api": ^0.25.6
-    "@gear-js/react-hooks": ^0.3.2
+    "@gear-js/api": ^0.26.1
+    "@gear-js/react-hooks": ^0.3.5
     "@gear-js/ui": ^0.4.0
     "@mantine/form": ^4.2.9
-    "@polkadot/api": ^9.3.3
+    "@polkadot/api": ^9.5.1
     "@polkadot/extension-dapp": ^0.43.3
     "@polkadot/react-identicon": ^2.4.1
-    "@polkadot/types": ^9.3.3
+    "@polkadot/types": ^9.5.1
     "@polkadot/util": ^9.7.2
     "@polkadot/wasm-crypto": ^6.3.1
     "@testing-library/jest-dom": ^5.16.4
@@ -2514,13 +2514,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/marketplace@workspace:apps/marketplace"
   dependencies:
-    "@gear-js/api": ^0.25.6
-    "@gear-js/react-hooks": ^0.3.2
+    "@gear-js/api": ^0.26.1
+    "@gear-js/react-hooks": ^0.3.5
     "@gear-js/ui": ^0.4.0
-    "@polkadot/api": ^9.3.3
+    "@polkadot/api": ^9.5.1
     "@polkadot/extension-dapp": ^0.43.3
     "@polkadot/react-identicon": ^2.6.2
-    "@polkadot/types": ^9.3.3
+    "@polkadot/types": ^9.5.1
     "@polkadot/wasm-crypto": ^6.3.1
     "@testing-library/jest-dom": ^5.16.4
     "@testing-library/react": ^13.3.0
@@ -2559,13 +2559,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/nft@workspace:apps/nft"
   dependencies:
-    "@gear-js/api": ^0.25.6
-    "@gear-js/react-hooks": ^0.3.2
+    "@gear-js/api": ^0.26.1
+    "@gear-js/react-hooks": ^0.3.5
     "@gear-js/ui": ^0.4.0
-    "@polkadot/api": ^9.3.3
+    "@polkadot/api": ^9.5.1
     "@polkadot/extension-dapp": ^0.43.2
     "@polkadot/react-identicon": ^2.2.1
-    "@polkadot/types": ^9.3.3
+    "@polkadot/types": ^9.5.1
     "@polkadot/util": ^9.7.2
     "@polkadot/wasm-crypto": ^6.3.1
     "@testing-library/jest-dom": ^5.16.4
@@ -2614,16 +2614,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/react-hooks@npm:^0.3.2, @gear-js/react-hooks@npm:^0.3.4":
-  version: 0.3.4
-  resolution: "@gear-js/react-hooks@npm:0.3.4"
+"@gear-js/react-hooks@npm:^0.3.2, @gear-js/react-hooks@npm:^0.3.5":
+  version: 0.3.5
+  resolution: "@gear-js/react-hooks@npm:0.3.5"
   peerDependencies:
-    "@gear-js/api": ^0.25.9
+    "@gear-js/api": ^0.26.1
     "@polkadot/extension-dapp": ^0.43.2
     react: ">=17.0.2"
     react-dom: ">=17.0.2"
     react-transition-group: ^4.4.2
-  checksum: 82c953a6b2cb1beaef26185344c474db7a78a1ffc7f19ca7f217c3f6ca26d1372440116376542c59b65a64956efe40d4b298a40adc2f8b5567616b04b2c0afc5
+  checksum: 3cb798c40b3972809574fa24bb1f035ac2a798c3abf5f1532d4fce792ecd3b9be7d55dee1d0e6e4f4d1c1f662bc42711fc55059afe76075e499be2cf6432e62c
   languageName: node
   linkType: hard
 
@@ -2721,14 +2721,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/supply-chain@workspace:apps/supply-chain"
   dependencies:
-    "@gear-js/api": ^0.25.6
-    "@gear-js/react-hooks": ^0.3.2
+    "@gear-js/api": ^0.26.1
+    "@gear-js/react-hooks": ^0.3.5
     "@gear-js/ui": ^0.4.0
     "@mantine/form": ^4.2.12
-    "@polkadot/api": ^9.3.3
+    "@polkadot/api": ^9.5.1
     "@polkadot/extension-dapp": ^0.43.3
     "@polkadot/react-identicon": ^2.9.3
-    "@polkadot/types": ^9.3.3
+    "@polkadot/types": ^9.5.1
     "@polkadot/util": ^9.7.2
     "@polkadot/wasm-crypto": ^6.3.1
     "@testing-library/jest-dom": ^5.16.4
@@ -2804,7 +2804,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/upload-dapp-chain@workspace:apps/upload-dapp-chain"
   dependencies:
-    "@gear-js/api": ^0.25.7
+    "@gear-js/api": ^0.26.1
     "@nestjs/axios": ^0.1.0
     "@nestjs/cli": ^8.0.0
     "@nestjs/common": ^8.0.0
@@ -2815,7 +2815,7 @@ __metadata:
     "@nestjs/schematics": ^8.0.0
     "@nestjs/testing": ^8.0.0
     "@nestjs/typeorm": ^9.0.1
-    "@polkadot/api": ^9.4.2
+    "@polkadot/api": ^9.5.1
     "@types/express": ^4.17.13
     "@types/jest": 27.5.0
     "@types/js-yaml": ^4.0.5
@@ -2894,7 +2894,7 @@ __metadata:
     "@babel/plugin-transform-typescript": 7.16.8
     "@babel/preset-env": 7.17.10
     "@babel/preset-typescript": 7.16.7
-    "@gear-js/api": ^0.26.0
+    "@gear-js/api": 0.26.1
     "@polkadot/api": 9.5.1
     "@types/chai": 4.3.1
     "@types/jest": 27.5.1
@@ -3875,11 +3875,11 @@ __metadata:
   linkType: hard
 
 "@libp2p/interface-peer-id@npm:^1.0.0":
-  version: 1.0.4
-  resolution: "@libp2p/interface-peer-id@npm:1.0.4"
+  version: 1.0.5
+  resolution: "@libp2p/interface-peer-id@npm:1.0.5"
   dependencies:
-    multiformats: ^9.6.3
-  checksum: 593ffad1f5afae8fb10ed991f4b7d718aa17599dedaf2bbe401c4d548740eab447ca806c8f7a59414290b2b5dc7a5a36def04959f096ef0aec173d7add332abf
+    multiformats: ^10.0.0
+  checksum: 346a7c8e12d394938b71b5871bfb85bb7bc14d0c871b3101029d6fbefc3ce0da7378e57ae6f8a588ffad913f967b56256298644982586c11e8ad503297629253
   languageName: node
   linkType: hard
 
@@ -3910,14 +3910,14 @@ __metadata:
   linkType: hard
 
 "@libp2p/peer-id@npm:^1.1.10":
-  version: 1.1.15
-  resolution: "@libp2p/peer-id@npm:1.1.15"
+  version: 1.1.16
+  resolution: "@libp2p/peer-id@npm:1.1.16"
   dependencies:
     "@libp2p/interface-peer-id": ^1.0.0
     err-code: ^3.0.1
-    multiformats: ^9.6.3
-    uint8arrays: ^3.0.0
-  checksum: 6475d5c4d06f618b0bae0c9f635bbc1b2b481cee184a8e5ff0ed4564f86eceffbfed4ebfd57b1c7c9132ed5e67132896f8887649f22539f235da5f14b5365b97
+    multiformats: ^10.0.0
+    uint8arrays: ^4.0.2
+  checksum: 21362f219c45102cefd7b4e27f302b46676d2a2b2d2463954c81153c6eadb5862485426d06856a421a5a1ea43f11067e7efc152e65a06eb63e437aa4d133549a
   languageName: node
   linkType: hard
 
@@ -4003,16 +4003,16 @@ __metadata:
   linkType: hard
 
 "@multiformats/multiaddr@npm:^11.0.0":
-  version: 11.0.3
-  resolution: "@multiformats/multiaddr@npm:11.0.3"
+  version: 11.0.5
+  resolution: "@multiformats/multiaddr@npm:11.0.5"
   dependencies:
     dns-over-http-resolver: ^2.1.0
     err-code: ^3.0.1
     is-ip: ^5.0.0
-    multiformats: ^9.4.5
-    uint8arrays: ^3.0.0
+    multiformats: ^10.0.0
+    uint8arrays: ^4.0.2
     varint: ^6.0.0
-  checksum: b59568a9d227594c1926374637e9d436273e8d0edd6ad230a387484bef3d8934da5fe80a0809dfda2f424b774505ddac1c4473cf9f353ada5f830396cdce8379
+  checksum: f4f8e87f5d741cce291fe48a31e7519cba304dec8f555128159487653d95a2a49d3de020df6cf61812018add2a4ac818ef8531462f107a35c463f28b380aa4ec
   languageName: node
   linkType: hard
 
@@ -4502,7 +4502,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/api@npm:9.5.1, @polkadot/api@npm:^9.2.2, @polkadot/api@npm:^9.3.3, @polkadot/api@npm:^9.4.1, @polkadot/api@npm:^9.4.2, @polkadot/api@npm:^9.5.1":
+"@polkadot/api@npm:9.5.1, @polkadot/api@npm:^9.2.2, @polkadot/api@npm:^9.4.1, @polkadot/api@npm:^9.5.1":
   version: 9.5.1
   resolution: "@polkadot/api@npm:9.5.1"
   dependencies:
@@ -4898,7 +4898,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/types@npm:9.5.1, @polkadot/types@npm:^9.2.2, @polkadot/types@npm:^9.2.3, @polkadot/types@npm:^9.3.3, @polkadot/types@npm:^9.4.1":
+"@polkadot/types@npm:9.5.1, @polkadot/types@npm:^9.2.2, @polkadot/types@npm:^9.2.3, @polkadot/types@npm:^9.4.1, @polkadot/types@npm:^9.5.1":
   version: 9.5.1
   resolution: "@polkadot/types@npm:9.5.1"
   dependencies:
@@ -5419,9 +5419,9 @@ __metadata:
   linkType: hard
 
 "@sinclair/typebox@npm:^0.24.1":
-  version: 0.24.45
-  resolution: "@sinclair/typebox@npm:0.24.45"
-  checksum: 5fb1607360925f36d52d057fec41d5076284373fb308e69086685a262706c8f0ecba223b17895d1dfb37cad824601f383f5b4106e6051a035a81833f65f93e06
+  version: 0.24.46
+  resolution: "@sinclair/typebox@npm:0.24.46"
+  checksum: 19d708fe93a42dce4ed6452a58909c841ad3484a6388a5b5d82e7ab11f8bfbd013bf34c32d6234a55532e4ff5f8ab9e1df17bb13b389aca038c7f05a8950a72a
   languageName: node
   linkType: hard
 
@@ -6679,9 +6679,9 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:>=13.7.0, @types/node@npm:^18.7.5":
-  version: 18.8.4
-  resolution: "@types/node@npm:18.8.4"
-  checksum: c2b87f6b0b1f02b2ce61ca7cb93ea287119bda086a3f33e48da8f5e70c24ad7141cc3465946e0e36abb7eba70c7b320c7659842096e4aa573b3a8d557322c818
+  version: 18.8.5
+  resolution: "@types/node@npm:18.8.5"
+  checksum: f7d896f54743178e64c534c6da16f582505acf18904ecd0ee8541cb4bc1d429ba514e7ecfd5145221b71adbd6ae1ff72df082f667e56d056fcd1a719df948e08
   languageName: node
   linkType: hard
 
@@ -7893,9 +7893,9 @@ __metadata:
   linkType: hard
 
 "ansi-styles@npm:^6.0.0":
-  version: 6.2.0
-  resolution: "ansi-styles@npm:6.2.0"
-  checksum: ce35204dc87f418440e8a95569c23e235715d7089e512f88254fb5fcedc18cdcfd6cd36852182388586eba21a9246b67a9ce4f1687864b06017407d8fda11a10
+  version: 6.2.1
+  resolution: "ansi-styles@npm:6.2.1"
+  checksum: ef940f2f0ced1a6347398da88a91da7930c33ecac3c77b72c5905f8b8fe402c52e6fde304ff5347f616e27a742da3f1dc76de98f6866c69251ad0b07a66776d9
   languageName: node
   linkType: hard
 
@@ -11213,9 +11213,9 @@ __metadata:
   linkType: hard
 
 "decimal.js@npm:^10.2.1":
-  version: 10.4.1
-  resolution: "decimal.js@npm:10.4.1"
-  checksum: 5da6dc74af5b73d954741b24d404ef6da07841794d9e51412a2708ec384dd7b4bced3365fb178f4cd119b7ef45f0b34344014a4dc0494c8374c5e746df3cb410
+  version: 10.4.2
+  resolution: "decimal.js@npm:10.4.2"
+  checksum: 536cd6816a3197f2e1aa3da4860856cb5a2db73f6fafe8cb3b924ccc63f9b7d78296acc13dccbd419bd958ccc6357921fb15467f883b37cab04bfba7044cada2
   languageName: node
   linkType: hard
 
@@ -11345,9 +11345,9 @@ __metadata:
   linkType: hard
 
 "defined@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "defined@npm:1.0.0"
-  checksum: 77672997c5001773371c4dbcce98da0b3dc43089d6da2ad87c4b800adb727633cea8723ea3889fe0c2112a2404e2fd07e3bfd0e55f7426aa6441d8992045dbd5
+  version: 1.0.1
+  resolution: "defined@npm:1.0.1"
+  checksum: b1a852300bdb57f297289b55eafdd0c517afaa3ec8190e78fce91b9d8d0c0369d4505ecbdacfd3d98372e664f4a267d9bd793938d4a8c76209c9d9516fbe2101
   languageName: node
   linkType: hard
 
@@ -11844,9 +11844,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.3.47, electron-to-chromium@npm:^1.4.251":
-  version: 1.4.279
-  resolution: "electron-to-chromium@npm:1.4.279"
-  checksum: f98f592ad6acb34a63a7c804b21a14c0f05e85bc2892812e8d20019493b6bd5425c401bfd00363015ca953fb0489136c02cc60140cd9ad59e2b299531faa9d2f
+  version: 1.4.281
+  resolution: "electron-to-chromium@npm:1.4.281"
+  checksum: 8c64a7b8a652405f0d8856f9b6df6d8a0188a71f4d03b938bc76456b3fb27fe9b5a7c3a9805e9e3cce482033a9645f13391a3416483498dca1c23bce1ff858dc
   languageName: node
   linkType: hard
 
@@ -17288,9 +17288,9 @@ __metadata:
   linkType: hard
 
 "libphonenumber-js@npm:^1.9.43":
-  version: 1.10.13
-  resolution: "libphonenumber-js@npm:1.10.13"
-  checksum: a1740bbed8faa1adb4ae01dda6a7c16b4fd2917efdd9bafac53fa06d9e4b53dc67543d282f7fd0043649edddc0f03359448a17adb837e534358c7ba92c7dc268
+  version: 1.10.14
+  resolution: "libphonenumber-js@npm:1.10.14"
+  checksum: 853608aca7ba63182bc9305ff4f5380c64973866bbd245a87fa219422371edd1e7c694ce3e6a8d8f3fb557bbbe10c7fc32601ff300be9937daf583d84c80bbd3
   languageName: node
   linkType: hard
 
@@ -18202,6 +18202,13 @@ __metadata:
   bin:
     multicast-dns: cli.js
   checksum: 00b8a57df152d4cd0297946320a94b7c3cdf75a46a2247f32f958a8927dea42958177f9b7fdae69fab2e4e033fb3416881af1f5e9055a3e1542888767139e2fb
+  languageName: node
+  linkType: hard
+
+"multiformats@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "multiformats@npm:10.0.0"
+  checksum: f43c317c997a21c138734883a8fc9c05687e691efe5884aa2854688ea43a2135d4b7daec3d14c7e40f0ae38ca51682054908de374f1d2d7e6a4b53d2d1322669
   languageName: node
   linkType: hard
 
@@ -20311,13 +20318,13 @@ __metadata:
   linkType: hard
 
 "postcss@npm:^8.3.5, postcss@npm:^8.4.14, postcss@npm:^8.4.4, postcss@npm:^8.4.7":
-  version: 8.4.17
-  resolution: "postcss@npm:8.4.17"
+  version: 8.4.18
+  resolution: "postcss@npm:8.4.18"
   dependencies:
     nanoid: ^3.3.4
     picocolors: ^1.0.0
     source-map-js: ^1.0.2
-  checksum: a6d9096dd711e17f7b1d18ff5dcb4fdedf3941d5a3dc8b0e4ea873b8f31972d57f73d6da9a8aed7ff389eb52190ed34f6a94f299a7f5ddc68b08a24a48f77eb9
+  checksum: 9349fd99849b2e3d2e134ff949b7770ecb12375f352723ce2bcc06167eba3850ea7844c1b191a85cd915d6a396b4e8ee9a5267e6cc5d8d003d0cbc7a97555d39
   languageName: node
   linkType: hard
 
@@ -24290,6 +24297,15 @@ __metadata:
   dependencies:
     multiformats: ^9.4.2
   checksum: b93b6c3f0a526b116799f3a3409bd4b5d5553eb3e73e485998ece7974742254fbc0d2f7988dd21ac86c4b974552f45d9ae9cf9cba9647e529f8eb1fdd2ed84d0
+  languageName: node
+  linkType: hard
+
+"uint8arrays@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "uint8arrays@npm:4.0.2"
+  dependencies:
+    multiformats: ^10.0.0
+  checksum: 18f44b231d4363b9f2ef65b2772a19c6b84534913fc0f6382b6d4bffc78adfc8e2ae05305cdef60f95958867d1d950fca064edebfa0b915380eac94894b593be
   languageName: node
   linkType: hard
 
