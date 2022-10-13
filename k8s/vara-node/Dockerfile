@@ -4,7 +4,7 @@ WORKDIR opt
 RUN apt update
 RUN apt install wget -y
 RUN apt install xz-utils -y
-RUN wget https://github.com/gear-tech/builds/releases/download/vara/vara-nightly-linux-x86_64.tar.xz
+RUN wget https://get.gear.rs/vara-nightly-linux-x86_64.tar.xz
 RUN tar -xvf vara-nightly-linux-x86_64.tar.xz
 RUN chmod +x gear-node
 
