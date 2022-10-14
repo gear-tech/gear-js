@@ -1,5 +1,5 @@
 import { initLogger } from '@gear-js/common';
 
-import { API_GATEWAY } from './constant';
+const API_GATEWAY = process.env.NODE_ENV === 'dev' ? 'API_GATEWAY' : '';
 
 export const apiGatewayLogger = initLogger(API_GATEWAY);

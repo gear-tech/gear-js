@@ -6,7 +6,6 @@ import { initKafka } from './init-kafka';
 import { gearService } from '../gear';
 import { sendGenesis } from '../common/send-genesis';
 import { transferBalanceProcess } from '../common/transfer-balance-process';
-import { getPayloadFromMessage } from '../utils';
 
 const consumer: Consumer = initKafka.consumer({ groupId: config.kafka.groupId });
 
@@ -22,24 +21,25 @@ async function connect(): Promise<void> {
 async function run(): Promise<void> {
   await consumer.run({
     eachMessage: async ({ message, topic }) => {
-      await messageProcessing(message, topic);
+      try {
+        await messageProcessing(message, topic);
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 }
 
-async function messageProcessing(message: KafkaMessage, topic: string): Promise<void | { error: string }> {
-  const { payload, error } = await getPayloadFromMessage(message);
+function messageProcessing(message: KafkaMessage, topic: string): Promise<void | { error: string }> {
+  const payload = JSON.parse(message.value.toString());
 
-  if (error) {
-    return { error };
+  if (topic === KAFKA_TOPICS.TEST_BALANCE_GENESIS) {
+    return sendGenesis();
   }
 
   if (payload.genesis === gearService.getGenesisHash()) {
-    await transferBalanceProcess(message, payload);
-  }
-
-  if (topic === KAFKA_TOPICS.TEST_BALANCE_GENESIS) {
-    await sendGenesis();
+    console.log(`Request`, payload);
+    return transferBalanceProcess(message, payload);
   }
 }
 
