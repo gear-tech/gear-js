@@ -65,7 +65,7 @@ const uploadLocalProgram = (program: Pick<IProgram, 'id' | 'owner' | 'name' | 't
     initStatus: ProgramStatus.Success,
   });
 
-const uploadLocalMetadata = async (programId: string, meta: string, metaBuffer: string, name?: string) => {
+const uploadLocalMetadata = async (programId: string, meta?: string, metaBuffer?: string, name?: string) => {
   const { result } = await getLocalProgram(programId);
 
   return PROGRAMS_LOCAL_FORAGE.setItem(programId, {

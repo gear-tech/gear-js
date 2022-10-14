@@ -27,10 +27,7 @@ const usePrograms = (initLoading = true) => {
 
     setIsLoading(true);
 
-    return getPrograms({
-      limit: DEFAULT_LIMIT,
-      ...params,
-    })
+    return getPrograms({ limit: DEFAULT_LIMIT, ...params })
       .then(({ result }) => setProgramsData(result, isReset))
       .catch((error) => {
         alert.error(error.message);

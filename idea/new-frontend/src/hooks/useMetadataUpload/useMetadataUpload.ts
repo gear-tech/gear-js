@@ -23,7 +23,7 @@ const useMetadataUplaod = () => {
     try {
       const { signature } = await signer.signRaw!({
         type: 'payload',
-        data: jsonMeta,
+        data: jsonMeta || '',
         address: account!.address,
       });
 
@@ -61,7 +61,7 @@ const useMetadataUplaod = () => {
           throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
         }
 
-        const jsonMeta = JSON.stringify(metadata);
+        const jsonMeta = metadata ? JSON.stringify(metadata) : undefined;
 
         if (isDevChain()) {
           await uploadLocalMetadata(programId, jsonMeta, metadataBuffer, name);

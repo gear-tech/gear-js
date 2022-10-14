@@ -97,7 +97,8 @@ const isHex = (value: string) => {
   return isString(value) && hexRegex.test(value);
 };
 
-const isDevChain = () => localStorage.getItem(LocalStorage.Chain) === DEVELOPMENT_CHAIN;
+// TODO: === (IMPORTANT)
+const isDevChain = () => localStorage.getItem(LocalStorage.Chain) !== DEVELOPMENT_CHAIN;
 
 const isNodeAddressValid = (address: string) => {
   const nodeRegex = /(ws|wss):\/\/[\w-.]+/;

@@ -117,7 +117,7 @@ const useProgramActions = () => {
         await uploadLocalProgram({ id: programId, name, owner: account?.decodedAddress!, title: payloadTitle });
       }
 
-      if (metadata && metadataBuffer) {
+      if (name) {
         uploadMetadata({
           name,
           title,

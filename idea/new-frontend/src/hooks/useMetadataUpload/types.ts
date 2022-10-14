@@ -7,15 +7,15 @@ type ParamsToUploadMeta = Partial<OperationCallbacks> & {
   name: string;
   title?: string;
   signer?: Signer;
-  metadata: Metadata;
+  metadata?: Metadata;
   programId: string;
-  metadataBuffer: string;
+  metadataBuffer?: string;
 };
 
 type ParamsToSignAndUpload = Partial<OperationCallbacks> &
   Omit<ParamsToSignAndSend, 'reject' | 'resolve'> &
   Omit<ParamsToUploadMeta, 'metadata'> & {
-    jsonMeta: string;
+    jsonMeta?: string;
   };
 
 export type { ParamsToUploadMeta, ParamsToSignAndUpload };
