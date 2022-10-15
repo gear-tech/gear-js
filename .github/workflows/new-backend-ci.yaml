@@ -217,6 +217,7 @@ jobs:
           yarn test
           
       - name: Configure AWS credentials
+        if: always()
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
@@ -224,26 +225,31 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
           
       - name: Scale down gear deployment
+        if: always()
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: scale --replicas=0 deployment gear-node -n $KUBE_NAMESPACE
           
       - name: Scale down vara deployment
+        if: always()
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: scale --replicas=0 deployment vara-node -n $KUBE_NAMESPACE
 
       - name: Scale down data-storage-gear
+        if: always()
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: scale --replicas=1 deployment data-storage -n $KUBE_NAMESPACE
           
       - name: Deploy down data-storage-vara
+        if: always()
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: scale --replicas=1 deployment data-storage-vara -n $KUBE_NAMESPACE
           
       - name: Scale down test-balance
+        if: always()
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: scale --replicas=0 deployment test-balance-testenv -n $KUBE_NAMESPACE
