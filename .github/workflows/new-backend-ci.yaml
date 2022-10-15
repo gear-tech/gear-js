@@ -150,21 +150,36 @@ jobs:
           aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+          
+      - name: Scale vara and gear deployment
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: scale --replicas=1 deployment gear-node -n $KUBE_NAMESPACE
+          
+      - name: Scale vara deployment
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: scale --replicas=1 deployment vara-node -n $KUBE_NAMESPACE
 
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment api-gateway postgres postgres-vara gear-node vara-node -n $KUBE_NAMESPACE
+          args: rollout restart deployment api-gateway postgres postgres-vara -n $KUBE_NAMESPACE
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n $KUBE_NAMESPACE --timeout=120s
 
-      - name: Deploy to k8s data-storage
+      - name: Scale up data-storage-gear
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment data-storage data-storage-vara -n $KUBE_NAMESPACE
+          args: scale --replicas=1 deployment data-storage -n $KUBE_NAMESPACE
+          
+      - name: Scale up data-storage-vara
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: scale --replicas=1 deployment data-storage-vara -n $KUBE_NAMESPACE
 
       - name: Check k8s deployment data-storage
         uses: sergeyfilyanin/kubectl-aws-eks@master
@@ -195,3 +210,30 @@ jobs:
         run: |
           YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
           yarn test
+          
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+          
+      - name: Scale down gear deployment
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: scale --replicas=0 deployment gear-node -n $KUBE_NAMESPACE
+          
+      - name: Scale down vara deployment
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: scale --replicas=0 deployment vara-node -n $KUBE_NAMESPACE
+
+      - name: Scale down data-storage-gear
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: scale --replicas=1 deployment data-storage -n $KUBE_NAMESPACE
+          
+      - name: Deploy down data-storage-vara
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: scale --replicas=1 deployment data-storage-vara -n $KUBE_NAMESPACE
