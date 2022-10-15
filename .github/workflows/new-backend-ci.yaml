@@ -151,11 +151,6 @@ jobs:
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
           
-      - name: Scale up gear deployment
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: scale --replicas=1 deployment gear-node -n $KUBE_NAMESPACE
-          
       - name: Scale up vara deployment
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
@@ -164,7 +159,7 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment api-gateway postgres postgres-vara postgres-testbalance-testenv -n $KUBE_NAMESPACE
+          args: rollout restart deployment api-gateway gear-node postgres postgres-vara postgres-testbalance-testenv -n $KUBE_NAMESPACE
           
       - name: Scale up test-balance
         uses: sergeyfilyanin/kubectl-aws-eks@master
@@ -179,7 +174,7 @@ jobs:
       - name: Scale up data-storage-gear
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: scale --replicas=1 deployment data-storage -n $KUBE_NAMESPACE
+          args: rollout restart deployment data-storage -n $KUBE_NAMESPACE
           
       - name: Scale up data-storage-vara
         uses: sergeyfilyanin/kubectl-aws-eks@master
@@ -224,23 +219,12 @@ jobs:
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
           
-      - name: Scale down gear deployment
-        if: always()
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: scale --replicas=0 deployment gear-node -n $KUBE_NAMESPACE
           
       - name: Scale down vara deployment
         if: always()
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: scale --replicas=0 deployment vara-node -n $KUBE_NAMESPACE
-
-      - name: Scale down data-storage-gear
-        if: always()
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: scale --replicas=0 deployment data-storage -n $KUBE_NAMESPACE
           
       - name: Deploy down data-storage-vara
         if: always()
