@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CodeChanged, GearApi, Hex, MessageEnqueued, MessageEnqueuedData } from '@gear-js/api';
+import { CodeChanged, GearApi, Hex, MessageEnqueued } from '@gear-js/api';
 import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
@@ -19,7 +19,7 @@ import { changeStatus } from '../healthcheck/healthcheck.controller';
 import { ProgramRepo } from '../program/program.repo';
 import { CreateProgramInput } from '../program/types';
 import configuration from '../config/configuration';
-import { KafkaNetworkData } from '../common/kafka-network-data';
+import { kafkaNetworkData } from '../common/kafka-network-data';
 import { ProducerService } from '../producer/producer.service';
 
 const { gear } = configuration();
@@ -70,7 +70,7 @@ export class GearEventListener {
 
       this.logger.log(`⚙️ Connected to ${this.api.runtimeChain} with genesis ${this.genesis}`);
 
-      KafkaNetworkData.genesis = this.genesis;
+      kafkaNetworkData.genesis = this.genesis;
 
       changeStatus('gearWSProvider');
     } catch (error) {

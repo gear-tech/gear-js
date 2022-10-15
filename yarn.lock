@@ -2307,10 +2307,12 @@ __metadata:
     "@nestjs/mapped-types": "*"
     "@nestjs/microservices": 8.4.7
     "@nestjs/platform-express": 8.4.7
+    "@nestjs/schedule": ^2.1.0
     "@nestjs/schematics": 8.0.11
     "@nestjs/testing": 8.4.7
     "@nestjs/typeorm": 8.1.4
     "@polkadot/api": ^9.5.1
+    "@types/cron": ^2.0.0
     "@types/express": 4.17.13
     "@types/jest": 27.5.2
     "@types/js-yaml": 4.0.5
@@ -4220,6 +4222,20 @@ __metadata:
     "@nestjs/common": ^8.0.0
     "@nestjs/core": ^8.0.0
   checksum: 41d3e35adfb2d3f54c9d4a7ce94525fac0be3119caa0bba8b5607c8345cef964a6893891c541d2f4e7a677cc4f91045bc3cb23e4bf29df9ba84a76e70eefd3e6
+  languageName: node
+  linkType: hard
+
+"@nestjs/schedule@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@nestjs/schedule@npm:2.1.0"
+  dependencies:
+    cron: 2.0.0
+    uuid: 8.3.2
+  peerDependencies:
+    "@nestjs/common": ^7.0.0 || ^8.0.0 || ^9.0.0
+    "@nestjs/core": ^7.0.0 || ^8.0.0 || ^9.0.0
+    reflect-metadata: ^0.1.12
+  checksum: 43423eb0491c692c08dcdb6d18d34ec758fe29cda52f4674a945e06933ec5b4e23229193c1b071971842b50db57024d6f1c55fe8f4c6392754b6a597b31eb423
   languageName: node
   linkType: hard
 
@@ -6319,7 +6335,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/cron@npm:2.0.0":
+"@types/cron@npm:2.0.0, @types/cron@npm:^2.0.0":
   version: 2.0.0
   resolution: "@types/cron@npm:2.0.0"
   dependencies:
@@ -10753,6 +10769,15 @@ __metadata:
   version: 1.1.1
   resolution: "create-require@npm:1.1.1"
   checksum: a9a1503d4390d8b59ad86f4607de7870b39cad43d929813599a23714831e81c520bddf61bcdd1f8e30f05fd3a2b71ae8538e946eb2786dc65c2bbc520f692eff
+  languageName: node
+  linkType: hard
+
+"cron@npm:2.0.0":
+  version: 2.0.0
+  resolution: "cron@npm:2.0.0"
+  dependencies:
+    luxon: ^1.23.x
+  checksum: 179ec137ada4ceb44cafe51c55491e84954308d7012d2a44539f0dadbbb1ffbbe3072c2f7aaa88595d60bd56e0d536aae2e4aaa4430c869317d6c2abd966988b
   languageName: node
   linkType: hard
 

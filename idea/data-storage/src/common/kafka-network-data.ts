@@ -1,7 +1,7 @@
-const KafkaNetworkData = {
+const kafkaNetworkData = {
   genesis: null,
   partition: null,
 };
 
-export { KafkaNetworkData };
+export { kafkaNetworkData };
 

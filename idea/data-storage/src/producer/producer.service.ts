@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 import { KAFKA_TOPICS } from '@gear-js/common';
 
 import { kafkaEventMap } from '../common/kafka-event.map';
-import { KafkaNetworkData } from '../common/kafka-network-data';
+import { kafkaNetworkData } from '../common/kafka-network-data';
 import configuration from '../config/configuration';
 
 const configKafka = configuration().kafka;
@@ -14,7 +14,7 @@ export class ProducerService {
   constructor(@Inject(configKafka.producerName) private kafkaProducer: Producer) {}
 
   public async sendByTopic(topic: string, params: any): Promise<void> {
-    const message: Message = { value: JSON.stringify(params), partition: KafkaNetworkData.partition };
+    const message: Message = { value: JSON.stringify(params), partition: kafkaNetworkData.partition };
 
     await this.kafkaProducer.send({
       topic,
@@ -25,7 +25,7 @@ export class ProducerService {
   public async setKafkaNetworkData(): Promise<void> {
     const correlationId = nanoid();
 
-    const message: Message = { value: JSON.stringify(KafkaNetworkData.genesis), headers: {
+    const message: Message = { value: JSON.stringify(kafkaNetworkData.genesis), headers: {
       kafka_correlationId: correlationId,
     } };
 
@@ -38,10 +38,10 @@ export class ProducerService {
     const res: Promise<any> = new Promise((resolve) => (topicEvent = resolve));
     kafkaEventMap.set(correlationId, topicEvent);
 
-    const kafkaNetworkData = await res;
+    const networkData = await res;
 
-    if(kafkaNetworkData.routingPartition !== null) {
-      KafkaNetworkData.partition = Number(kafkaNetworkData.routingPartition);
+    if(networkData.routingPartition !== null) {
+      kafkaNetworkData.partition = Number(networkData.routingPartition);
     }
   }
 }

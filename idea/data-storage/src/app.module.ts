@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 
 import { ConsumerModule } from './consumer/consumer.module';
 import { MessageModule } from './message/message.module';
@@ -13,6 +14,7 @@ import configurations from './config/configuration';
 import { Code, Message, Meta, Program } from './database/entities';
 import { ProducerModule } from './producer/producer.module';
 import { GearModule } from './gear/gear.module';
+import { TasksModule } from './tasks/tasks.module';
 
 const entities = [Meta, Message, Program, Code];
 
@@ -35,6 +37,7 @@ const entities = [Meta, Message, Program, Code];
       }),
       inject: [ConfigService],
     }),
+    ScheduleModule.forRoot(),
     ConsumerModule,
     ProgramModule,
     MessageModule,
@@ -43,6 +46,7 @@ const entities = [Meta, Message, Program, Code];
     HealthcheckModule,
     CodeModule,
     ProducerModule,
+    TasksModule,
   ],
   controllers: [HealthcheckController],
 })

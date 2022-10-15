@@ -26,7 +26,7 @@ import { MetadataService } from '../metadata/metadata.service';
 import { FormResponse } from '../decorator/form-response.decorator';
 import { CodeService } from '../code/code.service';
 import { kafkaEventMap } from '../common/kafka-event.map';
-import { KafkaNetworkData } from '../common/kafka-network-data';
+import { kafkaNetworkData } from '../common/kafka-network-data';
 import { ProducerService } from '../producer/producer.service';
 
 @Injectable()
@@ -79,9 +79,8 @@ export class ConsumerService {
     return await this.codeService.getByIdAndGenesis(params);
   }
 
-  @FormResponse
   async servicesPartition(): Promise<void> {
-    const params = { ...KafkaNetworkData };
+    const params = { ...kafkaNetworkData };
     await this.producerService.sendByTopic(`${KAFKA_TOPICS.SERVICES_PARTITION}.reply`, params);
   }
 

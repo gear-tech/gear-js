@@ -10,6 +10,8 @@ export async function setServicePartition(message: KafkaMessage): Promise<void> 
 
   if(!value.genesis) return;
 
+  if(servicesPartitionMap.has(value.genesis)) return;
+
   const partitionNum = Number(value.partition);
 
   const admin = initKafka.admin();
