@@ -202,6 +202,7 @@ jobs:
 
       - name: Prepare&Run Tests
         working-directory: idea/tests
+        timeout-minutes: 7
         env:
           API_ENDPOINT: ${{ secrets.API_ADDRESS_URL_NEW_BE }}
           WS_PROVIDER: ${{ secrets.WS_PROVIDER_URL_NEW_BE }}
