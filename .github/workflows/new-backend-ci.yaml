@@ -151,12 +151,12 @@ jobs:
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
           
-      - name: Scale vara and gear deployment
+      - name: Scale up gear deployment
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: scale --replicas=1 deployment gear-node -n $KUBE_NAMESPACE
           
-      - name: Scale vara deployment
+      - name: Scale up vara deployment
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: scale --replicas=1 deployment vara-node -n $KUBE_NAMESPACE
@@ -164,7 +164,12 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment api-gateway postgres postgres-vara -n $KUBE_NAMESPACE
+          args: rollout restart deployment api-gateway postgres postgres-vara postgres-testbalance-testenv -n $KUBE_NAMESPACE
+          
+      - name: Scale up test-balance
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: scale --replicas=1 deployment test-balance-testenv -n $KUBE_NAMESPACE
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
@@ -237,3 +242,8 @@ jobs:
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: scale --replicas=1 deployment data-storage-vara -n $KUBE_NAMESPACE
+          
+      - name: Scale down test-balance
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: scale --replicas=0 deployment test-balance-testenv -n $KUBE_NAMESPACE
