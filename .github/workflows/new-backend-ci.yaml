@@ -240,13 +240,13 @@ jobs:
         if: always()
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: scale --replicas=1 deployment data-storage -n $KUBE_NAMESPACE
+          args: scale --replicas=0 deployment data-storage -n $KUBE_NAMESPACE
           
       - name: Deploy down data-storage-vara
         if: always()
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: scale --replicas=1 deployment data-storage-vara -n $KUBE_NAMESPACE
+          args: scale --replicas=0 deployment data-storage-vara -n $KUBE_NAMESPACE
           
       - name: Scale down test-balance
         if: always()
