@@ -16,7 +16,6 @@ export class TasksService {
   }
 
   private async runSchedulerNetworkData(): Promise<void> {
-    console.log(JSON.stringify(kafkaNetworkData));
     if(!kafkaNetworkData.partition && !(kafkaNetworkData.partition === 0)) {
       try {
         await this.producerService.setKafkaNetworkData();
