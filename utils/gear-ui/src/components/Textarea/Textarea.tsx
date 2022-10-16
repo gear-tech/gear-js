@@ -33,6 +33,7 @@ const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAr
     error && styles.error,
     block && styles.block,
   );
+
   const textareaClassName = clsx(styles.textarea, styles[color]);
 
   const id = useId();
@@ -73,4 +74,5 @@ const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAr
   );
 });
 
-export { Textarea, Props as TextareaProps, styles as textareaStyles };
+export { Textarea, styles as textareaStyles };
+export type { Props as TextareaProps };

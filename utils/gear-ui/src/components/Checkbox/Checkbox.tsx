@@ -20,4 +20,5 @@ const Checkbox = forwardRef(({ label, className, type, ...attrs }: Props, ref: F
   );
 });
 
-export { Checkbox, Props as CheckboxProps, styles as checkboxStyles };
+export { Checkbox, styles as checkboxStyles };
+export type { Props as CheckboxProps };

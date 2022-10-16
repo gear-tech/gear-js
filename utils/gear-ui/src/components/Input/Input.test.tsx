@@ -1,4 +1,4 @@
-import { findByText, fireEvent, getByRole, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { Input } from './Input';
 import styles from './Input.module.scss';
 
@@ -126,7 +126,7 @@ describe('input tests', () => {
     const wrapper = screen.getByTestId('wrapper');
 
     expect(wrapper).toHaveClass(styles.light, styles.large);
-    expect(wrapper).not.toHaveClass(styles.dark, styles.normal, styles.block);
+    expect(wrapper).not.toHaveClass(styles.dark, styles.normal);
   });
 
   it('renders input with error', () => {

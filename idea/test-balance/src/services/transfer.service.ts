@@ -1,7 +1,7 @@
 import { plainToClass } from 'class-transformer';
 
-import { TransferBalance } from '../../database/entities/transfer.entity';
-import { transferRepository } from '../../repositories/transfer.repository';
+import { TransferBalance } from '../database/entities/transfer.entity';
+import { transferRepository } from '../repositories/transfer.repository';
 
 const transferService = {
   async setTransferDate(account: string, genesis: string): Promise<TransferBalance> {
@@ -9,8 +9,10 @@ const transferService = {
       account: `${account}.${genesis}`,
       lastTransfer: new Date(),
     });
+
     return transferRepository.save(transferBalanceTypeDB);
   },
+
   async isPossibleToTransfer(account: string, genesis: string): Promise<boolean> {
     const transfer = await transferRepository.getByAccountAndGenesis(account, genesis);
 

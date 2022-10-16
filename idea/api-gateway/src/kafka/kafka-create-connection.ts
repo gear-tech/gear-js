@@ -8,18 +8,13 @@ import { apiGatewayLogger } from '../common/api-gateway.logger';
 const topics = Object.values(KAFKA_TOPICS);
 
 async function kafkaCreateConnection(): Promise<void> {
-  try {
-    await Promise.all([
-      kafkaProducer.connect(),
-      kafkaConsumer.connect(),
-      kafkaConsumer.subscribeConsumerTopics(topics),
-    ]);
-    await kafkaConsumer.run();
-    changeStatus('kafka');
-    apiGatewayLogger.info('Kafka connection initialized');
-  } catch (err) {
-    apiGatewayLogger.error(`Kafka err:${err}`);
-  }
+  await Promise.all([kafkaProducer.connect(), kafkaConsumer.connect()]);
+  await kafkaConsumer.subscribeConsumerTopics(topics);
+  await kafkaConsumer.run();
+
+  changeStatus('kafka');
+
+  apiGatewayLogger.info('Kafka connection initialized');
 }
 
 export { kafkaCreateConnection };
