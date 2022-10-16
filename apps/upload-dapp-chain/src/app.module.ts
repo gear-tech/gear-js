@@ -12,8 +12,11 @@ import { User } from "./user/entities/user.entity";
 import { BotModule } from "./bot/bot.module";
 
 import { UserModule } from "./user/user.module";
-import { CommandModule } from "./command/command.module";
 import { TasksModule } from "./tasks/tasks.module";
+import { CodeModule } from "./code/code.module";
+import { ProgramModule } from "./program/program.module";
+import { MessageModule } from "./message/message.module";
+import { gearService } from "./gear/gear-service";
 
 const entities = [DappData, User];
 
@@ -56,10 +59,17 @@ const entities = [DappData, User];
     TypeOrmModule.forFeature(entities),
     BotModule,
     UserModule,
-    CommandModule,
     TasksModule,
+    CodeModule,
+    ProgramModule,
+    MessageModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: "GearService",
+      useValue: gearService,
+    },
+  ],
 })
 export class AppModule {}

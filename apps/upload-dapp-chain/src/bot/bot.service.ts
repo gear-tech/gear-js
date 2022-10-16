@@ -1,23 +1,29 @@
 import { Injectable, Logger } from "@nestjs/common";
 
-import { CommandService } from "../command/command.service";
 import { DappDataService } from "../dapp-data/dapp-data.service";
 import { Role, TBErrorMessage } from "../common/enums";
 import { UserService } from "../user/user.service";
 import { UserRepo } from "../user/user.repo";
 import { getTgCommands, updateProgramDataByReleaseRepo } from "../common/helpers";
 import { getWorkflowCommands } from "../common/helpers/get-workflow-commands";
-import { SendMessageInput, UploadCodesResult, UploadProgramResult } from "../command/types";
 import { getUploadProgramData } from "../common/helpers/get-upload-program-data";
 import { DappData } from "../dapp-data/entities/dapp-data.entity";
 import { FlowCommand, Payload } from "../common/types";
 import { getUploadProgramByName } from "../common/helpers/get-upload-program-by-name";
+import { CodeService } from "../code/code.service";
+import { MessageService } from "../message/message.service";
+import { ProgramService } from "../program/program.service";
+import { UploadProgramResult } from "../program/types";
+import { UploadCodesResult } from "../code/types";
+import { SendMessageInput } from "../message/types/send-message.input";
 
 @Injectable()
 export class BotService {
   private logger: Logger = new Logger(BotService.name);
   constructor(
-      private commandService: CommandService,
+      private codeService: CodeService,
+      private messageService: MessageService,
+      private programService: ProgramService,
       private dappDataService: DappDataService,
       private userService: UserService,
       private userRepository: UserRepo,
@@ -70,7 +76,7 @@ export class BotService {
 
       return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
     } catch (error) {
-      this.logger.error("_________UPLOAD_DAPPS_ERROR_________");
+      this.logger.error("Upload dapps bot command error");
       console.log(error);
 
       return JSON.stringify(error);
@@ -97,7 +103,7 @@ export class BotService {
 
       return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
     } catch (error) {
-      this.logger.error("_________UPLOAD_CODES_ERROR_________");
+      this.logger.error("Upload codes bot command error");
       console.log(error);
 
       return JSON.stringify(error);
@@ -136,7 +142,7 @@ export class BotService {
 
       return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
     } catch (error) {
-      this.logger.error("_________UPLOAD_DAPP_ERROR_________");
+      this.logger.error("Upload dapp bot command error");
       console.log(error);
 
       return JSON.stringify(error);
@@ -176,7 +182,7 @@ export class BotService {
 
       return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
     } catch (error) {
-      this.logger.error("_________UPLOAD_CODE_ERROR_________");
+      this.logger.error("Upload code bot command error");
       console.log(error);
 
       return JSON.stringify(error);
@@ -190,7 +196,7 @@ export class BotService {
 
         return "✅ Successfully updated programs meta.wasm and opt.wasm download urls";
       } catch (error) {
-        this.logger.error("_________UPDATE_WORKFLOW_PROGRAMS_DATA_ERROR_________");
+        this.logger.error("Update workflow file error");
         console.log(error);
 
         return JSON.stringify(error);
@@ -217,19 +223,20 @@ export class BotService {
           value,
         };
 
-        await this.commandService.sendMessage(sendMessageInput, uploadedPrograms);
+        await this.messageService.send(sendMessageInput, uploadedPrograms);
         return;
       }
 
       if (command === "uploadProgram") {
-        return this.commandService.uploadProgram(uploadProgramData);
+        return this.programService.upload(uploadProgramData);
       }
 
       if (command === "uploadCode") {
-        return this.commandService.uploadCode(uploadProgramData);
+        return this.codeService.upload(uploadProgramData);
       }
     } catch (error) {
-      this.logger.error("_________HANDLE_COMMAND_________");
+      this.logger.error("Handle commands error");
+      this.logger.error(`Program: ${uploadProgramData.dapp}`);
       console.log(error);
     }
   }
