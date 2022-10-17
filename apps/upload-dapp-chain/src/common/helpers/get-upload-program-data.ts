@@ -1,8 +1,8 @@
 import { load } from "js-yaml";
 import { readFileSync } from "fs";
 
-import { WorkflowYamlData } from "../types";
-import { Program } from "../types/program";
+import { WorkflowYamlData, Program } from "../types";
+import "dotenv/config";
 
 export function getUploadProgramData(programNum: string): Program {
   const pathWorkflowYaml = process.env.WORKFLOW_PATH as string;
