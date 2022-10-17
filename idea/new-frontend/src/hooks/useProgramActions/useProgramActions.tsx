@@ -5,13 +5,13 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import { Hex } from '@gear-js/api';
 import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
-import { useModal } from 'hooks';
+import { useChain, useModal } from 'hooks';
 import { uploadLocalProgram } from 'api/LocalDB';
 import { Method } from 'entities/explorer';
 import { ProgramStatus } from 'entities/program';
 import { OperationCallbacks } from 'entities/hooks';
 import { routes, PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'shared/config';
-import { checkWallet, isDevChain, readFileAsync, getExtrinsicFailedMessage } from 'shared/helpers';
+import { checkWallet, readFileAsync, getExtrinsicFailedMessage } from 'shared/helpers';
 import { CustomLink } from 'shared/ui/customLink';
 
 import { useMetadataUplaod } from '../useMetadataUpload';
@@ -23,6 +23,7 @@ const useProgramActions = () => {
   const alert = useAlert();
   const { api } = useApi();
   const { account } = useAccount();
+  const { isDevChain } = useChain();
 
   const { showModal } = useModal();
   const uploadMetadata = useMetadataUplaod();
@@ -113,7 +114,7 @@ const useProgramActions = () => {
 
       const { title: payloadTitle, metadata, metadataBuffer } = payload;
 
-      if (isDevChain()) {
+      if (isDevChain) {
         await uploadLocalProgram({ id: programId, name, owner: account?.decodedAddress!, title: payloadTitle });
       }
 

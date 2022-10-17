@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useAccount, useApi } from '@gear-js/react-hooks';
 import 'simplebar-react/dist/simplebar.min.css';
 
-import { useApp, useEventSubscriptions } from 'hooks';
+import { useApp, useChain, useEventSubscriptions } from 'hooks';
 import { Menu } from 'widgets/menu';
 import { Header } from 'widgets/header';
 import { Footer } from 'widgets/footer';
@@ -17,10 +17,12 @@ import { withProviders } from './providers';
 
 const App = withProviders(() => {
   const { nodeAddress } = useApp();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const { api, isApiReady } = useApi();
   const { isAccountReady } = useAccount();
-
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { isChainRequestReady } = useChain();
+  const isAppReady = isApiReady && isAccountReady && isChainRequestReady;
 
   useEventSubscriptions();
 
@@ -36,7 +38,6 @@ const App = withProviders(() => {
 
   useEffect(() => {
     if (isApiReady) {
-      localStorage.setItem(LocalStorage.Chain, api.runtimeChain.toHuman());
       localStorage.setItem(LocalStorage.Genesis, api.genesisHash.toHex());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,7 +49,7 @@ const App = withProviders(() => {
         <Menu />
         <div className="content">
           <Header />
-          {isApiReady && isAccountReady ? <Routing /> : <Loader />}
+          {isAppReady ? <Routing /> : <Loader />}
         </div>
       </main>
       <Footer />

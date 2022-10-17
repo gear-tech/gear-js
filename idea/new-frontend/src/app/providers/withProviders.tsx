@@ -8,6 +8,7 @@ import { AlertProvider } from './alert';
 import { BlocksProvider } from './blocks';
 import { ModalProvider } from './modal';
 import { EventsProvider } from './events';
+import { ChainProvider } from './chain';
 
 const providers = [
   BrowserRouter,
@@ -18,6 +19,7 @@ const providers = [
   ModalProvider,
   EventsProvider,
   BlocksProvider,
+  ChainProvider,
 ];
 
 const withProviders = (Component: ComponentType) => () =>

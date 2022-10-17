@@ -5,7 +5,7 @@ import isString from 'lodash.isstring';
 import { GearApi } from '@gear-js/api';
 import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
 
-import { DEVELOPMENT_CHAIN, ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes, LocalStorage } from 'shared/config';
+import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from 'shared/config';
 
 import { isHexValid } from './form';
 
@@ -97,9 +97,6 @@ const isHex = (value: string) => {
   return isString(value) && hexRegex.test(value);
 };
 
-// TODO: === (IMPORTANT)
-const isDevChain = () => localStorage.getItem(LocalStorage.Chain) !== DEVELOPMENT_CHAIN;
-
 const isNodeAddressValid = (address: string) => {
   const nodeRegex = /(ws|wss):\/\/[\w-.]+/;
 
@@ -143,7 +140,6 @@ export {
   getNodeAddressFromUrl,
   getExtrinsicFailedMessage,
   isHex,
-  isDevChain,
   isNodeAddressValid,
   isHexValid,
 };

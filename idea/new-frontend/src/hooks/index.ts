@@ -1,7 +1,4 @@
-import { useApp } from './useApp';
-import { useModal } from './useModal';
-import { useEvents } from './useEvents';
-import { useBlocks } from './useBlocks';
+import { useApp, useModal, useBlocks, useEvents, useChain } from './context';
 import { useMessage } from './useMessage';
 import { useOutsideClick } from './useOutsideClick';
 import { useChangeEffect } from './useChangeEffect';
@@ -30,6 +27,7 @@ export {
   useModal,
   useBlocks,
   useEvents,
+  useChain,
   useProgram,
   usePrograms,
   useMessage,

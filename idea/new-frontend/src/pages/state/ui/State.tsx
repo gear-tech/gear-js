@@ -1,8 +1,9 @@
 import { Hex, Metadata } from '@gear-js/api';
+import { fetchMetadata, getLocalProgramMeta } from 'api';
+import { useChain } from 'hooks';
 import { useRef, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { getMetadata } from 'api';
 import { StateForm } from 'widgets/stateForm';
 
 import styles from './State.module.scss';
@@ -15,6 +16,9 @@ const State = () => {
   const metaBuffer = useRef<Buffer>();
   const [metadata, setMetadata] = useState<Metadata>();
 
+  const { isDevChain } = useChain();
+  const getMetadata = isDevChain ? getLocalProgramMeta : fetchMetadata;
+
   useEffect(() => {
     getMetadata(programId).then(({ result }) => {
       const parsedMeta = JSON.parse(result.meta) as Metadata;
@@ -22,6 +26,7 @@ const State = () => {
       metaBuffer.current = Buffer.from(result.metaFile, 'base64');
       setMetadata(parsedMeta);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [programId]);
 
   const isLoading = !metadata || !metaBuffer.current;

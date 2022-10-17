@@ -2,18 +2,18 @@ import { useCallback } from 'react';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useAlert, useAccount } from '@gear-js/react-hooks';
 
-import { useModal } from 'hooks';
 import { uploadLocalMetadata } from 'api/LocalDB';
 import { RPCService } from 'shared/services/rpcService';
-import { isDevChain } from 'shared/helpers';
 import { RpcMethods, ACCOUNT_ERRORS } from 'shared/config';
 
+import { useChain, useModal } from '../context';
 import { ParamsToSignAndUpload, ParamsToUploadMeta } from './types';
 
 const useMetadataUplaod = () => {
   const alert = useAlert();
   const { account } = useAccount();
   const { showModal } = useModal();
+  const { isDevChain } = useChain();
 
   const signAndUpload = async (params: ParamsToSignAndUpload) => {
     const { name, title, signer, metadataBuffer, programId, jsonMeta, reject, resolve } = params;
@@ -63,7 +63,7 @@ const useMetadataUplaod = () => {
 
         const jsonMeta = metadata ? JSON.stringify(metadata) : undefined;
 
-        if (isDevChain()) {
+        if (isDevChain) {
           await uploadLocalMetadata(programId, jsonMeta, metadataBuffer, name);
 
           alert.success('Metadata added to the localDB successfully');

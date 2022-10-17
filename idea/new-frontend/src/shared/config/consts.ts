@@ -6,7 +6,6 @@ const HCAPTCHA_SITE_KEY = process.env.REACT_APP_HCAPTCHA_SITE_KEY as string;
 const WASM_COMPILER_GET = `${process.env.REACT_APP_WASM_COMPILER_URL}/get-wasm`;
 const WASM_COMPILER_BUILD = `${process.env.REACT_APP_WASM_COMPILER_URL}/build`;
 
-const DEVELOPMENT_CHAIN = 'Development';
 const NODE_ADRESS_URL_PARAM = 'node';
 
 const EXAMPLES_HREF = 'https://www.gear-tech.io/developers';
@@ -32,7 +31,6 @@ const PROGRAM_ERRORS = {
 
 enum LocalStorage {
   Nodes = 'nodes',
-  Chain = 'chain',
   Account = 'account',
   Genesis = 'genesis',
   NewUser = 'new_user',
@@ -73,6 +71,7 @@ enum RpcMethods {
   GetCode = 'code.data',
   GetAllCodes = 'code.all',
   GetTestBalance = 'testBalance.get',
+  NetworkData = 'networkData.available',
 }
 
 enum FileTypes {
@@ -94,7 +93,6 @@ export {
   HCAPTCHA_SITE_KEY,
   WASM_COMPILER_GET,
   WASM_COMPILER_BUILD,
-  DEVELOPMENT_CHAIN,
   NODE_ADRESS_URL_PARAM,
   EXAMPLES_HREF,
   DEFAULT_LIMIT,

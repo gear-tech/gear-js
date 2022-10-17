@@ -7,9 +7,8 @@ import { useApi, useAlert, Account, useAccount } from '@gear-js/react-hooks';
 import { TooltipWrapper, buttonStyles } from '@gear-js/ui';
 
 import { getTestBalance } from 'api';
-import { useBalanceTransfer } from 'hooks';
+import { useBalanceTransfer, useChain } from 'hooks';
 import { RecentBlocks } from 'features/recentBlocks';
-import { isDevChain } from 'shared/helpers';
 import { HCAPTCHA_SITE_KEY, AnimationTimeout } from 'shared/config';
 import { ReactComponent as TestBalanceSVG } from 'shared/assets/images/actions/testBalance.svg';
 
@@ -26,6 +25,7 @@ const TopSide = ({ account }: Props) => {
   const alert = useAlert();
   const { api, isApiReady } = useApi();
   const { isAccountReady } = useAccount();
+  const { isDevChain } = useChain();
 
   const captchaRef = useRef<HCaptcha>(null);
 
@@ -102,7 +102,7 @@ const TopSide = ({ account }: Props) => {
                   <button
                     type="button"
                     className={btnClasses}
-                    onClick={isDevChain() ? handleTransferBalanceFromAlice : handleTestBalanceClick}>
+                    onClick={isDevChain ? handleTransferBalanceFromAlice : handleTestBalanceClick}>
                     <TestBalanceSVG />
                   </button>
                 </TooltipWrapper>
