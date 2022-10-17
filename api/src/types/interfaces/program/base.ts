@@ -1,6 +1,7 @@
-import { Enum, u32, u64, Map, BTreeSet } from '@polkadot/types';
+import { Enum, u32, Map, BTreeSet } from '@polkadot/types';
 
 import { MessageId, ProgramId } from '../ids';
+import { DispatchKind } from '../message';
 import { WasmPageNumber } from './pages';
 
 export interface IProgram extends Enum {
@@ -16,7 +17,9 @@ export interface ActiveProgram extends Map {
   allocations: BTreeSet<WasmPageNumber>;
   pages_with_data: BTreeSet<u32>;
   code_hash: Uint8Array;
-  nonce: u64;
+  code_length_bytes: u32;
+  code_exports: BTreeSet<DispatchKind>;
+  static_pages: WasmPageNumber;
   state: IProgramState;
 }
 
