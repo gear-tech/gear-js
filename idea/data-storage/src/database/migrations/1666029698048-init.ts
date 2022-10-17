@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class init1665639222157 implements MigrationInterface {
-  name = 'init1665639222157';
+export class init1666029698048 implements MigrationInterface {
+  name = 'init1666029698048';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query('CREATE TYPE "public"."code_status_enum" AS ENUM(\'Active\', \'Inactive\')');
@@ -9,7 +9,7 @@ export class init1665639222157 implements MigrationInterface {
     await queryRunner.query('CREATE INDEX "IDX_0d3d98dbcf0d87b240911ce6e3" ON "code" ("genesis") ');
     await queryRunner.query('CREATE TABLE "meta" ("id" SERIAL NOT NULL, "program" character varying NOT NULL, "owner" character varying NOT NULL, "meta" character varying, "metaWasm" character varying, CONSTRAINT "PK_c4c17a6c2bd7651338b60fc590b" PRIMARY KEY ("id"))');
     await queryRunner.query('CREATE TYPE "public"."program_type_enum" AS ENUM(\'unknown\', \'active\', \'terminated\', \'init_failed\', \'paused\')');
-    await queryRunner.query('CREATE TABLE "program" ("genesis" character varying NOT NULL, "blockHash" character varying, "timestamp" TIMESTAMP, "_id" uuid NOT NULL DEFAULT uuid_generate_v4(), "id" character varying NOT NULL, "owner" character varying NOT NULL, "name" character varying NOT NULL, "title" character varying, "type" "public"."program_type_enum" NOT NULL DEFAULT \'unknown\', "code_id" uuid, "meta_id" integer, CONSTRAINT "PK_0927f29c435c391dcb574ccfb7a" PRIMARY KEY ("_id"))');
+    await queryRunner.query('CREATE TABLE "program" ("genesis" character varying NOT NULL, "blockHash" character varying, "timestamp" TIMESTAMP, "_id" uuid NOT NULL DEFAULT uuid_generate_v4(), "id" character varying NOT NULL, "owner" character varying NOT NULL, "name" character varying NOT NULL, "title" character varying, "expiration" integer, "type" "public"."program_type_enum" NOT NULL DEFAULT \'unknown\', "code_id" uuid, "meta_id" integer, CONSTRAINT "PK_0927f29c435c391dcb574ccfb7a" PRIMARY KEY ("_id"))');
     await queryRunner.query('CREATE INDEX "IDX_634f57814226ec9e93ea5e5da9" ON "program" ("genesis") ');
     await queryRunner.query('CREATE INDEX "IDX_a8dbdd1e11aad73e620bcefbb9" ON "program" ("owner") ');
     await queryRunner.query('CREATE TYPE "public"."message_entry_enum" AS ENUM(\'init\', \'handle\', \'reply\')');
