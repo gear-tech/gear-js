@@ -14,12 +14,15 @@
       "allocations": "BTreeSet<WasmPageNumber>",
       "pages_with_data": "BTreeSet<PageNumber>",
       "code_hash": "H256",
+      "code_length_bytes": "u32",
+      "code_exports": "BTreeSet<DispatchKind>",
+      "static_pages": "WasmPageNumber",
       "state": "ProgramState"
     },
     "ProgramState": {
       "_enum": {
         "Uninitialized": {
-          "message_id": "H256"
+          "message_id": "MessageId"
         },
         "Initialized": "Null"
       }
