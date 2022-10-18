@@ -1,6 +1,6 @@
 import { Metadata, CreateType } from '@gear-js/api';
 
-import { IMessage, Entry } from 'entities/message';
+import { IMessage, EntryPoint } from 'entities/message';
 
 const getDecodedMessagePayload = (meta: Metadata, message: IMessage) => {
   const { entry, payload } = message;
@@ -8,15 +8,15 @@ const getDecodedMessagePayload = (meta: Metadata, message: IMessage) => {
   let type: string | undefined;
 
   switch (entry) {
-    case Entry.Init: {
+    case EntryPoint.Init: {
       type = meta.init_output;
       break;
     }
-    case Entry.Reply: {
+    case EntryPoint.Reply: {
       type = meta.async_handle_output;
       break;
     }
-    case Entry.Handle: {
+    case EntryPoint.Handle: {
       type = meta.handle_output;
       break;
     }

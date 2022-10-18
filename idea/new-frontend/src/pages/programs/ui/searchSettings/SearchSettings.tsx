@@ -41,20 +41,20 @@ const SearchSettings = ({ isLoggedIn, initialValues, onSubmit }: Props) => {
         <FilterGroup title="Status" name="status" withReset>
           <StatusCheckbox
             name="status"
-            value={ProgramStatus.Success}
-            label={PROGRAM_STATUS_NAME[ProgramStatus.Success]}
+            value={ProgramStatus.Active}
+            label={PROGRAM_STATUS_NAME[ProgramStatus.Active]}
             status={BulbStatus.Success}
           />
           <StatusCheckbox
             name="status"
-            value={ProgramStatus.InProgress}
-            label={PROGRAM_STATUS_NAME[ProgramStatus.InProgress]}
+            value={ProgramStatus.Paused}
+            label={PROGRAM_STATUS_NAME[ProgramStatus.Paused]}
             status={BulbStatus.Loading}
           />
           <StatusCheckbox
             name="status"
-            value={ProgramStatus.Failed}
-            label={PROGRAM_STATUS_NAME[ProgramStatus.Failed]}
+            value={ProgramStatus.Terminated}
+            label={PROGRAM_STATUS_NAME[ProgramStatus.Terminated]}
             status={BulbStatus.Error}
           />
         </FilterGroup>

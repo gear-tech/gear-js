@@ -1,7 +1,7 @@
 interface IBase {
   genesis: string;
+  timestamp: string;
   blockHash: string | null;
-  timestamp: string | null;
 }
 
 export type { IBase };

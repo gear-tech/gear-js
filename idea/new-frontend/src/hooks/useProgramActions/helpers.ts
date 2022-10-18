@@ -29,7 +29,7 @@ const waitForProgramInit = (api: GearApi, programId: string) => {
             // eslint-disable-next-line no-restricted-syntax
             for (const [id, status] of mdEvent.data.statuses) {
               if (id.eq(messageId) && status.isFailed) {
-                resolve(ProgramStatus.Failed);
+                resolve(ProgramStatus.Terminated);
               }
             }
 
@@ -39,7 +39,7 @@ const waitForProgramInit = (api: GearApi, programId: string) => {
             const pcEvent = event as ProgramChanged;
 
             if (pcEvent.data.id.eq(programId) && pcEvent.data.change.isActive) {
-              resolve(ProgramStatus.Success);
+              resolve(ProgramStatus.Active);
             }
 
             break;

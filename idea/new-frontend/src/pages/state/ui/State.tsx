@@ -21,9 +21,11 @@ const State = () => {
 
   useEffect(() => {
     getMetadata(programId).then(({ result }) => {
+      if (!result.meta || !result.metaWasm) return Promise.reject(new Error('No metadata'));
+
       const parsedMeta = JSON.parse(result.meta) as Metadata;
 
-      metaBuffer.current = Buffer.from(result.metaFile, 'base64');
+      metaBuffer.current = Buffer.from(result.metaWasm, 'base64');
       setMetadata(parsedMeta);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

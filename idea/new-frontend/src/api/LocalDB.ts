@@ -3,11 +3,8 @@ import localForage from 'localforage';
 import { ProgramStatus, IProgram } from 'entities/program';
 
 import { ProgramPaginationModel } from './program';
-import { FetchMetadataResponse } from './metadata';
 
-const PROGRAMS_LOCAL_FORAGE = localForage.createInstance({
-  name: 'programs',
-});
+const PROGRAMS_LOCAL_FORAGE = localForage.createInstance({ name: 'programs' });
 
 const getLocalProgram = (id: string) =>
   PROGRAMS_LOCAL_FORAGE.getItem<IProgram>(id).then((response) => {
@@ -21,7 +18,7 @@ const getLocalProgram = (id: string) =>
 const getLocalProgramMeta = (id: string) =>
   PROGRAMS_LOCAL_FORAGE.getItem<IProgram>(id).then((response) => {
     if (response?.meta) {
-      return { result: response.meta as FetchMetadataResponse };
+      return { result: response.meta };
     }
 
     return Promise.reject(new Error('Metadata not found'));
@@ -62,7 +59,7 @@ const uploadLocalProgram = (program: Pick<IProgram, 'id' | 'owner' | 'name' | 't
     ...program,
     meta: null,
     timestamp: Date(),
-    initStatus: ProgramStatus.Success,
+    status: ProgramStatus.Active,
   });
 
 const uploadLocalMetadata = async (programId: string, meta?: string, metaBuffer?: string, name?: string) => {
@@ -74,7 +71,7 @@ const uploadLocalMetadata = async (programId: string, meta?: string, metaBuffer?
     meta: {
       meta,
       program: programId,
-      metaFile: metaBuffer,
+      metaWasm: metaBuffer,
     },
   });
 };

@@ -11,9 +11,9 @@ type Props = {
 };
 
 const ProgramTable = ({ program }: Props) => {
-  const { id, timestamp, initStatus } = program;
+  const { id, timestamp, status } = program;
 
-  const statusName = PROGRAM_STATUS_NAME[initStatus];
+  const statusName = PROGRAM_STATUS_NAME[status];
 
   return (
     <Table>
@@ -21,7 +21,7 @@ const ProgramTable = ({ program }: Props) => {
         <IdBlock id={id} size="big" />
       </TableRow>
       <TableRow name="Status">
-        <BulbBlock size="large" text={statusName} status={getBulbStatus(initStatus)} />
+        <BulbBlock size="large" text={statusName} status={getBulbStatus(status)} />
       </TableRow>
       <TableRow name="Created at">
         <TimestampBlock size="large" timestamp={timestamp} />

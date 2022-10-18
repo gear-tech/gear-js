@@ -4,7 +4,6 @@ import { Input } from '@gear-js/ui';
 
 import { OwnerFilter } from 'api/consts';
 import { Filters, FilterGroup, Radio, Checkbox } from 'features/filters';
-import { Type } from 'entities/message';
 import { AnimationTimeout } from 'shared/config';
 
 import styles from './SearchSettings.module.scss';
@@ -39,9 +38,8 @@ const SearchSettings = ({ isLoggedIn, initialValues, onSubmit }: Props) => {
           <Input name="createAt" type="date" />
         </FilterGroup>
         <FilterGroup title="Location" name="location" withReset>
-          <Checkbox name="location" value={Type.ProgramChanged} label="In mailbox" />
-          <Checkbox name="location" value={Type.DatabaseWiped} label="Sent messages" />
-          <Checkbox name="location" value={Type.MessageEnqueued} label="Received messages" />
+          <Checkbox name="location" value="sent message" label="Sent messages" />
+          <Checkbox name="location" value="recieved messages" label="Received messages" />
         </FilterGroup>
       </Filters>
     </section>

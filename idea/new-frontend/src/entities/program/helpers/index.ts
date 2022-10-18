@@ -4,9 +4,9 @@ import { ProgramStatus } from '../model/consts';
 
 const getBulbStatus = (programStatus: ProgramStatus): BulbStatus => {
   switch (programStatus) {
-    case ProgramStatus.Success:
+    case ProgramStatus.Active:
       return BulbStatus.Success;
-    case ProgramStatus.InProgress:
+    case ProgramStatus.Paused:
       return BulbStatus.Loading;
     default:
       return BulbStatus.Error;

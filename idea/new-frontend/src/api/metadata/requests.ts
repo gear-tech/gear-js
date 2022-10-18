@@ -1,11 +1,10 @@
 import { rpcService } from 'shared/services/rpcService';
 import { RpcMethods } from 'shared/config';
 
-import { AddMedatataParams, FetchMetadataResponse } from './types';
+import { IMeta } from 'entities/metadata';
 
-const addMetadata = (params: AddMedatataParams) => rpcService.callRPC(RpcMethods.AddMetadata, params);
+const addMetadata = (params: IMeta) => rpcService.callRPC(RpcMethods.AddMetadata, params);
 
-const fetchMetadata = (programId: string) =>
-  rpcService.callRPC<FetchMetadataResponse>(RpcMethods.GetMetadata, { programId });
+const fetchMetadata = (programId: string) => rpcService.callRPC<IMeta>(RpcMethods.GetMetadata, { programId });
 
 export { addMetadata, fetchMetadata };

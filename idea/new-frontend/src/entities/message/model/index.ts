@@ -1,5 +1,5 @@
 import { IMessage } from './types';
-import { Type, Entry, ReadReason } from './consts';
+import { Type, EntryPoint, ReadReason } from './consts';
 
-export { Type, Entry, ReadReason };
+export { Type, EntryPoint, ReadReason };
 export type { IMessage };

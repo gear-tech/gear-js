@@ -8,7 +8,6 @@ import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OP
 import { useChain, useModal } from 'hooks';
 import { uploadLocalProgram } from 'api/LocalDB';
 import { Method } from 'entities/explorer';
-import { ProgramStatus } from 'entities/program';
 import { OperationCallbacks } from 'entities/hooks';
 import { routes, PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'shared/config';
 import { checkWallet, readFileAsync, getExtrinsicFailedMessage } from 'shared/helpers';
@@ -105,7 +104,8 @@ const useProgramActions = () => {
 
       const programMessage = getProgramMessage(programId);
 
-      if (initStatus === ProgramStatus.Failed) {
+      // TODO: replace w/ ProgramStatus.Terminated
+      if (initStatus === 'failed') {
         alert.error(programMessage, ALERT_OPTIONS);
         reject();
 
@@ -115,7 +115,7 @@ const useProgramActions = () => {
       const { title: payloadTitle, metadata, metadataBuffer } = payload;
 
       if (isDevChain) {
-        await uploadLocalProgram({ id: programId, name, owner: account?.decodedAddress!, title: payloadTitle });
+        await uploadLocalProgram({ id: programId, name, owner: account?.decodedAddress!, title: payloadTitle || null });
       }
 
       if (name) {

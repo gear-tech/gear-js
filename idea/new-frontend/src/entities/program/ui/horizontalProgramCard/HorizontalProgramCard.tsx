@@ -20,13 +20,13 @@ type Props = {
 };
 
 const HorizontalProgramCard = memo(({ program, withSendMessage }: Props) => {
-  const { id: programId, name, initStatus, timestamp } = program;
+  const { id: programId, name, status, timestamp } = program;
 
   const stopPropagation = (event: MouseEvent<HTMLAnchorElement>) => {
     event.stopPropagation();
   };
 
-  const statusName = PROGRAM_STATUS_NAME[initStatus];
+  const statusName = PROGRAM_STATUS_NAME[status];
 
   return (
     <article className={styles.horizontalProgramCard}>
@@ -34,7 +34,7 @@ const HorizontalProgramCard = memo(({ program, withSendMessage }: Props) => {
         <h1 className={styles.name}>{name}</h1>
         <div className={styles.otherInfo}>
           <IdBlock id={programId} size="medium" withIcon color="light" />
-          <BulbBlock color="light" text={statusName} status={getBulbStatus(initStatus)} />
+          <BulbBlock color="light" text={statusName} status={getBulbStatus(status)} />
           <TimestampBlock color="light" withIcon timestamp={timestamp} />
         </div>
       </div>

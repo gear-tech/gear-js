@@ -20,13 +20,13 @@ type Props = {
 };
 
 const ProgramCard = memo(({ program, withSendMessage }: Props) => {
-  const { id: programId, name, initStatus, timestamp } = program;
+  const { id: programId, name, status, timestamp } = program;
 
   const stopPropagation = (event: MouseEvent<HTMLAnchorElement>) => {
     event.stopPropagation();
   };
 
-  const statusName = PROGRAM_STATUS_NAME[initStatus];
+  const statusName = PROGRAM_STATUS_NAME[status];
 
   return (
     <article className={styles.programCard}>
@@ -35,7 +35,7 @@ const ProgramCard = memo(({ program, withSendMessage }: Props) => {
         <h2 className={styles.name}>{name}</h2>
         <IdBlock id={programId} size="small" color="light" withIcon className={styles.idBlock} />
         <div className={styles.otherInfo}>
-          <BulbBlock text={statusName} color="light" status={getBulbStatus(initStatus)} className={styles.bulbBlock} />
+          <BulbBlock text={statusName} color="light" status={getBulbStatus(status)} className={styles.bulbBlock} />
           <TimestampBlock color="light" withIcon timestamp={timestamp} />
         </div>
       </div>
