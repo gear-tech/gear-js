@@ -1,23 +1,22 @@
-import { Hex } from '@gear-js/api';
+import { IProgram } from 'entities/program';
+import { IBase } from 'shared/types';
 
-import { Type, Entry, ReadReason } from './consts';
+import { Type, EntryPoint, ReadReason } from './consts';
 
-interface IMessage {
+interface IMessage extends IBase {
   id: string;
-  type: Type;
-  entry: Entry | null;
-  value: string;
+  destination: string;
   source: string;
-  genesis: string;
+  value: string;
   payload: string | null;
   exitCode: number | null;
-  blockHash: string;
-  timestamp: string;
-  readStatus: ReadReason;
-  expiration: null | number;
-  destination: string;
-  replyToMessageId: Hex | null;
+  replyToMessageId: string | null;
   processedWithPanic: boolean | null;
+  entry: EntryPoint | null;
+  expiration: number | null;
+  type: Type | null;
+  readReason: ReadReason | null;
+  program: IProgram | null;
 }
 
 export type { IMessage };

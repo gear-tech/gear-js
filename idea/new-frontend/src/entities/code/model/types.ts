@@ -1,13 +1,17 @@
+import { IMeta } from 'entities/metadata';
+import { IProgram } from 'entities/program';
+import { IBase } from 'shared/types';
+
 import { CodeStatus } from './consts';
 
-interface ICode {
+interface ICode extends IBase {
+  _id: string;
   id: string;
   name: string;
   status: CodeStatus;
-  expiration: null | number;
-  genesis: string;
-  blockHash: string | null;
-  timestamp: string;
+  meta: IMeta;
+  programs: IProgram[];
+  expiration: string | null;
 }
 
 export type { ICode };

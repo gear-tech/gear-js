@@ -1,23 +1,27 @@
-enum Entry {
-  Init = 'Init',
-  Handle = 'Handle',
-  Reply = 'Reply',
-}
-
 enum Type {
-  CodeChanged = 'CodeChanged',
-  DatabaseWiped = 'DatabaseWiped',
-  ProgramChanged = 'ProgramChanged',
   MessageEnqueued = 'MessageEnqueued',
   UserMessageSent = 'UserMessageSent',
-  UserMessageRead = 'UserMessageRead',
-  MessagesDispatched = 'MessagesDispatched',
+
+  // TODO: db entity has only MessageEnqueued and UserMessageSent values,
+  // do we need the rest?
+
+  // CodeChanged = 'CodeChanged',
+  // DatabaseWiped = 'DatabaseWiped',
+  // ProgramChanged = 'ProgramChanged',
+  // UserMessageRead = 'UserMessageRead',
+  // MessagesDispatched = 'MessagesDispatched',
 }
 
 enum ReadReason {
-  Replied = 'Replied',
-  Claimed = 'Claimed',
   OutOfRent = 'OutOfRent',
+  Claimed = 'Claimed',
+  Replied = 'Replied',
 }
 
-export { Type, Entry, ReadReason };
+enum EntryPoint {
+  Init = 'init',
+  Handle = 'handle',
+  Reply = 'reply',
+}
+
+export { Type, EntryPoint, ReadReason };
