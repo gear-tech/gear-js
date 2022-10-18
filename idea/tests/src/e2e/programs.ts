@@ -134,7 +134,7 @@ export async function checkInitStatus(genesis: string, programId: string, init: 
     genesis,
     id: programId,
   };
-  const status = init ? 'active' : 'init_failed';
+  const status = init ? 'active' : 'terminated';
   const response = await request('program.data', data);
   expect(response).to.have.property('result');
 

@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { GetAllCodeParams } from '@gear-js/common';
 
 import { Code } from '../database/entities';
-import { sqlWhereWithILike } from '../utils/sql-where-with-ilike';
 import { PAGINATION_LIMIT } from '../common/constants';
 import { CodeStatus } from '../common/enums';
 import { queryFilter } from '../common/helpers';

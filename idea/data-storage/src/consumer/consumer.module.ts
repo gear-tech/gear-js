@@ -9,6 +9,7 @@ import { MessageModule } from '../message/message.module';
 import { ConsumerService } from './consumer.service';
 import { CodeModule } from '../code/code.module';
 import { ProducerModule } from '../producer/producer.module';
+import { BlockModule } from '../block/block.module';
 
 const configKafka = configuration().kafka;
 
@@ -39,6 +40,7 @@ const configKafka = configuration().kafka;
     ProgramModule,
     MessageModule,
     CodeModule,
+    BlockModule,
   ],
   controllers: [ConsumerController],
   providers: [ConsumerService],

@@ -28,6 +28,8 @@ import { CodeService } from '../code/code.service';
 import { kafkaEventMap } from '../common/kafka-event.map';
 import { kafkaNetworkData } from '../common/kafka-network-data';
 import { ProducerService } from '../producer/producer.service';
+import { BlockService } from '../block/block.service';
+import { Block } from '../database/entities';
 
 @Injectable()
 export class ConsumerService {
@@ -37,6 +39,7 @@ export class ConsumerService {
     private metaService: MetadataService,
     private codeService: CodeService,
     private producerService: ProducerService,
+    private blockService: BlockService,
   ) {}
 
   @FormResponse
@@ -77,6 +80,11 @@ export class ConsumerService {
   @FormResponse
   async code(params: GetCodeParams): Result<ICode> {
     return await this.codeService.getByIdAndGenesis(params);
+  }
+
+  @FormResponse
+  async blocksStatus(): Result<Block> {
+    return await this.blockService.getLastBlock();
   }
 
   async servicesPartition(): Promise<void> {

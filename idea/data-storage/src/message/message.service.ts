@@ -58,7 +58,7 @@ export class MessageService {
       if (statuses[messageId] === 'Failed') {
         const message = await this.messageRepository.get(messageId, genesis);
         if (message.entry === MessageEntryPoint.INIT) {
-          await this.programService.setStatus(message.destination, genesis, ProgramStatus.INIT_FAILED);
+          await this.programService.setStatus(message.destination, genesis, ProgramStatus.TERMINATED);
         }
       }
     }

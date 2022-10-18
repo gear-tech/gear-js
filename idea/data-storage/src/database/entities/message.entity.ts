@@ -12,11 +12,11 @@ export class Message extends BaseEntity implements IMessage {
 
   @Index()
   @Column()
-    destination: string;
+    destination: string; //received messages
 
   @Index()
   @Column()
-    source: string;
+    source: string; //sent messages
 
   @Column({ nullable: true })
     payload: string;

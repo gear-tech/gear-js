@@ -6,6 +6,7 @@ import { ProgramModule } from '../program/program.module';
 import { MessageModule } from '../message/message.module';
 import { CodeModule } from '../code/code.module';
 import { ProducerModule } from '../producer/producer.module';
+import { BlockModule } from '../block/block.module';
 
 
 @Module({
@@ -14,7 +15,8 @@ import { ProducerModule } from '../producer/producer.module';
     ProgramModule,
     MessageModule,
     CodeModule,
-    ProducerModule
+    ProducerModule,
+    BlockModule
   ],
   providers: [GearEventListener],
   exports: [GearEventListener],

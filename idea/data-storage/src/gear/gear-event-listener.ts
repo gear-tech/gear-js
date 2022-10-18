@@ -21,6 +21,7 @@ import { CreateProgramInput } from '../program/types';
 import configuration from '../config/configuration';
 import { kafkaNetworkData } from '../common/kafka-network-data';
 import { ProducerService } from '../producer/producer.service';
+import { BlockService } from '../block/block.service';
 
 const { gear } = configuration();
 
@@ -37,6 +38,7 @@ export class GearEventListener {
     private codeService: CodeService,
     private codeRepository: CodeRepo,
     private producerService: ProducerService,
+    private blockService: BlockService,
   ) {}
 
   public async run() {
@@ -83,6 +85,7 @@ export class GearEventListener {
       const blockHash = block.createdAtHash.toHex();
       const timestamp = (await this.api.blocks.getBlockTimestamp(block)).toNumber();
 
+      await this.handleBlocks(block, timestamp, blockHash);
       await this.handleExtrinsics(block, timestamp);
 
       for (const {
@@ -143,14 +146,14 @@ export class GearEventListener {
     }
   }
 
-  private async handleExtrinsics(block: SignedBlockExtended, ts: number) {
+  private async handleExtrinsics(block: SignedBlockExtended, timestamp: number) {
     const status = this.api.createType('ExtrinsicStatus', { finalized: block.createdAtHash });
 
-    await this.handleCodeExtrinsics(block, status, ts);
+    await this.handleCodeExtrinsics(block, status, timestamp);
 
-    await this.handleProgramExtrinsics(block, status, ts);
+    await this.handleProgramExtrinsics(block, status, timestamp);
 
-    await this.handleMessageExtrinsics(block, status, ts);
+    await this.handleMessageExtrinsics(block, status, timestamp);
   }
 
   private async handleMessageExtrinsics(block: SignedBlockExtended, status: ExtrinsicStatus, timestamp: number) {
@@ -261,5 +264,15 @@ export class GearEventListener {
     }
 
     if(codes.length >= 1) await this.codeService.updateCodes(codes);
+  }
+
+  private async handleBlocks(block: SignedBlockExtended, timestamp: number, blockHash: Hex) {
+    const blockNumber = block.block.header.toHuman().number as string;
+
+    await this.blockService.createBlocks([{
+      hash: blockHash,
+      numberBlockInNode: blockNumber,
+      timestamp,
+    }]);
   }
 }
