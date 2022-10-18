@@ -115,7 +115,7 @@ describe('Program service', () => {
       updateProgramStatusInput.status,
     );
     expect(program.status).toEqual(updateProgramStatusInput.status);
-    expect(program.status).not.toEqual(ProgramStatus.INIT_FAILED);
+    expect(program.status).not.toEqual(ProgramStatus.TERMINATED);
     expect(program.status).not.toEqual(ProgramStatus.PAUSED);
     expect(mockProgramRepository.save).toHaveBeenCalled();
   });
