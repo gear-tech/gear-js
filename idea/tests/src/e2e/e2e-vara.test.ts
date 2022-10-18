@@ -137,7 +137,7 @@ describe('VARA_NODE networkDataAvailable method (depends on connection node)', (
   });
 });
 
-describe('block method', () => {
+describe('VARA_NODE block method', () => {
   test('blocks.status request', async () => {
     expect(await blocksStatus(genesis)).toBeTruthy();
   });
