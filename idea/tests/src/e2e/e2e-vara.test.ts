@@ -16,6 +16,7 @@ import { getAllMessages, getMessageData, getMessagePayload, getMessagesByDates }
 import { getCodeData, getCodes, getCodesByDates } from './code';
 import base from '../config/base';
 import { networkDataAvailable } from './network-data-available';
+import { blocksStatus } from './block';
 
 let genesis: Hex;
 let prepared: IPrepared;
@@ -53,8 +54,8 @@ describe('VARA_NODE program methods', () => {
     expect(await getAllProgramsByStatus(genesis, 'active')).toBeTruthy();
   });
 
-  test('program.all by status (init_failed) request', async () => {
-    expect(await getAllProgramsByStatus(genesis, 'init_failed')).toBeTruthy();
+  test('program.all by status (terminated) request', async () => {
+    expect(await getAllProgramsByStatus(genesis, 'terminated')).toBeTruthy();
   });
 
   test('program.all by dates request', async () => {
@@ -133,5 +134,11 @@ describe('VARA_NODE code methods', () => {
 describe('VARA_NODE networkDataAvailable method (depends on connection node)', () => {
   test('networkData.available request', async () => {
     expect(await networkDataAvailable(genesis)).toBeTruthy();
+  });
+});
+
+describe('block method', () => {
+  test('blocks.status request', async () => {
+    expect(await blocksStatus(genesis)).toBeTruthy();
   });
 });

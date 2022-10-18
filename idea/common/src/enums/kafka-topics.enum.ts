@@ -12,7 +12,8 @@ enum KAFKA_TOPICS {
   CODE_DATA = 'code.data',
   MESSAGES_UPDATE_DATA = 'messages.update.data',
   SERVICE_PARTITION_GET = 'service.partition.get',
-  SERVICES_PARTITION = 'services.partition'
+  SERVICES_PARTITION = 'services.partition',
+  BLOCKS_STATUS = 'blocks.status',
 }
 
 export { KAFKA_TOPICS };

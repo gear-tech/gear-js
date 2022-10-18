@@ -9,7 +9,8 @@ enum API_METHODS {
   TEST_BALANCE_AVAILABLE = 'testBalance.available',
   CODE_ALL = 'code.all',
   CODE_DATA = 'code.data',
-  NETWORK_DATA_AVAILABLE = 'networkData.available'
+  NETWORK_DATA_AVAILABLE = 'networkData.available',
+  BLOCKS_STATUS = 'blocks.status',
 }
 
 export { API_METHODS };
