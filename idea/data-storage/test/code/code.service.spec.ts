@@ -36,6 +36,7 @@ describe('Code service', () => {
       blockHash: '0x0000000000000000',
       status: CodeStatus.ACTIVE,
       expiration: '111',
+      uploadedBy: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
     };
 
     const codes = await codeService.updateCodes([updateCodeInput]);

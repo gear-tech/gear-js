@@ -12,11 +12,11 @@ export class Message extends BaseEntity implements IMessage {
 
   @Index()
   @Column()
-    destination: string; //received messages
+    destination: string;
 
   @Index()
   @Column()
-    source: string; //sent messages
+    source: string;
 
   @Column({ nullable: true })
     payload: string;
@@ -46,7 +46,7 @@ export class Message extends BaseEntity implements IMessage {
     readReason: MessageReadReason;
 
   @ManyToOne(() => Program, (program) => program.messages, {
-    nullable: true
+    nullable: true,
   })
   @JoinColumn({ name: 'program_id' })
     program: Program;

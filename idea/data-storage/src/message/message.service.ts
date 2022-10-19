@@ -1,10 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import {
-  AllMessagesResult,
-  FindMessageParams,
-  GetMessagesParams,
-  IMessage,
-} from '@gear-js/common';
+import { AllMessagesResult, FindMessageParams, GetMessagesParams, IMessage } from '@gear-js/common';
 
 import { Message } from '../database/entities';
 import { ProgramService } from '../program/program.service';
