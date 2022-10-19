@@ -40,7 +40,7 @@ const Programs = () => {
 
       if (!owner) return;
 
-      changeParams({ owner: decodedAddress });
+      changeParams((prevParams) => ({ ...prevParams, owner: decodedAddress }));
 
       if (!decodedAddress) setInitialValues({ owner: OwnerFilter.All, status });
     },

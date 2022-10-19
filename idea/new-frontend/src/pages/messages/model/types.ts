@@ -1,19 +1,17 @@
-import { OwnerFilter } from 'api/consts';
-import { Sort } from 'features/sortBy';
-import { Type } from 'entities/message';
-
 type FiltersValues = {
-  createAt: string;
-  location: Type[];
-  destination: OwnerFilter;
+  owner: string;
+  isRerender: boolean; // TODO: get rid of monkey patch
+};
+
+type ParamsValues = {
+  query?: string;
+  owner?: string;
 };
 
 type RequestParams = {
   query?: string;
-  sortBy?: Sort;
-  location?: Type[];
-  createAt?: string;
   destination?: string;
+  source?: string;
 };
 
-export type { FiltersValues, RequestParams };
+export type { FiltersValues, ParamsValues, RequestParams };

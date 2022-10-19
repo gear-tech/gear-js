@@ -2,12 +2,11 @@ import { FormEvent } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { Input } from '@gear-js/ui';
 
-import { OwnerFilter } from 'api/consts';
-import { Filters, FilterGroup, Radio, Checkbox } from 'features/filters';
+import { Filters, FilterGroup, Radio } from 'features/filters';
 import { AnimationTimeout } from 'shared/config';
 
-import styles from './SearchSettings.module.scss';
 import { FiltersValues } from '../../model/types';
+import styles from './SearchSettings.module.scss';
 
 type Props = {
   isLoggedIn: boolean;
@@ -28,18 +27,17 @@ const SearchSettings = ({ isLoggedIn, initialValues, onSubmit }: Props) => {
         <Input name="search" type="search" placeholder="Search by program ID, message ID..." />
       </form>
       <Filters initialValues={initialValues} onSubmit={onSubmit}>
-        <FilterGroup name="destination">
+        <FilterGroup name="owner">
+          <Radio name="owner" value="all" label="All messages" />
           <CSSTransition in={isLoggedIn} exit={false} timeout={AnimationTimeout.Medium} mountOnEnter unmountOnExit>
-            <Radio name="destination" value={OwnerFilter.User} label="My messages" className={styles.ownerFilter} />
+            <>
+              <Radio name="owner" value="source" label="Sent messages" className={styles.ownerFilter} />
+              <Radio name="owner" value="destination" label="Recieved messages" className={styles.ownerFilter} />
+            </>
           </CSSTransition>
-          <Radio name="destination" value={OwnerFilter.All} label="All messages" />
         </FilterGroup>
         <FilterGroup name="createAt" title="Created at">
           <Input name="createAt" type="date" />
-        </FilterGroup>
-        <FilterGroup title="Location" name="location" withReset>
-          <Checkbox name="location" value="sent message" label="Sent messages" />
-          <Checkbox name="location" value="recieved messages" label="Received messages" />
         </FilterGroup>
       </Filters>
     </section>
