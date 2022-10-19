@@ -7,4 +7,5 @@ export interface UpdateCodeInput {
   timestamp: number;
   blockHash: string;
   expiration?: string | null;
+  uploadedBy: string;
 }

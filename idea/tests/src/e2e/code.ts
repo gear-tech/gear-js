@@ -12,7 +12,6 @@ async function getCodes(genesis: string, codeIds: Hex[]): Promise<Passed> {
   return true;
 }
 
-
 async function getCodesByDates(genesis: string, date: Date): Promise<Passed> {
   const fromDate = new Date(date);
   fromDate.setMinutes(fromDate.getMinutes() - 5);
@@ -24,7 +23,7 @@ async function getCodesByDates(genesis: string, date: Date): Promise<Passed> {
 
   const isValidCodesData = response.result.listCode.reduce((arr, code: any) => {
     const createdProgramDate = new Date(code.timestamp);
-    if(createdProgramDate > fromDate && createdProgramDate < toDate) {
+    if (createdProgramDate > fromDate && createdProgramDate < toDate) {
       arr.push(true);
     } else {
       arr.push(false);
@@ -35,7 +34,7 @@ async function getCodesByDates(genesis: string, date: Date): Promise<Passed> {
 
   expect(response).to.have.own.property('result');
   expect(response.result).to.have.all.keys(['listCode', 'count']);
-  expect(isValidCodesData.every(el => el === true)).to.eq(true);
+  expect(isValidCodesData.every((el) => el === true)).to.eq(true);
   return true;
 }
 
@@ -45,6 +44,7 @@ async function getCodeData(genesis: string, codeId: Hex) {
   expect(response.result).to.have.all.keys([
     'id',
     '_id',
+    'uploadedBy',
     'name',
     'status',
     'expiration',
@@ -52,7 +52,7 @@ async function getCodeData(genesis: string, codeId: Hex) {
     'blockHash',
     'timestamp',
     'programs',
-    'meta'
+    'meta',
   ]);
   return true;
 }
