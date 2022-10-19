@@ -5,5 +5,5 @@ export function getTgCommands(): string {
   + "/uploadCodes" + "\n"
   + "/uploadCode [dappName]" + "\n"
   + "/addAccessUser [telegramUserId]" + "\n"
-  + "/updateWasmUrlsWorkflow";
+  + "/updateWorkflowWasmUrls";
 }
