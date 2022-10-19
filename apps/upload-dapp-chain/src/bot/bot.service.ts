@@ -4,7 +4,7 @@ import { DappDataService } from "../dapp-data/dapp-data.service";
 import { Role, TBErrorMessage } from "../common/enums";
 import { UserService } from "../user/user.service";
 import { UserRepo } from "../user/user.repo";
-import { getTgCommands, updateProgramDataByReleaseRepo } from "../common/helpers";
+import { getTgCommands, updateWasmUrlsByLastReleasesRepo } from "../common/helpers";
 import { getWorkflowCommands } from "../common/helpers/get-workflow-commands";
 import { getUploadProgramData } from "../common/helpers/get-upload-program-data";
 import { DappData } from "../dapp-data/entities/dapp-data.entity";
@@ -189,10 +189,10 @@ export class BotService {
     }
   }
 
-  public async updateWasmUrlsWorkflow(userId: number): Promise<string> {
+  public async updateWorkflowWasmUrls(userId: number): Promise<string> {
     if (await this.userService.isAdmin(String(userId))) {
       try {
-        await updateProgramDataByReleaseRepo();
+        await updateWasmUrlsByLastReleasesRepo();
 
         return "✅ Successfully updated programs meta.wasm and opt.wasm download urls";
       } catch (error) {
