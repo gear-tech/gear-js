@@ -1,13 +1,11 @@
-import { IGenesis, ISignature } from './common';
+import { IDates, IGenesis, ISignature } from './common';
 import { IMessage, UpdateMessageData } from './message';
 import { IPaginationParams } from './pagination';
 import { IProgram } from './program';
 
-interface GetMessagesParams extends IGenesis, IPaginationParams, SearchParam {
+interface GetMessagesParams extends IGenesis, IPaginationParams, SearchParam, IDates {
   destination?: string;
   source?: string;
-  fromDate?: string;
-  toDate?: string;
 }
 
 interface FindMessageParams extends IGenesis, Pick<IMessage, 'id'> {}
@@ -16,18 +14,15 @@ interface GetIncomingMessagesParams extends IGenesis, IPaginationParams, Pick<IM
 
 interface GetOutgoingMessagesParams extends IGenesis, IPaginationParams, Pick<IMessage, 'source'> {}
 
-interface GetAllProgramsParams extends IGenesis, IPaginationParams, SearchParam {
+interface GetAllProgramsParams extends IGenesis, IPaginationParams, SearchParam, IDates {
   publicKeyRaw?: string;
   owner?: string;
-  fromDate?: string;
-  toDate?: string;
   status?: string | string[];
 }
 
-interface GetAllCodeParams extends IGenesis, IPaginationParams, SearchParam {
+interface GetAllCodeParams extends IGenesis, IPaginationParams, SearchParam, IDates {
   name?: string;
-  fromDate?: string;
-  toDate?: string;
+  uploadedBy?: string;
 }
 
 interface GetAllUserProgramsParams extends IGenesis, IPaginationParams, Pick<IProgram, 'owner'>, SearchParam {}

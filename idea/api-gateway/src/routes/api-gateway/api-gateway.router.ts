@@ -7,7 +7,7 @@ import { checkGenesisMiddleware } from '../../middleware';
 
 export const apiGatewayRouter = Router({});
 
-apiGatewayRouter.post('', testBalanceMiddleware, checkGenesisMiddleware, async (req: Request, res: Response) => {
+apiGatewayRouter.post('', checkGenesisMiddleware, testBalanceMiddleware, async (req: Request, res: Response) => {
   try {
     const result = await apiGatewayService.rpc(req.body);
     res.json(result);

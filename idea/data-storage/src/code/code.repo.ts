@@ -27,11 +27,11 @@ export class CodeRepo {
   }
 
   public async listPaginationByGenesis(params: GetAllCodeParams): Promise<[Code[], number]> {
-    const { genesis, query, limit, offset, name, toDate, fromDate } = params;
+    const { genesis, query, limit, offset, name, toDate, fromDate, uploadedBy } = params;
     return this.codeRepo.findAndCount({
       where: queryFilter(
         { genesis, status: CodeStatus.ACTIVE },
-        { query, name, toDate, fromDate },
+        { query, name, toDate, fromDate, uploadedBy },
         ['id', 'name']),
       take: limit || PAGINATION_LIMIT,
       skip: offset || 0,

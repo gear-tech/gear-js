@@ -3,7 +3,7 @@ import {
   FindMessageParams,
   FindProgramParams,
   GetAllProgramsParams,
-  GetAllUserProgramsParams,
+  GetAllUserProgramsParams, GetCodeParams,
   GetIncomingMessagesParams,
   GetMessagesParams,
   GetMetaParams,
@@ -28,3 +28,4 @@ export type KafkaParams =
   | GetTestBalanceParams
   | GetAllUserProgramsParams
   | NetworkKafkaPartition
+  | GetCodeParams
