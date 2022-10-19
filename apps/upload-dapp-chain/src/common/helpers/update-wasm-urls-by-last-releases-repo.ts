@@ -1,7 +1,5 @@
-import { load } from "js-yaml";
-import { readFileSync } from "fs";
-import * as fs from "fs";
-import * as yaml from "js-yaml";
+import { load, dump } from "js-yaml";
+import { readFileSync, writeFile } from "fs";
 
 import "dotenv/config";
 
@@ -41,7 +39,7 @@ function getOptAndMetaDownloadUrl(dapp: string, repoAssets: Asset[]): string[] {
   return res;
 }
 
-export async function updateProgramDataByReleaseRepo(): Promise<void> {
+export async function updateWasmUrlsByLastReleasesRepo(): Promise<void> {
   const pathWorkflowYaml = process.env.WORKFLOW_PATH as string;
   // eslint-disable-next-line no-path-concat
   const workflowYamlData = load(readFileSync(__dirname + pathWorkflowYaml, "utf8")) as WorkflowYamlData;
@@ -57,12 +55,12 @@ export async function updateProgramDataByReleaseRepo(): Promise<void> {
       programData.metaDownloadUrl = metaDownloadUrl;
       programData.optDownloadUrl = optDownloadUrl;
     } catch (error) {
-      console.log("_________UPDATE_WORKFLOW_YAML_DAPP_DATA_ERROR_________", error);
+      console.log("Update program data by release error", error);
     }
   }
 
   // eslint-disable-next-line no-path-concat
-  fs.writeFile(__dirname + pathWorkflowYaml, yaml.dump(workflowYamlData), (error) => {
-    if (error) console.log("_________UPDATE_WORKFLOW_YAML_FILE_ERROR_________", error);
+  writeFile(__dirname + pathWorkflowYaml, dump(workflowYamlData), (error) => {
+    if (error) console.log("Write workflow yaml file error  ", error);
   });
 }

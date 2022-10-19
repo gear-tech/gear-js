@@ -14,7 +14,7 @@ export async function getLatestReleaseByRepo(repo: string): Promise<AxiosRespons
         `${process.env.GITHUB_API_BASE_URL}/repos/${process.env.GITHUB_OWNER_REPO}/${repo}/releases/latest`,
       ).toPromise();
   } catch (error) {
-    console.log("_____________________GetLatestRelease_Error___________________");
+    console.log("Get latest releases by repository error");
     console.log(error);
   }
 }
