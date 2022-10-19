@@ -50,10 +50,10 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-new-frontend:qa
           build-args: |
-            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS_NEW_FE }}
-            REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL_NEW_FE }}
+            REACT_APP_NODE_ADDRESS_NEW_FE=${{ secrets.REACT_APP_NODE_ADDRESS_NEW_FE }}
+            REACT_APP_API_URL_NEW_FE=${{ secrets.REACT_APP_API_URL_NEW_FE }}
             REACT_APP_WASM_COMPILER_URL=${{ secrets.REACT_APP_WASM_COMPILER_URL }}
-            REACT_APP_DEFAULT_NODES_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL_NEW_FE }}
+            REACT_APP_DEFAULT_NODES_URL_NEW_FE=${{ secrets.REACT_APP_DEFAULT_NODES_URL_NEW_FE }}
             REACT_APP_HCAPTCHA_SITE_KEY=${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
 
   deploy-to-k8s-dev:
