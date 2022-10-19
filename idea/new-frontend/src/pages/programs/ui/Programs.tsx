@@ -1,15 +1,15 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAccount } from '@gear-js/react-hooks';
 
 import { OwnerFilter } from 'api/consts';
 import { usePrograms, useDataLoading } from 'hooks';
-import { Sort, SortBy } from 'features/sortBy';
+import { ProgramStatus } from 'entities/program';
 
-import styles from './Programs.module.scss';
 import { RequestParams } from '../model/types';
 import { DEFAULT_REQUEST_PARAMS, DEFAULT_FILTER_VALUES } from '../model/consts';
 import { ProgramsList } from './programsList';
 import { SearchSettings } from './searchSettings';
+import styles from './Programs.module.scss';
 
 const Programs = () => {
   const { account } = useAccount();
@@ -24,45 +24,37 @@ const Programs = () => {
 
   const decodedAddress = account?.decodedAddress;
 
-  const handleParamsChange = useCallback(
-    ({ query, owner }: RequestParams) =>
-      changeParams({
-        query,
-        owner: owner === OwnerFilter.All ? undefined : decodedAddress,
-      }),
-    [changeParams, decodedAddress],
-  );
+  const getOwnerParam = (owner: string) => (owner === OwnerFilter.All ? undefined : decodedAddress);
+  const getStatusParam = (status: ProgramStatus[] | undefined) => (status && status.length > 0 ? status : undefined);
 
-  const handleSortChange = (sortBy: Sort) => changeParams({ sortBy });
+  const handleParamsChange = ({ query, owner, status }: RequestParams) =>
+    changeParams((prevParams) => ({
+      query: query ?? prevParams.query,
+      owner: owner ? getOwnerParam(owner) : prevParams.owner,
+      status: status ? getStatusParam(status) : prevParams.status,
+    }));
 
   useEffect(
     () => {
-      const { owner, createAt = '', status = [] } = params;
+      const { owner, status = [] } = params;
 
-      if (!owner) {
-        return;
-      }
+      if (!owner) return;
 
-      changeParams({ owner: decodedAddress || undefined });
+      changeParams({ owner: decodedAddress });
 
-      if (!decodedAddress) {
-        setInitialValues({
-          owner: OwnerFilter.All,
-          status,
-          createAt,
-        });
-      }
+      if (!decodedAddress) setInitialValues({ owner: OwnerFilter.All, status });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [decodedAddress],
   );
 
   const isLoggedIn = Boolean(account);
+  const heading = `Programs: ${totalCount}`;
 
   return (
     <div className={styles.pageWrapper}>
       <section className={styles.programsSection}>
-        <SortBy title="programs" count={totalCount} onChange={handleSortChange} />
+        <h2 className={styles.heading}>{heading}</h2>
         <ProgramsList
           programs={programs}
           totalCount={totalCount}

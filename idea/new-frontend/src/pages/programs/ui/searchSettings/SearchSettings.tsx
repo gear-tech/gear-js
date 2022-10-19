@@ -30,10 +30,10 @@ const SearchSettings = ({ isLoggedIn, initialValues, onSubmit }: Props) => {
       </form>
       <Filters initialValues={initialValues} onSubmit={onSubmit}>
         <FilterGroup name="owner">
+          <Radio name="owner" value="all" label="All programs" />
           <CSSTransition in={isLoggedIn} exit={false} timeout={AnimationTimeout.Medium} mountOnEnter unmountOnExit>
             <Radio name="owner" value="owner" label="My programs" className={styles.ownerFilter} />
           </CSSTransition>
-          <Radio name="owner" value="all" label="All programs" />
         </FilterGroup>
         <FilterGroup name="createAt" title="Created at">
           <Input name="createAt" type="date" />

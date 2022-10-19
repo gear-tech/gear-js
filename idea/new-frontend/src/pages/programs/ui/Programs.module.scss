@@ -1,4 +1,6 @@
-@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/mixins' as *;
+@use 'shared/assets/styles/variables' as *;
+@use '@gear-js/ui/headings' as *;
 
 .pageWrapper {
   @include childrenMargin(22px, right);
@@ -8,4 +10,9 @@
   .programsSection {
     flex: 1 1;
   }
+}
+
+.heading {
+  @include heading(24px, 1.3, 500);
+  color: $gray800;
 }

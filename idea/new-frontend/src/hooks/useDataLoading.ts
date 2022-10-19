@@ -18,13 +18,7 @@ const useDataLoading = <T>({ initLoad = true, defaultParams, fetchData }: Props<
         offset.current = 0;
       }
 
-      fetchData(
-        {
-          ...params,
-          offset: offset.current,
-        },
-        isReset,
-      ).then(() => {
+      fetchData({ ...params, offset: offset.current }, isReset).then(() => {
         offset.current += DEFAULT_LIMIT;
       });
     },
