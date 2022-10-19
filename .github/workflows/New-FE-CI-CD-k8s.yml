@@ -27,7 +27,6 @@ jobs:
   build-new-frontend-image-staging:
     runs-on: ubuntu-latest
     needs: [wait-previous-run]
-    environment: staging
     permissions:
       contents: read
       packages: write
