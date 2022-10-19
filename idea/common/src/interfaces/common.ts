@@ -3,8 +3,8 @@ interface IGenesis {
 }
 
 interface IDates {
-  fromDate: string;
-  toDate: string;
+  fromDate?: string;
+  toDate?: string;
 }
 
 interface IBaseDBRecord<Timestamp extends Date | number> extends IGenesis {
