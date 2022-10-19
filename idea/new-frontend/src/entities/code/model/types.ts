@@ -8,6 +8,7 @@ interface ICode extends IBase {
   name: string;
   status: CodeStatus;
   expiration: string | null;
+  uploadedBy: string;
 }
 
 export type { ICode };
