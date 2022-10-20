@@ -47,7 +47,7 @@ export class ProgramRepo {
         ['id', 'title', 'name']),
       take: limit || PAGINATION_LIMIT,
       skip: offset || 0,
-      relations: ['meta', 'messages', 'code'],
+      relations: ['meta', 'code'],
       select: { meta: { meta: true, program: true, id: true } },
       order: {
         timestamp: 'DESC',
