@@ -1,8 +1,8 @@
 import { FormEvent } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { Input } from '@gear-js/ui';
+import { useAccount } from '@gear-js/react-hooks';
 
-import { OwnerFilter } from 'api/consts';
 import { Filters, FilterGroup, Radio } from 'features/filters';
 import { AnimationTimeout } from 'shared/config';
 
@@ -16,6 +16,8 @@ type Props = {
 };
 
 const SearchSettings = ({ isLoggedIn, initialValues, onSubmit }: Props) => {
+  const { account } = useAccount();
+
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     // @ts-ignore
@@ -28,11 +30,11 @@ const SearchSettings = ({ isLoggedIn, initialValues, onSubmit }: Props) => {
         <Input name="search" type="search" placeholder="Search by name, id..." />
       </form>
       <Filters initialValues={initialValues} onSubmit={onSubmit}>
-        <FilterGroup name="destination">
+        <FilterGroup name="uploadedBy">
+          <Radio name="uploadedBy" value="none" label="All codes" />
           <CSSTransition in={isLoggedIn} exit={false} timeout={AnimationTimeout.Medium} mountOnEnter unmountOnExit>
-            <Radio name="destination" value={OwnerFilter.User} label="My codes" className={styles.ownerFilter} />
+            <Radio name="uploadedBy" value={account?.decodedAddress} label="My codes" className={styles.ownerFilter} />
           </CSSTransition>
-          <Radio name="destination" value={OwnerFilter.All} label="All codes" />
         </FilterGroup>
         <FilterGroup name="createAt" title="Created at">
           <Input name="createAt" type="date" />

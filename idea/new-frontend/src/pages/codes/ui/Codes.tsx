@@ -1,9 +1,7 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAccount } from '@gear-js/react-hooks';
 
-import { OwnerFilter } from 'api/consts';
 import { useCodes, useDataLoading } from 'hooks';
-import { Sort, SortBy } from 'features/sortBy';
 
 import styles from './Codes.module.scss';
 import { RequestParams } from '../model/types';
@@ -24,44 +22,38 @@ const Codes = () => {
 
   const decodedAddress = account?.decodedAddress;
 
-  const handleParamsChange = useCallback(
-    ({ query, destination }: RequestParams) =>
-      changeParams({
-        query,
-        destination: destination === OwnerFilter.All ? undefined : decodedAddress,
-      }),
-    [changeParams, decodedAddress],
-  );
+  const getUploadedByParam = (value: string) => (value === 'none' ? undefined : value);
 
-  const handleSortChange = (sortBy: Sort) => changeParams({ sortBy });
+  const handleParamsChange = ({ query, uploadedBy }: RequestParams) => {
+    changeParams((prevParams) => ({
+      query: query ?? prevParams.query,
+      uploadedBy: uploadedBy ? getUploadedByParam(uploadedBy) : prevParams.uploadedBy,
+    }));
+  };
 
   useEffect(
     () => {
-      const { destination, createAt = '' } = params;
+      const { uploadedBy } = params;
 
-      if (!destination) {
-        return;
-      }
+      if (!uploadedBy) return;
 
-      changeParams({ destination: decodedAddress || undefined });
+      changeParams((prevParams) => ({ ...prevParams, uploadedBy: decodedAddress }));
 
-      if (!decodedAddress) {
-        setInitialValues({
-          createAt,
-          destination: OwnerFilter.All,
-        });
-      }
+      // TODO: monkey patch to rerender on user logout
+      // this is bad, Filters component should be refactored
+      setInitialValues((prevValues) => ({ uploadedBy: decodedAddress || 'none', isRerender: !prevValues.isRerender }));
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [decodedAddress],
   );
 
   const isLoggedIn = Boolean(account);
+  const heading = `Codes: ${totalCount}`;
 
   return (
     <div className={styles.pageWrapper}>
       <section className={styles.codesSection}>
-        <SortBy title="Codes" count={totalCount} onChange={handleSortChange} />
+        <h2 className={styles.heading}>{heading}</h2>
         <CodesList codes={codes} totalCount={totalCount} isLoading={isLoading} loadMorePrograms={loadData} />
       </section>
       <SearchSettings isLoggedIn={isLoggedIn} initialValues={initialValues} onSubmit={handleParamsChange} />

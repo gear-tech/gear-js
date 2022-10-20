@@ -1,16 +1,11 @@
-import { OwnerFilter } from 'api/consts';
-import { Sort } from 'features/sortBy';
-
 type FiltersValues = {
-  createAt: string;
-  destination: OwnerFilter;
+  uploadedBy: string;
+  isRerender: boolean; // TODO: get rid of monkey patch
 };
 
 type RequestParams = {
   query?: string;
-  sortBy?: Sort;
-  createAt?: string;
-  destination?: string;
+  uploadedBy?: string;
 };
 
 export type { FiltersValues, RequestParams };
