@@ -11,8 +11,11 @@ export class BlockRepo {
     private blockRepo: Repository<Block>,
   ) {}
 
-  public async getLastBlock(): Promise<Block[]> {
+  public async getLastBlock(genesis: string): Promise<Block[]> {
     return this.blockRepo.find({
+      where:{
+        genesis
+      },
       order: {
         timestamp: 'DESC',
       },

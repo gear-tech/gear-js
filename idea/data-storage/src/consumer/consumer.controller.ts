@@ -79,8 +79,8 @@ export class ConsumerController {
 
   @MessagePattern(KAFKA_TOPICS.BLOCKS_STATUS)
   @KafkaMessagePartition
-  async blocksStatus(@Payload() payload: any): Promise<string> {
-    const result = await this.consumerService.blocksStatus();
+  async blocksStatus(@Payload() payload: KafkaPayload<any>): Promise<string> {
+    const result = await this.consumerService.blocksStatus(payload.value);
     return JSON.stringify(result);
   }
 

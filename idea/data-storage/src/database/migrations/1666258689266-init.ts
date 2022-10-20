@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class init1666169322491 implements MigrationInterface {
-    name = 'init1666169322491'
+export class init1666258689266 implements MigrationInterface {
+    name = 'init1666258689266'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
@@ -116,8 +116,12 @@ export class init1666169322491 implements MigrationInterface {
                 "number" character varying NOT NULL,
                 "hash" character varying,
                 "timestamp" TIMESTAMP,
+                "genesis" character varying NOT NULL,
                 CONSTRAINT "PK_51cafb3a347f80b2e155f1185a9" PRIMARY KEY ("_id")
             )
+        `);
+        await queryRunner.query(`
+            CREATE INDEX "IDX_a08fe3dc85de760c624254da6a" ON "block" ("genesis")
         `);
         await queryRunner.query(`
             ALTER TABLE "code"
@@ -149,6 +153,9 @@ export class init1666169322491 implements MigrationInterface {
         `);
         await queryRunner.query(`
             ALTER TABLE "code" DROP CONSTRAINT "FK_8aa019d7912f73ed38fc8138152"
+        `);
+        await queryRunner.query(`
+            DROP INDEX "public"."IDX_a08fe3dc85de760c624254da6a"
         `);
         await queryRunner.query(`
             DROP TABLE "block"

@@ -1,4 +1,4 @@
-import { FindOptionsWhere, Repository, UpdateResult } from 'typeorm';
+import { FindOptionsWhere, MoreThan, Repository, UpdateResult } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GetMessagesParams } from '@gear-js/common';
@@ -16,13 +16,18 @@ export class MessageRepo {
   ) {}
 
   public async listByIdAndSourceAndDestination(params: GetMessagesParams): Promise<[Message[], number]> {
-    const { genesis, source, query, destination, limit, offset, toDate, fromDate } = params;
+    const { genesis, source, query, destination, limit, offset, toDate, fromDate, mailbox } = params;
     const strictParams = { genesis };
     if (source) {
       strictParams['source'] = source;
     }
     if (destination) {
       strictParams['destination'] = destination;
+    }
+    if(mailbox){
+      strictParams['source'] = source;
+      strictParams['expiration'] = MoreThan(0);
+      strictParams['readReason'] = null;
     }
     return this.messageRepo.findAndCount({
       where: queryFilter(

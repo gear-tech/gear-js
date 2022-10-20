@@ -25,6 +25,7 @@ describe('Block service', () => {
 
   it('should be successfully create block entity', async () => {
     const createBlockInput: CreateBlockInput = {
+      genesis: '0x00',
       timestamp: new Date() as any,
       hash: '0x0000000000000000',
       numberBlockInNode: '1'
@@ -41,8 +42,9 @@ describe('Block service', () => {
   it('should be successfully get last block from block table', async () => {
     const dates = BLOCK_DB_MOCK.map(block => block.timestamp);
     const maxDate = new Date(Math.max(...dates as any));
+    const genesis = BLOCK_DB_MOCK[0].genesis;
 
-    const lastBlock = await blockService.getLastBlock();
+    const lastBlock = await blockService.getLastBlock(genesis);
 
     expect(lastBlock.timestamp).toEqual(maxDate);
     expect(mockBlockRepository.getLastBlock).toHaveBeenCalled();

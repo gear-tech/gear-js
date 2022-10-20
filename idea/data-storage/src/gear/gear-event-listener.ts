@@ -275,6 +275,7 @@ export class GearEventListener {
         hash: blockHash,
         numberBlockInNode: blockNumber,
         timestamp,
+        genesis: this.genesis
       },
     ]);
   }

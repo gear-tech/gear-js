@@ -9,8 +9,8 @@ import { Block } from '../database/entities';
 export class BlockService {
   constructor(private blockRepository: BlockRepo) {}
 
-  public async getLastBlock(): Promise<Block>{
-    const blockList = await this.blockRepository.getLastBlock();
+  public async getLastBlock(genesis: string): Promise<Block>{
+    const blockList = await this.blockRepository.getLastBlock(genesis);
 
     return blockList[0];
   }

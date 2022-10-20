@@ -12,6 +12,7 @@ export async function blocksStatus(genesis: string): Promise<Passed> {
     'number',
     'hash',
     'timestamp',
+    'genesis'
   ]);
   return true;
 }

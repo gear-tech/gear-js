@@ -8,13 +8,13 @@ export function KafkaMessagePartition(
   const originalMethod = descriptor.value;
   const kafkaMessage = '0';
 
-  descriptor.value = async function SafeWrapper() {
+  descriptor.value = function SafeWrapper() {
     try {
       const message = arguments[kafkaMessage] as Message;
-      if(message.partition === kafkaNetworkData.partition) return await originalMethod.apply(this, arguments);
+      if(message.partition === kafkaNetworkData.partition) return originalMethod.apply(this, arguments);
     } catch (ex) {
       console.log(ex);
-      return { error: ex.name };
+      return Promise.resolve({ error: ex.name });
     }
   };
   return descriptor;

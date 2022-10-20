@@ -6,6 +6,7 @@ import { IProgram } from './program';
 interface GetMessagesParams extends IGenesis, IPaginationParams, SearchParam, IDates {
   destination?: string;
   source?: string;
+  mailbox?: boolean;
 }
 
 interface FindMessageParams extends IGenesis, Pick<IMessage, 'id'> {}

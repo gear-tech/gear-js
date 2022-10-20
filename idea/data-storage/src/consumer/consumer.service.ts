@@ -83,8 +83,8 @@ export class ConsumerService {
   }
 
   @FormResponse
-  async blocksStatus(): Result<Block> {
-    return await this.blockService.getLastBlock();
+  async blocksStatus(params: any): Result<Block> {
+    return await this.blockService.getLastBlock(params.genesis);
   }
 
   async servicesPartition(): Promise<void> {
