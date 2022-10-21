@@ -1,11 +1,17 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_mixins.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
+@use '@gear-js/ui/mixins' as *;
 
 .recentBlockItem {
+  @include transition;
   border-radius: 16px;
   background-color: $gray004;
   padding: toRem(12) toRem(24);
+
+  &:hover {
+    background-color: rgba($gray004, 0.25);
+  }
 
   .hash {
     color: $gray800;

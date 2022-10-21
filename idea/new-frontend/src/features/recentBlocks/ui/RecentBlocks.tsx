@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
+import { useLocation } from 'react-router-dom';
 import { buttonStyles } from '@gear-js/ui';
 
 import { useBlocks, useOutsideClick } from 'hooks';
@@ -20,9 +21,12 @@ const RecentBlocks = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [timeInstance, setTimeInstance] = useState(0);
 
-  const toggleList = () => setIsOpen((prevState) => !prevState);
+  const openList = () => setIsOpen(true);
+  const closeList = () => setIsOpen(false);
 
-  const sectionRef = useOutsideClick<HTMLSelectElement>(toggleList, isOpen);
+  const sectionRef = useOutsideClick<HTMLSelectElement>(closeList, isOpen);
+
+  const location = useLocation();
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -48,6 +52,10 @@ const RecentBlocks = () => {
     setBlock(lastBlock);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blocks]);
+
+  useEffect(() => {
+    closeList();
+  }, [location]);
 
   const time = `${timeInstance.toFixed(1)} s`;
   const blockNumber = `#${block?.number ?? '00000'}`;
@@ -78,7 +86,7 @@ const RecentBlocks = () => {
                 <span className={styles.time}>{time}</span>
               </p>
             </div>
-            <button type="button" className={buttonClasses} onClick={toggleList}>
+            <button type="button" className={buttonClasses} onClick={openList}>
               <ArrowSVG />
             </button>
           </div>
