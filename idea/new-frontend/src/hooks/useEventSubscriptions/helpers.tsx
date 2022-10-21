@@ -2,7 +2,7 @@ import { generatePath } from 'react-router-dom';
 import { Hex, UserMessageSent, Transfer, encodeAddress } from '@gear-js/api';
 import { AlertContainerFactory } from '@gear-js/react-hooks';
 
-import { routes } from 'shared/config';
+import { absoluteRoutes } from 'shared/config';
 import { CustomLink } from 'shared/ui/customLink';
 
 const messageSentEventsHandler = (event: UserMessageSent, address: Hex, alert: AlertContainerFactory) => {
@@ -23,7 +23,7 @@ const messageSentEventsHandler = (event: UserMessageSent, address: Hex, alert: A
   showAlert(
     <>
       <p>
-        ID: <CustomLink to={generatePath(routes.message, { messageId })} text={messageId} />
+        ID: <CustomLink to={generatePath(absoluteRoutes.message, { messageId })} text={messageId} />
       </p>
       {isError && <p>{payload.toHuman() as string}</p>}
     </>,
