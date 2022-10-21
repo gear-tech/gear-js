@@ -10,12 +10,20 @@ const Message = () => {
   const { messageId } = useParams() as PageParams;
 
   const { message, isLoading: isMesageLoading } = useMessage(messageId);
-  const { metadata, isLoading: isProgramLoading } = useProgram(message?.source, true);
+
+  const programId = message?.program?.id;
+  const isProgram = !!programId;
+
+  const { metadata, isLoading: isProgramLoading } = useProgram(programId, true);
 
   return (
     <div>
       <Header messageId={messageId} exitCode={message?.exitCode} timestamp={message?.timestamp} />
-      <MessageInfo metadata={metadata} message={message} isLoading={isMesageLoading || isProgramLoading} />
+      <MessageInfo
+        metadata={metadata}
+        message={message}
+        isLoading={isMesageLoading || (isProgram && isProgramLoading)}
+      />
     </div>
   );
 };
