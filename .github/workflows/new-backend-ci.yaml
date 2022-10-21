@@ -77,70 +77,9 @@ jobs:
           file: idea/api-gateway/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:new
-
-  build-and-push-gear-node-image:
-    if: github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
-    needs: [wait-previous-run]
-    environment: dev
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Data Storage Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: k8s/gear-node/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-node:dev
-
-  build-and-push-gear-vara-node-image:
-    if: github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
-    needs: [wait-previous-run]
-    environment: dev
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Data Storage Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: k8s/vara-node/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-node:dev
-
-  purge-k8s-test-env:
-    needs:
-      [
-        build-data-storage-image,
-        build-api-gateway-image,
-        build-and-push-gear-vara-node-image,
-        build-and-push-gear-node-image,
-        wait-previous-run,
-      ]
+          
+  deploy-to-k8s-prod:
+    needs: [ build-data-storage-image, build-api-gateway-image ]
     runs-on: ubuntu-latest
 
     steps:
@@ -150,90 +89,13 @@ jobs:
           aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-          
-      - name: Scale up vara deployment
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: scale --replicas=1 deployment vara-node -n $KUBE_NAMESPACE
 
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment api-gateway gear-node postgres postgres-vara postgres-testbalance-testenv -n $KUBE_NAMESPACE
+          args: rollout restart deployment data-storage api-gateway -n new-backend
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n $KUBE_NAMESPACE --timeout=120s
-
-      - name: Rollout data-storage-gear
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: rollout restart deployment data-storage -n $KUBE_NAMESPACE
-          
-      - name: Scale up data-storage-vara
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: scale --replicas=1 deployment data-storage-vara -n $KUBE_NAMESPACE
-          
-      - name: Scale up test-balance
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: scale --replicas=1 deployment test-balance-testenv -n $KUBE_NAMESPACE
-
-      - name: Check k8s deployment data-storage
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: rollout status deployment data-storage -n $KUBE_NAMESPACE --timeout=120s
-
-  run-e2e-tests:
-    needs: [purge-k8s-test-env, wait-previous-run]
-    runs-on: ubuntu-latest
-    environment: dev
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Install NodeJS 16.x
-        uses: actions/setup-node@v2.1.5
-        with:
-          node-version: 16.x
-
-      - name: Prepare&Run Tests
-        working-directory: idea/tests
-        timeout-minutes: 7
-        env:
-          API_ENDPOINT: ${{ secrets.API_ADDRESS_URL_NEW_BE }}
-          WS_PROVIDER: ${{ secrets.WS_PROVIDER_URL_NEW_BE }}
-          WS_PROVIDER_VARA: ${{ secrets.WS_PROVIDER_VARA_URL_TEST }}
-          TEST_ENV: ${{ secrets.TEST_ENV }}
-        run: |
-          YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
-          yarn test
-          
-      - name: Configure AWS credentials
-        if: always()
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-                   
-      - name: Scale down vara deployment
-        if: always()
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: scale --replicas=0 deployment vara-node -n $KUBE_NAMESPACE
-          
-      - name: Deploy down data-storage-vara
-        if: always()
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: scale --replicas=0 deployment data-storage-vara -n $KUBE_NAMESPACE
-          
-      - name: Scale down test-balance
-        if: always()
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: scale --replicas=0 deployment test-balance-testenv -n $KUBE_NAMESPACE
+          args: get deployment -o name -n new-backend | xargs -n1 -t kubectl rollout status -n new-backend --timeout=120s
