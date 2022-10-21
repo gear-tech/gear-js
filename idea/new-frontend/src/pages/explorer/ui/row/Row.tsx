@@ -39,13 +39,10 @@ const Row = ({ extrinsic, events }: Props) => {
   const { isSigned, signer } = extrinsic;
   const { weight } = getDispatchInfo() || {};
 
-  const formattedSigner = isSigned && signer.toString();
-  const formattedWeight = weight?.toString();
+  const formattedSigner = isSigned && (signer.toHuman() as { Id: string }); // TODO: asserting cuz polkadot types are wrong
+  const formattedWeight = weight && (weight.toHuman() as unknown as { refTime: string; proofSize: string });
   const rowClassName = clsx(commonStyles.row, styles.row);
   const signerClassName = clsx(commonStyles.alignRight, styles.signer);
-
-  console.log(weight?.toHuman());
-  console.log(signer?.toHuman());
 
   return (
     <div className={rowClassName}>
@@ -53,8 +50,8 @@ const Row = ({ extrinsic, events }: Props) => {
         <Extrinsic extrinsic={extrinsic} />
       </div>
       <div>{getEvents()}</div>
-      <span className={commonStyles.alignRight}>{formattedWeight}</span>
-      <span className={signerClassName}>{formattedSigner}</span>
+      <span className={commonStyles.alignRight}>{formattedWeight && formattedWeight.refTime}</span>
+      <span className={signerClassName}>{formattedSigner && formattedSigner.Id}</span>
     </div>
   );
 };
