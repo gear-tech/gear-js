@@ -31,7 +31,7 @@ const useMetadataUplaod = () => {
         name,
         meta: jsonMeta,
         title,
-        metaFile: metadataBuffer,
+        metaWasm: metadataBuffer,
         signature,
         programId,
       });

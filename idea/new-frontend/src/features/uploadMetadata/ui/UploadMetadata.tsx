@@ -90,7 +90,6 @@ const UploadMetadata = ({ metadata, onReset, onUpload }: Props) => {
         label="Metadata file"
         direction="y"
         className={clsx(formStyles.field, formStyles.gap16)}
-        data-testid="metaFileInput"
         onChange={handleUploadMetaFile}
       />
       {metadata ? renderMetadataProperties(metadata) : null}

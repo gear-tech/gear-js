@@ -130,12 +130,7 @@ const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
               block
             />
             {values && (
-              <FileInput
-                accept={FileTypes.Json}
-                className={styles.fileInput}
-                data-testid="payloadFileInput"
-                onChange={handleUploadManualPayload}
-              />
+              <FileInput accept={FileTypes.Json} className={styles.fileInput} onChange={handleUploadManualPayload} />
             )}
           </>
         )}
