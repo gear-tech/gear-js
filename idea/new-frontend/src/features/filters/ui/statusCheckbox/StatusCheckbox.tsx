@@ -1,4 +1,6 @@
-import { ChangeEvent } from 'react';
+// TODO: remove after repo @types/react resolution drop
+// @ts-ignore
+import { ChangeEvent, useId } from 'react';
 import { useField, useForm } from 'react-final-form';
 import clsx from 'clsx';
 import { CheckboxProps, checkboxStyles } from '@gear-js/ui';
@@ -17,6 +19,8 @@ const StatusCheckbox = ({ name, label, value, status }: Props) => {
   const { input } = useField(name, { type: 'checkbox', value });
   const { submit } = useForm();
 
+  const id = useId();
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     input.onChange(event);
     submit();
@@ -25,9 +29,9 @@ const StatusCheckbox = ({ name, label, value, status }: Props) => {
   const inputClasses = clsx(checkboxStyles.input, checkboxStyles.checkbox);
 
   return (
-    <label htmlFor={input.name} className={checkboxStyles.label}>
+    <label htmlFor={id} className={checkboxStyles.label}>
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-      <input {...input} className={inputClasses} onChange={handleChange} />
+      <input {...input} id={id} className={inputClasses} onChange={handleChange} />
       <BulbBlock size="large" color="primary" status={status} text={label} className={styles.status} />
     </label>
   );
