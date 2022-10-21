@@ -1,9 +1,10 @@
-import { Link } from 'react-router-dom';
+import { generatePath, Link } from 'react-router-dom';
 import { Tooltip } from '@gear-js/ui';
 
 import { IdBlock } from 'shared/ui/idBlock';
 import blockSVG from 'shared/assets/images/indicators/block.svg';
 
+import { absoluteRoutes } from 'shared/config';
 import styles from './HorizontalWaitlistItem.module.scss';
 import { WaitlistContent, Interval } from '../../model/types';
 
@@ -23,7 +24,7 @@ const HorizontalWaitlistItem = ({ content, interval }: Props) => (
       </span>
       <Tooltip text="Start block - finish block" className={styles.tooltip} />
     </div>
-    <Link to="/" className={styles.link} />
+    <Link to={generatePath(absoluteRoutes.message, { messageId: content.message.id })} className={styles.link} />
   </article>
 );
 
