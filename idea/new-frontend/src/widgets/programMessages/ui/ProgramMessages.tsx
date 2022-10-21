@@ -21,11 +21,12 @@ type Props = {
 const ProgramMessages = ({ programId }: Props) => {
   const { account } = useAccount();
 
+  // TODO: reuse messages from program.data request?
   const messagesData = useMessages();
   const waitlistData = useWaitlist();
 
   const isLoggedIn = Boolean(account);
-  const destination = account?.decodedAddress;
+  const source = account?.decodedAddress;
 
   const [activeFilter, setActiveFilter] = useState(isLoggedIn ? MessageFilter.Messages : MessageFilter.Waitlist);
 
@@ -35,10 +36,7 @@ const ProgramMessages = ({ programId }: Props) => {
   const { loadData: loadMessages, changeParams } = useDataLoading<PaginationModel>({
     initLoad: isLoggedIn,
     fetchData: fetchMessages,
-    defaultParams: {
-      source: programId,
-      destination,
-    },
+    defaultParams: { destination: programId, source },
   });
 
   const checkActive = (filter: MessageFilter) => filter === activeFilter;
@@ -69,15 +67,12 @@ const ProgramMessages = ({ programId }: Props) => {
   }, []);
 
   useChangeEffect(() => {
-    if (destination) {
-      changeParams({
-        source: programId,
-        destination,
-      });
+    if (source) {
+      changeParams({ destination: programId, source });
     } else {
       setActiveFilter(MessageFilter.Waitlist);
     }
-  }, [destination]);
+  }, [source]);
 
   return (
     <div className={styles.programMessages}>
