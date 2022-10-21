@@ -1,5 +1,5 @@
 import { memo, MouseEvent } from 'react';
-import { Link, generatePath } from 'react-router-dom';
+import { generatePath } from 'react-router-dom';
 
 import { absoluteRoutes } from 'shared/config';
 import { IdBlock } from 'shared/ui/idBlock';
@@ -39,7 +39,6 @@ const HorizontalCodeCard = memo(({ code }: Props) => {
           onClick={stopPropagation}
         />
       </div>
-      <Link to="/" className={styles.cardLink} />
     </article>
   );
 });

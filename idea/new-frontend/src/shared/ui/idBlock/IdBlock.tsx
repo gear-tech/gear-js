@@ -2,9 +2,7 @@ import { MouseEvent } from 'react';
 import clsx from 'clsx';
 import { useAlert } from '@gear-js/react-hooks';
 import { buttonStyles } from '@gear-js/ui';
-import { generatePath, Link } from 'react-router-dom';
-
-import { absoluteRoutes } from 'shared/config';
+import { Link } from 'react-router-dom';
 
 import { getShortName, copyToClipboard } from '../../helpers';
 import { ReactComponent as CopySVG } from '../../assets/images/actions/copyGreen.svg';
@@ -18,10 +16,11 @@ type Props = {
   withIcon?: boolean;
   maxCharts?: number;
   className?: string;
+  to?: string;
 };
 
 const IdBlock = (props: Props) => {
-  const { id, size = 'medium', color = 'primary', withIcon = false, maxCharts, className } = props;
+  const { id, size = 'medium', color = 'primary', withIcon = false, maxCharts, className, to } = props;
 
   const alert = useAlert();
 
@@ -33,12 +32,22 @@ const IdBlock = (props: Props) => {
 
   const buttonClasses = clsx(buttonStyles.button, buttonStyles.noText, buttonStyles.transparent, styles.copyBtn);
 
+  const name = getShortName(id, maxCharts);
+  const nameClassName = clsx(styles.value, styles[color]);
+  const linkClassName = clsx(nameClassName, styles.link);
+
   return (
     <div className={clsx(styles.idBlock, styles[size], className)}>
       {withIcon && <img src={idSVG} alt="id" className={styles.icon} />}
-      <Link to={generatePath(absoluteRoutes.message, { messageId: id })} className={clsx(styles.value, styles[color])}>
-        {getShortName(id, maxCharts)}
-      </Link>
+
+      {to ? (
+        <Link to={to} className={linkClassName}>
+          {name}
+        </Link>
+      ) : (
+        <span className={nameClassName}>{name}</span>
+      )}
+
       <button type="button" className={buttonClasses} onClick={handleCopy}>
         <CopySVG className={clsx(buttonStyles.icon, styles.copyIcon)} />
       </button>

@@ -25,7 +25,13 @@ const HorizontalMessageCard = ({ message, moreInfo = false }: Props) => {
 
   return (
     <article className={clsx(styles.horizontalMessageCard, moreInfo && styles.moreInfo)}>
-      <IdBlock id={messageId} size="large" withIcon maxCharts={18} />
+      <IdBlock
+        id={messageId}
+        size="large"
+        withIcon
+        maxCharts={18}
+        to={generatePath(absoluteRoutes.message, { messageId })}
+      />
       <TimestampBlock size="medium" color="light" timestamp={timestamp} withIcon />
       {moreInfo && (
         <div className={styles.fromBlock}>
