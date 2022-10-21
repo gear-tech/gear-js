@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAccount } from '@gear-js/react-hooks';
 
-import { useCodes, useDataLoading } from 'hooks';
+import { useChain, useCodes, useDataLoading } from 'hooks';
 
 import styles from './Codes.module.scss';
 import { RequestParams } from '../model/types';
@@ -11,6 +11,7 @@ import { SearchSettings } from './searchSettings';
 
 const Codes = () => {
   const { account } = useAccount();
+  const { isDevChain } = useChain();
 
   const { codes, isLoading, totalCount, fetchCodes } = useCodes();
   const { params, loadData, changeParams } = useDataLoading<RequestParams>({
@@ -48,13 +49,18 @@ const Codes = () => {
   );
 
   const isLoggedIn = Boolean(account);
-  const heading = `Codes: ${totalCount}`;
+
+  const { query } = params;
+  const filteredCodes = isDevChain && query ? codes.filter(({ id }) => id.includes(query)) : codes;
+  const count = isDevChain ? filteredCodes.length : totalCount;
+
+  const heading = `Codes: ${count}`;
 
   return (
     <div className={styles.pageWrapper}>
       <section className={styles.codesSection}>
         <h2 className={styles.heading}>{heading}</h2>
-        <CodesList codes={codes} totalCount={totalCount} isLoading={isLoading} loadMorePrograms={loadData} />
+        <CodesList codes={filteredCodes} totalCount={count} isLoading={isLoading} loadMorePrograms={loadData} />
       </section>
       <SearchSettings isLoggedIn={isLoggedIn} initialValues={initialValues} onSubmit={handleParamsChange} />
     </div>

@@ -6,6 +6,7 @@ import { useAccount } from '@gear-js/react-hooks';
 import { Filters, FilterGroup, Radio } from 'features/filters';
 import { AnimationTimeout } from 'shared/config';
 
+import { useChain } from 'hooks';
 import styles from './SearchSettings.module.scss';
 import { FiltersValues } from '../../model/types';
 
@@ -17,6 +18,7 @@ type Props = {
 
 const SearchSettings = ({ isLoggedIn, initialValues, onSubmit }: Props) => {
   const { account } = useAccount();
+  const { isDevChain } = useChain();
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -29,14 +31,21 @@ const SearchSettings = ({ isLoggedIn, initialValues, onSubmit }: Props) => {
       <form className={styles.searchForm} onSubmit={handleSubmit}>
         <Input name="search" type="search" placeholder="Search by name, id..." />
       </form>
-      <Filters initialValues={initialValues} onSubmit={onSubmit}>
-        <FilterGroup name="uploadedBy">
-          <Radio name="uploadedBy" value="none" label="All codes" />
-          <CSSTransition in={isLoggedIn} exit={false} timeout={AnimationTimeout.Medium} mountOnEnter unmountOnExit>
-            <Radio name="uploadedBy" value={account?.decodedAddress} label="My codes" className={styles.ownerFilter} />
-          </CSSTransition>
-        </FilterGroup>
-      </Filters>
+      {!isDevChain && (
+        <Filters initialValues={initialValues} onSubmit={onSubmit}>
+          <FilterGroup name="uploadedBy">
+            <Radio name="uploadedBy" value="none" label="All codes" />
+            <CSSTransition in={isLoggedIn} exit={false} timeout={AnimationTimeout.Medium} mountOnEnter unmountOnExit>
+              <Radio
+                name="uploadedBy"
+                value={account?.decodedAddress}
+                label="My codes"
+                className={styles.ownerFilter}
+              />
+            </CSSTransition>
+          </FilterGroup>
+        </Filters>
+      )}
     </section>
   );
 };

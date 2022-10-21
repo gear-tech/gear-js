@@ -1,14 +1,17 @@
 import { useState } from 'react';
-import { useAlert } from '@gear-js/react-hooks';
+import { useAlert, useApi } from '@gear-js/react-hooks';
 
 import { getCodes } from 'api';
 import { CodePaginationModel } from 'api/code/types';
 import { PaginationModel } from 'api/types';
 import { ICode } from 'entities/code';
 import { DEFAULT_LIMIT } from 'shared/config';
+import { useChain } from 'hooks';
 
 const useCodes = (initLoading = true) => {
+  const { api } = useApi();
   const alert = useAlert();
+  const { isDevChain } = useChain();
 
   const [codes, setCodes] = useState<ICode[]>([]);
   const [isLoading, setIsLoading] = useState(initLoading);
@@ -28,11 +31,15 @@ const useCodes = (initLoading = true) => {
 
     setIsLoading(true);
 
-    return getCodes({
-      limit: DEFAULT_LIMIT,
-      ...params,
-    })
-      .then(({ result }) => setCodesData(result, isReset))
+    const promise = isDevChain
+      ? api.code
+          .all()
+          .then((ids) => ids.map((id) => ({ id, name: id })))
+          .then((listCode) => ({ listCode: listCode as ICode[], count: listCode.length }))
+          .then((result) => setCodesData(result, isReset))
+      : getCodes({ limit: DEFAULT_LIMIT, ...params }).then(({ result }) => setCodesData(result, isReset));
+
+    return promise
       .catch((error) => {
         alert.error(error.message);
         return Promise.reject(error);
