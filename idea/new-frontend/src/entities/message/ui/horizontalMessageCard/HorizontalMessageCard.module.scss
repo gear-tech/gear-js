@@ -1,6 +1,7 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_mixins.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
+@use '@gear-js/ui/mixins' as *;
 
 .horizontalMessageCard {
   align-items: center;
@@ -35,12 +36,16 @@
     }
   }
 
-  .link {
-    position: absolute;
-    border: inherit;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+  .programLink {
+    text-decoration: underline;
+    text-decoration-color: $gray300;
+
+    span {
+      @include transition;
+
+      &:hover {
+        opacity: 0.5;
+      }
+    }
   }
 }

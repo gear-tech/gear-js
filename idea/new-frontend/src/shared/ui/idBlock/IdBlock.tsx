@@ -2,12 +2,14 @@ import { MouseEvent } from 'react';
 import clsx from 'clsx';
 import { useAlert } from '@gear-js/react-hooks';
 import { buttonStyles } from '@gear-js/ui';
+import { generatePath, Link } from 'react-router-dom';
 
-import styles from './IdBlock.module.scss';
+import { absoluteRoutes } from 'shared/config';
 
 import { getShortName, copyToClipboard } from '../../helpers';
 import { ReactComponent as CopySVG } from '../../assets/images/actions/copyGreen.svg';
 import idSVG from '../../assets/images/indicators/id.svg';
+import styles from './IdBlock.module.scss';
 
 type Props = {
   id: string;
@@ -34,7 +36,9 @@ const IdBlock = (props: Props) => {
   return (
     <div className={clsx(styles.idBlock, styles[size], className)}>
       {withIcon && <img src={idSVG} alt="id" className={styles.icon} />}
-      <span className={clsx(styles.value, styles[color])}>{getShortName(id, maxCharts)}</span>
+      <Link to={generatePath(absoluteRoutes.message, { messageId: id })} className={clsx(styles.value, styles[color])}>
+        {getShortName(id, maxCharts)}
+      </Link>
       <button type="button" className={buttonClasses} onClick={handleCopy}>
         <CopySVG className={clsx(buttonStyles.icon, styles.copyIcon)} />
       </button>

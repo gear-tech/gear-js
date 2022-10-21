@@ -1,3 +1,4 @@
+import { IProgram } from 'entities/program';
 import { IBase } from 'shared/types';
 
 import { Type, EntryPoint, ReadReason } from './consts';
@@ -15,6 +16,7 @@ interface IMessage extends IBase {
   expiration: number | null;
   type: Type | null;
   readReason: ReadReason | null;
+  program: IProgram | null;
 }
 
 export type { IMessage };
