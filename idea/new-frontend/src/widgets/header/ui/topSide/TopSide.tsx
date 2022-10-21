@@ -25,7 +25,7 @@ const TopSide = ({ account }: Props) => {
   const alert = useAlert();
   const { api, isApiReady } = useApi();
   const { isAccountReady } = useAccount();
-  const { isDevChain } = useChain();
+  const { isDevChain, isTestBalanceAvailable } = useChain();
 
   const captchaRef = useRef<HCaptcha>(null);
 
@@ -95,7 +95,7 @@ const TopSide = ({ account }: Props) => {
           </CSSTransition>
         )}
         <div className={styles.rightSide}>
-          {account && (
+          {account && isTestBalanceAvailable && (
             <CSSTransition in appear timeout={AnimationTimeout.Default}>
               <div className={styles.privateContent}>
                 <TooltipWrapper text="Get test balance">

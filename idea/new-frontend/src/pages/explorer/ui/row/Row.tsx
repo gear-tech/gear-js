@@ -40,9 +40,12 @@ const Row = ({ extrinsic, events }: Props) => {
   const { weight } = getDispatchInfo() || {};
 
   const formattedSigner = isSigned && signer.toString();
-  const formattedWeight = weight?.toHuman();
+  const formattedWeight = weight?.toString();
   const rowClassName = clsx(commonStyles.row, styles.row);
   const signerClassName = clsx(commonStyles.alignRight, styles.signer);
+
+  console.log(weight?.toHuman());
+  console.log(signer?.toHuman());
 
   return (
     <div className={rowClassName}>

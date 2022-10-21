@@ -72,6 +72,7 @@ enum RpcMethods {
   GetAllCodes = 'code.all',
   GetTestBalance = 'testBalance.get',
   NetworkData = 'networkData.available',
+  TestBalanceAvailable = 'testBalance.available',
 }
 
 enum FileTypes {
