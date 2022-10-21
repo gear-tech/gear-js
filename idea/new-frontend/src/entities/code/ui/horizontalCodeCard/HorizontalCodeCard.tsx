@@ -30,10 +30,11 @@ const HorizontalCodeCard = memo(({ code }: Props) => {
         </div>
       </div>
       <div className={styles.actions}>
+        {/* TODO: rename initialize to create */}
         <ActionLink
           to={generatePath(absoluteRoutes.initializeProgram, { codeId })}
           icon={initializeProgramSVG}
-          text="Initialize program"
+          text="Create program"
           className={styles.sendMessage}
           onClick={stopPropagation}
         />
