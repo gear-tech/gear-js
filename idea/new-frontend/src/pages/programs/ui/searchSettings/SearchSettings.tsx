@@ -35,9 +35,6 @@ const SearchSettings = ({ isLoggedIn, initialValues, onSubmit }: Props) => {
             <Radio name="owner" value="owner" label="My programs" className={styles.ownerFilter} />
           </CSSTransition>
         </FilterGroup>
-        <FilterGroup name="createAt" title="Created at">
-          <Input name="createAt" type="date" />
-        </FilterGroup>
         <FilterGroup title="Status" name="status" withReset>
           <StatusCheckbox
             name="status"

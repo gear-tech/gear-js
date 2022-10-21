@@ -36,9 +36,6 @@ const SearchSettings = ({ isLoggedIn, initialValues, onSubmit }: Props) => {
             </>
           </CSSTransition>
         </FilterGroup>
-        <FilterGroup name="createAt" title="Created at">
-          <Input name="createAt" type="date" />
-        </FilterGroup>
       </Filters>
     </section>
   );
