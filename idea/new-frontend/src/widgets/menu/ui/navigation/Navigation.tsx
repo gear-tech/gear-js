@@ -19,8 +19,8 @@ const Navigation = ({ isOpen }: Props) => (
     <NavigationItem to={routes.codes} icon={<CodesSVG />} text="Codes" isFullWidth={isOpen} />
     <NavigationItem to={routes.messages} icon={<MessagesSVG />} text="Messages" isFullWidth={isOpen} />
     <NavigationItem to={routes.explorer} icon={<ExplorerSVG />} text="Explorer" isFullWidth={isOpen} />
-    <AppExamplesLink isFullWidth={isOpen} />
     <NavigationItem to={routes.mailbox} icon={<MailboxSVG />} text="Mailbox" isFullWidth={isOpen} />
+    <AppExamplesLink isFullWidth={isOpen} />
   </nav>
 );
 
