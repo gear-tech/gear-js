@@ -26,8 +26,7 @@ const Events = ({ events }: Props) => {
 
   const filteredEvents = isAnyFilterSelected ? events?.filter(({ method }) => filterValues[method]) : events;
 
-  // maybe worth to retrive element's type? to set return type and get rid of any
-  const getLastItem = (array: any[]) => {
+  const getLastItem = <T,>(array: T[]) => {
     const lastIndex = array.length - 1;
     return array[lastIndex];
   };
