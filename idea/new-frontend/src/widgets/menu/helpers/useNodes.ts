@@ -49,6 +49,8 @@ const useNodes = () => {
           if (isDevSection(section)) {
             const filtredNodes = section.nodes.filter((node) => node.address !== address);
 
+            localStorage.setItem(LocalStorage.Nodes, JSON.stringify(filtredNodes.filter(({ isCustom }) => isCustom)));
+
             return { caption: section.caption, nodes: filtredNodes };
           }
 
