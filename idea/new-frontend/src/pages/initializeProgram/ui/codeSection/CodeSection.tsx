@@ -5,7 +5,7 @@ import { Button } from '@gear-js/ui';
 import { useProgramActions } from 'hooks';
 import { Payload } from 'hooks/useProgramActions/types';
 import { RenderButtonsProps, SubmitHelpers, ProgramForm } from 'widgets/programForm';
-import { routes, GasMethod } from 'shared/config';
+import { GasMethod } from 'shared/config';
 import { FormText } from 'shared/ui/form';
 import { Subheader } from 'shared/ui/subheader';
 import plusSVG from 'shared/assets/images/actions/plus.svg';
@@ -31,7 +31,6 @@ const CodeSection = ({ codeId, metadata, metadataBuffer }: Props) => {
       payload,
       codeId: codeId as Hex,
       reject: helpers.enableButtons,
-      resolve: () => navigate(routes.programs),
     });
 
   const renderButtons = ({ isDisabled }: RenderButtonsProps) => (

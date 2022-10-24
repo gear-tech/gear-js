@@ -33,7 +33,8 @@ const useMessageClaim = () => {
         alert.success(message, alertOptions);
       } else if (method === Method.ExtrinsicFailed) {
         alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
-        reject();
+
+        if (reject) reject();
       }
     });
   };
@@ -50,17 +51,20 @@ const useMessageClaim = () => {
           handleEventsStatus(events, reject);
         } else if (status.isFinalized) {
           alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
-          resolve();
+
+          if (resolve) resolve();
         } else if (status.isInvalid) {
           alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
-          reject();
+
+          if (reject) reject();
         }
       });
     } catch (error) {
       const message = (error as Error).message;
 
       alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
-      reject();
+
+      if (reject) reject();
     }
   };
 
@@ -95,7 +99,8 @@ const useMessageClaim = () => {
         const message = (error as Error).message;
 
         alert.error(message);
-        reject();
+
+        if (reject) reject();
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

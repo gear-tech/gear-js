@@ -72,10 +72,12 @@ const useProgramActions = () => {
 
       if (method === Method.ExtrinsicFailed) {
         alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
-        reject();
+
+        if (reject) reject();
       } else if (method === Method.MessageEnqueued) {
         alert.success('Success', alertOptions);
-        resolve();
+
+        if (resolve) resolve();
       }
     });
   };
@@ -96,7 +98,8 @@ const useProgramActions = () => {
           handleEventsStatus(events, { reject, resolve });
         } else if (status.isInvalid) {
           alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
-          reject();
+
+          if (reject) reject();
         }
       });
 
@@ -107,7 +110,8 @@ const useProgramActions = () => {
       // TODO: replace w/ ProgramStatus.Terminated
       if (initStatus === 'failed') {
         alert.error(programMessage, ALERT_OPTIONS);
-        reject();
+
+        if (reject) reject();
 
         return;
       }
@@ -133,7 +137,8 @@ const useProgramActions = () => {
       const message = (error as Error).message;
 
       alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
-      reject();
+
+      if (reject) reject();
     }
   };
 
@@ -154,15 +159,7 @@ const useProgramActions = () => {
         const name = payload.programName || codeId;
 
         const handleConfirm = () =>
-          signAndUpload({
-            name,
-            title: TransactionName.CreateProgram,
-            signer,
-            payload,
-            programId,
-            reject,
-            resolve,
-          });
+          signAndUpload({ name, title: TransactionName.CreateProgram, signer, payload, programId, reject, resolve });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),
@@ -175,7 +172,7 @@ const useProgramActions = () => {
         const message = (error as Error).message;
 
         alert.error(message);
-        reject();
+        if (reject) reject();
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -196,15 +193,7 @@ const useProgramActions = () => {
         const name = payload.programName || file.name;
 
         const handleConfirm = () =>
-          signAndUpload({
-            name,
-            title: TransactionName.UploadProgram,
-            signer,
-            payload,
-            programId,
-            reject,
-            resolve,
-          });
+          signAndUpload({ name, title: TransactionName.UploadProgram, signer, payload, programId, reject, resolve });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),
@@ -217,7 +206,7 @@ const useProgramActions = () => {
         const message = (error as Error).message;
 
         alert.error(message);
-        reject();
+        if (reject) reject();
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

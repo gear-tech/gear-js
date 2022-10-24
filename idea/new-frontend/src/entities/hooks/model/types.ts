@@ -1,11 +1,11 @@
 import { Signer } from '@polkadot/api/types';
 
 type OperationCallbacks = {
-  reject: () => void;
-  resolve: () => void;
+  reject?: () => void;
+  resolve?: () => void;
 };
 
-type ParamsToSignAndSend = Required<OperationCallbacks> & {
+type ParamsToSignAndSend = OperationCallbacks & {
   signer: Signer;
 };
 

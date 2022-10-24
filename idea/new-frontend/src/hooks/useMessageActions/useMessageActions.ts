@@ -24,10 +24,12 @@ const useMessageActions = () => {
 
       if (method === Method.ExtrinsicFailed) {
         alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
-        reject();
+
+        if (reject) reject();
       } else if (method === Method.MessageEnqueued) {
         alert.success('Success', alertOptions);
-        resolve();
+
+        if (resolve) resolve();
       }
     });
   };
@@ -46,14 +48,16 @@ const useMessageActions = () => {
           handleEventsStatus(events, { reject, resolve });
         } else if (status.isInvalid) {
           alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
-          reject();
+
+          if (reject) reject();
         }
       });
     } catch (error) {
       const message = (error as Error).message;
 
       alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
-      reject();
+
+      if (reject) reject();
     }
   };
 
@@ -88,7 +92,8 @@ const useMessageActions = () => {
         const errorMessage = (error as Error).message;
 
         alert.error(errorMessage);
-        reject();
+
+        if (reject) reject();
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -127,7 +132,8 @@ const useMessageActions = () => {
         const errorMessage = (error as Error).message;
 
         alert.error(errorMessage);
-        reject();
+
+        if (reject) reject();
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect, ChangeEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { Metadata } from '@gear-js/api';
 import { Button, FileInput } from '@gear-js/ui';
@@ -8,7 +7,7 @@ import { useAlert } from '@gear-js/react-hooks';
 import { useProgramActions } from 'hooks';
 import { Payload } from 'hooks/useProgramActions/types';
 import { ProgramForm, SubmitHelpers, RenderButtonsProps } from 'widgets/programForm';
-import { GasMethod, routes } from 'shared/config';
+import { GasMethod } from 'shared/config';
 import { readFileAsync, checkFileFormat } from 'shared/helpers';
 import { Subheader } from 'shared/ui/subheader';
 import { formStyles } from 'shared/ui/form';
@@ -25,7 +24,6 @@ type Props = {
 
 const ProgramSection = ({ file, metadata, metadataBuffer }: Props) => {
   const alert = useAlert();
-  const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [fileBuffer, setFileBuffer] = useState<Buffer>();
@@ -84,7 +82,6 @@ const ProgramSection = ({ file, metadata, metadataBuffer }: Props) => {
       file: selectedFile!,
       payload,
       reject: helpers.enableButtons,
-      resolve: () => navigate(routes.programs),
     });
 
   const renderButtons = ({ isDisabled }: RenderButtonsProps) => (
