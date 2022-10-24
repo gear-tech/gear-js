@@ -15,6 +15,7 @@ import { GasField } from 'features/gasField';
 import { FormPayload, getPayloadFormValues, getSubmitPayload } from 'features/formPayload';
 import { useGasCalculate, useMessageActions } from 'hooks';
 import { Result } from 'hooks/useGasCalculate/types';
+import { FormPayloadType } from 'features/formPayloadType';
 
 import { getValidationSchema, resetPayloadValue } from '../helpers';
 import { FormValues, INITIAL_VALUES } from '../model';
@@ -128,6 +129,8 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
               ) : (
                 <FormPayload name="payload" label="Payload" values={payloadFormValues} gap="1/5" />
               )}
+
+              {!isLoading && !metadata && <FormPayloadType name="payloadType" label="Payload type" gap="1/5" />}
 
               {isLoading ? (
                 <Input label="Gas info" gap="1/5" className={styles.loading} readOnly />
