@@ -61,11 +61,12 @@ const StateForm = ({ meta, metaBuffer, programId, isLoading }: Props) => {
               <Input label="Program ID:" gap="1/5" value={programId} readOnly />
             )}
 
-            {isLoading ? (
-              <Textarea label="Payload" gap="1/5" className={styles.loading} readOnly />
-            ) : (
-              <FormPayload name="payload" label="Input Parameters" values={payloadFormValues} gap="1/5" />
-            )}
+            {payloadFormValues &&
+              (isLoading ? (
+                <Textarea label="Payload" gap="1/5" className={styles.loading} readOnly />
+              ) : (
+                <FormPayload name="payload" label="Input Parameters" values={payloadFormValues} gap="1/5" />
+              ))}
 
             {!isReaded && <Textarea label="Statedata:" rows={15} gap="1/5" className={styles.loading} readOnly block />}
 
