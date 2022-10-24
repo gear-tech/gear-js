@@ -21,6 +21,16 @@
   }
 }
 
+.link {
+  @include transition;
+  position: relative;
+  z-index: 1;
+
+  &:hover {
+    opacity: 0.5;
+  }
+}
+
 .content {
   flex: 1 1;
   padding: toRem(24);
@@ -46,7 +56,7 @@
     max-width: 60%;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: $textColor;
+    // color: $textColor;
     font-size: $fontSizeBig;
     font-family: 'Kanit';
     font-weight: 600;
@@ -75,13 +85,4 @@
 
     margin-bottom: 6px;
   }
-}
-
-.cardLink {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 3;
 }

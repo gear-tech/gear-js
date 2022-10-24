@@ -36,7 +36,9 @@ const HorizontalProgramCard = memo(({ program, withSendMessage }: Props) => {
   return (
     <article className={styles.horizontalProgramCard}>
       <div className={styles.content}>
-        <h1 className={styles.name}>{name}</h1>
+        <Link to={generatePath(absoluteRoutes.program, { programId })} className={styles.link}>
+          <h2 className={styles.name}>{name}</h2>
+        </Link>
         <div className={styles.otherInfo}>
           <IdBlock id={programId} size="medium" withIcon color="light" />
           <BulbBlock color="light" text={statusName} status={getBulbStatus(status)} />
@@ -62,7 +64,6 @@ const HorizontalProgramCard = memo(({ program, withSendMessage }: Props) => {
           />
         )}
       </div>
-      <Link to={generatePath(absoluteRoutes.program, { programId })} className={styles.cardLink} />
     </article>
   );
 });
