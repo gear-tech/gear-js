@@ -1,19 +1,16 @@
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/shared' as *;
+@use 'shared/assets/styles/variables' as *;
 
 .welcomeBanner {
   display: flex;
   align-items: center;
   overflow: hidden;
-  position: absolute;
   padding: toRem(32) toRem(46) toRem(32) toRem(32);
   border-radius: 24px;
   background-color: $bgColorSecondary;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  margin-bottom: 32px;
   z-index: 5;
+  position: relative;
 
   &::after {
     content: '';
@@ -141,7 +138,7 @@
       left: toRem(235);
       transform: rotate(-35deg) scale(1.1);
     }
-  
+
     &::before {
       left: toRem(45);
     }

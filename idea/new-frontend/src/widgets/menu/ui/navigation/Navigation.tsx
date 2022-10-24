@@ -1,5 +1,4 @@
 import { routes } from 'shared/config';
-import { ReactComponent as HomeSVG } from 'shared/assets/images/menu/home.svg';
 import { ReactComponent as CodesSVG } from 'shared/assets/images/menu/codes.svg';
 import { ReactComponent as MailboxSVG } from 'shared/assets/images/menu/mailbox.svg';
 import { ReactComponent as ProgramsSVG } from 'shared/assets/images/menu/programs.svg';
@@ -16,7 +15,6 @@ type Props = {
 
 const Navigation = ({ isOpen }: Props) => (
   <nav className={styles.navigation}>
-    <NavigationItem to={routes.home} icon={<HomeSVG />} text="Dashboard" isFullWidth={isOpen} end />
     <NavigationItem to={routes.programs} icon={<ProgramsSVG />} text="Programs" isFullWidth={isOpen} />
     <NavigationItem to={routes.codes} icon={<CodesSVG />} text="Codes" isFullWidth={isOpen} />
     <NavigationItem to={routes.messages} icon={<MessagesSVG />} text="Messages" isFullWidth={isOpen} />

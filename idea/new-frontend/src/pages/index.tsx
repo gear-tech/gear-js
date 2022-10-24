@@ -1,9 +1,8 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import { routes } from 'shared/config';
 import { useEvents } from 'hooks';
 
-import { Home } from './home';
 import { Program } from './program';
 import { Programs } from './programs';
 import { Message } from './message';
@@ -22,8 +21,6 @@ const Routing = () => {
 
   return (
     <Routes>
-      <Route path={routes.home} element={<Home />} />
-
       <Route path={routes.programs}>
         <Route index element={<Programs />} />
         <Route path={routes.uploadProgram} element={<UploadProgram />} />
@@ -54,6 +51,7 @@ const Routing = () => {
       </Route>
 
       <Route path="*" element={<NotFound />} />
+      <Route path="/" element={<Navigate to={routes.programs} replace />} />
     </Routes>
   );
 };
