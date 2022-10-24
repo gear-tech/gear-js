@@ -113,6 +113,7 @@ export class GearEventListener {
           ...payload,
           timestamp: new Date(timestamp),
           type: MessageType.USER_MESS_SENT,
+          program: await this.programRepository.getByOwnerAndGenesis(payload.source, genesis),
         });
         await this.messageService.createMessages([createMessageDBType]);
       },
