@@ -9,7 +9,7 @@ import { useChain, useModal } from 'hooks';
 import { uploadLocalProgram } from 'api/LocalDB';
 import { Method } from 'entities/explorer';
 import { OperationCallbacks } from 'entities/hooks';
-import { routes, PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'shared/config';
+import { PROGRAM_ERRORS, TransactionName, TransactionStatus, absoluteRoutes } from 'shared/config';
 import { checkWallet, readFileAsync, getExtrinsicFailedMessage } from 'shared/helpers';
 import { CustomLink } from 'shared/ui/customLink';
 
@@ -29,7 +29,7 @@ const useProgramActions = () => {
 
   const getProgramMessage = (programId: string) => (
     <p>
-      ID: <CustomLink to={generatePath(routes.program, { programId })} text={programId} />
+      ID: <CustomLink to={generatePath(absoluteRoutes.program, { programId })} text={programId} />
     </p>
   );
 
