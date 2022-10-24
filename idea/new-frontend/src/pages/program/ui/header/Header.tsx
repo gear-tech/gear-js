@@ -14,9 +14,10 @@ type Props = {
   name: string;
   programId: string;
   isLoading: boolean;
+  isStateButtonVisible: boolean;
 };
 
-const Header = ({ name, programId, isLoading }: Props) => (
+const Header = ({ name, programId, isLoading, isStateButtonVisible }: Props) => (
   <section className={clsx(styles.header, isLoading && styles.loading)}>
     {!isLoading && (
       <CSSTransition in appear timeout={AnimationTimeout.Default} mountOnEnter>
@@ -31,13 +32,15 @@ const Header = ({ name, programId, isLoading }: Props) => (
         color="secondary"
         className={styles.fixWidth}
       />
-      <UILink
-        to={generatePath(routes.state, { programId })}
-        icon={readSVG}
-        text="Read State"
-        color="secondary"
-        className={styles.fixWidth}
-      />
+      {isStateButtonVisible && (
+        <UILink
+          to={generatePath(routes.state, { programId })}
+          icon={readSVG}
+          text="Read State"
+          color="secondary"
+          className={styles.fixWidth}
+        />
+      )}
     </div>
   </section>
 );

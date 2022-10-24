@@ -2,7 +2,7 @@ import { Event } from '@polkadot/types/interfaces';
 import { AnySchema, ValidationError } from 'yup';
 import { setIn } from 'final-form';
 import isString from 'lodash.isstring';
-import { GearApi } from '@gear-js/api';
+import { GearApi, Metadata } from '@gear-js/api';
 import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
 
 import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from 'shared/config';
@@ -127,6 +127,8 @@ const getValidation =
     }
   };
 
+const isState = (meta: Metadata | undefined) => !!meta?.meta_state_output;
+
 export {
   checkWallet,
   formatDate,
@@ -142,4 +144,5 @@ export {
   isHex,
   isNodeAddressValid,
   isHexValid,
+  isState,
 };

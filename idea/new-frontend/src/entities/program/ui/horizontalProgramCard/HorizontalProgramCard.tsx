@@ -1,6 +1,7 @@
 import { memo, MouseEvent } from 'react';
 import { Link, generatePath } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
+import { Metadata } from '@gear-js/api';
 
 import { absoluteRoutes, AnimationTimeout, routes } from 'shared/config';
 import sendSVG from 'shared/assets/images/actions/send.svg';
@@ -9,6 +10,7 @@ import { IdBlock } from 'shared/ui/idBlock';
 import { BulbBlock } from 'shared/ui/bulbBlock';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
 import { ActionLink } from 'shared/ui/ActionLink';
+import { isState } from 'shared/helpers';
 
 import styles from './HorizontalProgramCard.module.scss';
 import { getBulbStatus } from '../../helpers';
@@ -27,6 +29,9 @@ const HorizontalProgramCard = memo(({ program, withSendMessage }: Props) => {
   };
 
   const statusName = PROGRAM_STATUS_NAME[status];
+
+  const metaString = program.meta?.meta;
+  const meta = metaString ? (JSON.parse(metaString) as Metadata) : undefined;
 
   return (
     <article className={styles.horizontalProgramCard}>
@@ -48,12 +53,14 @@ const HorizontalProgramCard = memo(({ program, withSendMessage }: Props) => {
             onClick={stopPropagation}
           />
         </CSSTransition>
-        <ActionLink
-          to={generatePath(routes.state, { programId })}
-          icon={readSVG}
-          text="Read State"
-          onClick={stopPropagation}
-        />
+        {isState(meta) && (
+          <ActionLink
+            to={generatePath(routes.state, { programId })}
+            icon={readSVG}
+            text="Read State"
+            onClick={stopPropagation}
+          />
+        )}
       </div>
       <Link to={generatePath(absoluteRoutes.program, { programId })} className={styles.cardLink} />
     </article>
