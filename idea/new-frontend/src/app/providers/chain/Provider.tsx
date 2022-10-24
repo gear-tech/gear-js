@@ -9,7 +9,8 @@ import { ChainContext } from './Context';
 const { Provider } = ChainContext;
 
 const ChainProvider = ({ children }: ProviderProps) => {
-  const { api, isApiReady } = useApi();
+  const { api } = useApi();
+  const genesis = api?.genesisHash.toHex();
 
   const [isDevChain, setIsDevChain] = useState<boolean>();
   const [isTestBalanceAvailable, setIsTestBalanceAvailable] = useState<boolean>();
@@ -17,22 +18,24 @@ const ChainProvider = ({ children }: ProviderProps) => {
   const isChainRequestReady = isDevChain !== undefined && isTestBalanceAvailable !== undefined;
 
   useEffect(() => {
-    if (isApiReady) {
+    if (genesis) {
       const apiRequest = new RPCService();
-      const genesis = api.genesisHash.toHex();
 
-      const requests = [
-        apiRequest.callRPC<boolean>(RpcMethods.NetworkData, { genesis }),
-        apiRequest.callRPC<boolean>(RpcMethods.TestBalanceAvailable, { genesis }),
-      ];
-
-      Promise.all(requests).then(([{ result: isDevChainResult }, { result: isTestBalanceAvailableResult }]) => {
-        setIsDevChain(!isDevChainResult);
-        setIsTestBalanceAvailable(isTestBalanceAvailableResult);
-      });
+      apiRequest.callRPC<boolean>(RpcMethods.NetworkData, { genesis }).then(({ result }) => setIsDevChain(!result));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isApiReady]);
+  }, [genesis]);
+
+  useEffect(() => {
+    if (isDevChain) {
+      setIsTestBalanceAvailable(true);
+    } else {
+      const apiRequest = new RPCService();
+
+      apiRequest
+        .callRPC<boolean>(RpcMethods.TestBalanceAvailable, { genesis })
+        .then(({ result }) => setIsTestBalanceAvailable(result));
+    }
+  }, [isDevChain, genesis]);
 
   return <Provider value={{ isDevChain, isTestBalanceAvailable, isChainRequestReady }}>{children}</Provider>;
 };
