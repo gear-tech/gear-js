@@ -26,14 +26,16 @@ const ChainProvider = ({ children }: ProviderProps) => {
   }, [genesis]);
 
   useEffect(() => {
-    if (isDevChain) {
-      setIsTestBalanceAvailable(true);
-    } else {
-      const apiRequest = new RPCService();
+    if (isDevChain !== undefined) {
+      if (isDevChain) {
+        setIsTestBalanceAvailable(true);
+      } else {
+        const apiRequest = new RPCService();
 
-      apiRequest
-        .callRPC<boolean>(RpcMethods.TestBalanceAvailable, { genesis })
-        .then(({ result }) => setIsTestBalanceAvailable(result));
+        apiRequest
+          .callRPC<boolean>(RpcMethods.TestBalanceAvailable, { genesis })
+          .then(({ result }) => setIsTestBalanceAvailable(result));
+      }
     }
   }, [isDevChain, genesis]);
 

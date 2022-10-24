@@ -7,8 +7,11 @@ import { PaginationModel } from 'api/types';
 import { IMessage } from 'entities/message';
 import { DEFAULT_LIMIT } from 'shared/config';
 
+import { useChain } from './context';
+
 const useMessages = (initLoading = true) => {
   const alert = useAlert();
+  const { isDevChain } = useChain();
 
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [isLoading, setIsLoading] = useState(initLoading);
@@ -28,16 +31,15 @@ const useMessages = (initLoading = true) => {
 
     setIsLoading(true);
 
-    return getMessages({
-      limit: DEFAULT_LIMIT,
-      ...params,
-    })
-      .then(({ result }) => setMessagesData(result, isReset))
-      .catch((error) => {
-        alert.error(error.message);
-        return Promise.reject(error);
-      })
-      .finally(() => setIsLoading(false));
+    return isDevChain
+      ? Promise.resolve().then(() => setIsLoading(false)) // we don't store local node messages
+      : getMessages({ limit: DEFAULT_LIMIT, ...params })
+          .then(({ result }) => setMessagesData(result, isReset))
+          .catch((error) => {
+            alert.error(error.message);
+            return Promise.reject(error);
+          })
+          .finally(() => setIsLoading(false));
   };
 
   return { messages, isLoading, totalCount, fetchMessages };
