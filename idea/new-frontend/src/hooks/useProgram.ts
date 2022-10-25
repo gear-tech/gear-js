@@ -19,9 +19,7 @@ const useProgram = (id?: string, initLoading = false) => {
   const metadata = useMemo(() => {
     const meta = program?.meta?.meta;
 
-    if (meta) {
-      return JSON.parse(meta) as Metadata;
-    }
+    if (meta) return JSON.parse(meta) as Metadata;
   }, [program]);
 
   useEffect(() => {

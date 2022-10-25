@@ -43,9 +43,7 @@ const Block = () => {
           api.blocks.getEvents(newBlock.hash).then(setEventRecords);
           setBlock(newBlock);
         })
-        .catch(({ message }: Error) => {
-          setError(message);
-        });
+        .catch(({ message }: Error) => setError(message));
     }
   }, [api, blockId]);
 

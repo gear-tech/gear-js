@@ -74,11 +74,7 @@ const useCodeUpload = () => {
 
         const { partialFee } = await api.code.paymentInfo(address, { signer });
 
-        const handleConfirm = () =>
-          signAndSend({
-            signer,
-            codeHash,
-          });
+        const handleConfirm = () => signAndSend({ signer, codeHash });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),

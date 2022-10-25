@@ -1,6 +1,6 @@
 import { Hex, Metadata } from '@gear-js/api';
 import { Button, Input, Textarea } from '@gear-js/ui';
-import { useAlert, useApi } from '@gear-js/react-hooks';
+import { useApi } from '@gear-js/react-hooks';
 import { useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { FormApi } from 'final-form';
@@ -30,7 +30,6 @@ type Props = {
 
 const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
   const { api } = useApi();
-  const alert = useAlert();
 
   const calculateGas = useGasCalculate();
   const { sendMessage, replyMessage } = useMessageActions();
@@ -106,7 +105,6 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
         formApi.current?.change('gasLimit', info.limit);
         setGasInfo(info);
       })
-      .catch(({ message }: Error) => alert.error(message))
       .finally(() => setIsGasDisabled(false));
   };
 
