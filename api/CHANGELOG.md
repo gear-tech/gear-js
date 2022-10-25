@@ -1,3 +1,12 @@
+## 0.26.3
+_10/25/2022_
+
+https://github.com/gear-tech/gear-js/pull/1045
+### Changes
+
+- Rename `generateCodeId` function to `generateCodeHash`
+- Add oportunity to generate codeHas from Uint8Array and hex
+
 ## 0.26.2
 _10/17/2022_
 
