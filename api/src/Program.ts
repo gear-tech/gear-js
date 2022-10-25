@@ -3,7 +3,7 @@ import { u8aToHex } from '@polkadot/util';
 import { Bytes } from '@polkadot/types';
 
 import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult, Hex } from './types';
-import { generateCodeId, generateProgramId, GPROG, GPROG_HEX, validateGasLimit, validateValue } from './utils';
+import { generateCodeHash, generateProgramId, GPROG, GPROG_HEX, validateGasLimit, validateValue } from './utils';
 import { GearTransaction } from './Transaction';
 import { createPayload } from './create-type';
 import { Metadata } from './types/interfaces';
@@ -45,7 +45,7 @@ export class GearProgram extends GearTransaction {
     const salt = program.salt || randomAsHex(20);
     const code = this._api.createType('Bytes', Array.from(program.code)) as Bytes;
     const payload = createPayload(program.initPayload, messageType || meta?.init_input, meta?.types);
-    const codeId = generateCodeId(code);
+    const codeId = generateCodeHash(code);
     const programId = generateProgramId(code, salt);
 
     try {
