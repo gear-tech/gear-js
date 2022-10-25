@@ -1,4 +1,5 @@
 import { Hex, Metadata } from '@gear-js/api';
+import { useAlert } from '@gear-js/react-hooks';
 import { fetchMetadata, getLocalProgramMeta } from 'api';
 import { useChain } from 'hooks';
 import { useRef, useState, useEffect } from 'react';
@@ -11,6 +12,7 @@ import styles from './State.module.scss';
 type Params = { programId: Hex };
 
 const State = () => {
+  const alert = useAlert();
   const { programId } = useParams() as Params;
 
   const metaBuffer = useRef<Buffer>();
@@ -20,14 +22,16 @@ const State = () => {
   const getMetadata = isDevChain ? getLocalProgramMeta : fetchMetadata;
 
   useEffect(() => {
-    getMetadata(programId).then(({ result }) => {
-      if (!result.meta || !result.metaWasm) return Promise.reject(new Error('No metadata'));
+    getMetadata(programId)
+      .then(({ result }) => {
+        if (!result.meta || !result.metaWasm) return Promise.reject(new Error('No metadata'));
 
-      const parsedMeta = JSON.parse(result.meta) as Metadata;
+        const parsedMeta = JSON.parse(result.meta) as Metadata;
 
-      metaBuffer.current = Buffer.from(result.metaWasm, 'base64');
-      setMetadata(parsedMeta);
-    });
+        metaBuffer.current = Buffer.from(result.metaWasm, 'base64');
+        setMetadata(parsedMeta);
+      })
+      .catch(({ message }: Error) => alert.error(message));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [programId]);
 
