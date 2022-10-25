@@ -4,8 +4,8 @@ import { u8aToU8a } from '@polkadot/util';
 import { Hex } from '../types';
 import { CreateType } from '../create-type/CreateType';
 
-export function generateCodeId(code: Buffer | Uint8Array): Hex {
-  return blake2AsHex(code, 256);
+export function generateCodeHash(code: Buffer | Uint8Array | Hex): Hex {
+  return blake2AsHex(u8aToU8a(code), 256);
 }
 
 export function generateProgramId(codeId: Hex | Uint8Array, salt: string | Hex | Uint8Array): Hex;
