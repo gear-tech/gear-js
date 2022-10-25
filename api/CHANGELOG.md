@@ -1,3 +1,11 @@
+## 0.27.0
+_10/25/2022_
+
+https://github.com/gear-tech/gear-js/pull/1046
+### Changes
+
+- Update `ActiveProgram` type according to https://github.com/gear-tech/gear/pull/1505
+ 
 ## 0.26.2
 _10/17/2022_
 
