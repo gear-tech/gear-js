@@ -4,29 +4,31 @@ import { IMessage, EntryPoint } from 'entities/message';
 
 const getDecodedMessagePayload = (meta: Metadata, message: IMessage) => {
   const { entry, payload } = message;
+  const isMessageEnqueued = message.type === 'MessageEnqueued';
 
-  let type: string | undefined;
+  let type = isMessageEnqueued ? meta.handle_input : meta.handle_output;
 
   switch (entry) {
     case EntryPoint.Init: {
-      type = meta.init_output;
+      type = isMessageEnqueued ? meta.init_input : meta.init_output;
       break;
     }
+
     case EntryPoint.Reply: {
-      type = meta.async_handle_output;
+      type = isMessageEnqueued ? meta.async_handle_input : meta.async_handle_output;
       break;
     }
+
     case EntryPoint.Handle: {
-      type = meta.handle_output;
+      type = isMessageEnqueued ? meta.handle_input : meta.handle_output;
       break;
     }
+
     default:
       break;
   }
 
-  if (!type) {
-    return payload;
-  }
+  if (!type) return payload;
 
   return CreateType.create(type, payload, meta);
 };
