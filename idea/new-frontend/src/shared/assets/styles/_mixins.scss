@@ -8,7 +8,7 @@
   :global(.simplebar-track) {
     overflow: visible;
     background-color: $gray100;
-    
+
     &:global(.simplebar-vertical) {
       width: 1px;
 
@@ -29,7 +29,7 @@
         background: $textColor;
         border-radius: 1px;
       }
-    } 
+    }
   }
 }
 
@@ -38,13 +38,13 @@
     @if $direction == bottom {
       margin-bottom: $margin;
     } @else if $direction == top {
-      margin-top: $margin; 
+      margin-top: $margin;
     } @else if $direction == left {
       margin-left: $margin;
     } @else if $direction == right {
       margin-right: $margin;
     }
 
-    @content
+    @content;
   }
 }

@@ -1,4 +1,15 @@
 @use 'shared/assets/styles/variables' as *;
+@use 'shared/assets/styles/mixins' as *;
+
+.simplebar {
+  @include customSimplebar;
+  max-height: 50vh;
+  margin-right: -16px;
+
+  :global(.simplebar-content) {
+    margin-right: 16px;
+  }
+}
 
 .modal {
   position: relative;

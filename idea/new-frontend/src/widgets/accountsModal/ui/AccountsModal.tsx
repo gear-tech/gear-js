@@ -3,6 +3,7 @@ import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { Button, Modal } from '@gear-js/ui';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
+import SimpleBar from 'simplebar-react';
 
 import { ModalProps } from 'entities/modal';
 import { LocalStorage } from 'shared/config';
@@ -67,16 +68,18 @@ const AccountsModal = ({ accounts, onClose }: Props) => {
     <Modal heading={heading} close={onClose} className={modalClassName}>
       {extensions ? (
         <>
-          {isWalletSelection && (
-            <Wallets selectedWalletId={walletId} onWalletClick={switchWallet} extensions={extensions} />
-          )}
-          {!isWalletSelection && (
-            <AccountList
-              list={accounts!.filter(({ meta }) => meta.source === walletId)}
-              address={account?.address}
-              toggleAccount={handleAccountClick}
-            />
-          )}
+          <SimpleBar className={styles.simplebar}>
+            {isWalletSelection && (
+              <Wallets selectedWalletId={walletId} onWalletClick={switchWallet} extensions={extensions} />
+            )}
+            {!isWalletSelection && (
+              <AccountList
+                list={accounts!.filter(({ meta }) => meta.source === walletId)}
+                address={account?.address}
+                toggleAccount={handleAccountClick}
+              />
+            )}
+          </SimpleBar>
 
           <footer className={styles.footer}>
             {wallet && (

@@ -6,11 +6,11 @@
 
 .simpleBar {
   @include customSimplebar;
-  
+
   width: 100%;
   margin-top: 20px;
   max-height: 463px;
-  
+
   .blockList {
     @include childrenMargin(5px);
 

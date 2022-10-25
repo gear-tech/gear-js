@@ -3,7 +3,7 @@ import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import clsx from 'clsx';
 import { decodeAddress } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
-import { Button, TooltipWrapper, buttonStyles } from '@gear-js/ui';
+import { Button, buttonStyles } from '@gear-js/ui';
 
 import { copyToClipboard } from 'shared/helpers';
 import { AccountButton } from 'shared/ui/accountButton';
@@ -48,9 +48,7 @@ const AccountItem = memo(({ account, isActive, onClick }: Props) => {
         className={accountBtnClasses}
         onClick={handleClick}
       />
-      <TooltipWrapper text="Copy HEX Public key">
-        <Button icon={copyKeySVG} color="transparent" onClick={handleCopy} />
-      </TooltipWrapper>
+      <Button icon={copyKeySVG} color="transparent" onClick={handleCopy} />
     </li>
   );
 });
