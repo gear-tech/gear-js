@@ -1,6 +1,6 @@
 {
   "types": {
-    "MessageId": "[u8; 32]",
+    "MessageId": "[u8;32]",
     "ExitCode": "i32",
     "Payload": "Vec<u8>",
     "Message": {

@@ -1,12 +1,15 @@
-## 0.26.3
+## 0.27.0
 _10/25/2022_
 
+https://github.com/gear-tech/gear-js/pull/1046
 https://github.com/gear-tech/gear-js/pull/1045
+
 ### Changes
 
+- Update `ActiveProgram` type according to https://github.com/gear-tech/gear/pull/1505
 - Rename `generateCodeId` function to `generateCodeHash`
 - Add oportunity to generate codeHas from Uint8Array and hex
-
+ 
 ## 0.26.2
 _10/17/2022_
 
