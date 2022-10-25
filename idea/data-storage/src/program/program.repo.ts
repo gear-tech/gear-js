@@ -26,15 +26,6 @@ export class ProgramRepo {
     });
   }
 
-  public async getByOwnerAndGenesis(owner: string, genesis: string): Promise<Program> {
-    return this.programRepo.findOne({
-      where: {
-        owner,
-        genesis
-      }
-    });
-  }
-
   public async getByIdAndGenesisAndOwner(id: string, genesis: string, owner: string): Promise<Program> {
     return this.programRepo.findOne({
       where: {

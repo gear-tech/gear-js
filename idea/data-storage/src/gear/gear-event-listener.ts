@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CodeChanged, GearApi, Hex, MessageEnqueued } from '@gear-js/api';
+import { CodeChanged, GearApi, generateCodeHash, Hex, MessageEnqueued } from '@gear-js/api';
 import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
@@ -113,7 +113,7 @@ export class GearEventListener {
           ...payload,
           timestamp: new Date(timestamp),
           type: MessageType.USER_MESS_SENT,
-          program: await this.programRepository.getByOwnerAndGenesis(payload.source, genesis),
+          program: await this.programRepository.get(payload.source, genesis),
         });
         await this.messageService.createMessages([createMessageDBType]);
       },
