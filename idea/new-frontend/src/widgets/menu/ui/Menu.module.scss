@@ -23,7 +23,7 @@
 
   &::after,
   &::before {
-    content: "";
+    content: '';
     display: block;
     left: 0;
     width: toRem(228);
@@ -32,13 +32,13 @@
     transition: left $timeout ease-in-out;
   }
 
-  &::after {  
-    z-index: -1;  
+  &::after {
+    z-index: -1;
     top: toRem(88);
     height: toRem(500);
     background: radial-gradient(50% 50% at 50% 50%, rgba(3, 52, 199, 0.4) 15%, rgba(24, 24, 27, 0) 100%);
   }
-  
+
   &::before {
     z-index: -2;
     top: toRem(-24);
@@ -46,14 +46,13 @@
     background: radial-gradient(50% 50% at 50% 50%, rgba(43, 208, 113, 0.4) 15%, rgba(24, 24, 27, 0) 100%);
   }
 
-
   &.open {
     width: toRem(228);
 
-    &::after {  
+    &::after {
       left: toRem(83);
     }
-  
+
     &::before {
       left: toRem(123);
     }
@@ -72,7 +71,7 @@
   border-radius: 50%;
   background: $gray300;
   backdrop-filter: blur(10px);
-  
+
   &.rotated svg {
     transform: rotate(180deg);
   }
@@ -122,7 +121,7 @@
   @include fade();
 
   margin-left: $margin;
-  
+
   &:global(.exit-done) {
     visibility: hidden;
     margin-left: 0;
@@ -130,7 +129,7 @@
 
   .linkText {
     @include transition(color);
-    
+
     margin-right: 14px;
     font-family: 'Kanit';
     color: $gray800;
@@ -138,7 +137,7 @@
     font-weight: 600;
     line-height: toRem(21);
     letter-spacing: 0.08em;
-    text-transform: capitalize
+    text-transform: capitalize;
   }
 }
 

@@ -1,24 +1,30 @@
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_mixins.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
-@use 'shared/assets/styles/_animations.scss' as *;
+@use 'shared/assets/styles/shared' as *;
+@use 'shared/assets/styles/mixins' as *;
+@use 'shared/assets/styles/variables' as shared;
+@use 'shared/assets/styles/animations' as *;
 @use '@gear-js/ui/headings' as *;
+@use '@gear-js/ui/variables' as ui;
 
 .nodeInfoButton {
-  @include childrenMargin($margin, right);
+  $borderWidth: ui.$borderModalWidth ui.$borderModalWidth ui.$borderModalWidth 0;
+  @include childrenMargin(shared.$margin, right);
 
   margin-top: auto;
   align-self: flex-start;
   justify-content: flex-start;
-  width: calc(100% - toRem(8));
-  padding: toRem(12) toRem(12) toRem(12) toRem(25);
-  background: rgba($gray300, 0.05);
-  box-shadow: inset 0px 1px 0px rgba($textColor, 0.05);
+  width: calc(100% - 8px);
+  padding: 10px 10px 10px 27px;
+  background-color: rgba(shared.$gray300, 0.05);
   border-radius: 0px 8px 8px 0px;
-  min-height: toRem(58);
+  color: shared.$gray700;
+  border-width: $borderWidth;
+  border-color: transparent;
+  border-style: solid;
 
-  &.fullWidth {
-    padding-left: toRem(34);
+  &.open {
+    color: ui.$successColor;
+    border-width: $borderWidth;
+    border-color: ui.$borderModalColor;
   }
 }
 
@@ -32,8 +38,8 @@
     right: -3px;
     width: 10px;
     height: 10px;
-    background: $successColor;
-    border: 2px solid $bgColor;
+    background: shared.$successColor;
+    border: 2px solid shared.$bgColor;
     border-radius: 50%;
   }
 }
@@ -44,7 +50,6 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  color: $gray700;
   line-height: toRem(16);
 
   &:global(.exit),

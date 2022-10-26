@@ -42,7 +42,7 @@ const Menu = () => {
           chain={chain}
           version={specVersion}
           isApiReady={isApiReady}
-          isFullWidth={isOpen}
+          isOpen={isNodesOpen}
           onClick={toggleNodesPopup}
         />
       </div>
