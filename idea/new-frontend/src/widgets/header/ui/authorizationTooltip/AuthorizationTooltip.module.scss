@@ -1,6 +1,7 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
 @use 'shared/assets/styles/_animations.scss' as *;
+@use '@gear-js/ui/mixins' as *;
 
 .authorizationTooltip {
   @include fadeAppear();
@@ -29,4 +30,14 @@
   color: $textColor;
   font-size: $fontSizeSmall;
   line-height: toRem(18);
+}
+
+.button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+
+  img {
+    @include square(16px);
+  }
 }

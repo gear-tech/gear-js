@@ -1,13 +1,13 @@
 import clsx from 'clsx';
 import { Account, useAccount } from '@gear-js/react-hooks';
 import { Button, buttonStyles } from '@gear-js/ui';
+import { useState } from 'react';
 
 import { useModal } from 'hooks';
 import { LocalStorage } from 'shared/config';
 import { AccountButton } from 'shared/ui/accountButton';
 import polkadotSVG from 'shared/assets/images/logos/polkadotLogo.svg';
 
-import { useState } from 'react';
 import styles from './Wallet.module.scss';
 import { AuthorizationTooltip } from '../authorizationTooltip';
 
@@ -22,13 +22,15 @@ const Wallet = ({ account, isApiReady }: Props) => {
 
   const [isTooltipShowing, setIsTooltipShowing] = useState(!localStorage.getItem(LocalStorage.NewUser));
 
+  const hideTooltip = () => {
+    setIsTooltipShowing(false);
+    localStorage.setItem(LocalStorage.NewUser, 'false');
+  };
+
   const handleClick = () => {
     showModal('accounts', { accounts });
 
-    if (isTooltipShowing) {
-      setIsTooltipShowing(false);
-      localStorage.setItem(LocalStorage.NewUser, 'false');
-    }
+    if (isTooltipShowing) hideTooltip();
   };
 
   const accountBtnClasses = clsx(buttonStyles.medium, styles.accountBtn, styles.fixSize);
@@ -45,7 +47,7 @@ const Wallet = ({ account, isApiReady }: Props) => {
       ) : (
         <Button icon={polkadotSVG} text="Connect" color="primary" className={styles.fixSize} onClick={handleClick} />
       )}
-      {isApiReady && isTooltipShowing && <AuthorizationTooltip />}
+      {isApiReady && isTooltipShowing && <AuthorizationTooltip onCloseButtonClick={hideTooltip} />}
     </div>
   );
 };

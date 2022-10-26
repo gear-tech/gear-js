@@ -1,17 +1,9 @@
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_mixins.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/variables' as *;
+@use 'shared/assets/styles/mixins' as *;
 
 .link {
   @include childrenMargin(10px, right);
 
   background-color: $bgColorTertiary;
-
-  .text {
-    color: $textColor;
-  }
-
-  &:hover{
-    background-color: $bgColorTertiary;
-  }
+  color: $textColor;
 }

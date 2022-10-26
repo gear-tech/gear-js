@@ -4,7 +4,7 @@
 @use 'shared/assets/styles/animations' as *;
 @use '@gear-js/ui/variables' as *;
 
-$popupWidth: 305px;
+$popupWidth: 340px;
 
 .nodesPopup {
   display: flex;
@@ -51,7 +51,13 @@ $popupWidth: 305px;
   }
 
   .actions {
-    @include childrenMargin($margin, right);
+    @include childrenMargin(24px, right);
+
+    display: flex;
+
+    > *:first-child {
+      flex: 1;
+    }
 
     position: relative;
     z-index: 1;
