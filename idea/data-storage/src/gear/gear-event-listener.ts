@@ -189,9 +189,9 @@ export class GearEventListener {
           }),
         );
       }
-    }
 
-    if (messages.length >= 1) await this.messageService.createMessages(messages);
+      await this.messageService.createMessages(messages);
+    }
   }
 
   private async handleProgramExtrinsics(block: SignedBlockExtended, status: ExtrinsicStatus, timestamp: number) {
@@ -207,12 +207,7 @@ export class GearEventListener {
           this.api.events.gear.MessageEnqueued.is(event),
         ).event as MessageEnqueued;
 
-        let codeId;
-        const uploadProgramIndex = 0;
-        const createProgramIndex = 1;
-
-        if(tx.method.method === txMethods[uploadProgramIndex]) codeId = generateCodeHash(tx.args[0].toHex());
-        if(tx.method.method === txMethods[createProgramIndex]) codeId = tx.args[0].toHex();
+        const codeId = tx.method.method === 'uploadProgram' ? generateCodeHash(tx.args[0].toHex()) : tx.args[0].toHex();
 
         programs.push({
           owner: source.toHex(),
@@ -223,9 +218,9 @@ export class GearEventListener {
           genesis: this.genesis,
         });
       }
-    }
 
-    if (programs.length >= 1) await this.programService.createPrograms(programs);
+      await this.programService.createPrograms(programs);
+    }
   }
 
   private async handleCodeExtrinsics(block: SignedBlockExtended, status: ExtrinsicStatus, timestamp: number) {
@@ -257,9 +252,9 @@ export class GearEventListener {
           });
         }
       }
-    }
 
-    if (codes.length >= 1) await this.codeService.updateCodes(codes);
+      await this.codeService.updateCodes(codes);
+    }
   }
 
   private async handleBlocks(block: SignedBlockExtended, timestamp: number, blockHash: Hex) {
