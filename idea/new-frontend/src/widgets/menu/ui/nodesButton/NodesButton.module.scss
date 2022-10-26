@@ -9,6 +9,7 @@
   $borderWidth: ui.$borderModalWidth ui.$borderModalWidth ui.$borderModalWidth 0;
   @include childrenMargin(shared.$margin, right);
 
+  min-height: toRem(58);
   margin-top: auto;
   align-self: flex-start;
   justify-content: flex-start;

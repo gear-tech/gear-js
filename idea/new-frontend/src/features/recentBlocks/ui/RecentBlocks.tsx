@@ -1,8 +1,9 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useState, useEffect } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
 import { useLocation } from 'react-router-dom';
-import { buttonStyles } from '@gear-js/ui';
 
 import { useBlocks, useOutsideClick } from 'hooks';
 import { IChainBlock } from 'entities/chainBlock';
@@ -21,7 +22,7 @@ const RecentBlocks = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [timeInstance, setTimeInstance] = useState(0);
 
-  const openList = () => setIsOpen(true);
+  const toggleList = () => setIsOpen((prevValue) => !prevValue);
   const closeList = () => setIsOpen(false);
 
   const sectionRef = useOutsideClick<HTMLSelectElement>(closeList, isOpen);
@@ -60,13 +61,7 @@ const RecentBlocks = () => {
   const time = `${timeInstance.toFixed(1)} s`;
   const blockNumber = `#${block?.number ?? '00000'}`;
 
-  const buttonClasses = clsx(
-    buttonStyles.button,
-    buttonStyles.transparent,
-    buttonStyles.noText,
-    styles.blocksBtn,
-    isOpen && styles.rotated,
-  );
+  const arrowClassName = clsx(styles.arrow, isOpen && styles.rotated);
 
   const blocksClasses = clsx(styles.recentBlocks, isOpen && styles.open);
 
@@ -74,7 +69,7 @@ const RecentBlocks = () => {
     <div className={styles.recentBlocksWrapper}>
       <CSSTransition in={isOpen} timeout={AnimationTimeout.Default}>
         <section ref={sectionRef} className={blocksClasses}>
-          <div className={styles.content}>
+          <div className={styles.content} onClick={toggleList}>
             <Graph blocks={blocks} className={styles.graph} />
             <div className={styles.blockInfo}>
               <h2 className={styles.title}>Recent block</h2>
@@ -86,9 +81,8 @@ const RecentBlocks = () => {
                 <span className={styles.time}>{time}</span>
               </p>
             </div>
-            <button type="button" className={buttonClasses} onClick={openList}>
-              <ArrowSVG />
-            </button>
+
+            <ArrowSVG className={arrowClassName} />
           </div>
           <CSSTransition in={isOpen} timeout={AnimationTimeout.Default}>
             <RecentBlocksList blocks={blocks} className={styles.recentBlocksList} />
