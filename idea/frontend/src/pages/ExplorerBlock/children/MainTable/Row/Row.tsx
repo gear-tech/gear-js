@@ -37,8 +37,8 @@ const Row = ({ extrinsic, events }: Props) => {
   const { isSigned, signer } = extrinsic;
   const { weight } = getDispatchInfo() || {};
 
-  const formattedSigner = isSigned && signer.toString();
-  const formattedWeight = weight?.toHuman();
+  const formattedSigner = isSigned && (signer.toHuman() as { Id: string }); // TODO: asserting cuz polkadot types are wrong
+  const formattedWeight = weight && (weight.toHuman() as unknown as { refTime: string; proofSize: string });
   const textClassName = clsx(styles.cell, styles.text);
 
   return (
@@ -47,8 +47,8 @@ const Row = ({ extrinsic, events }: Props) => {
         <Extrinsic extrinsic={extrinsic} className={styles.event} />
       </div>
       <div className={styles.cell}>{getEvents()}</div>
-      <div className={textClassName}>{formattedWeight}</div>
-      <div className={textClassName}>{formattedSigner}</div>
+      <div className={textClassName}>{formattedWeight && formattedWeight.refTime}</div>
+      <div className={textClassName}>{formattedSigner && formattedSigner.Id}</div>
     </>
   );
 };
