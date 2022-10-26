@@ -131,11 +131,9 @@ export class GearEventListener {
         await this.codeService.updateCodes([codeChangedInput]);
       },
       [Keys.DatabaseWiped]: async () => {
-        await Promise.all([
-          this.messageService.deleteRecords(genesis),
-          this.programService.deleteRecords(genesis),
-          this.codeService.deleteRecords(genesis),
-        ]);
+        await this.messageService.deleteRecords(genesis);
+        await this.programService.deleteRecords(genesis);
+        await this.codeService.deleteRecords(genesis);
       },
     };
 
@@ -204,28 +202,24 @@ export class GearEventListener {
     if (extrinsics.length >= 1) {
       for (const tx of extrinsics) {
         const {
-          data: { source, destination },
+          data: { source, destination }
         } = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
           this.api.events.gear.MessageEnqueued.is(event),
         ).event as MessageEnqueued;
 
-        let code;
+        let codeId;
+        const uploadProgramIndex = 0;
+        const createProgramIndex = 1;
 
-        try {
-          const codeId = await this.api.program.codeHash(destination.toHex());
-          code = await this.codeRepository.get(codeId, this.genesis);
-        } catch (error) {
-          this.logger.error('Code not exists error');
-          console.log('Code destination', destination.toHex());
-          code = null;
-        }
+        if(tx.method.method === txMethods[uploadProgramIndex]) codeId = generateCodeHash(tx.args[0].toHex());
+        if(tx.method.method === txMethods[createProgramIndex]) codeId = tx.args[0].toHex();
 
         programs.push({
           owner: source.toHex(),
           id: destination.toHex(),
           blockHash: block.createdAtHash.toHex(),
           timestamp,
-          code,
+          code: await this.codeRepository.get(codeId, this.genesis),
           genesis: this.genesis,
         });
       }

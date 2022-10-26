@@ -16,7 +16,6 @@ import { getAllMessages, getMessageData, getMessagePayload, getMessagesByDates }
 import { getCodeData, getCodes, getCodesByDates } from './code';
 import base from '../config/base';
 import { networkDataAvailable } from './network-data-available';
-import { blocksStatus } from './block';
 
 let genesis: Hex;
 let prepared: IPrepared;
