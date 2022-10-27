@@ -1,11 +1,11 @@
-import { Between, In } from 'typeorm';
+import { Between, In, Like } from 'typeorm';
 
 export function queryFilter(
   strictParams: {[key: string]: string},
   queryParams: {[key: string]: string | string[]},
   searchParams: string[]
 ): Record<string, unknown>[] | Record<string, unknown> {
-  let queryBodyList:Record<string, unknown>[] = [];
+  const queryBodyList:Record<string, unknown>[] = [];
   const { query, fromDate, toDate, ...queryParamsWithoutSearch } = queryParams;
 
   const isIncludeSearchByTitle = query && query.length > 0;
@@ -41,8 +41,8 @@ export function queryFilter(
     for(const param of searchParams){
       const queryBody: {[key: string]: unknown} = { ...strictParams };
 
-      queryBody[param] = query;
-      queryBodyList = [...queryBodyList, queryBody];
+      queryBody[param] = Like('%' + query + '%');
+      queryBodyList.push(queryBody);
     }
   }
 
