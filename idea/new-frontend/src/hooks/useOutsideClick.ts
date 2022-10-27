@@ -9,22 +9,16 @@ const useOutsideClick = <TElement extends Element>(callback: (event: MouseEvent)
       // @ts-ignore
       const isElementClicked = event.path.includes(ref.current);
 
-      if (!isElementClicked) {
-        callback(event);
-      }
+      if (!isElementClicked) callback(event);
     }
   };
 
   useEffect(() => {
-    if (!isActive) {
-      return;
-    }
+    if (!isActive) return;
 
     window.addEventListener('click', handleClick);
 
-    return () => {
-      window.removeEventListener('click', handleClick);
-    };
+    return () => window.removeEventListener('click', handleClick);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive]);
 

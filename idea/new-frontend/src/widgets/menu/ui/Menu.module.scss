@@ -10,6 +10,13 @@
   height: calc(100vh - $footerHeight);
 }
 
+.wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .menuContent {
   display: flex;
   flex-direction: column;
@@ -139,8 +146,4 @@
     letter-spacing: 0.08em;
     text-transform: capitalize;
   }
-}
-
-.nodePopup {
-  @include fade();
 }
