@@ -1,9 +1,8 @@
 import { memo, MouseEvent } from 'react';
 import { Link, generatePath } from 'react-router-dom';
-import { CSSTransition } from 'react-transition-group';
 import { Metadata } from '@gear-js/api';
 
-import { absoluteRoutes, AnimationTimeout, routes } from 'shared/config';
+import { absoluteRoutes, routes } from 'shared/config';
 import sendSVG from 'shared/assets/images/actions/send.svg';
 import readSVG from 'shared/assets/images/actions/read.svg';
 import { IdBlock } from 'shared/ui/idBlock';
@@ -18,10 +17,9 @@ import { IProgram, PROGRAM_STATUS_NAME } from '../../model';
 
 type Props = {
   program: IProgram;
-  withSendMessage: boolean;
 };
 
-const HorizontalProgramCard = memo(({ program, withSendMessage }: Props) => {
+const HorizontalProgramCard = memo(({ program }: Props) => {
   const { id: programId, name, status, timestamp } = program;
 
   const stopPropagation = (event: MouseEvent<HTMLAnchorElement>) => {
@@ -46,15 +44,13 @@ const HorizontalProgramCard = memo(({ program, withSendMessage }: Props) => {
         </div>
       </div>
       <div className={styles.actions}>
-        <CSSTransition in={withSendMessage} exit={false} timeout={AnimationTimeout.Medium} unmountOnExit>
-          <ActionLink
-            to={generatePath(absoluteRoutes.sendMessage, { programId })}
-            icon={sendSVG}
-            text="Send Message"
-            className={styles.sendMessage}
-            onClick={stopPropagation}
-          />
-        </CSSTransition>
+        <ActionLink
+          to={generatePath(absoluteRoutes.sendMessage, { programId })}
+          icon={sendSVG}
+          text="Send Message"
+          className={styles.sendMessage}
+          onClick={stopPropagation}
+        />
         {isState(meta) && (
           <ActionLink
             to={generatePath(routes.state, { programId })}

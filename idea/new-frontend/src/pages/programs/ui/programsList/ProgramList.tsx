@@ -13,12 +13,11 @@ type Props = {
   programs: IProgram[];
   isLoading: boolean;
   totalCount: number;
-  isLoggedIn: boolean;
   loadMorePrograms: () => void;
 };
 
 const ProgramsList = (props: Props) => {
-  const { programs, isLoading, totalCount, isLoggedIn, loadMorePrograms } = props;
+  const { programs, isLoading, totalCount, loadMorePrograms } = props;
 
   const hasMore = !isLoading && programs.length < totalCount;
   const isEmpty = !(isLoading || totalCount);
@@ -41,9 +40,7 @@ const ProgramsList = (props: Props) => {
             <ExamplesLink />
           </Placeholder>
         ) : (
-          programs.map((program) => (
-            <HorizontalProgramCard key={program.id} program={program} withSendMessage={isLoggedIn} />
-          ))
+          programs.map((program) => <HorizontalProgramCard key={program.id} program={program} />)
         )}
       </SimpleBar>
     </div>

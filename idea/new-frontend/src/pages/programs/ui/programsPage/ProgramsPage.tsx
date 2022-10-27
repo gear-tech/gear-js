@@ -56,13 +56,7 @@ const ProgramsPage = () => {
     <div className={styles.pageWrapper}>
       <section className={styles.programsSection}>
         <h2 className={styles.heading}>{heading}</h2>
-        <ProgramsList
-          programs={programs}
-          totalCount={totalCount}
-          isLoading={isLoading}
-          isLoggedIn={isLoggedIn}
-          loadMorePrograms={loadData}
-        />
+        <ProgramsList programs={programs} totalCount={totalCount} isLoading={isLoading} loadMorePrograms={loadData} />
       </section>
       <SearchSettings isLoggedIn={isLoggedIn} initialValues={initialValues} onSubmit={handleParamsChange} />
     </div>

@@ -81,8 +81,6 @@
   padding: toRem(12) toRem(24);
 
   .sendMessage {
-    @include fade();
-
     margin-bottom: 6px;
   }
 }
