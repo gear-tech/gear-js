@@ -12,7 +12,12 @@ export async function getAccount(account: string): Promise<KeyringPair> {
   if (account === "bob") {
     return GearKeyring.fromSuri("//Bob");
   }
+
   const seed = process.env[account.toUpperCase()] as string;
-  assert.notStrictEqual(seed, undefined, `Unable to find ${account} seed in environment variables`);
+
+  if (!seed) {
+    assert.notStrictEqual(seed, undefined, `Unable to find ${account} seed in environment variables`);
+  }
+
   return GearKeyring.fromSeed(seed);
 }

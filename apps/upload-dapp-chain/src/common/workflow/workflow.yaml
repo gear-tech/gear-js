@@ -6,7 +6,7 @@ programs:
       https://github.com/gear-dapps/nft-marketplace/releases/download/1.0.1/nft_marketplace-1.0.1.opt.wasm
     metaDownloadUrl: >-
       https://github.com/gear-dapps/nft-marketplace/releases/download/1.0.1/nft_marketplace-1.0.1.meta.wasm
-    acc: alice
+    acc: jordan
     payload:
       adminId: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'
       treasuryId: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'
@@ -19,7 +19,7 @@ programs:
       https://github.com/gear-dapps/non-fungible-token/releases/download/build/nft-0.2.2.opt.wasm
     metaDownloadUrl: >-
       https://github.com/gear-dapps/non-fungible-token/releases/download/build/nft-0.2.2.meta.wasm
-    acc: alice
+    acc: jordan
     payload:
       name: test
       symbol: test
@@ -33,7 +33,7 @@ programs:
       https://github.com/gear-dapps/non-fungible-token/releases/download/build/nft-0.2.2.opt.wasm
     metaDownloadUrl: >-
       https://github.com/gear-dapps/non-fungible-token/releases/download/build/nft-0.2.2.meta.wasm
-    acc: alice
+    acc: jordan
     payload:
       name: test
       symbol: test
@@ -47,7 +47,7 @@ programs:
       https://github.com/gear-dapps/lottery/releases/download/0.1.0/lottery-0.1.0.opt.wasm
     metaDownloadUrl: >-
       https://github.com/gear-dapps/lottery/releases/download/0.1.0/lottery-0.1.0.meta.wasm
-    acc: alice
+    acc: jordan
     payload: 0x
     value: null
   '5':
@@ -57,7 +57,7 @@ programs:
       https://github.com/gear-dapps/dutch-auction/releases/download/0.1.0/dutch_auction-0.1.0.opt.wasm
     metaDownloadUrl: >-
       https://github.com/gear-dapps/dutch-auction/releases/download/0.1.0/dutch_auction-0.1.0.meta.wasm
-    acc: alice
+    acc: jordan
     payload: 0x
     value: null
   '6':
@@ -67,7 +67,7 @@ programs:
       https://github.com/gear-dapps/escrow/releases/download/0.1.0/escrow-0.1.0.opt.wasm
     metaDownloadUrl: >-
       https://github.com/gear-dapps/escrow/releases/download/0.1.0/escrow-0.1.0.meta.wasm
-    acc: alice
+    acc: jordan
     value: null
   '7':
     dapp: supply_chain
@@ -76,7 +76,7 @@ programs:
       https://github.com/gear-dapps/supply-chain/releases/download/0.1.0/supply_chain-0.1.0.opt.wasm
     metaDownloadUrl: >-
       https://github.com/gear-dapps/supply-chain/releases/download/0.1.0/supply_chain-0.1.0.meta.wasm
-    acc: alice
+    acc: jordan
     value: null
   '8':
     dapp: rock_paper_scissors
@@ -85,7 +85,7 @@ programs:
       https://github.com/gear-dapps/rock-paper-scissors/releases/download/0.1.0/rock_paper_scissors-0.1.0.opt.wasm
     metaDownloadUrl: >-
       https://github.com/gear-dapps/rock-paper-scissors/releases/download/0.1.0/rock_paper_scissors-0.1.0.meta.wasm
-    acc: alice
+    acc: jordan
     value: null
   '9':
     dapp: staking
@@ -94,7 +94,7 @@ programs:
       https://github.com/gear-dapps/staking/releases/download/0.1.0/staking-0.1.0.opt.wasm
     metaDownloadUrl: >-
       https://github.com/gear-dapps/staking/releases/download/0.1.0/staking-0.1.0.meta.wasm
-    acc: alice
+    acc: jordan
     value: null
 workflow:
   - command: uploadProgram
