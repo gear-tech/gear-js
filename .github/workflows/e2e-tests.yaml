@@ -81,7 +81,9 @@ jobs:
 
       - name: Build common package
         if: steps.check_file_changed.outputs.dataStorage_changed == 'True'
-        run: yarn build:common
+        run: |
+          sudo chown -R "$USER:$GROUP" .yarn
+          yarn build:common
 
       - name: Run data-storage tests
         if: steps.check_file_changed.outputs.dataStorage_changed == 'True'
