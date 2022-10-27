@@ -30,7 +30,7 @@ export class CodeService {
   }
 
   public async updateCodes(updateCodesInput: UpdateCodeInput[] | CodeChangedInput[]): Promise<Code[]> {
-    let updateCodes = [];
+    const updateCodes = [];
 
     for(const updateCodeInput of updateCodesInput){
       const { id, genesis } = updateCodeInput;
@@ -42,14 +42,16 @@ export class CodeService {
           status: updateCodeInput.status,
           expiration: updateCodeInput.expiration,
         });
-        updateCodes = [...updateCodes, updateCode];
+
+        updateCodes.push(updateCode);
       } else {
         const createCode =  plainToClass(Code, {
           ...updateCodeInput,
           name: updateCodeInput.id,
           timestamp: new Date(updateCodeInput.timestamp),
         });
-        updateCodes = [...updateCodes, createCode];
+
+        updateCodes.push(createCode);
       }
     }
 
