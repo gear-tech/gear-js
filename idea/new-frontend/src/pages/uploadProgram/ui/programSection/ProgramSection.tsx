@@ -17,12 +17,13 @@ import plusSVG from 'shared/assets/images/actions/plus.svg';
 import styles from '../UploadProgram.module.scss';
 
 type Props = {
+  resetMetaFile: () => void;
   file?: File;
   metadata?: Metadata;
   metadataBuffer?: string;
 };
 
-const ProgramSection = ({ file, metadata, metadataBuffer }: Props) => {
+const ProgramSection = ({ file, metadata, metadataBuffer, resetMetaFile }: Props) => {
   const alert = useAlert();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -43,20 +44,22 @@ const ProgramSection = ({ file, metadata, metadataBuffer }: Props) => {
     }
   };
 
-  const setFileInputValue = (newFile: File) => {
+  const setFileInputValue = (newFile: File | undefined) => {
     const target = fileInputRef.current;
 
-    if (target) {
+    if (!target) return;
+
+    if (newFile) {
       const dataTransfer = new DataTransfer();
 
       dataTransfer.items.add(newFile);
       target.files = dataTransfer.files;
-      target.dispatchEvent(new Event('change', { bubbles: true }));
-      // Help Safari out
-      if (target.webkitEntries.length) {
-        target.dataset.file = `${dataTransfer.files[0].name}`;
-      }
+    } else {
+      target.files = null;
+      target.value = '';
     }
+
+    target.dispatchEvent(new Event('change', { bubbles: true }));
   };
 
   const handleChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
@@ -81,6 +84,11 @@ const ProgramSection = ({ file, metadata, metadataBuffer }: Props) => {
     uploadProgram({
       file: selectedFile!,
       payload,
+      resolve: () => {
+        setFileBuffer(undefined);
+        setFileInputValue(undefined);
+        setSelectedFile(undefined);
+      },
       reject: helpers.enableButtons,
     });
 
@@ -95,6 +103,8 @@ const ProgramSection = ({ file, metadata, metadataBuffer }: Props) => {
     if (selectedFile) {
       getFileBuffer(selectedFile);
       setFileInputValue(selectedFile);
+    } else {
+      resetMetaFile();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFile]);

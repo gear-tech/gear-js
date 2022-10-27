@@ -29,7 +29,12 @@ const UploadProgram = () => {
 
   return (
     <div className={styles.uploadProgramPage}>
-      <ProgramSection file={state?.file} metadata={metadata} metadataBuffer={metadataBuffer} />
+      <ProgramSection
+        file={state?.file}
+        metadata={metadata}
+        metadataBuffer={metadataBuffer}
+        resetMetaFile={resetMetadada}
+      />
       <MetadataSection metadata={metadata} onReset={resetMetadada} onUpload={uploadMetadada} />
     </div>
   );

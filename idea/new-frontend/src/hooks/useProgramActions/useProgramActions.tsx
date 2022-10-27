@@ -53,12 +53,7 @@ const useProgramActions = () => {
 
     const { gasLimit, value, initPayload, metadata, payloadType } = payload;
 
-    const program = {
-      code: new Uint8Array(fileBuffer),
-      value,
-      gasLimit,
-      initPayload,
-    };
+    const program = { code: new Uint8Array(fileBuffer), value, gasLimit, initPayload };
 
     const result = await api.program.upload(program, metadata, payloadType);
 
