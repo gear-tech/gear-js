@@ -17,9 +17,10 @@ type Props = {
   codeId: string;
   metadata?: Metadata;
   metadataBuffer?: string;
+  resetMetadada: () => void;
 };
 
-const CodeSection = ({ codeId, metadata, metadataBuffer }: Props) => {
+const CodeSection = ({ codeId, metadata, metadataBuffer, resetMetadada }: Props) => {
   const navigate = useNavigate();
 
   const { createProgram } = useProgramActions();
@@ -30,6 +31,11 @@ const CodeSection = ({ codeId, metadata, metadataBuffer }: Props) => {
     createProgram({
       payload,
       codeId: codeId as Hex,
+      resolve: () => {
+        helpers.resetForm();
+        resetMetadada();
+        helpers.enableButtons();
+      },
       reject: helpers.enableButtons,
     });
 

@@ -63,6 +63,8 @@ const ProgramForm = (props: Props) => {
   };
 
   const handleSubmitForm = (values: FormValues) => {
+    if (!formApi.current) return;
+
     setIsDisables(true);
 
     const { value, payload, gasLimit, programName, payloadType } = values;
@@ -77,7 +79,7 @@ const ProgramForm = (props: Props) => {
       initPayload: metadata ? getSubmitPayload(payload) : payload,
     };
 
-    onSubmit(data, { enableButtons: () => setIsDisables(false) });
+    onSubmit(data, { enableButtons: () => setIsDisables(false), resetForm: formApi.current.reset });
   };
 
   const encodeType = metadata?.init_input;

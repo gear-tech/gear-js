@@ -14,6 +14,7 @@ type RenderButtonsProps = {
 
 type SubmitHelpers = {
   enableButtons: () => void;
+  resetForm: () => void;
 };
 
 export type { FormValues, SubmitHelpers, RenderButtonsProps };

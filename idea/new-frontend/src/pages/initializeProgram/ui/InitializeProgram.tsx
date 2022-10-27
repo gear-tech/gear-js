@@ -27,7 +27,7 @@ const InitializeProgram = () => {
 
   return (
     <div className={styles.initializeProgramPage}>
-      <CodeSection codeId={codeId} metadata={metadata} metadataBuffer={metadataBuffer} />
+      <CodeSection codeId={codeId} metadata={metadata} metadataBuffer={metadataBuffer} resetMetadada={resetMetadada} />
       <MetadataSection metadata={metadata} onReset={resetMetadada} onUpload={uploadMetadada} />
     </div>
   );
