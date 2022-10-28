@@ -1,9 +1,9 @@
-import { Between, In, Like } from 'typeorm';
+import { Between, ILike, In } from 'typeorm';
 
 export function queryFilter(
   strictParams: {[key: string]: string},
   queryParams: {[key: string]: string | string[]},
-  searchParams: string[]
+  searchParams: unknown[] | Record<string, unknown>[]
 ): Record<string, unknown>[] | Record<string, unknown> {
   const queryBodyList:Record<string, unknown>[] = [];
   const { query, fromDate, toDate, ...queryParamsWithoutSearch } = queryParams;
@@ -39,9 +39,16 @@ export function queryFilter(
 
   if(isIncludeSearchByTitle) {
     for(const param of searchParams){
-      const queryBody: {[key: string]: unknown} = { ...strictParams };
+      let queryBody: {[key: string]: unknown} = { ...strictParams };
 
-      queryBody[param] = Like('%' + query + '%');
+      if(typeof param === 'object') {
+        queryBody = { ...queryBody, ...param };
+      }
+
+      if(typeof param === 'string'){
+        queryBody[param] = ILike('%' + query + '%');
+      }
+
       queryBodyList.push(queryBody);
     }
   }

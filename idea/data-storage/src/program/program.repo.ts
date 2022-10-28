@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -22,7 +22,7 @@ export class ProgramRepo {
     return this.programRepo.findOne({
       where: { id, genesis },
       relations: ['meta', 'messages', 'code'],
-      select: { meta: { meta: true, program: true, id: true } },
+      select: { meta: { meta: true, program: true } },
     });
   }
 
@@ -34,21 +34,23 @@ export class ProgramRepo {
         owner,
       },
       relations: ['meta', 'messages', 'code'],
-      select: { meta: { meta: true, program: true, id: true } },
+      select: { meta: { meta: true, program: true } },
     });
   }
 
   public async listPaginationByGenesis(params: GetAllProgramsParams): Promise<[Program[], number]> {
     const { genesis, query, limit, offset, owner, toDate, fromDate, status } = params;
+    const strictParams = { genesis };
+
     return this.programRepo.findAndCount({
       where: queryFilter(
-        { genesis },
+        strictParams,
         { query, owner, fromDate, toDate, status },
-        ['id', 'title', 'name']),
+        ['id', 'title', 'name', { code: { id: ILike('%' + query + '%') } }]),
+      relations: ['meta', 'code'],
+      select: { meta: { meta: true, program: true } },
       take: limit || PAGINATION_LIMIT,
       skip: offset || 0,
-      relations: ['meta', 'code'],
-      select: { meta: { meta: true, program: true, id: true } },
       order: {
         timestamp: 'DESC',
       },

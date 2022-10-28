@@ -22,7 +22,8 @@ export class CodeRepo {
         genesis,
         status: CodeStatus.ACTIVE,
       },
-      relations: ['programs', 'meta']
+      relations: ['programs', 'meta'],
+      select: { meta: { meta: true, program: true } },
     });
   }
 
@@ -35,9 +36,7 @@ export class CodeRepo {
         ['id', 'name']),
       take: limit || PAGINATION_LIMIT,
       skip: offset || 0,
-      order: {
-        timestamp: 'DESC',
-      },
+      order: { timestamp: 'DESC' },
     });
   }
 
