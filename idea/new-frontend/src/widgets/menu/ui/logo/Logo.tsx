@@ -1,6 +1,7 @@
 import { CSSTransition } from 'react-transition-group';
+import { Link } from 'react-router-dom';
 
-import { AnimationTimeout } from 'shared/config';
+import { AnimationTimeout, routes } from 'shared/config';
 import { ReactComponent as GearsSVG } from 'shared/assets/images/logos/gears.svg';
 import { ReactComponent as IdeaLogoSVG } from 'shared/assets/images/logos/idea.svg';
 import { ReactComponent as GearLogoSVG } from 'shared/assets/images/logos/gearText.svg';
@@ -12,7 +13,7 @@ type Props = {
 };
 
 const Logo = ({ isOpen }: Props) => (
-  <div className={styles.logoWrapper}>
+  <Link to={routes.programs} className={styles.logoWrapper}>
     <CSSTransition in={isOpen} timeout={AnimationTimeout.Default} unmountOnExit className={styles.ideaLogo}>
       <IdeaLogoSVG />
     </CSSTransition>
@@ -20,7 +21,7 @@ const Logo = ({ isOpen }: Props) => (
     <CSSTransition in={isOpen} timeout={AnimationTimeout.Default} unmountOnExit className={styles.gearLogo}>
       <GearLogoSVG />
     </CSSTransition>
-  </div>
+  </Link>
 );
 
 export { Logo };
