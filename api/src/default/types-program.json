@@ -1,6 +1,6 @@
 {
   "types": {
-    "ProgramId": "[u8; 32]",
+    "ProgramId": "[u8;32]",
     "Program": {
       "_enum": {
         "Active": "ActiveProgram",
@@ -10,16 +10,22 @@
     },
     "WasmPageNumber": "u32",
     "PageNumber": "u32",
+    "ReservationId": "[u8;32]",
+    "GasReservationSlot": { "amount": "u64", "expiration": "u32" },
     "ActiveProgram": {
       "allocations": "BTreeSet<WasmPageNumber>",
       "pages_with_data": "BTreeSet<PageNumber>",
+      "gas_reservation_map": "BTreeMap<ReservationId, GasReservationSlot>",
       "code_hash": "H256",
+      "code_length_bytes": "u32",
+      "code_exports": "BTreeSet<DispatchKind>",
+      "static_pages": "WasmPageNumber",
       "state": "ProgramState"
     },
     "ProgramState": {
       "_enum": {
         "Uninitialized": {
-          "message_id": "H256"
+          "message_id": "MessageId"
         },
         "Initialized": "Null"
       }

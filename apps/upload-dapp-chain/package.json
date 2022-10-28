@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/upload-dapp-chain",
-  "version": "--",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "prebuild": "rimraf dist",
@@ -20,12 +20,12 @@
     "@nestjs/core": "^8.0.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/schedule": "^2.1.0",
     "@nestjs/typeorm": "^9.0.1",
     "@polkadot/api": "^9.5.1",
+    "@types/cron": "^2.0.0",
     "@types/js-yaml": "^4.0.5",
     "axios": "^0.27.2",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.13.2",
     "dotenv": "^16.0.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",

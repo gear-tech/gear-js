@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 
 import { DappData } from "./entities/dapp-data.entity";
 import { DappDataRepo } from "./dapp-data.repo";
-import { UploadProgramResult } from "../command/types";
+import { UploadProgramResult } from "../program/types";
 
 @Injectable()
 export class DappDataService {

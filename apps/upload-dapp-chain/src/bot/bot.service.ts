@@ -1,23 +1,29 @@
 import { Injectable, Logger } from "@nestjs/common";
 
-import { CommandService } from "../command/command.service";
 import { DappDataService } from "../dapp-data/dapp-data.service";
 import { Role, TBErrorMessage } from "../common/enums";
 import { UserService } from "../user/user.service";
 import { UserRepo } from "../user/user.repo";
-import { getTgCommands } from "../common/helpers";
+import { getTgCommands, updateWasmUrlsByLastReleasesRepo } from "../common/helpers";
 import { getWorkflowCommands } from "../common/helpers/get-workflow-commands";
-import { SendMessageInput, UploadProgramResult } from "../command/types";
 import { getUploadProgramData } from "../common/helpers/get-upload-program-data";
 import { DappData } from "../dapp-data/entities/dapp-data.entity";
 import { FlowCommand, Payload } from "../common/types";
 import { getUploadProgramByName } from "../common/helpers/get-upload-program-by-name";
+import { CodeService } from "../code/code.service";
+import { MessageService } from "../message/message.service";
+import { ProgramService } from "../program/program.service";
+import { UploadProgramResult } from "../program/types";
+import { UploadCodesResult } from "../code/types";
+import { SendMessageInput } from "../message/types/send-message.input";
 
 @Injectable()
-export class TgbotService {
-  private logger: Logger = new Logger("TgbotService");
+export class BotService {
+  private logger: Logger = new Logger(BotService.name);
   constructor(
-      private commandService: CommandService,
+      private codeService: CodeService,
+      private messageService: MessageService,
+      private programService: ProgramService,
       private dappDataService: DappDataService,
       private userService: UserService,
       private userRepository: UserRepo,
@@ -37,7 +43,7 @@ export class TgbotService {
       }
 
       await this.userService.creatUser({ id, role: Role.DEV });
-      return "User successfully register";
+      return "✅ User successfully register";
     }
 
     return TBErrorMessage.ACCESS_DENIED;
@@ -60,19 +66,47 @@ export class TgbotService {
     }
 
     for (const commandInfo of workflow) {
-      const uploadedProgram = await this.handleCommand(commandInfo, uploadedPrograms);
-
-      if (uploadedProgram) uploadedPrograms.push(uploadedProgram);
+      if (commandInfo.command !== "uploadCode") {
+        const uploadedProgram = await this.handleCommand(commandInfo, uploadedPrograms);
+        if (uploadedProgram) uploadedPrograms.push(uploadedProgram);
+      }
     }
     try {
       const dapps = await this.dappDataService.createDappsData(uploadedPrograms);
 
-      console.log("________>dapps", dapps);
+      return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
+    } catch (error) {
+      this.logger.error("Upload dapps bot command error");
+      console.log(error);
+
+      return JSON.stringify(error);
+    }
+  }
+
+  public async uploadCodes(userId: number): Promise<DappData[] | string> {
+    const workflow = getWorkflowCommands();
+    const uploadedCodes: UploadCodesResult[] = [];
+
+    if (!await this.userService.validate(String(userId))) {
+      return TBErrorMessage.ACCESS_DENIED;
+    }
+
+    for (const commandInfo of workflow) {
+      if (commandInfo.command === "uploadCode") {
+        const uploadCode = await this.handleCommand(commandInfo, uploadedCodes);
+        if (uploadCode) uploadedCodes.push(uploadCode);
+      }
+    }
+
+    try {
+      const dapps = await this.dappDataService.createDappsData(uploadedCodes);
 
       return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
     } catch (error) {
-      this.logger.error("_________UPLOAD_DAPPS_ERROR_________");
+      this.logger.error("Upload codes bot command error");
       console.log(error);
+
+      return JSON.stringify(error);
     }
   }
 
@@ -106,12 +140,12 @@ export class TgbotService {
     try {
       const dapps = await this.dappDataService.createDappsData(uploadedPrograms);
 
-      console.log("________>", dapps);
-
       return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
     } catch (error) {
-      this.logger.error("_________UPLOAD_DAPP_ERROR_________");
+      this.logger.error("Upload dapp bot command error");
       console.log(error);
+
+      return JSON.stringify(error);
     }
   }
 
@@ -148,9 +182,28 @@ export class TgbotService {
 
       return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
     } catch (error) {
-      this.logger.error("_________UPLOAD_CODE_ERROR_________");
+      this.logger.error("Upload code bot command error");
       console.log(error);
+
+      return JSON.stringify(error);
     }
+  }
+
+  public async updateWorkflowWasmUrls(userId: number): Promise<string> {
+    if (await this.userService.isAdmin(String(userId))) {
+      try {
+        await updateWasmUrlsByLastReleasesRepo();
+
+        return "✅ Successfully updated programs meta.wasm and opt.wasm download urls";
+      } catch (error) {
+        this.logger.error("Update workflow file error");
+        console.log(error);
+
+        return JSON.stringify(error);
+      }
+    }
+
+    return TBErrorMessage.ACCESS_DENIED;
   }
 
   private async handleCommand(
@@ -170,19 +223,20 @@ export class TgbotService {
           value,
         };
 
-        await this.commandService.sendMessage(sendMessageInput, uploadedPrograms);
+        await this.messageService.send(sendMessageInput, uploadedPrograms);
         return;
       }
 
       if (command === "uploadProgram") {
-        return this.commandService.uploadProgram(uploadProgramData);
+        return this.programService.upload(uploadProgramData);
       }
 
       if (command === "uploadCode") {
-        return this.commandService.uploadCode(uploadProgramData);
+        return this.codeService.upload(uploadProgramData);
       }
     } catch (error) {
-      this.logger.error("_________HANDLE_COMMAND_________");
+      this.logger.error("Handle commands error");
+      this.logger.error(`Program: ${uploadProgramData.dapp}`);
       console.log(error);
     }
   }

@@ -6,6 +6,7 @@ import { changeStatus, healthcheckRouter } from './routes/healthcheck.router';
 import { connectToDB } from './database/app-data-source';
 import { gearService } from './gear';
 import { kafkaCreateConnection } from './kafka/kafka-create-connection';
+import { sendGenesis } from './common/send-genesis';
 
 const app = express();
 
@@ -21,13 +22,11 @@ const startApp = async () => {
   await connectToDB();
   changeStatus('database');
 
-  await kafkaCreateConnection();
-  changeStatus('kafka');
-
-  while (true) {
-    await gearService.connect();
-    console.log('Reconnecting...');
-  }
+  gearService.init(async () => {
+    await kafkaCreateConnection();
+    changeStatus('kafka');
+    await sendGenesis();
+  });
 };
 
 startApp();
