@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Metadata } from '@gear-js/api';
+import { CreateType, Metadata } from '@gear-js/api';
 
 import { getPreformattedText } from 'shared/helpers';
 import { FormText } from 'shared/ui/form';
 
+import { AnyJson, Codec } from '@polkadot/types/types';
 import styles from './MessageInfo.module.scss';
 import { IMessage } from '../../model';
 import { getDecodedMessagePayload } from '../../helpers';
@@ -30,7 +31,17 @@ const MessageInfo = ({ metadata, message, isLoading }: Props) => {
       return;
     }
 
-    const payload = metadata && !message.exitCode ? getDecodedMessagePayload(metadata, message) : message.payload;
+    let payload: AnyJson | Codec;
+
+    if (!message.exitCode) {
+      if (metadata) {
+        payload = getDecodedMessagePayload(metadata, message);
+      } else {
+        payload = CreateType.create('Bytes', message.payload).toHuman();
+      }
+    } else {
+      payload = CreateType.create('String', message.payload).toHuman();
+    }
 
     setDecodedPayload(payload ? getPreformattedText(payload) : '-');
   }, [metadata, message, isLoading]);
