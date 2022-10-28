@@ -1,8 +1,10 @@
+import { CSSTransition } from 'react-transition-group';
 import { MouseEvent } from 'react';
 import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
 
 import connectSVG from 'shared/assets/images/menu/connect.svg';
+import { AnimationTimeout } from 'shared/config';
 
 import styles from './NodesButton.module.scss';
 
@@ -12,10 +14,11 @@ type Props = {
   version: string;
   isApiReady: boolean;
   isOpen: boolean;
+  isFullWidth: boolean;
   onClick: (event: MouseEvent) => void;
 };
 
-const NodesButton = ({ name, chain, version, isApiReady, isOpen, onClick }: Props) => {
+const NodesButton = ({ name, chain, version, isApiReady, isOpen, isFullWidth, onClick }: Props) => {
   const btnClasses = clsx(buttonStyles.button, buttonStyles.light, styles.nodeInfoButton, isOpen && styles.open);
 
   return (
@@ -23,18 +26,20 @@ const NodesButton = ({ name, chain, version, isApiReady, isOpen, onClick }: Prop
       <p className={styles.menuIconWrapper}>
         <img src={connectSVG} alt="connect" className={buttonStyles.icon} />
       </p>
-      <p className={styles.nodeInfo}>
-        {isApiReady ? (
-          <>
-            <span className={styles.chain}>{chain}</span>
-            <span className={styles.otherInfo}>
-              {name}/{version}
-            </span>
-          </>
-        ) : (
-          'Loading...'
-        )}
-      </p>
+      <CSSTransition in={isFullWidth} timeout={AnimationTimeout.Small} className={styles.nodeInfo} unmountOnExit>
+        <p>
+          {isApiReady ? (
+            <>
+              <span className={styles.chain}>{chain}</span>
+              <span className={styles.otherInfo}>
+                {name}/{version}
+              </span>
+            </>
+          ) : (
+            'Loading...'
+          )}
+        </p>
+      </CSSTransition>
     </button>
   );
 };

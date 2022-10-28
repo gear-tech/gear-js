@@ -14,12 +14,12 @@ const Menu = () => {
 
   return (
     <menu className={clsx('menu', styles.menu)}>
-      <div className={styles.wrapper}>
+      <div className={clsx(styles.wrapper, isOpen && styles.open)}>
         <div className={clsx(styles.menuContent, isOpen && styles.open)}>
           <Logo isOpen={isOpen} />
           <Navigation isOpen={isOpen} />
         </div>
-        <NodesSwitch />
+        <NodesSwitch isButtonFullWidth={isOpen} />
       </div>
 
       <button type="button" className={clsx(styles.menuBtn, !isOpen && styles.rotated)} onClick={toggleMenu}>

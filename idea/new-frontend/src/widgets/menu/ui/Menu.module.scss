@@ -11,10 +11,16 @@
 }
 
 .wrapper {
+  width: toRem(74);
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition: width $timeout ease-in-out;
+
+  &.open {
+    width: toRem(228);
+  }
 }
 
 .menuContent {
@@ -24,9 +30,7 @@
   position: relative;
   padding-top: toRem(28);
   height: 100%;
-  width: toRem(74);
   overflow: hidden;
-  transition: width $timeout ease-in-out;
 
   &::after,
   &::before {
@@ -54,8 +58,6 @@
   }
 
   &.open {
-    width: toRem(228);
-
     &::after {
       left: toRem(83);
     }

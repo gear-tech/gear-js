@@ -11,7 +11,11 @@ import { useNodes } from 'widgets/menu/helpers/useNodes';
 import { NodesButton } from './nodesButton';
 import { NodesPopup } from './nodesPopup';
 
-const NodesSwitch = () => {
+type Props = {
+  isButtonFullWidth: boolean;
+};
+
+const NodesSwitch = ({ isButtonFullWidth }: Props) => {
   const { api, isApiReady } = useApi();
   const { nodeSections, isNodesLoading, addLocalNode, removeLocalNode } = useNodes();
 
@@ -81,6 +85,7 @@ const NodesSwitch = () => {
         version={specVersion}
         isApiReady={isApiReady}
         isOpen={isNodesOpen}
+        isFullWidth={isButtonFullWidth}
         onClick={toggleNodesPopup}
       />
       <CSSTransition in={isNodesOpen} timeout={AnimationTimeout.Default} mountOnEnter unmountOnExit>
