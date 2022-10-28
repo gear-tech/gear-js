@@ -1,4 +1,4 @@
-import { memo, MouseEvent } from 'react';
+import { memo } from 'react';
 import { Link, generatePath } from 'react-router-dom';
 import { Metadata } from '@gear-js/api';
 
@@ -21,10 +21,6 @@ type Props = {
 
 const HorizontalProgramCard = memo(({ program }: Props) => {
   const { id: programId, name, status, timestamp } = program;
-
-  const stopPropagation = (event: MouseEvent<HTMLAnchorElement>) => {
-    event.stopPropagation();
-  };
 
   const statusName = PROGRAM_STATUS_NAME[status];
 
@@ -49,15 +45,9 @@ const HorizontalProgramCard = memo(({ program }: Props) => {
           icon={sendSVG}
           text="Send Message"
           className={styles.sendMessage}
-          onClick={stopPropagation}
         />
         {isState(meta) && (
-          <ActionLink
-            to={generatePath(routes.state, { programId })}
-            icon={readSVG}
-            text="Read State"
-            onClick={stopPropagation}
-          />
+          <ActionLink to={generatePath(routes.state, { programId })} icon={readSVG} text="Read State" />
         )}
       </div>
     </article>

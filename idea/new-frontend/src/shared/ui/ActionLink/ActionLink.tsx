@@ -9,11 +9,11 @@ type Props = LinkProps & {
   text: string;
 };
 
-const ActionLink = ({ to, icon, text, className }: Props) => {
+const ActionLink = ({ to, icon, text, className, state }: Props) => {
   const linkClasses = clsx(buttonStyles.button, buttonStyles.small, buttonStyles.transparent, styles.link, className);
 
   return (
-    <Link to={to} className={linkClasses}>
+    <Link to={to} className={linkClasses} state={state}>
       <img src={icon} alt={text} className={buttonStyles.icon} />
       <span className={styles.linkText}>{text}</span>
     </Link>

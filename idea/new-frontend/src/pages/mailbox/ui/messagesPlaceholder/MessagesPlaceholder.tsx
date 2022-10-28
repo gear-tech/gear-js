@@ -8,7 +8,7 @@ type Props = {
 const MessagesPlaceholder = ({ isEmpty }: Props) => (
   <Placeholder
     block={<MessagePlaceholderSVG />}
-    title="There is no messages yet"
+    title="There are no messages yet"
     description="Your mailbox is currently empty"
     isEmpty={isEmpty}
     blocksCount={4}

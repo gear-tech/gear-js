@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAccount } from '@gear-js/react-hooks';
 
 import { OwnerFilter } from 'api/consts';
@@ -13,11 +14,13 @@ import { SearchSettings } from '../searchSettings';
 import styles from './ProgramsPage.module.scss';
 
 const ProgramsPage = () => {
+  const location = useLocation();
+
   const { account } = useAccount();
 
   const { programs, isLoading, totalCount, fetchPrograms } = usePrograms();
   const { params, loadData, changeParams } = useDataLoading<RequestParams>({
-    defaultParams: DEFAULT_REQUEST_PARAMS,
+    defaultParams: location.state ?? DEFAULT_REQUEST_PARAMS,
     fetchData: fetchPrograms,
   });
 
@@ -51,7 +54,6 @@ const ProgramsPage = () => {
 
   const isLoggedIn = Boolean(account);
   const heading = `Programs: ${totalCount}`;
-  // const programsAmount =
 
   return (
     <div className={styles.pageWrapper}>
@@ -59,7 +61,12 @@ const ProgramsPage = () => {
         <h2 className={styles.heading}>{heading}</h2>
         <ProgramsList programs={programs} totalCount={totalCount} isLoading={isLoading} loadMorePrograms={loadData} />
       </section>
-      <SearchSettings isLoggedIn={isLoggedIn} initialValues={initialValues} onSubmit={handleParamsChange} />
+      <SearchSettings
+        initQuery={params.query || ''}
+        isLoggedIn={isLoggedIn}
+        initialValues={initialValues}
+        onSubmit={handleParamsChange}
+      />
     </div>
   );
 };

@@ -33,7 +33,7 @@ const ProgramsList = (props: Props) => {
         {isLoaderShowing ? (
           <Placeholder
             block={<HorizontalProgramCardSVG className={styles.placeholderBlock} />}
-            title="There is no program yet"
+            title="There are no programs yet"
             description="You can start experimenting right now or try to build from examples. Let's Rock!"
             isEmpty={isEmpty}
             blocksCount={6}>

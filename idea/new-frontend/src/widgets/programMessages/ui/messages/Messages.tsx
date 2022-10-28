@@ -24,7 +24,7 @@ const Messages = ({ messages, isLoading, totalCount }: Props) => {
       {isLoaderShowing ? (
         <Placeholder
           block={<HorizontalMessageCardSVG className={styles.placeholderBlock} />}
-          title="There is no messages yet"
+          title="There are no messages yet"
           isEmpty={isEmpty}
           blocksCount={8}
         />

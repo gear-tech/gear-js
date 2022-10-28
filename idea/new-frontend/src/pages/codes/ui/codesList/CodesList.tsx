@@ -33,7 +33,7 @@ const CodesList = (props: Props) => {
         {isLoaderShowing ? (
           <Placeholder
             block={<HorizontalCodeCardSVG className={styles.placeholderBlock} />}
-            title="There is no codes yet"
+            title="There are no codes yet"
             description="You can start experimenting right now or try to build from examples. Let`s Rock!"
             isEmpty={isEmpty}
             blocksCount={8}>

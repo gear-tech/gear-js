@@ -1,11 +1,12 @@
-import { memo, MouseEvent } from 'react';
+import { memo } from 'react';
 import { generatePath } from 'react-router-dom';
 
-import { absoluteRoutes } from 'shared/config';
+import { absoluteRoutes, routes } from 'shared/config';
 import { IdBlock } from 'shared/ui/idBlock';
 import { ActionLink } from 'shared/ui/ActionLink';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
 import initializeProgramSVG from 'shared/assets/images/actions/initializeProgram.svg';
+import relatedProgramsSVG from 'shared/assets/images/actions/relatedPrograms.svg';
 
 import styles from './HorizontalCodeCard.module.scss';
 import { ICode } from '../../model';
@@ -16,10 +17,6 @@ type Props = {
 
 const HorizontalCodeCard = memo(({ code }: Props) => {
   const { id: codeId, timestamp } = code;
-
-  const stopPropagation = (event: MouseEvent<HTMLAnchorElement>) => {
-    event.stopPropagation();
-  };
 
   return (
     <article className={styles.horizontalCodeCard}>
@@ -38,8 +35,8 @@ const HorizontalCodeCard = memo(({ code }: Props) => {
           icon={initializeProgramSVG}
           text="Create program"
           className={styles.sendMessage}
-          onClick={stopPropagation}
         />
+        <ActionLink to={routes.programs} icon={relatedProgramsSVG} text="Related programs" state={{ query: codeId }} />
       </div>
     </article>
   );
