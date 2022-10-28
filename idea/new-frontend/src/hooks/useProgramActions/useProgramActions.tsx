@@ -69,11 +69,7 @@ const useProgramActions = () => {
         alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
 
         if (reject) reject();
-      } else if (method === Method.MessageEnqueued) {
-        alert.success('Success', alertOptions);
-
-        if (resolve) resolve();
-      }
+      } else if (method === Method.MessageEnqueued && resolve) resolve();
     });
   };
 
