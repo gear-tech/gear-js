@@ -95,21 +95,24 @@ const TopSide = ({ account }: Props) => {
           </CSSTransition>
         )}
         <div className={styles.rightSide}>
-          {account && isTestBalanceAvailable && (
+          {account && (
             <CSSTransition in appear timeout={AnimationTimeout.Default}>
               <div className={styles.privateContent}>
-                <TooltipWrapper text="Get test balance">
-                  <button
-                    type="button"
-                    className={btnClasses}
-                    onClick={isDevChain ? handleTransferBalanceFromAlice : handleTestBalanceClick}>
-                    <TestBalanceSVG />
-                  </button>
-                </TooltipWrapper>
+                {isTestBalanceAvailable && (
+                  <TooltipWrapper text="Get test balance">
+                    <button
+                      type="button"
+                      className={btnClasses}
+                      onClick={isDevChain ? handleTransferBalanceFromAlice : handleTestBalanceClick}>
+                      <TestBalanceSVG />
+                    </button>
+                  </TooltipWrapper>
+                )}
                 <BalanceInfo balance={account.balance} />
               </div>
             </CSSTransition>
           )}
+
           {isAccountReady && (
             <CSSTransition in appear timeout={AnimationTimeout.Default}>
               <Wallet account={account} isApiReady={isApiReady} />
