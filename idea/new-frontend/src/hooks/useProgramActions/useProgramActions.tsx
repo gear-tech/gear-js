@@ -73,8 +73,17 @@ const useProgramActions = () => {
     });
   };
 
-  const signAndUpload = async ({ name, title, signer, payload, programId, reject, resolve }: ParamsToSignAndUpload) => {
-    const alertId = alert.loading('SignIn', { title });
+  const signAndUpload = async ({
+    name,
+    title,
+    signer,
+    payload,
+    programId,
+    reject,
+    resolve,
+    method,
+  }: ParamsToSignAndUpload) => {
+    const alertId = alert.loading('SignIn', { title: method });
 
     try {
       const initialization = waitForProgramInit(api, programId);
@@ -150,7 +159,16 @@ const useProgramActions = () => {
         const name = payload.programName || codeId;
 
         const handleConfirm = () =>
-          signAndUpload({ name, title: TransactionName.CreateProgram, signer, payload, programId, reject, resolve });
+          signAndUpload({
+            name,
+            title: payload.metadata?.title,
+            method: TransactionName.CreateProgram,
+            signer,
+            payload,
+            programId,
+            reject,
+            resolve,
+          });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),
@@ -184,7 +202,16 @@ const useProgramActions = () => {
         const name = payload.programName || file.name;
 
         const handleConfirm = () =>
-          signAndUpload({ name, title: TransactionName.UploadProgram, signer, payload, programId, reject, resolve });
+          signAndUpload({
+            name,
+            title: payload.metadata?.title,
+            method: TransactionName.UploadProgram,
+            signer,
+            payload,
+            programId,
+            reject,
+            resolve,
+          });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),
