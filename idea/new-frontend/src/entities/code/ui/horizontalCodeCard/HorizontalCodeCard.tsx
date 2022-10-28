@@ -25,9 +25,11 @@ const HorizontalCodeCard = memo(({ code }: Props) => {
     <article className={styles.horizontalCodeCard}>
       <div className={styles.content}>
         <IdBlock id={codeId} size="large" className={styles.codeId} />
-        <div className={styles.otherInfo}>
-          <TimestampBlock color="light" withIcon timestamp={timestamp} />
-        </div>
+        {timestamp && (
+          <div className={styles.otherInfo}>
+            <TimestampBlock color="light" withIcon timestamp={timestamp} />
+          </div>
+        )}
       </div>
       <div className={styles.actions}>
         {/* TODO: rename initialize to create */}

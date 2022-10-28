@@ -31,24 +31,31 @@ const getLocalPrograms = (params: any) => {
   };
   const data = { result };
 
-  return PROGRAMS_LOCAL_FORAGE.iterate((elem: IProgram, key, iterationNumber) => {
-    const newLimit = params.offset + params.limit;
-
-    data.result.count = iterationNumber;
-
-    if (params.query) {
-      if (
-        (elem.name?.includes(params.query) || elem.id?.includes(params.query)) &&
-        iterationNumber <= newLimit &&
-        iterationNumber > params.offset
-      ) {
-        data.result.programs.push(elem);
+  return PROGRAMS_LOCAL_FORAGE.iterate((elem: IProgram) => {
+    if (params.query || params.owner || params.status) {
+      if (params.query) {
+        if (elem.name?.includes(params.query) || elem.id?.includes(params.query)) {
+          data.result.programs.push(elem);
+        }
       }
-    } else if (iterationNumber <= newLimit && iterationNumber > params.offset) {
+
+      if (params.owner) {
+        if (elem.owner === params.owner) {
+          data.result.programs.push(elem);
+        }
+      }
+
+      if (params.status) {
+        if (params.status.includes(elem.status)) {
+          data.result.programs.push(elem);
+        }
+      }
+    } else {
       data.result.programs.push(elem);
     }
   }).then(() => {
     data.result.programs.sort((prev, next) => Date.parse(next.timestamp) - Date.parse(prev.timestamp));
+    data.result.count = data.result.programs.length;
 
     return data;
   });

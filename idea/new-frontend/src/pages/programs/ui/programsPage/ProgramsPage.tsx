@@ -51,6 +51,7 @@ const ProgramsPage = () => {
 
   const isLoggedIn = Boolean(account);
   const heading = `Programs: ${totalCount}`;
+  // const programsAmount =
 
   return (
     <div className={styles.pageWrapper}>
