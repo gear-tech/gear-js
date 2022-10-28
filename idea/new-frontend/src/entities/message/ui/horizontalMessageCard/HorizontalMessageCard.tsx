@@ -6,6 +6,7 @@ import { IdBlock } from 'shared/ui/idBlock';
 import { BulbBlock, BulbStatus } from 'shared/ui/bulbBlock';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
 import flagSVG from 'shared/assets/images/indicators/flag.svg';
+import { ReactComponent as DirectionSVG } from 'shared/assets/images/indicators/messageDirection.svg';
 import { absoluteRoutes } from 'shared/config';
 
 import styles from './HorizontalMessageCard.module.scss';
@@ -20,18 +21,23 @@ const HorizontalMessageCard = ({ message, moreInfo = false }: Props) => {
   const { id: messageId, timestamp, type, program } = message;
   const { source, destination } = message;
 
-  const text = type === 'UserMessageSent' ? 'From:' : 'To:';
-  const addressText = type === 'UserMessageSent' ? source : destination;
+  const isMessageFromProgram = type === 'UserMessageSent';
+  const text = isMessageFromProgram ? 'From:' : 'To:';
+  const addressText = isMessageFromProgram ? source : destination;
 
   return (
     <article className={clsx(styles.horizontalMessageCard, moreInfo && styles.moreInfo)}>
-      <IdBlock
-        id={messageId}
-        size="large"
-        withIcon
-        maxCharts={18}
-        to={generatePath(absoluteRoutes.message, { messageId })}
-      />
+      <div className={styles.info}>
+        <DirectionSVG className={clsx(styles.directionSVG, isMessageFromProgram && styles.fromProgram)} />
+        <IdBlock
+          id={messageId}
+          size="large"
+          withIcon
+          maxCharts={18}
+          to={generatePath(absoluteRoutes.message, { messageId })}
+        />
+      </div>
+
       <TimestampBlock size="medium" color="light" timestamp={timestamp} withIcon />
       {moreInfo && (
         <div className={styles.fromBlock}>
