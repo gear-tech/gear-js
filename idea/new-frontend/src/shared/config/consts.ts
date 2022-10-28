@@ -11,7 +11,7 @@ const NODE_ADRESS_URL_PARAM = 'node';
 const EXAMPLES_HREF = 'https://www.gear-tech.io/developers';
 
 const DEFAULT_LIMIT = 20;
-const GEAR_BALANCE_TRANSFER_VALUE = 10_000_000_000;
+const GEAR_BALANCE_TRANSFER_VALUE = +(process.env.REACT_APP_DEFAULT_TRANSFER_BALANCE_VALUE as string);
 
 const ACCOUNT_ERRORS = {
   WALLET_NOT_CONNECTED: 'Wallet not connected',
