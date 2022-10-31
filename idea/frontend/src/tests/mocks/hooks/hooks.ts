@@ -4,23 +4,16 @@ import { Account } from '@gear-js/react-hooks';
 
 import * as UseGasCalculateModule from 'hooks/useGasCalculate/useGasCalculate';
 
-export const useAccountMock = (account?: Account) => {
+export const useAccountMock = (account?: Account, accounts?: Account[]) => {
   const mock = jest.spyOn(gearHooks, 'useAccount');
 
   mock.mockReturnValue({
     account,
+    accounts,
     switchAccount: jest.fn(),
-    updateBalance: jest.fn(),
     logout: jest.fn(),
+    isAccountReady: Boolean(accounts),
   });
-
-  return mock;
-};
-
-export const useAccountsMock = (accounts?: Account[]) => {
-  const mock = jest.spyOn(gearHooks, 'useAccounts');
-
-  mock.mockReturnValue({ accounts, isExtensionReady: Boolean(accounts) });
 
   return mock;
 };

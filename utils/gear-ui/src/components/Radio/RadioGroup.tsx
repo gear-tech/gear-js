@@ -17,4 +17,5 @@ const RadioGroup = ({ buttons, value, ...attrs }: Props) => {
   return <>{getButtons()}</>;
 };
 
-export { RadioGroup, Props as RadioGroupProps };
+export { RadioGroup };
+export type { Props as RadioGroupProps };

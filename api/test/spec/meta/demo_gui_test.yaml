@@ -36,6 +36,10 @@ payloads:
             field: 8
         expected: '0x010108'
 
+      - name: BVarSome
+        payload: '0x010108'
+        expected: '0x010108'
+
       - name: BVarNone
         payload:
           BVar: null

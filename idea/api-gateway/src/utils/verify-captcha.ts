@@ -1,8 +1,6 @@
 import { verify } from 'hcaptcha';
 
-import configuration from '../config/configuration';
-
-const config = configuration();
+import config from '../config/configuration';
 
 const SECRET = config.server.captchaSecret;
 

@@ -25,7 +25,15 @@ export class GetGasSpentError extends Error {
 export class ProgramTerminatedError extends Error {
   name = 'ProgramTerminated';
 
-  constructor() {
-    super('Program terminated');
+  constructor(id: string) {
+    super(`Program ${id} terminated`);
+  }
+}
+
+export class ProgramExitedError extends Error {
+  name = 'ProgramExited';
+
+  constructor(id: string) {
+    super(`Program ${id} exited`);
   }
 }

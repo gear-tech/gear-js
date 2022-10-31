@@ -1,10 +1,11 @@
 import { Button, Checkbox, FileInput, Input, Textarea } from '@gear-js/ui';
-import plus from 'assets/images/form/plus.svg';
-import { useIPFS, useSendNFTMessage } from 'hooks';
-import { getMintDetails, getMintPayload } from 'utils';
+import { useAlert } from '@gear-js/react-hooks';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
+import plus from 'assets/images/form/plus.svg';
+import { useIPFS, useSendNFTMessage } from 'hooks';
+import { getMintDetails, getMintPayload } from 'utils';
 import { Attributes } from './attributes';
 import styles from './Create.module.scss';
 
@@ -27,6 +28,7 @@ function Create() {
   const { fields, append, remove } = useFieldArray({ control, name: 'attributes' });
   const { errors } = formState;
 
+  const alert = useAlert();
   const ipfs = useIPFS();
   const sendMessage = useSendNFTMessage();
 
@@ -68,7 +70,8 @@ function Create() {
       .then(({ cid }) => cid)
       .then(async (imageCid) => (details ? { detailsCid: (await ipfs.add(details)).cid, imageCid } : { imageCid }))
       .then(({ imageCid, detailsCid }) => getMintPayload(name, description, imageCid, detailsCid))
-      .then((payload) => sendMessage(payload, { onSuccess: resetForm }));
+      .then((payload) => sendMessage(payload, { onSuccess: resetForm }))
+      .catch(({ message }: Error) => alert.error(message));
   };
 
   return (

@@ -1,4 +1,4 @@
-import { findByText, fireEvent, getByRole, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { Input } from './Input';
 import styles from './Input.module.scss';
 
@@ -16,8 +16,10 @@ describe('input tests', () => {
 
     const input = screen.getByLabelText('label');
     expect(input).toBeInTheDocument();
+    expect(input).not.toHaveAttribute('type');
 
-    rerender(<Input label="label" direction="y" />);
+    rerender(<Input label="label" type="number" direction="y" />);
+    expect(input).toHaveAttribute('type', 'number');
 
     const inputWrapper = screen.getByTestId('inputWrapper');
     expect(inputWrapper).not.toHaveClass(styles.x);
@@ -58,6 +60,7 @@ describe('input tests', () => {
 
     const input = screen.getByLabelText('label');
     expect(input).toBeInTheDocument();
+    expect(input).not.toHaveAttribute('type');
 
     fireEvent.focus(input);
 
@@ -142,5 +145,13 @@ describe('input tests', () => {
     const input = screen.getByLabelText('label');
 
     expect(ref.current).toBe(input);
+  });
+
+  it('renders block input', () => {
+    render(<Input label="label" block />);
+
+    const wrapper = screen.getByTestId('wrapper');
+
+    expect(wrapper).toHaveClass(styles.block);
   });
 });

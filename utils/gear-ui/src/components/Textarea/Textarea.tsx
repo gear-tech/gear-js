@@ -15,6 +15,7 @@ const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAr
     error,
     gap,
     tooltip,
+    block,
     rows = 5,
     color = 'dark',
     size = 'normal',
@@ -24,7 +25,15 @@ const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAr
 
   const { disabled, readOnly } = attrs;
 
-  const wrapperClassName = clsx(styles.wrapper, styles[color], styles[size], error && styles.error);
+  const wrapperClassName = clsx(
+    styles.wrapper,
+    readOnly && styles.readOnly,
+    styles[color],
+    styles[size],
+    error && styles.error,
+    block && styles.block,
+  );
+
   const textareaClassName = clsx(styles.textarea, styles[color]);
 
   const id = useId();
@@ -65,4 +74,5 @@ const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAr
   );
 });
 
-export { Textarea, Props as TextareaProps, styles as textareaStyles };
+export { Textarea, styles as textareaStyles };
+export type { Props as TextareaProps };

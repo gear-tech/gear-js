@@ -19,7 +19,7 @@ function Home() {
   const [form, setForm] = useState('');
   const resetForm = () => setForm('');
 
-  const { programId, setProgramId, resetProgramId, uploadProgram } = useProgram();
+  const { programId, setProgramId, resetProgramId, createProgram } = useProgram();
   const { walletId, setWalletId, resetWalletId } = useWalletId();
 
   const { escrow, isEscrowRead } = useEscrow(walletId);
@@ -65,7 +65,7 @@ function Home() {
   const getForm = () => {
     switch (form) {
       case FORM.INIT.PROGRAM:
-        return <InputAddress label="Fungible token address" onSubmit={uploadProgram} />;
+        return <InputAddress label="Fungible token address" onSubmit={createProgram} />;
       case FORM.INPUT.PROGRAM:
         return <InputAddress label="Program address" onSubmit={setProgramId} />;
       case FORM.INIT.WALLET:

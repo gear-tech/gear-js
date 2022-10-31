@@ -1,9 +1,7 @@
 import { ButtonProps } from '@gear-js/ui';
-import { ADDRESS } from 'consts';
 import { Auction, BaseNFT, MarketNFT, NFT, NFTDetails } from 'types';
 import { getIpfsAddress } from 'utils';
 
-const getMarketNFTPayload = (tokenId: string) => ({ ItemInfo: { nftContractId: ADDRESS.NFT_CONTRACT, tokenId } });
 const getHeading = (name: string, id: string) => `${name} #${id}`;
 const getTimestamp = (value: string) => +value.replaceAll(',', '');
 
@@ -69,4 +67,4 @@ function getAuctionDate(auction: Auction) {
   return { startDate, endDate, isAuctionOver };
 }
 
-export { getMarketNFTPayload, getNFTProps, getListingProps, getAuctionDate };
+export { getNFTProps, getListingProps, getAuctionDate };

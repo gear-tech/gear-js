@@ -20,13 +20,15 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
     error,
     gap,
     tooltip,
+    type,
+    block,
     size = 'normal',
     color = 'dark',
     direction = 'x',
     ...attrs
   } = props;
 
-  const { readOnly, disabled, type } = attrs;
+  const { readOnly, disabled } = attrs;
 
   const isSearch = type === 'search';
 
@@ -36,7 +38,9 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
     styles[size],
     styles[color],
     error && styles.error,
+    block && styles.block,
   );
+
   const inputClassName = clsx(styles.input, styles[color]);
 
   const { clearButton, inputRef } = useClearButton(forwardedRef, color);
@@ -56,7 +60,7 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
       <div className={wrapperClassName} data-testid="wrapper">
         {icon && <img src={icon} alt="input icon" className={styles.icon} />}
         <input
-          type={type}
+          type={isSearch ? undefined : type}
           id={id}
           className={inputClassName}
           ref={inputRef}
@@ -79,4 +83,5 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
   );
 });
 
-export { Input, Props as InputProps, styles as inputStyles };
+export { Input, styles as inputStyles };
+export type { Props as InputProps };

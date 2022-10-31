@@ -30,7 +30,7 @@ jest.mock('@polkadot/extension-dapp', () => ({
     }),
 }));
 
-describe('test uplaod meta page', () => {
+describe('test upload meta page', () => {
   const checkMetadataModal = async () => {
     const modal = await screen.findByTestId('modal');
 

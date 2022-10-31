@@ -12,7 +12,7 @@ import { TestBalance } from './children/TestBalance';
 import { useSidebarNodes } from 'hooks';
 
 const Header = () => {
-  const { account } = useAccount();
+  const { account, isAccountReady } = useAccount();
   const { api, isApiReady } = useApi();
   const sidebarNodes = useSidebarNodes();
 
@@ -57,10 +57,12 @@ const Header = () => {
           openSidebar={openSidebar}
         />
       </nav>
-      <div className={styles.rightSide}>
-        {account && <TestBalance address={account.address} />}
-        <Wallet />
-      </div>
+      {isAccountReady && (
+        <div className={styles.rightSide}>
+          {account && <TestBalance address={account.address} />}
+          <Wallet />
+        </div>
+      )}
       {isSidebarOpen && <Sidebar closeSidebar={closeSidebar} nodeSections={sidebarNodes} />}
     </header>
   );

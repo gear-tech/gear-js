@@ -1,5 +1,6 @@
 FROM node:16-alpine AS builder
-MAINTAINER gear
+MAINTAINER GEAR
+
 WORKDIR /frontend
 ARG REACT_APP_API_URL \
     REACT_APP_NODE_ADDRESS \
@@ -20,4 +21,3 @@ RUN npm run build
 FROM nginx:alpine
 RUN rm -vf /usr/share/nginx/html/*
 COPY --from=builder /frontend/build /usr/share/nginx/html
-#check7

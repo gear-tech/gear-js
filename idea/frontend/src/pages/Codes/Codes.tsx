@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useAccount } from '@gear-js/react-hooks';
+import { useAccount, useApi } from '@gear-js/react-hooks';
 
 import { useChangeEffect } from 'hooks';
 import { getCodes } from 'services';
+import { isDevChain } from 'helpers';
 import { INITIAL_LIMIT_BY_PAGE, URL_PARAMS } from 'consts';
 import { CodeModel } from 'types/code';
 import { layoutStyles } from 'layout/MainPageLayout';
@@ -12,6 +13,7 @@ import { SearchForm } from 'components/blocks/SearchForm/SearchForm';
 import { CodesList } from 'components/blocks/CodesList';
 
 const Codes = () => {
+  const { api } = useApi();
   const { account } = useAccount();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -25,17 +27,25 @@ const Codes = () => {
 
   useEffect(() => {
     if (decodedAddress) {
-      const params = {
-        query,
-        limit: INITIAL_LIMIT_BY_PAGE,
-        offset: (page - 1) * INITIAL_LIMIT_BY_PAGE,
-      };
+      if (isDevChain()) {
+        api.code
+          .all()
+          .then((ids) => ids.map((id) => ({ id, name: id })))
+          .then((result) => setCodes(result as CodeModel[]));
+      } else {
+        const params = {
+          query,
+          limit: INITIAL_LIMIT_BY_PAGE,
+          offset: (page - 1) * INITIAL_LIMIT_BY_PAGE,
+        };
 
-      getCodes(params).then(({ result }) => {
-        setCodes(result.listCode);
-        setCodesCount(result.count);
-      });
+        getCodes(params).then(({ result }) => {
+          setCodes(result.listCode);
+          setCodesCount(result.count);
+        });
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, query, decodedAddress]);
 
   useChangeEffect(() => {
@@ -48,15 +58,17 @@ const Codes = () => {
 
   const isLoading = !codes && Boolean(account);
 
+  const filteredCodes = isDevChain() ? codes?.filter(({ id }) => id.includes(query)) : codes;
+
   return (
     <div>
       <div className={layoutStyles.topPagination}>
-        <span className={layoutStyles.caption}>Total results: {codesCount}</span>
-        <Pagination page={page} pagesAmount={codesCount || 1} />
+        <span className={layoutStyles.caption}>Total results: {isDevChain() ? filteredCodes?.length : codesCount}</span>
+        {!isDevChain() && <Pagination page={page} pagesAmount={codesCount || 1} />}
       </div>
       <SearchForm placeholder="Find code" />
-      <CodesList codes={codes} isLoading={isLoading} className={layoutStyles.tableBody} />
-      {codesCount > 0 && (
+      <CodesList codes={filteredCodes} isLoading={isLoading} className={layoutStyles.tableBody} />
+      {!isDevChain() && codesCount > 0 && (
         <div className={layoutStyles.bottomPagination}>
           <Pagination page={page} pagesAmount={codesCount} />
         </div>

@@ -16,12 +16,11 @@ describe('Create type test', () => {
         expect(meta[type]).toBe(testFile.types[type]);
       }
       expect(decodeHexTypes(meta.types as Hex)).toEqual(testFile.displayed_types);
-      const createType = new CreateType();
       const encode = testFile.payloads.encode;
       for (const payloadType in encode) {
         for (const index in encode[payloadType]) {
           const payload = encode[payloadType][index];
-          const encoded = createType.create(meta[payloadType], payload.payload, meta);
+          const encoded = CreateType.create(meta[payloadType], payload.payload, meta.types);
           expect(encoded.toHex()).toEqual(payload.expected);
         }
       }
@@ -29,7 +28,7 @@ describe('Create type test', () => {
       for (const payloadType in decode) {
         for (const index in decode[payloadType]) {
           const payload = decode[payloadType][index];
-          const encoded = createType.create(meta[payloadType], payload.payload, meta);
+          const encoded = CreateType.create(meta[payloadType], payload.payload, meta.types);
           expect(encoded.toHuman()).toEqual(payload.expected);
         }
       }
@@ -48,6 +47,6 @@ describe('Create a type that differs from existing one in the registry', () => {
   });
 
   test('Wrong FTAction', () => {
-    expect(() => CreateType.create('FTActionU8', { Mint: 128 }, { types })).toThrow();
+    expect(() => CreateType.create('FtAction', { Mint: 128 }, { types })).toThrow();
   });
 });

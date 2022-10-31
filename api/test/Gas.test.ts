@@ -2,11 +2,12 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { u64 } from '@polkadot/types-codec';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+
 import { GearApi } from '../src';
 import { decodeAddress } from '../src/utils';
 import { GasInfo, Hex } from '../src/types';
 import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep } from './utilsFunctions';
-import { TEST_WASM_DIR } from './config';
+import { TARGET } from './config';
 
 const api = new GearApi();
 let alice: KeyringPair;
@@ -15,14 +16,15 @@ let programId: Hex;
 let codeId: Hex;
 let messageId: Hex;
 let exitCode: number;
-const code = readFileSync(join(TEST_WASM_DIR, 'test_gas.opt.wasm'));
-const gasLimits: { init: u64 | undefined; handle: u64 | undefined; reply: u64 | undefined } = {
+const code = readFileSync(join(TARGET, 'test_gas.opt.wasm'));
+const gasLimits: { init?: u64; handle?: u64; reply?: u64 } = {
   init: undefined,
   handle: undefined,
   reply: undefined,
 };
+
 beforeAll(async () => {
-  await api.isReady;
+  await api.isReadyOrError;
   [alice] = await getAccount();
   aliceRaw = decodeAddress(alice.address);
 });
@@ -33,7 +35,7 @@ afterAll(async () => {
 });
 
 describe('Calculate gas', () => {
-  test.only('Get init gas spent (upload)', async () => {
+  test('Get init gas spent (upload)', async () => {
     const gas: GasInfo = await api.program.calculateGas.initUpload(aliceRaw, code, '0x00', 0, true);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
@@ -51,7 +53,7 @@ describe('Calculate gas', () => {
     programId = program.programId;
     codeId = program.codeId;
     const initStatus = checkInit(api, programId);
-    api.program.signAndSend(alice, () => {});
+    await sendTransaction(program.extrinsic, alice, 'MessageEnqueued');
     expect(await initStatus()).toBe('success');
   });
 
@@ -69,9 +71,10 @@ describe('Calculate gas', () => {
 
   test('Create program', async () => {
     expect(gasLimits.init).toBeDefined();
-    api.program.create({ codeId, gasLimit: gasLimits.init as u64 });
+    const program = api.program.create({ codeId, gasLimit: gasLimits.init as u64 });
+    programId = program.programId;
     const initStatus = checkInit(api, programId);
-    api.program.signAndSend(alice, () => {});
+    await sendTransaction(program.extrinsic, alice, 'MessageEnqueued');
     expect(await initStatus()).toBe('success');
   });
 
@@ -90,14 +93,14 @@ describe('Calculate gas', () => {
 
   test('Send message', async () => {
     expect(gasLimits.handle).toBeDefined();
-    api.message.send({
+    const tx = api.message.send({
       destination: programId,
       payload: '0x50494e47',
-      gasLimit: (gasLimits.handle as u64).muln(2), // TODO remove `* 1.5` when expiration_block will work
+      gasLimit: (gasLimits.handle as u64).muln(2),
       value: 1000,
     });
     const waitForReply = listenToUserMessageSent(api, programId);
-    await sendTransaction(api.message, alice, 'MessageEnqueued');
+    await sendTransaction(tx, alice, 'MessageEnqueued');
     const { message } = await waitForReply(null);
     expect(message.id).toBeDefined();
     messageId = message.id.toHex();
@@ -120,7 +123,7 @@ describe('Calculate gas', () => {
 
   test('Calculate reply gas', async () => {
     expect(messageId).toBeDefined();
-    const gas = await api.program.calculateGas.reply(aliceRaw, messageId, exitCode, '0x00', 0, true);
+    const gas = await api.program.calculateGas.reply(aliceRaw, messageId, exitCode, '0x', 0, true);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
     gasLimits.reply = gas.min_limit;
@@ -132,7 +135,11 @@ describe('Calculate gas', () => {
 
   test('Send reply', async () => {
     expect(gasLimits.reply).toBeDefined();
-    const tx = api.message.sendReply({ replyToId: messageId, payload: '0x50494e47', gasLimit: gasLimits.reply as u64 });
+    const tx = api.message.sendReply({
+      replyToId: messageId,
+      payload: '0x50494e47',
+      gasLimit: gasLimits.reply!,
+    });
     const data = await sendTransaction(tx, alice, 'MessageEnqueued');
     expect(data).toBeDefined();
   });

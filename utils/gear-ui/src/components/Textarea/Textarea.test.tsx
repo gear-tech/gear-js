@@ -44,6 +44,16 @@ describe('textarea tests', () => {
     expect(textarea).not.toHaveClass('className');
   });
 
+  it('renders read only textarea', () => {
+    render(<Textarea readOnly />);
+
+    const wrapper = screen.getByTestId('wrapper');
+    const input = screen.getByRole('textbox');
+
+    expect(wrapper).toHaveClass(styles.readOnly);
+    expect(input).toHaveAttribute('readOnly');
+  });
+
   it('renders disabled textarea', () => {
     render(<Textarea className="className" disabled />);
 
@@ -105,5 +115,13 @@ describe('textarea tests', () => {
     const textarea = screen.getByRole('textbox');
 
     expect(ref.current).toBe(textarea);
+  });
+
+  it('renders block textarea', () => {
+    render(<Textarea label="label" block />);
+
+    const wrapper = screen.getByTestId('wrapper');
+
+    expect(wrapper).toHaveClass(styles.block);
   });
 });

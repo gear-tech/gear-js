@@ -12,6 +12,7 @@ import {
   GearTransaction,
 } from '../src';
 import { Hex } from '../src/types';
+
 export const checkInit = (api: GearApi, programId: string) => {
   let unsub: UnsubscribePromise;
   let messageId: Hex;
@@ -25,14 +26,10 @@ export const checkInit = (api: GearApi, programId: string) => {
               messageId = meEvent.data.id.toHex();
             }
             break;
-          case 'MessagesDispatched':
+          case 'MessagesDispatched': {
             const mdEvent = event as MessagesDispatched;
             for (const [id, status] of mdEvent.data.statuses) {
               if (id.eq(messageId)) {
-                if (status.isFailed) {
-                  reject('failed');
-                  break;
-                }
                 if (status.isSuccess) {
                   resolve('success');
                   break;
@@ -40,6 +37,18 @@ export const checkInit = (api: GearApi, programId: string) => {
               }
             }
             break;
+          }
+          case 'UserMessageSent': {
+            const {
+              data: { message },
+            } = event as UserMessageSent;
+            if (message.reply.isSome) {
+              const reply = message.reply.unwrap();
+              if (reply.replyTo.eq(messageId) && !reply.exitCode.eq(0)) {
+                reject(message.payload.toHuman());
+              }
+            }
+          }
         }
       });
     });

@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { KeyringPair } from '@polkadot/keyring/types';
 
-import { TEST_WASM_DIR } from './config';
+import { TARGET } from './config';
 import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep } from './utilsFunctions';
 import { Hex } from '../src/types';
 import { GearApi, getWasmMetadata } from '../src';
@@ -14,7 +14,7 @@ let guestbookId: Hex;
 let messageToClaim: Hex;
 
 beforeAll(async () => {
-  await api.isReady;
+  await api.isReadyOrError;
   [alice] = await getAccount();
 });
 
@@ -25,7 +25,7 @@ afterAll(async () => {
 
 describe('Gear Message', () => {
   test('upload test_mailbox', async () => {
-    const code = readFileSync(join(TEST_WASM_DIR, 'test_mailbox.opt.wasm'));
+    const code = readFileSync(join(TARGET, 'test_mailbox.opt.wasm'));
     guestbookId = api.program.upload({
       code,
       gasLimit: 2_000_000_000,
@@ -48,11 +48,11 @@ describe('Gear Message', () => {
       },
       { payload: 'ViewAllParticipants', reply: '0x041c446d6974726979', claim: true },
     ];
-    const metaWasm = readFileSync(join(TEST_WASM_DIR, 'test_mailbox.meta.wasm'));
+    const metaWasm = readFileSync(join(TARGET, 'test_mailbox.meta.wasm'));
     const meta = await getWasmMetadata(metaWasm);
 
     for (const message of messages) {
-      api.message.send(
+      const tx = api.message.send(
         {
           destination: guestbookId,
           payload: message.payload,
@@ -63,7 +63,7 @@ describe('Gear Message', () => {
       );
       const waitForReply = message.reply ? listenToUserMessageSent(api, guestbookId) : undefined;
 
-      const transactionData = await sendTransaction(api.message, alice, 'MessageEnqueued');
+      const transactionData = await sendTransaction(tx, alice, 'MessageEnqueued');
       expect(transactionData).toBeDefined();
 
       if (waitForReply) {

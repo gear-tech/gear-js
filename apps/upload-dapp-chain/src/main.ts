@@ -8,7 +8,6 @@ async function bootstrap() {
   await gearService.connect();
   const app = await NestFactory.create(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
-
   await app.listen(configService.get<number>("app.PORT"));
 }
 

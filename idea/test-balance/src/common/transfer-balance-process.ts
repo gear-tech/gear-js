@@ -1,7 +1,7 @@
 import { KafkaMessage } from 'kafkajs';
 import { JSONRPC_ERRORS } from '@gear-js/common';
 
-import { transferService } from '../services/transfer/transfer.service';
+import { transferService } from '../services/transfer.service';
 import { gearService } from '../gear';
 import { kafkaProducer } from '../kafka/producer';
 import { testBalanceLogger } from './test-balace.logger';

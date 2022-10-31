@@ -22,13 +22,13 @@
     ]
   },
   "dependencies": {
-    "@gear-js/api": "^0.25.2",
-    "@gear-js/react-hooks": "^0.2.19",
+    "@gear-js/api": "^0.27.0",
+    "@gear-js/react-hooks": "^0.3.6",
     "@gear-js/ui": "^0.4.0",
-    "@polkadot/api": "^9.2.2",
+    "@polkadot/api": "^9.6.1",
     "@polkadot/extension-dapp": "^0.43.2",
     "@polkadot/react-identicon": "^2.2.1",
-    "@polkadot/types": "^9.2.2",
+    "@polkadot/types": "^9.6.1",
     "@polkadot/util": "^9.7.2",
     "@polkadot/wasm-crypto": "^6.3.1",
     "@testing-library/jest-dom": "^5.16.4",

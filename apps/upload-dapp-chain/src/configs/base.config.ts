@@ -5,7 +5,8 @@ export default () => ({
   github: {
     GITHUB_ACCESS_TOKEN: process.env.GITHUB_ACCESS_TOKEN || "token",
     GITHUB_OWNER_REPO: process.env.GITHUB_OWNER_REPO || "owner",
-    GITHUB_API_BASE_URL: process.env.GITHUB_OWNER_REPO || "baseUrl",
+    GITHUB_API_BASE_URL: process.env.GITHUB_API_BASE_URL || "baseUrl",
+    GITHUB_API_ACCEPT: process.env.GITHUB_API_ACCEPT || "accept",
   },
   bot: {
     TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,

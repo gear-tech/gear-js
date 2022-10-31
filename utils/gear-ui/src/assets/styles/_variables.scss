@@ -36,4 +36,14 @@ $fontSizeLarge: 21px;
 
 // size
 
-$borderRadius: 20px;
+$borderRadius: 16px;
+$borderRadiusMedium: 20px;
+$borderRadiusLarge: 24px;
+$inputWidth: 450px;
+$textareaWidth: 600px;
+
+//
+
+$borderModalWidth: 2px;
+$borderModalColor: rgba($successColor, 0.5);
+$borderModal: $borderModalWidth solid $borderModalColor;

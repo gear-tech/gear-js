@@ -1,12 +1,12 @@
+update:
+	@cargo update
+
 build: 
-	cargo build --release
+	@cargo build --release
 
-cp: 
-	cp target/wasm32-unknown-unknown/release/*.{opt,meta}.wasm ../wasm
-
-all: build cp
+all: update build
 
 clean:
-	rm -rf ./**/target
+	@rm -rf ./**/target
 
-.PHONY: all clean build cp
+.PHONY: all clean build
