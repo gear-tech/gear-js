@@ -1,1 +1,3 @@
-export * from './useGasCalculate';
+import { useGasCalculate } from './useGasCalculate';
+
+export { useGasCalculate };

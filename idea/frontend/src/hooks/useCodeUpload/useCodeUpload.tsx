@@ -4,13 +4,13 @@ import { EventRecord } from '@polkadot/types/interfaces';
 import { Hex } from '@gear-js/api';
 import { useApi, useAlert, useAccount, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
-import { useModal } from '../index';
-import { ParamsToUploadCode, ParamsToSignAndSend } from './types';
+import { useModal } from 'hooks';
+import { Method } from 'entities/explorer';
+import { checkWallet, readFileAsync, getExtrinsicFailedMessage } from 'shared/helpers';
+import { PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'shared/config';
+import { CopiedInfo } from 'shared/ui/copiedInfo';
 
-import { checkWallet, readFileAsync, getExtrinsicFailedMessage } from 'helpers';
-import { PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'consts';
-import { Method } from 'types/explorer';
-import { CopiedInfo } from 'components/common/CopiedInfo';
+import { ParamsToUploadCode, ParamsToSignAndSend } from './types';
 
 const useCodeUpload = () => {
   const { api } = useApi();
@@ -19,7 +19,7 @@ const useCodeUpload = () => {
   const { showModal } = useModal();
 
   const submit = async (file: File) => {
-    const arrayBuffer = (await readFileAsync(file)) as ArrayBuffer;
+    const arrayBuffer = await readFileAsync(file, 'buffer');
     const buffer = Buffer.from(arrayBuffer);
 
     const result = await api.code.upload(buffer);
@@ -34,7 +34,7 @@ const useCodeUpload = () => {
 
       if (method === Method.ExtrinsicFailed) {
         alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
-      } else if (method === Method.CodeSaved) {
+      } else if (method === Method.CodeChanged) {
         alert.success(<CopiedInfo title="Code hash" info={codeHash} />, alertOptions);
       }
     });
@@ -74,11 +74,7 @@ const useCodeUpload = () => {
 
         const { partialFee } = await api.code.paymentInfo(address, { signer });
 
-        const handleConfirm = () =>
-          signAndSend({
-            signer,
-            codeHash,
-          });
+        const handleConfirm = () => signAndSend({ signer, codeHash });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),
@@ -93,7 +89,7 @@ const useCodeUpload = () => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [api, account]
+    [api, account],
   );
 
   return uploadCode;

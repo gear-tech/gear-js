@@ -1,1 +1,3 @@
-export { Codes } from './Codes';
+import { Codes } from './ui/Codes';
+
+export { Codes };

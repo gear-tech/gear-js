@@ -2,10 +2,10 @@ import { generatePath } from 'react-router-dom';
 import { Hex, UserMessageSent, Transfer, encodeAddress } from '@gear-js/api';
 import { AlertContainerFactory } from '@gear-js/react-hooks';
 
-import { routes } from 'routes';
-import { CustomLink } from 'components/common/CustomLink';
+import { absoluteRoutes } from 'shared/config';
+import { CustomLink } from 'shared/ui/customLink';
 
-export const messageSentEventsHandler = (event: UserMessageSent, address: Hex, alert: AlertContainerFactory) => {
+const messageSentEventsHandler = (event: UserMessageSent, address: Hex, alert: AlertContainerFactory) => {
   const { message, method, section } = event.data;
   const { payload, destination, reply, id } = message;
 
@@ -23,15 +23,15 @@ export const messageSentEventsHandler = (event: UserMessageSent, address: Hex, a
   showAlert(
     <>
       <p>
-        ID: <CustomLink to={generatePath(routes.message, { messageId })} text={messageId} />
+        ID: <CustomLink to={generatePath(absoluteRoutes.message, { messageId })} text={messageId} />
       </p>
-      {isError && <p>{payload.toHuman()}</p>}
+      {isError && <p>{payload.toHuman() as string}</p>}
     </>,
-    alertOptions
+    alertOptions,
   );
 };
 
-export const transferEventsHandler = (event: Transfer, address: Hex, alert: AlertContainerFactory) => {
+const transferEventsHandler = (event: Transfer, address: Hex, alert: AlertContainerFactory) => {
   const { from, to, amount, method, section } = event.data;
 
   if (to.toHex() !== address) {
@@ -42,3 +42,5 @@ export const transferEventsHandler = (event: Transfer, address: Hex, alert: Aler
 
   alert.info(message, { title: `${section}.${method}` });
 };
+
+export { messageSentEventsHandler, transferEventsHandler };

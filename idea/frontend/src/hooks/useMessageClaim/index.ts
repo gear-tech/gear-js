@@ -1,1 +1,3 @@
-export * from './useMessageClaim';
+import { useMessageClaim } from './useMessageClaim';
+
+export { useMessageClaim };

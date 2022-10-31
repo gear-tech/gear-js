@@ -1,1 +1,3 @@
-export * from './Mailbox';
+import { Mailbox } from './ui/Mailbox';
+
+export { Mailbox };

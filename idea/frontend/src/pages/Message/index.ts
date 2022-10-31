@@ -1,1 +1,3 @@
-export * from './Message';
+import { Message } from './ui/Message';
+
+export { Message };

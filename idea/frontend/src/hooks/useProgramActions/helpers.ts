@@ -1,10 +1,10 @@
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { GearApi, Hex, MessageEnqueued, MessagesDispatched, ProgramChanged } from '@gear-js/api';
 
-import { Method } from 'types/explorer';
-import { ProgramStatus } from 'types/program';
+import { Method } from 'entities/explorer';
+import { ProgramStatus } from 'entities/program';
 
-export const waitForProgramInit = (api: GearApi, programId: string) => {
+const waitForProgramInit = (api: GearApi, programId: string) => {
   let messageId: Hex;
   let unsubPromise: UnsubscribePromise;
 
@@ -26,9 +26,10 @@ export const waitForProgramInit = (api: GearApi, programId: string) => {
           case Method.MessagesDispatched: {
             const mdEvent = event as MessagesDispatched;
 
+            // eslint-disable-next-line no-restricted-syntax
             for (const [id, status] of mdEvent.data.statuses) {
               if (id.eq(messageId) && status.isFailed) {
-                resolve(ProgramStatus.Failed);
+                resolve(ProgramStatus.Terminated);
               }
             }
 
@@ -38,7 +39,7 @@ export const waitForProgramInit = (api: GearApi, programId: string) => {
             const pcEvent = event as ProgramChanged;
 
             if (pcEvent.data.id.eq(programId) && pcEvent.data.change.isActive) {
-              resolve(ProgramStatus.Success);
+              resolve(ProgramStatus.Active);
             }
 
             break;
@@ -50,3 +51,5 @@ export const waitForProgramInit = (api: GearApi, programId: string) => {
     });
   }).finally(unsubscribe);
 };
+
+export { waitForProgramInit };
