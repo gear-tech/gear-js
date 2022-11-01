@@ -3,7 +3,6 @@ import { useForm } from '@mantine/form';
 import { isHex } from '@polkadot/util';
 import check from 'assets/images/icons/check.svg';
 import { CreateFormValues } from 'types';
-import styles from './CreateWallet.module.scss';
 
 type Props = {
   onSubmit: (values: CreateFormValues) => void;
@@ -18,22 +17,13 @@ const validate = {
 
 function CreateWallet({ onSubmit }: Props) {
   const form = useForm({ initialValues, validate });
-  const { getInputProps, errors } = form;
+  const { getInputProps } = form;
 
   return (
     <form onSubmit={form.onSubmit(onSubmit)}>
-      <div>
-        <Input label="Buyer" className={styles.input} {...getInputProps('buyer')} />
-        <p className={styles.error}>{errors.buyer}</p>
-      </div>
-      <div>
-        <Input label="Seller" className={styles.input} {...getInputProps('seller')} />
-        <p className={styles.error}>{errors.seller}</p>
-      </div>
-      <div>
-        <Input type="number" label="Amount" className={styles.input} {...getInputProps('amount')} />
-        <p className={styles.error}>{errors.amount}</p>
-      </div>
+      <Input label="Buyer" color="light" direction="y" {...getInputProps('buyer')} />
+      <Input label="Seller" color="light" direction="y" {...getInputProps('seller')} />
+      <Input type="number" label="Amount" color="light" direction="y" {...getInputProps('amount')} />
       <Button text="Create wallet" type="submit" icon={check} block />
     </form>
   );
