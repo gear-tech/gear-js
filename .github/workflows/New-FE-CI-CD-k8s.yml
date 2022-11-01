@@ -45,7 +45,7 @@ jobs:
       - name: Build and push Frontend Docker image
         uses: docker/build-push-action@master
         with:
-          context: idea/new-frontend
+          context: idea/frontend
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-new-frontend:qa
           build-args: |
