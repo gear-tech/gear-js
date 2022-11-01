@@ -64,9 +64,9 @@ programs:
     dapp: escrow
     repo: escrow
     optDownloadUrl: >-
-      https://github.com/gear-dapps/escrow/releases/download/0.1.0/escrow-0.1.0.opt.wasm
+      https://github.com/gear-dapps/escrow/releases/download/0.1.1/escrow-0.1.1.opt.wasm
     metaDownloadUrl: >-
-      https://github.com/gear-dapps/escrow/releases/download/0.1.0/escrow-0.1.0.meta.wasm
+      https://github.com/gear-dapps/escrow/releases/download/0.1.1/escrow-0.1.1.meta.wasm
     acc: jordan
     value: null
   '7':
