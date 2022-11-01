@@ -12,7 +12,7 @@ function Start({ text, onInit, onUse }: Props) {
   return (
     <>
       <Button text={text} icon={idea} onClick={onInit} block />
-      <Button text="Use existing one" icon={general} color="secondary" onClick={onUse} block />
+      <Button text="Use existing one" icon={general} color="light" onClick={onUse} block />
     </>
   );
 }
