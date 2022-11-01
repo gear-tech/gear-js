@@ -10,7 +10,7 @@ import { plainToClass } from 'class-transformer';
 import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
 import { CodeService } from '../code/code.service';
-import { getPayloadByGearEvent, getPayloadAndValue } from '../common/helpers';
+import { getPayloadAndValue, getPayloadByGearEvent } from '../common/helpers';
 import { Message } from '../database/entities';
 import { CodeStatus, MessageEntryPoint, MessageType, ProgramStatus } from '../common/enums';
 import { CodeRepo } from '../code/code.repo';
@@ -218,7 +218,6 @@ export class GearEventListener {
           genesis: this.genesis,
         });
       }
-
       await this.programService.createPrograms(programs);
     }
   }
@@ -235,10 +234,7 @@ export class GearEventListener {
         );
 
         if (event) {
-          const {
-            data: { id, change },
-          } = event.event as CodeChanged;
-
+          const { data: { id, change } } = event.event as CodeChanged;
           const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
 
           codes.push({
@@ -250,6 +246,21 @@ export class GearEventListener {
             expiration: change.isActive ? change.asActive.expiration.toString() : null,
             uploadedBy: tx.signer.inner.toHex(),
           });
+        } else {
+          const codeId = generateCodeHash(tx.args[0].toHex());
+          const code = this.codeRepository.get(codeId, this.genesis);
+
+          if(!code) {
+            codes.push({
+              id: codeId,
+              genesis: this.genesis,
+              status: CodeStatus.ACTIVE,
+              timestamp,
+              blockHash: block.createdAtHash.toHex(),
+              expiration: null,
+              uploadedBy: tx.signer.inner.toHex(),
+            });
+          }
         }
       }
 

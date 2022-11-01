@@ -1,4 +1,4 @@
-import { ILike, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -46,7 +46,7 @@ export class ProgramRepo {
       where: queryFilter(
         strictParams,
         { query, owner, fromDate, toDate, status },
-        ['id', 'title', 'name', { code: { id: ILike('%' + query + '%') } }]),
+        ['id', 'title', 'name']),
       relations: ['meta', 'code'],
       select: { meta: { meta: true, program: true } },
       take: limit || PAGINATION_LIMIT,
