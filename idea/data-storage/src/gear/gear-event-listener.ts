@@ -248,7 +248,7 @@ export class GearEventListener {
           });
         } else {
           const codeId = generateCodeHash(tx.args[0].toHex());
-          const code = this.codeRepository.get(codeId, this.genesis);
+          const code = await this.codeRepository.get(codeId, this.genesis);
 
           if(!code) {
             codes.push({
