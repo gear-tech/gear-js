@@ -2,7 +2,7 @@
 @use 'shared/assets/styles/animations' as *;
 
 .body {
-  @include childrenMargin(30px);
+  @include childrenMargin(24px);
   margin-bottom: 32px;
 }
 

@@ -2,8 +2,7 @@
 @use 'shared/assets/styles/_variables.scss' as *;
 
 .fieldset {
-  background: $gray002;
-  box-shadow: inset 0px 1px 0px $gray150;
+  background: $gray003;
   border-radius: $borderRadius;
   border: none;
   padding: toRem(24);
@@ -18,5 +17,5 @@
 
   & > *:not(legend):not(:last-child) {
     margin-bottom: $margin;
-  } 
+  }
 }
