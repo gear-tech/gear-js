@@ -2,7 +2,6 @@ import Identicon from '@polkadot/react-identicon';
 import { Modal, Button } from '@gear-js/ui';
 
 import { ModalProps } from 'entities/modal';
-import { getShortName } from 'shared/helpers';
 
 import styles from './TransactionModal.module.scss';
 
@@ -32,7 +31,7 @@ const TransactionModal = (props: Props) => {
   };
 
   return (
-    <Modal heading="Transaction details" className={styles.modalContent} size="large" close={handleClose}>
+    <Modal heading="Transaction details" size="large" close={handleClose}>
       <h4 className={styles.contentHeading}>
         Sending transaction <span className={styles.headingName}>{name}</span>
       </h4>
@@ -41,12 +40,12 @@ const TransactionModal = (props: Props) => {
         <Identicon value={addressFrom} size={28} theme="polkadot" className={styles.infoIcon} />
         <p className={styles.infoParticipant}>
           <span className={styles.participantSide}>From:</span>
-          <span className={styles.participantValue}>{getShortName(addressFrom)}</span>
+          <span className={styles.participantValue}>{addressFrom}</span>
         </p>
         {addressTo && (
           <p className={styles.infoParticipant}>
             <span className={styles.participantSide}>To:</span>
-            <span className={styles.participantValue}>{getShortName(addressTo)}</span>
+            <span className={styles.participantValue}>{addressTo}</span>
           </p>
         )}
       </div>
