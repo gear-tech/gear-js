@@ -2386,7 +2386,7 @@ __metadata:
   dependencies:
     "@gear-js/api": ^0.27.0
     "@gear-js/react-hooks": ^0.3.6
-    "@gear-js/ui": ^0.4.0
+    "@gear-js/ui": ^0.5.10
     "@mantine/form": ^4.2.12
     "@polkadot/api": ^9.6.1
     "@polkadot/extension-dapp": ^0.43.3
@@ -2832,6 +2832,16 @@ __metadata:
     react: ">=17.0.2"
     sass: ^1.49.9
   checksum: 6b54abc01f803cc2bdaed321a10b6164963dc256d6a84030b73c5416908d9f6ddb28a89b6de42e3752bd1cc873a79868cf608c45f9441adf3ec9d94cc2b4fa3d
+  languageName: node
+  linkType: hard
+
+"@gear-js/ui@npm:^0.5.10":
+  version: 0.5.10
+  resolution: "@gear-js/ui@npm:0.5.10"
+  peerDependencies:
+    react: 18.2.0
+    sass: 1.49.9
+  checksum: d5e93b5ea8e23725dee1baf11dfc1ab6fdf17878bac0267f524791f32116f13116430af169b51591a7b434440fe9850e85ed6b259c7edaaa676e63cb5f18e1a2
   languageName: node
   linkType: hard
 
