@@ -246,7 +246,7 @@ jobs:
         build-and-push-api-gateway-image,
         build-and-push-test-balance-image,
         build-and-push-gear-vara-node-image,
-        build-and-push-gear-node-image
+        build-and-push-gear-node-image,
         wait-previous-run,
       ]
     runs-on: ubuntu-latest
