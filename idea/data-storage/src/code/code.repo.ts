@@ -6,7 +6,7 @@ import { GetAllCodeParams } from '@gear-js/common';
 import { Code } from '../database/entities';
 import { PAGINATION_LIMIT } from '../common/constants';
 import { CodeStatus } from '../common/enums';
-import { queryFilter } from '../common/helpers';
+import { constructQueryBuilder } from '../common/helpers';
 
 @Injectable()
 export class CodeRepo {
@@ -29,20 +29,25 @@ export class CodeRepo {
 
   public async listPaginationByGenesis(params: GetAllCodeParams): Promise<[Code[], number]> {
     const { genesis, query, limit, offset, name, toDate, fromDate, uploadedBy } = params;
-    return this.codeRepo.findAndCount({
-      where: queryFilter(
-        { genesis, status: CodeStatus.ACTIVE },
-        { query, name, toDate, fromDate, uploadedBy },
-        ['id', 'name']),
-      take: limit || PAGINATION_LIMIT,
-      skip: offset || 0,
-      order: { timestamp: 'DESC' },
-    });
+
+    const builder = constructQueryBuilder(
+      this.codeRepo,
+      genesis,
+      { uploadedBy, name },
+      { fields: ['id', 'name'], value: query },
+      { fromDate, toDate },
+      offset || 0,
+      limit || PAGINATION_LIMIT,
+      undefined,
+      ['timestamp', 'DESC'],
+    );
+
+    return builder.getManyAndCount();
   }
 
   public async get(id: string, genesis: string): Promise<Code> {
     return this.codeRepo.findOne({
-      where: { id, genesis }
+      where: { id, genesis },
     });
   }
 

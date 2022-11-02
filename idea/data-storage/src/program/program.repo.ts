@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Program } from '../database/entities';
 import { GetAllProgramsParams } from '@gear-js/common';
 import { PAGINATION_LIMIT } from '../common/constants';
-import { queryFilter } from '../common/helpers';
+import { constructQueryBuilder } from '../common/helpers';
 
 @Injectable()
 export class ProgramRepo {
@@ -40,21 +40,20 @@ export class ProgramRepo {
 
   public async listPaginationByGenesis(params: GetAllProgramsParams): Promise<[Program[], number]> {
     const { genesis, query, limit, offset, owner, toDate, fromDate, status } = params;
-    const strictParams = { genesis };
 
-    return this.programRepo.findAndCount({
-      where: queryFilter(
-        strictParams,
-        { query, owner, fromDate, toDate, status },
-        ['id', 'title', 'name']),
-      relations: ['meta', 'code'],
-      select: { meta: { meta: true, program: true } },
-      take: limit || PAGINATION_LIMIT,
-      skip: offset || 0,
-      order: {
-        timestamp: 'DESC',
-      },
-    });
+    const builder = constructQueryBuilder(
+      this.programRepo,
+      genesis,
+      { owner, status },
+      { fields: ['id', 'title', 'name', 'code.id'], value: query },
+      { fromDate, toDate },
+      offset || 0,
+      limit || PAGINATION_LIMIT,
+      ['code', 'meta'],
+      ['timestamp', 'DESC'],
+    );
+
+    return builder.getManyAndCount();
   }
 
   public async listByGenesis(genesis: string): Promise<Program[]> {
@@ -71,7 +70,7 @@ export class ProgramRepo {
 
   public async get(id: string, genesis: string): Promise<Program> {
     return this.programRepo.findOne({
-      where: { id, genesis }
+      where: { id, genesis },
     });
   }
 }

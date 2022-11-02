@@ -202,7 +202,7 @@ export class GearEventListener {
     if (extrinsics.length >= 1) {
       for (const tx of extrinsics) {
         const {
-          data: { source, destination }
+          data: { source, destination },
         } = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
           this.api.events.gear.MessageEnqueued.is(event),
         ).event as MessageEnqueued;
@@ -276,7 +276,7 @@ export class GearEventListener {
         hash: blockHash,
         numberBlockInNode: blockNumber,
         timestamp,
-        genesis: this.genesis
+        genesis: this.genesis,
       },
     ]);
   }

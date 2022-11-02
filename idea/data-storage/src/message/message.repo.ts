@@ -6,7 +6,7 @@ import { GetMessagesParams } from '@gear-js/common';
 import { Message } from '../database/entities';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { PAGINATION_LIMIT } from '../common/constants';
-import { queryFilter } from '../common/helpers';
+import { constructQueryBuilder } from '../common/helpers';
 
 @Injectable()
 export class MessageRepo {
@@ -24,23 +24,30 @@ export class MessageRepo {
     if (destination) {
       strictParams['destination'] = destination;
     }
-    if(mailbox){
+    if (mailbox) {
       strictParams['source'] = source;
       strictParams['expiration'] = MoreThan(0);
       strictParams['readReason'] = null;
     }
-    return this.messageRepo.findAndCount({
-      where: queryFilter(
-        strictParams,
-        { query, toDate, fromDate },
-        ['id', 'source', 'destination']),
-      take: limit || PAGINATION_LIMIT,
-      skip: offset || 0,
-      relations: ['program'],
-      order: {
-        timestamp: 'DESC',
+
+    const builder = constructQueryBuilder(
+      this.messageRepo,
+      genesis,
+      {
+        source,
+        destination,
+        readReason: mailbox ? null : undefined,
+        expiration: mailbox ? { operator: '>', value: 0 } : undefined,
       },
-    });
+      { fields: ['id', 'source', 'destination'], value: query },
+      { fromDate, toDate },
+      offset || 0,
+      limit || PAGINATION_LIMIT,
+      ['program'],
+      ['timestamp', 'DESC'],
+    );
+
+    return builder.getManyAndCount();
   }
 
   public async getByIdAndGenesis(id: string, genesis: string): Promise<Message> {
