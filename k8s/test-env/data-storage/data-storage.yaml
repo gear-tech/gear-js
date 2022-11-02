@@ -58,5 +58,7 @@ spec:
                 secretKeyRef:
                   name: kafka-testenv-secrets
                   key: password
+            - name: GEAR_WS_PROVIDER
+              value: ws://gear-node:9944
           imagePullPolicy: Always
 

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Message } from '../database/entities/message.entity';
+import { Message } from '../database/entities';
 import { MessageService } from './message.service';
 import { MessageRepo } from './message.repo';
 import { ProgramModule } from '../program/program.module';

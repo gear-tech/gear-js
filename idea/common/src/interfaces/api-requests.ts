@@ -1,11 +1,12 @@
-import { IGenesis, ISignature } from './common';
+import { IDates, IGenesis, ISignature } from './common';
 import { IMessage, UpdateMessageData } from './message';
 import { IPaginationParams } from './pagination';
 import { IProgram } from './program';
 
-interface GetMessagesParams extends IGenesis, IPaginationParams, SearchParam {
+interface GetMessagesParams extends IGenesis, IPaginationParams, SearchParam, IDates {
   destination?: string;
   source?: string;
+  mailbox?: boolean;
 }
 
 interface FindMessageParams extends IGenesis, Pick<IMessage, 'id'> {}
@@ -14,12 +15,16 @@ interface GetIncomingMessagesParams extends IGenesis, IPaginationParams, Pick<IM
 
 interface GetOutgoingMessagesParams extends IGenesis, IPaginationParams, Pick<IMessage, 'source'> {}
 
-interface GetAllProgramsParams extends IGenesis, IPaginationParams, SearchParam {
+interface GetAllProgramsParams extends IGenesis, IPaginationParams, SearchParam, IDates {
   publicKeyRaw?: string;
   owner?: string;
+  status?: string | string[];
 }
 
-interface GetAllCodeParams extends IGenesis, IPaginationParams, SearchParam {}
+interface GetAllCodeParams extends IGenesis, IPaginationParams, SearchParam, IDates {
+  name?: string;
+  uploadedBy?: string;
+}
 
 interface GetAllUserProgramsParams extends IGenesis, IPaginationParams, Pick<IProgram, 'owner'>, SearchParam {}
 
@@ -60,7 +65,7 @@ interface IRpcRequest {
   jsonrpc: '2.0';
   id: number;
   method: string;
-  params?:
+  params:
     | FindProgramParams
     | GetAllProgramsParams
     | AddMetaParams

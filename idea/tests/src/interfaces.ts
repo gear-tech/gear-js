@@ -12,6 +12,7 @@ export interface HumanMessageEnqueuedData {
 interface IUploadedPrograms extends IProgramSpec {
   name: string;
   messageId: Hex;
+  owner: Hex;
 }
 
 interface IMessageSpec {
@@ -51,6 +52,7 @@ interface IPreparedProgram {
   spec: IUploadedPrograms;
   init: boolean;
   id: Hex;
+  owner: Hex;
 }
 
 interface IPreparedMessages {

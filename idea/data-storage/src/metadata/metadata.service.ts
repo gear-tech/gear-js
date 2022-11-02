@@ -1,14 +1,13 @@
 import { signatureIsValid } from '@gear-js/api';
 import { Injectable } from '@nestjs/common';
 import { AddMetaParams, AddMetaResult, GetMetaParams, GetMetaResult } from '@gear-js/common';
+import { plainToClass } from 'class-transformer';
 
 import { SignatureNotVerified, MetadataNotFound } from '../common/errors';
 import { ProgramService } from '../program/program.service';
-import { Meta } from '../database/entities/meta.entity';
-import { sleep } from '../utils/sleep';
+import { Meta } from '../database/entities';
 import { MetadataRepo } from './metadata.repo';
 import { ProgramRepo } from '../program/program.repo';
-import { plainToClass } from 'class-transformer';
 import { UpdateProgramDataInput } from '../program/types';
 
 @Injectable()
@@ -21,7 +20,7 @@ export class MetadataService {
 
   async addMeta(params: AddMetaParams): Promise<AddMetaResult> {
     const { programId, genesis, signature, meta, title, name } = params;
-    const [_, program] = await Promise.all([sleep(1000), this.programRepository.getByIdAndGenesis(programId, genesis)]);
+    const program = await this.programRepository.getByIdAndGenesis(programId, genesis);
 
     try {
       if (!signatureIsValid(program.owner, signature, meta)) {

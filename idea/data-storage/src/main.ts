@@ -8,6 +8,7 @@ import configuration from './config/configuration';
 import { changeStatus } from './healthcheck/healthcheck.controller';
 import { dataStorageLogger } from './common/data-storage.logger';
 import { AppDataSource } from './data-source';
+import { GearEventListener } from './gear/gear-event-listener';
 
 async function bootstrap() {
   const { kafka, healthcheck } = configuration();
@@ -22,8 +23,6 @@ async function bootstrap() {
   }
 
   const app = await NestFactory.create(AppModule, { cors: true });
-  await app.listen(healthcheck.port);
-  dataStorageLogger.info(`HealthCheck app is running on ${healthcheck.port} 🚀`);
 
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.KAFKA,
@@ -41,6 +40,7 @@ async function bootstrap() {
       consumer: {
         groupId: kafka.groupId,
       },
+      producer: {},
     },
   });
 
@@ -50,5 +50,11 @@ async function bootstrap() {
   changeStatus('database');
 
   await AppDataSource.destroy();
+
+  await app.listen(healthcheck.port);
+
+  const gearEventListener = app.get(GearEventListener);
+  await gearEventListener.run();
 }
+
 bootstrap();
