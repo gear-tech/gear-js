@@ -35,7 +35,6 @@ const entities = [Meta, Message, Program, Code, Block];
         database: configService.get('database.name'),
         synchronize: false,
         entities,
-        logging: ['query'],
       }),
       inject: [ConfigService],
     }),
