@@ -13,7 +13,7 @@ const BalanceInfo = ({ balance }: Props) => {
 
   return (
     <section className={styles.balanceSection}>
-      <h2 className={clsx(headerStyles.title, styles.title)}>Balance</h2>
+      <h2 className={clsx(headerStyles.title, styles.title)}>Balance:</h2>
       <p className={headerStyles.content}>
         <span className={clsx(headerStyles.value, styles.value)}>{value}</span>
         <span className={styles.unit}>{unit}</span>
