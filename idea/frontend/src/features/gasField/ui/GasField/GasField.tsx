@@ -61,9 +61,11 @@ const GasField = (props: Props) => {
                 onValueChange={handleChange}
               />
             </div>
-            <button type="button" className={styles.addButton} onClick={increaseByTenPercent}>
-              +10%
-            </button>
+            {/* <button type="button" className={styles.addButton} onClick={increaseByTenPercent}>
+              
+            </button> */}
+
+            <Button text="+ 10%" color="light" className={styles.addButton} />
           </div>
           <Button
             icon={calculatorSVG}

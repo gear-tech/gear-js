@@ -41,21 +41,9 @@
       width: 100%;
     }
   }
+}
 
-  .addButton {
-    @include transition();
-
-    align-self: stretch;
-    color: $gray600;
-    padding: toRem(8) toRem(12);
-    font-size: $fontSize;
-    font-weight: 500;
-    font-family: 'Kanit';
-    line-height: toRem(20);
-    background-color: $bgColorTertiary;
-
-    &:hover {
-      background-color: $gray300;
-    }
-  }
+.addButton {
+  padding: 9px 12px;
+  margin: 2px;
 }
