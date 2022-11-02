@@ -13,7 +13,7 @@ const Footer = () => {
   return (
     <footer className={styles.footer}>
       <Socials />
-      <small className={styles.copyright}>{year}. All rights reserved.</small>
+      <small className={styles.copyright}>&copy; {year} Gear Technologies, Inc. All Rights Reserved.</small>
       <DotButton nodeAddress={nodeAddress} />
     </footer>
   );
