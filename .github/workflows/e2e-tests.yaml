@@ -300,6 +300,7 @@ jobs:
           node-version: 16.x
 
       - name: Prepare&Run Tests
+        timeout-minutes: 7
         working-directory: idea/tests
         env:
           API_ENDPOINT: ${{ secrets.API_ADDRESS_URL_TEST }}
