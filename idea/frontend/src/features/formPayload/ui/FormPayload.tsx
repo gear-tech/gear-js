@@ -116,7 +116,7 @@ const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
           onChange={handleViewChange}
         />
       )}
-      <div className={formStyles.content}>
+      <div>
         {!isManualView && values ? (
           <PayloadStructure levelName={name} typeStructure={values.typeStructure} />
         ) : (

@@ -37,7 +37,7 @@
   &.fixedSizes {
     min-height: 100px;
     max-height: 400px;
-  
+
     .preformatted {
       white-space: pre;
       overflow-wrap: initial;
@@ -74,12 +74,9 @@
   color: $textColor !important;
   font-size: $fontSize;
   line-height: toRem(14);
+  margin-bottom: 10px;
 
   &::after {
     content: '';
   }
-}
-
-.content {
-  margin-top: 10px;
 }
