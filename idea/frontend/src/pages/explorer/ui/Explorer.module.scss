@@ -11,7 +11,7 @@
 }
 
 .heading {
-  @extend %h4;
+  @include heading(24px, 31px, 500);
   color: shared.$gray800;
   align-self: center;
 }

@@ -3,6 +3,10 @@
 @use 'shared/assets/styles/_variables.scss' as *;
 @use 'shared/assets/styles/_animations.scss' as *;
 
+.wrapper {
+  align-items: center;
+}
+
 %labelStyles {
   color: $gray700;
   font-family: 'Kanit';
@@ -62,8 +66,9 @@
   font-size: $fontSize;
   font-weight: 400;
   line-height: toRem(20);
-  overflow-wrap: anywhere;
   white-space: break-spaces;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .gap16 {

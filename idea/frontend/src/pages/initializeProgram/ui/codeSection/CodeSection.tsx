@@ -1,12 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { Metadata, Hex } from '@gear-js/api';
-import { Button } from '@gear-js/ui';
+import { Button, Input } from '@gear-js/ui';
 
 import { useProgramActions } from 'hooks';
 import { Payload } from 'hooks/useProgramActions/types';
 import { RenderButtonsProps, SubmitHelpers, ProgramForm } from 'widgets/programForm';
 import { GasMethod } from 'shared/config';
-import { FormText } from 'shared/ui/form';
 import { Subheader } from 'shared/ui/subheader';
 import plusSVG from 'shared/assets/images/actions/plus.svg';
 import closeSVG from 'shared/assets/images/actions/close.svg';
@@ -50,7 +49,7 @@ const CodeSection = ({ codeId, metadata, metadataBuffer, resetMetadada }: Props)
     <section className={styles.pageSection}>
       <Subheader size="big" title="Enter program parameters" />
       <div className={styles.lining}>
-        <FormText label="Code ID" text={codeId} direction="y" className={styles.codeId} />
+        <Input label="Code ID" value={codeId} direction="y" className={styles.codeId} readOnly />
         <ProgramForm
           source={codeId as Hex}
           metadata={metadata}

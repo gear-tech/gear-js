@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   overflow: hidden;
-  padding: toRem(32) toRem(46) toRem(37) toRem(32);
+  padding: toRem(32);
   border-radius: 24px;
   background-color: $bgColorSecondary;
   margin-bottom: 32px;
@@ -17,9 +17,9 @@
     width: 50%;
     height: 200px;
     position: absolute;
-    left: -25%;
-    bottom: -100px;
-    background: radial-gradient(50% 50% at 50% 50%, rgba($successColor, 0.2) 10%, rgba(24, 24, 27, 0) 100%);
+    left: -160px;
+    bottom: -140px;
+    background: radial-gradient(50% 50% at 50% 50%, rgba(43, 208, 113, 0.25) 10%, rgba(24, 24, 27, 0) 100%);
   }
 
   .closeBtn {
@@ -37,7 +37,6 @@
 
   .title {
     font-family: 'Kanit';
-    color: $textColor;
     font-size: toRem(40);
     line-height: 1.1;
     font-weight: 700;
@@ -47,6 +46,7 @@
 
   .description {
     font-size: $fontSize;
+    color: $gray800;
     line-height: 1.6;
     font-feature-settings: 'salt' on, 'liga' off;
     margin-bottom: 40px;

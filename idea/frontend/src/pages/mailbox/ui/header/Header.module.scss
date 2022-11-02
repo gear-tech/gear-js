@@ -1,4 +1,5 @@
 @use '@gear-js/ui/headings' as *;
+@use 'shared/assets/styles/variables' as *;
 
 .header {
   display: flex;
@@ -7,7 +8,8 @@
 }
 
 .heading {
-  @extend %h4;
+  @include heading(24px, 31px, 500);
+  color: $gray800;
 }
 
 .form {
