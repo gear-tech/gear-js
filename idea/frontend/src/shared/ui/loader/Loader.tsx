@@ -10,14 +10,16 @@ const Loader = () => (
       <LoaderGear2SVG className={styles.gear2} />
       <LoaderGear3SVG className={styles.gear3} />
     </div>
-    <div className={styles.loaderLine}>
-      <hr className={styles.line} />
-      <hr className={styles.line} />
-      <hr className={styles.line} />
-      <hr className={styles.line} />
-      <hr className={styles.line} />
+    <div className={styles.progress}>
+      <div className={styles.loaderLine}>
+        <div className={styles.line} />
+        <div className={styles.line} />
+        <div className={styles.line} />
+        <div className={styles.line} />
+        <div className={styles.line} />
+      </div>
+      <span className={styles.text}>Loading...</span>
     </div>
-    <span className={styles.text}>Loading...</span>
   </div>
 );
 

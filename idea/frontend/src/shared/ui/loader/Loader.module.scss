@@ -29,7 +29,6 @@
 
 .loader {
   @extend %absoluteCenter;
-  
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -38,6 +37,8 @@
     position: relative;
     width: 105px;
     height: 100px;
+    filter: blur(2.5px);
+    opacity: 0.25;
 
     .gear1 {
       @extend %gearStyle;
@@ -67,43 +68,65 @@
 
   .loaderLine {
     @include childrenMargin($marginTiny, right);
-    
     display: flex;
     min-width: 176px;
     margin-top: $marginMedium;
     margin-bottom: 10px;
 
     .line {
-      border: none;
       height: 2px;
-      background: $successColor;
+      width: 32px;
+      background-color: #898b94;
       border-radius: 2px;
-      animation: 4s linear forwards progressLine;
+
+      position: relative;
+
+      &::before {
+        content: '';
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: $successColor;
+        animation: 4s linear forwards progressLine;
+      }
 
       &:nth-child(2) {
-        animation-delay: 4s;
+        &::before {
+          animation-delay: 4s;
+        }
       }
 
       &:nth-child(3) {
-        animation-delay: 8s;
+        &::before {
+          animation-delay: 8s;
+        }
       }
 
       &:nth-child(4) {
-        animation-delay: 12s;
+        &::before {
+          animation-delay: 12s;
+        }
       }
-      
+
       &:nth-child(5) {
-        animation-delay: 16s;
+        &::before {
+          animation-delay: 16s;
+        }
       }
     }
   }
 
   .text {
-    display: flex;
     font-family: 'Kanit';
     font-weight: 500;
     font-size: $fontSize;
     line-height: 1.3;
     color: $textColorTertiary;
   }
+}
+
+.progress {
+  @extend %absoluteCenter;
+  text-align: center;
 }
