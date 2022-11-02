@@ -262,7 +262,7 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment gear-node vara-node api-gateway-testenv frontend-nginx-testenv postgres-testenv postgres-testenv-vara postgres-testbalance-testenv -n $KUBE_NAMESPACE
+          args: rollout restart deployment gear-node api-gateway-testenv frontend-nginx-testenv postgres-testenv postgres-testenv-vara postgres-testbalance-testenv -n $KUBE_NAMESPACE
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
@@ -272,7 +272,7 @@ jobs:
       - name: Deploy to k8s data-storage
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment test-balance-testenv data-storage-testenv-vara data-storage-testenv -n $KUBE_NAMESPACE
+          args: rollout restart deployment test-balance-testenv data-storage-testenv -n $KUBE_NAMESPACE
 
       - name: Check k8s deployment test-balance-testenv
         uses: sergeyfilyanin/kubectl-aws-eks@master
