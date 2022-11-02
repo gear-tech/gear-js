@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useModal } from 'hooks';
 import { LocalStorage } from 'shared/config';
 import { AccountButton } from 'shared/ui/accountButton';
-import polkadotSVG from 'shared/assets/images/logos/polkadotLogo.svg';
+import substrateSVG from 'shared/assets/images/logos/substrate.svg';
 
 import styles from './Wallet.module.scss';
 import { AuthorizationTooltip } from '../authorizationTooltip';
@@ -45,7 +45,7 @@ const Wallet = ({ account, isApiReady }: Props) => {
           onClick={handleClick}
         />
       ) : (
-        <Button icon={polkadotSVG} text="Connect" color="primary" className={styles.fixSize} onClick={handleClick} />
+        <Button icon={substrateSVG} text="Connect" color="primary" className={styles.fixSize} onClick={handleClick} />
       )}
       {isApiReady && isTooltipShowing && <AuthorizationTooltip onCloseButtonClick={hideTooltip} />}
     </div>
