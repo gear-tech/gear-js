@@ -7,6 +7,7 @@ import configuration from './config/configuration';
 import { runSchedulerGenesisHashes } from './common/scheduler-genesis-hashes';
 import { apiGatewayLogger } from './common/api-gateway.logger';
 import { networkKafkaPartitions } from './common/helpers';
+import { createKafkaPartitions } from './common/helpers/create-kafka-partitions';
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use('/api', apiGatewayRouter);
 app.use('/health', healthcheckRouter);
 
 const startApp = async () => {
+  await createKafkaPartitions();
   await kafkaCreateConnection();
   await networkKafkaPartitions();
   await runSchedulerGenesisHashes();
