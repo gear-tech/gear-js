@@ -10,7 +10,7 @@
 }
 
 .wrapper {
-  @extend %inputWrapper;
+  @extend %wrapper;
   align-items: flex-start;
 
   &.readOnly {

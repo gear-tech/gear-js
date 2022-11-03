@@ -51,13 +51,14 @@
   background-color: #2b2b2e;
 }
 
-%inputWrapper {
+%wrapper {
   @extend %normalInputWrapper;
   @extend %largeInputWrapper;
   @extend %darkInputWrapper;
   @extend %lightInputWrapper;
 
   display: flex;
+  line-height: 20px;
   border: 1px solid transparent;
   border-radius: $borderRadiusMedium;
 
@@ -72,6 +73,10 @@
   &:not(:last-child) {
     margin-bottom: 5px;
   }
+}
+
+%inputWrapper {
+  height: 40px;
 }
 
 %input {
