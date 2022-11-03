@@ -1,21 +1,21 @@
 import { InputHTMLAttributes, forwardRef, ForwardedRef, useId } from 'react';
 import clsx from 'clsx';
-import { InputProps } from '../../types';
+import { InputProps, SVGComponent } from '../../types';
 import { useClearButton } from '../../hooks';
 import { Button } from '../Button/Button';
 import { InputWrapper } from '../utils';
-import search from './images/search.svg';
+import { ReactComponent as SearchSVG } from './images/search.svg';
 import styles from './Input.module.scss';
 
 type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> &
   InputProps & {
-    icon?: string;
+    icon?: SVGComponent;
   };
 
 const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElement>) => {
   const {
     label,
-    icon,
+    icon: Icon,
     className,
     error,
     gap,
@@ -58,7 +58,8 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
       disabled={disabled}
       tooltip={tooltip}>
       <div className={wrapperClassName} data-testid="wrapper">
-        {icon && <img src={icon} alt="input icon" className={styles.icon} />}
+        {Icon && <Icon className={styles.icon} />}
+
         <input
           type={isSearch ? undefined : type}
           id={id}
@@ -68,6 +69,7 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
           onBlur={clearButton.hide}
           {...attrs}
         />
+
         {clearButton.isVisible && (
           <Button
             icon={clearButton.icon}
@@ -77,7 +79,8 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
             className={styles.clearButton}
           />
         )}
-        {isSearch && <Button type="submit" icon={search} color="transparent" className={styles.searchButton} />}
+
+        {isSearch && <Button type="submit" icon={SearchSVG} color="transparent" className={styles.searchButton} />}
       </div>
     </InputWrapper>
   );

@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { Input } from './Input';
 import styles from './Input.module.scss';
 
-const arrowIcon = 'icon-path';
+const arrowIcon = jest.fn();
 
 describe('input tests', () => {
   it('renders input', () => {

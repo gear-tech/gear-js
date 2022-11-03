@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { Button } from './Button';
 import styles from './Button.module.scss';
 
-const arrowIcon = 'icon-path';
+const arrowIcon = jest.fn();
 
 describe('button tests', () => {
   it('renders button', () => {
