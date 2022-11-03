@@ -2234,38 +2234,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:^0.25.2":
-  version: 0.25.9
-  resolution: "@gear-js/api@npm:0.25.9"
-  peerDependencies:
-    "@polkadot/api": ^9.3.3
-    "@polkadot/wasm-crypto": ^6.3.1
-    rxjs: ^7.5.5
-  checksum: 9cb510adca8e2ea246b5ac23cfb4e11a1e7ef36692a2ad2b0bc126cee5df7251e1d4445734b4f3e382b80df4b1cfd316a696deb8adbc0a485d4562d9e15ebe29
-  languageName: node
-  linkType: hard
-
-"@gear-js/api@npm:^0.26.1":
-  version: 0.26.2
-  resolution: "@gear-js/api@npm:0.26.2"
-  peerDependencies:
-    "@polkadot/api": ^9.5.1
-    "@polkadot/wasm-crypto": ^6.3.1
-    rxjs: ^7.5.5
-  checksum: 80c9b6403f2a29dec0dc40ed7b4053152298fc6d27d56f4463120340805c9009df26218575a09f1b2eb9c830fc3d2a052a2fdd4f9c859d425174ed9fe627ca80
-  languageName: node
-  linkType: hard
-
 "@gear-js/auction@workspace:apps/auction":
   version: 0.0.0-use.local
   resolution: "@gear-js/auction@workspace:apps/auction"
   dependencies:
     "@gear-js/api": ^0.27.0
     "@gear-js/react-hooks": ^0.3.6
-    "@gear-js/ui": ^0.4.0
+    "@gear-js/ui": ^0.5.0
     "@mantine/form": ^4.2.12
     "@polkadot/api": ^9.6.1
-    "@polkadot/extension-dapp": ^0.43.3
+    "@polkadot/extension-dapp": ^0.44.0
     "@polkadot/react-identicon": ^2.8.2
     "@polkadot/types": ^9.6.1
     "@polkadot/util": ^9.7.2
@@ -2294,7 +2272,7 @@ __metadata:
     react-dom: ^18.2.0
     react-router-dom: ^6.3.0
     react-scripts: ^5.0.1
-    react-transition-group: 4.4.2
+    react-transition-group: 4.4.5
     sass: ^1.54.0
     typescript: ^4.7.4
     web-vitals: ^2.1.4
@@ -2378,7 +2356,7 @@ __metadata:
     "@gear-js/ui": ^0.5.10
     "@mantine/form": ^4.2.12
     "@polkadot/api": ^9.6.1
-    "@polkadot/extension-dapp": ^0.43.3
+    "@polkadot/extension-dapp": ^0.44.0
     "@polkadot/react-identicon": ^2.7.2
     "@polkadot/types": ^9.6.1
     "@polkadot/util": ^9.7.2
@@ -2488,10 +2466,10 @@ __metadata:
   dependencies:
     "@gear-js/api": ^0.27.0
     "@gear-js/react-hooks": ^0.3.6
-    "@gear-js/ui": ^0.4.0
+    "@gear-js/ui": ^0.5.0
     "@mantine/form": ^4.2.9
     "@polkadot/api": ^9.6.1
-    "@polkadot/extension-dapp": ^0.43.3
+    "@polkadot/extension-dapp": ^0.44.0
     "@polkadot/react-identicon": ^2.4.1
     "@polkadot/types": ^9.6.1
     "@polkadot/util": ^9.7.2
@@ -2533,9 +2511,9 @@ __metadata:
   dependencies:
     "@gear-js/api": ^0.27.0
     "@gear-js/react-hooks": ^0.3.6
-    "@gear-js/ui": ^0.4.0
+    "@gear-js/ui": ^0.5.0
     "@polkadot/api": ^9.6.1
-    "@polkadot/extension-dapp": ^0.43.3
+    "@polkadot/extension-dapp": ^0.44.0
     "@polkadot/react-identicon": ^2.6.2
     "@polkadot/types": ^9.6.1
     "@polkadot/wasm-crypto": ^6.3.1
@@ -2578,9 +2556,9 @@ __metadata:
   dependencies:
     "@gear-js/api": ^0.27.0
     "@gear-js/react-hooks": ^0.3.6
-    "@gear-js/ui": ^0.4.0
+    "@gear-js/ui": ^0.5.0
     "@polkadot/api": ^9.6.1
-    "@polkadot/extension-dapp": ^0.43.2
+    "@polkadot/extension-dapp": ^0.44.0
     "@polkadot/react-identicon": ^2.2.1
     "@polkadot/types": ^9.6.1
     "@polkadot/util": ^9.7.2
@@ -2618,20 +2596,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/react-hooks@npm:^0.2.19":
-  version: 0.2.23
-  resolution: "@gear-js/react-hooks@npm:0.2.23"
-  peerDependencies:
-    "@gear-js/api": ^0.25.5
-    "@polkadot/extension-dapp": ^0.43.2
-    react: ">=17.0.2"
-    react-dom: ">=17.0.2"
-    react-transition-group: ^4.4.2
-  checksum: 6f8044336137b2ec1bcc64170882477c9c7e7f059bf14526cfe10e4a3e733b4e8fdb2115729423ce2ef9abf0f38d58f5e023f7ab25494f1f253d32e9c49a5a74
-  languageName: node
-  linkType: hard
-
-"@gear-js/react-hooks@npm:^0.3.6":
+"@gear-js/react-hooks@npm:^0.3.0, @gear-js/react-hooks@npm:^0.3.6":
   version: 0.3.6
   resolution: "@gear-js/react-hooks@npm:0.3.6"
   peerDependencies:
@@ -2650,10 +2615,10 @@ __metadata:
   dependencies:
     "@gear-js/api": ^0.27.0
     "@gear-js/react-hooks": ^0.3.6
-    "@gear-js/ui": ^0.4.0
+    "@gear-js/ui": ^0.5.0
     "@mantine/form": ^4.2.12
     "@polkadot/api": ^9.6.1
-    "@polkadot/extension-dapp": ^0.43.2
+    "@polkadot/extension-dapp": ^0.44.0
     "@polkadot/react-identicon": ^2.8.2
     "@polkadot/types": ^9.6.1
     "@polkadot/util": ^10.1.8
@@ -2682,7 +2647,7 @@ __metadata:
     react-dom: ^18.2.0
     react-router-dom: ^6.3.0
     react-scripts: ^5.0.1
-    react-transition-group: 4.4.2
+    react-transition-group: 4.4.5
     sass: ^1.54.0
     typescript: ^4.7.4
     web-vitals: ^2.1.4
@@ -2693,12 +2658,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/staking@workspace:apps/staking"
   dependencies:
-    "@gear-js/api": ^0.25.2
-    "@gear-js/react-hooks": ^0.2.19
-    "@gear-js/ui": ^0.4.0
+    "@gear-js/api": ^0.27.0
+    "@gear-js/react-hooks": ^0.3.0
+    "@gear-js/ui": ^0.5.0
     "@mantine/form": ^4.2.9
     "@polkadot/api": ^9.2.2
-    "@polkadot/extension-dapp": ^0.43.3
+    "@polkadot/extension-dapp": ^0.44.0
     "@polkadot/react-identicon": ^2.7.2
     "@polkadot/types": ^9.2.2
     "@polkadot/util": ^9.7.2
@@ -2740,10 +2705,10 @@ __metadata:
   dependencies:
     "@gear-js/api": ^0.27.0
     "@gear-js/react-hooks": ^0.3.6
-    "@gear-js/ui": ^0.4.0
+    "@gear-js/ui": ^0.5.0
     "@mantine/form": ^4.2.12
     "@polkadot/api": ^9.6.1
-    "@polkadot/extension-dapp": ^0.43.3
+    "@polkadot/extension-dapp": ^0.44.0
     "@polkadot/react-identicon": ^2.9.3
     "@polkadot/types": ^9.6.1
     "@polkadot/util": ^9.7.2
@@ -2807,17 +2772,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/ui@npm:^0.4.0":
-  version: 0.4.0
-  resolution: "@gear-js/ui@npm:0.4.0"
-  peerDependencies:
-    react: ">=17.0.2"
-    sass: ^1.49.9
-  checksum: 6b54abc01f803cc2bdaed321a10b6164963dc256d6a84030b73c5416908d9f6ddb28a89b6de42e3752bd1cc873a79868cf608c45f9441adf3ec9d94cc2b4fa3d
-  languageName: node
-  linkType: hard
-
-"@gear-js/ui@npm:^0.5.10":
+"@gear-js/ui@npm:^0.5.0, @gear-js/ui@npm:^0.5.10":
   version: 0.5.10
   resolution: "@gear-js/ui@npm:0.5.10"
   peerDependencies:
@@ -2831,7 +2786,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/upload-dapp-chain@workspace:apps/upload-dapp-chain"
   dependencies:
-    "@gear-js/api": ^0.26.1
+    "@gear-js/api": ^0.27.0
     "@nestjs/axios": ^0.1.0
     "@nestjs/cli": ^8.0.0
     "@nestjs/common": ^8.0.0
@@ -2846,7 +2801,7 @@ __metadata:
     "@polkadot/api": ^9.5.1
     "@types/cron": ^2.0.0
     "@types/express": ^4.17.13
-    "@types/jest": 27.5.0
+    "@types/jest": 27.5.2
     "@types/js-yaml": ^4.0.5
     "@types/node": ^16.0.0
     "@types/supertest": ^2.0.11
@@ -2859,7 +2814,7 @@ __metadata:
     eslint-config-prettier: ^8.3.0
     eslint-plugin-import: ^2.26.0
     eslint-plugin-prettier: ^4.0.0
-    jest: 28.0.3
+    jest: 28.1.3
     js-yaml: ^4.1.0
     nestjs-telegraf: ^2.6.0
     node-fetch: ^2.6.7
@@ -2871,10 +2826,10 @@ __metadata:
     source-map-support: ^0.5.20
     supertest: ^6.1.3
     telegraf: ^4.8.6
-    ts-jest: 28.0.1
+    ts-jest: 28.0.8
     ts-loader: ^9.2.3
     ts-node: ^10.0.0
-    tsconfig-paths: 4.0.0
+    tsconfig-paths: 4.1.0
     typeorm: ^0.3.7
     typescript: ^4.3.5
   languageName: unknown
@@ -3246,7 +3201,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/core@npm:^28.0.3, @jest/core@npm:^28.1.3":
+"@jest/core@npm:^28.1.3":
   version: 28.1.3
   resolution: "@jest/core@npm:28.1.3"
   dependencies:
@@ -4658,7 +4613,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/extension-dapp@npm:^0.43.2, @polkadot/extension-dapp@npm:^0.43.3":
+"@polkadot/extension-dapp@npm:^0.43.3":
   version: 0.43.3
   resolution: "@polkadot/extension-dapp@npm:0.43.3"
   dependencies:
@@ -4671,6 +4626,22 @@ __metadata:
     "@polkadot/util": "*"
     "@polkadot/util-crypto": "*"
   checksum: de619d7270d94b5a0856be1a49ffc8f61d4ff7cf8a967ab2a954ac86efef6522f6e3f03b6c685b7a0217a866c04348fbad6212e1b801bfbca6e96abc3232f157
+  languageName: node
+  linkType: hard
+
+"@polkadot/extension-dapp@npm:^0.44.0":
+  version: 0.44.6
+  resolution: "@polkadot/extension-dapp@npm:0.44.6"
+  dependencies:
+    "@babel/runtime": ^7.18.9
+    "@polkadot/extension-inject": ^0.44.6
+    "@polkadot/util": ^10.1.5
+    "@polkadot/util-crypto": ^10.1.5
+  peerDependencies:
+    "@polkadot/api": "*"
+    "@polkadot/util": "*"
+    "@polkadot/util-crypto": "*"
+  checksum: 37cef474d09a1aeac10b900baa837f44bc2e32c99b7f19e000fc74a46dd2494806310e15aab86a8b91fa61d82826860f9cad1e15c8184c0ee915e776acdb8266
   languageName: node
   linkType: hard
 
@@ -4687,6 +4658,22 @@ __metadata:
   peerDependencies:
     "@polkadot/api": "*"
   checksum: bf5d02badf0d29260e39567d605c2f2e181d2d65bfdf40608359895e85be0e053c31eee74ce4ac600339146acb59772eded4a4b5624207c3bd26c3293937d88c
+  languageName: node
+  linkType: hard
+
+"@polkadot/extension-inject@npm:^0.44.6":
+  version: 0.44.6
+  resolution: "@polkadot/extension-inject@npm:0.44.6"
+  dependencies:
+    "@babel/runtime": ^7.18.9
+    "@polkadot/rpc-provider": ^9.2.3
+    "@polkadot/types": ^9.2.3
+    "@polkadot/util": ^10.1.5
+    "@polkadot/util-crypto": ^10.1.5
+    "@polkadot/x-global": ^10.1.5
+  peerDependencies:
+    "@polkadot/api": "*"
+  checksum: d758834795920d908e9e9ddbe3e4d9167922d2c230a45474401c17e41ed31187f69619afb8280ce4a41d9d894fbccc347403c89db9dd065f0cc0db6d3faac93e
   languageName: node
   linkType: hard
 
@@ -4828,7 +4815,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/rpc-provider@npm:9.6.2":
+"@polkadot/rpc-provider@npm:9.6.2, @polkadot/rpc-provider@npm:^9.2.3":
   version: 9.6.2
   resolution: "@polkadot/rpc-provider@npm:9.6.2"
   dependencies:
@@ -5062,7 +5049,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/types@npm:9.6.2, @polkadot/types@npm:^9.2.2, @polkadot/types@npm:^9.6.1":
+"@polkadot/types@npm:9.6.2, @polkadot/types@npm:^9.2.2, @polkadot/types@npm:^9.2.3, @polkadot/types@npm:^9.6.1":
   version: 9.6.2
   resolution: "@polkadot/types@npm:9.6.2"
   dependencies:
@@ -5107,7 +5094,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/util-crypto@npm:10.1.11, @polkadot/util-crypto@npm:^10.1.1, @polkadot/util-crypto@npm:^10.1.11":
+"@polkadot/util-crypto@npm:10.1.11, @polkadot/util-crypto@npm:^10.1.1, @polkadot/util-crypto@npm:^10.1.11, @polkadot/util-crypto@npm:^10.1.5":
   version: 10.1.11
   resolution: "@polkadot/util-crypto@npm:10.1.11"
   dependencies:
@@ -5149,7 +5136,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/util@npm:10.1.11, @polkadot/util@npm:^10.1.1, @polkadot/util@npm:^10.1.11, @polkadot/util@npm:^10.1.8":
+"@polkadot/util@npm:10.1.11, @polkadot/util@npm:^10.1.1, @polkadot/util@npm:^10.1.11, @polkadot/util@npm:^10.1.5, @polkadot/util@npm:^10.1.8":
   version: 10.1.11
   resolution: "@polkadot/util@npm:10.1.11"
   dependencies:
@@ -5290,7 +5277,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/x-global@npm:10.1.11, @polkadot/x-global@npm:^10.1.1, @polkadot/x-global@npm:^10.1.11":
+"@polkadot/x-global@npm:10.1.11, @polkadot/x-global@npm:^10.1.1, @polkadot/x-global@npm:^10.1.11, @polkadot/x-global@npm:^10.1.5":
   version: 10.1.11
   resolution: "@polkadot/x-global@npm:10.1.11"
   dependencies:
@@ -5690,7 +5677,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@subsquid/openreader@npm:^3.0.0":
+"@subsquid/openreader@npm:^3.1.2":
   version: 3.1.2
   resolution: "@subsquid/openreader@npm:3.1.2"
   dependencies:
@@ -5782,19 +5769,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@subsquid/typeorm-codegen@npm:^0.1.1":
-  version: 0.1.2
-  resolution: "@subsquid/typeorm-codegen@npm:0.1.2"
+"@subsquid/typeorm-codegen@npm:^0.2.0":
+  version: 0.2.2
+  resolution: "@subsquid/typeorm-codegen@npm:0.2.2"
   dependencies:
-    "@subsquid/openreader": ^3.0.0
+    "@subsquid/openreader": ^3.1.2
     "@subsquid/typeorm-config": ^2.0.0
-    "@subsquid/util-internal": ^0.0.1
+    "@subsquid/util-internal": ^1.0.0
     "@subsquid/util-internal-code-printer": ^0.0.2
     "@subsquid/util-naming": ^0.0.1
     commander: ^9.3.0
   bin:
     squid-typeorm-codegen: bin/run.js
-  checksum: f321a5b785e8684c09e350fa0b85e7447d3937e4154ac64c0b21d12f67a301c59fd3d33f11f5b96b0742b16ba471e32d414a406632ba4328cd75f7f2b9d0ec1a
+  checksum: 64ccba3e577c02105ce7a3a9fdfc9d25e718815b2f4b203698601b3bfbb02438f8fb4ed718b21e76e48972b1e42ba2191300294236a8a204761f7b2a280aa097
   languageName: node
   linkType: hard
 
@@ -6607,16 +6594,6 @@ __metadata:
     jest-diff: ^26.0.0
     pretty-format: ^26.0.0
   checksum: ae39675412f08d884926254e9b12bfd2b5a4e4d204c94d3148cb942174a474930d0c60540133c968f22241d4712b7940c96cbc883096eb326a4d5b206fb78bd0
-  languageName: node
-  linkType: hard
-
-"@types/jest@npm:27.5.0":
-  version: 27.5.0
-  resolution: "@types/jest@npm:27.5.0"
-  dependencies:
-    jest-matcher-utils: ^27.0.0
-    pretty-format: ^27.0.0
-  checksum: ca09ac3a17972e18683c57b681a6866c7a56c67f429810ece00425d948da62f207d271becb5cc759da3630f120596ec3c8e0ceb0eecefbe26daffba168b82879
   languageName: node
   linkType: hard
 
@@ -15145,7 +15122,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-cli@npm:^28.0.3":
+"jest-cli@npm:^28.1.3":
   version: 28.1.3
   resolution: "jest-cli@npm:28.1.3"
   dependencies:
@@ -16375,13 +16352,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:28.0.3":
-  version: 28.0.3
-  resolution: "jest@npm:28.0.3"
+"jest@npm:28.1.3":
+  version: 28.1.3
+  resolution: "jest@npm:28.1.3"
   dependencies:
-    "@jest/core": ^28.0.3
+    "@jest/core": ^28.1.3
+    "@jest/types": ^28.1.3
     import-local: ^3.0.2
-    jest-cli: ^28.0.3
+    jest-cli: ^28.1.3
   peerDependencies:
     node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
   peerDependenciesMeta:
@@ -16389,7 +16367,7 @@ __metadata:
       optional: true
   bin:
     jest: bin/jest.js
-  checksum: 2596927a56610b0e41b2eb6a41234ae5fa04208f535b2e36392184a2cc5b3d28a49ac1b9cf3ebd75604210a5fe5cea534ba0b8381a6698faccb4b4c462a44650
+  checksum: b9dcb542eb7c16261c281cdc2bf37155dbb3f1205bae0b567f05051db362c85ddd4b765f126591efb88f6d298eb10336d0aa6c7d5373b4d53f918137a9a70182
   languageName: node
   linkType: hard
 
@@ -17742,12 +17720,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "nft-squid@workspace:apps/indexers/nft-marketplace"
   dependencies:
-    "@gear-js/api": ^0.25.2
+    "@gear-js/api": ^0.27.0
     "@playlyfe/gql": ^2.6.2
     "@polkadot/api": ^9.2.2
     "@subsquid/graphql-server": ^2.0.0
     "@subsquid/substrate-processor": ^1.6.0
-    "@subsquid/typeorm-codegen": ^0.1.1
+    "@subsquid/typeorm-codegen": ^0.2.0
     "@subsquid/typeorm-migration": ^0.1.2
     "@subsquid/typeorm-store": ^0.1.2
     "@subsquid/util-internal-gql-request": ^0.0.0
@@ -20365,22 +20343,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-transition-group@npm:4.4.2":
-  version: 4.4.2
-  resolution: "react-transition-group@npm:4.4.2"
-  dependencies:
-    "@babel/runtime": ^7.5.5
-    dom-helpers: ^5.0.1
-    loose-envify: ^1.4.0
-    prop-types: ^15.6.2
-  peerDependencies:
-    react: ">=16.6.0"
-    react-dom: ">=16.6.0"
-  checksum: b67bf5b3e86dbab72d658b9a52a3589e5960583ab28c7c66272427d8fe30d4c7de422d5046ae96bd2683cdf80cc3264b2516f5ce80cae1dbe6cf3ca6dda392c5
-  languageName: node
-  linkType: hard
-
-"react-transition-group@npm:^4.4.2, react-transition-group@npm:^4.4.5":
+"react-transition-group@npm:4.4.5, react-transition-group@npm:^4.4.2, react-transition-group@npm:^4.4.5":
   version: 4.4.5
   resolution: "react-transition-group@npm:4.4.5"
   dependencies:
@@ -22714,39 +22677,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:28.0.1":
-  version: 28.0.1
-  resolution: "ts-jest@npm:28.0.1"
-  dependencies:
-    bs-logger: 0.x
-    fast-json-stable-stringify: 2.x
-    jest-util: ^28.0.0
-    json5: 2.x
-    lodash.memoize: 4.x
-    make-error: 1.x
-    semver: 7.x
-    yargs-parser: ^20.x
-  peerDependencies:
-    "@babel/core": ">=7.0.0-beta.0 <8"
-    "@types/jest": ^27.0.0
-    babel-jest: ^28.0.0
-    jest: ^28.0.0
-    typescript: ">=4.3"
-  peerDependenciesMeta:
-    "@babel/core":
-      optional: true
-    "@types/jest":
-      optional: true
-    babel-jest:
-      optional: true
-    esbuild:
-      optional: true
-  bin:
-    ts-jest: cli.js
-  checksum: d6827b5eb9838b63c694a49a6d85020f62e6eed1e8aae935fdb3fabdccc0ed7207b41c812c0de793a8e5ba1b7818cddfc4d51dc29ed6054f3a08cafbedbef26e
-  languageName: node
-  linkType: hard
-
 "ts-jest@npm:28.0.2":
   version: 28.0.2
   resolution: "ts-jest@npm:28.0.2"
@@ -22777,6 +22707,39 @@ __metadata:
   bin:
     ts-jest: cli.js
   checksum: bb244015f947cf9a77c892691a8131116a86f4f1cc7a1ff045cd72f78c16485c07ac582b31117f8d722a0ebb9d51c27468c28e2f8eec8bbae6e2a09ee41066f2
+  languageName: node
+  linkType: hard
+
+"ts-jest@npm:28.0.8":
+  version: 28.0.8
+  resolution: "ts-jest@npm:28.0.8"
+  dependencies:
+    bs-logger: 0.x
+    fast-json-stable-stringify: 2.x
+    jest-util: ^28.0.0
+    json5: ^2.2.1
+    lodash.memoize: 4.x
+    make-error: 1.x
+    semver: 7.x
+    yargs-parser: ^21.0.1
+  peerDependencies:
+    "@babel/core": ">=7.0.0-beta.0 <8"
+    "@jest/types": ^28.0.0
+    babel-jest: ^28.0.0
+    jest: ^28.0.0
+    typescript: ">=4.3"
+  peerDependenciesMeta:
+    "@babel/core":
+      optional: true
+    "@jest/types":
+      optional: true
+    babel-jest:
+      optional: true
+    esbuild:
+      optional: true
+  bin:
+    ts-jest: cli.js
+  checksum: c72e9292709e77ce47ac7813cb24feaa9d01dc983598d29a821f224b5cc190dc7d67e17379cef089095404c00b9d582ee91c727916f9ec289cb1b723df408ae3
   languageName: node
   linkType: hard
 
@@ -22920,14 +22883,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsconfig-paths@npm:4.0.0":
-  version: 4.0.0
-  resolution: "tsconfig-paths@npm:4.0.0"
+"tsconfig-paths@npm:4.1.0":
+  version: 4.1.0
+  resolution: "tsconfig-paths@npm:4.1.0"
   dependencies:
     json5: ^2.2.1
     minimist: ^1.2.6
     strip-bom: ^3.0.0
-  checksum: a8cf746ffe438513a71c70c1bcdee8da7d62ab2af286efbe2728ff55c4d4c92c2aea80a0822982ded6d0a13c7686c24632934d7c0f4f564be9e1b2cdc3d65eea
+  checksum: e4b101f81b2abd95499d8145e0aa73144e857c2c359191058486cef101b7accae22a69114e5d5814a13d5ab3b0bae70dd0c85bcdb7e829bbe1bfda5c9067c9b1
   languageName: node
   linkType: hard
 
@@ -24621,7 +24584,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs-parser@npm:^21.0.0":
+"yargs-parser@npm:^21.0.0, yargs-parser@npm:^21.0.1":
   version: 21.1.1
   resolution: "yargs-parser@npm:21.1.1"
   checksum: ed2d96a616a9e3e1cc7d204c62ecc61f7aaab633dcbfab2c6df50f7f87b393993fe6640d017759fe112d0cb1e0119f2b4150a87305cc873fd90831c6a58ccf1c

@@ -5,9 +5,9 @@
   "dependencies": {
     "@gear-js/api": "^0.27.0",
     "@gear-js/react-hooks": "^0.3.6",
-    "@gear-js/ui": "^0.4.0",
+    "@gear-js/ui": "^0.5.0",
     "@polkadot/api": "^9.6.1",
-    "@polkadot/extension-dapp": "^0.43.3",
+    "@polkadot/extension-dapp": "^0.44.0",
     "@polkadot/react-identicon": "^2.6.2",
     "@polkadot/types": "^9.6.1",
     "@polkadot/wasm-crypto": "^6.3.1",
