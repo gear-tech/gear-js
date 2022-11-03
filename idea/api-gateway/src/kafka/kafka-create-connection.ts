@@ -28,7 +28,7 @@ async function createTopics(topics: string[]): Promise<void> {
     const isExistTopicInKafka = kafkaTopics.includes(topic);
 
     if(!isExistTopicInKafka) {
-      const createTopic: ITopicConfig = { topic, numPartitions: 5 };
+      const createTopic: ITopicConfig = { topic };
 
       await admin.createTopics({
         validateOnly: true,
