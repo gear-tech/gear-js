@@ -31,7 +31,7 @@ async function createTopics(topics: string[]): Promise<void> {
       const createTopic: ITopicConfig = { topic };
 
       await admin.createTopics({
-        validateOnly: true,
+        waitForLeaders: true,
         topics: [createTopic],
       });
     }
