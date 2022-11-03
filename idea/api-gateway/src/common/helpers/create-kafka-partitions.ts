@@ -12,7 +12,7 @@ export async function createKafkaPartitions(){
       const partitionsByTopic = topicOffsets.map(el => el.partition);
 
       if(!partitionsByTopic.includes(i)){
-        const topicPartitions = topics.map(topic => ({ topic, count: i, assignments: null }));
+        const topicPartitions = topics.map(topic => ({ topic, count: i, assignments: [] }));
         createPartitionsPromises.push(admin.createPartitions({
           topicPartitions
         }));
