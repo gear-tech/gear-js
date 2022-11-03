@@ -6,6 +6,7 @@ import { initKafka } from './init-kafka';
 import { deleteKafkaEvent, kafkaEventMap } from './kafka-event-map';
 import { genesisHashesCollection } from '../common/genesis-hashes-collection';
 import { sendServicePartition, setServicePartition } from '../common/helpers';
+import { servicesPartitionMap } from '../common/services-partition-map';
 
 const configKafka = config.kafka;
 
@@ -42,10 +43,12 @@ async function messageProcessing(message: KafkaMessage, topic: string): Promise<
     if (topic === `${KAFKA_TOPICS.SERVICE_PARTITION_GET}.reply`) {
       console.log('Genesis received from data-storage:', message);
       await sendServicePartition(message, topic);
+      console.log(...servicesPartitionMap);
       return;
     }
     if (topic === `${KAFKA_TOPICS.SERVICES_PARTITION}.reply`) {
       await setServicePartition(message);
+      console.log(...servicesPartitionMap);
       return;
     }
     if (topic === `${KAFKA_TOPICS.TEST_BALANCE_GENESIS}.reply`) {
