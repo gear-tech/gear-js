@@ -1,0 +1,24 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.balanceSection {
+  margin-left: $margin;
+
+  .title {
+    color: $gray800;
+    font-weight: 400;
+  }
+
+  .unit {
+    color: $gray700;
+    font-size: $fontSize;
+    font-weight: 400;
+    line-height: 18.2px;
+  }
+
+  .value {
+    color: $textColor;
+    font-weight: 500;
+    line-height: 19.8px;
+  }
+}

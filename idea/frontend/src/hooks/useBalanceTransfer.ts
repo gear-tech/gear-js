@@ -3,9 +3,9 @@ import { AddressOrPair } from '@polkadot/api/types';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { useApi, useAlert } from '@gear-js/react-hooks';
 
-import { getExtrinsicFailedMessage } from 'helpers';
-import { GEAR_BALANCE_TRANSFER_VALUE } from 'consts';
-import { Method } from 'types/explorer';
+import { Method } from 'entities/explorer';
+import { getExtrinsicFailedMessage } from 'shared/helpers';
+import { GEAR_BALANCE_TRANSFER_VALUE } from 'shared/config';
 
 const useBalanceTransfer = () => {
   const alert = useAlert();
@@ -38,7 +38,7 @@ const useBalanceTransfer = () => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [api]
+    [api],
   );
 
   return transferBalance;

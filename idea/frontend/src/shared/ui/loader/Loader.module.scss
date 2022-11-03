@@ -1,0 +1,132 @@
+@use 'shared/assets/styles/_shared' as *;
+@use 'shared/assets/styles/_mixins' as *;
+@use 'shared/assets/styles/_variables' as *;
+
+@keyframes rotateGear {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes progressLine {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 32px;
+  }
+}
+
+%gearStyle {
+  position: absolute;
+  animation-name: rotateGear;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.loader {
+  @extend %absoluteCenter;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .gears {
+    position: relative;
+    width: 105px;
+    height: 100px;
+    filter: blur(2.5px);
+    opacity: 0.25;
+
+    .gear1 {
+      @extend %gearStyle;
+
+      top: 0;
+      left: 0;
+      animation-duration: 6s;
+    }
+
+    .gear2 {
+      @extend %gearStyle;
+
+      top: 37px;
+      right: 0;
+      animation-duration: 3.8s;
+      animation-direction: reverse;
+    }
+
+    .gear3 {
+      @extend %gearStyle;
+
+      left: 25px;
+      bottom: 0;
+      animation-duration: 2.4s;
+    }
+  }
+
+  .loaderLine {
+    @include childrenMargin($marginTiny, right);
+    display: flex;
+    min-width: 176px;
+    margin-top: $marginMedium;
+    margin-bottom: 10px;
+
+    .line {
+      height: 2px;
+      width: 32px;
+      background-color: #898b94;
+      border-radius: 2px;
+
+      position: relative;
+
+      &::before {
+        content: '';
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: $successColor;
+        animation: 4s linear forwards progressLine;
+      }
+
+      &:nth-child(2) {
+        &::before {
+          animation-delay: 4s;
+        }
+      }
+
+      &:nth-child(3) {
+        &::before {
+          animation-delay: 8s;
+        }
+      }
+
+      &:nth-child(4) {
+        &::before {
+          animation-delay: 12s;
+        }
+      }
+
+      &:nth-child(5) {
+        &::before {
+          animation-delay: 16s;
+        }
+      }
+    }
+  }
+
+  .text {
+    font-family: 'Kanit';
+    font-weight: 500;
+    font-size: $fontSize;
+    line-height: 1.3;
+    color: $textColorTertiary;
+  }
+}
+
+.progress {
+  @extend %absoluteCenter;
+  text-align: center;
+}

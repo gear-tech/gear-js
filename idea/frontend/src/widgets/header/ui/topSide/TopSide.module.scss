@@ -1,0 +1,52 @@
+@use '@gear-js/ui/mixins' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.topSide {
+  display: flex;
+  position: relative;
+  align-items: center;
+}
+
+.leftSide {
+  @include fadeAppear();
+  @include childrenMargin($margineLarge, right);
+
+  display: flex;
+  align-items: center;
+}
+
+.rightSide {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+
+  .privateContent {
+    @include fadeAppear();
+
+    display: flex;
+    align-items: center;
+
+    .testBalanceBtn {
+      background-color: $green007;
+
+      svg path {
+        @include transition();
+
+        fill: $successColor;
+      }
+
+      &:hover {
+        background-color: $successColor;
+
+        svg path {
+          @include transition();
+  
+          fill: $textColor;
+        }  
+      }
+    }
+  }
+}

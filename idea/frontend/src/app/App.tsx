@@ -1,30 +1,28 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAccount, useApi } from '@gear-js/react-hooks';
+import 'simplebar-react/dist/simplebar.min.css';
+
+import { useApp, useChain, useEventSubscriptions } from 'hooks';
+import { Menu } from 'widgets/menu';
+import { Header } from 'widgets/header';
+import { Footer } from 'widgets/footer';
+import { Routing } from 'pages';
+import { LocalStorage, NODE_ADRESS_URL_PARAM } from 'shared/config';
+import { Loader } from 'shared/ui/loader';
 
 import './App.scss';
-import 'yup-extended';
-import { AppRoutes } from './children/AppRoutes';
+import './yup-extended';
+import { withProviders } from './providers';
 
-import { useEventSubscriptions } from 'hooks';
-import { withProviders } from 'context';
-import { NODE_API_ADDRESS } from 'context/api/const';
-import { NODE_ADRESS_URL_PARAM, LOCAL_STORAGE } from 'consts';
-
-import 'assets/scss/common.scss';
-import 'assets/scss/index.scss';
-
-import { Main } from 'layout/Main/Main';
-import { Loader } from 'components/blocks/Loader/Loader';
-import { Header } from 'components/blocks/Header/Header';
-import { Footer } from 'components/blocks/Footer/Footer';
-
-const Component = () => {
-  const { api, isApiReady } = useApi();
-
+const App = withProviders(() => {
+  const { nodeAddress } = useApp();
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const { api, isApiReady } = useApi();
   const { isAccountReady } = useAccount();
+  const { isChainRequestReady } = useChain();
+  const isAppReady = isApiReady && isAccountReady && isChainRequestReady;
 
   useEventSubscriptions();
 
@@ -32,28 +30,31 @@ const Component = () => {
     const urlNodeAddress = searchParams.get(NODE_ADRESS_URL_PARAM);
 
     if (!urlNodeAddress) {
-      searchParams.set(NODE_ADRESS_URL_PARAM, NODE_API_ADDRESS);
+      searchParams.set(NODE_ADRESS_URL_PARAM, nodeAddress);
       setSearchParams(searchParams, { replace: true });
     }
-  }, [searchParams, setSearchParams]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   useEffect(() => {
     if (isApiReady) {
-      localStorage.setItem(LOCAL_STORAGE.CHAIN, api.runtimeChain.toHuman());
-      localStorage.setItem(LOCAL_STORAGE.GENESIS, api.genesisHash.toHex());
+      localStorage.setItem(LocalStorage.Genesis, api.genesisHash.toHex());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady]);
 
-  const isInitLoaded = isApiReady && isAccountReady;
-
   return (
     <>
-      <Header />
-      <Main>{isInitLoaded ? <AppRoutes /> : <Loader />}</Main>
+      <main className="main">
+        <Menu />
+        <div className="content">
+          <Header />
+          {isAppReady ? <Routing /> : <Loader />}
+        </div>
+      </main>
       <Footer />
     </>
   );
-};
+});
 
-export const App = withProviders(Component);
+export { App };

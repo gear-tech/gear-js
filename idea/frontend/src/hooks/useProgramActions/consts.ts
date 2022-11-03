@@ -1,5 +1,7 @@
 import { AlertOptions } from '@gear-js/react-hooks';
 
-export const ALERT_OPTIONS: AlertOptions = {
+const ALERT_OPTIONS: AlertOptions = {
   title: 'Program initialization',
 };
+
+export { ALERT_OPTIONS };

@@ -1,0 +1,10 @@
+@use 'shared/assets/styles/animations' as *;
+@use 'shared/assets/styles/variables' as *;
+
+.placeholder {
+  @include loading;
+  height: 60px;
+  border-radius: $borderRadius;
+  background-color: $bgColor4;
+  position: relative;
+}

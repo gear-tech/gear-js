@@ -2,36 +2,36 @@ import { useCallback } from 'react';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useAlert, useAccount } from '@gear-js/react-hooks';
 
+import { uploadLocalMetadata } from 'api/LocalDB';
+import { RPCService } from 'shared/services/rpcService';
+import { RpcMethods, ACCOUNT_ERRORS } from 'shared/config';
+
+import { useChain, useModal } from '../context';
 import { ParamsToSignAndUpload, ParamsToUploadMeta } from './types';
-import { useModal } from '../index';
 
-import { RPC_METHODS, ACCOUNT_ERRORS } from 'consts';
-import { isDevChain } from 'helpers';
-import { uploadLocalMetadata } from 'services/LocalDBService';
-import ServerRPCRequestService from 'services/ServerRPCRequestService';
-
-const useMetadataUpload = () => {
+const useMetadataUplaod = () => {
   const alert = useAlert();
   const { account } = useAccount();
   const { showModal } = useModal();
+  const { isDevChain } = useChain();
 
   const signAndUpload = async (params: ParamsToSignAndUpload) => {
     const { name, title, signer, metadataBuffer, programId, jsonMeta, reject, resolve } = params;
 
-    const apiRequest = new ServerRPCRequestService();
+    const apiRequest = new RPCService();
 
     try {
       const { signature } = await signer.signRaw!({
         type: 'payload',
-        data: jsonMeta,
+        data: jsonMeta || '',
         address: account!.address,
       });
 
-      const { error } = await apiRequest.callRPC(RPC_METHODS.ADD_METADATA, {
+      const { error } = await apiRequest.callRPC(RpcMethods.AddMetadata, {
         name,
         meta: jsonMeta,
         title,
-        metaFile: metadataBuffer,
+        metaWasm: metadataBuffer,
         signature,
         programId,
       });
@@ -61,9 +61,9 @@ const useMetadataUpload = () => {
           throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
         }
 
-        const jsonMeta = JSON.stringify(metadata);
+        const jsonMeta = metadata ? JSON.stringify(metadata) : undefined;
 
-        if (isDevChain()) {
+        if (isDevChain) {
           await uploadLocalMetadata(programId, jsonMeta, metadataBuffer, name);
 
           alert.success('Metadata added to the localDB successfully');
@@ -100,10 +100,10 @@ const useMetadataUpload = () => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [account]
+    [account],
   );
 
   return uploadMetadata;
 };
 
-export { useMetadataUpload };
+export { useMetadataUplaod };

@@ -1,0 +1,28 @@
+import { Link, LinkProps } from 'react-router-dom';
+import clsx from 'clsx';
+import { ButtonProps, buttonStyles } from '@gear-js/ui';
+
+type Props = LinkProps & ButtonProps;
+
+const UILink = (props: Props) => {
+  const { icon, size, text, color, className, children, ...otherProps } = props;
+
+  const linkClasses = clsx(
+    buttonStyles.button,
+    size ? buttonStyles[size] : buttonStyles.medium,
+    color ? buttonStyles[color] : buttonStyles.primary,
+    !text && buttonStyles.noText,
+    className,
+  );
+
+  return (
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    <Link {...otherProps} className={linkClasses}>
+      <img src={icon} alt={text || 'icon'} className={buttonStyles.icon} />
+      {text}
+      {children}
+    </Link>
+  );
+};
+
+export { UILink };

@@ -1,0 +1,77 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+%textStyle {
+  font-size: $fontSizeMedium;
+  font-weight: 400;
+  line-height: 25px;
+}
+
+.contentHeading {
+  @extend %textStyle;
+
+  color: $textColor;
+  margin-bottom: 10px;
+
+  .headingName {
+    color: #f2c94c;
+  }
+}
+
+.contentFeeInfo {
+  @extend %textStyle;
+
+  color: $successColor;
+}
+
+.contentTransactionInfo {
+  position: relative;
+  margin: 25px 0 20px 14px;
+  padding: 17px 24px;
+  border-radius: $borderRadius;
+  background-color: rgba(255, 255, 255, 0.03);
+
+  .infoIcon {
+    position: absolute;
+    top: 50%;
+    left: -14px;
+    transform: translateY(-50%);
+  }
+
+  .infoParticipant {
+    display: flex;
+    justify-content: space-between;
+    line-height: 21px;
+
+    &:not(:last-child) {
+      margin-bottom: 5px;
+    }
+
+    .participantSide {
+      flex: 1 0 40px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-right: 24px;
+      font-weight: 500;
+      font-size: $fontSize;
+      text-align: left;
+    }
+
+    .participantValue {
+      color: $textColor;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.contentButtons {
+  @include childrenMargin(10px, right);
+
+  display: flex;
+
+  .actionButton {
+    flex: 1 1 50%;
+  }
+}

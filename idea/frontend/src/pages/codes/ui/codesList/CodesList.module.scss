@@ -1,0 +1,28 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.codesList {
+  position: relative;
+  margin-top: $margin;
+
+  .simpleBar {
+    @include customSimplebar;
+
+    height: calc($contentHeight - toRem(31.19) - $margin);
+
+    :global(.simplebar-content) {
+      @include childrenMargin(12px);
+
+      margin-right: $margin;
+    }
+
+    &.noOverflow {
+      overflow: hidden;
+    }
+  }
+}
+
+.placeholderBlock {
+  height: toRem(109);
+}

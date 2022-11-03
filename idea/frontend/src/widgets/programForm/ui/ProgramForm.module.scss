@@ -1,0 +1,12 @@
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.formContent {
+  @include childrenMargin($marginMedium);
+
+  margin-bottom: $marginBig;
+}
+
+.buttons {
+  @include childrenMargin($margin, right);
+}

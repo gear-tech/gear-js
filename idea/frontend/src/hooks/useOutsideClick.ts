@@ -1,23 +1,28 @@
 import { useEffect, useRef } from 'react';
 
-function useOutsideClick<TElement extends Element>(callback: () => void) {
+const useOutsideClick = <TElement extends Element>(callback: (event: MouseEvent) => void, isActive = true) => {
   const ref = useRef<TElement>(null);
 
-  const handleClick = ({ target }: MouseEvent) => {
-    const isElementClicked = ref.current?.contains(target as Node);
+  const handleClick = (event: MouseEvent) => {
+    if (ref.current) {
+      // https://github.com/JedWatson/react-select/issues/4560
+      // @ts-ignore
+      const isElementClicked = event.path.includes(ref.current);
 
-    if (!isElementClicked) {
-      callback();
+      if (!isElementClicked) callback(event);
     }
   };
 
   useEffect(() => {
+    if (!isActive) return;
+
     window.addEventListener('click', handleClick);
+
     return () => window.removeEventListener('click', handleClick);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isActive]);
 
   return ref;
-}
+};
 
 export { useOutsideClick };
