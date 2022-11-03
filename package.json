@@ -38,7 +38,7 @@
     "idea/**/*.{js,ts,tsx}": "eslint --fix --ignore-pattern 'idea/frontend/**'"
   },
   "resolutions": {
-    "@types/react": "17.0.44"
+    "@types/react": "17.0.52"
   },
   "packageManager": "yarn@3.2.3",
   "version": "1.2.0"
