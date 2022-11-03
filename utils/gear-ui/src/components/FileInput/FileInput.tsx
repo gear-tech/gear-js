@@ -19,12 +19,24 @@ import styles from './FileInput.module.scss';
 
 type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> &
   Omit<InputProps, 'color'> & {
+    color?: 'light' | 'primary';
     label?: string;
     error?: string;
   };
 
 const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElement>) => {
-  const { label, className, gap, error, tooltip, onChange, direction = 'x', size = 'normal', ...attrs } = props;
+  const {
+    label,
+    className,
+    gap,
+    error,
+    tooltip,
+    onChange,
+    direction = 'x',
+    size = 'normal',
+    color = 'light',
+    ...attrs
+  } = props;
   const { disabled } = attrs;
 
   const [name, setName] = useState('');
@@ -85,7 +97,7 @@ const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInput
         <Button
           text="Select file"
           icon={SelectSVG}
-          color="light"
+          color={color}
           size={size === 'normal' ? 'medium' : 'large'}
           onClick={handleButtonClick}
         />
