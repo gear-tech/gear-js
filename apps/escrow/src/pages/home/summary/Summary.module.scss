@@ -20,14 +20,13 @@
 }
 
 .key {
-  @include heading(12px, 24px);
+  @include heading(18px, 26px, 500);
   color: $textColorSecondary;
 }
 
 .value {
+  @include heading(16px, 24px);
   font-size: $fontSizeMedium;
-  font-weight: 600;
-  letter-spacing: 0.01em;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

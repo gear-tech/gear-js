@@ -58,6 +58,7 @@ jobs:
             REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
             REACT_APP_WASM_COMPILER_URL=${{ secrets.REACT_APP_WASM_COMPILER_URL }}
             REACT_APP_DEFAULT_NODES_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
+            REACT_APP_DEFAULT_TRANSFER_BALANCE_VALUE=${{ secrets.REACT_APP_DEFAULT_TRANSFER_BALANCE_VALUE }}
             REACT_APP_HCAPTCHA_SITE_KEY=${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
 
   build-data-storage-image-staging:
@@ -112,32 +113,6 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:qa
 
-  build-event-listeners-image-staging:
-    runs-on: ubuntu-latest
-    needs: [wait-previous-run]
-    environment: staging
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Events Listener Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/events-listener/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-events-listener:qa
-
   build-test-balance-image-staging:
     runs-on: ubuntu-latest
     needs: [wait-previous-run]
@@ -170,7 +145,6 @@ jobs:
         build-frontend-image-staging,
         build-data-storage-image-staging,
         build-api-gateway-image-staging,
-        build-event-listeners-image-staging,
         build-test-balance-image-staging,
         wait-previous-run,
       ]
@@ -187,7 +161,7 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment api-gateway data-storage frontend-nginx test-balance-workshop-node events-listener-workshop-node events-listener-rpc-testnet -n dev-1
+          args: rollout restart deployment api-gateway data-storage-rpc data-storage-workshop frontend-nginx test-balance-workshop-node -n dev-1
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master

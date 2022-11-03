@@ -4,7 +4,6 @@ import { Input, Button } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 import { isHex } from '@polkadot/util';
 import check from 'assets/images/icons/check.svg';
-import styles from './InputAddress.module.scss';
 
 type Props = {
   label: string;
@@ -18,7 +17,7 @@ function InputAddress({ label, onSubmit }: Props) {
   const { api } = useApi();
 
   const form = useForm({ initialValues, validate });
-  const { getInputProps, errors, setFieldError } = form;
+  const { getInputProps, setFieldError } = form;
 
   const handleSubmit = async (address: Hex) => {
     const isProgram = await api.program.exists(address);
@@ -32,10 +31,7 @@ function InputAddress({ label, onSubmit }: Props) {
 
   return (
     <form onSubmit={form.onSubmit(({ address }) => handleSubmit(address))}>
-      <div>
-        <Input label={label} {...getInputProps('address')} />
-        <p className={styles.error}>{errors.address}</p>
-      </div>
+      <Input label={label} color="light" direction="y" {...getInputProps('address')} />
       <Button type="submit" text="Continue" icon={check} block />
     </form>
   );

@@ -1,12 +1,14 @@
 import { Test } from '@nestjs/testing';
-import { GetAllProgramsParams, GetAllUserProgramsParams, InitStatus } from '@gear-js/common';
+import { GetAllProgramsParams, GetAllUserProgramsParams } from '@gear-js/common';
 
 import { ProgramService } from '../../src/program/program.service';
 import { ProgramRepo } from '../../src/program/program.repo';
-import { UpdateProgramDataInput } from '../../src/program/types';
+import { CreateProgramInput, UpdateProgramDataInput } from '../../src/program/types';
+import { ProgramStatus } from '../../src/common/enums';
 
 import { mockProgramRepository } from '../mock/program/program-repository.mock';
 import { PROGRAM_DB_MOCK } from '../mock/program/program-db.mock';
+import { CODE_DB_MOCK } from '../mock/code/code-db.mock';
 
 const PROGRAM_ENTITY_ID = '0x7357';
 
@@ -28,15 +30,19 @@ describe('Program service', () => {
   });
 
   it('should be successfully created new program', async () => {
-    const program = await programService.createProgram({
+    const code = CODE_DB_MOCK[0];
+
+    const createProgramInput: CreateProgramInput = {
       id: PROGRAM_ENTITY_ID,
       genesis: '0x07357',
       owner: '0x7357',
       blockHash: '0x1234',
       timestamp: 0,
-    });
+      code
+    };
+    const programs = await programService.createPrograms([createProgramInput]);
 
-    expect(program.id).toEqual(PROGRAM_ENTITY_ID);
+    expect(programs[0].id).toEqual(PROGRAM_ENTITY_ID);
     expect(mockProgramRepository.save).toHaveBeenCalled();
   });
 
@@ -68,7 +74,7 @@ describe('Program service', () => {
     expect(mockProgramRepository.getByIdAndGenesis).toHaveBeenCalled();
   });
 
-  it('should successfully get programs and called getAllUserProgram method', async () => {
+  it('should successfully get programs by owner and called getAllPrograms method', async () => {
     const { genesis, owner } = PROGRAM_DB_MOCK[1];
     const getAllUserProgramParamsInput: GetAllUserProgramsParams = {
       genesis,
@@ -76,11 +82,11 @@ describe('Program service', () => {
       limit: 1,
       owner,
     };
-    const result = await programService.getAllUserPrograms(getAllUserProgramParamsInput);
+    const result = await programService.getAllPrograms(getAllUserProgramParamsInput);
     expect.arrayContaining(result.programs);
     expect(result.programs[0].owner).toEqual(owner);
     expect(result.programs[0].genesis).toEqual(genesis);
-    expect(mockProgramRepository.listByOwnerAndGenesis).toHaveBeenCalled();
+    expect(mockProgramRepository.listPaginationByGenesis).toHaveBeenCalled();
   });
 
   it('should successfully get programs and called getAllPrograms method', async () => {
@@ -96,21 +102,21 @@ describe('Program service', () => {
     expect(mockProgramRepository.listPaginationByGenesis).toHaveBeenCalled();
   });
 
-  it('should successfully update program status to PROGRESS', async () => {
+  it('should successfully update program status to ACTIVE', async () => {
     const { id, genesis } = PROGRAM_DB_MOCK[2];
     const updateProgramStatusInput = {
       id,
       genesis,
-      status: InitStatus.PROGRESS,
+      status: ProgramStatus.ACTIVE,
     };
     const program = await programService.setStatus(
       updateProgramStatusInput.id,
       updateProgramStatusInput.genesis,
       updateProgramStatusInput.status,
     );
-    expect(program.initStatus).toEqual(updateProgramStatusInput.status);
-    expect(program.initStatus).not.toEqual(InitStatus.SUCCESS);
-    expect(program.initStatus).not.toEqual(InitStatus.FAILED);
+    expect(program.status).toEqual(updateProgramStatusInput.status);
+    expect(program.status).not.toEqual(ProgramStatus.TERMINATED);
+    expect(program.status).not.toEqual(ProgramStatus.PAUSED);
     expect(mockProgramRepository.save).toHaveBeenCalled();
   });
 

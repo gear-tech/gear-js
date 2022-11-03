@@ -1,26 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
-import {
-  AllMessagesResult,
-  FindMessageParams,
-  GetMessagesParams,
-  IMessage,
-  IMessagesDispatchedKafkaValue,
-  InitStatus,
-  MESSAGE_READ_STATUS,
-  UpdateMessageData,
-} from '@gear-js/common';
+import { AllMessagesResult, FindMessageParams, GetMessagesParams, IMessage } from '@gear-js/common';
 
-import { Message } from '../database/entities/message.entity';
+import { Message } from '../database/entities';
 import { ProgramService } from '../program/program.service';
 import { MessageNotFound } from '../common/errors';
-import { sleep } from '../utils/sleep';
 import { MessageRepo } from './message.repo';
-import { CreateMessageInput } from './types';
+import { MessageEntryPoint, MessageReadReason, ProgramStatus } from '../common/enums';
+import { MessageDispatchedDataInput } from './types/message-dispatched-data.input';
 
 @Injectable()
 export class MessageService {
-  private logger: Logger = new Logger('MessageService');
+  private logger: Logger = new Logger(MessageService.name);
 
   constructor(private messageRepository: MessageRepo, private programService: ProgramService) {}
 
@@ -41,26 +31,15 @@ export class MessageService {
     return message;
   }
 
-  public async createMessage({ timestamp, ...params }: CreateMessageInput): Promise<IMessage> {
+  public async createMessages(createMessagesDBType: Message[]): Promise<IMessage[]> {
     try {
-      const messageTypeDB = plainToClass(Message, {
-        ...params,
-        timestamp: new Date(timestamp),
-      });
-
-      if (params.replyToMessageId) {
-        const { entry } = await this.messageRepository.get(params.replyToMessageId);
-        messageTypeDB.entry = entry;
-      }
-
-      return this.messageRepository.save(messageTypeDB);
+      return this.messageRepository.save(createMessagesDBType);
     } catch (error) {
       this.logger.error(error, error.stack);
     }
   }
 
-  public async setDispatchedStatus({ statuses, genesis }: IMessagesDispatchedKafkaValue): Promise<void> {
-    await sleep(1000);
+  public async setDispatchedStatus({ statuses, genesis }: MessageDispatchedDataInput): Promise<void> {
     for (const messageId of Object.keys(statuses)) {
       try {
         await this.messageRepository.update(
@@ -72,29 +51,17 @@ export class MessageService {
       }
 
       if (statuses[messageId] === 'Failed') {
-        const message = await this.messageRepository.get(messageId);
-        if (message.entry === 'Init') {
-          this.programService.setStatus(message.destination, genesis, InitStatus.FAILED);
+        const message = await this.messageRepository.get(messageId, genesis);
+        if (message.entry === MessageEntryPoint.INIT) {
+          await this.programService.setStatus(message.destination, genesis, ProgramStatus.TERMINATED);
         }
       }
     }
   }
 
-  public async updateMessagesData(updateMessagesParams: UpdateMessageData[]): Promise<void> {
-    const promises = updateMessagesParams.map((updateMessageData) => {
-      return this.updateMessage(updateMessageData);
-    });
-
+  public async updateReadStatus(id: string, readReason: MessageReadReason): Promise<void> {
     try {
-      await Promise.all(promises);
-    } catch (error) {
-      this.logger.error(error);
-    }
-  }
-
-  public async updateReadStatus(id: string, readStatus: MESSAGE_READ_STATUS): Promise<void> {
-    try {
-      await this.messageRepository.update({ id }, { readStatus });
+      await this.messageRepository.update({ id }, { readReason });
     } catch (error) {
       this.logger.error(error, error.stack);
     }
@@ -103,10 +70,5 @@ export class MessageService {
   public async deleteRecords(genesis: string): Promise<void> {
     const messages = await this.messageRepository.listByGenesis(genesis);
     await this.messageRepository.remove(messages);
-  }
-
-  private async updateMessage(updateMessageData: UpdateMessageData): Promise<void> {
-    const { messageId, genesis, ...data } = updateMessageData;
-    await this.messageRepository.update({ id: messageId, genesis }, { ...data });
   }
 }

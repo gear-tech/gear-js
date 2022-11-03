@@ -1,3 +1,5 @@
-import { testBalanceMiddleware } from './test-balance.middlware';
+import { testBalanceMiddleware } from './test-balance.middleware';
+import { checkGenesisMiddleware } from './check-genesis.middleware';
 
-export { testBalanceMiddleware };
+
+export { testBalanceMiddleware, checkGenesisMiddleware };

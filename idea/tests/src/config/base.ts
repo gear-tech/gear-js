@@ -11,13 +11,7 @@ function checkEnv(name: string): string {
 export default {
   gear: {
     wsProvider: checkEnv('WS_PROVIDER'),
+    wsProviderVara: checkEnv('WS_PROVIDER_VARA'),
     api: checkEnv('API_ENDPOINT'),
-  },
-  db: {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    name: process.env.DB_NAME,
   },
 };

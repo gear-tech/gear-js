@@ -5,6 +5,7 @@ import config from '../config/configuration';
 import { initKafka } from './init-kafka';
 import { deleteKafkaEvent, kafkaEventMap } from './kafka-event-map';
 import { genesisHashesCollection } from '../common/genesis-hashes-collection';
+import { sendServicePartition, setServicePartition } from '../common/helpers';
 
 const configKafka = config.kafka;
 
@@ -17,7 +18,11 @@ async function connect(): Promise<void> {
 async function run(): Promise<void> {
   await consumer.run({
     eachMessage: async ({ message, topic }) => {
-      await messageProcessing(message, topic);
+      try {
+        await messageProcessing(message, topic);
+      } catch (error){
+        console.log(error);
+      }
     },
   });
 }
@@ -32,20 +37,31 @@ async function subscribeConsumerTopics(topics: string[]): Promise<void> {
   await Promise.all(promises);
 }
 
-function messageProcessing(message: KafkaMessage, topic: string): void {
-  if (topic === `${KAFKA_TOPICS.TEST_BALANCE_GENESIS}.reply`) {
-    const genesisHash = message.value.toString();
+async function messageProcessing(message: KafkaMessage, topic: string): Promise<void> {
+  if (message.value !== null) {
+    if (topic === `${KAFKA_TOPICS.SERVICE_PARTITION_GET}.reply`) {
+      await sendServicePartition(message, topic);
+      return;
+    }
+    if (topic === `${KAFKA_TOPICS.SERVICES_PARTITION}.reply`) {
+      await setServicePartition(message);
+      return;
+    }
+    if (topic === `${KAFKA_TOPICS.TEST_BALANCE_GENESIS}.reply`) {
+      const genesisHash = message.value.toString();
 
-    genesisHashesCollection.add(genesisHash);
+      genesisHashesCollection.add(genesisHash);
 
-    console.log(`Genesis received from test-balance: ${genesisHash}`);
-  } else {
-    const correlationId = message.headers.kafka_correlationId.toString();
-    const resultFromService = kafkaEventMap.get(correlationId);
+      console.log(`Genesis received from test-balance: ${genesisHash}`);
+      return;
+    } else {
+      const correlationId = message.headers.kafka_correlationId.toString();
+      const resultFromService = kafkaEventMap.get(correlationId);
 
-    if (resultFromService) resultFromService(JSON.parse(message.value.toString()));
+      if (resultFromService) resultFromService(JSON.parse(message.value.toString()));
 
-    deleteKafkaEvent(correlationId);
+      deleteKafkaEvent(correlationId);
+    }
   }
 }
 
