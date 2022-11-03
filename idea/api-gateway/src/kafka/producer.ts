@@ -16,6 +16,10 @@ async function sendByTopic(
   params: KafkaParams | string,
   correlationId?: string,
 ): Promise<void> {
+  console.log('SEND', {
+    topic,
+    messages: [createMessageBody(topic, params, correlationId)],
+  });
   await producer.send({
     topic,
     messages: [createMessageBody(topic, params, correlationId)],
@@ -26,7 +30,7 @@ function createMessageBody(topic: string, params: KafkaParams | string, correlat
   const sendMessagePartition = servicesPartitionMap.get(params['genesis']);
   const result: Message = { value: JSON.stringify(params), headers: {} };
 
-  if(params['genesis'] && sendMessagePartition) {
+  if (params['genesis'] && sendMessagePartition) {
     result.partition = Number(sendMessagePartition);
   }
 
