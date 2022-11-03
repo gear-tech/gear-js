@@ -22,6 +22,9 @@ export default {
       password: checkEnv('KAFKA_SASL_PASSWORD'),
     },
   },
+  rabbitmq: {
+    url: checkEnv('RABBIT_MQ_URL')
+  },
   // every 1 hour "0 * * * *"
   cron: {
     time: process.env.CRON_TIME || '0 * * * *',
