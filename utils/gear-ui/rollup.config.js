@@ -6,8 +6,8 @@ import dts from 'rollup-plugin-dts';
 import postcss from 'rollup-plugin-postcss';
 import { terser } from 'rollup-plugin-terser';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
-import image from '@rollup/plugin-image';
 import fs from 'fs';
+import svgr from '@svgr/rollup';
 
 // importing built css manually, cuz postcss with 'extract: true' somehow doesn't do it
 const writeCssImport = () => ({
@@ -37,8 +37,8 @@ export default [
       writeCssImport(),
       resolve(),
       commonjs(),
+      svgr({ exportType: 'named', jsxRuntime: 'automatic' }),
       typescript({ tsconfig: './tsconfig.json' }),
-      image(),
       terser(),
     ],
   },
