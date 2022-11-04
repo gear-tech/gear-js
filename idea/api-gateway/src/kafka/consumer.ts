@@ -41,14 +41,15 @@ async function subscribeConsumerTopics(topics: string[]): Promise<void> {
 async function messageProcessing(message: KafkaMessage, topic: string): Promise<void> {
   if (message.value !== null) {
     if (topic === `${KAFKA_TOPICS.SERVICE_PARTITION_GET}.reply`) {
-      console.log('Genesis received from data-storage:', message);
       await sendServicePartition(message, topic);
-      console.log(...servicesPartitionMap);
+
+      console.log('Genesises received from data-storages:', ...servicesPartitionMap);
       return;
     }
     if (topic === `${KAFKA_TOPICS.SERVICES_PARTITION}.reply`) {
       await setServicePartition(message);
-      console.log(...servicesPartitionMap);
+
+      console.log('Genesises received from data-storages:', ...servicesPartitionMap);
       return;
     }
     if (topic === `${KAFKA_TOPICS.TEST_BALANCE_GENESIS}.reply`) {

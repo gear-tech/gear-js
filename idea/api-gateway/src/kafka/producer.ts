@@ -16,7 +16,6 @@ async function sendByTopic(
   params: KafkaParams | string,
   correlationId?: string,
 ): Promise<void> {
-  console.log(createMessageBody(topic, params, correlationId));
   await producer.send({
     topic,
     messages: [createMessageBody(topic, params, correlationId)],

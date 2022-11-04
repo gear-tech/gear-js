@@ -20,15 +20,16 @@ async function kafkaCreateConnection(): Promise<void> {
   apiGatewayLogger.info('Kafka connection initialized');
 }
 
-async function createTopics(topics: string[]): Promise<void> {
+export async function createTopics(topics: string[]): Promise<void> {
   const admin = initKafka.admin();
+  await admin.connect();
   const kafkaTopics = await admin.listTopics();
 
   for(const topic of topics){
     const isExistTopicInKafka = kafkaTopics.includes(topic);
 
     if(!isExistTopicInKafka) {
-      const createTopic: ITopicConfig = { topic };
+      const createTopic: ITopicConfig = { topic, numPartitions: 5 };
 
       await admin.createTopics({
         waitForLeaders: true,
@@ -36,6 +37,7 @@ async function createTopics(topics: string[]): Promise<void> {
       });
     }
   }
+  await admin.disconnect();
 }
 
 export { kafkaCreateConnection };
