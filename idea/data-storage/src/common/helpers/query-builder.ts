@@ -84,14 +84,17 @@ export function constructQueryBuilder<E extends ObjectLiteral = ObjectLiteral, K
 
   builder.limit(limit);
   builder.offset(offset);
+
   if (orderBy) {
+    const orderByCondition = {};
     if (Array.isArray(orderBy)) {
       for (const { column, sort } of orderBy) {
-        builder.orderBy(`${alias}.${column}`, sort);
+        orderByCondition[`${alias}.${column}`] = sort;
       }
     } else {
-      builder.orderBy(`${alias}.${orderBy.column}`, orderBy.sort);
+      orderByCondition[`${alias}.${orderBy.column}`] = orderBy.sort;
     }
+    builder.orderBy(orderByCondition);
   }
 
   return builder;

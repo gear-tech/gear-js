@@ -1,8 +1,5 @@
 import { Test } from '@nestjs/testing';
-import {
-  FindMessageParams,
-  GetMessagesParams
-} from '@gear-js/common';
+import { FindMessageParams, GetMessagesParams } from '@gear-js/common';
 
 import { MessageService } from '../../src/message/message.service';
 import { mockMessageRepository } from '../mock/message/message-repository.mock';
@@ -51,7 +48,7 @@ describe('Message service', () => {
     };
 
     const messageDBType = plainToClass(Message, {
-      ...createMessageInput
+      ...createMessageInput,
     });
 
     const message = await messageService.createMessages([messageDBType]);
@@ -84,7 +81,7 @@ describe('Message service', () => {
     expect(result.messages[0].id).toEqual(messageMock.id);
     expect(result.messages[0].source).toEqual(messageMock.source);
     expect(result.messages[0].destination).toEqual(messageMock.destination);
-    expect(mockMessageRepository.listByIdAndSourceAndDestination).toHaveBeenCalled();
+    expect(mockMessageRepository.list).toHaveBeenCalled();
   });
 
   it('should be successfully get message and called getByIdAndGenesis method', async () => {

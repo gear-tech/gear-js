@@ -14,7 +14,7 @@ export const mockProgramRepository = {
       }
     });
   }),
-  listPaginationByGenesis: jest.fn((params: GetAllProgramsParams) => {
+  list: jest.fn((params: GetAllProgramsParams) => {
     const { limit, genesis, owner } = params;
     const programs = PROGRAM_DB_MOCK.filter((program) => {
       if (genesis && program.genesis === genesis) {

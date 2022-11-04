@@ -60,7 +60,7 @@ describe('Code service', () => {
     expect(result.listCode[0].id).toEqual(codeMock.id);
     expect(result.listCode[0].expiration).toEqual(codeMock.expiration);
     expect(result.listCode[0].name).toEqual(codeMock.name);
-    expect(mockCodeRepository.listPaginationByGenesis).toHaveBeenCalled();
+    expect(mockCodeRepository.list).toHaveBeenCalled();
   });
 
   it('should be successfully get code entity and called getByIdAndGenesis method', async () => {
