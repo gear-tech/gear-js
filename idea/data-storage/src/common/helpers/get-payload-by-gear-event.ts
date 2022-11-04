@@ -27,6 +27,7 @@ function userMessageSentPayload(data: UserMessageSentData): UserMessageSentInput
     value: value.toString(),
     replyToMessageId: reply.isSome ? reply.unwrap().replyTo.toHex() : null,
     exitCode: reply.isSome ? reply.unwrap().exitCode.toNumber() : null,
+    expiration: data.expiration.isSome ? data.expiration.unwrap().toNumber() : null,
   };
 }
 
@@ -42,7 +43,7 @@ function programChangedPayload(data: ProgramChangedData): ProgramChangedInput | 
   if (change.isActive || change.isInactive) {
     return {
       id: id.toHex(),
-      isActive: change.isActive ? true : false
+      isActive: change.isActive ? true : false,
     };
   }
   return null;
@@ -56,18 +57,18 @@ function codeChangedPayload(data: CodeChangedData): CodeChangedInput | null {
   if (!status) {
     return null;
   }
-  return {  id: id.toHex(), status, expiration };
+  return { id: id.toHex(), status, expiration };
 }
 
 function messagesDispatchedPayload(data: MessagesDispatchedData): MessageDispatchedDataInput | null {
   const { statuses } = data;
   if (statuses.size > 0) {
-    return {  statuses: statuses.toHuman() as { [key: string]: MessageStatus } };
+    return { statuses: statuses.toHuman() as { [key: string]: MessageStatus } };
   }
   return null;
 }
 
-export function getPayloadByGearEvent (method: string, data: GenericEventData): GearEventPayload {
+export function getPayloadByGearEvent(method: string, data: GenericEventData): GearEventPayload {
   const payloads = {
     [Keys.UserMessageSent]: (data: UserMessageSentData): UserMessageSentInput => {
       return userMessageSentPayload(data);
@@ -86,10 +87,10 @@ export function getPayloadByGearEvent (method: string, data: GenericEventData): 
     },
     [Keys.DatabaseWiped]: () => {
       return {};
-    }
+    },
   };
 
-  if(method in payloads){
+  if (method in payloads) {
     return payloads[method](data);
   } else {
     return null;
