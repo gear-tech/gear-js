@@ -15,7 +15,7 @@ export class MessageService {
   constructor(private messageRepository: MessageRepo, private programService: ProgramService) {}
 
   public async getAllMessages(params: GetMessagesParams): Promise<AllMessagesResult> {
-    const [messages, total] = await this.messageRepository.listByIdAndSourceAndDestination(params);
+    const [messages, total] = await this.messageRepository.list(params);
     return {
       messages,
       count: total,
