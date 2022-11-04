@@ -2197,7 +2197,7 @@ __metadata:
     eslint-plugin-prettier: 3.4.1
     express: 4.18.1
     hcaptcha: 0.1.1
-    kafkajs: 1.16.0
+    kafkajs: 2.2.2
     nanoid: 3.3.4
     nodemon: 2.0.19
     prettier: 2.7.1
@@ -16652,7 +16652,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kafkajs@npm:^2.0.2":
+"kafkajs@npm:2.2.2, kafkajs@npm:^2.0.2":
   version: 2.2.2
   resolution: "kafkajs@npm:2.2.2"
   checksum: 3e539bd678d3d665e878f754f80cbaef358b6a06e48bc834e167db0a2edd4fc15e1894c1ff8f3f12af68ce1d020f8ec8e39b537d5d17601cbefb756e9f23717a
