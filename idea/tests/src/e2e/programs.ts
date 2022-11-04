@@ -107,7 +107,7 @@ export async function uploadMeta(genesis: string, program: IPreparedProgram): Pr
     genesis,
     programId: program.id,
     meta,
-    metaFile: metaFile ? metaFile.toString('base64') : null,
+    metaWasm: metaFile ? metaFile.toString('base64') : null,
     name: program.spec.name,
     title: `Test ${program.spec.name}`,
     signature: u8aToHex(accs[program.spec.account].sign(meta)),
@@ -127,6 +127,7 @@ export async function getMeta(genesis: string, programId: string): Promise<Passe
   const response = await request('program.meta.get', data);
   expect(response).to.have.property('result');
   expect(response.result).to.have.all.keys('program', 'meta', 'metaWasm');
+  expect(response.result.metaWasm).to.not.be.undefined;
   return true;
 }
 
