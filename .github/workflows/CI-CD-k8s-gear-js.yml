@@ -2,7 +2,7 @@ name: Deploy Gear-js to k8s stage/prod
 
 on:
   push:
-    branches: ['main', 'fix-backend']
+    branches: ['main']
     paths:
       - idea/api-gateway/**
       - idea/data-storage/**
