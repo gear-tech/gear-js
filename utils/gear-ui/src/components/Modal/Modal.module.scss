@@ -54,7 +54,7 @@
 }
 
 .heading {
-  @extend %h4;
+  @include heading(24px, 31px, 500);
   margin-right: 16px;
   color: rgba(#fff, 0.8);
   text-align: center;
