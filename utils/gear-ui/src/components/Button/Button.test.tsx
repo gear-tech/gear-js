@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { Button } from './Button';
 import styles from './Button.module.scss';
 
-const arrowIcon = jest.fn();
+const ArrowIcon = () => <svg data-testid="svg" />;
 
 describe('button tests', () => {
   it('renders button', () => {
@@ -24,20 +24,20 @@ describe('button tests', () => {
   });
 
   it('renders icon button', () => {
-    render(<Button icon={arrowIcon} />);
+    render(<Button icon={ArrowIcon} />);
 
     const button = screen.getByRole('button');
-    const icon = screen.getByRole('img');
+    const icon = screen.getByTestId('svg');
 
     expect(button).toContainElement(icon);
     expect(button).toHaveClass(styles.noText);
   });
 
   it('renders button with icon and text', () => {
-    render(<Button text="button text" icon={arrowIcon} />);
+    render(<Button text="button text" icon={ArrowIcon} />);
 
     const button = screen.getByText('button text');
-    const icon = screen.getByRole('img');
+    const icon = screen.getByTestId('svg');
 
     expect(button).toContainElement(icon);
     expect(button).toHaveClass(styles.medium);
