@@ -5,8 +5,8 @@ import { generatePath } from 'react-router-dom';
 import { getShortName } from 'shared/helpers';
 import { absoluteRoutes, AnimationTimeout, routes } from 'shared/config';
 import { UILink } from 'shared/ui/uiLink';
-import sendSVG from 'shared/assets/images/actions/send.svg';
-import readSVG from 'shared/assets/images/actions/read.svg';
+import { ReactComponent as sendSVG } from 'shared/assets/images/actions/send.svg';
+import { ReactComponent as readSVG } from 'shared/assets/images/actions/read.svg';
 
 import styles from './Header.module.scss';
 

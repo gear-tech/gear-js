@@ -2,7 +2,7 @@ import { generatePath, Link } from 'react-router-dom';
 import { Tooltip } from '@gear-js/ui';
 
 import { IdBlock } from 'shared/ui/idBlock';
-import blockSVG from 'shared/assets/images/indicators/block.svg';
+import { ReactComponent as BlockSVG } from 'shared/assets/images/indicators/block.svg';
 
 import { absoluteRoutes } from 'shared/config';
 import styles from './HorizontalWaitlistItem.module.scss';
@@ -18,7 +18,7 @@ const HorizontalWaitlistItem = ({ content, interval }: Props) => (
     <IdBlock id={content.message.id} size="large" withIcon maxCharts={18} />
     <span className={styles.entry}>{content.kind}</span>
     <div className={styles.interval}>
-      <img src={blockSVG} alt="block" />
+      <BlockSVG />
       <span>
         {interval.start} - {interval.finish}
       </span>

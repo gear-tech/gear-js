@@ -2,9 +2,9 @@ import { Button } from '@gear-js/ui';
 import { useNavigate } from 'react-router-dom';
 
 import { useCodeUpload, useModal } from 'hooks';
-import uploadCodeSVG from 'shared/assets/images/actions/uploadCode.svg';
-import uploadFileSVG from 'shared/assets/images/actions/uploadFile.svg';
-import sendMessageSVG from 'shared/assets/images/actions/send.svg';
+import { ReactComponent as uploadCodeSVG } from 'shared/assets/images/actions/uploadCode.svg';
+import { ReactComponent as uploadFileSVG } from 'shared/assets/images/actions/uploadFile.svg';
+import { ReactComponent as sendMessageSVG } from 'shared/assets/images/actions/send.svg';
 import { absoluteRoutes } from 'shared/config';
 
 import styles from './BottomSide.module.scss';

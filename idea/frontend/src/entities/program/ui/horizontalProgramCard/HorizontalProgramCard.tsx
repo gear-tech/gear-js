@@ -3,8 +3,8 @@ import { Link, generatePath } from 'react-router-dom';
 import { Metadata } from '@gear-js/api';
 
 import { absoluteRoutes, routes } from 'shared/config';
-import sendSVG from 'shared/assets/images/actions/send.svg';
-import readSVG from 'shared/assets/images/actions/read.svg';
+import { ReactComponent as sendSVG } from 'shared/assets/images/actions/send.svg';
+import { ReactComponent as readSVG } from 'shared/assets/images/actions/read.svg';
 import { IdBlock } from 'shared/ui/idBlock';
 import { BulbBlock } from 'shared/ui/bulbBlock';
 import { TimestampBlock } from 'shared/ui/timestampBlock';

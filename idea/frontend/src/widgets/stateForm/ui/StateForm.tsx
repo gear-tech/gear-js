@@ -5,7 +5,7 @@ import { Form } from 'react-final-form';
 
 import { BackButton } from 'shared/ui/backButton';
 import { Box } from 'shared/ui/box';
-import readSVG from 'shared/assets/images/actions/read.svg';
+import { ReactComponent as readSVG } from 'shared/assets/images/actions/read.svg';
 import { FormPayload, getPayloadFormValues, getSubmitPayload } from 'features/formPayload';
 import { getPreformattedText, getValidation } from 'shared/helpers';
 import { useStateRead } from 'hooks';

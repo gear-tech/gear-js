@@ -2,7 +2,7 @@ import { Button } from '@gear-js/ui';
 import { CSSTransition } from 'react-transition-group';
 
 import { AnimationTimeout } from 'shared/config';
-import closeSVG from 'shared/assets/images/actions/close.svg';
+import { ReactComponent as closeSVG } from 'shared/assets/images/actions/close.svg';
 
 import styles from './AuthorizationTooltip.module.scss';
 

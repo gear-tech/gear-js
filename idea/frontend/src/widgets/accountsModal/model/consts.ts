@@ -1,6 +1,6 @@
-import PolkadotSVG from 'shared/assets/images/wallets/polkadot.svg';
-import SubwalletSVG from 'shared/assets/images/wallets/subwallet.svg';
-import TalismanSVG from 'shared/assets/images/wallets/talisman.svg';
+import { ReactComponent as PolkadotSVG } from 'shared/assets/images/wallets/polkadot.svg';
+import { ReactComponent as SubwalletSVG } from 'shared/assets/images/wallets/subwallet.svg';
+import { ReactComponent as TalismanSVG } from 'shared/assets/images/wallets/talisman.svg';
 
 const WALLET = {
   'polkadot-js': { name: 'Polkadot JS', icon: PolkadotSVG },

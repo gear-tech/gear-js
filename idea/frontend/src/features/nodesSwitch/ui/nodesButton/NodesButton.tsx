@@ -3,7 +3,7 @@ import { MouseEvent } from 'react';
 import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
 
-import connectSVG from 'shared/assets/images/menu/connect.svg';
+import { ReactComponent as ConnectSVG } from 'shared/assets/images/menu/connect.svg';
 import { AnimationTimeout } from 'shared/config';
 
 import styles from './NodesButton.module.scss';
@@ -24,7 +24,7 @@ const NodesButton = ({ name, chain, version, isApiReady, isOpen, isFullWidth, on
   return (
     <button type="button" className={btnClasses} onClick={onClick}>
       <p className={styles.menuIconWrapper}>
-        <img src={connectSVG} alt="connect" className={buttonStyles.icon} />
+        <ConnectSVG className={buttonStyles.icon} />
       </p>
       <CSSTransition in={isFullWidth} timeout={AnimationTimeout.Small} className={styles.nodeInfo} unmountOnExit>
         <p>

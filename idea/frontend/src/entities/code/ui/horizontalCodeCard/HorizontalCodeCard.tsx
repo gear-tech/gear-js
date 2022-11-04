@@ -5,8 +5,8 @@ import { absoluteRoutes, routes } from 'shared/config';
 import { IdBlock } from 'shared/ui/idBlock';
 import { ActionLink } from 'shared/ui/ActionLink';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
-import initializeProgramSVG from 'shared/assets/images/actions/initializeProgram.svg';
-import relatedProgramsSVG from 'shared/assets/images/actions/relatedPrograms.svg';
+import { ReactComponent as initializeProgramSVG } from 'shared/assets/images/actions/initializeProgram.svg';
+import { ReactComponent as relatedProgramsSVG } from 'shared/assets/images/actions/relatedPrograms.svg';
 
 import styles from './HorizontalCodeCard.module.scss';
 import { ICode } from '../../model';
