@@ -126,7 +126,7 @@ export async function getMeta(genesis: string, programId: string): Promise<Passe
   };
   const response = await request('program.meta.get', data);
   expect(response).to.have.property('result');
-  expect(response.result).to.have.all.keys('program', 'meta', 'metaFile');
+  expect(response.result).to.have.all.keys('program', 'meta', 'metaWasm');
   return true;
 }
 
