@@ -24,7 +24,9 @@ export async function getAllProgramsByOwner(genesis: string, programs: IPrepared
   const keyList = Object.keys(programs);
   const owner = programs[keyList[0]].owner;
 
-  const ownerList = Object.keys(programs).map(key => programs[key]).map(program => program.owner);
+  const ownerList = Object.keys(programs)
+    .map((key) => programs[key])
+    .map((program) => program.owner);
 
   const response = await request('program.all', { genesis, owner });
   expect(response).to.have.own.property('result');
@@ -61,7 +63,7 @@ export async function getAllProgramsByDates(genesis: string, date: Date): Promis
 
   const isValidProgramsDate = response.result.programs.reduce((arr, program: any) => {
     const createdProgramDate = new Date(program.timestamp);
-    if(createdProgramDate > fromDate && createdProgramDate < toDate) {
+    if (createdProgramDate > fromDate && createdProgramDate < toDate) {
       arr.push(true);
     } else {
       arr.push(false);
@@ -71,7 +73,7 @@ export async function getAllProgramsByDates(genesis: string, date: Date): Promis
   }, []);
 
   expect(response).to.have.own.property('result');
-  expect(isValidProgramsDate.every(el => el === true)).to.equal(true);
+  expect(isValidProgramsDate.every((el) => el === true)).to.equal(true);
 
   return true;
 }
@@ -92,10 +94,9 @@ export async function getProgramData(genesis: string, programId: string): Promis
     'status',
     'code',
     'messages',
-    'expiration'
+    'expiration',
   );
   return true;
-
 }
 
 export async function uploadMeta(genesis: string, program: IPreparedProgram): Promise<Passed> {
@@ -106,7 +107,7 @@ export async function uploadMeta(genesis: string, program: IPreparedProgram): Pr
     genesis,
     programId: program.id,
     meta,
-    metaWasm: metaFile ? metaFile.toString('base64') : null,
+    metaFile: metaFile ? metaFile.toString('base64') : null,
     name: program.spec.name,
     title: `Test ${program.spec.name}`,
     signature: u8aToHex(accs[program.spec.account].sign(meta)),
@@ -125,7 +126,7 @@ export async function getMeta(genesis: string, programId: string): Promise<Passe
   };
   const response = await request('program.meta.get', data);
   expect(response).to.have.property('result');
-  expect(response.result).to.have.all.keys('program', 'meta', 'metaWasm');
+  expect(response.result).to.have.all.keys('program', 'meta', 'metaFile');
   return true;
 }
 

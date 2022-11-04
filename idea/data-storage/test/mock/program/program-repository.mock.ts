@@ -1,4 +1,4 @@
-import { GetAllProgramsParams, GetAllUserProgramsParams } from '@gear-js/common';
+import { GetAllProgramsParams } from '@gear-js/common';
 
 import { Program } from '../../../src/database/entities';
 import { PROGRAM_DB_MOCK } from './program-db.mock';
