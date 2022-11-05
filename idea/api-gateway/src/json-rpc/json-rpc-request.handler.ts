@@ -1,8 +1,8 @@
 import { API_METHODS, IRpcRequest, IRpcResponse, JSONRPC_ERRORS } from '@gear-js/common';
 
 import { getResponse, isNetworkDataAvailable } from '../utils';
-import { genesisHashesCollection, isTestBalanceAvailable } from '../common/genesis-hashes-collection';
-import { servicesPartitionMap } from '../common/services-partition-map';
+import { testBalanceGenesisCollection, isTestBalanceAvailable } from '../common/test-balance-genesis-collection';
+import { dataStoragePartitionsMap } from '../common/data-storage-partitions-map';
 import { jsonRpcHandler } from './json-rpc.handler';
 
 async function jsonRpcRequestHandler(
@@ -48,7 +48,7 @@ function isExistJsonRpcMethod(kafkaTopic: string): boolean {
 }
 
 function validateGenesis(genesis: string): boolean {
-  if(servicesPartitionMap.has(genesis) || genesisHashesCollection.has(genesis)){
+  if(dataStoragePartitionsMap.has(genesis) || testBalanceGenesisCollection.has(genesis)){
     return true;
   }
 

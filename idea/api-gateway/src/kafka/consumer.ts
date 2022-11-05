@@ -4,9 +4,9 @@ import { KafkaMessage } from 'kafkajs';
 import config from '../config/configuration';
 import { initKafka } from './init-kafka';
 import { deleteKafkaEvent, kafkaEventMap } from './kafka-event-map';
-import { genesisHashesCollection } from '../common/genesis-hashes-collection';
+import { testBalanceGenesisCollection } from '../common/test-balance-genesis-collection';
 import { sendServicePartition, setServicePartition } from '../common/helpers';
-import { servicesPartitionMap } from '../common/services-partition-map';
+import { dataStoragePartitionsMap } from '../common/data-storage-partitions-map';
 
 const configKafka = config.kafka;
 
@@ -43,19 +43,19 @@ async function messageProcessing(message: KafkaMessage, topic: string): Promise<
     if (topic === `${KAFKA_TOPICS.SERVICE_PARTITION_GET}.reply`) {
       await sendServicePartition(message, topic);
 
-      console.log('Genesises received from data-storages:', ...servicesPartitionMap);
+      console.log('Genesises received from data-storages:', ...dataStoragePartitionsMap);
       return;
     }
     if (topic === `${KAFKA_TOPICS.SERVICES_PARTITION}.reply`) {
       await setServicePartition(message);
 
-      console.log('Genesises received from data-storages:', ...servicesPartitionMap);
+      console.log('Genesises received from data-storages:', ...dataStoragePartitionsMap);
       return;
     }
     if (topic === `${KAFKA_TOPICS.TEST_BALANCE_GENESIS}.reply`) {
       const genesisHash = message.value.toString();
 
-      genesisHashesCollection.add(genesisHash);
+      testBalanceGenesisCollection.add(genesisHash);
 
       console.log(`Genesis received from test-balance: ${genesisHash}`);
       return;
