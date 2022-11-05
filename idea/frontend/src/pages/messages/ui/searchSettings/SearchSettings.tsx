@@ -24,7 +24,7 @@ const SearchSettings = ({ isLoggedIn, initialValues, onSubmit }: Props) => {
   return (
     <section className={styles.searchSettings}>
       <form className={styles.searchForm} onSubmit={handleSubmit}>
-        <Input name="search" type="search" placeholder="Search by program ID, message ID..." />
+        <Input name="search" type="search" placeholder="Search by id, source, destination..." />
       </form>
       <Filters initialValues={initialValues} onSubmit={onSubmit}>
         <FilterGroup name="owner">
