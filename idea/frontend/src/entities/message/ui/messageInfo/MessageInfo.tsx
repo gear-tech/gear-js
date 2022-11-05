@@ -52,8 +52,8 @@ const MessageInfo = ({ metadata, message, isLoading }: Props) => {
     <section className={styles.messageInfo}>
       <FormText text={id} label="Message ID" isLoading={isPayloadLoading} className={styles.text} />
       <FormText text={source} label="Source" isLoading={isPayloadLoading} className={styles.text} />
-      <FormText text={value} label="Value" isLoading={isPayloadLoading} className={styles.text} />
       <FormText text={destination} label="Destination" isLoading={isPayloadLoading} className={styles.text} />
+      <FormText text={value} label="Value" isLoading={isPayloadLoading} className={styles.text} />
       <FormText text={decodedPayload} label="Payload" isLoading={isPayloadLoading} isTextarea className={styles.text} />
     </section>
   );
