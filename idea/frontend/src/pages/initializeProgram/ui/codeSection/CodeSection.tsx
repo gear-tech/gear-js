@@ -40,7 +40,7 @@ const CodeSection = ({ codeId, metadata, metadataBuffer, resetMetadada }: Props)
 
   const renderButtons = ({ isDisabled }: RenderButtonsProps) => (
     <>
-      <Button icon={plusSVG} type="submit" text="Initialize Program" disabled={isDisabled} />
+      <Button icon={plusSVG} type="submit" text="Create Program" disabled={isDisabled} />
       <Button icon={closeSVG} text="Cancel" color="light" onClick={goBack} />
     </>
   );
