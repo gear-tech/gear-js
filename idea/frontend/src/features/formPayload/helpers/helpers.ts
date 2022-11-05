@@ -24,6 +24,10 @@ const getSubmitPayload = (payload: PayloadValue): any => {
     return Object.fromEntries(preparedValues);
   }
 
+  if (Array.isArray(payload)) {
+    return payload.map((item) => getSubmitPayload(item));
+  }
+
   return payload;
 };
 
