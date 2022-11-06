@@ -23,7 +23,8 @@ export default {
     },
   },
   // every 1 hour "0 * * * *"
-  cron: {
-    time: process.env.CRON_TIME || '0 * * * *',
+  scheduler: {
+    genesisHashesTime: process.env.CRON_TIME_GENESIS_HASHES || '0 * * * *',
+    networkDataStoragesTime: process.env.CRON_TIME_NETWORK_DATA_STORAGES || '0 * * * *',
   },
 };
