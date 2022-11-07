@@ -270,32 +270,6 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:prod
 
-  build-event-listeners-image-prod:
-    runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, 'idea-release')
-    needs: [tag-prod-version]
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Events Listener Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/events-listener/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-events-listener:prod
-
   build-test-balance-image-prod:
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.message, 'idea-release')
@@ -328,7 +302,6 @@ jobs:
         build-frontend-image-prod,
         build-data-storage-image-prod,
         build-api-gateway-image-prod,
-        build-event-listeners-image-prod,
         build-test-balance-image-prod,
       ]
     runs-on: ubuntu-latest
@@ -345,9 +318,9 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment api-gateway data-storage frontend-nginx test-balance-workshop-node test-balance-testnet-node events-listener-workshop-node events-listener-rpc-testnet events-listener-vara-testnet -n prod-gear-js
+          args: rollout restart deployment api-gateway data-storage-vara data-storage-rpc frontend-nginx test-balance-testnet-node -n prod-idea
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: get deployment -o name -n prod-gear-js | xargs -n1 -t kubectl rollout status -n prod-gear-js --timeout=120s
+          args: get deployment -o name -n prod-idea | xargs -n1 -t kubectl rollout status -n prod-idea --timeout=120s
