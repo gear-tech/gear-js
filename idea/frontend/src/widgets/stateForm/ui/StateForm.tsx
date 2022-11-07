@@ -5,13 +5,12 @@ import { Form } from 'react-final-form';
 
 import { BackButton } from 'shared/ui/backButton';
 import { Box } from 'shared/ui/box';
-import readSVG from 'shared/assets/images/actions/read.svg';
+import { ReactComponent as readSVG } from 'shared/assets/images/actions/read.svg';
 import { FormPayload, getPayloadFormValues, getSubmitPayload } from 'features/formPayload';
-import { getPreformattedText, getValidation } from 'shared/helpers';
+import { getPreformattedText } from 'shared/helpers';
 import { useStateRead } from 'hooks';
 
 import { FormValues, INITIAL_VALUES } from '../model';
-import { getValidationSchema } from '../helpers';
 import styles from './StateForm.module.scss';
 
 type Props = {
@@ -35,23 +34,13 @@ const StateForm = ({ meta, metaBuffer, programId, isLoading }: Props) => {
 
   const payloadFormValues = useMemo(() => getPayloadFormValues(meta?.types, encodeType), [meta, encodeType]);
 
-  const validation = useMemo(
-    () => {
-      const schema = getValidationSchema(encodeType, meta);
-
-      return getValidation(schema);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [meta, encodeType],
-  );
-
   useEffect(() => {
     if (meta && !encodeType) readState();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [meta, encodeType]);
 
   return (
-    <Form initialValues={INITIAL_VALUES} validate={validation} onSubmit={handleSubmit} validateOnBlur>
+    <Form initialValues={INITIAL_VALUES} onSubmit={handleSubmit} validateOnBlur>
       {(formApi) => (
         <form onSubmit={formApi.handleSubmit}>
           <Box className={styles.body}>

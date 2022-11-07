@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { InputWrapper, inputStyles, InputProps, Button } from '@gear-js/ui';
 
 import { formStyles } from 'shared/ui/form';
-import calculatorSVG from 'shared/assets/images/actions/calculator.svg';
+import { ReactComponent as calculatorSVG } from 'shared/assets/images/actions/calculator.svg';
 import { Result } from 'hooks/useGasCalculate/types';
 
 import { Info } from '../Info';
@@ -61,11 +61,7 @@ const GasField = (props: Props) => {
                 onValueChange={handleChange}
               />
             </div>
-            {/* <button type="button" className={styles.addButton} onClick={increaseByTenPercent}>
-              
-            </button> */}
-
-            <Button text="+ 10%" color="light" className={styles.addButton} />
+            <Button text="+ 10%" color="light" className={styles.addButton} onClick={increaseByTenPercent} />
           </div>
           <Button
             icon={calculatorSVG}

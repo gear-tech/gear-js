@@ -7,7 +7,7 @@ import { Modal, buttonStyles } from '@gear-js/ui';
 
 import { ModalProps } from 'entities/modal';
 import { checkFileFormat } from 'shared/helpers';
-import uploadFileSVG from 'shared/assets/images/actions/uploadFile.svg';
+import { ReactComponent as UploadFileSVG } from 'shared/assets/images/actions/uploadFile.svg';
 
 import styles from './UploadFileModal.module.scss';
 import { FILE_INPUT_ID } from '../model/const';
@@ -46,7 +46,7 @@ const UploadFileModal = ({ name, onClose, onUpload }: Props) => {
   return (
     <Modal heading={`Upload new ${name}`} className={styles.modalContent} close={onClose}>
       <label htmlFor={FILE_INPUT_ID} className={labelStyles}>
-        <img src={uploadFileSVG} alt="file" className={buttonStyles.icon} />
+        <UploadFileSVG className={buttonStyles.icon} />
         Select File
         <input id={FILE_INPUT_ID} type="file" className={styles.fileInput} onChange={handleChange} />
       </label>

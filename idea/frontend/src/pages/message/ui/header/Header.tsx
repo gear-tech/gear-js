@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import { AnimationTimeout } from 'shared/config';
 import { getShortName, formatDate } from 'shared/helpers';
-import timestampSVG from 'shared/assets/images/indicators/time.svg';
+import { ReactComponent as TimestampSVG } from 'shared/assets/images/indicators/time.svg';
 
 import styles from './Header.module.scss';
 
@@ -25,7 +25,7 @@ const Header = memo(({ exitCode, messageId, timestamp }: Props) => {
       {timestamp && (
         <CSSTransition in appear timeout={AnimationTimeout.Default}>
           <div className={styles.timestampSide}>
-            <img src={timestampSVG} alt="timestamp" className={styles.icon} />
+            <TimestampSVG className={styles.icon} />
             <span>Timestamp:</span>
             <span className={styles.value}>{formatDate(timestamp)}</span>
           </div>

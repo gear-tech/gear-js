@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 import { getShortName, copyToClipboard } from '../../helpers';
 import { ReactComponent as CopySVG } from '../../assets/images/actions/copyGreen.svg';
-import idSVG from '../../assets/images/indicators/id.svg';
+import { ReactComponent as IdSVG } from '../../assets/images/indicators/id.svg';
 import styles from './IdBlock.module.scss';
 
 type Props = {
@@ -38,7 +38,7 @@ const IdBlock = (props: Props) => {
 
   return (
     <div className={clsx(styles.idBlock, styles[size], className)}>
-      {withIcon && <img src={idSVG} alt="id" className={styles.icon} />}
+      {withIcon && <IdSVG className={styles.icon} />}
 
       {to ? (
         <Link to={to} className={linkClassName}>

@@ -2,8 +2,8 @@ import clsx from 'clsx';
 import { generatePath, Link } from 'react-router-dom';
 
 import { IChainBlock } from 'entities/chainBlock';
-import timeSVG from 'shared/assets/images/indicators/time.svg';
-import blockNumberSVG from 'shared/assets/images/indicators/blockNumber.svg';
+import { ReactComponent as TimeSVG } from 'shared/assets/images/indicators/time.svg';
+import { ReactComponent as BlockNumberSVG } from 'shared/assets/images/indicators/blockNumber.svg';
 import { absoluteRoutes } from 'shared/config';
 
 import styles from './RecentBlockItem.module.scss';
@@ -19,11 +19,11 @@ const RecentBlockItem = ({ block, className }: Props) => (
       <p className={styles.hash}>{block.hash}</p>
       <div className={styles.content}>
         <span className={styles.otherInfo}>
-          <img src={blockNumberSVG} alt="block number" />
+          <TimeSVG className={styles.icon} />
           {block.number}
         </span>
         <span className={styles.otherInfo}>
-          <img src={timeSVG} alt="block time" />
+          <BlockNumberSVG className={styles.icon} />
           {block.time}
         </span>
       </div>

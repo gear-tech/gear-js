@@ -5,7 +5,7 @@ import { Modal, Input, Button } from '@gear-js/ui';
 import { ModalProps } from 'entities/modal';
 import { NodeSection } from 'entities/node';
 import { isNodeAddressValid } from 'shared/helpers';
-import plusSVG from 'shared/assets/images/actions/plus.svg';
+import { ReactComponent as plusSVG } from 'shared/assets/images/actions/plus.svg';
 
 import styles from './NetworkModal.module.scss';
 

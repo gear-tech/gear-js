@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import styles from './TimestampBlock.module.scss';
 import { formatDate } from '../../helpers';
-import timeSVG from '../../assets/images/indicators/time.svg';
+import { ReactComponent as TimeSVG } from '../../assets/images/indicators/time.svg';
 
 type Props = {
   size?: 'small' | 'medium' | 'large';
@@ -19,7 +19,7 @@ const TimestampBlock = (props: Props) => {
 
   return (
     <div className={clsx(styles.timestampBlock, className)}>
-      {withIcon && <img src={timeSVG} alt="timestamp" className={styles.icon} />}
+      {withIcon && <TimeSVG className={styles.icon} />}
       <span className={textClasses}>{formatDate(timestamp)}</span>
     </div>
   );
