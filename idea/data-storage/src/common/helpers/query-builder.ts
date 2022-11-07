@@ -72,9 +72,9 @@ export function constructQueryBuilder<E extends ObjectLiteral = ObjectLiteral, K
   if (search && search.value) {
     for (const field of search.fields) {
       if (field.includes('.')) {
-        builder.orWhere(`${where} AND ${field} like :search`);
+        builder.orWhere(`${where} AND ${field} ILIKE :search`);
       } else {
-        builder.orWhere(`${where} AND ${alias}.${field} like :search`);
+        builder.orWhere(`${where} AND ${alias}.${field} ILIKE :search`);
       }
     }
     builder.setParameter('search', `%${search.value}%`);
