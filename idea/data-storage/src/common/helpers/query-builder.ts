@@ -51,7 +51,7 @@ export function constructQueryBuilder<E extends ObjectLiteral = ObjectLiteral, K
   offset: number,
   limit: number,
   join?: string[],
-  orderBy?: [string, 'DESC' | 'ASC'],
+  orderBy?: { column: string; sort: 'DESC' | 'ASC' } | { column: string; sort: 'DESC' | 'ASC' }[],
 ): SelectQueryBuilder<E> {
   const alias = 't';
   const builder = repo.createQueryBuilder(alias);
@@ -84,8 +84,17 @@ export function constructQueryBuilder<E extends ObjectLiteral = ObjectLiteral, K
 
   builder.limit(limit);
   builder.offset(offset);
+
   if (orderBy) {
-    builder.orderBy(`${alias}.${orderBy[0]}`, orderBy[1]);
+    const orderByCondition = {};
+    if (Array.isArray(orderBy)) {
+      for (const { column, sort } of orderBy) {
+        orderByCondition[`${alias}.${column}`] = sort;
+      }
+    } else {
+      orderByCondition[`${alias}.${orderBy.column}`] = orderBy.sort;
+    }
+    builder.orderBy(orderByCondition);
   }
 
   return builder;

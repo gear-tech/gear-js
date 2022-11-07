@@ -90,7 +90,7 @@ export class ConsumerController {
   }
 
   @MessagePattern(KAFKA_TOPICS.SERVICES_PARTITION)
-  async servicesPartition(@Payload() payload: Message): Promise<void> {
+  async servicesPartition(): Promise<void> {
     await this.consumerService.servicesPartition();
   }
 }

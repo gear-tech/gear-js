@@ -1,4 +1,4 @@
-import { FindOptionsWhere, MoreThan, Repository, UpdateResult } from 'typeorm';
+import { FindOptionsWhere, Repository, UpdateResult } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GetMessagesParams } from '@gear-js/common';
@@ -15,20 +15,8 @@ export class MessageRepo {
     private messageRepo: Repository<Message>,
   ) {}
 
-  public async listByIdAndSourceAndDestination(params: GetMessagesParams): Promise<[Message[], number]> {
+  public async list(params: GetMessagesParams): Promise<[Message[], number]> {
     const { genesis, source, query, destination, limit, offset, toDate, fromDate, mailbox } = params;
-    const strictParams = { genesis };
-    if (source) {
-      strictParams['source'] = source;
-    }
-    if (destination) {
-      strictParams['destination'] = destination;
-    }
-    if (mailbox) {
-      strictParams['source'] = source;
-      strictParams['expiration'] = MoreThan(0);
-      strictParams['readReason'] = null;
-    }
 
     const builder = constructQueryBuilder(
       this.messageRepo,
@@ -44,7 +32,10 @@ export class MessageRepo {
       offset || 0,
       limit || PAGINATION_LIMIT,
       ['program'],
-      ['timestamp', 'DESC'],
+      [
+        { column: 'timestamp', sort: 'DESC' },
+        { column: 'type', sort: 'ASC' },
+      ],
     );
 
     return builder.getManyAndCount();

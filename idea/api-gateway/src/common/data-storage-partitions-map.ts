@@ -1,6 +1,6 @@
 import { initKafka } from '../kafka/init-kafka';
 
-const servicesPartitionMap = new Map<string, string>();
+const dataStoragePartitionsMap = new Map<string, string>();
 
 async function getNewServicePartition (topic: string): Promise<number> {
   let sumPartitionsInApiGatewayService = 1;
@@ -13,7 +13,7 @@ async function getNewServicePartition (topic: string): Promise<number> {
     return acc + topicData.partition;
   }, 1 as number);
 
-  for(const [_, partition] of servicesPartitionMap){
+  for(const [_, partition] of dataStoragePartitionsMap){
     const numPartition = Number(partition);
 
     sumPartitionsInApiGatewayService += numPartition;
@@ -40,4 +40,4 @@ async function getNewServicePartition (topic: string): Promise<number> {
   }
 }
 
-export { servicesPartitionMap, getNewServicePartition };
+export { dataStoragePartitionsMap, getNewServicePartition };

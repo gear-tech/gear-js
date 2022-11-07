@@ -27,7 +27,7 @@ export class CodeRepo {
     });
   }
 
-  public async listPaginationByGenesis(params: GetAllCodeParams): Promise<[Code[], number]> {
+  public async list(params: GetAllCodeParams): Promise<[Code[], number]> {
     const { genesis, query, limit, offset, name, toDate, fromDate, uploadedBy } = params;
 
     const builder = constructQueryBuilder(
@@ -39,7 +39,7 @@ export class CodeRepo {
       offset || 0,
       limit || PAGINATION_LIMIT,
       undefined,
-      ['timestamp', 'DESC'],
+      { column: 'timestamp', sort: 'DESC' },
     );
 
     return builder.getManyAndCount();

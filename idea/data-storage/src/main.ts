@@ -44,9 +44,6 @@ async function bootstrap() {
     },
   });
 
-  const gearEventListener = app.get(GearEventListener);
-  await gearEventListener.run();
-
   await app.startAllMicroservices();
   changeStatus('kafka');
   await waitReady();
@@ -55,6 +52,9 @@ async function bootstrap() {
   await AppDataSource.destroy();
 
   await app.listen(healthcheck.port);
+
+  const gearEventListener = app.get(GearEventListener);
+  await gearEventListener.run();
 }
 
 bootstrap();

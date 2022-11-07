@@ -4,9 +4,8 @@ import { apiGatewayRouter } from './routes/api-gateway/api-gateway.router';
 import { healthcheckRouter } from './routes/healthcheck/healthcheck.router';
 import { kafkaCreateConnection } from './kafka/kafka-create-connection';
 import configuration from './config/configuration';
-import { runSchedulerGenesisHashes } from './common/scheduler-genesis-hashes';
 import { apiGatewayLogger } from './common/api-gateway.logger';
-import { networkKafkaPartitions } from './common/helpers';
+import { runSchedulers } from './common/shedulers';
 
 const app = express();
 
@@ -21,8 +20,7 @@ app.use('/health', healthcheckRouter);
 
 const startApp = async () => {
   await kafkaCreateConnection();
-  await networkKafkaPartitions();
-  await runSchedulerGenesisHashes();
+  await runSchedulers();
 
   app.listen(port, () => {
     apiGatewayLogger.info(`App successfully run on the ${port} 🚀`);

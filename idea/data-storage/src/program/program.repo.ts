@@ -38,7 +38,7 @@ export class ProgramRepo {
     });
   }
 
-  public async listPaginationByGenesis(params: GetAllProgramsParams): Promise<[Program[], number]> {
+  public async list(params: GetAllProgramsParams): Promise<[Program[], number]> {
     const { genesis, query, limit, offset, owner, toDate, fromDate, status } = params;
 
     const builder = constructQueryBuilder(
@@ -50,7 +50,7 @@ export class ProgramRepo {
       offset || 0,
       limit || PAGINATION_LIMIT,
       ['code', 'meta'],
-      ['timestamp', 'DESC'],
+      { column: 'timestamp', sort: 'DESC' },
     );
 
     return builder.getManyAndCount();

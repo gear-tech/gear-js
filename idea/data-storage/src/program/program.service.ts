@@ -1,11 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
-import {
-  FindProgramParams,
-  GetAllProgramsParams,
-  GetAllProgramsResult,
-  IProgram,
-} from '@gear-js/common';
+import { FindProgramParams, GetAllProgramsParams, GetAllProgramsResult, IProgram } from '@gear-js/common';
 
 import { ProgramNotFound } from '../common/errors';
 import { Program } from '../database/entities';
@@ -19,7 +14,7 @@ export class ProgramService {
   constructor(private programRepository: ProgramRepo) {}
 
   public async getAllPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
-    const [programs, total] = await this.programRepository.listPaginationByGenesis(params);
+    const [programs, total] = await this.programRepository.list(params);
     return {
       programs,
       count: total,
@@ -27,7 +22,6 @@ export class ProgramService {
   }
 
   public async createPrograms(createProgramsInput: CreateProgramInput[]): Promise<Program[]> {
-
     const createProgramsDBType = createProgramsInput.map((createProgramInput) => {
       return plainToClass(Program, {
         ...createProgramInput,

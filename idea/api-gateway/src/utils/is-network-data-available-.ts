@@ -1,5 +1,5 @@
-import { servicesPartitionMap } from '../common/services-partition-map';
+import { dataStoragePartitionsMap } from '../common/data-storage-partitions-map';
 
 export function isNetworkDataAvailable(genesis: string): boolean {
-  return servicesPartitionMap.has(genesis);
+  return dataStoragePartitionsMap.has(genesis);
 }

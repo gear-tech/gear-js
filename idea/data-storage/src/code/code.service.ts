@@ -13,7 +13,7 @@ export class CodeService {
   constructor(private codeRepository: CodeRepo) {}
 
   public async getAllCode(params: GetAllCodeParams): Promise<GetAllCodeResult> {
-    const [listCode, total] = await this.codeRepository.listPaginationByGenesis(params);
+    const [listCode, total] = await this.codeRepository.list(params);
     return {
       listCode,
       count: total,
@@ -32,11 +32,11 @@ export class CodeService {
   public async updateCodes(updateCodesInput: UpdateCodeInput[] | CodeChangedInput[]): Promise<Code[]> {
     const updateCodes = [];
 
-    for(const updateCodeInput of updateCodesInput){
+    for (const updateCodeInput of updateCodesInput) {
       const { id, genesis } = updateCodeInput;
       const code = await this.codeRepository.getByIdAndGenesis(id, genesis);
 
-      if(code) {
+      if (code) {
         const updateCode = plainToClass(Code, {
           ...code,
           status: updateCodeInput.status,
@@ -45,7 +45,7 @@ export class CodeService {
 
         updateCodes.push(updateCode);
       } else {
-        const createCode =  plainToClass(Code, {
+        const createCode = plainToClass(Code, {
           ...updateCodeInput,
           name: updateCodeInput.id,
           timestamp: new Date(updateCodeInput.timestamp),

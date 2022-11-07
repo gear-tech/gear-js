@@ -18,7 +18,7 @@ export const mockCodeRepository = {
       }
     });
   }),
-  listPaginationByGenesis: jest.fn((params: GetAllCodeParams) => {
+  list: jest.fn((params: GetAllCodeParams) => {
     const { genesis, limit } = params;
     const listCode = CODE_DB_MOCK.filter((code) => {
       if (code.genesis === genesis) {
