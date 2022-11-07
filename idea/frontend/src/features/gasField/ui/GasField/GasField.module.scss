@@ -24,6 +24,7 @@
   border: 1px solid $borderColor;
   overflow: hidden;
   border-radius: $borderRadiusMedium;
+  height: 40px;
 
   &:focus-within {
     border-color: $borderColor2;
