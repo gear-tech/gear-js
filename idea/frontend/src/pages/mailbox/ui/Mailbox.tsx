@@ -2,7 +2,6 @@ import { Hex } from '@gear-js/api';
 import { useApi, useAccount } from '@gear-js/react-hooks';
 import { useState, useCallback, useEffect } from 'react';
 import SimpleBar from 'simplebar-react';
-import clsx from 'clsx';
 
 import { useMessageClaim } from 'hooks';
 
@@ -25,9 +24,6 @@ const Mailbox = () => {
 
   const isAnyMessage = list && list.length > 0;
   const isListEmpty = list?.length === 0;
-  const isPlaceholderVisible = !isAnyMessage;
-
-  const simpleBarClassName = clsx(styles.simpleBar, isPlaceholderVisible && styles.noOverflow);
 
   const handleClaim = useCallback(
     (messageId: Hex, reject: () => void) => {
@@ -55,9 +51,14 @@ const Mailbox = () => {
   return (
     <>
       <Header onSearchSubmit={setSearchQuery} />
-      <SimpleBar className={simpleBarClassName}>
-        {isAnyMessage ? <Messages list={list} onClaim={handleClaim} /> : <MessagesPlaceholder isEmpty={isListEmpty} />}
-      </SimpleBar>
+
+      {isAnyMessage ? (
+        <SimpleBar className={styles.simpleBar}>
+          <Messages list={list} onClaim={handleClaim} />
+        </SimpleBar>
+      ) : (
+        <MessagesPlaceholder isEmpty={isListEmpty} />
+      )}
     </>
   );
 };
