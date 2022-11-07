@@ -10,6 +10,7 @@ const Button = forwardRef((props: Props, ref: ForwardedRef<HTMLButtonElement>) =
     className,
     block,
     noWrap,
+    noLetterSpacing,
     type = 'button',
     color = 'primary',
     size = 'medium',
@@ -23,6 +24,7 @@ const Button = forwardRef((props: Props, ref: ForwardedRef<HTMLButtonElement>) =
     styles[text ? size : 'noText'],
     block && styles.block,
     noWrap && styles.noWrap,
+    !noLetterSpacing && styles.letterSpacing,
   );
 
   return (
