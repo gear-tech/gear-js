@@ -38,7 +38,7 @@ describe('Program service', () => {
       owner: '0x7357',
       blockHash: '0x1234',
       timestamp: 0,
-      code
+      code,
     };
     const programs = await programService.createPrograms([createProgramInput]);
 
@@ -86,7 +86,7 @@ describe('Program service', () => {
     expect.arrayContaining(result.programs);
     expect(result.programs[0].owner).toEqual(owner);
     expect(result.programs[0].genesis).toEqual(genesis);
-    expect(mockProgramRepository.listPaginationByGenesis).toHaveBeenCalled();
+    expect(mockProgramRepository.list).toHaveBeenCalled();
   });
 
   it('should successfully get programs and called getAllPrograms method', async () => {
@@ -99,7 +99,7 @@ describe('Program service', () => {
     const result = await programService.getAllPrograms(getAllProgramParamsInput);
     expect.arrayContaining(result.programs);
     expect(result.programs[0].genesis).toEqual(genesis);
-    expect(mockProgramRepository.listPaginationByGenesis).toHaveBeenCalled();
+    expect(mockProgramRepository.list).toHaveBeenCalled();
   });
 
   it('should successfully update program status to ACTIVE', async () => {

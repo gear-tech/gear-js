@@ -1,0 +1,67 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use '@gear-js/ui/mixins' as *;
+
+.horizontalMessageCard {
+  align-items: center;
+  position: relative;
+  padding: toRem(20) toRem(24);
+  background: $bgColorSecondary;
+  box-shadow: 0px 4px 4px $bgColor;
+  border-radius: 16px;
+
+  &.moreInfo {
+    display: grid;
+    gap: 30px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  &:not(.moreInfo) {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .info {
+    @include childrenMargin(8px, right);
+    display: flex;
+    align-items: center;
+
+    .directionSVG {
+      &.fromProgram {
+        transform: rotate(180deg);
+
+        path {
+          fill: $blue;
+        }
+      }
+    }
+  }
+
+  .fromBlock {
+    @include childrenMargin($marginSmall, right);
+
+    display: flex;
+    font-weight: 500;
+    align-items: center;
+
+    .text {
+      color: $gray600;
+      font-size: $fontSizeTiny;
+      line-height: 1.3;
+    }
+  }
+
+  .programLink {
+    text-decoration: underline;
+    text-decoration-color: $gray300;
+
+    span {
+      @include transition;
+
+      &:hover {
+        opacity: 0.5;
+      }
+    }
+  }
+}

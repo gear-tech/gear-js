@@ -1,1 +1,3 @@
-export * from './useMetadataUpload';
+import { useMetadataUplaod } from './useMetadataUpload';
+
+export { useMetadataUplaod };

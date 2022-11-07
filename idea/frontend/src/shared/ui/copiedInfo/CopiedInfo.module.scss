@@ -1,0 +1,10 @@
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.info {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.copyButton {
+  margin-top: $marginSmall;
+}

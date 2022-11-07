@@ -1,23 +1,24 @@
 import { KafkaMessage } from 'kafkajs';
-import { initKafka } from '../../kafka/init-kafka';
 import { KAFKA_TOPICS } from '@gear-js/common';
-import { servicesPartitionMap } from '../services-partition-map';
+
+import { initKafka } from '../../kafka/init-kafka';
+import { dataStoragePartitionsMap } from '../data-storage-partitions-map';
 
 export async function setServicePartition(message: KafkaMessage): Promise<void> {
-  const value = JSON.parse(message.value.toString());
+  const params = JSON.parse(message.value.toString());
 
-  if(!('genesis' in value) || !('partition' in value)) return;
+  if(!('genesis' in params) || !('partition' in params)) return;
 
-  if(!value.genesis) return;
+  if(!params.genesis) return;
 
-  if(servicesPartitionMap.has(value.genesis)) return;
+  if(dataStoragePartitionsMap.has(params.genesis)) return;
 
-  const partitionNum = Number(value.partition);
+  const partitionNum = Number(params.partition);
 
   const admin = initKafka.admin();
   const topicOffsets = await admin.fetchTopicOffsets(`${KAFKA_TOPICS.SERVICE_PARTITION_GET}.reply`);
 
   const topicOffset = topicOffsets.find(topicData => topicData.partition === partitionNum);
 
-  servicesPartitionMap.set(value.genesis, String(topicOffset.partition));
+  dataStoragePartitionsMap.set(params.genesis, String(topicOffset.partition));
 }

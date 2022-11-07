@@ -1,0 +1,39 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.node {
+  display: flex;
+  align-items: center;
+
+  .radio {
+    font-family: 'Kanit';
+    font-size: $fontSizeSmall;
+    font-weight: 400;
+    line-height: 1.54;
+    overflow-wrap: anywhere;
+
+    input {
+      flex-shrink: 0;
+    }
+
+    &.current {
+      color: $successColor;
+    }
+  }
+
+  .buttons {
+    @include childrenMargin(5px, right);
+
+    margin-left: 10px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+
+    .actionBtn img {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}

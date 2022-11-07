@@ -1,0 +1,17 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.simpleBar {
+  @include customSimplebar; 
+
+  flex: 1 1 440px;
+  // needed for scrolling with flex
+  min-height: 1px;
+  
+  .list {
+    @include childrenMargin($marginMedium);
+
+    padding-right: toRem(22);
+  }
+}

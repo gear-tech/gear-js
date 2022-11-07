@@ -32,6 +32,12 @@
 
 @font-face {
   font-family: 'Kanit';
+  font-weight: 300;
+  src: url('./fonts/kanit-300.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Kanit';
   font-weight: 400;
   src: url('./fonts/kanit-400.woff2') format('woff2');
 }

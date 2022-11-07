@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { ReactNode, useEffect, useState, MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { Button } from '../Button/Button';
-import icon from './images/x.svg';
+import { ReactComponent as xSVG } from './images/x.svg';
 import styles from './Modal.module.scss';
 
 type Props = {
@@ -39,7 +39,7 @@ const Modal = ({ heading, close, children, className, size = 'normal' }: Props) 
       <div className={modalClassName} data-testid="modal">
         <header className={styles.header}>
           <h3 className={styles.heading}>{heading}</h3>
-          <Button icon={icon} color="transparent" onClick={close} />
+          <Button icon={xSVG} color="transparent" onClick={close} />
         </header>
         {children && (
           <div className={bodyClassName} data-testid="body">

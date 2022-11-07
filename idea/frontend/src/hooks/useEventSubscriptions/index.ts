@@ -1,1 +1,3 @@
-export * from './useEventSubscriptions';
+import { useEventSubscriptions } from './useEventSubscriptions';
+
+export { useEventSubscriptions };

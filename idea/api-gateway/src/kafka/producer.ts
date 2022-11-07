@@ -3,7 +3,7 @@ import { Message } from 'kafkajs';
 
 import { initKafka } from './init-kafka';
 import { KafkaParams } from './types';
-import { servicesPartitionMap } from '../common/services-partition-map';
+import { dataStoragePartitionsMap } from '../common/data-storage-partitions-map';
 
 const producer = initKafka.producer();
 
@@ -16,25 +16,18 @@ async function sendByTopic(
   params: KafkaParams | string,
   correlationId?: string,
 ): Promise<void> {
-  await producer.send({
-    topic,
-    messages: [createMessageBody(topic, params, correlationId)],
-  });
-}
+  const message: Message = { value: JSON.stringify(params), headers: {} };
+  const genesis: string = params['genesis'];
 
-function createMessageBody(topic: string, params: KafkaParams | string, correlationId?: string): Message {
-  const sendMessagePartition = servicesPartitionMap.get(params['genesis']);
-  const result: Message = { value: JSON.stringify(params), headers: {} };
-
-  if(params['genesis'] && sendMessagePartition) {
-    result.partition = Number(sendMessagePartition);
+  if(dataStoragePartitionsMap.has(genesis)) {
+    message.partition = Number(dataStoragePartitionsMap.get(genesis));
   }
 
   if (correlationId) {
-    result.headers = { kafka_correlationId: correlationId, kafka_replyTopic: `${topic}.reply` };
+    message.headers = { kafka_correlationId: correlationId, kafka_replyTopic: `${topic}.reply` };
   }
 
-  return result;
+  await producer.send({ topic, messages: [message] });
 }
 
 export const kafkaProducer = { sendByTopic, connect };

@@ -1,0 +1,15 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.messageInfo {
+  @include childrenMargin($marginMedium);
+
+  padding: toRem(24);
+  border-radius: 16px;
+  background-color: $bgColor4;
+
+  .text {
+    grid-template-columns: minmax(toRem(100), 0.1fr) minmax(toRem(452), 0.6fr);
+  }
+}

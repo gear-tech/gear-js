@@ -33,7 +33,7 @@ export const mockMessageRepository = {
     });
     return [messages, limit];
   }),
-  listByIdAndSourceAndDestination: jest.fn((params: GetMessagesParams) => {
+  list: jest.fn((params: GetMessagesParams) => {
     const { source, destination, limit } = params;
     const messages = MESSAGE_DB_MOCK.filter((message) => {
       if (message.source === source && message.destination === destination) {

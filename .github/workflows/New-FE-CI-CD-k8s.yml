@@ -27,7 +27,6 @@ jobs:
   build-new-frontend-image-staging:
     runs-on: ubuntu-latest
     needs: [wait-previous-run]
-    environment: staging
     permissions:
       contents: read
       packages: write
@@ -46,17 +45,17 @@ jobs:
       - name: Build and push Frontend Docker image
         uses: docker/build-push-action@master
         with:
-          context: idea/new-frontend
+          context: idea/frontend
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-new-frontend:qa
           build-args: |
-            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
-            REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
+            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS_NEW_FE }}
+            REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL_NEW_FE }}
             REACT_APP_WASM_COMPILER_URL=${{ secrets.REACT_APP_WASM_COMPILER_URL }}
-            REACT_APP_DEFAULT_NODES_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
+            REACT_APP_DEFAULT_NODES_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL_NEW_FE }}
             REACT_APP_HCAPTCHA_SITE_KEY=${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
 
-  deploy-to-k8s-prod:
+  deploy-to-k8s-dev:
     needs: build-new-frontend-image-staging
     runs-on: ubuntu-latest
 
@@ -71,9 +70,9 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment new-fe -n dev-1
+          args: rollout restart deployment new-fe -n new-backend
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: get deployment -o name -n dev-1 | xargs -n1 -t kubectl rollout status -n dev-1 --timeout=120s
+          args: get deployment -o name -n new-backend | xargs -n1 -t kubectl rollout status -n new-backend --timeout=120s

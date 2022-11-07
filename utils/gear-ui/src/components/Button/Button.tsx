@@ -4,7 +4,17 @@ import { Props } from './Button.types';
 import styles from './Button.module.scss';
 
 const Button = forwardRef((props: Props, ref: ForwardedRef<HTMLButtonElement>) => {
-  const { text, icon, className, block, noWrap, type = 'button', color = 'primary', size = 'medium', ...attrs } = props;
+  const {
+    text,
+    icon: Icon,
+    className,
+    block,
+    noWrap,
+    type = 'button',
+    color = 'primary',
+    size = 'medium',
+    ...attrs
+  } = props;
 
   const buttonClassName = clsx(
     styles.button,
@@ -17,7 +27,7 @@ const Button = forwardRef((props: Props, ref: ForwardedRef<HTMLButtonElement>) =
 
   return (
     <button type={type} className={buttonClassName} ref={ref} {...attrs}>
-      {icon && <img src={icon} alt="button icon" className={styles.icon} />}
+      {Icon && <Icon className={styles.icon} />}
       {text}
     </button>
   );

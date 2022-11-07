@@ -1,0 +1,79 @@
+@use '@gear-js/ui/mixins' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.horizontalCodeCard {
+  @include transition(background-color);
+
+  display: flex;
+  position: relative;
+  border-radius: toRem(16);
+  background-color: $bgColor4;
+
+  &:hover {
+    background-color: $gray100;
+
+    .content::after {
+      background: radial-gradient(50% 50% at 50% 50%, rgba($successColor, 0.45) 25%, rgba(24, 24, 27, 0) 100%);
+    }
+  }
+}
+
+.content {
+  flex: 1 1;
+  padding: toRem(24);
+  overflow: hidden;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: -40%;
+    bottom: -100%;
+    width: 100%;
+    height: 200%;
+    background: radial-gradient(50% 50% at 50% 50%, rgba($successColor, 0.23) 0%, rgba(24, 24, 27, 0) 100%);
+  }
+
+  .otherInfo {
+    display: flex;
+    position: relative;
+  }
+
+  .codeId {
+    z-index: 2;
+    margin-bottom: 10px;
+  }
+
+  .otherInfo {
+    @include childrenMargin($margin, right);
+
+    z-index: 4;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  flex: 0.3 1;
+  padding: toRem(12) toRem(24);
+
+  .sendMessage {
+    @include fade();
+
+    margin-bottom: 9px;
+  }
+}
+
+.cardLink {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+}

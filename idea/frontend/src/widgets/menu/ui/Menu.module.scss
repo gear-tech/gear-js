@@ -1,0 +1,151 @@
+@use '@gear-js/ui/mixins' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.menu {
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  height: calc(100vh - $footerHeight);
+}
+
+.wrapper {
+  width: toRem(74);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: width $timeout ease-in-out;
+
+  &.open {
+    width: toRem(228);
+  }
+}
+
+.menuContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding-top: toRem(28);
+  height: 100%;
+  overflow: hidden;
+
+  &::after,
+  &::before {
+    content: '';
+    display: block;
+    left: 0;
+    width: toRem(228);
+    position: absolute;
+    opacity: 0.7;
+    transition: left $timeout ease-in-out;
+  }
+
+  &::after {
+    z-index: -1;
+    top: toRem(88);
+    height: toRem(500);
+    background: radial-gradient(50% 50% at 50% 50%, rgba(3, 52, 199, 0.4) 15%, rgba(24, 24, 27, 0) 100%);
+  }
+
+  &::before {
+    z-index: -2;
+    top: toRem(-24);
+    height: toRem(600);
+    background: radial-gradient(50% 50% at 50% 50%, rgba(43, 208, 113, 0.4) 15%, rgba(24, 24, 27, 0) 100%);
+  }
+
+  &.open {
+    &::after {
+      left: toRem(83);
+    }
+
+    &::before {
+      left: toRem(123);
+    }
+  }
+}
+
+.menuBtn {
+  @include transition();
+
+  width: 22px;
+  height: 22px;
+  padding: 2px;
+  position: absolute;
+  top: toRem(28);
+  right: -11px;
+  border-radius: 50%;
+  background: $gray300;
+  backdrop-filter: blur(10px);
+
+  &.rotated svg {
+    transform: rotate(180deg);
+  }
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.navLink {
+  @include transition(background-color);
+
+  display: flex;
+  align-items: center;
+  padding: toRem(12);
+  white-space: nowrap;
+  border-radius: 16px;
+  background-color: inherit;
+
+  &:global(.active) {
+    background-color: $green005;
+  }
+
+  &:hover,
+  &:global(.active) {
+    svg path {
+      fill: $successColor;
+    }
+
+    .linkText {
+      color: $successColor;
+    }
+  }
+
+  svg path {
+    @include transition(fill);
+  }
+
+  .icon {
+    display: inline-block;
+    min-width: 20px;
+    text-align: center;
+  }
+}
+
+.linkContent {
+  @include fade();
+
+  margin-left: $margin;
+
+  &:global(.exit-done) {
+    visibility: hidden;
+    margin-left: 0;
+  }
+
+  .linkText {
+    @include transition(color);
+
+    margin-right: 14px;
+    font-family: 'Kanit';
+    color: $gray800;
+    font-size: $fontSize;
+    font-weight: 600;
+    line-height: toRem(21);
+    letter-spacing: 0.08em;
+    text-transform: capitalize;
+  }
+}

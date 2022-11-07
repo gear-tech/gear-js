@@ -1,0 +1,47 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/mixins' as *;
+@use 'shared/assets/styles/mixins' as *;
+
+.panel {
+  @include childrenMargin(16px);
+}
+
+.header {
+  @include transition;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.5;
+  }
+}
+
+.innerHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.heading {
+  font-size: $fontSize;
+  font-weight: 400;
+  color: $textColor;
+}
+
+.subheading {
+  font-size: 12px;
+}
+
+.arrow {
+  @include transition;
+  margin-left: 12px;
+  transform: rotate(90deg);
+
+  path {
+    @include transition;
+    fill: $buttonColor;
+  }
+
+  &.open {
+    transform: rotate(-90deg);
+  }
+}

@@ -1,0 +1,16 @@
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.content {
+  @include childrenMargin($margineLarge, right);
+
+  display: flex;
+  margin-top: $marginMedium;
+  
+  .leftSide {
+    @include childrenMargin($marginMedium);
+
+    flex: 1 1;
+  }
+}

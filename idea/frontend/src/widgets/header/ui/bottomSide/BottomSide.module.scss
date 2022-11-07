@@ -1,0 +1,52 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+@keyframes bottomSide {
+  from {
+    height: 0;
+    opacity: 0;
+    margin-top: 0;
+  }
+  to {
+    height: $headerBottomSideHeight;
+    opacity: 0;
+    margin-top: $margin;
+  }
+}
+
+.bottomSide {
+  @include childrenMargin($margin, right);
+
+  &:global(.enter),
+  &:global(.exit-done) {
+    height: 0;
+    opacity: 0;
+    margin-top: 0;
+    overflow: hidden;
+  }
+
+  &:global(.enter-active) {
+    animation: $smallTimeout linear forwards bottomSide;
+  }
+
+  &:global(.exit),
+  &:global(.enter-done) {
+    height: $headerBottomSideHeight;
+    opacity: 1;
+    margin-top: $margin;
+  }
+
+  &:global(.exit) {
+    overflow: hidden;
+  }
+
+  &:global(.exit-active) {
+    animation: $smallTimeout linear reverse forwards bottomSide;
+  }
+
+  .fixSize {
+    min-width: toRem(225);
+  }
+}

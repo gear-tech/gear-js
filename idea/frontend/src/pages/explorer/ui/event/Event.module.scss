@@ -1,0 +1,106 @@
+@use '@gear-js/ui/variables' as ui;
+@use '@gear-js/ui/headings' as *;
+@use '@gear-js/ui/mixins' as *;
+@use 'shared/assets/styles/variables' as shared;
+@use 'shared/assets/styles/mixins' as *;
+
+.event {
+  @include childrenMargin(16px);
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 8.5fr auto;
+  background-color: shared.$bgColor4;
+  border-radius: shared.$borderRadius;
+  overflow: hidden;
+}
+
+.innerHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.heading {
+  @include heading(16px, 21px, 500);
+}
+
+.subheading {
+  font-size: 12px;
+  font-weight: 500;
+  color: shared.$borderColor2;
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+
+  &::after {
+    @include transition;
+    content: '';
+    position: absolute;
+    right: -40%;
+    bottom: -100%;
+    width: 100%;
+    height: 200%;
+    background-image: radial-gradient(50% 50% at 50% 50%, ui.$successColor 0%, rgba(24, 24, 27, 0) 100%);
+    opacity: 0.25;
+  }
+
+  &:hover {
+    .arrow {
+      path {
+        fill: ui.$buttonColorHover;
+      }
+    }
+
+    &::after {
+      opacity: 0.5;
+    }
+  }
+}
+
+.counter {
+  margin-left: 32px;
+  font-weight: 600;
+}
+
+.blockNumber {
+  @include transition;
+  padding: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: shared.$borderColor2;
+  font-weight: 600;
+
+  &:hover {
+    color: ui.$textColor;
+  }
+}
+
+.arrow {
+  @include transition;
+  margin-left: 12px;
+  transform: rotate(90deg);
+
+  path {
+    @include transition;
+    fill: ui.$buttonColor;
+  }
+
+  &.open {
+    transform: rotate(-90deg);
+  }
+}
+
+.body {
+  @include childrenMargin(16px);
+  padding: 0 16px;
+}

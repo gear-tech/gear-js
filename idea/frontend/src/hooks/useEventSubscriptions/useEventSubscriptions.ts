@@ -2,9 +2,8 @@ import { useEffect } from 'react';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { useApi, useAccount, useAlert } from '@gear-js/react-hooks';
 
+import { Method } from 'entities/explorer';
 import { transferEventsHandler, messageSentEventsHandler } from './helpers';
-
-import { Method } from 'types/explorer';
 
 const useEventSubscriptions = () => {
   const alert = useAlert();
@@ -22,9 +21,9 @@ const useEventSubscriptions = () => {
 
     unsubs.push(
       api.gearEvents.subscribeToGearEvent(Method.UserMessageSent, (event) =>
-        messageSentEventsHandler(event, decodedAddress, alert)
+        messageSentEventsHandler(event, decodedAddress, alert),
       ),
-      api.gearEvents.subscribeToTransferEvents((event) => transferEventsHandler(event, decodedAddress, alert))
+      api.gearEvents.subscribeToTransferEvents((event) => transferEventsHandler(event, decodedAddress, alert)),
     );
 
     return () => {

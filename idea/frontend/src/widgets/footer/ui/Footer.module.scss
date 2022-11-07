@@ -1,0 +1,26 @@
+@use '@gear-js/ui/breakpoints' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: toRem(36) toRem(40) toRem(20) toRem(40);
+  text-align: center;
+  color: $textColorSecondary;
+
+  @include md {
+    @include childrenMargin($marginBig);
+
+    flex-direction: column;
+  }
+}
+
+.copyright {
+  color: $gray600;
+  font-size: 12px;
+  margin-left: auto;
+  margin-right: 32px;
+}

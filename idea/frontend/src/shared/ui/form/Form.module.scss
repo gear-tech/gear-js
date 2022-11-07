@@ -1,0 +1,87 @@
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.wrapper {
+  align-items: center;
+}
+
+%labelStyles {
+  color: $gray700;
+  font-family: 'Kanit';
+
+  &::after {
+    content: ':';
+  }
+}
+
+.field {
+  label {
+    @extend %labelStyles;
+  }
+}
+
+.text {
+  @extend %labelStyles;
+
+  font-size: $fontSizeMedium;
+  font-weight: 500;
+}
+
+.textContent {
+  min-height: toRem(42);
+
+  &.loading {
+    @include loading();
+
+    position: relative;
+  }
+
+  &.fixedSizes {
+    min-height: 100px;
+    max-height: 400px;
+
+    .preformatted {
+      white-space: pre;
+      overflow-wrap: initial;
+    }
+  }
+
+  &:focus-within {
+    border: none;
+  }
+}
+
+.simpleBar {
+  @include customSimplebar();
+
+  width: 100%;
+  height: 100%;
+}
+
+.preformatted {
+  display: inline;
+  font-family: 'Kanit';
+  font-size: $fontSize;
+  font-weight: 400;
+  line-height: toRem(20);
+  white-space: break-spaces;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.gap16 {
+  gap: $margin !important;
+}
+
+.checkbox {
+  color: $textColor !important;
+  font-size: $fontSize;
+  line-height: toRem(14);
+  margin-bottom: 30px;
+
+  &::after {
+    content: '';
+  }
+}

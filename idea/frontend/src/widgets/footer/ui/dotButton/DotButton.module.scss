@@ -1,0 +1,17 @@
+@use 'shared/assets/styles/variables' as *;
+@use '@gear-js/ui/mixins' as *;
+
+.link {
+  @include transition;
+  color: $gray800;
+  font-size: 16px;
+  font-weight: 500;
+
+  &:hover {
+    opacity: 0.5;
+  }
+
+  .icon {
+    margin-right: 10px;
+  }
+}
