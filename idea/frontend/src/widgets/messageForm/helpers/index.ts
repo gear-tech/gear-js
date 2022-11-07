@@ -4,14 +4,15 @@ import isPlainObject from 'lodash.isplainobject';
 
 import { PayloadSchemaParams, PayloadValue } from 'entities/formPayload';
 
-const getValidationSchema = ({ type, deposit, metadata, maxGasLimit }: PayloadSchemaParams) =>
+const getValidationSchema = ({ deposit, maxGasLimit }: PayloadSchemaParams) =>
   yup.object().shape({
     value: yup
       .number()
       .required('This field is required')
       .test('min', `Value should be more ${deposit} or equal than 0`, (value = 0) => value === 0 || value > deposit),
     // @ts-ignore
-    payload: yup.mixed().default('').testPayload(type, metadata),
+    // commented cuz otherwise react-final-form crashes on certain types of payloads
+    // payload: yup.mixed().default('').testPayload(type, metadata),
     gasLimit: yup
       .number()
       .required('This field is required')
