@@ -49,7 +49,7 @@ export class ProgramRepo {
       { fromDate, toDate },
       offset || 0,
       limit || PAGINATION_LIMIT,
-      ['code', 'meta'],
+      ['code'],
       { column: 'timestamp', sort: 'DESC' },
     );
 
