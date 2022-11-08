@@ -41,7 +41,9 @@ async function bootstrap() {
       },
       consumer: {
         groupId: kafka.groupId,
+        maxBytesPerPartition: 1048576,
       },
+      subscribe: { fromBeginning: false },
       producer: {},
     },
   });
