@@ -18,16 +18,19 @@ export class ProducerService {
 
     await this.kafkaProducer.send({
       topic,
-      messages: [message]
+      messages: [message],
     });
   }
 
   public async setKafkaNetworkData(): Promise<void> {
     const correlationId = nanoid();
 
-    const message: Message = { value: JSON.stringify(kafkaNetworkData.genesis), headers: {
-      kafka_correlationId: correlationId,
-    } };
+    const message: Message = {
+      value: JSON.stringify(kafkaNetworkData.genesis),
+      headers: {
+        kafka_correlationId: correlationId,
+      },
+    };
 
     await this.kafkaProducer.send({
       topic: `${KAFKA_TOPICS.SERVICE_PARTITION_GET}.reply`,
@@ -40,7 +43,7 @@ export class ProducerService {
 
     const networkData = await res;
 
-    if(networkData.routingPartition !== null) {
+    if (networkData.routingPartition !== null) {
       kafkaNetworkData.partition = Number(networkData.routingPartition);
     }
   }

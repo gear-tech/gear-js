@@ -2352,7 +2352,7 @@ __metadata:
     eslint-plugin-prettier: 3.4.1
     jest: 27.5.1
     js-yaml: 4.1.0
-    kafkajs: 1.16.0
+    kafkajs: 2.2.2
     nanoid: ^3.0.0
     pg: 8.7.3
     prettier: 2.7.1
@@ -2796,7 +2796,7 @@ __metadata:
     eslint-config-prettier: 8.5.0
     eslint-plugin-prettier: 3.4.1
     express: ^4.18.1
-    kafkajs: ^1.15.0
+    kafkajs: 2.2.2
     nodemon: ^2.0.16
     pg: ^8.7.1
     postgres: ^1.0.2
@@ -16652,13 +16652,6 @@ __metadata:
     array-includes: ^3.1.5
     object.assign: ^4.1.3
   checksum: a2ed78cac49a0f0c4be8b1eafe3c5257a1411341d8e7f1ac740debae003de04e5f6372bfcfbd9d082e954ffd99aac85bcda85b7c6bc11609992483f4cdc0f745
-  languageName: node
-  linkType: hard
-
-"kafkajs@npm:1.16.0, kafkajs@npm:^1.15.0":
-  version: 1.16.0
-  resolution: "kafkajs@npm:1.16.0"
-  checksum: 78dbb8705bb231aa1d7767554e40acfde19cae97daf43a893fd7b0c286445a0c02d7b67ce04fa10029d341dfc81b698cb1071106eaf1c3439d721332f6a96964
   languageName: node
   linkType: hard
 
