@@ -1,5 +1,5 @@
 FROM node:16-alpine AS builder
-MAINTAINER gear
+
 WORKDIR /new-frontend
 ARG REACT_APP_API_URL \
     REACT_APP_NODE_ADDRESS \
