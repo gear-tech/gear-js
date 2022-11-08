@@ -45,7 +45,7 @@ async function subscribeConsumerTopics(topics: string[]): Promise<void> {
 async function messageProcessing(message: KafkaMessage, topic: string): Promise<void> {
   if (message.value !== null) {
     if (topic === `${KAFKA_TOPICS.SERVICE_PARTITION_GET}.reply`) {
-      await sendServicePartition(message, topic);
+      await sendServicePartition(message, KAFKA_TOPICS.SERVICE_PARTITION_GET);
 
       console.log('Genesises received from data-storages:', ...dataStoragePartitionsMap);
       return;
