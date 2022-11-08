@@ -3,10 +3,10 @@ import { Controller, Get, HttpCode } from '@nestjs/common';
 const status = {
   kafka: false,
   database: false,
-  gearWSProvider: false
+  gearWSProvider: false,
 };
 
-export const changeStatus = (service: 'kafka' | 'database' | 'gearWSProvider') => {
+export const changeStatus = (service: 'kafka' | 'database' | 'gear') => {
   status[service] = !status[service];
 };
 
