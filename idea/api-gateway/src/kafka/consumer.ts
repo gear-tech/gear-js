@@ -10,7 +10,11 @@ import { dataStoragePartitionsMap } from '../common/data-storage-partitions-map'
 
 const configKafka = config.kafka;
 
-export const consumer = initKafka.consumer({ groupId: configKafka.groupId, maxBytesPerPartition: 1048576 });
+export const consumer = initKafka.consumer({
+  groupId: configKafka.groupId,
+  maxBytesPerPartition: 10485760, //10 mb
+  maxBytes: 104857600,
+});
 
 async function connect(): Promise<void> {
   await consumer.connect();
