@@ -7,8 +7,8 @@ import { Payload } from 'hooks/useProgramActions/types';
 import { RenderButtonsProps, SubmitHelpers, ProgramForm } from 'widgets/programForm';
 import { GasMethod } from 'shared/config';
 import { Subheader } from 'shared/ui/subheader';
-import plusSVG from 'shared/assets/images/actions/plus.svg';
-import closeSVG from 'shared/assets/images/actions/close.svg';
+import { ReactComponent as plusSVG } from 'shared/assets/images/actions/plus.svg';
+import { ReactComponent as closeSVG } from 'shared/assets/images/actions/close.svg';
 
 import styles from '../InitializeProgram.module.scss';
 
@@ -40,7 +40,7 @@ const CodeSection = ({ codeId, metadata, metadataBuffer, resetMetadada }: Props)
 
   const renderButtons = ({ isDisabled }: RenderButtonsProps) => (
     <>
-      <Button icon={plusSVG} type="submit" text="Initialize Program" disabled={isDisabled} />
+      <Button icon={plusSVG} type="submit" text="Create Program" disabled={isDisabled} />
       <Button icon={closeSVG} text="Cancel" color="light" onClick={goBack} />
     </>
   );

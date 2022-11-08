@@ -7,8 +7,8 @@ import SimpleBar from 'simplebar-react';
 
 import { ModalProps } from 'entities/modal';
 import { LocalStorage } from 'shared/config';
-import logoutSVG from 'shared/assets/images/actions/logout.svg';
-import arrowSVG from 'shared/assets/images/actions/arrowLeft.svg';
+import { ReactComponent as logoutSVG } from 'shared/assets/images/actions/logout.svg';
+import { ReactComponent as arrowSVG } from 'shared/assets/images/actions/arrowLeft.svg';
 
 import { useExtensions, useWallet } from '../hooks';
 import { AccountList } from './accountList';

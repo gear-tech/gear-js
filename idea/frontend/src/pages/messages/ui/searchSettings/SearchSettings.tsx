@@ -24,7 +24,7 @@ const SearchSettings = ({ isLoggedIn, initialValues, onSubmit }: Props) => {
   return (
     <section className={styles.searchSettings}>
       <form className={styles.searchForm} onSubmit={handleSubmit}>
-        <Input name="search" type="search" placeholder="Search by program ID, message ID..." />
+        <Input name="search" type="search" placeholder="Search by id, source, destination..." />
       </form>
       <Filters initialValues={initialValues} onSubmit={onSubmit}>
         <FilterGroup name="owner">
@@ -32,7 +32,7 @@ const SearchSettings = ({ isLoggedIn, initialValues, onSubmit }: Props) => {
           <CSSTransition in={isLoggedIn} exit={false} timeout={AnimationTimeout.Medium} mountOnEnter unmountOnExit>
             <>
               <Radio name="owner" value="source" label="Sent messages" className={styles.ownerFilter} />
-              <Radio name="owner" value="destination" label="Recieved messages" className={styles.ownerFilter} />
+              <Radio name="owner" value="destination" label="Received messages" className={styles.ownerFilter} />
             </>
           </CSSTransition>
         </FilterGroup>

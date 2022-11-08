@@ -1,11 +1,12 @@
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_mixins.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/shared' as *;
+@use 'shared/assets/styles/mixins' as *;
+@use 'shared/assets/styles/variables' as *;
 
 .programsList {
+  @include childrenMargin(12px);
   position: relative;
   margin-top: $margin;
-  
+
   .simpleBar {
     @include customSimplebar;
 
@@ -15,10 +16,6 @@
       @include childrenMargin(12px);
 
       margin-right: $margin;
-    }
-
-    &.noOverflow {
-      overflow: hidden;
     }
   }
 }

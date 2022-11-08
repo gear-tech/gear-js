@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import SimpleBar from 'simplebar-react';
-import clsx from 'clsx';
 
 import { IdeaEvent } from 'entities/explorer';
 import { LOCAL_STORAGE, FilterValues, FILTER_VALUES } from 'pages/explorer/model';
@@ -54,15 +53,15 @@ const Events = ({ events }: Props) => {
 
   const isAnyEvent = filteredEvents && filteredEvents.length > 0;
   const isListEmpty = filteredEvents?.length === 0;
-  const isPlaceholderVisible = !isAnyEvent;
-
-  const simpleBarClassName = clsx(styles.simpleBar, isPlaceholderVisible && styles.noOverflow);
 
   return (
     <>
-      <SimpleBar className={simpleBarClassName}>
-        {isAnyEvent ? getEvents() : <EventsPlaceholder isEmpty={isListEmpty} />}
-      </SimpleBar>
+      {isAnyEvent ? (
+        <SimpleBar className={styles.simpleBar}>{getEvents()}</SimpleBar>
+      ) : (
+        <EventsPlaceholder isEmpty={isListEmpty} />
+      )}
+
       <Filter values={filterValues} setValues={setFilterValues} isAnySelected={isAnyFilterSelected} />
     </>
   );

@@ -3,9 +3,9 @@ import clsx from 'clsx';
 import { CSSTransition } from 'react-transition-group';
 
 import { AnimationTimeout } from 'shared/config';
-import plusSVG from 'shared/assets/images/actions/plus.svg';
-import closeSVG from 'shared/assets/images/actions/close.svg';
-import switchSVG from 'shared/assets/images/actions/switch.svg';
+import { ReactComponent as plusSVG } from 'shared/assets/images/actions/plus.svg';
+import { ReactComponent as closeSVG } from 'shared/assets/images/actions/close.svg';
+import { ReactComponent as switchSVG } from 'shared/assets/images/actions/switch.svg';
 import { NodeSection } from 'entities/node';
 
 import { NodesList } from '../nodesList';

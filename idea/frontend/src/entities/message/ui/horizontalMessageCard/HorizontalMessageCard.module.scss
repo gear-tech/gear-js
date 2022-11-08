@@ -28,7 +28,7 @@
     align-items: center;
 
     .directionSVG {
-      &.fromProgram {
+      &:not(.fromProgram) {
         transform: rotate(180deg);
 
         path {

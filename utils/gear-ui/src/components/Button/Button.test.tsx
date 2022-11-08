@@ -47,7 +47,7 @@ describe('button tests', () => {
     const { rerender } = render(<Button text="button text" color="secondary" size="small" />);
 
     const button = screen.getByRole('button');
-    expect(button).toHaveClass(styles.secondary, styles.small);
+    expect(button).toHaveClass(styles.secondary, styles.small, styles.letterSpacing);
 
     rerender(<Button text="button text" color="light" size="small" />);
     expect(button).toHaveClass(styles.light, styles.small);
@@ -65,10 +65,13 @@ describe('button tests', () => {
     expect(button).toHaveClass(styles.transparent);
   });
 
-  it('renders no wrap block button', () => {
-    render(<Button text="button text" block noWrap />);
+  it('renders no wrap block button without letter spacing', () => {
+    render(<Button text="button text" block noWrap noLetterSpacing />);
+
     const button = screen.getByRole('button');
+
     expect(button).toHaveClass(styles.block, styles.noWrap);
+    expect(button).not.toHaveClass(styles.letterSpacing);
   });
 
   it('passes ref', () => {

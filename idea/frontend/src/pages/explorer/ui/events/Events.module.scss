@@ -9,14 +9,4 @@
   :global(.simplebar-content) {
     @include childrenMargin(16px);
   }
-
-  &.noOverflow {
-    overflow: hidden;
-  }
-
-  &:not(.noOverflow) {
-    :global(.simplebar-content) {
-      margin-right: $margin;
-    }
-  }
 }

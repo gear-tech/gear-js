@@ -6,7 +6,6 @@ import { ICode, HorizontalCodeCard } from 'entities/code';
 import { ExamplesLink } from 'shared/ui/examplesLink';
 import { ReactComponent as HorizontalCodeCardSVG } from 'shared/assets/images/placeholders/horizontalProgramCard.svg';
 
-import clsx from 'clsx';
 import styles from './CodesList.module.scss';
 
 type Props = {
@@ -27,22 +26,22 @@ const CodesList = (props: Props) => {
 
   return (
     <div className={styles.codesList}>
-      <SimpleBar
-        className={clsx(styles.simpleBar, isLoaderShowing && styles.noOverflow)}
-        scrollableNodeProps={{ ref: scrollableNodeRef }}>
-        {isLoaderShowing ? (
-          <Placeholder
-            block={<HorizontalCodeCardSVG className={styles.placeholderBlock} />}
-            title="There are no codes yet"
-            description="You can start experimenting right now or try to build from examples. Let`s Rock!"
-            isEmpty={isEmpty}
-            blocksCount={8}>
-            <ExamplesLink />
-          </Placeholder>
-        ) : (
-          codes.map((code) => <HorizontalCodeCard key={code.id} code={code} />)
-        )}
-      </SimpleBar>
+      {isLoaderShowing ? (
+        <Placeholder
+          block={<HorizontalCodeCardSVG className={styles.placeholderBlock} />}
+          title="There are no codes yet"
+          description="You can start experimenting right now or try to build from examples. Let`s Rock!"
+          isEmpty={isEmpty}
+          blocksCount={4}>
+          <ExamplesLink />
+        </Placeholder>
+      ) : (
+        <SimpleBar className={styles.simpleBar} scrollableNodeProps={{ ref: scrollableNodeRef }}>
+          {codes.map((code) => (
+            <HorizontalCodeCard key={code.id} code={code} />
+          ))}
+        </SimpleBar>
+      )}
     </div>
   );
 };

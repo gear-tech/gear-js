@@ -3,9 +3,9 @@ import { Button, buttonStyles, Input, Textarea } from '@gear-js/ui';
 import { useState } from 'react';
 import clsx from 'clsx';
 
-import sendSVG from 'shared/assets/images/actions/send.svg';
-import testBalanceSVG from 'shared/assets/images/actions/testBalance.svg';
-import letterSVG from 'shared/assets/images/actions/letter.svg';
+import { ReactComponent as sendSVG } from 'shared/assets/images/actions/send.svg';
+import { ReactComponent as testBalanceSVG } from 'shared/assets/images/actions/testBalance.svg';
+import { ReactComponent as letterSVG } from 'shared/assets/images/actions/letter.svg';
 import { ReactComponent as ArrowSVG } from 'shared/assets/images/actions/arrowRight.svg';
 import { getPreformattedText } from 'shared/helpers';
 
