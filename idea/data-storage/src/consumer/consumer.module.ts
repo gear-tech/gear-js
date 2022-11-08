@@ -31,6 +31,7 @@ const configKafka = configuration().kafka;
             },
           },
           consumer: {
+            maxBytesPerPartition: 1048576,
             groupId: configKafka.groupId,
           },
         },
