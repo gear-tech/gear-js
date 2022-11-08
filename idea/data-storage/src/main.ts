@@ -22,6 +22,8 @@ async function bootstrap() {
     throw error;
   }
 
+  await AppDataSource.destroy();
+
   const app = await NestFactory.create(AppModule, { cors: true });
 
   app.connectMicroservice<MicroserviceOptions>({
@@ -46,15 +48,14 @@ async function bootstrap() {
 
   await app.startAllMicroservices();
   changeStatus('kafka');
-  await waitReady();
   changeStatus('database');
 
-  await AppDataSource.destroy();
-
-  await app.listen(healthcheck.port);
+  await waitReady();
 
   const gearEventListener = app.get(GearEventListener);
   await gearEventListener.run();
+
+  await app.listen(healthcheck.port);
 }
 
 bootstrap();

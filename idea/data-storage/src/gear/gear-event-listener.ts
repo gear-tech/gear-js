@@ -44,7 +44,12 @@ export class GearEventListener {
   public async run() {
     // eslint-disable-next-line no-constant-condition
     while (true) {
-      await this.connectGearNode();
+      try {
+        await this.connectGearNode();
+      } catch (error) {
+        this.logger.log('⚙️ 📡 Reconnecting to the gear node');
+        continue;
+      }
       const unsub = await this.listen();
 
       await this.producerService.setKafkaNetworkData();
@@ -52,32 +57,28 @@ export class GearEventListener {
       await new Promise((resolve) => {
         this.api.on('error', (error) => {
           unsub();
-          changeStatus('gearWSProvider');
+          changeStatus('gear');
           resolve(error);
         });
       });
 
-      this.logger.log('⚙️ 📡 Reconnection node');
+      this.logger.log('⚙️ 📡 Reconnecting to the gear node');
     }
   }
 
   private async connectGearNode(): Promise<void> {
-    try {
-      this.api = await GearApi.create({
-        providerAddress: gear.wsProvider,
-        throwOnConnect: true,
-      });
+    this.api = await GearApi.create({
+      providerAddress: gear.wsProvider,
+      throwOnConnect: true,
+    });
 
-      this.genesis = this.api.genesisHash.toHex();
+    this.genesis = this.api.genesisHash.toHex();
 
-      this.logger.log(`⚙️ Connected to ${this.api.runtimeChain} with genesis ${this.genesis}`);
+    this.logger.log(`⚙️ Connected to ${this.api.runtimeChain} with genesis ${this.genesis}`);
 
-      kafkaNetworkData.genesis = this.genesis;
+    kafkaNetworkData.genesis = this.genesis;
 
-      changeStatus('gearWSProvider');
-    } catch (error) {
-      console.log('api.isReady', error);
-    }
+    changeStatus('gear');
   }
 
   private listen() {
@@ -234,7 +235,9 @@ export class GearEventListener {
         );
 
         if (event) {
-          const { data: { id, change } } = event.event as CodeChanged;
+          const {
+            data: { id, change },
+          } = event.event as CodeChanged;
           const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
 
           codes.push({
@@ -250,7 +253,7 @@ export class GearEventListener {
           const codeId = generateCodeHash(tx.args[0].toHex());
           const code = await this.codeRepository.get(codeId, this.genesis);
 
-          if(!code) {
+          if (!code) {
             codes.push({
               id: codeId,
               genesis: this.genesis,
