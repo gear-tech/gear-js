@@ -54,6 +54,8 @@ export class GearEventListener {
 
       await this.producerService.setKafkaNetworkData();
 
+      this.logger.log(`📍️Network data:${JSON.stringify(kafkaNetworkData)}`);
+
       await new Promise((resolve) => {
         this.api.on('error', (error) => {
           unsub();
