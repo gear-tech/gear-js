@@ -2256,6 +2256,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gear-js/api@npm:^0.27.1":
+  version: 0.27.1
+  resolution: "@gear-js/api@npm:0.27.1"
+  peerDependencies:
+    "@polkadot/api": ^9.6.1
+    "@polkadot/wasm-crypto": ^6.3.1
+    rxjs: ^7.5.5
+  checksum: b1d15b75259900678688f1143cf54f079617c4e5b4c946adf8324298b6685581e9be269c016481dfdcca49fb9070e3c19b14d2cc9decfb78b5ed41fc16092d7f
+  languageName: node
+  linkType: hard
+
 "@gear-js/auction@workspace:apps/auction":
   version: 0.0.0-use.local
   resolution: "@gear-js/auction@workspace:apps/auction"
@@ -2420,8 +2431,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/frontend@workspace:idea/frontend"
   dependencies:
-    "@gear-js/api": ^0.27.0
-    "@gear-js/react-hooks": ^0.3.6
+    "@gear-js/api": ^0.27.1
+    "@gear-js/react-hooks": ^0.3.7
     "@gear-js/ui": 0.5.13
     "@hcaptcha/react-hcaptcha": ^1.4.4
     "@mantine/form": ^5.4.0
@@ -2641,6 +2652,19 @@ __metadata:
     react-dom: ">=17.0.2"
     react-transition-group: ^4.4.2
   checksum: 5d1c6584ffb4e3cbd19b7b3d5c1f5f765dc408f41af482fcbcc84be9d5d12874718e5e2cfa7d978e704d74e3849ada60fbd7f44d1850d7a79e2677445b04d71b
+  languageName: node
+  linkType: hard
+
+"@gear-js/react-hooks@npm:^0.3.7":
+  version: 0.3.7
+  resolution: "@gear-js/react-hooks@npm:0.3.7"
+  peerDependencies:
+    "@gear-js/api": ^0.27.1
+    "@polkadot/extension-dapp": ^0.43.2
+    react: ">=17.0.2"
+    react-dom: ">=17.0.2"
+    react-transition-group: ^4.4.2
+  checksum: 65b74aedef0bb5f3e62c5bab0abdf4b3e186942aeb86cbe47e731bc02f498d5e14b2435897931111c9b7acf58af7fa91319405288cab77b3e30b57b439a443bb
   languageName: node
   linkType: hard
 
