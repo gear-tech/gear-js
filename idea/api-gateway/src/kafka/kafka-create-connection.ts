@@ -8,10 +8,11 @@ import { apiGatewayLogger } from '../common/api-gateway.logger';
 import { initKafka } from './init-kafka';
 
 const topics = Object.values(KAFKA_TOPICS);
+const replyTopics = Object.values(KAFKA_TOPICS).map(topic => (`${topic}.reply`));
 
 async function kafkaCreateConnection(): Promise<void> {
   await Promise.all([kafkaProducer.connect(), kafkaConsumer.connect()]);
-  await createTopics(topics);
+  await createTopics([...topics, ...replyTopics]);
   await kafkaConsumer.subscribeConsumerTopics(topics);
   await kafkaConsumer.run();
 
