@@ -1,3 +1,12 @@
+## 0.27.1
+_11/09/2022_
+
+https://github.com/gear-tech/gear-js/pull/1075
+
+### Changes
+
+- Add new `gr_reserve_gas`, `gr_unreserve_gas`, `gr_random` syscalls to `importObj`
+
 ## 0.27.0
 _10/25/2022_
 
