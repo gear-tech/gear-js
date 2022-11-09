@@ -1,4 +1,4 @@
-import dotSVG from 'shared/assets/images/logos/dotLogo.svg';
+import { ReactComponent as DotSVG } from 'shared/assets/images/logos/dotLogo.svg';
 
 import styles from './DotButton.module.scss';
 
@@ -12,7 +12,7 @@ const DotButton = ({ nodeAddress }: Props) => (
     href={`https://polkadot.js.org/apps/?rpc=${nodeAddress}#/explorer`}
     target="_blank"
     className={styles.link}>
-    <img src={dotSVG} alt="logo" className={styles.icon} />
+    <DotSVG className={styles.icon} />
     Polkadot Explorer
   </a>
 );

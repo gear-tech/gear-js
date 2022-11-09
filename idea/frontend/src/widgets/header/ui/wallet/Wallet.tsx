@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useModal } from 'hooks';
 import { LocalStorage } from 'shared/config';
 import { AccountButton } from 'shared/ui/accountButton';
-import substrateSVG from 'shared/assets/images/logos/substrate.svg';
+import { ReactComponent as substrateSVG } from 'shared/assets/images/logos/substrate.svg';
 
 import styles from './Wallet.module.scss';
 import { AuthorizationTooltip } from '../authorizationTooltip';

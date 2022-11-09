@@ -12,7 +12,7 @@ import { readFileAsync, checkFileFormat } from 'shared/helpers';
 import { Subheader } from 'shared/ui/subheader';
 import { formStyles } from 'shared/ui/form';
 import { BackButton } from 'shared/ui/backButton';
-import plusSVG from 'shared/assets/images/actions/plus.svg';
+import { ReactComponent as plusSVG } from 'shared/assets/images/actions/plus.svg';
 
 import styles from '../UploadProgram.module.scss';
 

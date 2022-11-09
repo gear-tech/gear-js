@@ -19,7 +19,7 @@ async function sendByTopic(
   const message: Message = { value: JSON.stringify(params), headers: {} };
   const genesis: string = params['genesis'];
 
-  if(dataStoragePartitionsMap.has(genesis)) {
+  if (dataStoragePartitionsMap.has(genesis)) {
     message.partition = Number(dataStoragePartitionsMap.get(genesis));
   }
 

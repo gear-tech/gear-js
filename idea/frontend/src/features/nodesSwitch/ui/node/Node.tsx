@@ -2,8 +2,8 @@ import { useAlert } from '@gear-js/react-hooks';
 import { Button, Radio } from '@gear-js/ui';
 
 import { copyToClipboard } from 'shared/helpers';
-import trashSVG from 'shared/assets/images/actions/trash.svg';
-import copyGreenSVG from 'shared/assets/images/actions/copyGreen.svg';
+import { ReactComponent as trashSVG } from 'shared/assets/images/actions/trash.svg';
+import { ReactComponent as copyGreenSVG } from 'shared/assets/images/actions/copyGreen.svg';
 
 import clsx from 'clsx';
 import styles from './Node.module.scss';
@@ -27,9 +27,7 @@ const Node = ({ address, isCustom, nodeAddress, selectedNode, selectNode, remove
   const handleChange = () => selectNode(address);
 
   const handleRemove = () => {
-    if (isCurrentNode) {
-      return;
-    }
+    if (isCurrentNode) return;
 
     removeLocalNode(address);
   };

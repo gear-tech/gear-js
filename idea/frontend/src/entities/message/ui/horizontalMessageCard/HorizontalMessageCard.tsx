@@ -5,7 +5,7 @@ import { getShortName } from 'shared/helpers';
 import { IdBlock } from 'shared/ui/idBlock';
 import { BulbBlock, BulbStatus } from 'shared/ui/bulbBlock';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
-import flagSVG from 'shared/assets/images/indicators/flag.svg';
+import { ReactComponent as FlagSVG } from 'shared/assets/images/indicators/flag.svg';
 import { ReactComponent as DirectionSVG } from 'shared/assets/images/indicators/messageDirection.svg';
 import { absoluteRoutes } from 'shared/config';
 
@@ -41,7 +41,7 @@ const HorizontalMessageCard = ({ message, moreInfo = false }: Props) => {
       <TimestampBlock size="medium" color="light" timestamp={timestamp} withIcon />
       {moreInfo && (
         <div className={styles.fromBlock}>
-          <img src={flagSVG} alt="flag" />
+          <FlagSVG />
           <span className={styles.text}>{text}</span>
 
           {program ? (

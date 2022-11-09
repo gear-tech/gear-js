@@ -5,7 +5,7 @@ import { ButtonProps, buttonStyles } from '@gear-js/ui';
 type Props = LinkProps & ButtonProps;
 
 const UILink = (props: Props) => {
-  const { icon, size, text, color, className, children, ...otherProps } = props;
+  const { icon: Icon, size, text, color, className, children, ...otherProps } = props;
 
   const linkClasses = clsx(
     buttonStyles.button,
@@ -18,7 +18,7 @@ const UILink = (props: Props) => {
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
     <Link {...otherProps} className={linkClasses}>
-      <img src={icon} alt={text || 'icon'} className={buttonStyles.icon} />
+      {Icon && <Icon className={buttonStyles.icon} />}
       {text}
       {children}
     </Link>

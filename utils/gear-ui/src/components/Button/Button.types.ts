@@ -9,6 +9,7 @@ interface BaseProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   block?: boolean;
   noWrap?: boolean;
   tooltip?: string;
+  noLetterSpacing?: boolean;
 }
 
 interface TextProps extends BaseProps {

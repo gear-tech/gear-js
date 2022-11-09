@@ -5,7 +5,6 @@ import { Placeholder } from 'entities/placeholder';
 import { IMessage, HorizontalMessageCard } from 'entities/message';
 import { ReactComponent as HorizontalMessageCardSVG } from 'shared/assets/images/placeholders/horizontalMessageCard.svg';
 
-import clsx from 'clsx';
 import styles from './MessagesList.module.scss';
 
 type Props = {
@@ -26,20 +25,20 @@ const MessagesList = (props: Props) => {
 
   return (
     <div className={styles.programsList}>
-      <SimpleBar
-        className={clsx(styles.simpleBar, isLoaderShowing && styles.noOverflow)}
-        scrollableNodeProps={{ ref: scrollableNodeRef }}>
-        {isLoaderShowing ? (
-          <Placeholder
-            block={<HorizontalMessageCardSVG className={styles.placeholderBlock} />}
-            title="There are no messages yet"
-            isEmpty={isEmpty}
-            blocksCount={8}
-          />
-        ) : (
-          messages.map((message) => <HorizontalMessageCard key={message.id} message={message} moreInfo />)
-        )}
-      </SimpleBar>
+      {isLoaderShowing ? (
+        <Placeholder
+          block={<HorizontalMessageCardSVG className={styles.placeholderBlock} />}
+          title="There are no messages yet"
+          isEmpty={isEmpty}
+          blocksCount={7}
+        />
+      ) : (
+        <SimpleBar className={styles.simpleBar} scrollableNodeProps={{ ref: scrollableNodeRef }}>
+          {messages.map((message) => (
+            <HorizontalMessageCard key={message.id} message={message} moreInfo />
+          ))}
+        </SimpleBar>
+      )}
     </div>
   );
 };

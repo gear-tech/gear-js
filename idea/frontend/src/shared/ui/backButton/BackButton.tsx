@@ -1,7 +1,7 @@
 import { Button } from '@gear-js/ui';
 import { useNavigate } from 'react-router-dom';
 
-import closeSVG from 'shared/assets/images/actions/close.svg';
+import { ReactComponent as closeSVG } from 'shared/assets/images/actions/close.svg';
 
 const BackButton = () => {
   const navigate = useNavigate();
