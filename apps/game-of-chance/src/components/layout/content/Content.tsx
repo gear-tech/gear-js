@@ -10,7 +10,7 @@ function Content({ subheading, children }: Props) {
   return (
     <div className={styles.container}>
       <header>
-        <h2 className={styles.heading}>Lottery</h2>
+        <h2 className={styles.heading}>Game of chance</h2>
         <p className={styles.subheading}>{subheading}</p>
       </header>
       {children}

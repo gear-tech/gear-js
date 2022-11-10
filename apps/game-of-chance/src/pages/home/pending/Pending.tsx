@@ -33,7 +33,7 @@ function Pending({ isOwner, dashboard, prizeFund, players, onResetButtonClick }:
     <Content subheading={subheading}>
       {isOwner &&
         (winner || (!isLotteryActive && !isAnyPlayer) ? (
-          <Button text="Start new lottery" onClick={onResetButtonClick} />
+          <Button text="Start new Game" onClick={onResetButtonClick} />
         ) : (
           <Button text="Pick random winner" disabled={isLotteryActive} onClick={pickWinner} />
         ))}

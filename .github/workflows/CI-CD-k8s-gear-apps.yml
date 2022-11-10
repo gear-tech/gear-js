@@ -56,8 +56,8 @@ jobs:
         $SourceDiffMarketplace = $diff | Where-Object { $_ -match '^apps/marketplace/' }
         $HasDiffMarketplace = $SourceDiffMarketplace.Length -gt 0
 
-        # Check if a file under lottery/ has changed (added, modified, deleted)
-        $SourceDiffLottery = $diff | Where-Object { $_ -match '^apps/lottery/' }
+        # Check if a file under game-of-chance/ has changed (added, modified, deleted)
+        $SourceDiffLottery = $diff | Where-Object { $_ -match '^apps/game-of-chance/' }
         $HasDiffLottery = $SourceDiffLottery.Length -gt 0
 
         # Check if a file under escrow/ has changed (added, modified, deleted)
@@ -180,7 +180,7 @@ jobs:
       - name: Build and push Lottery Docker image
         uses: docker/build-push-action@master
         with:
-          file: apps/lottery/Dockerfile
+          file: apps/game-of-chance/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-lottery:prod
           build-args: |
