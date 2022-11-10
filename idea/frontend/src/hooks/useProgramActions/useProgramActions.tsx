@@ -83,7 +83,9 @@ const useProgramActions = () => {
     resolve,
     method,
   }: ParamsToSignAndUpload) => {
+    const { title: payloadTitle, metadata, metadataBuffer } = payload;
     const alertId = alert.loading('SignIn', { title: method });
+    const programMessage = getProgramMessage(programId);
 
     try {
       const initialization = waitForProgramInit(api, programId);
@@ -96,6 +98,18 @@ const useProgramActions = () => {
         } else if (status.isFinalized) {
           alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
           handleEventsStatus(events, { reject, resolve });
+
+          if (name) {
+            uploadMetadata({
+              name,
+              title,
+              signer,
+              metadata,
+              programId,
+              metadataBuffer,
+              resolve: () => alert.success(programMessage, ALERT_OPTIONS),
+            });
+          }
         } else if (status.isInvalid) {
           alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
 
@@ -104,8 +118,6 @@ const useProgramActions = () => {
       });
 
       const initStatus = await initialization;
-
-      const programMessage = getProgramMessage(programId);
 
       // TODO: replace w/ ProgramStatus.Terminated
       if (initStatus === 'failed') {
@@ -116,22 +128,8 @@ const useProgramActions = () => {
         return;
       }
 
-      const { title: payloadTitle, metadata, metadataBuffer } = payload;
-
       if (isDevChain) {
         await uploadLocalProgram({ id: programId, name, owner: account?.decodedAddress!, title: payloadTitle || null });
-      }
-
-      if (name) {
-        uploadMetadata({
-          name,
-          title,
-          signer,
-          metadata,
-          programId,
-          metadataBuffer,
-          resolve: () => alert.success(programMessage, ALERT_OPTIONS),
-        });
       }
     } catch (error) {
       const message = (error as Error).message;
