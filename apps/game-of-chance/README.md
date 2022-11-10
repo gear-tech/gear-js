@@ -10,7 +10,7 @@
 
 ## Description
 
-React application of [Game of chance](https://wiki.gear-tech.io/examples/lottery) based on [Rust smart-contract](https://github.com/gear-dapps/game-of-chance).
+React application of [Game of chance](https://wiki.gear-tech.io/examples/game-of-chance) based on [Rust smart-contract](https://github.com/gear-dapps/game-of-chance).
 
 ## Getting started
 
