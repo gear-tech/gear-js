@@ -42,7 +42,7 @@ async function init(connectionEstablishedCb: () => void) {
       connectionEstablishedCb();
       onInit = false;
     } else {
-      sendGenesis();
+      await sendGenesis();
     }
 
     await new Promise((resolve) =>

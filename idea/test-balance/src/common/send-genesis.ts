@@ -1,10 +1,11 @@
-import { KAFKA_TOPICS } from '@gear-js/common';
+import { RabbitMQueues } from '@gear-js/common';
 
 import { gearService } from '../gear';
-import { kafkaProducer } from '../kafka/producer';
+import { IRMQMessage } from '../rabbitmq/types';
+import { rabbitMQ } from '../rabbitmq/init-rabbitmq';
 
 export async function sendGenesis(): Promise<void> {
   const genesisHash = gearService.getGenesisHash();
-
-  await kafkaProducer.send(`${KAFKA_TOPICS.TEST_BALANCE_GENESIS}.reply`, genesisHash);
+  const rmqMessage: IRMQMessage = { genesis: genesisHash, action: 'add', service: 'tb', params: null };
+  rabbitMQ.mainChannel.sendToQueue(RabbitMQueues.GENESISES, Buffer.from(JSON.stringify(rmqMessage)));
 }
