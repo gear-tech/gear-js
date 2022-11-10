@@ -14,7 +14,7 @@
     "build:escrow": "yarn workspace @gear-js/escrow build",
     "build:nft": "yarn workspace @gear-js/nft build",
     "build:marketplace": "yarn workspace @gear-js/marketplace build",
-    "build:lottery": "yarn workspace @gear-js/lottery build",
+    "build:game-of-chance": "yarn workspace @gear-js/game-of-chance build",
     "build:auction": "yarn workspace @gear-js/auction build",
     "build:social": "yarn workspace @gear-js/social build",
     "build:staking": "yarn workspace @gear-js/staking build",
