@@ -1,6 +1,8 @@
 import { initKafka } from '../kafka/init-kafka';
+import { Channel } from 'amqplib';
 
 const dataStoragePartitionsMap = new Map<string, string>();
+const dataStoragesMap: Map<string, Channel> = new Map<string, Channel>();
 
 async function getNewServicePartition (topic: string): Promise<number> {
   let sumPartitionsInApiGatewayService = 1;
@@ -40,4 +42,4 @@ async function getNewServicePartition (topic: string): Promise<number> {
   }
 }
 
-export { dataStoragePartitionsMap, getNewServicePartition };
+export { dataStoragePartitionsMap, getNewServicePartition, dataStoragesMap };

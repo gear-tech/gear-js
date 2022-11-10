@@ -5,3 +5,4 @@ export * from './api-methods.enum';
 export * from './message-read-reason.enum';
 export * from './code-status.enum';
 export * from './program-status.enum';
+export * from './rabbit-mqueues.enum';
