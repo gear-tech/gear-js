@@ -8,9 +8,9 @@ const LOCAL_STORAGE = {
 };
 
 const SUBHEADING = {
-  AWAIT: 'Waiting for owner to start the lottery.',
-  PENDING: 'You can see the lottery status here.',
-  FORM: "Specify lottery duration and, if necessary, the address of the token contract and click the 'Submit and start' button to launch the lottery.",
+  AWAIT: 'Waiting for owner to start the Game of chance.',
+  PENDING: 'You can see the Game of chance status here.',
+  FORM: "Specify Game of chance duration and, if necessary, the address of the token contract and click the 'Submit and start' button to launch the Game of chance.",
   LOGIN: 'In order to start, please login.',
 };
 

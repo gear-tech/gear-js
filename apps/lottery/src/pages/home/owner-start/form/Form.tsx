@@ -54,7 +54,7 @@ function Form() {
           <Input
             type="number"
             className={styles.input}
-            label="Lottery duration (minutes)"
+            label="Game duration (minutes)"
             {...getInputProps('duration')}
           />
           <p className={styles.error}>{errors.duration}</p>

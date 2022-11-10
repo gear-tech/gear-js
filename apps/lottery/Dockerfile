@@ -14,11 +14,11 @@ COPY yarn.lock .
 COPY tsconfig.json .
 COPY .yarn .yarn
 COPY .yarnrc.yml .
-COPY ./apps/lottery apps/lottery
+COPY ./apps/game-of-chance apps/game-of-chance
 
 RUN yarn install
 RUN yarn build:lottery
 
 FROM nginx:alpine
 RUN rm -vf /usr/share/nginx/html/*
-COPY --from=builder /src/apps/lottery/build /usr/share/nginx/html
+COPY --from=builder /src/apps/game-of-chance/build /usr/share/nginx/html
