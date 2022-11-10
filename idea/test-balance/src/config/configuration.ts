@@ -32,6 +32,9 @@ export default {
     accountBalance: checkEnv('TEST_ACCOUNT_BALANCE'),
     balanceToTransfer: checkEnv('TEST_BALANCE_VALUE'),
   },
+  rabbitmq: {
+    url: checkEnv('RABBIT_MQ_URL'),
+  },
   healthcheck: {
     port: parseInt(process.env.PORT || '3000'),
   },
