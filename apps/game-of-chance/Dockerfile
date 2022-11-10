@@ -18,7 +18,7 @@ COPY .yarnrc.yml .
 COPY ./apps/game-of-chance apps/game-of-chance
 
 RUN yarn install
-RUN yarn build:lottery
+RUN yarn build:game-of-chance
 
 FROM nginx:alpine
 RUN rm -vf /usr/share/nginx/html/*
