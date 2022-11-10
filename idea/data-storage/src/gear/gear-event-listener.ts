@@ -84,8 +84,11 @@ export class GearEventListener {
   }
 
   private listen() {
-    return this.api.derive.chain.subscribeNewBlocks(async (block) => {
-      const blockHash = block.createdAtHash.toHex();
+    return this.api.derive.chain.subscribeFinalizedHeads(async (head) => {
+      const blockHash = head.createdAtHash.toHex();
+
+      const block = await this.api.derive.chain.getBlock(blockHash);
+
       const timestamp = (await this.api.blocks.getBlockTimestamp(block)).toNumber();
 
       await this.handleBlocks(block, timestamp, blockHash);
