@@ -1,36 +1,34 @@
 import { Channel, connect, Connection } from 'amqplib';
+import { RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
 
 import config from '../config/configuration';
-import { RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
 import { gearService } from '../gear';
 import { directExchangeConsumer } from './consumer';
 
-let connectionAMQP: Connection;
-let mainChannel: Channel;
-let assertQueue;
+export let connectionAMQP: Connection;
+export let mainChannelAMQP: Channel;
 
-async function initAMQP(): Promise<void> {
+export async function initAMQP(): Promise<void> {
   try {
     connectionAMQP = await connect(config.rabbitmq.url);
-    mainChannel = await connectionAMQP.createChannel();
-    await mainChannel.prefetch(1);
+    mainChannelAMQP = await connectionAMQP.createChannel();
+    await mainChannelAMQP.prefetch(1);
     const exchange = RabbitMQExchanges.DIRECT_EX;
     const genesis = gearService.getGenesisHash();
     const exchangeType = 'direct';
+    const routingKey = `tb.${genesis}`;
 
     const messageBuff = JSON.stringify({ service: 'tb', action: 'add', genesis });
-    mainChannel.sendToQueue(RabbitMQueues.GENESISES, Buffer.from(messageBuff));
+    mainChannelAMQP.sendToQueue(RabbitMQueues.GENESISES, Buffer.from(messageBuff));
 
-    await mainChannel.assertExchange(exchange, exchangeType, { durable: false });
+    await mainChannelAMQP.assertExchange(exchange, exchangeType, {});
 
-    assertQueue = await mainChannel.assertQueue(RabbitMQExchanges.DIRECT_EX, {});
+    const assertQueue = await mainChannelAMQP.assertQueue('', {});
 
-    await mainChannel.bindQueue(assertQueue.queue, exchange, `dt.${genesis}`);
+    await mainChannelAMQP.bindQueue(assertQueue.queue, exchange, routingKey);
 
-    await directExchangeConsumer();
+    await directExchangeConsumer(mainChannelAMQP, assertQueue);
   } catch (error) {
-    console.error('Init AMQP error', error);
+    console.error(`${new Date()} | Init AMQP error`, error);
   }
 }
-
-export const rabbitMQ = { mainChannel, connectionAMQP, assertQueue };
