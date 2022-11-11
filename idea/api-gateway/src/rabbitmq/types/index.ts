@@ -35,6 +35,7 @@ interface IMessageTestBalanceParams {
   genesis: string;
   params: any;
   correlationId: string;
+  method: API_METHODS;
 }
 
 export { IMessageNetworkDSParams, IMessageTestBalanceParams };

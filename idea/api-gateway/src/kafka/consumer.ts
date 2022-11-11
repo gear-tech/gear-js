@@ -4,7 +4,6 @@ import { KafkaMessage } from 'kafkajs';
 import config from '../config/configuration';
 import { initKafka } from './init-kafka';
 import { deleteKafkaEvent, kafkaEventMap } from './kafka-event-map';
-import { testBalanceGenesisCollection } from '../common/test-balance-genesis-collection';
 import { sendServicePartition, setServicePartition } from '../common/helpers';
 import { dataStoragePartitionsMap } from '../common/data-storage-partitions-map';
 
@@ -59,7 +58,7 @@ async function messageProcessing(message: KafkaMessage, topic: string): Promise<
     if (topic === `${KAFKA_TOPICS.TEST_BALANCE_GENESIS}.reply`) {
       const genesisHash = message.value.toString();
 
-      testBalanceGenesisCollection.add(genesisHash);
+      // testBalanceGenesisCollection.add(genesisHash);
 
       console.log(`Genesis received from test-balance: ${genesisHash}`);
       return;

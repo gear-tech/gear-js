@@ -2,58 +2,68 @@ import { connect, Connection, Channel } from 'amqplib';
 import { RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
 
 import config from '../config/configuration';
-import { IMessageNetworkDSParams, IMessageTestBalanceParams } from './types';
+import { RpcResponse } from '../json-rpc/types';
 
-let connectionAMQO: Connection;
-let mainChannel: Channel;
+let connectionAMQP: Connection;
+let mainChannelAMQP: Channel;
 
 const testBalanceServicesMap: Map<string, Channel> = new Map<string, Channel>();
 const dataStorageServicesMap: Map<string, Channel> = new Map<string, Channel>();
+const rabbitMQEventMap: Map<string, (params: any) => RpcResponse> = new Map<string, (params: any) => RpcResponse>();
 
 export async function initAMQP(): Promise<void> {
   try {
-    connectionAMQO = await connect(config.rabbitmq.url);
-    mainChannel = await connectionAMQO.createChannel();
+    connectionAMQP = await connect(config.rabbitmq.url);
+    mainChannelAMQP = await connectionAMQP.createChannel();
 
-    await mainChannel.assertExchange(RabbitMQExchanges.TOPIC_EX, 'topic', { durable: true });
-    await mainChannel.assertExchange(RabbitMQExchanges.DIRECT_EX, 'direct', { durable: true });
-    const repliesAssertQueue =  await mainChannel.assertQueue(RabbitMQueues.REPLIES, {
+    await mainChannelAMQP.assertExchange(RabbitMQExchanges.TOPIC_EX, 'topic', { durable: true });
+    await mainChannelAMQP.assertExchange(RabbitMQExchanges.DIRECT_EX, 'direct', { durable: true });
+    const repliesAssertQueue = await mainChannelAMQP.assertQueue(RabbitMQueues.REPLIES, {
       durable: true,
       exclusive: true,
       messageTtl: 30_000 });
 
-    await mainChannel.bindQueue(repliesAssertQueue.queue, RabbitMQExchanges.DIRECT_EX, RabbitMQueues.REPLIES);
-    const genesisesAssertQueue = await mainChannel.assertQueue(RabbitMQueues.GENESISES, {
+    await mainChannelAMQP.bindQueue(repliesAssertQueue.queue, RabbitMQExchanges.DIRECT_EX, RabbitMQueues.REPLIES);
+    const genesisesAssertQueue = await mainChannelAMQP.assertQueue(RabbitMQueues.GENESISES, {
       durable: true,
       exclusive: true,
       messageTtl: 30_000 });
 
-    await mainChannel.bindQueue(genesisesAssertQueue.queue, RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES);
+    await mainChannelAMQP.bindQueue(genesisesAssertQueue.queue, RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES);
 
     await subscribeToGenesises();
     await subscribeToReplies();
   } catch (error) {
-    console.log('Init rabbitMQ error', error);
+    console.error(`${new Date()} | Init rabbitMQ error`, error);
   }
 }
 
 async function subscribeToReplies(): Promise<void> {
-  await mainChannel.consume(RabbitMQueues.REPLIES, (message) => {
-    if (message) {
-      console.log(message);
+  await mainChannelAMQP.consume(RabbitMQueues.REPLIES, (message) => {
+    if (!message) {
+      return;
+    }
+
+    const messageContent = JSON.parse(message.content.toString());
+    const correlationId = message.properties.correlationId;
+    const resultFromService = rabbitMQEventMap.get(correlationId);
+
+    if (resultFromService) {
+      resultFromService(messageContent);
+      rabbitMQEventMap.delete(correlationId);
     }
   });
 }
 
 async function subscribeToGenesises() {
-  await mainChannel.consume(RabbitMQueues.GENESISES, async function (message) {
+  await mainChannelAMQP.consume(RabbitMQueues.GENESISES, async function (message) {
     if (!message) {
       return;
     }
-
+    console.log(message.content.toString());
     const { genesis, service, action } = JSON.parse(message.content.toString());
     if (action === 'add') {
-      const channel = await connectionAMQO.createChannel();
+      const channel = await connectionAMQP.createChannel();
       await channel.assertExchange(RabbitMQExchanges.DIRECT_EX, 'direct', { durable: true });
       if (service === 'ds') {
         dataStorageServicesMap.set(genesis, channel);
@@ -78,40 +88,4 @@ async function subscribeToGenesises() {
   });
 }
 
-async function sendMessageToDataStorage(messageNetworkDSParams: IMessageNetworkDSParams) {
-  const { genesis, params, correlationId, method } = messageNetworkDSParams;
-
-  if (!dataStorageServicesMap.has(genesis)) {
-    throw new Error(`There is no data storage service listening to the network with geneis ${genesis}`);
-  }
-
-  const channel = dataStorageServicesMap.get(genesis);
-
-  await channel.assertQueue(`ds.${genesis}`, { durable: false, exclusive: true });
-
-  channel.publish(RabbitMQExchanges.DIRECT_EX, `ds.${genesis}`, Buffer.from(JSON.stringify(params)), {
-    correlationId,
-    headers: { method },
-  });
-}
-
-async function sendMessageToTestBalance(messageTestBalanceParams: IMessageTestBalanceParams) {
-  const { genesis, params, correlationId } = messageTestBalanceParams;
-
-  if (!testBalanceServicesMap.has(genesis)) {
-    throw new Error(`There is no test balance service interacting with the network with geneis ${genesis}`);
-  }
-
-  const channel = testBalanceServicesMap.get(genesis);
-
-  await channel.assertQueue(`tb.${genesis}`, { durable: false, exclusive: true });
-
-  channel.publish(RabbitMQExchanges.DIRECT_EX, `tb.${genesis}`, Buffer.from(params), { correlationId });
-}
-
-export const rabbitMQ = {
-  sendMessageToDataStorage,
-  sendMessageToTestBalance
-};
-
-export { testBalanceServicesMap, dataStorageServicesMap };
+export { testBalanceServicesMap, dataStorageServicesMap, rabbitMQEventMap, connectionAMQP, mainChannelAMQP };

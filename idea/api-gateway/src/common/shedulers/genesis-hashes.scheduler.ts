@@ -3,7 +3,7 @@ import { KAFKA_TOPICS } from '@gear-js/common';
 
 import configuration from '../../config/configuration';
 import { kafkaProducer } from '../../kafka/producer';
-import { testBalanceGenesisCollection } from '../test-balance-genesis-collection';
+// import { testBalanceGenesisCollection } from '../test-balance-genesis-collection';
 
 export async function runSchedulerGenesisHashes() {
   await kafkaProducer.sendByTopic(KAFKA_TOPICS.TEST_BALANCE_GENESIS, 'testBalance.genesis');
@@ -11,7 +11,7 @@ export async function runSchedulerGenesisHashes() {
   const cronTime = configuration.scheduler.genesisHashesTime;
 
   const cron = new CronJob(cronTime, async function () {
-    testBalanceGenesisCollection.clear();
+    // testBalanceGenesisCollection.clear();
 
     await kafkaProducer.sendByTopic(KAFKA_TOPICS.TEST_BALANCE_GENESIS, 'testBalance.genesis');
   });

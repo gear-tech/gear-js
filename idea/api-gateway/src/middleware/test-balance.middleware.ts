@@ -2,7 +2,7 @@ import { Response, Request, NextFunction } from 'express';
 import { API_METHODS, IRpcRequest, JSONRPC_ERRORS } from '@gear-js/common';
 
 import { getResponse, verifyCaptcha } from '../utils';
-import { isTestBalanceAvailable } from '../common/test-balance-genesis-collection';
+import { isTestBalanceAvailable } from '../common/helpers/is-test-balance-availabel';
 
 async function verifyTestBalanceRequest(body: IRpcRequest) {
   if (body.method === API_METHODS.TEST_BALANCE_GET) {

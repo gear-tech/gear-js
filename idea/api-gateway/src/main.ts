@@ -2,10 +2,9 @@ import express from 'express';
 
 import { apiGatewayRouter } from './routes/api-gateway/api-gateway.router';
 import { healthcheckRouter } from './routes/healthcheck/healthcheck.router';
-import { kafkaCreateConnection } from './kafka/kafka-create-connection';
 import configuration from './config/configuration';
 import { apiGatewayLogger } from './common/api-gateway.logger';
-import { runSchedulers } from './common/shedulers';
+import { initAMQP } from './rabbitmq/init-rabbitmq';
 
 const app = express();
 
@@ -19,11 +18,12 @@ app.use('/api', apiGatewayRouter);
 app.use('/health', healthcheckRouter);
 
 const startApp = async () => {
-  await kafkaCreateConnection();
-  await runSchedulers();
+  await initAMQP();
+  // await kafkaCreateConnection();
+  // await runSchedulers();
 
   app.listen(port, () => {
-    apiGatewayLogger.info(`App successfully run on the ${port} 🚀`);
+    apiGatewayLogger.info(`⚙️ 🚀 App successfully run on the ${port}️`);
   });
 };
 
