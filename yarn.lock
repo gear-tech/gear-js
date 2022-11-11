@@ -2493,9 +2493,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/lottery@workspace:apps/lottery":
+"@gear-js/game-of-chance@workspace:apps/game-of-chance":
   version: 0.0.0-use.local
-  resolution: "@gear-js/lottery@workspace:apps/lottery"
+  resolution: "@gear-js/game-of-chance@workspace:apps/game-of-chance"
   dependencies:
     "@gear-js/api": ^0.27.0
     "@gear-js/react-hooks": ^0.3.6

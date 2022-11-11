@@ -19,7 +19,8 @@
       2,
       {
         "SwitchCase": 1,
-        "flatTernaryExpressions": false
+        "flatTernaryExpressions": false,
+        "offsetTernaryExpressions": true
       }
     ],
     "object-curly-spacing": ["error", "always"],
