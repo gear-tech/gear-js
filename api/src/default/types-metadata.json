@@ -1,0 +1,15 @@
+{
+  "types": {
+    "MessageId": "[u8;32]",
+    "ExitCode": "i32",
+    "Payload": "Vec<u8>",
+    "InOut": {
+      "input": "Option<String>",
+      "output": "Option<String>"
+    },
+    "WasmMetadata": {
+      "functions": "HashMap<String, InOut>",
+      "reg": "Bytes"
+    }
+  }
+}

@@ -1,8 +1,9 @@
 import { u64 } from '@polkadot/types';
+import { u8aToHex } from '@polkadot/util';
 import { BlockNumber } from '@polkadot/types/interfaces';
 
 import { getExportValue, PAGE_SIZE } from './utils';
-import { IGearPages } from '../types';
+import { Hex, IGearPages } from '../types';
 import importObj from './importObj';
 
 export async function readState(
@@ -28,4 +29,30 @@ export async function readState(
   });
   const { exports } = module.instance;
   return exports?.meta_state ? new Uint8Array(getExportValue(memory, exports.meta_state)) : null;
+}
+
+export async function getStateFunctions(wasmBytes: Buffer): Promise<Hex> {
+  const memory = new WebAssembly.Memory({ initial: 17 });
+
+  let result: Hex;
+
+  const module = await WebAssembly.instantiate(
+    wasmBytes,
+    importObj(memory, undefined, undefined, undefined, undefined, (metadata: Uint8Array) => {
+      result = u8aToHex(metadata);
+    }),
+  );
+
+  const { exports } = module.instance;
+  if (!exports?.metadata) {
+    throw new Error('Unable to find exports in applied wasm');
+  }
+
+  if (typeof exports.metadata !== 'function') {
+    throw new Error('exports.metadata is not a function');
+  }
+
+  exports.metadata();
+
+  return result;
 }

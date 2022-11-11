@@ -8,18 +8,18 @@ export async function getWasmMetadata(wasmBytes: Buffer, showDebug = false): Pro
   const { exports } = module.instance;
   return exports
     ? {
-      types: `0x${readMetaValue(memory, exports.meta_registry)}`,
-      init_input: readMetaValue(memory, exports.meta_init_input),
-      init_output: readMetaValue(memory, exports.meta_init_output),
-      async_init_input: readMetaValue(memory, exports.meta_async_init_input),
-      async_init_output: readMetaValue(memory, exports.meta_async_init_output),
-      handle_input: readMetaValue(memory, exports.meta_handle_input),
-      handle_output: readMetaValue(memory, exports.meta_handle_output),
-      async_handle_input: readMetaValue(memory, exports.meta_async_handle_input),
-      async_handle_output: readMetaValue(memory, exports.meta_async_handle_output),
-      title: readMetaValue(memory, exports.meta_title),
-      meta_state_input: readMetaValue(memory, exports.meta_state_input),
-      meta_state_output: readMetaValue(memory, exports.meta_state_output),
-    }
+        types: `0x${readMetaValue(memory, exports.meta_registry)}`,
+        init_input: readMetaValue(memory, exports.meta_init_input),
+        init_output: readMetaValue(memory, exports.meta_init_output),
+        async_init_input: readMetaValue(memory, exports.meta_async_init_input),
+        async_init_output: readMetaValue(memory, exports.meta_async_init_output),
+        handle_input: readMetaValue(memory, exports.meta_handle_input),
+        handle_output: readMetaValue(memory, exports.meta_handle_output),
+        async_handle_input: readMetaValue(memory, exports.meta_async_handle_input),
+        async_handle_output: readMetaValue(memory, exports.meta_async_handle_output),
+        title: readMetaValue(memory, exports.meta_title),
+        meta_state_input: readMetaValue(memory, exports.meta_state_input),
+        meta_state_output: readMetaValue(memory, exports.meta_state_output),
+      }
     : {};
 }

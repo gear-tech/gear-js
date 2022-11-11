@@ -7,6 +7,7 @@ export default (
   inputValue?: Uint8Array,
   timestamp?: u64,
   block_height?: BlockNumber,
+  replyFn: (result: Uint8Array) => void = () => {},
 ) => ({
   env: {
     abortStackOverflow: () => {
@@ -46,7 +47,7 @@ export default (
     gr_read: (at: number, len: number, dest: number) => {
       new Uint8Array(memory.buffer).set(inputValue.slice(at, len), dest);
     },
-    gr_reply: () => {},
+    gr_reply: replyFn,
     gr_reply_wgas: () => {},
     gr_reply_commit: () => {},
     gr_reply_commit_wgas: () => {},

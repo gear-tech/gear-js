@@ -20,7 +20,8 @@
       2,
       {
         "SwitchCase": 1,
-        "flatTernaryExpressions": false
+        "flatTernaryExpressions": false,
+        "offsetTernaryExpressions": true
       }
     ],
     "linebreak-style": ["error", "unix"],
