@@ -20,7 +20,6 @@ async function handleEventByApiMethod(
     const messageTestBalanceParams: IMessageTestBalanceParams = { correlationId, params, genesis, method };
 
     await producer.sendMessageToTestBalance(messageTestBalanceParams);
-    rabbitMQEventMap.set(correlationId, methodEvent);
   } else {
     const messageDataStorageParams: IMessageNetworkDSParams = {
       genesis,
@@ -30,8 +29,9 @@ async function handleEventByApiMethod(
     };
 
     await producer.sendMessageToDataStorage(messageDataStorageParams);
-    rabbitMQEventMap.set(correlationId, methodEvent);
   }
+
+  rabbitMQEventMap.set(correlationId, methodEvent);
 
   return res;
 }
