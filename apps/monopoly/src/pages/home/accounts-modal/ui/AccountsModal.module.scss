@@ -1,0 +1,39 @@
+@use 'assets/styles/variables' as *;
+@use 'assets/styles/mixins' as *;
+
+.simplebar {
+  @include customSimplebar;
+  max-height: 50vh;
+  margin-right: -16px;
+
+  :global(.simplebar-content) {
+    margin-right: 16px;
+  }
+}
+
+.modal {
+  position: relative;
+
+  &.empty {
+    text-align: center;
+  }
+
+  &:not(.empty) {
+    padding-bottom: 102px;
+  }
+}
+
+.footer {
+  position: absolute; // workaround cuz footer has different bg color
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 24px 32px;
+  border-radius: 0 0 $borderRadiusMedium $borderRadiusMedium;
+  display: flex;
+  background-color: $bgColor4;
+}
+
+.logoutButton {
+  margin-left: auto;
+}
