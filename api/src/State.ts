@@ -51,6 +51,8 @@ export class GearProgramState extends GearStorage {
       }
     });
 
+    initialSize++;
+
     const pages = await this.gPages(programId, program);
     const blockHash = await this._api.blocks.getFinalizedHead();
     const block = await this._api.blocks.get(blockHash);
