@@ -25,7 +25,7 @@ function Cell({ index, players, ownership, properties, Image, card, type }: Prop
   const ref = useOutsideClick<HTMLDivElement>(() => setIsCardVisible(false));
 
   const getColor = (address: Hex) => players?.find((player) => player.address === address)?.color;
-  const getGrade = (grade: 'Platinum' | 'Silver' | 'Gold') => {
+  const getGrade = (grade: 'Bronze' | 'Silver' | 'Gold') => {
     switch (grade) {
       case 'Gold':
         return (
@@ -42,7 +42,7 @@ function Cell({ index, players, ownership, properties, Image, card, type }: Prop
             <GradeSVG />
           </>
         );
-      case 'Platinum':
+      case 'Bronze':
         return <GradeSVG />;
       default:
         return null;
@@ -55,7 +55,7 @@ function Cell({ index, players, ownership, properties, Image, card, type }: Prop
 
   const isAnyChip = chips.length > 0;
 
-  const propertyValue = properties?.[index]?.[1];
+  const propertyValue = properties?.[index]?.[2];
   const propertyValueNumber = propertyValue ? +propertyValue.replaceAll(',', '') : 0;
   const formattedPropNumber = numeral(propertyValueNumber).format('0.00a');
 
@@ -73,7 +73,7 @@ function Cell({ index, players, ownership, properties, Image, card, type }: Prop
       )}
       {isAnyChip && <div className={styles.chips}>{chips}</div>}
       {!!propertyValueNumber && <div className={styles.propertyValue}>{formattedPropNumber}</div>}
-      {properties?.[index]?.[0]?.[0] && <div className={styles.grade}>{getGrade(properties?.[index]?.[0]?.[0])}</div>}
+      {properties?.[index]?.[1]?.[0] && <div className={styles.grade}>{getGrade(properties?.[index]?.[1]?.[0])}</div>}
 
       {isCardVisible && card && (
         <div className={styles.card}>

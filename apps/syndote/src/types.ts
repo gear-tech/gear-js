@@ -35,7 +35,7 @@ type PlayerType = {
   balance: string;
 };
 
-type Properties = { [key: number]: [['Platinum' | 'Silver' | 'Gold'], string, string] };
+type Properties = { [key: number]: [Hex, ['Bronze' | 'Silver' | 'Gold'], string, string] };
 
 type Step = {
   currentStep: string;
