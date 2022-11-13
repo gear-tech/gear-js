@@ -37,7 +37,7 @@ import { Hex } from '@gear-js/api';
 import { PlayerType } from 'types';
 
 const ADDRESS = {
-  NODE: process.env.REACT_APP_NODE_ADDRESS as string,
+  NODE: process.env.REACT_APP_SYNDOTE_NODE_ADDRESS as string,
   CONTRACT: process.env.REACT_APP_CONTRACT_ADDRESS as Hex,
 };
 

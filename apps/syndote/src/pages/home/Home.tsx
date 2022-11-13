@@ -3,7 +3,7 @@ import { useAccount, useAlert, useApi, useMetadata } from '@gear-js/react-hooks'
 import { CreateType, Hex, MessagesDispatched } from '@gear-js/api';
 import { ADDRESS, fields, INIT_PLAYERS, LocalStorage } from 'consts';
 import { MessagePayload, State, Step } from 'types';
-import metaWasm from 'assets/wasm/monopoly.meta.wasm';
+import metaWasm from 'assets/wasm/syndote.meta.wasm';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { Loader } from 'components';
 import { u8, Vec } from '@polkadot/types';

@@ -10,7 +10,7 @@
 
 ## Description
 
-React application of [Monopoly](#) based on [Rust smart-contract](https://github.com/gear-dapps/monopoly).
+React application of [Syndote](#) based on [Rust smart-contract](#).
 
 ## Getting started
 
