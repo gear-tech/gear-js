@@ -2267,6 +2267,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gear-js/api@npm:^0.27.3":
+  version: 0.27.3
+  resolution: "@gear-js/api@npm:0.27.3"
+  peerDependencies:
+    "@polkadot/api": ^9.6.1
+    "@polkadot/wasm-crypto": ^6.3.1
+    rxjs: ^7.5.5
+  checksum: f9f298c08d192b366a75f05aaf816131f3576a68bc4ab69207e2e23ff15498cdea255813780453f0e8546eac625ede2cdded21ecbbca7e0f7c7921562bc01d1a
+  languageName: node
+  linkType: hard
+
 "@gear-js/auction@workspace:apps/auction":
   version: 0.0.0-use.local
   resolution: "@gear-js/auction@workspace:apps/auction"
@@ -2583,6 +2594,54 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@gear-js/monopoly@workspace:apps/monopoly":
+  version: 0.0.0-use.local
+  resolution: "@gear-js/monopoly@workspace:apps/monopoly"
+  dependencies:
+    "@gear-js/api": ^0.27.3
+    "@gear-js/react-hooks": ^0.3.9
+    "@gear-js/ui": ^0.5.13
+    "@mantine/form": ^4.2.12
+    "@polkadot/api": ^9.6.1
+    "@polkadot/extension-dapp": ^0.43.2
+    "@polkadot/react-identicon": ^2.9.12
+    "@polkadot/types": ^9.6.1
+    "@polkadot/util": ^9.7.2
+    "@polkadot/wasm-crypto": ^6.3.1
+    "@testing-library/jest-dom": ^5.16.5
+    "@testing-library/react": ^13.4.0
+    "@testing-library/user-event": ^13.5.0
+    "@types/jest": ^27.5.2
+    "@types/node": ^16.18.3
+    "@types/numeral": ^2.0.2
+    "@types/react": ^18.0.25
+    "@types/react-dom": ^18.0.8
+    "@typescript-eslint/eslint-plugin": ^5.42.1
+    "@typescript-eslint/parser": ^5.42.1
+    buffer: ^6.0.3
+    clsx: ^1.2.1
+    eslint: ^8.27.0
+    eslint-config-airbnb: ^19.0.4
+    eslint-config-airbnb-typescript: ^17.0.0
+    eslint-config-prettier: ^8.5.0
+    eslint-plugin-import: ^2.26.0
+    eslint-plugin-jsx-a11y: ^6.6.1
+    eslint-plugin-react: ^7.31.10
+    eslint-plugin-react-hooks: ^4.6.0
+    numeral: ^2.0.6
+    react: ^18.2.0
+    react-app-rewired: ^2.2.1
+    react-dom: ^18.2.0
+    react-router-dom: ^6.4.3
+    react-scripts: ^5.0.1
+    react-transition-group: ^4.4.2
+    sass: ^1.56.0
+    simplebar-react: ^2.4.3
+    typescript: ^4.8.4
+    web-vitals: ^2.1.4
+  languageName: unknown
+  linkType: soft
+
 "@gear-js/nft@workspace:apps/nft":
   version: 0.0.0-use.local
   resolution: "@gear-js/nft@workspace:apps/nft"
@@ -2665,6 +2724,19 @@ __metadata:
     react-dom: ">=17.0.2"
     react-transition-group: ^4.4.2
   checksum: 5683ab32161e820390f924207dd7d415a632bd267fdeea3ecce91d1427eb267ab9a33cb16dc9fe7801c236ab160b187ba2033771375216c5524ee8397654bf01
+  languageName: node
+  linkType: hard
+
+"@gear-js/react-hooks@npm:^0.3.9":
+  version: 0.3.9
+  resolution: "@gear-js/react-hooks@npm:0.3.9"
+  peerDependencies:
+    "@gear-js/api": ^0.27.3
+    "@polkadot/extension-dapp": ^0.43.2
+    react: ">=17.0.2"
+    react-dom: ">=17.0.2"
+    react-transition-group: ^4.4.2
+  checksum: 15befd8ddd875818d7e1d0e48c2c152784d431f32c3d4164646f352ff518274eec36110620cbb732c5aa881a6538a54bddf2c1f508285da34bd936944b723fa3
   languageName: node
   linkType: hard
 
@@ -17701,54 +17773,6 @@ __metadata:
   checksum: a01586bc2850eb5809eda6de0c7ab19255c1e0eb217a805f86ba662bb4aab00b919032d67e7c826c6c12bcfb2fbe19cecbacf0ab6184936487edc4ba37d3ba53
   languageName: node
   linkType: hard
-
-"monopoly@workspace:apps/monopoly":
-  version: 0.0.0-use.local
-  resolution: "monopoly@workspace:apps/monopoly"
-  dependencies:
-    "@gear-js/api": ^0.27.2
-    "@gear-js/react-hooks": ^0.3.8
-    "@gear-js/ui": ^0.5.13
-    "@mantine/form": ^4.2.12
-    "@polkadot/api": ^9.6.1
-    "@polkadot/extension-dapp": ^0.43.2
-    "@polkadot/react-identicon": ^2.9.12
-    "@polkadot/types": ^9.6.1
-    "@polkadot/util": ^9.7.2
-    "@polkadot/wasm-crypto": ^6.3.1
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": ^13.4.0
-    "@testing-library/user-event": ^13.5.0
-    "@types/jest": ^27.5.2
-    "@types/node": ^16.18.3
-    "@types/numeral": ^2.0.2
-    "@types/react": ^18.0.25
-    "@types/react-dom": ^18.0.8
-    "@typescript-eslint/eslint-plugin": ^5.42.1
-    "@typescript-eslint/parser": ^5.42.1
-    buffer: ^6.0.3
-    clsx: ^1.2.1
-    eslint: ^8.27.0
-    eslint-config-airbnb: ^19.0.4
-    eslint-config-airbnb-typescript: ^17.0.0
-    eslint-config-prettier: ^8.5.0
-    eslint-plugin-import: ^2.26.0
-    eslint-plugin-jsx-a11y: ^6.6.1
-    eslint-plugin-react: ^7.31.10
-    eslint-plugin-react-hooks: ^4.6.0
-    numeral: ^2.0.6
-    react: ^18.2.0
-    react-app-rewired: ^2.2.1
-    react-dom: ^18.2.0
-    react-router-dom: ^6.4.3
-    react-scripts: ^5.0.1
-    react-transition-group: ^4.4.2
-    sass: ^1.56.0
-    simplebar-react: ^2.4.3
-    typescript: ^4.8.4
-    web-vitals: ^2.1.4
-  languageName: unknown
-  linkType: soft
 
 "mri@npm:^1.2.0":
   version: 1.2.0
