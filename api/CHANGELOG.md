@@ -1,3 +1,13 @@
+## 0.27.3
+
+_11/13/2022_
+
+https://github.com/gear-tech/gear-js/pull/1088
+
+### Changes
+
+- Add `gr_reservation_send_commit`, `gr_reservation_send`, `gr_reservation_reply`, `gr_reservation_reply_commit` syscalls
+
 ## 0.27.2
 
 _11/12/2022_
