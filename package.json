@@ -18,7 +18,7 @@
     "build:auction": "yarn workspace @gear-js/auction build",
     "build:social": "yarn workspace @gear-js/social build",
     "build:staking": "yarn workspace @gear-js/staking build",
-    "build:monopoly": "yarn workspace @gear-js/monopoly build",
+    "build:syndote": "yarn workspace @gear-js/syndote build",
     "build:upload-dapp-chain": "yarn workspace @gear-js/upload-dapp-chain build",
     "build:supply-chain": "yarn workspace @gear-js/supply-chain build",
     "postinstall": "husky install"
