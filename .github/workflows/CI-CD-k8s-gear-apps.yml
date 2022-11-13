@@ -249,7 +249,7 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-monopoly:prod
           build-args: |
-            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
+            REACT_APP_SYNDOTE_NODE_ADDRESS=${{ secrets.REACT_APP_SYNDOTE_NODE_ADDRESS }}
             REACT_APP_CONTRACT_ADDRESS=${{ secrets.REACT_APP_CONTRACT_ADDRESS}}
 
   build-and-push-supply-chain-image:
