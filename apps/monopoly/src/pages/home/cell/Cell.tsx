@@ -108,20 +108,8 @@ function Cell({ index, players, ownership, properties, Image, card, type }: Prop
             </div>
             <div>
               <p className={styles.infoRow}>
-                Field value
+                Cell value
                 <span className={styles.value}>{card.cell}</span>
-              </p>
-              <p className={styles.infoRow}>
-                Deposit value
-                <span className={styles.value}>{card.deposit}</span>
-              </p>
-              <p className={styles.infoRow}>
-                Buyout
-                <span className={styles.value}>{card.buyout}</span>
-              </p>
-              <p className={styles.infoRow}>
-                Branch buyout
-                <span className={styles.value}>{card.branch}</span>
               </p>
             </div>
           </div>

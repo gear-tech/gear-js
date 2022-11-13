@@ -54,9 +54,6 @@ type CellValues = {
   silver: number;
   gold: number;
   cell: number;
-  deposit: number;
-  buyout: number;
-  branch: number;
 };
 
 export type { PlayerState, PlayerType, State, Step, MessagePayload, Players, Properties, CellValues };
