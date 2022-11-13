@@ -82,7 +82,7 @@ jobs:
         $HasDiffSupply = $SourceDiffSupply.Length -gt 0
         
         # Check if a file under monopoly/ has changed (added, modified, deleted)
-        $SourceDiffMonopoly = $diff | Where-Object { $_ -match '^apps/monopoly/' }
+        $SourceDiffMonopoly = $diff | Where-Object { $_ -match '^apps/syndote/' }
         $HasDiffMonopoly = $SourceDiffMonopoly.Length -gt 0
 
 
@@ -245,7 +245,7 @@ jobs:
       - name: Build and push Monopoly Docker image
         uses: docker/build-push-action@master
         with:
-          file: apps/monopoly/Dockerfile
+          file: apps/syndote/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-monopoly:prod
           build-args: |
