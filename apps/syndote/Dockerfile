@@ -11,11 +11,11 @@ COPY yarn.lock .
 COPY tsconfig.json .
 COPY .yarn .yarn
 COPY .yarnrc.yml .
-COPY ./apps/monopoly apps/monopoly
+COPY ./syndote/monopoly syndote/monopoly
 
 RUN yarn install
-RUN yarn build:monopoly
+RUN yarn build:syndote
 
 FROM nginx:alpine
 RUN rm -vf /usr/share/nginx/html/*
-COPY --from=builder /src/apps/staking/build /usr/share/nginx/html
+COPY --from=builder /src/apps/syndote/build /usr/share/nginx/html
