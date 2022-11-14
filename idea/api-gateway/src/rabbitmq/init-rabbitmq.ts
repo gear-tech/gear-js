@@ -24,12 +24,14 @@ export async function initAMQP(): Promise<void> {
       messageTtl: 30_000 });
 
     await mainChannelAMQP.bindQueue(repliesAssertQueue.queue, RabbitMQExchanges.DIRECT_EX, RabbitMQueues.REPLIES);
+
     const genesisesAssertQueue = await mainChannelAMQP.assertQueue(RabbitMQueues.GENESISES, {
       durable: true,
       exclusive: true,
       messageTtl: 30_000 });
 
     await mainChannelAMQP.bindQueue(genesisesAssertQueue.queue, RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES);
+    await mainChannelAMQP.bindQueue(genesisesAssertQueue.queue, RabbitMQExchanges.TOPIC_EX, RabbitMQueues.GENESISES);
 
     await subscribeToGenesises();
     await subscribeToReplies();
@@ -48,10 +50,9 @@ async function subscribeToReplies(): Promise<void> {
     const correlationId = message.properties.correlationId;
     const resultFromService = rabbitMQEventMap.get(correlationId);
 
-    if (resultFromService) {
-      resultFromService(messageContent);
-      rabbitMQEventMap.delete(correlationId);
-    }
+    if (resultFromService) resultFromService(messageContent);
+
+    rabbitMQEventMap.delete(correlationId);
   });
 }
 
@@ -60,16 +61,25 @@ async function subscribeToGenesises() {
     if (!message) {
       return;
     }
-    console.log(message.content.toString());
+
     const { genesis, service, action } = JSON.parse(message.content.toString());
+
+    if(dataStorageServicesMap.has(genesis) || testBalanceServicesMap.has(genesis)) return;
+
     if (action === 'add') {
       const channel = await connectionAMQP.createChannel();
-      await channel.assertExchange(RabbitMQExchanges.DIRECT_EX, 'direct', { durable: true });
+      await channel.assertExchange(RabbitMQExchanges.DIRECT_EX, 'direct', { durable: true  });
       if (service === 'ds') {
         dataStorageServicesMap.set(genesis, channel);
+        await channel.assertQueue(`ds.${genesis}`, { durable: true, exclusive: true });
+        console.log(`${new Date()} Data storage genesises`);
+        console.log(dataStorageServicesMap.keys());
       }
       if (service === 'tb') {
         testBalanceServicesMap.set(genesis, channel);
+        await channel.assertQueue(`tb.${genesis}`, { durable: true, exclusive: true });
+        console.log(`${new Date()} Test balance genesises`);
+        console.log(testBalanceServicesMap.keys());
       }
     }
 

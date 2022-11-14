@@ -1,7 +1,6 @@
 import { API_METHODS } from '@gear-js/common';
 import { nanoid } from 'nanoid';
 
-import { KafkaParams } from '../kafka/types';
 import { RpcResponse } from './types';
 import { IMessageNetworkDSParams, IMessageTestBalanceParams, Params } from '../rabbitmq/types';
 import { producer } from '../rabbitmq/producer';
@@ -36,7 +35,7 @@ async function handleEventByApiMethod(
   return res;
 }
 
-async function jsonRpcHandler(method: API_METHODS, params: KafkaParams): Promise<RpcResponse> {
+async function jsonRpcHandler(method: API_METHODS, params: Params): Promise<RpcResponse> {
   return handleEventByApiMethod(method, params);
 }
 

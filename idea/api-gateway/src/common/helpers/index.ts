@@ -1,4 +1,5 @@
-import { sendServicePartition } from './send-service-partition';
-import { setServicePartition } from './set-service-partition';
+import { isNetworkDataAvailable } from './is-network-data-available-';
+import { isTestBalanceAvailable } from './is-test-balance-availabel';
 
-export { sendServicePartition, setServicePartition };
+
+export { isNetworkDataAvailable, isTestBalanceAvailable };

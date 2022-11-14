@@ -5,6 +5,7 @@ import { healthcheckRouter } from './routes/healthcheck/healthcheck.router';
 import configuration from './config/configuration';
 import { apiGatewayLogger } from './common/api-gateway.logger';
 import { initAMQP } from './rabbitmq/init-rabbitmq';
+import { runSchedulers } from './common/shedulers';
 
 const app = express();
 
@@ -19,8 +20,7 @@ app.use('/health', healthcheckRouter);
 
 const startApp = async () => {
   await initAMQP();
-  // await kafkaCreateConnection();
-  // await runSchedulers();
+  await runSchedulers();
 
   app.listen(port, () => {
     apiGatewayLogger.info(`⚙️ 🚀 App successfully run on the ${port}️`);

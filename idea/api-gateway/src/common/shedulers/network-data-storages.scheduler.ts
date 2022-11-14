@@ -1,20 +1,18 @@
 import { CronJob } from 'cron';
-import { KAFKA_TOPICS } from '@gear-js/common';
 
 import configuration from '../../config/configuration';
-import { kafkaProducer } from '../../kafka/producer';
-import { KafkaParams } from '../../kafka/types';
-import { dataStoragePartitionsMap } from '../data-storage-partitions-map';
+import { dataStorageServicesMap } from '../../rabbitmq/init-rabbitmq';
+import { producer } from '../../rabbitmq/producer';
 
 export async function runSchedulerNetworkDataStorages() {
-  await kafkaProducer.sendByTopic(KAFKA_TOPICS.SERVICES_PARTITION, {} as KafkaParams);
+  await producer.sendMessageDSGenesises();
 
   const cronTime = configuration.scheduler.networkDataStoragesTime;
 
   const cron = new CronJob(cronTime, async function () {
-    dataStoragePartitionsMap.clear();
+    dataStorageServicesMap.clear();
 
-    await kafkaProducer.sendByTopic(KAFKA_TOPICS.SERVICES_PARTITION, {} as KafkaParams);
+    await producer.sendMessageDSGenesises();
   });
 
   cron.start();
