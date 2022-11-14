@@ -22,6 +22,7 @@ import { FormResponse } from '../decorator/form-response.decorator';
 export class RabbitmqService {
   private logger: Logger = new Logger(RabbitmqService.name);
   private mainChannel: Channel;
+  private topicChannel: Channel;
   private connection: Connection;
 
   constructor(
@@ -37,9 +38,10 @@ export class RabbitmqService {
     try {
       this.connection = await connect(this.configService.get<string>('rabbitmq.url'));
       this.mainChannel = await this.connection.createChannel();
-      await this.mainChannel.prefetch(1);
+      this.topicChannel = await this.connection.createChannel();
 
       const directExchange = RabbitMQExchanges.DIRECT_EX;
+      const topicExchange = RabbitMQExchanges.TOPIC_EX;
       const directExchangeType = 'direct';
       const routingKey = `ds.${genesis}`;
 
@@ -49,26 +51,29 @@ export class RabbitmqService {
 
       await this.mainChannel.assertExchange(directExchange, directExchangeType, {});
 
-      const assertQueue = await this.mainChannel.assertQueue('', {});
+      const assertQueue = await this.mainChannel.assertQueue(`ds_AQ_${genesis}`, { durable: false });
+      const assertTopicQueue = await this.topicChannel.assertQueue(`ds_ATQ_${genesis}`, { durable: false });
 
       await this.mainChannel.bindQueue(assertQueue.queue, directExchange, routingKey);
+      await this.topicChannel.bindQueue(assertTopicQueue.queue, topicExchange, 'ds.genesises');
 
       await this.directExchangeConsumer(assertQueue);
+      await this.topicExchangeConsumer(assertTopicQueue, genesis);
     } catch (error) {
       this.logger.error(new Date());
       this.logger.error(JSON.stringify(error));
     }
   }
 
-  private async directExchangeConsumer(repliesAssertQueue: Replies.AssertQueue){
+  private async directExchangeConsumer(repliesAssertQueue: Replies.AssertQueue): Promise<void>{
     try {
       await this.mainChannel.consume(repliesAssertQueue.queue, async (message) => {
         if(!message){
           return;
         }
+        const method = message.properties.headers.method;
 
         const params = JSON.parse(message.content.toString());
-        const method = message.properties.headers.method;
         const correlationId = message.properties.correlationId;
 
         const result = await this.handleEventByMethod(method, params);
@@ -79,6 +84,22 @@ export class RabbitmqService {
     } catch (error) {
       this.logger.error(new Date());
       this.logger.error(`Direct exchange consumer ${JSON.stringify(error)}`);
+    }
+  }
+
+  private async topicExchangeConsumer(repliesAssertQueue: Replies.AssertQueue, genesis): Promise<void> {
+    try {
+      await this.topicChannel.consume(repliesAssertQueue.queue, async (message) => {
+        if(!message){
+          return;
+        }
+
+        const messageBuff = JSON.stringify({ service: 'ds', action: 'add', genesis });
+        this.mainChannel.sendToQueue(RabbitMQueues.GENESISES, Buffer.from(messageBuff));
+      });
+    } catch (error) {
+      this.logger.error(new Date());
+      this.logger.error(`Topic exchange consumer ${JSON.stringify(error)}`);
     }
   }
 
