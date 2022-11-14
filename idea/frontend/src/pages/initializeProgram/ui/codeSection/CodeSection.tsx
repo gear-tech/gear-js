@@ -49,7 +49,7 @@ const CodeSection = ({ codeId, metadata, metadataBuffer, resetMetadada }: Props)
     <section className={styles.pageSection}>
       <Subheader size="big" title="Enter program parameters" />
       <div className={styles.lining}>
-        <Input label="Code ID" value={codeId} direction="y" className={styles.codeId} readOnly />
+        <Input label="Code ID" value={codeId} direction="y" className={styles.codeId} block readOnly />
         <ProgramForm
           source={codeId as Hex}
           metadata={metadata}
