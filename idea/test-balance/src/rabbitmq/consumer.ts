@@ -1,5 +1,5 @@
 import { Channel, Replies } from 'amqplib';
-import { KAFKA_TOPICS, RabbitMQueues } from '@gear-js/common';
+import { AMQP_METHODS, RabbitMQueues } from '@gear-js/common';
 
 import { producer } from './producer';
 import { gearService } from '../gear';
@@ -12,17 +12,27 @@ export async function directExchangeConsumer(channel: Channel, repliesAssertQueu
       const method = message.properties.headers.method;
       const correlationId = message.properties.correlationId;
 
-      if (method === KAFKA_TOPICS.TEST_BALANCE_GENESIS) {
-        await producer.sendGenesis(RabbitMQueues.GENESISES, gearService.getGenesisHash());
-        return;
-      }
-
-      if (method === KAFKA_TOPICS.TEST_BALANCE_GET && payload.genesis === gearService.getGenesisHash()) {
+      if (method === AMQP_METHODS.TEST_BALANCE_GET && payload.genesis === gearService.getGenesisHash()) {
         console.log(`${new Date()} | Request`, payload);
         await transferBalanceProcess(payload, correlationId);
       }
     });
   } catch (error) {
     console.error(`${new Date()} | Direct exchange consumer error`, error);
+  }
+}
+
+export async function topicExchangeConsumer(channel: Channel, repliesAssertQueue: Replies.AssertQueue): Promise<void> {
+  try {
+    await channel.consume(repliesAssertQueue.queue, async (message) => {
+      if (!message) {
+        return;
+      }
+
+      await producer.sendGenesis(RabbitMQueues.GENESISES, gearService.getGenesisHash());
+    });
+  } catch (error) {
+    this.logger.error(new Date());
+    this.logger.error(`${new Date()} | Topic exchange consumer error ${JSON.stringify(error)}`);
   }
 }
