@@ -11,7 +11,7 @@ COPY yarn.lock .
 COPY tsconfig.json .
 COPY .yarn .yarn
 COPY .yarnrc.yml .
-COPY ./syndote/monopoly syndote/monopoly
+COPY ./apps/syndote apps/syndote
 
 RUN yarn install
 RUN yarn build:syndote
