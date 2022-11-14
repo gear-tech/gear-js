@@ -21,7 +21,6 @@
     "dotenv": "16.0.1",
     "express": "4.18.1",
     "hcaptcha": "0.1.1",
-    "kafkajs": "2.2.2",
     "nanoid": "3.3.4",
     "rimraf": "3.0.2"
   },
