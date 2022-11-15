@@ -55,6 +55,7 @@ export class GearEventListener {
         await this.rabbitMQService.connect(this.genesis);
       } catch (error) {
         console.log('RabbitMQ connection error', error);
+        process.exit(1);
       }
 
       await new Promise((resolve) => {
