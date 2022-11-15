@@ -20,14 +20,16 @@ export async function initAMQP(): Promise<void> {
     await mainChannelAMQP.assertExchange(RabbitMQExchanges.DIRECT_EX, 'direct', { durable: true });
     const repliesAssertQueue = await mainChannelAMQP.assertQueue(RabbitMQueues.REPLIES, {
       durable: true,
-      exclusive: true,
+      exclusive: false,
+      autoDelete: true,
       messageTtl: 30_000 });
 
     await mainChannelAMQP.bindQueue(repliesAssertQueue.queue, RabbitMQExchanges.DIRECT_EX, RabbitMQueues.REPLIES);
 
     const genesisesAssertQueue = await mainChannelAMQP.assertQueue(RabbitMQueues.GENESISES, {
       durable: true,
-      exclusive: true,
+      exclusive: false,
+      autoDelete: true,
       messageTtl: 30_000
     });
 
