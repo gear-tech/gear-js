@@ -73,7 +73,7 @@ async function subscribeToGenesises() {
 
         const channel = await createChannel();
         dataStorageServicesMap.set(genesis, channel);
-        await channel.assertQueue(`ds.${genesis}`, { durable: true, exclusive: true });
+        await channel.assertQueue(`ds.${genesis}`, { durable: true, exclusive: false });
         console.log(`${new Date()} Data storage genesises`);
         console.log(dataStorageServicesMap.keys());
       }
@@ -82,7 +82,7 @@ async function subscribeToGenesises() {
 
         const channel = await createChannel();
         testBalanceServicesMap.set(genesis, channel);
-        await channel.assertQueue(`tb.${genesis}`, { durable: true, exclusive: true });
+        await channel.assertQueue(`tb.${genesis}`, { durable: true, exclusive: false });
         console.log(`${new Date()} Test balance genesises`);
         console.log(testBalanceServicesMap.keys());
       }
