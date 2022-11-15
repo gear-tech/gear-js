@@ -28,10 +28,10 @@ async function bootstrap() {
 
   await waitReady();
 
+  await app.listen(healthcheck.port);
+
   const gearEventListener = app.get(GearEventListener);
   await gearEventListener.run();
-
-  await app.listen(healthcheck.port);
 }
 
 bootstrap();
