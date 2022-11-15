@@ -24,11 +24,17 @@ export async function initAMQP(): Promise<void> {
     const messageBuff = JSON.stringify({ service: 'tb', action: 'add', genesis });
     mainChannelAMQP.sendToQueue(RabbitMQueues.GENESISES, Buffer.from(messageBuff));
 
-    await mainChannelAMQP.assertExchange(directExchange, directExchangeType, {});
-    await mainChannelAMQP.assertExchange(topicExchange, topicExchangeType, {});
+    await mainChannelAMQP.assertExchange(directExchange, directExchangeType, { durable: true });
+    await mainChannelAMQP.assertExchange(topicExchange, topicExchangeType, { durable: true });
 
-    const assertQueue = await mainChannelAMQP.assertQueue(`tb_AQ_${genesis}`, {});
-    const assertTopicQueue = await topicChannelAMQP.assertQueue(`tb_ATQ_${genesis}`, {});
+    const assertQueue = await mainChannelAMQP.assertQueue(`tb_AQ_${genesis}`, {
+      durable: false,
+      autoDelete: true,
+    });
+    const assertTopicQueue = await topicChannelAMQP.assertQueue(`tb_ATQ_${genesis}`, {
+      durable: false,
+      autoDelete: true,
+    });
 
     await mainChannelAMQP.bindQueue(assertQueue.queue, directExchange, routingKey);
     await mainChannelAMQP.bindQueue(assertTopicQueue.queue, topicExchange, 'tb.genesises');

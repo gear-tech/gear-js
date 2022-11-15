@@ -49,10 +49,17 @@ export class RabbitmqService {
       //send genesis to api-gateway
       this.mainChannel.sendToQueue(RabbitMQueues.GENESISES, Buffer.from(messageBuff));
 
-      await this.mainChannel.assertExchange(directExchange, directExchangeType, {});
+      await this.mainChannel.assertExchange(directExchange, directExchangeType, { durable: true });
+      await this.topicChannel.assertExchange(topicExchange, 'topic', { durable: true });
 
-      const assertQueue = await this.mainChannel.assertQueue(`ds_AQ_${genesis}`, { durable: false });
-      const assertTopicQueue = await this.topicChannel.assertQueue(`ds_ATQ_${genesis}`, { durable: false });
+      const assertQueue = await this.mainChannel.assertQueue(`ds_AQ_${genesis}`, {
+        durable: false,
+        autoDelete: true,
+      });
+      const assertTopicQueue = await this.topicChannel.assertQueue(`ds_ATQ_${genesis}`, {
+        durable: false,
+        autoDelete: true,
+      });
 
       await this.mainChannel.bindQueue(assertQueue.queue, directExchange, routingKey);
       await this.topicChannel.bindQueue(assertTopicQueue.queue, topicExchange, 'ds.genesises');
