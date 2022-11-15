@@ -13,15 +13,6 @@ export default {
     port: parseInt('PORT', 10) || 3000,
     captchaSecret: checkEnv('CAPTCH_SECRET'),
   },
-  kafka: {
-    clientId: checkEnv('KAFKA_CLIENT_ID'),
-    groupId: checkEnv('KAFKA_GROUP_ID'),
-    brokers: checkEnv('KAFKA_BROKERS').split(','),
-    sasl: {
-      username: checkEnv('KAFKA_SASL_USERNAME'),
-      password: checkEnv('KAFKA_SASL_PASSWORD'),
-    },
-  },
   rabbitmq: {
     url: checkEnv('RABBIT_MQ_URL')
   },
