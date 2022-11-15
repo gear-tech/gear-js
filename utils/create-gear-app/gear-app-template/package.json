@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/cra-template-gear-app",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "A ready-made application template with a well-thought-out infrastructure for quickly turning the application on Gear blockchain.",
   "author": "Gear Technologies",
   "license": "GPL-3.0"

@@ -13,8 +13,8 @@ type Props = {
 function AccountButton({ address, name, onClick, isActive, block }: Props) {
   const className = clsx(
     buttonStyles.button,
-    buttonStyles.normal,
-    isActive ? buttonStyles.primary : buttonStyles.secondary,
+    buttonStyles.medium,
+    isActive ? buttonStyles.primary : buttonStyles.light,
     block && buttonStyles.block,
   );
 
