@@ -41,8 +41,10 @@ const HorizontalMessageCard = ({ message, moreInfo = false }: Props) => {
       <TimestampBlock size="medium" color="light" timestamp={timestamp} withIcon />
       {moreInfo && (
         <div className={styles.fromBlock}>
-          <FlagSVG />
-          <span className={styles.text}>{text}</span>
+          <div className={styles.fromIcon}>
+            <FlagSVG />
+            <span className={styles.text}>{text}</span>
+          </div>
 
           {program ? (
             <Link to={generatePath(absoluteRoutes.program, { programId: program.id })} className={styles.programLink}>
