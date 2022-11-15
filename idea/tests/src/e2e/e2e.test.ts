@@ -126,7 +126,7 @@ describe('code methods', () => {
   });
 
   test('code.data request', async () => {
-    const codeIndex = 0;
+    const codeIndex = 1;
     const codeId = Array.from(prepared.collectionCode.keys())[codeIndex];
 
     expect(await getCodeData(genesis, codeId)).toBeTruthy();
