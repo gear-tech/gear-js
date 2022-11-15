@@ -1,0 +1,19 @@
+@use '@gear-js/ui/mixins' as *;
+
+.mainButtons {
+  display: inline-block;
+  margin: 0 24px;
+
+  > *:not(:last-child) {
+    margin-right: 12px;
+  }
+}
+
+.button {
+  @include circle(40px);
+  background-color: #00ff38;
+}
+
+.backButton {
+  transform: scaleX(-1);
+}

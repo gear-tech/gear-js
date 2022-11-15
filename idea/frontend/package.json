@@ -1,10 +1,10 @@
 {
   "name": "@gear-js/frontend",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
-    "@gear-js/api": "^0.27.0",
-    "@gear-js/react-hooks": "^0.3.6",
+    "@gear-js/api": "^0.27.3",
+    "@gear-js/react-hooks": "^0.3.9",
     "@gear-js/ui": "0.5.13",
     "@hcaptcha/react-hcaptcha": "^1.4.4",
     "@mantine/form": "^5.4.0",

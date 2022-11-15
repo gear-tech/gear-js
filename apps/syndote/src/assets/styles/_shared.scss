@@ -1,0 +1,22 @@
+%absoluteCenterX {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+%absoluteCenterY {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+%absoluteCenter {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@function toRem($value) {
+  @return ($value / 16) + rem;
+}

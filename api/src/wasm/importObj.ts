@@ -50,6 +50,8 @@ export default (
     gr_reply_wgas: () => {},
     gr_reply_commit: () => {},
     gr_reply_commit_wgas: () => {},
+    gr_reservation_reply: () => {},
+    gr_reservation_reply_commit: () => {},
     gr_reply_push: () => {},
     gr_reply_to: () => {},
     gr_send: () => {},
@@ -58,6 +60,8 @@ export default (
     gr_send_commit_wgas: () => {},
     gr_send_init: () => {},
     gr_send_push: () => {},
+    gr_reservation_send: () => {},
+    gr_reservation_send_commit: () => {},
     gr_size: () => {
       return inputValue.byteLength;
     },

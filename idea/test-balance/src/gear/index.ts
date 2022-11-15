@@ -36,7 +36,12 @@ async function init(connectionEstablishedCb: () => void) {
   let onInit = true;
 
   while (true) {
-    await connect();
+    try {
+      await connect();
+    } catch (error) {
+      console.log('Reconnecting...');
+      continue;
+    }
 
     if (onInit) {
       connectionEstablishedCb();
