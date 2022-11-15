@@ -14,16 +14,15 @@
     "@babel/plugin-transform-typescript": "7.16.8",
     "@babel/preset-env": "7.17.10",
     "@babel/preset-typescript": "7.16.7",
-    "@gear-js/api": "0.26.1",
-    "@polkadot/api": "9.6.1",
+    "@gear-js/api": "0.27.3",
+    "@polkadot/api": "^9.6.1",
     "babel-jest": "28.1.0",
-    "chai": "4.3.6",
+    "chai": "4.3.7",
     "dotenv": "16.0.1",
-    "jest": "^29.1.2",
+    "jest": "^29.3.1",
     "js-yaml": "4.1.0",
     "node-fetch": "2.6.7",
     "ts-jest": "28.0.2",
-    "ts-node": "10.9.1",
-    "typeorm": "0.3.6"
+    "ts-node": "10.9.1"
   }
 }
