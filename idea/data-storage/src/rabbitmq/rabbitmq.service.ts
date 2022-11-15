@@ -36,7 +36,9 @@ export class RabbitmqService {
 
   public async connect(genesis: string): Promise<void> {
     try {
-      this.connection = await connect(this.configService.get<string>('rabbitmq.url'));
+      this.connection = await connect(this.configService.get<string>('rabbitmq.url'), {
+
+      });
       this.mainChannel = await this.connection.createChannel();
       this.topicChannel = await this.connection.createChannel();
 
@@ -68,7 +70,7 @@ export class RabbitmqService {
       await this.topicExchangeConsumer(assertTopicQueue, genesis);
     } catch (error) {
       this.logger.error(new Date());
-      this.logger.error(JSON.stringify(error));
+      console.log(error);
     }
   }
 

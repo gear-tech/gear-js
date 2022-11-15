@@ -51,9 +51,11 @@ export class GearEventListener {
       }
       const unsub = await this.listen();
 
-      await this.rabbitMQService.connect(this.genesis);
-
-      this.logger.log('📍️Rabbit MQ connected successfully');
+      try {
+        await this.rabbitMQService.connect(this.genesis);
+      } catch (error) {
+        console.log('RabbitMQ connection error', error);
+      }
 
       await new Promise((resolve) => {
         this.api.on('error', (error) => {
