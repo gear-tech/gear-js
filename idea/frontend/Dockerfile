@@ -1,5 +1,4 @@
 FROM node:18-alpine AS builder
-MAINTAINER GEAR
 
 WORKDIR /new-frontend
 ARG REACT_APP_API_URL \
