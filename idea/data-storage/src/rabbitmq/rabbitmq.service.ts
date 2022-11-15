@@ -57,10 +57,12 @@ export class RabbitmqService {
       const assertQueue = await this.mainChannel.assertQueue(`ds_AQ_${genesis}`, {
         durable: false,
         autoDelete: true,
+        exclusive: false
       });
       const assertTopicQueue = await this.topicChannel.assertQueue(`ds_ATQ_${genesis}`, {
         durable: false,
         autoDelete: true,
+        exclusive: true
       });
 
       await this.mainChannel.bindQueue(assertQueue.queue, directExchange, routingKey);
