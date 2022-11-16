@@ -154,9 +154,43 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
+          args: rollout restart deployment postgres rabbitmq -n rabbitmq
+          
+      - name: Check k8s deployments
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: get deployment -o name -n rabbitmq | xargs -n1 -t kubectl rollout status -n rabbitmq --timeout=120s
+          
+      - name: Deploy to k8s
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
           args: rollout restart deployment api-gateway frontend-nginx data-storage-rpc -n rabbitmq
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: get deployment -o name -n rabbitmq | xargs -n1 -t kubectl rollout status -n rabbitmq --timeout=120s
+          
+  run-e2e-tests:
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install NodeJS 16.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16.x
+
+      - name: Prepare&Run Tests
+        timeout-minutes: 7
+        working-directory: idea/tests
+        env:
+          API_ENDPOINT: ${{ secrets.API_ADDRESS_URL_RABBIT }}
+          WS_PROVIDER: ${{ secrets.WS_PROVIDER_URL_RABBIT }}
+          TEST_ENV: ${{ secrets.TEST_ENV }}
+        run: |
+          YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+          yarn test
