@@ -23,6 +23,8 @@ let genesis: Hex;
 let prepared: IPrepared;
 let api: GearApi;
 
+jest.setTimeout(60_000);
+
 beforeAll(async () => {
   api = await GearApi.create({ providerAddress: base.gear.wsProvider });
   genesis = api.genesisHash.toHex();
