@@ -13,32 +13,34 @@ import { processPrepare } from '../prepare';
 import { IPrepared, IPreparedProgram, IPreparedPrograms } from '../interfaces';
 import { sleep } from '../utils';
 import { getAllMessages, getMessageData, getMessagePayload, getMessagesByDates } from './messages';
+import { getTestBalance, testBalanceAvailable } from './testBalance';
 import { getCodeData, getCodes, getCodesByDates } from './code';
 import base from '../config/base';
 import { networkDataAvailable } from './network-data-available';
+import { blocksStatus } from './block';
 
 let genesis: Hex;
 let prepared: IPrepared;
 let api: GearApi;
 
-beforeAll(async () => {
-  api = await GearApi.create({ providerAddress: base.gear.wsProviderVara });
-  genesis = api.genesisHash.toHex();
-  await waitReady();
-  try {
-    prepared = await processPrepare(api);
-  } catch (err) {
-    console.log(err);
-    process.exit(1);
-  }
-});
+describe('api methods Vara node', () => {
+  beforeAll(async () => {
+    api = await GearApi.create({ providerAddress: base.gear.wsProviderVara });
+    genesis = api.genesisHash.toHex();
+    await waitReady();
+    try {
+      prepared = await processPrepare(api);
+    } catch (err) {
+      console.log(err);
+      process.exit(1);
+    }
+  });
 
-afterAll(async () => {
-  await api.disconnect();
-  await sleep();
-});
+  afterAll(async () => {
+    await api.disconnect();
+    await sleep();
+  });
 
-describe('VARA_NODE program methods', () => {
   test('program.all request', async () => {
     expect(await getAllPrograms(genesis, Object.keys(prepared.programs) as Hex[])).toBeTruthy();
   });
@@ -84,9 +86,7 @@ describe('VARA_NODE program methods', () => {
       expect(await checkInitStatus(genesis, id_, prepared.programs[id_].init)).toBeTruthy();
     }
   });
-});
 
-describe('VARA_NODE message methods', () => {
   test('message.all request', async () => {
     const messages = Array.from(prepared.messages.log.keys()).concat(
       Array.from(prepared.messages.sent.values()).map(({ id }) => id),
@@ -108,9 +108,7 @@ describe('VARA_NODE message methods', () => {
       expect(await getMessagePayload(genesis, value.id));
     }
   });
-});
 
-describe('VARA_NODE code methods', () => {
   test('code.all request', async () => {
     const codeIds = Array.from(prepared.collectionCode.keys());
     expect(await getCodes(genesis, codeIds)).toBeTruthy();
@@ -122,14 +120,24 @@ describe('VARA_NODE code methods', () => {
   });
 
   test('code.data request', async () => {
-    const codeIndex = 0;
+    const codeIndex = 1;
     const codeId = Array.from(prepared.collectionCode.keys())[codeIndex];
+
     expect(await getCodeData(genesis, codeId)).toBeTruthy();
   });
-});
 
-describe('VARA_NODE networkDataAvailable method (depends on connection node)', () => {
+  test('testBalance.get request', async () => {
+    expect(await getTestBalance(genesis)).toBeTruthy();
+  });
+  test('testBalance.available request', async () => {
+    expect(await testBalanceAvailable(genesis)).toBeTruthy();
+  });
+
   test('networkData.available request', async () => {
     expect(await networkDataAvailable(genesis)).toBeTruthy();
+  });
+
+  test('blocks.status request', async () => {
+    expect(await blocksStatus(genesis)).toBeTruthy();
   });
 });
