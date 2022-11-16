@@ -3,6 +3,13 @@
 @use 'shared/assets/styles/_variables.scss' as *;
 @use '@gear-js/ui/mixins' as *;
 
+%smallText {
+  font-size: $fontSizeTiny;
+  font-weight: 500;
+  line-height: 16px;
+  color: $gray600;
+}
+
 .horizontalMessageCard {
   align-items: center;
   position: relative;
@@ -41,6 +48,7 @@
   .fromBlock {
     display: grid;
     grid-template-columns: 2fr 8fr;
+    gap: 12px;
     font-weight: 500;
     align-items: center;
 
@@ -58,15 +66,17 @@
   }
 
   .programLink {
+    @include transition;
+    @extend %smallText;
     text-decoration: underline;
     text-decoration-color: $gray300;
 
-    span {
-      @include transition;
-
-      &:hover {
-        opacity: 0.5;
-      }
+    &:hover {
+      opacity: 0.5;
     }
+  }
+
+  .text {
+    @extend %smallText;
   }
 }
