@@ -1,7 +1,7 @@
 {
   "name": "@gear-js/web-tests",
   "scripts": {
-    "test": "jest --no-cache",
+    "test": "jest --clearCache && jest --runInBand",
     "build": "tsc"
   },
   "devDependencies": {
