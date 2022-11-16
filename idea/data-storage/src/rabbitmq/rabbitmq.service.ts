@@ -70,9 +70,11 @@ export class RabbitmqService {
 
       await this.directExchangeConsumer(assertQueue);
       await this.topicExchangeConsumer(assertTopicQueue, genesis);
+
+      console.log('📍 RabbitMQ connected successfully');
     } catch (error) {
       this.logger.error(new Date());
-      console.log(error);
+      throw error;
     }
   }
 
