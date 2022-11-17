@@ -1,6 +1,7 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_mixins.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
+@use '@gear-js/ui/mixins' as *;
 
 .messageInfo {
   @include childrenMargin($marginMedium);
@@ -10,6 +11,19 @@
   background-color: $bgColor4;
 
   .text {
-    grid-template-columns: minmax(toRem(100), 0.1fr) minmax(toRem(452), 0.6fr);
+    grid-template-columns: minmax(toRem(10), 0.15fr) minmax(toRem(452), 0.6fr);
+  }
+}
+
+.replyTo {
+  align-items: center;
+
+  a {
+    @include transition;
+    text-decoration: underline;
+
+    &:hover {
+      opacity: 0.5;
+    }
   }
 }
