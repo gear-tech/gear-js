@@ -110,6 +110,7 @@ describe('api methods', () => {
   });
 
   test('code.all request', async () => {
+    await sleep();
     const codeIds = Array.from(prepared.collectionCode.keys());
     expect(await getCodes(genesis, codeIds)).toBeTruthy();
   });
