@@ -115,12 +115,11 @@ const ProgramSection = ({ file, metadata, metadataBuffer, resetMetaFile }: Props
     <section className={styles.pageSection}>
       <Subheader size="big" title="Enter program parameters" />
       <div className={styles.lining}>
-        {/* @ts-ignore */}
         <FileInput
           ref={fileInputRef}
-          size="large"
           label="Program file"
           direction="y"
+          color="primary"
           className={fileInputClasses}
           onChange={handleChangeFile}
         />

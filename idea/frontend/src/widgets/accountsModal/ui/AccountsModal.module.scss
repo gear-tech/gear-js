@@ -14,10 +14,6 @@
 .modal {
   position: relative;
 
-  &.empty {
-    text-align: center;
-  }
-
   &:not(.empty) {
     padding-bottom: 102px;
   }

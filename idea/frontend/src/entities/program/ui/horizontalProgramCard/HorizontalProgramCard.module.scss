@@ -48,27 +48,23 @@
   }
 
   .otherInfo {
-    display: flex;
+    display: grid;
+    grid-template-columns: 4fr 2fr 3fr;
     position: relative;
+    z-index: 4;
+    gap: 16px;
   }
 
   .name {
     max-width: 60%;
     overflow: hidden;
     text-overflow: ellipsis;
-    // color: $textColor;
     font-size: $fontSizeBig;
     font-family: 'Kanit';
     font-weight: 600;
     line-height: 1.3;
     margin-right: $margin;
     margin-bottom: 10px;
-  }
-
-  .otherInfo {
-    @include childrenMargin($margin, right);
-
-    z-index: 4;
   }
 }
 

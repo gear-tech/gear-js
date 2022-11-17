@@ -127,7 +127,7 @@ const ProgramForm = (props: Props) => {
 
               <FormPayload name="payload" label="Initial payload" direction="y" values={payloadFormValues} />
 
-              {!metadata && <FormPayloadType name="payloadType" label="Initial payload type" direction="y" />}
+              {!metadata && <FormPayloadType name="payloadType" label="Initial payload type" direction="y" block />}
 
               <GasField
                 name="gasLimit"

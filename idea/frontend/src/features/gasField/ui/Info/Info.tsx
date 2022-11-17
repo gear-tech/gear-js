@@ -19,7 +19,7 @@ const Info = ({ isAwait, reserved, returned }: Props) => (
     <div className={styles.gasInfoCard}>
       {isAwait && (
         <p className={styles.info}>
-          <ShareSVG />
+          <LoadingSVG />
           <span className={styles.text}>Added to waitlist...</span>
         </p>
       )}
@@ -29,7 +29,7 @@ const Info = ({ isAwait, reserved, returned }: Props) => (
         <span className={clsx(styles.value, styles.green)}>{reserved}</span>
       </p>
       <p className={styles.info}>
-        <LoadingSVG />
+        <ShareSVG />
         <span className={styles.text}>Maybe returned:</span>
         <span className={clsx(styles.value, styles.blue)}>{returned}</span>
       </p>
