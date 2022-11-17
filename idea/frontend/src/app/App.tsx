@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useAccount, useApi } from '@gear-js/react-hooks';
 import 'simplebar-react/dist/simplebar.min.css';
 
-import { useApp, useChain, useEventSubscriptions } from 'hooks';
+import { useApp, useChain, useEventSubscriptions, useLocalProgramsFilter } from 'hooks';
 import { Menu } from 'widgets/menu';
 import { Header } from 'widgets/header';
 import { Footer } from 'widgets/footer';
@@ -25,6 +25,7 @@ const App = withProviders(() => {
   const isAppReady = isApiReady && isAccountReady && isChainRequestReady;
 
   useEventSubscriptions();
+  useLocalProgramsFilter();
 
   useEffect(() => {
     const urlNodeAddress = searchParams.get(NODE_ADRESS_URL_PARAM);
