@@ -11,7 +11,7 @@
   background-color: $bgColor4;
 
   .text {
-    grid-template-columns: minmax(toRem(10), 0.15fr) minmax(toRem(452), 0.6fr);
+    grid-template-columns: minmax(toRem(100), 0.15fr) minmax(toRem(452), 0.6fr);
   }
 }
 
@@ -21,6 +21,7 @@
   a {
     @include transition;
     text-decoration: underline;
+    padding: 0 16px;
 
     &:hover {
       opacity: 0.5;

@@ -20,7 +20,7 @@ type Props = {
 };
 
 const MessageInfo = ({ metadata, message, isLoading }: Props) => {
-  const { id, source, value, destination, replyToMessageId } = message ?? {};
+  const { id, source, value, destination, replyToMessageId, entry } = message ?? {};
 
   const [decodedPayload, setDecodedPayload] = useState<string>();
 
@@ -60,15 +60,20 @@ const MessageInfo = ({ metadata, message, isLoading }: Props) => {
       <FormText text={value} label="Value" isLoading={isPayloadLoading} className={styles.text} />
       <FormText text={decodedPayload} label="Payload" isLoading={isPayloadLoading} isTextarea className={styles.text} />
 
-      {replyToMessageId && !isLoading && (
-        <InputWrapper
-          label="Reply To Message ID"
-          id="replyTo"
-          direction="x"
-          size="normal"
-          className={clsx(styles.text, styles.replyTo)}>
-          <Link to={generatePath(absoluteRoutes.message, { messageId: replyToMessageId })}>{replyToMessageId}</Link>
-        </InputWrapper>
+      {!isPayloadLoading && (
+        <>
+          {entry && <FormText text={entry} label="Entry" className={styles.text} />}
+          {replyToMessageId && (
+            <InputWrapper
+              label="Reply To Message ID"
+              id="replyTo"
+              direction="x"
+              size="normal"
+              className={clsx(styles.text, styles.replyTo)}>
+              <Link to={generatePath(absoluteRoutes.message, { messageId: replyToMessageId })}>{replyToMessageId}</Link>
+            </InputWrapper>
+          )}
+        </>
       )}
     </section>
   );
