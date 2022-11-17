@@ -2688,6 +2688,7 @@ __metadata:
     "@types/node": ^16.11.54
     "@types/react": ^18.0.21
     "@types/react-dom": ^18.0.6
+    "@types/react-final-form-listeners": ^1.0.0
     "@types/react-transition-group": ^4.4.5
     "@typescript-eslint/eslint-plugin": ^5.34.0
     "@typescript-eslint/parser": ^5.34.0
@@ -2715,6 +2716,7 @@ __metadata:
     react-dnd-html5-backend: ^16.0.1
     react-dom: ^18.2.0
     react-final-form: ^6.5.9
+    react-final-form-listeners: ^1.0.3
     react-number-format: ^4.9.3
     react-render-if-visible: ^2.1.0
     react-router-dom: ^6.3.0
@@ -6750,6 +6752,15 @@ __metadata:
   dependencies:
     "@types/react": "*"
   checksum: 522e5e949d05f35c6037a2290838c9c7ff92a9d06f7d96b993c7c3f5a86d8f3a6337e059c94e6fb0920227f445e5d1ce10fbfe3d9bbd95fb82a5539249d90646
+  languageName: node
+  linkType: hard
+
+"@types/react-final-form-listeners@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@types/react-final-form-listeners@npm:1.0.0"
+  dependencies:
+    "@types/react": "*"
+  checksum: 61ce0fabf9cdbe314b2139f6cd116bc48e013bbef086a5b42278e3aee5c004e9173292df1a8e5ff1fad81ebfd641a21d8a0f77294fb2cfd8c9ad3ede9bc21cbb
   languageName: node
   linkType: hard
 
@@ -20150,6 +20161,20 @@ __metadata:
   version: 6.0.11
   resolution: "react-error-overlay@npm:6.0.11"
   checksum: ce7b44c38fadba9cedd7c095cf39192e632daeccf1d0747292ed524f17dcb056d16bc197ddee5723f9dd888f0b9b19c3b486c430319e30504289b9296f2d2c42
+  languageName: node
+  linkType: hard
+
+"react-final-form-listeners@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "react-final-form-listeners@npm:1.0.3"
+  dependencies:
+    "@babel/runtime": ^7.12.5
+  peerDependencies:
+    final-form: ">=4.0.0"
+    prop-types: ^15.6.0
+    react: ^15.3.0 || ^16.0.0 || ^17.0.0
+    react-final-form: ">=3.0.0"
+  checksum: 9f32a2158c7e27b529cd25166f1b78f40fb99bc23dcc869513fa790be1c9e4687dd5a057c23275c7c0e352e7ef6d60f76dad5ede02de3855c49bc4dd68a907e9
   languageName: node
   linkType: hard
 
