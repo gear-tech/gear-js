@@ -6,12 +6,13 @@ import { isExists } from 'utils';
 import styles from './Create.module.scss';
 
 type Props = {
-  onBackClick: () => void;
+  onBackClick: (arg:string) => void;
   onSubmit: ReturnType<typeof useCreateHandler>;
+  setStateAction: any
 };
 
 const initialValues = {
-  gameName: '',
+  // gameName: '',
   betSize: '',
   playersCountLimit: '',
   entryTimeoutMs: '',
@@ -20,7 +21,7 @@ const initialValues = {
 };
 
 const validate = {
-  gameName: isExists,
+  // gameName: isExists,
   betSize: isExists,
   playersCountLimit: isExists,
   entryTimeoutMs: isExists,
@@ -28,24 +29,23 @@ const validate = {
   revealTimeoutMs: isExists,
 };
 
-function Create({ onBackClick, onSubmit }: Props) {
+function Create({ onBackClick, onSubmit, setStateAction }: Props) {
   const form = useForm({ initialValues, validate });
   const { getInputProps } = form;
-
-  const handleSubmit = form.onSubmit((values) => onSubmit(values));
+  const handleSubmit = form.onSubmit((values) => { onSubmit(values, { onSuccess: (hex) => setStateAction(hex) }) });
 
   return (
     <>
       <h2 className={styles.heading}>Create new game</h2>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <Input label="Game name" direction="y" {...getInputProps('gameName')} />
-        <Input label="Bet size" direction="y" {...getInputProps('betSize')} />
-        <Input label="Max players" direction="y" {...getInputProps('playersCountLimit')} />
-        <Input label="Entry timeout" direction="y" {...getInputProps('entryTimeoutMs')} />
-        <Input label="Move timeout" direction="y" {...getInputProps('moveTimeoutMs')} />
-        <Input label="Reveal timeout" direction="y" {...getInputProps('revealTimeoutMs')} />
+        {/* <Input label="Game name" direction="y" {...getInputProps('gameName')} /> */}
+        <Input autoComplete="off" type='number' label="Bet size" direction="y" {...getInputProps('betSize')} />
+        <Input autoComplete="off" type='number' label="Max players" direction="y" {...getInputProps('playersCountLimit')} />
+        <Input autoComplete="off" type='number' label="Entry timeout" direction="y" {...getInputProps('entryTimeoutMs')} />
+        <Input autoComplete="off" type='number' label="Move timeout" direction="y" {...getInputProps('moveTimeoutMs')} />
+        <Input autoComplete="off" type='number' label="Reveal timeout" direction="y" {...getInputProps('revealTimeoutMs')} />
         <div className={styles.buttons}>
-          <BackButton onClick={onBackClick} />
+          <BackButton onClick={()=>onBackClick('')} />
           <Button type="submit" text="Create" size="large" />
         </div>
       </form>

@@ -14,13 +14,23 @@
   align-items: center;
   justify-content: center;
 
-  & > *:not(:last-child) {
+  &>*:not(:last-child) {
     margin-bottom: 20px;
+  }
+
+  & input::-webkit-inner-spin-button,
+    input::-webkit-outer-spin-button {
+    display: none;
+    margin: 0;
+  }
+
+  & input[type=number] {
+    -moz-appearance: textfield;
   }
 }
 
 .buttons {
-  & > *:not(:last-child) {
+  &>*:not(:last-child) {
     margin-right: 25px;
   }
 }
