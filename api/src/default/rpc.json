@@ -114,6 +114,10 @@
       "chainName": { "params": [], "type": "String" },
       "properties": { "params": [], "type": "String" },
       "genesisHash": { "params": [], "type": "H256" }
+    },
+    "transaction_unstable": {
+      "submitAndWatch": { "params": [] },
+      "unwatch": { "params": [] }
     }
   }
 }
