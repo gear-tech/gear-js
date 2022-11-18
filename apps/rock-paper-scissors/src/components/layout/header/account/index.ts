@@ -1,3 +1,3 @@
-import { Account } from './Account';
+import { AccountComponent } from './Account';
 
-export { Account };
+export { AccountComponent };

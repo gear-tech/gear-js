@@ -1,5 +1,5 @@
 import { Logo } from './logo';
-import { Account } from './account';
+import { AccountComponent } from './account';
 import styles from './Header.module.scss';
 
 type Props = {
@@ -10,7 +10,7 @@ function Header({ isAccountVisible }: Props) {
   return (
     <header className={styles.header}>
       <Logo />
-      {isAccountVisible && <Account />}
+      {isAccountVisible && <AccountComponent />}
     </header>
   );
 }
