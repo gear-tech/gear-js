@@ -1,5 +1,6 @@
 import { u32, u128, Vec, Option, BTreeMap, BTreeSet, GenericEventData, Bool } from '@polkadot/types';
 import { BlockNumber, AccountId32 } from '@polkadot/types/interfaces';
+import { GasNodeId, ReservationId } from 'types/interfaces/ids/gas';
 
 import { QueuedDispatch, ProgramDetails } from '../types';
 import {
@@ -47,7 +48,7 @@ export interface MessagesDispatchedData extends GenericEventData {
 
 export interface MessageWaitedData extends GenericEventData {
   id: MessageId;
-  origin: Option<MessageId>;
+  origin: Option<GasNodeId<MessageId, ReservationId>>;
   reason: MessageWaitedReason;
   expiration: BlockNumber;
 }
