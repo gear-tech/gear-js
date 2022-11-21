@@ -30,7 +30,7 @@ async function sendMessageToTestBalance(messageTestBalanceParams: IMessageTestBa
 async function sendMessageTBGenesises(): Promise<void> {
   mainChannelAMQP.publish(RabbitMQExchanges.TOPIC_EX,
     'tb.genesises',
-    Buffer.from(JSON.stringify({})),
+    Buffer.from(''),
     {  headers: { method: AMQP_METHODS.TEST_BALANCE_GENESISES } }
   );
 }
@@ -38,7 +38,7 @@ async function sendMessageTBGenesises(): Promise<void> {
 async function sendMessageDSGenesises(): Promise<void> {
   mainChannelAMQP.publish(RabbitMQExchanges.TOPIC_EX,
     'ds.genesises',
-    Buffer.from(JSON.stringify({})),
+    Buffer.from(''),
     {  headers: { method: AMQP_METHODS.DATA_STORAGE_GENESISES } }
   );
 }
