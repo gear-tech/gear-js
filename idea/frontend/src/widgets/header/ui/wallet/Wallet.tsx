@@ -1,37 +1,22 @@
 import clsx from 'clsx';
 import { Account, useAccount } from '@gear-js/react-hooks';
 import { Button, buttonStyles } from '@gear-js/ui';
-import { useState } from 'react';
 
 import { useModal } from 'hooks';
-import { LocalStorage } from 'shared/config';
 import { AccountButton } from 'shared/ui/accountButton';
 import { ReactComponent as substrateSVG } from 'shared/assets/images/logos/substrate.svg';
 
 import styles from './Wallet.module.scss';
-import { AuthorizationTooltip } from '../authorizationTooltip';
 
 type Props = {
   account?: Account;
-  isApiReady: boolean;
 };
 
-const Wallet = ({ account, isApiReady }: Props) => {
+const Wallet = ({ account }: Props) => {
   const { accounts } = useAccount();
   const { showModal } = useModal();
 
-  const [isTooltipShowing, setIsTooltipShowing] = useState(!localStorage.getItem(LocalStorage.NewUser));
-
-  const hideTooltip = () => {
-    setIsTooltipShowing(false);
-    localStorage.setItem(LocalStorage.NewUser, 'false');
-  };
-
-  const handleClick = () => {
-    showModal('accounts', { accounts });
-
-    if (isTooltipShowing) hideTooltip();
-  };
+  const openAccountsModal = () => showModal('accounts', { accounts });
 
   const accountBtnClasses = clsx(buttonStyles.medium, styles.accountBtn);
 
@@ -42,12 +27,11 @@ const Wallet = ({ account, isApiReady }: Props) => {
           name={account.meta.name}
           address={account.address}
           className={accountBtnClasses}
-          onClick={handleClick}
+          onClick={openAccountsModal}
         />
       ) : (
-        <Button icon={substrateSVG} text="Connect" color="primary" onClick={handleClick} />
+        <Button icon={substrateSVG} text="Connect" color="primary" onClick={openAccountsModal} />
       )}
-      {isApiReady && isTooltipShowing && <AuthorizationTooltip onCloseButtonClick={hideTooltip} />}
     </div>
   );
 };
