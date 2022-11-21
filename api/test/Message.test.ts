@@ -68,8 +68,9 @@ describe('Gear Message', () => {
 
       if (waitForReply) {
         const reply = await waitForReply(transactionData.id);
-        expect(reply?.message.reply.isSome).toBeTruthy();
-        expect(reply?.message.reply.unwrap().exitCode.toNumber()).toBe(0);
+        expect(reply?.message.details.isSome).toBeTruthy();
+        expect(reply?.message.details.unwrap().isReply).toBeTruthy();
+        expect(reply?.message.details.unwrap().asReply.statusCode.toNumber()).toBe(0);
         expect(reply?.message.payload.toHex()).toBe(message.reply);
         if (message.claim) {
           messageToClaim = reply.message.id.toHex();

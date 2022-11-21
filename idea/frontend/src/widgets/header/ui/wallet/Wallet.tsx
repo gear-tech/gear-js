@@ -33,7 +33,7 @@ const Wallet = ({ account, isApiReady }: Props) => {
     if (isTooltipShowing) hideTooltip();
   };
 
-  const accountBtnClasses = clsx(buttonStyles.medium, styles.accountBtn, styles.fixSize);
+  const accountBtnClasses = clsx(buttonStyles.medium, styles.accountBtn);
 
   return (
     <div className={styles.walletWrapper}>
@@ -45,7 +45,7 @@ const Wallet = ({ account, isApiReady }: Props) => {
           onClick={handleClick}
         />
       ) : (
-        <Button icon={substrateSVG} text="Connect" color="primary" className={styles.fixSize} onClick={handleClick} />
+        <Button icon={substrateSVG} text="Connect" color="primary" onClick={handleClick} />
       )}
       {isApiReady && isTooltipShowing && <AuthorizationTooltip onCloseButtonClick={hideTooltip} />}
     </div>

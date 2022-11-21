@@ -1,3 +1,13 @@
+## 0.27.4
+
+_11/18/2022_
+
+https://github.com/gear-tech/gear-js/pull/1100
+
+### Changes
+
+- Update `UserMessageSent` and `MessageWaited` events data according to https://github.com/gear-tech/gear/pull/1730 and https://github.com/gear-tech/gear/pull/1833
+
 ## 0.27.3
 
 _11/13/2022_

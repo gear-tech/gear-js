@@ -11,12 +11,7 @@ type Props = Pick<InputProps, 'label' | 'direction' | 'className'> & {
 };
 
 const FormText = ({ text, label, className, direction = 'x', isLoading = false, isTextarea = false }: Props) => {
-  const wrapperClasses = clsx(
-    inputWrapperStyles.wrapper,
-    inputWrapperStyles[direction],
-    !isTextarea && styles.wrapper,
-    className,
-  );
+  const wrapperClasses = clsx(inputWrapperStyles.wrapper, inputWrapperStyles[direction], className);
 
   const fieldWrapperClasses = clsx(
     inputStyles.wrapper,
@@ -31,7 +26,9 @@ const FormText = ({ text, label, className, direction = 'x', isLoading = false, 
 
   return (
     <div className={wrapperClasses}>
-      <span className={styles.text}>{label}</span>
+      <div className={clsx(inputWrapperStyles.labelWrapper, inputWrapperStyles.normal, inputWrapperStyles[direction])}>
+        <span className={inputWrapperStyles.label}>{label}</span>
+      </div>
       <div className={fieldWrapperClasses}>
         {!isLoading &&
           (isTextarea ? (

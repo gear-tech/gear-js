@@ -42,10 +42,13 @@ export const checkInit = (api: GearApi, programId: string) => {
             const {
               data: { message },
             } = event as UserMessageSent;
-            if (message.reply.isSome) {
-              const reply = message.reply.unwrap();
-              if (reply.replyTo.eq(messageId) && !reply.exitCode.eq(0)) {
-                reject(message.payload.toHuman());
+            if (message.details.isSome) {
+              const details = message.details.unwrap();
+              if (details.isReply) {
+                const reply = details.asReply;
+                if (reply.replyTo.eq(messageId) && !reply.statusCode.eq(0)) {
+                  reject(message.payload.toHuman());
+                }
               }
             }
           }
@@ -72,9 +75,19 @@ export function listenToUserMessageSent(api: GearApi, programId: Hex) {
     const message = messages.find(
       ({
         data: {
-          message: { reply },
+          message: { details },
         },
-      }) => (messageId === null ? reply.isNone : reply.isSome && reply.unwrap().replyTo.eq(messageId)),
+      }) => {
+        if (messageId === null) {
+          return details.isNone;
+        }
+
+        if (details.isSome) {
+          return details.unwrap().isReply && details.unwrap().asReply.replyTo.eq(messageId);
+        } else {
+          return false;
+        }
+      },
     );
     (await unsub)();
     if (!message) {
