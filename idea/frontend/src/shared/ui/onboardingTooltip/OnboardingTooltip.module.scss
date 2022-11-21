@@ -1,0 +1,59 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/headings' as *;
+@use 'shared/assets/styles/mixins' as *;
+
+.tooltip {
+  width: 400px;
+  padding: 24px 24px 24px 32px;
+  position: absolute;
+  top: 150%;
+  right: 100%;
+  background-color: #29292b;
+  border-radius: $borderRadiusMedium;
+  border: $borderModal;
+  z-index: 2;
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 1px);
+    right: 24px;
+    width: 0;
+    height: 0;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    border-right: 9px solid $borderModalColor;
+    transform-origin: bottom right;
+    transform: rotate(-45deg);
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: #d1d1d1;
+}
+
+.steps {
+  @include childrenMargin(16px, right);
+  display: flex;
+}
+
+.prevStepButton {
+  transform: rotate(180deg);
+}
+
+.main {
+  @include childrenMargin(8px);
+  margin-bottom: 24px;
+}
+
+.heading {
+  @extend %h5;
+}
+
+.text {
+  line-height: 26px;
+  color: #d1d1d1;
+}

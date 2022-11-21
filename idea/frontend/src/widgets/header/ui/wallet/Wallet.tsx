@@ -6,6 +6,7 @@ import { useModal } from 'hooks';
 import { AccountButton } from 'shared/ui/accountButton';
 import { ReactComponent as substrateSVG } from 'shared/assets/images/logos/substrate.svg';
 
+import { OnboardingTooltip } from 'shared/ui/onboardingTooltip';
 import styles from './Wallet.module.scss';
 
 type Props = {
@@ -32,6 +33,8 @@ const Wallet = ({ account }: Props) => {
       ) : (
         <Button icon={substrateSVG} text="Connect" color="primary" onClick={openAccountsModal} />
       )}
+
+      <OnboardingTooltip />
     </div>
   );
 };
