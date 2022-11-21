@@ -9,7 +9,7 @@ import { OperationCallbacks } from 'entities/hooks';
 import { checkWallet, getExtrinsicFailedMessage } from 'shared/helpers';
 import { PROGRAM_ERRORS, TransactionStatus, TransactionName } from 'shared/config';
 
-import { ParamsToSendMessage, ParamsToSignAndSend, PatamsToReplyMessage } from './types';
+import { ParamsToSendMessage, ParamsToSignAndSend, ParamsToReplyMessage } from './types';
 
 const useMessageActions = () => {
   const alert = useAlert();
@@ -101,7 +101,7 @@ const useMessageActions = () => {
   );
 
   const replyMessage = useCallback(
-    async ({ reply, metadata, payloadType, reject, resolve }: PatamsToReplyMessage) => {
+    async ({ reply, metadata, payloadType, reject, resolve }: ParamsToReplyMessage) => {
       try {
         checkWallet(account);
 

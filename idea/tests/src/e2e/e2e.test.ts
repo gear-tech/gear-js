@@ -3,8 +3,10 @@ import { waitReady } from '@polkadot/wasm-crypto';
 
 import {
   checkInitStatus,
-  getAllPrograms, getAllProgramsByDates,
-  getAllProgramsByOwner, getAllProgramsByStatus,
+  getAllPrograms,
+  getAllProgramsByDates,
+  getAllProgramsByOwner,
+  getAllProgramsByStatus,
   getMeta,
   getProgramData,
   uploadMeta,
@@ -24,9 +26,17 @@ let prepared: IPrepared;
 let api: GearApi;
 
 describe('api methods', () => {
+
   beforeAll(async () => {
-    api = await GearApi.create({ providerAddress: base.gear.wsProvider });
+    try {
+      api = await GearApi.create({ providerAddress: base.gear.wsProvider, throwOnConnect: true });
+    } catch (error) {
+      console.log(error);
+      process.exit(0);
+    }
+
     genesis = api.genesisHash.toHex();
+
     await waitReady();
     try {
       prepared = await processPrepare(api);

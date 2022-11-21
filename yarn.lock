@@ -2256,7 +2256,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:0.27.5, @gear-js/api@npm:^0.27.5":
+"@gear-js/api@npm:0.27.5, @gear-js/api@npm:^0.27.0, @gear-js/api@npm:^0.27.3, @gear-js/api@npm:^0.27.5":
   version: 0.27.5
   resolution: "@gear-js/api@npm:0.27.5"
   peerDependencies:
@@ -2286,17 +2286,6 @@ __metadata:
     "@polkadot/wasm-crypto": ^6.3.1
     rxjs: ^7.5.5
   checksum: 80c9b6403f2a29dec0dc40ed7b4053152298fc6d27d56f4463120340805c9009df26218575a09f1b2eb9c830fc3d2a052a2fdd4f9c859d425174ed9fe627ca80
-  languageName: node
-  linkType: hard
-
-"@gear-js/api@npm:^0.27.0, @gear-js/api@npm:^0.27.3":
-  version: 0.27.4
-  resolution: "@gear-js/api@npm:0.27.4"
-  peerDependencies:
-    "@polkadot/api": ^9.6.1
-    "@polkadot/wasm-crypto": ^6.3.1
-    rxjs: ^7.5.5
-  checksum: 56242f8b3c4b1200546f9d981e8ceb158907db8a9e573b660c6f9c29833c5bd201685bbe35c33ea2fbe20d69b97e0a98620d89390432b4815bb8fcaa6e9aab01
   languageName: node
   linkType: hard
 
@@ -2464,8 +2453,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/frontend@workspace:idea/frontend"
   dependencies:
-    "@gear-js/api": ^0.27.3
-    "@gear-js/react-hooks": ^0.3.9
+    "@gear-js/api": ^0.27.5
+    "@gear-js/react-hooks": ^0.3.10
     "@gear-js/ui": 0.5.13
     "@hcaptcha/react-hcaptcha": ^1.4.4
     "@mantine/form": ^5.4.0
@@ -2675,16 +2664,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/react-hooks@npm:^0.3.6, @gear-js/react-hooks@npm:^0.3.9":
-  version: 0.3.9
-  resolution: "@gear-js/react-hooks@npm:0.3.9"
+"@gear-js/react-hooks@npm:^0.3.10, @gear-js/react-hooks@npm:^0.3.6, @gear-js/react-hooks@npm:^0.3.9":
+  version: 0.3.10
+  resolution: "@gear-js/react-hooks@npm:0.3.10"
   peerDependencies:
-    "@gear-js/api": ^0.27.3
+    "@gear-js/api": ^0.27.5
     "@polkadot/extension-dapp": ^0.43.2
     react: ">=17.0.2"
     react-dom: ">=17.0.2"
     react-transition-group: ^4.4.2
-  checksum: 15befd8ddd875818d7e1d0e48c2c152784d431f32c3d4164646f352ff518274eec36110620cbb732c5aa881a6538a54bddf2c1f508285da34bd936944b723fa3
+  checksum: 1cf9bb822047cfea6b5de667e4cf73454f243f7b592136df3d3efef34fdaae01a13938e28ef07ec3eaaf0ccca5252dd4ccbef07c2cc99c6fb84b77481214e444
   languageName: node
   linkType: hard
 
