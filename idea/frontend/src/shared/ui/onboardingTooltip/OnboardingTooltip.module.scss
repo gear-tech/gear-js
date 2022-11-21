@@ -2,12 +2,17 @@
 @use '@gear-js/ui/headings' as *;
 @use 'shared/assets/styles/mixins' as *;
 
+$position: calc(100% + 26px);
+$arrowPosition: calc(100% + 1px);
+
+.wrapper {
+  position: relative;
+}
+
 .tooltip {
   width: 400px;
   padding: 24px 24px 24px 32px;
   position: absolute;
-  top: 150%;
-  right: 100%;
   background-color: #29292b;
   border-radius: $borderRadiusMedium;
   border: $borderModal;
@@ -16,15 +21,88 @@
   &::before {
     content: '';
     position: absolute;
-    bottom: calc(100% + 1px);
-    right: 24px;
     width: 0;
     height: 0;
     border-top: 9px solid transparent;
     border-bottom: 9px solid transparent;
     border-right: 9px solid $borderModalColor;
-    transform-origin: bottom right;
-    transform: rotate(-45deg);
+  }
+
+  &.node {
+    &::before {
+      bottom: 24px;
+      right: calc(100% + 1px);
+      transform-origin: bottom right;
+      transform: rotate(-45deg);
+    }
+  }
+
+  &.wallet,
+  &.message,
+  &.code {
+    top: $position;
+    right: 0;
+  }
+
+  &.program {
+    top: $position;
+    left: 0;
+  }
+
+  &.codes,
+  &.messages,
+  &.explorer,
+  &.mailbox,
+  &.apps {
+    top: 0;
+    left: $position;
+  }
+
+  &.node {
+    bottom: 0;
+    left: $position;
+  }
+
+  &.wallet,
+  &.code,
+  &.message {
+    &::before {
+      bottom: $arrowPosition;
+      right: 24px;
+      transform-origin: bottom right;
+      transform: rotate(-45deg);
+    }
+  }
+
+  &.program {
+    &::before {
+      bottom: $arrowPosition;
+      left: 24px;
+      transform-origin: bottom right;
+      transform: rotate(45deg) scaleX(-1);
+    }
+  }
+
+  &.codes,
+  &.messages,
+  &.mailbox,
+  &.explorer,
+  &.apps {
+    &::before {
+      top: 24px;
+      right: $arrowPosition;
+      transform-origin: top right;
+      transform: rotate(135deg);
+    }
+  }
+
+  &.node {
+    &::before {
+      bottom: 24px;
+      right: $arrowPosition;
+      transform-origin: bottom right;
+      transform: rotate(-135deg);
+    }
   }
 }
 
@@ -46,7 +124,10 @@
 
 .main {
   @include childrenMargin(8px);
-  margin-bottom: 24px;
+
+  &:not(:last-child) {
+    margin-bottom: 24px;
+  }
 }
 
 .heading {

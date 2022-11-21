@@ -8,6 +8,7 @@ import { AnimationTimeout, NODE_ADRESS_URL_PARAM } from 'shared/config';
 
 import { useNodes } from 'widgets/menu/helpers/useNodes';
 
+import { OnboardingTooltip } from 'shared/ui/onboardingTooltip';
 import { NodesButton } from './nodesButton';
 import { NodesPopup } from './nodesPopup';
 
@@ -79,15 +80,18 @@ const NodesSwitch = ({ isButtonFullWidth }: Props) => {
 
   return (
     <div ref={ref}>
-      <NodesButton
-        name={specName}
-        chain={chain}
-        version={specVersion}
-        isApiReady={isApiReady}
-        isOpen={isNodesOpen}
-        isFullWidth={isButtonFullWidth}
-        onClick={toggleNodesPopup}
-      />
+      <OnboardingTooltip index={9}>
+        <NodesButton
+          name={specName}
+          chain={chain}
+          version={specVersion}
+          isApiReady={isApiReady}
+          isOpen={isNodesOpen}
+          isFullWidth={isButtonFullWidth}
+          onClick={toggleNodesPopup}
+        />
+      </OnboardingTooltip>
+
       <CSSTransition in={isNodesOpen} timeout={AnimationTimeout.Default} mountOnEnter unmountOnExit>
         <NodesPopup
           chain={chain}

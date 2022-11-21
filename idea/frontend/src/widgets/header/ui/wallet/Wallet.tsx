@@ -22,7 +22,7 @@ const Wallet = ({ account }: Props) => {
   const accountBtnClasses = clsx(buttonStyles.medium, styles.accountBtn);
 
   return (
-    <div className={styles.walletWrapper}>
+    <OnboardingTooltip className={styles.walletWrapper} index={0}>
       {account ? (
         <AccountButton
           name={account.meta.name}
@@ -33,9 +33,7 @@ const Wallet = ({ account }: Props) => {
       ) : (
         <Button icon={substrateSVG} text="Connect" color="primary" onClick={openAccountsModal} />
       )}
-
-      <OnboardingTooltip />
-    </div>
+    </OnboardingTooltip>
   );
 };
 
