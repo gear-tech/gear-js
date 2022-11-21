@@ -45,18 +45,18 @@ export class GearEventListener {
     while (true) {
       try {
         await this.connectGearNode();
+        await this.rabbitMQService.initRMQ(this.genesis);
       } catch (error) {
         this.logger.log('⚙️ 📡 Reconnecting to the gear node');
         continue;
       }
       const unsub = await this.listen();
 
-      await this.rabbitMQService.connect(this.genesis);
-
       await new Promise((resolve) => {
-        this.api.on('error', (error) => {
-          unsub();
+        this.api.on('error',  async (error) => {
+          await this.rabbitMQService.sendDeleteGenesis(this.genesis);
           changeStatus('gear');
+          unsub();
           resolve(error);
         });
       });

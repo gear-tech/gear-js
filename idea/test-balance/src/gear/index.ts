@@ -51,8 +51,9 @@ async function init(connectionEstablishedCb: () => void) {
     }
 
     await new Promise((resolve) =>
-      api.on('error', (error) => {
+      api.on('error', async (error) => {
         console.log(`${new Date()} | Gear node connection error`, error);
+        await producer.sendDeleteGenesis(RabbitMQueues.GENESISES, getGenesisHash());
         changeStatus('ws');
         resolve(error);
       }),

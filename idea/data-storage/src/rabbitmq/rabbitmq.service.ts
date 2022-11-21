@@ -34,11 +34,13 @@ export class RabbitmqService {
     private blockService: BlockService,
   ) {}
 
-  public async connect(genesis: string): Promise<void> {
-    try {
-      this.connection = await connect(this.configService.get<string>('rabbitmq.url'), {
+  public async connect(): Promise<void> {
+    this.connection = await connect(this.configService.get<string>('rabbitmq.url'));
+    console.log('📍 RabbitMQ connected successfully');
+  }
 
-      });
+  public async initRMQ(genesis: string): Promise<void> {
+    try {
       this.mainChannel = await this.connection.createChannel();
       this.topicChannel = await this.connection.createChannel();
 
@@ -54,12 +56,12 @@ export class RabbitmqService {
       await this.mainChannel.assertExchange(directExchange, directExchangeType, {});
       await this.topicChannel.assertExchange(topicExchange, 'topic', {});
 
-      const assertQueue = await this.mainChannel.assertQueue(`ds_AQ_${genesis}`, {
+      const assertQueue = await this.mainChannel.assertQueue(`ds.AQ.${genesis}`, {
         durable: false,
         autoDelete: true,
         exclusive: false
       });
-      const assertTopicQueue = await this.topicChannel.assertQueue(`ds_ATQ_${genesis}`, {
+      const assertTopicQueue = await this.topicChannel.assertQueue(`ds.ATQ.${genesis}`, {
         durable: false,
         exclusive: false,
         autoDelete: true
@@ -68,17 +70,21 @@ export class RabbitmqService {
       await this.mainChannel.bindQueue(assertQueue.queue, directExchange, routingKey);
       await this.topicChannel.bindQueue(assertTopicQueue.queue, topicExchange, 'ds.genesises');
 
-      await this.directExchangeConsumer(assertQueue);
-      await this.topicExchangeConsumer(assertTopicQueue, genesis);
-
-      console.log('📍 RabbitMQ connected successfully');
+      await this.directMessageConsumer(assertQueue);
+      await this.topicMessageConsumer(assertTopicQueue, genesis);
     } catch (error) {
-      this.logger.error(new Date());
-      throw error;
+      this.logger.error('Init RMQ error');
+      this.logger.error(error);
     }
   }
 
-  private async directExchangeConsumer(repliesAssertQueue: Replies.AssertQueue): Promise<void>{
+  public async sendDeleteGenesis(genesis: string): Promise<void> {
+    const messageBuff = JSON.stringify({ service: 'ds', action: 'delete', genesis });
+    this.mainChannel.sendToQueue(RabbitMQueues.GENESISES, Buffer.from(messageBuff));
+  }
+
+
+  private async directMessageConsumer(repliesAssertQueue: Replies.AssertQueue): Promise<void>{
     try {
       await this.mainChannel.consume(repliesAssertQueue.queue, async (message) => {
         if(!message){
@@ -100,7 +106,7 @@ export class RabbitmqService {
     }
   }
 
-  private async topicExchangeConsumer(repliesAssertQueue: Replies.AssertQueue, genesis): Promise<void> {
+  private async topicMessageConsumer(repliesAssertQueue: Replies.AssertQueue, genesis): Promise<void> {
     try {
       await this.topicChannel.consume(repliesAssertQueue.queue, async (message) => {
         if(!message){

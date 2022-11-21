@@ -9,7 +9,7 @@ export let connectionAMQP: Connection;
 export let mainChannelAMQP: Channel;
 export let topicChannelAMQP: Channel;
 
-export async function initAMQP(): Promise<void> {
+export async function initAMQ(): Promise<void> {
   try {
     connectionAMQP = await connect(config.rabbitmq.url);
     mainChannelAMQP = await connectionAMQP.createChannel();
@@ -24,16 +24,16 @@ export async function initAMQP(): Promise<void> {
     const messageBuff = JSON.stringify({ service: 'tb', action: 'add', genesis });
     mainChannelAMQP.sendToQueue(RabbitMQueues.GENESISES, Buffer.from(messageBuff));
 
-    await mainChannelAMQP.assertExchange(directExchange, directExchangeType, {});
-    await mainChannelAMQP.assertExchange(topicExchange, topicExchangeType, {});
+    await mainChannelAMQP.assertExchange(directExchange, directExchangeType);
+    await mainChannelAMQP.assertExchange(topicExchange, topicExchangeType);
 
-    const assertQueue = await mainChannelAMQP.assertQueue(`tb_AQ_${genesis}`, {
+    const assertQueue = await mainChannelAMQP.assertQueue(`tb_AQ.${genesis}`, {
       durable: false,
       autoDelete: true,
       exclusive: false,
     });
 
-    const assertTopicQueue = await topicChannelAMQP.assertQueue(`tb_ATQ_${genesis}`, {
+    const assertTopicQueue = await topicChannelAMQP.assertQueue(`tb.ATQ.${genesis}`, {
       durable: false,
       autoDelete: true,
       exclusive: false,

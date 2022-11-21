@@ -7,6 +7,7 @@ import { changeStatus } from './healthcheck/healthcheck.controller';
 import { dataStorageLogger } from './common/data-storage.logger';
 import { AppDataSource } from './data-source';
 import { GearEventListener } from './gear/gear-event-listener';
+import { RabbitmqService } from './rabbitmq/rabbitmq.service';
 
 async function bootstrap() {
   const { healthcheck } = configuration();
@@ -27,6 +28,9 @@ async function bootstrap() {
   changeStatus('database');
 
   await waitReady();
+
+  const rabbitmqService = app.get(RabbitmqService);
+  await rabbitmqService.connect();
 
   await app.listen(healthcheck.port);
 
