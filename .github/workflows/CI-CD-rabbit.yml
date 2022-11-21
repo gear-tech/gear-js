@@ -164,7 +164,7 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment api-gateway frontend-nginx data-storage-rpc gear-node -n rabbitmq
+          args: rollout restart deployment api-gateway frontend-nginx data-storage-rpc gear-node test-balance-testenv -n rabbitmq
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
