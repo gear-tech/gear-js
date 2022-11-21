@@ -1,4 +1,4 @@
-import { API_METHODS, IRpcRequest, IRpcResponse, JSONRPC_ERRORS } from '@gear-js/common';
+import { IRpcRequest, IRpcResponse, JSONRPC_ERRORS } from '@gear-js/common';
 
 export function getResponse(procedure: IRpcRequest, error?: any, result?: any): IRpcResponse {
   const response: IRpcResponse = {

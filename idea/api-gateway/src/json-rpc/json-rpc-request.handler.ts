@@ -1,8 +1,7 @@
 import { API_METHODS, IRpcRequest, IRpcResponse, JSONRPC_ERRORS } from '@gear-js/common';
 
-import { getResponse, isNetworkDataAvailable } from '../utils';
+import { getResponse } from '../utils';
 import { jsonRpcHandler } from './json-rpc.handler';
-import { isTestBalanceAvailable } from '../common/helpers/is-test-balance-availabel';
 import { dataStorageServicesMap, testBalanceServicesMap } from '../rabbitmq/init-rabbitmq';
 
 async function jsonRpcRequestHandler(
@@ -26,12 +25,11 @@ async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
   }
 
   if (method === API_METHODS.TEST_BALANCE_AVAILABLE) {
-    return getResponse(procedure, null, isTestBalanceAvailable(params.genesis));
+    return getResponse(procedure, null, testBalanceServicesMap.has(params.genesis));
   }
 
   if(procedure.method === API_METHODS.NETWORK_DATA_AVAILABLE) {
-    const { params: { genesis } } = procedure;
-    return getResponse(procedure, null, isNetworkDataAvailable(genesis));
+    return getResponse(procedure, null, dataStorageServicesMap.has(params.genesis));
   }
 
   if(!validateGenesis(params.genesis)){
