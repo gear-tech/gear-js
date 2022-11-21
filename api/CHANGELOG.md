@@ -1,3 +1,13 @@
+## 0.27.5
+
+_11/21/2022_
+
+https://github.com/gear-tech/gear-js/pull/1102
+
+### Changes
+
+- Update `gr_read` syscall
+
 ## 0.27.4
 
 _11/18/2022_
