@@ -3,8 +3,10 @@ import { waitReady } from '@polkadot/wasm-crypto';
 
 import {
   checkInitStatus,
-  getAllPrograms, getAllProgramsByDates,
-  getAllProgramsByOwner, getAllProgramsByStatus,
+  getAllPrograms,
+  getAllProgramsByDates,
+  getAllProgramsByOwner,
+  getAllProgramsByStatus,
   getMeta,
   getProgramData,
   uploadMeta,
@@ -26,8 +28,15 @@ let api: GearApi;
 jest.setTimeout(30_000);
 
 beforeAll(async () => {
-  api = await GearApi.create({ providerAddress: base.gear.wsProvider });
+  try {
+    api = await GearApi.create({ providerAddress: base.gear.wsProvider, throwOnConnect: true });
+  } catch (error) {
+    console.log(error);
+    process.exit(0);
+  }
+
   genesis = api.genesisHash.toHex();
+
   await waitReady();
   try {
     prepared = await processPrepare(api);
@@ -153,4 +162,3 @@ describe('block method', () => {
     expect(await blocksStatus(genesis)).toBeTruthy();
   });
 });
-

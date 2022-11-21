@@ -140,8 +140,7 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-test-balance:qa
 
   deploy-to-k8s-staging:
-    needs:
-      [
+    needs: [
         # build-frontend-image-staging,
         build-data-storage-image-staging,
         build-api-gateway-image-staging,
@@ -319,7 +318,7 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment api-gateway data-storage-vara data-storage-rpc data-storage-workshop test-balance-workshop-node frontend-nginx test-balance-testnet-node -n prod-idea
+          args: rollout restart deployment api-gateway data-storage-stable data-storage-vara data-storage-workshop test-balance-workshop-node frontend-nginx test-balance-testnet-node -n prod-idea
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master

@@ -8,7 +8,7 @@ type ParamsToSendMessage = OperationCallbacks & {
   payloadType?: string;
 };
 
-type PatamsToReplyMessage = OperationCallbacks & {
+type ParamsToReplyMessage = OperationCallbacks & {
   reply: IMessageSendReplyOptions;
   metadata?: Metadata;
   payloadType?: string;
@@ -18,4 +18,4 @@ type ParamsToSignAndSend = CommonParamsToSignAndSend & {
   title?: string;
 };
 
-export type { ParamsToSendMessage, PatamsToReplyMessage, ParamsToSignAndSend };
+export type { ParamsToSendMessage, ParamsToReplyMessage, ParamsToSignAndSend };
