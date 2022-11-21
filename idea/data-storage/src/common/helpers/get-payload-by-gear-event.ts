@@ -18,15 +18,23 @@ import { GearEventPayload } from '../types';
 import { CodeChangedInput } from '../../code/types';
 
 function userMessageSentPayload(data: UserMessageSentData): UserMessageSentInput {
-  const { id, source, destination, payload, value, reply } = data.message;
+  const { id, source, destination, payload, value, details } = data.message;
   return {
     id: id.toHex(),
     source: source.toHex(),
     destination: destination.toHex(),
     payload: payload.toHex(),
     value: value.toString(),
-    replyToMessageId: reply.isSome ? reply.unwrap().replyTo.toHex() : null,
-    exitCode: reply.isSome ? reply.unwrap().exitCode.toNumber() : null,
+    replyToMessageId: details.isSome
+      ? details.unwrap().isReply
+        ? details.unwrap().asReply.replyTo.toHex()
+        : null
+      : null,
+    exitCode: details.isSome
+      ? details.unwrap().isReply
+        ? details.unwrap().asReply.statusCode.toNumber()
+        : null
+      : null,
     expiration: data.expiration.isSome ? data.expiration.unwrap().toNumber() : null,
   };
 }

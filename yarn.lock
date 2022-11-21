@@ -2223,14 +2223,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.27.0, @gear-js/api@npm:^0.27.0":
-  version: 0.27.0
-  resolution: "@gear-js/api@npm:0.27.0"
+"@gear-js/api@npm:0.27.4":
+  version: 0.27.4
+  resolution: "@gear-js/api@npm:0.27.4"
   peerDependencies:
     "@polkadot/api": ^9.6.1
     "@polkadot/wasm-crypto": ^6.3.1
     rxjs: ^7.5.5
-  checksum: 9807d1f846294b1e2e60b726807ac83326e0f831826a874a5de42285edc51bb4d04c8035208e48e71a2d148ecd8ece93115decebf1fb95ffc21f72f81c164720
+  checksum: 56242f8b3c4b1200546f9d981e8ceb158907db8a9e573b660c6f9c29833c5bd201685bbe35c33ea2fbe20d69b97e0a98620d89390432b4815bb8fcaa6e9aab01
   languageName: node
   linkType: hard
 
@@ -2253,6 +2253,17 @@ __metadata:
     "@polkadot/wasm-crypto": ^6.3.1
     rxjs: ^7.5.5
   checksum: 80c9b6403f2a29dec0dc40ed7b4053152298fc6d27d56f4463120340805c9009df26218575a09f1b2eb9c830fc3d2a052a2fdd4f9c859d425174ed9fe627ca80
+  languageName: node
+  linkType: hard
+
+"@gear-js/api@npm:^0.27.0":
+  version: 0.27.0
+  resolution: "@gear-js/api@npm:0.27.0"
+  peerDependencies:
+    "@polkadot/api": ^9.6.1
+    "@polkadot/wasm-crypto": ^6.3.1
+    rxjs: ^7.5.5
+  checksum: 9807d1f846294b1e2e60b726807ac83326e0f831826a874a5de42285edc51bb4d04c8035208e48e71a2d148ecd8ece93115decebf1fb95ffc21f72f81c164720
   languageName: node
   linkType: hard
 
@@ -2331,7 +2342,7 @@ __metadata:
     "@babel/plugin-transform-modules-commonjs": 7.18.6
     "@babel/plugin-transform-typescript": 7.18.12
     "@babel/preset-typescript": 7.18.6
-    "@gear-js/api": 0.27.0
+    "@gear-js/api": 0.27.4
     "@gear-js/common": "workspace:^"
     "@nestjs/cli": 8.2.8
     "@nestjs/common": 8.4.7
