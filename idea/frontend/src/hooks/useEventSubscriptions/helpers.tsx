@@ -7,7 +7,7 @@ import { CustomLink } from 'shared/ui/customLink';
 
 const messageSentEventsHandler = (event: UserMessageSent, address: Hex, alert: AlertContainerFactory) => {
   const { message, method, section } = event.data;
-  const { payload, destination, reply, id } = message;
+  const { payload, destination, details, id } = message;
 
   if (destination.toHex() !== address) {
     return;
@@ -16,7 +16,7 @@ const messageSentEventsHandler = (event: UserMessageSent, address: Hex, alert: A
   const messageId = id.toHex();
   const alertOptions = { title: `${section}.${method}` };
 
-  const isError = reply.isSome && !reply.unwrap().exitCode.eq(0);
+  const isError = details.isSome && details.unwrap().isReply && !details.unwrap().asReply.statusCode.eq(0);
 
   const showAlert = isError ? alert.error : alert.success;
 
