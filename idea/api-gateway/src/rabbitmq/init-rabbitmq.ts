@@ -18,23 +18,21 @@ export async function initAMQP(): Promise<void> {
 
     await mainChannelAMQP.assertExchange(RabbitMQExchanges.TOPIC_EX, 'topic', { durable: true });
     await mainChannelAMQP.assertExchange(RabbitMQExchanges.DIRECT_EX, 'direct', { durable: true });
-    const repliesAssertQueue = await mainChannelAMQP.assertQueue(RabbitMQueues.REPLIES, {
+
+    await mainChannelAMQP.assertQueue(RabbitMQueues.REPLIES, {
       durable: true,
       exclusive: false,
-      autoDelete: true,
+      autoDelete: false,
       messageTtl: 30_000 });
 
-    await mainChannelAMQP.bindQueue(repliesAssertQueue.queue, RabbitMQExchanges.DIRECT_EX, RabbitMQueues.REPLIES);
+    await mainChannelAMQP.bindQueue(RabbitMQueues.REPLIES, RabbitMQExchanges.DIRECT_EX, RabbitMQueues.REPLIES);
 
-    const genesisesAssertQueue = await mainChannelAMQP.assertQueue(RabbitMQueues.GENESISES, {
+    await mainChannelAMQP.assertQueue(RabbitMQueues.GENESISES, {
       durable: true,
       exclusive: false,
-      autoDelete: true,
+      autoDelete: false,
       messageTtl: 30_000
     });
-
-    await mainChannelAMQP.bindQueue(genesisesAssertQueue.queue, RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES);
-    await mainChannelAMQP.bindQueue(genesisesAssertQueue.queue, RabbitMQExchanges.TOPIC_EX, RabbitMQueues.GENESISES);
 
     await subscribeToGenesises();
     await subscribeToReplies();
