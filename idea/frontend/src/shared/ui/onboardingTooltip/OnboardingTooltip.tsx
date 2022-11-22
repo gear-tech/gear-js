@@ -19,44 +19,47 @@ const OnboardingTooltip = ({ children, index, className }: Props) => {
 
   const counterText = `${step + 1} of ${lastStep + 1}`;
 
-  const wrapperClassName = clsx(styles.wrapper, className);
-  const tooltipClassName = clsx(styles.tooltip, styles[stepName]);
-
   const isVisible = index === step;
+
+  const wrapperClassName = clsx(styles.wrapper, className, isVisible && styles.active, styles[stepName]);
+  const tooltipClassName = clsx(styles.tooltip, styles[stepName]);
 
   return (
     <div className={wrapperClassName}>
       {children}
 
       {isVisible && (
-        <div className={tooltipClassName}>
-          <header className={styles.header}>
-            <div className={styles.steps}>
-              <Button
-                icon={ArrowSVG}
-                color="transparent"
-                className={styles.prevStepButton}
-                onClick={prevStep}
-                disabled={isFirstStep}
-              />
-              <p>{counterText}</p>
-              <Button icon={ArrowSVG} color="transparent" onClick={nextStep} disabled={isLastStep} />
+        <>
+          <div className={tooltipClassName}>
+            <header className={styles.header}>
+              <div className={styles.steps}>
+                <Button
+                  icon={ArrowSVG}
+                  color="transparent"
+                  className={styles.prevStepButton}
+                  onClick={prevStep}
+                  disabled={isFirstStep}
+                />
+                <p>{counterText}</p>
+                <Button icon={ArrowSVG} color="transparent" onClick={nextStep} disabled={isLastStep} />
+              </div>
+
+              <Button icon={CrossSVG} color="transparent" />
+            </header>
+
+            <div className={styles.main}>
+              <h2 className={styles.heading}>{heading}</h2>
+              <p className={styles.text}>{text}</p>
             </div>
 
-            <Button icon={CrossSVG} color="transparent" />
-          </header>
-
-          <div className={styles.main}>
-            <h2 className={styles.heading}>{heading}</h2>
-            <p className={styles.text}>{text}</p>
+            {!isLastStep && (
+              <footer>
+                <Button text="Next" color="secondary" onClick={nextStep} />
+              </footer>
+            )}
           </div>
-
-          {!isLastStep && (
-            <footer>
-              <Button text="Next" color="secondary" onClick={nextStep} />
-            </footer>
-          )}
-        </div>
+          <div className={styles.overlay} />
+        </>
       )}
     </div>
   );
