@@ -34,6 +34,8 @@ export async function initAMQP(): Promise<void> {
       messageTtl: 30_000
     });
 
+    await mainChannelAMQP.bindQueue(RabbitMQueues.GENESISES, RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES);
+
     await subscribeToGenesises();
     await subscribeToReplies();
   } catch (error) {

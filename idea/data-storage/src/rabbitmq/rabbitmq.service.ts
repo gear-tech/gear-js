@@ -49,9 +49,9 @@ export class RabbitmqService {
       const directExchangeType = 'direct';
       const routingKey = `ds.${genesis}`;
 
-      const messageBuff = JSON.stringify({ service: 'ds', action: 'add', genesis });
       //send genesis to api-gateway
-      this.mainChannel.sendToQueue(RabbitMQueues.GENESISES, Buffer.from(messageBuff));
+      const messageBuff = JSON.stringify({ service: 'ds', action: 'add', genesis });
+      this.mainChannel.publish(directExchange, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
 
       await this.mainChannel.assertExchange(directExchange, directExchangeType, {});
       await this.topicChannel.assertExchange(topicExchange, 'topic', {});
@@ -78,11 +78,15 @@ export class RabbitmqService {
     }
   }
 
-  public async sendDeleteGenesis(genesis: string): Promise<void> {
+  public sendDeleteGenesis(genesis: string): void {
     const messageBuff = JSON.stringify({ service: 'ds', action: 'delete', genesis });
-    this.mainChannel.sendToQueue(RabbitMQueues.GENESISES, Buffer.from(messageBuff));
+    this.sendMessage(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, messageBuff);
   }
 
+  private sendMessage(exchange: RabbitMQExchanges, queue: RabbitMQueues, params: any, correlationId?: string,): void {
+    const messageBuff = JSON.stringify(params);
+    this.mainChannel.publish(exchange, queue, Buffer.from(messageBuff), { correlationId });
+  }
 
   private async directMessageConsumer(repliesAssertQueue: Replies.AssertQueue): Promise<void>{
     try {
@@ -97,11 +101,9 @@ export class RabbitmqService {
 
         const result = await this.handleEventByMethod(method, params);
 
-        const messageBuff = JSON.stringify(result);
-        this.mainChannel.sendToQueue(RabbitMQueues.REPLIES, Buffer.from(messageBuff), { correlationId });
+        this.sendMessage(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.REPLIES, result, correlationId);
       });
     } catch (error) {
-      this.logger.error(new Date());
       this.logger.error(`Direct exchange consumer ${JSON.stringify(error)}`);
     }
   }
@@ -114,10 +116,9 @@ export class RabbitmqService {
         }
 
         const messageBuff = JSON.stringify({ service: 'ds', action: 'add', genesis });
-        this.mainChannel.sendToQueue(RabbitMQueues.GENESISES, Buffer.from(messageBuff));
+        this.mainChannel.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
       });
     } catch (error) {
-      this.logger.error(new Date());
       this.logger.error(`Topic exchange consumer ${JSON.stringify(error)}`);
     }
   }

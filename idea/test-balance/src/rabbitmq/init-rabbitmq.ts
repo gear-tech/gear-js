@@ -21,8 +21,9 @@ export async function initAMQ(): Promise<void> {
     const topicExchangeType = 'topic';
     const routingKey = `tb.${genesis}`;
 
+    //send genesis
     const messageBuff = JSON.stringify({ service: 'tb', action: 'add', genesis });
-    mainChannelAMQP.sendToQueue(RabbitMQueues.GENESISES, Buffer.from(messageBuff));
+    mainChannelAMQP.publish(directExchange, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
 
     await mainChannelAMQP.assertExchange(directExchange, directExchangeType);
     await mainChannelAMQP.assertExchange(topicExchange, topicExchangeType);

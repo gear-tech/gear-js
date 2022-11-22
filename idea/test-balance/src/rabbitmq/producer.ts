@@ -1,20 +1,22 @@
-import { RabbitMQueues } from '@gear-js/common';
+import { RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
 
 import { mainChannelAMQP } from './init-rabbitmq';
 
-async function sendGenesis(queue: RabbitMQueues, genesis: string): Promise<void> {
+function sendGenesis(queue: RabbitMQueues, genesis: string): void {
   const messageBuff = JSON.stringify({ service: 'tb', action: 'add', genesis });
-  mainChannelAMQP.sendToQueue(queue, Buffer.from(messageBuff));
+  mainChannelAMQP.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
 }
 
-async function sendDeleteGenesis(queue: RabbitMQueues, genesis: string): Promise<void> {
+function sendDeleteGenesis(queue: RabbitMQueues, genesis: string): void {
   const messageBuff = JSON.stringify({ service: 'tb', action: 'delete', genesis });
-  mainChannelAMQP.sendToQueue(queue, Buffer.from(messageBuff));
+  mainChannelAMQP.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
 }
 
-async function sendMessageToQueue(queue: RabbitMQueues, correlationId: string, params: any): Promise<void> {
+function sendMessage(exchange: RabbitMQExchanges, queue: RabbitMQueues, correlationId: string, params: any): void {
   const messageBuff = JSON.stringify(params);
-  mainChannelAMQP.sendToQueue(queue, Buffer.from(messageBuff), { correlationId });
+  mainChannelAMQP.publish(exchange, queue, Buffer.from(messageBuff), {
+    correlationId,
+  });
 }
 
-export const producer = { sendGenesis, sendMessageToQueue, sendDeleteGenesis };
+export const producer = { sendGenesis, sendMessage, sendDeleteGenesis };

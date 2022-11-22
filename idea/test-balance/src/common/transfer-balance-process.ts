@@ -1,4 +1,4 @@
-import { JSONRPC_ERRORS, RabbitMQueues } from '@gear-js/common';
+import { JSONRPC_ERRORS, RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
 
 import { transferService } from '../services/transfer.service';
 import { gearService } from '../gear';
@@ -20,5 +20,5 @@ export async function transferBalanceProcess(payload: any, correlationId: string
     testBalanceLogger.error(error.message, error.stack);
     result = { error: JSONRPC_ERRORS.InternalError.name };
   }
-  await producer.sendMessageToQueue(RabbitMQueues.REPLIES, correlationId, result);
+  await producer.sendMessage(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.REPLIES, correlationId, result);
 }
