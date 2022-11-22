@@ -5,7 +5,7 @@ import { producer } from './producer';
 import { gearService } from '../gear';
 import { transferBalanceProcess } from '../common/transfer-balance-process';
 
-export async function directExchangeConsumer(channel: Channel, repliesAssertQueue: Replies.AssertQueue): Promise<void> {
+export async function directMessageConsumer(channel: Channel, repliesAssertQueue: Replies.AssertQueue): Promise<void> {
   try {
     await channel.consume(repliesAssertQueue.queue, async (message) => {
       const payload = JSON.parse(message.content.toString());
@@ -22,7 +22,7 @@ export async function directExchangeConsumer(channel: Channel, repliesAssertQueu
   }
 }
 
-export async function topicExchangeConsumer(channel: Channel, repliesAssertQueue: Replies.AssertQueue): Promise<void> {
+export async function topicMessageConsumer(channel: Channel, repliesAssertQueue: Replies.AssertQueue): Promise<void> {
   try {
     await channel.consume(repliesAssertQueue.queue, async (message) => {
       if (!message) {

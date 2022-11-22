@@ -80,10 +80,10 @@ export class RabbitmqService {
 
   public sendDeleteGenesis(genesis: string): void {
     const messageBuff = JSON.stringify({ service: 'ds', action: 'delete', genesis });
-    this.sendMessage(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, messageBuff);
+    this.mainChannel.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
   }
 
-  private sendMessage(exchange: RabbitMQExchanges, queue: RabbitMQueues, params: any, correlationId?: string,): void {
+  private sendMessage(exchange: RabbitMQExchanges, queue: RabbitMQueues, params: any, correlationId?: string): void {
     const messageBuff = JSON.stringify(params);
     this.mainChannel.publish(exchange, queue, Buffer.from(messageBuff), { correlationId });
   }

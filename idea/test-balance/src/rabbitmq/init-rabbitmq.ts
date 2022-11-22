@@ -3,7 +3,7 @@ import { RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
 
 import config from '../config/configuration';
 import { gearService } from '../gear';
-import { directExchangeConsumer, topicExchangeConsumer } from './consumer';
+import { directMessageConsumer, topicMessageConsumer } from './consumer';
 
 export let connectionAMQP: Connection;
 export let mainChannelAMQP: Channel;
@@ -43,8 +43,8 @@ export async function initAMQ(): Promise<void> {
     await mainChannelAMQP.bindQueue(assertQueue.queue, directExchange, routingKey);
     await mainChannelAMQP.bindQueue(assertTopicQueue.queue, topicExchange, 'tb.genesises');
 
-    await directExchangeConsumer(mainChannelAMQP, assertQueue);
-    await topicExchangeConsumer(topicChannelAMQP, assertTopicQueue);
+    await directMessageConsumer(mainChannelAMQP, assertQueue);
+    await topicMessageConsumer(topicChannelAMQP, assertTopicQueue);
   } catch (error) {
     console.error(`${new Date()} | Init AMQP error`, error);
   }
