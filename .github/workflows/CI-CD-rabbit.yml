@@ -154,7 +154,7 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment postgres rabbitmq -n rabbitmq
+          args: rollout restart deployment postgres postgres-testbalance-testenv rabbitmq -n rabbitmq
           
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
