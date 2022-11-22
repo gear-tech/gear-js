@@ -28,22 +28,16 @@ export async function initAMQ(): Promise<void> {
     await mainChannelAMQP.assertExchange(directExchange, directExchangeType);
     await mainChannelAMQP.assertExchange(topicExchange, topicExchangeType);
 
-    const assertQueue = await mainChannelAMQP.assertQueue(`tb_AQ.${genesis}`, {
+    const assertTopicQueue = await topicChannelAMQP.assertQueue(`tbt.${genesis}`, {
       durable: false,
       autoDelete: true,
       exclusive: false,
     });
 
-    const assertTopicQueue = await topicChannelAMQP.assertQueue(`tb.ATQ.${genesis}`, {
-      durable: false,
-      autoDelete: true,
-      exclusive: false,
-    });
-
-    await mainChannelAMQP.bindQueue(assertQueue.queue, directExchange, routingKey);
+    await mainChannelAMQP.bindQueue(routingKey, directExchange, routingKey);
     await mainChannelAMQP.bindQueue(assertTopicQueue.queue, topicExchange, 'tb.genesises');
 
-    await directMessageConsumer(mainChannelAMQP, assertQueue);
+    await directMessageConsumer(mainChannelAMQP, routingKey);
     await topicMessageConsumer(topicChannelAMQP, assertTopicQueue);
   } catch (error) {
     console.error(`${new Date()} | Init AMQP error`, error);

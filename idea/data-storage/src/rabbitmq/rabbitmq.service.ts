@@ -56,21 +56,16 @@ export class RabbitmqService {
       await this.mainChannel.assertExchange(directExchange, directExchangeType);
       await this.topicChannel.assertExchange(topicExchange, 'topic');
 
-      const assertQueue = await this.mainChannel.assertQueue(`ds.AQ.${genesis}`, {
-        durable: false,
-        autoDelete: true,
-        exclusive: false
-      });
-      const assertTopicQueue = await this.topicChannel.assertQueue(`ds.ATQ.${genesis}`, {
+      const assertTopicQueue = await this.topicChannel.assertQueue(`dst.${genesis}`, {
         durable: false,
         exclusive: false,
         autoDelete: true
       });
 
-      await this.mainChannel.bindQueue(assertQueue.queue, directExchange, routingKey);
+      await this.mainChannel.bindQueue(routingKey, directExchange, routingKey);
       await this.topicChannel.bindQueue(assertTopicQueue.queue, topicExchange, 'ds.genesises');
 
-      await this.directMessageConsumer(assertQueue);
+      await this.directMessageConsumer(routingKey);
       await this.topicMessageConsumer(assertTopicQueue, genesis);
     } catch (error) {
       this.logger.error('Init RMQ error');
@@ -88,9 +83,9 @@ export class RabbitmqService {
     this.mainChannel.publish(exchange, queue, Buffer.from(messageBuff), { correlationId });
   }
 
-  private async directMessageConsumer(repliesAssertQueue: Replies.AssertQueue): Promise<void>{
+  private async directMessageConsumer(queue: string): Promise<void>{
     try {
-      await this.mainChannel.consume(repliesAssertQueue.queue, async (message) => {
+      await this.mainChannel.consume(queue, async (message) => {
         if(!message){
           return;
         }
