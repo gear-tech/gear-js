@@ -21,7 +21,8 @@
     "build:syndote": "yarn workspace @gear-js/syndote build",
     "build:upload-dapp-chain": "yarn workspace @gear-js/upload-dapp-chain build",
     "build:supply-chain": "yarn workspace @gear-js/supply-chain build",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "bump:polkadot": "node dev/bump-polkadot.js && yarn install"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "5.36.1",
