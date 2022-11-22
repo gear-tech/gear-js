@@ -53,8 +53,8 @@ export class RabbitmqService {
       const messageBuff = JSON.stringify({ service: 'ds', action: 'add', genesis });
       this.mainChannel.publish(directExchange, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
 
-      await this.mainChannel.assertExchange(directExchange, directExchangeType, {});
-      await this.topicChannel.assertExchange(topicExchange, 'topic', {});
+      await this.mainChannel.assertExchange(directExchange, directExchangeType);
+      await this.topicChannel.assertExchange(topicExchange, 'topic');
 
       const assertQueue = await this.mainChannel.assertQueue(`ds.AQ.${genesis}`, {
         durable: false,
