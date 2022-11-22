@@ -26,8 +26,16 @@ function userMessageSentPayload(data: UserMessageSentData): UserMessageSentInput
     destination: destination.toHex(),
     payload: payload.toHex(),
     value: value.toString(),
-    replyToMessageId: details.isSome ? details.unwrap().asReply.replyTo.toHex() : null,
-    exitCode: details.isSome ? details.unwrap().asReply.statusCode.toNumber() : null,
+    replyToMessageId: details.isSome
+      ? details.unwrap().isReply
+        ? details.unwrap().asReply.replyTo.toHex()
+        : null
+      : null,
+    exitCode: details.isSome
+      ? details.unwrap().isReply
+        ? details.unwrap().asReply.statusCode.toNumber()
+        : null
+      : null,
     expiration: data.expiration.isSome ? data.expiration.unwrap().toNumber() : null,
   };
 }
