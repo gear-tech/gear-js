@@ -2,7 +2,7 @@ import { API_METHODS, IRpcRequest, IRpcResponse, JSONRPC_ERRORS } from '@gear-js
 
 import { getResponse } from '../utils';
 import { jsonRpcHandler } from './json-rpc.handler';
-import { dataStorageServicesMap, testBalanceServicesMap } from '../rabbitmq/init-rabbitmq';
+import { dataStorageChannels, testBalanceChannels } from '../rabbitmq/init-rabbitmq';
 
 async function jsonRpcRequestHandler(
   rpcBodyRequest: IRpcRequest | IRpcRequest[],
@@ -25,11 +25,11 @@ async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
   }
 
   if (method === API_METHODS.TEST_BALANCE_AVAILABLE) {
-    return getResponse(procedure, null, testBalanceServicesMap.has(params.genesis));
+    return getResponse(procedure, null, testBalanceChannels.has(params.genesis));
   }
 
   if(procedure.method === API_METHODS.NETWORK_DATA_AVAILABLE) {
-    return getResponse(procedure, null, dataStorageServicesMap.has(params.genesis));
+    return getResponse(procedure, null, dataStorageChannels.has(params.genesis));
   }
 
   if(!validateGenesis(params.genesis)){
@@ -47,7 +47,7 @@ function isExistJsonRpcMethod(kafkaTopic: string): boolean {
 }
 
 function validateGenesis(genesis: string): boolean {
-  if(dataStorageServicesMap.has(genesis) || testBalanceServicesMap.has(genesis)){
+  if(dataStorageChannels.has(genesis) || testBalanceChannels.has(genesis)){
     return true;
   }
 

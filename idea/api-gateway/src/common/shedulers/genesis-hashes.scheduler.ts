@@ -2,7 +2,7 @@ import { CronJob } from 'cron';
 
 import configuration from '../../config/configuration';
 import { producer } from '../../rabbitmq/producer';
-import { testBalanceServicesMap } from '../../rabbitmq/init-rabbitmq';
+import { testBalanceChannels } from '../../rabbitmq/init-rabbitmq';
 
 export async function runSchedulerGenesisHashes() {
   await producer.sendMessageTBGenesises();
@@ -10,7 +10,7 @@ export async function runSchedulerGenesisHashes() {
   const cronTime = configuration.scheduler.genesisHashesTime;
 
   const cron = new CronJob(cronTime, async function () {
-    testBalanceServicesMap.clear();
+    testBalanceChannels.clear();
 
     await producer.sendMessageTBGenesises();
   });

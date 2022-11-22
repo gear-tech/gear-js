@@ -1,7 +1,7 @@
 import { CronJob } from 'cron';
 
 import configuration from '../../config/configuration';
-import { dataStorageServicesMap } from '../../rabbitmq/init-rabbitmq';
+import { dataStorageChannels } from '../../rabbitmq/init-rabbitmq';
 import { producer } from '../../rabbitmq/producer';
 
 export async function runSchedulerNetworkDataStorages() {
@@ -10,7 +10,7 @@ export async function runSchedulerNetworkDataStorages() {
   const cronTime = configuration.scheduler.networkDataStoragesTime;
 
   const cron = new CronJob(cronTime, async function () {
-    dataStorageServicesMap.clear();
+    dataStorageChannels.clear();
 
     await producer.sendMessageDSGenesises();
   });

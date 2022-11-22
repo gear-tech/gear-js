@@ -1,12 +1,12 @@
-import { IMessageNetworkDSParams, IMessageTestBalanceParams } from './types';
+import { IMessageDataStorageParams, IMessageTestBalanceParams } from './types';
 import { AMQP_METHODS, RabbitMQExchanges } from '@gear-js/common';
 
-import { dataStorageServicesMap, mainChannelAMQP, testBalanceServicesMap } from './init-rabbitmq';
+import { dataStorageChannels, mainChannelAMQP, testBalanceChannels } from './init-rabbitmq';
 
-async function sendMessageToDataStorage(messageNetworkDSParams: IMessageNetworkDSParams): Promise<void> {
+async function sendMessageToDataStorage(messageNetworkDSParams: IMessageDataStorageParams): Promise<void> {
   const { genesis, params, correlationId, method } = messageNetworkDSParams;
 
-  const channel = dataStorageServicesMap.get(genesis);
+  const channel = dataStorageChannels.get(genesis);
 
   channel.publish(
     RabbitMQExchanges.DIRECT_EX,
@@ -18,7 +18,7 @@ async function sendMessageToDataStorage(messageNetworkDSParams: IMessageNetworkD
 async function sendMessageToTestBalance(messageTestBalanceParams: IMessageTestBalanceParams): Promise<void> {
   const { genesis, params, correlationId, method } = messageTestBalanceParams;
 
-  const channel = testBalanceServicesMap.get(genesis);
+  const channel = testBalanceChannels.get(genesis);
 
   channel.publish(
     RabbitMQExchanges.DIRECT_EX,

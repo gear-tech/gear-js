@@ -7,11 +7,11 @@ import { RpcResponse } from '../json-rpc/types';
 let connectionAMQP: Connection;
 let mainChannelAMQP: Channel;
 
-const testBalanceServicesMap: Map<string, Channel> = new Map<string, Channel>();
-const dataStorageServicesMap: Map<string, Channel> = new Map<string, Channel>();
-const rabbitMQEventMap: Map<string, (params: any) => RpcResponse> = new Map<string, (params: any) => RpcResponse>();
+const testBalanceChannels: Map<string, Channel> = new Map<string, Channel>();
+const dataStorageChannels: Map<string, Channel> = new Map<string, Channel>();
+const repliesMap: Map<string, (params: any) => RpcResponse> = new Map<string, (params: any) => RpcResponse>();
 
-export async function initAMQP(): Promise<void> {
+export async function initAMQ(): Promise<void> {
   try {
     connectionAMQP = await connect(config.rabbitmq.url);
     mainChannelAMQP = await connectionAMQP.createChannel();
@@ -51,11 +51,11 @@ async function subscribeToReplies(): Promise<void> {
 
     const messageContent = JSON.parse(message.content.toString());
     const correlationId = message.properties.correlationId;
-    const resultFromService = rabbitMQEventMap.get(correlationId);
+    const resultFromService = repliesMap.get(correlationId);
 
     if (resultFromService) resultFromService(messageContent);
 
-    rabbitMQEventMap.delete(correlationId);
+    repliesMap.delete(correlationId);
   });
 }
 
@@ -69,35 +69,35 @@ async function subscribeToGenesises() {
 
     if (action === 'add') {
       if (service === 'ds') {
-        if(dataStorageServicesMap.has(genesis)) return;
+        if(dataStorageChannels.has(genesis)) return;
 
         const channel = await createChannel();
-        dataStorageServicesMap.set(genesis, channel);
+        dataStorageChannels.set(genesis, channel);
         await channel.assertQueue(`ds.${genesis}`, { durable: false, exclusive: false });
         console.log(`${new Date()} Data storage genesises`);
-        console.log(dataStorageServicesMap.keys());
+        console.log(dataStorageChannels.keys());
       }
       if (service === 'tb') {
-        if(testBalanceServicesMap.has(genesis)) return;
+        if(testBalanceChannels.has(genesis)) return;
 
         const channel = await createChannel();
-        testBalanceServicesMap.set(genesis, channel);
+        testBalanceChannels.set(genesis, channel);
         await channel.assertQueue(`tb.${genesis}`, { durable: false, exclusive: false });
         console.log(`${new Date()} Test balance genesises`);
-        console.log(testBalanceServicesMap.keys());
+        console.log(testBalanceChannels.keys());
       }
     }
 
     if (action === 'delete') {
       if (service === 'ds') {
-        const channel = dataStorageServicesMap.get(genesis);
+        const channel = dataStorageChannels.get(genesis);
         await channel.close();
-        dataStorageServicesMap.delete(genesis);
+        dataStorageChannels.delete(genesis);
       }
       if (service === 'tb') {
-        const channel = testBalanceServicesMap.get(genesis);
+        const channel = testBalanceChannels.get(genesis);
         await channel.close();
-        testBalanceServicesMap.delete(genesis);
+        testBalanceChannels.delete(genesis);
       }
     }
   });
@@ -109,4 +109,4 @@ async function createChannel(): Promise<Channel> {
   return channel;
 }
 
-export { testBalanceServicesMap, dataStorageServicesMap, rabbitMQEventMap, connectionAMQP, mainChannelAMQP };
+export { testBalanceChannels, dataStorageChannels, repliesMap, connectionAMQP, mainChannelAMQP };

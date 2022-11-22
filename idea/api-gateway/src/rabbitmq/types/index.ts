@@ -24,7 +24,7 @@ export type Params =
   | GetAllUserProgramsParams
   | GetCodeParams
 
-interface IMessageNetworkDSParams {
+interface IMessageDataStorageParams {
   genesis: string;
   method: API_METHODS;
   params: Record<string, any> | Params | string
@@ -38,4 +38,4 @@ interface IMessageTestBalanceParams {
   method: API_METHODS;
 }
 
-export { IMessageNetworkDSParams, IMessageTestBalanceParams };
+export { IMessageDataStorageParams, IMessageTestBalanceParams };

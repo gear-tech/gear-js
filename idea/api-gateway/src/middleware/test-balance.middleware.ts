@@ -2,11 +2,11 @@ import { Response, Request, NextFunction } from 'express';
 import { API_METHODS, IRpcRequest, JSONRPC_ERRORS } from '@gear-js/common';
 
 import { getResponse, verifyCaptcha } from '../utils';
-import { testBalanceServicesMap } from '../rabbitmq/init-rabbitmq';
+import { testBalanceChannels } from '../rabbitmq/init-rabbitmq';
 
 async function verifyTestBalanceRequest(body: IRpcRequest) {
   if (body.method === API_METHODS.TEST_BALANCE_GET) {
-    if (!body.params?.genesis || !testBalanceServicesMap.has(body.params.genesis)) {
+    if (!body.params?.genesis || !testBalanceChannels.has(body.params.genesis)) {
       return JSONRPC_ERRORS.TestBalanceIsUnavailable.name;
     }
     if (!body.params?.['token'] || !(await verifyCaptcha(body.params['token']))) {

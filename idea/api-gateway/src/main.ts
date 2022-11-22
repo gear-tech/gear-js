@@ -4,7 +4,7 @@ import { apiGatewayRouter } from './routes/api-gateway/api-gateway.router';
 import { healthcheckRouter } from './routes/healthcheck/healthcheck.router';
 import configuration from './config/configuration';
 import { apiGatewayLogger } from './common/api-gateway.logger';
-import { initAMQP } from './rabbitmq/init-rabbitmq';
+import { initAMQ } from './rabbitmq/init-rabbitmq';
 import { runSchedulers } from './common/shedulers';
 
 const app = express();
@@ -19,7 +19,7 @@ app.use('/api', apiGatewayRouter);
 app.use('/health', healthcheckRouter);
 
 const startApp = async () => {
-  await initAMQP();
+  await initAMQ();
   await runSchedulers();
 
   app.listen(port, () => {
