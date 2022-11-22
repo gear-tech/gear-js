@@ -15,7 +15,7 @@
     "@babel/preset-env": "7.17.10",
     "@babel/preset-typescript": "7.16.7",
     "@gear-js/api": "0.27.5",
-    "@polkadot/api": "9.6.1",
+    "@polkadot/api": "9.9.1",
     "babel-jest": "28.1.0",
     "chai": "4.3.6",
     "dotenv": "16.0.1",
