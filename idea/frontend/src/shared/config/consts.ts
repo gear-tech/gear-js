@@ -35,6 +35,7 @@ enum LocalStorage {
   Genesis = 'genesis',
   HideWelcomeBanner = 'hide_welcome_banner',
   Wallet = 'wallet',
+  IsNewUser = 'isNewUser',
 }
 
 enum GasMethod {

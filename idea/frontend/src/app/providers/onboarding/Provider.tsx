@@ -1,102 +1,54 @@
-import { ProviderProps } from '@gear-js/react-hooks';
-import { useState } from 'react';
+import { ProviderProps, useAccount } from '@gear-js/react-hooks';
+import { useState, useEffect } from 'react';
+import { LocalStorage } from 'shared/config';
 
 import { OnboardingContext } from './Context';
+import { getHeading, getText } from './helpers';
 
 const steps = ['wallet', 'program', 'code', 'codes', 'message', 'messages', 'explorer', 'mailbox', 'apps', 'node'];
 
 const { Provider } = OnboardingContext;
 
 const OnboardingProvider = ({ children }: ProviderProps) => {
-  const [step, setStep] = useState(0);
-  const stepName = steps[step];
+  const { account } = useAccount();
 
-  const lastStep = steps.length - 1;
+  const accountAddress = account?.address;
 
-  const isFirstStep = step === 0;
-  const isLastStep = step === lastStep;
+  const [isOnboardingActive, setIsOnboardingActive] = useState(!localStorage[LocalStorage.IsNewUser]);
+  const [stepIndex, setStepIndex] = useState(0);
 
-  const prevStep = () => setStep((prevValue) => prevValue - 1);
-  const nextStep = () => setStep((prevValue) => prevValue + 1);
+  const step = steps[stepIndex];
+  const lastStepIndex = steps.length - 1;
+  const isFirstStep = stepIndex === 0;
+  const isLastStep = stepIndex === lastStepIndex;
+  const heading = getHeading(stepIndex);
+  const text = getText(stepIndex);
 
-  const getHeading = () => {
-    switch (step) {
-      case 0:
-        return 'Connect your account to start working with the portal';
+  const prevStep = () => setStepIndex((prevIndex) => prevIndex - 1);
+  const nextStep = () => setStepIndex((prevIndex) => prevIndex + 1);
 
-      case 1:
-        return 'This option allows you to upload a program to the network';
-
-      case 2:
-        return "This option allows you to upload your program without program's initialization in the network";
-
-      case 3:
-        return 'The list of uploaded codes can be found here';
-
-      case 4:
-        return 'This option allows you to send a message to a program';
-
-      case 5:
-        return 'The list of messages can be found here';
-
-      case 6:
-        return 'Explorer';
-
-      case 7:
-        return 'Mailbox';
-
-      case 8:
-        return 'App examples';
-
-      case 9:
-        return 'Network switcher';
-
-      default:
-        return '';
-    }
+  const stopOnboarding = () => {
+    setIsOnboardingActive(false);
+    localStorage.setItem(LocalStorage.IsNewUser, 'false');
   };
 
-  const getText = () => {
-    switch (step) {
-      case 0:
-        return 'Click here to select a wallet and choose an account';
+  useEffect(() => {
+    if (accountAddress) setStepIndex(1);
+  }, [accountAddress]);
 
-      case 1:
-        return "Select program's and meta .wasm files, click the “Calculate gas” and “Upload program” buttons. You will be prompted to sign the transaction of the program initialization.";
-
-      case 2:
-        return 'It can be used to initialize one or several instances of an identical program later';
-
-      case 3:
-        return 'You can select the required code to Create a new program being initialized in the network';
-
-      case 4:
-        return "Copy destination program's address where to send a message and provide necessary details in the Payload section, click the “Calculate gas” and “Send message” buttons. You will be prompted to sign the transaction for the message sending.";
-
-      case 5:
-        return 'You can navigate to necessary messages using search by program id, message id or applying filters';
-
-      case 6:
-        return 'Here you can get details about recent network events, search by block hash or block number or apply filters';
-
-      case 7:
-        return 'Here you can check messages sent from programs to currently connected account.';
-
-      case 8:
-        return 'If you do not have a program to upload, check a broad library of smart-contract examples created by Gear team and find what best fits your use cases. You can take it as is or adapt to your needs.';
-
-      case 9:
-        return "Select the network you're working with, connect to your local test net or localhost Gear node";
-
-      default:
-        return '';
-    }
+  const value = {
+    stepIndex,
+    step,
+    lastStepIndex,
+    isFirstStep,
+    isLastStep,
+    heading,
+    text,
+    isOnboardingActive,
+    prevStep,
+    nextStep,
+    stopOnboarding,
   };
-
-  const heading = getHeading();
-  const text = getText();
-
-  const value = { step, lastStep, isFirstStep, isLastStep, prevStep, nextStep, heading, text, stepName };
 
   return <Provider value={value}>{children}</Provider>;
 };

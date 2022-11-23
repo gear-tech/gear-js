@@ -3,6 +3,7 @@
 @use '@gear-js/ui/mixins' as *;
 @use 'shared/assets/styles/mixins' as *;
 @use 'shared/assets/styles/shared' as *;
+@use 'shared/assets/styles/animations' as *;
 
 $position: calc(100% + 26px);
 $arrowPosition: calc(100% + 1px);
@@ -24,7 +25,7 @@ $arrowPosition: calc(100% + 1px);
   &.active {
     > *:first-child {
       position: relative;
-      z-index: 10;
+      z-index: 8;
 
       &::before,
       &::after {
@@ -71,6 +72,12 @@ $arrowPosition: calc(100% + 1px);
         }
       }
     }
+
+    &:not(.wallet) {
+      > *:first-child {
+        pointer-events: none;
+      }
+    }
   }
 }
 
@@ -82,7 +89,7 @@ $arrowPosition: calc(100% + 1px);
   height: 100%;
   background-color: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(7.5px);
-  z-index: 9;
+  z-index: 7;
   overflow: hidden;
 }
 
@@ -93,7 +100,7 @@ $arrowPosition: calc(100% + 1px);
   background-color: #29292b;
   border-radius: $borderRadiusMedium;
   border: $borderModal;
-  z-index: 11;
+  z-index: 9;
 
   &::before {
     content: '';

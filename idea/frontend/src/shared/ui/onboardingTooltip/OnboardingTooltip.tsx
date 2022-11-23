@@ -1,4 +1,5 @@
 import { Button } from '@gear-js/ui';
+import { useAccount } from '@gear-js/react-hooks';
 import { ReactNode } from 'react';
 import clsx from 'clsx';
 
@@ -15,14 +16,28 @@ type Props = {
 };
 
 const OnboardingTooltip = ({ children, index, className }: Props) => {
-  const { step, lastStep, isFirstStep, isLastStep, nextStep, prevStep, heading, text, stepName } = useOnboarding();
+  const { account } = useAccount();
+  const {
+    stepIndex,
+    step,
+    lastStepIndex,
+    isFirstStep,
+    isLastStep,
+    heading,
+    text,
+    isOnboardingActive,
+    nextStep,
+    prevStep,
+    stopOnboarding,
+  } = useOnboarding();
 
-  const counterText = `${step + 1} of ${lastStep + 1}`;
+  const counterText = `${stepIndex + 1} of ${lastStepIndex + 1}`;
 
-  const isVisible = index === step;
+  const isVisible = index === stepIndex && isOnboardingActive;
+  const isFirstStepLocked = isFirstStep && !account;
 
-  const wrapperClassName = clsx(styles.wrapper, className, isVisible && styles.active, styles[stepName]);
-  const tooltipClassName = clsx(styles.tooltip, styles[stepName]);
+  const wrapperClassName = clsx(styles.wrapper, className, isVisible && styles.active, styles[step]);
+  const tooltipClassName = clsx(styles.tooltip, styles[step]);
 
   return (
     <div className={wrapperClassName}>
@@ -41,10 +56,15 @@ const OnboardingTooltip = ({ children, index, className }: Props) => {
                   disabled={isFirstStep}
                 />
                 <p>{counterText}</p>
-                <Button icon={ArrowSVG} color="transparent" onClick={nextStep} disabled={isLastStep} />
+                <Button
+                  icon={ArrowSVG}
+                  color="transparent"
+                  onClick={nextStep}
+                  disabled={isFirstStepLocked || isLastStep}
+                />
               </div>
 
-              <Button icon={CrossSVG} color="transparent" />
+              <Button icon={CrossSVG} color="transparent" onClick={stopOnboarding} />
             </header>
 
             <div className={styles.main}>
@@ -52,7 +72,7 @@ const OnboardingTooltip = ({ children, index, className }: Props) => {
               <p className={styles.text}>{text}</p>
             </div>
 
-            {!isLastStep && (
+            {!isFirstStepLocked && !isLastStep && (
               <footer>
                 <Button text="Next" color="secondary" onClick={nextStep} />
               </footer>
