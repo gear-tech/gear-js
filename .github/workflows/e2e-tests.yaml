@@ -92,7 +92,7 @@ jobs:
 
       - name: Build frontend pkg
         if: steps.check_file_changed.outputs.frontend_changed == 'True'
-        run: yarn build:frontend
+        run: sudo yarn build:frontend
 
   wait-previous-run:
     needs: [run-unit-tests]
