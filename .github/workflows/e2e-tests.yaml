@@ -3,7 +3,7 @@ name: 'e2e test'
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-    branches: main
+    branches: [main]
     paths:
       - idea/api-gateway/**
       - idea/data-storage/**
@@ -41,6 +41,7 @@ jobs:
     outputs:
       dataStorage_changed: ${{ steps.check_file_changed.outputs.dataStorage_changed }}
       frontend_changed: ${{ steps.check_file_changed.outputs.frontend_changed }}
+
     steps:
       - uses: actions/checkout@v2
         with:
@@ -89,9 +90,9 @@ jobs:
         if: steps.check_file_changed.outputs.dataStorage_changed == 'True'
         run: yarn test:data-storage
 
-      # - name: Run frontend tests
-      #   if: steps.check_file_changed.outputs.frontend_changed == 'True'
-      #   run: yarn test:frontend
+      - name: Build frontend pkg
+        if: steps.check_file_changed.outputs.frontend_changed == 'True'
+        run: yarn build:frontend
 
   wait-previous-run:
     needs: [run-unit-tests]
@@ -129,7 +130,7 @@ jobs:
           file: k8s/gear-node/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-node:dev
-          
+
   build-and-push-gear-vara-node-image:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest

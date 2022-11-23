@@ -28,11 +28,11 @@ jobs:
           node-version: 16.x
 
       - name: Install dependencies
-        working-directory: utils/gear-ui
+        working-directory: utils/gear-hooks
         run: yarn install
 
       - name: Build pkg
-        working-directory: utils/gear-ui
+        working-directory: utils/gear-hooks
         run: yarn build
 
   publish-to-npm:
