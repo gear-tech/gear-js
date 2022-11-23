@@ -19,7 +19,7 @@
   "scripts": {
     "build": "rm -rf dist && rm -rf *.scss && rm -rf fonts && cp -R ./src/assets/styles/. . && rollup -c",
     "test": "jest",
-    "prepare": "npm run build"
+    "prepare": "yarn build"
   },
   "peerDependencies": {
     "react": "18.2.0",
