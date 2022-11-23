@@ -1,6 +1,8 @@
 import { ProviderProps, useAccount } from '@gear-js/react-hooks';
 import { useState, useEffect } from 'react';
-import { LocalStorage } from 'shared/config';
+import { useLocation } from 'react-router-dom';
+
+import { LocalStorage, routes } from 'shared/config';
 
 import { OnboardingContext } from './Context';
 import { getHeading, getText } from './helpers';
@@ -11,8 +13,10 @@ const { Provider } = OnboardingContext;
 
 const OnboardingProvider = ({ children }: ProviderProps) => {
   const { account } = useAccount();
-
   const accountAddress = account?.address;
+
+  const location = useLocation();
+  const { pathname } = location;
 
   const [isOnboardingActive, setIsOnboardingActive] = useState(!localStorage[LocalStorage.IsNewUser]);
   const [stepIndex, setStepIndex] = useState(0);
@@ -33,8 +37,16 @@ const OnboardingProvider = ({ children }: ProviderProps) => {
   };
 
   useEffect(() => {
-    if (accountAddress) setStepIndex(1);
-  }, [accountAddress]);
+    if (accountAddress) {
+      const isHomePage = pathname === routes.programs;
+
+      if (isHomePage) {
+        setStepIndex(1);
+      } else {
+        stopOnboarding();
+      }
+    }
+  }, [accountAddress, pathname]);
 
   const value = {
     stepIndex,
