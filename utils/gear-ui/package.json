@@ -17,7 +17,7 @@
   ],
   "homepage": "https://github.com/gear-tech/gear-js/tree/master/utils/gear-ui#readme",
   "scripts": {
-    "build": "rm -rf dist && rm -rf *.scss && rm -rf fonts && cp -R ./src/assets/styles/. . && rollup -c",
+    "build": "rm -rf dist && rm -rf *.scss || true && rm -rf fonts && cp -R ./src/assets/styles/. . && rollup -c",
     "test": "jest",
     "prepare": "yarn build"
   },
