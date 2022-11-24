@@ -10,13 +10,11 @@ export async function checkGenesisMiddleware(req: Request, res: Response, next: 
     const isExistGenesis = body.every((value) => value.params.genesis);
 
     if (!isExistGenesis) {
-      res.send(getResponse(body, JSONRPC_ERRORS.NoGenesisFound.name));
-      return;
+      return res.send(getResponse(body, JSONRPC_ERRORS.NoGenesisFound.name));
     }
   } else {
     if (!body.params.genesis) {
-      res.send(getResponse(body, JSONRPC_ERRORS.NoGenesisFound.name));
-      return;
+      return res.send(getResponse(body, JSONRPC_ERRORS.NoGenesisFound.name));
     }
   }
 
