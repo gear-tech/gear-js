@@ -24,6 +24,11 @@ export const JSONRPC_ERRORS = {
     code: -32605,
     message: 'Service for getting a test balance is unavailable on this network',
   },
+  NoGenesisFound: {
+    name: 'NoGenesisFound',
+    code: -32605,
+    message: 'Genesis not found in the request',
+  },
   ServiceIsNotAvaiable: {
     name: 'ServiceIsNotAvaiable',
     code: -32500,
