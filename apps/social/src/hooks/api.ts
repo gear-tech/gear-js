@@ -69,9 +69,9 @@ function usePRCMeta(ids: Hex[] | undefined) {
       const response = await apiRequest.getResource('program.meta.get', batchParams);
       const promises = response
         .filter((res: RPCmetaResponse) => res.result)
-        .map(({ result: { program, metaFile } }: RPCSuccessResponse) => ({
+        .map(({ result: { program, metaWasm } }: RPCSuccessResponse) => ({
           program,
-          metaFile,
+          metaWasm,
         }));
 
       const metaArr = await Promise.all(promises);
@@ -98,8 +98,8 @@ function useMessages() {
 
   useEffect(() => {
     if (programMeta) {
-      const [{ metaFile }] = programMeta;
-      const buffer = Buffer.from(metaFile, 'base64');
+      const [{ metaWasm }] = programMeta;
+      const buffer = Buffer.from(metaWasm, 'base64');
 
       api.programState.read(id, buffer).then((state) => setMessages(state.toHuman() as Message[]));
     }
@@ -117,8 +117,8 @@ function useFeed(ids: Hex[] | undefined) {
   useEffect(() => {
     const getMessges = async () => {
       if (programMeta) {
-        const promises = programMeta.map(async ({ program, metaFile }: any) => {
-          const buffer = Buffer.from(metaFile, 'base64');
+        const promises = programMeta.map(async ({ program, metaWasm }: any) => {
+          const buffer = Buffer.from(metaWasm, 'base64');
           const state = await api.programState.read(program, buffer);
 
           return state.toHuman();
@@ -182,8 +182,8 @@ function useChannelActions() {
 
   useEffect(() => {
     if (programMeta) {
-      const [{ metaFile }] = programMeta;
-      const buffer = Buffer.from(metaFile, 'base64');
+      const [{ metaWasm }] = programMeta;
+      const buffer = Buffer.from(metaWasm, 'base64');
       getWasmMetadata(buffer).then((m) => setMetadata(m));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
