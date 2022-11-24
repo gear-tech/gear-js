@@ -1,0 +1,82 @@
+@use '@gear-js/ui/mixins' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.horizontalProgramCard {
+  @include transition(background-color);
+
+  display: flex;
+  position: relative;
+  border-radius: toRem(16);
+  background-color: $bgColor4;
+
+  &:hover {
+    background-color: $gray100;
+
+    .content::after {
+      background: radial-gradient(50% 50% at 50% 50%, rgba($successColor, 0.45) 25%, rgba(24, 24, 27, 0) 100%);
+    }
+  }
+}
+
+.link {
+  @include transition;
+  position: relative;
+  z-index: 1;
+
+  &:hover {
+    opacity: 0.5;
+  }
+}
+
+.content {
+  flex: 1 1;
+  padding: toRem(24);
+  overflow: hidden;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: -40%;
+    bottom: -100%;
+    width: 100%;
+    height: 200%;
+    background: radial-gradient(50% 50% at 50% 50%, rgba($successColor, 0.23) 0%, rgba(24, 24, 27, 0) 100%);
+  }
+
+  .otherInfo {
+    display: grid;
+    grid-template-columns: 4fr 2fr 3fr;
+    position: relative;
+    z-index: 4;
+    gap: 16px;
+  }
+
+  .name {
+    max-width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: $fontSizeBig;
+    font-family: 'Kanit';
+    font-weight: 600;
+    line-height: 1.3;
+    margin-right: $margin;
+    margin-bottom: 10px;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  flex: 0.3 1;
+  padding: toRem(12) toRem(24);
+
+  .sendMessage {
+    margin-bottom: 6px;
+  }
+}

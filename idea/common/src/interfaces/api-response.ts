@@ -23,7 +23,7 @@ interface AddMetaResult {
 interface GetMetaResult {
   program: string;
   meta: string;
-  metaFile: string;
+  metaWasm: string;
 }
 
 interface ProgramDataResult extends Omit<IProgram, 'meta'> {

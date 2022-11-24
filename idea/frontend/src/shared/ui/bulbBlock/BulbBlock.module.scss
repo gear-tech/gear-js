@@ -1,0 +1,56 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.bulbBlock {
+  display: flex;
+  align-items: center;
+
+  &::before {
+    content: '';
+
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    margin: $marginTiny;
+    border-radius: 50%;
+    background-color: $textColor;
+  }
+
+  &.error::before {
+    background-color: $errorColor;
+    box-shadow: 0px 0px 10px $errorColor;
+  }
+
+  &.success::before {
+    background-color: $successColor;
+    box-shadow: 0px 0px 10px $successColor;
+  }
+
+  &.loading::before {
+    background-color: $blue;
+    box-shadow: 0px 0px 10px $blue;
+  }
+}
+
+.status {
+  line-height: 1.3;
+  margin-left: $marginSmall;
+
+  &.small {
+    font-size: $fontSizeTiny;
+  }
+
+  &.large {
+    font-size: $fontSize;
+    font-family: 'Kanit';
+    font-weight: 600;
+  }
+
+  &.primary {
+    color: $textColor;
+  }
+
+  &.light {
+    color: $gray600;
+  }
+}

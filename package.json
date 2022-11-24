@@ -2,12 +2,13 @@
   "name": "gear-js",
   "private": true,
   "scripts": {
-    "build:backend": "yarn build:common && yarn workspaces foreach -ptR --from '{@gear-js/event-listener,@gear-js/api-gateway,@gear-js/data-storage,@gear-js/test-balance}' run build",
+    "build:backend": "yarn build:common && yarn workspaces foreach -ptR --from '{@gear-js/api-gateway,@gear-js/data-storage,@gear-js/test-balance}' run build",
     "build:common": "yarn workspace @gear-js/common build",
-    "build:events-listener": "yarn workspace @gear-js/event-listener build",
     "build:api-gateway": "yarn workspace @gear-js/api-gateway build",
     "build:data-storage": "yarn workspace @gear-js/data-storage build",
-    "build:frontend": "yarn workspace @gear-js/frontend build",
+    "build:hooks": "yarn workspace @gear-js/react-hooks build",
+    "build:ui": "yarn workspace @gear-js/ui build",
+    "build:frontend": "yarn build:hooks && yarn build:ui && yarn workspace @gear-js/frontend build",
     "build:test-balance": "yarn workspace @gear-js/test-balance build",
     "build:wasm-compiler": "yarn workspace @gear-js/wasm-compiler build",
     "test:data-storage": "yarn workspace @gear-js/data-storage test",
@@ -15,32 +16,33 @@
     "build:escrow": "yarn workspace @gear-js/escrow build",
     "build:nft": "yarn workspace @gear-js/nft build",
     "build:marketplace": "yarn workspace @gear-js/marketplace build",
-    "build:lottery": "yarn workspace @gear-js/lottery build",
+    "build:game-of-chance": "yarn workspace @gear-js/game-of-chance build",
     "build:auction": "yarn workspace @gear-js/auction build",
     "build:social": "yarn workspace @gear-js/social build",
     "build:staking": "yarn workspace @gear-js/staking build",
+    "build:syndote": "yarn workspace @gear-js/syndote build",
     "build:upload-dapp-chain": "yarn workspace @gear-js/upload-dapp-chain build",
     "build:supply-chain": "yarn workspace @gear-js/supply-chain build",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "bump:polkadot": "node dev/bump-polkadot.js && yarn install"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "5.36.1",
     "@typescript-eslint/parser": "5.36.1",
-    "eslint": "8.22.0",
+    "eslint": "8.28.0",
     "husky": "8.0.1",
     "lint-staged": "12.5.0"
   },
   "workspaces": [
-    "idea/**",
-    "apps/**"
+    "idea/*",
+    "apps/*",
+    "utils/gear-hooks",
+    "utils/gear-ui"
   ],
   "lint-staged": {
     "api/**/*.{js,ts}": "cd api && npm run lint:fix",
     "idea/**/*.{js,ts,tsx}": "eslint --fix --ignore-pattern 'idea/frontend/**'"
   },
-  "resolutions": {
-    "@types/react": "17.0.44"
-  },
-  "packageManager": "yarn@3.2.3",
+  "packageManager": "yarn@3.3.0",
   "version": "1.2.0"
 }

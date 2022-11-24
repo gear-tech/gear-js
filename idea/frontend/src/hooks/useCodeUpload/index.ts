@@ -1,1 +1,3 @@
-export * from './useCodeUpload';
+import { useCodeUpload } from './useCodeUpload';
+
+export { useCodeUpload };

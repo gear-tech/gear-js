@@ -1,0 +1,6 @@
+@use 'shared/assets/styles/mixins' as *;
+
+.block {
+  @include childrenMargin(60px);
+  grid-column: 1 / 3;
+}

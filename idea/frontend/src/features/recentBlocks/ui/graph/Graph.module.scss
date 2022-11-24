@@ -1,0 +1,27 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.graph {
+  @include childrenMargin($marginTiny, right);
+
+  display: flex;
+  align-items: flex-end;
+  width: toRem(74);
+  height: toRem(32);
+}
+
+.line {
+  $firstLineOpacity: 0.25;
+
+  width: toRem(2);
+  opacity: $firstLineOpacity;
+  border: none;
+  background-color: $indigo;
+  
+  @for $index from 0 to 14 {
+    &:nth-child(#{$index}){
+      opacity: $firstLineOpacity + (0.05 * $index);
+    }
+  }
+}

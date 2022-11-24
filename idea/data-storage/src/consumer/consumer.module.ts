@@ -8,13 +8,17 @@ import { ProgramModule } from '../program/program.module';
 import { MessageModule } from '../message/message.module';
 import { ConsumerService } from './consumer.service';
 import { CodeModule } from '../code/code.module';
+import { ProducerModule } from '../producer/producer.module';
+import { BlockModule } from '../block/block.module';
 
 const configKafka = configuration().kafka;
+
 @Module({
   imports: [
+    ProducerModule,
     ClientsModule.register([
       {
-        name: 'DATA_STORAGE',
+        name: configKafka.consumerName,
         transport: Transport.KAFKA,
         options: {
           client: {
@@ -27,6 +31,7 @@ const configKafka = configuration().kafka;
             },
           },
           consumer: {
+            maxBytesPerPartition: 10485760,
             groupId: configKafka.groupId,
           },
         },
@@ -36,6 +41,7 @@ const configKafka = configuration().kafka;
     ProgramModule,
     MessageModule,
     CodeModule,
+    BlockModule,
   ],
   controllers: [ConsumerController],
   providers: [ConsumerService],

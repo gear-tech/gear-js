@@ -1,0 +1,14 @@
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.contentLoader {
+  position: relative;
+  border-radius: 16px;
+  
+  & > svg {
+    width: 100%;
+  }
+
+  &.active {
+    @include loading();
+  }
+}

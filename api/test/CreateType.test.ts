@@ -1,4 +1,4 @@
-import { CreateType, getWasmMetadata, decodeHexTypes, Hex } from '../src';
+import { CreateType, getWasmMetadata, decodeHexTypes, Hex, createPayloadTypeStructure } from '../src';
 import yaml from 'js-yaml';
 import fs from 'fs';
 import { join } from 'path';
@@ -48,5 +48,14 @@ describe('Create a type that differs from existing one in the registry', () => {
 
   test('Wrong FTAction', () => {
     expect(() => CreateType.create('FtAction', { Mint: 128 }, { types })).toThrow();
+  });
+});
+
+describe('demo_gui', () => {
+  const metaFile = fs.readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_gui_test.meta.wasm'));
+  test('handle', async () => {
+    const meta = await getWasmMetadata(metaFile);
+    const payload = [{ one: '1', two: '2' }, [null, 128, [1, 2, 3]]];
+    expect(CreateType.create(meta.handle_input!, payload, meta));
   });
 });

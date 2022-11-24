@@ -3,6 +3,7 @@ import { Message } from 'kafkajs';
 
 import { initKafka } from './init-kafka';
 import { KafkaParams } from './types';
+import { dataStoragePartitionsMap } from '../common/data-storage-partitions-map';
 
 const producer = initKafka.producer();
 
@@ -15,20 +16,18 @@ async function sendByTopic(
   params: KafkaParams | string,
   correlationId?: string,
 ): Promise<void> {
-  await producer.send({
-    topic,
-    messages: [createMessageBody(topic, params, correlationId)],
-  });
-}
+  const message: Message = { value: JSON.stringify(params), headers: {} };
+  const genesis: string = params['genesis'];
 
-function createMessageBody(topic: string, params: KafkaParams | string, correlationId?: string): Message {
-  const result: Message = { value: JSON.stringify(params), headers: {} };
-
-  if (correlationId) {
-    result.headers = { kafka_correlationId: correlationId, kafka_replyTopic: `${topic}.reply` };
+  if (dataStoragePartitionsMap.has(genesis)) {
+    message.partition = Number(dataStoragePartitionsMap.get(genesis));
   }
 
-  return result;
+  if (correlationId) {
+    message.headers = { kafka_correlationId: correlationId, kafka_replyTopic: `${topic}.reply` };
+  }
+
+  await producer.send({ topic, messages: [message] });
 }
 
 export const kafkaProducer = { sendByTopic, connect };

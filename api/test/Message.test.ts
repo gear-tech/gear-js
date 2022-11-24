@@ -68,8 +68,9 @@ describe('Gear Message', () => {
 
       if (waitForReply) {
         const reply = await waitForReply(transactionData.id);
-        expect(reply?.message.reply.isSome).toBeTruthy();
-        expect(reply?.message.reply.unwrap().exitCode.toNumber()).toBe(0);
+        expect(reply?.message.details.isSome).toBeTruthy();
+        expect(reply?.message.details.unwrap().isReply).toBeTruthy();
+        expect(reply?.message.details.unwrap().asReply.statusCode.toNumber()).toBe(0);
         expect(reply?.message.payload.toHex()).toBe(message.reply);
         if (message.claim) {
           messageToClaim = reply.message.id.toHex();
@@ -79,6 +80,7 @@ describe('Gear Message', () => {
   });
 
   test('Read mailbox', async () => {
+    expect(messageToClaim).toBeDefined();
     const mailbox = await api.mailbox.read(decodeAddress(alice.address));
     const filteredMB = mailbox.filter((value) => value[0].id.eq(messageToClaim));
     expect(filteredMB).toHaveLength(1);
@@ -90,6 +92,7 @@ describe('Gear Message', () => {
   });
 
   test('Read mailbox with message id', async () => {
+    expect(messageToClaim).toBeDefined();
     const mailbox = await api.mailbox.read(decodeAddress(alice.address), messageToClaim);
     expect(mailbox).toHaveProperty([0, 'toHuman']);
     expect(mailbox.toHuman()).toHaveLength(2);
@@ -100,6 +103,7 @@ describe('Gear Message', () => {
   });
 
   test('Claim value from mailbox', async () => {
+    expect(messageToClaim).toBeDefined();
     const submitted = api.claimValueFromMailbox.submit(messageToClaim);
     const transactionData = await sendTransaction(submitted, alice, 'UserMessageRead');
     expect(transactionData.id).toBe(messageToClaim);

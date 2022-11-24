@@ -1,0 +1,41 @@
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.programMessages {
+  position: sticky;
+  align-self: flex-start;
+  top: 16px;
+  flex: 1 1;
+
+  .filters {
+    @include childrenMargin(5px, right);
+
+    margin-right: 12px;
+
+    .messagesBtn {
+      @include fade();
+    }
+  }
+}
+
+.simpleBar {
+  @include customSimplebar;
+
+  height: calc($contentHeight - toRem(77.5) - 60px - toRem(26));
+
+  &.noOverflow {
+    overflow: hidden;
+  }
+
+  :global(.simplebar-content) {
+    @include childrenMargin($marginSmall);
+
+    margin-right: 12px;
+  }
+}
+
+.placeholderBlock {
+  height: toRem(60.8);
+}

@@ -1,0 +1,30 @@
+@use '@gear-js/ui/breakpoints' as *;
+@use 'assets/styles/_mixins.scss' as *;
+@use 'assets/styles/_shared.scss' as *;
+@use 'assets/styles/_variables.scss' as *;
+
+.accountList {
+  @include childrenMargin($margin);
+}
+
+.accountButton {
+  width: 100%;
+  font-weight: 500;
+  text-transform: uppercase;
+  padding: 16px 40px;
+
+  &.active {
+    background: $successColor;
+  }
+}
+
+.accountName {
+  font-size: $fontSizeMedium;
+  padding: 0 5px;
+}
+
+.accountIcon {
+  @include md {
+    display: none !important;
+  }
+}

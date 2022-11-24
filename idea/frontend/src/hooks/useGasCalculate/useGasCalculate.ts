@@ -1,34 +1,33 @@
-import { useCallback } from 'react';
 import isPlainObject from 'lodash.isplainobject';
 import { Metadata, Hex, GasInfo } from '@gear-js/api';
-import { useApi, useAlert } from '@gear-js/react-hooks';
+import { useApi, useAlert, useAccount } from '@gear-js/react-hooks';
 
-import { Values, Code } from './types';
+import { GasMethod } from 'shared/config';
 
-import { LOCAL_STORAGE, GasMethod } from 'consts';
-import { getSubmitPayload } from 'components/common/Form/FormPayload/helpers';
+import { Values, Code, Result } from './types';
+import { preparedGasInfo } from './helpers';
 
 const useGasCalculate = () => {
   const alert = useAlert();
   const { api } = useApi();
+  const { account } = useAccount();
 
-  const calculateGas = useCallback(
-    async <T extends GasMethod>(
-      method: T,
-      values: Values,
-      code: Code<T>,
-      meta?: Metadata,
-      addressId?: string
-    ): Promise<number> => {
-      const { value, payload, payloadType } = values;
+  const calculateGas = async <T extends GasMethod>(
+    method: T,
+    values: Values,
+    code: Code<T>,
+    meta?: Metadata,
+    addressId?: string,
+  ): Promise<Result> => {
+    const { value, payload, payloadType } = values;
 
-      const submitPayload = getSubmitPayload(payload);
+    try {
+      const isPayloadEmpty = isPlainObject(payload) && Object.keys(payload as object).length === 0;
 
-      if (isPlainObject(submitPayload) && Object.keys(submitPayload as object).length === 0) {
-        throw new Error(`Paylod can't be empty`);
-      }
+      if (isPayloadEmpty) throw new Error(`Paylod can't be empty`);
+      if (!account) throw new Error(`No account`);
 
-      const publicKeyRaw = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex;
+      const { decodedAddress } = account;
       const metaOrTypeOfPayload = meta || payloadType;
 
       let estimatedGas: GasInfo;
@@ -36,58 +35,58 @@ const useGasCalculate = () => {
       switch (method) {
         case GasMethod.InitUpdate:
           estimatedGas = await api.program.calculateGas.initUpload(
-            publicKeyRaw,
+            decodedAddress,
             code as Buffer,
-            submitPayload,
+            payload,
             value,
             true,
-            metaOrTypeOfPayload
+            metaOrTypeOfPayload,
           );
           break;
         case GasMethod.InitCreate:
           estimatedGas = await api.program.calculateGas.initCreate(
-            publicKeyRaw,
+            decodedAddress,
             code as Hex,
-            submitPayload,
+            payload,
             value,
             true,
-            metaOrTypeOfPayload
+            metaOrTypeOfPayload,
           );
           break;
         case GasMethod.Handle:
           estimatedGas = await api.program.calculateGas.handle(
-            publicKeyRaw,
+            decodedAddress,
             addressId as Hex,
-            submitPayload,
+            payload,
             value,
             true,
-            metaOrTypeOfPayload
+            metaOrTypeOfPayload,
           );
           break;
         case GasMethod.Reply:
           estimatedGas = await api.program.calculateGas.reply(
-            publicKeyRaw,
+            decodedAddress,
             addressId as Hex,
             0,
-            submitPayload,
+            payload,
             value,
             true,
-            metaOrTypeOfPayload
+            metaOrTypeOfPayload,
           );
           break;
         default:
           throw new Error('Unknown method');
       }
 
-      const minLimit = estimatedGas.min_limit.toNumber();
+      return preparedGasInfo(estimatedGas);
+    } catch (error) {
+      const message = (error as Error).message;
 
-      alert.info(`Estimated gas ${minLimit}`);
+      alert.error(message);
 
-      return minLimit;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [api]
-  );
+      return Promise.reject(error);
+    }
+  };
 
   return calculateGas;
 };

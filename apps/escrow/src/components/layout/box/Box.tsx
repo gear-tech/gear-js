@@ -21,8 +21,8 @@ function Box({ onBack, onHome, isNavigationVisible, children }: Props) {
       <header>
         {isNavigationVisible && (
           <div className={styles.buttons}>
-            <Button icon={back} color="secondary" onClick={onBack} />
-            <Button icon={home} color="secondary" onClick={onHome} />
+            <Button icon={back} color="transparent" onClick={onBack} />
+            <Button icon={home} color="transparent" onClick={onHome} />
           </div>
         )}
         <h2 className={styles.heading}>

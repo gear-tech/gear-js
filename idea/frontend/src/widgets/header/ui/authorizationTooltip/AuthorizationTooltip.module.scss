@@ -1,0 +1,43 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+@use '@gear-js/ui/mixins' as *;
+
+.authorizationTooltip {
+  @include fadeAppear();
+
+  position: absolute;
+  padding: toRem(12) toRem(16);
+  width: toRem(210);
+  background-color: $oceanBlue;
+  border-radius: 10px;
+  z-index: 10;
+  top: 95%;
+  right: 54%;
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    right: toRem(16);
+    border-style: solid;
+    border-width: toRem(8.5) 0 0 toRem(8.5);
+    border-color: transparent transparent transparent $oceanBlue;
+  }
+}
+
+.text {
+  color: $textColor;
+  font-size: $fontSizeSmall;
+  line-height: toRem(18);
+}
+
+.button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+
+  img {
+    @include square(16px);
+  }
+}

@@ -1,4 +1,4 @@
-import { MESSAGE_READ_STATUS } from '../enums';
+import { MessageReadReason } from '../enums';
 
 interface IMessage {
   id: string;
@@ -25,7 +25,7 @@ interface IMessagesDispatchedData {
 
 interface IUserMessageReadData {
   id: string;
-  reason: MESSAGE_READ_STATUS | null;
+  reason: MessageReadReason | null;
 }
 
 interface UpdateMessageData {

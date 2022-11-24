@@ -4,6 +4,9 @@
  */
 
 module.exports = {
+  roots: [
+    '<rootDir>/src'
+  ],
   clearMocks: true,
   coverageProvider: 'v8',
   // testEnvironment: 'node',

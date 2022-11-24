@@ -50,7 +50,7 @@ jobs:
       - name: Build and push Frontend Docker image
         uses: docker/build-push-action@master
         with:
-          context: idea/frontend
+          file: idea/frontend/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:qa
           build-args: |
@@ -58,6 +58,7 @@ jobs:
             REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
             REACT_APP_WASM_COMPILER_URL=${{ secrets.REACT_APP_WASM_COMPILER_URL }}
             REACT_APP_DEFAULT_NODES_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
+            REACT_APP_DEFAULT_TRANSFER_BALANCE_VALUE=${{ secrets.REACT_APP_DEFAULT_TRANSFER_BALANCE_VALUE }}
             REACT_APP_HCAPTCHA_SITE_KEY=${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
 
   build-data-storage-image-staging:
@@ -112,32 +113,6 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:qa
 
-  build-event-listeners-image-staging:
-    runs-on: ubuntu-latest
-    needs: [wait-previous-run]
-    environment: staging
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Events Listener Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/events-listener/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-events-listener:qa
-
   build-test-balance-image-staging:
     runs-on: ubuntu-latest
     needs: [wait-previous-run]
@@ -165,12 +140,10 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-test-balance:qa
 
   deploy-to-k8s-staging:
-    needs:
-      [
+    needs: [
         build-frontend-image-staging,
         build-data-storage-image-staging,
         build-api-gateway-image-staging,
-        build-event-listeners-image-staging,
         build-test-balance-image-staging,
         wait-previous-run,
       ]
@@ -187,193 +160,9 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment api-gateway data-storage frontend-nginx test-balance-workshop-node events-listener-workshop-node events-listener-rpc-testnet -n dev-1
+          args: rollout restart deployment api-gateway frontend-nginx data-storage-rpc data-storage-vara testbalance-testnet -n dev-1
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: get deployment -o name -n dev-1 | xargs -n1 -t kubectl rollout status -n dev-1 --timeout=120s
-
-  tag-prod-version:
-    needs: [deploy-to-k8s-staging]
-    runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, 'idea-release')
-    environment: production
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: '0'
-      - name: Bump version and push tag
-        uses: sergeyfilyanin/github-tag-action@main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          INITIAL_VERSION: '1.0.0'
-          WITH_IDEA: true
-
-  build-frontend-image-prod:
-    runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, 'idea-release')
-    needs: [tag-prod-version]
-    environment: production
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Frontend Docker image
-        uses: docker/build-push-action@master
-        with:
-          context: idea/frontend
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:prod
-          build-args: |
-            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
-            REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
-            REACT_APP_WASM_COMPILER_URL=${{ secrets.REACT_APP_WASM_COMPILER_URL }}
-            REACT_APP_DEFAULT_NODES_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
-            REACT_APP_HCAPTCHA_SITE_KEY=${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
-
-  build-data-storage-image-prod:
-    runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, 'idea-release')
-    needs: [tag-prod-version]
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Data Storage Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/data-storage/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-data-storage:prod
-
-  build-api-gateway-image-prod:
-    runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, 'idea-release')
-    needs: [tag-prod-version]
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Api Gateway Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/api-gateway/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:prod
-
-  build-event-listeners-image-prod:
-    runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, 'idea-release')
-    needs: [tag-prod-version]
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Events Listener Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/events-listener/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-events-listener:prod
-
-  build-test-balance-image-prod:
-    runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, 'idea-release')
-    needs: [tag-prod-version]
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Test Balance Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/test-balance/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-test-balance:prod
-
-  deploy-to-k8s-prod:
-    needs:
-      [
-        build-frontend-image-prod,
-        build-data-storage-image-prod,
-        build-api-gateway-image-prod,
-        build-event-listeners-image-prod,
-        build-test-balance-image-prod,
-      ]
-    runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, 'idea-release')
-
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Deploy to k8s
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: rollout restart deployment api-gateway data-storage frontend-nginx test-balance-workshop-node test-balance-testnet-node events-listener-workshop-node events-listener-rpc-testnet events-listener-vara-testnet -n prod-gear-js
-
-      - name: Check k8s deployments
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: get deployment -o name -n prod-gear-js | xargs -n1 -t kubectl rollout status -n prod-gear-js --timeout=120s

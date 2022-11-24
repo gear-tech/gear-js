@@ -1,7 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { CODE_STATUS, ICode } from '@gear-js/common';
+import { Column, Entity, Index, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { ICode } from '@gear-js/common';
 
 import { BaseEntity } from './base.entity';
+import { Program } from './program.entity';
+import { Meta } from './meta.entity';
+import { CodeStatus } from '../../common/enums';
 
 @Entity()
 export class Code extends BaseEntity implements ICode {
@@ -11,12 +14,23 @@ export class Code extends BaseEntity implements ICode {
   @Column()
     id: string;
 
+  @Index()
+  @Column()
+    uploadedBy: string;
+
   @Column()
     name: string;
 
-  @Column({ type: 'enum', enum: CODE_STATUS })
-    status: CODE_STATUS;
+  @Column({ type: 'enum', enum: CodeStatus })
+    status: CodeStatus;
 
   @Column({ nullable: true })
-    expiration: number;
+    expiration: string;
+
+  @OneToOne(() => Meta, (meta) => meta.code)
+  @JoinColumn({ name: 'meta_id' })
+    meta: Meta;
+
+  @OneToMany(() => Program, (program) => program.code)
+    programs: Program[];
 }

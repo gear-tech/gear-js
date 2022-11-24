@@ -18,7 +18,7 @@ export class MetadataRepo {
   public async getByProgramId(programId: string): Promise<Meta> {
     return this.metadataRepo.findOne({
       where: { program: programId },
-      select: ['program', 'meta', 'metaFile'],
+      select: ['program', 'meta', 'metaWasm'],
     });
   }
 }

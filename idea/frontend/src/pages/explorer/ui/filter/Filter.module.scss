@@ -1,0 +1,29 @@
+@use '@gear-js/ui/headings' as *;
+@use 'shared/assets/styles/variables' as *;
+@use 'shared/assets/styles/mixins' as *;
+
+.filter {
+  align-self: flex-start;
+  width: 100%;
+  padding: 16px 24px 24px;
+  background-color: $bgColorSecondary;
+  border-radius: $borderRadius;
+}
+
+.heading {
+  @include heading(24px, 31px);
+  display: inline-block;
+  margin-bottom: 16px;
+  color: $gray800;
+}
+
+.body {
+  @include childrenMargin(8px);
+}
+
+.button {
+  margin-left: 16px;
+  color: $successColor;
+  line-height: 22px;
+  letter-spacing: 0.08em;
+}

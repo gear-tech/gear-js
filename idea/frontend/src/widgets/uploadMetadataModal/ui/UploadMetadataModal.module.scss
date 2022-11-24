@@ -1,0 +1,37 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+%textStyle {
+  font-size: $fontSizeMedium;
+  font-weight: 400;
+  line-height: 25px;
+}
+
+.modalContent {
+  text-align: center;
+}
+
+.contentHeading {
+  @extend %textStyle;
+
+  color: $textColor;
+  margin-bottom: 10px;
+}
+
+.contentFeeInfo {
+  @extend %textStyle;
+
+  color: $successColor;
+}
+
+.contentButtons {
+  @include childrenMargin(10px, right);
+
+  display: flex;
+  margin-top: 20px;
+
+  .actionButton {
+    flex: 1 1 50%;
+  }
+}

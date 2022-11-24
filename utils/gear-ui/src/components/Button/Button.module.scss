@@ -32,9 +32,15 @@
   white-space: nowrap;
 }
 
+.letterSpacing {
+  letter-spacing: 0.08em;
+}
+
 .large {
+  max-height: 48px;
   padding: 16px 32px;
   font-size: 14px;
+  line-height: 16px;
 
   .icon {
     margin-right: 10px;
@@ -42,8 +48,10 @@
 }
 
 .medium {
+  max-height: 40px;
   padding: 12px 24px;
   font-size: 14px;
+  line-height: 16px;
 
   .icon {
     margin-right: 10px;
@@ -51,8 +59,10 @@
 }
 
 .small {
+  max-height: 24px;
   padding: 6px 16px;
   font-size: 12px;
+  line-height: 12px;
 
   .icon {
     margin-right: 6px;
@@ -80,7 +90,6 @@
 }
 
 .light {
-  color: #bcbcbc;
   background-color: $buttonColorLight;
 
   &:hover {

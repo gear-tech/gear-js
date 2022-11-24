@@ -1,0 +1,42 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.gasInfoCard {
+  @include fadeAppear();
+  @include childrenMargin($margin);
+
+  display: flex;
+  padding: toRem(16);
+  border-radius: $borderRadius;
+  flex-direction: column;
+  background-color: $bgColor7;
+}
+
+.info {
+  @include childrenMargin($marginSmall, right);
+
+  display: flex;
+  align-items: center;
+  color: $textColor;
+  font-family: 'Kanit';
+  line-height: toRem(26);
+
+  .text {
+    font-size: $fontSizeMedium;
+  }
+
+  .value {
+    font-size: $fontSizeBig;
+    font-weight: 500;
+
+    &.green {
+      color: $successColor;
+    }
+
+    &.blue {
+      color: $blue;
+    }
+  }
+}

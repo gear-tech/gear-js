@@ -1,7 +1,9 @@
 import { Hex } from '@gear-js/api';
 
-import { OperationCallbacks } from 'types/hooks';
+import { OperationCallbacks } from 'entities/hooks';
 
-export type ParamsToClaimMessage = OperationCallbacks & {
+type ParamsToClaimMessage = OperationCallbacks & {
   messageId: Hex;
 };
+
+export type { ParamsToClaimMessage };

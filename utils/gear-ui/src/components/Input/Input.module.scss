@@ -2,6 +2,7 @@
 @use '../../assets/styles/utils' as *;
 
 .wrapper {
+  @extend %wrapper;
   @extend %inputWrapper;
 
   &.readOnly {

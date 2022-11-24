@@ -1,4 +1,4 @@
-import { GetAllProgramsParams, GetAllUserProgramsParams } from '@gear-js/common';
+import { GetAllProgramsParams } from '@gear-js/common';
 
 import { Program } from '../../../src/database/entities';
 import { PROGRAM_DB_MOCK } from './program-db.mock';
@@ -14,26 +14,13 @@ export const mockProgramRepository = {
       }
     });
   }),
-  getByIdAndGenesisAndOwner: jest.fn((id: string, genesis: string, owner: string) => {
-    return PROGRAM_DB_MOCK.find((program) => {
-      if (id === program.id && genesis === program.genesis && owner === program.owner) {
-        return program;
-      }
-    });
-  }),
-  listByOwnerAndGenesis: jest.fn((params: GetAllUserProgramsParams) => {
+  list: jest.fn((params: GetAllProgramsParams) => {
     const { limit, genesis, owner } = params;
     const programs = PROGRAM_DB_MOCK.filter((program) => {
-      if (program.owner === owner && program.genesis === genesis) {
+      if (genesis && program.genesis === genesis) {
         return program;
       }
-    });
-    return [programs, limit];
-  }),
-  listPaginationByGenesis: jest.fn((params: GetAllProgramsParams) => {
-    const { limit, genesis } = params;
-    const programs = PROGRAM_DB_MOCK.filter((program) => {
-      if (program.genesis === genesis) {
+      if (genesis && owner && program.genesis === genesis && program.owner === owner) {
         return program;
       }
     });

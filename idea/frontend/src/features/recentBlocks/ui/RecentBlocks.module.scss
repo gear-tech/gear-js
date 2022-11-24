@@ -1,0 +1,195 @@
+@use '@gear-js/ui/mixins' as *;
+@use '@gear-js/ui/variables' as ui;
+@use 'shared/assets/styles/shared' as *;
+@use 'shared/assets/styles/mixins' as *;
+@use 'shared/assets/styles/variables' as shared;
+@use 'shared/assets/styles/animations' as *;
+
+%enterStyles {
+  background: linear-gradient(180deg, #29292b 65.67%, shared.$bgColorSecondary 100%);
+  border-radius: 24px;
+}
+
+%contentTransition {
+  .time,
+  .title,
+  .value,
+  .point,
+  .graph > hr,
+  .arrow path {
+    @include transition;
+  }
+}
+
+%enterDoneStyles {
+  .graph > hr {
+    background-color: ui.$successColor;
+  }
+
+  .blockInfo {
+    .time,
+    .title,
+    .value {
+      color: ui.$successColor;
+    }
+
+    .point {
+      background-color: ui.$successColor;
+    }
+  }
+
+  .arrow path {
+    fill: ui.$successColor;
+  }
+}
+
+%exitDoneStyles {
+  .graph > hr {
+    background-color: shared.$indigo;
+  }
+
+  .blockInfo {
+    .title {
+      color: shared.$indigo800;
+    }
+
+    .time,
+    .value {
+      color: shared.$indigo;
+    }
+
+    .point {
+      background-color: shared.$indigo700;
+    }
+  }
+
+  .arrow path {
+    fill: shared.$indigo;
+  }
+}
+
+.recentBlocksWrapper {
+  position: relative;
+}
+
+.recentBlocks {
+  @include expand(toRem(48), 522px);
+  $border: ui.$borderModalWidth solid;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: $border transparent;
+  height: toRem(48);
+  position: absolute;
+  top: toRem(-30);
+  left: toRem(-101.5);
+  width: toRem(432);
+  padding: toRem(12) toRem(12) toRem(24) toRem(24);
+  z-index: 10;
+
+  &.open {
+    border: $border ui.$borderModalColor;
+  }
+
+  &:global(.enter) {
+    @extend %enterStyles;
+  }
+
+  &:global(.enter-active) {
+    @extend %enterDoneStyles;
+    @extend %contentTransition;
+  }
+
+  &:global(.enter-done) {
+    @extend %enterStyles;
+    @extend %enterDoneStyles;
+  }
+
+  &:global(.exit) {
+    @extend %enterStyles;
+    @extend %enterDoneStyles;
+  }
+
+  &:global(.exit-active) {
+    @extend %exitDoneStyles;
+    @extend %contentTransition;
+
+    height: toRem(55);
+  }
+}
+
+.indicators {
+  @include childrenMargin(shared.$marginTiny, right);
+
+  display: flex;
+  color: shared.$indigo700;
+  font-size: shared.$fontSizeBig;
+  font-weight: 300;
+  line-height: 1.3;
+  align-items: center;
+
+  .value {
+    color: shared.$indigo;
+    font-weight: 600;
+    font-family: 'Kanit';
+  }
+}
+
+.content {
+  @include transition;
+  display: flex;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.65;
+  }
+
+  .title {
+    color: shared.$indigo800;
+    line-height: 1.3;
+    font-size: shared.$fontSizeTiny;
+    font-weight: 400;
+  }
+
+  .blockInfo {
+    position: relative;
+    margin-left: 12px;
+
+    .time {
+      min-width: toRem(50);
+    }
+
+    .point {
+      display: inline-block;
+      width: toRem(4);
+      height: toRem(4);
+      border-radius: 50%;
+      background-color: shared.$indigo;
+    }
+  }
+}
+
+.arrow {
+  margin-top: 10px;
+  margin-left: -5px;
+  align-self: center;
+  transform: rotate(90deg);
+
+  path {
+    fill: shared.$indigo;
+  }
+
+  &.rotated {
+    transform: rotate(-90deg);
+  }
+}
+
+.recentBlocksList {
+  @include fade();
+
+  &:global(.enter),
+  &:global(.exit) {
+    overflow: hidden;
+  }
+}

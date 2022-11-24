@@ -1,0 +1,146 @@
+@use 'shared/assets/styles/shared' as *;
+@use 'shared/assets/styles/variables' as *;
+
+.welcomeBanner {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: toRem(32);
+  border-radius: 24px;
+  background-color: $bgColorSecondary;
+  margin-bottom: 32px;
+  z-index: 5;
+  position: relative;
+
+  &::after {
+    content: '';
+    width: 50%;
+    height: 200px;
+    position: absolute;
+    left: -160px;
+    bottom: -140px;
+    background: radial-gradient(50% 50% at 50% 50%, rgba(43, 208, 113, 0.25) 10%, rgba(24, 24, 27, 0) 100%);
+  }
+
+  .closeBtn {
+    position: absolute;
+    top: toRem(24);
+    right: toRem(24);
+  }
+}
+
+.content {
+  flex: 1 1;
+  position: relative;
+  margin-right: 5px;
+  z-index: 2;
+
+  .title {
+    font-family: 'Kanit';
+    font-size: toRem(40);
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    margin-bottom: $margin;
+  }
+
+  .description {
+    font-size: $fontSize;
+    color: $gray800;
+    line-height: 1.6;
+    font-feature-settings: 'salt' on, 'liga' off;
+    margin-bottom: 40px;
+  }
+}
+
+.banner {
+  position: relative;
+  flex: 0 0 toRem(360);
+  height: toRem(250);
+
+  & > img {
+    position: absolute;
+    transition: all $mediumTimeout ease-in;
+  }
+
+  .gear1 {
+    width: toRem(181);
+    height: toRem(190);
+    top: toRem(20);
+    left: toRem(150);
+    z-index: 2;
+  }
+
+  .gear2 {
+    width: toRem(136);
+    height: toRem(122);
+    top: toRem(130);
+    left: toRem(85);
+    filter: blur(3px);
+  }
+
+  .gear3 {
+    width: toRem(68);
+    height: toRem(67);
+    top: toRem(80);
+    left: toRem(80);
+    filter: blur(6px);
+  }
+
+  &::after,
+  &::before {
+    content: '';
+    position: absolute;
+    transition: all $mediumTimeout ease-in;
+  }
+
+  &::after {
+    width: toRem(122);
+    height: toRem(200);
+    top: toRem(-20);
+    left: toRem(225);
+    transform: rotate(-35deg);
+    background: radial-gradient(50% 50% at 50% 50%, rgba($successColor, 0.5) 40%, rgba(24, 24, 27, 0) 100%);
+  }
+
+  &::before {
+    width: toRem(90);
+    height: toRem(265);
+    top: toRem(-20);
+    left: toRem(70);
+    transform: rotate(35deg);
+    background: radial-gradient(50% 50% at 50% 50%, rgba(#003293, 0.6) 40%, rgba(24, 24, 27, 0) 100%);
+  }
+
+  &:hover {
+    .gear1,
+    .gear2,
+    .gear3 {
+      transform: scale(1.1);
+    }
+
+    .gear2,
+    .gear3 {
+      filter: blur(0px);
+    }
+
+    .gear2 {
+      top: toRem(140);
+      left: toRem(65);
+    }
+
+    .gear3 {
+      top: toRem(75);
+      left: toRem(60);
+    }
+
+    &::after {
+      left: toRem(235);
+      transform: rotate(-35deg) scale(1.1);
+    }
+
+    &::before {
+      left: toRem(45);
+    }
+  }
+}

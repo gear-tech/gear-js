@@ -1,2 +1,3 @@
-// eslint-disable-next-line import/no-cycle
-export * from './useProgramActions';
+import { useProgramActions } from './useProgramActions';
+
+export { useProgramActions };
