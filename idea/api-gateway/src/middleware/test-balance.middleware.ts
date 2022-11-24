@@ -21,7 +21,7 @@ export async function testBalanceMiddleware(req: Request, res: Response, next: N
 
   if (Array.isArray(body)) {
     for (const request of body) {
-      const error = verifyTestBalanceRequest(request);
+      const error = await verifyTestBalanceRequest(request);
       if (error) {
         return res.send(getResponse(body, error));
       }
