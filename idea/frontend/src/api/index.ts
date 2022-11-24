@@ -6,7 +6,7 @@ import { fetchProgram, fetchPrograms } from './program';
 import { fetchTestBalance } from './balance';
 import { fetchMessage, fetchMessages } from './message';
 import { fetchMetadata, addMetadata } from './metadata';
-import { getLocalProgram, getLocalPrograms, getLocalProgramMeta } from './LocalDB';
+import { getLocalProgram, getLocalPrograms, getLocalProgramMeta, PROGRAMS_LOCAL_FORAGE } from './LocalDB';
 
 const getNodes = (): Promise<NodeSection[]> => fetch(DEFAULT_NODES_URL).then((result) => result.json());
 
@@ -24,4 +24,5 @@ export {
   fetchMessages as getMessages,
   addMetadata as uploadMetadata,
   fetchTestBalance as getTestBalance,
+  PROGRAMS_LOCAL_FORAGE,
 };
