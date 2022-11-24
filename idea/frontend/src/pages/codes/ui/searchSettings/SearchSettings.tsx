@@ -1,35 +1,31 @@
-import { FormEvent } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { Input } from '@gear-js/ui';
 import { useAccount } from '@gear-js/react-hooks';
+import { useForm } from '@mantine/form';
 
 import { Filters, FilterGroup, Radio } from 'features/filters';
 import { AnimationTimeout } from 'shared/config';
-
 import { useChain } from 'hooks';
+
 import styles from './SearchSettings.module.scss';
-import { FiltersValues } from '../../model/types';
+import { FiltersValues, RequestParams } from '../../model/types';
 
 type Props = {
   isLoggedIn: boolean;
   initialValues: FiltersValues;
-  onSubmit: (values: FiltersValues) => void;
+  initQuery: string;
+  onSubmit: (values: RequestParams) => void;
 };
 
-const SearchSettings = ({ isLoggedIn, initialValues, onSubmit }: Props) => {
+const SearchSettings = ({ isLoggedIn, initialValues, initQuery, onSubmit }: Props) => {
   const { account } = useAccount();
   const { isDevChain } = useChain();
-
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    // @ts-ignore
-    onSubmit({ query: event.target.search.value });
-  };
+  const form = useForm({ initialValues: { query: initQuery } });
 
   return (
     <section className={styles.searchSettings}>
-      <form className={styles.searchForm} onSubmit={handleSubmit}>
-        <Input name="search" type="search" placeholder="Search by name, id..." />
+      <form className={styles.searchForm} onSubmit={form.onSubmit(({ query }) => onSubmit({ query }))}>
+        <Input name="search" type="search" placeholder="Search by name, id..." {...form.getInputProps('query')} />
       </form>
       {!isDevChain && (
         <Filters initialValues={initialValues} onSubmit={onSubmit}>
