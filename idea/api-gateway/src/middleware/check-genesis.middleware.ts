@@ -6,17 +6,16 @@ import { getResponse } from '../utils';
 export async function checkGenesisMiddleware(req: Request, res: Response, next: NextFunction) {
   const body: IRpcRequest = req.body;
 
-  if(Array.isArray(body)) {
-    const isExistGenesis = body.every((value) => 'genesis' in value
-      && value.genesis);
+  if (Array.isArray(body)) {
+    const isExistGenesis = body.every((value) => value.params.genesis);
 
     if (!isExistGenesis) {
-      res.send(getResponse(body, JSONRPC_ERRORS.InvalidParams.name));
+      res.send(getResponse(body, JSONRPC_ERRORS.NoGenesisFound.name));
       return;
     }
   } else {
-    if (!('genesis' in body.params && body.params.genesis)) {
-      res.send(getResponse(body, JSONRPC_ERRORS.InvalidParams.name));
+    if (!body.params.genesis) {
+      res.send(getResponse(body, JSONRPC_ERRORS.NoGenesisFound.name));
       return;
     }
   }
