@@ -21,6 +21,7 @@ import { useMessages } from './useMessages';
 import { useWaitlist } from './useWaitlist';
 import { useCodes } from './useCodes';
 import { useIsProgramExists } from './useIsProgramExists';
+import { useLocalProgramsFilter } from './useLocalProgramsFilter';
 
 export {
   useApp,
@@ -51,4 +52,5 @@ export {
   useCodes,
   useIsProgramExists,
   useOnboarding,
+  useLocalProgramsFilter
 };

@@ -1,10 +1,14 @@
-import { useEffect, useState } from 'react';
 import { CreateType, Metadata } from '@gear-js/api';
+import { InputWrapper } from '@gear-js/ui';
+import { AnyJson, Codec } from '@polkadot/types/types';
+import { useEffect, useState } from 'react';
+import { generatePath, Link } from 'react-router-dom';
+import clsx from 'clsx';
 
 import { getPreformattedText } from 'shared/helpers';
 import { FormText } from 'shared/ui/form';
+import { absoluteRoutes } from 'shared/config';
 
-import { AnyJson, Codec } from '@polkadot/types/types';
 import styles from './MessageInfo.module.scss';
 import { IMessage } from '../../model';
 import { getDecodedMessagePayload } from '../../helpers';
@@ -16,7 +20,7 @@ type Props = {
 };
 
 const MessageInfo = ({ metadata, message, isLoading }: Props) => {
-  const { id, source, value, destination } = message ?? {};
+  const { id, source, value, destination, replyToMessageId, entry } = message ?? {};
 
   const [decodedPayload, setDecodedPayload] = useState<string>();
 
@@ -55,6 +59,22 @@ const MessageInfo = ({ metadata, message, isLoading }: Props) => {
       <FormText text={destination} label="Destination" isLoading={isPayloadLoading} className={styles.text} />
       <FormText text={value} label="Value" isLoading={isPayloadLoading} className={styles.text} />
       <FormText text={decodedPayload} label="Payload" isLoading={isPayloadLoading} isTextarea className={styles.text} />
+
+      {!isPayloadLoading && (
+        <>
+          {entry && <FormText text={entry} label="Entry" className={styles.text} />}
+          {replyToMessageId && (
+            <InputWrapper
+              label="Reply To Message ID"
+              id="replyTo"
+              direction="x"
+              size="normal"
+              className={clsx(styles.text, styles.replyTo)}>
+              <Link to={generatePath(absoluteRoutes.message, { messageId: replyToMessageId })}>{replyToMessageId}</Link>
+            </InputWrapper>
+          )}
+        </>
+      )}
     </section>
   );
 };

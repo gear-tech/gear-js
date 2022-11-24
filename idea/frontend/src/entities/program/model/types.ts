@@ -1,3 +1,4 @@
+import { Hex } from '@gear-js/api';
 import { ICode } from 'entities/code';
 import { IMessage } from 'entities/message';
 import { IMeta } from 'entities/metadata';
@@ -7,7 +8,7 @@ import { ProgramStatus } from './consts';
 
 interface IProgram extends IBase {
   _id: string;
-  id: string;
+  id: Hex;
   owner: string;
   name: string;
   status: ProgramStatus;

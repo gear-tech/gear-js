@@ -29,7 +29,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "5.36.1",
     "@typescript-eslint/parser": "5.36.1",
-    "eslint": "8.22.0",
+    "eslint": "8.28.0",
     "husky": "8.0.1",
     "lint-staged": "12.5.0"
   },
@@ -43,6 +43,6 @@
     "api/**/*.{js,ts}": "cd api && npm run lint:fix",
     "idea/**/*.{js,ts,tsx}": "eslint --fix --ignore-pattern 'idea/frontend/**'"
   },
-  "packageManager": "yarn@3.2.3",
+  "packageManager": "yarn@3.3.0",
   "version": "1.2.0"
 }

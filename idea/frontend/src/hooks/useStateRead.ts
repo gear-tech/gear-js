@@ -32,7 +32,9 @@ const useStateRead = (programId: Hex, metaBuffer: Buffer | undefined) => {
     [api, programId, metaBuffer],
   );
 
-  return { readState, state, isReaded };
+  const resetState = () => setState(undefined);
+
+  return { readState, resetState, state, isReaded };
 };
 
 export { useStateRead };

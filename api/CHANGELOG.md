@@ -1,3 +1,13 @@
+## 0.27.6
+
+_11/24/2022_
+
+https://github.com/gear-tech/gear-js/pull/1111
+
+### Changes
+
+- Update `Entry` and `DispatchKind` types
+
 ## 0.27.5
 
 _11/21/2022_
