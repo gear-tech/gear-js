@@ -43,7 +43,7 @@ jobs:
       - name: Build and push Frontend Docker image
         uses: docker/build-push-action@master
         with:
-          context: idea/frontend
+          file: idea/frontend/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:rabbit
           build-args: |
