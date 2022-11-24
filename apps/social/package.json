@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@gear-js/api": "^0.27.5",
+    "@gear-js/api": "^0.27.6",
     "@gear-js/react-hooks": "^0.3.10",
     "@gear-js/ui": "^0.4.0",
     "@mantine/form": "^4.2.12",
