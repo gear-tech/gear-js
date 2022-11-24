@@ -3,7 +3,7 @@ import { u8aToHex } from '@polkadot/util';
 import { expect } from 'chai';
 import { readFileSync } from 'fs';
 
-import request from './request';
+import request, { batchRequest } from './request';
 import accounts from '../config/accounts';
 import { IPreparedProgram, IPreparedPrograms, Passed } from '../interfaces';
 
@@ -96,6 +96,12 @@ export async function getProgramData(genesis: string, programId: string): Promis
     'messages',
     'expiration',
   );
+  return true;
+}
+
+export async function getProgramDataInBatch(genesis: string, programId: string): Promise<Passed> {
+  const response = await batchRequest('program.data', { genesis, programId });
+  expect(response).to.have.own.property('result');
   return true;
 }
 

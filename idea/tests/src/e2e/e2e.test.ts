@@ -9,6 +9,7 @@ import {
   getAllProgramsByStatus,
   getMeta,
   getProgramData,
+  getProgramDataInBatch,
   uploadMeta,
 } from './programs';
 import { processPrepare } from '../prepare';
@@ -90,6 +91,10 @@ describe('program methods', () => {
     for (const id_ of Object.keys(prepared.programs)) {
       expect(await getProgramData(genesis, id_)).toBeTruthy();
     }
+  });
+
+  test('program.data method in batch request', async () => {
+    expect(await getProgramDataInBatch(genesis, Object.keys(prepared.programs)[0])).toBeTruthy();
   });
 
   test('check if init status saved correctly', async () => {
