@@ -86,7 +86,7 @@
   left: toRem(-101.5);
   width: toRem(432);
   padding: toRem(12) toRem(12) toRem(24) toRem(24);
-  z-index: 10;
+  z-index: 1;
 
   &.open {
     border: $border ui.$borderModalColor;

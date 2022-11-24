@@ -15,9 +15,10 @@ const Menu = () => {
   return (
     <menu className={clsx('menu', styles.menu)}>
       <div className={clsx(styles.wrapper, isOpen && styles.open)}>
-        <div className={clsx(styles.menuContent, isOpen && styles.open)}>
+        <div className={styles.menuContent}>
           <Logo isOpen={isOpen} />
           <Navigation isOpen={isOpen} />
+          <div className={clsx(styles.gradient, isOpen && styles.open)} />
         </div>
         <NodesSwitch isButtonFullWidth={isOpen} />
       </div>

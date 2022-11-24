@@ -1,4 +1,4 @@
-import { useApp, useModal, useBlocks, useEvents, useChain } from './context';
+import { useApp, useModal, useBlocks, useEvents, useChain, useOnboarding } from './context';
 import { useMessage } from './useMessage';
 import { useOutsideClick } from './useOutsideClick';
 import { useChangeEffect } from './useChangeEffect';
@@ -51,5 +51,6 @@ export {
   useEventSubscriptions,
   useCodes,
   useIsProgramExists,
-  useLocalProgramsFilter,
+  useOnboarding,
+  useLocalProgramsFilter
 };
