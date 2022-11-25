@@ -2,7 +2,7 @@ import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { Program } from '../database/entities';
+import { Meta, Program } from '../database/entities';
 import { GetAllProgramsParams } from '@gear-js/common';
 import { PAGINATION_LIMIT } from '../common/constants';
 import { constructQueryBuilder } from '../common/helpers';
@@ -49,7 +49,7 @@ export class ProgramRepo {
       { fromDate, toDate },
       offset || 0,
       limit || PAGINATION_LIMIT,
-      ['code'],
+      ['code', { table: 'meta', columns: ['id', 'program', 'owner', 'meta'] }],
       { column: 'timestamp', sort: 'DESC' },
     );
 

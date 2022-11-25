@@ -50,7 +50,7 @@ export function constructQueryBuilder<E extends ObjectLiteral = ObjectLiteral, K
   { fromDate, toDate }: IDates,
   offset: number,
   limit: number,
-  join?: string[],
+  join?: (string | { columns: string[]; table: string })[],
   orderBy?: { column: string; sort: 'DESC' | 'ASC' } | { column: string; sort: 'DESC' | 'ASC' }[],
 ): SelectQueryBuilder<E> {
   const alias = 't';
@@ -58,7 +58,19 @@ export function constructQueryBuilder<E extends ObjectLiteral = ObjectLiteral, K
 
   if (join) {
     for (const prop of join) {
-      builder.leftJoinAndSelect(`${alias}.${prop}`, prop);
+      if(typeof prop === 'object') {
+        const selectColumns = [];
+        const { columns, table } = prop;
+        builder.innerJoin(`${alias}.${table}`, table);
+        builder.select();
+
+        for(const colum of columns) {
+          selectColumns.push(`${table}.${colum}`);
+        }
+        builder.addSelect(selectColumns);
+      } else {
+        builder.leftJoinAndSelect(`${alias}.${prop}`, prop);
+      }
     }
   }
 
