@@ -47,24 +47,21 @@ const OnboardingTooltip = ({ children, index, className }: Props) => {
         <>
           <div className={tooltipClassName}>
             <header className={styles.header}>
-              <div className={styles.steps}>
-                <Button
-                  icon={ArrowSVG}
-                  color="transparent"
-                  className={styles.prevStepButton}
-                  onClick={prevStep}
-                  disabled={isFirstStep}
-                />
-                <p>{counterText}</p>
-                <Button
-                  icon={ArrowSVG}
-                  color="transparent"
-                  onClick={nextStep}
-                  disabled={isFirstStepLocked || isLastStep}
-                />
-              </div>
+              {!isFirstStepLocked && (
+                <div className={styles.steps}>
+                  <Button
+                    icon={ArrowSVG}
+                    color="transparent"
+                    className={styles.prevStepButton}
+                    onClick={prevStep}
+                    disabled={isFirstStep}
+                  />
+                  <p>{counterText}</p>
+                  <Button icon={ArrowSVG} color="transparent" onClick={nextStep} disabled={isLastStep} />
+                </div>
+              )}
 
-              <Button icon={CrossSVG} color="transparent" onClick={stopOnboarding} />
+              <Button icon={CrossSVG} color="transparent" className={styles.closeButton} onClick={stopOnboarding} />
             </header>
 
             <div className={styles.main}>
