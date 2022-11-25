@@ -17,11 +17,11 @@ const providers = [
   AlertProvider,
   ApiProvider,
   AccountProvider,
+  OnboardingProvider,
   ModalProvider,
   EventsProvider,
   BlocksProvider,
   ChainProvider,
-  OnboardingProvider,
 ];
 
 const withProviders = (Component: ComponentType) => () =>

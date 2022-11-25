@@ -129,6 +129,9 @@ const getValidation =
 
 const isState = (meta: Metadata | undefined) => !!meta?.meta_state_output;
 
+const disableScroll = () => document.body.classList.add('noOverflow');
+const enableScroll = () => document.body.classList.remove('noOverflow');
+
 export {
   checkWallet,
   formatDate,
@@ -145,4 +148,6 @@ export {
   isNodeAddressValid,
   isHexValid,
   isState,
+  disableScroll,
+  enableScroll,
 };
