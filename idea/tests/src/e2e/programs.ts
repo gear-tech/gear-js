@@ -101,7 +101,9 @@ export async function getProgramData(genesis: string, programId: string): Promis
 
 export async function getProgramDataInBatch(genesis: string, programId: string): Promise<Passed> {
   const response = await batchRequest('program.data', { genesis, programId });
-  expect(response).to.have.own.property('result');
+  expect(Array.isArray(response)).ok;
+  expect(response).to.have.length(1);
+  expect(response[0]).to.have.own.property('result');
   return true;
 }
 
