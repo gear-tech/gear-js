@@ -30,7 +30,7 @@
     "@typescript-eslint/eslint-plugin": "5.36.1",
     "@typescript-eslint/parser": "5.36.1",
     "eslint": "8.28.0",
-    "husky": "8.0.1",
+    "husky": "8.0.2",
     "lint-staged": "12.5.0"
   },
   "workspaces": [
