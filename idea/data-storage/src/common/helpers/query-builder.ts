@@ -61,11 +61,11 @@ export function constructQueryBuilder<E extends ObjectLiteral = ObjectLiteral, K
       if(typeof prop === 'object') {
         const selectColumns = [];
         const { columns, table } = prop;
-        builder.innerJoin(`${alias}.${table}`, table);
+        builder.leftJoin(`${alias}.${table}`, table);
         builder.select();
 
-        for(const colum of columns) {
-          selectColumns.push(`${table}.${colum}`);
+        for(const column of columns) {
+          selectColumns.push(`${table}.${column}`);
         }
         builder.addSelect(selectColumns);
       } else {
