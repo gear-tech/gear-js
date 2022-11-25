@@ -51,7 +51,7 @@ const TransactionModal = (props: Props) => {
       </div>
       <div className={styles.contentButtons}>
         <Button text="Submit" className={styles.actionButton} onClick={handleConfirm} />
-        <Button text="Cancel" color="secondary" className={styles.actionButton} onClick={handleClose} />
+        <Button text="Cancel" color="light" className={styles.actionButton} onClick={handleClose} />
       </div>
     </Modal>
   );
