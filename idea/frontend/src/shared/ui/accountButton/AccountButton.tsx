@@ -16,7 +16,7 @@ const AccountButton = ({ name, address, className, onClick }: Props) => {
 
   return (
     <button type="button" className={accountBtnClasses} onClick={onClick}>
-      <Identicon value={address} size={28} theme="polkadot" className={buttonStyles.icon} />
+      <Identicon value={address} size={24} theme="polkadot" className={buttonStyles.icon} />
       <span className={styles.accountName}>{name}</span>
     </button>
   );

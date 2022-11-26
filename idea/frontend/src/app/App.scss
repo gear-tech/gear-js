@@ -13,7 +13,6 @@
 
 html {
   font-size: 100%;
-  overflow-x: hidden; // cuz of onboarding animations
 }
 
 body {
@@ -22,6 +21,10 @@ body {
   background-repeat: no-repeat;
   background-position: right -150px top -50px;
   min-height: 100vh;
+
+  &.noOverflow {
+    overflow: hidden;
+  }
 }
 
 #root {

@@ -4,7 +4,7 @@ import { ReactComponent as TalismanSVG } from 'shared/assets/images/wallets/tali
 
 const WALLET = {
   'polkadot-js': { name: 'Polkadot JS', icon: PolkadotSVG },
-  'subwallet-js': { name: 'Subwallet', icon: SubwalletSVG },
+  'subwallet-js': { name: 'SubWallet', icon: SubwalletSVG },
   talisman: { name: 'Talisman', icon: TalismanSVG },
 };
 
