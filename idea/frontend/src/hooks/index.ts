@@ -22,6 +22,7 @@ import { useWaitlist } from './useWaitlist';
 import { useCodes } from './useCodes';
 import { useIsProgramExists } from './useIsProgramExists';
 import { useLocalProgramsFilter } from './useLocalProgramsFilter';
+import { useNodeVersion } from './useNodeVersion';
 
 export {
   useApp,
@@ -52,5 +53,6 @@ export {
   useCodes,
   useIsProgramExists,
   useOnboarding,
-  useLocalProgramsFilter
+  useLocalProgramsFilter,
+  useNodeVersion,
 };
