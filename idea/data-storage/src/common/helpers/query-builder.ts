@@ -59,15 +59,9 @@ export function constructQueryBuilder<E extends ObjectLiteral = ObjectLiteral, K
   if (join) {
     for (const prop of join) {
       if(typeof prop === 'object') {
-        const selectColumns = [];
         const { columns, table } = prop;
         builder.leftJoin(`${alias}.${table}`, table);
-        builder.select();
-
-        for(const column of columns) {
-          selectColumns.push(`${table}.${column}`);
-        }
-        builder.addSelect(selectColumns);
+        builder.addSelect(columns.map((column) => `${table}.${column}`));
       } else {
         builder.leftJoinAndSelect(`${alias}.${prop}`, prop);
       }
