@@ -29,7 +29,7 @@ type RPCError = {
 
 type MetaResult = {
   meta: string;
-  metaFile: string;
+  metaWasm: string;
   program: Hex;
 }
 

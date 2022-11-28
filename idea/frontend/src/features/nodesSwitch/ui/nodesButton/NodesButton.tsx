@@ -26,7 +26,7 @@ const NodesButton = ({ name, chain, version, isApiReady, isOpen, isFullWidth, on
       <p className={styles.menuIconWrapper}>
         <ConnectSVG className={buttonStyles.icon} />
       </p>
-      <CSSTransition in={isFullWidth} timeout={AnimationTimeout.Small} className={styles.nodeInfo} unmountOnExit>
+      <CSSTransition in={isFullWidth} timeout={AnimationTimeout.Tiny} className={styles.nodeInfo} unmountOnExit>
         <p>
           {isApiReady ? (
             <>

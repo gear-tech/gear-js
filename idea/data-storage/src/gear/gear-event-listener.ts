@@ -84,8 +84,11 @@ export class GearEventListener {
   }
 
   private listen() {
-    return this.api.derive.chain.subscribeNewBlocks(async (block) => {
-      const blockHash = block.createdAtHash.toHex();
+    return this.api.derive.chain.subscribeFinalizedHeads(async (head) => {
+      const blockHash = head.createdAtHash.toHex();
+
+      const block = await this.api.derive.chain.getBlock(blockHash);
+
       const timestamp = (await this.api.blocks.getBlockTimestamp(block)).toNumber();
 
       await this.handleBlocks(block, timestamp, blockHash);
@@ -165,11 +168,17 @@ export class GearEventListener {
 
     if (extrinsics.length >= 1) {
       for (const tx of extrinsics) {
+        const foundEvent = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
+          this.api.events.gear.MessageEnqueued.is(event),
+        );
+
+        if (!foundEvent) {
+          continue;
+        }
+
         const {
           data: { id, source, destination, entry },
-        } = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
-          this.api.events.gear.MessageEnqueued.is(event),
-        ).event as MessageEnqueued;
+        } = foundEvent.event as MessageEnqueued;
 
         const [payload, value] = getPayloadAndValue(tx.args, tx.method.method);
 
@@ -204,11 +213,17 @@ export class GearEventListener {
 
     if (extrinsics.length >= 1) {
       for (const tx of extrinsics) {
+        const foundEvent = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
+          this.api.events.gear.MessageEnqueued.is(event),
+        );
+
+        if (!foundEvent) {
+          continue;
+        }
+
         const {
           data: { source, destination },
-        } = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
-          this.api.events.gear.MessageEnqueued.is(event),
-        ).event as MessageEnqueued;
+        } = foundEvent.event as MessageEnqueued;
 
         const codeId = tx.method.method === 'uploadProgram' ? generateCodeHash(tx.args[0].toHex()) : tx.args[0].toHex();
 

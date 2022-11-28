@@ -18,6 +18,7 @@
 
 .bottomSide {
   @include childrenMargin($margin, right);
+  display: flex;
 
   &:global(.enter),
   &:global(.exit-done) {

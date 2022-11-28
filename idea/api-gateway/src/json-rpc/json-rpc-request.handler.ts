@@ -5,7 +5,7 @@ import { testBalanceGenesisCollection, isTestBalanceAvailable } from '../common/
 import { dataStoragePartitionsMap } from '../common/data-storage-partitions-map';
 import { jsonRpcHandler } from './json-rpc.handler';
 
-async function jsonRpcRequestHandler(
+export async function jsonRpcRequestHandler(
   rpcBodyRequest: IRpcRequest | IRpcRequest[],
 ): Promise<IRpcResponse | IRpcResponse[]> {
   if (Array.isArray(rpcBodyRequest)) {
@@ -29,12 +29,14 @@ async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
     return getResponse(procedure, null, isTestBalanceAvailable(params.genesis));
   }
 
-  if(procedure.method === API_METHODS.NETWORK_DATA_AVAILABLE) {
-    const { params: { genesis } } = procedure;
+  if (procedure.method === API_METHODS.NETWORK_DATA_AVAILABLE) {
+    const {
+      params: { genesis },
+    } = procedure;
     return getResponse(procedure, null, isNetworkDataAvailable(genesis));
   }
 
-  if(!validateGenesis(params.genesis)){
+  if (!validateGenesis(params.genesis)) {
     return getResponse(procedure, JSONRPC_ERRORS.InvalidParams.name);
   }
 
@@ -48,11 +50,9 @@ function isExistJsonRpcMethod(kafkaTopic: string): boolean {
 }
 
 function validateGenesis(genesis: string): boolean {
-  if(dataStoragePartitionsMap.has(genesis) || testBalanceGenesisCollection.has(genesis)){
+  if (dataStoragePartitionsMap.has(genesis) || testBalanceGenesisCollection.has(genesis)) {
     return true;
   }
 
   return false;
 }
-
-export { jsonRpcRequestHandler };

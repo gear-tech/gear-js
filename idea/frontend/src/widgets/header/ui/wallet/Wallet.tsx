@@ -1,54 +1,39 @@
 import clsx from 'clsx';
 import { Account, useAccount } from '@gear-js/react-hooks';
 import { Button, buttonStyles } from '@gear-js/ui';
-import { useState } from 'react';
 
 import { useModal } from 'hooks';
-import { LocalStorage } from 'shared/config';
 import { AccountButton } from 'shared/ui/accountButton';
 import { ReactComponent as substrateSVG } from 'shared/assets/images/logos/substrate.svg';
 
+import { OnboardingTooltip } from 'shared/ui/onboardingTooltip';
 import styles from './Wallet.module.scss';
-import { AuthorizationTooltip } from '../authorizationTooltip';
 
 type Props = {
   account?: Account;
-  isApiReady: boolean;
 };
 
-const Wallet = ({ account, isApiReady }: Props) => {
+const Wallet = ({ account }: Props) => {
   const { accounts } = useAccount();
   const { showModal } = useModal();
 
-  const [isTooltipShowing, setIsTooltipShowing] = useState(!localStorage.getItem(LocalStorage.NewUser));
+  const openAccountsModal = () => showModal('accounts', { accounts });
 
-  const hideTooltip = () => {
-    setIsTooltipShowing(false);
-    localStorage.setItem(LocalStorage.NewUser, 'false');
-  };
-
-  const handleClick = () => {
-    showModal('accounts', { accounts });
-
-    if (isTooltipShowing) hideTooltip();
-  };
-
-  const accountBtnClasses = clsx(buttonStyles.medium, styles.accountBtn, styles.fixSize);
+  const accountBtnClasses = clsx(buttonStyles.medium, styles.accountBtn);
 
   return (
-    <div className={styles.walletWrapper}>
+    <OnboardingTooltip className={styles.walletWrapper} index={0}>
       {account ? (
         <AccountButton
           name={account.meta.name}
           address={account.address}
           className={accountBtnClasses}
-          onClick={handleClick}
+          onClick={openAccountsModal}
         />
       ) : (
-        <Button icon={substrateSVG} text="Connect" color="primary" className={styles.fixSize} onClick={handleClick} />
+        <Button icon={substrateSVG} text="Connect" color="primary" onClick={openAccountsModal} />
       )}
-      {isApiReady && isTooltipShowing && <AuthorizationTooltip onCloseButtonClick={hideTooltip} />}
-    </div>
+    </OnboardingTooltip>
   );
 };
 

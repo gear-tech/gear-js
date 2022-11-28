@@ -23,7 +23,7 @@ const FilterHeader = () => {
 
   return (
     <div className={styles.header}>
-      <h1 className={styles.title}>Filters</h1>
+      <h2 className={styles.title}>Filters</h2>
       <CSSTransition in={isDirty} timeout={AnimationTimeout.Default} mountOnEnter unmountOnExit>
         <Button text="Clear all" color="transparent" className={styles.clearAllBtn} onClick={handleClick} />
       </CSSTransition>

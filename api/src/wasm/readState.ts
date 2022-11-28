@@ -17,7 +17,7 @@ export async function readState(
   const memory = new WebAssembly.Memory({ initial: initialSize });
   const module = await WebAssembly.instantiate(
     wasmBytes,
-    importObj(memory, false, inputValue, blockTimestamp, blockNumber),
+    importObj(memory, true, inputValue, blockTimestamp, blockNumber),
   );
   Object.keys(pages).forEach((pageNumber: string) => {
     const start = +pageNumber * PAGE_SIZE;

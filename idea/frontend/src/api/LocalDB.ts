@@ -2,6 +2,7 @@ import localForage from 'localforage';
 
 import { ProgramStatus, IProgram } from 'entities/program';
 
+import { LocalStorage } from 'shared/config';
 import { ProgramPaginationModel } from './program';
 
 const PROGRAMS_LOCAL_FORAGE = localForage.createInstance({ name: 'programs' });
@@ -80,7 +81,15 @@ const uploadLocalMetadata = async (programId: string, meta?: string, metaBuffer?
       program: programId,
       metaWasm: metaBuffer,
     },
+    genesis: localStorage.getItem(LocalStorage.Genesis),
   });
 };
 
-export { getLocalProgram, getLocalPrograms, getLocalProgramMeta, uploadLocalProgram, uploadLocalMetadata };
+export {
+  getLocalProgram,
+  getLocalPrograms,
+  getLocalProgramMeta,
+  uploadLocalProgram,
+  uploadLocalMetadata,
+  PROGRAMS_LOCAL_FORAGE,
+};

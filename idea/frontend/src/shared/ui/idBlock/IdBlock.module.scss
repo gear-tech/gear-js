@@ -33,13 +33,14 @@
   }
 
   .icon {
-    margin-right: $marginTiny;
+    flex-shrink: 0;
+    margin-right: $marginSmall;
   }
 
   .copyBtn {
     position: relative;
     z-index: 4;
-    margin-left: 2px;
+    margin-left: $marginSmall;
   }
 
   &.small {

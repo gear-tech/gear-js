@@ -5,9 +5,11 @@ export interface Entry extends Enum {
   isInit: boolean;
   isHandle: boolean;
   isReply: boolean;
+  isSignal: boolean;
   asInit: Null;
   asHandle: Null;
   asReply: MessageId;
+  asSignal: Null;
 }
 
-export type DispatchKind = Entry
+export type DispatchKind = Entry;

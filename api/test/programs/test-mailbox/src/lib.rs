@@ -4,7 +4,7 @@ use codec::{Decode, Encode};
 use gstd::{msg, prelude::*};
 use scale_info::TypeInfo;
 
-#[derive(TypeInfo, Decode, Encode)]
+#[derive(TypeInfo, Decode, Encode, Clone)]
 struct Participant {
     name: String,
 }
@@ -22,15 +22,15 @@ gstd::metadata! {
         output: Vec<Participant>,
 }
 
-static mut PARTICIPANT: Vec<Participant> = Vec::new();
+static mut PARTICIPANTS: Vec<Participant> = Vec::new();
 
 #[no_mangle]
 unsafe extern "C" fn handle() {
     let input: HandleInputAction = msg::load().expect("Unable to load message");
     match input {
-        HandleInputAction::AddParticipant(participant) => PARTICIPANT.push(participant),
+        HandleInputAction::AddParticipant(participant) => PARTICIPANTS.push(participant),
         HandleInputAction::ViewAllParticipants => {
-            msg::reply(&PARTICIPANT, 1000).expect("Error during msg::reply");
+            msg::reply(PARTICIPANTS.clone(), 1000).expect("Error during msg::reply");
         }
     }
 }

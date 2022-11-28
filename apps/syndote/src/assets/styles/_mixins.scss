@@ -1,0 +1,50 @@
+@use './variables' as *;
+
+@mixin customSimplebar {
+  :global(.simplebar-content-wrapper) {
+    outline: none;
+  }
+
+  :global(.simplebar-track) {
+    overflow: visible;
+    background-color: $gray100;
+
+    &:global(.simplebar-vertical) {
+      width: 1px;
+
+      :global(.simplebar-scrollbar) {
+        width: 3px;
+        margin-left: -1px;
+        background: $textColor;
+        border-radius: 1px;
+      }
+    }
+
+    &:global(.simplebar-horizontal) {
+      height: 1px;
+
+      :global(.simplebar-scrollbar) {
+        height: 3px;
+        margin-top: -1px;
+        background: $textColor;
+        border-radius: 1px;
+      }
+    }
+  }
+}
+
+@mixin childrenMargin($margin, $direction: bottom) {
+  & > *:not(:last-child) {
+    @if $direction == bottom {
+      margin-bottom: $margin;
+    } @else if $direction == top {
+      margin-top: $margin;
+    } @else if $direction == left {
+      margin-left: $margin;
+    } @else if $direction == right {
+      margin-right: $margin;
+    }
+
+    @content;
+  }
+}

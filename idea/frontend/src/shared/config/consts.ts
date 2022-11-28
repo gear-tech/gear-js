@@ -33,9 +33,9 @@ enum LocalStorage {
   Nodes = 'nodes',
   Account = 'account',
   Genesis = 'genesis',
-  NewUser = 'new_user',
   HideWelcomeBanner = 'hide_welcome_banner',
   Wallet = 'wallet',
+  IsNewUser = 'isNewUser',
 }
 
 enum GasMethod {
@@ -81,6 +81,7 @@ enum FileTypes {
 }
 
 enum AnimationTimeout {
+  Tiny = 50,
   Small = 150,
   Default = 250,
   Medium = 400,

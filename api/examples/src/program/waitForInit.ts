@@ -16,10 +16,16 @@ export function waitForInit(api: GearApi, programId: string): Promise<Unsubscrib
           case 'UserMessageSent':
             const {
               data: {
-                message: { source, reply, payload },
+                message: { source, details, payload },
               },
             } = event as UserMessageSent;
-            if (source.eq(programId) && reply.isSome && reply.unwrap()[0].eq(messageId) && reply.unwrap()[1].eq(1)) {
+            if (
+              source.eq(programId) &&
+              details.isSome &&
+              details.unwrap().isReply &&
+              details.unwrap().asReply.replyTo.eq(messageId) &&
+              details.unwrap().asReply.statusCode.eq(1)
+            ) {
               reject(payload.toHuman());
             }
             break;

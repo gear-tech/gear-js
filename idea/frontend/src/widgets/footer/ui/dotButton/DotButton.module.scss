@@ -1,11 +1,15 @@
 @use 'shared/assets/styles/variables' as *;
 @use '@gear-js/ui/mixins' as *;
+@use '@gear-js/ui/headings' as *;
 
 .link {
   @include transition;
+  @extend %headingFont;
   color: $gray800;
   font-size: 16px;
   font-weight: 500;
+  display: flex;
+  align-items: center;
 
   &:hover {
     opacity: 0.5;

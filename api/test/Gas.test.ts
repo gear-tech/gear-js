@@ -104,8 +104,8 @@ describe('Calculate gas', () => {
     const { message } = await waitForReply(null);
     expect(message.id).toBeDefined();
     messageId = message.id.toHex();
-    expect(message.reply).toBeDefined();
-    expect(message.reply.isNone).toBeTruthy();
+    expect(message.details).toBeDefined();
+    expect(message.details.isNone).toBeTruthy();
   });
 
   test('Get gas spent if payload is U8a', async () => {

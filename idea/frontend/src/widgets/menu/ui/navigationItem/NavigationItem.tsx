@@ -16,7 +16,7 @@ type Props = NavLinkProps & {
 const NavigationItem = ({ to, icon, text, children, isFullWidth, end }: Props) => (
   <NavLink to={to} className={styles.navLink} end={end}>
     <span className={styles.icon}>{icon}</span>
-    <CSSTransition in={isFullWidth} timeout={AnimationTimeout.Default}>
+    <CSSTransition in={isFullWidth} timeout={AnimationTimeout.Tiny}>
       <div className={styles.linkContent}>
         <span className={styles.linkText}>{text}</span>
         {children}

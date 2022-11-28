@@ -15,7 +15,7 @@ const AppExamplesLink = ({ isFullWidth }: Props) => (
     <span className={styles.icon}>
       <AppSVG />
     </span>
-    <CSSTransition in={isFullWidth} timeout={AnimationTimeout.Default}>
+    <CSSTransition in={isFullWidth} timeout={AnimationTimeout.Tiny}>
       <div className={styles.linkContent}>
         <span className={styles.linkText}>App Examples</span>
         <ExternalResourceSVG />
