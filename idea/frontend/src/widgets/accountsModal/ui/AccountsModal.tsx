@@ -13,7 +13,6 @@ import { ReactComponent as arrowSVG } from 'shared/assets/images/actions/arrowLe
 import { useExtensions, useWallet } from '../hooks';
 import { AccountList } from './accountList';
 import { Wallets } from './wallets';
-import { Empty } from './empty';
 import styles from './AccountsModal.module.scss';
 
 type Props = ModalProps & {
@@ -86,7 +85,7 @@ const AccountsModal = ({ accounts, onClose }: Props) => {
               <Button
                 icon={isWalletSelection ? arrowSVG : wallet.icon}
                 text={isWalletSelection ? 'Back' : wallet.name}
-                color="transparent"
+                color='transparent'
                 onClick={toggleWalletSelection}
                 disabled={!wallet}
               />
@@ -94,15 +93,23 @@ const AccountsModal = ({ accounts, onClose }: Props) => {
 
             <Button
               icon={logoutSVG}
-              text="Logout"
-              color="transparent"
+              text='Logout'
+              color='transparent'
               className={styles.logoutButton}
               onClick={handleLogoutClick}
             />
           </footer>
         </>
       ) : (
-        <Empty />
+        <p>
+          Wallet extension was not found or disconnected. Please check how to install a supported wallet and create an
+          account
+          {' '}
+          <a href='https://wiki.gear-tech.io/docs/idea/account/create-account' target='_blank' rel='noreferrer'
+             className='link-text'>
+            here
+          </a>.
+        </p>
       )}
     </Modal>
   );

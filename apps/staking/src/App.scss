@@ -45,7 +45,7 @@ input[type="number"]:focus {
 .customScroll {
   &::-webkit-scrollbar {
     width: 3px;
-    height: 3px;  
+    height: 3px;
   }
 
   &::-webkit-scrollbar-track {
@@ -59,4 +59,12 @@ input[type="number"]:focus {
 
   scrollbar-color: $textColor  $lineColor;
   scrollbar-width: thin;
+}
+
+.link-text {
+  transition: opacity 150ms ease-in;
+
+  &:hover {
+    opacity: .5;
+  }
 }
