@@ -13,7 +13,7 @@ const repliesMap: Map<string, (params: any) => RpcResponse> = new Map<string, (p
 
 export async function initAMQ(): Promise<void> {
   try {
-    connectionAMQP = await connect(config.rabbitmq.url);
+    connectionAMQP = await connectAMQP(config.rabbitmq.url);
     mainChannelAMQP = await connectionAMQP.createChannel();
 
     await mainChannelAMQP.assertExchange(RabbitMQExchanges.TOPIC_EX, 'topic', { durable: true });
@@ -40,6 +40,14 @@ export async function initAMQ(): Promise<void> {
     await subscribeToReplies();
   } catch (error) {
     console.error(`${new Date()} | Init rabbitMQ error`, error);
+  }
+}
+
+async function connectAMQP(url: string): Promise<Connection> {
+  try {
+    return connect(url);
+  } catch (error) {
+    console.error(`${new Date()} | RabbitMQ connection error`, error);
   }
 }
 
@@ -109,4 +117,4 @@ async function createChannel(): Promise<Channel> {
   return channel;
 }
 
-export { testBalanceChannels, dataStorageChannels, repliesMap, connectionAMQP, mainChannelAMQP };
+export { testBalanceChannels, dataStorageChannels, repliesMap, connectionAMQP, mainChannelAMQP, connectAMQP };
