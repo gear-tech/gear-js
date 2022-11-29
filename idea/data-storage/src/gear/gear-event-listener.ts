@@ -41,12 +41,14 @@ export class GearEventListener {
   ) {}
 
   public async run() {
-    setTimeout(async () => {
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
       try {
         await this.connectGearNode();
         await this.rabbitMQService.initRMQ(this.genesis);
       } catch (error) {
         this.logger.log('⚙️ 📡 Reconnecting to the gear node');
+        continue;
       }
       const unsub = await this.listen();
 
@@ -60,7 +62,7 @@ export class GearEventListener {
       });
 
       this.logger.log('⚙️ 📡 Reconnecting to the gear node');
-    }, 1000);
+    }
   }
 
   private async connectGearNode(): Promise<void> {

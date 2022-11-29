@@ -32,9 +32,11 @@ async function bootstrap() {
   const rabbitmqService = app.get(RabbitmqService);
   const gearEventListener = app.get(GearEventListener);
 
+  await rabbitmqService.connect();
+
   setInterval( async () => {
     await rabbitmqService.connect().catch((error) => {
-      console.log(error);
+      console.log(`${new Date()}`, error);
       process.exit(0);
     });
   }, 1000);
