@@ -1,16 +1,3 @@
-import {
-  AddMetaParams,
-  API_METHODS,
-  FindMessageParams,
-  FindProgramParams,
-  GetAllProgramsParams, GetAllUserProgramsParams, GetCodeParams,
-  GetIncomingMessagesParams,
-  GetMessagesParams,
-  GetMetaParams,
-  GetOutgoingMessagesParams,
-  GetTestBalanceParams,
-} from '@gear-js/common';
-
 export type Params =
   | AddMetaParams
   | FindMessageParams
@@ -23,6 +10,21 @@ export type Params =
   | GetTestBalanceParams
   | GetAllUserProgramsParams
   | GetCodeParams
+  | Record<string, any>
+  | string
+
+import {
+  AddMetaParams,
+  API_METHODS,
+  FindMessageParams,
+  FindProgramParams,
+  GetAllProgramsParams, GetAllUserProgramsParams, GetCodeParams,
+  GetIncomingMessagesParams,
+  GetMessagesParams,
+  GetMetaParams,
+  GetOutgoingMessagesParams,
+  GetTestBalanceParams,
+} from '@gear-js/common';
 
 interface IMessageDataStorageParams {
   genesis: string;

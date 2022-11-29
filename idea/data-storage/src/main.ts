@@ -30,11 +30,17 @@ async function bootstrap() {
   await waitReady();
 
   const rabbitmqService = app.get(RabbitmqService);
-  await rabbitmqService.connect();
+  const gearEventListener = app.get(GearEventListener);
+
+  setInterval( async () => {
+    await rabbitmqService.connect().catch((error) => {
+      console.log(error);
+      process.exit(0);
+    });
+  }, 1000);
 
   await app.listen(healthcheck.port);
 
-  const gearEventListener = app.get(GearEventListener);
   await gearEventListener.run();
 }
 

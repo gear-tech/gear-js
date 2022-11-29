@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Channel, Connection, connect, Replies } from 'amqplib';
 import {
@@ -23,7 +23,7 @@ export class RabbitmqService {
   private logger: Logger = new Logger(RabbitmqService.name);
   private mainChannel: Channel;
   private topicChannel: Channel;
-  private connection: Connection;
+  public connection: Connection;
 
   constructor(
     private configService: ConfigService,
@@ -36,7 +36,6 @@ export class RabbitmqService {
 
   public async connect(): Promise<void> {
     this.connection = await connect(this.configService.get<string>('rabbitmq.url'));
-    console.log('📍 RabbitMQ connected successfully');
   }
 
   public async initRMQ(genesis: string): Promise<void> {

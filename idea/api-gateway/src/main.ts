@@ -20,7 +20,7 @@ app.use('/health', healthcheckRouter);
 
 const startApp = async () => {
   await initAMQ();
-  await runSchedulers();
+  setInterval(runSchedulers, 1000);
 
   app.listen(port, () => {
     apiGatewayLogger.info(`⚙️ 🚀 App successfully run on the ${port}️`);
