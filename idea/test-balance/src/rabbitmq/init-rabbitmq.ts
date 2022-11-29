@@ -11,7 +11,7 @@ export let topicChannelAMQP: Channel;
 
 export async function initAMQ(): Promise<void> {
   try {
-    connectionAMQP = await connect(config.rabbitmq.url);
+    connectionAMQP = await connectAMQP(config.rabbitmq.url);
     mainChannelAMQP = await connectionAMQP.createChannel();
     topicChannelAMQP = await connectionAMQP.createChannel();
     const directExchange = RabbitMQExchanges.DIRECT_EX;
@@ -39,7 +39,22 @@ export async function initAMQ(): Promise<void> {
 
     await directMessageConsumer(mainChannelAMQP, routingKey);
     await topicMessageConsumer(topicChannelAMQP, assertTopicQueue);
+    checkConnectionRabbitMQ();
   } catch (error) {
     console.error(`${new Date()} | Init AMQP error`, error);
   }
+}
+
+async function connectAMQP(url: string): Promise<Connection> {
+  try {
+    return connect(url);
+  } catch (error) {
+    console.error(`${new Date()} | RabbitMQ connection error`, error);
+  }
+}
+
+function checkConnectionRabbitMQ() {
+  setInterval(async () => {
+    await connectAMQP(config.rabbitmq.url);
+  }, 1000);
 }
