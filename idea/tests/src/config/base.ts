@@ -11,7 +11,7 @@ function checkEnv(name: string): string {
 export default {
   gear: {
     wsProvider: checkEnv('WS_PROVIDER'),
-    wsProviderVara: checkEnv('WS_PROVIDER_VARA'),
+    wsProviderVara: process.env.WS_PROVIDER_VARA,
     api: checkEnv('API_ENDPOINT'),
   },
 };

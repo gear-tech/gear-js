@@ -20,16 +20,8 @@ export default () => ({
     password: checkEnv('DB_PASSWORD'),
     name: checkEnv('DB_NAME'),
   },
-  kafka: {
-    consumerName: checkEnv('KAFKA_CONSUMER_REGISTER_NAME'),
-    producerName: checkEnv('KAFKA_PRODUCER_REGISTER_NAME'),
-    clientId: checkEnv('KAFKA_CLIENT_ID'),
-    groupId: checkEnv('KAFKA_GROUP_ID'),
-    brokers: checkEnv('KAFKA_BROKERS').split(','),
-    sasl: {
-      username: checkEnv('KAFKA_SASL_USERNAME'),
-      password: checkEnv('KAFKA_SASL_PASSWORD'),
-    },
+  rabbitmq: {
+    url: checkEnv('RABBIT_MQ_URL')
   },
   healthcheck: {
     port: Number(process.env.HEALTHCHECK_PORT || '3001'),

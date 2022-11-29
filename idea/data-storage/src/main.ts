@@ -1,7 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { waitReady } from '@polkadot/wasm-crypto';
-import { kafkaLogger } from '@gear-js/common';
 
 import { AppModule } from './app.module';
 import configuration from './config/configuration';
@@ -9,9 +7,10 @@ import { changeStatus } from './healthcheck/healthcheck.controller';
 import { dataStorageLogger } from './common/data-storage.logger';
 import { AppDataSource } from './data-source';
 import { GearEventListener } from './gear/gear-event-listener';
+import { RabbitmqService } from './rabbitmq/rabbitmq.service';
 
 async function bootstrap() {
-  const { kafka, healthcheck } = configuration();
+  const { healthcheck } = configuration();
 
   try {
     await AppDataSource.initialize();
@@ -26,38 +25,25 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule, { cors: true });
 
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.KAFKA,
-    options: {
-      client: {
-        clientId: kafka.clientId,
-        brokers: kafka.brokers,
-        logCreator: kafkaLogger,
-        sasl: {
-          mechanism: 'plain',
-          username: kafka.sasl.username,
-          password: kafka.sasl.password,
-        },
-      },
-      consumer: {
-        groupId: kafka.groupId,
-        maxBytesPerPartition: 10485760,
-      },
-      subscribe: { fromBeginning: false },
-      producer: {},
-    },
-  });
-
-  await app.startAllMicroservices();
-  changeStatus('kafka');
   changeStatus('database');
 
   await waitReady();
 
+  const rabbitmqService = app.get(RabbitmqService);
   const gearEventListener = app.get(GearEventListener);
-  await gearEventListener.run();
+
+  await rabbitmqService.connect();
+
+  setInterval( async () => {
+    await rabbitmqService.connect().catch((error) => {
+      console.log(`${new Date()}`, error);
+      process.exit(0);
+    });
+  }, 1000);
 
   await app.listen(healthcheck.port);
+
+  await gearEventListener.run();
 }
 
 bootstrap();

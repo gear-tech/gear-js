@@ -1,18 +1,42 @@
 import { API_METHODS } from '@gear-js/common';
 import { nanoid } from 'nanoid';
 
-import { KafkaParams } from '../kafka/types';
-import { kafkaEventMap } from '../kafka/kafka-event-map';
-import { kafkaProducer } from '../kafka/producer';
 import { RpcResponse } from './types';
+import { IMessageDataStorageParams, IMessageTestBalanceParams, Params } from '../rabbitmq/types';
+import { producer } from '../rabbitmq/producer';
+import { repliesMap } from '../rabbitmq/init-rabbitmq';
 
-export async function jsonRpcHandler(topic: API_METHODS, params: KafkaParams): Promise<RpcResponse> {
-  const correlationId: string = nanoid(6);
-  await kafkaProducer.sendByTopic(topic, params, correlationId);
+async function handleEventByApiMethod(
+  method: API_METHODS,
+  params: Record<string, any> | Params | string
+): Promise<RpcResponse> {
+  const correlationId: string = nanoid(12);
+  const genesis = params['genesis'];
+  let replyResolve;
+  const replyPromise: Promise<RpcResponse> = new Promise((resolve) => (replyResolve = resolve));
 
-  let topicEvent;
-  const res: Promise<RpcResponse> = new Promise((resolve) => (topicEvent = resolve));
+  if(method === API_METHODS.TEST_BALANCE_GET) {
+    const messageTestBalanceParams: IMessageTestBalanceParams = { correlationId, params, genesis, method };
 
-  kafkaEventMap.set(correlationId, topicEvent);
-  return res;
+    await producer.sendMessageToTestBalance(messageTestBalanceParams);
+  } else {
+    const messageDataStorageParams: IMessageDataStorageParams = {
+      genesis,
+      correlationId,
+      method,
+      params
+    };
+
+    await producer.sendMessageToDataStorage(messageDataStorageParams);
+  }
+
+  repliesMap.set(correlationId, replyResolve);
+
+  return replyPromise;
 }
+
+async function jsonRpcHandler(method: API_METHODS, params: Params): Promise<RpcResponse> {
+  return handleEventByApiMethod(method, params);
+}
+
+export { jsonRpcHandler };

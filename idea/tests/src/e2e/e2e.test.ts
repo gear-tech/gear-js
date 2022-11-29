@@ -26,33 +26,32 @@ let genesis: Hex;
 let prepared: IPrepared;
 let api: GearApi;
 
-jest.setTimeout(30_000);
+describe('api methods', () => {
 
-beforeAll(async () => {
-  try {
-    api = await GearApi.create({ providerAddress: base.gear.wsProvider, throwOnConnect: true });
-  } catch (error) {
-    console.log(error);
-    process.exit(0);
-  }
+  beforeAll(async () => {
+    try {
+      api = await GearApi.create({ providerAddress: base.gear.wsProvider, throwOnConnect: true });
+    } catch (error) {
+      console.log(error);
+      process.exit(0);
+    }
 
-  genesis = api.genesisHash.toHex();
+    genesis = api.genesisHash.toHex();
 
-  await waitReady();
-  try {
-    prepared = await processPrepare(api);
-  } catch (err) {
-    console.log(err);
-    process.exit(1);
-  }
-});
+    await waitReady();
+    try {
+      prepared = await processPrepare(api);
+    } catch (err) {
+      console.log(err);
+      process.exit(1);
+    }
+  });
 
-afterAll(async () => {
-  await api.disconnect();
-  await sleep();
-});
+  afterAll(async () => {
+    await api.disconnect();
+    await sleep();
+  });
 
-describe('program methods', () => {
   test('program.all request', async () => {
     expect(await getAllPrograms(genesis, Object.keys(prepared.programs) as Hex[])).toBeTruthy();
   });
@@ -102,9 +101,7 @@ describe('program methods', () => {
       expect(await checkInitStatus(genesis, id_, prepared.programs[id_].init)).toBeTruthy();
     }
   });
-});
 
-describe('message methods', () => {
   test('message.all request', async () => {
     const messages = Array.from(prepared.messages.log.keys()).concat(
       Array.from(prepared.messages.sent.values()).map(({ id }) => id),
@@ -126,10 +123,9 @@ describe('message methods', () => {
       expect(await getMessagePayload(genesis, value.id));
     }
   });
-});
 
-describe('code methods', () => {
   test('code.all request', async () => {
+    await sleep();
     const codeIds = Array.from(prepared.collectionCode.keys());
     expect(await getCodes(genesis, codeIds)).toBeTruthy();
   });
@@ -140,29 +136,23 @@ describe('code methods', () => {
   });
 
   test('code.data request', async () => {
-    const codeIndex = 0;
+    const codeIndex = 1;
     const codeId = Array.from(prepared.collectionCode.keys())[codeIndex];
 
     expect(await getCodeData(genesis, codeId)).toBeTruthy();
   });
-});
 
-describe('testBalance', () => {
   test('testBalance.get request', async () => {
     expect(await getTestBalance(genesis)).toBeTruthy();
   });
   test('testBalance.available request', async () => {
     expect(await testBalanceAvailable(genesis)).toBeTruthy();
   });
-});
 
-describe('networkDataAvailable method (depends on connection node)', () => {
   test('networkData.available request', async () => {
     expect(await networkDataAvailable(genesis)).toBeTruthy();
   });
-});
 
-describe('block method', () => {
   test('blocks.status request', async () => {
     expect(await blocksStatus(genesis)).toBeTruthy();
   });

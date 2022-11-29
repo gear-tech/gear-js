@@ -6,6 +6,7 @@ import { sendMessages } from './send-message';
 import { uploadPrograms } from './upload-programs';
 import { IMessageSpec, IProgramSpec, IPrepared, ICodeSpec } from '../interfaces';
 import { uploadCollectionCode } from './upload-collection-code';
+import { sleep } from '../utils';
 
 export async function processPrepare(api: GearApi): Promise<IPrepared> {
   const programs = load(readFileSync('./spec/programs.yaml', 'utf8')) as { [program: string]: IProgramSpec };
@@ -18,6 +19,7 @@ export async function processPrepare(api: GearApi): Promise<IPrepared> {
   const collectionCode = load(readFileSync('./spec/collection-code.yaml', 'utf8')) as { [key: string]: ICodeSpec[] };
   const uploadedCollectionCode = await uploadCollectionCode(api ,collectionCode);
   collectionCodeChanged.forEach((value, key) => uploadedCollectionCode.set(key, value));
+  await sleep(30_000);
 
   return { programs: uploadedPrograms, messages: sentMessages, collectionCode: uploadedCollectionCode };
 }

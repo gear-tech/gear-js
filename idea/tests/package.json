@@ -1,12 +1,12 @@
 {
   "name": "@gear-js/web-tests",
   "scripts": {
-    "test": "jest --no-cache",
+    "test": "jest --clearCache && jest --runInBand",
     "build": "tsc"
   },
   "devDependencies": {
     "@types/chai": "4.3.4",
-    "@types/jest": "27.5.2",
+    "@types/jest": "29.2.3",
     "@types/js-yaml": "4.0.5",
     "typescript": "4.9.3"
   },

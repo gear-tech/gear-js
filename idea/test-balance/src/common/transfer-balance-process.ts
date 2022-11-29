@@ -1,12 +1,11 @@
-import { KafkaMessage } from 'kafkajs';
-import { JSONRPC_ERRORS } from '@gear-js/common';
+import { JSONRPC_ERRORS, RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
 
 import { transferService } from '../services/transfer.service';
 import { gearService } from '../gear';
-import { kafkaProducer } from '../kafka/producer';
 import { testBalanceLogger } from './test-balace.logger';
+import { producer } from '../rabbitmq/producer';
 
-export async function transferBalanceProcess(message: KafkaMessage, payload: any): Promise<void> {
+export async function transferBalanceProcess(payload: any, correlationId: string): Promise<void> {
   let result;
 
   try {
@@ -21,9 +20,5 @@ export async function transferBalanceProcess(message: KafkaMessage, payload: any
     testBalanceLogger.error(error.message, error.stack);
     result = { error: JSONRPC_ERRORS.InternalError.name };
   }
-
-  const topic = message.headers.kafka_replyTopic.toString();
-  const correlationId = message.headers.kafka_correlationId.toString();
-
-  await kafkaProducer.send(topic, JSON.stringify(result), correlationId);
+  await producer.sendMessage(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.REPLIES, correlationId, result);
 }

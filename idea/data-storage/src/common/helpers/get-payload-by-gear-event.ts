@@ -19,6 +19,7 @@ import { CodeChangedInput } from '../../code/types';
 
 function userMessageSentPayload(data: UserMessageSentData): UserMessageSentInput {
   const { id, source, destination, payload, value, details } = data.message;
+
   return {
     id: id.toHex(),
     source: source.toHex(),
