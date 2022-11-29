@@ -23,3 +23,11 @@ main {
 body {
   background: $bgColor url(assets/images/bg.svg) center/cover no-repeat;
 }
+
+.link-text {
+  transition: opacity 150ms ease-in;
+
+  &:hover {
+    opacity: .5;
+  }
+}

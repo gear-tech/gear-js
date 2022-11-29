@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAccount } from '@gear-js/react-hooks';
-import userSVG from 'assets/images/icons/login.svg';
+import { ReactComponent as userSVG } from 'assets/images/icons/login.svg';
 import { Button } from '@gear-js/ui';
 import { AccountsModal } from './accounts-modal';
 import { Wallet } from './wallet';
