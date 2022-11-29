@@ -260,6 +260,16 @@ jobs:
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Restart RabbitMQ
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment rabbitmq -n $KUBE_NAMESPACE
+          
+      - name: Check RabbitMQ
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n $KUBE_NAMESPACE --timeout=120s
+          
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
