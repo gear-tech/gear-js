@@ -1,6 +1,6 @@
 import { Button, Select } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
-import check from 'assets/images/icons/check.svg';
+import { ReactComponent as check } from 'assets/images/icons/check.svg';
 import { InfoText } from 'components';
 import { Wallet } from 'types';
 

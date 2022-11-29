@@ -1,3 +1,13 @@
+## 0.27.7
+
+_11/29/2022_
+
+https://github.com/gear-tech/gear-js/pull/1126
+
+### Changes
+
+- Update syscalls
+
 ## 0.27.6
 
 _11/24/2022_

@@ -1,7 +1,7 @@
 import { Input, Button } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 import { isHex } from '@polkadot/util';
-import check from 'assets/images/icons/check.svg';
+import { ReactComponent as check } from 'assets/images/icons/check.svg';
 import { CreateFormValues } from 'types';
 
 type Props = {

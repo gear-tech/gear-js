@@ -2111,7 +2111,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.27.6, @gear-js/api@npm:^0.27.0, @gear-js/api@npm:^0.27.3, @gear-js/api@npm:^0.27.5, @gear-js/api@npm:^0.27.6":
+"@gear-js/api@npm:0.27.6":
   version: 0.27.6
   resolution: "@gear-js/api@npm:0.27.6"
   peerDependencies:
@@ -2141,6 +2141,17 @@ __metadata:
     "@polkadot/wasm-crypto": ^6.3.1
     rxjs: ^7.5.5
   checksum: 80c9b6403f2a29dec0dc40ed7b4053152298fc6d27d56f4463120340805c9009df26218575a09f1b2eb9c830fc3d2a052a2fdd4f9c859d425174ed9fe627ca80
+  languageName: node
+  linkType: hard
+
+"@gear-js/api@npm:^0.27.0, @gear-js/api@npm:^0.27.3, @gear-js/api@npm:^0.27.5, @gear-js/api@npm:^0.27.6, @gear-js/api@npm:^0.27.7":
+  version: 0.27.7
+  resolution: "@gear-js/api@npm:0.27.7"
+  peerDependencies:
+    "@polkadot/api": ^9.6.1
+    "@polkadot/wasm-crypto": ^6.3.1
+    rxjs: ^7.5.5
+  checksum: 623888daed201ea8afc247a71eb151363f149784d3492aba480df0da71612332736d044ba3f89ae28ae95f08a002bba84da40e8a5753a60d6f0a9f2f1bc80f72
   languageName: node
   linkType: hard
 
@@ -2308,7 +2319,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/frontend@workspace:idea/frontend"
   dependencies:
-    "@gear-js/api": ^0.27.6
+    "@gear-js/api": ^0.27.7
     "@gear-js/react-hooks": "workspace:^"
     "@gear-js/ui": "workspace:^"
     "@hcaptcha/react-hcaptcha": ^1.4.4
@@ -2512,11 +2523,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/react-hooks@workspace:utils/gear-hooks"
   dependencies:
-    "@gear-js/api": ^0.27.6
-    "@polkadot/api": ^9.6.1
+    "@gear-js/api": ^0.27.7
+    "@polkadot/api": ^9.9.1
     "@polkadot/extension-dapp": ^0.44.6
     "@polkadot/extension-inject": ^0.44.6
-    "@polkadot/types": ^9.6.1
+    "@polkadot/types": ^9.9.1
     "@polkadot/util": ^10.1.6
     "@rollup/plugin-commonjs": ^22.0.0
     "@rollup/plugin-node-resolve": ^13.3.0
@@ -2533,7 +2544,7 @@ __metadata:
     rollup-plugin-typescript2: ^0.31.2
     typescript: ^4.7.2
   peerDependencies:
-    "@gear-js/api": ^0.27.6
+    "@gear-js/api": ^0.27.7
     "@polkadot/extension-dapp": ^0.43.2
     react: ">=17.0.2"
     react-dom: ">=17.0.2"
@@ -4382,7 +4393,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/api@npm:9.9.4, @polkadot/api@npm:^9.6.1":
+"@polkadot/api@npm:9.9.4, @polkadot/api@npm:^9.9.1":
   version: 9.9.4
   resolution: "@polkadot/api@npm:9.9.4"
   dependencies:
@@ -4597,7 +4608,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/types@npm:9.9.4, @polkadot/types@npm:^9.2.3, @polkadot/types@npm:^9.6.1":
+"@polkadot/types@npm:9.9.4, @polkadot/types@npm:^9.2.3, @polkadot/types@npm:^9.9.1":
   version: 9.9.4
   resolution: "@polkadot/types@npm:9.9.4"
   dependencies:
@@ -9911,9 +9922,9 @@ __metadata:
   linkType: hard
 
 "cssdb@npm:^7.1.0":
-  version: 7.1.0
-  resolution: "cssdb@npm:7.1.0"
-  checksum: 19870ddc2f51d10179bd6278c3c3bf7c54abc342b1070ea496cd9eceb564a4f1820bc9133e5c796fd53d974b68dc30d0f4093a70733d215d9c722663800ef151
+  version: 7.2.0
+  resolution: "cssdb@npm:7.2.0"
+  checksum: a571955eac16772071358671cf748c077a95a8acfb8812ecbcb84217d00360edaeb31994a2ddf10e75b9693f1e846f121ad3d6e149eeb7625625ea24184754fd
   languageName: node
   linkType: hard
 
@@ -16221,13 +16232,13 @@ __metadata:
   linkType: hard
 
 "mini-css-extract-plugin@npm:^2.4.5":
-  version: 2.7.0
-  resolution: "mini-css-extract-plugin@npm:2.7.0"
+  version: 2.7.1
+  resolution: "mini-css-extract-plugin@npm:2.7.1"
   dependencies:
     schema-utils: ^4.0.0
   peerDependencies:
     webpack: ^5.0.0
-  checksum: e6b111d4289132bd496286eec42801c74c83af7eac71af630a5babae48ca65377f47d8b39e1f0653b449e68e67b57dbd0d36917242f08fc3e7770e70c0cb56cd
+  checksum: 0da0db7befa4da5df2293440e540d9414b23b99768bbec4b8dab40c1c961ad31532239635be06c6ca9a6d4cfcb0caeb6dbd19d5e31d3271d734e0a39c3245c23
   languageName: node
   linkType: hard
 
