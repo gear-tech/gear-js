@@ -268,7 +268,7 @@ jobs:
       - name: Check RabbitMQ
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout status rabbitmq -n $KUBE_NAMESPACE --timeout=120s
+          args: rollout status deployment rabbitmq -n $KUBE_NAMESPACE --timeout=120s
           
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
