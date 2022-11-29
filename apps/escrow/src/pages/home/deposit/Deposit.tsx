@@ -1,6 +1,6 @@
 import { Button } from '@gear-js/ui';
-import wallet from 'assets/images/icons/wallet.svg';
-import cross from 'assets/images/icons/cross.svg';
+import { ReactComponent as wallet } from 'assets/images/icons/wallet.svg';
+import { ReactComponent as cross } from 'assets/images/icons/cross.svg';
 import { ESCROW } from 'consts';
 import { InfoText } from 'components';
 
