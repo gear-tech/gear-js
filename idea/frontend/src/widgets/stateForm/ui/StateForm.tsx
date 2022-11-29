@@ -2,6 +2,7 @@ import { Button, Input, Textarea } from '@gear-js/ui';
 import { Hex, Metadata } from '@gear-js/api';
 import { useEffect, useMemo } from 'react';
 import { Form } from 'react-final-form';
+import { OnChange } from 'react-final-form-listeners';
 
 import { BackButton } from 'shared/ui/backButton';
 import { Box } from 'shared/ui/box';
@@ -21,7 +22,7 @@ type Props = {
 };
 
 const StateForm = ({ meta, metaBuffer, programId, isLoading }: Props) => {
-  const { state, isReaded, readState } = useStateRead(programId, metaBuffer);
+  const { state, isReaded, readState, resetState } = useStateRead(programId, metaBuffer);
   const isState = state !== undefined; // could be null
 
   const handleSubmit = async (values: FormValues) => {
@@ -57,6 +58,7 @@ const StateForm = ({ meta, metaBuffer, programId, isLoading }: Props) => {
                 <FormPayload name="payload" label="Input Parameters" values={payloadFormValues} gap="1/5" />
               ))}
 
+            <OnChange name="payload">{() => resetState()}</OnChange>
             {!isReaded && <Textarea label="Statedata:" rows={15} gap="1/5" className={styles.loading} readOnly block />}
 
             {isReaded && isState && (

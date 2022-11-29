@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAccount } from '@gear-js/react-hooks';
 
 import { useChain, useCodes, useDataLoading } from 'hooks';
@@ -10,12 +11,13 @@ import { CodesList } from './codesList';
 import { SearchSettings } from './searchSettings';
 
 const Codes = () => {
+  const location = useLocation();
   const { account } = useAccount();
   const { isDevChain } = useChain();
 
   const { codes, isLoading, totalCount, fetchCodes } = useCodes();
   const { params, loadData, changeParams } = useDataLoading<RequestParams>({
-    defaultParams: DEFAULT_REQUEST_PARAMS,
+    defaultParams: location.state ?? DEFAULT_REQUEST_PARAMS,
     fetchData: fetchCodes,
   });
 
@@ -62,7 +64,12 @@ const Codes = () => {
         <h2 className={styles.heading}>{heading}</h2>
         <CodesList codes={filteredCodes} totalCount={count} isLoading={isLoading} loadMorePrograms={loadData} />
       </section>
-      <SearchSettings isLoggedIn={isLoggedIn} initialValues={initialValues} onSubmit={handleParamsChange} />
+      <SearchSettings
+        initQuery={params.query || ''}
+        isLoggedIn={isLoggedIn}
+        initialValues={initialValues}
+        onSubmit={handleParamsChange}
+      />
     </div>
   );
 };

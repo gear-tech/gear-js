@@ -18,10 +18,9 @@ async function verifyTestBalanceRequest(body: IRpcRequest) {
 
 export async function testBalanceMiddleware(req: Request, res: Response, next: NextFunction) {
   const body: IRpcRequest = req.body;
-
   if (Array.isArray(body)) {
     for (const request of body) {
-      const error = verifyTestBalanceRequest(request);
+      const error = await verifyTestBalanceRequest(request);
       if (error) {
         return res.send(getResponse(body, error));
       }

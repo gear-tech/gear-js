@@ -25,7 +25,7 @@ const Header = memo(({ exitCode, messageId, timestamp }: Props) => {
       {timestamp && (
         <CSSTransition in appear timeout={AnimationTimeout.Default}>
           <div className={styles.timestampSide}>
-            <TimestampSVG className={styles.icon} />
+            <TimestampSVG />
             <span>Timestamp:</span>
             <span className={styles.value}>{formatDate(timestamp)}</span>
           </div>

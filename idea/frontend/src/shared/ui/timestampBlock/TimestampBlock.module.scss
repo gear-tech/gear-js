@@ -33,6 +33,7 @@
   }
 
   .icon {
+    flex-shrink: 0;
     margin-right: $marginSmall;
   }
 }

@@ -1,5 +1,8 @@
 import { useState, useCallback, useMemo, useEffect, ReactNode } from 'react';
 
+import { useOnboarding } from 'hooks';
+import { disableScroll, enableScroll } from 'shared/helpers';
+
 import { MODALS } from './consts';
 import { ModalName, ModalProperties } from './types';
 import { ModalContext } from './Context';
@@ -13,6 +16,8 @@ type Props = {
 const ModalProvider = ({ children }: Props) => {
   const [modalName, setModalName] = useState<ModalName | null>(null);
   const [modalProps, setModalProps] = useState<any>(null);
+
+  const { isOnboardingActive } = useOnboarding();
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Escape') {
@@ -35,24 +40,24 @@ const ModalProvider = ({ children }: Props) => {
     [closeModal],
   );
 
-  const value = useMemo(
-    () => ({
-      showModal,
-      closeModal,
-    }),
-    [showModal, closeModal],
-  );
+  const value = useMemo(() => ({ showModal, closeModal }), [showModal, closeModal]);
 
   useEffect(() => {
-    if (!(modalName && modalProps)) {
-      return;
-    }
+    if (!modalName || !modalProps || isOnboardingActive) return;
 
-    document.body.style.overflow = 'hidden';
+    disableScroll();
+
+    return () => {
+      enableScroll();
+    };
+  }, [modalName, modalProps, isOnboardingActive]);
+
+  useEffect(() => {
+    if (!modalName || !modalProps) return;
+
     document.addEventListener('keydown', handleKeyDown, false);
 
     return () => {
-      document.body.style.overflow = 'auto';
       document.removeEventListener('keydown', handleKeyDown, false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

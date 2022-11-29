@@ -4,7 +4,7 @@ import { getResponse } from '../utils';
 import { jsonRpcHandler } from './json-rpc.handler';
 import { dataStorageChannels, testBalanceChannels } from '../rabbitmq/init-rabbitmq';
 
-async function jsonRpcRequestHandler(
+export async function jsonRpcRequestHandler(
   rpcBodyRequest: IRpcRequest | IRpcRequest[],
 ): Promise<IRpcResponse | IRpcResponse[]> {
   if (Array.isArray(rpcBodyRequest)) {
@@ -32,7 +32,7 @@ async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
     return getResponse(procedure, null, dataStorageChannels.has(params.genesis));
   }
 
-  if(!validateGenesis(params.genesis)){
+  if (!validateGenesis(params.genesis)) {
     return getResponse(procedure, JSONRPC_ERRORS.InvalidParams.name);
   }
 
@@ -53,5 +53,3 @@ function validateGenesis(genesis: string): boolean {
 
   return false;
 }
-
-export { jsonRpcRequestHandler };

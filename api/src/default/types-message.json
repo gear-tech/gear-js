@@ -25,7 +25,7 @@
       "payload_store": "Option<PayloadStore>"
     },
     "DispatchKind": {
-      "_enum": ["Init", "Handle", "HandleReply"]
+      "_enum": ["Init", "Handle", "Reply", "Signal"]
     },
     "QueuedMessage": {
       "id": "H256",

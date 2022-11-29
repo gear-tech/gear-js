@@ -115,7 +115,7 @@ const TopSide = ({ account }: Props) => {
 
           {isAccountReady && (
             <CSSTransition in appear timeout={AnimationTimeout.Default}>
-              <Wallet account={account} isApiReady={isApiReady} />
+              <Wallet account={account} />
             </CSSTransition>
           )}
         </div>

@@ -1,12 +1,14 @@
 @use '@gear-js/ui/mixins' as *;
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
-@use 'shared/assets/styles/_animations.scss' as *;
+@use '@gear-js/ui/headings' as *;
+@use 'shared/assets/styles/shared' as *;
+@use 'shared/assets/styles/variables' as *;
+@use 'shared/assets/styles/animations' as *;
+@use 'shared/assets/styles/mixins' as *;
 
 .menu {
   position: sticky;
   top: 0;
-  z-index: 8;
+  z-index: 6;
   height: calc(100vh - $footerHeight);
 }
 
@@ -23,13 +25,13 @@
   }
 }
 
-.menuContent {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  padding-top: toRem(28);
+.gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
+  z-index: -1;
   overflow: hidden;
 
   &::after,
@@ -66,6 +68,15 @@
       left: toRem(123);
     }
   }
+}
+
+.menuContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding-top: toRem(28);
+  height: 100%;
 }
 
 .menuBtn {
@@ -147,5 +158,34 @@
     line-height: toRem(21);
     letter-spacing: 0.08em;
     text-transform: capitalize;
+  }
+}
+
+.version {
+  @include childrenMargin(9px, right);
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+
+  &Link {
+    @extend %headingFont;
+    @include transition;
+    @include childrenMargin(18px, right);
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: rgba(#fff, 0.7);
+
+    &:hover {
+      opacity: 0.5;
+    }
+
+    .text {
+      @include fade();
+    }
+  }
+
+  .tooltip {
+    @include fade();
   }
 }
