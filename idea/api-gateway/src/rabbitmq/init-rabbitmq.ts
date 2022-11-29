@@ -3,6 +3,7 @@ import { RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
 
 import config from '../config/configuration';
 import { RpcResponse } from '../json-rpc/types';
+import configuration from '../config/configuration';
 
 let connectionAMQP: Connection;
 let mainChannelAMQP: Channel;
@@ -38,6 +39,7 @@ export async function initAMQ(): Promise<void> {
 
     await subscribeToGenesises();
     await subscribeToReplies();
+    checkConnectionRabbitMQ();
   } catch (error) {
     console.error(`${new Date()} | Init rabbitMQ error`, error);
   }
@@ -109,6 +111,12 @@ async function subscribeToGenesises() {
       }
     }
   });
+}
+
+function checkConnectionRabbitMQ() {
+  setInterval(async () => {
+    await connectAMQP(configuration.rabbitmq.url);
+  }, 1000);
 }
 
 async function createChannel(): Promise<Channel> {
