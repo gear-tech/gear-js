@@ -43,6 +43,7 @@ export async function initAMQ(): Promise<void> {
     checkConnectionRabbitMQ();
   } catch (error) {
     console.error(`${new Date()} | Init AMQP error`, error);
+    process.exit(0);
   }
 }
 
@@ -56,12 +57,8 @@ async function connectAMQP(url: string): Promise<Connection> {
 
 function checkConnectionRabbitMQ() {
   const cron = new CronJob(config.scheduler.checkRabbitMQConnectionTime, async function () {
-    try {
-      const connection = await connectionAMQP.createChannel();
-      await connection.close();
-    } catch (error) {
-      process.exit(0);
-    }
+    const connection = await connectionAMQP.createChannel();
+    await connection.close();
   });
 
   cron.start();
