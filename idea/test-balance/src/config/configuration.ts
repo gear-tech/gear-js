@@ -26,10 +26,6 @@ export default {
   rabbitmq: {
     url: checkEnv('RABBIT_MQ_URL'),
   },
-  // every 10 second "*/10 * * * * *"
-  scheduler: {
-    checkRabbitMQConnectionTime: process.env.CRON_TIME_CHECK_RABBITMQ_CONNECTION || '*/10 * * * * *',
-  },
   healthcheck: {
     port: parseInt(process.env.PORT || '3010'),
   },

@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Channel, Connection, connect, Replies } from 'amqplib';
-import { Cron } from '@nestjs/schedule';
 import {
   AddMetaParams,
   API_METHODS, FindMessageParams,
@@ -12,15 +11,12 @@ import {
 } from '@gear-js/common';
 
 import { ProgramService } from '../program/program.service';
-import configuration from '../config/configuration';
 import { MessageService } from '../message/message.service';
 import { MetadataService } from '../metadata/metadata.service';
 import { CodeService } from '../code/code.service';
 import { BlockService } from '../block/block.service';
 import { RabbitmqMessageParams } from './types/rabbitmq-params';
 import { FormResponse } from '../decorator/form-response.decorator';
-
-const { scheduler } = configuration();
 
 @Injectable()
 export class RabbitmqService {
@@ -40,16 +36,6 @@ export class RabbitmqService {
 
   public async connect(): Promise<void> {
     this.connection = await connect(this.configService.get<string>('rabbitmq.url'));
-  }
-
-  @Cron(scheduler.checkRabbitMQConnectionTime)
-  public async checkConnectionRabbitMQ() {
-    try {
-      const channel = await this.connection.createChannel();
-      await channel.close();
-    } catch (error) {
-      process.exit(0);
-    }
   }
 
   public async initRMQ(genesis: string): Promise<void> {
@@ -80,6 +66,11 @@ export class RabbitmqService {
 
       await this.directMessageConsumer(routingKey);
       await this.topicMessageConsumer(assertTopicQueue, genesis);
+
+      this.connection.on('close', (error) => {
+        console.log(new Date(), error);
+        process.exit(1);
+      });
     } catch (error) {
       this.logger.error('Init RMQ error');
       this.logger.error(error);
