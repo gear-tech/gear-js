@@ -6,7 +6,7 @@ import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IPr
 import { generateCodeHash, generateProgramId, GPROG, GPROG_HEX, validateGasLimit, validateValue } from './utils';
 import { GearTransaction } from './Transaction';
 import { createPayload } from './create-type';
-import { Metadata } from './types/interfaces';
+import { OldMetadata } from './types/interfaces';
 import { SubmitProgramError } from './errors';
 import { GearApi } from './GearApi';
 import { GearGas } from './Gas';
@@ -38,7 +38,7 @@ export class GearProgram extends GearTransaction {
    * })
    * ```
    */
-  upload(program: IProgramUploadOptions, meta?: Metadata, messageType?: string): IProgramUploadResult {
+  upload(program: IProgramUploadOptions, meta?: OldMetadata, messageType?: string): IProgramUploadResult {
     validateValue(program.value, this._api);
     validateGasLimit(program.gasLimit, this._api);
 
@@ -75,7 +75,7 @@ export class GearProgram extends GearTransaction {
    * })
    * ```
    */
-  create(program: IProgramCreateOptions, meta?: Metadata, messageType?: string): IProgramCreateResult {
+  create(program: IProgramCreateOptions, meta?: OldMetadata, messageType?: string): IProgramCreateResult {
     validateValue(program.value, this._api);
     validateGasLimit(program.gasLimit, this._api);
 

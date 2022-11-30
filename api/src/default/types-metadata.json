@@ -3,13 +3,21 @@
     "MessageId": "[u8;32]",
     "ExitCode": "i32",
     "Payload": "Vec<u8>",
-    "InOut": {
-      "input": "Option<String>",
-      "output": "Option<String>"
+    "TypesRepr": {
+      "input": "Option<u32>",
+      "output": "Option<u32>"
     },
-    "WasmMetadata": {
+    "ProgramMetadata": {
+      "init": "TypesRepr",
+      "handle": "TypesRepr",
+      "reply": "TypesRepr",
+      "others": "TypesRepr",
+      "state": "Option<u32>",
+      "reg": "Vec<u8>"
+    },
+    "StateMetadata": {
       "functions": "HashMap<String, InOut>",
-      "reg": "Bytes"
+      "reg": "Vec<u8>"
     }
   }
 }

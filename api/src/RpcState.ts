@@ -1,29 +1,6 @@
-import { HashMap, Text, Option, Struct, Bytes } from '@polkadot/types';
-
-import { getStateFunctions } from './wasm';
 import { CreateType } from './create-type';
 import { GearApi } from './GearApi';
 import { Hex } from './types';
-
-interface InOut extends Struct {
-  input: Option<Text>;
-  output: Option<Text>;
-}
-
-interface WasmMetadata extends Struct {
-  functions: HashMap<Text, InOut>;
-  reg: Bytes;
-}
-
-interface HumanInOut {
-  input: string | null;
-  output: string | null;
-}
-
-interface HumanWasmMetadata {
-  functions: Record<string, HumanInOut>;
-  reg: Hex;
-}
 
 export class GearRpcState {
   constructor(private api: GearApi) {}
@@ -52,12 +29,5 @@ export class GearRpcState {
       args.at || null,
     );
     return CreateType.create(type, state, registry);
-  }
-
-  async getMetadata(wasm: Buffer | Uint8Array): Promise<HumanWasmMetadata> {
-    const metadataBytes = await getStateFunctions(wasm instanceof Uint8Array ? Buffer.from(wasm) : wasm);
-    const metadata = this.api.createType('WasmMetadata', metadataBytes) as WasmMetadata;
-
-    return metadata.toHuman() as unknown as HumanWasmMetadata;
   }
 }

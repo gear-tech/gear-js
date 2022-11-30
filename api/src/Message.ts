@@ -1,7 +1,7 @@
 import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 
-import { IMessageSendOptions, IMessageSendReplyOptions, Metadata } from './types';
+import { IMessageSendOptions, IMessageSendReplyOptions, OldMetadata } from './types';
 import { SendMessageError, SendReplyError } from './errors';
 import { validateGasLimit, validateValue } from './utils';
 import { GearTransaction } from './Transaction';
@@ -29,7 +29,7 @@ export class GearMessage extends GearTransaction {
    */
   send(
     message: IMessageSendOptions,
-    meta?: Metadata,
+    meta?: OldMetadata,
     messageType?: string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
     validateValue(message.value, this._api);
@@ -71,7 +71,7 @@ export class GearMessage extends GearTransaction {
    */
   sendReply(
     message: IMessageSendReplyOptions,
-    meta?: Metadata,
+    meta?: OldMetadata,
     messageType?: string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
     validateValue(message.value, this._api);

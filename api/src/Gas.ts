@@ -1,7 +1,7 @@
 import { isHex, isString } from '@polkadot/util';
 
 import { Hex, PayloadType, Value } from './types';
-import { Metadata } from './types/interfaces';
+import { OldMetadata } from './types/interfaces';
 import { createPayload } from './create-type';
 import { GearApi } from './GearApi';
 import { GasInfo } from './types';
@@ -9,7 +9,7 @@ import { GasInfo } from './types';
 export class GearGas {
   constructor(private _api: GearApi) {}
 
-  #getTypeAndMeta(metaOrTypeOfPayload: Metadata | string, metaType: string): [string, Metadata | undefined] {
+  #getTypeAndMeta(metaOrTypeOfPayload: OldMetadata | string, metaType: string): [string, OldMetadata | undefined] {
     if (!metaOrTypeOfPayload) {
       return [undefined, undefined];
     }
@@ -52,7 +52,7 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    meta?: Metadata,
+    meta?: OldMetadata,
   ): Promise<GasInfo>;
 
   /**
@@ -102,7 +102,7 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    metaOrTypeOfPayload?: string | Metadata,
+    metaOrTypeOfPayload?: string | OldMetadata,
   ): Promise<GasInfo>;
 
   async initUpload(
@@ -111,7 +111,7 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    metaOrTypeOfPayload?: string | Metadata,
+    metaOrTypeOfPayload?: string | OldMetadata,
   ): Promise<GasInfo> {
     const [type, meta] = this.#getTypeAndMeta(metaOrTypeOfPayload, 'init_input');
     return this._api.rpc['gear'].calculateInitUploadGas(
@@ -156,7 +156,7 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    meta?: Metadata,
+    meta?: OldMetadata,
   ): Promise<GasInfo>;
 
   /**
@@ -206,7 +206,7 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    metaOrTypeOfPayload?: string | Metadata,
+    metaOrTypeOfPayload?: string | OldMetadata,
   ): Promise<GasInfo>;
 
   async initCreate(
@@ -215,7 +215,7 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    metaOrTypeOfPayload?: string | Metadata,
+    metaOrTypeOfPayload?: string | OldMetadata,
   ): Promise<GasInfo> {
     const [type, meta] = this.#getTypeAndMeta(metaOrTypeOfPayload, 'init_input');
     return this._api.rpc['gear'].calculateInitCreateGas(
@@ -262,7 +262,7 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    meta?: Metadata,
+    meta?: OldMetadata,
   ): Promise<GasInfo>;
 
   /**
@@ -313,7 +313,7 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    metaOrTypeOfPayload?: string | Metadata,
+    metaOrTypeOfPayload?: string | OldMetadata,
   ): Promise<GasInfo>;
 
   async handle(
@@ -322,7 +322,7 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    metaOrTypeOfPayload?: string | Metadata,
+    metaOrTypeOfPayload?: string | OldMetadata,
   ): Promise<GasInfo> {
     const [type, meta] = this.#getTypeAndMeta(metaOrTypeOfPayload, 'handle_input');
     return this._api.rpc['gear'].calculateHandleGas(
@@ -367,7 +367,7 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    meta?: Metadata,
+    meta?: OldMetadata,
   ): Promise<GasInfo>;
 
   /**
@@ -424,7 +424,7 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    metaOrTypeOfPayload?: string | Metadata,
+    metaOrTypeOfPayload?: string | OldMetadata,
   ): Promise<GasInfo>;
 
   async reply(
@@ -434,7 +434,7 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    metaOrTypeOfPayload?: string | Metadata,
+    metaOrTypeOfPayload?: string | OldMetadata,
   ): Promise<GasInfo> {
     const [type, meta] = this.#getTypeAndMeta(metaOrTypeOfPayload, 'handle_input');
     return this._api.rpc['gear'].calculateReplyGas(

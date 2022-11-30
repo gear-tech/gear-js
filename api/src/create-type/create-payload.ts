@@ -1,10 +1,10 @@
-import { Codec } from '@polkadot/types/types';
 import { isHex, isU8a, u8aToHex } from '@polkadot/util';
+import { HexString } from '@polkadot/util/types';
+import { Codec } from '@polkadot/types/types';
 
-import { Hex } from '../types';
 import { CreateType } from './CreateType';
 
-export function createPayload(payload: unknown, type: string, types: Hex | Uint8Array): Hex | Uint8Array | Codec {
+export function createPayload(payload: unknown, type: string, types: HexString): HexString | Uint8Array | Codec {
   if (payload === undefined) {
     return '0x';
   }

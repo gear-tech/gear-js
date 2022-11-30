@@ -1,0 +1,443 @@
+{
+  "types": [
+    {
+      "id": 0,
+      "type": {
+        "path": [],
+        "params": [],
+        "def": {
+          "primitive": "Str"
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 1,
+      "type": {
+        "path": [
+          "registry",
+          "types",
+          "AllInOne"
+        ],
+        "params": [],
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "name": "field1",
+                "type": 2,
+                "typeName": "Option<String>",
+                "docs": []
+              },
+              {
+                "name": "field2",
+                "type": 3,
+                "typeName": "Vec<X>",
+                "docs": []
+              },
+              {
+                "name": "field3",
+                "type": 8,
+                "typeName": "Result<(u8, String), i32>",
+                "docs": []
+              },
+              {
+                "name": "filed4",
+                "type": 11,
+                "typeName": "[u128; 8]",
+                "docs": []
+              },
+              {
+                "name": "filed5",
+                "type": 13,
+                "typeName": "[u8; 32]",
+                "docs": []
+              },
+              {
+                "name": "field6",
+                "type": 14,
+                "typeName": "ActorId",
+                "docs": []
+              },
+              {
+                "name": "field7",
+                "type": 15,
+                "typeName": "BTreeMap<String, u8>",
+                "docs": []
+              },
+              {
+                "name": "field8",
+                "type": 18,
+                "typeName": "BTreeSet<u32>",
+                "docs": []
+              }
+            ]
+          }
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 2,
+      "type": {
+        "path": [
+          "Option"
+        ],
+        "params": [
+          {
+            "name": "T",
+            "type": 0
+          }
+        ],
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "name": "None",
+                "fields": [],
+                "index": 0,
+                "docs": []
+              },
+              {
+                "name": "Some",
+                "fields": [
+                  {
+                    "name": null,
+                    "type": 0,
+                    "typeName": null,
+                    "docs": []
+                  }
+                ],
+                "index": 1,
+                "docs": []
+              }
+            ]
+          }
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 3,
+      "type": {
+        "path": [],
+        "params": [],
+        "def": {
+          "sequence": {
+            "type": 4
+          }
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 4,
+      "type": {
+        "path": [
+          "registry",
+          "types",
+          "X"
+        ],
+        "params": [],
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "name": null,
+                "type": 5,
+                "typeName": "(u8, u16)",
+                "docs": []
+              }
+            ]
+          }
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 5,
+      "type": {
+        "path": [],
+        "params": [],
+        "def": {
+          "tuple": [
+            6,
+            7
+          ]
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 6,
+      "type": {
+        "path": [],
+        "params": [],
+        "def": {
+          "primitive": "U8"
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 7,
+      "type": {
+        "path": [],
+        "params": [],
+        "def": {
+          "primitive": "U16"
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 8,
+      "type": {
+        "path": [
+          "Result"
+        ],
+        "params": [
+          {
+            "name": "T",
+            "type": 9
+          },
+          {
+            "name": "E",
+            "type": 10
+          }
+        ],
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "name": "Ok",
+                "fields": [
+                  {
+                    "name": null,
+                    "type": 9,
+                    "typeName": null,
+                    "docs": []
+                  }
+                ],
+                "index": 0,
+                "docs": []
+              },
+              {
+                "name": "Err",
+                "fields": [
+                  {
+                    "name": null,
+                    "type": 10,
+                    "typeName": null,
+                    "docs": []
+                  }
+                ],
+                "index": 1,
+                "docs": []
+              }
+            ]
+          }
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 9,
+      "type": {
+        "path": [],
+        "params": [],
+        "def": {
+          "tuple": [
+            6,
+            0
+          ]
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 10,
+      "type": {
+        "path": [],
+        "params": [],
+        "def": {
+          "primitive": "I32"
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 11,
+      "type": {
+        "path": [],
+        "params": [],
+        "def": {
+          "array": {
+            "len": 8,
+            "type": 12
+          }
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 12,
+      "type": {
+        "path": [],
+        "params": [],
+        "def": {
+          "primitive": "U128"
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 13,
+      "type": {
+        "path": [],
+        "params": [],
+        "def": {
+          "array": {
+            "len": 32,
+            "type": 6
+          }
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 14,
+      "type": {
+        "path": [
+          "gstd",
+          "common",
+          "primitives",
+          "ActorId"
+        ],
+        "params": [],
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "name": null,
+                "type": 13,
+                "typeName": "[u8; 32]",
+                "docs": []
+              }
+            ]
+          }
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 15,
+      "type": {
+        "path": [
+          "BTreeMap"
+        ],
+        "params": [
+          {
+            "name": "K",
+            "type": 0
+          },
+          {
+            "name": "V",
+            "type": 6
+          }
+        ],
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "name": null,
+                "type": 16,
+                "typeName": null,
+                "docs": []
+              }
+            ]
+          }
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 16,
+      "type": {
+        "path": [],
+        "params": [],
+        "def": {
+          "sequence": {
+            "type": 17
+          }
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 17,
+      "type": {
+        "path": [],
+        "params": [],
+        "def": {
+          "tuple": [
+            0,
+            6
+          ]
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 18,
+      "type": {
+        "path": [
+          "BTreeSet"
+        ],
+        "params": [
+          {
+            "name": "T",
+            "type": 19
+          }
+        ],
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "name": null,
+                "type": 20,
+                "typeName": null,
+                "docs": []
+              }
+            ]
+          }
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 19,
+      "type": {
+        "path": [],
+        "params": [],
+        "def": {
+          "primitive": "U32"
+        },
+        "docs": []
+      }
+    },
+    {
+      "id": 20,
+      "type": {
+        "path": [],
+        "params": [],
+        "def": {
+          "sequence": {
+            "type": 19
+          }
+        },
+        "docs": []
+      }
+    }
+  ]
+}

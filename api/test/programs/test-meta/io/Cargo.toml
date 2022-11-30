@@ -1,0 +1,10 @@
+[package]
+name = "test-meta-io"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+gmeta = { git = "https://github.com/gear-tech/gear.git", branch = "dn-on-chain-state"  }
+scale-info = { version = "2.1.1", default-features = false, features = ["derive"] }
+codec = { package = "parity-scale-codec", version = "3.1.2", default-features = false, features = ["derive", "full"] }
+gstd = { git = "https://github.com/gear-tech/gear.git", branch = "dn-on-chain-state"  }

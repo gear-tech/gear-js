@@ -1,8 +1,9 @@
 import { Codec, AnyJson } from '@polkadot/types/types';
+import { HexString } from '@polkadot/util/types';
 
 import { getWasmMetadata, readState } from './wasm';
 import { ReadStateError } from './errors';
-import { Metadata, Hex } from './types';
+import { OldMetadata } from './types';
 import { GearStorage } from './Storage';
 import { CreateType } from './create-type';
 
@@ -13,7 +14,7 @@ export class GearProgramState extends GearStorage {
    * @param meta - Metadata
    * @returns decoded state
    */
-  decodeState(state: Uint8Array, meta: Metadata): Codec {
+  decodeState(state: Uint8Array, meta: OldMetadata): Codec {
     if (!state) {
       throw new ReadStateError('Unable to read state. meta_state function is not specified in metadata');
     }
@@ -28,7 +29,7 @@ export class GearProgramState extends GearStorage {
    * @param inputValue - input parameters
    * @returns ArrayBuffer with encoded data
    */
-  encodeInput(meta: Metadata, inputValue: AnyJson): Uint8Array {
+  encodeInput(meta: OldMetadata, inputValue: AnyJson): Uint8Array {
     const encoded = CreateType.create(meta.meta_state_input, inputValue, meta.types);
     return encoded.toU8a();
   }
@@ -39,7 +40,7 @@ export class GearProgramState extends GearStorage {
    * @param metaWasm - file with metadata
    * @returns decoded state
    */
-  async read(programId: Hex, metaWasm: Buffer, inputValue?: AnyJson): Promise<Codec> {
+  async read(programId: HexString, metaWasm: Buffer, inputValue?: AnyJson): Promise<Codec> {
     const codeHash = await this._api.program.codeHash(programId);
     let initialSize = await this._api.code.staticPages(codeHash);
 

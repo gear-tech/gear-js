@@ -1,6 +1,7 @@
-import { Hex } from '../common';
+import { Vec, HashMap, u8, u32, Text, Option, Struct } from '@polkadot/types';
+import { HexString } from '@polkadot/util/types';
 
-export interface Metadata {
+export interface OldMetadata {
   init_input?: string;
   init_output?: string;
   async_init_input?: string;
@@ -10,7 +11,45 @@ export interface Metadata {
   async_handle_input?: string;
   async_handle_output?: string;
   title?: string;
-  types?: Hex;
+  types?: HexString;
   meta_state_input?: string;
   meta_state_output?: string;
+}
+
+export interface TypesRepr extends Struct {
+  input: Option<u32>;
+  output: Option<u32>;
+}
+
+export interface HumanTypesRepr {
+  input?: number;
+  output?: number;
+}
+
+export interface IProgramMetadata extends Struct {
+  init: TypesRepr;
+  handle: TypesRepr;
+  reply: TypesRepr;
+  others: TypesRepr;
+  state: Option<u32>;
+  reg: Vec<u8>;
+}
+
+export interface HumanProgramMetadata {
+  init: HumanTypesRepr;
+  handle: HumanTypesRepr;
+  reply: HumanTypesRepr;
+  others: HumanTypesRepr;
+  state: number | null;
+  reg: HexString;
+}
+
+export interface StateMetadata extends Struct {
+  functions: HashMap<Text, TypesRepr>;
+  reg: Vec<u8>;
+}
+
+export interface HumanStateMetadata {
+  functions: Record<string, HumanTypesRepr>;
+  reg: HexString;
 }
