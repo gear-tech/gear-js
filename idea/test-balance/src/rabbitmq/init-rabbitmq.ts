@@ -56,8 +56,12 @@ async function connectAMQP(url: string): Promise<Connection> {
 
 function checkConnectionRabbitMQ() {
   const cron = new CronJob(config.scheduler.checkRabbitMQConnectionTime, async function () {
-    const connection = await connectionAMQP.createChannel();
-    await connection.close();
+    try {
+      const connection = await connectionAMQP.createChannel();
+      await connection.close();
+    } catch (error) {
+      process.exit(0);
+    }
   });
 
   cron.start();

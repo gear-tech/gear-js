@@ -48,9 +48,8 @@ export class RabbitmqService {
       const channel = await this.connection.createChannel();
       await channel.close();
     } catch (error) {
-      throw error;
+      process.exit(0);
     }
-
   }
 
   public async initRMQ(genesis: string): Promise<void> {
