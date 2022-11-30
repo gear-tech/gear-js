@@ -34,13 +34,6 @@ async function bootstrap() {
 
   await rabbitmqService.connect();
 
-  setInterval( async () => {
-    await rabbitmqService.connect().catch((error) => {
-      console.log(`${new Date()}`, error);
-      process.exit(0);
-    });
-  }, 1000);
-
   await app.listen(healthcheck.port);
 
   await gearEventListener.run();

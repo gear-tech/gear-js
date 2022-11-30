@@ -23,6 +23,9 @@ export default () => ({
   rabbitmq: {
     url: checkEnv('RABBIT_MQ_URL')
   },
+  scheduler: {
+    checkRabbitMQConnectionTime: process.env.CRON_TIME_CHECK_RABBITMQ_CONNECTION || '*/10 * * * * *',
+  },
   healthcheck: {
     port: Number(process.env.HEALTHCHECK_PORT || '3001'),
   },
