@@ -13,11 +13,13 @@ import { Block, Code, Message, Meta, Program } from './database/entities';
 import { GearModule } from './gear/gear.module';
 import { BlockModule } from './block/block.module';
 import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 const entities = [Meta, Message, Program, Code, Block];
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       load: [configurations],
     }),

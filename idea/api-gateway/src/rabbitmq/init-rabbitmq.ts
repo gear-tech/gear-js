@@ -1,5 +1,6 @@
 import { connect, Connection, Channel } from 'amqplib';
 import { RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
+import { CronJob } from 'cron';
 
 import config from '../config/configuration';
 import { RpcResponse } from '../json-rpc/types';
@@ -114,9 +115,12 @@ async function subscribeToGenesises() {
 }
 
 function checkConnectionRabbitMQ() {
-  setInterval(async () => {
-    await connectAMQP(configuration.rabbitmq.url);
-  }, 1000);
+  const cron = new CronJob(configuration.scheduler.checkRabbitMQConnectionTime, async function () {
+    const channel = await createChannel();
+    await channel.close();
+  });
+
+  cron.start();
 }
 
 async function createChannel(): Promise<Channel> {

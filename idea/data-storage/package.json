@@ -33,6 +33,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/microservices": "8.4.7",
     "@nestjs/platform-express": "8.4.7",
+    "@nestjs/schedule": "^2.1.0",
     "@nestjs/typeorm": "8.1.4",
     "@polkadot/api": "9.9.4",
     "@types/amqplib": "^0.8.2",

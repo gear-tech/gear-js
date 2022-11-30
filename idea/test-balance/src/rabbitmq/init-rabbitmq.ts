@@ -1,5 +1,6 @@
 import { Channel, connect, Connection } from 'amqplib';
 import { RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
+import { CronJob } from 'cron';
 
 import config from '../config/configuration';
 import { gearService } from '../gear';
@@ -54,7 +55,10 @@ async function connectAMQP(url: string): Promise<Connection> {
 }
 
 function checkConnectionRabbitMQ() {
-  setInterval(async () => {
-    await connectAMQP(config.rabbitmq.url);
-  }, 1000);
+  const cron = new CronJob(config.scheduler.checkRabbitMQConnectionTime, async function () {
+    const connection = await connectionAMQP.createChannel();
+    await connection.close();
+  });
+
+  cron.start();
 }
