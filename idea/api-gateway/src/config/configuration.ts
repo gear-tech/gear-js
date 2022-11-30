@@ -21,6 +21,5 @@ export default {
   scheduler: {
     genesisHashesTime: process.env.CRON_TIME_GENESIS_HASHES || '0 * * * *',
     networkDataStoragesTime: process.env.CRON_TIME_NETWORK_DATA_STORAGES || '0 * * * *',
-    checkRabbitMQConnectionTime: process.env.CRON_TIME_CHECK_RABBITMQ_CONNECTION || '*/10 * * * * *',
   },
 };

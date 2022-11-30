@@ -1,6 +1,5 @@
 import { Channel, connect, Connection } from 'amqplib';
 import { RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
-import { CronJob } from 'cron';
 
 import config from '../config/configuration';
 import { gearService } from '../gear';
@@ -40,7 +39,11 @@ export async function initAMQ(): Promise<void> {
 
     await directMessageConsumer(mainChannelAMQP, routingKey);
     await topicMessageConsumer(topicChannelAMQP, assertTopicQueue);
-    checkConnectionRabbitMQ();
+
+    connectionAMQP.on('close', (error) => {
+      console.log(new Date(), error);
+      process.exit(1);
+    });
   } catch (error) {
     console.error(`${new Date()} | Init AMQP error`, error);
     process.exit(0);
@@ -53,13 +56,4 @@ async function connectAMQP(url: string): Promise<Connection> {
   } catch (error) {
     console.error(`${new Date()} | RabbitMQ connection error`, error);
   }
-}
-
-function checkConnectionRabbitMQ() {
-  const cron = new CronJob(config.scheduler.checkRabbitMQConnectionTime, async function () {
-    const connection = await connectionAMQP.createChannel();
-    await connection.close();
-  });
-
-  cron.start();
 }

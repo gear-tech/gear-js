@@ -1,10 +1,8 @@
 import { connect, Connection, Channel } from 'amqplib';
 import { RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
-import { CronJob } from 'cron';
 
 import config from '../config/configuration';
 import { RpcResponse } from '../json-rpc/types';
-import configuration from '../config/configuration';
 
 let connectionAMQP: Connection;
 let mainChannelAMQP: Channel;
@@ -40,7 +38,11 @@ export async function initAMQ(): Promise<void> {
 
     await subscribeToGenesises();
     await subscribeToReplies();
-    checkConnectionRabbitMQ();
+
+    connectionAMQP.on('close', (error) => {
+      console.log(new Date() ,error);
+      process.exit(1);
+    });
   } catch (error) {
     console.error(`${new Date()} | Init rabbitMQ error`, error);
   }
@@ -112,15 +114,6 @@ async function subscribeToGenesises() {
       }
     }
   });
-}
-
-function checkConnectionRabbitMQ() {
-  const cron = new CronJob(configuration.scheduler.checkRabbitMQConnectionTime, async function () {
-    const channel = await createChannel();
-    await channel.close();
-  });
-
-  cron.start();
 }
 
 async function createChannel(): Promise<Channel> {
