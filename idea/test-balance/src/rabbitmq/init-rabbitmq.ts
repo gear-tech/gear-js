@@ -43,6 +43,7 @@ export async function initAMQ(): Promise<void> {
     checkConnectionRabbitMQ();
   } catch (error) {
     console.error(`${new Date()} | Init AMQP error`, error);
+    process.exit(0);
   }
 }
 

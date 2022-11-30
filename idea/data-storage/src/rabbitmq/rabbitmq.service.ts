@@ -44,8 +44,12 @@ export class RabbitmqService {
 
   @Cron(scheduler.checkRabbitMQConnectionTime)
   public async checkConnectionRabbitMQ() {
-    const channel = await this.connection.createChannel();
-    await channel.close();
+    try {
+      const channel = await this.connection.createChannel();
+      await channel.close();
+    } catch (error) {
+      process.exit(0);
+    }
   }
 
   public async initRMQ(genesis: string): Promise<void> {
