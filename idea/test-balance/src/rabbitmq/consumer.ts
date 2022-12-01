@@ -7,16 +7,20 @@ import { transferBalanceProcess } from '../common/transfer-balance-process';
 
 export async function directMessageConsumer(channel: Channel, queue: string): Promise<void> {
   try {
-    await channel.consume(queue, async (message) => {
-      const payload = JSON.parse(message.content.toString());
-      const method = message.properties.headers.method;
-      const correlationId = message.properties.correlationId;
+    await channel.consume(
+      queue,
+      async (message) => {
+        const payload = JSON.parse(message.content.toString());
+        const method = message.properties.headers.method;
+        const correlationId = message.properties.correlationId;
 
-      if (method === AMQP_METHODS.TEST_BALANCE_GET && payload.genesis === gearService.getGenesisHash()) {
-        console.log(`${new Date()} | Request`, payload);
-        await transferBalanceProcess(payload, correlationId);
-      }
-    });
+        if (method === AMQP_METHODS.TEST_BALANCE_GET && payload.genesis === gearService.getGenesisHash()) {
+          console.log(`${new Date()} | Request`, payload);
+          await transferBalanceProcess(payload, correlationId);
+        }
+      },
+      { noAck: true },
+    );
   } catch (error) {
     console.error(`${new Date()} | Direct exchange consumer error`, error);
   }
@@ -24,13 +28,17 @@ export async function directMessageConsumer(channel: Channel, queue: string): Pr
 
 export async function topicMessageConsumer(channel: Channel, repliesAssertQueue: Replies.AssertQueue): Promise<void> {
   try {
-    await channel.consume(repliesAssertQueue.queue, async (message) => {
-      if (!message) {
-        return;
-      }
+    await channel.consume(
+      repliesAssertQueue.queue,
+      async (message) => {
+        if (!message) {
+          return;
+        }
 
-      await producer.sendGenesis(RabbitMQueues.GENESISES, gearService.getGenesisHash());
-    });
+        await producer.sendGenesis(RabbitMQueues.GENESISES, gearService.getGenesisHash());
+      },
+      { noAck: true },
+    );
   } catch (error) {
     this.logger.error(new Date());
     this.logger.error(`${new Date()} | Topic exchange consumer error ${JSON.stringify(error)}`);
