@@ -69,7 +69,7 @@ async function subscribeToReplies(): Promise<void> {
     if (resultFromService) resultFromService(messageContent);
 
     repliesMap.delete(correlationId);
-  });
+  }, { noAck: true });
 }
 
 async function subscribeToGenesises() {
@@ -113,7 +113,7 @@ async function subscribeToGenesises() {
         testBalanceChannels.delete(genesis);
       }
     }
-  });
+  }, { noAck: true });
 }
 
 async function createChannel(): Promise<Channel> {

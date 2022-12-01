@@ -101,7 +101,7 @@ export class RabbitmqService {
         const result = await this.handleEventByMethod(method, params);
 
         this.sendMessage(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.REPLIES, result, correlationId);
-      });
+      }, { noAck: true });
     } catch (error) {
       this.logger.error(`Direct exchange consumer ${JSON.stringify(error)}`);
     }
@@ -116,7 +116,7 @@ export class RabbitmqService {
 
         const messageBuff = JSON.stringify({ service: 'ds', action: 'add', genesis });
         this.mainChannel.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
-      });
+      }, { noAck: true });
     } catch (error) {
       this.logger.error(`Topic exchange consumer ${JSON.stringify(error)}`);
     }
