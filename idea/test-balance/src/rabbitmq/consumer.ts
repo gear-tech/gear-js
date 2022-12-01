@@ -19,7 +19,7 @@ export async function directMessageConsumer(channel: Channel, queue: string): Pr
           await transferBalanceProcess(payload, correlationId);
         }
       },
-      { noAck: false },
+      { noAck: true },
     );
   } catch (error) {
     console.error(`${new Date()} | Direct exchange consumer error`, error);
@@ -37,7 +37,7 @@ export async function topicMessageConsumer(channel: Channel, repliesAssertQueue:
 
         await producer.sendGenesis(RabbitMQueues.GENESISES, gearService.getGenesisHash());
       },
-      { noAck: false },
+      { noAck: true },
     );
   } catch (error) {
     this.logger.error(new Date());
