@@ -1,13 +1,14 @@
-import { CreateType } from './create-type';
+import { Metadata } from './metadata';
 import { GearApi } from './GearApi';
 import { Hex } from './types';
 
 export class GearRpcState {
   constructor(private api: GearApi) {}
 
-  async readState(args: { programId: Hex; at?: Hex }, registry: Hex, type: string) {
+  async readState(args: { programId: Hex; at?: Hex }, registry: Hex, type: number) {
     const state = await this.api.rpc['gear'].readState(args.programId, args.at || null);
-    return CreateType.create(type, state, registry);
+    const meta = new Metadata(registry);
+    return meta.createType(type, state);
   }
 
   async readStateUsingWasm(
@@ -19,7 +20,7 @@ export class GearRpcState {
       at?: Hex;
     },
     registry: Hex,
-    type: string,
+    type: number,
   ) {
     const state = await this.api.rpc['gear'].readStateUsingWasm(
       args.programId,
@@ -28,6 +29,7 @@ export class GearRpcState {
       args.argument || null,
       args.at || null,
     );
-    return CreateType.create(type, state, registry);
+    const meta = new Metadata(registry);
+    return meta.createType(type, state);
   }
 }

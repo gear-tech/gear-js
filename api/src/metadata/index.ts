@@ -1,2 +1,3 @@
-export * from './programMetadata';
+export * from './metadata';
 export * from './stateMetadata';
+export * from './programMetadata';

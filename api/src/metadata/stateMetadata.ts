@@ -1,6 +1,5 @@
 import { HexString } from '@polkadot/util/types';
 import { u8aToHex } from '@polkadot/util';
-import v8 from 'v8';
 
 import { CreateType } from '../create-type';
 
@@ -8,24 +7,21 @@ import { HumanStateMetadata } from '../types';
 import importObj from '../wasm/importObj';
 
 export async function getStateMetadata(wasmBytes: Buffer): Promise<HumanStateMetadata> {
-  const wasmModule = new WebAssembly.Module(wasmBytes);
-
-  console.log(v8.deserialize(wasmBytes));
-
   const memory = new WebAssembly.Memory({ initial: 17 });
 
   let metadata: HexString;
 
-  const instance = new WebAssembly.Instance(
-    wasmModule,
+  const { instance } = await WebAssembly.instantiate(
+    wasmBytes,
     importObj(memory, undefined, undefined, undefined, undefined, (meta: Uint8Array) => {
       metadata = u8aToHex(meta);
     }),
   );
 
   const { exports } = instance;
+
   if (!exports?.metadata) {
-    throw new Error('Unable to find exports in applied wasm');
+    throw new Error('Unable to find metadata function in exports of applied wasm');
   }
 
   if (typeof exports.metadata !== 'function') {
