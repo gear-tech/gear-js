@@ -2372,7 +2372,6 @@ __metadata:
     react-final-form: ^6.5.9
     react-final-form-listeners: ^1.0.3
     react-number-format: ^4.9.3
-    react-render-if-visible: ^2.1.0
     react-router-dom: ^6.3.0
     react-scripts: ^5.0.1
     react-transition-group: ^4.4.5
@@ -19075,16 +19074,6 @@ __metadata:
   version: 0.11.0
   resolution: "react-refresh@npm:0.11.0"
   checksum: 112178a05b1e0ffeaf5d9fb4e56b4410a34a73adeb04dbf13abdc50d9ac9df2ada83e81485156cca0b3fa296aa3612751b3d6cd13be4464642a43679b819cbc7
-  languageName: node
-  linkType: hard
-
-"react-render-if-visible@npm:^2.1.0":
-  version: 2.1.1
-  resolution: "react-render-if-visible@npm:2.1.1"
-  peerDependencies:
-    react: ">= 16.8.0 < 19"
-    react-dom: ">= 16.8.0 < 19"
-  checksum: 736bbf26c2900cd6a649b31884fefc22c71f08bbf47a95550d132f87bf17b53e718a38fc27b898489c58959e4babfa97979ab7268bce5b30d6b19b228305fbea
   languageName: node
   linkType: hard
 
