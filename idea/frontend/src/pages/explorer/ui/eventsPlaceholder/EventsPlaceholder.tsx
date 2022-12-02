@@ -11,7 +11,7 @@ const EventsPlaceholder = ({ isEmpty }: Props) => (
   <div className={styles.placeholder}>
     <Placeholder
       block={<EventPlaceholderSVG />}
-      title="There is no events yet"
+      title="There are no events yet"
       description="The list is empty while there are no events"
       isEmpty={isEmpty}
       blocksCount={5}

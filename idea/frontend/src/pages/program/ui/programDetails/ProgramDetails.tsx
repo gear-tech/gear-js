@@ -17,7 +17,7 @@ const ProgramDetails = ({ program, isLoading }: Props) => {
     <article>
       <Subheader title="Program details" />
       {isLoaderShowing ? (
-        <ContentLoader text="There is no program" isEmpty={isEmpty}>
+        <ContentLoader text="There are no program" isEmpty={isEmpty}>
           <ProgramDetailsSVG />
         </ContentLoader>
       ) : (
