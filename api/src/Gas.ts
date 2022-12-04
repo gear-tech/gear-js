@@ -2,7 +2,7 @@ import { isHex, isString } from '@polkadot/util';
 
 import { Hex, PayloadType, Value } from './types';
 import { OldMetadata } from './types/interfaces';
-import { createPayload } from './create-type';
+import { encodePayload } from './create-type';
 import { GearApi } from './GearApi';
 import { GasInfo } from './types';
 
@@ -117,7 +117,7 @@ export class GearGas {
     return this._api.rpc['gear'].calculateInitUploadGas(
       sourceId,
       isHex(code) ? code : this._api.createType('Bytes', Array.from(code)).toHex(),
-      createPayload(payload, type, meta?.types),
+      encodePayload(payload, meta?.types, type),
       value || 0,
       allowOtherPanics || true,
     );
@@ -221,7 +221,7 @@ export class GearGas {
     return this._api.rpc['gear'].calculateInitCreateGas(
       sourceId,
       codeId,
-      createPayload(payload, type, meta?.types),
+      encodePayload(payload, meta?.types, type),
       value || 0,
       allowOtherPanics || true,
     );
@@ -328,7 +328,7 @@ export class GearGas {
     return this._api.rpc['gear'].calculateHandleGas(
       sourceId,
       destinationId,
-      createPayload(payload, type, meta?.types),
+      encodePayload(payload, meta?.types, type),
       value || 0,
       allowOtherPanics || true,
     );
@@ -441,7 +441,7 @@ export class GearGas {
       sourceId,
       messageId,
       exitCode,
-      createPayload(payload, type, meta?.types),
+      encodePayload(payload, meta?.types, type),
       value || 0,
       allowOtherPanics || true,
     );

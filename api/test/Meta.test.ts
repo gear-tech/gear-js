@@ -1,5 +1,4 @@
 import { getProgramMetadata, HumanProgramMetadata, Metadata } from '../src';
-import { writeFileSync } from 'fs';
 
 let programMeta: HumanProgramMetadata;
 let meta: Metadata;

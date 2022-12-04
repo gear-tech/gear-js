@@ -5,9 +5,11 @@ import { HexString } from '@polkadot/util/types';
 import { hexToU8a } from '@polkadot/util';
 import assert from 'assert';
 
+type TypeKind = 'primitive' | 'empty' | 'none' | 'sequence' | 'composite' | 'variant' | 'array' | 'tuple';
+
 interface TypeStructure {
   name: string;
-  kind: 'primitive' | 'empty' | 'none' | 'sequence' | 'composite' | 'variant' | 'array' | 'tuple';
+  kind: TypeKind;
   type: string | object | TypeStructure;
   len?: number;
 }
@@ -157,7 +159,7 @@ export class Metadata {
     }
   }
 
-  private getTypeName(index: number | Si1LookupTypeId) {
+  getTypeName(index: number | Si1LookupTypeId) {
     const { def, params, path } = this.portableRegistry.getSiType(index);
 
     if (def.isPrimitive) {
@@ -201,5 +203,9 @@ export class Metadata {
       }
       return this.portableRegistry.getName(index);
     }
+  }
+
+  getAllTypes() {
+    return this.registry.knownTypes.types;
   }
 }
