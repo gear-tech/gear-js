@@ -1,18 +1,47 @@
 import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { HexString } from '@polkadot/util/types';
 
-import { IMessageSendOptions, IMessageSendReplyOptions, OldMetadata } from './types';
+import { HumanProgramMetadata, IMessageSendOptions, IMessageSendReplyOptions, OldMetadata } from './types';
 import { SendMessageError, SendReplyError } from './errors';
 import { validateGasLimit, validateValue } from './utils';
 import { GearTransaction } from './Transaction';
 import { encodePayload } from './create-type';
+import { isProgramMeta } from './metadata';
 
 export class GearMessage extends GearTransaction {
+  send(
+    args: IMessageSendOptions,
+    meta?: HumanProgramMetadata,
+    typeIndex?: number,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
+  /**
+   * @deprecated This method will ber removed as soon as we move completely to the new metadata
+   */
+  send(
+    args: IMessageSendOptions,
+    meta?: OldMetadata,
+    messageType?: string,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
+  send(
+    args: IMessageSendOptions,
+    hexRegistry?: HexString,
+    typeIndex?: number,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
+  send(
+    args: IMessageSendOptions,
+    metaOrHexRegistry?: HumanProgramMetadata | HexString | OldMetadata,
+    typeIndexOrMessageType?: number | string,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
   /**
    * ## Send Message
    * @param message
-   * @param meta Metadata
-   * @param messageType MessageType
+   * @param metaOrHexRegistry Metadata
+   * @param typeIndexOrMessageType type index in registry or type name
    * @returns Submitted result
    * ```javascript
    * const api = await GearApi.create()
@@ -28,37 +57,60 @@ export class GearMessage extends GearTransaction {
    * ```
    */
   send(
-    message: IMessageSendOptions,
-    meta?: OldMetadata,
-    messageType?: string,
+    { destination, value, gasLimit, ...args }: IMessageSendOptions,
+    metaOrHexRegistry?: HumanProgramMetadata | HexString | OldMetadata,
+    typeIndexOrMessageType?: number | string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
-    validateValue(message.value, this._api);
-    validateGasLimit(message.gasLimit, this._api);
+    validateValue(value, this._api);
+    validateGasLimit(gasLimit, this._api);
 
     const payload = encodePayload(
-      message.payload,
-      meta,
-      messageType || meta?.async_handle_input || meta?.async_init_input,
+      args.payload,
+      metaOrHexRegistry,
+      isProgramMeta(metaOrHexRegistry) ? 'handle' : 'handle_input',
+      typeIndexOrMessageType,
     );
 
     try {
-      this.extrinsic = this._api.tx.gear.sendMessage(
-        message.destination,
-        payload,
-        message.gasLimit,
-        message.value || 0,
-      );
+      this.extrinsic = this._api.tx.gear.sendMessage(destination, payload, gasLimit, value || 0);
       return this.extrinsic;
     } catch (error) {
       throw new SendMessageError(error.message);
     }
   }
 
+  sendReply(
+    args: IMessageSendReplyOptions,
+    meta?: HumanProgramMetadata,
+    typeIndex?: number,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
+  /**
+   * @deprecated This method will ber removed as soon as we move completely to the new metadata
+   */
+  sendReply(
+    args: IMessageSendReplyOptions,
+    meta?: OldMetadata,
+    messageType?: string,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
+  sendReply(
+    args: IMessageSendReplyOptions,
+    hexRegistry?: HexString,
+    typeIndex?: number,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
+  sendReply(
+    args: IMessageSendReplyOptions,
+    metaOrHexRegistry?: HumanProgramMetadata | HexString | OldMetadata,
+    typeIndexOrMessageType?: number | string,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
   /**
    * Sends reply message
-   * @param message Message parameters
-   * @param meta Metadata
-   * @param messageType MessageType
+   * @param args Message parameters
+   * @param metaOrHexRegistry Metadata
+   * @param typeIndexOrMessageType type index in registry or type name
    * @returns Submitted result
    * @example
    * ```javascript
@@ -75,21 +127,22 @@ export class GearMessage extends GearTransaction {
    * ```
    */
   sendReply(
-    message: IMessageSendReplyOptions,
-    meta?: OldMetadata,
-    messageType?: string,
+    { value, gasLimit, replyToId, ...args }: IMessageSendReplyOptions,
+    metaOrHexRegistry?: HumanProgramMetadata | HexString | OldMetadata,
+    typeIndexOrMessageType?: number | string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
-    validateValue(message.value, this._api);
-    validateGasLimit(message.gasLimit, this._api);
+    validateValue(value, this._api);
+    validateGasLimit(gasLimit, this._api);
 
     const payload = encodePayload(
-      message.payload,
-      meta,
-      messageType || meta?.async_handle_input || meta?.async_init_input,
+      args.payload,
+      metaOrHexRegistry,
+      isProgramMeta(metaOrHexRegistry) ? 'reply' : 'async_handle_input',
+      typeIndexOrMessageType,
     );
 
     try {
-      this.extrinsic = this._api.tx.gear.sendReply(message.replyToId, payload, message.gasLimit, message.value);
+      this.extrinsic = this._api.tx.gear.sendReply(replyToId, payload, gasLimit, value);
       return this.extrinsic;
     } catch (error) {
       throw new SendReplyError();

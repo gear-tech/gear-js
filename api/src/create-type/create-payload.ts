@@ -1,10 +1,9 @@
 import { isHex, isU8a, u8aToHex } from '@polkadot/util';
 import { HexString } from '@polkadot/util/types';
-import { Codec } from '@polkadot/types/types';
 
-import { CreateType } from './CreateType';
-import { isOldMeta, isProgramMeta, Metadata } from '../metadata';
 import { HumanProgramMetadata, HumanStateMetadata, OldMetadata } from '../types';
+import { isOldMeta, isProgramMeta, Metadata } from '../metadata';
+import { CreateType } from './CreateType';
 
 export function getRegistry<M extends HumanProgramMetadata | HumanStateMetadata>(
   metaOrHexRegistry: M | HexString | OldMetadata,
@@ -29,12 +28,7 @@ export function encodePayload<
   T = M extends HumanProgramMetadata
     ? keyof Omit<HumanProgramMetadata, 'reg' | 'state'>
     : keyof Omit<OldMetadata, 'types' | 'title'>,
->(
-  payload: unknown,
-  hexRegistryOrMeta: HexString | M,
-  type: T,
-  typeIndexOrMessageType?: number | string,
-): HexString | Uint8Array | Codec {
+>(payload: unknown, hexRegistryOrMeta: HexString | M, type: T, typeIndexOrMessageType?: number | string): HexString {
   if (payload === undefined) {
     return '0x';
   }
@@ -50,17 +44,16 @@ export function encodePayload<
   const registry = getRegistry(hexRegistryOrMeta);
 
   if (isProgramMeta(hexRegistryOrMeta)) {
-    return new Metadata(registry).createType(
-      hexRegistryOrMeta[type as keyof Omit<HumanProgramMetadata, 'reg' | 'state'>].input,
-      payload,
-    );
+    return new Metadata(registry)
+      .createType(hexRegistryOrMeta[type as keyof Omit<HumanProgramMetadata, 'reg' | 'state'>].input, payload)
+      .toHex();
   } else if (isOldMeta(hexRegistryOrMeta)) {
-    return CreateType.create(hexRegistryOrMeta[type as keyof OldMetadata], payload);
+    return CreateType.create(hexRegistryOrMeta[type as keyof OldMetadata], payload, hexRegistryOrMeta.types).toHex();
   } else {
     if (typeof typeIndexOrMessageType === 'number') {
-      return new Metadata(registry).createType(typeIndexOrMessageType, payload);
+      return new Metadata(registry).createType(typeIndexOrMessageType, payload).toHex();
     } else {
-      return CreateType.create(typeIndexOrMessageType, payload, registry);
+      return CreateType.create(typeIndexOrMessageType, payload, registry).toHex();
     }
   }
 }

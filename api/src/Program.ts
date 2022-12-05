@@ -32,7 +32,7 @@ export class GearProgram extends GearTransaction {
 
   upload(
     args: IProgramUploadOptions,
-    metaOrHexRegistry?: HexString,
+    metaOrHexRegistry?: HumanProgramMetadata | HexString | OldMetadata,
     typeIndexOrMessageType?: number | string,
   ): IProgramUploadResult;
 

@@ -63,9 +63,9 @@ dependencies = [
 
 [[package]]
 name = "cargo_metadata"
-version = "0.15.1"
+version = "0.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "406c859255d568f4f742b3146d51851f3bfd49f734a2c289d9107c4395ee0062"
+checksum = "982a0cf6a99c350d7246035613882e376d58cebe571785abc5da4f648d53ac0a"
 dependencies = [
  "camino",
  "cargo-platform",
@@ -208,7 +208,7 @@ dependencies = [
 [[package]]
 name = "galloc"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?branch=stable#d2cd8f88e084e3e37a96dd3e32841bbb0d3bcbd1"
+source = "git+https://github.com/gear-tech/gear.git?branch=stable#a57e3210cda835e86ad114e6b0cb9c259a45242c"
 dependencies = [
  "dlmalloc",
 ]
@@ -216,7 +216,7 @@ dependencies = [
 [[package]]
 name = "gcore"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?branch=stable#d2cd8f88e084e3e37a96dd3e32841bbb0d3bcbd1"
+source = "git+https://github.com/gear-tech/gear.git?branch=stable#a57e3210cda835e86ad114e6b0cb9c259a45242c"
 dependencies = [
  "gear-core-errors",
  "gsys",
@@ -227,7 +227,7 @@ dependencies = [
 [[package]]
 name = "gear-core-errors"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?branch=stable#d2cd8f88e084e3e37a96dd3e32841bbb0d3bcbd1"
+source = "git+https://github.com/gear-tech/gear.git?branch=stable#a57e3210cda835e86ad114e6b0cb9c259a45242c"
 dependencies = [
  "derive_more",
  "parity-scale-codec",
@@ -237,7 +237,7 @@ dependencies = [
 [[package]]
 name = "gear-wasm-builder"
 version = "0.1.2"
-source = "git+https://github.com/gear-tech/gear.git#f54ab906b55f8c308f383c111fb7abb99674bbac"
+source = "git+https://github.com/gear-tech/gear.git#022907b402b3ea3337431d4c1fd3e119dccd9c2e"
 dependencies = [
  "anyhow",
  "cargo_metadata",
@@ -253,7 +253,7 @@ dependencies = [
 [[package]]
 name = "gstd"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?branch=stable#d2cd8f88e084e3e37a96dd3e32841bbb0d3bcbd1"
+source = "git+https://github.com/gear-tech/gear.git?branch=stable#a57e3210cda835e86ad114e6b0cb9c259a45242c"
 dependencies = [
  "bs58",
  "futures",
@@ -271,7 +271,7 @@ dependencies = [
 [[package]]
 name = "gstd-codegen"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?branch=stable#d2cd8f88e084e3e37a96dd3e32841bbb0d3bcbd1"
+source = "git+https://github.com/gear-tech/gear.git?branch=stable#a57e3210cda835e86ad114e6b0cb9c259a45242c"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -281,7 +281,7 @@ dependencies = [
 [[package]]
 name = "gsys"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?branch=stable#d2cd8f88e084e3e37a96dd3e32841bbb0d3bcbd1"
+source = "git+https://github.com/gear-tech/gear.git?branch=stable#a57e3210cda835e86ad114e6b0cb9c259a45242c"
 
 [[package]]
 name = "hermit-abi"
@@ -332,9 +332,9 @@ checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "libc"
-version = "0.2.137"
+version = "0.2.138"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fc7fcc620a3bff7cdd7a365be3376c97191aeaccc2a603e600951e452615bf89"
+checksum = "db6d7e329c562c5dfab7a46a2afabc8b987ab9a4834c9d1ca04dc54c1546cef8"
 
 [[package]]
 name = "libc_print"
@@ -519,18 +519,18 @@ dependencies = [
 
 [[package]]
 name = "serde"
-version = "1.0.147"
+version = "1.0.149"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d193d69bae983fc11a79df82342761dfbf28a99fc8d203dca4c3c1b590948965"
+checksum = "256b9932320c590e707b94576e3cc1f7c9024d0ee6612dfbcf1cb106cbe8e055"
 dependencies = [
  "serde_derive",
 ]
 
 [[package]]
 name = "serde_derive"
-version = "1.0.147"
+version = "1.0.149"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4f1d362ca8fc9c3e3a7484440752472d68a6caa98f1ab81d99b5dfe517cec852"
+checksum = "b4eae9b04cbffdfd550eb462ed33bc6a1b68c935127d008b27444d08380f94e4"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -539,9 +539,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.88"
+version = "1.0.89"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8e8b3801309262e8184d9687fb697586833e939767aea0dda89f5a8e650e8bd7"
+checksum = "020ff22c755c2ed3f8cf162dbb41a7268d934702f3ed3631656ea597e08fc3db"
 dependencies = [
  "itoa",
  "ryu",
@@ -562,9 +562,9 @@ checksum = "0873cb29201126440dcc78d0b1f5a13d917e78831778429a7920ca9c7f3dae1e"
 
 [[package]]
 name = "syn"
-version = "1.0.103"
+version = "1.0.105"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a864042229133ada95abf3b54fdc62ef5ccabe9515b64717bcb9a1919e59445d"
+checksum = "60b9b43d45702de4c839cb9b51d9f529c5dd26a4aff255b42b1ebc03e88ee908"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -642,9 +642,9 @@ dependencies = [
 
 [[package]]
 name = "uint"
-version = "0.9.4"
+version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a45526d29728d135c2900b0d30573fe3ee79fceb12ef534c7bb30e810a91b601"
+checksum = "76f64bba2c53b04fcab63c01a7d7427eadc821e3bc48c34dc9ba29c501164b52"
 dependencies = [
  "byteorder",
  "crunchy",
