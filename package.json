@@ -2,6 +2,7 @@
   "name": "gear-js",
   "private": true,
   "scripts": {
+    "build:api": "yarn workspace @gear-js/api run build",
     "build:backend": "yarn build:common && yarn workspaces foreach -ptR --from '{@gear-js/api-gateway,@gear-js/data-storage,@gear-js/test-balance}' run build",
     "build:common": "yarn workspace @gear-js/common build",
     "build:api-gateway": "yarn workspace @gear-js/api-gateway build",
@@ -34,13 +35,15 @@
     "lint-staged": "12.5.0"
   },
   "workspaces": [
+    "api",
+    "api/examples",
     "idea/*",
     "apps/*",
     "utils/gear-hooks",
     "utils/gear-ui"
   ],
   "lint-staged": {
-    "api/**/*.{js,ts}": "cd api && npm run lint:fix",
+    "api/**/*.{js,ts}": "cd api && yarn lint:fix",
     "idea/**/*.{js,ts,tsx}": "eslint --fix --ignore-pattern 'idea/frontend/**'"
   },
   "packageManager": "yarn@3.3.0",
