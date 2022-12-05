@@ -1,6 +1,7 @@
 FROM node:18-alpine AS builder
 
 WORKDIR /src
+MAINTAINER GEAR 
 
 COPY package.json .
 COPY yarn.lock .
