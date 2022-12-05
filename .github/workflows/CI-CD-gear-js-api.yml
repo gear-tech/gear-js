@@ -50,9 +50,8 @@ jobs:
           tar -xvf examples.tar.gz
 
       - name: Build test programs
-        run: |
-          cd api/test/programs
-          cargo build --release
+        working-directory: api/test/programs
+        run: cargo build --release
 
       - name: Prepare
         run: |
@@ -62,7 +61,7 @@ jobs:
 
       - name: Run tests
         working-directory: api
-        run: npm test
+        run: yarn test
 
       - name: Build examples
         if: ${{ contains(github.event.*.labels.*.name, 'api') }}
