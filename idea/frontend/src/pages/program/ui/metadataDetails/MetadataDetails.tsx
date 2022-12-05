@@ -19,7 +19,7 @@ const MetadataDetails = ({ metadata, isLoading }: Props) => {
     <article>
       <Subheader title="Metadata" />
       {isLoaderShowing ? (
-        <ContentLoader text="There are no metadata yet" isEmpty={isEmpty}>
+        <ContentLoader text="There is no metadata yet" isEmpty={isEmpty}>
           <MetadataDetailsSVG />
         </ContentLoader>
       ) : (
