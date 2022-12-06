@@ -1,8 +1,7 @@
 import { HexString } from '@polkadot/util/types';
 import { u8aToHex } from '@polkadot/util';
 
-import { CreateType } from '../create-type';
-
+import { CreateType } from '../create-type/CreateType';
 import { HumanStateMetadata } from '../types';
 import importObj from '../wasm/importObj';
 

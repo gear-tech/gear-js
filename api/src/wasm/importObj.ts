@@ -1,6 +1,5 @@
-import { u64 } from '@polkadot/types';
+import { TypeRegistry, u64 } from '@polkadot/types';
 import { BlockNumber } from '@polkadot/types/interfaces';
-import { CreateType } from '../create-type';
 
 export default (
   memory: WebAssembly.Memory,
@@ -65,7 +64,7 @@ export default (
     gr_reservation_send: () => {},
     gr_reservation_send_commit: () => {},
     gr_size: (size_ptr: number) => {
-      const len = CreateType.create('u32', inputValue.byteLength).toU8a();
+      const len = new TypeRegistry().createType('u32', inputValue.byteLength).toU8a();
       for (let i = 0; i < len.length; i++) {
         new Uint8Array(memory.buffer)[size_ptr + i] = len[i];
       }
@@ -76,7 +75,9 @@ export default (
       if (showDebug) {
         console.debug(
           '[GR_DEBUG]',
-          CreateType.create('String', new Uint8Array(memory.buffer.slice(payload, payload + len))).toString(),
+          new TypeRegistry()
+            .createType('String', new Uint8Array(memory.buffer.slice(payload, payload + len)))
+            .toHuman(),
         );
       }
     },
@@ -85,7 +86,7 @@ export default (
     gr_error: (error: number, len: number) => {
       console.error(
         '[GR_ERROR]',
-        CreateType.create('String', new Uint8Array(memory.buffer.slice(error, error + len))).toString(),
+        new TypeRegistry().createType('String', new Uint8Array(memory.buffer.slice(error, error + len))).toHuman(),
       );
     },
   },

@@ -5,11 +5,33 @@ import { HexString } from '@polkadot/util/types';
 import { HumanProgramMetadata, IMessageSendOptions, IMessageSendReplyOptions, OldMetadata } from './types';
 import { SendMessageError, SendReplyError } from './errors';
 import { validateGasLimit, validateValue } from './utils';
+import { encodePayload } from './utils/create-payload';
 import { GearTransaction } from './Transaction';
-import { encodePayload } from './create-type';
 import { isProgramMeta } from './metadata';
 
 export class GearMessage extends GearTransaction {
+  /**
+   * ## Send Message
+   * @param args Message parameters
+   * @param meta Program metadata obtained using `getProgramMetadata` function.
+   * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.handle.input` will be used instead.
+   * @returns Submitted result
+   * ```javascript
+   * const programId = '0x..';
+   * const hexMeta = '0x...';
+   * const meta = getProgramMetadata(hexMeta);
+   *
+   * const tx = api.message.send({
+   *   destination: programId,
+   *   payload: { amazingPayload: { } },
+   *   gasLimit: 20_000_000
+   * }, meta, meta.handle.input)
+   *
+   * tx.signAndSend(account, (events) => {
+   *   events.forEach(({event}) => console.log(event.toHuman()))
+   * })
+   * ```
+   */
   send(
     args: IMessageSendOptions,
     meta?: HumanProgramMetadata,
@@ -27,8 +49,8 @@ export class GearMessage extends GearTransaction {
 
   send(
     args: IMessageSendOptions,
-    hexRegistry?: HexString,
-    typeIndex?: number,
+    hexRegistry: HexString,
+    typeIndex: number,
   ): SubmittableExtrinsic<'promise', ISubmittableResult>;
 
   send(
@@ -43,18 +65,6 @@ export class GearMessage extends GearTransaction {
    * @param metaOrHexRegistry Metadata
    * @param typeIndexOrMessageType type index in registry or type name
    * @returns Submitted result
-   * ```javascript
-   * const api = await GearApi.create()
-   * const programId = '0xd7540ae9da85e33b47276e2cb4efc2f0b58fef1227834f21ddc8c7cb551cced6'
-   * const tx = api.message.send({
-   *  destination: messageId,
-   *  payload: 'Hello, World!',
-   *  gasLimit: 20_000_000
-   * }, undefiend, 'String')
-   * tx.signAndSend(account, (events) => {
-   *  events.forEach(({event}) => console.log(event.toHuman()))
-   * })
-   * ```
    */
   send(
     { destination, value, gasLimit, ...args }: IMessageSendOptions,
@@ -79,6 +89,28 @@ export class GearMessage extends GearTransaction {
     }
   }
 
+  /**
+   * Sends reply message
+   * @param args Message parameters
+   * @param meta Program metadata obtained using `getProgramMetadata` function.
+   * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.reply.input` will be used instead.
+   * @returns Submitted result
+   * ```javascript
+   * const replyToMessage = '0x..';
+   * const hexMeta = '0x...';
+   * const meta = getProgramMetadata(hexMeta);
+   *
+   * const tx = api.message.send({
+   *   replyToId: replyToMessage,
+   *   payload: { amazingPayload: { } },
+   *   gasLimit: 20_000_000
+   * }, meta, meta.reply.input)
+   *
+   * tx.signAndSend(account, (events) => {
+   *   events.forEach(({event}) => console.log(event.toHuman()))
+   * })
+   * ```
+   */
   sendReply(
     args: IMessageSendReplyOptions,
     meta?: HumanProgramMetadata,
@@ -96,8 +128,8 @@ export class GearMessage extends GearTransaction {
 
   sendReply(
     args: IMessageSendReplyOptions,
-    hexRegistry?: HexString,
-    typeIndex?: number,
+    hexRegistry: HexString,
+    typeIndex: number,
   ): SubmittableExtrinsic<'promise', ISubmittableResult>;
 
   sendReply(
@@ -112,19 +144,6 @@ export class GearMessage extends GearTransaction {
    * @param metaOrHexRegistry Metadata
    * @param typeIndexOrMessageType type index in registry or type name
    * @returns Submitted result
-   * @example
-   * ```javascript
-   * const api = await GearApi.create()
-   * const messageId = '0xd7540ae9da85e33b47276e2cb4efc2f0b58fef1227834f21ddc8c7cb551cced6'
-   * const tx = api.message.sendReply({
-   *  replyToId: messageId,
-   *  payload: 'Reply message',
-   *  gasLimit: 20_000_000
-   * }, undefiend, 'String')
-   * tx.signAndSend(account, (events) => {
-   *  events.forEach(({event}) => console.log(event.toHuman()))
-   * })
-   * ```
    */
   sendReply(
     { value, gasLimit, replyToId, ...args }: IMessageSendReplyOptions,

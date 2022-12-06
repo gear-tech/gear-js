@@ -3,7 +3,7 @@ import { HexString } from '@polkadot/util/types';
 
 import { HumanProgramMetadata, HumanStateMetadata, OldMetadata } from '../types';
 import { isOldMeta, isProgramMeta, Metadata } from '../metadata';
-import { CreateType } from './CreateType';
+import { CreateType } from '../create-type/CreateType';
 
 export function getRegistry<M extends HumanProgramMetadata | HumanStateMetadata>(
   metaOrHexRegistry: M | HexString | OldMetadata,

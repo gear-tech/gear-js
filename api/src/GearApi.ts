@@ -114,6 +114,7 @@ export class GearApi extends ApiPromise {
   get waitlistCost(): u64 {
     return this.consts.gearScheduler.waitlistCost as u64;
   }
+
   /**
    * Method provides opportunity to get informations about error occurs in ExtrinsicFailed event
    * @param event

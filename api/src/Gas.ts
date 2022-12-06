@@ -2,7 +2,7 @@ import { isHex, isString } from '@polkadot/util';
 
 import { Hex, PayloadType, Value } from './types';
 import { OldMetadata } from './types/interfaces';
-import { encodePayload } from './create-type';
+import { encodePayload } from './utils/create-payload';
 import { GearApi } from './GearApi';
 import { GasInfo } from './types';
 
