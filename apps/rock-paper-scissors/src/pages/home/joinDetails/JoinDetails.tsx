@@ -7,8 +7,8 @@ import styles from './JoinDetails.module.scss'
 
 type Props = {
     onBackClick: (arg: string) => void;
-    onClickRegister?:(arg:any) => void;
-    payloadSend?:(payload: any, options?: any) => void;
+    onClickRegister?: (arg: any) => void;
+    payloadSend?: (payload: any, options?: any) => void;
     heading: string;
     bet: string | undefined;
     game: string;
@@ -19,9 +19,9 @@ type Props = {
     move: string | undefined;
     reveal: string | undefined;
     contract: Hex | undefined;
-    hoursLeft:string;
-    minutesLeft:string;
-    secondsLeft:string;
+    hoursLeft: string;
+    minutesLeft: string;
+    secondsLeft: string;
 };
 
 function JoinDetails({ onBackClick, onClickRegister, payloadSend, hoursLeft, minutesLeft, secondsLeft, round, game, heading, bet, players, entry, move, reveal, SVG, contract }: Props) {
@@ -46,7 +46,7 @@ function JoinDetails({ onBackClick, onClickRegister, payloadSend, hoursLeft, min
                     {entry && <Detail label="Entry timeout" text={entry} className={styles.entry} />}
                     {move && <Detail label="Move timeout" text={move} className={styles.move} />}
                     {reveal && <Detail label="Reveal timeout" text={reveal} className={styles.reveal} />}
-                    <Button className={styles.register} text={`Register ${hoursLeft}:${minutesLeft}:${secondsLeft}`} block onClick={onClickRegister}/>
+                    <Button className={styles.register} text={`Register ${hoursLeft}:${minutesLeft}:${secondsLeft}`} block onClick={onClickRegister} />
                 </div>
             </div>
         </div>
