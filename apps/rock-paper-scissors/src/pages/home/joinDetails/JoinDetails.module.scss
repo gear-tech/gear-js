@@ -1,0 +1,62 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/headings' as *;
+
+.container {
+    max-width: 810px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .visual {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .svg {
+    align-self: flex-end;
+    margin: 75px 90px 0 0;
+  }
+
+  .heading {
+    @extend %h2;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+  }
+
+  .details {
+    max-width: 370px;
+    margin-bottom: 25px;
+    display: grid;
+    grid-template-areas: 'a b' 'c c' 'd e' 'f f' 'g h' 'j j';
+    gap: 25px 125px;
+  }
+  .game{
+    grid-area: a;
+  }
+  .round{
+    grid-area: b;
+  }
+  .contract{
+    grid-area: c;
+  }
+  .players{
+    grid-area: d;
+  }
+  .bet{
+    grid-area: e;
+  }
+  .entry{
+    grid-area: f;
+  }
+  .move{
+    grid-area: g;
+  }
+  .reveal{
+    grid-area: h;
+  }
+  .register{
+    grid-area: j;
+  }
