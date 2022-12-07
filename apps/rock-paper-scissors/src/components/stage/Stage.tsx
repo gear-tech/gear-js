@@ -3,13 +3,13 @@ import { StageType } from 'types';
 import styles from './Stage.module.scss';
 
 type Props = {
-  value: StageType;
+  value: StageType|undefined|'';
 };
 
 function Stage({ value }: Props) {
-  const className = clsx(styles.stage, styles[value]);
+  const className = clsx(styles.stage, styles[value||'preparation']);
 
-  return <span className={className}>{value}</span>;
+  return <span className={className}>{value||'preparation'}</span>;
 }
 
 export { Stage };
