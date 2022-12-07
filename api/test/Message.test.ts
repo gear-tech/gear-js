@@ -13,7 +13,7 @@ let alice: KeyringPair;
 let programId: HexString;
 let messageToClaim: HexString;
 
-const code = readFileSync(join('test/programs/test-meta/target/wasm32-unknown-unknown/release', 'test_meta.opt.wasm'));
+const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
 const metaHex: HexString = `0x${readFileSync('test/programs/test-meta/meta.txt', 'utf-8')}`;
 const metadata = getProgramMetadata(metaHex);
 

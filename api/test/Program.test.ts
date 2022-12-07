@@ -4,7 +4,7 @@ import { blake2AsHex } from '@polkadot/util-crypto';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-import { GEAR_EXAMPLES_WASM_DIR } from './config';
+import { TARGET } from './config';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { GearApi, getProgramMetadata } from '../src';
 
@@ -13,7 +13,7 @@ let alice: KeyringPair;
 let codeId: HexString;
 let programId: HexString;
 
-const code = readFileSync(join('test/programs/test-meta/target/wasm32-unknown-unknown/release', 'test_meta.opt.wasm'));
+const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
 const metaHex: HexString = `0x${readFileSync('test/programs/test-meta/meta.txt', 'utf-8')}`;
 
 beforeAll(async () => {

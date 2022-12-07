@@ -4,9 +4,9 @@ update:
 build: 
 	@cargo build --release
 
-all: update build
+all: clean update build
 
 clean:
-	@rm -rf ./**/target
+	@rm -rf target
 
 .PHONY: all clean build
