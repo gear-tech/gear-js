@@ -14,17 +14,26 @@ type Props = {
   move: string | undefined;
   reveal: string | undefined;
   SVG: SVGType;
-  players: Array<Hex>
+  admin?:boolean;
+  players?: Array<Hex> | Array<string> | [];
   onBackClick: (arg: string) => void;
 };
 
 
 
-function Details({ onBackClick, heading, game, round, contract, players, bet, entry, move, reveal, SVG }: Props) {
+function Details({ onBackClick, heading, game, round, contract, players, bet, entry, move, reveal, SVG, admin }: Props) {
+  const handleRouteChange = () => {
+    if (admin) {
+      onBackClick('lobby admin')
+    } else {
+      onBackClick('game')
+    }
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.visual}>
-        <BackButton onClick={() => onBackClick('lobby')} />
+        <BackButton onClick={handleRouteChange} />
         <SVG className={styles.svg} />
       </div>
       <div>
@@ -35,7 +44,7 @@ function Details({ onBackClick, heading, game, round, contract, players, bet, en
           <Detail label="Contract address" className={styles.contract}>
             <span className={styles.contractText}>{contract}</span>
           </Detail>
-          <Detail label="Players" text={players.length.toString()} className={styles.players} />
+          <Detail label="Players" text={players?.length.toString()||'0'} className={styles.players} />
           <Detail label="Bet size" className={styles.bet}>
             <span className={styles.betText}>{bet}</span>
           </Detail>
@@ -45,7 +54,7 @@ function Details({ onBackClick, heading, game, round, contract, players, bet, en
         </div>
         <div className={styles.lobby}>
           <span className={styles.lobbyTitle}>lobby:</span>
-          {players.map(player => <span className={styles.lobbyText} key={player}>{player}</span>)}
+          {players?.map(player => <span className={styles.lobbyText} key={player}>{player}</span>)||'0'}
         </div>
       </div>
     </div>
