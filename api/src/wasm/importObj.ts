@@ -7,7 +7,7 @@ export default (
   inputValue?: Uint8Array,
   timestamp?: u64,
   block_height?: BlockNumber,
-  replyFn: (result: Uint8Array) => void = () => {},
+  replyFn: (payload: number, len: number) => void = () => {},
 ) => ({
   env: {
     abortStackOverflow: () => {

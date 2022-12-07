@@ -41,7 +41,7 @@ afterAll(async () => {
   await sleep(2000);
 });
 
-describe.skip('Read State', () => {
+describe('Read State', () => {
   test('Upload demo_meta_test program', async () => {
     const payload = meta.createType(meta.types.init.input!, { amount: 8, currency: 'GR' }).toHex();
 
@@ -75,13 +75,84 @@ describe.skip('Read State', () => {
 
   test('Get state v1 meta', async () => {
     stateV1Meta = await getStateMetadata(stateV1);
-    console.log(stateV1Meta);
-    expect(stateV1Meta).toEqual({ functions: [], reg: '0x' });
+    expect(stateV1Meta.functions).toMatchObject({
+      all_wallets: { input: null, output: 0 },
+      first_wallet: { input: null, output: 8 },
+      last_wallet: { input: null, output: 8 },
+    });
   });
 
-  test.only('Get state v2 meta', async () => {
+  test('Read state v1 all_wallets', async () => {
+    const state = await api.rpcState.readStateUsingWasm(
+      { programId, fn_name: 'all_wallets', wasm: stateV1 },
+      stateV1Meta,
+    );
+
+    expect(state.toJSON()).toMatchObject([
+      {
+        id: { decimal: 1, hex: '0x01' },
+        person: { surname: 'SomeSurname', name: 'SomeName' },
+      },
+      {
+        id: { decimal: 2, hex: '0x02' },
+        person: { surname: 'OtherName', name: 'OtherSurname' },
+      },
+    ]);
+  });
+
+  test('Read state v1 first_wallet', async () => {
+    const state = await api.rpcState.readStateUsingWasm(
+      { programId, fn_name: 'first_wallet', wasm: stateV1 },
+      stateV1Meta,
+    );
+
+    expect(state.toJSON()).toMatchObject({
+      id: { decimal: 1, hex: '0x01' },
+      person: { surname: 'SomeSurname', name: 'SomeName' },
+    });
+  });
+
+  test('Read state v1 last_wallet', async () => {
+    const state = await api.rpcState.readStateUsingWasm(
+      { programId, fn_name: 'last_wallet', wasm: stateV1 },
+      stateV1Meta,
+    );
+
+    expect(state.toJSON()).toMatchObject({
+      id: { decimal: 2, hex: '0x02' },
+      person: { surname: 'OtherName', name: 'OtherSurname' },
+    });
+  });
+
+  test('Get state v2 meta', async () => {
     stateV2Meta = await getStateMetadata(stateV2);
-    console.log(stateV2Meta.functions);
-    expect(stateV2Meta).toEqual({ functions: [], reg: '0x' });
+    expect(stateV2Meta.functions).toMatchObject({
+      wallet_by_id: { input: 0, output: 4 },
+      wallet_by_person: { input: 6, output: 4 },
+    });
+  });
+
+  test('Read state v2 wallet_by_id', async () => {
+    const state = await api.rpcState.readStateUsingWasm(
+      { programId, fn_name: 'wallet_by_id', wasm: stateV2, argument: { decimal: 2, hex: '0x02' } },
+      stateV2Meta,
+    );
+
+    expect(state.toJSON()).toMatchObject({
+      id: { decimal: 2, hex: '0x02' },
+      person: { surname: 'OtherName', name: 'OtherSurname' },
+    });
+  });
+
+  test('Read state v2 wallet_by_person', async () => {
+    const state = await api.rpcState.readStateUsingWasm(
+      { programId, fn_name: 'wallet_by_person', wasm: stateV2, argument: { surname: 'SomeSurname', name: 'SomeName' } },
+      stateV2Meta,
+    );
+
+    expect(state.toJSON()).toMatchObject({
+      id: { decimal: 1, hex: '0x01' },
+      person: { surname: 'SomeSurname', name: 'SomeName' },
+    });
   });
 });

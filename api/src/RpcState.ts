@@ -1,6 +1,9 @@
 import { ProgramMetadata, StateMetadata } from './metadata';
 import { GearApi } from './GearApi';
 import { Hex } from './types';
+import { CreateType } from './create-type';
+import { isBuffer } from '@polkadot/util';
+import { Codec } from '@polkadot/types/types';
 
 export class GearRpcState {
   constructor(private api: GearApi) {}
@@ -18,19 +21,22 @@ export class GearRpcState {
       argument?: any;
       at?: Hex;
     },
-    meta: StateMetadata,
-  ) {
-    const fn = meta.functions[args.fn_name];
+    meta?: StateMetadata,
+  ): Promise<Codec> {
+    const fnTypes = meta?.functions[args.fn_name];
 
-    const payload = fn?.input ? meta.createType(fn.input, args.argument) : args.argument;
+    const payload =
+      fnTypes?.input !== undefined && fnTypes?.input !== null
+        ? meta.createType(fnTypes.input, args.argument).toHex()
+        : args.argument;
 
     const state = await this.api.rpc['gear'].readStateUsingWasm(
       args.programId,
       args.fn_name,
-      args.wasm,
+      isBuffer(args.wasm) ? CreateType.create('Bytes', Array.from(args.wasm)) : args.wasm,
       payload || null,
       args.at || null,
     );
-    return meta.createType(fn.output, state);
+    return meta && fnTypes ? meta.createType(fnTypes.output, state) : state;
   }
 }
