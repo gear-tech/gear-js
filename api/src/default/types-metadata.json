@@ -16,7 +16,7 @@
       "reg": "Vec<u8>"
     },
     "StateMetadata": {
-      "functions": "HashMap<String, InOut>",
+      "functions": "BTreeMap<String, TypesRepr>",
       "reg": "Vec<u8>"
     }
   }

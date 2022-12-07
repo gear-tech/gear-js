@@ -1,12 +1,14 @@
 import { ISubmittableResult } from '@polkadot/types/types';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { SubmittableExtrinsic, VoidFn } from '@polkadot/api/types';
 import { HexString } from '@polkadot/util/types';
+import { ReplaySubject } from 'rxjs';
 
 import { HumanProgramMetadata, IMessageSendOptions, IMessageSendReplyOptions, OldMetadata } from './types';
 import { SendMessageError, SendReplyError } from './errors';
 import { validateGasLimit, validateValue } from './utils';
 import { encodePayload } from './utils/create-payload';
 import { GearTransaction } from './Transaction';
+import { UserMessageSentData } from './events';
 import { isProgramMeta } from './metadata';
 
 export class GearMessage extends GearTransaction {
@@ -166,5 +168,40 @@ export class GearMessage extends GearTransaction {
     } catch (error) {
       throw new SendReplyError();
     }
+  }
+
+  listenToReplies(programId: HexString, bufferSize = 5) {
+    let unsub: VoidFn;
+    const subject = new ReplaySubject<[HexString, UserMessageSentData]>(bufferSize);
+    let messageId: HexString;
+
+    this._api.gearEvents
+      .subscribeToGearEvent('UserMessageSent', ({ data }) => {
+        if (data.message.source.eq(programId)) {
+          if (data.message.details.isSome && data.message.details.unwrap().isReply) {
+            const id = data.message.details.unwrap().asReply.replyTo.toHex();
+            if (!messageId || id === messageId) {
+              subject.next([data.message.details.unwrap().asReply.replyTo.toHex(), data]);
+            }
+          }
+        }
+      })
+      .then((result) => {
+        unsub = result;
+      });
+
+    return (messageId: HexString): Promise<UserMessageSentData> => {
+      return new Promise((resolve) => {
+        subject.subscribe({
+          next: ([id, data]) => {
+            if (id === messageId) {
+              subject.complete();
+              unsub();
+              resolve(data);
+            }
+          },
+        });
+      });
+    };
   }
 }

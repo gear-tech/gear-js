@@ -87,7 +87,11 @@ export class CreateType {
 
   static create(type: string, payload: unknown, hexRegistry?: HexString): Codec;
 
-  static create(type: string, payload: unknown, defaultTypes?: boolean): Codec;
+  static create<T extends Codec = undefined>(
+    type: string,
+    payload: unknown,
+    defaultTypes?: boolean,
+  ): T extends Codec ? T : Codec;
 
   static create(
     type: string,

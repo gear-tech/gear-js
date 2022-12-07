@@ -19,37 +19,40 @@ export interface OldMetadata {
 export interface TypesRepr extends Struct {
   input: Option<u32>;
   output: Option<u32>;
+  toJSON: () => HumanTypesRepr;
 }
 
-export interface HumanTypesRepr {
+export type HumanTypesRepr = {
   input?: number;
   output?: number;
-}
+};
 
-export interface IProgramMetadata extends Struct {
+export interface ProgramMetadata extends Struct {
   init: TypesRepr;
   handle: TypesRepr;
   reply: TypesRepr;
   others: TypesRepr;
   state: Option<u32>;
   reg: Vec<u8>;
+  toJSON: () => HumanProgramMetadata;
 }
 
-export interface HumanProgramMetadata {
+export type HumanProgramMetadata = {
   init: HumanTypesRepr;
   handle: HumanTypesRepr;
   reply: HumanTypesRepr;
   others: HumanTypesRepr;
   state: number | null;
   reg: HexString;
-}
+};
 
 export interface StateMetadata extends Struct {
   functions: HashMap<Text, TypesRepr>;
   reg: Vec<u8>;
+  toJSON: () => HumanStateMetadata;
 }
 
-export interface HumanStateMetadata {
+export type HumanStateMetadata = {
   functions: Record<string, HumanTypesRepr>;
   reg: HexString;
-}
+};

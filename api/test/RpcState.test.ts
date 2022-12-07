@@ -74,15 +74,15 @@ describe('Read State', () => {
     ]).toEqual(state.toJSON());
   });
 
-  test.skip('Get state v1 meta', async () => {
+  test('Get state v1 meta', async () => {
     stateV1Meta = await getStateMetadata(stateV1);
-    console.log(stateV1);
+    console.log(stateV1Meta);
     expect(stateV1Meta).toEqual({ functions: [], reg: '0x' });
   });
 
-  test.skip('Get state v2 meta', async () => {
+  test.only('Get state v2 meta', async () => {
     stateV2Meta = await getStateMetadata(stateV2);
-    console.log(stateV2);
+    console.log(stateV2Meta);
     expect(stateV2Meta).toEqual({ functions: [], reg: '0x' });
   });
 });

@@ -1,5 +1,6 @@
-import { HexString } from '@polkadot/util/types';
 import { randomAsHex } from '@polkadot/util-crypto';
+import { H256 } from '@polkadot/types/interfaces';
+import { HexString } from '@polkadot/util/types';
 import { u8aToHex } from '@polkadot/util';
 import { Bytes } from '@polkadot/types';
 
@@ -203,5 +204,16 @@ export class GearProgram extends GearTransaction {
   async codeHash(programId: HexString): Promise<HexString> {
     const program = await this._api.storage.gProg(programId);
     return u8aToHex(program.code_hash);
+  }
+
+  /**
+   * ### Get hash of program metadata
+   * @param programId
+   * @param at (optional) block hash
+   * @returns
+   */
+  async metaHash(programId: HexString, at?: HexString): Promise<HexString> {
+    const metaHash = (await this._api.rpc['gear'].readMetahash(programId, at || null)) as H256;
+    return metaHash.toHex();
   }
 }

@@ -1,8 +1,8 @@
 import { isHex, isString } from '@polkadot/util';
 
+import { encodePayload } from './utils/create-payload';
 import { Hex, PayloadType, Value } from './types';
 import { OldMetadata } from './types/interfaces';
-import { encodePayload } from './utils/create-payload';
 import { GearApi } from './GearApi';
 import { GasInfo } from './types';
 
@@ -162,7 +162,7 @@ export class GearGas {
   /**
    * ### Get gas spent of init message using create_program extrinsic
    * @param sourceId Account id
-   * @param code Program code
+   * @param codeId Program code id
    * @param payload Payload of init message
    * @param value Value of message
    * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
@@ -193,7 +193,7 @@ export class GearGas {
   /**
    * ### Get gas spent of init message using create_program extrinsic
    * @param sourceId Account id
-   * @param code Program code
+   * @param codeId Program code id
    * @param payload Payload of init message
    * @param value Value of message
    * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
