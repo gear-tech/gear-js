@@ -17,12 +17,10 @@ import { GearBalance } from './Balance';
 import { GearEvents } from './events';
 import { GearBlock } from './Blocks';
 import { GearCode } from './Code';
-import { GearRpcState } from './RpcState';
 
 export class GearApi extends ApiPromise {
   public program: GearProgram;
   public programState: GearProgramState;
-  public rpcState: GearRpcState;
   public message: GearMessage;
   public balance: GearBalance;
   public gearEvents: GearEvents;
@@ -62,7 +60,6 @@ export class GearApi extends ApiPromise {
 
     this.isReady.then(() => {
       this.program = new GearProgram(this);
-      this.rpcState = new GearRpcState(this);
       this.message = new GearMessage(this);
       this.balance = new GearBalance(this);
       this.gearEvents = new GearEvents(this);
