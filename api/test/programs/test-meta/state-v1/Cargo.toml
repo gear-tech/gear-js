@@ -1,0 +1,16 @@
+[package]
+name = "test-meta-state-v1"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+gstd = { git = "https://github.com/gear-tech/gear.git", branch = "dn-on-chain-state" }
+gmeta = { git = "https://github.com/gear-tech/gear.git", branch = "dn-on-chain-state", features = ["codegen"]  }
+test-meta-io = { path = "../io" }
+
+[build-dependencies]
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", features = ["metawasm"], branch = "dn-on-chain-state"  }
+
+[features]
+default = ["std"]
+std = []
