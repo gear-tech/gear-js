@@ -47,3 +47,11 @@ button {
   border: none;
   cursor: pointer;
 }
+
+.link-text {
+  transition: opacity 150ms ease-in;
+
+  &:hover {
+    opacity: .5;
+  }
+}

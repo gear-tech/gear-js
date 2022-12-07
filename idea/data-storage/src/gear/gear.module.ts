@@ -5,8 +5,8 @@ import { MetadataModule } from '../metadata/metadata.module';
 import { ProgramModule } from '../program/program.module';
 import { MessageModule } from '../message/message.module';
 import { CodeModule } from '../code/code.module';
-import { ProducerModule } from '../producer/producer.module';
 import { BlockModule } from '../block/block.module';
+import { RabbitmqModule } from '../rabbitmq/rabbitmq.module';
 
 
 @Module({
@@ -15,8 +15,8 @@ import { BlockModule } from '../block/block.module';
     ProgramModule,
     MessageModule,
     CodeModule,
-    ProducerModule,
-    BlockModule
+    BlockModule,
+    RabbitmqModule,
   ],
   providers: [GearEventListener],
   exports: [GearEventListener],

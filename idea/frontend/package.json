@@ -2,8 +2,14 @@
   "name": "@gear-js/frontend",
   "version": "0.1.1",
   "private": true,
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject"
+  },
   "dependencies": {
-    "@gear-js/api": "^0.27.6",
+    "@gear-js/api": "^0.27.7",
     "@gear-js/react-hooks": "workspace:^",
     "@gear-js/ui": "workspace:^",
     "@hcaptcha/react-hcaptcha": "^1.4.4",
@@ -33,36 +39,12 @@
     "react-final-form": "^6.5.9",
     "react-final-form-listeners": "^1.0.3",
     "react-number-format": "^4.9.3",
-    "react-render-if-visible": "^2.1.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
     "react-transition-group": "^4.4.5",
     "simplebar-react": "^2.4.1",
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"
-  },
-  "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      "chrome >= 67",
-      "edge >= 79",
-      "firefox >= 68",
-      "opera >= 54",
-      "safari >= 14"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   },
   "devDependencies": {
     "@types/jest": "^27.5.2",
@@ -89,6 +71,23 @@
     "react-app-rewired": "^2.2.1",
     "sass": "^1.54.5",
     "typescript": "^4.7.4"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      "chrome >= 67",
+      "edge >= 79",
+      "firefox >= 68",
+      "opera >= 54",
+      "safari >= 14"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "lint-staged": {
     "./**/*.{js,ts,tsx, scss}": "eslint --fix"

@@ -48,7 +48,7 @@ const MainTable = ({ extrinsics, eventRecords, error }: Props) => {
         ) : (
           <Placeholder
             block={<MainTablePlaceholderSVG />}
-            title="There is no events yet"
+            title="There are no events yet"
             description={error || 'The list is empty while there are no events'}
             isEmpty={isListEmpty || !!error}
           />

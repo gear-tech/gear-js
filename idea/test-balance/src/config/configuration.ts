@@ -9,15 +9,6 @@ const checkEnv = (envName: string) => {
 };
 
 export default {
-  kafka: {
-    clientId: checkEnv('KAFKA_CLIENT_ID'),
-    groupId: checkEnv('KAFKA_GROUP_ID'),
-    brokers: checkEnv('KAFKA_BROKERS').split(','),
-    sasl: {
-      username: checkEnv('KAFKA_SASL_USERNAME'),
-      password: checkEnv('KAFKA_SASL_PASSWORD'),
-    },
-  },
   db: {
     port: parseInt(process.env.DB_PORT, 10) || 5432,
     user: checkEnv('DB_USER'),
@@ -32,7 +23,10 @@ export default {
     accountBalance: checkEnv('TEST_ACCOUNT_BALANCE'),
     balanceToTransfer: checkEnv('TEST_BALANCE_VALUE'),
   },
+  rabbitmq: {
+    url: checkEnv('RABBIT_MQ_URL'),
+  },
   healthcheck: {
-    port: parseInt(process.env.PORT || '3000'),
+    port: parseInt(process.env.PORT || '3010'),
   },
 };

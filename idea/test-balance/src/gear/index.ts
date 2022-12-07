@@ -1,14 +1,14 @@
 import { GearApi, TransferData } from '@gear-js/api';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { BN } from '@polkadot/util';
-import { initLogger } from '@gear-js/common';
+import { initLogger, RabbitMQueues } from '@gear-js/common';
 
 import config from '../config/configuration';
 import { ResponseTransferBalance } from './types';
 import { transferService } from '../services/transfer.service';
 import { createAccount } from './utils';
 import { changeStatus } from '../routes/healthcheck.router';
-import { sendGenesis } from '../common/send-genesis';
+import { producer } from '../rabbitmq/producer';
 
 let api: GearApi;
 let accountGR: KeyringPair;
@@ -47,12 +47,13 @@ async function init(connectionEstablishedCb: () => void) {
       connectionEstablishedCb();
       onInit = false;
     } else {
-      sendGenesis();
+      await producer.sendGenesis(RabbitMQueues.GENESISES, getGenesisHash());
     }
 
     await new Promise((resolve) =>
-      api.on('error', (error) => {
-        console.log(error);
+      api.on('error', async (error) => {
+        console.log(`${new Date()} | Gear node connection error`, error);
+        await producer.sendDeleteGenesis(RabbitMQueues.GENESISES, getGenesisHash());
         changeStatus('ws');
         resolve(error);
       }),

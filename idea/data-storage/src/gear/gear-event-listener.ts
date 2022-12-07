@@ -19,9 +19,8 @@ import { changeStatus } from '../healthcheck/healthcheck.controller';
 import { ProgramRepo } from '../program/program.repo';
 import { CreateProgramInput } from '../program/types';
 import configuration from '../config/configuration';
-import { kafkaNetworkData } from '../common/kafka-network-data';
-import { ProducerService } from '../producer/producer.service';
 import { BlockService } from '../block/block.service';
+import { RabbitmqService } from '../rabbitmq/rabbitmq.service';
 
 const { gear } = configuration();
 
@@ -29,7 +28,7 @@ const { gear } = configuration();
 export class GearEventListener {
   private logger: Logger = new Logger(GearEventListener.name);
   private api: GearApi;
-  private genesis: Hex;
+  public genesis: Hex;
 
   constructor(
     private programService: ProgramService,
@@ -37,8 +36,8 @@ export class GearEventListener {
     private messageService: MessageService,
     private codeService: CodeService,
     private codeRepository: CodeRepo,
-    private producerService: ProducerService,
     private blockService: BlockService,
+    private rabbitMQService: RabbitmqService,
   ) {}
 
   public async run() {
@@ -46,20 +45,18 @@ export class GearEventListener {
     while (true) {
       try {
         await this.connectGearNode();
+        await this.rabbitMQService.initRMQ(this.genesis);
       } catch (error) {
         this.logger.log('⚙️ 📡 Reconnecting to the gear node');
         continue;
       }
       const unsub = await this.listen();
 
-      await this.producerService.setKafkaNetworkData();
-
-      this.logger.log(`📍️Network data:${JSON.stringify(kafkaNetworkData)}`);
-
       await new Promise((resolve) => {
-        this.api.on('error', (error) => {
-          unsub();
+        this.api.on('error',  async (error) => {
+          await this.rabbitMQService.sendDeleteGenesis(this.genesis);
           changeStatus('gear');
+          unsub();
           resolve(error);
         });
       });
@@ -77,8 +74,6 @@ export class GearEventListener {
     this.genesis = this.api.genesisHash.toHex();
 
     this.logger.log(`⚙️ Connected to ${this.api.runtimeChain} with genesis ${this.genesis}`);
-
-    kafkaNetworkData.genesis = this.genesis;
 
     changeStatus('gear');
   }

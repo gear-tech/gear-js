@@ -21,18 +21,18 @@
     "prepare": "yarn build"
   },
   "peerDependencies": {
-    "@gear-js/api": "^0.27.6",
+    "@gear-js/api": "^0.27.7",
     "@polkadot/extension-dapp": "^0.43.2",
     "react": ">=17.0.2",
     "react-dom": ">=17.0.2",
     "react-transition-group": "^4.4.2"
   },
   "devDependencies": {
-    "@gear-js/api": "^0.27.6",
-    "@polkadot/api": "^9.6.1",
+    "@gear-js/api": "^0.27.7",
+    "@polkadot/api": "^9.9.1",
     "@polkadot/extension-dapp": "^0.44.6",
     "@polkadot/extension-inject": "^0.44.6",
-    "@polkadot/types": "^9.6.1",
+    "@polkadot/types": "^9.9.1",
     "@polkadot/util": "^10.1.6",
     "@rollup/plugin-commonjs": "^22.0.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
