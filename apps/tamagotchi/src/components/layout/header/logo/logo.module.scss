@@ -1,0 +1,15 @@
+@use '@gear-js/ui/variables' as *;
+
+.link {
+  display: inline-flex;
+  color: $textColor;
+  transition: color 150ms ease-in;
+
+  &:hover {
+    color: rgba($textColor, 0.7);
+  }
+
+  svg {
+    max-height: 42px;
+  }
+}

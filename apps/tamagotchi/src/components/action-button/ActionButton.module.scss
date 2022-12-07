@@ -1,0 +1,34 @@
+@use '@gear-js/ui/mixins' as *;
+@use '@gear-js/ui/headings' as *;
+@use '@gear-js/ui/variables' as *;
+
+.button {
+  @include transition;
+  @extend %h5;
+  text-align: center;
+  background-color: transparent;
+  border: none;
+  color: $textColor;
+  text-transform: uppercase;
+
+  &:not(.active) {
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+}
+
+.logo {
+  @include circle(144px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 12px;
+  background-color: #fff;
+
+  &.active {
+    background-image: linear-gradient(318.65deg, #2ecf72 9.17%, #2b593e 115.68%);
+  }
+}

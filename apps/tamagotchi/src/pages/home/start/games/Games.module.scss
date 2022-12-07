@@ -1,0 +1,50 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/headings' as *;
+@use 'assets/styles/shared' as *;
+
+.games {
+  max-width: 1000px;
+
+  &:not(:last-child) {
+    margin-bottom: 48px;
+  }
+}
+
+.heading {
+  @extend %h3;
+  margin-bottom: 40px;
+  text-align: center;
+  text-transform: uppercase;
+  color: #bcbcbc;
+}
+
+.header {
+  color: rgba(#fff, 0.5);
+}
+
+.body {
+  @extend %scroll;
+  position: relative;
+  height: 235px;
+  overflow-y: auto;
+
+  .row {
+    background-color: rgba(#282828, 0.5);
+
+    &:not(:last-child) {
+      margin-bottom: 20px;
+    }
+  }
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  min-height: 40px;
+  padding: 10px 20px;
+}
+
+.empty {
+  @extend %absoluteCenter;
+  color: $textColorSecondary;
+}

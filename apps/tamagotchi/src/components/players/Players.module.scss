@@ -1,0 +1,57 @@
+@use '@gear-js/ui/headings' as *;
+@use 'assets/styles/shared' as *;
+
+.heading {
+  @extend %h4;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+
+  &.center {
+    text-align: center;
+  }
+}
+
+.header {
+  @include heading(14px);
+  padding: 8px 20px;
+  background-color: #282828;
+
+  .cell {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.icon {
+  margin-right: 8px;
+}
+
+.list {
+  @extend %scroll;
+  max-height: 225px;
+  overflow-y: auto;
+}
+
+.header,
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.row {
+  padding: 15px 20px;
+  background-color: rgba(#282828, 0.5);
+  backdrop-filter: blur(8px);
+}
+
+.player {
+  width: 85%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.checkbox {
+  input {
+    margin: 0;
+  }
+}

@@ -1,0 +1,67 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/headings' as *;
+
+.container {
+  max-width: 1100px;
+  display: flex;
+}
+
+.players {
+  flex: 1;
+  max-width: 655px;
+  margin-right: 70px;
+}
+
+.players,
+.summary {
+  > *:first-child {
+    margin-bottom: 30px;
+  }
+}
+
+.heading {
+  @extend %h2;
+  text-transform: uppercase;
+}
+
+.summary {
+  &Main {
+    display: grid;
+    grid-template-areas:
+      'a a'
+      'b c'
+      'd e';
+    gap: 40px 55px;
+    margin-bottom: 30px;
+  }
+}
+
+.time {
+  grid-area: a;
+}
+
+.stage {
+  grid-area: b;
+}
+
+.bet {
+  grid-area: c;
+  font-weight: 600;
+  color: $successColor;
+}
+
+.game {
+  grid-area: d;
+}
+
+.round {
+  grid-area: e;
+}
+
+.detailsButton {
+  margin-right: 25px;
+}
+
+.actionButton {
+  margin-top: 47px;
+}

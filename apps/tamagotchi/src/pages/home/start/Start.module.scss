@@ -1,0 +1,14 @@
+@use '@gear-js/ui/headings' as *;
+
+.heading {
+  @extend %h1;
+  max-width: 800px;
+  margin-bottom: 25px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.button {
+  max-width: 285px;
+  margin-bottom: 48px;
+}

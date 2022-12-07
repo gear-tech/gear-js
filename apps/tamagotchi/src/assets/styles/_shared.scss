@@ -1,0 +1,23 @@
+%absoluteCenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+%scroll {
+  &::-webkit-scrollbar {
+    width: 3px;
+
+    &-thumb {
+      background-color: #fff;
+      border-radius: 1px;
+    }
+
+    &-track {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid transparent;
+      background-clip: content-box;
+    }
+  }
+}
