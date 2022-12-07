@@ -1,4 +1,4 @@
-import { Hex } from '@gear-js/api';
+import { useMemo } from 'react';
 import { ReactComponent as IdSVG } from 'assets/images/icons/id.svg';
 import { ReactComponent as MedalSVG } from 'assets/images/icons/medal.svg';
 import { Checkbox } from '@gear-js/ui';
@@ -7,22 +7,24 @@ import styles from './Players.module.scss';
 
 type Props = {
   heading: string;
-  list: Hex[];
+  list: string[];
+  finishedPlayers?: string[];
   className?: string;
   center?: boolean;
 };
 
-function Players({ heading, list, className, center }: Props) {
+function Players({  heading, list, finishedPlayers, className, center }: Props) {
+  
   const headingClassName = clsx(styles.heading, center && styles.center);
   const listClassName = clsx(styles.list, className);
 
-  const getPlayers = () =>
-    list.map((player) => (
+  const getPlayers = useMemo(() =>
+    list && list.map((player) => (
       <li key={player} className={styles.row}>
         <span className={styles.player}>{player}</span>
-        <Checkbox label="" className={styles.checkbox} readOnly />
+        <Checkbox checked={finishedPlayers?.includes(player)} label="" className={styles.checkbox} readOnly />
       </li>
-    ));
+    )), [list, finishedPlayers]);
 
   return (
     <>
@@ -37,7 +39,7 @@ function Players({ heading, list, className, center }: Props) {
           Moved
         </div>
       </header>
-      <ul className={listClassName}>{getPlayers()}</ul>
+      <ul className={listClassName}>{getPlayers}</ul>
     </>
   );
 }
