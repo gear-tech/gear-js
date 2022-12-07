@@ -6,11 +6,11 @@ import { Bytes } from '@polkadot/types';
 
 import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult } from './types';
 import { generateCodeHash, generateProgramId, GPROG, GPROG_HEX, validateGasLimit, validateValue } from './utils';
-import { HumanProgramMetadata, OldMetadata } from './types/interfaces';
+import { OldMetadata } from './types/interfaces';
 import { encodePayload } from './utils/create-payload';
 import { GearTransaction } from './Transaction';
 import { SubmitProgramError } from './errors';
-import { isProgramMeta } from './metadata';
+import { isProgramMeta, ProgramMetadata } from './metadata';
 import { GearApi } from './GearApi';
 import { GearGas } from './Gas';
 
@@ -44,7 +44,7 @@ export class GearProgram extends GearTransaction {
    * })
    * ```
    */
-  upload(args: IProgramUploadOptions, meta?: HumanProgramMetadata, typeIndex?: number): IProgramUploadResult;
+  upload(args: IProgramUploadOptions, meta?: ProgramMetadata, typeIndex?: number): IProgramUploadResult;
 
   /**
    * @deprecated This method will ber removed as soon as we move completely to the new metadata
@@ -62,7 +62,7 @@ export class GearProgram extends GearTransaction {
 
   upload(
     args: IProgramUploadOptions,
-    metaOrHexRegistry?: HumanProgramMetadata | HexString | OldMetadata,
+    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
     typeIndexOrMessageType?: number | string,
   ): IProgramUploadResult;
 
@@ -73,7 +73,7 @@ export class GearProgram extends GearTransaction {
    */
   upload(
     args: IProgramUploadOptions,
-    metaOrHexRegistry?: HumanProgramMetadata | HexString | OldMetadata,
+    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
     typeIndexOrMessageType?: number | string,
   ): IProgramUploadResult {
     validateValue(args.value, this._api);
@@ -121,7 +121,7 @@ export class GearProgram extends GearTransaction {
    * })
    * ```
    */
-  create(args: IProgramCreateOptions, meta?: HumanProgramMetadata, typeIndex?: number): IProgramCreateResult;
+  create(args: IProgramCreateOptions, meta?: ProgramMetadata, typeIndex?: number): IProgramCreateResult;
 
   /**
    * @deprecated This method will be removed as soon as we move completely to the new metadata
@@ -139,7 +139,7 @@ export class GearProgram extends GearTransaction {
 
   create(
     args: IProgramCreateOptions,
-    metaOrHexRegistry?: HexString | HumanProgramMetadata | OldMetadata,
+    metaOrHexRegistry?: HexString | ProgramMetadata | OldMetadata,
     typeIndexOrMessageType?: number | string,
   ): IProgramCreateResult;
 
@@ -150,7 +150,7 @@ export class GearProgram extends GearTransaction {
    */
   create(
     { codeId, initPayload, value, gasLimit, ...args }: IProgramCreateOptions,
-    metaOrHexRegistry?: HexString | HumanProgramMetadata | OldMetadata,
+    metaOrHexRegistry?: HexString | ProgramMetadata | OldMetadata,
     typeIndexOrMessageType?: number | string,
   ): IProgramCreateResult {
     validateValue(value, this._api);

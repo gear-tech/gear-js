@@ -3,13 +3,13 @@ import { SubmittableExtrinsic, VoidFn } from '@polkadot/api/types';
 import { HexString } from '@polkadot/util/types';
 import { ReplaySubject } from 'rxjs';
 
-import { HumanProgramMetadata, IMessageSendOptions, IMessageSendReplyOptions, OldMetadata } from './types';
+import { IMessageSendOptions, IMessageSendReplyOptions, OldMetadata } from './types';
 import { SendMessageError, SendReplyError } from './errors';
 import { validateGasLimit, validateValue } from './utils';
 import { encodePayload } from './utils/create-payload';
 import { GearTransaction } from './Transaction';
 import { UserMessageSentData } from './events';
-import { isProgramMeta } from './metadata';
+import { ProgramMetadata, isProgramMeta } from './metadata';
 
 export class GearMessage extends GearTransaction {
   /**
@@ -36,7 +36,7 @@ export class GearMessage extends GearTransaction {
    */
   send(
     args: IMessageSendOptions,
-    meta?: HumanProgramMetadata,
+    meta?: ProgramMetadata,
     typeIndex?: number,
   ): SubmittableExtrinsic<'promise', ISubmittableResult>;
 
@@ -57,7 +57,7 @@ export class GearMessage extends GearTransaction {
 
   send(
     args: IMessageSendOptions,
-    metaOrHexRegistry?: HumanProgramMetadata | HexString | OldMetadata,
+    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
     typeIndexOrMessageType?: number | string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult>;
 
@@ -70,7 +70,7 @@ export class GearMessage extends GearTransaction {
    */
   send(
     { destination, value, gasLimit, ...args }: IMessageSendOptions,
-    metaOrHexRegistry?: HumanProgramMetadata | HexString | OldMetadata,
+    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
     typeIndexOrMessageType?: number | string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
     validateValue(value, this._api);
@@ -115,7 +115,7 @@ export class GearMessage extends GearTransaction {
    */
   sendReply(
     args: IMessageSendReplyOptions,
-    meta?: HumanProgramMetadata,
+    meta?: ProgramMetadata,
     typeIndex?: number,
   ): SubmittableExtrinsic<'promise', ISubmittableResult>;
 
@@ -136,7 +136,7 @@ export class GearMessage extends GearTransaction {
 
   sendReply(
     args: IMessageSendReplyOptions,
-    metaOrHexRegistry?: HumanProgramMetadata | HexString | OldMetadata,
+    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
     typeIndexOrMessageType?: number | string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult>;
 
@@ -149,7 +149,7 @@ export class GearMessage extends GearTransaction {
    */
   sendReply(
     { value, gasLimit, replyToId, ...args }: IMessageSendReplyOptions,
-    metaOrHexRegistry?: HumanProgramMetadata | HexString | OldMetadata,
+    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
     typeIndexOrMessageType?: number | string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
     validateValue(value, this._api);

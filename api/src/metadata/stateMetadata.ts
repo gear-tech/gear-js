@@ -2,10 +2,20 @@ import { HexString } from '@polkadot/util/types';
 import { u8aToHex } from '@polkadot/util';
 
 import { CreateType } from '../create-type/CreateType';
-import { HumanStateMetadata, StateMetadata } from '../types';
+import { HumanStateMetadataRepr, HumanTypesRepr, StateMetadataRepr } from '../types';
 import importObj from '../wasm/importObj';
+import { GearMetadata } from './metadata';
 
-export async function getStateMetadata(wasmBytes: Buffer): Promise<HumanStateMetadata> {
+export class StateMetadata extends GearMetadata {
+  functions: Record<string, HumanTypesRepr>;
+
+  constructor({ reg, functions }: HumanStateMetadataRepr) {
+    super(reg);
+    this.functions = functions;
+  }
+}
+
+export async function getStateMetadata(wasmBytes: Buffer): Promise<StateMetadata> {
   const memory = new WebAssembly.Memory({ initial: 17 });
 
   let resolveMetadataPromise: (metadata: HexString) => void;
@@ -34,9 +44,9 @@ export async function getStateMetadata(wasmBytes: Buffer): Promise<HumanStateMet
 
   exports.metadata();
 
-  const meta = CreateType.create('StateMetadata', await metadata, true) as StateMetadata;
+  const meta = CreateType.create<StateMetadataRepr>('StateMetadataRepr', await metadata, true);
 
   console.log(meta.toJSON());
 
-  return meta.toJSON();
+  return new StateMetadata(meta.toJSON());
 }

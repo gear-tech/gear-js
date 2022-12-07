@@ -1,13 +1,11 @@
-import { isHex, isU8a, u8aToHex } from '@polkadot/util';
+import { isHex, isString, isU8a, u8aToHex } from '@polkadot/util';
 import { HexString } from '@polkadot/util/types';
 
-import { HumanProgramMetadata, HumanStateMetadata, OldMetadata } from '../types';
-import { isOldMeta, isProgramMeta, Metadata } from '../metadata';
+import { HumanProgramMetadataRepr, OldMetadata } from '../types';
+import { isOldMeta, isProgramMeta, ProgramMetadata, GearMetadata, isStateMeta } from '../metadata';
 import { CreateType } from '../create-type/CreateType';
 
-export function getRegistry<M extends HumanProgramMetadata | HumanStateMetadata>(
-  metaOrHexRegistry: M | HexString | OldMetadata,
-): HexString {
+export function getRegistry(metaOrHexRegistry: HexString | OldMetadata): HexString {
   if (!metaOrHexRegistry) {
     return undefined;
   }
@@ -19,14 +17,12 @@ export function getRegistry<M extends HumanProgramMetadata | HumanStateMetadata>
   if (isOldMeta(metaOrHexRegistry)) {
     return metaOrHexRegistry.types;
   }
-
-  return metaOrHexRegistry.reg;
 }
 
 export function encodePayload<
-  M extends OldMetadata | HumanProgramMetadata = OldMetadata | HumanProgramMetadata,
-  T = M extends HumanProgramMetadata
-    ? keyof Omit<HumanProgramMetadata, 'reg' | 'state'>
+  M extends OldMetadata | GearMetadata = OldMetadata | GearMetadata,
+  T = M extends ProgramMetadata
+    ? keyof Omit<HumanProgramMetadataRepr, 'reg' | 'state'>
     : keyof Omit<OldMetadata, 'types' | 'title'>,
 >(payload: unknown, hexRegistryOrMeta: HexString | M, type: T, typeIndexOrMessageType?: number | string): HexString {
   if (payload === undefined) {
@@ -41,19 +37,23 @@ export function encodePayload<
     return u8aToHex(payload);
   }
 
-  const registry = getRegistry(hexRegistryOrMeta);
-
   if (isProgramMeta(hexRegistryOrMeta)) {
-    return new Metadata(registry)
-      .createType(hexRegistryOrMeta[type as keyof Omit<HumanProgramMetadata, 'reg' | 'state'>].input, payload)
+    return hexRegistryOrMeta
+      .createType(hexRegistryOrMeta.types[type as keyof Omit<HumanProgramMetadataRepr, 'reg' | 'state'>].input, payload)
       .toHex();
   } else if (isOldMeta(hexRegistryOrMeta)) {
-    return CreateType.create(hexRegistryOrMeta[type as keyof OldMetadata], payload, hexRegistryOrMeta.types).toHex();
-  } else {
+    return CreateType.create(
+      isString(typeIndexOrMessageType) ? typeIndexOrMessageType : hexRegistryOrMeta[type as keyof OldMetadata],
+      payload,
+      hexRegistryOrMeta.types,
+    ).toHex();
+  } else if (isStateMeta(hexRegistryOrMeta)) {
+    // TODO
+  } else if (isHex(hexRegistryOrMeta)) {
     if (typeof typeIndexOrMessageType === 'number') {
-      return new Metadata(registry).createType(typeIndexOrMessageType, payload).toHex();
+      return new GearMetadata(hexRegistryOrMeta).createType(typeIndexOrMessageType, payload).toHex();
     } else {
-      return CreateType.create(typeIndexOrMessageType, payload, registry).toHex();
+      return CreateType.create(typeIndexOrMessageType, payload, hexRegistryOrMeta).toHex();
     }
   }
 }

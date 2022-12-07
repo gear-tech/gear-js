@@ -16,9 +16,12 @@ unsafe extern "C" fn init() {
 }
 #[no_mangle]
 unsafe extern "C" fn handle() {
-    let message_in: Action = msg::load().unwrap();
+    let action: Action = msg::load().unwrap();
 
-    msg::reply(EmptyStruct { empty: () }, 0).unwrap();
+    match action {
+        Action::One(option_string) => msg::reply(EmptyStruct { empty: () }, 1000).unwrap(),
+        _ => msg::reply(EmptyStruct { empty: () }, 0).unwrap(),
+    };
 }
 
 extern "C" fn state() {

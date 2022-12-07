@@ -7,7 +7,7 @@
       "input": "Option<u32>",
       "output": "Option<u32>"
     },
-    "ProgramMetadata": {
+    "ProgramMetadataRepr": {
       "init": "TypesRepr",
       "handle": "TypesRepr",
       "reply": "TypesRepr",
@@ -15,7 +15,7 @@
       "state": "Option<u32>",
       "reg": "Vec<u8>"
     },
-    "StateMetadata": {
+    "StateMetadataRepr": {
       "functions": "BTreeMap<String, TypesRepr>",
       "reg": "Vec<u8>"
     }

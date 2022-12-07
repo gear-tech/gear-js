@@ -1,4 +1,4 @@
-import { Vec, HashMap, u8, u32, Text, Option, Struct } from '@polkadot/types';
+import { Vec, u8, u32, Text, Option, Struct, BTreeMap } from '@polkadot/types';
 import { HexString } from '@polkadot/util/types';
 
 export interface OldMetadata {
@@ -27,17 +27,17 @@ export type HumanTypesRepr = {
   output?: number;
 };
 
-export interface ProgramMetadata extends Struct {
+export interface ProgramMetadataRepr extends Struct {
   init: TypesRepr;
   handle: TypesRepr;
   reply: TypesRepr;
   others: TypesRepr;
   state: Option<u32>;
   reg: Vec<u8>;
-  toJSON: () => HumanProgramMetadata;
+  toJSON: () => HumanProgramMetadataRepr;
 }
 
-export type HumanProgramMetadata = {
+export type HumanProgramMetadataRepr = {
   init: HumanTypesRepr;
   handle: HumanTypesRepr;
   reply: HumanTypesRepr;
@@ -46,13 +46,13 @@ export type HumanProgramMetadata = {
   reg: HexString;
 };
 
-export interface StateMetadata extends Struct {
-  functions: HashMap<Text, TypesRepr>;
+export interface StateMetadataRepr extends Struct {
+  functions: BTreeMap<Text, TypesRepr>;
   reg: Vec<u8>;
-  toJSON: () => HumanStateMetadata;
+  toJSON: () => HumanStateMetadataRepr;
 }
 
-export type HumanStateMetadata = {
+export type HumanStateMetadataRepr = {
   functions: Record<string, HumanTypesRepr>;
   reg: HexString;
 };

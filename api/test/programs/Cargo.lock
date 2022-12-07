@@ -237,7 +237,7 @@ dependencies = [
 [[package]]
 name = "gear-wasm-builder"
 version = "0.1.2"
-source = "git+https://github.com/gear-tech/gear.git#022907b402b3ea3337431d4c1fd3e119dccd9c2e"
+source = "git+https://github.com/gear-tech/gear.git#e5b6826ce0f4200d2e66b277614ab4f3ef6c85a3"
 dependencies = [
  "anyhow",
  "cargo_metadata",

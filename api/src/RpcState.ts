@@ -1,13 +1,12 @@
-import { Metadata } from './metadata';
+import { ProgramMetadata, StateMetadata } from './metadata';
 import { GearApi } from './GearApi';
-import { Hex, HumanStateMetadata } from './types';
+import { Hex } from './types';
 
 export class GearRpcState {
   constructor(private api: GearApi) {}
 
-  async readState(args: { programId: Hex; at?: Hex }, registry: Hex, type: number) {
+  async readState(args: { programId: Hex; at?: Hex }, meta: ProgramMetadata, type: number) {
     const state = await this.api.rpc['gear'].readState(args.programId, args.at || null);
-    const meta = new Metadata(registry);
     return meta.createType(type, state);
   }
 
@@ -19,11 +18,9 @@ export class GearRpcState {
       argument?: any;
       at?: Hex;
     },
-    metadata: HumanStateMetadata,
+    meta: StateMetadata,
   ) {
-    const meta = new Metadata(metadata.reg);
-
-    const fn = metadata.functions[args.fn_name];
+    const fn = meta.functions[args.fn_name];
 
     const payload = fn?.input ? meta.createType(fn.input, args.argument) : args.argument;
 

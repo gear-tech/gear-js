@@ -1,17 +1,21 @@
+import { KeyringPair } from '@polkadot/keyring/types';
+import { HexString } from '@polkadot/util/types';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { KeyringPair } from '@polkadot/keyring/types';
 
 import { TARGET } from './config';
-import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep } from './utilsFunctions';
-import { Hex } from '../src/types';
-import { GearApi, getWasmMetadata } from '../src';
+import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
+import { GearApi, getProgramMetadata } from '../src';
 import { decodeAddress } from '../src/utils';
 
 const api = new GearApi();
 let alice: KeyringPair;
-let guestbookId: Hex;
-let messageToClaim: Hex;
+let programId: HexString;
+let messageToClaim: HexString;
+
+const code = readFileSync(join('test/programs/test-meta/target/wasm32-unknown-unknown/release', 'test_meta.opt.wasm'));
+const metaHex: HexString = `0x${readFileSync('test/programs/test-meta/meta.txt', 'utf-8')}`;
+const metadata = getProgramMetadata(metaHex);
 
 beforeAll(async () => {
   await api.isReadyOrError;
@@ -24,57 +28,57 @@ afterAll(async () => {
 });
 
 describe('Gear Message', () => {
-  test('upload test_mailbox', async () => {
-    const code = readFileSync(join(TARGET, 'test_mailbox.opt.wasm'));
-    guestbookId = api.program.upload({
-      code,
-      gasLimit: 2_000_000_000,
-    }).programId;
-    const status = checkInit(api, guestbookId);
+  test('upload test_meta', async () => {
+    programId = api.program.upload(
+      {
+        code,
+        initPayload: [1, 2, 3],
+        gasLimit: 200_000_000_000,
+      },
+      metadata,
+    ).programId;
+    const status = checkInit(api, programId);
     const transactionData = await sendTransaction(api.program, alice, 'MessageEnqueued');
-    expect(transactionData.destination).toBe(guestbookId);
+    expect(transactionData.destination).toBe(programId);
     expect(await status()).toBe('success');
   });
 
   test('send messages', async () => {
     const messages = [
+      { payload: { Two: [[8, 16]] }, reply: '0x', claim: true },
       {
         payload: {
-          AddParticipant: {
-            name: 'Dmitriy',
-          },
+          One: 'Dmitriy',
         },
-        value: 100_000,
+        value: 1_000,
+        reply: '0x',
+        claim: true,
       },
-      { payload: 'ViewAllParticipants', reply: '0x041c446d6974726979', claim: true },
     ];
-    const metaWasm = readFileSync(join(TARGET, 'test_mailbox.meta.wasm'));
-    const meta = await getWasmMetadata(metaWasm);
 
     for (const message of messages) {
       const tx = api.message.send(
         {
-          destination: guestbookId,
+          destination: programId,
           payload: message.payload,
           gasLimit: 2_000_000_000,
           value: message.value,
         },
-        meta,
+        metadata,
       );
-      const waitForReply = message.reply ? listenToUserMessageSent(api, guestbookId) : undefined;
+
+      const waitForReply = api.message.listenToReplies(programId);
 
       const transactionData = await sendTransaction(tx, alice, 'MessageEnqueued');
       expect(transactionData).toBeDefined();
 
-      if (waitForReply) {
-        const reply = await waitForReply(transactionData.id);
-        expect(reply?.message.details.isSome).toBeTruthy();
-        expect(reply?.message.details.unwrap().isReply).toBeTruthy();
-        expect(reply?.message.details.unwrap().asReply.statusCode.toNumber()).toBe(0);
-        expect(reply?.message.payload.toHex()).toBe(message.reply);
-        if (message.claim) {
-          messageToClaim = reply.message.id.toHex();
-        }
+      const reply = await waitForReply(transactionData.id);
+      expect(reply?.message.details.isSome).toBeTruthy();
+      expect(reply?.message.details.unwrap().isReply).toBeTruthy();
+      expect(reply?.message.details.unwrap().asReply.statusCode.toNumber()).toBe(0);
+      expect(reply?.message.payload.toHex()).toBe(message.reply);
+      if (message.claim) {
+        messageToClaim = reply.message.id.toHex();
       }
     }
   });

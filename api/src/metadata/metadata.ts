@@ -14,15 +14,15 @@ interface TypeStructure {
   len?: number;
 }
 
-export class Metadata {
+export class GearMetadata {
   private registry: Registry;
   private portableRegistry: PortableRegistry;
-  private types: Map<number, { name: string; def: any }>;
+  private regTypes: Map<number, { name: string; def: any }>;
 
   constructor(hexRegistry: HexString) {
     this.registry = new TypeRegistry();
     this.portableRegistry = new PortableRegistry(this.registry, hexToU8a(hexRegistry), true);
-    this.types = new Map();
+    this.regTypes = new Map();
     this.prepare();
     this.registerTypes();
   }
@@ -32,20 +32,20 @@ export class Metadata {
       const name = this.portableRegistry.getName(type.id);
       const typeDef = this.portableRegistry.getTypeDef(type.id);
       if (name !== undefined) {
-        this.types.set(type.id.toNumber(), { name: this.portableRegistry.getName(type.id), def: typeDef.type });
+        this.regTypes.set(type.id.toNumber(), { name: this.portableRegistry.getName(type.id), def: typeDef.type });
       } else {
         assert(
           typeDef.lookupIndex === type.id.toNumber(),
           'Lookup index of type is not equal to index in portable registry',
         );
-        this.types.set(typeDef.lookupIndex, { name: typeDef.type, def: null });
+        this.regTypes.set(typeDef.lookupIndex, { name: typeDef.type, def: null });
       }
     }
   }
 
   private registerTypes() {
     const types = {};
-    Array.from(this.types.values()).forEach(({ name, def }) => {
+    Array.from(this.regTypes.values()).forEach(({ name, def }) => {
       if (def) {
         types[name] = def;
       }
@@ -55,7 +55,7 @@ export class Metadata {
   }
 
   createType(typeIndex: number, payload: unknown): Codec {
-    const type = this.types.get(typeIndex);
+    const type = this.regTypes.get(typeIndex);
     assert.notStrictEqual(type, undefined, `Type with index ${typeIndex} not found in registered types`);
     return this.registry.createType(type.name, payload);
   }

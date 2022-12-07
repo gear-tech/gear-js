@@ -6,7 +6,7 @@ import { join } from 'path';
 
 import { GEAR_EXAMPLES_WASM_DIR } from './config';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
-import { GearApi, getProgramMetadata, Metadata } from '../src';
+import { GearApi, getProgramMetadata } from '../src';
 
 const api = new GearApi();
 let alice: KeyringPair;
@@ -28,8 +28,7 @@ afterAll(async () => {
 
 describe('New Program', () => {
   test('Upload program', async () => {
-    const programMeta = getProgramMetadata(metaHex);
-    const metadata = new Metadata(programMeta.reg);
+    const metadata = getProgramMetadata(metaHex);
 
     const program = api.program.upload(
       {
@@ -37,7 +36,7 @@ describe('New Program', () => {
         gasLimit: 200_000_000_000,
         initPayload: [1, 2, 3],
       },
-      programMeta,
+      metadata,
     );
     expect(program.programId).toBeDefined();
     expect(program.salt).toBeDefined();
@@ -54,13 +53,12 @@ describe('New Program', () => {
     expect(await status()).toBe('success');
 
     const reply = await waitForReply(transactionData.id);
-    expect(metadata.createType(programMeta.init.output!, reply.message.payload).toJSON()).toMatchObject({ One: 1 });
+    expect(metadata.createType(metadata.types.init.output!, reply.message.payload).toJSON()).toMatchObject({ One: 1 });
   });
 
   test('Сreate program', async () => {
     expect(codeId).toBeDefined();
-    const programMeta = getProgramMetadata(metaHex);
-    const metadata = new Metadata(programMeta.reg);
+    const metadata = getProgramMetadata(metaHex);
 
     const { programId, salt } = api.program.create(
       {
@@ -68,8 +66,8 @@ describe('New Program', () => {
         gasLimit: 200_000_000_000,
         initPayload: [4, 5, 6],
       },
-      programMeta,
-      programMeta.init.input,
+      metadata,
+      metadata.types.init.input,
     );
 
     expect(programId).toBeDefined();
@@ -84,7 +82,7 @@ describe('New Program', () => {
     expect(await status()).toBe('success');
 
     const reply = await waitForReply(transactionData.id);
-    expect(metadata.createType(programMeta.init.output!, reply.message.payload).toJSON()).toMatchObject({ One: 1 });
+    expect(metadata.createType(metadata.types.init.output!, reply.message.payload).toJSON()).toMatchObject({ One: 1 });
   });
 
   test('Throw error if value is incorrect', () => {
@@ -112,17 +110,20 @@ describe('New Program', () => {
 
 describe('Program', () => {
   test('Get all uploaded programs', async () => {
+    expect(programId).toBeDefined();
     const programs = await api.program.allUploadedPrograms();
     expect(programs).toBeDefined();
     expect(programs.includes(programId)).toBeTruthy();
   });
 
   test('Program exists', async () => {
+    expect(programId).toBeDefined();
     const programs = await api.program.exists(programId);
     expect(programs).toBeTruthy();
   });
 
   test('Get hash of program metadata', async () => {
+    expect(programId).toBeDefined();
     const metaHash = await api.program.metaHash(programId);
     expect(metaHash).toBe(blake2AsHex(metaHex, 256));
   });
