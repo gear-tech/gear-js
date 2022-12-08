@@ -1,3 +1,4 @@
+import { Hex } from '@gear-js/api';
 import { useCreateHandler } from '@gear-js/react-hooks';
 import { Button, Input } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
@@ -8,7 +9,8 @@ import styles from './Create.module.scss';
 type Props = {
   onBackClick: (arg: string) => void;
   onSubmit: ReturnType<typeof useCreateHandler>;
-  setStateAction: any
+  setLoading: (loading: boolean) => void;
+  setStateAction: (hex: Hex) => void;
 };
 
 const initialValues = {
@@ -36,11 +38,15 @@ const validate = {
   revealTimeoutMs: (value: string) => (isExists(value) || isMinValue(Number(value), 10)),
 };
 
-function Create({ onBackClick, onSubmit, setStateAction }: Props) {
+function Create({ onBackClick, onSubmit, setStateAction, setLoading }: Props) {
   const form = useForm({ initialValues, validate, transformValues, });
   const { getInputProps } = form;
   const handleSubmit = form.onSubmit((values) => {
-    onSubmit(values, { onSuccess: (hex) => { setStateAction(hex); } })
+    setLoading(true);
+    onSubmit(values, {
+      onSuccess: (hex) => setStateAction(hex),
+      onError: () => setLoading(false)
+    })
   });
 
   return (

@@ -9,6 +9,7 @@ type Props = {
     onBackClick: (arg: string) => void;
     onClickRegister?: (arg: any) => void;
     payloadSend?: (payload: any, options?: any) => void;
+    clearProgrammId: (arg: Hex) => void;
     heading: string;
     bet: string | undefined;
     game: string;
@@ -24,11 +25,11 @@ type Props = {
     secondsLeft: string;
 };
 
-function JoinDetails({ onBackClick, onClickRegister, payloadSend, hoursLeft, minutesLeft, secondsLeft, round, game, heading, bet, players, entry, move, reveal, SVG, contract }: Props) {
+function JoinDetails({ onBackClick, onClickRegister, payloadSend, clearProgrammId, hoursLeft, minutesLeft, secondsLeft, round, game, heading, bet, players, entry, move, reveal, SVG, contract }: Props) {
     return (
         <div className={styles.container}>
             <div className={styles.visual}>
-                <BackButton onClick={() => onBackClick('')} />
+                <BackButton onClick={() => {onBackClick('join');clearProgrammId('' as Hex) }} />
                 <SVG className={styles.svg} />
             </div>
             <div>

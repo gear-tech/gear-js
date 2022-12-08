@@ -12,7 +12,7 @@ import {
 } from 'types'
 import { ApiLoader, Stage } from 'components';
 
-import { useAccount, useCreateHandler, useMetadata, useReadState, useSendMessage } from '@gear-js/react-hooks';
+import { useAccount, useAlert, useCreateHandler, useMetadata, useReadState, useSendMessage } from '@gear-js/react-hooks';
 import { blake2AsHex } from '@polkadot/util-crypto';
 import { stringToU8a, } from '@polkadot/util';
 import { Hex } from '@gear-js/api';
@@ -65,7 +65,7 @@ const useConfig = (programID: Hex, metaBuffer: any) => {
   const configTime = useMemo(() => ({ Deadline: null }), []);
   const configPlayerMoves = useMemo(() => ({ PlayerMoves: null }), []);
 
-  const gameState = useReadState<StateConfigType>(programID, metaBuffer, configState);
+  const gameState = useReadState<StateConfigType>(programID, metaBuffer, configState,);
   const timeState = useReadState<StateTimeStampType>(programID, metaBuffer, configTimeStamp);
   const gameStageState = useReadState<StateGameStageType>(programID, metaBuffer, configGameStage);
   const lobbyState = useReadState<StateLobbyType>(programID, metaBuffer, configLobby);
@@ -84,12 +84,13 @@ function Home() {
   const [move, setMove] = useState<{ name: string, id?: string, SVG?: SVGType }>({ name: '' })
   const { form, onClickRouteChange } = useForm();
   const create = useCreateRockPaperScissors();
+  const alert = useAlert()
 
   // temporary 
   const { metaBuffer } = useMetadata(metaAssets)
   // const { metaBuffer } = useWasm();  
 
-  const { gameState, timeState, gameStageState, lobbyState, timeLeft, playerMoves } = useConfig(programID, metaBuffer);
+  const { gameState, gameStageState, lobbyState, timeLeft, timeState, playerMoves } = useConfig(programID, metaBuffer);
   const payloadSend = useMessage(programID)
 
 
@@ -128,23 +129,35 @@ function Home() {
 
   const { betSize, moveTimeoutMs, revealTimeoutMs, entryTimeoutMs, playersCountLimit } = state?.Config || {}
 
-  const lobbyList = lobbyState.state?.LobbyList
+  const lobbyList = lobbyState.state?.LobbyList;
+
+  useEffect(() => {
+    if (gameState.error && loading) {
+      setLoading(false)
+      onClickRouteChange('join');
+    }
+    if (Number(betSize?.split(',').join('')) > 500) {
+      setLoading(false)
+    } 
+  }, [gameState.error, onClickRouteChange, loading, betSize])
+  
+  // console.log(Number(betSize?.split(',').join('')))
+  // console.log(gameState)
 
   const onClickCreate = (hex: Hex) => {
     onClickRouteChange('lobby admin')
     setProgramID(hex);
   }
 
-  const onClickJoin = (hex: Hex) => {
-    setLoading(true)
-    setProgramID(hex);
+  const onClickJoin = (hex: Hex,) => {
+    setLoading(true);
     onClickRouteChange('Join game');
-    setLoading(false)
+    setProgramID(hex);
   }
+
 
   const onClickRegister = () => {
     if (lobbyList?.includes(accountHex as never)) { return onClickRouteChange('game') }
-
     payloadSend(
       { Register: null },
       { onSuccess: () => { onClickRouteChange('game') }, value: betSize?.replace(',', '') })
@@ -152,18 +165,23 @@ function Home() {
 
 
   const onSubmitMove = (userMove: any, pass: string) => {
+    setLoading(true)
     const outputPass = userMove.id + pass;
     const payload = blake2AsHex(outputPass, 256);
     payloadSend(
       { MakeMove: payload },
       { onSuccess: () => { onClickRouteChange('game'); setMove(userMove) } })
+      setLoading(false)
   }
 
   const onSubmitReveal = (userMove: string, pass: string) => {
+    setLoading(true)
+
     const outputPass = stringToU8a(`${userMove}${pass}`);
     payloadSend(
       { Reveal: Array.from(outputPass) },
       { onSuccess: () => { onClickRouteChange('game') } })
+      setLoading(false)
   }
 
   const onLeaveGame = () => {
@@ -173,107 +191,110 @@ function Home() {
   }
 
   return (
-    <>
-      {/* {loading && <ApiLoader />} */}
-      {!form && <Start onCreateClick={onClickRouteChange} />}
+    loading ? (
+      <ApiLoader />
+    ) : (
+      <>
+        {!form && <Start onCreateClick={onClickRouteChange} setProgramID={setProgramID} />}
 
-      {form === 'create' && (
-        <Create onBackClick={onClickRouteChange} onSubmit={create} setStateAction={onClickCreate} />
-      )}
+        {form === 'create' &&
+          <Create setLoading={setLoading} onBackClick={onClickRouteChange} onSubmit={create} setStateAction={onClickCreate} />
+        }
 
-      {form === 'join' && (loading ? <ApiLoader /> :
-        <Join onBackClick={onClickRouteChange} onClickSubmit={onClickJoin} />
-      )}
+        {form === 'join' &&
+          <Join onBackClick={onClickRouteChange} onClickSubmit={onClickJoin} />
+        }
 
-      {form === 'lobby admin' &&
-        <Game
-          players={lobbyList}
-          finishedPlayers={gameStageFinishedPlayers}
-          onRouteChange={onClickRouteChange}
-          heading={'heading' || programID}
-          stage={getGameStage}
-          bet={betSize}
-          game='current game'
-          round='0'
-          hoursLeft={hours}
-          minutesLeft={minutes}
-          secondsLeft={seconds}
-          admin
-        />
-      }
-      {form === 'detail' &&
-        <Details
-          heading={'heading' || programID}
-          game='current game'
-          round='0?'
-          bet={betSize}
-          players={lobbyList}
-          contract={programID}
-          move={moveTimeoutMs}
-          reveal={revealTimeoutMs}
-          entry={entryTimeoutMs}
-          SVG={GearBgSVG}
-          onBackClick={onClickRouteChange}
-        />}
-      {form === 'detail admin' &&
-        <Details
-          heading={'heading' || programID}
-          game='current game'
-          round='0'
-          bet={betSize}
-          players={lobbyList}
-          contract={programID}
-          move={moveTimeoutMs}
-          reveal={revealTimeoutMs}
-          entry={entryTimeoutMs}
-          SVG={GearBgSVG}
-          onBackClick={onClickRouteChange}
-          admin
-        />}
-      {form === 'Join game' &&
-        <JoinDetails
-          onBackClick={onClickRouteChange}
-          onClickRegister={onClickRegister}
-          payloadSend={payloadSend}
-          round='0'
-          game='current game'
-          heading={'heading' || programID}
-          bet={betSize}
-          contract={programID}
-          players={playersCountLimit || ''}
-          move={moveTimeoutMs}
-          reveal={revealTimeoutMs}
-          entry={entryTimeoutMs}
-          SVG={LizardBgSVG}
-          hoursLeft={hours}
-          minutesLeft={minutes}
-          secondsLeft={seconds}
-        />
-      }
-      {form === 'game' &&
-        <Game
-          account={accountHex}
-          players={lobbyList}
-          finishedPlayers={gameStageFinishedPlayers}
-          onRouteChange={onClickRouteChange}
-          onLeaveGame={onLeaveGame}
-          heading='somth heading'
-          stage={getGameStage}
-          bet={betSize}
-          game='current game'
-          round='0'
-          hoursLeft={hours}
-          minutesLeft={minutes}
-          secondsLeft={seconds}
-        />
-      }
-      {form === 'move' && <Move onSubmitMove={onSubmitMove} onRouteChange={onClickRouteChange} />}
-      {form === 'reveal' && <Reveal move={move} onClickMove={onSubmitReveal} onRouteChange={onClickRouteChange} />}
+        {form === 'lobby admin' &&
+          <Game
+            players={lobbyList}
+            finishedPlayers={gameStageFinishedPlayers}
+            onRouteChange={onClickRouteChange}
+            heading={'heading' || programID}
+            stage={getGameStage}
+            bet={betSize}
+            game='current game'
+            round='0'
+            hoursLeft={hours}
+            minutesLeft={minutes}
+            secondsLeft={seconds}
+            admin
+          />
+        }
+        {form === 'detail' &&
+          <Details
+            heading={'heading' || programID}
+            game='current game'
+            round='0?'
+            bet={betSize}
+            players={lobbyList}
+            contract={programID}
+            move={moveTimeoutMs}
+            reveal={revealTimeoutMs}
+            entry={entryTimeoutMs}
+            SVG={GearBgSVG}
+            onBackClick={onClickRouteChange}
+          />}
+        {form === 'detail admin' &&
+          <Details
+            heading={'heading' || programID}
+            game='current game'
+            round='0'
+            bet={betSize}
+            players={lobbyList}
+            contract={programID}
+            move={moveTimeoutMs}
+            reveal={revealTimeoutMs}
+            entry={entryTimeoutMs}
+            SVG={GearBgSVG}
+            onBackClick={onClickRouteChange}
+            admin
+          />}
+        {form === 'Join game' &&
+          <JoinDetails
+            clearProgrammId={setProgramID}
+            onBackClick={onClickRouteChange}
+            onClickRegister={onClickRegister}
+            payloadSend={payloadSend}
+            round='0'
+            game='current game'
+            heading={'heading' || programID}
+            bet={betSize}
+            contract={programID}
+            players={playersCountLimit || ''}
+            move={moveTimeoutMs}
+            reveal={revealTimeoutMs}
+            entry={entryTimeoutMs}
+            SVG={LizardBgSVG}
+            hoursLeft={hours}
+            minutesLeft={minutes}
+            secondsLeft={seconds}
+          />
+        }
+        {form === 'game' &&
+          <Game
+            account={accountHex}
+            players={lobbyList}
+            finishedPlayers={gameStageFinishedPlayers}
+            onRouteChange={onClickRouteChange}
+            onLeaveGame={onLeaveGame}
+            heading='somth heading'
+            stage={getGameStage}
+            bet={betSize}
+            game='current game'
+            round='0'
+            hoursLeft={hours}
+            minutesLeft={minutes}
+            secondsLeft={seconds}
+          />
+        }
+        {form === 'move' && <Move onSubmitMove={onSubmitMove} onRouteChange={onClickRouteChange} />}
+        {form === 'reveal' && <Reveal move={move} onClickMove={onSubmitReveal} onRouteChange={onClickRouteChange} />}
 
-      {form==='result round' && <RoundResult name='' game={programID} round={gameStage.state.round} winners={['2'as Hex]} loosers={['1'as Hex]}/>}
-      {/* {form==='result game' && <GameResult/>} */}
+        {form === 'result round' && <RoundResult name='' game={programID} round={gameStage.state.round} winners={['2' as Hex]} loosers={['1' as Hex]} />}
+        {/* {form==='result game' && <GameResult/>} */}
 
-    </>
+      </>)
   )
 }
 

@@ -18,7 +18,10 @@ const initialValues = {
 function Join({ onBackClick, onClickSubmit }: Props) {
     const form = useForm({ initialValues });
     const { getInputProps } = form;
-    const handleSubmit = form.onSubmit((values) => {onClickSubmit(JSON.parse(JSON.stringify(values.programId)))});
+    const handleSubmit = form.onSubmit((values) => {
+        if(!values.programId)return;
+        onClickSubmit(values.programId as Hex)
+    });
     return (
         <div className={styles.container}>
             <h2 className={styles.heading}>Join game</h2>
@@ -27,7 +30,7 @@ function Join({ onBackClick, onClickSubmit }: Props) {
             </form>
             <div className={styles.buttons}>
                 <BackButton onClick={() => onBackClick('')} />
-                <Button type="submit" text="Join" size="large" onClick={()=>handleSubmit()} />
+                <Button type="submit" text="Join" size="large" onClick={() => handleSubmit()} />
             </div>
         </div>
     )
