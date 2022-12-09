@@ -3,7 +3,7 @@ import { HexString } from '@polkadot/util/types';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-import { GearApi, getProgramMetadata, getStateMetadata, StateMetadata } from '../src';
+import { CreateType, GearApi, getProgramMetadata, getStateMetadata, StateMetadata } from '../src';
 import { checkInit, getAccount, sleep } from './utilsFunctions';
 import { TARGET } from './config';
 
@@ -56,7 +56,7 @@ describe('Read State', () => {
 
   test('Get program state', async () => {
     expect(programId).toBeDefined();
-    const state = await api.programState.read({ programId }, meta, meta.types.state!);
+    const state = await api.programState.read({ programId }, meta);
     expect([
       {
         id: { decimal: 0, hex: '0x00' },
@@ -100,7 +100,7 @@ describe('Read State', () => {
   test('Read state v1 first_wallet', async () => {
     expect(programId).toBeDefined();
     const state = await api.programState.readStateUsingWasm(
-      { programId, fn_name: 'first_wallet', wasm: stateV1 },
+      { programId, fn_name: 'first_wallet', wasm: Uint8Array.from(stateV1) },
       stateV1Meta,
     );
 
@@ -112,8 +112,9 @@ describe('Read State', () => {
 
   test('Read state v1 last_wallet', async () => {
     expect(programId).toBeDefined();
+    const wasmAsHex = CreateType.create('Bytes', stateV1).toHex();
     const state = await api.programState.readStateUsingWasm(
-      { programId, fn_name: 'last_wallet', wasm: stateV1 },
+      { programId, fn_name: 'last_wallet', wasm: wasmAsHex },
       stateV1Meta,
     );
 

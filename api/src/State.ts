@@ -49,7 +49,7 @@ export class GearProgramState extends GearStorage {
     const state = await this._api.rpc['gear'].readStateUsingWasm(
       args.programId,
       args.fn_name,
-      isBuffer(args.wasm) ? CreateType.create('Bytes', Array.from(args.wasm)) : args.wasm,
+      CreateType.create('Bytes', args.wasm),
       payload || null,
       args.at || null,
     );
