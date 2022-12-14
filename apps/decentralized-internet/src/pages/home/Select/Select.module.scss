@@ -1,0 +1,13 @@
+.select{
+    margin-bottom: 3em;
+    margin-top: 0.7em;
+    padding: .25em;
+    border: 0;
+    border-bottom: 2px solid rgba(173, 216, 230, 0.396); 
+    font-weight: bold;
+    letter-spacing: .1em;
+    border-radius: 0;
+    &:focus, &:active {
+      outline: 0;
+    }
+}
