@@ -129,6 +129,8 @@ const ProgramForm = (props: Props) => {
 
               {!metadata && <FormPayloadType name="payloadType" label="Initial payload type" direction="y" block />}
 
+              <FormInput min={0} type="number" name="value" label="Initial value" placeholder="0" direction="y" block />
+
               <GasField
                 name="gasLimit"
                 label="Gas limit"
@@ -139,8 +141,6 @@ const ProgramForm = (props: Props) => {
                 info={gasInfo}
                 block
               />
-
-              <FormInput min={0} type="number" name="value" label="Initial value" placeholder="0" direction="y" block />
             </div>
 
             <div className={styles.buttons}>{renderButtons({ isDisabled })}</div>

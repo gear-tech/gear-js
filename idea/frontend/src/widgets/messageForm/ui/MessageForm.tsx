@@ -131,6 +131,12 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
               {!isLoading && !metadata && <FormPayloadType name="payloadType" label="Payload type" gap="1/5" />}
 
               {isLoading ? (
+                <Input label="Value" gap="1/5" className={styles.loading} readOnly />
+              ) : (
+                <FormInput name="value" label="Value" gap="1/5" />
+              )}
+
+              {isLoading ? (
                 <Input label="Gas info" gap="1/5" className={styles.loading} readOnly />
               ) : (
                 <GasField
@@ -139,12 +145,6 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
                   onGasCalculate={handleGasCalculate}
                   gap="1/5"
                 />
-              )}
-
-              {isLoading ? (
-                <Input label="Value" gap="1/5" className={styles.loading} readOnly />
-              ) : (
-                <FormInput name="value" label="Value" gap="1/5" />
               )}
             </Box>
 
