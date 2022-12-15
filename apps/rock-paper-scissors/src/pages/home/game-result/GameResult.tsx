@@ -6,8 +6,8 @@ import styles from './GameResult.module.scss';
 type Props = {
   name: string;
   game: string;
-  winner: Hex;
-  loosers: Hex[];
+  winner?: Hex;
+  loosers?: Hex[];
 };
 
 function GameResult({ name, game, winner, loosers }: Props) {
