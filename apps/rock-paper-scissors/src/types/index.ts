@@ -28,10 +28,19 @@ type StateGameStageType = {
 type StateLobbyType = {
     LobbyList?: Hex[] | string[] | []
 }
+type StateRoundType = {
+    CurrentRound?: number | string | undefined
+}
+type StateWinnerType = {
+    Winner?: Hex | undefined
+}
 
 type TimeType = { hours: string, minutes: string, seconds: string }
 
-type UserMoveType = {name?:string, id?:string, SVG?:React.FunctionComponent<React.SVGProps<SVGSVGElement>>}
+type PlayersMoveType = { PlayerMoves: Hex[] }
+
+type UserMoveType = { name?: string, id?: string, SVG?: React.FunctionComponent<React.SVGProps<SVGSVGElement>> }
+
 
 
 
@@ -44,5 +53,8 @@ export type {
     StateLobbyType,
     StateTimeLeftType,
     TimeType,
-    UserMoveType
+    PlayersMoveType,
+    UserMoveType,
+    StateRoundType,
+    StateWinnerType
 };
