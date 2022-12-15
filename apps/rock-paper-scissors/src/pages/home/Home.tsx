@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useWasm, useMsToTime } from 'hooks';
-import { useForm } from 'utils'
+import { useForm } from 'utils';
+import { ApiLoader, Stage } from 'components';
 import {
   StateConfigType,
   StateTimeStampType,
@@ -8,11 +9,18 @@ import {
   StateLobbyType,
   StageType,
   StateTimeLeftType,
-  SVGType
-} from 'types'
-import { ApiLoader, Stage } from 'components';
-
-import { useAccount, useAlert, useCreateHandler, useMetadata, useReadState, useSendMessage } from '@gear-js/react-hooks';
+  PlayersMoveType,
+  SVGType,
+  StateRoundType,
+  StateWinnerType
+} from 'types';
+import {
+  useAccount,
+  useCreateHandler,
+  useMetadata,
+  useReadState,
+  useSendMessage
+} from '@gear-js/react-hooks';
 import { blake2AsHex } from '@polkadot/util-crypto';
 import { stringToU8a, } from '@polkadot/util';
 import { Hex } from '@gear-js/api';
@@ -28,7 +36,7 @@ import { ReactComponent as GearBgSVG } from '../../assets/images/backgrounds/gea
 import { ReactComponent as LizardBgSVG } from '../../assets/images/backgrounds/lizard.svg'
 import { Reveal } from './reveal';
 import { RoundResult } from './round-result';
-// import { GameResult } from './game-result';
+import { GameResult } from './game-result';
 import metaAssets from '../../assets/metaWasm/rock_paper_scissors.meta.wasm'
 
 
@@ -55,24 +63,25 @@ function useMessage(programID: Hex) {
 }
 
 
-// const players: Array<Hex> = ['0x01', '0x02', '0x03', '0x04', '0x05', '0x06'];
-
 const useConfig = (programID: Hex, metaBuffer: any) => {
+
   const configState = useMemo(() => ({ Config: null }), []);
-  const configTimeStamp = useMemo(() => ({ CurrentStageTimestamp: null }), []);
   const configGameStage = useMemo(() => ({ GameStage: null }), []);
   const configLobby = useMemo(() => ({ LobbyList: null }), []);
   const configTime = useMemo(() => ({ Deadline: null }), []);
   const configPlayerMoves = useMemo(() => ({ PlayerMoves: null }), []);
+  const configWinner = useMemo(() => ({ Winner: null }), []);
+  const configRound = useMemo(() => ({ CurrentRound: null }), []);
 
   const gameState = useReadState<StateConfigType>(programID, metaBuffer, configState,);
-  const timeState = useReadState<StateTimeStampType>(programID, metaBuffer, configTimeStamp);
   const gameStageState = useReadState<StateGameStageType>(programID, metaBuffer, configGameStage);
   const lobbyState = useReadState<StateLobbyType>(programID, metaBuffer, configLobby);
+  const winnerState = useReadState<StateWinnerType>(programID, metaBuffer, configWinner);
   const timeLeft = useReadState<StateTimeLeftType>(programID, metaBuffer, configTime);
-  const playerMoves = useReadState<StateTimeLeftType>(programID, metaBuffer, configPlayerMoves);
+  const playerMoves = useReadState<PlayersMoveType>(programID, metaBuffer, configPlayerMoves);
+  const roundState = useReadState<StateRoundType>(programID, metaBuffer, configRound);
 
-  return { gameState, timeState, gameStageState, lobbyState, timeLeft, playerMoves }
+  return { gameState, gameStageState, lobbyState, timeLeft, playerMoves, winnerState, roundState }
 }
 
 function Home() {
@@ -80,28 +89,27 @@ function Home() {
   const accountHex = account?.decodedAddress;
 
   const [programID, setProgramID] = useState('' as Hex);
-  const [loading, setLoading] = useState(false)
-  const [move, setMove] = useState<{ name: string, id?: string, SVG?: SVGType }>({ name: '' })
+  const [loading, setLoading] = useState(false);
+  const [move, setMove] = useState<{ name: string, id?: string, SVG?: SVGType }>({ name: '' });
+  const [prevLobbyList, setPrevLobbyList] = useState<Hex[]>([]);
   const { form, onClickRouteChange } = useForm();
   const create = useCreateRockPaperScissors();
-  const alert = useAlert()
 
   // temporary 
-  const { metaBuffer } = useMetadata(metaAssets)
+  const { metaBuffer } = useMetadata(metaAssets);
   // const { metaBuffer } = useWasm();  
 
-  const { gameState, gameStageState, lobbyState, timeLeft, timeState, playerMoves } = useConfig(programID, metaBuffer);
-  const payloadSend = useMessage(programID)
+  const { gameState, gameStageState, lobbyState, timeLeft, playerMoves, winnerState, roundState } = useConfig(programID, metaBuffer);
+  const payloadSend = useMessage(programID);
 
+  console.log('round: ', roundState)
 
   const { state } = gameState;
+  const { minutes, hours, seconds } = useMsToTime(timeLeft.state?.Deadline);
 
-  // const timeCurrent: string | undefined = timeState.state?.CurrentStageTimestamp
-  const { minutes, hours, seconds } = useMsToTime(timeLeft.state?.Deadline)
-
+  const round = (Number(roundState.state?.CurrentRound) + 1).toString();
 
   const gameStage: any = useMemo(() => gameStageState.state?.GameStage, [gameStageState.state?.GameStage]);
-
 
   const getGameStage = useMemo(
     () => {
@@ -116,20 +124,32 @@ function Home() {
       }
       if (Object.keys(gameStage).includes('Reveal')) {
         return 'reveal';
-
       }
     },
     [gameStage],
-  )
+  );
 
   const gameStageFinishedPlayers = useMemo(() => {
     if (gameStage?.InProgress?.finishedPlayers) { return gameStage?.InProgress?.finishedPlayers }
     if (gameStage?.Reveal?.finishedPlayers) { return gameStage?.Reveal?.finishedPlayers }
   }, [gameStage?.InProgress?.finishedPlayers, gameStage?.Reveal?.finishedPlayers]);
 
-  const { betSize, moveTimeoutMs, revealTimeoutMs, entryTimeoutMs, playersCountLimit } = state?.Config || {}
+  const { betSize, moveTimeoutMs, revealTimeoutMs, entryTimeoutMs, playersCountLimit } = state?.Config || {};
 
   const lobbyList = lobbyState.state?.LobbyList;
+
+  useEffect(() => {
+    if (lobbyList && Object.keys(gameStage).includes('Reveal')) setPrevLobbyList([...lobbyList as []])
+  }, [lobbyList, gameStage])
+
+  const loosers = useMemo(() => {
+    const loosersArray = [] as Hex[];
+    prevLobbyList.forEach((prevLobbyPlayer) => {
+      if (!(lobbyList?.includes(prevLobbyPlayer as never)) && (prevLobbyPlayer !== winnerState.state?.Winner))
+        loosersArray.push(prevLobbyPlayer)
+    });
+    return loosersArray;
+  }, [lobbyList, prevLobbyList, winnerState.state?.Winner])
 
   useEffect(() => {
     if (gameState.error && loading) {
@@ -138,22 +158,19 @@ function Home() {
     }
     if (Number(betSize?.split(',').join('')) > 500) {
       setLoading(false)
-    } 
-  }, [gameState.error, onClickRouteChange, loading, betSize])
-  
-  // console.log(Number(betSize?.split(',').join('')))
-  // console.log(gameState)
+    }
+  }, [gameState.error, onClickRouteChange, loading, betSize]);
 
   const onClickCreate = (hex: Hex) => {
     onClickRouteChange('lobby admin')
     setProgramID(hex);
-  }
+  };
 
   const onClickJoin = (hex: Hex,) => {
     setLoading(true);
     onClickRouteChange('Join game');
     setProgramID(hex);
-  }
+  };
 
 
   const onClickRegister = () => {
@@ -161,8 +178,7 @@ function Home() {
     payloadSend(
       { Register: null },
       { onSuccess: () => { onClickRouteChange('game') }, value: betSize?.replace(',', '') })
-  }
-
+  };
 
   const onSubmitMove = (userMove: any, pass: string) => {
     setLoading(true)
@@ -171,8 +187,8 @@ function Home() {
     payloadSend(
       { MakeMove: payload },
       { onSuccess: () => { onClickRouteChange('game'); setMove(userMove) } })
-      setLoading(false)
-  }
+    setLoading(false)
+  };
 
   const onSubmitReveal = (userMove: string, pass: string) => {
     setLoading(true)
@@ -180,15 +196,34 @@ function Home() {
     const outputPass = stringToU8a(`${userMove}${pass}`);
     payloadSend(
       { Reveal: Array.from(outputPass) },
-      { onSuccess: () => { onClickRouteChange('game') } })
-      setLoading(false)
+      { onSuccess: () => { onClickRouteChange('round result') } })
+    setLoading(false)
+  };
+
+  // const onEndGame = () => {
+  //   payloadSend(
+  //     { StopGame: null },
+  //     { onSuccess: () => { console.log('Game OvEr'); onClickRouteChange('') } })
+  // };
+
+
+  const getResult = () => {
+    if (lobbyList?.length) {
+      return (
+        <RoundResult
+          name=''
+          game={programID}
+          round={round}
+          winners={Object.entries(playerMoves?.state?.PlayerMoves || [])}
+          loosers={loosers}
+        />
+      )
+    }
+    return (
+      <GameResult name='' game={programID} winner={winnerState.state?.Winner} loosers={loosers} />
+    )
   }
 
-  const onLeaveGame = () => {
-    payloadSend(
-      { StopGame: null },
-      { onSuccess: () => { console.log('Game OvEr'); onClickRouteChange('') } })
-  }
 
   return (
     loading ? (
@@ -214,7 +249,7 @@ function Home() {
             stage={getGameStage}
             bet={betSize}
             game='current game'
-            round='0'
+            round={round}
             hoursLeft={hours}
             minutesLeft={minutes}
             secondsLeft={seconds}
@@ -225,7 +260,7 @@ function Home() {
           <Details
             heading={'heading' || programID}
             game='current game'
-            round='0?'
+            round={round}
             bet={betSize}
             players={lobbyList}
             contract={programID}
@@ -239,7 +274,7 @@ function Home() {
           <Details
             heading={'heading' || programID}
             game='current game'
-            round='0'
+            round={round}
             bet={betSize}
             players={lobbyList}
             contract={programID}
@@ -256,7 +291,7 @@ function Home() {
             onBackClick={onClickRouteChange}
             onClickRegister={onClickRegister}
             payloadSend={payloadSend}
-            round='0'
+            round={round}
             game='current game'
             heading={'heading' || programID}
             bet={betSize}
@@ -277,23 +312,40 @@ function Home() {
             players={lobbyList}
             finishedPlayers={gameStageFinishedPlayers}
             onRouteChange={onClickRouteChange}
-            onLeaveGame={onLeaveGame}
             heading='somth heading'
             stage={getGameStage}
             bet={betSize}
             game='current game'
-            round='0'
+            round={round}
             hoursLeft={hours}
             minutesLeft={minutes}
             secondsLeft={seconds}
           />
         }
+
         {form === 'move' && <Move onSubmitMove={onSubmitMove} onRouteChange={onClickRouteChange} />}
+
         {form === 'reveal' && <Reveal move={move} onClickMove={onSubmitReveal} onRouteChange={onClickRouteChange} />}
 
-        {form === 'result round' && <RoundResult name='' game={programID} round={gameStage.state.round} winners={['2' as Hex]} loosers={['1' as Hex]} />}
-        {/* {form==='result game' && <GameResult/>} */}
-
+        {form === 'round result' &&
+          (gameStage?.Reveal ?
+            <Game
+              account={accountHex}
+              players={lobbyList}
+              finishedPlayers={gameStageFinishedPlayers}
+              onRouteChange={onClickRouteChange}
+              heading='somth heading'
+              stage={getGameStage}
+              bet={betSize}
+              game='current game'
+              round={round}
+              hoursLeft={hours}
+              minutesLeft={minutes}
+              secondsLeft={seconds}
+            /> : (
+              getResult()
+            ))
+        }
       </>)
   )
 }
