@@ -3,17 +3,20 @@ import { useEffect, useState } from 'react';
 
 function useNodeVersion() {
   const { api } = useApi();
+
   const [nodeVersion, setNodeVersion] = useState('');
+  const [commitHash, setCommitHash] = useState('');
 
   useEffect(() => {
     api?.nodeVersion().then((result) => {
-      const [, version] = result.split('-');
+      const [, commitHashResult] = result.split('-');
 
-      if (version && version !== 'unknown') setNodeVersion(version);
+      setNodeVersion(result);
+      setCommitHash(commitHashResult);
     });
   }, [api]);
 
-  return nodeVersion;
+  return { nodeVersion, commitHash };
 }
 
 export { useNodeVersion };
