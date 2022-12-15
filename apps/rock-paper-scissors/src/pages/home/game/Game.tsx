@@ -8,7 +8,6 @@ import styles from './Game.module.scss';
 
 type Props = {
   onRouteChange: (arg: string) => void;
-  onLeaveGame?: () => void;
   account?: Hex | undefined;
   heading: string;
   stage?: StageType | '';
@@ -24,21 +23,20 @@ type Props = {
 };
 
 
-function Game({ onRouteChange, onLeaveGame, account, players, finishedPlayers, heading, stage, bet, game, round, hoursLeft, minutesLeft, secondsLeft, admin }: Props) {
+function Game({ onRouteChange, account, players, finishedPlayers, heading, stage, bet, game, round, hoursLeft, minutesLeft, secondsLeft, admin }: Props) {
 
   const handleRouteChange = () => admin ? onRouteChange('detail admin') : onRouteChange('detail')
 
   const getButton = useMemo(() => {
     if (stage === "preparation") { return }
     if (finishedPlayers?.includes(account as Hex)) { return }
-    if (stage === 'progress') {
+    if (stage === 'progress' ) {
       return <Button onClick={() => onRouteChange('move')} text="Make a move" size="large" className={styles.actionButton} />
     }
     if (stage === 'reveal') {
       return <Button onClick={() => onRouteChange('reveal')} text="Reveal" size="large" className={styles.actionButton} />
     }
-    // console.log('unsupported stage')
-  }, [stage, onRouteChange, finishedPlayers, account])
+  }, [onRouteChange, stage, finishedPlayers, account])
 
 
   return (
@@ -67,10 +65,9 @@ function Game({ onRouteChange, onLeaveGame, account, players, finishedPlayers, h
           <Detail label="Current round" text={round} className={styles.round} />
         </div>
         <Button text="Details" color="light" size="large" onClick={handleRouteChange} className={styles.detailsButton} />
-        {admin ?
+        {admin &&
           <Button text="Edit next game" color="light" size="large" onClick={() => onRouteChange('create')} />
-          :
-          <Button onClick={onLeaveGame} text="Leave the game" color="light" size="large" />}
+        }
       </div>
     </div>
   );

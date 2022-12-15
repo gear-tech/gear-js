@@ -7,7 +7,7 @@ import styles from './Players.module.scss';
 
 type Props = {
   heading: string;
-  list: string[];
+  list?: string[];
   finishedPlayers?: string[];
   className?: string;
   center?: boolean;
