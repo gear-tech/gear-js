@@ -16,6 +16,7 @@ const useForm = () => {
     'game',
     'move',
     'reveal',
+    'round result',
   ]
 
   const openCreateForm = () => setForm('create');
