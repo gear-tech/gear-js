@@ -39,7 +39,7 @@ describe('Read State', () => {
   test('Upload demo_meta_test program', async () => {
     const program = api.program.upload(
       {
-        code: code,
+        code,
         initPayload: [1, 2, 3],
         gasLimit: 200_000_000_000,
       },
