@@ -67,8 +67,6 @@ function Home() {
   const { gameState, gameStageState, lobbyState, timeLeft, playerMoves, winnerState, roundState } = useGetState(programID, metaBuffer);
   const payloadSend = useMessage(programID);
 
-  console.log('round: ', roundState)
-
   const { state } = gameState;
   const { minutes, hours, seconds } = useMsToTime(timeLeft.state?.Deadline);
 
@@ -200,7 +198,7 @@ function Home() {
             players={lobbyList}
             finishedPlayers={gameStageFinishedPlayers}
             onRouteChange={onClickRouteChange}
-            heading={'heading' || programID}
+            heading={programID}
             stage={getGameStage}
             bet={betSize}
             game='current game'
@@ -213,7 +211,7 @@ function Home() {
         }
         {form === 'detail' &&
           <Details
-            heading={'heading' || programID}
+            heading={programID}
             game='current game'
             round={round}
             bet={betSize}
@@ -227,7 +225,7 @@ function Home() {
           />}
         {form === 'detail admin' &&
           <Details
-            heading={'' || programID}
+            heading={programID}
             game=''
             round={round}
             bet={betSize}
@@ -245,10 +243,9 @@ function Home() {
             clearProgrammId={setProgramID}
             onBackClick={onClickRouteChange}
             onClickRegister={onClickRegister}
-            payloadSend={payloadSend}
             round={round}
             game='current game'
-            heading={'heading' || programID}
+            heading={programID}
             bet={betSize}
             contract={programID}
             players={playersCountLimit || ''}
@@ -270,7 +267,7 @@ function Home() {
             heading='somth heading'
             stage={getGameStage}
             bet={betSize}
-            game='current game'
+            game={programID}
             round={round}
             hoursLeft={hours}
             minutesLeft={minutes}
@@ -292,7 +289,7 @@ function Home() {
               heading='somth heading'
               stage={getGameStage}
               bet={betSize}
-              game='current game'
+              game={programID}
               round={round}
               hoursLeft={hours}
               minutesLeft={minutes}

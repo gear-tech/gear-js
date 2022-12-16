@@ -13,7 +13,7 @@ type Props = {
 
 function RoundResult({ name, game, round, winners, loosers }: Props) {
   const hexId=winners?.map(el=>el[0])
-  const moves=winners?.map(el=>el[1])
+  // const moves=winners?.map(el=>el[1])
   return (
     <div className={styles.container}>
       <h2 className={styles.heading}>

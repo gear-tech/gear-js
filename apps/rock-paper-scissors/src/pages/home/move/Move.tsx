@@ -24,14 +24,14 @@ type Props = {
 
 
 function Move({  onSubmitMove,onRouteChange }: Props) {
-  const [userMove, setUserMove] = useState<UserMoveType>({})
-  const [passValue, setPassvalue] = useState('')
+  const [userMove, setUserMove] = useState<UserMoveType>({});
+  const [passValue, setPassvalue] = useState('');
 
   const handleSubmitMove = () => {
-    if(passValue && Object.keys(userMove).length > 0) onSubmitMove(userMove||null, passValue)
-  }
+    if(passValue && Object.keys(userMove).length > 0) onSubmitMove(userMove||null, passValue);
+  };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setPassvalue(e.target.value)
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setPassvalue(e.target.value);
 
   const getActions = () =>
     ACTIONS.map((el) => (

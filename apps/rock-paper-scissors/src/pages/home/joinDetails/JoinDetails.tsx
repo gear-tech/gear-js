@@ -8,7 +8,6 @@ import styles from './JoinDetails.module.scss'
 type Props = {
     onBackClick: (arg: string) => void;
     onClickRegister?: (arg: any) => void;
-    payloadSend?: (payload: any, options?: any) => void;
     clearProgrammId: (arg: Hex) => void;
     heading: string;
     bet: string | undefined;
@@ -25,11 +24,28 @@ type Props = {
     secondsLeft: string;
 };
 
-function JoinDetails({ onBackClick, onClickRegister, payloadSend, clearProgrammId, hoursLeft, minutesLeft, secondsLeft, round, game, heading, bet, players, entry, move, reveal, SVG, contract }: Props) {
+function JoinDetails({ onBackClick,
+    onClickRegister,
+    clearProgrammId,
+    hoursLeft,
+    minutesLeft,
+    secondsLeft,
+    round,
+    game,
+    heading,
+    bet,
+    players,
+    entry,
+    move,
+    reveal,
+    SVG,
+    contract
+}: Props) {
+    const timeLeftToString = `Register ${hoursLeft}:${minutesLeft}:${secondsLeft}`
     return (
         <div className={styles.container}>
             <div className={styles.visual}>
-                <BackButton onClick={() => {onBackClick('join');clearProgrammId('' as Hex) }} />
+                <BackButton onClick={() => { onBackClick('join'); clearProgrammId('' as Hex) }} />
                 <SVG className={styles.svg} />
             </div>
             <div>
@@ -47,7 +63,12 @@ function JoinDetails({ onBackClick, onClickRegister, payloadSend, clearProgrammI
                     {entry && <Detail label="Entry timeout" text={entry} className={styles.entry} />}
                     {move && <Detail label="Move timeout" text={move} className={styles.move} />}
                     {reveal && <Detail label="Reveal timeout" text={reveal} className={styles.reveal} />}
-                    <Button className={styles.register} text={`Register ${hoursLeft}:${minutesLeft}:${secondsLeft}`} block onClick={onClickRegister} />
+                    <Button
+                        className={styles.register}
+                        text={timeLeftToString}
+                        block
+                        onClick={onClickRegister}
+                    />
                 </div>
             </div>
         </div>
