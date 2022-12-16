@@ -1,24 +1,12 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
-import { useWasm, useMsToTime } from 'hooks';
+import { useState, useMemo, useEffect } from 'react';
+import { /* useWasm, */ useMsToTime, useGetState } from 'hooks';
 import { useForm } from 'utils';
-import { ApiLoader, Stage } from 'components';
-import {
-  StateConfigType,
-  StateTimeStampType,
-  StateGameStageType,
-  StateLobbyType,
-  StageType,
-  StateTimeLeftType,
-  PlayersMoveType,
-  SVGType,
-  StateRoundType,
-  StateWinnerType
-} from 'types';
+import { ApiLoader } from 'components';
+import { SVGType } from 'types';
 import {
   useAccount,
   useCreateHandler,
   useMetadata,
-  useReadState,
   useSendMessage
 } from '@gear-js/react-hooks';
 import { blake2AsHex } from '@polkadot/util-crypto';
@@ -37,8 +25,8 @@ import { ReactComponent as LizardBgSVG } from '../../assets/images/backgrounds/l
 import { Reveal } from './reveal';
 import { RoundResult } from './round-result';
 import { GameResult } from './game-result';
-import metaAssets from '../../assets/metaWasm/rock_paper_scissors.meta.wasm'
 
+import metaAssets from '../../assets/metaWasm/rock_paper_scissors.meta.wasm'
 
 // function useCreateRockPaperScissors() {
 //   const { codeHash, meta } = useWasm();
@@ -49,7 +37,6 @@ import metaAssets from '../../assets/metaWasm/rock_paper_scissors.meta.wasm'
 //   const { meta } = useWasm();
 //   return useSendMessage(programID, meta)
 // }
-
 //  temporary 
 
 function useCreateRockPaperScissors() {
@@ -60,28 +47,6 @@ function useCreateRockPaperScissors() {
 
 function useMessage(programID: Hex) {
   return useSendMessage(programID, metaAssets)
-}
-
-
-const useConfig = (programID: Hex, metaBuffer: any) => {
-
-  const configState = useMemo(() => ({ Config: null }), []);
-  const configGameStage = useMemo(() => ({ GameStage: null }), []);
-  const configLobby = useMemo(() => ({ LobbyList: null }), []);
-  const configTime = useMemo(() => ({ Deadline: null }), []);
-  const configPlayerMoves = useMemo(() => ({ PlayerMoves: null }), []);
-  const configWinner = useMemo(() => ({ Winner: null }), []);
-  const configRound = useMemo(() => ({ CurrentRound: null }), []);
-
-  const gameState = useReadState<StateConfigType>(programID, metaBuffer, configState,);
-  const gameStageState = useReadState<StateGameStageType>(programID, metaBuffer, configGameStage);
-  const lobbyState = useReadState<StateLobbyType>(programID, metaBuffer, configLobby);
-  const winnerState = useReadState<StateWinnerType>(programID, metaBuffer, configWinner);
-  const timeLeft = useReadState<StateTimeLeftType>(programID, metaBuffer, configTime);
-  const playerMoves = useReadState<PlayersMoveType>(programID, metaBuffer, configPlayerMoves);
-  const roundState = useReadState<StateRoundType>(programID, metaBuffer, configRound);
-
-  return { gameState, gameStageState, lobbyState, timeLeft, playerMoves, winnerState, roundState }
 }
 
 function Home() {
@@ -99,7 +64,7 @@ function Home() {
   const { metaBuffer } = useMetadata(metaAssets);
   // const { metaBuffer } = useWasm();  
 
-  const { gameState, gameStageState, lobbyState, timeLeft, playerMoves, winnerState, roundState } = useConfig(programID, metaBuffer);
+  const { gameState, gameStageState, lobbyState, timeLeft, playerMoves, winnerState, roundState } = useGetState(programID, metaBuffer);
   const payloadSend = useMessage(programID);
 
   console.log('round: ', roundState)
@@ -272,8 +237,8 @@ function Home() {
           />}
         {form === 'detail admin' &&
           <Details
-            heading={'heading' || programID}
-            game='current game'
+            heading={'' || programID}
+            game=''
             round={round}
             bet={betSize}
             players={lobbyList}

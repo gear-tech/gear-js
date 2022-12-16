@@ -15,9 +15,6 @@ type StateConfigType = {
     }
 }
 
-type StateTimeStampType = {
-    CurrentStageTimestamp?: string,
-}
 type StateTimeLeftType = {
     Deadline?: string,
 }
@@ -48,7 +45,6 @@ export type {
     StageType,
     SVGType,
     StateConfigType,
-    StateTimeStampType,
     StateGameStageType,
     StateLobbyType,
     StateTimeLeftType,
