@@ -1,0 +1,24 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.initializeProgramPage {
+  @include childrenMargin($marginBig, right);
+
+  display: flex;
+  align-items: flex-start;
+}
+
+.pageSection {
+  flex: 1 1;
+}
+
+.lining {
+  padding: toRem(14) toRem(24) toRem(24);
+  border-radius: $borderRadius;
+  background-color: $bgColor4;
+
+  .codeId:not(:only-child) {
+    margin-bottom: $marginMedium;
+  }
+}

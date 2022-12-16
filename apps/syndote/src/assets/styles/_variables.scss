@@ -1,0 +1,104 @@
+@use './shared' as *;
+
+$headerHeight: var(--header-height);
+$headerBottomSideHeight: toRem(45.5);
+
+$headerTopSideHeight: toRem(52);
+
+$footerHeight: toRem(80);
+
+$contentHeight: calc(100vh - $footerHeight - $headerHeight);
+
+$textColor: #fff;
+$textColorSecondary: #858585;
+$textColorTertiary: #d1d1d1;
+
+$blue: #1852ff;
+$indigo: #6e7ca9;
+$oceanBlue: #3975e9;
+$lightGray: #ebecf2;
+
+$errorColor: #f24a4a;
+$successColor: #2bd071;
+
+$bgColor: #18181b;
+$bgColorSecondary: #202022;
+$bgColorTertiary: #414141;
+$bgColor4: #222225;
+$bgColor5: #2b2b2e;
+$bgColor6: #242529;
+$bgColor7: rgba(217, 217, 217, 0.05);
+
+$lineColor: #333333;
+$lineColorSecondary: #e2e6ea1a;
+
+$borderColor: #3a3d4d;
+$borderColor2: #898b94;
+
+$indigo800: rgba($indigo, 0.8);
+$indigo700: rgba($indigo, 0.7);
+$indigo120: rgba($indigo, 0.12);
+$indigo005: rgba($indigo, 0.05);
+
+$gray800: rgba($textColor, 0.8);
+$gray700: rgba($textColor, 0.7);
+$gray600: rgba($textColor, 0.6);
+$gray300: rgba($textColor, 0.3); // #ffffff4d
+$gray100: rgba($textColor, 0.1); // #ffffff1a
+$gray150: rgba($textColor, 0.15);
+$gray009: rgba($textColor, 0.09);
+$gray007: rgba($textColor, 0.07);
+$gray005: rgba($textColor, 0.05);
+$gray004: rgba($textColor, 0.04);
+$gray003: rgba($textColor, 0.03);
+$gray002: rgba($textColor, 0.02);
+
+$green300: rgba($successColor, 0.3);
+$green200: rgba($successColor, 0.2);
+$green100: rgba($successColor, 0.1);
+$green007: rgba($successColor, 0.07);
+$green005: rgba($successColor, 0.05);
+
+// button color
+
+$buttonColor: $successColor;
+$buttonColorHover: #168b4e;
+
+$buttonColorSecondary: $blue;
+$buttonColorSecondaryHover: #1443cf;
+
+$buttonColorLightGreen: $green100;
+$buttonColorLightGreenHover: $green300;
+
+$buttonColorGradient: linear-gradient(87.17deg, #2bd071 53.13%, $blue 85.01%);
+$buttonColorGradientHover: linear-gradient(87.17deg, $blue 10.42%, #2bd071 79.17%);
+
+// font
+
+$fontSizeBig: toRem(18);
+$fontSizeMedium: toRem(16);
+$fontSize: toRem(14);
+$fontSizeSmall: toRem(12);
+$fontSizeTiny: toRem(10);
+
+// size
+
+$borderRadius: 16px;
+$borderRadiusMedium: 20px;
+
+// animation
+
+$delay: 50ms;
+$smallTimeout: 150ms;
+$timeout: 250ms;
+$mediumTimeout: 400ms;
+$bigTimeout: 1000ms;
+
+// margin
+
+$marginTiny: 4px;
+$marginSmall: 8px;
+$margin: 16px;
+$marginMedium: 24px;
+$marginBig: 32px;
+$margineLarge: 40px;

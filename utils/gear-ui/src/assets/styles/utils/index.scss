@@ -47,19 +47,20 @@
 }
 
 %readOnlyInputWrapper {
-  border-color: transparent;
+  border: none;
   background-color: #2b2b2e;
 }
 
-%inputWrapper {
+%wrapper {
   @extend %normalInputWrapper;
   @extend %largeInputWrapper;
   @extend %darkInputWrapper;
   @extend %lightInputWrapper;
 
   display: flex;
+  line-height: 20px;
   border: 1px solid transparent;
-  border-radius: $borderRadius;
+  border-radius: $borderRadiusMedium;
 
   &:focus-within {
     border-color: #898b94;
@@ -74,11 +75,15 @@
   }
 }
 
+%inputWrapper {
+  height: 40px;
+}
+
 %input {
   @extend %darkInput;
   @extend %lightInput;
 
-  flex: 1;
+  width: 100%;
 }
 
 %clearButton {

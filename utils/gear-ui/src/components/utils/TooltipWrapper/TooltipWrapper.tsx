@@ -18,4 +18,5 @@ const TooltipWrapper = ({ text, children, className }: Props) => {
   );
 };
 
-export { TooltipWrapper, Props as TooltipWrapperProps, styles as TooltipWrapperStyles };
+export { TooltipWrapper, styles as TooltipWrapperStyles };
+export type { Props as TooltipWrapperProps };

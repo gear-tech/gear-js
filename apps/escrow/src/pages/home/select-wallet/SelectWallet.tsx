@@ -1,8 +1,8 @@
 import { Button, Select } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
-import check from 'assets/images/icons/check.svg';
+import { ReactComponent as check } from 'assets/images/icons/check.svg';
+import { InfoText } from 'components';
 import { Wallet } from 'types';
-import styles from './SelectWallet.module.scss';
 
 type Props = {
   wallets: Wallet[] | undefined;
@@ -24,11 +24,11 @@ function SelectWallet({ wallets, onSubmit }: Props) {
 
   return isAnyWallet ? (
     <form onSubmit={form.onSubmit(handleSubmit)}>
-      <Select label="Wallet ID" options={options} {...getInputProps('id')} />
+      <Select label="Wallet ID" options={options} color="light" direction="y" {...getInputProps('id')} />
       <Button type="submit" text="Continue" icon={check} block />
     </form>
   ) : (
-    <p className={styles.text}>There are no wallets in your contract, please create one</p>
+    <InfoText text="There are no wallets in your contract, please create one" />
   );
 }
 

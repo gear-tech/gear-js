@@ -1,12 +1,25 @@
-import { Hex } from '@gear-js/api';
+import { Hex, PayloadType } from '@gear-js/api';
 
-import { GasMethod } from 'consts';
-import { PayloadValue } from 'components/common/Form/FormPayload/types';
+import { GasMethod } from 'shared/config';
 
-export type Values = {
+type Values = {
   value: number;
-  payload: PayloadValue;
+  payload: PayloadType;
   payloadType: string;
 };
 
-export type Code<T> = T extends GasMethod.InitUpdate ? Buffer : T extends GasMethod.InitCreate ? Hex : null;
+type Code<T> = T extends GasMethod.InitUpdate ? Buffer : T extends GasMethod.InitCreate ? Hex : null;
+
+interface IGasInfo {
+  burned: string;
+  waited: boolean;
+  minLimit: string;
+  reserved: string;
+  mayBeReturned: string;
+}
+
+type Result = IGasInfo & {
+  limit: number;
+};
+
+export type { Values, Code, Result };

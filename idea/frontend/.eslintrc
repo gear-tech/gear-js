@@ -1,103 +1,49 @@
 {
   "root": true,
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
   "extends": [
     "plugin:react/recommended",
     "airbnb",
     "airbnb/hooks",
     "airbnb-typescript",
+
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/react-in-jsx-scope.md#when-not-to-use-it
     // https://github.com/yannickcr/eslint-plugin-react/issues/3052#issuecomment-1017555974
     "plugin:react/jsx-runtime",
+
     "prettier"
   ],
-  "plugins": ["react", "@typescript-eslint"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "env": {
-    "browser": true,
-    "es2021": true
-  },
+  "plugins": ["react", "@typescript-eslint"],
+  "ignorePatterns": ["src/global.d.ts", "config-overrides.js"],
   "rules": {
-    "semi": ["error", "always"],
-    "no-void": "off",
-    "no-alert": "off",
-    "no-console": "off",
-    "no-plusplus": [
-      "error",
+    "react/require-default-props": "off", // we don"t use prop-types
+
+    "react/function-component-definition": [
+      2,
       {
-        "allowForLoopAfterthoughts": true
+        "namedComponents": "arrow-function",
+        "unnamedComponents": "arrow-function"
       }
     ],
-    "no-lonely-if": ["error"],
-    // TODO: discuss and adjust
-    "no-return-assign": "off",
-    "no-param-reassign": "warn",
-    "no-useless-return": "off",
-    "no-underscore-dangle": "off",
-    "no-restricted-syntax": "off",
-    "curly": ["warn"],
-    "id-length": [
-      "warn",
-      {
-        "exceptions": ["i", "j"],
-        "min": 2
-      }
-    ],
-    "max-depth": ["warn", 4],
-    "consistent-return": "off",
-    // TODO: discuss and adjust
-    "arrow-body-style": "off",
+
+    "import/prefer-default-export": "off", // force named exports
+    "import/no-default-export": "error",
+
+    "@typescript-eslint/no-unused-vars": "warn", // "error" is not convinient in development
+
     "prefer-destructuring": "off",
-    "class-methods-use-this": "off",
-    "jsx-a11y/href-no-hash": ["off"],
-    "jsx-a11y/anchor-is-valid": ["off"],
-    "jsx-a11y/anchor-has-content": "off",
-    "jsx-a11y/click-events-have-key-events": "off",
-    "jsx-a11y/label-has-associated-control": [
-      "off",
-      {
-        "assert": "either"
-      }
-    ],
-    "react/prop-types": "off",
-    "react/button-has-type": "off",
-    "react/no-array-index-key": "warn",
-    "react/require-default-props": "off",
-    "react/state-in-constructor": ["off"],
-    "react/jsx-no-useless-fragment": "off",
-    "react/jsx-filename-extension": [
-      1,
-      {
-        "extensions": [".tsx", ".ts"]
-      }
-    ],
-    "react/jsx-props-no-spreading": ["off"],
-    "react/static-property-placement": "off",
-    "react/destructuring-assignment": ["off"],
-    "react/function-component-definition": "off",
-    "react/jsx-no-constructed-context-values": "warn",
-    "@typescript-eslint/no-redeclare": "off",
-    "@typescript-eslint/no-unused-vars": ["warn"],
-    "@typescript-eslint/default-param-last": ["off"],
-    // TODO: discuss and adjust
-    "import/order": "off",
-    "import/no-cycle": "warn",
-    // allow devDeps import in test files
-    "import/no-extraneous-dependencies": [
+    "consistent-return": "off", // we want functions to have different return behavior
+
+    "react/jsx-props-no-spreading": [
       "error",
-      {
-        "devDependencies": ["src/tests/**", "src/setupTests.ts"]
-      }
-    ],
-    "import/prefer-default-export": "off"
-  },
-  "settings": {
-    "react": {
-      "pragma": "React",
-      "version": "detect"
-    }
+      { "exceptions": ["Input", "FileInput", "Textarea", "Select", "NumberFormat"] }
+    ] // disable for form elements, cuz @mantine/form input props needs to be desctructured
   }
 }

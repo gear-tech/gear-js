@@ -10,11 +10,15 @@
 }
 
 .wrapper {
-  @extend %inputWrapper;
+  @extend %wrapper;
   align-items: flex-start;
 
   &.readOnly {
     @extend %readOnlyInputWrapper;
+  }
+
+  &:not(.block) {
+    max-width: $textareaWidth;
   }
 }
 

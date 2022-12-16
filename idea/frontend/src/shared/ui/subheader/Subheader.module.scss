@@ -1,0 +1,34 @@
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.subheader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  &.medium {
+    margin-bottom: $margin;
+
+    .title {
+      font-size: toRem(18);
+      font-weight: 600;
+    }
+  }
+
+  &.big {
+    margin-bottom: $marginBig;
+
+    .title {
+      font-size: toRem(24);
+      font-weight: 500;
+    }
+  }
+
+  .title {    
+    font-family: 'Kanit';
+    line-height: 1.3;
+    color: $gray800;
+  }
+}

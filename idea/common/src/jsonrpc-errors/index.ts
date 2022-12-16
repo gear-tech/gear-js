@@ -14,9 +14,24 @@ export const JSONRPC_ERRORS = {
     code: -32603,
     message: 'Internal error',
   },
+  TransferLimitReached: {
+    name: 'TransferLimitReached',
+    code: -32604,
+    message: 'Limit to transfer balance is reached for today',
+  },
+  TestBalanceIsUnavailable: {
+    name: 'TestBalanceIsUnavailable',
+    code: -32605,
+    message: 'Service for getting a test balance is unavailable on this network',
+  },
+  NoGenesisFound: {
+    name: 'NoGenesisFound',
+    code: -32605,
+    message: 'Genesis not found in the request',
+  },
   ServiceIsNotAvaiable: {
     name: 'ServiceIsNotAvaiable',
-    code: -32000,
+    code: -32500,
     message: 'Service is not available',
   },
   UnableToGetData: {
@@ -48,10 +63,5 @@ export const JSONRPC_ERRORS = {
     name: 'Forbidden',
     code: -32403,
     message: 'Forbidden',
-  },
-  TransferLimitReached: {
-    name: 'TransferLimitReached',
-    code: -32010,
-    message: 'Limit to transfer balance is reached for today',
   },
 };

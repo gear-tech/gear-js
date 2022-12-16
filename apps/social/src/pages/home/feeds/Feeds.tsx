@@ -37,7 +37,7 @@ function Feeds() {
         {feed && ownFeed ? (
           <>
             {isAnyMessages && <ul className={styles.list}>{messages}</ul>}
-            {!isAnyMessages && <p className={styles.text}>There are no any message at the moment.</p>}
+            {!isAnyMessages && <p className={styles.text}>There are no any messages at the moment.</p>}
           </>
         ) : (
           <Loader />

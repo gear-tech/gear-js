@@ -1,9 +1,12 @@
-build: 
-	cargo build --release
+update:
+	@cargo update
 
-all: build
+build: 
+	@cargo build --release
+
+all: update build
 
 clean:
-	rm -rf ./**/target
+	@rm -rf ./**/target
 
 .PHONY: all clean build

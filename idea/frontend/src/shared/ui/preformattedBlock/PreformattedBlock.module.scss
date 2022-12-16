@@ -1,0 +1,11 @@
+@use 'shared/assets/styles/shared' as *;
+@use 'shared/assets/styles/variables' as *;
+@use 'shared/assets/styles/mixins' as *;
+
+.simpleBar {
+  @include customSimplebar;
+  padding: toRem(16) toRem(24);
+  color: $borderColor2;
+  background-color: $gray003;
+  border-radius: $borderRadius;
+}

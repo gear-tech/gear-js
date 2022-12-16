@@ -1,0 +1,78 @@
+@use 'shared/assets/styles/shared' as *;
+@use 'shared/assets/styles/mixins' as *;
+@use 'shared/assets/styles/variables' as shared;
+@use 'shared/assets/styles/animations' as *;
+@use '@gear-js/ui/headings' as *;
+@use '@gear-js/ui/variables' as ui;
+
+.nodeInfoButton {
+  $borderWidth: ui.$borderModalWidth ui.$borderModalWidth ui.$borderModalWidth 0;
+  @include childrenMargin(shared.$margin, right);
+
+  min-height: toRem(58);
+  margin-top: auto;
+  align-self: flex-start;
+  justify-content: flex-start;
+  width: calc(100% - 8px);
+  padding: 10px 10px 10px 27px;
+  background-color: rgba(shared.$gray300, 0.05);
+  border-radius: 0px 8px 8px 0px;
+  color: shared.$gray700;
+  border-width: $borderWidth;
+  border-color: transparent;
+  border-style: solid;
+
+  &.open {
+    color: ui.$successColor;
+    border-width: $borderWidth;
+    border-color: ui.$borderModalColor;
+  }
+}
+
+.menuIconWrapper {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    right: -3px;
+    width: 10px;
+    height: 10px;
+    background: shared.$successColor;
+    border: 2px solid shared.$bgColor;
+    border-radius: 50%;
+  }
+}
+
+.nodeInfo {
+  @include fade();
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: toRem(16);
+
+  &:global(.exit),
+  &:global(.enter),
+  &:global(.exit-done) {
+    white-space: nowrap;
+  }
+
+  .chain,
+  .otherInfo {
+    text-align: left;
+  }
+
+  .chain {
+    @extend %headingFont;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+
+  .otherInfo {
+    font-family: 'Poppins';
+    font-size: 12px;
+    font-weight: 300;
+  }
+}

@@ -1,0 +1,60 @@
+name: Update Workshop
+
+
+on:
+  push:
+    branches: ['main']
+    paths:
+      - apps/social/**
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+
+jobs:
+  build-social-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Social Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: apps/social/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-social:latest
+          build-args: |
+            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
+            REACT_APP_ROUTER_CONTRACT_ADDRESS=${{ secrets.REACT_APP_ROUTER_CONTRACT_ADDRESS }}
+            REACT_APP_META_STORAGE_API=${{ secrets.REACT_APP_META_STORAGE_API }}
+
+  deploy-to-k8s-prod:
+    needs: build-social-image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy to k8s
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment social-workshop -n prod-gear-apps

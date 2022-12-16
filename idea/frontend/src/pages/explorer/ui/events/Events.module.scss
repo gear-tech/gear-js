@@ -1,0 +1,12 @@
+@use 'shared/assets/styles/mixins' as *;
+@use 'shared/assets/styles/variables' as *;
+@use 'shared/assets/styles/shared' as *;
+
+.simpleBar {
+  @include customSimplebar;
+  height: calc($contentHeight - toRem(42.6) - $marginMedium);
+
+  :global(.simplebar-content) {
+    @include childrenMargin(16px);
+  }
+}

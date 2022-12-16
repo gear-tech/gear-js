@@ -6,7 +6,7 @@ const close = jest.fn();
 
 describe('modal tests', () => {
   it('renders modal', () => {
-    render(<Modal heading="test" close={close} />);
+    const { rerender } = render(<Modal heading="test" close={close} />);
 
     const root = document.getElementById('modal-root');
     const overlay = screen.getByTestId('overlay');
@@ -23,6 +23,14 @@ describe('modal tests', () => {
 
     expect(modal).toContainElement(button);
     expect(body).not.toBeInTheDocument();
+
+    expect(modal).toHaveClass('normal');
+    expect(modal).not.toHaveClass('large');
+
+    rerender(<Modal heading="test" close={close} size="large" />);
+
+    expect(modal).toHaveClass('large');
+    expect(modal).not.toHaveClass('normal');
   });
 
   it('renders modal with content', () => {

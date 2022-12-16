@@ -1,0 +1,5 @@
+@use 'assets/styles/mixins' as *;
+
+.wallets {
+  @include childrenMargin(16px);
+}

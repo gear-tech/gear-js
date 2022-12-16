@@ -1,0 +1,6 @@
+@use '@gear-js/ui/headings' as *;
+
+.heading {
+  @extend %h4;
+  margin-bottom: 30px;
+}

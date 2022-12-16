@@ -1,6 +1,6 @@
 import { Button } from '@gear-js/ui';
-import check from 'assets/images/icons/check.svg';
-import reset from 'assets/images/icons/reset.svg';
+import { ReactComponent as check } from 'assets/images/icons/check.svg';
+import { ReactComponent as reset } from 'assets/images/icons/reset.svg';
 import { InfoText } from 'components';
 import { ESCROW } from 'consts';
 

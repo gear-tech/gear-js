@@ -1,0 +1,67 @@
+@use 'shared/assets/styles/shared' as *;
+@use 'shared/assets/styles/mixins' as *;
+@use 'shared/assets/styles/variables' as *;
+@use 'shared/assets/styles/animations' as *;
+@use '@gear-js/ui/variables' as *;
+
+$popupWidth: 340px;
+
+.nodesPopup {
+  @include fade();
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: absolute;
+  width: $popupWidth;
+  z-index: 2;
+  right: -$popupWidth;
+  bottom: 0;
+  background: radial-gradient(34.1% 16.48% at -1.97% 102.53%, $green200 0%, rgba(43, 208, 113, 0) 100%) $bgColor6;
+  box-shadow: inset 0px 1px 0px $gray005;
+  border-radius: 16px;
+  height: 630px;
+  border: $borderModal;
+
+  &.loading {
+    @include loading();
+
+    background: $bgColor6;
+  }
+
+  .closeBtn {
+    position: absolute;
+    top: 15px;
+    right: 13px;
+  }
+}
+
+.content {
+  @include fade();
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: toRem(32) toRem(24) toRem(32) toRem(32);
+
+  .chain {
+    font-family: 'Kanit';
+    font-weight: 600;
+    font-size: toRem(24);
+    line-height: toRem(31);
+    margin-bottom: $marginMedium;
+  }
+
+  .actions {
+    @include childrenMargin(24px, right);
+
+    display: flex;
+
+    > *:first-child {
+      flex: 1;
+    }
+
+    position: relative;
+    z-index: 1;
+    margin-top: 26px;
+  }
+}

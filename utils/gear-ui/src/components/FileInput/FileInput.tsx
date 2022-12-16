@@ -13,18 +13,30 @@ import { InputProps } from '../../types';
 import { getFileSize } from '../../utils';
 import { Button } from '../Button/Button';
 import { InputWrapper } from '../utils';
-import remove from './images/remove.svg';
-import select from './images/select.svg';
+import { ReactComponent as RemoveSVG } from './images/remove.svg';
+import { ReactComponent as SelectSVG } from './images/select.svg';
 import styles from './FileInput.module.scss';
 
 type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> &
   Omit<InputProps, 'color'> & {
+    color?: 'light' | 'primary';
     label?: string;
     error?: string;
   };
 
 const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElement>) => {
-  const { label, className, gap, error, tooltip, onChange, direction = 'x', size = 'normal', ...attrs } = props;
+  const {
+    label,
+    className,
+    gap,
+    error,
+    tooltip,
+    onChange,
+    direction = 'x',
+    size = 'normal',
+    color = 'light',
+    ...attrs
+  } = props;
   const { disabled } = attrs;
 
   const [name, setName] = useState('');
@@ -77,15 +89,15 @@ const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInput
         <>
           <div className={styles.file}>
             <Button text={name} color="transparent" size="small" className={styles.name} onClick={handleButtonClick} />
-            <Button icon={remove} color="transparent" onClick={handleRemoveButtonClick} />
+            <Button icon={RemoveSVG} color="transparent" onClick={handleRemoveButtonClick} />
           </div>
           {!error && <span className={styles.size}>Size: {getFileSize(ref.current?.files?.[0].size as number)}</span>}
         </>
       ) : (
         <Button
           text="Select file"
-          icon={select}
-          color="light"
+          icon={SelectSVG}
+          color={color}
           size={size === 'normal' ? 'medium' : 'large'}
           onClick={handleButtonClick}
         />
@@ -94,4 +106,5 @@ const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInput
   );
 });
 
-export { FileInput, Props as FileInputProps, styles as fileInputStyles };
+export { FileInput, styles as fileInputStyles };
+export type { Props as FileInputProps };

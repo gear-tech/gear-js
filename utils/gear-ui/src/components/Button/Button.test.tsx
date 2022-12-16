@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { Button } from './Button';
 import styles from './Button.module.scss';
 
-const arrowIcon = 'icon-path';
+const ArrowIcon = () => <svg data-testid="svg" />;
 
 describe('button tests', () => {
   it('renders button', () => {
@@ -24,20 +24,20 @@ describe('button tests', () => {
   });
 
   it('renders icon button', () => {
-    render(<Button icon={arrowIcon} />);
+    render(<Button icon={ArrowIcon} />);
 
     const button = screen.getByRole('button');
-    const icon = screen.getByRole('img');
+    const icon = screen.getByTestId('svg');
 
     expect(button).toContainElement(icon);
     expect(button).toHaveClass(styles.noText);
   });
 
   it('renders button with icon and text', () => {
-    render(<Button text="button text" icon={arrowIcon} />);
+    render(<Button text="button text" icon={ArrowIcon} />);
 
     const button = screen.getByText('button text');
-    const icon = screen.getByRole('img');
+    const icon = screen.getByTestId('svg');
 
     expect(button).toContainElement(icon);
     expect(button).toHaveClass(styles.medium);
@@ -47,7 +47,7 @@ describe('button tests', () => {
     const { rerender } = render(<Button text="button text" color="secondary" size="small" />);
 
     const button = screen.getByRole('button');
-    expect(button).toHaveClass(styles.secondary, styles.small);
+    expect(button).toHaveClass(styles.secondary, styles.small, styles.letterSpacing);
 
     rerender(<Button text="button text" color="light" size="small" />);
     expect(button).toHaveClass(styles.light, styles.small);
@@ -65,10 +65,13 @@ describe('button tests', () => {
     expect(button).toHaveClass(styles.transparent);
   });
 
-  it('renders no wrap block button', () => {
-    render(<Button text="button text" block noWrap />);
+  it('renders no wrap block button without letter spacing', () => {
+    render(<Button text="button text" block noWrap noLetterSpacing />);
+
     const button = screen.getByRole('button');
+
     expect(button).toHaveClass(styles.block, styles.noWrap);
+    expect(button).not.toHaveClass(styles.letterSpacing);
   });
 
   it('passes ref', () => {

@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useAccount } from '@gear-js/react-hooks';
-import userSVG from 'assets/images/icons/login.svg';
+import { ReactComponent as userSVG } from 'assets/images/icons/login.svg';
 import { Button } from '@gear-js/ui';
 import { AccountsModal } from './accounts-modal';
 import { Wallet } from './wallet';
 
 function Account() {
-  const { account } = useAccount();
+  const { account, accounts } = useAccount();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {
@@ -24,7 +24,7 @@ function Account() {
       ) : (
         <Button icon={userSVG} text="Sign in" onClick={openModal} />
       )}
-      {isModalOpen && <AccountsModal close={closeModal} />}
+      {isModalOpen && <AccountsModal accounts={accounts} close={closeModal} />}
     </>
   );
 }

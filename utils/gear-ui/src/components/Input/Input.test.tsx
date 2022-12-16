@@ -1,8 +1,8 @@
-import { findByText, fireEvent, getByRole, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { Input } from './Input';
 import styles from './Input.module.scss';
 
-const arrowIcon = 'icon-path';
+const ArrowIcon = () => <svg data-testid="svg" />;
 
 describe('input tests', () => {
   it('renders input', () => {
@@ -40,13 +40,12 @@ describe('input tests', () => {
   });
 
   it('renders input with icon', () => {
-    render(<Input label="label" icon={arrowIcon} />);
+    render(<Input label="label" icon={ArrowIcon} />);
 
     const wrapper = screen.getByTestId('wrapper');
-    const icon = screen.getByRole('img');
+    const icon = screen.getByTestId('svg');
 
     expect(wrapper).toContainElement(icon);
-    expect(icon).toHaveAttribute('src', arrowIcon);
   });
 
   it('renders search input', () => {
@@ -145,5 +144,13 @@ describe('input tests', () => {
     const input = screen.getByLabelText('label');
 
     expect(ref.current).toBe(input);
+  });
+
+  it('renders block input', () => {
+    render(<Input label="label" block />);
+
+    const wrapper = screen.getByTestId('wrapper');
+
+    expect(wrapper).toHaveClass(styles.block);
   });
 });

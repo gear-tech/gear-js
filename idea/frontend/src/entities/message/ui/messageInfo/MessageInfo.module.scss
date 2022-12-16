@@ -1,0 +1,30 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use '@gear-js/ui/mixins' as *;
+
+.messageInfo {
+  @include childrenMargin($marginMedium);
+
+  padding: toRem(24);
+  border-radius: 16px;
+  background-color: $bgColor4;
+
+  .text {
+    grid-template-columns: minmax(toRem(100), 0.15fr) minmax(toRem(452), 0.6fr);
+  }
+}
+
+.replyTo {
+  align-items: center;
+
+  a {
+    @include transition;
+    text-decoration: underline;
+    padding: 0 16px;
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+}

@@ -1,0 +1,25 @@
+@use 'shared/assets/styles/shared' as *;
+@use 'shared/assets/styles/mixins' as *;
+@use 'shared/assets/styles/variables' as *;
+
+.programsList {
+  @include childrenMargin(12px);
+  position: relative;
+  margin-top: $margin;
+
+  .simpleBar {
+    @include customSimplebar;
+
+    height: calc($contentHeight - toRem(31.19) - $margin);
+
+    :global(.simplebar-content) {
+      @include childrenMargin(12px);
+
+      margin-right: $margin;
+    }
+  }
+}
+
+.placeholderBlock {
+  height: toRem(60.8);
+}

@@ -116,4 +116,12 @@ describe('textarea tests', () => {
 
     expect(ref.current).toBe(textarea);
   });
+
+  it('renders block textarea', () => {
+    render(<Textarea label="label" block />);
+
+    const wrapper = screen.getByTestId('wrapper');
+
+    expect(wrapper).toHaveClass(styles.block);
+  });
 });

@@ -1,6 +1,6 @@
 import { Button } from '@gear-js/ui';
-import wallet from 'assets/images/icons/wallet.svg';
-import cross from 'assets/images/icons/cross.svg';
+import { ReactComponent as wallet } from 'assets/images/icons/wallet.svg';
+import { ReactComponent as cross } from 'assets/images/icons/cross.svg';
 import { ESCROW } from 'consts';
 import { InfoText } from 'components';
 
@@ -17,11 +17,11 @@ function Deposit({ role, onDeposit, onCancel }: Props) {
         return (
           <>
             <Button text="Make deposit" icon={wallet} onClick={onDeposit} block />
-            <Button text="Cancel deal" icon={cross} color="secondary" onClick={onCancel} block />
+            <Button text="Cancel deal" icon={cross} color="light" onClick={onCancel} block />
           </>
         );
       case ESCROW.ROLE.SELLER:
-        return <Button text="Cancel deal" icon={cross} color="secondary" onClick={onCancel} block />;
+        return <Button text="Cancel deal" icon={cross} color="light" onClick={onCancel} block />;
       default:
         return <InfoText text="Awaiting buyer deposit." />;
     }

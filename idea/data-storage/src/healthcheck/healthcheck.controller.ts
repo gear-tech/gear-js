@@ -1,12 +1,12 @@
-import { Controller, Get, Res } from '@nestjs/common';
-import { Response } from 'express';
+import { Controller, Get, HttpCode } from '@nestjs/common';
 
 const status = {
   kafka: false,
   database: false,
+  gearWSProvider: false,
 };
 
-export const changeStatus = (service: 'kafka' | 'database') => {
+export const changeStatus = (service: 'kafka' | 'database' | 'gear') => {
   status[service] = !status[service];
 };
 
@@ -15,19 +15,26 @@ export class HealthcheckController {
   constructor() {}
 
   @Get('kafka')
-  kafka(@Res() response: Response) {
-    return response.status(status.kafka ? 200 : 500).json({ connected: status.kafka });
+  @HttpCode(status.kafka ? 200 : 500)
+  kafka() {
+    return { connected: status.kafka };
   }
 
   @Get('database')
-  database(@Res() response: Response) {
-    return response.status(status.database ? 200 : 500).json({ connected: status.database });
+  @HttpCode(status.database ? 200 : 500)
+  database() {
+    return { connected: status.database };
+  }
+
+  @Get('gear_ws_provider')
+  @HttpCode(status.gearWSProvider ? 200 : 500)
+  gearWSProvider() {
+    return { connected: status.gearWSProvider };
   }
 
   @Get()
-  general(@Res() response: Response) {
-    const { kafka, database } = status;
-    const allTogether = kafka && database;
-    return response.status(allTogether ? 200 : 500).json({ connected: { kafka, database } });
+  @HttpCode(status.gearWSProvider && status.database && status.kafka ? 200 : 500)
+  general() {
+    return { connected: { ...status } };
   }
 }

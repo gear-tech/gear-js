@@ -1,0 +1,23 @@
+@use '@gear-js/ui/mixins' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.simpleBar {
+  @include customSimplebar;
+
+  width: 100%;
+  margin-top: 20px;
+  max-height: 463px;
+
+  .blockList {
+    @include childrenMargin(5px);
+
+    padding-right: toRem(10);
+
+    .listItem {
+      @include fade(0ms, $bigTimeout);
+    }
+  }
+}

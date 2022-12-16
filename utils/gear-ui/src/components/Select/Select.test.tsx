@@ -91,4 +91,12 @@ describe('select tests', () => {
 
     expect(ref.current).toBe(select);
   });
+
+  it('renders block select', () => {
+    render(<Select options={initOptions} block />);
+
+    const select = screen.getByRole('combobox');
+
+    expect(select).toHaveClass(styles.block);
+  });
 });

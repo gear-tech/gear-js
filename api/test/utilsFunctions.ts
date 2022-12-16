@@ -26,14 +26,10 @@ export const checkInit = (api: GearApi, programId: string) => {
               messageId = meEvent.data.id.toHex();
             }
             break;
-          case 'MessagesDispatched':
+          case 'MessagesDispatched': {
             const mdEvent = event as MessagesDispatched;
             for (const [id, status] of mdEvent.data.statuses) {
               if (id.eq(messageId)) {
-                if (status.isFailed) {
-                  reject('failed');
-                  break;
-                }
                 if (status.isSuccess) {
                   resolve('success');
                   break;
@@ -41,6 +37,21 @@ export const checkInit = (api: GearApi, programId: string) => {
               }
             }
             break;
+          }
+          case 'UserMessageSent': {
+            const {
+              data: { message },
+            } = event as UserMessageSent;
+            if (message.details.isSome) {
+              const details = message.details.unwrap();
+              if (details.isReply) {
+                const reply = details.asReply;
+                if (reply.replyTo.eq(messageId) && !reply.statusCode.eq(0)) {
+                  reject(message.payload.toHuman());
+                }
+              }
+            }
+          }
         }
       });
     });
@@ -64,9 +75,19 @@ export function listenToUserMessageSent(api: GearApi, programId: Hex) {
     const message = messages.find(
       ({
         data: {
-          message: { reply },
+          message: { details },
         },
-      }) => (messageId === null ? reply.isNone : reply.isSome && reply.unwrap().replyTo.eq(messageId)),
+      }) => {
+        if (messageId === null) {
+          return details.isNone;
+        }
+
+        if (details.isSome) {
+          return details.unwrap().isReply && details.unwrap().asReply.replyTo.eq(messageId);
+        } else {
+          return false;
+        }
+      },
     );
     (await unsub)();
     if (!message) {

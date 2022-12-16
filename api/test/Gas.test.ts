@@ -96,7 +96,7 @@ describe('Calculate gas', () => {
     const tx = api.message.send({
       destination: programId,
       payload: '0x50494e47',
-      gasLimit: (gasLimits.handle as u64).muln(1.5),
+      gasLimit: (gasLimits.handle as u64).muln(2),
       value: 1000,
     });
     const waitForReply = listenToUserMessageSent(api, programId);
@@ -104,8 +104,8 @@ describe('Calculate gas', () => {
     const { message } = await waitForReply(null);
     expect(message.id).toBeDefined();
     messageId = message.id.toHex();
-    expect(message.reply).toBeDefined();
-    expect(message.reply.isNone).toBeTruthy();
+    expect(message.details).toBeDefined();
+    expect(message.details.isNone).toBeTruthy();
   });
 
   test('Get gas spent if payload is U8a', async () => {

@@ -1,11 +1,13 @@
 import { Hex } from '@gear-js/api';
 
-import { ParamsToSignAndSend as CommonParamsToSignAndSend } from 'types/hooks';
+import { ParamsToSignAndSend as CommonParamsToSignAndSend } from 'entities/hooks';
 
-export type ParamsToUploadCode = {
+type ParamsToUploadCode = {
   file: File;
 };
 
-export type ParamsToSignAndSend = Omit<CommonParamsToSignAndSend, 'reject' | 'resolve'> & {
+type ParamsToSignAndSend = Omit<CommonParamsToSignAndSend, 'reject' | 'resolve'> & {
   codeHash: Hex;
 };
+
+export type { ParamsToUploadCode, ParamsToSignAndSend };

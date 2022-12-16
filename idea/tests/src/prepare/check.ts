@@ -4,9 +4,9 @@ import assert from 'assert';
 
 import {
   ICodeSpec,
-  IMessageSpec,
+  IMessageSpec, IPreparedProgram,
   IPreparedPrograms,
-  IUploadedPrograms
+  IUploadedPrograms,
 } from '../interfaces';
 
 function checkPrograms(
@@ -23,7 +23,8 @@ function checkPrograms(
       spec: programs[id],
       init: initSuccess.get(programs[id].messageId),
       id: id,
-    };
+      owner: programs[id].owner
+    } as IPreparedProgram;
   }
   return result;
 }

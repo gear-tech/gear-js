@@ -1,0 +1,21 @@
+<svg width="980" height="200" preserveAspectRatio="none" viewBox="0 0 980 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_1811_18256)">
+<rect width="980" height="200" rx="16" fill="white" fill-opacity="0.05"/>
+<rect x="24" y="44" width="168" height="16" rx="8" fill="white" fill-opacity="0.1"/>
+<rect x="224" y="32" width="520" height="40" rx="20" fill="white" fill-opacity="0.1"/>
+<rect x="24" y="108" width="168" height="16" rx="8" fill="white" fill-opacity="0.1"/>
+<rect x="224" y="96" width="520" height="40" rx="20" fill="white" fill-opacity="0.1"/>
+<g opacity="0.1">
+<rect x="24" y="172" width="168" height="16" rx="8" fill="white" fill-opacity="0.1"/>
+<rect x="224" y="160" width="520" height="40" rx="20" fill="white" fill-opacity="0.1"/>
+</g>
+<line x1="776.5" y1="2.18557e-08" x2="776.5" y2="200" stroke="white" stroke-opacity="0.05"/>
+<rect x="808" y="42" width="120" height="20" rx="10" fill="white" fill-opacity="0.1"/>
+<rect x="808" y="86" width="120" height="20" rx="10" fill="white" fill-opacity="0.1"/>
+</g>
+<defs>
+<clipPath id="clip0_1811_18256">
+<rect width="980" height="200" rx="16" fill="white"/>
+</clipPath>
+</defs>
+</svg>

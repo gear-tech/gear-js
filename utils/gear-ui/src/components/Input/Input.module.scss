@@ -2,10 +2,15 @@
 @use '../../assets/styles/utils' as *;
 
 .wrapper {
+  @extend %wrapper;
   @extend %inputWrapper;
 
   &.readOnly {
     @extend %readOnlyInputWrapper;
+  }
+
+  &:not(.block) {
+    max-width: $inputWidth;
   }
 }
 

@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { Button } from '../Button/Button';
-import xSVG from './images/x.svg';
+import { ReactComponent as xSVG } from './images/x.svg';
 import { Props } from './Alert.types';
 import styles from './Alert.module.scss';
 
@@ -20,4 +20,5 @@ function Alert({ alert, close }: Props) {
   );
 }
 
-export { Alert, Props as AlertProps, styles as alertStyles };
+export { Alert, styles as alertStyles };
+export type { Props as AlertProps };

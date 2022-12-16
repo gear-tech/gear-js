@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { FunctionComponent, ReactNode, SVGProps } from 'react';
 
 type Gap = `${number}/${number}`;
 
@@ -7,6 +7,7 @@ type BaseInputProps = {
   color?: 'light' | 'dark';
   error?: ReactNode;
   tooltip?: string;
+  block?: boolean;
 };
 
 type XDirectionProps = BaseInputProps & { label?: string; direction?: 'x'; gap?: Gap };
@@ -14,4 +15,6 @@ type YDirectionProps = BaseInputProps & { label?: string; direction?: 'y'; gap?:
 
 type InputProps = XDirectionProps | YDirectionProps;
 
-export { Gap, InputProps };
+type SVGComponent = FunctionComponent<SVGProps<SVGSVGElement>>;
+
+export { Gap, InputProps, SVGComponent };

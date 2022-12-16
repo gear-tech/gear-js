@@ -1,27 +1,57 @@
-@import 'assets/scss/index.scss';
-@import 'assets/scss/common.scss';
+@use './styles/index.scss';
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --header-height: toRem(103);
+}
+
+html {
+  font-size: 100%;
+}
+
+body {
+  background-color: $bgColor;
+  background-image: url('/shared/assets/images/placeholders/greenShadowBg.png');
+  background-repeat: no-repeat;
+  background-position: right -150px top -50px;
+  min-height: 100vh;
+
+  &.noOverflow {
+    overflow: hidden;
+  }
+}
 
 #root {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  justify-content: space-between;
-  // cuz if flexGap mixin is used for layout that is close to viewport borders there'll be extra pixels
-  overflow-x: hidden;
+  position: relative;
 }
 
-#alert-root {
-  position: fixed;
-  z-index: 999;
-  width: 390px;
-  right: 22px;
-  bottom: 5px;
+.main {
+  display: flex;
+  min-height: calc(100vh - $footerHeight);
 }
-// TODO: remove it after the geat-ui will updated
-#modal-root {
-  & > div > div {
-    width: auto;
-    max-width: unset;
-    background-color:#232323;
+
+.content {
+  flex: 1 1;
+  padding: 0 toRem(32) 0 toRem(48);
+  position: relative;
+  min-height: $contentHeight;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+}
+
+.link-text {
+  transition: opacity 150ms ease-in;
+
+  &:hover {
+    opacity: .5;
   }
 }

@@ -1,0 +1,13 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.navigation {
+  @include childrenMargin(6px);
+
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 toRem(15);
+  margin-top: 96px;
+}

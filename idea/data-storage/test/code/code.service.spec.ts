@@ -1,6 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { CODE_STATUS, GetAllCodeParams, GetCodeParams } from '@gear-js/common';
-import { UpdateResult } from 'typeorm';
+import { GetAllCodeParams, GetCodeParams } from '@gear-js/common';
 
 import { Code } from '../../src/database/entities';
 import { mockCodeRepository } from '../mock/code/code-repository.mock';
@@ -8,6 +7,7 @@ import { CODE_DB_MOCK } from '../mock/code/code-db.mock';
 import { CodeRepo } from '../../src/code/code.repo';
 import { CodeService } from '../../src/code/code.service';
 import { UpdateCodeInput } from '../../src/code/types';
+import { CodeStatus } from '../../src/common/enums';
 
 const CODE_ENTITY_ID = '0x7357';
 
@@ -34,16 +34,16 @@ describe('Code service', () => {
       genesis: '0x07357',
       timestamp: 0,
       blockHash: '0x0000000000000000',
-      status: CODE_STATUS.ACTIVE,
-      expiration: 111,
+      status: CodeStatus.ACTIVE,
+      expiration: '111',
+      uploadedBy: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
     };
 
-    const code = await codeService.updateCode(updateCodeInput);
+    const codes = await codeService.updateCodes([updateCodeInput]);
 
-    if (!(code instanceof UpdateResult)) {
-      expect(code.id).toEqual(updateCodeInput.id);
-      expect(code.status).toEqual(updateCodeInput.status);
-    }
+    expect(codes[0].id).toEqual(updateCodeInput.id);
+    expect(codes[0].status).toEqual(updateCodeInput.status);
+    expect(codes[0].expiration).toEqual(updateCodeInput.expiration);
     expect(mockCodeRepository.save).toHaveBeenCalled();
   });
 
@@ -60,7 +60,7 @@ describe('Code service', () => {
     expect(result.listCode[0].id).toEqual(codeMock.id);
     expect(result.listCode[0].expiration).toEqual(codeMock.expiration);
     expect(result.listCode[0].name).toEqual(codeMock.name);
-    expect(mockCodeRepository.listPaginationByGenesis).toHaveBeenCalled();
+    expect(mockCodeRepository.list).toHaveBeenCalled();
   });
 
   it('should be successfully get code entity and called getByIdAndGenesis method', async () => {

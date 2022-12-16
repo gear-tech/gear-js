@@ -4,13 +4,13 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import { UserMessageRead } from '@gear-js/api';
 import { useApi, useAccount, useAlert, DEFAULT_SUCCESS_OPTIONS, DEFAULT_ERROR_OPTIONS } from '@gear-js/react-hooks';
 
-import { useModal } from '../index';
-import { ParamsToClaimMessage } from './types';
+import { useModal } from 'hooks';
+import { Method } from 'entities/explorer';
+import { OperationCallbacks, ParamsToSignAndSend } from 'entities/hooks';
+import { PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'shared/config';
+import { checkWallet, getExtrinsicFailedMessage } from 'shared/helpers';
 
-import { PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'consts';
-import { checkWallet, getExtrinsicFailedMessage } from 'helpers';
-import { Method } from 'types/explorer';
-import { ParamsToSignAndSend, OperationCallbacks } from 'types/hooks';
+import { ParamsToClaimMessage } from './types';
 
 const useMessageClaim = () => {
   const alert = useAlert();
@@ -33,7 +33,8 @@ const useMessageClaim = () => {
         alert.success(message, alertOptions);
       } else if (method === Method.ExtrinsicFailed) {
         alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
-        reject();
+
+        if (reject) reject();
       }
     });
   };
@@ -50,17 +51,20 @@ const useMessageClaim = () => {
           handleEventsStatus(events, reject);
         } else if (status.isFinalized) {
           alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
-          resolve();
+
+          if (resolve) resolve();
         } else if (status.isInvalid) {
           alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
-          reject();
+
+          if (reject) reject();
         }
       });
     } catch (error) {
       const message = (error as Error).message;
 
       alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
-      reject();
+
+      if (reject) reject();
     }
   };
 
@@ -95,11 +99,12 @@ const useMessageClaim = () => {
         const message = (error as Error).message;
 
         alert.error(message);
-        reject();
+
+        if (reject) reject();
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [api, account]
+    [api, account],
   );
 
   return claimMessage;

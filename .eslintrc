@@ -7,6 +7,7 @@
   },
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   "parser": "@typescript-eslint/parser",
+  "ignorePatterns": "**/migrations/*.ts",
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module"
@@ -18,7 +19,8 @@
       2,
       {
         "SwitchCase": 1,
-        "flatTernaryExpressions": false
+        "flatTernaryExpressions": false,
+        "offsetTernaryExpressions": true
       }
     ],
     "object-curly-spacing": ["error", "always"],

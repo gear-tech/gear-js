@@ -1,36 +1,188 @@
+## 0.27.7
+
+_11/29/2022_
+
+https://github.com/gear-tech/gear-js/pull/1126
+
+### Changes
+
+- Update syscalls
+
+## 0.27.6
+
+_11/24/2022_
+
+https://github.com/gear-tech/gear-js/pull/1111
+
+### Changes
+
+- Update `Entry` and `DispatchKind` types
+
+## 0.27.5
+
+_11/21/2022_
+
+https://github.com/gear-tech/gear-js/pull/1102
+
+### Changes
+
+- Update `gr_read` syscall
+
+## 0.27.4
+
+_11/18/2022_
+
+https://github.com/gear-tech/gear-js/pull/1100
+
+### Changes
+
+- Update `UserMessageSent` and `MessageWaited` events data according to https://github.com/gear-tech/gear/pull/1730 and https://github.com/gear-tech/gear/pull/1833
+
+## 0.27.3
+
+_11/13/2022_
+
+https://github.com/gear-tech/gear-js/pull/1088
+
+### Changes
+
+- Add `gr_reservation_send_commit`, `gr_reservation_send`, `gr_reservation_reply`, `gr_reservation_reply_commit` syscalls
+
+## 0.27.2
+
+_11/12/2022_
+
+https://github.com/gear-tech/gear-js/pull/1084
+
+### Changes
+
+- Increase the value of initial size by 1 when reading the state
+
+## 0.27.1
+
+_11/09/2022_
+
+https://github.com/gear-tech/gear-js/pull/1075
+
+### Changes
+
+- Add new `gr_reserve_gas`, `gr_unreserve_gas`, `gr_random` syscalls to `importObj`
+
+## 0.27.0
+
+_10/25/2022_
+
+https://github.com/gear-tech/gear-js/pull/1046
+https://github.com/gear-tech/gear-js/pull/1045
+
+### Changes
+
+- Update `ActiveProgram` type according to https://github.com/gear-tech/gear/pull/1505
+- Rename `generateCodeId` function to `generateCodeHash`
+- Add oportunity to generate codeHas from Uint8Array and hex
+
+## 0.26.2
+
+_10/17/2022_
+
+https://github.com/gear-tech/gear-js/pull/1041
+
+### Changes
+
+- Update `ActiveProgram` type according to https://github.com/gear-tech/gear/pull/1474
+
+## 0.26.1
+
+_10/11/2022_
+
+https://github.com/gear-tech/gear-js/pull/1031
+
+### Changes
+
+- Rename `gr_msg_id` syscall to `gr_message_id`
+
+## 0.26.0
+
+_10/06/2022_
+
+https://github.com/gear-tech/gear-js/pull/1030
+
+### Changes
+
+- Bump @polkadot/api to 9.5.1
+
+## 0.25.9
+
+_10/06/2022_
+
+https://github.com/gear-tech/gear-js/pull/1023
+
+### Changes
+
+- Add method to get all code ids existed on chain
+
+## 0.25.8
+
+_10/03/2022_
+
+https://github.com/gear-tech/gear-js/pull/1012
+
+### Changes
+
+- Add new syscalls
+
+## 0.25.7
+
+_09/17/2022_
+
+https://github.com/gear-tech/gear-js/pull/996
+
+### Changes
+
+- Add Exited variant to Program enum
+
 ## 0.25.6
+
 _09/13/2022_
 
 https://github.com/gear-tech/gear-js/pull/988
+
 ### Changes
 
 - Add function to convert type name
 
 ## 0.25.5
+
 _09/12/2022_
 
 https://github.com/gear-tech/gear-js/pull/982
+
 ### Changes
 
 - Add method to subscribe to `UserMessageSent` events by actorId
 
 ## 0.25.4
+
 _09/12/2022_
 
 https://github.com/gear-tech/gear-js/pull/981
+
 ### Changes
 
 - Add new TypeInfo parser
 
 ## 0.25.3
+
 _09/08/2022_
 
 https://github.com/gear-tech/gear-js/pull/979
+
 ### Changes
 
 - Use api.derive to subscription to new blocks
 
 ## 0.25.2
+
 _08/17/2022_
 
 https://github.com/gear-tech/gear-js/pull/933
@@ -48,6 +200,7 @@ _08/18/2022_
 https://github.com/gear-tech/gear-js/pull/935
 
 ### Changes
+
 - Describe Null type in `createPayloadTypeStructure` function
 
 ## 0.25.0
@@ -78,6 +231,7 @@ https://github.com/gear-tech/gear-js/pull/894
 - Fix type of `paymentInfo` method's argument.
 
 ---
+
 ## 0.24.1
 
 _07/22/2022_
@@ -89,6 +243,7 @@ https://github.com/gear-tech/gear-js/pull/872
 - Add oportunity to call `gr_block_height` syscall in meta_state function
 
 ---
+
 ## 0.24.0
 
 _07/19/2022_
@@ -104,6 +259,7 @@ https://github.com/gear-tech/gear-js/pull/848
 - Also `waitlist.read` and `mailbox.read` methods now return Codec types without keys.
 
 ---
+
 ## 0.23.6
 
 _07/19/2022_
@@ -115,6 +271,7 @@ https://github.com/gear-tech/gear-js/pull/845
 - Adjust simple enum generation
 
 ---
+
 ## 0.23.5
 
 _07/18/2022_
@@ -126,6 +283,7 @@ https://github.com/gear-tech/gear-js/pull/843
 - Fix getting program pages according to https://github.com/gear-tech/gear/pull/1193
 
 ---
+
 ## 0.23.4
 
 _07/18/2022_
@@ -141,6 +299,7 @@ https://github.com/gear-tech/gear-js/pull/840
 - Add eslint config
 
 ---
+
 ## 0.23.3
 
 _07/12/2022_

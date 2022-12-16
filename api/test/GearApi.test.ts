@@ -18,11 +18,19 @@ afterAll(async () => {
 
 describe('GearApi', () => {
   test('chain', async () => {
-    expect(await api.chain()).toBeDefined();
+    expect(await api.chain()).toBe('Development');
   });
 
   test('nodeName', async () => {
-    expect(await api.nodeName()).toBeDefined();
+    expect(await api.nodeName()).toBe('Gear Node');
+  });
+
+  test('runtimeChain', async () => {
+    expect(api.runtimeChain.toHuman()).toBe('Development');
+  });
+
+  test('genesisHash', async () => {
+    expect(api.genesisHash).toBeDefined();
   });
 
   test('nodeVersion', async () => {
@@ -75,5 +83,11 @@ describe('Blocks', () => {
     const hash = await api.blocks.getBlockHash(1);
     const blockNumber = await api.blocks.getBlockNumber(hash.toHex());
     expect(blockNumber.toNumber()).toBe(1);
+  });
+});
+
+describe('Runtime consts', () => {
+  test('blockGasLimit', () => {
+    expect(api.blockGasLimit).not.toBeUndefined();
   });
 });

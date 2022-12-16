@@ -1,0 +1,95 @@
+.player {
+  padding: 16px 30px 16px 16px;
+  display: flex;
+  background-color: #fff;
+  border-top-width: 2px;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+
+  &:not(:last-child) {
+    margin-bottom: 20px;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+  }
+}
+
+.summary {
+  overflow: hidden;
+}
+
+.icon {
+  margin-right: 12px;
+
+  svg {
+    border-radius: 50%;
+    border-width: 3px;
+    border-style: solid;
+  }
+}
+
+.address {
+  font-family: Kanit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 21px;
+  letter-spacing: 0.08em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.balance {
+  font-family: Kanit;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 18px;
+  letter-spacing: 0.08em;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.total {
+  display: inline-block;
+  padding: 2px 6px;
+  font-family: Kanit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 0.08em;
+  background-color: #dadada;
+  color: #fff;
+  border-radius: 2px;
+  text-align: center;
+
+  &.success {
+    background-color: #02c86a;
+  }
+
+  &.error {
+    background-color: #e65659;
+  }
+}
+
+.pink {
+  color: #e1147b;
+  border-color: #e1147b;
+}
+
+.purple {
+  color: #9b51e0;
+  border-color: #9b51e0;
+}
+
+.green {
+  color: #27ae60;
+  border-color: #27ae60;
+}
+
+.yellow {
+  color: #f2994a;
+  border-color: #f2994a;
+}
