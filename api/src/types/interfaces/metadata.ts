@@ -32,6 +32,7 @@ export interface ProgramMetadataRepr extends Struct {
   handle: TypesRepr;
   reply: TypesRepr;
   others: TypesRepr;
+  signal: Option<u32>;
   state: Option<u32>;
   reg: Vec<u8>;
   toJSON: () => HumanProgramMetadataRepr;
@@ -42,6 +43,7 @@ export type HumanProgramMetadataRepr = {
   handle: HumanTypesRepr;
   reply: HumanTypesRepr;
   others: HumanTypesRepr;
+  signal: number | null;
   state: number | null;
   reg: HexString;
 };

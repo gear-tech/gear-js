@@ -15,6 +15,7 @@ impl Metadata for ProgramMetadata {
     type Handle = InOut<Action, EmptyStruct>;
     type Reply = InOut<String, Vec<u16>>;
     type Others = InOut<(), ()>;
+    type Signal = ();
     type State = Vec<Wallet>;
 }
 
@@ -59,4 +60,9 @@ pub struct Person {
 pub struct Wallet {
     pub id: Id,
     pub person: Person,
+}
+
+pub enum State {
+    DappMeta(String),
+    Data(Vec<Wallet>),
 }

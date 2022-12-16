@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-gstd = { git = "https://github.com/gear-tech/gear.git", branch = "dn-on-chain-state" }
+gstd = { git = "https://github.com/gear-tech/gear.git" }
 scale-info = { version = "2.3.0", default-features = false, features = ["derive"] }
 codec = { package = "parity-scale-codec", version = "3.2.1", default-features = false, features = ["derive", "full"] }
 test-meta-io = { path = "io" }
@@ -15,7 +15,7 @@ test-meta-state-v2 = { path = "state-v2", default-features = false, optional = t
 
 [build-dependencies]
 test-meta-io = { path = "io" }
-gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", branch = "dn-on-chain-state"  }
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git"  }
 
 
 [features]

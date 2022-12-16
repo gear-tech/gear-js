@@ -12,6 +12,7 @@
       "handle": "TypesRepr",
       "reply": "TypesRepr",
       "others": "TypesRepr",
+      "signal": "Option<u32>",
       "state": "Option<u32>",
       "reg": "Vec<u8>"
     },

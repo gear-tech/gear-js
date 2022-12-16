@@ -251,7 +251,7 @@ dependencies = [
 [[package]]
 name = "galloc"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?branch=dn-on-chain-state#945c9d4ca3a35766d1111d0a00bead85abe7b4fd"
+source = "git+https://github.com/gear-tech/gear.git#d39d0bfc0570a62f0554dfacbea79c3a7a955038"
 dependencies = [
  "dlmalloc",
 ]
@@ -259,7 +259,7 @@ dependencies = [
 [[package]]
 name = "gcore"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?branch=dn-on-chain-state#945c9d4ca3a35766d1111d0a00bead85abe7b4fd"
+source = "git+https://github.com/gear-tech/gear.git#d39d0bfc0570a62f0554dfacbea79c3a7a955038"
 dependencies = [
  "gear-core-errors",
  "gsys",
@@ -270,7 +270,7 @@ dependencies = [
 [[package]]
 name = "gear-core-errors"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?branch=dn-on-chain-state#945c9d4ca3a35766d1111d0a00bead85abe7b4fd"
+source = "git+https://github.com/gear-tech/gear.git#d39d0bfc0570a62f0554dfacbea79c3a7a955038"
 dependencies = [
  "derive_more",
  "parity-scale-codec",
@@ -280,7 +280,7 @@ dependencies = [
 [[package]]
 name = "gear-wasm-builder"
 version = "0.1.2"
-source = "git+https://github.com/gear-tech/gear.git?branch=dn-on-chain-state#945c9d4ca3a35766d1111d0a00bead85abe7b4fd"
+source = "git+https://github.com/gear-tech/gear.git#d39d0bfc0570a62f0554dfacbea79c3a7a955038"
 dependencies = [
  "anyhow",
  "cargo_metadata",
@@ -295,25 +295,9 @@ dependencies = [
 ]
 
 [[package]]
-name = "gear-wasm-builder"
-version = "0.1.2"
-source = "git+https://github.com/gear-tech/gear.git#650fe04b87689adcdaab20f64116b0e5a83a0cb3"
-dependencies = [
- "anyhow",
- "cargo_metadata",
- "colored",
- "log",
- "pathdiff",
- "pwasm-utils",
- "thiserror",
- "toml",
- "which",
-]
-
-[[package]]
 name = "gmeta"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?branch=dn-on-chain-state#945c9d4ca3a35766d1111d0a00bead85abe7b4fd"
+source = "git+https://github.com/gear-tech/gear.git#d39d0bfc0570a62f0554dfacbea79c3a7a955038"
 dependencies = [
  "blake2-rfc",
  "gmeta-codegen",
@@ -325,7 +309,7 @@ dependencies = [
 [[package]]
 name = "gmeta-codegen"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?branch=dn-on-chain-state#945c9d4ca3a35766d1111d0a00bead85abe7b4fd"
+source = "git+https://github.com/gear-tech/gear.git#d39d0bfc0570a62f0554dfacbea79c3a7a955038"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -335,7 +319,7 @@ dependencies = [
 [[package]]
 name = "gstd"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?branch=dn-on-chain-state#945c9d4ca3a35766d1111d0a00bead85abe7b4fd"
+source = "git+https://github.com/gear-tech/gear.git#d39d0bfc0570a62f0554dfacbea79c3a7a955038"
 dependencies = [
  "bs58",
  "futures",
@@ -353,7 +337,7 @@ dependencies = [
 [[package]]
 name = "gstd-codegen"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?branch=dn-on-chain-state#945c9d4ca3a35766d1111d0a00bead85abe7b4fd"
+source = "git+https://github.com/gear-tech/gear.git#d39d0bfc0570a62f0554dfacbea79c3a7a955038"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -363,7 +347,7 @@ dependencies = [
 [[package]]
 name = "gsys"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?branch=dn-on-chain-state#945c9d4ca3a35766d1111d0a00bead85abe7b4fd"
+source = "git+https://github.com/gear-tech/gear.git#d39d0bfc0570a62f0554dfacbea79c3a7a955038"
 
 [[package]]
 name = "hermit-abi"
@@ -582,9 +566,9 @@ checksum = "4501abdff3ae82a1c1b477a17252eb69cee9e66eb915c1abaa4f44d873df9f09"
 
 [[package]]
 name = "scale-info"
-version = "2.3.0"
+version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "88d8a765117b237ef233705cc2cc4c6a27fccd46eea6ef0c8c6dae5f3ef407f8"
+checksum = "001cf62ece89779fd16105b5f515ad0e5cedcd5440d3dd806bb067978e7c3608"
 dependencies = [
  "cfg-if",
  "derive_more",
@@ -594,9 +578,9 @@ dependencies = [
 
 [[package]]
 name = "scale-info-derive"
-version = "2.3.0"
+version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cdcd47b380d8c4541044e341dcd9475f55ba37ddc50c908d945fc036a8642496"
+checksum = "303959cf613a6f6efd19ed4b4ad5bf79966a13352716299ad532cfb115f4205c"
 dependencies = [
  "proc-macro-crate",
  "proc-macro2",
@@ -615,18 +599,18 @@ dependencies = [
 
 [[package]]
 name = "serde"
-version = "1.0.149"
+version = "1.0.150"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "256b9932320c590e707b94576e3cc1f7c9024d0ee6612dfbcf1cb106cbe8e055"
+checksum = "e326c9ec8042f1b5da33252c8a37e9ffbd2c9bef0155215b6e6c80c790e05f91"
 dependencies = [
  "serde_derive",
 ]
 
 [[package]]
 name = "serde_derive"
-version = "1.0.149"
+version = "1.0.150"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b4eae9b04cbffdfd550eb462ed33bc6a1b68c935127d008b27444d08380f94e4"
+checksum = "42a3df25b0713732468deadad63ab9da1f1fd75a48a15024b50363f128db627e"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -677,7 +661,7 @@ checksum = "55937e1799185b12863d447f42597ed69d9928686b8d88a1df17376a097d8369"
 name = "test-gas"
 version = "0.1.0"
 dependencies = [
- "gear-wasm-builder 0.1.2 (git+https://github.com/gear-tech/gear.git)",
+ "gear-wasm-builder",
  "gstd",
  "parity-scale-codec",
  "scale-info",
@@ -687,7 +671,7 @@ dependencies = [
 name = "test-meta"
 version = "0.1.0"
 dependencies = [
- "gear-wasm-builder 0.1.2 (git+https://github.com/gear-tech/gear.git?branch=dn-on-chain-state)",
+ "gear-wasm-builder",
  "gstd",
  "parity-scale-codec",
  "scale-info",
@@ -710,7 +694,7 @@ dependencies = [
 name = "test-meta-state-v1"
 version = "0.1.0"
 dependencies = [
- "gear-wasm-builder 0.1.2 (git+https://github.com/gear-tech/gear.git?branch=dn-on-chain-state)",
+ "gear-wasm-builder",
  "gmeta",
  "gstd",
  "test-meta-io",
@@ -720,7 +704,7 @@ dependencies = [
 name = "test-meta-state-v2"
 version = "0.1.0"
 dependencies = [
- "gear-wasm-builder 0.1.2 (git+https://github.com/gear-tech/gear.git?branch=dn-on-chain-state)",
+ "gear-wasm-builder",
  "gmeta",
  "gstd",
  "test-meta-io",
@@ -730,7 +714,7 @@ dependencies = [
 name = "test-syscall-in-state"
 version = "0.1.0"
 dependencies = [
- "gear-wasm-builder 0.1.2 (git+https://github.com/gear-tech/gear.git)",
+ "gear-wasm-builder",
  "gstd",
  "parity-scale-codec",
  "scale-info",
@@ -740,7 +724,7 @@ dependencies = [
 name = "test-waitlist"
 version = "0.1.0"
 dependencies = [
- "gear-wasm-builder 0.1.2 (git+https://github.com/gear-tech/gear.git)",
+ "gear-wasm-builder",
  "gstd",
  "parity-scale-codec",
  "scale-info",
@@ -768,9 +752,9 @@ dependencies = [
 
 [[package]]
 name = "toml"
-version = "0.5.9"
+version = "0.5.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8d82e1a7758622a465f8cee077614c73484dac5b836c02ff6a40d5d1010324d7"
+checksum = "1333c76748e868a4d9d1017b5ab53171dfd095f70c712fdb4653a406547f598f"
 dependencies = [
  "serde",
 ]
