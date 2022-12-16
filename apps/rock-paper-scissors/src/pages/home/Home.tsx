@@ -76,27 +76,17 @@ function Home() {
 
   const gameStage: any = useMemo(() => gameStageState.state?.GameStage, [gameStageState.state?.GameStage]);
 
-  const getGameStage = useMemo(
-    () => {
-      if (!gameStage) {
-        return ''
-      }
-      if (gameStage === 'preparation') {
-        return 'preparation';
-      }
-      if (Object.keys(gameStage).includes('InProgress')) {
-        return 'progress';
-      }
-      if (Object.keys(gameStage).includes('Reveal')) {
-        return 'reveal';
-      }
-    },
-    [gameStage],
+  const getGameStage = useMemo(() => {
+    if (!gameStage) return '';
+    if (gameStage === 'preparation') return 'preparation';
+    if (Object.keys(gameStage).includes('InProgress')) return 'progress';
+    if (Object.keys(gameStage).includes('Reveal')) return 'reveal';
+  }, [gameStage]
   );
 
   const gameStageFinishedPlayers = useMemo(() => {
-    if (gameStage?.InProgress?.finishedPlayers) { return gameStage?.InProgress?.finishedPlayers }
-    if (gameStage?.Reveal?.finishedPlayers) { return gameStage?.Reveal?.finishedPlayers }
+    if (gameStage?.InProgress?.finishedPlayers) return gameStage?.InProgress?.finishedPlayers;
+    if (gameStage?.Reveal?.finishedPlayers) return gameStage?.Reveal?.finishedPlayers;
   }, [gameStage?.InProgress?.finishedPlayers, gameStage?.Reveal?.finishedPlayers]);
 
   const { betSize, moveTimeoutMs, revealTimeoutMs, entryTimeoutMs, playersCountLimit } = state?.Config || {};
@@ -105,7 +95,7 @@ function Home() {
 
   useEffect(() => {
     if (lobbyList && Object.keys(gameStage).includes('Reveal')) setPrevLobbyList([...lobbyList as []])
-  }, [lobbyList, gameStage])
+  }, [lobbyList, gameStage]);
 
   const loosers = useMemo(() => {
     const loosersArray = [] as Hex[];
