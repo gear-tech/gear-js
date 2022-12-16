@@ -69,7 +69,7 @@ describe('Read State', () => {
     ]).toEqual(state.toJSON());
   });
 
-  test.only('Get state v1 meta', async () => {
+  test('Get state v1 meta', async () => {
     stateV1Meta = await getStateMetadata(stateV1);
     expect(stateV1Meta.functions).toMatchObject({
       all_wallets: { input: null, output: 0 },
