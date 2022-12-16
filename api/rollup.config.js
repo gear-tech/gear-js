@@ -38,7 +38,10 @@ export default [
         tsconfig: 'tsconfig.json',
       }),
       json(),
-      nodeResolve({ preferBuiltins: true, resolveOnly: (module) => !module.includes('polkadot') }),
+      nodeResolve({
+        preferBuiltins: true,
+        resolveOnly: (module) => !module.includes('polkadot') && !module.includes('rxjs'),
+      }),
     ],
   },
 
