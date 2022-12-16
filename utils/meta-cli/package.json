@@ -4,7 +4,7 @@
   "type": "module",
   "bin": "src/app.js",
   "main": "src/app.js",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "preferGlobal": true,
   "dependencies": {
     "@gear-js/api": "0.27.7",
