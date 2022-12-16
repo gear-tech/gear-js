@@ -39,7 +39,10 @@ export function encodePayload<
 
   if (isProgramMeta(hexRegistryOrMeta)) {
     return hexRegistryOrMeta
-      .createType(hexRegistryOrMeta.types[type as keyof Omit<HumanProgramMetadataRepr, 'reg' | 'state'>].input, payload)
+      .createType(
+        hexRegistryOrMeta.types[type as keyof Omit<HumanProgramMetadataRepr, 'reg' | 'state' | 'signal'>].input,
+        payload,
+      )
       .toHex();
   } else if (isOldMeta(hexRegistryOrMeta)) {
     return CreateType.create(
