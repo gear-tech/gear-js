@@ -108,6 +108,30 @@
           }
         ],
         "type": "GasInfo"
+      },
+      "readMetahash": {
+        "params": [
+          { "name": "program_id", "type": "H256" },
+          { "name": "at", "type": "Option<BlockHash>" }
+        ],
+        "type": "H256"
+      },
+      "readState": {
+        "params": [
+          { "name": "program_id", "type": "H256" },
+          { "name": "at", "type": "Option<BlockHash>" }
+        ],
+        "type": "Bytes"
+      },
+      "readStateUsingWasm": {
+        "params": [
+          { "name": "program_id", "type": "H256" },
+          { "name": "fn_name", "type": "Bytes" },
+          { "name": "wasm", "type": "Bytes" },
+          { "name": "argument", "type": "Option<Bytes>" },
+          { "name": "at", "type": "Option<BlockHash>" }
+        ],
+        "type": "Bytes"
       }
     },
     "chainSpec_unstable": {

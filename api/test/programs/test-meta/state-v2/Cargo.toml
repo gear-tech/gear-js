@@ -1,0 +1,16 @@
+[package]
+name = "test-meta-state-v2"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+gstd = { git = "https://github.com/gear-tech/gear.git" }
+gmeta = { git = "https://github.com/gear-tech/gear.git", features = ["codegen"]  }
+test-meta-io = { path = "../io" }
+
+[build-dependencies]
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", features = ["metawasm"]  }
+
+[features]
+default = ["std"]
+std = []

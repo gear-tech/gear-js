@@ -1,6 +1,6 @@
-import { u64 } from '@polkadot/types';
+import { TypeRegistry, u64 } from '@polkadot/types';
 import { BlockNumber } from '@polkadot/types/interfaces';
-import { CreateType } from '../create-type';
+import assert from 'assert';
 
 export default (
   memory: WebAssembly.Memory,
@@ -8,6 +8,7 @@ export default (
   inputValue?: Uint8Array,
   timestamp?: u64,
   block_height?: BlockNumber,
+  replyFn: (payload: number, len: number) => void = () => {},
 ) => ({
   env: {
     abortStackOverflow: () => {
@@ -35,17 +36,18 @@ export default (
       if (showDebug) {
         console.debug(
           '[GR_DEBUG]',
-          CreateType.create('String', new Uint8Array(memory.buffer.slice(payload, payload + len))).toString(),
+          new TypeRegistry()
+            .createType('String', new Uint8Array(memory.buffer.slice(payload, payload + len)))
+            .toHuman(),
         );
       }
     },
     gr_error: (error: number, len: number) => {
       console.error(
         '[GR_ERROR]',
-        CreateType.create('String', new Uint8Array(memory.buffer.slice(error, error + len))).toString(),
+        new TypeRegistry().createType('String', new Uint8Array(memory.buffer.slice(error, error + len))).toHuman(),
       );
     },
-    gr_status_code: () => {},
     gr_exit: () => {},
     gr_gas_available: () => {},
     gr_leave: () => {},
@@ -54,6 +56,7 @@ export default (
     gr_program_id: () => {},
     gr_random: () => {},
     gr_read: (at: number, len: number, buffer: number) => {
+      assert.notStrictEqual(inputValue, undefined, 'Input value not found');
       new Uint8Array(memory.buffer).set(inputValue.slice(at, len), buffer);
     },
     gr_reply_commit_wgas: () => {},
@@ -61,7 +64,7 @@ export default (
     gr_reply_push: () => {},
     gr_reply_to: () => {},
     gr_reply_wgas: () => {},
-    gr_reply: () => {},
+    gr_reply: replyFn,
     gr_reservation_reply_commit: () => {},
     gr_reservation_reply: () => {},
     gr_reservation_send_commit: () => {},
@@ -74,12 +77,14 @@ export default (
     gr_send_wgas: () => {},
     gr_send: () => {},
     gr_size: (size_ptr: number) => {
-      const len = CreateType.create('u32', inputValue.byteLength).toU8a();
+      assert.notStrictEqual(inputValue, undefined, 'Input value not found');
+      const len = new TypeRegistry().createType('u32', inputValue.byteLength).toU8a();
       for (let i = 0; i < len.length; i++) {
         new Uint8Array(memory.buffer)[size_ptr + i] = len[i];
       }
     },
     gr_source: () => {},
+    gr_status_code: () => {},
     gr_system_reserve_gas: () => {},
     gr_unreserve_gas: () => {},
     gr_value_available: () => {},
