@@ -35,6 +35,7 @@ jobs:
           target: wasm32-unknown-unknown
 
       - name: Install dependencies
+        working-directory: api
         run: yarn install
 
       - name: Build @gear-js/api
@@ -89,6 +90,7 @@ jobs:
           static-checking: localIsNew
 
       - name: Install dependencies
+        working-directory: api
         run: yarn install
 
       - name: Build @gear-js/api
