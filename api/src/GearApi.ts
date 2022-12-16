@@ -1,7 +1,6 @@
-import { SpRuntimeDispatchError } from '@polkadot/types/lookup';
 import { RegistryError } from '@polkadot/types-codec/types';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { Event } from '@polkadot/types/interfaces';
+import { DispatchError, Event } from '@polkadot/types/interfaces';
 import { u128, u64 } from '@polkadot/types';
 
 import { gearRpc, gearTypes } from './default';
@@ -97,19 +96,19 @@ export class GearApi extends ApiPromise {
   }
 
   get existentialDeposit(): u128 {
-    return this.consts.balances.existentialDeposit;
+    return this.consts.balances.existentialDeposit as unknown as u128;
   }
 
   get blockGasLimit(): u64 {
-    return this.consts.gearGas.blockGasLimit as u64;
+    return this.consts.gearGas.blockGasLimit as unknown as u64;
   }
 
   get mailboxTreshold(): u64 {
-    return this.consts.gear.mailboxThreshold as u64;
+    return this.consts.gear.mailboxThreshold as unknown as u64;
   }
 
   get waitlistCost(): u64 {
-    return this.consts.gearScheduler.waitlistCost as u64;
+    return this.consts.gearScheduler.waitlistCost as unknown as u64;
   }
 
   /**
@@ -118,7 +117,7 @@ export class GearApi extends ApiPromise {
    * @returns
    */
   getExtrinsicFailedError(event: Event): RegistryError {
-    const error = event.data[0] as SpRuntimeDispatchError;
+    const error = event.data[0] as DispatchError;
     const { isModule, asModule } = error;
     return isModule ? this.registry.findMetaError(asModule) : null;
   }

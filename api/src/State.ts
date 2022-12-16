@@ -29,7 +29,7 @@ export class GearProgramState extends GearStorage {
    * @param args
    * @param meta StateMetadata returned from getStateMetadata function
    */
-  async readStateUsingWasm(
+  async readUsingWasm(
     args: {
       programId: HexString;
       fn_name: string;
@@ -62,7 +62,7 @@ export class GearProgramState extends GearStorage {
    * @param meta - Metadata
    * @returns decoded state
    */
-  decodeState(state: Uint8Array, meta: OldMetadata): Codec {
+  private decodeState(state: Uint8Array, meta: OldMetadata): Codec {
     if (!state) {
       throw new ReadStateError('Unable to read state. meta_state function is not specified in metadata');
     }
@@ -77,7 +77,7 @@ export class GearProgramState extends GearStorage {
    * @param inputValue - input parameters
    * @returns ArrayBuffer with encoded data
    */
-  encodeInput(meta: OldMetadata, inputValue: AnyJson): Uint8Array {
+  private encodeInput(meta: OldMetadata, inputValue: AnyJson): Uint8Array {
     const encoded = CreateType.create(meta.meta_state_input, inputValue, meta.types);
     return encoded.toU8a();
   }

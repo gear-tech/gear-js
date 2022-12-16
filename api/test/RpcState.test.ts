@@ -69,7 +69,7 @@ describe('Read State', () => {
     ]).toEqual(state.toJSON());
   });
 
-  test('Get state v1 meta', async () => {
+  test.only('Get state v1 meta', async () => {
     stateV1Meta = await getStateMetadata(stateV1);
     expect(stateV1Meta.functions).toMatchObject({
       all_wallets: { input: null, output: 0 },
@@ -80,7 +80,7 @@ describe('Read State', () => {
 
   test('Read state v1 all_wallets', async () => {
     expect(programId).toBeDefined();
-    const state = await api.programState.readStateUsingWasm(
+    const state = await api.programState.readUsingWasm(
       { programId, fn_name: 'all_wallets', wasm: stateV1 },
       stateV1Meta,
     );
@@ -99,7 +99,7 @@ describe('Read State', () => {
 
   test('Read state v1 first_wallet', async () => {
     expect(programId).toBeDefined();
-    const state = await api.programState.readStateUsingWasm(
+    const state = await api.programState.readUsingWasm(
       { programId, fn_name: 'first_wallet', wasm: Uint8Array.from(stateV1) },
       stateV1Meta,
     );
@@ -113,7 +113,7 @@ describe('Read State', () => {
   test('Read state v1 last_wallet', async () => {
     expect(programId).toBeDefined();
     const wasmAsHex = CreateType.create('Bytes', stateV1).toHex();
-    const state = await api.programState.readStateUsingWasm(
+    const state = await api.programState.readUsingWasm(
       { programId, fn_name: 'last_wallet', wasm: wasmAsHex },
       stateV1Meta,
     );
@@ -134,7 +134,7 @@ describe('Read State', () => {
 
   test('Read state v2 wallet_by_id', async () => {
     expect(programId).toBeDefined();
-    const state = await api.programState.readStateUsingWasm(
+    const state = await api.programState.readUsingWasm(
       { programId, fn_name: 'wallet_by_id', wasm: stateV2, argument: { decimal: 1, hex: '0x01' } },
       stateV2Meta,
     );
@@ -147,7 +147,7 @@ describe('Read State', () => {
 
   test('Read state v2 wallet_by_person', async () => {
     expect(programId).toBeDefined();
-    const state = await api.programState.readStateUsingWasm(
+    const state = await api.programState.readUsingWasm(
       { programId, fn_name: 'wallet_by_person', wasm: stateV2, argument: { surname: 'Surname0', name: 'Name0' } },
       stateV2Meta,
     );

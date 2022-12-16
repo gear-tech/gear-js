@@ -12,7 +12,7 @@ export class StateMetadata extends GearMetadata {
   }
 }
 
-export async function getStateMetadata(wasmBytes: Buffer): Promise<StateMetadata> {
+export async function getStateMetadata(wasmBytes: Buffer | Uint8Array): Promise<StateMetadata> {
   const memory = new WebAssembly.Memory({ initial: 17 });
 
   let resolveMetadataPromise: (metadata: Uint8Array) => void;

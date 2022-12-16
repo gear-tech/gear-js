@@ -1,3 +1,13 @@
+## 0.28.0
+
+_12/16/2022_
+
+https://github.com/gear-tech/gear-js/pull/1135
+
+### Changes
+
+- New approach to reading state and using metadata
+
 ## 0.27.7
 
 _11/29/2022_
