@@ -2274,6 +2274,7 @@ __metadata:
     eslint-config-prettier: 8.5.0
     eslint-plugin-prettier: 3.4.1
     jest: 27.5.1
+    jest-environment-node: 27.5.1
     js-yaml: 4.1.0
     nanoid: ^3.0.0
     pg: 8.7.3
@@ -15354,7 +15355,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-environment-node@npm:^27.5.1":
+"jest-environment-node@npm:27.5.1, jest-environment-node@npm:^27.5.1":
   version: 27.5.1
   resolution: "jest-environment-node@npm:27.5.1"
   dependencies:
