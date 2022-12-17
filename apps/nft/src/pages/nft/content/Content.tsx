@@ -12,12 +12,12 @@ type Props = {
   image: string;
   ownerId: Hex;
   description: string;
-  approvedAccounts: Hex[];
+  // approvedAccounts: Hex[];
   rarity?: string;
   attributes?: { [key: string]: string };
   onTransferButtonClick: () => void;
   onApproveButtonClick: () => void;
-  onRevokeButtonClick: (address: Hex) => void;
+  // onRevokeButtonClick: (address: Hex) => void;
 };
 
 function Content(props: Props) {
@@ -26,17 +26,17 @@ function Content(props: Props) {
     image,
     ownerId,
     description,
-    approvedAccounts,
+    // approvedAccounts,
     rarity,
     attributes,
     onTransferButtonClick,
     onApproveButtonClick,
-    onRevokeButtonClick,
+    // onRevokeButtonClick,
   } = props;
 
   const { account } = useAccount();
   const isOwner = account?.decodedAddress === ownerId;
-  const isAnyApprovedAccount = !!approvedAccounts.length;
+  // const isAnyApprovedAccount = !!approvedAccounts.length;
 
   const detailsClassName = clsx(styles.main, styles.details);
 
@@ -62,9 +62,9 @@ function Content(props: Props) {
             <Card heading="Description" text={description} />
             {attributes && <Attributes attributes={attributes} />}
           </div>
-          {isAnyApprovedAccount && (
-            <Addresses list={approvedAccounts} onAddressClick={onRevokeButtonClick} isOwner={isOwner} />
-          )}
+          {/* {isAnyApprovedAccount && ( */}
+          {/*  <Addresses list={approvedAccounts} onAddressClick={onRevokeButtonClick} isOwner={isOwner} /> */}
+          {/* )} */}
         </section>
       </div>
     </>

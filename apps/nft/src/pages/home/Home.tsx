@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNFTs, useOwnerNFTs, useApprovedNFTs } from 'hooks';
+import { useNFTs, useOwnerNFTs } from 'hooks';
 import { InfoText, Loader } from 'components';
 import { FILTERS } from 'consts';
 import { useAccount } from '@gear-js/react-hooks';
@@ -13,28 +13,28 @@ function Home() {
 
   const nfts = useNFTs();
   const { ownerNFTs, isOwnerNFTsRead } = useOwnerNFTs();
-  const { approvedNFTs, isApprovedNFTsRead } = useApprovedNFTs();
+  // const { approvedNFTs, isApprovedNFTsRead } = useApprovedNFTs();
 
   const getList = () => {
     switch (filter) {
       case 'My':
         return ownerNFTs;
-      case 'Approved':
-        return approvedNFTs;
+      // case 'Approved':
+      //   return approvedNFTs;
       default:
         return nfts;
     }
   };
 
   const getNFTs = () =>
-    getList()?.map(({ id, name, media }) => (
-      <li key={id}>
-        <NFT id={id} name={name} media={media} />
+    getList()?.map(({ tokenId, name, linkToMedia }) => (
+      <li key={tokenId}>
+        <NFT id={tokenId} name={name} media={linkToMedia} />
       </li>
     ));
 
   const NFTs = getNFTs();
-  const isEachNftLoaded = nfts && (account ? isOwnerNFTsRead && isApprovedNFTsRead : true);
+  const isEachNftLoaded = nfts && (account ? isOwnerNFTsRead : true);
   const isAnyNft = !!NFTs?.length;
 
   return (

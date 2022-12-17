@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { TokenDetails } from 'types';
 import { getIpfsAddress } from 'utils';
 import { ConfirmationModal, AddressModal, Loader } from 'components';
@@ -8,7 +8,7 @@ import { Content } from './content';
 
 function NFT() {
   const nft = useNFT();
-  const { id, reference } = nft || {};
+  const { tokenId: id } = nft || {};
 
   const sendMessage = useSendNFTMessage();
 
@@ -19,17 +19,9 @@ function NFT() {
   const [isApproveModalOpen, setIsApproveModalOpen] = useState(false);
   const [revokedAddress, setRevokedAddress] = useState('' as Hex);
 
-  useEffect(() => {
-    if (reference) {
-      fetch(getIpfsAddress(reference))
-        .then((response) => response.json())
-        .then(setDetails);
-    }
-  }, [reference]);
-
   const openTransferModal = () => setIsTransferModalOpen(true);
   const openApproveModal = () => setIsApproveModalOpen(true);
-  const openRevokeModal = (address: Hex) => setRevokedAddress(address);
+  // const openRevokeModal = (address: Hex) => setRevokedAddress(address);
 
   const closeModal = () => {
     setIsTransferModalOpen(false);
@@ -45,18 +37,18 @@ function NFT() {
 
   return (
     <>
-      {nft ? (
+      {nft?.tokenId ? (
         <Content
-          heading={`${nft.name} #${nft.id}`}
-          image={getIpfsAddress(nft.media)}
+          heading={`${nft.name} #${nft.tokenId}`}
+          image={getIpfsAddress(nft.linkToMedia as string)}
           ownerId={nft.ownerId}
-          description={nft.description}
-          approvedAccounts={nft.approvedAccountIds}
-          rarity={rarity}
-          attributes={attributes}
+          description={nft.description as string}
+          // approvedAccounts={nft.approvedAccountIds as Hex}  // todo: remove
+          rarity={rarity}  // todo: remove
+          attributes={attributes}  // todo: remove
           onTransferButtonClick={openTransferModal}
           onApproveButtonClick={openApproveModal}
-          onRevokeButtonClick={openRevokeModal}
+          // onRevokeButtonClick={openRevokeModal}
         />
       ) : (
         <Loader />

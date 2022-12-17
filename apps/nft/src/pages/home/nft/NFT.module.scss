@@ -12,9 +12,12 @@
   margin: 0 auto 30px;
   // TODO: replace w/ shared img-fluid class/mixin
   max-width: 100%;
-  height: auto;
+  //height: auto;
   max-height: 200px;
   border-radius: $borderRadius;
+  aspect-ratio: 1/1;
+  width: 100%;
+  object-fit: contain;
 }
 
 .heading,

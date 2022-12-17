@@ -4,6 +4,6 @@ import { getMintDetails, getMintPayload } from './form';
 
 const isLoggedIn = ({ address }: InjectedAccountWithMeta) => localStorage[LOCAL_STORAGE.ACCOUNT] === address;
 
-const getIpfsAddress = (cid: string) => `${ADDRESS.IPFS_GATEWAY}/${cid}`;
+const getIpfsAddress = (cid: string) => `${cid}`; // ${ADDRESS.IPFS_GATEWAY}/
 
 export { isLoggedIn, getIpfsAddress, getMintDetails, getMintPayload };

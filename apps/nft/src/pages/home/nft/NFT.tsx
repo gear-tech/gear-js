@@ -8,18 +8,16 @@ type Props = {
   media: string;
 };
 
-function NFT({ id, name, media }: Props) {
+export function NFT({ id, name, media }: Props) {
   const to = `/nft/${id}`;
   const src = getIpfsAddress(media);
   const text = `#${id}`;
 
   return (
     <Link to={to} className={styles.nft}>
-      <img src={src} alt={name} className={styles.image} />
+      <img src={src} alt={name} className={styles.image} loading="lazy" />
       <h3 className={styles.heading}>{name}</h3>
       <p className={styles.text}>{text}</p>
     </Link>
   );
 }
-
-export { NFT };

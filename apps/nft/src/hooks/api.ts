@@ -1,11 +1,11 @@
 import { useAccount, useReadState, useSendMessage } from '@gear-js/react-hooks';
 import { useMemo } from 'react';
-import { Params, Token } from 'types';
+import { ArtMetadata, Params, Token } from 'types';
 import { useParams } from 'react-router-dom';
 import { AnyJson } from '@polkadot/types/types';
 import { useWasm } from './context';
 
-type TokenState = { Token: { token: Token } };
+type TokenState = { Token: { artMetadata: ArtMetadata } };
 type TokensState = { AllTokens: { tokens: Token[] } };
 type OwnerTokensState = { TokensForOwner: { tokens: Token[] } };
 type ApprovedTokensState = { ApprovedTokens: { tokens: Token[] } };
@@ -23,7 +23,7 @@ function useNFT() {
 
   const { state } = useNFTState<TokenState>(payload);
 
-  return state?.Token.token;
+  return state?.Token.artMetadata;
 }
 
 function useNFTs() {
