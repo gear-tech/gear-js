@@ -20,7 +20,6 @@ function useNFTState<T>(payload: AnyJson) {
 function useNFT() {
   const { id } = useParams() as Params;
   const payload = useMemo(() => ({ Token: { tokenId: id } }), [id]);
-
   const { state } = useNFTState<TokenState>(payload);
 
   return state?.Token.artMetadata;

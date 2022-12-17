@@ -2,7 +2,6 @@ import { Hex } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 import clsx from 'clsx';
-import { Addresses } from '../addresses';
 import { Attributes } from '../attributes';
 import { Card } from '../card';
 import styles from './Content.module.scss';
@@ -12,12 +11,10 @@ type Props = {
   image: string;
   ownerId: Hex;
   description: string;
-  // approvedAccounts: Hex[];
   rarity?: string;
   attributes?: { [key: string]: string };
   onTransferButtonClick: () => void;
   onApproveButtonClick: () => void;
-  // onRevokeButtonClick: (address: Hex) => void;
 };
 
 function Content(props: Props) {
@@ -26,17 +23,13 @@ function Content(props: Props) {
     image,
     ownerId,
     description,
-    // approvedAccounts,
     rarity,
     attributes,
     onTransferButtonClick,
     onApproveButtonClick,
-    // onRevokeButtonClick,
   } = props;
-
   const { account } = useAccount();
   const isOwner = account?.decodedAddress === ownerId;
-  // const isAnyApprovedAccount = !!approvedAccounts.length;
 
   const detailsClassName = clsx(styles.main, styles.details);
 
@@ -62,9 +55,6 @@ function Content(props: Props) {
             <Card heading="Description" text={description} />
             {attributes && <Attributes attributes={attributes} />}
           </div>
-          {/* {isAnyApprovedAccount && ( */}
-          {/*  <Addresses list={approvedAccounts} onAddressClick={onRevokeButtonClick} isOwner={isOwner} /> */}
-          {/* )} */}
         </section>
       </div>
     </>
