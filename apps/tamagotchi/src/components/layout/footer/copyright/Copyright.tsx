@@ -1,9 +1,3 @@
-import styles from './Copyright.module.scss';
-
-function Copyright() {
-  const year = new Date().getFullYear();
-
-  return <small className={styles.copyright}>{year}. All rights reserved.</small>;
-}
-
-export { Copyright };
+export const Copyright = () => <p className='text-secondary-text'>
+  &copy; {new Date().getFullYear()} Gear Technologies, Inc. All Rights Reserved.
+</p>;

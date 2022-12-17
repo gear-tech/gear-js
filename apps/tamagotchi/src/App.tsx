@@ -14,7 +14,7 @@ function Component() {
   return (
     <div className="page">
       <Header />
-      <main className="page__content container">
+      <main className="page__content container pb-5">
         {isApiReady && isAccountReady && wasm ? <Routing /> : <ApiLoader />}
       </main>
       <Footer />

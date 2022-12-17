@@ -1,3 +1,1 @@
-import { Copyright } from './Copyright';
-
-export { Copyright };
+export { Copyright } from './Copyright';

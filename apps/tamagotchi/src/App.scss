@@ -1,6 +1,10 @@
 @use 'assets/styles';
 @use '@gear-js/ui/variables' as *;
 
+:root {
+  --color-text-secondary: #{$textColorSecondary};
+}
+
 html {
   background-color: #1E1E1E;
 }
