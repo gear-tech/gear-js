@@ -1,6 +1,8 @@
 name: Deploy Gear-apps to k8s stage/prod
 
 on:
+  push:
+    branches: ['ek-update-nft-dapp']
   workflow_dispatch:
 
 env:
