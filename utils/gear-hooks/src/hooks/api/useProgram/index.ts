@@ -1,5 +1,5 @@
 import { web3FromSource } from '@polkadot/extension-dapp';
-import { GasLimit, Metadata } from '@gear-js/api';
+import { GasLimit, ProgramMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { useContext } from 'react';
 import { AccountContext, AlertContext, ApiContext } from 'context';
@@ -10,19 +10,19 @@ import { waitForProgramInit } from './utils';
 function useProgram(
   method: 'upload',
   code: Code | undefined,
-  metadata?: Metadata | undefined,
+  metadata?: ProgramMetadata | undefined,
   payloadType?: string | undefined,
 ): UseProgram;
 function useProgram(
   method: 'create',
   codeId: CodeId | undefined,
-  metadata?: Metadata | undefined,
+  metadata?: ProgramMetadata | undefined,
   payloadType?: string | undefined,
 ): UseProgram;
 function useProgram(
   method: 'upload' | 'create',
   codeOrCodeId: Code | CodeId | undefined,
-  metadata?: Metadata | undefined,
+  metadata?: ProgramMetadata | undefined,
   payloadType?: string | undefined,
 ): UseProgram {
   const alert = useContext(AlertContext); // сircular dependency fix
@@ -69,13 +69,17 @@ function useProgram(
   return action;
 }
 
-function useUploadProgram(code: Code | undefined, metadata?: Metadata | undefined, payloadType?: string | undefined) {
+function useUploadProgram(
+  code: Code | undefined,
+  metadata?: ProgramMetadata | undefined,
+  payloadType?: string | undefined,
+) {
   return useProgram('upload', code, metadata, payloadType);
 }
 
 function useCreateProgram(
   codeId: CodeId | undefined,
-  metadata?: Metadata | undefined,
+  metadata?: ProgramMetadata | undefined,
   payloadType?: string | undefined,
 ) {
   return useProgram('create', codeId, metadata, payloadType);

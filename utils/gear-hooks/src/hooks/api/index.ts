@@ -1,4 +1,3 @@
-import { useMetadata } from './useMetadata';
 import { useReadState } from './useReadState';
 import { useSendMessage } from './useSendMessage';
 import { useUploadProgram, useCreateProgram } from './useProgram';
@@ -10,7 +9,6 @@ import {
 } from './useCalculateGas';
 
 export {
-  useMetadata,
   useReadState,
   useSendMessage,
   useUploadProgram,

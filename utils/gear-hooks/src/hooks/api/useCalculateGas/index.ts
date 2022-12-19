@@ -1,14 +1,10 @@
-import { GasInfo, Hex, Metadata } from '@gear-js/api';
+import { GasInfo, Hex, ProgramMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { useContext } from 'react';
 import { AccountContext, ApiContext } from 'context';
 import { Options } from './types';
 
-function useUploadCalculateGas(
-  code: Hex | Buffer | undefined,
-  metaOrPayloadType?: Metadata | string | undefined,
-  options?: Options,
-) {
+function useUploadCalculateGas(code: Hex | Buffer | undefined, meta?: ProgramMetadata | undefined, options?: Options) {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
 
@@ -25,18 +21,15 @@ function useUploadCalculateGas(
       initPayload,
       value,
       isOtherPanicsAllowed,
-      metaOrPayloadType,
+      // @ts-ignore TODO: remove after fix
+      meta,
     );
   };
 
   return calculateGas;
 }
 
-function useCreateCalculateGas(
-  codeId: Hex | undefined,
-  metaOrPayloadType?: Metadata | string | undefined,
-  options?: Options,
-) {
+function useCreateCalculateGas(codeId: Hex | undefined, meta?: ProgramMetadata | undefined, options?: Options) {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
 
@@ -53,7 +46,8 @@ function useCreateCalculateGas(
       initPayload,
       value,
       isOtherPanicsAllowed,
-      metaOrPayloadType,
+      // @ts-ignore TODO: remove after fix
+      meta,
     );
   };
 
@@ -62,7 +56,7 @@ function useCreateCalculateGas(
 
 function useHandleCalculateGas(
   destinationId: Hex | Buffer | undefined,
-  metaOrPayloadType?: Metadata | string | undefined,
+  meta?: ProgramMetadata | undefined,
   options?: Options,
 ) {
   const { api } = useContext(ApiContext); // сircular dependency fix
@@ -81,7 +75,8 @@ function useHandleCalculateGas(
       initPayload,
       value,
       isOtherPanicsAllowed,
-      metaOrPayloadType,
+      // @ts-ignore TODO: remove after fix
+      meta,
     );
   };
 
@@ -91,7 +86,7 @@ function useHandleCalculateGas(
 function useReplyCalculateGas(
   messageId: Hex | undefined,
   exitCode: number | undefined,
-  metaOrPayloadType?: Metadata | string | undefined,
+  meta?: ProgramMetadata | undefined,
   options?: Options,
 ) {
   const { api } = useContext(ApiContext); // сircular dependency fix
@@ -112,7 +107,8 @@ function useReplyCalculateGas(
       initPayload,
       value,
       isOtherPanicsAllowed,
-      metaOrPayloadType,
+      // @ts-ignore TODO: remove after fix
+      meta,
     );
   };
 

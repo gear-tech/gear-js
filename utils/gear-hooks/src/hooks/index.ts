@@ -1,5 +1,4 @@
 import {
-  useMetadata,
   useReadState,
   useSendMessage,
   useUploadProgram,
@@ -13,7 +12,6 @@ import { useAccount, useAlert, useApi } from './context';
 import { useCreateHandler } from './handlers';
 
 export {
-  useMetadata,
   useReadState,
   useSendMessage,
   useUploadProgram,
