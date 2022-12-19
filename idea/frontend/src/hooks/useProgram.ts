@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { Metadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 
 import { fetchProgram, getLocalProgram } from 'api';
@@ -19,7 +19,7 @@ const useProgram = (id?: string, initLoading = false) => {
   const metadata = useMemo(() => {
     const meta = program?.meta?.meta;
 
-    if (meta) return JSON.parse(meta) as Metadata;
+    if (meta) return JSON.parse(meta) as ProgramMetadata;
   }, [program]);
 
   useEffect(() => {

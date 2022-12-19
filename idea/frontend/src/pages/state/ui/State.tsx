@@ -1,4 +1,4 @@
-import { Hex, Metadata } from '@gear-js/api';
+import { Hex, ProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { fetchMetadata, getLocalProgramMeta } from 'api';
 import { useChain } from 'hooks';
@@ -16,7 +16,7 @@ const State = () => {
   const { programId } = useParams() as Params;
 
   const metaBuffer = useRef<Buffer>();
-  const [metadata, setMetadata] = useState<Metadata>();
+  const [metadata, setMetadata] = useState<ProgramMetadata>();
 
   const { isDevChain } = useChain();
   const getMetadata = isDevChain ? getLocalProgramMeta : fetchMetadata;
@@ -26,7 +26,7 @@ const State = () => {
       .then(({ result }) => {
         if (!result.meta || !result.metaWasm) return Promise.reject(new Error('No metadata'));
 
-        const parsedMeta = JSON.parse(result.meta) as Metadata;
+        const parsedMeta = JSON.parse(result.meta) as ProgramMetadata;
 
         metaBuffer.current = Buffer.from(result.metaWasm, 'base64');
         setMetadata(parsedMeta);

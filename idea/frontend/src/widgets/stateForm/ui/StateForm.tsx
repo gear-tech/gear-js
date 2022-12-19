@@ -1,5 +1,5 @@
 import { Button, Input, Textarea } from '@gear-js/ui';
-import { Hex, Metadata } from '@gear-js/api';
+import { Hex, ProgramMetadata } from '@gear-js/api';
 import { useEffect, useMemo } from 'react';
 import { Form } from 'react-final-form';
 import { OnChange } from 'react-final-form-listeners';
@@ -15,7 +15,7 @@ import { FormValues, INITIAL_VALUES } from '../model';
 import styles from './StateForm.module.scss';
 
 type Props = {
-  meta: Metadata | undefined;
+  meta: ProgramMetadata | undefined;
   metaBuffer: Buffer | undefined;
   programId: Hex;
   isLoading: boolean;

@@ -2,7 +2,7 @@ import { Event } from '@polkadot/types/interfaces';
 import { AnySchema, ValidationError } from 'yup';
 import { setIn } from 'final-form';
 import isString from 'lodash.isstring';
-import { GearApi, Metadata } from '@gear-js/api';
+import { GearApi, ProgramMetadata } from '@gear-js/api';
 import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
 
 import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from 'shared/config';
@@ -127,7 +127,7 @@ const getValidation =
     }
   };
 
-const isState = (meta: Metadata | undefined) => !!meta?.meta_state_output;
+const isState = (meta: ProgramMetadata | undefined) => !!meta?.meta_state_output;
 
 const disableScroll = () => document.body.classList.add('noOverflow');
 const enableScroll = () => document.body.classList.remove('noOverflow');

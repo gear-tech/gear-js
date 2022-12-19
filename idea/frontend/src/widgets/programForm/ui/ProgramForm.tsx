@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef, useEffect, ReactChild } from 'react';
 import { FormApi } from 'final-form';
 import { Form } from 'react-final-form';
-import { Metadata, Hex } from '@gear-js/api';
+import { ProgramMetadata, Hex } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 
 import { useGasCalculate, useChangeEffect } from 'hooks';
@@ -20,7 +20,7 @@ import { INITIAL_VALUES, FormValues, RenderButtonsProps, SubmitHelpers } from '.
 
 type Props = {
   source: Buffer | Hex;
-  metadata?: Metadata;
+  metadata?: ProgramMetadata;
   gasMethod: GasMethod;
   metadataBuffer?: string;
   renderButtons: (props: RenderButtonsProps) => ReactChild;
@@ -40,7 +40,7 @@ const ProgramForm = (props: Props) => {
 
   const calculateGas = useGasCalculate();
 
-  const changeProgramName = (meta: Metadata) => formApi.current?.change('programName', meta?.title ?? '');
+  const changeProgramName = (meta: ProgramMetadata) => formApi.current?.change('programName', meta?.title ?? '');
 
   const handleGasCalculate = async () => {
     if (!formApi.current) {

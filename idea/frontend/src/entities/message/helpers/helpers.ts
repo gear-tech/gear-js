@@ -1,8 +1,8 @@
-import { Metadata, CreateType } from '@gear-js/api';
+import { ProgramMetadata, CreateType } from '@gear-js/api';
 
 import { IMessage, EntryPoint } from 'entities/message';
 
-const getDecodedMessagePayload = (meta: Metadata, message: IMessage) => {
+const getDecodedMessagePayload = (meta: ProgramMetadata, message: IMessage) => {
   const { entry, payload } = message;
   const isMessageEnqueued = message.type === 'MessageEnqueued';
 

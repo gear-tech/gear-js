@@ -1,5 +1,5 @@
 import { Signer } from '@polkadot/api/types';
-import { Metadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 
 import { OperationCallbacks, ParamsToSignAndSend } from 'entities/hooks';
 
@@ -7,7 +7,7 @@ type ParamsToUploadMeta = Partial<OperationCallbacks> & {
   name: string;
   title?: string;
   signer?: Signer;
-  metadata?: Metadata;
+  metadata?: ProgramMetadata;
   programId: string;
   metadataBuffer?: string;
 };

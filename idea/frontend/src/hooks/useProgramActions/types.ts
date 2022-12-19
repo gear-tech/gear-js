@@ -1,4 +1,4 @@
-import { Hex, Metadata } from '@gear-js/api';
+import { Hex, ProgramMetadata } from '@gear-js/api';
 
 import { OperationCallbacks, ParamsToSignAndSend } from 'entities/hooks';
 
@@ -6,7 +6,7 @@ type Payload = {
   value: number;
   title?: string;
   gasLimit: number;
-  metadata?: Metadata;
+  metadata?: ProgramMetadata;
   metadataBuffer?: string;
   initPayload: string;
   programName?: string;

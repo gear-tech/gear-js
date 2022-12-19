@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Metadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 
 import { UploadData } from 'features/uploadMetadata';
 import { StateWithFile } from 'shared/types';
@@ -12,7 +12,7 @@ import { MetadataSection } from './metadataSection';
 const UploadProgram = () => {
   const location = useLocation();
 
-  const [metadata, setMetadata] = useState<Metadata>();
+  const [metadata, setMetadata] = useState<ProgramMetadata>();
   const [metadataBuffer, setMetadataBuffer] = useState<string>();
 
   const resetMetadada = useCallback(() => {

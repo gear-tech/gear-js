@@ -1,5 +1,5 @@
 import isPlainObject from 'lodash.isplainobject';
-import { Metadata, Hex, GasInfo } from '@gear-js/api';
+import { ProgramMetadata, Hex, GasInfo } from '@gear-js/api';
 import { useApi, useAlert, useAccount } from '@gear-js/react-hooks';
 
 import { GasMethod } from 'shared/config';
@@ -16,7 +16,7 @@ const useGasCalculate = () => {
     method: T,
     values: Values,
     code: Code<T>,
-    meta?: Metadata,
+    meta?: ProgramMetadata,
     addressId?: string,
   ): Promise<Result> => {
     const { value, payload, payloadType } = values;

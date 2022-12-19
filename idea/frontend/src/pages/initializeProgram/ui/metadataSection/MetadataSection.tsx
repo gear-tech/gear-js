@@ -1,4 +1,4 @@
-import { Metadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 
 import { UploadMetadata, UploadData } from 'features/uploadMetadata';
 import { Subheader } from 'shared/ui/subheader';
@@ -6,7 +6,7 @@ import { Subheader } from 'shared/ui/subheader';
 import styles from '../InitializeProgram.module.scss';
 
 type Props = {
-  metadata?: Metadata;
+  metadata?: ProgramMetadata;
   onReset: () => void;
   onUpload: (data: UploadData) => void;
 };

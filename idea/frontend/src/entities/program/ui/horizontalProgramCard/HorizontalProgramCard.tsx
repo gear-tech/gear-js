@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { Link, generatePath } from 'react-router-dom';
-import { Metadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 
 import { absoluteRoutes, routes } from 'shared/config';
 import { ReactComponent as sendSVG } from 'shared/assets/images/actions/send.svg';
@@ -25,7 +25,7 @@ const HorizontalProgramCard = memo(({ program }: Props) => {
   const statusName = PROGRAM_STATUS_NAME[status];
 
   const metaString = program.meta?.meta;
-  const meta = metaString ? (JSON.parse(metaString) as Metadata) : undefined;
+  const meta = metaString ? (JSON.parse(metaString) as ProgramMetadata) : undefined;
 
   return (
     <article className={styles.horizontalProgramCard}>

@@ -1,4 +1,4 @@
-import { Hex, Metadata } from '@gear-js/api';
+import { Hex, ProgramMetadata } from '@gear-js/api';
 import { Button, Input, Textarea } from '@gear-js/ui';
 import { useApi } from '@gear-js/react-hooks';
 import { useMemo, useRef, useState } from 'react';
@@ -25,7 +25,7 @@ type Props = {
   id: Hex;
   isReply: boolean;
   isLoading: boolean;
-  metadata?: Metadata | undefined;
+  metadata?: ProgramMetadata | undefined;
 };
 
 const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {

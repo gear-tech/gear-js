@@ -23,6 +23,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "assert": "^2.0.0",
     "buffer": "^6.0.3",
     "clsx": "^1.2.1",
     "final-form": "^4.20.7",

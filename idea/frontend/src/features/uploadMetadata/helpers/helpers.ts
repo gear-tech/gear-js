@@ -1,10 +1,10 @@
-import { Metadata, decodeHexTypes, Hex } from '@gear-js/api';
+import { ProgramMetadata, decodeHexTypes, Hex } from '@gear-js/api';
 
 import { getPreformattedText } from 'shared/helpers';
 
 import { META_FIELDS } from '../model';
 
-const getMetadataProperties = (metadata: Metadata): Metadata => {
+const getMetadataProperties = (metadata: ProgramMetadata): ProgramMetadata => {
   const valuesFromMeta = META_FIELDS.reduce((result, metaKey) => {
     const metaValue = metadata[metaKey];
 
@@ -14,7 +14,7 @@ const getMetadataProperties = (metadata: Metadata): Metadata => {
     }
 
     return result;
-  }, {} as Metadata);
+  }, {} as ProgramMetadata);
 
   if (metadata.types) {
     const decodedTypes = decodeHexTypes(metadata.types);

@@ -1,6 +1,6 @@
 import { useRef, useEffect, ChangeEvent } from 'react';
 import clsx from 'clsx';
-import { Metadata, getWasmMetadata } from '@gear-js/api';
+import { ProgramMetadata, getWasmMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { FileInput } from '@gear-js/ui';
 
@@ -13,7 +13,7 @@ import { UploadData } from '../model';
 import { getMetadataProperties } from '../helpers';
 
 type Props = {
-  metadata?: Metadata;
+  metadata?: ProgramMetadata;
   onReset: () => void;
   onUpload: (data: UploadData) => void;
 };
@@ -22,7 +22,7 @@ const UploadMetadata = ({ metadata, onReset, onUpload }: Props) => {
   const alert = useAlert();
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const prevMetadata = usePrevious<Metadata | undefined>(metadata);
+  const prevMetadata = usePrevious<ProgramMetadata | undefined>(metadata);
 
   const handleUploadMetaFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -39,7 +39,7 @@ const UploadMetadata = ({ metadata, onReset, onUpload }: Props) => {
       }
 
       const readedFile = await readFileAsync(file, 'buffer');
-      const fileMeta: Metadata = await getWasmMetadata(readedFile as Buffer);
+      const fileMeta: ProgramMetadata = await getWasmMetadata(readedFile as Buffer);
 
       if (!fileMeta) {
         throw new Error('Failed to load meta');
@@ -55,7 +55,7 @@ const UploadMetadata = ({ metadata, onReset, onUpload }: Props) => {
     }
   };
 
-  const renderMetadataProperties = (meta: Metadata) => {
+  const renderMetadataProperties = (meta: ProgramMetadata) => {
     // if incorrect wasm file, then types will be '0x'
     if (meta.types === '0x') {
       return null;

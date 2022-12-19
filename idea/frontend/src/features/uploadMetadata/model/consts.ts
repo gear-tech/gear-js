@@ -1,6 +1,6 @@
-import { Metadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 
-const META_FIELDS: (keyof Metadata)[] = [
+const META_FIELDS: (keyof ProgramMetadata)[] = [
   'init_input',
   'init_output',
   'async_init_input',

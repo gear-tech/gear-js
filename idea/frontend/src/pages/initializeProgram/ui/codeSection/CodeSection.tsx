@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Metadata, Hex } from '@gear-js/api';
+import { ProgramMetadata, Hex } from '@gear-js/api';
 import { Button, Input } from '@gear-js/ui';
 
 import { useProgramActions } from 'hooks';
@@ -14,7 +14,7 @@ import styles from '../InitializeProgram.module.scss';
 
 type Props = {
   codeId: string;
-  metadata?: Metadata;
+  metadata?: ProgramMetadata;
   metadataBuffer?: string;
   resetMetadada: () => void;
 };

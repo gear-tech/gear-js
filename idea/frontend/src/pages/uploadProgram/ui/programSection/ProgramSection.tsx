@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, ChangeEvent } from 'react';
 import clsx from 'clsx';
-import { Metadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 import { Button, FileInput } from '@gear-js/ui';
 import { useAlert } from '@gear-js/react-hooks';
 
@@ -19,7 +19,7 @@ import styles from '../UploadProgram.module.scss';
 type Props = {
   resetMetaFile: () => void;
   file?: File;
-  metadata?: Metadata;
+  metadata?: ProgramMetadata;
   metadataBuffer?: string;
 };
 

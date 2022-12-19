@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { Metadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 
 import { UploadData } from 'features/uploadMetadata';
 
@@ -12,7 +12,7 @@ import { MetadataSection } from './metadataSection';
 const InitializeProgram = () => {
   const { codeId } = useParams() as PageParams;
 
-  const [metadata, setMetadata] = useState<Metadata>();
+  const [metadata, setMetadata] = useState<ProgramMetadata>();
   const [metadataBuffer, setMetadataBuffer] = useState<string>();
 
   const resetMetadada = useCallback(() => {

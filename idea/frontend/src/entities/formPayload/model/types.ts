@@ -1,4 +1,4 @@
-import { Metadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 
 import { ValueType } from './consts';
 
@@ -26,14 +26,14 @@ type PayloadValue =
 type PayloadSchemaModel = {
   type?: string;
   deposit: number;
-  metadata?: Metadata;
+  metadata?: ProgramMetadata;
   maxGasLimit: number;
 };
 
 type PayloadSchemaParams = {
   type?: string;
   deposit: number;
-  metadata?: Metadata;
+  metadata?: ProgramMetadata;
   maxGasLimit: number;
 };
 

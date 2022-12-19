@@ -1,4 +1,4 @@
-import { CreateType, Metadata } from '@gear-js/api';
+import { CreateType, ProgramMetadata } from '@gear-js/api';
 import { InputWrapper } from '@gear-js/ui';
 import { AnyJson, Codec } from '@polkadot/types/types';
 import { useEffect, useState } from 'react';
@@ -15,7 +15,7 @@ import { getDecodedMessagePayload } from '../../helpers';
 
 type Props = {
   message?: IMessage;
-  metadata?: Metadata;
+  metadata?: ProgramMetadata;
   isLoading: boolean;
 };
 

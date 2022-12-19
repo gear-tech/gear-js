@@ -1,7 +1,7 @@
-import { Metadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 
 type UploadData = {
-  metadata: Metadata;
+  metadata: ProgramMetadata;
   metadataBuffer: string;
 };
 

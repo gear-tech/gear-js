@@ -1,11 +1,11 @@
 import { useMemo, ReactNode } from 'react';
-import { Metadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
+import { ProgramMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 
 import { Table, ExpandedTableRow } from 'shared/ui/table';
 import { PreformattedBlock } from 'shared/ui/preformattedBlock';
 
 type Props = {
-  metadata: Metadata;
+  metadata: ProgramMetadata;
 };
 
 const MetadataTable = ({ metadata }: Props) => {

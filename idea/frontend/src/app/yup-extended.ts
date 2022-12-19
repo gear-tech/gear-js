@@ -1,6 +1,6 @@
 /* eslint-disable func-names */
 import * as yup from 'yup';
-import { Metadata, CreateType } from '@gear-js/api';
+import { ProgramMetadata, CreateType } from '@gear-js/api';
 
 import { PayloadValue } from 'entities/formPayload';
 import { getSubmitPayload } from 'features/formPayload';
@@ -9,7 +9,7 @@ const PAYLOAD_ERROR_MESSAGE = 'Invalid payload';
 const PAYLOAD_TYPE_ERROR_MESSAGE = 'Invalid payload type';
 
 // TODO: add ts support https://github.com/jquense/yup/issues/312
-yup.addMethod(yup.mixed, 'testPayload', function (type?: string, metadata?: Metadata) {
+yup.addMethod(yup.mixed, 'testPayload', function (type?: string, metadata?: ProgramMetadata) {
   return this.test('testPayload', PAYLOAD_ERROR_MESSAGE, function (payload: PayloadValue = '') {
     const { parent, createError } = this;
 

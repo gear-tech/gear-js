@@ -1,4 +1,4 @@
-import { Metadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 
 import { MetadataTable } from 'entities/metadata';
 import { Subheader } from 'shared/ui/subheader';
@@ -7,7 +7,7 @@ import { ReactComponent as MetadataDetailsSVG } from 'shared/assets/images/place
 import { ContentLoader } from '../contentLoader';
 
 type Props = {
-  metadata?: Metadata;
+  metadata?: ProgramMetadata;
   isLoading: boolean;
 };
 
