@@ -61,7 +61,10 @@ export default [
         tsconfig: 'tsconfig.cjs.json',
       }),
       json(),
-      nodeResolve({ preferBuiltins: true, resolveOnly: (module) => !module.includes('polkadot') }),
+      nodeResolve({
+        preferBuiltins: true,
+        resolveOnly: (module) => !module.includes('polkadot') && !module.includes('rxjs'),
+      }),
       commonjs(),
       writePackageJson(),
       cpReadme(),
