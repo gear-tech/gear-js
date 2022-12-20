@@ -74,7 +74,7 @@ export class GearProgram extends GearTransaction {
   upload(
     args: IProgramUploadOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
-    typeIndexOrMessageType?: number | string,
+    typeIndexOrTypeName?: number | string,
   ): IProgramUploadResult {
     validateValue(args.value, this._api);
     validateGasLimit(args.gasLimit, this._api);
@@ -86,7 +86,7 @@ export class GearProgram extends GearTransaction {
       args.initPayload,
       metaOrHexRegistry,
       isProgramMeta(metaOrHexRegistry) ? 'init' : 'init_input',
-      typeIndexOrMessageType,
+      typeIndexOrTypeName,
     );
     const codeId = generateCodeHash(code);
     const programId = generateProgramId(code, salt);
