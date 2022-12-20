@@ -2100,25 +2100,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:0.27.5":
-  version: 0.27.5
-  resolution: "@gear-js/api@npm:0.27.5"
-  peerDependencies:
-    "@polkadot/api": ^9.6.1
-    "@polkadot/wasm-crypto": ^6.3.1
+"@gear-js/api@npm:0.28.1, @gear-js/api@npm:^0.28.1":
+  version: 0.28.1
+  resolution: "@gear-js/api@npm:0.28.1"
+  dependencies:
+    "@polkadot/api": 9.10.1
+    "@polkadot/util": 10.2.1
+    "@polkadot/wasm-crypto": 6.4.1
     rxjs: ^7.5.5
-  checksum: 7c6bd98a7f0f8b324f8465d89d851dc94f2c8cdd93b9402660fd9f4111d8dc246e2a72203c682e214c0f2f18a281c7cf741805ab8c3a8f35bb6fb43e2a145c16
-  languageName: node
-  linkType: hard
-
-"@gear-js/api@npm:0.27.6":
-  version: 0.27.6
-  resolution: "@gear-js/api@npm:0.27.6"
-  peerDependencies:
-    "@polkadot/api": ^9.6.1
-    "@polkadot/wasm-crypto": ^6.3.1
-    rxjs: ^7.5.5
-  checksum: 2e42f9f8ef7d35bc12aab2544769db365d68bfe944227765ffa8be3e7fb44be41a589d67fc6780614625f88194be6f593c71124bd360677c8ae14a2609a14657
+  checksum: ff06dc18b0ba2c945ea3f489ece874c0261343163b64ef48dfe852341460f64257939d5e938c5b378be17a7c4129a13b43c6ca0cd055fb3a71bb10c46ae72355
   languageName: node
   linkType: hard
 
@@ -2144,7 +2134,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:^0.27.0, @gear-js/api@npm:^0.27.3, @gear-js/api@npm:^0.27.5, @gear-js/api@npm:^0.27.6, @gear-js/api@npm:^0.27.7":
+"@gear-js/api@npm:^0.27.0, @gear-js/api@npm:^0.27.3, @gear-js/api@npm:^0.27.6, @gear-js/api@npm:^0.27.7":
   version: 0.27.7
   resolution: "@gear-js/api@npm:0.27.7"
   peerDependencies:
@@ -2219,7 +2209,7 @@ __metadata:
     "@babel/plugin-transform-modules-commonjs": 7.18.6
     "@babel/plugin-transform-typescript": 7.18.12
     "@babel/preset-typescript": 7.18.6
-    "@gear-js/api": 0.27.5
+    "@gear-js/api": 0.28.1
     "@gear-js/common": "workspace:^"
     "@nestjs/cli": 8.2.8
     "@nestjs/common": 8.4.7
@@ -2753,7 +2743,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/test-balance@workspace:idea/test-balance"
   dependencies:
-    "@gear-js/api": ^0.27.5
+    "@gear-js/api": ^0.28.1
     "@gear-js/common": "workspace:^"
     "@polkadot/api": 9.10.1
     "@types/amqplib": ^0.8.2
@@ -2917,7 +2907,7 @@ __metadata:
     "@babel/plugin-transform-typescript": 7.20.2
     "@babel/preset-env": 7.20.2
     "@babel/preset-typescript": 7.18.6
-    "@gear-js/api": 0.27.6
+    "@gear-js/api": 0.28.1
     "@polkadot/api": 9.10.1
     "@types/chai": 4.3.4
     "@types/jest": 29.2.3
