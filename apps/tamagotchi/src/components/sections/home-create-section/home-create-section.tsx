@@ -26,9 +26,16 @@ export const HomeCreateSection = () => {
   const closeModal = () => setOpen(false);
 
   return (
-    <section className="text-center">
-      <div className="flex justify-center">
-        <img className="aspect-[45/56]" src="/images/avatar.svg" width={448} height={560} alt="Img" loading="lazy" />
+    <section className="grid grid-rows-[1fr_auto_auto] h-[calc(100vh-196px)] text-center">
+      <div className="grow flex flex-col justify-center">
+        <img
+          className="grow w-full h-30 aspect-[45/56]"
+          src="/images/avatar.svg"
+          width={448}
+          height={560}
+          alt="Img"
+          loading="lazy"
+        />
       </div>
       <div className="mt-12 space-y-6">
         <h2 className="typo-h2 text-primary">Geary</h2>
