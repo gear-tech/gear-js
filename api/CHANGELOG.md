@@ -1,3 +1,13 @@
+## 0.28.3
+
+_12/20/2022_
+
+https://github.com/gear-tech/gear-js/pull/1146
+
+### Changes
+
+- Add new meta to methods for gas calculation
+
 ## 0.28.1
 
 _12/16/2022_

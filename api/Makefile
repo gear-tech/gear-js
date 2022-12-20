@@ -7,6 +7,9 @@ build:
 clean:
 	@rm -rf test/programs/target
 
+fmt:
+	@cargo fmt --manifest-path test/programs/Cargo.toml
+
 all: clean update build
 
 .PHONY: all clean build

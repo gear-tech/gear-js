@@ -1,17 +1,47 @@
+// This file is part of Gear.
+
+// Copyright (C) 2021-2022 Gear Technologies Inc.
+// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <https://www.gnu.org/licenses/>.
+
 #![no_std]
 
-use gstd::msg;
+// Reexport of types
+pub use test_gas_io::*;
 
-#[no_mangle]
-pub unsafe extern "C" fn init() {
-    msg::reply("Init", 0).expect("Unable to send relpy");
+// For wasm compilation
+#[cfg(not(feature = "std"))]
+mod wasm;
+
+// Exports for native usage as dependency in other crates
+#[cfg(feature = "std")]
+mod exports {
+    mod code {
+        include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
+    }
+
+    // Binary itself
+    pub use code::WASM_BINARY_OPT as WASM_BINARY;
+
+    // Metadata of the binary, defining types and registry for JS
+    pub use code::WASM_METADATA;
 }
 
-#[gstd::async_main]
-async fn main() {
-    let _response = msg::send_bytes_for_reply(msg::source(), b"PING", 0)
-        .expect("")
-        .await
-        .expect("Error in async");
-    msg::reply_bytes(b"ok", 0).unwrap();
-}
+// Empty exports while compiling into wasm
+#[cfg(not(feature = "std"))]
+mod exports {}
+
+// Public exports
+pub use exports::*;
