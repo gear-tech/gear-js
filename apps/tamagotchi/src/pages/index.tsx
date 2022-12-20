@@ -3,10 +3,10 @@ import { Home } from './home';
 
 const routes = [{ path: '/', Page: Home }];
 
-function Routing() {
-  const getRoutes = () => routes.map(({ path, Page }) => <Route key={path} path={path} element={<Page />} />);
-
-  return <Routes>{getRoutes()}</Routes>;
-}
-
-export { Routing };
+export const Routing = () => (
+  <Routes>
+    {routes.map(({ path, Page }) => (
+      <Route key={path} path={path} element={<Page />} />
+    ))}
+  </Routes>
+);

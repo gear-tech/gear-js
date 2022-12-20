@@ -2,32 +2,10 @@
 @use '@gear-js/ui/variables' as *;
 
 :root {
-  --color-text-secondary: #{$textColorSecondary};
+  --color-secondary: #{red($textColorSecondary) green($textColorSecondary) blue($textColorSecondary)};
+  --color-primary: #{red($successColor) green($successColor) blue($successColor)};
 }
 
 html {
   background-color: #1E1E1E;
-}
-
-.page {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  width: 100%;
-
-  &__content {
-    flex: 1 1 1px;
-  }
-
-  > * {
-    width: 100%;
-  }
-}
-
-.container {
-  max-width: 1150px;
-  margin-right: auto;
-  margin-left: auto;
-  padding-right: 20px;
-  padding-left: 20px;
 }

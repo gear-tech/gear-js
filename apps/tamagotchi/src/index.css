@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  .container {
+    @apply w-full max-w-[1150px] mx-auto px-5;
+  }
+}
+
+@layer components {
+  .typo-h2 {
+    @apply font-kanit text-[40px] leading-[48px] font-bold tracking-[0.04em]
+  }
+
+}

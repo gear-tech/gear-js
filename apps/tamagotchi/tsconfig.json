@@ -18,16 +18,5 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": "./src",
-    "paths": {
-      "@/application/*": [
-        "./application/*"
-      ],
-      "@/assets/*": [
-        "./assets/*"
-      ],
-      "@/components/*": [
-        "./components/*"
-      ],
-    }
   }
 }

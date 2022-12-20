@@ -1,6 +1,6 @@
 import { Account } from '@gear-js/react-hooks';
-import { AccountButton } from '../account-button';
 import { TestBalanceButton } from '../test-balance-button';
+import { AccountButton } from 'components/common/account-button';
 
 type Props = {
   balance: Account['balance'];
