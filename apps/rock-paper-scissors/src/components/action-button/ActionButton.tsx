@@ -3,8 +3,8 @@ import { SVGType } from 'types';
 import styles from './ActionButton.module.scss';
 
 type Props = {
-  onClick: (attr: string) => void;
-  SVG?: SVGType;
+  onClick: () => void;
+  SVG: SVGType;
   isActive: boolean;
   name: string;
 };
@@ -14,9 +14,9 @@ function ActionButton({ SVG, isActive, name, onClick }: Props) {
   const logoClassName = clsx(styles.logo, isActive && styles.active);
 
   return (
-    <button type="button" className={className} onClick={() => onClick(name)}>
+    <button type="button" className={className} onClick={onClick}>
       <span className={logoClassName}>
-        {SVG && <SVG />}
+        <SVG />
       </span>
       {name}
     </button>
