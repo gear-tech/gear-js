@@ -11,23 +11,25 @@ import {
     StateWinnerType
 } from 'types';
 
-export const useGetState = (programID: Hex, metaBuffer: any) => {
+const useRockPaperScissors = (programID: Hex, metaBuffer: any) => {
 
-    const configState = useMemo(() => ({ Config: null }), []);
-    const configGameStage = useMemo(() => ({ GameStage: null }), []);
-    const configLobby = useMemo(() => ({ LobbyList: null }), []);
-    const configTime = useMemo(() => ({ Deadline: null }), []);
-    const configPlayerMoves = useMemo(() => ({ PlayerMoves: null }), []);
-    const configWinner = useMemo(() => ({ Winner: null }), []);
-    const configRound = useMemo(() => ({ CurrentRound: null }), []);
+    const payloadConfig = useMemo(() => ({ Config: null }), []);
+    const payloadGameStage = useMemo(() => ({ GameStage: null }), []);
+    const payloadLobby = useMemo(() => ({ LobbyList: null }), []);
+    const payloadTime = useMemo(() => ({ Deadline: null }), []);
+    const payloadPlayerMoves = useMemo(() => ({ PlayerMoves: null }), []);
+    const payloadWinner = useMemo(() => ({ Winner: null }), []);
+    const payloadRound = useMemo(() => ({ CurrentRound: null }), []);
 
-    const gameState = useReadState<StateConfigType>(programID, metaBuffer, configState,);
-    const gameStageState = useReadState<StateGameStageType>(programID, metaBuffer, configGameStage);
-    const lobbyState = useReadState<StateLobbyType>(programID, metaBuffer, configLobby);
-    const winnerState = useReadState<StateWinnerType>(programID, metaBuffer, configWinner);
-    const timeLeft = useReadState<StateTimeLeftType>(programID, metaBuffer, configTime);
-    const playerMoves = useReadState<PlayersMoveType>(programID, metaBuffer, configPlayerMoves);
-    const roundState = useReadState<StateRoundType>(programID, metaBuffer, configRound);
+    const gameState = useReadState<StateConfigType>(programID, metaBuffer, payloadConfig);
+    const gameStageState = useReadState<StateGameStageType>(programID, metaBuffer, payloadGameStage);
+    const lobbyState = useReadState<StateLobbyType>(programID, metaBuffer, payloadLobby);
+    const winnerState = useReadState<StateWinnerType>(programID, metaBuffer, payloadWinner);
+    const timeLeft = useReadState<StateTimeLeftType>(programID, metaBuffer, payloadTime);
+    const playerMoves = useReadState<PlayersMoveType>(programID, metaBuffer, payloadPlayerMoves);
+    const roundState = useReadState<StateRoundType>(programID, metaBuffer, payloadRound);
 
     return { gameState, gameStageState, lobbyState, timeLeft, playerMoves, winnerState, roundState }
 }
+
+export { useRockPaperScissors }
