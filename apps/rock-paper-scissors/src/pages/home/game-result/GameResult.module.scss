@@ -17,6 +17,9 @@
 .subheading {
   color: $successColor;
   margin-bottom: 45px;
+  max-width: 675px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .winner {
