@@ -18,10 +18,6 @@ main {
   flex-direction: column;
   align-items: center;
   position: relative; // for loaders
-
-  & > * {
-    width: 100%;
-  }
 }
 
 body {
