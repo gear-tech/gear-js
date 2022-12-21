@@ -15,56 +15,56 @@ const useMetadataUplaod = () => {
   const { showModal } = useModal();
   const { isDevChain } = useChain();
 
-  const signAndUpload = async (params: ParamsToSignAndUpload) => {
-    const { name, title, signer, metadataBuffer, programId, jsonMeta, reject, resolve } = params;
+  // const signAndUpload = async (params: ParamsToSignAndUpload) => {
+  //   const { name, title, signer, metadataBuffer, programId, jsonMeta, reject, resolve } = params;
 
-    const apiRequest = new RPCService();
+  //   const apiRequest = new RPCService();
 
-    try {
-      const { signature } = await signer.signRaw!({
-        type: 'payload',
-        data: jsonMeta || '',
-        address: account!.address,
-      });
+  //   try {
+  //     const { signature } = await signer.signRaw!({
+  //       type: 'payload',
+  //       data: jsonMeta || '',
+  //       address: account!.address,
+  //     });
 
-      const { error } = await apiRequest.callRPC(RpcMethods.AddMetadata, {
-        name,
-        meta: jsonMeta,
-        title,
-        metaWasm: metadataBuffer,
-        signature,
-        programId,
-      });
+  //     const { error } = await apiRequest.callRPC(RpcMethods.AddMetadata, {
+  //       name,
+  //       meta: jsonMeta,
+  //       title,
+  //       metaWasm: metadataBuffer,
+  //       signature,
+  //       programId,
+  //     });
 
-      if (error) {
-        throw new Error(error.message);
-      }
+  //     if (error) {
+  //       throw new Error(error.message);
+  //     }
 
-      alert.success('Metadata saved successfully');
+  //     alert.success('Metadata saved successfully');
 
-      if (resolve) resolve();
-    } catch (error) {
-      const message = (error as Error).message;
+  //     if (resolve) resolve();
+  //   } catch (error) {
+  //     const message = (error as Error).message;
 
-      alert.error(message);
+  //     alert.error(message);
 
-      if (reject) reject();
-    }
-  };
+  //     if (reject) reject();
+  //   }
+  // };
 
   const uploadMetadata = useCallback(
     async (params: ParamsToUploadMeta) => {
-      const { name, title, metadata, metadataBuffer, programId, reject, resolve } = params;
+      // hex instead of meta and buffer
+      // metaHex
+      const { name, programId, reject, resolve } = params;
 
       try {
         if (!account) {
           throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
         }
 
-        const jsonMeta = metadata ? JSON.stringify(metadata) : undefined;
-
         if (isDevChain) {
-          await uploadLocalMetadata(programId, jsonMeta, metadataBuffer, name);
+          // await uploadLocalMetadata(programId, jsonMeta, metadataBuffer, name);
 
           alert.success('Metadata added to the localDB successfully');
 
@@ -73,24 +73,24 @@ const useMetadataUplaod = () => {
           return;
         }
 
-        const signer = params.signer ?? (await web3FromSource(account.meta.source)).signer;
+        // const signer = params.signer ?? (await web3FromSource(account.meta.source)).signer;
 
         const handleConfirm = () =>
-          signAndUpload({
-            name,
-            title,
-            signer,
-            jsonMeta,
-            programId,
-            metadataBuffer,
-            reject,
-            resolve,
-          });
+          // signAndUpload({
+          //   name,
+          //   title,
+          //   signer,
+          //   jsonMeta,
+          //   programId,
+          //   metadataBuffer,
+          //   reject,
+          //   resolve,
+          // });
 
-        showModal('metadata', {
-          onAbort: reject,
-          onConfirm: handleConfirm,
-        });
+          showModal('metadata', {
+            onAbort: reject,
+            onConfirm: handleConfirm,
+          });
       } catch (error) {
         const message = (error as Error).message;
 

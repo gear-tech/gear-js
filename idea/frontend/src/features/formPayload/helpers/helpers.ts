@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import isString from 'lodash.isstring';
 import isPlainObject from 'lodash.isplainobject';
-import { decodeHexTypes, createPayloadTypeStructure, toJSON, Hex } from '@gear-js/api';
+import { decodeHexTypes, createPayloadTypeStructure, toJSON, ProgramMetadata } from '@gear-js/api';
 
 import { ValueType, TypeStructure, PayloadValue } from 'entities/formPayload';
 import { getPreformattedText } from 'shared/helpers';
@@ -111,19 +111,21 @@ const getPayloadValue = (typeStructure: TypeStructure): PayloadValue => {
   }
 };
 
-const getPayloadFormValues = (types?: Hex, typeName?: string): FormPayloadValues | undefined => {
-  if (types && typeName) {
-    const decodedTypes = decodeHexTypes(types);
-
-    const typeStructure = createPayloadTypeStructure(typeName, decodedTypes);
-    const manualPayload = createPayloadTypeStructure(typeName, decodedTypes, true);
-
-    return {
-      payload: getPayloadValue(typeStructure),
-      manualPayload: getPreformattedText(manualPayload),
-      typeStructure,
-    };
-  }
+// metadata instead of types, and typeIndex
+// getTypeDef
+const getPayloadFormValues = (metadata: ProgramMetadata, metaIndex: number) => {
+  // const getPayloadFormValues = (metadata: ProgramMetadata, metaIndex: number): FormPayloadValues | undefined => {
+  // if (types && typeName) {
+  //   const decodedTypes = decodeHexTypes(types);
+  //   const typeStructure = getTypeDef(typeName, decodedTypes);
+  //   const manualPayload = createPayloadTypeStructure(typeName, decodedTypes, true);
+  //   return {
+  //     payload: getPayloadValue(typeStructure),
+  //     // drop manual payload
+  //     // manualPayload: getPreformattedText(manualPayload),
+  //     typeStructure,
+  //   };
+  // }
 };
 
 export { getItemLabel, getPayloadValue, getNextLevelName, getSubmitPayload, getPayloadFormValues };

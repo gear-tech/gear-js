@@ -21,11 +21,14 @@ yup.addMethod(yup.mixed, 'testPayload', function (type?: string, metadata?: Prog
       return createError({ message: PAYLOAD_TYPE_ERROR_MESSAGE });
     }
 
+    // m
+    // metadata?.createType()
+    // TODO:
     const payloadType = metadata ? type : parent.payloadType;
     const submitPayload = getSubmitPayload(payload);
 
     try {
-      CreateType.create(payloadType, submitPayload, metadata);
+      // CreateType.create(payloadType, submitPayload, metadata);
 
       return true;
     } catch {

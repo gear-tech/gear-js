@@ -1,21 +1,21 @@
 import { useRef, useEffect, ChangeEvent } from 'react';
 import clsx from 'clsx';
-import { ProgramMetadata, getWasmMetadata } from '@gear-js/api';
+import { ProgramMetadata, getProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { FileInput } from '@gear-js/ui';
+import { isHex } from '@polkadot/util';
 
 import { usePrevious } from 'hooks';
-import { checkFileFormat, readFileAsync } from 'shared/helpers';
+import { checkFileFormat } from 'shared/helpers';
 import { FormText, formStyles } from 'shared/ui/form';
 
-import styles from './UploadMetadata.module.scss';
-import { UploadData } from '../model';
 import { getMetadataProperties } from '../helpers';
+import styles from './UploadMetadata.module.scss';
 
 type Props = {
   metadata?: ProgramMetadata;
   onReset: () => void;
-  onUpload: (data: UploadData) => void;
+  onUpload: (meta: ProgramMetadata) => void;
 };
 
 const UploadMetadata = ({ metadata, onReset, onUpload }: Props) => {
@@ -34,20 +34,22 @@ const UploadMetadata = ({ metadata, onReset, onUpload }: Props) => {
     }
 
     try {
-      if (!checkFileFormat(file)) {
-        throw new Error('Wrong file format');
-      }
+      if (!checkFileFormat(file)) throw new Error('Wrong file format');
 
-      const readedFile = await readFileAsync(file, 'buffer');
-      const fileMeta: ProgramMetadata = await getWasmMetadata(readedFile as Buffer);
+      const reader = new FileReader();
+      reader.readAsText(file, 'UTF-8');
 
-      if (!fileMeta) {
-        throw new Error('Failed to load meta');
-      }
+      reader.onload = ({ target }) => {
+        if (target) {
+          const { result } = target;
 
-      const metadataBuffer = Buffer.from(new Uint8Array(readedFile)).toString('base64');
+          if (isHex(result)) {
+            const meta = getProgramMetadata(result);
 
-      onUpload({ metadata: fileMeta, metadataBuffer });
+            onUpload(meta);
+          } else throw new Error('Wrong file format');
+        }
+      };
     } catch (error) {
       const message = (error as Error).message;
 
@@ -56,15 +58,10 @@ const UploadMetadata = ({ metadata, onReset, onUpload }: Props) => {
   };
 
   const renderMetadataProperties = (meta: ProgramMetadata) => {
-    // if incorrect wasm file, then types will be '0x'
-    if (meta.types === '0x') {
-      return null;
-    }
-
     const metadataProperties = getMetadataProperties(meta);
 
     return Object.entries(metadataProperties).map(([name, value]) => (
-      <FormText key={name} text={value} label={name} direction="y" isTextarea={name === 'types'} />
+      <FormText key={name} text={JSON.stringify(value)} label={name} direction="y" isTextarea={name === 'types'} />
     ));
   };
 

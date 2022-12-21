@@ -13,7 +13,12 @@ const MetadataTable = ({ metadata }: Props) => {
     const items: ReactNode[] = [];
 
     if (metadata.types) {
-      const decodedTypes = decodeHexTypes(metadata.types);
+      // const decodedTypes = decodeHexTypes(metadata.types);
+      const decodedTypes = '';
+
+      // on each type, exec metadata.getTypeName(index) to get name
+      // metadata.types;
+      // metadata.getTypeName();
 
       Object.entries(metadata).forEach(([key, value]) => {
         if (value && key !== 'types' && key !== 'title') {

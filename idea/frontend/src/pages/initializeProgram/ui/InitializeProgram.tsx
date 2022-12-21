@@ -1,8 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ProgramMetadata } from '@gear-js/api';
-
-import { UploadData } from 'features/uploadMetadata';
 
 import styles from './InitializeProgram.module.scss';
 import { PageParams } from '../model';
@@ -13,22 +11,13 @@ const InitializeProgram = () => {
   const { codeId } = useParams() as PageParams;
 
   const [metadata, setMetadata] = useState<ProgramMetadata>();
-  const [metadataBuffer, setMetadataBuffer] = useState<string>();
 
-  const resetMetadada = useCallback(() => {
-    setMetadata(undefined);
-    setMetadataBuffer(undefined);
-  }, []);
-
-  const uploadMetadada = useCallback((data: UploadData) => {
-    setMetadata(data.metadata);
-    setMetadataBuffer(data.metadataBuffer);
-  }, []);
+  const resetMetadada = () => setMetadata(undefined);
 
   return (
     <div className={styles.initializeProgramPage}>
-      <CodeSection codeId={codeId} metadata={metadata} metadataBuffer={metadataBuffer} resetMetadada={resetMetadada} />
-      <MetadataSection metadata={metadata} onReset={resetMetadada} onUpload={uploadMetadada} />
+      <CodeSection codeId={codeId} metadata={metadata} resetMetadada={resetMetadada} />
+      <MetadataSection metadata={metadata} onReset={resetMetadada} onUpload={setMetadata} />
     </div>
   );
 };

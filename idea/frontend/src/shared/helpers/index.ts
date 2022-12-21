@@ -127,7 +127,7 @@ const getValidation =
     }
   };
 
-const isState = (meta: ProgramMetadata | undefined) => !!meta?.meta_state_output;
+const isState = (meta: ProgramMetadata | undefined) => !!meta?.types.state;
 
 const disableScroll = () => document.body.classList.add('noOverflow');
 const enableScroll = () => document.body.classList.remove('noOverflow');

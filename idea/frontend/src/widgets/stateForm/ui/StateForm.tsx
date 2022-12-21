@@ -22,7 +22,7 @@ type Props = {
 };
 
 const StateForm = ({ meta, metaBuffer, programId, isLoading }: Props) => {
-  const { state, isReaded, readState, resetState } = useStateRead(programId, metaBuffer);
+  const { state, isReaded, readState, resetState } = useStateRead(programId, meta);
   const isState = state !== undefined; // could be null
 
   const handleSubmit = async (values: FormValues) => {
@@ -31,14 +31,15 @@ const StateForm = ({ meta, metaBuffer, programId, isLoading }: Props) => {
     await readState(payload);
   };
 
-  const encodeType = meta?.meta_state_input;
+  // const encodeType = meta?.meta_state_input;
 
-  const payloadFormValues = useMemo(() => getPayloadFormValues(meta?.types, encodeType), [meta, encodeType]);
+  // const payloadFormValues = useMemo(() => getPayloadFormValues(meta, encodeType), [meta, encodeType]);
+  const payloadFormValues = undefined;
 
-  useEffect(() => {
-    if (meta && !encodeType) readState();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [meta, encodeType]);
+  // useEffect(() => {
+  //   if (meta && !encodeType) readState();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [meta, encodeType]);
 
   return (
     <Form initialValues={INITIAL_VALUES} onSubmit={handleSubmit} validateOnBlur>
@@ -66,16 +67,16 @@ const StateForm = ({ meta, metaBuffer, programId, isLoading }: Props) => {
             )}
           </Box>
 
-          {encodeType && (
-            <Button
-              type="submit"
-              text="Read State"
-              icon={readSVG}
-              color="secondary"
-              size="large"
-              className={styles.button}
-            />
-          )}
+          {/* {encodeType && ( */}
+          <Button
+            type="submit"
+            text="Read State"
+            icon={readSVG}
+            color="secondary"
+            size="large"
+            className={styles.button}
+          />
+          {/* )} */}
           <BackButton />
         </form>
       )}

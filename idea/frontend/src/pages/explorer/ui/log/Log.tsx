@@ -33,11 +33,13 @@ const Log = ({ data }: Props) => {
 
   const handlePayloadDecoding = (typeKey: TypeKey, errorCallback: () => void) => {
     if (metadata) {
-      const type = metadata[typeKey];
+      // TODO:
+      // const type = metadata[typeKey];
+      const type = '';
 
       if (type) {
         try {
-          setDecodedPayload(CreateType.create(type, payload, metadata));
+          // setDecodedPayload(CreateType.create(type, payload, metadata));
         } catch {
           errorCallback();
         }

@@ -43,18 +43,19 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
   const deposit = api.existentialDeposit.toNumber();
   const maxGasLimit = api.blockGasLimit.toNumber();
   const method = isReply ? GasMethod.Reply : GasMethod.Handle;
-  const encodeType = isReply ? metadata?.async_handle_input : metadata?.handle_input;
+  // const encodeType = isReply ? metadata?.types.reply.input : metadata?.types.handle.input;
 
-  const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, encodeType), [metadata, encodeType]);
+  // const payloadFormValues = useMemo(() => getPayloadFormValues(metadata, encodeType), [metadata, encodeType]);
+  const payloadFormValues = undefined;
 
   const validation = useMemo(
     () => {
-      const schema = getValidationSchema({ type: encodeType, deposit, metadata, maxGasLimit });
+      const schema = getValidationSchema({ deposit, metadata, maxGasLimit });
 
       return getValidation(schema);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [metadata, encodeType],
+    [metadata],
   );
 
   const disableSubmitButton = () => setIsDisabled(true);

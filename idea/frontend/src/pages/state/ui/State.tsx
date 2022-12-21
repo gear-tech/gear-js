@@ -22,6 +22,9 @@ const State = () => {
   const getMetadata = isDevChain ? getLocalProgramMeta : fetchMetadata;
 
   useEffect(() => {
+    // get meta depends on full state or not
+    // if full - read
+
     getMetadata(programId)
       .then(({ result }) => {
         if (!result.meta || !result.metaWasm) return Promise.reject(new Error('No metadata'));

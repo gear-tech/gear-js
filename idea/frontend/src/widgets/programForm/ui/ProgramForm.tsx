@@ -40,7 +40,7 @@ const ProgramForm = (props: Props) => {
 
   const calculateGas = useGasCalculate();
 
-  const changeProgramName = (meta: ProgramMetadata) => formApi.current?.change('programName', meta?.title ?? '');
+  const changeProgramName = (meta: ProgramMetadata) => formApi.current?.change('programName', '');
 
   const handleGasCalculate = async () => {
     if (!formApi.current) {
@@ -82,21 +82,20 @@ const ProgramForm = (props: Props) => {
     onSubmit(data, { enableButtons: () => setIsDisables(false), resetForm: formApi.current.reset });
   };
 
-  const encodeType = metadata?.init_input;
-
   const deposit = api.existentialDeposit.toNumber();
   const maxGasLimit = api.blockGasLimit.toNumber();
 
-  const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, encodeType), [metadata, encodeType]);
+  // const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, encodeType), [metadata, encodeType]);
+  const payloadFormValues = undefined;
 
   const validation = useMemo(
     () => {
-      const schema = getValidationSchema({ type: encodeType, deposit, metadata, maxGasLimit });
+      const schema = getValidationSchema({ deposit, metadata, maxGasLimit });
 
       return getValidation(schema);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [metadata, encodeType],
+    [metadata],
   );
 
   useEffect(() => {

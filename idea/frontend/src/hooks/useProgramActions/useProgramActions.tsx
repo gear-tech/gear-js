@@ -33,7 +33,7 @@ const useProgramActions = () => {
     </p>
   );
 
-  const createProgram = async (codeId: Hex, payload: Payload) => {
+  const createProgram = (codeId: Hex, payload: Payload) => {
     const { gasLimit, value, initPayload, metadata, payloadType } = payload;
 
     const program = {
@@ -43,7 +43,7 @@ const useProgramActions = () => {
       initPayload,
     };
 
-    const result = await api.program.create(program, metadata, payloadType);
+    const result = api.program.create(program, metadata, payloadType);
 
     return result.programId;
   };
@@ -55,7 +55,7 @@ const useProgramActions = () => {
 
     const program = { code: new Uint8Array(fileBuffer), value, gasLimit, initPayload };
 
-    const result = await api.program.upload(program, metadata, payloadType);
+    const result = api.program.upload(program, metadata, payloadType);
 
     return result.programId;
   };
@@ -159,7 +159,7 @@ const useProgramActions = () => {
         const handleConfirm = () =>
           signAndUpload({
             name,
-            title: payload.metadata?.title,
+            // title: payload.metadata?.title,
             method: TransactionName.CreateProgram,
             signer,
             payload,
@@ -202,7 +202,7 @@ const useProgramActions = () => {
         const handleConfirm = () =>
           signAndUpload({
             name,
-            title: payload.metadata?.title,
+            // title: payload.metadata?.title,
             method: TransactionName.UploadProgram,
             signer,
             payload,

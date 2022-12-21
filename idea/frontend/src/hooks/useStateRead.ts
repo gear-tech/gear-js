@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react';
 import { AnyJson } from '@polkadot/types/types';
-import { Hex } from '@gear-js/api';
+import { Hex, ProgramMetadata } from '@gear-js/api';
 import { useApi, useAlert } from '@gear-js/react-hooks';
 
-const useStateRead = (programId: Hex, metaBuffer: Buffer | undefined) => {
+const useStateRead = (programId: Hex, metadata: ProgramMetadata | undefined) => {
   const alert = useAlert();
   const { api } = useApi();
 
@@ -12,11 +12,12 @@ const useStateRead = (programId: Hex, metaBuffer: Buffer | undefined) => {
 
   const readState = useCallback(
     async (initValue?: AnyJson) => {
-      if (metaBuffer) {
+      if (metadata) {
         try {
           setIsReaded(false);
 
-          const result = await api.programState.read(programId, metaBuffer, initValue);
+          //
+          const result = await api.programState.read({ programId }, metadata);
 
           setState(result.toHuman());
         } catch (error) {
@@ -29,7 +30,7 @@ const useStateRead = (programId: Hex, metaBuffer: Buffer | undefined) => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [api, programId, metaBuffer],
+    [api, programId, metadata],
   );
 
   const resetState = () => setState(undefined);
