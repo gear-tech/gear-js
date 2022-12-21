@@ -22,8 +22,12 @@
 
 .heading {
   @extend %h2;
+  max-width: 400px;
   text-transform: uppercase;
   margin-bottom: 25px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .details {

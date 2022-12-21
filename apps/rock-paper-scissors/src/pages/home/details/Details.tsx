@@ -1,6 +1,7 @@
 import { Hex } from '@gear-js/api';
-import { BackButton, Detail } from 'components';
+import { BackButton, Detail, Loader } from 'components';
 import { SVGType } from 'types';
+import { handleRouteChange } from 'utils';
 import styles from './Details.module.scss';
 
 type Props = {
@@ -13,14 +14,14 @@ type Props = {
   move: string | undefined;
   reveal: string | undefined;
   SVG: SVGType;
+  isLoading: boolean;
   admin?: boolean;
   players?: Array<Hex> | Array<string> | [];
-  onBackClick: (arg: string) => void;
+  onRouteChange: (arg: string) => void;
 };
 
-
 function Details({
-  onBackClick,
+  onRouteChange,
   heading,
   game,
   round,
@@ -31,16 +32,22 @@ function Details({
   move,
   reveal,
   SVG,
-  admin
+  admin,
+  isLoading,
 }: Props) {
-  const handleRouteChange = () => {
-    if (admin) { onBackClick('lobby admin') } else { onBackClick('game') }
-  }
+  const playersAmount = players?.length.toString() || '0';
 
-  return (
+  const getPlayers = () =>
+    players?.map((player) => (
+      <span className={styles.lobbyText} key={player}>
+        {player}
+      </span>
+    )) || '0';
+
+  return isLoading ? (
     <div className={styles.container}>
       <div className={styles.visual}>
-        <BackButton onClick={handleRouteChange} />
+        <BackButton onClick={() => handleRouteChange(admin, onRouteChange)} />
         <SVG className={styles.svg} />
       </div>
       <div>
@@ -51,20 +58,22 @@ function Details({
           <Detail label="Contract address" className={styles.contract}>
             <span className={styles.contractText}>{contract}</span>
           </Detail>
-          <Detail label="Players" text={players?.length.toString() || '0'} className={styles.players} />
+          <Detail label="Players" text={playersAmount} className={styles.players} />
           <Detail label="Bet size" className={styles.bet}>
             <span className={styles.betText}>{bet}</span>
           </Detail>
-          {entry && <Detail label="Entry timeout" text={entry} className={styles.entry} />}
-          {move && <Detail label="Move timeout" text={move} className={styles.move} />}
-          {reveal && <Detail label="Reveal timeout" text={reveal} className={styles.reveal} />}
+          {entry && <Detail label="Entry timeout" text={entry.slice(0, -4)} className={styles.entry} />}
+          {move && <Detail label="Move timeout" text={move.slice(0, -4)} className={styles.move} />}
+          {reveal && <Detail label="Reveal timeout" text={reveal.slice(0, -4)} className={styles.reveal} />}
         </div>
         <div className={styles.lobby}>
           <span className={styles.lobbyTitle}>lobby:</span>
-          {players?.map(player => <span className={styles.lobbyText} key={player}>{player}</span>) || '0'}
+          {getPlayers()}
         </div>
       </div>
     </div>
+  ) : (
+    <Loader />
   );
 }
 
