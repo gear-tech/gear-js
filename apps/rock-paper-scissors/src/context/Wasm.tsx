@@ -23,12 +23,7 @@ const WasmContext = createContext<Program>({} as Program);
 
 function useWasmRequest(name: string) {
   const alert = useAlert();
-  const [program, setProgram] = useState<Program>({
-    programId: '' as Hex,
-    codeHash: '0x00',
-    metaBuffer: {} as Buffer,
-    meta: {},
-  });
+  const [program, setProgram] = useState<Program>();
   useEffect(() => {
     const params = new URLSearchParams({ name });
     const url = `${ADDRESS.DAPPS_API}?${params}`;
