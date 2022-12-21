@@ -5,8 +5,8 @@ import { Hex } from '@gear-js/api';
 import styles from './Join.module.scss';
 
 type Props = {
-    onBackClick: (arg: string) => void;
-    onClickSubmit: (arg: Hex) => void;
+    onClickRouteChange: (arg: string) => void;
+    setProgramID: (arg: Hex) => void;
     onSubmit?: any;
 };
 
@@ -15,12 +15,14 @@ const initialValues = {
 };
 
 
-function Join({ onBackClick, onClickSubmit }: Props) {
+function Join({ onClickRouteChange, setProgramID }: Props) {
     const form = useForm({ initialValues });
     const { getInputProps } = form;
     const handleSubmit = form.onSubmit((values) => {
         if(!values.programId)return;
-        onClickSubmit(values.programId as Hex)
+        const valueLowered=values.programId.toLowerCase();
+        setProgramID(valueLowered as Hex)
+        onClickRouteChange('Join game')
     });
     return (
         <div className={styles.container}>
@@ -29,7 +31,7 @@ function Join({ onBackClick, onClickSubmit }: Props) {
                 <Input autoComplete="off" label="Program Id" direction="y"  {...getInputProps('programId')} />
             </form>
             <div className={styles.buttons}>
-                <BackButton onClick={() => onBackClick('')} />
+                <BackButton onClick={() => onClickRouteChange('')} />
                 <Button type="submit" text="Join" size="large" onClick={() => handleSubmit()} />
             </div>
         </div>
