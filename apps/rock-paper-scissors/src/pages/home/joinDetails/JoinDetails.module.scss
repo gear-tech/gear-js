@@ -21,8 +21,12 @@
   }
 
   .heading {
+    max-width: 370px;;
     @extend %h2;
     text-transform: uppercase;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
     margin-bottom: 25px;
   }
 
@@ -40,6 +44,9 @@
     grid-area: b;
   }
   .contract{
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
     grid-area: c;
   }
   .players{
