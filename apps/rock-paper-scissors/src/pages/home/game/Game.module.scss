@@ -3,13 +3,15 @@
 
 .container {
   max-width: 1100px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 50px;
 }
 
 .players {
   flex: 1;
-  max-width: 655px;
-  margin-right: 70px;
+  max-width: 500px;
+  margin-right: 20px;
 }
 
 .players,
@@ -20,11 +22,16 @@
 }
 
 .heading {
+  max-height: 80%;
   @extend %h2;
   text-transform: uppercase;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .summary {
+  max-width: 600px;
   &Main {
     display: grid;
     grid-template-areas:
@@ -52,6 +59,10 @@
 
 .game {
   grid-area: d;
+  max-width: 80%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .round {
