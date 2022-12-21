@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button, Input } from '@gear-js/ui';
+import { onSubmitMove } from 'utils';
 import { ActionButton, BackButton } from 'components';
 import { UserMoveType } from 'types';
 import { ReactComponent as RockSVG } from 'assets/images/actions/rock.svg';
@@ -18,17 +19,18 @@ const ACTIONS = [
 ];
 
 type Props = {
-  onSubmitMove: (userMove: any, pass: string) => void;
   onRouteChange: (arg: string) => void;
+  setUserMove: (arg: UserMoveType) => void;
+  payloadSend: any;
+  userMove: UserMoveType;
 };
 
-
-function Move({  onSubmitMove,onRouteChange }: Props) {
-  const [userMove, setUserMove] = useState<UserMoveType>({});
+function Move({ payloadSend, onRouteChange, setUserMove, userMove }: Props) {
   const [passValue, setPassvalue] = useState('');
 
   const handleSubmitMove = () => {
-    if(passValue && Object.keys(userMove).length > 0) onSubmitMove(userMove||null, passValue);
+    onSubmitMove(onRouteChange, payloadSend, userMove || null, passValue);
+    setUserMove(userMove);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setPassvalue(e.target.value);
@@ -36,7 +38,12 @@ function Move({  onSubmitMove,onRouteChange }: Props) {
   const getActions = () =>
     ACTIONS.map((el) => (
       <li key={el.name}>
-        <ActionButton name={el.name} SVG={el.SVG} isActive={el.name === userMove.name} onClick={() => setUserMove(el)} />
+        <ActionButton
+          name={el.name}
+          SVG={el.SVG}
+          isActive={el.name === userMove.name}
+          onClick={() => setUserMove(el)}
+        />
       </li>
     ));
 
@@ -54,7 +61,6 @@ function Move({  onSubmitMove,onRouteChange }: Props) {
         <Button onClick={handleSubmitMove} text="Done" size="large" />
       </div>
     </div>
-
   );
 }
 
