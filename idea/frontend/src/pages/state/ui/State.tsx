@@ -1,10 +1,10 @@
 import { Hex, ProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
-import { fetchMetadata, getLocalProgramMeta } from 'api';
-import { useChain } from 'hooks';
 import { useRef, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { fetchMetadata, getLocalProgramMeta } from 'api';
+import { useChain } from 'hooks';
 import { StateForm } from 'widgets/stateForm';
 
 import styles from './State.module.scss';

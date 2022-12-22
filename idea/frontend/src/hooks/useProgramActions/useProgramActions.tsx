@@ -36,12 +36,7 @@ const useProgramActions = () => {
   const createProgram = (codeId: Hex, payload: Payload) => {
     const { gasLimit, value, initPayload, metadata, payloadType } = payload;
 
-    const program = {
-      value,
-      codeId,
-      gasLimit,
-      initPayload,
-    };
+    const program = { value, codeId, gasLimit, initPayload };
 
     const result = api.program.create(program, metadata, payloadType);
 
@@ -157,16 +152,7 @@ const useProgramActions = () => {
         const name = payload.programName || codeId;
 
         const handleConfirm = () =>
-          signAndUpload({
-            name,
-            // title: payload.metadata?.title,
-            method: TransactionName.CreateProgram,
-            signer,
-            payload,
-            programId,
-            reject,
-            resolve,
-          });
+          signAndUpload({ name, method: TransactionName.CreateProgram, signer, payload, programId, reject, resolve });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),
@@ -200,16 +186,7 @@ const useProgramActions = () => {
         const name = payload.programName || file.name;
 
         const handleConfirm = () =>
-          signAndUpload({
-            name,
-            // title: payload.metadata?.title,
-            method: TransactionName.UploadProgram,
-            signer,
-            payload,
-            programId,
-            reject,
-            resolve,
-          });
+          signAndUpload({ name, method: TransactionName.UploadProgram, signer, payload, programId, reject, resolve });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),

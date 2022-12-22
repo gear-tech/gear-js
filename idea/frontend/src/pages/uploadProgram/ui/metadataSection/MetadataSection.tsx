@@ -3,7 +3,7 @@ import { ProgramMetadata } from '@gear-js/api';
 import { UploadMetadata } from 'features/uploadMetadata';
 import { Subheader } from 'shared/ui/subheader';
 
-import styles from '../UploadProgram.module.scss';
+import commonStyles from '../UploadProgram.module.scss';
 
 type Props = {
   metadata?: ProgramMetadata;
@@ -12,7 +12,7 @@ type Props = {
 };
 
 const MetadataSection = ({ metadata, onReset, onUpload }: Props) => (
-  <section className={styles.pageSection}>
+  <section className={commonStyles.pageSection}>
     <Subheader size="big" title="Add metadata" />
     <UploadMetadata metadata={metadata} onReset={onReset} onUpload={onUpload} />
   </section>

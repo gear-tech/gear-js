@@ -6,12 +6,9 @@ import { FileInput } from '@gear-js/ui';
 import { isHex } from '@polkadot/util';
 
 import { usePrevious } from 'hooks';
-import { checkFileFormat, getPreformattedText } from 'shared/helpers';
-import { FormText, formStyles } from 'shared/ui/form';
+import { checkFileFormat } from 'shared/helpers';
+import { formStyles } from 'shared/ui/form';
 import { FileTypes } from 'shared/config';
-
-import { getMetadataProperties } from '../helpers';
-import styles from './UploadMetadata.module.scss';
 
 type Props = {
   metadata?: ProgramMetadata;
@@ -19,13 +16,13 @@ type Props = {
   onUpload: (meta: ProgramMetadata) => void;
 };
 
-const UploadMetadata = ({ metadata, onReset, onUpload }: Props) => {
+const MetadataFileInput = ({ metadata, onReset, onUpload }: Props) => {
   const alert = useAlert();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const prevMetadata = usePrevious<ProgramMetadata | undefined>(metadata);
 
-  const handleUploadMetaFile = async (event: ChangeEvent<HTMLInputElement>) => {
+  const handleUploadMetaFile = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (!file) {
@@ -63,20 +60,6 @@ const UploadMetadata = ({ metadata, onReset, onUpload }: Props) => {
     }
   };
 
-  const renderMetadataProperties = (meta: ProgramMetadata) => {
-    const metadataProperties = getMetadataProperties(meta);
-
-    return Object.entries(metadataProperties).map(([name, value]) => (
-      <FormText
-        key={name}
-        text={name === 'types' ? getPreformattedText(value) : JSON.stringify(value)}
-        label={name}
-        direction="y"
-        isTextarea={name === 'types'}
-      />
-    ));
-  };
-
   // TODO: think about this
   useEffect(() => {
     const target = inputRef.current;
@@ -92,18 +75,15 @@ const UploadMetadata = ({ metadata, onReset, onUpload }: Props) => {
   }, [metadata]);
 
   return (
-    <div className={styles.uploadMetadata}>
-      <FileInput
-        ref={inputRef}
-        color="primary"
-        label="Metadata file"
-        direction="y"
-        className={clsx(formStyles.field, formStyles.gap16)}
-        onChange={handleUploadMetaFile}
-      />
-      {metadata ? renderMetadataProperties(metadata) : null}
-    </div>
+    <FileInput
+      ref={inputRef}
+      color="primary"
+      label="Metadata file"
+      direction="y"
+      className={clsx(formStyles.field, formStyles.gap16)}
+      onChange={handleUploadMetaFile}
+    />
   );
 };
 
-export { UploadMetadata };
+export { MetadataFileInput };
