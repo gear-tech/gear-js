@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { IMeta } from '@gear-js/common';
+import { IMeta, IMetaData } from '@gear-js/common';
 
 import { Code } from './code.entity';
 import { Program } from './program.entity';
@@ -7,23 +7,23 @@ import { Program } from './program.entity';
 @Entity()
 export class Meta implements IMeta {
   @PrimaryGeneratedColumn('rowid')
-    id: string;
+  public  id: string;
 
   @Column()
-    program: string;
+  public program: string;
 
   @Column()
-    owner: string;
+  public owner: string;
 
   @Column({ nullable: true })
-    meta: string;
+  public hex: string;
 
-  @Column({ nullable: true })
-    metaWasm: string;
+  @Column({ nullable: true, type: 'json' })
+  public data: IMetaData;
 
   @OneToOne(() => Code, (code) => code.meta)
-    code: Code;
+  public code: Code;
 
   @OneToMany(() => Program, (program) => program.meta)
-    programs: Program[];
+  public programs: Program[];
 }

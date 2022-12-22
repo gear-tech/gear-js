@@ -1,21 +1,23 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
+
+import configurations from './config/configuration';
 
 import { MessageModule } from './message/message.module';
-import { MetadataModule } from './metadata/metadata.module';
+import { MetaModule } from './meta/meta.module';
 import { ProgramModule } from './program/program.module';
 import { CodeModule } from './code/code.module';
 import { HealthcheckController } from './healthcheck/healthcheck.controller';
 import { HealthcheckModule } from './healthcheck/healthcheck.module';
-import configurations from './config/configuration';
-import { Block, Code, Message, Meta, Program } from './database/entities';
 import { GearModule } from './gear/gear.module';
 import { BlockModule } from './block/block.module';
 import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
-import { ScheduleModule } from '@nestjs/schedule';
+import { StateModule } from './state/state.module';
+import { Block, Code, Message, Meta, Program, State } from './database/entities';
 
-const entities = [Meta, Message, Program, Code, Block];
+const entities = [Meta, Message, Program, Code, Block, State];
 
 @Module({
   imports: [
@@ -39,12 +41,13 @@ const entities = [Meta, Message, Program, Code, Block];
     }),
     ProgramModule,
     MessageModule,
-    MetadataModule,
+    MetaModule,
     GearModule,
     HealthcheckModule,
     CodeModule,
     BlockModule,
     RabbitmqModule,
+    StateModule,
   ],
   controllers: [HealthcheckController],
 })

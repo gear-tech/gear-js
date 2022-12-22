@@ -18,39 +18,39 @@ import { ProgramStatus } from '../../common/enums';
 @Entity()
 export class Program extends BaseEntity implements IProgram {
   @PrimaryGeneratedColumn('uuid')
-    _id: string;
+  public  _id: string;
 
   @Column()
-    id: string;
+  public id: string;
 
   @Index()
   @Column()
-    owner: string;
+  public  owner: string;
 
   @Column()
-    name: string;
+  public  name: string;
 
   @Column({ nullable: true })
-    title: string;
+  public  title: string;
 
   @Column({ nullable: true })
-    expiration: number;
+  public  expiration: number;
 
   @Column({ name: 'type', type: 'enum', enum: ProgramStatus, default: ProgramStatus.UNKNOWN })
-    status: ProgramStatus;
+  public status: ProgramStatus;
 
   @ManyToOne(() => Code, (code) => code.programs, {
     nullable: true
   })
   @JoinColumn({ name: 'code_id' })
-    code: Code;
+  public  code: Code;
 
   @ManyToOne(() => Meta, (meta) => meta.programs, {
     nullable: true, onDelete: 'CASCADE'
   })
   @JoinColumn({ name: 'meta_id' })
-    meta: Meta;
+  public  meta: Meta;
 
   @OneToMany(() => Message, (message) => message.program)
-    messages: Message[];
+  public  messages: Message[];
 }

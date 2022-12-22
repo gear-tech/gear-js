@@ -71,6 +71,7 @@ export class ProgramRepo {
   public async get(id: string, genesis: string): Promise<Program> {
     return this.programRepo.findOne({
       where: { id, genesis },
+      relations: ['code']
     });
   }
 }

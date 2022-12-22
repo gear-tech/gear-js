@@ -8,46 +8,46 @@ import { MessageEntryPoint, MessageType, MessageReadReason } from '../../common/
 @Entity()
 export class Message extends BaseEntity implements IMessage {
   @PrimaryColumn()
-    id: string;
+  public  id: string;
 
   @Index()
   @Column()
-    destination: string;
+  public  destination: string;
 
   @Index()
   @Column()
-    source: string;
+  public  source: string;
 
   @Column({ nullable: true })
-    payload: string;
+  public payload: string;
 
   @Column({ default: '0' })
-    value: string;
+  public  value: string;
 
   @Column({ nullable: true })
-    exitCode: number;
+  public  exitCode: number;
 
   @Column({ nullable: true })
-    replyToMessageId: string;
+  public  replyToMessageId: string;
 
   @Column({ nullable: true })
-    processedWithPanic: boolean;
+  public  processedWithPanic: boolean;
 
   @Column({ type: 'enum', enum: MessageEntryPoint, nullable: true, default: null })
-    entry: MessageEntryPoint;
+  public  entry: MessageEntryPoint;
 
   @Column({ nullable: true })
-    expiration: number;
+  public  expiration: number;
 
   @Column({ type: 'enum', enum: MessageType, nullable: true, default: null })
-    type: MessageType;
+  public  type: MessageType;
 
   @Column({ type: 'enum', enum: MessageReadReason, nullable: true, default: null })
-    readReason: MessageReadReason;
+  public readReason: MessageReadReason;
 
   @ManyToOne(() => Program, (program) => program.messages, {
     nullable: true,
   })
   @JoinColumn({ name: 'program_id' })
-    program: Program;
+  public  program: Program;
 }

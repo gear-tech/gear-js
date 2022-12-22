@@ -111,6 +111,7 @@ export async function getProgramDataInBatch(genesis: string, programId: string):
 export async function uploadMeta(genesis: string, program: IPreparedProgram): Promise<Passed> {
   const accs = await accounts();
   const metaHex: HexString = `0x${readFileSync(program.spec.pathToMetaTxt, 'utf-8')}`;
+
   const data = {
     genesis,
     programId: program.id,

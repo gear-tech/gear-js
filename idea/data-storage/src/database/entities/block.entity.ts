@@ -3,18 +3,18 @@ import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class Block {
   @PrimaryGeneratedColumn('uuid')
-    _id: string;
+  public _id: string;
 
   @Column()
-    number: string;
+  public number: string;
 
   @Column({ nullable: true })
-    hash: string;
+  public  hash: string;
 
   @Column({ nullable: true, type: 'timestamp' })
-    timestamp: Date;
+  public  timestamp: Date;
 
   @Index()
   @Column()
-    genesis: string;
+  public  genesis: string;
 }

@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { MetadataService } from './metadata.service';
-import { MetadataRepo } from './metadata.repo';
+import { MetaService } from './meta.service';
+import { MetaRepo } from './meta.repo';
 import { Meta } from '../database/entities';
 import { ProgramModule } from '../program/program.module';
 
 @Module({
   imports: [ProgramModule, TypeOrmModule.forFeature([Meta])],
-  providers: [MetadataService, MetadataRepo],
-  exports: [MetadataService, MetadataRepo],
+  providers: [MetaService, MetaRepo],
+  exports: [MetaService, MetaRepo],
 })
-export class MetadataModule {}
+export class MetaModule {}

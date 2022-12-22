@@ -2,21 +2,22 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Channel, Connection, connect, Replies } from 'amqplib';
 import {
-  AddMetaParams,
+  AddMetaParams, AddStateParams,
   API_METHODS, FindMessageParams,
   FindProgramParams, GetAllCodeParams,
-  GetAllProgramsParams, GetCodeParams, GetMessagesParams, GetMetaParams,
+  GetAllProgramsParams, GetAllStateParams, GetCodeParams, GetMessagesParams, GetMetaParams, GetStateParams,
   RabbitMQExchanges,
   RabbitMQueues,
 } from '@gear-js/common';
 
 import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
-import { MetadataService } from '../metadata/metadata.service';
+import { MetaService } from '../meta/meta.service';
 import { CodeService } from '../code/code.service';
 import { BlockService } from '../block/block.service';
 import { RabbitmqMessageParams } from './types/rabbitmq-params';
 import { FormResponse } from '../decorator/form-response.decorator';
+import { StateService } from '../state/state.service';
 
 @Injectable()
 export class RabbitmqService {
@@ -28,10 +29,11 @@ export class RabbitmqService {
   constructor(
     private configService: ConfigService,
     private messageService: MessageService,
-    private metaService: MetadataService,
+    private metaService: MetaService,
     private codeService: CodeService,
     private programService: ProgramService,
     private blockService: BlockService,
+    private stateService: StateService,
   ) {}
 
   public async connect(): Promise<void> {
@@ -151,6 +153,15 @@ export class RabbitmqService {
       },
       [API_METHODS.BLOCKS_STATUS]: () => {
         return this.blockService.getLastBlock(params.genesis as string);
+      },
+      [API_METHODS.PROGRAM_STATE_ADD]: () => {
+        return this.stateService.create(params as AddStateParams);
+      },
+      [API_METHODS.PROGRAM_STATE_GET]: () => {
+        return this.stateService.get(params as GetStateParams);
+      },
+      [API_METHODS.PROGRAM_STATE_ALL]: () => {
+        return this.stateService.listByProgramId(params as GetAllStateParams);
       },
     };
 

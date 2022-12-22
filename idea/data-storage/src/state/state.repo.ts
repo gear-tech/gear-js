@@ -1,0 +1,41 @@
+import { Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { State } from '../database/entities';
+
+@Injectable()
+export class StateRepo {
+  constructor(
+    @InjectRepository(State)
+    private stateRepo: Repository<State>,
+  ) {}
+
+  public async list(codeId: string, query: string): Promise<[State[], number]> {
+    if(query) {
+      return this.stateRepo
+        .createQueryBuilder('state')
+        .select(['state.id', 'state.name', 'state.functions'])
+        .where('state.funcNames ::jsonb @> :funcNames', {
+          funcNames: JSON.stringify(query),
+        })
+        .andWhere('state.code = :id', { id: codeId })
+        .orderBy('state.name', 'ASC')
+        .getManyAndCount();
+    }
+    return  this.stateRepo.findAndCount({
+      where: { code: { id: codeId } }
+    });
+  }
+
+  public async get(id: string): Promise<State> {
+    return this.stateRepo.findOne({
+      where: { id },
+      select:['id', 'functions', 'wasmBuffBase64', 'name']
+    });
+  }
+
+  public async save(metadata: State): Promise<State> {
+    return this.stateRepo.save(metadata);
+  }
+}

@@ -5,20 +5,20 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Meta } from '../database/entities';
 
 @Injectable()
-export class MetadataRepo {
+export class MetaRepo {
   constructor(
     @InjectRepository(Meta)
-    private metadataRepo: Repository<Meta>,
+    private metaRepo: Repository<Meta>,
   ) {}
 
   public async save(metadata: Meta): Promise<Meta> {
-    return this.metadataRepo.save(metadata);
+    return this.metaRepo.save(metadata);
   }
 
   public async getByProgramId(programId: string): Promise<Meta> {
-    return this.metadataRepo.findOne({
+    return this.metaRepo.findOne({
       where: { program: programId },
-      select: ['program', 'meta', 'metaWasm'],
+      select: ['program', 'hex', 'data'],
     });
   }
 }
