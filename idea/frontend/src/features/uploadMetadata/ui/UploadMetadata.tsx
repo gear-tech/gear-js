@@ -1,13 +1,14 @@
 import { useRef, useEffect, ChangeEvent } from 'react';
 import clsx from 'clsx';
-import { ProgramMetadata, getProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata, getProgramMetadata, Hex } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { FileInput } from '@gear-js/ui';
 import { isHex } from '@polkadot/util';
 
 import { usePrevious } from 'hooks';
-import { checkFileFormat } from 'shared/helpers';
+import { checkFileFormat, getPreformattedText } from 'shared/helpers';
 import { FormText, formStyles } from 'shared/ui/form';
+import { FileTypes } from 'shared/config';
 
 import { getMetadataProperties } from '../helpers';
 import styles from './UploadMetadata.module.scss';
@@ -34,7 +35,7 @@ const UploadMetadata = ({ metadata, onReset, onUpload }: Props) => {
     }
 
     try {
-      if (!checkFileFormat(file)) throw new Error('Wrong file format');
+      if (!checkFileFormat(file, FileTypes.Text)) throw new Error('Wrong file format');
 
       const reader = new FileReader();
       reader.readAsText(file, 'UTF-8');
@@ -47,7 +48,12 @@ const UploadMetadata = ({ metadata, onReset, onUpload }: Props) => {
             const meta = getProgramMetadata(result);
 
             onUpload(meta);
-          } else throw new Error('Wrong file format');
+          } else if (typeof result === 'string') {
+            const hexResult = `0x${result}` as Hex;
+            const meta = getProgramMetadata(hexResult);
+
+            onUpload(meta);
+          } else throw new Error('Error reading meta file');
         }
       };
     } catch (error) {
@@ -61,7 +67,13 @@ const UploadMetadata = ({ metadata, onReset, onUpload }: Props) => {
     const metadataProperties = getMetadataProperties(meta);
 
     return Object.entries(metadataProperties).map(([name, value]) => (
-      <FormText key={name} text={JSON.stringify(value)} label={name} direction="y" isTextarea={name === 'types'} />
+      <FormText
+        key={name}
+        text={name === 'types' ? getPreformattedText(value) : JSON.stringify(value)}
+        label={name}
+        direction="y"
+        isTextarea={name === 'types'}
+      />
     ));
   };
 

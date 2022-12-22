@@ -78,6 +78,7 @@ enum RpcMethods {
 enum FileTypes {
   Wasm = 'application/wasm',
   Json = 'application/json',
+  Text = 'text/plain',
 }
 
 enum AnimationTimeout {

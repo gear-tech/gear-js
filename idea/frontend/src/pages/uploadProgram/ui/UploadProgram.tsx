@@ -10,7 +10,7 @@ import styles from './UploadProgram.module.scss';
 
 const UploadProgram = () => {
   const { state } = useLocation();
-  const { file } = state as StateWithFile;
+  const { file } = (state as StateWithFile | undefined) || {};
 
   const [metadata, setMetadata] = useState<ProgramMetadata>();
 

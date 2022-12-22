@@ -1,9 +1,12 @@
 import { ProgramMetadata, HumanTypesRepr } from '@gear-js/api';
+import { RegistryTypes } from '@polkadot/types/types';
 import isPlainObject from 'lodash.isplainobject';
 
 import { META_FIELDS } from '../model';
 
-// TODO: refactor and types
+type MetaProperties = Partial<ProgramMetadata['types']> & { types?: RegistryTypes };
+
+// TODO: get rid of ts-ignore
 const getMetadataProperties = (metadata: ProgramMetadata) => {
   const valuesFromMeta = META_FIELDS.reduce((result, metaKey) => {
     const metaValue = metadata.types[metaKey];
@@ -41,19 +44,11 @@ const getMetadataProperties = (metadata: ProgramMetadata) => {
       }
     } else if (metaValue) {
       // eslint-disable-next-line no-param-reassign
-      result[metaKey] = metadata.getTypeName(metaValue as number).toJSON();
+      result[metaKey] = metadata.getTypeName(metaValue as number);
     }
 
     return result;
-  }, {} as any);
-
-  // if (metadata.types) {
-  //   const decodedTypes = decodeHexTypes(metadata.types);
-  //   valuesFromMeta.types = getPreformattedText(decodedTypes) as Hex;
-
-  //   // types:
-  //   metadata.getAllTypes();
-  // }
+  }, {} as MetaProperties);
 
   valuesFromMeta.types = metadata.getAllTypes();
 
