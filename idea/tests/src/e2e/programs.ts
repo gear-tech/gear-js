@@ -1,4 +1,4 @@
-import { getWasmMetadata, Hex } from '@gear-js/api';
+import { Hex } from '@gear-js/api';
 import { u8aToHex } from '@polkadot/util';
 import { expect } from 'chai';
 import { readFileSync } from 'fs';
@@ -6,6 +6,7 @@ import { readFileSync } from 'fs';
 import request, { batchRequest } from './request';
 import accounts from '../config/accounts';
 import { IPreparedProgram, IPreparedPrograms, Passed } from '../interfaces';
+import { HexString } from '@polkadot/util/types';
 
 export async function getAllPrograms(genesis: string, expected: Hex[]): Promise<Passed> {
   const response = await request('program.all', { genesis });
@@ -109,16 +110,14 @@ export async function getProgramDataInBatch(genesis: string, programId: string):
 
 export async function uploadMeta(genesis: string, program: IPreparedProgram): Promise<Passed> {
   const accs = await accounts();
-  const metaFile = program.spec.pathToMeta ? readFileSync(program.spec.pathToMeta) : null;
-  const meta = metaFile ? JSON.stringify(await getWasmMetadata(metaFile)) : null;
+  const metaHex: HexString = `0x${readFileSync(program.spec.pathToMetaTxt, 'utf-8')}`;
   const data = {
     genesis,
     programId: program.id,
-    meta,
-    metaWasm: metaFile ? metaFile.toString('base64') : null,
+    metaHex,
     name: program.spec.name,
     title: `Test ${program.spec.name}`,
-    signature: u8aToHex(accs[program.spec.account].sign(meta)),
+    signature: u8aToHex(accs[program.spec.account].sign(metaHex)),
   };
   const response = await request('program.meta.add', data);
   expect(response).to.have.property('result');

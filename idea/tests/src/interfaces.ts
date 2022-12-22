@@ -17,7 +17,7 @@ interface IUploadedPrograms extends IProgramSpec {
 
 interface IMessageSpec {
   id: number;
-  pathToMeta?: string;
+  pathToMetaTxt?: string;
   payload: undefined;
   gasLimit: number;
   value?: number;
@@ -28,7 +28,7 @@ interface IMessageSpec {
 
 interface IProgramSpec {
   pathToOpt: string;
-  pathToMeta?: string;
+  pathToMetaTxt?: string;
   initPayload?: undefined;
   gasLimit: number;
   value?: number;

@@ -1,19 +1,8 @@
-ping:
-  pathToOpt: ./wasm/demo_ping.opt.wasm
-  gasLimit: 2000000000
+test:
+  pathToOpt: ./wasm-test/test_meta.opt.wasm
+  pathToMetaTxt: ./wasm-test/meta.txt
+  gasLimit: 200_000_000_000
   account: alice
+  initPayload: [1, 2, 3]
   shouldSuccess: true
 
-guestbook:
-  pathToOpt: ./wasm/guestbook.opt.wasm
-  pathToMeta: ./wasm/guestbook.meta.wasm
-  gasLimit: 2000000000
-  account: alice
-  shouldSuccess: true
-
-meta:
-  pathToOpt: ./wasm/demo_meta.opt.wasm
-  pathToMeta: ./wasm/demo_meta.meta.wasm
-  gasLimit: 2000000000
-  account: alice
-  shouldSuccess: false
