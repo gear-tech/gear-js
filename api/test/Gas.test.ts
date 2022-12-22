@@ -3,11 +3,11 @@ import { u64 } from '@polkadot/types-codec';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-import { GearApi } from '../src';
+import { GearApi, getProgramMetadata } from '../src';
 import { decodeAddress } from '../src/utils';
 import { GasInfo, Hex } from '../src/types';
 import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep } from './utilsFunctions';
-import { TARGET } from './config';
+import { PROGRAMS_DIR, TARGET } from './config';
 
 const api = new GearApi();
 let alice: KeyringPair;
@@ -16,7 +16,10 @@ let programId: Hex;
 let codeId: Hex;
 let messageId: Hex;
 let exitCode: number;
+
 const code = readFileSync(join(TARGET, 'test_gas.opt.wasm'));
+const meta = getProgramMetadata(`0x${readFileSync(join(PROGRAMS_DIR, 'test-gas/meta.txt'), 'utf-8')}`);
+
 const gasLimits: { init?: u64; handle?: u64; reply?: u64 } = {
   init: undefined,
   handle: undefined,
@@ -36,7 +39,7 @@ afterAll(async () => {
 
 describe('Calculate gas', () => {
   test('Get init gas spent (upload)', async () => {
-    const gas: GasInfo = await api.program.calculateGas.initUpload(aliceRaw, code, '0x00', 0, true);
+    const gas: GasInfo = await api.program.calculateGas.initUpload(aliceRaw, code, { input: 'Init' }, 0, true, meta);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
     expect(gas.min_limit.gtn(0)).toBeTruthy();
@@ -49,7 +52,7 @@ describe('Calculate gas', () => {
 
   test('Upload program', async () => {
     expect(gasLimits.init).toBeDefined();
-    const program = api.program.upload({ code, gasLimit: gasLimits.init as u64 });
+    const program = api.program.upload({ code, gasLimit: gasLimits.init as u64, initPayload: { input: 'Init' } }, meta);
     programId = program.programId;
     codeId = program.codeId;
     const initStatus = checkInit(api, programId);
@@ -58,7 +61,7 @@ describe('Calculate gas', () => {
   });
 
   test('Get init gas spent (create)', async () => {
-    const gas: GasInfo = await api.program.calculateGas.initCreate(aliceRaw, codeId, '0x00', 0, true);
+    const gas: GasInfo = await api.program.calculateGas.initCreate(aliceRaw, codeId, { input: 'Init' }, 0, true, meta);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
     expect(gas.min_limit.gtn(0)).toBeTruthy();
@@ -71,7 +74,10 @@ describe('Calculate gas', () => {
 
   test('Create program', async () => {
     expect(gasLimits.init).toBeDefined();
-    const program = api.program.create({ codeId, gasLimit: gasLimits.init as u64 });
+    const program = api.program.create(
+      { codeId, gasLimit: gasLimits.init as u64, initPayload: { input: 'Init' } },
+      meta,
+    );
     programId = program.programId;
     const initStatus = checkInit(api, programId);
     await sendTransaction(program.extrinsic, alice, 'MessageEnqueued');
@@ -80,7 +86,7 @@ describe('Calculate gas', () => {
 
   test('Get handle gas spent', async () => {
     expect(programId).toBeDefined();
-    const gas = await api.program.calculateGas.handle(aliceRaw, programId, '0x50494e47', 1000, true);
+    const gas = await api.program.calculateGas.handle(aliceRaw, programId, { input: 'Handle' }, 1000, true, meta);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
     expect(gas.min_limit.gtn(0)).toBeTruthy();
@@ -93,12 +99,15 @@ describe('Calculate gas', () => {
 
   test('Send message', async () => {
     expect(gasLimits.handle).toBeDefined();
-    const tx = api.message.send({
-      destination: programId,
-      payload: '0x50494e47',
-      gasLimit: (gasLimits.handle as u64).muln(2),
-      value: 1000,
-    });
+    const tx = api.message.send(
+      {
+        destination: programId,
+        payload: { input: 'Handle' },
+        gasLimit: (gasLimits.handle as u64).muln(2),
+        value: 1000,
+      },
+      meta,
+    );
     const waitForReply = listenToUserMessageSent(api, programId);
     await sendTransaction(tx, alice, 'MessageEnqueued');
     const { message } = await waitForReply(null);
@@ -108,22 +117,9 @@ describe('Calculate gas', () => {
     expect(message.details.isNone).toBeTruthy();
   });
 
-  test('Get gas spent if payload is U8a', async () => {
-    const payload = new Uint8Array([80, 73, 78, 71]);
-    const gas = await api.program.calculateGas.handle(aliceRaw, programId, payload, 0, true);
-
-    expect(gas).toBeDefined();
-    expect(gas.toHuman()).toHaveProperty('min_limit');
-    expect(gas.min_limit.gtn(0)).toBeTruthy();
-    expect(gas.toHuman()).toHaveProperty('burned');
-    expect(gas.toHuman()).toHaveProperty('reserved');
-    expect(gas.toHuman()).toHaveProperty('may_be_returned');
-    expect(gas.toHuman()).toHaveProperty('waited');
-  });
-
   test('Calculate reply gas', async () => {
     expect(messageId).toBeDefined();
-    const gas = await api.program.calculateGas.reply(aliceRaw, messageId, exitCode, '0x', 0, true);
+    const gas = await api.program.calculateGas.reply(aliceRaw, messageId, exitCode, { input: 'Reply' }, 0, true, meta);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
     gasLimits.reply = gas.min_limit;
@@ -135,11 +131,14 @@ describe('Calculate gas', () => {
 
   test('Send reply', async () => {
     expect(gasLimits.reply).toBeDefined();
-    const tx = api.message.sendReply({
-      replyToId: messageId,
-      payload: '0x50494e47',
-      gasLimit: gasLimits.reply!,
-    });
+    const tx = api.message.sendReply(
+      {
+        replyToId: messageId,
+        payload: { input: 'Reply' },
+        gasLimit: gasLimits.reply!,
+      },
+      meta,
+    );
     const data = await sendTransaction(tx, alice, 'MessageEnqueued');
     expect(data).toBeDefined();
   });

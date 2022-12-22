@@ -13,7 +13,7 @@ on:
 jobs:
   test:
     if: github.event_name == 'pull_request'
-    # runs-on: static-runner
+
     runs-on: ubuntu-20.04
     steps:
       - name: Cancel previous workflow runs
@@ -27,18 +27,20 @@ jobs:
         with:
           node-version: 16.x
 
-      - name: "Install: Nightly toolchain"
+      - name: 'Install: Nightly toolchain'
         uses: actions-rs/toolchain@v1
         with:
           toolchain: nightly
           components: clippy, rustfmt
           target: wasm32-unknown-unknown
 
-      - name: Install dependencies and build @gear-js/api
+      - name: Install dependencies
         working-directory: api
-        run: |
-          npm ci
-          npm run build
+        run: yarn install
+
+      - name: Build @gear-js/api
+        working-directory: api
+        run: yarn build
 
       - name: Download gear examples
         working-directory: api/test/wasm
@@ -47,32 +49,29 @@ jobs:
           cd examples
           wget -O ./examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
           tar -xvf examples.tar.gz
-          
+
       - name: Build test programs
-        run: |
-          cd api/test/programs
-          cargo build --release
+        working-directory: api/test/programs
+        run: cargo build --release
 
       - name: Prepare
         run: |
           wget -O ./gear https://github.com/gear-tech/gear/releases/download/build/gear
           chmod +x gear
           nohup ./gear --dev --execution=wasm --tmp --unsafe-ws-external --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
- 
+
       - name: Run tests
         working-directory: api
-        run: npm test
-        
+        run: yarn test
+
       - name: Build examples
         if: ${{ contains(github.event.*.labels.*.name, 'api') }}
         working-directory: api/examples
-        run: |
-          npm install --no-package-lock
-          npm run build
+        run: yarn build
 
   publish-to-npm:
     if: github.event_name == 'push'
-#    runs-on: static-runner
+
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -90,11 +89,13 @@ jobs:
           file-url: https://unpkg.com/@gear-js/api@latest/package.json
           static-checking: localIsNew
 
-      - name: Install dependencies and build @gear-js/api
+      - name: Install dependencies
         working-directory: api
-        run: |
-          npm ci
-          npm run build
+        run: yarn install
+
+      - name: Build @gear-js/api
+        working-directory: api
+        run: yarn build
 
       - name: Publish
         if: steps.check.outputs.changed == 'true'

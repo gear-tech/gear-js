@@ -1,48 +1,90 @@
 import { ISubmittableResult } from '@polkadot/types/types';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { SubmittableExtrinsic, VoidFn } from '@polkadot/api/types';
+import { HexString } from '@polkadot/util/types';
+import { ReplaySubject } from 'rxjs';
 
-import { IMessageSendOptions, IMessageSendReplyOptions, Metadata } from './types';
+import { IMessageSendOptions, IMessageSendReplyOptions, OldMetadata } from './types';
 import { SendMessageError, SendReplyError } from './errors';
 import { validateGasLimit, validateValue } from './utils';
+import { encodePayload } from './utils/create-payload';
 import { GearTransaction } from './Transaction';
-import { createPayload } from './create-type';
+import { UserMessageSentData } from './events';
+import { ProgramMetadata, isProgramMeta } from './metadata';
 
 export class GearMessage extends GearTransaction {
   /**
    * ## Send Message
-   * @param message
-   * @param meta Metadata
-   * @param messageType MessageType
+   * @param args Message parameters
+   * @param meta Program metadata obtained using `getProgramMetadata` function.
+   * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.handle.input` will be used instead.
    * @returns Submitted result
    * ```javascript
-   * const api = await GearApi.create()
-   * const programId = '0xd7540ae9da85e33b47276e2cb4efc2f0b58fef1227834f21ddc8c7cb551cced6'
+   * const programId = '0x..';
+   * const hexMeta = '0x...';
+   * const meta = getProgramMetadata(hexMeta);
+   *
    * const tx = api.message.send({
-   *  destination: messageId,
-   *  payload: 'Hello, World!',
-   *  gasLimit: 20_000_000
-   * }, undefiend, 'String')
+   *   destination: programId,
+   *   payload: { amazingPayload: { } },
+   *   gasLimit: 20_000_000
+   * }, meta, meta.handle.input)
+   *
    * tx.signAndSend(account, (events) => {
-   *  events.forEach(({event}) => console.log(event.toHuman()))
+   *   events.forEach(({event}) => console.log(event.toHuman()))
    * })
    * ```
    */
   send(
-    message: IMessageSendOptions,
-    meta?: Metadata,
-    messageType?: string,
-  ): SubmittableExtrinsic<'promise', ISubmittableResult> {
-    validateValue(message.value, this._api);
-    validateGasLimit(message.gasLimit, this._api);
+    args: IMessageSendOptions,
+    meta?: ProgramMetadata,
+    typeIndex?: number,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
 
-    const payload = createPayload(message.payload, messageType || meta?.handle_input, meta?.types);
+  /**
+   * @deprecated This method will ber removed as soon as we move completely to the new metadata
+   */
+  send(
+    args: IMessageSendOptions,
+    meta?: OldMetadata,
+    messageType?: string,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
+  send(
+    args: IMessageSendOptions,
+    hexRegistry: HexString,
+    typeIndex: number,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
+  send(
+    args: IMessageSendOptions,
+    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
+    typeIndexOrMessageType?: number | string,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
+  /**
+   * ## Send Message
+   * @param message
+   * @param metaOrHexRegistry Metadata
+   * @param typeIndexOrMessageType type index in registry or type name
+   * @returns Submitted result
+   */
+  send(
+    { destination, value, gasLimit, ...args }: IMessageSendOptions,
+    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
+    typeIndexOrMessageType?: number | string,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult> {
+    validateValue(value, this._api);
+    validateGasLimit(gasLimit, this._api);
+
+    const payload = encodePayload(
+      args.payload,
+      metaOrHexRegistry,
+      isProgramMeta(metaOrHexRegistry) ? 'handle' : 'handle_input',
+      typeIndexOrMessageType,
+    );
+
     try {
-      this.extrinsic = this._api.tx.gear.sendMessage(
-        message.destination,
-        payload,
-        message.gasLimit,
-        message.value || 0,
-      );
+      this.extrinsic = this._api.tx.gear.sendMessage(destination, payload, gasLimit, value || 0);
       return this.extrinsic;
     } catch (error) {
       throw new SendMessageError(error.message);
@@ -51,43 +93,115 @@ export class GearMessage extends GearTransaction {
 
   /**
    * Sends reply message
-   * @param message Message parameters
-   * @param meta Metadata
-   * @param messageType MessageType
+   * @param args Message parameters
+   * @param meta Program metadata obtained using `getProgramMetadata` function.
+   * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.reply.input` will be used instead.
    * @returns Submitted result
-   * @example
    * ```javascript
-   * const api = await GearApi.create()
-   * const messageId = '0xd7540ae9da85e33b47276e2cb4efc2f0b58fef1227834f21ddc8c7cb551cced6'
-   * const tx = api.message.sendReply({
-   *  replyToId: messageId,
-   *  payload: 'Reply message',
-   *  gasLimit: 20_000_000
-   * }, undefiend, 'String')
+   * const replyToMessage = '0x..';
+   * const hexMeta = '0x...';
+   * const meta = getProgramMetadata(hexMeta);
+   *
+   * const tx = api.message.send({
+   *   replyToId: replyToMessage,
+   *   payload: { amazingPayload: { } },
+   *   gasLimit: 20_000_000
+   * }, meta, meta.reply.input)
+   *
    * tx.signAndSend(account, (events) => {
-   *  events.forEach(({event}) => console.log(event.toHuman()))
+   *   events.forEach(({event}) => console.log(event.toHuman()))
    * })
    * ```
    */
   sendReply(
-    message: IMessageSendReplyOptions,
-    meta?: Metadata,
-    messageType?: string,
-  ): SubmittableExtrinsic<'promise', ISubmittableResult> {
-    validateValue(message.value, this._api);
-    validateGasLimit(message.gasLimit, this._api);
+    args: IMessageSendReplyOptions,
+    meta?: ProgramMetadata,
+    typeIndex?: number,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
 
-    const payload = createPayload(
-      message.payload,
-      messageType || meta?.async_handle_input || meta?.async_init_input,
-      meta?.types,
+  /**
+   * @deprecated This method will ber removed as soon as we move completely to the new metadata
+   */
+  sendReply(
+    args: IMessageSendReplyOptions,
+    meta?: OldMetadata,
+    messageType?: string,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
+  sendReply(
+    args: IMessageSendReplyOptions,
+    hexRegistry: HexString,
+    typeIndex: number,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
+  sendReply(
+    args: IMessageSendReplyOptions,
+    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
+    typeIndexOrMessageType?: number | string,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
+  /**
+   * Sends reply message
+   * @param args Message parameters
+   * @param metaOrHexRegistry Metadata
+   * @param typeIndexOrMessageType type index in registry or type name
+   * @returns Submitted result
+   */
+  sendReply(
+    { value, gasLimit, replyToId, ...args }: IMessageSendReplyOptions,
+    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
+    typeIndexOrMessageType?: number | string,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult> {
+    validateValue(value, this._api);
+    validateGasLimit(gasLimit, this._api);
+
+    const payload = encodePayload(
+      args.payload,
+      metaOrHexRegistry,
+      isProgramMeta(metaOrHexRegistry) ? 'reply' : 'async_handle_input',
+      typeIndexOrMessageType,
     );
 
     try {
-      this.extrinsic = this._api.tx.gear.sendReply(message.replyToId, payload, message.gasLimit, message.value);
+      this.extrinsic = this._api.tx.gear.sendReply(replyToId, payload, gasLimit, value);
       return this.extrinsic;
     } catch (error) {
       throw new SendReplyError();
     }
+  }
+
+  listenToReplies(programId: HexString, bufferSize = 5) {
+    let unsub: VoidFn;
+    const subject = new ReplaySubject<[HexString, UserMessageSentData]>(bufferSize);
+    let messageId: HexString;
+
+    this._api.gearEvents
+      .subscribeToGearEvent('UserMessageSent', ({ data }) => {
+        if (data.message.source.eq(programId)) {
+          if (data.message.details.isSome && data.message.details.unwrap().isReply) {
+            const id = data.message.details.unwrap().asReply.replyTo.toHex();
+            if (!messageId || id === messageId) {
+              subject.next([data.message.details.unwrap().asReply.replyTo.toHex(), data]);
+            }
+          }
+        }
+      })
+      .then((result) => {
+        unsub = result;
+      });
+
+    return (messageId: HexString): Promise<UserMessageSentData> => {
+      return new Promise((resolve) => {
+        subject.subscribe({
+          next: ([id, data]) => {
+            if (id === messageId) {
+              subject.complete();
+              unsub();
+              resolve(data);
+            }
+          },
+        });
+      });
+    };
   }
 }

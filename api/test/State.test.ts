@@ -36,7 +36,7 @@ afterAll(async () => {
 });
 
 describe('Read State', () => {
-  test('Upload demo_meta_test program', async () => {
+  test('Upload demo_meta program', async () => {
     const { programId, extrinsic } = api.program.upload(
       {
         code: demo_meta_test.code,
