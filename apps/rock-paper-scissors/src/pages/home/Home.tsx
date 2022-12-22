@@ -132,13 +132,7 @@ function Home() {
           clearProgrammId={setProgramID}
           onRouteChange={onClickRouteChange}
           onClickRegister={() =>
-            onClickRegister(
-              onClickRouteChange,
-              payloadSend,
-              lobbyList || ([] as Hex[]),
-              accountHex || ('' as Hex),
-              betSize || ('' as Hex),
-            )
+            onClickRegister(onClickRouteChange, payloadSend, lobbyList as Hex[], accountHex as Hex, betSize as string)
           }
           round={round}
           game="current game"

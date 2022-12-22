@@ -22,7 +22,7 @@ function Join({ onClickRouteChange, setProgramID }: Props) {
         if(!values.programId)return;
         const valueLowered=values.programId.toLowerCase();
         setProgramID(valueLowered as Hex)
-        onClickRouteChange('Join game')
+        setTimeout(()=>onClickRouteChange('Join game'),0)
     });
     return (
         <div className={styles.container}>

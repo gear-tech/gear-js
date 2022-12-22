@@ -44,7 +44,7 @@ function JoinDetails({
   contract,
   isLoading
 }: Props) {
-  const timeLeftToString = `Register ${hoursLeft}:${minutesLeft}:${secondsLeft}`;
+  const timeLeftToString = secondsLeft!=="NaN" ?`Register ${hoursLeft}:${minutesLeft}:${secondsLeft}`:'Register';
   return isLoading ? (
     <div className={styles.container}>
       <div className={styles.visual}>

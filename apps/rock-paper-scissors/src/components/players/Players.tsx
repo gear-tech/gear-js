@@ -31,10 +31,9 @@ function Players({ heading, list, finishedPlayers, className, center }: Props) {
         </div>
       </header>
       <ul className={listClassName}>
-        {list.length &&
-          list.map((player) => (
-            <Player key={player} id={player as Hex} isFinished={finishedPlayers?.includes(player) || false} />
-          ))}
+        {list.map((player) => (
+          <Player key={player} id={player as Hex} isFinished={finishedPlayers?.includes(player) || false} />
+        ))}
       </ul>
     </>
   );

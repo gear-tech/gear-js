@@ -57,11 +57,7 @@ function Game({
     <div className={styles.container}>
       <div className={styles.players}>
         <BackButton onClick={() => onRouteChange('')} />
-        <Players
-          finishedPlayers={finishedPlayers as string[]}
-          list={(players as Hex[]) || []}
-          heading="Current players"
-        />
+        <Players finishedPlayers={finishedPlayers as string[]} list={players as Hex[]} heading="Current players" />
         {!admin && getButton()}
       </div>
       <div className={styles.summary}>

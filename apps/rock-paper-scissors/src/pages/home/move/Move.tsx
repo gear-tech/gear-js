@@ -51,7 +51,7 @@ function Move({ payloadSend, onRouteChange, setUserMove, userMove }: Props) {
     <div className={styles.container}>
       <h2 className={styles.heading}>Move</h2>
       <ul className={styles.actions}>{getActions()}</ul>
-      <Input onChange={handleChange} type="password" label="Password" direction="y" />
+      <Input className={styles.inputPassword} onChange={handleChange} type="password" label="Password" direction="y" />
       <div className={styles.notice}>
         <p>For greater security, use a different password each time, but don`t forget it!</p>
         <p> At the reveal stage you will need to repeat it.</p>
