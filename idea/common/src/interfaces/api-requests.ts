@@ -21,6 +21,10 @@ interface GetAllProgramsParams extends IGenesis, IPaginationParams, SearchParam,
   status?: string | string[];
 }
 
+interface GetAllStateParams extends IGenesis, IPaginationParams, SearchParam {
+  programId: string
+}
+
 interface GetAllCodeParams extends IGenesis, IPaginationParams, SearchParam, IDates {
   name?: string;
   uploadedBy?: string;
@@ -34,10 +38,15 @@ interface FindProgramParams extends IGenesis, Pick<IProgram, 'id'> {
 
 interface AddMetaParams extends IGenesis, ISignature {
   programId: string;
-  meta?: string;
-  metaFile?: string;
+  metaHex: string;
   name?: string;
-  title?: string;
+  title: string;
+}
+
+interface AddStateParams extends IGenesis {
+  programId: string;
+  wasmBuffBase64: string;
+  name: string;
 }
 
 interface UpdateMessagesParams {
@@ -46,6 +55,10 @@ interface UpdateMessagesParams {
 
 interface GetMetaParams extends IGenesis {
   programId: string;
+}
+
+interface GetStateParams extends IGenesis {
+  stateId: string;
 }
 
 interface GetCodeParams extends IGenesis {
@@ -91,4 +104,7 @@ export {
   GetCodeParams,
   GetAllCodeParams,
   UpdateMessagesParams,
+  AddStateParams,
+  GetStateParams,
+  GetAllStateParams,
 };

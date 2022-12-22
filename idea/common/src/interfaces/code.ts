@@ -6,6 +6,7 @@ interface ICode {
   name: string;
   status: CodeStatus;
   expiration?: string | null;
+  hex: string | null;
 }
 
 interface ICodeChangedData {
