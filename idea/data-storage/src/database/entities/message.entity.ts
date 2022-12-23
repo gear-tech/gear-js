@@ -12,35 +12,35 @@ export class Message extends BaseEntity implements IMessage {
 
   @Index()
   @Column()
-  public  destination: string;
+  public destination: string;
 
   @Index()
   @Column()
-  public  source: string;
+  public source: string;
 
   @Column({ nullable: true })
   public payload: string;
 
   @Column({ default: '0' })
-  public  value: string;
+  public value: string;
 
   @Column({ nullable: true })
-  public  exitCode: number;
+  public exitCode: number;
 
   @Column({ nullable: true })
-  public  replyToMessageId: string;
+  public replyToMessageId: string;
 
   @Column({ nullable: true })
-  public  processedWithPanic: boolean;
+  public processedWithPanic: boolean;
 
   @Column({ type: 'enum', enum: MessageEntryPoint, nullable: true, default: null })
-  public  entry: MessageEntryPoint;
+  public entry: MessageEntryPoint;
 
   @Column({ nullable: true })
-  public  expiration: number;
+  public expiration: number;
 
   @Column({ type: 'enum', enum: MessageType, nullable: true, default: null })
-  public  type: MessageType;
+  public type: MessageType;
 
   @Column({ type: 'enum', enum: MessageReadReason, nullable: true, default: null })
   public readReason: MessageReadReason;
@@ -49,5 +49,5 @@ export class Message extends BaseEntity implements IMessage {
     nullable: true,
   })
   @JoinColumn({ name: 'program_id' })
-  public  program: Program;
+  public program: Program;
 }

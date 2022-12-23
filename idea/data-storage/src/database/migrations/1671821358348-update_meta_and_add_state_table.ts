@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class updateMetaAndAddStateTable1671794326960 implements MigrationInterface {
-    name = 'updateMetaAndAddStateTable1671794326960'
+export class updateMetaAndAddStateTable1671821358348 implements MigrationInterface {
+    name = 'updateMetaAndAddStateTable1671821358348'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
@@ -16,10 +16,16 @@ export class updateMetaAndAddStateTable1671794326960 implements MigrationInterfa
             )
         `);
         await queryRunner.query(`
-            ALTER TABLE "meta" DROP COLUMN "meta"
+            ALTER TABLE "meta" DROP COLUMN "program"
+        `);
+        await queryRunner.query(`
+            ALTER TABLE "meta" DROP COLUMN "owner"
         `);
         await queryRunner.query(`
             ALTER TABLE "meta" DROP COLUMN "metaWasm"
+        `);
+        await queryRunner.query(`
+            ALTER TABLE "meta" DROP COLUMN "meta"
         `);
         await queryRunner.query(`
             ALTER TABLE "code"
@@ -31,7 +37,7 @@ export class updateMetaAndAddStateTable1671794326960 implements MigrationInterfa
         `);
         await queryRunner.query(`
             ALTER TABLE "meta"
-            ADD "data" json
+            ADD "types" json
         `);
         await queryRunner.query(`
             ALTER TABLE "state"
@@ -44,7 +50,7 @@ export class updateMetaAndAddStateTable1671794326960 implements MigrationInterfa
             ALTER TABLE "state" DROP CONSTRAINT "FK_cb46b1ac13bba524405d4e81382"
         `);
         await queryRunner.query(`
-            ALTER TABLE "meta" DROP COLUMN "data"
+            ALTER TABLE "meta" DROP COLUMN "types"
         `);
         await queryRunner.query(`
             ALTER TABLE "meta" DROP COLUMN "hex"
@@ -54,11 +60,19 @@ export class updateMetaAndAddStateTable1671794326960 implements MigrationInterfa
         `);
         await queryRunner.query(`
             ALTER TABLE "meta"
+            ADD "meta" character varying
+        `);
+        await queryRunner.query(`
+            ALTER TABLE "meta"
             ADD "metaWasm" character varying
         `);
         await queryRunner.query(`
             ALTER TABLE "meta"
-            ADD "meta" character varying
+            ADD "owner" character varying NOT NULL
+        `);
+        await queryRunner.query(`
+            ALTER TABLE "meta"
+            ADD "program" character varying NOT NULL
         `);
         await queryRunner.query(`
             DROP TABLE "state"

@@ -146,7 +146,7 @@ export class RabbitmqService {
         return this.metaService.addMeta(params as AddMetaParams);
       },
       [API_METHODS.PROGRAM_META_GET]: () => {
-        return this.metaService.getMeta(params as GetMetaParams);
+        return this.programService.getProgramMeta(params as GetMetaParams);
       },
       [API_METHODS.MESSAGE_ALL]: () => {
         return this.messageService.getAllMessages(params as GetMessagesParams);

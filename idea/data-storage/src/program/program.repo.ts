@@ -22,7 +22,7 @@ export class ProgramRepo {
     return this.programRepo.findOne({
       where: { id, genesis },
       relations: ['meta', 'messages', 'code'],
-      select: { meta: { data: true, program: true } },
+      select: { meta: { types: true, hex: true } },
     });
   }
 
@@ -34,7 +34,18 @@ export class ProgramRepo {
         owner,
       },
       relations: ['meta', 'messages', 'code'],
-      select: { meta: { data: true, program: true } },
+      select: { meta: { types: true, hex: true } },
+    });
+  }
+
+  public async getByIdMeta(id: string, genesis: string): Promise<Program> {
+    return this.programRepo.findOne({
+      where: {
+        id,
+        genesis,
+      },
+      relations: ['meta'],
+      select: { meta: { types: true, hex: true } },
     });
   }
 

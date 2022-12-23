@@ -14,11 +14,4 @@ export class MetaRepo {
   public async save(metadata: Meta): Promise<Meta> {
     return this.metaRepo.save(metadata);
   }
-
-  public async getByProgramId(programId: string): Promise<Meta> {
-    return this.metaRepo.findOne({
-      where: { program: programId },
-      select: ['program', 'hex', 'data'],
-    });
-  }
 }

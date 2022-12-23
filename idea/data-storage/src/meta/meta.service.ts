@@ -1,10 +1,10 @@
 import { getProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { AddMetaParams, AddMetaResult, GetMetaParams, GetMetaResult } from '@gear-js/common';
+import { AddMetaParams, AddMetaResult } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
 
-import { InvalidProgramMetaHex, MetadataNotFound, ProgramNotFound } from '../common/errors';
+import { InvalidProgramMetaHex, ProgramNotFound } from '../common/errors';
 import { ProgramService } from '../program/program.service';
 import { Meta } from '../database/entities';
 import { MetaRepo } from './meta.repo';
@@ -22,7 +22,7 @@ export class MetaService {
     private gearEventListener: GearEventListener,
   ) {}
 
-  async addMeta(params: AddMetaParams): Promise<AddMetaResult> {
+  public async addMeta(params: AddMetaParams): Promise<AddMetaResult> {
     const { programId, genesis, metaHex, name } = params;
     const program = await this.programRepository.getByIdAndGenesis(programId, genesis);
 
@@ -30,7 +30,7 @@ export class MetaService {
       throw new ProgramNotFound();
     }
 
-    if(!(await this.gearEventListener.validateMetaHex(metaHex, programId))) {
+    if(!(await this.gearEventListener.isValidMetaHex(metaHex, programId))) {
       throw new InvalidProgramMetaHex();
     }
 
@@ -39,9 +39,7 @@ export class MetaService {
     const metadataTypeDB = plainToClass(Meta, {
       ...params,
       hex: metaHex,
-      data: metaData.types,
-      program: program.id,
-      owner: program.owner,
+      types: metaData.types,
     });
 
     const metadata = await this.metaRepository.save(metadataTypeDB);
@@ -55,13 +53,5 @@ export class MetaService {
     await this.programService.updateProgramData(updateProgramDataInput);
 
     return { status: 'Metadata added' };
-  }
-
-  async getMeta(params: GetMetaParams): Promise<GetMetaResult> {
-    const meta = await this.metaRepository.getByProgramId(params.programId);
-    if (!meta) {
-      throw new MetadataNotFound();
-    }
-    return meta;
   }
 }

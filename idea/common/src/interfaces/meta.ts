@@ -14,8 +14,6 @@ export interface IMetaData {
 
 export interface IMeta {
   id: string;
-  program: string;
-  owner: string;
   hex: string;
-  data: IMetaData | string,
+  types: IMetaData | string,
 }
