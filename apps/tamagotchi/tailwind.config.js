@@ -13,6 +13,15 @@ module.exports = {
         kanit: ['Kanit', ...defaultTheme.fontFamily.sans],
         poppins: ['Poppins', ...defaultTheme.fontFamily.sans],
       },
+      fontSize: {
+        sm: ['14px', '20px'],
+        base: ['16px', '24px'],
+        lg: ['18px', '20px'],
+        xl: ['24px', '32px'],
+      },
+      opacity: {
+        15: '.15',
+      },
       screens: {
         xxs: '335px',
         xs: '375px',

@@ -1,7 +1,6 @@
 import { SVGProps } from "react";
 
-export type IconProps = {
+export type IconProps = SVGProps<SVGSVGElement> & {
   name: string;
-  className?: string;
   section?: string;
-} & SVGProps<SVGSVGElement>;
+};
