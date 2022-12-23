@@ -4,13 +4,13 @@ import {
   useRockPaperScissors,
   useCreateRockPaperScissors,
   useRockPaperScissorsMessage,
+  useRoute
 } from 'hooks';
-import { useForm, onClickRegister, gameStageFinishedPlayers, getGameStage, getLoosers } from 'utils';
+import { onClickRegister, gameStageFinishedPlayers, getGameStage, getLoosers } from 'utils';
 import { ApiLoader } from 'components';
 import { UserMoveType } from 'types';
 import { useAccount, useMetadata } from '@gear-js/react-hooks';
 import { Hex } from '@gear-js/api';
-
 import { Create } from './create';
 import { Start } from './start';
 import { Game } from './game';
@@ -36,7 +36,7 @@ function Home() {
   const payloadSend = useRockPaperScissorsMessage(programID);
 
   const { account } = useAccount();
-  const { form, onClickRouteChange } = useForm();
+  const { route, setRoute } = useRoute();
 
   // temporary
   const { metaBuffer } = useMetadata(metaAssets);
@@ -72,15 +72,15 @@ function Home() {
     const betSizeToNumber = Number(betSize?.split(',').join(''));
     if (gameState.error && loading) {
       setLoading(false);
-      onClickRouteChange('join');
+      setRoute('join');
     }
     if (betSizeToNumber > 500) {
       setLoading(false);
     }
-  }, [gameState.error, onClickRouteChange, loading, betSize]);
+  }, [gameState.error, setRoute, loading, betSize]);
 
   const onClickCreate = (hex: Hex) => {
-    onClickRouteChange('lobby admin');
+    setRoute('lobby admin');
     setProgramID(hex);
   };
 
@@ -93,7 +93,7 @@ function Home() {
           round={round}
           winners={lobbyList as []}
           loosers={loosers}
-          onClickRoute={onClickRouteChange}
+          onClickRoute={setRoute}
           nextRound={nextRoundPlayer}
         />
       );
@@ -105,7 +105,7 @@ function Home() {
         winner={winnerState.state?.Winner || ('' as Hex)}
         loosers={loosers}
         account={accountHex || ('' as Hex)}
-        onClickClose={() => onClickRouteChange('')}
+        onClickClose={() => setRoute('')}
       />
     );
   };
@@ -114,25 +114,25 @@ function Home() {
     <ApiLoader />
   ) : (
     <>
-      {!form && <Start onClickRouteChange={onClickRouteChange} setProgramID={setProgramID} />}
+      {!route && <Start onClickRouteChange={setRoute} setProgramID={setProgramID} />}
 
-      {form === 'create' && (
+      {route === 'create' && (
         <Create
           setLoading={setLoading}
-          onRouteChange={onClickRouteChange}
+          onRouteChange={setRoute}
           onSubmit={create}
           setStateAction={onClickCreate}
         />
       )}
 
-      {form === 'join' && <Join onClickRouteChange={onClickRouteChange} setProgramID={setProgramID} />}
+      {route === 'join' && <Join onClickRouteChange={setRoute} setProgramID={setProgramID} />}
 
-      {form === 'Join game' && (
+      {route === 'Join game' && (
         <JoinDetails
           clearProgrammId={setProgramID}
-          onRouteChange={onClickRouteChange}
+          onRouteChange={setRoute}
           onClickRegister={() =>
-            onClickRegister(onClickRouteChange, payloadSend, lobbyList as Hex[], accountHex as Hex, betSize as string)
+            onClickRegister(setRoute, payloadSend, lobbyList as Hex[], accountHex as Hex, betSize as string)
           }
           round={round}
           game="current game"
@@ -150,11 +150,11 @@ function Home() {
           isLoading={isLoading}
         />
       )}
-      {form === 'lobby admin' && (
+      {route === 'lobby admin' && (
         <Game
           players={lobbyList}
           finishedPlayers={finishedPlayers}
-          onRouteChange={onClickRouteChange}
+          onRouteChange={setRoute}
           heading={programID}
           stage={gameStage}
           bet={betSize}
@@ -166,11 +166,11 @@ function Home() {
           admin
         />
       )}
-      {form === 'game' && (
+      {route === 'game' && (
         <Game
           players={lobbyList}
           finishedPlayers={finishedPlayers}
-          onRouteChange={onClickRouteChange}
+          onRouteChange={setRoute}
           heading="Rock Paper Scissors"
           stage={gameStage}
           bet={betSize}
@@ -182,7 +182,7 @@ function Home() {
           account={accountHex}
         />
       )}
-      {form === 'detail' && (
+      {route === 'detail' && (
         <Details
           heading={programID}
           game="current game"
@@ -194,11 +194,11 @@ function Home() {
           reveal={revealTimeoutMs}
           entry={entryTimeoutMs}
           SVG={GearBgSVG}
-          onRouteChange={onClickRouteChange}
+          onRouteChange={setRoute}
           isLoading={isLoading}
         />
       )}
-      {form === 'detail admin' && (
+      {route === 'detail admin' && (
         <Details
           heading={programID}
           game=""
@@ -210,31 +210,31 @@ function Home() {
           reveal={revealTimeoutMs}
           entry={entryTimeoutMs}
           SVG={GearBgSVG}
-          onRouteChange={onClickRouteChange}
+          onRouteChange={setRoute}
           admin
           isLoading={isLoading}
         />
       )}
 
-      {form === 'move' && (
+      {route === 'move' && (
         <Move
           payloadSend={payloadSend}
-          onRouteChange={onClickRouteChange}
+          onRouteChange={setRoute}
           userMove={userMove || ({} as UserMoveType)}
           setUserMove={setUserMove}
         />
       )}
 
-      {form === 'reveal' && (
-        <Reveal userMove={userMove || {}} payloadSend={payloadSend} onRouteChange={onClickRouteChange} />
+      {route === 'reveal' && (
+        <Reveal userMove={userMove || {}} payloadSend={payloadSend} onRouteChange={setRoute} />
       )}
 
-      {form === 'round result' &&
+      {route === 'round result' &&
         (gameStageData?.Reveal ? (
           <Game
             players={lobbyList}
             finishedPlayers={finishedPlayers}
-            onRouteChange={onClickRouteChange}
+            onRouteChange={setRoute}
             heading="somth heading"
             stage={gameStage}
             bet={betSize}

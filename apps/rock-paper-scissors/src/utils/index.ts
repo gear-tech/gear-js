@@ -2,7 +2,7 @@ import { Hex } from '@gear-js/api';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { LOCAL_STORAGE } from 'consts';
 import { GameStageType, StageType } from 'types';
-import { isExists, isMinValue, useForm } from './form';
+import { isExists, isMinValue } from './form';
 import { onSubmitReveal, onSubmitMove, onClickRegister } from './sendMessage';
 
 const isLoggedIn = ({ address }: InjectedAccountWithMeta) => localStorage[LOCAL_STORAGE.ACCOUNT] === address;
@@ -48,7 +48,6 @@ export {
   isLoggedIn,
   isExists,
   isMinValue,
-  useForm,
   onSubmitReveal,
   onSubmitMove,
   onClickRegister,
