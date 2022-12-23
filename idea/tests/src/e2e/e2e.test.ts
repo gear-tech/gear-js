@@ -1,6 +1,8 @@
 import { GearApi, Hex } from '@gear-js/api';
 import { waitReady } from '@polkadot/wasm-crypto';
 
+import base from '../config/base';
+
 import {
   addState,
   checkInitStatus,
@@ -10,7 +12,8 @@ import {
   getAllProgramsByStatus,
   getMeta,
   getProgramData,
-  getProgramDataInBatch, getState, getStates,
+  getProgramDataInBatch,
+  getStates,
   uploadMeta,
 } from './programs';
 import { processPrepare } from '../prepare';
@@ -19,7 +22,6 @@ import { sleep } from '../utils';
 import { getAllMessages, getMessageData, getMessagePayload, getMessagesByDates } from './messages';
 import { getTestBalance, testBalanceAvailable } from './testBalance';
 import { getCodeData, getCodes, getCodesByDates } from './code';
-import base from '../config/base';
 import { networkDataAvailable } from './network-data-available';
 import { blocksStatus } from './block';
 
@@ -84,6 +86,13 @@ describe('api methods', () => {
   test('program.meta.get request', async () => {
     for (const id_ of Object.keys(prepared.programs)) {
       expect(await getMeta(genesis, id_)).toBeTruthy();
+    }
+  });
+
+  test('program.state.add request', async () => {
+    for (const id_ of Object.keys(prepared.programs)) {
+      const program = prepared.programs[id_] as IPreparedProgram;
+      expect(await addState(genesis, program)).toBeTruthy();
     }
   });
 

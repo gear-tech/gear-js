@@ -16,9 +16,7 @@ export class StateRepo {
       return this.stateRepo
         .createQueryBuilder('state')
         .select(['state.id', 'state.name', 'state.functions'])
-        .where('state.funcNames ::jsonb @> :funcNames', {
-          funcNames: JSON.stringify(query),
-        })
+        .where(`LOWER(("state"."funcNames")::text) like LOWER('%${query}%')`)
         .andWhere('state.code = :id', { id: codeId })
         .orderBy('state.name', 'ASC')
         .getManyAndCount();

@@ -29,13 +29,13 @@ export class ProgramService {
 
   public async getProgramMeta(params: GetMetaParams): Promise<Meta> {
     const { programId, genesis } = params;
-    const { meta } = await this.programRepository.getByIdMeta(programId, genesis);
+    const program = await this.programRepository.getByIdMeta(programId, genesis);
 
-    if (!meta) {
+    if (!program.meta) {
       throw new MetadataNotFound();
     }
 
-    return meta;
+    return program.meta;
   }
 
   public async createPrograms(createProgramsInput: CreateProgramInput[]): Promise<Program[]> {
