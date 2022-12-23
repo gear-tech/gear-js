@@ -29,6 +29,7 @@ interface IMessageSpec {
 interface IProgramSpec {
   pathToOpt: string;
   pathToMetaTxt?: string;
+  pathToMetaState?: string;
   initPayload?: undefined;
   gasLimit: number;
   value?: number;

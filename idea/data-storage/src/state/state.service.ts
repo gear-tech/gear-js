@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AddStateParams, AddStateResult, GetAllStateParams, GetStateParams } from '@gear-js/common';
+import { AddStateParams, AddStateResult, GetAllStateParams, GetStateParams, GetStatesResult } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
 import { getStateMetadata } from '@gear-js/api';
 
@@ -15,11 +15,16 @@ export class StateService {
     private programRepository: ProgramRepo,
   ) {}
 
-  public async listByProgramId(getAllStateParams: GetAllStateParams): Promise<[State[], number]> {
+  public async listByProgramId(getAllStateParams: GetAllStateParams): Promise<GetStatesResult> {
     const { programId, genesis, query } = getAllStateParams;
     const program = await this.programRepository.get(programId, genesis);
 
-    return this.stateRepository.list(program.code.id, query);
+    const [states, total] = await this.stateRepository.list(program.code.id, query);
+
+    return {
+      states,
+      count: total,
+    };
   }
 
   public async get(getStateParams: GetStateParams): Promise<State> {
@@ -35,8 +40,9 @@ export class StateService {
     if (!program) {
       throw new ProgramNotFound();
     }
-    const metaBuff = new Buffer(wasmBuffBase64, 'base64');
-    const { functions } = await getStateMetadata(metaBuff);
+
+    const metaStateBuff = Buffer.from(wasmBuffBase64, 'base64');
+    const { functions } = await getStateMetadata(metaStateBuff);
     const funcNames = Object.keys(functions);
 
     const createMetaDataInput = plainToClass(State, {

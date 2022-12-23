@@ -15,10 +15,10 @@ export class State implements IState {
   public wasmBuffBase64: string;
 
   @Column({ type: 'json' })
-  public funcNames: string[];
+  public funcNames: string;
 
   @Column({ type: 'json' })
-  public functions: JSON;
+  public functions: string;
 
   @ManyToOne(() => Code, (code) => code.states, {
     nullable: true

@@ -12,7 +12,7 @@ export class StateRepo {
   ) {}
 
   public async list(codeId: string, query: string): Promise<[State[], number]> {
-    if(query) {
+    if(query && query.length >= 1) {
       return this.stateRepo
         .createQueryBuilder('state')
         .select(['state.id', 'state.name', 'state.functions'])
@@ -24,7 +24,8 @@ export class StateRepo {
         .getManyAndCount();
     }
     return  this.stateRepo.findAndCount({
-      where: { code: { id: codeId } }
+      where: { code: { id: codeId } },
+      select: { functions: true, name: true, id: true }
     });
   }
 

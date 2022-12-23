@@ -30,9 +30,10 @@ export class MetaService {
       throw new ProgramNotFound();
     }
 
-    if(!(await this.gearEventListener.validMetaHex(metaHex, programId))) {
+    if(!(await this.gearEventListener.validateMetaHex(metaHex, programId))) {
       throw new InvalidProgramMetaHex();
     }
+
     const metaData = getProgramMetadata(metaHex as HexString);
 
     const metadataTypeDB = plainToClass(Meta, {

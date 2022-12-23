@@ -21,7 +21,7 @@ interface GetAllProgramsParams extends IGenesis, IPaginationParams, SearchParam,
   status?: string | string[];
 }
 
-interface GetAllStateParams extends IGenesis, IPaginationParams, SearchParam {
+interface GetAllStateParams extends IGenesis, SearchParam {
   programId: string
 }
 

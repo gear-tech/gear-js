@@ -2,6 +2,7 @@ import { GearApi, Hex } from '@gear-js/api';
 import { waitReady } from '@polkadot/wasm-crypto';
 
 import {
+  addState,
   checkInitStatus,
   getAllPrograms,
   getAllProgramsByDates,
@@ -9,7 +10,7 @@ import {
   getAllProgramsByStatus,
   getMeta,
   getProgramData,
-  getProgramDataInBatch,
+  getProgramDataInBatch, getState, getStates,
   uploadMeta,
 } from './programs';
 import { processPrepare } from '../prepare';
@@ -83,6 +84,13 @@ describe('api methods', () => {
   test('program.meta.get request', async () => {
     for (const id_ of Object.keys(prepared.programs)) {
       expect(await getMeta(genesis, id_)).toBeTruthy();
+    }
+  });
+
+  test('program.state.all request', async () => {
+    for (const id_ of Object.keys(prepared.programs)) {
+      const program = prepared.programs[id_] as IPreparedProgram;
+      expect(await getStates(genesis, program)).toBeTruthy();
     }
   });
 

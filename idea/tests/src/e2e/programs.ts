@@ -1,10 +1,8 @@
 import { Hex } from '@gear-js/api';
-import { u8aToHex } from '@polkadot/util';
 import { expect } from 'chai';
 import { readFileSync } from 'fs';
 
 import request, { batchRequest } from './request';
-import accounts from '../config/accounts';
 import { IPreparedProgram, IPreparedPrograms, Passed } from '../interfaces';
 import { HexString } from '@polkadot/util/types';
 
@@ -109,7 +107,6 @@ export async function getProgramDataInBatch(genesis: string, programId: string):
 }
 
 export async function uploadMeta(genesis: string, program: IPreparedProgram): Promise<Passed> {
-  const accs = await accounts();
   const metaHex: HexString = `0x${readFileSync(program.spec.pathToMetaTxt, 'utf-8')}`;
 
   const data = {
@@ -117,8 +114,6 @@ export async function uploadMeta(genesis: string, program: IPreparedProgram): Pr
     programId: program.id,
     metaHex,
     name: program.spec.name,
-    title: `Test ${program.spec.name}`,
-    signature: u8aToHex(accs[program.spec.account].sign(metaHex)),
   };
   const response = await request('program.meta.add', data);
   expect(response).to.have.property('result');
@@ -136,6 +131,51 @@ export async function getMeta(genesis: string, programId: string): Promise<Passe
   expect(response).to.have.property('result');
   expect(response.result).to.have.all.keys('program', 'data', 'hex');
   expect(response.result.data).to.not.be.undefined;
+  return true;
+}
+
+export async function addState(genesis: string, program: IPreparedProgram): Promise<Passed> {
+  const n = program.spec.pathToMetaState.lastIndexOf('/');
+  const nameFile = program.spec.pathToMetaState.substring(n + 1);
+
+  const metaBuff = readFileSync(program.spec.pathToMetaState);
+  const metaStateBuffBase64 = metaBuff.toString('base64');
+
+  const data = {
+    genesis,
+    wasmBuffBase64: metaStateBuffBase64,
+    programId: program.id,
+    name: nameFile,
+  };
+
+  const response = await request('program.state.add', data);
+  expect(response).to.have.property('result');
+  expect(response.result).to.have.property('status');
+  expect(response.result.status).to.eq('State added');
+  return true;
+}
+
+export async function getStates(genesis: string, program: IPreparedProgram): Promise<Passed> {
+
+  const data = {
+    genesis,
+    programId: program.id,
+  };
+
+  const response = await request('program.state.all', data);
+  expect(response).to.have.property('result');
+
+  return true;
+}
+
+export async function getState(genesis: string, program: IPreparedProgram): Promise<Passed> {
+
+  const data = {
+    genesis
+  };
+
+  const response = await request('program.state.get', data);
+  expect(response).to.have.property('result');
   return true;
 }
 
