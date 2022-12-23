@@ -17,5 +17,5 @@ export interface IMeta {
   program: string;
   owner: string;
   hex: string;
-  data: IMetaData,
+  data: IMetaData | string,
 }

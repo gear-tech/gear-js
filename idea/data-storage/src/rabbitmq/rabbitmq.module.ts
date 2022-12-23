@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { RabbitmqService } from './rabbitmq.service';
@@ -12,7 +12,7 @@ import { StateModule } from '../state/state.module';
 @Module({
   imports: [
     ConfigModule,
-    MetaModule,
+    forwardRef(() => MetaModule),
     ProgramModule,
     MessageModule,
     CodeModule,

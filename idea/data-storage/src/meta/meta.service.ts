@@ -1,39 +1,37 @@
-import { getProgramMetadata, signatureIsValid } from '@gear-js/api';
+import { getProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { AddMetaParams, AddMetaResult, GetMetaParams, GetMetaResult } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
 
-import { SignatureNotVerified, MetadataNotFound, ProgramNotFound } from '../common/errors';
+import { InvalidProgramMetaHex, MetadataNotFound, ProgramNotFound } from '../common/errors';
 import { ProgramService } from '../program/program.service';
 import { Meta } from '../database/entities';
 import { MetaRepo } from './meta.repo';
 import { ProgramRepo } from '../program/program.repo';
 import { UpdateProgramDataInput } from '../program/types';
+import { GearEventListener } from '../gear/gear-event-listener';
 
 @Injectable()
 export class MetaService {
   constructor(
     private programService: ProgramService,
     private programRepository: ProgramRepo,
-    private metadataRepository: MetaRepo,
+    private metaRepository: MetaRepo,
+    @Inject(forwardRef(() => GearEventListener))
+    private gearEventListener: GearEventListener,
   ) {}
 
   async addMeta(params: AddMetaParams): Promise<AddMetaResult> {
-    const { programId, genesis, signature, metaHex, name, title } = params;
+    const { programId, genesis, metaHex, name } = params;
     const program = await this.programRepository.getByIdAndGenesis(programId, genesis);
 
     if (!program) {
       throw new ProgramNotFound();
     }
 
-    try {
-      //TODO how validate
-      if (!signatureIsValid(program.owner, signature, metaHex)) {
-        throw new SignatureNotVerified();
-      }
-    } catch (err) {
-      throw new SignatureNotVerified(err.message);
+    if(!(await this.gearEventListener.validMetaHex(metaHex, programId))) {
+      throw new InvalidProgramMetaHex();
     }
     const metaData = getProgramMetadata(metaHex as HexString);
 
@@ -45,13 +43,12 @@ export class MetaService {
       owner: program.owner,
     });
 
-    const metadata = await this.metadataRepository.save(metadataTypeDB);
+    const metadata = await this.metaRepository.save(metadataTypeDB);
 
     const updateProgramDataInput: UpdateProgramDataInput = {
       id: params.programId,
       genesis,
       name,
-      title,
       meta: metadata,
     };
     await this.programService.updateProgramData(updateProgramDataInput);
@@ -60,7 +57,7 @@ export class MetaService {
   }
 
   async getMeta(params: GetMetaParams): Promise<GetMetaResult> {
-    const meta = await this.metadataRepository.getByProgramId(params.programId);
+    const meta = await this.metaRepository.getByProgramId(params.programId);
     if (!meta) {
       throw new MetadataNotFound();
     }

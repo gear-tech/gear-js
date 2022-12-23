@@ -134,8 +134,8 @@ export async function getMeta(genesis: string, programId: string): Promise<Passe
   };
   const response = await request('program.meta.get', data);
   expect(response).to.have.property('result');
-  expect(response.result).to.have.all.keys('program', 'meta', 'metaWasm');
-  expect(response.result.metaWasm).to.not.be.undefined;
+  expect(response.result).to.have.all.keys('program', 'data', 'hex');
+  expect(response.result.data).to.not.be.undefined;
   return true;
 }
 

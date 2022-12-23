@@ -22,7 +22,7 @@ export class ProgramRepo {
     return this.programRepo.findOne({
       where: { id, genesis },
       relations: ['meta', 'messages', 'code'],
-      select: { meta: { meta: true, program: true } },
+      select: { meta: { data: true, program: true } },
     });
   }
 
@@ -34,7 +34,7 @@ export class ProgramRepo {
         owner,
       },
       relations: ['meta', 'messages', 'code'],
-      select: { meta: { meta: true, program: true } },
+      select: { meta: { data: true, program: true } },
     });
   }
 
@@ -49,7 +49,7 @@ export class ProgramRepo {
       { fromDate, toDate },
       offset || 0,
       limit || PAGINATION_LIMIT,
-      ['code', { table: 'meta', columns: ['meta'] }],
+      ['code', { table: 'meta', columns: ['data'] }],
       { column: 'timestamp', sort: 'DESC' },
     );
 

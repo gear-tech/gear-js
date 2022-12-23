@@ -29,7 +29,7 @@ interface AddStateResult {
 interface GetMetaResult {
   program: string;
   hex: string;
-  data: IMetaData;
+  data: string;
 }
 
 interface GetAllStateResult {

@@ -1,11 +1,19 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Channel, Connection, connect, Replies } from 'amqplib';
+import { Channel, connect, Connection, Replies } from 'amqplib';
 import {
-  AddMetaParams, AddStateParams,
-  API_METHODS, FindMessageParams,
-  FindProgramParams, GetAllCodeParams,
-  GetAllProgramsParams, GetAllStateParams, GetCodeParams, GetMessagesParams, GetMetaParams, GetStateParams,
+  AddMetaParams,
+  AddStateParams,
+  API_METHODS,
+  FindMessageParams,
+  FindProgramParams,
+  GetAllCodeParams,
+  GetAllProgramsParams,
+  GetAllStateParams,
+  GetCodeParams,
+  GetMessagesParams,
+  GetMetaParams,
+  GetStateParams,
   RabbitMQExchanges,
   RabbitMQueues,
 } from '@gear-js/common';
@@ -29,6 +37,7 @@ export class RabbitmqService {
   constructor(
     private configService: ConfigService,
     private messageService: MessageService,
+    @Inject(forwardRef(() => MetaService))
     private metaService: MetaService,
     private codeService: CodeService,
     private programService: ProgramService,

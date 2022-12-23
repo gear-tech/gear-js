@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { IMeta, IMetaData } from '@gear-js/common';
+import { IMeta } from '@gear-js/common';
 
 import { Code } from './code.entity';
 import { Program } from './program.entity';
@@ -19,7 +19,7 @@ export class Meta implements IMeta {
   public hex: string;
 
   @Column({ nullable: true, type: 'json' })
-  public data: IMetaData;
+  public data: string;
 
   @OneToOne(() => Code, (code) => code.meta)
   public code: Code;

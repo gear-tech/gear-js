@@ -1,4 +1,4 @@
-import { IDates, IGenesis, ISignature } from './common';
+import { IDates, IGenesis } from './common';
 import { IMessage, UpdateMessageData } from './message';
 import { IPaginationParams } from './pagination';
 import { IProgram } from './program';
@@ -36,11 +36,10 @@ interface FindProgramParams extends IGenesis, Pick<IProgram, 'id'> {
   owner?: string;
 }
 
-interface AddMetaParams extends IGenesis, ISignature {
+interface AddMetaParams extends IGenesis {
   programId: string;
   metaHex: string;
   name?: string;
-  title: string;
 }
 
 interface AddStateParams extends IGenesis {
