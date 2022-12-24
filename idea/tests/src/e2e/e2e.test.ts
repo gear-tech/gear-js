@@ -30,7 +30,7 @@ import {
   errorMethodNotExist,
   errorNoGenesisFound,
   errorProgramNotFound,
-} from './errors.test';
+} from './json-rpc.errors';
 
 let genesis: Hex;
 let prepared: IPrepared;
