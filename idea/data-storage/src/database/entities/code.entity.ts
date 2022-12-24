@@ -10,34 +10,34 @@ import { State } from './state.entity';
 @Entity()
 export class Code extends BaseEntity implements ICode {
   @PrimaryGeneratedColumn('uuid')
-  public  _id: string;
+  public _id: string;
 
   @Column()
   public id: string;
 
   @Index()
   @Column()
-  public  uploadedBy: string;
+  public uploadedBy: string;
 
   @Column()
-  public  name: string;
+  public name: string;
 
   @Column({ type: 'enum', enum: CodeStatus })
-  public  status: CodeStatus;
+  public status: CodeStatus;
 
   @Column({ nullable: true })
-  public  expiration: string;
+  public expiration: string;
 
   @Column({ nullable: true })
-  public  hex: string;
+  public hex: string;
 
   @OneToOne(() => Meta, (meta) => meta.code)
   @JoinColumn({ name: 'meta_id' })
-  public  meta: Meta;
+  public meta: Meta;
 
   @OneToMany(() => Program, (program) => program.code)
   public programs: Program[];
 
   @OneToMany(() => State, (state) => state.code)
-  public  states: State[];
+  public states: State[];
 }
