@@ -29,7 +29,7 @@ interface IMessageSpec {
 interface IProgramSpec {
   pathToOpt: string;
   pathToMetaTxt?: string;
-  pathToMetaState?: string;
+  pathStates?: string[];
   initPayload?: undefined;
   gasLimit: number;
   value?: number;
@@ -43,6 +43,12 @@ interface ICodeSpec {
   pathToOpt?: string;
   gasLimit: number;
   account: Account;
+}
+
+interface IState {
+  id: string;
+  name: string;
+  functions: object
 }
 
 interface IPreparedPrograms {
@@ -81,4 +87,5 @@ export {
   IPreparedMessages,
   IPrepared,
   IPreparedCollectionCode,
+  IState
 };

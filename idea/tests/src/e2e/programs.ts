@@ -1,10 +1,12 @@
 import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 import { expect } from 'chai';
 import { readFileSync } from 'fs';
 
 import request, { batchRequest } from './request';
-import { IPreparedProgram, IPreparedPrograms, Passed } from '../interfaces';
-import { HexString } from '@polkadot/util/types';
+import { IPreparedProgram, IPreparedPrograms, IState, Passed } from '../interfaces';
+
+export const mapProgramStates = new Map<string, IState[]>;
 
 export async function getAllPrograms(genesis: string, expected: Hex[]): Promise<Passed> {
   const response = await request('program.all', { genesis });
@@ -135,11 +137,11 @@ export async function getMeta(genesis: string, programId: string): Promise<Passe
   return true;
 }
 
-export async function addState(genesis: string, program: IPreparedProgram): Promise<Passed> {
-  const n = program.spec.pathToMetaState.lastIndexOf('/');
-  const nameFile = program.spec.pathToMetaState.substring(n + 1);
+export async function addState(genesis: string, program: IPreparedProgram, statePath: string): Promise<Passed> {
+  const n = statePath.lastIndexOf('/');
+  const nameFile = statePath.substring(n + 1);
 
-  const metaBuff = readFileSync(program.spec.pathToMetaState);
+  const metaBuff = readFileSync(statePath);
   const metaStateBuffBase64 = metaBuff.toString('base64');
 
   const data = {
@@ -165,18 +167,42 @@ export async function getStates(genesis: string, program: IPreparedProgram): Pro
 
   const response = await request('program.state.all', data);
   expect(response).to.have.property('result');
+  expect(response.result.count).to.equal(program.spec.pathStates.length);
+
+  if(response.result.count >= 1) {
+    mapProgramStates.set(program.id, response.result.states as IState[]);
+  }
 
   return true;
 }
 
-export async function getState(genesis: string, program: IPreparedProgram): Promise<Passed> {
+export async function getStatesByFuncName(genesis: string, program: IPreparedProgram, query: string): Promise<Passed> {
 
   const data = {
-    genesis
+    genesis,
+    programId: program.id,
+    query
+  };
+
+  const response = await request('program.state.all', data);
+  const funcNames = Object.keys(response.result.states[0].functions);
+
+  expect(response).to.have.property('result');
+  expect(true).to.equal(funcNames.includes(query));
+
+  return true;
+}
+
+export async function getState(genesis: string, state: IState): Promise<Passed> {
+
+  const data = {
+    genesis,
+    stateId: state.id
   };
 
   const response = await request('program.state.get', data);
   expect(response).to.have.property('result');
+  expect(response.result.functions).to.have.all.keys(state.functions);
   return true;
 }
 

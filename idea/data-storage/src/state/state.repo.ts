@@ -16,14 +16,17 @@ export class StateRepo {
       return this.stateRepo
         .createQueryBuilder('state')
         .select(['state.id', 'state.name', 'state.functions'])
+        .leftJoinAndSelect('state.code', 'code', 'code.id = :id', {
+          id: codeId
+        })
         .where(`LOWER(("state"."funcNames")::text) like LOWER('%${query}%')`)
-        .andWhere('state.code = :id', { id: codeId })
         .orderBy('state.name', 'ASC')
         .getManyAndCount();
     }
     return  this.stateRepo.findAndCount({
       where: { code: { id: codeId } },
-      select: { functions: true, name: true, id: true }
+      select: { functions: true, name: true, id: true },
+      order: { name: 'ASC' }
     });
   }
 

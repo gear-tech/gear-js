@@ -12,8 +12,8 @@ import {
   getAllProgramsByStatus,
   getMeta,
   getProgramData,
-  getProgramDataInBatch,
-  getStates,
+  getProgramDataInBatch, getState,
+  getStates, getStatesByFuncName, mapProgramStates,
   uploadMeta,
 } from './programs';
 import { processPrepare } from '../prepare';
@@ -92,7 +92,11 @@ describe('api methods', () => {
   test('program.state.add request', async () => {
     for (const id_ of Object.keys(prepared.programs)) {
       const program = prepared.programs[id_] as IPreparedProgram;
-      expect(await addState(genesis, program)).toBeTruthy();
+      const programStatesPath = program.spec.pathStates;
+
+      for(const statePath of programStatesPath) {
+        expect(await addState(genesis, program, statePath)).toBeTruthy();
+      }
     }
   });
 
@@ -100,6 +104,34 @@ describe('api methods', () => {
     for (const id_ of Object.keys(prepared.programs)) {
       const program = prepared.programs[id_] as IPreparedProgram;
       expect(await getStates(genesis, program)).toBeTruthy();
+    }
+  });
+
+  test('program.state.all by function name request', async () => {
+    for (const id_ of Object.keys(prepared.programs)) {
+      const program = prepared.programs[id_] as IPreparedProgram;
+
+      if(mapProgramStates.has(id_)) {
+        const statesInDB = mapProgramStates.get(id_);
+
+        for(const state of statesInDB) {
+          const name = Object.keys(state.functions)[0];
+          expect(await getStatesByFuncName(genesis, program, name)).toBeTruthy();
+        }
+      }
+    }
+  });
+
+  test('program.state.get request', async () => {
+    for (const id_ of Object.keys(prepared.programs)) {
+
+      if(mapProgramStates.has(id_)) {
+        const statesInDB = mapProgramStates.get(id_);
+
+        for(const state of statesInDB) {
+          expect(await getState(genesis, state)).toBeTruthy();
+        }
+      }
     }
   });
 
