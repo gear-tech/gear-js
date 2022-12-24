@@ -2,7 +2,7 @@
   "name": "gear-js",
   "private": true,
   "scripts": {
-    "build:backend": "yarn build:common && yarn workspaces foreach -ptR --from '{@gear-js/api-gateway,@gear-js/data-storage,@gear-js/test-balance}' run build",
+    "build:backend": "yarn build:common && yarn workspaces foreach -ptR --from '{@gear-js/api-gateway,@gear-js/data-storage,@gear-js/test-balance,@gear-js/web-tests}' run build",
     "build:common": "yarn workspace @gear-js/common build",
     "build:api-gateway": "yarn workspace @gear-js/api-gateway build",
     "build:data-storage": "yarn workspace @gear-js/data-storage build",
