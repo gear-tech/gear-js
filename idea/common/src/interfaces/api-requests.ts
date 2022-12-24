@@ -2,6 +2,8 @@ import { IDates, IGenesis } from './common';
 import { IMessage, UpdateMessageData } from './message';
 import { IPaginationParams } from './pagination';
 import { IProgram } from './program';
+import { IState } from './state';
+import { ICode } from './code';
 
 interface GetMessagesParams extends IGenesis, IPaginationParams, SearchParam, IDates {
   destination?: string;
@@ -52,17 +54,11 @@ interface UpdateMessagesParams {
   params: UpdateMessageData[];
 }
 
-interface GetMetaParams extends IGenesis {
-  programId: string;
-}
+interface GetMetaParams extends IGenesis, Pick<IProgram, 'id'> {}
 
-interface GetStateParams extends IGenesis {
-  stateId: string;
-}
+interface GetStateParams extends IGenesis, Pick<IState, 'id'> {}
 
-interface GetCodeParams extends IGenesis {
-  codeId: string;
-}
+interface GetCodeParams extends IGenesis, Pick<ICode, 'id'> {}
 
 interface GetTestBalanceParams extends IGenesis {
   address: string;

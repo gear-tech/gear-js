@@ -54,6 +54,11 @@ export const JSONRPC_ERRORS = {
     code: -32404,
     message: 'Program not found',
   },
+  StateNotFound: {
+    name: 'StateNotFound',
+    code: -32404,
+    message: 'State not found',
+  },
   SignatureNotVerified: {
     name: 'SignatureNotVerified',
     code: -32403,

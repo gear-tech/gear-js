@@ -28,10 +28,10 @@ export class ProgramService {
   }
 
   public async getProgramMeta(params: GetMetaParams): Promise<Meta> {
-    const { programId, genesis } = params;
-    const program = await this.programRepository.getByIdMeta(programId, genesis);
+    const { id, genesis } = params;
+    const program = await this.programRepository.getByIdMeta(id, genesis);
 
-    if (!program.meta) {
+    if (!program['meta']) {
       throw new MetadataNotFound();
     }
 

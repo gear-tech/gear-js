@@ -80,7 +80,7 @@ export async function getAllProgramsByDates(genesis: string, date: Date): Promis
 }
 
 export async function getProgramData(genesis: string, programId: string): Promise<Passed> {
-  const response = await request('program.data', { genesis, programId });
+  const response = await request('program.data', { genesis, id: programId });
   expect(response).to.have.own.property('result');
   expect(response.result).to.have.all.keys(
     'id',
@@ -101,7 +101,7 @@ export async function getProgramData(genesis: string, programId: string): Promis
 }
 
 export async function getProgramDataInBatch(genesis: string, programId: string): Promise<Passed> {
-  const response = await batchRequest('program.data', { genesis, programId });
+  const response = await batchRequest('program.data', { genesis, id: programId });
   expect(Array.isArray(response)).ok;
   expect(response).to.have.length(1);
   expect(response[0]).to.have.own.property('result');
@@ -127,7 +127,7 @@ export async function uploadMeta(genesis: string, program: IPreparedProgram): Pr
 export async function getMeta(genesis: string, programId: string): Promise<Passed> {
   const data = {
     genesis,
-    programId,
+    id: programId,
   };
   const response = await request('program.meta.get', data);
   expect(response).to.have.property('result');
@@ -197,7 +197,7 @@ export async function getState(genesis: string, state: IState): Promise<Passed> 
 
   const data = {
     genesis,
-    stateId: state.id
+    id: state.id
   };
 
   const response = await request('program.state.get', data);

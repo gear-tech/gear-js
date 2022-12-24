@@ -7,6 +7,7 @@ import { StateRepo } from './state.repo';
 import { ProgramRepo } from '../program/program.repo';
 import { State } from '../database/entities';
 import { ProgramNotFound } from '../common/errors';
+import { StateNotFound } from '../common/errors/state';
 
 @Injectable()
 export class StateService {
@@ -28,8 +29,15 @@ export class StateService {
   }
 
   public async get(getStateParams: GetStateParams): Promise<State> {
-    const { stateId } = getStateParams;
-    return this.stateRepository.get(stateId);
+    const { id } = getStateParams;
+
+    const state = await this.stateRepository.get(id);
+
+    if(!state) {
+      throw new StateNotFound();
+    }
+
+    return this.stateRepository.get(id);
   }
 
   public async create(addStateParams: AddStateParams): Promise<AddStateResult> {

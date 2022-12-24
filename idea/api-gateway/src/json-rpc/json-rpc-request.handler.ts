@@ -33,7 +33,7 @@ async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
   }
 
   if (!validateGenesis(params.genesis)) {
-    return getResponse(procedure, JSONRPC_ERRORS.InvalidParams.name);
+    return getResponse(procedure, JSONRPC_ERRORS.NoGenesisFound.name);
   }
 
   const { error, result } = await jsonRpcHandler(method as API_METHODS, params);
