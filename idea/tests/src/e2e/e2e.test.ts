@@ -25,6 +25,7 @@ import { getCodeData, getCodes, getCodesByDates } from './code';
 import { networkDataAvailable } from './network-data-available';
 import { blocksStatus } from './block';
 import {
+  errorInvalidMetaHex,
   errorInvalidParams,
   errorMessageNotFound,
   errorMethodNotExist,
@@ -36,7 +37,7 @@ let genesis: Hex;
 let prepared: IPrepared;
 let api: GearApi;
 
-describe('api methods', () => {
+describe('API methods', () => {
 
   beforeAll(async () => {
     try {
@@ -247,6 +248,14 @@ describe('api methods', () => {
 
     test('error message not found', async () => {
       expect(await errorMessageNotFound(genesis)).toBeTruthy();
+    });
+
+    test('error message invalid meta hex', async () => {
+      const programKey = Object.keys(prepared.programs)[0];
+      const program = prepared.programs[programKey] as IPreparedProgram;
+      const invalidMetaHex = '0100000000010300000001070000000118000000011221100';
+
+      expect(await errorInvalidMetaHex(genesis, program.id, invalidMetaHex)).toBeTruthy();
     });
   });
 });

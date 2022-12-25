@@ -9,6 +9,11 @@ export const JSONRPC_ERRORS = {
     code: -32602,
     message: 'Invalid params',
   },
+  InvalidProgramMetaHex: {
+    name: 'InvalidProgramMetaHex',
+    code: -32602,
+    message: 'Invalid program meta hex',
+  },
   InternalError: {
     name: 'InternalError',
     code: -32603,
