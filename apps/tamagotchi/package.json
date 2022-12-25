@@ -11,6 +11,7 @@
     "@gear-js/api": "0.27.7",
     "@gear-js/react-hooks": "0.3.10",
     "@gear-js/ui": "0.5.13",
+    "@headlessui/react": "1.7.7",
     "@mantine/form": "4.2.12",
     "@polkadot/api": "9.10.1",
     "@polkadot/extension-dapp": "0.43.3",
