@@ -16,6 +16,14 @@ type Props = {
 function Players({ heading, list, finishedPlayers, className, center }: Props) {
   const headingClassName = clsx(styles.heading, center && styles.center);
   const listClassName = clsx(styles.list, className);
+  const getPlayers = () =>
+    list ? (
+      list.map((player) => (
+        <Player key={player} id={player as Hex} isFinished={finishedPlayers?.includes(player) || false} />
+      ))
+    ) : (
+      <span className={styles.player}>There is no players yet</span>
+    );
 
   return (
     <>
@@ -30,11 +38,7 @@ function Players({ heading, list, finishedPlayers, className, center }: Props) {
           Moved
         </div>
       </header>
-      <ul className={listClassName}>
-        {list.map((player) => (
-          <Player key={player} id={player as Hex} isFinished={finishedPlayers?.includes(player) || false} />
-        ))}
-      </ul>
+      <ul className={listClassName}>{getPlayers()}</ul>
     </>
   );
 }
