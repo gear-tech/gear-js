@@ -33,9 +33,9 @@ const validate = {
   // gameName: isExists,
   betSize: isExists,
   playersCountLimit: isExists,
-  entryTimeoutMs:isExists,
+  entryTimeoutMs: isExists,
   moveTimeoutMs: isExists,
-  revealTimeoutMs:isExists,
+  revealTimeoutMs: isExists,
 };
 
 function Create({ onRouteChange, onSubmit, setStateAction, setLoading }: Props) {
@@ -44,7 +44,10 @@ function Create({ onRouteChange, onSubmit, setStateAction, setLoading }: Props) 
   const handleSubmit = form.onSubmit((values) => {
     setLoading(true);
     onSubmit(values, {
-      onSuccess: (hex) => setStateAction(hex),
+      onSuccess: (hex) => {
+        setStateAction(hex);
+        setLoading(false);
+      },
       onError: () => setLoading(false),
     });
   });
