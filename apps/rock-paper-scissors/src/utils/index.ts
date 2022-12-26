@@ -22,17 +22,17 @@ const gameStageFinishedPlayers = (gameStage: GameStageType) => {
   return { finishedPlayers };
 };
 
-const getGameStage = (stageData: any) => {
+const getGameStageText = (stageData: any) => {
   const gameStageKeys = typeof stageData === 'object' ? Object.keys(stageData) : [];
-  let gameStage: StageType = 'preparation';
+  let gameStageText: StageType = 'preparation';
   if (gameStageKeys?.includes('InProgress')) {
-    gameStage = 'progress';
+    gameStageText = 'progress';
   } else if (gameStageKeys?.includes('Reveal')) {
-    gameStage = 'reveal';
+    gameStageText = 'reveal';
   } else {
-    gameStage = 'preparation';
+    gameStageText = 'preparation';
   }
-  return { gameStage };
+  return { gameStageText };
 };
 
 const getLoosers  = (prevLobbyList:Hex[], lobbyList:Hex[]|undefined, winnerState:any ) => {
@@ -53,6 +53,6 @@ export {
   onClickRegister,
   handleRouteChange,
   gameStageFinishedPlayers,
-  getGameStage,
+  getGameStageText,
   getLoosers,
 };
