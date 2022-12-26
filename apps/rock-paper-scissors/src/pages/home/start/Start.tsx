@@ -1,14 +1,13 @@
-import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { ReactComponent as CreateSVG } from 'assets/images/icons/create.svg';
 import styles from './Start.module.scss';
 
 type Props = {
-  onClickRouteChange: (arg: string) => void;
-  setProgramID: (arg: Hex) => void;
+  onClickJoin: () => void;
+  onClickCreate: () => void;
 };
 
-function Start({ onClickRouteChange, setProgramID }: Props) {
+function Start({ onClickJoin, onClickCreate }: Props) {
   return (
     <>
       <h2 className={styles.heading}>Rock Paper Scissors Lizard Spock</h2>
@@ -17,20 +16,14 @@ function Start({ onClickRouteChange, setProgramID }: Props) {
         text="Create new game"
         size="large"
         className={styles.button}
-        onClick={() => {
-          setProgramID('' as Hex);
-          onClickRouteChange('create');
-        }}
+        onClick={onClickCreate}
       />
       <Button
         icon={CreateSVG}
         text="Join game"
         size="large"
         className={styles.button}
-        onClick={() => {
-          setProgramID('' as Hex);
-          onClickRouteChange('join');
-        }}
+        onClick={onClickJoin}
       />
     </>
   );
