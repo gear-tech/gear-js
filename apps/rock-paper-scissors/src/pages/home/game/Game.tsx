@@ -2,11 +2,13 @@ import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { BackButton, Detail, Players, Stage } from 'components';
 import { StageType } from 'types';
+import { ButtonMove } from './buttonMove';
 import { Countdown } from './countdown';
 import styles from './Game.module.scss';
 
 type Props = {
   onRouteChange: (arg: string) => void;
+  onClickDetail: () => void;
   heading: string;
   stage: StageType;
   bet: string | undefined;
@@ -17,8 +19,8 @@ type Props = {
   hoursLeft: string;
   minutesLeft: string;
   secondsLeft: string;
+  finishedAccount: boolean;
   admin?: boolean;
-  account?: Hex;
 };
 
 function Game({
@@ -33,32 +35,17 @@ function Game({
   hoursLeft,
   minutesLeft,
   secondsLeft,
-  account,
+  finishedAccount,
   admin,
+  onClickDetail,
 }: Props) {
-  const handleRouteChange = () => (admin ? onRouteChange('detail admin') : onRouteChange('detail'));
-
-  const getButton = () => {
-    if (stage === 'preparation') return;
-    if (finishedPlayers?.includes(account as Hex)) return;
-    if (stage === 'progress') {
-      return (
-        <Button onClick={() => onRouteChange('move')} text="Make a move" size="large" className={styles.actionButton} />
-      );
-    }
-    if (stage === 'reveal') {
-      return (
-        <Button onClick={() => onRouteChange('reveal')} text="Reveal" size="large" className={styles.actionButton} />
-      );
-    }
-  };
-
   return (
     <div className={styles.container}>
       <div className={styles.players}>
         <BackButton onClick={() => onRouteChange('')} />
         <Players finishedPlayers={finishedPlayers as string[]} list={players as Hex[]} heading="Current players" />
-        {!admin && getButton()}
+        {(!admin && (stage as StageType) !== 'preparation') ||
+          (!finishedAccount && <ButtonMove stage={stage} onRouteChange={onRouteChange} />)}
       </div>
       <div className={styles.summary}>
         <h2 className={styles.heading}>{heading}</h2>
@@ -77,13 +64,7 @@ function Game({
           <Detail label="Current game" text={game} className={styles.game} />
           <Detail label="Current round" text={round} className={styles.round} />
         </div>
-        <Button
-          text="Details"
-          color="light"
-          size="large"
-          onClick={handleRouteChange}
-          className={styles.detailsButton}
-        />
+        <Button text="Details" color="light" size="large" onClick={onClickDetail} className={styles.detailsButton} />
         {admin && <Button text="Edit next game" color="light" size="large" onClick={() => onRouteChange('create')} />}
       </div>
     </div>
