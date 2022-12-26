@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
-import { ProgramMetadata } from '@gear-js/api';
+import { Hex, getProgramMetadata } from '@gear-js/api';
 
 import { StateWithFile } from 'shared/types';
 
@@ -12,14 +12,15 @@ const UploadProgram = () => {
   const { state } = useLocation();
   const { file } = (state as StateWithFile | undefined) || {};
 
-  const [metadata, setMetadata] = useState<ProgramMetadata>();
+  const [metaHex, setMetaHex] = useState<Hex>();
+  const metadata = useMemo(() => (metaHex ? getProgramMetadata(metaHex) : undefined), [metaHex]);
 
-  const resetMetadada = () => setMetadata(undefined);
+  const resetMetaHex = () => setMetaHex(undefined);
 
   return (
     <div className={styles.uploadProgramPage}>
-      <ProgramSection file={file} metadata={metadata} resetMetaFile={resetMetadada} />
-      <MetadataSection metadata={metadata} onReset={resetMetadada} onUpload={setMetadata} />
+      <ProgramSection file={file} metaHex={metaHex} metadata={metadata} resetMetaFile={resetMetaHex} />
+      <MetadataSection metadata={metadata} onReset={resetMetaHex} onUpload={setMetaHex} />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, ChangeEvent } from 'react';
 import clsx from 'clsx';
-import { ProgramMetadata } from '@gear-js/api';
+import { Hex, ProgramMetadata } from '@gear-js/api';
 import { Button, FileInput } from '@gear-js/ui';
 import { useAlert } from '@gear-js/react-hooks';
 
@@ -19,11 +19,11 @@ import styles from '../UploadProgram.module.scss';
 type Props = {
   resetMetaFile: () => void;
   file?: File;
-  metadata?: ProgramMetadata;
-  metadataBuffer?: string;
+  metaHex: Hex | undefined;
+  metadata: ProgramMetadata | undefined;
 };
 
-const ProgramSection = ({ file, metadata, metadataBuffer, resetMetaFile }: Props) => {
+const ProgramSection = ({ file, metaHex, metadata, resetMetaFile }: Props) => {
   const alert = useAlert();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -126,9 +126,9 @@ const ProgramSection = ({ file, metadata, metadataBuffer, resetMetaFile }: Props
         {selectedFile && fileBuffer && (
           <ProgramForm
             source={fileBuffer}
+            metaHex={metaHex}
             metadata={metadata}
             gasMethod={GasMethod.InitUpdate}
-            metadataBuffer={metadataBuffer}
             renderButtons={renderButtons}
             onSubmit={handleSubmitForm}
           />

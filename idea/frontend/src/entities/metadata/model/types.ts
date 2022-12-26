@@ -1,5 +1,5 @@
 interface IMeta {
-  program: string;
+  id: string;
   meta: string | null;
   metaWasm: string | null;
 }

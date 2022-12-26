@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { ProgramMetadata } from '@gear-js/api';
+import { Hex, getProgramMetadata } from '@gear-js/api';
 
 import styles from './InitializeProgram.module.scss';
 import { PageParams } from '../model';
@@ -10,14 +10,15 @@ import { MetadataSection } from './metadataSection';
 const InitializeProgram = () => {
   const { codeId } = useParams() as PageParams;
 
-  const [metadata, setMetadata] = useState<ProgramMetadata>();
+  const [metaHex, setMetaHex] = useState<Hex>();
+  const metadata = useMemo(() => (metaHex ? getProgramMetadata(metaHex) : undefined), [metaHex]);
 
-  const resetMetadada = () => setMetadata(undefined);
+  const resetMetaHex = () => setMetaHex(undefined);
 
   return (
     <div className={styles.initializeProgramPage}>
-      <CodeSection codeId={codeId} metadata={metadata} resetMetadada={resetMetadada} />
-      <MetadataSection metadata={metadata} onReset={resetMetadada} onUpload={setMetadata} />
+      <CodeSection codeId={codeId} metaHex={metaHex} metadata={metadata} resetMetadada={resetMetaHex} />
+      <MetadataSection metadata={metadata} onReset={resetMetaHex} onUpload={setMetaHex} />
     </div>
   );
 };

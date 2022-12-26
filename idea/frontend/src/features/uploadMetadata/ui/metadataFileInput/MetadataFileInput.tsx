@@ -1,6 +1,6 @@
 import { useRef, useEffect, ChangeEvent } from 'react';
 import clsx from 'clsx';
-import { ProgramMetadata, getProgramMetadata, Hex } from '@gear-js/api';
+import { ProgramMetadata, Hex } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { FileInput } from '@gear-js/ui';
 import { isHex } from '@polkadot/util';
@@ -13,7 +13,7 @@ import { FileTypes } from 'shared/config';
 type Props = {
   metadata?: ProgramMetadata;
   onReset: () => void;
-  onUpload: (meta: ProgramMetadata) => void;
+  onUpload: (metaHex: Hex) => void;
 };
 
 const MetadataFileInput = ({ metadata, onReset, onUpload }: Props) => {
@@ -42,14 +42,11 @@ const MetadataFileInput = ({ metadata, onReset, onUpload }: Props) => {
           const { result } = target;
 
           if (isHex(result)) {
-            const meta = getProgramMetadata(result);
-
-            onUpload(meta);
+            onUpload(result);
           } else if (typeof result === 'string') {
             const hexResult = `0x${result}` as Hex;
-            const meta = getProgramMetadata(hexResult);
 
-            onUpload(meta);
+            onUpload(hexResult);
           } else throw new Error('Error reading meta file');
         }
       };

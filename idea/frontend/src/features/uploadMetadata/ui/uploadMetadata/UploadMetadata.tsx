@@ -1,4 +1,4 @@
-import { getProgramMetadata, Hex, ProgramMetadata } from '@gear-js/api';
+import { Hex, ProgramMetadata } from '@gear-js/api';
 import { Checkbox } from '@gear-js/ui';
 import { useEffect, useState } from 'react';
 
@@ -13,14 +13,14 @@ import styles from './UploadMetadata.module.scss';
 type Props = {
   metadata: ProgramMetadata | undefined;
   onReset: () => void;
-  onUpload: (meta: ProgramMetadata) => void;
+  onUpload: (metaHex: Hex) => void;
 };
 
 const UploadMetadata = ({ metadata, onReset, onUpload }: Props) => {
   const [isManualInput, setIsManualInput] = useState(false);
 
   const toggleManualInput = () => setIsManualInput((prevValue) => !prevValue);
-  const handleManualInputSubmit = (metaHex: Hex) => onUpload(getProgramMetadata(metaHex));
+  const handleManualInputSubmit = (metaHex: Hex) => onUpload(metaHex);
 
   const renderMetadataProperties = (meta: ProgramMetadata) => {
     const metadataProperties = getMetadataProperties(meta);

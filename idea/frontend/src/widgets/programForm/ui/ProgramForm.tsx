@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef, useEffect, ReactChild } from 'react';
 import { FormApi } from 'final-form';
 import { Form } from 'react-final-form';
-import { ProgramMetadata, Hex } from '@gear-js/api';
+import { ProgramMetadata, Hex, getProgramMetadata } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 
 import { useGasCalculate, useChangeEffect } from 'hooks';
@@ -20,15 +20,15 @@ import { INITIAL_VALUES, FormValues, RenderButtonsProps, SubmitHelpers } from '.
 
 type Props = {
   source: Buffer | Hex;
-  metadata?: ProgramMetadata;
+  metaHex: Hex | undefined;
+  metadata: ProgramMetadata | undefined;
   gasMethod: GasMethod;
-  metadataBuffer?: string;
   renderButtons: (props: RenderButtonsProps) => ReactChild;
   onSubmit: (values: Payload, helpers: SubmitHelpers) => void;
 };
 
 const ProgramForm = (props: Props) => {
-  const { gasMethod, metadata, source, metadataBuffer, renderButtons, onSubmit } = props;
+  const { gasMethod, metaHex, metadata, source, renderButtons, onSubmit } = props;
 
   const { api } = useApi();
 
@@ -40,12 +40,8 @@ const ProgramForm = (props: Props) => {
 
   const calculateGas = useGasCalculate();
 
-  const changeProgramName = (meta: ProgramMetadata) => formApi.current?.change('programName', '');
-
   const handleGasCalculate = async () => {
-    if (!formApi.current) {
-      return;
-    }
+    if (!formApi.current) return;
 
     setIsGasDisabled(true);
 
@@ -72,9 +68,9 @@ const ProgramForm = (props: Props) => {
     const data: Payload = {
       value,
       gasLimit,
+      metaHex,
       metadata,
       programName,
-      metadataBuffer,
       payloadType: metadata ? undefined : payloadType,
       initPayload: metadata ? getSubmitPayload(payload) : payload,
     };
@@ -98,17 +94,8 @@ const ProgramForm = (props: Props) => {
     [metadata],
   );
 
-  useEffect(() => {
-    if (metadata) {
-      changeProgramName(metadata);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   useChangeEffect(() => {
-    if (metadata) {
-      changeProgramName(metadata);
-    } else {
+    if (!metadata) {
       formApi.current?.restart();
       setGasinfo(undefined);
     }

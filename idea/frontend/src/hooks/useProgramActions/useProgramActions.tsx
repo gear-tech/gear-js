@@ -70,7 +70,6 @@ const useProgramActions = () => {
 
   const signAndUpload = async ({
     name,
-    title,
     signer,
     payload,
     programId,
@@ -78,7 +77,7 @@ const useProgramActions = () => {
     resolve,
     method,
   }: ParamsToSignAndUpload) => {
-    const { title: payloadTitle, metadata, metadataBuffer } = payload;
+    const { metaHex } = payload;
     const alertId = alert.loading('SignIn', { title: method });
     const programMessage = getProgramMessage(programId);
 
@@ -94,14 +93,11 @@ const useProgramActions = () => {
           alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
           handleEventsStatus(events, { reject, resolve });
 
-          if (name) {
+          if (metaHex) {
             uploadMetadata({
               name,
-              title,
-              signer,
-              metadata,
               programId,
-              metadataBuffer,
+              metaHex,
               resolve: () => alert.success(programMessage, ALERT_OPTIONS),
             });
           }
@@ -124,7 +120,7 @@ const useProgramActions = () => {
       }
 
       if (isDevChain) {
-        await uploadLocalProgram({ id: programId, name, owner: account?.decodedAddress!, title: payloadTitle || null });
+        await uploadLocalProgram({ id: programId, name, owner: account?.decodedAddress! });
       }
     } catch (error) {
       const message = (error as Error).message;

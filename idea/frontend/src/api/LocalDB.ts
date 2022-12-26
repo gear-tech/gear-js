@@ -1,3 +1,4 @@
+import { Hex, getProgramMetadata } from '@gear-js/api';
 import localForage from 'localforage';
 
 import { ProgramStatus, IProgram } from 'entities/program';
@@ -62,7 +63,7 @@ const getLocalPrograms = (params: any) => {
   });
 };
 
-const uploadLocalProgram = (program: Pick<IProgram, 'id' | 'owner' | 'name' | 'title'>) =>
+const uploadLocalProgram = (program: Pick<IProgram, 'id' | 'owner' | 'name'>) =>
   PROGRAMS_LOCAL_FORAGE.setItem(program.id, {
     ...program,
     meta: null,
@@ -70,17 +71,13 @@ const uploadLocalProgram = (program: Pick<IProgram, 'id' | 'owner' | 'name' | 't
     status: ProgramStatus.Active,
   });
 
-const uploadLocalMetadata = async (programId: string, meta?: string, metaBuffer?: string, name?: string) => {
+const uploadLocalMetadata = async (programId: string, metaHex: Hex, name?: string) => {
   const { result } = await getLocalProgram(programId);
 
   return PROGRAMS_LOCAL_FORAGE.setItem(programId, {
     ...result,
     name: name ?? result.name,
-    meta: {
-      meta,
-      program: programId,
-      metaWasm: metaBuffer,
-    },
+    meta: getProgramMetadata(metaHex),
     genesis: localStorage.getItem(LocalStorage.Genesis),
   });
 };

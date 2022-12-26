@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { ProgramMetadata, Hex } from '@gear-js/api';
+import { Hex, ProgramMetadata } from '@gear-js/api';
 import { Button, Input } from '@gear-js/ui';
 
 import { useProgramActions } from 'hooks';
@@ -14,12 +14,12 @@ import styles from '../InitializeProgram.module.scss';
 
 type Props = {
   codeId: string;
-  metadata?: ProgramMetadata;
-  metadataBuffer?: string;
+  metaHex: Hex | undefined;
+  metadata: ProgramMetadata | undefined;
   resetMetadada: () => void;
 };
 
-const CodeSection = ({ codeId, metadata, metadataBuffer, resetMetadada }: Props) => {
+const CodeSection = ({ codeId, metaHex, metadata, resetMetadada }: Props) => {
   const navigate = useNavigate();
 
   const { createProgram } = useProgramActions();
@@ -52,9 +52,9 @@ const CodeSection = ({ codeId, metadata, metadataBuffer, resetMetadada }: Props)
         <Input label="Code ID" value={codeId} direction="y" className={styles.codeId} block readOnly />
         <ProgramForm
           source={codeId as Hex}
+          metaHex={metaHex}
           metadata={metadata}
           gasMethod={GasMethod.InitCreate}
-          metadataBuffer={metadataBuffer}
           renderButtons={renderButtons}
           onSubmit={handleSubmit}
         />
