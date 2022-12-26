@@ -8,7 +8,7 @@ import { ApproveAccountPopup } from 'components/popups/approve-account-popup';
 export const AccountActionsMenu = () => {
   const [openTransfer, setOpenTransfer] = useState(false);
   const [openApprove, setOpenApprove] = useState(false);
-  const isApproved = true;
+  const isApproved = false;
 
   return (
     <div className="">

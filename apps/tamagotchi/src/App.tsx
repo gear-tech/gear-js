@@ -15,7 +15,9 @@ const Component = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-1 container pb-5">{isApiReady && isAccountReady ? <Routing /> : <ApiLoader />}</main>
+      <main className="flex flex-col flex-1 container pb-5">
+        {isApiReady && isAccountReady ? <Routing /> : <ApiLoader />}
+      </main>
       <Footer />
     </div>
   );

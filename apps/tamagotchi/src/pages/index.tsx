@@ -1,7 +1,11 @@
 import { Route, Routes } from 'react-router-dom';
 import { Home } from './home';
+import { Store } from './store';
 
-const routes = [{ path: '/', Page: Home }];
+const routes = [
+  { path: '/', Page: Home },
+  { path: '/store', Page: Store },
+];
 
 export const Routing = () => (
   <Routes>

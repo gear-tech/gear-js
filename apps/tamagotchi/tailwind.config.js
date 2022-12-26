@@ -14,10 +14,13 @@ module.exports = {
         poppins: ['Poppins', ...defaultTheme.fontFamily.sans],
       },
       fontSize: {
+        xxs: ['10px', '18px'],
+        xs: ['12px', '16px'],
         sm: ['14px', '20px'],
         base: ['16px', '24px'],
         lg: ['18px', '20px'],
         xl: ['24px', '32px'],
+        '2xl': ['28px', '32px'],
       },
       opacity: {
         15: '.15',
