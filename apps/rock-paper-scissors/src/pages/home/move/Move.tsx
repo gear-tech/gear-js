@@ -26,14 +26,14 @@ type Props = {
 };
 
 function Move({ payloadSend, onRouteChange, setUserMove, userMove }: Props) {
-  const [passValue, setPassvalue] = useState('');
+  const [passwordValue, setPasswordValue] = useState('');
 
   const handleSubmitMove = () => {
-    onSubmitMove(onRouteChange, payloadSend, userMove || null, passValue);
+    onSubmitMove(onRouteChange, payloadSend, userMove, passwordValue);
     setUserMove(userMove);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setPassvalue(e.target.value);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setPasswordValue(e.target.value);
 
   const getActions = () =>
     ACTIONS.map((el) => (

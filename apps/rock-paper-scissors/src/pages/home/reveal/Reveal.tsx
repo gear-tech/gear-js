@@ -17,9 +17,7 @@ function Reveal({ userMove, payloadSend, onRouteChange }: Props) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setPasswordvalue(e.target.value);
 
   const handleSubmit = () => {
-    if (userMove.id && passwordValue) {
-      onSubmitReveal(onRouteChange, payloadSend, userMove.id, passwordValue);
-    }
+    onSubmitReveal(onRouteChange, payloadSend, userMove.id, passwordValue);
   };
 
   return (
@@ -27,9 +25,7 @@ function Reveal({ userMove, payloadSend, onRouteChange }: Props) {
       <h2 className={styles.heading}>Reveal</h2>
       <div className={styles.box}>
         <Input type="password" label="Password" direction="y" className={styles.input} onChange={handleChange} />
-        {userMove?.name && userMove?.SVG && (
-          <ActionButton name={userMove?.name} SVG={userMove?.SVG} isActive onClick={() => {}} />
-        )}
+        <ActionButton name={userMove?.name} SVG={userMove?.SVG} isActive onClick={() => {}} />
       </div>
       <div className={styles.buttons}>
         <BackButton onClick={() => onRouteChange('game')} />

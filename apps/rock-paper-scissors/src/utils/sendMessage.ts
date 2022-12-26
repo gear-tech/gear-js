@@ -40,8 +40,9 @@ const onSubmitMove = (routeChange: (arg: string) => void, payloadSend: any, user
   }
 };
 
-const onSubmitReveal = (routeChange: (arg: string) => void, payloadSend: any, userMove: string, pass: string) => {
-  const outputPass = stringToU8a(`${userMove}${pass}`);
+const onSubmitReveal = (routeChange: (arg: string) => void, payloadSend: any, userMove: string, password: string) => {
+  if (userMove && password) return;
+  const outputPass = stringToU8a(`${userMove}${password}`);
   payloadSend(
     { Reveal: Array.from(outputPass) },
     {
