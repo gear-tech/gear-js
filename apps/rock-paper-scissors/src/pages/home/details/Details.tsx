@@ -1,5 +1,5 @@
 import { Hex } from '@gear-js/api';
-import { BackButton, Detail, Loader } from 'components';
+import { BackButton, Detail } from 'components';
 import { SVGType } from 'types';
 import { handleRouteChange } from 'utils';
 import styles from './Details.module.scss';
@@ -8,13 +8,12 @@ type Props = {
   heading: string;
   game: string;
   round: string;
-  contract: Hex | undefined;
-  bet: string | undefined;
-  entry: string | undefined;
-  move: string | undefined;
-  reveal: string | undefined;
+  contract: Hex;
+  bet: string;
+  entry: string;
+  move: string;
+  reveal: string;
   SVG: SVGType;
-  isLoading: boolean;
   admin?: boolean;
   players?: Array<Hex> | Array<string> | [];
   onRouteChange: (arg: string) => void;
@@ -33,10 +32,8 @@ function Details({
   reveal,
   SVG,
   admin,
-  isLoading,
 }: Props) {
   const playersAmount = players?.length.toString() || '0';
-
   const getPlayers = () =>
     players?.map((player) => (
       <span className={styles.lobbyText} key={player}>
@@ -44,7 +41,7 @@ function Details({
       </span>
     )) || '0';
 
-  return isLoading ? (
+  return (
     <div className={styles.container}>
       <div className={styles.visual}>
         <BackButton onClick={() => handleRouteChange(admin, onRouteChange)} />
@@ -62,9 +59,9 @@ function Details({
           <Detail label="Bet size" className={styles.bet}>
             <span className={styles.betText}>{bet}</span>
           </Detail>
-          {entry && <Detail label="Entry timeout" text={entry.slice(0, -4)} className={styles.entry} />}
-          {move && <Detail label="Move timeout" text={move.slice(0, -4)} className={styles.move} />}
-          {reveal && <Detail label="Reveal timeout" text={reveal.slice(0, -4)} className={styles.reveal} />}
+          <Detail label="Entry timeout" text={entry} className={styles.entry} />
+          <Detail label="Move timeout" text={move} className={styles.move} />
+          <Detail label="Reveal timeout" text={reveal} className={styles.reveal} />
         </div>
         <div className={styles.lobby}>
           <span className={styles.lobbyTitle}>lobby:</span>
@@ -72,8 +69,6 @@ function Details({
         </div>
       </div>
     </div>
-  ) : (
-    <Loader />
   );
 }
 
