@@ -1,13 +1,14 @@
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';
-import { Icon } from 'components/ui/icon';
 import clsx from 'clsx';
+import { Icon } from 'components/ui/icon';
 import { TransferAccountPopup } from 'components/popups/transfer-account-popup';
+import { ApproveAccountPopup } from 'components/popups/approve-account-popup';
 
 export const AccountActionsMenu = () => {
-  const [open, setOpen] = useState(false);
-  const openModal = () => setOpen(true);
-  const closeModal = () => setOpen(false);
+  const [openTransfer, setOpenTransfer] = useState(false);
+  const [openApprove, setOpenApprove] = useState(false);
+  const isApproved = true;
 
   return (
     <div className="">
@@ -38,9 +39,10 @@ export const AccountActionsMenu = () => {
                         className={clsx(
                           'flex items-center gap-2 w-full px-6 py-2 text-white transition-colors',
                           active && 'text-opacity-70',
-                        )}>
-                        <Icon name="check" className="w-5 h-5" />
-                        Approve
+                        )}
+                        onClick={() => setOpenTransfer(true)}>
+                        <Icon name="transfer" className="w-5 h-5" />
+                        Transfer
                       </button>
                     )}
                   </Menu.Item>
@@ -51,9 +53,9 @@ export const AccountActionsMenu = () => {
                           'flex items-center gap-2 w-full px-6 py-2 text-white transition-colors',
                           active && 'text-opacity-70',
                         )}
-                        onClick={openModal}>
-                        <Icon name="transfer" className="w-5 h-5" />
-                        Transfer
+                        onClick={() => setOpenApprove(true)}>
+                        <Icon name="check" className="w-5 h-5" />
+                        {!isApproved ? 'Approve' : 'Revoke approval'}
                       </button>
                     )}
                   </Menu.Item>
@@ -75,7 +77,8 @@ export const AccountActionsMenu = () => {
           </>
         )}
       </Menu>
-      {open && <TransferAccountPopup close={closeModal} />}
+      {openTransfer && <TransferAccountPopup close={() => setOpenTransfer(false)} />}
+      {openApprove && <ApproveAccountPopup close={() => setOpenApprove(false)} />}
     </div>
   );
 };
