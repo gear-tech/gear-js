@@ -7,8 +7,8 @@ const socials = [
   { href: 'https://medium.com/@gear_techs', icon: 'medium' },
 ];
 
-export const Socials = () => {
-  return (
+export const Footer = () => (
+  <footer className="container flex items-center gap-4 justify-between py-7.5">
     <ul className="flex gap-5">
       {socials.map(({ href, icon }) => (
         <li key={icon}>
@@ -18,5 +18,8 @@ export const Socials = () => {
         </li>
       ))}
     </ul>
-  );
-};
+    <p className="text-white text-opacity-60 text-xs">
+      &copy; {new Date().getFullYear()} Gear Technologies, Inc. All Rights Reserved.
+    </p>
+  </footer>
+);

@@ -1,17 +1,8 @@
-const ADDRESS = {
+export const ADDRESS = {
   NODE: process.env.REACT_APP_NODE_ADDRESS as string,
   DAPPS_API: process.env.REACT_APP_DAPPS_API_ADDRESS as string,
 };
 
-const LOCAL_STORAGE = {
+export const LOCAL_STORAGE = {
   ACCOUNT: 'account',
 };
-
-const EMPTY_GAMES = [
-  { name: '', players: '', bet: '', game: '', round: '', stage: '', action: '' },
-  { name: '', players: '', bet: '', game: '', round: '', stage: '', action: '' },
-  { name: '', players: '', bet: '', game: '', round: '', stage: '', action: '' },
-  { name: '', players: '', bet: '', game: '', round: '', stage: '', action: '' },
-];
-
-export { ADDRESS, LOCAL_STORAGE, EMPTY_GAMES };

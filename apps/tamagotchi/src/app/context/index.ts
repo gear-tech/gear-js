@@ -1,3 +1,1 @@
-import { WasmContext, WasmProvider } from './Wasm';
-
-export { WasmContext, WasmProvider };
+export { WasmContext, WasmProvider } from './Wasm';
