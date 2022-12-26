@@ -7,33 +7,33 @@ type SVGType = FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | un
 
 type StateConfigType = {
   Config: {
-    betSize: string | undefined;
-    entryTimeoutMs: string | undefined;
-    moveTimeoutMs: string | undefined;
-    playersCountLimit: string | undefined;
-    revealTimeoutMs: string | undefined;
+    betSize: string;
+    entryTimeoutMs: string;
+    moveTimeoutMs: string;
+    playersCountLimit: string;
+    revealTimeoutMs: string;
   };
 };
 
-type StateTimeLeftType = { Deadline?: string };
+type StateTimeLeftType = { Deadline: string };
 
-type StateGameStageType = { GameStage?: StageType | undefined | {} };
+type StateGameStageType = { GameStage: StageType | {} };
 
-type StateLobbyType = { LobbyList?: Hex[] };
+type StateLobbyType = { LobbyList: Hex[] };
 
-type StateRoundType = { CurrentRound?: number | string | undefined };
+type StateRoundType = { CurrentRound: number | string | undefined };
 
-type StateWinnerType = { Winner?: Hex | undefined };
+type StateWinnerType = { Winner: Hex | undefined };
 
 type TimeType = { hours: string; minutes: string; seconds: string };
 
 type PlayersMoveType = { PlayerMoves: Hex[] };
 
-type UserMoveType = { name?: string; id?: string; SVG?: React.FunctionComponent<React.SVGProps<SVGSVGElement>> };
+type UserMoveType = { name: string; id: string; SVG: React.FunctionComponent<React.SVGProps<SVGSVGElement>> };
 
 type GameStageType = {
-  InProgress?: { finishedPlayers: Hex[] };
-  Reveal?: { finishedPlayers: Hex[] };
+  InProgress: { finishedPlayers: Hex[] };
+  Reveal: { finishedPlayers: Hex[] };
 };
 
 export type {
