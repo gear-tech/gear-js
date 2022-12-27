@@ -51,7 +51,12 @@ const onSubmitMove = (
   }
 };
 
-const onSubmitReveal = (routeChange: (arg: string) => void, payloadSend: any, userMove: string, password: string) => {
+const onSubmitReveal = (
+  routeChange: (arg: string) => void,
+  payloadSend: (payload: AnyJson, options?: SendMessageOptions | undefined) => void,
+  userMove: string,
+  password: string,
+) => {
   if (userMove && password) return;
   const outputPass = stringToU8a(`${userMove}${password}`);
   payloadSend(
