@@ -10,12 +10,16 @@ type MetaProperties = Partial<ProgramMetadata['types']> & { types?: RegistryType
 const getMetadataProperties = (metadata: ProgramMetadata) => {
   const valuesFromMeta = META_FIELDS.reduce((result, metaKey) => {
     const metaValue = metadata.types[metaKey];
+    const isMetaValue = metaValue !== null && metaValue !== undefined;
 
     if (isPlainObject(metaValue)) {
       const types = metaValue as HumanTypesRepr;
       const { input, output } = types;
 
-      if (input) {
+      const isInput = input !== null && input !== undefined;
+      const isOutput = output !== null && output !== undefined;
+
+      if (isInput) {
         const typeName = metadata.getTypeName(input);
 
         if (result[metaKey]) {
@@ -29,7 +33,7 @@ const getMetadataProperties = (metadata: ProgramMetadata) => {
         }
       }
 
-      if (output) {
+      if (isOutput) {
         const typeName = metadata.getTypeName(output);
 
         if (result[metaKey]) {
@@ -42,7 +46,7 @@ const getMetadataProperties = (metadata: ProgramMetadata) => {
           result[metaKey] = { output: typeName };
         }
       }
-    } else if (metaValue) {
+    } else if (isMetaValue) {
       // eslint-disable-next-line no-param-reassign
       result[metaKey] = metadata.getTypeName(metaValue as number);
     }
