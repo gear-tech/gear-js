@@ -90,7 +90,7 @@ jobs:
         if: steps.check_file_changed.outputs.dataStorage_changed == 'True'
         run: yarn test:data-storage
         env:
-          TEST_ENV: ${{ secrets.TEST_ENV }}
+          TEST_ENV_UNIT: ${{ secrets.TEST_ENV }}
 
       - name: Build frontend pkg
         if: steps.check_file_changed.outputs.frontend_changed == 'True'
