@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { AddStateParams, AddStateResult, GetAllStateParams, GetStateParams, GetStatesResult } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
-import { getStateMetadata } from '@gear-js/api';
 
 import { StateRepo } from './state.repo';
 import { ProgramRepo } from '../program/program.repo';
 import { State } from '../database/entities';
 import { ProgramNotFound } from '../common/errors';
 import { StateNotFound } from '../common/errors/state';
+import { getStateMeta } from '../common/helpers';
 
 @Injectable()
 export class StateService {
@@ -50,7 +50,7 @@ export class StateService {
     }
 
     const metaStateBuff = Buffer.from(wasmBuffBase64, 'base64');
-    const { functions } = await getStateMetadata(metaStateBuff);
+    const { functions } = await getStateMeta(metaStateBuff);
     const funcNames = Object.keys(functions);
 
     const createMetaDataInput = plainToClass(State, {

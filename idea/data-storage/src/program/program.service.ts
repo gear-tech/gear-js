@@ -56,7 +56,7 @@ export class ProgramService {
   }
 
   public async updateProgramData(updateProgramDataInput: UpdateProgramDataInput): Promise<IProgram> {
-    const { meta, id, genesis, name, title } = updateProgramDataInput;
+    const { meta, id, genesis, name } = updateProgramDataInput;
     const program = await this.programRepository.getByIdAndGenesis(id, genesis);
 
     if (!program) {
@@ -64,7 +64,6 @@ export class ProgramService {
     }
 
     program.name = name;
-    program.title = title;
     program.meta = meta;
 
     try {

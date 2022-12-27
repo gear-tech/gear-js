@@ -91,7 +91,6 @@ export async function getProgramData(genesis: string, programId: string): Promis
     'name',
     'timestamp',
     'meta',
-    'title',
     'status',
     'code',
     'messages',

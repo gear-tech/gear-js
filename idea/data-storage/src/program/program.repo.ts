@@ -56,7 +56,7 @@ export class ProgramRepo {
       this.programRepo,
       genesis,
       { owner, status },
-      { fields: ['id', 'title', 'name', 'code.id'], value: query },
+      { fields: ['id', 'name', 'code.id'], value: query },
       { fromDate, toDate },
       offset || 0,
       limit || PAGINATION_LIMIT,

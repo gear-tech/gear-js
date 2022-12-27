@@ -31,9 +31,6 @@ export class Program extends BaseEntity implements IProgram {
   public name: string;
 
   @Column({ nullable: true })
-  public title: string;
-
-  @Column({ nullable: true })
   public expiration: number;
 
   @Column({ name: 'type', type: 'enum', enum: ProgramStatus, default: ProgramStatus.UNKNOWN })

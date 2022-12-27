@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class updateMetaAndAddStateTable1671821358348 implements MigrationInterface {
-    name = 'updateMetaAndAddStateTable1671821358348'
+export class updateMetaAndAddStateTable1672126612759 implements MigrationInterface {
+    name = 'updateMetaAndAddStateTable1672126612759'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
@@ -16,16 +16,19 @@ export class updateMetaAndAddStateTable1671821358348 implements MigrationInterfa
             )
         `);
         await queryRunner.query(`
-            ALTER TABLE "meta" DROP COLUMN "program"
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "meta" DROP COLUMN "owner"
+            ALTER TABLE "meta" DROP COLUMN "meta"
         `);
         await queryRunner.query(`
             ALTER TABLE "meta" DROP COLUMN "metaWasm"
         `);
         await queryRunner.query(`
-            ALTER TABLE "meta" DROP COLUMN "meta"
+            ALTER TABLE "meta" DROP COLUMN "owner"
+        `);
+        await queryRunner.query(`
+            ALTER TABLE "meta" DROP COLUMN "program"
+        `);
+        await queryRunner.query(`
+            ALTER TABLE "program" DROP COLUMN "title"
         `);
         await queryRunner.query(`
             ALTER TABLE "code"
@@ -59,12 +62,12 @@ export class updateMetaAndAddStateTable1671821358348 implements MigrationInterfa
             ALTER TABLE "code" DROP COLUMN "hex"
         `);
         await queryRunner.query(`
-            ALTER TABLE "meta"
-            ADD "meta" character varying
+            ALTER TABLE "program"
+            ADD "title" character varying
         `);
         await queryRunner.query(`
             ALTER TABLE "meta"
-            ADD "metaWasm" character varying
+            ADD "program" character varying NOT NULL
         `);
         await queryRunner.query(`
             ALTER TABLE "meta"
@@ -72,7 +75,11 @@ export class updateMetaAndAddStateTable1671821358348 implements MigrationInterfa
         `);
         await queryRunner.query(`
             ALTER TABLE "meta"
-            ADD "program" character varying NOT NULL
+            ADD "metaWasm" character varying
+        `);
+        await queryRunner.query(`
+            ALTER TABLE "meta"
+            ADD "meta" character varying
         `);
         await queryRunner.query(`
             DROP TABLE "state"

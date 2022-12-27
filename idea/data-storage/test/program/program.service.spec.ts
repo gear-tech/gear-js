@@ -52,13 +52,11 @@ describe('Program service', () => {
       id,
       genesis,
       name: 'newName',
-      title: 'newTitle',
     };
     const program = await programService.updateProgramData(updateProgramDataInput);
 
     expect(program.id).toEqual(updateProgramDataInput.id);
     expect(program.name).toEqual(updateProgramDataInput.name);
-    expect(program.title).toEqual(updateProgramDataInput.title);
     expect(program.meta).toEqual(updateProgramDataInput.meta);
   });
 
@@ -67,7 +65,6 @@ describe('Program service', () => {
       id: 'not_exist',
       genesis: 'not_exist',
       name: 'newName',
-      title: 'newTitle',
     };
 
     await expect(programService.updateProgramData(updateProgramDataInput)).rejects.toThrowError();
