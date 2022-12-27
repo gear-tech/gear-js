@@ -122,11 +122,16 @@ jobs:
           aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+          
+      - name: Restart postgres
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment postgres-data-rpc -n dev-idea
 
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment api-gateway frontend-nginx data-storage-rpc data-storage-workshop testbalance-testnet -n dev-idea
+          args: rollout restart deployment api-gateway frontend-nginx data-storage-rpc testbalance-testnet -n dev-idea
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
