@@ -31,7 +31,7 @@ export class ProgramService {
     const { id, genesis } = params;
     const program = await this.programRepository.getByIdMeta(id, genesis);
 
-    if (!program['meta']) {
+    if (program.meta === null) {
       throw new MetadataNotFound();
     }
 

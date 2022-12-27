@@ -67,8 +67,13 @@ export class GearEventListener {
   }
 
   public async isValidMetaHex(hex: string, programId: string): Promise<boolean> {
-    const metaHash = await this.api.program.metaHash(programId as Hex);
-    return metaHash === blake2AsHex(hex, 256);
+    try {
+      const metaHash = await this.api.program.metaHash(programId as Hex);
+      return metaHash === blake2AsHex(hex, 256);
+    } catch (error) {
+      this.logger.error(error);
+      return false;
+    }
   }
 
   private async connectGearNode(): Promise<void> {
