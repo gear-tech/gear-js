@@ -7,7 +7,7 @@ import styles from './JoinDetails.module.scss';
 
 type Props = {
   onRouteChange: (arg: string) => void;
-  onClickRegister?: (arg: any) => void;
+  onClickRegister?: (arg: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   clearProgrammId: (arg: Hex) => void;
   heading: string;
   bet: string;

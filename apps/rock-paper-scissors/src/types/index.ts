@@ -21,9 +21,9 @@ type StateGameStageType = { GameStage: StageType | {} };
 
 type StateLobbyType = { LobbyList: Hex[] };
 
-type StateRoundType = { CurrentRound: number | string | undefined };
+type StateRoundType = { CurrentRound: number | string };
 
-type StateWinnerType = { Winner: Hex | undefined };
+type StateWinnerType = { Winner: Hex };
 
 type TimeType = { hours: string; minutes: string; seconds: string };
 
@@ -34,6 +34,23 @@ type UserMoveType = { name: string; id: string; SVG: React.FunctionComponent<Rea
 type GameStageType = {
   InProgress: { finishedPlayers: Hex[] };
   Reveal: { finishedPlayers: Hex[] };
+};
+
+type AnyJson =
+  | string
+  | number
+  | boolean
+  | AnyJson[]
+  | {
+      [index: string]: AnyJson;
+    }
+  | null
+  | undefined;
+
+type SendMessageOptions = {
+  value?: string | number;
+  isOtherPanicsAllowed?: boolean;
+  onSuccess?: () => void;
 };
 
 export type {
@@ -49,4 +66,6 @@ export type {
   StateRoundType,
   StateWinnerType,
   GameStageType,
+  AnyJson,
+  SendMessageOptions,
 };

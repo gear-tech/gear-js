@@ -9,7 +9,7 @@ import {
 } from 'hooks';
 import { onClickRegister, gameStageFinishedPlayers, getGameStageText, getLoosers } from 'utils';
 import { ApiLoader } from 'components';
-import { GameStageType, UserMoveType } from 'types';
+import { GameStageType, StageType, StateWinnerType, UserMoveType } from 'types';
 import { useAccount, useMetadata } from '@gear-js/react-hooks';
 import { Hex } from '@gear-js/api';
 import { Create } from './create';
@@ -43,11 +43,11 @@ function Home() {
   // const { metaBuffer } = useWasm();
 
   const { gameStageState, gameStateError, gameState, lobbyState, timeLeft, winnerState, roundState } =
-    useRockPaperScissors(programID, metaBuffer);
+    useRockPaperScissors(programID, metaBuffer as Buffer);
 
   const { betSize, moveTimeoutS, revealTimeoutS, entryTimeoutS, playersCountLimit } = gameState;
   const { minutes, hours, seconds } = useMsToTime(timeLeft?.Deadline);
-  const { gameStageText } = getGameStageText(gameStageState);
+  const { gameStageText } = getGameStageText(gameStageState as StageType);
 
   const lobbyList = lobbyState?.LobbyList;
   const accountHex = useMemo(() => account?.decodedAddress, [account]);
@@ -56,7 +56,7 @@ function Home() {
   const { finishedPlayers } = gameStageFinishedPlayers(gameStageState as GameStageType);
   const finishedAccount = finishedPlayers?.includes(accountHex as Hex);
 
-  const { loosers } = getLoosers(prevLobbyList, lobbyList, winnerState);
+  const { loosers } = getLoosers(prevLobbyList, lobbyList, winnerState as StateWinnerType);
   const nextRoundPlayer = !loosers.includes(accountHex as Hex);
 
   useEffect(() => {

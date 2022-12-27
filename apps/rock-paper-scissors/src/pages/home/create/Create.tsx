@@ -21,7 +21,13 @@ const initialValues = {
   moveTimeoutMs: '',
   revealTimeoutMs: '',
 };
-const transformValues = (values: any) => ({
+const transformValues = (values: {
+  betSize: string;
+  playersCountLimit: string;
+  entryTimeoutMs: string;
+  moveTimeoutMs: string;
+  revealTimeoutMs: string;
+}) => ({
   betSize: values.betSize,
   playersCountLimit: values.playersCountLimit,
   entryTimeoutMs: `${values.entryTimeoutMs}000`,

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Input } from '@gear-js/ui';
 import { onSubmitMove } from 'utils';
 import { ActionButton, BackButton } from 'components';
-import { UserMoveType } from 'types';
+import { AnyJson, SendMessageOptions, UserMoveType } from 'types';
 import { ReactComponent as RockSVG } from 'assets/images/actions/rock.svg';
 import { ReactComponent as PaperSVG } from 'assets/images/actions/paper.svg';
 import { ReactComponent as ScissorsSVG } from 'assets/images/actions/scissors.svg';
@@ -21,7 +21,7 @@ const ACTIONS = [
 type Props = {
   onRouteChange: (arg: string) => void;
   setUserMove: (arg: UserMoveType) => void;
-  payloadSend: any;
+  payloadSend: (payload: AnyJson, options?: SendMessageOptions  | undefined) => void;
   userMove: UserMoveType;
 };
 

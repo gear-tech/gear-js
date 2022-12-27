@@ -11,7 +11,7 @@ import {
   StateWinnerType,
 } from 'types';
 
-const useRockPaperScissors = (programID: Hex, metaBuffer: any) => {
+const useRockPaperScissors = (programID: Hex, metaBuffer: Buffer) => {
   const payloadConfig = useMemo(() => ({ Config: null }), []);
   const payloadGameStage = useMemo(() => ({ GameStage: null }), []);
   const payloadLobby = useMemo(() => ({ LobbyList: null }), []);

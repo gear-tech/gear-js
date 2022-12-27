@@ -9,7 +9,7 @@ type Props = {
   loosers: Hex[];
   winner: Hex;
   account: Hex;
-  nextRoundPlayer: any;
+  nextRoundPlayer: boolean;
   setRoute: (arg: string) => void;
 };
 

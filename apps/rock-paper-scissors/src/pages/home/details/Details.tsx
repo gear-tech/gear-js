@@ -39,7 +39,7 @@ function Details({
       <span className={styles.lobbyText} key={player}>
         {player}
       </span>
-    )) || '0';
+    ))|| '';
 
   return (
     <div className={styles.container}>

@@ -7,7 +7,7 @@ import styles from './Reveal.module.scss';
 
 type Props = {
   userMove: UserMoveType;
-  payloadSend: any;
+  payloadSend: unknown;
   onRouteChange: (arg: string) => void;
 };
 

@@ -1,11 +1,17 @@
 import { Hex } from '@gear-js/api';
 import { stringToU8a } from '@polkadot/util';
 import { blake2AsHex } from '@polkadot/util-crypto';
-import { UserMoveType } from 'types';
+import { AnyJson, UserMoveType } from 'types';
+
+type SendMessageOptions = {
+  value?: string | number;
+  isOtherPanicsAllowed?: boolean;
+  onSuccess?: () => void;
+};
 
 const onClickRegister = (
   routeChange: (arg: string) => void,
-  payloadSend: any,
+  payloadSend: (payload: AnyJson, options?: SendMessageOptions | undefined) => void,
   lobbyList: Hex[],
   accountHex: Hex,
   betSize: string,
@@ -25,7 +31,12 @@ const onClickRegister = (
   );
 };
 
-const onSubmitMove = (routeChange: (arg: string) => void, payloadSend: any, userMove: UserMoveType, pass: string) => {
+const onSubmitMove = (
+  routeChange: (arg: string) => void,
+  payloadSend: (payload: AnyJson, options?: SendMessageOptions | undefined) => void,
+  userMove: UserMoveType,
+  pass: string,
+) => {
   if (pass && Object.keys(userMove).length > 0) {
     const outputPass = userMove.id + pass;
     const payload = blake2AsHex(outputPass, 256);
