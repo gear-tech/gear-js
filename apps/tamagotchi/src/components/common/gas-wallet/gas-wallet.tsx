@@ -1,5 +1,5 @@
 import { Account } from '@gear-js/react-hooks';
-import { GetGasBalance } from '../get-gas-balance';
+import { GetGasBalance } from 'components/common/get-gas-balance';
 
 type Props = {
   balance: Account['balance'];

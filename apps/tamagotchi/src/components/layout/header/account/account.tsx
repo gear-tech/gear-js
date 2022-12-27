@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useAccount } from '@gear-js/react-hooks';
 import { Button, buttonStyles } from '@gear-js/ui';
-import { GasWallet } from './gas-wallet';
+import { GasWallet } from 'components/common/gas-wallet';
 import { SelectAccountPopup } from 'components/popups/select-account-popup';
-import { TokensWallet } from './tokens-wallet';
+import { TokensWallet } from 'components/common/tokens-wallet';
 import { AccountButton } from 'components/common/account-button';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';

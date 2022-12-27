@@ -1,4 +1,4 @@
-import { getWasmMetadata, Hex, Metadata } from '@gear-js/api';
+import { getWasmMetadata, Hex } from '@gear-js/api';
 import { ProviderProps, useAlert } from '@gear-js/react-hooks';
 import { createContext, useEffect, useState } from 'react';
 import { ADDRESS } from 'app/consts';
@@ -16,7 +16,7 @@ type Program = {
   programId: Hex;
   codeHash: Hex;
   metaBuffer: Buffer;
-  meta: Metadata;
+  // meta: Metadata;
 };
 
 export const WasmContext = createContext<Program>({} as Program);
@@ -27,7 +27,7 @@ function useWasmRequest(name: string) {
     programId: '' as Hex,
     codeHash: '0x00',
     metaBuffer: {} as Buffer,
-    meta: {},
+    // meta: {},
   });
   // useEffect(() => {
   //   const params = new URLSearchParams({ name });
