@@ -10,7 +10,7 @@ import { checkPrograms } from './check';
 
 async function uploadProgram(api: GearApi, spec: IProgramSpec): Promise<{ id: Hex; source: Hex; destination: Hex }> {
   const code = readFileSync(spec.pathToOpt);
-  const metaHex: HexString = `0x${readFileSync(spec.pathToMetaTxt, 'utf-8')}`;
+  const metaHex: HexString = spec['pathToMetaTxt'] ? `0x${readFileSync(spec.pathToMetaTxt, 'utf-8')}` : null;
   const metaData = spec.pathToMetaTxt ? getProgramMetadata(metaHex) : undefined;
   const account = (await accounts())[spec.account];
 

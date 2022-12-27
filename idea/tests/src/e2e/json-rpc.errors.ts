@@ -70,3 +70,15 @@ export async function errorInvalidMetaHex(genesis: string, programId: string, he
 
   return true;
 }
+
+export async function errorMetaNotFound(genesis: string, programId: string): Promise<Passed> {
+  const response = await request('program.meta.get', {
+    genesis,
+    programId,
+  });
+
+  expect(response.error.message).to.equal('Metadata not found');
+  expect(response.error.code).to.equal(-32404);
+
+  return true;
+}

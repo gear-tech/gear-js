@@ -27,7 +27,7 @@ import { blocksStatus } from './block';
 import {
   errorInvalidMetaHex,
   errorInvalidParams,
-  errorMessageNotFound,
+  errorMessageNotFound, errorMetaNotFound,
   errorMethodNotExist,
   errorNoGenesisFound,
   errorProgramNotFound,
@@ -106,12 +106,17 @@ describe('API methods', () => {
     test('program.meta.add request', async () => {
       for (const id_ of Object.keys(prepared.programs)) {
         const program = prepared.programs[id_] as IPreparedProgram;
+        if(!program.spec['pathToMetaTxt']) continue;
+
         expect(await uploadMeta(genesis, program)).toBeTruthy();
       }
     });
 
     test('program.meta.get request', async () => {
       for (const id_ of Object.keys(prepared.programs)) {
+        const program = prepared.programs[id_] as IPreparedProgram;
+        if(!program.spec['pathToMetaTxt']) continue;
+
         expect(await getMeta(genesis, id_)).toBeTruthy();
       }
     });
@@ -121,8 +126,9 @@ describe('API methods', () => {
     test('program.state.add request', async () => {
       for (const id_ of Object.keys(prepared.programs)) {
         const program = prepared.programs[id_] as IPreparedProgram;
-        const programStatesPath = program.spec.pathStates;
+        if(!program.spec['pathStates']) continue;
 
+        const programStatesPath = program.spec.pathStates;
         for(const statePath of programStatesPath) {
           expect(await addState(genesis, program, statePath)).toBeTruthy();
         }
@@ -132,6 +138,8 @@ describe('API methods', () => {
     test('program.state.all request', async () => {
       for (const id_ of Object.keys(prepared.programs)) {
         const program = prepared.programs[id_] as IPreparedProgram;
+        if(!program.spec['pathStates']) continue;
+
         expect(await getStates(genesis, program)).toBeTruthy();
       }
     });
@@ -256,6 +264,15 @@ describe('API methods', () => {
       const invalidMetaHex = '0100000000010300000001070000000118000000011221100';
 
       expect(await errorInvalidMetaHex(genesis, program.id, invalidMetaHex)).toBeTruthy();
+    });
+
+    test('error metadata not found', async () => {
+      for (const id_ of Object.keys(prepared.programs)) {
+        const program = prepared.programs[id_] as IPreparedProgram;
+        if(!program.spec['pathToMetaTxt']) {
+          expect(await errorMetaNotFound(genesis, id_)).toBeTruthy();
+        }
+      }
     });
   });
 });
