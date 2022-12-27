@@ -8,5 +8,5 @@ export async function getStateMeta(stateMetaBuff: Buffer): Promise<{ functions: 
     return { functions: {} };
   }
 
-  return await getStateMetadata(stateMetaBuff);
+  return getStateMetadata(stateMetaBuff);
 }
