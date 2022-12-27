@@ -23,6 +23,7 @@ or
 ```sh
 yarn add @gear-js/api
 ```
+
 ---
 
 ## Getting started
@@ -55,10 +56,11 @@ const genesis = gearApi.genesisHash.toHex();
 ## Payloads and metadata
 
 ### Encode / decode payloads
-*It's necessary to send only bytes to interact with programs on blockchain.*
-*For that purpose we use the `scale-codec` implementation from `@polkadot-js`*
 
-You can use static `CreateType.create` method to encode and decode data 
+_It's necessary to send only bytes to interact with programs on blockchain._
+_For that purpose we use the `scale-codec` implementation from `@polkadot-js`_
+
+You can use static `CreateType.create` method to encode and decode data
 
 <details>
 <summary>Example</summary>
@@ -81,34 +83,68 @@ result.toString(); //  - returns a string represetation of the value
 result.toU8a(); // - encodes the value as a Unit8Array
 result.toJSON(); // - converts the value to JSON
 ```
+
 </details>
 
 ### Getting metadata
 
-It's possible to get the definition of program types from the `.meta.wasm` file obtained after building the program.
-Use the `getWasmMetadata` function for this purpose
+There're 2 types of metadata.
 
-<details>
-<summary>Example</summary>
+1. `ProgramMetadata` is used to encode/decode messages to/from a program as well as to read the whole state of the program
+
+_You can use `getProgramMetadata` function to create program metadata. The function takes metadata of the program in format of hex string. It will return object of ProgramMetadata class that has property `types` that contains all types of the program._
+
+**You should pass an object of this class to function arguments when you want to send some extrinsics that require encoding payloads**
 
 ```javascript
-import { getWasmMetadata } from '@gear-js/api';
-const fileBuffer = fs.readFileSync('path/to/program.meta.wasm');
-const meta = await getWasmMetadata(fileBuffer);
+import { getProgramMetadata } from '@gear-js/api';
+
+const meta = getProgramMetadata(`0x...`);
+meta.types.init.input; // can be used to encode input message for init entrypoint of the program
+meta.types.init.output; // can be used to decode output message for init entrypoint of the program
+// the same thing available for all entrypoints of the program
+
+meta.types.state; // contauns type for decoding state output
 ```
-</details>
+
+2. `StateMetadata` is used to encode input/decode output payloads that is needed to read state using a specific wasm.
+
+_You can use `getStateMetadata` function to create program metadata. The function takes wasm as Buffer to read state. It will return object of StateMetadata class that has property `functions` that contains available function of wasm and input/output types_
+
+```javascript
+import { getStateMetadata } from '@gear-js/api';
+
+const fileBuffer = fs.readFileSync('path/to/state.meta.wasm');
+const meta = await getStateMetadata(fileBuffer);
+meta.functions; // is an object whose keys are names of funtions and values are objects of input/output types
+```
+
+Both `ProgramMetadata` and `StateMetadata` classes have a few methods that can help to understand what some type is or get the name of some type (because types are represented as number in regestry) as well as encode and decode data.
+
+```javascript
+import { ProgramMetadata } from '@gear-js/api`;
+
+const meta = getProgramMetadata(`0x...`);
+
+meta.getTypeName(4); // will return name of type with this index
+
+meta.getTypeDef(4); // will return structure of this type
+meta.getTypeDef(4, true); // if you need to get type structre with additional field (name, type, kind, len) you have to pass the second argument
+
+meta.getAllTypes(); // will return all custom types existed in the registry of the program
+
+meta.createType(4, { value: 'value' }); // to encode or decode data
+```
 
 ---
 
 ## Gear extrinsics
 
-***Extrinsics are used to interact with programs running on blockchain networks powered by Gear Protocol***
+**_Extrinsics are used to interact with programs running on blockchain networks powered by Gear Protocol_**
 
 ### Upload program
-Use `api.program.upload` method to create `upload_program` extrinsic
 
-<details>
-<summary>Example</summary>
+Use `api.program.upload` method to create `upload_program` extrinsic
 
 ```javascript
 const code = fs.readFileSync('path/to/program.wasm');
@@ -134,14 +170,10 @@ try {
   console.error(`${error.name}: ${error.message}`);
 }
 ```
-</details>
-
 
 ### Upload code
-Use `api.code.upload` method to create `upload_code` extrinsic
 
-<details>
-<summary>Example</summary>
+Use `api.code.upload` method to create `upload_code` extrinsic
 
 ```javascript
 const code = fs.readFileSync('path/to/program.opt.wasm');
@@ -158,15 +190,13 @@ gearApi.code.signAndSend(alice, () => {
   });
 });
 ```
-</details>
 
 ### Create program from uploaded code on chain
+
 Use `api.program.create` method to create `create_program` extrinsic
-<details>
-<summary>Example</summary>
 
 ```javascript
-const codeId = '0x...'
+const codeId = '0x...';
 
 const program = {
   codeId,
@@ -181,14 +211,10 @@ await extrinsic.signAndSend(keyring, (event) => {
   console.log(event.toHuman());
 });
 ```
-</details>
-
 
 ### Send message
-Use `api.message.send` method to create `send_message` extrinsic
 
-<details>
-<summary>Example</summary>
+Use `api.message.send` method to create `send_message` extrinsic
 
 ```javascript
 try {
@@ -213,12 +239,10 @@ try {
   console.error(`${error.name}: ${error.message}`);
 }
 ```
-</details>
 
 ### Send reply message
+
 Use `api.message.reply` method to create `send_reply` extrinsic
-<details>
-<summary>Example</summary>
 
 ```javascript
 try {
@@ -228,8 +252,8 @@ try {
     gasLimit: 10000000,
     value: 1000,
   };
-  // In this case payload will be encoded using `meta.async_handle_input` type if it exsits, 
-  // otherwise `meta.async_init_input` will be used 
+  // In this case payload will be encoded using `meta.async_handle_input` type if it exsits,
+  // otherwise `meta.async_init_input` will be used
   const extrinsic = gearApi.message.sendReply(reply, meta);
 } catch (error) {
   console.error(`${error.name}: ${error.message}`);
@@ -242,11 +266,11 @@ try {
   console.error(`${error.name}: ${error.message}`);
 }
 ```
-</details>
-
 
 ### Get transaction fee
+
 To get a transaction fee before sending a transaction you can use paymentInfo method.
+
 <details>
 <summary>Example</summary>
 
@@ -258,11 +282,11 @@ const paymentInfo = await api.program.paymentInfo(alice);
 const transactionFee = paymentInfo.partialFee.toNumber();
 consolg.log(transactionFee);
 ```
+
 </details>
 
-
-
 ### Calculate gas for messages
+
 To find out the minimum gas amount to send extrinsic, use `gearApi.program.calculateGas.[method]`.
 
 Gas calculation returns GasInfo object contains 3 parameters:
@@ -273,7 +297,8 @@ Gas calculation returns GasInfo object contains 3 parameters:
 - `may_be_returned` - value that can be returned in some cases
 - `waited` - notifies that the message will be added to waitlist
 
-### Init (for upload_program extrinsic)
+#### Init (for upload_program extrinsic)
+
 <details>
 <summary>Example</summary>
 
@@ -290,9 +315,11 @@ const gas = await gearApi.program.calculateGas.initUpload(
 
 console.log(gas.toHuman());
 ```
+
 </details>
 
-### Init (for create_program extrinsic)
+#### Init (for create_program extrinsic)
+
 <details>
 <summary>Example</summary>
 
@@ -309,9 +336,11 @@ const gas = await gearApi.program.calculateGas.initCreate(
 
 console.log(gas.toHuman());
 ```
+
 </details>
 
-### Handle message 
+#### Handle message
+
 <details>
 <summary>Example</summary>
 
@@ -333,9 +362,11 @@ const gas = await gearApi.program.calculateGas.handle(
 );
 console.log(gas.toHuman());
 ```
+
 </details>
 
-### Reply to a message
+#### Reply to a message
+
 <details>
 <summary>Example</summary>
 
@@ -353,6 +384,7 @@ const gas = await gearApi.program.calculateGas.reply(
 );
 console.log(gas.toHuman());
 ```
+
 </details>
 
 ---
@@ -360,9 +392,8 @@ console.log(gas.toHuman());
 ## Work with programs and blockchain state
 
 ### Check that the address belongs to some program
+
 To find out if an address belongs to a program use the `api.program.exists` method.
-<details>
-<summary>Example</summary>
 
 ```javascript
 const programId = '0x...';
@@ -370,22 +401,31 @@ const programExists = await api.program.exists(programId);
 
 console.log(`Program with address ${programId} ${programExists ? 'exists' : "doesn't exist"}`);
 ```
-</details>
 
 ### Read state of program
 
-To read the state of the program you must have a .meta.wasm file of that program.
+There are 2 ways to read state of a program.
 
-<details>
-<summary>Example</summary>
+1. Read full state of a program.
+   _To read full state of the program you need to have only metadata of this program. You can call `api.programState.read` method to get the state._
 
-```javascript
-const metaWasm = fs.readFileSync('path/to/meta.wasm');
-const state = await gearApi.programState.read(programId, metaWasm);
-// If program expects inputValue in meta_state function it's possible to specify it
-const state = await gearApi.programState.read(programId, metaWasm, inputValue);
-```
-</details>
+   ```javascript
+   await api.programState.read({ programId: `0x...` }, programMetadata);
+
+   // Also you can read the state of the program at some specific block.
+   await api.programState.read({ programId: `0x...`, at: `0x...` }, programMetadata);
+   ```
+
+2. Read state using wasm.
+   _If you have some program that is able to read state and return you only necessary data you need to use `api.programState.readUsingWasm` method._
+
+   ```javascript
+   const wasm = readFileSync('path/to/state.meta.wasm');
+   const state = await api.programState.readUsingWasm(
+     { programId, fn_name: 'name_of_function_to_execute', wasm, argument: { input: 'payload' } },
+     wasm,
+   );
+   ```
 
 ### Get ids of all uploaded codes
 
@@ -398,12 +438,17 @@ To get all ids of uploaded codes use `api.code.all` method. It returns array of 
 const codeIds = await gearApi.code.all();
 console.log(codeIds);
 ```
+
 </details>
 
 ### Mailbox
+
 The mailbox contains messages that are waiting for user action.
+
 #### Read
+
 To read the mailbox use `api.mailbox.read` method.
+
 <details>
 <summary>Example</summary>
 
@@ -412,10 +457,13 @@ const api = await GearApi.create();
 const mailbox = await api.mailbox.read('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY');
 console.log(mailbox);
 ```
+
 </details>
 
 ### Claim value
+
 To claim value from a message in the mailbox use `api.mailbox.claimValue.submit` method.
+
 <details>
 <summary>Example</summary>
 
@@ -424,10 +472,13 @@ const api = await GearApi.create();
 const submitted = await api.mailbox.claimValue.submit(messageId);
 await api.mailbox.claimValue.signAndSend(...);
 ```
+
 </details>
 
 ### Waitlist
+
 To read the program's waitlist use `api.waitlist.read` method.
+
 <details>
 <summary>Example</summary>
 
@@ -437,6 +488,7 @@ const programId = '0x1234...';
 const waitlist = await api.waitlist.read(programId);
 console.log(waitlist);
 ```
+
 </details>
 
 ---
@@ -444,6 +496,7 @@ console.log(waitlist);
 ## Events
 
 ### Subscribe to all events
+
 <details>
 <summary>Example</summary>
 
@@ -454,9 +507,11 @@ const unsub = await gearApi.query.system.events((events) => {
 // Unsubscribe
 unsub();
 ```
+
 </details>
 
 ### Check what the event is
+
 <details>
 <summary>Example</summary>
 
@@ -475,9 +530,11 @@ gearApi.query.system.events((events) => {
     });
 });
 ```
+
 </details>
 
 ### Subscribe to specific gear events
+
 <details>
 <summary>Example</summary>
 
@@ -541,11 +598,15 @@ const unsub = await gearApi.gearEvents.subscribeToNewBlocks((header) => {
 // Unsubscribe
 unsub();
 ```
+
 </details>
 
 ---
+
 ## Blocks
+
 ### Get block data
+
 <details>
 <summary>Example</summary>
 
@@ -553,9 +614,11 @@ unsub();
 const data = await gearApi.blocks.get(blockNumberOrBlockHash);
 console.log(data.toHuman());
 ```
+
 </details>
 
 ### Get block timestamp
+
 <details>
 <summary>Example</summary>
 
@@ -563,9 +626,11 @@ console.log(data.toHuman());
 const ts = await gearApi.blocks.getBlockTimestamp(blockNumberOrBlockHash);
 console.log(ts.toNumber());
 ```
+
 </details>
 
 ### Get blockHash by block number
+
 <details>
 <summary>Example</summary>
 
@@ -573,9 +638,11 @@ console.log(ts.toNumber());
 const hash = await gearApi.blocks.getBlockHash(blockNumber);
 console.log(hash.toHex());
 ```
+
 </details>
 
 ### Get block number by blockhash
+
 <details>
 <summary>Example</summary>
 
@@ -583,9 +650,11 @@ console.log(hash.toHex());
 const hash = await gearApi.blocks.getBlockNumber(blockHash);
 console.log(hash.toNumber());
 ```
+
 </details>
 
 ### Get all block's events
+
 <details>
 <summary>Example</summary>
 
@@ -595,9 +664,11 @@ events.forEach((event) => {
   console.log(event.toHuman());
 });
 ```
+
 </details>
 
 ### Get all block's extrinsics
+
 <details>
 <summary>Example</summary>
 
@@ -607,6 +678,7 @@ extrinsics.forEach((extrinsic) => {
   console.log(extrinsic.toHuman());
 });
 ```
+
 </details>
 
 ---
@@ -614,6 +686,7 @@ extrinsics.forEach((extrinsic) => {
 ## Keyring
 
 ### Create keyring
+
 To create keyring you can use static methods of `GearKeyring` class.
 
 <details>
@@ -698,14 +771,14 @@ Use `encodeAddress` and `decodeAddress` functions to convert the public key into
 
 ```javascript
 import { decodeAddress } from '@gear-js/api';
-console.log(decodeAddress('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY'))
+console.log(decodeAddress('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY'));
 ```
 
 2. Convert to ss58 format
 
 ```javascript
 import { encodeAddress } from '@gear-js/api';
-console.log(encodeAddress('0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'))
+console.log(encodeAddress('0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'));
 ```
 
 </details>

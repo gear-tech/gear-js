@@ -14,7 +14,7 @@ async function checkType(type, meta) {
       {
         type: 'list',
         name: 'type',
-        message: `Select type`,
+        message: 'Select type',
         choices: DEFAULT_TYPES,
       },
     ]);
@@ -111,7 +111,7 @@ export class Action {
       meta = await checkMeta(meta, true);
       type = await checkType(type, !!meta);
       const { typeName, struct } = await getTypeStruct(type, meta);
-      console.log(`TypeName: `, chalk.green(`${typeName}`));
+      console.log('TypeName: ', chalk.green(`${typeName}`));
       console.log(struct);
       process.exit(0);
     } catch (error) {
