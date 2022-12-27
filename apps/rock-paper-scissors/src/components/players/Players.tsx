@@ -16,8 +16,9 @@ type Props = {
 function Players({ heading, list, finishedPlayers, className, center }: Props) {
   const headingClassName = clsx(styles.heading, center && styles.center);
   const listClassName = clsx(styles.list, className);
+
   const getPlayers = () =>
-    list ? (
+    list.length ? (
       list.map((player) => (
         <Player key={player} id={player as Hex} isFinished={finishedPlayers?.includes(player) || false} />
       ))
