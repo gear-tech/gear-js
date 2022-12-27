@@ -7,7 +7,7 @@ import {
   useRockPaperScissorsMessage,
   useRoute,
 } from 'hooks';
-import { onClickRegister, gameStageFinishedPlayers, getGameStageText, getLoosers } from 'utils';
+import { onClickRegister, gameStageFinishedPlayers, getGameStageText, getLoosers, getButtonVisible } from 'utils';
 import { ApiLoader } from 'components';
 import { GameStageType, StageType, StateWinnerType, UserMoveType } from 'types';
 import { useAccount, useMetadata } from '@gear-js/react-hooks';
@@ -58,9 +58,10 @@ function Home() {
 
   const { loosers } = getLoosers(prevLobbyList, lobbyList, winnerState as StateWinnerType);
   const nextRoundPlayer = !loosers.includes(accountHex as Hex);
+  const { buttonVisible } = getButtonVisible(gameStageText, finishedAccount);
 
   useEffect(() => {
-    if (lobbyList?.length && (gameStageText as string) === 'Reveal') setPrevLobbyList([...(lobbyList as [])]);
+    if ((gameStageText as string) === 'reveal') setPrevLobbyList(lobbyList as Hex[]);
   }, [lobbyList, gameStageText]);
 
   useEffect(() => {
@@ -135,7 +136,7 @@ function Home() {
           minutesLeft={minutes}
           secondsLeft={seconds}
           onClickDetail={() => setRoute('detail admin')}
-          finishedAccount={finishedAccount}
+          buttonVisible={false}
           admin
         />
       )}
@@ -152,7 +153,7 @@ function Home() {
           hoursLeft={hours}
           minutesLeft={minutes}
           secondsLeft={seconds}
-          finishedAccount={finishedAccount}
+          buttonVisible={buttonVisible}
           onClickDetail={() => setRoute('detail')}
         />
       )}
@@ -202,7 +203,7 @@ function Home() {
       )}
 
       {route === 'round result' &&
-        ((gameStageText as string) === 'Revial' ? (
+        (gameStageText === 'reveal' ? (
           <Game
             players={lobbyList}
             finishedPlayers={finishedPlayers}
@@ -215,7 +216,7 @@ function Home() {
             hoursLeft={hours}
             minutesLeft={minutes}
             secondsLeft={seconds}
-            finishedAccount={finishedAccount}
+            buttonVisible={buttonVisible}
             onClickDetail={() => setRoute('detail')}
           />
         ) : (

@@ -57,7 +57,7 @@ const onSubmitReveal = (
   userMove: string,
   password: string,
 ) => {
-  if (userMove && password) return;
+  if (!userMove && !password) return;
   const outputPass = stringToU8a(`${userMove}${password}`);
   payloadSend(
     { Reveal: Array.from(outputPass) },

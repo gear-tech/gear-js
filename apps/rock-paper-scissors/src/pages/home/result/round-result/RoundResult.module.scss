@@ -14,8 +14,11 @@
 
 .heading {
   @extend %h2;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .subheading {

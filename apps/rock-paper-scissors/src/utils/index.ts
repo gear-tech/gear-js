@@ -22,7 +22,7 @@ const gameStageFinishedPlayers = (gameStage: GameStageType) => {
   return { finishedPlayers };
 };
 
-const getGameStageText = (stageData: string|{inProgress:{}|{Reveal:{}}}) => {
+const getGameStageText = (stageData: string | { inProgress: {} | { Reveal: {} } }) => {
   const gameStageKeys = typeof stageData === 'object' ? Object.keys(stageData) : [];
   let gameStageText: StageType = 'preparation';
   if (gameStageKeys?.includes('InProgress')) {
@@ -35,13 +35,20 @@ const getGameStageText = (stageData: string|{inProgress:{}|{Reveal:{}}}) => {
   return { gameStageText };
 };
 
-const getLoosers  = (prevLobbyList:Hex[], lobbyList:Hex[]|undefined, winnerState:StateWinnerType ) => {
+const getLoosers = (prevLobbyList: Hex[], lobbyList: Hex[] | undefined, winnerState: StateWinnerType) => {
   const loosers = [] as Hex[];
   prevLobbyList.forEach((prevLobbyPlayer) => {
-    if (!lobbyList?.includes(prevLobbyPlayer as never) && prevLobbyPlayer !== winnerState.Winner){
-      loosers.push(prevLobbyPlayer)}
+    if (!lobbyList?.includes(prevLobbyPlayer as never) && prevLobbyPlayer !== winnerState.Winner) {
+      loosers.push(prevLobbyPlayer);
+    }
   });
   return { loosers };
+};
+
+const getButtonVisible = (stage: StageType, finishedAccount: boolean) => {
+  const buttonVisible = (stage as StageType) !== 'preparation' && !finishedAccount;
+  console.log(buttonVisible);
+  return { buttonVisible };
 };
 
 export {
@@ -55,4 +62,5 @@ export {
   gameStageFinishedPlayers,
   getGameStageText,
   getLoosers,
+  getButtonVisible,
 };

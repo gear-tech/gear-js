@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Button, Input } from '@gear-js/ui';
 import { ActionButton, BackButton } from 'components';
-import { UserMoveType } from 'types';
+import { AnyJson, SendMessageOptions, UserMoveType } from 'types';
 import { onSubmitReveal } from 'utils';
 import styles from './Reveal.module.scss';
 
 type Props = {
   userMove: UserMoveType;
-  payloadSend: unknown;
+  payloadSend: (payload: AnyJson, options?: SendMessageOptions  | undefined) => void;
   onRouteChange: (arg: string) => void;
 };
 
