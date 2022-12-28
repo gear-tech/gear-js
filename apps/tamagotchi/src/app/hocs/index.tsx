@@ -7,7 +7,7 @@ import {
   ProviderProps,
 } from '@gear-js/react-hooks';
 import { Alert, alertStyles } from '@gear-js/ui';
-import { WasmProvider } from 'app/context';
+import { LessonsProvider } from 'app/context';
 import { ADDRESS } from 'app/consts';
 
 const ApiProvider = ({ children }: ProviderProps) => (
@@ -20,7 +20,7 @@ const AlertProvider = ({ children }: ProviderProps) => (
   </GearAlertProvider>
 );
 
-const providers = [BrowserRouter, AlertProvider, ApiProvider, AccountProvider, WasmProvider];
+const providers = [BrowserRouter, AlertProvider, ApiProvider, AccountProvider, LessonsProvider];
 
 export const withProviders = (Component: ComponentType) => () =>
   providers.reduceRight((children, Provider) => <Provider>{children}</Provider>, <Component />);

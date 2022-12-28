@@ -2,8 +2,13 @@ import { Icon } from 'components/ui/icon';
 import { AccountActionsMenu } from 'components/menus/account-actions-menu';
 import clsx from 'clsx';
 import { Button, buttonStyles } from '@gear-js/ui';
+import { useContext } from 'react';
+import { LessonsContext } from 'app/context';
+import { getTamagotchiAge } from 'app/utils/get-tamagotchi-age';
 
 export const CharacterStats = ({ simple }: { simple?: boolean }) => {
+  const { tamagotchi } = useContext(LessonsContext);
+
   return (
     <div className={clsx('flex gap-12 items-center p-4 bg-white/5 rounded-2xl', !simple && 'w-full')}>
       <div className="basis-[415px] w-full px-8 py-6 bg-[#1E1E1E] rounded-2xl">
@@ -20,11 +25,11 @@ export const CharacterStats = ({ simple }: { simple?: boolean }) => {
             <tbody className="block space-y-8">
               <tr className="flex gap-8">
                 <th className="flex-1 w-40 text-white text-opacity-70 font-medium">Owner ID:</th>
-                <td className="flex-1 w-40">Daniel</td>
+                <td className="flex-1 w-40">{tamagotchi?.name}</td>
               </tr>
               <tr className="flex gap-8">
                 <th className="flex-1 w-40 text-white text-opacity-70 font-medium">Age:</th>
-                <td className="flex-1 w-40">2 days</td>
+                <td className="flex-1 w-40">{getTamagotchiAge(tamagotchi?.dateOfBirth as string)}</td>
               </tr>
             </tbody>
           </table>

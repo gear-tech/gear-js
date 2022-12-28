@@ -2,14 +2,12 @@ import { Button } from '@gear-js/ui';
 import { SelectAccountPopup } from 'components/popups/select-account-popup';
 import { CreateTamagotchiForm } from 'components/forms/create-tamagotchi-form';
 import { useAccount } from '@gear-js/react-hooks';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { LessonsContext } from '../../../app/context';
+import { LoginSection } from '../../sections/login-section';
 
 export const ConnectAccount = () => {
-  const { account, accounts } = useAccount();
-  const [open, setOpen] = useState(false);
-
-  const openModal = () => setOpen(true);
-  const closeModal = () => setOpen(false);
+  const { account } = useAccount();
 
   return (
     <div className="flex flex-col items-center gap-9 text-center w-full">
@@ -19,16 +17,7 @@ export const ConnectAccount = () => {
           {account ? 'Insert program ID to create a character' : 'Connect your account to start the game'}
         </p>
       </div>
-      <div className=" w-full">
-        {account ? (
-          <CreateTamagotchiForm />
-        ) : (
-          <>
-            <Button text="Connect account" color="primary" onClick={openModal} />
-            {open && <SelectAccountPopup accounts={accounts} close={closeModal} />}
-          </>
-        )}
-      </div>
+      <div className=" w-full">{account ? <CreateTamagotchiForm /> : <LoginSection />}</div>
     </div>
   );
 };
