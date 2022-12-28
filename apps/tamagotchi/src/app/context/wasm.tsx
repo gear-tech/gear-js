@@ -1,7 +1,10 @@
-import { getWasmMetadata, Hex } from '@gear-js/api';
-import { ProviderProps, useAlert } from '@gear-js/react-hooks';
+import { getProgramMetadata, getWasmMetadata, Hex } from '@gear-js/api';
+import { ProviderProps, useAlert, useApi, useMetadata } from '@gear-js/react-hooks';
 import { createContext, useEffect, useState } from 'react';
 import { ADDRESS } from 'app/consts';
+import txt from 'assets/meta/meta.txt';
+// import meta from 'assets/meta/tmg.meta.wasm';
+import { Metadata } from '@polkadot/types';
 
 type Result = {
   id: Hex;
@@ -14,21 +17,22 @@ type Result = {
 
 type Program = {
   programId: Hex;
-  codeHash: Hex;
+  // codeHash: Hex;
   metaBuffer: Buffer;
-  // meta: Metadata;
+  meta: Metadata;
 };
 
 export const WasmContext = createContext<Program>({} as Program);
 
 function useWasmRequest(name: string) {
   const alert = useAlert();
-  const [program, setProgram] = useState<Program>({
-    programId: '' as Hex,
-    codeHash: '0x00',
+  const [test, setTest] = useState<any>();
+  // const { metaBuffer, metadata } = useMetadata(meta);
+  const program = {
+    programId: '0x4544c718d4aa1545dc3db3327c1e79d26fe9c0e17a13cb4d7de355cc83715b4a' as Hex,
     metaBuffer: {} as Buffer,
-    // meta: {},
-  });
+    meta: {},
+  };
   // useEffect(() => {
   //   const params = new URLSearchParams({ name });
   //   const url = `${ADDRESS.DAPPS_API}?${params}`;
