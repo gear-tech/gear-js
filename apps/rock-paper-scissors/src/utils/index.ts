@@ -47,7 +47,6 @@ const getLoosers = (prevLobbyList: Hex[], lobbyList: Hex[] | undefined, winnerSt
 
 const getButtonVisible = (stage: StageType, finishedAccount: boolean) => {
   const buttonVisible = (stage as StageType) !== 'preparation' && !finishedAccount;
-  console.log(buttonVisible);
   return { buttonVisible };
 };
 
