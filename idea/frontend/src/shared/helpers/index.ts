@@ -7,6 +7,7 @@ import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
 
 import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from 'shared/config';
 
+import { IMeta } from 'entities/metadata';
 import { isHexValid } from './form';
 
 const checkWallet = (account?: Account) => {
@@ -127,7 +128,7 @@ const getValidation =
     }
   };
 
-const isState = (meta: ProgramMetadata | undefined) => !!meta?.types.state;
+const isState = (meta: IMeta | ProgramMetadata | undefined | null) => !!meta?.types.state;
 
 const disableScroll = () => document.body.classList.add('noOverflow');
 const enableScroll = () => document.body.classList.remove('noOverflow');

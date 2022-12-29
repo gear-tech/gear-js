@@ -14,9 +14,9 @@ interface IProgram extends IBase {
   status: ProgramStatus;
   messages: IMessage[];
   title: string | null;
-  expiration: number | null;
-  code: ICode | null;
-  meta: IMeta | null;
+  expiration?: number;
+  code?: ICode;
+  meta?: IMeta;
 }
 
 export type { IProgram };
