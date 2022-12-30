@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react';
-import { AnyJson } from '@polkadot/types/types';
-import { Hex, ProgramMetadata } from '@gear-js/api';
+import { AnyJson, Codec } from '@polkadot/types/types';
+import { getStateMetadata, Hex, ProgramMetadata } from '@gear-js/api';
 import { useApi, useAlert } from '@gear-js/react-hooks';
 
-const useStateRead = (programId: Hex, metadata: ProgramMetadata | undefined) => {
+const useStateRead = (programId: Hex, metadataOrWasm: ProgramMetadata | Uint8Array | undefined) => {
   const alert = useAlert();
   const { api } = useApi();
 
@@ -11,13 +11,20 @@ const useStateRead = (programId: Hex, metadata: ProgramMetadata | undefined) => 
   const [isReaded, setIsReaded] = useState(true);
 
   const readState = useCallback(
-    async (initValue?: AnyJson) => {
-      if (metadata) {
+    async (fnName = '') => {
+      if (metadataOrWasm) {
         try {
           setIsReaded(false);
 
-          //
-          const result = await api.programState.read({ programId }, metadata);
+          const isWasm = metadataOrWasm instanceof Uint8Array;
+          let result: Codec;
+
+          if (isWasm) {
+            const meta = await getStateMetadata(metadataOrWasm);
+            result = await api.programState.readUsingWasm({ programId, wasm: metadataOrWasm, fn_name: fnName }, meta);
+          } else {
+            result = await api.programState.read({ programId }, metadataOrWasm);
+          }
 
           setState(result.toHuman());
         } catch (error) {
@@ -30,7 +37,7 @@ const useStateRead = (programId: Hex, metadata: ProgramMetadata | undefined) => 
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [api, programId, metadata],
+    [api, programId, metadataOrWasm],
   );
 
   const resetState = () => setState(undefined);

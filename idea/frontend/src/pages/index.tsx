@@ -42,7 +42,11 @@ const Routing = () => {
         <Route path={routes.initializeProgram} element={<InitializeProgram />} />
       </Route>
 
-      <Route path={routes.state} element={<State />} />
+      <Route path="/state">
+        <Route path=":programId" element={<State />} />
+        <Route path="full/:programId" element={<State />} />
+        <Route path="wasm/:programId" element={<State />} />
+      </Route>
       <Route path={routes.mailbox} element={<Mailbox />} />
 
       <Route path={routes.explorer} element={<Explorer.Layout />}>

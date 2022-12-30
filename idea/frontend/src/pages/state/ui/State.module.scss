@@ -1,6 +1,14 @@
 @use '@gear-js/ui/headings' as *;
+@use 'shared/assets/styles/variables' as *;
+
+.state {
+  display: grid;
+  grid-template-columns: 7fr 3fr;
+  gap: 16px 32px;
+  align-items: flex-start;
+}
 
 .heading {
   @extend %h4;
-  margin-bottom: 30px;
+  color: $gray800;
 }

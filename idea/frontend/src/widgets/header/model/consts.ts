@@ -10,6 +10,8 @@ const PATHS_WITHOUT_BOTTOM_SIDE = [
   absoluteRoutes.sendMessage,
   absoluteRoutes.reply,
   routes.state,
+  '/state/full/:programId',
+  '/state/wasm/:programId',
 ];
 
 export { SHORT_HEADER_HEIGHT, FULL_HEADER_HEIGHT, PATHS_WITHOUT_BOTTOM_SIDE };
