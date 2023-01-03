@@ -2,7 +2,7 @@ import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { useAccount } from '@gear-js/react-hooks';
 import { LOCAL_STORAGE } from 'app/consts';
 import { AccountButton } from 'components/common/account-button';
-import { isLoggedIn } from 'app/utils';
+import { isLoggedIn } from 'app/utils/is-account';
 
 type Props = {
   list: InjectedAccountWithMeta[];

@@ -1,6 +1,6 @@
 import { Button, Input } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
-import { isExists } from 'app/utils';
+import { isExists } from 'app/utils/form-validations';
 import { Icon } from 'components/ui/icon';
 
 const initialValues = {

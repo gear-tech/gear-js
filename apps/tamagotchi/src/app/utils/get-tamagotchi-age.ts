@@ -1,4 +1,4 @@
-export const getTamagotchiAge = (v: string) => {
+export const getTamagotchiAge = (v: number) => {
   const seconds = Math.floor((Date.now() - +v) / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);

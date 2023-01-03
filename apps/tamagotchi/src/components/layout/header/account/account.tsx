@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useAccount } from '@gear-js/react-hooks';
 import { Button, buttonStyles } from '@gear-js/ui';
 import { GasWallet } from 'components/common/gas-wallet';
@@ -7,8 +7,10 @@ import { TokensWallet } from 'components/common/tokens-wallet';
 import { AccountButton } from 'components/common/account-button';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
+import { LessonsContext } from 'app/context';
 
 export const AccountComponent = () => {
+  const { lesson } = useContext(LessonsContext);
   const { account, accounts } = useAccount();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -19,15 +21,20 @@ export const AccountComponent = () => {
     <>
       {account ? (
         <div className="flex gap-4">
-          <Link to="/store" className={clsx('btn whitespace-nowrap', buttonStyles.primary)}>
-            Open Store
-          </Link>
-          <TokensWallet
-            balance={account.balance}
-            address={account.address}
-            name={account.meta.name}
-            onClick={openModal}
-          />
+          {lesson > 2 && (
+            <>
+              <Link to="/store" className={clsx('btn whitespace-nowrap', buttonStyles.primary)}>
+                Open Store
+              </Link>
+
+              <TokensWallet
+                balance={account.balance}
+                address={account.address}
+                name={account.meta.name}
+                onClick={openModal}
+              />
+            </>
+          )}
           <GasWallet balance={account.balance} address={account.address} name={account.meta.name} onClick={openModal} />
           <AccountButton address={account.address} name={account.meta.name} onClick={openModal} />
         </div>

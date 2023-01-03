@@ -2,7 +2,7 @@ import { createContext, Dispatch, ReactNode, SetStateAction, useState } from 're
 import { LessonsAll } from '../types/lessons';
 
 type Value = {
-  lesson?: number;
+  lesson: number;
   setLesson: Dispatch<SetStateAction<number>>;
   tamagotchi?: LessonsAll;
   setTamagotchi: Dispatch<SetStateAction<LessonsAll | undefined>>;

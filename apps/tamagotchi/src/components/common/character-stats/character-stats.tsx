@@ -6,19 +6,18 @@ import { useContext } from 'react';
 import { LessonsContext } from 'app/context';
 import { getTamagotchiAge } from 'app/utils/get-tamagotchi-age';
 
-export const CharacterStats = ({ simple }: { simple?: boolean }) => {
+export const CharacterStats = () => {
   const { tamagotchi } = useContext(LessonsContext);
+  const simple = !tamagotchi?.entertained;
 
   return (
     <div className={clsx('flex gap-12 items-center p-4 bg-white/5 rounded-2xl', !simple && 'w-full')}>
       <div className="basis-[415px] w-full px-8 py-6 bg-[#1E1E1E] rounded-2xl">
         <div className="flex justify-between gap-4">
           <h2 className="typo-h2 text-primary">Geary</h2>
-          {!simple && (
-            <div className="">
-              <AccountActionsMenu />
-            </div>
-          )}
+          <div className="">
+            <AccountActionsMenu />
+          </div>
         </div>
         <div className="mt-8 text-white text-lg font-medium">
           <table className="block w-full text-left">
@@ -29,7 +28,7 @@ export const CharacterStats = ({ simple }: { simple?: boolean }) => {
               </tr>
               <tr className="flex gap-8">
                 <th className="flex-1 w-40 text-white text-opacity-70 font-medium">Age:</th>
-                <td className="flex-1 w-40">{getTamagotchiAge(tamagotchi?.dateOfBirth as string)}</td>
+                <td className="flex-1 w-40">{getTamagotchiAge(tamagotchi?.dateOfBirth as number)}</td>
               </tr>
             </tbody>
           </table>
@@ -54,7 +53,7 @@ export const CharacterStats = ({ simple }: { simple?: boolean }) => {
             <div className="basis-50">
               <Button
                 className={clsx(buttonStyles.light, 'gap-2 w-full')}
-                text="Sleep"
+                text="Feed"
                 icon={() => <Icon name="moon" className="w-5 h-5" />}
               />
             </div>
