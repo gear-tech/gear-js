@@ -1,48 +1,36 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { AnyJson, Codec } from '@polkadot/types/types';
-import { getStateMetadata, Hex, ProgramMetadata } from '@gear-js/api';
+import { Hex, ProgramMetadata, getStateMetadata } from '@gear-js/api';
 import { useApi, useAlert } from '@gear-js/react-hooks';
 
-const useStateRead = (programId: Hex, metadataOrWasm: ProgramMetadata | Uint8Array | undefined) => {
+const useStateRead = (programId: Hex) => {
   const alert = useAlert();
   const { api } = useApi();
 
   const [state, setState] = useState<AnyJson>();
-  const [isReaded, setIsReaded] = useState(true);
+  const [isStateRead, setIsStateRead] = useState(true);
 
-  const readState = useCallback(
-    async (fnName = '') => {
-      if (metadataOrWasm) {
-        try {
-          setIsReaded(false);
+  const handleStateRead = (callback: () => Promise<Codec>) => {
+    setIsStateRead(false);
 
-          const isWasm = metadataOrWasm instanceof Uint8Array;
-          let result: Codec;
+    callback()
+      .then((result) => setState(result.toHuman()))
+      .catch(({ message }: Error) => alert.error(message))
+      .finally(() => setIsStateRead(true));
+  };
 
-          if (isWasm) {
-            const meta = await getStateMetadata(metadataOrWasm);
-            result = await api.programState.readUsingWasm({ programId, wasm: metadataOrWasm, fn_name: fnName }, meta);
-          } else {
-            result = await api.programState.read({ programId }, metadataOrWasm);
-          }
+  const readFullState = (metadata: ProgramMetadata) =>
+    handleStateRead(() => api.programState.read({ programId }, metadata));
 
-          setState(result.toHuman());
-        } catch (error) {
-          const message = (error as Error).message;
-
-          alert.error(message);
-        } finally {
-          setIsReaded(true);
-        }
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [api, programId, metadataOrWasm],
-  );
+  const readWasmState = (wasm: Buffer, fn_name: string, argument: AnyJson) =>
+    getStateMetadata(wasm).then((stateMetadata) =>
+      api.programState.readUsingWasm({ programId, wasm, fn_name, argument }, stateMetadata),
+    );
 
   const resetState = () => setState(undefined);
+  const isState = state !== undefined; // could be null
 
-  return { readState, resetState, state, isReaded };
+  return { readFullState, readWasmState, resetState, state, isStateRead, isState };
 };
 
 export { useStateRead };

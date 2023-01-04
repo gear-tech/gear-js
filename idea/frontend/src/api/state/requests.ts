@@ -11,4 +11,6 @@ const addState = (params: { programId: Hex; wasmBuffBase64: string; name: string
 const fetchStates = (programId: string) =>
   rpcService.callRPC<{ states: IState[]; count: number }>(RpcMethods.GetStates, { programId });
 
-export { addState, fetchStates };
+const fetchState = (id: string) => rpcService.callRPC<IState & { wasmBuffBase64: string }>(RpcMethods.GetState, { id });
+
+export { addState, fetchStates, fetchState };

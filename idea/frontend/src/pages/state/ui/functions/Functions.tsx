@@ -8,16 +8,26 @@ import styles from './Functions.module.scss';
 type Props = {
   list: IState[] | undefined;
   value: string;
-  onChange: (value: string) => void;
+  onFunctionChange: (value: string) => void;
+  onStateChange: (value: IState) => void;
 };
 
-const Functions = ({ list, value, onChange }: Props) => {
+const Functions = ({ list, value, onFunctionChange, onStateChange }: Props) => {
   const getFunctions = () =>
-    list?.map(({ name, id, functions }) => (
-      <li key={id}>
-        <ExpansionPanel heading={name} list={Object.keys(functions)} value={value} onChange={onChange} />
-      </li>
-    ));
+    list?.map((state) => {
+      const { name, id, functions } = state;
+
+      const handleFunctionChange = (funcValue: string) => {
+        onFunctionChange(funcValue);
+        onStateChange(state);
+      };
+
+      return (
+        <li key={id}>
+          <ExpansionPanel heading={name} list={Object.keys(functions)} value={value} onChange={handleFunctionChange} />
+        </li>
+      );
+    });
 
   return (
     <Box>

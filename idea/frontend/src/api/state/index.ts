@@ -1,3 +1,3 @@
-import { addState, fetchStates } from './requests';
+import { addState, fetchStates, fetchState } from './requests';
 
-export { addState, fetchStates };
+export { addState, fetchStates, fetchState };

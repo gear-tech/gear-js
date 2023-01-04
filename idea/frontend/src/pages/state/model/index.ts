@@ -1,3 +1,5 @@
-import { IState } from './types';
+import { IState, FormValues } from './types';
+import { INITIAL_VALUES } from './consts';
 
-export type { IState };
+export { INITIAL_VALUES };
+export type { FormValues, IState };
