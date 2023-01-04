@@ -1,7 +1,7 @@
-import { useState, useMemo, useRef, useEffect, ReactChild } from 'react';
+import { useState, useMemo, useRef, ReactChild } from 'react';
 import { FormApi } from 'final-form';
 import { Form } from 'react-final-form';
-import { ProgramMetadata, Hex, getProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata, Hex } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 
 import { useGasCalculate, useChangeEffect } from 'hooks';
@@ -81,8 +81,10 @@ const ProgramForm = (props: Props) => {
   const deposit = api.existentialDeposit.toNumber();
   const maxGasLimit = api.blockGasLimit.toNumber();
 
-  // const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, encodeType), [metadata, encodeType]);
-  const payloadFormValues = undefined;
+  const typeIndex = metadata?.types.init.input;
+  const isTypeIndex = typeIndex !== undefined && typeIndex !== null;
+
+  const payloadFormValues = metadata && isTypeIndex ? getPayloadFormValues(metadata, typeIndex) : undefined;
 
   const validation = useMemo(
     () => {

@@ -43,10 +43,11 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
   const deposit = api.existentialDeposit.toNumber();
   const maxGasLimit = api.blockGasLimit.toNumber();
   const method = isReply ? GasMethod.Reply : GasMethod.Handle;
-  // const encodeType = isReply ? metadata?.types.reply.input : metadata?.types.handle.input;
 
-  // const payloadFormValues = useMemo(() => getPayloadFormValues(metadata, encodeType), [metadata, encodeType]);
-  const payloadFormValues = undefined;
+  const typeIndex = isReply ? metadata?.types.reply.input : metadata?.types.handle.input;
+  const isTypeIndex = typeIndex !== undefined && typeIndex !== null;
+
+  const payloadFormValues = metadata && isTypeIndex ? getPayloadFormValues(metadata, typeIndex) : undefined;
 
   const validation = useMemo(
     () => {

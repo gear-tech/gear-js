@@ -40,10 +40,10 @@ const StateForm = ({ meta, programId, isLoading }: Props) => {
     await readState(payload);
   };
 
-  // const encodeType = meta?.meta_state_input;
+  const typeIndex = meta?.types.state;
+  const isTypeIndex = typeIndex !== undefined && typeIndex !== null;
 
-  // const payloadFormValues = useMemo(() => getPayloadFormValues(meta, encodeType), [meta, encodeType]);
-  const payloadFormValues = undefined;
+  const payloadFormValues = meta && isTypeIndex ? getPayloadFormValues(meta, typeIndex) : undefined;
 
   // useEffect(() => {
   //   if (meta && !encodeType) readState();
@@ -81,12 +81,12 @@ const StateForm = ({ meta, programId, isLoading }: Props) => {
               <Input label="Program ID:" gap="1/5" value={programId} readOnly />
             )}
 
-            {/* {payloadFormValues &&
+            {payloadFormValues &&
               (isLoading ? (
                 <Textarea label="Payload" gap="1/5" className={styles.loading} readOnly />
               ) : (
                 <FormPayload name="payload" label="Input Parameters" values={payloadFormValues} gap="1/5" />
-              ))} */}
+              ))}
 
             <OnChange name="payload">{() => resetState()}</OnChange>
             {!isReaded && <Textarea label="Statedata:" rows={15} gap="1/5" className={styles.loading} readOnly block />}

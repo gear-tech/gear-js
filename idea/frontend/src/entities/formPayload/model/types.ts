@@ -1,17 +1,12 @@
 import { ProgramMetadata } from '@gear-js/api';
 
-import { ValueType } from './consts';
+type TypeKind = 'primitive' | 'empty' | 'none' | 'sequence' | 'composite' | 'variant' | 'array' | 'tuple';
 
 type TypeStructure = {
   name: string;
-  type: ValueType;
-  count?: number;
-  value:
-    | string
-    | TypeStructure[]
-    | {
-        [key: string]: TypeStructure;
-      };
+  kind: TypeKind;
+  type: string | object | TypeStructure;
+  len?: number;
 };
 
 type PayloadValue =
