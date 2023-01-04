@@ -11,9 +11,11 @@ import styles from './ExpansionPanel.module.scss';
 type Props = {
   heading: string;
   list: string[];
+  value: string;
+  onChange: (value: string) => void;
 };
 
-const ExpansionPanel = ({ heading, list }: Props) => {
+const ExpansionPanel = ({ heading, list, value, onChange }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen((prevValue) => !prevValue);
@@ -23,7 +25,7 @@ const ExpansionPanel = ({ heading, list }: Props) => {
   const getRadioButtons = () =>
     list.map((func) => (
       <li key={func}>
-        <Radio label={func} name="functions" />
+        <Radio label={func} name="functions" checked={value === func} onChange={() => onChange(func)} />
       </li>
     ));
 

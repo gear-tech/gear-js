@@ -20,6 +20,7 @@ const State = () => {
 
   const [metadata, setMetadata] = useState<ProgramMetadata>();
   const [states, setStates] = useState<IState[]>();
+  const [stateFunction, setStateFunction] = useState('');
 
   const { isDevChain } = useChain();
   const getMetadata = isDevChain ? getLocalProgramMeta : fetchMetadata;
@@ -42,7 +43,7 @@ const State = () => {
       <h2 className={styles.heading}>Read state</h2>
       <Input type="search" placeholder="Search by function name" />
       <StateForm meta={metadata} programId={programId} isLoading={isLoading} />
-      <Functions list={states} />
+      <Functions list={states} value={stateFunction} onChange={setStateFunction} />
     </div>
   );
 };
