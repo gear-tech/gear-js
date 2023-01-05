@@ -61,8 +61,13 @@ export class StateService {
       functions,
     });
 
-    await this.stateRepository.save(createMetaDataInput);
+    const state = await this.stateRepository.save(createMetaDataInput);
 
-    return { status: 'State added' };
+    return { status: 'State added', state: {
+      id: state.id,
+      name: state.name,
+      wasmBuffBase64: state.wasmBuffBase64,
+      functions: state.functions },
+    };
   }
 }

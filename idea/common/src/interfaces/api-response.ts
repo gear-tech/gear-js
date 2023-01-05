@@ -27,6 +27,7 @@ interface AddMetaResult {
 
 interface AddStateResult {
   status: 'State added';
+  state: IState
 }
 
 interface GetMetaResult {

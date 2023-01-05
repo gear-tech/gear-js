@@ -151,9 +151,18 @@ export async function addState(genesis: string, program: IPreparedProgram, state
   };
 
   const response = await request('program.state.add', data);
+
   expect(response).to.have.property('result');
   expect(response.result).to.have.property('status');
+  expect(response.result).to.have.property('state');
   expect(response.result.status).to.eq('State added');
+  expect(response.result.state).to.have.all.keys(
+    'id',
+    'name',
+    'wasmBuffBase64',
+    'functions'
+  );
+
   return true;
 }
 
