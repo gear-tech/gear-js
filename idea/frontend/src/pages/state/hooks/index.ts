@@ -1,6 +1,6 @@
 import { Hex, ProgramMetadata, getProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
-import { useState, useEffect, ChangeEvent } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { getLocalProgramMeta, fetchMetadata, fetchStates, fetchState, addState } from 'api';
@@ -41,40 +41,32 @@ const useMetadataAndStates = (programId: Hex) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [programId]);
 
-  return { metadata, states };
-};
-
-const useStateWasm = (programId: Hex, stateId: string | undefined) => {
-  const [wasmBuffer, setWasmBuffer] = useState<Buffer>();
-
-  useEffect(() => {
-    if (stateId) {
-      fetchState(stateId).then(({ result }) => setWasmBuffer(Buffer.from(result.wasmBuffBase64, 'base64')));
-    }
-  }, [stateId]);
+  const searchStates = (query: string) =>
+    fetchStates(programId, query)
+      .then(({ result }) => setStates(result.states))
+      .catch(({ message }: Error) => alert.error(message));
 
   const getBase64 = (file: File) =>
     readFileAsync(file, 'buffer')
       .then((ArrayBuffer) => Buffer.from(ArrayBuffer))
       .then((buffer) => buffer.toString('base64'));
 
-  const uploadWasmBuffer = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    const [file] = target.files || [];
+  const uploadState = (file: File) =>
+    getBase64(file)
+      .then((wasmBuffBase64) => addState({ programId, wasmBuffBase64, name: file.name }))
+      .then(({ result }) => setStates((prevStates) => (prevStates ? [...prevStates, result.state] : prevStates)))
+      .catch(({ message }: Error) => alert.error(message));
 
-    if (file) {
-      getBase64(file).then((wasmBuffBase64) => addState({ programId, wasmBuffBase64, name: file.name }));
-    }
-  };
-
-  return { wasmBuffer, uploadWasmBuffer };
+  return { metadata, states, searchStates, uploadState };
 };
 
 const useStateSelection = (metadata: ProgramMetadata | undefined) => {
+  const alert = useAlert();
+
   const [selectedState, setSelectedState] = useState<IState>();
   const selectedStateId = selectedState?.id;
 
   const [functionId, setFunctionId] = useState('');
-
   const { functions } = selectedState || {};
   const selectedFunction = functions?.[functionId];
   const typeIndex = selectedFunction?.input;
@@ -82,14 +74,25 @@ const useStateSelection = (metadata: ProgramMetadata | undefined) => {
 
   const payloadFormValues = metadata && isTypeIndex ? getPayloadFormValues(metadata, typeIndex) : undefined;
 
+  const [wasmBuffer, setWasmBuffer] = useState<Buffer>();
+
+  useEffect(() => {
+    if (selectedStateId) {
+      fetchState(selectedStateId)
+        .then(({ result }) => setWasmBuffer(Buffer.from(result.wasmBuffBase64, 'base64')))
+        .catch(({ message }: Error) => alert.error(message));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedStateId]);
+
   return {
-    selectedStateId,
     functionId,
     typeIndex,
     selectState: setSelectedState,
     selectFunction: setFunctionId,
     payloadFormValues,
+    wasmBuffer,
   };
 };
 
-export { useStateType, useMetadataAndStates, useStateWasm, useStateSelection };
+export { useStateType, useMetadataAndStates, useStateSelection };

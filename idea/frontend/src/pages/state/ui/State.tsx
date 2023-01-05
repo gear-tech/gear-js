@@ -1,6 +1,7 @@
 import { Hex } from '@gear-js/api';
 import { Button, FileInput, Input } from '@gear-js/ui';
-import { useEffect } from 'react';
+import { useForm } from '@mantine/form';
+import { ChangeEvent, useEffect } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
 import clsx from 'clsx';
 
@@ -10,8 +11,9 @@ import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg
 import { ReactComponent as ApplySVG } from 'shared/assets/images/actions/apply.svg';
 import { BackButton } from 'shared/ui/backButton';
 import { UILink } from 'shared/ui/uiLink';
+import { resetFileInput } from 'shared/helpers';
 
-import { useMetadataAndStates, useStateSelection, useStateType, useStateWasm } from '../hooks';
+import { useMetadataAndStates, useStateSelection, useStateType } from '../hooks';
 import { FormValues } from '../model';
 import { Functions } from './functions';
 import { StateForm } from './stateForm';
@@ -21,14 +23,15 @@ type Params = { programId: Hex };
 
 const State = () => {
   const { programId } = useParams() as Params;
+  const { getInputProps, onSubmit } = useForm({ initialValues: { query: '' } });
 
-  const { stateType, isFullState, isWasmState, isStateTypeSelection } = useStateType();
-  const { metadata, states } = useMetadataAndStates(programId);
-  const { selectedStateId, functionId, selectState, selectFunction, payloadFormValues } = useStateSelection(metadata);
-  const { wasmBuffer, uploadWasmBuffer } = useStateWasm(programId, selectedStateId);
   const { readFullState, readWasmState, resetState, state, isStateRead, isState } = useStateRead(programId);
+  const { stateType, isFullState, isWasmState, isStateTypeSelection } = useStateType();
+  const { metadata, states, searchStates, uploadState } = useMetadataAndStates(programId);
+  const { functionId, selectState, selectFunction, payloadFormValues, wasmBuffer } = useStateSelection(metadata);
 
   const className = clsx(styles.state, isWasmState && styles.stateWasm);
+  const isLoading = !metadata;
 
   useEffect(() => {
     if (isFullState && metadata) readFullState(metadata);
@@ -45,13 +48,21 @@ const State = () => {
     if (wasmBuffer) readWasmState(wasmBuffer, functionId, getSubmitPayload(payload));
   };
 
-  const isLoading = !metadata;
+  const handleWasmInputChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
+    const [file] = target.files || [];
+
+    if (file) uploadState(file).then(() => resetFileInput(target));
+  };
 
   return (
     <div className={className}>
       <h2 className={styles.heading}>Read state</h2>
 
-      {isWasmState && <Input type="search" placeholder="Search by function name" />}
+      {isWasmState && (
+        <form onSubmit={onSubmit(({ query }) => searchStates(query))}>
+          <Input type="search" placeholder="Search by function name" {...getInputProps('query')} />
+        </form>
+      )}
 
       <div>
         <StateForm
@@ -89,8 +100,13 @@ const State = () => {
 
           {isWasmState && (
             <>
-              <Button type="submit" form="state" text="Read" size="large" />
-              <FileInput size="large" color="primary" onChange={uploadWasmBuffer} />
+              {functionId && (
+                <Button type="submit" form="state" color="secondary" text="Read State" icon={ReadSVG} size="large" />
+              )}
+
+              {/* TODO: remove after @gear-js/ui update */}
+              {/* @ts-ignore */}
+              <FileInput size="large" color="secondary" className={styles.wasmInput} onChange={handleWasmInputChange} />
             </>
           )}
 

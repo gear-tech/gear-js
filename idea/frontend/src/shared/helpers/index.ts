@@ -1,14 +1,14 @@
-import { Event } from '@polkadot/types/interfaces';
+import type { Event } from '@polkadot/types/interfaces';
+import { GearApi, ProgramMetadata } from '@gear-js/api';
+import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
 import { AnySchema, ValidationError } from 'yup';
 import { setIn } from 'final-form';
 import isString from 'lodash.isstring';
-import { GearApi, ProgramMetadata } from '@gear-js/api';
-import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
 
 import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from 'shared/config';
 
 import { IMeta } from 'entities/metadata';
-import { isHexValid } from './form';
+import { isHexValid, isExists } from './form';
 
 const checkWallet = (account?: Account) => {
   if (!account) {
@@ -92,12 +92,6 @@ const getExtrinsicFailedMessage = (api: GearApi, event: Event) => {
   return `${errorMethod}: ${formattedDocs}`;
 };
 
-const isHex = (value: string) => {
-  const hexRegex = /^0x[\da-fA-F]+/;
-
-  return isString(value) && hexRegex.test(value);
-};
-
 const isNodeAddressValid = (address: string) => {
   const nodeRegex = /(ws|wss):\/\/[\w-.]+/;
 
@@ -133,6 +127,13 @@ const isState = (meta: IMeta | ProgramMetadata | undefined | null) => !!meta?.ty
 const disableScroll = () => document.body.classList.add('noOverflow');
 const enableScroll = () => document.body.classList.remove('noOverflow');
 
+const resetFileInput = (target: HTMLInputElement) => {
+  // eslint-disable-next-line no-param-reassign
+  target.value = '';
+  const changeEvent = new Event('change', { bubbles: true });
+  target.dispatchEvent(changeEvent);
+};
+
 export {
   checkWallet,
   formatDate,
@@ -145,10 +146,11 @@ export {
   getPreformattedText,
   getNodeAddressFromUrl,
   getExtrinsicFailedMessage,
-  isHex,
   isNodeAddressValid,
   isHexValid,
+  isExists,
   isState,
   disableScroll,
   enableScroll,
+  resetFileInput,
 };

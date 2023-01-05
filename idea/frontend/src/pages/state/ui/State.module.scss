@@ -26,8 +26,9 @@
 .buttons {
   @include childrenMargin(16px, right);
   display: flex;
+}
 
-  > *:first-child {
-    width: auto;
-  }
+.wasmInput {
+  // TODO: should be @gear-js/ui update?
+  width: auto;
 }
