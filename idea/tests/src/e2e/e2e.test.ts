@@ -129,9 +129,7 @@ describe('API methods', () => {
         if(!program.spec['pathStates']) continue;
 
         const programStatesPath = program.spec.pathStates;
-        console.log( 'path__________', programStatesPath);
         for(const statePath of programStatesPath) {
-          console.log('--------->StatePath' ,statePath);
           expect(await addState(genesis, program, statePath)).toBeTruthy();
         }
       }
