@@ -10,6 +10,18 @@
   &Wasm {
     grid-template-columns: 7fr 3fr;
   }
+
+  > * {
+    &:nth-child(2) {
+      // state
+      order: 1;
+    }
+
+    &:nth-child(4) {
+      // functions
+      order: 2;
+    }
+  }
 }
 
 .heading {

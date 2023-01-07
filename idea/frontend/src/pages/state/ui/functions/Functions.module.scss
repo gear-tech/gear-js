@@ -12,3 +12,14 @@
 .functions {
   @include childrenMargin(24px);
 }
+
+.placeholder {
+  @include childrenMargin(20px);
+  position: relative;
+
+  h2 {
+    font-size: 28px !important; // overriding cuz it's the only case of a custom heading style
+    font-weight: 600 !important;
+    line-height: 31px !important;
+  }
+}

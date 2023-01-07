@@ -28,7 +28,9 @@ const useMetadataAndStates = (programId: Hex) => {
   const getMetadata = isDevChain ? getLocalProgramMeta : fetchMetadata;
 
   const [metadata, setMetadata] = useState<ProgramMetadata>();
-  const [states, setStates] = useState<IState[]>();
+
+  const [states, setStates] = useState<IState[]>([]);
+  const [isEachStateReady, setIsEachStateReady] = useState(false);
 
   useEffect(() => {
     Promise.all([getMetadata(programId), fetchStates(programId)])
@@ -36,28 +38,37 @@ const useMetadataAndStates = (programId: Hex) => {
         setMetadata(getProgramMetadata(metaResult.hex));
         setStates(statesResult.states);
       })
-      .catch(({ message }: Error) => alert.error(message));
+      .catch(({ message }: Error) => alert.error(message))
+      .finally(() => setIsEachStateReady(true));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [programId]);
 
-  const searchStates = (query: string) =>
+  const searchStates = (query: string) => {
+    setIsEachStateReady(false);
+
     fetchStates(programId, query)
       .then(({ result }) => setStates(result.states))
-      .catch(({ message }: Error) => alert.error(message));
+      .catch(({ message }: Error) => alert.error(message))
+      .finally(() => setIsEachStateReady(true));
+  };
 
   const getBase64 = (file: File) =>
     readFileAsync(file, 'buffer')
       .then((ArrayBuffer) => Buffer.from(ArrayBuffer))
       .then((buffer) => buffer.toString('base64'));
 
-  const uploadState = (file: File) =>
-    getBase64(file)
+  const uploadState = (file: File) => {
+    setIsEachStateReady(false);
+
+    return getBase64(file)
       .then((wasmBuffBase64) => addState({ programId, wasmBuffBase64, name: file.name }))
       .then(({ result }) => setStates((prevStates) => (prevStates ? [...prevStates, result.state] : prevStates)))
-      .catch(({ message }: Error) => alert.error(message));
+      .catch(({ message }: Error) => alert.error(message))
+      .finally(() => setIsEachStateReady(true));
+  };
 
-  return { metadata, states, searchStates, uploadState };
+  return { metadata, states, isEachStateReady, searchStates, uploadState };
 };
 
 const useStateSelection = (metadata: ProgramMetadata | undefined) => {

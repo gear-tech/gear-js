@@ -1,6 +1,5 @@
 import { Hex } from '@gear-js/api';
-import { Button, FileInput, Input } from '@gear-js/ui';
-import { useForm } from '@mantine/form';
+import { Button, FileInput } from '@gear-js/ui';
 import { ChangeEvent, useEffect } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
 import clsx from 'clsx';
@@ -23,11 +22,10 @@ type Params = { programId: Hex };
 
 const State = () => {
   const { programId } = useParams() as Params;
-  const { getInputProps, onSubmit } = useForm({ initialValues: { query: '' } });
 
   const { readFullState, readWasmState, resetState, state, isStateRead, isState } = useStateRead(programId);
   const { stateType, isFullState, isWasmState, isStateTypeSelection } = useStateType();
-  const { metadata, states, searchStates, uploadState } = useMetadataAndStates(programId);
+  const { metadata, states, isEachStateReady, searchStates, uploadState } = useMetadataAndStates(programId);
   const { functionId, selectState, selectFunction, payloadFormValues, wasmBuffer } = useStateSelection(metadata);
 
   const className = clsx(styles.state, isWasmState && styles.stateWasm);
@@ -58,13 +56,7 @@ const State = () => {
     <div className={className}>
       <h2 className={styles.heading}>Read state</h2>
 
-      {isWasmState && (
-        <form onSubmit={onSubmit(({ query }) => searchStates(query))}>
-          <Input type="search" placeholder="Search by function name" {...getInputProps('query')} />
-        </form>
-      )}
-
-      <div>
+      <div className={styles.form}>
         <StateForm
           programId={programId}
           state={state}
@@ -115,7 +107,14 @@ const State = () => {
       </div>
 
       {isWasmState && (
-        <Functions list={states} value={functionId} onStateChange={selectState} onFunctionChange={selectFunction} />
+        <Functions
+          list={states}
+          value={functionId}
+          isReady={isEachStateReady}
+          onStateChange={selectState}
+          onFunctionChange={selectFunction}
+          onSearchSubmit={searchStates}
+        />
       )}
     </div>
   );
