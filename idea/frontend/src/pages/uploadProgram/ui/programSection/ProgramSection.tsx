@@ -80,7 +80,7 @@ const ProgramSection = ({ file, metaHex, metadata, resetMetaFile }: Props) => {
     setSelectedFile(currentFile);
   };
 
-  const handleSubmitForm = (payload: Payload, helpers: SubmitHelpers) =>
+  const handleSubmitForm = (payload: Payload, helpers: SubmitHelpers) => {
     uploadProgram({
       file: selectedFile!,
       payload,
@@ -91,6 +91,7 @@ const ProgramSection = ({ file, metaHex, metadata, resetMetaFile }: Props) => {
       },
       reject: helpers.enableButtons,
     });
+  };
 
   const renderButtons = ({ isDisabled }: RenderButtonsProps) => (
     <>

@@ -84,7 +84,10 @@ const ProgramForm = (props: Props) => {
   const typeIndex = metadata?.types.init.input;
   const isTypeIndex = typeIndex !== undefined && typeIndex !== null;
 
-  const payloadFormValues = metadata && isTypeIndex ? getPayloadFormValues(metadata, typeIndex) : undefined;
+  const payloadFormValues = useMemo(
+    () => (metadata && isTypeIndex ? getPayloadFormValues(metadata, typeIndex) : undefined),
+    [metadata, isTypeIndex, typeIndex],
+  );
 
   const validation = useMemo(
     () => {

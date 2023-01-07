@@ -47,7 +47,10 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
   const typeIndex = isReply ? metadata?.types.reply.input : metadata?.types.handle.input;
   const isTypeIndex = typeIndex !== undefined && typeIndex !== null;
 
-  const payloadFormValues = metadata && isTypeIndex ? getPayloadFormValues(metadata, typeIndex) : undefined;
+  const payloadFormValues = useMemo(
+    () => (metadata && isTypeIndex ? getPayloadFormValues(metadata, typeIndex) : undefined),
+    [metadata, isTypeIndex, typeIndex],
+  );
 
   const validation = useMemo(
     () => {

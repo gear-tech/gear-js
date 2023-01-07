@@ -1,6 +1,6 @@
 import { Hex, ProgramMetadata, getProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { getLocalProgramMeta, fetchMetadata, fetchStates, fetchState, addState } from 'api';
@@ -72,7 +72,10 @@ const useStateSelection = (metadata: ProgramMetadata | undefined) => {
   const typeIndex = selectedFunction?.input;
   const isTypeIndex = typeIndex !== undefined && typeIndex !== null;
 
-  const payloadFormValues = metadata && isTypeIndex ? getPayloadFormValues(metadata, typeIndex) : undefined;
+  const payloadFormValues = useMemo(
+    () => (metadata && isTypeIndex ? getPayloadFormValues(metadata, typeIndex) : undefined),
+    [metadata, isTypeIndex, typeIndex],
+  );
 
   const [wasmBuffer, setWasmBuffer] = useState<Buffer>();
 
