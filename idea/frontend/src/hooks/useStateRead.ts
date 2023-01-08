@@ -23,8 +23,10 @@ const useStateRead = (programId: Hex) => {
     handleStateRead(() => api.programState.read({ programId }, metadata));
 
   const readWasmState = (wasm: Buffer, fn_name: string, argument: AnyJson) =>
-    getStateMetadata(wasm).then((stateMetadata) =>
-      api.programState.readUsingWasm({ programId, wasm, fn_name, argument }, stateMetadata),
+    handleStateRead(() =>
+      getStateMetadata(wasm).then((stateMetadata) =>
+        api.programState.readUsingWasm({ programId, wasm, fn_name, argument }, stateMetadata),
+      ),
     );
 
   const resetState = () => setState(undefined);

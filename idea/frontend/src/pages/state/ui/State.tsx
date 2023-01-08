@@ -39,6 +39,11 @@ const State = () => {
 
   useEffect(() => {
     resetState();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [functionId]);
+
+  useEffect(() => {
+    resetState();
     selectState(undefined);
     selectFunction('');
 
