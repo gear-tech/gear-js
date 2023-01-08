@@ -26,7 +26,7 @@ const State = () => {
   const { readFullState, readWasmState, resetState, state, isStateRead, isState } = useStateRead(programId);
   const { stateType, isFullState, isWasmState, isStateTypeSelection } = useStateType();
   const { metadata, states, isEachStateReady, searchStates, uploadState } = useMetadataAndStates(programId);
-  const { functionId, selectState, selectFunction, payloadFormValues, wasmBuffer } = useStateSelection(metadata);
+  const { functionId, payloadFormValues, wasmBuffer, selectState, selectFunction } = useStateSelection(metadata);
 
   const className = clsx(styles.state, isWasmState && styles.stateWasm);
   const isLoading = !metadata || (!!functionId && !wasmBuffer);
@@ -39,6 +39,9 @@ const State = () => {
 
   useEffect(() => {
     resetState();
+    selectState(undefined);
+    selectFunction('');
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stateType]);
 
@@ -93,7 +96,15 @@ const State = () => {
           {isWasmState && (
             <>
               {functionId && (
-                <Button type="submit" form="state" color="secondary" text="Read State" icon={ReadSVG} size="large" />
+                <Button
+                  type="submit"
+                  form="state"
+                  color="secondary"
+                  text="Read State"
+                  icon={ReadSVG}
+                  size="large"
+                  disabled={isLoading}
+                />
               )}
 
               {/* TODO: remove after @gear-js/ui update */}

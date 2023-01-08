@@ -104,10 +104,10 @@ const useStateSelection = (metadata: ProgramMetadata | undefined) => {
   return {
     functionId,
     typeIndex,
-    selectState: setSelectedState,
-    selectFunction: setFunctionId,
     payloadFormValues,
     wasmBuffer,
+    selectState: setSelectedState,
+    selectFunction: setFunctionId,
   };
 };
 
