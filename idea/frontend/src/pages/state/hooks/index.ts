@@ -92,6 +92,8 @@ const useStateSelection = (metadata: ProgramMetadata | undefined) => {
 
   useEffect(() => {
     if (selectedStateId) {
+      setWasmBuffer(undefined); // to trigger loader
+
       fetchState(selectedStateId)
         .then(({ result }) => setWasmBuffer(Buffer.from(result.wasmBuffBase64, 'base64')))
         .catch(({ message }: Error) => alert.error(message));

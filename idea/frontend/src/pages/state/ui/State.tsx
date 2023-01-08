@@ -29,7 +29,7 @@ const State = () => {
   const { functionId, selectState, selectFunction, payloadFormValues, wasmBuffer } = useStateSelection(metadata);
 
   const className = clsx(styles.state, isWasmState && styles.stateWasm);
-  const isLoading = !metadata;
+  const isLoading = !metadata || (!!functionId && !wasmBuffer);
 
   useEffect(() => {
     if (isFullState && metadata) readFullState(metadata);
