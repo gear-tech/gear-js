@@ -1,11 +1,12 @@
 import { PortableRegistry, TypeRegistry } from '@polkadot/types';
-import { Si1LookupTypeId } from '@polkadot/types/interfaces';
+import { Si1LookupTypeId, Si1TypeDef } from '@polkadot/types/interfaces';
 import { Codec, Registry } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 import { hexToU8a } from '@polkadot/util';
 import assert from 'assert';
+import { writeFileSync } from 'fs';
 
-type TypeKind = 'primitive' | 'empty' | 'none' | 'sequence' | 'composite' | 'variant' | 'array' | 'tuple';
+type TypeKind = 'primitive' | 'empty' | 'none' | 'sequence' | 'composite' | 'variant' | 'array' | 'tuple' | 'option';
 
 interface TypeStructure {
   name: string;
@@ -28,6 +29,7 @@ export class GearMetadata {
   }
 
   private prepare() {
+    writeFileSync('reg.json', JSON.stringify(this.portableRegistry.toJSON()));
     for (const type of this.portableRegistry.types) {
       const name = this.portableRegistry.getName(type.id);
       const typeDef = this.portableRegistry.getTypeDef(type.id);
@@ -131,7 +133,14 @@ export class GearMetadata {
 
     if (def.isVariant) {
       const _variants = {};
+      const name = this.getTypeName(typeIndex);
+
       for (const { name, fields } of def.asVariant.variants) {
+        if (name.eq('None')) {
+          _variants[name.toString()] = additionalFields ? { name: 'None', kind: 'none', type: null } : null;
+          continue;
+        }
+
         if (fields.length === 0) {
           _variants[name.toString()] = null;
           continue;
@@ -143,16 +152,18 @@ export class GearMetadata {
         }
 
         const fields_ = {};
+
         fields.map(({ name, type }) => {
           fields_[name.toString()] = type ? this.getTypeDef(type, additionalFields) : null;
         });
 
         _variants[name.toString()] = fields_;
       }
+
       return additionalFields
         ? {
-            name: this.getTypeName(typeIndex),
-            kind: 'variant',
+            name,
+            kind: this.isOption(name, def) ? 'option' : 'variant',
             type: _variants,
           }
         : { _variants };
@@ -207,5 +218,21 @@ export class GearMetadata {
 
   getAllTypes() {
     return this.registry.knownTypes.types;
+  }
+
+  private isOption(typeName: string, typeDef: Si1TypeDef) {
+    if (!typeDef.isVariant) {
+      return false;
+    }
+    if (!/^Option<[\w\d]+>$/.test(typeName)) {
+      return false;
+    }
+    if (
+      typeDef.asVariant.variants.length !== 2 ||
+      typeDef.asVariant.variants.filter((v) => v.name.eq('Some') || v.name.eq('None')).length !== 2
+    ) {
+      return false;
+    }
+    return true;
   }
 }
