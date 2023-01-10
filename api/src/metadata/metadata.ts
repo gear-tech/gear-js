@@ -4,16 +4,8 @@ import { Codec, Registry } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 import { hexToU8a } from '@polkadot/util';
 import assert from 'assert';
-import { writeFileSync } from 'fs';
 
-type TypeKind = 'primitive' | 'empty' | 'none' | 'sequence' | 'composite' | 'variant' | 'array' | 'tuple' | 'option';
-
-interface TypeStructure {
-  name: string;
-  kind: TypeKind;
-  type: string | object | TypeStructure;
-  len?: number;
-}
+import { TypeStructure } from '../types';
 
 export class GearMetadata {
   private registry: Registry;
@@ -29,7 +21,6 @@ export class GearMetadata {
   }
 
   private prepare() {
-    writeFileSync('reg.json', JSON.stringify(this.portableRegistry.toJSON()));
     for (const type of this.portableRegistry.types) {
       const name = this.portableRegistry.getName(type.id);
       const typeDef = this.portableRegistry.getTypeDef(type.id);

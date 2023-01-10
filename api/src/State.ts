@@ -1,6 +1,5 @@
 import { Codec, AnyJson } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
-import { isBuffer } from '@polkadot/util';
 
 import { ProgramMetadata, StateMetadata } from './metadata';
 import { getWasmMetadata, readState } from './wasm';

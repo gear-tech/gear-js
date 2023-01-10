@@ -1,10 +1,10 @@
 import { CreateType } from '../create-type/CreateType';
-import { HumanStateMetadataRepr, HumanTypesRepr, StateMetadataRepr } from '../types';
+import { HumanStateMetadataRepr, StateFunctions, StateMetadataRepr } from '../types';
 import importObj from '../wasm/importObj';
 import { GearMetadata } from './metadata';
 
 export class StateMetadata extends GearMetadata {
-  functions: Record<string, HumanTypesRepr>;
+  functions: StateFunctions;
 
   constructor({ reg, functions }: HumanStateMetadataRepr) {
     super(reg);
