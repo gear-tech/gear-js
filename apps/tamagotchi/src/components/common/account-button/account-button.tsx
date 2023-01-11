@@ -15,10 +15,6 @@ export const AccountButton = ({ address, name, onClick, isActive }: Props) => (
     className={clsx('w-full !justify-start', isActive ? buttonStyles.primary : buttonStyles.light)}
     text={name}
     onClick={onClick}
-    icon={() => (
-      <>
-        <Identicon value={address} className={buttonStyles.icon} theme="polkadot" size={28} />
-      </>
-    )}
+    icon={() => <Identicon value={address} className={buttonStyles.icon} theme="polkadot" size={28} />}
   />
 );

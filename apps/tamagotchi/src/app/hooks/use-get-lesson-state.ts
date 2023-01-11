@@ -10,25 +10,22 @@ type Props = typeof createTamagotchiInitial;
 export function useGetLessonState() {
   const { api } = useApi();
   const alert = useAlert();
-  const { state, setState } = useContext(TmgContext);
+  const { setState } = useContext(TmgContext);
 
   const create = useCallback(
     async ({ programId, currentStep }: Props) => {
       setState({ programId, lesson: Number(currentStep) });
-      console.log('state in lesson', state);
 
       try {
         const metadata = await getLessonMetadata(Number(currentStep));
-        console.log({ metadata });
         const res = await api.programState.read({ programId }, metadata);
-        console.log(res.toJSON());
         setState({ programId, lesson: Number(currentStep), tamagotchi: res.toJSON() as LessonsAll });
       } catch (e) {
         alert.error((e as Error).message);
         setState(undefined);
       }
     },
-    [alert, api.programState, setState, state],
+    [alert, api.programState, setState],
   );
 
   return { create };

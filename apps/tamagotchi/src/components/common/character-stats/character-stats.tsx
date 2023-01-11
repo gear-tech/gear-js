@@ -14,11 +14,7 @@ export const CharacterStats = () => {
   const { update } = useUpdateState();
 
   const simple = !state?.tamagotchi?.entertained;
-  const onSuccess = () => {
-    console.log('ss');
-    update();
-  };
-
+  const onSuccess = () => update();
   const feedHandler = () => sendHandler({ Feed: null }, { onSuccess });
   const playHandler = () => sendHandler({ Play: null }, { onSuccess });
   const sleepHandler = () => sendHandler({ Sleep: null }, { onSuccess });
