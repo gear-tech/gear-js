@@ -1,25 +1,6 @@
-@use '@gear-js/ui/headings' as *;
-@use 'shared/assets/styles/variables' as *;
 @use 'shared/assets/styles/mixins' as *;
 
-.heading {
-  @extend %h4;
-  margin-bottom: 16px;
-  font-weight: 400;
-  color: $gray800;
-}
-
-.functions {
-  @include childrenMargin(24px);
-}
-
-.placeholder {
-  @include childrenMargin(20px);
-  position: relative;
-
-  h2 {
-    font-size: 28px !important; // overriding cuz it's the only case of a custom heading style
-    font-weight: 600 !important;
-    line-height: 31px !important;
-  }
+.list {
+  @include childrenMargin(12px);
+  padding-left: 8px;
 }

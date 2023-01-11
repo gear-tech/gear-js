@@ -127,7 +127,9 @@ const isState = (meta: IMeta | ProgramMetadata | undefined | null) => !!meta?.ty
 const disableScroll = () => document.body.classList.add('noOverflow');
 const enableScroll = () => document.body.classList.remove('noOverflow');
 
-const resetFileInput = (target: HTMLInputElement) => {
+const resetFileInput = (target: HTMLInputElement | null) => {
+  if (!target) return;
+
   // eslint-disable-next-line no-param-reassign
   target.value = '';
   const changeEvent = new Event('change', { bubbles: true });

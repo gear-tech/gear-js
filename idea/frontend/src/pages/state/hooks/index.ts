@@ -1,14 +1,16 @@
-import { Hex, ProgramMetadata, getProgramMetadata } from '@gear-js/api';
+import { Hex, ProgramMetadata, getProgramMetadata, getStateMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { getLocalProgramMeta, fetchMetadata, fetchStates, fetchState, addState } from 'api';
 import { useChain } from 'hooks';
-import { readFileAsync } from 'shared/helpers';
+import { readFileAsync, resetFileInput } from 'shared/helpers';
 import { getPayloadFormValues } from 'features/formPayload';
+import {} from 'shared/config';
 
 import { IState } from '../model';
+import { IFunctions } from '../model/types';
 
 const useStateType = () => {
   const location = useLocation();
@@ -77,10 +79,12 @@ const useStateSelection = (metadata: ProgramMetadata | undefined) => {
   const [selectedState, setSelectedState] = useState<IState>();
   const selectedStateId = selectedState?.id;
 
-  const [functionId, setFunctionId] = useState('');
+  const [selectedFunction, setSelectedFunction] = useState({ id: '', isFileFunction: false });
+  const functionId = selectedFunction.id;
+
   const { functions } = selectedState || {};
-  const selectedFunction = functions?.[functionId];
-  const typeIndex = selectedFunction?.input;
+  const functionTypes = functions?.[functionId];
+  const typeIndex = functionTypes?.input;
   const isTypeIndex = typeIndex !== undefined && typeIndex !== null;
 
   const payloadFormValues = useMemo(
@@ -101,14 +105,48 @@ const useStateSelection = (metadata: ProgramMetadata | undefined) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStateId]);
 
+  const resetFunction = () => setSelectedFunction({ id: '', isFileFunction: false });
+  const resetSelectedState = () => setSelectedState(undefined);
+
   return {
     functionId,
+    isFileFunction: selectedFunction.isFileFunction,
     typeIndex,
     payloadFormValues,
     wasmBuffer,
+    resetFunction,
+    resetSelectedState,
     selectState: setSelectedState,
-    selectFunction: setFunctionId,
+    selectFunction: setSelectedFunction,
   };
 };
 
-export { useStateType, useMetadataAndStates, useStateSelection };
+const useFileFunctions = () => {
+  const alert = useAlert();
+
+  const [fileFunctions, setFileFunctions] = useState<IFunctions>();
+  const [wasmFile, setWasmFile] = useState<File>();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const resetWasmFile = () => setWasmFile(undefined);
+
+  useEffect(() => {
+    if (wasmFile) {
+      readFileAsync(wasmFile, 'buffer').then((result) => {
+        const buffer = Buffer.from(result);
+
+        getStateMetadata(buffer)
+          .then(({ functions }) => setFileFunctions(functions))
+          .catch(({ message }: Error) => {
+            alert.error(message);
+            resetWasmFile();
+            resetFileInput(fileInputRef.current);
+          });
+      });
+    }
+  }, [alert, wasmFile]);
+
+  return { fileFunctions, fileInputRef, wasmFile, resetWasmFile, selectWasmFile: setWasmFile };
+};
+
+export { useStateType, useMetadataAndStates, useStateSelection, useFileFunctions };

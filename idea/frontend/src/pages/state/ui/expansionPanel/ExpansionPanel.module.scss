@@ -35,8 +35,3 @@
   @include transition;
   transform: rotate(90deg);
 }
-
-.list {
-  @include childrenMargin(12px);
-  padding-left: 8px;
-}

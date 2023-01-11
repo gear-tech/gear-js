@@ -38,6 +38,7 @@
 .buttons {
   @include childrenMargin(16px, right);
   display: flex;
+  align-items: center;
 }
 
 .wasmInput {

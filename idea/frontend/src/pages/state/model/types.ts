@@ -6,10 +6,12 @@ type FormValues = {
   payload: PayloadValue;
 };
 
+type IFunctions = Record<string, HumanTypesRepr>;
+
 type IState = {
   id: string;
   name: string;
-  functions: { [key: string]: HumanTypesRepr };
+  functions: IFunctions;
 };
 
-export type { FormValues, IState };
+export type { FormValues, IState, IFunctions };

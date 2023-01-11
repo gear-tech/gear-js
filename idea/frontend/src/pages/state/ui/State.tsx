@@ -10,26 +10,43 @@ import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg
 import { ReactComponent as ApplySVG } from 'shared/assets/images/actions/apply.svg';
 import { BackButton } from 'shared/ui/backButton';
 import { UILink } from 'shared/ui/uiLink';
-import { resetFileInput } from 'shared/helpers';
+import { checkFileFormat, resetFileInput } from 'shared/helpers';
 
-import { useMetadataAndStates, useStateSelection, useStateType } from '../hooks';
+import { FileTypes } from 'shared/config';
+import { useAlert } from '@gear-js/react-hooks';
+import { useFileFunctions, useMetadataAndStates, useStateSelection, useStateType } from '../hooks';
 import { FormValues } from '../model';
-import { Functions } from './functions';
+import { WasmStates } from './wasmStates';
 import { StateForm } from './stateForm';
 import styles from './State.module.scss';
 
 type Params = { programId: Hex };
 
 const State = () => {
+  const alert = useAlert();
   const { programId } = useParams() as Params;
 
-  const { readFullState, readWasmState, resetState, state, isStateRead, isState } = useStateRead(programId);
+  const { state, isStateRead, isState, readFullState, readWasmState, resetState } = useStateRead(programId);
   const { stateType, isFullState, isWasmState, isStateTypeSelection } = useStateType();
   const { metadata, states, isEachStateReady, searchStates, uploadState } = useMetadataAndStates(programId);
-  const { functionId, payloadFormValues, wasmBuffer, selectState, selectFunction } = useStateSelection(metadata);
+
+  const {
+    functionId,
+    isFileFunction,
+    payloadFormValues,
+    wasmBuffer,
+    selectState,
+    selectFunction,
+    resetFunction,
+    resetSelectedState,
+  } = useStateSelection(metadata);
+
+  const { fileFunctions, fileInputRef, wasmFile, resetWasmFile, selectWasmFile } = useFileFunctions();
 
   const className = clsx(styles.state, isWasmState && styles.stateWasm);
-  const isLoading = !metadata || (!!functionId && !wasmBuffer);
+
+  const isUploadedFunctionSelected = !!functionId && !isFileFunction;
+  const isLoading = !metadata || (isUploadedFunctionSelected && !wasmBuffer);
 
   useEffect(() => {
     if (isFullState && metadata) readFullState(metadata);
@@ -44,8 +61,8 @@ const State = () => {
 
   useEffect(() => {
     resetState();
-    selectState(undefined);
-    selectFunction('');
+    resetSelectedState();
+    resetFunction();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stateType]);
@@ -57,7 +74,28 @@ const State = () => {
   const handleWasmInputChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
     const [file] = target.files || [];
 
-    if (file) uploadState(file).then(() => resetFileInput(target));
+    if (!checkFileFormat(file, FileTypes.Wasm)) {
+      alert.error('Wrong file format');
+
+      // TODO: remove after @gear-js/ui update,
+      // onChange should be called before inner setState
+      resetFileInput(fileInputRef.current);
+
+      return;
+    }
+
+    selectWasmFile(file);
+  };
+
+  const handleUploadFileButtonClick = () => {
+    if (!wasmFile) return;
+
+    uploadState(wasmFile).then(() => {
+      resetFileInput(fileInputRef.current);
+      resetWasmFile();
+      resetFunction();
+      resetState();
+    });
   };
 
   return (
@@ -105,16 +143,22 @@ const State = () => {
                   type="submit"
                   form="state"
                   color="secondary"
-                  text="Read State"
+                  text="Read"
                   icon={ReadSVG}
                   size="large"
                   disabled={isLoading}
                 />
               )}
 
-              {/* TODO: remove after @gear-js/ui update */}
-              {/* @ts-ignore */}
-              <FileInput size="large" color="secondary" className={styles.wasmInput} onChange={handleWasmInputChange} />
+              <FileInput
+                ref={fileInputRef}
+                size="large"
+                // TODO: remove after @gear-js/ui update
+                // @ts-ignore
+                color="secondary"
+                className={styles.wasmInput}
+                onChange={handleWasmInputChange}
+              />
             </>
           )}
 
@@ -123,13 +167,15 @@ const State = () => {
       </div>
 
       {isWasmState && (
-        <Functions
-          list={states}
+        <WasmStates
+          uploadedStates={states}
+          fileFunctions={fileFunctions ? Object.keys(fileFunctions) : []}
           value={functionId}
-          isReady={isEachStateReady}
+          isEachUploadedStateReady={isEachStateReady}
           onStateChange={selectState}
           onFunctionChange={selectFunction}
           onSearchSubmit={searchStates}
+          onUploadButtonClick={handleUploadFileButtonClick}
         />
       )}
     </div>
