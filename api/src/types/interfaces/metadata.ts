@@ -58,3 +58,23 @@ export type HumanStateMetadataRepr = {
   functions: Record<string, HumanTypesRepr>;
   reg: HexString;
 };
+
+export type StateFunctions = Record<string, HumanTypesRepr>;
+
+export type TypeKind =
+  | 'primitive'
+  | 'empty'
+  | 'none'
+  | 'sequence'
+  | 'composite'
+  | 'variant'
+  | 'array'
+  | 'tuple'
+  | 'option';
+
+export interface TypeStructure {
+  name: string;
+  kind: TypeKind;
+  type: string | object | TypeStructure;
+  len?: number;
+}

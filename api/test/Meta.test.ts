@@ -136,10 +136,10 @@ describe('Create type test', () => {
       kind: 'variant',
       type: {
         One: {
-          kind: 'variant',
+          kind: 'option',
           name: 'Option<Str>',
           type: {
-            None: null,
+            None: { name: 'None', kind: 'none', type: null },
             Some: {
               name: 'Str',
               kind: 'primitive',
@@ -226,9 +226,9 @@ describe('Create type test', () => {
     });
     expect(meta.getTypeDef(8, true)).toEqual({
       name: 'Option<Str>',
-      kind: 'variant',
+      kind: 'option',
       type: {
-        None: null,
+        None: { name: 'None', kind: 'none', type: null },
         Some: { name: 'Str', kind: 'primitive', type: 'Str' },
       },
     });
