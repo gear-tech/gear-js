@@ -1,3 +1,13 @@
+## 0.28.4
+
+_01/10/2023_
+
+https://github.com/gear-tech/gear-js/pull/1149
+
+### Changes
+
+- Add variant `option` to TypeKind variants
+
 ## 0.28.3
 
 _12/20/2022_
