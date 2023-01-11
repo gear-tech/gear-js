@@ -1,10 +1,6 @@
-import { Button } from '@gear-js/ui';
-import { SelectAccountPopup } from 'components/popups/select-account-popup';
 import { CreateTamagotchiForm } from 'components/forms/create-tamagotchi-form';
 import { useAccount } from '@gear-js/react-hooks';
-import { useContext, useState } from 'react';
-import { LessonsContext } from '../../../app/context';
-import { LoginSection } from '../../sections/login-section';
+import { LoginSection } from 'components/sections/login-section';
 
 export const ConnectAccount = () => {
   const { account } = useAccount();

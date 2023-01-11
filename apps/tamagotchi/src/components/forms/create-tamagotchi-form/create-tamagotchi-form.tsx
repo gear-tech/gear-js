@@ -16,8 +16,12 @@ const options = [
 
 export const CreateTamagotchiForm = () => {
   const { create } = useGetLessonState();
-  const form = useForm({ initialValues: createTamagotchiInitial, validate });
-  const { getInputProps } = form;
+  const form = useForm({
+    initialValues: createTamagotchiInitial,
+    validate,
+    validateInputOnChange: true,
+  });
+  const { getInputProps, errors } = form;
   const handleSubmit = form.onSubmit((values) => {
     create(values);
   });
@@ -28,10 +32,10 @@ export const CreateTamagotchiForm = () => {
         <Input placeholder="Insert program ID" direction="y" {...getInputProps('programId')} />
       </div>
       <div className="">
-        <Select options={options} title="fff" {...getInputProps('currentStep')} />
+        <Select options={options} direction="y" {...getInputProps('currentStep')} />
       </div>
       <div className="whitespace-nowrap">
-        <Button text="Create Tamagochi" color="primary" type="submit" />
+        <Button text="Create Tamagochi" color="primary" type="submit" disabled={Object.keys(errors).length > 0} />
       </div>
     </form>
   );

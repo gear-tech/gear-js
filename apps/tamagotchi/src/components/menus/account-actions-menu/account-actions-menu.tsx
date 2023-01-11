@@ -4,14 +4,14 @@ import clsx from 'clsx';
 import { Icon } from 'components/ui/icon';
 import { TransferAccountPopup } from 'components/popups/transfer-account-popup';
 import { ApproveAccountPopup } from 'components/popups/approve-account-popup';
-import { LessonsContext } from '../../../app/context';
+import { TmgContext } from 'app/context';
 
 export const AccountActionsMenu = () => {
   const [openTransfer, setOpenTransfer] = useState(false);
   const [openApprove, setOpenApprove] = useState(false);
   const isApproved = false;
-  const { lesson, setTamagotchi } = useContext(LessonsContext);
-  const simple = lesson < 3;
+  const { state, setState } = useContext(TmgContext);
+  const simple = state && state.lesson < 3;
 
   return (
     <div className="">
@@ -73,7 +73,7 @@ export const AccountActionsMenu = () => {
                           'flex items-center gap-2 w-full px-6 py-2 text-white transition-colors',
                           active && 'text-opacity-70',
                         )}
-                        onClick={() => setTamagotchi(undefined)}>
+                        onClick={() => setState(undefined)}>
                         <Icon name="upload" className="w-5 h-5" />
                         Upload Contract
                       </button>

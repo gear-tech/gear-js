@@ -7,10 +7,10 @@ import { TokensWallet } from 'components/common/tokens-wallet';
 import { AccountButton } from 'components/common/account-button';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
-import { LessonsContext } from 'app/context';
+import { TmgContext } from 'app/context';
 
 export const AccountComponent = () => {
-  const { lesson } = useContext(LessonsContext);
+  const { state } = useContext(TmgContext);
   const { account, accounts } = useAccount();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -21,7 +21,7 @@ export const AccountComponent = () => {
     <>
       {account ? (
         <div className="flex gap-4">
-          {lesson > 2 && (
+          {state && state.lesson > 2 && (
             <>
               <Link to="/store" className={clsx('btn whitespace-nowrap', buttonStyles.primary)}>
                 Open Store
