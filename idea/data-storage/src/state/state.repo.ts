@@ -37,6 +37,12 @@ export class StateRepo {
     });
   }
 
+  public async getByHexWasmState(hex: string): Promise<State> {
+    return this.stateRepo.findOne({
+      where: { hexWasmState: hex },
+    });
+  }
+
   public async save(metadata: State): Promise<State> {
     return this.stateRepo.save(metadata);
   }

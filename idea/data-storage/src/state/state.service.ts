@@ -6,8 +6,9 @@ import { StateRepo } from './state.repo';
 import { ProgramRepo } from '../program/program.repo';
 import { State } from '../database/entities';
 import { ProgramNotFound } from '../common/errors';
-import { StateNotFound } from '../common/errors/state';
-import { getStateMeta } from '../common/helpers';
+import { StateAlreadyExists, StateNotFound } from '../common/errors/state';
+import { getHexWasmState, getStateMeta } from '../common/helpers';
+import { Hex } from '@gear-js/api';
 
 @Injectable()
 export class StateService {
@@ -50,12 +51,19 @@ export class StateService {
     }
 
     const metaStateBuff = Buffer.from(wasmBuffBase64, 'base64');
+    const hexState = getHexWasmState(metaStateBuff);
+
+    if(await this.isExistStateHexInDB(hexState)){
+      throw new StateAlreadyExists();
+    }
+
     const { functions } = await getStateMeta(metaStateBuff);
     const funcNames = Object.keys(functions);
 
     const createMetaDataInput = plainToClass(State, {
       code: program.code,
       name,
+      hexWasmState: hexState,
       wasmBuffBase64,
       funcNames,
       functions,
@@ -69,5 +77,11 @@ export class StateService {
       wasmBuffBase64: state.wasmBuffBase64,
       functions: state.functions },
     };
+  }
+
+  private async isExistStateHexInDB(stateHex: Hex): Promise<boolean> {
+    const state = await this.stateRepository.getByHexWasmState(stateHex);
+
+    return !!state;
   }
 }
