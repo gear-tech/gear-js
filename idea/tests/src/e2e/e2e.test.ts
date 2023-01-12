@@ -30,7 +30,7 @@ import {
   errorMessageNotFound, errorMetaNotFound,
   errorMethodNotExist,
   errorNoGenesisFound,
-  errorProgramNotFound,
+  errorProgramNotFound, errorStateAlreadyExists,
 } from './json-rpc.errors';
 
 let genesis: Hex;
@@ -273,6 +273,14 @@ describe('API methods', () => {
           expect(await errorMetaNotFound(genesis, id_)).toBeTruthy();
         }
       }
+    });
+
+    test('error state already exists', async () => {
+      const programKey = Object.keys(prepared.programs)[0];
+      const program = prepared.programs[programKey] as IPreparedProgram;
+      const programStatesPath = program.spec.pathStates[0];
+
+      expect(await errorStateAlreadyExists(genesis, program, programStatesPath)).toBeTruthy();
     });
   });
 });

@@ -1,7 +1,8 @@
 import { expect } from 'chai';
 
 import request, { invalidRequest } from './request';
-import { Passed } from '../interfaces';
+import { IPreparedProgram, Passed } from '../interfaces';
+import { readFileSync } from 'fs';
 
 export async function errorMethodNotExist(genesis: string): Promise<Passed> {
   const notExistMethod = 'program.some';
@@ -79,6 +80,32 @@ export async function errorMetaNotFound(genesis: string, programId: string): Pro
 
   expect(response.error.message).to.equal('Metadata not found');
   expect(response.error.code).to.equal(-32404);
+
+  return true;
+}
+
+export async function errorStateAlreadyExists(
+  genesis: string,
+  program: IPreparedProgram,
+  statePath: string,
+): Promise<Passed> {
+  const n = statePath.lastIndexOf('/');
+  const nameFile = statePath.substring(n + 1);
+
+  const metaBuff = readFileSync(statePath);
+  const metaStateBuffBase64 = metaBuff.toString('base64');
+
+  const data = {
+    genesis,
+    wasmBuffBase64: metaStateBuffBase64,
+    programId: program.id,
+    name: nameFile,
+  };
+
+  const response = await request('program.state.add', data);
+
+  expect(response.error.message).to.equal('State already exists');
+  expect(response.error.code).to.equal(-32400);
 
   return true;
 }
