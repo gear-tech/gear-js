@@ -1,27 +1,36 @@
 import { Button, Input } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
-import { isExists } from 'app/utils/form-validations';
 import { Icon } from 'components/ui/icon';
+import { hexRequired } from 'app/utils/form-validations';
+import { useTamagocthiMessage } from 'app/hooks/use-tamagotchi-message';
+import { useUpdateState } from 'app/hooks/use-update-state';
 
 const initialValues = {
-  email: '',
+  address: '',
 };
 
 const validate = {
-  email: isExists,
+  address: hexRequired,
 };
 
-export const ApproveAccountForm = () => {
+export const ApproveAccountForm = ({ close }: { close: () => void }) => {
+  const sendHandler = useTamagocthiMessage();
+  const { update } = useUpdateState();
   const form = useForm({ initialValues, validate });
   const { getInputProps } = form;
+  const onSuccess = () => {
+    update();
+    close();
+  };
+
   const handleSubmit = form.onSubmit((values) => {
-    console.log('submitted');
+    sendHandler({ Approve: values.address }, { onSuccess });
   });
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit}>
       <div className="">
-        <Input placeholder="Enter the account address" type="email" direction="y" {...getInputProps('email')} />
+        <Input placeholder="Enter the account address" {...getInputProps('address')} />
       </div>
       <div className="whitespace-nowrap">
         <Button

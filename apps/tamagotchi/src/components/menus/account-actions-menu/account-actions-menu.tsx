@@ -1,17 +1,67 @@
+import { Fragment, useContext, useEffect, useState } from 'react';
 import { Menu, Transition } from '@headlessui/react';
-import { Fragment, useContext, useState } from 'react';
 import clsx from 'clsx';
+import { TmgContext } from 'app/context';
 import { Icon } from 'components/ui/icon';
 import { TransferAccountPopup } from 'components/popups/transfer-account-popup';
 import { ApproveAccountPopup } from 'components/popups/approve-account-popup';
-import { TmgContext } from 'app/context';
+import { RevokeApprovalPopup } from 'components/popups/revoke-approval-popup';
+import { useAccount } from '@gear-js/react-hooks';
+import { decodeAddress } from '@gear-js/api';
 
 export const AccountActionsMenu = () => {
+  const { account } = useAccount();
+  const { state, setState } = useContext(TmgContext);
+  const initialOptions = [
+    {
+      id: 4,
+      label: 'Upload Contract',
+      action: () => setState(undefined),
+      icon: 'upload',
+    },
+  ];
   const [openTransfer, setOpenTransfer] = useState(false);
   const [openApprove, setOpenApprove] = useState(false);
-  const isApproved = false;
-  const { state, setState } = useContext(TmgContext);
-  const simple = state && state.lesson < 3;
+  const [openRevoke, setOpenRevoke] = useState(false);
+  const [options, setOptions] = useState([...initialOptions]);
+
+  const getUserActions = () => {
+    const isOwner = decodeAddress(account?.address as string) === state?.tamagotchi?.owner;
+    const isApproved = Boolean(state?.tamagotchi?.allowedAccount);
+    const isCurrentAccountApproved = isApproved
+      ? decodeAddress(String(account?.address)) === state?.tamagotchi?.allowedAccount
+      : false;
+    const result = [];
+
+    if (isOwner || isCurrentAccountApproved) {
+      result.unshift({
+        id: 1,
+        label: 'Transfer',
+        action: () => setOpenTransfer(true),
+        icon: 'transfer',
+      });
+    }
+    if (isOwner) {
+      isApproved
+        ? result.push({
+            id: 2,
+            label: 'Revoke approval',
+            action: () => setOpenRevoke(true),
+            icon: 'check',
+          })
+        : result.push({
+            id: 3,
+            label: 'Approve',
+            action: () => setOpenApprove(true),
+            icon: 'check',
+          });
+    }
+    return [...result, ...initialOptions];
+  };
+
+  useEffect(() => {
+    Number(state?.lesson) > 2 ? setOptions(getUserActions()) : setOptions(initialOptions);
+  }, [state]);
 
   return (
     <div className="">
@@ -36,49 +86,21 @@ export const AccountActionsMenu = () => {
               leaveTo="transform opacity-0 scale-95">
               <Menu.Items className="absolute right-0 mt-2 origin-top-right divide-y divide-gray-100 rounded-md bg-[#353535] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <div className="py-2 font-kanit font-semibold text-sm whitespace-nowrap">
-                  {!simple && (
-                    <>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            className={clsx(
-                              'flex items-center gap-2 w-full px-6 py-2 text-white transition-colors',
-                              active && 'text-opacity-70',
-                            )}
-                            onClick={() => setOpenTransfer(true)}>
-                            <Icon name="transfer" className="w-5 h-5" />
-                            Transfer
-                          </button>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            className={clsx(
-                              'flex items-center gap-2 w-full px-6 py-2 text-white transition-colors',
-                              active && 'text-opacity-70',
-                            )}
-                            onClick={() => setOpenApprove(true)}>
-                            <Icon name="check" className="w-5 h-5" />
-                            {!isApproved ? 'Approve' : 'Revoke approval'}
-                          </button>
-                        )}
-                      </Menu.Item>
-                    </>
-                  )}
-                  <Menu.Item>
-                    {({ active }) => (
-                      <button
-                        className={clsx(
-                          'flex items-center gap-2 w-full px-6 py-2 text-white transition-colors',
-                          active && 'text-opacity-70',
-                        )}
-                        onClick={() => setState(undefined)}>
-                        <Icon name="upload" className="w-5 h-5" />
-                        Upload Contract
-                      </button>
-                    )}
-                  </Menu.Item>
+                  {options.map((item) => (
+                    <Menu.Item key={item.id}>
+                      {({ active }) => (
+                        <button
+                          className={clsx(
+                            'flex items-center gap-2 w-full px-6 py-2 text-white transition-colors',
+                            active && 'text-opacity-70',
+                          )}
+                          onClick={item.action}>
+                          <Icon name={item.icon} className="w-5 h-5" />
+                          {item.label}
+                        </button>
+                      )}
+                    </Menu.Item>
+                  ))}
                 </div>
               </Menu.Items>
             </Transition>
@@ -87,6 +109,7 @@ export const AccountActionsMenu = () => {
       </Menu>
       {openTransfer && <TransferAccountPopup close={() => setOpenTransfer(false)} />}
       {openApprove && <ApproveAccountPopup close={() => setOpenApprove(false)} />}
+      {openRevoke && <RevokeApprovalPopup close={() => setOpenRevoke(false)} />}
     </div>
   );
 };

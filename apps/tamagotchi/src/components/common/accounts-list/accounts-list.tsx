@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { decodeAddress } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
@@ -7,6 +8,7 @@ import { Icon } from 'components/ui/icon';
 import { LOCAL_STORAGE } from 'app/consts';
 import { isLoggedIn } from 'app/utils/is-account';
 import { copyToClipboard } from 'app/utils';
+import { TmgContext } from 'app/context';
 
 type Props = {
   list: InjectedAccountWithMeta[];
@@ -16,11 +18,13 @@ type Props = {
 export const AccountsList = ({ list, onChange }: Props) => {
   const { switchAccount } = useAccount();
   const alert = useAlert();
+  const { setState } = useContext(TmgContext);
 
   const handleAccountButtonClick = async (account: InjectedAccountWithMeta) => {
     await switchAccount(account);
     localStorage.setItem(LOCAL_STORAGE.ACCOUNT, account.address);
     onChange();
+    setState(undefined);
   };
 
   const handleCopy = (address: string) => {
@@ -48,8 +52,8 @@ export const AccountsList = ({ list, onChange }: Props) => {
     </ul>
   ) : (
     <p>
-      No accounts found.
-      Please open Polkadot extension, create a new account or import existing one and reload the page.
+      No accounts found. Please open Polkadot extension, create a new account or import existing one and reload the
+      page.
     </p>
   );
 };

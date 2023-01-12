@@ -13,12 +13,15 @@ const validate = {
   address: hexRequired,
 };
 
-export const TransferAccountForm = () => {
+export const TransferAccountForm = ({ close }: { close: () => void }) => {
   const sendHandler = useTamagocthiMessage();
   const { update } = useUpdateState();
   const form = useForm({ initialValues, validate });
   const { getInputProps } = form;
-  const onSuccess = () => update();
+  const onSuccess = () => {
+    update();
+    close();
+  };
 
   const handleSubmit = form.onSubmit((values) => {
     sendHandler({ Transfer: values.address }, { onSuccess });

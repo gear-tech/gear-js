@@ -15,4 +15,8 @@ type Lesson2 = {
   restedBlock: number;
 };
 
-export type LessonsAll = Lesson1 & Lesson2;
+type Lesson3 = {
+  allowedAccount: string;
+};
+
+export type LessonsAll = Lesson1 & Lesson2 & Lesson3;

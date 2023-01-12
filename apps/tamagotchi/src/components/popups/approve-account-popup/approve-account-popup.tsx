@@ -1,19 +1,15 @@
 import { Modal } from '@gear-js/ui';
 import { ApproveAccountForm } from 'components/forms/approve-account-form';
 
-type Props = {
-  close: () => void;
-};
-
-export const ApproveAccountPopup = ({ close }: Props) => {
+export const ApproveAccountPopup = ({ close }: { close: () => void }) => {
   return (
-    <Modal heading="Transfer" close={close}>
+    <Modal heading="Approve" close={close}>
       <div className="space-y-6">
         <p>
           Approve another account to dispose Geary.
           <b className="font-semibold block">It will not change the ownership.</b>
         </p>
-        <ApproveAccountForm />
+        <ApproveAccountForm close={close} />
       </div>
     </Modal>
   );
