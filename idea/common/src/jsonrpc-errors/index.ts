@@ -69,6 +69,11 @@ export const JSONRPC_ERRORS = {
     code: -32403,
     message: 'Signature not verified',
   },
+  StateAlreadyExists: {
+    name: 'StateAlreadyExists',
+    code: -32400,
+    message: 'State already exists',
+  },
   Forbidden: {
     name: 'Forbidden',
     code: -32403,
