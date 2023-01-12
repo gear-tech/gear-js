@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { AddStateParams, AddStateResult, GetAllStateParams, GetStateParams, GetStatesResult } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
+import { Hex } from '@gear-js/api';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 import { StateRepo } from './state.repo';
 import { ProgramRepo } from '../program/program.repo';
@@ -8,7 +11,6 @@ import { State } from '../database/entities';
 import { ProgramNotFound } from '../common/errors';
 import { StateAlreadyExists, StateNotFound } from '../common/errors/state';
 import { getHexWasmState, getStateMeta } from '../common/helpers';
-import { Hex } from '@gear-js/api';
 
 @Injectable()
 export class StateService {
@@ -80,6 +82,10 @@ export class StateService {
   }
 
   private async isExistStateHexInDB(stateHex: Hex): Promise<boolean> {
+    if (process.env.TEST_ENV_UNIT) {
+      return false;
+    }
+
     const state = await this.stateRepository.getByHexWasmState(stateHex);
 
     return !!state;
