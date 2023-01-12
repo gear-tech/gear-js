@@ -1,8 +1,8 @@
 import { useAlert, useApi } from '@gear-js/react-hooks';
 import { useCallback, useContext } from 'react';
 import { TmgContext } from '../context';
-import { LessonsAll } from 'app/types/lessons';
 import { createTamagotchiInitial } from '../consts';
+import { LessonsAll } from 'app/types/lessons';
 import { getLessonMetadata } from 'app/utils/get-lesson-metadata';
 
 type Props = typeof createTamagotchiInitial;

@@ -7,8 +7,10 @@ import { AccountActionsMenu } from 'components/menus/account-actions-menu';
 import { getTamagotchiAge } from 'app/utils/get-tamagotchi-age';
 import { useTamagocthiMessage } from 'app/hooks/use-tamagotchi-message';
 import { useUpdateState } from 'app/hooks/use-update-state';
+import { useAccount } from '@gear-js/react-hooks';
 
 export const CharacterStats = () => {
+  const { account } = useAccount();
   const { state } = useContext(TmgContext);
   const sendHandler = useTamagocthiMessage();
   const { update } = useUpdateState();
@@ -32,7 +34,7 @@ export const CharacterStats = () => {
         <div className={clsx('flex gap-12 items-center p-4 bg-white/5 rounded-2xl', !baseView && 'w-full')}>
           <div className="basis-[415px] w-full px-8 py-6 bg-[#1E1E1E] rounded-2xl">
             <div className="flex justify-between gap-4">
-              <h2 className="typo-h2 text-primary">Geary</h2>
+              <h2 className="typo-h2 text-primary truncate">{state.tamagotchi.name}</h2>
               <div className="">
                 <AccountActionsMenu />
               </div>
@@ -42,7 +44,7 @@ export const CharacterStats = () => {
                 <tbody className="block space-y-8">
                   <tr className="flex gap-8">
                     <th className="flex-1 w-40 text-white text-opacity-70 font-medium">Owner ID:</th>
-                    <td className="flex-1 w-40">{state.tamagotchi.name}</td>
+                    <td className="flex-1 w-40 truncate">{account?.meta.name}</td>
                   </tr>
                   <tr className="flex gap-8">
                     <th className="flex-1 w-40 text-white text-opacity-70 font-medium">Age:</th>
