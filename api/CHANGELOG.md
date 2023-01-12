@@ -1,3 +1,13 @@
+## 0.28.5
+
+_01/12/2023_
+
+https://github.com/gear-tech/gear-js/pull/1150
+
+### Changes
+
+- Don't use instanceof to figure out which class an object belongs to
+
 ## 0.28.4
 
 _01/10/2023_

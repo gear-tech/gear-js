@@ -12,15 +12,17 @@ export function isOldMeta(arg: unknown): arg is OldMetadata {
 }
 
 export function isProgramMeta(arg: unknown): arg is ProgramMetadata {
-  if (arg instanceof ProgramMetadata) {
-    return true;
+  if (typeof arg !== 'object') {
+    return false;
   }
-  return false;
+  // It's a temporary solution until problem with instanceof is solved on the frontend
+  return Object.getPrototypeOf(arg).constructor.toString() === ProgramMetadata.prototype.constructor.toString();
 }
 
 export function isStateMeta(arg: unknown): arg is StateMetadata {
-  if (arg instanceof StateMetadata) {
-    return true;
+  if (typeof arg !== 'object') {
+    return false;
   }
-  return false;
+  // It's a temporary solution until problem with instanceof is solved on the frontend
+  return Object.getPrototypeOf(arg).constructor.toString() === StateMetadata.prototype.constructor.toString();
 }
