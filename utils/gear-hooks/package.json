@@ -21,14 +21,14 @@
     "prepare": "yarn build"
   },
   "peerDependencies": {
-    "@gear-js/api": "^0.28.3",
+    "@gear-js/api": "^0.28.4",
     "@polkadot/extension-dapp": "^0.43.2",
     "react": ">=17.0.2",
     "react-dom": ">=17.0.2",
     "react-transition-group": "^4.4.2"
   },
   "devDependencies": {
-    "@gear-js/api": "^0.28.3",
+    "@gear-js/api": "^0.28.4",
     "@polkadot/api": "9.10.1",
     "@polkadot/extension-dapp": "^0.44.6",
     "@polkadot/extension-inject": "^0.44.6",

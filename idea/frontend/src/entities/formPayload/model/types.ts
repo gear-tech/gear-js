@@ -1,6 +1,4 @@
-import { ProgramMetadata } from '@gear-js/api';
-
-type TypeKind = 'primitive' | 'empty' | 'none' | 'sequence' | 'composite' | 'variant' | 'array' | 'tuple';
+import { ProgramMetadata, TypeKind } from '@gear-js/api';
 
 type TypeStructure = {
   name: string;

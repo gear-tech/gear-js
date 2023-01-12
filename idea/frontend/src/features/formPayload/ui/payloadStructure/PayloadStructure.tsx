@@ -7,6 +7,7 @@ import { TupleItem } from '../tupleItem';
 import { ArrayItem } from '../arrayItem';
 import { StructItem } from '../structItem';
 import { PrimitiveItem } from '../primitiveItem';
+import { OptionItem } from '../optionItem';
 
 type Props = Omit<PayloadStructureProps, 'title'>;
 
@@ -24,6 +25,11 @@ const PayloadStructure = (props: Props) => {
 
       case 'variant': {
         Component = EnumItem;
+        break;
+      }
+
+      case 'option': {
+        Component = OptionItem;
         break;
       }
 

@@ -33,7 +33,7 @@ const OptionItem = ({ title, levelName, typeStructure, renderNextItem }: Payload
       {renderNextItem({
         levelName,
         // @ts-ignore
-        typeStructure: isNone ? null : value,
+        typeStructure: isNone ? null : type.Some,
       })}
     </Fieldset>
   );
