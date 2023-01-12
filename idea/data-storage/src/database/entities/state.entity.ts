@@ -14,6 +14,9 @@ export class State implements IState {
   @Column()
   public wasmBuffBase64: string;
 
+  @Column()
+  public hexWasmState: string;
+
   @Column({ type: 'json' })
   public funcNames: string;
 
