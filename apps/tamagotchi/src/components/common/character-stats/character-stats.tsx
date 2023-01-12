@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import clsx from 'clsx';
 import { Button, buttonStyles } from '@gear-js/ui';
 import { TmgContext } from 'app/context';
@@ -13,16 +13,23 @@ export const CharacterStats = () => {
   const sendHandler = useTamagocthiMessage();
   const { update } = useUpdateState();
 
-  const simple = !state?.tamagotchi?.entertained;
+  const baseView = !state?.tamagotchi?.entertained;
   const onSuccess = () => update();
   const feedHandler = () => sendHandler({ Feed: null }, { onSuccess });
   const playHandler = () => sendHandler({ Play: null }, { onSuccess });
   const sleepHandler = () => sendHandler({ Sleep: null }, { onSuccess });
 
+  useEffect(() => {
+    if (!state?.isDirty) {
+      update();
+      console.log('!!!!extra uptade!!!!!!');
+    }
+  }, [state?.isDirty, update]);
+
   return (
     <>
       {state?.tamagotchi && (
-        <div className={clsx('flex gap-12 items-center p-4 bg-white/5 rounded-2xl', !simple && 'w-full')}>
+        <div className={clsx('flex gap-12 items-center p-4 bg-white/5 rounded-2xl', !baseView && 'w-full')}>
           <div className="basis-[415px] w-full px-8 py-6 bg-[#1E1E1E] rounded-2xl">
             <div className="flex justify-between gap-4">
               <h2 className="typo-h2 text-primary">Geary</h2>
@@ -106,12 +113,12 @@ export const CharacterStats = () => {
                       <span className="inline-flex gap-2 items-center text-white/70 font-kanit font-medium">
                         <Icon name="tired" className="w-5 h-5" /> Tired:
                       </span>
-                      <span>{state.tamagotchi.rested / 10000}</span>
+                      <span>{state.tamagotchi.rested / 1000}</span>
                     </div>
                     <div className="relative mt-3 bg-white/15 h-2.5 rounded-full overflow-hidden">
                       <div
                         className="absolute inset-0 bg-primary"
-                        style={{ width: `${state.tamagotchi.rested / 1000}%` }}
+                        style={{ width: `${state.tamagotchi.rested / 100}%` }}
                       />
                     </div>
                   </div>

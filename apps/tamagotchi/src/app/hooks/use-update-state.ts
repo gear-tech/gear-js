@@ -12,7 +12,7 @@ export const useUpdateState = () => {
 
   const update = useCallback(() => {
     if (state && metadata) {
-      const { programId, lesson } = state;
+      const { programId, lesson, isDirty } = state;
       Promise.resolve(api.programState.read({ programId }, metadata))
         .then((res) =>
           setState({
@@ -24,7 +24,8 @@ export const useUpdateState = () => {
         .catch((e) => {
           alert.error((e as Error).message);
           setState(undefined);
-        });
+        })
+        .finally(() => (!isDirty ? setState({ ...state, isDirty: true }) : null));
     }
   }, [alert, api.programState, metadata, setState, state]);
 

@@ -5,4 +5,5 @@ export type TmgState = {
   lesson: number;
   tamagotchi?: LessonsAll;
   programId: Hex;
+  isDirty?: boolean;
 };
