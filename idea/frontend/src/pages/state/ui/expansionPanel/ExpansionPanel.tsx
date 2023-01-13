@@ -9,13 +9,14 @@ import { Functions } from '../functions';
 import styles from './ExpansionPanel.module.scss';
 
 type Props = {
+  id: string;
   heading: string;
   list: string[];
   value: string;
-  onChange: (value: string) => void;
+  onChange: (funcId: string, funcName: string) => void;
 };
 
-const ExpansionPanel = ({ heading, list, value, onChange }: Props) => {
+const ExpansionPanel = ({ id, heading, list, value, onChange }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen((prevValue) => !prevValue);
@@ -28,7 +29,7 @@ const ExpansionPanel = ({ heading, list, value, onChange }: Props) => {
         <h4 className={styles.heading}>{heading}</h4>
         <ArrowSVG className={styles.arrow} />
       </header>
-      {isOpen && <Functions list={list} value={value} onChange={onChange} />}
+      {isOpen && <Functions list={list} value={value} stateId={id} onChange={onChange} />}
     </div>
   );
 };

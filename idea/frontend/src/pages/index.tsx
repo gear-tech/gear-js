@@ -12,8 +12,8 @@ import { NotFound } from './notFound';
 import { Send } from './send';
 import { Codes } from './codes';
 import { InitializeProgram } from './initializeProgram';
-import { State } from './state';
 import { Mailbox } from './mailbox';
+import * as State from './state';
 import * as Explorer from './explorer';
 
 const Routing = () => {
@@ -42,11 +42,12 @@ const Routing = () => {
         <Route path={routes.initializeProgram} element={<InitializeProgram />} />
       </Route>
 
-      <Route path="/state">
-        <Route path=":programId" element={<State />} />
-        <Route path="full/:programId" element={<State />} />
-        <Route path="wasm/:programId" element={<State />} />
+      <Route path="/state" element={<State.Layout />}>
+        <Route path=":programId" element={<State.Main />} />
+        <Route path="full/:programId" element={<State.Full />} />
+        <Route path="wasm/:programId" element={<State.Wasm />} />
       </Route>
+
       <Route path={routes.mailbox} element={<Mailbox />} />
 
       <Route path={routes.explorer} element={<Explorer.Layout />}>

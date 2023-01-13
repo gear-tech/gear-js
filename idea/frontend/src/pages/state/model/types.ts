@@ -1,4 +1,4 @@
-import { HumanTypesRepr } from '@gear-js/api';
+import { StateFunctions } from '@gear-js/api';
 
 import { PayloadValue } from 'entities/formPayload';
 
@@ -6,12 +6,10 @@ type FormValues = {
   payload: PayloadValue;
 };
 
-type IFunctions = Record<string, HumanTypesRepr>;
-
 type IState = {
   id: string;
   name: string;
-  functions: IFunctions;
+  functions: StateFunctions;
 };
 
-export type { FormValues, IState, IFunctions };
+export type { FormValues, IState };

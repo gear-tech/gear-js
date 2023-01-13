@@ -1,0 +1,27 @@
+@use 'shared/assets/styles/mixins' as *;
+@use 'shared/assets/styles/animations' as *;
+
+.box {
+  @include childrenMargin(24px);
+  margin-bottom: 24px;
+}
+
+.buttons {
+  @include childrenMargin(16px, right);
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  // TODO: should be @gear-js/ui update?
+  width: auto;
+}
+
+.loading {
+  div {
+    div {
+      @include loading;
+      position: relative;
+    }
+  }
+}

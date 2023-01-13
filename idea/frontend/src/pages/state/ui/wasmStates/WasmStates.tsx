@@ -13,8 +13,8 @@ type Props = {
   uploadedStates: IState[];
   fileFunctions: string[] | undefined;
   value: string;
-  isEachUploadedStateReady: boolean;
-  onFunctionChange: (value: { id: string; isFileFunction: boolean }) => void;
+  isStateRequestReady: boolean;
+  onFunctionChange: (value: { id: string; name: string; isFileFunction: boolean }) => void;
   onStateChange: (value: IState) => void;
   onSearchSubmit: (value: string) => void;
   onUploadButtonClick: () => void;
@@ -27,7 +27,7 @@ const WasmStates = (props: Props) => {
     uploadedStates,
     fileFunctions,
     value,
-    isEachUploadedStateReady,
+    isStateRequestReady,
     onFunctionChange,
     onStateChange,
     onSearchSubmit,
@@ -36,8 +36,8 @@ const WasmStates = (props: Props) => {
 
   const { getInputProps, onSubmit } = useForm({ initialValues });
 
-  const isAnyUploadedState = isEachUploadedStateReady && uploadedStates.length > 0;
-  const isUploadedStatesListEmpty = isEachUploadedStateReady && uploadedStates.length === 0;
+  const isAnyUploadedState = isStateRequestReady && uploadedStates.length > 0;
+  const isUploadedStatesListEmpty = isStateRequestReady && uploadedStates.length === 0;
   const isAnyFileFunction = !!fileFunctions?.length;
   const isFileFunctionListEmpty = fileFunctions?.length === 0;
 
@@ -46,14 +46,14 @@ const WasmStates = (props: Props) => {
       const { name, id, functions } = state;
       const functionNames = Object.keys(functions);
 
-      const handleFunctionChange = (funcValue: string) => {
-        onFunctionChange({ id: funcValue, isFileFunction: false });
+      const handleFunctionChange = (funcId: string, funcName: string) => {
+        onFunctionChange({ id: funcId, name: funcName, isFileFunction: false });
         onStateChange(state);
       };
 
       return (
         <li key={id}>
-          <ExpansionPanel heading={name} list={functionNames} value={value} onChange={handleFunctionChange} />
+          <ExpansionPanel id={id} heading={name} list={functionNames} value={value} onChange={handleFunctionChange} />
         </li>
       );
     });
@@ -82,7 +82,7 @@ const WasmStates = (props: Props) => {
             <Functions
               list={fileFunctions}
               value={value}
-              onChange={(id) => onFunctionChange({ id, isFileFunction: true })}
+              onChange={(id) => onFunctionChange({ id, name: id, isFileFunction: true })}
             />
           ) : (
             <FunctionsPlaceholder isEmpty={isFileFunctionListEmpty} file />

@@ -1,15 +1,11 @@
 @use '@gear-js/ui/headings' as *;
 @use 'shared/assets/styles/variables' as *;
-@use 'shared/assets/styles/mixins' as *;
 
-.state {
+.wrapper {
   display: grid;
-  gap: 16px 32px;
+  grid-template-columns: 7fr 3fr;
+  gap: 0 32px;
   align-items: flex-start;
-
-  &Wasm {
-    grid-template-columns: 7fr 3fr;
-  }
 
   > * {
     &:nth-child(2) {
@@ -26,22 +22,6 @@
 
 .heading {
   @extend %h4;
+  margin-bottom: 32px;
   color: $gray800;
-}
-
-.buttonsHeading {
-  @extend %h5;
-  color: $gray800;
-  margin-bottom: 20px;
-}
-
-.buttons {
-  @include childrenMargin(16px, right);
-  display: flex;
-  align-items: center;
-}
-
-.wasmInput {
-  // TODO: should be @gear-js/ui update?
-  width: auto;
 }
