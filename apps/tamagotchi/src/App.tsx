@@ -12,7 +12,7 @@ const Component = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex flex-col flex-1 container pb-5">
+      <main className="flex flex-col flex-1 container pt-3 pb-5">
         {isApiReady && isAccountReady ? <Routing /> : <ApiLoader />}
       </main>
       <Footer />

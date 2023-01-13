@@ -8,9 +8,9 @@ export const HomeCreateSection = () => {
   const { state } = useContext(TmgContext);
 
   return (
-    <section className="grid grid-rows-[1fr_auto_auto] h-[calc(100vh-196px)]">
+    <section className="grid grid-rows-[1fr_auto_auto] h-[calc(100vh-216px)]">
       <div className="grow flex flex-col justify-center text-center">
-        <CharacterAvatar />
+        <CharacterAvatar lesson={Number(state?.lesson)} />
       </div>
       <div className="mt-12 flex flex-col items-center gap-9">
         {state?.tamagotchi ? <CharacterStats /> : <ConnectAccount />}

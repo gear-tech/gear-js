@@ -24,7 +24,6 @@ export const CharacterStats = () => {
   useEffect(() => {
     if (!state?.isDirty) {
       update();
-      console.log('!!!!extra uptade!!!!!!');
     }
   }, [state?.isDirty, update]);
 
