@@ -4,14 +4,22 @@ import { readFileSync } from 'fs';
 import { State, Code, Program, StateToCode } from '../../../src/database/entities';
 
 const code = new Code();
-code.id = '0x001';
+code.id = '0x005';
 
 const mockProgramForState = new Program();
-mockProgramForState.id = '0x001';
+mockProgramForState.id = '0x005';
 mockProgramForState.code = code;
+
+const newCode = new Code();
+newCode.id = '0x001';
+
+const mockProgramForState_EXIST = new Program();
+mockProgramForState_EXIST.id = '0x001';
+mockProgramForState_EXIST.code = newCode;
 
 const mockStateToCodeForState = new StateToCode();
 mockStateToCodeForState.code = code;
+mockStateToCodeForState.hexWasmState = 'hex';
 
 function getStateDBMock(): State[] {
   const pathStates = '/states.mock.yaml';
@@ -25,4 +33,4 @@ function getStateDBMock(): State[] {
 
 const STATE_DB_MOCK = getStateDBMock();
 
-export { STATE_DB_MOCK, mockProgramForState, mockStateToCodeForState };
+export { STATE_DB_MOCK, mockProgramForState, mockStateToCodeForState, mockProgramForState_EXIST };

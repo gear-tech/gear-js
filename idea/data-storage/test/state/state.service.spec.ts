@@ -5,20 +5,18 @@ import { StateService } from '../../src/state/state.service';
 import { mockStataRepository } from '../mock/state/state-repository.mock';
 import { ProgramRepo } from '../../src/program/program.repo';
 import { StateRepo } from '../../src/state/state.repo';
-import { mockProgramForState, STATE_DB_MOCK } from '../mock/state/state-db.mock';
-import { StateToCode } from '../../src/database/entities';
+import { mockProgramForState, mockProgramForState_EXIST, STATE_DB_MOCK } from '../mock/state/state-db.mock';
 import { StateToCodeService } from '../../src/state-to-code/state-to-code.service';
 import { StateToCodeRepo } from '../../src/state-to-code/state-to-code.repo';
+import { mockStateToCodeRepository } from '../mock/state-to-code/state-to-code-repository.mock';
 
 describe('State service', () => {
   let stateService!: StateService;
-  const mockStateToCodeRepository = {
-    save: jest.fn().mockImplementation((stateToCode: StateToCode): Promise<StateToCode> => {
-      return new Promise((resolve) => resolve(stateToCode));
-    }),
-  };
   const mockProgramRepository = {
-    get: jest.fn((id: string, genesis: string) => mockProgramForState),
+    get: jest.fn((id: string, genesis: string) => {
+      if(id !== mockProgramForState.id) return null;
+      return  mockProgramForState;
+    }),
   };
 
   beforeAll(async () => {
@@ -44,11 +42,24 @@ describe('State service', () => {
     stateService = moduleRef.get<StateService>(StateService);
   });
 
+  it('should be fail if program id invalid', async () => {
+    const invalidProgramId = '_';
+    const addStateParams: AddStateParams = {
+      genesis: '0x00',
+      name: 'state_1',
+      programId: invalidProgramId,
+      wasmBuffBase64: 'state_wasmBuffBase64'
+    };
+
+    await expect(stateService.create(addStateParams)).rejects.toThrowError();
+    expect(mockProgramRepository.get).toHaveBeenCalled();
+  });
+
   it('should be successfully create state entity', async () => {
     const addStateParams: AddStateParams = {
       genesis: '0x00',
       name: 'state_1',
-      programId: 'some_program_id',
+      programId: mockProgramForState.id,
       wasmBuffBase64: 'state_wasmBuffBase64'
     };
 
@@ -56,6 +67,17 @@ describe('State service', () => {
 
     expect(res.status).toEqual('State added');
     expect(mockStataRepository.save).toHaveBeenCalled();
+  });
+
+  it('should be fail if code with stateHex already exists', async () => {
+    const addStateParams: AddStateParams = {
+      genesis: '0x00',
+      name: 'state_1',
+      programId: mockProgramForState_EXIST.id,
+      wasmBuffBase64: 'state_wasmBuffBase64'
+    };
+
+    await expect(stateService.create(addStateParams)).rejects.toThrowError();
   });
 
   it('should be successfully get states', async () => {
