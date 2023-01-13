@@ -15,9 +15,10 @@ import { GearModule } from './gear/gear.module';
 import { BlockModule } from './block/block.module';
 import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
 import { StateModule } from './state/state.module';
-import { Block, Code, Message, Meta, Program, State } from './database/entities';
+import { Block, Code, Message, Meta, Program, State, StateToCode } from './database/entities';
+import { StateToCodeModule } from './state-to-code/state-to-code.module';
 
-const entities = [Meta, Message, Program, Code, Block, State];
+const entities = [Meta, Message, Program, Code, Block, State, StateToCode];
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ const entities = [Meta, Message, Program, Code, Block, State];
     BlockModule,
     RabbitmqModule,
     StateModule,
+    StateToCodeModule,
   ],
   controllers: [HealthcheckController],
 })

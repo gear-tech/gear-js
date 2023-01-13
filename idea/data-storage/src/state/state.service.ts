@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AddStateParams, AddStateResult, GetAllStateParams, GetStateParams, GetStatesResult } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
-import { Hex } from '@gear-js/api';
-import * as dotenv from 'dotenv';
-dotenv.config();
 
 import { StateRepo } from './state.repo';
 import { ProgramRepo } from '../program/program.repo';
@@ -11,17 +8,25 @@ import { State } from '../database/entities';
 import { ProgramNotFound } from '../common/errors';
 import { StateAlreadyExists, StateNotFound } from '../common/errors/state';
 import { getHexWasmState, getStateMeta } from '../common/helpers';
+import { StateToCodeService } from '../state-to-code/state-to-code.service';
+
 
 @Injectable()
 export class StateService {
   constructor(
     private stateRepository: StateRepo,
     private programRepository: ProgramRepo,
+    private stateToCodeService: StateToCodeService,
   ) {}
 
   public async listByProgramId(getAllStateParams: GetAllStateParams): Promise<GetStatesResult> {
     const { programId, genesis, query } = getAllStateParams;
+
     const program = await this.programRepository.get(programId, genesis);
+
+    if (!program) {
+      throw new ProgramNotFound();
+    }
 
     const [states, total] = await this.stateRepository.list(program.code.id, query);
 
@@ -54,8 +59,9 @@ export class StateService {
 
     const metaStateBuff = Buffer.from(wasmBuffBase64, 'base64');
     const hexState = getHexWasmState(metaStateBuff);
+    const isExistStateByCode = await this.stateToCodeService.isExistStateHexByCode(hexState, program.code.id);
 
-    if(await this.isExistStateHexInDB(hexState)){
+    if(isExistStateByCode){
       throw new StateAlreadyExists();
     }
 
@@ -63,9 +69,7 @@ export class StateService {
     const funcNames = Object.keys(functions);
 
     const createMetaDataInput = plainToClass(State, {
-      code: program.code,
       name,
-      hexWasmState: hexState,
       wasmBuffBase64,
       funcNames,
       functions,
@@ -73,21 +77,13 @@ export class StateService {
 
     const state = await this.stateRepository.save(createMetaDataInput);
 
+    await this.stateToCodeService.create(program.code, state, hexState);
+
     return { status: 'State added', state: {
       id: state.id,
       name: state.name,
       wasmBuffBase64: state.wasmBuffBase64,
       functions: state.functions },
     };
-  }
-
-  private async isExistStateHexInDB(stateHex: Hex): Promise<boolean> {
-    if (process.env.TEST_ENV_UNIT) {
-      return false;
-    }
-
-    const state = await this.stateRepository.getByHexWasmState(stateHex);
-
-    return !!state;
   }
 }

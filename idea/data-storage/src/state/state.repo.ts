@@ -16,15 +16,14 @@ export class StateRepo {
       return this.stateRepo
         .createQueryBuilder('state')
         .select(['state.id', 'state.name', 'state.functions'])
-        .leftJoinAndSelect('state.code', 'code', 'code.id = :id', {
-          id: codeId
-        })
+        .innerJoin('state.stateToCodes', 'stateToCodes')
+        .innerJoin('stateToCodes.code', 'code', 'code.id = :id', { id: codeId })
         .where(`LOWER(("state"."funcNames")::text) like LOWER('%${query}%')`)
         .orderBy('state.name', 'ASC')
         .getManyAndCount();
     }
     return  this.stateRepo.findAndCount({
-      where: { code: { id: codeId } },
+      where: { stateToCodes: { code: { id: codeId } }  },
       select: { functions: true, name: true, id: true },
       order: { name: 'ASC' }
     });
@@ -33,13 +32,7 @@ export class StateRepo {
   public async get(id: string): Promise<State> {
     return this.stateRepo.findOne({
       where: { id },
-      select:['id', 'functions', 'wasmBuffBase64', 'name']
-    });
-  }
-
-  public async getByHexWasmState(hex: string): Promise<State> {
-    return this.stateRepo.findOne({
-      where: { hexWasmState: hex },
+      select: ['id', 'functions', 'wasmBuffBase64', 'name']
     });
   }
 
