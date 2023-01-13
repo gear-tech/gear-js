@@ -1,7 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { IState } from '@gear-js/common';
-
-import { Code } from './code.entity';
+import { StateToCode } from './state-to-code.entity';
 
 @Entity()
 export class State implements IState {
@@ -14,18 +13,12 @@ export class State implements IState {
   @Column()
   public wasmBuffBase64: string;
 
-  @Column()
-  public hexWasmState: string;
-
   @Column({ type: 'json' })
   public funcNames: string;
 
   @Column({ type: 'json' })
   public functions: string;
 
-  @ManyToOne(() => Code, (code) => code.states, {
-    nullable: true
-  })
-  @JoinColumn({ name: 'code_id' })
-  public code: Code;
+  @OneToMany(() => StateToCode, stateToCode => stateToCode.state)
+  public stateToCodes!: StateToCode[];
 }

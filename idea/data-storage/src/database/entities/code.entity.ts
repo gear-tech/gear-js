@@ -5,7 +5,7 @@ import { BaseEntity } from './base.entity';
 import { Program } from './program.entity';
 import { Meta } from './meta.entity';
 import { CodeStatus } from '../../common/enums';
-import { State } from './state.entity';
+import { StateToCode } from './state-to-code.entity';
 
 @Entity()
 export class Code extends BaseEntity implements ICode {
@@ -38,6 +38,6 @@ export class Code extends BaseEntity implements ICode {
   @OneToMany(() => Program, (program) => program.code)
   public programs: Program[];
 
-  @OneToMany(() => State, (state) => state.code)
-  public states: State[];
+  @OneToMany(() => StateToCode, stateToCode => stateToCode.code)
+  public stateToCodes!: StateToCode[];
 }
