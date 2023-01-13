@@ -15,10 +15,11 @@ export const mockStataRepository = {
   }),
   list: jest.fn((codeId: string, query: string) => {
     const states = STATE_DB_MOCK.filter((state) => {
-      if (codeId === state.code.id) {
+      const isExistCode = state.stateToCodes.some((stateToCode) => stateToCode.code.id === codeId);
+      if (isExistCode) {
         return state;
       }
-      if (codeId === state.code.id && state.funcNames.includes(query)) {
+      if (isExistCode && state.funcNames.includes(query)) {
         return state;
       }
     });

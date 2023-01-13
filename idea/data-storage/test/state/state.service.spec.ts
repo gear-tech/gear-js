@@ -6,9 +6,17 @@ import { mockStataRepository } from '../mock/state/state-repository.mock';
 import { ProgramRepo } from '../../src/program/program.repo';
 import { StateRepo } from '../../src/state/state.repo';
 import { mockProgramForState, STATE_DB_MOCK } from '../mock/state/state-db.mock';
+import { StateToCode } from '../../src/database/entities';
+import { StateToCodeService } from '../../src/state-to-code/state-to-code.service';
+import { StateToCodeRepo } from '../../src/state-to-code/state-to-code.repo';
 
 describe('State service', () => {
   let stateService!: StateService;
+  const mockStateToCodeRepository = {
+    save: jest.fn().mockImplementation((stateToCode: StateToCode): Promise<StateToCode> => {
+      return new Promise((resolve) => resolve(stateToCode));
+    }),
+  };
   const mockProgramRepository = {
     get: jest.fn((id: string, genesis: string) => mockProgramForState),
   };
@@ -17,6 +25,10 @@ describe('State service', () => {
     const moduleRef = await Test.createTestingModule({
       providers: [
         {
+          provide: StateToCodeRepo,
+          useFactory: () => mockStateToCodeRepository,
+        },
+        {
           provide: StateRepo,
           useFactory: () => mockStataRepository,
         },
@@ -24,6 +36,7 @@ describe('State service', () => {
           provide: ProgramRepo,
           useFactory: () => mockProgramRepository
         },
+        StateToCodeService,
         StateService,
       ],
     }).compile();
