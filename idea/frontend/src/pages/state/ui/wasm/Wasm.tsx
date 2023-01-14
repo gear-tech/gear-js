@@ -4,6 +4,7 @@ import { useAlert } from '@gear-js/react-hooks';
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { OnChange } from 'react-final-form-listeners';
+import { FormApi } from 'final-form';
 
 import { addState, fetchState, fetchStates } from 'api';
 import { useStateRead } from 'hooks';
@@ -26,19 +27,21 @@ const Wasm = () => {
   const metadata = useMetadata(programId);
   const { state, isStateRead, isState, readWasmState, resetState } = useStateRead(programId);
 
-  const [uploadedStates, setUploadedStates] = useState<IState[]>([]);
+  const [isStateRequestReady, setIsStatesRequestReady] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [file, setFile] = useState<File>();
+  const [fileWasmBuffer, setFileWasmBuffer] = useState<Buffer>();
   const [fileFunctions, setFileFunctions] = useState<StateFunctions>();
 
-  const [uploadedWasmBuffer, setUploadedWasmBuffer] = useState<Buffer>();
-  const [fileWasmBuffer, setFileWasmBuffer] = useState<Buffer>();
-
-  const [isStateRequestReady, setIsStatesRequestReady] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
+  const [uploadedStates, setUploadedStates] = useState<IState[]>([]);
   const [uploadedState, setUploadedState] = useState<IState>();
-  const uploadedStateId = uploadedState?.id;
+  const [uploadedWasmBuffer, setUploadedWasmBuffer] = useState<Buffer>();
 
   const [selectedFunction, setSelectedFunction] = useState({ id: '', name: '', isFileFunction: false });
+
+  const uploadedStateId = uploadedState?.id;
+
   const { isFileFunction } = selectedFunction;
   const functionId = selectedFunction.id;
   const functionName = selectedFunction.name;
@@ -49,18 +52,26 @@ const Wasm = () => {
   const typeIndex = functionTypes?.input;
   const isTypeIndex = typeIndex !== undefined && typeIndex !== null;
 
+  const formApi = useRef<FormApi<FormValues>>();
+
   const payloadFormValues = useMemo(
     () => (metadata && isTypeIndex ? getPayloadFormValues(metadata, typeIndex) : undefined),
-    [metadata, isTypeIndex, typeIndex],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [metadata, isTypeIndex, typeIndex, functionId],
   );
 
   // const resetStateWasmBuffer = () => setStateWasmBuffer(undefined);
   const resetFileInputValue = () => resetFileInput(fileInputRef.current);
 
   const handleInputChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    const [file] = target.files || [];
+    const [result] = target.files || [];
 
-    if (file && !checkFileFormat(file, FileTypes.Wasm)) {
+    if (!result) {
+      setFile(result);
+      return;
+    }
+
+    if (!checkFileFormat(result, FileTypes.Wasm)) {
       alert.error('Wrong file format');
 
       // TODO: remove after @gear-js/ui update,
@@ -70,17 +81,7 @@ const Wasm = () => {
       return;
     }
 
-    readFileAsync(file, 'buffer')
-      .then((arrayBuffer) => Buffer.from(arrayBuffer))
-      .then(async (buffer) => ({ stateMeta: await getStateMetadata(buffer), buffer }))
-      .then(({ stateMeta, buffer }) => {
-        setFileFunctions(stateMeta.functions);
-        setFileWasmBuffer(buffer);
-      })
-      .catch(({ message }: Error) => {
-        alert.error(message);
-        resetFileInputValue();
-      });
+    setFile(result);
   };
 
   useEffect(() => {
@@ -94,8 +95,6 @@ const Wasm = () => {
 
   useEffect(() => {
     if (uploadedStateId) {
-      setUploadedWasmBuffer(undefined); // to trigger loader
-
       fetchState(uploadedStateId)
         .then(({ result }) => Buffer.from(result.wasmBuffBase64, 'base64'))
         .then((buffer) => setUploadedWasmBuffer(buffer))
@@ -114,81 +113,135 @@ const Wasm = () => {
   };
 
   const uploadState = () => {
-    if (!fileWasmBuffer) return;
+    if (!file || !fileWasmBuffer) return;
 
     setIsStatesRequestReady(false);
 
-    const [file] = fileInputRef.current?.files || [];
+    const { name } = file;
+    const wasmBuffBase64 = fileWasmBuffer.toString('base64');
 
-    return addState({ programId, wasmBuffBase64: fileWasmBuffer.toString('base64'), name: file.name })
-      .then(({ result }) =>
-        setUploadedStates((prevStates) => (prevStates ? [...prevStates, result.state] : prevStates)),
-      )
+    return addState({ programId, wasmBuffBase64, name })
+      .then(({ result }) => {
+        setUploadedStates((prevStates) => [...prevStates, result.state]);
+        resetFileInputValue();
+      })
       .catch(({ message }: Error) => alert.error(message))
       .finally(() => setIsStatesRequestReady(true));
   };
 
   const handleSubmit = (values: FormValues) => {
+    const wasm = isFileFunction ? fileWasmBuffer : uploadedWasmBuffer;
     const payload = getSubmitPayload(values.payload);
 
-    if (isFileFunction) {
-      if (!fileWasmBuffer) return;
+    if (!wasm) return;
 
-      readWasmState(fileWasmBuffer, functionName, payload);
-    } else {
-      if (!uploadedWasmBuffer) return;
-
-      readWasmState(uploadedWasmBuffer, functionName, payload);
-    }
+    readWasmState(wasm, functionName, payload);
   };
 
   const isUploadedFunctionSelected = !!functionName && !isFileFunction;
   const isLoading = !metadata || (isUploadedFunctionSelected && !uploadedWasmBuffer);
 
+  const setFileBufferAndFunctions = (value: File) => {
+    readFileAsync(value, 'buffer')
+      .then((arrayBuffer) => Buffer.from(arrayBuffer))
+      .then(async (buffer) => ({ stateMeta: await getStateMetadata(buffer), buffer }))
+      .then(({ stateMeta, buffer }) => {
+        setFileFunctions(stateMeta.functions);
+        setFileWasmBuffer(buffer);
+      })
+      .catch(({ message }: Error) => {
+        alert.error(message);
+        resetFileInputValue();
+      });
+  };
+
+  const resetFileBufferAndFunctions = () => {
+    setFileFunctions(undefined);
+    setFileWasmBuffer(undefined);
+  };
+
+  const resetSelectedFunction = () => setSelectedFunction({ id: '', name: '', isFileFunction: false });
+
+  useEffect(() => {
+    if (file) {
+      setFileBufferAndFunctions(file);
+    } else {
+      resetFileBufferAndFunctions();
+    }
+
+    resetSelectedFunction();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [file]);
+
+  const resetUploadedState = () => setUploadedState(undefined);
+  const resetUploadedWasmBuffer = () => setUploadedWasmBuffer(undefined);
+  const resetPayloadValue = () => formApi.current?.change('payload', payloadFormValues?.payload);
+
+  useEffect(() => {
+    resetSelectedFunction();
+  }, [uploadedStates]);
+
+  useEffect(() => {
+    if (!functionId) {
+      resetUploadedState();
+      resetUploadedWasmBuffer();
+    }
+
+    resetState();
+    resetPayloadValue();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [functionId]);
+
   return (
     <>
       <Form initialValues={INITIAL_VALUES} onSubmit={handleSubmit} validateOnBlur>
-        {(formApi) => (
-          <form id="state" onSubmit={formApi.handleSubmit}>
-            <Box className={styles.box}>
-              <Input label="Program ID:" gap="1/5" value={programId} readOnly />
+        {(formProps) => {
+          formApi.current = formProps.form;
 
-              {payloadFormValues &&
-                (isLoading ? (
-                  <Textarea label="Payload" gap="1/5" className={styles.loading} readOnly />
-                ) : (
-                  <FormPayload name="payload" label="Input Parameters" values={payloadFormValues} gap="1/5" />
-                ))}
+          return (
+            <form id="state" onSubmit={formProps.handleSubmit}>
+              <Box className={styles.box}>
+                <Input label="Program ID:" gap="1/5" value={programId} readOnly />
 
-              <OnChange name="payload">{() => resetState()}</OnChange>
-              {!isStateRead && (
-                <Textarea label="Statedata:" rows={15} gap="1/5" className={styles.loading} readOnly block />
-              )}
+                {payloadFormValues &&
+                  (isLoading ? (
+                    <Textarea label="Payload" gap="1/5" className={styles.loading} readOnly />
+                  ) : (
+                    <FormPayload name="payload" label="Input Parameters" values={payloadFormValues} gap="1/5" />
+                  ))}
 
-              {isStateRead && isState && (
-                <Textarea label="Statedata:" rows={15} gap="1/5" value={getPreformattedText(state)} readOnly block />
-              )}
-            </Box>
+                <OnChange name="payload">{() => resetState()}</OnChange>
+                {!isStateRead && (
+                  <Textarea label="Statedata:" rows={15} gap="1/5" className={styles.loading} readOnly block />
+                )}
 
-            <div className={styles.buttons}>
-              {functionName && (
-                <Button type="submit" form="state" color="secondary" text="Read" icon={ReadSVG} size="large" />
-              )}
+                {isStateRead && isState && (
+                  <Textarea label="Statedata:" rows={15} gap="1/5" value={getPreformattedText(state)} readOnly block />
+                )}
+              </Box>
 
-              <FileInput
-                ref={fileInputRef}
-                size="large"
-                // TODO: remove after @gear-js/ui update
-                // @ts-ignore
-                color="secondary"
-                className={styles.input}
-                onChange={handleInputChange}
-              />
+              <div className={styles.buttons}>
+                {functionName && (
+                  <Button type="submit" form="state" color="secondary" text="Read" icon={ReadSVG} size="large" />
+                )}
 
-              <BackButton />
-            </div>
-          </form>
-        )}
+                <FileInput
+                  ref={fileInputRef}
+                  size="large"
+                  // TODO: remove after @gear-js/ui update
+                  // @ts-ignore
+                  color="secondary"
+                  className={styles.input}
+                  onChange={handleInputChange}
+                />
+
+                <BackButton />
+              </div>
+            </form>
+          );
+        }}
       </Form>
 
       <WasmStates
