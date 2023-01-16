@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class updateMetaAndAddStateTable1673532869584 implements MigrationInterface {
-    name = 'updateMetaAndAddStateTable1673532869584'
+export class updateMetaCodeAndAddStateTable1673872715863 implements MigrationInterface {
+    name = 'updateMetaCodeAndAddStateTable1673872715863'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
@@ -19,33 +19,29 @@ export class updateMetaAndAddStateTable1673532869584 implements MigrationInterfa
                 "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
                 "codeId" character varying NOT NULL,
                 "stateId" uuid NOT NULL,
-                "hexWasmState" character varying NOT NULL,
+                "stateHex" character varying NOT NULL,
                 "code_id" uuid,
                 CONSTRAINT "PK_f4189c7208d247ff74101eba8e4" PRIMARY KEY ("id")
             )
         `);
         await queryRunner.query(`
-            ALTER TABLE "meta" DROP COLUMN "meta"
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "meta" DROP COLUMN "metaWasm"
+            ALTER TABLE "meta" DROP COLUMN "program"
         `);
         await queryRunner.query(`
             ALTER TABLE "meta" DROP COLUMN "owner"
         `);
         await queryRunner.query(`
-            ALTER TABLE "meta" DROP COLUMN "program"
+            ALTER TABLE "meta" DROP COLUMN "metaWasm"
+        `);
+        await queryRunner.query(`
+            ALTER TABLE "meta" DROP COLUMN "meta"
         `);
         await queryRunner.query(`
             ALTER TABLE "program" DROP COLUMN "title"
         `);
         await queryRunner.query(`
-            ALTER TABLE "code"
-            ADD "hex" character varying
-        `);
-        await queryRunner.query(`
             ALTER TABLE "meta"
-            ADD "hex" character varying
+            ADD "hash" character varying
         `);
         await queryRunner.query(`
             ALTER TABLE "meta"
@@ -72,10 +68,7 @@ export class updateMetaAndAddStateTable1673532869584 implements MigrationInterfa
             ALTER TABLE "meta" DROP COLUMN "types"
         `);
         await queryRunner.query(`
-            ALTER TABLE "meta" DROP COLUMN "hex"
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "code" DROP COLUMN "hex"
+            ALTER TABLE "meta" DROP COLUMN "hash"
         `);
         await queryRunner.query(`
             ALTER TABLE "program"
@@ -83,11 +76,7 @@ export class updateMetaAndAddStateTable1673532869584 implements MigrationInterfa
         `);
         await queryRunner.query(`
             ALTER TABLE "meta"
-            ADD "program" character varying NOT NULL
-        `);
-        await queryRunner.query(`
-            ALTER TABLE "meta"
-            ADD "owner" character varying NOT NULL
+            ADD "meta" character varying
         `);
         await queryRunner.query(`
             ALTER TABLE "meta"
@@ -95,7 +84,11 @@ export class updateMetaAndAddStateTable1673532869584 implements MigrationInterfa
         `);
         await queryRunner.query(`
             ALTER TABLE "meta"
-            ADD "meta" character varying
+            ADD "owner" character varying NOT NULL
+        `);
+        await queryRunner.query(`
+            ALTER TABLE "meta"
+            ADD "program" character varying NOT NULL
         `);
         await queryRunner.query(`
             DROP TABLE "state_to_code"

@@ -7,7 +7,7 @@ import { ProgramRepo } from '../program/program.repo';
 import { State } from '../database/entities';
 import { ProgramNotFound } from '../common/errors';
 import { StateAlreadyExists, StateNotFound } from '../common/errors/state';
-import { getHexWasmState, getStateMeta } from '../common/helpers';
+import { getCodeHash, getStateMeta } from '../common/helpers';
 import { StateToCodeService } from '../state-to-code/state-to-code.service';
 
 
@@ -58,7 +58,7 @@ export class StateService {
     }
 
     const metaStateBuff = Buffer.from(wasmBuffBase64, 'base64');
-    const hexState = getHexWasmState(metaStateBuff);
+    const hexState = getCodeHash(metaStateBuff);
     const isExistStateByCode = await this.stateToCodeService.isExistStateHexByCode(hexState, program.code.id);
 
     if(isExistStateByCode){

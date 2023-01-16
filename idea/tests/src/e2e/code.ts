@@ -46,7 +46,6 @@ async function getCodeData(genesis: string, codeId: Hex) {
     '_id',
     'uploadedBy',
     'name',
-    'hex',
     'status',
     'expiration',
     'genesis',

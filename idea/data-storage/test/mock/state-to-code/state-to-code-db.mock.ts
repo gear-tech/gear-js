@@ -17,7 +17,6 @@ function getStateToCodeDBMock(): StateToCode[] {
       ...stateToCodes,
       code,
       state,
-
       stateId: state.id,
       codeId: code.id,
     }));

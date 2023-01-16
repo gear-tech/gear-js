@@ -24,7 +24,7 @@ interface GetAllProgramsParams extends IGenesis, IPaginationParams, SearchParam,
 }
 
 interface GetAllStateParams extends IGenesis, SearchParam {
-  programId: string
+  programId: string,
 }
 
 interface GetAllCodeParams extends IGenesis, IPaginationParams, SearchParam, IDates {
@@ -59,6 +59,15 @@ interface GetMetaParams extends IGenesis, Pick<IProgram, 'id'> {}
 interface GetStateParams extends IGenesis, Pick<IState, 'id'> {}
 
 interface GetCodeParams extends IGenesis, Pick<ICode, 'id'> {}
+
+interface GetStateByCodeParams extends IGenesis {
+  codeId: string;
+  stateId: string;
+}
+
+interface GetMetaByCodeParams extends IGenesis {
+  codeId: string;
+}
 
 interface GetTestBalanceParams extends IGenesis {
   address: string;
@@ -102,4 +111,6 @@ export {
   AddStateParams,
   GetStateParams,
   GetAllStateParams,
+  GetStateByCodeParams,
+  GetMetaByCodeParams,
 };

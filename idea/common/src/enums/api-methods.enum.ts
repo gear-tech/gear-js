@@ -2,6 +2,8 @@ enum API_METHODS {
   PROGRAM_DATA = 'program.data',
   PROGRAM_META_ADD = 'program.meta.add',
   PROGRAM_STATE_ADD = 'program.state.add',
+  CODE_STATE_GET = 'code.state.get',
+  CODE_META_GET = 'code.meta.get',
   PROGRAM_STATE_ALL = 'program.state.all',
   PROGRAM_STATE_GET = 'program.state.get',
   PROGRAM_META_GET = 'program.meta.get',

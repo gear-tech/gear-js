@@ -28,9 +28,6 @@ export class Code extends BaseEntity implements ICode {
   @Column({ nullable: true })
   public expiration: string;
 
-  @Column({ nullable: true })
-  public hex: string;
-
   @OneToOne(() => Meta, (meta) => meta.code)
   @JoinColumn({ name: 'meta_id' })
   public meta: Meta;
@@ -38,6 +35,6 @@ export class Code extends BaseEntity implements ICode {
   @OneToMany(() => Program, (program) => program.code)
   public programs: Program[];
 
-  @OneToMany(() => StateToCode, stateToCode => stateToCode.code)
+  @OneToMany(() => StateToCode, (stateToCode) => stateToCode.code)
   public stateToCodes!: StateToCode[];
 }

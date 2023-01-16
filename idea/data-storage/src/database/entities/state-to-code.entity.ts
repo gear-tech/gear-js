@@ -15,11 +15,11 @@ export class StateToCode {
   public stateId!: string;
 
   @Column()
-  public hexWasmState: string;
+  public stateHex: string;
 
-  @ManyToOne(() => Code, code => code.stateToCodes)
+  @ManyToOne(() => Code, (code) => code.stateToCodes)
   public code!: Code;
 
-  @ManyToOne(() => State, state => state.stateToCodes)
+  @ManyToOne(() => State, (state) => state.stateToCodes)
   public state!: State;
 }

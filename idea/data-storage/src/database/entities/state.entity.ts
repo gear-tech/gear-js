@@ -19,6 +19,6 @@ export class State implements IState {
   @Column({ type: 'json' })
   public functions: string;
 
-  @OneToMany(() => StateToCode, stateToCode => stateToCode.state)
+  @OneToMany(() => StateToCode, (stateToCode) => stateToCode.state)
   public stateToCodes!: StateToCode[];
 }

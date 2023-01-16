@@ -1,10 +1,10 @@
 import { getProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { AddMetaParams, AddMetaResult } from '@gear-js/common';
+import { AddMetaParams, AddMetaResult, GetStateByCodeParams } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
 
-import { InvalidProgramMetaHex, ProgramNotFound } from '../common/errors';
+import { InvalidProgramMetaHex, MetadataNotFound, ProgramNotFound } from '../common/errors';
 import { ProgramService } from '../program/program.service';
 import { Meta } from '../database/entities';
 import { MetaRepo } from './meta.repo';
@@ -22,6 +22,15 @@ export class MetaService {
     private gearEventListener: GearEventListener,
   ) {}
 
+  public async getByCodeId(params:  GetStateByCodeParams): Promise<Meta> {
+    const { codeId } = params;
+    const meta = await this.metaRepository.getByCodeId(codeId);
+
+    if(!meta) throw new MetadataNotFound();
+
+    return meta;
+  }
+
   public async addMeta(params: AddMetaParams): Promise<AddMetaResult> {
     const { programId, genesis, metaHex, name } = params;
     const program = await this.programRepository.getByIdAndGenesis(programId, genesis);
@@ -38,7 +47,7 @@ export class MetaService {
 
     const metadataTypeDB = plainToClass(Meta, {
       ...params,
-      hex: metaHex,
+      hash: metaHex,
       types: metaData.types,
     });
 

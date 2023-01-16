@@ -19,7 +19,7 @@ mockProgramForState_EXIST.code = newCode;
 
 const mockStateToCodeForState = new StateToCode();
 mockStateToCodeForState.code = code;
-mockStateToCodeForState.hexWasmState = 'hex';
+mockStateToCodeForState.stateHex = 'hex';
 
 function getStateDBMock(): State[] {
   const pathStates = '/states.mock.yaml';

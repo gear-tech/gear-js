@@ -8,6 +8,7 @@ import { MessageModule } from '../message/message.module';
 import { CodeModule } from '../code/code.module';
 import { BlockModule } from '../block/block.module';
 import { StateModule } from '../state/state.module';
+import { StateToCodeModule } from '../state-to-code/state-to-code.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { StateModule } from '../state/state.module';
     MessageModule,
     CodeModule,
     BlockModule,
-    StateModule
+    StateModule,
+    StateToCodeModule,
   ],
   providers: [RabbitmqService],
   exports: [RabbitmqService],

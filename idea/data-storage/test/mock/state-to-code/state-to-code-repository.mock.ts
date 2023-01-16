@@ -7,7 +7,14 @@ export const mockStateToCodeRepository = {
   }),
   getByCodeIdAndStateHex: jest.fn((codeId: string, stateHex: string) => {
     return STATE_TO_CODE_DB_MOCK.find((stateToCode) => {
-      if (codeId === stateToCode.code.id && stateToCode.hexWasmState === stateHex) {
+      if (codeId === stateToCode.code.id && stateToCode.stateHex === stateHex) {
+        return stateToCode;
+      }
+    });
+  }),
+  getByCodeIdAndStateId: jest.fn((codeId: string, stateId: string) => {
+    return STATE_TO_CODE_DB_MOCK.find((stateToCode) => {
+      if (codeId === stateToCode.code.id && stateToCode.stateId === stateId) {
         return stateToCode;
       }
     });

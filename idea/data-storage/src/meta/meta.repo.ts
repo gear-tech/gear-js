@@ -11,6 +11,12 @@ export class MetaRepo {
     private metaRepo: Repository<Meta>,
   ) {}
 
+  public async getByCodeId(codeId: string): Promise<Meta> {
+    return this.metaRepo.findOne({
+      where: { code: { id: codeId } }
+    });
+  }
+
   public async save(metadata: Meta): Promise<Meta> {
     return this.metaRepo.save(metadata);
   }

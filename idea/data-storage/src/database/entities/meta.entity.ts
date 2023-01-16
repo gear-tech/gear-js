@@ -10,7 +10,7 @@ export class Meta implements IMeta {
   public  id: string;
 
   @Column({ nullable: true })
-  public hex: string;
+  public hash: string;
 
   @Column({ nullable: true, type: 'json' })
   public types: string;

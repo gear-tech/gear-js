@@ -6,6 +6,7 @@ import { mockStateToCodeRepository } from '../mock/state-to-code/state-to-code-r
 import { Code, State } from '../../src/database/entities';
 import { StateToCodeRepo } from '../../src/state-to-code/state-to-code.repo';
 import { STATE_TO_CODE_DB_MOCK } from '../mock/state-to-code/state-to-code-db.mock';
+import { GetStateByCodeParams } from '@gear-js/common';
 
 describe('StateToCode service', () => {
   let stateToCodeService!: StateToCodeService;
@@ -34,7 +35,7 @@ describe('StateToCode service', () => {
 
     const stateToCode = await stateToCodeService.create(code, state, stateHex);
 
-    expect(stateToCode.hexWasmState).toEqual(stateHex);
+    expect(stateToCode.stateHex).toEqual(stateHex);
     expect(stateToCode.codeId).toEqual(code._id);
     expect(stateToCode.state.id).toEqual(state.id);
     expect(mockStateToCodeRepository.save).toHaveBeenCalled();
@@ -44,10 +45,26 @@ describe('StateToCode service', () => {
     const stateToCodeInDB = STATE_TO_CODE_DB_MOCK[0];
 
     const res = await stateToCodeService.isExistStateHexByCode(
-      stateToCodeInDB.hexWasmState as Hex,
+      stateToCodeInDB.stateHex as Hex,
       stateToCodeInDB.code.id,
     );
 
     expect(res).toEqual(true);
+  });
+
+  it('should be successfully get codeToState by codeId and stateId', async () => {
+    const stateToCodeInDB = STATE_TO_CODE_DB_MOCK[0];
+
+    const params: GetStateByCodeParams = {
+      codeId: stateToCodeInDB.codeId,
+      stateId: stateToCodeInDB.stateId,
+      genesis: '0x00'
+    };
+
+    const res = await stateToCodeService.getByCodeIdAndStateId(params);
+
+    expect(res.codeId).toEqual(params.codeId);
+    expect(res.stateId).toEqual(params.stateId);
+    expect(mockStateToCodeRepository.getByCodeIdAndStateId).toHaveBeenCalled();
   });
 });

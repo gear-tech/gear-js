@@ -11,11 +11,21 @@ export class StateToCodeRepo {
     private stateToCodeRepo: Repository<StateToCode>,
   ) {}
 
+  public async getByCodeIdAndStateId(codeId: string, stateId: string): Promise<StateToCode> {
+    return this.stateToCodeRepo.findOne({
+      where: {
+        code: { id: codeId },
+        stateId,
+      },
+      relations: ['state']
+    });
+  }
+
   public async getByCodeIdAndStateHex(codeId: string, stateHex: string): Promise<StateToCode> {
     return this.stateToCodeRepo.findOne({
       where: {
         code: { id: codeId },
-        hexWasmState: stateHex,
+        stateHex,
       } });
   }
 

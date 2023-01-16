@@ -13,6 +13,7 @@ import {
   GetCodeParams,
   GetMessagesParams,
   GetMetaParams,
+  GetStateByCodeParams,
   GetStateParams,
   RabbitMQExchanges,
   RabbitMQueues,
@@ -26,6 +27,7 @@ import { BlockService } from '../block/block.service';
 import { RabbitmqMessageParams } from './types/rabbitmq-params';
 import { FormResponse } from '../decorator/form-response.decorator';
 import { StateService } from '../state/state.service';
+import { StateToCodeService } from '../state-to-code/state-to-code.service';
 
 @Injectable()
 export class RabbitmqService {
@@ -43,6 +45,7 @@ export class RabbitmqService {
     private programService: ProgramService,
     private blockService: BlockService,
     private stateService: StateService,
+    private stateToCodeService: StateToCodeService,
   ) {}
 
   public async connect(): Promise<void> {
@@ -159,6 +162,12 @@ export class RabbitmqService {
       },
       [API_METHODS.CODE_DATA]: () => {
         return this.codeService.getByIdAndGenesis(params as GetCodeParams);
+      },
+      [API_METHODS.CODE_META_GET]: () => {
+        return this.metaService.getByCodeId(params as GetStateByCodeParams);
+      },
+      [API_METHODS.CODE_STATE_GET]: () => {
+        return this.stateToCodeService.getByCodeIdAndStateId(params as GetStateByCodeParams);
       },
       [API_METHODS.BLOCKS_STATUS]: () => {
         return this.blockService.getLastBlock(params.genesis as string);
