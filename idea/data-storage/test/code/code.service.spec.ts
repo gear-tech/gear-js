@@ -68,7 +68,7 @@ describe('Code service', () => {
 
     const params: GetCodeParams = {
       genesis: codeMock.genesis,
-      codeId: codeMock.id,
+      id: codeMock.id,
     };
 
     const code = await codeService.getByIdAndGenesis(params);
@@ -85,7 +85,7 @@ describe('Code service', () => {
     invalidCodeEntity.genesis = 'some_genesis';
 
     const params: GetCodeParams = {
-      codeId: invalidCodeEntity.id,
+      id: invalidCodeEntity.id,
       genesis: invalidCodeEntity.genesis,
     };
 

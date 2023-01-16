@@ -4,11 +4,11 @@ import { IBaseDBRecord } from '@gear-js/common';
 export abstract class BaseEntity implements IBaseDBRecord<Date> {
   @Index()
   @Column()
-    genesis: string;
+  public  genesis: string;
 
   @Column({ nullable: true })
-    blockHash: string;
+  public blockHash: string;
 
   @Column({ type: 'timestamp' })
-    timestamp: Date;
+  public timestamp: Date;
 }

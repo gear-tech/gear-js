@@ -1,7 +1,9 @@
-import { IDates, IGenesis, ISignature } from './common';
+import { IDates, IGenesis } from './common';
 import { IMessage, UpdateMessageData } from './message';
 import { IPaginationParams } from './pagination';
 import { IProgram } from './program';
+import { IState } from './state';
+import { ICode } from './code';
 
 interface GetMessagesParams extends IGenesis, IPaginationParams, SearchParam, IDates {
   destination?: string;
@@ -21,6 +23,10 @@ interface GetAllProgramsParams extends IGenesis, IPaginationParams, SearchParam,
   status?: string | string[];
 }
 
+interface GetAllStateParams extends IGenesis, SearchParam {
+  programId: string,
+}
+
 interface GetAllCodeParams extends IGenesis, IPaginationParams, SearchParam, IDates {
   name?: string;
   uploadedBy?: string;
@@ -32,23 +38,34 @@ interface FindProgramParams extends IGenesis, Pick<IProgram, 'id'> {
   owner?: string;
 }
 
-interface AddMetaParams extends IGenesis, ISignature {
+interface AddMetaParams extends IGenesis {
   programId: string;
-  meta?: string;
-  metaFile?: string;
+  metaHex: string;
   name?: string;
-  title?: string;
+}
+
+interface AddStateParams extends IGenesis {
+  programId: string;
+  wasmBuffBase64: string;
+  name: string;
 }
 
 interface UpdateMessagesParams {
   params: UpdateMessageData[];
 }
 
-interface GetMetaParams extends IGenesis {
-  programId: string;
+interface GetMetaParams extends IGenesis, Pick<IProgram, 'id'> {}
+
+interface GetStateParams extends IGenesis, Pick<IState, 'id'> {}
+
+interface GetCodeParams extends IGenesis, Pick<ICode, 'id'> {}
+
+interface GetStateByCodeParams extends IGenesis {
+  codeId: string;
+  stateId: string;
 }
 
-interface GetCodeParams extends IGenesis {
+interface GetMetaByCodeParams extends IGenesis {
   codeId: string;
 }
 
@@ -91,4 +108,9 @@ export {
   GetCodeParams,
   GetAllCodeParams,
   UpdateMessagesParams,
+  AddStateParams,
+  GetStateParams,
+  GetAllStateParams,
+  GetStateByCodeParams,
+  GetMetaByCodeParams,
 };

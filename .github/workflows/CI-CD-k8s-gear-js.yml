@@ -2,7 +2,7 @@ name: Deploy Gear-js to k8s stage/prod
 
 on:
   push:
-    branches: ['main']
+    branches: ['idea-new-state-and-meteadata']
     paths:
       - idea/api-gateway/**
       - idea/data-storage/**
@@ -27,40 +27,7 @@ jobs:
       - uses: mktcode/consecutive-workflow-action@v1 # please read security note
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-
-  build-frontend-image-staging:
-    runs-on: ubuntu-latest
-    needs: [wait-previous-run]
-    environment: staging
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Frontend Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/frontend/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:qa
-          build-args: |
-            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
-            REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
-            REACT_APP_WASM_COMPILER_URL=${{ secrets.REACT_APP_WASM_COMPILER_URL }}
-            REACT_APP_DEFAULT_NODES_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
-            REACT_APP_DEFAULT_TRANSFER_BALANCE_VALUE=${{ secrets.REACT_APP_DEFAULT_TRANSFER_BALANCE_VALUE }}
-            REACT_APP_HCAPTCHA_SITE_KEY=${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
-
+            
   build-data-storage-image-staging:
     runs-on: ubuntu-latest
     needs: [wait-previous-run]
@@ -85,7 +52,7 @@ jobs:
         with:
           file: idea/data-storage/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-data-storage:qa
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-data-storage:dev-state
 
   build-api-gateway-image-staging:
     runs-on: ubuntu-latest
@@ -111,7 +78,7 @@ jobs:
         with:
           file: idea/api-gateway/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:qa
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:dev-state
 
   build-test-balance-image-staging:
     runs-on: ubuntu-latest
@@ -137,11 +104,10 @@ jobs:
         with:
           file: idea/test-balance/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-test-balance:qa
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-test-balance:dev-state
 
   deploy-to-k8s-staging:
     needs: [
-        build-frontend-image-staging,
         build-data-storage-image-staging,
         build-api-gateway-image-staging,
         build-test-balance-image-staging,
@@ -156,13 +122,18 @@ jobs:
           aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+          
+      - name: Restart postgres
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment postgres-data-rpc -n dev-idea
 
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment api-gateway frontend-nginx data-storage-rpc data-storage-workshop testbalance-testnet -n dev-1
+          args: rollout restart deployment api-gateway frontend-nginx data-storage-rpc testbalance-testnet -n dev-idea
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: get deployment -o name -n dev-1 | xargs -n1 -t kubectl rollout status -n dev-1 --timeout=120s
+          args: get deployment -o name -n dev-idea | xargs -n1 -t kubectl rollout status -n dev-idea --timeout=120s

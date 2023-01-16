@@ -1,0 +1,16 @@
+@use 'shared/assets/styles/mixins' as *;
+@use 'shared/assets/styles/animations' as *;
+
+.box {
+  @include childrenMargin(24px);
+  margin-bottom: 24px;
+}
+
+.loading {
+  div {
+    div {
+      @include loading;
+      position: relative;
+    }
+  }
+}

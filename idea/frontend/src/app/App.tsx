@@ -12,7 +12,6 @@ import { LocalStorage, NODE_ADRESS_URL_PARAM } from 'shared/config';
 import { Loader } from 'shared/ui/loader';
 
 import './App.scss';
-import './yup-extended';
 import { withProviders } from './providers';
 
 const App = withProviders(() => {

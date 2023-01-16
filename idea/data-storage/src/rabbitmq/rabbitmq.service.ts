@@ -1,22 +1,33 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Channel, Connection, connect, Replies } from 'amqplib';
+import { Channel, connect, Connection, Replies } from 'amqplib';
 import {
   AddMetaParams,
-  API_METHODS, FindMessageParams,
-  FindProgramParams, GetAllCodeParams,
-  GetAllProgramsParams, GetCodeParams, GetMessagesParams, GetMetaParams,
+  AddStateParams,
+  API_METHODS,
+  FindMessageParams,
+  FindProgramParams,
+  GetAllCodeParams,
+  GetAllProgramsParams,
+  GetAllStateParams,
+  GetCodeParams,
+  GetMessagesParams,
+  GetMetaParams,
+  GetStateByCodeParams,
+  GetStateParams,
   RabbitMQExchanges,
   RabbitMQueues,
 } from '@gear-js/common';
 
 import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
-import { MetadataService } from '../metadata/metadata.service';
+import { MetaService } from '../meta/meta.service';
 import { CodeService } from '../code/code.service';
 import { BlockService } from '../block/block.service';
 import { RabbitmqMessageParams } from './types/rabbitmq-params';
 import { FormResponse } from '../decorator/form-response.decorator';
+import { StateService } from '../state/state.service';
+import { StateToCodeService } from '../state-to-code/state-to-code.service';
 
 @Injectable()
 export class RabbitmqService {
@@ -28,10 +39,13 @@ export class RabbitmqService {
   constructor(
     private configService: ConfigService,
     private messageService: MessageService,
-    private metaService: MetadataService,
+    @Inject(forwardRef(() => MetaService))
+    private metaService: MetaService,
     private codeService: CodeService,
     private programService: ProgramService,
     private blockService: BlockService,
+    private stateService: StateService,
+    private stateToCodeService: StateToCodeService,
   ) {}
 
   public async connect(): Promise<void> {
@@ -135,7 +149,7 @@ export class RabbitmqService {
         return this.metaService.addMeta(params as AddMetaParams);
       },
       [API_METHODS.PROGRAM_META_GET]: () => {
-        return this.metaService.getMeta(params as GetMetaParams);
+        return this.programService.getProgramMeta(params as GetMetaParams);
       },
       [API_METHODS.MESSAGE_ALL]: () => {
         return this.messageService.getAllMessages(params as GetMessagesParams);
@@ -149,8 +163,23 @@ export class RabbitmqService {
       [API_METHODS.CODE_DATA]: () => {
         return this.codeService.getByIdAndGenesis(params as GetCodeParams);
       },
+      [API_METHODS.CODE_META_GET]: () => {
+        return this.metaService.getByCodeId(params as GetStateByCodeParams);
+      },
+      [API_METHODS.CODE_STATE_GET]: () => {
+        return this.stateToCodeService.getByCodeIdAndStateId(params as GetStateByCodeParams);
+      },
       [API_METHODS.BLOCKS_STATUS]: () => {
         return this.blockService.getLastBlock(params.genesis as string);
+      },
+      [API_METHODS.PROGRAM_STATE_ADD]: () => {
+        return this.stateService.create(params as AddStateParams);
+      },
+      [API_METHODS.PROGRAM_STATE_GET]: () => {
+        return this.stateService.get(params as GetStateParams);
+      },
+      [API_METHODS.PROGRAM_STATE_ALL]: () => {
+        return this.stateService.listByProgramId(params as GetAllStateParams);
       },
     };
 

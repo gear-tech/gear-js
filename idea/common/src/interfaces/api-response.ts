@@ -3,6 +3,7 @@ import { IPaginationResult } from './pagination';
 import { IProgram } from './program';
 import { ICode } from './code';
 import { RpcErrorCode } from '../enums';
+import { IState } from './state';
 
 interface AllMessagesResult extends IPaginationResult {
   messages: IMessage[];
@@ -10,6 +11,10 @@ interface AllMessagesResult extends IPaginationResult {
 
 interface GetAllProgramsResult extends IPaginationResult {
   programs: IProgram[];
+}
+
+interface GetStatesResult extends IPaginationResult {
+  states: IState[];
 }
 
 interface GetAllCodeResult extends IPaginationResult {
@@ -20,10 +25,19 @@ interface AddMetaResult {
   status: 'Metadata added';
 }
 
+interface AddStateResult {
+  status: 'State added';
+  state: IState
+}
+
 interface GetMetaResult {
   program: string;
-  meta: string;
-  metaWasm: string;
+  hex: string;
+  data: string;
+}
+
+interface GetAllStateResult {
+  states: IState[];
 }
 
 interface ProgramDataResult extends Omit<IProgram, 'meta'> {
@@ -41,7 +55,8 @@ interface IRpcResponse {
     | IMessage[]
     | GetMetaResult
     | AddMetaResult
-    | GetAllCodeResult;
+    | GetAllCodeResult
+    | GetStatesResult;
   error?: IRpcError;
 }
 
@@ -55,8 +70,11 @@ export {
   GetAllProgramsResult,
   GetAllCodeResult,
   AddMetaResult,
+  AddStateResult,
+  GetAllStateResult,
   GetMetaResult,
   ProgramDataResult,
   IRpcResponse,
   IRpcError,
+  GetStatesResult,
 };

@@ -1,41 +1,26 @@
-import { useState, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Metadata } from '@gear-js/api';
+import { Hex, getProgramMetadata } from '@gear-js/api';
 
-import { UploadData } from 'features/uploadMetadata';
 import { StateWithFile } from 'shared/types';
 
-import styles from './UploadProgram.module.scss';
 import { ProgramSection } from './programSection';
 import { MetadataSection } from './metadataSection';
+import styles from './UploadProgram.module.scss';
 
 const UploadProgram = () => {
-  const location = useLocation();
+  const { state } = useLocation();
+  const { file } = (state as StateWithFile | undefined) || {};
 
-  const [metadata, setMetadata] = useState<Metadata>();
-  const [metadataBuffer, setMetadataBuffer] = useState<string>();
+  const [metaHex, setMetaHex] = useState<Hex>();
+  const metadata = useMemo(() => (metaHex ? getProgramMetadata(metaHex) : undefined), [metaHex]);
 
-  const resetMetadada = useCallback(() => {
-    setMetadata(undefined);
-    setMetadataBuffer(undefined);
-  }, []);
-
-  const uploadMetadada = useCallback((data: UploadData) => {
-    setMetadata(data.metadata);
-    setMetadataBuffer(data.metadataBuffer);
-  }, []);
-
-  const state = location.state as StateWithFile;
+  const resetMetaHex = () => setMetaHex(undefined);
 
   return (
     <div className={styles.uploadProgramPage}>
-      <ProgramSection
-        file={state?.file}
-        metadata={metadata}
-        metadataBuffer={metadataBuffer}
-        resetMetaFile={resetMetadada}
-      />
-      <MetadataSection metadata={metadata} onReset={resetMetadada} onUpload={uploadMetadada} />
+      <ProgramSection file={file} metaHex={metaHex} metadata={metadata} resetMetaFile={resetMetaHex} />
+      <MetadataSection metadata={metadata} onReset={resetMetaHex} onUpload={setMetaHex} />
     </div>
   );
 };

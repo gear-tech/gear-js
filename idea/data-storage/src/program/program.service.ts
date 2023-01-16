@@ -1,9 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
-import { FindProgramParams, GetAllProgramsParams, GetAllProgramsResult, IProgram } from '@gear-js/common';
+import {
+  FindProgramParams,
+  GetAllProgramsParams,
+  GetAllProgramsResult,
+  GetMetaParams,
+  IProgram,
+} from '@gear-js/common';
 
-import { ProgramNotFound } from '../common/errors';
-import { Program } from '../database/entities';
+import { MetadataNotFound, ProgramNotFound } from '../common/errors';
+import { Meta, Program } from '../database/entities';
 import { CreateProgramInput, UpdateProgramDataInput } from './types';
 import { ProgramRepo } from './program.repo';
 import { ProgramStatus } from '../common/enums';
@@ -19,6 +25,17 @@ export class ProgramService {
       programs,
       count: total,
     };
+  }
+
+  public async getProgramMeta(params: GetMetaParams): Promise<Meta> {
+    const { id, genesis } = params;
+    const program = await this.programRepository.getByIdMeta(id, genesis);
+
+    if (program.meta === null) {
+      throw new MetadataNotFound();
+    }
+
+    return program.meta;
   }
 
   public async createPrograms(createProgramsInput: CreateProgramInput[]): Promise<Program[]> {
@@ -39,7 +56,7 @@ export class ProgramService {
   }
 
   public async updateProgramData(updateProgramDataInput: UpdateProgramDataInput): Promise<IProgram> {
-    const { meta, id, genesis, name, title } = updateProgramDataInput;
+    const { meta, id, genesis, name } = updateProgramDataInput;
     const program = await this.programRepository.getByIdAndGenesis(id, genesis);
 
     if (!program) {
@@ -47,7 +64,6 @@ export class ProgramService {
     }
 
     program.name = name;
-    program.title = title;
     program.meta = meta;
 
     try {

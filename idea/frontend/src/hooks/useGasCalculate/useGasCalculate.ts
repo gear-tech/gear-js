@@ -1,5 +1,5 @@
 import isPlainObject from 'lodash.isplainobject';
-import { Metadata, Hex, GasInfo } from '@gear-js/api';
+import { ProgramMetadata, Hex, GasInfo } from '@gear-js/api';
 import { useApi, useAlert, useAccount } from '@gear-js/react-hooks';
 
 import { GasMethod } from 'shared/config';
@@ -16,19 +16,18 @@ const useGasCalculate = () => {
     method: T,
     values: Values,
     code: Code<T>,
-    meta?: Metadata,
+    meta?: ProgramMetadata,
     addressId?: string,
   ): Promise<Result> => {
-    const { value, payload, payloadType } = values;
+    const { value, payload } = values;
 
     try {
       const isPayloadEmpty = isPlainObject(payload) && Object.keys(payload as object).length === 0;
 
-      if (isPayloadEmpty) throw new Error(`Paylod can't be empty`);
+      if (isPayloadEmpty) throw new Error(`Payload can't be empty`);
       if (!account) throw new Error(`No account`);
 
       const { decodedAddress } = account;
-      const metaOrTypeOfPayload = meta || payloadType;
 
       let estimatedGas: GasInfo;
 
@@ -40,7 +39,7 @@ const useGasCalculate = () => {
             payload,
             value,
             true,
-            metaOrTypeOfPayload,
+            meta,
           );
           break;
         case GasMethod.InitCreate:
@@ -50,7 +49,7 @@ const useGasCalculate = () => {
             payload,
             value,
             true,
-            metaOrTypeOfPayload,
+            meta,
           );
           break;
         case GasMethod.Handle:
@@ -60,7 +59,7 @@ const useGasCalculate = () => {
             payload,
             value,
             true,
-            metaOrTypeOfPayload,
+            meta,
           );
           break;
         case GasMethod.Reply:
@@ -71,7 +70,7 @@ const useGasCalculate = () => {
             payload,
             value,
             true,
-            metaOrTypeOfPayload,
+            meta,
           );
           break;
         default:

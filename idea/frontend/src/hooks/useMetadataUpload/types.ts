@@ -1,21 +1,11 @@
-import { Signer } from '@polkadot/api/types';
-import { Metadata } from '@gear-js/api';
+import { Hex } from '@gear-js/api';
 
-import { OperationCallbacks, ParamsToSignAndSend } from 'entities/hooks';
+import { OperationCallbacks } from 'entities/hooks';
 
 type ParamsToUploadMeta = Partial<OperationCallbacks> & {
   name: string;
-  title?: string;
-  signer?: Signer;
-  metadata?: Metadata;
   programId: string;
-  metadataBuffer?: string;
+  metaHex: Hex;
 };
 
-type ParamsToSignAndUpload = Partial<OperationCallbacks> &
-  Omit<ParamsToSignAndSend, 'reject' | 'resolve'> &
-  Omit<ParamsToUploadMeta, 'metadata'> & {
-    jsonMeta?: string;
-  };
-
-export type { ParamsToUploadMeta, ParamsToSignAndUpload };
+export type { ParamsToUploadMeta };

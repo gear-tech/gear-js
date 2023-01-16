@@ -33,17 +33,12 @@ const useProgramActions = () => {
     </p>
   );
 
-  const createProgram = async (codeId: Hex, payload: Payload) => {
+  const createProgram = (codeId: Hex, payload: Payload) => {
     const { gasLimit, value, initPayload, metadata, payloadType } = payload;
 
-    const program = {
-      value,
-      codeId,
-      gasLimit,
-      initPayload,
-    };
+    const program = { value, codeId, gasLimit, initPayload };
 
-    const result = await api.program.create(program, metadata, payloadType);
+    const result = api.program.create(program, metadata, payloadType);
 
     return result.programId;
   };
@@ -55,7 +50,7 @@ const useProgramActions = () => {
 
     const program = { code: new Uint8Array(fileBuffer), value, gasLimit, initPayload };
 
-    const result = await api.program.upload(program, metadata, payloadType);
+    const result = api.program.upload(program, metadata, payloadType);
 
     return result.programId;
   };
@@ -75,7 +70,6 @@ const useProgramActions = () => {
 
   const signAndUpload = async ({
     name,
-    title,
     signer,
     payload,
     programId,
@@ -83,7 +77,7 @@ const useProgramActions = () => {
     resolve,
     method,
   }: ParamsToSignAndUpload) => {
-    const { title: payloadTitle, metadata, metadataBuffer } = payload;
+    const { metaHex } = payload;
     const alertId = alert.loading('SignIn', { title: method });
     const programMessage = getProgramMessage(programId);
 
@@ -99,14 +93,11 @@ const useProgramActions = () => {
           alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
           handleEventsStatus(events, { reject, resolve });
 
-          if (name) {
+          if (metaHex) {
             uploadMetadata({
               name,
-              title,
-              signer,
-              metadata,
               programId,
-              metadataBuffer,
+              metaHex,
               resolve: () => alert.success(programMessage, ALERT_OPTIONS),
             });
           }
@@ -129,7 +120,7 @@ const useProgramActions = () => {
       }
 
       if (isDevChain) {
-        await uploadLocalProgram({ id: programId, name, owner: account?.decodedAddress!, title: payloadTitle || null });
+        await uploadLocalProgram({ id: programId, name, owner: account?.decodedAddress! });
       }
     } catch (error) {
       const message = (error as Error).message;
@@ -157,16 +148,7 @@ const useProgramActions = () => {
         const name = payload.programName || codeId;
 
         const handleConfirm = () =>
-          signAndUpload({
-            name,
-            title: payload.metadata?.title,
-            method: TransactionName.CreateProgram,
-            signer,
-            payload,
-            programId,
-            reject,
-            resolve,
-          });
+          signAndUpload({ name, method: TransactionName.CreateProgram, signer, payload, programId, reject, resolve });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),
@@ -200,16 +182,7 @@ const useProgramActions = () => {
         const name = payload.programName || file.name;
 
         const handleConfirm = () =>
-          signAndUpload({
-            name,
-            title: payload.metadata?.title,
-            method: TransactionName.UploadProgram,
-            signer,
-            payload,
-            programId,
-            reject,
-            resolve,
-          });
+          signAndUpload({ name, method: TransactionName.UploadProgram, signer, payload, programId, reject, resolve });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),

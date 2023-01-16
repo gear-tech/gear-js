@@ -1,33 +1,30 @@
-import { Hex, MessagesDispatched } from '@gear-js/api';
+import { Hex, MessagesDispatched, ProgramMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { useEffect, useState, useContext } from 'react';
 import { AlertContext, ApiContext } from 'context';
-import { useConditionalMetaBuffer } from './useMetadata';
 
 type State<T> = { state: T | undefined; isStateRead: boolean; error: string };
 
 function useReadState<T = AnyJson>(
   programId: Hex | undefined,
-  metaSourceOrBuffer: string | Buffer | undefined,
+  meta: ProgramMetadata | undefined,
   payload?: AnyJson,
   isReadOnError?: boolean,
 ): State<T> {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const alert = useContext(AlertContext);
 
-  const metaBuffer = useConditionalMetaBuffer(metaSourceOrBuffer);
-
   const [state, setState] = useState<T>();
   const [error, setError] = useState('');
   const [isStateRead, setIsStateRead] = useState(true);
 
   const readState = (isInitLoad?: boolean) => {
-    if (programId && metaBuffer && payload) {
+    if (programId && meta && payload) {
       if (isInitLoad) setIsStateRead(false);
 
       api.programState
-        .read(programId, metaBuffer, payload)
+        .read({ programId }, meta)
         .then((codecState) => codecState.toHuman())
         .then((result) => {
           setState(result as unknown as T);
@@ -43,7 +40,7 @@ function useReadState<T = AnyJson>(
   useEffect(() => {
     readState(true);
     setError('');
-  }, [programId, metaBuffer, payload]);
+  }, [programId, payload]);
 
   const handleStateChange = ({ data }: MessagesDispatched) => {
     const changedIDs = data.stateChanges.toHuman() as Hex[];
@@ -55,14 +52,14 @@ function useReadState<T = AnyJson>(
   useEffect(() => {
     let unsub: UnsubscribePromise | undefined;
 
-    if (api && programId && metaBuffer && payload) {
+    if (api && programId && payload) {
       unsub = api.gearEvents.subscribeToGearEvent('MessagesDispatched', handleStateChange);
     }
 
     return () => {
       if (unsub) unsub.then((unsubCallback) => unsubCallback());
     };
-  }, [api, programId, metaBuffer, payload]);
+  }, [api, programId, payload]);
 
   useEffect(() => {
     if (error) alert.error(error);

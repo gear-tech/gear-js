@@ -22,7 +22,7 @@ export class ProgramRepo {
     return this.programRepo.findOne({
       where: { id, genesis },
       relations: ['meta', 'messages', 'code'],
-      select: { meta: { meta: true, program: true } },
+      select: { meta: { types: true, hash: true } },
     });
   }
 
@@ -34,7 +34,18 @@ export class ProgramRepo {
         owner,
       },
       relations: ['meta', 'messages', 'code'],
-      select: { meta: { meta: true, program: true } },
+      select: { meta: { types: true, hash: true } },
+    });
+  }
+
+  public async getByIdMeta(id: string, genesis: string): Promise<Program> {
+    return this.programRepo.findOne({
+      where: {
+        id,
+        genesis,
+      },
+      relations: ['meta'],
+      select: { meta: { types: true, hash: true } },
     });
   }
 
@@ -45,11 +56,11 @@ export class ProgramRepo {
       this.programRepo,
       genesis,
       { owner, status },
-      { fields: ['id', 'title', 'name', 'code.id'], value: query },
+      { fields: ['id', 'name', 'code.id'], value: query },
       { fromDate, toDate },
       offset || 0,
       limit || PAGINATION_LIMIT,
-      ['code', { table: 'meta', columns: ['meta'] }],
+      ['code', { table: 'meta', columns: ['types'] }],
       { column: 'timestamp', sort: 'DESC' },
     );
 
@@ -71,6 +82,7 @@ export class ProgramRepo {
   public async get(id: string, genesis: string): Promise<Program> {
     return this.programRepo.findOne({
       where: { id, genesis },
+      relations: ['code']
     });
   }
 }

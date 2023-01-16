@@ -1,15 +1,13 @@
 import { VFC, useCallback } from 'react';
 
-import { ValueType } from 'entities/formPayload';
-
 import { PayloadItemProps, PayloadStructureProps } from '../../model';
 import { VecItem } from '../vecItem';
 import { EnumItem } from '../enumItem';
 import { TupleItem } from '../tupleItem';
 import { ArrayItem } from '../arrayItem';
-import { OptionItem } from '../optionItem';
 import { StructItem } from '../structItem';
 import { PrimitiveItem } from '../primitiveItem';
+import { OptionItem } from '../optionItem';
 
 type Props = Omit<PayloadStructureProps, 'title'>;
 
@@ -19,41 +17,42 @@ const PayloadStructure = (props: Props) => {
 
     const { title, levelName, typeStructure } = itemProps;
 
-    switch (typeStructure?.type) {
-      case ValueType.Vec:
-      case ValueType.BTreeMap:
-      case ValueType.BTreeSet: {
+    switch (typeStructure?.kind) {
+      case 'sequence': {
         Component = VecItem;
         break;
       }
-      case ValueType.Null: {
-        return null;
-      }
-      case ValueType.Enum:
-      case ValueType.Result: {
+
+      case 'variant': {
         Component = EnumItem;
         break;
       }
-      case ValueType.Array: {
-        Component = ArrayItem;
-        break;
-      }
-      case ValueType.Tuple: {
-        Component = TupleItem;
-        break;
-      }
-      case ValueType.Option: {
+
+      case 'option': {
         Component = OptionItem;
         break;
       }
-      case ValueType.Struct: {
+
+      case 'array': {
+        Component = ArrayItem;
+        break;
+      }
+
+      case 'tuple': {
+        Component = TupleItem;
+        break;
+      }
+
+      case 'composite': {
         Component = StructItem;
         break;
       }
-      case ValueType.Primitive: {
+
+      case 'primitive': {
         Component = PrimitiveItem;
         break;
       }
+
       default:
         return null;
     }

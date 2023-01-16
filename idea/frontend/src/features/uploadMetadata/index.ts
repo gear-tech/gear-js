@@ -1,5 +1,3 @@
-import { UploadData } from './model';
-import { UploadMetadata } from './ui/UploadMetadata';
+import { UploadMetadata } from './ui/uploadMetadata';
 
 export { UploadMetadata };
-export type { UploadData };

@@ -1,5 +1,4 @@
 import {
-  useMetadata,
   useReadState,
   useSendMessage,
   useUploadProgram,
@@ -38,7 +37,6 @@ import {
 } from 'types';
 
 export {
-  useMetadata,
   useReadState,
   useSendMessage,
   useUploadProgram,

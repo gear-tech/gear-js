@@ -12,9 +12,6 @@ const getValidationSchema = ({ deposit, maxGasLimit }: PayloadSchemaParams) =>
         `Initial value should be more ${deposit} or equal than 0`,
         (value = 0) => value === 0 || value > deposit,
       ),
-    // @ts-ignore
-    // commented cuz otherwise react-final-form crashes on certain types of payloads
-    // payload: yup.mixed().default('').testPayload(type, metadata),
     gasLimit: yup
       .number()
       .required('This field is required')

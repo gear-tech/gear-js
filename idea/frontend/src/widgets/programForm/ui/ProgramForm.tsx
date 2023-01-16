@@ -1,7 +1,7 @@
-import { useState, useMemo, useRef, useEffect, ReactChild } from 'react';
+import { useState, useMemo, useRef, ReactChild } from 'react';
 import { FormApi } from 'final-form';
 import { Form } from 'react-final-form';
-import { Metadata, Hex } from '@gear-js/api';
+import { ProgramMetadata, Hex } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 
 import { useGasCalculate, useChangeEffect } from 'hooks';
@@ -20,15 +20,15 @@ import { INITIAL_VALUES, FormValues, RenderButtonsProps, SubmitHelpers } from '.
 
 type Props = {
   source: Buffer | Hex;
-  metadata?: Metadata;
+  metaHex: Hex | undefined;
+  metadata: ProgramMetadata | undefined;
   gasMethod: GasMethod;
-  metadataBuffer?: string;
   renderButtons: (props: RenderButtonsProps) => ReactChild;
   onSubmit: (values: Payload, helpers: SubmitHelpers) => void;
 };
 
 const ProgramForm = (props: Props) => {
-  const { gasMethod, metadata, source, metadataBuffer, renderButtons, onSubmit } = props;
+  const { gasMethod, metaHex, metadata, source, renderButtons, onSubmit } = props;
 
   const { api } = useApi();
 
@@ -40,12 +40,8 @@ const ProgramForm = (props: Props) => {
 
   const calculateGas = useGasCalculate();
 
-  const changeProgramName = (meta: Metadata) => formApi.current?.change('programName', meta?.title ?? '');
-
   const handleGasCalculate = async () => {
-    if (!formApi.current) {
-      return;
-    }
+    if (!formApi.current) return;
 
     setIsGasDisabled(true);
 
@@ -72,9 +68,9 @@ const ProgramForm = (props: Props) => {
     const data: Payload = {
       value,
       gasLimit,
+      metaHex,
       metadata,
       programName,
-      metadataBuffer,
       payloadType: metadata ? undefined : payloadType,
       initPayload: metadata ? getSubmitPayload(payload) : payload,
     };
@@ -82,34 +78,29 @@ const ProgramForm = (props: Props) => {
     onSubmit(data, { enableButtons: () => setIsDisables(false), resetForm: formApi.current.reset });
   };
 
-  const encodeType = metadata?.init_input;
-
   const deposit = api.existentialDeposit.toNumber();
   const maxGasLimit = api.blockGasLimit.toNumber();
 
-  const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, encodeType), [metadata, encodeType]);
+  const typeIndex = metadata?.types.init.input;
+  const isTypeIndex = typeIndex !== undefined && typeIndex !== null;
+
+  const payloadFormValues = useMemo(
+    () => (metadata && isTypeIndex ? getPayloadFormValues(metadata, typeIndex) : undefined),
+    [metadata, isTypeIndex, typeIndex],
+  );
 
   const validation = useMemo(
     () => {
-      const schema = getValidationSchema({ type: encodeType, deposit, metadata, maxGasLimit });
+      const schema = getValidationSchema({ deposit, metadata, maxGasLimit });
 
       return getValidation(schema);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [metadata, encodeType],
+    [metadata],
   );
 
-  useEffect(() => {
-    if (metadata) {
-      changeProgramName(metadata);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   useChangeEffect(() => {
-    if (metadata) {
-      changeProgramName(metadata);
-    } else {
+    if (!metadata) {
       formApi.current?.restart();
       setGasinfo(undefined);
     }

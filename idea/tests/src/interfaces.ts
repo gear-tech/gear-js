@@ -17,7 +17,7 @@ interface IUploadedPrograms extends IProgramSpec {
 
 interface IMessageSpec {
   id: number;
-  pathToMeta?: string;
+  pathToMetaTxt?: string;
   payload: undefined;
   gasLimit: number;
   value?: number;
@@ -28,7 +28,8 @@ interface IMessageSpec {
 
 interface IProgramSpec {
   pathToOpt: string;
-  pathToMeta?: string;
+  pathToMetaTxt?: string;
+  pathStates?: string[];
   initPayload?: undefined;
   gasLimit: number;
   value?: number;
@@ -42,6 +43,12 @@ interface ICodeSpec {
   pathToOpt?: string;
   gasLimit: number;
   account: Account;
+}
+
+interface IState {
+  id: string;
+  name: string;
+  functions: object
 }
 
 interface IPreparedPrograms {
@@ -80,4 +87,5 @@ export {
   IPreparedMessages,
   IPrepared,
   IPreparedCollectionCode,
+  IState
 };

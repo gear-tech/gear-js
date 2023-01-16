@@ -89,6 +89,8 @@ jobs:
       - name: Run data-storage tests
         if: steps.check_file_changed.outputs.dataStorage_changed == 'True'
         run: yarn test:data-storage
+        env:
+          TEST_ENV_UNIT: ${{ secrets.TEST_ENV }}
 
       - name: Build frontend pkg
         if: steps.check_file_changed.outputs.frontend_changed == 'True'
@@ -264,12 +266,12 @@ jobs:
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: rollout restart deployment rabbitmq -n $KUBE_NAMESPACE
-          
+
       - name: Check RabbitMQ
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: rollout status deployment rabbitmq -n $KUBE_NAMESPACE --timeout=120s
-          
+
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:

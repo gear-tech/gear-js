@@ -9,7 +9,7 @@ const TupleItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadI
   return (
     <Fieldset legend={itemLabel}>
       {/* @ts-ignore */}
-      {typeStructure.value.map((item, index) =>
+      {typeStructure.type.map((item, index) =>
         renderNextItem({
           levelName: getNextLevelName(levelName, index),
           typeStructure: item,

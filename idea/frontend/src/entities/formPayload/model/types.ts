@@ -1,17 +1,10 @@
-import { Metadata } from '@gear-js/api';
-
-import { ValueType } from './consts';
+import { ProgramMetadata, TypeKind } from '@gear-js/api';
 
 type TypeStructure = {
   name: string;
-  type: ValueType;
-  count?: number;
-  value:
-    | string
-    | TypeStructure[]
-    | {
-        [key: string]: TypeStructure;
-      };
+  kind: TypeKind;
+  type: string | object | TypeStructure;
+  len?: number;
 };
 
 type PayloadValue =
@@ -26,14 +19,14 @@ type PayloadValue =
 type PayloadSchemaModel = {
   type?: string;
   deposit: number;
-  metadata?: Metadata;
+  metadata?: ProgramMetadata;
   maxGasLimit: number;
 };
 
 type PayloadSchemaParams = {
   type?: string;
   deposit: number;
-  metadata?: Metadata;
+  metadata?: ProgramMetadata;
   maxGasLimit: number;
 };
 

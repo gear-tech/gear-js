@@ -1,13 +1,12 @@
-import { Hex, Metadata } from '@gear-js/api';
+import { Hex, ProgramMetadata } from '@gear-js/api';
 
 import { OperationCallbacks, ParamsToSignAndSend } from 'entities/hooks';
 
 type Payload = {
   value: number;
-  title?: string;
   gasLimit: number;
-  metadata?: Metadata;
-  metadataBuffer?: string;
+  metaHex?: Hex;
+  metadata?: ProgramMetadata | undefined;
   initPayload: string;
   programName?: string;
   payloadType?: string;
@@ -30,7 +29,6 @@ type ParamsToCreate = OperationCallbacks & DataToCreate;
 type ParamsToSignAndUpload = ParamsToSignAndSend & {
   method: string;
   name: string;
-  title?: string;
   payload: Payload;
   programId: Hex;
 };
