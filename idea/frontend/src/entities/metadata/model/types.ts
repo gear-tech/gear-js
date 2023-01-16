@@ -1,7 +1,7 @@
 import { Hex, ProgramMetadata } from '@gear-js/api';
 
 interface IMeta {
-  hex: Hex;
+  hash: Hex;
   types: ProgramMetadata['types'];
 }
 

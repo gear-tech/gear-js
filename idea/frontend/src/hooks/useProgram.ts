@@ -17,9 +17,9 @@ const useProgram = (id?: string, initLoading = false) => {
   const [isLoading, setIsLoading] = useState(initLoading);
 
   const metadata = useMemo(() => {
-    const { hex } = program?.meta || {};
+    const { hash } = program?.meta || {};
 
-    if (hex) return getProgramMetadata(hex);
+    if (hash) return getProgramMetadata(hash);
   }, [program]);
 
   useEffect(() => {
