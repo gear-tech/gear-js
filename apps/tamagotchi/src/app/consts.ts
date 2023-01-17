@@ -13,3 +13,7 @@ export const createTamagotchiInitial = {
   programId: '' as Hex,
   currentStep: 0,
 };
+
+export const ENV = {
+  store: process.env.REACT_APP_TOKENS_STORE_ADDRESS as Hex,
+};

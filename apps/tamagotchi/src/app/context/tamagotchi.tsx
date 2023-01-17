@@ -17,9 +17,7 @@ const useTmgState = (): Value => {
 
   useEffect(() => {
     const ls = localStorage.getItem('tmgState');
-    if (ls) {
-      setState(JSON.parse(ls));
-    }
+    if (ls) setState(JSON.parse(ls));
   }, []);
 
   useEffect(() => {

@@ -2,20 +2,25 @@ import { Icon } from 'components/ui/icon';
 import { Button } from '@gear-js/ui';
 import { PaymentErrorPopup } from 'components/popups/payment-error-popup';
 import { useState } from 'react';
+import { StoreNFTItem } from '../../../app/types/tamagotchi-state';
 
-export const StoreItemCard = () => {
+export const StoreItemCard = ({ item }: { item: StoreNFTItem }) => {
   const [open, setOpen] = useState(false);
+  const [description, value] = item;
 
   return (
-    <article className="">
+    <article>
       <div className="flex flex-col py-10 px-8 bg-white/5 aspect-[347/230] rounded-2xl">
-        <h2 className="mt-auto text-center font-kanit font-semibold text-xl tracking-[0.04em]">Item title</h2>
+        <div className="flex justify-center">
+          <Icon name={'item-' + description.title.toLowerCase()} section="tamagotchi" className="w-35 h-35" />
+        </div>
+        <h2 className="mt-auto text-center font-kanit font-semibold text-xl tracking-[0.04em]">{description.title}</h2>
       </div>
-      <div className="flex items-center justify-between gap-5 mt-4">
+      <div className="flex items-center justify-between gap-5 mt-4 px-4">
         <p className="flex gap-2 items-center text-primary">
           <Icon name="money" className="w-5 h-5" />
           <span className="text-xxs font-medium">
-            <strong className="font-kanit font-medium text-[20px] leading-6">1.34</strong> MUnits
+            <strong className="font-kanit font-medium text-[20px] leading-6">{value}</strong> Tokens
           </span>
         </p>
 

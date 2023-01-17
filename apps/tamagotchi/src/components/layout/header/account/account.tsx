@@ -21,7 +21,7 @@ export const AccountComponent = () => {
     <>
       {account ? (
         <div className="flex gap-4">
-          {state && state.lesson > 2 && (
+          {state?.store && (
             <>
               <Link to="/store" className={clsx('btn whitespace-nowrap', buttonStyles.primary)}>
                 Open Store

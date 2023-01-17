@@ -1,3 +1,5 @@
+import { ProgramMetadata } from '@gear-js/api';
+
 type Lesson1 = {
   name: string;
   dateOfBirth: number;
@@ -20,3 +22,8 @@ type Lesson3 = {
 };
 
 export type LessonsAll = Lesson1 & Lesson2 & Lesson3;
+
+export type LessonMetadataResponse = {
+  tamagotchi: ProgramMetadata;
+  store?: ProgramMetadata;
+};

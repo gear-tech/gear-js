@@ -12,8 +12,9 @@ export const useUpdateState = () => {
 
   const update = useCallback(() => {
     if (state && metadata) {
+      console.log('updated up iubpiubpiubpibpibpi ivpiyvpi');
       const { programId, lesson, isDirty } = state;
-      Promise.resolve(api.programState.read({ programId }, metadata))
+      Promise.resolve(api.programState.read({ programId }, metadata.tamagotchi))
         .then((res) =>
           setState({
             programId,

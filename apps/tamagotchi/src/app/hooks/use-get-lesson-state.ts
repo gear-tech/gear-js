@@ -1,9 +1,10 @@
 import { useAlert, useApi } from '@gear-js/react-hooks';
 import { useCallback, useContext } from 'react';
 import { TmgContext } from '../context';
-import { createTamagotchiInitial } from '../consts';
+import { createTamagotchiInitial, ENV } from '../consts';
 import { LessonsAll } from 'app/types/lessons';
 import { getLessonMetadata } from 'app/utils/get-lesson-metadata';
+import { StoreNFT } from 'app/types/tamagotchi-state';
 
 type Props = typeof createTamagotchiInitial;
 
@@ -18,8 +19,16 @@ export function useGetLessonState() {
 
       try {
         const metadata = await getLessonMetadata(Number(currentStep));
-        const res = await api.programState.read({ programId }, metadata);
-        setState({ programId, lesson: Number(currentStep), tamagotchi: res.toJSON() as LessonsAll });
+        const resT = await api.programState.read({ programId }, metadata.tamagotchi);
+        let resS;
+        if (metadata.store) resS = await api.programState.read({ programId: ENV.store }, metadata.store);
+
+        setState({
+          programId,
+          lesson: Number(currentStep),
+          tamagotchi: resT.toJSON() as LessonsAll,
+          store: resS?.toJSON() as StoreNFT,
+        });
       } catch (e) {
         alert.error((e as Error).message);
         setState(undefined);

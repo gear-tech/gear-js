@@ -10,12 +10,12 @@ export const PaymentErrorPopup = ({ close }: Props) => {
     <Modal heading="Payment error" close={close}>
       <div className="space-y-6">
         <p>
-          There are not enough funds on your account, please replenish the balance using the "Get Test Balance" button
+          There are not enough funds on your account, please replenish the balance using the "Get Token Balance" button
         </p>
         <Button
           className="gap-2 w-full"
           color="primary"
-          text="Get Test Balance"
+          text="Get Token Balance"
           icon={() => <Icon name="money" className="w-5 h-5" />}
         />
       </div>
