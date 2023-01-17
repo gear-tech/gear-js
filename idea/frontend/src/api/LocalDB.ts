@@ -77,7 +77,7 @@ const uploadLocalMetadata = async (programId: string, metaHex: Hex, name?: strin
   return PROGRAMS_LOCAL_FORAGE.setItem(programId, {
     ...result,
     name: name ?? result.name,
-    meta: { hex: metaHex, types: getProgramMetadata(metaHex).types },
+    meta: { hash: metaHex, types: getProgramMetadata(metaHex).types },
     genesis: localStorage.getItem(LocalStorage.Genesis),
   });
 };
