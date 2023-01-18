@@ -10,7 +10,8 @@ import { LocalStorage } from 'shared/config';
 import { ReactComponent as logoutSVG } from 'shared/assets/images/actions/logout.svg';
 import { ReactComponent as arrowSVG } from 'shared/assets/images/actions/arrowLeft.svg';
 
-import { useExtensions, useWallet } from '../hooks';
+import { isWeb3Injected } from '@polkadot/extension-dapp';
+import { useWallet } from '../hooks';
 import { AccountList } from './accountList';
 import { Wallets } from './wallets';
 import styles from './AccountsModal.module.scss';
@@ -20,9 +21,8 @@ type Props = ModalProps & {
 };
 
 const AccountsModal = ({ accounts, onClose }: Props) => {
-  const { logout, switchAccount, account } = useAccount();
+  const { account, extensions, login, logout } = useAccount();
   const { wallet, walletId, switchWallet, resetWallet } = useWallet();
-  const extensions = useExtensions();
 
   const [isWalletSelection, setIsWalletSelection] = useState(!wallet);
 
@@ -37,7 +37,7 @@ const AccountsModal = ({ accounts, onClose }: Props) => {
 
   const handleAccountClick = (newAccount: InjectedAccountWithMeta) => {
     if (walletId) {
-      switchAccount(newAccount);
+      login(newAccount);
       localStorage.setItem(LocalStorage.Wallet, walletId);
       onClose();
     }
@@ -52,20 +52,18 @@ const AccountsModal = ({ accounts, onClose }: Props) => {
   }, [walletId]);
 
   useEffect(() => {
-    if (extensions) {
-      const isChosenExtensionExists = extensions.some((ext) => ext.name === walletId);
+    const isChosenExtensionExists = extensions.some((ext) => ext.name === walletId);
 
-      if (!isChosenExtensionExists) resetWallet();
-    }
+    if (!isChosenExtensionExists) resetWallet();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [extensions]);
 
-  const modalClassName = clsx(styles.modal, !accounts && styles.empty);
+  const modalClassName = clsx(styles.modal, !isWeb3Injected && styles.empty);
   const heading = isWalletSelection ? 'Choose Wallet' : 'Connect account';
 
   return (
     <Modal heading={heading} close={onClose} className={modalClassName}>
-      {extensions ? (
+      {isWeb3Injected ? (
         <>
           <SimpleBar className={styles.simplebar}>
             {isWalletSelection && (
@@ -85,7 +83,7 @@ const AccountsModal = ({ accounts, onClose }: Props) => {
               <Button
                 icon={isWalletSelection ? arrowSVG : wallet.icon}
                 text={isWalletSelection ? 'Back' : wallet.name}
-                color='transparent'
+                color="transparent"
                 onClick={toggleWalletSelection}
                 disabled={!wallet}
               />
@@ -93,8 +91,8 @@ const AccountsModal = ({ accounts, onClose }: Props) => {
 
             <Button
               icon={logoutSVG}
-              text='Logout'
-              color='transparent'
+              text="Logout"
+              color="transparent"
               className={styles.logoutButton}
               onClick={handleLogoutClick}
             />
@@ -103,12 +101,15 @@ const AccountsModal = ({ accounts, onClose }: Props) => {
       ) : (
         <p>
           Wallet extension was not found or disconnected. Please check how to install a supported wallet and create an
-          account
-          {' '}
-          <a href='https://wiki.gear-tech.io/docs/idea/account/create-account' target='_blank' rel='noreferrer'
-             className='link-text'>
+          account{' '}
+          <a
+            href="https://wiki.gear-tech.io/docs/idea/account/create-account"
+            target="_blank"
+            rel="noreferrer"
+            className="link-text">
             here
-          </a>.
+          </a>
+          .
         </p>
       )}
     </Modal>

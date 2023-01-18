@@ -11,8 +11,8 @@ import { Routing } from 'pages';
 import { LocalStorage, NODE_ADRESS_URL_PARAM } from 'shared/config';
 import { Loader } from 'shared/ui/loader';
 
-import './App.scss';
 import { withProviders } from './providers';
+import './App.scss';
 
 const App = withProviders(() => {
   const { nodeAddress } = useApp();
