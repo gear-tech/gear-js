@@ -1,9 +1,8 @@
 import txt1 from 'assets/meta/meta1.txt';
 import txt2 from 'assets/meta/meta2.txt';
 import txt3 from 'assets/meta/meta3.txt';
-import store4 from 'assets/meta/meta4.txt';
 
-type Props = { tamagotchi: RequestInfo | URL; store?: RequestInfo | URL };
+type Props = { tamagotchi: RequestInfo | URL; };
 export function getLessonAssets(lesson: number) {
   const getAssets = (): Props => {
     switch (lesson) {
@@ -18,7 +17,7 @@ export function getLessonAssets(lesson: number) {
         return { tamagotchi: txt3 };
       case 4:
         console.log('selected lesson 4');
-        return { tamagotchi: txt3, store: store4 };
+        return { tamagotchi: txt3 };
       default:
         console.log('selected default');
         return { tamagotchi: txt1 };

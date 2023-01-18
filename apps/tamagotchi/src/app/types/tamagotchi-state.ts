@@ -23,5 +23,4 @@ export type TmgState = {
   tamagotchi?: LessonsAll;
   programId: Hex;
   isDirty?: boolean;
-  store?: StoreNFT;
 };

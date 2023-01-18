@@ -12,7 +12,7 @@ export const StoreItemCard = ({ item }: { item: StoreNFTItem }) => {
     <article>
       <div className="flex flex-col py-10 px-8 bg-white/5 aspect-[347/230] rounded-2xl">
         <div className="flex justify-center">
-          <Icon name={'item-' + description.title.toLowerCase()} section="tamagotchi" className="w-35 h-35" />
+          <Icon name={'item-' + description.media.toLowerCase()} section="tamagotchi" className="w-35 h-35" />
         </div>
         <h2 className="mt-auto text-center font-kanit font-semibold text-xl tracking-[0.04em]">{description.title}</h2>
       </div>

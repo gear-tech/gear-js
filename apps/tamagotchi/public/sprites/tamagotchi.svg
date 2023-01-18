@@ -1,4 +1,4 @@
-<svg width="0" height="0" class="hidden">
+<svg width="0" height="0" class="" style="height: 0; width: 0; position: absolute; visibility: hidden;">
     <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 430 430" id="body-normal">
         <path opacity="0.5"
               d="M216.613 414.413C276.577 414.413 325.188 409.479 325.188 403.394C325.188 397.308 276.577 392.375 216.613 392.375C156.648 392.375 108.038 397.308 108.038 403.394C108.038 409.479 156.648 414.413 216.613 414.413Z"
@@ -446,7 +446,7 @@
         </g>
         <defs>
             <clipPath id="clip0_3_23665">
-                <rect width="108.575" height="70.4125" fill="white" transform="translate(161.25)"></rect>
+                <rect width="108.575" height="70.4125" fill="white" transform="translate(161.25)"/>
             </clipPath>
         </defs>
     </symbol>
@@ -1502,22 +1502,22 @@
         <defs>
             <linearGradient id="paint0_linear_1340_2087" x1="108.556" y1="9.0202" x2="101.847" y2="96.9415"
                             gradientUnits="userSpaceOnUse">
-                <stop stop-color="white"/>
+                <stop stop-color="white" offset="2"/>
                 <stop offset="1" stop-color="#242424"/>
             </linearGradient>
             <linearGradient id="paint1_linear_1340_2087" x1="122.34" y1="10.067" x2="115.63" y2="97.9884"
                             gradientUnits="userSpaceOnUse">
-                <stop stop-color="white"/>
+                <stop stop-color="white" offset="0"/>
                 <stop offset="1" stop-color="#242424"/>
             </linearGradient>
             <linearGradient id="paint2_linear_1340_2087" x1="30.4848" y1="3.05715" x2="23.7751" y2="90.9786"
                             gradientUnits="userSpaceOnUse">
-                <stop stop-color="white"/>
+                <stop stop-color="white" offset="0"/>
                 <stop offset="1" stop-color="#242424"/>
             </linearGradient>
             <linearGradient id="paint3_linear_1340_2087" x1="43.9422" y1="4.0937" x2="37.2325" y2="92.0153"
                             gradientUnits="userSpaceOnUse">
-                <stop stop-color="white"/>
+                <stop stop-color="white" offset="0"/>
                 <stop offset="1" stop-color="#242424"/>
             </linearGradient>
         </defs>
