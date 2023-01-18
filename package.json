@@ -6,9 +6,8 @@
     "build:common": "yarn workspace @gear-js/common build",
     "build:api-gateway": "yarn workspace @gear-js/api-gateway build",
     "build:data-storage": "yarn workspace @gear-js/data-storage build",
-    "build:hooks": "yarn workspace @gear-js/react-hooks build",
     "build:ui": "yarn workspace @gear-js/ui build",
-    "build:frontend": "yarn build:hooks && yarn build:ui && yarn workspace @gear-js/frontend build",
+    "build:frontend": "yarn build:ui && yarn workspace @gear-js/frontend build",
     "build:test-balance": "yarn workspace @gear-js/test-balance build",
     "build:wasm-compiler": "yarn workspace @gear-js/wasm-compiler build",
     "test:data-storage": "yarn workspace @gear-js/data-storage test",
@@ -36,7 +35,6 @@
   "workspaces": [
     "idea/*",
     "apps/*",
-    "utils/gear-hooks",
     "utils/gear-ui"
   ],
   "lint-staged": {
