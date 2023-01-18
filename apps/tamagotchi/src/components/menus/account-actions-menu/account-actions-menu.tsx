@@ -1,7 +1,7 @@
 import { Fragment, useContext, useEffect, useState } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import clsx from 'clsx';
-import { TmgContext } from 'app/context';
+import { AppCtx } from 'app/context';
 import { Icon } from 'components/ui/icon';
 import { TransferAccountPopup } from 'components/popups/transfer-account-popup';
 import { ApproveAccountPopup } from 'components/popups/approve-account-popup';
@@ -10,12 +10,12 @@ import { useAccount } from '@gear-js/react-hooks';
 
 export const AccountActionsMenu = () => {
   const { account } = useAccount();
-  const { state, setState } = useContext(TmgContext);
+  const { tamagotchi, lesson, setLesson } = useContext(AppCtx);
   const initialOptions = [
     {
       id: 4,
       label: 'Upload Contract',
-      action: () => setState(undefined),
+      action: () => setLesson(undefined),
       icon: 'upload',
     },
   ];
@@ -25,9 +25,9 @@ export const AccountActionsMenu = () => {
   const [options, setOptions] = useState([...initialOptions]);
 
   const getUserActions = () => {
-    const isOwner = account?.decodedAddress === state?.tamagotchi?.owner;
-    const isApproved = Boolean(state?.tamagotchi?.allowedAccount);
-    const isCurrentAccountApproved = isApproved ? account?.decodedAddress === state?.tamagotchi?.allowedAccount : false;
+    const isOwner = account?.decodedAddress === tamagotchi?.owner;
+    const isApproved = Boolean(tamagotchi?.allowedAccount);
+    const isCurrentAccountApproved = isApproved ? account?.decodedAddress === tamagotchi?.allowedAccount : false;
     const result = [];
 
     if (isOwner || isCurrentAccountApproved) {
@@ -57,8 +57,8 @@ export const AccountActionsMenu = () => {
   };
 
   useEffect(() => {
-    Number(state?.lesson) > 2 ? setOptions(getUserActions()) : setOptions(initialOptions);
-  }, [state]);
+    Number(lesson?.step) > 2 ? setOptions(getUserActions()) : setOptions(initialOptions);
+  }, [lesson?.step]);
 
   return (
     <div className="">

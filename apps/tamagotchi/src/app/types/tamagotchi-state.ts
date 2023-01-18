@@ -1,4 +1,3 @@
-import { LessonsAll } from './lessons';
 import { Hex } from '@gear-js/api';
 
 export type StoreNFTItemDescription = {
@@ -18,9 +17,7 @@ export type StoreNFT = {
   transactions: {};
 };
 
-export type TmgState = {
-  lesson: number;
-  tamagotchi?: LessonsAll;
+export type LessonState = {
+  step: number;
   programId: Hex;
-  isDirty?: boolean;
 };

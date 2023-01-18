@@ -8,7 +8,7 @@ import { Icon } from 'components/ui/icon';
 import { LOCAL_STORAGE } from 'app/consts';
 import { isLoggedIn } from 'app/utils/is-account';
 import { copyToClipboard } from 'app/utils';
-import { TmgContext } from 'app/context';
+import { AppCtx } from 'app/context';
 
 type Props = {
   list: InjectedAccountWithMeta[];
@@ -18,13 +18,13 @@ type Props = {
 export const AccountsList = ({ list, onChange }: Props) => {
   const { switchAccount } = useAccount();
   const alert = useAlert();
-  const { setState } = useContext(TmgContext);
+  const { reset } = useContext(AppCtx);
 
   const handleAccountButtonClick = async (account: InjectedAccountWithMeta) => {
     await switchAccount(account);
     localStorage.setItem(LOCAL_STORAGE.ACCOUNT, account.address);
     onChange();
-    setState(undefined);
+    reset();
   };
 
   const handleCopy = (address: string) => {

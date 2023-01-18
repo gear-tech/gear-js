@@ -1,42 +1,61 @@
 import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react';
-import type { TmgState } from 'app/types/tamagotchi-state';
+import type { LessonState } from 'app/types/tamagotchi-state';
+import type { TamagotchiState } from 'app/types/lessons';
 
-type Value = {
-  state?: TmgState;
-  setState: Dispatch<SetStateAction<TmgState | undefined>>;
+type Program = {
+  lesson?: LessonState;
+  setLesson: Dispatch<SetStateAction<LessonState | undefined>>;
+  tamagotchi?: TamagotchiState;
+  setTamagotchi: Dispatch<SetStateAction<TamagotchiState | undefined>>;
+  isDirty: boolean;
+  setIsDirty: Dispatch<SetStateAction<boolean>>;
+  reset: () => void;
 };
 
-export const TmgContext = createContext({} as Value);
+export const AppCtx = createContext({} as Program);
 
-const useTmgState = (): Value => {
-  const [state, setState] = useState<TmgState>();
+const useTmgState = (): Program => {
+  const [lesson, setLesson] = useState<LessonState>();
+  const [tamagotchi, setTamagotchi] = useState<TamagotchiState>();
+  const [isDirty, setIsDirty] = useState<boolean>(false);
+
+  const reset = () => {
+    setLesson(undefined);
+    setTamagotchi(undefined);
+    setIsDirty(false);
+  };
 
   useEffect(() => {
-    console.log({ state });
-  }, [state]);
+    console.log({ lesson });
+  }, [lesson]);
 
   useEffect(() => {
     const ls = localStorage.getItem('tmgState');
-    if (ls) setState(JSON.parse(ls));
+    if (ls) setLesson(JSON.parse(ls));
   }, []);
 
   useEffect(() => {
-    if (state) {
+    if (lesson) {
       console.log('set?');
-      localStorage.setItem('tmgState', JSON.stringify(state));
+      localStorage.setItem('tmgState', JSON.stringify(lesson));
     } else {
       console.log('remove?');
       localStorage.removeItem('tmgState');
     }
-  }, [state]);
+  }, [lesson]);
 
   return {
-    state,
-    setState,
+    lesson,
+    setLesson,
+    tamagotchi,
+    setTamagotchi,
+    isDirty,
+    setIsDirty,
+    reset,
   };
 };
 
 export function TmgProvider({ children }: { children: ReactNode }) {
-  const { Provider } = TmgContext;
+  const { Provider } = AppCtx;
   return <Provider value={useTmgState()}>{children}</Provider>;
 }

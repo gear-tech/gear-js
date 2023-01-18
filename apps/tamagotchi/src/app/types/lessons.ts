@@ -1,11 +1,11 @@
 import { ProgramMetadata } from '@gear-js/api';
 
-type Lesson1 = {
+type Tamagotchi1 = {
   name: string;
   dateOfBirth: number;
 };
 
-type Lesson2 = {
+type Tamagotchi2 = {
   // name: string;
   // dateOfBirth: number;
   entertained: number;
@@ -17,11 +17,11 @@ type Lesson2 = {
   restedBlock: number;
 };
 
-type Lesson3 = {
+type Tamagotchi3 = {
   allowedAccount: string;
 };
 
-export type LessonsAll = Lesson1 & Lesson2 & Lesson3;
+export type TamagotchiState = Tamagotchi1 & Tamagotchi2 & Tamagotchi3;
 
 export type LessonMetadataResponse = {
   tamagotchi: ProgramMetadata;

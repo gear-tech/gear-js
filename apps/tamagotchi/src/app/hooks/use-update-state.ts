@@ -1,33 +1,30 @@
 import { useAlert, useApi } from '@gear-js/react-hooks';
 import { useCallback, useContext } from 'react';
-import { TmgContext } from '../context';
-import { LessonsAll } from '../types/lessons';
+import { AppCtx } from '../context';
+import type { TamagotchiState } from 'app/types/lessons';
 import { useLessonMetadata } from './use-lesson-metadata';
 
 export const useUpdateState = () => {
   const { api } = useApi();
   const alert = useAlert();
-  const { state, setState } = useContext(TmgContext);
+  const { lesson, setLesson, setTamagotchi, isDirty, setIsDirty, reset } = useContext(AppCtx);
   const { metadata } = useLessonMetadata();
 
   const update = useCallback(() => {
-    if (state && metadata) {
-      const { programId, lesson, isDirty } = state;
+    if (lesson && metadata) {
+      const { programId, step } = lesson;
       Promise.resolve(api.programState.read({ programId }, metadata))
-        .then((res) =>
-          setState({
-            programId,
-            lesson,
-            tamagotchi: res.toJSON() as LessonsAll,
-          }),
-        )
+        .then((res) => {
+          setLesson({ programId, step });
+          setTamagotchi(res.toJSON() as TamagotchiState);
+        })
         .catch((e) => {
           alert.error((e as Error).message);
-          setState(undefined);
+          reset();
         })
-        .finally(() => (!isDirty ? setState({ ...state, isDirty: true }) : null));
+        .finally(() => (!isDirty ? setIsDirty(true) : null));
     }
-  }, [alert, api.programState, metadata, setState, state]);
+  }, [lesson, metadata]);
 
   return { update };
 };

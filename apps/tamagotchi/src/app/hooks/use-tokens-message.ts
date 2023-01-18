@@ -1,13 +1,13 @@
 import { useContext } from 'react';
 import type { Hex } from '@gear-js/api';
 import { useSendMessage } from '@gear-js/react-hooks';
-import { TmgContext } from '../context';
+import { AppCtx } from '../context';
 import { useLessonMetadata } from './use-lesson-metadata';
 
 export function useTokensMessage() {
-  const { state } = useContext(TmgContext);
+  const { lesson } = useContext(AppCtx);
   const { metadata } = useLessonMetadata();
-  return useSendMessage(state?.programId as Hex, metadata);
+  return useSendMessage(lesson?.programId as Hex, metadata);
 }
 
 // todo: meta.txt for token metadata
