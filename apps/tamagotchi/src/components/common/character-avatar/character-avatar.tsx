@@ -4,16 +4,11 @@ type CharacterAvatarProps = {
   lesson: number;
   emotion?: 'hello' | 'happy' | 'angry' | 'scared' | 'crying';
   age?: 'baby' | 'adult' | 'old';
+  state?: 'normal' | 'dead'
   hasItem?: ('sword' | 'hat' | 'bag' | 'glasses')[];
   color?: string;
 };
-export const CharacterAvatar = ({
-  lesson,
-  emotion = 'hello',
-  age = 'baby',
-  hasItem = ['hat', 'bag'],
-  color,
-}: CharacterAvatarProps) => {
+export const CharacterAvatar = ({ lesson, emotion = 'happy', age = 'baby', hasItem, state = 'normal', color }: CharacterAvatarProps) => {
   const s = 'tamagotchi';
   const cn = 'absolute inset-0 w-full h-full';
   const mouse = age === 'baby' ? 'face-baby' : `mouse-${age}-${emotion === 'hello' ? 'happy' : emotion}`;
@@ -24,6 +19,7 @@ export const CharacterAvatar = ({
   }`;
   const tail = `tail-${hasItem?.includes('sword') ? 'sword' : emotion === 'hello' ? 'hello' : 'normal'}`;
   const glasses = hasItem?.includes('glasses') ? 'head-glasses' : age === 'old' ? 'face-old-glasses' : null;
+  const body = `body-${state}`
 
   return (
     <>
@@ -31,7 +27,7 @@ export const CharacterAvatar = ({
         <div className="relative grow text-[#16B768] w-full h-30 aspect-square">
           <Icon name={tail} section={s} className={cn} />
           <Icon name={hands} section={s} className={cn} />
-          <Icon name="body-normal" section={s} className={cn} />
+          <Icon name={body} section={s} className={cn} />
           {hasItem?.includes('bag') && <Icon name="body-bag" section={s} className={cn} />}
           <Icon name={head} section={s} className={cn} />
           <Icon name={mouse} section={s} className={cn} />
