@@ -7,7 +7,7 @@ import { useLessonMetadata } from './use-lesson-metadata';
 export function useTokensMessage() {
   const { state } = useContext(TmgContext);
   const { metadata } = useLessonMetadata();
-  return useSendMessage(state?.programId as Hex, metadata?.store);
+  return useSendMessage(state?.programId as Hex, metadata);
 }
 
 // todo: meta.txt for token metadata
