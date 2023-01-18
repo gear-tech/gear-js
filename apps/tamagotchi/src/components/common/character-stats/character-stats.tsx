@@ -1,7 +1,6 @@
-import { useContext, useEffect } from 'react';
 import clsx from 'clsx';
 import { Button, buttonStyles } from '@gear-js/ui';
-import { AppCtx } from 'app/context';
+import { useTamagotchi } from 'app/context';
 import { Icon } from 'components/ui/icon';
 import { AccountActionsMenu } from 'components/menus/account-actions-menu';
 import { getTamagotchiAge } from 'app/utils/get-tamagotchi-age';
@@ -11,7 +10,7 @@ import { useAccount } from '@gear-js/react-hooks';
 
 export const CharacterStats = () => {
   const { account } = useAccount();
-  const { tamagotchi } = useContext(AppCtx);
+  const { tamagotchi } = useTamagotchi();
   const sendHandler = useTamagocthiMessage();
   const { update } = useUpdateState();
 

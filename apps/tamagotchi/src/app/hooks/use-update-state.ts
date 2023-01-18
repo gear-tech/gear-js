@@ -1,13 +1,13 @@
 import { useAlert, useApi } from '@gear-js/react-hooks';
-import { useCallback, useContext } from 'react';
-import { AppCtx } from '../context';
+import { useCallback } from 'react';
+import { useTamagotchi } from '../context';
 import type { TamagotchiState } from 'app/types/lessons';
 import { useLessonMetadata } from './use-lesson-metadata';
 
 export const useUpdateState = () => {
   const { api } = useApi();
   const alert = useAlert();
-  const { lesson, setLesson, setTamagotchi, isDirty, setIsDirty, reset } = useContext(AppCtx);
+  const { lesson, setLesson, setTamagotchi, isConnected, setisConnected, reset } = useTamagotchi();
   const { metadata } = useLessonMetadata();
 
   const update = useCallback(() => {
@@ -22,7 +22,7 @@ export const useUpdateState = () => {
           alert.error((e as Error).message);
           reset();
         })
-        .finally(() => (!isDirty ? setIsDirty(true) : null));
+        .finally(() => (!isConnected ? setisConnected(true) : null));
     }
   }, [lesson, metadata]);
 

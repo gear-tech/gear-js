@@ -1,11 +1,10 @@
-import { useContext } from 'react';
 import type { Hex } from '@gear-js/api';
 import { useSendMessage } from '@gear-js/react-hooks';
-import { AppCtx } from '../context';
+import { useTamagotchi } from '../context';
 import { useLessonMetadata } from './use-lesson-metadata';
 
 export function useTokensMessage() {
-  const { lesson } = useContext(AppCtx);
+  const { lesson } = useTamagotchi();
   const { metadata } = useLessonMetadata();
   return useSendMessage(lesson?.programId as Hex, metadata);
 }

@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useAccount } from '@gear-js/react-hooks';
 import { Button, buttonStyles } from '@gear-js/ui';
 import { GasWallet } from 'components/common/gas-wallet';
@@ -7,10 +7,10 @@ import { TokensWallet } from 'components/common/tokens-wallet';
 import { AccountButton } from 'components/common/account-button';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
-import { AppCtx } from 'app/context';
+import { useTamagotchi } from 'app/context';
 
 export const AccountComponent = () => {
-  const { lesson } = useContext(AppCtx);
+  const { lesson } = useTamagotchi();
   const { account, accounts } = useAccount();
   const [isModalOpen, setIsModalOpen] = useState(false);
 

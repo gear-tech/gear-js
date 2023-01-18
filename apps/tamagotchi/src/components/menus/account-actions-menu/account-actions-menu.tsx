@@ -1,7 +1,7 @@
-import { Fragment, useContext, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import clsx from 'clsx';
-import { AppCtx } from 'app/context';
+import { useTamagotchi } from 'app/context';
 import { Icon } from 'components/ui/icon';
 import { TransferAccountPopup } from 'components/popups/transfer-account-popup';
 import { ApproveAccountPopup } from 'components/popups/approve-account-popup';
@@ -10,7 +10,7 @@ import { useAccount } from '@gear-js/react-hooks';
 
 export const AccountActionsMenu = () => {
   const { account } = useAccount();
-  const { tamagotchi, lesson, setLesson } = useContext(AppCtx);
+  const { tamagotchi, lesson, setLesson } = useTamagotchi();
   const initialOptions = [
     {
       id: 4,

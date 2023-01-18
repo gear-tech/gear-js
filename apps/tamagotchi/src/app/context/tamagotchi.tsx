@@ -7,27 +7,23 @@ type Program = {
   setLesson: Dispatch<SetStateAction<LessonState | undefined>>;
   tamagotchi?: TamagotchiState;
   setTamagotchi: Dispatch<SetStateAction<TamagotchiState | undefined>>;
-  isDirty: boolean;
-  setIsDirty: Dispatch<SetStateAction<boolean>>;
+  isConnected: boolean;
+  setisConnected: Dispatch<SetStateAction<boolean>>;
   reset: () => void;
 };
 
-export const AppCtx = createContext({} as Program);
+export const TamagotchiCtx = createContext({} as Program);
 
 const useTmgState = (): Program => {
   const [lesson, setLesson] = useState<LessonState>();
   const [tamagotchi, setTamagotchi] = useState<TamagotchiState>();
-  const [isDirty, setIsDirty] = useState<boolean>(false);
+  const [isConnected, setisConnected] = useState<boolean>(false);
 
   const reset = () => {
     setLesson(undefined);
     setTamagotchi(undefined);
-    setIsDirty(false);
+    setisConnected(false);
   };
-
-  useEffect(() => {
-    console.log({ lesson });
-  }, [lesson]);
 
   useEffect(() => {
     const ls = localStorage.getItem('tmgState');
@@ -49,13 +45,13 @@ const useTmgState = (): Program => {
     setLesson,
     tamagotchi,
     setTamagotchi,
-    isDirty,
-    setIsDirty,
+    isConnected,
+    setisConnected,
     reset,
   };
 };
 
 export function TmgProvider({ children }: { children: ReactNode }) {
-  const { Provider } = AppCtx;
+  const { Provider } = TamagotchiCtx;
   return <Provider value={useTmgState()}>{children}</Provider>;
 }

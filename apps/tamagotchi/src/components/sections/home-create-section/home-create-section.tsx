@@ -1,27 +1,27 @@
 import { CharacterStats } from 'components/common/character-stats';
 import { CharacterAvatar } from 'components/common/character-avatar';
 import { ConnectAccount } from 'components/common/connect-account';
-import { useContext, useEffect } from 'react';
-import { AppCtx } from 'app/context';
-import { useUpdateState } from '../../../app/hooks/use-update-state';
+import { useEffect } from 'react';
+import { useTamagotchi } from 'app/context';
+import { useUpdateState } from 'app/hooks/use-update-state';
 // import { CreateType } from '@gear-js/api';
 // import { useAccount } from '@gear-js/react-hooks';
 
 export const HomeCreateSection = () => {
   // const { account } = useAccount();
-  const { lesson, tamagotchi, isDirty } = useContext(AppCtx);
+  const { lesson, tamagotchi, isConnected } = useTamagotchi();
   const { update } = useUpdateState();
   // const result = CreateType.create('TokenContractMessage', {
   //   Mint: { recipient: account?.decodedAddress, amount: 2000 },
   // });
-  //
+
   // console.log(result);
 
   useEffect(() => {
-    if (lesson?.step && !isDirty) {
+    if (lesson && !isConnected) {
       update();
     }
-  }, [lesson?.step]);
+  }, [isConnected, lesson, update]);
 
   return (
     <section className="grid grid-rows-[1fr_auto_auto] h-[calc(100vh-216px)]">

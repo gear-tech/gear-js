@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { decodeAddress } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
@@ -8,7 +7,7 @@ import { Icon } from 'components/ui/icon';
 import { LOCAL_STORAGE } from 'app/consts';
 import { isLoggedIn } from 'app/utils/is-account';
 import { copyToClipboard } from 'app/utils';
-import { AppCtx } from 'app/context';
+import { useTamagotchi } from 'app/context';
 
 type Props = {
   list: InjectedAccountWithMeta[];
@@ -18,7 +17,7 @@ type Props = {
 export const AccountsList = ({ list, onChange }: Props) => {
   const { switchAccount } = useAccount();
   const alert = useAlert();
-  const { reset } = useContext(AppCtx);
+  const { reset } = useTamagotchi();
 
   const handleAccountButtonClick = async (account: InjectedAccountWithMeta) => {
     await switchAccount(account);
