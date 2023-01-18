@@ -26,10 +26,10 @@ export const AccountActionsMenu = () => {
   const [options, setOptions] = useState([...initialOptions]);
 
   const getUserActions = () => {
-    const isOwner = decodeAddress(account?.address as string) === state?.tamagotchi?.owner;
+    const isOwner = account?.decodedAddress === state?.tamagotchi?.owner;
     const isApproved = Boolean(state?.tamagotchi?.allowedAccount);
     const isCurrentAccountApproved = isApproved
-      ? decodeAddress(String(account?.address)) === state?.tamagotchi?.allowedAccount
+      ? account?.decodedAddress === state?.tamagotchi?.allowedAccount
       : false;
     const result = [];
 
