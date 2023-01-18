@@ -7,7 +7,6 @@ import { TransferAccountPopup } from 'components/popups/transfer-account-popup';
 import { ApproveAccountPopup } from 'components/popups/approve-account-popup';
 import { RevokeApprovalPopup } from 'components/popups/revoke-approval-popup';
 import { useAccount } from '@gear-js/react-hooks';
-import { decodeAddress } from '@gear-js/api';
 
 export const AccountActionsMenu = () => {
   const { account } = useAccount();
@@ -28,9 +27,7 @@ export const AccountActionsMenu = () => {
   const getUserActions = () => {
     const isOwner = account?.decodedAddress === state?.tamagotchi?.owner;
     const isApproved = Boolean(state?.tamagotchi?.allowedAccount);
-    const isCurrentAccountApproved = isApproved
-      ? account?.decodedAddress === state?.tamagotchi?.allowedAccount
-      : false;
+    const isCurrentAccountApproved = isApproved ? account?.decodedAddress === state?.tamagotchi?.allowedAccount : false;
     const result = [];
 
     if (isOwner || isCurrentAccountApproved) {
