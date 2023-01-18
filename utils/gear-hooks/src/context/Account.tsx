@@ -1,20 +1,21 @@
-import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import type { InjectedAccountWithMeta, InjectedExtension } from '@polkadot/extension-inject/types';
 import { Balance } from '@polkadot/types/interfaces';
-import { isWeb3Injected, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp';
+import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { useState, createContext, useContext, useEffect } from 'react';
 import { Account, ProviderProps } from 'types';
 import { LOCAL_STORAGE } from 'consts';
-import { getBalance, getAccount, isLoggedIn, getAccounts } from 'utils';
+import { getBalance, getAccount, isLoggedIn } from 'utils';
 import { ApiContext } from './Api';
 import { AlertContext } from './Alert';
 
 type Value = {
+  extensions: InjectedExtension[];
+  accounts: InjectedAccountWithMeta[];
   account: Account | undefined;
-  accounts: InjectedAccountWithMeta[] | undefined;
-  switchAccount: (account: InjectedAccountWithMeta) => Promise<string | void>;
-  logout: () => void;
   isAccountReady: boolean;
+  login: (account: InjectedAccountWithMeta) => Promise<string | void>;
+  logout: () => void;
 };
 
 const AccountContext = createContext({} as Value);
@@ -23,26 +24,27 @@ function AccountProvider({ children }: ProviderProps) {
   const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
   const alert = useContext(AlertContext);
 
+  const [extensions, setExtensions] = useState<InjectedExtension[]>([]);
+  const [accounts, setAccounts] = useState<InjectedAccountWithMeta[]>([]);
+
   const [account, setAccount] = useState<Account>();
   const { address } = account || {};
 
-  const [accounts, setAccounts] = useState<InjectedAccountWithMeta[]>();
-
-  const [isExtensionReady, setIsExtensionReady] = useState(false);
+  const [isWeb3Enabled, setIsWeb3Enabled] = useState(false);
   const [isAccountReady, setIsAccountReady] = useState(false);
-
-  const login = (_account: Account) => {
-    localStorage.setItem(LOCAL_STORAGE.ACCOUNT, _account.address);
-    setAccount(_account);
-  };
 
   const handleError = ({ message }: Error) => alert.error(message);
 
-  const switchAccount = (_account: InjectedAccountWithMeta) =>
+  const switchAccount = (acc: Account) => {
+    localStorage.setItem(LOCAL_STORAGE.ACCOUNT, acc.address);
+    setAccount(acc);
+  };
+
+  const login = (acc: InjectedAccountWithMeta) =>
     api?.balance
-      .findOut(_account.address)
-      .then((balance) => getAccount(_account, balance))
-      .then(login)
+      .findOut(acc.address)
+      .then((balance) => getAccount(acc, balance))
+      .then(switchAccount)
       .catch(handleError);
 
   const logout = () => {
@@ -53,31 +55,31 @@ function AccountProvider({ children }: ProviderProps) {
   useEffect(() => {
     if (isApiReady)
       web3Enable('Gear App')
-        .then(getAccounts)
-        .then(setAccounts)
+        .then(async (result) => ({ exts: result, accs: await web3Accounts() }))
+        .then(({ exts, accs }) => {
+          setExtensions(exts);
+          setAccounts(accs);
+        })
         .catch(handleError)
-        .finally(() => setIsExtensionReady(true));
+        .finally(() => setIsWeb3Enabled(true));
   }, [isApiReady]);
 
   useEffect(() => {
+    if (!isWeb3Enabled) return;
+
+    const loggedInAccount = accounts?.find(isLoggedIn);
     let unsub: UnsubscribePromise | undefined;
 
-    if (isWeb3Injected && isExtensionReady) web3AccountsSubscribe((accs) => setAccounts(accs));
+    web3AccountsSubscribe((accs) => setAccounts(accs));
+
+    if (loggedInAccount) {
+      login(loggedInAccount).finally(() => setIsAccountReady(true));
+    } else setIsAccountReady(true);
 
     return () => {
       unsub?.then((unsubCallback) => unsubCallback());
     };
-  }, [isWeb3Injected, isExtensionReady]);
-
-  useEffect(() => {
-    if (isExtensionReady) {
-      const loggedInAccount = accounts?.find(isLoggedIn);
-
-      if (loggedInAccount) {
-        switchAccount(loggedInAccount).finally(() => setIsAccountReady(true));
-      } else setIsAccountReady(true);
-    }
-  }, [isExtensionReady]);
+  }, [isWeb3Enabled]);
 
   const updateBalance = (balance: Balance) =>
     setAccount((prevAccount) => (prevAccount ? { ...prevAccount, balance: getBalance(balance) } : prevAccount));
@@ -90,15 +92,16 @@ function AccountProvider({ children }: ProviderProps) {
     }
 
     return () => {
-      if (unsub) unsub.then((callback) => callback());
+      unsub?.then((callback) => callback());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, address]);
 
   const { Provider } = AccountContext;
-  const value = { account, accounts, switchAccount, logout, isAccountReady };
+  const value = { extensions, accounts, account, isAccountReady, login, logout };
 
   return <Provider value={value}>{children}</Provider>;
 }
 
 export { AccountContext, AccountProvider };
+export type { Value };
