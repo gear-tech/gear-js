@@ -59,8 +59,8 @@ jobs:
         working-directory: utils/gear-hooks
         run: |
           export token=$(printenv $(printenv GITHUB_ACTOR))
-          yarn install
-          yarn build
+          npm install
+          npm run build
           npm config set //registry.npmjs.org/:_authToken=$token
           npm publish
         env:
