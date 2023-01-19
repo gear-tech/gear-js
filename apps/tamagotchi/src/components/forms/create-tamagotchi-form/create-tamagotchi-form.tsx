@@ -1,8 +1,9 @@
 import { Button, Input, Select } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
-import { useGetLessonState } from 'app/hooks/use-get-lesson-state';
+// import { useGetLessonState } from 'app/hooks/use-get-lesson-state';
 import { hexRequired } from 'app/utils/form-validations';
 import { createTamagotchiInitial } from 'app/consts';
+import { useLesson } from '../../../app/context';
 
 const validate = {
   programId: hexRequired,
@@ -17,7 +18,8 @@ const options = [
 ];
 
 export const CreateTamagotchiForm = () => {
-  const { create } = useGetLessonState();
+  const { setLesson } = useLesson();
+  // const { create } = useGetLessonState();
   const form = useForm({
     initialValues: createTamagotchiInitial,
     validate,
@@ -25,7 +27,8 @@ export const CreateTamagotchiForm = () => {
   });
   const { getInputProps, errors } = form;
   const handleSubmit = form.onSubmit((values) => {
-    create(values);
+    // create(values);
+    setLesson({ step: +values.currentStep, programId: values.programId });
   });
 
   return (

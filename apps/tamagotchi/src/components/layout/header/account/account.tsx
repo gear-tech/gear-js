@@ -7,10 +7,10 @@ import { TokensWallet } from 'components/common/tokens-wallet';
 import { AccountButton } from 'components/common/account-button';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
-import { useTamagotchi } from 'app/context';
+import { useLesson } from 'app/context';
 
 export const AccountComponent = () => {
-  const { lesson } = useTamagotchi();
+  const { lesson } = useLesson();
   const { account, accounts } = useAccount();
   const [isModalOpen, setIsModalOpen] = useState(false);
 

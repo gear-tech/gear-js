@@ -7,7 +7,7 @@ import { Icon } from 'components/ui/icon';
 import { LOCAL_STORAGE } from 'app/consts';
 import { isLoggedIn } from 'app/utils/is-account';
 import { copyToClipboard } from 'app/utils';
-import { useTamagotchi } from 'app/context';
+import { useLesson } from 'app/context';
 
 type Props = {
   list: InjectedAccountWithMeta[];
@@ -17,7 +17,7 @@ type Props = {
 export const AccountsList = ({ list, onChange }: Props) => {
   const { switchAccount } = useAccount();
   const alert = useAlert();
-  const { reset } = useTamagotchi();
+  const { reset } = useLesson();
 
   const handleAccountButtonClick = async (account: InjectedAccountWithMeta) => {
     await switchAccount(account);

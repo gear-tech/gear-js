@@ -11,7 +11,7 @@ export const LOCAL_STORAGE = {
 
 export const createTamagotchiInitial = {
   programId: '' as Hex,
-  currentStep: 0,
+  currentStep: 1,
 };
 
 export const ENV = {

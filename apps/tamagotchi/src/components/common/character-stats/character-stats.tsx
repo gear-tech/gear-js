@@ -1,24 +1,22 @@
 import clsx from 'clsx';
 import { Button, buttonStyles } from '@gear-js/ui';
-import { useTamagotchi } from 'app/context';
+import { useLesson } from 'app/context';
 import { Icon } from 'components/ui/icon';
 import { AccountActionsMenu } from 'components/menus/account-actions-menu';
 import { getTamagotchiAge } from 'app/utils/get-tamagotchi-age';
 import { useTamagocthiMessage } from 'app/hooks/use-tamagotchi-message';
-import { useUpdateState } from 'app/hooks/use-update-state';
 import { useAccount } from '@gear-js/react-hooks';
 
 export const CharacterStats = () => {
   const { account } = useAccount();
-  const { tamagotchi } = useTamagotchi();
-  const sendHandler = useTamagocthiMessage();
-  const { update } = useUpdateState();
+  const { tamagotchi } = useLesson();
 
   const fullView = tamagotchi?.entertained;
-  const onSuccess = () => update();
-  const feedHandler = () => sendHandler({ Feed: null }, { onSuccess });
-  const playHandler = () => sendHandler({ Play: null }, { onSuccess });
-  const sleepHandler = () => sendHandler({ Sleep: null }, { onSuccess });
+
+  const sendHandler = useTamagocthiMessage();
+  const feedHandler = () => sendHandler({ Feed: null });
+  const playHandler = () => sendHandler({ Play: null });
+  const sleepHandler = () => sendHandler({ Sleep: null });
 
   return (
     <>
@@ -55,7 +53,7 @@ export const CharacterStats = () => {
                       <span className="inline-flex gap-2 items-center text-white/70 font-kanit font-medium">
                         <Icon name="food-tray" className="w-5 h-5" /> Hungry:
                       </span>
-                      <span>{tamagotchi.fed / 1000}</span>
+                      <span>{Number(tamagotchi.fed) / 1000}</span>
                     </div>
                     <div className="relative mt-3 bg-white/15 h-2.5 rounded-full overflow-hidden">
                       <div className="absolute inset-0 bg-primary" style={{ width: `${tamagotchi.fed / 100}%` }} />

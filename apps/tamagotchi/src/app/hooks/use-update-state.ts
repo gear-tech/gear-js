@@ -1,30 +1,27 @@
 import { useAlert, useApi } from '@gear-js/react-hooks';
 import { useCallback } from 'react';
-import { useTamagotchi } from '../context';
+import { useLesson } from '../context';
 import type { TamagotchiState } from 'app/types/lessons';
-import { useLessonMetadata } from './use-lesson-metadata';
 
 export const useUpdateState = () => {
   const { api } = useApi();
   const alert = useAlert();
-  const { lesson, setLesson, setTamagotchi, isConnected, setisConnected, reset } = useTamagotchi();
-  const { metadata } = useLessonMetadata();
+  const { lesson, meta, setTamagotchi, isFetched, setIsFetched, reset } = useLesson();
 
   const update = useCallback(() => {
-    if (lesson && metadata) {
-      const { programId, step } = lesson;
-      Promise.resolve(api.programState.read({ programId }, metadata))
-        .then((res) => {
-          setLesson({ programId, step });
-          setTamagotchi(res.toJSON() as TamagotchiState);
-        })
-        .catch((e) => {
-          alert.error((e as Error).message);
-          reset();
-        })
-        .finally(() => (!isConnected ? setisConnected(true) : null));
+    if (lesson && meta) {
+      console.log('fake updated');
+      // Promise.resolve(api.programState.read({ programId: lesson.programId }, meta))
+      //   .then((res) => {
+      //     setTamagotchi(res.toJSON() as TamagotchiState);
+      //   })
+      //   .catch((e) => {
+      //     alert.error((e as Error).message);
+      //     reset();
+      //   })
+      //   .finally(() => (!isFetched ? setIsFetched(true) : null));
     }
-  }, [lesson, metadata]);
+  }, [api, lesson, meta]);
 
   return { update };
 };

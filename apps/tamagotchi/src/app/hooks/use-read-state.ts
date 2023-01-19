@@ -25,9 +25,10 @@ export function useReadState<T = AnyJson>(
 
       api.programState
         .read({ programId }, meta)
-        .then((codecState) => codecState.toHuman())
+        .then((codecState) => codecState.toJSON())
         .then((result) => {
           setState(result as unknown as T);
+          console.log({ state, result });
           if (!isReadOnError) setIsStateRead(true);
         })
         .catch(({ message }: Error) => setError(message))
@@ -51,13 +52,17 @@ export function useReadState<T = AnyJson>(
 
   useEffect(() => {
     let unsub: UnsubscribePromise | undefined;
+    console.log('prepare to unsubscribe');
 
     if (api && programId && payload) {
       unsub = api.gearEvents.subscribeToGearEvent('MessagesDispatched', handleStateChange);
     }
 
     return () => {
-      if (unsub) unsub.then((unsubCallback) => unsubCallback());
+      if (unsub) {
+        console.log('unsubscribed');
+        unsub.then((unsubCallback) => unsubCallback());
+      }
     };
   }, [api, programId, payload]);
 

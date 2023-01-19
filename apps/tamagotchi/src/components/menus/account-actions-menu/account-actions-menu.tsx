@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import clsx from 'clsx';
-import { useTamagotchi } from 'app/context';
+import { useLesson } from 'app/context';
 import { Icon } from 'components/ui/icon';
 import { TransferAccountPopup } from 'components/popups/transfer-account-popup';
 import { ApproveAccountPopup } from 'components/popups/approve-account-popup';
@@ -10,12 +10,12 @@ import { useAccount } from '@gear-js/react-hooks';
 
 export const AccountActionsMenu = () => {
   const { account } = useAccount();
-  const { tamagotchi, lesson, setLesson } = useTamagotchi();
+  const { lesson, reset, tamagotchi } = useLesson();
   const initialOptions = [
     {
       id: 4,
       label: 'Upload Contract',
-      action: () => setLesson(undefined),
+      action: () => reset(),
       icon: 'upload',
     },
   ];
@@ -58,7 +58,7 @@ export const AccountActionsMenu = () => {
 
   useEffect(() => {
     Number(lesson?.step) > 2 ? setOptions(getUserActions()) : setOptions(initialOptions);
-  }, [lesson?.step]);
+  }, [lesson, account, tamagotchi]);
 
   return (
     <div className="">

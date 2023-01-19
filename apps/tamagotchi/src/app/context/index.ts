@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 import { NFTStoreContext } from './nft-store';
-import { TamagotchiCtx } from './tamagotchi';
+import { LessonsCtx } from './tamagotchi';
 
 export const useNFTStore = () => useContext(NFTStoreContext);
-export const useTamagotchi = () => useContext(TamagotchiCtx);
+export const useLesson = () => useContext(LessonsCtx);
 
-export { TamagotchiCtx, TmgProvider } from './tamagotchi';
+export { LessonsCtx, TmgProvider } from './tamagotchi';
 export { NFTStoreContext, NFTStoreProvider } from './nft-store';
