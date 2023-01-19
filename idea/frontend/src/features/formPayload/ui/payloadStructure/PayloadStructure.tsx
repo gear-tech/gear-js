@@ -48,7 +48,8 @@ const PayloadStructure = (props: Props) => {
         break;
       }
 
-      case 'primitive': {
+      case 'primitive':
+      case 'actorid': {
         Component = PrimitiveItem;
         break;
       }

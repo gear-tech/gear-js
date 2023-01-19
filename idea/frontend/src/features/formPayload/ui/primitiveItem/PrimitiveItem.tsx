@@ -1,10 +1,9 @@
 import { useField } from 'react-final-form';
 import { Input } from '@gear-js/ui';
 
-import styles from '../FormPayload.module.scss';
-
 import { getItemLabel } from '../../helpers';
 import { PayloadItemProps } from '../../model';
+import styles from '../FormPayload.module.scss';
 
 const PrimitiveItem = ({ title, levelName, typeStructure }: PayloadItemProps) => {
   const { input } = useField(levelName);
