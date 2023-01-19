@@ -246,7 +246,7 @@ const Wasm = () => {
 
       <WasmStates
         uploadedStates={uploadedStates}
-        fileFunctions={fileFunctions ? Object.keys(fileFunctions) : []}
+        fileFunctions={fileFunctions ? Object.keys(fileFunctions) : undefined}
         value={functionId}
         isStateRequestReady={isStateRequestReady}
         onStateChange={setUploadedState}
