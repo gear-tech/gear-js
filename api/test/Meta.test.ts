@@ -122,12 +122,12 @@ describe('Create type test', () => {
         Four: {
           array8: ['U128', 8],
           array32: ['U8', 32],
-          actor: ['U8', 32],
+          actor: 'ActorId',
         },
         Five: {
           array8: ['Str', 8],
           array32: [['U8', 'U16'], 32],
-          actor: ['U8', 32],
+          actor: 'ActorId',
         },
       },
     });
@@ -189,7 +189,7 @@ describe('Create type test', () => {
               len: 8,
             },
             array32: { name: '[U8;32]', kind: 'array', type: { type: 'U8', name: 'U8', kind: 'primitive' }, len: 32 },
-            actor: { name: 'ActorId', kind: 'array', type: { type: 'U8', name: 'U8', kind: 'primitive' }, len: 32 },
+            actor: { name: 'ActorId', kind: 'actorid', type: 'actorid' },
           },
         },
         Five: {
@@ -210,7 +210,7 @@ describe('Create type test', () => {
               },
               len: 32,
             },
-            actor: { name: 'ActorId', kind: 'array', type: { type: 'U8', name: 'U8', kind: 'primitive' }, len: 32 },
+            actor: { name: 'ActorId', kind: 'actorid', type: 'actorid' },
           },
         },
       },
@@ -336,7 +336,7 @@ describe('Create type test', () => {
     expect(meta.getTypeDef(16)).toEqual({
       array8: ['U128', 8],
       array32: ['U8', 32],
-      actor: ['U8', 32],
+      actor: 'ActorId',
     });
     expect(meta.getTypeDef(16, true)).toEqual({
       name: 'SomeStruct<U128, U8>',
@@ -344,7 +344,7 @@ describe('Create type test', () => {
       type: {
         array8: { name: '[U128;8]', kind: 'array', type: { type: 'U128', name: 'U128', kind: 'primitive' }, len: 8 },
         array32: { name: '[U8;32]', kind: 'array', type: { type: 'U8', name: 'U8', kind: 'primitive' }, len: 32 },
-        actor: { name: 'ActorId', kind: 'array', type: { type: 'U8', name: 'U8', kind: 'primitive' }, len: 32 },
+        actor: { name: 'ActorId', kind: 'actorid', type: 'actorid' },
       },
     });
   });
@@ -375,20 +375,19 @@ describe('Create type test', () => {
   });
 
   test('Get type structure 20', () => {
-    expect(meta.getTypeDef(20)).toEqual(['U8', 32]); //??? ActorId
+    expect(meta.getTypeDef(20)).toEqual('ActorId');
     expect(meta.getTypeDef(20, true)).toEqual({
       name: 'ActorId',
-      kind: 'array',
-      len: 32,
-      type: { name: 'U8', kind: 'primitive', type: 'U8' },
+      kind: 'actorid',
+      type: 'actorid',
     });
-  }); // TODO (ActorId as separate type)
+  });
 
   test('Get type structure 21', () => {
     expect(meta.getTypeDef(21)).toEqual({
       array8: ['Str', 8],
       array32: [['U8', 'U16'], 32],
-      actor: ['U8', 32],
+      actor: 'ActorId',
     });
     expect(meta.getTypeDef(21, true)).toEqual({
       name: 'SomeStruct<Str, X>',
@@ -408,7 +407,7 @@ describe('Create type test', () => {
           },
           len: 32,
         },
-        actor: { name: 'ActorId', kind: 'array', type: { type: 'U8', name: 'U8', kind: 'primitive' }, len: 32 },
+        actor: { name: 'ActorId', kind: 'actorid', type: 'actorid' },
       },
     });
   });
