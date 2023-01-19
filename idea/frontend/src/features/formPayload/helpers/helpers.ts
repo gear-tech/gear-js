@@ -32,10 +32,11 @@ const getSubmitPayload = (payload: PayloadValue): any => {
 const getPayloadValue = (typeStructure: TypeStructure | null): PayloadValue => {
   if (!typeStructure) return null;
 
-  const { kind, type, len } = typeStructure;
+  const { kind, type } = typeStructure;
 
   switch (kind) {
-    case 'sequence': {
+    case 'sequence':
+    case 'array': {
       if (!isPlainObject(type)) {
         console.error('Value of type "sequence" is not an object');
 
@@ -44,19 +45,6 @@ const getPayloadValue = (typeStructure: TypeStructure | null): PayloadValue => {
 
       // @ts-ignore
       return getPreformattedText([getPayloadValue(type)]);
-    }
-
-    case 'array': {
-      const arrayLength = len || 0;
-
-      if (!isPlainObject(type)) {
-        console.error('Value of type "Array" is not an object');
-
-        return [];
-      }
-
-      // @ts-ignore
-      return new Array(arrayLength).fill(getPayloadValue(type));
     }
 
     case 'tuple': {

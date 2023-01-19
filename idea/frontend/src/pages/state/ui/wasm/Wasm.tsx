@@ -60,7 +60,6 @@ const Wasm = () => {
     [metadata, isTypeIndex, typeIndex, functionId],
   );
 
-  // const resetStateWasmBuffer = () => setStateWasmBuffer(undefined);
   const resetFileInputValue = () => resetFileInput(fileInputRef.current);
 
   const handleInputChange = ({ target }: ChangeEvent<HTMLInputElement>) => {

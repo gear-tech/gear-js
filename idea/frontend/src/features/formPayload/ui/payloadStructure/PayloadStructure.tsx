@@ -4,7 +4,6 @@ import { PayloadItemProps, PayloadStructureProps } from '../../model';
 import { VecItem } from '../vecItem';
 import { EnumItem } from '../enumItem';
 import { TupleItem } from '../tupleItem';
-import { ArrayItem } from '../arrayItem';
 import { StructItem } from '../structItem';
 import { PrimitiveItem } from '../primitiveItem';
 import { OptionItem } from '../optionItem';
@@ -18,7 +17,8 @@ const PayloadStructure = (props: Props) => {
     const { title, levelName, typeStructure } = itemProps;
 
     switch (typeStructure?.kind) {
-      case 'sequence': {
+      case 'sequence':
+      case 'array': {
         Component = VecItem;
         break;
       }
@@ -30,11 +30,6 @@ const PayloadStructure = (props: Props) => {
 
       case 'option': {
         Component = OptionItem;
-        break;
-      }
-
-      case 'array': {
-        Component = ArrayItem;
         break;
       }
 
