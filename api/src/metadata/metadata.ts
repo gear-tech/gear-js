@@ -109,6 +109,10 @@ export class GearMetadata {
 
     if (def.isComposite) {
       let result: any = {};
+      const name = this.getTypeName(typeIndex);
+      if (name === 'ActorId') {
+        return additionalFields ? { name, kind: 'actorid', type: 'actorid' } : name;
+      }
       for (const { name, type } of def.asComposite.fields) {
         if (name.isSome) {
           result[name.unwrap().toString()] = this.getTypeDef(type, additionalFields);
@@ -119,7 +123,7 @@ export class GearMetadata {
           return additionalFields ? { ...result, name: this.getTypeName(typeIndex) } : result;
         }
       }
-      return additionalFields ? { name: this.getTypeName(typeIndex), kind: 'composite', type: result } : result;
+      return additionalFields ? { name, kind: 'composite', type: result } : result;
     }
 
     if (def.isVariant) {

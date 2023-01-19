@@ -70,7 +70,8 @@ export type TypeKind =
   | 'variant'
   | 'array'
   | 'tuple'
-  | 'option';
+  | 'option'
+  | 'actorid';
 
 export interface TypeStructure {
   name: string;

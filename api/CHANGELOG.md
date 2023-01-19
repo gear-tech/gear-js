@@ -1,3 +1,13 @@
+## 0.28.6
+
+_01/19/2023_
+
+https://github.com/gear-tech/gear-js/pull/1154
+
+### Changes
+
+- Add separate type `actorid`
+
 ## 0.28.5
 
 _01/12/2023_
