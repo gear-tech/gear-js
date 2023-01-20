@@ -8,6 +8,7 @@ import isString from 'lodash.isstring';
 import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from 'shared/config';
 
 import { IMeta } from 'entities/metadata';
+import { isAndroid, isIOS } from '@react-aria/utils';
 import { isHexValid, isExists } from './form';
 
 const checkWallet = (account?: Account) => {
@@ -136,6 +137,8 @@ const resetFileInput = (target: HTMLInputElement | null) => {
   target.dispatchEvent(changeEvent);
 };
 
+const isMobileDevice = () => isIOS() || (isAndroid() as boolean); // asserting cuz isAndroid somehow any
+
 export {
   checkWallet,
   formatDate,
@@ -155,4 +158,5 @@ export {
   disableScroll,
   enableScroll,
   resetFileInput,
+  isMobileDevice,
 };

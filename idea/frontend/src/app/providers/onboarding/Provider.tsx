@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { LocalStorage, routes } from 'shared/config';
-import { disableScroll, enableScroll } from 'shared/helpers';
+import { disableScroll, enableScroll, isMobileDevice } from 'shared/helpers';
 
 import { OnboardingContext } from './Context';
 import { getHeading, getText } from './helpers';
@@ -19,7 +19,10 @@ const OnboardingProvider = ({ children }: ProviderProps) => {
   const location = useLocation();
   const { pathname } = location;
 
-  const [isOnboardingActive, setIsOnboardingActive] = useState(!localStorage[LocalStorage.IsNewUser]);
+  const [isOnboardingActive, setIsOnboardingActive] = useState(
+    isMobileDevice() ? false : !localStorage[LocalStorage.IsNewUser],
+  );
+
   const [stepIndex, setStepIndex] = useState(0);
 
   const step = steps[stepIndex];

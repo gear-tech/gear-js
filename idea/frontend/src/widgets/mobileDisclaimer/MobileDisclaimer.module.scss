@@ -1,0 +1,43 @@
+@use '@gear-js/ui/variables' as *;
+
+.overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  z-index: 100;
+}
+
+.disclaimer {
+  width: 100%;
+  max-width: 340px;
+  padding: 40px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: #29292b;
+  border: $borderModal;
+  border-radius: $borderRadiusMedium;
+  transform: scale(2.5); // scaling cuz of meta viewport tag lack
+
+  img {
+    margin-bottom: 30px;
+  }
+
+  p {
+    line-height: 26px;
+    color: #d1d1d1;
+  }
+
+  button {
+    margin-top: 24px;
+  }
+}

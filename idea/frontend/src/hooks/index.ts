@@ -23,6 +23,7 @@ import { useCodes } from './useCodes';
 import { useIsProgramExists } from './useIsProgramExists';
 import { useLocalProgramsFilter } from './useLocalProgramsFilter';
 import { useNodeVersion } from './useNodeVersion';
+import { useMobileDisclaimer } from './useMobileDisclaimer';
 
 export {
   useApp,
@@ -55,4 +56,5 @@ export {
   useOnboarding,
   useLocalProgramsFilter,
   useNodeVersion,
+  useMobileDisclaimer,
 };
