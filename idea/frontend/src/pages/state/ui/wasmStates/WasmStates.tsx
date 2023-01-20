@@ -38,8 +38,6 @@ const WasmStates = (props: Props) => {
 
   const isAnyUploadedState = isStateRequestReady && uploadedStates.length > 0;
   const isUploadedStatesListEmpty = isStateRequestReady && uploadedStates.length === 0;
-  const isAnyFileFunction = !!fileFunctions?.length;
-  const isFileFunctionListEmpty = fileFunctions?.length === 0;
 
   const getStateWasms = () =>
     uploadedStates?.map((state) => {
@@ -66,29 +64,16 @@ const WasmStates = (props: Props) => {
         <Input type="search" placeholder="Search by function name" {...getInputProps('query')} />
       </form>
       <div className={styles.wrapper}>
-        <Box>
-          <h3 className={styles.heading}>Uploaded Functions</h3>
-          {isAnyUploadedState ? (
-            <ul className={styles.functions}>{getStateWasms()}</ul>
-          ) : (
-            <FunctionsPlaceholder isEmpty={isUploadedStatesListEmpty} />
-          )}
-        </Box>
+        {fileFunctions && (
+          <Box className={styles.fileFunctions}>
+            <h3 className={styles.heading}>File Functions</h3>
 
-        <Box className={styles.fileFunctions}>
-          <h3 className={styles.heading}>File Functions</h3>
-
-          {isAnyFileFunction ? (
             <Functions
               list={fileFunctions}
               value={value}
               onChange={(id) => onFunctionChange({ id, name: id, isFileFunction: true })}
             />
-          ) : (
-            <FunctionsPlaceholder isEmpty={isFileFunctionListEmpty} file />
-          )}
 
-          {isAnyFileFunction && (
             <Button
               text="Upload"
               color="secondary"
@@ -96,6 +81,15 @@ const WasmStates = (props: Props) => {
               className={styles.uploadFileButton}
               onClick={onUploadButtonClick}
             />
+          </Box>
+        )}
+
+        <Box>
+          <h3 className={styles.heading}>Uploaded Functions</h3>
+          {isAnyUploadedState ? (
+            <ul className={styles.functions}>{getStateWasms()}</ul>
+          ) : (
+            <FunctionsPlaceholder isEmpty={isUploadedStatesListEmpty} />
           )}
         </Box>
       </div>

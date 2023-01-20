@@ -60,7 +60,6 @@ const Wasm = () => {
     [metadata, isTypeIndex, typeIndex, functionId],
   );
 
-  // const resetStateWasmBuffer = () => setStateWasmBuffer(undefined);
   const resetFileInputValue = () => resetFileInput(fileInputRef.current);
 
   const handleInputChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
@@ -246,7 +245,7 @@ const Wasm = () => {
 
       <WasmStates
         uploadedStates={uploadedStates}
-        fileFunctions={fileFunctions ? Object.keys(fileFunctions) : []}
+        fileFunctions={fileFunctions ? Object.keys(fileFunctions) : undefined}
         value={functionId}
         isStateRequestReady={isStateRequestReady}
         onStateChange={setUploadedState}

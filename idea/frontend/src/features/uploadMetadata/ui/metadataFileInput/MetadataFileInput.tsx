@@ -75,7 +75,7 @@ const MetadataFileInput = ({ metadata, onReset, onUpload }: Props) => {
     <FileInput
       ref={inputRef}
       color="primary"
-      label="Metadata file"
+      label="Upload the meta.txt file"
       direction="y"
       className={clsx(formStyles.field, formStyles.gap16)}
       onChange={handleUploadMetaFile}
