@@ -3,10 +3,11 @@ import { useSearchParams } from 'react-router-dom';
 import { useAccount, useApi } from '@gear-js/react-hooks';
 import 'simplebar-react/dist/simplebar.min.css';
 
-import { useApp, useChain, useEventSubscriptions, useLocalProgramsFilter } from 'hooks';
+import { useApp, useChain, useEventSubscriptions, useLocalProgramsFilter, useMobileDisclaimer } from 'hooks';
 import { Menu } from 'widgets/menu';
 import { Header } from 'widgets/header';
 import { Footer } from 'widgets/footer';
+import { MobileDisclaimer } from 'widgets/mobileDisclaimer';
 import { Routing } from 'pages';
 import { LocalStorage, NODE_ADRESS_URL_PARAM } from 'shared/config';
 import { Loader } from 'shared/ui/loader';
@@ -22,6 +23,8 @@ const App = withProviders(() => {
   const { isAccountReady } = useAccount();
   const { isChainRequestReady } = useChain();
   const isAppReady = isApiReady && isAccountReady && isChainRequestReady;
+
+  const { isMobileDisclaimerVisible, closeMobileDisclaimer } = useMobileDisclaimer();
 
   useEventSubscriptions();
   useLocalProgramsFilter();
@@ -51,6 +54,8 @@ const App = withProviders(() => {
           <Header />
           {isAppReady ? <Routing /> : <Loader />}
         </div>
+
+        {isMobileDisclaimerVisible && <MobileDisclaimer onCloseButtonClick={closeMobileDisclaimer} />}
       </main>
       <Footer />
     </>
