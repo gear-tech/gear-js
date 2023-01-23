@@ -1,3 +1,13 @@
+## 0.28.7
+
+_01/23/2023_
+
+https://github.com/gear-tech/gear-js/pull/1157
+
+### Changes
+
+- Set `kind` to `primitive` for types from `primitive_types` crate
+
 ## 0.28.6
 
 _01/19/2023_
