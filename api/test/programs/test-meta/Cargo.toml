@@ -20,6 +20,4 @@ gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git"  }
 
 [features]
 default = ["std"]
-std = [
-    "codec/std",
-]
+std = ["codec/std"]

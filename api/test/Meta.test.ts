@@ -11,15 +11,15 @@ beforeAll(() => {
   meta = getProgramMetadata(`0x${hex}`);
 });
 
-describe('Create type test', () => {
+describe('Get type definitions', () => {
   test('Program Metadata', () => {
     expect(meta.types).toEqual({
       init: { input: 0, output: 3 },
       handle: { input: 7, output: 24 },
       reply: { input: 4, output: 26 },
       others: { input: null, output: null },
-      signal: null,
-      state: 27,
+      signal: 27,
+      state: 28,
     });
   });
 
@@ -463,7 +463,12 @@ describe('Create type test', () => {
   });
 
   test('Get type structure 27', () => {
-    expect(meta.getTypeDef(27)).toEqual([
+    expect(meta.getTypeDef(27)).toEqual('H256');
+    expect(meta.getTypeDef(27, true)).toEqual({ kind: 'primitive', name: 'H256', type: 'H256' });
+  });
+
+  test('Get type structure 28', () => {
+    expect(meta.getTypeDef(28)).toEqual([
       {
         id: {
           decimal: 'U64',
@@ -475,7 +480,7 @@ describe('Create type test', () => {
         },
       },
     ]);
-    expect(meta.getTypeDef(27, true)).toEqual({
+    expect(meta.getTypeDef(28, true)).toEqual({
       name: 'Vec<Wallet>',
       kind: 'sequence',
       type: {
@@ -503,8 +508,8 @@ describe('Create type test', () => {
     });
   });
 
-  test('Get type structure 28', () => {
-    expect(meta.getTypeDef(28)).toEqual({
+  test('Get type structure 29', () => {
+    expect(meta.getTypeDef(29)).toEqual({
       id: {
         decimal: 'U64',
         hex: ['U8'],
@@ -514,7 +519,7 @@ describe('Create type test', () => {
         name: 'Str',
       },
     });
-    expect(meta.getTypeDef(28, true)).toEqual({
+    expect(meta.getTypeDef(29, true)).toEqual({
       name: 'Wallet',
       kind: 'composite',
       type: {
@@ -538,12 +543,12 @@ describe('Create type test', () => {
     });
   });
 
-  test('Get type structure 29', () => {
-    expect(meta.getTypeDef(29)).toEqual({
+  test('Get type structure 30', () => {
+    expect(meta.getTypeDef(30)).toEqual({
       decimal: 'U64',
       hex: ['U8'],
     });
-    expect(meta.getTypeDef(29, true)).toEqual({
+    expect(meta.getTypeDef(30, true)).toEqual({
       name: 'Id',
       kind: 'composite',
       type: {
@@ -553,17 +558,17 @@ describe('Create type test', () => {
     });
   });
 
-  test('Get type structure 30', () => {
-    expect(meta.getTypeDef(30)).toEqual('U64');
-    expect(meta.getTypeDef(30, true)).toEqual({ name: 'U64', kind: 'primitive', type: 'U64' });
+  test('Get type structure 31', () => {
+    expect(meta.getTypeDef(31)).toEqual('U64');
+    expect(meta.getTypeDef(31, true)).toEqual({ name: 'U64', kind: 'primitive', type: 'U64' });
   });
 
-  test('Get type structure 31', () => {
-    expect(meta.getTypeDef(31)).toEqual({
+  test('Get type structure 32', () => {
+    expect(meta.getTypeDef(32)).toEqual({
       surname: 'Str',
       name: 'Str',
     });
-    expect(meta.getTypeDef(31, true)).toEqual({
+    expect(meta.getTypeDef(32, true)).toEqual({
       name: 'Person',
       kind: 'composite',
       type: {

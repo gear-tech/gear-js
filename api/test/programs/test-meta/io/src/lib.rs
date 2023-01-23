@@ -6,6 +6,7 @@ use alloc::string::String;
 use codec::{Decode, Encode};
 use gmeta::{InOut, Metadata};
 use gstd::{prelude::*, ActorId, BTreeMap, BTreeSet};
+use primitive_types::H256;
 use scale_info::TypeInfo;
 
 pub struct ProgramMetadata;
@@ -15,7 +16,7 @@ impl Metadata for ProgramMetadata {
     type Handle = InOut<Action, EmptyStruct>;
     type Reply = InOut<String, Vec<u16>>;
     type Others = InOut<(), ()>;
-    type Signal = ();
+    type Signal = H256;
     type State = Vec<Wallet>;
 }
 
