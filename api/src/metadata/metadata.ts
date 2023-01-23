@@ -9,8 +9,8 @@ import { TypeStructure } from '../types';
 
 export class GearMetadata {
   private registry: Registry;
-  private portableRegistry: PortableRegistry;
   private regTypes: Map<number, { name: string; def: any }>;
+  portableRegistry: PortableRegistry;
 
   constructor(hexRegistry: HexString) {
     this.registry = new TypeRegistry();
@@ -68,12 +68,17 @@ export class GearMetadata {
     typeIndex: number | Si1LookupTypeId,
     additionalFields = false,
   ): string | Record<string, any> | TypeStructure {
-    const { def } = this.portableRegistry.getSiType(typeIndex);
+    const { def, path } = this.portableRegistry.getSiType(typeIndex);
 
     if (def.isPrimitive) {
       return additionalFields
         ? { name: def.asPrimitive.type, kind: 'primitive', type: def.asPrimitive.type }
         : def.asPrimitive.type;
+    }
+
+    if (path.length > 0 && path.at(0).toString() === 'primitive_types') {
+      const type = this.getTypeName(typeIndex);
+      return additionalFields ? { name: type, kind: 'primitive', type } : type;
     }
 
     if (def.isEmpty) {
