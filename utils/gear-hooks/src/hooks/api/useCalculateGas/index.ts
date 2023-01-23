@@ -15,15 +15,7 @@ function useUploadCalculateGas(code: Hex | Buffer | undefined, meta?: ProgramMet
     const { decodedAddress } = account;
     const { value = 0, isOtherPanicsAllowed = false } = options || {};
 
-    return api.program.calculateGas.initUpload(
-      decodedAddress,
-      code,
-      initPayload,
-      value,
-      isOtherPanicsAllowed,
-      // @ts-ignore TODO: remove after fix
-      meta,
-    );
+    return api.program.calculateGas.initUpload(decodedAddress, code, initPayload, value, isOtherPanicsAllowed, meta);
   };
 
   return calculateGas;
@@ -40,15 +32,7 @@ function useCreateCalculateGas(codeId: Hex | undefined, meta?: ProgramMetadata |
     const { decodedAddress } = account;
     const { value = 0, isOtherPanicsAllowed = false } = options || {};
 
-    return api.program.calculateGas.initCreate(
-      decodedAddress,
-      codeId,
-      initPayload,
-      value,
-      isOtherPanicsAllowed,
-      // @ts-ignore TODO: remove after fix
-      meta,
-    );
+    return api.program.calculateGas.initCreate(decodedAddress, codeId, initPayload, value, isOtherPanicsAllowed, meta);
   };
 
   return calculateGas;
@@ -75,7 +59,6 @@ function useHandleCalculateGas(
       initPayload,
       value,
       isOtherPanicsAllowed,
-      // @ts-ignore TODO: remove after fix
       meta,
     );
   };
@@ -107,7 +90,6 @@ function useReplyCalculateGas(
       initPayload,
       value,
       isOtherPanicsAllowed,
-      // @ts-ignore TODO: remove after fix
       meta,
     );
   };
