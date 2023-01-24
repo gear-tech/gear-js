@@ -1,7 +1,7 @@
 import { Hex } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
 import { Content, Loader } from 'components';
-import { useLottery, useLotteryStatus } from 'hooks';
+import { useLotteryState, useLotteryStatus } from 'hooks';
 import { getDate, getNumber, isWinner } from 'utils';
 import { STATUS, SUBHEADING } from 'consts';
 import { OwnerStart } from './owner-start';
@@ -11,27 +11,26 @@ import { Pending } from './pending';
 function Home() {
   const { account } = useAccount();
 
-  const { lottery, isLotteryRead } = useLottery();
-  const { lotteryOwner, lotteryStartTime, lotteryDuration, tokenAddress } = lottery || {};
+  const { state, isStateRead } = useLotteryState();
+  const { admin, started, ended, fungibleToken } = state || {};
 
-  const cost = lottery?.participationCost || '';
-  const prizeFund = lottery?.prizeFund || '';
-  const players = lottery ? Object.values(lottery.players) : [];
-  const winner = lottery && isWinner(lottery.winner) ? lottery.winner : ('' as Hex);
-  const isOwner = account?.decodedAddress === lotteryOwner;
+  const cost = state?.participationCost || '';
+  const prizeFund = state?.prizeFund || '';
+  const players = state?.players || [];
+  const winner = state && isWinner(state.winner) ? state.winner : ('' as Hex);
+  const isOwner = account?.decodedAddress === admin;
   const isPlayer = players.some(({ playerId }) => playerId === account?.decodedAddress);
   const isParticipant = isPlayer || isOwner;
 
-  const startTime = getNumber(lotteryStartTime || '');
-  const duration = getNumber(lotteryDuration || '');
-  const endTime = startTime + duration;
+  const startTime = getNumber(started || '');
+  const endTime = getNumber(ended || '');
 
   const { status, countdown, resetStatus } = useLotteryStatus(endTime);
   const isLotteryStarted = status !== STATUS.AWAIT;
   const isLotteryActive = status === STATUS.PENDING;
   const dashboard = { startTime: getDate(startTime), endTime: getDate(endTime), status, winner, countdown };
 
-  return isLotteryRead ? (
+  return isStateRead ? (
     <>
       {isLotteryStarted && isParticipant && (
         <Pending
@@ -42,8 +41,9 @@ function Home() {
           onResetButtonClick={resetStatus}
         />
       )}
+
       {!isLotteryStarted && isOwner && <OwnerStart />}
-      {isLotteryActive && !isParticipant && <PlayerStart cost={cost} isToken={!!tokenAddress} />}
+      {isLotteryActive && !isParticipant && <PlayerStart cost={cost} isToken={!!fungibleToken} />}
       {!isLotteryActive && !isParticipant && <Content subheading={SUBHEADING.AWAIT} />}
     </>
   ) : (

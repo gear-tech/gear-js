@@ -2119,6 +2119,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gear-js/api@npm:0.28.7":
+  version: 0.28.7
+  resolution: "@gear-js/api@npm:0.28.7"
+  peerDependencies:
+    "@polkadot/api": ^9.11.1
+    "@polkadot/wasm-crypto": ^6.4.1
+    rxjs: ^7.5.5
+  checksum: 6465339eb9bc568aaa4566d7a0a56d877c7231e9f3c91f03a3ee03225c1ae6ba8787d1712ce74ec6598421674e0656cc79a21efe6f379878f9dd29a15b741294
+  languageName: node
+  linkType: hard
+
 "@gear-js/api@npm:^0.25.2":
   version: 0.25.9
   resolution: "@gear-js/api@npm:0.25.9"
@@ -2410,14 +2421,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/game-of-chance@workspace:apps/game-of-chance"
   dependencies:
-    "@gear-js/api": ^0.27.0
-    "@gear-js/react-hooks": ^0.3.6
+    "@gear-js/api": 0.28.7
+    "@gear-js/react-hooks": 0.5.3
     "@gear-js/ui": ^0.4.0
     "@mantine/form": ^4.2.9
-    "@polkadot/api": 9.10.1
+    "@polkadot/api": 9.11.1
     "@polkadot/extension-dapp": 0.44.6
     "@polkadot/react-identicon": 2.9.14
-    "@polkadot/types": 9.10.1
+    "@polkadot/types": 9.11.1
     "@polkadot/util": 10.2.1
     "@polkadot/wasm-crypto": 6.4.1
     "@testing-library/jest-dom": ^5.16.4
@@ -2541,6 +2552,19 @@ __metadata:
     web-vitals: ^2.1.4
   languageName: unknown
   linkType: soft
+
+"@gear-js/react-hooks@npm:0.5.3":
+  version: 0.5.3
+  resolution: "@gear-js/react-hooks@npm:0.5.3"
+  peerDependencies:
+    "@gear-js/api": ^0.28.7
+    "@polkadot/extension-dapp": ^0.44.8
+    react: ">=17.0.2"
+    react-dom: ">=17.0.2"
+    react-transition-group: ^4.4.2
+  checksum: a0022732a30fcda45cbbd7eedb26430b2cad94a588820bdafc9a3b2ca94c07e055c28b1b59dfbac89cc516383ebcc19447adc68d46a8a94a2cbd98ca93324e0a
+  languageName: node
+  linkType: hard
 
 "@gear-js/react-hooks@npm:0.5.4":
   version: 0.5.4

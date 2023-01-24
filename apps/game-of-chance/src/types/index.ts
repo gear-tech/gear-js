@@ -6,14 +6,14 @@ type Player = {
 };
 
 type Lottery = {
-  lotteryOwner: Hex;
-  lotteryStartTime: string;
-  lotteryDuration: string;
+  admin: Hex;
+  started: string;
+  ended: string;
   participationCost: string;
   prizeFund: string;
-  players: { [index: number]: Player };
+  players: Player[];
   winner: Hex;
-  tokenAddress: Hex;
+  fungibleToken: Hex | null;
 };
 
 type DashboardProps = {
