@@ -1,16 +1,15 @@
 import { Button, Checkbox, Input } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 import { isHex } from '@polkadot/util';
+import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useLotteryMessage } from 'hooks';
-import { useEffect, useState } from 'react';
 import styles from './Form.module.scss';
 
-const initialValues = { duration: '', prizeFund: '', participationCost: '', tokenAddress: '' };
+const initialValues = { duration: '', participationCost: '', ftAddress: '' };
 
 const getValidation = (isFungibleToken: boolean) => ({
   duration: (value: string) => (!value ? 'Duration is required' : null),
-  prizeFund: (value: string) => (!value ? 'Prize fund is required' : null),
   participationCost: (value: string) => (!value ? 'Participation cost is required' : null),
   tokenAddress: (value: string) => (isFungibleToken && !isHex(value) ? 'Address should be hex' : null),
 });
@@ -35,15 +34,17 @@ function Form() {
   };
 
   const handleSubmit = (data: typeof initialValues) => {
+    const { participationCost } = data;
     const duration = +data.duration * S_MULTIPLIER * MS_MULTIPLIER;
-    const tokenAddress = data.tokenAddress || null;
-    const payload = { StartLottery: { ...data, duration, tokenAddress } };
+    const ftAddress = data.ftAddress || null;
+
+    const payload = { Start: { duration, participation_cost: participationCost, fungible_token: ftAddress } };
 
     sendMessage(payload, { onSuccess: resetForm });
   };
 
   useEffect(() => {
-    if (!isFungibleToken) setFieldValue('tokenAddress', '');
+    if (!isFungibleToken) setFieldValue('ftAddress', '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFungibleToken]);
 
@@ -60,10 +61,6 @@ function Form() {
           <p className={styles.error}>{errors.duration}</p>
         </div>
         <div className={styles.inputWrapper}>
-          <Input type="number" className={styles.input} label="Prize fund" {...getInputProps('prizeFund')} />
-          <p className={styles.error}>{errors.prizeFund}</p>
-        </div>
-        <div className={styles.inputWrapper}>
           <Input
             type="number"
             className={styles.input}
@@ -78,7 +75,7 @@ function Form() {
           </div>
           {isFungibleToken && (
             <div className={styles.inputWrapper}>
-              <Input className={styles.input} label="Address" {...getInputProps('tokenAddress')} />
+              <Input className={styles.input} label="Address" {...getInputProps('ftAddress')} />
               <p className={styles.error}>{errors.tokenAddress}</p>
             </div>
           )}

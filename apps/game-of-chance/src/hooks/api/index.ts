@@ -4,7 +4,7 @@ import metaTxt from 'assets/meta/meta.txt';
 import { Lottery } from 'types';
 import { useMetadata } from './useMetadata';
 
-const programId = '0xf793f8f10d4a6c37cfee251fa418521bb1d6e8a7d8284c21889a74197e8566e7' as Hex;
+const programId = '0x986de5d9fa9b53a47e2f64b837b0d5668fb5b7d5b5935671626d1b1671d1341d' as Hex;
 
 function useLotteryMetadata() {
   return useMetadata(metaTxt);
