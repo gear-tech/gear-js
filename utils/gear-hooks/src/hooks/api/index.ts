@@ -1,4 +1,4 @@
-import { useReadState } from './useReadState';
+import { useReadFullState, useReadWasmState } from './useReadState';
 import { useSendMessage } from './useSendMessage';
 import { useUploadProgram, useCreateProgram } from './useProgram';
 import {
@@ -9,7 +9,8 @@ import {
 } from './useCalculateGas';
 
 export {
-  useReadState,
+  useReadFullState,
+  useReadWasmState,
   useSendMessage,
   useUploadProgram,
   useCreateProgram,

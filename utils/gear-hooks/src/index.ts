@@ -1,5 +1,6 @@
 import {
-  useReadState,
+  useReadFullState,
+  useReadWasmState,
   useSendMessage,
   useUploadProgram,
   useCreateProgram,
@@ -37,7 +38,8 @@ import {
 } from 'types';
 
 export {
-  useReadState,
+  useReadFullState,
+  useReadWasmState,
   useSendMessage,
   useUploadProgram,
   useCreateProgram,

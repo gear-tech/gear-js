@@ -57,7 +57,6 @@ function useSendMessage(destination: Hex, metadata: ProgramMetadata | undefined)
       const { source } = meta;
 
       api.program.calculateGas
-        // @ts-ignore TODO: remove after fix
         .handle(decodedAddress, destination, payload, value, isOtherPanicsAllowed, metadata)
         .then(getAutoGasLimit)
         .then((gasLimit) => ({ destination, gasLimit, payload, value }))
