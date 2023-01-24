@@ -76,7 +76,10 @@ const useProgram = (): Program => {
           setTamagotchi(result);
           setIsStateRead(true);
         })
-        .catch(({ message }: Error) => setError(message));
+        .catch(({ message }: Error) => {
+          setError(message);
+          reset();
+        });
     }
   };
 
