@@ -1,5 +1,6 @@
 import {
-  useReadState,
+  useReadFullState,
+  useReadWasmState,
   useSendMessage,
   useUploadProgram,
   useCreateProgram,
@@ -12,7 +13,8 @@ import { useAccount, useAlert, useApi } from './context';
 import { useCreateHandler } from './handlers';
 
 export {
-  useReadState,
+  useReadFullState,
+  useReadWasmState,
   useSendMessage,
   useUploadProgram,
   useCreateProgram,
