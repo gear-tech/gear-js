@@ -25,6 +25,7 @@
 
   .privateContent {
     @include fadeAppear();
+    @include childrenMargin(16px, right);
 
     display: flex;
     align-items: center;
@@ -43,9 +44,9 @@
 
         svg path {
           @include transition();
-  
+
           fill: $textColor;
-        }  
+        }
       }
     }
   }
