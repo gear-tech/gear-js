@@ -1,45 +1,55 @@
-import { useCallback } from 'react';
 import { AddressOrPair } from '@polkadot/api/types';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { useApi, useAlert } from '@gear-js/react-hooks';
 
 import { Method } from 'entities/explorer';
 import { getExtrinsicFailedMessage } from 'shared/helpers';
-import { GEAR_BALANCE_TRANSFER_VALUE } from 'shared/config';
+import { web3FromSource } from '@polkadot/extension-dapp';
+
+type Options = {
+  signSource?: string;
+  onSuccess?: () => void;
+};
 
 const useBalanceTransfer = () => {
   const alert = useAlert();
   const { api } = useApi();
 
-  const handleEventsStatus = (events: EventRecord[]) => {
+  const handleEventsStatus = (events: EventRecord[], onSuccess?: () => void) => {
     events.forEach(({ event }) => {
       const { method, section } = event;
 
       const alertOptions = { title: `${section}.${method}` };
 
       if (method === Method.Transfer) {
-        alert.success('Balance received successfully', alertOptions);
+        alert.success('Balance transfered successfully', alertOptions);
+
+        if (onSuccess) onSuccess();
       } else if (method === Method.ExtrinsicFailed) {
         alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
       }
     });
   };
 
-  const transferBalance = useCallback(
-    async (addressTo: string, addressFrom: AddressOrPair) => {
-      try {
-        api.balance.transfer(addressTo, GEAR_BALANCE_TRANSFER_VALUE);
+  const transferBalance = (from: AddressOrPair, to: string, value: number, options?: Options) => {
+    try {
+      const { signSource, onSuccess } = options || {};
 
-        await api.balance.signAndSend(addressFrom, ({ events }) => handleEventsStatus(events));
-      } catch (error) {
-        const message = (error as Error).message;
+      api.balance.transfer(to, value);
 
-        alert.error(message);
+      if (signSource) {
+        web3FromSource(signSource).then(({ signer }) =>
+          api.balance.signAndSend(from, { signer }, ({ events }) => handleEventsStatus(events, onSuccess)),
+        );
+      } else {
+        api.balance.signAndSend(from, ({ events }) => handleEventsStatus(events, onSuccess));
       }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [api],
-  );
+    } catch (error) {
+      const { message } = error as Error;
+
+      alert.error(message);
+    }
+  };
 
   return transferBalance;
 };

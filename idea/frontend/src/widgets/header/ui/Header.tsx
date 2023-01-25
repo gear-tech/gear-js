@@ -29,7 +29,7 @@ const Header = () => {
 
   return (
     <header className={styles.header}>
-      <TopSide account={account} />
+      <TopSide />
       <CSSTransition
         in={isBottomSideVisible}
         exit={withBottomSide}
