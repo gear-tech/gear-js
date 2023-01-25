@@ -15,12 +15,13 @@ type Props = {
 };
 
 export const AccountsList = ({ list, onChange }: Props) => {
-  const { switchAccount } = useAccount();
+  const { logout, login } = useAccount();
   const alert = useAlert();
   const { reset } = useLesson();
 
   const handleAccountButtonClick = async (account: InjectedAccountWithMeta) => {
-    await switchAccount(account);
+    await logout();
+    await login(account);
     localStorage.setItem(LOCAL_STORAGE.ACCOUNT, account.address);
     onChange();
     reset();
