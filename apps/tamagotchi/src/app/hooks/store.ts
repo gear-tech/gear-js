@@ -17,7 +17,7 @@ export function useNFTs() {
   const payload = useMemo(() => ({}), []);
   const { state } = useNFTState<StoreNFT>(payload);
 
-  return { items: state?.attributes, owners: state?.owners };
+  return { items: Object.values(state?.attributes ?? {}), owners: state?.owners };
 }
 
 // export function useOwnerNFTs() {

@@ -7,18 +7,19 @@ import { useNFTs } from 'app/hooks/store';
 
 export const StoreSection = () => {
   const { items } = useNFTs();
-
   return (
     <>
       <h1 className="text-2xl font-kanit font-bold">Store</h1>
-      {items && (
+      {items.length ? (
         <ul className="mt-8 mb-10 grid grid-cols-3 gap-8">
-          {Object.values(items).map((item, i) => (
+          {items.map((item, i) => (
             <li key={i}>
               <StoreItemCard item={item} />
             </li>
           ))}
         </ul>
+      ) : (
+        <p className="my-auto opacity-70 text-center">Items not found</p>
       )}
       <div className="mt-auto">
         <Link to="/" className={clsx('btn gap-2 whitespace-nowrap', buttonStyles.light)}>

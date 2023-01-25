@@ -28,7 +28,6 @@ export function useReadState<T = AnyJson>(
         .then((codecState) => codecState.toJSON())
         .then((result) => {
           setState(result as unknown as T);
-          console.log({ state, result });
           if (!isReadOnError) setIsStateRead(true);
         })
         .catch(({ message }: Error) => setError(message))
