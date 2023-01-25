@@ -5,7 +5,7 @@ import clsx from 'clsx';
 export const GetGasBalance = () => {
   return (
     <div className="">
-      <TooltipWrapper text="Get Gas Balance">
+      <TooltipWrapper text="Account gas balance">
         <Button
           className={clsx('p-2', buttonStyles.lightGreen)}
           icon={() => <Icon name="test-balance" width={20} height={20} />}

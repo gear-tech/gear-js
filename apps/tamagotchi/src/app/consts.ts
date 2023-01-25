@@ -15,5 +15,6 @@ export const createTamagotchiInitial = {
 };
 
 export const ENV = {
-  store: process.env.REACT_APP_TOKENS_STORE_ADDRESS as Hex,
+  store: process.env.REACT_APP_STORE_ADDRESS as Hex,
+  balance: process.env.REACT_APP_TOKEN_BALANCE_ADDRESS as Hex,
 };

@@ -3,7 +3,7 @@ import type { ProviderProps } from '@gear-js/react-hooks';
 import { createContext } from 'react';
 import { ProgramMetadata } from '@gear-js/api';
 import { useMetadata } from '../hooks/use-metadata';
-import meta from 'assets/meta/meta-store.txt';
+import meta from 'assets/meta/meta-ft.txt';
 import { ENV } from '../consts';
 
 type Program = {
@@ -19,14 +19,14 @@ const program: Program = {
 function useStore(): Program {
   const { metadata } = useMetadata(meta);
   return {
-    programId: ENV.store as Hex,
+    programId: ENV.balance as Hex,
     meta: metadata as ProgramMetadata,
   };
 }
 
-export const NFTStoreCtx = createContext<Program>(program);
+export const TokensBalanceCtx = createContext<Program>(program);
 
-export function NFTStoreProvider({ children }: ProviderProps) {
-  const { Provider } = NFTStoreCtx;
+export function TokensBalanceProvider({ children }: ProviderProps) {
+  const { Provider } = TokensBalanceCtx;
   return <Provider value={useStore()}>{children}</Provider>;
 }

@@ -1,9 +1,12 @@
 import { useContext } from 'react';
-import { NFTStoreContext } from './nft-store';
+import { NFTStoreCtx } from './nft-store';
 import { LessonsCtx } from './tamagotchi';
+import { TokensBalanceCtx } from './token-balance';
 
-export const useNFTStore = () => useContext(NFTStoreContext);
+export const useTokensBalanceStore = () => useContext(TokensBalanceCtx);
+export const useNFTStore = () => useContext(NFTStoreCtx);
 export const useLesson = () => useContext(LessonsCtx);
 
 export { LessonsCtx, TmgProvider } from './tamagotchi';
-export { NFTStoreContext, NFTStoreProvider } from './nft-store';
+export { TokensBalanceCtx, TokensBalanceProvider } from './token-balance';
+export { NFTStoreCtx, NFTStoreProvider } from './nft-store';
