@@ -1,15 +1,15 @@
-import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic, VoidFn } from '@polkadot/api/types';
 import { HexString } from '@polkadot/util/types';
+import { ISubmittableResult } from '@polkadot/types/types';
 import { ReplaySubject } from 'rxjs';
 
 import { IMessageSendOptions, IMessageSendReplyOptions, OldMetadata } from './types';
+import { ProgramMetadata, isProgramMeta } from './metadata';
 import { SendMessageError, SendReplyError } from './errors';
 import { validateGasLimit, validateValue } from './utils';
-import { encodePayload } from './utils/create-payload';
 import { GearTransaction } from './Transaction';
 import { UserMessageSentData } from './events';
-import { ProgramMetadata, isProgramMeta } from './metadata';
+import { encodePayload } from './utils/create-payload';
 
 export class GearMessage extends GearTransaction {
   /**

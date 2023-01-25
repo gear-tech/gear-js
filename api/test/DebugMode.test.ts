@@ -1,9 +1,10 @@
 import { KeyringPair } from '@polkadot/keyring/types';
-import { readFileSync } from 'fs';
-import { join } from 'path';
-import { GearApi, DebugMode } from '../src';
+
+import { DebugMode, GearApi } from '../src';
 import { getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { GEAR_EXAMPLES_WASM_DIR } from './config';
+import { join } from 'path';
+import { readFileSync } from 'fs';
 
 const api = new GearApi();
 let alice: KeyringPair;

@@ -1,12 +1,12 @@
-import { Codec, AnyJson } from '@polkadot/types/types';
+import { AnyJson, Codec } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
 import { ProgramMetadata, StateMetadata } from './metadata';
 import { getWasmMetadata, readState } from './wasm';
 import { CreateType } from './create-type';
-import { ReadStateError } from './errors';
 import { GearStorage } from './Storage';
 import { OldMetadata } from './types';
+import { ReadStateError } from './errors';
 
 interface ReadStateArgs {
   programId: HexString;

@@ -1,9 +1,9 @@
+import { Codec, Registry } from '@polkadot/types/types';
 import { PortableRegistry, TypeRegistry } from '@polkadot/types';
 import { Si1LookupTypeId, Si1TypeDef } from '@polkadot/types/interfaces';
-import { Codec, Registry } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
-import { hexToU8a } from '@polkadot/util';
 import assert from 'assert';
+import { hexToU8a } from '@polkadot/util';
 
 import { TypeStructure } from '../types';
 
@@ -146,18 +146,20 @@ export class GearMetadata {
           continue;
         }
 
-        if (fields.length === 1) {
-          _variants[name.toString()] = this.getTypeDef(fields[0].type, additionalFields);
-          continue;
+        if (fields[0].name.isNone) {
+          if (fields.length === 1) {
+            _variants[name.toString()] = this.getTypeDef(fields[0].type, additionalFields);
+          } else {
+            const tuple = fields.map(({ type }) => this.getTypeDef(type, additionalFields));
+            _variants[name.toString()] = additionalFields ? { name: null, kind: 'tuple', type: tuple } : tuple;
+          }
+        } else {
+          const result = {};
+          for (const { name, type } of fields) {
+            result[name.unwrap().toString()] = this.getTypeDef(type, additionalFields);
+          }
+          _variants[name.toString()] = additionalFields ? { name: null, kind: 'composite', type: result } : result;
         }
-
-        const fields_ = {};
-
-        fields.map(({ name, type }) => {
-          fields_[name.toString()] = type ? this.getTypeDef(type, additionalFields) : null;
-        });
-
-        _variants[name.toString()] = fields_;
       }
 
       return additionalFields

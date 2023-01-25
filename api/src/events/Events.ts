@@ -1,9 +1,9 @@
 import { UnsubscribePromise } from '@polkadot/api/types';
 
-import { ISystemAccountInfo, IBalanceCallback, IBlocksCallback, Hex } from '../types';
-import { IGearEvent } from './types';
-import { GearApi } from '../GearApi';
+import { Hex, IBalanceCallback, IBlocksCallback, ISystemAccountInfo } from '../types';
 import { Transfer, UserMessageSent } from './GearEvents';
+import { GearApi } from '../GearApi';
+import { IGearEvent } from './types';
 
 export class GearEvents {
   private api: GearApi;

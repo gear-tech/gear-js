@@ -1,10 +1,11 @@
-import { CreateType, GearApi, MessageWaitedData } from '../src';
-import { Hex } from '../src/types';
-import { checkInit, getAccount, listenToMessageWaited, sendTransaction, sleep } from './utilsFunctions';
-import { readFileSync } from 'fs';
-import { TARGET } from './config';
-import { join } from 'path';
 import { KeyringPair } from '@polkadot/keyring/types';
+import { join } from 'path';
+
+import { CreateType, GearApi, MessageWaitedData } from '../src';
+import { checkInit, getAccount, listenToMessageWaited, sendTransaction, sleep } from './utilsFunctions';
+import { Hex } from '../src/types';
+import { TARGET } from './config';
+import { readFileSync } from 'fs';
 
 const api = new GearApi();
 

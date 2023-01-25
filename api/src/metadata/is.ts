@@ -1,6 +1,6 @@
+import { OldMetadata } from '../types';
 import { ProgramMetadata } from './programMetadata';
 import { StateMetadata } from './stateMetadata';
-import { OldMetadata } from '../types';
 
 export function isOldMeta(arg: unknown): arg is OldMetadata {
   if (typeof arg === 'object') {

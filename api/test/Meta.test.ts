@@ -1,13 +1,13 @@
 import { PROGRAMS_DIR } from './config';
-import { readFileSync } from 'fs';
+import fs from 'fs';
 import { join } from 'path';
 
-import { getProgramMetadata, ProgramMetadata } from '../src';
+import { ProgramMetadata, getProgramMetadata } from '../src';
 
 let meta: ProgramMetadata;
 
 beforeAll(() => {
-  const hex = readFileSync(join(PROGRAMS_DIR, 'test-meta/meta.txt'), 'utf-8');
+  const hex = fs.readFileSync(join(PROGRAMS_DIR, 'test-meta/meta.txt'), 'utf-8');
   meta = getProgramMetadata(`0x${hex}`);
 });
 
@@ -114,9 +114,11 @@ describe('Get type definitions', () => {
         },
         Two: [['U8', 'U16']],
         Three: {
-          _variants: {
-            Ok: ['U8', 'Str'],
-            Err: 'I32',
+          field1: {
+            _variants: {
+              Ok: ['U8', 'Str'],
+              Err: 'I32',
+            },
           },
         },
         Four: {
@@ -129,6 +131,7 @@ describe('Get type definitions', () => {
           array32: [['U8', 'U16'], 32],
           actor: 'ActorId',
         },
+        Six: ['ActorId', { empty: null }],
       },
     });
     expect(meta.getTypeDef(7, true)).toEqual({
@@ -160,21 +163,27 @@ describe('Get type definitions', () => {
           },
         },
         Three: {
-          name: 'Result<(U8, Str), I32>',
-          kind: 'variant',
+          kind: 'composite',
+          name: null,
           type: {
-            Ok: {
-              name: '(U8, Str)',
-              kind: 'tuple',
-              type: [
-                { name: 'U8', kind: 'primitive', type: 'U8' },
-                { name: 'Str', kind: 'primitive', type: 'Str' },
-              ],
-            },
-            Err: {
-              name: 'I32',
-              kind: 'primitive',
-              type: 'I32',
+            field1: {
+              name: 'Result<(U8, Str), I32>',
+              kind: 'variant',
+              type: {
+                Ok: {
+                  name: '(U8, Str)',
+                  kind: 'tuple',
+                  type: [
+                    { name: 'U8', kind: 'primitive', type: 'U8' },
+                    { name: 'Str', kind: 'primitive', type: 'Str' },
+                  ],
+                },
+                Err: {
+                  name: 'I32',
+                  kind: 'primitive',
+                  type: 'I32',
+                },
+              },
             },
           },
         },
@@ -213,6 +222,28 @@ describe('Get type definitions', () => {
             actor: { name: 'ActorId', kind: 'actorid', type: 'actorid' },
           },
         },
+        Six: {
+          kind: 'tuple',
+          name: null,
+          type: [
+            {
+              kind: 'actorid',
+              name: 'ActorId',
+              type: 'actorid',
+            },
+            {
+              kind: 'composite',
+              name: 'EmptyStruct',
+              type: {
+                empty: {
+                  kind: 'empty',
+                  name: '()',
+                  type: null,
+                },
+              },
+            },
+          ],
+        },
       },
     });
   });
@@ -248,6 +279,7 @@ describe('Get type definitions', () => {
         ],
       },
     });
+    expect(meta.createType(9, [[8, 16]]).toJSON()).toEqual([[8, 16]]);
   });
 
   test('Get type structure 10', () => {
@@ -460,6 +492,7 @@ describe('Get type definitions', () => {
       kind: 'sequence',
       type: { name: 'U16', kind: 'primitive', type: 'U16' },
     });
+    expect(meta.createType(26, [16, 17, 18]).toJSON()).toEqual([16, 17, 18]);
   });
 
   test('Get type structure 27', () => {

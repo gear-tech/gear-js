@@ -1,16 +1,17 @@
-import { GenericEventData, GenericEvent } from '@polkadot/types';
+import { GenericEvent, GenericEventData } from '@polkadot/types';
+
 import {
   CodeChangedData,
   DebugData,
+  DebugModeData,
   MessageEnqueuedData,
-  MessagesDispatchedData,
   MessageWaitedData,
+  MessageWakenData,
+  MessagesDispatchedData,
   ProgramChangedData,
   TransferData,
   UserMessageReadData,
   UserMessageSentData,
-  DebugModeData,
-  MessageWakenData,
 } from './GearEventData';
 
 export interface GearEvent<D extends GenericEventData> extends GenericEvent {

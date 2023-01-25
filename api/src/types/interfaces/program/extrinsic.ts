@@ -1,6 +1,6 @@
+import { AnyJson } from '@polkadot/types/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
-import { AnyJson } from '@polkadot/types/types';
 
 import { GasLimit, Hex, Value } from '../../common';
 

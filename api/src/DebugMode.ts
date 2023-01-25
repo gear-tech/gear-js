@@ -1,8 +1,8 @@
 import { SubmittableExtrinsic, UnsubscribePromise } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 
-import { GearTransaction } from './Transaction';
 import { DebugDataSnapshot } from './events';
+import { GearTransaction } from './Transaction';
 
 export class DebugMode extends GearTransaction {
   enabled: SubmittableExtrinsic<'promise', ISubmittableResult>;

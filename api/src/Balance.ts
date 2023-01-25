@@ -1,7 +1,7 @@
-import { SubmittableExtrinsic } from '@polkadot/api/types';
-import { ISubmittableResult } from '@polkadot/types/types';
-import { Balance } from '@polkadot/types/interfaces';
 import { BN } from '@polkadot/util';
+import { Balance } from '@polkadot/types/interfaces';
+import { ISubmittableResult } from '@polkadot/types/types';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
 
 import { GearTransaction } from './Transaction';
 import { ISystemAccountInfo } from './types';

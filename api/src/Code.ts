@@ -1,9 +1,9 @@
+import { Bytes, Option } from '@polkadot/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
-import { Bytes, Option } from '@polkadot/types';
 
-import { generateCodeHash, validateCodeId } from './utils';
 import { CodeMetadata, CodeStorage, Hex } from './types';
+import { generateCodeHash, validateCodeId } from './utils';
 import { GearTransaction } from './Transaction';
 
 export class GearCode extends GearTransaction {

@@ -1,7 +1,8 @@
-import { GearApi } from '../src';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { RegistryError } from '@polkadot/types-codec/types';
+
 import { getAccount, sleep } from './utilsFunctions';
+import { GearApi } from '../src';
 
 const api = new GearApi();
 let alice: KeyringPair;

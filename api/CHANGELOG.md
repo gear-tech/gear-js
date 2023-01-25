@@ -1,3 +1,13 @@
+## 0.28.8
+
+_01/25/2023_
+
+https://github.com/gear-tech/gear-js/pull/1161
+
+### Changes
+
+- Fix enum variants type definition
+
 ## 0.28.7
 
 _01/23/2023_

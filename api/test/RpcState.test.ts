@@ -1,9 +1,9 @@
-import { KeyringPair } from '@polkadot/keyring/types';
 import { HexString } from '@polkadot/util/types';
-import { readFileSync } from 'fs';
+import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
+import { readFileSync } from 'fs';
 
-import { CreateType, GearApi, getProgramMetadata, getStateMetadata, StateMetadata } from '../src';
+import { CreateType, GearApi, StateMetadata, getProgramMetadata, getStateMetadata } from '../src';
 import { checkInit, getAccount, sleep } from './utilsFunctions';
 import { TARGET } from './config';
 

@@ -1,4 +1,4 @@
-import { Header, Balance } from '@polkadot/types/interfaces';
+import { Balance, Header } from '@polkadot/types/interfaces';
 import { ISubmittableResult } from '@polkadot/types/types';
 
 export interface IBlocksCallback {

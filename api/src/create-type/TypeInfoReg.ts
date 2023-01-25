@@ -1,11 +1,11 @@
-import { Hex } from '../types';
-import { TypeRegistry, PortableRegistry } from '@polkadot/types';
+import { PortableRegistry, TypeRegistry } from '@polkadot/types';
 import { hexToU8a, isHex } from '@polkadot/util';
 import { Codec } from '@polkadot/types/types';
 
 import { isJSON, toJSON } from '../utils/json';
-import { joinTypePath } from '../utils/types';
+import { Hex } from '../types';
 import { REGULAR_EXP } from '../utils/regexp';
+import { joinTypePath } from '../utils/types';
 
 function getName(path: string[], name: string, slice = -1) {
   if (name.endsWith(joinTypePath(path.slice(slice)))) {

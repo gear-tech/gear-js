@@ -1,9 +1,9 @@
-import { mnemonicGenerate, mnemonicToMiniSecret } from '@polkadot/util-crypto';
-import { hexToU8a, isU8a, stringToU8a, isString, u8aToHex } from '@polkadot/util';
 import { KeyringPair, KeyringPair$Json } from '@polkadot/keyring/types';
+import { hexToU8a, isString, isU8a, stringToU8a, u8aToHex } from '@polkadot/util';
+import { mnemonicGenerate, mnemonicToMiniSecret } from '@polkadot/util-crypto';
 import { Keypair } from '@polkadot/util-crypto/types';
-import { waitReady } from '@polkadot/wasm-crypto';
 import { Keyring } from '@polkadot/api';
+import { waitReady } from '@polkadot/wasm-crypto';
 
 import { decodeAddress } from './utils';
 

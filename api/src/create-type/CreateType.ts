@@ -1,10 +1,10 @@
-import { RegistryTypes } from '@polkadot/types-codec/types';
-import { Codec, Registry } from '@polkadot/types/types';
 import { Bytes, TypeRegistry } from '@polkadot/types';
-import { HexString } from '@polkadot/util/types';
+import { Codec, Registry } from '@polkadot/types/types';
 import { isHex, isU8a } from '@polkadot/util';
+import { HexString } from '@polkadot/util/types';
+import { RegistryTypes } from '@polkadot/types-codec/types';
 
-import { toJSON, isJSON, getTypeAndPayload, typeIsGeneric, typeIsString } from '../utils';
+import { getTypeAndPayload, isJSON, toJSON, typeIsGeneric, typeIsString } from '../utils';
 import { TypeInfoRegistry } from './TypeInfoReg';
 import { gearTypes } from '../default';
 
