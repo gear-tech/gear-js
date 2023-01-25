@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/react-hooks",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "React hooks used across Gear applications",
   "author": "Gear Technologies",
   "license": "GPL-3.0",
@@ -21,14 +21,14 @@
     "prepare": "npm run build"
   },
   "peerDependencies": {
-    "@gear-js/api": "^0.28.7",
+    "@gear-js/api": "^0.28.8",
     "@polkadot/extension-dapp": "^0.44.8",
     "react": ">=17.0.2",
     "react-dom": ">=17.0.2",
     "react-transition-group": "^4.4.2"
   },
   "devDependencies": {
-    "@gear-js/api": "^0.28.7",
+    "@gear-js/api": "^0.28.8",
     "@polkadot/api": "9.11.1",
     "@polkadot/extension-dapp": "0.44.8",
     "@polkadot/extension-inject": "0.44.8",
