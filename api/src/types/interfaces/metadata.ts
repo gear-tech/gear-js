@@ -1,4 +1,4 @@
-import { Vec, u8, u32, Text, Option, Struct, BTreeMap } from '@polkadot/types';
+import { BTreeMap, Option, Struct, Text, Vec, u32, u8 } from '@polkadot/types';
 import { HexString } from '@polkadot/util/types';
 
 export interface OldMetadata {

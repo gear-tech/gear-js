@@ -1,4 +1,4 @@
-import { Enum, u8, u32, u64, u128, i32, Option, Vec, Struct, BTreeMap, BTreeSet } from '@polkadot/types';
+import { BTreeMap, BTreeSet, Enum, Option, Struct, Vec, i32, u128, u32, u64, u8 } from '@polkadot/types';
 import { AccountId32 } from '@polkadot/types/interfaces';
 import { Codec } from '@polkadot/types/types';
 

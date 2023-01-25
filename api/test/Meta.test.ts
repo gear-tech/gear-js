@@ -2,7 +2,7 @@ import { PROGRAMS_DIR } from './config';
 import fs from 'fs';
 import { join } from 'path';
 
-import { getProgramMetadata, ProgramMetadata } from '../src';
+import { ProgramMetadata, getProgramMetadata } from '../src';
 
 let meta: ProgramMetadata;
 

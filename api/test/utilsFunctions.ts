@@ -1,15 +1,16 @@
 import { SubmittableExtrinsic, UnsubscribePromise } from '@polkadot/api/types';
 import { KeyringPair } from '@polkadot/keyring/types';
+
 import {
   GearApi,
   GearKeyring,
+  GearTransaction,
   IGearEvent,
+  MessageEnqueued,
   MessageWaitedData,
+  MessagesDispatched,
   UserMessageSent,
   UserMessageSentData,
-  MessageEnqueued,
-  MessagesDispatched,
-  GearTransaction,
 } from '../src';
 import { Hex } from '../src/types';
 

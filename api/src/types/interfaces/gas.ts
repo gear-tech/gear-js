@@ -1,4 +1,4 @@
-import { Struct, u64, u32, bool } from '@polkadot/types';
+import { Struct, bool, u32, u64 } from '@polkadot/types';
 
 export interface GasInfo extends Struct {
   min_limit: u64;

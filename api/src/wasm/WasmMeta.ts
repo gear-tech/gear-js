@@ -1,6 +1,6 @@
-import { readMetaValue } from './utils';
 import { OldMetadata } from '../types';
 import importObj from './importObj';
+import { readMetaValue } from './utils';
 
 export async function getWasmMetadata(wasmBytes: Buffer, showDebug = false): Promise<OldMetadata> {
   const memory = new WebAssembly.Memory({ initial: 256 });

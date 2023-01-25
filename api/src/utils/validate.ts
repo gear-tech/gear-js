@@ -2,8 +2,8 @@ import { BN, u8aToBigInt } from '@polkadot/util';
 import { u128, u64 } from '@polkadot/types';
 
 import { GasLimit, Hex, Value } from '../types';
-import { ValidationError } from '../errors';
 import { GearApi } from '../GearApi';
+import { ValidationError } from '../errors';
 
 export function validateValue(value: Value | undefined, api: GearApi) {
   if (!value) return;

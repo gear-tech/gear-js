@@ -1,9 +1,9 @@
-import { Enum, u32, Map, BTreeSet, BTreeMap } from '@polkadot/types';
+import { BTreeMap, BTreeSet, Enum, Map, u32 } from '@polkadot/types';
 import { Hash } from '@polkadot/types/interfaces';
 
 import { MessageId, ProgramId } from '../ids';
-import { GasReservationSlot } from '../gas';
 import { DispatchKind } from '../message';
+import { GasReservationSlot } from '../gas';
 import { WasmPageNumber } from './pages';
 
 export interface IProgram extends Enum {

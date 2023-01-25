@@ -1,13 +1,13 @@
 import { KeyringPair } from '@polkadot/keyring/types';
-import { u64 } from '@polkadot/types-codec';
-import { readFileSync } from 'fs';
 import { join } from 'path';
+import { readFileSync } from 'fs';
+import { u64 } from '@polkadot/types-codec';
 
-import { GearApi, getProgramMetadata } from '../src';
-import { decodeAddress } from '../src/utils';
 import { GasInfo, Hex } from '../src/types';
-import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep } from './utilsFunctions';
+import { GearApi, getProgramMetadata } from '../src';
 import { PROGRAMS_DIR, TARGET } from './config';
+import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep } from './utilsFunctions';
+import { decodeAddress } from '../src/utils';
 
 const api = new GearApi();
 let alice: KeyringPair;

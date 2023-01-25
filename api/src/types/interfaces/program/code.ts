@@ -1,7 +1,8 @@
+import { BTreeSet, Option, Struct, Vec, u32, u8 } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
-import { u8, u32, Option, BTreeSet, Vec, Struct } from '@polkadot/types';
-import { WasmPageNumber } from './pages';
+
 import { DispatchKind } from '../message';
+import { WasmPageNumber } from './pages';
 
 export interface CodeMetadata extends Struct {
   author: H256;

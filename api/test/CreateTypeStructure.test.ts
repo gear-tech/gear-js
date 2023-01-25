@@ -1,4 +1,4 @@
-import { createPayloadTypeStructure, CreateType, decodeHexTypes, Hex } from '../src';
+import { CreateType, Hex, createPayloadTypeStructure, decodeHexTypes } from '../src';
 
 describe('Create type structure test', () => {
   const types = {

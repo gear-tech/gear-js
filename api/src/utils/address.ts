@@ -1,5 +1,5 @@
-import { u8aToHex } from '@polkadot/util';
 import { Keyring } from '@polkadot/api';
+import { u8aToHex } from '@polkadot/util';
 
 import { Hex } from '../types';
 

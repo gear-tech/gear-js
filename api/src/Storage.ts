@@ -1,7 +1,7 @@
 import { Option, Raw } from '@polkadot/types';
 import { Codec } from '@polkadot/types/types';
 
-import { ActiveProgram, IGearPages, IProgram, Hex } from './types';
+import { ActiveProgram, Hex, IGearPages, IProgram } from './types';
 import { GPAGES_HEX, GPROG_HEX, SEPARATOR } from './utils';
 import { ProgramExitedError, ProgramTerminatedError, ReadStorageError } from './errors';
 import { GearApi } from './GearApi';

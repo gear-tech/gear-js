@@ -30,6 +30,16 @@
     "@typescript-eslint/no-explicit-any": "off",
     "no-case-declarations": 0,
     "eol-last": "error",
-    "max-len": ["error", { "code": 120, "tabWidth": 2, "ignoreStrings": true, "ignoreComments": true }]
+    "max-len": ["error", { "code": 120, "tabWidth": 2, "ignoreStrings": true, "ignoreComments": true }],
+    "sort-imports": [
+      "error",
+      {
+        "ignoreCase": false,
+        "ignoreDeclarationSort": false,
+        "ignoreMemberSort": false,
+        "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
+        "allowSeparatedGroups": true
+      }
+    ]
   }
 }

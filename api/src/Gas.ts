@@ -1,11 +1,11 @@
 import { isHex } from '@polkadot/util';
 
-import { isProgramMeta, ProgramMetadata } from './metadata';
-import { encodePayload } from './utils/create-payload';
 import { Hex, PayloadType, Value } from './types';
-import { OldMetadata } from './types/interfaces';
-import { GearApi } from './GearApi';
+import { ProgramMetadata, isProgramMeta } from './metadata';
 import { GasInfo } from './types';
+import { GearApi } from './GearApi';
+import { OldMetadata } from './types/interfaces';
+import { encodePayload } from './utils/create-payload';
 
 export class GearGas {
   constructor(private _api: GearApi) {}

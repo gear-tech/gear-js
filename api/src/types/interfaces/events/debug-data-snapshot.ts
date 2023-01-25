@@ -1,5 +1,6 @@
-import { u8, u32, u64, Null, Option, Vec, BTreeMap, Enum, Struct } from '@polkadot/types';
+import { BTreeMap, Enum, Null, Option, Struct, Vec, u32, u64, u8 } from '@polkadot/types';
 import { Codec } from '@polkadot/types/types';
+
 import { CodeId, ProgramId } from '../ids';
 
 import { Entry, Payload, StoredMessage } from '../message';

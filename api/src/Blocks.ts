@@ -1,15 +1,15 @@
-import { HeaderExtended } from '@polkadot/api-derive/types';
-import { PromiseResult } from '@polkadot/api/types';
-import { u64, Compact, GenericExtrinsic, Vec } from '@polkadot/types';
-import { SignedBlock, BlockNumber, BlockHash } from '@polkadot/types/interfaces';
+import { AnyNumber, AnyTuple } from '@polkadot/types/types';
+import { BlockHash, BlockNumber, SignedBlock } from '@polkadot/types/interfaces';
+import { Compact, GenericExtrinsic, Vec, u64 } from '@polkadot/types';
+import { isHex, isNumber, isU8a } from '@polkadot/util';
 import { FrameSystemEventRecord } from '@polkadot/types/lookup';
-import { AnyTuple, AnyNumber } from '@polkadot/types/types';
-import { isHex, isU8a, isNumber } from '@polkadot/util';
+import { HeaderExtended } from '@polkadot/api-derive/types';
 import { Observable } from 'rxjs';
+import { PromiseResult } from '@polkadot/api/types';
 
 import { CreateType } from './create-type';
-import { GetBlockError } from './errors';
 import { GearApi } from './GearApi';
+import { GetBlockError } from './errors';
 import { Hex } from './types';
 
 export class GearBlock {

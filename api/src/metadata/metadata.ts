@@ -1,9 +1,9 @@
+import { Codec, Registry } from '@polkadot/types/types';
 import { PortableRegistry, TypeRegistry } from '@polkadot/types';
 import { Si1LookupTypeId, Si1TypeDef } from '@polkadot/types/interfaces';
-import { Codec, Registry } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
-import { hexToU8a } from '@polkadot/util';
 import assert from 'assert';
+import { hexToU8a } from '@polkadot/util';
 
 import { TypeStructure } from '../types';
 

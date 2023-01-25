@@ -1,8 +1,8 @@
-import { u8aToHex } from '@polkadot/util';
-import { readFileSync } from 'fs';
 import { join } from 'path';
+import { readFileSync } from 'fs';
+import { u8aToHex } from '@polkadot/util';
 
-import { generateCodeHash, generateProgramId, Hex } from '../src';
+import { Hex, generateCodeHash, generateProgramId } from '../src';
 import { TEST_WASM_DIR } from './config';
 
 const pingCode = readFileSync(join(TEST_WASM_DIR, 'demo_ping.opt.wasm'));
