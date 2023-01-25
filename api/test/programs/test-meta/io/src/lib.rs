@@ -37,6 +37,7 @@ pub enum Action {
     Three { field1: Result<(u8, String), i32> },
     Four(SomeStruct<u128, u8>),
     Five(SomeStruct<String, X>),
+    Six(ActorId, EmptyStruct),
 }
 
 #[derive(TypeInfo, Encode, Decode, Clone)]
