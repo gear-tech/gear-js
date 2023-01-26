@@ -23,9 +23,9 @@ function useReadFullState<T = AnyJson>(
   useEffect(() => {
     readState(true);
     resetError();
-  }, [programId]);
+  }, [programId, meta]);
 
-  useStateSubscription(programId, readFullState);
+  useStateSubscription(programId, readState, !!meta);
 
   return { state, isStateRead, error };
 }

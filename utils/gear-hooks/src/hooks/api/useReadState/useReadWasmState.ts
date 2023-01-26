@@ -15,7 +15,7 @@ function useReadWasmState<T = AnyJson>(
   const { api } = useContext(ApiContext); // сircular dependency fix
 
   const readWasmState = () => {
-    if (!programId || !wasm || !functionName) return;
+    if (!programId || !wasm || !functionName || !payload) return;
 
     return getStateMetadata(wasm).then((stateMetadata) =>
       api.programState.readUsingWasm({ programId, wasm, fn_name: functionName, argument: payload }, stateMetadata),
@@ -27,9 +27,9 @@ function useReadWasmState<T = AnyJson>(
   useEffect(() => {
     readState(true);
     resetError();
-  }, [programId, payload]);
+  }, [programId, wasm, functionName, payload]);
 
-  useStateSubscription(programId, readState, !!payload);
+  useStateSubscription(programId, readState, !!wasm && !!functionName && !!payload);
 
   return { state, isStateRead, error };
 }
