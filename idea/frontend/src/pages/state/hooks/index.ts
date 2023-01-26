@@ -37,7 +37,7 @@ const useMetadata = (programId: Hex) => {
     const getMetadata = isDevChain ? getLocalProgramMeta : fetchMetadata;
 
     getMetadata(programId)
-      .then(({ result }) => setMetadata(getProgramMetadata(result.hash)))
+      .then(({ result }) => setMetadata(getProgramMetadata(result.hex)))
       .catch(({ message }: Error) => alert.error(message));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
