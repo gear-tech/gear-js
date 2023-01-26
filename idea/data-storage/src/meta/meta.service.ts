@@ -1,4 +1,4 @@
-import { getProgramMetadata } from '@gear-js/api';
+import { generateCodeHash, getProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { AddMetaParams, AddMetaResult, GetStateByCodeParams } from '@gear-js/common';
@@ -43,22 +43,26 @@ export class MetaService {
       throw new InvalidProgramMetaHex();
     }
 
+    const hash = generateCodeHash(metaHex as HexString);
+    const meta = await this.metaRepository.get(hash);
     const metaData = getProgramMetadata(metaHex as HexString);
-
-    const metadataTypeDB = plainToClass(Meta, {
-      ...params,
-      hash: metaHex,
-      types: metaData.types,
-    });
-
-    const metadata = await this.metaRepository.save(metadataTypeDB);
-
     const updateProgramDataInput: UpdateProgramDataInput = {
       id: params.programId,
       genesis,
       name,
-      meta: metadata,
     };
+
+    if(meta) {
+      updateProgramDataInput.meta = meta;
+    } else {
+      updateProgramDataInput.meta = plainToClass(Meta, {
+        ...params,
+        id: hash,
+        hex: metaHex,
+        types: metaData.types,
+      });
+    }
+
     await this.programService.updateProgramData(updateProgramDataInput);
 
     return { status: 'Metadata added' };
