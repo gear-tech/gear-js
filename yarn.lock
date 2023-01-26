@@ -2119,17 +2119,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.28.8, @gear-js/api@npm:^0.28.8":
-  version: 0.28.8
-  resolution: "@gear-js/api@npm:0.28.8"
-  peerDependencies:
-    "@polkadot/api": ^9.11.1
-    "@polkadot/wasm-crypto": ^6.4.1
-    rxjs: ^7.5.5
-  checksum: 8c429fa971cf8cad29d1ef68798dffe4b1d32ed35d9b0975f403cbfc6df1f403fec5853b159f6bfaa38379602819c01d1dd6f5fef8555cda7834d6d65ad91478
-  languageName: node
-  linkType: hard
-
 "@gear-js/api@npm:^0.25.2":
   version: 0.25.9
   resolution: "@gear-js/api@npm:0.25.9"
@@ -2171,6 +2160,17 @@ __metadata:
     "@polkadot/wasm-crypto": ^6.4.1
     rxjs: ^7.5.5
   checksum: 8559434e6fb3eebb5f523a915d15e1a8b8299f7238bb58b1541d43407c9f83b0f89ed6dc40718184a79388eab0b1f5803a8ba8d094555676f2afb1f2c8a46308
+  languageName: node
+  linkType: hard
+
+"@gear-js/api@npm:^0.28.8":
+  version: 0.28.8
+  resolution: "@gear-js/api@npm:0.28.8"
+  peerDependencies:
+    "@polkadot/api": ^9.11.1
+    "@polkadot/wasm-crypto": ^6.4.1
+    rxjs: ^7.5.5
+  checksum: 8c429fa971cf8cad29d1ef68798dffe4b1d32ed35d9b0975f403cbfc6df1f403fec5853b159f6bfaa38379602819c01d1dd6f5fef8555cda7834d6d65ad91478
   languageName: node
   linkType: hard
 
@@ -2406,51 +2406,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/game-of-chance@workspace:apps/game-of-chance":
-  version: 0.0.0-use.local
-  resolution: "@gear-js/game-of-chance@workspace:apps/game-of-chance"
-  dependencies:
-    "@gear-js/api": 0.28.8
-    "@gear-js/react-hooks": 0.5.5
-    "@gear-js/ui": ^0.4.0
-    "@mantine/form": ^4.2.9
-    "@polkadot/api": 9.11.1
-    "@polkadot/extension-dapp": 0.44.6
-    "@polkadot/react-identicon": 2.9.14
-    "@polkadot/types": 9.11.1
-    "@polkadot/util": 10.2.1
-    "@polkadot/wasm-crypto": 6.4.1
-    "@testing-library/jest-dom": ^5.16.4
-    "@testing-library/react": ^13.3.0
-    "@testing-library/user-event": ^13.5.0
-    "@types/jest": ^27.5.2
-    "@types/node": ^16.11.41
-    "@types/react": ^18.0.12
-    "@types/react-dom": ^18.0.5
-    "@typescript-eslint/eslint-plugin": ^5.28.0
-    "@typescript-eslint/parser": ^5.28.0
-    buffer: ^6.0.3
-    clsx: ^1.1.1
-    eslint: ^8.17.0
-    eslint-config-airbnb: ^19.0.4
-    eslint-config-airbnb-typescript: ^17.0.0
-    eslint-config-prettier: ^8.5.0
-    eslint-plugin-import: ^2.26.0
-    eslint-plugin-jsx-a11y: ^6.5.1
-    eslint-plugin-react: ^7.30.0
-    eslint-plugin-react-hooks: ^4.6.0
-    react: ^18.2.0
-    react-app-rewired: ^2.2.1
-    react-dom: ^18.2.0
-    react-router-dom: ^6.3.0
-    react-scripts: ^5.0.1
-    react-transition-group: ^4.4.2
-    sass: ^1.54.0
-    typescript: ^4.7.3
-    web-vitals: ^2.1.4
-  languageName: unknown
-  linkType: soft
-
 "@gear-js/marketplace@workspace:apps/marketplace":
   version: 0.0.0-use.local
   resolution: "@gear-js/marketplace@workspace:apps/marketplace"
@@ -2552,19 +2507,6 @@ __metadata:
     react-dom: ">=17.0.2"
     react-transition-group: ^4.4.2
   checksum: d98bb35e753971efaa90bbf49a67b4e4f3e1e52a3de3758643ef5e8419565a2b25ab7c25e74155fa50620bd1dea42acd923384a35c23ae98493a44cfd6eb5086
-  languageName: node
-  linkType: hard
-
-"@gear-js/react-hooks@npm:0.5.5":
-  version: 0.5.5
-  resolution: "@gear-js/react-hooks@npm:0.5.5"
-  peerDependencies:
-    "@gear-js/api": ^0.28.8
-    "@polkadot/extension-dapp": ^0.44.8
-    react: ">=17.0.2"
-    react-dom: ">=17.0.2"
-    react-transition-group: ^4.4.2
-  checksum: 6f7ca75da901006c321dfaa2d05868c0ff9c36669c3a6ba170bd925fdddb20c00ac57509dd0a921e698b1ffc9fd9f7f272a32c07755a8704cf62f6514a0c2b1c
   languageName: node
   linkType: hard
 
@@ -6795,7 +6737,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.0.12, @types/react@npm:^18.0.14, @types/react@npm:^18.0.15, @types/react@npm:^18.0.21, @types/react@npm:^18.0.25, @types/react@npm:^18.0.9":
+"@types/react@npm:*, @types/react@npm:^18.0.14, @types/react@npm:^18.0.15, @types/react@npm:^18.0.21, @types/react@npm:^18.0.25, @types/react@npm:^18.0.9":
   version: 18.0.26
   resolution: "@types/react@npm:18.0.26"
   dependencies:
@@ -7053,7 +6995,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^5.0.0, @typescript-eslint/eslint-plugin@npm:^5.25.0, @typescript-eslint/eslint-plugin@npm:^5.28.0, @typescript-eslint/eslint-plugin@npm:^5.30.0, @typescript-eslint/eslint-plugin@npm:^5.30.5, @typescript-eslint/eslint-plugin@npm:^5.30.6, @typescript-eslint/eslint-plugin@npm:^5.31.0, @typescript-eslint/eslint-plugin@npm:^5.32.0, @typescript-eslint/eslint-plugin@npm:^5.34.0, @typescript-eslint/eslint-plugin@npm:^5.42.1, @typescript-eslint/eslint-plugin@npm:^5.5.0":
+"@typescript-eslint/eslint-plugin@npm:^5.0.0, @typescript-eslint/eslint-plugin@npm:^5.25.0, @typescript-eslint/eslint-plugin@npm:^5.30.0, @typescript-eslint/eslint-plugin@npm:^5.30.5, @typescript-eslint/eslint-plugin@npm:^5.30.6, @typescript-eslint/eslint-plugin@npm:^5.31.0, @typescript-eslint/eslint-plugin@npm:^5.32.0, @typescript-eslint/eslint-plugin@npm:^5.34.0, @typescript-eslint/eslint-plugin@npm:^5.42.1, @typescript-eslint/eslint-plugin@npm:^5.5.0":
   version: 5.48.2
   resolution: "@typescript-eslint/eslint-plugin@npm:5.48.2"
   dependencies:
@@ -7137,7 +7079,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^5.0.0, @typescript-eslint/parser@npm:^5.25.0, @typescript-eslint/parser@npm:^5.28.0, @typescript-eslint/parser@npm:^5.30.0, @typescript-eslint/parser@npm:^5.30.5, @typescript-eslint/parser@npm:^5.30.6, @typescript-eslint/parser@npm:^5.31.0, @typescript-eslint/parser@npm:^5.32.0, @typescript-eslint/parser@npm:^5.34.0, @typescript-eslint/parser@npm:^5.42.1, @typescript-eslint/parser@npm:^5.5.0":
+"@typescript-eslint/parser@npm:^5.0.0, @typescript-eslint/parser@npm:^5.25.0, @typescript-eslint/parser@npm:^5.30.0, @typescript-eslint/parser@npm:^5.30.5, @typescript-eslint/parser@npm:^5.30.6, @typescript-eslint/parser@npm:^5.31.0, @typescript-eslint/parser@npm:^5.32.0, @typescript-eslint/parser@npm:^5.34.0, @typescript-eslint/parser@npm:^5.42.1, @typescript-eslint/parser@npm:^5.5.0":
   version: 5.48.2
   resolution: "@typescript-eslint/parser@npm:5.48.2"
   dependencies:
@@ -12077,7 +12019,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.16.0, eslint@npm:^8.17.0, eslint@npm:^8.18.0, eslint@npm:^8.19.0, eslint@npm:^8.21.0, eslint@npm:^8.22.0, eslint@npm:^8.27.0, eslint@npm:^8.3.0":
+"eslint@npm:^8.16.0, eslint@npm:^8.18.0, eslint@npm:^8.19.0, eslint@npm:^8.21.0, eslint@npm:^8.22.0, eslint@npm:^8.27.0, eslint@npm:^8.3.0":
   version: 8.32.0
   resolution: "eslint@npm:8.32.0"
   dependencies:
@@ -22860,7 +22802,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.3.5, typescript@npm:^4.6.4, typescript@npm:^4.7.3, typescript@npm:^4.7.4, typescript@npm:^4.8.4":
+"typescript@npm:^4.3.5, typescript@npm:^4.6.4, typescript@npm:^4.7.4, typescript@npm:^4.8.4":
   version: 4.9.4
   resolution: "typescript@npm:4.9.4"
   bin:
@@ -22900,7 +22842,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.3.5#~builtin<compat/typescript>, typescript@patch:typescript@^4.6.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.7.3#~builtin<compat/typescript>, typescript@patch:typescript@^4.7.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.8.4#~builtin<compat/typescript>":
+"typescript@patch:typescript@^4.3.5#~builtin<compat/typescript>, typescript@patch:typescript@^4.6.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.7.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.8.4#~builtin<compat/typescript>":
   version: 4.9.4
   resolution: "typescript@patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=d73830"
   bin:
