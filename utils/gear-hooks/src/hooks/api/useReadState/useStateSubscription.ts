@@ -1,5 +1,4 @@
 import { Hex, MessagesDispatched } from '@gear-js/api';
-import { UnsubscribePromise } from '@polkadot/api/types';
 import { useContext, useEffect } from 'react';
 import { ApiContext } from 'context';
 
@@ -15,11 +14,10 @@ function useStateSubscription(programId: Hex | undefined, onStateChange: () => v
 
   useEffect(() => {
     const isDependency = dependency !== undefined;
-    let unsub: UnsubscribePromise | undefined;
 
     if (!programId || (isDependency && !dependency)) return;
 
-    unsub = api?.gearEvents.subscribeToGearEvent('MessagesDispatched', handleStateChange);
+    const unsub = api?.gearEvents.subscribeToGearEvent('MessagesDispatched', handleStateChange);
 
     return () => {
       unsub?.then((unsubCallback) => unsubCallback());
