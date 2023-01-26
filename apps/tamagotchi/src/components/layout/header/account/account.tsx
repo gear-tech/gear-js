@@ -26,13 +26,7 @@ export const AccountComponent = () => {
               <Link to="/store" className={clsx('btn whitespace-nowrap', buttonStyles.primary)}>
                 Open Store
               </Link>
-
-              <TokensWallet
-                balance={account.balance}
-                address={account.address}
-                name={account.meta.name}
-                onClick={openModal}
-              />
+              <TokensWallet onClick={openModal} />
             </>
           )}
           <GasWallet balance={account.balance} address={account.address} name={account.meta.name} onClick={openModal} />

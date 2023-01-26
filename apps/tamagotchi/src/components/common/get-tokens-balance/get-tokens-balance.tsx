@@ -4,11 +4,9 @@ import clsx from 'clsx';
 import { CreateType, Hex } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
 import meta from 'assets/meta/meta-ft.txt';
-// import {useTokensBalanceStore} from 'app/context'
 
 export const GetTokensBalance = () => {
   const { account } = useAccount();
-  // const { meta } = useTokensBalanceStore();
   const handle = () => {
     const result = CreateType.create(
       'TokenContractMessage',
