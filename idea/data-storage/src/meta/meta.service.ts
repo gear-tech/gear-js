@@ -31,6 +31,10 @@ export class MetaService {
     return meta;
   }
 
+  public async get(id: string): Promise<Meta> {
+    return this.metaRepository.get(id);
+  }
+
   public async addMeta(params: AddMetaParams): Promise<AddMetaResult> {
     const { programId, genesis, metaHex, name } = params;
     const program = await this.programRepository.getByIdAndGenesis(programId, genesis);

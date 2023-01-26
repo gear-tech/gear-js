@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { CodeChanged, GearApi, generateCodeHash, Hex, MessageEnqueued } from '@gear-js/api';
 import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
@@ -22,6 +22,7 @@ import { CreateProgramInput } from '../program/types';
 import configuration from '../config/configuration';
 import { BlockService } from '../block/block.service';
 import { RabbitmqService } from '../rabbitmq/rabbitmq.service';
+import { MetaService } from '../meta/meta.service';
 
 const { gear } = configuration();
 
@@ -39,6 +40,8 @@ export class GearEventListener {
     private codeRepository: CodeRepo,
     private blockService: BlockService,
     private rabbitMQService: RabbitmqService,
+    @Inject(forwardRef(() => MetaService))
+    private metaService: MetaService,
   ) {}
 
   public async run() {
@@ -216,6 +219,7 @@ export class GearEventListener {
     const txMethods = ['uploadProgram', 'createProgram'];
     const extrinsics = block.block.extrinsics.filter(({ method: { method } }) => txMethods.includes(method));
     const programs: CreateProgramInput[] = [];
+    let metaHash;
 
     if (extrinsics.length >= 1) {
       for (const tx of extrinsics) {
@@ -232,15 +236,28 @@ export class GearEventListener {
         } = foundEvent.event as MessageEnqueued;
 
         const codeId = tx.method.method === 'uploadProgram' ? generateCodeHash(tx.args[0].toHex()) : tx.args[0].toHex();
-
-        programs.push({
+        const createProgram = {
           owner: source.toHex(),
           id: destination.toHex(),
           blockHash: block.createdAtHash.toHex(),
           timestamp,
           code: await this.codeRepository.get(codeId, this.genesis),
           genesis: this.genesis,
-        });
+        };
+
+
+        try {
+          metaHash = await this.api.program.metaHash(destination.toHex());
+
+          if(metaHash) {
+            const meta = await this.metaService.get(metaHash);
+            Object.assign(createProgram, { meta });
+          }
+        } catch (error) {
+          this.logger.error(error);
+        }
+
+        programs.push(createProgram);
       }
       await this.programService.createPrograms(programs);
     }
