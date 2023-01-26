@@ -108,7 +108,6 @@ describe('API methods', () => {
         const program = prepared.programs[id_] as IPreparedProgram;
 
         if(program.spec['pathToMetaTxt']) {
-          console.log('add-------->' ,program);
           expect(await uploadMeta(genesis, program)).toBeTruthy();
         }
       }
@@ -118,7 +117,6 @@ describe('API methods', () => {
       for (const id_ of Object.keys(prepared.programs)) {
         const program = prepared.programs[id_] as IPreparedProgram;
         if(program.spec['pathToMetaTxt']) {
-          console.log('get_________>',program);
           expect(await getMeta(genesis, id_)).toBeTruthy();
         }
       }
