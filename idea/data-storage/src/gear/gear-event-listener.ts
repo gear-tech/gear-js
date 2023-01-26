@@ -40,7 +40,6 @@ export class GearEventListener {
     private codeRepository: CodeRepo,
     private blockService: BlockService,
     private rabbitMQService: RabbitmqService,
-    @Inject(forwardRef(() => MetaService))
     private metaService: MetaService,
   ) {}
 
@@ -250,8 +249,14 @@ export class GearEventListener {
           metaHash = await this.api.program.metaHash(destination.toHex());
 
           if(metaHash) {
-            const meta = await this.metaService.get(metaHash);
-            Object.assign(createProgram, { meta });
+            const meta = await this.metaService.getByHash(metaHash);
+
+            if(meta){
+              Object.assign(createProgram, { meta });
+            } else {
+              const meta = await this.metaService.createMeta({ hash: metaHash });
+              Object.assign(createProgram, { meta });
+            }
           }
         } catch (error) {
           this.logger.error(error);

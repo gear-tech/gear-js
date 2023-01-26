@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { IMeta } from '@gear-js/common';
 
 import { Code } from './code.entity';
@@ -6,8 +6,11 @@ import { Program } from './program.entity';
 
 @Entity()
 export class Meta implements IMeta {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn('rowid')
   public id: string;
+
+  @Column({ unique: true })
+  public hash: string;
 
   @Column({ nullable: true })
   public hex: string;
