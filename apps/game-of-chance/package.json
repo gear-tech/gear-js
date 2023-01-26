@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@gear-js/api": "0.28.7",
-    "@gear-js/react-hooks": "0.5.3",
+    "@gear-js/api": "0.28.8",
+    "@gear-js/react-hooks": "0.5.5",
     "@gear-js/ui": "^0.4.0",
     "@mantine/form": "^4.2.9",
     "@polkadot/api": "9.11.1",

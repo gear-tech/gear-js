@@ -1,17 +1,12 @@
 import { Hex } from '@gear-js/api';
 
-type Player = {
-  playerId: Hex;
-  balance: string;
-};
-
 type Lottery = {
   admin: Hex;
   started: string;
-  ended: string;
+  ending: string;
   participationCost: string;
   prizeFund: string;
-  players: Player[];
+  players: Hex[];
   winner: Hex;
   fungibleToken: Hex | null;
 };
@@ -24,4 +19,4 @@ type DashboardProps = {
   countdown: string;
 };
 
-export type { Player, Lottery, DashboardProps };
+export type { Lottery, DashboardProps };

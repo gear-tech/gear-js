@@ -1,7 +1,8 @@
 import { Button } from '@gear-js/ui';
 import { useAccount } from '@gear-js/react-hooks';
+import { Hex } from '@gear-js/api';
 import { Content } from 'components';
-import { Player, DashboardProps } from 'types';
+import { DashboardProps } from 'types';
 import { useLotteryMessage } from 'hooks';
 import { STATUS, SUBHEADING } from 'consts';
 import { getNumber } from 'utils';
@@ -13,11 +14,12 @@ type Props = {
   isOwner: boolean;
   dashboard: DashboardProps;
   prizeFund: string;
-  players: Player[];
+  players: Hex[];
+  cost: string;
   onResetButtonClick: () => void;
 };
 
-function Pending({ isOwner, dashboard, prizeFund, players, onResetButtonClick }: Props) {
+function Pending({ isOwner, dashboard, prizeFund, players, cost, onResetButtonClick }: Props) {
   const { account } = useAccount();
   const sendMessage = useLotteryMessage();
   const pickWinner = () => sendMessage({ PickWinner: null }, { value: getNumber(prizeFund) });
@@ -39,7 +41,7 @@ function Pending({ isOwner, dashboard, prizeFund, players, onResetButtonClick }:
         ))}
       <Dashboard startTime={startTime} endTime={endTime} status={status} winner={winner} countdown={countdown} />
       {isPlayerStatus && <PlayerStatus isWinner={isPlayerWinner} />}
-      <Players list={players} />
+      <Players list={players} balance={cost} />
     </Content>
   );
 }

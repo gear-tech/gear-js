@@ -12,18 +12,18 @@ function Home() {
   const { account } = useAccount();
 
   const { state, isStateRead } = useLotteryState();
-  const { admin, started, ended, fungibleToken } = state || {};
+  const { admin, started, ending, fungibleToken } = state || {};
 
   const cost = state?.participationCost || '';
   const prizeFund = state?.prizeFund || '';
   const players = state?.players || [];
   const winner = state && isWinner(state.winner) ? state.winner : ('' as Hex);
   const isOwner = account?.decodedAddress === admin;
-  const isPlayer = players.some(({ playerId }) => playerId === account?.decodedAddress);
+  const isPlayer = players.some((playerId) => playerId === account?.decodedAddress);
   const isParticipant = isPlayer || isOwner;
 
   const startTime = getNumber(started || '');
-  const endTime = getNumber(ended || '');
+  const endTime = getNumber(ending || '');
 
   const { status, countdown, resetStatus } = useLotteryStatus(endTime);
   const isLotteryStarted = status !== STATUS.AWAIT;
@@ -38,6 +38,7 @@ function Home() {
           dashboard={dashboard}
           prizeFund={prizeFund}
           players={players}
+          cost={cost}
           onResetButtonClick={resetStatus}
         />
       )}

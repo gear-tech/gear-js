@@ -15,7 +15,7 @@ function PlayerStart({ cost, isToken }: Props) {
 
   const enter = () => {
     const costNumber = getNumber(cost);
-    sendMessage({ Enter: costNumber }, isToken ? undefined : { value: costNumber });
+    sendMessage({ Enter: null }, isToken ? undefined : { value: costNumber });
   };
 
   return (

@@ -1,12 +1,13 @@
+import { Hex } from '@gear-js/api';
 import clsx from 'clsx';
-import { Player } from 'types';
 import styles from './Players.module.scss';
 
 type Props = {
-  list: Player[];
+  list: Hex[];
+  balance: string;
 };
 
-function Players({ list }: Props) {
+function Players({ list, balance }: Props) {
   const isAnyPlayer = list.length > 0;
 
   const headerClassName = clsx(styles.row, styles.header);
@@ -14,7 +15,7 @@ function Players({ list }: Props) {
   const textClassName = clsx(styles.cell, styles.text);
 
   const getPlayers = () =>
-    list.map(({ playerId, balance }, index) => (
+    list.map((playerId, index) => (
       <li key={playerId} className={styles.row}>
         <span className={styles.cell}>{index}</span>
         <span className={addressClassName}>{playerId}</span>
