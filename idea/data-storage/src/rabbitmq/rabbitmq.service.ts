@@ -2,6 +2,7 @@ import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Channel, connect, Connection, Replies } from 'amqplib';
 import {
+  AddMetaByCodeParams,
   AddMetaParams,
   AddStateParams,
   API_METHODS,
@@ -11,7 +12,7 @@ import {
   GetAllProgramsParams,
   GetAllStateParams,
   GetCodeParams,
-  GetMessagesParams,
+  GetMessagesParams, GetMetaByCodeParams,
   GetMetaParams,
   GetStateByCodeParams,
   GetStateParams,
@@ -164,7 +165,10 @@ export class RabbitmqService {
         return this.codeService.getByIdAndGenesis(params as GetCodeParams);
       },
       [API_METHODS.CODE_META_GET]: () => {
-        return this.metaService.getByCodeId(params as GetStateByCodeParams);
+        return this.metaService.getByCodeId(params as GetMetaByCodeParams);
+      },
+      [API_METHODS.CODE_META_ADD]: () => {
+        return this.metaService.addMetaByCode(params as AddMetaByCodeParams);
       },
       [API_METHODS.CODE_STATE_GET]: () => {
         return this.stateToCodeService.getByCodeIdAndStateId(params as GetStateByCodeParams);
