@@ -1,0 +1,24 @@
+{
+  "types": {
+    "MessageId": "[u8;32]",
+    "ExitCode": "i32",
+    "Payload": "Vec<u8>",
+    "TypesRepr": {
+      "input": "Option<u32>",
+      "output": "Option<u32>"
+    },
+    "ProgramMetadataRepr": {
+      "init": "TypesRepr",
+      "handle": "TypesRepr",
+      "reply": "TypesRepr",
+      "others": "TypesRepr",
+      "signal": "Option<u32>",
+      "state": "Option<u32>",
+      "reg": "Vec<u8>"
+    },
+    "StateMetadataRepr": {
+      "functions": "BTreeMap<String, TypesRepr>",
+      "reg": "Vec<u8>"
+    }
+  }
+}

@@ -15,14 +15,27 @@ type Props = {
 };
 
 const Placeholder = ({ title, block, isEmpty, children, blocksCount = 1, description }: Props) => {
-  const loaderClasses = clsx(styles.block, !isEmpty && styles.loading);
+  const getOpacityClassName = (blockIndex: number) => {
+    const lastBlockIndex = blocksCount - 1;
+
+    switch (blockIndex) {
+      case lastBlockIndex:
+        return 'transparent';
+      case lastBlockIndex - 1:
+        return 'semiTransparent';
+      case lastBlockIndex - 2:
+        return 'barelyTransparent';
+      default:
+        return '';
+    }
+  };
 
   const renderBlocks = () => {
     const result = [];
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < blocksCount; i++) {
       result.push(
-        <div key={i} className={loaderClasses}>
+        <div key={i} className={clsx(styles.block, !isEmpty && styles.loading, styles[getOpacityClassName(i)])}>
           {block}
         </div>,
       );

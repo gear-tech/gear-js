@@ -1,7 +1,7 @@
-import { u64 } from '@polkadot/types';
 import { BlockNumber } from '@polkadot/types/interfaces';
+import { u64 } from '@polkadot/types';
 
-import { getExportValue, PAGE_SIZE } from './utils';
+import { PAGE_SIZE, getExportValue } from './utils';
 import { IGearPages } from '../types';
 import importObj from './importObj';
 

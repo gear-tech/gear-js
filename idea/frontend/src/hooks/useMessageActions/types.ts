@@ -1,16 +1,16 @@
-import { Metadata, IMessageSendOptions, IMessageSendReplyOptions } from '@gear-js/api';
+import { ProgramMetadata, IMessageSendOptions, IMessageSendReplyOptions } from '@gear-js/api';
 
 import { OperationCallbacks, ParamsToSignAndSend as CommonParamsToSignAndSend } from 'entities/hooks';
 
 type ParamsToSendMessage = OperationCallbacks & {
   message: IMessageSendOptions;
-  metadata?: Metadata;
+  metadata?: ProgramMetadata;
   payloadType?: string;
 };
 
 type ParamsToReplyMessage = OperationCallbacks & {
   reply: IMessageSendReplyOptions;
-  metadata?: Metadata;
+  metadata?: ProgramMetadata;
   payloadType?: string;
 };
 

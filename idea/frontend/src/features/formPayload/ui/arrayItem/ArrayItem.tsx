@@ -6,9 +6,9 @@ import { PayloadItemProps } from '../../model';
 import { getItemLabel, getNextLevelName } from '../../helpers';
 
 const ArrayItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadItemProps) => {
-  const { value, count } = typeStructure;
+  const { type, len } = typeStructure;
 
-  const arrayItems = useMemo(() => new Array(count || 0).fill(value), [value, count]);
+  const arrayItems = useMemo(() => new Array(len || 0).fill(type), [type, len]);
 
   const itemLabel = getItemLabel(typeStructure.name, title);
 

@@ -1,3 +1,73 @@
+## 0.28.8
+
+_01/25/2023_
+
+https://github.com/gear-tech/gear-js/pull/1161
+
+### Changes
+
+- Fix enum variants type definition
+
+## 0.28.7
+
+_01/23/2023_
+
+https://github.com/gear-tech/gear-js/pull/1157
+
+### Changes
+
+- Set `kind` to `primitive` for types from `primitive_types` crate
+
+## 0.28.6
+
+_01/19/2023_
+
+https://github.com/gear-tech/gear-js/pull/1154
+
+### Changes
+
+- Add separate type `actorid`
+
+## 0.28.5
+
+_01/12/2023_
+
+https://github.com/gear-tech/gear-js/pull/1150
+
+### Changes
+
+- Don't use instanceof to figure out which class an object belongs to
+
+## 0.28.4
+
+_01/10/2023_
+
+https://github.com/gear-tech/gear-js/pull/1149
+
+### Changes
+
+- Add variant `option` to TypeKind variants
+
+## 0.28.3
+
+_12/20/2022_
+
+https://github.com/gear-tech/gear-js/pull/1146
+
+### Changes
+
+- Add new meta to methods for gas calculation
+
+## 0.28.1
+
+_12/16/2022_
+
+https://github.com/gear-tech/gear-js/pull/1135
+
+### Changes
+
+- New approach to reading state and using metadata
+
 ## 0.27.7
 
 _11/29/2022_

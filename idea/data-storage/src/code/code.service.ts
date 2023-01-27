@@ -21,8 +21,8 @@ export class CodeService {
   }
 
   public async getByIdAndGenesis(params: GetCodeParams): Promise<Code> {
-    const { codeId, genesis } = params;
-    const code = await this.codeRepository.getByIdAndGenesis(codeId, genesis);
+    const { id, genesis } = params;
+    const code = await this.codeRepository.getByIdAndGenesis(id, genesis);
     if (!code) {
       throw new CodeNotFound();
     }

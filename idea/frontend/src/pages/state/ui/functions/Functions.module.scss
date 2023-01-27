@@ -1,0 +1,6 @@
+@use 'shared/assets/styles/mixins' as *;
+
+.list {
+  @include childrenMargin(12px);
+  padding-left: 8px;
+}

@@ -8,7 +8,7 @@ const StructItem = ({ title, levelName, typeStructure, renderNextItem }: Payload
 
   return (
     <Fieldset legend={itemLabel}>
-      {Object.entries(typeStructure.value).map((item) => {
+      {Object.entries(typeStructure.type).map((item) => {
         const [key, value] = item;
 
         return renderNextItem({

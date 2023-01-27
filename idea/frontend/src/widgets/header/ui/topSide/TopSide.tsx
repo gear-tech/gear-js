@@ -3,29 +3,27 @@ import { CSSTransition } from 'react-transition-group';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import clsx from 'clsx';
 import { GearKeyring } from '@gear-js/api';
-import { useApi, useAlert, Account, useAccount } from '@gear-js/react-hooks';
+import { useApi, useAlert, useAccount } from '@gear-js/react-hooks';
 import { TooltipWrapper, buttonStyles } from '@gear-js/ui';
 
 import { getTestBalance } from 'api';
-import { useBalanceTransfer, useChain } from 'hooks';
+import { useBalanceTransfer, useChain, useModal } from 'hooks';
 import { RecentBlocks } from 'features/recentBlocks';
-import { HCAPTCHA_SITE_KEY, AnimationTimeout } from 'shared/config';
+import { HCAPTCHA_SITE_KEY, AnimationTimeout, GEAR_BALANCE_TRANSFER_VALUE } from 'shared/config';
 import { ReactComponent as TestBalanceSVG } from 'shared/assets/images/actions/testBalance.svg';
+import { ReactComponent as TransferBalanceSVG } from 'shared/assets/images/actions/transferBalance.svg';
 
-import styles from './TopSide.module.scss';
 import { Wallet } from '../wallet';
 import { BalanceInfo } from '../balanceInfo';
 import { TotalIssuance } from '../totalIssuance';
+import styles from './TopSide.module.scss';
 
-type Props = {
-  account?: Account;
-};
-
-const TopSide = ({ account }: Props) => {
+const TopSide = () => {
   const alert = useAlert();
   const { api, isApiReady } = useApi();
-  const { isAccountReady } = useAccount();
+  const { account, isAccountReady } = useAccount();
   const { isDevChain, isTestBalanceAvailable } = useChain();
+  const { showModal, closeModal } = useModal();
 
   const captchaRef = useRef<HCaptcha>(null);
 
@@ -36,18 +34,13 @@ const TopSide = ({ account }: Props) => {
 
   const transferBalance = useBalanceTransfer();
 
-  const handleTransferBalance = () => {
-    if (address) {
-      getTestBalance({
-        token: captchaToken,
-        address,
-      }).catch((error) => alert.error(error.message));
-    }
+  const getBalanceFromService = () => {
+    if (address) getTestBalance({ address, token: captchaToken }).catch(({ message }: Error) => alert.error(message));
   };
 
   const handleTestBalanceClick = () => {
     if (captchaToken) {
-      handleTransferBalance();
+      getBalanceFromService();
 
       return;
     }
@@ -55,12 +48,12 @@ const TopSide = ({ account }: Props) => {
     captchaRef.current?.execute();
   };
 
-  const handleTransferBalanceFromAlice = async () => {
-    if (address) {
-      const alice = await GearKeyring.fromSuri('//Alice');
+  const getBalanceFromAlice = async () => {
+    if (!address) return;
 
-      transferBalance(address, alice);
-    }
+    const alice = await GearKeyring.fromSuri('//Alice');
+
+    transferBalance(alice, address, GEAR_BALANCE_TRANSFER_VALUE);
   };
 
   const handleExpire = () => setCaptchaToken('');
@@ -75,13 +68,22 @@ const TopSide = ({ account }: Props) => {
   }, [api, isApiReady]);
 
   useEffect(() => {
-    if (captchaToken) {
-      handleTransferBalance();
-    }
+    if (captchaToken) getBalanceFromService();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [captchaToken]);
 
   const btnClasses = clsx(buttonStyles.button, buttonStyles.medium, buttonStyles.noText, styles.testBalanceBtn);
+
+  const handleTransferBalanceSubmit = (to: string, value: number) => {
+    if (!account) return;
+
+    const { source } = account.meta;
+
+    transferBalance(address, to, value, { signSource: source, onSuccess: closeModal });
+  };
+
+  const openTransferBalanceModal = () => showModal('transferBalance', { onSubmit: handleTransferBalanceSubmit });
 
   return (
     <>
@@ -103,11 +105,18 @@ const TopSide = ({ account }: Props) => {
                     <button
                       type="button"
                       className={btnClasses}
-                      onClick={isDevChain ? handleTransferBalanceFromAlice : handleTestBalanceClick}>
+                      onClick={isDevChain ? getBalanceFromAlice : handleTestBalanceClick}>
                       <TestBalanceSVG />
                     </button>
                   </TooltipWrapper>
                 )}
+
+                <TooltipWrapper text="Transfer balance">
+                  <button type="button" className={btnClasses} onClick={openTransferBalanceModal}>
+                    <TransferBalanceSVG />
+                  </button>
+                </TooltipWrapper>
+
                 <BalanceInfo balance={account.balance} />
               </div>
             </CSSTransition>

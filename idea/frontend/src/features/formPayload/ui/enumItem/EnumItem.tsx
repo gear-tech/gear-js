@@ -9,9 +9,9 @@ import { PayloadItemProps } from '../../model';
 import { getItemLabel, getNextLevelName, getPayloadValue } from '../../helpers';
 
 const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadItemProps) => {
-  const { name, value } = typeStructure;
+  const { name, type } = typeStructure;
 
-  const options = useMemo(() => Object.keys(value).map((key) => ({ value: key, label: key })), [value]);
+  const options = useMemo(() => Object.keys(type).map((key) => ({ value: key, label: key })), [type]);
 
   const { change } = useForm(levelName);
   const [selected, setSelected] = useState(options[0].value);
@@ -23,7 +23,7 @@ const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadIt
 
   useChangeEffect(() => {
     // @ts-ignore
-    const parsedStructure = getPayloadValue(value[selected]);
+    const parsedStructure = getPayloadValue(type[selected]);
 
     change(levelName, { [selected]: parsedStructure });
   }, [selected]);
@@ -34,7 +34,7 @@ const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadIt
       {renderNextItem({
         levelName: nextLevelName,
         // @ts-ignore
-        typeStructure: value[selected],
+        typeStructure: type[selected],
       })}
     </Fieldset>
   );

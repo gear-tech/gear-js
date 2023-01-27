@@ -1,11 +1,10 @@
-import { Hex, Metadata } from '@gear-js/api';
+import { Hex, ProgramMetadata } from '@gear-js/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { AnyJson, ISubmittableResult } from '@polkadot/types/types';
 import { useContext, useRef } from 'react';
 import { AccountContext, AlertContext, ApiContext } from 'context';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
-import { useConditionalMeta } from './useMetadata';
 import { getAutoGasLimit } from 'utils';
 
 type SendMessageOptions = {
@@ -14,12 +13,10 @@ type SendMessageOptions = {
   onSuccess?: () => void;
 };
 
-function useSendMessage(destination: Hex, metaSourceOrData: string | Metadata | undefined) {
+function useSendMessage(destination: Hex, metadata: ProgramMetadata | undefined) {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
   const alert = useContext(AlertContext);
-
-  const metadata = useConditionalMeta(metaSourceOrData);
 
   const title = 'gear.sendMessage';
   const loadingAlertId = useRef('');

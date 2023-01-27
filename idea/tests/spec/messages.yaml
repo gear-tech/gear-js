@@ -1,41 +1,22 @@
-ping:
+test:
   - id: 1
-    payload: PING
-    metaType: String
-    gasLimit: 20000000000
+    payload:
+      One: 'Alice'
+    pathToMetaTxt: ./wasm-test/meta.txt
+    gasLimit: 200_000_000_000
+    reply: '0x'
+    value: 1_000
+    claim: true
     account: alice
     log: '0x504f4e47'
 
   - id: 2
-    payload: PING
-    metaType: String
-    gasLimit: 20000000000
+    payload:
+      Two: [[8, 16]]
+    pathToMetaTxt: ./wasm-test/meta.txt
+    gasLimit: 200_000_000_000
+    reply: '0x'
+    value: 1_000
+    claim: true
     account: bob
     log: '0x504f4e47'
-
-guestbook:
-  - id: 3
-    payload:
-      AddMessage:
-        author: Alice
-        msg: Hello, World!
-    pathToMeta: ./wasm/guestbook.meta.wasm
-    gasLimit: 20000000000
-    account: alice
-
-  - id: 4
-    payload:
-      AddMessage:
-        author: Bob
-        msg: Hello, Alice!
-    pathToMeta: ./wasm/guestbook.meta.wasm
-    gasLimit: 20000000000
-    account: bob
-
-  - id: 5
-    payload:
-      ViewMessages: 'Null'
-    pathToMeta: ./wasm/guestbook.meta.wasm
-    gasLimit: 20000000000
-    account: alice
-    log: '0x0814416c6963653448656c6c6f2c20576f726c64210c426f623448656c6c6f2c20416c69636521'

@@ -4,13 +4,9 @@ const useOutsideClick = <TElement extends Element>(callback: (event: MouseEvent)
   const ref = useRef<TElement>(null);
 
   const handleClick = (event: MouseEvent) => {
-    if (ref.current) {
-      // https://github.com/JedWatson/react-select/issues/4560
-      // @ts-ignore
-      const isElementClicked = event.path.includes(ref.current);
+    const isOutsideClick = ref.current && !ref.current.contains(event.target as Node);
 
-      if (!isElementClicked) callback(event);
-    }
+    if (isOutsideClick) callback(event);
   };
 
   useEffect(() => {

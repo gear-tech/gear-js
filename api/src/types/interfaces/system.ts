@@ -1,5 +1,5 @@
-import { Codec } from '@polkadot/types/types';
 import { BN } from '@polkadot/util';
+import { Codec } from '@polkadot/types/types';
 
 export interface ISystemAccountInfo extends Codec {
   nonce: Codec;

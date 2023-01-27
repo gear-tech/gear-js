@@ -1,8 +1,8 @@
-import { readFileSync } from 'fs';
 import { join } from 'path';
+import { readFileSync } from 'fs';
 
-import { getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { GearApi, Hex } from '../src';
+import { getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { GEAR_EXAMPLES_WASM_DIR } from './config';
 
 const api = new GearApi();

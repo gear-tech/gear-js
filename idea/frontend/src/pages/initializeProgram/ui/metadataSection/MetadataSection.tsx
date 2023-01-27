@@ -1,14 +1,14 @@
-import { Metadata } from '@gear-js/api';
+import { ProgramMetadata, Hex } from '@gear-js/api';
 
-import { UploadMetadata, UploadData } from 'features/uploadMetadata';
+import { UploadMetadata } from 'features/uploadMetadata';
 import { Subheader } from 'shared/ui/subheader';
 
 import styles from '../InitializeProgram.module.scss';
 
 type Props = {
-  metadata?: Metadata;
+  metadata: ProgramMetadata | undefined;
   onReset: () => void;
-  onUpload: (data: UploadData) => void;
+  onUpload: (metaHex: Hex) => void;
 };
 
 const MetadataSection = ({ metadata, onReset, onUpload }: Props) => (

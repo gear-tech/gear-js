@@ -1,7 +1,8 @@
-import { GearApi, GearKeyring, getWasmMetadata } from '../../../lib';
-import { decodeAddress } from '../../../lib/utils';
 import { readFileSync } from 'fs';
+
+import { GearApi, GearKeyring, getWasmMetadata } from '../../../lib';
 import { PATH_TO_META, PATH_TO_OPT } from '../config';
+import { decodeAddress } from '../../../lib/utils';
 import { waitForInit } from './waitForInit';
 
 const main = async () => {

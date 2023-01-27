@@ -1,5 +1,6 @@
-import { GearApi, Hex } from '../../../lib';
 import { readFileSync } from 'fs';
+
+import { GearApi, Hex } from '../../../lib';
 import { PATH_TO_META } from '../config';
 
 const [programId] = process.argv.slice(2) as [Hex];

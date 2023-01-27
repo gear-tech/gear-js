@@ -73,11 +73,15 @@ enum RpcMethods {
   GetTestBalance = 'testBalance.get',
   NetworkData = 'networkData.available',
   TestBalanceAvailable = 'testBalance.available',
+  AddState = 'program.state.add',
+  GetStates = 'program.state.all',
+  GetState = 'program.state.get',
 }
 
 enum FileTypes {
   Wasm = 'application/wasm',
   Json = 'application/json',
+  Text = 'text/plain',
 }
 
 enum AnimationTimeout {

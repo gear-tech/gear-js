@@ -7,10 +7,22 @@
   svg {
     width: 100%;
   }
-  
+
   &.loading {
     @include loading();
 
     position: relative;
   }
+}
+
+.transparent {
+  opacity: 0.1;
+}
+
+.semiTransparent {
+  opacity: 0.4;
+}
+
+.barelyTransparent {
+  opacity: 0.7;
 }

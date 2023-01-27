@@ -1,8 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { Metadata } from '@gear-js/api';
-
-import { UploadData } from 'features/uploadMetadata';
+import { Hex, getProgramMetadata } from '@gear-js/api';
 
 import styles from './InitializeProgram.module.scss';
 import { PageParams } from '../model';
@@ -12,23 +10,15 @@ import { MetadataSection } from './metadataSection';
 const InitializeProgram = () => {
   const { codeId } = useParams() as PageParams;
 
-  const [metadata, setMetadata] = useState<Metadata>();
-  const [metadataBuffer, setMetadataBuffer] = useState<string>();
+  const [metaHex, setMetaHex] = useState<Hex>();
+  const metadata = useMemo(() => (metaHex ? getProgramMetadata(metaHex) : undefined), [metaHex]);
 
-  const resetMetadada = useCallback(() => {
-    setMetadata(undefined);
-    setMetadataBuffer(undefined);
-  }, []);
-
-  const uploadMetadada = useCallback((data: UploadData) => {
-    setMetadata(data.metadata);
-    setMetadataBuffer(data.metadataBuffer);
-  }, []);
+  const resetMetaHex = () => setMetaHex(undefined);
 
   return (
     <div className={styles.initializeProgramPage}>
-      <CodeSection codeId={codeId} metadata={metadata} metadataBuffer={metadataBuffer} resetMetadada={resetMetadada} />
-      <MetadataSection metadata={metadata} onReset={resetMetadada} onUpload={uploadMetadada} />
+      <CodeSection codeId={codeId} metaHex={metaHex} metadata={metadata} resetMetadada={resetMetaHex} />
+      <MetadataSection metadata={metadata} onReset={resetMetaHex} onUpload={setMetaHex} />
     </div>
   );
 };

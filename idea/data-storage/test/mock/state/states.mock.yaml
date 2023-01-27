@@ -1,0 +1,6 @@
+- id: '1138f9d9-efb2-41af-b614-75cea454569c'
+  name: 'state_1'
+  wasmBuffBase64: 'state_1_wasmBuffBase64'
+  funcNames: ['func_1']
+  functions:
+    func_1: {}

@@ -5,32 +5,36 @@ import { BaseEntity } from './base.entity';
 import { Program } from './program.entity';
 import { Meta } from './meta.entity';
 import { CodeStatus } from '../../common/enums';
+import { StateToCode } from './state-to-code.entity';
 
 @Entity()
 export class Code extends BaseEntity implements ICode {
   @PrimaryGeneratedColumn('uuid')
-    _id: string;
+  public _id: string;
 
   @Column()
-    id: string;
+  public id: string;
 
   @Index()
   @Column()
-    uploadedBy: string;
+  public uploadedBy: string;
 
   @Column()
-    name: string;
+  public name: string;
 
   @Column({ type: 'enum', enum: CodeStatus })
-    status: CodeStatus;
+  public status: CodeStatus;
 
   @Column({ nullable: true })
-    expiration: string;
+  public expiration: string;
 
   @OneToOne(() => Meta, (meta) => meta.code)
   @JoinColumn({ name: 'meta_id' })
-    meta: Meta;
+  public meta: Meta;
 
   @OneToMany(() => Program, (program) => program.code)
-    programs: Program[];
+  public programs: Program[];
+
+  @OneToMany(() => StateToCode, (stateToCode) => stateToCode.code)
+  public stateToCodes!: StateToCode[];
 }

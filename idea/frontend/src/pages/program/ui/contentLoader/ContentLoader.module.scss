@@ -1,14 +1,25 @@
-@use 'shared/assets/styles/_animations.scss' as *;
+@use 'shared/assets/styles/animations' as *;
+@use 'shared/assets/styles/variables' as *;
 
 .contentLoader {
   position: relative;
   border-radius: 16px;
-  
+
   & > svg {
     width: 100%;
   }
 
   &.active {
     @include loading();
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(0deg, $bgColor 0%, rgba($bgColor, 0) 90%);
   }
 }

@@ -1,11 +1,11 @@
-import { Hex } from '../types';
-import { TypeRegistry, PortableRegistry } from '@polkadot/types';
+import { PortableRegistry, TypeRegistry } from '@polkadot/types';
 import { hexToU8a, isHex } from '@polkadot/util';
 import { Codec } from '@polkadot/types/types';
 
 import { isJSON, toJSON } from '../utils/json';
-import { joinTypePath } from '../utils/types';
+import { Hex } from '../types';
 import { REGULAR_EXP } from '../utils/regexp';
+import { joinTypePath } from '../utils/types';
 
 function getName(path: string[], name: string, slice = -1) {
   if (name.endsWith(joinTypePath(path.slice(slice)))) {
@@ -121,19 +121,6 @@ export class TypeInfoRegistry {
     this.#registerTypes();
   }
 
-  getShortName(fullName: string): string {
-    if (fullName.includes('::')) {
-      fullName = joinTypePath(fullName.split('::'));
-    }
-    if (fullName.includes('_')) {
-      fullName = joinTypePath(fullName.split('_'));
-    }
-    if (!this.#replaceMap.has(fullName)) {
-      return fullName;
-    }
-    return this.#replaceMap.get(fullName);
-  }
-
   getTypes() {
     return this.#finalTypeDefinition;
   }
@@ -149,7 +136,32 @@ export class TypeInfoRegistry {
       if (`${typeName}${match}` in this.#finalTypeDefinition) {
         return `${typeName}${match}${type.slice(typeName.length)}`;
       }
+      const matchShortName = this.getShortName(match);
+      if (matchShortName in this.#finalTypeDefinition) {
+        return `${typeName}<${matchShortName}>`;
+      }
     }
     return type;
+  }
+
+  getShortName(fullName: string): string {
+    let resultName: string;
+    const includesColons = fullName.includes('::');
+
+    if (includesColons) {
+      resultName = joinTypePath(fullName.split('::'));
+    }
+    if (fullName.includes('_')) {
+      resultName = joinTypePath(fullName.split('_'));
+    }
+
+    if (resultName) {
+      if (!this.#replaceMap.has(resultName)) {
+        return includesColons ? fullName.split('::').at(-1) : resultName;
+      } else {
+        return this.#replaceMap.get(resultName);
+      }
+    }
+    return fullName;
   }
 }

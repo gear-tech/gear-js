@@ -1,15 +1,15 @@
-import { Codec } from '@polkadot/types-codec/types';
+import { BTreeSet, Option, Struct, Vec, u32, u8 } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
-import { u8, u32, Option, BTreeSet, Vec } from '@polkadot/types';
-import { WasmPageNumber } from './pages';
-import { DispatchKind } from '../message';
 
-export interface CodeMetadata extends Codec {
+import { DispatchKind } from '../message';
+import { WasmPageNumber } from './pages';
+
+export interface CodeMetadata extends Struct {
   author: H256;
   blockNumber: u32;
 }
 
-export interface InstrumentedCode extends Codec {
+export interface InstrumentedCode extends Struct {
   code: Vec<u8>;
   exports: BTreeSet<DispatchKind>;
   staticPages: WasmPageNumber;

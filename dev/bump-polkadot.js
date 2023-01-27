@@ -24,12 +24,19 @@ async function bumpInPkg(path, versions) {
   const pkg = JSON.parse(readFileSync(path, 'utf-8'));
 
   await goThroughDeps(pkg.dependencies, versions);
-  await goThroughDeps(pkg.devDependencies, versions);
+
+  if (pkg.devDependencies) {
+    await goThroughDeps(pkg.devDependencies, versions);
+  }
+
+  if (pkg.peerDependencies) {
+    await goThroughDeps(pkg.peerDependencies, versions);
+  }
 
   writeFileSync(path, JSON.stringify(pkg, undefined, 2) + '\n');
 }
 
-const packages = { apps: '*', idea: ['data-storage', 'frontend', 'test-balance', 'tests'] };
+const packages = { apps: '*', idea: ['data-storage', 'frontend', 'test-balance', 'tests'], api: ['', 'examples'] };
 
 const main = async () => {
   const versions = {};

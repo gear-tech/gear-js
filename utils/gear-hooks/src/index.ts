@@ -1,6 +1,6 @@
 import {
-  useMetadata,
-  useReadState,
+  useReadFullState,
+  useReadWasmState,
   useSendMessage,
   useUploadProgram,
   useCreateProgram,
@@ -38,8 +38,8 @@ import {
 } from 'types';
 
 export {
-  useMetadata,
-  useReadState,
+  useReadFullState,
+  useReadWasmState,
   useSendMessage,
   useUploadProgram,
   useCreateProgram,

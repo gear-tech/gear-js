@@ -9,14 +9,14 @@ import { getItemLabel, getPayloadValue } from '../../helpers';
 import { PayloadItemProps, OPTION_ITEM_OPTIONS, DEFAULT_OPTION_VALUE } from '../../model';
 
 const OptionItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadItemProps) => {
-  const { name, value } = typeStructure;
+  const { name, type } = typeStructure;
 
   const { change } = useForm();
   const [selected, setSelected] = useState(DEFAULT_OPTION_VALUE);
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => setSelected(event.target.value);
 
-  const parsedPayload = useMemo(() => getPayloadValue(value as any), [value]);
+  const parsedPayload = useMemo(() => getPayloadValue(type as any), [type]);
 
   const isNone = selected === DEFAULT_OPTION_VALUE;
   const itemLabel = getItemLabel(name, title);
@@ -33,7 +33,7 @@ const OptionItem = ({ title, levelName, typeStructure, renderNextItem }: Payload
       {renderNextItem({
         levelName,
         // @ts-ignore
-        typeStructure: isNone ? null : value,
+        typeStructure: isNone ? null : type.Some,
       })}
     </Fieldset>
   );

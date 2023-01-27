@@ -1,10 +1,7 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
-@use 'shared/assets/styles/_animations.scss' as *;
 
 .emptyContent {
-  @include fade();
-
   position: absolute;
   top: 0;
   left: 0;
@@ -14,7 +11,6 @@
   align-items: center;
   flex-direction: column;
   justify-content: center;
-  background: linear-gradient(0deg, $bgColor 0%, rgba($bgColor, 0) 90%);
 }
 
 .textContent {

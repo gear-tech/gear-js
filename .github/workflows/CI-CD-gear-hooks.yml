@@ -22,10 +22,10 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      - name: Install NodeJS 16.x
+      - name: Install NodeJS 18.x
         uses: actions/setup-node@v2.1.5
         with:
-          node-version: 16.x
+          node-version: 18.x
 
       - name: Install dependencies
         working-directory: utils/gear-hooks
@@ -41,10 +41,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Use node 17.x
+      - name: Use node 18.x
         uses: actions/setup-node@v2.1.5
         with:
-          node-version: 17.x
+          node-version: 18.x
 
       - name: Check package version
         uses: EndBug/version-check@v1
@@ -54,13 +54,19 @@ jobs:
           file-url: https://unpkg.com/@gear-js/react-hooks@latest/package.json
           static-checking: localIsNew
 
+      - name: Install dependencies
+        working-directory: utils/gear-hooks
+        run: yarn install
+
+      - name: Build pkg
+        working-directory: utils/gear-hooks
+        run: yarn build
+
       - name: Publish
         if: steps.check.outputs.changed == 'true'
         working-directory: utils/gear-hooks
         run: |
           export token=$(printenv $(printenv GITHUB_ACTOR))
-          yarn install
-          yarn build
           npm config set //registry.npmjs.org/:_authToken=$token
           npm publish
         env:

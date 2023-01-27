@@ -1,30 +1,35 @@
-import { isHex, isU8a } from '@polkadot/util';
-import { Codec, Registry } from '@polkadot/types/types';
 import { Bytes, TypeRegistry } from '@polkadot/types';
-import { RegistryTypes } from '@polkadot/types-codec/types/registry';
+import { Codec, Registry } from '@polkadot/types/types';
+import { isHex, isU8a } from '@polkadot/util';
+import { HexString } from '@polkadot/util/types';
+import { RegistryTypes } from '@polkadot/types-codec/types';
 
-import { getTypeAndPayload, typeIsGeneric, typeIsString } from '../utils/types';
+import { getTypeAndPayload, isJSON, toJSON, typeIsGeneric, typeIsString } from '../utils';
 import { TypeInfoRegistry } from './TypeInfoReg';
-import { toJSON, isJSON } from '../utils/json';
-import { Hex, Metadata } from '../types';
+import { gearTypes } from '../default';
 
 export class CreateType {
   registry: Registry;
+  #typeInfoReg: TypeInfoRegistry;
 
-  constructor(registryOrRegistryTypes?: TypeRegistry | Registry | Hex | Uint8Array) {
+  constructor(registryOrRegistryTypes?: TypeRegistry | Registry | HexString | Uint8Array, defaultTypes?: boolean) {
     if (!registryOrRegistryTypes) {
       this.registry = new TypeRegistry();
     } else if (isHex(registryOrRegistryTypes) || isU8a(registryOrRegistryTypes)) {
-      const typeInfoReg = new TypeInfoRegistry(registryOrRegistryTypes);
-      this.registry = typeInfoReg.registry;
+      this.#typeInfoReg = new TypeInfoRegistry(registryOrRegistryTypes);
+      this.registry = this.#typeInfoReg.registry;
     } else if (registryOrRegistryTypes) {
       this.registry = registryOrRegistryTypes;
+    }
+    if (defaultTypes) {
+      this.registerDefaultTypes();
     }
   }
 
   /**
-   * Register custom types in case of use custom types without
+   * Register your custom types after CreateType class intialization
    * @param types
+   * @param defaultTypes set to true if you want to register default types too
    * @example
    * ```javascript
    * const types = {
@@ -44,18 +49,23 @@ export class CreateType {
    * createType.create('CustomStruct', { fieldA: 'Hello', fieldB: 255 });
    * ```
    */
-  public registerTypes(types?: RegistryTypes) {
-    this.registry.setKnownTypes({ types: { ...types } });
-    this.registry.register({ ...types });
+  public registerTypes(types: RegistryTypes, defaultTypes?: boolean) {
+    this.registry.setKnownTypes({ types });
+    this.registry.register(types);
+    if (defaultTypes) {
+      this.registerDefaultTypes;
+    }
   }
 
-  public create(type: string, payload: unknown, metadata?: Metadata): Codec;
+  private registerDefaultTypes() {
+    this.registry.setKnownTypes({ types: gearTypes });
+    this.registry.register(gearTypes);
+  }
 
   /**
    *
    * @param type `TypeName` to encode or decode payload
    * @param payload `Payload` that have to be encoded or decoded
-   * @param registryTypes Types encoded by TypeInfo
    * @returns Codec
    * @example
    * ```javascript
@@ -65,36 +75,37 @@ export class CreateType {
    *
    * const decoded = createType.create('String', '0x48656c6c6f2c20576f726c6421');
    * console.log(decoded.toHuman()); // "Hello, World!"
-   *
-   * // create type with metadata
-   * const metadata = fs.readFileSync('path/to/file/with/metadata/*.meta.wasm);
-   * const encoded = create(metadata.handle_input, somePayload, metadata);
-   * console.log(encoded.toHex());
-   * ```
    */
-  public create(type: string, payload: unknown, registryTypes?: Hex | Uint8Array): Codec;
 
-  public create(type: string, payload: unknown, registryTypesOrMetadata?: Hex | Uint8Array | Metadata): Codec;
-
-  public create(type: string, payload: unknown, registryTypesOrMetadata?: Hex | Uint8Array | Metadata): Codec {
+  public create(type: string, payload: unknown): Codec {
     [type, payload] = getTypeAndPayload(type, payload);
-    if (registryTypesOrMetadata) {
-      const registryTypes =
-        isHex(registryTypesOrMetadata) || isU8a(registryTypesOrMetadata)
-          ? registryTypesOrMetadata
-          : registryTypesOrMetadata.types;
-      const typeInfoReg = new TypeInfoRegistry(registryTypes);
-      this.registry = typeInfoReg.registry;
-      type = typeIsGeneric(type) ? typeInfoReg.getGenericName(type) : typeInfoReg.getShortName(type);
+    if (this.#typeInfoReg) {
+      type = typeIsGeneric(type) ? this.#typeInfoReg.getGenericName(type) : this.#typeInfoReg.getShortName(type);
     }
     return this.createType(type, isJSON(payload) ? toJSON(payload) : payload);
   }
+
+  static create(type: string, payload: unknown, hexRegistry?: HexString): Codec;
+
+  static create<T extends Codec = undefined>(
+    type: string,
+    payload: unknown,
+    defaultTypes?: boolean,
+  ): T extends Codec ? T : Codec;
+
+  static create(
+    type: string,
+    payload: unknown,
+    hexRegistryOrDefaultTypes?: HexString | boolean,
+    defaultTypes?: boolean,
+  ): Codec;
 
   /**
    *
    * @param type `TypeName` to encode or decode payload
    * @param payload `Payload` that have to be encoded or decoded
-   * @param registryTypesOrMetadata
+   * @param hexRegistry registry in hex format
+   * @param defaultTypes set to true if you want to register default types too
    * @returns Codec
    * @example
    * ```javascript
@@ -102,9 +113,19 @@ export class CreateType {
    * console.log(encoded.toHex()); // 0x48656c6c6f2c20576f726c6421
    * ```
    */
-  static create(type: string, payload: unknown, registryTypesOrMetadata?: Hex | Uint8Array | Metadata): Codec {
-    const createType = new CreateType();
-    return createType.create(type, payload, registryTypesOrMetadata);
+  static create(
+    type: string,
+    payload: unknown,
+    hexRegistryOrDefaultTypes?: HexString | boolean,
+    defaultTypes?: boolean,
+  ): Codec {
+    const [hexRegistry, _default] =
+      typeof hexRegistryOrDefaultTypes === 'boolean'
+        ? [undefined, hexRegistryOrDefaultTypes]
+        : [hexRegistryOrDefaultTypes, defaultTypes];
+
+    const createType = new CreateType(hexRegistry, _default);
+    return createType.create(type, payload);
   }
 
   private createType(type: string, data: unknown): Codec {

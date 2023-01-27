@@ -1,44 +1,27 @@
 import { useCallback } from 'react';
-import { web3FromSource } from '@polkadot/extension-dapp';
 import { useAlert, useAccount } from '@gear-js/react-hooks';
 
 import { uploadLocalMetadata } from 'api/LocalDB';
 import { RPCService } from 'shared/services/rpcService';
 import { RpcMethods, ACCOUNT_ERRORS } from 'shared/config';
 
-import { useChain, useModal } from '../context';
-import { ParamsToSignAndUpload, ParamsToUploadMeta } from './types';
+import { useChain } from '../context';
+import { ParamsToUploadMeta } from './types';
 
 const useMetadataUplaod = () => {
   const alert = useAlert();
   const { account } = useAccount();
-  const { showModal } = useModal();
   const { isDevChain } = useChain();
 
-  const signAndUpload = async (params: ParamsToSignAndUpload) => {
-    const { name, title, signer, metadataBuffer, programId, jsonMeta, reject, resolve } = params;
+  const upload = async (params: ParamsToUploadMeta) => {
+    const { name, metaHex, programId, reject, resolve } = params;
 
     const apiRequest = new RPCService();
 
     try {
-      const { signature } = await signer.signRaw!({
-        type: 'payload',
-        data: jsonMeta || '',
-        address: account!.address,
-      });
+      const { error } = await apiRequest.callRPC(RpcMethods.AddMetadata, { name, metaHex, programId });
 
-      const { error } = await apiRequest.callRPC(RpcMethods.AddMetadata, {
-        name,
-        meta: jsonMeta,
-        title,
-        metaWasm: metadataBuffer,
-        signature,
-        programId,
-      });
-
-      if (error) {
-        throw new Error(error.message);
-      }
+      if (error) throw new Error(error.message);
 
       alert.success('Metadata saved successfully');
 
@@ -54,17 +37,13 @@ const useMetadataUplaod = () => {
 
   const uploadMetadata = useCallback(
     async (params: ParamsToUploadMeta) => {
-      const { name, title, metadata, metadataBuffer, programId, reject, resolve } = params;
+      const { name, metaHex, programId, reject, resolve } = params;
 
       try {
-        if (!account) {
-          throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
-        }
-
-        const jsonMeta = metadata ? JSON.stringify(metadata) : undefined;
+        if (!account) throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
 
         if (isDevChain) {
-          await uploadLocalMetadata(programId, jsonMeta, metadataBuffer, name);
+          await uploadLocalMetadata(programId, metaHex, name);
 
           alert.success('Metadata added to the localDB successfully');
 
@@ -73,24 +52,7 @@ const useMetadataUplaod = () => {
           return;
         }
 
-        const signer = params.signer ?? (await web3FromSource(account.meta.source)).signer;
-
-        const handleConfirm = () =>
-          signAndUpload({
-            name,
-            title,
-            signer,
-            jsonMeta,
-            programId,
-            metadataBuffer,
-            reject,
-            resolve,
-          });
-
-        showModal('metadata', {
-          onAbort: reject,
-          onConfirm: handleConfirm,
-        });
+        upload({ name, programId, metaHex, reject, resolve });
       } catch (error) {
         const message = (error as Error).message;
 

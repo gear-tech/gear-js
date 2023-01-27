@@ -6,9 +6,8 @@
     "build:common": "yarn workspace @gear-js/common build",
     "build:api-gateway": "yarn workspace @gear-js/api-gateway build",
     "build:data-storage": "yarn workspace @gear-js/data-storage build",
-    "build:hooks": "yarn workspace @gear-js/react-hooks build",
     "build:ui": "yarn workspace @gear-js/ui build",
-    "build:frontend": "yarn build:hooks && yarn build:ui && yarn workspace @gear-js/frontend build",
+    "build:frontend": "yarn build:ui && yarn workspace @gear-js/frontend build",
     "build:test-balance": "yarn workspace @gear-js/test-balance build",
     "build:wasm-compiler": "yarn workspace @gear-js/wasm-compiler build",
     "test:data-storage": "yarn workspace @gear-js/data-storage test",
@@ -16,7 +15,6 @@
     "build:escrow": "yarn workspace @gear-js/escrow build",
     "build:nft": "yarn workspace @gear-js/nft build",
     "build:marketplace": "yarn workspace @gear-js/marketplace build",
-    "build:game-of-chance": "yarn workspace @gear-js/game-of-chance build",
     "build:auction": "yarn workspace @gear-js/auction build",
     "build:social": "yarn workspace @gear-js/social build",
     "build:staking": "yarn workspace @gear-js/staking build",
@@ -36,11 +34,10 @@
   "workspaces": [
     "idea/*",
     "apps/*",
-    "utils/gear-hooks",
     "utils/gear-ui"
   ],
   "lint-staged": {
-    "api/**/*.{js,ts}": "cd api && npm run lint:fix",
+    "api/**/*.{js,ts}": "cd api && yarn lint:fix",
     "idea/**/*.{js,ts,tsx}": "eslint --fix --ignore-pattern 'idea/frontend/**'"
   },
   "packageManager": "yarn@3.3.0",

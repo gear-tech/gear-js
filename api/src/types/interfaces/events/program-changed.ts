@@ -1,5 +1,5 @@
-import { Null, Enum } from '@polkadot/types';
 import { BlockNumber, H256 } from '@polkadot/types/interfaces';
+import { Enum, Null } from '@polkadot/types';
 
 export interface ProgramChangedKind extends Enum {
   isActive: boolean;

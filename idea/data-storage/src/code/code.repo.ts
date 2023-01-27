@@ -23,7 +23,7 @@ export class CodeRepo {
         status: CodeStatus.ACTIVE,
       },
       relations: ['programs', 'meta'],
-      select: { meta: { meta: true, program: true } },
+      select: { meta: { types: true, hex: true } },
     });
   }
 

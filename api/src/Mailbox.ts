@@ -2,8 +2,8 @@ import { AccountId32 } from '@polkadot/types/interfaces';
 import { Option } from '@polkadot/types';
 
 import { Hex, MailboxItem } from './types';
-import { GearClaimValue } from './Claim';
 import { GearApi } from './GearApi';
+import { GearClaimValue } from './Claim';
 
 export class GearMailbox {
   public claimValue: GearClaimValue;

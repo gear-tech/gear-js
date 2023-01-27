@@ -1,4 +1,4 @@
-import { createPayloadTypeStructure, CreateType, decodeHexTypes, Hex } from '../src';
+import { CreateType, Hex, createPayloadTypeStructure, decodeHexTypes } from '../src';
 
 describe('Create type structure test', () => {
   const types = {
@@ -367,7 +367,7 @@ describe('Replace namespaces test', () => {
         },
         percent: 16,
       },
-      { types },
+      types,
     );
     expect(encoded.toHex()).toBe(
       '0x083547727776614546357a58623236467a3972635170445753353743744552487014003547727776614546357a61623236467a397263517044575335374374455248701e001000',
@@ -471,7 +471,7 @@ describe('Simple enum test', () => {
         },
       },
     });
-    expect(CreateType.create('State', { TokenPrice: null }, { types }).toHex()).toBe('0x00');
+    expect(CreateType.create('State', { TokenPrice: null }, types).toHex()).toBe('0x00');
   });
   test('Raw State (from types of dutch auction)', () => {
     const decodedTypes = decodeHexTypes(types);

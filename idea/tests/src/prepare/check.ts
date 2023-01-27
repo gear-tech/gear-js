@@ -22,7 +22,7 @@ function checkPrograms(
     result[id] = {
       spec: programs[id],
       init: initSuccess.get(programs[id].messageId),
-      id: id,
+      id,
       owner: programs[id].owner
     } as IPreparedProgram;
   }
@@ -44,6 +44,7 @@ function checkUserMessageSent(
   specMessages: { [program: string]: IMessageSpec[] },
   checkUserMessageSentMessages: Map<Hex, any>,
 ) {
+
   assert(
     Object.keys(specMessages).reduce((counter, key) => {
       counter += specMessages[key].reduce((count, value) => {

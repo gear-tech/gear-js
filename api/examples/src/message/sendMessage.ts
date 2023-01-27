@@ -1,7 +1,8 @@
-import { GearApi, GearKeyring, getWasmMetadata, MessageEnqueued, Hex } from '../../../lib';
-import { decodeAddress } from '../../../lib/utils';
 import { readFileSync } from 'fs';
+
+import { GearApi, GearKeyring, Hex, MessageEnqueued, getWasmMetadata } from '../../../lib';
 import { PATH_TO_META } from '../config';
+import { decodeAddress } from '../../../lib/utils';
 import { waitForReply } from './waitForReply';
 
 const [programId] = process.argv.slice(2) as [Hex];

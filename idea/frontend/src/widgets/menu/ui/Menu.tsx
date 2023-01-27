@@ -17,7 +17,7 @@ const Menu = () => {
   const [isOpen, setIsOpen] = useState(true);
   const toggleMenu = () => setIsOpen((prevState) => !prevState);
 
-  const nodeVersion = useNodeVersion();
+  const { nodeVersion, commitHash } = useNodeVersion();
 
   return (
     <menu className={clsx('menu', styles.menu)}>
@@ -32,7 +32,7 @@ const Menu = () => {
           <div className={styles.version}>
             <a
               rel="external noreferrer"
-              href={`https://github.com/gear-tech/gear/commit/${nodeVersion}`}
+              href={`https://github.com/gear-tech/gear/commit/${commitHash}`}
               target="_blank"
               className={styles.versionLink}>
               <GithubLogoSVG />

@@ -1,4 +1,4 @@
-import { Hex, Metadata } from '@gear-js/api';
+import { Hex, ProgramMetadata } from '@gear-js/api';
 import { Button, Input, Textarea } from '@gear-js/ui';
 import { useApi } from '@gear-js/react-hooks';
 import { useMemo, useRef, useState } from 'react';
@@ -25,7 +25,7 @@ type Props = {
   id: Hex;
   isReply: boolean;
   isLoading: boolean;
-  metadata?: Metadata | undefined;
+  metadata?: ProgramMetadata | undefined;
 };
 
 const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
@@ -43,18 +43,23 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
   const deposit = api.existentialDeposit.toNumber();
   const maxGasLimit = api.blockGasLimit.toNumber();
   const method = isReply ? GasMethod.Reply : GasMethod.Handle;
-  const encodeType = isReply ? metadata?.async_handle_input : metadata?.handle_input;
 
-  const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, encodeType), [metadata, encodeType]);
+  const typeIndex = isReply ? metadata?.types.reply.input : metadata?.types.handle.input;
+  const isTypeIndex = typeIndex !== undefined && typeIndex !== null;
+
+  const payloadFormValues = useMemo(
+    () => (metadata && isTypeIndex ? getPayloadFormValues(metadata, typeIndex) : undefined),
+    [metadata, isTypeIndex, typeIndex],
+  );
 
   const validation = useMemo(
     () => {
-      const schema = getValidationSchema({ type: encodeType, deposit, metadata, maxGasLimit });
+      const schema = getValidationSchema({ deposit, metadata, maxGasLimit });
 
       return getValidation(schema);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [metadata, encodeType],
+    [metadata],
   );
 
   const disableSubmitButton = () => setIsDisabled(true);
@@ -131,6 +136,12 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
               {!isLoading && !metadata && <FormPayloadType name="payloadType" label="Payload type" gap="1/5" />}
 
               {isLoading ? (
+                <Input label="Value" gap="1/5" className={styles.loading} readOnly />
+              ) : (
+                <FormInput name="value" label="Value" gap="1/5" />
+              )}
+
+              {isLoading ? (
                 <Input label="Gas info" gap="1/5" className={styles.loading} readOnly />
               ) : (
                 <GasField
@@ -139,12 +150,6 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
                   onGasCalculate={handleGasCalculate}
                   gap="1/5"
                 />
-              )}
-
-              {isLoading ? (
-                <Input label="Value" gap="1/5" className={styles.loading} readOnly />
-              ) : (
-                <FormInput name="value" label="Value" gap="1/5" />
               )}
             </Box>
 

@@ -1,22 +1,21 @@
-import { SpRuntimeDispatchError } from '@polkadot/types/lookup';
-import { RegistryError } from '@polkadot/types-codec/types';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { Event } from '@polkadot/types/interfaces';
+import { DispatchError, Event } from '@polkadot/types/interfaces';
 import { u128, u64 } from '@polkadot/types';
+import { RegistryError } from '@polkadot/types-codec/types';
 
 import { gearRpc, gearTypes } from './default';
-import { GearProgramState } from './State';
-import { GearWaitlist } from './Waitlist';
-import { GearClaimValue } from './Claim';
 import { GearApiOptions } from './types';
-import { GearProgram } from './Program';
-import { GearStorage } from './Storage';
+import { GearBalance } from './Balance';
+import { GearBlock } from './Blocks';
+import { GearClaimValue } from './Claim';
+import { GearCode } from './Code';
+import { GearEvents } from './events';
 import { GearMailbox } from './Mailbox';
 import { GearMessage } from './Message';
-import { GearBalance } from './Balance';
-import { GearEvents } from './events';
-import { GearBlock } from './Blocks';
-import { GearCode } from './Code';
+import { GearProgram } from './Program';
+import { GearProgramState } from './State';
+import { GearStorage } from './Storage';
+import { GearWaitlist } from './Waitlist';
 
 export class GearApi extends ApiPromise {
   public program: GearProgram;
@@ -97,27 +96,28 @@ export class GearApi extends ApiPromise {
   }
 
   get existentialDeposit(): u128 {
-    return this.consts.balances.existentialDeposit;
+    return this.consts.balances.existentialDeposit as unknown as u128;
   }
 
   get blockGasLimit(): u64 {
-    return this.consts.gearGas.blockGasLimit as u64;
+    return this.consts.gearGas.blockGasLimit as unknown as u64;
   }
 
   get mailboxTreshold(): u64 {
-    return this.consts.gear.mailboxThreshold as u64;
+    return this.consts.gear.mailboxThreshold as unknown as u64;
   }
 
   get waitlistCost(): u64 {
-    return this.consts.gearScheduler.waitlistCost as u64;
+    return this.consts.gearScheduler.waitlistCost as unknown as u64;
   }
+
   /**
    * Method provides opportunity to get informations about error occurs in ExtrinsicFailed event
    * @param event
    * @returns
    */
   getExtrinsicFailedError(event: Event): RegistryError {
-    const error = event.data[0] as SpRuntimeDispatchError;
+    const error = event.data[0] as DispatchError;
     const { isModule, asModule } = error;
     return isModule ? this.registry.findMetaError(asModule) : null;
   }

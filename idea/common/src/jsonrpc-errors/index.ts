@@ -9,6 +9,11 @@ export const JSONRPC_ERRORS = {
     code: -32602,
     message: 'Invalid params',
   },
+  InvalidProgramMetaHex: {
+    name: 'InvalidProgramMetaHex',
+    code: -32602,
+    message: 'Invalid program meta hex',
+  },
   InternalError: {
     name: 'InternalError',
     code: -32603,
@@ -54,10 +59,20 @@ export const JSONRPC_ERRORS = {
     code: -32404,
     message: 'Program not found',
   },
+  StateNotFound: {
+    name: 'StateNotFound',
+    code: -32404,
+    message: 'State not found',
+  },
   SignatureNotVerified: {
     name: 'SignatureNotVerified',
     code: -32403,
     message: 'Signature not verified',
+  },
+  StateAlreadyExists: {
+    name: 'StateAlreadyExists',
+    code: -32400,
+    message: 'State already exists',
   },
   Forbidden: {
     name: 'Forbidden',

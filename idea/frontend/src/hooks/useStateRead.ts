@@ -1,40 +1,38 @@
-import { useState, useCallback } from 'react';
-import { AnyJson } from '@polkadot/types/types';
-import { Hex } from '@gear-js/api';
+import { useState } from 'react';
+import { AnyJson, Codec } from '@polkadot/types/types';
+import { Hex, ProgramMetadata, getStateMetadata } from '@gear-js/api';
 import { useApi, useAlert } from '@gear-js/react-hooks';
 
-const useStateRead = (programId: Hex, metaBuffer: Buffer | undefined) => {
+const useStateRead = (programId: Hex) => {
   const alert = useAlert();
   const { api } = useApi();
 
   const [state, setState] = useState<AnyJson>();
-  const [isReaded, setIsReaded] = useState(true);
+  const [isStateRead, setIsStateRead] = useState(true);
 
-  const readState = useCallback(
-    async (initValue?: AnyJson) => {
-      if (metaBuffer) {
-        try {
-          setIsReaded(false);
+  const handleStateRead = (callback: () => Promise<Codec>) => {
+    setIsStateRead(false);
 
-          const result = await api.programState.read(programId, metaBuffer, initValue);
+    callback()
+      .then((result) => setState(result.toHuman()))
+      .catch(({ message }: Error) => alert.error(message))
+      .finally(() => setIsStateRead(true));
+  };
 
-          setState(result.toHuman());
-        } catch (error) {
-          const message = (error as Error).message;
+  const readFullState = (metadata: ProgramMetadata) =>
+    handleStateRead(() => api.programState.read({ programId }, metadata));
 
-          alert.error(message);
-        } finally {
-          setIsReaded(true);
-        }
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [api, programId, metaBuffer],
-  );
+  const readWasmState = (wasm: Buffer, fn_name: string, argument: AnyJson) =>
+    handleStateRead(() =>
+      getStateMetadata(wasm).then((stateMetadata) =>
+        api.programState.readUsingWasm({ programId, wasm, fn_name, argument }, stateMetadata),
+      ),
+    );
 
   const resetState = () => setState(undefined);
+  const isState = state !== undefined; // could be null
 
-  return { readState, resetState, state, isReaded };
+  return { readFullState, readWasmState, resetState, state, isStateRead, isState };
 };
 
 export { useStateRead };

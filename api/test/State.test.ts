@@ -1,12 +1,12 @@
 import { KeyringPair } from '@polkadot/keyring/types';
-import { readFileSync } from 'fs';
 import { join } from 'path';
+import { readFileSync } from 'fs';
 
 import { GearApi, getWasmMetadata } from '../src';
 import { Hex } from '../src/types';
 
-import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { GEAR_EXAMPLES_WASM_DIR, TARGET } from './config';
+import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 
 const api = new GearApi();
 let alice: KeyringPair;
@@ -36,7 +36,7 @@ afterAll(async () => {
 });
 
 describe('Read State', () => {
-  test('Upload demo_meta_test program', async () => {
+  test('Upload demo_meta program', async () => {
     const { programId, extrinsic } = api.program.upload(
       {
         code: demo_meta_test.code,

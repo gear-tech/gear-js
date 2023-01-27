@@ -1,37 +1,29 @@
-import { isHex, isString } from '@polkadot/util';
+import { isHex } from '@polkadot/util';
 
 import { Hex, PayloadType, Value } from './types';
-import { Metadata } from './types/interfaces';
-import { createPayload } from './create-type';
-import { GearApi } from './GearApi';
+import { ProgramMetadata, isProgramMeta } from './metadata';
 import { GasInfo } from './types';
+import { GearApi } from './GearApi';
+import { OldMetadata } from './types/interfaces';
+import { encodePayload } from './utils/create-payload';
 
 export class GearGas {
   constructor(private _api: GearApi) {}
 
-  #getTypeAndMeta(metaOrTypeOfPayload: Metadata | string, metaType: string): [string, Metadata | undefined] {
-    if (!metaOrTypeOfPayload) {
-      return [undefined, undefined];
-    }
-    if (isString(metaOrTypeOfPayload)) {
-      return [metaOrTypeOfPayload, undefined];
-    } else {
-      return [metaOrTypeOfPayload[metaType], metaOrTypeOfPayload];
-    }
-  }
   /**
    * ### Get gas spent of init message using upload_program extrinsic
-   * @param sourceId Account id
+   * @param sourceId Account Id
    * @param code Program code
    * @param payload Payload of init message
    * @param value Value of message
    * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
-   * @param meta Metadata
-   * @returns number in U64 format
+   * @param meta (optional) Program metadata obtained using `getProgramMetadata` function.
+   * @param typeIndexOrTypeName  Index of type in the registry. If not specified the type index from `meta.init.input` will be used instead.
+   * If meta is not passed it's possible to specify type name that can be one of the default rust types
    * @example
    * ```javascript
    * const code = fs.readFileSync('demo_meta.opt.wasm');
-   * const meta = await getWasmMetadata(fs.readFileSync('demo_meta.opt.wasm'));
+   * const meta = await getProgramMetadata('0x...');
    * const gas = await gearApi.program.gasSpent.init(
    *   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
    *   code,
@@ -43,38 +35,18 @@ export class GearGas {
    *   true,
    *   meta
    * );
-   * console.log(gas.toHuman());
-   * ```
-   */
-  async initUpload(
-    sourceId: Hex,
-    code: Hex | Buffer,
-    payload: PayloadType,
-    value?: Value,
-    allowOtherPanics?: boolean,
-    meta?: Metadata,
-  ): Promise<GasInfo>;
-
-  /**
-   * ### Get gas spent of init message using upload_program extrinsic
-   * @param sourceId Account id
-   * @param code Program code
-   * @param payload Payload of init message
-   * @param value Value of message
-   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
-   * @param typeOfPayload One of the primitives types
-   * @returns number in U64 format
-   * @example
-   * ```javascript
-   * const code = fs.readFileSync('demo_ping.opt.wasm');
+   * console.log(gas.toJSON());
+   *
+   * // Or
    * const gas = await gearApi.program.gasSpent.init(
    *   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
    *   code,
-   *   '0x00',
-   *   0
-   *   false,
+   *   'Hello',
+   *   0,
+   *   true,
+   *   undefined,
+   *   'String',
    * );
-   * console.log(gas.toHuman());
    * ```
    */
   async initUpload(
@@ -83,7 +55,21 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    typeOfPayload?: string,
+    meta?: ProgramMetadata,
+    typeIndexOrTypeName?: number,
+  ): Promise<GasInfo>;
+
+  /**
+   * ### Get gas spent of init message using upload_program extrinsic
+   * @deprecated
+   */
+  async initUpload(
+    sourceId: Hex,
+    code: Hex | Buffer,
+    payload: PayloadType,
+    value?: Value,
+    allowOtherPanics?: boolean,
+    oldMeta?: OldMetadata,
   ): Promise<GasInfo>;
 
   /**
@@ -93,8 +79,9 @@ export class GearGas {
    * @param payload Payload of init message
    * @param value Value of message
    * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
-   * @param metaOrTypeOfPayload Metadata or one of the primitives types
-   * @returns number in U64 format
+   * @param meta Metadata
+   * @param typeIndexOrTypeName Index of type in the registry. If not specified the type index from `meta.init.input` will be used instead.
+   * If meta is not passed it's possible to specify type name that can be one of the default rust types
    */
   async initUpload(
     sourceId: Hex,
@@ -102,7 +89,8 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    metaOrTypeOfPayload?: string | Metadata,
+    meta?: OldMetadata | ProgramMetadata,
+    typeIndexOrTypeName?: number,
   ): Promise<GasInfo>;
 
   async initUpload(
@@ -111,13 +99,14 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    metaOrTypeOfPayload?: string | Metadata,
+    meta?: OldMetadata | ProgramMetadata,
+    typeIndexOrTypeName?: number,
   ): Promise<GasInfo> {
-    const [type, meta] = this.#getTypeAndMeta(metaOrTypeOfPayload, 'init_input');
+    const _payload = encodePayload(payload, meta, isProgramMeta(meta) ? 'init' : 'init_input', typeIndexOrTypeName);
     return this._api.rpc['gear'].calculateInitUploadGas(
       sourceId,
       isHex(code) ? code : this._api.createType('Bytes', Array.from(code)).toHex(),
-      createPayload(payload, type, meta?.types),
+      _payload,
       value || 0,
       allowOtherPanics || true,
     );
@@ -131,11 +120,12 @@ export class GearGas {
    * @param value Value of message
    * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param meta Metadata
-   * @returns number in U64 format
+   * @param typeIndexOrTypeName  Index of type in the registry. If not specified the type index from `meta.init.input` will be used instead.
+   * If meta is not passed it's possible to specify type name that can be one of the default rust types
    * @example
    * ```javascript
    * const code = fs.readFileSync('demo_meta.opt.wasm');
-   * const meta = await getWasmMetadata(fs.readFileSync('demo_meta.opt.wasm'));
+   * const meta = await getProgramMetadata('0x...');
    * const gas = await gearApi.program.gasSpent.init(
    *   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
    *   code,
@@ -145,9 +135,10 @@ export class GearGas {
    *   },
    *   0,
    *   true,
-   *   meta
+   *   meta,
+   *   meta.types.init.input
    * );
-   * console.log(gas.toHuman());
+   * console.log(gas.toJSON());
    * ```
    */
   async initCreate(
@@ -156,18 +147,33 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    meta?: Metadata,
+    meta?: ProgramMetadata,
+    typeIndexOrTypeName?: number,
+  ): Promise<GasInfo>;
+
+  /**
+   * ### Get gas spent of init message using create_program extrinsic
+   * @deprecated
+   */
+  async initCreate(
+    sourceId: Hex,
+    code: Hex,
+    payload: PayloadType,
+    value?: Value,
+    allowOtherPanics?: boolean,
+    meta?: OldMetadata,
   ): Promise<GasInfo>;
 
   /**
    * ### Get gas spent of init message using create_program extrinsic
    * @param sourceId Account id
-   * @param code Program code
+   * @param codeId Program code id
    * @param payload Payload of init message
    * @param value Value of message
    * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
-   * @param typeOfPayload One of the primitives types
-   * @returns number in U64 format
+   * @param meta Metadata
+   * @param typeIndexOrTypeName  Index of type in the registry. If not specified the type index from `meta.init.input` will be used instead.
+   * If meta is not passed it's possible to specify type name that can be one of the default rust types
    * @example
    * ```javascript
    * const code = fs.readFileSync('demo_ping.opt.wasm');
@@ -187,18 +193,20 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    typeOfPayload?: string,
+    meta?: OldMetadata | ProgramMetadata,
+    typeIndexOrTypeName?: number,
   ): Promise<GasInfo>;
 
   /**
    * ### Get gas spent of init message using create_program extrinsic
    * @param sourceId Account id
-   * @param code Program code
+   * @param codeId Program code id
    * @param payload Payload of init message
    * @param value Value of message
    * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
-   * @param metaOrTypeOfPayload Metadata or one of the primitives types
-   * @returns number in U64 format
+   * @param meta Metadata
+   * @param typeIndexOrTypeName  Index of type in the registry. If not specified the type index from `meta.init.input` will be used instead.
+   * If meta is not passed it's possible to specify type name that can be one of the default rust types
    */
   async initCreate(
     sourceId: Hex,
@@ -206,7 +214,8 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    metaOrTypeOfPayload?: string | Metadata,
+    meta?: OldMetadata | ProgramMetadata,
+    typeIndexOrTypeName?: number,
   ): Promise<GasInfo>;
 
   async initCreate(
@@ -215,31 +224,33 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    metaOrTypeOfPayload?: string | Metadata,
+    meta?: OldMetadata | ProgramMetadata,
+    typeIndexOrTypeName?: number,
   ): Promise<GasInfo> {
-    const [type, meta] = this.#getTypeAndMeta(metaOrTypeOfPayload, 'init_input');
+    const _payload = encodePayload(payload, meta, isProgramMeta(meta) ? 'init' : 'init_input', typeIndexOrTypeName);
     return this._api.rpc['gear'].calculateInitCreateGas(
       sourceId,
       codeId,
-      createPayload(payload, type, meta?.types),
+      _payload,
       value || 0,
       allowOtherPanics || true,
     );
   }
 
   /**
-   * Get gas spent of hanle message
+   * ### Get gas spent of hanle message
    * @param sourceId Account id
    * @param destinationId Program id
    * @param payload Payload of message
    * @param value Value of message
    * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param meta Metadata
-   * @returns number in U64 format
+   * @param typeIndexOrTypeName  Index of type in the registry. If not specified the type index from `meta.init.input` will be used instead.
+   * If meta is not passed it's possible to specify type name that can be one of the default rust types
    * @example
    * ```javascript
    * const code = fs.readFileSync('demo_meta.opt.wasm');
-   * const meta = await getWasmMetadata(fs.readFileSync('demo_meta.opt.wasm'));
+   * const meta = await getProgramMetadata('0x...');
    * const gas = await gearApi.program.gasSpent.handle(
    *   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
    *   '0xa178362715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
@@ -262,7 +273,21 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    meta?: Metadata,
+    meta?: ProgramMetadata,
+    typeIndexOrTypeName?: number,
+  ): Promise<GasInfo>;
+
+  /**
+   * ### Get gas spent of hanle message
+   * @deprecated
+   */
+  async handle(
+    sourceId: Hex,
+    destinationId: Hex | Buffer,
+    payload: PayloadType,
+    value?: Value,
+    allowOtherPanics?: boolean,
+    meta?: OldMetadata,
   ): Promise<GasInfo>;
 
   /**
@@ -272,21 +297,9 @@ export class GearGas {
    * @param payload Payload of message
    * @param value Value of message
    * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
-   * @param typeOfPayload One of the primitives types
-   * @returns number in U64 format
-   * @example
-   * ```javascript
-   * const code = fs.readFileSync('demo_ping.opt.wasm');
-   * const gas = await gearApi.program.gasSpent.handle(
-   *   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
-   *   '0xa178362715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
-   *   'PING',
-   *   0,
-   *   false,
-   *   'String'
-   * );
-   * console.log(gas.toHuman());
-   * ```
+   * @param meta Metadata
+   * @param typeIndexOrTypeName  Index of type in the registry. If not specified the type index from `meta.init.input` will be used instead.
+   * If meta is not passed it's possible to specify type name that can be one of the default rust types
    */
   async handle(
     sourceId: Hex,
@@ -294,26 +307,8 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    typeOfPayload?: string,
-  ): Promise<GasInfo>;
-
-  /**
-   * Get gas spent of hanle message
-   * @param sourceId Account id
-   * @param destinationId Program id
-   * @param payload Payload of message
-   * @param value Value of message
-   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
-   * @param metaOrTypeOfPayload Metadata or one of the primitives types
-   * @returns number in U64 format
-   */
-  async handle(
-    sourceId: Hex,
-    destinationId: Hex | Buffer,
-    payload: PayloadType,
-    value?: Value,
-    allowOtherPanics?: boolean,
-    metaOrTypeOfPayload?: string | Metadata,
+    meta?: OldMetadata | ProgramMetadata,
+    typeIndexOrTypeName?: number,
   ): Promise<GasInfo>;
 
   async handle(
@@ -322,17 +317,70 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    metaOrTypeOfPayload?: string | Metadata,
+    meta?: OldMetadata | ProgramMetadata,
+    typeIndexOrTypeName?: number,
   ): Promise<GasInfo> {
-    const [type, meta] = this.#getTypeAndMeta(metaOrTypeOfPayload, 'handle_input');
+    const _payload = encodePayload(payload, meta, isProgramMeta(meta) ? 'handle' : 'handle_input', typeIndexOrTypeName);
     return this._api.rpc['gear'].calculateHandleGas(
       sourceId,
       destinationId,
-      createPayload(payload, type, meta?.types),
+      _payload,
       value || 0,
       allowOtherPanics || true,
     );
   }
+
+  /**
+   * ### Get gas spent of reply message
+   * @param sourceId Account id
+   * @param messageId Message id of a message waiting for response
+   * @param exitCode Exit code of a message waiting for response
+   * @param payload Payload of message
+   * @param value Value of message
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
+   * @param meta Metadata
+   * @param typeIndexOrTypeName  Index of type in the registry. If not specified the type index from `meta.init.input` will be used instead.
+   * If meta is not passed it's possible to specify type name that can be one of the default rust types
+   * @example
+   * ```javascript
+   * const code = fs.readFileSync('demo_async.opt.wasm');
+   * const meta = await getProgramMetadata('0x...');
+   * const gas = await gearApi.program.gasSpent.reply(
+   *   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
+   *   '0x518e6bc03d274aadb3454f566f634bc2b6aef9ae6faeb832c18ae8300fd72635',
+   *   0,
+   *   'PONG',
+   *   1000,
+   *   true,
+   *   meta,
+   * );
+   * console.log(gas.toJSON());
+   * ```
+   */
+  async reply(
+    sourceId: Hex,
+    messageId: Hex,
+    exitCode: number,
+    payload: PayloadType,
+    value?: Value,
+    allowOtherPanics?: boolean,
+    meta?: ProgramMetadata,
+    typeIndexOrTypeName?: number,
+  ): Promise<GasInfo>;
+
+  /**
+   * ### Get gas spent of reply message
+   * @deprecated
+   */
+  async reply(
+    sourceId: Hex,
+    messageId: Hex,
+    exitCode: number,
+    payload: PayloadType,
+    value?: Value,
+    allowOtherPanics?: boolean,
+    meta?: OldMetadata,
+  ): Promise<GasInfo>;
 
   /**
    * Get gas spent of reply message
@@ -343,22 +391,8 @@ export class GearGas {
    * @param value Value of message
    * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param meta Metadata
-   * @returns number in U64 format
-   * @example
-   * ```javascript
-   * const code = fs.readFileSync('demo_async.opt.wasm');
-   * const meta = await getWasmMetadata(fs.readFileSync('demo_async.opt.wasm'));
-   * const gas = await gearApi.program.gasSpent.reply(
-   *   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
-   *   '0x518e6bc03d274aadb3454f566f634bc2b6aef9ae6faeb832c18ae8300fd72635',
-   *   0,
-   *   'PONG',
-   *   1000,
-   *   true,
-   *   meta,
-   * );
-   * console.log(gas.toHuman());
-   * ```
+   * @param typeIndexOrTypeName  Index of type in the registry. If not specified the type index from `meta.init.input` will be used instead.
+   * If meta is not passed it's possible to specify type name that can be one of the default rust types
    */
   async reply(
     sourceId: Hex,
@@ -367,64 +401,8 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    meta?: Metadata,
-  ): Promise<GasInfo>;
-
-  /**
-   * Get gas spent of reply message
-   * @param sourceId Account id
-   * @param messageId Message id of a message waiting for response
-   * @param exitCode Exit code of a message waiting for response
-   * @param payload Payload of message
-   * @param value Value of message
-   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
-   * @param typeOfPayload One of the primitives types
-   * @returns number in U64 format
-   * @example
-   * ```javascript
-   * const code = fs.readFileSync('demo_async.opt.wasm');
-   * const meta = await getWasmMetadata(fs.readFileSync('demo_async.opt.wasm'));
-   * const gas = await gearApi.program.gasSpent.reply(
-   *   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
-   *   '0x518e6bc03d274aadb3454f566f634bc2b6aef9ae6faeb832c18ae8300fd72635',
-   *   0,
-   *   'PONG',
-   *   1000,
-   *   false,
-   *   'String',
-   * );
-   * console.log(gas.toHuman());
-   * ```
-   */
-  async reply(
-    sourceId: Hex,
-    messageId: Hex,
-    exitCode: number,
-    payload: PayloadType,
-    value?: Value,
-    allowOtherPanics?: boolean,
-    typeOfPayload?: string,
-  ): Promise<GasInfo>;
-
-  /**
-   * Get gas spent of reply message
-   * @param sourceId Account id
-   * @param messageId Message id of a message waiting for response
-   * @param exitCode Exit code of a message waiting for response
-   * @param payload Payload of message
-   * @param value Value of message
-   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
-   * @param metaOrTypeOfPayload Metadata or one of the primitives types
-   * @returns number in U64 format
-   */
-  async reply(
-    sourceId: Hex,
-    messageId: Hex,
-    exitCode: number,
-    payload: PayloadType,
-    value?: Value,
-    allowOtherPanics?: boolean,
-    metaOrTypeOfPayload?: string | Metadata,
+    meta?: OldMetadata | ProgramMetadata,
+    typeIndexOrTypeName?: number,
   ): Promise<GasInfo>;
 
   async reply(
@@ -434,14 +412,20 @@ export class GearGas {
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
-    metaOrTypeOfPayload?: string | Metadata,
+    meta?: OldMetadata | ProgramMetadata,
+    typeIndexOrTypeName?: number,
   ): Promise<GasInfo> {
-    const [type, meta] = this.#getTypeAndMeta(metaOrTypeOfPayload, 'handle_input');
+    const _payload = encodePayload(
+      payload,
+      meta,
+      isProgramMeta(meta) ? 'reply' : 'async_handle_input',
+      typeIndexOrTypeName,
+    );
     return this._api.rpc['gear'].calculateReplyGas(
       sourceId,
       messageId,
       exitCode,
-      createPayload(payload, type, meta?.types),
+      _payload,
       value || 0,
       allowOtherPanics || true,
     );

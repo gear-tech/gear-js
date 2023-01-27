@@ -7,6 +7,7 @@ import { fetchTestBalance } from './balance';
 import { fetchMessage, fetchMessages } from './message';
 import { fetchMetadata, addMetadata } from './metadata';
 import { getLocalProgram, getLocalPrograms, getLocalProgramMeta, PROGRAMS_LOCAL_FORAGE } from './LocalDB';
+import { addState, fetchStates, fetchState } from './state';
 
 const getNodes = (): Promise<NodeSection[]> => fetch(DEFAULT_NODES_URL).then((result) => result.json());
 
@@ -18,6 +19,9 @@ export {
   getLocalPrograms,
   fetchMetadata,
   getLocalProgramMeta,
+  addState,
+  fetchStates,
+  fetchState,
   fetchCode as getCode,
   fetchCodes as getCodes,
   fetchMessage as getMessage,

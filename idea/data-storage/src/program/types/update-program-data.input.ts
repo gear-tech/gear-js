@@ -4,6 +4,5 @@ export interface UpdateProgramDataInput {
   id: string;
   genesis: string;
   name?: string;
-  title?: string;
   meta?: Meta;
 }

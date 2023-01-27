@@ -3,9 +3,9 @@ resolver = "2"
 
 members = [
   "test-gas",
-  "test-mailbox",
   "test-syscall-in-state",
   "test-waitlist",
+  "test-meta",
 ]
 
 [profile.release]

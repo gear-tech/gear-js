@@ -7,23 +7,20 @@ import { Program } from './program.entity';
 @Entity()
 export class Meta implements IMeta {
   @PrimaryGeneratedColumn('rowid')
-    id: string;
+  public id: string;
 
-  @Column()
-    program: string;
-
-  @Column()
-    owner: string;
+  @Column({ unique: true })
+  public hash: string;
 
   @Column({ nullable: true })
-    meta: string;
+  public hex: string;
 
-  @Column({ nullable: true })
-    metaWasm: string;
+  @Column({ nullable: true, type: 'json' })
+  public types: string;
 
   @OneToOne(() => Code, (code) => code.meta)
-    code: Code;
+  public code: Code;
 
   @OneToMany(() => Program, (program) => program.meta)
-    programs: Program[];
+  public programs: Program[];
 }

@@ -1,12 +1,10 @@
 /* eslint-disable no-console */
 import isString from 'lodash.isstring';
 import isPlainObject from 'lodash.isplainobject';
-import { decodeHexTypes, createPayloadTypeStructure, toJSON, Hex } from '@gear-js/api';
+import { toJSON, ProgramMetadata } from '@gear-js/api';
 
-import { ValueType, TypeStructure, PayloadValue } from 'entities/formPayload';
+import { TypeStructure, PayloadValue } from 'entities/formPayload';
 import { getPreformattedText } from 'shared/helpers';
-
-import { FormPayloadValues } from '../model/types';
 
 const getItemLabel = (name: string, title?: string) => (title ? `${title} (${name})` : name);
 
@@ -31,99 +29,75 @@ const getSubmitPayload = (payload: PayloadValue): any => {
   return payload;
 };
 
-const getPayloadValue = (typeStructure: TypeStructure): PayloadValue => {
-  const { type, value, count } = typeStructure;
+const getPayloadValue = (typeStructure: TypeStructure | null): PayloadValue => {
+  if (!typeStructure) return null;
 
-  switch (type) {
-    case ValueType.Vec: {
-      if (!isPlainObject(value)) {
-        console.error('Value of type "Vec" is not an object');
+  const { kind, type } = typeStructure;
+
+  switch (kind) {
+    case 'sequence':
+    case 'array': {
+      if (!isPlainObject(type)) {
+        console.error('Value of type "sequence" is not an object');
 
         return '[ ]';
       }
-      // @ts-ignore
-      return getPreformattedText([getPayloadValue(value)]);
-    }
-    case ValueType.Array: {
-      const arrayLength = count || 0;
 
-      if (!isPlainObject(value)) {
-        console.error('Value of type "Array" is not an object');
-
-        return [];
-      }
       // @ts-ignore
-      return new Array(arrayLength).fill(getPayloadValue(value));
+      return getPreformattedText([getPayloadValue(type)]);
     }
-    case ValueType.Tuple: {
-      if (!Array.isArray(value)) {
+
+    case 'tuple': {
+      if (!Array.isArray(type)) {
         console.error('Value of type "Tuple" is not an array');
 
         return [];
       }
 
-      return value.map(getPayloadValue);
+      return type.map(getPayloadValue);
     }
-    case ValueType.Enum:
-    case ValueType.Result: {
-      if (!isPlainObject(value)) {
-        console.error('Value of type "Enum" or "Result" is not an object');
+
+    case 'variant': {
+      if (!isPlainObject(type)) {
+        console.error('Value of type "variant" is not an object');
 
         return {};
       }
 
-      const [firstKey, firstValue] = Object.entries(value)[0];
+      const [firstKey, firstValue] = Object.entries(type)[0];
 
       return {
         [firstKey]: getPayloadValue(firstValue),
       };
     }
-    case ValueType.Struct: {
-      if (!isPlainObject(value)) {
-        console.error('Value of type "Enum", "Result", "Struct" is not an object');
+
+    case 'composite': {
+      if (!isPlainObject(type)) {
+        console.error('Value of type "composite" is not an object');
 
         return {};
       }
 
-      const structure = Object.entries(value).map((item) => [item[0], getPayloadValue(item[1])]);
+      const structure = Object.entries(type).map((item) => [item[0], getPayloadValue(item[1])]);
 
       return Object.fromEntries(structure);
     }
-    case ValueType.Null:
-    case ValueType.Option: {
-      return null;
-    }
-    case ValueType.BTreeMap: {
-      if (!isPlainObject(value)) {
-        console.error('Value of type "BTreeMap" is not an object');
-      }
 
-      return '{ }';
-    }
-    case ValueType.BTreeSet: {
-      return '[ ]';
-    }
-    case ValueType.Primitive: {
+    case 'primitive': {
       return '';
     }
+
     default:
       return null;
   }
 };
 
-const getPayloadFormValues = (types?: Hex, typeName?: string): FormPayloadValues | undefined => {
-  if (types && typeName) {
-    const decodedTypes = decodeHexTypes(types);
+const getPayloadFormValues = (metadata: ProgramMetadata, metaIndex: number) => {
+  const typeDef = metadata.getTypeDef(metaIndex);
+  const extendedTypeDef = metadata.getTypeDef(metaIndex, true);
+  const payload = getPayloadValue(extendedTypeDef);
 
-    const typeStructure = createPayloadTypeStructure(typeName, decodedTypes);
-    const manualPayload = createPayloadTypeStructure(typeName, decodedTypes, true);
-
-    return {
-      payload: getPayloadValue(typeStructure),
-      manualPayload: getPreformattedText(manualPayload),
-      typeStructure,
-    };
-  }
+  return { payload, manualPayload: getPreformattedText(typeDef), typeStructure: extendedTypeDef };
 };
 
 export { getItemLabel, getPayloadValue, getNextLevelName, getSubmitPayload, getPayloadFormValues };
