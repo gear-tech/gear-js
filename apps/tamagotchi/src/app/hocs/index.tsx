@@ -7,7 +7,7 @@ import {
   ProviderProps,
 } from '@gear-js/react-hooks';
 import { Alert, alertStyles } from '@gear-js/ui';
-import { TmgProvider, NFTStoreProvider, TokensBalanceProvider } from 'app/context';
+import { TmgProvider, TokensBalanceProvider } from 'app/context';
 import { ADDRESS } from 'app/consts';
 
 const ApiProvider = ({ children }: ProviderProps) => (
@@ -20,15 +20,7 @@ const AlertProvider = ({ children }: ProviderProps) => (
   </GearAlertProvider>
 );
 
-const providers = [
-  BrowserRouter,
-  AlertProvider,
-  ApiProvider,
-  AccountProvider,
-  TmgProvider,
-  NFTStoreProvider,
-  TokensBalanceProvider,
-];
+const providers = [BrowserRouter, AlertProvider, ApiProvider, AccountProvider, TmgProvider, TokensBalanceProvider];
 
 export const withProviders = (Component: ComponentType) => () =>
   providers.reduceRight((children, Provider) => <Provider>{children}</Provider>, <Component />);

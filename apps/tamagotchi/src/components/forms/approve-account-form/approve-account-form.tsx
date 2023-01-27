@@ -3,7 +3,6 @@ import { useForm } from '@mantine/form';
 import { Icon } from 'components/ui/icon';
 import { hexRequired } from 'app/utils/form-validations';
 import { useTamagocthiMessage } from 'app/hooks/use-tamagotchi-message';
-import { useUpdateState } from 'app/hooks/use-update-state';
 
 const initialValues = {
   address: '',
@@ -15,13 +14,9 @@ const validate = {
 
 export const ApproveAccountForm = ({ close }: { close: () => void }) => {
   const sendHandler = useTamagocthiMessage();
-  const { update } = useUpdateState();
   const form = useForm({ initialValues, validate });
   const { getInputProps } = form;
-  const onSuccess = () => {
-    update();
-    close();
-  };
+  const onSuccess = () => close();
 
   const handleSubmit = form.onSubmit((values) => {
     sendHandler({ Approve: values.address }, { onSuccess });

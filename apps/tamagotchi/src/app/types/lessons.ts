@@ -1,13 +1,11 @@
-import { ProgramMetadata } from '@gear-js/api';
+import { Hex } from '@gear-js/api';
 
-type Tamagotchi1 = {
+type T1 = {
   name: string;
   dateOfBirth: number;
 };
 
-type Tamagotchi2 = {
-  // name: string;
-  // dateOfBirth: number;
+type T2 = {
   entertained: number;
   entertainedBlock: number;
   fed: number;
@@ -17,13 +15,13 @@ type Tamagotchi2 = {
   restedBlock: number;
 };
 
-type Tamagotchi3 = {
+type T3 = {
   allowedAccount: string;
 };
 
-export type TamagotchiState = Tamagotchi1 & Tamagotchi2 & Tamagotchi3;
+export type TamagotchiState = T1 & T2 & T3;
 
-export type LessonMetadataResponse = {
-  tamagotchi: ProgramMetadata;
-  store?: ProgramMetadata;
+export type LessonState = {
+  step: number;
+  programId: Hex;
 };

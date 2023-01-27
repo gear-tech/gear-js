@@ -2,23 +2,15 @@ import { Icon } from 'components/ui/icon';
 import { Button } from '@gear-js/ui';
 import { PaymentErrorPopup } from 'components/popups/payment-error-popup';
 import { useState } from 'react';
-import { IStoreItem } from 'app/types/tamagotchi-state';
+import { StoreItemType } from 'app/types/ft-store';
 import { useTamagocthiMessage } from 'app/hooks/use-tamagotchi-message';
 import { ENV } from 'app/consts';
 
-export const StoreItemCard = ({ item }: { item: IStoreItem }) => {
+export const StoreItemCard = ({ item }: { item: StoreItemType }) => {
   const [open, setOpen] = useState(false);
-  const { id, amount, description } = item;
-  // console.log(item);
-
   const sendHandler = useTamagocthiMessage();
+  const { id, amount, description } = item;
   const handler = () => {
-    // console.log({
-    //   BuyAttribute: {
-    //     storeId: ENV.store,
-    //     attribute_id: id,
-    //   },
-    // });
     sendHandler({
       BuyAttribute: {
         storeId: ENV.store,

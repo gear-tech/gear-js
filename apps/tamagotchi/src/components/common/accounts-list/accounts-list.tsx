@@ -5,8 +5,7 @@ import { useAccount, useAlert } from '@gear-js/react-hooks';
 import { AccountButton } from 'components/common/account-button';
 import { Icon } from 'components/ui/icon';
 import { LOCAL_STORAGE } from 'app/consts';
-import { isLoggedIn } from 'app/utils/is-account';
-import { copyToClipboard } from 'app/utils';
+import { copyToClipboard, isLoggedIn } from 'app/utils';
 import { useLesson } from 'app/context';
 
 type Props = {

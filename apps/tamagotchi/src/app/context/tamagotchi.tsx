@@ -1,10 +1,18 @@
 import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useRef, useState } from 'react';
-import type { LessonState } from 'app/types/tamagotchi-state';
+import type { LessonState } from 'app/types/lessons';
 import type { TamagotchiState } from 'app/types/lessons';
 import { getProgramMetadata, Hex, MessagesDispatched, ProgramMetadata } from '@gear-js/api';
 import { getLessonAssets } from '../utils/get-lesson-assets';
 import { useAlert, useApi } from '@gear-js/react-hooks';
 import { UnsubscribePromise } from '@polkadot/api/types';
+import { useMetadata } from '../hooks/use-metadata';
+import metaStore from '../../assets/meta/meta-store.txt';
+import { ENV } from '../consts';
+
+type ItemsStoreType = {
+  programId: Hex;
+  meta: ProgramMetadata;
+};
 
 type Program = {
   lesson?: LessonState;
@@ -17,12 +25,14 @@ type Program = {
   meta?: ProgramMetadata;
   tamagotchiItems: number[];
   setTamagotchiItems: Dispatch<SetStateAction<number[]>>;
+  store: ItemsStoreType;
 };
 
 export const LessonsCtx = createContext({} as Program);
 
 const useProgram = (): Program => {
   const [lesson, setLesson] = useState<LessonState>();
+  const [store, setStore] = useState<ItemsStoreType>({} as ItemsStoreType);
   const [tamagotchi, setTamagotchi] = useState<TamagotchiState>();
   const [tamagotchiItems, setTamagotchiItems] = useState<number[]>([]);
   const [isFetched, setIsFetched] = useState<boolean>(false);
@@ -33,6 +43,17 @@ const useProgram = (): Program => {
   const alert = useAlert();
   const [error, setError] = useState('');
   const [isStateRead, setIsStateRead] = useState(true);
+
+  const { metadata: mStore } = useMetadata(metaStore);
+
+  useEffect(() => {
+    if (mStore) {
+      setStore({
+        programId: ENV.store,
+        meta: mStore,
+      });
+    }
+  }, [mStore]);
 
   const reset = () => {
     setLesson(undefined);
@@ -118,6 +139,7 @@ const useProgram = (): Program => {
     meta,
     tamagotchiItems,
     setTamagotchiItems,
+    store,
   };
 };
 

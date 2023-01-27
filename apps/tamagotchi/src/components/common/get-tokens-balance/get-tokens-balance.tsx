@@ -16,7 +16,6 @@ export const GetTokensBalance = () => {
       ?.createType(9, {
         Mint: {
           amount: 10000,
-          // recipient: '0x0100000000000000000000000000000000000000000000000000000000000000',
           recipient: lesson?.programId,
         },
       })

@@ -1,7 +1,6 @@
 import { AnyJson } from '@polkadot/types/types';
-import { LessonsCtx, useLesson } from '../context';
+import { LessonsCtx } from '../context';
 import { useReadState } from './use-read-state';
-// import { useMemo } from 'react';
 import { TamagotchiState } from '../types/lessons';
 import { useContext, useEffect, useMemo } from 'react';
 
