@@ -52,10 +52,14 @@ export class MetaService {
       ...meta,
       hex: metaHex,
       types: metaData.types,
-      name,
     });
 
-    await this.metaRepository.save(updateMeta);
+    program.name = name;
+
+    await Promise.all([
+      this.metaRepository.save(updateMeta),
+      this.programRepository.save([program])
+    ]);
 
     return { status: 'Metadata added' };
   }
