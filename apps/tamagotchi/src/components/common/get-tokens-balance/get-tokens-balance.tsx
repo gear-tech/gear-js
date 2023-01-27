@@ -1,26 +1,39 @@
 import { TooltipWrapper, Button, buttonStyles } from '@gear-js/ui';
 import { Icon } from 'components/ui/icon';
 import clsx from 'clsx';
-import { CreateType, Hex } from '@gear-js/api';
-import { useAccount } from '@gear-js/react-hooks';
-import meta from 'assets/meta/meta-ft.txt';
+import metaCode from 'assets/meta/meta-ft-code.txt';
+import { useLesson } from 'app/context';
+import { useMetadata } from 'app/hooks/use-metadata';
+import { useTokensMessage } from 'app/hooks/use-tokens-message';
 
 export const GetTokensBalance = () => {
-  const { account } = useAccount();
-  const handle = () => {
-    const result = CreateType.create(
-      'TokenContractMessage',
-      {
-        Mint: { recipient: account?.decodedAddress, amount: 2000 },
-      },
-      meta as Hex,
-    );
+  const { lesson } = useLesson();
+  const sendHandler = useTokensMessage();
+  const { metadata } = useMetadata(metaCode);
 
-    console.log(result.toJSON());
+  const handle = () => {
+    const encodedMint = metadata
+      ?.createType(9, {
+        Mint: {
+          amount: 10000,
+          // recipient: '0x0100000000000000000000000000000000000000000000000000000000000000',
+          recipient: lesson?.programId,
+        },
+      })
+      .toU8a();
+
+    const onSuccess = () => console.log('success');
+
+    if (encodedMint) {
+      sendHandler(
+        { Message: { transaction_id: Math.floor(Math.random() * Date.now()), payload: [...encodedMint] } },
+        { onSuccess },
+      );
+    }
   };
 
   return (
-    <div className="">
+    <div>
       <TooltipWrapper text="Get Tokens Balance">
         <Button
           className={clsx('p-2', buttonStyles.light)}

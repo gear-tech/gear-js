@@ -3,7 +3,7 @@ import { Hex } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
 import { AnyJson } from '@polkadot/types/types';
 import { useReadState } from './use-read-state';
-import { useTokensBalanceStore } from '../context';
+import { useLesson, useTokensBalanceStore } from '../context';
 
 type Balance = {
   admin: Hex;
@@ -34,6 +34,7 @@ function useReadFTMain<T>(payload: AnyJson) {
 function useFTMain() {
   const payload = useMemo(() => ({}), []);
   const { state } = useReadFTMain<Balance>(payload);
+  // console.log({ state });
   return state;
 }
 function useReadFTLogic<T>(payload: AnyJson) {
@@ -48,12 +49,13 @@ function useFTLogic() {
 }
 function useReadFTStorage<T>(payload: AnyJson) {
   const state = useFTLogic();
-  const { account } = useAccount();
+  const { lesson } = useLesson();
   const { metaStorage } = useTokensBalanceStore();
+  // console.log('logic: ', { state });
   const getStorageIdByAccount = () => {
     if (state) {
       for (const a of state.idToStorage) {
-        if (a[0] === account?.decodedAddress.charAt(0)) {
+        if (a[0] === lesson?.programId.charAt(2)) {
           return a[1] as Hex;
         }
       }
@@ -63,13 +65,14 @@ function useReadFTStorage<T>(payload: AnyJson) {
 }
 export function useFTStorage() {
   const payload = useMemo(() => ({}), []);
-  const { account } = useAccount();
+  const { lesson } = useLesson();
   const { state } = useReadFTStorage<BalanceStorage>(payload);
 
+  // console.log('storage: ', { state });
   const getBalanceByAccountId = () => {
     if (state) {
       for (const a of state.balances) {
-        if (a[0] === account?.decodedAddress) {
+        if (a[0] === lesson?.programId) {
           return a[1] as number;
         }
       }

@@ -2,11 +2,30 @@ import { Icon } from 'components/ui/icon';
 import { Button } from '@gear-js/ui';
 import { PaymentErrorPopup } from 'components/popups/payment-error-popup';
 import { useState } from 'react';
-import { StoreNFTItem } from '../../../app/types/tamagotchi-state';
+import { IStoreItem } from 'app/types/tamagotchi-state';
+import { useTamagocthiMessage } from 'app/hooks/use-tamagotchi-message';
+import { ENV } from 'app/consts';
 
-export const StoreItemCard = ({ item }: { item: StoreNFTItem }) => {
+export const StoreItemCard = ({ item }: { item: IStoreItem }) => {
   const [open, setOpen] = useState(false);
-  const [description, value] = item;
+  const { id, amount, description } = item;
+  // console.log(item);
+
+  const sendHandler = useTamagocthiMessage();
+  const handler = () => {
+    // console.log({
+    //   BuyAttribute: {
+    //     storeId: ENV.store,
+    //     attribute_id: id,
+    //   },
+    // });
+    sendHandler({
+      BuyAttribute: {
+        storeId: ENV.store,
+        attribute_id: id,
+      },
+    });
+  };
 
   return (
     <article>
@@ -20,7 +39,7 @@ export const StoreItemCard = ({ item }: { item: StoreNFTItem }) => {
         <p className="flex gap-2 items-center text-primary">
           <Icon name="money" className="w-5 h-5" />
           <span className="text-xxs font-medium">
-            <strong className="font-kanit font-medium text-[20px] leading-6">{value}</strong> Tokens
+            <strong className="font-kanit font-medium text-[20px] leading-6">{amount}</strong> Tokens
           </span>
         </p>
 
@@ -29,7 +48,7 @@ export const StoreItemCard = ({ item }: { item: StoreNFTItem }) => {
           color="lightGreen"
           text="Buy"
           icon={() => <Icon name="cart" className="w-4 h-4" />}
-          onClick={() => setOpen(true)}
+          onClick={handler}
         />
       </div>
       {open && <PaymentErrorPopup close={() => setOpen(false)} />}

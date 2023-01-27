@@ -15,6 +15,8 @@ type Program = {
   setIsFetched: Dispatch<SetStateAction<boolean>>;
   reset: () => void;
   meta?: ProgramMetadata;
+  tamagotchiItems: number[];
+  setTamagotchiItems: Dispatch<SetStateAction<number[]>>;
 };
 
 export const LessonsCtx = createContext({} as Program);
@@ -22,6 +24,7 @@ export const LessonsCtx = createContext({} as Program);
 const useProgram = (): Program => {
   const [lesson, setLesson] = useState<LessonState>();
   const [tamagotchi, setTamagotchi] = useState<TamagotchiState>();
+  const [tamagotchiItems, setTamagotchiItems] = useState<number[]>([]);
   const [isFetched, setIsFetched] = useState<boolean>(false);
   const [meta, setMeta] = useState<ProgramMetadata>();
   const isParsed = useRef(false);
@@ -113,6 +116,8 @@ const useProgram = (): Program => {
     setIsFetched,
     reset,
     meta,
+    tamagotchiItems,
+    setTamagotchiItems,
   };
 };
 

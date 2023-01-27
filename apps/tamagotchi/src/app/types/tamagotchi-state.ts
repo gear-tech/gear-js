@@ -1,5 +1,11 @@
 import { Hex } from '@gear-js/api';
 
+export type IStoreItem = {
+  id: number;
+  amount: number;
+  description: StoreNFTItemDescription;
+};
+
 export type StoreNFTItemDescription = {
   description: string;
   media: string;
