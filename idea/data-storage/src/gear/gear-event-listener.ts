@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CodeChanged, GearApi, generateCodeHash, Hex, MessageEnqueued } from '@gear-js/api';
 import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
@@ -218,7 +218,6 @@ export class GearEventListener {
     const txMethods = ['uploadProgram', 'createProgram'];
     const extrinsics = block.block.extrinsics.filter(({ method: { method } }) => txMethods.includes(method));
     const programs: CreateProgramInput[] = [];
-    let metaHash;
 
     if (extrinsics.length >= 1) {
       for (const tx of extrinsics) {
@@ -246,7 +245,7 @@ export class GearEventListener {
 
 
         try {
-          metaHash = await this.api.program.metaHash(destination.toHex());
+          const metaHash = await this.api.program.metaHash(destination.toHex());
 
           if(metaHash) {
             const meta = await this.metaService.getByHash(metaHash);
