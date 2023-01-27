@@ -106,18 +106,19 @@ describe('API methods', () => {
     test('program.meta.add request', async () => {
       for (const id_ of Object.keys(prepared.programs)) {
         const program = prepared.programs[id_] as IPreparedProgram;
-        if(!program.spec['pathToMetaTxt']) continue;
 
-        expect(await uploadMeta(genesis, program)).toBeTruthy();
+        if(program.spec['pathToMetaTxt']) {
+          expect(await uploadMeta(genesis, program)).toBeTruthy();
+        }
       }
     });
 
     test('program.meta.get request', async () => {
       for (const id_ of Object.keys(prepared.programs)) {
         const program = prepared.programs[id_] as IPreparedProgram;
-        if(!program.spec['pathToMetaTxt']) continue;
-
-        expect(await getMeta(genesis, id_)).toBeTruthy();
+        if(program.spec['pathToMetaTxt']) {
+          expect(await getMeta(genesis, id_)).toBeTruthy();
+        }
       }
     });
   });

@@ -71,7 +71,6 @@ export class ProgramService {
 
       return programs[0];
     } catch (error) {
-      console.log(error);
       this.logger.error(error);
     }
   }

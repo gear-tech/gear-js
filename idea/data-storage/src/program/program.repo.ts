@@ -22,7 +22,7 @@ export class ProgramRepo {
     return this.programRepo.findOne({
       where: { id, genesis },
       relations: ['meta', 'messages', 'code'],
-      select: { meta: { types: true, hash: true } },
+      select: { meta: { types: true, hex: true, hash: true } },
     });
   }
 
@@ -34,7 +34,7 @@ export class ProgramRepo {
         owner,
       },
       relations: ['meta', 'messages', 'code'],
-      select: { meta: { types: true, hash: true } },
+      select: { meta: { types: true, hex: true, hash: true } },
     });
   }
 
@@ -45,7 +45,7 @@ export class ProgramRepo {
         genesis,
       },
       relations: ['meta'],
-      select: { meta: { types: true, hash: true } },
+      select: { meta: { types: true, hex: true, hash: true } },
     });
   }
 

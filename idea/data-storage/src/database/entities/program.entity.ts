@@ -43,7 +43,7 @@ export class Program extends BaseEntity implements IProgram {
   public code: Code;
 
   @ManyToOne(() => Meta, (meta) => meta.programs, {
-    nullable: true, onDelete: 'CASCADE'
+    nullable: true
   })
   @JoinColumn({ name: 'meta_id' })
   public meta: Meta;

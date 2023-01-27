@@ -7,7 +7,7 @@ async function getMetaByCode(genesis: string, codeId: Hex) {
   expect(response).to.have.own.property('result');
   expect(response.result).to.have.all.keys([
     'id',
-    'hash',
+    'hex',
     'types',
     'code',
     'programs',

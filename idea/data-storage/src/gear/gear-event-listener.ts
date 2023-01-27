@@ -22,6 +22,7 @@ import { CreateProgramInput } from '../program/types';
 import configuration from '../config/configuration';
 import { BlockService } from '../block/block.service';
 import { RabbitmqService } from '../rabbitmq/rabbitmq.service';
+import { MetaService } from '../meta/meta.service';
 
 const { gear } = configuration();
 
@@ -39,6 +40,7 @@ export class GearEventListener {
     private codeRepository: CodeRepo,
     private blockService: BlockService,
     private rabbitMQService: RabbitmqService,
+    private metaService: MetaService,
   ) {}
 
   public async run() {
@@ -232,15 +234,34 @@ export class GearEventListener {
         } = foundEvent.event as MessageEnqueued;
 
         const codeId = tx.method.method === 'uploadProgram' ? generateCodeHash(tx.args[0].toHex()) : tx.args[0].toHex();
-
-        programs.push({
+        const createProgram = {
           owner: source.toHex(),
           id: destination.toHex(),
           blockHash: block.createdAtHash.toHex(),
           timestamp,
           code: await this.codeRepository.get(codeId, this.genesis),
           genesis: this.genesis,
-        });
+        };
+
+
+        try {
+          const metaHash = await this.api.program.metaHash(destination.toHex());
+
+          if(metaHash) {
+            const meta = await this.metaService.getByHash(metaHash);
+
+            if(meta){
+              Object.assign(createProgram, { meta });
+            } else {
+              const meta = await this.metaService.createMeta({ hash: metaHash });
+              Object.assign(createProgram, { meta });
+            }
+          }
+        } catch (error) {
+          this.logger.error(error);
+        }
+
+        programs.push(createProgram);
       }
       await this.programService.createPrograms(programs);
     }

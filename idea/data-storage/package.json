@@ -25,7 +25,7 @@
     "migrate-undo": "yarn typeorm migration:revert"
   },
   "dependencies": {
-    "@gear-js/api": "0.28.2",
+    "@gear-js/api": "0.28.8",
     "@gear-js/common": "workspace:^",
     "@nestjs/common": "8.4.7",
     "@nestjs/config": "1.2.1",
@@ -35,7 +35,7 @@
     "@nestjs/platform-express": "8.4.7",
     "@nestjs/schedule": "^2.1.0",
     "@nestjs/typeorm": "8.1.4",
-    "@polkadot/api": "9.10.1",
+    "@polkadot/api": "9.11.1",
     "@types/amqplib": "^0.8.2",
     "@types/cron": "^2.0.0",
     "amqplib": "^0.10.3",
