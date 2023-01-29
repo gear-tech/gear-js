@@ -1,4 +1,3 @@
-import { generateCodeHash, getProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { Injectable } from '@nestjs/common';
 import {
@@ -15,6 +14,7 @@ import { MetaRepo } from './meta.repo';
 import { ProgramRepo } from '../program/program.repo';
 import { CreateMetaInput } from './types/create-meta.input';
 import { CodeRepo } from '../code/code.repo';
+import { generateCodeHashByApi, getProgramMetadataByApi } from '../common/helpers';
 
 @Injectable()
 export class MetaService {
@@ -44,9 +44,9 @@ export class MetaService {
 
     if(!code) throw new CodeNotFound();
 
-    const hash = generateCodeHash(metaHex as HexString);
+    const hash = generateCodeHashByApi(metaHex as HexString);
     const meta = await this.metaRepository.getByHash(hash);
-    const metaData = getProgramMetadata(metaHex as HexString);
+    const metaData = getProgramMetadataByApi(metaHex as HexString);
 
     if(meta) {
       this.validateMetaHex(meta, hash);
@@ -72,10 +72,10 @@ export class MetaService {
 
     if(program.meta === null) throw new MetadataNotFound();
 
-    const hash = generateCodeHash(metaHex as HexString);
+    const hash = generateCodeHashByApi(metaHex as HexString);
 
     this.validateMetaHex(program.meta, hash);
-    const metaData = getProgramMetadata(metaHex as HexString);
+    const metaData = getProgramMetadataByApi(metaHex as HexString);
     const meta = await this.metaRepository.getByHash(hash);
 
     const updateMeta = plainToClass(Meta, {
@@ -102,7 +102,7 @@ export class MetaService {
     return this.metaRepository.save(createMeta);
   }
 
-  private validateMetaHex(programMeta: Meta, hash: string): void {
-    if(programMeta.hash !== hash) throw new InvalidProgramMetaHex();
+  private validateMetaHex(meta: Meta, hash: string): void {
+    if(meta.hash !== hash) throw new InvalidProgramMetaHex();
   }
 }

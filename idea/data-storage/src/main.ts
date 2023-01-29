@@ -34,7 +34,9 @@ async function bootstrap() {
 
   await rabbitmqService.connect();
 
-  await app.listen(healthcheck.port);
+  await app.listen(healthcheck.port, () => {
+    console.log(`⚙️ Application running on ${healthcheck.port} port`);
+  });
 
   await gearEventListener.run();
 }

@@ -40,7 +40,6 @@ export class RabbitmqService {
   constructor(
     private configService: ConfigService,
     private messageService: MessageService,
-    @Inject(forwardRef(() => MetaService))
     private metaService: MetaService,
     private codeService: CodeService,
     private programService: ProgramService,

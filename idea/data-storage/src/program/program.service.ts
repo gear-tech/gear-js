@@ -55,26 +55,6 @@ export class ProgramService {
     }
   }
 
-  public async updateProgramData(updateProgramDataInput: UpdateProgramDataInput): Promise<IProgram> {
-    const { meta, id, genesis, name } = updateProgramDataInput;
-    const program = await this.programRepository.getByIdAndGenesis(id, genesis);
-
-    if (!program) {
-      throw new ProgramNotFound();
-    }
-
-    program.name = name;
-    program.meta = meta;
-
-    try {
-      const programs = await this.programRepository.save([program]);
-
-      return programs[0];
-    } catch (error) {
-      this.logger.error(error);
-    }
-  }
-
   public async findProgram(params: FindProgramParams): Promise<Program> {
     const { id, genesis, owner } = params;
     let program: Program;
