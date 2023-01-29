@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ScheduleModule } from '@nestjs/schedule';
 
 import configurations from './config/configuration';
 
@@ -22,7 +21,6 @@ const entities = [Meta, Message, Program, Code, Block, State, StateToCode];
 
 @Module({
   imports: [
-    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       load: [configurations],
     }),
