@@ -1,17 +1,16 @@
-import { Bytes } from '@polkadot/types';
+import { Bytes, Option } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
 import { randomAsHex } from '@polkadot/util-crypto';
-import { u8aToHex } from '@polkadot/util';
 
-import { GPROG, GPROG_HEX, generateCodeHash, generateProgramId, validateGasLimit, validateValue } from './utils';
+import { IProgram, OldMetadata } from './types/interfaces';
 import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult } from './types';
+import { ProgramDoesNotExistError, ProgramExitedError, ProgramTerminatedError, SubmitProgramError } from './errors';
 import { ProgramMetadata, isProgramMeta } from './metadata';
+import { generateCodeHash, generateProgramId, getIdsFromKeys, validateGasLimit, validateValue } from './utils';
 import { GearApi } from './GearApi';
 import { GearGas } from './Gas';
 import { GearTransaction } from './Transaction';
-import { OldMetadata } from './types/interfaces';
-import { SubmitProgramError } from './errors';
 import { encodePayload } from './utils/create-payload';
 
 export class GearProgram extends GearTransaction {
@@ -178,11 +177,26 @@ export class GearProgram extends GearTransaction {
    * Get ids of all uploaded programs
    * @returns Array of program ids
    */
-  async allUploadedPrograms(): Promise<HexString[]> {
-    const keys = await this._api.rpc.state.getKeys(GPROG);
-    return keys.map((prog) => {
-      return `0x${prog.toHex().slice(GPROG_HEX.length + 2)}` as HexString;
-    });
+  async allUploadedPrograms(count?: number): Promise<HexString[]> {
+    const prefix = this._api.query.gearProgram.programStorage.keyPrefix();
+    const programIds: HexString[] = [];
+    if (count) {
+      const keys = await this._api.rpc.state.getKeysPaged(prefix, count);
+      programIds.push(...getIdsFromKeys(keys, prefix));
+    } else {
+      count = 1000;
+      const keys = await this._api.rpc.state.getKeysPaged(prefix, count);
+      programIds.push(...getIdsFromKeys(keys, prefix));
+      let keysLength = keys.length;
+      let lastKey = keys.at(-1);
+      while (keysLength === count) {
+        const keys = await this._api.rpc.state.getKeysPaged(prefix, count, lastKey);
+        programIds.push(...getIdsFromKeys(keys, prefix));
+        lastKey = keys.at(-1);
+        keysLength = keys.length;
+      }
+    }
+    return programIds;
   }
 
   /**
@@ -191,9 +205,8 @@ export class GearProgram extends GearTransaction {
    * @returns `true` if address belongs to program, and `false` otherwise
    */
   async exists(id: HexString): Promise<boolean> {
-    const progs = await this._api.rpc.state.getKeys(GPROG);
-    const program = progs.find((prog) => prog.eq(`0x${GPROG_HEX}${id.slice(2)}`));
-    return Boolean(program);
+    const program = (await this._api.query.gearProgram.programStorage(id)) as Option<IProgram>;
+    return program.isSome;
   }
 
   /**
@@ -201,9 +214,16 @@ export class GearProgram extends GearTransaction {
    * @param programId
    * @returns codeHash of the program
    */
-  async codeHash(programId: HexString): Promise<HexString> {
-    const program = await this._api.storage.gProg(programId);
-    return u8aToHex(program.code_hash);
+  async codeHash(id: HexString): Promise<HexString> {
+    const program = (await this._api.query.gearProgram.programStorage(id)) as Option<IProgram>;
+
+    if (program.isNone) throw new ProgramDoesNotExistError();
+
+    if (program.unwrap().isTerminated) throw new ProgramTerminatedError(id);
+
+    if (program.unwrap().isExited) throw new ProgramExitedError(program.unwrap().asExited.toHex());
+
+    return program.unwrap().asActive.codeHash.toHex();
   }
 
   /**

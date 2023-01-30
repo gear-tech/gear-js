@@ -118,13 +118,35 @@ describe('Program', () => {
 
   test('Program exists', async () => {
     expect(programId).toBeDefined();
-    const programs = await api.program.exists(programId);
-    expect(programs).toBeTruthy();
+    const isExist = await api.program.exists(programId);
+    expect(isExist).toBeTruthy();
+  });
+
+  test('Get code hash', async () => {
+    expect(programId).toBeDefined();
+    expect(codeId).toBeDefined();
+    const codeHash = await api.program.codeHash(programId);
+    expect(codeHash).toBe(codeId);
   });
 
   test('Get hash of program metadata', async () => {
     expect(programId).toBeDefined();
     const metaHash = await api.program.metaHash(programId);
     expect(metaHash).toBe(blake2AsHex(metaHex, 256));
+  });
+
+  test('Get program storage', async () => {
+    programId = '0x436863be4a5fac6f3f7328bb4b05a57c37051a7ace80fe144f670cb8377e978e';
+    expect(programId).toBeDefined();
+    const program = await api.storage.getProgram(programId);
+    expect(program).toBeDefined();
+  });
+
+  test('Get program pages', async () => {
+    programId = '0x436863be4a5fac6f3f7328bb4b05a57c37051a7ace80fe144f670cb8377e978e';
+    expect(programId).toBeDefined();
+    const program = await api.storage.getProgram(programId);
+    const pages = await api.storage.getProgramPages(programId, program);
+    expect(Object.keys(pages)).not.toHaveLength(0);
   });
 });

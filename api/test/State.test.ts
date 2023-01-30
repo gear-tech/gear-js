@@ -57,18 +57,18 @@ describe('Read State', () => {
 
   test('Get program from storage', async () => {
     expect(demo_meta_test.id).not.toBe('0x');
-    const gProg = await api.storage.gProg(demo_meta_test.id);
+    const gProg = await api.storage.getProgram(demo_meta_test.id);
     expect(gProg).toBeDefined();
     expect(gProg).toHaveProperty('allocations');
-    expect(gProg).toHaveProperty('pages_with_data');
-    expect(gProg).toHaveProperty('code_hash');
+    expect(gProg).toHaveProperty('pagesWithData');
+    expect(gProg).toHaveProperty('codeHash');
     expect(gProg).toHaveProperty('state');
   });
 
   test('Get program pages from storage', async () => {
     expect(demo_meta_test.id).not.toBe('0x');
-    const gProg = await api.storage.gProg(demo_meta_test.id);
-    const gPages = await api.storage.gPages(demo_meta_test.id, gProg);
+    const gProg = await api.storage.getProgram(demo_meta_test.id);
+    const gPages = await api.storage.getProgramPages(demo_meta_test.id, gProg);
     expect(gPages).toBeDefined();
   });
 
@@ -141,9 +141,7 @@ describe('Other', () => {
 
   test('Get nonexistent program from storage', async () => {
     await expect(
-      api.storage.gProg('0x0000000000000000000000000000000000000000000000000000000000000000'),
-    ).rejects.toThrow(
-      'Program with id 0x0000000000000000000000000000000000000000000000000000000000000000 was not found in the storage',
-    );
+      api.storage.getProgram('0x0000000000000000000000000000000000000000000000000000000000000000'),
+    ).rejects.toThrow('Program does not exist');
   });
 });

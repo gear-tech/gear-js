@@ -3,7 +3,7 @@ import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 
 import { CodeMetadata, CodeStorage, Hex } from './types';
-import { generateCodeHash, validateCodeId } from './utils';
+import { generateCodeHash, getIdsFromKeys, validateCodeId } from './utils';
 import { GearTransaction } from './Transaction';
 
 export class GearCode extends GearTransaction {
@@ -54,9 +54,9 @@ export class GearCode extends GearTransaction {
    * @returns array of code ids uploaded on chain
    */
   async all(): Promise<Hex[]> {
-    const keyPrefix = this._api.query.gearProgram.metadataStorage.keyPrefix();
-    const codeMetadata = await this._api.rpc.state.getKeys(keyPrefix);
-    const codeIds = codeMetadata.map((key) => '0x' + key.toHex().slice(keyPrefix.length)) as Hex[];
+    const prefix = this._api.query.gearProgram.metadataStorage.keyPrefix();
+    const keys = await this._api.rpc.state.getKeys(prefix);
+    const codeIds = getIdsFromKeys(keys, prefix);
 
     return codeIds;
   }

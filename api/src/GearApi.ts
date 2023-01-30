@@ -14,7 +14,7 @@ import { GearMailbox } from './Mailbox';
 import { GearMessage } from './Message';
 import { GearProgram } from './Program';
 import { GearProgramState } from './State';
-import { GearStorage } from './Storage';
+import { GearProgramStorage } from './Storage';
 import { GearWaitlist } from './Waitlist';
 
 export class GearApi extends ApiPromise {
@@ -25,11 +25,12 @@ export class GearApi extends ApiPromise {
   public gearEvents: GearEvents;
   public defaultTypes: Record<string, unknown>;
   public blocks: GearBlock;
-  public storage: GearStorage;
+  public storage: GearProgramStorage;
   public mailbox: GearMailbox;
   public claimValueFromMailbox: GearClaimValue;
   public code: GearCode;
   public waitlist: GearWaitlist;
+  provider: WsProvider;
 
   constructor(options: GearApiOptions = {}) {
     const { types, providerAddress, ...restOptions } = options;
@@ -56,6 +57,7 @@ export class GearApi extends ApiPromise {
       },
       ...restOptions,
     });
+    this.provider = provider as WsProvider;
 
     this.isReady.then(() => {
       this.program = new GearProgram(this);
@@ -65,7 +67,7 @@ export class GearApi extends ApiPromise {
       this.defaultTypes = defaultTypes;
       this.programState = new GearProgramState(this);
       this.blocks = new GearBlock(this);
-      this.storage = new GearStorage(this);
+      this.storage = new GearProgramStorage(this);
       this.claimValueFromMailbox = new GearClaimValue(this);
       this.mailbox = new GearMailbox(this);
       this.code = new GearCode(this);
