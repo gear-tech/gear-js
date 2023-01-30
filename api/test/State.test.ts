@@ -1,9 +1,9 @@
+import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
 import { GearApi, getWasmMetadata } from '../src';
-import { Hex } from '../src/types';
 
 import { GEAR_EXAMPLES_WASM_DIR, TARGET } from './config';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
@@ -14,15 +14,15 @@ let alice: KeyringPair;
 const demo_meta_test = {
   code: readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_meta.opt.wasm')),
   meta: readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_meta.meta.wasm')),
-  id: '0x' as Hex,
+  id: '0x' as HexString,
   uploadBlock: '0x',
-  codeHash: '0x' as Hex,
+  codeHash: '0x' as HexString,
 };
 
 const syscalls_test = {
   code: readFileSync(join(TARGET, 'test_syscall_in_state.opt.wasm')),
   meta: readFileSync(join(TARGET, 'test_syscall_in_state.meta.wasm')),
-  id: '0x' as Hex,
+  id: '0x' as HexString,
 };
 
 beforeAll(async () => {
@@ -57,7 +57,7 @@ describe('Read State', () => {
 
   test('Get program from storage', async () => {
     expect(demo_meta_test.id).not.toBe('0x');
-    const gProg = await api.storage.getProgram(demo_meta_test.id);
+    const gProg = await api.programStorage.getProgram(demo_meta_test.id);
     expect(gProg).toBeDefined();
     expect(gProg).toHaveProperty('allocations');
     expect(gProg).toHaveProperty('pagesWithData');
@@ -67,8 +67,8 @@ describe('Read State', () => {
 
   test('Get program pages from storage', async () => {
     expect(demo_meta_test.id).not.toBe('0x');
-    const gProg = await api.storage.getProgram(demo_meta_test.id);
-    const gPages = await api.storage.getProgramPages(demo_meta_test.id, gProg);
+    const gProg = await api.programStorage.getProgram(demo_meta_test.id);
+    const gPages = await api.programStorage.getProgramPages(demo_meta_test.id, gProg);
     expect(gPages).toBeDefined();
   });
 
@@ -100,7 +100,7 @@ describe('Read State', () => {
 
   test('Tests read demo_meta state with Some input', async () => {
     expect(demo_meta_test.id).not.toBe('0x');
-    const state = await api.programState.read(demo_meta_test.id, demo_meta_test.meta, { decimal: 1, hex: [1] });
+    const state = await api.programState.read(demo_meta_test.id, demo_meta_test.meta, { decimal: 1, HexString: [1] });
     expect(state.toHex()).toBe('0x04010000000000000004012c536f6d655375726e616d6520536f6d654e616d65');
   });
 });
@@ -141,7 +141,7 @@ describe('Other', () => {
 
   test('Get nonexistent program from storage', async () => {
     await expect(
-      api.storage.getProgram('0x0000000000000000000000000000000000000000000000000000000000000000'),
+      api.programStorage.getProgram('0x0000000000000000000000000000000000000000000000000000000000000000'),
     ).rejects.toThrow('Program does not exist');
   });
 });

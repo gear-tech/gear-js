@@ -1,12 +1,13 @@
+import { HexString } from '@polkadot/util/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 import { u8aToHex } from '@polkadot/util';
 
-import { Hex, generateCodeHash, generateProgramId } from '../src';
+import { generateCodeHash, generateProgramId } from '../src';
 import { TEST_WASM_DIR } from './config';
 
 const pingCode = readFileSync(join(TEST_WASM_DIR, 'demo_ping.opt.wasm'));
-let codeId: Hex;
+let codeId: HexString;
 
 describe('Generate IDs', () => {
   test('demo_ping codeHash', () => {
@@ -20,7 +21,7 @@ describe('Generate IDs', () => {
     );
   });
 
-  test('demo_ping codeHash from hex', () => {
+  test('demo_ping codeHash from HexString', () => {
     expect(generateCodeHash(u8aToHex(Uint8Array.from(pingCode)))).toBe(
       '0x4b701fedb61456cd75df8ae6348f73aa9f529f2363f9ce76398f14aba15f01d6',
     );

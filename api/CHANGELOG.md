@@ -7,6 +7,7 @@ https://github.com/gear-tech/gear-js/pull/1172
 ### Changes
 
 - Update reading program storage accoriding to https://github.com/gear-tech/gear/pull/2017
+- Remove `Hex` type. Use `HexString` from `@polkadot/util/types` instead
 
 ## 0.28.8
 

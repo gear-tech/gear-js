@@ -1,7 +1,8 @@
+import { HexString } from '@polkadot/util/types';
 import { Option } from '@polkadot/types';
 import { u8aToU8a } from '@polkadot/util';
 
-import { ActiveProgram, Hex, IGearPages, IProgram } from './types';
+import { ActiveProgram, IGearPages, IProgram } from './types';
 import { ProgramDoesNotExistError, ProgramExitedError, ProgramTerminatedError } from './errors';
 import { GearApi } from './GearApi';
 
@@ -13,7 +14,7 @@ export class GearProgramStorage {
    * @param programId
    * @returns
    */
-  async getProgram(programId: Hex): Promise<ActiveProgram> {
+  async getProgram(programId: HexString): Promise<ActiveProgram> {
     const storage = (await this._api.query.gearProgram.programStorage(programId)) as Option<IProgram>;
 
     if (storage.isNone) {
@@ -35,7 +36,7 @@ export class GearProgramStorage {
    * @param gProg
    * @returns
    */
-  async getProgramPages(programId: Hex, program: ActiveProgram): Promise<IGearPages> {
+  async getProgramPages(programId: HexString, program: ActiveProgram): Promise<IGearPages> {
     const pages = {};
     for (const page of program.pagesWithData) {
       pages[page.toNumber()] = u8aToU8a(

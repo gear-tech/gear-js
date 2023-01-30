@@ -1,20 +1,21 @@
+import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 import { u64 } from '@polkadot/types-codec';
 
-import { GasInfo, Hex } from '../src/types';
 import { GearApi, getProgramMetadata } from '../src';
 import { PROGRAMS_DIR, TARGET } from './config';
 import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep } from './utilsFunctions';
+import { GasInfo } from '../src/types';
 import { decodeAddress } from '../src/utils';
 
 const api = new GearApi();
 let alice: KeyringPair;
-let aliceRaw: Hex;
-let programId: Hex;
-let codeId: Hex;
-let messageId: Hex;
+let aliceRaw: HexString;
+let programId: HexString;
+let codeId: HexString;
+let messageId: HexString;
 let exitCode: number;
 
 const code = readFileSync(join(TARGET, 'test_gas.opt.wasm'));

@@ -1,9 +1,9 @@
 import { PortableRegistry, TypeRegistry } from '@polkadot/types';
 import { hexToU8a, isHex } from '@polkadot/util';
 import { Codec } from '@polkadot/types/types';
+import { HexString } from '@polkadot/util/types';
 
 import { isJSON, toJSON } from '../utils/json';
-import { Hex } from '../types';
 import { REGULAR_EXP } from '../utils/regexp';
 import { joinTypePath } from '../utils/types';
 
@@ -39,7 +39,7 @@ export class TypeInfoRegistry {
   #portableReg: PortableRegistry;
   #restrictedNames: string[];
 
-  constructor(registryTypes: Hex | Uint8Array) {
+  constructor(registryTypes: HexString | Uint8Array) {
     this.registryTypes = isHex(registryTypes) ? hexToU8a(registryTypes) : registryTypes;
     this.registry = new TypeRegistry();
     this.#portableReg = new PortableRegistry(this.registry, this.registryTypes, true);

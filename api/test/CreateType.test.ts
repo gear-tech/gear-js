@@ -1,8 +1,9 @@
+import { HexString } from '@polkadot/util/types';
 import fs from 'fs';
 import { join } from 'path';
 import yaml from 'js-yaml';
 
-import { CreateType, Hex, decodeHexTypes, getWasmMetadata } from '../src';
+import { CreateType, decodeHexTypes, getWasmMetadata } from '../src';
 import { GEAR_EXAMPLES_WASM_DIR } from './config';
 
 const testFiles = fs.readdirSync('test/spec/meta');
@@ -16,7 +17,7 @@ describe('Create type test', () => {
       for (const type in testFile.types) {
         expect(meta[type]).toBe(testFile.types[type]);
       }
-      expect(decodeHexTypes(meta.types as Hex)).toEqual(testFile.displayed_types);
+      expect(decodeHexTypes(meta.types as HexString)).toEqual(testFile.displayed_types);
       const encode = testFile.payloads.encode;
       for (const payloadType in encode) {
         for (const index in encode[payloadType]) {
