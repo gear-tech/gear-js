@@ -136,14 +136,12 @@ describe('Program', () => {
   });
 
   test('Get program storage', async () => {
-    programId = '0x436863be4a5fac6f3f7328bb4b05a57c37051a7ace80fe144f670cb8377e978e';
     expect(programId).toBeDefined();
     const program = await api.programStorage.getProgram(programId);
     expect(program).toBeDefined();
   });
 
   test('Get program pages', async () => {
-    programId = '0x436863be4a5fac6f3f7328bb4b05a57c37051a7ace80fe144f670cb8377e978e';
     expect(programId).toBeDefined();
     const program = await api.programStorage.getProgram(programId);
     const pages = await api.programStorage.getProgramPages(programId, program);
