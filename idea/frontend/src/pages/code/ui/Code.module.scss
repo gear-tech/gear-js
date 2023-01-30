@@ -11,8 +11,6 @@
 .code {
   @include childrenMargin(32px, right);
   display: flex;
-  // grid-template-columns: 1fr 1fr;
-  // gap: 32px;
 
   > * {
     flex-basis: 50%;
@@ -21,10 +19,6 @@
 
 .summary {
   @include childrenMargin(32px);
-}
-
-.programs {
-  @include childrenMargin(12px);
 }
 
 .buttons {
