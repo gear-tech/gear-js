@@ -1,4 +1,4 @@
-import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 import { generatePath, useParams } from 'react-router-dom';
 
 import { useDataLoading, usePrograms } from 'hooks';
@@ -15,7 +15,7 @@ import { ReactComponent as PlusSVG } from 'shared/assets/images/actions/plus.svg
 import { useMetadata } from '../hooks';
 import styles from './Code.module.scss';
 
-type Params = { codeId: Hex };
+type Params = { codeId: HexString };
 
 const Code = () => {
   const { codeId } = useParams() as Params;

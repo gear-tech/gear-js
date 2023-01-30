@@ -13,16 +13,19 @@ type Props = {
   isLoading: boolean;
   totalCount: number;
   loadMorePrograms: () => void;
+  main?: boolean;
 };
 
-const ProgramsList = (props: Props) => {
-  const { programs, isLoading, totalCount, loadMorePrograms } = props;
-
+const ProgramsList = ({ programs, isLoading, totalCount, main, loadMorePrograms }: Props) => {
   const hasMore = !isLoading && programs.length < totalCount;
   const isEmpty = !(isLoading || totalCount);
   const isLoaderShowing = isEmpty || (!totalCount && isLoading);
 
   const scrollableNodeRef = useScrollLoader<HTMLDivElement>(loadMorePrograms, hasMore);
+
+  const description = main
+    ? "You can start experimenting right now or try to build from examples. Let's Rock!"
+    : undefined;
 
   return (
     <div className={styles.programsList}>
@@ -30,10 +33,10 @@ const ProgramsList = (props: Props) => {
         <Placeholder
           block={<HorizontalProgramCardSVG className={styles.placeholderBlock} />}
           title="There are no programs yet"
-          description="You can start experimenting right now or try to build from examples. Let's Rock!"
+          description={description}
           isEmpty={isEmpty}
           blocksCount={4}>
-          <ExamplesLink />
+          {main && <ExamplesLink />}
         </Placeholder>
       ) : (
         <SimpleBar className={styles.simpleBar} scrollableNodeProps={{ ref: scrollableNodeRef }}>

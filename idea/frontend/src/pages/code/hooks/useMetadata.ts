@@ -1,10 +1,11 @@
-import { Hex, ProgramMetadata, getProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata, getProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
+import { HexString } from '@polkadot/util/types';
 import { useState, useEffect } from 'react';
 
 import { fetchCodeMetadata } from 'api';
 
-const useMetadata = (codeId: Hex) => {
+const useMetadata = (codeId: HexString) => {
   const alert = useAlert();
 
   const [metadata, setMetadata] = useState<ProgramMetadata>();
