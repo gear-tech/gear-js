@@ -15,6 +15,7 @@ import { InitializeProgram } from './initializeProgram';
 import { Mailbox } from './mailbox';
 import * as State from './state';
 import * as Explorer from './explorer';
+import { Code } from './code';
 
 const Routing = () => {
   const events = useEvents();
@@ -54,6 +55,8 @@ const Routing = () => {
         <Route index element={<Explorer.Events events={events} />} />
         <Route path={routes.block} element={<Explorer.Block />} />
       </Route>
+
+      <Route path={routes.code} element={<Code />} />
 
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Navigate to={routes.programs} replace />} />

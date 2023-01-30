@@ -5,7 +5,7 @@ import { fetchCode, fetchCodes } from './code';
 import { fetchProgram, fetchPrograms } from './program';
 import { fetchTestBalance } from './balance';
 import { fetchMessage, fetchMessages } from './message';
-import { fetchMetadata, addMetadata } from './metadata';
+import { fetchMetadata, fetchCodeMetadata, addMetadata } from './metadata';
 import { getLocalProgram, getLocalPrograms, getLocalProgramMeta, PROGRAMS_LOCAL_FORAGE } from './LocalDB';
 import { addState, fetchStates, fetchState } from './state';
 
@@ -19,6 +19,7 @@ export {
   getLocalPrograms,
   addMetadata,
   fetchMetadata,
+  fetchCodeMetadata,
   getLocalProgramMeta,
   addState,
   fetchStates,
