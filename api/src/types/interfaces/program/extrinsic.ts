@@ -1,8 +1,9 @@
 import { AnyJson } from '@polkadot/types/types';
+import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 
-import { GasLimit, Hex, Value } from '../../common';
+import { GasLimit, Value } from '../../common';
 
 export interface IProgramUploadOptions {
   code: Buffer | Uint8Array;
@@ -13,13 +14,13 @@ export interface IProgramUploadOptions {
 }
 
 export interface IProgramCreateOptions extends Omit<IProgramUploadOptions, 'code'> {
-  codeId: Hex | Uint8Array;
+  codeId: HexString | Uint8Array;
 }
 
 export interface IProgramUploadResult {
-  programId: Hex;
-  codeId: Hex;
-  salt: Hex;
+  programId: HexString;
+  codeId: HexString;
+  salt: HexString;
   extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
 }
 

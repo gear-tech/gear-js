@@ -1,7 +1,8 @@
+import { HexString } from '@polkadot/util/types';
 import { Option } from '@polkadot/types';
 
-import { Hex, WaitlistItem } from './types';
 import { GearApi } from './GearApi';
+import { WaitlistItem } from './types';
 
 export class GearWaitlist {
   constructor(private _api: GearApi) {}
@@ -17,7 +18,7 @@ export class GearWaitlist {
    * console.log(waitlist.map(item => item.toHuman()));
    * ```
    */
-  async read(programId: Hex, numberOfMessages?: number): Promise<WaitlistItem[]>;
+  async read(programId: HexString, numberOfMessages?: number): Promise<WaitlistItem[]>;
 
   /**
    * ## _Get particular message from program's waitlist_
@@ -32,9 +33,12 @@ export class GearWaitlist {
    * console.log(waitlist.toHuman());
    * ```
    */
-  async read(programId: Hex, messageId: Hex): Promise<WaitlistItem>;
+  async read(programId: HexString, messageId: HexString): Promise<WaitlistItem>;
 
-  async read(programId: Hex, messageIdOrNumberOfMessages?: Hex | number): Promise<WaitlistItem[] | WaitlistItem> {
+  async read(
+    programId: HexString,
+    messageIdOrNumberOfMessages?: HexString | number,
+  ): Promise<WaitlistItem[] | WaitlistItem> {
     const [messageId, numberOfMessages] =
       typeof messageIdOrNumberOfMessages === 'string'
         ? [messageIdOrNumberOfMessages, undefined]

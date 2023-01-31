@@ -1,9 +1,10 @@
 import { AccountId32 } from '@polkadot/types/interfaces';
+import { HexString } from '@polkadot/util/types';
 import { Option } from '@polkadot/types';
 
-import { Hex, MailboxItem } from './types';
 import { GearApi } from './GearApi';
 import { GearClaimValue } from './Claim';
+import { MailboxItem } from './types';
 
 export class GearMailbox {
   public claimValue: GearClaimValue;
@@ -23,7 +24,7 @@ export class GearMailbox {
    * console.log(mailbox.map(item => item.toHuman()));
    * ```
    */
-  async read(accountId: Hex, numberOfMessages?: number): Promise<MailboxItem[]>;
+  async read(accountId: HexString, numberOfMessages?: number): Promise<MailboxItem[]>;
 
   /**
    * ## Get particular message from mailbox
@@ -40,11 +41,11 @@ export class GearMailbox {
    * }
    * ```
    */
-  async read(accountId: Hex, messageId: Hex): Promise<MailboxItem>;
+  async read(accountId: HexString, messageId: HexString): Promise<MailboxItem>;
 
   async read(
-    accountId: Hex | AccountId32 | string,
-    messageIdOrNumberOfMessages?: Hex | number,
+    accountId: HexString | AccountId32 | string,
+    messageIdOrNumberOfMessages?: HexString | number,
   ): Promise<MailboxItem[] | MailboxItem> {
     const [messageId, numberOfMessages] =
       typeof messageIdOrNumberOfMessages === 'string'

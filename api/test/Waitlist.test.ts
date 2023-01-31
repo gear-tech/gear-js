@@ -1,9 +1,9 @@
+import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
 
 import { CreateType, GearApi, MessageWaitedData } from '../src';
 import { checkInit, getAccount, listenToMessageWaited, sendTransaction, sleep } from './utilsFunctions';
-import { Hex } from '../src/types';
 import { TARGET } from './config';
 import { readFileSync } from 'fs';
 
@@ -11,9 +11,9 @@ const api = new GearApi();
 
 const CODE_PATH = join(TARGET, 'test_waitlist.opt.wasm');
 let alice: KeyringPair;
-let programId: Hex;
-let messageId: Hex;
-let messageWaited: (messageId: Hex) => Promise<MessageWaitedData>;
+let programId: HexString;
+let messageId: HexString;
+let messageWaited: (messageId: HexString) => Promise<MessageWaitedData>;
 
 beforeAll(async () => {
   await api.isReadyOrError;

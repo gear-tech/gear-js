@@ -1,4 +1,6 @@
-import { CreateType, Hex, createPayloadTypeStructure, decodeHexTypes } from '../src';
+import { HexString } from '@polkadot/util/types';
+
+import { CreateType, createPayloadTypeStructure, decodeHexTypes } from '../src';
 
 describe('Create type structure test', () => {
   const types = {
@@ -418,7 +420,7 @@ describe('BTreeSet test', () => {
   };
 
   test('decodeHexTypes will not fail', () => {
-    expect(decodeHexTypes(metadata.types as Hex)).toEqual({
+    expect(decodeHexTypes(metadata.types as HexString)).toEqual({
       ActorId: '[u8;32]',
       TestBTreeSet: { first: 'BTreeSet<ActorId>', second: 'BTreeSet<u8>' },
     });
@@ -435,7 +437,7 @@ describe('BTreeSet test', () => {
           ]),
           second: new Set([1, 2, 3, 3]),
         },
-        metadata.types as Hex,
+        metadata.types as HexString,
       ).toHuman(),
     ).toEqual({
       first: ['0xd7540ae9da85e33b47276e2cb4efc2f0b58fef1227834f21ddc8c7cb551cced6'],
