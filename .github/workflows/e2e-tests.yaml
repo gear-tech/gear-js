@@ -91,6 +91,9 @@ jobs:
         run: yarn test:data-storage
         env:
           TEST_ENV_UNIT: ${{ secrets.TEST_ENV }}
+          DB_USER: example
+          DB_PASSWORD: example
+          DB_NAME: example
 
       - name: Build frontend pkg
         if: steps.check_file_changed.outputs.frontend_changed == 'True'
