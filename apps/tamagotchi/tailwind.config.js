@@ -5,6 +5,24 @@ module.exports = {
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
+      animation: {
+        'ping-slow': 'ping 3s linear infinite',
+        wiggle: 'wiggle 1s ease-in-out infinite',
+        'battle-turn-1': 'turn 2s linear infinite',
+        'battle-turn-2': 'turn 2s linear infinite 400ms',
+        'battle-turn-3': 'turn 2s linear infinite 900ms',
+      },
+      keyframes: {
+        wiggle: {
+          '0%, 100%': { transform: 'rotate(-3deg)' },
+          '50%': { transform: 'rotate(3deg)' },
+        },
+        turn: {
+          '0%': { opacity: '50%' },
+          '50%': { opacity: '25%' },
+          '100%': { opacity: '15%' },
+        },
+      },
       colors: {
         secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
         primary: 'rgb(var(--color-primary) / <alpha-value>)',

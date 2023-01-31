@@ -1,4 +1,5 @@
 import { Icon } from 'components/ui/icon';
+import { Link } from 'react-router-dom';
 
 const socials = [
   { href: 'https://twitter.com/gear_techs', icon: 'twitter' },
@@ -17,6 +18,12 @@ export const Footer = () => (
           </a>
         </li>
       ))}
+      <li>
+        <Link to={'/battle'}>battle</Link>
+      </li>
+      <li>
+        <Link to={'/store'}>store</Link>
+      </li>
     </ul>
     <p className="text-white text-opacity-60 text-xs">
       &copy; {new Date().getFullYear()} Gear Technologies, Inc. All Rights Reserved.

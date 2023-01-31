@@ -1,8 +1,8 @@
-import { Hex } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { useReadState } from './use-read-state';
 import { useLesson, useTokensBalanceStore } from '../context';
 import { BalanceLogic, BalanceMain, BalanceStorage } from '../types/ft-wallet';
+import { HexString } from '@polkadot/util/types';
 
 const payload = {};
 
@@ -35,7 +35,7 @@ function useReadFTStorage<T>(payload: AnyJson) {
     if (state) {
       for (const a of state.idToStorage) {
         if (a[0] === lesson?.programId.charAt(2)) {
-          return a[1] as Hex;
+          return a[1] as HexString;
         }
       }
     }

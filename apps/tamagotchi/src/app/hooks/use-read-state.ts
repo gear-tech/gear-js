@@ -1,13 +1,14 @@
-import { Hex, MessagesDispatched, ProgramMetadata } from '@gear-js/api';
+import { MessagesDispatched, ProgramMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { useEffect, useState } from 'react';
 import { useAlert, useApi } from '@gear-js/react-hooks';
+import { HexString } from '@polkadot/util/types';
 
 type State<T> = { state: T | undefined; isStateRead: boolean; error: string };
 
 export function useReadState<T = AnyJson>(
-  programId: Hex | undefined,
+  programId: HexString | undefined,
   meta: ProgramMetadata | undefined,
   payload?: AnyJson,
   isReadOnError?: boolean,
@@ -43,7 +44,7 @@ export function useReadState<T = AnyJson>(
   }, [programId, payload]);
 
   const handleStateChange = ({ data }: MessagesDispatched) => {
-    const changedIDs = data.stateChanges.toHuman() as Hex[];
+    const changedIDs = data.stateChanges.toHuman() as HexString[];
     const isAnyChange = changedIDs.some((id) => id === programId);
 
     if (isAnyChange) readState();

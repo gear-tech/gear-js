@@ -9,6 +9,7 @@ import {
 import { Alert, alertStyles } from '@gear-js/ui';
 import { TmgProvider, TokensBalanceProvider } from 'app/context';
 import { ADDRESS } from 'app/consts';
+import { BattleProvider } from '../context/battle';
 
 const ApiProvider = ({ children }: ProviderProps) => (
   <GearApiProvider providerAddress={ADDRESS.NODE}>{children}</GearApiProvider>
@@ -20,7 +21,15 @@ const AlertProvider = ({ children }: ProviderProps) => (
   </GearAlertProvider>
 );
 
-const providers = [BrowserRouter, AlertProvider, ApiProvider, AccountProvider, TmgProvider, TokensBalanceProvider];
+const providers = [
+  BrowserRouter,
+  AlertProvider,
+  ApiProvider,
+  AccountProvider,
+  TmgProvider,
+  TokensBalanceProvider,
+  BattleProvider,
+];
 
 export const withProviders = (Component: ComponentType) => () =>
   providers.reduceRight((children, Provider) => <Provider>{children}</Provider>, <Component />);

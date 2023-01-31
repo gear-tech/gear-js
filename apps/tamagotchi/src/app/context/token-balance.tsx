@@ -1,4 +1,3 @@
-import type { Hex } from '@gear-js/api';
 import type { ProviderProps } from '@gear-js/react-hooks';
 import { createContext } from 'react';
 import { ProgramMetadata } from '@gear-js/api';
@@ -7,16 +6,17 @@ import meta from 'assets/meta/meta-ft.txt';
 import metaLogic from 'assets/meta/meta-ft_logic.txt';
 import metaStorage from 'assets/meta/meta-ft_storage.txt';
 import { ENV } from '../consts';
+import { HexString } from '@polkadot/util/types';
 
 type Program = {
-  programId: Hex;
+  programId: HexString;
   metaMain: ProgramMetadata;
   metaLogic: ProgramMetadata;
   metaStorage: ProgramMetadata;
 };
 
 const program: Program = {
-  programId: '' as Hex,
+  programId: '' as HexString,
   metaMain: {} as ProgramMetadata,
   metaLogic: {} as ProgramMetadata,
   metaStorage: {} as ProgramMetadata,
@@ -27,7 +27,7 @@ function useStore(): Program {
   const { metadata: metaL } = useMetadata(metaLogic);
   const { metadata: metaS } = useMetadata(metaStorage);
   return {
-    programId: ENV.balance as Hex,
+    programId: ENV.balance as HexString,
     metaMain: metadata as ProgramMetadata,
     metaLogic: metaL as ProgramMetadata,
     metaStorage: metaS as ProgramMetadata,

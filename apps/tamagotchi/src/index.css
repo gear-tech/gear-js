@@ -36,9 +36,14 @@
 }
 
 @layer components {
+  .typo-h1 {
+    @apply font-kanit text-[72px] leading-[86px] font-medium
+  }
+
   .typo-h2 {
     @apply font-kanit text-[40px] leading-[48px] font-bold tracking-[0.04em]
   }
+
   .btn {
     @apply inline-flex justify-center items-center text-center py-2.5 px-8 text-[14px] font-semibold text-center leading-5 tracking-[0.08em] rounded-full whitespace-nowrap cursor-pointer select-none;
   }
@@ -74,4 +79,17 @@
   .btn--loading {
     @apply opacity-90 gap-2 before:w-4 before:h-4 before:border-2 before:border-neutral-400 before:rounded-full before:border-l-transparent before:border-t-transparent before:animate-spin;
   }
+}
+
+.ellipse {
+  position: absolute;
+  top: 100%;
+  z-index: -20;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 276px;
+  height: 171px;
+  background: #ffffff;
+  opacity: 0.7;
+  filter: blur(50px);
 }

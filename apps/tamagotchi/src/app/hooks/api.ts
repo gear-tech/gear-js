@@ -1,26 +1,23 @@
 import { AnyJson } from '@polkadot/types/types';
-import { LessonsCtx } from '../context';
+import { useLesson } from '../context';
 import { useReadState } from './use-read-state';
 import { TamagotchiState } from '../types/lessons';
-import { useContext, useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 
-function useTamagotchiState<T>(payload?: AnyJson) {
-  const { lesson, meta } = useContext(LessonsCtx);
-  console.log({ lesson });
+const payload = {};
+
+export function useReadTamagotchi<T>(payload?: AnyJson) {
+  const { lesson, meta } = useLesson();
+  console.log({ lesson, meta });
   return useReadState<T>(lesson?.programId, meta, payload);
 }
 
 export function useTamagotchi() {
-  const { lesson } = useContext(LessonsCtx);
-  const payload = useMemo(() => ({}), []);
-  const { state } = useTamagotchiState<TamagotchiState>(payload);
+  const { setTamagotchi } = useLesson();
+  const { state } = useReadTamagotchi<TamagotchiState>(payload);
 
   useEffect(() => {
-    // setTamagotchi(state);
-    console.log({ state, lesson });
-
-    // return () => setTamagotchi(undefined);
-  }, [lesson, state]);
-
-  return state;
+    if (state) setTamagotchi(state);
+    console.log('useTamagotchi', { state });
+  }, [setTamagotchi, state]);
 }

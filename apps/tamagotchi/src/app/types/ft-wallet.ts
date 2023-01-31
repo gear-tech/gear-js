@@ -1,23 +1,23 @@
-import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 
 export type BalanceMain = {
-  admin: Hex;
-  ftLogicId: Hex;
+  admin: HexString;
+  ftLogicId: HexString;
   transactions: [];
 };
 export type BalanceLogic = {
-  admin: Hex;
-  ftLogicId: Hex;
+  admin: HexString;
+  ftLogicId: HexString;
   transactions: [];
-  ftokenId: Hex;
-  idToStorage: Array<[string, Hex]>;
+  ftokenId: HexString;
+  idToStorage: Array<[string, HexString]>;
   instructions: [];
-  storageCodeHash: Hex;
+  storageCodeHash: HexString;
   transactionStatus: [];
 };
 export type BalanceStorage = {
   approvals: [];
-  balances: Array<[Hex, number]>;
-  ftLogicId: Hex;
+  balances: Array<[HexString, number]>;
+  ftLogicId: HexString;
   transactionStatus: [];
 };

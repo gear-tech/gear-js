@@ -1,68 +1,94 @@
 import { Icon } from 'components/ui/icon';
-import { useEffect, useState } from 'react';
-import { useLesson } from 'app/context';
+import { StoreItemsNames } from 'app/types/ft-store';
+import clsx from 'clsx';
+import { useEffect, useRef, useState } from 'react';
 
-type TamagotchiItem = 'sword' | 'hat' | 'bag' | 'glasses';
+type Emotions = 'hello' | 'happy' | 'angry' | 'scared' | 'crying';
 
 type CharacterAvatarProps = {
   lesson: number;
-  emotion?: 'hello' | 'happy' | 'angry' | 'scared' | 'crying';
+  emotion?: Emotions;
   age?: 'baby' | 'adult' | 'old';
   state?: 'normal' | 'dead';
-  hasItem?: TamagotchiItem[];
+  hasItem?: StoreItemsNames[];
   color?: string;
-};
-
-const getOwnItems = (a: number[]) => {
-  const res: TamagotchiItem[] = [];
-  a.includes(1) && res.push('sword');
-  a.includes(2) && res.push('hat');
-  a.includes(3) && res.push('glasses');
-  a.includes(4) && res.push('bag');
-  return res;
+  className?: string;
+  isActive?: boolean;
+  isWinner?: boolean;
+  energy?: number;
 };
 export const CharacterAvatar = ({
+  className,
   lesson,
   emotion = 'happy',
   age = 'baby',
   state = 'normal',
+  hasItem,
   color,
+  isActive,
+  isWinner,
+  energy,
 }: CharacterAvatarProps) => {
-  const [ownItems, setOwnItems] = useState<TamagotchiItem[]>([]);
-  const { tamagotchiItems } = useLesson();
+  const [damage, setDamage] = useState<number>(0);
+  const info = useRef({ isReady: false, energy: 0 });
+
+  useEffect(() => {
+    if (energy) {
+      if (info.current.isReady && info.current.energy !== energy) {
+        setDamage(Math.round((energy - info.current.energy) / 100));
+      } else {
+        info.current.isReady = true;
+        info.current.energy = energy;
+      }
+    }
+  }, [energy]);
 
   const s = 'tamagotchi';
   const cn = 'absolute inset-0 w-full h-full';
-  const mouse = age === 'baby' ? 'face-baby' : `mouse-${age}-${emotion === 'hello' ? 'happy' : emotion}`;
+  const isDead = state === 'dead';
+  const emo: Emotions = isDead ? 'scared' : isWinner ? 'hello' : emotion;
+
+  const mouse = age === 'baby' ? 'face-baby' : `mouse-${age}-${emo === 'hello' ? 'happy' : emo}`;
   const head = `head-${age}`;
-  const eye = `eye-${emotion === 'hello' ? 'happy' : emotion}`;
+  const eye = `eye-${emo === 'hello' ? 'happy' : emo}`;
   const hands = `hands-${
-    ownItems?.includes('sword') ? 'sword' : emotion === 'hello' ? 'hello' : emotion === 'angry' ? 'angry' : 'normal'
+    hasItem?.includes('sword') ? 'sword' : emo === 'hello' ? 'hello' : emo === 'angry' ? 'angry' : 'normal'
   }`;
-  const tail = `tail-${ownItems?.includes('sword') ? 'sword' : emotion === 'hello' ? 'hello' : 'normal'}`;
-  const glasses = ownItems?.includes('glasses') ? 'head-glasses' : age === 'old' ? 'face-old-glasses' : null;
+  const tail = `tail-${hasItem?.includes('sword') ? 'sword' : emo === 'hello' ? 'hello' : 'normal'}`;
+  const glasses = hasItem?.includes('glasses') ? 'head-glasses' : age === 'old' ? 'face-old-glasses' : null;
   const body = `body-${state}`;
-
-  useEffect(() => {
-    tamagotchiItems && setOwnItems(getOwnItems(tamagotchiItems));
-
-    return () => setOwnItems([]);
-  }, [tamagotchiItems]);
 
   return (
     <>
       {lesson > 1 ? (
-        <div className="relative grow text-[#16B768] w-full h-30 aspect-square">
-          <Icon name={tail} section={s} className={cn} />
-          <Icon name={hands} section={s} className={cn} />
+        <div className={clsx('relative text-[#16B768]', className ?? 'grow w-full h-30 aspect-square')}>
+          {!isDead && <Icon name={tail} section={s} className={cn} />}
+          {!isDead && <Icon name={hands} section={s} className={cn} />}
           <Icon name={body} section={s} className={cn} />
-          {ownItems?.includes('bag') && <Icon name="body-bag" section={s} className={cn} />}
+          {hasItem?.includes('bag') && <Icon name="body-bag" section={s} className={cn} />}
           <Icon name={head} section={s} className={cn} />
           <Icon name={mouse} section={s} className={cn} />
           <Icon name={eye} section={s} className={cn} />
-          {glasses && <Icon name={glasses} section={s} className={cn} />}
-          {ownItems?.includes('hat') && <Icon name="head-hat" section={s} className={cn} />}
-          {emotion === 'crying' && <Icon name="tears" section={s} className={cn} />}
+          {!isDead && glasses && <Icon name={glasses} section={s} className={cn} />}
+          {!isDead && hasItem?.includes('hat') && <Icon name="head-hat" section={s} className={cn} />}
+          {emo === 'crying' && <Icon name="tears" section={s} className={cn} />}
+          {!isDead && (isActive || isWinner) && (
+            <div className="absolute top-full -z-1 left-1/2 -translate-x-1/2">
+              <div
+                className={clsx(
+                  'animate-pulse opacity-70 blur-2xl w-64 h-40',
+                  isActive && 'bg-white',
+                  isWinner && 'bg-[#2BD071]',
+                )}
+              />
+            </div>
+          )}
+          {Boolean(damage) && (
+            <div className="absolute top-1/4 right-15 w-12 h-12 grid place-items-center">
+              <Icon name="damage" section={s} className="absolute inset-0 w-full h-full" />
+              <span className="relative z-1 text-white font-bold">{damage}</span>
+            </div>
+          )}
         </div>
       ) : (
         <img

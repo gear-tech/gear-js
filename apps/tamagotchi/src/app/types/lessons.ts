@@ -1,6 +1,6 @@
-import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 
-type T1 = {
+export type T1 = {
   name: string;
   dateOfBirth: number;
 };
@@ -18,10 +18,14 @@ type T2 = {
 type T3 = {
   allowedAccount: string;
 };
+type T4 = {
+  energy: number;
+  power: number;
+};
 
-export type TamagotchiState = T1 & T2 & T3;
+export type TamagotchiState = T1 & T2 & T3 & T4;
 
 export type LessonState = {
   step: number;
-  programId: Hex;
+  programId: HexString;
 };
