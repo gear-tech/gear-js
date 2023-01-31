@@ -1,18 +1,18 @@
-import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 
 type Account = 'alice' | 'bob';
 
 export interface HumanMessageEnqueuedData {
-  id: Hex;
-  destination: Hex;
-  source: Hex;
+  id: HexString;
+  destination: HexString;
+  source: HexString;
   expiration: string;
 }
 
 interface IUploadedPrograms extends IProgramSpec {
   name: string;
-  messageId: Hex;
-  owner: Hex;
+  messageId: HexString;
+  owner: HexString;
 }
 
 interface IMessageSpec {
@@ -52,22 +52,22 @@ interface IState {
 }
 
 interface IPreparedPrograms {
-  [key: Hex]: IPreparedProgram;
+  [key: HexString]: IPreparedProgram;
 }
 
 interface IPreparedProgram {
   spec: IUploadedPrograms;
   init: boolean;
-  id: Hex;
-  owner: Hex;
+  id: HexString;
+  owner: HexString;
 }
 
 interface IPreparedMessages {
   sent: Map<number, HumanMessageEnqueuedData>;
-  log: Map<Hex, any>;
+  log: Map<HexString, any>;
 }
 
-type IPreparedCollectionCode = Map<Hex, any>;
+type IPreparedCollectionCode = Map<HexString, any>;
 
 interface IPrepared {
   programs: IPreparedPrograms;

@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { GearApi, getProgramMetadata, Hex } from '@gear-js/api';
+import { GearApi, getProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 
 import accounts from '../config/accounts';
@@ -8,7 +8,7 @@ import { listenToUserMessageSent } from './subscriptions';
 import { checkMessages, checkUserMessageSent } from './check';
 import { sleep } from '../utils';
 
-async function sendMessage(api: GearApi, destination: Hex, spec: IMessageSpec): Promise<HumanMessageEnqueuedData> {
+async function sendMessage(api: GearApi, destination: HexString, spec: IMessageSpec): Promise<HumanMessageEnqueuedData> {
   const metaHex: HexString = `0x${readFileSync(spec.pathToMetaTxt, 'utf-8')}`;
   const metaData = getProgramMetadata(metaHex);
 
@@ -38,7 +38,7 @@ export async function sendMessages(
   uploadedPrograms: IPreparedPrograms,
 ) {
   const sentMessages = new Map<number, HumanMessageEnqueuedData>();
-  const logs = new Map<Hex, any>();
+  const logs = new Map<HexString, any>();
   const unsub = await listenToUserMessageSent(api, (data) => {
     logs.set(data.message.id.toHex(), data.toHuman());
   });

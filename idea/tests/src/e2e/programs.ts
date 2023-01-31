@@ -1,4 +1,3 @@
-import { Hex } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { expect } from 'chai';
 import { readFileSync } from 'fs';
@@ -8,14 +7,14 @@ import { IPreparedProgram, IPreparedPrograms, IState, Passed } from '../interfac
 
 export const mapProgramStates = new Map<string, IState[]>;
 
-export async function getAllPrograms(genesis: string, expected: Hex[]): Promise<Passed> {
+export async function getAllPrograms(genesis: string, expected: HexString[]): Promise<Passed> {
   const response = await request('program.all', { genesis });
   expect(response).to.have.own.property('result');
   expect(response.result.count).to.eq(expected.length);
 
   response.result.programs
     .map((program: any) => program.id)
-    .forEach((programId: Hex) => {
+    .forEach((programId: HexString) => {
       expect(expected).to.contains(programId);
     });
   return true;
@@ -35,7 +34,7 @@ export async function getAllProgramsByOwner(genesis: string, programs: IPrepared
 
   response.result.programs
     .map((program: any) => program.owner)
-    .forEach((programOwner: Hex) => {
+    .forEach((programOwner: HexString) => {
       expect(ownerList).to.contains(programOwner);
     });
   return true;
