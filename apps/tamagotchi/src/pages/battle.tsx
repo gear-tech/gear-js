@@ -2,23 +2,32 @@ import { BattleCharacterCard } from '../components/common/battle-character-card'
 import { CharacterAvatar } from '../components/common/character-avatar';
 import { Icon } from '../components/ui/icon';
 import { buttonStyles } from '@gear-js/ui';
-import { useBattleData, usePlayersData } from '../app/hooks/battle';
+import { useBattleMessage, useInitBattleData } from 'app/hooks/use-battle';
 import { StartBattleForm } from 'components/forms/start-battle-form';
 import clsx from 'clsx';
-import { useBattleMessage } from '../app/hooks/use-battle-message';
 import { BattleTamagotchiTopStats } from 'components/tamagotchi/battle-tamagotchi-top-stats';
 import { useEffect, useState } from 'react';
 import { TamagotchiState } from '../app/types/lessons';
+import { useBattle } from '../app/context';
 
 export const Battle = () => {
   const [winner, setWinner] = useState<TamagotchiState>();
-  const { battle } = useBattleData();
-  const warriors = usePlayersData();
+  useInitBattleData();
+  const { battleState: battle, players: warriors, setBattleState } = useBattle();
   const sendMessage = useBattleMessage();
 
   const handleAttack = () => {
     const onSuccess = () => console.log('success');
-    if (battle?.state === 'GameIsOver') sendMessage({ StartNewGame: null }, { onSuccess });
+    if (battle?.state === 'GameIsOver')
+      sendMessage(
+        { StartNewGame: null },
+        {
+          onSuccess: () => {
+            setBattleState(undefined);
+            console.log({ battle, warriors });
+          },
+        },
+      );
     if (battle?.state === 'Moves') sendMessage({ MakeMove: null }, { onSuccess });
   };
 
@@ -36,8 +45,8 @@ export const Battle = () => {
           {/*Top*/}
           <div className="flex gap-10 justify-between grow items-center">
             <BattleTamagotchiTopStats
-              state={battle.state}
-              isWinner={battle.winner === battle.players[0].tmgId}
+              state={battle?.state}
+              isWinner={battle?.winner === battle?.players[0]?.tmgId}
               health={Math.round(warriors[0].energy / 100)}
             />
             {battle?.state === 'Moves' && (
@@ -57,8 +66,8 @@ export const Battle = () => {
               </div>
             )}
             <BattleTamagotchiTopStats
-              state={battle.state}
-              isWinner={battle.winner === battle.players[1].tmgId}
+              state={battle?.state}
+              isWinner={battle?.winner === battle?.players[1]?.tmgId}
               health={Math.round(warriors[1].energy / 100)}
               isReverse
             />
@@ -69,7 +78,7 @@ export const Battle = () => {
               <CharacterAvatar
                 lesson={6}
                 hasItem={[]}
-                energy={warriors[0].energy}
+                energy={warriors[0]?.energy}
                 className="min-h-[430px]"
                 isActive={battle?.currentTurn === 0 && battle?.state !== 'GameIsOver'}
                 isWinner={battle?.state === 'GameIsOver' && battle.winner === battle.players[0].tmgId}

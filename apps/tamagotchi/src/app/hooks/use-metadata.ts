@@ -1,5 +1,21 @@
 import { useEffect, useState } from 'react';
-import { getProgramMetadata, ProgramMetadata } from '@gear-js/api';
+import { getProgramMetadata, getWasmMetadata, OldMetadata, ProgramMetadata } from '@gear-js/api';
+import { Buffer } from 'buffer';
+import { HexString } from '@polkadot/util/types';
+import { useAlert } from '@gear-js/react-hooks';
+import { Metadata } from '@polkadot/types';
+
+type Result = {
+  id: HexString;
+  metaWasmBase64: string;
+  name: string;
+  repo: string;
+  updatedAt: string;
+};
+type Program = {
+  buffer: Buffer;
+  meta: Metadata;
+};
 
 export const useMetadata = (source: RequestInfo | URL) => {
   const [data, setData] = useState<ProgramMetadata>();
@@ -12,4 +28,21 @@ export const useMetadata = (source: RequestInfo | URL) => {
   }, [source]);
 
   return { metadata: data };
+};
+export const useWasmMetadata = (source: RequestInfo | URL) => {
+  const alert = useAlert();
+  const [data, setData] = useState<Program>();
+
+  useEffect(() => {
+    if (source) {
+      fetch(source)
+        .then((response) => response.arrayBuffer())
+        .then((array) => Buffer.from(array))
+        .then(async (buffer) => ({ buffer, meta: (await getWasmMetadata(buffer)) as Metadata }))
+        .then(({ meta, buffer }) => setData({ meta: meta, buffer }))
+        .catch(({ message }: Error) => alert.error(`Fetch error: ${message}`));
+    }
+  }, [source]);
+
+  return data;
 };

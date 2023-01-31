@@ -1,6 +1,6 @@
 import { Account } from '@gear-js/react-hooks';
 import { GetTokensBalance } from 'components/common/get-tokens-balance';
-import { useFTStorage } from 'app/hooks/token';
+import { useFTStorage } from 'app/hooks/use-ft-balance';
 
 type Props = {
   // balance: Account['balance'];

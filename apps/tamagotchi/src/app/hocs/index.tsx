@@ -9,7 +9,7 @@ import {
 import { Alert, alertStyles } from '@gear-js/ui';
 import { TmgProvider, TokensBalanceProvider } from 'app/context';
 import { ADDRESS } from 'app/consts';
-import { BattleProvider } from '../context/battle';
+import { BattleProvider } from '../context/ctx-battle';
 
 const ApiProvider = ({ children }: ProviderProps) => (
   <GearApiProvider providerAddress={ADDRESS.NODE}>{children}</GearApiProvider>

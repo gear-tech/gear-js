@@ -4,11 +4,11 @@ import clsx from 'clsx';
 import metaCode from 'assets/meta/meta-ft-code.txt';
 import { useLesson } from 'app/context';
 import { useMetadata } from 'app/hooks/use-metadata';
-import { useTokensMessage } from 'app/hooks/use-tokens-message';
+import { useFtMessage } from 'app/hooks/use-ft-message';
 
 export const GetTokensBalance = () => {
   const { lesson } = useLesson();
-  const sendHandler = useTokensMessage();
+  const sendHandler = useFtMessage();
   const { metadata } = useMetadata(metaCode);
 
   const handle = () => {

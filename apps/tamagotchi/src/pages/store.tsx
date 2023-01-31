@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
-import { useItemsStore } from 'app/hooks/store';
+import { useItemsStore } from 'app/hooks/use-store';
 import { StoreItemCard } from 'components/cards/store-item-card';
 import { Icon } from 'components/ui/icon';
 

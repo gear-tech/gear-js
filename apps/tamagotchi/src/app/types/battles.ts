@@ -1,6 +1,15 @@
 import { HexString } from '@polkadot/util/types';
+import { TamagotchiState } from './lessons';
 
-export type BattlePlayer = {
+export type BattlePlayerResponse = {
+  attributes: number[];
+  energy: number;
+  owner: HexString;
+  power: number;
+  tmgId: HexString;
+};
+
+export type TamagotchiBattlePlayer = TamagotchiState & {
   attributes: number[];
   energy: number;
   owner: HexString;
@@ -12,7 +21,7 @@ export type BattleStatesList = 'Registration' | 'Moves' | 'Waiting' | 'GameIsOve
 
 export type BattleStateResponse = {
   currentTurn: number;
-  players: Array<BattlePlayer>;
+  players: BattlePlayerResponse[];
   state: BattleStatesList;
   steps: number;
   tmgStoreId: HexString;

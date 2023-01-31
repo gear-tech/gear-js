@@ -6,14 +6,16 @@ import { AccountActionsMenu } from 'components/menus/account-actions-menu';
 import { getTamagotchiAge } from 'app/utils/get-tamagotchi-age';
 import { useTamagocthiMessage } from 'app/hooks/use-tamagotchi-message';
 import { useAccount } from '@gear-js/react-hooks';
-import { useTamagotchi } from 'app/hooks/api';
+import { useTamagotchi, useTamagotchiWasm } from 'app/hooks/use-tamagotchi';
 
 export const CharacterStats = () => {
-  const { account } = useAccount();
-  const { tamagotchi } = useLesson();
-  const sendHandler = useTamagocthiMessage();
   useTamagotchi();
-  const fullView = tamagotchi?.entertained;
+  useTamagotchiWasm();
+
+  const { account } = useAccount();
+  const { tamagotchi, lesson } = useLesson();
+  const sendHandler = useTamagocthiMessage();
+  const fullView = Boolean(lesson && lesson?.step > 1);
   const feedHandler = () => sendHandler({ Feed: null });
   const playHandler = () => sendHandler({ Play: null });
   const sleepHandler = () => sendHandler({ Sleep: null });

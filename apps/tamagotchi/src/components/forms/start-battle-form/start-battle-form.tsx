@@ -2,8 +2,8 @@ import { Button, Input } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 import { hexRequired } from 'app/utils/form-validations';
 import { createTamagotchiInitial } from 'app/consts';
-import { useBattleMessage } from 'app/hooks/use-battle-message';
-import { useBattle } from '../../../app/context';
+import { useBattle } from 'app/context';
+import { useBattleMessage } from 'app/hooks/use-battle';
 
 const validate: Record<string, typeof hexRequired> = {
   programId: hexRequired,
@@ -24,7 +24,7 @@ export const StartBattleForm = () => {
   });
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 my-auto">
       <h2 className="text-center typo-h2">Registration for Battle</h2>
       <p className="text-center text-white text-opacity-70">Current players' queue: {battleState?.players.length}</p>
       <form onSubmit={handleSubmit} className="flex items-start justify-center gap-6">
