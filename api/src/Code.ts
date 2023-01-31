@@ -1,11 +1,14 @@
-import { Bytes, Option } from '@polkadot/types';
+import { Bytes, Option, Vec, u8 } from '@polkadot/types';
 import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { u8aToHex } from '@polkadot/util';
 
 import { CodeMetadata, CodeStorage } from './types';
 import { generateCodeHash, getIdsFromKeys, validateCodeId } from './utils';
+import { CodeDoesNotExistError } from './errors';
 import { GearTransaction } from './Transaction';
+import { getGrReply } from './wasm';
 
 export class GearCode extends GearTransaction {
   /**
@@ -60,5 +63,22 @@ export class GearCode extends GearTransaction {
     const codeIds = getIdsFromKeys(keys, prefix);
 
     return codeIds;
+  }
+
+  async metaHash(codeId: HexString): Promise<HexString> {
+    const code = (await this._api.query.gearProgram.originalCodeStorage(codeId)) as Option<Vec<u8>>;
+    if (code.isNone) {
+      throw new CodeDoesNotExistError(codeId);
+    }
+
+    const metahash = await getGrReply(code.unwrap().toHex(), 'metahash');
+
+    return u8aToHex(metahash);
+  }
+
+  async metaHashFromWasm(wasm: Buffer | ArrayBuffer | HexString | Uint8Array) {
+    const metahash = await getGrReply(wasm, 'metahash');
+
+    return u8aToHex(metahash);
   }
 }
