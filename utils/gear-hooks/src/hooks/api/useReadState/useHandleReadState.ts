@@ -18,7 +18,7 @@ function useHandleReadState<T = AnyJson>(
     if (isInitLoad) setIsStateRead(false);
 
     handleReadState()
-      ?.then((codecState) => codecState.toHuman())
+      ?.then((codecState) => codecState.toJSON())
       .then((result) => {
         setState(result as unknown as T);
         if (!isReadOnError) setIsStateRead(true);
