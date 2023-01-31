@@ -1,5 +1,6 @@
-import { Hex, ProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 import { Checkbox } from '@gear-js/ui';
+import { HexString } from '@polkadot/util/types';
 import { useEffect, useState } from 'react';
 
 import { getPreformattedText } from 'shared/helpers';
@@ -13,14 +14,14 @@ import styles from './UploadMetadata.module.scss';
 type Props = {
   metadata: ProgramMetadata | undefined;
   onReset: () => void;
-  onUpload: (metaHex: Hex) => void;
+  onUpload: (metaHex: HexString) => void;
 };
 
 const UploadMetadata = ({ metadata, onReset, onUpload }: Props) => {
   const [isManualInput, setIsManualInput] = useState(false);
 
   const toggleManualInput = () => setIsManualInput((prevValue) => !prevValue);
-  const handleManualInputSubmit = (metaHex: Hex) => onUpload(metaHex);
+  const handleManualInputSubmit = (metaHex: HexString) => onUpload(metaHex);
 
   const renderMetadataProperties = (meta: ProgramMetadata) => {
     const metadataProperties = getMetadataProperties(meta);

@@ -2,8 +2,8 @@ import { useCallback } from 'react';
 import { generatePath } from 'react-router-dom';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { web3FromSource } from '@polkadot/extension-dapp';
-import { Hex } from '@gear-js/api';
 import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
+import { HexString } from '@polkadot/util/types';
 
 import { useChain, useModal } from 'hooks';
 import { uploadLocalProgram } from 'api/LocalDB';
@@ -33,7 +33,7 @@ const useProgramActions = () => {
     </p>
   );
 
-  const createProgram = (codeId: Hex, payload: Payload) => {
+  const createProgram = (codeId: HexString, payload: Payload) => {
     const { gasLimit, value, initPayload, metadata, payloadType } = payload;
 
     const program = { value, codeId, gasLimit, initPayload };

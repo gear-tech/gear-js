@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 
 import { useProgram } from 'hooks';
 import { ProgramMessages } from 'widgets/programMessages';
@@ -34,7 +34,7 @@ const Program = () => {
           <ProgramDetails program={program} isLoading={isLoading} />
           <MetadataDetails metadata={metadata} isLoading={isLoading} />
         </div>
-        <ProgramMessages programId={programId as Hex} messages={sortedMessages || []} isLoading={isLoading} />
+        <ProgramMessages programId={programId as HexString} messages={sortedMessages || []} isLoading={isLoading} />
       </div>
     </div>
   );

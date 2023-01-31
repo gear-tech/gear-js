@@ -1,6 +1,7 @@
 import isPlainObject from 'lodash.isplainobject';
-import { ProgramMetadata, Hex, GasInfo } from '@gear-js/api';
+import { ProgramMetadata, GasInfo } from '@gear-js/api';
 import { useApi, useAlert, useAccount } from '@gear-js/react-hooks';
+import { HexString } from '@polkadot/util/types';
 
 import { GasMethod } from 'shared/config';
 
@@ -45,7 +46,7 @@ const useGasCalculate = () => {
         case GasMethod.InitCreate:
           estimatedGas = await api.program.calculateGas.initCreate(
             decodedAddress,
-            code as Hex,
+            code as HexString,
             payload,
             value,
             true,
@@ -55,7 +56,7 @@ const useGasCalculate = () => {
         case GasMethod.Handle:
           estimatedGas = await api.program.calculateGas.handle(
             decodedAddress,
-            addressId as Hex,
+            addressId as HexString,
             payload,
             value,
             true,
@@ -65,7 +66,7 @@ const useGasCalculate = () => {
         case GasMethod.Reply:
           estimatedGas = await api.program.calculateGas.reply(
             decodedAddress,
-            addressId as Hex,
+            addressId as HexString,
             0,
             payload,
             value,

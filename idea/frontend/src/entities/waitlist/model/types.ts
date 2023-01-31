@@ -1,13 +1,13 @@
-import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 
 type MailMessage = {
-  id: Hex;
-  source: Hex;
-  destination: Hex;
+  id: HexString;
+  source: HexString;
+  destination: HexString;
   value: string;
   payload: string;
   reply: null | {
-    replyTo: Hex;
+    replyTo: HexString;
     exitCode: number;
   };
 };

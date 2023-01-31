@@ -1,4 +1,5 @@
-import { Hex, PayloadType } from '@gear-js/api';
+import { PayloadType } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 
 import { GasMethod } from 'shared/config';
 
@@ -8,7 +9,7 @@ type Values = {
   payloadType: string;
 };
 
-type Code<T> = T extends GasMethod.InitUpdate ? Buffer : T extends GasMethod.InitCreate ? Hex : null;
+type Code<T> = T extends GasMethod.InitUpdate ? Buffer : T extends GasMethod.InitCreate ? HexString : null;
 
 interface IGasInfo {
   burned: string;

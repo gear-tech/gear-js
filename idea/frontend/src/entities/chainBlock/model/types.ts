@@ -1,7 +1,7 @@
-import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 
 interface IChainBlock {
-  hash: Hex;
+  hash: HexString;
   number: number;
   time: string;
 }

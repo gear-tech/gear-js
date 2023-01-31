@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 
 import { useWaitlist } from 'hooks';
 import { Subheader } from 'shared/ui/subheader';
@@ -12,7 +12,7 @@ import { Waitlist } from './waitlist';
 import styles from './ProgramMessages.module.scss';
 
 type Props = {
-  programId: Hex;
+  programId: HexString;
   messages: IMessage[];
   isLoading: boolean;
 };

@@ -1,5 +1,5 @@
-import { Hex } from '@gear-js/api';
 import { useParams } from 'react-router-dom';
+import { HexString } from '@polkadot/util/types';
 
 import { MessageForm } from 'widgets/messageForm';
 import { useMessage, useProgram } from 'hooks';
@@ -9,7 +9,7 @@ import styles from './Send.module.scss';
 const Send = () => {
   const { programId, messageId } = useParams();
 
-  const id = (programId || messageId) as Hex;
+  const id = (programId || messageId) as HexString;
   const isReply = !!messageId;
 
   const { message } = useMessage(messageId);

@@ -1,6 +1,6 @@
-import { Hex } from '@gear-js/api';
 import { Modal, Input, Button } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
+import { HexString } from '@polkadot/util/types';
 import { generatePath, useNavigate } from 'react-router-dom';
 
 import { ModalProps } from 'entities/modal';
@@ -9,7 +9,7 @@ import { isHexValid } from 'shared/helpers';
 
 import styles from './MessageModal.module.scss';
 
-const initialValues = { programId: '' as Hex };
+const initialValues = { programId: '' as HexString };
 const validate = { programId: isHexValid };
 const initForm = { initialValues, validate };
 

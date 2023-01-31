@@ -1,8 +1,8 @@
-import { Hex } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
+import { HexString } from '@polkadot/util/types';
 import { useState } from 'react';
 
-function useIsProgramExists(programId: Hex) {
+function useIsProgramExists(programId: HexString) {
   const { api } = useApi();
 
   const [isReady, setIsReady] = useState(true);
