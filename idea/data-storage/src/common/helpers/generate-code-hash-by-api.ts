@@ -1,7 +1,7 @@
 import { HexString } from '@polkadot/util/types';
-import { generateCodeHash, Hex } from '@gear-js/api';
+import { generateCodeHash } from '@gear-js/api';
 
-export function generateCodeHashByApi(hex: HexString): Hex {
+export function generateCodeHashByApi(hex: HexString): HexString {
   if(process.env.TEST_ENV_UNIT) return '0x00';
 
   return  generateCodeHash(hex);

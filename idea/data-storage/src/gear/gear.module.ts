@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 
 import { GearEventListener } from './gear-event-listener';
 import { ProgramModule } from '../program/program.module';
@@ -13,7 +13,7 @@ import { MetaModule } from '../meta/meta.module';
   imports: [
     ProgramModule,
     MessageModule,
-    MetaModule,
+    forwardRef(() => MetaModule),
     CodeModule,
     BlockModule,
     RabbitmqModule,

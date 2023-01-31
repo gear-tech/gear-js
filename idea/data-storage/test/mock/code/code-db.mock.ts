@@ -1,13 +1,17 @@
 import { readFileSync } from 'fs';
 import { load } from 'js-yaml';
 
-import { Code } from '../../../src/database/entities';
+import { Code, Meta } from '../../../src/database/entities';
+
+const meta = new Meta();
+meta.hash = 'hash';
 
 function getCodeDBMock(): Code[] {
   const pathCollectionCode = '/collection-code.mock.yaml';
   try {
     const listCode = load(readFileSync(__dirname + pathCollectionCode, 'utf8')) as Code[];
-    return  listCode.map((code) => ({ ...code, timestamp: new Date() }));
+    return  listCode.map((code, index) => (index === 0 ?
+        { ...code, timestamp: new Date(), meta } : { ...code, timestamp: new Date() }));
   } catch (err) {
     console.error(err);
   }

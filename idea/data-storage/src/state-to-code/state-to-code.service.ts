@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 import { plainToClass } from 'class-transformer';
 
 import { StateToCodeRepo } from './state-to-code.repo';
@@ -20,13 +20,13 @@ export class StateToCodeService {
     return stateToCode;
   }
 
-  public async create(code: Code, state: State, stateHex: Hex): Promise<StateToCode> {
+  public async create(code: Code, state: State, stateHex: HexString): Promise<StateToCode> {
     const stateToCode = plainToClass(StateToCode, { code, codeId: code._id, state, stateHex: stateHex });
 
     return this.stateToCodeRepository.save(stateToCode);
   }
 
-  public async isExistStateHexByCode(stateHex: Hex, codeId: string): Promise<boolean> {
+  public async isExistStateHexByCode(stateHex: HexString, codeId: string): Promise<boolean> {
     const stateToCode = await this.stateToCodeRepository.getByCodeIdAndStateHex(codeId, stateHex);
 
     return !!stateToCode;

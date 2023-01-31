@@ -12,7 +12,8 @@ import {
   GetAllProgramsParams,
   GetAllStateParams,
   GetCodeParams,
-  GetMessagesParams, GetMetaByCodeParams,
+  GetMessagesParams,
+  GetMetaByCodeParams,
   GetMetaParams,
   GetStateByCodeParams,
   GetStateParams,
@@ -40,6 +41,7 @@ export class RabbitmqService {
   constructor(
     private configService: ConfigService,
     private messageService: MessageService,
+    @Inject(forwardRef(() => MetaService))
     private metaService: MetaService,
     private codeService: CodeService,
     private programService: ProgramService,
@@ -146,7 +148,7 @@ export class RabbitmqService {
         return this.programService.getAllPrograms(params as GetAllProgramsParams);
       },
       [API_METHODS.PROGRAM_META_ADD]: () => {
-        return this.metaService.addMeta(params as AddMetaParams);
+        return this.metaService.addMetaByProgram(params as AddMetaParams);
       },
       [API_METHODS.PROGRAM_META_GET]: () => {
         return this.programService.getProgramMeta(params as GetMetaParams);
@@ -164,7 +166,7 @@ export class RabbitmqService {
         return this.codeService.getByIdAndGenesis(params as GetCodeParams);
       },
       [API_METHODS.CODE_META_GET]: () => {
-        return this.metaService.getByCodeId(params as GetMetaByCodeParams);
+        return this.codeService.getMeta(params as GetMetaByCodeParams);
       },
       [API_METHODS.CODE_META_ADD]: () => {
         return this.metaService.addMetaByCode(params as AddMetaByCodeParams);

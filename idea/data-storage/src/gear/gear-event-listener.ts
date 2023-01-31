@@ -1,5 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { CodeChanged, GearApi, generateCodeHash, Hex, MessageEnqueued } from '@gear-js/api';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { CodeChanged, GearApi, generateCodeHash, MessageEnqueued } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
@@ -29,8 +30,8 @@ const { gear } = configuration();
 @Injectable()
 export class GearEventListener {
   private logger: Logger = new Logger(GearEventListener.name);
-  private api: GearApi;
-  public genesis: Hex;
+  public api: GearApi;
+  public genesis: HexString;
 
   constructor(
     private programService: ProgramService,
@@ -40,6 +41,7 @@ export class GearEventListener {
     private codeRepository: CodeRepo,
     private blockService: BlockService,
     private rabbitMQService: RabbitmqService,
+    @Inject(forwardRef(() => MetaService))
     private metaService: MetaService,
   ) {}
 
@@ -70,7 +72,7 @@ export class GearEventListener {
 
   public async isValidMetaHex(hex: string, programId: string): Promise<boolean> {
     try {
-      const metaHash = await this.api.program.metaHash(programId as Hex);
+      const metaHash = await this.api.program.metaHash(programId as HexString);
       return metaHash === blake2AsHex(hex, 256);
     } catch (error) {
       this.logger.error(error);
@@ -252,9 +254,11 @@ export class GearEventListener {
 
             if(meta){
               Object.assign(createProgram, { meta });
+              await this.codeService.addMeta(codeId, this.genesis, meta);
             } else {
               const meta = await this.metaService.createMeta({ hash: metaHash });
               Object.assign(createProgram, { meta });
+              await this.codeService.addMeta(codeId, this.genesis, meta);
             }
           }
         } catch (error) {
@@ -315,7 +319,7 @@ export class GearEventListener {
     }
   }
 
-  private async handleBlocks(block: SignedBlockExtended, timestamp: number, blockHash: Hex) {
+  private async handleBlocks(block: SignedBlockExtended, timestamp: number, blockHash: HexString) {
     const blockNumber = block.block.header.toHuman().number as string;
 
     await this.blockService.createBlocks([

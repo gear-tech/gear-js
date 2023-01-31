@@ -1,37 +1,39 @@
 import { HexString } from '@polkadot/util/types';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import {
   AddMetaByCodeParams,
   AddMetaParams,
   AddMetaResult,
-  GetMetaByCodeParams,
 } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
 
-import { CodeNotFound, InvalidProgramMetaHex, MetadataNotFound, ProgramNotFound } from '../common/errors';
+import {
+  CodeNotFound,
+  InvalidCodeMetaHex,
+  InvalidProgramMetaHex,
+  MetadataNotFound,
+  ProgramNotFound,
+} from '../common/errors';
 import { Meta } from '../database/entities';
 import { MetaRepo } from './meta.repo';
 import { ProgramRepo } from '../program/program.repo';
 import { CreateMetaInput } from './types/create-meta.input';
 import { CodeRepo } from '../code/code.repo';
 import { generateCodeHashByApi, getProgramMetadataByApi } from '../common/helpers';
+import { GearEventListener } from '../gear/gear-event-listener';
+import { ProgramService } from '../program/program.service';
 
 @Injectable()
 export class MetaService {
+  private logger: Logger = new Logger(MetaService.name);
   constructor(
     private programRepository: ProgramRepo,
+    private programService: ProgramService,
     private metaRepository: MetaRepo,
     private codeRepository: CodeRepo,
+    @Inject(forwardRef(() => GearEventListener))
+    private gearEventListener: GearEventListener,
   ) {}
-
-  public async getByCodeId(params: GetMetaByCodeParams): Promise<Meta> {
-    const { codeId } = params;
-    const meta = await this.metaRepository.getByCodeId(codeId);
-
-    if(!meta) throw new MetadataNotFound();
-
-    return meta;
-  }
 
   public async getByHash(hash: string): Promise<Meta> {
     return this.metaRepository.getByHash(hash);
@@ -44,27 +46,46 @@ export class MetaService {
 
     if(!code) throw new CodeNotFound();
 
-    const hash = generateCodeHashByApi(metaHex as HexString);
-    const meta = await this.metaRepository.getByHash(hash);
-    const metaData = getProgramMetadataByApi(metaHex as HexString);
+    try {
+      const metaHash = await this.gearEventListener.api.code.metaHash(code.id as HexString);
+      const hash = generateCodeHashByApi(metaHex as HexString);
 
-    if(meta) {
-      this.validateMetaHex(meta, hash);
+      if(metaHash && metaHash !== hash) throw new InvalidCodeMetaHex();
 
-      const updateMeta = plainToClass(Meta, { ...meta, hex: metaHex, types: metaData.types });
+      if(metaHash) {
+        const meta = await this.metaRepository.getByHash(hash);
+        const metaData = getProgramMetadataByApi(metaHex as HexString);
 
-      code.meta = await this.metaRepository.save(updateMeta);
-      await this.codeRepository.save([code]);
-    } else {
-      const createMetaInput: CreateMetaInput = { hex: metaHex, hash, types: metaData.types };
-      code.meta = await this.createMeta(createMetaInput);
-      await this.codeRepository.save([code]);
+        if(meta) {
+          const updateMeta = plainToClass(Meta, { ...meta, hex: metaHex, types: metaData.types });
+
+          const updatedMeta = await this.metaRepository.save(updateMeta);
+          code.meta = updatedMeta;
+
+          await Promise.all([
+            this.codeRepository.save([code]),
+            this.programService.addProgramsMetaByCode(codeId, genesis, updatedMeta)
+          ]);
+        } else {
+          const createMetaInput: CreateMetaInput = { hex: metaHex, hash, types: metaData.types };
+          const createMeta = await this.createMeta(createMetaInput);
+          code.meta = createMeta;
+
+          await Promise.all([
+            this.codeRepository.save([code]),
+            this.programService.addProgramsMetaByCode(codeId, genesis, createMeta)
+          ]);
+        }
+      }
+    } catch (error) {
+      this.logger.error(error);
+      throw new InvalidCodeMetaHex();
     }
 
     return { status: 'Metadata added' };
   }
 
-  public async addMeta(params: AddMetaParams): Promise<AddMetaResult> {
+  public async addMetaByProgram(params: AddMetaParams): Promise<AddMetaResult> {
     const { programId, genesis, metaHex, name } = params;
     const program = await this.programRepository.getByIdAndGenesis(programId, genesis);
 
@@ -74,7 +95,7 @@ export class MetaService {
 
     const hash = generateCodeHashByApi(metaHex as HexString);
 
-    this.validateMetaHex(program.meta, hash);
+    this.validateProgramMetaHex(program.meta, hash);
     const metaData = getProgramMetadataByApi(metaHex as HexString);
     const meta = await this.metaRepository.getByHash(hash);
 
@@ -102,7 +123,7 @@ export class MetaService {
     return this.metaRepository.save(createMeta);
   }
 
-  private validateMetaHex(meta: Meta, hash: string): void {
+  private validateProgramMetaHex(meta: Meta, hash: string): void {
     if(meta.hash !== hash) throw new InvalidProgramMetaHex();
   }
 }

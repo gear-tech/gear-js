@@ -14,8 +14,46 @@ export class ProgramRepo {
     private programRepo: Repository<Program>,
   ) {}
 
-  public async save(programs: Program[]): Promise<Program[]> {
-    return this.programRepo.save(programs);
+  public async list(params: GetAllProgramsParams): Promise<[Program[], number]> {
+    const { genesis, query, limit, offset, owner, toDate, fromDate, status } = params;
+
+    const builder = constructQueryBuilder(
+      this.programRepo,
+      genesis,
+      { owner, status },
+      { fields: ['id', 'name', 'code.id'], value: query },
+      { fromDate, toDate },
+      offset || 0,
+      limit || PAGINATION_LIMIT,
+      ['code', { table: 'meta', columns: ['types'] }],
+      { column: 'timestamp', sort: 'DESC' },
+    );
+
+    return builder.getManyAndCount();
+  }
+
+  public async listByGenesis(genesis: string): Promise<Program[]> {
+    return this.programRepo.find({
+      where: {
+        genesis,
+      },
+    });
+  }
+
+  public async listByCodeIdAndGenesis(codeId: string, genesis: string): Promise<Program[]> {
+    return this.programRepo.find({
+      where: {
+        genesis,
+        code: { id: codeId }
+      },
+    });
+  }
+
+  public async get(id: string, genesis: string): Promise<Program> {
+    return this.programRepo.findOne({
+      where: { id, genesis },
+      relations: ['code']
+    });
   }
 
   public async getByIdAndGenesis(id: string, genesis: string): Promise<Program> {
@@ -49,40 +87,11 @@ export class ProgramRepo {
     });
   }
 
-  public async list(params: GetAllProgramsParams): Promise<[Program[], number]> {
-    const { genesis, query, limit, offset, owner, toDate, fromDate, status } = params;
-
-    const builder = constructQueryBuilder(
-      this.programRepo,
-      genesis,
-      { owner, status },
-      { fields: ['id', 'name', 'code.id'], value: query },
-      { fromDate, toDate },
-      offset || 0,
-      limit || PAGINATION_LIMIT,
-      ['code', { table: 'meta', columns: ['types'] }],
-      { column: 'timestamp', sort: 'DESC' },
-    );
-
-    return builder.getManyAndCount();
-  }
-
-  public async listByGenesis(genesis: string): Promise<Program[]> {
-    return this.programRepo.find({
-      where: {
-        genesis,
-      },
-    });
+  public async save(programs: Program[]): Promise<Program[]> {
+    return this.programRepo.save(programs);
   }
 
   public async remove(programs: Program[]): Promise<Program[]> {
     return this.programRepo.remove(programs);
-  }
-
-  public async get(id: string, genesis: string): Promise<Program> {
-    return this.programRepo.findOne({
-      where: { id, genesis },
-      relations: ['code']
-    });
   }
 }
