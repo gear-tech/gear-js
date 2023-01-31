@@ -1,5 +1,5 @@
-import { Hex } from '@gear-js/api';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import { HexString } from '@polkadot/util/types';
 import {
   AlertType,
   AlertOptions,
@@ -14,7 +14,7 @@ import {
 type ProviderProps = Omit<React.ProviderProps<never>, 'value'>;
 
 interface Account extends InjectedAccountWithMeta {
-  decodedAddress: Hex;
+  decodedAddress: HexString;
   balance: { value: string; unit: string | undefined };
 }
 

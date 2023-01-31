@@ -1,12 +1,13 @@
-import { Hex, ProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
+import { HexString } from '@polkadot/util/types';
 import { useContext, useEffect } from 'react';
 import { ApiContext } from 'context';
 import { useHandleReadState } from './useHandleReadState';
 import { useStateSubscription } from './useStateSubscription';
 
 function useReadFullState<T = AnyJson>(
-  programId: Hex | undefined,
+  programId: HexString | undefined,
   meta: ProgramMetadata | undefined,
   isReadOnError?: boolean,
 ) {

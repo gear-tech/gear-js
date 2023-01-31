@@ -1,7 +1,8 @@
-import { Hex, ProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { AnyJson, ISubmittableResult } from '@polkadot/types/types';
+import { HexString } from '@polkadot/util/types';
 import { useContext, useRef } from 'react';
 import { AccountContext, AlertContext, ApiContext } from 'context';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
@@ -13,7 +14,7 @@ type SendMessageOptions = {
   onSuccess?: () => void;
 };
 
-function useSendMessage(destination: Hex, metadata: ProgramMetadata | undefined) {
+function useSendMessage(destination: HexString, metadata: ProgramMetadata | undefined) {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
   const alert = useContext(AlertContext);
