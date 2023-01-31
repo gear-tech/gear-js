@@ -7,7 +7,6 @@ import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { SignedBlockExtended } from '@polkadot/api-derive/types';
 import { Keys } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
-import { blake2AsHex } from '@polkadot/util-crypto';
 
 import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
@@ -67,16 +66,6 @@ export class GearEventListener {
       });
 
       this.logger.log('⚙️ 📡 Reconnecting to the gear node');
-    }
-  }
-
-  public async isValidMetaHex(hex: string, programId: string): Promise<boolean> {
-    try {
-      const metaHash = await this.api.program.metaHash(programId as HexString);
-      return metaHash === blake2AsHex(hex, 256);
-    } catch (error) {
-      this.logger.error(error);
-      return false;
     }
   }
 
