@@ -3,7 +3,7 @@ import { H256 } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
 import { randomAsHex } from '@polkadot/util-crypto';
 
-import { IProgram, OldMetadata } from './types/interfaces';
+import { IProgram, OldMetadata, ProgramMap } from './types/interfaces';
 import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult } from './types';
 import { ProgramDoesNotExistError, ProgramExitedError, ProgramTerminatedError, SubmitProgramError } from './errors';
 import { ProgramMetadata, isProgramMeta } from './metadata';
@@ -215,15 +215,17 @@ export class GearProgram extends GearTransaction {
    * @returns codeHash of the program
    */
   async codeHash(id: HexString): Promise<HexString> {
-    const program = (await this._api.query.gearProgram.programStorage(id)) as Option<IProgram>;
+    const programOption = (await this._api.query.gearProgram.programStorage(id)) as Option<ProgramMap>;
 
-    if (program.isNone) throw new ProgramDoesNotExistError();
+    if (programOption.isNone) throw new ProgramDoesNotExistError();
 
-    if (program.unwrap().isTerminated) throw new ProgramTerminatedError(id);
+    const program = programOption.unwrap()[0];
 
-    if (program.unwrap().isExited) throw new ProgramExitedError(program.unwrap().asExited.toHex());
+    if (program.isTerminated) throw new ProgramTerminatedError(id);
 
-    return program.unwrap().asActive.codeHash.toHex();
+    if (program.isExited) throw new ProgramExitedError(program.asExited.toHex());
+
+    return program.asActive.codeHash.toHex();
   }
 
   /**

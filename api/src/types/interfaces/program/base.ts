@@ -1,5 +1,5 @@
-import { BTreeMap, BTreeSet, Enum, Map, u32 } from '@polkadot/types';
-import { Hash } from '@polkadot/types/interfaces';
+import { BTreeMap, BTreeSet, Enum, Map, Tuple, u32 } from '@polkadot/types';
+import { BlockNumber, Hash } from '@polkadot/types/interfaces';
 
 import { CodeId, MessageId, ProgramId } from '../ids';
 import { DispatchKind } from '../message';
@@ -20,7 +20,6 @@ export interface ActiveProgram extends Map {
   pagesWithData: BTreeSet<u32>;
   gasReservationMap: BTreeMap<Hash, GasReservationSlot>;
   codeHash: CodeId;
-  codeLengthBytes: u32;
   codeExports: BTreeSet<DispatchKind>;
   staticPages: WasmPageNumber;
   state: IProgramState;
@@ -31,4 +30,9 @@ export interface IProgramState {
   asUninitialized: { messageId: MessageId };
   isInitialized: boolean;
   asInitialized: null;
+}
+
+export interface ProgramMap extends Tuple {
+  0: IProgram;
+  1: BlockNumber;
 }

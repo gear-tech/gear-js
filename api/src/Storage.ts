@@ -2,7 +2,7 @@ import { HexString } from '@polkadot/util/types';
 import { Option } from '@polkadot/types';
 import { u8aToU8a } from '@polkadot/util';
 
-import { ActiveProgram, IGearPages, IProgram } from './types';
+import { ActiveProgram, IGearPages, ProgramMap } from './types';
 import { ProgramDoesNotExistError, ProgramExitedError, ProgramTerminatedError } from './errors';
 import { GearApi } from './GearApi';
 
@@ -15,13 +15,13 @@ export class GearProgramStorage {
    * @returns
    */
   async getProgram(programId: HexString): Promise<ActiveProgram> {
-    const storage = (await this._api.query.gearProgram.programStorage(programId)) as Option<IProgram>;
+    const programOption = (await this._api.query.gearProgram.programStorage(programId)) as Option<ProgramMap>;
 
-    if (storage.isNone) {
+    if (programOption.isNone) {
       throw new ProgramDoesNotExistError();
     }
 
-    const program = storage.unwrap();
+    const program = programOption.unwrap()[0];
 
     if (program.isTerminated) throw new ProgramTerminatedError(program.asTerminated.toHex());
 
