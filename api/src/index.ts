@@ -9,7 +9,7 @@ export { GearMailbox } from './Mailbox';
 export { GearProgramState } from './State';
 export { GearBlock } from './Blocks';
 export { GearGas } from './Gas';
-export { GearStorage } from './Storage';
+export { GearProgramStorage } from './Storage';
 export { GearClaimValue } from './Claim';
 export { GearWaitlist } from './Waitlist';
 export * from './Transaction';

@@ -37,3 +37,11 @@ export class ProgramExitedError extends Error {
     super(`Program ${id} exited`);
   }
 }
+
+export class CodeDoesNotExistError extends Error {
+  name = 'CodeDoesNotExist';
+  
+  constructor(id: string) {
+    super(`Code with id ${id} not found in the storage`);
+  }
+}

@@ -1,4 +1,5 @@
 import { SubmittableExtrinsic, UnsubscribePromise } from '@polkadot/api/types';
+import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 
 import {
@@ -12,11 +13,10 @@ import {
   UserMessageSent,
   UserMessageSentData,
 } from '../src';
-import { Hex } from '../src/types';
 
 export const checkInit = (api: GearApi, programId: string) => {
   let unsub: UnsubscribePromise;
-  let messageId: Hex;
+  let messageId: HexString;
   const initPromise = new Promise((resolve, reject) => {
     unsub = api.query.system.events((events) => {
       events.forEach(({ event }) => {
@@ -65,14 +65,14 @@ export const checkInit = (api: GearApi, programId: string) => {
   };
 };
 
-export function listenToUserMessageSent(api: GearApi, programId: Hex) {
+export function listenToUserMessageSent(api: GearApi, programId: HexString) {
   const messages: UserMessageSent[] = [];
   const unsub = api.gearEvents.subscribeToGearEvent('UserMessageSent', (event) => {
     if (event.data.message.source.eq(programId)) {
       messages.push(event);
     }
   });
-  return async (messageId: Hex | null): Promise<UserMessageSentData> => {
+  return async (messageId: HexString | null): Promise<UserMessageSentData> => {
     const message = messages.find(
       ({
         data: {
@@ -136,7 +136,7 @@ export const listenToMessageWaited = (api: GearApi) => {
   const unsub = api.gearEvents.subscribeToGearEvent('MessageWaited', (event) => {
     messages.push(event.data);
   });
-  return async (messageId: Hex): Promise<MessageWaitedData> => {
+  return async (messageId: HexString): Promise<MessageWaitedData> => {
     const message = messages.find(({ id }) => id.eq(messageId));
     (await unsub)();
     if (!message) {

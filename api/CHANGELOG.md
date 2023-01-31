@@ -1,3 +1,24 @@
+## 0.29.1
+
+_01/31/2023_
+
+https://github.com/gear-tech/gear-js/pull/1174
+
+### Changes
+
+- Add ability to get metahash by codeId and from wasm
+
+## 0.29.0
+
+_01/30/2023_
+
+https://github.com/gear-tech/gear-js/pull/1172
+
+### Changes
+
+- Update reading program storage accoriding to https://github.com/gear-tech/gear/pull/2017
+- Remove `Hex` type. Use `HexString` from `@polkadot/util/types` instead
+
 ## 0.28.8
 
 _01/25/2023_
