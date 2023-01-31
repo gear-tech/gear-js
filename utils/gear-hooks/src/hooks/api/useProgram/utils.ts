@@ -1,6 +1,7 @@
-import { GearApi, Hex, MessageEnqueued, MessagesDispatched, ProgramChanged } from '@gear-js/api';
+import { GearApi, MessageEnqueued, MessagesDispatched, ProgramChanged } from '@gear-js/api';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { Event } from '@polkadot/types/interfaces';
+import { HexString } from '@polkadot/util/types';
 import { Method, ProgramStatus } from './types';
 
 const getExtrinsicFailedMessage = (api: GearApi, event: Event) => {
@@ -11,7 +12,7 @@ const getExtrinsicFailedMessage = (api: GearApi, event: Event) => {
 };
 
 const waitForProgramInit = (api: GearApi, programId: string) => {
-  let messageId: Hex;
+  let messageId: HexString;
   let unsubPromise: UnsubscribePromise;
 
   const unsubscribe = async () => (await unsubPromise)();

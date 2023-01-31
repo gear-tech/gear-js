@@ -1,5 +1,5 @@
-import { Hex } from '@gear-js/api';
 import { EventRecord } from '@polkadot/types/interfaces';
+import { HexString } from '@polkadot/util/types';
 import { useContext } from 'react';
 import { DEFAULT_SUCCESS_OPTIONS, DEFAULT_ERROR_OPTIONS } from 'consts';
 import { AlertContext, ApiContext } from 'context';
@@ -10,7 +10,7 @@ function useHandleSignStatus() {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const alert = useContext(AlertContext);
 
-  const handleEventsStatus = (events: EventRecord[], programId: Hex, callbacks?: Callbacks) => {
+  const handleEventsStatus = (events: EventRecord[], programId: HexString, callbacks?: Callbacks) => {
     const { onError, onSuccess } = callbacks || {};
 
     events.forEach(({ event }) => {

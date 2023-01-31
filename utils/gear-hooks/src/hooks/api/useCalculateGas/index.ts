@@ -1,10 +1,15 @@
-import { GasInfo, Hex, ProgramMetadata } from '@gear-js/api';
+import { GasInfo, ProgramMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
+import { HexString } from '@polkadot/util/types';
 import { useContext } from 'react';
 import { AccountContext, ApiContext } from 'context';
 import { Options } from './types';
 
-function useUploadCalculateGas(code: Hex | Buffer | undefined, meta?: ProgramMetadata | undefined, options?: Options) {
+function useUploadCalculateGas(
+  code: HexString | Buffer | undefined,
+  meta?: ProgramMetadata | undefined,
+  options?: Options,
+) {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
 
@@ -21,7 +26,7 @@ function useUploadCalculateGas(code: Hex | Buffer | undefined, meta?: ProgramMet
   return calculateGas;
 }
 
-function useCreateCalculateGas(codeId: Hex | undefined, meta?: ProgramMetadata | undefined, options?: Options) {
+function useCreateCalculateGas(codeId: HexString | undefined, meta?: ProgramMetadata | undefined, options?: Options) {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
 
@@ -39,7 +44,7 @@ function useCreateCalculateGas(codeId: Hex | undefined, meta?: ProgramMetadata |
 }
 
 function useHandleCalculateGas(
-  destinationId: Hex | Buffer | undefined,
+  destinationId: HexString | Buffer | undefined,
   meta?: ProgramMetadata | undefined,
   options?: Options,
 ) {
@@ -67,7 +72,7 @@ function useHandleCalculateGas(
 }
 
 function useReplyCalculateGas(
-  messageId: Hex | undefined,
+  messageId: HexString | undefined,
   exitCode: number | undefined,
   meta?: ProgramMetadata | undefined,
   options?: Options,
