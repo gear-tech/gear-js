@@ -19,7 +19,7 @@ export const BattleTamagotchiTopStats = ({ isWinner, state, health, isReverse }:
             state === 'GameIsOver'
               ? isWinner
                 ? 'bg-[#2BD071] ring-[#2BD071]'
-                : 'bg-[#F24A4A] ring-[#F24A4A]'
+                : 'bg-error ring-error'
               : 'bg-white ring-white',
           )}>
           <CharacterAvatar lesson={6} hasItem={[]} className="w-50 h-50 -left-1/2" />
@@ -37,7 +37,7 @@ export const BattleTamagotchiTopStats = ({ isWinner, state, health, isReverse }:
           <div
             className={clsx(
               'absolute inset-0 rounded-xl',
-              state === 'GameIsOver' ? (isWinner ? 'bg-[#2BD071]' : 'bg-[#F24A4A]') : 'bg-[#2BD071]',
+              state === 'GameIsOver' ? (isWinner ? 'bg-[#2BD071]' : 'bg-error') : 'bg-[#2BD071]',
             )}
             style={{ width: `${health}%` }}
           />

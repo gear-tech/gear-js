@@ -4,6 +4,7 @@
 :root {
   --color-secondary: #{red($textColorSecondary) green($textColorSecondary) blue($textColorSecondary)};
   --color-primary: #{red($successColor) green($successColor) blue($successColor)};
+  --color-error: #{red($errorColor) green($errorColor) blue($errorColor)};
 }
 
 html {

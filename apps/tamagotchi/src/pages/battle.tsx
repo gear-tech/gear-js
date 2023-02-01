@@ -103,7 +103,7 @@ export const Battle = () => {
                 className={clsx(
                   'btn items-center gap-2 min-w-[250px]',
                   battle?.state === 'Moves'
-                    ? 'bg-[#F24A4A] text-white hover:bg-red-600 transition-colors'
+                    ? 'bg-error text-white hover:bg-red-600 transition-colors'
                     : battle?.state === 'GameIsOver'
                     ? buttonStyles.secondary
                     : buttonStyles.primary,

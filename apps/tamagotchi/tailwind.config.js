@@ -26,6 +26,7 @@ module.exports = {
       colors: {
         secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
         primary: 'rgb(var(--color-primary) / <alpha-value>)',
+        error: 'rgb(var(--color-error) / <alpha-value>)',
       },
       fontFamily: {
         kanit: ['Kanit', ...defaultTheme.fontFamily.sans],
