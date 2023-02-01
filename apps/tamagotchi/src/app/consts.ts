@@ -20,3 +20,10 @@ export const ENV = {
   balance: process.env.REACT_APP_TOKEN_BALANCE_ADDRESS as HexString,
   battle: process.env.REACT_APP_BATTLE_ADDRESS as HexString,
 };
+
+export const MULTIPLIER = {
+  MILLISECONDS: 1000,
+  SECONDS: 60,
+  MINUTES: 60,
+  HOURS: 24,
+};

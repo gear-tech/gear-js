@@ -24,7 +24,7 @@ export function useTamagotchi() {
   useEffect(() => {
     if (state) setTamagotchi(state);
     console.log(state);
-  }, [setTamagotchi, state]);
+  }, [state]);
 }
 
 export function useReadTamagotchiWasm<T>() {
@@ -40,12 +40,12 @@ export function useTamagotchiWasm() {
   useEffect(() => {
     if (state) {
       setTamagotchi({ ...tamagotchi, ...state } as TamagotchiState);
-      console.log('init wasm state:', { state });
+      // console.log('init wasm state:', { state });
     }
     const interval = setInterval(() => {
       if (state) {
         setTamagotchi({ ...tamagotchi, ...state } as TamagotchiState);
-        console.log('interval wasm state:', { state });
+        // console.log('interval wasm state:', { state });
       }
     }, 25000);
     return () => clearInterval(interval);
