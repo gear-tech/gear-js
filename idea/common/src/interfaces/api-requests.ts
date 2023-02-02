@@ -38,6 +38,12 @@ interface FindProgramParams extends IGenesis, Pick<IProgram, 'id'> {
   owner?: string;
 }
 
+interface AddMetaByCodeParams extends IGenesis {
+  codeId: string;
+  metaHex: string;
+  name?: string;
+}
+
 interface AddMetaParams extends IGenesis {
   programId: string;
   metaHex: string;
@@ -113,4 +119,5 @@ export {
   GetAllStateParams,
   GetStateByCodeParams,
   GetMetaByCodeParams,
+  AddMetaByCodeParams,
 };

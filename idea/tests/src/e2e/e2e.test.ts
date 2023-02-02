@@ -1,4 +1,5 @@
-import { GearApi, Hex } from '@gear-js/api';
+import { GearApi } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 import { waitReady } from '@polkadot/wasm-crypto';
 
 import base from '../config/base';
@@ -33,7 +34,7 @@ import {
   errorProgramNotFound, errorStateAlreadyExists,
 } from './json-rpc.errors';
 
-let genesis: Hex;
+let genesis: HexString;
 let prepared: IPrepared;
 let api: GearApi;
 
@@ -65,7 +66,7 @@ describe('API methods', () => {
 
   describe('Program', () => {
     test('program.all request', async () => {
-      expect(await getAllPrograms(genesis, Object.keys(prepared.programs) as Hex[])).toBeTruthy();
+      expect(await getAllPrograms(genesis, Object.keys(prepared.programs) as HexString[])).toBeTruthy();
     });
 
     test('program.all by owner request', async () => {
@@ -178,7 +179,7 @@ describe('API methods', () => {
     test('message.all request', async () => {
       const messages = Array.from(prepared.messages.log.keys()).concat(
         Array.from(prepared.messages.sent.values()).map(({ id }) => id),
-      ) as Hex[];
+      ) as HexString[];
       Object.values(prepared.programs).forEach(({ messageId }) => messages.push(messageId));
       expect(await getAllMessages(genesis, messages)).toBeTruthy();
     });

@@ -1,11 +1,11 @@
-import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 import { BaseDataInput } from '../../gear/types';
 
 export interface UserMessageSentInput extends BaseDataInput {
-  id: Hex;
-  destination: Hex;
-  source: Hex;
-  payload?: Hex;
+  id: HexString;
+  destination: HexString;
+  source: HexString;
+  payload?: HexString;
   value?: string;
   entry?: string;
   replyToMessageId?: string | null;

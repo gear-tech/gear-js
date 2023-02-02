@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { GetAllCodeParams, GetCodeParams } from '@gear-js/common';
+import { GetAllCodeParams, GetCodeParams, GetMetaByCodeParams } from '@gear-js/common';
 
 import { Code } from '../../src/database/entities';
 import { mockCodeRepository } from '../mock/code/code-repository.mock';
@@ -61,6 +61,27 @@ describe('Code service', () => {
     expect(result.listCode[0].expiration).toEqual(codeMock.expiration);
     expect(result.listCode[0].name).toEqual(codeMock.name);
     expect(mockCodeRepository.list).toHaveBeenCalled();
+  });
+
+  it('should be successfully get meta by code id', async () => {
+    const codeDB = CODE_DB_MOCK[0];
+
+    const getMetaByCodeParams: GetMetaByCodeParams = { genesis: codeDB.genesis, codeId: codeDB.id };
+
+    const meta = await codeService.getMeta(getMetaByCodeParams);
+
+    expect(meta.hash).toEqual(codeDB.meta.hash);
+    expect(mockCodeRepository.getByIdAndGenesis).toHaveBeenCalled();
+  });
+
+  it('should be fail if code id invalid and call exception', async () => {
+    const invalidCodeId = '_';
+
+    const getMetaByCodeParams: GetMetaByCodeParams = { genesis: '0x00', codeId: invalidCodeId };
+
+
+    await expect(codeService.getMeta(getMetaByCodeParams)).rejects.toThrowError();
+    expect(mockCodeRepository.getByIdAndGenesis).toHaveBeenCalled();
   });
 
   it('should be successfully get code entity and called getByIdAndGenesis method', async () => {
