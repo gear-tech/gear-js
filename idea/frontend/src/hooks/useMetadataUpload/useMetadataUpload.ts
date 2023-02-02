@@ -1,14 +1,15 @@
 import { useCallback } from 'react';
 import { useAlert, useAccount } from '@gear-js/react-hooks';
+import { HexString } from '@polkadot/util/types';
 
+import { addMetadata } from 'api';
 import { uploadLocalMetadata } from 'api/LocalDB';
-import { RPCService } from 'shared/services/rpcService';
-import { RpcMethods, ACCOUNT_ERRORS } from 'shared/config';
+import { ACCOUNT_ERRORS } from 'shared/config';
 
 import { useChain } from '../context';
 import { ParamsToUploadMeta } from './types';
 
-const useMetadataUplaod = () => {
+const useMetadataUpload = () => {
   const alert = useAlert();
   const { account } = useAccount();
   const { isDevChain } = useChain();
@@ -16,10 +17,8 @@ const useMetadataUplaod = () => {
   const upload = async (params: ParamsToUploadMeta) => {
     const { name, metaHex, programId, reject, resolve } = params;
 
-    const apiRequest = new RPCService();
-
     try {
-      const { error } = await apiRequest.callRPC(RpcMethods.AddMetadata, { name, metaHex, programId });
+      const { error } = await addMetadata({ name, metaHex, programId: programId as HexString });
 
       if (error) throw new Error(error.message);
 
@@ -68,4 +67,4 @@ const useMetadataUplaod = () => {
   return uploadMetadata;
 };
 
-export { useMetadataUplaod };
+export { useMetadataUpload };

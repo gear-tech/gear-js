@@ -25,6 +25,7 @@ const useProgram = (id?: string, initLoading = false) => {
   useEffect(() => {
     if (id) {
       setIsLoading(true);
+
       getProgram(id)
         .then(({ result }) => setProgram(result))
         .catch((err) => alert.error(err.message))
