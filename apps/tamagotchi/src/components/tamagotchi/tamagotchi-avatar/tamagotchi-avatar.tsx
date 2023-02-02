@@ -9,7 +9,7 @@ type CharacterAvatarProps = {
   lesson: number;
   emotion?: Emotions;
   age?: 'baby' | 'adult' | 'old';
-  state?: 'normal' | 'dead';
+  isDead?: boolean;
   hasItem?: StoreItemsNames[];
   color?: string;
   className?: string;
@@ -17,12 +17,12 @@ type CharacterAvatarProps = {
   isWinner?: boolean;
   energy?: number;
 };
-export const CharacterAvatar = ({
+export const TamagotchiAvatar = ({
   className,
   lesson,
   emotion = 'happy',
   age = 'baby',
-  state = 'normal',
+  isDead,
   hasItem,
   color,
   isActive,
@@ -45,7 +45,6 @@ export const CharacterAvatar = ({
 
   const s = 'tamagotchi';
   const cn = 'absolute inset-0 w-full h-full';
-  const isDead = state === 'dead';
   const emo: Emotions = isDead ? 'scared' : isWinner ? 'hello' : emotion;
 
   const mouse = age === 'baby' ? 'face-baby' : `mouse-${age}-${emo === 'hello' ? 'happy' : emo}`;
@@ -56,7 +55,7 @@ export const CharacterAvatar = ({
   }`;
   const tail = `tail-${hasItem?.includes('sword') ? 'sword' : emo === 'hello' ? 'hello' : 'normal'}`;
   const glasses = hasItem?.includes('glasses') ? 'head-glasses' : age === 'old' ? 'face-old-glasses' : null;
-  const body = `body-${state}`;
+  const body = `body-${isDead ? 'dead' : 'normal'}`;
 
   return (
     <>

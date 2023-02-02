@@ -2,7 +2,7 @@ import { getTamagotchiAge } from 'app/utils/get-tamagotchi-age';
 import type { TamagotchiState } from 'app/types/lessons';
 import { useAccount } from '@gear-js/react-hooks';
 
-export const BattleCharacterCard = ({ tamagotchi }: { tamagotchi: TamagotchiState }) => {
+export const TamagotchiBattleInfoCard = ({ tamagotchi }: { tamagotchi: TamagotchiState }) => {
   const { account } = useAccount();
   return (
     <div className="flex gap-12 items-center p-4 bg-[#292929] rounded-2xl w-fit">

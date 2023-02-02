@@ -1,11 +1,11 @@
-import { BattleCharacterCard } from '../components/common/battle-character-card';
-import { CharacterAvatar } from '../components/common/character-avatar';
+import { TamagotchiBattleInfoCard } from '../components/tamagotchi/tamagotchi-battle-info-card';
+import { TamagotchiAvatar } from '../components/tamagotchi/tamagotchi-avatar';
 import { Icon } from '../components/ui/icon';
 import { buttonStyles } from '@gear-js/ui';
 import { useBattleMessage, useInitBattleData } from 'app/hooks/use-battle';
 import { StartBattleForm } from 'components/forms/start-battle-form';
 import clsx from 'clsx';
-import { BattleTamagotchiTopStats } from 'components/tamagotchi/battle-tamagotchi-top-stats';
+import { TamagotchiBattleTopStats } from 'components/tamagotchi/tamagotchi-battle-top-stats';
 import { useEffect, useState } from 'react';
 import { TamagotchiState } from '../app/types/lessons';
 import { useBattle } from '../app/context';
@@ -44,7 +44,7 @@ export const Battle = () => {
         <>
           {/*Top*/}
           <div className="flex gap-10 justify-between grow items-center">
-            <BattleTamagotchiTopStats
+            <TamagotchiBattleTopStats
               state={battle?.state}
               isWinner={battle?.winner === battle?.players[0]?.tmgId}
               health={Math.round(warriors[0].energy / 100)}
@@ -65,7 +65,7 @@ export const Battle = () => {
                 />
               </div>
             )}
-            <BattleTamagotchiTopStats
+            <TamagotchiBattleTopStats
               state={battle?.state}
               isWinner={battle?.winner === battle?.players[1]?.tmgId}
               health={Math.round(warriors[1].energy / 100)}
@@ -75,20 +75,14 @@ export const Battle = () => {
           {/*Avatars*/}
           <div className="relative grow flex gap-10 justify-between items-center mt-15">
             <div className="basis-[445px] flex flex-col">
-              <CharacterAvatar
+              <TamagotchiAvatar
                 lesson={6}
                 hasItem={[]}
                 energy={warriors[0]?.energy}
                 className="min-h-[430px]"
                 isActive={battle?.currentTurn === 0 && battle?.state !== 'GameIsOver'}
                 isWinner={battle?.state === 'GameIsOver' && battle.winner === battle.players[0].tmgId}
-                state={
-                  battle?.state === 'GameIsOver'
-                    ? battle.winner === battle.players[0].tmgId
-                      ? 'normal'
-                      : 'dead'
-                    : 'normal'
-                }
+                isDead={battle?.state === 'GameIsOver' && battle.winner === battle.players[0].tmgId}
               />
             </div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-8">
@@ -120,30 +114,24 @@ export const Battle = () => {
               </button>
             </div>
             <div className="basis-[445px] flex flex-col">
-              <CharacterAvatar
+              <TamagotchiAvatar
                 lesson={6}
                 hasItem={[]}
                 energy={warriors[1].energy}
                 className="min-h-[430px]"
                 isActive={battle?.currentTurn === 1 && battle?.state !== 'GameIsOver'}
                 isWinner={battle?.state === 'GameIsOver' && battle.winner === battle.players[1].tmgId}
-                state={
-                  battle?.state === 'GameIsOver'
-                    ? battle.winner === battle.players[1].tmgId
-                      ? 'normal'
-                      : 'dead'
-                    : 'normal'
-                }
+                isDead={battle?.state === 'GameIsOver' && battle.winner === battle.players[1].tmgId}
               />
             </div>
           </div>
           {/*Info*/}
           <div className="flex gap-10 justify-between grow mt-10">
             <div className="basis-[445px] flex flex-col">
-              <BattleCharacterCard tamagotchi={warriors[0]} />
+              <TamagotchiBattleInfoCard tamagotchi={warriors[0]} />
             </div>
             <div className="basis-[445px] flex flex-col">
-              <BattleCharacterCard tamagotchi={warriors[1]} />
+              <TamagotchiBattleInfoCard tamagotchi={warriors[1]} />
             </div>
           </div>
         </>

@@ -6,12 +6,12 @@ import { useTamagocthiMessage } from 'app/hooks/use-tamagotchi-message';
 import { useAccount } from '@gear-js/react-hooks';
 import { useTamagotchi } from 'app/hooks/use-tamagotchi';
 import { useThrottleWasmState } from 'app/hooks/use-read-wasm-state';
-import { TamagotchiInfoCardRow } from '../../tamagotchi/tamagotchi-info-card-row';
+import { TamagotchiInfoCardRow } from '../tamagotchi-info-card-row';
 import { useLesson5 } from 'app/hooks/use-lesson-5';
 
-export const CharacterStats = () => {
+export const TamagotchiInfoCard = () => {
   useTamagotchi();
-  useThrottleWasmState();
+  // useThrottleWasmState();
   useLesson5();
 
   const { account } = useAccount();

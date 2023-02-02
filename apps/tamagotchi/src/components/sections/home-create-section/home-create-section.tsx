@@ -1,5 +1,5 @@
-import { CharacterStats } from 'components/common/character-stats';
-import { CharacterAvatar } from 'components/common/character-avatar';
+import { TamagotchiInfoCard } from 'components/tamagotchi/tamagotchi-info-card';
+import { TamagotchiAvatar } from 'components/tamagotchi/tamagotchi-avatar';
 import { ConnectAccount } from 'components/common/connect-account';
 import { useLesson } from 'app/context';
 import { useEffect, useState } from 'react';
@@ -18,9 +18,11 @@ export const HomeCreateSection = () => {
   return (
     <section className="grid grid-rows-[1fr_auto_auto] h-[calc(100vh-216px)]">
       <div className="grow flex flex-col justify-center text-center">
-        <CharacterAvatar lesson={Number(lesson?.step)} hasItem={ownItems} />
+        <TamagotchiAvatar lesson={Number(lesson?.step)} hasItem={ownItems} />
       </div>
-      <div className="mt-12 flex flex-col items-center gap-9">{lesson ? <CharacterStats /> : <ConnectAccount />}</div>
+      <div className="mt-12 flex flex-col items-center gap-9">
+        {lesson ? <TamagotchiInfoCard /> : <ConnectAccount />}
+      </div>
     </section>
   );
 };

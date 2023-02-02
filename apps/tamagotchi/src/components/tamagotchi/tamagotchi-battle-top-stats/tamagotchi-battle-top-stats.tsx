@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { CharacterAvatar } from '../../common/character-avatar';
+import { TamagotchiAvatar } from '../tamagotchi-avatar';
 import { BattleStatesList } from 'app/types/battles';
 import { Icon } from '../../ui/icon';
 
@@ -9,7 +9,7 @@ type Props = {
   state: BattleStatesList;
   isReverse?: boolean;
 };
-export const BattleTamagotchiTopStats = ({ isWinner, state, health, isReverse }: Props) => {
+export const TamagotchiBattleTopStats = ({ isWinner, state, health, isReverse }: Props) => {
   return (
     <div className={clsx('basis-[445px] flex gap-6 items-center', isReverse && 'flex-row-reverse')}>
       <div className="relative flex flex-col items-center w-fit">
@@ -22,7 +22,7 @@ export const BattleTamagotchiTopStats = ({ isWinner, state, health, isReverse }:
                 : 'bg-error ring-error'
               : 'bg-white ring-white',
           )}>
-          <CharacterAvatar lesson={6} hasItem={[]} className="w-50 h-50 -left-1/2" />
+          <TamagotchiAvatar lesson={6} hasItem={[]} className="w-50 h-50 -left-1/2" />
         </div>
         {/*<div className="absolute top-[calc(100%-8px)] inline-flex gap-2 items-center py-1 px-4 tracking-widest font-kanit font-semibold text-base leading-5 bg-[#404040] rounded-lg">*/}
         {/*  <Icon name="wins" className="w-5 h-5" /> 10*/}
