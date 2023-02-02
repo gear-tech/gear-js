@@ -1,5 +1,6 @@
-import { getProgramMetadata, Hex, ProgramMetadata } from '@gear-js/api';
+import { getProgramMetadata, ProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
+import { HexString } from '@polkadot/util/types';
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
@@ -7,7 +8,7 @@ import { fetchMetadata, getLocalProgramMeta } from 'api';
 import { useChain } from 'hooks';
 
 type Params = {
-  programId: Hex;
+  programId: HexString;
 };
 
 const useProgramId = () => {
@@ -27,7 +28,7 @@ const useStateType = () => {
   return { stateType: type, isFullState: isFull, isWasmState: isWasm, isStateTypeSelection: isSelection };
 };
 
-const useMetadata = (programId: Hex) => {
+const useMetadata = (programId: HexString) => {
   const alert = useAlert();
   const { isDevChain } = useChain();
 

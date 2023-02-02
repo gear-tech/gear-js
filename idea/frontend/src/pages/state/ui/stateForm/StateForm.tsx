@@ -1,6 +1,6 @@
 import { Input, Textarea } from '@gear-js/ui';
-import { Hex } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
+import { HexString } from '@polkadot/util/types';
 import { Form } from 'react-final-form';
 import { OnChange } from 'react-final-form-listeners';
 
@@ -12,7 +12,7 @@ import { FormValues, INITIAL_VALUES } from '../../model';
 import styles from './StateForm.module.scss';
 
 type Props = {
-  programId: Hex;
+  programId: HexString;
   state: AnyJson;
   payloadFormValues: FormPayloadValues | undefined;
   isLoading: boolean;

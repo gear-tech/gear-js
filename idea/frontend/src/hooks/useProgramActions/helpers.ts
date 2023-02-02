@@ -1,11 +1,12 @@
 import { UnsubscribePromise } from '@polkadot/api/types';
-import { GearApi, Hex, MessageEnqueued, MessagesDispatched, ProgramChanged } from '@gear-js/api';
+import { GearApi, MessageEnqueued, MessagesDispatched, ProgramChanged } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 
 import { Method } from 'entities/explorer';
 import { ProgramStatus } from 'entities/program';
 
 const waitForProgramInit = (api: GearApi, programId: string) => {
-  let messageId: Hex;
+  let messageId: HexString;
   let unsubPromise: UnsubscribePromise;
 
   const unsubscribe = async () => (await unsubPromise)();

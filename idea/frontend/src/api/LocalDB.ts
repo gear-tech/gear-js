@@ -1,4 +1,5 @@
-import { Hex, getProgramMetadata } from '@gear-js/api';
+import { getProgramMetadata } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 import localForage from 'localforage';
 
 import { ProgramStatus, IProgram } from 'entities/program';
@@ -71,7 +72,7 @@ const uploadLocalProgram = (program: Pick<IProgram, 'id' | 'owner' | 'name'>) =>
     status: ProgramStatus.Active,
   });
 
-const uploadLocalMetadata = async (programId: string, metaHex: Hex, name?: string) => {
+const uploadLocalMetadata = async (programId: string, metaHex: HexString, name?: string) => {
   const { result } = await getLocalProgram(programId);
 
   return PROGRAMS_LOCAL_FORAGE.setItem(programId, {

@@ -1,7 +1,8 @@
-import { Hex, ProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 
 interface IMeta {
-  hex: Hex;
+  hex: HexString;
   types: ProgramMetadata['types'];
 }
 

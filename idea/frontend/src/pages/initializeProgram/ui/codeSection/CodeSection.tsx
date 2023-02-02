@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { Hex, ProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 import { Button, Input } from '@gear-js/ui';
+import { HexString } from '@polkadot/util/types';
 
 import { useProgramActions } from 'hooks';
 import { Payload } from 'hooks/useProgramActions/types';
@@ -14,7 +15,7 @@ import styles from '../InitializeProgram.module.scss';
 
 type Props = {
   codeId: string;
-  metaHex: Hex | undefined;
+  metaHex: HexString | undefined;
   metadata: ProgramMetadata | undefined;
   resetMetadada: () => void;
 };
@@ -29,7 +30,7 @@ const CodeSection = ({ codeId, metaHex, metadata, resetMetadada }: Props) => {
   const handleSubmit = (payload: Payload, helpers: SubmitHelpers) =>
     createProgram({
       payload,
-      codeId: codeId as Hex,
+      codeId: codeId as HexString,
       resolve: () => {
         helpers.resetForm();
         resetMetadada();
@@ -51,7 +52,7 @@ const CodeSection = ({ codeId, metaHex, metadata, resetMetadada }: Props) => {
       <div className={styles.lining}>
         <Input label="Code ID" value={codeId} direction="y" className={styles.codeId} block readOnly />
         <ProgramForm
-          source={codeId as Hex}
+          source={codeId as HexString}
           metaHex={metaHex}
           metadata={metadata}
           gasMethod={GasMethod.InitCreate}
