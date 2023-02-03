@@ -1,12 +1,12 @@
+import { useEffect, useRef, useState } from 'react';
+import clsx from 'clsx';
 import { Icon } from 'components/ui/icon';
 import { StoreItemsNames } from 'app/types/ft-store';
-import clsx from 'clsx';
-import { useEffect, useRef, useState } from 'react';
 import { useLesson } from 'app/context';
 
 type Emotions = 'hello' | 'happy' | 'angry' | 'scared' | 'crying';
 
-type CharacterAvatarProps = {
+type TamagotchiAvatarProps = {
   emotion?: Emotions;
   age?: 'baby' | 'adult' | 'old';
   isDead?: boolean;
@@ -27,10 +27,10 @@ export const TamagotchiAvatar = ({
   isActive,
   isWinner,
   energy,
-}: CharacterAvatarProps) => {
-  const { tamagotchi, activeNotification } = useLesson();
+}: TamagotchiAvatarProps) => {
+  const { tamagotchi } = useLesson();
   const [dead, setDead] = useState<boolean>(Boolean(isDead));
-  const [emotionCurrent, setEmotionCurrent] = useState<Emotions>(emotion);
+  const [currentEmotion, setCurrentEmotion] = useState<Emotions>(emotion);
   const [damage, setDamage] = useState<number>(0);
   const info = useRef({ isReady: false, energy: 0 });
 
@@ -48,19 +48,31 @@ export const TamagotchiAvatar = ({
 
   useEffect(() => {
     if (tamagotchi) {
-      const { fed, rested, entertained } = tamagotchi;
-      [fed, rested, entertained].reduce((sum, a) => sum + a) === 0 ? setDead(true) : setDead(false);
+      setDead(tamagotchi.isDead);
     }
   }, [tamagotchi]);
 
   useEffect(() => {
-    setEmotionCurrent(activeNotification ? 'crying' : dead ? 'scared' : isWinner ? 'hello' : emotion);
-  }, [activeNotification, dead, emotion, isWinner]);
+    if (tamagotchi) {
+      const { fed, entertained, rested } = tamagotchi;
+      setCurrentEmotion(
+        dead
+          ? 'scared'
+          : isWinner
+          ? 'hello'
+          : 3500 > Math.min.apply(null, [fed, rested, entertained])
+          ? 'crying'
+          : 6500 > Math.min.apply(null, [fed, rested, entertained])
+          ? 'angry'
+          : emotion,
+      );
+    }
+  }, [dead, emotion, isWinner, tamagotchi]);
 
   const s = 'tamagotchi';
   const cn = 'absolute inset-0 w-full h-full';
   const tamagotchiDied = isDead || dead;
-  const emo: Emotions = tamagotchiDied ? 'scared' : isWinner ? 'hello' : emotion;
+  const emo: Emotions = tamagotchiDied ? 'scared' : isWinner ? 'hello' : currentEmotion;
 
   const mouse = age === 'baby' ? 'face-baby' : `mouse-${age}-${emo === 'hello' ? 'happy' : emo}`;
   const head = `head-${age}`;
@@ -90,7 +102,7 @@ export const TamagotchiAvatar = ({
             className={clsx(
               'animate-pulse opacity-70 blur-2xl w-64 h-40',
               isActive && 'bg-white',
-              isWinner && 'bg-[#2BD071]',
+              isWinner && 'bg-primary',
             )}
           />
         </div>

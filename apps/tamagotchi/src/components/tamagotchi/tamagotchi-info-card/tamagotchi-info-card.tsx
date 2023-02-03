@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { useLesson } from 'app/context';
 import { AccountActionsMenu } from 'components/menus/account-actions-menu';
 import { getTamagotchiAge } from 'app/utils/get-tamagotchi-age';
-import { useTamagocthiMessage } from 'app/hooks/use-tamagotchi-message';
+import { useTamagotchiMessage } from 'app/hooks/use-tamagotchi';
 import { useAccount } from '@gear-js/react-hooks';
 import { useTamagotchi } from 'app/hooks/use-tamagotchi';
 import { useThrottleWasmState } from 'app/hooks/use-read-wasm-state';
@@ -13,19 +13,22 @@ import { useState } from 'react';
 import { getNotificationTypeValue } from 'app/utils';
 
 export const TamagotchiInfoCard = () => {
-  useTamagotchi();
-  // useThrottleWasmState();
-  const { setNotification, activeNotification, setActiveNotification } = useLesson5();
   const { account } = useAccount();
   const { tamagotchi, lesson } = useLesson();
-  const send = useTamagocthiMessage();
+  const { setNotification, activeNotification, setActiveNotification } = useLesson5();
   const [pending, setPending] = useState(false);
+  const send = useTamagotchiMessage();
+
+  useTamagotchi();
+  // useThrottleWasmState();
 
   const fullView = Boolean(lesson && lesson?.step > 1);
 
   const onSuccess = (str: NotificationResponseTypes) => {
-    setNotification((prev) => ({ ...prev, ...getNotificationTypeValue(str) }));
-    setActiveNotification(undefined);
+    if (activeNotification) {
+      setNotification((prev) => ({ ...prev, ...getNotificationTypeValue(str) }));
+      setActiveNotification(undefined);
+    }
     setPending(false);
   };
   const feedHandler = () => {

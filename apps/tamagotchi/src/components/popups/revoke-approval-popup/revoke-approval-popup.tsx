@@ -1,8 +1,8 @@
 import { Button, Modal } from '@gear-js/ui';
-import { useTamagocthiMessage } from 'app/hooks/use-tamagotchi-message';
+import { useTamagotchiMessage } from 'app/hooks/use-tamagotchi';
 
 export const RevokeApprovalPopup = ({ close }: { close: () => void }) => {
-  const sendHandler = useTamagocthiMessage();
+  const sendHandler = useTamagotchiMessage();
   const onSuccess = () => close();
   const handler = () => sendHandler({ RevokeApproval: null }, { onSuccess });
 

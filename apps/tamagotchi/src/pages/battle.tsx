@@ -98,7 +98,7 @@ export const Battle = () => {
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-8">
                   {winner && (
                     <p className="flex flex-col items-center">
-                      <strong className="typo-h2 text-[#2BD071]">{winner.name}</strong>
+                      <strong className="typo-h2 text-primary">{winner.name}</strong>
                       <span className="typo-h1">Win</span>
                     </p>
                   )}

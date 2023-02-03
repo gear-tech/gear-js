@@ -2,7 +2,7 @@ import { Button, Input } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 import { Icon } from 'components/ui/icon';
 import { hexRequired } from 'app/utils/form-validations';
-import { useTamagocthiMessage } from 'app/hooks/use-tamagotchi-message';
+import { useTamagotchiMessage } from 'app/hooks/use-tamagotchi';
 
 const initialValues = {
   address: '',
@@ -13,7 +13,7 @@ const validate = {
 };
 
 export const TransferAccountForm = ({ close }: { close: () => void }) => {
-  const sendHandler = useTamagocthiMessage();
+  const sendHandler = useTamagotchiMessage();
   const form = useForm({ initialValues, validate });
   const { getInputProps } = form;
   const onSuccess = () => close();

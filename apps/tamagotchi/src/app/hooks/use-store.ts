@@ -1,23 +1,23 @@
 import { useEffect, useState } from 'react';
-import { AnyJson } from '@polkadot/types/types';
-import { useReadState } from './use-read-state';
+import { useReadFullState } from '@gear-js/react-hooks';
 import { useLesson } from 'app/context';
 import { StoreItemType, ItemsStoreResponse } from 'app/types/ft-store';
+import { ENV } from '../consts';
+import { useMetadata } from './use-metadata';
+import metaStore from 'assets/meta/meta-store.txt';
 
-function useReadItemsStore<T>(payload: AnyJson) {
-  const { store } = useLesson();
-  return useReadState<T>(store.programId, store.meta, payload);
+function useReadItemsStore<T>() {
+  const { metadata } = useMetadata(metaStore);
+  return useReadFullState<T>(ENV.store, metadata);
 }
 
-const payload = {};
-
 export function useItemsStore() {
-  const { state } = useReadItemsStore<ItemsStoreResponse>(payload);
+  const { state } = useReadItemsStore<ItemsStoreResponse>();
   const { lesson, setTamagotchiItems } = useLesson();
   const [items, setItems] = useState<StoreItemType[]>([]);
 
   useEffect(() => {
-    if (lesson?.programId) {
+    if (lesson?.programId && lesson.step > 3) {
       const getItems = () => {
         const result: StoreItemType[] = [];
         for (const idx in state?.attributes) {

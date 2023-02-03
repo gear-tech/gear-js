@@ -3,20 +3,25 @@ import { Button } from '@gear-js/ui';
 import { PaymentErrorPopup } from 'components/popups/payment-error-popup';
 import { useState } from 'react';
 import { StoreItemType } from 'app/types/ft-store';
-import { useTamagocthiMessage } from 'app/hooks/use-tamagotchi-message';
+import { useTamagotchiMessage } from 'app/hooks/use-tamagotchi';
 import { ENV } from 'app/consts';
+import { useGetFTBalance } from 'app/hooks/use-ft-balance';
 
 export const StoreItemCard = ({ item }: { item: StoreItemType }) => {
-  const [open, setOpen] = useState(false);
-  const sendHandler = useTamagocthiMessage();
   const { id, amount, description } = item;
+  const [open, setOpen] = useState(false);
+  const { balance } = useGetFTBalance();
+  const sendHandler = useTamagotchiMessage();
+
   const handler = () => {
-    sendHandler({
-      BuyAttribute: {
-        storeId: ENV.store,
-        attribute_id: id,
-      },
-    });
+    if (balance) {
+      sendHandler({
+        BuyAttribute: {
+          storeId: ENV.store,
+          attribute_id: id,
+        },
+      });
+    } else setOpen(true);
   };
 
   return (

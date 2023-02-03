@@ -1,33 +1,33 @@
-import { AnyJson } from '@polkadot/types/types';
-import { useReadState } from './use-read-state';
-import { useLesson, useTokensBalanceStore } from '../context';
-import { BalanceLogic, BalanceMain, BalanceStorage } from '../types/ft-wallet';
-import { HexString } from '@polkadot/util/types';
+import { useReadFullState } from '@gear-js/react-hooks';
+import type { HexString } from '@polkadot/util/types';
+import { useLesson, useTokensBalanceStore } from 'app/context';
+import { BalanceLogic, BalanceMain, BalanceStorage } from 'app/types/ft-wallet';
+import { useFtMessage } from './use-ft-message';
+import { useMetadata } from './use-metadata';
+import metaCode from '../../assets/meta/meta-ft-code.txt';
 
-const payload = {};
-
-function useReadFTMain<T>(payload: AnyJson) {
+function useReadFTMain<T>() {
   const { metaMain, programId } = useTokensBalanceStore();
-  return useReadState<T>(programId, metaMain, payload);
+  return useReadFullState<T>(programId, metaMain);
 }
 
 function useFTMain() {
-  const { state } = useReadFTMain<BalanceMain>(payload);
+  const { state } = useReadFTMain<BalanceMain>();
   return state;
 }
 
-function useReadFTLogic<T>(payload: AnyJson) {
+function useReadFTLogic<T>() {
   const state = useFTMain();
   const { metaLogic } = useTokensBalanceStore();
-  return useReadState<T>(state?.ftLogicId, metaLogic, payload);
+  return useReadFullState<T>(state?.ftLogicId, metaLogic);
 }
 
 function useFTLogic() {
-  const { state } = useReadFTLogic<BalanceLogic>(payload);
+  const { state } = useReadFTLogic<BalanceLogic>();
   return state;
 }
 
-function useReadFTStorage<T>(payload: AnyJson) {
+function useReadFTStorage<T>() {
   const state = useFTLogic();
   const { lesson } = useLesson();
   const { metaStorage } = useTokensBalanceStore();
@@ -40,12 +40,12 @@ function useReadFTStorage<T>(payload: AnyJson) {
       }
     }
   };
-  return useReadState<T>(getStorageIdByAccount(), metaStorage, payload);
+  return useReadFullState<T>(getStorageIdByAccount(), metaStorage);
 }
 
 export function useFTStorage() {
   const { lesson } = useLesson();
-  const { state } = useReadFTStorage<BalanceStorage>(payload);
+  const { state } = useReadFTStorage<BalanceStorage>();
   const getBalanceByAccountId = () => {
     if (state) {
       for (const a of state.balances) {
@@ -57,4 +57,33 @@ export function useFTStorage() {
     return 0;
   };
   return getBalanceByAccountId();
+}
+
+export function useGetFTBalance() {
+  const { lesson } = useLesson();
+  const sendHandler = useFtMessage();
+  const { metadata } = useMetadata(metaCode);
+  const balance = useFTStorage();
+
+  const handler = (cb?: () => void) => {
+    const encodedMint = metadata
+      ?.createType(9, {
+        Mint: {
+          amount: 5000,
+          recipient: lesson?.programId,
+        },
+      })
+      .toU8a();
+
+    const onSuccess = () => cb && cb();
+
+    if (encodedMint) {
+      sendHandler(
+        { Message: { transaction_id: Math.floor(Math.random() * Date.now()), payload: [...encodedMint] } },
+        { onSuccess },
+      );
+    }
+  };
+
+  return { balance, handler };
 }

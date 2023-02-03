@@ -1,22 +1,20 @@
-import { useApi } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
-import { UnsubscribePromise } from '@polkadot/api/types';
+import type { UserMessageSent } from '@gear-js/api';
+import { useApi } from '@gear-js/react-hooks';
+import type { UnsubscribePromise } from '@polkadot/api/types';
 import { useLesson } from '../context';
-import { NotificationResponseTypes, NotificationType } from '../types/lessons';
-import { UserMessageSent } from '@gear-js/api';
-import { getNotificationTypeValue } from '../utils';
+import type { NotificationResponseTypes, NotificationType } from 'app/types/lessons';
+import { getNotificationTypeValue } from 'app/utils';
 
 export const useLesson5 = () => {
   const { api } = useApi();
   const [notification, setNotification] = useState<NotificationType>({});
   const [activeNotification, setActiveNotification] = useState<NotificationResponseTypes>();
-  const { lesson, meta, tamagotchi } = useLesson();
+  const { lesson, lessonMeta, tamagotchi } = useLesson();
 
   useEffect(() => {
     if (tamagotchi) {
-      const { fed, rested, entertained } = tamagotchi;
-      if ([fed, rested, entertained].reduce((sum, a) => sum + a) === 0) {
-        setActiveNotification({} as NotificationResponseTypes);
+      if (tamagotchi.isDead) {
         setActiveNotification(undefined);
       } else {
         if (Object.keys(notification).length) {
@@ -32,19 +30,18 @@ export const useLesson5 = () => {
   useEffect(() => {
     let unsub: UnsubscribePromise | undefined;
 
-    if (meta && lesson?.step === 5 && tamagotchi) {
-      const { fed, rested, entertained } = tamagotchi;
-      if ([fed, rested, entertained].reduce((sum, a) => sum + a) === 0) {
+    if (lessonMeta && lesson?.step === 5 && tamagotchi) {
+      if (tamagotchi.isDead) {
         unsub = api.gearEvents.subscribeToGearEvent('UserMessageSent', ({ data }: UserMessageSent) => {
           const {
             message: { payload },
           } = data;
 
-          const decodedPayload = meta.createType(8, payload).toHuman() as NotificationResponseTypes;
+          const decodedPayload = lessonMeta.createType(8, payload).toHuman() as NotificationResponseTypes;
 
           if (tamagotchi && ['WantToSleep', 'PlayWithMe', 'FeedMe'].includes(decodedPayload)) {
             const update = getNotificationTypeValue(decodedPayload, tamagotchi);
-            setNotification((arg) => ({ ...arg, ...update }));
+            setNotification((prev) => ({ ...prev, ...update }));
           }
         });
       }
@@ -53,7 +50,7 @@ export const useLesson5 = () => {
     return () => {
       if (unsub) unsub.then((unsubCallback) => unsubCallback());
     };
-  }, [lesson, meta, tamagotchi]);
+  }, [lesson, lessonMeta, tamagotchi]);
 
   return {
     notification,

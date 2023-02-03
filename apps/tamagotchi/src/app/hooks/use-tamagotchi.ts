@@ -1,11 +1,12 @@
-import { useLesson } from '../context';
-import { TamagotchiState } from '../types/lessons';
 import { useEffect } from 'react';
-import { useReadFullState } from '@gear-js/react-hooks';
+import { useReadFullState, useSendMessage } from '@gear-js/react-hooks';
+import { HexString } from '@polkadot/util/types';
+import { useLesson } from 'app/context';
+import type { TamagotchiState } from 'app/types/lessons';
 
 export function useReadTamagotchi<T>() {
-  const { lesson, meta } = useLesson();
-  return useReadFullState<T>(lesson?.programId, meta);
+  const { lesson, lessonMeta } = useLesson();
+  return useReadFullState<T>(lesson?.programId, lessonMeta);
 }
 
 export function useTamagotchi() {
@@ -13,8 +14,15 @@ export function useTamagotchi() {
   const { state } = useReadTamagotchi<TamagotchiState>();
 
   useEffect(() => {
-    // state ? setTamagotchi(state) : reset();
-    if (state) setTamagotchi(state);
+    if (state) {
+      const { fed, rested, entertained } = state;
+      setTamagotchi({ ...state, isDead: [fed, rested, entertained].reduce((sum, a) => sum + a) === 0 });
+    }
     // console.log('state in use', state);
   }, [state]);
+}
+
+export function useTamagotchiMessage() {
+  const { lesson, lessonMeta } = useLesson();
+  return useSendMessage(lesson?.programId as HexString, lessonMeta);
 }

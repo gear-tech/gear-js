@@ -18,7 +18,7 @@ export const TamagotchiBattleTopStats = ({ isWinner, state, health, isReverse }:
             'relative w-25 h-25 rounded-full overflow-hidden ring-2 ring-opacity-50',
             state === 'GameIsOver'
               ? isWinner
-                ? 'bg-[#2BD071] ring-[#2BD071]'
+                ? 'bg-primary ring-primary'
                 : 'bg-error ring-error'
               : 'bg-white ring-white',
           )}>
@@ -37,7 +37,7 @@ export const TamagotchiBattleTopStats = ({ isWinner, state, health, isReverse }:
           <div
             className={clsx(
               'absolute inset-0 -z-1 rounded-xl',
-              state === 'GameIsOver' ? (isWinner ? 'bg-[#2BD071]' : 'bg-error') : 'bg-[#2BD071]',
+              state === 'GameIsOver' ? (isWinner ? 'bg-primary' : 'bg-error') : 'bg-primary',
             )}
             style={{ width: `${health}%` }}
           />

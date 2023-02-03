@@ -18,12 +18,17 @@ type T2 = {
 type T3 = {
   allowedAccount: string;
 };
+
 type T4 = {
   energy: number;
   power: number;
 };
 
-export type TamagotchiState = T1 & T2 & T3 & T4;
+type TCustom = {
+  isDead: boolean;
+};
+
+export type TamagotchiState = T1 & T2 & T3 & T4 & TCustom;
 
 export type LessonState = {
   step: number;
