@@ -123,7 +123,7 @@ export class GearEventListener {
         await this.messageService.createMessages([createMessageDBType]);
       },
       [Keys.ProgramChanged]: async () => {
-        if (payload.isActive) await this.programService.setStatus(id, genesis, ProgramStatus.ACTIVE);
+        await this.programService.setStatus(id, genesis, payload.programStatus);
       },
       [Keys.MessagesDispatched]: async () => {
         await this.messageService.setDispatchedStatus(payload);

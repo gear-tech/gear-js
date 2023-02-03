@@ -13,7 +13,7 @@ import { UserMessageSentInput } from '../../message/types/user-message-sent.inpu
 import { UserMessageReadInput } from '../../message/types/user-message-read.input';
 import { ProgramChangedInput } from '../../program/types/program-changed.input';
 import { MessageDispatchedDataInput } from '../../message/types/message-dispatched-data.input';
-import { CodeStatus, MessageStatus } from '../enums';
+import { CodeStatus, MessageStatus, ProgramStatus } from '../enums';
 import { GearEventPayload } from '../types';
 import { CodeChangedInput } from '../../code/types';
 
@@ -49,12 +49,23 @@ function userMessageReadPayload(data: UserMessageReadData): UserMessageReadInput
 
 function programChangedPayload(data: ProgramChangedData): ProgramChangedInput | null {
   const { id, change } = data;
-  if (change.isActive || change.isInactive) {
-    return {
-      id: id.toHex(),
-      isActive: change.isActive ? true : false,
-    };
+  const res = { id: id.toHex(),  programStatus: ProgramStatus.UNKNOWN };
+
+  if (change.isActive) {
+    Object.assign(res, { programStatus: ProgramStatus.ACTIVE });
+    return res;
   }
+
+  if(change.isInactive) {
+    Object.assign(res, { programStatus: ProgramStatus.EXITED });
+    return res;
+  }
+
+  if (change.isPaused) {
+    Object.assign(res, { programStatus: ProgramStatus.PAUSED });
+    return res;
+  }
+
   return null;
 }
 
