@@ -11,6 +11,8 @@ module.exports = {
         'battle-turn-1': 'turn 2s linear infinite',
         'battle-turn-2': 'turn 2s linear infinite 400ms',
         'battle-turn-3': 'turn 2s linear infinite 900ms',
+        wave: 'wave 2s linear infinite',
+        'wave-2': 'wave 2s linear infinite 500ms',
       },
       keyframes: {
         wiggle: {
@@ -22,11 +24,17 @@ module.exports = {
           '50%': { opacity: '25%' },
           '100%': { opacity: '15%' },
         },
+        wave: {
+          '0%': { opacity: 0.5 },
+          '100%': { opacity: 0, transform: 'scale(1.4)' },
+        },
       },
       colors: {
         secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
         primary: 'rgb(var(--color-primary) / <alpha-value>)',
         error: 'rgb(var(--color-error) / <alpha-value>)',
+        'dark-500': 'rgb(var(--color-dark-500) / <alpha-value>)',
+        light: 'rgb(var(--color-light) / <alpha-value>)',
       },
       fontFamily: {
         kanit: ['Kanit', ...defaultTheme.fontFamily.sans],

@@ -29,3 +29,7 @@ export type LessonState = {
   step: number;
   programId: HexString;
 };
+
+export type NotificationResponseTypes = 'WantToSleep' | 'PlayWithMe' | 'FeedMe';
+
+export type NotificationType = [NotificationResponseTypes, number][];

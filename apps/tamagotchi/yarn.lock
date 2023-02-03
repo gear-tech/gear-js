@@ -1736,6 +1736,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@floating-ui/core@npm:^1.0.0, @floating-ui/core@npm:^1.1.0":
+  version: 1.1.1
+  resolution: "@floating-ui/core@npm:1.1.1"
+  checksum: a8497bf981eedf652d275f7207342a9b24c1a67909dca9e042e2379b24321e6688c7774415f3ea607c466adf82b02d8779513f449376c46b2982f2380c80cd35
+  languageName: node
+  linkType: hard
+
+"@floating-ui/dom@npm:^1.0.0, @floating-ui/dom@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@floating-ui/dom@npm:1.1.1"
+  dependencies:
+    "@floating-ui/core": ^1.1.0
+  checksum: 8b7f3b98ed7ec0b634e4a0b735253b0442358c5cea8302935fc185b2bd882202a053622abe9248c76d0908645dd35f93adeaed2d64371b2ab76b36725ce3f7d3
+  languageName: node
+  linkType: hard
+
+"@floating-ui/react-dom@npm:^1.0.0":
+  version: 1.2.2
+  resolution: "@floating-ui/react-dom@npm:1.2.2"
+  dependencies:
+    "@floating-ui/dom": ^1.1.1
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: 5cb7879a8fe53ce4ca8361473d93e18806402d6bcde4e935d5aafa2b72032019e62f7d019d7d7145ead1ed829569ac14d6d8c50d7beedcea04cb3d02af661597
+  languageName: node
+  linkType: hard
+
 "@gar/promisify@npm:^1.1.3":
   version: 1.1.3
   resolution: "@gar/promisify@npm:1.1.3"
@@ -1774,6 +1802,21 @@ __metadata:
     react: 18.2.0
     sass: 1.49.9
   checksum: fff610760efba2bbb3a6f118e90bf923b9ac90d46b20b5762c1395ee94cef987a0f0a9d4e832be2949213b9187455e8b57f3671d4471696183e81a1a45d9ee5a
+  languageName: node
+  linkType: hard
+
+"@headlessui-float/react@npm:0.10.1":
+  version: 0.10.1
+  resolution: "@headlessui-float/react@npm:0.10.1"
+  dependencies:
+    "@floating-ui/core": ^1.0.0
+    "@floating-ui/dom": ^1.0.0
+    "@floating-ui/react-dom": ^1.0.0
+  peerDependencies:
+    "@headlessui/react": ^1.0.0
+    react: ^16 || ^17 || ^18
+    react-dom: ^16 || ^17 || ^18
+  checksum: 67ca02e7b713627005b247e98b52922008fcbc1aa9f182e3254c32cd8286c04546ab816d4745d412ac9f7f660adea9ba80b63ef94ceb978698f4b67bf80ebaca
   languageName: node
   linkType: hard
 
@@ -7349,6 +7392,7 @@ __metadata:
     "@gear-js/api": 0.29.1
     "@gear-js/react-hooks": 0.5.6
     "@gear-js/ui": 0.5.13
+    "@headlessui-float/react": 0.10.1
     "@headlessui/react": 1.7.7
     "@mantine/form": 5.10.0
     "@polkadot/api": 9.13.2

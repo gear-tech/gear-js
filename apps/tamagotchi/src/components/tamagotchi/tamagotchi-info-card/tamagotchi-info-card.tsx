@@ -8,6 +8,7 @@ import { useTamagotchi } from 'app/hooks/use-tamagotchi';
 import { useThrottleWasmState } from 'app/hooks/use-read-wasm-state';
 import { TamagotchiInfoCardRow } from '../tamagotchi-info-card-row';
 import { useLesson5 } from 'app/hooks/use-lesson-5';
+import { NotificationResponseTypes } from 'app/types/lessons';
 
 export const TamagotchiInfoCard = () => {
   useTamagotchi();
@@ -15,22 +16,44 @@ export const TamagotchiInfoCard = () => {
   useLesson5();
 
   const { account } = useAccount();
-  const { tamagotchi, lesson } = useLesson();
-  const sendHandler = useTamagocthiMessage();
+  const { tamagotchi, lesson, notification, setNotification, activeNotification, setActiveNotification } = useLesson();
+  const send = useTamagocthiMessage();
 
   const fullView = Boolean(lesson && lesson?.step > 1);
-  const feedHandler = () => sendHandler({ Feed: null });
-  const playHandler = () => sendHandler({ Play: null });
-  const sleepHandler = () => sendHandler({ Sleep: null });
+
+  const onSuccess = (str: NotificationResponseTypes) => {
+    setNotification(
+      notification.splice(
+        notification.findIndex((el) => el[0] === str),
+        1,
+      ),
+    );
+    setActiveNotification(undefined);
+  };
+  const feedHandler = () => send({ Feed: null }, { onSuccess: () => onSuccess('FeedMe') });
+  const playHandler = () =>
+    send(
+      { Play: null },
+      {
+        onSuccess: () => onSuccess('PlayWithMe'),
+      },
+    );
+  const sleepHandler = () =>
+    send(
+      { Sleep: null },
+      {
+        onSuccess: () => onSuccess('WantToSleep'),
+      },
+    );
 
   return (
     <>
       {tamagotchi && (
-        <div className={clsx('flex gap-12 items-center p-4 bg-white/5 rounded-2xl', fullView && 'w-full')}>
+        <div className={clsx('flex gap-12 items-center p-4 pr-12 bg-white/5 rounded-2xl', fullView && 'w-full')}>
           <div className="basis-[415px] w-full px-8 py-6 bg-[#1E1E1E] rounded-2xl">
             <div className="flex justify-between gap-4">
               <h2 className="typo-h2 text-primary truncate">{tamagotchi.name}</h2>
-              <div className="">
+              <div>
                 <AccountActionsMenu />
               </div>
             </div>
@@ -57,6 +80,11 @@ export const TamagotchiInfoCard = () => {
                 icon="feed"
                 labelBtn="Feed"
                 onClick={feedHandler}
+                tooltipText={
+                  'Your character has a low fed score. In order to increase the level, please click on the "Feed" button'
+                }
+                tooltipTitle="Low level of fed"
+                isActive={activeNotification === 'FeedMe'}
               />
               <TamagotchiInfoCardRow
                 label="Happy"
@@ -64,6 +92,11 @@ export const TamagotchiInfoCard = () => {
                 icon="happy"
                 labelBtn="Play"
                 onClick={playHandler}
+                tooltipText={
+                  'Your character has a low happiness score. In order to increase the level, please click on the "Play" button'
+                }
+                tooltipTitle="Low level of happiness"
+                isActive={activeNotification === 'PlayWithMe'}
               />
               <TamagotchiInfoCardRow
                 label="Tired"
@@ -71,6 +104,11 @@ export const TamagotchiInfoCard = () => {
                 icon="tired"
                 labelBtn="Sleep"
                 onClick={sleepHandler}
+                tooltipText={
+                  'Your character has a low rest score. In order to increase the level, please click on the "Sleep" button'
+                }
+                tooltipTitle="Low level of rest"
+                isActive={activeNotification === 'WantToSleep'}
               />
             </div>
           )}

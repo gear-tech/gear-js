@@ -1,5 +1,5 @@
 import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useRef, useState } from 'react';
-import type { LessonState } from 'app/types/lessons';
+import type { LessonState, NotificationType } from 'app/types/lessons';
 import type { TamagotchiState } from 'app/types/lessons';
 import { getProgramMetadata, ProgramMetadata } from '@gear-js/api';
 import { getLessonAssets } from '../utils/get-lesson-assets';
@@ -7,23 +7,20 @@ import { useMetadata } from '../hooks/use-metadata';
 import metaStore from '../../assets/meta/meta-store.txt';
 import { ENV } from '../consts';
 import { HexString } from '@polkadot/util/types';
+import { NotificationResponseTypes } from 'app/types/lessons';
 
 type ItemsStoreType = {
   programId: HexString;
   meta: ProgramMetadata;
 };
 
-type BattleState = {
-  player1?: HexString;
-  player2?: HexString;
-  meta?: ProgramMetadata;
-};
-
 type Program = {
   lesson?: LessonState;
   setLesson: Dispatch<SetStateAction<LessonState | undefined>>;
-  battle?: BattleState;
-  setBattle: Dispatch<SetStateAction<BattleState | undefined>>;
+  notification: NotificationType;
+  setNotification: Dispatch<SetStateAction<NotificationType>>;
+  activeNotification?: NotificationResponseTypes;
+  setActiveNotification: Dispatch<SetStateAction<NotificationResponseTypes | undefined>>;
   tamagotchi?: TamagotchiState;
   setTamagotchi: Dispatch<SetStateAction<TamagotchiState | undefined>>;
   isFetched: boolean;
@@ -37,16 +34,16 @@ type Program = {
 
 export const LessonsCtx = createContext({} as Program);
 
-const payload = {};
 const useProgram = (): Program => {
   const [lesson, setLesson] = useState<LessonState>();
-  const [battle, setBattle] = useState<BattleState>();
   const [store, setStore] = useState<ItemsStoreType>({} as ItemsStoreType);
   const [tamagotchi, setTamagotchi] = useState<TamagotchiState>();
   const [tamagotchiItems, setTamagotchiItems] = useState<number[]>([]);
   const [isFetched, setIsFetched] = useState<boolean>(false);
   const [meta, setMeta] = useState<ProgramMetadata>();
   const isParsed = useRef(false);
+  const [notification, setNotification] = useState<NotificationType>([]);
+  const [activeNotification, setActiveNotification] = useState<NotificationResponseTypes>();
 
   const { metadata: mStore } = useMetadata(metaStore);
 
@@ -87,6 +84,12 @@ const useProgram = (): Program => {
     }
   }, [lesson]);
 
+  useEffect(() => {
+    if (notification.length > 0) {
+      setActiveNotification(notification.reduce((el, prev) => (el[1] < prev[1] ? el : prev))[0]);
+    } else setActiveNotification(undefined);
+  }, [tamagotchi, notification]);
+
   return {
     lesson,
     setLesson,
@@ -99,8 +102,10 @@ const useProgram = (): Program => {
     tamagotchiItems,
     setTamagotchiItems,
     store,
-    battle,
-    setBattle,
+    notification,
+    setNotification,
+    activeNotification,
+    setActiveNotification,
   };
 };
 

@@ -1,10 +1,11 @@
-import {useApi} from '@gear-js/react-hooks'
-import {useEffect} from 'react'
-import {UnsubscribePromise} from '@polkadot/api/types'
-import {useLesson} from '../context'
+import { useApi } from '@gear-js/react-hooks';
+import { useEffect } from 'react';
+import { UnsubscribePromise } from '@polkadot/api/types';
+import { useLesson } from '../context';
+import { NotificationResponseTypes } from '../types/lessons';
 
 export const useLesson5 = () => {
-  const { lesson, meta } = useLesson();
+  const { lesson, meta, notification, setNotification, tamagotchi } = useLesson();
 
   const { api } = useApi();
 
@@ -17,16 +18,22 @@ export const useLesson5 = () => {
         const { source, payload } = message;
 
         if (source.toHex() === lesson?.programId) {
-          const decodedPayload = meta.createType(8, payload).toHuman() as unknown;
-          console.log({ decodedPayload });
+          const decodedPayload = meta.createType(8, payload).toHuman() as NotificationResponseTypes;
+          // console.log('payload: ', decodedPayload);
+          const checkTypes = notification.map((el) => el[0]);
 
-          if (typeof decodedPayload === 'object' && decodedPayload !== null) {
-            // if (decodedPayload.Step) {
-            //   setSteps((prevSteps) => [...prevSteps, decodedPayload.Step]);
-            // }
-            // else if (decodedPayload.GameFinished) {
-            //   setWinner(decodedPayload.GameFinished.winner);
-            // }
+          if (tamagotchi && decodedPayload && !checkTypes.includes(decodedPayload)) {
+            const getNotificationTypeAmount = (): number => {
+              switch (decodedPayload) {
+                case 'FeedMe':
+                  return tamagotchi.fed;
+                case 'PlayWithMe':
+                  return tamagotchi.entertained;
+                case 'WantToSleep':
+                  return tamagotchi.rested;
+              }
+            };
+            setNotification([...notification, [decodedPayload, getNotificationTypeAmount()]]);
           }
         }
       });
@@ -37,4 +44,4 @@ export const useLesson5 = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [meta]);
-}
+};
