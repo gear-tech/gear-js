@@ -13,7 +13,7 @@ import { MessageService } from '../message/message.service';
 import { CodeService } from '../code/code.service';
 import { getPayloadAndValue, getPayloadByGearEvent } from '../common/helpers';
 import { Message } from '../database/entities';
-import { CodeStatus, MessageEntryPoint, MessageType, ProgramStatus } from '../common/enums';
+import { CodeStatus, MessageEntryPoint, MessageType } from '../common/enums';
 import { CodeRepo } from '../code/code.repo';
 import { CodeChangedInput, UpdateCodeInput } from '../code/types';
 import { changeStatus } from '../healthcheck/healthcheck.controller';
