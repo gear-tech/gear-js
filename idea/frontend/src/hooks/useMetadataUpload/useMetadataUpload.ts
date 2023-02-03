@@ -1,14 +1,14 @@
-import { useCallback } from 'react';
 import { useAlert, useAccount } from '@gear-js/react-hooks';
+import { HexString } from '@polkadot/util/types';
 
+import { addMetadata } from 'api';
 import { uploadLocalMetadata } from 'api/LocalDB';
-import { RPCService } from 'shared/services/rpcService';
-import { RpcMethods, ACCOUNT_ERRORS } from 'shared/config';
+import { ACCOUNT_ERRORS } from 'shared/config';
 
 import { useChain } from '../context';
 import { ParamsToUploadMeta } from './types';
 
-const useMetadataUplaod = () => {
+const useMetadataUpload = () => {
   const alert = useAlert();
   const { account } = useAccount();
   const { isDevChain } = useChain();
@@ -16,10 +16,8 @@ const useMetadataUplaod = () => {
   const upload = async (params: ParamsToUploadMeta) => {
     const { name, metaHex, programId, reject, resolve } = params;
 
-    const apiRequest = new RPCService();
-
     try {
-      const { error } = await apiRequest.callRPC(RpcMethods.AddMetadata, { name, metaHex, programId });
+      const { error } = await addMetadata({ name, metaHex, programId: programId as HexString });
 
       if (error) throw new Error(error.message);
 
@@ -35,37 +33,33 @@ const useMetadataUplaod = () => {
     }
   };
 
-  const uploadMetadata = useCallback(
-    async (params: ParamsToUploadMeta) => {
-      const { name, metaHex, programId, reject, resolve } = params;
+  const uploadMetadata = async (params: ParamsToUploadMeta) => {
+    const { name, metaHex, programId, reject, resolve } = params;
 
-      try {
-        if (!account) throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
+    try {
+      if (!account) throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
 
-        if (isDevChain) {
-          await uploadLocalMetadata(programId, metaHex, name);
+      if (isDevChain) {
+        await uploadLocalMetadata(programId, metaHex, name);
 
-          alert.success('Metadata added to the localDB successfully');
+        alert.success('Metadata added to the localDB successfully');
 
-          if (resolve) resolve();
+        if (resolve) resolve();
 
-          return;
-        }
-
-        upload({ name, programId, metaHex, reject, resolve });
-      } catch (error) {
-        const message = (error as Error).message;
-
-        alert.error(message);
-
-        if (reject) reject();
+        return;
       }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [account],
-  );
+
+      upload({ name, programId, metaHex, reject, resolve });
+    } catch (error) {
+      const message = (error as Error).message;
+
+      alert.error(message);
+
+      if (reject) reject();
+    }
+  };
 
   return uploadMetadata;
 };
 
-export { useMetadataUplaod };
+export { useMetadataUpload };

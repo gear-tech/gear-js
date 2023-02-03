@@ -17,6 +17,7 @@ export {
   getLocalProgram,
   fetchPrograms,
   getLocalPrograms,
+  addMetadata,
   fetchMetadata,
   getLocalProgramMeta,
   addState,

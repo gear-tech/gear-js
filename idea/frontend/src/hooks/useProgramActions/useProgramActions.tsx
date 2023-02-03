@@ -13,7 +13,7 @@ import { PROGRAM_ERRORS, TransactionName, TransactionStatus, absoluteRoutes } fr
 import { checkWallet, readFileAsync, getExtrinsicFailedMessage } from 'shared/helpers';
 import { CustomLink } from 'shared/ui/customLink';
 
-import { useMetadataUplaod } from '../useMetadataUpload';
+import { useMetadataUpload } from '../useMetadataUpload';
 import { waitForProgramInit } from './helpers';
 import { ALERT_OPTIONS } from './consts';
 import { Payload, ParamsToCreate, ParamsToUpload, ParamsToSignAndUpload } from './types';
@@ -25,7 +25,7 @@ const useProgramActions = () => {
   const { isDevChain } = useChain();
 
   const { showModal } = useModal();
-  const uploadMetadata = useMetadataUplaod();
+  const uploadMetadata = useMetadataUpload();
 
   const getProgramMessage = (programId: string) => (
     <p>

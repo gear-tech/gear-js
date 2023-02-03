@@ -1,11 +1,5 @@
-@use 'shared/assets/styles/shared' as *;
 @use 'shared/assets/styles/mixins' as *;
-@use 'shared/assets/styles/variables' as *;
 
 .box {
   @include childrenMargin(24px);
-
-  padding: toRem(14) toRem(24) toRem(24);
-  border-radius: $borderRadius;
-  background-color: $bgColor4;
 }

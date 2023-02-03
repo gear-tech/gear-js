@@ -5,6 +5,7 @@ import { useAlert } from '@gear-js/react-hooks';
 import { fetchProgram, getLocalProgram } from 'api';
 import { IProgram } from 'entities/program';
 
+import { HexString } from '@polkadot/util/types';
 import { useChain } from './context';
 
 const useProgram = (id?: string, initLoading = false) => {
@@ -22,9 +23,19 @@ const useProgram = (id?: string, initLoading = false) => {
     if (hex) return getProgramMetadata(hex);
   }, [program]);
 
+  const updateMeta = (metaHex: HexString, programName: string) =>
+    setProgram((prevProgram) => {
+      if (!prevProgram) return;
+
+      const meta = { ...getProgramMetadata(metaHex), hex: metaHex };
+
+      return { ...prevProgram, name: programName, meta };
+    });
+
   useEffect(() => {
     if (id) {
       setIsLoading(true);
+
       getProgram(id)
         .then(({ result }) => setProgram(result))
         .catch((err) => alert.error(err.message))
@@ -33,7 +44,7 @@ const useProgram = (id?: string, initLoading = false) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  return { program, metadata, isLoading };
+  return { program, metadata, isLoading, updateMeta };
 };
 
 export { useProgram };

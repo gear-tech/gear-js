@@ -1,37 +1,22 @@
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_mixins.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/mixins' as *;
 
-%textStyle {
-  font-size: $fontSizeMedium;
-  font-weight: 400;
-  line-height: 25px;
+.simplebar {
+  @include customSimplebar;
+  max-height: 75vh;
+  margin-right: -16px;
+
+  :global(.simplebar-content) {
+    margin-right: 16px;
+  }
 }
 
-.modalContent {
-  text-align: center;
-}
-
-.contentHeading {
-  @extend %textStyle;
-
-  color: $textColor;
-  margin-bottom: 10px;
-}
-
-.contentFeeInfo {
-  @extend %textStyle;
-
-  color: $successColor;
-}
-
-.contentButtons {
-  @include childrenMargin(10px, right);
-
+.form {
+  @include childrenMargin(32px);
   display: flex;
-  margin-top: 20px;
+  flex-direction: column;
+  align-items: center;
 
-  .actionButton {
-    flex: 1 1 50%;
+  > *:first-child {
+    width: 100%;
   }
 }

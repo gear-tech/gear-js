@@ -14,7 +14,7 @@ import { MetadataDetails } from './metadataDetails';
 const Program = () => {
   const { programId } = useParams() as PathParams;
 
-  const { program, metadata, isLoading } = useProgram(programId, true);
+  const { program, metadata, isLoading, updateMeta } = useProgram(programId, true);
   const { messages } = program || {};
 
   const sortedMessages = messages?.sort(
@@ -28,6 +28,8 @@ const Program = () => {
         programId={programId}
         isLoading={isLoading}
         isStateButtonVisible={isState(metadata)}
+        isAddMetaButtonVisible={!metadata}
+        onMetaAdd={updateMeta}
       />
       <div className={styles.content}>
         <div className={styles.leftSide}>
