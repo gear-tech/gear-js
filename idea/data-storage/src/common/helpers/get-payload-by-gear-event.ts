@@ -41,32 +41,26 @@ function userMessageSentPayload(data: UserMessageSentData): UserMessageSentInput
 }
 
 function userMessageReadPayload(data: UserMessageReadData): UserMessageReadInput {
-  return {
-    id: data.id.toHex(),
-    reason: getMessageReadStatus(data),
-  };
+  return { id: data.id.toHex(), reason: getMessageReadStatus(data) };
 }
 
-function programChangedPayload(data: ProgramChangedData): ProgramChangedInput | null {
+function programChangedPayload(data: ProgramChangedData): ProgramChangedInput {
   const { id, change } = data;
   const res = { id: id.toHex(),  programStatus: ProgramStatus.UNKNOWN };
 
   if (change.isActive) {
     res.programStatus = ProgramStatus.ACTIVE;
-    return res;
   }
 
   if(change.isInactive) {
     res.programStatus = ProgramStatus.EXITED;
-    return res;
   }
 
   if (change.isPaused) {
     res.programStatus = ProgramStatus.EXITED;
-    return res;
   }
 
-  return null;
+  return res;
 }
 
 function codeChangedPayload(data: CodeChangedData): CodeChangedInput | null {
