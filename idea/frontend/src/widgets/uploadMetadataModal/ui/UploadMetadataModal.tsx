@@ -5,7 +5,6 @@ import { HexString } from '@polkadot/util/types';
 import { useState, useMemo } from 'react';
 import SimpleBar from 'simplebar-react';
 
-import { useMetadataUpload, useModal } from 'hooks';
 import { ModalProps } from 'entities/modal';
 import { UploadMetadata } from 'features/uploadMetadata';
 import { ReactComponent as plusSVG } from 'shared/assets/images/actions/plus.svg';
@@ -17,32 +16,23 @@ const initialValues = { name: '' };
 const validate = { name: isExists };
 
 type Props = ModalProps & {
-  programId: HexString;
-  onSuccessSubmit: (metaHex: HexString, programName: string) => void;
+  onSubmit: (values: { metaHex: HexString; name: string }) => void;
+  isCode?: boolean;
 };
 
-const UploadMetadataModal = ({ onClose, programId, onSuccessSubmit }: Props) => {
-  const { getInputProps, onSubmit } = useForm({ initialValues, validate });
-  const { closeModal } = useModal();
+const UploadMetadataModal = ({ onClose, onSubmit, isCode }: Props) => {
+  const form = useForm({ initialValues, validate });
+  const { getInputProps } = form;
 
-  const uploadMetadata = useMetadataUpload();
-
-  const [metaHex, setMetaHex] = useState<HexString>();
+  const [metaHex, setMetaHex] = useState('' as HexString);
 
   const metadata = useMemo(() => (metaHex ? getProgramMetadata(metaHex) : undefined), [metaHex]);
 
-  const resetMetaHex = () => setMetaHex(undefined);
+  const resetMetaHex = () => setMetaHex('' as HexString);
 
-  const handleSubmit = onSubmit(({ name }) => {
-    if (!metaHex) return;
+  const handleSubmit = form.onSubmit(({ name }) => onSubmit({ metaHex, name }));
 
-    const resolve = () => {
-      onSuccessSubmit(metaHex, name);
-      closeModal();
-    };
-
-    uploadMetadata({ name, programId, metaHex, resolve });
-  });
+  const nameInputLabel = isCode ? 'Code Name' : 'Program Name';
 
   return (
     <Modal heading="Upload metadata" size="large" className={styles.modal} close={onClose}>
@@ -50,7 +40,7 @@ const UploadMetadataModal = ({ onClose, programId, onSuccessSubmit }: Props) => 
         <form className={styles.form} onSubmit={handleSubmit}>
           <UploadMetadata metadata={metadata} onReset={resetMetaHex} onUpload={setMetaHex} />
 
-          {metadata && <Input label="Program Name" direction="y" block {...getInputProps('name')} />}
+          {metadata && <Input label={nameInputLabel} direction="y" block {...getInputProps('name')} />}
           {metadata && <Button type="submit" icon={plusSVG} text="Upload Metadata" />}
         </form>
       </SimpleBar>

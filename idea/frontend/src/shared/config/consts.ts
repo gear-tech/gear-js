@@ -65,6 +65,7 @@ enum RpcMethods {
   GetProgram = 'program.data',
   GetAllPrograms = 'program.all',
   AddMetadata = 'program.meta.add',
+  AddCodeMetadata = 'code.meta.add',
   GetMetadata = 'program.meta.get',
   GetCodeMetadata = 'code.meta.get',
   GetMessage = 'message.data',

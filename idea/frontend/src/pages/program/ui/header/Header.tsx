@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { CSSTransition } from 'react-transition-group';
 import { generatePath } from 'react-router-dom';
 
-import { useModal } from 'hooks';
+import { useMetadataUpload, useModal } from 'hooks';
 import { getShortName } from 'shared/helpers';
 import { absoluteRoutes, AnimationTimeout, routes } from 'shared/config';
 import { UILink } from 'shared/ui/uiLink';
@@ -15,7 +15,7 @@ import { ReactComponent as AddMetaSVG } from 'shared/assets/images/actions/addMe
 import styles from './Header.module.scss';
 
 type Props = {
-  name: string;
+  programName: string;
   programId: HexString;
   isLoading: boolean;
   isStateButtonVisible: boolean;
@@ -23,16 +23,33 @@ type Props = {
   onMetaAdd: (metaHex: HexString, programName: string) => void;
 };
 
-const Header = ({ name, programId, isLoading, isStateButtonVisible, isAddMetaButtonVisible, onMetaAdd }: Props) => {
-  const { showModal } = useModal();
+const Header = ({
+  programName,
+  programId,
+  isLoading,
+  isStateButtonVisible,
+  isAddMetaButtonVisible,
+  onMetaAdd,
+}: Props) => {
+  const { showModal, closeModal } = useModal();
+  const uploadMetadata = useMetadataUpload();
 
-  const openUploadMetadataModal = () => showModal('metadata', { programId, onSuccessSubmit: onMetaAdd });
+  const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
+    const resolve = () => {
+      onMetaAdd(metaHex, name);
+      closeModal();
+    };
+
+    uploadMetadata({ name, programId, metaHex, resolve });
+  };
+
+  const openUploadMetadataModal = () => showModal('metadata', { onSubmit: handleUploadMetadataSubmit });
 
   return (
     <section className={clsx(styles.header, isLoading && styles.loading)}>
       {!isLoading && (
         <CSSTransition in appear timeout={AnimationTimeout.Default} mountOnEnter>
-          <h1 className={styles.programName}>{getShortName(name, 36)}</h1>
+          <h1 className={styles.programName}>{getShortName(programName, 36)}</h1>
         </CSSTransition>
       )}
 

@@ -25,7 +25,7 @@ const Program = () => {
   return (
     <div>
       <Header
-        name={program?.name || programId}
+        programName={program?.name || programId}
         programId={programId}
         isLoading={isLoading}
         isStateButtonVisible={isState(metadata)}

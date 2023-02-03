@@ -1,7 +1,11 @@
+import { getProgramMetadata } from '@gear-js/api';
+import { useAlert } from '@gear-js/react-hooks';
+import { Button } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
 import { generatePath, useParams } from 'react-router-dom';
 
-import { useDataLoading, usePrograms } from 'hooks';
+import { addCodeMetadata } from 'api';
+import { useDataLoading, useModal, usePrograms } from 'hooks';
 import { BackButton } from 'shared/ui/backButton';
 import { absoluteRoutes } from 'shared/config';
 import { UILink } from 'shared/ui/uiLink';
@@ -11,6 +15,7 @@ import { ProgramsList } from 'pages/programs/ui/programsList';
 import { RequestParams } from 'pages/programs/model/types';
 import { MetadataDetails } from 'pages/program/ui/metadataDetails';
 import { ReactComponent as PlusSVG } from 'shared/assets/images/actions/plus.svg';
+import { ReactComponent as AddMetaSVG } from 'shared/assets/images/actions/addMeta.svg';
 
 import { useMetadata } from '../hooks';
 import styles from './Code.module.scss';
@@ -19,11 +24,25 @@ type Params = { codeId: HexString };
 
 const Code = () => {
   const { codeId } = useParams() as Params;
+  const alert = useAlert();
 
-  const metadata = useMetadata(codeId);
+  const { showModal, closeModal } = useModal();
+  const { metadata, updateMetadata } = useMetadata(codeId);
 
   const { programs, isLoading, totalCount, fetchPrograms } = usePrograms();
   const { loadData } = useDataLoading<RequestParams>({ defaultParams: { query: codeId }, fetchData: fetchPrograms });
+
+  const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
+    addCodeMetadata({ codeId, metaHex, name })
+      .then(() => {
+        alert.success('Metadata for code uploaded successfully');
+        closeModal();
+        updateMetadata(getProgramMetadata(metaHex));
+      })
+      .catch(({ message }: Error) => alert.error(message));
+  };
+
+  const showUploadMetadataModal = () => showModal('metadata', { onSubmit: handleUploadMetadataSubmit, isCode: true });
 
   return (
     <>
@@ -58,6 +77,10 @@ const Code = () => {
           icon={PlusSVG}
           size="large"
         />
+
+        {!metadata && (
+          <Button text="Add metadata" icon={AddMetaSVG} color="light" size="large" onClick={showUploadMetadataModal} />
+        )}
 
         <BackButton />
       </div>

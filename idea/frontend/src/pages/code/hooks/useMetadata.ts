@@ -18,7 +18,7 @@ const useMetadata = (codeId: HexString) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return metadata;
+  return { metadata, updateMetadata: setMetadata };
 };
 
 export { useMetadata };
