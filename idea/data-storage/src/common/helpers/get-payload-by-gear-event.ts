@@ -52,17 +52,17 @@ function programChangedPayload(data: ProgramChangedData): ProgramChangedInput | 
   const res = { id: id.toHex(),  programStatus: ProgramStatus.UNKNOWN };
 
   if (change.isActive) {
-    Object.assign(res, { programStatus: ProgramStatus.ACTIVE });
+    res.programStatus = ProgramStatus.ACTIVE;
     return res;
   }
 
   if(change.isInactive) {
-    Object.assign(res, { programStatus: ProgramStatus.EXITED });
+    res.programStatus = ProgramStatus.EXITED;
     return res;
   }
 
   if (change.isPaused) {
-    Object.assign(res, { programStatus: ProgramStatus.PAUSED });
+    res.programStatus = ProgramStatus.EXITED;
     return res;
   }
 
