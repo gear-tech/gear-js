@@ -20,7 +20,7 @@ type Props = {
   isLoading: boolean;
   isStateButtonVisible: boolean;
   isAddMetaButtonVisible: boolean;
-  onMetaAdd: (metaHex: HexString) => void;
+  onMetaAdd: (metaHex: HexString, programName: string) => void;
 };
 
 const Header = ({ name, programId, isLoading, isStateButtonVisible, isAddMetaButtonVisible, onMetaAdd }: Props) => {

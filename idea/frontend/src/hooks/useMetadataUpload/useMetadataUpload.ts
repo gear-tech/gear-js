@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { useAlert, useAccount } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 
@@ -34,35 +33,31 @@ const useMetadataUpload = () => {
     }
   };
 
-  const uploadMetadata = useCallback(
-    async (params: ParamsToUploadMeta) => {
-      const { name, metaHex, programId, reject, resolve } = params;
+  const uploadMetadata = async (params: ParamsToUploadMeta) => {
+    const { name, metaHex, programId, reject, resolve } = params;
 
-      try {
-        if (!account) throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
+    try {
+      if (!account) throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
 
-        if (isDevChain) {
-          await uploadLocalMetadata(programId, metaHex, name);
+      if (isDevChain) {
+        await uploadLocalMetadata(programId, metaHex, name);
 
-          alert.success('Metadata added to the localDB successfully');
+        alert.success('Metadata added to the localDB successfully');
 
-          if (resolve) resolve();
+        if (resolve) resolve();
 
-          return;
-        }
-
-        upload({ name, programId, metaHex, reject, resolve });
-      } catch (error) {
-        const message = (error as Error).message;
-
-        alert.error(message);
-
-        if (reject) reject();
+        return;
       }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [account],
-  );
+
+      upload({ name, programId, metaHex, reject, resolve });
+    } catch (error) {
+      const message = (error as Error).message;
+
+      alert.error(message);
+
+      if (reject) reject();
+    }
+  };
 
   return uploadMetadata;
 };

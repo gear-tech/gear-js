@@ -23,13 +23,13 @@ const useProgram = (id?: string, initLoading = false) => {
     if (hex) return getProgramMetadata(hex);
   }, [program]);
 
-  const updateMeta = (metaHex: HexString) =>
+  const updateMeta = (metaHex: HexString, programName: string) =>
     setProgram((prevProgram) => {
-      const { meta } = prevProgram || {};
+      if (!prevProgram) return;
 
-      if (!prevProgram || !meta) return;
+      const meta = { ...getProgramMetadata(metaHex), hex: metaHex };
 
-      return { ...prevProgram, meta: { ...meta, hex: metaHex } };
+      return { ...prevProgram, name: programName, meta };
     });
 
   useEffect(() => {

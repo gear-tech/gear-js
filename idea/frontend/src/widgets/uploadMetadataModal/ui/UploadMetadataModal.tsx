@@ -18,7 +18,7 @@ const validate = { name: isExists };
 
 type Props = ModalProps & {
   programId: HexString;
-  onSuccessSubmit: (metaHex: HexString) => void;
+  onSuccessSubmit: (metaHex: HexString, programName: string) => void;
 };
 
 const UploadMetadataModal = ({ onClose, programId, onSuccessSubmit }: Props) => {
@@ -37,7 +37,7 @@ const UploadMetadataModal = ({ onClose, programId, onSuccessSubmit }: Props) => 
     if (!metaHex) return;
 
     const resolve = () => {
-      onSuccessSubmit(metaHex);
+      onSuccessSubmit(metaHex, name);
       closeModal();
     };
 
