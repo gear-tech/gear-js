@@ -20,12 +20,13 @@ type Props = {
   isLoading: boolean;
   isStateButtonVisible: boolean;
   isAddMetaButtonVisible: boolean;
+  onMetaAdd: (metaHex: HexString) => void;
 };
 
-const Header = ({ name, programId, isLoading, isStateButtonVisible, isAddMetaButtonVisible }: Props) => {
+const Header = ({ name, programId, isLoading, isStateButtonVisible, isAddMetaButtonVisible, onMetaAdd }: Props) => {
   const { showModal } = useModal();
 
-  const openUploadMetadataModal = () => showModal('metadata', { programId });
+  const openUploadMetadataModal = () => showModal('metadata', { programId, onSuccessSubmit: onMetaAdd });
 
   return (
     <section className={clsx(styles.header, isLoading && styles.loading)}>
