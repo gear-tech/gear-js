@@ -70,6 +70,7 @@ const uploadLocalProgram = (program: Pick<IProgram, 'id' | 'owner' | 'name'>) =>
     meta: null,
     timestamp: Date(),
     status: ProgramStatus.Active,
+    genesis: localStorage.getItem(LocalStorage.Genesis),
   });
 
 const uploadLocalMetadata = async (programId: string, metaHex: HexString, name?: string) => {
@@ -79,7 +80,6 @@ const uploadLocalMetadata = async (programId: string, metaHex: HexString, name?:
     ...result,
     name: name ?? result.name,
     meta: { hex: metaHex, types: getProgramMetadata(metaHex).types },
-    genesis: localStorage.getItem(LocalStorage.Genesis),
   });
 };
 
