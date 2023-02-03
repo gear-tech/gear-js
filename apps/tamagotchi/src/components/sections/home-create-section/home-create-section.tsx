@@ -12,6 +12,7 @@ export const HomeCreateSection = () => {
 
   useEffect(() => {
     tamagotchiItems && setOwnItems(getOwnItems(tamagotchiItems));
+    console.log(ownItems);
     return () => setOwnItems([]);
   }, [tamagotchiItems]);
 

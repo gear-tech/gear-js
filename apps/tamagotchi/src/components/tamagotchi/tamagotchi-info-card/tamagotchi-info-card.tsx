@@ -10,26 +10,21 @@ import { TamagotchiInfoCardRow } from '../tamagotchi-info-card-row';
 import { useLesson5 } from 'app/hooks/use-lesson-5';
 import { NotificationResponseTypes } from 'app/types/lessons';
 import { useState } from 'react';
+import { getNotificationTypeValue } from 'app/utils';
 
 export const TamagotchiInfoCard = () => {
   useTamagotchi();
   // useThrottleWasmState();
-  useLesson5();
-
+  const { setNotification, activeNotification, setActiveNotification } = useLesson5();
   const { account } = useAccount();
-  const { tamagotchi, lesson, notification, setNotification, activeNotification, setActiveNotification } = useLesson();
+  const { tamagotchi, lesson } = useLesson();
   const send = useTamagocthiMessage();
   const [pending, setPending] = useState(false);
 
   const fullView = Boolean(lesson && lesson?.step > 1);
 
   const onSuccess = (str: NotificationResponseTypes) => {
-    setNotification(
-      notification.splice(
-        notification.findIndex((el) => el[0] === str),
-        1,
-      ),
-    );
+    setNotification((prev) => ({ ...prev, ...getNotificationTypeValue(str) }));
     setActiveNotification(undefined);
     setPending(false);
   };
@@ -62,7 +57,7 @@ export const TamagotchiInfoCard = () => {
         <div className={clsx('flex gap-12 items-center p-4 pr-12 bg-white/5 rounded-2xl', fullView && 'w-full')}>
           <div className="basis-[415px] w-full px-8 py-6 bg-[#1E1E1E] rounded-2xl">
             <div className="flex justify-between gap-4">
-              <h2 className="typo-h2 text-primary truncate">{tamagotchi.name}</h2>
+              <h2 className="typo-h2 text-primary truncate">{tamagotchi.name ? tamagotchi.name : 'Geary'}</h2>
               <div>
                 <AccountActionsMenu isPending={pending} />
               </div>

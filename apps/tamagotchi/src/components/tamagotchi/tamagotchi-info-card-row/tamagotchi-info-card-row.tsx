@@ -3,7 +3,7 @@ import { Button } from '@gear-js/ui';
 import clsx from 'clsx';
 import { Popover } from '@headlessui/react';
 import { Float } from '@headlessui-float/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Props = {
   onClick: () => void;
@@ -25,12 +25,17 @@ export const TamagotchiInfoCardRow = ({
   onClick,
   tooltipTitle,
   tooltipText,
-  isActive = false,
+  isActive,
   isPending,
 }: Props) => {
-  const [show, setShow] = useState(isActive);
+  const [show, setShow] = useState(false);
   const toggle = () => setShow(!show);
   const current = Number(value) / 100;
+
+  useEffect(() => {
+    setShow(isActive);
+    // console.log({ isActive });
+  }, [isActive]);
 
   return (
     <Popover>

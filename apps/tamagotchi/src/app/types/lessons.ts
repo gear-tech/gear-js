@@ -32,4 +32,4 @@ export type LessonState = {
 
 export type NotificationResponseTypes = 'WantToSleep' | 'PlayWithMe' | 'FeedMe';
 
-export type NotificationType = [NotificationResponseTypes, number][];
+export type NotificationType = Partial<Record<NotificationResponseTypes, number>>;
