@@ -4,6 +4,7 @@ enum ProgramStatus {
   Terminated = 'terminated',
   InitFailed = 'init_failed',
   Paused = 'paused',
+  Exited = 'exited',
 
   // TODO: old ones
   // Success = 'success',
@@ -17,6 +18,7 @@ const PROGRAM_STATUS_NAME = {
   [ProgramStatus.Terminated as const]: 'Terminated',
   [ProgramStatus.InitFailed as const]: 'Terminated',
   [ProgramStatus.Paused as const]: 'Paused',
+  [ProgramStatus.Exited as const]: 'Exited',
 };
 
 export { ProgramStatus, PROGRAM_STATUS_NAME };

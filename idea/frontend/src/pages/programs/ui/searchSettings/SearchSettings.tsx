@@ -51,6 +51,12 @@ const SearchSettings = ({ initQuery, isLoggedIn, initialValues, onSubmit }: Prop
             label={PROGRAM_STATUS_NAME[ProgramStatus.Terminated]}
             status={BulbStatus.Error}
           />
+          <StatusCheckbox
+            name="status"
+            value={ProgramStatus.Exited}
+            label={PROGRAM_STATUS_NAME[ProgramStatus.Exited]}
+            status={BulbStatus.Exited}
+          />
         </FilterGroup>
       </Filters>
     </section>
