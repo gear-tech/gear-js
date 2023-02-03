@@ -12,6 +12,7 @@ type SendMessageOptions = {
   value?: string | number;
   isOtherPanicsAllowed?: boolean;
   onSuccess?: () => void;
+  onError?: () => void;
 };
 
 function useSendMessage(destination: HexString, metadata: ProgramMetadata | undefined) {
@@ -22,18 +23,19 @@ function useSendMessage(destination: HexString, metadata: ProgramMetadata | unde
   const title = 'gear.sendMessage';
   const loadingAlertId = useRef('');
 
-  const handleEventsStatus = (events: EventRecord[], onSuccess?: () => void) => {
+  const handleEventsStatus = (events: EventRecord[], onSuccess?: () => void, onError?: () => void) => {
     events.forEach(({ event: { method, section } }) => {
       if (method === 'MessageEnqueued') {
         alert.success(`${section}.MessageEnqueued`);
         onSuccess && onSuccess();
       } else if (method === 'ExtrinsicFailed') {
         alert.error('Extrinsic Failed', { title });
+        onError && onError();
       }
     });
   };
 
-  const handleStatus = (result: ISubmittableResult, onSuccess?: () => void) => {
+  const handleStatus = (result: ISubmittableResult, onSuccess?: () => void, onError?: () => void) => {
     const { status, events } = result;
     const { isReady, isInBlock, isInvalid, isFinalized } = status;
 
@@ -45,7 +47,7 @@ function useSendMessage(destination: HexString, metadata: ProgramMetadata | unde
       alert.update(loadingAlertId.current, 'In Block');
     } else if (isFinalized) {
       alert.update(loadingAlertId.current, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
-      handleEventsStatus(events, onSuccess);
+      handleEventsStatus(events, onSuccess, onError);
     }
   };
 
@@ -53,7 +55,7 @@ function useSendMessage(destination: HexString, metadata: ProgramMetadata | unde
     if (account && metadata) {
       loadingAlertId.current = alert.loading('Sign In', { title });
 
-      const { value = 0, isOtherPanicsAllowed = false, onSuccess } = options || {};
+      const { value = 0, isOtherPanicsAllowed = false, onSuccess, onError } = options || {};
       const { address, decodedAddress, meta } = account;
       const { source } = meta;
 
@@ -62,8 +64,13 @@ function useSendMessage(destination: HexString, metadata: ProgramMetadata | unde
         .then(getAutoGasLimit)
         .then((gasLimit) => ({ destination, gasLimit, payload, value }))
         .then((message) => api.message.send(message, metadata) && web3FromSource(source))
-        .then(({ signer }) => api.message.signAndSend(address, { signer }, (result) => handleStatus(result, onSuccess)))
-        .catch(({ message }: Error) => alert.update(loadingAlertId.current, message, DEFAULT_ERROR_OPTIONS));
+        .then(({ signer }) =>
+          api.message.signAndSend(address, { signer }, (result) => handleStatus(result, onSuccess, onError)),
+        )
+        .catch(({ message }: Error) => {
+          alert.update(loadingAlertId.current, message, DEFAULT_ERROR_OPTIONS);
+          onError && onError();
+        });
     }
   };
 
