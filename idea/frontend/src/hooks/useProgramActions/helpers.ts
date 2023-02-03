@@ -24,6 +24,7 @@ const waitForProgramInit = (api: GearApi, programId: string) => {
 
             break;
           }
+
           case Method.MessagesDispatched: {
             const mdEvent = event as MessagesDispatched;
 
@@ -36,15 +37,21 @@ const waitForProgramInit = (api: GearApi, programId: string) => {
 
             break;
           }
+
           case Method.ProgramChanged: {
             const pcEvent = event as ProgramChanged;
 
-            if (pcEvent.data.id.eq(programId) && pcEvent.data.change.isActive) {
-              resolve(ProgramStatus.Active);
+            if (pcEvent.data.id.eq(programId)) {
+              if (pcEvent.data.change.isActive) {
+                resolve(ProgramStatus.Active);
+              } else if (pcEvent.data.change.isPaused || pcEvent.data.change.isInactive) {
+                resolve(ProgramStatus.Exited);
+              }
             }
 
             break;
           }
+
           default:
             break;
         }

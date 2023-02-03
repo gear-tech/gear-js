@@ -13,6 +13,7 @@ import { PROGRAM_ERRORS, TransactionName, TransactionStatus, absoluteRoutes } fr
 import { checkWallet, readFileAsync, getExtrinsicFailedMessage } from 'shared/helpers';
 import { CustomLink } from 'shared/ui/customLink';
 
+import { ProgramStatus } from 'entities/program';
 import { useMetadataUpload } from '../useMetadataUpload';
 import { waitForProgramInit } from './helpers';
 import { ALERT_OPTIONS } from './consts';
@@ -94,12 +95,7 @@ const useProgramActions = () => {
           handleEventsStatus(events, { reject, resolve });
 
           if (metaHex) {
-            uploadMetadata({
-              name,
-              programId,
-              metaHex,
-              resolve: () => alert.success(programMessage, ALERT_OPTIONS),
-            });
+            uploadMetadata({ name, programId, metaHex, resolve: () => alert.success(programMessage, ALERT_OPTIONS) });
           }
         } else if (status.isInvalid) {
           alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
@@ -110,8 +106,7 @@ const useProgramActions = () => {
 
       const initStatus = await initialization;
 
-      // TODO: replace w/ ProgramStatus.Terminated
-      if (initStatus === 'failed') {
+      if (initStatus === ProgramStatus.Terminated || initStatus === ProgramStatus.Exited) {
         alert.error(programMessage, ALERT_OPTIONS);
 
         if (reject) reject();
