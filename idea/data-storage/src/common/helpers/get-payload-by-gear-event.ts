@@ -53,20 +53,17 @@ function programChangedPayload(data: ProgramChangedData): ProgramChangedInput | 
 
   if (change.isActive) {
     res.programStatus = ProgramStatus.ACTIVE;
-    return res;
   }
 
   if(change.isInactive) {
     res.programStatus = ProgramStatus.EXITED;
-    return res;
   }
 
   if (change.isPaused) {
     res.programStatus = ProgramStatus.EXITED;
-    return res;
   }
 
-  return null;
+  return res;
 }
 
 function codeChangedPayload(data: CodeChangedData): CodeChangedInput | null {
