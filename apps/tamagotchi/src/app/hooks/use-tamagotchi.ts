@@ -9,11 +9,14 @@ export function useReadTamagotchi<T>() {
 }
 
 export function useTamagotchi() {
-  const { setTamagotchi } = useLesson();
-  const { state } = useReadTamagotchi<TamagotchiState>();
+  const { setTamagotchi, reset } = useLesson();
+  const { state, isStateRead } = useReadTamagotchi<TamagotchiState>();
 
   useEffect(() => {
+    // state ? setTamagotchi(state) : reset();
     if (state) setTamagotchi(state);
-    console.log(state);
+    console.log('state in use', state);
   }, [state]);
+
+  return { isStateRead };
 }

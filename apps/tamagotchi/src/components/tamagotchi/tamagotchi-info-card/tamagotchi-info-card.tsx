@@ -9,6 +9,7 @@ import { useThrottleWasmState } from 'app/hooks/use-read-wasm-state';
 import { TamagotchiInfoCardRow } from '../tamagotchi-info-card-row';
 import { useLesson5 } from 'app/hooks/use-lesson-5';
 import { NotificationResponseTypes } from 'app/types/lessons';
+import { useState } from 'react';
 
 export const TamagotchiInfoCard = () => {
   useTamagotchi();
@@ -18,6 +19,7 @@ export const TamagotchiInfoCard = () => {
   const { account } = useAccount();
   const { tamagotchi, lesson, notification, setNotification, activeNotification, setActiveNotification } = useLesson();
   const send = useTamagocthiMessage();
+  const [pending, setPending] = useState(false);
 
   const fullView = Boolean(lesson && lesson?.step > 1);
 
@@ -29,22 +31,30 @@ export const TamagotchiInfoCard = () => {
       ),
     );
     setActiveNotification(undefined);
+    setPending(false);
   };
-  const feedHandler = () => send({ Feed: null }, { onSuccess: () => onSuccess('FeedMe') });
-  const playHandler = () =>
+  const feedHandler = () => {
+    setPending(true);
+    send({ Feed: null }, { onSuccess: () => onSuccess('FeedMe') });
+  };
+  const playHandler = () => {
+    setPending(true);
     send(
       { Play: null },
       {
         onSuccess: () => onSuccess('PlayWithMe'),
       },
     );
-  const sleepHandler = () =>
+  };
+  const sleepHandler = () => {
+    setPending(true);
     send(
       { Sleep: null },
       {
         onSuccess: () => onSuccess('WantToSleep'),
       },
     );
+  };
 
   return (
     <>
@@ -54,7 +64,7 @@ export const TamagotchiInfoCard = () => {
             <div className="flex justify-between gap-4">
               <h2 className="typo-h2 text-primary truncate">{tamagotchi.name}</h2>
               <div>
-                <AccountActionsMenu />
+                <AccountActionsMenu isPending={pending} />
               </div>
             </div>
             <div className="mt-8 text-white text-lg font-medium">
@@ -85,6 +95,7 @@ export const TamagotchiInfoCard = () => {
                 }
                 tooltipTitle="Low level of fed"
                 isActive={activeNotification === 'FeedMe'}
+                isPending={pending}
               />
               <TamagotchiInfoCardRow
                 label="Happy"
@@ -97,6 +108,7 @@ export const TamagotchiInfoCard = () => {
                 }
                 tooltipTitle="Low level of happiness"
                 isActive={activeNotification === 'PlayWithMe'}
+                isPending={pending}
               />
               <TamagotchiInfoCardRow
                 label="Tired"
@@ -109,6 +121,7 @@ export const TamagotchiInfoCard = () => {
                 }
                 tooltipTitle="Low level of rest"
                 isActive={activeNotification === 'WantToSleep'}
+                isPending={pending}
               />
             </div>
           )}

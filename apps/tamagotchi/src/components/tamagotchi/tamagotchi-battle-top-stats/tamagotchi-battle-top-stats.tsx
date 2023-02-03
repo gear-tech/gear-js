@@ -22,7 +22,7 @@ export const TamagotchiBattleTopStats = ({ isWinner, state, health, isReverse }:
                 : 'bg-error ring-error'
               : 'bg-white ring-white',
           )}>
-          <TamagotchiAvatar lesson={6} hasItem={[]} className="w-50 h-50 -left-1/2" />
+          <TamagotchiAvatar hasItem={[]} className="w-50 h-50 -left-1/2" />
         </div>
         {/*<div className="absolute top-[calc(100%-8px)] inline-flex gap-2 items-center py-1 px-4 tracking-widest font-kanit font-semibold text-base leading-5 bg-[#404040] rounded-lg">*/}
         {/*  <Icon name="wins" className="w-5 h-5" /> 10*/}
@@ -36,7 +36,7 @@ export const TamagotchiBattleTopStats = ({ isWinner, state, health, isReverse }:
         <div className="relative py-0.5 px-4 rounded-xl overflow-hidden bg-white/10">
           <div
             className={clsx(
-              'absolute inset-0 rounded-xl',
+              'absolute inset-0 -z-1 rounded-xl',
               state === 'GameIsOver' ? (isWinner ? 'bg-[#2BD071]' : 'bg-error') : 'bg-[#2BD071]',
             )}
             style={{ width: `${health}%` }}

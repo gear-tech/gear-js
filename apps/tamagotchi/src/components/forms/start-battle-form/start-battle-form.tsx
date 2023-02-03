@@ -26,7 +26,9 @@ export const StartBattleForm = () => {
   return (
     <div className="space-y-10 my-auto">
       <h2 className="text-center typo-h2">Registration for Battle</h2>
-      <p className="text-center text-white text-opacity-70">Current players' queue: {battleState?.players.length}</p>
+      <p className="text-center text-white text-opacity-70">
+        Current players' queue: {battleState?.players.length ?? 0}
+      </p>
       <form onSubmit={handleSubmit} className="flex items-start justify-center gap-6">
         <div className="basis-[400px]">
           <Input placeholder="Insert program ID" direction="y" {...getInputProps('programId')} />

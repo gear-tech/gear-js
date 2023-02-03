@@ -8,7 +8,7 @@ import { ApproveAccountPopup } from 'components/popups/approve-account-popup';
 import { RevokeApprovalPopup } from 'components/popups/revoke-approval-popup';
 import { useAccount } from '@gear-js/react-hooks';
 
-export const AccountActionsMenu = () => {
+export const AccountActionsMenu = ({ isPending }: { isPending: boolean }) => {
   const { account } = useAccount();
   const { lesson, reset, tamagotchi } = useLesson();
   const initialOptions = [
@@ -70,7 +70,9 @@ export const AccountActionsMenu = () => {
                 'inline-flex w-full justify-center rounded-full bg-white px-4 py-1.5 text-sm font-semibold font-kanit text-white transition-colors',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75',
                 open ? 'bg-opacity-30' : 'bg-opacity-10 hover:bg-opacity-30',
-              )}>
+                isPending && 'opacity-50 pointer-events-none',
+              )}
+              disabled={isPending}>
               Options
             </Menu.Button>
             <Transition

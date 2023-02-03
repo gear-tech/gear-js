@@ -14,6 +14,7 @@ type Props = {
   tooltipTitle: string;
   tooltipText: string;
   isActive: boolean;
+  isPending: boolean;
 };
 
 export const TamagotchiInfoCardRow = ({
@@ -25,11 +26,11 @@ export const TamagotchiInfoCardRow = ({
   tooltipTitle,
   tooltipText,
   isActive = false,
+  isPending,
 }: Props) => {
   const [show, setShow] = useState(isActive);
   const toggle = () => setShow(!show);
   const current = Number(value) / 100;
-  // const middleware = [arrow({ element: refArrow, padding: 5 })];
 
   return (
     <Popover>
@@ -76,6 +77,7 @@ export const TamagotchiInfoCardRow = ({
               text={labelBtn}
               icon={() => <Icon name={`act-${labelBtn.toLowerCase()}`} className="w-5 h-5" />}
               onClick={onClick}
+              disabled={isPending}
             />
           </div>
         </div>
