@@ -4,7 +4,7 @@ import { HexString } from '@polkadot/util/types';
 import { ProgramMetadata, StateMetadata } from './metadata';
 import { getWasmMetadata, readState } from './wasm';
 import { CreateType } from './create-type';
-import { GearStorage } from './Storage';
+import { GearProgramStorage } from './Storage';
 import { OldMetadata } from './types';
 import { ReadStateError } from './errors';
 
@@ -13,7 +13,7 @@ interface ReadStateArgs {
   at?: HexString;
 }
 
-export class GearProgramState extends GearStorage {
+export class GearProgramState extends GearProgramStorage {
   private async newRead(
     args: { programId: HexString; at?: HexString },
     meta: ProgramMetadata,
@@ -85,7 +85,7 @@ export class GearProgramState extends GearStorage {
     const codeHash = await this._api.program.codeHash(programId);
     let initialSize = await this._api.code.staticPages(codeHash);
 
-    const program = await this.gProg(programId);
+    const program = await this.getProgram(programId);
 
     program.allocations.forEach((value) => {
       if (value.gtn(initialSize - 1)) {
@@ -95,7 +95,7 @@ export class GearProgramState extends GearStorage {
 
     initialSize++;
 
-    const pages = await this.gPages(programId, program);
+    const pages = await this.getProgramPages(programId, program);
     const blockHash = await this._api.blocks.getFinalizedHead();
     const block = await this._api.blocks.get(blockHash);
 

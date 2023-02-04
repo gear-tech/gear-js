@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { EventRecord } from '@polkadot/types/interfaces';
-import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 import { useApi, useAlert, useAccount, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
 import { useModal } from 'hooks';
@@ -27,7 +27,7 @@ const useCodeUpload = () => {
     return result.codeHash;
   };
 
-  const handleEventsStatus = (events: EventRecord[], codeHash: Hex) => {
+  const handleEventsStatus = (events: EventRecord[], codeHash: HexString) => {
     events.forEach(({ event }) => {
       const { method, section } = event;
       const alertOptions = { title: `${section}.${method}` };

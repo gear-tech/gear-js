@@ -1,5 +1,5 @@
-import { Hex } from '@gear-js/api';
 import { Button, buttonStyles, Input, Textarea } from '@gear-js/ui';
+import { HexString } from '@polkadot/util/types';
 import { useState } from 'react';
 import clsx from 'clsx';
 
@@ -17,7 +17,7 @@ import { FormattedMailboxItem } from '../../model';
 
 type Props = {
   value: FormattedMailboxItem;
-  onClaim: (messageId: Hex, reject: () => void) => void;
+  onClaim: (messageId: HexString, reject: () => void) => void;
 };
 
 const Message = ({ value, onClaim }: Props) => {

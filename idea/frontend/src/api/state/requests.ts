@@ -1,10 +1,10 @@
-import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 
 import { IState } from 'pages/state/model';
 import { RpcMethods } from 'shared/config';
 import { rpcService } from 'shared/services/rpcService';
 
-const addState = (params: { programId: Hex; wasmBuffBase64: string; name: string }) =>
+const addState = (params: { programId: HexString; wasmBuffBase64: string; name: string }) =>
   rpcService.callRPC<{ state: IState }>(RpcMethods.AddState, params);
 
 const fetchStates = (programId: string, query?: string) =>

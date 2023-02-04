@@ -1,5 +1,5 @@
 import { AnyJson } from '@polkadot/types/types';
 import { Bytes } from '@polkadot/types';
-import { Hex } from './common';
+import { HexString } from '@polkadot/util/types';
 
-export type PayloadType = Hex | Uint8Array | string | Bytes | AnyJson;
+export type PayloadType = HexString | Uint8Array | string | Bytes | AnyJson;

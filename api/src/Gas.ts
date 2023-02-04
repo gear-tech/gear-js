@@ -1,6 +1,7 @@
+import { HexString } from '@polkadot/util/types';
 import { isHex } from '@polkadot/util';
 
-import { Hex, PayloadType, Value } from './types';
+import { PayloadType, Value } from './types';
 import { ProgramMetadata, isProgramMeta } from './metadata';
 import { GasInfo } from './types';
 import { GearApi } from './GearApi';
@@ -50,8 +51,8 @@ export class GearGas {
    * ```
    */
   async initUpload(
-    sourceId: Hex,
-    code: Hex | Buffer,
+    sourceId: HexString,
+    code: HexString | Buffer,
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
@@ -64,8 +65,8 @@ export class GearGas {
    * @deprecated
    */
   async initUpload(
-    sourceId: Hex,
-    code: Hex | Buffer,
+    sourceId: HexString,
+    code: HexString | Buffer,
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
@@ -84,8 +85,8 @@ export class GearGas {
    * If meta is not passed it's possible to specify type name that can be one of the default rust types
    */
   async initUpload(
-    sourceId: Hex,
-    code: Hex | Buffer,
+    sourceId: HexString,
+    code: HexString | Buffer,
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
@@ -94,8 +95,8 @@ export class GearGas {
   ): Promise<GasInfo>;
 
   async initUpload(
-    sourceId: Hex,
-    code: Hex | Buffer,
+    sourceId: HexString,
+    code: HexString | Buffer,
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
@@ -142,8 +143,8 @@ export class GearGas {
    * ```
    */
   async initCreate(
-    sourceId: Hex,
-    code: Hex,
+    sourceId: HexString,
+    code: HexString,
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
@@ -156,8 +157,8 @@ export class GearGas {
    * @deprecated
    */
   async initCreate(
-    sourceId: Hex,
-    code: Hex,
+    sourceId: HexString,
+    code: HexString,
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
@@ -188,8 +189,8 @@ export class GearGas {
    * ```
    */
   async initCreate(
-    sourceId: Hex,
-    codeId: Hex,
+    sourceId: HexString,
+    codeId: HexString,
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
@@ -209,8 +210,8 @@ export class GearGas {
    * If meta is not passed it's possible to specify type name that can be one of the default rust types
    */
   async initCreate(
-    sourceId: Hex,
-    codeId: Hex,
+    sourceId: HexString,
+    codeId: HexString,
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
@@ -219,8 +220,8 @@ export class GearGas {
   ): Promise<GasInfo>;
 
   async initCreate(
-    sourceId: Hex,
-    codeId: Hex,
+    sourceId: HexString,
+    codeId: HexString,
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
@@ -257,7 +258,7 @@ export class GearGas {
    *    {
    *       id: {
    *         decimal: 64,
-   *         hex: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
+   *         HexString: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
    *       },
    *    },
    *   0,
@@ -268,8 +269,8 @@ export class GearGas {
    * ```
    */
   async handle(
-    sourceId: Hex,
-    destinationId: Hex | Buffer,
+    sourceId: HexString,
+    destinationId: HexString | Buffer,
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
@@ -282,8 +283,8 @@ export class GearGas {
    * @deprecated
    */
   async handle(
-    sourceId: Hex,
-    destinationId: Hex | Buffer,
+    sourceId: HexString,
+    destinationId: HexString | Buffer,
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
@@ -302,8 +303,8 @@ export class GearGas {
    * If meta is not passed it's possible to specify type name that can be one of the default rust types
    */
   async handle(
-    sourceId: Hex,
-    destinationId: Hex | Buffer,
+    sourceId: HexString,
+    destinationId: HexString | Buffer,
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
@@ -312,8 +313,8 @@ export class GearGas {
   ): Promise<GasInfo>;
 
   async handle(
-    sourceId: Hex,
-    destinationId: Hex,
+    sourceId: HexString,
+    destinationId: HexString,
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
@@ -358,8 +359,8 @@ export class GearGas {
    * ```
    */
   async reply(
-    sourceId: Hex,
-    messageId: Hex,
+    sourceId: HexString,
+    messageId: HexString,
     exitCode: number,
     payload: PayloadType,
     value?: Value,
@@ -373,8 +374,8 @@ export class GearGas {
    * @deprecated
    */
   async reply(
-    sourceId: Hex,
-    messageId: Hex,
+    sourceId: HexString,
+    messageId: HexString,
     exitCode: number,
     payload: PayloadType,
     value?: Value,
@@ -395,8 +396,8 @@ export class GearGas {
    * If meta is not passed it's possible to specify type name that can be one of the default rust types
    */
   async reply(
-    sourceId: Hex,
-    messageId: Hex,
+    sourceId: HexString,
+    messageId: HexString,
     exitCode: number,
     payload: PayloadType,
     value?: Value,
@@ -406,8 +407,8 @@ export class GearGas {
   ): Promise<GasInfo>;
 
   async reply(
-    sourceId: Hex,
-    messageId: Hex,
+    sourceId: HexString,
+    messageId: HexString,
     exitCode: number,
     payload: PayloadType,
     value?: Value,

@@ -1,11 +1,12 @@
 import { generatePath } from 'react-router-dom';
-import { Hex, UserMessageSent, Transfer, encodeAddress } from '@gear-js/api';
+import { UserMessageSent, Transfer, encodeAddress } from '@gear-js/api';
 import { AlertContainerFactory } from '@gear-js/react-hooks';
+import { HexString } from '@polkadot/util/types';
 
 import { absoluteRoutes } from 'shared/config';
 import { CustomLink } from 'shared/ui/customLink';
 
-const messageSentEventsHandler = (event: UserMessageSent, address: Hex, alert: AlertContainerFactory) => {
+const messageSentEventsHandler = (event: UserMessageSent, address: HexString, alert: AlertContainerFactory) => {
   const { message, method, section } = event.data;
   const { payload, destination, details, id } = message;
 
@@ -31,7 +32,7 @@ const messageSentEventsHandler = (event: UserMessageSent, address: Hex, alert: A
   );
 };
 
-const transferEventsHandler = (event: Transfer, address: Hex, alert: AlertContainerFactory) => {
+const transferEventsHandler = (event: Transfer, address: HexString, alert: AlertContainerFactory) => {
   const { from, to, amount, method, section } = event.data;
 
   if (to.toHex() !== address) {

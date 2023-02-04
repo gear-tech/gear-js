@@ -1,6 +1,7 @@
 import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { blake2AsHex } from '@polkadot/util-crypto';
+import { bufferToU8a } from '@polkadot/util';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
@@ -12,6 +13,7 @@ const api = new GearApi();
 let alice: KeyringPair;
 let codeId: HexString;
 let programId: HexString;
+let metaHash: HexString;
 
 const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
 const metaHex: HexString = `0x${readFileSync('test/programs/test-meta/meta.txt', 'utf-8')}`;
@@ -118,13 +120,50 @@ describe('Program', () => {
 
   test('Program exists', async () => {
     expect(programId).toBeDefined();
-    const programs = await api.program.exists(programId);
-    expect(programs).toBeTruthy();
+    const isExist = await api.program.exists(programId);
+    expect(isExist).toBeTruthy();
   });
 
-  test('Get hash of program metadata', async () => {
+  test('Get code hash', async () => {
     expect(programId).toBeDefined();
-    const metaHash = await api.program.metaHash(programId);
+    expect(codeId).toBeDefined();
+    const codeHash = await api.program.codeHash(programId);
+    expect(codeHash).toBe(codeId);
+  });
+
+  test('Get metahash by program id', async () => {
+    expect(programId).toBeDefined();
+    metaHash = await api.program.metaHash(programId);
     expect(metaHash).toBe(blake2AsHex(metaHex, 256));
+  });
+
+  test('Get metahash by codeId', async () => {
+    expect(programId).toBeDefined();
+    expect(codeId).toBeDefined();
+    const codeMetaHash = await api.code.metaHash(codeId);
+    expect(codeMetaHash).toBe(metaHash);
+  });
+
+  test('Get metahash by wasm', async () => {
+    const codeMetaHash = await api.code.metaHashFromWasm(code);
+    expect(codeMetaHash).toBe(metaHash);
+  });
+
+  test('Get metahash by wasm if it is Uint8Array', async () => {
+    const codeMetaHash = await api.code.metaHashFromWasm(bufferToU8a(code));
+    expect(codeMetaHash).toBe(metaHash);
+  });
+
+  test('Get program storage', async () => {
+    expect(programId).toBeDefined();
+    const program = await api.programStorage.getProgram(programId);
+    expect(program).toBeDefined();
+  });
+
+  test('Get program pages', async () => {
+    expect(programId).toBeDefined();
+    const program = await api.programStorage.getProgram(programId);
+    const pages = await api.programStorage.getProgramPages(programId, program);
+    expect(Object.keys(pages)).not.toHaveLength(0);
   });
 });

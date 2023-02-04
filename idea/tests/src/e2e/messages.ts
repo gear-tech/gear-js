@@ -1,10 +1,10 @@
-import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 import { expect } from 'chai';
 
 import request from './request';
 import { Passed } from '../interfaces';
 
-export async function getAllMessages(genesis: string, messagesIds: Hex[]): Promise<Passed> {
+export async function getAllMessages(genesis: string, messagesIds: HexString[]): Promise<Passed> {
   const response = await request('message.all', { genesis, limit: 100 });
   expect(response).to.have.own.property('result');
   expect(response.result).to.have.all.keys(['messages', 'count']);
@@ -39,7 +39,7 @@ export async function getMessagesByDates(genesis: string, date: Date): Promise<P
   return true;
 }
 
-export async function getMessageData(genesis: string, messageId: Hex) {
+export async function getMessageData(genesis: string, messageId: HexString) {
   const response = await request('message.data', { genesis, id: messageId });
   expect(response).to.have.own.property('result');
   expect(response.result).to.have.all.keys([
@@ -63,7 +63,7 @@ export async function getMessageData(genesis: string, messageId: Hex) {
   return true;
 }
 
-export async function getMessagePayload(genesis: string, messageId: Hex) {
+export async function getMessagePayload(genesis: string, messageId: HexString) {
   const response = await request('message.data', { genesis, id: messageId });
   expect(response).to.have.own.property('result');
   expect(response.result).to.have.property('payload');

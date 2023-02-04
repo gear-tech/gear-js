@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { GearApi, getProgramMetadata, Hex, MessageEnqueuedData } from '@gear-js/api';
+import { GearApi, getProgramMetadata, MessageEnqueuedData } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 
 import accounts from '../config/accounts';
@@ -8,7 +8,7 @@ import { sleep } from '../utils';
 import { listenToCodeChanged, listenToMessagesDispatched, listenToUserMessageSent } from './subscriptions';
 import { checkPrograms } from './check';
 
-async function uploadProgram(api: GearApi, spec: IProgramSpec): Promise<{ id: Hex; source: Hex; destination: Hex }> {
+async function uploadProgram(api: GearApi, spec: IProgramSpec): Promise<{ id: HexString; source: HexString; destination: HexString }> {
   const code = readFileSync(spec.pathToOpt);
   const metaHex: HexString = spec['pathToMetaTxt'] ? `0x${readFileSync(spec.pathToMetaTxt, 'utf-8')}` : null;
   const metaData = spec.pathToMetaTxt ? getProgramMetadata(metaHex) : undefined;
@@ -37,10 +37,10 @@ async function uploadProgram(api: GearApi, spec: IProgramSpec): Promise<{ id: He
 export async function uploadPrograms(
   api: GearApi,
   programs: { [program: string]: IProgramSpec },
-): Promise<[IPreparedPrograms, Map<Hex, any>, Map<Hex, any>]> {
+): Promise<[IPreparedPrograms, Map<HexString, any>, Map<HexString, any>]> {
   const initSuccess = new Map<string, boolean>();
-  const userMessages = new Map<Hex, any>();
-  const collectionCodeChanged = new Map<Hex, any>();
+  const userMessages = new Map<HexString, any>();
+  const collectionCodeChanged = new Map<HexString, any>();
 
   const unsubMessagesDispatched = await listenToMessagesDispatched(api, (messageId, success) => {
     initSuccess.set(messageId, success);
@@ -54,7 +54,7 @@ export async function uploadPrograms(
     collectionCodeChanged.set(data.id.toHex(), data.toHuman());
   });
 
-  const uploadedPrograms: { [key: Hex]: IUploadedPrograms } = {};
+  const uploadedPrograms: { [key: HexString]: IUploadedPrograms } = {};
 
   for (const program of Object.keys(programs)) {
     const uploadedProgram = await uploadProgram(api, programs[program]);

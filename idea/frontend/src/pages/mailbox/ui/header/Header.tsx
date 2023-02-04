@@ -1,7 +1,7 @@
-import { Hex } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
 import { Input } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
+import { HexString } from '@polkadot/util/types';
 import { useEffect } from 'react';
 
 import { isHexValid } from 'shared/helpers';
@@ -9,10 +9,10 @@ import { isHexValid } from 'shared/helpers';
 import styles from './Header.module.scss';
 
 type Props = {
-  onSearchSubmit: (query: Hex) => void;
+  onSearchSubmit: (query: HexString) => void;
 };
 
-const initialValues = { query: '' as Hex };
+const initialValues = { query: '' as HexString };
 const validate = { query: isHexValid };
 const initForm = { initialValues, validate };
 

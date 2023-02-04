@@ -1,4 +1,4 @@
-import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 
 import { ParamsToSignAndSend as CommonParamsToSignAndSend } from 'entities/hooks';
 
@@ -7,7 +7,7 @@ type ParamsToUploadCode = {
 };
 
 type ParamsToSignAndSend = Omit<CommonParamsToSignAndSend, 'reject' | 'resolve'> & {
-  codeHash: Hex;
+  codeHash: HexString;
 };
 
 export type { ParamsToUploadCode, ParamsToSignAndSend };

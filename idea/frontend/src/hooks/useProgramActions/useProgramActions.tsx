@@ -2,8 +2,8 @@ import { useCallback } from 'react';
 import { generatePath } from 'react-router-dom';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { web3FromSource } from '@polkadot/extension-dapp';
-import { Hex } from '@gear-js/api';
 import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
+import { HexString } from '@polkadot/util/types';
 
 import { useChain, useModal } from 'hooks';
 import { uploadLocalProgram } from 'api/LocalDB';
@@ -13,7 +13,8 @@ import { PROGRAM_ERRORS, TransactionName, TransactionStatus, absoluteRoutes } fr
 import { checkWallet, readFileAsync, getExtrinsicFailedMessage } from 'shared/helpers';
 import { CustomLink } from 'shared/ui/customLink';
 
-import { useMetadataUplaod } from '../useMetadataUpload';
+import { ProgramStatus } from 'entities/program';
+import { useMetadataUpload } from '../useMetadataUpload';
 import { waitForProgramInit } from './helpers';
 import { ALERT_OPTIONS } from './consts';
 import { Payload, ParamsToCreate, ParamsToUpload, ParamsToSignAndUpload } from './types';
@@ -25,7 +26,7 @@ const useProgramActions = () => {
   const { isDevChain } = useChain();
 
   const { showModal } = useModal();
-  const uploadMetadata = useMetadataUplaod();
+  const uploadMetadata = useMetadataUpload();
 
   const getProgramMessage = (programId: string) => (
     <p>
@@ -33,7 +34,7 @@ const useProgramActions = () => {
     </p>
   );
 
-  const createProgram = (codeId: Hex, payload: Payload) => {
+  const createProgram = (codeId: HexString, payload: Payload) => {
     const { gasLimit, value, initPayload, metadata, payloadType } = payload;
 
     const program = { value, codeId, gasLimit, initPayload };
@@ -94,12 +95,7 @@ const useProgramActions = () => {
           handleEventsStatus(events, { reject, resolve });
 
           if (metaHex) {
-            uploadMetadata({
-              name,
-              programId,
-              metaHex,
-              resolve: () => alert.success(programMessage, ALERT_OPTIONS),
-            });
+            uploadMetadata({ name, programId, metaHex, resolve: () => alert.success(programMessage, ALERT_OPTIONS) });
           }
         } else if (status.isInvalid) {
           alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
@@ -110,8 +106,7 @@ const useProgramActions = () => {
 
       const initStatus = await initialization;
 
-      // TODO: replace w/ ProgramStatus.Terminated
-      if (initStatus === 'failed') {
+      if (initStatus === ProgramStatus.Terminated || initStatus === ProgramStatus.Exited) {
         alert.error(programMessage, ALERT_OPTIONS);
 
         if (reject) reject();

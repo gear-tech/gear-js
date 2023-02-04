@@ -1,7 +1,8 @@
-import { Hex, ProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { AnyJson, ISubmittableResult } from '@polkadot/types/types';
+import { HexString } from '@polkadot/util/types';
 import { useContext, useRef } from 'react';
 import { AccountContext, AlertContext, ApiContext } from 'context';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
@@ -11,9 +12,10 @@ type SendMessageOptions = {
   value?: string | number;
   isOtherPanicsAllowed?: boolean;
   onSuccess?: () => void;
+  onError?: () => void;
 };
 
-function useSendMessage(destination: Hex, metadata: ProgramMetadata | undefined) {
+function useSendMessage(destination: HexString, metadata: ProgramMetadata | undefined) {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
   const alert = useContext(AlertContext);
@@ -21,18 +23,19 @@ function useSendMessage(destination: Hex, metadata: ProgramMetadata | undefined)
   const title = 'gear.sendMessage';
   const loadingAlertId = useRef('');
 
-  const handleEventsStatus = (events: EventRecord[], onSuccess?: () => void) => {
+  const handleEventsStatus = (events: EventRecord[], onSuccess?: () => void, onError?: () => void) => {
     events.forEach(({ event: { method, section } }) => {
       if (method === 'MessageEnqueued') {
         alert.success(`${section}.MessageEnqueued`);
         onSuccess && onSuccess();
       } else if (method === 'ExtrinsicFailed') {
         alert.error('Extrinsic Failed', { title });
+        onError && onError();
       }
     });
   };
 
-  const handleStatus = (result: ISubmittableResult, onSuccess?: () => void) => {
+  const handleStatus = (result: ISubmittableResult, onSuccess?: () => void, onError?: () => void) => {
     const { status, events } = result;
     const { isReady, isInBlock, isInvalid, isFinalized } = status;
 
@@ -44,7 +47,7 @@ function useSendMessage(destination: Hex, metadata: ProgramMetadata | undefined)
       alert.update(loadingAlertId.current, 'In Block');
     } else if (isFinalized) {
       alert.update(loadingAlertId.current, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
-      handleEventsStatus(events, onSuccess);
+      handleEventsStatus(events, onSuccess, onError);
     }
   };
 
@@ -52,7 +55,7 @@ function useSendMessage(destination: Hex, metadata: ProgramMetadata | undefined)
     if (account && metadata) {
       loadingAlertId.current = alert.loading('Sign In', { title });
 
-      const { value = 0, isOtherPanicsAllowed = false, onSuccess } = options || {};
+      const { value = 0, isOtherPanicsAllowed = false, onSuccess, onError } = options || {};
       const { address, decodedAddress, meta } = account;
       const { source } = meta;
 
@@ -61,8 +64,13 @@ function useSendMessage(destination: Hex, metadata: ProgramMetadata | undefined)
         .then(getAutoGasLimit)
         .then((gasLimit) => ({ destination, gasLimit, payload, value }))
         .then((message) => api.message.send(message, metadata) && web3FromSource(source))
-        .then(({ signer }) => api.message.signAndSend(address, { signer }, (result) => handleStatus(result, onSuccess)))
-        .catch(({ message }: Error) => alert.update(loadingAlertId.current, message, DEFAULT_ERROR_OPTIONS));
+        .then(({ signer }) =>
+          api.message.signAndSend(address, { signer }, (result) => handleStatus(result, onSuccess, onError)),
+        )
+        .catch(({ message }: Error) => {
+          alert.update(loadingAlertId.current, message, DEFAULT_ERROR_OPTIONS);
+          onError && onError();
+        });
     }
   };
 

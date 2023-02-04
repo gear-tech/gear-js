@@ -3,7 +3,7 @@ import { GetAllProgramsParams, GetAllUserProgramsParams } from '@gear-js/common'
 
 import { ProgramService } from '../../src/program/program.service';
 import { ProgramRepo } from '../../src/program/program.repo';
-import { CreateProgramInput, UpdateProgramDataInput } from '../../src/program/types';
+import { CreateProgramInput } from '../../src/program/types';
 import { ProgramStatus } from '../../src/common/enums';
 
 import { mockProgramRepository } from '../mock/program/program-repository.mock';
@@ -44,31 +44,6 @@ describe('Program service', () => {
 
     expect(programs[0].id).toEqual(PROGRAM_ENTITY_ID);
     expect(mockProgramRepository.save).toHaveBeenCalled();
-  });
-
-  it('should be successfully updated program', async () => {
-    const { id, genesis } = PROGRAM_DB_MOCK[0];
-    const updateProgramDataInput: UpdateProgramDataInput = {
-      id,
-      genesis,
-      name: 'newName',
-    };
-    const program = await programService.updateProgramData(updateProgramDataInput);
-
-    expect(program.id).toEqual(updateProgramDataInput.id);
-    expect(program.name).toEqual(updateProgramDataInput.name);
-    expect(program.meta).toEqual(updateProgramDataInput.meta);
-  });
-
-  it('should be get not found program exception', async () => {
-    const updateProgramDataInput: UpdateProgramDataInput = {
-      id: 'not_exist',
-      genesis: 'not_exist',
-      name: 'newName',
-    };
-
-    await expect(programService.updateProgramData(updateProgramDataInput)).rejects.toThrowError();
-    expect(mockProgramRepository.getByIdAndGenesis).toHaveBeenCalled();
   });
 
   it('should successfully get programs by owner and called getAllPrograms method', async () => {

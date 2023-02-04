@@ -4,6 +4,9 @@ import { getPayloadAndValue } from './get-update-message-data';
 import { constructQueryBuilder } from './query-builder';
 import { getStateMeta } from './get-state-meta';
 import { getCodeHash } from './get-wasm-hash';
+import { generateCodeHashByApi } from './generate-code-hash-by-api';
+import { getProgramMetadataByApi } from './get-program-metadata-by-api';
+
 
 export {
   getMessageReadStatus,
@@ -12,4 +15,6 @@ export {
   constructQueryBuilder,
   getStateMeta,
   getCodeHash,
+  generateCodeHashByApi,
+  getProgramMetadataByApi
 };

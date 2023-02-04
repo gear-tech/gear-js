@@ -1,6 +1,6 @@
 import { Input, Button } from '@gear-js/ui';
-import { Hex } from '@gear-js/api';
 import { useForm } from '@mantine/form';
+import { HexString } from '@polkadot/util/types';
 
 import { ReactComponent as ApplySVG } from 'shared/assets/images/actions/apply.svg';
 import { isHexValid } from 'shared/helpers';
@@ -8,10 +8,10 @@ import { isHexValid } from 'shared/helpers';
 import styles from './MetadataInput.module.scss';
 
 type Props = {
-  onSubmit: (value: Hex) => void;
+  onSubmit: (value: HexString) => void;
 };
 
-const initialValues = { metaHex: '' as Hex };
+const initialValues = { metaHex: '' as HexString };
 const validate = { metaHex: isHexValid };
 
 const MetadataInput = ({ onSubmit }: Props) => {

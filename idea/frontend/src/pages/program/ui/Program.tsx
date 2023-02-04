@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 
 import { useProgram } from 'hooks';
 import { ProgramMessages } from 'widgets/programMessages';
@@ -14,7 +14,7 @@ import { MetadataDetails } from './metadataDetails';
 const Program = () => {
   const { programId } = useParams() as PathParams;
 
-  const { program, metadata, isLoading } = useProgram(programId, true);
+  const { program, metadata, isLoading, updateMeta } = useProgram(programId, true);
   const { messages } = program || {};
 
   const sortedMessages = messages?.sort(
@@ -28,13 +28,15 @@ const Program = () => {
         programId={programId}
         isLoading={isLoading}
         isStateButtonVisible={isState(metadata)}
+        isAddMetaButtonVisible={!metadata}
+        onMetaAdd={updateMeta}
       />
       <div className={styles.content}>
         <div className={styles.leftSide}>
           <ProgramDetails program={program} isLoading={isLoading} />
           <MetadataDetails metadata={metadata} isLoading={isLoading} />
         </div>
-        <ProgramMessages programId={programId as Hex} messages={sortedMessages || []} isLoading={isLoading} />
+        <ProgramMessages programId={programId as HexString} messages={sortedMessages || []} isLoading={isLoading} />
       </div>
     </div>
   );

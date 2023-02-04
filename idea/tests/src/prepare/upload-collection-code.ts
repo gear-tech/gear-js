@@ -1,11 +1,12 @@
-import { CodeChangedData, GearApi, Hex } from '@gear-js/api';
+import { CodeChangedData, GearApi } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 import { readFileSync } from 'fs';
 
 import { ICodeSpec, IPreparedCollectionCode } from '../interfaces';
 import accounts from '../config/accounts';
 import { checkCollectionCode } from './check';
 
-async function uploadCode(api: GearApi, spec: ICodeSpec): Promise<{ id: Hex, change: string, expiration: any } | void> {
+async function uploadCode(api: GearApi, spec: ICodeSpec): Promise<{ id: HexString, change: string, expiration: any } | void> {
   const code = readFileSync(spec.pathToOpt);
   const account = (await accounts())[spec.account];
   await api.code.upload(code);
@@ -34,7 +35,7 @@ async function uploadCollectionCode(
   api: GearApi,
   collectionCode: { [key: string]: ICodeSpec[] },
 ):Promise<IPreparedCollectionCode> {
-  const sendCollectionCode = new Map<Hex, any>;
+  const sendCollectionCode = new Map<HexString, any>;
 
   for (const key of  Object.keys(collectionCode)) {
     const listCode = collectionCode[key];

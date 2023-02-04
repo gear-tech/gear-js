@@ -1,6 +1,7 @@
+import { HexString } from '@polkadot/util/types';
 import { UnsubscribePromise } from '@polkadot/api/types';
 
-import { Hex, IBalanceCallback, IBlocksCallback, ISystemAccountInfo } from '../types';
+import { IBalanceCallback, IBlocksCallback, ISystemAccountInfo } from '../types';
 import { Transfer, UserMessageSent } from './GearEvents';
 import { GearApi } from '../GearApi';
 import { IGearEvent } from './types';
@@ -25,14 +26,17 @@ export class GearEvents {
     });
   }
 
-  #umsActorsMatch(from: Hex, to: Hex, event: UserMessageSent): boolean {
+  #umsActorsMatch(from: HexString, to: HexString, event: UserMessageSent): boolean {
     if (event.data.message.source.eq(from) || event.data.message.destination.eq(to)) {
       return true;
     }
     return false;
   }
 
-  subscribeToUserMessageSentByActor(options: { from?: Hex; to?: Hex }, callback: (event: UserMessageSent) => void) {
+  subscribeToUserMessageSentByActor(
+    options: { from?: HexString; to?: HexString },
+    callback: (event: UserMessageSent) => void,
+  ) {
     return this.api.query.system.events((events) => {
       events
         .filter(({ event }) => event.method === 'UserMessageSent')

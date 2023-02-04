@@ -1,4 +1,4 @@
-import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 
 import assert from 'assert';
 
@@ -10,7 +10,7 @@ import {
 } from '../interfaces';
 
 function checkPrograms(
-  programs: { [id: Hex]: IUploadedPrograms },
+  programs: { [id: HexString]: IUploadedPrograms },
   initSuccess: Map<string, boolean>,
 ): IPreparedPrograms {
   const result: IPreparedPrograms = {};
@@ -42,7 +42,7 @@ function checkMessages(sentMessages: Map<number, any>, specMessages: { [program:
 
 function checkUserMessageSent(
   specMessages: { [program: string]: IMessageSpec[] },
-  checkUserMessageSentMessages: Map<Hex, any>,
+  checkUserMessageSentMessages: Map<HexString, any>,
 ) {
 
   assert(
@@ -61,8 +61,8 @@ function checkUserMessageSent(
 }
 
 function checkCollectionCode(
-  sentCollectionCode: Map<Hex, any>,
-  specCollectionCode: { [key: string]: ICodeSpec[] }): Map<Hex, any> {
+  sentCollectionCode: Map<HexString, any>,
+  specCollectionCode: { [key: string]: ICodeSpec[] }): Map<HexString, any> {
   assert(
     Object.keys(specCollectionCode).reduce((counter, key) => {
       counter += specCollectionCode[key].length;

@@ -1,11 +1,11 @@
-import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 
 import { OperationCallbacks } from 'entities/hooks';
 
 type ParamsToUploadMeta = Partial<OperationCallbacks> & {
   name: string;
   programId: string;
-  metaHex: Hex;
+  metaHex: HexString;
 };
 
 export type { ParamsToUploadMeta };

@@ -1,5 +1,7 @@
+import { HexString } from '@polkadot/util/types';
+
 type PathParams = {
-  programId: string;
+  programId: HexString;
 };
 
 type StateWithFile = {

@@ -1,10 +1,10 @@
-import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 import { expect } from 'chai';
 
 import { Passed } from '../interfaces';
 import request from './request';
 
-async function getCodes(genesis: string, codeIds: Hex[]): Promise<Passed> {
+async function getCodes(genesis: string, codeIds: HexString[]): Promise<Passed> {
   const response = await request('code.all', { genesis, limit: 100 });
   expect(response).to.have.own.property('result');
   expect(response.result).to.have.all.keys(['listCode', 'count']);
@@ -38,7 +38,7 @@ async function getCodesByDates(genesis: string, date: Date): Promise<Passed> {
   return true;
 }
 
-async function getCodeData(genesis: string, codeId: Hex) {
+async function getCodeData(genesis: string, codeId: HexString) {
   const response = await request('code.data', { genesis, codeId });
   expect(response).to.have.own.property('result');
   expect(response.result).to.have.all.keys([

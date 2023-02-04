@@ -1,9 +1,10 @@
 import { load } from 'js-yaml';
 import { readFileSync } from 'fs';
 
-import { Meta, Program } from '../../../src/database/entities';
+import { Program } from '../../../src/database/entities';
+import { METADATA_DB_MOCK } from '../metadata/metadata-db.mock';
 
-const metadata = new Meta();
+const metadata = METADATA_DB_MOCK[0];
 
 function getProgramDBMock(): Program[] {
   const pathPrograms = '/programs.mock.yaml';

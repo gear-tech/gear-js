@@ -1,5 +1,5 @@
-import { Hex } from '@gear-js/api';
 import { useApi, useAccount } from '@gear-js/react-hooks';
+import { HexString } from '@polkadot/util/types';
 import { useState, useCallback, useEffect } from 'react';
 import SimpleBar from 'simplebar-react';
 
@@ -18,7 +18,7 @@ const Mailbox = () => {
   const claimMessage = useMessageClaim();
 
   const [mailbox, setMailbox] = useState<FormattedMailboxItem[]>();
-  const [searchQuery, setSearchQuery] = useState('' as Hex);
+  const [searchQuery, setSearchQuery] = useState('' as HexString);
 
   const list = searchQuery ? mailbox?.filter(([message]) => message.id === searchQuery) : mailbox;
 
@@ -26,7 +26,7 @@ const Mailbox = () => {
   const isListEmpty = list?.length === 0;
 
   const handleClaim = useCallback(
-    (messageId: Hex, reject: () => void) => {
+    (messageId: HexString, reject: () => void) => {
       const removeMail = () =>
         setMailbox((prevState) => prevState && prevState.filter(([mail]) => mail.id !== messageId));
 
@@ -35,11 +35,11 @@ const Mailbox = () => {
     [claimMessage],
   );
 
-  const address = account?.address as Hex;
+  const address = account?.address as HexString;
 
   useEffect(() => {
     setMailbox(undefined);
-    setSearchQuery('' as Hex);
+    setSearchQuery('' as HexString);
 
     if (address)
       api.mailbox

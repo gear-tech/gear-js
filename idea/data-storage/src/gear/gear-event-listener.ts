@@ -1,19 +1,19 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { CodeChanged, GearApi, generateCodeHash, Hex, MessageEnqueued } from '@gear-js/api';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { CodeChanged, GearApi, generateCodeHash, MessageEnqueued } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { SignedBlockExtended } from '@polkadot/api-derive/types';
 import { Keys } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
-import { blake2AsHex } from '@polkadot/util-crypto';
 
 import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
 import { CodeService } from '../code/code.service';
 import { getPayloadAndValue, getPayloadByGearEvent } from '../common/helpers';
 import { Message } from '../database/entities';
-import { CodeStatus, MessageEntryPoint, MessageType, ProgramStatus } from '../common/enums';
+import { CodeStatus, MessageEntryPoint, MessageType } from '../common/enums';
 import { CodeRepo } from '../code/code.repo';
 import { CodeChangedInput, UpdateCodeInput } from '../code/types';
 import { changeStatus } from '../healthcheck/healthcheck.controller';
@@ -29,8 +29,8 @@ const { gear } = configuration();
 @Injectable()
 export class GearEventListener {
   private logger: Logger = new Logger(GearEventListener.name);
-  private api: GearApi;
-  public genesis: Hex;
+  public api: GearApi;
+  public genesis: HexString;
 
   constructor(
     private programService: ProgramService,
@@ -40,6 +40,7 @@ export class GearEventListener {
     private codeRepository: CodeRepo,
     private blockService: BlockService,
     private rabbitMQService: RabbitmqService,
+    @Inject(forwardRef(() => MetaService))
     private metaService: MetaService,
   ) {}
 
@@ -65,16 +66,6 @@ export class GearEventListener {
       });
 
       this.logger.log('⚙️ 📡 Reconnecting to the gear node');
-    }
-  }
-
-  public async isValidMetaHex(hex: string, programId: string): Promise<boolean> {
-    try {
-      const metaHash = await this.api.program.metaHash(programId as Hex);
-      return metaHash === blake2AsHex(hex, 256);
-    } catch (error) {
-      this.logger.error(error);
-      return false;
     }
   }
 
@@ -132,7 +123,7 @@ export class GearEventListener {
         await this.messageService.createMessages([createMessageDBType]);
       },
       [Keys.ProgramChanged]: async () => {
-        if (payload.isActive) await this.programService.setStatus(id, genesis, ProgramStatus.ACTIVE);
+        await this.programService.setStatus(id, genesis, payload.programStatus);
       },
       [Keys.MessagesDispatched]: async () => {
         await this.messageService.setDispatchedStatus(payload);
@@ -252,9 +243,11 @@ export class GearEventListener {
 
             if(meta){
               Object.assign(createProgram, { meta });
+              await this.codeService.addMeta(codeId, this.genesis, meta);
             } else {
               const meta = await this.metaService.createMeta({ hash: metaHash });
               Object.assign(createProgram, { meta });
+              await this.codeService.addMeta(codeId, this.genesis, meta);
             }
           }
         } catch (error) {
@@ -315,7 +308,7 @@ export class GearEventListener {
     }
   }
 
-  private async handleBlocks(block: SignedBlockExtended, timestamp: number, blockHash: Hex) {
+  private async handleBlocks(block: SignedBlockExtended, timestamp: number, blockHash: HexString) {
     const blockNumber = block.block.header.toHuman().number as string;
 
     await this.blockService.createBlocks([

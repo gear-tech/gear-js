@@ -1,40 +1,59 @@
-import { Modal, Button } from '@gear-js/ui';
+import { getProgramMetadata } from '@gear-js/api';
+import { Button, Input, Modal } from '@gear-js/ui';
+import { useForm } from '@mantine/form';
+import { HexString } from '@polkadot/util/types';
+import { useState, useMemo } from 'react';
+import SimpleBar from 'simplebar-react';
 
+import { useMetadataUpload, useModal } from 'hooks';
 import { ModalProps } from 'entities/modal';
+import { UploadMetadata } from 'features/uploadMetadata';
+import { ReactComponent as plusSVG } from 'shared/assets/images/actions/plus.svg';
 
+import { isExists } from 'shared/helpers';
 import styles from './UploadMetadataModal.module.scss';
 
+const initialValues = { name: '' };
+const validate = { name: isExists };
+
 type Props = ModalProps & {
-  onAbort?: () => void;
-  onConfirm: () => void;
+  programId: HexString;
+  onSuccessSubmit: (metaHex: HexString, programName: string) => void;
 };
 
-const UploadMetadataModal = ({ onClose, onAbort, onConfirm }: Props) => {
-  const handleClose = () => {
-    if (onAbort) {
-      onAbort();
-    }
+const UploadMetadataModal = ({ onClose, programId, onSuccessSubmit }: Props) => {
+  const { getInputProps, onSubmit } = useForm({ initialValues, validate });
+  const { closeModal } = useModal();
 
-    onClose();
-  };
+  const uploadMetadata = useMetadataUpload();
 
-  const handleConfirm = () => {
-    onConfirm();
-    onClose();
-  };
+  const [metaHex, setMetaHex] = useState<HexString>();
+
+  const metadata = useMemo(() => (metaHex ? getProgramMetadata(metaHex) : undefined), [metaHex]);
+
+  const resetMetaHex = () => setMetaHex(undefined);
+
+  const handleSubmit = onSubmit(({ name }) => {
+    if (!metaHex) return;
+
+    const resolve = () => {
+      onSuccessSubmit(metaHex, name);
+      closeModal();
+    };
+
+    uploadMetadata({ name, programId, metaHex, resolve });
+  });
 
   return (
-    <Modal heading="Upload metadata" className={styles.modalContent} size="large" close={handleClose}>
-      <h4 className={styles.contentHeading}>
-        Uploading metadata into the backend is necessary for further interaction with the program
-      </h4>
-      <p className={styles.contentFeeInfo}>This is a free of charge operation</p>
-      <p className={styles.contentFeeInfo}>Please sign the metadata uploading at the next step</p>
+    <Modal heading="Upload metadata" size="large" className={styles.modal} close={onClose}>
+      <SimpleBar className={styles.simplebar}>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <UploadMetadata metadata={metadata} onReset={resetMetaHex} onUpload={setMetaHex} />
 
-      <div className={styles.contentButtons}>
-        <Button text="Submit" className={styles.actionButton} onClick={handleConfirm} />
-        <Button text="Cancel" color="secondary" className={styles.actionButton} onClick={handleClose} />
-      </div>
+          {metadata && <Input label="Program Name" direction="y" block {...getInputProps('name')} />}
+          {metadata && <Button type="submit" icon={plusSVG} text="Upload Metadata" />}
+        </form>
+      </SimpleBar>
     </Modal>
   );
 };

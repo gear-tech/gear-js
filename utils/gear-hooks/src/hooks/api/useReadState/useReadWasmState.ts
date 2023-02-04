@@ -1,12 +1,13 @@
-import { Hex, getStateMetadata } from '@gear-js/api';
+import { getStateMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
+import { HexString } from '@polkadot/util/types';
 import { useContext, useEffect } from 'react';
 import { ApiContext } from 'context';
 import { useHandleReadState } from './useHandleReadState';
 import { useStateSubscription } from './useStateSubscription';
 
 function useReadWasmState<T = AnyJson>(
-  programId: Hex | undefined,
+  programId: HexString | undefined,
   wasm: Buffer | Uint8Array | undefined,
   functionName: string | undefined,
   payload?: AnyJson,

@@ -1,6 +1,7 @@
-import { Hex, ProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 import { Button, Input, Textarea } from '@gear-js/ui';
 import { useApi } from '@gear-js/react-hooks';
+import { HexString } from '@polkadot/util/types';
 import { useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { FormApi } from 'final-form';
@@ -22,7 +23,7 @@ import { FormValues, INITIAL_VALUES } from '../model';
 import styles from './MessageForm.module.scss';
 
 type Props = {
-  id: Hex;
+  id: HexString;
   isReply: boolean;
   isLoading: boolean;
   metadata?: ProgramMetadata | undefined;

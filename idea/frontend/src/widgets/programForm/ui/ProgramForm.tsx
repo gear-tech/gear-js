@@ -1,8 +1,9 @@
 import { useState, useMemo, useRef, ReactChild } from 'react';
 import { FormApi } from 'final-form';
 import { Form } from 'react-final-form';
-import { ProgramMetadata, Hex } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
+import { HexString } from '@polkadot/util/types';
 
 import { useGasCalculate, useChangeEffect } from 'hooks';
 import { Result } from 'hooks/useGasCalculate/types';
@@ -19,8 +20,8 @@ import { getValidationSchema } from '../helpers';
 import { INITIAL_VALUES, FormValues, RenderButtonsProps, SubmitHelpers } from '../model';
 
 type Props = {
-  source: Buffer | Hex;
-  metaHex: Hex | undefined;
+  source: Buffer | HexString;
+  metaHex: HexString | undefined;
   metadata: ProgramMetadata | undefined;
   gasMethod: GasMethod;
   renderButtons: (props: RenderButtonsProps) => ReactChild;

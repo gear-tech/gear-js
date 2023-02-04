@@ -13,7 +13,7 @@ import { UserMessageSentInput } from '../../message/types/user-message-sent.inpu
 import { UserMessageReadInput } from '../../message/types/user-message-read.input';
 import { ProgramChangedInput } from '../../program/types/program-changed.input';
 import { MessageDispatchedDataInput } from '../../message/types/message-dispatched-data.input';
-import { CodeStatus, MessageStatus } from '../enums';
+import { CodeStatus, MessageStatus, ProgramStatus } from '../enums';
 import { GearEventPayload } from '../types';
 import { CodeChangedInput } from '../../code/types';
 
@@ -41,21 +41,26 @@ function userMessageSentPayload(data: UserMessageSentData): UserMessageSentInput
 }
 
 function userMessageReadPayload(data: UserMessageReadData): UserMessageReadInput {
-  return {
-    id: data.id.toHex(),
-    reason: getMessageReadStatus(data),
-  };
+  return { id: data.id.toHex(), reason: getMessageReadStatus(data) };
 }
 
-function programChangedPayload(data: ProgramChangedData): ProgramChangedInput | null {
+function programChangedPayload(data: ProgramChangedData): ProgramChangedInput {
   const { id, change } = data;
-  if (change.isActive || change.isInactive) {
-    return {
-      id: id.toHex(),
-      isActive: change.isActive ? true : false,
-    };
+  const res = { id: id.toHex(),  programStatus: ProgramStatus.UNKNOWN };
+
+  if (change.isActive) {
+    res.programStatus = ProgramStatus.ACTIVE;
   }
-  return null;
+
+  if(change.isInactive) {
+    res.programStatus = ProgramStatus.EXITED;
+  }
+
+  if (change.isPaused) {
+    res.programStatus = ProgramStatus.EXITED;
+  }
+
+  return res;
 }
 
 function codeChangedPayload(data: CodeChangedData): CodeChangedInput | null {

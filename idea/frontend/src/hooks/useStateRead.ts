@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { AnyJson, Codec } from '@polkadot/types/types';
-import { Hex, ProgramMetadata, getStateMetadata } from '@gear-js/api';
+import { ProgramMetadata, getStateMetadata } from '@gear-js/api';
 import { useApi, useAlert } from '@gear-js/react-hooks';
+import { HexString } from '@polkadot/util/types';
 
-const useStateRead = (programId: Hex) => {
+const useStateRead = (programId: HexString) => {
   const alert = useAlert();
   const { api } = useApi();
 

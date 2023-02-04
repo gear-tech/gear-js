@@ -8,7 +8,7 @@ import { usePrograms } from './usePrograms';
 import { useCodeUpload } from './useCodeUpload';
 import { useMessageClaim } from './useMessageClaim';
 import { useProgramActions } from './useProgramActions';
-import { useMetadataUplaod } from './useMetadataUpload';
+import { useMetadataUpload } from './useMetadataUpload';
 import { useBalanceTransfer } from './useBalanceTransfer';
 import { useEventSubscriptions } from './useEventSubscriptions';
 import { useGasCalculate } from './useGasCalculate';
@@ -48,7 +48,7 @@ export {
   useGasCalculate,
   useProgramActions,
   useMessageActions,
-  useMetadataUplaod,
+  useMetadataUpload,
   useBalanceTransfer,
   useEventSubscriptions,
   useCodes,

@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Hex, WaitlistItem } from '@gear-js/api';
+import { WaitlistItem } from '@gear-js/api';
 import { useApi, useAlert } from '@gear-js/react-hooks';
+import { HexString } from '@polkadot/util/types';
 
 const useWaitlist = () => {
   const alert = useAlert();
@@ -9,7 +10,7 @@ const useWaitlist = () => {
   const [waitlist, setWaitlist] = useState<WaitlistItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchWaitlist = (programId: Hex) =>
+  const fetchWaitlist = (programId: HexString) =>
     api.waitlist
       .read(programId)
       .then(setWaitlist)

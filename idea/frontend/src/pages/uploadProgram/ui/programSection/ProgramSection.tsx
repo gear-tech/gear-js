@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect, ChangeEvent } from 'react';
 import clsx from 'clsx';
-import { Hex, ProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 import { Button, FileInput } from '@gear-js/ui';
 import { useAlert } from '@gear-js/react-hooks';
+import { HexString } from '@polkadot/util/types';
 
 import { useProgramActions } from 'hooks';
 import { Payload } from 'hooks/useProgramActions/types';
@@ -19,7 +20,7 @@ import styles from '../UploadProgram.module.scss';
 type Props = {
   resetMetaFile: () => void;
   file?: File;
-  metaHex: Hex | undefined;
+  metaHex: HexString | undefined;
   metadata: ProgramMetadata | undefined;
 };
 
