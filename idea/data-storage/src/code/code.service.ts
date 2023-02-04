@@ -38,7 +38,7 @@ export class CodeService {
       throw new CodeNotFound();
     }
 
-    if(!code.meta === null) throw new MetadataNotFound();
+    if(code.meta === null) throw new MetadataNotFound();
 
     return code.meta;
   }

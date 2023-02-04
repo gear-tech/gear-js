@@ -11,7 +11,6 @@ import {
   CodeNotFound,
   InvalidCodeMetaHex,
   InvalidProgramMetaHex,
-  MetadataNotFound,
   ProgramNotFound,
 } from '../common/errors';
 import { Meta } from '../database/entities';
@@ -22,6 +21,7 @@ import { CodeRepo } from '../code/code.repo';
 import { generateCodeHashByApi, getProgramMetadataByApi } from '../common/helpers';
 import { GearEventListener } from '../gear/gear-event-listener';
 import { ProgramService } from '../program/program.service';
+import { AddProgramMetaInput } from '../program/types';
 
 @Injectable()
 export class MetaService {
@@ -40,19 +40,19 @@ export class MetaService {
   }
 
   public async addMetaByCode(params: AddMetaByCodeParams): Promise<AddMetaResult> {
-    const { genesis, metaHex, codeId } = params;
+    const { genesis, metaHex, codeId, name } = params;
 
     const code = await this.codeRepository.get(codeId, genesis);
 
     if(!code) throw new CodeNotFound();
 
     try {
-      const metaHash = await this.gearEventListener.api.code.metaHash(code.id as HexString);
+      const codeMetaHash = await this.gearEventListener.api.code.metaHash(code.id as HexString);
       const hash = generateCodeHashByApi(metaHex as HexString);
 
-      if(metaHash && metaHash !== hash) throw new InvalidCodeMetaHex();
+      if(codeMetaHash && codeMetaHash !== hash) throw new InvalidCodeMetaHex();
 
-      if(metaHash) {
+      if(codeMetaHash) {
         const meta = await this.metaRepository.getByHash(hash);
         const metaData = getProgramMetadataByApi(metaHex as HexString);
 
@@ -62,18 +62,22 @@ export class MetaService {
           const updatedMeta = await this.metaRepository.save(updateMeta);
           code.meta = updatedMeta;
 
+          const addProgramsMeta: AddProgramMetaInput = { name, meta };
+
           await Promise.all([
             this.codeRepository.save([code]),
-            this.programService.addProgramsMetaByCode(codeId, genesis, updatedMeta)
+            this.programService.addProgramsMetaByCode(codeId, genesis, addProgramsMeta)
           ]);
         } else {
           const createMetaInput: CreateMetaInput = { hex: metaHex, hash, types: metaData.types };
           const createMeta = await this.createMeta(createMetaInput);
           code.meta = createMeta;
 
+          const addProgramsMeta: AddProgramMetaInput = { name, meta: createMeta };
+
           await Promise.all([
             this.codeRepository.save([code]),
-            this.programService.addProgramsMetaByCode(codeId, genesis, createMeta)
+            this.programService.addProgramsMetaByCode(codeId, genesis, addProgramsMeta)
           ]);
         }
       }
@@ -91,26 +95,34 @@ export class MetaService {
 
     if (!program) throw new ProgramNotFound();
 
-    if(program.meta === null) throw new MetadataNotFound();
+    try {
+      const programMetaHash = await this.gearEventListener.api.program.metaHash(program.id as HexString);
+      const hash = generateCodeHashByApi(metaHex as HexString);
 
-    const hash = generateCodeHashByApi(metaHex as HexString);
+      if(programMetaHash && hash !== programMetaHash) throw new InvalidProgramMetaHex();
 
-    this.validateProgramMetaHex(program.meta, hash);
-    const metaData = getProgramMetadataByApi(metaHex as HexString);
-    const meta = await this.metaRepository.getByHash(hash);
 
-    const updateMeta = plainToClass(Meta, {
-      ...meta,
-      hex: metaHex,
-      types: metaData.types,
-    });
+      this.validateProgramMetaHex(program.meta, hash);
+      const metaData = getProgramMetadataByApi(metaHex as HexString);
+      const meta = await this.metaRepository.getByHash(hash);
 
-    program.name = name;
+      const updateMeta = plainToClass(Meta, {
+        ...meta,
+        hex: metaHex,
+        types: metaData.types,
+      });
 
-    await Promise.all([
-      this.metaRepository.save(updateMeta),
-      this.programRepository.save([program])
-    ]);
+      program.name = name;
+
+      await Promise.all([
+        this.metaRepository.save(updateMeta),
+        this.programRepository.save([program])
+      ]);
+
+    } catch (error) {
+      this.logger.error(error);
+      throw new InvalidProgramMetaHex();
+    }
 
     return { status: 'Metadata added' };
   }
