@@ -1,18 +1,9 @@
 import { HexString } from '@polkadot/util/types';
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
-import {
-  AddMetaByCodeParams,
-  AddMetaParams,
-  AddMetaResult,
-} from '@gear-js/common';
+import { AddMetaByCodeParams, AddMetaParams, AddMetaResult } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
 
-import {
-  CodeNotFound,
-  InvalidCodeMetaHex,
-  InvalidProgramMetaHex,
-  ProgramNotFound,
-} from '../common/errors';
+import { CodeNotFound, InvalidCodeMetaHex, InvalidProgramMetaHex, ProgramNotFound } from '../common/errors';
 import { Meta } from '../database/entities';
 import { MetaRepo } from './meta.repo';
 import { ProgramRepo } from '../program/program.repo';
@@ -59,8 +50,7 @@ export class MetaService {
         if(meta) {
           const updateMeta = plainToClass(Meta, { ...meta, hex: metaHex, types: metaData.types });
 
-          const updatedMeta = await this.metaRepository.save(updateMeta);
-          code.meta = updatedMeta;
+          code.meta = await this.metaRepository.save(updateMeta);
 
           const addProgramsMeta: AddProgramMetaInput = { name, meta };
 
