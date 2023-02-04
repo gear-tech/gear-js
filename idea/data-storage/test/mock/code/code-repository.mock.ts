@@ -27,8 +27,15 @@ export const mockCodeRepository = {
     });
     return [listCode, limit];
   }),
-  save: jest.fn().mockImplementation((code: Code): Promise<Code> => {
-    return new Promise((resolve) => resolve(code));
+  get: jest.fn((codeId: string, genesis: string): Code => {
+    return CODE_DB_MOCK.find((code) => {
+      if (code.genesis === genesis && code.id === codeId) {
+        return code;
+      }
+    });
+  }),
+  save: jest.fn().mockImplementation((codes: Code[]): Promise<Code[]> => {
+    return new Promise((resolve) => resolve(codes));
   }),
 
   update: jest.fn().mockImplementation((messageEntityDB: Code, updateCodeInput: Code): Promise<Code> => {

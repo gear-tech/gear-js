@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { AddMetaParams } from '@gear-js/common';
+import { AddMetaByCodeParams, AddMetaParams } from '@gear-js/common';
 
 import { ProgramRepo } from '../../src/program/program.repo';
 
@@ -13,10 +13,14 @@ import { mockMetadataRepository } from '../mock/metadata/metadata-repository.moc
 import { METADATA_DB_MOCK } from '../mock/metadata/metadata-db.mock';
 import { GearEventListener } from '../../src/gear/gear-event-listener';
 import { ProgramService } from '../../src/program/program.service';
+import { CODE_DB_MOCK } from '../mock/code/code-db.mock';
 
 
 describe('Meta service', () => {
   let metaService!: MetaService;
+  const mockGearEventListener = {
+    api: { program: { metaHash: () => '0x00' }, code: { metaHash: () => '0x00'  } }
+  };
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -31,7 +35,7 @@ describe('Meta service', () => {
         },
         {
           provide: GearEventListener,
-          useFactory: () => {},
+          useFactory: () => mockGearEventListener
         },
         {
           provide: CodeRepo,
@@ -45,10 +49,33 @@ describe('Meta service', () => {
     metaService = moduleRef.get<MetaService>(MetaService);
   });
 
+  it('should successfully add metadata code', async () => {
+    const mockProgram = CODE_DB_MOCK[0];
+
+    const addMetaParams: AddMetaByCodeParams = {
+      name: 'name',
+      genesis: mockProgram.genesis,
+      codeId: mockProgram.id,
+      metaHex: 'hex',
+    };
+
+    const res = await metaService.addMetaByCode(addMetaParams);
+
+
+    expect(res.status).toEqual('Metadata added');
+    expect(mockMetadataRepository.save).toHaveBeenCalled();
+    expect(mockCodeRepository.save).toHaveBeenCalled();
+  });
+
   it('should successfully add metadata program', async () => {
     const mockProgram = PROGRAM_DB_MOCK[0];
 
-    const addMetaParams: AddMetaParams = { name: 'name', genesis: mockProgram.genesis, programId: mockProgram.id, metaHex: 'hex' };
+    const addMetaParams: AddMetaParams = {
+      name: 'name',
+      genesis: mockProgram.genesis,
+      programId: mockProgram.id,
+      metaHex: 'hex',
+    };
 
     const res = await metaService.addMetaByProgram(addMetaParams);
 
