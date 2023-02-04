@@ -67,6 +67,21 @@ describe('Meta service', () => {
     expect(mockCodeRepository.save).toHaveBeenCalled();
   });
 
+  it('should fail add meta code if code id invalid', async () => {
+    const mockProgram = CODE_DB_MOCK[0];
+    const invalidCodeId = '_';
+
+    const addMetaParams: AddMetaByCodeParams = {
+      name: 'name',
+      genesis: mockProgram.genesis,
+      codeId: invalidCodeId,
+      metaHex: 'hex',
+    };
+
+    await expect(metaService.addMetaByCode(addMetaParams)).rejects.toThrowError();
+    expect(mockCodeRepository.get).toHaveBeenCalled();
+  });
+
   it('should successfully add metadata program', async () => {
     const mockProgram = PROGRAM_DB_MOCK[0];
 
