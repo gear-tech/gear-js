@@ -30,6 +30,11 @@
     background-color: $blue;
     box-shadow: 0px 0px 10px $blue;
   }
+
+  &.exited::before {
+    background-color: #ccc;
+    box-shadow: 0px 0px 10px #ccc;
+  }
 }
 
 .status {
