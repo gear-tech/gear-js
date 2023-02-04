@@ -50,7 +50,7 @@ export const Battle = () => {
   return (
     <>
       {battle &&
-        (battle?.state !== 'Registration' ? (
+        (battle?.state !== 'Registration' && warriors.length > 0 ? (
           isAllowed ? (
             <>
               {/*Top*/}
