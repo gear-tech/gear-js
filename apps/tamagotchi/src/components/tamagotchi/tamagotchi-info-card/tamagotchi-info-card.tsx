@@ -20,7 +20,7 @@ export const TamagotchiInfoCard = () => {
   const send = useTamagotchiMessage();
 
   useTamagotchi();
-  // useThrottleWasmState();
+  useThrottleWasmState();
 
   const fullView = Boolean(lesson && lesson?.step > 1);
 
@@ -31,9 +31,10 @@ export const TamagotchiInfoCard = () => {
     }
     setPending(false);
   };
+  const onError = () => setPending(false);
   const feedHandler = () => {
     setPending(true);
-    send({ Feed: null }, { onSuccess: () => onSuccess('FeedMe') });
+    send({ Feed: null }, { onSuccess: () => onSuccess('FeedMe'), onError });
   };
   const playHandler = () => {
     setPending(true);
@@ -41,6 +42,7 @@ export const TamagotchiInfoCard = () => {
       { Play: null },
       {
         onSuccess: () => onSuccess('PlayWithMe'),
+        onError,
       },
     );
   };
@@ -50,6 +52,7 @@ export const TamagotchiInfoCard = () => {
       { Sleep: null },
       {
         onSuccess: () => onSuccess('WantToSleep'),
+        onError,
       },
     );
   };
@@ -57,7 +60,7 @@ export const TamagotchiInfoCard = () => {
   return (
     <>
       {tamagotchi && (
-        <div className={clsx('flex gap-12 items-center p-4 pr-12 bg-white/5 rounded-2xl', fullView && 'w-full')}>
+        <div className={clsx('flex gap-12 items-center p-4 bg-white/5 rounded-2xl', fullView && 'w-full pr-12')}>
           <div className="basis-[415px] w-full px-8 py-6 bg-[#1E1E1E] rounded-2xl">
             <div className="flex justify-between gap-4">
               <h2 className="typo-h2 text-primary truncate">{tamagotchi.name ? tamagotchi.name : 'Geary'}</h2>

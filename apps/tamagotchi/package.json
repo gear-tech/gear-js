@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@gear-js/api": "0.29.1",
-    "@gear-js/react-hooks": "0.5.6",
+    "@gear-js/react-hooks": "0.5.7",
     "@gear-js/ui": "0.5.13",
     "@headlessui-float/react": "0.10.1",
     "@headlessui/react": "1.7.7",

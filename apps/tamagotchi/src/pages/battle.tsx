@@ -20,14 +20,14 @@ export const Battle = () => {
   const sendMessage = useBattleMessage();
 
   const handleAttack = () => {
-    const onSuccess = () => console.log('success');
+    const onSuccess = () => console.log('move');
     if (battle?.state === 'GameIsOver')
       sendMessage(
         { StartNewGame: null },
         {
           onSuccess: () => {
             setBattleState(undefined);
-            console.log({ battle, warriors });
+            // console.log({ battle, warriors });
           },
         },
       );

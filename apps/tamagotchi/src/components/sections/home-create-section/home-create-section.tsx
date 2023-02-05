@@ -5,7 +5,7 @@ import { useLesson } from 'app/context';
 import { useEffect, useState } from 'react';
 import { StoreItemsNames } from 'app/types/ft-store';
 import { getOwnItems } from 'app/utils/get-own-items';
-import { useItemsStore } from '../../../app/hooks/use-store';
+import { useItemsStore } from 'app/hooks/use-store';
 
 export const HomeCreateSection = () => {
   const { lesson, tamagotchiItems, tamagotchi } = useLesson();

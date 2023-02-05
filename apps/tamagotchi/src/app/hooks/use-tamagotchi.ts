@@ -11,15 +11,15 @@ export function useReadTamagotchi<T>() {
 
 export function useTamagotchi() {
   const { setTamagotchi } = useLesson();
-  const { state } = useReadTamagotchi<TamagotchiState>();
+  const { state, isStateRead } = useReadTamagotchi<TamagotchiState>();
 
   useEffect(() => {
-    if (state) {
+    if (state && isStateRead) {
       const { fed, rested, entertained } = state;
       setTamagotchi({ ...state, isDead: [fed, rested, entertained].reduce((sum, a) => sum + a) === 0 });
     }
-    // console.log('state in use', state);
-  }, [state]);
+    // console.log('state in use', state, isStateRead);
+  }, [state, isStateRead]);
 }
 
 export function useTamagotchiMessage() {

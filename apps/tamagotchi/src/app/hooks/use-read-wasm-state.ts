@@ -73,28 +73,33 @@ export function useThrottleWasmState(payload?: AnyJson, isReadOnError?: boolean)
   };
 
   useEffect(() => {
-    if (!programId || !wasm || !functionName) return;
+    if (!programId || !wasm || !functionName || (lesson && lesson.step < 2)) return;
+
+    const interval = setInterval(() => {
+      readState();
+      // console.log('interval read state:');
+    }, 25000);
 
     const unsub = api?.gearEvents.subscribeToGearEvent('MessagesDispatched', handleStateChange);
 
     return () => {
+      clearInterval(interval);
       unsub?.then((unsubCallback) => unsubCallback());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, programId, wasm, functionName]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      readState();
-      console.log('interval read state:');
-    }, 25000);
-    return () => clearInterval(interval);
-  }, [programId, wasm, functionName]);
-
-  useEffect(() => {
+    if (lesson && lesson.step < 2) return;
     if (state) {
-      setTamagotchi({ ...tamagotchi, ...state } as TamagotchiState);
-      console.log('update state with:', { state });
+      const { fed, rested, entertained } = state;
+
+      setTamagotchi({
+        ...tamagotchi,
+        ...state,
+        isDead: [fed, rested, entertained].reduce((sum, a) => sum + a) === 0,
+      } as TamagotchiState);
+      // console.log('update state with:', { state });
     }
   }, [state]);
 }

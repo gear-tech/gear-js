@@ -28,7 +28,7 @@ export const TamagotchiAvatar = ({
   isWinner,
   energy,
 }: TamagotchiAvatarProps) => {
-  const { tamagotchi } = useLesson();
+  const { tamagotchi, lesson } = useLesson();
   const [dead, setDead] = useState<boolean>(Boolean(isDead));
   const [currentEmotion, setCurrentEmotion] = useState<Emotions>(emotion);
   const [damage, setDamage] = useState<number>(0);
@@ -53,21 +53,24 @@ export const TamagotchiAvatar = ({
   }, [tamagotchi]);
 
   useEffect(() => {
-    if (tamagotchi) {
+    if (tamagotchi && lesson) {
       const { fed, entertained, rested } = tamagotchi;
-      setCurrentEmotion(
-        dead
-          ? 'scared'
-          : isWinner
-          ? 'hello'
-          : 3500 > Math.min.apply(null, [fed, rested, entertained])
-          ? 'crying'
-          : 6500 > Math.min.apply(null, [fed, rested, entertained])
-          ? 'angry'
-          : emotion,
-      );
+
+      if (Number(lesson.step) > 1) {
+        setCurrentEmotion(
+          dead
+            ? 'scared'
+            : isWinner
+            ? 'hello'
+            : 4000 > Math.min.apply(null, [fed, rested, entertained])
+            ? 'crying'
+            : 6000 > Math.min.apply(null, [fed, rested, entertained])
+            ? 'angry'
+            : emotion,
+        );
+      }
     }
-  }, [dead, emotion, isWinner, tamagotchi]);
+  }, [dead, emotion, isWinner, lesson, tamagotchi]);
 
   const s = 'tamagotchi';
   const cn = 'absolute inset-0 w-full h-full';
