@@ -8,11 +8,11 @@ import {
 } from '@gear-js/react-hooks';
 import { Alert, alertStyles } from '@gear-js/ui';
 import { TmgProvider, TokensBalanceProvider } from 'app/context';
-import { ADDRESS } from 'app/consts';
-import { BattleProvider } from '../context/ctx-battle';
+import { ENV } from 'app/consts';
+import { BattleProvider } from '../context';
 
 const ApiProvider = ({ children }: ProviderProps) => (
-  <GearApiProvider providerAddress={ADDRESS.NODE}>{children}</GearApiProvider>
+  <GearApiProvider providerAddress={ENV.NODE}>{children}</GearApiProvider>
 );
 
 const AlertProvider = ({ children }: ProviderProps) => (
