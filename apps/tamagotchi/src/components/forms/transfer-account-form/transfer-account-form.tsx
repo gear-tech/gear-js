@@ -3,6 +3,7 @@ import { useForm } from '@mantine/form';
 import { Icon } from 'components/ui/icon';
 import { hexRequired } from 'app/utils/form-validations';
 import { useTamagotchiMessage } from 'app/hooks/use-tamagotchi';
+import { useApp } from '../../../app/context';
 
 const initialValues = {
   address: '',
@@ -13,6 +14,7 @@ const validate = {
 };
 
 export const TransferAccountForm = ({ close }: { close: () => void }) => {
+  const { isPending } = useApp();
   const sendHandler = useTamagotchiMessage();
   const form = useForm({ initialValues, validate });
   const { getInputProps } = form;
@@ -34,6 +36,7 @@ export const TransferAccountForm = ({ close }: { close: () => void }) => {
           type="submit"
           icon={() => <Icon name="transfer" className="w-5 h-5" />}
           className="w-full gap-2"
+          disabled={isPending}
         />
       </div>
     </form>

@@ -6,7 +6,7 @@ import { AccountButton } from 'components/common/account-button';
 import { Icon } from 'components/ui/icon';
 import { LOCAL_STORAGE } from 'app/consts';
 import { copyToClipboard, isLoggedIn } from 'app/utils';
-import { useLesson } from 'app/context';
+import { useLessons, useTamagotchi } from 'app/context';
 
 type Props = {
   list: InjectedAccountWithMeta[];
@@ -16,14 +16,17 @@ type Props = {
 export const AccountsList = ({ list, onChange }: Props) => {
   const { logout, login } = useAccount();
   const alert = useAlert();
-  const { reset } = useLesson();
+  const { setTamagotchi } = useTamagotchi();
+  const { setLesson, setIsAdmin } = useLessons();
 
   const handleAccountButtonClick = async (account: InjectedAccountWithMeta) => {
     await logout();
     await login(account);
     localStorage.setItem(LOCAL_STORAGE.ACCOUNT, account.address);
     onChange();
-    reset();
+    setTamagotchi(undefined);
+    setLesson(undefined);
+    setIsAdmin(false);
   };
 
   const handleCopy = (address: string) => {

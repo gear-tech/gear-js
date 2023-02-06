@@ -16,7 +16,7 @@ type T2 = {
 };
 
 type T3 = {
-  allowedAccount: string;
+  allowedAccount: string | null;
 };
 
 type T4 = {

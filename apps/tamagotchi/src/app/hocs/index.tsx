@@ -7,7 +7,14 @@ import {
   ProviderProps,
 } from '@gear-js/react-hooks';
 import { Alert, alertStyles } from '@gear-js/ui';
-import { AppProvider, ItemsStoreProvider, TmgProvider, TokensBalanceProvider, BattleProvider } from 'app/context';
+import {
+  AppProvider,
+  ItemsStoreProvider,
+  TmgProvider,
+  TokensBalanceProvider,
+  BattleProvider,
+  LessonsProvider,
+} from 'app/context';
 import { ENV } from 'app/consts';
 
 const ApiProvider = ({ children }: ProviderProps) => (
@@ -25,11 +32,12 @@ const providers = [
   AlertProvider,
   ApiProvider,
   AccountProvider,
+  AppProvider,
+  LessonsProvider,
   TmgProvider,
   TokensBalanceProvider,
-  BattleProvider,
   ItemsStoreProvider,
-  AppProvider,
+  BattleProvider,
 ];
 
 export const withProviders = (Component: ComponentType) => () =>

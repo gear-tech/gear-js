@@ -3,7 +3,7 @@ import { getStateMetadata, MessagesDispatched } from '@gear-js/api';
 import { useAlert, useApi } from '@gear-js/react-hooks';
 import type { AnyJson } from '@polkadot/types/types';
 import type { HexString } from '@polkadot/util/types';
-import { useLesson } from 'app/context';
+import { useLessons, useTamagotchi } from 'app/context';
 import { useWasmMetadata } from './use-metadata';
 import type { TamagotchiState } from 'app/types/lessons';
 import state2 from 'assets/meta/state2.meta.wasm';
@@ -21,9 +21,9 @@ export function useThrottleWasmState(payload?: AnyJson, isReadOnError?: boolean)
   const [error, setError] = useState('');
   const [isStateRead, setIsStateRead] = useState(true);
 
-  const { lesson } = useLesson();
+  const { lesson } = useLessons();
   const metadata = useWasmMetadata(state2);
-  const { tamagotchi, setTamagotchi } = useLesson();
+  const { tamagotchi, setTamagotchi } = useTamagotchi();
 
   const programId: HexString | undefined = lesson?.programId;
   const wasm: Buffer | Uint8Array | undefined = metadata?.buffer;
@@ -99,7 +99,6 @@ export function useThrottleWasmState(payload?: AnyJson, isReadOnError?: boolean)
         ...state,
         isDead: [fed, rested, entertained].reduce((sum, a) => sum + a) === 0,
       } as TamagotchiState);
-      // console.log('update state with:', { state });
     }
   }, [state]);
 }

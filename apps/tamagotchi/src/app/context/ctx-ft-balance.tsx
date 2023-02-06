@@ -34,9 +34,9 @@ function useStore(): Program {
   };
 }
 
-export const TokensBalanceCtx = createContext<Program>(program);
+export const FTBalanceCtx = createContext<Program>(program);
 
 export function TokensBalanceProvider({ children }: ProviderProps) {
-  const { Provider } = TokensBalanceCtx;
+  const { Provider } = FTBalanceCtx;
   return <Provider value={useStore()}>{children}</Provider>;
 }

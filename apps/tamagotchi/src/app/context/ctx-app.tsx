@@ -1,4 +1,4 @@
-import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react';
+import { createContext, Dispatch, ReactNode, SetStateAction, useState } from 'react';
 
 type Program = {
   isPending: boolean;
@@ -9,10 +9,6 @@ export const AppCtx = createContext({} as Program);
 
 const useProgram = (): Program => {
   const [isPending, setIsPending] = useState<boolean>(false);
-
-  useEffect(() => {
-    console.log({ isPending });
-  }, [isPending]);
 
   return {
     isPending,

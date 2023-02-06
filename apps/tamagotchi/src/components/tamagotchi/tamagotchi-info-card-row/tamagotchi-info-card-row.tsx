@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { Popover } from '@headlessui/react';
 import { Float } from '@headlessui-float/react';
 import { useEffect, useState } from 'react';
-import { useApp } from 'app/context';
+import { useApp, useLessons } from 'app/context';
 
 type Props = {
   onClick: () => void;
@@ -31,6 +31,7 @@ export const TamagotchiInfoCardRow = ({
   const toggle = () => setShow(!show);
   const current = Number(value) / 100;
   const { isPending } = useApp();
+  const { isAdmin } = useLessons();
 
   useEffect(() => {
     setShow(isActive);
@@ -81,7 +82,7 @@ export const TamagotchiInfoCardRow = ({
               text={labelBtn}
               icon={() => <Icon name={`act-${labelBtn.toLowerCase()}`} className="w-5 h-5" />}
               onClick={onClick}
-              disabled={isPending}
+              disabled={isPending || !isAdmin}
             />
           </div>
         </div>

@@ -1,17 +1,9 @@
 import { useEffect, useState } from 'react';
-import { getProgramMetadata, getWasmMetadata, OldMetadata, ProgramMetadata } from '@gear-js/api';
+import { getProgramMetadata, getWasmMetadata, ProgramMetadata } from '@gear-js/api';
 import { Buffer } from 'buffer';
-import { HexString } from '@polkadot/util/types';
 import { useAlert } from '@gear-js/react-hooks';
 import { Metadata } from '@polkadot/types';
 
-type Result = {
-  id: HexString;
-  metaWasmBase64: string;
-  name: string;
-  repo: string;
-  updatedAt: string;
-};
 type Program = {
   buffer: Buffer;
   meta: Metadata;

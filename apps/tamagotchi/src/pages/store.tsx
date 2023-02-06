@@ -3,10 +3,10 @@ import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
 import { StoreItemCard } from 'components/cards/store-item-card';
 import { Icon } from 'components/ui/icon';
-import { useLesson, useFTStore } from '../app/context';
+import { useFTStore, useLessons } from 'app/context';
 
 export const Store = () => {
-  const { lesson } = useLesson();
+  const { lesson } = useLessons();
   const { items } = useFTStore();
 
   return (

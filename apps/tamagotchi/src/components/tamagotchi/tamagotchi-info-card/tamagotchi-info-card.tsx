@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useApp, useLesson } from 'app/context';
+import { useApp, useLessons, useTamagotchi } from 'app/context';
 import { AccountActionsMenu } from 'components/menus/account-actions-menu';
 import { getTamagotchiAge } from 'app/utils/get-tamagotchi-age';
 import { useTamagotchiMessage } from 'app/hooks/use-tamagotchi';
@@ -11,10 +11,11 @@ import { getNotificationTypeValue } from 'app/utils';
 
 export const TamagotchiInfoCard = () => {
   const { account } = useAccount();
-  const { tamagotchi, lesson } = useLesson();
+  const { setIsPending } = useApp();
+  const { lesson } = useLessons();
+  const { tamagotchi } = useTamagotchi();
   const { setNotification, activeNotification, setActiveNotification } = useLesson5();
   const send = useTamagotchiMessage();
-  const { setIsPending } = useApp();
 
   const fullView = Boolean(lesson && lesson?.step > 1);
 
@@ -69,7 +70,9 @@ export const TamagotchiInfoCard = () => {
                 <tbody className="block space-y-8">
                   <tr className="flex gap-8">
                     <th className="flex-1 w-40 text-white text-opacity-70 font-medium">Owner ID:</th>
-                    <td className="flex-1 w-40 truncate">{account?.meta.name}</td>
+                    <td className="flex-1 w-40 truncate">
+                      {tamagotchi.owner === account?.meta.name ? account?.meta.name : tamagotchi.owner}
+                    </td>
                   </tr>
                   <tr className="flex gap-8">
                     <th className="flex-1 w-40 text-white text-opacity-70 font-medium">Age:</th>

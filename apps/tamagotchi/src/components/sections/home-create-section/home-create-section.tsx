@@ -1,10 +1,11 @@
 import { TamagotchiInfoCard } from 'components/tamagotchi/tamagotchi-info-card';
 import { TamagotchiAvatar } from 'components/tamagotchi/tamagotchi-avatar';
 import { ConnectAccount } from 'components/common/connect-account';
-import { useLesson } from 'app/context';
+import { useLessons, useTamagotchi } from 'app/context';
 
 export const HomeCreateSection = () => {
-  const { lesson, tamagotchi } = useLesson();
+  const { tamagotchi } = useTamagotchi();
+  const { lesson } = useLessons();
   return (
     <section className="grid grid-rows-[1fr_auto_auto] h-[calc(100vh-216px)]">
       <div className="grow flex flex-col justify-center text-center">

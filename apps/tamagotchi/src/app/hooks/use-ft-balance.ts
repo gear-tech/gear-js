@@ -1,13 +1,17 @@
-import { useReadFullState } from '@gear-js/react-hooks';
+import { useReadFullState, useSendMessage } from '@gear-js/react-hooks';
 import type { HexString } from '@polkadot/util/types';
-import { useApp, useLesson, useTokensBalanceStore } from 'app/context';
+import { useApp, useTamagotchi, useFTBalance, useLessons } from 'app/context';
 import { BalanceLogic, BalanceMain, BalanceStorage } from 'app/types/ft-wallet';
-import { useFtMessage } from './use-ft-message';
 import { useMetadata } from './use-metadata';
 import metaCode from 'assets/meta/meta-ft-code.txt';
 
+export function useFtMessage() {
+  const { metaMain, programId } = useFTBalance();
+  return useSendMessage(programId as HexString, metaMain);
+}
+
 function useReadFTMain<T>() {
-  const { metaMain, programId } = useTokensBalanceStore();
+  const { metaMain, programId } = useFTBalance();
   return useReadFullState<T>(programId, metaMain);
 }
 
@@ -18,7 +22,7 @@ function useFTMain() {
 
 function useReadFTLogic<T>() {
   const state = useFTMain();
-  const { metaLogic } = useTokensBalanceStore();
+  const { metaLogic } = useFTBalance();
   return useReadFullState<T>(state?.ftLogicId, metaLogic);
 }
 
@@ -29,8 +33,8 @@ function useFTLogic() {
 
 function useReadFTStorage<T>() {
   const state = useFTLogic();
-  const { lesson } = useLesson();
-  const { metaStorage } = useTokensBalanceStore();
+  const { lesson } = useLessons();
+  const { metaStorage } = useFTBalance();
   const getStorageIdByAccount = () => {
     if (state) {
       for (const a of state.idToStorage) {
@@ -44,7 +48,7 @@ function useReadFTStorage<T>() {
 }
 
 export function useFTStorage() {
-  const { lesson } = useLesson();
+  const { lesson } = useLessons();
   const { state } = useReadFTStorage<BalanceStorage>();
   const getBalanceByAccountId = () => {
     if (state) {
@@ -60,7 +64,7 @@ export function useFTStorage() {
 }
 
 export function useGetFTBalance() {
-  const { lesson } = useLesson();
+  const { lesson } = useLessons();
   const sendHandler = useFtMessage();
   const { metadata } = useMetadata(metaCode);
   const balance = useFTStorage();

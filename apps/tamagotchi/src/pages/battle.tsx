@@ -20,7 +20,6 @@ export const Battle = () => {
   const sendMessage = useBattleMessage();
 
   const handleAttack = () => {
-    const onSuccess = () => console.log('move');
     if (battle?.state === 'GameIsOver')
       sendMessage(
         { StartNewGame: null },
@@ -31,7 +30,7 @@ export const Battle = () => {
           },
         },
       );
-    if (battle?.state === 'Moves') sendMessage({ MakeMove: null }, { onSuccess });
+    if (battle?.state === 'Moves') sendMessage({ MakeMove: null });
   };
 
   useEffect(() => {

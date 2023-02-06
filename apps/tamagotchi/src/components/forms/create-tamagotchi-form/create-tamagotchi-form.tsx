@@ -2,7 +2,7 @@ import { Button, buttonStyles, Input, Select } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 import { hexRequired } from 'app/utils/form-validations';
 import { createTamagotchiInitial } from 'app/consts';
-import { useApp, useLesson } from 'app/context';
+import { useApp, useLessons, useTamagotchi } from 'app/context';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
@@ -21,8 +21,8 @@ const options = [
 ];
 
 export const CreateTamagotchiForm = () => {
-  const { setLesson } = useLesson();
   const { isPending } = useApp();
+  const { setLesson } = useLessons();
   const [validation, setValidation] = useState(validate);
   const form = useForm({
     initialValues: createTamagotchiInitial,

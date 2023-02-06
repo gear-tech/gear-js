@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { Icon } from 'components/ui/icon';
 import { StoreItemsNames } from 'app/types/ft-store';
-import { useLesson } from 'app/context';
+import { useLessons, useTamagotchi } from 'app/context';
 
 type Emotions = 'hello' | 'happy' | 'angry' | 'scared' | 'crying';
 
@@ -29,7 +29,8 @@ export const TamagotchiAvatar = ({
   isWinner,
   energy,
 }: TamagotchiAvatarProps) => {
-  const { tamagotchi, tamagotchiItems, lesson } = useLesson();
+  const { tamagotchi, tamagotchiItems } = useTamagotchi();
+  const { lesson } = useLessons();
   const [dead, setDead] = useState<boolean>(Boolean(isDead));
   const [currentEmotion, setCurrentEmotion] = useState<Emotions>(emotion);
   const [damage, setDamage] = useState<number>(0);

@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import clsx from 'clsx';
-import { useApp, useLesson } from 'app/context';
+import { useApp, useLessons, useTamagotchi } from 'app/context';
 import { Icon } from 'components/ui/icon';
 import { TransferAccountPopup } from 'components/popups/transfer-account-popup';
 import { ApproveAccountPopup } from 'components/popups/approve-account-popup';
@@ -11,12 +11,17 @@ import { useAccount } from '@gear-js/react-hooks';
 export const AccountActionsMenu = () => {
   const { account } = useAccount();
   const { isPending } = useApp();
-  const { lesson, reset, tamagotchi } = useLesson();
+  const { setTamagotchi, tamagotchi } = useTamagotchi();
+  const { lesson, setLesson, setIsAdmin } = useLessons();
   const initialOptions = [
     {
       id: 4,
       label: 'Upload Contract',
-      action: () => reset(),
+      action: () => {
+        setTamagotchi(undefined);
+        setLesson(undefined);
+        setIsAdmin(false);
+      },
       icon: 'upload',
     },
   ];

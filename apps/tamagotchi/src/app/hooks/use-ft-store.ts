@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useReadFullState } from '@gear-js/react-hooks';
-import { useFTStore, useLesson } from 'app/context';
+import { useFTStore, useLessons, useTamagotchi } from 'app/context';
 import { ItemsStoreResponse } from 'app/types/ft-store';
 import { ENV } from '../consts';
 import { useMetadata } from './use-metadata';
@@ -13,7 +13,8 @@ function useReadItemsStore<T>() {
 }
 
 export function useItemsStore() {
-  const { lesson, setTamagotchiItems } = useLesson();
+  const { setTamagotchiItems } = useTamagotchi();
+  const { lesson } = useLessons();
   const { setItems } = useFTStore();
   const { state } = useReadItemsStore<ItemsStoreResponse>();
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import type { UserMessageSent } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 import type { UnsubscribePromise } from '@polkadot/api/types';
-import { useLesson } from '../context';
+import { useLessons, useTamagotchi } from '../context';
 import type { NotificationResponseTypes, NotificationType } from 'app/types/lessons';
 import { getNotificationTypeValue } from 'app/utils';
 
@@ -10,7 +10,8 @@ export const useLesson5 = () => {
   const { api } = useApi();
   const [notification, setNotification] = useState<NotificationType>({});
   const [activeNotification, setActiveNotification] = useState<NotificationResponseTypes>();
-  const { lesson, lessonMeta, tamagotchi } = useLesson();
+  const { lesson, lessonMeta } = useLessons();
+  const { tamagotchi } = useTamagotchi();
 
   useEffect(() => {
     if (tamagotchi) {
