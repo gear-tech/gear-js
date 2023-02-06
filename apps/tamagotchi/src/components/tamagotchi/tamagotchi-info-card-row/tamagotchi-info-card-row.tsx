@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { Popover } from '@headlessui/react';
 import { Float } from '@headlessui-float/react';
 import { useEffect, useState } from 'react';
+import { useApp } from 'app/context';
 
 type Props = {
   onClick: () => void;
@@ -14,7 +15,6 @@ type Props = {
   tooltipTitle: string;
   tooltipText: string;
   isActive: boolean;
-  isPending: boolean;
 };
 
 export const TamagotchiInfoCardRow = ({
@@ -26,15 +26,14 @@ export const TamagotchiInfoCardRow = ({
   tooltipTitle,
   tooltipText,
   isActive,
-  isPending,
 }: Props) => {
   const [show, setShow] = useState(false);
   const toggle = () => setShow(!show);
   const current = Number(value) / 100;
+  const { isPending } = useApp();
 
   useEffect(() => {
     setShow(isActive);
-    // console.log({ isActive });
   }, [isActive]);
 
   return (

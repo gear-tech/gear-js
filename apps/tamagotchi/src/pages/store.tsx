@@ -3,16 +3,14 @@ import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
 import { StoreItemCard } from 'components/cards/store-item-card';
 import { Icon } from 'components/ui/icon';
-import { useLesson, useFTStore, useApp } from '../app/context';
+import { useLesson, useFTStore } from '../app/context';
 
 export const Store = () => {
   const { lesson } = useLesson();
   const { items } = useFTStore();
-  const { setIsPending } = useApp();
 
   return (
     <>
-      <button onClick={() => setIsPending((prevState) => !prevState)}>cls</button>
       <h1 className="text-2xl font-kanit font-bold">Store</h1>
       {lesson?.programId ? (
         items.length ? (

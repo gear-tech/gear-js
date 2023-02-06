@@ -2,8 +2,8 @@ import { Button, buttonStyles, Input, Select } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 import { hexRequired } from 'app/utils/form-validations';
 import { createTamagotchiInitial } from 'app/consts';
-import { useLesson } from 'app/context';
-import { Link, useNavigate } from 'react-router-dom';
+import { useApp, useLesson } from 'app/context';
+import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 
@@ -21,8 +21,8 @@ const options = [
 ];
 
 export const CreateTamagotchiForm = () => {
-  const navigate = useNavigate();
   const { setLesson } = useLesson();
+  const { isPending } = useApp();
   const [validation, setValidation] = useState(validate);
   const form = useForm({
     initialValues: createTamagotchiInitial,
@@ -31,11 +31,7 @@ export const CreateTamagotchiForm = () => {
   });
   const { getInputProps, errors } = form;
   const handleSubmit = form.onSubmit((values) => {
-    if (+form.values.currentStep === 6) {
-      navigate('/battle');
-    } else {
-      setLesson({ step: +values.currentStep, programId: values.programId });
-    }
+    setLesson({ step: +values.currentStep, programId: values.programId });
   });
 
   useEffect(() => {
@@ -61,7 +57,12 @@ export const CreateTamagotchiForm = () => {
             <Select options={options} direction="y" {...getInputProps('currentStep')} />
           </div>
           <div className="whitespace-nowrap">
-            <Button text="Create Tamagochi" color="primary" type="submit" disabled={Object.keys(errors).length > 0} />
+            <Button
+              text="Create Tamagochi"
+              color="primary"
+              type="submit"
+              disabled={Object.keys(errors).length > 0 || isPending}
+            />
           </div>
         </>
       )}

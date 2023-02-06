@@ -13,13 +13,14 @@ export const StoreItemCard = ({ item }: { item: StoreItemType }) => {
   const [open, setOpen] = useState(false);
   const { balance } = useGetFTBalance();
   const sendHandler = useTamagotchiMessage();
-  const { setIsPending } = useApp();
+  const { setIsPending, isPending } = useApp();
 
   const onError = () => setIsPending(false);
   const onSuccess = () => setIsPending(false);
 
   const handler = (amount: number) => {
-    if (balance > amount) {
+    if (balance >= amount) {
+      setIsPending((prev) => !prev);
       sendHandler(
         {
           BuyAttribute: {
@@ -54,7 +55,7 @@ export const StoreItemCard = ({ item }: { item: StoreItemType }) => {
           text="Buy"
           icon={() => <Icon name="cart" className="w-4 h-4" />}
           onClick={() => handler(amount)}
-          disabled={isBought}
+          disabled={isBought || isPending}
         />
       </div>
       {open && <PaymentErrorPopup close={() => setOpen(false)} />}

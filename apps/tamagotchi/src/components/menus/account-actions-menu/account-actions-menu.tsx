@@ -1,15 +1,16 @@
 import { Fragment, useEffect, useState } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import clsx from 'clsx';
-import { useLesson } from 'app/context';
+import { useApp, useLesson } from 'app/context';
 import { Icon } from 'components/ui/icon';
 import { TransferAccountPopup } from 'components/popups/transfer-account-popup';
 import { ApproveAccountPopup } from 'components/popups/approve-account-popup';
 import { RevokeApprovalPopup } from 'components/popups/revoke-approval-popup';
 import { useAccount } from '@gear-js/react-hooks';
 
-export const AccountActionsMenu = ({ isPending }: { isPending: boolean }) => {
+export const AccountActionsMenu = () => {
   const { account } = useAccount();
+  const { isPending } = useApp();
   const { lesson, reset, tamagotchi } = useLesson();
   const initialOptions = [
     {
@@ -19,10 +20,10 @@ export const AccountActionsMenu = ({ isPending }: { isPending: boolean }) => {
       icon: 'upload',
     },
   ];
+  const [options, setOptions] = useState([...initialOptions]);
   const [openTransfer, setOpenTransfer] = useState(false);
   const [openApprove, setOpenApprove] = useState(false);
   const [openRevoke, setOpenRevoke] = useState(false);
-  const [options, setOptions] = useState([...initialOptions]);
 
   const getUserActions = () => {
     const isOwner = account?.decodedAddress === tamagotchi?.owner;

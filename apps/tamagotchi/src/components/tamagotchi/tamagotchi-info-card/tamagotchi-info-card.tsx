@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useLesson } from 'app/context';
+import { useApp, useLesson } from 'app/context';
 import { AccountActionsMenu } from 'components/menus/account-actions-menu';
 import { getTamagotchiAge } from 'app/utils/get-tamagotchi-age';
 import { useTamagotchiMessage } from 'app/hooks/use-tamagotchi';
@@ -7,15 +7,14 @@ import { useAccount } from '@gear-js/react-hooks';
 import { TamagotchiInfoCardRow } from '../tamagotchi-info-card-row';
 import { useLesson5 } from 'app/hooks/use-lesson-5';
 import { NotificationResponseTypes } from 'app/types/lessons';
-import { useState } from 'react';
 import { getNotificationTypeValue } from 'app/utils';
 
 export const TamagotchiInfoCard = () => {
   const { account } = useAccount();
   const { tamagotchi, lesson } = useLesson();
   const { setNotification, activeNotification, setActiveNotification } = useLesson5();
-  const [pending, setPending] = useState(false);
   const send = useTamagotchiMessage();
+  const { setIsPending } = useApp();
 
   const fullView = Boolean(lesson && lesson?.step > 1);
 
@@ -24,15 +23,15 @@ export const TamagotchiInfoCard = () => {
       setNotification((prev) => ({ ...prev, ...getNotificationTypeValue(str) }));
       setActiveNotification(undefined);
     }
-    setPending(false);
+    setIsPending(false);
   };
-  const onError = () => setPending(false);
+  const onError = () => setIsPending(false);
   const feedHandler = () => {
-    setPending(true);
+    setIsPending(true);
     send({ Feed: null }, { onSuccess: () => onSuccess('FeedMe'), onError });
   };
   const playHandler = () => {
-    setPending(true);
+    setIsPending(true);
     send(
       { Play: null },
       {
@@ -42,7 +41,7 @@ export const TamagotchiInfoCard = () => {
     );
   };
   const sleepHandler = () => {
-    setPending(true);
+    setIsPending(true);
     send(
       { Sleep: null },
       {
@@ -62,7 +61,7 @@ export const TamagotchiInfoCard = () => {
                 {tamagotchi.name ? tamagotchi.name : 'Geary'}
               </h2>
               <div>
-                <AccountActionsMenu isPending={pending} />
+                <AccountActionsMenu />
               </div>
             </div>
             <div className="mt-8 text-white text-lg font-medium">
@@ -88,12 +87,9 @@ export const TamagotchiInfoCard = () => {
                 icon="feed"
                 labelBtn="Feed"
                 onClick={feedHandler}
-                tooltipText={
-                  'Your character has a low fed score. In order to increase the level, please click on the "Feed" button'
-                }
+                tooltipText='Your character has a low fed score. In order to increase the level, please click on the "Feed" button'
                 tooltipTitle="Low level of fed"
                 isActive={activeNotification === 'FeedMe'}
-                isPending={pending}
               />
               <TamagotchiInfoCardRow
                 label="Happy"
@@ -101,12 +97,9 @@ export const TamagotchiInfoCard = () => {
                 icon="happy"
                 labelBtn="Play"
                 onClick={playHandler}
-                tooltipText={
-                  'Your character has a low happiness score. In order to increase the level, please click on the "Play" button'
-                }
+                tooltipText='Your character has a low happiness score. In order to increase the level, please click on the "Play" button'
                 tooltipTitle="Low level of happiness"
                 isActive={activeNotification === 'PlayWithMe'}
-                isPending={pending}
               />
               <TamagotchiInfoCardRow
                 label="Tired"
@@ -114,12 +107,9 @@ export const TamagotchiInfoCard = () => {
                 icon="tired"
                 labelBtn="Sleep"
                 onClick={sleepHandler}
-                tooltipText={
-                  'Your character has a low rest score. In order to increase the level, please click on the "Sleep" button'
-                }
+                tooltipText='Your character has a low rest score. In order to increase the level, please click on the "Sleep" button'
                 tooltipTitle="Low level of rest"
                 isActive={activeNotification === 'WantToSleep'}
-                isPending={pending}
               />
             </div>
           )}

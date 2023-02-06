@@ -4,7 +4,7 @@ import { useApp, useLesson, useTokensBalanceStore } from 'app/context';
 import { BalanceLogic, BalanceMain, BalanceStorage } from 'app/types/ft-wallet';
 import { useFtMessage } from './use-ft-message';
 import { useMetadata } from './use-metadata';
-import metaCode from '../../assets/meta/meta-ft-code.txt';
+import metaCode from 'assets/meta/meta-ft-code.txt';
 
 function useReadFTMain<T>() {
   const { metaMain, programId } = useTokensBalanceStore();
@@ -64,6 +64,7 @@ export function useGetFTBalance() {
   const sendHandler = useFtMessage();
   const { metadata } = useMetadata(metaCode);
   const balance = useFTStorage();
+  const { setIsPending } = useApp();
 
   const handler = (cb?: () => void) => {
     const encodedMint = metadata
@@ -75,10 +76,18 @@ export function useGetFTBalance() {
       })
       .toU8a();
 
-    const onSuccess = () => cb && cb();
-    const onError = () => cb && cb();
+    const onSuccess = () => {
+      setIsPending(false);
+      cb && cb();
+    };
+    const onError = () => {
+      setIsPending(false);
+      cb && cb();
+    };
 
     if (encodedMint) {
+      setIsPending(true);
+
       sendHandler(
         { Message: { transaction_id: Math.floor(Math.random() * Date.now()), payload: [...encodedMint] } },
         { onSuccess, onError },

@@ -9,16 +9,14 @@ type Props = {
 
 export const PaymentErrorPopup = ({ close }: Props) => {
   const { handler } = useGetFTBalance();
-  const { isPending, setIsPending } = useApp();
+  const { isPending } = useApp();
 
   const onClick = () => {
-    setIsPending(true);
     handler(onClose);
   };
 
   const onClose = () => {
     close();
-    setIsPending(false);
   };
 
   return (
