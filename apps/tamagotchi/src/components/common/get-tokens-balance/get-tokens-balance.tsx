@@ -12,7 +12,7 @@ export const GetTokensBalance = () => {
         <Button
           className={clsx('p-2', buttonStyles.light)}
           icon={() => <Icon name="test-balance" width={20} height={20} />}
-          onClick={() => handler}
+          onClick={() => handler()}
         />
       </TooltipWrapper>
     </div>
