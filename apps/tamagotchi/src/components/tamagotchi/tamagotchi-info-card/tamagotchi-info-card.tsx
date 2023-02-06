@@ -71,7 +71,7 @@ export const TamagotchiInfoCard = () => {
                   <tr className="flex gap-8">
                     <th className="flex-1 w-40 text-white text-opacity-70 font-medium">Owner ID:</th>
                     <td className="flex-1 w-40 truncate">
-                      {tamagotchi.owner === account?.meta.name ? account?.meta.name : tamagotchi.owner}
+                      {tamagotchi.owner === account?.decodedAddress ? account?.meta.name : tamagotchi.owner}
                     </td>
                   </tr>
                   <tr className="flex gap-8">
