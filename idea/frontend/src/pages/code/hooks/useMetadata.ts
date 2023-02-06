@@ -4,6 +4,7 @@ import { HexString } from '@polkadot/util/types';
 import { useState, useEffect } from 'react';
 
 import { fetchCodeMetadata } from 'api';
+import { RPCError, RPCErrorCode } from 'shared/services/rpcService';
 
 const useMetadata = (codeId: HexString) => {
   const alert = useAlert();
@@ -13,7 +14,9 @@ const useMetadata = (codeId: HexString) => {
   useEffect(() => {
     fetchCodeMetadata(codeId)
       .then(({ result }) => setMetadata(getProgramMetadata(result.hex)))
-      .catch(({ message }: Error) => alert.error(message));
+      .catch(({ message, code }: RPCError) => {
+        if (code !== RPCErrorCode.MetadataNotFound) alert.error(message);
+      });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
