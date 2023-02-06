@@ -16,6 +16,7 @@ import { Mailbox } from './mailbox';
 import * as State from './state';
 import * as Explorer from './explorer';
 import { Code } from './code';
+import { UploadCode } from './uploadCode';
 
 const Routing = () => {
   const events = useEvents();
@@ -57,6 +58,7 @@ const Routing = () => {
       </Route>
 
       <Route path={routes.code} element={<Code />} />
+      <Route path={routes.uploadCode} element={<UploadCode />} />
 
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Navigate to={routes.programs} replace />} />

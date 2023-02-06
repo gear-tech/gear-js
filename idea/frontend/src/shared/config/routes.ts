@@ -2,7 +2,7 @@ const routes = {
   home: '/',
   codes: '/codes',
   code: '/code/:codeId',
-  uploadCode: '/upload-code',
+  uploadCode: '/code/upload',
   programs: '/programs',
   program: ':programId',
   uploadProgram: 'upload',

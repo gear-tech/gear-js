@@ -1,0 +1,13 @@
+@use 'shared/assets/styles/mixins' as *;
+
+.box {
+  margin-bottom: 32px;
+}
+
+.form {
+  @include childrenMargin(24px);
+}
+
+.buttons {
+  @include childrenMargin(16px, right);
+}
