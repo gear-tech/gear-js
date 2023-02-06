@@ -31,7 +31,7 @@ export const useLesson5 = () => {
     let unsub: UnsubscribePromise | undefined;
 
     if (lessonMeta && lesson?.step === 5 && tamagotchi) {
-      if (tamagotchi.isDead) {
+      if (!tamagotchi.isDead) {
         unsub = api.gearEvents.subscribeToGearEvent('UserMessageSent', ({ data }: UserMessageSent) => {
           const {
             message: { payload },
