@@ -47,3 +47,13 @@ export const getStoreItems = (state: ItemsStoreResponse, programId: HexString) =
   }
   return { store, tamagotchi };
 };
+export const getAttributesById = (state: ItemsStoreResponse | undefined, ids: number[]): StoreItemsNames[] => {
+  if (!state) return [];
+  if (ids.length < 1) return [];
+
+  const result: StoreItemsNames[] = [];
+  for (const id in state.attributes) {
+    if (ids.includes(+id)) result.push(state.attributes[id][0].media);
+  }
+  return result;
+};

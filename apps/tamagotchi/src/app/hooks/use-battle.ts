@@ -5,8 +5,8 @@ import { BattleStateResponse } from '../types/battles';
 import { HexString } from '@polkadot/util/types';
 import { useReadFullState, useSendMessage } from '@gear-js/react-hooks';
 import { useMetadata } from './use-metadata';
-import metaBattle from '../../assets/meta/meta-battle.txt';
-import metaPlayer from '../../assets/meta/meta6.txt';
+import metaBattle from 'assets/meta/meta-battle.txt';
+import metaPlayer from 'assets/meta/meta6.txt';
 import { ENV } from '../consts';
 
 function useReadPlayerState<T>(player?: HexString) {
@@ -38,7 +38,6 @@ export function useInitBattleData() {
 
   useEffect(() => {
     setBattleState(state);
-    // console.log('battle', state);
   }, [state]);
 }
 

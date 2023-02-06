@@ -1,7 +1,13 @@
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import { TamagotchiAvatarAge } from '../types/tamagotchi';
+
 export const getTamagotchiAge = (v: number) => {
-  const seconds = Math.floor((Date.now() - +v) / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.round(hours / 24);
-  return days > 1 ? `${days} days` : '1 day';
+  dayjs.extend(relativeTime);
+  return dayjs(v).fromNow(true);
+};
+
+export const getTamagotchiAgeDiff = (v: number): TamagotchiAvatarAge => {
+  const diff = dayjs().diff(dayjs(v), 'minutes');
+  return diff > 60 ? 'old' : diff > 20 ? 'adult' : 'old';
 };

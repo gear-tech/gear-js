@@ -8,7 +8,7 @@ export const TamagotchiBattleInfoCard = ({ tamagotchi }: { tamagotchi: Tamagotch
     <div className="flex gap-12 items-center p-4 bg-[#292929] rounded-2xl w-fit">
       <div className="basis-[415px] w-full px-8 py-6 bg-[#1E1E1E] rounded-2xl">
         <div className="flex justify-between gap-4">
-          <h2 className="typo-h2 text-primary truncate">{tamagotchi.name}</h2>
+          <h2 className="typo-h2 text-primary truncate max-w-[9ch]">{tamagotchi.name}</h2>
         </div>
         <div className="mt-8 text-white text-lg font-medium">
           <table className="block w-full text-left">

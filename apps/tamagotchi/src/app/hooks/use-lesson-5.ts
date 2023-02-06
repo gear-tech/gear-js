@@ -14,26 +14,15 @@ export const useLesson5 = () => {
   const { tamagotchi } = useTamagotchi();
 
   useEffect(() => {
-    console.log({ notification, activeNotification });
-  }, [notification, activeNotification]);
-
-  useEffect(() => {
     if (tamagotchi) {
       if (tamagotchi.isDead) {
         setActiveNotification(undefined);
       } else {
         if (Object.keys(notification).length) {
           const minValue = Object.entries(notification)
-            .filter((item) => {
-              console.log(Boolean(item[1]));
-              return Boolean(item[1]);
-            })
-            .sort(([, v1], [, v2]) => {
-              console.log('sort diff: ', v1 - v2);
-              return v1 - v2;
-            })[0];
+            .filter((item) => Boolean(item[1]))
+            .sort(([, v1], [, v2]) => v1 - v2)[0];
           if (minValue) {
-            console.log({ minValue });
             setActiveNotification(minValue[0] as NotificationResponseTypes);
           } else setActiveNotification(undefined);
         }
@@ -53,7 +42,7 @@ export const useLesson5 = () => {
 
           const decodedPayload = lessonMeta.createType(8, payload).toHuman() as NotificationResponseTypes;
 
-          console.log({ decodedPayload });
+          // console.log({ decodedPayload });
 
           if (tamagotchi && ['WantToSleep', 'PlayWithMe', 'FeedMe'].includes(decodedPayload)) {
             const update = getNotificationTypeValue(decodedPayload, tamagotchi);

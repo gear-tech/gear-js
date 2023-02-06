@@ -3,12 +3,12 @@ import clsx from 'clsx';
 import { Icon } from 'components/ui/icon';
 import { StoreItemsNames } from 'app/types/ft-store';
 import { useLessons, useTamagotchi } from 'app/context';
-
-type Emotions = 'hello' | 'happy' | 'angry' | 'scared' | 'crying';
+import { getTamagotchiAgeDiff } from 'app/utils/get-tamagotchi-age';
+import { TamagotchiAvatarAge, TamagotchiAvatarEmotions } from 'app/types/tamagotchi';
 
 type TamagotchiAvatarProps = {
-  emotion?: Emotions;
-  age?: 'baby' | 'adult' | 'old';
+  emotion?: TamagotchiAvatarEmotions;
+  age?: TamagotchiAvatarAge;
   isDead?: boolean;
   hasItem?: StoreItemsNames[];
   color?: string;
@@ -32,29 +32,35 @@ export const TamagotchiAvatar = ({
   const { tamagotchi, tamagotchiItems } = useTamagotchi();
   const { lesson } = useLessons();
   const [dead, setDead] = useState<boolean>(Boolean(isDead));
-  const [currentEmotion, setCurrentEmotion] = useState<Emotions>(emotion);
+  const [currentEmotion, setCurrentEmotion] = useState<TamagotchiAvatarEmotions>(emotion);
   const [damage, setDamage] = useState<number>(0);
-  const info = useRef({ isReady: false, energy: 0 });
-
   const [itemsUsed, setItemsUsed] = useState<StoreItemsNames[]>(hasItem);
+  const info = useRef({ isReady: false, energy: 0 });
+  const [tamagotchiAge, setTamagotchiAge] = useState<TamagotchiAvatarAge>(age);
 
   useEffect(() => {
-    if (tamagotchiItems) {
-      setItemsUsed(tamagotchiItems);
+    if (tamagotchi) {
+      setTamagotchiAge(getTamagotchiAgeDiff(tamagotchi.dateOfBirth));
     }
+  }, [tamagotchi]);
+
+  useEffect(() => {
+    tamagotchiItems.length > 0 ? setItemsUsed(tamagotchiItems) : setItemsUsed(hasItem);
   }, [tamagotchiItems]);
 
   useEffect(() => {
-    setDamage(0);
     if (energy && !isActive) {
-      if (info.current.isReady && info.current.energy !== energy) {
-        setDamage(Math.round((energy - info.current.energy) / 100));
+      if (info.current.isReady) {
+        if (info.current.energy !== energy) {
+          setDamage(Math.round((energy - info.current.energy) / 100));
+          info.current.energy = energy;
+        }
       } else {
         info.current.isReady = true;
         info.current.energy = energy;
       }
-    }
-  }, [energy]);
+    } else setDamage(0);
+  }, [energy, isActive]);
 
   useEffect(() => {
     if (tamagotchi) {
@@ -85,16 +91,16 @@ export const TamagotchiAvatar = ({
   const s = 'tamagotchi';
   const cn = 'absolute inset-0 w-full h-full';
   const tamagotchiDied = isDead || dead;
-  const emo: Emotions = tamagotchiDied ? 'scared' : isWinner ? 'hello' : currentEmotion;
+  const emo: TamagotchiAvatarEmotions = tamagotchiDied ? 'scared' : isWinner ? 'hello' : currentEmotion;
 
-  const mouse = age === 'baby' ? 'face-baby' : `mouse-${age}-${emo === 'hello' ? 'happy' : emo}`;
-  const head = `head-${age}`;
+  const mouse = tamagotchiAge === 'baby' ? 'face-baby' : `mouse-${tamagotchiAge}-${emo === 'hello' ? 'happy' : emo}`;
+  const head = `head-${tamagotchiAge}`;
   const eye = `eye-${emo === 'hello' ? 'happy' : emo}`;
   const hands = `hands-${
     itemsUsed?.includes('sword') ? 'sword' : emo === 'hello' ? 'hello' : emo === 'angry' ? 'angry' : 'normal'
   }`;
   const tail = `tail-${itemsUsed?.includes('sword') ? 'sword' : emo === 'hello' ? 'hello' : 'normal'}`;
-  const glasses = itemsUsed?.includes('glasses') ? 'head-glasses' : age === 'old' ? 'face-old-glasses' : null;
+  const glasses = itemsUsed?.includes('glasses') ? 'head-glasses' : tamagotchiAge === 'old' ? 'face-old-glasses' : null;
   const body = `body-${tamagotchiDied ? 'dead' : 'normal'}`;
 
   return (

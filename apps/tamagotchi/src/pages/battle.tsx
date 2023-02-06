@@ -7,30 +7,55 @@ import { StartBattleForm } from 'components/forms/start-battle-form';
 import clsx from 'clsx';
 import { TamagotchiBattleTopStats } from 'components/tamagotchi/tamagotchi-battle-top-stats';
 import { useEffect, useState } from 'react';
-import { TamagotchiState } from '../app/types/lessons';
-import { useBattle } from '../app/context';
+import { TamagotchiState } from 'app/types/lessons';
+import { useApp, useBattle, useFTStore } from 'app/context';
 import { useAccount } from '@gear-js/react-hooks';
+import { getAttributesById } from '../app/utils';
+import { getTamagotchiAgeDiff } from '../app/utils/get-tamagotchi-age';
 
 export const Battle = () => {
   const { account } = useAccount();
+  const { isPending, setIsPending } = useApp();
+  const { store } = useFTStore();
+  const { battleState: battle, players: warriors, setBattleState } = useBattle();
+  useInitBattleData();
   const [isAllowed, setIsAllowed] = useState<boolean>(false);
   const [winner, setWinner] = useState<TamagotchiState>();
-  useInitBattleData();
-  const { battleState: battle, players: warriors, setBattleState } = useBattle();
   const sendMessage = useBattleMessage();
+  // const [damage, setDamage] = useState<number[]>([]);
+
+  // useEffect(() => {
+  //   setDamage(0);
+  //   if (energy && !isActive) {
+  //     if (info.current.isReady && info.current.energy !== energy) {
+  //       setDamage(Math.round((energy - info.current.energy) / 100));
+  //     } else {
+  //       info.current.isReady = true;
+  //       info.current.energy = energy;
+  //     }
+  //   }
+  // }, [energy, isActive]);
 
   const handleAttack = () => {
-    if (battle?.state === 'GameIsOver')
+    const onError = () => setIsPending(false);
+    const onSuccess = () => setIsPending(false);
+    if (battle?.state === 'GameIsOver') {
+      setIsPending(true);
       sendMessage(
         { StartNewGame: null },
         {
           onSuccess: () => {
             setBattleState(undefined);
-            // console.log({ battle, warriors });
+            setIsPending(false);
           },
+          onError,
         },
       );
-    if (battle?.state === 'Moves') sendMessage({ MakeMove: null });
+    }
+    if (battle?.state === 'Moves') {
+      setIsPending(true);
+      sendMessage({ MakeMove: null }, { onError, onSuccess });
+    }
   };
 
   useEffect(() => {
@@ -86,7 +111,8 @@ export const Battle = () => {
               <div className="relative grow flex gap-10 justify-between items-center mt-15">
                 <div className="basis-[445px] flex flex-col">
                   <TamagotchiAvatar
-                    hasItem={[]}
+                    age={getTamagotchiAgeDiff(warriors[0].dateOfBirth)}
+                    hasItem={getAttributesById(store, battle.players[0].attributes)}
                     energy={warriors[1]?.energy}
                     className="min-h-[430px]"
                     isActive={battle?.currentTurn === 0 && battle?.state !== 'GameIsOver'}
@@ -110,8 +136,10 @@ export const Battle = () => {
                         : battle?.state === 'GameIsOver'
                         ? buttonStyles.secondary
                         : buttonStyles.primary,
+                      buttonStyles.button,
                     )}
-                    onClick={handleAttack}>
+                    onClick={handleAttack}
+                    disabled={isPending}>
                     <Icon name="swords" className="w-5 h-5" />{' '}
                     {battle?.state === 'Moves'
                       ? 'Attack'
@@ -124,7 +152,8 @@ export const Battle = () => {
                 </div>
                 <div className="basis-[445px] flex flex-col">
                   <TamagotchiAvatar
-                    hasItem={[]}
+                    age={getTamagotchiAgeDiff(warriors[1].dateOfBirth)}
+                    hasItem={getAttributesById(store, battle.players[1].attributes)}
                     energy={warriors[0].energy}
                     className="min-h-[430px]"
                     isActive={battle?.currentTurn === 1 && battle?.state !== 'GameIsOver'}

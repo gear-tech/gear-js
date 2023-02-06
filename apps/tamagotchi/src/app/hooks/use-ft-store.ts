@@ -15,15 +15,29 @@ function useReadItemsStore<T>() {
 export function useItemsStore() {
   const { setTamagotchiItems } = useTamagotchi();
   const { lesson } = useLessons();
-  const { setItems } = useFTStore();
+  const { setItems, setStore } = useFTStore();
   const { state } = useReadItemsStore<ItemsStoreResponse>();
+
+  useEffect(() => {
+    setStore(state);
+
+    return () => {
+      setStore(undefined);
+    };
+  }, [state]);
 
   useEffect(() => {
     if (lesson && lesson.step > 3 && state) {
       const { programId } = lesson;
       setItems(getStoreItems(state, programId).store);
       setTamagotchiItems(getStoreItems(state, programId).tamagotchi);
+    } else {
+      setItems([]);
+      setTamagotchiItems([]);
     }
-    return () => setItems([]);
+    return () => {
+      setItems([]);
+      setTamagotchiItems([]);
+    };
   }, [lesson, state]);
 }
