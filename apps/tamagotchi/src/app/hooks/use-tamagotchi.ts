@@ -21,7 +21,6 @@ export function useInitTamagotchi() {
       setTamagotchi({ ...state, isDead: [fed, rested, entertained].reduce((sum, a) => sum + a) === 0 });
       const { decodedAddress } = account;
       setIsAdmin([state.owner, state.allowedAccount].includes(decodedAddress));
-      console.log({ state });
     }
   }, [state, isStateRead, account]);
 }
