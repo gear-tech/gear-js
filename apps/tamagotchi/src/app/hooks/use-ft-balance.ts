@@ -1,6 +1,6 @@
 import { useReadFullState } from '@gear-js/react-hooks';
 import type { HexString } from '@polkadot/util/types';
-import { useLesson, useTokensBalanceStore } from 'app/context';
+import { useApp, useLesson, useTokensBalanceStore } from 'app/context';
 import { BalanceLogic, BalanceMain, BalanceStorage } from 'app/types/ft-wallet';
 import { useFtMessage } from './use-ft-message';
 import { useMetadata } from './use-metadata';
@@ -76,11 +76,12 @@ export function useGetFTBalance() {
       .toU8a();
 
     const onSuccess = () => cb && cb();
+    const onError = () => cb && cb();
 
     if (encodedMint) {
       sendHandler(
         { Message: { transaction_id: Math.floor(Math.random() * Date.now()), payload: [...encodedMint] } },
-        { onSuccess },
+        { onSuccess, onError },
       );
     }
   };

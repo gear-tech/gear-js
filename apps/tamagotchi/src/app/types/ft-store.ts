@@ -4,7 +4,7 @@ export type StoreItemsNames = 'sword' | 'hat' | 'bag' | 'glasses';
 
 type StoreItemDescription = {
   description: string;
-  media: string;
+  media: StoreItemsNames;
   title: string;
 };
 
@@ -12,6 +12,7 @@ export type StoreItemType = {
   id: number;
   amount: number;
   description: StoreItemDescription;
+  isBought: boolean;
 };
 
 export type ItemsStoreResponse = {

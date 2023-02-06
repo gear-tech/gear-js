@@ -6,21 +6,29 @@ import { StoreItemType } from 'app/types/ft-store';
 import { useTamagotchiMessage } from 'app/hooks/use-tamagotchi';
 import { ENV } from 'app/consts';
 import { useGetFTBalance } from 'app/hooks/use-ft-balance';
+import { useApp } from 'app/context';
 
 export const StoreItemCard = ({ item }: { item: StoreItemType }) => {
-  const { id, amount, description } = item;
+  const { id, amount, description, isBought } = item;
   const [open, setOpen] = useState(false);
   const { balance } = useGetFTBalance();
   const sendHandler = useTamagotchiMessage();
+  const { setIsPending } = useApp();
 
-  const handler = () => {
-    if (balance) {
-      sendHandler({
-        BuyAttribute: {
-          storeId: ENV.store,
-          attribute_id: id,
+  const onError = () => setIsPending(false);
+  const onSuccess = () => setIsPending(false);
+
+  const handler = (amount: number) => {
+    if (balance > amount) {
+      sendHandler(
+        {
+          BuyAttribute: {
+            storeId: ENV.store,
+            attribute_id: id,
+          },
         },
-      });
+        { onError, onSuccess },
+      );
     } else setOpen(true);
   };
 
@@ -45,7 +53,8 @@ export const StoreItemCard = ({ item }: { item: StoreItemType }) => {
           color="lightGreen"
           text="Buy"
           icon={() => <Icon name="cart" className="w-4 h-4" />}
-          onClick={handler}
+          onClick={() => handler(amount)}
+          disabled={isBought}
         />
       </div>
       {open && <PaymentErrorPopup close={() => setOpen(false)} />}

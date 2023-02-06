@@ -1,18 +1,20 @@
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
-import { useItemsStore } from 'app/hooks/use-store';
 import { StoreItemCard } from 'components/cards/store-item-card';
 import { Icon } from 'components/ui/icon';
-import { useLesson } from '../app/context';
+import { useLesson, useFTStore, useApp } from '../app/context';
 
 export const Store = () => {
-  const { items } = useItemsStore();
-  const { tamagotchi } = useLesson();
+  const { lesson } = useLesson();
+  const { items } = useFTStore();
+  const { setIsPending } = useApp();
+
   return (
     <>
+      <button onClick={() => setIsPending((prevState) => !prevState)}>cls</button>
       <h1 className="text-2xl font-kanit font-bold">Store</h1>
-      {tamagotchi ? (
+      {lesson?.programId ? (
         items.length ? (
           <ul className="mt-8 mb-10 grid grid-cols-3 gap-8">
             {items.map((item, i) => (
@@ -25,7 +27,7 @@ export const Store = () => {
           <p className="my-auto opacity-70 text-center">Items not found</p>
         )
       ) : (
-        <p className="my-auto opacity-70 text-center">Please, connect your Tamagotchi Program</p>
+        <p className="my-auto opacity-70 text-center">Please, connect your Tamagotchi</p>
       )}
       <div className="mt-auto">
         <Link to="/" className={clsx('btn gap-2 whitespace-nowrap', buttonStyles.light)}>

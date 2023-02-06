@@ -38,6 +38,7 @@ export function useInitBattleData() {
 
   useEffect(() => {
     setBattleState(state);
+    console.log('battle', state);
   }, [state]);
 }
 

@@ -4,8 +4,6 @@ import { AccountActionsMenu } from 'components/menus/account-actions-menu';
 import { getTamagotchiAge } from 'app/utils/get-tamagotchi-age';
 import { useTamagotchiMessage } from 'app/hooks/use-tamagotchi';
 import { useAccount } from '@gear-js/react-hooks';
-import { useTamagotchi } from 'app/hooks/use-tamagotchi';
-import { useThrottleWasmState } from 'app/hooks/use-read-wasm-state';
 import { TamagotchiInfoCardRow } from '../tamagotchi-info-card-row';
 import { useLesson5 } from 'app/hooks/use-lesson-5';
 import { NotificationResponseTypes } from 'app/types/lessons';
@@ -18,9 +16,6 @@ export const TamagotchiInfoCard = () => {
   const { setNotification, activeNotification, setActiveNotification } = useLesson5();
   const [pending, setPending] = useState(false);
   const send = useTamagotchiMessage();
-
-  useTamagotchi();
-  useThrottleWasmState();
 
   const fullView = Boolean(lesson && lesson?.step > 1);
 
@@ -63,7 +58,9 @@ export const TamagotchiInfoCard = () => {
         <div className={clsx('flex gap-12 items-center p-4 bg-white/5 rounded-2xl', fullView && 'w-full pr-12')}>
           <div className="basis-[415px] w-full px-8 py-6 bg-[#1E1E1E] rounded-2xl">
             <div className="flex justify-between gap-4">
-              <h2 className="typo-h2 text-primary truncate">{tamagotchi.name ? tamagotchi.name : 'Geary'}</h2>
+              <h2 className="typo-h2 text-primary truncate max-w-[9ch]">
+                {tamagotchi.name ? tamagotchi.name : 'Geary'}
+              </h2>
               <div>
                 <AccountActionsMenu isPending={pending} />
               </div>

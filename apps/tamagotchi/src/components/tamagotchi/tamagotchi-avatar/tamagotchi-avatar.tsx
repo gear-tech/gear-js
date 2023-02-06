@@ -17,22 +17,31 @@ type TamagotchiAvatarProps = {
   isWinner?: boolean;
   energy?: number;
 };
+
 export const TamagotchiAvatar = ({
   className,
   emotion = 'happy',
   age = 'baby',
   isDead,
-  hasItem,
+  hasItem = [],
   color,
   isActive,
   isWinner,
   energy,
 }: TamagotchiAvatarProps) => {
-  const { tamagotchi, lesson } = useLesson();
+  const { tamagotchi, tamagotchiItems, lesson } = useLesson();
   const [dead, setDead] = useState<boolean>(Boolean(isDead));
   const [currentEmotion, setCurrentEmotion] = useState<Emotions>(emotion);
   const [damage, setDamage] = useState<number>(0);
   const info = useRef({ isReady: false, energy: 0 });
+
+  const [itemsUsed, setItemsUsed] = useState<StoreItemsNames[]>(hasItem);
+
+  useEffect(() => {
+    if (tamagotchiItems) {
+      setItemsUsed(tamagotchiItems);
+    }
+  }, [tamagotchiItems]);
 
   useEffect(() => {
     setDamage(0);
@@ -81,10 +90,10 @@ export const TamagotchiAvatar = ({
   const head = `head-${age}`;
   const eye = `eye-${emo === 'hello' ? 'happy' : emo}`;
   const hands = `hands-${
-    hasItem?.includes('sword') ? 'sword' : emo === 'hello' ? 'hello' : emo === 'angry' ? 'angry' : 'normal'
+    itemsUsed?.includes('sword') ? 'sword' : emo === 'hello' ? 'hello' : emo === 'angry' ? 'angry' : 'normal'
   }`;
-  const tail = `tail-${hasItem?.includes('sword') ? 'sword' : emo === 'hello' ? 'hello' : 'normal'}`;
-  const glasses = hasItem?.includes('glasses') ? 'head-glasses' : age === 'old' ? 'face-old-glasses' : null;
+  const tail = `tail-${itemsUsed?.includes('sword') ? 'sword' : emo === 'hello' ? 'hello' : 'normal'}`;
+  const glasses = itemsUsed?.includes('glasses') ? 'head-glasses' : age === 'old' ? 'face-old-glasses' : null;
   const body = `body-${tamagotchiDied ? 'dead' : 'normal'}`;
 
   return (
@@ -92,12 +101,12 @@ export const TamagotchiAvatar = ({
       {!tamagotchiDied && <Icon name={tail} section={s} className={cn} />}
       {!tamagotchiDied && <Icon name={hands} section={s} className={cn} />}
       <Icon name={body} section={s} className={cn} />
-      {hasItem?.includes('bag') && <Icon name="body-bag" section={s} className={cn} />}
+      {itemsUsed?.includes('bag') && <Icon name="body-bag" section={s} className={cn} />}
       <Icon name={head} section={s} className={cn} />
       <Icon name={mouse} section={s} className={cn} />
       <Icon name={eye} section={s} className={cn} />
       {!tamagotchiDied && glasses && <Icon name={glasses} section={s} className={cn} />}
-      {!tamagotchiDied && hasItem?.includes('hat') && <Icon name="head-hat" section={s} className={cn} />}
+      {!tamagotchiDied && itemsUsed?.includes('hat') && <Icon name="head-hat" section={s} className={cn} />}
       {emo === 'crying' && <Icon name="tears" section={s} className={cn} />}
       {!tamagotchiDied && (isActive || isWinner) && (
         <div className="absolute top-full -z-1 left-1/2 -translate-x-1/2">

@@ -1,6 +1,7 @@
 import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useRef, useState } from 'react';
 import { getProgramMetadata, ProgramMetadata } from '@gear-js/api';
 import type { LessonState, TamagotchiState } from 'app/types/lessons';
+import type { StoreItemsNames } from 'app/types/ft-store';
 import { getLessonAssets } from 'app/utils/get-lesson-assets';
 
 type Program = {
@@ -10,8 +11,8 @@ type Program = {
   setTamagotchi: Dispatch<SetStateAction<TamagotchiState | undefined>>;
   reset: () => void;
   lessonMeta?: ProgramMetadata;
-  tamagotchiItems: number[];
-  setTamagotchiItems: Dispatch<SetStateAction<number[]>>;
+  tamagotchiItems: StoreItemsNames[];
+  setTamagotchiItems: Dispatch<SetStateAction<StoreItemsNames[]>>;
 };
 
 export const LessonsCtx = createContext({} as Program);
@@ -20,13 +21,8 @@ const useProgram = (): Program => {
   const [lesson, setLesson] = useState<LessonState>();
   const [lessonMeta, setLessonMeta] = useState<ProgramMetadata>();
   const [tamagotchi, setTamagotchi] = useState<TamagotchiState>();
-  const [tamagotchiItems, setTamagotchiItems] = useState<number[]>([]);
+  const [tamagotchiItems, setTamagotchiItems] = useState<StoreItemsNames[]>([]);
   const isParsed = useRef(false);
-
-  const reset = () => {
-    setLesson(undefined);
-    setTamagotchi(undefined);
-  };
 
   useEffect(() => {
     if (lesson) {
@@ -46,6 +42,11 @@ const useProgram = (): Program => {
       } else localStorage.removeItem('tmgState');
     }
   }, [lesson]);
+
+  const reset = () => {
+    setLesson(undefined);
+    setTamagotchi(undefined);
+  };
 
   return {
     lesson,

@@ -1,6 +1,7 @@
 import { Button, Modal } from '@gear-js/ui';
 import { Icon } from '../../ui/icon';
-import { useGetFTBalance } from '../../../app/hooks/use-ft-balance';
+import { useGetFTBalance } from 'app/hooks/use-ft-balance';
+import { useApp } from 'app/context';
 
 type Props = {
   close: () => void;
@@ -8,6 +9,17 @@ type Props = {
 
 export const PaymentErrorPopup = ({ close }: Props) => {
   const { handler } = useGetFTBalance();
+  const { isPending, setIsPending } = useApp();
+
+  const onClick = () => {
+    setIsPending(true);
+    handler(onClose);
+  };
+
+  const onClose = () => {
+    close();
+    setIsPending(false);
+  };
 
   return (
     <Modal heading="Payment error" close={close}>
@@ -20,7 +32,8 @@ export const PaymentErrorPopup = ({ close }: Props) => {
           color="primary"
           text="Get Token Balance"
           icon={() => <Icon name="money" className="w-5 h-5" />}
-          onClick={() => handler(close)}
+          onClick={onClick}
+          disabled={isPending}
         />
       </div>
     </Modal>

@@ -119,7 +119,7 @@ export const Battle = () => {
                       : battle?.state === 'Waiting'
                       ? 'Wait...'
                       : battle?.state === 'GameIsOver'
-                      ? 'Start New Game'
+                      ? 'Finish Game'
                       : ''}
                   </button>
                 </div>
