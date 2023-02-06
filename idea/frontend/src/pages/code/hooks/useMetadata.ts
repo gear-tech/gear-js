@@ -10,18 +10,20 @@ const useMetadata = (codeId: HexString) => {
   const alert = useAlert();
 
   const [metadata, setMetadata] = useState<ProgramMetadata>();
+  const [isMetadataReady, setIsMetadataReady] = useState(false);
 
   useEffect(() => {
     fetchCodeMetadata(codeId)
       .then(({ result }) => setMetadata(getProgramMetadata(result.hex)))
       .catch(({ message, code }: RPCError) => {
         if (code !== RPCErrorCode.MetadataNotFound) alert.error(message);
-      });
+      })
+      .finally(() => setIsMetadataReady(true));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { metadata, updateMetadata: setMetadata };
+  return { metadata, isMetadataReady, updateMetadata: setMetadata };
 };
 
 export { useMetadata };

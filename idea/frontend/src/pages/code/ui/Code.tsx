@@ -27,7 +27,7 @@ const Code = () => {
   const alert = useAlert();
 
   const { showModal, closeModal } = useModal();
-  const { metadata, updateMetadata } = useMetadata(codeId);
+  const { metadata, isMetadataReady, updateMetadata } = useMetadata(codeId);
 
   const { programs, isLoading, totalCount, fetchPrograms } = usePrograms();
   const { loadData } = useDataLoading<RequestParams>({ defaultParams: { query: codeId }, fetchData: fetchPrograms });
@@ -78,7 +78,7 @@ const Code = () => {
           size="large"
         />
 
-        {!metadata && (
+        {isMetadataReady && !metadata && (
           <Button text="Add metadata" icon={AddMetaSVG} color="light" size="large" onClick={showUploadMetadataModal} />
         )}
 
