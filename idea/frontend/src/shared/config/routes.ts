@@ -1,7 +1,7 @@
 const routes = {
   home: '/',
   codes: '/codes',
-  code: ':codeId',
+  code: '/code/:codeId',
   uploadCode: '/upload-code',
   programs: '/programs',
   program: ':programId',
@@ -24,7 +24,6 @@ const routes = {
 };
 
 const absoluteRoutes = {
-  code: `${routes.codes}/:codeId`,
   meta: `/meta/:programId`,
   program: `${routes.programs}/${routes.program}`,
   uploadProgram: `${routes.programs}/${routes.uploadProgram}`,

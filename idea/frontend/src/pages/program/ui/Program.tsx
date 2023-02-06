@@ -6,6 +6,7 @@ import { ProgramMessages } from 'widgets/programMessages';
 import { PathParams } from 'shared/types';
 import { isState } from 'shared/helpers';
 
+import { Subheader } from 'shared/ui/subheader';
 import styles from './Program.module.scss';
 import { Header } from './header';
 import { ProgramDetails } from './programDetails';
@@ -24,17 +25,21 @@ const Program = () => {
   return (
     <div>
       <Header
-        name={program?.name || programId}
+        programName={program?.name || programId}
         programId={programId}
         isLoading={isLoading}
         isStateButtonVisible={isState(metadata)}
-        isAddMetaButtonVisible={!metadata}
+        isAddMetaButtonVisible={!isLoading && !metadata}
         onMetaAdd={updateMeta}
       />
       <div className={styles.content}>
         <div className={styles.leftSide}>
           <ProgramDetails program={program} isLoading={isLoading} />
-          <MetadataDetails metadata={metadata} isLoading={isLoading} />
+
+          <div>
+            <Subheader title="Metadata" />
+            <MetadataDetails metadata={metadata} isLoading={isLoading} />
+          </div>
         </div>
         <ProgramMessages programId={programId as HexString} messages={sortedMessages || []} isLoading={isLoading} />
       </div>

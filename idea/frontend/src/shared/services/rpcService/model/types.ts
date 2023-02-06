@@ -5,7 +5,7 @@ type JsonRpcId = number | string;
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
 type RPCError = {
-  code: RPCErrorCode | string;
+  code: RPCErrorCode | number;
   data: string;
   message: string;
 };

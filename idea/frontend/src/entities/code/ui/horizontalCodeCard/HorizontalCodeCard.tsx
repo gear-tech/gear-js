@@ -18,10 +18,12 @@ type Props = {
 const HorizontalCodeCard = memo(({ code }: Props) => {
   const { id: codeId, timestamp } = code;
 
+  const to = `/code/${codeId}`;
+
   return (
     <article className={styles.horizontalCodeCard}>
       <div className={styles.content}>
-        <IdBlock id={codeId} size="large" className={styles.codeId} />
+        <IdBlock to={to} id={codeId} size="large" className={styles.codeId} />
         {timestamp && (
           <div className={styles.otherInfo}>
             <TimestampBlock color="light" withIcon timestamp={timestamp} />
