@@ -29,7 +29,7 @@ const Program = () => {
         programId={programId}
         isLoading={isLoading}
         isStateButtonVisible={isState(metadata)}
-        isAddMetaButtonVisible={!metadata}
+        isAddMetaButtonVisible={!isLoading && !metadata}
         onMetaAdd={updateMeta}
       />
       <div className={styles.content}>
