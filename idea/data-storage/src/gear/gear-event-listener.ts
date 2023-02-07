@@ -271,13 +271,7 @@ export class GearEventListener {
           const metaHash = await getMetaHash(this.api.code, id.toHex());
 
           if(metaHash) {
-            const meta = await this.metaService.getByHash(metaHash);
-
-            if(meta){
-              updateCodeInput.meta = meta;
-            } else {
-              updateCodeInput.meta = await this.metaService.createMeta({ hash: metaHash });
-            }
+            updateCodeInput.meta = await this.metaService.getByHashApi(metaHash);
           }
 
           codes.push(updateCodeInput);
@@ -297,13 +291,7 @@ export class GearEventListener {
           };
 
           if(metaHash) {
-            const meta = await this.metaService.getByHash(metaHash);
-
-            if(meta){
-              updateCodeInput.meta = meta;
-            } else {
-              updateCodeInput.meta = await this.metaService.createMeta({ hash: metaHash });
-            }
+            updateCodeInput.meta = await this.metaService.getByHashApi(metaHash);
           }
 
           if (!code) {

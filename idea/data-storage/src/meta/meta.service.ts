@@ -26,8 +26,26 @@ export class MetaService {
     private gearEventListener: GearEventListener,
   ) {}
 
+  public async getByHashApi(hash: string): Promise<Meta> {
+    const meta = await this.getByHash(hash);
+
+    if(meta){
+      return meta;
+    } else {
+      return this.createMeta({ hash });
+    }
+  }
+
   public async getByHash(hash: string): Promise<Meta> {
     return this.metaRepository.getByHash(hash);
+  }
+
+  async createMeta(createMetaInput: CreateMetaInput): Promise<Meta> {
+    const createMeta = plainToClass(Meta, {
+      ...createMetaInput
+    });
+
+    return this.metaRepository.save(createMeta);
   }
 
   public async addMetaByCode(params: AddMetaByCodeParams): Promise<AddMetaResult> {
@@ -115,14 +133,6 @@ export class MetaService {
     }
 
     return { status: 'Metadata added' };
-  }
-
-  public async createMeta(createMetaInput: CreateMetaInput): Promise<Meta> {
-    const createMeta = plainToClass(Meta, {
-      ...createMetaInput
-    });
-
-    return this.metaRepository.save(createMeta);
   }
 
   private validateProgramMetaHex(meta: Meta, hash: string): void {
