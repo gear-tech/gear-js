@@ -12,8 +12,18 @@ export const GetTokensBalance = () => {
     <div>
       <TooltipWrapper text="Get Tokens Balance">
         <Button
-          className={clsx('p-2', buttonStyles.light)}
-          icon={() => <Icon name="test-balance" width={20} height={20} />}
+          className={clsx('group !p-2.5', buttonStyles.light)}
+          icon={() => (
+            <>
+              <Icon name="test-balance" width={20} height={20} />
+              <Icon
+                name="plus"
+                width={12}
+                height={12}
+                className="absolute bottom-2 right-1.5 bg-[#3a3a3a] group-hover:bg-[#6c6c6c] rounded-full transition-colors"
+              />
+            </>
+          )}
           onClick={() => handler()}
           disabled={isPending}
         />
