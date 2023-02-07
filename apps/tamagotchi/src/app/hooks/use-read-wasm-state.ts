@@ -60,10 +60,12 @@ export function useThrottleWasmState(payload?: AnyJson, isReadOnError?: boolean)
   }, [error]);
 
   useEffect(() => {
-    readState(true);
-    resetError();
+    if (lesson && lesson.step > 2) {
+      readState(true);
+      resetError();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [programId, wasm, functionName]);
+  }, [programId, wasm, functionName, lesson]);
 
   const handleStateChange = ({ data }: MessagesDispatched) => {
     const changedIDs = data.stateChanges.toHuman() as HexString[];
@@ -75,10 +77,7 @@ export function useThrottleWasmState(payload?: AnyJson, isReadOnError?: boolean)
   useEffect(() => {
     if (!programId || !wasm || !functionName || (lesson && lesson.step < 2)) return;
 
-    const interval = setInterval(() => {
-      readState();
-      // console.log('interval read state:');
-    }, 25000);
+    const interval = setInterval(() => readState(), 25000);
 
     const unsub = api?.gearEvents.subscribeToGearEvent('MessagesDispatched', handleStateChange);
 
@@ -87,7 +86,7 @@ export function useThrottleWasmState(payload?: AnyJson, isReadOnError?: boolean)
       unsub?.then((unsubCallback) => unsubCallback());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api, programId, wasm, functionName]);
+  }, [api, programId, wasm, functionName, lesson]);
 
   useEffect(() => {
     if (lesson && lesson.step < 2) return;
@@ -100,5 +99,6 @@ export function useThrottleWasmState(payload?: AnyJson, isReadOnError?: boolean)
         isDead: [fed, rested, entertained].reduce((sum, a) => sum + a) === 0,
       } as TamagotchiState);
     }
-  }, [state]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, lesson]);
 }
