@@ -33,7 +33,6 @@ export const AccountComponent = () => {
               <TokensWallet />
             </>
           )}
-          <TokensWallet />
           <GasWallet balance={account.balance} address={account.address} name={account.meta.name} onClick={openModal} />
           <AccountButton address={account.address} name={account.meta.name} onClick={openModal} />
         </div>
