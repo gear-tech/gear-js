@@ -9,7 +9,7 @@ import { MetaRepo } from './meta.repo';
 import { ProgramRepo } from '../program/program.repo';
 import { CreateMetaInput } from './types/create-meta.input';
 import { CodeRepo } from '../code/code.repo';
-import { generateCodeHashByApi, getProgramMetadataByApi } from '../common/helpers';
+import { generateCodeHashByApi, getMetaHash, getProgramMetadataByApi } from '../common/helpers';
 import { GearEventListener } from '../gear/gear-event-listener';
 import { ProgramService } from '../program/program.service';
 import { AddProgramMetaInput } from '../program/types';
@@ -38,7 +38,7 @@ export class MetaService {
     if(!code) throw new CodeNotFound();
 
     try {
-      const codeMetaHash = await this.gearEventListener.api.code.metaHash(code.id as HexString);
+      const codeMetaHash = await getMetaHash(this.gearEventListener.api.program, code.id as HexString);
       const hash = generateCodeHashByApi(metaHex as HexString);
 
       if(codeMetaHash && codeMetaHash !== hash) throw new InvalidCodeMetaHex();
@@ -86,7 +86,7 @@ export class MetaService {
     if (!program) throw new ProgramNotFound();
 
     try {
-      const programMetaHash = await this.gearEventListener.api.program.metaHash(program.id as HexString);
+      const programMetaHash = await getMetaHash(this.gearEventListener.api.program, program.id as HexString);
       const hash = generateCodeHashByApi(metaHex as HexString);
 
       if(programMetaHash && hash !== programMetaHash) throw new InvalidProgramMetaHex();
