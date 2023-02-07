@@ -35,10 +35,10 @@ const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInput
     gap,
     error,
     tooltip,
+    onChange,
     direction = 'x',
     size = 'normal',
     color = 'light',
-    onChange = () => {},
     ...attrs
   } = props;
 
@@ -47,7 +47,7 @@ const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInput
   const [innerValue, setInnerValue] = useState<File>();
 
   const file = value || innerValue;
-  const setFile = value ? onChange : setInnerValue;
+  const setFile = onChange || setInnerValue;
 
   const ref = useRef<HTMLInputElement>(null);
   const id = useId();
