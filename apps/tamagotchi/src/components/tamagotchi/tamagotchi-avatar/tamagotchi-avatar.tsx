@@ -14,6 +14,7 @@ type TamagotchiAvatarProps = {
   color?: string;
   className?: string;
   isActive?: boolean;
+  inBattle?: boolean;
   isWinner?: boolean;
   energy?: number;
 };
@@ -28,6 +29,7 @@ export const TamagotchiAvatar = ({
   isActive,
   isWinner,
   energy,
+  inBattle,
 }: TamagotchiAvatarProps) => {
   const { tamagotchi, tamagotchiItems } = useTamagotchi();
   const { lesson } = useLessons();
@@ -45,8 +47,12 @@ export const TamagotchiAvatar = ({
   }, [tamagotchi]);
 
   useEffect(() => {
-    tamagotchiItems.length > 0 ? setItemsUsed(tamagotchiItems) : setItemsUsed(hasItem);
-  }, [tamagotchiItems]);
+    if (tamagotchiItems.length > 0 && !inBattle) {
+      setItemsUsed(tamagotchiItems);
+    } else {
+      setItemsUsed(hasItem);
+    }
+  }, [tamagotchiItems, hasItem, inBattle]);
 
   useEffect(() => {
     if (energy && !isActive) {
@@ -72,7 +78,7 @@ export const TamagotchiAvatar = ({
     if (tamagotchi && lesson) {
       const { fed, entertained, rested } = tamagotchi;
 
-      if (Number(lesson.step) > 1) {
+      if (Number(lesson.step) > 1 && !inBattle) {
         setCurrentEmotion(
           dead
             ? 'scared'

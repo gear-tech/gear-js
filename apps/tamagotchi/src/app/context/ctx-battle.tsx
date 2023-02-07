@@ -1,4 +1,4 @@
-import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react';
+import { createContext, Dispatch, ReactNode, SetStateAction, useState } from 'react';
 import { BattleStateResponse, TamagotchiBattlePlayer } from '../types/battles';
 
 type Program = {

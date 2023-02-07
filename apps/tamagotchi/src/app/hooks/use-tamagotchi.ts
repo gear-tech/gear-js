@@ -17,10 +17,10 @@ export function useInitTamagotchi() {
 
   useEffect(() => {
     if (state && isStateRead && account) {
-      const { fed, rested, entertained } = state;
+      const { fed, rested, entertained, owner, allowedAccount } = state;
       setTamagotchi({ ...state, isDead: [fed, rested, entertained].reduce((sum, a) => sum + a) === 0 });
       const { decodedAddress } = account;
-      setIsAdmin([state.owner, state.allowedAccount].includes(decodedAddress));
+      setIsAdmin([owner, allowedAccount].includes(decodedAddress));
     }
   }, [state, isStateRead, account]);
 }

@@ -10,8 +10,8 @@ import { useEffect, useState } from 'react';
 import { TamagotchiState } from 'app/types/lessons';
 import { useApp, useBattle, useFTStore } from 'app/context';
 import { useAccount } from '@gear-js/react-hooks';
-import { getAttributesById } from '../app/utils';
-import { getTamagotchiAgeDiff } from '../app/utils/get-tamagotchi-age';
+import { getAttributesById } from 'app/utils';
+import { getTamagotchiAgeDiff } from 'app/utils/get-tamagotchi-age';
 
 export const Battle = () => {
   const { account } = useAccount();
@@ -22,19 +22,6 @@ export const Battle = () => {
   const [isAllowed, setIsAllowed] = useState<boolean>(false);
   const [winner, setWinner] = useState<TamagotchiState>();
   const sendMessage = useBattleMessage();
-  // const [damage, setDamage] = useState<number[]>([]);
-
-  // useEffect(() => {
-  //   setDamage(0);
-  //   if (energy && !isActive) {
-  //     if (info.current.isReady && info.current.energy !== energy) {
-  //       setDamage(Math.round((energy - info.current.energy) / 100));
-  //     } else {
-  //       info.current.isReady = true;
-  //       info.current.energy = energy;
-  //     }
-  //   }
-  // }, [energy, isActive]);
 
   const handleAttack = () => {
     const onError = () => setIsPending(false);
@@ -75,28 +62,36 @@ export const Battle = () => {
     <>
       {battle &&
         (battle?.state !== 'Registration' && warriors.length > 0 ? (
-          isAllowed ? (
+          !isAllowed ? (
             <>
               {/*Top*/}
-              <div className="flex gap-10 justify-between grow items-center">
+              <div className="flex gap-10 justify-between items-center">
                 <TamagotchiBattleTopStats
                   state={battle?.state}
                   isWinner={battle?.winner === battle?.players[0]?.tmgId}
-                  health={Math.round(warriors[0].energy / 100)}
-                />
-                {battle?.state === 'Moves' && (
+                  health={Math.round(warriors[0].energy / 100)}>
+                  <TamagotchiAvatar
+                    inBattle
+                    className="w-30 xl:w-50 aspect-square -left-1/2"
+                    age={getTamagotchiAgeDiff(warriors[0].dateOfBirth)}
+                    hasItem={getAttributesById(store, battle.players[0].attributes)}
+                    isActive={battle?.currentTurn === 0 && battle?.state !== 'GameIsOver'}
+                    isWinner={battle?.state === 'GameIsOver' && battle.winner === battle.players[0].tmgId}
+                  />
+                </TamagotchiBattleTopStats>
+                {battle?.state !== 'Moves' && (
                   <div className={clsx('flex', battle?.currentTurn === 1 && 'rotate-180')}>
                     <Icon
                       name="battle-next-step"
-                      className="w-10 h-20 text-white animate-battle-turn-1 transition-opacity"
+                      className="w-6 xl:w-10 aspect-[1/2] text-white animate-battle-turn-1 transition-opacity"
                     />
                     <Icon
                       name="battle-next-step"
-                      className="w-10 h-20 text-white animate-battle-turn-2 transition-opacity"
+                      className="w-6 xl:w-10 aspect-[1/2] text-white animate-battle-turn-2 transition-opacity"
                     />
                     <Icon
                       name="battle-next-step"
-                      className="w-10 h-20 text-white animate-battle-turn-3 transition-opacity"
+                      className="w-6 xl:w-10 aspect-[1/2] text-white animate-battle-turn-3 transition-opacity"
                     />
                   </div>
                 )}
@@ -104,17 +99,26 @@ export const Battle = () => {
                   state={battle?.state}
                   isWinner={battle?.winner === battle?.players[1]?.tmgId}
                   health={Math.round(warriors[1].energy / 100)}
-                  isReverse
-                />
+                  isReverse>
+                  <TamagotchiAvatar
+                    inBattle
+                    className="w-30 xl:w-50 aspect-square -left-1/2"
+                    age={getTamagotchiAgeDiff(warriors[1].dateOfBirth)}
+                    hasItem={getAttributesById(store, battle.players[1].attributes)}
+                    isActive={battle?.currentTurn === 1 && battle?.state !== 'GameIsOver'}
+                    isWinner={battle?.state === 'GameIsOver' && battle.winner === battle.players[1].tmgId}
+                  />
+                </TamagotchiBattleTopStats>
               </div>
               {/*Avatars*/}
-              <div className="relative grow flex gap-10 justify-between items-center mt-15">
-                <div className="basis-[445px] flex flex-col">
+              <div className="relative grow grid grid-cols-[repeat(2,minmax(auto,445px))] justify-between gap-10 mt-10 xl:mt-15">
+                <div className="w-full h-full flex flex-col">
                   <TamagotchiAvatar
+                    inBattle
                     age={getTamagotchiAgeDiff(warriors[0].dateOfBirth)}
                     hasItem={getAttributesById(store, battle.players[0].attributes)}
                     energy={warriors[1]?.energy}
-                    className="min-h-[430px]"
+                    className="grow w-full h-full "
                     isActive={battle?.currentTurn === 0 && battle?.state !== 'GameIsOver'}
                     isWinner={battle?.state === 'GameIsOver' && battle.winner === battle.players[0].tmgId}
                     isDead={battle?.state === 'GameIsOver' && battle.winner !== battle.players[0].tmgId}
@@ -123,8 +127,10 @@ export const Battle = () => {
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-8">
                   {winner && (
                     <p className="flex flex-col items-center">
-                      <strong className="typo-h2 text-primary">{winner.name}</strong>
-                      <span className="typo-h1">Win</span>
+                      <strong className="text-2xl leading-normal xl:typo-h2 text-primary truncate max-w-[9ch]">
+                        {winner.name}
+                      </strong>
+                      <span className="text-[60px] leading-[1.2] font-bold xl:typo-h1">Win</span>
                     </p>
                   )}
 
@@ -150,12 +156,13 @@ export const Battle = () => {
                       : ''}
                   </button>
                 </div>
-                <div className="basis-[445px] flex flex-col">
+                <div className="w-full h-full flex flex-col">
                   <TamagotchiAvatar
+                    inBattle
                     age={getTamagotchiAgeDiff(warriors[1].dateOfBirth)}
                     hasItem={getAttributesById(store, battle.players[1].attributes)}
                     energy={warriors[0].energy}
-                    className="min-h-[430px]"
+                    className="grow w-full h-full "
                     isActive={battle?.currentTurn === 1 && battle?.state !== 'GameIsOver'}
                     isWinner={battle?.state === 'GameIsOver' && battle.winner === battle.players[1].tmgId}
                     isDead={battle?.state === 'GameIsOver' && battle.winner !== battle.players[1].tmgId}
@@ -163,7 +170,7 @@ export const Battle = () => {
                 </div>
               </div>
               {/*Info*/}
-              <div className="flex gap-10 justify-between grow mt-10">
+              <div className="flex gap-10 justify-between mt-8 xl:mt-10">
                 <div className="basis-[445px] flex flex-col">
                   <TamagotchiBattleInfoCard tamagotchi={warriors[0]} />
                 </div>

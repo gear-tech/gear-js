@@ -10,7 +10,7 @@ export const GetTokensBalance = () => {
 
   return (
     <div>
-      <TooltipWrapper text="Get Tokens Balance">
+      <TooltipWrapper text="Get Tokens">
         <Button
           className={clsx('group !p-2.5', buttonStyles.light)}
           icon={() => (

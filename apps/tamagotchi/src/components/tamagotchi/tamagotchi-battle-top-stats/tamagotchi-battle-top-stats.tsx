@@ -8,21 +8,22 @@ type Props = {
   isWinner?: boolean;
   state: BattleStatesList;
   isReverse?: boolean;
+  children?: JSX.Element;
 };
-export const TamagotchiBattleTopStats = ({ isWinner, state, health, isReverse }: Props) => {
+export const TamagotchiBattleTopStats = ({ isWinner, state, health, isReverse, children }: Props) => {
   return (
     <div className={clsx('basis-[445px] flex gap-6 items-center', isReverse && 'flex-row-reverse')}>
       <div className="relative flex flex-col items-center w-fit">
         <div
           className={clsx(
-            'relative w-25 h-25 rounded-full overflow-hidden ring-2 ring-opacity-50',
+            'relative w-15 xl:w-25 aspect-square rounded-full overflow-hidden ring-2 ring-opacity-50',
             state === 'GameIsOver'
               ? isWinner
                 ? 'bg-primary ring-primary'
                 : 'bg-error ring-error'
               : 'bg-white ring-white',
           )}>
-          <TamagotchiAvatar hasItem={[]} className="w-50 h-50 -left-1/2" />
+          {children}
         </div>
         {/*<div className="absolute top-[calc(100%-8px)] inline-flex gap-2 items-center py-1 px-4 tracking-widest font-kanit font-semibold text-base leading-5 bg-[#404040] rounded-lg">*/}
         {/*  <Icon name="wins" className="w-5 h-5" /> 10*/}
