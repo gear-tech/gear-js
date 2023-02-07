@@ -112,9 +112,9 @@ export const TamagotchiAvatar = ({
       <Icon name={head} section={s} className={cn} />
       <Icon name={mouse} section={s} className={cn} />
       <Icon name={eye} section={s} className={cn} />
+      {emo === 'crying' && <Icon name="tears" section={s} className={cn} />}
       {!tamagotchiDied && glasses && <Icon name={glasses} section={s} className={cn} />}
       {!tamagotchiDied && itemsUsed?.includes('hat') && <Icon name="head-hat" section={s} className={cn} />}
-      {emo === 'crying' && <Icon name="tears" section={s} className={cn} />}
       {!tamagotchiDied && (isActive || isWinner) && (
         <div className="absolute top-full -z-1 left-1/2 -translate-x-1/2">
           <div
