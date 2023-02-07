@@ -1,4 +1,4 @@
-import { useRef, useEffect, ChangeEvent } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { ProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
@@ -20,12 +20,11 @@ type Props = {
 const MetadataFileInput = ({ metadata, onReset, onUpload }: Props) => {
   const alert = useAlert();
 
+  const [metaFile, setMetaFile] = useState<File>();
   const inputRef = useRef<HTMLInputElement>(null);
   const prevMetadata = usePrevious<ProgramMetadata | undefined>(metadata);
 
-  const handleUploadMetaFile = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-
+  const handleUploadMetaFile = (file: File | undefined) => {
     if (!file) {
       onReset();
 
@@ -34,6 +33,8 @@ const MetadataFileInput = ({ metadata, onReset, onUpload }: Props) => {
 
     try {
       if (!checkFileFormat(file, FileTypes.Text)) throw new Error('Wrong file format');
+
+      setMetaFile(file);
 
       const reader = new FileReader();
       reader.readAsText(file, 'UTF-8');
@@ -74,6 +75,7 @@ const MetadataFileInput = ({ metadata, onReset, onUpload }: Props) => {
 
   return (
     <FileInput
+      value={metaFile}
       ref={inputRef}
       color="primary"
       label="Upload the meta.txt file"

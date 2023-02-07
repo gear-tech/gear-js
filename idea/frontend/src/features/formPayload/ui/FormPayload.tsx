@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, ChangeEvent } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useForm, useField } from 'react-final-form';
 import clsx from 'clsx';
 import { useAlert } from '@gear-js/react-hooks';
@@ -52,9 +52,7 @@ const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
     }
   };
 
-  const handleUploadManualPayload = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-
+  const handleUploadManualPayload = async (file: File | undefined) => {
     if (!file) {
       return dropManualPayloadFile();
     }
@@ -130,7 +128,12 @@ const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
               block
             />
             {values && (
-              <FileInput accept={FileTypes.Json} className={styles.fileInput} onChange={handleUploadManualPayload} />
+              <FileInput
+                value={manualPayloadFile}
+                accept={FileTypes.Json}
+                className={styles.fileInput}
+                onChange={handleUploadManualPayload}
+              />
             )}
           </>
         )}

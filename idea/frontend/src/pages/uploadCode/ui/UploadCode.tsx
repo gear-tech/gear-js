@@ -15,15 +15,13 @@ const UploadCode = () => {
 
   const [file, setFile] = useState(initFile);
 
-  console.log(file);
-
   return (
     <>
       <Subheader title="Upload Code" size="big" />
 
       <Box className={styles.box}>
         <form className={styles.form}>
-          <FileInput label="Code file" gap="1/5" />
+          <FileInput label="Code file" gap="1/5" value={file} onChange={setFile} />
           <Input label="Code name" gap="1/5" />
         </form>
       </Box>

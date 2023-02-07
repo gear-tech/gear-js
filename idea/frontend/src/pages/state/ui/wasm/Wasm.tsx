@@ -1,7 +1,7 @@
 import { getStateMetadata, StateFunctions } from '@gear-js/api';
 import { Button, FileInput, Input, Textarea } from '@gear-js/ui';
 import { useAlert } from '@gear-js/react-hooks';
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { OnChange } from 'react-final-form-listeners';
 import { FormApi } from 'final-form';
@@ -62,20 +62,11 @@ const Wasm = () => {
 
   const resetFileInputValue = () => resetFileInput(fileInputRef.current);
 
-  const handleInputChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    const [result] = target.files || [];
-
-    if (!result) {
-      setFile(result);
-      return;
-    }
+  const handleInputChange = (result: File | undefined) => {
+    if (!result) return;
 
     if (!checkFileFormat(result, FileTypes.Wasm)) {
       alert.error('Wrong file format');
-
-      // TODO: remove after @gear-js/ui update,
-      // onChange should be called before inner setState
-      resetFileInputValue();
 
       return;
     }
@@ -227,10 +218,9 @@ const Wasm = () => {
                 )}
 
                 <FileInput
+                  value={file}
                   ref={fileInputRef}
                   size="large"
-                  // TODO: remove after @gear-js/ui update
-                  // @ts-ignore
                   color="secondary"
                   className={styles.input}
                   onChange={handleInputChange}

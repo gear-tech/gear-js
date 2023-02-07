@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, ChangeEvent } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import clsx from 'clsx';
 import { ProgramMetadata } from '@gear-js/api';
 import { Button, FileInput } from '@gear-js/ui';
@@ -63,14 +63,8 @@ const ProgramSection = ({ file, metaHex, metadata, resetMetaFile }: Props) => {
     target.dispatchEvent(new Event('change', { bubbles: true }));
   };
 
-  const handleChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
-    const currentFile = event.target.files?.[0];
-
-    if (!currentFile) {
-      setSelectedFile(undefined);
-
-      return;
-    }
+  const handleChangeFile = (currentFile: File | undefined) => {
+    if (!currentFile) return;
 
     if (!checkFileFormat(currentFile)) {
       alert.error('Wrong file format');
@@ -118,6 +112,7 @@ const ProgramSection = ({ file, metaHex, metadata, resetMetaFile }: Props) => {
       <Subheader size="big" title="Enter program parameters" />
       <div className={styles.lining}>
         <FileInput
+          value={selectedFile}
           ref={fileInputRef}
           label="Program file"
           direction="y"
