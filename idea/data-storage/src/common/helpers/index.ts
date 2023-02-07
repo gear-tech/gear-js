@@ -6,6 +6,7 @@ import { getStateMeta } from './get-state-meta';
 import { getCodeHash } from './get-wasm-hash';
 import { generateCodeHashByApi } from './generate-code-hash-by-api';
 import { getProgramMetadataByApi } from './get-program-metadata-by-api';
+import { getMetaHash } from './get-meta-hash';
 
 
 export {
@@ -16,5 +17,6 @@ export {
   getStateMeta,
   getCodeHash,
   generateCodeHashByApi,
-  getProgramMetadataByApi
+  getProgramMetadataByApi,
+  getMetaHash,
 };
