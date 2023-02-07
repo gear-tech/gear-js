@@ -9,5 +9,5 @@ export const getTamagotchiAge = (v: number) => {
 
 export const getTamagotchiAgeDiff = (v: number): TamagotchiAvatarAge => {
   const diff = dayjs().diff(dayjs(v), 'minutes');
-  return diff > 60 ? 'old' : diff > 20 ? 'adult' : 'old';
+  return diff > 60 ? 'old' : diff > 20 ? 'adult' : 'baby';
 };
