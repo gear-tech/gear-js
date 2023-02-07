@@ -12,7 +12,7 @@ import {
 } from 'react';
 import { InputProps } from '../../types';
 import { getFileSize } from '../../utils';
-import { Button } from '../Button/Button';
+import { Button, ButtonProps } from '../Button/Button';
 import { InputWrapper } from '../utils';
 import { ReactComponent as RemoveSVG } from './images/remove.svg';
 import { ReactComponent as SelectSVG } from './images/select.svg';
@@ -20,10 +20,10 @@ import styles from './FileInput.module.scss';
 
 type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'onChange'> &
   Omit<InputProps, 'color'> & {
-    value?: File;
+    value?: File | undefined;
     label?: string;
     error?: string;
-    color?: 'light' | 'primary';
+    color?: ButtonProps['color'];
     onChange?: (value: File | undefined) => void;
   };
 
