@@ -62,7 +62,7 @@ export const Battle = () => {
     <>
       {battle &&
         (battle?.state !== 'Registration' && warriors.length > 0 ? (
-          !isAllowed ? (
+          isAllowed ? (
             <>
               {/*Top*/}
               <div className="flex gap-10 justify-between items-center">
@@ -79,7 +79,7 @@ export const Battle = () => {
                     isWinner={battle?.state === 'GameIsOver' && battle.winner === battle.players[0].tmgId}
                   />
                 </TamagotchiBattleTopStats>
-                {battle?.state !== 'Moves' && (
+                {battle?.state === 'Moves' && (
                   <div className={clsx('flex', battle?.currentTurn === 1 && 'rotate-180')}>
                     <Icon
                       name="battle-next-step"
