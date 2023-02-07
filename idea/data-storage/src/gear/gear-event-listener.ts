@@ -251,14 +251,15 @@ export class GearEventListener {
         const event = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
           this.api.events.gear.CodeChanged.is(event),
         );
+        const { data: { id } } = event.event as CodeChanged;
+        const codeId = event ? id.toHex() : generateCodeHash(tx.args[0].toHex());
+        const metaHash = await getMetaHash(this.api.code, codeId);
 
         if (event) {
-          const {
-            data: { id, change },
-          } = event.event as CodeChanged;
+          const { data: { change } } = event.event as CodeChanged;
           const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
           const updateCodeInput = {
-            id: id.toHex(),
+            id: codeId,
             genesis: this.genesis,
             status: codeStatus,
             timestamp,
@@ -268,17 +269,13 @@ export class GearEventListener {
             meta: null,
           };
 
-          const metaHash = await getMetaHash(this.api.code, id.toHex());
-
           if(metaHash) {
             updateCodeInput.meta = await this.metaService.getByHashApi(metaHash);
           }
 
           codes.push(updateCodeInput);
         } else {
-          const codeId = generateCodeHash(tx.args[0].toHex());
           const code = await this.codeRepository.get(codeId, this.genesis);
-          const metaHash = await getMetaHash(this.api.code, codeId);
           const updateCodeInput = {
             id: codeId,
             genesis: this.genesis,
