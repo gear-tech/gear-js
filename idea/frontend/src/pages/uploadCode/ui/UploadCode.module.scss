@@ -1,7 +1,13 @@
 @use 'shared/assets/styles/mixins' as *;
 
-.box {
+.wrapper {
+  @include childrenMargin(32px, right);
+  display: flex;
   margin-bottom: 32px;
+
+  > * {
+    flex-basis: 50%;
+  }
 }
 
 .form {

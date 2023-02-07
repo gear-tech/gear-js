@@ -10,6 +10,7 @@ import { checkWallet, readFileAsync, getExtrinsicFailedMessage } from 'shared/he
 import { PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'shared/config';
 import { CopiedInfo } from 'shared/ui/copiedInfo';
 
+import { addCodeMetadata } from 'api';
 import { ParamsToUploadCode, ParamsToSignAndSend } from './types';
 
 const useCodeUpload = () => {
@@ -40,7 +41,7 @@ const useCodeUpload = () => {
     });
   };
 
-  const signAndSend = async ({ signer, codeHash }: ParamsToSignAndSend) => {
+  const signAndSend = async ({ signer, codeId, metaHex, name }: ParamsToSignAndSend) => {
     const alertId = alert.loading('SignIn', { title: TransactionName.SubmitCode });
 
     try {
@@ -49,7 +50,12 @@ const useCodeUpload = () => {
           alert.update(alertId, TransactionStatus.Ready);
         } else if (status.isInBlock) {
           alert.update(alertId, TransactionStatus.InBlock);
-          handleEventsStatus(events, codeHash);
+          handleEventsStatus(events, codeId);
+
+          if (metaHex)
+            addCodeMetadata({ codeId, metaHex, name })
+              .then(() => alert.success('Metadata saved successfully'))
+              .catch(({ message }: Error) => alert.error(message));
         } else if (status.isFinalized) {
           alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
         } else if (status.isInvalid) {
@@ -64,17 +70,17 @@ const useCodeUpload = () => {
   };
 
   const uploadCode = useCallback(
-    async ({ file }: ParamsToUploadCode) => {
+    async ({ file, name, metaHex }: ParamsToUploadCode) => {
       try {
         checkWallet(account);
 
         const { address, meta } = account!;
 
-        const [codeHash, { signer }] = await Promise.all([submit(file), web3FromSource(meta.source)]);
+        const [codeId, { signer }] = await Promise.all([submit(file), web3FromSource(meta.source)]);
 
         const { partialFee } = await api.code.paymentInfo(address, { signer });
 
-        const handleConfirm = () => signAndSend({ signer, codeHash });
+        const handleConfirm = () => signAndSend({ signer, name, codeId, metaHex });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),
