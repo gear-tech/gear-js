@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { generatePath } from 'react-router-dom';
+import { generatePath, Link } from 'react-router-dom';
 
 import { absoluteRoutes, routes } from 'shared/config';
 import { IdBlock } from 'shared/ui/idBlock';
@@ -16,16 +16,19 @@ type Props = {
 };
 
 const HorizontalCodeCard = memo(({ code }: Props) => {
-  const { id: codeId, timestamp } = code;
+  const { id: codeId, timestamp, name } = code;
 
   const to = `/code/${codeId}`;
 
   return (
     <article className={styles.horizontalCodeCard}>
       <div className={styles.content}>
-        <IdBlock to={to} id={codeId} size="large" className={styles.codeId} />
+        <Link to={to} className={styles.name}>
+          {name}
+        </Link>
         {timestamp && (
           <div className={styles.otherInfo}>
+            <IdBlock id={codeId} size="medium" withIcon color="light" />
             <TimestampBlock color="light" withIcon timestamp={timestamp} />
           </div>
         )}
