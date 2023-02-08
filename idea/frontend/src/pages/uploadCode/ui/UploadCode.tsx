@@ -22,11 +22,11 @@ const UploadCode = () => {
   const { state } = useLocation();
   const initFile = state?.file as File | undefined;
 
-  const { getInputProps, onSubmit, reset } = useForm({ initialValues, validate });
-  const [file, setFile] = useState(initFile);
-
   const [metaHex, setMetaHex] = useState('' as HexString);
   const metadata = useMemo(() => (metaHex ? getProgramMetadata(metaHex) : undefined), [metaHex]);
+
+  const { getInputProps, onSubmit, reset } = useForm({ initialValues, validate: metaHex ? validate : undefined });
+  const [file, setFile] = useState(initFile);
 
   const resetFile = () => setFile(undefined);
   const resetMetaHex = () => setMetaHex('' as HexString);

@@ -54,8 +54,6 @@ const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
 
   const handleUploadManualPayload = async (file: File | undefined) => {
     if (!file) {
-      setManualPayloadFile(undefined);
-
       return dropManualPayloadFile();
     }
 
