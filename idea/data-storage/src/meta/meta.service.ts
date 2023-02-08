@@ -26,14 +26,12 @@ export class MetaService {
     private gearEventListener: GearEventListener,
   ) {}
 
-  public async getByHashApi(hash: string): Promise<Meta> {
+  public async getByHashOrCreate(hash: string): Promise<Meta> {
     const meta = await this.getByHash(hash);
 
-    if(meta){
-      return meta;
-    } else {
-      return this.createMeta({ hash });
-    }
+    if(meta) return meta;
+
+    return this.createMeta({ hash });
   }
 
   public async getByHash(hash: string): Promise<Meta> {
@@ -69,6 +67,7 @@ export class MetaService {
           const updateMeta = plainToClass(Meta, { ...meta, hex: metaHex, types: metaData.types });
 
           code.meta = await this.metaRepository.save(updateMeta);
+          code.name = name;
 
           const addProgramsMeta: AddProgramMetaInput = { name, meta };
 
@@ -80,6 +79,7 @@ export class MetaService {
           const createMetaInput: CreateMetaInput = { hex: metaHex, hash, types: metaData.types };
           const createMeta = await this.createMeta(createMetaInput);
           code.meta = createMeta;
+          code.name = name;
 
           const addProgramsMeta: AddProgramMetaInput = { name, meta: createMeta };
 

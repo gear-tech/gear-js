@@ -270,7 +270,7 @@ export class GearEventListener {
           };
 
           if(metaHash) {
-            updateCodeInput.meta = await this.metaService.getByHashApi(metaHash);
+            updateCodeInput.meta = await this.metaService.getByHashOrCreate(metaHash);
           }
 
           codes.push(updateCodeInput);
@@ -288,7 +288,7 @@ export class GearEventListener {
           };
 
           if(metaHash) {
-            updateCodeInput.meta = await this.metaService.getByHashApi(metaHash);
+            updateCodeInput.meta = await this.metaService.getByHashOrCreate(metaHash);
           }
 
           if (!code) {
