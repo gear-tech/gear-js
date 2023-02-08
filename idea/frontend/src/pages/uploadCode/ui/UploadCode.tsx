@@ -6,6 +6,7 @@ import { useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { useCodeUpload } from 'hooks';
+import { isExists } from 'shared/helpers';
 import { Box } from 'shared/ui/box';
 import { Subheader } from 'shared/ui/subheader';
 import { BackButton } from 'shared/ui/backButton';
@@ -15,24 +16,33 @@ import { ReactComponent as PlusSVG } from 'shared/assets/images/actions/plus.svg
 import styles from './UploadCode.module.scss';
 
 const initialValues = { name: '' };
+const validate = { name: isExists };
 
 const UploadCode = () => {
   const { state } = useLocation();
   const initFile = state?.file as File | undefined;
 
-  const { getInputProps, onSubmit } = useForm({ initialValues });
+  const { getInputProps, onSubmit, reset } = useForm({ initialValues, validate });
   const [file, setFile] = useState(initFile);
 
   const [metaHex, setMetaHex] = useState('' as HexString);
   const metadata = useMemo(() => (metaHex ? getProgramMetadata(metaHex) : undefined), [metaHex]);
+
+  const resetFile = () => setFile(undefined);
   const resetMetaHex = () => setMetaHex('' as HexString);
 
   const uploadCode = useCodeUpload();
 
+  const resetForm = () => {
+    reset();
+    resetFile();
+    resetMetaHex();
+  };
+
   const handleSubmit = onSubmit(({ name }) => {
     if (!file) return;
 
-    uploadCode({ file, name, metaHex });
+    uploadCode({ file, name, metaHex, resolve: resetForm });
   });
 
   return (

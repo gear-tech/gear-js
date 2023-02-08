@@ -28,7 +28,13 @@ const useCodeUpload = () => {
     return result.codeHash;
   };
 
-  const handleEventsStatus = (events: EventRecord[], codeHash: HexString) => {
+  const handleEventsStatus = (
+    events: EventRecord[],
+    codeHash: HexString,
+    metaHex: HexString,
+    name: string,
+    resolve?: () => void,
+  ) => {
     events.forEach(({ event }) => {
       const { method, section } = event;
       const alertOptions = { title: `${section}.${method}` };
@@ -37,11 +43,18 @@ const useCodeUpload = () => {
         alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
       } else if (method === Method.CodeChanged) {
         alert.success(<CopiedInfo title="Code hash" info={codeHash} />, alertOptions);
+
+        if (resolve) resolve();
+
+        if (metaHex)
+          addCodeMetadata({ codeId: codeHash, metaHex, name })
+            .then(() => alert.success('Metadata saved successfully'))
+            .catch(({ message }: Error) => alert.error(message));
       }
     });
   };
 
-  const signAndSend = async ({ signer, codeId, metaHex, name }: ParamsToSignAndSend) => {
+  const signAndSend = async ({ signer, codeId, metaHex, name, resolve }: ParamsToSignAndSend) => {
     const alertId = alert.loading('SignIn', { title: TransactionName.SubmitCode });
 
     try {
@@ -50,12 +63,7 @@ const useCodeUpload = () => {
           alert.update(alertId, TransactionStatus.Ready);
         } else if (status.isInBlock) {
           alert.update(alertId, TransactionStatus.InBlock);
-          handleEventsStatus(events, codeId);
-
-          if (metaHex)
-            addCodeMetadata({ codeId, metaHex, name })
-              .then(() => alert.success('Metadata saved successfully'))
-              .catch(({ message }: Error) => alert.error(message));
+          handleEventsStatus(events, codeId, metaHex, name, resolve);
         } else if (status.isFinalized) {
           alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
         } else if (status.isInvalid) {
@@ -70,7 +78,7 @@ const useCodeUpload = () => {
   };
 
   const uploadCode = useCallback(
-    async ({ file, name, metaHex }: ParamsToUploadCode) => {
+    async ({ file, name, metaHex, resolve }: ParamsToUploadCode) => {
       try {
         checkWallet(account);
 
@@ -80,7 +88,7 @@ const useCodeUpload = () => {
 
         const { partialFee } = await api.code.paymentInfo(address, { signer });
 
-        const handleConfirm = () => signAndSend({ signer, name, codeId, metaHex });
+        const handleConfirm = () => signAndSend({ signer, name, codeId, metaHex, resolve });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),
