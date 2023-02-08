@@ -64,7 +64,10 @@ const ProgramSection = ({ file, metaHex, metadata, resetMetaFile }: Props) => {
   };
 
   const handleChangeFile = (currentFile: File | undefined) => {
-    if (!currentFile) return;
+    if (!currentFile) {
+      setSelectedFile(undefined);
+      return;
+    }
 
     if (!checkFileFormat(currentFile)) {
       alert.error('Wrong file format');

@@ -28,6 +28,8 @@ const MetadataFileInput = ({ metadata, onReset, onUpload }: Props) => {
     if (!file) {
       onReset();
 
+      setMetaFile(undefined);
+
       return;
     }
 

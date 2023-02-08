@@ -63,7 +63,11 @@ const Wasm = () => {
   const resetFileInputValue = () => resetFileInput(fileInputRef.current);
 
   const handleInputChange = (result: File | undefined) => {
-    if (!result) return;
+    if (!result) {
+      setFile(undefined);
+
+      return;
+    }
 
     if (!checkFileFormat(result, FileTypes.Wasm)) {
       alert.error('Wrong file format');
