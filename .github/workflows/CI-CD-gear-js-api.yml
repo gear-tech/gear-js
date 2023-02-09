@@ -12,7 +12,6 @@ on:
 
 jobs:
   test:
-    if: github.event_name == 'pull_request'
 
     runs-on: ubuntu-20.04
     steps:
@@ -52,7 +51,7 @@ jobs:
 
       - name: Build test programs
         working-directory: api/test/programs
-        run: cargo build --release
+        run: RUSTFLAGS=-g cargo build --release
 
       - name: Prepare
         run: |
