@@ -13,7 +13,6 @@ import { useBalanceTransfer } from './useBalanceTransfer';
 import { useEventSubscriptions } from './useEventSubscriptions';
 import { useGasCalculate } from './useGasCalculate';
 import { useStateRead } from './useStateRead';
-import { usePrevious } from './usePrevious';
 import { useDataLoading } from './useDataLoading';
 import { useScrollLoader } from './useScrollLoader';
 import { useElementSizes } from './useElementSizes';
@@ -36,7 +35,6 @@ export {
   useMessage,
   useMessages,
   useWaitlist,
-  usePrevious,
   useStateRead,
   useCodeUpload,
   useDataLoading,
