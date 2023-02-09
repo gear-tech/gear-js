@@ -3,9 +3,9 @@ import { Balance } from '@polkadot/types/interfaces';
 import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { useState, createContext, useContext, useEffect } from 'react';
-import { Account, ProviderProps } from 'types';
 import { LOCAL_STORAGE } from 'consts';
 import { getBalance, getAccount, isLoggedIn } from 'utils';
+import { Account, ProviderProps } from '../types';
 import { ApiContext } from './Api';
 import { AlertContext } from './Alert';
 
