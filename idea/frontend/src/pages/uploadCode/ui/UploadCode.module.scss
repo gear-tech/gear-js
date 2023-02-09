@@ -1,0 +1,25 @@
+@use 'shared/assets/styles/mixins' as *;
+
+.wrapper {
+  @include childrenMargin(32px, right);
+  display: flex;
+  margin-bottom: 32px;
+
+  > * {
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+
+    > *:nth-child(2) {
+      flex: 1;
+    }
+  }
+}
+
+.form {
+  @include childrenMargin(24px);
+}
+
+.buttons {
+  @include childrenMargin(16px, right);
+}
