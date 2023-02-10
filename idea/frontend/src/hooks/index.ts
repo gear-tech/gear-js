@@ -23,6 +23,7 @@ import { useIsProgramExists } from './useIsProgramExists';
 import { useLocalProgramsFilter } from './useLocalProgramsFilter';
 import { useNodeVersion } from './useNodeVersion';
 import { useMobileDisclaimer } from './useMobileDisclaimer';
+import { useMetaOnUpload } from './useMetaOnUpload';
 
 export {
   useApp,
@@ -55,4 +56,5 @@ export {
   useLocalProgramsFilter,
   useNodeVersion,
   useMobileDisclaimer,
+  useMetaOnUpload,
 };
