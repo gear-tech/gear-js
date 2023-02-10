@@ -268,14 +268,6 @@ dependencies = [
 [[package]]
 name = "galloc"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265#ad5b6a8bfb18c15f54eee9c402dc273524967265"
-dependencies = [
- "dlmalloc",
-]
-
-[[package]]
-name = "galloc"
-version = "0.1.0"
 source = "git+https://github.com/gear-tech/gear.git#d293c53ec6bc2c346403e9880c21121c3eabdd2c"
 dependencies = [
  "dlmalloc",
@@ -284,33 +276,12 @@ dependencies = [
 [[package]]
 name = "gcore"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265#ad5b6a8bfb18c15f54eee9c402dc273524967265"
-dependencies = [
- "gear-core-errors 0.1.0 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
- "gsys 0.1.0 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
- "parity-scale-codec",
- "static_assertions",
-]
-
-[[package]]
-name = "gcore"
-version = "0.1.0"
 source = "git+https://github.com/gear-tech/gear.git#d293c53ec6bc2c346403e9880c21121c3eabdd2c"
 dependencies = [
- "gear-core-errors 0.1.0 (git+https://github.com/gear-tech/gear.git)",
- "gsys 0.1.0 (git+https://github.com/gear-tech/gear.git)",
+ "gear-core-errors",
+ "gsys",
  "parity-scale-codec",
  "static_assertions",
-]
-
-[[package]]
-name = "gear-core-errors"
-version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265#ad5b6a8bfb18c15f54eee9c402dc273524967265"
-dependencies = [
- "derive_more",
- "parity-scale-codec",
- "scale-info",
 ]
 
 [[package]]
@@ -326,29 +297,12 @@ dependencies = [
 [[package]]
 name = "gear-wasm-builder"
 version = "0.1.2"
-source = "git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265#ad5b6a8bfb18c15f54eee9c402dc273524967265"
-dependencies = [
- "anyhow",
- "cargo_metadata",
- "colored",
- "gmeta 0.1.0 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
- "log",
- "pathdiff",
- "pwasm-utils",
- "thiserror",
- "toml",
- "which",
-]
-
-[[package]]
-name = "gear-wasm-builder"
-version = "0.1.2"
 source = "git+https://github.com/gear-tech/gear.git#d293c53ec6bc2c346403e9880c21121c3eabdd2c"
 dependencies = [
  "anyhow",
  "cargo_metadata",
  "colored",
- "gmeta 0.1.0 (git+https://github.com/gear-tech/gear.git)",
+ "gmeta",
  "log",
  "pathdiff",
  "pwasm-utils",
@@ -360,7 +314,7 @@ dependencies = [
 [[package]]
 name = "gmeta"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265#ad5b6a8bfb18c15f54eee9c402dc273524967265"
+source = "git+https://github.com/gear-tech/gear.git#d293c53ec6bc2c346403e9880c21121c3eabdd2c"
 dependencies = [
  "blake2-rfc",
  "gmeta-codegen",
@@ -370,20 +324,9 @@ dependencies = [
 ]
 
 [[package]]
-name = "gmeta"
-version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#d293c53ec6bc2c346403e9880c21121c3eabdd2c"
-dependencies = [
- "blake2-rfc",
- "hex",
- "parity-scale-codec",
- "scale-info",
-]
-
-[[package]]
 name = "gmeta-codegen"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265#ad5b6a8bfb18c15f54eee9c402dc273524967265"
+source = "git+https://github.com/gear-tech/gear.git#d293c53ec6bc2c346403e9880c21121c3eabdd2c"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -393,33 +336,14 @@ dependencies = [
 [[package]]
 name = "gstd"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265#ad5b6a8bfb18c15f54eee9c402dc273524967265"
-dependencies = [
- "bs58",
- "futures",
- "galloc 0.1.0 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
- "gcore 0.1.0 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
- "gear-core-errors 0.1.0 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
- "gstd-codegen 0.1.0 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
- "hashbrown 0.13.2",
- "hex",
- "parity-scale-codec",
- "primitive-types",
- "scale-info",
- "static_assertions",
-]
-
-[[package]]
-name = "gstd"
-version = "0.1.0"
 source = "git+https://github.com/gear-tech/gear.git#d293c53ec6bc2c346403e9880c21121c3eabdd2c"
 dependencies = [
  "bs58",
  "futures",
- "galloc 0.1.0 (git+https://github.com/gear-tech/gear.git)",
- "gcore 0.1.0 (git+https://github.com/gear-tech/gear.git)",
- "gear-core-errors 0.1.0 (git+https://github.com/gear-tech/gear.git)",
- "gstd-codegen 0.1.0 (git+https://github.com/gear-tech/gear.git)",
+ "galloc",
+ "gcore",
+ "gear-core-errors",
+ "gstd-codegen",
  "hashbrown 0.13.2",
  "hex",
  "parity-scale-codec",
@@ -431,27 +355,12 @@ dependencies = [
 [[package]]
 name = "gstd-codegen"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265#ad5b6a8bfb18c15f54eee9c402dc273524967265"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
-name = "gstd-codegen"
-version = "0.1.0"
 source = "git+https://github.com/gear-tech/gear.git#d293c53ec6bc2c346403e9880c21121c3eabdd2c"
 dependencies = [
  "proc-macro2",
  "quote",
  "syn",
 ]
-
-[[package]]
-name = "gsys"
-version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265#ad5b6a8bfb18c15f54eee9c402dc273524967265"
 
 [[package]]
 name = "gsys"
@@ -818,8 +727,8 @@ checksum = "55937e1799185b12863d447f42597ed69d9928686b8d88a1df17376a097d8369"
 name = "test-gas"
 version = "0.1.0"
 dependencies = [
- "gear-wasm-builder 0.1.2 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
- "gstd 0.1.0 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
+ "gear-wasm-builder",
+ "gstd",
  "parity-scale-codec",
  "scale-info",
  "test-gas-io",
@@ -829,8 +738,8 @@ dependencies = [
 name = "test-gas-io"
 version = "0.1.0"
 dependencies = [
- "gmeta 0.1.0 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
- "gstd 0.1.0 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
+ "gmeta",
+ "gstd",
  "parity-scale-codec",
  "scale-info",
 ]
@@ -839,8 +748,8 @@ dependencies = [
 name = "test-meta"
 version = "0.1.0"
 dependencies = [
- "gear-wasm-builder 0.1.2 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
- "gstd 0.1.0 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
+ "gear-wasm-builder",
+ "gstd",
  "parity-scale-codec",
  "scale-info",
  "test-meta-io",
@@ -852,8 +761,8 @@ dependencies = [
 name = "test-meta-io"
 version = "0.1.0"
 dependencies = [
- "gmeta 0.1.0 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
- "gstd 0.1.0 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
+ "gmeta",
+ "gstd",
  "parity-scale-codec",
  "primitive-types",
  "scale-info",
@@ -863,9 +772,9 @@ dependencies = [
 name = "test-meta-state-v1"
 version = "0.1.0"
 dependencies = [
- "gear-wasm-builder 0.1.2 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
- "gmeta 0.1.0 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
- "gstd 0.1.0 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
+ "gear-wasm-builder",
+ "gmeta",
+ "gstd",
  "test-meta-io",
 ]
 
@@ -873,9 +782,9 @@ dependencies = [
 name = "test-meta-state-v2"
 version = "0.1.0"
 dependencies = [
- "gear-wasm-builder 0.1.2 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
- "gmeta 0.1.0 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
- "gstd 0.1.0 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
+ "gear-wasm-builder",
+ "gmeta",
+ "gstd",
  "test-meta-io",
 ]
 
@@ -883,8 +792,8 @@ dependencies = [
 name = "test-syscall-in-state"
 version = "0.1.0"
 dependencies = [
- "gear-wasm-builder 0.1.2 (git+https://github.com/gear-tech/gear.git)",
- "gstd 0.1.0 (git+https://github.com/gear-tech/gear.git)",
+ "gear-wasm-builder",
+ "gstd",
  "parity-scale-codec",
  "scale-info",
 ]
@@ -893,8 +802,8 @@ dependencies = [
 name = "test-waitlist"
 version = "0.1.0"
 dependencies = [
- "gear-wasm-builder 0.1.2 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
- "gstd 0.1.0 (git+https://github.com/gear-tech/gear.git?rev=ad5b6a8bfb18c15f54eee9c402dc273524967265)",
+ "gear-wasm-builder",
+ "gstd",
  "parity-scale-codec",
  "scale-info",
 ]
