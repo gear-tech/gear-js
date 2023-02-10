@@ -51,7 +51,7 @@ jobs:
 
       - name: Build test programs
         working-directory: api/test/programs
-        run: cargo build -vv --release
+        run: cargo build -vv -j1 --release
 
       - name: Prepare
         run: |
