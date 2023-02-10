@@ -51,7 +51,7 @@ jobs:
 
       - name: Build test programs
         working-directory: api/test/programs
-        run: RUSTFLAGS=-g cargo build --release
+        run: cargo build -v --release
 
       - name: Prepare
         run: |
