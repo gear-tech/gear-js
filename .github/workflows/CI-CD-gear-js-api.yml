@@ -34,10 +34,6 @@ jobs:
           components: clippy, rustfmt
           target: wasm32-unknown-unknown
 
-      - name: Build test programs
-        working-directory: api/test/programs
-        run: cargo build --release -vv
-
       - name: Install dependencies
         working-directory: api
         run: yarn install
@@ -45,6 +41,10 @@ jobs:
       - name: Build @gear-js/api
         working-directory: api
         run: yarn build
+
+      - name: Build test programs
+        working-directory: api/test/programs
+        run: cargo build --release --locked
 
       - name: Download gear examples
         working-directory: api/test/wasm
