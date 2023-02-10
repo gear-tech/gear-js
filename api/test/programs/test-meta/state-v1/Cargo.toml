@@ -4,12 +4,12 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-gstd = { git = "https://github.com/gear-tech/gear.git", rev = "cc116088b67ca1ddd75cefeb48510335af721915" }
-gmeta = { git = "https://github.com/gear-tech/gear.git",  rev = "cc116088b67ca1ddd75cefeb48510335af721915", features = ["codegen"]  }
+gstd = { git = "https://github.com/gear-tech/gear.git", rev = "ad5b6a8bfb18c15f54eee9c402dc273524967265" }
+gmeta = { git = "https://github.com/gear-tech/gear.git",  rev = "ad5b6a8bfb18c15f54eee9c402dc273524967265", features = ["codegen"]  }
 test-meta-io = { path = "../io" }
 
 [build-dependencies]
-gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", features = ["metawasm"], rev = "cc116088b67ca1ddd75cefeb48510335af721915" }
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", features = ["metawasm"], rev = "ad5b6a8bfb18c15f54eee9c402dc273524967265" }
 
 [features]
 default = ["std"]

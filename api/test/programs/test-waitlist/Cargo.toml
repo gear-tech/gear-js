@@ -5,9 +5,9 @@ authors = ["Gear Technologies"]
 edition = "2021"
 
 [dependencies]
-gstd = { git = "https://github.com/gear-tech/gear.git", rev = "cc116088b67ca1ddd75cefeb48510335af721915" }
+gstd = { git = "https://github.com/gear-tech/gear.git", rev = "ad5b6a8bfb18c15f54eee9c402dc273524967265" }
 scale-info = { version = "2.3.0", default-features = false, features = ["derive"] }
 codec = { package = "parity-scale-codec", version = "3.2.1", default-features = false, features = ["derive", "full"] }
 
 [build-dependencies]
-gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", rev = "cc116088b67ca1ddd75cefeb48510335af721915" }
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", rev = "ad5b6a8bfb18c15f54eee9c402dc273524967265" }
