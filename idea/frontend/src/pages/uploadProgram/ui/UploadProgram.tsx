@@ -37,9 +37,11 @@ const UploadProgram = () => {
   );
 
   const handleSubmit = (payload: Payload, { enableButtons }: SubmitHelpers) => {
-    if (!optFile) return;
+    if (!optFile || !optBuffer) return;
 
-    uploadProgram({ file: optFile, payload, resolve: resetOptFile, reject: enableButtons });
+    const name = payload.programName || optFile.name;
+
+    uploadProgram({ optBuffer, payload, name, resolve: resetOptFile, reject: enableButtons });
   };
 
   return (

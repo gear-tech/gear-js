@@ -10,7 +10,7 @@ import { uploadLocalProgram } from 'api/LocalDB';
 import { Method } from 'entities/explorer';
 import { OperationCallbacks } from 'entities/hooks';
 import { PROGRAM_ERRORS, TransactionName, TransactionStatus, absoluteRoutes } from 'shared/config';
-import { checkWallet, readFileAsync, getExtrinsicFailedMessage } from 'shared/helpers';
+import { checkWallet, getExtrinsicFailedMessage } from 'shared/helpers';
 import { CustomLink } from 'shared/ui/customLink';
 
 import { ProgramStatus } from 'entities/program';
@@ -44,12 +44,10 @@ const useProgramActions = () => {
     return result.programId;
   };
 
-  const uploadProgram = async (file: File, payload: Payload) => {
-    const fileBuffer = await readFileAsync(file, 'buffer');
-
+  const uploadProgram = async (optBuffer: Buffer, payload: Payload) => {
     const { gasLimit, value, initPayload, metadata, payloadType } = payload;
 
-    const program = { code: new Uint8Array(fileBuffer), value, gasLimit, initPayload };
+    const program = { code: optBuffer, value, gasLimit, initPayload };
 
     const result = api.program.upload(program, metadata, payloadType);
 
@@ -164,17 +162,18 @@ const useProgramActions = () => {
   );
 
   const upload = useCallback(
-    async ({ file, payload, reject, resolve }: ParamsToUpload) => {
+    async ({ optBuffer, payload, name, reject, resolve }: ParamsToUpload) => {
       try {
         checkWallet(account);
 
         const { meta, address } = account!;
 
-        const [{ signer }, programId] = await Promise.all([web3FromSource(meta.source), uploadProgram(file, payload)]);
+        const [{ signer }, programId] = await Promise.all([
+          web3FromSource(meta.source),
+          uploadProgram(optBuffer, payload),
+        ]);
 
         const { partialFee } = await api.program.paymentInfo(address, { signer });
-
-        const name = payload.programName || file.name;
 
         const handleConfirm = () =>
           signAndUpload({ name, method: TransactionName.UploadProgram, signer, payload, programId, reject, resolve });

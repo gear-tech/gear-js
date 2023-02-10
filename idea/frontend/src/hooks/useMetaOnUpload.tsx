@@ -1,12 +1,14 @@
 import { generateCodeHash, getProgramMetadata, ProgramMetadata } from '@gear-js/api';
-import { useAlert } from '@gear-js/react-hooks';
+import { useAlert, useApi } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { generatePath, useLocation } from 'react-router-dom';
 
 import { fetchCodeMetadata } from 'api';
 import { readFileAsync } from 'shared/helpers';
 import { RPCError, RPCErrorCode } from 'shared/services/rpcService';
+import { CustomLink } from 'shared/ui/customLink';
+import { routes } from 'shared/config';
 
 type MetadataState = {
   value: ProgramMetadata | undefined;
@@ -20,7 +22,17 @@ const initMeta = {
   isUploaded: false,
 };
 
-const useMetaOnUpload = () => {
+const getCodeExistsAlert = (codeId: HexString) => (
+  <>
+    <p>Code already exists</p>
+    <p>
+      ID: <CustomLink to={generatePath(routes.code, { codeId })} text={codeId} />
+    </p>
+  </>
+);
+
+const useMetaOnUpload = (isCode?: boolean) => {
+  const { api } = useApi();
   const alert = useAlert();
 
   const { state } = useLocation();
@@ -31,6 +43,8 @@ const useMetaOnUpload = () => {
 
   const [metadata, setMetadata] = useState<MetadataState>(initMeta);
   const [isUploadedMetaReady, setIsUploadedMetaReady] = useState(true);
+
+  const [isCodeExists, setIsCodeExists] = useState<Boolean>();
 
   const setUploadedMetadata = (hex: HexString) =>
     setMetadata({ hex, value: getProgramMetadata(hex), isUploaded: true });
@@ -58,7 +72,28 @@ const useMetaOnUpload = () => {
   }, [optFile]);
 
   useEffect(() => {
-    if (!optBuffer) return;
+    if (!isCode || !optBuffer) return;
+
+    setIsCodeExists(undefined);
+
+    const codeId = generateCodeHash(optBuffer);
+
+    api.code.exists(codeId).then((result) => {
+      setIsCodeExists(result);
+
+      if (!result) return;
+
+      resetOptFile();
+      alert.error(getCodeExistsAlert(codeId));
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [optBuffer]);
+
+  useEffect(() => {
+    const isCodeCheckReady = isCodeExists !== undefined;
+
+    if (!optBuffer || (isCode && !isCodeCheckReady) || isCodeExists) return;
 
     setIsUploadedMetaReady(false);
 
@@ -72,7 +107,7 @@ const useMetaOnUpload = () => {
       .finally(() => setIsUploadedMetaReady(true));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [optBuffer]);
+  }, [optBuffer, isCodeExists]);
 
   return {
     optFile,

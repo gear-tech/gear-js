@@ -14,7 +14,8 @@ type Payload = {
 };
 
 type DataToUpload = {
-  file: File;
+  optBuffer: Buffer;
+  name: string;
   payload: Payload;
 };
 

@@ -1,11 +1,8 @@
 import { Button, FileInput, Input } from '@gear-js/ui';
-import { getProgramMetadata } from '@gear-js/api';
 import { useForm } from '@mantine/form';
-import { HexString } from '@polkadot/util/types';
-import { useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 
-import { useCodeUpload } from 'hooks';
+import { useCodeUpload, useMetaOnUpload } from 'hooks';
 import { isExists } from 'shared/helpers';
 import { Box } from 'shared/ui/box';
 import { Subheader } from 'shared/ui/subheader';
@@ -19,31 +16,38 @@ const initialValues = { name: '' };
 const validate = { name: isExists };
 
 const UploadCode = () => {
-  const { state } = useLocation();
-  const initFile = state?.file as File | undefined;
+  const {
+    optFile,
+    setOptFile,
+    resetOptFile,
+    optBuffer,
+    metadata,
+    setFileMetadata,
+    resetMetadata,
+    isUploadedMetaReady,
+  } = useMetaOnUpload(true);
 
-  const [metaHex, setMetaHex] = useState('' as HexString);
-  const metadata = useMemo(() => (metaHex ? getProgramMetadata(metaHex) : undefined), [metaHex]);
-
-  const { getInputProps, onSubmit, reset } = useForm({ initialValues, validate: metaHex ? validate : undefined });
-  const [file, setFile] = useState(initFile);
-
-  const resetFile = () => setFile(undefined);
-  const resetMetaHex = () => setMetaHex('' as HexString);
+  const { getInputProps, onSubmit, reset } = useForm({ initialValues, validate: metadata.hex ? validate : undefined });
 
   const uploadCode = useCodeUpload();
 
   const resetForm = () => {
     reset();
-    resetFile();
-    resetMetaHex();
+    resetOptFile();
   };
 
   const handleSubmit = onSubmit(({ name }) => {
-    if (!file) return;
+    if (!optBuffer) return;
 
-    uploadCode({ file, name, metaHex, resolve: resetForm });
+    uploadCode({ optBuffer, name, metaHex: metadata.hex, resolve: resetForm });
   });
+
+  useEffect(() => {
+    if (optFile) return;
+
+    resetForm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [optFile]);
 
   return (
     <>
@@ -52,20 +56,26 @@ const UploadCode = () => {
           <Subheader title="Enter code parameters" size="big" />
           <Box>
             <form className={styles.form} id="uploadCodeForm" onSubmit={handleSubmit}>
-              <FileInput label="Code file" direction="y" value={file} onChange={setFile} />
-              {metaHex && <Input label="Code name" direction="y" {...getInputProps('name')} />}
+              <FileInput label="Code file" direction="y" value={optFile} onChange={setOptFile} />
+              {metadata.hex && <Input label="Code name" direction="y" {...getInputProps('name')} />}
             </form>
           </Box>
         </div>
 
         <div>
           <Subheader size="big" title="Add metadata" />
-          <UploadMetadata metadata={metadata} onUpload={setMetaHex} onReset={resetMetaHex} />
+          <UploadMetadata
+            metadata={metadata.value}
+            isInputDisabled={!!metadata.isUploaded}
+            isLoading={!isUploadedMetaReady}
+            onUpload={setFileMetadata}
+            onReset={resetMetadata}
+          />
         </div>
       </div>
 
       <div className={styles.buttons}>
-        {file && <Button type="submit" text="Upload code" icon={PlusSVG} size="large" form="uploadCodeForm" />}
+        {optFile && <Button type="submit" text="Upload code" icon={PlusSVG} size="large" form="uploadCodeForm" />}
         <BackButton />
       </div>
     </>
