@@ -11,19 +11,20 @@ import {
   useEffect,
 } from 'react';
 import { InputProps } from '../../types';
-import { getFileSize } from '../../utils';
+import { getFileSize, isFileTypeValid } from '../../utils';
 import { Button, ButtonProps } from '../Button/Button';
 import { InputWrapper } from '../utils';
 import { ReactComponent as RemoveSVG } from './images/remove.svg';
 import { ReactComponent as SelectSVG } from './images/select.svg';
 import styles from './FileInput.module.scss';
 
-type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'onChange'> &
+type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'onChange' | 'accept'> &
   Omit<InputProps, 'color'> & {
     value?: File | undefined;
     label?: string;
     error?: string;
     color?: ButtonProps['color'];
+    accept?: string | string[];
     onChange?: (value: File | undefined) => void;
   };
 
@@ -35,6 +36,7 @@ const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInput
     gap,
     error,
     tooltip,
+    accept,
     onChange,
     direction = 'x',
     size = 'normal',
@@ -51,6 +53,8 @@ const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInput
 
   const ref = useRef<HTMLInputElement>(null);
   const id = useId();
+
+  const acceptValue = Array.isArray(accept) ? accept.join(',') : accept;
 
   // TODO: figure out what's wrong
   // @ts-ignore
@@ -72,7 +76,15 @@ const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInput
     reset();
   };
 
-  const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => setFile(target.files?.[0]);
+  const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
+    const eventFile = target.files?.[0];
+
+    const isFileValid = !eventFile || (accept ? isFileTypeValid(eventFile, accept) : true);
+
+    if (!isFileValid) throw new Error('Wrong file format');
+
+    setFile(eventFile);
+  };
 
   // TODO: replace w/ useChangeEffect
   useEffect(() => {
@@ -90,7 +102,15 @@ const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInput
       gap={gap}
       disabled={disabled}
       tooltip={tooltip}>
-      <input id={id} type="file" className={styles.input} ref={ref} onChange={handleChange} {...attrs} />
+      <input
+        id={id}
+        type="file"
+        className={styles.input}
+        ref={ref}
+        accept={acceptValue}
+        onChange={handleChange}
+        {...attrs}
+      />
       {file ? (
         <>
           <div className={styles.file}>
