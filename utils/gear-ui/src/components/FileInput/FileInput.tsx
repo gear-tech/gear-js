@@ -8,24 +8,28 @@ import {
   ChangeEvent,
   useId,
   InputHTMLAttributes,
+  useEffect,
 } from 'react';
 import { InputProps } from '../../types';
 import { getFileSize } from '../../utils';
-import { Button } from '../Button/Button';
+import { Button, ButtonProps } from '../Button/Button';
 import { InputWrapper } from '../utils';
 import { ReactComponent as RemoveSVG } from './images/remove.svg';
 import { ReactComponent as SelectSVG } from './images/select.svg';
 import styles from './FileInput.module.scss';
 
-type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> &
+type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'onChange'> &
   Omit<InputProps, 'color'> & {
-    color?: 'light' | 'primary';
+    value?: File | undefined;
     label?: string;
     error?: string;
+    color?: ButtonProps['color'];
+    onChange?: (value: File | undefined) => void;
   };
 
 const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElement>) => {
   const {
+    value,
     label,
     className,
     gap,
@@ -37,41 +41,43 @@ const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInput
     color = 'light',
     ...attrs
   } = props;
+
   const { disabled } = attrs;
 
-  const [name, setName] = useState('');
+  const [innerValue, setInnerValue] = useState<File>();
+
+  const file = value || innerValue;
+  const setFile = onChange || setInnerValue;
+
   const ref = useRef<HTMLInputElement>(null);
+  const id = useId();
 
   // TODO: figure out what's wrong
   // @ts-ignore
   useImperativeHandle(forwardedRef, () => ref.current);
-  const id = useId();
 
-  const handleButtonClick = () => {
-    ref.current?.click();
-  };
+  const handleButtonClick = () => ref.current?.click();
 
-  const resetValue = () => {
-    if (ref.current) {
-      ref.current.value = '';
-    }
+  const reset = () => {
+    if (!ref.current) return;
+
+    ref.current.value = '';
+
+    const changeEvent = new Event('change', { bubbles: true });
+    ref.current.dispatchEvent(changeEvent);
   };
 
   const handleRemoveButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
-    if (ref.current) {
-      resetValue();
-      const changeEvent = new Event('change', { bubbles: true });
-      ref.current.dispatchEvent(changeEvent);
-    }
+    reset();
   };
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.files?.[0]?.name || '');
+  const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => setFile(target.files?.[0]);
 
-    if (onChange) onChange(e);
-  };
+  // TODO: replace w/ useChangeEffect
+  useEffect(() => {
+    if (!value) reset();
+  }, [value]);
 
   return (
     <InputWrapper
@@ -85,13 +91,20 @@ const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInput
       disabled={disabled}
       tooltip={tooltip}>
       <input id={id} type="file" className={styles.input} ref={ref} onChange={handleChange} {...attrs} />
-      {name ? (
+      {file ? (
         <>
           <div className={styles.file}>
-            <Button text={name} color="transparent" size="small" className={styles.name} onClick={handleButtonClick} />
+            <Button
+              text={file.name}
+              color="transparent"
+              size="small"
+              className={styles.name}
+              onClick={handleButtonClick}
+            />
             <Button icon={RemoveSVG} color="transparent" onClick={handleRemoveButtonClick} />
           </div>
-          {!error && <span className={styles.size}>Size: {getFileSize(ref.current?.files?.[0].size as number)}</span>}
+
+          {!error && <span className={styles.size}>Size: {getFileSize(file.size)}</span>}
         </>
       ) : (
         <Button
