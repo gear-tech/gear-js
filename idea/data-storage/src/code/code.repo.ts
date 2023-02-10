@@ -38,7 +38,7 @@ export class CodeRepo {
       { fromDate, toDate },
       offset || 0,
       limit || PAGINATION_LIMIT,
-      undefined,
+      [{ table: 'meta', columns: ['types', 'hex'] }],
       { column: 'timestamp', sort: 'DESC' },
     );
 
@@ -48,6 +48,7 @@ export class CodeRepo {
   public async get(id: string, genesis: string): Promise<Code> {
     return this.codeRepo.findOne({
       where: { id, genesis },
+      relations: ['meta']
     });
   }
 

@@ -43,15 +43,6 @@ export class CodeService {
     return code.meta;
   }
 
-  public async addMeta(codeId: string, genesis: string, meta: Meta): Promise<void> {
-    const code = await this.codeRepository.get(codeId, genesis);
-
-    if(code && code.meta !== null) {
-      code.meta = meta;
-      await this.codeRepository.save([code]);
-    }
-  }
-
   public async updateCodes(updateCodesInput: UpdateCodeInput[] | CodeChangedInput[]): Promise<Code[]> {
     const updateCodes = [];
 
@@ -64,6 +55,7 @@ export class CodeService {
           ...code,
           status: updateCodeInput.status,
           expiration: updateCodeInput.expiration,
+          meta: updateCodeInput.meta
         });
 
         updateCodes.push(updateCode);
@@ -72,6 +64,7 @@ export class CodeService {
           ...updateCodeInput,
           name: updateCodeInput.id,
           timestamp: new Date(updateCodeInput.timestamp),
+          meta: updateCodeInput.meta
         });
 
         updateCodes.push(createCode);

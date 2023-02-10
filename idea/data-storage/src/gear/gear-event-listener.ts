@@ -11,7 +11,7 @@ import { plainToClass } from 'class-transformer';
 import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
 import { CodeService } from '../code/code.service';
-import { getPayloadAndValue, getPayloadByGearEvent } from '../common/helpers';
+import { getMetaHash, getPayloadAndValue, getPayloadByGearEvent } from '../common/helpers';
 import { Message } from '../database/entities';
 import { CodeStatus, MessageEntryPoint, MessageType } from '../common/enums';
 import { CodeRepo } from '../code/code.repo';
@@ -225,36 +225,17 @@ export class GearEventListener {
         } = foundEvent.event as MessageEnqueued;
 
         const codeId = tx.method.method === 'uploadProgram' ? generateCodeHash(tx.args[0].toHex()) : tx.args[0].toHex();
-        const createProgram = {
+        const code = await this.codeRepository.get(codeId, this.genesis);
+
+        programs.push({
           owner: source.toHex(),
           id: destination.toHex(),
           blockHash: block.createdAtHash.toHex(),
           timestamp,
-          code: await this.codeRepository.get(codeId, this.genesis),
+          code,
           genesis: this.genesis,
-        };
-
-
-        try {
-          const metaHash = await this.api.program.metaHash(destination.toHex());
-
-          if(metaHash) {
-            const meta = await this.metaService.getByHash(metaHash);
-
-            if(meta){
-              Object.assign(createProgram, { meta });
-              await this.codeService.addMeta(codeId, this.genesis, meta);
-            } else {
-              const meta = await this.metaService.createMeta({ hash: metaHash });
-              Object.assign(createProgram, { meta });
-              await this.codeService.addMeta(codeId, this.genesis, meta);
-            }
-          }
-        } catch (error) {
-          this.logger.error(error);
-        }
-
-        programs.push(createProgram);
+          meta: code.meta,
+        });
       }
       await this.programService.createPrograms(programs);
     }
@@ -270,36 +251,48 @@ export class GearEventListener {
         const event = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
           this.api.events.gear.CodeChanged.is(event),
         );
+        const { data: { id } } = event.event as CodeChanged;
+        const codeId = event ? id.toHex() : generateCodeHash(tx.args[0].toHex());
+        const metaHash = await getMetaHash(this.api.code, codeId);
 
         if (event) {
-          const {
-            data: { id, change },
-          } = event.event as CodeChanged;
+          const { data: { change } } = event.event as CodeChanged;
           const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
-
-          codes.push({
-            id: id.toHex(),
+          const updateCodeInput = {
+            id: codeId,
             genesis: this.genesis,
             status: codeStatus,
             timestamp,
             blockHash: block.createdAtHash.toHex(),
             expiration: change.isActive ? change.asActive.expiration.toString() : null,
             uploadedBy: tx.signer.inner.toHex(),
-          });
+            meta: null,
+          };
+
+          if(metaHash) {
+            updateCodeInput.meta = await this.metaService.getByHashOrCreate(metaHash);
+          }
+
+          codes.push(updateCodeInput);
         } else {
-          const codeId = generateCodeHash(tx.args[0].toHex());
           const code = await this.codeRepository.get(codeId, this.genesis);
+          const updateCodeInput = {
+            id: codeId,
+            genesis: this.genesis,
+            status: CodeStatus.ACTIVE,
+            timestamp,
+            blockHash: block.createdAtHash.toHex(),
+            expiration: null,
+            uploadedBy: tx.signer.inner.toHex(),
+            meta: null,
+          };
+
+          if(metaHash) {
+            updateCodeInput.meta = await this.metaService.getByHashOrCreate(metaHash);
+          }
 
           if (!code) {
-            codes.push({
-              id: codeId,
-              genesis: this.genesis,
-              status: CodeStatus.ACTIVE,
-              timestamp,
-              blockHash: block.createdAtHash.toHex(),
-              expiration: null,
-              uploadedBy: tx.signer.inner.toHex(),
-            });
+            codes.push(updateCodeInput);
           }
         }
       }

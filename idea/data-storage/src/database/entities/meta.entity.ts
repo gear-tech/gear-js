@@ -7,7 +7,7 @@ import { Program } from './program.entity';
 @Entity()
 export class Meta implements IMeta {
   @PrimaryGeneratedColumn('rowid')
-  public id: string;
+  public id: number;
 
   @Column({ unique: true })
   public hash: string;

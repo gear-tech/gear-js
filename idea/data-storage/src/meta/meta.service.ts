@@ -9,7 +9,7 @@ import { MetaRepo } from './meta.repo';
 import { ProgramRepo } from '../program/program.repo';
 import { CreateMetaInput } from './types/create-meta.input';
 import { CodeRepo } from '../code/code.repo';
-import { generateCodeHashByApi, getProgramMetadataByApi } from '../common/helpers';
+import { generateCodeHashByApi, getMetaHash, getProgramMetadataByApi } from '../common/helpers';
 import { GearEventListener } from '../gear/gear-event-listener';
 import { ProgramService } from '../program/program.service';
 import { AddProgramMetaInput } from '../program/types';
@@ -26,8 +26,24 @@ export class MetaService {
     private gearEventListener: GearEventListener,
   ) {}
 
+  public async getByHashOrCreate(hash: string): Promise<Meta> {
+    const meta = await this.getByHash(hash);
+
+    if(meta) return meta;
+
+    return this.createMeta({ hash });
+  }
+
   public async getByHash(hash: string): Promise<Meta> {
     return this.metaRepository.getByHash(hash);
+  }
+
+  async createMeta(createMetaInput: CreateMetaInput): Promise<Meta> {
+    const createMeta = plainToClass(Meta, {
+      ...createMetaInput
+    });
+
+    return this.metaRepository.save(createMeta);
   }
 
   public async addMetaByCode(params: AddMetaByCodeParams): Promise<AddMetaResult> {
@@ -38,7 +54,7 @@ export class MetaService {
     if(!code) throw new CodeNotFound();
 
     try {
-      const codeMetaHash = await this.gearEventListener.api.code.metaHash(code.id as HexString);
+      const codeMetaHash = await getMetaHash(this.gearEventListener.api.program, code.id as HexString);
       const hash = generateCodeHashByApi(metaHex as HexString);
 
       if(codeMetaHash && codeMetaHash !== hash) throw new InvalidCodeMetaHex();
@@ -51,6 +67,7 @@ export class MetaService {
           const updateMeta = plainToClass(Meta, { ...meta, hex: metaHex, types: metaData.types });
 
           code.meta = await this.metaRepository.save(updateMeta);
+          code.name = name;
 
           const addProgramsMeta: AddProgramMetaInput = { name, meta };
 
@@ -62,6 +79,7 @@ export class MetaService {
           const createMetaInput: CreateMetaInput = { hex: metaHex, hash, types: metaData.types };
           const createMeta = await this.createMeta(createMetaInput);
           code.meta = createMeta;
+          code.name = name;
 
           const addProgramsMeta: AddProgramMetaInput = { name, meta: createMeta };
 
@@ -86,7 +104,7 @@ export class MetaService {
     if (!program) throw new ProgramNotFound();
 
     try {
-      const programMetaHash = await this.gearEventListener.api.program.metaHash(program.id as HexString);
+      const programMetaHash = await getMetaHash(this.gearEventListener.api.program, program.id as HexString);
       const hash = generateCodeHashByApi(metaHex as HexString);
 
       if(programMetaHash && hash !== programMetaHash) throw new InvalidProgramMetaHex();
@@ -115,14 +133,6 @@ export class MetaService {
     }
 
     return { status: 'Metadata added' };
-  }
-
-  public async createMeta(createMetaInput: CreateMetaInput): Promise<Meta> {
-    const createMeta = plainToClass(Meta, {
-      ...createMetaInput
-    });
-
-    return this.metaRepository.save(createMeta);
   }
 
   private validateProgramMetaHex(meta: Meta, hash: string): void {
