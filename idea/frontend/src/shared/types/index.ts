@@ -1,4 +1,4 @@
-import { PathParams, StateWithFile } from './routes';
+import { PathParams } from './routes';
 import { IBase } from './entities';
 
-export type { PathParams, StateWithFile, IBase };
+export type { PathParams, IBase };

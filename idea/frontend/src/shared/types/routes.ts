@@ -4,8 +4,4 @@ type PathParams = {
   programId: HexString;
 };
 
-type StateWithFile = {
-  file?: File;
-};
-
-export type { StateWithFile, PathParams };
+export type { PathParams };

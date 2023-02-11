@@ -6,7 +6,7 @@ import { useApi, useAlert, useAccount, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OP
 
 import { useModal } from 'hooks';
 import { Method } from 'entities/explorer';
-import { checkWallet, readFileAsync, getExtrinsicFailedMessage } from 'shared/helpers';
+import { checkWallet, getExtrinsicFailedMessage } from 'shared/helpers';
 import { PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'shared/config';
 import { CopiedInfo } from 'shared/ui/copiedInfo';
 
@@ -19,19 +19,16 @@ const useCodeUpload = () => {
   const { account } = useAccount();
   const { showModal } = useModal();
 
-  const submit = async (file: File) => {
-    const arrayBuffer = await readFileAsync(file, 'buffer');
-    const buffer = Buffer.from(arrayBuffer);
+  const submit = async (optBuffer: Buffer) => {
+    const { codeHash } = await api.code.upload(optBuffer);
 
-    const result = await api.code.upload(buffer);
-
-    return result.codeHash;
+    return codeHash;
   };
 
   const handleEventsStatus = (
     events: EventRecord[],
     codeHash: HexString,
-    metaHex: HexString,
+    metaHex: HexString | undefined,
     name: string,
     resolve?: () => void,
   ) => {
@@ -78,13 +75,13 @@ const useCodeUpload = () => {
   };
 
   const uploadCode = useCallback(
-    async ({ file, name, metaHex, resolve }: ParamsToUploadCode) => {
+    async ({ optBuffer, name, metaHex, resolve }: ParamsToUploadCode) => {
       try {
         checkWallet(account);
 
         const { address, meta } = account!;
 
-        const [codeId, { signer }] = await Promise.all([submit(file), web3FromSource(meta.source)]);
+        const [codeId, { signer }] = await Promise.all([submit(optBuffer), web3FromSource(meta.source)]);
 
         const { partialFee } = await api.code.paymentInfo(address, { signer });
 
