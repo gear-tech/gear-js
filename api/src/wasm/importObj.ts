@@ -53,6 +53,7 @@ export default (
     gr_leave: () => {},
     gr_message_id: () => {},
     gr_origin: () => {},
+    gr_panic: () => {},
     gr_program_id: () => {},
     gr_random: () => {},
     gr_read: (at: number, len: number, buffer: number) => {
