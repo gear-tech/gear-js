@@ -9,7 +9,6 @@ export function getExportValue(memory: WebAssembly.Memory, func: WebAssembly.Exp
   const result_ptr = (func as () => number)();
   const pointer = new Uint32Array(memory.buffer.slice(result_ptr, result_ptr + 4))[0];
   const length = new Uint32Array(memory.buffer.slice(result_ptr + 4, result_ptr + 8))[0];
-  console.log({ pointer, length });
   const buf = memory.buffer.slice(pointer, pointer + length);
   return buf;
 }
