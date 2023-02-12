@@ -245,14 +245,21 @@ export class GearEventListener {
     const txMethods = ['uploadProgram', 'uploadCode'];
     const extrinsics = block.block.extrinsics.filter(({ method: { method } }) => txMethods.includes(method));
     const codes: UpdateCodeInput[] = [];
+    let codeId;
 
     if (extrinsics.length >= 1) {
       for (const tx of extrinsics) {
         const event = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
           this.api.events.gear.CodeChanged.is(event),
         );
-        const { data: { id } } = event.event as CodeChanged;
-        const codeId = event ? id.toHex() : generateCodeHash(tx.args[0].toHex());
+
+        if(event) {
+          const { data: { id } } = event.event as CodeChanged;
+          codeId = id.toHex();
+        } else {
+          codeId = generateCodeHash(tx.args[0].toHex());
+        }
+
         const metaHash = await getMetaHash(this.api.code, codeId);
 
         if (event) {
