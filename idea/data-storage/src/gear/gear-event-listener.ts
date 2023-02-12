@@ -245,7 +245,6 @@ export class GearEventListener {
     const txMethods = ['uploadProgram', 'uploadCode'];
     const extrinsics = block.block.extrinsics.filter(({ method: { method } }) => txMethods.includes(method));
     const codes: UpdateCodeInput[] = [];
-    let codeId;
 
     if (extrinsics.length >= 1) {
       for (const tx of extrinsics) {
@@ -253,13 +252,10 @@ export class GearEventListener {
           this.api.events.gear.CodeChanged.is(event),
         );
 
-        if(event) {
-          const { data: { id } } = event.event as CodeChanged;
-          codeId = id.toHex();
-        } else {
-          codeId = generateCodeHash(tx.args[0].toHex());
-        }
+        if(!event) return;
 
+        const { data: { id } } = event.event as CodeChanged;
+        const codeId = event ? id.toHex() : generateCodeHash(tx.args[0].toHex());
         const metaHash = await getMetaHash(this.api.code, codeId);
 
         if (event) {
@@ -281,26 +277,6 @@ export class GearEventListener {
           }
 
           codes.push(updateCodeInput);
-        } else {
-          const code = await this.codeRepository.get(codeId, this.genesis);
-          const updateCodeInput = {
-            id: codeId,
-            genesis: this.genesis,
-            status: CodeStatus.ACTIVE,
-            timestamp,
-            blockHash: block.createdAtHash.toHex(),
-            expiration: null,
-            uploadedBy: tx.signer.inner.toHex(),
-            meta: null,
-          };
-
-          if(metaHash) {
-            updateCodeInput.meta = await this.metaService.getByHashOrCreate(metaHash);
-          }
-
-          if (!code) {
-            codes.push(updateCodeInput);
-          }
         }
       }
 
