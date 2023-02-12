@@ -3,18 +3,18 @@ use gstd::prelude::*;
 use test_meta_io::Wallet;
 
 #[metawasm]
-pub trait Metawasm {
-    type State = Vec<Wallet>;
+pub mod metafns {
+    pub type State = Vec<Wallet>;
 
-    fn all_wallets(state: Self::State) -> Vec<Wallet> {
+    pub fn all_wallets(state: State) -> Vec<Wallet> {
         state
     }
 
-    fn first_wallet(state: Self::State) -> Option<Wallet> {
+    pub fn first_wallet(state: State) -> Option<Wallet> {
         state.first().cloned()
     }
 
-    fn last_wallet(state: Self::State) -> Option<Wallet> {
+    pub fn last_wallet(state: State) -> Option<Wallet> {
         state.last().cloned()
     }
 }
