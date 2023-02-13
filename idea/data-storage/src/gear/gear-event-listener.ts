@@ -226,16 +226,20 @@ export class GearEventListener {
 
         const codeId = tx.method.method === 'uploadProgram' ? generateCodeHash(tx.args[0].toHex()) : tx.args[0].toHex();
         const code = await this.codeRepository.get(codeId, this.genesis);
-
-        programs.push({
+        const createProgramInput: CreateProgramInput = {
           owner: source.toHex(),
           id: destination.toHex(),
           blockHash: block.createdAtHash.toHex(),
           timestamp,
           code,
           genesis: this.genesis,
-          meta: code.meta,
-        });
+        };
+
+        if(code && code['meta'] !== null) {
+          createProgramInput.meta = code.meta;
+        }
+
+        programs.push(createProgramInput);
       }
       await this.programService.createPrograms(programs);
     }
