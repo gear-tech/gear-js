@@ -7,10 +7,3 @@ test:
   initPayload: [1, 2, 3]
   shouldSuccess: true
 
-room:
-  pathToOpt: ./wasm/room.opt.wasm
-  gasLimit: 200_000_000_000
-  account: alice
-  initPayload: [1]
-  shouldSuccess: true
-

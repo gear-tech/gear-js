@@ -1,4 +1,4 @@
-bot:
+ping:
   - id: 1
     account: alice
-    pathToOpt: ./wasm/bot.opt.wasm
+    pathToOpt: ./wasm-test/demo_ping.opt.wasm
