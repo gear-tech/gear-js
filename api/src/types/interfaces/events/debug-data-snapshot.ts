@@ -3,9 +3,7 @@ import { Codec } from '@polkadot/types/types';
 
 import { CodeId, ProgramId } from '../ids';
 
-import { Entry, Payload, StoredMessage } from '../message';
-
-type DispatchKind = Entry;
+import { DispatchKind, Payload, StoredMessage } from '../message';
 
 export interface PayloadStore extends Struct {
   outgoing: BTreeMap<u64, Option<Payload>>;
