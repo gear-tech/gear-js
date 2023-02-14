@@ -4,7 +4,7 @@ import { load } from 'js-yaml';
 import { Code, Meta } from '../../../src/database/entities';
 
 const meta = new Meta();
-meta.hash = 'hash';
+meta.hash = '0x00';
 
 function getCodeDBMock(): Code[] {
   const pathCollectionCode = '/collection-code.mock.yaml';

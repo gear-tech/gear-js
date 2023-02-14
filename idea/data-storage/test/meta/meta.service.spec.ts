@@ -11,16 +11,12 @@ import { MetaService } from '../../src/meta/meta.service';
 import { MetaRepo } from '../../src/meta/meta.repo';
 import { mockMetadataRepository } from '../mock/metadata/metadata-repository.mock';
 import { METADATA_DB_MOCK } from '../mock/metadata/metadata-db.mock';
-import { GearEventListener } from '../../src/gear/gear-event-listener';
 import { ProgramService } from '../../src/program/program.service';
 import { CODE_DB_MOCK } from '../mock/code/code-db.mock';
 
 
 describe('Meta service', () => {
   let metaService!: MetaService;
-  const mockGearEventListener = {
-    api: { program: { metaHash: () => '0x00' }, code: { metaHash: () => '0x00'  } }
-  };
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -32,10 +28,6 @@ describe('Meta service', () => {
         {
           provide: ProgramRepo,
           useFactory: () => mockProgramRepository,
-        },
-        {
-          provide: GearEventListener,
-          useFactory: () => mockGearEventListener
         },
         {
           provide: CodeRepo,
