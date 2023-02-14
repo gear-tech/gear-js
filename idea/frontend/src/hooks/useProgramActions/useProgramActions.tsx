@@ -54,7 +54,7 @@ const useProgramActions = () => {
     return result.programId;
   };
 
-  const handleEventsStatus = (events: EventRecord[], { reject, resolve }: OperationCallbacks) => {
+  const handleEventsStatus = (events: EventRecord[], { reject }: OperationCallbacks) => {
     events.forEach(({ event }) => {
       const { method, section } = event;
       const alertOptions = { title: `${section}.${method}` };
@@ -63,7 +63,7 @@ const useProgramActions = () => {
         alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
 
         if (reject) reject();
-      } else if (method === Method.MessageEnqueued && resolve) resolve();
+      }
     });
   };
 
@@ -111,6 +111,8 @@ const useProgramActions = () => {
 
         return;
       }
+
+      if (resolve) resolve();
 
       if (isDevChain) {
         await uploadLocalProgram({ id: programId, name, owner: account?.decodedAddress! });
