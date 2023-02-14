@@ -54,7 +54,7 @@ export class MetaService {
     if(!code) throw new CodeNotFound();
 
     try {
-      const codeMetaHash = await getMetaHash(this.gearEventListener.api.program, code.id as HexString);
+      const codeMetaHash = await getMetaHash(this.gearEventListener.api.code, code.id as HexString);
       const hash = generateCodeHashByApi(metaHex as HexString);
 
       if(codeMetaHash && codeMetaHash !== hash) throw new InvalidCodeMetaHex();
