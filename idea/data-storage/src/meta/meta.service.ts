@@ -1,16 +1,22 @@
 import { HexString } from '@polkadot/util/types';
-import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { AddMetaByCodeParams, AddMetaParams, AddMetaResult } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
 
-import { CodeNotFound, InvalidCodeMetaHex, InvalidProgramMetaHex, ProgramNotFound } from '../common/errors';
+import {
+  CodeDoNotHaveMeta,
+  CodeNotFound,
+  InvalidCodeMetaHex,
+  InvalidProgramMetaHex,
+  ProgramDoNotHaveMeta,
+  ProgramNotFound,
+} from '../common/errors';
 import { Meta } from '../database/entities';
 import { MetaRepo } from './meta.repo';
 import { ProgramRepo } from '../program/program.repo';
 import { CreateMetaInput } from './types/create-meta.input';
 import { CodeRepo } from '../code/code.repo';
-import { generateCodeHashByApi, getMetaHash, getProgramMetadataByApi } from '../common/helpers';
-import { GearEventListener } from '../gear/gear-event-listener';
+import { generateCodeHashByApi, getProgramMetadataByApi } from '../common/helpers';
 import { ProgramService } from '../program/program.service';
 import { AddProgramMetaInput } from '../program/types';
 
@@ -22,8 +28,6 @@ export class MetaService {
     private programService: ProgramService,
     private metaRepository: MetaRepo,
     private codeRepository: CodeRepo,
-    @Inject(forwardRef(() => GearEventListener))
-    private gearEventListener: GearEventListener,
   ) {}
 
   public async getByHashOrCreate(hash: string): Promise<Meta> {
@@ -53,41 +57,40 @@ export class MetaService {
 
     if(!code) throw new CodeNotFound();
 
+    if(code.meta === null) throw new CodeDoNotHaveMeta();
+
     try {
-      const codeMetaHash = await getMetaHash(this.gearEventListener.api.code, code.id as HexString);
       const hash = generateCodeHashByApi(metaHex as HexString);
 
-      if(codeMetaHash && codeMetaHash !== hash) throw new InvalidCodeMetaHex();
+      if(code.meta.hash !== hash) throw new InvalidCodeMetaHex();
 
-      if(codeMetaHash) {
-        const meta = await this.metaRepository.getByHash(hash);
-        const metaData = getProgramMetadataByApi(metaHex as HexString);
+      const meta = await this.metaRepository.getByHash(hash);
+      const metaData = getProgramMetadataByApi(metaHex as HexString);
 
-        if(meta) {
-          const updateMeta = plainToClass(Meta, { ...meta, hex: metaHex, types: metaData.types });
+      if(meta) {
+        const updateMeta = plainToClass(Meta, { ...meta, hex: metaHex, types: metaData.types });
 
-          code.meta = await this.metaRepository.save(updateMeta);
-          code.name = name;
+        code.meta = await this.metaRepository.save(updateMeta);
+        code.name = name;
 
-          const addProgramsMeta: AddProgramMetaInput = { name, meta };
+        const addProgramsMeta: AddProgramMetaInput = { name, meta };
 
-          await Promise.all([
-            this.codeRepository.save([code]),
-            this.programService.addProgramsMetaByCode(codeId, genesis, addProgramsMeta)
-          ]);
-        } else {
-          const createMetaInput: CreateMetaInput = { hex: metaHex, hash, types: metaData.types };
-          const createMeta = await this.createMeta(createMetaInput);
-          code.meta = createMeta;
-          code.name = name;
+        await Promise.all([
+          this.codeRepository.save([code]),
+          this.programService.addProgramsMetaByCode(codeId, genesis, addProgramsMeta)
+        ]);
+      } else {
+        const createMetaInput: CreateMetaInput = { hex: metaHex, hash, types: metaData.types };
+        const createMeta = await this.createMeta(createMetaInput);
+        code.meta = createMeta;
+        code.name = name;
 
-          const addProgramsMeta: AddProgramMetaInput = { name, meta: createMeta };
+        const addProgramsMeta: AddProgramMetaInput = { name, meta: createMeta };
 
-          await Promise.all([
-            this.codeRepository.save([code]),
-            this.programService.addProgramsMetaByCode(codeId, genesis, addProgramsMeta)
-          ]);
-        }
+        await Promise.all([
+          this.codeRepository.save([code]),
+          this.programService.addProgramsMetaByCode(codeId, genesis, addProgramsMeta)
+        ]);
       }
     } catch (error) {
       this.logger.error(error);
@@ -103,14 +106,13 @@ export class MetaService {
 
     if (!program) throw new ProgramNotFound();
 
+    if(program.meta === null) throw new ProgramDoNotHaveMeta();
+
     try {
-      const programMetaHash = await getMetaHash(this.gearEventListener.api.program, program.id as HexString);
       const hash = generateCodeHashByApi(metaHex as HexString);
 
-      if(programMetaHash && hash !== programMetaHash) throw new InvalidProgramMetaHex();
+      if(program.meta.hash !== hash) throw new InvalidCodeMetaHex();
 
-
-      this.validateProgramMetaHex(program.meta, hash);
       const metaData = getProgramMetadataByApi(metaHex as HexString);
       const meta = await this.metaRepository.getByHash(hash);
 
@@ -126,16 +128,11 @@ export class MetaService {
         this.metaRepository.save(updateMeta),
         this.programRepository.save([program])
       ]);
-
     } catch (error) {
       this.logger.error(error);
       throw new InvalidProgramMetaHex();
     }
 
     return { status: 'Metadata added' };
-  }
-
-  private validateProgramMetaHex(meta: Meta, hash: string): void {
-    if(meta.hash !== hash) throw new InvalidProgramMetaHex();
   }
 }

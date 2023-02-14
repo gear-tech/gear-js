@@ -7,3 +7,7 @@ export class CodeNotFound extends GearJsonRPCError {
 export class InvalidCodeMetaHex extends GearJsonRPCError {
   name = 'InvalidCodeMetaHex';
 }
+
+export class CodeDoNotHaveMeta extends GearJsonRPCError {
+  name = 'CodeDoNotHaveMeta';
+}
