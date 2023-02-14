@@ -1,3 +1,13 @@
+## 0.29.4
+
+_02/14/2023_
+
+https://github.com/gear-tech/gear-js/pull/1199
+
+### Changes
+
+- Add `gr_oom_panic` syscall
+
 ## 0.29.2
 
 _02/11/2023_
