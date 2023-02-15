@@ -8,7 +8,7 @@ import { MessageEntryPoint, MessageType, MessageReadReason } from '../../common/
 @Entity()
 export class Message extends BaseEntity implements IMessage {
   @PrimaryColumn()
-  public  id: string;
+  public id: string;
 
   @Index()
   @Column()
@@ -33,16 +33,16 @@ export class Message extends BaseEntity implements IMessage {
   @Column({ nullable: true })
   public processedWithPanic: boolean;
 
-  @Column({ type: 'enum', enum: MessageEntryPoint, nullable: true, default: null })
+  @Column({ type: 'string', nullable: true, default: null })
   public entry: MessageEntryPoint;
 
   @Column({ nullable: true })
   public expiration: number;
 
-  @Column({ type: 'enum', enum: MessageType, nullable: true, default: null })
+  @Column({ type: 'string', nullable: true, default: null })
   public type: MessageType;
 
-  @Column({ type: 'enum', enum: MessageReadReason, nullable: true, default: null })
+  @Column({ type: 'string', nullable: true, default: null })
   public readReason: MessageReadReason;
 
   @ManyToOne(() => Program, (program) => program.messages, {
