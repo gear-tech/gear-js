@@ -37,9 +37,9 @@ describe.skip('DebugMode', () => {
       code: readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_ping.opt.wasm')),
       gasLimit: 2_000_000_000,
     });
-    await sendTransaction(api.program.extrinsic, alice, 'MessageEnqueued');
+    await sendTransaction(api.program.extrinsic, alice, 'MessageQueued');
     api.message.send({ destination: programId, payload: 'PING', gasLimit: 2_000_000_000 });
-    await sendTransaction(api.message.extrinsic, alice, 'MessageEnqueued');
+    await sendTransaction(api.message.extrinsic, alice, 'MessageQueued');
     (await unsub)();
     expect(snapshots).toHaveLength(2);
     for (const snapshot of snapshots) {

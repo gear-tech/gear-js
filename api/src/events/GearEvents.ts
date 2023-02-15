@@ -4,7 +4,7 @@ import {
   CodeChangedData,
   DebugData,
   DebugModeData,
-  MessageEnqueuedData,
+  MessageQueuedData,
   MessageWaitedData,
   MessageWakenData,
   MessagesDispatchedData,
@@ -18,7 +18,7 @@ export interface GearEvent<D extends GenericEventData> extends GenericEvent {
   data: D;
 }
 
-export type MessageEnqueued = GearEvent<MessageEnqueuedData>;
+export type MessageQueued = GearEvent<MessageQueuedData>;
 
 export type UserMessageSent = GearEvent<UserMessageSentData>;
 

@@ -7,7 +7,7 @@ import {
   GearKeyring,
   GearTransaction,
   IGearEvent,
-  MessageEnqueued,
+  MessageQueued,
   MessageWaitedData,
   MessagesDispatched,
   UserMessageSent,
@@ -21,8 +21,8 @@ export const checkInit = (api: GearApi, programId: string) => {
     unsub = api.query.system.events((events) => {
       events.forEach(({ event }) => {
         switch (event.method) {
-          case 'MessageEnqueued':
-            const meEvent = event as MessageEnqueued;
+          case 'MessageQueued':
+            const meEvent = event as MessageQueued;
             if (meEvent.data.destination.eq(programId) && meEvent.data.entry.isInit) {
               messageId = meEvent.data.id.toHex();
             }
