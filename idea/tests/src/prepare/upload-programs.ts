@@ -64,7 +64,7 @@ export async function uploadPrograms(
       owner: uploadedProgram.source,
     };
   }
-  await sleep();
+  await sleep(5000);
   unsubMessagesDispatched();
   unsubUserMessageSent();
   unsubCodeChanged();
