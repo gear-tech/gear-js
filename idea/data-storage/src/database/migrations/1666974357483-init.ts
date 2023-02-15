@@ -75,7 +75,7 @@ export class init1666974357483 implements MigrationInterface {
             CREATE TYPE "public"."message_entry_enum" AS ENUM('init', 'handle', 'reply')
         `);
     await queryRunner.query(`
-            CREATE TYPE "public"."message_type_enum" AS ENUM('UserMessageSent', 'MessageQueued')
+            CREATE TYPE "public"."message_type_enum" AS ENUM('UserMessageSent', 'MessageEnqueued')
         `);
     await queryRunner.query(`
             CREATE TYPE "public"."message_readreason_enum" AS ENUM('OutOfRent', 'Claimed', 'Replied')
