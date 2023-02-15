@@ -1,5 +1,5 @@
 import { UnsubscribePromise } from '@polkadot/api/types';
-import { GearApi, MessageEnqueued, MessagesDispatched, ProgramChanged } from '@gear-js/api';
+import { GearApi, MessageQueued, MessagesDispatched, ProgramChanged } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 
 import { Method } from 'entities/explorer';
@@ -15,8 +15,8 @@ const waitForProgramInit = (api: GearApi, programId: string) => {
     unsubPromise = api.query.system.events((events) => {
       events.forEach(({ event }) => {
         switch (event.method) {
-          case Method.MessageEnqueued: {
-            const meEvent = event as MessageEnqueued;
+          case Method.MessageQueued: {
+            const meEvent = event as MessageQueued;
 
             if (meEvent.data.destination.eq(programId) && meEvent.data.entry.isInit) {
               messageId = meEvent.data.id.toHex();

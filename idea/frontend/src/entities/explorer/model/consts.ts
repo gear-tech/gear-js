@@ -8,7 +8,7 @@ enum Method {
   ProgramChanged = 'ProgramChanged',
   UserMessageSent = 'UserMessageSent',
   UserMessageRead = 'UserMessageRead',
-  MessageEnqueued = 'MessageEnqueued',
+  MessageQueued = 'MessageQueued',
   MessagesDispatched = 'MessagesDispatched',
   MessageWaited = 'MessageWaited',
   MessageWaken = 'MessageWaken',

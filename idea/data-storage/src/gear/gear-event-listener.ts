@@ -1,5 +1,5 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
-import { CodeChanged, GearApi, generateCodeHash, MessageEnqueued } from '@gear-js/api';
+import { CodeChanged, GearApi, generateCodeHash, MessageQueued } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
@@ -57,7 +57,7 @@ export class GearEventListener {
       const unsub = await this.listen();
 
       await new Promise((resolve) => {
-        this.api.on('error',  async (error) => {
+        this.api.on('error', async (error) => {
           await this.rabbitMQService.sendDeleteGenesis(this.genesis);
           changeStatus('gear');
           unsub();
@@ -168,7 +168,7 @@ export class GearEventListener {
     if (extrinsics.length >= 1) {
       for (const tx of extrinsics) {
         const foundEvent = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
-          this.api.events.gear.MessageEnqueued.is(event),
+          this.api.events.gear.MessageQueued.is(event),
         );
 
         if (!foundEvent) {
@@ -177,7 +177,7 @@ export class GearEventListener {
 
         const {
           data: { id, source, destination, entry },
-        } = foundEvent.event as MessageEnqueued;
+        } = foundEvent.event as MessageQueued;
 
         const [payload, value] = getPayloadAndValue(tx.args, tx.method.method);
 
@@ -213,7 +213,7 @@ export class GearEventListener {
     if (extrinsics.length >= 1) {
       for (const tx of extrinsics) {
         const foundEvent = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
-          this.api.events.gear.MessageEnqueued.is(event),
+          this.api.events.gear.MessageQueued.is(event),
         );
 
         if (!foundEvent) {
@@ -222,7 +222,7 @@ export class GearEventListener {
 
         const {
           data: { source, destination },
-        } = foundEvent.event as MessageEnqueued;
+        } = foundEvent.event as MessageQueued;
 
         const codeId = tx.method.method === 'uploadProgram' ? generateCodeHash(tx.args[0].toHex()) : tx.args[0].toHex();
         const code = await this.codeRepository.get(codeId, this.genesis);
@@ -235,7 +235,7 @@ export class GearEventListener {
           genesis: this.genesis,
         };
 
-        if(code && code['meta'] !== null) {
+        if (code && code['meta'] !== null) {
           createProgramInput.meta = code.meta;
         }
 
@@ -256,14 +256,18 @@ export class GearEventListener {
           this.api.events.gear.CodeChanged.is(event),
         );
 
-        if(!event) return;
+        if (!event) return;
 
-        const { data: { id } } = event.event as CodeChanged;
+        const {
+          data: { id },
+        } = event.event as CodeChanged;
         const codeId = event ? id.toHex() : generateCodeHash(tx.args[0].toHex());
         const metaHash = await getMetaHash(this.api.code, codeId);
 
         if (event) {
-          const { data: { change } } = event.event as CodeChanged;
+          const {
+            data: { change },
+          } = event.event as CodeChanged;
           const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
           const updateCodeInput = {
             id: codeId,
@@ -276,7 +280,7 @@ export class GearEventListener {
             meta: null,
           };
 
-          if(metaHash) {
+          if (metaHash) {
             updateCodeInput.meta = await this.metaService.getByHashOrCreate(metaHash);
           }
 

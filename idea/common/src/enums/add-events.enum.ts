@@ -1,5 +1,5 @@
 enum Keys {
-  MessageEnqueued = 'MessageEnqueued',
+  MessageQueued = 'MessageQueued',
   UserMessageSent = 'UserMessageSent',
   UserMessageRead = 'UserMessageRead',
   MessagesDispatched = 'MessagesDispatched',

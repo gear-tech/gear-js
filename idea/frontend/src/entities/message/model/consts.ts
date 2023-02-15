@@ -1,8 +1,8 @@
 enum Type {
-  MessageEnqueued = 'MessageEnqueued',
+  MessageQueued = 'MessageQueued',
   UserMessageSent = 'UserMessageSent',
 
-  // TODO: db entity has only MessageEnqueued and UserMessageSent values,
+  // TODO: db entity has only MessageQueued and UserMessageSent values,
   // do we need the rest?
 
   // CodeChanged = 'CodeChanged',
