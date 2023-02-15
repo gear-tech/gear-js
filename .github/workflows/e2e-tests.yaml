@@ -332,7 +332,7 @@ jobs:
 
       - name: Copy built programs
         run: |
-          cp api/test/programs/target/wasm32-unknown-unknown/release/test_meta* idea/test/wasm-test
+          cp api/test/programs/target/wasm32-unknown-unknown/release/test_meta* idea/tests/wasm-test
           cp api/test/programs/test-meta/meta.txt idea/tests/wasm-test/meta.txt
 
 
