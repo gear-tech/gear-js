@@ -66,7 +66,7 @@ export async function errorInvalidMetaHex(genesis: string, programId: string, he
     name: '',
   });
 
-  expect(response.error.message).to.equal('Invalid program meta hex');
+  expect(response.error.message).to.equal('Invalid meta hex');
   expect(response.error.code).to.equal(-32602);
 
   return true;
