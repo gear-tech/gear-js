@@ -311,10 +311,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install NodeJS 16.x
+      - name: Install NodeJS 18.x
         uses: actions/setup-node@v2.1.5
         with:
-          node-version: 16.x
+          node-version: 18.x
+
+      - name: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+        run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+
+      - name: 'Install: Nightly toolchain'
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          components: clippy, rustfmt
+          target: wasm32-unknown-unknown
+
+      - name: Build test programs
+        working-directory: api/test/programs
+        run: cargo build --release --locked
+
+      - name: Copy built programs
+        run: |
+          cp api/test/programs/target/wasm32-unknown-unknown/release/test_meta* idea/test/wasm-test
+          cp api/test/programs/test-meta/meta.txt idea/test/wasm-test/meta.txt
+
 
       - name: Prepare&Run Tests
         timeout-minutes: 7
@@ -324,6 +344,4 @@ jobs:
           WS_PROVIDER: ${{ secrets.WS_PROVIDER_URL_TEST }}
           WS_PROVIDER_VARA: ${{ secrets.WS_PROVIDER_VARA_URL_TEST }}
           TEST_ENV: ${{ secrets.TEST_ENV }}
-        run: |
-          YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
-          yarn test
+        run: yarn test
