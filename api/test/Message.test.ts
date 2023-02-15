@@ -38,7 +38,7 @@ describe('Gear Message', () => {
       metadata,
     ).programId;
     const status = checkInit(api, programId);
-    const transactionData = await sendTransaction(api.program, alice, 'MessageEnqueued');
+    const transactionData = await sendTransaction(api.program, alice, 'MessageQueued');
     expect(transactionData.destination).toBe(programId);
     expect(await status()).toBe('success');
   });
@@ -69,7 +69,7 @@ describe('Gear Message', () => {
 
       const waitForReply = api.message.listenToReplies(programId);
 
-      const transactionData = await sendTransaction(tx, alice, 'MessageEnqueued');
+      const transactionData = await sendTransaction(tx, alice, 'MessageQueued');
       expect(transactionData).toBeDefined();
 
       const reply = await waitForReply(transactionData.id);

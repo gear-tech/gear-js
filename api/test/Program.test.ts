@@ -49,7 +49,7 @@ describe('New Program', () => {
     const status = checkInit(api, program.programId);
     const waitForReply = api.message.listenToReplies(programId);
 
-    const transactionData = await sendTransaction(program.extrinsic, alice, 'MessageEnqueued');
+    const transactionData = await sendTransaction(program.extrinsic, alice, 'MessageQueued');
 
     expect(transactionData.destination).toBe(program.programId);
     expect(await status()).toBe('success');
@@ -78,7 +78,7 @@ describe('New Program', () => {
     const status = checkInit(api, programId);
     const waitForReply = api.message.listenToReplies(programId);
 
-    const transactionData = await sendTransaction(api.program, alice, 'MessageEnqueued');
+    const transactionData = await sendTransaction(api.program, alice, 'MessageQueued');
 
     expect(transactionData.destination).toBe(programId);
     expect(await status()).toBe('success');

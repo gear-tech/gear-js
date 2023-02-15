@@ -1,3 +1,13 @@
+## 0.29.5
+
+_02/14/2023_
+
+https://github.com/gear-tech/gear-js/pull/1201
+
+### Changes
+
+- Rename events, error and their enum variants accoriding to https://github.com/gear-tech/gear/pull/2163
+
 ## 0.29.4
 
 _02/14/2023_

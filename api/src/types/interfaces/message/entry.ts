@@ -1,7 +1,7 @@
 import { Enum, Null } from '@polkadot/types';
 import { MessageId } from '../ids';
 
-export interface Entry extends Enum {
+export interface MessageEntry extends Enum {
   isInit: boolean;
   isHandle: boolean;
   isReply: boolean;
@@ -12,4 +12,4 @@ export interface Entry extends Enum {
   asSignal: Null;
 }
 
-export type DispatchKind = Entry;
+export type DispatchKind = MessageEntry;
