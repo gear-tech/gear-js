@@ -9,25 +9,20 @@ export const JSONRPC_ERRORS = {
     code: -32602,
     message: 'Invalid params',
   },
-  InvalidProgramMetaHex: {
-    name: 'InvalidProgramMetaHex',
+  InvalidMetaHex: {
+    name: 'InvalidMetaHex',
     code: -32602,
-    message: 'Invalid program meta hex',
+    message: 'Invalid meta hex',
   },
-  InvalidCodeMetaHex: {
-    name: 'InvalidCodeMetaHex',
+  CodeHasNoMeta: {
+    name: 'CodeHasNoMeta',
     code: -32602,
-    message: 'Invalid code meta hex',
+    message: 'Unable to validate meta hash',
   },
-  CodeDoNotHaveMeta: {
-    name: 'CodeDoNotHaveMeta',
+  ProgramHasNoMeta: {
+    name: 'ProgramHasNoMeta',
     code: -32602,
-    message: 'Code do not have meta',
-  },
-  ProgramDoNotHaveMeta: {
-    name: 'ProgramDoNotHaveMeta',
-    code: -32602,
-    message: 'Program do not have meta',
+    message: 'Unable to validate meta hash',
   },
   InternalError: {
     name: 'InternalError',

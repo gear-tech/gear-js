@@ -16,9 +16,10 @@ import { MetaRepo } from './meta.repo';
 import { ProgramRepo } from '../program/program.repo';
 import { CreateMetaInput } from './types/create-meta.input';
 import { CodeRepo } from '../code/code.repo';
-import { generateCodeHashByApi, getProgramMetadataByApi } from '../common/helpers';
+import { _generateCodeHash, _getProgramMetadata } from '../common/helpers';
 import { ProgramService } from '../program/program.service';
 import { AddProgramMetaInput } from '../program/types';
+import { InvalidMetaHex } from '../common/errors/base';
 
 @Injectable()
 export class MetaService {
@@ -60,12 +61,12 @@ export class MetaService {
     if(code.meta === null) throw new CodeDoNotHaveMeta();
 
     try {
-      const hash = generateCodeHashByApi(metaHex as HexString);
+      const hash = _generateCodeHash(metaHex as HexString);
 
-      if(code.meta.hash !== hash) throw new InvalidCodeMetaHex();
+      if(code.meta.hash !== hash) throw new InvalidMetaHex();
 
       const meta = await this.metaRepository.getByHash(hash);
-      const metaData = getProgramMetadataByApi(metaHex as HexString);
+      const metaData = _getProgramMetadata(metaHex as HexString);
 
       if(meta) {
         const updateMeta = plainToClass(Meta, { ...meta, hex: metaHex, types: metaData.types });
@@ -109,11 +110,11 @@ export class MetaService {
     if(program.meta === null) throw new ProgramDoNotHaveMeta();
 
     try {
-      const hash = generateCodeHashByApi(metaHex as HexString);
+      const hash = _generateCodeHash(metaHex as HexString);
 
-      if(program.meta.hash !== hash) throw new InvalidCodeMetaHex();
+      if(program.meta.hash !== hash) throw new InvalidMetaHex();
 
-      const metaData = getProgramMetadataByApi(metaHex as HexString);
+      const metaData = _getProgramMetadata(metaHex as HexString);
       const meta = await this.metaRepository.getByHash(hash);
 
       const updateMeta = plainToClass(Meta, {
