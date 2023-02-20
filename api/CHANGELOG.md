@@ -1,3 +1,13 @@
+## 0.30.0
+
+_02/15/2023_
+
+https://github.com/gear-tech/gear-js/pull/1204
+
+### Changes
+
+- Bump `@polkadot/api` to `9.14.1`.
+
 ## 0.29.5
 
 _02/14/2023_
