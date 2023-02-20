@@ -8,8 +8,8 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@gear-js/api": "0.29.5",
-    "@polkadot/api": "9.11.1",
+    "@gear-js/api": "0.30.0",
+    "@polkadot/api": "9.14.1",
     "winston": "3.7.2"
   },
   "license": "ISC",
