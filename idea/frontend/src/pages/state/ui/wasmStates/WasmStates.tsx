@@ -1,6 +1,7 @@
 import { useForm } from '@mantine/form';
 import { Button, Input } from '@gear-js/ui';
 
+import { useChain } from 'hooks';
 import { IState } from 'pages/state/model';
 import { Box } from 'shared/ui/box';
 
@@ -34,6 +35,7 @@ const WasmStates = (props: Props) => {
     onUploadButtonClick,
   } = props;
 
+  const { isDevChain } = useChain();
   const { getInputProps, onSubmit } = useForm({ initialValues });
 
   const isAnyUploadedState = isStateRequestReady && uploadedStates.length > 0;
@@ -61,8 +63,9 @@ const WasmStates = (props: Props) => {
   return (
     <>
       <form className={styles.form} onSubmit={handleSearchSubmit}>
-        <Input type="search" placeholder="Search by function name" {...getInputProps('query')} />
+        <Input type="search" placeholder="Search by function name" {...getInputProps('query')} disabled={isDevChain} />
       </form>
+
       <div className={styles.wrapper}>
         {fileFunctions && (
           <Box className={styles.fileFunctions}>
@@ -84,14 +87,16 @@ const WasmStates = (props: Props) => {
           </Box>
         )}
 
-        <Box>
-          <h3 className={styles.heading}>Uploaded Functions</h3>
-          {isAnyUploadedState ? (
-            <ul className={styles.functions}>{getStateWasms()}</ul>
-          ) : (
-            <FunctionsPlaceholder isEmpty={isUploadedStatesListEmpty} />
-          )}
-        </Box>
+        {!isDevChain && (
+          <Box>
+            <h3 className={styles.heading}>Uploaded Functions</h3>
+            {isAnyUploadedState ? (
+              <ul className={styles.functions}>{getStateWasms()}</ul>
+            ) : (
+              <FunctionsPlaceholder isEmpty={isUploadedStatesListEmpty} />
+            )}
+          </Box>
+        )}
       </div>
     </>
   );

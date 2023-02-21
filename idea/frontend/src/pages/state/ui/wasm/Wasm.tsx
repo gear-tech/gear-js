@@ -7,7 +7,7 @@ import { OnChange } from 'react-final-form-listeners';
 import { FormApi } from 'final-form';
 
 import { addState, fetchState, fetchStates } from 'api';
-import { useStateRead } from 'hooks';
+import { useChain, useStateRead } from 'hooks';
 import { FileTypes } from 'shared/config';
 import { checkFileFormat, getPreformattedText, readFileAsync, resetFileInput } from 'shared/helpers';
 import { BackButton } from 'shared/ui/backButton';
@@ -21,13 +21,14 @@ import { WasmStates } from '../wasmStates';
 import styles from './Wasm.module.scss';
 
 const Wasm = () => {
+  const { isDevChain } = useChain();
   const alert = useAlert();
 
   const programId = useProgramId();
   const metadata = useMetadata(programId);
   const { state, isStateRead, isState, readWasmState, resetState } = useStateRead(programId);
 
-  const [isStateRequestReady, setIsStatesRequestReady] = useState(false);
+  const [isStateRequestReady, setIsStatesRequestReady] = useState(!!isDevChain);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File>();
@@ -79,6 +80,8 @@ const Wasm = () => {
   };
 
   useEffect(() => {
+    if (isDevChain) return;
+
     fetchStates(programId)
       .then(({ result }) => setUploadedStates(result.states))
       .catch(({ message }: Error) => alert.error(message))
@@ -88,12 +91,13 @@ const Wasm = () => {
   }, []);
 
   useEffect(() => {
-    if (uploadedStateId) {
-      fetchState(uploadedStateId)
-        .then(({ result }) => Buffer.from(result.wasmBuffBase64, 'base64'))
-        .then((buffer) => setUploadedWasmBuffer(buffer))
-        .catch(({ message }: Error) => alert.error(message));
-    }
+    if (!uploadedStateId) return;
+
+    fetchState(uploadedStateId)
+      .then(({ result }) => Buffer.from(result.wasmBuffBase64, 'base64'))
+      .then((buffer) => setUploadedWasmBuffer(buffer))
+      .catch(({ message }: Error) => alert.error(message));
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadedStateId]);
 
