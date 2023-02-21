@@ -101,7 +101,10 @@ export class MetaService {
 
   public async addMetaByProgram(params: AddMetaParams): Promise<AddMetaResult> {
     const { programId, genesis, metaHex, name } = params;
+    console.log('_______addMetaByProgramParams>', params);
     const program = await this.programRepository.getByIdAndGenesis(programId, genesis);
+
+    console.log('________Program',program);
 
     if (!program) throw new ProgramNotFound();
 

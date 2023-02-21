@@ -40,7 +40,6 @@ export class GearEventListener {
     private codeRepository: CodeRepo,
     private blockService: BlockService,
     private rabbitMQService: RabbitmqService,
-    @Inject(forwardRef(() => MetaService))
     private metaService: MetaService,
   ) {}
 
@@ -201,6 +200,7 @@ export class GearEventListener {
         );
       }
 
+      console.log('_____>createMessages', messages);
       await this.messageService.createMessages(messages);
     }
   }
@@ -241,6 +241,8 @@ export class GearEventListener {
 
         programs.push(createProgramInput);
       }
+
+      console.log('_____>createPrograms', programs);
       await this.programService.createPrograms(programs);
     }
   }
@@ -288,6 +290,7 @@ export class GearEventListener {
         }
       }
 
+      console.log('_____>updateCodes', codes);
       await this.codeService.updateCodes(codes);
     }
   }
