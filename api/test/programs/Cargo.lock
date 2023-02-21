@@ -288,7 +288,7 @@ dependencies = [
 [[package]]
 name = "galloc"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#67d856fe75939cd7b1bd494791a1c77199f8f1e5"
+source = "git+https://github.com/gear-tech/gear.git#f21c1f634496a0584ba04ec1b296a526673b2f52"
 dependencies = [
  "dlmalloc",
 ]
@@ -296,7 +296,7 @@ dependencies = [
 [[package]]
 name = "gcore"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#67d856fe75939cd7b1bd494791a1c77199f8f1e5"
+source = "git+https://github.com/gear-tech/gear.git#f21c1f634496a0584ba04ec1b296a526673b2f52"
 dependencies = [
  "gear-core-errors",
  "gsys",
@@ -307,7 +307,7 @@ dependencies = [
 [[package]]
 name = "gear-core-errors"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#67d856fe75939cd7b1bd494791a1c77199f8f1e5"
+source = "git+https://github.com/gear-tech/gear.git#f21c1f634496a0584ba04ec1b296a526673b2f52"
 dependencies = [
  "derive_more",
  "enum-iterator",
@@ -318,7 +318,7 @@ dependencies = [
 [[package]]
 name = "gear-wasm-builder"
 version = "0.1.2"
-source = "git+https://github.com/gear-tech/gear.git#67d856fe75939cd7b1bd494791a1c77199f8f1e5"
+source = "git+https://github.com/gear-tech/gear.git#f21c1f634496a0584ba04ec1b296a526673b2f52"
 dependencies = [
  "anyhow",
  "cargo_metadata",
@@ -335,7 +335,7 @@ dependencies = [
 [[package]]
 name = "gmeta"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#67d856fe75939cd7b1bd494791a1c77199f8f1e5"
+source = "git+https://github.com/gear-tech/gear.git#f21c1f634496a0584ba04ec1b296a526673b2f52"
 dependencies = [
  "blake2-rfc",
  "gmeta-codegen",
@@ -347,7 +347,7 @@ dependencies = [
 [[package]]
 name = "gmeta-codegen"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#67d856fe75939cd7b1bd494791a1c77199f8f1e5"
+source = "git+https://github.com/gear-tech/gear.git#f21c1f634496a0584ba04ec1b296a526673b2f52"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -357,7 +357,7 @@ dependencies = [
 [[package]]
 name = "gstd"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#67d856fe75939cd7b1bd494791a1c77199f8f1e5"
+source = "git+https://github.com/gear-tech/gear.git#f21c1f634496a0584ba04ec1b296a526673b2f52"
 dependencies = [
  "bs58",
  "futures",
@@ -376,7 +376,7 @@ dependencies = [
 [[package]]
 name = "gstd-codegen"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#67d856fe75939cd7b1bd494791a1c77199f8f1e5"
+source = "git+https://github.com/gear-tech/gear.git#f21c1f634496a0584ba04ec1b296a526673b2f52"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -386,7 +386,7 @@ dependencies = [
 [[package]]
 name = "gsys"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#67d856fe75939cd7b1bd494791a1c77199f8f1e5"
+source = "git+https://github.com/gear-tech/gear.git#f21c1f634496a0584ba04ec1b296a526673b2f52"
 
 [[package]]
 name = "hashbrown"

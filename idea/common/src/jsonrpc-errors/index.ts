@@ -9,15 +9,20 @@ export const JSONRPC_ERRORS = {
     code: -32602,
     message: 'Invalid params',
   },
-  InvalidProgramMetaHex: {
-    name: 'InvalidProgramMetaHex',
+  InvalidMetaHex: {
+    name: 'InvalidMetaHex',
     code: -32602,
-    message: 'Invalid program meta hex',
+    message: 'Invalid meta hex',
   },
-  InvalidCodeMetaHex: {
-    name: 'InvalidCodeMetaHex',
+  CodeHasNoMeta: {
+    name: 'CodeHasNoMeta',
     code: -32602,
-    message: 'Invalid code meta hex',
+    message: 'Unable to validate meta hash',
+  },
+  ProgramHasNoMeta: {
+    name: 'ProgramHasNoMeta',
+    code: -32602,
+    message: 'Unable to validate meta hash',
   },
   InternalError: {
     name: 'InternalError',
@@ -53,6 +58,11 @@ export const JSONRPC_ERRORS = {
     name: 'MessageNotFound',
     code: -32404,
     message: 'Message not found',
+  },
+  CodeNotFound: {
+    name: 'CodeNotFound',
+    code: -32404,
+    message: 'Code not found',
   },
   MetadataNotFound: {
     name: 'MetadataNotFound',
