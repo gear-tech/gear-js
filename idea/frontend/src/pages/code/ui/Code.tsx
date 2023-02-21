@@ -5,7 +5,7 @@ import { HexString } from '@polkadot/util/types';
 import { generatePath, useParams } from 'react-router-dom';
 
 import { addCodeMetadata } from 'api';
-import { useDataLoading, useModal, usePrograms } from 'hooks';
+import { useChain, useDataLoading, useModal, usePrograms } from 'hooks';
 import { BackButton } from 'shared/ui/backButton';
 import { absoluteRoutes } from 'shared/config';
 import { UILink } from 'shared/ui/uiLink';
@@ -24,6 +24,7 @@ type Params = { codeId: HexString };
 
 const Code = () => {
   const { codeId } = useParams() as Params;
+  const { isDevChain } = useChain();
   const alert = useAlert();
 
   const { showModal, closeModal } = useModal();
@@ -78,7 +79,7 @@ const Code = () => {
           size="large"
         />
 
-        {isMetadataReady && !metadata && (
+        {!isDevChain && isMetadataReady && !metadata && (
           <Button text="Add metadata" icon={AddMetaSVG} color="light" size="large" onClick={showUploadMetadataModal} />
         )}
 

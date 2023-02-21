@@ -5,14 +5,18 @@ import { useState, useEffect } from 'react';
 
 import { fetchCodeMetadata } from 'api';
 import { RPCError, RPCErrorCode } from 'shared/services/rpcService';
+import { useChain } from 'hooks';
 
 const useMetadata = (codeId: HexString) => {
   const alert = useAlert();
+  const { isDevChain } = useChain();
 
   const [metadata, setMetadata] = useState<ProgramMetadata>();
-  const [isMetadataReady, setIsMetadataReady] = useState(false);
+  const [isMetadataReady, setIsMetadataReady] = useState(isDevChain);
 
   useEffect(() => {
+    if (isDevChain) return;
+
     fetchCodeMetadata(codeId)
       .then(({ result }) => setMetadata(getProgramMetadata(result.hex)))
       .catch(({ message, code }: RPCError) => {

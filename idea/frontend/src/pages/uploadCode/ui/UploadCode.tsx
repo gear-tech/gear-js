@@ -2,7 +2,7 @@ import { Button, FileInput, Input } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 import { useEffect } from 'react';
 
-import { useCodeUpload, useMetaOnUpload } from 'hooks';
+import { useChain, useCodeUpload, useMetaOnUpload } from 'hooks';
 import { isExists } from 'shared/helpers';
 import { Box } from 'shared/ui/box';
 import { Subheader } from 'shared/ui/subheader';
@@ -29,6 +29,7 @@ const UploadCode = () => {
 
   const { getInputProps, onSubmit, reset } = useForm({ initialValues, validate: metadata.hex ? validate : undefined });
 
+  const { isDevChain } = useChain();
   const uploadCode = useCodeUpload();
 
   const resetForm = () => {
@@ -62,16 +63,18 @@ const UploadCode = () => {
           </Box>
         </div>
 
-        <div>
-          <Subheader size="big" title="Add metadata" />
-          <UploadMetadata
-            metadata={metadata.value}
-            isInputDisabled={!!metadata.isUploaded}
-            isLoading={!isUploadedMetaReady}
-            onUpload={setFileMetadata}
-            onReset={resetMetadata}
-          />
-        </div>
+        {!isDevChain && (
+          <div>
+            <Subheader size="big" title="Add metadata" />
+            <UploadMetadata
+              metadata={metadata.value}
+              isInputDisabled={!!metadata.isUploaded}
+              isLoading={!isUploadedMetaReady}
+              onUpload={setFileMetadata}
+              onReset={resetMetadata}
+            />
+          </div>
+        )}
       </div>
 
       <div className={styles.buttons}>
