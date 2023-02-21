@@ -1,6 +1,6 @@
 import { ReactNode, useMemo } from 'react';
 
-import { NODE_ADDRESS } from 'shared/config';
+import { LocalStorage, NODE_ADDRESS } from 'shared/config';
 
 import { getNodeAddressFromUrl } from './helpers';
 import { AppContext } from './Context';
@@ -11,9 +11,7 @@ type Props = {
 
 const AppProvider = ({ children }: Props) => {
   const values = useMemo(
-    () => ({
-      nodeAddress: getNodeAddressFromUrl() || NODE_ADDRESS,
-    }),
+    () => ({ nodeAddress: getNodeAddressFromUrl() || localStorage[LocalStorage.Node] || NODE_ADDRESS }),
     [],
   );
 

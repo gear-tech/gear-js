@@ -12,7 +12,7 @@ interface IMessage {
   expiration?: number | null;
 }
 
-interface IMessageEnqueuedData {
+interface IMessageQueuedData {
   id: string;
   destination: string;
   source: string;
@@ -35,4 +35,4 @@ interface UpdateMessageData {
   value: string;
 }
 
-export { IMessage, IMessageEnqueuedData, IMessagesDispatchedData, IUserMessageReadData, UpdateMessageData };
+export { IMessage, IMessageQueuedData, IMessagesDispatchedData, IUserMessageReadData, UpdateMessageData };

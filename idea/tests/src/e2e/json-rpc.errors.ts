@@ -45,6 +45,19 @@ export async function errorProgramNotFound(genesis: string): Promise<Passed> {
   return true;
 }
 
+export async function errorCodeNotFound(genesis: string): Promise<Passed> {
+  const invalidCodeAddress = '0x00';
+  const response = await request('code.data', {
+    genesis,
+    id: invalidCodeAddress
+  });
+
+  expect(response.error.message).to.equal('Code not found');
+  expect(response.error.code).to.equal(-32404);
+
+  return true;
+}
+
 export async function errorMessageNotFound(genesis: string): Promise<Passed> {
   const invalidMessageId = '0x00';
   const response = await request('message.data', {

@@ -137,32 +137,32 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-node:dev
 
-  build-and-push-gear-vara-node-image:
-    if: github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
-    needs: [wait-previous-run]
-    environment: dev
-    permissions:
-      contents: read
-      packages: write
+#  build-and-push-gear-vara-node-image:
+#    if: github.event.pull_request.draft == false
+#    runs-on: ubuntu-latest
+#    needs: [wait-previous-run]
+#    environment: dev
+#    permissions:
+#      contents: read
+#      packages: write
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v2
 
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Log in to the github container registry
+#        uses: docker/login-action@master
+#        with:
+#          registry: ${{ env.REGISTRY }}
+#          username: ${{ github.actor }}
+#          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Data Storage Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: k8s/vara-node/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-node:dev
+#      - name: Build and push Data Storage Docker image
+#        uses: docker/build-push-action@master
+#        with:
+#          file: k8s/vara-node/Dockerfile
+#          push: true
+#          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-node:dev
 
   build-and-push-data-storage-image:
     if: github.event.pull_request.draft == false
@@ -252,7 +252,6 @@ jobs:
         build-and-push-data-storage-image,
         build-and-push-api-gateway-image,
         build-and-push-test-balance-image,
-        build-and-push-gear-vara-node-image,
         build-and-push-gear-node-image,
         wait-previous-run,
       ]
@@ -311,10 +310,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install NodeJS 16.x
+      - name: Install NodeJS 18.x
         uses: actions/setup-node@v2.1.5
         with:
-          node-version: 16.x
+          node-version: 18.x
+
+      - name: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+        run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+
+      - name: 'Install: Nightly toolchain'
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          components: clippy, rustfmt
+          target: wasm32-unknown-unknown
+
+      - name: Build test programs
+        working-directory: api/test/programs
+        run: cargo build --release --locked
+
+      - name: Copy built programs
+        run: |
+          cp api/test/programs/target/wasm32-unknown-unknown/release/test_meta* idea/tests/wasm-test
+          cp api/test/programs/test-meta/meta.txt idea/tests/wasm-test/meta.txt
+
 
       - name: Prepare&Run Tests
         timeout-minutes: 7
@@ -324,6 +343,4 @@ jobs:
           WS_PROVIDER: ${{ secrets.WS_PROVIDER_URL_TEST }}
           WS_PROVIDER_VARA: ${{ secrets.WS_PROVIDER_VARA_URL_TEST }}
           TEST_ENV: ${{ secrets.TEST_ENV }}
-        run: |
-          YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
-          yarn test
+        run: yarn test

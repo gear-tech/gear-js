@@ -6,8 +6,6 @@ import { plainToClass } from 'class-transformer';
 import {
   CodeDoNotHaveMeta,
   CodeNotFound,
-  InvalidCodeMetaHex,
-  InvalidProgramMetaHex,
   ProgramDoNotHaveMeta,
   ProgramNotFound,
 } from '../common/errors';
@@ -95,7 +93,7 @@ export class MetaService {
       }
     } catch (error) {
       this.logger.error(error);
-      throw new InvalidCodeMetaHex();
+      throw new InvalidMetaHex();
     }
 
     return { status: 'Metadata added' };
@@ -131,7 +129,7 @@ export class MetaService {
       ]);
     } catch (error) {
       this.logger.error(error);
-      throw new InvalidProgramMetaHex();
+      throw new InvalidMetaHex();
     }
 
     return { status: 'Metadata added' };

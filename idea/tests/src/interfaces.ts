@@ -2,7 +2,7 @@ import { HexString } from '@polkadot/util/types';
 
 type Account = 'alice' | 'bob';
 
-export interface HumanMessageEnqueuedData {
+export interface HumanMessageQueuedData {
   id: HexString;
   destination: HexString;
   source: HexString;
@@ -48,7 +48,7 @@ interface ICodeSpec {
 interface IState {
   id: string;
   name: string;
-  functions: object
+  functions: object;
 }
 
 interface IPreparedPrograms {
@@ -63,7 +63,7 @@ interface IPreparedProgram {
 }
 
 interface IPreparedMessages {
-  sent: Map<number, HumanMessageEnqueuedData>;
+  sent: Map<number, HumanMessageQueuedData>;
   log: Map<HexString, any>;
 }
 
@@ -87,5 +87,5 @@ export {
   IPreparedMessages,
   IPrepared,
   IPreparedCollectionCode,
-  IState
+  IState,
 };

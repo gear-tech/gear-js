@@ -76,7 +76,7 @@ const TopSide = () => {
   const btnClasses = clsx(buttonStyles.button, buttonStyles.medium, buttonStyles.noText, styles.testBalanceBtn);
 
   const handleTransferBalanceSubmit = (to: string, value: number) => {
-    if (!account) return;
+    if (!account || !address) return;
 
     const { source } = account.meta;
 

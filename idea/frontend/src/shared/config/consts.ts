@@ -30,6 +30,7 @@ const PROGRAM_ERRORS = {
 };
 
 enum LocalStorage {
+  Node = 'node',
   Nodes = 'nodes',
   Account = 'account',
   Genesis = 'genesis',

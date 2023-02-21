@@ -59,6 +59,11 @@ export const JSONRPC_ERRORS = {
     code: -32404,
     message: 'Message not found',
   },
+  CodeNotFound: {
+    name: 'CodeNotFound',
+    code: -32404,
+    message: 'Code not found',
+  },
   MetadataNotFound: {
     name: 'MetadataNotFound',
     code: -32404,

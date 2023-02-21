@@ -26,7 +26,7 @@ const useMessageActions = () => {
         alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
 
         if (reject) reject();
-      } else if (method === Method.MessageEnqueued) {
+      } else if (method === Method.MessageQueued) {
         alert.success('Success', alertOptions);
 
         if (resolve) resolve();

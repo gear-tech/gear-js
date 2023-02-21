@@ -19,7 +19,7 @@ export async function processPrepare(api: GearApi): Promise<IPrepared> {
   const collectionCode = load(readFileSync('./spec/collection-code.yaml', 'utf8')) as { [key: string]: ICodeSpec[] };
   const uploadedCollectionCode = await uploadCollectionCode(api ,collectionCode);
   collectionCodeChanged.forEach((value, key) => uploadedCollectionCode.set(key, value));
-  await sleep(30_000);
+  await sleep(40_000);
 
   return { programs: uploadedPrograms, messages: sentMessages, collectionCode: uploadedCollectionCode };
 }
