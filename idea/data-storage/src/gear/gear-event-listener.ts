@@ -225,7 +225,10 @@ export class GearEventListener {
         } = foundEvent.event as MessageQueued;
 
         const codeId = tx.method.method === 'uploadProgram' ? generateCodeHash(tx.args[0].toHex()) : tx.args[0].toHex();
+        console.log('________>ProgramCodeId', codeId);
         const code = await this.codeRepository.get(codeId, this.genesis);
+
+        console.log('________>ProgramCode', code);
         const createProgramInput: CreateProgramInput = {
           owner: source.toHex(),
           id: destination.toHex(),
