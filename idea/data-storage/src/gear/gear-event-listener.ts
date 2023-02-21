@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CodeChanged, GearApi, generateCodeHash, MessageQueued } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { filterEvents } from '@polkadot/api/util';
@@ -290,29 +290,6 @@ export class GearEventListener {
           }
 
           codes.push(updateCodeInput);
-        } else {
-          const codeId = generateCodeHash(tx.args[0].toHex());
-          const code = await this.codeRepository.get(codeId, this.genesis);
-
-          if (!code) {
-            const metaHash = await getMetaHash(this.api.code, codeId);
-            const updateCodeInput = {
-              id: codeId,
-              genesis: this.genesis,
-              status: CodeStatus.ACTIVE,
-              timestamp,
-              blockHash: block.createdAtHash.toHex(),
-              expiration: null,
-              uploadedBy: tx.signer.inner.toHex(),
-              meta: null,
-            };
-
-            if (metaHash) {
-              updateCodeInput.meta = await this.metaService.getByHashOrCreate(metaHash);
-            }
-
-            codes.push(updateCodeInput);
-          }
         }
       }
 
