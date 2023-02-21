@@ -2,3 +2,4 @@ wasm/
 .env
 dist/
 .yarn/
+wasm-test/*
