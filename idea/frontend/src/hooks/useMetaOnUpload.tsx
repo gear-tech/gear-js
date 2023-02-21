@@ -9,6 +9,7 @@ import { readFileAsync } from 'shared/helpers';
 import { RPCError, RPCErrorCode } from 'shared/services/rpcService';
 import { CustomLink } from 'shared/ui/customLink';
 import { routes } from 'shared/config';
+import { useChain } from './context';
 
 type MetadataState = {
   value: ProgramMetadata | undefined;
@@ -33,6 +34,7 @@ const getCodeExistsAlert = (codeId: HexString) => (
 
 const useMetaOnUpload = (isCode?: boolean) => {
   const { api } = useApi();
+  const { isDevChain } = useChain();
   const alert = useAlert();
 
   const { state } = useLocation();
@@ -93,7 +95,7 @@ const useMetaOnUpload = (isCode?: boolean) => {
   useEffect(() => {
     const isCodeCheckReady = isCodeExists !== undefined;
 
-    if (!optBuffer || (isCode && !isCodeCheckReady) || isCodeExists) return;
+    if (!optBuffer || (isCode && !isCodeCheckReady) || isCodeExists || isDevChain) return;
 
     setIsUploadedMetaReady(false);
 
