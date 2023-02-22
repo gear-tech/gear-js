@@ -263,13 +263,13 @@ export class GearEventListener {
 
         // if (!event) return;
 
-        const {
-          data: { id },
-        } = event.event as CodeChanged;
-        const codeId = event ? id.toHex() : generateCodeHash(tx.args[0].toHex());
-        const metaHash = await getMetaHash(this.api.code, codeId);
-
         if (event) {
+          const {
+            data: { id },
+          } = event.event as CodeChanged;
+          const codeId = event ? id.toHex() : generateCodeHash(tx.args[0].toHex());
+          const metaHash = await getMetaHash(this.api.code, codeId);
+
           const {
             data: { change },
           } = event.event as CodeChanged;
