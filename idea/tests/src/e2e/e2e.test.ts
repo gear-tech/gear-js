@@ -26,6 +26,7 @@ import { getCodeData, getCodes, getCodesByDates } from './code';
 import { networkDataAvailable } from './network-data-available';
 import { blocksStatus } from './block';
 import {
+  errorCodeNotFound,
   errorInvalidMetaHex,
   errorInvalidParams,
   errorMessageNotFound, errorMetaNotFound,
@@ -254,6 +255,10 @@ describe('API methods', () => {
 
     test('error program not found', async () => {
       expect(await errorProgramNotFound(genesis)).toBeTruthy();
+    });
+
+    test('error code not found', async () => {
+      expect(await errorCodeNotFound(genesis)).toBeTruthy();
     });
 
     test('error message not found', async () => {

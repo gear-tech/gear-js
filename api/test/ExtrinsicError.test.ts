@@ -30,7 +30,7 @@ describe('Get extrinsic errors', () => {
       });
     });
     expect(error.docs.join(' ')).toBe('Failed to create a program.');
-    expect(error.method).toBe('FailedToConstructProgram');
-    expect(error.name).toBe('FailedToConstructProgram');
+    expect(error.method).toBe('ProgramConstructionFailed');
+    expect(error.name).toBe('ProgramConstructionFailed');
   });
 });

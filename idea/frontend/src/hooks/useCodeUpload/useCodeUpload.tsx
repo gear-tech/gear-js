@@ -6,10 +6,11 @@ import { useApi, useAlert, useAccount, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OP
 
 import { useModal } from 'hooks';
 import { Method } from 'entities/explorer';
-import { checkWallet, readFileAsync, getExtrinsicFailedMessage } from 'shared/helpers';
+import { checkWallet, getExtrinsicFailedMessage } from 'shared/helpers';
 import { PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'shared/config';
 import { CopiedInfo } from 'shared/ui/copiedInfo';
 
+import { addCodeMetadata } from 'api';
 import { ParamsToUploadCode, ParamsToSignAndSend } from './types';
 
 const useCodeUpload = () => {
@@ -18,16 +19,19 @@ const useCodeUpload = () => {
   const { account } = useAccount();
   const { showModal } = useModal();
 
-  const submit = async (file: File) => {
-    const arrayBuffer = await readFileAsync(file, 'buffer');
-    const buffer = Buffer.from(arrayBuffer);
+  const submit = async (optBuffer: Buffer) => {
+    const { codeHash } = await api.code.upload(optBuffer);
 
-    const result = await api.code.upload(buffer);
-
-    return result.codeHash;
+    return codeHash;
   };
 
-  const handleEventsStatus = (events: EventRecord[], codeHash: HexString) => {
+  const handleEventsStatus = (
+    events: EventRecord[],
+    codeHash: HexString,
+    metaHex: HexString | undefined,
+    name: string,
+    resolve?: () => void,
+  ) => {
     events.forEach(({ event }) => {
       const { method, section } = event;
       const alertOptions = { title: `${section}.${method}` };
@@ -36,11 +40,18 @@ const useCodeUpload = () => {
         alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
       } else if (method === Method.CodeChanged) {
         alert.success(<CopiedInfo title="Code hash" info={codeHash} />, alertOptions);
+
+        if (resolve) resolve();
+
+        if (metaHex)
+          addCodeMetadata({ codeId: codeHash, metaHex, name })
+            .then(() => alert.success('Metadata saved successfully'))
+            .catch(({ message }: Error) => alert.error(message));
       }
     });
   };
 
-  const signAndSend = async ({ signer, codeHash }: ParamsToSignAndSend) => {
+  const signAndSend = async ({ signer, codeId, metaHex, name, resolve }: ParamsToSignAndSend) => {
     const alertId = alert.loading('SignIn', { title: TransactionName.SubmitCode });
 
     try {
@@ -49,7 +60,7 @@ const useCodeUpload = () => {
           alert.update(alertId, TransactionStatus.Ready);
         } else if (status.isInBlock) {
           alert.update(alertId, TransactionStatus.InBlock);
-          handleEventsStatus(events, codeHash);
+          handleEventsStatus(events, codeId, metaHex, name, resolve);
         } else if (status.isFinalized) {
           alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
         } else if (status.isInvalid) {
@@ -64,17 +75,17 @@ const useCodeUpload = () => {
   };
 
   const uploadCode = useCallback(
-    async ({ file }: ParamsToUploadCode) => {
+    async ({ optBuffer, name, metaHex, resolve }: ParamsToUploadCode) => {
       try {
         checkWallet(account);
 
         const { address, meta } = account!;
 
-        const [codeHash, { signer }] = await Promise.all([submit(file), web3FromSource(meta.source)]);
+        const [codeId, { signer }] = await Promise.all([submit(optBuffer), web3FromSource(meta.source)]);
 
         const { partialFee } = await api.code.paymentInfo(address, { signer });
 
-        const handleConfirm = () => signAndSend({ signer, codeHash });
+        const handleConfirm = () => signAndSend({ signer, name, codeId, metaHex, resolve });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),

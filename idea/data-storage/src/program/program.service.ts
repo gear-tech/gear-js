@@ -10,7 +10,7 @@ import {
 
 import { MetadataNotFound, ProgramNotFound } from '../common/errors';
 import { Meta, Program } from '../database/entities';
-import { CreateProgramInput } from './types';
+import { AddProgramMetaInput, CreateProgramInput } from './types';
 import { ProgramRepo } from './program.repo';
 import { ProgramStatus } from '../common/enums';
 
@@ -27,9 +27,14 @@ export class ProgramService {
     };
   }
 
-  public async addProgramsMetaByCode(codeId: string, genesis: string, meta: Meta): Promise<Program[]> {
+  public async addProgramsMetaByCode(
+    codeId: string,
+    genesis: string,
+    addProgramMetaInput :AddProgramMetaInput,
+  ): Promise<Program[]> {
     const programs = await this.programRepository.listByCodeIdAndGenesis(codeId, genesis);
-    const updatePrograms = programs.map(program => ({ ...program, meta }));
+    const { name, meta } = addProgramMetaInput;
+    const updatePrograms = programs.map(program => ({ ...program, meta, name }));
 
     return this.programRepository.save(updatePrograms);
   }

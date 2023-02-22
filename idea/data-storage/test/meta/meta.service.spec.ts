@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { AddMetaParams } from '@gear-js/common';
+import { AddMetaByCodeParams, AddMetaParams } from '@gear-js/common';
 
 import { ProgramRepo } from '../../src/program/program.repo';
 
@@ -11,8 +11,8 @@ import { MetaService } from '../../src/meta/meta.service';
 import { MetaRepo } from '../../src/meta/meta.repo';
 import { mockMetadataRepository } from '../mock/metadata/metadata-repository.mock';
 import { METADATA_DB_MOCK } from '../mock/metadata/metadata-db.mock';
-import { GearEventListener } from '../../src/gear/gear-event-listener';
 import { ProgramService } from '../../src/program/program.service';
+import { CODE_DB_MOCK } from '../mock/code/code-db.mock';
 
 
 describe('Meta service', () => {
@@ -30,10 +30,6 @@ describe('Meta service', () => {
           useFactory: () => mockProgramRepository,
         },
         {
-          provide: GearEventListener,
-          useFactory: () => {},
-        },
-        {
           provide: CodeRepo,
           useFactory: () => mockCodeRepository,
         },
@@ -45,10 +41,48 @@ describe('Meta service', () => {
     metaService = moduleRef.get<MetaService>(MetaService);
   });
 
+  it('should successfully add metadata code', async () => {
+    const mockProgram = CODE_DB_MOCK[0];
+
+    const addMetaParams: AddMetaByCodeParams = {
+      name: 'name',
+      genesis: mockProgram.genesis,
+      codeId: mockProgram.id,
+      metaHex: 'hex',
+    };
+
+    const res = await metaService.addMetaByCode(addMetaParams);
+
+
+    expect(res.status).toEqual('Metadata added');
+    expect(mockMetadataRepository.save).toHaveBeenCalled();
+    expect(mockCodeRepository.save).toHaveBeenCalled();
+  });
+
+  it('should fail add meta code if code id invalid', async () => {
+    const mockProgram = CODE_DB_MOCK[0];
+    const invalidCodeId = '_';
+
+    const addMetaParams: AddMetaByCodeParams = {
+      name: 'name',
+      genesis: mockProgram.genesis,
+      codeId: invalidCodeId,
+      metaHex: 'hex',
+    };
+
+    await expect(metaService.addMetaByCode(addMetaParams)).rejects.toThrowError();
+    expect(mockCodeRepository.get).toHaveBeenCalled();
+  });
+
   it('should successfully add metadata program', async () => {
     const mockProgram = PROGRAM_DB_MOCK[0];
 
-    const addMetaParams: AddMetaParams = { name: 'name', genesis: mockProgram.genesis, programId: mockProgram.id, metaHex: 'hex' };
+    const addMetaParams: AddMetaParams = {
+      name: 'name',
+      genesis: mockProgram.genesis,
+      programId: mockProgram.id,
+      metaHex: 'hex',
+    };
 
     const res = await metaService.addMetaByProgram(addMetaParams);
 

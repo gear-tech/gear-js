@@ -2,7 +2,7 @@ import {
   CodeChanged,
   DebugDataSnapshot,
   DebugMode,
-  MessageEnqueued,
+  MessageQueued,
   MessageWaited,
   MessageWaken,
   MessagesDispatched,
@@ -12,7 +12,7 @@ import {
 } from './GearEvents';
 
 export interface IGearEvent {
-  MessageEnqueued: MessageEnqueued;
+  MessageQueued: MessageQueued;
   UserMessageSent: UserMessageSent;
   UserMessageRead: UserMessageRead;
   MessagesDispatched: MessagesDispatched;

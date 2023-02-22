@@ -1,27 +1,88 @@
-import { useState, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
-import { getProgramMetadata } from '@gear-js/api';
-import { HexString } from '@polkadot/util/types';
+import { Button, FileInput } from '@gear-js/ui';
+import { clsx } from 'clsx';
 
-import { StateWithFile } from 'shared/types';
+import { useMetaOnUpload, useProgramActions } from 'hooks';
+import { formStyles } from 'shared/ui/form';
+import { BackButton } from 'shared/ui/backButton';
+import { ReactComponent as PlusSVG } from 'shared/assets/images/actions/plus.svg';
+import { Subheader } from 'shared/ui/subheader';
+import { FileTypes, GasMethod } from 'shared/config';
+import { Payload } from 'hooks/useProgramActions/types';
+import { UploadMetadata } from 'features/uploadMetadata';
+import { ProgramForm, RenderButtonsProps, SubmitHelpers } from 'widgets/programForm';
 
-import { ProgramSection } from './programSection';
-import { MetadataSection } from './metadataSection';
 import styles from './UploadProgram.module.scss';
 
 const UploadProgram = () => {
-  const { state } = useLocation();
-  const { file } = (state as StateWithFile | undefined) || {};
+  const {
+    optFile,
+    setOptFile,
+    resetOptFile,
+    optBuffer,
+    metadata,
+    setFileMetadata,
+    resetMetadata,
+    isUploadedMetaReady,
+  } = useMetaOnUpload();
 
-  const [metaHex, setMetaHex] = useState<HexString>();
-  const metadata = useMemo(() => (metaHex ? getProgramMetadata(metaHex) : undefined), [metaHex]);
+  const { uploadProgram } = useProgramActions();
 
-  const resetMetaHex = () => setMetaHex(undefined);
+  const fileInputClassName = clsx(formStyles.field, formStyles.gap16, styles.fileInput);
+
+  const renderButtons = ({ isDisabled }: RenderButtonsProps) => (
+    <>
+      <Button icon={PlusSVG} type="submit" text="Upload Program" size="large" disabled={isDisabled} />
+      <BackButton />
+    </>
+  );
+
+  const handleSubmit = (payload: Payload, { enableButtons }: SubmitHelpers) => {
+    if (!optFile || !optBuffer) return;
+
+    const name = payload.programName || optFile.name;
+
+    uploadProgram({ optBuffer, payload, name, resolve: resetOptFile, reject: enableButtons });
+  };
 
   return (
     <div className={styles.uploadProgramPage}>
-      <ProgramSection file={file} metaHex={metaHex} metadata={metadata} resetMetaFile={resetMetaHex} />
-      <MetadataSection metadata={metadata} onReset={resetMetaHex} onUpload={setMetaHex} />
+      <section className={styles.pageSection}>
+        <Subheader size="big" title="Enter program parameters" />
+
+        <div className={styles.lining}>
+          <FileInput
+            value={optFile}
+            label="Program file"
+            direction="y"
+            color="primary"
+            className={fileInputClassName}
+            onChange={setOptFile}
+            accept={FileTypes.Wasm}
+          />
+
+          {optBuffer && (
+            <ProgramForm
+              source={optBuffer}
+              metaHex={metadata.hex}
+              metadata={metadata.value}
+              gasMethod={GasMethod.InitUpdate}
+              renderButtons={renderButtons}
+              onSubmit={handleSubmit}
+            />
+          )}
+        </div>
+      </section>
+
+      <section className={styles.pageSection}>
+        <Subheader size="big" title="Add metadata" />
+        <UploadMetadata
+          metadata={metadata.value}
+          isInputDisabled={!!metadata.isUploaded}
+          isLoading={!isUploadedMetaReady}
+          onReset={resetMetadata}
+          onUpload={setFileMetadata}
+        />
+      </section>
     </div>
   );
 };

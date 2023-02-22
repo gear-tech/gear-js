@@ -17,4 +17,7 @@ const getFileSize = (bytes: number) => {
   return `${size} ${unit}`;
 };
 
-export { getLabelGap, getFileSize };
+const isFileTypeValid = (file: File, type: string | string[]) =>
+  Array.isArray(type) ? type.some((type) => type === file.type) : type === file.type;
+
+export { getLabelGap, getFileSize, isFileTypeValid };

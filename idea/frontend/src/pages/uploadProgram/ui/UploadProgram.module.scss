@@ -4,9 +4,18 @@
 
 .uploadProgramPage {
   @include childrenMargin($marginBig, right);
-
   display: flex;
-  align-items: flex-start;
+  margin-bottom: 32px;
+
+  > * {
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+
+    > *:nth-child(2) {
+      flex: 1;
+    }
+  }
 }
 
 .pageSection {

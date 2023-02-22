@@ -1,3 +1,43 @@
+## 0.30.0
+
+_02/15/2023_
+
+https://github.com/gear-tech/gear-js/pull/1204
+
+### Changes
+
+- Bump `@polkadot/api` to `9.14.1`.
+
+## 0.29.5
+
+_02/14/2023_
+
+https://github.com/gear-tech/gear-js/pull/1201
+
+### Changes
+
+- Rename events, error and their enum variants accoriding to https://github.com/gear-tech/gear/pull/2163
+
+## 0.29.4
+
+_02/14/2023_
+
+https://github.com/gear-tech/gear-js/pull/1199
+
+### Changes
+
+- Add `gr_oom_panic` syscall
+
+## 0.29.2
+
+_02/11/2023_
+
+https://github.com/gear-tech/gear-js/pull/1194
+
+### Changes
+
+- Add `gr_panic` syscall
+
 ## 0.29.1
 
 _01/31/2023_

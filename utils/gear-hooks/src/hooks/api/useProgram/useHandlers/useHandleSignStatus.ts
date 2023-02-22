@@ -20,7 +20,7 @@ function useHandleSignStatus() {
       if (method === Method.ExtrinsicFailed) {
         alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
         if (onError) onError();
-      } else if (method === Method.MessageEnqueued) {
+      } else if (method === Method.MessageQueued) {
         alert.success('Success', alertOptions);
         if (onSuccess) onSuccess(programId);
       }

@@ -2,12 +2,7 @@ import { HexString } from '@polkadot/util/types';
 
 import assert from 'assert';
 
-import {
-  ICodeSpec,
-  IMessageSpec, IPreparedProgram,
-  IPreparedPrograms,
-  IUploadedPrograms,
-} from '../interfaces';
+import { ICodeSpec, IMessageSpec, IPreparedProgram, IPreparedPrograms, IUploadedPrograms } from '../interfaces';
 
 function checkPrograms(
   programs: { [id: HexString]: IUploadedPrograms },
@@ -23,7 +18,7 @@ function checkPrograms(
       spec: programs[id],
       init: initSuccess.get(programs[id].messageId),
       id,
-      owner: programs[id].owner
+      owner: programs[id].owner,
     } as IPreparedProgram;
   }
   return result;
@@ -44,7 +39,6 @@ function checkUserMessageSent(
   specMessages: { [program: string]: IMessageSpec[] },
   checkUserMessageSentMessages: Map<HexString, any>,
 ) {
-
   assert(
     Object.keys(specMessages).reduce((counter, key) => {
       counter += specMessages[key].reduce((count, value) => {
@@ -62,7 +56,8 @@ function checkUserMessageSent(
 
 function checkCollectionCode(
   sentCollectionCode: Map<HexString, any>,
-  specCollectionCode: { [key: string]: ICodeSpec[] }): Map<HexString, any> {
+  specCollectionCode: { [key: string]: ICodeSpec[] },
+): Map<HexString, any> {
   assert(
     Object.keys(specCollectionCode).reduce((counter, key) => {
       counter += specCollectionCode[key].length;
@@ -73,4 +68,4 @@ function checkCollectionCode(
   return sentCollectionCode;
 }
 
-export  { checkPrograms, checkMessages, checkUserMessageSent,  checkCollectionCode };
+export { checkPrograms, checkMessages, checkUserMessageSent, checkCollectionCode };

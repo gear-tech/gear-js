@@ -1,5 +1,12 @@
 @use 'shared/assets/styles/mixins' as *;
+@use 'shared/assets/styles/animations' as *;
 
 .box {
   @include childrenMargin(24px);
+
+  &.loading {
+    @include loading;
+    min-height: 475px;
+    position: relative;
+  }
 }

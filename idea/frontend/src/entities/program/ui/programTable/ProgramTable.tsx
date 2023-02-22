@@ -1,10 +1,11 @@
+import { generatePath, Link } from 'react-router-dom';
+
 import { Table, TableRow } from 'shared/ui/table';
 import { IdBlock } from 'shared/ui/idBlock';
 import { BulbBlock } from 'shared/ui/bulbBlock';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
-
-import { Link } from 'react-router-dom';
 import { routes } from 'shared/config';
+
 import { getBulbStatus } from '../../helpers';
 import { IProgram, PROGRAM_STATUS_NAME } from '../../model';
 import styles from './ProgramTable.module.scss';
@@ -15,6 +16,7 @@ type Props = {
 
 const ProgramTable = ({ program }: Props) => {
   const { id, timestamp, status, code } = program;
+  const codeId = code?.id;
 
   const statusName = PROGRAM_STATUS_NAME[status];
 
@@ -30,10 +32,10 @@ const ProgramTable = ({ program }: Props) => {
         <TimestampBlock size="large" timestamp={timestamp} />
       </TableRow>
 
-      {code && (
+      {codeId && (
         <TableRow name="Codehash" hideOwerflow>
-          <Link to={routes.codes} state={{ query: code.id }} className={styles.codeLink}>
-            {code.id}
+          <Link to={generatePath(routes.code, { codeId })} className={styles.codeLink}>
+            {codeId}
           </Link>
         </TableRow>
       )}

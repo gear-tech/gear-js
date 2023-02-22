@@ -4,3 +4,7 @@ export class GearJsonRPCError extends Error {
     super(data);
   }
 }
+
+export class InvalidMetaHex extends GearJsonRPCError {
+  name = 'InvalidMetaHex';
+}

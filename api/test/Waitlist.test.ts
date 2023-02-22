@@ -19,9 +19,9 @@ beforeAll(async () => {
   await api.isReadyOrError;
   const code = readFileSync(CODE_PATH);
   alice = (await getAccount())[0];
-  programId = api.program.upload({ code, gasLimit: 2_000_000_000 }).programId;
+  programId = api.program.upload({ code, gasLimit: 20_000_000_000 }).programId;
   const init = checkInit(api, programId);
-  await sendTransaction(api.program, alice, 'MessageEnqueued');
+  await sendTransaction(api.program, alice, 'MessageQueued');
   expect(await init()).toBe('success');
   messageWaited = listenToMessageWaited(api);
 });
@@ -33,8 +33,8 @@ afterAll(async () => {
 
 describe('GearWaitlist', () => {
   test("read program's waitlist", async () => {
-    api.message.send({ destination: programId, payload: '0x00', gasLimit: 2_000_000_000 });
-    messageId = (await sendTransaction(api.message, alice, 'MessageEnqueued')).id;
+    api.message.send({ destination: programId, payload: '0x00', gasLimit: 20_000_000_000 });
+    messageId = (await sendTransaction(api.message, alice, 'MessageQueued')).id;
     const eventData = await messageWaited(messageId);
     expect(eventData).toBeDefined();
     expect(eventData).toHaveProperty('reason');
@@ -64,8 +64,8 @@ describe('GearWaitlist', () => {
   });
 
   test("send one more message and read program's waitlist", async () => {
-    api.message.send({ destination: programId, payload: '0x00', gasLimit: 2_000_000_000 });
-    messageId = (await sendTransaction(api.message, alice, 'MessageEnqueued'))[0];
+    api.message.send({ destination: programId, payload: '0x00', gasLimit: 20_000_000_000 });
+    messageId = (await sendTransaction(api.message, alice, 'MessageQueued'))[0];
     const waitlist = await api.waitlist.read(programId);
     expect(waitlist).toHaveLength(2);
   });

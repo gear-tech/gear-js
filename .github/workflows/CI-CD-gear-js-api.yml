@@ -42,6 +42,10 @@ jobs:
         working-directory: api
         run: yarn build
 
+      - name: Build test programs
+        working-directory: api/test/programs
+        run: cargo build --release --locked
+
       - name: Download gear examples
         working-directory: api/test/wasm
         run: |
@@ -49,10 +53,6 @@ jobs:
           cd examples
           wget -O ./examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
           tar -xvf examples.tar.gz
-
-      - name: Build test programs
-        working-directory: api/test/programs
-        run: cargo build --release
 
       - name: Prepare
         run: |

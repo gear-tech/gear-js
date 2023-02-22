@@ -6,7 +6,7 @@ import {
   CodeChangeKind,
   CodeId,
   DispatchStatus,
-  Entry,
+  MessageEntry,
   MessageId,
   MessageWaitedReason,
   MessageWokenReason,
@@ -23,11 +23,11 @@ export class GearEventData extends GenericEventData {
   }
 }
 
-export interface MessageEnqueuedData extends GenericEventData {
+export interface MessageQueuedData extends GenericEventData {
   id: MessageId;
   source: AccountId32;
   destination: ProgramId;
-  entry: Entry;
+  entry: MessageEntry;
 }
 
 export interface UserMessageSentData extends GenericEventData {

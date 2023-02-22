@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 
 import { useApp, useModal, useOutsideClick } from 'hooks';
-import { AnimationTimeout, NODE_ADRESS_URL_PARAM } from 'shared/config';
+import { AnimationTimeout, LocalStorage, NODE_ADRESS_URL_PARAM } from 'shared/config';
 
 import { useNodes } from 'widgets/menu/helpers/useNodes';
 
@@ -47,17 +47,9 @@ const NodesSwitch = ({ isButtonFullWidth }: Props) => {
 
   const handleAddButtonClick = (address: string) => {
     addLocalNode(address);
-    setSelectedNode(address);
-
     closeNetworkModal();
 
     setTimeout(() => document.getElementById(address)?.scrollIntoView(false), 10);
-  };
-
-  const handleRemoveButtonClick = (address: string) => {
-    removeLocalNode(address);
-
-    if (address === selectedNode) setSelectedNode(nodeAddress);
   };
 
   const switchNode = () => {
@@ -65,17 +57,15 @@ const NodesSwitch = ({ isButtonFullWidth }: Props) => {
     searchParams.set(NODE_ADRESS_URL_PARAM, selectedNode);
     setSearchParams(searchParams);
 
+    localStorage.setItem(LocalStorage.Node, selectedNode);
+
     window.location.reload();
   };
 
   const showAddNodeModal = () => {
     setIsModalHidden(false);
 
-    showModal('network', {
-      nodeSections,
-      addNetwork: handleAddButtonClick,
-      onClose: closeNetworkModal,
-    });
+    showModal('network', { nodeSections, addNetwork: handleAddButtonClick, onClose: closeNetworkModal });
   };
 
   return (
@@ -100,7 +90,7 @@ const NodesSwitch = ({ isButtonFullWidth }: Props) => {
           nodeSections={nodeSections}
           selectedNode={selectedNode}
           selectNode={setSelectedNode}
-          removeNode={handleRemoveButtonClick}
+          removeNode={removeLocalNode}
           onSwitchButtonClick={switchNode}
           onAddButtonClick={showAddNodeModal}
           onCloseButtonClick={close}

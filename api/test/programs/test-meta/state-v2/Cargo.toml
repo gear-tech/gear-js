@@ -9,7 +9,7 @@ gmeta = { git = "https://github.com/gear-tech/gear.git", features = ["codegen"] 
 test-meta-io = { path = "../io" }
 
 [build-dependencies]
-gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", features = ["metawasm"]  }
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", features = ["metawasm"] }
 
 [features]
 default = ["std"]

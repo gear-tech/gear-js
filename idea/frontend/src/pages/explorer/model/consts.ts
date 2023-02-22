@@ -6,7 +6,7 @@ const FILTER_VALUES = {
   [Method.ProgramChanged]: false,
   [Method.UserMessageSent]: false,
   [Method.UserMessageRead]: false,
-  [Method.MessageEnqueued]: false,
+  [Method.MessageQueued]: false,
   [Method.MessageWaited]: false,
   [Method.MessageWaken]: false,
   [Method.MessagesDispatched]: false,
