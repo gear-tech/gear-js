@@ -1,4 +1,5 @@
 FROM node:18-alpine
+MAINTAINER GEAR
 
 WORKDIR /src
 COPY package.json .
