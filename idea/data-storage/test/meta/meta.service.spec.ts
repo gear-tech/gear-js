@@ -104,10 +104,11 @@ describe('Meta service', () => {
   it('should successfully get meta by hash', async () => {
     const metaDB = METADATA_DB_MOCK[0];
 
+
     const meta = await metaService.getByHash(metaDB.hash);
 
     expect(meta.hash).toEqual(metaDB.hash);
-    expect(meta.code.id).toEqual(metaDB.code.id);
+    expect(meta.codes[0].id).toEqual(metaDB.codes[0].id);
     expect(mockMetadataRepository.getByHash).toHaveBeenCalled();
   });
 
