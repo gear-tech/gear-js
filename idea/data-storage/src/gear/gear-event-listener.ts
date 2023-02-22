@@ -200,7 +200,6 @@ export class GearEventListener {
         );
       }
 
-      console.log('_____>createMessages', messages);
       await this.messageService.createMessages(messages);
     }
   }
@@ -225,10 +224,8 @@ export class GearEventListener {
         } = foundEvent.event as MessageQueued;
 
         const codeId = tx.method.method === 'uploadProgram' ? generateCodeHash(tx.args[0].toHex()) : tx.args[0].toHex();
-        console.log('________>ProgramCodeId', codeId);
         const code = await this.codeRepository.get(codeId, this.genesis);
 
-        console.log('________>ProgramCode', code);
         const createProgramInput: CreateProgramInput = {
           owner: source.toHex(),
           id: destination.toHex(),
@@ -245,7 +242,6 @@ export class GearEventListener {
         programs.push(createProgramInput);
       }
 
-      console.log('_____>createPrograms', programs);
       await this.programService.createPrograms(programs);
     }
   }
@@ -316,7 +312,6 @@ export class GearEventListener {
         }
       }
 
-      console.log('_____>updateCodes', codes);
       await this.codeService.updateCodes(codes);
     }
   }
