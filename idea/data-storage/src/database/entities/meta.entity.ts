@@ -9,7 +9,7 @@ export class Meta implements IMeta {
   @PrimaryGeneratedColumn('rowid')
   public id: number;
 
-  @Column({ unique: true })
+  @Column()
   public hash: string;
 
   @Column({ nullable: true })
