@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CodeChanged, GearApi, generateCodeHash, MessageQueued } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { filterEvents } from '@polkadot/api/util';
@@ -40,7 +40,6 @@ export class GearEventListener {
     private codeRepository: CodeRepo,
     private blockService: BlockService,
     private rabbitMQService: RabbitmqService,
-    @Inject(forwardRef(() => MetaService))
     private metaService: MetaService,
   ) {}
 
@@ -226,6 +225,7 @@ export class GearEventListener {
 
         const codeId = tx.method.method === 'uploadProgram' ? generateCodeHash(tx.args[0].toHex()) : tx.args[0].toHex();
         const code = await this.codeRepository.get(codeId, this.genesis);
+
         const createProgramInput: CreateProgramInput = {
           owner: source.toHex(),
           id: destination.toHex(),
@@ -241,6 +241,7 @@ export class GearEventListener {
 
         programs.push(createProgramInput);
       }
+
       await this.programService.createPrograms(programs);
     }
   }
@@ -255,19 +256,14 @@ export class GearEventListener {
         const event = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
           this.api.events.gear.CodeChanged.is(event),
         );
-
-        if (!event) return;
-
-        const {
-          data: { id },
-        } = event.event as CodeChanged;
-        const codeId = event ? id.toHex() : generateCodeHash(tx.args[0].toHex());
-        const metaHash = await getMetaHash(this.api.code, codeId);
+        let codeId = generateCodeHash(tx.args[0].toHex());
+        let metaHash = await getMetaHash(this.api.code, codeId);
 
         if (event) {
-          const {
-            data: { change },
-          } = event.event as CodeChanged;
+          const { data: { id, change } } = event.event as CodeChanged;
+          codeId = id.toHex();
+          metaHash = await getMetaHash(this.api.code, codeId);
+
           const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
           const updateCodeInput = {
             id: codeId,
@@ -285,6 +281,27 @@ export class GearEventListener {
           }
 
           codes.push(updateCodeInput);
+        } else {
+          const code = await this.codeRepository.get(codeId, this.genesis);
+
+          if (!code) {
+            const updateCodeInput = {
+              id: codeId,
+              genesis: this.genesis,
+              status: CodeStatus.ACTIVE,
+              timestamp,
+              blockHash: block.createdAtHash.toHex(),
+              expiration: null,
+              uploadedBy: tx.signer.inner.toHex(),
+              meta: null,
+            };
+
+            if (metaHash) {
+              updateCodeInput.meta = await this.metaService.getByHashOrCreate(metaHash);
+            }
+
+            codes.push(updateCodeInput);
+          }
         }
       }
 

@@ -11,7 +11,7 @@ function getMetadataDBMock(): Meta[] {
   try {
     const listMeta = load(readFileSync(__dirname + pathCollectionMetadata, 'utf8')) as Meta[];
 
-    return listMeta.map(meta => ({ ...meta, code }));
+    return listMeta.map(meta => ({ ...meta, codes: [code] }));
   } catch (err) {
     console.error(err);
   }

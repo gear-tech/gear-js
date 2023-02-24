@@ -3,12 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { AddMetaByCodeParams, AddMetaParams, AddMetaResult } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
 
-import {
-  CodeDoNotHaveMeta,
-  CodeNotFound,
-  ProgramDoNotHaveMeta,
-  ProgramNotFound,
-} from '../common/errors';
+import { CodeHasNoMeta, CodeNotFound, ProgramHasNoMeta, ProgramNotFound } from '../common/errors';
 import { Meta } from '../database/entities';
 import { MetaRepo } from './meta.repo';
 import { ProgramRepo } from '../program/program.repo';
@@ -56,7 +51,7 @@ export class MetaService {
 
     if(!code) throw new CodeNotFound();
 
-    if(code.meta === null) throw new CodeDoNotHaveMeta();
+    if(code.meta === null) throw new CodeHasNoMeta();
 
     try {
       const hash = _generateCodeHash(metaHex as HexString);
@@ -105,7 +100,7 @@ export class MetaService {
 
     if (!program) throw new ProgramNotFound();
 
-    if(program.meta === null) throw new ProgramDoNotHaveMeta();
+    if(program.meta === null) throw new ProgramHasNoMeta();
 
     try {
       const hash = _generateCodeHash(metaHex as HexString);
