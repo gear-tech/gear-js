@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import isString from 'lodash.isstring';
 import isPlainObject from 'lodash.isplainobject';
-import { toJSON, ProgramMetadata } from '@gear-js/api';
+import { toJSON, ProgramMetadata, StateMetadata } from '@gear-js/api';
 
 import { TypeStructure, PayloadValue } from 'entities/formPayload';
 import { getPreformattedText } from 'shared/helpers';
@@ -92,7 +92,7 @@ const getPayloadValue = (typeStructure: TypeStructure | null): PayloadValue => {
   }
 };
 
-const getPayloadFormValues = (metadata: ProgramMetadata, metaIndex: number) => {
+const getPayloadFormValues = (metadata: ProgramMetadata | StateMetadata, metaIndex: number) => {
   const typeDef = metadata.getTypeDef(metaIndex);
   const extendedTypeDef = metadata.getTypeDef(metaIndex, true);
   const payload = getPayloadValue(extendedTypeDef);
