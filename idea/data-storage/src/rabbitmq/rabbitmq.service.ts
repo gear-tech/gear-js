@@ -1,6 +1,6 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Channel, connect, Connection, Replies } from 'amqplib';
+import { Channel, connect, Connection } from 'amqplib';
 import {
   AddMetaByCodeParams,
   AddMetaParams,
@@ -54,7 +54,7 @@ export class RabbitmqService {
     this.connection = await connect(this.configService.get<string>('rabbitmq.url'));
   }
 
-  public async initRMQ(genesis: string): Promise<void> {
+  public async initRMQ(): Promise<void> {
     try {
       this.mainChannel = await this.connection.createChannel();
       this.topicChannel = await this.connection.createChannel();
@@ -62,26 +62,9 @@ export class RabbitmqService {
       const directExchange = RabbitMQExchanges.DIRECT_EX;
       const topicExchange = RabbitMQExchanges.TOPIC_EX;
       const directExchangeType = 'direct';
-      const routingKey = `ds.${genesis}`;
-
-      //send genesis to api-gateway
-      const messageBuff = JSON.stringify({ service: 'ds', action: 'add', genesis });
-      this.mainChannel.publish(directExchange, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
 
       await this.mainChannel.assertExchange(directExchange, directExchangeType);
       await this.topicChannel.assertExchange(topicExchange, 'topic');
-
-      const assertTopicQueue = await this.topicChannel.assertQueue(`dst.${genesis}`, {
-        durable: false,
-        exclusive: false,
-        autoDelete: true
-      });
-
-      await this.mainChannel.bindQueue(routingKey, directExchange, routingKey);
-      await this.topicChannel.bindQueue(assertTopicQueue.queue, topicExchange, 'ds.genesises');
-
-      await this.directMessageConsumer(routingKey);
-      await this.topicMessageConsumer(assertTopicQueue, genesis);
 
       this.connection.on('close', (error) => {
         console.log(new Date(), error);
@@ -93,53 +76,87 @@ export class RabbitmqService {
     }
   }
 
-  public sendDeleteGenesis(genesis: string): void {
+  public async deleteGenesisQ(genesis: string) {
+    const routingKey = `ds.${genesis}`;
     const messageBuff = JSON.stringify({ service: 'ds', action: 'delete', genesis });
+    await this.mainChannel.unbindQueue(routingKey, RabbitMQExchanges.DIRECT_EX, routingKey);
     this.mainChannel.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
   }
 
-  private sendMessage(exchange: RabbitMQExchanges, queue: RabbitMQueues, params: any, correlationId?: string): void {
+  public async addGenesisQ(genesis: string) {
+    const genesisQ = `ds.${genesis}`;
+    await this.topicChannel.assertQueue(genesisQ, {
+      durable: false,
+      exclusive: false,
+      autoDelete: true,
+    });
+
+    const topicQ = `dst.${genesis}`;
+    await this.topicChannel.assertQueue(topicQ, {
+      durable: false,
+      exclusive: false,
+      autoDelete: true,
+    });
+    await this.mainChannel.bindQueue(genesisQ, RabbitMQExchanges.DIRECT_EX, genesisQ);
+    await this.topicChannel.bindQueue(topicQ, RabbitMQExchanges.TOPIC_EX, 'ds.genesises');
+    await this.directMsgConsumer(genesisQ);
+    await this.topicMsgConsumer(topicQ, genesis);
+
+    const msgBuff = JSON.stringify({ service: 'ds', action: 'add', genesis });
+    this.mainChannel.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(msgBuff));
+    await this.directMsgConsumer(genesisQ);
+  }
+
+  private sendMsg(exchange: RabbitMQExchanges, queue: RabbitMQueues, params: any, correlationId?: string): void {
     const messageBuff = JSON.stringify(params);
     this.mainChannel.publish(exchange, queue, Buffer.from(messageBuff), { correlationId });
   }
 
-  private async directMessageConsumer(queue: string): Promise<void>{
+  private async directMsgConsumer(queue: string): Promise<void> {
     try {
-      await this.mainChannel.consume(queue, async (message) => {
-        if(!message){
-          return;
-        }
-        const method = message.properties.headers.method;
+      await this.mainChannel.consume(
+        queue,
+        async (message) => {
+          if (!message) {
+            return;
+          }
+          const method = message.properties.headers.method;
 
-        const params = JSON.parse(message.content.toString());
-        const correlationId = message.properties.correlationId;
+          const params = JSON.parse(message.content.toString());
+          const correlationId = message.properties.correlationId;
 
-        const result = await this.handleEventByMethod(method, params);
+          const result = await this.handleIncomingMsg(method, params);
 
-        this.sendMessage(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.REPLIES, result, correlationId);
-      }, { noAck: true });
+          this.sendMsg(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.REPLIES, result, correlationId);
+        },
+        { noAck: true },
+      );
     } catch (error) {
       this.logger.error(`Direct exchange consumer ${JSON.stringify(error)}`);
     }
   }
 
-  private async topicMessageConsumer(repliesAssertQueue: Replies.AssertQueue, genesis): Promise<void> {
+  private async topicMsgConsumer(repliesAssertQueue: string, genesis): Promise<void> {
     try {
-      await this.topicChannel.consume(repliesAssertQueue.queue, async (message) => {
-        if(!message){
-          return;
-        }
+      await this.topicChannel.consume(
+        repliesAssertQueue,
+        async (message) => {
+          if (!message) {
+            return;
+          }
 
-        const messageBuff = JSON.stringify({ service: 'ds', action: 'add', genesis });
-        this.mainChannel.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
-      }, { noAck: true });
+          const messageBuff = JSON.stringify({ service: 'ds', action: 'add', genesis });
+          this.mainChannel.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
+        },
+        { noAck: true },
+      );
     } catch (error) {
       this.logger.error(`Topic exchange consumer ${JSON.stringify(error)}`);
     }
   }
 
   @FormResponse
-  private async handleEventByMethod(method: string, params: RabbitmqMessageParams): Promise<any> {
+  private async handleIncomingMsg(method: string, params: RabbitmqMessageParams): Promise<any> {
     const methods = {
       [API_METHODS.PROGRAM_DATA]: () => {
         return this.programService.findProgram(params as FindProgramParams);
