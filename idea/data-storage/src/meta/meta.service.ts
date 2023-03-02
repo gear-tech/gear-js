@@ -55,10 +55,6 @@ export class MetaService {
 
     const hash = _generateCodeHash(metaHex as HexString);
 
-    console.log(params);
-    console.log(hash);
-    console.log(code.meta);
-
     if (code.meta.hash !== hash) throw new InvalidMetaHex();
 
     const meta = await this.metaRepository.getByHash(hash);
@@ -102,8 +98,7 @@ export class MetaService {
     if (program.meta === null) throw new ProgramHasNoMeta();
 
     const hash = _generateCodeHash(metaHex as HexString);
-    console.log(program.meta);
-    console.log(hash);
+
     if (program.meta.hash !== hash) throw new InvalidMetaHex();
 
     const metaData = _getProgramMetadata(metaHex as HexString);
