@@ -55,13 +55,17 @@ export class GearService {
 
   private async recconect(): Promise<void> {
     this.unsub && this.unsub();
+    if (this.api) {
+      await this.api.disconnect();
+      this.api === null;
+    }
     recconectionsCounter++;
     if (recconectionsCounter > MAX_RECCONECTIONS) {
       throw new Error(`Unable to connect to ${gear.wsProvider}`);
     }
     this.logger.log('⚙️ 📡 Reconnecting to the gear node');
     await new Promise((resolve) => {
-      setTimeout(resolve, 5000);
+      setTimeout(resolve, 2000);
     });
     this.rabbitMQService.deleteGenesisQ(this.genesis);
     changeStatus('gear');
@@ -74,13 +78,10 @@ export class GearService {
       await this.api.isReadyOrError;
     } catch (e) {
       this.logger.error(`Failed to connect to ${gear.wsProvider}`);
-      return this.recconect();
     }
     await this.api.isReady;
-    this.api.on('error', () => {
-      this.recconect();
-    });
     this.api.on('disconnected', () => {
+      console.log('DISCONNECTED');
       this.recconect();
     });
 
