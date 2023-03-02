@@ -12,10 +12,10 @@ import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
 import { CodeService } from '../code/code.service';
 import { getExtrinsics, getMetaHash, getPayloadAndValue, getPayloadByGearEvent } from '../common/helpers';
-import { Message } from '../database/entities';
+import { Code, Message, Program } from '../database/entities';
 import { CodeStatus, MessageEntryPoint, MessageType } from '../common/enums';
 import { CodeRepo } from '../code/code.repo';
-import { CodeChangedInput, UpdateCodeInput } from '../code/types';
+import { CodeChangedInput, CreateCodeInput } from '../code/types';
 import { changeStatus } from '../healthcheck/healthcheck.controller';
 import { ProgramRepo } from '../program/program.repo';
 import { CreateProgramInput } from '../program/types';
@@ -81,7 +81,6 @@ export class GearService {
     }
     await this.api.isReady;
     this.api.on('disconnected', () => {
-      console.log('DISCONNECTED');
       this.recconect();
     });
 
@@ -221,7 +220,7 @@ export class GearService {
       return;
     }
 
-    const programs: CreateProgramInput[] = [];
+    const programs: Program[] = [];
 
     for (const tx of extrinsics) {
       const foundEvent = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
@@ -235,24 +234,34 @@ export class GearService {
       const {
         data: { source, destination },
       } = foundEvent.event as MessageQueued;
+      const programId = destination.toHex();
+      const owner = source.toHex();
+      const blockHash = block.block.hash.toHex();
 
       const codeId = tx.method.method === 'uploadProgram' ? generateCodeHash(tx.args[0].toHex()) : tx.args[0].toHex();
-      const code = await this.codeRepository.get(codeId, this.genesis);
-
-      const createProgramInput: CreateProgramInput = {
-        owner: source.toHex(),
-        id: destination.toHex(),
-        blockHash: block.createdAtHash.toHex(),
-        timestamp,
-        code,
-        genesis: this.genesis,
-      };
-
-      if (code && code['meta'] !== null) {
-        createProgramInput.meta = code.meta;
+      let code: Code;
+      try {
+        code = await this.codeRepository.get(codeId, this.genesis);
+      } catch (e) {
+        this.logger.error(
+          `Unable to retrieve code by id ${codeId} for program ${programId} encountered in block ${blockHash}`,
+        );
+        // TODO it's necessary to have ability to get code info even if it was missed for some reason
+        continue;
       }
 
-      programs.push(createProgramInput);
+      programs.push(
+        plainToClass(Program, {
+          id: programId,
+          name: programId,
+          owner,
+          blockHash,
+          timestamp: new Date(timestamp),
+          code,
+          genesis: this.genesis,
+          meta: code.meta,
+        }),
+      );
     }
 
     await this.programService.createPrograms(programs);
@@ -265,7 +274,7 @@ export class GearService {
       return;
     }
 
-    const codes: UpdateCodeInput[] = [];
+    const codes: Code[] = [];
 
     for (const tx of extrinsics) {
       const event = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
@@ -285,20 +294,22 @@ export class GearService {
       const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
       const meta = metaHash ? await this.metaService.getByHashOrCreate(metaHash) : null;
 
-      const updateCodeInput = {
-        id: codeId,
-        genesis: this.genesis,
-        status: codeStatus,
-        timestamp,
-        blockHash: block.block.header.hash.toHex(),
-        expiration: change.isActive ? change.asActive.expiration.toString() : null,
-        uploadedBy: tx.signer.inner.toHex(),
-        meta,
-      };
-      codes.push(updateCodeInput);
+      codes.push(
+        plainToClass(Code, {
+          id: codeId,
+          name: codeId,
+          genesis: this.genesis,
+          status: codeStatus,
+          timestamp: new Date(timestamp),
+          blockHash: block.block.header.hash.toHex(),
+          expiration: change.isActive ? change.asActive.expiration.toString() : null,
+          uploadedBy: tx.signer.inner.toHex(),
+          meta,
+        }),
+      );
     }
 
-    await this.codeService.updateCodes(codes);
+    await this.codeService.createCodes(codes);
   }
 
   private async handleBlock(block: SignedBlockExtended, timestamp: number, blockHash: HexString) {

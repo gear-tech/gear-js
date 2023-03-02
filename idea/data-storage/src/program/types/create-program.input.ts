@@ -2,9 +2,10 @@ import { Code, Meta } from '../../database/entities';
 
 export interface CreateProgramInput {
   id: string;
+  name: string;
   owner: string;
   genesis: string;
-  timestamp: number;
+  timestamp: Date;
   blockHash: string;
   code: Code;
   meta?: Meta;
