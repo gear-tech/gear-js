@@ -52,7 +52,7 @@ export class GearService {
     await this.connect();
   }
 
-  private async recconect(): Promise<void> {
+  private async reconnect(): Promise<void> {
     this.unsub && this.unsub();
     if (this.api) {
       await this.api.disconnect();
@@ -80,7 +80,7 @@ export class GearService {
     }
     await this.api.isReady;
     this.api.on('disconnected', () => {
-      this.recconect();
+      this.reconnect();
     });
 
     this.genesis = this.api.genesisHash.toHex();
