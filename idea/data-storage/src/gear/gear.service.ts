@@ -6,7 +6,7 @@ import { GenericEventData } from '@polkadot/types';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { SignedBlockExtended } from '@polkadot/api-derive/types';
 import { Keys } from '@gear-js/common';
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 
 import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
@@ -15,10 +15,9 @@ import { getExtrinsics, getMetaHash, getPayloadAndValue, getPayloadByGearEvent }
 import { Code, Message, Program } from '../database/entities';
 import { CodeStatus, MessageEntryPoint, MessageType } from '../common/enums';
 import { CodeRepo } from '../code/code.repo';
-import { CodeChangedInput, CreateCodeInput } from '../code/types';
+import { CodeChangedInput } from '../code/types';
 import { changeStatus } from '../healthcheck/healthcheck.controller';
 import { ProgramRepo } from '../program/program.repo';
-import { CreateProgramInput } from '../program/types';
 import configuration from '../config/configuration';
 import { BlockService } from '../block/block.service';
 import { RabbitmqService } from '../rabbitmq/rabbitmq.service';
@@ -121,7 +120,7 @@ export class GearService {
 
     const eventsMethod = {
       [Keys.UserMessageSent]: async () => {
-        const createMessageDBType = plainToClass(Message, {
+        const createMessageDBType = plainToInstance(Message, {
           ...payload,
           timestamp: new Date(timestamp),
           type: MessageType.USER_MESS_SENT,
@@ -191,7 +190,7 @@ export class GearService {
       const [payload, value] = getPayloadAndValue(tx.args, tx.method.method);
 
       messages.push(
-        plainToClass(Message, {
+        plainToInstance(Message, {
           id: id.toHex(),
           destination: destination.toHex(),
           source: source.toHex(),
@@ -251,7 +250,7 @@ export class GearService {
       }
 
       programs.push(
-        plainToClass(Program, {
+        plainToInstance(Program, {
           id: programId,
           name: programId,
           owner,
@@ -295,7 +294,7 @@ export class GearService {
       const meta = metaHash ? await this.metaService.getByHashOrCreate(metaHash) : null;
 
       codes.push(
-        plainToClass(Code, {
+        plainToInstance(Code, {
           id: codeId,
           name: codeId,
           genesis: this.genesis,

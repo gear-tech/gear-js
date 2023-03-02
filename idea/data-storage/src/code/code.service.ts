@@ -1,11 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
 import { GetAllCodeParams, GetAllCodeResult, GetCodeParams, GetMetaByCodeParams } from '@gear-js/common';
 
 import { Code, Meta } from '../database/entities';
 import { CodeRepo } from './code.repo';
 import { CodeNotFound, MetadataNotFound } from '../common/errors';
-import { CodeChangedInput, CreateCodeInput } from './types';
+import { CodeChangedInput } from './types';
 
 @Injectable()
 export class CodeService {
@@ -52,30 +51,15 @@ export class CodeService {
     }
   }
 
-  public async updateCodes(updateCodesInput: CreateCodeInput[] | CodeChangedInput[]): Promise<Code[]> {
+  public async updateCodes(updateCodesInput: CodeChangedInput[]): Promise<Code[]> {
     const codes = [];
 
     for (const updateCodeInput of updateCodesInput) {
       const { id, genesis } = updateCodeInput;
       const code = await this.codeRepository.getByIdAndGenesis(id, genesis);
-
-      if (code) {
-        const updateCode = plainToClass(Code, {
-          ...code,
-          status: updateCodeInput.status,
-          expiration: updateCodeInput.expiration,
-          meta: updateCodeInput.meta,
-        });
-
-        codes.push(updateCode);
-      } else {
-        const createCode = plainToClass(Code, {
-          ...updateCodeInput,
-          meta: updateCodeInput.meta,
-        });
-
-        codes.push(createCode);
-      }
+      code.expiration = updateCodeInput.expiration;
+      code.status = updateCodeInput.status;
+      codes.push(code);
     }
 
     try {

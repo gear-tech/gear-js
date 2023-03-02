@@ -3,12 +3,13 @@ import { GetAllProgramsParams, GetAllUserProgramsParams } from '@gear-js/common'
 
 import { ProgramService } from '../../src/program/program.service';
 import { ProgramRepo } from '../../src/program/program.repo';
-import { CreateProgramInput } from '../../src/program/types';
 import { ProgramStatus } from '../../src/common/enums';
 
 import { mockProgramRepository } from '../mock/program/program-repository.mock';
 import { PROGRAM_DB_MOCK } from '../mock/program/program-db.mock';
 import { CODE_DB_MOCK } from '../mock/code/code-db.mock';
+import { plainToInstance } from 'class-transformer';
+import { Program } from '../../src/database/entities';
 
 const PROGRAM_ENTITY_ID = '0x7357';
 
@@ -32,14 +33,14 @@ describe('Program service', () => {
   it('should be successfully created new program', async () => {
     const code = CODE_DB_MOCK[0];
 
-    const createProgramInput: CreateProgramInput = {
+    const createProgramInput: Program = plainToInstance(Program, {
       id: PROGRAM_ENTITY_ID,
       genesis: '0x07357',
       owner: '0x7357',
       blockHash: '0x1234',
-      timestamp: 0,
+      timestamp: new Date(0),
       code,
-    };
+    });
     const programs = await programService.createPrograms([createProgramInput]);
 
     expect(programs[0].id).toEqual(PROGRAM_ENTITY_ID);
