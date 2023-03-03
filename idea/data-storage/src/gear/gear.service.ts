@@ -66,7 +66,7 @@ export class GearService {
     await new Promise((resolve) => {
       setTimeout(resolve, 2000);
     });
-    this.rabbitMQService.deleteGenesisQ(this.genesis);
+    this.rabbitMQService.deleteGenesisQueue(this.genesis);
     changeStatus('gear');
     return this.connect();
   }
@@ -84,7 +84,7 @@ export class GearService {
     });
 
     this.genesis = this.api.genesisHash.toHex();
-    this.rabbitMQService.addGenesisQ(this.genesis);
+    this.rabbitMQService.addGenesisQueue(this.genesis);
     this.logger.log(`⚙️ Connected to ${this.api.runtimeChain} with genesis ${this.genesis}`);
     reconnectionsCounter = 0;
     this.unsub = await this.listen();
@@ -258,7 +258,7 @@ export class GearService {
           timestamp: new Date(timestamp),
           code,
           genesis: this.genesis,
-          meta: code.meta,
+          meta: code ? code.meta : null,
         }),
       );
     }

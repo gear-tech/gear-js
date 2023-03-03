@@ -76,14 +76,14 @@ export class RabbitmqService {
     }
   }
 
-  public async deleteGenesisQ(genesis: string) {
+  public async deleteGenesisQueue(genesis: string) {
     const routingKey = `ds.${genesis}`;
     const messageBuff = JSON.stringify({ service: 'ds', action: 'delete', genesis });
     await this.mainChannel.unbindQueue(routingKey, RabbitMQExchanges.DIRECT_EX, routingKey);
     this.mainChannel.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
   }
 
-  public async addGenesisQ(genesis: string) {
+  public async addGenesisQueue(genesis: string) {
     const genesisQ = `ds.${genesis}`;
     await this.topicChannel.assertQueue(genesisQ, {
       durable: false,
@@ -104,7 +104,6 @@ export class RabbitmqService {
 
     const msgBuff = JSON.stringify({ service: 'ds', action: 'add', genesis });
     this.mainChannel.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(msgBuff));
-    await this.directMsgConsumer(genesisQ);
   }
 
   private sendMsg(exchange: RabbitMQExchanges, queue: RabbitMQueues, params: any, correlationId?: string): void {
