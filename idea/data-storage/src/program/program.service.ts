@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
 import {
   FindProgramParams,
   GetAllProgramsParams,
@@ -10,7 +9,7 @@ import {
 
 import { MetadataNotFound, ProgramNotFound } from '../common/errors';
 import { Meta, Program } from '../database/entities';
-import { AddProgramMetaInput, CreateProgramInput } from './types';
+import { AddProgramMetaInput } from './types';
 import { ProgramRepo } from './program.repo';
 import { ProgramStatus } from '../common/enums';
 
@@ -30,11 +29,11 @@ export class ProgramService {
   public async addProgramsMetaByCode(
     codeId: string,
     genesis: string,
-    addProgramMetaInput :AddProgramMetaInput,
+    addProgramMetaInput: AddProgramMetaInput,
   ): Promise<Program[]> {
     const programs = await this.programRepository.listByCodeIdAndGenesis(codeId, genesis);
     const { name, meta } = addProgramMetaInput;
-    const updatePrograms = programs.map(program => ({ ...program, meta, name }));
+    const updatePrograms = programs.map((program) => ({ ...program, meta, name }));
 
     return this.programRepository.save(updatePrograms);
   }
@@ -50,17 +49,9 @@ export class ProgramService {
     return program.meta;
   }
 
-  public async createPrograms(createProgramsInput: CreateProgramInput[]): Promise<Program[]> {
-    const createProgramsDBType = createProgramsInput.map((createProgramInput) => {
-      return plainToClass(Program, {
-        ...createProgramInput,
-        name: createProgramInput.id,
-        timestamp: new Date(createProgramInput.timestamp),
-      });
-    });
-
+  public async createPrograms(programs: Program[]): Promise<Program[]> {
     try {
-      return this.programRepository.save(createProgramsDBType);
+      return this.programRepository.save(programs);
     } catch (error) {
       this.logger.error(error, error.stack);
       return;

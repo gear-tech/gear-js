@@ -1,11 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
 import { GetAllCodeParams, GetAllCodeResult, GetCodeParams, GetMetaByCodeParams } from '@gear-js/common';
 
 import { Code, Meta } from '../database/entities';
 import { CodeRepo } from './code.repo';
 import { CodeNotFound, MetadataNotFound } from '../common/errors';
-import { CodeChangedInput, UpdateCodeInput } from './types';
+import { CodeChangedInput } from './types';
 
 @Injectable()
 export class CodeService {
@@ -38,41 +37,33 @@ export class CodeService {
       throw new CodeNotFound();
     }
 
-    if(code.meta === null) throw new MetadataNotFound();
+    if (code.meta === null) throw new MetadataNotFound();
 
     return code.meta;
   }
 
-  public async updateCodes(updateCodesInput: UpdateCodeInput[] | CodeChangedInput[]): Promise<Code[]> {
-    const updateCodes = [];
+  public async createCodes(codes: Code[]) {
+    try {
+      return this.codeRepository.save(codes);
+    } catch (error) {
+      this.logger.error('Update codes error');
+      console.log(error);
+    }
+  }
+
+  public async updateCodes(updateCodesInput: CodeChangedInput[]): Promise<Code[]> {
+    const codes = [];
 
     for (const updateCodeInput of updateCodesInput) {
       const { id, genesis } = updateCodeInput;
       const code = await this.codeRepository.getByIdAndGenesis(id, genesis);
-
-      if (code) {
-        const updateCode = plainToClass(Code, {
-          ...code,
-          status: updateCodeInput.status,
-          expiration: updateCodeInput.expiration,
-          meta: updateCodeInput.meta
-        });
-
-        updateCodes.push(updateCode);
-      } else {
-        const createCode = plainToClass(Code, {
-          ...updateCodeInput,
-          name: updateCodeInput.id,
-          timestamp: new Date(updateCodeInput.timestamp),
-          meta: updateCodeInput.meta
-        });
-
-        updateCodes.push(createCode);
-      }
+      code.expiration = updateCodeInput.expiration;
+      code.status = updateCodeInput.status;
+      codes.push(code);
     }
 
     try {
-      return this.codeRepository.save(updateCodes);
+      return this.codeRepository.save(codes);
     } catch (error) {
       this.logger.error('Update codes error');
       console.log(error);

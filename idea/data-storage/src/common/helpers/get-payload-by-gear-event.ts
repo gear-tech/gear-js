@@ -46,13 +46,13 @@ function userMessageReadPayload(data: UserMessageReadData): UserMessageReadInput
 
 function programChangedPayload(data: ProgramChangedData): ProgramChangedInput {
   const { id, change } = data;
-  const res = { id: id.toHex(),  programStatus: ProgramStatus.UNKNOWN };
+  const res = { id: id.toHex(), programStatus: ProgramStatus.UNKNOWN };
 
   if (change.isActive) {
     res.programStatus = ProgramStatus.ACTIVE;
   }
 
-  if(change.isInactive) {
+  if (change.isInactive) {
     res.programStatus = ProgramStatus.EXITED;
   }
 
@@ -66,7 +66,7 @@ function programChangedPayload(data: ProgramChangedData): ProgramChangedInput {
 function codeChangedPayload(data: CodeChangedData): CodeChangedInput | null {
   const { id, change } = data;
   const status = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
-  const expiration = change.isActive ? change.asActive.expiration.toHuman() : null;
+  const expiration = change.isActive ? change.asActive.expiration.toString() : null;
 
   if (!status) {
     return null;

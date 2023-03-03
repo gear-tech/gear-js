@@ -35,6 +35,7 @@
     "@nestjs/platform-express": "8.4.7",
     "@nestjs/typeorm": "8.1.4",
     "@polkadot/api": "9.14.1",
+    "@polkadot/types": "9.14.1",
     "@types/amqplib": "^0.8.2",
     "@types/cron": "^2.0.0",
     "amqplib": "^0.10.3",

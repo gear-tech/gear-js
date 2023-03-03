@@ -7,7 +7,7 @@ import { getCodeHash } from './get-wasm-hash';
 import { _generateCodeHash } from './_generate-code-hash';
 import { _getProgramMetadata } from './_get-program-metadata';
 import { getMetaHash } from './get-meta-hash';
-
+import { getExtrinsics } from './get-extrinsics';
 
 export {
   getMessageReadStatus,
@@ -19,4 +19,5 @@ export {
   _generateCodeHash,
   _getProgramMetadata,
   getMetaHash,
+  getExtrinsics,
 };
