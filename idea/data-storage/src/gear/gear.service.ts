@@ -27,7 +27,7 @@ import { VoidFn } from '@polkadot/api/types';
 const { gear } = configuration();
 
 const MAX_RECCONECTIONS = 10;
-let recconectionsCounter = 0;
+let reconnectionsCounter = 0;
 
 @Injectable()
 export class GearService {
@@ -58,8 +58,8 @@ export class GearService {
       await this.api.disconnect();
       this.api === null;
     }
-    recconectionsCounter++;
-    if (recconectionsCounter > MAX_RECCONECTIONS) {
+    reconnectionsCounter++;
+    if (reconnectionsCounter > MAX_RECCONECTIONS) {
       throw new Error(`Unable to connect to ${gear.wsProvider}`);
     }
     this.logger.log('⚙️ 📡 Reconnecting to the gear node');
@@ -86,7 +86,7 @@ export class GearService {
     this.genesis = this.api.genesisHash.toHex();
     this.rabbitMQService.addGenesisQ(this.genesis);
     this.logger.log(`⚙️ Connected to ${this.api.runtimeChain} with genesis ${this.genesis}`);
-    recconectionsCounter = 0;
+    reconnectionsCounter = 0;
     this.unsub = await this.listen();
     changeStatus('gear');
   }
