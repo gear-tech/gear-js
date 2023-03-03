@@ -7,6 +7,7 @@ import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { SignedBlockExtended } from '@polkadot/api-derive/types';
 import { Keys } from '@gear-js/common';
 import { plainToInstance } from 'class-transformer';
+import { VoidFn } from '@polkadot/api/types';
 
 import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
@@ -22,11 +23,10 @@ import configuration from '../config/configuration';
 import { BlockService } from '../block/block.service';
 import { RabbitmqService } from '../rabbitmq/rabbitmq.service';
 import { MetaService } from '../meta/meta.service';
-import { VoidFn } from '@polkadot/api/types';
 
 const { gear } = configuration();
 
-const MAX_RECCONECTIONS = 10;
+const MAX_RECONNECTIONS = 10;
 let reconnectionsCounter = 0;
 
 @Injectable()
@@ -59,7 +59,7 @@ export class GearService {
       this.api === null;
     }
     reconnectionsCounter++;
-    if (reconnectionsCounter > MAX_RECCONECTIONS) {
+    if (reconnectionsCounter > MAX_RECONNECTIONS) {
       throw new Error(`Unable to connect to ${gear.wsProvider}`);
     }
     this.logger.log('⚙️ 📡 Reconnecting to the gear node');
@@ -75,7 +75,7 @@ export class GearService {
     this.api = new GearApi({ providerAddress: gear.wsProvider });
     try {
       await this.api.isReadyOrError;
-    } catch (e) {
+    } catch (error) {
       this.logger.error(`Failed to connect to ${gear.wsProvider}`);
     }
     await this.api.isReady;
