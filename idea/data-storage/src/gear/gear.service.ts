@@ -238,15 +238,13 @@ export class GearService {
       const blockHash = block.block.hash.toHex();
 
       const codeId = tx.method.method === 'uploadProgram' ? generateCodeHash(tx.args[0].toHex()) : tx.args[0].toHex();
-      let code: Code;
-      try {
-        code = await this.codeRepository.get(codeId, this.genesis);
-      } catch (e) {
+      const code = await this.codeRepository.get(codeId, this.genesis);
+
+      if (!code) {
         this.logger.error(
           `Unable to retrieve code by id ${codeId} for program ${programId} encountered in block ${blockHash}`,
         );
         // TODO it's necessary to have ability to get code info even if it was missed for some reason
-        continue;
       }
 
       programs.push(
