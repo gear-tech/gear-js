@@ -6,7 +6,7 @@ import configuration from './config/configuration';
 import { changeStatus } from './healthcheck/healthcheck.controller';
 import { dataStorageLogger } from './common/data-storage.logger';
 import { AppDataSource } from './data-source';
-import { GearEventListener } from './gear/gear-event-listener';
+import { GearService } from './gear/gear.service';
 import { RabbitmqService } from './rabbitmq/rabbitmq.service';
 
 async function bootstrap() {
@@ -30,15 +30,15 @@ async function bootstrap() {
   await waitReady();
 
   const rabbitmqService = app.get(RabbitmqService);
-  const gearEventListener = app.get(GearEventListener);
+  const gearEventListener = app.get(GearService);
 
   await rabbitmqService.connect();
+
+  await gearEventListener.run();
 
   await app.listen(healthcheck.port, () => {
     console.log(`⚙️ Application running on ${healthcheck.port} port`);
   });
-
-  await gearEventListener.run();
 }
 
 bootstrap();

@@ -14,7 +14,6 @@ import { METADATA_DB_MOCK } from '../mock/metadata/metadata-db.mock';
 import { ProgramService } from '../../src/program/program.service';
 import { CODE_DB_MOCK } from '../mock/code/code-db.mock';
 
-
 describe('Meta service', () => {
   let metaService!: MetaService;
 
@@ -41,7 +40,7 @@ describe('Meta service', () => {
     metaService = moduleRef.get<MetaService>(MetaService);
   });
 
-  it('should successfully add metadata code', async () => {
+  it('should successfully add metadata by code', async () => {
     const mockProgram = CODE_DB_MOCK[0];
 
     const addMetaParams: AddMetaByCodeParams = {
@@ -52,7 +51,6 @@ describe('Meta service', () => {
     };
 
     const res = await metaService.addMetaByCode(addMetaParams);
-
 
     expect(res.status).toEqual('Metadata added');
     expect(mockMetadataRepository.save).toHaveBeenCalled();
@@ -86,7 +84,6 @@ describe('Meta service', () => {
 
     const res = await metaService.addMetaByProgram(addMetaParams);
 
-
     expect(res.status).toEqual('Metadata added');
     expect(mockMetadataRepository.save).toHaveBeenCalled();
     expect(mockProgramRepository.save).toHaveBeenCalled();
@@ -111,5 +108,4 @@ describe('Meta service', () => {
     expect(meta.codes[0].id).toEqual(metaDB.codes[0].id);
     expect(mockMetadataRepository.getByHash).toHaveBeenCalled();
   });
-
 });

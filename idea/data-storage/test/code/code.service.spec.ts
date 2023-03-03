@@ -6,8 +6,8 @@ import { mockCodeRepository } from '../mock/code/code-repository.mock';
 import { CODE_DB_MOCK } from '../mock/code/code-db.mock';
 import { CodeRepo } from '../../src/code/code.repo';
 import { CodeService } from '../../src/code/code.service';
-import { UpdateCodeInput } from '../../src/code/types';
 import { CodeStatus } from '../../src/common/enums';
+import { plainToInstance } from 'class-transformer';
 
 const CODE_ENTITY_ID = '0x7357';
 
@@ -29,17 +29,17 @@ describe('Code service', () => {
   });
 
   it('should be successfully create code entity', async () => {
-    const updateCodeInput: UpdateCodeInput = {
+    const updateCodeInput: Code = plainToInstance(Code, {
       id: CODE_ENTITY_ID,
       genesis: '0x07357',
-      timestamp: 0,
+      timestamp: new Date(0),
       blockHash: '0x0000000000000000',
       status: CodeStatus.ACTIVE,
       expiration: '111',
       uploadedBy: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
-    };
+    });
 
-    const codes = await codeService.updateCodes([updateCodeInput]);
+    const codes = await codeService.createCodes([updateCodeInput]);
 
     expect(codes[0].id).toEqual(updateCodeInput.id);
     expect(codes[0].status).toEqual(updateCodeInput.status);
@@ -78,7 +78,6 @@ describe('Code service', () => {
     const invalidCodeId = '_';
 
     const getMetaByCodeParams: GetMetaByCodeParams = { genesis: '0x00', codeId: invalidCodeId };
-
 
     await expect(codeService.getMeta(getMetaByCodeParams)).rejects.toThrowError();
     expect(mockCodeRepository.getByIdAndGenesis).toHaveBeenCalled();
