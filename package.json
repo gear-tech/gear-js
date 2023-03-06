@@ -12,7 +12,6 @@
     "build:wasm-compiler": "yarn workspace @gear-js/wasm-compiler build",
     "test:data-storage": "yarn workspace @gear-js/data-storage test",
     "test:frontend": "yarn workspace @gear-js/frontend test",
-    "build:escrow": "yarn workspace @gear-js/escrow build",
     "build:nft": "yarn workspace @gear-js/nft build",
     "build:marketplace": "yarn workspace @gear-js/marketplace build",
     "build:auction": "yarn workspace @gear-js/auction build",
