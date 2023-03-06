@@ -10,15 +10,20 @@ import { IChainBlock } from 'entities/chainBlock';
 import { AnimationTimeout } from 'shared/config';
 import { ReactComponent as ArrowSVG } from 'shared/assets/images/actions/arrowRight.svg';
 
+import { useApi } from '@gear-js/react-hooks';
+import { U128 } from '@polkadot/types';
 import styles from './RecentBlocks.module.scss';
 import { getMinWidth } from '../helpers';
 import { Graph } from './graph';
 import { RecentBlocksList } from './recentBlocksList';
 
 const RecentBlocks = () => {
+  const { api } = useApi();
   const blocks = useBlocks();
 
   const [block, setBlock] = useState<IChainBlock>();
+  const [gearBlock, setGearBlock] = useState<number>();
+
   const [isOpen, setIsOpen] = useState(false);
   const [timeInstance, setTimeInstance] = useState(0);
 
@@ -40,9 +45,7 @@ const RecentBlocks = () => {
   }, []);
 
   useEffect(() => {
-    if (!blocks.length) {
-      return;
-    }
+    if (!blocks.length) return;
 
     const lastBlock = blocks[0];
 
@@ -55,11 +58,18 @@ const RecentBlocks = () => {
   }, [blocks]);
 
   useEffect(() => {
+    api.query.gear.blockNumber((result: U128) => setGearBlock(result.toNumber()));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     closeList();
   }, [location]);
 
   const time = `${timeInstance.toFixed(1)} s`;
   const blockNumber = `#${block?.number ?? '00000'}`;
+  const gearBlockNumber = `#${gearBlock ?? '00000'}`;
 
   const arrowClassName = clsx(styles.arrow, isOpen && styles.rotated);
 
@@ -71,14 +81,25 @@ const RecentBlocks = () => {
         <section ref={sectionRef} className={blocksClasses}>
           <div className={styles.content} onClick={toggleList}>
             <Graph blocks={blocks} className={styles.graph} />
+
             <div className={styles.blockInfo}>
               <h2 className={styles.title}>Recent block</h2>
               <p className={styles.indicators}>
                 <span style={getMinWidth(blockNumber)} className={styles.value}>
                   {blockNumber}
                 </span>
+
                 <span className={styles.point} />
                 <span className={styles.time}>{time}</span>
+              </p>
+            </div>
+
+            <div className={styles.blockInfo}>
+              <h2 className={styles.title}>Gear block</h2>
+              <p className={styles.indicators}>
+                <span style={getMinWidth(gearBlockNumber)} className={styles.value}>
+                  {gearBlockNumber}
+                </span>
               </p>
             </div>
 

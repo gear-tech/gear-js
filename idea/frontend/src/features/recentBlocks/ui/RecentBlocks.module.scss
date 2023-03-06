@@ -84,7 +84,7 @@
   position: absolute;
   top: toRem(-30);
   left: toRem(-101.5);
-  width: toRem(432);
+  width: toRem(500);
   padding: toRem(12) toRem(12) toRem(24) toRem(24);
   z-index: 1;
 
@@ -120,8 +120,6 @@
 }
 
 .indicators {
-  @include childrenMargin(shared.$marginTiny, right);
-
   display: flex;
   color: shared.$indigo700;
   font-size: shared.$fontSizeBig;
@@ -138,6 +136,7 @@
 
 .content {
   @include transition;
+  @include childrenMargin(12px, right);
   display: flex;
   cursor: pointer;
 
@@ -154,16 +153,16 @@
 
   .blockInfo {
     position: relative;
-    margin-left: 12px;
 
     .time {
-      min-width: toRem(50);
+      min-width: toRem(40);
     }
 
     .point {
       display: inline-block;
       width: toRem(4);
       height: toRem(4);
+      margin: 0 4px;
       border-radius: 50%;
       background-color: shared.$indigo;
     }
@@ -172,7 +171,6 @@
 
 .arrow {
   margin-top: 10px;
-  margin-left: -5px;
   align-self: center;
   transform: rotate(90deg);
 
