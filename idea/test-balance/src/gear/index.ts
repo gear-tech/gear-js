@@ -47,13 +47,13 @@ async function init(connectionEstablishedCb: () => void) {
       connectionEstablishedCb();
       onInit = false;
     } else {
-      await producer.sendGenesis(RabbitMQueues.GENESISES, getGenesisHash());
+      producer.sendGenesis(RabbitMQueues.GENESISES, getGenesisHash());
     }
 
     await new Promise((resolve) =>
-      api.on('error', async (error) => {
+      api.on('error', (error) => {
         console.log(`${new Date()} | Gear node connection error`, error);
-        await producer.sendDeleteGenesis(RabbitMQueues.GENESISES, getGenesisHash());
+        producer.sendDeleteGenesis(RabbitMQueues.GENESISES, getGenesisHash());
         changeStatus('ws');
         resolve(error);
       }),

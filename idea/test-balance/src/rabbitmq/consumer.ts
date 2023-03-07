@@ -3,7 +3,7 @@ import { AMQP_METHODS, RabbitMQueues } from '@gear-js/common';
 
 import { producer } from './producer';
 import { gearService } from '../gear';
-import { transferBalanceProcess } from '../common/transfer-balance-process';
+import { requests } from '../common/transfer-balance-process';
 
 export async function directMessageConsumer(channel: Channel, queue: string): Promise<void> {
   try {
@@ -15,8 +15,7 @@ export async function directMessageConsumer(channel: Channel, queue: string): Pr
         const correlationId = message.properties.correlationId;
 
         if (method === AMQP_METHODS.TEST_BALANCE_GET && payload.genesis === gearService.getGenesisHash()) {
-          console.log(`${new Date()} | Request`, payload);
-          await transferBalanceProcess(payload, correlationId);
+          requests.push({ payload, correlationId });
         }
       },
       { noAck: true },
@@ -35,7 +34,7 @@ export async function topicMessageConsumer(channel: Channel, repliesAssertQueue:
           return;
         }
 
-        await producer.sendGenesis(RabbitMQueues.GENESISES, gearService.getGenesisHash());
+        producer.sendGenesis(RabbitMQueues.GENESISES, gearService.getGenesisHash());
       },
       { noAck: true },
     );
