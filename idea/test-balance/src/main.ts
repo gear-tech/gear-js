@@ -22,11 +22,10 @@ const startApp = async () => {
   await connectToDB();
   changeStatus('database');
 
-  await gearService.init(async () => {
-    await initAMQ();
-    changeStatus('rabbitMQ');
-    transferProcess();
-  });
+  await gearService.init();
+  await initAMQ();
+  changeStatus('rabbitMQ');
+  transferProcess();
 };
 
 startApp();

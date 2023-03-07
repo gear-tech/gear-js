@@ -1,5 +1,5 @@
 import { Channel, Replies } from 'amqplib';
-import { AMQP_METHODS, RabbitMQueues } from '@gear-js/common';
+import { AMQP_METHODS } from '@gear-js/common';
 
 import { producer } from './producer';
 import { gearService } from '../gear';
@@ -35,7 +35,7 @@ export async function topicMessageConsumer(channel: Channel, repliesAssertQueue:
           return;
         }
 
-        producer.sendGenesis(RabbitMQueues.GENESISES, gearService.getGenesisHash());
+        producer.sendGenesis(gearService.getGenesisHash());
       },
       { noAck: true },
     );
