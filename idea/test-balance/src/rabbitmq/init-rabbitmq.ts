@@ -33,7 +33,11 @@ export async function initAMQ(): Promise<void> {
       autoDelete: true,
       exclusive: false,
     });
-
+    await this.topicChannel.assertQueue(routingKey, {
+      durable: false,
+      autoDelete: true,
+      exclusive: false,
+    });
     await mainChannelAMQP.bindQueue(routingKey, directExchange, routingKey);
     await mainChannelAMQP.bindQueue(assertTopicQueue.queue, topicExchange, 'tb.genesises');
 
