@@ -327,7 +327,7 @@ jobs:
 
       - name: Build test programs
         working-directory: api/test/programs
-        run: cargo build --release --locked
+        run: cargo build --release
 
       - name: Copy built programs
         run: |
