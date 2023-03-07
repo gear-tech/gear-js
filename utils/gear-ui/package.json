@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/ui",
-  "version": "0.5.16",
+  "version": "0.5.17",
   "description": "React UI components used across Gear applications",
   "author": "Gear Technologies",
   "license": "GPL-3.0",
@@ -23,7 +23,7 @@
   },
   "peerDependencies": {
     "react": "18.2.0",
-    "sass": "1.49.9"
+    "sass": "^1.58.3"
   },
   "devDependencies": {
     "@babel/core": "7.18.13",
