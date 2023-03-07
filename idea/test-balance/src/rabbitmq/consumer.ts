@@ -15,7 +15,6 @@ export async function directMessageConsumer(channel: Channel, queue: string): Pr
         const correlationId = message.properties.correlationId;
 
         if (method === AMQP_METHODS.TEST_BALANCE_GET && payload.genesis === gearService.getGenesisHash()) {
-          console.log('  [*] CONSUMER', correlationId);
           requests.push({ payload, correlationId });
         }
       },

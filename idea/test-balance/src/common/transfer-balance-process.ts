@@ -32,7 +32,6 @@ async function* transferGenerator() {
 
 export async function transferProcess(): Promise<void> {
   for await (const { payload, correlationId } of transferGenerator()) {
-    console.log('  [*]  TRANSFER_PROCESS', correlationId);
     let result;
 
     try {
