@@ -36,6 +36,7 @@ export async function getTestBalanceSeveralTimesAtATime(genesis: string) {
 
   expect(responses[0]).to.have.own.property('result');
   expect(responses[1]).to.have.own.property('result');
+  expect(responses[2]).to.have.own.property('result');
   return true;
 }
 
