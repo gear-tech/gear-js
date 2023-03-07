@@ -1,4 +1,4 @@
-import { JSONRPC_ERRORS, RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
+import { IRpcResponse, JSONRPC_ERRORS, RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
 
 import { transferService } from '../services/transfer.service';
 import { gearService } from '../gear';
@@ -32,6 +32,7 @@ async function* transferGenerator() {
 
 export async function transferProcess(): Promise<void> {
   for await (const { payload, correlationId } of transferGenerator()) {
+    console.log('  [*]  TRANSFER_PROCESS', correlationId);
     let result;
 
     try {

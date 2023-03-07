@@ -13,15 +13,18 @@ import {
   getAllProgramsByStatus,
   getMeta,
   getProgramData,
-  getProgramDataInBatch, getState,
-  getStates, getStatesByFuncName, mapProgramStates,
+  getProgramDataInBatch,
+  getState,
+  getStates,
+  getStatesByFuncName,
+  mapProgramStates,
   uploadMeta,
 } from './programs';
 import { processPrepare } from '../prepare';
 import { IPrepared, IPreparedProgram, IPreparedPrograms } from '../interfaces';
 import { sleep } from '../utils';
 import { getAllMessages, getMessageData, getMessagePayload, getMessagesByDates } from './messages';
-import { getTestBalance, testBalanceAvailable } from './testBalance';
+import { getTestBalance, getTestBalanceSeveralTimesAtATime, testBalanceAvailable } from './testBalance';
 import { getCodeData, getCodes, getCodesByDates } from './code';
 import { networkDataAvailable } from './network-data-available';
 import { blocksStatus } from './block';
@@ -29,10 +32,12 @@ import {
   errorCodeNotFound,
   errorInvalidMetaHex,
   errorInvalidParams,
-  errorMessageNotFound, errorMetaNotFound,
+  errorMessageNotFound,
+  errorMetaNotFound,
   errorMethodNotExist,
   errorNoGenesisFound,
-  errorProgramNotFound, errorStateAlreadyExists,
+  errorProgramNotFound,
+  errorStateAlreadyExists,
 } from './json-rpc.errors';
 
 let genesis: HexString;
@@ -40,7 +45,6 @@ let prepared: IPrepared;
 let api: GearApi;
 
 describe('API methods', () => {
-
   beforeAll(async () => {
     try {
       api = await GearApi.create({ providerAddress: base.gear.wsProvider, throwOnConnect: true });
@@ -109,7 +113,7 @@ describe('API methods', () => {
       for (const id_ of Object.keys(prepared.programs)) {
         const program = prepared.programs[id_] as IPreparedProgram;
 
-        if(program.spec['pathToMetaTxt']) {
+        if (program.spec['pathToMetaTxt']) {
           expect(await uploadMeta(genesis, program)).toBeTruthy();
         }
       }
@@ -118,7 +122,7 @@ describe('API methods', () => {
     test('program.meta.get request', async () => {
       for (const id_ of Object.keys(prepared.programs)) {
         const program = prepared.programs[id_] as IPreparedProgram;
-        if(program.spec['pathToMetaTxt']) {
+        if (program.spec['pathToMetaTxt']) {
           expect(await getMeta(genesis, id_)).toBeTruthy();
         }
       }
@@ -129,10 +133,10 @@ describe('API methods', () => {
     test('program.state.add request', async () => {
       for (const id_ of Object.keys(prepared.programs)) {
         const program = prepared.programs[id_] as IPreparedProgram;
-        if(!program.spec['pathStates']) continue;
+        if (!program.spec['pathStates']) continue;
 
         const programStatesPath = program.spec.pathStates;
-        for(const statePath of programStatesPath) {
+        for (const statePath of programStatesPath) {
           expect(await addState(genesis, program, statePath)).toBeTruthy();
         }
       }
@@ -141,7 +145,7 @@ describe('API methods', () => {
     test('program.state.all request', async () => {
       for (const id_ of Object.keys(prepared.programs)) {
         const program = prepared.programs[id_] as IPreparedProgram;
-        if(!program.spec['pathStates']) continue;
+        if (!program.spec['pathStates']) continue;
 
         expect(await getStates(genesis, program)).toBeTruthy();
       }
@@ -151,10 +155,10 @@ describe('API methods', () => {
       for (const id_ of Object.keys(prepared.programs)) {
         const program = prepared.programs[id_] as IPreparedProgram;
 
-        if(mapProgramStates.has(id_)) {
+        if (mapProgramStates.has(id_)) {
           const statesInDB = mapProgramStates.get(id_);
 
-          for(const state of statesInDB) {
+          for (const state of statesInDB) {
             const name = Object.keys(state.functions)[0];
             expect(await getStatesByFuncName(genesis, program, name)).toBeTruthy();
           }
@@ -164,11 +168,10 @@ describe('API methods', () => {
 
     test('program.state.get request', async () => {
       for (const id_ of Object.keys(prepared.programs)) {
-
-        if(mapProgramStates.has(id_)) {
+        if (mapProgramStates.has(id_)) {
           const statesInDB = mapProgramStates.get(id_);
 
-          for(const state of statesInDB) {
+          for (const state of statesInDB) {
             expect(await getState(genesis, state)).toBeTruthy();
           }
         }
@@ -225,6 +228,10 @@ describe('API methods', () => {
       expect(await getTestBalance(genesis)).toBeTruthy();
     });
 
+    test('several testBalance.get requests at a time', async () => {
+      expect(await getTestBalanceSeveralTimesAtATime(genesis)).toBeTruthy();
+    });
+
     test('testBalance.available request', async () => {
       expect(await testBalanceAvailable(genesis)).toBeTruthy();
     });
@@ -276,7 +283,7 @@ describe('API methods', () => {
     test('error metadata not found', async () => {
       for (const id_ of Object.keys(prepared.programs)) {
         const program = prepared.programs[id_] as IPreparedProgram;
-        if(!program.spec['pathToMetaTxt']) {
+        if (!program.spec['pathToMetaTxt']) {
           expect(await errorMetaNotFound(genesis, id_)).toBeTruthy();
         }
       }
