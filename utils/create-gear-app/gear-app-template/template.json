@@ -12,7 +12,7 @@
     "dependencies": {
       "@gear-js/api": "^0.30.0",
       "@gear-js/react-hooks": "^0.5.10",
-      "@gear-js/ui": "^0.5.16",
+      "@gear-js/ui": "^0.5.17",
       "@mantine/form": "^5.4.0",
       "@polkadot/api": "^9.14.1",
       "@polkadot/extension-dapp": "^0.43.2",
@@ -35,7 +35,7 @@
       "react-router-dom": "^6.3.0",
       "react-scripts": "5.0.1",
       "react-transition-group": "^4.4.2",
-      "sass": "^1.54.0",
+      "sass": "^1.58.3",
       "typescript": "^4.6.4",
       "web-vitals": "^2.1.4"
     },
