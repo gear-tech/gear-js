@@ -1,4 +1,4 @@
-import { IRpcResponse, JSONRPC_ERRORS, RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
+import { JSONRPC_ERRORS, RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
 
 import { transferService } from '../services/transfer.service';
 import { gearService } from '../gear';
@@ -11,7 +11,7 @@ const pushEmitter = new EventEmitter();
 
 Object.defineProperty(requests, 'push', {
   value: function (v: any) {
-    requests.push(v);
+    this[this.length] = v;
     pushEmitter.emit('push');
   },
 });
