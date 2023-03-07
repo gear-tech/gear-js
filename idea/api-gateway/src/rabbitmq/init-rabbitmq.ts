@@ -13,41 +13,37 @@ const repliesMap: Map<string, (params: any) => RpcResponse> = new Map<string, (p
 const logger = initLogger('RMQ');
 
 export async function initAMQ(): Promise<void> {
-  try {
-    connectionAMQP = await connectAMQP(config.rabbitmq.url);
-    mainChannelAMQP = await connectionAMQP.createChannel();
+  connectionAMQP = await connectAMQP(config.rabbitmq.url);
+  mainChannelAMQP = await connectionAMQP.createChannel();
 
-    await mainChannelAMQP.assertExchange(RabbitMQExchanges.TOPIC_EX, 'topic', { durable: true });
-    await mainChannelAMQP.assertExchange(RabbitMQExchanges.DIRECT_EX, 'direct', { durable: true });
+  await mainChannelAMQP.assertExchange(RabbitMQExchanges.TOPIC_EX, 'topic', { durable: true });
+  await mainChannelAMQP.assertExchange(RabbitMQExchanges.DIRECT_EX, 'direct', { durable: true });
 
-    await mainChannelAMQP.assertQueue(RabbitMQueues.REPLIES, {
-      durable: true,
-      exclusive: false,
-      autoDelete: false,
-      messageTtl: 30_000,
-    });
+  await mainChannelAMQP.assertQueue(RabbitMQueues.REPLIES, {
+    durable: true,
+    exclusive: false,
+    autoDelete: false,
+    messageTtl: 30_000,
+  });
 
-    await mainChannelAMQP.bindQueue(RabbitMQueues.REPLIES, RabbitMQExchanges.DIRECT_EX, RabbitMQueues.REPLIES);
+  await mainChannelAMQP.bindQueue(RabbitMQueues.REPLIES, RabbitMQExchanges.DIRECT_EX, RabbitMQueues.REPLIES);
 
-    await mainChannelAMQP.assertQueue(RabbitMQueues.GENESISES, {
-      durable: true,
-      exclusive: false,
-      autoDelete: false,
-      messageTtl: 30_000,
-    });
+  await mainChannelAMQP.assertQueue(RabbitMQueues.GENESISES, {
+    durable: true,
+    exclusive: false,
+    autoDelete: false,
+    messageTtl: 30_000,
+  });
 
-    await mainChannelAMQP.bindQueue(RabbitMQueues.GENESISES, RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES);
+  await mainChannelAMQP.bindQueue(RabbitMQueues.GENESISES, RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES);
 
-    await subscribeToGenesises();
-    await subscribeToReplies();
+  await subscribeToGenesises();
+  await subscribeToReplies();
 
-    connectionAMQP.on('close', (error) => {
-      console.log(new Date(), error);
-      process.exit(1);
-    });
-  } catch (error) {
-    console.error(`${new Date()} | Init rabbitMQ error`, error);
-  }
+  connectionAMQP.on('close', (error) => {
+    console.log(new Date(), error);
+    process.exit(1);
+  });
 }
 
 async function connectAMQP(url: string): Promise<Connection> {
