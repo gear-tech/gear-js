@@ -11,11 +11,11 @@ type Props = {
 };
 
 function Accounts({ list, onChange }: Props) {
-  const { switchAccount } = useAccount();
+  const { login } = useAccount();
   const isAnyAccount = list.length > 0;
 
   const handleAccountButtonClick = (account: InjectedAccountWithMeta) => {
-    switchAccount(account);
+    login(account);
     localStorage.setItem(LOCAL_STORAGE.ACCOUNT, account.address);
     onChange();
   };
