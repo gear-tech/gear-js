@@ -15,7 +15,7 @@ test-meta-state-v2 = { path = "state-v2", default-features = false, optional = t
 
 [build-dependencies]
 test-meta-io = { path = "io" }
-gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git" }
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", rev = "653b4b338c83567cb1a3eda38df782fabea05187" }
 
 
 [features]
