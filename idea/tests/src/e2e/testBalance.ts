@@ -14,7 +14,7 @@ export async function getTestBalance(genesis: string): Promise<Passed> {
 }
 
 export async function getTestBalanceSeveralTimesAtATime(genesis: string) {
-  const promises = Promise.all([
+  const [res1, res2, res3] = await Promise.all([
     request('testBalance.get', {
       genesis,
       address: '5HpG9w8EBLe5XCrbczpwq5TSXvedjrBGCwqxK1iQ7qUsSWFc',
@@ -32,11 +32,9 @@ export async function getTestBalanceSeveralTimesAtATime(genesis: string) {
     }),
   ]);
 
-  const responses = await promises;
-
-  expect(responses[0]).to.have.own.property('result');
-  expect(responses[1]).to.have.own.property('result');
-  expect(responses[2]).to.have.own.property('result');
+  expect(res1).to.have.own.property('result');
+  expect(res2).to.have.own.property('result');
+  expect(res3).to.have.own.property('result');
   return true;
 }
 

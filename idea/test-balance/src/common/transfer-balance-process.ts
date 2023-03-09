@@ -1,12 +1,13 @@
 import { JSONRPC_ERRORS, RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
+import { EventEmitter } from 'node:events';
 
 import { transferService } from '../services/transfer.service';
 import { gearService } from '../gear';
 import { testBalanceLogger } from './test-balace.logger';
 import { producer } from '../rabbitmq/producer';
-import { EventEmitter } from 'node:events';
+import { TBRequestParams } from './types';
 
-export const requests: Array<{ payload: any; correlationId: string }> = [];
+export const requests: Array<TBRequestParams> = [];
 const pushEmitter = new EventEmitter();
 
 Object.defineProperty(requests, 'push', {
@@ -31,13 +32,16 @@ async function* transferGenerator() {
 }
 
 export async function transferProcess(): Promise<void> {
-  for await (const { payload, correlationId } of transferGenerator()) {
+  for await (const {
+    payload: { address, genesis },
+    correlationId,
+  } of transferGenerator()) {
     let result;
 
     try {
-      const isPossibleToTransfer = await transferService.isPossibleToTransfer(payload.address, payload.genesis);
+      const isPossibleToTransfer = await transferService.isPossibleToTransfer(address, genesis);
       if (isPossibleToTransfer) {
-        const transferBalance = await gearService.transferBalance(payload.address);
+        const transferBalance = await gearService.transferBalance(address);
         result = { result: transferBalance };
       } else {
         result = { error: JSONRPC_ERRORS.TransferLimitReached.name };

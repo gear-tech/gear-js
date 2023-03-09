@@ -52,14 +52,15 @@ async function transfer(
   from: KeyringPair = tbAccount,
   balance: BN = balanceToTransfer,
 ): Promise<TransferData> {
-  api.balance.transfer(to, balance);
+  const tx = api.balance.transfer(to, balance);
   return new Promise((resolve, reject) => {
-    api.balance.signAndSend(from, ({ events }) => {
-      events.forEach(({ event: { method, data } }) => {
+    tx.signAndSend(from, ({ events }) => {
+      events.forEach(({ event }) => {
+        const { method, data } = event;
         if (method === 'Transfer') {
           resolve(data as TransferData);
         } else if (method === 'ExtrinsicFailed') {
-          reject(data);
+          reject(api.getExtrinsicFailedError(event).docs.filter(Boolean).join('. '));
         }
       });
     });
