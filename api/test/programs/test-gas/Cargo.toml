@@ -11,5 +11,5 @@ codec = { package = "parity-scale-codec", version = "3.2.1", default-features = 
 test-gas-io = { path = "io" }
 
 [build-dependencies]
-gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", rev = "653b4b338c83567cb1a3eda38df782fabea05187" }
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git" }
 test-gas-io = { path = "io" }
