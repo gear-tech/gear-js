@@ -14,12 +14,11 @@ export default {
     captchaSecret: checkEnv('CAPTCH_SECRET'),
   },
   rabbitmq: {
-    url: checkEnv('RABBIT_MQ_URL')
+    url: checkEnv('RABBIT_MQ_URL'),
   },
   // every 1 hour "0 * * * *"
   // every 10 second "*/10 * * * * *"
   scheduler: {
     genesisHashesTime: process.env.CRON_TIME_GENESIS_HASHES || '0 * * * *',
-    networkDataStoragesTime: process.env.CRON_TIME_NETWORK_DATA_STORAGES || '0 * * * *',
   },
 };

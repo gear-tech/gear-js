@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 gstd = { git = "https://github.com/gear-tech/gear.git" }
-gmeta = { git = "https://github.com/gear-tech/gear.git", features = ["codegen"]  }
+gmeta = { git = "https://github.com/gear-tech/gear.git", features = ["codegen"] }
 test-meta-io = { path = "../io" }
 
 [build-dependencies]

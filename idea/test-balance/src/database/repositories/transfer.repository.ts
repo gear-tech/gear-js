@@ -1,5 +1,5 @@
-import { AppDataSource } from '../database/app-data-source';
-import { TransferBalance } from '../database/entities/transfer.entity';
+import { AppDataSource } from '../app-data-source';
+import { TransferBalance } from '../entities/transfer.entity';
 
 const transferBalanceRepo = AppDataSource.getRepository(TransferBalance);
 

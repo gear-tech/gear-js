@@ -6,6 +6,7 @@ import { changeStatus, healthcheckRouter } from './routes/healthcheck.router';
 import { connectToDB } from './database/app-data-source';
 import { gearService } from './gear';
 import { initAMQ } from './rabbitmq/init-rabbitmq';
+import { transferProcess } from './common/transfer-balance-process';
 
 const app = express();
 
@@ -21,10 +22,10 @@ const startApp = async () => {
   await connectToDB();
   changeStatus('database');
 
-  await gearService.init(async () => {
-    await initAMQ();
-    changeStatus('rabbitMQ');
-  });
+  await gearService.init();
+  await initAMQ();
+  changeStatus('rabbitMQ');
+  transferProcess();
 };
 
 startApp();

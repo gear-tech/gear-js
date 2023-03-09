@@ -56,7 +56,7 @@ export class GearService {
     this.unsub && this.unsub();
     if (this.api) {
       await this.api.disconnect();
-      this.api === null;
+      this.api = null;
     }
     reconnectionsCounter++;
     if (reconnectionsCounter > MAX_RECONNECTIONS) {

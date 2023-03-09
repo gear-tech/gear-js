@@ -1,93 +1,66 @@
-import { GearApi, TransferData } from '@gear-js/api';
+import { TransferData } from '@gear-js/api';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { BN } from '@polkadot/util';
-import { initLogger, RabbitMQueues } from '@gear-js/common';
+import { initLogger } from '@gear-js/common';
 
 import config from '../config/configuration';
 import { ResponseTransferBalance } from './types';
 import { transferService } from '../services/transfer.service';
 import { createAccount } from './utils';
-import { changeStatus } from '../routes/healthcheck.router';
-import { producer } from '../rabbitmq/producer';
+import { connect, api, getGenesisHash } from './connection';
 
-let api: GearApi;
-let accountGR: KeyringPair;
-let rootAccountGR: KeyringPair;
-let accountBalanceGR: BN;
-let balanceToTransferGR: BN;
+let tbAccount: KeyringPair;
+let prefundedAcc: KeyringPair;
+let tbAccBalance: BN;
+let balanceToTransfer: BN;
 
 const logger = initLogger('TEST_BALANCE_GEAR');
 
-async function connect() {
-  api = await GearApi.create({ providerAddress: config.gear.providerAddress });
-  logger.info(`Connected to ${await api.chain()} with genesis ${getGenesisHash()}`);
-  changeStatus('ws');
+async function init() {
+  tbAccount = await createAccount(config.gear.accountSeed);
+  prefundedAcc = await createAccount(config.gear.rootAccountSeed);
+  tbAccBalance = new BN(config.gear.accountBalance);
+  balanceToTransfer = new BN(config.gear.balanceToTransfer);
+
+  await connect();
 
   if (await isSmallAccountBalance()) {
-    await transferBalance(accountGR.address, rootAccountGR, accountBalanceGR);
-  }
-}
-
-async function init(connectionEstablishedCb: () => void) {
-  accountGR = await createAccount(config.gear.accountSeed);
-  rootAccountGR = await createAccount(config.gear.rootAccountSeed);
-  accountBalanceGR = new BN(config.gear.accountBalance);
-  balanceToTransferGR = new BN(config.gear.balanceToTransfer);
-  let onInit = true;
-
-  while (true) {
-    try {
-      await connect();
-    } catch (error) {
-      console.log('Reconnecting...');
-      continue;
-    }
-
-    if (onInit) {
-      connectionEstablishedCb();
-      onInit = false;
-    } else {
-      await producer.sendGenesis(RabbitMQueues.GENESISES, getGenesisHash());
-    }
-
-    await new Promise((resolve) =>
-      api.on('error', async (error) => {
-        console.log(`${new Date()} | Gear node connection error`, error);
-        await producer.sendDeleteGenesis(RabbitMQueues.GENESISES, getGenesisHash());
-        changeStatus('ws');
-        resolve(error);
-      }),
-    );
-    console.log('Reconnecting...');
+    await transferBalance(tbAccount.address, prefundedAcc, tbAccBalance);
   }
 }
 
 async function transferBalance(
   to: string,
-  from: KeyringPair = accountGR,
-  balance: BN = balanceToTransferGR,
+  from: KeyringPair = tbAccount,
+  balance: BN = balanceToTransfer,
 ): Promise<ResponseTransferBalance> {
+  logger.info(`Transfer value ${balance.toNumber()} from ${from.address} to ${to}`);
   try {
-    await transfer(from, to, balance);
+    await transfer(to, from, balance);
   } catch (error) {
     logger.error(error);
     return { error: `Transfer balance from ${from} to ${to} failed` };
   }
-  if (to !== accountGR.address) {
+  if (to !== tbAccount.address) {
     await transferService.setTransferDate(to, getGenesisHash());
   }
   return { status: 'ok', transferredBalance: balance.toString() };
 }
 
-async function transfer(from: KeyringPair = accountGR, to: string, balance: BN): Promise<TransferData> {
-  api.balance.transfer(to, balance);
+async function transfer(
+  to: string,
+  from: KeyringPair = tbAccount,
+  balance: BN = balanceToTransfer,
+): Promise<TransferData> {
+  const tx = api.balance.transfer(to, balance);
   return new Promise((resolve, reject) => {
-    api.balance.signAndSend(from, ({ events }) => {
-      events.forEach(({ event: { method, data } }) => {
+    tx.signAndSend(from, ({ events }) => {
+      events.forEach(({ event }) => {
+        const { method, data } = event;
         if (method === 'Transfer') {
           resolve(data as TransferData);
         } else if (method === 'ExtrinsicFailed') {
-          reject(data);
+          reject(api.getExtrinsicFailedError(event).docs.filter(Boolean).join('. '));
         }
       });
     });
@@ -95,15 +68,11 @@ async function transfer(from: KeyringPair = accountGR, to: string, balance: BN):
 }
 
 async function isSmallAccountBalance(): Promise<boolean> {
-  const balance = await api.balance.findOut(accountGR.address);
-  if (balance.lt(accountBalanceGR)) {
+  const balance = await api.balance.findOut(tbAccount.address);
+  if (balance.lt(tbAccBalance)) {
     return true;
   }
   return false;
-}
-
-function getGenesisHash(): string {
-  return api.genesisHash.toHex();
 }
 
 export const gearService = { init, getGenesisHash, transferBalance };

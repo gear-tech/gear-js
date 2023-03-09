@@ -1,7 +1,7 @@
 import { plainToClass } from 'class-transformer';
 
 import { TransferBalance } from '../database/entities/transfer.entity';
-import { transferRepository } from '../repositories/transfer.repository';
+import { transferRepository } from '../database/repositories/transfer.repository';
 
 const transferService = {
   async setTransferDate(account: string, genesis: string): Promise<TransferBalance> {
