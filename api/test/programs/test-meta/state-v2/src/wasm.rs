@@ -13,4 +13,8 @@ pub mod metafns {
     pub fn wallet_by_person(state: State, person: Person) -> Option<Wallet> {
         state.into_iter().find(|w| w.person == person)
     }
+
+    pub fn wallet_by_u128(state: State, number: u128) -> Option<Wallet> {
+        state.into_iter().find(|w| w.id.decimal == number)
+    }
 }

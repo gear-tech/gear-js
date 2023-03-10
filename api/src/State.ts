@@ -42,7 +42,7 @@ export class GearProgramState extends GearProgramStorage {
 
     const payload =
       fnTypes?.input !== undefined && fnTypes?.input !== null
-        ? meta.createType(fnTypes.input, args.argument).toHex()
+        ? Array.from(meta.createType(fnTypes.input, args.argument).toU8a())
         : args.argument;
 
     const state = await this._api.rpc['gear'].readStateUsingWasm(

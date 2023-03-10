@@ -48,7 +48,7 @@ pub struct EmptyStruct {
 // Additional to primary types
 #[derive(TypeInfo, Decode, Encode, Debug, PartialEq, Eq, Clone)]
 pub struct Id {
-    pub decimal: u64,
+    pub decimal: u128,
     pub hex: Vec<u8>,
 }
 

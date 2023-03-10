@@ -504,7 +504,7 @@ describe('Get type definitions', () => {
     expect(meta.getTypeDef(28)).toEqual([
       {
         id: {
-          decimal: 'U64',
+          decimal: 'U128',
           hex: ['U8'],
         },
         person: {
@@ -524,7 +524,7 @@ describe('Get type definitions', () => {
             name: 'Id',
             kind: 'composite',
             type: {
-              decimal: { name: 'U64', kind: 'primitive', type: 'U64' },
+              decimal: { name: 'U128', kind: 'primitive', type: 'U128' },
               hex: { name: 'Vec<U8>', kind: 'sequence', type: { name: 'U8', kind: 'primitive', type: 'U8' } },
             },
           },
@@ -544,7 +544,7 @@ describe('Get type definitions', () => {
   test('Get type structure 29', () => {
     expect(meta.getTypeDef(29)).toEqual({
       id: {
-        decimal: 'U64',
+        decimal: 'U128',
         hex: ['U8'],
       },
       person: {
@@ -560,7 +560,7 @@ describe('Get type definitions', () => {
           name: 'Id',
           kind: 'composite',
           type: {
-            decimal: { name: 'U64', kind: 'primitive', type: 'U64' },
+            decimal: { name: 'U128', kind: 'primitive', type: 'U128' },
             hex: { name: 'Vec<U8>', kind: 'sequence', type: { name: 'U8', kind: 'primitive', type: 'U8' } },
           },
         },
@@ -578,30 +578,25 @@ describe('Get type definitions', () => {
 
   test('Get type structure 30', () => {
     expect(meta.getTypeDef(30)).toEqual({
-      decimal: 'U64',
+      decimal: 'U128',
       hex: ['U8'],
     });
     expect(meta.getTypeDef(30, true)).toEqual({
       name: 'Id',
       kind: 'composite',
       type: {
-        decimal: { name: 'U64', kind: 'primitive', type: 'U64' },
+        decimal: { name: 'U128', kind: 'primitive', type: 'U128' },
         hex: { name: 'Vec<U8>', kind: 'sequence', type: { name: 'U8', kind: 'primitive', type: 'U8' } },
       },
     });
   });
 
   test('Get type structure 31', () => {
-    expect(meta.getTypeDef(31)).toEqual('U64');
-    expect(meta.getTypeDef(31, true)).toEqual({ name: 'U64', kind: 'primitive', type: 'U64' });
-  });
-
-  test('Get type structure 32', () => {
-    expect(meta.getTypeDef(32)).toEqual({
+    expect(meta.getTypeDef(31)).toEqual({
       surname: 'Str',
       name: 'Str',
     });
-    expect(meta.getTypeDef(32, true)).toEqual({
+    expect(meta.getTypeDef(31, true)).toEqual({
       name: 'Person',
       kind: 'composite',
       type: {

@@ -1,3 +1,13 @@
+## 0.30.1
+
+_03/10/2023_
+
+https://github.com/gear-tech/gear-js/pull/1226
+
+### Changes
+
+- Send payload as array of bytes instead of hex to avoid problem with endianness.
+
 ## 0.30.0
 
 _02/15/2023_

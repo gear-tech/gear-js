@@ -3,7 +3,6 @@ resolver = "2"
 
 members = [
   "test-gas",
-  "test-syscall-in-state",
   "test-waitlist",
   "test-meta",
 ]
