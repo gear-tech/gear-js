@@ -157,4 +157,17 @@ describe('Read State', () => {
       person: { surname: 'Surname0', name: 'Name0' },
     });
   });
+
+  test('Read state v2 wallet_by_u128', async () => {
+    expect(programId).toBeDefined();
+    const state = await api.programState.readUsingWasm(
+      { programId, fn_name: 'wallet_by_u128', wasm: stateV2, argument: 1 },
+      stateV2Meta,
+    );
+
+    expect(state.toJSON()).toMatchObject({
+      id: { decimal: 1, hex: '0x01' },
+      person: { surname: 'Surname1', name: 'Name1' },
+    });
+  });
 });
