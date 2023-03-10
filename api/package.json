@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/api",
-  "version": "0.30.0",
+  "version": "0.30.1",
   "description": "A JavaScript library that provides functionality to connect GEAR Component APIs.",
   "main": "cjs/index.js",
   "module": "index.js",
