@@ -84,7 +84,7 @@ __metadata:
     rollup-plugin-typescript2: ^0.31.2
     typescript: ^4.7.2
   peerDependencies:
-    "@gear-js/api": 0.30.0
+    "@gear-js/api": 0.30.1
     "@polkadot/extension-dapp": ^0.44.8
     react: ">=17.0.2"
     react-dom: ">=17.0.2"
