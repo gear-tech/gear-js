@@ -8,13 +8,14 @@ import { SignedBlockExtended } from '@polkadot/api-derive/types';
 import { Keys, CodeStatus } from '@gear-js/common';
 import { plainToInstance } from 'class-transformer';
 import { VoidFn } from '@polkadot/api/types';
+import { Option } from '@polkadot/types';
 
 import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
 import { CodeService } from '../code/code.service';
-import { getExtrinsics, getMetaHash, getPayloadAndValue, eventDataHandlers } from '../common/helpers';
-import { Code, Message, Program } from '../database/entities';
+import { getExtrinsics, getMetahash, getPayloadAndValue, eventDataHandlers } from '../common/helpers';
 import { MessageEntryPoint, MessageType } from '../common/enums';
+import { Code, Message, Program } from '../database/entities';
 import { CodeRepo } from '../code/code.repo';
 import { changeStatus } from '../healthcheck/healthcheck.controller';
 import { ProgramRepo } from '../program/program.repo';
@@ -23,7 +24,6 @@ import { RabbitmqService } from '../rabbitmq/rabbitmq.service';
 import { MetaService } from '../meta/meta.service';
 import { sleep } from '../utils/sleep';
 import config from '../config/configuration';
-import { Option } from '@polkadot/types';
 
 const gearConfig = config().gear;
 
@@ -268,10 +268,20 @@ export class GearService {
         this.logger.error(
           `Unable to retrieve code by id ${codeId} for program ${programId} encountered in block ${blockHash}`,
         );
-        this.indexBlockWithCode(codeId);
+        this.indexBlockWithMissedCode(codeId);
       }
 
       code = await this.codeRepository.get(codeId, this.genesis);
+
+      if (!code) {
+        this.logger.error(
+          `Unable to retrieve code by id ${codeId} for program ${programId}. Program won't be saved to the database.`,
+        );
+        continue;
+      }
+
+      const metahash = await getMetahash(this.api.program, programId);
+      const meta = metahash ? await this.metaService.getByHashOrCreate(metahash) : null;
 
       programs.push(
         plainToInstance(Program, {
@@ -282,7 +292,7 @@ export class GearService {
           timestamp: new Date(timestamp),
           code,
           genesis: this.genesis,
-          meta: code ? code.meta : null,
+          meta,
         }),
       );
     }
@@ -312,10 +322,10 @@ export class GearService {
         data: { id, change },
       } = event.event as CodeChanged;
       const codeId = id.toHex();
-      const metaHash = await getMetaHash(this.api.code, codeId);
+      const metahash = await getMetahash(this.api.code, codeId);
 
       const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
-      const meta = metaHash ? await this.metaService.getByHashOrCreate(metaHash) : null;
+      const meta = metahash ? await this.metaService.getByHashOrCreate(metahash) : null;
 
       codes.push(
         plainToInstance(Code, {
@@ -353,7 +363,7 @@ export class GearService {
     return this.indexBlock(hash.toHex());
   }
 
-  private async indexBlockWithCode(codeId: HexString) {
+  private async indexBlockWithMissedCode(codeId: HexString) {
     const metaStorage = (await this.api.query.gearProgram.metadataStorage(codeId)) as Option<any>;
     if (metaStorage.isSome) {
       const blockNumber = metaStorage.unwrap()['blockNumber'].toNumber();

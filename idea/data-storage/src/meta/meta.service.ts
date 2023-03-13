@@ -3,15 +3,14 @@ import { Injectable } from '@nestjs/common';
 import { AddMetaByCodeParams, AddMetaParams, AddMetaResult } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
 
-import { CodeHasNoMeta, CodeNotFound, ProgramHasNoMeta, ProgramNotFound } from '../common/errors';
+import { InvalidMetaHex, CodeHasNoMeta, CodeNotFound, ProgramHasNoMeta, ProgramNotFound } from '../common/errors';
 import { Meta } from '../database/entities';
 import { MetaRepo } from './meta.repo';
 import { ProgramRepo } from '../program/program.repo';
 import { CreateMetaInput, AddProgramMetaInput } from '../common/types';
 import { CodeRepo } from '../code/code.repo';
-import { _generateCodeHash, _getProgramMetadata } from '../common/helpers';
+import { generateMetaHash, _getProgramMetadata } from '../common/helpers';
 import { ProgramService } from '../program/program.service';
-import { InvalidMetaHex } from '../common/errors/base';
 
 @Injectable()
 export class MetaService {
@@ -51,15 +50,15 @@ export class MetaService {
 
     if (code.meta === null) throw new CodeHasNoMeta();
 
-    const hash = _generateCodeHash(metaHex as HexString);
+    const hash = generateMetaHash(metaHex as HexString);
 
     if (code.meta.hash !== hash) throw new InvalidMetaHex();
 
     const meta = await this.metaRepository.getByHash(hash);
-    const metaData = _getProgramMetadata(metaHex as HexString);
+    const metadata = _getProgramMetadata(metaHex as HexString);
 
     if (meta) {
-      const updateMeta = plainToClass(Meta, { ...meta, hex: metaHex, types: metaData.types });
+      const updateMeta = plainToClass(Meta, { ...meta, hex: metaHex, types: metadata.types });
 
       code.meta = await this.metaRepository.save(updateMeta);
       code.name = name;
@@ -71,7 +70,7 @@ export class MetaService {
         this.programService.addProgramsMetaByCode(codeId, genesis, addProgramsMeta),
       ]);
     } else {
-      const createMetaInput: CreateMetaInput = { hex: metaHex, hash, types: metaData.types };
+      const createMetaInput: CreateMetaInput = { hex: metaHex, hash, types: metadata.types };
       const createMeta = await this.createMeta(createMetaInput);
       code.meta = createMeta;
       code.name = name;
@@ -95,7 +94,7 @@ export class MetaService {
 
     if (program.meta === null) throw new ProgramHasNoMeta();
 
-    const hash = _generateCodeHash(metaHex as HexString);
+    const hash = generateMetaHash(metaHex as HexString);
 
     if (program.meta.hash !== hash) throw new InvalidMetaHex();
 

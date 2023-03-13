@@ -3,9 +3,9 @@ import { getPayloadAndValue } from './get-update-message-data';
 import { constructQueryBuilder } from './query-builder';
 import { getStateMeta } from './get-state-meta';
 import { getCodeHash } from './get-wasm-hash';
-import { _generateCodeHash } from './_generate-code-hash';
+import { generateMetaHash } from './generate-meta-hash';
 import { _getProgramMetadata } from './_get-program-metadata';
-import { getMetaHash } from './get-meta-hash';
+import { getMetahash } from './get-meta-hash';
 import { getExtrinsics } from './get-extrinsics';
 
 export {
@@ -14,8 +14,8 @@ export {
   constructQueryBuilder,
   getStateMeta,
   getCodeHash,
-  _generateCodeHash,
+  generateMetaHash,
   _getProgramMetadata,
-  getMetaHash,
+  getMetahash,
   getExtrinsics,
 };
