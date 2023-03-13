@@ -118,7 +118,7 @@ export class GearService {
     for await (const { hash, blockNumber } of this.blocksGenerator()) {
       if (this.lastBlockNumber === undefined) {
         this.logger.log(`Block processing started with ${blockNumber}.`);
-      } else if (blockNumber === this.lastBlockNumber) continue;
+      } else if (blockNumber === this.lastBlockNumber || blockNumber === 0) continue;
       else if (blockNumber - 1 !== this.lastBlockNumber) {
         this.logger.warn(
           // eslint-disable-next-line max-len
@@ -127,6 +127,10 @@ export class GearService {
         for (let bn = this.lastBlockNumber + 1; bn < blockNumber; bn++) {
           await this.indexMissedBlock(bn);
         }
+      }
+      if (this.api === null) {
+        console.log('api null');
+        continue;
       }
 
       await this.indexBlock(hash);
@@ -182,6 +186,7 @@ export class GearService {
   }
 
   private async handleExtrinsics(block: SignedBlockExtended, timestamp: number) {
+    if (this.api === null) return;
     const status = this.api.createType('ExtrinsicStatus', { finalized: block.block.header.hash.toHex() });
 
     await this.handleCodeExtrinsics(block, status, timestamp);
