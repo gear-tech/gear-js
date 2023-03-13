@@ -7,7 +7,7 @@ import { InvalidMetaHex, CodeHasNoMeta, CodeNotFound, ProgramHasNoMeta, ProgramN
 import { Meta } from '../database/entities';
 import { MetaRepo } from './meta.repo';
 import { ProgramRepo } from '../program/program.repo';
-import { CreateMetaInput, AddProgramMetaInput } from '../common/types';
+import { CreateMetaInput } from '../common/types';
 import { CodeRepo } from '../code/code.repo';
 import { generateMetaHash, _getProgramMetadata } from '../common/helpers';
 import { ProgramService } from '../program/program.service';
@@ -23,7 +23,6 @@ export class MetaService {
 
   public async getByHashOrCreate(hash: string): Promise<Meta> {
     const meta = await this.getByHash(hash);
-
     if (meta) return meta;
 
     return this.createMeta({ hash });
@@ -54,34 +53,16 @@ export class MetaService {
 
     if (code.meta.hash !== hash) throw new InvalidMetaHex();
 
-    const meta = await this.metaRepository.getByHash(hash);
+    console.log(code.meta);
+    const meta = code.meta;
     const metadata = _getProgramMetadata(metaHex as HexString);
 
-    if (meta) {
-      const updateMeta = plainToClass(Meta, { ...meta, hex: metaHex, types: metadata.types });
+    meta.hex = metaHex;
+    meta.types = JSON.stringify(metadata.types);
 
-      code.meta = await this.metaRepository.save(updateMeta);
-      code.name = name;
+    code.name = name;
 
-      const addProgramsMeta: AddProgramMetaInput = { name, meta };
-
-      await Promise.all([
-        this.codeRepository.save([code]),
-        this.programService.addProgramsMetaByCode(codeId, genesis, addProgramsMeta),
-      ]);
-    } else {
-      const createMetaInput: CreateMetaInput = { hex: metaHex, hash, types: metadata.types };
-      const createMeta = await this.createMeta(createMetaInput);
-      code.meta = createMeta;
-      code.name = name;
-
-      const addProgramsMeta: AddProgramMetaInput = { name, meta: createMeta };
-
-      await Promise.all([
-        this.codeRepository.save([code]),
-        this.programService.addProgramsMetaByCode(codeId, genesis, addProgramsMeta),
-      ]);
-    }
+    await Promise.all([this.metaRepository.save(meta), this.codeRepository.save([code])]);
 
     return { status: 'Metadata added' };
   }
@@ -97,18 +78,14 @@ export class MetaService {
     const hash = generateMetaHash(metaHex as HexString);
     if (program.meta.hash !== hash) throw new InvalidMetaHex();
 
-    const metaData = _getProgramMetadata(metaHex as HexString);
+    const metadata = _getProgramMetadata(metaHex as HexString);
     const meta = program.meta;
-
-    const updateMeta = plainToClass(Meta, {
-      ...meta,
-      hex: metaHex,
-      types: metaData.types,
-    });
+    meta.hex = metaHex;
+    meta.types = JSON.stringify(metadata.types);
 
     program.name = name;
 
-    await Promise.all([this.metaRepository.save(updateMeta), this.programRepository.save([program])]);
+    await Promise.all([this.metaRepository.save(meta), this.programRepository.save([program])]);
 
     return { status: 'Metadata added' };
   }
