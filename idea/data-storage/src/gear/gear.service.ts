@@ -5,7 +5,7 @@ import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { SignedBlockExtended } from '@polkadot/api-derive/types';
-import { Keys, CodeStatus } from '@gear-js/common';
+import { EventNames, CodeStatus } from '@gear-js/common';
 import { plainToInstance } from 'class-transformer';
 import { VoidFn } from '@polkadot/api/types';
 import { Option } from '@polkadot/types';
@@ -24,15 +24,13 @@ import { RabbitmqService } from '../rabbitmq/rabbitmq.service';
 import { MetaService } from '../meta/meta.service';
 import { sleep } from '../utils/sleep';
 import config from '../config/configuration';
+import { BlockParams } from '../common/types';
 
 const gearConfig = config().gear;
 
 const MAX_RECONNECTIONS = 10;
 let reconnectionsCounter = 0;
-interface BlockParams {
-  number: number;
-  hash: HexString;
-}
+
 @Injectable()
 export class GearService {
   private logger: Logger = new Logger(GearService.name);
@@ -102,7 +100,7 @@ export class GearService {
   private async listen() {
     this.newBlocks = [];
     return this.api.derive.chain.subscribeFinalizedHeads(({ number, hash }) => {
-      this.newBlocks.push({ number: number.toNumber(), hash: hash.toHex() });
+      this.newBlocks.push({ blockNumber: number.toNumber(), hash: hash.toHex() });
     });
   }
 
@@ -117,22 +115,22 @@ export class GearService {
   }
 
   private async indexBlocks() {
-    for await (const { hash, number } of this.blocksGenerator()) {
+    for await (const { hash, blockNumber } of this.blocksGenerator()) {
       if (this.lastBlockNumber === undefined) {
-        this.logger.log(`Block processing started with ${number}.`);
-      } else if (number === this.lastBlockNumber) continue;
-      else if (number - 1 !== this.lastBlockNumber) {
+        this.logger.log(`Block processing started with ${blockNumber}.`);
+      } else if (blockNumber === this.lastBlockNumber) continue;
+      else if (blockNumber - 1 !== this.lastBlockNumber) {
         this.logger.warn(
           // eslint-disable-next-line max-len
-          `Some blocks have been missed. The last processed block is ${this.lastBlockNumber} but the current is ${number}`,
+          `Some blocks have been missed. The last processed block is ${this.lastBlockNumber} but the current is ${blockNumber}`,
         );
-        for (let n = this.lastBlockNumber + 1; n < number; n++) {
-          await this.indexMissedBlock(n);
+        for (let bn = this.lastBlockNumber + 1; bn < blockNumber; bn++) {
+          await this.indexMissedBlock(bn);
         }
       }
 
       await this.indexBlock(hash);
-      this.lastBlockNumber = number;
+      this.lastBlockNumber = blockNumber;
     }
   }
 
@@ -145,8 +143,8 @@ export class GearService {
     await this.handleEvents(block, timestamp, hash);
   }
 
-  eventHandlers: Record<Keys, (data: any, timestamp?: number) => Promise<unknown>> = {
-    [Keys.UserMessageSent]: async (data: any, timestamp: number) => {
+  eventHandlers: Record<EventNames, (data: any, timestamp?: number) => Promise<unknown>> = {
+    [EventNames.UserMessageSent]: async (data: any, timestamp: number) => {
       const message = plainToInstance(Message, {
         ...data,
         timestamp: new Date(timestamp),
@@ -155,17 +153,18 @@ export class GearService {
       });
       await this.messageService.createMessages([message]);
     },
-    [Keys.ProgramChanged]: async (data: any) =>
+    [EventNames.ProgramChanged]: async (data: any) =>
       await this.programService.setStatus(data.id, this.genesis, data.programStatus),
-    [Keys.MessagesDispatched]: (data: any) => this.messageService.setDispatchedStatus(data),
-    [Keys.UserMessageRead]: (data: any) => this.messageService.updateReadStatus(data.id, data.reason),
-    [Keys.CodeChanged]: (data: any) => this.codeService.updateCodes([data]),
+    [EventNames.MessagesDispatched]: (data: any) => this.messageService.setDispatchedStatus(data),
+    [EventNames.UserMessageRead]: (data: any) => this.messageService.updateReadStatus(data.id, data.reason),
+    [EventNames.CodeChanged]: (data: any) => this.codeService.updateCodes([data]),
   };
 
   private async handleEvents(block: SignedBlockExtended, timestamp: number, hash: HexString): Promise<void> {
+    const necessaryEvents = block.events.filter(({ event: { method } }) => Object.keys(EventNames).includes(method));
     for (const {
       event: { data, method },
-    } of block.events.filter(({ event: { method } }) => Object.keys(Keys).includes(method))) {
+    } of necessaryEvents) {
       try {
         const eventData = eventDataHandlers[method](data as GenericEventData);
 

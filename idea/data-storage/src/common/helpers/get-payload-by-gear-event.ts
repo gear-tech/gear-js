@@ -1,4 +1,4 @@
-import { Keys, ProgramStatus, MessageReadReason } from '@gear-js/common';
+import { EventNames, ProgramStatus, MessageReadReason } from '@gear-js/common';
 import {
   CodeChangedData,
   MessagesDispatchedData,
@@ -88,11 +88,11 @@ function messagesDispatchedPayload({ statuses }: MessagesDispatchedData): Messag
   return null;
 }
 
-export const eventDataHandlers: Record<Keys, (data: GenericEventData) => GearEventPayload> = {
-  [Keys.UserMessageSent]: (data: UserMessageSentData): UserMessageSentInput => userMessageSentPayload(data),
-  [Keys.UserMessageRead]: (data: UserMessageReadData): UserMessageReadInput => userMessageReadPayload(data),
-  [Keys.ProgramChanged]: (data: ProgramChangedData): ProgramChangedInput => programChangedPayload(data),
-  [Keys.MessagesDispatched]: (data: MessagesDispatchedData): MessagesDispatchedDataInput | null =>
+export const eventDataHandlers: Record<EventNames, (data: GenericEventData) => GearEventPayload> = {
+  [EventNames.UserMessageSent]: (data: UserMessageSentData): UserMessageSentInput => userMessageSentPayload(data),
+  [EventNames.UserMessageRead]: (data: UserMessageReadData): UserMessageReadInput => userMessageReadPayload(data),
+  [EventNames.ProgramChanged]: (data: ProgramChangedData): ProgramChangedInput => programChangedPayload(data),
+  [EventNames.MessagesDispatched]: (data: MessagesDispatchedData): MessagesDispatchedDataInput | null =>
     messagesDispatchedPayload(data),
-  [Keys.CodeChanged]: (data: CodeChangedData): CodeChangedInput => codeChangedPayload(data),
+  [EventNames.CodeChanged]: (data: CodeChangedData): CodeChangedInput => codeChangedPayload(data),
 };

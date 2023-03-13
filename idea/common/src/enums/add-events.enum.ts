@@ -1,4 +1,4 @@
-enum Keys {
+enum EventNames {
   UserMessageSent = 'UserMessageSent',
   UserMessageRead = 'UserMessageRead',
   MessagesDispatched = 'MessagesDispatched',
@@ -6,4 +6,4 @@ enum Keys {
   CodeChanged = 'CodeChanged',
 }
 
-export { Keys };
+export { EventNames };

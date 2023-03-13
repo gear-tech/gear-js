@@ -1,4 +1,5 @@
 import { ExtrinsicStatus, SignedBlock } from '@polkadot/types/interfaces';
+import { HexString } from '@polkadot/util/types';
 
 import { CodeChangedInput } from './code';
 import { MessagesDispatchedDataInput, UserMessageReadInput, UserMessageSentInput } from './message';
@@ -26,3 +27,8 @@ export type GearEventPayload =
   | MessagesDispatchedDataInput
   | CodeChangedInput
   | null;
+
+export interface BlockParams {
+  blockNumber: number;
+  hash: HexString;
+}
