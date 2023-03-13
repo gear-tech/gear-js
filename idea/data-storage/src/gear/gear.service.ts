@@ -101,7 +101,7 @@ export class GearService {
 
   private async listen() {
     this.newBlocks = [];
-    return this.api.rpc.chain.subscribeFinalizedHeads(({ number, hash }) => {
+    return this.api.derive.chain.subscribeFinalizedHeads(({ number, hash }) => {
       this.newBlocks.push({ number: number.toNumber(), hash: hash.toHex() });
     });
   }
