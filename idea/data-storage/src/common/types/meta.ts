@@ -5,8 +5,3 @@ export interface CreateMetaInput {
   types?: string | unknown;
   hex?: string;
 }
-
-export interface AddProgramMetaInput {
-  name: string;
-  meta: Meta;
-}

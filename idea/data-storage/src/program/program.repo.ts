@@ -44,7 +44,7 @@ export class ProgramRepo {
     return this.programRepo.find({
       where: {
         genesis,
-        code: { id: codeId }
+        code: { id: codeId },
       },
     });
   }
@@ -52,7 +52,7 @@ export class ProgramRepo {
   public async get(id: string, genesis: string): Promise<Program> {
     return this.programRepo.findOne({
       where: { id, genesis },
-      relations: ['code']
+      relations: ['code'],
     });
   }
 
@@ -60,7 +60,7 @@ export class ProgramRepo {
     return this.programRepo.findOne({
       where: { id, genesis },
       relations: ['meta', 'messages', 'code'],
-      select: { meta: { types: true, hex: true, hash: true } },
+      select: { meta: { types: true, hex: true, hash: true, id: true } },
     });
   }
 
