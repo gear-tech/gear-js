@@ -16,7 +16,7 @@ export class Meta implements IMeta {
   public hex: string;
 
   @Column({ nullable: true, type: 'json' })
-  public types: string;
+  public types: any;
 
   @OneToMany(() => Code, (code) => code.meta)
   public codes: Code[];
