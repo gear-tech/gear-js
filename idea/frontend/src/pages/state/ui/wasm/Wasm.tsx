@@ -15,6 +15,7 @@ import { Box } from 'shared/ui/box';
 import { FormPayload, getPayloadFormValues, getSubmitPayload } from 'features/formPayload';
 import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg';
 
+import { downloadJson } from '../../helpers';
 import { IState, FormValues, INITIAL_VALUES } from '../../model';
 import { useProgramId } from '../../hooks';
 import { WasmStates } from '../wasmStates';
@@ -186,23 +187,7 @@ const Wasm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFileFunction, uploadedStateId, wasmBuffer]);
 
-  const downloadJson = () => {
-    const json = JSON.stringify(state, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-
-    link.setAttribute('style', 'display: none');
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'state');
-
-    document.body.appendChild(link);
-    link.click();
-
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(link);
-  };
+  const handleDownloadJsonButtonClick = () => downloadJson(state);
 
   return (
     <>
@@ -247,7 +232,7 @@ const Wasm = () => {
                 />
 
                 {isStateRead && isState && (
-                  <Button text="Download JSON" color="secondary" size="large" onClick={downloadJson} />
+                  <Button text="Download JSON" color="secondary" size="large" onClick={handleDownloadJsonButtonClick} />
                 )}
 
                 <BackButton />

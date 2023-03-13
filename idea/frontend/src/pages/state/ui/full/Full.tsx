@@ -1,4 +1,4 @@
-import { Input, Textarea } from '@gear-js/ui';
+import { Button, Input, Textarea } from '@gear-js/ui';
 import clsx from 'clsx';
 
 import { useStateRead } from 'hooks';
@@ -8,6 +8,7 @@ import { getPreformattedText } from 'shared/helpers';
 import { BackButton } from 'shared/ui/backButton';
 import { Box } from 'shared/ui/box';
 
+import { downloadJson } from '../../helpers';
 import { useProgramId } from '../../hooks';
 import styles from './Full.module.scss';
 
@@ -24,6 +25,8 @@ const Full = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metadata]);
 
+  const handleDownloadJsonButtonClick = () => downloadJson(state);
+
   return (
     <>
       <Box className={styles.box}>
@@ -31,7 +34,13 @@ const Full = () => {
         <Textarea label="Statedata:" gap="1/5" rows={15} value={value} className={className} readOnly block />
       </Box>
 
-      <BackButton />
+      <div className={styles.buttons}>
+        {isStateRead && (
+          <Button text="Download JSON" color="secondary" size="large" onClick={handleDownloadJsonButtonClick} />
+        )}
+
+        <BackButton />
+      </div>
     </>
   );
 };
