@@ -5,36 +5,42 @@ import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { SignedBlockExtended } from '@polkadot/api-derive/types';
-import { Keys } from '@gear-js/common';
+import { Keys, CodeStatus } from '@gear-js/common';
 import { plainToInstance } from 'class-transformer';
 import { VoidFn } from '@polkadot/api/types';
 
 import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
 import { CodeService } from '../code/code.service';
-import { getExtrinsics, getMetaHash, getPayloadAndValue, getPayloadByGearEvent } from '../common/helpers';
+import { getExtrinsics, getMetaHash, getPayloadAndValue, eventDataHandlers } from '../common/helpers';
 import { Code, Message, Program } from '../database/entities';
-import { CodeStatus, MessageEntryPoint, MessageType } from '../common/enums';
+import { MessageEntryPoint, MessageType } from '../common/enums';
 import { CodeRepo } from '../code/code.repo';
-import { CodeChangedInput } from '../code/types';
 import { changeStatus } from '../healthcheck/healthcheck.controller';
 import { ProgramRepo } from '../program/program.repo';
-import configuration from '../config/configuration';
 import { BlockService } from '../block/block.service';
 import { RabbitmqService } from '../rabbitmq/rabbitmq.service';
 import { MetaService } from '../meta/meta.service';
+import { sleep } from '../utils/sleep';
+import config from '../config/configuration';
+import { Option } from '@polkadot/types';
 
-const { gear } = configuration();
+const gearConfig = config().gear;
 
 const MAX_RECONNECTIONS = 10;
 let reconnectionsCounter = 0;
-
+interface BlockParams {
+  number: number;
+  hash: HexString;
+}
 @Injectable()
 export class GearService {
   private logger: Logger = new Logger(GearService.name);
   public api: GearApi;
   public genesis: HexString;
   private unsub: VoidFn;
+  private newBlocks: Array<BlockParams>;
+  private lastBlockNumber: number;
 
   constructor(
     private programService: ProgramService,
@@ -53,6 +59,7 @@ export class GearService {
   }
 
   private async reconnect(): Promise<void> {
+    this.newBlocks = [];
     this.unsub && this.unsub();
     if (this.api) {
       await this.api.disconnect();
@@ -60,7 +67,7 @@ export class GearService {
     }
     reconnectionsCounter++;
     if (reconnectionsCounter > MAX_RECONNECTIONS) {
-      throw new Error(`Unable to connect to ${gear.wsProvider}`);
+      throw new Error(`Unable to connect to ${gearConfig.wsProvider}`);
     }
     this.logger.log('⚙️ 📡 Reconnecting to the gear node');
     await new Promise((resolve) => {
@@ -72,11 +79,11 @@ export class GearService {
   }
 
   private async connect(): Promise<void> {
-    this.api = new GearApi({ providerAddress: gear.wsProvider });
+    this.api = new GearApi({ providerAddress: gearConfig.wsProvider });
     try {
       await this.api.isReadyOrError;
     } catch (error) {
-      this.logger.error(`Failed to connect to ${gear.wsProvider}`);
+      this.logger.error(`Failed to connect to ${gearConfig.wsProvider}`);
     }
     await this.api.isReady;
     this.api.on('disconnected', () => {
@@ -88,71 +95,88 @@ export class GearService {
     this.logger.log(`⚙️ Connected to ${this.api.runtimeChain} with genesis ${this.genesis}`);
     reconnectionsCounter = 0;
     this.unsub = await this.listen();
+    this.indexBlocks();
     changeStatus('gear');
   }
 
   private async listen() {
-    return this.api.derive.chain.subscribeNewBlocks(async (block) => {
-      const blockHash = block.block.hash.toHex();
-      const timestamp = (await this.api.blocks.getBlockTimestamp(block)).toNumber();
-
-      await this.handleBlock(block, timestamp, blockHash);
-      await this.handleExtrinsics(block, timestamp);
-
-      for (const {
-        event: { data, method },
-      } of block.events) {
-        try {
-          const payload = getPayloadByGearEvent(method, data as GenericEventData);
-          if (payload !== null) {
-            await this.handleEvents(method, { ...payload, blockHash, timestamp, genesis: this.genesis });
-          }
-        } catch (error) {
-          console.error(error);
-          this.logger.warn({ method, data: data.toHuman() });
-        }
-      }
+    this.newBlocks = [];
+    return this.api.rpc.chain.subscribeFinalizedHeads(({ number, hash }) => {
+      this.newBlocks.push({ number: number.toNumber(), hash: hash.toHex() });
     });
   }
 
-  private async handleEvents(method: string, payload: any): Promise<void> {
-    const { id, genesis, timestamp } = payload;
+  private async *blocksGenerator() {
+    while (true) {
+      if (this.newBlocks.length === 0) {
+        await sleep(1000);
+        continue;
+      }
+      yield this.newBlocks.shift();
+    }
+  }
 
-    const eventsMethod = {
-      [Keys.UserMessageSent]: async () => {
-        const createMessageDBType = plainToInstance(Message, {
-          ...payload,
-          timestamp: new Date(timestamp),
-          type: MessageType.USER_MESS_SENT,
-          program: await this.programRepository.get(payload.source, genesis),
-        });
-        await this.messageService.createMessages([createMessageDBType]);
-      },
-      [Keys.ProgramChanged]: async () => {
-        await this.programService.setStatus(id, genesis, payload.programStatus);
-      },
-      [Keys.MessagesDispatched]: async () => {
-        await this.messageService.setDispatchedStatus(payload);
-      },
-      [Keys.UserMessageRead]: async () => {
-        await this.messageService.updateReadStatus(id, payload.reason);
-      },
-      [Keys.CodeChanged]: async () => {
-        const codeChangedInput: CodeChangedInput = { ...payload };
-        await this.codeService.updateCodes([codeChangedInput]);
-      },
-      [Keys.DatabaseWiped]: async () => {
-        await this.messageService.deleteRecords(genesis);
-        await this.programService.deleteRecords(genesis);
-        await this.codeService.deleteRecords(genesis);
-      },
-    };
+  private async indexBlocks() {
+    for await (const { hash, number } of this.blocksGenerator()) {
+      if (this.lastBlockNumber === undefined) {
+        this.logger.log(`Block processing started with ${number}.`);
+      } else if (number === this.lastBlockNumber) continue;
+      else if (number - 1 !== this.lastBlockNumber) {
+        this.logger.warn(
+          // eslint-disable-next-line max-len
+          `Some blocks have been missed. The last processed block is ${this.lastBlockNumber} but the current is ${number}`,
+        );
+        for (let n = this.lastBlockNumber + 1; n < number; n++) {
+          await this.indexMissedBlock(n);
+        }
+      }
 
-    try {
-      method in eventsMethod && (await eventsMethod[method]());
-    } catch (error) {
-      this.logger.error('Handle events error');
-      console.log(error);
+      await this.indexBlock(hash);
+      this.lastBlockNumber = number;
+    }
+  }
+
+  private async indexBlock(hash: HexString) {
+    const block = await this.api.derive.chain.getBlock(hash);
+    const timestamp = (await this.api.blocks.getBlockTimestamp(block)).toNumber();
+
+    await this.handleBlock(block, timestamp, hash);
+    await this.handleExtrinsics(block, timestamp);
+    await this.handleEvents(block, timestamp, hash);
+  }
+
+  eventHandlers: Record<Keys, (data: any, timestamp?: number) => Promise<unknown>> = {
+    [Keys.UserMessageSent]: async (data: any, timestamp: number) => {
+      const message = plainToInstance(Message, {
+        ...data,
+        timestamp: new Date(timestamp),
+        type: MessageType.USER_MESS_SENT,
+        program: await this.programRepository.get(data.source, this.genesis),
+      });
+      await this.messageService.createMessages([message]);
+    },
+    [Keys.ProgramChanged]: async (data: any) =>
+      await this.programService.setStatus(data.id, this.genesis, data.programStatus),
+    [Keys.MessagesDispatched]: (data: any) => this.messageService.setDispatchedStatus(data),
+    [Keys.UserMessageRead]: (data: any) => this.messageService.updateReadStatus(data.id, data.reason),
+    [Keys.CodeChanged]: (data: any) => this.codeService.updateCodes([data]),
+  };
+
+  private async handleEvents(block: SignedBlockExtended, timestamp: number, hash: HexString): Promise<void> {
+    for (const {
+      event: { data, method },
+    } of block.events.filter(({ event: { method } }) => Object.keys(Keys).includes(method))) {
+      try {
+        const eventData = eventDataHandlers[method](data as GenericEventData);
+
+        if (eventData === null) continue;
+
+        eventData.blockHash = hash;
+        await this.eventHandlers[method](eventData, timestamp);
+      } catch (error) {
+        this.logger.warn({ method, data: data.toHuman() });
+        console.error(error);
+      }
     }
   }
 
@@ -238,14 +262,16 @@ export class GearService {
       const blockHash = block.block.hash.toHex();
 
       const codeId = tx.method.method === 'uploadProgram' ? generateCodeHash(tx.args[0].toHex()) : tx.args[0].toHex();
-      const code = await this.codeRepository.get(codeId, this.genesis);
+      let code = await this.codeRepository.get(codeId, this.genesis);
 
       if (!code) {
         this.logger.error(
           `Unable to retrieve code by id ${codeId} for program ${programId} encountered in block ${blockHash}`,
         );
-        // TODO it's necessary to have ability to get code info even if it was missed for some reason
+        this.indexBlockWithCode(codeId);
       }
+
+      code = await this.codeRepository.get(codeId, this.genesis);
 
       programs.push(
         plainToInstance(Program, {
@@ -319,5 +345,21 @@ export class GearService {
         genesis: this.genesis,
       },
     ]);
+  }
+
+  private async indexMissedBlock(number: number) {
+    const hash = await this.api.blocks.getBlockHash(number);
+    this.logger.log(`Index missed block ${number} with hash ${hash.toHex()}`);
+    return this.indexBlock(hash.toHex());
+  }
+
+  private async indexBlockWithCode(codeId: HexString) {
+    const metaStorage = (await this.api.query.gearProgram.metadataStorage(codeId)) as Option<any>;
+    if (metaStorage.isSome) {
+      const blockNumber = metaStorage.unwrap()['blockNumber'].toNumber();
+
+      return this.indexMissedBlock(blockNumber);
+    }
+    this.logger.error(`Code with hash ${codeId} not found in storage`);
   }
 }

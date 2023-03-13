@@ -5,6 +5,4 @@ import { MessageReadReason } from './message-read-reason.enum';
 import { CodeStatus } from './code-status.enum';
 import { MessageStatus } from './message-status.enum';
 
-
-
-export { MessageStatus ,CodeStatus, MessageEntryPoint, MessageType, ProgramStatus, MessageReadReason };
+export { MessageStatus, CodeStatus, MessageEntryPoint, MessageType, ProgramStatus, MessageReadReason };

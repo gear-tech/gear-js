@@ -4,7 +4,7 @@ import { GetAllCodeParams, GetAllCodeResult, GetCodeParams, GetMetaByCodeParams 
 import { Code, Meta } from '../database/entities';
 import { CodeRepo } from './code.repo';
 import { CodeNotFound, MetadataNotFound } from '../common/errors';
-import { CodeChangedInput } from './types';
+import { CodeChangedInput } from '../common/types';
 
 @Injectable()
 export class CodeService {

@@ -5,13 +5,13 @@ import {
   GetAllProgramsResult,
   GetMetaParams,
   IProgram,
+  ProgramStatus,
 } from '@gear-js/common';
 
 import { MetadataNotFound, ProgramNotFound } from '../common/errors';
 import { Meta, Program } from '../database/entities';
-import { AddProgramMetaInput } from './types';
+import { AddProgramMetaInput } from '../common/types';
 import { ProgramRepo } from './program.repo';
-import { ProgramStatus } from '../common/enums';
 
 @Injectable()
 export class ProgramService {

@@ -1,5 +1,5 @@
 import { HexString } from '@polkadot/util/types';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { AddMetaByCodeParams, AddMetaParams, AddMetaResult } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
 
@@ -7,16 +7,14 @@ import { CodeHasNoMeta, CodeNotFound, ProgramHasNoMeta, ProgramNotFound } from '
 import { Meta } from '../database/entities';
 import { MetaRepo } from './meta.repo';
 import { ProgramRepo } from '../program/program.repo';
-import { CreateMetaInput } from './types/create-meta.input';
+import { CreateMetaInput, AddProgramMetaInput } from '../common/types';
 import { CodeRepo } from '../code/code.repo';
 import { _generateCodeHash, _getProgramMetadata } from '../common/helpers';
 import { ProgramService } from '../program/program.service';
-import { AddProgramMetaInput } from '../program/types';
 import { InvalidMetaHex } from '../common/errors/base';
 
 @Injectable()
 export class MetaService {
-  private logger: Logger = new Logger(MetaService.name);
   constructor(
     private programRepository: ProgramRepo,
     private programService: ProgramService,

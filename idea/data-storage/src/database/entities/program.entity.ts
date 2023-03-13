@@ -1,12 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  Index,
-  OneToMany,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, Index, OneToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { IProgram } from '@gear-js/common';
 
 import { BaseEntity } from './base.entity';
@@ -37,13 +29,13 @@ export class Program extends BaseEntity implements IProgram {
   public status: ProgramStatus;
 
   @ManyToOne(() => Code, (code) => code.programs, {
-    nullable: true
+    nullable: true,
   })
   @JoinColumn({ name: 'code_id' })
   public code: Code;
 
   @ManyToOne(() => Meta, (meta) => meta.programs, {
-    nullable: true
+    nullable: true,
   })
   @JoinColumn({ name: 'meta_id' })
   public meta: Meta;
