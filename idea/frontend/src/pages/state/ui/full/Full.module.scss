@@ -14,3 +14,8 @@
     }
   }
 }
+
+.buttons {
+  @include childrenMargin(16px, right);
+  display: flex;
+}

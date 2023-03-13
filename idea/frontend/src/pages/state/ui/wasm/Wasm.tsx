@@ -15,6 +15,7 @@ import { Box } from 'shared/ui/box';
 import { FormPayload, getPayloadFormValues, getSubmitPayload } from 'features/formPayload';
 import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg';
 
+import { downloadJson } from '../../helpers';
 import { IState, FormValues, INITIAL_VALUES } from '../../model';
 import { useProgramId } from '../../hooks';
 import { WasmStates } from '../wasmStates';
@@ -186,6 +187,8 @@ const Wasm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFileFunction, uploadedStateId, wasmBuffer]);
 
+  const handleDownloadJsonButtonClick = () => downloadJson(state);
+
   return (
     <>
       <Form initialValues={INITIAL_VALUES} onSubmit={handleSubmit} validateOnBlur>
@@ -227,6 +230,10 @@ const Wasm = () => {
                   onChange={setFile}
                   accept={FileTypes.Wasm}
                 />
+
+                {isStateRead && isState && (
+                  <Button text="Download JSON" color="secondary" size="large" onClick={handleDownloadJsonButtonClick} />
+                )}
 
                 <BackButton />
               </div>
