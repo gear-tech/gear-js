@@ -58,7 +58,7 @@ export class MetaService {
     const metadata = _getProgramMetadata(metaHex as HexString);
 
     meta.hex = metaHex;
-    meta.types = JSON.stringify(metadata.types);
+    meta.types = metadata.types;
 
     code.name = name;
 
@@ -81,7 +81,7 @@ export class MetaService {
     const metadata = _getProgramMetadata(metaHex as HexString);
     const meta = program.meta;
     meta.hex = metaHex;
-    meta.types = JSON.stringify(metadata.types);
+    meta.types = metadata.types;
 
     program.name = name;
 
