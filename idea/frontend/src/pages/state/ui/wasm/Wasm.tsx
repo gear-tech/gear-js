@@ -186,6 +186,24 @@ const Wasm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFileFunction, uploadedStateId, wasmBuffer]);
 
+  const downloadJson = () => {
+    const json = JSON.stringify(state, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    link.setAttribute('style', 'display: none');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'state');
+
+    document.body.appendChild(link);
+    link.click();
+
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(link);
+  };
+
   return (
     <>
       <Form initialValues={INITIAL_VALUES} onSubmit={handleSubmit} validateOnBlur>
@@ -227,6 +245,10 @@ const Wasm = () => {
                   onChange={setFile}
                   accept={FileTypes.Wasm}
                 />
+
+                {isStateRead && isState && (
+                  <Button text="Download JSON" color="secondary" size="large" onClick={downloadJson} />
+                )}
 
                 <BackButton />
               </div>

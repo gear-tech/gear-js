@@ -15,7 +15,7 @@ const useStateRead = (programId: HexString) => {
     setIsStateRead(false);
 
     callback()
-      .then((result) => setState(result.toHuman()))
+      .then((result) => setState(result.toJSON()))
       .catch(({ message }: Error) => alert.error(message))
       .finally(() => setIsStateRead(true));
   };
