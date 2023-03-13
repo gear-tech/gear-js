@@ -147,6 +147,7 @@ export class GearService {
     [EventNames.UserMessageSent]: async (data: any, timestamp: number) => {
       const message = plainToInstance(Message, {
         ...data,
+        genesis: this.genesis,
         timestamp: new Date(timestamp),
         type: MessageType.USER_MESS_SENT,
         program: await this.programRepository.get(data.source, this.genesis),
@@ -155,9 +156,10 @@ export class GearService {
     },
     [EventNames.ProgramChanged]: async (data: any) =>
       await this.programService.setStatus(data.id, this.genesis, data.programStatus),
-    [EventNames.MessagesDispatched]: (data: any) => this.messageService.setDispatchedStatus(data),
+    [EventNames.MessagesDispatched]: (data: any) =>
+      this.messageService.setDispatchedStatus({ ...data, genesis: this.genesis }),
     [EventNames.UserMessageRead]: (data: any) => this.messageService.updateReadStatus(data.id, data.reason),
-    [EventNames.CodeChanged]: (data: any) => this.codeService.updateCodes([data]),
+    [EventNames.CodeChanged]: (data: any) => this.codeService.setCodeStatuses([data], this.genesis),
   };
 
   private async handleEvents(block: SignedBlockExtended, timestamp: number, hash: HexString): Promise<void> {

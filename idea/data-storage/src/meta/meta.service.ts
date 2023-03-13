@@ -95,7 +95,6 @@ export class MetaService {
     if (program.meta === null) throw new ProgramHasNoMeta();
 
     const hash = generateMetaHash(metaHex as HexString);
-
     if (program.meta.hash !== hash) throw new InvalidMetaHex();
 
     const metaData = _getProgramMetadata(metaHex as HexString);

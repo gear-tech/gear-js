@@ -51,14 +51,13 @@ export class CodeService {
     }
   }
 
-  public async updateCodes(updateCodesInput: CodeChangedInput[]): Promise<Code[]> {
+  public async setCodeStatuses(codeStatuses: CodeChangedInput[], genesis: string): Promise<Code[]> {
     const codes = [];
 
-    for (const updateCodeInput of updateCodesInput) {
-      const { id, genesis } = updateCodeInput;
-      const code = await this.codeRepository.getByIdAndGenesis(id, genesis);
-      code.expiration = updateCodeInput.expiration;
-      code.status = updateCodeInput.status;
+    for (const codeStatus of codeStatuses) {
+      const code = await this.codeRepository.getByIdAndGenesis(codeStatus.id, genesis);
+      code.expiration = codeStatus.expiration;
+      code.status = codeStatus.status;
       codes.push(code);
     }
 
