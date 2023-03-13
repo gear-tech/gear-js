@@ -1,11 +1,9 @@
-enum Keys {
-  MessageQueued = 'MessageQueued',
+enum EventNames {
   UserMessageSent = 'UserMessageSent',
   UserMessageRead = 'UserMessageRead',
   MessagesDispatched = 'MessagesDispatched',
   ProgramChanged = 'ProgramChanged',
   CodeChanged = 'CodeChanged',
-  DatabaseWiped = 'DatabaseWiped',
 }
 
-export { Keys };
+export { EventNames };

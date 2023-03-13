@@ -37,7 +37,7 @@ async function bootstrap() {
   await gearEventListener.run();
 
   await app.listen(healthcheck.port, () => {
-    console.log(`⚙️ Application running on ${healthcheck.port} port`);
+    console.log(`⚙️ Healthcheck app is running on ${healthcheck.port} port`);
   });
 }
 

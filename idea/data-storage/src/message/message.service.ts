@@ -1,12 +1,19 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { AllMessagesResult, FindMessageParams, GetMessagesParams, IMessage } from '@gear-js/common';
+import {
+  AllMessagesResult,
+  FindMessageParams,
+  GetMessagesParams,
+  IMessage,
+  MessageReadReason,
+  ProgramStatus,
+} from '@gear-js/common';
 
 import { Message } from '../database/entities';
 import { ProgramService } from '../program/program.service';
-import { MessageNotFound } from '../common/errors';
 import { MessageRepo } from './message.repo';
-import { MessageEntryPoint, MessageReadReason, ProgramStatus } from '../common/enums';
-import { MessageDispatchedDataInput } from './types/message-dispatched-data.input';
+import { MessageNotFound } from '../common/errors';
+import { MessageEntryPoint } from '../common/enums';
+import { MessagesDispatchedDataInput } from '../common/types';
 
 @Injectable()
 export class MessageService {
@@ -31,15 +38,21 @@ export class MessageService {
     return message;
   }
 
-  public async createMessages(createMessagesDBType: Message[]): Promise<IMessage[]> {
+  public async createMessages(messages: Message[]): Promise<IMessage[]> {
+    for (const m of messages) {
+      if (m.replyToMessageId) {
+        const replyTo = await this.messageRepository.getByIdAndGenesis(m.replyToMessageId, m.genesis);
+        m.entry = replyTo.entry;
+      }
+    }
     try {
-      return this.messageRepository.save(createMessagesDBType);
+      return this.messageRepository.save(messages);
     } catch (error) {
       this.logger.error(error, error.stack);
     }
   }
 
-  public async setDispatchedStatus({ statuses, genesis }: MessageDispatchedDataInput): Promise<void> {
+  public async setDispatchedStatus({ statuses, genesis }: MessagesDispatchedDataInput): Promise<void> {
     for (const messageId of Object.keys(statuses)) {
       try {
         await this.messageRepository.update(

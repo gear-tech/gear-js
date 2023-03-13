@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gear-js/api": "0.30.0",
+    "@gear-js/api": "0.30.1",
     "@gear-js/common": "workspace:^",
     "@polkadot/api": "9.14.1",
     "@types/amqplib": "^0.8.2",

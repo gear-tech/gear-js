@@ -7,7 +7,7 @@ import { useApi, useAlert, useAccount, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OP
 import { useModal } from 'hooks';
 import { Method } from 'entities/explorer';
 import { checkWallet, getExtrinsicFailedMessage } from 'shared/helpers';
-import { PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'shared/config';
+import { PROGRAM_ERRORS, TransactionName, TransactionStatus, UPLOAD_METADATA_TIMEOUT } from 'shared/config';
 import { CopiedInfo } from 'shared/ui/copiedInfo';
 
 import { addCodeMetadata } from 'api';
@@ -25,13 +25,7 @@ const useCodeUpload = () => {
     return codeHash;
   };
 
-  const handleEventsStatus = (
-    events: EventRecord[],
-    codeHash: HexString,
-    metaHex: HexString | undefined,
-    name: string,
-    resolve?: () => void,
-  ) => {
+  const handleEventsStatus = (events: EventRecord[], codeHash: HexString, resolve?: () => void) => {
     events.forEach(({ event }) => {
       const { method, section } = event;
       const alertOptions = { title: `${section}.${method}` };
@@ -42,11 +36,6 @@ const useCodeUpload = () => {
         alert.success(<CopiedInfo title="Code hash" info={codeHash} />, alertOptions);
 
         if (resolve) resolve();
-
-        if (metaHex)
-          addCodeMetadata({ codeId: codeHash, metaHex, name })
-            .then(() => alert.success('Metadata saved successfully'))
-            .catch(({ message }: Error) => alert.error(message));
       }
     });
   };
@@ -60,9 +49,17 @@ const useCodeUpload = () => {
           alert.update(alertId, TransactionStatus.Ready);
         } else if (status.isInBlock) {
           alert.update(alertId, TransactionStatus.InBlock);
-          handleEventsStatus(events, codeId, metaHex, name, resolve);
+          handleEventsStatus(events, codeId, resolve);
         } else if (status.isFinalized) {
           alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
+
+          if (metaHex) {
+            // timeout cuz wanna be sure that block data is ready
+            setTimeout(
+              () => addCodeMetadata({ codeId, metaHex, name }).catch(({ message }: Error) => alert.error(message)),
+              UPLOAD_METADATA_TIMEOUT,
+            );
+          }
         } else if (status.isInvalid) {
           alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
         }

@@ -2,9 +2,9 @@ import { IBaseDBRecord } from './common';
 import { IMessage, IMessageQueuedData, IMessagesDispatchedData, IUserMessageReadData } from './message';
 import { IProgramChangedData } from './program';
 import { ICodeChangedData } from './code';
-import { Keys } from '../enums';
+import { EventNames } from '../enums';
 
-interface NewEventData<K extends Keys, V> {
+interface NewEventData<K extends EventNames, V> {
   key: K;
   value: V;
 }

@@ -1,7 +1,7 @@
 import { HexString } from '@polkadot/util/types';
 
-import { CodeStatus } from '../../common/enums';
-import { BaseDataInput } from '../../gear/types';
+import { CodeStatus } from '../enums';
+import { BaseDataInput } from './gear';
 
 export interface CodeChangedInput extends BaseDataInput {
   id: HexString;

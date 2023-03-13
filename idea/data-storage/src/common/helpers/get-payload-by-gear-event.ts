@@ -1,4 +1,4 @@
-import { Keys } from '@gear-js/common';
+import { EventNames, ProgramStatus, MessageReadReason } from '@gear-js/common';
 import {
   CodeChangedData,
   MessagesDispatchedData,
@@ -6,19 +6,20 @@ import {
   UserMessageReadData,
   UserMessageSentData,
 } from '@gear-js/api';
-
 import { GenericEventData } from '@polkadot/types';
-import { getMessageReadStatus } from './get-message-read-status';
-import { UserMessageSentInput } from '../../message/types/user-message-sent.input';
-import { UserMessageReadInput } from '../../message/types/user-message-read.input';
-import { ProgramChangedInput } from '../../program/types/program-changed.input';
-import { MessageDispatchedDataInput } from '../../message/types/message-dispatched-data.input';
-import { CodeStatus, MessageStatus, ProgramStatus } from '../enums';
-import { GearEventPayload } from '../types';
-import { CodeChangedInput } from '../../code/types';
 
-function userMessageSentPayload(data: UserMessageSentData): UserMessageSentInput {
-  const { id, source, destination, payload, value, details } = data.message;
+import { CodeStatus, MessageStatus } from '../enums';
+import {
+  GearEventPayload,
+  ProgramChangedInput,
+  UserMessageReadInput,
+  UserMessageSentInput,
+  MessagesDispatchedDataInput,
+} from '../types';
+import { CodeChangedInput } from '../types';
+
+function userMessageSentPayload({ message, expiration }: UserMessageSentData): UserMessageSentInput {
+  const { id, source, destination, payload, value, details } = message;
 
   return {
     id: id.toHex(),
@@ -36,16 +37,26 @@ function userMessageSentPayload(data: UserMessageSentData): UserMessageSentInput
         ? details.unwrap().asReply.statusCode.toNumber()
         : null
       : null,
-    expiration: data.expiration.isSome ? data.expiration.unwrap().toNumber() : null,
+    expiration: expiration.isSome ? expiration.unwrap().toNumber() : null,
   };
 }
 
-function userMessageReadPayload(data: UserMessageReadData): UserMessageReadInput {
-  return { id: data.id.toHex(), reason: getMessageReadStatus(data) };
+function userMessageReadPayload({ id, reason }: UserMessageReadData): UserMessageReadInput {
+  const res = { id: id.toHex(), reason: null };
+
+  if (reason.isSystem && reason.asSystem.isOutOfRent) {
+    res.reason = MessageReadReason.OUT_OF_RENT;
+  }
+  if (reason.isRuntime && reason.asRuntime.isMessageClaimed) {
+    res.reason = MessageReadReason.CLAIMED;
+  }
+  if (reason.isRuntime && reason.asRuntime.isMessageReplied) {
+    res.reason = MessageReadReason.REPLIED;
+  }
+  return res;
 }
 
-function programChangedPayload(data: ProgramChangedData): ProgramChangedInput {
-  const { id, change } = data;
+function programChangedPayload({ id, change }: ProgramChangedData): ProgramChangedInput {
   const res = { id: id.toHex(), programStatus: ProgramStatus.UNKNOWN };
 
   if (change.isActive) {
@@ -63,50 +74,25 @@ function programChangedPayload(data: ProgramChangedData): ProgramChangedInput {
   return res;
 }
 
-function codeChangedPayload(data: CodeChangedData): CodeChangedInput | null {
-  const { id, change } = data;
-  const status = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
+function codeChangedPayload({ id, change }: CodeChangedData): CodeChangedInput {
+  const status = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : CodeStatus.UNKNOWN;
   const expiration = change.isActive ? change.asActive.expiration.toString() : null;
 
-  if (!status) {
-    return null;
-  }
   return { id: id.toHex(), status, expiration };
 }
 
-function messagesDispatchedPayload(data: MessagesDispatchedData): MessageDispatchedDataInput | null {
-  const { statuses } = data;
+function messagesDispatchedPayload({ statuses }: MessagesDispatchedData): MessagesDispatchedDataInput | null {
   if (statuses.size > 0) {
     return { statuses: statuses.toHuman() as { [key: string]: MessageStatus } };
   }
   return null;
 }
 
-export function getPayloadByGearEvent(method: string, data: GenericEventData): GearEventPayload {
-  const payloads = {
-    [Keys.UserMessageSent]: (data: UserMessageSentData): UserMessageSentInput => {
-      return userMessageSentPayload(data);
-    },
-    [Keys.UserMessageRead]: (data: UserMessageReadData): UserMessageReadInput => {
-      return userMessageReadPayload(data);
-    },
-    [Keys.ProgramChanged]: (data: ProgramChangedData): ProgramChangedInput | null => {
-      return programChangedPayload(data);
-    },
-    [Keys.MessagesDispatched]: (data: MessagesDispatchedData): MessageDispatchedDataInput => {
-      return messagesDispatchedPayload(data);
-    },
-    [Keys.CodeChanged]: (data: CodeChangedData): CodeChangedInput | null => {
-      return codeChangedPayload(data);
-    },
-    [Keys.DatabaseWiped]: () => {
-      return {};
-    },
-  };
-
-  if (method in payloads) {
-    return payloads[method](data);
-  } else {
-    return null;
-  }
-}
+export const eventDataHandlers: Record<EventNames, (data: GenericEventData) => GearEventPayload> = {
+  [EventNames.UserMessageSent]: (data: UserMessageSentData): UserMessageSentInput => userMessageSentPayload(data),
+  [EventNames.UserMessageRead]: (data: UserMessageReadData): UserMessageReadInput => userMessageReadPayload(data),
+  [EventNames.ProgramChanged]: (data: ProgramChangedData): ProgramChangedInput => programChangedPayload(data),
+  [EventNames.MessagesDispatched]: (data: MessagesDispatchedData): MessagesDispatchedDataInput | null =>
+    messagesDispatchedPayload(data),
+  [EventNames.CodeChanged]: (data: CodeChangedData): CodeChangedInput => codeChangedPayload(data),
+};

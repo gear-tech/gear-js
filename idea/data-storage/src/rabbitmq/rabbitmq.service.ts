@@ -26,7 +26,7 @@ import { MessageService } from '../message/message.service';
 import { MetaService } from '../meta/meta.service';
 import { CodeService } from '../code/code.service';
 import { BlockService } from '../block/block.service';
-import { RabbitmqMessageParams } from './types/rabbitmq-params';
+import { RabbitmqMessageParams } from '../common/types';
 import { FormResponse } from '../decorator/form-response.decorator';
 import { StateService } from '../state/state.service';
 import { StateToCodeService } from '../state-to-code/state-to-code.service';
@@ -157,51 +157,21 @@ export class RabbitmqService {
   @FormResponse
   private async handleIncomingMsg(method: string, params: RabbitmqMessageParams): Promise<any> {
     const methods = {
-      [API_METHODS.PROGRAM_DATA]: () => {
-        return this.programService.findProgram(params as FindProgramParams);
-      },
-      [API_METHODS.PROGRAM_ALL]: () => {
-        return this.programService.getAllPrograms(params as GetAllProgramsParams);
-      },
-      [API_METHODS.PROGRAM_META_ADD]: () => {
-        return this.metaService.addMetaByProgram(params as AddMetaParams);
-      },
-      [API_METHODS.PROGRAM_META_GET]: () => {
-        return this.programService.getProgramMeta(params as GetMetaParams);
-      },
-      [API_METHODS.MESSAGE_ALL]: () => {
-        return this.messageService.getAllMessages(params as GetMessagesParams);
-      },
-      [API_METHODS.MESSAGE_DATA]: () => {
-        return this.messageService.getMessage(params as FindMessageParams);
-      },
-      [API_METHODS.CODE_ALL]: () => {
-        return this.codeService.getAllCode(params as GetAllCodeParams);
-      },
-      [API_METHODS.CODE_DATA]: () => {
-        return this.codeService.getByIdAndGenesis(params as GetCodeParams);
-      },
-      [API_METHODS.CODE_META_GET]: () => {
-        return this.codeService.getMeta(params as GetMetaByCodeParams);
-      },
-      [API_METHODS.CODE_META_ADD]: () => {
-        return this.metaService.addMetaByCode(params as AddMetaByCodeParams);
-      },
-      [API_METHODS.CODE_STATE_GET]: () => {
-        return this.stateToCodeService.getByCodeIdAndStateId(params as GetStateByCodeParams);
-      },
-      [API_METHODS.BLOCKS_STATUS]: () => {
-        return this.blockService.getLastBlock(params.genesis as string);
-      },
-      [API_METHODS.PROGRAM_STATE_ADD]: () => {
-        return this.stateService.create(params as AddStateParams);
-      },
-      [API_METHODS.PROGRAM_STATE_GET]: () => {
-        return this.stateService.get(params as GetStateParams);
-      },
-      [API_METHODS.PROGRAM_STATE_ALL]: () => {
-        return this.stateService.listByProgramId(params as GetAllStateParams);
-      },
+      [API_METHODS.PROGRAM_DATA]: () => this.programService.findProgram(params as FindProgramParams),
+      [API_METHODS.PROGRAM_ALL]: () => this.programService.getAllPrograms(params as GetAllProgramsParams),
+      [API_METHODS.PROGRAM_META_ADD]: () => this.metaService.addMetaByProgram(params as AddMetaParams),
+      [API_METHODS.PROGRAM_META_GET]: () => this.programService.getProgramMeta(params as GetMetaParams),
+      [API_METHODS.MESSAGE_ALL]: () => this.messageService.getAllMessages(params as GetMessagesParams),
+      [API_METHODS.MESSAGE_DATA]: () => this.messageService.getMessage(params as FindMessageParams),
+      [API_METHODS.CODE_ALL]: () => this.codeService.getAllCode(params as GetAllCodeParams),
+      [API_METHODS.CODE_DATA]: () => this.codeService.getByIdAndGenesis(params as GetCodeParams),
+      [API_METHODS.CODE_META_GET]: () => this.codeService.getMeta(params as GetMetaByCodeParams),
+      [API_METHODS.CODE_META_ADD]: () => this.metaService.addMetaByCode(params as AddMetaByCodeParams),
+      [API_METHODS.CODE_STATE_GET]: () => this.stateToCodeService.getByCodeIdAndStateId(params as GetStateByCodeParams),
+      [API_METHODS.BLOCKS_STATUS]: () => this.blockService.getLastBlock(params.genesis as string),
+      [API_METHODS.PROGRAM_STATE_ADD]: () => this.stateService.create(params as AddStateParams),
+      [API_METHODS.PROGRAM_STATE_GET]: () => this.stateService.get(params as GetStateParams),
+      [API_METHODS.PROGRAM_STATE_ALL]: () => this.stateService.listByProgramId(params as GetAllStateParams),
     };
 
     return methods[method]();

@@ -9,7 +9,13 @@ import { useChain, useModal } from 'hooks';
 import { uploadLocalProgram } from 'api/LocalDB';
 import { Method } from 'entities/explorer';
 import { OperationCallbacks } from 'entities/hooks';
-import { PROGRAM_ERRORS, TransactionName, TransactionStatus, absoluteRoutes } from 'shared/config';
+import {
+  PROGRAM_ERRORS,
+  TransactionName,
+  TransactionStatus,
+  absoluteRoutes,
+  UPLOAD_METADATA_TIMEOUT,
+} from 'shared/config';
 import { checkWallet, getExtrinsicFailedMessage } from 'shared/helpers';
 import { CustomLink } from 'shared/ui/customLink';
 
@@ -93,7 +99,13 @@ const useProgramActions = () => {
           handleEventsStatus(events, { reject, resolve });
 
           if (metaHex) {
-            uploadMetadata({ name, programId, metaHex, resolve: () => alert.success(programMessage, ALERT_OPTIONS) });
+            // timeout cuz wanna be sure that block data is ready
+            setTimeout(uploadMetadata, UPLOAD_METADATA_TIMEOUT, {
+              name,
+              programId,
+              metaHex,
+              resolve: () => alert.success(programMessage, ALERT_OPTIONS),
+            });
           }
         } else if (status.isInvalid) {
           alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
