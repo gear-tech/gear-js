@@ -13,7 +13,6 @@
     "test:data-storage": "yarn workspace @gear-js/data-storage test",
     "test:frontend": "yarn workspace @gear-js/frontend test",
     "build:nft": "yarn workspace @gear-js/nft build",
-    "build:marketplace": "yarn workspace @gear-js/marketplace build",
     "build:auction": "yarn workspace @gear-js/auction build",
     "build:social": "yarn workspace @gear-js/social build",
     "build:staking": "yarn workspace @gear-js/staking build",
