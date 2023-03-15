@@ -28,7 +28,6 @@ jobs:
     runs-on: ubuntu-latest
     # Declare outputs for next jobs
     outputs:
-      lottery_changed: ${{ steps.check_file_changed.outputs.lottery_changed }}
       auction_changed: ${{ steps.check_file_changed.outputs.auction_changed }}
       staking_changed: ${{ steps.check_file_changed.outputs.staking_changed }}
       upload_changed: ${{ steps.check_file_changed.outputs.upload_changed }}
@@ -45,10 +44,6 @@ jobs:
       run: |
         # Diff HEAD with the previous commit
         $diff = git diff --name-only HEAD^ HEAD
-
-        # Check if a file under game-of-chance/ has changed (added, modified, deleted)
-        $SourceDiffLottery = $diff | Where-Object { $_ -match '^apps/game-of-chance/' }
-        $HasDiffLottery = $SourceDiffLottery.Length -gt 0
 
         # Check if a file under auction/ has changed (added, modified, deleted)
         $SourceDiffAuction = $diff | Where-Object { $_ -match '^apps/auction/' }
@@ -71,43 +66,11 @@ jobs:
         $HasDiffMonopoly = $SourceDiffMonopoly.Length -gt 0
 
 
-        Write-Host "::set-output name=lottery_changed::$HasDiffLottery"
         Write-Host "::set-output name=auction_changed::$HasDiffAuction"
         Write-Host "::set-output name=staking_changed::$HasDiffStaking"
         Write-Host "::set-output name=upload_changed::$HasDiffUpload"
         Write-Host "::set-output name=supply_changed::$HasDiffSupply"
         Write-Host "::set-output name=monopoly_changed::$HasDiffMonopoly"
-
-
-  build-and-push-lottery-image:
-    runs-on: ubuntu-latest
-    needs: [wait-previous-run,conditional_job_check_files]
-    if: needs.conditional_job_check_files.outputs.lottery_changed == 'True'
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Lottery Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: apps/game-of-chance/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-lottery:prod
-          build-args: |
-            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
-            REACT_APP_LOTTERY_CONTRACT_ADDRESS=${{ secrets.REACT_APP_LOTTERY_CONTRACT_ADDRESS }}
-            REACT_APP_DAPPS_API_ADDRESS=${{ secrets.REACT_APP_DAPPS_API_ADDRESS}}
 
   build-and-push-monopoly-image:
     runs-on: ubuntu-latest
@@ -265,28 +228,6 @@ jobs:
           file: apps/upload-dapp-chain/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-upload:prod
-
-  deploy-lottery-k8s:
-    needs: [ build-and-push-lottery-image, wait-previous-run]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Deploy to k8s
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: rollout restart deployment lottery -n $KUBE_NAMESPACE
-
-      - name: Check k8s deployments
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n $KUBE_NAMESPACE --timeout=120s
 
   deploy-monopoly-k8s:
     needs: [ build-and-push-monopoly-image, wait-previous-run]
