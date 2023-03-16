@@ -285,7 +285,7 @@ export class GearService {
         this.logger.error(
           `Unable to retrieve code by id ${codeId} for program ${programId} encountered in block ${blockHash}`,
         );
-        this.indexBlockWithMissedCode(codeId);
+        await this.indexBlockWithMissedCode(codeId);
       }
 
       code = await this.codeRepository.get(codeId, this.genesis);
