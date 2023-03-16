@@ -179,7 +179,18 @@ export class GearService {
         eventData.blockHash = hash;
         await this.eventHandlers[method](eventData, timestamp);
       } catch (error) {
-        this.logger.warn({ method, data: data.toHuman() });
+        this.logger.warn(
+          JSON.stringify(
+            {
+              method,
+              data: data.toHuman(),
+              eventData: eventDataHandlers[method](data as GenericEventData),
+              blockHash: hash,
+            },
+            undefined,
+            2,
+          ),
+        );
         console.error(error);
       }
     }
