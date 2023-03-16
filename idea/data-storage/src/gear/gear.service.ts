@@ -184,7 +184,6 @@ export class GearService {
             {
               method,
               data: data.toHuman(),
-              eventData: eventDataHandlers[method](data as GenericEventData),
               blockHash: hash,
             },
             undefined,
