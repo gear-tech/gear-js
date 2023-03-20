@@ -2178,7 +2178,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:^0.27.0, @gear-js/api@npm:^0.27.3, @gear-js/api@npm:^0.27.6":
+"@gear-js/api@npm:^0.27.0, @gear-js/api@npm:^0.27.6":
   version: 0.27.7
   resolution: "@gear-js/api@npm:0.27.7"
   peerDependencies:
@@ -2400,7 +2400,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/react-hooks@npm:^0.3.10, @gear-js/react-hooks@npm:^0.3.6, @gear-js/react-hooks@npm:^0.3.9":
+"@gear-js/react-hooks@npm:^0.3.10, @gear-js/react-hooks@npm:^0.3.6":
   version: 0.3.10
   resolution: "@gear-js/react-hooks@npm:0.3.10"
   peerDependencies:
@@ -2548,54 +2548,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/syndote@workspace:apps/syndote":
-  version: 0.0.0-use.local
-  resolution: "@gear-js/syndote@workspace:apps/syndote"
-  dependencies:
-    "@gear-js/api": ^0.27.3
-    "@gear-js/react-hooks": ^0.3.9
-    "@gear-js/ui": ^0.5.13
-    "@mantine/form": ^4.2.12
-    "@polkadot/api": 9.10.1
-    "@polkadot/extension-dapp": 0.44.6
-    "@polkadot/react-identicon": 2.9.14
-    "@polkadot/types": 9.10.1
-    "@polkadot/util": 10.2.1
-    "@polkadot/wasm-crypto": 6.4.1
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": ^13.4.0
-    "@testing-library/user-event": ^13.5.0
-    "@types/jest": ^27.5.2
-    "@types/node": ^16.18.3
-    "@types/numeral": ^2.0.2
-    "@types/react": ^18.0.25
-    "@types/react-dom": ^18.0.8
-    "@typescript-eslint/eslint-plugin": ^5.42.1
-    "@typescript-eslint/parser": ^5.42.1
-    buffer: ^6.0.3
-    clsx: ^1.2.1
-    eslint: ^8.27.0
-    eslint-config-airbnb: ^19.0.4
-    eslint-config-airbnb-typescript: ^17.0.0
-    eslint-config-prettier: ^8.5.0
-    eslint-plugin-import: ^2.26.0
-    eslint-plugin-jsx-a11y: ^6.6.1
-    eslint-plugin-react: ^7.31.10
-    eslint-plugin-react-hooks: ^4.6.0
-    numeral: ^2.0.6
-    react: ^18.2.0
-    react-app-rewired: ^2.2.1
-    react-dom: ^18.2.0
-    react-router-dom: ^6.4.3
-    react-scripts: ^5.0.1
-    react-transition-group: ^4.4.2
-    sass: ^1.56.0
-    simplebar-react: ^2.4.3
-    typescript: ^4.8.4
-    web-vitals: ^2.1.4
-  languageName: unknown
-  linkType: soft
-
 "@gear-js/test-balance@workspace:idea/test-balance":
   version: 0.0.0-use.local
   resolution: "@gear-js/test-balance@workspace:idea/test-balance"
@@ -2625,7 +2577,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/ui@^0.5.13, @gear-js/ui@workspace:^, @gear-js/ui@workspace:utils/gear-ui":
+"@gear-js/ui@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@gear-js/ui@npm:0.4.0"
+  peerDependencies:
+    react: ">=17.0.2"
+    sass: ^1.49.9
+  checksum: 6b54abc01f803cc2bdaed321a10b6164963dc256d6a84030b73c5416908d9f6ddb28a89b6de42e3752bd1cc873a79868cf608c45f9441adf3ec9d94cc2b4fa3d
+  languageName: node
+  linkType: hard
+
+"@gear-js/ui@workspace:^, @gear-js/ui@workspace:utils/gear-ui":
   version: 0.0.0-use.local
   resolution: "@gear-js/ui@workspace:utils/gear-ui"
   dependencies:
@@ -2659,16 +2621,6 @@ __metadata:
     sass: ^1.58.3
   languageName: unknown
   linkType: soft
-
-"@gear-js/ui@npm:^0.4.0":
-  version: 0.4.0
-  resolution: "@gear-js/ui@npm:0.4.0"
-  peerDependencies:
-    react: ">=17.0.2"
-    sass: ^1.49.9
-  checksum: 6b54abc01f803cc2bdaed321a10b6164963dc256d6a84030b73c5416908d9f6ddb28a89b6de42e3752bd1cc873a79868cf608c45f9441adf3ec9d94cc2b4fa3d
-  languageName: node
-  linkType: hard
 
 "@gear-js/upload-dapp-chain@workspace:apps/upload-dapp-chain":
   version: 0.0.0-use.local
@@ -5630,7 +5582,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:^13.3.0, @testing-library/react@npm:^13.4.0":
+"@testing-library/react@npm:^13.3.0":
   version: 13.4.0
   resolution: "@testing-library/react@npm:13.4.0"
   dependencies:
@@ -6214,7 +6166,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^16.0.0, @types/node@npm:^16.11.44, @types/node@npm:^16.11.47, @types/node@npm:^16.11.54, @types/node@npm:^16.18.3":
+"@types/node@npm:^16.0.0, @types/node@npm:^16.11.44, @types/node@npm:^16.11.47, @types/node@npm:^16.11.54":
   version: 16.18.14
   resolution: "@types/node@npm:16.18.14"
   checksum: 7865c1c3e7c7d2fef6103c6dfa181755dc48365024253d6acc460e884508b5937a222aa8bd04835988ff0bdc47867e2ada78859c0a7f9c65b44884316f3b469c
@@ -6227,13 +6179,6 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: 2f9301089b0643ad3d9ee20b8a79984c53ed425c6afac3022d1546e73374baf87ae3736329bf3f038cf39d921862754b4166574815a00a17525901c9180a6884
-  languageName: node
-  linkType: hard
-
-"@types/numeral@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "@types/numeral@npm:2.0.2"
-  checksum: d8b778ef5d1b20cb5919fb2cf41108b324ccfaeccb0238caaf54bd9d4bffbbd57d7b860844f05831fb356a5dc0115b477891531325180a670076036ee1b4a8ca
   languageName: node
   linkType: hard
 
@@ -6279,7 +6224,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^18.0.0, @types/react-dom@npm:^18.0.6, @types/react-dom@npm:^18.0.8":
+"@types/react-dom@npm:^18.0.0, @types/react-dom@npm:^18.0.6":
   version: 18.0.11
   resolution: "@types/react-dom@npm:18.0.11"
   dependencies:
@@ -6306,7 +6251,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.0.15, @types/react@npm:^18.0.21, @types/react@npm:^18.0.25":
+"@types/react@npm:*, @types/react@npm:^18.0.15, @types/react@npm:^18.0.21":
   version: 18.0.28
   resolution: "@types/react@npm:18.0.28"
   dependencies:
@@ -6571,7 +6516,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^5.0.0, @typescript-eslint/eslint-plugin@npm:^5.30.6, @typescript-eslint/eslint-plugin@npm:^5.31.0, @typescript-eslint/eslint-plugin@npm:^5.32.0, @typescript-eslint/eslint-plugin@npm:^5.34.0, @typescript-eslint/eslint-plugin@npm:^5.42.1, @typescript-eslint/eslint-plugin@npm:^5.5.0":
+"@typescript-eslint/eslint-plugin@npm:^5.0.0, @typescript-eslint/eslint-plugin@npm:^5.30.6, @typescript-eslint/eslint-plugin@npm:^5.31.0, @typescript-eslint/eslint-plugin@npm:^5.32.0, @typescript-eslint/eslint-plugin@npm:^5.34.0, @typescript-eslint/eslint-plugin@npm:^5.5.0":
   version: 5.54.1
   resolution: "@typescript-eslint/eslint-plugin@npm:5.54.1"
   dependencies:
@@ -6656,7 +6601,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^5.0.0, @typescript-eslint/parser@npm:^5.30.6, @typescript-eslint/parser@npm:^5.31.0, @typescript-eslint/parser@npm:^5.32.0, @typescript-eslint/parser@npm:^5.34.0, @typescript-eslint/parser@npm:^5.42.1, @typescript-eslint/parser@npm:^5.5.0":
+"@typescript-eslint/parser@npm:^5.0.0, @typescript-eslint/parser@npm:^5.30.6, @typescript-eslint/parser@npm:^5.31.0, @typescript-eslint/parser@npm:^5.32.0, @typescript-eslint/parser@npm:^5.34.0, @typescript-eslint/parser@npm:^5.5.0":
   version: 5.54.1
   resolution: "@typescript-eslint/parser@npm:5.54.1"
   dependencies:
@@ -11298,7 +11243,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:^7.27.1, eslint-plugin-react@npm:^7.30.1, eslint-plugin-react@npm:^7.31.10":
+"eslint-plugin-react@npm:^7.27.1, eslint-plugin-react@npm:^7.30.1":
   version: 7.32.2
   resolution: "eslint-plugin-react@npm:7.32.2"
   dependencies:
@@ -11510,7 +11455,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.19.0, eslint@npm:^8.21.0, eslint@npm:^8.22.0, eslint@npm:^8.27.0, eslint@npm:^8.3.0":
+"eslint@npm:^8.19.0, eslint@npm:^8.21.0, eslint@npm:^8.22.0, eslint@npm:^8.3.0":
   version: 8.35.0
   resolution: "eslint@npm:8.35.0"
   dependencies:
@@ -16747,13 +16692,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"numeral@npm:^2.0.6":
-  version: 2.0.6
-  resolution: "numeral@npm:2.0.6"
-  checksum: 89f011116539692bf53fde380adeb0579623d00f782703c71c0062d4a8686770c404a041ff4eef454de53925a9f75bba1fa52726057b13d40473f707730b07c2
-  languageName: node
-  linkType: hard
-
 "nwsapi@npm:^2.2.0, nwsapi@npm:^2.2.2":
   version: 2.2.2
   resolution: "nwsapi@npm:2.2.2"
@@ -18879,7 +18817,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:^6.3.0, react-router-dom@npm:^6.4.3":
+"react-router-dom@npm:^6.3.0":
   version: 6.8.2
   resolution: "react-router-dom@npm:6.8.2"
   dependencies:
@@ -18985,7 +18923,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-transition-group@npm:^4.4.2, react-transition-group@npm:^4.4.5":
+"react-transition-group@npm:^4.4.5":
   version: 4.4.5
   resolution: "react-transition-group@npm:4.4.5"
   dependencies:
@@ -19685,7 +19623,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.54.0, sass@npm:^1.54.5, sass@npm:^1.56.0":
+"sass@npm:^1.54.0, sass@npm:^1.54.5":
   version: 1.58.3
   resolution: "sass@npm:1.58.3"
   dependencies:
@@ -20016,7 +19954,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"simplebar-react@npm:^2.4.1, simplebar-react@npm:^2.4.3":
+"simplebar-react@npm:^2.4.1":
   version: 2.4.3
   resolution: "simplebar-react@npm:2.4.3"
   dependencies:
@@ -21910,7 +21848,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.3.5, typescript@npm:^4.7.4, typescript@npm:^4.8.4":
+"typescript@npm:^4.3.5, typescript@npm:^4.7.4":
   version: 4.9.5
   resolution: "typescript@npm:4.9.5"
   bin:
@@ -21950,7 +21888,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.3.5#~builtin<compat/typescript>, typescript@patch:typescript@^4.7.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.8.4#~builtin<compat/typescript>":
+"typescript@patch:typescript@^4.3.5#~builtin<compat/typescript>, typescript@patch:typescript@^4.7.4#~builtin<compat/typescript>":
   version: 4.9.5
   resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=d73830"
   bin:
