@@ -171,19 +171,26 @@ export class GearService {
     for (const {
       event: { data, method },
     } of necessaryEvents) {
+      let eventData = null;
       try {
-        const eventData = eventDataHandlers[method](data as GenericEventData);
+        eventData = eventDataHandlers[method](data as GenericEventData);
+      } catch (err) {
+        this.logger.warn(`Unable to form event data, ${JSON.stringify({ method, data: data.toHuman() })}`);
+        console.log(err);
+        continue;
+      }
 
-        if (eventData === null) continue;
+      if (eventData === null) continue;
+      eventData.blockHash = hash;
 
-        eventData.blockHash = hash;
+      try {
         await this.eventHandlers[method](eventData, timestamp);
       } catch (error) {
         this.logger.warn(
           JSON.stringify(
             {
               method,
-              data: data.toHuman(),
+              data: eventData,
               blockHash: hash,
             },
             undefined,

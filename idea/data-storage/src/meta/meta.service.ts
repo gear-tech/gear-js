@@ -10,13 +10,11 @@ import { ProgramRepo } from '../program/program.repo';
 import { CreateMetaInput } from '../common/types';
 import { CodeRepo } from '../code/code.repo';
 import { generateMetaHash, _getProgramMetadata } from '../common/helpers';
-import { ProgramService } from '../program/program.service';
 
 @Injectable()
 export class MetaService {
   constructor(
     private programRepository: ProgramRepo,
-    private programService: ProgramService,
     private metaRepository: MetaRepo,
     private codeRepository: CodeRepo,
   ) {}
