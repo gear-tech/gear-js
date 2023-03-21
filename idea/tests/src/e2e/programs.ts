@@ -129,7 +129,7 @@ export async function getMeta(genesis: string, id: string): Promise<Passed> {
   };
   const response = await request('program.meta.get', data);
   expect(response).to.have.property('result');
-  expect(response.result).to.have.all.keys('types', 'hex', 'hash');
+  expect(response.result).to.have.all.keys('types', 'hex', 'hash', 'id');
   expect(response.result.hash).to.not.be.undefined;
   expect(response.result.hex).to.not.be.undefined;
   expect(response.result.types).to.not.be.undefined;
