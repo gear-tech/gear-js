@@ -1,4 +1,4 @@
-FROM debian:stable-slim
+FROM ubuntu:22.10
 MAINTAINER GEAR
 WORKDIR opt
 RUN apt update
