@@ -33,6 +33,7 @@ const Code = () => {
   const programs = code?.programs || [];
 
   const [metadata, setMetadata] = useState<ProgramMetadata>();
+  const isLoading = !code;
 
   const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
     addCodeMetadata({ id: codeId, metaHex, name })
@@ -77,13 +78,13 @@ const Code = () => {
 
           <div>
             <h2 className={styles.heading}>Metadata</h2>
-            <MetadataDetails metadata={metadata} isLoading={false} />
+            <MetadataDetails metadata={metadata} isLoading={isLoading} />
           </div>
         </div>
 
         <div>
           <h2 className={styles.heading}>Programs</h2>
-          <ProgramsList programs={programs} totalCount={programs.length} isLoading={!code} />
+          <ProgramsList programs={programs} totalCount={programs.length} isLoading={isLoading} />
         </div>
       </div>
 
