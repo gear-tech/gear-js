@@ -12,7 +12,7 @@ type Props = {
   programs: IProgram[];
   isLoading: boolean;
   totalCount: number;
-  loadMorePrograms: () => void;
+  loadMorePrograms?: () => void;
   main?: boolean;
 };
 

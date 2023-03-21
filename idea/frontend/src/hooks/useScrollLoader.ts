@@ -3,7 +3,8 @@ import throttle from 'lodash.throttle';
 
 const OFFSET = 80;
 
-const useScrollLoader = <T extends HTMLElement>(callback: () => void, hasMore: boolean) => {
+// eslint-disable-next-line @typescript-eslint/default-param-last
+const useScrollLoader = <T extends HTMLElement>(callback = () => {}, hasMore: boolean) => {
   const ref = useRef<T>(null);
 
   useEffect(() => {
