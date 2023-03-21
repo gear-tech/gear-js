@@ -11,7 +11,7 @@ export const mockCodeRepository = {
       }
     });
   }),
-  getByIdAndGenesis: jest.fn((id: string, genesis: string) => {
+  getWithMeta: jest.fn((id: string, genesis: string) => {
     return CODE_DB_MOCK.find((code) => {
       if (code.id === id && code.genesis === genesis) {
         return code;
@@ -36,14 +36,6 @@ export const mockCodeRepository = {
   }),
   save: jest.fn().mockImplementation((codes: Code[]): Promise<Code[]> => {
     return new Promise((resolve) => resolve(codes));
-  }),
-
-  update: jest.fn().mockImplementation((messageEntityDB: Code, updateCodeInput: Code): Promise<Code> => {
-    const { id, genesis } = messageEntityDB;
-    const updateCodeIndex = CODE_DB_MOCK.findIndex((code) => code.id === id || code.genesis === genesis);
-    CODE_DB_MOCK[updateCodeIndex] = { ...CODE_DB_MOCK[updateCodeIndex], ...updateCodeInput };
-
-    return new Promise((resolve) => resolve(CODE_DB_MOCK[updateCodeIndex]));
   }),
   removeByGenesis: jest.fn().mockImplementation((genesis: string): Code[] => {
     return CODE_DB_MOCK.filter((code) => {

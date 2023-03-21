@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { AddMetaByCodeParams, AddMetaParams } from '@gear-js/common';
+import { AddMetaByCodeParams, AddMetaByProgramParams } from '@gear-js/common';
 
 import { ProgramRepo } from '../../src/program/program.repo';
 
@@ -46,7 +46,7 @@ describe('Meta service', () => {
     const addMetaParams: AddMetaByCodeParams = {
       name: 'name',
       genesis: mockProgram.genesis,
-      codeId: mockProgram.id,
+      id: mockProgram.id,
       metaHex: 'hex',
     };
 
@@ -64,21 +64,21 @@ describe('Meta service', () => {
     const addMetaParams: AddMetaByCodeParams = {
       name: 'name',
       genesis: mockProgram.genesis,
-      codeId: invalidCodeId,
+      id: invalidCodeId,
       metaHex: 'hex',
     };
 
     await expect(metaService.addMetaByCode(addMetaParams)).rejects.toThrowError();
-    expect(mockCodeRepository.get).toHaveBeenCalled();
+    expect(mockCodeRepository.getWithMeta).toHaveBeenCalled();
   });
 
   it('should successfully add metadata program', async () => {
     const mockProgram = PROGRAM_DB_MOCK[0];
 
-    const addMetaParams: AddMetaParams = {
+    const addMetaParams: AddMetaByProgramParams = {
       name: 'name',
       genesis: mockProgram.genesis,
-      programId: mockProgram.id,
+      id: mockProgram.id,
       metaHex: 'hex',
     };
 
@@ -92,10 +92,10 @@ describe('Meta service', () => {
   it('should fail add metadata program if program id and genesis invalid', async () => {
     const invalidProgramId = '_';
 
-    const addMetaParams: AddMetaParams = { name: 'name', genesis: '_', programId: invalidProgramId, metaHex: 'hex' };
+    const addMetaParams: AddMetaByProgramParams = { name: 'name', genesis: '_', id: invalidProgramId, metaHex: 'hex' };
 
     await expect(metaService.addMetaByProgram(addMetaParams)).rejects.toThrowError();
-    expect(mockProgramRepository.getByIdAndGenesis).toHaveBeenCalled();
+    expect(mockProgramRepository.getWithMeta).toHaveBeenCalled();
   });
 
   it('should successfully get meta by hash', async () => {

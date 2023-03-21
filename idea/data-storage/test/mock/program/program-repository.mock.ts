@@ -7,7 +7,21 @@ export const mockProgramRepository = {
   save: jest.fn().mockImplementation((program: Program): Promise<Program> => {
     return new Promise((resolve) => resolve(program));
   }),
-  getByIdAndGenesis: jest.fn((id: string, genesis: string) => {
+  getWithMetaAndMessages: jest.fn((id: string, genesis: string) => {
+    return PROGRAM_DB_MOCK.find((program) => {
+      if (id === program.id && genesis === program.genesis) {
+        return program;
+      }
+    });
+  }),
+  getWithMeta: jest.fn((id: string, genesis: string) => {
+    return PROGRAM_DB_MOCK.find((program) => {
+      if (id === program.id && genesis === program.genesis) {
+        return program;
+      }
+    });
+  }),
+  get: jest.fn((id: string, genesis: string) => {
     return PROGRAM_DB_MOCK.find((program) => {
       if (id === program.id && genesis === program.genesis) {
         return program;

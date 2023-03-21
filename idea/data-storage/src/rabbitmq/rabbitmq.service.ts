@@ -159,7 +159,7 @@ export class RabbitmqService {
     const methods = {
       [API_METHODS.BLOCKS_STATUS]: () => this.blockService.getLastBlock(params.genesis as string),
       [API_METHODS.CODE_ALL]: () => this.codeService.getAllCode(params as GetAllCodeParams),
-      [API_METHODS.CODE_DATA]: () => this.codeService.getByIdAndGenesis(params as GetCodeParams),
+      [API_METHODS.CODE_DATA]: () => this.codeService.get(params as GetCodeParams),
       [API_METHODS.CODE_META_GET]: () => this.codeService.getMeta(params as GetMetaByCodeParams),
       [API_METHODS.CODE_META_ADD]: () => this.metaService.addMetaByCode(params as AddMetaByCodeParams),
       [API_METHODS.CODE_STATE_GET]: () => this.stateToCodeService.getByCodeIdAndStateId(params as GetStateByCodeParams),
