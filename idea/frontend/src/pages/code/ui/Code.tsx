@@ -34,7 +34,7 @@ const Code = () => {
   const { loadData } = useDataLoading<RequestParams>({ defaultParams: { query: codeId }, fetchData: fetchPrograms });
 
   const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
-    addCodeMetadata({ codeId, metaHex, name })
+    addCodeMetadata({ id: codeId, metaHex, name })
       .then(() => {
         alert.success('Metadata for code uploaded successfully');
         closeModal();

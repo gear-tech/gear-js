@@ -1,23 +1,25 @@
 import {
-  AddMetaParams,
+  AddMetaByProgramParams,
+  AddMetaByCodeParams,
   FindMessageParams,
   FindProgramParams,
   GetAllCodeParams,
   GetAllProgramsParams,
   GetCodeParams,
   GetMessagesParams,
-  GetMetaParams,
+  GetMetaByProgramParams,
 } from '@gear-js/common';
 import { ExecutionError } from '../errors';
 
 export type RabbitmqMessageParams =
   | FindProgramParams
   | GetAllProgramsParams
-  | AddMetaParams
-  | GetMetaParams
+  | AddMetaByProgramParams
+  | GetMetaByProgramParams
   | GetMessagesParams
   | FindMessageParams
   | GetAllCodeParams
-  | GetCodeParams;
+  | GetCodeParams
+  | AddMetaByCodeParams;
 
 export type Result<T> = Promise<T | ExecutionError>;

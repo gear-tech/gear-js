@@ -5,7 +5,7 @@ import { readFileSync } from 'fs';
 import request, { batchRequest } from './request';
 import { IPreparedProgram, IPreparedPrograms, IState, Passed } from '../interfaces';
 
-export const mapProgramStates = new Map<string, IState[]>;
+export const mapProgramStates = new Map<string, IState[]>();
 
 export async function getAllPrograms(genesis: string, expected: HexString[]): Promise<Passed> {
   const response = await request('program.all', { genesis });
@@ -78,8 +78,8 @@ export async function getAllProgramsByDates(genesis: string, date: Date): Promis
   return true;
 }
 
-export async function getProgramData(genesis: string, programId: string): Promise<Passed> {
-  const response = await request('program.data', { genesis, id: programId });
+export async function getProgramData(genesis: string, id: string): Promise<Passed> {
+  const response = await request('program.data', { genesis, id });
   expect(response).to.have.own.property('result');
   expect(response.result).to.have.all.keys(
     'id',
@@ -111,7 +111,7 @@ export async function uploadMeta(genesis: string, program: IPreparedProgram): Pr
 
   const data = {
     genesis,
-    programId: program.id,
+    id: program.id,
     metaHex,
     name: program.spec.name,
   };
@@ -122,10 +122,10 @@ export async function uploadMeta(genesis: string, program: IPreparedProgram): Pr
   return true;
 }
 
-export async function getMeta(genesis: string, programId: string): Promise<Passed> {
+export async function getMeta(genesis: string, id: string): Promise<Passed> {
   const data = {
     genesis,
-    id: programId,
+    id,
   };
   const response = await request('program.meta.get', data);
   expect(response).to.have.property('result');
@@ -156,18 +156,12 @@ export async function addState(genesis: string, program: IPreparedProgram, state
   expect(response.result).to.have.property('status');
   expect(response.result).to.have.property('state');
   expect(response.result.status).to.eq('State added');
-  expect(response.result.state).to.have.all.keys(
-    'id',
-    'name',
-    'wasmBuffBase64',
-    'functions'
-  );
+  expect(response.result.state).to.have.all.keys('id', 'name', 'wasmBuffBase64', 'functions');
 
   return true;
 }
 
 export async function getStates(genesis: string, program: IPreparedProgram): Promise<Passed> {
-
   const data = {
     genesis,
     programId: program.id,
@@ -177,7 +171,7 @@ export async function getStates(genesis: string, program: IPreparedProgram): Pro
   expect(response).to.have.property('result');
   expect(response.result.count).to.equal(program.spec.pathStates.length);
 
-  if(response.result.count >= 1) {
+  if (response.result.count >= 1) {
     mapProgramStates.set(program.id, response.result.states as IState[]);
   }
 
@@ -185,11 +179,10 @@ export async function getStates(genesis: string, program: IPreparedProgram): Pro
 }
 
 export async function getStatesByFuncName(genesis: string, program: IPreparedProgram, query: string): Promise<Passed> {
-
   const data = {
     genesis,
     programId: program.id,
-    query
+    query,
   };
 
   const response = await request('program.state.all', data);
@@ -202,22 +195,21 @@ export async function getStatesByFuncName(genesis: string, program: IPreparedPro
 }
 
 export async function getState(genesis: string, state: IState): Promise<Passed> {
-
   const data = {
     genesis,
-    id: state.id
+    id: state.id,
   };
 
-  const response = await request('program.state.get', data);
+  const response = await request('state.get', data);
   expect(response).to.have.property('result');
   expect(response.result.functions).to.have.all.keys(state.functions);
   return true;
 }
 
-export async function checkInitStatus(genesis: string, programId: string, init: boolean) {
+export async function checkInitStatus(genesis: string, id: string, init: boolean) {
   const data = {
     genesis,
-    id: programId,
+    id,
   };
   const status = init ? 'active' : 'terminated';
   const response = await request('program.data', data);

@@ -33,13 +33,6 @@ export const mockProgramRepository = {
       }
     });
   }),
-  listByCodeIdAndGenesis: jest.fn((codeId: string, genesis: string) => {
-    return PROGRAM_DB_MOCK.filter((program) => {
-      if (program.genesis === genesis && program.code.id === codeId) {
-        return program;
-      }
-    });
-  }),
   remove: jest.fn().mockImplementation((programsToDelete: Program[]): Promise<Program[]> => {
     return new Promise((resolve) => resolve(programsToDelete));
   }),

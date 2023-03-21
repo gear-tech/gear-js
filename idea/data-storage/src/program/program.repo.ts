@@ -40,15 +40,6 @@ export class ProgramRepo {
     });
   }
 
-  public async listByCodeIdAndGenesis(codeId: string, genesis: string): Promise<Program[]> {
-    return this.programRepo.find({
-      where: {
-        genesis,
-        code: { id: codeId },
-      },
-    });
-  }
-
   public async get(id: string, genesis: string): Promise<Program> {
     return this.programRepo.findOne({
       where: { id, genesis },
@@ -56,7 +47,7 @@ export class ProgramRepo {
     });
   }
 
-  public async getByIdAndGenesis(id: string, genesis: string): Promise<Program> {
+  public async getWithMetaAndMessages(id: string, genesis: string): Promise<Program> {
     return this.programRepo.findOne({
       where: { id, genesis },
       relations: ['meta', 'messages', 'code'],
@@ -72,18 +63,18 @@ export class ProgramRepo {
         owner,
       },
       relations: ['meta', 'messages', 'code'],
-      select: { meta: { types: true, hex: true, hash: true } },
+      select: { meta: { types: true, hex: true, hash: true, id: true } },
     });
   }
 
-  public async getByIdMeta(id: string, genesis: string): Promise<Program> {
+  public async getWithMeta(id: string, genesis: string): Promise<Program> {
     return this.programRepo.findOne({
       where: {
         id,
         genesis,
       },
       relations: ['meta'],
-      select: { meta: { types: true, hex: true, hash: true } },
+      select: { meta: { types: true, hex: true, hash: true, id: true } },
     });
   }
 

@@ -5,7 +5,7 @@ import { ICode } from 'entities/code';
 import { PaginationModel } from '../types';
 import { CodePaginationModel } from './types';
 
-const fetchCode = (codeId: string) => rpcService.callRPC<ICode>(RpcMethods.GetCode, { codeId });
+const fetchCode = (id: string) => rpcService.callRPC<ICode>(RpcMethods.GetCode, { id });
 
 const fetchCodes = (params: PaginationModel) => rpcService.callRPC<CodePaginationModel>(RpcMethods.GetAllCodes, params);
 

@@ -4,14 +4,14 @@ import { rpcService } from 'shared/services/rpcService';
 import { RpcMethods } from 'shared/config';
 import { IMeta } from 'entities/metadata';
 
-const addMetadata = (params: { programId: HexString; name: string; metaHex: HexString }) =>
+const addMetadata = (params: { id: HexString; name: string; metaHex: HexString }) =>
   rpcService.callRPC(RpcMethods.AddMetadata, params);
 
-const addCodeMetadata = (params: { codeId: HexString; name: string; metaHex: HexString }) =>
+const addCodeMetadata = (params: { id: HexString; name: string; metaHex: HexString }) =>
   rpcService.callRPC(RpcMethods.AddCodeMetadata, params);
 
-const fetchMetadata = (programId: string) => rpcService.callRPC<IMeta>(RpcMethods.GetMetadata, { id: programId });
+const fetchMetadata = (id: string) => rpcService.callRPC<IMeta>(RpcMethods.GetMetadata, { id });
 
-const fetchCodeMetadata = (codeId: string) => rpcService.callRPC<IMeta>(RpcMethods.GetCodeMetadata, { codeId });
+const fetchCodeMetadata = (id: string) => rpcService.callRPC<IMeta>(RpcMethods.GetCodeMetadata, { id });
 
 export { addMetadata, addCodeMetadata, fetchMetadata, fetchCodeMetadata };

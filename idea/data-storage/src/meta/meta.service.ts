@@ -1,6 +1,6 @@
 import { HexString } from '@polkadot/util/types';
 import { Injectable } from '@nestjs/common';
-import { AddMetaByCodeParams, AddMetaParams, AddMetaResult } from '@gear-js/common';
+import { AddMetaByCodeParams, AddMetaByProgramParams, AddMetaResult } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
 
 import { InvalidMetaHex, CodeHasNoMeta, CodeNotFound, ProgramHasNoMeta, ProgramNotFound } from '../common/errors';
@@ -41,9 +41,9 @@ export class MetaService {
   }
 
   public async addMetaByCode(params: AddMetaByCodeParams): Promise<AddMetaResult> {
-    const { genesis, metaHex, codeId, name } = params;
+    const { genesis, metaHex, id, name } = params;
 
-    const code = await this.codeRepository.get(codeId, genesis);
+    const code = await this.codeRepository.getWithMeta(id, genesis);
 
     if (!code) throw new CodeNotFound();
 
@@ -53,7 +53,6 @@ export class MetaService {
 
     if (code.meta.hash !== hash) throw new InvalidMetaHex();
 
-    console.log(code.meta);
     const meta = code.meta;
     const metadata = _getProgramMetadata(metaHex as HexString);
 
@@ -67,9 +66,9 @@ export class MetaService {
     return { status: 'Metadata added' };
   }
 
-  public async addMetaByProgram(params: AddMetaParams): Promise<AddMetaResult> {
-    const { programId, genesis, metaHex, name } = params;
-    const program = await this.programRepository.getByIdAndGenesis(programId, genesis);
+  public async addMetaByProgram(params: AddMetaByProgramParams): Promise<AddMetaResult> {
+    const { id, genesis, metaHex, name } = params;
+    const program = await this.programRepository.getWithMeta(id, genesis);
 
     if (!program) throw new ProgramNotFound();
 

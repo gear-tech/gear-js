@@ -3,7 +3,7 @@ import {
   FindProgramParams,
   GetAllProgramsParams,
   GetAllProgramsResult,
-  GetMetaParams,
+  GetMetaByProgramParams,
   IProgram,
   ProgramStatus,
 } from '@gear-js/common';
@@ -25,9 +25,9 @@ export class ProgramService {
     };
   }
 
-  public async getProgramMeta(params: GetMetaParams): Promise<Meta> {
+  public async getProgramMeta(params: GetMetaByProgramParams): Promise<Meta> {
     const { id, genesis } = params;
-    const program = await this.programRepository.getByIdMeta(id, genesis);
+    const program = await this.programRepository.getWithMeta(id, genesis);
 
     if (program.meta === null) {
       throw new MetadataNotFound();
@@ -52,7 +52,7 @@ export class ProgramService {
     if (this.isExistOwnerInParams(params)) {
       program = await this.programRepository.getByIdAndGenesisAndOwner(id, genesis, owner);
     } else {
-      program = await this.programRepository.getByIdAndGenesis(id, genesis);
+      program = await this.programRepository.getWithMetaAndMessages(id, genesis);
     }
 
     if (!program) {
@@ -62,7 +62,7 @@ export class ProgramService {
   }
 
   async setStatus(id: string, genesis: string, status: ProgramStatus): Promise<IProgram> {
-    const program = await this.programRepository.getByIdAndGenesis(id, genesis);
+    const program = await this.programRepository.get(id, genesis);
 
     if (!program) {
       throw new ProgramNotFound();

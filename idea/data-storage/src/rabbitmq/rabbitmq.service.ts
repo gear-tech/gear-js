@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Channel, connect, Connection } from 'amqplib';
 import {
   AddMetaByCodeParams,
-  AddMetaParams,
+  AddMetaByProgramParams,
   AddStateParams,
   API_METHODS,
   FindMessageParams,
@@ -14,7 +14,7 @@ import {
   GetCodeParams,
   GetMessagesParams,
   GetMetaByCodeParams,
-  GetMetaParams,
+  GetMetaByProgramParams,
   GetStateByCodeParams,
   GetStateParams,
   RabbitMQExchanges,
@@ -157,21 +157,22 @@ export class RabbitmqService {
   @FormResponse
   private async handleIncomingMsg(method: string, params: RabbitmqMessageParams): Promise<any> {
     const methods = {
-      [API_METHODS.PROGRAM_DATA]: () => this.programService.findProgram(params as FindProgramParams),
-      [API_METHODS.PROGRAM_ALL]: () => this.programService.getAllPrograms(params as GetAllProgramsParams),
-      [API_METHODS.PROGRAM_META_ADD]: () => this.metaService.addMetaByProgram(params as AddMetaParams),
-      [API_METHODS.PROGRAM_META_GET]: () => this.programService.getProgramMeta(params as GetMetaParams),
-      [API_METHODS.MESSAGE_ALL]: () => this.messageService.getAllMessages(params as GetMessagesParams),
-      [API_METHODS.MESSAGE_DATA]: () => this.messageService.getMessage(params as FindMessageParams),
+      [API_METHODS.BLOCKS_STATUS]: () => this.blockService.getLastBlock(params.genesis as string),
       [API_METHODS.CODE_ALL]: () => this.codeService.getAllCode(params as GetAllCodeParams),
       [API_METHODS.CODE_DATA]: () => this.codeService.getByIdAndGenesis(params as GetCodeParams),
       [API_METHODS.CODE_META_GET]: () => this.codeService.getMeta(params as GetMetaByCodeParams),
       [API_METHODS.CODE_META_ADD]: () => this.metaService.addMetaByCode(params as AddMetaByCodeParams),
       [API_METHODS.CODE_STATE_GET]: () => this.stateToCodeService.getByCodeIdAndStateId(params as GetStateByCodeParams),
-      [API_METHODS.BLOCKS_STATUS]: () => this.blockService.getLastBlock(params.genesis as string),
+      [API_METHODS.MESSAGE_ALL]: () => this.messageService.getAllMessages(params as GetMessagesParams),
+      [API_METHODS.MESSAGE_DATA]: () => this.messageService.getMessage(params as FindMessageParams),
+      [API_METHODS.PROGRAM_ALL]: () => this.programService.getAllPrograms(params as GetAllProgramsParams),
+      [API_METHODS.PROGRAM_DATA]: () => this.programService.findProgram(params as FindProgramParams),
+      [API_METHODS.PROGRAM_META_ADD]: () => this.metaService.addMetaByProgram(params as AddMetaByProgramParams),
+      [API_METHODS.PROGRAM_META_GET]: () => this.programService.getProgramMeta(params as GetMetaByProgramParams),
+      [API_METHODS.PROGRAM_STATE_ALL]: () => this.stateService.listByProgramId(params as GetAllStateParams),
       [API_METHODS.PROGRAM_STATE_ADD]: () => this.stateService.create(params as AddStateParams),
       [API_METHODS.PROGRAM_STATE_GET]: () => this.stateService.get(params as GetStateParams),
-      [API_METHODS.PROGRAM_STATE_ALL]: () => this.stateService.listByProgramId(params as GetAllStateParams),
+      [API_METHODS.STATE_GET]: () => this.stateService.get(params as GetStateParams),
     };
 
     return methods[method]();
