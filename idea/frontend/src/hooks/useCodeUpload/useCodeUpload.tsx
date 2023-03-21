@@ -56,7 +56,7 @@ const useCodeUpload = () => {
           if (metaHex) {
             // timeout cuz wanna be sure that block data is ready
             setTimeout(
-              () => addCodeMetadata({ codeId, metaHex, name }).catch(({ message }: Error) => alert.error(message)),
+              () => addCodeMetadata({ id: codeId, metaHex, name }).catch(({ message }: Error) => alert.error(message)),
               UPLOAD_METADATA_TIMEOUT,
             );
           }

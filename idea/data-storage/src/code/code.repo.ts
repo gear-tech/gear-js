@@ -15,7 +15,13 @@ export class CodeRepo {
     private codeRepo: Repository<Code>,
   ) {}
 
-  public async getByIdAndGenesis(id: string, genesis: string): Promise<Code> {
+  public async get(id: string, genesis: string): Promise<Code> {
+    return this.codeRepo.findOne({
+      where: { id, genesis },
+    });
+  }
+
+  public async getWithMeta(id: string, genesis: string): Promise<Code> {
     return this.codeRepo.findOne({
       where: {
         id,
@@ -23,7 +29,7 @@ export class CodeRepo {
         status: CodeStatus.ACTIVE,
       },
       relations: ['programs', 'meta'],
-      select: { meta: { types: true, hex: true } },
+      select: { meta: { types: true, hex: true, hash: true } },
     });
   }
 
@@ -43,13 +49,6 @@ export class CodeRepo {
     );
 
     return builder.getManyAndCount();
-  }
-
-  public async get(id: string, genesis: string): Promise<Code> {
-    return this.codeRepo.findOne({
-      where: { id, genesis },
-      relations: ['meta']
-    });
   }
 
   public async save(codes: Code[]): Promise<Code[]> {

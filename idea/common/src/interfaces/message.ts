@@ -1,6 +1,4 @@
-import { MessageReadReason } from '../enums';
-
-interface IMessage {
+export interface IMessage {
   id: string;
   destination: string;
   source: string;
@@ -11,28 +9,3 @@ interface IMessage {
   exitCode?: number | null;
   expiration?: number | null;
 }
-
-interface IMessageQueuedData {
-  id: string;
-  destination: string;
-  source: string;
-  entry: 'Init' | 'Handle' | 'Reply';
-}
-
-interface IMessagesDispatchedData {
-  statuses: { [key: string]: 'Success' | 'Failed' };
-}
-
-interface IUserMessageReadData {
-  id: string;
-  reason: MessageReadReason | null;
-}
-
-interface UpdateMessageData {
-  messageId: string;
-  payload: string;
-  genesis: string;
-  value: string;
-}
-
-export { IMessage, IMessageQueuedData, IMessagesDispatchedData, IUserMessageReadData, UpdateMessageData };

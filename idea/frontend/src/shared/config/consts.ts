@@ -80,7 +80,7 @@ enum RpcMethods {
   TestBalanceAvailable = 'testBalance.available',
   AddState = 'program.state.add',
   GetStates = 'program.state.all',
-  GetState = 'program.state.get',
+  GetState = 'state.get',
 }
 
 enum FileTypes {

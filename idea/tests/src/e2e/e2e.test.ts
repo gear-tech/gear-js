@@ -92,8 +92,8 @@ describe('API methods', () => {
     });
 
     test('program.data method', async () => {
-      for (const id_ of Object.keys(prepared.programs)) {
-        expect(await getProgramData(genesis, id_)).toBeTruthy();
+      for (const id of Object.keys(prepared.programs)) {
+        expect(await getProgramData(genesis, id)).toBeTruthy();
       }
     });
 
@@ -102,16 +102,16 @@ describe('API methods', () => {
     });
 
     test('check if init status saved correctly', async () => {
-      for (const id_ of Object.keys(prepared.programs)) {
-        expect(await checkInitStatus(genesis, id_, prepared.programs[id_].init)).toBeTruthy();
+      for (const id of Object.keys(prepared.programs)) {
+        expect(await checkInitStatus(genesis, id, prepared.programs[id].init)).toBeTruthy();
       }
     });
   });
 
   describe('Metadata', () => {
     test('program.meta.add request', async () => {
-      for (const id_ of Object.keys(prepared.programs)) {
-        const program = prepared.programs[id_] as IPreparedProgram;
+      for (const id of Object.keys(prepared.programs)) {
+        const program = prepared.programs[id] as IPreparedProgram;
 
         if (program.spec['pathToMetaTxt']) {
           expect(await uploadMeta(genesis, program)).toBeTruthy();
@@ -120,10 +120,10 @@ describe('API methods', () => {
     });
 
     test('program.meta.get request', async () => {
-      for (const id_ of Object.keys(prepared.programs)) {
-        const program = prepared.programs[id_] as IPreparedProgram;
+      for (const id of Object.keys(prepared.programs)) {
+        const program = prepared.programs[id] as IPreparedProgram;
         if (program.spec['pathToMetaTxt']) {
-          expect(await getMeta(genesis, id_)).toBeTruthy();
+          expect(await getMeta(genesis, id)).toBeTruthy();
         }
       }
     });
@@ -131,8 +131,8 @@ describe('API methods', () => {
 
   describe('State', () => {
     test('program.state.add request', async () => {
-      for (const id_ of Object.keys(prepared.programs)) {
-        const program = prepared.programs[id_] as IPreparedProgram;
+      for (const id of Object.keys(prepared.programs)) {
+        const program = prepared.programs[id] as IPreparedProgram;
         if (!program.spec['pathStates']) continue;
 
         const programStatesPath = program.spec.pathStates;
@@ -143,8 +143,8 @@ describe('API methods', () => {
     });
 
     test('program.state.all request', async () => {
-      for (const id_ of Object.keys(prepared.programs)) {
-        const program = prepared.programs[id_] as IPreparedProgram;
+      for (const id of Object.keys(prepared.programs)) {
+        const program = prepared.programs[id] as IPreparedProgram;
         if (!program.spec['pathStates']) continue;
 
         expect(await getStates(genesis, program)).toBeTruthy();
@@ -152,11 +152,11 @@ describe('API methods', () => {
     });
 
     test('program.state.all by function name request', async () => {
-      for (const id_ of Object.keys(prepared.programs)) {
-        const program = prepared.programs[id_] as IPreparedProgram;
+      for (const id of Object.keys(prepared.programs)) {
+        const program = prepared.programs[id] as IPreparedProgram;
 
-        if (mapProgramStates.has(id_)) {
-          const statesInDB = mapProgramStates.get(id_);
+        if (mapProgramStates.has(id)) {
+          const statesInDB = mapProgramStates.get(id);
 
           for (const state of statesInDB) {
             const name = Object.keys(state.functions)[0];
@@ -166,10 +166,10 @@ describe('API methods', () => {
       }
     });
 
-    test('program.state.get request', async () => {
-      for (const id_ of Object.keys(prepared.programs)) {
-        if (mapProgramStates.has(id_)) {
-          const statesInDB = mapProgramStates.get(id_);
+    test('state.get request', async () => {
+      for (const id of Object.keys(prepared.programs)) {
+        if (mapProgramStates.has(id)) {
+          const statesInDB = mapProgramStates.get(id);
 
           for (const state of statesInDB) {
             expect(await getState(genesis, state)).toBeTruthy();

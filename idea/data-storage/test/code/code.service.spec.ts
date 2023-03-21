@@ -66,24 +66,24 @@ describe('Code service', () => {
   it('should be successfully get meta by code id', async () => {
     const codeDB = CODE_DB_MOCK[0];
 
-    const getMetaByCodeParams: GetMetaByCodeParams = { genesis: codeDB.genesis, codeId: codeDB.id };
+    const getMetaByCodeParams: GetMetaByCodeParams = { genesis: codeDB.genesis, id: codeDB.id };
 
     const meta = await codeService.getMeta(getMetaByCodeParams);
 
     expect(meta.hash).toEqual(codeDB.meta.hash);
-    expect(mockCodeRepository.getByIdAndGenesis).toHaveBeenCalled();
+    expect(mockCodeRepository.getWithMeta).toHaveBeenCalled();
   });
 
   it('should be fail if code id invalid and call exception', async () => {
     const invalidCodeId = '_';
 
-    const getMetaByCodeParams: GetMetaByCodeParams = { genesis: '0x00', codeId: invalidCodeId };
+    const getMetaByCodeParams: GetMetaByCodeParams = { genesis: '0x00', id: invalidCodeId };
 
     await expect(codeService.getMeta(getMetaByCodeParams)).rejects.toThrowError();
-    expect(mockCodeRepository.getByIdAndGenesis).toHaveBeenCalled();
+    expect(mockCodeRepository.getWithMeta).toHaveBeenCalled();
   });
 
-  it('should be successfully get code entity and called getByIdAndGenesis method', async () => {
+  it('should be successfully get code entity and called getWithMeta method', async () => {
     const codeMock = CODE_DB_MOCK[0];
 
     const params: GetCodeParams = {
@@ -91,12 +91,12 @@ describe('Code service', () => {
       id: codeMock.id,
     };
 
-    const code = await codeService.getByIdAndGenesis(params);
+    const code = await codeService.get(params);
 
     expect(code.id).toEqual(codeMock.id);
     expect(code.expiration).toEqual(codeMock.expiration);
     expect(code.name).toEqual(codeMock.name);
-    expect(mockCodeRepository.getByIdAndGenesis).toHaveBeenCalled();
+    expect(mockCodeRepository.getWithMeta).toHaveBeenCalled();
   });
 
   it('should fail if code entity not found and called getByIdAndGenesis method', async () => {
@@ -109,8 +109,8 @@ describe('Code service', () => {
       genesis: invalidCodeEntity.genesis,
     };
 
-    await expect(codeService.getByIdAndGenesis(params)).rejects.toThrowError();
-    expect(mockCodeRepository.getByIdAndGenesis).toHaveBeenCalled();
+    await expect(codeService.get(params)).rejects.toThrowError();
+    expect(mockCodeRepository.getWithMeta).toHaveBeenCalled();
   });
 
   it('should be successfully deleted code entity and called remove method', async () => {

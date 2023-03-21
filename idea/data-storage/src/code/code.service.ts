@@ -20,9 +20,9 @@ export class CodeService {
     };
   }
 
-  public async getByIdAndGenesis(params: GetCodeParams): Promise<Code> {
+  public async get(params: GetCodeParams): Promise<Code> {
     const { id, genesis } = params;
-    const code = await this.codeRepository.getByIdAndGenesis(id, genesis);
+    const code = await this.codeRepository.getWithMeta(id, genesis);
     if (!code) {
       throw new CodeNotFound();
     }
@@ -30,8 +30,8 @@ export class CodeService {
   }
 
   public async getMeta(params: GetMetaByCodeParams): Promise<Meta> {
-    const { codeId, genesis } = params;
-    const code = await this.codeRepository.getByIdAndGenesis(codeId, genesis);
+    const { id, genesis } = params;
+    const code = await this.codeRepository.getWithMeta(id, genesis);
 
     if (!code) {
       throw new CodeNotFound();
@@ -55,7 +55,7 @@ export class CodeService {
     const codes = [];
 
     for (const codeStatus of codeStatuses) {
-      const code = await this.codeRepository.getByIdAndGenesis(codeStatus.id, genesis);
+      const code = await this.codeRepository.get(codeStatus.id, genesis);
       code.expiration = codeStatus.expiration;
       code.status = codeStatus.status;
       codes.push(code);

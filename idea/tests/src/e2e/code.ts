@@ -38,8 +38,8 @@ async function getCodesByDates(genesis: string, date: Date): Promise<Passed> {
   return true;
 }
 
-async function getCodeData(genesis: string, codeId: HexString) {
-  const response = await request('code.data', { genesis, codeId });
+async function getCodeData(genesis: string, id: HexString) {
+  const response = await request('code.data', { genesis, id });
   expect(response).to.have.own.property('result');
   expect(response.result).to.have.all.keys([
     'id',

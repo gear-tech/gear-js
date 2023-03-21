@@ -17,7 +17,7 @@ const useMetadataUpload = () => {
     const { name, metaHex, programId, reject, resolve } = params;
 
     try {
-      const { error } = await addMetadata({ name, metaHex, programId: programId as HexString });
+      const { error } = await addMetadata({ name, metaHex, id: programId as HexString });
 
       if (error) throw new Error(error.message);
 
