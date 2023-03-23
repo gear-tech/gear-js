@@ -12,6 +12,7 @@ import {
   useAlert,
   useApi,
   useCreateHandler,
+  SendMessageOptions,
 } from './hooks';
 
 import { AccountProvider, ApiProvider, AlertProvider } from './context';
@@ -69,4 +70,5 @@ export {
   DefaultTemplateOptions,
   ProviderProps,
   Account,
+  SendMessageOptions,
 };

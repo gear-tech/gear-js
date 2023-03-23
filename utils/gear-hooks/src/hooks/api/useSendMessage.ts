@@ -77,4 +77,4 @@ function useSendMessage(destination: HexString, metadata: ProgramMetadata | unde
   return sendMessage;
 }
 
-export { useSendMessage };
+export { useSendMessage, SendMessageOptions };
