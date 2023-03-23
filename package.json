@@ -17,7 +17,6 @@
     "build:social": "yarn workspace @gear-js/social build",
     "build:staking": "yarn workspace @gear-js/staking build",
     "build:upload-dapp-chain": "yarn workspace @gear-js/upload-dapp-chain build",
-    "build:supply-chain": "yarn workspace @gear-js/supply-chain build",
     "postinstall": "husky install",
     "bump:polkadot": "node dev/bump-polkadot.js && yarn install"
   },

@@ -56,9 +56,7 @@ jobs:
           $SourceDiffUpload = $diff | Where-Object { $_ -match '^apps/upload-dapp-chain/' }
           $HasDiffUpload = $SourceDiffUpload.Length -gt 0
 
-            # Check if a file under supply-chain/ has changed (added, modified, deleted)
-          $SourceDiffSupply = $diff | Where-Object { $_ -match '^apps/supply-chain/' }
-          $HasDiffSupply = $SourceDiffSupply.Length -gt 0
+
 
 
 
@@ -67,35 +65,6 @@ jobs:
           Write-Host "::set-output name=staking_changed::$HasDiffStaking"
           Write-Host "::set-output name=upload_changed::$HasDiffUpload"
           Write-Host "::set-output name=supply_changed::$HasDiffSupply"
-
-  build-and-push-supply-chain-image:
-    runs-on: ubuntu-latest
-    needs: [wait-previous-run, conditional_job_check_files]
-    if: needs.conditional_job_check_files.outputs.supply_changed == 'True'
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Supply Chain Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: apps/supply-chain/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-supply-chain:prod
-          build-args: |
-            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
-            REACT_APP_DAPPS_API_ADDRESS=${{ secrets.REACT_APP_DAPPS_API_ADDRESS}}
 
   build-and-push-auction-image:
     runs-on: ubuntu-latest
@@ -254,28 +223,6 @@ jobs:
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: rollout restart deployment upload-dappchain -n $KUBE_NAMESPACE
-
-      - name: Check k8s deployments
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n $KUBE_NAMESPACE --timeout=120s
-
-  deploy-supply-chain-k8s:
-    needs: [build-and-push-supply-chain-image, wait-previous-run]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Deploy to k8s
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: rollout restart deployment supply-chain -n $KUBE_NAMESPACE
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
