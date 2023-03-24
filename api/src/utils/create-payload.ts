@@ -51,7 +51,8 @@ export function encodePayload<
         )
         .toU8a(),
     );
-  } else if (isOldMeta(hexRegistryOrMeta)) {
+  }
+  if (isOldMeta(hexRegistryOrMeta)) {
     return Array.from(
       CreateType.create(
         isString(typeIndexOrMessageType) ? typeIndexOrMessageType : hexRegistryOrMeta[type as keyof OldMetadata],
@@ -59,11 +60,13 @@ export function encodePayload<
         hexRegistryOrMeta.types,
       ).toU8a(),
     );
-  } else if (isHex(hexRegistryOrMeta)) {
+  }
+  if (isHex(hexRegistryOrMeta)) {
     if (typeof typeIndexOrMessageType === 'number') {
       return Array.from(new GearMetadata(hexRegistryOrMeta).createType(typeIndexOrMessageType, payload).toU8a());
     } else {
       return Array.from(CreateType.create(typeIndexOrMessageType, payload, hexRegistryOrMeta).toU8a());
     }
   }
+  return Array.from(CreateType.create('Bytes', payload).toU8a());
 }
