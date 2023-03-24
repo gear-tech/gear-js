@@ -5,7 +5,13 @@ import { randomAsHex } from '@polkadot/util-crypto';
 
 import { IProgram, OldMetadata, ProgramMap } from './types/interfaces';
 import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult } from './types';
-import { ProgramDoesNotExistError, ProgramExitedError, ProgramTerminatedError, SubmitProgramError } from './errors';
+import {
+  ProgramDoesNotExistError,
+  ProgramExitedError,
+  ProgramHasNoMetahash,
+  ProgramTerminatedError,
+  SubmitProgramError,
+} from './errors';
 import { ProgramMetadata, isProgramMeta } from './metadata';
 import { generateCodeHash, generateProgramId, getIdsFromKeys, validateGasLimit, validateValue } from './utils';
 import { GearApi } from './GearApi';
@@ -217,7 +223,7 @@ export class GearProgram extends GearTransaction {
   async codeHash(id: HexString): Promise<HexString> {
     const programOption = (await this._api.query.gearProgram.programStorage(id)) as Option<ProgramMap>;
 
-    if (programOption.isNone) throw new ProgramDoesNotExistError();
+    if (programOption.isNone) throw new ProgramDoesNotExistError(id);
 
     const program = programOption.unwrap()[0];
 
@@ -235,7 +241,19 @@ export class GearProgram extends GearTransaction {
    * @returns
    */
   async metaHash(programId: HexString, at?: HexString): Promise<HexString> {
-    const metaHash = (await this._api.rpc['gear'].readMetahash(programId, at || null)) as H256;
-    return metaHash.toHex();
+    try {
+      const metaHash = (await this._api.rpc['gear'].readMetahash(programId, at || null)) as H256;
+      return metaHash.toHex();
+    } catch (error) {
+      if (error.code === 8000) {
+        if (error.data.includes('Program not found')) {
+          throw new ProgramDoesNotExistError(programId);
+        }
+        if (error.data.includes('unreachable')) {
+          throw new ProgramHasNoMetahash(programId);
+        }
+      }
+      throw error;
+    }
   }
 }

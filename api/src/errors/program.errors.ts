@@ -9,8 +9,8 @@ export class SubmitProgramError extends Error {
 export class ProgramDoesNotExistError extends Error {
   name = 'ProgramDoesNotExist';
 
-  constructor() {
-    super('Program does not exist');
+  constructor(id: string) {
+    super(`Program with id ${id} does not exist`);
   }
 }
 
@@ -40,8 +40,16 @@ export class ProgramExitedError extends Error {
 
 export class CodeDoesNotExistError extends Error {
   name = 'CodeDoesNotExist';
-  
+
   constructor(id: string) {
     super(`Code with id ${id} not found in the storage`);
+  }
+}
+
+export class ProgramHasNoMetahash extends Error {
+  name = 'ProgramHasNoMetahash';
+
+  constructor(id: string) {
+    super(`Program with id ${id} has not metahash function`);
   }
 }

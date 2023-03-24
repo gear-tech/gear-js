@@ -18,7 +18,7 @@ export class GearProgramStorage {
     const programOption = (await this._api.query.gearProgram.programStorage(programId)) as Option<ProgramMap>;
 
     if (programOption.isNone) {
-      throw new ProgramDoesNotExistError();
+      throw new ProgramDoesNotExistError(programId);
     }
 
     const program = programOption.unwrap()[0];
