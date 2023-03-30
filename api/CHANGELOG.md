@@ -1,3 +1,13 @@
+## 0.30.3
+
+_03/30/2023_
+
+https://github.com/gear-tech/gear-js/pull/1244
+
+### Changes
+
+- Add syscalls `gr_signal_from`, `gr_reply_push_input`, `gr_reply_input_wgas`, `gr_reply_input`, `gr_send_push_input`, `gr_send_input_wgas`, `gr_send_input`
+
 ## 0.30.2
 
 _03/24/2023_
