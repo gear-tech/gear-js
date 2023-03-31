@@ -4,6 +4,7 @@ src/
 examples/
 test/
 
+yarn.lock
 .eslintrc.cjs
 .gitignore
 babel.config.json

@@ -9,11 +9,11 @@ export function getAccounts(accounts: Record<string, string>) {
   const result: Record<string, KeyringPair> = {};
   Object.entries(accounts).forEach(([name, seed]) => {
     if (seed.startsWith('//')) {
-      result[name] = keyring.addFromUri(seed);
+      result[name] = keyring.addFromUri(seed) as KeyringPair;
     } else if (isHex(seed)) {
-      result[name] = keyring.addFromSeed(hexToU8a(seed), {}, 'sr25519');
+      result[name] = keyring.addFromSeed(hexToU8a(seed), {}, 'sr25519') as KeyringPair;
     } else {
-      result[name] = keyring.addFromMnemonic(seed, {}, 'sr25519');
+      result[name] = keyring.addFromMnemonic(seed, {}, 'sr25519') as KeyringPair;
     }
     logger.info(`Set account ${name} to ${result[name].address}`, { lvl: 1 });
   });

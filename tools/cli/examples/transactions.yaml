@@ -7,7 +7,7 @@ prefunded_account:
   alice
 
 fund_accounts:
-  my_account: 1_000_000_000_000_000
+  my_account: 1000000000000000
 
 programs:
   - id: 0

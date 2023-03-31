@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/app.js",
   "preferGlobal": true,
   "bin": {
@@ -12,13 +12,13 @@
     "dev": "ts-node src/app.ts"
   },
   "dependencies": {
-    "@gear-js/api": "^0.30.3",
-    "@polkadot/api": "^9.14.1",
+    "@gear-js/api": "0.30.5",
+    "@polkadot/api": "10.2.1",
     "chalk": "^4",
-    "commander": "^10.0.0",
-    "inquirer": "^9.1.4",
-    "winston": "^3.8.2",
-    "yaml": "^2.2.1"
+    "commander": "10.0.0",
+    "inquirer": "9.1.4",
+    "winston": "3.8.2",
+    "yaml": "2.2.1"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",
