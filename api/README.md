@@ -115,7 +115,7 @@ meta.functions; // is an object whose keys are names of funtions and values are 
 Both `ProgramMetadata` and `StateMetadata` classes have a few methods that can help to understand what some type is or get the name of some type (because types are represented as number in regestry) as well as encode and decode data.
 
 ```javascript
-import { ProgramMetadata } from '@gear-js/api`;
+import { ProgramMetadata } from '@gear-js/api';
 
 const meta = getProgramMetadata(`0x...`);
 
