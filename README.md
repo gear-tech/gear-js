@@ -10,7 +10,7 @@
 
 ## [@gear-js/api](https://github.com/gear-tech/gear-js/tree/master/api)
 
-JavaScript library that provides functionality to connect Gear node and interact with it.
+JavaScript library that provides functionality to connect to the Gear node and interact with it.
 
 Refer to the [api](https://github.com/gear-tech/gear-js/blob/master/api/README.md) docs for detail
 
@@ -42,16 +42,12 @@ React application that serves as a get-familiar with Gear to help developers wri
 
 #### [data-storage](https://github.com/gear-tech/gear-js/tree/master/idea/data-storage)
 
-Microservice is responsible for storing metadata of uploaded programs and information about events and listens to all the events occuring in the Gear node and sends to the data-storage to store the information about them
-
-#### [api-gateway](https://github.com/gear-tech/gear-js/tree/master/idea/api-gateway)
-
-Microservice provides any interaction between the events / meta data store and an external user
+Microservice is responsible for storing information about programs and their messages as well as the metadata of these programs.
 
 #### [test-balance](https://github.com/gear-tech/gear-js/tree/master/idea/test-balance)
 
 Microservice provides the opportunity to obtain test tokens
 
-#### [wasm-compiler](https://github.com/gear-tech/gear-js/tree/master/idea/wasm-compiler)
+#### [api-gateway](https://github.com/gear-tech/gear-js/tree/master/idea/api-gateway)
 
-Microservice provides the opportunity to compile rust projects to wasm
+Microservice provides any interaction between data-storage / test-balance services and an external user

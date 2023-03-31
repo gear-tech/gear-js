@@ -13,7 +13,10 @@ export class ProgramMetadata extends GearMetadata {
   }
 }
 
-export function getProgramMetadata(hexMetadata: HexString): ProgramMetadata {
+export function getProgramMetadata(hexMetadata: HexString | string): ProgramMetadata {
+  if (!hexMetadata.startsWith('0x')) {
+    hexMetadata = '0x' + hexMetadata;
+  }
   const metaRepr = CreateType.create<ProgramMetadataRepr>('ProgramMetadataRepr', hexMetadata, true).toJSON();
   return new ProgramMetadata(metaRepr);
 }
