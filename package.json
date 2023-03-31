@@ -30,7 +30,8 @@
   "workspaces": [
     "idea/*",
     "apps/*",
-    "utils/gear-ui"
+    "utils/gear-ui",
+    "tools/cli"
   ],
   "lint-staged": {
     "api/**/*.{js,ts}": "cd api && yarn lint:fix",
