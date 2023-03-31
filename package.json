@@ -29,7 +29,6 @@
   },
   "workspaces": [
     "idea/*",
-    "apps/*",
     "utils/gear-ui",
     "tools/cli"
   ],
