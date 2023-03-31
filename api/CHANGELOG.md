@@ -1,3 +1,13 @@
+## 0.30.4
+
+_03/31/2023_
+
+https://github.com/gear-tech/gear-js/pull/1248
+
+### Changes
+
+- Bump polkadot-js packages
+
 ## 0.30.3
 
 _03/30/2023_
