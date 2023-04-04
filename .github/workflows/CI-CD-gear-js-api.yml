@@ -27,12 +27,15 @@ jobs:
         with:
           node-version: 16.x
 
-      - name: 'Install: Nightly toolchain'
+      - name: "Install: Set cargo path"
+        run: echo "/tmp/cargo/bin" >> $GITHUB_PATH
+
+      - name: "Install: Nightly toolchain"
         uses: actions-rs/toolchain@v1
         with:
           toolchain: nightly
-          components: clippy, rustfmt
           target: wasm32-unknown-unknown
+          components: llvm-tools-preview
       
       - name: "Install: Show specific nightly version"
         if: ${{ env.NIGHTLY_TOOLCHAIN_VERSION != '' }}
