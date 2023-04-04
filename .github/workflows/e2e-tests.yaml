@@ -6,8 +6,7 @@ on:
     branches: [main]
     paths:
       - idea/api-gateway/**
-      - idea/data-storage/**
-      - idea/events-listener/**
+      - idea/indexer/**
       - idea/frontend/**
       - idea/test-balance/**
       - idea/tests/**
@@ -34,72 +33,6 @@ env:
   REACT_APP_HCAPTCHA_SITE_KEY: ${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
 
 jobs:
-  run-unit-tests:
-    runs-on: ubuntu-latest
-    environment: staging
-    # Declare outputs for next steps
-    outputs:
-      dataStorage_changed: ${{ steps.check_file_changed.outputs.dataStorage_changed }}
-      frontend_changed: ${{ steps.check_file_changed.outputs.frontend_changed }}
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          # Checkout as many commits as needed for the diff
-          fetch-depth: 2
-      - shell: pwsh
-        id: check_file_changed
-        run: |
-          # Diff HEAD with the previous commit
-          $diff = git diff --name-only HEAD^ HEAD
-          # Check if a file under dataStorage/ has changed (added, modified, deleted)
-          $SourceDiffDataStorage = $diff | Where-Object { $_ -match '^idea/data-storage/' }
-          $HasDiffDataStorage = $SourceDiffDataStorage.Length -gt 0
-          # Check if a file under frontend/ has changed (added, modified, deleted)
-          $SourceDiffFrontend = $diff | Where-Object { $_ -match '^idea/frontend/' }
-          $HasDiffFrontend = $SourceDiffFrontend.Length -gt 0
-          # Set the output
-          Write-Host "::set-output name=dataStorage_changed::$HasDiffDataStorage"
-          Write-Host "::set-output name=frontend_changed::$HasDiffFrontend"
-
-      - name: Cancel previous workflow runs
-        uses: styfle/cancel-workflow-action@0.4.0
-        with:
-          access_token: ${{ github.token }}
-
-      - uses: c-hive/gha-yarn-cache@v2.1.0
-
-      - name: Setup NodeJS
-        uses: actions/setup-node@v2
-        with:
-          node-version: 17
-          cache: yarn
-
-      - name: Install dependencies
-        uses: borales/actions-yarn@v3.0.0
-        with:
-          cmd: install
-
-      - name: Build common package
-        if: steps.check_file_changed.outputs.dataStorage_changed == 'True'
-        run: |
-          sudo chown -R "$USER:$GROUP" .yarn
-          yarn build:common
-
-      - name: Run data-storage tests
-        if: steps.check_file_changed.outputs.dataStorage_changed == 'True'
-        run: yarn test:data-storage
-        env:
-          TEST_ENV_UNIT: ${{ secrets.TEST_ENV }}
-          DB_USER: example
-          DB_PASSWORD: example
-          DB_NAME: example
-          RABBIT_MQ_URL: example
-
-      - name: Build frontend pkg
-        if: steps.check_file_changed.outputs.frontend_changed == 'True'
-        run: sudo yarn build:frontend
-
   wait-previous-run:
     needs: [run-unit-tests]
     if: github.event.pull_request.draft == false
@@ -164,7 +97,7 @@ jobs:
 #          push: true
 #          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-node:dev
 
-  build-and-push-data-storage-image:
+  build-and-push-indexer-image:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     needs: [wait-previous-run]
@@ -184,12 +117,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Data Storage Docker image
+      - name: Build and push Indexer Docker image
         uses: docker/build-push-action@master
         with:
-          file: idea/data-storage/Dockerfile
+          file: idea/indexer/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-data-storage:dev
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-indexer:dev
 
   build-and-push-api-gateway-image:
     if: github.event.pull_request.draft == false
@@ -249,7 +182,7 @@ jobs:
     if: github.event.pull_request.draft == false
     needs:
       [
-        build-and-push-data-storage-image,
+        build-and-push-indexer-image,
         build-and-push-api-gateway-image,
         build-and-push-test-balance-image,
         build-and-push-gear-node-image,
@@ -285,20 +218,20 @@ jobs:
         with:
           args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n $KUBE_NAMESPACE --timeout=120s
 
-      - name: Deploy to k8s data-storage
+      - name: Deploy to k8s indexer
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment test-balance-testenv data-storage-testenv -n $KUBE_NAMESPACE
+          args: rollout restart deployment test-balance-testenv indexer-testenv -n $KUBE_NAMESPACE
 
       - name: Check k8s deployment test-balance-testenv
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: rollout status deployment test-balance-testenv -n $KUBE_NAMESPACE --timeout=120s
 
-      - name: Check k8s deployment data-storage
+      - name: Check k8s deployment indexer
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout status deployment data-storage-testenv -n $KUBE_NAMESPACE --timeout=120s
+          args: rollout status deployment indexer-testenv -n $KUBE_NAMESPACE --timeout=120s
 
   run-e2e-tests:
     if: github.event.pull_request.draft == false
