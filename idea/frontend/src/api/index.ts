@@ -1,8 +1,8 @@
 import { NodeSection } from 'entities/node';
 import { DEFAULT_NODES_URL } from 'shared/config';
 
-import { fetchCode, fetchCodes } from './code';
-import { fetchProgram, fetchPrograms } from './program';
+import { fetchCode, fetchCodes, addCodeName } from './code';
+import { fetchProgram, fetchPrograms, addProgramName } from './program';
 import { fetchTestBalance } from './balance';
 import { fetchMessage, fetchMessages } from './message';
 import { fetchMetadata, fetchCodeMetadata, addMetadata, addCodeMetadata } from './metadata';
@@ -14,11 +14,13 @@ const getNodes = (): Promise<NodeSection[]> => fetch(DEFAULT_NODES_URL).then((re
 export {
   getNodes,
   fetchProgram,
+  addProgramName,
   getLocalProgram,
   fetchPrograms,
   getLocalPrograms,
   addMetadata,
   addCodeMetadata,
+  addCodeName,
   fetchMetadata,
   fetchCodeMetadata,
   getLocalProgramMeta,
