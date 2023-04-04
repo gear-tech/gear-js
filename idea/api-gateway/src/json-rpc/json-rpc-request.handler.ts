@@ -28,12 +28,12 @@ async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
     return getResponse(procedure, null, testBalanceChannels.has(params.genesis));
   }
 
-  if(procedure.method === API_METHODS.NETWORK_DATA_AVAILABLE) {
+  if (procedure.method === API_METHODS.NETWORK_DATA_AVAILABLE) {
     return getResponse(procedure, null, dataStorageChannels.has(params.genesis));
   }
 
-  if (!validateGenesis(params.genesis)) {
-    return getResponse(procedure, JSONRPC_ERRORS.NoGenesisFound.name);
+  if (!validateGenesis(params.genesis, method)) {
+    return getResponse(procedure, JSONRPC_ERRORS.UnknownNetwork.name);
   }
 
   const { error, result } = await jsonRpcHandler(method as API_METHODS, params);
@@ -46,10 +46,9 @@ function isExistJsonRpcMethod(kafkaTopic: string): boolean {
   return methods.includes(kafkaTopic);
 }
 
-function validateGenesis(genesis: string): boolean {
-  if(dataStorageChannels.has(genesis) || testBalanceChannels.has(genesis)){
-    return true;
+function validateGenesis(genesis: string, method: string): boolean {
+  if (method === API_METHODS.TEST_BALANCE_GET) {
+    return testBalanceChannels.has(genesis);
   }
-
-  return false;
+  return dataStorageChannels.has(genesis);
 }

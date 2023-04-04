@@ -1,8 +1,9 @@
 import { connect, Connection, Channel } from 'amqplib';
-import { initLogger, RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
+import { RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
 
 import config from '../config/configuration';
 import { RpcResponse } from '../json-rpc/types';
+import { logger } from '../common/logger';
 
 let connectionAMQP: Connection;
 let mainChannelAMQP: Channel;
@@ -10,7 +11,6 @@ let mainChannelAMQP: Channel;
 const testBalanceChannels: Map<string, Channel> = new Map<string, Channel>();
 const dataStorageChannels: Map<string, Channel> = new Map<string, Channel>();
 const repliesMap: Map<string, (params: any) => RpcResponse> = new Map<string, (params: any) => RpcResponse>();
-const logger = initLogger('RMQ');
 
 export async function initAMQ(): Promise<void> {
   connectionAMQP = await connectAMQP(config.rabbitmq.url);

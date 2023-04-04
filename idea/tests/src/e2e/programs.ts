@@ -113,12 +113,13 @@ export async function uploadMeta(genesis: string, program: IPreparedProgram): Pr
     genesis,
     id: program.id,
     metaHex,
-    name: program.spec.name,
   };
   const response = await request('program.meta.add', data);
   expect(response).to.have.property('result');
-  expect(response.result).to.have.property('status');
-  expect(response.result.status).to.eq('Metadata added');
+  expect(response.result).to.have.all.keys('types', 'hex', 'hash', 'id');
+  expect(response.result.hash).to.not.be.undefined;
+  expect(response.result.hex).to.not.be.undefined;
+  expect(response.result.types).to.not.be.undefined;
   return true;
 }
 

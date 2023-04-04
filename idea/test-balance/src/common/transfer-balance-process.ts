@@ -3,7 +3,7 @@ import { EventEmitter } from 'node:events';
 
 import { transferService } from '../services/transfer.service';
 import { gearService } from '../gear';
-import { testBalanceLogger } from './test-balace.logger';
+import { logger } from './logger';
 import { producer } from '../rabbitmq/producer';
 import { TBRequestParams } from './types';
 
@@ -47,7 +47,7 @@ export async function transferProcess(): Promise<void> {
         result = { error: JSONRPC_ERRORS.TransferLimitReached.name };
       }
     } catch (error) {
-      testBalanceLogger.error(error.message, error.stack);
+      logger.error(error.message, error.stack);
       result = { error: JSONRPC_ERRORS.InternalError.name };
     }
     producer.sendMessage(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.REPLIES, correlationId, result);

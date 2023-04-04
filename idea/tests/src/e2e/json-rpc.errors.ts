@@ -23,10 +23,19 @@ export async function errorInvalidParams(genesis: string): Promise<Passed> {
   return true;
 }
 
-export async function errorNoGenesisFound(genesis: string): Promise<Passed> {
-  const response = await request('program.all', { genesis: `__${genesis}__` });
+export async function errorNoGenesisFound(): Promise<Passed> {
+  const response = await request('program.all', {});
 
   expect(response.error.message).to.equal('Genesis not found in the request');
+  expect(response.error.code).to.equal(-32605);
+
+  return true;
+}
+
+export async function unknownNetworkError(genesis: string): Promise<Passed> {
+  const response = await request('program.all', { genesis: `__${genesis}__` });
+
+  expect(response.error.message).to.equal('Unknown network');
   expect(response.error.code).to.equal(-32605);
 
   return true;
@@ -36,7 +45,7 @@ export async function errorProgramNotFound(genesis: string): Promise<Passed> {
   const invalidProgramAddress = '0x00';
   const response = await request('program.data', {
     genesis,
-    id: invalidProgramAddress
+    id: invalidProgramAddress,
   });
 
   expect(response.error.message).to.equal('Program not found');
@@ -49,7 +58,7 @@ export async function errorCodeNotFound(genesis: string): Promise<Passed> {
   const invalidCodeAddress = '0x00';
   const response = await request('code.data', {
     genesis,
-    id: invalidCodeAddress
+    id: invalidCodeAddress,
   });
 
   expect(response.error.message).to.equal('Code not found');
@@ -62,7 +71,7 @@ export async function errorMessageNotFound(genesis: string): Promise<Passed> {
   const invalidMessageId = '0x00';
   const response = await request('message.data', {
     genesis,
-    id: invalidMessageId
+    id: invalidMessageId,
   });
 
   expect(response.error.message).to.equal('Message not found');

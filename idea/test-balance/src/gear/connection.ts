@@ -1,11 +1,9 @@
 import { GearApi } from '@gear-js/api';
-import { initLogger } from '@gear-js/common';
 
 import { changeStatus } from '../routes/healthcheck.router';
 import config from '../config/configuration';
 import { producer } from '../rabbitmq/producer';
-
-const logger = initLogger('TEST_BALANCE_GEAR');
+import { logger } from '../common/logger';
 
 export let api: GearApi;
 

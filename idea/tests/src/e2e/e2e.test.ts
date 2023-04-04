@@ -38,6 +38,7 @@ import {
   errorNoGenesisFound,
   errorProgramNotFound,
   errorStateAlreadyExists,
+  unknownNetworkError,
 } from './json-rpc.errors';
 
 let genesis: HexString;
@@ -69,7 +70,7 @@ describe('API methods', () => {
     await sleep();
   });
 
-  describe('Program', () => {
+  describe.only('Program', () => {
     test('program.all request', async () => {
       expect(await getAllPrograms(genesis, Object.keys(prepared.programs) as HexString[])).toBeTruthy();
     });
@@ -108,7 +109,7 @@ describe('API methods', () => {
     });
   });
 
-  describe('Metadata', () => {
+  describe.only('Metadata', () => {
     test('program.meta.add request', async () => {
       for (const id of Object.keys(prepared.programs)) {
         const program = prepared.programs[id] as IPreparedProgram;
@@ -129,7 +130,7 @@ describe('API methods', () => {
     });
   });
 
-  describe('State', () => {
+  describe.only('State', () => {
     test('program.state.add request', async () => {
       for (const id of Object.keys(prepared.programs)) {
         const program = prepared.programs[id] as IPreparedProgram;
@@ -179,7 +180,7 @@ describe('API methods', () => {
     });
   });
 
-  describe('Message', () => {
+  describe.only('Message', () => {
     test('message.all request', async () => {
       const messages = Array.from(prepared.messages.log.keys()).concat(
         Array.from(prepared.messages.sent.values()).map(({ id }) => id),
@@ -203,7 +204,7 @@ describe('API methods', () => {
     });
   });
 
-  describe('Code', () => {
+  describe.only('Code', () => {
     test('code.all request', async () => {
       await sleep();
       const codeIds = Array.from(prepared.collectionCode.keys());
@@ -237,7 +238,7 @@ describe('API methods', () => {
     });
   });
 
-  describe('Network', () => {
+  describe.only('Network', () => {
     test('networkData.available request', async () => {
       expect(await networkDataAvailable(genesis)).toBeTruthy();
     });
@@ -247,7 +248,7 @@ describe('API methods', () => {
     });
   });
 
-  describe('JSON_RPC errors', () => {
+  describe.only('JSON_RPC errors', () => {
     test('error method not exist', async () => {
       expect(await errorMethodNotExist(genesis)).toBeTruthy();
     });
@@ -257,7 +258,11 @@ describe('API methods', () => {
     });
 
     test('error no genesis found', async () => {
-      expect(await errorNoGenesisFound(genesis)).toBeTruthy();
+      expect(await errorNoGenesisFound()).toBeTruthy();
+    });
+
+    test('error unknown network', async () => {
+      expect(await unknownNetworkError(genesis)).toBeTruthy();
     });
 
     test('error program not found', async () => {

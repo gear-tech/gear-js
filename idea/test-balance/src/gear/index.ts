@@ -1,20 +1,18 @@
 import { TransferData } from '@gear-js/api';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { BN } from '@polkadot/util';
-import { initLogger } from '@gear-js/common';
 
 import config from '../config/configuration';
 import { ResponseTransferBalance } from './types';
 import { transferService } from '../services/transfer.service';
 import { createAccount } from './utils';
 import { connect, api, getGenesisHash } from './connection';
+import { logger } from '../common/logger';
 
 let tbAccount: KeyringPair;
 let prefundedAcc: KeyringPair;
 let tbAccBalance: BN;
 let balanceToTransfer: BN;
-
-const logger = initLogger('TEST_BALANCE_GEAR');
 
 async function init() {
   tbAccount = await createAccount(config.gear.accountSeed);
