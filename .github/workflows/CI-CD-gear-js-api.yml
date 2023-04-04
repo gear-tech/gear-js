@@ -15,12 +15,13 @@ jobs:
     if: github.event_name == 'pull_request'
 
     runs-on: ubuntu-20.04
+
     steps:
       - name: Cancel previous workflow runs
         uses: styfle/cancel-workflow-action@0.4.0
         with:
           access_token: ${{ github.token }}
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Install NodeJS 16.x
         uses: actions/setup-node@v3
@@ -38,8 +39,7 @@ jobs:
           components: llvm-tools-preview
       
       - name: "Install: Show specific nightly version"
-        if: ${{ env.NIGHTLY_TOOLCHAIN_VERSION != '' }}
-        run: echo $NIGHTLY_TOOLCHAIN_VERSION | sed 's/-/ - /g'
+        run: echo $NIGHTLY_TOOLCHAIN_VERSION
 
       - name: "Install: Specific nightly toolchain"
         if: ${{ env.NIGHTLY_TOOLCHAIN_VERSION != '' }}
