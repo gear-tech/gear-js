@@ -123,6 +123,32 @@ export async function uploadMeta(genesis: string, program: IPreparedProgram): Pr
   return true;
 }
 
+export async function addProgramName(genesis: string, program: IPreparedProgram): Promise<Passed> {
+  const data = {
+    genesis,
+    id: program.id,
+    name: program.spec.name,
+  };
+  const response = await request('program.name.add', data);
+
+  expect(response).to.have.property('result');
+  expect(response.result).to.have.all.keys(
+    'id',
+    '_id',
+    'blockHash',
+    'genesis',
+    'owner',
+    'name',
+    'timestamp',
+    'meta',
+    'status',
+    'code',
+    'expiration',
+  );
+  expect(response.result.name).to.eq(program.spec.name);
+  return true;
+}
+
 export async function getMeta(genesis: string, id: string): Promise<Passed> {
   const data = {
     genesis,

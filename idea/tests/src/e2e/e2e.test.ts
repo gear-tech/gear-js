@@ -70,7 +70,7 @@ describe('API methods', () => {
     await sleep();
   });
 
-  describe.only('Program', () => {
+  describe('Program', () => {
     test('program.all request', async () => {
       expect(await getAllPrograms(genesis, Object.keys(prepared.programs) as HexString[])).toBeTruthy();
     });
@@ -109,7 +109,7 @@ describe('API methods', () => {
     });
   });
 
-  describe.only('Metadata', () => {
+  describe('Metadata', () => {
     test('program.meta.add request', async () => {
       for (const id of Object.keys(prepared.programs)) {
         const program = prepared.programs[id] as IPreparedProgram;
@@ -130,7 +130,7 @@ describe('API methods', () => {
     });
   });
 
-  describe.only('State', () => {
+  describe('State', () => {
     test('program.state.add request', async () => {
       for (const id of Object.keys(prepared.programs)) {
         const program = prepared.programs[id] as IPreparedProgram;
@@ -180,7 +180,7 @@ describe('API methods', () => {
     });
   });
 
-  describe.only('Message', () => {
+  describe('Message', () => {
     test('message.all request', async () => {
       const messages = Array.from(prepared.messages.log.keys()).concat(
         Array.from(prepared.messages.sent.values()).map(({ id }) => id),
@@ -204,7 +204,7 @@ describe('API methods', () => {
     });
   });
 
-  describe.only('Code', () => {
+  describe('Code', () => {
     test('code.all request', async () => {
       await sleep();
       const codeIds = Array.from(prepared.collectionCode.keys());
@@ -238,7 +238,7 @@ describe('API methods', () => {
     });
   });
 
-  describe.only('Network', () => {
+  describe('Network', () => {
     test('networkData.available request', async () => {
       expect(await networkDataAvailable(genesis)).toBeTruthy();
     });
@@ -248,7 +248,7 @@ describe('API methods', () => {
     });
   });
 
-  describe.only('JSON_RPC errors', () => {
+  describe('JSON_RPC errors', () => {
     test('error method not exist', async () => {
       expect(await errorMethodNotExist(genesis)).toBeTruthy();
     });
