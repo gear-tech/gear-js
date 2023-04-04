@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - idea/api-gateway/**
+      - idea/common/**
       - idea/indexer/**
       - idea/frontend/**
       - idea/test-balance/**
