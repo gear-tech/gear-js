@@ -68,7 +68,7 @@ export class GearEvents {
     });
   }
 
-  async subscribeToBalanceChange(accountAddress: string, callback: IBalanceCallback): UnsubscribePromise {
+  async subscribeToBalanceChanges(accountAddress: string, callback: IBalanceCallback): UnsubscribePromise {
     let {
       data: { free: previousFree },
     } = (await this.api.query.system.account(accountAddress)) as FrameSystemAccountInfo;
