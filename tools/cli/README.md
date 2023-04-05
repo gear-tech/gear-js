@@ -10,7 +10,7 @@
 
 ## Description
 
-CLI tool that allows to send transactions to the Gear node based on yaml file
+A CLI tool that allows sending transactions to the Gear node based on yaml file.
 
 ## Installation
 
