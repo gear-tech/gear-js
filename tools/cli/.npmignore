@@ -1,0 +1,14 @@
+.vscode/
+node_modules/
+src/
+examples/
+test/
+
+yarn.lock
+.eslintrc.cjs
+.gitignore
+babel.config.json
+jest.config.js
+package-lock.json
+rollup.config.js
+tsconfig*
