@@ -27,7 +27,7 @@ To run workflow use this command
 gear-js workflow path/to/workflow.yaml
 ```
 
-You can also specify some arguments to be used instead of the unkown parts of the payloads (`$cli token_name`)
+You can also specify some arguments to be used instead of the unknown parts of the payloads (`$cli token_name`)
 ```bash
 gear-js workflow path/to/workflow.yaml token_name=MY_NFT url=https://gear-tech.io
 ```
