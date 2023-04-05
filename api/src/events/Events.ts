@@ -1,7 +1,8 @@
+import { FrameSystemAccountInfo } from '@polkadot/types/lookup';
 import { HexString } from '@polkadot/util/types';
 import { UnsubscribePromise } from '@polkadot/api/types';
 
-import { IBalanceCallback, IBlocksCallback, ISystemAccountInfo } from '../types';
+import { IBalanceCallback, IBlocksCallback } from '../types';
 import { Transfer, UserMessageSent } from './GearEvents';
 import { GearApi } from '../GearApi';
 import { IGearEvent } from './types';
@@ -70,7 +71,7 @@ export class GearEvents {
   async subscribeToBalanceChanges(accountAddress: string, callback: IBalanceCallback): UnsubscribePromise {
     let {
       data: { free: previousFree },
-    } = (await this.api.query.system.account(accountAddress)) as ISystemAccountInfo;
+    } = (await this.api.query.system.account(accountAddress)) as FrameSystemAccountInfo;
 
     return this.api.query.system.account(accountAddress, ({ data: { free: currentFree } }) => {
       if (!currentFree.sub(previousFree).isZero()) {
