@@ -75,6 +75,7 @@ async function bootstrap() {
     metaService,
     statusService,
     true,
+    true,
   );
 
   await indexer.run(api, blocks);

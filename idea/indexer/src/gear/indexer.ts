@@ -39,6 +39,7 @@ export class GearIndexer {
     private metaService: MetaService,
     private statusService?: StatusService,
     private oneTimeSync: boolean = false,
+    private logEveryBlock: boolean = false,
   ) {}
 
   public async run(api: GearApi, onlyBlocks?: number[]) {
@@ -110,8 +111,10 @@ export class GearIndexer {
 
   private async indexBlock(hash: HexString): Promise<[Program[], Code[]]> {
     const block = await this.api.derive.chain.getBlock(hash);
+    const bn = block.block.header.number.toString();
+    if (bn === '0') return;
 
-    if (block.block.header.number.eq(0)) return;
+    if (this.logEveryBlock) logger.info(`Processing block ${bn}`);
 
     const timestamp = (await this.api.blocks.getBlockTimestamp(block)).toNumber();
 
@@ -119,7 +122,7 @@ export class GearIndexer {
     await this.handleEvents(block, timestamp, hash);
     await this.handleBlock(block, timestamp, hash);
     if (this.oneTimeSync) {
-      await this.statusService.update(this.genesis, block.block.header.number.toString(), hash);
+      await this.statusService.update(this.genesis, bn, hash);
     }
     return programsAndCodes;
   }
