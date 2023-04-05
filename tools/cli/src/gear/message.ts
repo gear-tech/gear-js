@@ -2,6 +2,7 @@ import { CreateType, GearApi, MessageQueued, ProgramMetadata } from '@gear-js/ap
 import { KeyringPair } from '@polkadot/keyring/types';
 import { u64 } from '@polkadot/types';
 import { u8aToHex } from '@polkadot/util';
+import { HexString } from '@polkadot/util/types';
 
 import { logger } from '../utils';
 import { getReply, isMsgDispatchedSuccessfully } from './findEvents';
@@ -9,7 +10,7 @@ import { getReply, isMsgDispatchedSuccessfully } from './findEvents';
 export async function sendMessage(
   api: GearApi,
   account: KeyringPair,
-  programId: `0x${string}`,
+  programId: HexString,
   meta: ProgramMetadata,
   payload: any,
   value?: number | string,
@@ -39,7 +40,7 @@ export async function sendMessage(
     meta?.types.handle.input,
   );
 
-  const [blockHash, msgId]: [`0x${string}`, `0x${string}`] = await new Promise((resolve) =>
+  const [blockHash, msgId]: [HexString, HexString] = await new Promise((resolve) =>
     extrinsic.signAndSend(account, ({ events, status }) => {
       const meEvent = events.find(({ event: { method } }) => method === 'MessageQueued');
       if (meEvent) {
@@ -55,14 +56,14 @@ export async function sendMessage(
   const isSuccess = await isMsgDispatchedSuccessfully(api, msgId, blockHash);
 
   if (!isSuccess) {
-    throw new Error(`Message failed`);
+    throw new Error('Message failed');
   }
-  logger.info(`Message dispatched successfuly`, { lvl: 1 });
+  logger.info('Message dispatched successfuly', { lvl: 1 });
 
   const reply = await getReply(api, programId, msgId, blockHash, 10);
 
   if (!reply) {
-    throw new Error(`Reply was not received`);
+    throw new Error('Reply was not received');
   }
   logger.info(`Reply message id: ${reply.msgId}`, { lvl: 1 });
   logger.info(

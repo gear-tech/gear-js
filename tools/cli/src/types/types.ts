@@ -1,13 +1,14 @@
 import { ProgramMetadata } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 
 export interface IProgram extends Omit<SchemeProgram, 'id' | 'path_to_meta' | 'path_to_wasm'> {
-  address?: `0x${string}`;
+  address?: HexString;
   meta?: ProgramMetadata;
   wasm?: Buffer;
 }
 
 export interface ICode extends Omit<SchemeCode, 'id'> {
-  hash?: `0x${string}`;
+  hash?: HexString;
 }
 
 export interface SchemeProgram {
@@ -17,14 +18,14 @@ export interface SchemeProgram {
   path_to_meta?: string;
   payload?: any;
   value?: number;
-  address?: `0x${string}`;
+  address?: HexString;
 }
 
 export interface SchemeCode {
   id: number;
   name?: string;
   path_to_wasm?: string;
-  hash?: `0x${string}`;
+  hash?: HexString;
 }
 
 export interface UploadProgramTransactionScheme {

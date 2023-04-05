@@ -1,10 +1,11 @@
 import { DispatchStatus, GearApi, MessagesDispatched, UserMessageSent } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 
 export async function isMsgDispatchedSuccessfully(
   api: GearApi,
-  messageId: `0x${string}`,
-  fromBlock: `0x${string}`,
-  numberOfBlocksToCheck: number = 100,
+  messageId: HexString,
+  fromBlock: HexString,
+  numberOfBlocksToCheck = 100,
 ) {
   const bn = (await api.blocks.getBlockNumber(fromBlock)).toNumber();
   for (let i = bn; i < bn + numberOfBlocksToCheck; i++) {
@@ -33,10 +34,10 @@ export async function isMsgDispatchedSuccessfully(
 
 export async function getReply(
   api: GearApi,
-  programId: `0x${string}`,
-  messageId: `0x${string}`,
-  fromBlock: `0x${string}`,
-  numberOfBlocksToCheck: number = 100,
+  programId: HexString,
+  messageId: HexString,
+  fromBlock: HexString,
+  numberOfBlocksToCheck = 100,
 ) {
   const bn = (await api.blocks.getBlockNumber(fromBlock)).toNumber();
   for (let i = bn; i < bn + numberOfBlocksToCheck; i++) {
@@ -46,15 +47,16 @@ export async function getReply(
     if (userMessageSents.length === 0) continue;
 
     for (const userMessageSent of userMessageSents) {
-      const event = userMessageSent.event as UserMessageSent;
+      const {
+        data: {
+          message: { id, source, payload, details },
+        },
+      } = userMessageSent.event as UserMessageSent;
       const reply = await new Promise((resolve) => {
-        if (event.data.message.source.eq(programId)) {
-          if (event.data.message.details.isSome) {
-            if (event.data.message.details.unwrap().isReply) {
-              if (event.data.message.details.unwrap().asReply.replyTo.eq(messageId)) {
-                resolve([event.data.message.id.toHex(), event.data.message.payload]);
-              }
-            }
+        if (source.eq(programId) && details.isSome) {
+          const unwrappedDetails = details.unwrap();
+          if (unwrappedDetails.isReply && unwrappedDetails.asReply.replyTo.eq(messageId)) {
+            resolve([id.toHex(), payload]);
           }
         }
         resolve(undefined);

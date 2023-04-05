@@ -1,6 +1,7 @@
 import { GearApi, getProgramMetadata, MessageQueued, ProgramMetadata } from '@gear-js/api';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { u8aToHex } from '@polkadot/util';
+import { HexString } from '@polkadot/util/types';
 import fs from 'fs';
 import path from 'path';
 
@@ -36,7 +37,7 @@ export async function uploadProgram(
 
   logger.info(`Program id: ${programId}`, { lvl: 1 });
 
-  const [blockHash, msgId]: [`0x${string}`, `0x${string}`] = await new Promise((resolve) =>
+  const [blockHash, msgId]: [HexString, HexString] = await new Promise((resolve) =>
     extrinsic.signAndSend(account, ({ events, status }) => {
       const meEvent = events.find(({ event: { method } }) => method === 'MessageQueued');
       if (meEvent) {
@@ -51,11 +52,11 @@ export async function uploadProgram(
   const isSuccess = await isMsgDispatchedSuccessfully(api, msgId, blockHash);
 
   if (isSuccess) {
-    logger.info(`Program initialized successfuly`, { lvl: 1 });
+    logger.info('Program initialized successfuly', { lvl: 1 });
     return programId;
   }
 
-  throw new Error(`Program initialization failed`);
+  throw new Error('Program initialization failed');
 }
 
 export function getPrograms(programs: Array<SchemeProgram>, basePath: string): Record<number, IProgram> {

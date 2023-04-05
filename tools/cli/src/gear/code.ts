@@ -1,6 +1,7 @@
 import { CodeChangedData, CodeMetadata, GearApi, generateCodeHash } from '@gear-js/api';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { Option } from '@polkadot/types-codec';
+import { HexString } from '@polkadot/util/types';
 import fs from 'fs';
 
 import { ICode, SchemeCode } from '../types';
@@ -22,7 +23,7 @@ export async function uploadCode(api: GearApi, account: KeyringPair, pathToProgr
 
   await api.code.upload(code);
 
-  const blockHash: `0x${string}` = await new Promise((resolve, reject) =>
+  const blockHash: HexString = await new Promise((resolve, reject) =>
     api.code.signAndSend(account, ({ events, status }) => {
       const ccEvent = events.find(({ event }) => event.method === 'CodeChanged');
       const data = ccEvent?.event.data as CodeChangedData;
@@ -36,7 +37,7 @@ export async function uploadCode(api: GearApi, account: KeyringPair, pathToProgr
     }),
   );
 
-  logger.info(`Code successfully uploaded`, { lvl: 1 });
+  logger.info('Code successfully uploaded', { lvl: 1 });
 
   return { codeHash, blockHash };
 }
