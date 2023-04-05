@@ -10,7 +10,7 @@
 
 ## Description
 
-The Gear-JS API provides a set of utilities, libraries and tools that enable JavaScript applications to interact with smart contracts running in the Gear network via queries to a Gear node.
+The Gear-JS API provides a set of utilities, libraries and tools that enable JavaScript applications to interact with smart contracts running in the Gear-based networks via queries to a Gear node.
 
 ## Installation
 
@@ -69,7 +69,7 @@ import { CreateType } from '@gear-js/api';
 const result = CreateType.create('TypeName', somePayload);
 ```
 
-Result of this functions is data of type `Codec` and it has the next methods
+The result of these functions is the data of type `Codec` and it has the following methods:
 
 ```javascript
 result.toHex(); // - returns a hex represetation of the value
@@ -85,7 +85,7 @@ There're 2 types of metadata.
 
 1. `ProgramMetadata` is used to encode/decode messages to/from a program as well as to read the whole state of the program
 
-_You can use `getProgramMetadata` function to create program metadata. The function takes metadata of the program in format of hex string. It will return object of ProgramMetadata class that has property `types` that contains all types of the program._
+_You can use `getProgramMetadata` function to create the program metadata. The function takes metadata of the program in format of hex string. It will return object of `ProgramMetadata` class that has property `types` that contains all types of the program._
 
 **You should pass an object of this class to function arguments when you want to send some extrinsics that require encoding payloads**
 
@@ -180,7 +180,7 @@ gearApi.code.signAndSend(alice, () => {
 });
 ```
 
-### Create program from uploaded code on chain
+### Create program from the code uploaded on chain
 
 Use `api.program.create` method to create `create_program` extrinsic
 
@@ -201,7 +201,7 @@ await extrinsic.signAndSend(keyring, (event) => {
 });
 ```
 
-### Send message
+### Send a message
 
 Use `api.message.send` method to create `send_message` extrinsic
 
@@ -229,7 +229,7 @@ try {
 }
 ```
 
-### Send reply message
+### Send a reply message
 
 Use `api.message.reply` method to create `send_reply` extrinsic
 
@@ -246,9 +246,9 @@ await extrinsic(keyring, (events) => {
 });
 ```
 
-### Get transaction fee
+### Get a transaction fee
 
-To get a transaction fee before sending a transaction you can use paymentInfo method.
+To get a transaction fee before sending a transaction you can use `paymentInfo` method.
 
 ```javascript
 const api = await GearApi.create();
@@ -311,7 +311,7 @@ const programExists = await api.program.exists(programId);
 console.log(`Program with address ${programId} ${programExists ? 'exists' : "doesn't exist"}`);
 ```
 
-### Read state of program
+### Read state of a program
 
 There are 2 ways to read state of a program.
 
