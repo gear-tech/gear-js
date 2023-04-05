@@ -20,6 +20,7 @@ import { checkWallet, getExtrinsicFailedMessage } from 'shared/helpers';
 import { CustomLink } from 'shared/ui/customLink';
 
 import { ProgramStatus } from 'entities/program';
+import { addProgramName } from 'api';
 import { useMetadataUpload } from '../useMetadataUpload';
 import { waitForProgramInit } from './helpers';
 import { ALERT_OPTIONS } from './consts';
@@ -98,15 +99,19 @@ const useProgramActions = () => {
           alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
           handleEventsStatus(events, { reject, resolve });
 
-          if (metaHex) {
-            // timeout cuz wanna be sure that block data is ready
-            setTimeout(uploadMetadata, UPLOAD_METADATA_TIMEOUT, {
-              name,
-              programId,
-              metaHex,
-              resolve: () => alert.success(programMessage, ALERT_OPTIONS),
-            });
-          }
+          // timeout cuz wanna be sure that block data is ready
+          setTimeout(() => {
+            addProgramName({ id: programId, name }).then(
+              () =>
+                metaHex &&
+                uploadMetadata({
+                  name,
+                  programId,
+                  metaHex,
+                  resolve: () => alert.success(programMessage, ALERT_OPTIONS),
+                }),
+            );
+          }, UPLOAD_METADATA_TIMEOUT);
         } else if (status.isInvalid) {
           alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
 
