@@ -101,7 +101,7 @@ const useProgramActions = () => {
 
           // timeout cuz wanna be sure that block data is ready
           setTimeout(() => {
-            addProgramName({ id: programId, name }).then(
+            addProgramName({ id: programId, name: name || programId }).then(
               () =>
                 metaHex &&
                 uploadMetadata({
@@ -132,7 +132,7 @@ const useProgramActions = () => {
       if (resolve) resolve();
 
       if (isDevChain) {
-        await uploadLocalProgram({ id: programId, name, owner: account?.decodedAddress! });
+        await uploadLocalProgram({ id: programId, name: name || programId, owner: account?.decodedAddress! });
       }
     } catch (error) {
       const message = (error as Error).message;
@@ -157,10 +157,16 @@ const useProgramActions = () => {
 
         const { partialFee } = await api.program.paymentInfo(address, { signer });
 
-        const name = payload.programName || codeId;
-
         const handleConfirm = () =>
-          signAndUpload({ name, method: TransactionName.CreateProgram, signer, payload, programId, reject, resolve });
+          signAndUpload({
+            name: payload.programName,
+            method: TransactionName.CreateProgram,
+            signer,
+            payload,
+            programId,
+            reject,
+            resolve,
+          });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),

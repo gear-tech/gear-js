@@ -60,9 +60,11 @@ const Code = () => {
   }, []);
 
   useEffect(() => {
-    if (!code?.meta) return;
+    const metaHex = code?.meta?.hex;
 
-    setMetadata(getProgramMetadata(code.meta.hex));
+    if (!metaHex) return;
+
+    setMetadata(getProgramMetadata(metaHex));
   }, [code]);
 
   return (

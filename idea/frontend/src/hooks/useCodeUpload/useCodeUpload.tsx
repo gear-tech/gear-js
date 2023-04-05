@@ -57,7 +57,7 @@ const useCodeUpload = () => {
           setTimeout(() => {
             const id = codeId;
 
-            addCodeName({ id, name })
+            addCodeName({ id, name: name || id })
               .then(() => metaHex && addCodeMetadata({ id, metaHex }))
               .catch(({ message }: Error) => alert.error(message));
           }, UPLOAD_METADATA_TIMEOUT);
