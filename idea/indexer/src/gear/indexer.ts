@@ -1,4 +1,4 @@
-import { CodeChanged, GearApi, generateCodeHash, MessageQueued } from '@gear-js/api';
+import { CodeMetadata, CodeChanged, GearApi, generateCodeHash, MessageQueued } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
@@ -380,7 +380,7 @@ export class GearIndexer {
   }
 
   private async indexBlockWithMissedCode(codeId: HexString) {
-    const metaStorage = (await this.api.query.gearProgram.metadataStorage(codeId)) as Option<any>;
+    const metaStorage = (await this.api.query.gearProgram.metadataStorage(codeId)) as Option<CodeMetadata>;
     if (metaStorage.isSome) {
       const blockNumber = metaStorage.unwrap()['blockNumber'].toNumber();
 
