@@ -1,5 +1,5 @@
 import { Channel, connect, Connection } from 'amqplib';
-import { RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
+import { RabbitMQExchanges, RabbitMQueues, RMQServiceActions, RMQServices } from '@gear-js/common';
 
 import config from '../config/configuration';
 import { gearService } from '../gear';
@@ -18,16 +18,16 @@ export async function initAMQ(): Promise<void> {
   const genesis = gearService.getGenesisHash();
   const directExchangeType = 'direct';
   const topicExchangeType = 'topic';
-  const routingKey = `tb.${genesis}`;
+  const routingKey = `${RMQServices.TEST_BALANCE}.${genesis}`;
 
   //send genesis
-  const messageBuff = JSON.stringify({ service: 'tb', action: 'add', genesis });
+  const messageBuff = JSON.stringify({ service: RMQServices.TEST_BALANCE, action: RMQServiceActions.ADD, genesis });
   mainChannelAMQP.publish(directExchange, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
 
   await mainChannelAMQP.assertExchange(directExchange, directExchangeType);
   await mainChannelAMQP.assertExchange(topicExchange, topicExchangeType);
 
-  const assertTopicQueue = await topicChannelAMQP.assertQueue(`tbt.${genesis}`, {
+  const assertTopicQueue = await topicChannelAMQP.assertQueue(`${RMQServices.TEST_BALANCE}t.${genesis}`, {
     durable: false,
     autoDelete: true,
     exclusive: false,
@@ -38,7 +38,7 @@ export async function initAMQ(): Promise<void> {
     exclusive: false,
   });
   await mainChannelAMQP.bindQueue(routingKey, directExchange, routingKey);
-  await mainChannelAMQP.bindQueue(assertTopicQueue.queue, topicExchange, 'tb.genesises');
+  await mainChannelAMQP.bindQueue(assertTopicQueue.queue, topicExchange, `${RMQServices.TEST_BALANCE}.genesises`);
 
   await directMessageConsumer(mainChannelAMQP, routingKey);
   await topicMessageConsumer(topicChannelAMQP, assertTopicQueue);

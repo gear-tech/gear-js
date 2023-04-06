@@ -10,7 +10,7 @@ import { checkWallet, getExtrinsicFailedMessage } from 'shared/helpers';
 import { PROGRAM_ERRORS, TransactionName, TransactionStatus, UPLOAD_METADATA_TIMEOUT } from 'shared/config';
 import { CopiedInfo } from 'shared/ui/copiedInfo';
 
-import { addCodeMetadata } from 'api';
+import { addCodeMetadata, addCodeName } from 'api';
 import { ParamsToUploadCode, ParamsToSignAndSend } from './types';
 
 const useCodeUpload = () => {
@@ -53,13 +53,14 @@ const useCodeUpload = () => {
         } else if (status.isFinalized) {
           alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
 
-          if (metaHex) {
-            // timeout cuz wanna be sure that block data is ready
-            setTimeout(
-              () => addCodeMetadata({ id: codeId, metaHex, name }).catch(({ message }: Error) => alert.error(message)),
-              UPLOAD_METADATA_TIMEOUT,
-            );
-          }
+          // timeout cuz wanna be sure that block data is ready
+          setTimeout(() => {
+            const id = codeId;
+
+            addCodeName({ id, name: name || id })
+              .then(() => metaHex && addCodeMetadata({ id, metaHex }))
+              .catch(({ message }: Error) => alert.error(message));
+          }, UPLOAD_METADATA_TIMEOUT);
         } else if (status.isInvalid) {
           alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
         }

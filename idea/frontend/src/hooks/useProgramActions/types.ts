@@ -30,7 +30,7 @@ type ParamsToCreate = OperationCallbacks & DataToCreate;
 
 type ParamsToSignAndUpload = ParamsToSignAndSend & {
   method: string;
-  name: string;
+  name?: string;
   payload: Payload;
   programId: HexString;
 };

@@ -44,6 +44,11 @@ export const JSONRPC_ERRORS = {
     code: -32605,
     message: 'Genesis not found in the request',
   },
+  UnknownNetwork: {
+    name: 'UnknownNetwork',
+    code: -32605,
+    message: 'Unknown network',
+  },
   ServiceIsNotAvaiable: {
     name: 'ServiceIsNotAvaiable',
     code: -32500,

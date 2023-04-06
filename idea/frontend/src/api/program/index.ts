@@ -1,5 +1,5 @@
-import { fetchProgram, fetchPrograms } from './requests';
+import { fetchProgram, fetchPrograms, addProgramName } from './requests';
 import { FetchProgramsParams, ProgramPaginationModel } from './types';
 
-export { fetchProgram, fetchPrograms };
+export { fetchProgram, fetchPrograms, addProgramName };
 export type { FetchProgramsParams, ProgramPaginationModel };

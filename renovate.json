@@ -18,18 +18,11 @@
     {
       "matchPaths": ["idea/frontend/**"],
       "groupName": "idea-frontend",
-      "reviewers": ["nikitayutanov", "aderrod94", "Pinkdesu"],
+      "reviewers": ["nikitayutanov"],
       "addLabels": ["frontend"]
     },
     {
-      "matchPaths": [
-        "idea/api-gateway/**",
-        "idea/common/**",
-        "idea/data-storage/**",
-        "idea/events-listener/**",
-        "idea/test-balance/**",
-        "idea/wasm-compiler/**"
-      ],
+      "matchPaths": ["idea/api-gateway/**", "idea/common/**", "idea/indexer/**", "idea/test-balance/**"],
       "groupName": "idea-backend",
       "reviewers": ["osipov-mit", "Almazatun"],
       "addLabels": ["backend"]
@@ -41,22 +34,16 @@
       "addLabels": ["tests"]
     },
     {
-      "matchPaths": ["utils/meta-cli/**"],
-      "groupName": "utils",
+      "matchPaths": ["tools/cli/**"],
+      "groupName": "tools",
       "reviewers": ["osipov-mit"],
-      "addLabels": ["utils"]
+      "addLabels": ["tools"]
     },
     {
       "matchPaths": ["utils/gear-ui/**", "utils/gear-hooks/**", "utils/create-gear-app/**"],
       "groupName": "utils",
       "reviewers": ["nikitayutanov"],
       "addLabels": ["utils"]
-    },
-    {
-      "matchPaths": ["apps/**"],
-      "groupName": "apps",
-      "reviewers": ["nikitayutanov"],
-      "addLabels": ["apps"]
     }
   ]
 }

@@ -2,32 +2,25 @@ import { API_METHODS } from '@gear-js/common';
 import { nanoid } from 'nanoid';
 
 import { RpcResponse } from './types';
-import { IMessageDataStorageParams, IMessageTestBalanceParams, Params } from '../rabbitmq/types';
+import { IRMQMessageParams, Params } from '../rabbitmq/types';
 import { producer } from '../rabbitmq/producer';
 import { repliesMap } from '../rabbitmq/init-rabbitmq';
 
 async function handleEventByApiMethod(
   method: API_METHODS,
-  params: Record<string, any> | Params | string
+  params: Record<string, any> | Params | string,
 ): Promise<RpcResponse> {
   const correlationId: string = nanoid(12);
   const genesis = params['genesis'];
   let replyResolve;
   const replyPromise: Promise<RpcResponse> = new Promise((resolve) => (replyResolve = resolve));
 
-  if(method === API_METHODS.TEST_BALANCE_GET) {
-    const messageTestBalanceParams: IMessageTestBalanceParams = { correlationId, params, genesis, method };
+  const message: IRMQMessageParams = { correlationId, params, genesis, method };
 
-    await producer.sendMessageToTestBalance(messageTestBalanceParams);
+  if (method === API_METHODS.TEST_BALANCE_GET) {
+    await producer.sendMsgToTestBalance(message);
   } else {
-    const messageDataStorageParams: IMessageDataStorageParams = {
-      genesis,
-      correlationId,
-      method,
-      params
-    };
-
-    await producer.sendMessageToDataStorage(messageDataStorageParams);
+    await producer.sendMsgToIndexer(message);
   }
 
   repliesMap.set(correlationId, replyResolve);

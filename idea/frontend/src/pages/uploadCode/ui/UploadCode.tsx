@@ -58,7 +58,7 @@ const UploadCode = () => {
           <Box>
             <form className={styles.form} id="uploadCodeForm" onSubmit={handleSubmit}>
               <FileInput label="Code file" direction="y" value={optFile} onChange={setOptFile} />
-              {metadata.hex && <Input label="Code name" direction="y" {...getInputProps('name')} />}
+              <Input label="Code name" direction="y" {...getInputProps('name')} />
             </form>
           </Box>
         </div>

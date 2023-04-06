@@ -38,6 +38,7 @@ import {
   errorNoGenesisFound,
   errorProgramNotFound,
   errorStateAlreadyExists,
+  unknownNetworkError,
 } from './json-rpc.errors';
 
 let genesis: HexString;
@@ -257,7 +258,11 @@ describe('API methods', () => {
     });
 
     test('error no genesis found', async () => {
-      expect(await errorNoGenesisFound(genesis)).toBeTruthy();
+      expect(await errorNoGenesisFound()).toBeTruthy();
+    });
+
+    test('error unknown network', async () => {
+      expect(await unknownNetworkError(genesis)).toBeTruthy();
     });
 
     test('error program not found', async () => {

@@ -1,14 +1,14 @@
-import { RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
+import { RMQServiceActions, RMQServices, RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
 
 import { mainChannelAMQP } from './init-rabbitmq';
 
 function sendGenesis(genesis: string): void {
-  const messageBuff = JSON.stringify({ service: 'tb', action: 'add', genesis });
+  const messageBuff = JSON.stringify({ service: RMQServices.TEST_BALANCE, action: RMQServiceActions.ADD, genesis });
   mainChannelAMQP.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
 }
 
 function sendDeleteGenesis(genesis: string): void {
-  const messageBuff = JSON.stringify({ service: 'tb', action: 'delete', genesis });
+  const messageBuff = JSON.stringify({ service: RMQServices.TEST_BALANCE, action: RMQServiceActions.DELETE, genesis });
   mainChannelAMQP.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
 }
 

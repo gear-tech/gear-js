@@ -14,10 +14,10 @@ const useMetadataUpload = () => {
   const { isDevChain } = useChain();
 
   const upload = async (params: ParamsToUploadMeta) => {
-    const { name, metaHex, programId, reject, resolve } = params;
+    const { metaHex, programId, reject, resolve } = params;
 
     try {
-      const { error } = await addMetadata({ name, metaHex, id: programId as HexString });
+      const { error } = await addMetadata({ metaHex, id: programId as HexString });
 
       if (error) throw new Error(error.message);
 
@@ -49,7 +49,7 @@ const useMetadataUpload = () => {
         return;
       }
 
-      upload({ name, programId, metaHex, reject, resolve });
+      upload({ programId, metaHex, reject, resolve });
     } catch (error) {
       const message = (error as Error).message;
 
