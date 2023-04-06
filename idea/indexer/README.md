@@ -16,8 +16,6 @@ This microservice is part of Gear Idea portal which is responsible for indexing 
 2. Install [PostgreSQL](https://www.postgresql.org/docs/15/tutorial-install.html) and create a database
 
 ## Usage
-To run Indexer service it's necessary to have running [rabbitmq service](https://www.rabbitmq.com/#getstarted).
-
 1. Specify environment variables in `.env` file. Example is in `.env.example` file
 2. Run `yarn install` to install dependencies
 3. Build the package using `yarn build` command
