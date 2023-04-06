@@ -28,18 +28,9 @@ export type Params =
   | Record<string, any>
   | string;
 
-interface IMessageDataStorageParams {
+export interface IRMQMessageParams {
   genesis: string;
   method: API_METHODS;
   params: Record<string, any> | Params | string;
   correlationId: string;
 }
-
-interface IMessageTestBalanceParams {
-  genesis: string;
-  params: any;
-  correlationId: string;
-  method: API_METHODS;
-}
-
-export { IMessageDataStorageParams, IMessageTestBalanceParams };

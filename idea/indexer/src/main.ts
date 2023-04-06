@@ -1,4 +1,5 @@
 import { waitReady } from '@polkadot/wasm-crypto';
+import { RMQServiceActions } from '@gear-js/common';
 
 import { changeStatus, runHealthcheckServer } from './healthcheck';
 import { AppDataSource } from './database';
@@ -38,7 +39,7 @@ async function bootstrap() {
   const indexer = new GearIndexer(programService, messageService, codeService, blockService, metaService);
 
   await connectToNode(indexer, async (action, genesis) => {
-    if (action === 'add') {
+    if (action === RMQServiceActions.ADD) {
       await rmq.addGenesisQueue(genesis);
     } else {
       await rmq.deleteGenesisQueue(genesis);

@@ -6,35 +6,29 @@ export async function validateJsonRpcRequestMiddleware(req: Request, res: Respon
 
   if (Array.isArray(body)) {
     for (const request of body) {
-      if (!validateJsonRpcRequest(request)) {
-        return res.send(createResponse(request));
+      if (!isValidRequestParams(request)) {
+        return res.send(getInvalidParamsResponse(request));
       }
     }
   } else {
-    if (!validateJsonRpcRequest(body)) {
-      return res.send(createResponse(body));
+    if (!isValidRequestParams(body)) {
+      return res.send(getInvalidParamsResponse(body));
     }
   }
   next();
 }
 
-function validateJsonRpcRequest(body: IRpcRequest): boolean {
-  const { id, method, jsonrpc, params } = body;
-
-  if (id && method && jsonrpc && params) {
-    return true;
-  }
-
-  return false;
+function isValidRequestParams({ id, method, jsonrpc, params }: IRpcRequest): boolean {
+  return !!id && !!method && !!jsonrpc && !!params;
 }
 
-function createResponse(requst: IRpcRequest) {
+function getInvalidParamsResponse({ id }: IRpcRequest) {
   const response: any = {
     jsonrpc: '2.0',
   };
   const error = JSONRPC_ERRORS.InvalidParams.name;
 
-  response['id'] = requst.id ? requst.id : null;
+  response['id'] = id ? id : null;
   response['error'] = {
     message: JSONRPC_ERRORS[error].message,
     code: JSONRPC_ERRORS[error].code,

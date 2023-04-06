@@ -1,4 +1,5 @@
 import { GearApi } from '@gear-js/api';
+import { RMQServiceActions } from '@gear-js/common';
 
 import config from '../config';
 import { changeStatus } from '../healthcheck';
@@ -25,7 +26,7 @@ export async function connectToNode(indexer: GearIndexer, cb: GenesisCb) {
   reconnectionsCounter = 0;
 
   indexer.run(api);
-  cb('add', genesis);
+  cb(RMQServiceActions.ADD, genesis);
 
   logger.info(`⚙️ Connected to ${api.runtimeChain} with genesis ${genesis}`);
   changeStatus('gear');
@@ -34,7 +35,7 @@ export async function connectToNode(indexer: GearIndexer, cb: GenesisCb) {
 async function reconnect(api: GearApi, genesis: string, indexer: GearIndexer, cb: GenesisCb) {
   changeStatus('gear');
 
-  cb('delete', genesis);
+  cb(RMQServiceActions.DELETE, genesis);
 
   indexer.stop();
   try {

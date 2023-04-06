@@ -19,6 +19,8 @@ import {
   GetStateParams,
   RabbitMQExchanges,
   RabbitMQueues,
+  RMQServiceActions,
+  RMQServices,
 } from '@gear-js/common';
 
 import { FormResponse, logger, RabbitmqMessageParams } from '../common';
@@ -64,32 +66,32 @@ export class RMQService {
   }
 
   public async deleteGenesisQueue(genesis: string) {
-    const routingKey = `ds.${genesis}`;
-    const messageBuff = JSON.stringify({ service: 'ds', action: 'delete', genesis });
+    const routingKey = `${RMQServices.INDEXER}.${genesis}`;
+    const messageBuff = JSON.stringify({ service: RMQServices.INDEXER, action: RMQServiceActions.DELETE, genesis });
     await this.mainChannel.unbindQueue(routingKey, RabbitMQExchanges.DIRECT_EX, routingKey);
     this.mainChannel.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
   }
 
   public async addGenesisQueue(genesis: string) {
-    const genesisQ = `ds.${genesis}`;
+    const genesisQ = `${RMQServices.INDEXER}.${genesis}`;
     await this.topicChannel.assertQueue(genesisQ, {
       durable: false,
       exclusive: false,
       autoDelete: true,
     });
 
-    const topicQ = `dst.${genesis}`;
+    const topicQ = `${RMQServices.INDEXER}t.${genesis}`;
     await this.topicChannel.assertQueue(topicQ, {
       durable: false,
       exclusive: false,
       autoDelete: true,
     });
     await this.mainChannel.bindQueue(genesisQ, RabbitMQExchanges.DIRECT_EX, genesisQ);
-    await this.topicChannel.bindQueue(topicQ, RabbitMQExchanges.TOPIC_EX, 'ds.genesises');
+    await this.topicChannel.bindQueue(topicQ, RabbitMQExchanges.TOPIC_EX, `${RMQServices.INDEXER}.genesises`);
     await this.directMsgConsumer(genesisQ);
     await this.topicMsgConsumer(topicQ, genesis);
 
-    const msgBuff = JSON.stringify({ service: 'ds', action: 'add', genesis });
+    const msgBuff = JSON.stringify({ service: RMQServices.INDEXER, action: RMQServiceActions.ADD, genesis });
     this.mainChannel.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(msgBuff));
   }
 
@@ -122,16 +124,16 @@ export class RMQService {
     }
   }
 
-  private async topicMsgConsumer(repliesAssertQueue: string, genesis): Promise<void> {
+  private async topicMsgConsumer(queue: string, genesis: string): Promise<void> {
     try {
       await this.topicChannel.consume(
-        repliesAssertQueue,
+        queue,
         async (message) => {
           if (!message) {
             return;
           }
 
-          const messageBuff = JSON.stringify({ service: 'ds', action: 'add', genesis });
+          const messageBuff = JSON.stringify({ service: RMQServices.INDEXER, action: RMQServiceActions.ADD, genesis });
           this.mainChannel.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
         },
         { noAck: true },

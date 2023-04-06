@@ -1,5 +1,5 @@
 import { connect, Connection, Channel } from 'amqplib';
-import { RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
+import { RMQServiceActions, RMQServices, RabbitMQExchanges, RabbitMQueues } from '@gear-js/common';
 
 import config from '../config/configuration';
 import { RpcResponse } from '../json-rpc/types';
@@ -9,7 +9,7 @@ let connectionAMQP: Connection;
 let mainChannelAMQP: Channel;
 
 const testBalanceChannels: Map<string, Channel> = new Map<string, Channel>();
-const dataStorageChannels: Map<string, Channel> = new Map<string, Channel>();
+const indexerChannels: Map<string, Channel> = new Map<string, Channel>();
 const repliesMap: Map<string, (params: any) => RpcResponse> = new Map<string, (params: any) => RpcResponse>();
 
 export async function initAMQ(): Promise<void> {
@@ -84,39 +84,43 @@ async function subscribeToGenesises() {
 
       const { genesis, service, action } = JSON.parse(message.content.toString());
 
-      if (action === 'add') {
-        if (service === 'ds') {
-          if (dataStorageChannels.has(genesis)) return;
+      if (action === RMQServiceActions.ADD) {
+        if (service === RMQServices.INDEXER) {
+          if (indexerChannels.has(genesis)) return;
 
           const channel = await createChannel();
-          dataStorageChannels.set(genesis, channel);
-          await channel.assertQueue(`ds.${genesis}`, { durable: false, exclusive: false, autoDelete: true });
+          indexerChannels.set(genesis, channel);
+          await channel.assertQueue(`${RMQServices.INDEXER}.${genesis}`, {
+            durable: false,
+            exclusive: false,
+            autoDelete: true,
+          });
 
-          logger.info(`DS: Add new genesis ${genesis}`);
-          logger.info(`DS genesises: ${JSON.stringify(Array.from(dataStorageChannels.keys()), undefined, 2)}`);
+          logger.info(`Indexer: Add new genesis ${genesis}`);
+          logger.info(`Indexer genesises: ${JSON.stringify(Array.from(indexerChannels.keys()), undefined, 2)}`);
         }
-        if (service === 'tb') {
+        if (service === RMQServices.TEST_BALANCE) {
           if (testBalanceChannels.has(genesis)) return;
 
           const channel = await createChannel();
           testBalanceChannels.set(genesis, channel);
-          await channel.assertQueue(`tb.${genesis}`, { durable: false, exclusive: false });
+          await channel.assertQueue(`${RMQServices.TEST_BALANCE}.${genesis}`, { durable: false, exclusive: false });
           logger.info(`TB: Add new genesis ${genesis}`);
           logger.info(`TB genesises: ${JSON.stringify(Array.from(testBalanceChannels.keys()), undefined, 2)}`);
         }
       }
 
-      if (action === 'delete') {
-        if (service === 'ds') {
-          const channel = dataStorageChannels.get(genesis);
+      if (action === RMQServiceActions.DELETE) {
+        if (service === RMQServices.INDEXER) {
+          const channel = indexerChannels.get(genesis);
           if (channel) {
             await channel.close();
-            dataStorageChannels.delete(genesis);
-            logger.info(`DS: Delete genesis ${genesis}`);
-            logger.info(`DS genesises: ${JSON.stringify(Array.from(dataStorageChannels.keys()), undefined, 2)}`);
+            indexerChannels.delete(genesis);
+            logger.info(`Indexer: Delete genesis ${genesis}`);
+            logger.info(`Indexer genesises: ${JSON.stringify(Array.from(indexerChannels.keys()), undefined, 2)}`);
           }
         }
-        if (service === 'tb') {
+        if (service === RMQServices.TEST_BALANCE) {
           const channel = testBalanceChannels.get(genesis);
           if (channel) {
             await channel.close();
@@ -137,4 +141,4 @@ async function createChannel(): Promise<Channel> {
   return channel;
 }
 
-export { testBalanceChannels, dataStorageChannels, repliesMap, connectionAMQP, mainChannelAMQP, connectAMQP };
+export { testBalanceChannels, indexerChannels, repliesMap, connectionAMQP, mainChannelAMQP, connectAMQP };

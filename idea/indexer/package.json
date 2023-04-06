@@ -23,7 +23,7 @@
     "typescript": "^5.0.2"
   },
   "scripts": {
-    "dev": "ts-node-dev src/main.ts",
+    "dev": "clear && ts-node-dev src/main.ts",
     "build": "rm -rf dist && tsc",
     "start": "node dist/main.js",
     "dev:once": "ts-node-dev src/one-time-sync.ts",
