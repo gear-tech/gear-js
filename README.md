@@ -40,9 +40,9 @@ The source code of the portal for smart-contract developers and backend microser
 
 A React application that serves as a get-familiar with Gear to help developers write, test and upload smart contracts to a test network as well as manage accounts, balances, events and more.
 
-#### [data-storage](https://github.com/gear-tech/gear-js/tree/master/idea/data-storage)
+#### [indexer](https://github.com/gear-tech/gear-js/tree/master/idea/indexer)
 
-A microservice responsible for storing information about programs and their messages as well as the metadata of these programs.
+A microservice responsible for indexing blockchain and storing information about programs and their messages as well as for the storing the metadata of the programs.
 
 #### [test-balance](https://github.com/gear-tech/gear-js/tree/master/idea/test-balance)
 
