@@ -35,6 +35,56 @@ env:
   NIGHTLY_TOOLCHAIN_VERSION: ${{ vars.NIGHTLY_TOOLCHAIN_VERSION }}
 
 jobs:
+  build-frontend-pkg:
+    runs-on: ubuntu-latest
+    environment: staging
+    # Declare outputs for next steps
+    outputs:
+      frontend_changed: ${{ steps.check_file_changed.outputs.frontend_changed }}
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # Checkout as many commits as needed for the diff
+          fetch-depth: 2
+
+      - shell: pwsh
+        id: check_file_changed
+        run: |
+          # Diff HEAD with the previous commit
+          $diff = git diff --name-only HEAD^ HEAD
+          # Check if a file under frontend/ has changed (added, modified, deleted)
+          $SourceDiffFrontend = $diff | Where-Object { $_ -match '^idea/frontend/' }
+          $HasDiffFrontend = $SourceDiffFrontend.Length -gt 0
+          # Set the output
+          Write-Host "::set-output name=frontend_changed::$HasDiffFrontend"
+
+      - name: Cancel previous workflow runs
+        if: steps.check_file_changed.outputs.frontend_changed == 'True'
+        uses: styfle/cancel-workflow-action@0.4.0
+        with:
+          access_token: ${{ github.token }}
+
+      - if: steps.check_file_changed.outputs.frontend_changed == 'True'
+        uses: c-hive/gha-yarn-cache@v2.1.0
+
+      - name: Setup NodeJS
+        if: steps.check_file_changed.outputs.frontend_changed == 'True'
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+          cache: yarn
+
+      - name: Install dependencies
+        if: steps.check_file_changed.outputs.frontend_changed == 'True'
+        uses: borales/actions-yarn@v3.0.0
+        with:
+          cmd: install
+
+      - name: Build frontend pkg
+        if: steps.check_file_changed.outputs.frontend_changed == 'True'
+        run: sudo yarn build:frontend
+
   wait-previous-run:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
@@ -64,7 +114,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Data Storage Docker image
+      - name: Build and push Gear node Docker image
         uses: docker/build-push-action@master
         with:
           file: k8s/gear-node/Dockerfile
