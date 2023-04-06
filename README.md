@@ -42,7 +42,7 @@ A React application that serves as a get-familiar with Gear to help developers w
 
 #### [indexer](https://github.com/gear-tech/gear-js/tree/master/idea/indexer)
 
-A microservice responsible for indexing blockchain and storing information about programs and their messages as well as for the storing the metadata of the programs.
+A microservice responsible for blockchain indexing and storing information about programs and their messages as well as for storing programs metadata.
 
 #### [test-balance](https://github.com/gear-tech/gear-js/tree/master/idea/test-balance)
 
