@@ -28,7 +28,6 @@
   },
   "workspaces": [
     "idea/*",
-    "apps/*",
     "utils/gear-ui"
   ],
   "lint-staged": {

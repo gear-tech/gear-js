@@ -10,17 +10,17 @@
 
 ## [@gear-js/api](https://github.com/gear-tech/gear-js/tree/master/api)
 
-JavaScript library that provides functionality to connect Gear node and interact with it.
+A JavaScript library that enables connection to the Gear node and allows interaction with it.
 
-Refer to the [api](https://github.com/gear-tech/gear-js/blob/master/api/README.md) docs for detail
+Refer to the [api](https://github.com/gear-tech/gear-js/blob/master/api/README.md) docs for details.
 
 #### [npm package](https://www.npmjs.com/package/@gear-js/api)
 
 ## [@gear-js/gear-meta](https://github.com/gear-tech/gear-js/tree/master/utils/meta-cli)
 
-JavaScript CLI tool that provides functionality to work with `.meta.wasm` files.
+A JavaScript CLI tool that provides functionality for working with `.meta.wasm` files.
 
-Refer to the [meta-cli](https://github.com/gear-tech/gear-js/blob/master/utils/meta-cli/README.md) docs for detail
+Refer to the [meta-cli](https://github.com/gear-tech/gear-js/blob/master/utils/meta-cli/README.md) docs for details.
 
 #### [npm package](https://www.npmjs.com/package/@gear-js/gear-meta)
 
@@ -28,30 +28,26 @@ Refer to the [meta-cli](https://github.com/gear-tech/gear-js/blob/master/utils/m
 
 React UI components used across Gear applications.
 
-Refer to the [gear-ui](https://github.com/gear-tech/gear-js/blob/master/utils/gear-ui/README.md) docs for detail
+Refer to the [gear-ui](https://github.com/gear-tech/gear-js/blob/master/utils/gear-ui/README.md) docs for details.
 
 #### [npm package](https://www.npmjs.com/package/@gear-js/ui)
 
-## [idea](https://github.com/gear-tech/gear-js/tree/master/idea)
+## [Gear Idea](https://github.com/gear-tech/gear-js/tree/master/idea)
 
-Source code of [idea.gear-tech.io](https://idea.gear-tech.io/) and backend microservices
+The source code of the portal for smart-contract developers and backend microservices - [idea.gear-tech.io](https://idea.gear-tech.io/).
 
 #### [frontend](https://github.com/gear-tech/gear-js/tree/master/idea/frontend)
 
-React application that serves as a get-familiar with Gear to help developers write, test and upload smart contracts to a test network as well as manage accounts, balances, events and more
+A React application that serves as a get-familiar with Gear to help developers write, test and upload smart contracts to a test network as well as manage accounts, balances, events and more.
 
 #### [data-storage](https://github.com/gear-tech/gear-js/tree/master/idea/data-storage)
 
-Microservice is responsible for storing metadata of uploaded programs and information about events and listens to all the events occuring in the Gear node and sends to the data-storage to store the information about them
-
-#### [api-gateway](https://github.com/gear-tech/gear-js/tree/master/idea/api-gateway)
-
-Microservice provides any interaction between the events / meta data store and an external user
+A microservice responsible for storing information about programs and their messages as well as the metadata of these programs.
 
 #### [test-balance](https://github.com/gear-tech/gear-js/tree/master/idea/test-balance)
 
-Microservice provides the opportunity to obtain test tokens
+A microservice that provides the opportunity to obtain test tokens.
 
-#### [wasm-compiler](https://github.com/gear-tech/gear-js/tree/master/idea/wasm-compiler)
+#### [api-gateway](https://github.com/gear-tech/gear-js/tree/master/idea/api-gateway)
 
-Microservice provides the opportunity to compile rust projects to wasm
+A microservice that provides any interaction between data-storage / test-balance services and an external user.

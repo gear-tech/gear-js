@@ -1,0 +1,42 @@
+{
+  "name": "@gear-js/cli",
+  "version": "0.0.3",
+  "main": "dist/app.js",
+  "preferGlobal": true,
+  "bin": {
+    "gear-js": "dist/app.js"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "start": "node dist/app.js",
+    "dev": "ts-node src/app.ts"
+  },
+  "dependencies": {
+    "@gear-js/api": "0.30.5",
+    "@polkadot/api": "10.2.1",
+    "chalk": "^4",
+    "commander": "10.0.0",
+    "inquirer": "9.1.4",
+    "winston": "3.8.2",
+    "yaml": "2.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  },
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gear-tech/gear-js.git"
+  },
+  "keywords": [
+    "gear",
+    "gear-js",
+    "gear-cli"
+  ],
+  "author": "Gear Technologies",
+  "bugs": {
+    "url": "https://github.com/gear-tech/gear-js/issues"
+  }
+}

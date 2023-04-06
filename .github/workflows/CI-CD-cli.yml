@@ -1,0 +1,65 @@
+name: 'CI-CD @gear-js/cli'
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - tools/cli/**
+  push:
+    branches: [main]
+    paths:
+      - tools/cli/**
+
+jobs:
+  test:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel previous workflow runs
+        uses: styfle/cancel-workflow-action@0.4.0
+        with:
+          access_token: ${{ github.token }}
+
+      - uses: actions/checkout@v2
+
+      - name: Install NodeJS 16.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16.x
+
+      - name: Install dependencies
+        working-directory: tools/cli
+        run: yarn install
+
+      - name: Build pkg
+        working-directory: tools/cli
+        run: yarn build
+
+  publish-to-npm:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use node 16.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16.x
+
+      - name: Check package version
+        uses: EndBug/version-check@v1
+        id: check
+        with:
+          file-name: tools/cli/package.json
+          file-url: https://unpkg.com/@gear-js/cli@latest/package.json
+          static-checking: localIsNew
+
+      - name: Publish
+        if: steps.check.outputs.changed == 'true'
+        working-directory: tools/cli
+        run: |
+          export token=$(printenv $(printenv GITHUB_ACTOR))
+          npm config set //registry.npmjs.org/:_authToken=$token
+          npm publish
+        env:
+          osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
