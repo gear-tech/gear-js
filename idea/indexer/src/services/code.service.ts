@@ -68,7 +68,7 @@ export class CodeService {
     return code.meta;
   }
 
-  public async setCodeStatuses(codeStatus: CodeChangedInput, genesis: string): Promise<Code> {
+  public async setCodeStatus(codeStatus: CodeChangedInput, genesis: string): Promise<Code> {
     const code = await this.get({ id: codeStatus.id, genesis });
     code.expiration = codeStatus.expiration;
     code.status = codeStatus.status;

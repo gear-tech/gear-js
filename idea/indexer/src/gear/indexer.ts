@@ -150,7 +150,7 @@ export class GearIndexer {
       this.messageService.setDispatchedStatus({ ...data, genesis: this.genesis }),
     [EventNames.UserMessageRead]: (data: UserMessageReadInput) =>
       this.messageService.updateReadStatus(data.id, data.reason),
-    [EventNames.CodeChanged]: (data: CodeChangedInput) => this.codeService.setCodeStatuses(data, this.genesis),
+    [EventNames.CodeChanged]: (data: CodeChangedInput) => this.codeService.setCodeStatus(data, this.genesis),
   };
 
   private async handleEvents(block: SignedBlockExtended, timestamp: number): Promise<void> {
