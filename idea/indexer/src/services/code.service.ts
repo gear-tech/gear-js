@@ -63,26 +63,17 @@ export class CodeService {
   public async getMeta(params: GetMetaByCodeParams): Promise<Meta> {
     const code = await this.get(params);
 
-    if (!code) {
-      throw new CodeNotFound();
-    }
-
-    if (code.meta === null) throw new MetadataNotFound();
+    if (!code.meta?.hex) throw new MetadataNotFound();
 
     return code.meta;
   }
 
-  public async setCodeStatuses(codeStatuses: CodeChangedInput[], genesis: string): Promise<Code[]> {
-    const codes = [];
+  public async setCodeStatuses(codeStatus: CodeChangedInput, genesis: string): Promise<Code> {
+    const code = await this.get({ id: codeStatus.id, genesis });
+    code.expiration = codeStatus.expiration;
+    code.status = codeStatus.status;
 
-    for (const codeStatus of codeStatuses) {
-      const code = await this.get({ id: codeStatus.id, genesis });
-      code.expiration = codeStatus.expiration;
-      code.status = codeStatus.status;
-      codes.push(code);
-    }
-
-    return this.repo.save(codes);
+    return this.repo.save(code);
   }
 
   public async deleteRecords(genesis: string): Promise<void> {

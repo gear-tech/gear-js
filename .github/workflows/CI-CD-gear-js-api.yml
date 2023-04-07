@@ -116,10 +116,12 @@ jobs:
           static-checking: localIsNew
 
       - name: Install dependencies
+        if: steps.check.outputs.changed == 'true'
         working-directory: api
         run: yarn install
 
       - name: Build @gear-js/api
+        if: steps.check.outputs.changed == 'true'
         working-directory: api
         run: yarn build
 

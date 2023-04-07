@@ -1,4 +1,4 @@
-import { CodeMetadata, CodeChanged, GearApi, generateCodeHash, MessageQueued } from '@gear-js/api';
+import { CodeMetadata, ProgramMap, CodeChanged, GearApi, generateCodeHash, MessageQueued } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
@@ -18,6 +18,11 @@ import {
   MessageEntryPoint,
   MessageType,
   logger,
+  UserMessageSentInput,
+  UserMessageReadInput,
+  ProgramChangedInput,
+  CodeChangedInput,
+  MessagesDispatchedDataInput,
 } from '../common';
 import { Block, Code, Message, Program } from '../database/entities';
 
@@ -119,34 +124,36 @@ export class GearIndexer {
     const timestamp = (await this.api.blocks.getBlockTimestamp(block)).toNumber();
 
     const programsAndCodes = await this.handleExtrinsics(block, timestamp);
-    await this.handleEvents(block, timestamp, hash);
-    await this.handleBlock(block, timestamp, hash);
+    await this.handleEvents(block, timestamp);
+    await this.handleBlock(block, timestamp);
     if (this.oneTimeSync) {
       await this.statusService.update(this.genesis, bn, hash);
     }
     return programsAndCodes;
   }
 
-  eventHandlers: Record<EventNames, (data: any, timestamp?: number) => Promise<unknown>> = {
-    [EventNames.UserMessageSent]: async (data: any, timestamp: number) => {
+  eventHandlers: Record<EventNames, (data: any, timestamp: number, blockHash: HexString) => Promise<unknown>> = {
+    [EventNames.UserMessageSent]: async (data: UserMessageSentInput, timestamp: number, blockHash: HexString) => {
       const message = plainToInstance(Message, {
         ...data,
+        blockHash,
         genesis: this.genesis,
         timestamp: new Date(timestamp),
         type: MessageType.USER_MESS_SENT,
-        program: await this.programService.get({ id: data.source, genesis: this.genesis }),
+        program: await this.getProgram(data.source, blockHash, data.id),
       });
       await this.messageService.create([message]);
     },
-    [EventNames.ProgramChanged]: async (data: any) =>
+    [EventNames.ProgramChanged]: async (data: ProgramChangedInput) =>
       await this.programService.setStatus(data.id, this.genesis, data.programStatus),
-    [EventNames.MessagesDispatched]: (data: any) =>
+    [EventNames.MessagesDispatched]: (data: MessagesDispatchedDataInput) =>
       this.messageService.setDispatchedStatus({ ...data, genesis: this.genesis }),
-    [EventNames.UserMessageRead]: (data: any) => this.messageService.updateReadStatus(data.id, data.reason),
-    [EventNames.CodeChanged]: (data: any) => this.codeService.setCodeStatuses([data], this.genesis),
+    [EventNames.UserMessageRead]: (data: UserMessageReadInput) =>
+      this.messageService.updateReadStatus(data.id, data.reason),
+    [EventNames.CodeChanged]: (data: CodeChangedInput) => this.codeService.setCodeStatuses(data, this.genesis),
   };
 
-  private async handleEvents(block: SignedBlockExtended, timestamp: number, hash: HexString): Promise<void> {
+  private async handleEvents(block: SignedBlockExtended, timestamp: number): Promise<void> {
     const necessaryEvents = block.events.filter(({ event: { method } }) => Object.keys(EventNames).includes(method));
     for (const {
       event: { data, method },
@@ -161,17 +168,17 @@ export class GearIndexer {
       }
 
       if (eventData === null) continue;
-      eventData.blockHash = hash;
 
+      const blockHash = block.block.header.hash.toHex();
       try {
-        await this.eventHandlers[method](eventData, timestamp);
+        await this.eventHandlers[method](eventData, timestamp, blockHash);
       } catch (error) {
         logger.warn(
           JSON.stringify(
             {
               method,
               data: eventData,
-              blockHash: hash,
+              blockHash,
             },
             undefined,
             2,
@@ -184,6 +191,7 @@ export class GearIndexer {
 
   private async handleExtrinsics(block: SignedBlockExtended, timestamp: number): Promise<[Program[], Code[]]> {
     if (this.api === null) return;
+
     const status = this.api.createType('ExtrinsicStatus', { finalized: block.block.header.hash.toHex() });
 
     const codes = await this.handleCodeExtrinsics(block, status, timestamp);
@@ -224,16 +232,23 @@ export class GearIndexer {
           ? MessageEntryPoint.HANDLE
           : MessageEntryPoint.REPLY;
 
+      const blockHash = block.block.header.hash.toHex();
+      const msgId = id.toHex();
+      const programId = destination.toHex();
+
+      const program = this.getProgram(programId, blockHash, msgId);
+
       messages.push(
         plainToInstance(Message, {
-          id: id.toHex(),
+          id: msgId,
+          blockHash,
+          genesis: this.genesis,
+          timestamp: new Date(timestamp),
           destination: destination.toHex(),
           source: source.toHex(),
           payload,
           value,
-          timestamp: new Date(timestamp),
-          genesis: this.genesis,
-          program: await this.programService.get({ id: destination.toHex(), genesis: this.genesis }),
+          program,
           type: MessageType.ENQUEUED,
           entry: messageEntry,
         }),
@@ -361,11 +376,11 @@ export class GearIndexer {
     return this.codeService.create(codes);
   }
 
-  private async handleBlock(block: SignedBlockExtended, timestamp: number, hash: HexString) {
+  private async handleBlock(block: SignedBlockExtended, timestamp: number) {
     const blockNumber = block.block.header.number.toString();
     await this.blockService.create(
       plainToInstance(Block, {
-        hash,
+        hash: block.block.header.hash.toHex(),
         number: blockNumber,
         timestamp: new Date(timestamp),
         genesis: this.genesis,
@@ -382,10 +397,32 @@ export class GearIndexer {
   private async indexBlockWithMissedCode(codeId: HexString) {
     const metaStorage = (await this.api.query.gearProgram.metadataStorage(codeId)) as Option<CodeMetadata>;
     if (metaStorage.isSome) {
-      const blockNumber = metaStorage.unwrap()['blockNumber'].toNumber();
+      const blockNumber = metaStorage.unwrap().blockNumber.toNumber();
 
       return this.indexMissedBlock(blockNumber);
     }
     logger.error(`Code with hash ${codeId} not found in storage`);
+  }
+
+  private async indexBlockWithMissedProgram(programId: HexString) {
+    const progStorage = (await this.api.query.gearProgram.programStorage(programId)) as Option<ProgramMap>;
+    if (progStorage.isSome) {
+      const blockNumber = progStorage.unwrap()[1].toNumber();
+
+      return this.indexMissedBlock(blockNumber);
+    }
+    logger.error(`Program with id ${programId} not found in storage`);
+  }
+
+  private async getProgram(id: HexString, blockHash: HexString, msgId: HexString) {
+    let program: Program;
+    try {
+      program = await this.programService.get({ id, genesis: this.genesis });
+    } catch (err) {
+      logger.error(`Unable to retrieve program by id ${id} for message ${msgId} encountered in block ${blockHash}`);
+      await this.indexBlockWithMissedProgram(id);
+    }
+    program = await this.programService.get({ id, genesis: this.genesis });
+    return program;
   }
 }

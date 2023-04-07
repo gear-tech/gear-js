@@ -1,4 +1,3 @@
-import { ExtrinsicStatus, SignedBlock } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
 
 import { CodeChangedInput } from './code';
@@ -9,15 +8,6 @@ export interface BaseDataInput {
   genesis?: string;
   timestamp?: number;
   blockHash?: any;
-}
-
-export interface HandleExtrinsicsDataInput {
-  signedBlock: SignedBlock;
-  events: any;
-  status: ExtrinsicStatus;
-  genesis: string;
-  timestamp: number;
-  blockHash: any;
 }
 
 export type GearEventPayload =

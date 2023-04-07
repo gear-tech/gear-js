@@ -3,7 +3,6 @@ import {
   AllMessagesResult,
   FindMessageParams,
   GetMessagesParams,
-  IMessage,
   MessageReadReason,
   ProgramStatus,
 } from '@gear-js/common';
@@ -26,7 +25,7 @@ export class MessageService {
     this.repo = dataSource.getRepository(Message);
   }
 
-  public async get({ id, genesis }: FindMessageParams): Promise<IMessage> {
+  public async get({ id, genesis }: FindMessageParams): Promise<Message> {
     const message = await this.repo.findOne({ where: { id, genesis }, relations: ['program'] });
     if (!message) {
       throw new MessageNotFound();
@@ -71,7 +70,7 @@ export class MessageService {
     };
   }
 
-  public async create(messages: Message[]): Promise<IMessage[]> {
+  public async create(messages: Message[]): Promise<Message[]> {
     for (const m of messages) {
       if (m.replyToMessageId) {
         const replyTo = await this.get({ id: m.replyToMessageId, genesis: m.genesis });
