@@ -5,7 +5,6 @@ import { plainToInstance } from 'class-transformer';
 
 import {
   generateMetahash,
-  CreateMetaInput,
   InvalidMetaHex,
   CodeNotFound,
   ProgramNotFound,
@@ -34,15 +33,15 @@ export class MetaService {
     const meta = await this.getByHash(hash);
     if (meta) return meta;
 
-    return this.create({ hash });
+    return this.create(plainToInstance(Meta, { hash }));
   }
 
   public async getByHash(hash: string): Promise<Meta> {
     return this.repo.findOneBy({ hash });
   }
 
-  async create(meta: CreateMetaInput): Promise<Meta> {
-    return this.repo.save(plainToInstance(Meta, meta));
+  async create(meta: Meta): Promise<Meta> {
+    return this.repo.save(meta);
   }
 
   public async addMetaByCode({ genesis, metaHex, id }: AddMetaByCodeParams): Promise<Meta> {

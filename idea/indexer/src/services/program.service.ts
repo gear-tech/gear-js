@@ -77,7 +77,7 @@ export class ProgramService {
   public async getMeta(params: GetMetaByProgramParams): Promise<Meta> {
     const program = await this.get(params);
 
-    if (program.meta === null) {
+    if (!program.meta?.hex) {
       throw new MetadataNotFound();
     }
 
