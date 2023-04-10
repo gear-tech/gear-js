@@ -1,6 +1,8 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 
+export type WsAddress = `ws://${string}` | `wss://${string}`;
+
 export interface IProgram extends Omit<SchemeProgram, 'id' | 'path_to_meta' | 'path_to_wasm'> {
   address?: HexString;
   meta?: ProgramMetadata;
@@ -60,7 +62,7 @@ export type SchemeTransaction =
   | UploadProgramTransactionScheme;
 
 export interface IScheme {
-  wsAddress: `ws://${string}` | `wss://${string}`;
+  wsAddress: WsAddress;
   accounts: Record<string, string>;
   prefunded_account?: string;
   fund_accounts?: Record<string, number>;
@@ -68,3 +70,5 @@ export interface IScheme {
   codes?: Array<SchemeCode>;
   transactions: Array<SchemeTransaction>;
 }
+
+export type CLIArguments = Record<string, string>;

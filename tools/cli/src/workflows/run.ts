@@ -6,12 +6,17 @@ import { waitReady } from '@polkadot/wasm-crypto';
 import { getCodes, uploadCode, sendMessage, getPrograms, uploadProgram, fundAccounts, getAccounts } from '../gear';
 import { validateScheme } from './validate';
 import { getPayload } from './payload';
-import { IScheme } from '../types';
+import { CLIArguments, IScheme, WsAddress } from '../types';
 import { logger } from '../utils';
+import { replaceCliArgs } from './replace';
 
-export async function runWorkflow(pathToScheme: string, cliArguments: string[]) {
+export async function runWorkflow(pathToScheme: string, cliArguments: CLIArguments, wsAddress?: WsAddress) {
   const schemeFile = fs.readFileSync(pathToScheme, 'utf-8');
   const scheme: IScheme = parse(schemeFile);
+  if (wsAddress) {
+    scheme.wsAddress = wsAddress;
+  }
+  replaceCliArgs(scheme, cliArguments);
   const errors = validateScheme(scheme);
   if (errors) {
     logger.error('Scheme validation failed due to the following errors:', { lvl: 0 });
@@ -23,7 +28,13 @@ export async function runWorkflow(pathToScheme: string, cliArguments: string[]) 
   await waitReady();
 
   const basePath = pathToScheme.split('/').slice(0, -1).join('/');
-  const api = await GearApi.create({ providerAddress: scheme.wsAddress });
+  const api = new GearApi({ providerAddress: scheme.wsAddress, noInitWarn: true });
+  try {
+    await api.isReadyOrError;
+  } catch (err) {
+    throw new Error(`Unable to connect to ${scheme.wsAddress}`);
+  }
+
   logger.info(`Connected to ${await api.chain()}\n`, { lvl: 0 });
 
   logger.info('Set accounts', { lvl: 0 });

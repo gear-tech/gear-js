@@ -35,6 +35,14 @@ export function validateScheme(scheme: IScheme) {
         errors.push(`Program ${program.id} has invalid address, its type must be a string`, program);
         continue;
       }
+      if (!program.address.startsWith('0x')) {
+        errors.push(`Program ${program.id} has invalid address, it must start with 0x`, program);
+        continue;
+      }
+      if (program.address.length !== 66) {
+        errors.push(`Program ${program.id} has invalid address, it must contain 32 bytes`, program);
+        continue;
+      }
     }
     programs[program.id] = program;
     if (!program.path_to_wasm && !program.address) {

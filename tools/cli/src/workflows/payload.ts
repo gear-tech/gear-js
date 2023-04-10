@@ -1,18 +1,14 @@
 import { KeyringPair } from '@polkadot/keyring/types';
 import { decodeAddress } from '@gear-js/api';
 
-import { ICode, IProgram } from '../types/index.js';
-
-const ACC_REGEX = /\$account \w+/g;
-const PROG_REGEX = /\$program \d+/g;
-const CODE_REGEX = /\$code \d+/g;
-const CLI_REGEX = /\$cli \d+/g;
+import { CLIArguments, ICode, IProgram } from '../types';
+import { ACC_REGEX, CLI_REGEX, CODE_REGEX, PROG_REGEX, replaceMatch } from '../common';
 
 export function getPayload(
   accounts: Record<string, KeyringPair>,
   programs: Record<number, IProgram>,
   codes: Record<number, ICode>,
-  cliArguments: string[],
+  cliArguments: CLIArguments,
   payload: any,
 ) {
   if (!payload) {
@@ -26,28 +22,19 @@ export function getPayload(
   const matchCli = stringPayload.match(CLI_REGEX);
 
   if (matchProg) {
-    for (const match of matchProg) {
-      const program = programs[Number(match.split(' ')[1])].address;
-      stringPayload = stringPayload.replace(match, program);
-    }
+    stringPayload = replaceMatch(stringPayload, matchProg, programs, 'address', Number);
   }
+
   if (matchAcc) {
-    for (const match of matchAcc) {
-      const acc = decodeAddress(accounts[match.split(' ')[1]].address);
-      stringPayload = stringPayload.replace(match, acc);
-    }
+    stringPayload = replaceMatch(stringPayload, matchAcc, accounts, 'address', undefined, decodeAddress);
   }
+
   if (matchCode) {
-    for (const match of matchCode) {
-      const code = codes[Number(match.split(' ')[1])].hash;
-      stringPayload = stringPayload.replace(match, code);
-    }
+    stringPayload = replaceMatch(stringPayload, matchProg, codes, 'hash', Number);
   }
+
   if (matchCli) {
-    for (const match of matchCli) {
-      const arg = cliArguments[Number(match.split(' ')[1])];
-      stringPayload = stringPayload.replace(match, arg);
-    }
+    stringPayload = replaceMatch(stringPayload, matchCli, cliArguments);
   }
   return JSON.parse(stringPayload);
 }
