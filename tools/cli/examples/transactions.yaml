@@ -11,7 +11,7 @@ fund_accounts:
 
 programs:
   - id: 0
-    address: '0xa5291ad71150456ecf304d12c8e4bc0d01fbcc203b9fa92532bf50c0377f87c4'
+    address: $cli program
     path_to_meta: ./programs/nft.meta.txt
 
   - name: Non-Fungible Token 1
@@ -78,7 +78,7 @@ transactions:
         transaction_id: 0
         token_metadata: 
           TokenMetadata:
-            name: $cli 0
+            name: $cli name
             description: Description
             media: https://
             reference: https://

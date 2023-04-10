@@ -29,7 +29,12 @@ gear-js workflow path/to/workflow.yaml
 
 You can also specify some arguments to be used instead of the unknown parts of the payloads (`$cli token_name`)
 ```bash
-gear-js workflow path/to/workflow.yaml token_name=MY_NFT url=https://gear-tech.io
+gear-js workflow path/to/workflow.yaml -a token_name=MY_NFT url=https://gear-tech.io
+```
+
+To specify the endpoint of the node to connect to, use the CLI argument `--ws`.
+```bash
+gear-js workflow path/to/wotkflow.yaml --ws wss://rpc-node.gear-tech.io
 ```
 
 ### Structure of the workflow file

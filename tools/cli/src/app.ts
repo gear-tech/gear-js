@@ -14,6 +14,10 @@ program
     '-a, --arguments <args...>',
     `Custom arguments to replace $cli in payloads.\nExample: ${chalk.green('-a arg1=value1 arg2=value2')}`,
   )
+  .option(
+    '--ws <wsAddress>',
+    `Custom websocket address to connect to the node.\nExample: ${chalk.green('--ws wss://rpc-node.gear-tech.io')}`,
+  )
   .action((pathToYaml, options) => {
     const args = {};
     if (options.arguments) {
@@ -26,10 +30,9 @@ program
         args[name] = value;
       });
     }
-    runWorkflow(pathToYaml, options.arguments || [])
+    runWorkflow(pathToYaml, args, options.ws)
       .catch((err) => {
         logger.error(err, { lvl: 0 });
-        console.log(err);
         process.exit(1);
       })
       .then(() => process.exit(0));
