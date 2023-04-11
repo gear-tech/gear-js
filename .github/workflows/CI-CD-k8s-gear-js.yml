@@ -26,40 +26,7 @@ jobs:
       - uses: mktcode/consecutive-workflow-action@v1 # please read security note
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          
-  build-frontend-image-staging:
-    runs-on: ubuntu-latest
-    needs: [wait-previous-run]
-    environment: staging
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Frontend Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/frontend/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:qa
-          build-args: |
-            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
-            REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
-            REACT_APP_WASM_COMPILER_URL=${{ secrets.REACT_APP_WASM_COMPILER_URL }}
-            REACT_APP_DEFAULT_NODES_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
-            REACT_APP_DEFAULT_TRANSFER_BALANCE_VALUE=${{ secrets.REACT_APP_DEFAULT_TRANSFER_BALANCE_VALUE }}
-            REACT_APP_HCAPTCHA_SITE_KEY=${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
-            
+                      
   build-indexer-image-staging:
     runs-on: ubuntu-latest
     needs: [wait-previous-run]
@@ -84,84 +51,8 @@ jobs:
         with:
           file: idea/indexer/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-indexer:qa
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-indexer:developer
 
-  build-api-gateway-image-staging:
-    runs-on: ubuntu-latest
-    needs: [wait-previous-run]
-    environment: staging
-    permissions:
-      contents: read
-      packages: write
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
 
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Api Gateway Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/api-gateway/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:qa
-
-  build-test-balance-image-staging:
-    runs-on: ubuntu-latest
-    needs: [wait-previous-run]
-    environment: staging
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Test Balance Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/test-balance/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-test-balance:qa
-
-  deploy-to-k8s-staging:
-    needs: [
-        build-frontend-image-staging,
-        build-indexer-image-staging,
-        build-api-gateway-image-staging,
-        build-test-balance-image-staging,
-        wait-previous-run,
-      ]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Deploy to k8s
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: rollout restart deployment api-gateway frontend-nginx indexer-rpc indexer-workshop testbalance-testnet -n dev-1
-
-      - name: Check k8s deployments
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: get deployment -o name -n dev-idea | xargs -n1 -t kubectl rollout status -n dev-idea --timeout=120s
