@@ -1,4 +1,5 @@
 import { CodeStatus, MessageReadReason } from '@gear-js/common';
+
 import { MessageEntryPoint, MessageStatus, ProgramStatus, generateUUID } from '../common';
 import { Block, Code, Message, Meta, Program } from '../database';
 import { BlockService, CodeService, MessageService, MetaService, ProgramService } from '../services';
@@ -127,7 +128,7 @@ export class TempState {
   async setDispatchedStatus(statuses: { [key: string]: MessageStatus }) {
     for (const [id, status] of Object.entries(statuses)) {
       const msg = await this.getMsg(id);
-      msg.processedWithPanic = status === 'Success' ? false : true;
+      msg.processedWithPanic = status !== 'Success';
 
       if (status === 'Failed') {
         if (msg.entry === MessageEntryPoint.INIT) {
