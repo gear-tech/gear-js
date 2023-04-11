@@ -70,7 +70,7 @@ export class MessageService {
     };
   }
 
-  public async create(messages: Message[]): Promise<Message[]> {
+  public async save(messages: Message[]): Promise<Message[]> {
     for (const m of messages) {
       if (m.replyToMessageId) {
         const replyTo = await this.get({ id: m.replyToMessageId, genesis: m.genesis });

@@ -23,8 +23,10 @@ export class BlockService {
     return block;
   }
 
-  public async create(block: Block): Promise<Block> {
-    return this.repo.save(block);
+  public async save(block: Block[]): Promise<Block[]>;
+  public async save(block: Block): Promise<Block>;
+  public async save(block: Block | Block[]): Promise<Block | Block[]> {
+    return this.repo.save(Array.isArray(block) ? block : [block]);
   }
 
   public async getSyncedBlockNumbers(from: number, to: number, genesis: string) {
