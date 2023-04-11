@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, Index, OneToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, Index, OneToMany, ManyToOne, PrimaryColumn } from 'typeorm';
 import { IProgram } from '@gear-js/common';
 
 import { BaseEntity } from './base.entity';
@@ -9,7 +9,7 @@ import { ProgramStatus } from '../../common/enums';
 
 @Entity()
 export class Program extends BaseEntity implements IProgram {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn('uuid', { nullable: false })
   public _id: string;
 
   @Column()
@@ -23,7 +23,7 @@ export class Program extends BaseEntity implements IProgram {
   public name: string;
 
   @Column({ nullable: true })
-  public expiration: number;
+  public expiration: string;
 
   @Column({ name: 'type', type: 'enum', enum: ProgramStatus, default: ProgramStatus.UNKNOWN })
   public status: ProgramStatus;

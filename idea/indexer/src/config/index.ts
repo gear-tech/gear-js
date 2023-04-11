@@ -28,7 +28,9 @@ export default {
   },
   gear: {
     wsProvider: checkEnv('GEAR_WS_PROVIDER', 'ws://127.0.0.1:9944'),
-    fromBlock: process.env.FROM_BLOCK,
-    toBlock: process.env.TO_BLOCK,
+  },
+  indexer: {
+    batchSize: Number(process.env.BATCH_SIZE || -1),
+    logEveryBlock: !!process.env.LOG_EVERY_BLOCK,
   },
 };

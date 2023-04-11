@@ -51,21 +51,16 @@ async function bootstrap() {
   const lastBlock = await blockService.getLastBlock(genesis);
   const toBlock = Number(lastBlock.number);
 
-  const syncedBlocks = await blockService.getSyncedBlockNumbers(fromBlock, toBlock, genesis);
+  let syncedBlocks = await blockService.getSyncedBlockNumbers(fromBlock, toBlock, genesis);
 
-  const it = getIterator(fromBlock, toBlock);
+  const blocksSet = new Set(syncedBlocks);
 
-  const blocks = [];
-  let res = it.next();
-  if (!syncedBlocks.includes(res.value)) {
-    blocks.push(res.value);
-  }
-  while (!res.done) {
-    res = it.next();
-    if (!syncedBlocks.includes(res.value)) {
-      blocks.push(res.value);
-    }
-  }
+  const blocks = Array.from({ length: toBlock - fromBlock + 1 }, (_, i) => fromBlock + i).filter(
+    (v) => !blocksSet.has(v),
+  );
+
+  blocksSet.clear();
+  syncedBlocks = undefined;
 
   const indexer = new GearIndexer(
     programService,
@@ -75,10 +70,17 @@ async function bootstrap() {
     metaService,
     statusService,
     true,
-    true,
   );
 
-  await indexer.run(api, blocks);
+  if (config.indexer.batchSize > 0) {
+    for (let i = 0; i <= blocks.length; i += config.indexer.batchSize) {
+      console.time('run');
+      await indexer.run(api, blocks.slice(i, i + config.indexer.batchSize));
+      console.timeEnd('run');
+    }
+  } else {
+    await indexer.run(api, blocks);
+  }
 }
 
 bootstrap()
@@ -87,21 +89,3 @@ bootstrap()
     console.log(err);
     process.exit(1);
   });
-
-function getIterator(start: number, end: number) {
-  let nextIndex = start;
-  let count = 0;
-  const iterator = {
-    next(): { value: number; done: boolean } {
-      let res;
-      if (nextIndex < end) {
-        res = { value: nextIndex, done: false };
-        nextIndex += 1;
-        count++;
-        return res;
-      }
-      return { value: count, done: true };
-    },
-  };
-  return iterator;
-}

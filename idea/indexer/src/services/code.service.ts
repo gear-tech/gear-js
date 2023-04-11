@@ -1,5 +1,6 @@
 import {
   AddCodeNameParams,
+  CodeStatus,
   GetAllCodeParams,
   GetAllCodeResult,
   GetCodeParams,
@@ -8,7 +9,7 @@ import {
 import { DataSource, Repository } from 'typeorm';
 
 import { Code, Meta } from '../database/entities';
-import { CodeNotFound, MetadataNotFound, constructQueryBuilder, CodeChangedInput, PAGINATION_LIMIT } from '../common';
+import { CodeNotFound, MetadataNotFound, constructQueryBuilder, PAGINATION_LIMIT } from '../common';
 
 export class CodeService {
   private repo: Repository<Code>;
@@ -17,7 +18,7 @@ export class CodeService {
     this.repo = dataSource.getRepository(Code);
   }
 
-  public create(codes: Code[]) {
+  public save(codes: Code[]) {
     return this.repo.save(codes);
   }
 
@@ -68,10 +69,10 @@ export class CodeService {
     return code.meta;
   }
 
-  public async setCodeStatus(codeStatus: CodeChangedInput, genesis: string): Promise<Code> {
-    const code = await this.get({ id: codeStatus.id, genesis });
-    code.expiration = codeStatus.expiration;
-    code.status = codeStatus.status;
+  public async setStatus(id: string, genesis: string, status: CodeStatus, expiration: string): Promise<Code> {
+    const code = await this.get({ id, genesis });
+    code.status = status;
+    code.expiration = expiration;
 
     return this.repo.save(code);
   }

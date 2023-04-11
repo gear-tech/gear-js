@@ -31,17 +31,20 @@ export class MetaService {
 
   public async getByHashOrCreate(hash: string): Promise<Meta> {
     const meta = await this.getByHash(hash);
+
     if (meta) return meta;
 
-    return this.create(plainToInstance(Meta, { hash }));
+    return this.save(plainToInstance(Meta, { hash }));
   }
 
   public async getByHash(hash: string): Promise<Meta> {
     return this.repo.findOneBy({ hash });
   }
 
-  async create(meta: Meta): Promise<Meta> {
-    return this.repo.save(meta);
+  async save(meta: Meta[]): Promise<Meta[]>;
+  async save(meta: Meta): Promise<Meta>;
+  async save(meta: Meta | Meta[]): Promise<Meta | Meta[]> {
+    return this.repo.save(meta as Meta);
   }
 
   public async addMetaByCode({ genesis, metaHex, id }: AddMetaByCodeParams): Promise<Meta> {

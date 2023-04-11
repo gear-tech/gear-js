@@ -57,26 +57,25 @@ function userMessageReadPayload({ id, reason }: UserMessageReadData): UserMessag
 }
 
 function programChangedPayload({ id, change }: ProgramChangedData): ProgramChangedInput {
-  const res = { id: id.toHex(), programStatus: ProgramStatus.UNKNOWN };
+  const status = change.isActive
+    ? ProgramStatus.ACTIVE
+    : change.isInactive
+      ? ProgramStatus.EXITED
+      : change.isPaused
+        ? ProgramStatus.PAUSED
+        : ProgramStatus.UNKNOWN;
+  const expiration = change.isActive ? change.asActive.expiration.toString() : null;
 
-  if (change.isActive) {
-    res.programStatus = ProgramStatus.ACTIVE;
-  }
-
-  if (change.isInactive) {
-    res.programStatus = ProgramStatus.EXITED;
-  }
-
-  if (change.isPaused) {
-    res.programStatus = ProgramStatus.EXITED;
-  }
-
-  return res;
+  return { id: id.toHex(), status, expiration };
 }
 
 function codeChangedPayload({ id, change }: CodeChangedData): CodeChangedInput {
   const status = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : CodeStatus.UNKNOWN;
-  const expiration = change.isActive ? change.asActive.expiration.toString() : null;
+  const expiration = change.isActive
+    ? change.asActive.expiration.isSome
+      ? change.asActive.expiration.unwrap().toString()
+      : null
+    : null;
 
   return { id: id.toHex(), status, expiration };
 }
