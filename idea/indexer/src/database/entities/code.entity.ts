@@ -9,7 +9,7 @@ import { StateToCode } from './state-to-code.entity';
 
 @Entity()
 export class Code extends BaseEntity implements ICode {
-  @PrimaryColumn('uuid')
+  @PrimaryColumn('uuid', { nullable: false })
   public _id: string;
 
   @Column()

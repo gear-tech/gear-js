@@ -87,6 +87,7 @@ export class ProgramService {
   public async save(programs: Program[]): Promise<Program[]> {
     return this.repo.save(programs);
   }
+
   async setStatus(id: string, genesis: string, status: ProgramStatus): Promise<IProgram> {
     const program = await this.get({ id, genesis });
 

@@ -40,7 +40,7 @@
     "start": "node dist/main.js",
     "dev:once": "ts-node-dev src/one-time-sync.ts",
     "migration:generate": "yarn typeorm migration:generate -p -d dist/database/data-source.js",
-    "migrate": "yarn typeorm migration:run",
-    "migrate-undo": "yarn typeorm migration:revert"
+    "migration:apply": "yarn typeorm migration:run -d dist/database/data-source.js",
+    "migrate:revert": "yarn typeorm migration:revert -d dist/database/data-source.js"
   }
 }

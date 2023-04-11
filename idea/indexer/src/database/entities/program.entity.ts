@@ -9,7 +9,7 @@ import { ProgramStatus } from '../../common/enums';
 
 @Entity()
 export class Program extends BaseEntity implements IProgram {
-  @PrimaryColumn()
+  @PrimaryColumn('uuid', { nullable: false })
   public _id: string;
 
   @Column()
