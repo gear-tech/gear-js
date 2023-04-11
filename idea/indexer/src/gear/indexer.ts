@@ -120,9 +120,7 @@ export class GearIndexer {
     interestedCode?: string,
   ): Promise<[Program, Code]> {
     if (blockNumber === 0) return;
-    console.time('getBlock');
     const block = await this.api.derive.chain.getBlockByNumber(blockNumber);
-    console.timeEnd('getBlock');
 
     const hash = block.block.header.hash.toHex();
 
