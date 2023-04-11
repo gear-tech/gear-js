@@ -1,4 +1,4 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { ICode } from '@gear-js/common';
 
 import { BaseEntity } from './base.entity';
@@ -9,7 +9,7 @@ import { StateToCode } from './state-to-code.entity';
 
 @Entity()
 export class Code extends BaseEntity implements ICode {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn('uuid')
   public _id: string;
 
   @Column()

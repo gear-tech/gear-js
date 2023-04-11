@@ -31,5 +31,6 @@ export default {
   },
   indexer: {
     batchSize: Number(process.env.BATCH_SIZE || -1),
+    logEveryBlock: !!process.env.LOG_EVERY_BLOCK,
   },
 };

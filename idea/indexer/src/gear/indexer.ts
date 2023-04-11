@@ -14,7 +14,6 @@ import {
   getMetahash,
   getPayloadAndValue,
   eventDataHandlers,
-  BlockParams,
   MessageEntryPoint,
   MessageType,
   logger,
@@ -24,15 +23,16 @@ import {
   CodeChangedInput,
   MessagesDispatchedDataInput,
 } from '../common';
-import { Block, Code, Message, Program } from '../database/entities';
+import { Block, Code, Message, Meta, Program } from '../database/entities';
 import { BlockService, CodeService, MessageService, MetaService, ProgramService, StatusService } from '../services';
 import { TempState } from './temp-state';
+import config from '../config';
 
 export class GearIndexer {
   public api: GearApi;
   private genesis: HexString;
   private unsub: VoidFn;
-  private newBlocks: Array<BlockParams>;
+  private newBlocks: Array<number>;
   private lastBlockNumber: number;
   private generatorLoop: boolean;
   private tempState: TempState;
@@ -45,7 +45,6 @@ export class GearIndexer {
     metaService: MetaService,
     private statusService?: StatusService,
     private oneTimeSync: boolean = false,
-    private logEveryBlock: boolean = false,
   ) {
     this.tempState = new TempState(programService, messageService, codeService, blockService, metaService);
   }
@@ -57,14 +56,11 @@ export class GearIndexer {
     this.generatorLoop = true;
     if (onlyBlocks) {
       logger.info(`Processing blocks from ${onlyBlocks[0]} to ${onlyBlocks.at(-1)}`);
-      for (const bn of onlyBlocks) {
-        const hash = await this.api.rpc.chain.getBlockHash(bn);
-        this.newBlocks.push({ blockNumber: bn, hash: hash.toHex() });
-      }
+      this.newBlocks = onlyBlocks;
       await this.indexBlocks();
     } else {
-      this.unsub = await this.api.derive.chain.subscribeFinalizedHeads(({ number, hash }) => {
-        this.newBlocks.push({ blockNumber: number.toNumber(), hash: hash.toHex() });
+      this.unsub = await this.api.derive.chain.subscribeFinalizedHeads(({ number }) => {
+        this.newBlocks.push(number.toNumber());
       });
       this.indexBlocks();
     }
@@ -94,7 +90,7 @@ export class GearIndexer {
   }
 
   private async indexBlocks() {
-    for await (const { hash, blockNumber } of this.blocksGenerator()) {
+    for await (const blockNumber of this.blocksGenerator()) {
       if (this.lastBlockNumber === undefined) {
         logger.info(`Block processing started with ${blockNumber}.`);
       } else if (blockNumber === this.lastBlockNumber || blockNumber === 0) continue;
@@ -112,22 +108,25 @@ export class GearIndexer {
         continue;
       }
 
-      await this.indexBlock(hash);
+      await this.indexBlock(blockNumber);
       this.lastBlockNumber = blockNumber;
     }
   }
 
   private async indexBlock(
-    hash: HexString,
+    blockNumber: number,
     isMissed = false,
     interestedProgram?: string,
     interestedCode?: string,
   ): Promise<[Program, Code]> {
-    const block = await this.api.derive.chain.getBlock(hash);
-    const bn = block.block.header.number.toString();
-    if (bn === '0') return;
+    if (blockNumber === 0) return;
+    console.time('getBlock');
+    const block = await this.api.derive.chain.getBlockByNumber(blockNumber);
+    console.timeEnd('getBlock');
 
-    if (this.logEveryBlock) logger.info(`Processing block ${bn}`);
+    const hash = block.block.header.hash.toHex();
+
+    if (config.indexer.logEveryBlock) logger.info(`Processing block ${blockNumber}`);
 
     if (!isMissed) {
       this.tempState.newState(this.genesis);
@@ -139,9 +138,14 @@ export class GearIndexer {
     await this.handleEvents(block, timestamp);
     this.handleBlock(block, timestamp);
 
-    await this.tempState.save();
+    try {
+      await this.tempState.save();
+    } catch (err) {
+      logger.error(`Error during saving the data of the block ${blockNumber}. ${err.message}`);
+      return [null, null];
+    }
     if (this.oneTimeSync) {
-      await this.statusService.update(this.genesis, bn, hash);
+      await this.statusService.update(this.genesis, blockNumber.toString(), hash);
     }
     return [
       interestedProgram ? await this.tempState.getProgram(interestedProgram) : null,
@@ -163,7 +167,7 @@ export class GearIndexer {
       );
     },
     [EventNames.ProgramChanged]: async (data: ProgramChangedInput) =>
-      await this.tempState.setProgramStatus(data.id, data.programStatus),
+      await this.tempState.setProgramStatus(data.id, data.status, data.expiration),
     [EventNames.MessagesDispatched]: (data: MessagesDispatchedDataInput) =>
       this.tempState.setDispatchedStatus(data.statuses),
     [EventNames.UserMessageRead]: (data: UserMessageReadInput) => this.tempState.setReadStatus(data.id, data.reason),
@@ -306,11 +310,15 @@ export class GearIndexer {
         logger.error(
           `Unable to retrieve code by id ${codeId} for program ${programId}. Program won't be saved to the database.`,
         );
-        continue;
       }
 
-      const metahash = await getMetahash(this.api.program, programId);
-      const meta = metahash ? await this.tempState.getMeta(metahash) : null;
+      let meta: Meta;
+      if (code.meta) {
+        meta = code.meta;
+      } else {
+        const metahash = await getMetahash(this.api.program, programId);
+        meta = metahash ? await this.tempState.getMeta(metahash) : null;
+      }
 
       this.tempState.addProgram(
         plainToInstance(Program, {
@@ -391,9 +399,8 @@ export class GearIndexer {
   }
 
   private async indexMissedBlock(number: number, interestedProgram?: string, interestedCode?: string) {
-    const hash = await this.api.blocks.getBlockHash(number);
-    logger.warn(`Index missed block ${number} with hash ${hash.toHex()}`);
-    return this.indexBlock(hash.toHex(), true, interestedProgram, interestedCode);
+    logger.warn(`Index missed block ${number}`);
+    return this.indexBlock(number, true, interestedProgram, interestedCode);
   }
 
   public async indexBlockWithMissedCode(codeId: HexString): Promise<Code | null> {

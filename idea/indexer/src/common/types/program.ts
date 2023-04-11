@@ -5,5 +5,6 @@ import { BaseDataInput } from './gear';
 
 export interface ProgramChangedInput extends BaseDataInput {
   id: HexString;
-  programStatus: ProgramStatus;
+  status: ProgramStatus;
+  expiration?: string;
 }

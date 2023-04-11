@@ -70,7 +70,6 @@ async function bootstrap() {
     metaService,
     statusService,
     true,
-    true,
   );
 
   if (config.indexer.batchSize > 0) {

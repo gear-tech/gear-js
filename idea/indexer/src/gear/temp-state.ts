@@ -1,5 +1,5 @@
 import { CodeStatus, MessageReadReason } from '@gear-js/common';
-import { MessageEntryPoint, MessageStatus, ProgramStatus } from '../common';
+import { MessageEntryPoint, MessageStatus, ProgramStatus, generateUUID } from '../common';
 import { Block, Code, Message, Meta, Program } from '../database';
 import { BlockService, CodeService, MessageService, MetaService, ProgramService } from '../services';
 
@@ -36,12 +36,18 @@ export class TempState {
 
   addProgram(program: Program) {
     if (!this.programs.has(program.id)) {
+      if (!program._id) {
+        program._id = generateUUID();
+      }
       this.programs.set(program.id, program);
     }
   }
 
   addCode(code: Code) {
     if (!this.codes.has(code.id)) {
+      if (!code._id) {
+        code._id = generateUUID();
+      }
       this.codes.set(code.id, code);
     }
   }
@@ -93,9 +99,11 @@ export class TempState {
     return msg;
   }
 
-  async setProgramStatus(id: string, status: ProgramStatus) {
+  async setProgramStatus(id: string, status: ProgramStatus, expiration?: string) {
     if (this.programs.has(id)) {
-      this.programs.get(id).status = status;
+      const program = this.programs.get(id);
+      program.status = status;
+      program.expiration = expiration;
     } else {
       const program = await this.programService.get({ id, genesis: this.genesis });
       program.status = status;
@@ -135,7 +143,6 @@ export class TempState {
   }
 
   async save() {
-    await this.metaService.save(Array.from(this.meta.values()));
     await this.codeService.save(Array.from(this.codes.values()));
     await this.programService.save(Array.from(this.programs.values()));
     await this.messageService.save(Array.from(this.messages.values()));

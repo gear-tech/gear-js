@@ -44,7 +44,7 @@ export class MetaService {
   async save(meta: Meta[]): Promise<Meta[]>;
   async save(meta: Meta): Promise<Meta>;
   async save(meta: Meta | Meta[]): Promise<Meta | Meta[]> {
-    return this.repo.save(Array.isArray(meta) ? meta : [meta]);
+    return this.repo.save(meta as Meta);
   }
 
   public async addMetaByCode({ genesis, metaHex, id }: AddMetaByCodeParams): Promise<Meta> {
