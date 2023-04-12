@@ -2323,7 +2323,7 @@ __metadata:
     "@typescript-eslint/parser": 4.33.0
     adm-zip: 0.5.9
     dockerode: 3.3.3
-    dotenv: 16.0.1
+    dotenv: 16.0.3
     eslint: 7.32.0
     eslint-config-prettier: 8.5.0
     eslint-plugin-prettier: 3.4.1

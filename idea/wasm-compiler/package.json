@@ -15,7 +15,7 @@
   "dependencies": {
     "adm-zip": "0.5.9",
     "dockerode": "3.3.3",
-    "dotenv": "16.0.1",
+    "dotenv": "16.0.3",
     "express": "4.18.1",
     "multer": "1.4.5-lts.1",
     "pg": "8.7.3",
