@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "adm-zip": "0.5.9",
-    "dockerode": "3.3.3",
+    "dockerode": "3.3.5",
     "dotenv": "16.0.1",
     "express": "4.18.1",
     "multer": "1.4.5-lts.1",
@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@types/adm-zip": "0.5.0",
-    "@types/dockerode": "3.3.9",
+    "@types/dockerode": "3.3.16",
     "@types/express": "4.17.13",
     "@types/jest": "26.0.24",
     "@types/multer": "1.4.7",

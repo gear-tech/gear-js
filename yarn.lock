@@ -1750,6 +1750,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@balena/dockerignore@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@balena/dockerignore@npm:1.0.2"
+  checksum: 0d39f8fbcfd1a983a44bced54508471ab81aaaa40e2c62b46a9f97eac9d6b265790799f16919216db486331dedaacdde6ecbd6b7abe285d39bc50de111991699
+  languageName: node
+  linkType: hard
+
 "@bcoe/v8-coverage@npm:^0.2.3":
   version: 0.2.3
   resolution: "@bcoe/v8-coverage@npm:0.2.3"
@@ -2313,7 +2320,7 @@ __metadata:
   resolution: "@gear-js/wasm-compiler@workspace:idea/wasm-compiler"
   dependencies:
     "@types/adm-zip": 0.5.0
-    "@types/dockerode": 3.3.9
+    "@types/dockerode": 3.3.16
     "@types/express": 4.17.13
     "@types/jest": 26.0.24
     "@types/multer": 1.4.7
@@ -2322,7 +2329,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 4.33.0
     "@typescript-eslint/parser": 4.33.0
     adm-zip: 0.5.9
-    dockerode: 3.3.3
+    dockerode: 3.3.5
     dotenv: 16.0.1
     eslint: 7.32.0
     eslint-config-prettier: 8.5.0
@@ -4773,13 +4780,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/dockerode@npm:3.3.9":
-  version: 3.3.9
-  resolution: "@types/dockerode@npm:3.3.9"
+"@types/dockerode@npm:3.3.16":
+  version: 3.3.16
+  resolution: "@types/dockerode@npm:3.3.16"
   dependencies:
     "@types/docker-modem": "*"
     "@types/node": "*"
-  checksum: 3d03c68addb37c50e9557fff17171d26423aa18e544cb24e4caa81ebcec39ccc1cafed7adbfb8f4220d8ed23028d231717826bb77a786d425885c4f4cc37536d
+  checksum: ef316e330f8a1a137962d6000cac53bb25b5ba4300e38dd5842f32a6c58bec420278d61526c68865351c48c7e843c9aa45bcbca332737630a0c251e09390bf5b
   languageName: node
   linkType: hard
 
@@ -8474,13 +8481,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dockerode@npm:3.3.3":
-  version: 3.3.3
-  resolution: "dockerode@npm:3.3.3"
+"dockerode@npm:3.3.5":
+  version: 3.3.5
+  resolution: "dockerode@npm:3.3.5"
   dependencies:
+    "@balena/dockerignore": ^1.0.2
     docker-modem: ^3.0.0
     tar-fs: ~2.0.1
-  checksum: 3eadf48c9d5d8232d6e00cdc56fe2712bfc90fd41f0a6bdc1fc9fd5b155a4a14af24fb58905a6dc5dc7af3899a6e78e4e9b6d31c3e18d3a9087a553a0a9da197
+  checksum: 7f6650422b07fa7ea9d5801f04b1a432634446b5fe37b995b8302b953b64e93abf1bb4596c2fb574ba47aafee685ef2ab959cc86c9654add5a26d09541bbbcc6
   languageName: node
   linkType: hard
 
