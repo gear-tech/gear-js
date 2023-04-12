@@ -311,7 +311,7 @@ export class GearIndexer {
       }
 
       let meta: Meta;
-      if (code.meta) {
+      if (code?.meta) {
         meta = code.meta;
       } else {
         const metahash = await getMetahash(this.api.program, programId);
@@ -364,7 +364,7 @@ export class GearIndexer {
       const msgId = id.toHex();
       const programId = destination.toHex();
 
-      const program = this.getProgram(programId, blockHash, msgId);
+      const program = await this.getProgram(programId, blockHash, msgId);
 
       this.tempState.addMsg(
         plainToInstance(Message, {
