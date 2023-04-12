@@ -113,12 +113,7 @@ export class GearIndexer {
     }
   }
 
-  private async indexBlock(
-    blockNumber: number,
-    isMissed = false,
-    interestedProgram?: string,
-    interestedCode?: string,
-  ): Promise<[Program, Code]> {
+  private async indexBlock(blockNumber: number, isMissed = false): Promise<void> {
     if (blockNumber === 0) return;
     const block = await this.api.derive.chain.getBlockByNumber(blockNumber);
 
@@ -140,15 +135,10 @@ export class GearIndexer {
       await this.tempState.save();
     } catch (err) {
       logger.error(`Error during saving the data of the block ${blockNumber}. ${err.message}`);
-      return [null, null];
     }
     if (this.oneTimeSync) {
       await this.statusService.update(this.genesis, blockNumber.toString(), hash);
     }
-    return [
-      interestedProgram ? await this.tempState.getProgram(interestedProgram) : null,
-      interestedCode ? await this.tempState.getCode(interestedCode) : null,
-    ];
   }
 
   eventHandlers: Record<EventNames, (data: any, timestamp: number, blockHash: HexString) => Promise<void> | void> = {
@@ -294,24 +284,10 @@ export class GearIndexer {
       const blockHash = block.block.hash.toHex();
 
       const codeId = tx.method.method === 'uploadProgram' ? generateCodeHash(tx.args[0].toHex()) : tx.args[0].toHex();
-      let code: Code;
-      try {
-        code = await this.tempState.getCode(codeId);
-      } catch (err) {
-        logger.error(
-          `Unable to retrieve code by id ${codeId} for program ${programId} encountered in block ${blockHash}`,
-        );
-        code = await this.indexBlockWithMissedCode(codeId);
-      }
-
-      if (!code) {
-        logger.error(
-          `Unable to retrieve code by id ${codeId} for program ${programId}. Program won't be saved to the database.`,
-        );
-      }
+      const code = await this.getCode(codeId, blockHash, programId);
 
       let meta: Meta;
-      if (code.meta) {
+      if (code?.meta) {
         meta = code.meta;
       } else {
         const metahash = await getMetahash(this.api.program, programId);
@@ -364,7 +340,7 @@ export class GearIndexer {
       const msgId = id.toHex();
       const programId = destination.toHex();
 
-      const program = this.getProgram(programId, blockHash, msgId);
+      const program = await this.getProgram(programId, blockHash, msgId);
 
       this.tempState.addMsg(
         plainToInstance(Message, {
@@ -396,9 +372,9 @@ export class GearIndexer {
     );
   }
 
-  private async indexMissedBlock(number: number, interestedProgram?: string, interestedCode?: string) {
+  private async indexMissedBlock(number: number) {
     logger.warn(`Index missed block ${number}`);
-    return this.indexBlock(number, true, interestedProgram, interestedCode);
+    return this.indexBlock(number, true);
   }
 
   public async indexBlockWithMissedCode(codeId: HexString): Promise<Code | null> {
@@ -406,7 +382,9 @@ export class GearIndexer {
     if (metaStorage.isSome) {
       const blockNumber = metaStorage.unwrap().blockNumber.toNumber();
 
-      return (await this.indexMissedBlock(blockNumber))[1];
+      await this.indexMissedBlock(blockNumber);
+
+      return this.tempState.getCode(codeId);
     }
     logger.error(`Code with hash ${codeId} not found in storage`);
     return null;
@@ -417,21 +395,30 @@ export class GearIndexer {
     if (progStorage.isSome) {
       const blockNumber = progStorage.unwrap()[1].toNumber();
 
-      return (await this.indexMissedBlock(blockNumber))[0];
+      await this.indexMissedBlock(blockNumber);
+
+      return this.tempState.getProgram(programId);
     }
 
     logger.error(`Program with id ${programId} not found in storage`);
     return null;
   }
 
-  private async getProgram(id: HexString, blockHash: HexString, msgId: HexString) {
-    let program: Program;
-    try {
-      program = await this.tempState.getProgram(id);
-    } catch (err) {
+  private async getProgram(id: HexString, blockHash: HexString, msgId: HexString): Promise<Program> {
+    let program = await this.tempState.getProgram(id);
+    if (!program) {
       logger.error(`Unable to retrieve program by id ${id} for message ${msgId} encountered in block ${blockHash}`);
       program = await this.indexBlockWithMissedProgram(id);
     }
     return program;
+  }
+
+  private async getCode(id: HexString, blockHash: HexString, programId: HexString): Promise<Code> {
+    let code = await this.tempState.getCode(id);
+    if (!code) {
+      logger.error(`Unable to retrieve code by id ${id} of program ${programId} encountered in block ${blockHash}`);
+      code = await this.indexBlockWithMissedCode(id);
+    }
+    return code;
   }
 }

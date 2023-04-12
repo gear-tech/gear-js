@@ -57,7 +57,9 @@ export class TempState {
     if (!this.messages.has(msg.id)) {
       if (msg.replyToMessageId) {
         const replyTo = await this.getMsg(msg.replyToMessageId);
-        msg.entry = replyTo.entry;
+        if (replyTo) {
+          msg.entry = replyTo.entry;
+        }
       }
       this.messages.set(msg.id, msg);
     }
@@ -71,15 +73,26 @@ export class TempState {
     if (this.programs.has(id)) {
       return this.programs.get(id);
     }
+    try {
+      const program = await this.programService.get({ id, genesis: this.genesis });
+      this.programs.set(program.id, program);
+      return program;
+    } catch (err) {
+      return null;
+    }
   }
 
   async getCode(id: string): Promise<Code> {
     if (this.codes.has(id)) {
       return this.codes.get(id);
     }
-    const code = await this.codeService.get({ id, genesis: this.genesis });
-    this.codes.set(code.id, code);
-    return code;
+    try {
+      const code = await this.codeService.get({ id, genesis: this.genesis });
+      this.codes.set(code.id, code);
+      return code;
+    } catch (err) {
+      return null;
+    }
   }
 
   async getMeta(hash: string): Promise<Meta> {
@@ -95,44 +108,40 @@ export class TempState {
     if (this.messages.has(id)) {
       return this.messages.get(id);
     }
-    const msg = await this.messageService.get({ id, genesis: this.genesis });
-    this.messages.set(msg.id, msg);
-    return msg;
+    try {
+      const msg = await this.messageService.get({ id, genesis: this.genesis });
+      this.messages.set(msg.id, msg);
+      return msg;
+    } catch (err) {
+      return null;
+    }
   }
 
   async setProgramStatus(id: string, status: ProgramStatus, expiration?: string) {
-    if (this.programs.has(id)) {
-      const program = this.programs.get(id);
+    const program = await this.getProgram(id);
+    if (program) {
       program.status = status;
       program.expiration = expiration;
-    } else {
-      const program = await this.programService.get({ id, genesis: this.genesis });
-      program.status = status;
-      this.programs.set(program.id, program);
     }
   }
 
   async setCodeStatus(id: string, status: CodeStatus, expiration: string) {
-    if (this.codes.has(id)) {
-      const code = this.codes.get(id);
+    const code = await this.getCode(id);
+    if (code) {
       code.status = status;
       code.expiration = expiration;
-    } else {
-      const code = await this.codeService.get({ id, genesis: this.genesis });
-      code.status = status;
-      code.expiration = expiration;
-      this.codes.set(code.id, code);
     }
   }
 
   async setDispatchedStatus(statuses: { [key: string]: MessageStatus }) {
     for (const [id, status] of Object.entries(statuses)) {
       const msg = await this.getMsg(id);
-      msg.processedWithPanic = status !== 'Success';
-
-      if (status === 'Failed') {
-        if (msg.entry === MessageEntryPoint.INIT) {
-          await this.setProgramStatus(msg.destination, ProgramStatus.TERMINATED);
+      if (msg) {
+        msg.processedWithPanic = status !== 'Success';
+        if (status === 'Failed') {
+          if (msg.entry === MessageEntryPoint.INIT) {
+            await this.setProgramStatus(msg.destination, ProgramStatus.TERMINATED);
+          }
         }
       }
     }
@@ -140,7 +149,9 @@ export class TempState {
 
   async setReadStatus(id: string, reason: MessageReadReason) {
     const msg = await this.getMsg(id);
-    msg.readReason = reason;
+    if (msg) {
+      msg.readReason = reason;
+    }
   }
 
   async save() {
