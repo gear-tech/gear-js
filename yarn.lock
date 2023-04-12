@@ -2321,7 +2321,7 @@ __metadata:
     "@types/supertest": 2.0.12
     "@typescript-eslint/eslint-plugin": 4.33.0
     "@typescript-eslint/parser": 4.33.0
-    adm-zip: 0.5.9
+    adm-zip: 0.5.10
     dockerode: 3.3.3
     dotenv: 16.0.1
     eslint: 7.32.0
@@ -5929,10 +5929,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"adm-zip@npm:0.5.9":
-  version: 0.5.9
-  resolution: "adm-zip@npm:0.5.9"
-  checksum: 4909bc04119fdd5e8f8ba43826e50623e5c427cf0a939c809d4f9456a6a03c6aa0544e82088739de9ba16b7649f71b99ccbbddc7b2c38bd6143f9c4726cc7ed9
+"adm-zip@npm:0.5.10":
+  version: 0.5.10
+  resolution: "adm-zip@npm:0.5.10"
+  checksum: 07ed91cf6423bf5dca4ee63977bc7635e91b8d21829c00829d48dce4c6932e1b19e6cfcbe44f1931c956e68795ae97183fc775913883fa48ce88a1ac11fb2034
   languageName: node
   linkType: hard
 
