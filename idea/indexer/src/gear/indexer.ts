@@ -384,7 +384,7 @@ export class GearIndexer {
 
       await this.indexMissedBlock(blockNumber);
 
-      return await this.tempState.getCode(codeId);
+      return this.tempState.getCode(codeId);
     }
     logger.error(`Code with hash ${codeId} not found in storage`);
     return null;
@@ -397,7 +397,7 @@ export class GearIndexer {
 
       await this.indexMissedBlock(blockNumber);
 
-      return await this.tempState.getProgram(programId);
+      return this.tempState.getProgram(programId);
     }
 
     logger.error(`Program with id ${programId} not found in storage`);
