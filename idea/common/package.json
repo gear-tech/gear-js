@@ -8,12 +8,12 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@gear-js/api": "0.30.3",
-    "@polkadot/api": "9.14.1",
-    "winston": "3.7.2"
+    "@gear-js/api": "0.30.6",
+    "@polkadot/api": "9.14.2",
+    "winston": "3.8.2"
   },
   "license": "ISC",
   "devDependencies": {
-    "typescript": "4.7.4"
+    "typescript": "4.9.5"
   }
 }

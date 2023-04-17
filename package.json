@@ -20,10 +20,10 @@
     "bump:polkadot": "node dev/bump-polkadot.js && yarn install"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "5.57.1",
-    "@typescript-eslint/parser": "5.57.1",
-    "eslint": "8.28.0",
-    "husky": "8.0.2",
+    "@typescript-eslint/eslint-plugin": "5.58.0",
+    "@typescript-eslint/parser": "5.58.0",
+    "eslint": "8.38.0",
+    "husky": "8.0.3",
     "lint-staged": "12.5.0"
   },
   "workspaces": [
@@ -34,6 +34,6 @@
     "api/**/*.{js,ts}": "cd api && yarn lint:fix",
     "idea/**/*.{js,ts,tsx}": "eslint --fix --ignore-pattern 'idea/frontend/**'"
   },
-  "packageManager": "yarn@3.3.0",
+  "packageManager": "yarn@3.5.0",
   "version": "1.2.0"
 }
