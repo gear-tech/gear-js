@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 
-import { GearApi, GearKeyring } from '../../../lib';
+import { GearApi, GearKeyring } from '@gear-js/api';
 import { PATH_TO_OPT } from '../config';
 
 const main = async () => {

@@ -68,11 +68,11 @@ jobs:
         working-directory: api
         run: yarn build
 
-      - name: "Build: test programs"
-        working-directory: api/test/programs
+      - name: "Prepare: build programs"
+        working-directory: api/programs
         run: cargo build --release --locked
 
-      - name: Download gear examples
+      - name: "Prepare: download Gear examples"
         working-directory: api/test/wasm
         run: |
           mkdir examples
@@ -80,20 +80,25 @@ jobs:
           wget -O ./examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
           tar -xvf examples.tar.gz
 
-      - name: Prepare
+      - name: "Prepare: run Gear node"
         run: |
           wget -O ./gear https://github.com/gear-tech/gear/releases/download/build/gear
           chmod +x gear
           nohup ./gear --dev --execution=wasm --tmp --unsafe-ws-external --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
 
-      - name: Run tests
+      - name: "Test: run"
         working-directory: api
         run: yarn test
 
-      - name: Build examples
+      - name: "Test: install examples dependencies"
         if: ${{ contains(github.event.*.labels.*.name, 'api') }}
         working-directory: api/examples
-        run: yarn build
+        run: npm install
+
+      - name: "Test: build examples"
+        if: ${{ contains(github.event.*.labels.*.name, 'api') }}
+        working-directory: api/examples
+        run: npm run build
 
   publish-to-npm:
     if: github.event_name == 'push'

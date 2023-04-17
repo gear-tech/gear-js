@@ -4,8 +4,8 @@ import { join } from 'path';
 import { readFileSync } from 'fs';
 
 import { CreateType, GearApi, StateMetadata, getProgramMetadata, getStateMetadata } from '../src';
+import { TARGET, TEST_META_META } from './config';
 import { checkInit, getAccount, sleep } from './utilsFunctions';
-import { TARGET } from './config';
 
 const api = new GearApi();
 let alice: KeyringPair;
@@ -19,7 +19,7 @@ let stateV1Meta: StateMetadata;
 const stateV2 = readFileSync(join(TARGET, 'test_meta_state_v2.meta.wasm'));
 let stateV2Meta: StateMetadata;
 
-const metaHex = `0x${readFileSync(join('test/programs/test-meta', 'meta.txt'), 'utf-8')}` as HexString;
+const metaHex = `0x${readFileSync(TEST_META_META, 'utf-8')}` as HexString;
 
 const meta = getProgramMetadata(metaHex);
 

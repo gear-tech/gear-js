@@ -6,8 +6,8 @@ import { join } from 'path';
 import { readFileSync } from 'fs';
 
 import { GearApi, getProgramMetadata } from '../src';
+import { TARGET, TEST_META_META } from './config';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
-import { TARGET } from './config';
 
 const api = new GearApi();
 let alice: KeyringPair;
@@ -16,7 +16,7 @@ let programId: HexString;
 let metaHash: HexString;
 
 const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
-const metaHex: HexString = `0x${readFileSync('test/programs/test-meta/meta.txt', 'utf-8')}`;
+const metaHex: HexString = `0x${readFileSync(TEST_META_META, 'utf-8')}`;
 
 beforeAll(async () => {
   await api.isReadyOrError;
