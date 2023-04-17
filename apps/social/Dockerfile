@@ -1,4 +1,4 @@
-FROM node:16-alpine AS builder
+FROM node:19-alpine AS builder
 
 ARG REACT_APP_NODE_ADDRESS  \
     REACT_APP_ROUTER_CONTRACT_ADDRESS \
