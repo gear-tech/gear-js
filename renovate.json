@@ -46,7 +46,7 @@
       "addLabels": ["utils"]
     },
     {
-      "matchPaths": ["package.json"],
+      "matchPaths": ["./package.json"],
       "groupName": "repo",
       "reviewers": ["osipov-mit"]
     }
