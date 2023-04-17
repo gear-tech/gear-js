@@ -101,7 +101,7 @@ const useProgramActions = () => {
 
           // timeout cuz wanna be sure that block data is ready
           setTimeout(() => {
-            addProgramName({ id: programId, name: name || programId }).then(
+            addProgramName({ id: programId, name: name || programId }, isDevChain).then(
               () =>
                 metaHex &&
                 uploadMetadata({
