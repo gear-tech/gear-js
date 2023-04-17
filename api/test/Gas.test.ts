@@ -5,7 +5,7 @@ import { readFileSync } from 'fs';
 import { u64 } from '@polkadot/types-codec';
 
 import { GearApi, getProgramMetadata } from '../src';
-import { PROGRAMS_DIR, TARGET } from './config';
+import { TARGET, TEST_GAS_META } from './config';
 import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep } from './utilsFunctions';
 import { GasInfo } from '../src/types';
 import { decodeAddress } from '../src/utils';
@@ -19,7 +19,7 @@ let messageId: HexString;
 let exitCode: number;
 
 const code = readFileSync(join(TARGET, 'test_gas.opt.wasm'));
-const meta = getProgramMetadata(`0x${readFileSync(join(PROGRAMS_DIR, 'test-gas/meta.txt'), 'utf-8')}`);
+const meta = getProgramMetadata(`0x${readFileSync(TEST_GAS_META, 'utf-8')}`);
 
 const gasLimits: { init?: u64; handle?: u64; reply?: u64 } = {
   init: undefined,

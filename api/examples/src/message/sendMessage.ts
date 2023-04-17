@@ -1,11 +1,11 @@
+import { GearApi, GearKeyring, MessageQueued, decodeAddress, getProgramMetadata } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 import { readFileSync } from 'fs';
 
-import { GearApi, GearKeyring, Hex, MessageEnqueued, getWasmMetadata } from '../../../lib';
 import { PATH_TO_META } from '../config';
-import { decodeAddress } from '../../../lib/utils';
 import { waitForReply } from './waitForReply';
 
-const [programId] = process.argv.slice(2) as [Hex];
+const [programId] = process.argv.slice(2) as [HexString];
 
 const main = async () => {
   const api = await GearApi.create();
@@ -14,13 +14,10 @@ const main = async () => {
 
   const metaFile = readFileSync(PATH_TO_META);
 
-  const meta = await getWasmMetadata(metaFile);
+  const meta = getProgramMetadata(`0x${metaFile}`);
 
   const payload = {
-    AddParticipant: {
-      name: 'alice',
-      age: 50,
-    },
+    One: 'String',
   };
 
   const gas = await api.program.calculateGas.handle(
@@ -35,7 +32,7 @@ const main = async () => {
   const tx = api.message.send({ destination: programId, payload, gasLimit: gas.min_limit, value: 20000 }, meta);
 
   const reply = waitForReply(api, programId);
-  let messageId: Hex;
+  let messageId: HexString;
   try {
     await new Promise((resolve, reject) => {
       tx.signAndSend(alice, ({ events, status }) => {
@@ -43,7 +40,7 @@ const main = async () => {
         if (status.isFinalized) resolve(status.asFinalized);
         events.forEach(({ event }) => {
           if (event.method === 'MessageEnqueued') {
-            messageId = (event as MessageEnqueued).data.id.toHex();
+            messageId = (event as MessageQueued).data.id.toHex();
           } else if (event.method === 'ExtrinsicFailed') {
             reject(api.getExtrinsicFailedError(event).docs.join('/n'));
           }

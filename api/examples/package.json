@@ -15,8 +15,8 @@
   "author": "",
   "license": "GPL-3.0",
   "dependencies": {
-    "@gear-js/api": "workspace:^",
-    "@polkadot/api": "9.10.1",
+    "@gear-js/api": "file:..",
+    "@polkadot/api": "10.3.4",
     "dotenv": "^16.0.0",
     "rxjs": "^7.5.5",
     "ts-node": "^10.4.0"

@@ -1,14 +1,15 @@
-import { GearApi, Hex, MessageEnqueued, ProgramChanged, UserMessageSent } from '../../../lib';
+import { GearApi, MessageQueued, ProgramChanged, UserMessageSent } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 import { UnsubscribePromise } from '@polkadot/api/types';
 
 export function waitForInit(api: GearApi, programId: string): Promise<UnsubscribePromise> {
-  let messageId: Hex;
+  let messageId: HexString;
   return new Promise((resolve, reject) => {
     const unsub = api.query.system.events((events) => {
       events.forEach(({ event }) => {
         switch (event.method) {
           case 'MessageEnqueued':
-            const meEvent = event as MessageEnqueued;
+            const meEvent = event as MessageQueued;
             if (meEvent.data.destination.eq(programId) && meEvent.data.entry.isInit) {
               messageId = meEvent.data.id.toHex();
             }

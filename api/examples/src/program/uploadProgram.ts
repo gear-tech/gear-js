@@ -1,8 +1,7 @@
+import { GearApi, GearKeyring, decodeAddress, getProgramMetadata } from '@gear-js/api';
 import { readFileSync } from 'fs';
 
-import { GearApi, GearKeyring, getWasmMetadata } from '../../../lib';
 import { PATH_TO_META, PATH_TO_OPT } from '../config';
-import { decodeAddress } from '../../../lib/utils';
 import { waitForInit } from './waitForInit';
 
 const main = async () => {
@@ -13,11 +12,9 @@ const main = async () => {
   const code = readFileSync(PATH_TO_OPT);
   const metaFile = readFileSync(PATH_TO_META);
 
-  const meta = await getWasmMetadata(metaFile);
+  const meta = getProgramMetadata(`0x${metaFile}`);
 
-  const initPayload = {
-    name_of_event: 'GEAR JS EXAMPLE',
-  };
+  const initPayload = [1, 2, 3];
 
   const gas = await api.program.calculateGas.initUpload(decodeAddress(alice.address), code, initPayload, 0, true, meta);
 
@@ -26,7 +23,7 @@ const main = async () => {
   console.log(`ProgramID: ${programId}\n`);
 
   waitForInit(api, programId)
-    .then(() => console.log('Program initialization was successful'))
+    .then(() => console.log('Program initialized successfully'))
     .catch((error) => {
       console.log(`Program initialization failed due to next error: ${error}\n`);
     });

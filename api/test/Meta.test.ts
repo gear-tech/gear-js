@@ -1,13 +1,12 @@
-import { PROGRAMS_DIR } from './config';
+import { TEST_META_META } from './config';
 import fs from 'fs';
-import { join } from 'path';
 
 import { ProgramMetadata, getProgramMetadata } from '../src';
 
 let meta: ProgramMetadata;
 
 beforeAll(() => {
-  const hex = fs.readFileSync(join(PROGRAMS_DIR, 'test-meta/meta.txt'), 'utf-8');
+  const hex = fs.readFileSync(TEST_META_META, 'utf-8');
   meta = getProgramMetadata(`0x${hex}`);
 });
 

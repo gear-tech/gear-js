@@ -1,4 +1,4 @@
-import { GearApi, UserMessageSent } from '../../../lib';
+import { GearApi, UserMessageSent } from '@gear-js/api';
 
 export function waitForReply(api: GearApi, programId: string): (messageId: string) => Promise<UserMessageSent> {
   const messages = {};
