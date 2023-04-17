@@ -92,13 +92,17 @@ jobs:
 
       - name: "Test: install examples dependencies"
         if: ${{ contains(github.event.*.labels.*.name, 'api') }}
-        working-directory: api/examples
-        run: npm install
+        working-directory: api
+        run: |
+          cd examples
+          npm install
 
       - name: "Test: build examples"
         if: ${{ contains(github.event.*.labels.*.name, 'api') }}
-        working-directory: api/examples
-        run: npm run build
+        working-directory: api
+        run: |
+          cd examples
+          npm run build
 
   publish-to-npm:
     if: github.event_name == 'push'
