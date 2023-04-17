@@ -3,7 +3,7 @@
   "labels": ["dependencies"],
   "branchConcurrentLimit": 5,
   "branchPrefix": "renovate-",
-  "ignorePaths": ["ansible/**", ".github/**", "idea/wasm-compiler"],
+  "ignorePaths": ["ansible/**", ".github/**", "idea/wasm-compiler/**", "**/Dockerfile"],
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
