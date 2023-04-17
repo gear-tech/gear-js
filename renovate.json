@@ -3,7 +3,7 @@
   "labels": ["dependencies"],
   "branchConcurrentLimit": 5,
   "branchPrefix": "renovate-",
-  "ignorePaths": ["ansible/**", ".github/**"],
+  "ignorePaths": ["ansible/**", ".github/**", "idea/wasm-compiler"],
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
@@ -44,6 +44,11 @@
       "groupName": "utils",
       "reviewers": ["nikitayutanov"],
       "addLabels": ["utils"]
+    },
+    {
+      "matchPaths": ["package.json"],
+      "groupName": "repo",
+      "reviewers": ["osipov-mit"]
     }
   ]
 }
