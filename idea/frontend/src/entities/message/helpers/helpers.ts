@@ -29,7 +29,7 @@ const getDecodedMessagePayload = (meta: ProgramMetadata, message: IMessage) => {
       break;
   }
 
-  return type ? meta.createType(type, payload) : payload;
+  return type !== undefined && type !== null ? meta.createType(type, payload) : payload;
 };
 
 export { getDecodedMessagePayload };
