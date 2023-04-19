@@ -32,7 +32,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.20.13, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
+"@babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
   version: 7.20.13
   resolution: "@babel/runtime@npm:7.20.13"
   dependencies:
@@ -68,7 +68,7 @@ __metadata:
     "@polkadot/extension-dapp": 0.45.5
     "@polkadot/extension-inject": 0.45.5
     "@polkadot/types": 10.3.4
-    "@polkadot/util": 10.4.1
+    "@polkadot/util": 11.1.3
     "@rollup/plugin-commonjs": ^22.0.0
     "@rollup/plugin-node-resolve": ^13.3.0
     "@types/react": ^18.0.37
@@ -77,7 +77,7 @@ __metadata:
     nanoid: ^4.0.2
     react: 18.2.0
     react-dom: 18.2.0
-    react-transition-group: ^4.4.5
+    react-transition-group: 4.4.5
     rollup: 2.75.6
     rollup-plugin-peer-deps-external: ^2.2.4
     rollup-plugin-terser: ^7.0.2
@@ -87,8 +87,8 @@ __metadata:
     "@gear-js/api": ^0.30.6
     "@polkadot/api": ^10.3.4
     "@polkadot/extension-dapp": ^0.44.8
-    react: ">=18.2.0"
-    react-dom: ">=18.2.0"
+    react: ">=17.0.2"
+    react-dom: ">=17.0.2"
     react-transition-group: ^4.4.2
   languageName: unknown
   linkType: soft
@@ -452,21 +452,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/util@npm:10.4.1":
-  version: 10.4.1
-  resolution: "@polkadot/util@npm:10.4.1"
-  dependencies:
-    "@babel/runtime": ^7.20.13
-    "@polkadot/x-bigint": 10.4.1
-    "@polkadot/x-global": 10.4.1
-    "@polkadot/x-textdecoder": 10.4.1
-    "@polkadot/x-textencoder": 10.4.1
-    "@types/bn.js": ^5.1.1
-    bn.js: ^5.2.1
-  checksum: 1e375e24c5f34a4a3dda21f7f42f7830bd7e6d0536c466e97016567944810be6e89ab511d5d2f2d6053c2276ae2ccfccb7f64a476507d285653806031f34a939
-  languageName: node
-  linkType: hard
-
 "@polkadot/util@npm:11.1.3, @polkadot/util@npm:^11.1.3":
   version: 11.1.3
   resolution: "@polkadot/util@npm:11.1.3"
@@ -560,16 +545,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/x-bigint@npm:10.4.1":
-  version: 10.4.1
-  resolution: "@polkadot/x-bigint@npm:10.4.1"
-  dependencies:
-    "@babel/runtime": ^7.20.13
-    "@polkadot/x-global": 10.4.1
-  checksum: 596935c0fad4dbc038f2ac053794a9572369327006ef69e66944b76d0a92c1d1e2ba74ba90dc43fb91af6e2718dc1349dd7590ae085ab6c1a3841ef697a47bdc
-  languageName: node
-  linkType: hard
-
 "@polkadot/x-bigint@npm:11.1.3, @polkadot/x-bigint@npm:^11.1.3":
   version: 11.1.3
   resolution: "@polkadot/x-bigint@npm:11.1.3"
@@ -588,15 +563,6 @@ __metadata:
     node-fetch: ^3.3.1
     tslib: ^2.5.0
   checksum: b0a5d28c6197b063fbb956d0a4aa7eabe89fc3be2ceeeaff8b85a657d957245180847127de2c332d1db3be7a3f0d59b0f0efdc71cb7bf50e526561e7b261f7c9
-  languageName: node
-  linkType: hard
-
-"@polkadot/x-global@npm:10.4.1":
-  version: 10.4.1
-  resolution: "@polkadot/x-global@npm:10.4.1"
-  dependencies:
-    "@babel/runtime": ^7.20.13
-  checksum: 5e59c4f96f0701e7c036482a0a96d8d365630a8880cf465ebc3b25eb785bf488dbc45f0613423c169ffcfec00065de1add8b9ab8eb3ed3aa2cfaa8102310a09e
   languageName: node
   linkType: hard
 
@@ -619,16 +585,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/x-textdecoder@npm:10.4.1":
-  version: 10.4.1
-  resolution: "@polkadot/x-textdecoder@npm:10.4.1"
-  dependencies:
-    "@babel/runtime": ^7.20.13
-    "@polkadot/x-global": 10.4.1
-  checksum: 4295d04add17706bfa723c4e27e355ec0d85e5ba13f5d33709743d33255d99c5cc0ba9fc25a8249387ab878266ba75521a9388d03dbf1678dcffa6cbc4080c17
-  languageName: node
-  linkType: hard
-
 "@polkadot/x-textdecoder@npm:11.1.3":
   version: 11.1.3
   resolution: "@polkadot/x-textdecoder@npm:11.1.3"
@@ -636,16 +592,6 @@ __metadata:
     "@polkadot/x-global": 11.1.3
     tslib: ^2.5.0
   checksum: 6c049b2d8728771199072123392452441a7107a658261c42e2ee7389d76fed5467195e072069265153a12b039deaaf17fd72189688244e0c8c288b114b50e07f
-  languageName: node
-  linkType: hard
-
-"@polkadot/x-textencoder@npm:10.4.1":
-  version: 10.4.1
-  resolution: "@polkadot/x-textencoder@npm:10.4.1"
-  dependencies:
-    "@babel/runtime": ^7.20.13
-    "@polkadot/x-global": 10.4.1
-  checksum: 343cef41910a2d764519454b745bf61b446afd006e414eafc6ea8270b366a918e72a1592c865eeea65471927bbd49a1db20f6a496d6ba32d3a870f886aa640a6
   languageName: node
   linkType: hard
 
@@ -2107,7 +2053,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-transition-group@npm:^4.4.5":
+"react-transition-group@npm:4.4.5":
   version: 4.4.5
   resolution: "react-transition-group@npm:4.4.5"
   dependencies:

@@ -21,12 +21,12 @@
     "prepare": "npm run build"
   },
   "peerDependencies": {
-    "@gear-js/api": "^0.30.6",
-    "@polkadot/api": "^10.3.4",
-    "@polkadot/extension-dapp": "^0.44.8",
-    "react": ">=17.0.2",
-    "react-dom": ">=17.0.2",
-    "react-transition-group": "^4.4.2"
+    "@gear-js/api": "0.30.6",
+    "@polkadot/api": "10.3.4",
+    "@polkadot/extension-dapp": "0.45.5",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-transition-group": "4.4.5"
   },
   "devDependencies": {
     "@gear-js/api": "0.30.6",
@@ -34,13 +34,13 @@
     "@polkadot/extension-dapp": "0.45.5",
     "@polkadot/extension-inject": "0.45.5",
     "@polkadot/types": "10.3.4",
-    "@polkadot/util": "10.4.1",
+    "@polkadot/util": "11.1.3",
     "@rollup/plugin-commonjs": "^22.0.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",
-    "@types/react-transition-group": "^4.4.5",
-    "nanoid": "^4.0.2",
+    "@types/react-transition-group": "4.4.5",
+    "nanoid": "4.0.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-transition-group": "4.4.5",
