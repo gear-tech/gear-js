@@ -2303,7 +2303,7 @@ __metadata:
     tslib: 2.4.0
     typescript: 4.9.5
   peerDependencies:
-    react: 18.2.0
+    react: ">=17.0.2"
     sass: 1.62.0
   languageName: unknown
   linkType: soft
