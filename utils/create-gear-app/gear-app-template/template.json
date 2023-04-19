@@ -7,9 +7,9 @@
     },
     "dependencies": {
       "@gear-js/api": "0.30.6",
-      "@gear-js/react-hooks": "^0.5.14",
-      "@gear-js/ui": "^0.5.17",
-      "@mantine/form": "5.10.5",
+      "@gear-js/react-hooks": "0.5.14",
+      "@gear-js/ui": "0.5.17",
+      "@mantine/form": "6.0.8",
       "@polkadot/api": "10.3.4",
       "@polkadot/extension-dapp": "0.45.5",
       "@polkadot/react-identicon": "3.1.4",
@@ -36,17 +36,17 @@
       "web-vitals": "3.3.1"
     },
     "devDependencies": {
-      "@typescript-eslint/eslint-plugin": "^5.25.0",
-      "@typescript-eslint/parser": "^5.25.0",
-      "eslint": "^8.16.0",
-      "eslint-config-airbnb": "^19.0.4",
-      "eslint-config-airbnb-typescript": "^17.0.0",
-      "eslint-config-prettier": "^8.5.0",
-      "eslint-plugin-import": "^2.26.0",
-      "eslint-plugin-jsx-a11y": "^6.5.1",
-      "eslint-plugin-react": "^7.30.0",
-      "eslint-plugin-react-hooks": "^4.5.0",
-      "react-app-rewired": "^2.2.1"
+      "@typescript-eslint/eslint-plugin": "5.25.0",
+      "@typescript-eslint/parser": "5.25.0",
+      "eslint": "8.16.0",
+      "eslint-config-airbnb": "19.0.4",
+      "eslint-config-airbnb-typescript": "17.0.0",
+      "eslint-config-prettier": "8.8.0",
+      "eslint-plugin-import": "2.27.5",
+      "eslint-plugin-jsx-a11y": "6.7.1",
+      "eslint-plugin-react": "7.32.2",
+      "eslint-plugin-react-hooks": "4.6.0",
+      "react-app-rewired": "2.2.1"
     },
     "browserslist": {
       "production": ["chrome >= 67", "edge >= 79", "firefox >= 68", "opera >= 54", "safari >= 14"],
