@@ -73,8 +73,8 @@ __metadata:
     "@rollup/plugin-node-resolve": ^13.3.0
     "@types/react": ^18.0.37
     "@types/react-dom": ^18.0.11
-    "@types/react-transition-group": ^4.4.5
-    nanoid: ^4.0.2
+    "@types/react-transition-group": 4.4.5
+    nanoid: 4.0.2
     react: 18.2.0
     react-dom: 18.2.0
     react-transition-group: 4.4.5
@@ -84,12 +84,12 @@ __metadata:
     rollup-plugin-typescript2: ^0.31.2
     typescript: 4.9.5
   peerDependencies:
-    "@gear-js/api": ^0.30.6
-    "@polkadot/api": ^10.3.4
-    "@polkadot/extension-dapp": ^0.44.8
-    react: ">=17.0.2"
-    react-dom: ">=17.0.2"
-    react-transition-group: ^4.4.2
+    "@gear-js/api": 0.30.6
+    "@polkadot/api": 10.3.4
+    "@polkadot/extension-dapp": 0.45.5
+    react: 18.2.0
+    react-dom: 18.2.0
+    react-transition-group: 4.4.5
   languageName: unknown
   linkType: soft
 
@@ -757,7 +757,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-transition-group@npm:^4.4.5":
+"@types/react-transition-group@npm:4.4.5":
   version: 4.4.5
   resolution: "@types/react-transition-group@npm:4.4.5"
   dependencies:
@@ -1762,7 +1762,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^4.0.2":
+"nanoid@npm:4.0.2":
   version: 4.0.2
   resolution: "nanoid@npm:4.0.2"
   bin:
