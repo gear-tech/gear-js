@@ -1,21 +1,6 @@
 import { BTreeMap, Option, Struct, Text, Vec, u32, u8 } from '@polkadot/types';
 import { HexString } from '@polkadot/util/types';
 
-export interface OldMetadata {
-  init_input?: string;
-  init_output?: string;
-  async_init_input?: string;
-  async_init_output?: string;
-  handle_input?: string;
-  handle_output?: string;
-  async_handle_input?: string;
-  async_handle_output?: string;
-  title?: string;
-  types?: HexString;
-  meta_state_input?: string;
-  meta_state_output?: string;
-}
-
 export interface TypesRepr extends Struct {
   input: Option<u32>;
   output: Option<u32>;

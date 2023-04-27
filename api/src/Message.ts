@@ -3,13 +3,12 @@ import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { ReplaySubject } from 'rxjs';
 
-import { IMessageSendOptions, IMessageSendReplyOptions, OldMetadata } from './types';
+import { IMessageSendOptions, IMessageSendReplyOptions } from './types';
 import { ProgramMetadata, isProgramMeta } from './metadata';
 import { SendMessageError, SendReplyError } from './errors';
-import { validateGasLimit, validateValue } from './utils';
+import { encodePayload, validateGasLimit, validateValue } from './utils';
 import { GearTransaction } from './Transaction';
 import { UserMessageSentData } from './events';
-import { encodePayload } from './utils/create-payload';
 
 export class GearMessage extends GearTransaction {
   /**
@@ -36,17 +35,8 @@ export class GearMessage extends GearTransaction {
    */
   send(
     args: IMessageSendOptions,
-    meta?: ProgramMetadata,
+    meta: ProgramMetadata,
     typeIndex?: number,
-  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
-
-  /**
-   * @deprecated This method will ber removed as soon as we move completely to the new metadata
-   */
-  send(
-    args: IMessageSendOptions,
-    meta?: OldMetadata,
-    messageType?: string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult>;
 
   send(
@@ -57,7 +47,7 @@ export class GearMessage extends GearTransaction {
 
   send(
     args: IMessageSendOptions,
-    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
+    metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrMessageType?: number | string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult>;
 
@@ -70,7 +60,7 @@ export class GearMessage extends GearTransaction {
    */
   send(
     { destination, value, gasLimit, ...args }: IMessageSendOptions,
-    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
+    metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrMessageType?: number | string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
     validateValue(value, this._api);
@@ -119,15 +109,6 @@ export class GearMessage extends GearTransaction {
     typeIndex?: number,
   ): SubmittableExtrinsic<'promise', ISubmittableResult>;
 
-  /**
-   * @deprecated This method will ber removed as soon as we move completely to the new metadata
-   */
-  sendReply(
-    args: IMessageSendReplyOptions,
-    meta?: OldMetadata,
-    messageType?: string,
-  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
-
   sendReply(
     args: IMessageSendReplyOptions,
     hexRegistry: HexString,
@@ -136,7 +117,7 @@ export class GearMessage extends GearTransaction {
 
   sendReply(
     args: IMessageSendReplyOptions,
-    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
+    metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrMessageType?: number | string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult>;
 
@@ -149,7 +130,7 @@ export class GearMessage extends GearTransaction {
    */
   sendReply(
     { value, gasLimit, replyToId, ...args }: IMessageSendReplyOptions,
-    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
+    metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrMessageType?: number | string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
     validateValue(value, this._api);

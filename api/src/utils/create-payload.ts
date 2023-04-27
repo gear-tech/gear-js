@@ -1,11 +1,11 @@
-import { hexToU8a, isHex, isString, isU8a } from '@polkadot/util';
+import { hexToU8a, isHex, isU8a } from '@polkadot/util';
 import { HexString } from '@polkadot/util/types';
 
-import { GearMetadata, ProgramMetadata, isOldMeta, isProgramMeta } from '../metadata';
-import { HumanProgramMetadataRepr, OldMetadata } from '../types';
-import { CreateType } from '../create-type/CreateType';
+import { GearMetadata, ProgramMetadata, isProgramMeta } from '../metadata';
+import { CreateType } from '../metadata';
+import { HumanProgramMetadataRepr } from '../types';
 
-export function getRegistry(metaOrHexRegistry: HexString | OldMetadata): HexString {
+export function getRegistry(metaOrHexRegistry: HexString): HexString {
   if (!metaOrHexRegistry) {
     return undefined;
   }
@@ -13,20 +13,11 @@ export function getRegistry(metaOrHexRegistry: HexString | OldMetadata): HexStri
   if (isHex(metaOrHexRegistry)) {
     return metaOrHexRegistry;
   }
-
-  if (isOldMeta(metaOrHexRegistry)) {
-    return metaOrHexRegistry.types;
-  }
 }
 
-export function encodePayload<
-  M extends OldMetadata | ProgramMetadata = OldMetadata | ProgramMetadata,
-  T = M extends ProgramMetadata
-    ? keyof Omit<HumanProgramMetadataRepr, 'reg' | 'state'>
-    : keyof Omit<OldMetadata, 'types' | 'title'>,
->(
+export function encodePayload<T = keyof Omit<HumanProgramMetadataRepr, 'reg' | 'state' | 'signal'>>(
   payload: unknown,
-  hexRegistryOrMeta: HexString | M,
+  hexRegistryOrMeta: HexString | ProgramMetadata,
   type: T,
   typeIndexOrMessageType?: number | string,
 ): Array<number> {
@@ -52,15 +43,7 @@ export function encodePayload<
         .toU8a(),
     );
   }
-  if (isOldMeta(hexRegistryOrMeta)) {
-    return Array.from(
-      CreateType.create(
-        isString(typeIndexOrMessageType) ? typeIndexOrMessageType : hexRegistryOrMeta[type as keyof OldMetadata],
-        payload,
-        hexRegistryOrMeta.types,
-      ).toU8a(),
-    );
-  }
+
   if (isHex(hexRegistryOrMeta)) {
     if (typeof typeIndexOrMessageType === 'number') {
       return Array.from(new GearMetadata(hexRegistryOrMeta).createType(typeIndexOrMessageType, payload).toU8a());
@@ -68,5 +51,10 @@ export function encodePayload<
       return Array.from(CreateType.create(typeIndexOrMessageType, payload, hexRegistryOrMeta).toU8a());
     }
   }
+
+  if (typeof typeIndexOrMessageType === 'string') {
+    return Array.from(CreateType.create(typeIndexOrMessageType, payload).toU8a());
+  }
+
   return Array.from(CreateType.create('Bytes', payload).toU8a());
 }

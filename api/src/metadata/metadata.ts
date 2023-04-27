@@ -222,6 +222,15 @@ export class GearMetadata {
     return this.registry.knownTypes.types;
   }
 
+  getTypeIndexByName(typeName: string): number | null {
+    for (const [index, { name }] of this.regTypes.entries()) {
+      if (name === typeName) {
+        return index;
+      }
+    }
+    return null;
+  }
+
   private isOption(typeName: string, typeDef: Si1TypeDef) {
     if (!typeDef.isVariant) {
       return false;

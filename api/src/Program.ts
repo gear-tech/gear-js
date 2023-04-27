@@ -3,7 +3,7 @@ import { H256 } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
 import { randomAsHex } from '@polkadot/util-crypto';
 
-import { IProgram, OldMetadata, ProgramMap } from './types/interfaces';
+import { IProgram, ProgramMap } from './types/interfaces';
 import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult } from './types';
 import {
   ProgramDoesNotExistError,
@@ -52,11 +52,6 @@ export class GearProgram extends GearTransaction {
   upload(args: IProgramUploadOptions, meta?: ProgramMetadata, typeIndex?: number): IProgramUploadResult;
 
   /**
-   * @deprecated This method will ber removed as soon as we move completely to the new metadata
-   */
-  upload(args: IProgramUploadOptions, meta?: OldMetadata, messageType?: string): IProgramUploadResult;
-
-  /**
    * ### Upload program with code using registry in hex format to encode payload
    * @param args Program parameters
    * @param hexRegistry Registry presented as Hex string
@@ -67,7 +62,7 @@ export class GearProgram extends GearTransaction {
 
   upload(
     args: IProgramUploadOptions,
-    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
+    metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrMessageType?: number | string,
   ): IProgramUploadResult;
 
@@ -78,7 +73,7 @@ export class GearProgram extends GearTransaction {
    */
   upload(
     args: IProgramUploadOptions,
-    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
+    metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrTypeName?: number | string,
   ): IProgramUploadResult {
     validateValue(args.value, this._api);
@@ -129,11 +124,6 @@ export class GearProgram extends GearTransaction {
   create(args: IProgramCreateOptions, meta?: ProgramMetadata, typeIndex?: number): IProgramCreateResult;
 
   /**
-   * @deprecated This method will be removed as soon as we move completely to the new metadata
-   */
-  create(args: IProgramCreateOptions, meta?: OldMetadata, messageType?: string): IProgramCreateResult;
-
-  /**
    * ### Create program from uploaded on chain code using program metadata to encode payload
    * @param args Program parameters
    * @param hexRegistry Registry presented as Hex string
@@ -144,7 +134,7 @@ export class GearProgram extends GearTransaction {
 
   create(
     args: IProgramCreateOptions,
-    metaOrHexRegistry?: HexString | ProgramMetadata | OldMetadata,
+    metaOrHexRegistry?: HexString | ProgramMetadata,
     typeIndexOrMessageType?: number | string,
   ): IProgramCreateResult;
 
@@ -155,7 +145,7 @@ export class GearProgram extends GearTransaction {
    */
   create(
     { codeId, initPayload, value, gasLimit, ...args }: IProgramCreateOptions,
-    metaOrHexRegistry?: HexString | ProgramMetadata | OldMetadata,
+    metaOrHexRegistry?: HexString | ProgramMetadata,
     typeIndexOrMessageType?: number | string,
   ): IProgramCreateResult {
     validateValue(value, this._api);

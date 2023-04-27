@@ -1,7 +1,7 @@
 import { HexString } from '@polkadot/util/types';
 
 import { HumanProgramMetadataRepr, ProgramMetadataRepr } from '../types';
-import { CreateType } from '../create-type';
+import { CreateType } from './create-type';
 import { GearMetadata } from './metadata';
 
 export class ProgramMetadata extends GearMetadata {
@@ -17,6 +17,6 @@ export function getProgramMetadata(hexMetadata: HexString | string): ProgramMeta
   if (!hexMetadata.startsWith('0x')) {
     hexMetadata = '0x' + hexMetadata;
   }
-  const metaRepr = CreateType.create<ProgramMetadataRepr>('ProgramMetadataRepr', hexMetadata, true).toJSON();
+  const metaRepr = CreateType.create<ProgramMetadataRepr>('ProgramMetadataRepr', hexMetadata).toJSON();
   return new ProgramMetadata(metaRepr);
 }
