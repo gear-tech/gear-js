@@ -1,8 +1,8 @@
-import { eventDataHandlers } from './get-payload-by-gear-event';
-import { getPayloadAndValue } from './get-update-message-data';
-import { constructQueryBuilder } from './query-builder';
-import { getExtrinsics } from './get-extrinsics';
 export * from './metahash';
 export * from './generate-uuid';
+export * from './get-provider-address';
+export * from './get-payload-by-gear-event';
+export * from './get-update-message-data';
+export * from './query-builder';
+export * from './get-extrinsics';
 
-export { eventDataHandlers, getPayloadAndValue, constructQueryBuilder, getExtrinsics };

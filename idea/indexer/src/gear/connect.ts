@@ -3,41 +3,69 @@ import { RMQServiceActions } from '@gear-js/common';
 
 import config from '../config';
 import { changeStatus } from '../healthcheck';
-import { GenesisCb, logger } from '../common';
+import { GenesisCb, getProviderAddress, logger } from '../common';
 import { GearIndexer } from './indexer';
 
-const MAX_RECONNECTIONS = 10;
+let addresses = config.gear.providerAddresses;
+const MAX_RECONNECTIONS = 10; //max count reconnection for each provider address
 let reconnectionsCounter = 0;
+let providerAdd = getProviderAddress(addresses);
+let connectionStatus;
 
 export async function connectToNode(indexer: GearIndexer, cb: GenesisCb) {
-  const api = new GearApi({ providerAddress: config.gear.wsProvider });
+  const api = new GearApi({ providerAddress: providerAdd });
+
   try {
     await api.isReadyOrError;
+    connectionStatus = true;
   } catch (error) {
-    logger.error(`Failed to connect to ${config.gear.wsProvider}`);
+    connectionStatus = false;
+    logger.error(`Failed to connect to ${providerAdd}`);
+    indexer.stop();
+    await retryConnectionToNode(api, indexer, cb);
   }
   await api.isReady;
   const genesis = api.genesisHash.toHex();
 
   api.on('disconnected', () => {
-    reconnect(api, genesis, indexer, cb);
+    connectionStatus = false;
+    indexer.stop();
+    genesis && cb(RMQServiceActions.DELETE, genesis);
+    retryConnectionToNode(api, indexer, cb);
   });
 
+
   reconnectionsCounter = 0;
-
-  indexer.run(api);
-  cb(RMQServiceActions.ADD, genesis);
-
+  connectionStatus = true;
+  connectionStatus && api && await indexer.run(api);
+  connectionStatus && cb(RMQServiceActions.ADD, genesis);
   logger.info(`⚙️ Connected to ${api.runtimeChain} with genesis ${genesis}`);
   changeStatus('gear');
 }
 
-async function reconnect(api: GearApi, genesis: string, indexer: GearIndexer, cb: GenesisCb) {
+async function retryConnectionToNode(api: GearApi, indexer: GearIndexer, cb: GenesisCb) {
+  if (addresses.length === 0) throw new Error('️ 📡 Unable to connect to node providers 🔴');
+
+  if(connectionStatus) return;
+
+  for(let i = 0; i <= addresses.length; i + 1){
+    await new Promise((resolve) => {
+      setTimeout(resolve, 2000);
+    });
+
+    await reconnect(api, indexer, cb);
+  }
+}
+
+async function reconnect(api: GearApi, indexer: GearIndexer, cb: GenesisCb) {
   changeStatus('gear');
 
-  cb(RMQServiceActions.DELETE, genesis);
+  if (connectionStatus) {
+    reconnectionsCounter = 0;
+    addresses = config.gear.providerAddresses;
+    return;
+  }
 
-  indexer.stop();
   try {
     await api.disconnect();
   } catch (err) {
@@ -46,14 +74,12 @@ async function reconnect(api: GearApi, genesis: string, indexer: GearIndexer, cb
   reconnectionsCounter++;
 
   if (reconnectionsCounter > MAX_RECONNECTIONS) {
-    throw new Error(`Unable to connect to ${config.gear.wsProvider}`);
+    addresses = addresses.filter((address) => address !== providerAdd);
+    providerAdd = getProviderAddress(addresses);
+    reconnectionsCounter = 0;
   }
 
-  logger.info('⚙️ 📡 Reconnecting to the gear node...');
-
-  await new Promise((resolve) => {
-    setTimeout(resolve, 2000);
-  });
+  logger.info('⚙️ 📡 Reconnecting to the gear node... 🟡');
 
   return connectToNode(indexer, cb);
 }

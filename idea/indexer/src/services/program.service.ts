@@ -9,9 +9,8 @@ import {
   ProgramStatus,
 } from '@gear-js/common';
 
-import { MetadataNotFound, ProgramNotFound } from '../common/errors';
-import { Meta, Program } from '../database/entities';
-import { PAGINATION_LIMIT, constructQueryBuilder } from '../common';
+import { MetadataNotFound, ProgramNotFound, PAGINATION_LIMIT, constructQueryBuilder } from '../common';
+import { Meta, Program } from '../database';
 
 export class ProgramService {
   private repo: Repository<Program>;

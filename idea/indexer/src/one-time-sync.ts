@@ -1,4 +1,5 @@
 import { waitReady } from '@polkadot/wasm-crypto';
+import { GearApi } from '@gear-js/api';
 
 import { changeStatus, runHealthcheckServer } from './healthcheck';
 import { AppDataSource } from './database';
@@ -8,7 +9,6 @@ import { MessageService } from './services';
 import { ProgramService } from './services';
 import { MetaService } from './services';
 import { GearHelper, GearIndexer } from './gear';
-import { GearApi } from '@gear-js/api';
 import config from './config';
 import { logger } from './common';
 

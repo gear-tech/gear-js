@@ -8,11 +8,11 @@ import {
 } from '@gear-js/common';
 import { DataSource, Repository } from 'typeorm';
 import { plainToClass, plainToInstance } from 'class-transformer';
+import { generateCodeHash, getStateMetadata } from '@gear-js/api';
 
-import { Code, State, StateToCode } from '../database/entities';
+import { Code, State, StateToCode } from '../database';
 import { ProgramNotFound, StateAlreadyExists, StateNotFound } from '../common';
 import { ProgramService } from './program.service';
-import { generateCodeHash, getStateMetadata } from '@gear-js/api';
 
 export class StateService {
   private repo: Repository<State>;

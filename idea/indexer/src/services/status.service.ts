@@ -1,6 +1,6 @@
 import { DataSource, Repository } from 'typeorm';
 
-import { Status } from '../database/entities';
+import { Status } from '../database';
 
 export class StatusService {
   private repo: Repository<Status>;

@@ -11,7 +11,7 @@ import { ProgramService } from './services';
 import { MetaService } from './services';
 import { StateService } from './services';
 import { GearIndexer, connectToNode } from './gear';
-import { GearHelper } from './gear/helper';
+import { GearHelper } from './gear';
 
 async function bootstrap() {
   runHealthcheckServer();

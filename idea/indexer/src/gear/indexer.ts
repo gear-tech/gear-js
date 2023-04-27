@@ -23,7 +23,7 @@ import {
   CodeChangedInput,
   MessagesDispatchedDataInput,
 } from '../common';
-import { Block, Code, Message, Meta, Program } from '../database/entities';
+import { Block, Code, Message, Meta, Program } from '../database';
 import { BlockService, CodeService, MessageService, MetaService, ProgramService, StatusService } from '../services';
 import { TempState } from './temp-state';
 import config from '../config';
