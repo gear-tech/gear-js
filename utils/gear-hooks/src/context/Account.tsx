@@ -88,7 +88,7 @@ function AccountProvider({ children }: ProviderProps) {
     let unsub: UnsubscribePromise | undefined;
 
     if (address) {
-      unsub = api?.gearEvents.subscribeToBalanceChange(address, updateBalance);
+      unsub = api?.gearEvents.subscribeToBalanceChanges(address, updateBalance);
     }
 
     return () => {

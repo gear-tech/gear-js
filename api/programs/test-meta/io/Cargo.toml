@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 gmeta = { git = "https://github.com/gear-tech/gear.git" }
-scale-info = { version = "2.3.0", default-features = false, features = ["derive"] }
-codec = { package = "parity-scale-codec", version = "3.2.1", default-features = false, features = ["derive", "full"] }
+scale-info = { version = "2.5.0", default-features = false, features = ["derive"] }
+codec = { package = "parity-scale-codec", version = "3.4.0", default-features = false, features = ["derive", "full"] }
 gstd = { git = "https://github.com/gear-tech/gear.git" }
 primitive-types = { version = "0.12.1", default-features = false }
