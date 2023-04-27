@@ -15,7 +15,9 @@ type SendMessageOptions = {
   onError?: () => void;
 };
 
-function useSendMessage(destination: HexString, metadata: ProgramMetadata | undefined) {
+const MAX_GAS_LIMIT = 250000000000;
+
+function useSendMessage(destination: HexString, metadata: ProgramMetadata | undefined, isMaxGasLimit = false) {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
   const alert = useContext(AlertContext);
@@ -59,9 +61,13 @@ function useSendMessage(destination: HexString, metadata: ProgramMetadata | unde
       const { address, decodedAddress, meta } = account;
       const { source } = meta;
 
-      api.program.calculateGas
-        .handle(decodedAddress, destination, payload, value, isOtherPanicsAllowed, metadata)
-        .then(getAutoGasLimit)
+      const getGasLimit = isMaxGasLimit
+        ? Promise.resolve(MAX_GAS_LIMIT)
+        : api.program.calculateGas
+            .handle(decodedAddress, destination, payload, value, isOtherPanicsAllowed, metadata)
+            .then(getAutoGasLimit);
+
+      getGasLimit
         .then((gasLimit) => ({ destination, gasLimit, payload, value }))
         .then((message) => api.message.send(message, metadata) && web3FromSource(source))
         .then(({ signer }) =>
