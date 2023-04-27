@@ -18,6 +18,7 @@ export default {
   },
   gear: {
     providerAddress: checkEnv('WS_PROVIDER'),
+    providerAddresses: checkEnv('WS_PROVIDERS').split(','),
     accountSeed: checkEnv('TEST_ACCOUNT_SEED'),
     rootAccountSeed: checkEnv('ROOT_ACCOUNT_SEED'),
     accountBalance: checkEnv('TEST_ACCOUNT_BALANCE'),
