@@ -44,7 +44,7 @@ export async function connectToNode(indexer: GearIndexer, cb: GenesisCb) {
 }
 
 async function retryConnectionToNode(api: GearApi, indexer: GearIndexer, cb: GenesisCb) {
-  if (addresses.length === 0) throw new Error('️ 📡 Unable to connect to node providers 🔴');
+  if (addresses.length === 0) throw new Error('️ 📡 Unable to connect node providers 🔴');
 
   if(connectionStatus) return;
 
