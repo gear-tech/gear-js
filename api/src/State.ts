@@ -2,6 +2,7 @@ import { Codec } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
 import { CreateType, ProgramMetadata, StateMetadata } from './metadata';
+import { Bytes } from '@polkadot/types';
 import { GearProgramStorage } from './Storage';
 
 interface ReadStateArgs {
@@ -23,21 +24,21 @@ export class GearProgramState extends GearProgramStorage {
       argument?: any;
       at?: HexString;
     },
-    meta?: StateMetadata,
+    meta: StateMetadata,
   ): Promise<Codec> {
     const fnTypes = meta?.functions[args.fn_name];
 
     const payload =
       fnTypes?.input !== undefined && fnTypes?.input !== null
         ? Array.from(meta.createType(fnTypes.input, args.argument).toU8a())
-        : args.argument;
+        : null;
 
     const state = await this._api.rpc['gear'].readStateUsingWasm(
       args.programId,
       args.fn_name,
-      CreateType.create('Bytes', args.wasm),
-      payload || null,
-      args.at || null,
+      CreateType.create<Bytes>('Bytes', args.wasm),
+      payload,
+      args.at,
     );
     return meta && fnTypes ? meta.createType(fnTypes.output, state) : state;
   }
