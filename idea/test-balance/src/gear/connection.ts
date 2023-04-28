@@ -4,24 +4,26 @@ import { changeStatus } from '../routes/healthcheck.router';
 import config from '../config/configuration';
 import { producer } from '../rabbitmq/producer';
 import { logger } from '../common/logger';
-import { getProviderAddress } from '../common/get-provider-address';
 
 export let api: GearApi;
 
 let addresses = config.gear.providerAddresses;
-const MAX_RECONNECTIONS = 10; //max reconnection for each provider address
+const MAX_RECONNECTIONS = 10; //max count reconnection for each provider address
 let reconnectionsCounter = 0;
-let providerAdd = getProviderAddress(addresses);
-let connectionStatus;
+let providerAdd = addresses[0];
+let connectionStatus = false;
 
 export async function connect() {
+  if (!providerAdd) {
+    throw new Error('Not found provider address to connect');
+  }
+
   api = new GearApi({ providerAddress: providerAdd });
 
   try {
     await api.isReadyOrError;
     connectionStatus = true;
   } catch (error) {
-    connectionStatus = false;
     logger.error(`Failed to connect to ${providerAdd}`);
     await retryConnectionToNode();
   }
@@ -32,6 +34,7 @@ export async function connect() {
     retryConnectionToNode();
   });
 
+  connectionStatus = true;
   logger.info(`Connected to ${await api.chain()} with genesis ${getGenesisHash()}`);
   changeStatus('ws');
 }
@@ -39,9 +42,7 @@ export async function connect() {
 async function retryConnectionToNode() {
   if (addresses.length === 0) throw new Error(`️ 📡 Unable to connect node providers 🔴`);
 
-  if (connectionStatus) {
-    return;
-  }
+  if (connectionStatus) return;
 
   for (let i = 0; i <= addresses.length; i + 1) {
     await new Promise((resolve) => {
@@ -68,7 +69,7 @@ async function reconnect(): Promise<void> {
   reconnectionsCounter++;
   if (reconnectionsCounter > MAX_RECONNECTIONS) {
     addresses = addresses.filter((address) => address !== providerAdd);
-    providerAdd = getProviderAddress(addresses);
+    providerAdd = addresses[0];
     reconnectionsCounter = 0;
   }
 
