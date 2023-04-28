@@ -8,9 +8,10 @@ import { CodeService } from './services';
 import { MessageService } from './services';
 import { ProgramService } from './services';
 import { MetaService } from './services';
-import { GearHelper, GearIndexer } from './gear';
+import { GearHelper, GearIndexer, providerAdd } from './gear';
 import config from './config';
 import { logger } from './common';
+
 
 async function bootstrap() {
   runHealthcheckServer();
@@ -30,11 +31,11 @@ async function bootstrap() {
   const messageService = new MessageService(dataSource, programService);
   const statusService = new StatusService(dataSource);
 
-  const api = new GearApi({ providerAddress: config.gear.wsProvider });
+  const api = new GearApi({ providerAddress: providerAdd });
   try {
     await api.isReadyOrError;
   } catch (error) {
-    logger.error(`Failed to connect to ${config.gear.wsProvider}`);
+    logger.error(`Failed to connect to ${providerAdd}`);
     throw error;
   }
   await api.isReady;

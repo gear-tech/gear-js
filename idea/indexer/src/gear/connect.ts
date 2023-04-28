@@ -9,7 +9,7 @@ import { GearIndexer } from './indexer';
 let addresses = config.gear.providerAddresses;
 const MAX_RECONNECTIONS = 10; //max count reconnection for each provider address
 let reconnectionsCounter = 0;
-let providerAdd = getProviderAddress(addresses);
+export let providerAdd = getProviderAddress(addresses);
 let connectionStatus;
 
 export async function connectToNode(indexer: GearIndexer, cb: GenesisCb) {
