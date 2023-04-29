@@ -114,4 +114,9 @@ describe('Gear Message', () => {
     const mailbox = await api.mailbox.read(decodeAddress(alice.address));
     expect(mailbox.filter((value) => value[0][1] === messageToClaim)).toHaveLength(0);
   });
+
+  test('Send message with specifying payload type instead of metadata', () => {
+    const tx = api.message.send({ destination: '0x', gasLimit: 1000, payload: 'PING' }, undefined, 'String');
+    expect(tx.args[1].toJSON()).toBe('0x1050494e47');
+  });
 });

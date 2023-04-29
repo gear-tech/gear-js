@@ -1,4 +1,5 @@
 import { hexToU8a, isHex, isU8a } from '@polkadot/util';
+import { Codec } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
 import { GearMetadata, ProgramMetadata, isProgramMeta } from '../metadata';
@@ -15,11 +16,11 @@ export function getRegistry(metaOrHexRegistry: HexString): HexString {
   }
 }
 
-export function encodePayload<T = keyof Omit<HumanProgramMetadataRepr, 'reg' | 'state' | 'signal'>>(
+export function encodePayload(
   payload: unknown,
   hexRegistryOrMeta: HexString | ProgramMetadata,
-  type: T,
-  typeIndexOrMessageType?: number | string,
+  type: keyof Omit<HumanProgramMetadataRepr, 'reg' | 'state' | 'signal'>,
+  typeIndexOrPayloadType?: number | string,
 ): Array<number> {
   if (payload === undefined) {
     return [];
@@ -33,28 +34,41 @@ export function encodePayload<T = keyof Omit<HumanProgramMetadataRepr, 'reg' | '
     return Array.from(payload);
   }
 
-  if (isProgramMeta(hexRegistryOrMeta)) {
-    return Array.from(
-      hexRegistryOrMeta
-        .createType(
-          hexRegistryOrMeta.types[type as keyof Omit<HumanProgramMetadataRepr, 'reg' | 'state' | 'signal'>].input,
-          payload,
-        )
-        .toU8a(),
-    );
-  }
+  const [reg, meta] = isProgramMeta(hexRegistryOrMeta)
+    ? [undefined, hexRegistryOrMeta]
+    : [hexRegistryOrMeta, undefined];
 
-  if (isHex(hexRegistryOrMeta)) {
-    if (typeof typeIndexOrMessageType === 'number') {
-      return Array.from(new GearMetadata(hexRegistryOrMeta).createType(typeIndexOrMessageType, payload).toU8a());
+  const [typeIndex, payloadType] =
+    typeof typeIndexOrPayloadType === 'number'
+      ? [typeIndexOrPayloadType, undefined]
+      : [undefined, typeIndexOrPayloadType];
+
+  let result: Codec;
+
+  if (meta) {
+    if (typeIndex || typeIndex === 0) {
+      result = meta.createType(typeIndex, payload);
+    } else if (payloadType) {
+      const index = meta.getTypeIndexByName(payloadType);
+      if (index === null) {
+        result = CreateType.create(payloadType, payload);
+      } else {
+        result = meta.createType(meta.getTypeIndexByName(payloadType), payload);
+      }
     } else {
-      return Array.from(CreateType.create(typeIndexOrMessageType, payload, hexRegistryOrMeta).toU8a());
+      result = meta.createType(meta.types[type].input, payload);
     }
+  } else if (reg) {
+    if (typeIndex || typeIndex === 0) {
+      result = new GearMetadata(reg).createType(typeIndex, payload);
+    } else {
+      result = CreateType.create(payloadType, payload, reg);
+    }
+  } else if (payloadType) {
+    result = CreateType.create(payloadType, payload);
+  } else {
+    result = CreateType.create('Bytes', payload);
   }
 
-  if (typeof typeIndexOrMessageType === 'string') {
-    return Array.from(CreateType.create(typeIndexOrMessageType, payload).toU8a());
-  }
-
-  return Array.from(CreateType.create('Bytes', payload).toU8a());
+  return Array.from(result.toU8a());
 }

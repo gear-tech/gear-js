@@ -1,10 +1,9 @@
 import { HexString } from '@polkadot/util/types';
-import { isHex } from '@polkadot/util';
 
 import { PayloadType, Value } from './types';
-import { ProgramMetadata, isProgramMeta } from './metadata';
 import { GasInfo } from './types';
 import { GearApi } from './GearApi';
+import { ProgramMetadata } from './metadata';
 import { encodePayload } from './utils/create-payload';
 
 export class GearGas {
@@ -58,11 +57,10 @@ export class GearGas {
     meta?: ProgramMetadata,
     typeIndexOrTypeName?: number | string,
   ): Promise<GasInfo> {
-    const _payload = encodePayload(payload, meta, isProgramMeta(meta) ? 'init' : 'init_input', typeIndexOrTypeName);
     return this._api.rpc['gear'].calculateInitUploadGas(
       sourceId,
-      isHex(code) ? code : this._api.createType('Bytes', Array.from(code)).toHex(),
-      _payload,
+      encodePayload(code, undefined, undefined, 'Bytes'),
+      encodePayload(payload, meta, 'init', typeIndexOrTypeName),
       value || 0,
       allowOtherPanics || true,
     );
@@ -116,7 +114,7 @@ export class GearGas {
     meta?: ProgramMetadata,
     typeIndexOrTypeName?: number | string,
   ): Promise<GasInfo> {
-    const _payload = encodePayload(payload, meta, isProgramMeta(meta) ? 'init' : 'init_input', typeIndexOrTypeName);
+    const _payload = encodePayload(payload, meta, 'init', typeIndexOrTypeName);
     return this._api.rpc['gear'].calculateInitCreateGas(
       sourceId,
       codeId,
@@ -165,7 +163,7 @@ export class GearGas {
     meta?: ProgramMetadata,
     typeIndexOrTypeName?: number | string,
   ): Promise<GasInfo> {
-    const _payload = encodePayload(payload, meta, isProgramMeta(meta) ? 'handle' : 'handle_input', typeIndexOrTypeName);
+    const _payload = encodePayload(payload, meta, 'handle', typeIndexOrTypeName);
     return this._api.rpc['gear'].calculateHandleGas(
       sourceId,
       destinationId,
@@ -212,12 +210,7 @@ export class GearGas {
     meta?: ProgramMetadata,
     typeIndexOrTypeName?: number,
   ): Promise<GasInfo> {
-    const _payload = encodePayload(
-      payload,
-      meta,
-      isProgramMeta(meta) ? 'reply' : 'async_handle_input',
-      typeIndexOrTypeName,
-    );
+    const _payload = encodePayload(payload, meta, 'reply', typeIndexOrTypeName);
     return this._api.rpc['gear'].calculateReplyGas(
       sourceId,
       messageId,

@@ -12,11 +12,11 @@ import {
   ProgramTerminatedError,
   SubmitProgramError,
 } from './errors';
-import { ProgramMetadata, isProgramMeta } from './metadata';
 import { generateCodeHash, generateProgramId, getIdsFromKeys, validateGasLimit, validateValue } from './utils';
 import { GearApi } from './GearApi';
 import { GearGas } from './Gas';
 import { GearTransaction } from './Transaction';
+import { ProgramMetadata } from './metadata';
 import { encodePayload } from './utils/create-payload';
 
 export class GearProgram extends GearTransaction {
@@ -60,17 +60,17 @@ export class GearProgram extends GearTransaction {
    */
   upload(args: IProgramUploadOptions, hexRegistry: HexString, typeIndex: number): IProgramUploadResult;
 
+  /** ### Upload program with code using type name to encode payload
+   * @param args
+   * @param metaOrHexRegistry (optional) Metadata or hex registry
+   * @param typeName type name (one of the default rust types if metadata or registry don't specified)
+   */
   upload(
     args: IProgramUploadOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
-    typeIndexOrMessageType?: number | string,
+    typeName?: string,
   ): IProgramUploadResult;
 
-  /** ### Upload program with code
-   * @param args
-   * @param metaOrHexRegistry Metadata
-   * @param typeIndexOrMessageType type index in registry or type name
-   */
   upload(
     args: IProgramUploadOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
@@ -82,12 +82,7 @@ export class GearProgram extends GearTransaction {
     const salt = args.salt || randomAsHex(20);
     const code = this._api.createType('Bytes', Array.from(args.code)) as Bytes;
 
-    const payload = encodePayload(
-      args.initPayload,
-      metaOrHexRegistry,
-      isProgramMeta(metaOrHexRegistry) ? 'init' : 'init_input',
-      typeIndexOrTypeName,
-    );
+    const payload = encodePayload(args.initPayload, metaOrHexRegistry, 'init', typeIndexOrTypeName);
     const codeId = generateCodeHash(code);
     const programId = generateProgramId(code, salt);
 
@@ -132,31 +127,26 @@ export class GearProgram extends GearTransaction {
    */
   create(args: IProgramCreateOptions, hexRegistry: HexString, typeIndex: number): IProgramCreateResult;
 
+  /** ## Create program using existed codeId
+   * @param args
+   * @param metaOrHexRegistry (optional) Metadata or hex registry in hex format
+   * @param type name type name (one of the default rust types if metadata or registry don't specified)
+   */
   create(
     args: IProgramCreateOptions,
     metaOrHexRegistry?: HexString | ProgramMetadata,
-    typeIndexOrMessageType?: number | string,
+    typeName?: number | string,
   ): IProgramCreateResult;
 
-  /** ## Create program using existed codeId
-   * @param args
-   * @param metaOrHexRegistry Metadata
-   * @param typeIndexOrMessageType type index in registry or type name
-   */
   create(
     { codeId, initPayload, value, gasLimit, ...args }: IProgramCreateOptions,
     metaOrHexRegistry?: HexString | ProgramMetadata,
-    typeIndexOrMessageType?: number | string,
+    typeIndexOrTypeName?: number | string,
   ): IProgramCreateResult {
     validateValue(value, this._api);
     validateGasLimit(gasLimit, this._api);
 
-    const payload = encodePayload(
-      initPayload,
-      metaOrHexRegistry,
-      isProgramMeta(metaOrHexRegistry) ? 'init' : 'init_input',
-      typeIndexOrMessageType,
-    );
+    const payload = encodePayload(initPayload, metaOrHexRegistry, 'init', typeIndexOrTypeName);
     const salt = args.salt || randomAsHex(20);
 
     const programId = generateProgramId(codeId, salt);

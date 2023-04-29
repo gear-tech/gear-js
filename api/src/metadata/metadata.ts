@@ -224,7 +224,7 @@ export class GearMetadata {
 
   getTypeIndexByName(typeName: string): number | null {
     for (const [index, { name }] of this.regTypes.entries()) {
-      if (name === typeName) {
+      if (name.toLowerCase() === typeName.toLowerCase()) {
         return index;
       }
     }

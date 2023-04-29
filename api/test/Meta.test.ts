@@ -24,6 +24,8 @@ describe('Get type definitions', () => {
 
   test('Get type structure 0', () => {
     expect(meta.getTypeDef(0)).toEqual(['U8']);
+    expect(meta.getTypeName(0)).toEqual('BTreeSet<U8>');
+    expect(meta.getTypeIndexByName('BTreeSet<U8>')).toEqual(0);
     expect(meta.getTypeDef(0, true)).toEqual({
       name: 'BTreeSet<U8>',
       kind: 'sequence',
@@ -33,6 +35,8 @@ describe('Get type definitions', () => {
 
   test('Get type structure 1', () => {
     expect(meta.getTypeDef(1)).toEqual('U8');
+    expect(meta.getTypeName(1)).toEqual('U8');
+    expect(meta.getTypeIndexByName('U8')).toEqual(1);
     expect(meta.getTypeDef(1, true)).toEqual({
       name: 'U8',
       kind: 'primitive',
@@ -580,6 +584,8 @@ describe('Get type definitions', () => {
       decimal: 'U128',
       hex: ['U8'],
     });
+    expect(meta.getTypeName(30)).toEqual('Id');
+    expect(meta.getTypeIndexByName('TestMetaIoId')).toEqual(30);
     expect(meta.getTypeDef(30, true)).toEqual({
       name: 'Id',
       kind: 'composite',
