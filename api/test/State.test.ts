@@ -112,7 +112,7 @@ describe('Read State', () => {
 
   test('Read state v1 last_wallet', async () => {
     expect(programId).toBeDefined();
-    const wasmAsHex = CreateType.create('Bytes', stateV1).toHex();
+    const wasmAsHex = CreateType.create('Bytes', Array.from(stateV1)).toHex();
     const state = await api.programState.readUsingWasm(
       { programId, fn_name: 'last_wallet', wasm: wasmAsHex },
       stateV1Meta,

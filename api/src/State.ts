@@ -33,13 +33,9 @@ export class GearProgramState extends GearProgramStorage {
         ? Array.from(meta.createType(fnTypes.input, args.argument).toU8a())
         : null;
 
-    const state = await this._api.rpc['gear'].readStateUsingWasm(
-      args.programId,
-      args.fn_name,
-      CreateType.create<Bytes>('Bytes', args.wasm),
-      payload,
-      args.at,
-    );
+    const code = typeof args.wasm === 'string' ? args.wasm : CreateType.create<Bytes>('Bytes', Array.from(args.wasm));
+
+    const state = await this._api.rpc['gear'].readStateUsingWasm(args.programId, args.fn_name, code, payload, args.at);
     return meta && fnTypes ? meta.createType(fnTypes.output, state) : state;
   }
 
