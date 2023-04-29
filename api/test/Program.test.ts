@@ -6,10 +6,10 @@ import { join } from 'path';
 import { readFileSync } from 'fs';
 
 import { GearApi, getProgramMetadata } from '../src';
-import { TARGET, TEST_META_META } from './config';
+import { TARGET, TEST_META_META, WS_ADDRESS } from './config';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 
-const api = new GearApi();
+const api = new GearApi({ providerAddress: WS_ADDRESS });
 let alice: KeyringPair;
 let codeId: HexString;
 let programId: HexString;

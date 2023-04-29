@@ -4,10 +4,10 @@ import { join } from 'path';
 import { readFileSync } from 'fs';
 
 import { CreateType, GearApi, StateMetadata, getProgramMetadata, getStateMetadata } from '../src';
-import { TARGET, TEST_META_META } from './config';
+import { TARGET, TEST_META_META, WS_ADDRESS } from './config';
 import { checkInit, getAccount, sleep } from './utilsFunctions';
 
-const api = new GearApi();
+const api = new GearApi({ providerAddress: WS_ADDRESS });
 let alice: KeyringPair;
 
 const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
