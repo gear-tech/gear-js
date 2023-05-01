@@ -1,3 +1,14 @@
+## 0.31.0
+
+_04/29/2023_
+
+https://github.com/gear-tech/gear-js/pull/1278
+
+### Changes
+
+- Remove ability to work with old metadata
+- Bump polkadot-js pkgs to `10.4.1` version
+
 ## 0.30.6
 
 _04/17/2023_

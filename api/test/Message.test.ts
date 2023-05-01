@@ -4,11 +4,11 @@ import { join } from 'path';
 import { readFileSync } from 'fs';
 
 import { GearApi, getProgramMetadata } from '../src';
-import { TARGET, TEST_META_META } from './config';
+import { TARGET, TEST_META_META, WS_ADDRESS } from './config';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { decodeAddress } from '../src/utils';
 
-const api = new GearApi();
+const api = new GearApi({ providerAddress: WS_ADDRESS });
 let alice: KeyringPair;
 let programId: HexString;
 let messageToClaim: HexString;
@@ -113,5 +113,10 @@ describe('Gear Message', () => {
     expect(transactionData.id).toBe(messageToClaim);
     const mailbox = await api.mailbox.read(decodeAddress(alice.address));
     expect(mailbox.filter((value) => value[0][1] === messageToClaim)).toHaveLength(0);
+  });
+
+  test('Send message with specifying payload type instead of metadata', () => {
+    const tx = api.message.send({ destination: '0x', gasLimit: 1000, payload: 'PING' }, undefined, 'String');
+    expect(tx.args[1].toJSON()).toBe('0x1050494e47');
   });
 });

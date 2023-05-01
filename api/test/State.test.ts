@@ -4,10 +4,10 @@ import { join } from 'path';
 import { readFileSync } from 'fs';
 
 import { CreateType, GearApi, StateMetadata, getProgramMetadata, getStateMetadata } from '../src';
-import { TARGET, TEST_META_META } from './config';
+import { TARGET, TEST_META_META, WS_ADDRESS } from './config';
 import { checkInit, getAccount, sleep } from './utilsFunctions';
 
-const api = new GearApi();
+const api = new GearApi({ providerAddress: WS_ADDRESS });
 let alice: KeyringPair;
 
 const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
@@ -112,7 +112,7 @@ describe('Read State', () => {
 
   test('Read state v1 last_wallet', async () => {
     expect(programId).toBeDefined();
-    const wasmAsHex = CreateType.create('Bytes', stateV1).toHex();
+    const wasmAsHex = CreateType.create('Bytes', Array.from(stateV1)).toHex();
     const state = await api.programState.readUsingWasm(
       { programId, fn_name: 'last_wallet', wasm: wasmAsHex },
       stateV1Meta,

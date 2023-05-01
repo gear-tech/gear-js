@@ -8,7 +8,7 @@ import { HexString } from '@polkadot/util/types';
 import { Observable } from 'rxjs';
 import { PromiseResult } from '@polkadot/api/types';
 
-import { CreateType } from './create-type';
+import { CreateType } from './metadata';
 import { GearApi } from './GearApi';
 import { GetBlockError } from './errors';
 
