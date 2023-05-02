@@ -67,10 +67,11 @@ async function handleIncomingMsg(method: string, params: any): Promise<any> {
   };
 
   try {
-    return methods[method]();
+    const response = await methods[method]();
+
+    return { result: response };
   } catch (error) {
-    console.log(error);
-    return;
+    return { error: error.name };
   }
 }
 
