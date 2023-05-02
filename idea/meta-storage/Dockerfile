@@ -1,0 +1,14 @@
+FROM node:18-alpine
+
+WORKDIR /src
+COPY package.json .
+COPY yarn.lock .
+COPY tsconfig.json .
+COPY .yarn .yarn
+COPY .yarnrc.yml .
+COPY ./idea/common idea/common
+COPY ./idea/meta-storage/ idea/meta-storage
+RUN yarn install
+RUN yarn build:common
+RUN yarn build:meta-storage
+CMD ["node", "idea/meta-storage/dist/main.js"]

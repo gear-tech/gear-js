@@ -20,6 +20,8 @@ enum API_METHODS {
   STATE_GET = 'state.get',
   TEST_BALANCE_GET = 'testBalance.get',
   TEST_BALANCE_AVAILABLE = 'testBalance.available',
+  META_GET = 'meta.get',
+  META_ADD = 'meta.add',
 }
 
 export { API_METHODS };

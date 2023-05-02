@@ -2,8 +2,9 @@
   "name": "gear-js",
   "private": true,
   "scripts": {
-    "build:backend": "yarn build:common && yarn workspaces foreach -ptR --from '{@gear-js/api-gateway,@gear-js/indexer,@gear-js/test-balance}' run build",
+    "build:backend": "yarn build:common && yarn workspaces foreach -ptR --from '{@gear-js/api-gateway,@gear-js/indexer,@gear-js/test-balance,@gear-js/meta-storage}' run build",
     "build:common": "yarn workspace @gear-js/common build",
+    "build:meta-storage": "yarn workspace @gear-js/meta-storage build",
     "build:api-gateway": "yarn workspace @gear-js/api-gateway build",
     "build:indexer": "yarn workspace @gear-js/indexer build",
     "build:ui": "yarn workspace @gear-js/ui build",

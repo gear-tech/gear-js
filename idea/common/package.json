@@ -12,7 +12,7 @@
     "@polkadot/api": "9.14.1",
     "winston": "3.7.2"
   },
-  "license": "ISC",
+  "license": "GPL-3.0",
   "devDependencies": {
     "typescript": "4.7.4"
   }

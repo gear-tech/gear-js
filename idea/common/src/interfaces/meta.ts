@@ -1,7 +1,7 @@
 import { ProgramMetadata } from '@gear-js/api';
 
 export interface IMeta {
-  id: number;
+  id: string;
   hex: string;
   types: ProgramMetadata | string,
 }
