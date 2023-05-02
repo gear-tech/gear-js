@@ -3,7 +3,7 @@ import { H256 } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
 import { randomAsHex } from '@polkadot/util-crypto';
 
-import { IProgram, OldMetadata, ProgramMap } from './types/interfaces';
+import { IProgram, ProgramMap } from './types/interfaces';
 import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult } from './types';
 import {
   ProgramDoesNotExistError,
@@ -12,11 +12,11 @@ import {
   ProgramTerminatedError,
   SubmitProgramError,
 } from './errors';
-import { ProgramMetadata, isProgramMeta } from './metadata';
 import { generateCodeHash, generateProgramId, getIdsFromKeys, validateGasLimit, validateValue } from './utils';
 import { GearApi } from './GearApi';
 import { GearGas } from './Gas';
 import { GearTransaction } from './Transaction';
+import { ProgramMetadata } from './metadata';
 import { encodePayload } from './utils/create-payload';
 
 export class GearProgram extends GearTransaction {
@@ -52,11 +52,6 @@ export class GearProgram extends GearTransaction {
   upload(args: IProgramUploadOptions, meta?: ProgramMetadata, typeIndex?: number): IProgramUploadResult;
 
   /**
-   * @deprecated This method will ber removed as soon as we move completely to the new metadata
-   */
-  upload(args: IProgramUploadOptions, meta?: OldMetadata, messageType?: string): IProgramUploadResult;
-
-  /**
    * ### Upload program with code using registry in hex format to encode payload
    * @param args Program parameters
    * @param hexRegistry Registry presented as Hex string
@@ -65,20 +60,20 @@ export class GearProgram extends GearTransaction {
    */
   upload(args: IProgramUploadOptions, hexRegistry: HexString, typeIndex: number): IProgramUploadResult;
 
-  upload(
-    args: IProgramUploadOptions,
-    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
-    typeIndexOrMessageType?: number | string,
-  ): IProgramUploadResult;
-
-  /** ### Upload program with code
+  /** ### Upload program with code using type name to encode payload
    * @param args
-   * @param metaOrHexRegistry Metadata
-   * @param typeIndexOrMessageType type index in registry or type name
+   * @param metaOrHexRegistry (optional) Metadata or hex registry
+   * @param typeName type name (one of the default rust types if metadata or registry don't specified)
    */
   upload(
     args: IProgramUploadOptions,
-    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
+    metaOrHexRegistry?: ProgramMetadata | HexString,
+    typeName?: string,
+  ): IProgramUploadResult;
+
+  upload(
+    args: IProgramUploadOptions,
+    metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrTypeName?: number | string,
   ): IProgramUploadResult {
     validateValue(args.value, this._api);
@@ -87,12 +82,7 @@ export class GearProgram extends GearTransaction {
     const salt = args.salt || randomAsHex(20);
     const code = this._api.createType('Bytes', Array.from(args.code)) as Bytes;
 
-    const payload = encodePayload(
-      args.initPayload,
-      metaOrHexRegistry,
-      isProgramMeta(metaOrHexRegistry) ? 'init' : 'init_input',
-      typeIndexOrTypeName,
-    );
+    const payload = encodePayload(args.initPayload, metaOrHexRegistry, 'init', typeIndexOrTypeName);
     const codeId = generateCodeHash(code);
     const programId = generateProgramId(code, salt);
 
@@ -129,11 +119,6 @@ export class GearProgram extends GearTransaction {
   create(args: IProgramCreateOptions, meta?: ProgramMetadata, typeIndex?: number): IProgramCreateResult;
 
   /**
-   * @deprecated This method will be removed as soon as we move completely to the new metadata
-   */
-  create(args: IProgramCreateOptions, meta?: OldMetadata, messageType?: string): IProgramCreateResult;
-
-  /**
    * ### Create program from uploaded on chain code using program metadata to encode payload
    * @param args Program parameters
    * @param hexRegistry Registry presented as Hex string
@@ -142,31 +127,26 @@ export class GearProgram extends GearTransaction {
    */
   create(args: IProgramCreateOptions, hexRegistry: HexString, typeIndex: number): IProgramCreateResult;
 
-  create(
-    args: IProgramCreateOptions,
-    metaOrHexRegistry?: HexString | ProgramMetadata | OldMetadata,
-    typeIndexOrMessageType?: number | string,
-  ): IProgramCreateResult;
-
   /** ## Create program using existed codeId
    * @param args
-   * @param metaOrHexRegistry Metadata
-   * @param typeIndexOrMessageType type index in registry or type name
+   * @param metaOrHexRegistry (optional) Metadata or hex registry in hex format
+   * @param type name type name (one of the default rust types if metadata or registry don't specified)
    */
   create(
+    args: IProgramCreateOptions,
+    metaOrHexRegistry?: HexString | ProgramMetadata,
+    typeName?: number | string,
+  ): IProgramCreateResult;
+
+  create(
     { codeId, initPayload, value, gasLimit, ...args }: IProgramCreateOptions,
-    metaOrHexRegistry?: HexString | ProgramMetadata | OldMetadata,
-    typeIndexOrMessageType?: number | string,
+    metaOrHexRegistry?: HexString | ProgramMetadata,
+    typeIndexOrTypeName?: number | string,
   ): IProgramCreateResult {
     validateValue(value, this._api);
     validateGasLimit(gasLimit, this._api);
 
-    const payload = encodePayload(
-      initPayload,
-      metaOrHexRegistry,
-      isProgramMeta(metaOrHexRegistry) ? 'init' : 'init_input',
-      typeIndexOrMessageType,
-    );
+    const payload = encodePayload(initPayload, metaOrHexRegistry, 'init', typeIndexOrTypeName);
     const salt = args.salt || randomAsHex(20);
 
     const programId = generateProgramId(codeId, salt);

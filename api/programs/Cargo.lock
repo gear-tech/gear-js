@@ -288,7 +288,7 @@ dependencies = [
 [[package]]
 name = "galloc"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#dda96e01adfb73b7d3d17006e397017f98b4baad"
+source = "git+https://github.com/gear-tech/gear.git#ca9827fe66e4291c83a84859bd14d3345767e696"
 dependencies = [
  "dlmalloc",
 ]
@@ -296,7 +296,7 @@ dependencies = [
 [[package]]
 name = "gcore"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#dda96e01adfb73b7d3d17006e397017f98b4baad"
+source = "git+https://github.com/gear-tech/gear.git#ca9827fe66e4291c83a84859bd14d3345767e696"
 dependencies = [
  "gear-core-errors",
  "gsys",
@@ -307,7 +307,7 @@ dependencies = [
 [[package]]
 name = "gear-core-errors"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#dda96e01adfb73b7d3d17006e397017f98b4baad"
+source = "git+https://github.com/gear-tech/gear.git#ca9827fe66e4291c83a84859bd14d3345767e696"
 dependencies = [
  "derive_more",
  "enum-iterator",
@@ -317,7 +317,7 @@ dependencies = [
 [[package]]
 name = "gear-wasm-builder"
 version = "0.1.2"
-source = "git+https://github.com/gear-tech/gear.git#dda96e01adfb73b7d3d17006e397017f98b4baad"
+source = "git+https://github.com/gear-tech/gear.git#ca9827fe66e4291c83a84859bd14d3345767e696"
 dependencies = [
  "anyhow",
  "cargo_metadata",
@@ -335,7 +335,7 @@ dependencies = [
 [[package]]
 name = "gear-wasm-instrument"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#dda96e01adfb73b7d3d17006e397017f98b4baad"
+source = "git+https://github.com/gear-tech/gear.git#ca9827fe66e4291c83a84859bd14d3345767e696"
 dependencies = [
  "enum-iterator",
  "wasm-instrument",
@@ -344,7 +344,7 @@ dependencies = [
 [[package]]
 name = "gmeta"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#dda96e01adfb73b7d3d17006e397017f98b4baad"
+source = "git+https://github.com/gear-tech/gear.git#ca9827fe66e4291c83a84859bd14d3345767e696"
 dependencies = [
  "blake2-rfc",
  "derive_more",
@@ -356,17 +356,17 @@ dependencies = [
 [[package]]
 name = "gmeta-codegen"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#dda96e01adfb73b7d3d17006e397017f98b4baad"
+source = "git+https://github.com/gear-tech/gear.git#ca9827fe66e4291c83a84859bd14d3345767e696"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.13",
+ "syn 2.0.15",
 ]
 
 [[package]]
 name = "gstd"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#dda96e01adfb73b7d3d17006e397017f98b4baad"
+source = "git+https://github.com/gear-tech/gear.git#ca9827fe66e4291c83a84859bd14d3345767e696"
 dependencies = [
  "bs58",
  "futures",
@@ -384,17 +384,17 @@ dependencies = [
 [[package]]
 name = "gstd-codegen"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#dda96e01adfb73b7d3d17006e397017f98b4baad"
+source = "git+https://github.com/gear-tech/gear.git#ca9827fe66e4291c83a84859bd14d3345767e696"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.13",
+ "syn 2.0.15",
 ]
 
 [[package]]
 name = "gsys"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#dda96e01adfb73b7d3d17006e397017f98b4baad"
+source = "git+https://github.com/gear-tech/gear.git#ca9827fe66e4291c83a84859bd14d3345767e696"
 
 [[package]]
 name = "hashbrown"
@@ -470,9 +470,9 @@ checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "libc"
-version = "0.2.140"
+version = "0.2.142"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "99227334921fae1a979cf0bfdfcc6b3e5ce376ef57e16fb6fb3ea2ed6095f80c"
+checksum = "6a987beff54b60ffa6d51982e1aa1146bc42f19bd26be28b0586f252fccf5317"
 
 [[package]]
 name = "libc_print"
@@ -649,9 +649,9 @@ checksum = "f91339c0467de62360649f8d3e185ca8de4224ff281f66000de5eb2a77a79041"
 
 [[package]]
 name = "scale-info"
-version = "2.5.0"
+version = "2.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0cfdffd972d76b22f3d7f81c8be34b2296afd3a25e0a547bd9abe340a4dbbe97"
+checksum = "dfdef77228a4c05dc94211441595746732131ad7f6530c6c18f045da7b7ab937"
 dependencies = [
  "cfg-if",
  "derive_more",
@@ -661,9 +661,9 @@ dependencies = [
 
 [[package]]
 name = "scale-info-derive"
-version = "2.5.0"
+version = "2.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "61fa974aea2d63dd18a4ec3a49d59af9f34178c73a4f56d2f18205628d00681e"
+checksum = "53012eae69e5aa5c14671942a5dd47de59d4cdcff8532a6dd0e081faf1119482"
 dependencies = [
  "proc-macro-crate",
  "proc-macro2",
@@ -682,29 +682,29 @@ dependencies = [
 
 [[package]]
 name = "serde"
-version = "1.0.159"
+version = "1.0.160"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3c04e8343c3daeec41f58990b9d77068df31209f2af111e059e9fe9646693065"
+checksum = "bb2f3770c8bce3bcda7e149193a069a0f4365bda1fa5cd88e03bca26afc1216c"
 dependencies = [
  "serde_derive",
 ]
 
 [[package]]
 name = "serde_derive"
-version = "1.0.159"
+version = "1.0.160"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4c614d17805b093df4b147b51339e7e44bf05ef59fba1e45d83500bcfb4d8585"
+checksum = "291a097c63d8497e00160b166a967a4a79c64f3facdd01cbd7502231688d77df"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.13",
+ "syn 2.0.15",
 ]
 
 [[package]]
 name = "serde_json"
-version = "1.0.95"
+version = "1.0.96"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d721eca97ac802aa7777b701877c8004d950fc142651367300d21c1cc0194744"
+checksum = "057d394a50403bcac12672b2b18fb387ab6d289d957dab67dd201875391e52f1"
 dependencies = [
  "itoa",
  "ryu",
@@ -745,9 +745,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "2.0.13"
+version = "2.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4c9da457c5285ac1f936ebd076af6dac17a61cfe7826f2076b4d015cf47bc8ec"
+checksum = "a34fcf3e8b60f57e6a14301a2e916d323af98b0ea63c599441eec8558660c822"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -852,7 +852,7 @@ checksum = "f9456a42c5b0d803c8cd86e73dd7cc9edd429499f37a3550d286d5e86720569f"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.13",
+ "syn 2.0.15",
 ]
 
 [[package]]

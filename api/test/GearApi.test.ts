@@ -1,7 +1,8 @@
 import { GearApi } from '../src';
+import { WS_ADDRESS } from './config';
 import { sleep } from './utilsFunctions';
 
-const api = new GearApi();
+const api = new GearApi({ providerAddress: WS_ADDRESS });
 
 beforeAll(async () => {
   try {
