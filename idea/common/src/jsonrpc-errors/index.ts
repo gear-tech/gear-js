@@ -94,6 +94,11 @@ export const JSONRPC_ERRORS = {
     code: -32400,
     message: 'State already exists',
   },
+  MetaAlreadyExists: {
+    name: 'MetaAlreadyExists',
+    code: -32400,
+    message: 'Meta already exists',
+  },
   Forbidden: {
     name: 'Forbidden',
     code: -32403,
