@@ -19,6 +19,8 @@ async function handleEventByApiMethod(
 
   if (method === API_METHODS.TEST_BALANCE_GET) {
     await producer.sendMsgToTestBalance(message);
+  } else if ([API_METHODS.META_GET, API_METHODS.META_ADD].includes(method)) {
+    await producer.sendMsgToMetaStorage(message);
   } else {
     await producer.sendMsgToIndexer(message);
   }
