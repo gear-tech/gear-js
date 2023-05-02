@@ -32,6 +32,12 @@ async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
     return getResponse(procedure, null, indexerChannels.has(params.genesis));
   }
 
+  if([API_METHODS.META_GET, API_METHODS.META_ADD].includes(method as API_METHODS)) {
+    const { error, result } = await jsonRpcHandler(method as API_METHODS, params);
+
+    return getResponse(procedure, error, result);
+  }
+
   if (!isValidGenesis(params.genesis, method)) {
     return getResponse(procedure, JSONRPC_ERRORS.UnknownNetwork.name);
   }
