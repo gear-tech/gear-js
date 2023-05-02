@@ -3,7 +3,7 @@ import { API_METHODS, RabbitMQExchanges, RabbitMQueues, RMQServices } from '@gea
 
 import config from '../config/configuration';
 
-import { metaService } from '../services/meta/transfer.service';
+import { metaService } from '../services/meta/meta.service';
 import { producer } from './producer';
 
 export let connectionAMQP: Connection;
@@ -26,6 +26,8 @@ export async function initAMQ(): Promise<void> {
 
   await mainChannelAMQP.bindQueue(RMQServices.META_STORAGE, directExchange, RMQServices.META_STORAGE);
   await directMessageConsumer(mainChannelAMQP, RMQServices.META_STORAGE);
+
+  console.log(`${new Date()} | 🐰 RabbitMQ connect successfully URL:${config.rabbitmq.url}`);
 
   connectionAMQP.on('close', (error) => {
     console.log(new Date(), error);
@@ -54,7 +56,13 @@ export async function directMessageConsumer(channel: Channel, queue: string): Pr
 
 async function handleIncomingMsg(method: string, params: any): Promise<any> {
   const methods = {
-    [API_METHODS.META_ADD]: () => metaService.create(params),
+    [API_METHODS.META_ADD]: () => {
+      if ('hash' in params) {
+        return metaService.createByIndexer(params);
+      } else {
+        return metaService.create(params);
+      }
+    },
     [API_METHODS.META_GET]: () => metaService.getByHash(params.hash),
   };
 

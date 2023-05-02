@@ -1,5 +1,4 @@
 export interface CreateMetaInput {
-  hash: string;
+  hash?: string;
   hex: string;
-  types: any;
 }
