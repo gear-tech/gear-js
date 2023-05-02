@@ -31,6 +31,18 @@ async function sendMsgToTestBalance({ genesis, params, correlationId, method }: 
   );
 }
 
+async function sendMsgToMetaStorage({ params, correlationId, method }: IRMQMessageParams): Promise<void> {
+  mainChannelAMQP.publish(
+    RabbitMQExchanges.DIRECT_EX,
+    RMQServices.META_STORAGE,
+    Buffer.from(JSON.stringify(params)),
+    {
+      correlationId,
+      headers: { method },
+    },
+  );
+}
+
 async function sendMsgTBGenesises(): Promise<void> {
   mainChannelAMQP.publish(RabbitMQExchanges.TOPIC_EX, `${RMQServices.TEST_BALANCE}.genesises`, Buffer.from(''));
 }
@@ -44,4 +56,5 @@ export const producer = {
   sendMsgTBGenesises,
   sendMsgToIndexer,
   sendMsgToTestBalance,
+  sendMsgToMetaStorage,
 };
