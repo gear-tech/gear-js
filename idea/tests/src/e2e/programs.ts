@@ -6,6 +6,7 @@ import request, { batchRequest } from './request';
 import { IPreparedProgram, IPreparedPrograms, IState, Passed } from '../interfaces';
 
 export const mapProgramStates = new Map<string, IState[]>();
+export const matProgramsMetaHash = new Map<string, string>();
 
 export async function getAllPrograms(genesis: string, expected: HexString[]): Promise<Passed> {
   const response = await request('program.all', { genesis });
@@ -89,12 +90,13 @@ export async function getProgramData(genesis: string, id: string): Promise<Passe
     'owner',
     'name',
     'timestamp',
-    'meta',
+    'metaHash',
     'status',
     'code',
     'messages',
     'expiration',
   );
+  matProgramsMetaHash.set(id, response.result.metaHash);
   return true;
 }
 
@@ -111,13 +113,13 @@ export async function uploadMeta(genesis: string, program: IPreparedProgram): Pr
 
   const data = {
     genesis,
-    id: program.id,
-    metaHex,
+    hex: metaHex,
   };
-  const response = await request('program.meta.add', data);
+
+  const response = await request('meta.add', data);
   expect(response).to.have.property('result');
-  expect(response.result).to.have.all.keys('types', 'hex', 'hash', 'id');
-  expect(response.result.hash).to.not.be.undefined;
+  expect(response.result).to.have.all.keys('types', 'hex', 'id');
+  expect(response.result.id).to.not.be.undefined;
   expect(response.result.hex).to.not.be.undefined;
   expect(response.result.types).to.not.be.undefined;
   return true;
@@ -149,15 +151,15 @@ export async function addProgramName(genesis: string, program: IPreparedProgram)
   return true;
 }
 
-export async function getMeta(genesis: string, id: string): Promise<Passed> {
+export async function getMeta(genesis: string, hash: string): Promise<Passed> {
   const data = {
     genesis,
-    id,
+    hash,
   };
-  const response = await request('program.meta.get', data);
+  const response = await request('meta.get', data);
   expect(response).to.have.property('result');
-  expect(response.result).to.have.all.keys('types', 'hex', 'hash', 'id');
-  expect(response.result.hash).to.not.be.undefined;
+  expect(response.result).to.have.all.keys('types', 'hex', 'id');
+  expect(response.result.id).to.not.be.undefined;
   expect(response.result.hex).to.not.be.undefined;
   expect(response.result.types).to.not.be.undefined;
   return true;

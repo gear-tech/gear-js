@@ -38,16 +38,12 @@ interface FindProgramParams extends IGenesis, Pick<IProgram, 'id'> {
   owner?: string;
 }
 
-interface AddMetaByCodeParams extends IGenesis, Pick<ICode, 'id'> {
-  metaHex: string;
+interface AddMetaParams extends IGenesis {
+  hex: string;
 }
 
 interface AddCodeNameParams extends IGenesis, Pick<ICode, 'id'> {
   name: string;
-}
-
-interface AddMetaByProgramParams extends IGenesis, Pick<IProgram, 'id'> {
-  metaHex: string;
 }
 
 interface AddProgramNameParams extends IGenesis, Pick<IProgram, 'id'> {
@@ -60,9 +56,9 @@ interface AddStateParams extends IGenesis {
   name: string;
 }
 
-interface GetMetaByProgramParams extends IGenesis, Pick<IProgram, 'id'> {}
-
-interface GetMetaByCodeParams extends IGenesis, Pick<ICode, 'id'> {}
+interface GetMetaParams extends IGenesis {
+  hash: string;
+}
 
 interface GetStateParams extends IGenesis, Pick<IState, 'id'> {}
 
@@ -89,10 +85,9 @@ interface IRpcRequest {
   params:
     | FindProgramParams
     | GetAllProgramsParams
-    | AddMetaByProgramParams
-    | GetMetaByProgramParams
     | GetMessagesParams
     | GetCodeParams
+    | GetMetaParams
     | GetAllCodeParams;
 }
 
@@ -104,8 +99,6 @@ export {
   GetAllProgramsParams,
   GetAllUserProgramsParams,
   FindProgramParams,
-  AddMetaByProgramParams,
-  GetMetaByProgramParams,
   GetTestBalanceParams,
   SearchParam,
   IRpcRequest,
@@ -115,8 +108,8 @@ export {
   GetStateParams,
   GetAllStateParams,
   GetStateByCodeParams,
-  GetMetaByCodeParams,
-  AddMetaByCodeParams,
+  GetMetaParams,
+  AddMetaParams,
   AddCodeNameParams,
   AddProgramNameParams,
 };

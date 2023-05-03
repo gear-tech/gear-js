@@ -17,7 +17,7 @@ import {
   getState,
   getStates,
   getStatesByFuncName,
-  mapProgramStates,
+  mapProgramStates, matProgramsMetaHash,
   uploadMeta,
 } from './programs';
 import { processPrepare } from '../prepare';
@@ -110,7 +110,7 @@ describe('API methods', () => {
   });
 
   describe('Metadata', () => {
-    test('program.meta.add request', async () => {
+    test('meta.add request', async () => {
       for (const id of Object.keys(prepared.programs)) {
         const program = prepared.programs[id] as IPreparedProgram;
 
@@ -120,11 +120,11 @@ describe('API methods', () => {
       }
     });
 
-    test('program.meta.get request', async () => {
+    test('meta.get request', async () => {
       for (const id of Object.keys(prepared.programs)) {
-        const program = prepared.programs[id] as IPreparedProgram;
-        if (program.spec['pathToMetaTxt']) {
-          expect(await getMeta(genesis, id)).toBeTruthy();
+        const programMetaHash = matProgramsMetaHash.get(id);
+        if (programMetaHash) {
+          expect(await getMeta(genesis, programMetaHash)).toBeTruthy();
         }
       }
     });
