@@ -1,5 +1,5 @@
 import {
-  AddMetaByProgramParams,
+  AddMetaParams,
   API_METHODS,
   FindMessageParams,
   FindProgramParams,
@@ -8,19 +8,19 @@ import {
   GetCodeParams,
   GetIncomingMessagesParams,
   GetMessagesParams,
-  GetMetaByProgramParams,
+  GetMetaParams,
   GetOutgoingMessagesParams,
   GetTestBalanceParams,
 } from '@gear-js/common';
 
 export type Params =
-  | AddMetaByProgramParams
+  | AddMetaParams
   | FindMessageParams
   | FindProgramParams
   | GetAllProgramsParams
   | GetIncomingMessagesParams
   | GetMessagesParams
-  | GetMetaByProgramParams
+  | GetMetaParams
   | GetOutgoingMessagesParams
   | GetTestBalanceParams
   | GetAllUserProgramsParams
