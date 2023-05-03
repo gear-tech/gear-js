@@ -40,7 +40,7 @@ describe('Gear Message', () => {
     const status = checkInit(api, programId);
     const transactionData = await sendTransaction(api.program, alice, 'MessageQueued');
     expect(transactionData.destination).toBe(programId);
-    expect(await status()).toBe('success');
+    expect(await status).toBe('success');
   });
 
   test('send messages', async () => {

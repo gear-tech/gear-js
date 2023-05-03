@@ -46,13 +46,18 @@ describe('New Program', () => {
     programId = program.programId;
     codeId = program.codeId;
 
-    const status = checkInit(api, program.programId);
+    const programChangedStatuses: string[] = [];
+
+    const status = checkInit(api, program.programId, (st) => {
+      programChangedStatuses.push(st);
+    });
+
     const waitForReply = api.message.listenToReplies(programId);
 
     const transactionData = await sendTransaction(program.extrinsic, alice, 'MessageQueued');
 
     expect(transactionData.destination).toBe(program.programId);
-    expect(await status()).toBe('success');
+    expect(await status).toBe('success');
 
     const reply = await waitForReply(transactionData.id);
     expect(metadata.createType(metadata.types.init.output!, reply.message.payload).toJSON()).toMatchObject({ One: 1 });
@@ -75,13 +80,21 @@ describe('New Program', () => {
     expect(programId).toBeDefined();
     expect(salt).toBeDefined();
 
-    const status = checkInit(api, programId);
+    const programChangedStatuses: string[] = [];
+
+    const status = checkInit(api, programId, (st) => {
+      programChangedStatuses.push(st);
+    });
+
     const waitForReply = api.message.listenToReplies(programId);
 
     const transactionData = await sendTransaction(api.program, alice, 'MessageQueued');
 
     expect(transactionData.destination).toBe(programId);
-    expect(await status()).toBe('success');
+    expect(await status).toBe('success');
+
+    expect(programChangedStatuses).toContain('ProgramSet');
+    expect(programChangedStatuses).toContain('Active');
 
     const reply = await waitForReply(transactionData.id);
     expect(metadata.createType(metadata.types.init.output!, reply.message.payload).toJSON()).toMatchObject({ One: 1 });
