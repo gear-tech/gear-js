@@ -4,14 +4,13 @@ import {
   FindProgramParams,
   GetAllProgramsParams,
   GetAllProgramsResult,
-  GetMetaByProgramParams,
   IProgram,
   ProgramStatus,
 } from '@gear-js/common';
 
-import { MetadataNotFound, ProgramNotFound } from '../common/errors';
-import { Meta, Program } from '../database/entities';
-import { PAGINATION_LIMIT, constructQueryBuilder } from '../common';
+import { ProgramNotFound } from '../common/errors';
+import { Program } from '../database/entities';
+import { constructQueryBuilder, PAGINATION_LIMIT } from '../common';
 
 export class ProgramService {
   private repo: Repository<Program>;
@@ -72,16 +71,6 @@ export class ProgramService {
       programs,
       count,
     };
-  }
-
-  public async getMeta(params: GetMetaByProgramParams): Promise<Meta> {
-    const program = await this.get(params);
-
-    if (!program.meta?.hex) {
-      throw new MetadataNotFound();
-    }
-
-    return program.meta;
   }
 
   public async save(programs: Program[]): Promise<Program[]> {

@@ -6,7 +6,6 @@ import { BlockService, StatusService } from './services';
 import { CodeService } from './services';
 import { MessageService } from './services';
 import { ProgramService } from './services';
-import { MetaService } from './services';
 import { GearHelper, GearIndexer } from './gear';
 import { GearApi } from '@gear-js/api';
 import config from './config';
@@ -26,7 +25,6 @@ async function bootstrap() {
   const blockService = new BlockService(dataSource);
   const codeService = new CodeService(dataSource);
   const programService = new ProgramService(dataSource);
-  const metaService = new MetaService(dataSource, programService, codeService, helper);
   const messageService = new MessageService(dataSource, programService);
   const statusService = new StatusService(dataSource);
 
@@ -67,7 +65,6 @@ async function bootstrap() {
     messageService,
     codeService,
     blockService,
-    metaService,
     statusService,
     true,
   );

@@ -45,7 +45,10 @@ export async function directMessageConsumer(channel: Channel, queue: string): Pr
         const correlationId = message.properties.correlationId;
 
         const res = await handleIncomingMsg(method, payload);
-        producer.sendMessage(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.REPLIES, correlationId, res);
+
+        if (correlationId) {
+          producer.sendMessage(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.REPLIES, correlationId, res);
+        }
       },
       { noAck: true },
     );

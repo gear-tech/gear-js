@@ -14,12 +14,8 @@ export const metaService = {
 
     if (metaDB) return;
 
-    const metadata = getProgramMetadata(createMetaInput.hex as HexString);
-
     const metaTypeDB = plainToClass(Meta, {
-      ...createMetaInput,
       id: createMetaInput.hash,
-      types: metadata.types,
     });
 
     return metaRepository.save(metaTypeDB);
@@ -30,7 +26,7 @@ export const metaService = {
 
     const meta = await metaRepository.get(hash);
 
-    if (meta) throw new MetaAlreadyExists();
+    if (meta && meta.hex !== null) throw new MetaAlreadyExists();
 
     const metadata = getProgramMetadata(createMetaInput.hex as HexString);
 

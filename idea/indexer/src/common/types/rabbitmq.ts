@@ -12,6 +12,8 @@ import {
 } from '@gear-js/common';
 import { ExecutionError } from '../errors';
 
+export type MessageOptions = { correlationId?: string, method?: string };
+
 export type RabbitmqMessageParams =
   | FindProgramParams
   | GetAllProgramsParams

@@ -1,8 +1,6 @@
 import { Channel, connect, Connection } from 'amqplib';
 import {
   AddCodeNameParams,
-  AddMetaByCodeParams,
-  AddMetaByProgramParams,
   AddProgramNameParams,
   AddStateParams,
   API_METHODS,
@@ -13,8 +11,6 @@ import {
   GetAllStateParams,
   GetCodeParams,
   GetMessagesParams,
-  GetMetaByCodeParams,
-  GetMetaByProgramParams,
   GetStateByCodeParams,
   GetStateParams,
   RabbitMQExchanges,
@@ -24,8 +20,10 @@ import {
 } from '@gear-js/common';
 
 import { FormResponse, logger, RabbitmqMessageParams } from '../common';
-import { BlockService, CodeService, MessageService, MetaService, ProgramService, StateService } from '../services';
+import { BlockService, CodeService, MessageService, ProgramService, StateService } from '../services';
 import config from '../config';
+
+let mainChannel: Channel;
 
 export class RMQService {
   private mainChannel: Channel;
@@ -36,7 +34,6 @@ export class RMQService {
     private blockService: BlockService,
     private codeService: CodeService,
     private messageService: MessageService,
-    private metaService: MetaService,
     private programService: ProgramService,
     private stateService: StateService,
   ) {}
@@ -46,6 +43,7 @@ export class RMQService {
 
     try {
       this.mainChannel = await this.connection.createChannel();
+      mainChannel = this.mainChannel;
       this.topicChannel = await this.connection.createChannel();
 
       const directExchange = RabbitMQExchanges.DIRECT_EX;
@@ -100,6 +98,11 @@ export class RMQService {
     this.mainChannel.publish(exchange, queue, Buffer.from(messageBuff), { correlationId });
   }
 
+  static sendMsgToMetaStorage(exchange: RabbitMQExchanges, queue: RabbitMQueues, params: any, method?: string): void {
+    const messageBuff = JSON.stringify(params);
+    mainChannel.publish(exchange, queue, Buffer.from(messageBuff), { headers: { method } });
+  }
+
   private async directMsgConsumer(queue: string): Promise<void> {
     try {
       await this.mainChannel.consume(
@@ -150,16 +153,12 @@ export class RMQService {
       [API_METHODS.CODE_ALL]: () => this.codeService.getMany(params as GetAllCodeParams),
       [API_METHODS.CODE_DATA]: () => this.codeService.get(params as GetCodeParams),
       [API_METHODS.CODE_NAME_ADD]: () => this.codeService.setName(params as AddCodeNameParams),
-      [API_METHODS.CODE_META_ADD]: () => this.metaService.addMetaByCode(params as AddMetaByCodeParams),
-      [API_METHODS.CODE_META_GET]: () => this.codeService.getMeta(params as GetMetaByCodeParams),
       [API_METHODS.CODE_STATE_GET]: () => this.stateService.getByCodeIdAndStateId(params as GetStateByCodeParams),
       [API_METHODS.MESSAGE_ALL]: () => this.messageService.getMany(params as GetMessagesParams),
       [API_METHODS.MESSAGE_DATA]: () => this.messageService.get(params as FindMessageParams),
       [API_METHODS.PROGRAM_ALL]: () => this.programService.getAllPrograms(params as GetAllProgramsParams),
       [API_METHODS.PROGRAM_DATA]: () => this.programService.getWithMessages(params as FindProgramParams),
       [API_METHODS.PROGRAM_NAME_ADD]: () => this.programService.setName(params as AddProgramNameParams),
-      [API_METHODS.PROGRAM_META_ADD]: () => this.metaService.addMetaByProgram(params as AddMetaByProgramParams),
-      [API_METHODS.PROGRAM_META_GET]: () => this.programService.getMeta(params as GetMetaByProgramParams),
       [API_METHODS.PROGRAM_STATE_ALL]: () => this.stateService.listByProgramId(params as GetAllStateParams),
       [API_METHODS.PROGRAM_STATE_ADD]: () => this.stateService.create(params as AddStateParams),
       [API_METHODS.PROGRAM_STATE_GET]: () => this.stateService.get(params as GetStateParams),

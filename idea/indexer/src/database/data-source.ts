@@ -1,9 +1,9 @@
 import { DataSource } from 'typeorm';
 
-import { Block, Code, Message, Meta, Program, State, StateToCode, Status } from './entities';
+import { Block, Code, Message, Program, State, StateToCode, Status } from './entities';
 import config from '../config';
 
-const entities = [Meta, Message, Program, Code, Block, State, StateToCode, Status];
+const entities = [Message, Program, Code, Block, State, StateToCode, Status];
 
 export const AppDataSource = new DataSource({
   type: 'postgres',

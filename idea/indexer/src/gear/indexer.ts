@@ -1,32 +1,32 @@
-import { CodeMetadata, ProgramMap, CodeChanged, GearApi, generateCodeHash, MessageQueued } from '@gear-js/api';
+import { CodeChanged, CodeMetadata, GearApi, generateCodeHash, MessageQueued, ProgramMap } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { filterEvents } from '@polkadot/api/util';
-import { GenericEventData } from '@polkadot/types';
+import { GenericEventData, Option } from '@polkadot/types';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { SignedBlockExtended } from '@polkadot/api-derive/types';
-import { EventNames, CodeStatus } from '@gear-js/common';
+import { API_METHODS, CodeStatus, EventNames, RabbitMQExchanges, RMQServices } from '@gear-js/common';
 import { plainToInstance } from 'class-transformer';
 import { VoidFn } from '@polkadot/api/types';
-import { Option } from '@polkadot/types';
 
 import {
+  CodeChangedInput,
+  eventDataHandlers,
   getExtrinsics,
   getMetahash,
   getPayloadAndValue,
-  eventDataHandlers,
-  MessageEntryPoint,
-  MessageType,
   logger,
-  UserMessageSentInput,
-  UserMessageReadInput,
-  ProgramChangedInput,
-  CodeChangedInput,
+  MessageEntryPoint,
   MessagesDispatchedDataInput,
+  MessageType,
+  ProgramChangedInput,
+  UserMessageReadInput,
+  UserMessageSentInput,
 } from '../common';
-import { Block, Code, Message, Meta, Program } from '../database/entities';
-import { BlockService, CodeService, MessageService, MetaService, ProgramService, StatusService } from '../services';
+import { Block, Code, Message, Program } from '../database/entities';
+import { BlockService, CodeService, MessageService, ProgramService, StatusService } from '../services';
 import { TempState } from './temp-state';
 import config from '../config';
+import { RMQService } from '../rabbitmq';
 
 export class GearIndexer {
   public api: GearApi;
@@ -42,11 +42,10 @@ export class GearIndexer {
     messageService: MessageService,
     codeService: CodeService,
     blockService: BlockService,
-    metaService: MetaService,
     private statusService?: StatusService,
     private oneTimeSync: boolean = false,
   ) {
-    this.tempState = new TempState(programService, messageService, codeService, blockService, metaService);
+    this.tempState = new TempState(programService, messageService, codeService, blockService);
   }
 
   public async run(api: GearApi, onlyBlocks?: number[]) {
@@ -237,8 +236,15 @@ export class GearIndexer {
       const codeId = id.toHex();
       const metahash = await getMetahash(this.api.code, codeId);
 
+      RMQService.sendMsgToMetaStorage(
+        RabbitMQExchanges.DIRECT_EX,
+        RMQServices.META_STORAGE as any,
+        { hash: metahash },
+        API_METHODS.META_ADD
+      );
+
+
       const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
-      const meta = metahash ? await this.tempState.getMeta(metahash) : null;
 
       this.tempState.addCode(
         plainToInstance(Code, {
@@ -250,7 +256,7 @@ export class GearIndexer {
           blockHash: block.block.header.hash.toHex(),
           expiration: change.isActive ? change.asActive.expiration.toString() : null,
           uploadedBy: tx.signer.inner.toHex(),
-          meta,
+          metaHash: metahash,
         }),
       );
     }
@@ -286,12 +292,18 @@ export class GearIndexer {
       const codeId = tx.method.method === 'uploadProgram' ? generateCodeHash(tx.args[0].toHex()) : tx.args[0].toHex();
       const code = await this.getCode(codeId, blockHash, programId);
 
-      let meta: Meta;
-      if (code?.meta) {
-        meta = code.meta;
+      let metaHash: string;
+      if (code.metaHash !== null) {
+        metaHash = code.metaHash;
       } else {
-        const metahash = await getMetahash(this.api.program, programId);
-        meta = metahash ? await this.tempState.getMeta(metahash) : null;
+        metaHash = await getMetahash(this.api.program, programId);
+
+        RMQService.sendMsgToMetaStorage(
+          RabbitMQExchanges.DIRECT_EX,
+          RMQServices.META_STORAGE as any,
+          { hash: metaHash },
+          API_METHODS.META_ADD
+        );
       }
 
       this.tempState.addProgram(
@@ -303,7 +315,7 @@ export class GearIndexer {
           timestamp: new Date(timestamp),
           code,
           genesis: this.genesis,
-          meta,
+          metaHash,
         }),
       );
     }

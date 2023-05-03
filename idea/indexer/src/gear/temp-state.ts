@@ -1,15 +1,14 @@
 import { CodeStatus, MessageReadReason } from '@gear-js/common';
 
 import { MessageEntryPoint, MessageStatus, ProgramStatus, generateUUID } from '../common';
-import { Block, Code, Message, Meta, Program } from '../database';
-import { BlockService, CodeService, MessageService, MetaService, ProgramService } from '../services';
+import { Block, Code, Message, Program } from '../database';
+import { BlockService, CodeService, MessageService, ProgramService } from '../services';
 
 export class TempState {
   private programs: Map<string, Program>;
   private codes: Map<string, Code>;
   private messages: Map<string, Message>;
   private blocks: Map<string, Block>;
-  private meta: Map<string, Meta>;
   private genesis: string;
 
   constructor(
@@ -17,13 +16,11 @@ export class TempState {
     private messageService: MessageService,
     private codeService: CodeService,
     private blockService: BlockService,
-    private metaService: MetaService,
   ) {
     this.programs = new Map();
     this.codes = new Map();
     this.messages = new Map();
     this.blocks = new Map();
-    this.meta = new Map();
   }
 
   newState(genesis: string) {
@@ -32,7 +29,6 @@ export class TempState {
     this.codes.clear();
     this.messages.clear();
     this.blocks.clear();
-    this.meta.clear();
   }
 
   addProgram(program: Program) {
@@ -93,15 +89,6 @@ export class TempState {
     } catch (err) {
       return null;
     }
-  }
-
-  async getMeta(hash: string): Promise<Meta> {
-    if (this.meta.has(hash)) {
-      return this.meta.get(hash);
-    }
-    const meta = await this.metaService.getByHashOrCreate(hash);
-    this.meta.set(meta.hash, meta);
-    return meta;
   }
 
   async getMsg(id: string): Promise<Message> {
