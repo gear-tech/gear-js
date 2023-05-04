@@ -18,7 +18,7 @@ export async function initAMQ(): Promise<void> {
   await mainChannelAMQP.assertExchange(directExchange, directExchangeType);
 
   await mainChannelAMQP.assertQueue(RMQServices.META_STORAGE, {
-    durable: false,
+    durable: true,
     autoDelete: false,
     exclusive: false,
     messageTtl: 30_000,

@@ -4,7 +4,7 @@ import { IMeta } from '@gear-js/common';
 @Entity()
 export class Meta implements IMeta {
   @PrimaryColumn()
-  public id!: string; //hash
+  public hash!: string;
 
   @Column({ nullable: true })
   public hex!: string;

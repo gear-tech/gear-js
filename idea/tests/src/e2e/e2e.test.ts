@@ -17,7 +17,7 @@ import {
   getState,
   getStates,
   getStatesByFuncName,
-  mapProgramStates, matProgramsMetaHash,
+  mapProgramStates, mapProgramsMetaHash,
   uploadMeta,
 } from './programs';
 import { processPrepare } from '../prepare';
@@ -122,7 +122,7 @@ describe('API methods', () => {
 
     test('meta.get request', async () => {
       for (const id of Object.keys(prepared.programs)) {
-        const programMetaHash = matProgramsMetaHash.get(id);
+        const programMetaHash = mapProgramsMetaHash.get(id);
         if (programMetaHash) {
           expect(await getMeta(genesis, programMetaHash)).toBeTruthy();
         }

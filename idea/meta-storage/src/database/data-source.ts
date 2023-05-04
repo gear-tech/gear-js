@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
 
 import config from '../config/configuration';
-import { Meta } from './entities';
+import { Meta } from './entities/meta.entity';
 
 const entities = [Meta];
 

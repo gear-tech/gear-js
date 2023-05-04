@@ -6,7 +6,7 @@ import request, { batchRequest } from './request';
 import { IPreparedProgram, IPreparedPrograms, IState, Passed } from '../interfaces';
 
 export const mapProgramStates = new Map<string, IState[]>();
-export const matProgramsMetaHash = new Map<string, string>();
+export const mapProgramsMetaHash = new Map<string, string>();
 
 export async function getAllPrograms(genesis: string, expected: HexString[]): Promise<Passed> {
   const response = await request('program.all', { genesis });
@@ -96,7 +96,7 @@ export async function getProgramData(genesis: string, id: string): Promise<Passe
     'messages',
     'expiration',
   );
-  matProgramsMetaHash.set(id, response.result.metaHash);
+  mapProgramsMetaHash.set(id, response.result.metaHash);
   return true;
 }
 
