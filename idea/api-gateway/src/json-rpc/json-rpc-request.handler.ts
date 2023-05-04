@@ -3,6 +3,7 @@ import { API_METHODS, IRpcRequest, IRpcResponse, JSONRPC_ERRORS } from '@gear-js
 import { getResponse } from '../utils';
 import { jsonRpcHandler } from './json-rpc.handler';
 import { indexerChannels, testBalanceChannels } from '../rabbitmq/init-rabbitmq';
+import { checkGenesis } from '../common/check-genesis';
 
 export async function jsonRpcRequestHandler(
   rpcBodyRequest: IRpcRequest | IRpcRequest[],
@@ -24,18 +25,22 @@ async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
     return getResponse(procedure, JSONRPC_ERRORS.MethodNotFound.name);
   }
 
+  if([API_METHODS.META_GET, API_METHODS.META_ADD].includes(method as API_METHODS)) {
+    const { error, result } = await jsonRpcHandler(method as API_METHODS, params);
+
+    return getResponse(procedure, error, result);
+  }
+
+  const checkGenesisResult = checkGenesis(procedure);
+
+  if(checkGenesisResult) return checkGenesisResult;
+
   if (method === API_METHODS.TEST_BALANCE_AVAILABLE) {
     return getResponse(procedure, null, testBalanceChannels.has(params.genesis));
   }
 
   if (procedure.method === API_METHODS.NETWORK_DATA_AVAILABLE) {
     return getResponse(procedure, null, indexerChannels.has(params.genesis));
-  }
-
-  if([API_METHODS.META_GET, API_METHODS.META_ADD].includes(method as API_METHODS)) {
-    const { error, result } = await jsonRpcHandler(method as API_METHODS, params);
-
-    return getResponse(procedure, error, result);
   }
 
   if (!isValidGenesis(params.genesis, method)) {

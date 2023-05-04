@@ -23,7 +23,7 @@ import { FormResponse, logger, RabbitmqMessageParams } from '../common';
 import { BlockService, CodeService, MessageService, ProgramService, StateService } from '../services';
 import config from '../config';
 
-let mainChannel: Channel;
+export let mainChannel: Channel;
 
 export class RMQService {
   private mainChannel: Channel;
@@ -96,11 +96,6 @@ export class RMQService {
   private sendMsg(exchange: RabbitMQExchanges, queue: RabbitMQueues, params: any, correlationId?: string): void {
     const messageBuff = JSON.stringify(params);
     this.mainChannel.publish(exchange, queue, Buffer.from(messageBuff), { correlationId });
-  }
-
-  static sendMsgToMetaStorage(exchange: RabbitMQExchanges, queue: RabbitMQueues, params: any, method?: string): void {
-    const messageBuff = JSON.stringify(params);
-    mainChannel.publish(exchange, queue, Buffer.from(messageBuff), { headers: { method } });
   }
 
   private async directMsgConsumer(queue: string): Promise<void> {

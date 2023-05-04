@@ -59,13 +59,7 @@ export async function directMessageConsumer(channel: Channel, queue: string): Pr
 
 async function handleIncomingMsg(method: string, params: any): Promise<any> {
   const methods = {
-    [API_METHODS.META_ADD]: () => {
-      if ('hash' in params) {
-        return metaService.createByIndexer(params);
-      } else {
-        return metaService.create(params);
-      }
-    },
+    [API_METHODS.META_ADD]: () => metaService.create(params),
     [API_METHODS.META_GET]: () => metaService.getByHash(params.hash),
   };
 

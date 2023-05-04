@@ -1,6 +1,6 @@
 import { plainToInstance } from 'class-transformer';
 import { HexString } from '@polkadot/util/types';
-import { generateCodeHash, getProgramMetadata } from '@gear-js/api';
+import { generateCodeHash, getProgramMetadata, ProgramMetadata } from '@gear-js/api';
 
 import { CreateMetaInput } from './input/create-meta.input';
 import { metaRepository } from '../../database/repositories';
@@ -8,37 +8,25 @@ import { MetadataNotFound } from '../../common/errors';
 import { Meta } from '../../database/entities/meta.entity';
 
 export const metaService = {
-  async createByIndexer(createMetaInput: CreateMetaInput): Promise<Meta | null> {
-    const metaDB = await metaRepository.get(createMetaInput.hash);
+  async create(createMetaInput: CreateMetaInput): Promise<Meta | null> {
+    const { hex, hash } = createMetaInput;
+    const hashStr = hex ? generateCodeHash(hex as HexString) : hash;
+    const metaDB = await metaRepository.get(hashStr);
+    let metadata: ProgramMetadata;
 
-    if (metaDB) return;
+    if (metaDB && metaDB.hex !== null) return;
 
     const metaTypeDB = plainToInstance(Meta, {
-      id: createMetaInput.hash,
+      hash,
+      hex,
     });
+
+    if (hex) {
+      metadata = getProgramMetadata(hex as HexString);
+      metaTypeDB.types = metadata.types;
+    }
 
     return metaRepository.save(metaTypeDB);
-  },
-
-  async create(createMetaInput: CreateMetaInput): Promise<string> {
-    const hash = generateCodeHash(createMetaInput.hex as HexString);
-    const responseMessage = 'Request succeeded';
-
-    const meta = await metaRepository.get(hash);
-
-    if (meta && meta.hex !== null) return responseMessage;
-
-    const metadata = getProgramMetadata(createMetaInput.hex as HexString);
-
-    const metaTypeDB = plainToInstance(Meta, {
-      ...createMetaInput,
-      ...metadata,
-      types: metadata.types,
-    });
-
-    await metaRepository.save(metaTypeDB);
-
-    return responseMessage;
   },
 
   async getByHash(hash: string): Promise<Meta | undefined> {

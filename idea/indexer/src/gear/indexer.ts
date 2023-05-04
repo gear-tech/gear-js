@@ -26,7 +26,7 @@ import { Block, Code, Message, Program } from '../database/entities';
 import { BlockService, CodeService, MessageService, ProgramService, StatusService } from '../services';
 import { TempState } from './temp-state';
 import config from '../config';
-import { RMQService } from '../rabbitmq';
+import { sendMsgQueue } from '../common/helpers/send-mesage-queue';
 
 export class GearIndexer {
   public api: GearApi;
@@ -236,13 +236,10 @@ export class GearIndexer {
       const codeId = id.toHex();
       const metahash = await getMetahash(this.api.code, codeId);
 
-      RMQService.sendMsgToMetaStorage(
-        RabbitMQExchanges.DIRECT_EX,
+      sendMsgQueue(RabbitMQExchanges.DIRECT_EX,
         RMQServices.META_STORAGE as any,
         { hash: metahash },
-        API_METHODS.META_ADD
-      );
-
+        { method: API_METHODS.META_ADD });
 
       const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
 
@@ -298,12 +295,10 @@ export class GearIndexer {
       } else {
         metaHash = await getMetahash(this.api.program, programId);
 
-        RMQService.sendMsgToMetaStorage(
-          RabbitMQExchanges.DIRECT_EX,
+        sendMsgQueue(RabbitMQExchanges.DIRECT_EX,
           RMQServices.META_STORAGE as any,
           { hash: metaHash },
-          API_METHODS.META_ADD
-        );
+          { method: API_METHODS.META_ADD });
       }
 
       this.tempState.addProgram(
