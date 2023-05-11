@@ -32,14 +32,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.30.5":
-  version: 0.30.5
-  resolution: "@gear-js/api@npm:0.30.5"
+"@gear-js/api@npm:0.30.6":
+  version: 0.30.6
+  resolution: "@gear-js/api@npm:0.30.6"
   peerDependencies:
-    "@polkadot/api": ^10.2.1
+    "@polkadot/api": ^10.3.4
     "@polkadot/wasm-crypto": ^7.0.3
-    rxjs: ^7.5.5
-  checksum: c7ba708dd550f6c8fca9d68a129790070e12249dec56e0558fcbfda2ce950325325ddcc145c258c6dbc64de4653b2cd485fa9e19ee63a9c84457acfb8b7d5f63
+    rxjs: ^7.8.0
+  checksum: 91bffafa5c8c1cbcc8a53f3966befcb5eb8e083ecc344854918a76ffd2b11aaa202a684a0e93b9ffa475ff8ddd19194bb895e60fe50129af0a049680ee475edd
   languageName: node
   linkType: hard
 
@@ -47,7 +47,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/cli@workspace:."
   dependencies:
-    "@gear-js/api": 0.30.5
+    "@gear-js/api": 0.30.6
     "@polkadot/api": 10.2.1
     "@types/node": ^18.15.11
     chalk: ^4
