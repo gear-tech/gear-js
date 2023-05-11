@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/cli",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "dist/app.js",
   "preferGlobal": true,
   "bin": {
