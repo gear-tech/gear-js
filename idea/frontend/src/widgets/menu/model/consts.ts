@@ -9,7 +9,7 @@ const GENESIS = {
 };
 
 const LOGO = {
-  [GENESIS.VARA]: { SVG: VaraSVG, SHORT_SVG: ShortVaraSVG },
+  [GENESIS.VARA]: { SVG: VaraSVG, SHORT_SVG: ShortVaraSVG, NETWORK: NetworkVaraSVG },
 };
 
 const NODE_SECTIONS = [
@@ -23,7 +23,7 @@ const NODE_SECTIONS = [
       {
         isCustom: false,
         address: 'wss://rpc-node.gear-tech.io:443',
-        SVG: NetworkVaraSVG,
+        SVG: LOGO[GENESIS.VARA].NETWORK,
       },
     ],
   },

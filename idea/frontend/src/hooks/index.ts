@@ -24,6 +24,7 @@ import { useLocalProgramsFilter } from './useLocalProgramsFilter';
 import { useNodeVersion } from './useNodeVersion';
 import { useMobileDisclaimer } from './useMobileDisclaimer';
 import { useMetaOnUpload } from './useMetaOnUpload';
+import { useNetworkIcon } from './useNetworkIcon';
 
 export {
   useApp,
@@ -57,4 +58,5 @@ export {
   useNodeVersion,
   useMobileDisclaimer,
   useMetaOnUpload,
+  useNetworkIcon,
 };
