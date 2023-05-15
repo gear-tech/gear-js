@@ -1,30 +1,13 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useAlert } from '@gear-js/react-hooks';
 
-import { getNodes } from 'api';
 import { NodeSection } from 'entities/node';
-import { LocalStorage } from 'shared/config';
+import { LocalStorage, NODE_SECTIONS } from 'shared/config';
 
 import { concatNodes, isDevSection, getLocalNodes, getLocalNodesFromLS } from './helpers';
 import { DEVELOPMENT_SECTION } from '../model/consts';
 
 const useNodes = () => {
-  const alert = useAlert();
-
-  const [isNodesLoading, setIsNodesLoading] = useState(true);
   const [nodeSections, setNodeSections] = useState<NodeSection[]>([]);
-
-  const setAllNodeSections = (sections: NodeSection[]) => {
-    const localNodes = getLocalNodesFromLS();
-
-    const isDevSectionExist = sections.find(isDevSection);
-
-    const allNodes = isDevSectionExist
-      ? concatNodes(sections, localNodes)
-      : sections.concat({ caption: DEVELOPMENT_SECTION, nodes: localNodes });
-
-    setNodeSections(allNodes);
-  };
 
   const addLocalNode = useCallback(
     (address: string) => {
@@ -61,14 +44,19 @@ const useNodes = () => {
   );
 
   useEffect(() => {
-    getNodes()
-      .then(setAllNodeSections)
-      .catch((error) => alert.error(error.message))
-      .finally(() => setIsNodesLoading(false));
+    const localNodes = getLocalNodesFromLS();
+    const isDevSectionExist = NODE_SECTIONS.find(isDevSection);
+
+    const allNodes = isDevSectionExist
+      ? concatNodes(NODE_SECTIONS, localNodes)
+      : NODE_SECTIONS.concat({ caption: DEVELOPMENT_SECTION, nodes: localNodes });
+
+    setNodeSections(allNodes);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { isNodesLoading, nodeSections, addLocalNode, removeLocalNode };
+  return { nodeSections, addLocalNode, removeLocalNode };
 };
 
 export { useNodes };

@@ -1,10 +1,6 @@
 const API_URL = process.env.REACT_APP_API_URL as string;
 const NODE_ADDRESS = process.env.REACT_APP_NODE_ADDRESS as string;
-const DEFAULT_NODES_URL = process.env.REACT_APP_DEFAULT_NODES_URL as string;
 const HCAPTCHA_SITE_KEY = process.env.REACT_APP_HCAPTCHA_SITE_KEY as string;
-
-const WASM_COMPILER_GET = `${process.env.REACT_APP_WASM_COMPILER_URL}/get-wasm`;
-const WASM_COMPILER_BUILD = `${process.env.REACT_APP_WASM_COMPILER_URL}/build`;
 
 const NODE_ADRESS_URL_PARAM = 'node';
 
@@ -99,13 +95,40 @@ enum AnimationTimeout {
   Big = 1000,
 }
 
+const NODE_SECTIONS = [
+  {
+    caption: 'test network',
+    nodes: [
+      {
+        isCustom: false,
+        address: 'wss://rpc-node.gear-tech.io:443',
+      },
+    ],
+  },
+  {
+    caption: 'workshop',
+    nodes: [
+      {
+        isCustom: false,
+        address: 'wss://node-workshop.gear.rs:443',
+      },
+    ],
+  },
+  {
+    caption: 'development',
+    nodes: [
+      {
+        isCustom: false,
+        address: 'ws://localhost:9944',
+      },
+    ],
+  },
+];
+
 export {
   API_URL,
   NODE_ADDRESS,
-  DEFAULT_NODES_URL,
   HCAPTCHA_SITE_KEY,
-  WASM_COMPILER_GET,
-  WASM_COMPILER_BUILD,
   NODE_ADRESS_URL_PARAM,
   EXAMPLES_HREF,
   DEFAULT_LIMIT,
@@ -113,6 +136,7 @@ export {
   ACCOUNT_ERRORS,
   PROGRAM_ERRORS,
   UPLOAD_METADATA_TIMEOUT,
+  NODE_SECTIONS,
   LocalStorage,
   GasMethod,
   TransactionName,

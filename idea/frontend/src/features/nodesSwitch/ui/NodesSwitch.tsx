@@ -18,7 +18,7 @@ type Props = {
 
 const NodesSwitch = ({ isButtonFullWidth }: Props) => {
   const { api, isApiReady } = useApi();
-  const { nodeSections, isNodesLoading, addLocalNode, removeLocalNode } = useNodes();
+  const { nodeSections, addLocalNode, removeLocalNode } = useNodes();
 
   const { nodeAddress } = useApp();
   const { showModal, closeModal } = useModal();
@@ -85,7 +85,6 @@ const NodesSwitch = ({ isButtonFullWidth }: Props) => {
       <CSSTransition in={isNodesOpen} timeout={AnimationTimeout.Default} mountOnEnter unmountOnExit>
         <NodesPopup
           chain={chain}
-          isLoading={isNodesLoading}
           nodeAddress={nodeAddress}
           nodeSections={nodeSections}
           selectedNode={selectedNode}
