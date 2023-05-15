@@ -34,6 +34,7 @@
 }
 
 .icon {
+  flex-shrink: 0;
   width: 28px;
   height: 28px;
   border: 1px solid #bcbcbd;
@@ -45,14 +46,9 @@
 
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   line-height: toRem(16);
-
-  &:global(.exit),
-  &:global(.enter),
-  &:global(.exit-done) {
-    white-space: nowrap;
-  }
+  white-space: nowrap;
+  overflow: hidden;
 
   .chain,
   .otherInfo {
@@ -63,11 +59,15 @@
     @extend %headingFont;
     font-weight: 500;
     margin-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .otherInfo {
     font-family: 'Poppins';
     font-size: 12px;
     font-weight: 300;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
