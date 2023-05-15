@@ -8,19 +8,26 @@
   align-items: center;
 
   .radio {
-    font-family: 'Kanit';
     font-size: $fontSizeSmall;
     font-weight: 400;
     line-height: 1.54;
-    overflow-wrap: anywhere;
-
-    input {
-      flex-shrink: 0;
-    }
+    white-space: nowrap;
 
     &.current {
       color: $successColor;
+
+      .icon {
+        border-color: #2bd071;
+      }
     }
+  }
+
+  .icon {
+    width: 24px;
+    height: 24px;
+    margin: 0 8px 0 2px;
+    border: 1px solid #898b94;
+    border-radius: 50%;
   }
 
   .buttons {

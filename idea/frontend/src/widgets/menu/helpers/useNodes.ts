@@ -1,10 +1,10 @@
 import { useEffect, useState, useCallback } from 'react';
 
 import { NodeSection } from 'entities/node';
-import { LocalStorage, NODE_SECTIONS } from 'shared/config';
+import { LocalStorage } from 'shared/config';
 
 import { concatNodes, isDevSection, getLocalNodes, getLocalNodesFromLS } from './helpers';
-import { DEVELOPMENT_SECTION } from '../model/consts';
+import { DEVELOPMENT_SECTION, NODE_SECTIONS } from '../model/consts';
 
 const useNodes = () => {
   const [nodeSections, setNodeSections] = useState<NodeSection[]>([]);

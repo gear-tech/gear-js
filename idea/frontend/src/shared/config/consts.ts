@@ -95,36 +95,6 @@ enum AnimationTimeout {
   Big = 1000,
 }
 
-const NODE_SECTIONS = [
-  {
-    caption: 'test network',
-    nodes: [
-      {
-        isCustom: false,
-        address: 'wss://rpc-node.gear-tech.io:443',
-      },
-    ],
-  },
-  {
-    caption: 'workshop',
-    nodes: [
-      {
-        isCustom: false,
-        address: 'wss://node-workshop.gear.rs:443',
-      },
-    ],
-  },
-  {
-    caption: 'development',
-    nodes: [
-      {
-        isCustom: false,
-        address: 'ws://localhost:9944',
-      },
-    ],
-  },
-];
-
 export {
   API_URL,
   NODE_ADDRESS,
@@ -136,7 +106,6 @@ export {
   ACCOUNT_ERRORS,
   PROGRAM_ERRORS,
   UPLOAD_METADATA_TIMEOUT,
-  NODE_SECTIONS,
   LocalStorage,
   GasMethod,
   TransactionName,
