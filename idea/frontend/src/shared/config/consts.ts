@@ -1,6 +1,7 @@
 const API_URL = process.env.REACT_APP_API_URL as string;
 const NODE_ADDRESS = process.env.REACT_APP_NODE_ADDRESS as string;
 const HCAPTCHA_SITE_KEY = process.env.REACT_APP_HCAPTCHA_SITE_KEY as string;
+const NODES_JSON = process.env.REACT_APP_NODES_JSON as string;
 
 const NODE_ADRESS_URL_PARAM = 'node';
 
@@ -106,6 +107,7 @@ export {
   ACCOUNT_ERRORS,
   PROGRAM_ERRORS,
   UPLOAD_METADATA_TIMEOUT,
+  NODES_JSON,
   LocalStorage,
   GasMethod,
   TransactionName,

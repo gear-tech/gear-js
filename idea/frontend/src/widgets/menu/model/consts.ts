@@ -1,3 +1,7 @@
+import { ReactComponent as GearSVG } from 'shared/assets/images/logos/gear.svg';
+import { ReactComponent as ShortGearSVG } from 'shared/assets/images/logos/shortcut/gear.svg';
+import { ReactComponent as GearNetworkSVG } from 'shared/assets/images/logos/networks/gear.svg';
+
 import { ReactComponent as VaraSVG } from 'shared/assets/images/logos/vara.svg';
 import { ReactComponent as ShortVaraSVG } from 'shared/assets/images/logos/shortcut/vara.svg';
 import { ReactComponent as NetworkVaraSVG } from 'shared/assets/images/logos/networks/vara.svg';
@@ -9,66 +13,15 @@ const GENESIS = {
   VARA: '0xfe1b4c55fd4d668101126434206571a7838a8b6b93a6d1b95d607e78e6c53763',
 };
 
-const VARA_LOGO = { SVG: VaraSVG, SHORT_SVG: ShortVaraSVG, NETWORK: NetworkVaraSVG };
-
-const LOGO = {
-  [GENESIS.VARA_TESTNET]: VARA_LOGO,
-  [GENESIS.VARA]: VARA_LOGO,
+// TODO: think about naming of ICON and LOGO, and overall structure
+const ICON = {
+  vara: { SVG: VaraSVG, SHORT_SVG: ShortVaraSVG, NETWORK: NetworkVaraSVG },
+  gear: { SVG: GearSVG, SHORT_SVG: ShortGearSVG, NETWORK: GearNetworkSVG },
 };
 
-const NODE_SECTIONS = [
-  {
-    caption: 'Vara Stable Testnet',
-    nodes: [
-      {
-        isCustom: false,
-        address: 'wss://testnet.vara.rs',
-        SVG: NetworkVaraSVG,
-      },
-      {
-        isCustom: false,
-        address: 'wss://archive-testnet.vara.rs',
-        SVG: NetworkVaraSVG,
-      },
-    ],
-  },
-  {
-    caption: 'Gear Staging Testnet V7',
-    nodes: [
-      {
-        isCustom: false,
-        address: 'wss://rpc-node.gear-tech.io',
-      },
-      {
-        isCustom: false,
-        address: 'wss://archive-node.gear-tech.io',
-      },
-    ],
-  },
-  {
-    caption: 'vara network',
-    nodes: [
-      {
-        isCustom: false,
-        address: 'wss://rpc.vara-network.io',
-        SVG: NetworkVaraSVG,
-      },
-      {
-        isCustom: false,
-        address: 'wss://archive-rpc.vara-network.io',
-        SVG: NetworkVaraSVG,
-      },
-    ],
-  },
-  {
-    caption: 'development',
-    nodes: [
-      {
-        isCustom: false,
-        address: 'ws://localhost:9944',
-      },
-    ],
-  },
-];
+const LOGO = {
+  [GENESIS.VARA_TESTNET]: ICON.vara,
+  [GENESIS.VARA]: ICON.vara,
+};
 
-export { DEVELOPMENT_SECTION, LOGO, NODE_SECTIONS };
+export { DEVELOPMENT_SECTION, ICON, LOGO };

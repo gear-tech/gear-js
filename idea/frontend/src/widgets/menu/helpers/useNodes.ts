@@ -1,10 +1,10 @@
 import { useEffect, useState, useCallback } from 'react';
 
 import { NodeSection } from 'entities/node';
-import { LocalStorage } from 'shared/config';
+import { LocalStorage, NODES_JSON } from 'shared/config';
 
 import { concatNodes, isDevSection, getLocalNodes, getLocalNodesFromLS } from './helpers';
-import { DEVELOPMENT_SECTION, NODE_SECTIONS } from '../model/consts';
+import { DEVELOPMENT_SECTION } from '../model/consts';
 
 const useNodes = () => {
   const [nodeSections, setNodeSections] = useState<NodeSection[]>([]);
@@ -44,12 +44,14 @@ const useNodes = () => {
   );
 
   useEffect(() => {
+    const initialNodeSections = JSON.parse(NODES_JSON || '[]') as NodeSection[];
+
     const localNodes = getLocalNodesFromLS();
-    const isDevSectionExist = NODE_SECTIONS.find(isDevSection);
+    const isDevSectionExist = initialNodeSections.find(isDevSection);
 
     const allNodes = isDevSectionExist
-      ? concatNodes(NODE_SECTIONS, localNodes)
-      : NODE_SECTIONS.concat({ caption: DEVELOPMENT_SECTION, nodes: localNodes });
+      ? concatNodes(initialNodeSections, localNodes)
+      : initialNodeSections.concat({ caption: DEVELOPMENT_SECTION, nodes: localNodes });
 
     setNodeSections(allNodes);
 

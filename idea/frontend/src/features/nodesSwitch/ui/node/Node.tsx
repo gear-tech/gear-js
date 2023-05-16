@@ -1,27 +1,26 @@
 import { useAlert } from '@gear-js/react-hooks';
 import { Button, radioStyles } from '@gear-js/ui';
-import { FunctionComponent, SVGProps } from 'react';
 import clsx from 'clsx';
 
+import { Node as NodeType } from 'entities/node';
 import { copyToClipboard } from 'shared/helpers';
 import { ReactComponent as trashSVG } from 'shared/assets/images/actions/trash.svg';
 import { ReactComponent as copyGreenSVG } from 'shared/assets/images/actions/copyGreen.svg';
-import { ReactComponent as DefaultSVG } from 'shared/assets/images/logos/networks/gear.svg';
+import { ICON } from 'widgets/menu/model/consts';
 
 import styles from './Node.module.scss';
 
-type Props = {
-  address: string;
-  isCustom: boolean;
+type Props = NodeType & {
   nodeAddress: string;
   selectedNode: string;
   selectNode: (address: string) => void;
   removeLocalNode: (address: string) => void;
-  SVG?: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | undefined }>;
 };
 
 const Node = (props: Props) => {
-  const { address, isCustom, nodeAddress, selectedNode, selectNode, removeLocalNode, SVG = DefaultSVG } = props;
+  const { address, isCustom, nodeAddress, selectedNode, selectNode, removeLocalNode, icon = 'gear' } = props;
+
+  const SVG = ICON[icon as keyof typeof ICON].NETWORK;
 
   const alert = useAlert();
 
