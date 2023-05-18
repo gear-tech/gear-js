@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  db:
+    build:
+      context: .
+      dockerfile: ./db.Dockerfile
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - postgres_services:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_services:

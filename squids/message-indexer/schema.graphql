@@ -1,0 +1,36 @@
+enum MessageType {
+    MessageQueued
+    UserMessageSent
+    UserMessageRead
+}
+
+enum MessageEntryPoint {
+    Init
+    Handle
+    Reply
+}
+
+enum MessageReadReason {
+    OutOfRent
+    Claimed
+    Replied
+}
+
+type Message @entity {
+    id: ID!
+    payload: String
+    destination: String
+    source: String
+    replyToMessageId: String
+    value: String
+    reply: String
+    expiration: Int
+    type: MessageType!
+    blockHash: String
+    timestamp: String!
+    entry: MessageEntryPoint
+    readReason: MessageReadReason
+    processedWithPanic: Boolean
+    exitCode: Int
+    isInMailBox: Boolean
+}

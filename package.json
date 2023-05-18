@@ -6,6 +6,7 @@
     "build:common": "yarn workspace @gear-js/common build",
     "build:api-gateway": "yarn workspace @gear-js/api-gateway build",
     "build:indexer": "yarn workspace @gear-js/indexer build",
+    "build:message-indexer": "yarn workspace @gear-js/message-indexer build",
     "build:ui": "yarn workspace @gear-js/ui build",
     "build:frontend": "yarn build:ui && yarn workspace @gear-js/frontend build",
     "build:test-balance": "yarn workspace @gear-js/test-balance build",
@@ -28,6 +29,7 @@
   },
   "workspaces": [
     "idea/*",
+    "squids/*",
     "utils/gear-ui"
   ],
   "lint-staged": {
