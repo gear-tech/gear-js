@@ -144,6 +144,12 @@ describe('New Program', () => {
     expect(result).toHaveProperty(['change', 'ExpirationChanged', 'expiration']);
     expect(Number(result.change.ExpirationChanged.expiration.replaceAll(',', ''))).toBe(expiration + 10_000);
   });
+
+  test('Calculate pay rent', () => {
+    const costPerBlock = api.program.costPerBlock;
+    const pay = api.program.calcualtePayRent(10_000);
+    expect(pay.toString()).toBe(costPerBlock.muln(10_000).toString());
+  });
 });
 
 describe('Program', () => {
