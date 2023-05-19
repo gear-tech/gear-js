@@ -4,7 +4,7 @@ import { Store } from '@subsquid/typeorm-store';
 
 import { processor } from './init-processor';
 import { initDB } from './init-db';
-import { MessageType, SubSquidMessageEventType } from '../common/enum';
+import { MessageType, EventType } from '../common/enum';
 import { Message } from '../model';
 
 const messageMap = new Map<string, Message>();
@@ -19,20 +19,20 @@ async function eventHandler(ctx: BatchContext<Store, BatchProcessorItem<typeof p
       const { header: { timestamp, hash } } = block;
       const time = new Date(timestamp);
 
-      if (name === SubSquidMessageEventType.GEAR_USER_MESS_READ) {
+      if (name === EventType.GEAR_USER_MSG_READ) {
         const { id, reason } = item.event.args;
         const message = await ctx.store.findOneBy(Message, { id });
 
         if (message) {
           // eslint-disable-next-line no-underscore-dangle
-          message.readReason = reason.value.__king;
+          message.readReason = reason.value.__kind;
           message.isInMailBox = false;
 
           messageMap.set(message.id, message as Message);
         }
       }
 
-      if (name === SubSquidMessageEventType.GEAR_MESS_DISPATCHED) {
+      if (name === EventType.GEAR_MSG_DISPATCHED) {
         const { statuses } = item.event.args;
         const [id, status] = Object.entries(statuses) as [string, any];
         const statusVal = status as any;
@@ -45,7 +45,7 @@ async function eventHandler(ctx: BatchContext<Store, BatchProcessorItem<typeof p
         }
       }
 
-      if (name === SubSquidMessageEventType.GEAR_USER_MESS_SENT) {
+      if (name === EventType.GEAR_USER_MSG_SENT) {
         const { expiration, message } = item.event.args;
         const { id, destination, details, payload, source, value } = message;
         const isInMailBox = !!expiration;
@@ -58,7 +58,7 @@ async function eventHandler(ctx: BatchContext<Store, BatchProcessorItem<typeof p
           isInMailBox,
           replyToMessageId: details.value.replyTo,
           exitCode: details.value.statusCode,
-          type: MessageType.USER_MESS_SENT,
+          type: MessageType.USER_MSG_SENT,
           blockHash: hash,
           timestamp: time,
           expiration,
@@ -67,7 +67,7 @@ async function eventHandler(ctx: BatchContext<Store, BatchProcessorItem<typeof p
         messageMap.set(id, createMessage);
       }
 
-      if (name === SubSquidMessageEventType.GEAR_MESS_ENQUEUED) {
+      if (name === EventType.GEAR_MSG_ENQUEUED) {
         const { destination, id, source, entry } = item.event.args;
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
@@ -83,7 +83,7 @@ async function eventHandler(ctx: BatchContext<Store, BatchProcessorItem<typeof p
           timestamp: time,
           value,
           payload: initPayload,
-          type: MessageType.ENQUEUED,
+          type: MessageType.QUEUED,
         });
 
         messageMap.set(id, message);

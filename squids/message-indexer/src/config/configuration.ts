@@ -12,7 +12,7 @@ export const checkEnv = (envName: string, defaultValue?: string) => {
   return env as string;
 };
 
-export default () => ({
+export default {
   database: {
     host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT || '5432', 10),
@@ -23,4 +23,4 @@ export default () => ({
   subsquid: {
     archiveProvider: checkEnv('SUBSQUID_ARCHIVE_PROVIDER'),
   },
-});
+};

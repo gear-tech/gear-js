@@ -1,6 +1,5 @@
 import { TypeormDatabase } from '@subsquid/typeorm-store';
-
-import config from '../config/configuration';
+import { config } from 'dotenv';
 
 config();
 
