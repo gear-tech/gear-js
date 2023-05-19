@@ -15,7 +15,7 @@ import {
 export const checkInit = (
   api: GearApi,
   programId: string,
-  cb?: (status: 'ProgramSet' | 'Active' | 'Terminated') => void,
+  cb?: (status: 'ProgramSet' | 'Active' | 'Terminated', expiration?: number) => void,
 ) => {
   let unsub: UnsubscribePromise;
 
@@ -23,9 +23,9 @@ export const checkInit = (
     unsub = api.gearEvents.subscribeToGearEvent('ProgramChanged', ({ data }) => {
       if (data.id.eq(programId)) {
         if (data.change.isProgramSet) {
-          cb && cb('ProgramSet');
+          cb && cb('ProgramSet', data.change.asProgramSet.expiration.toNumber());
         } else if (data.change.isActive) {
-          cb && cb('Active');
+          cb && cb('Active', data.change.asActive.expiration.toNumber());
           unsub.then((fn) => fn());
           resolve('success');
         } else if (data.change.isTerminated) {

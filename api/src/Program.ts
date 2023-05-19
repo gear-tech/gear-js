@@ -1,17 +1,31 @@
 import { Bytes, Option } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
+import { ISubmittableResult } from '@polkadot/types/types';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { randomAsHex } from '@polkadot/util-crypto';
 
-import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult } from './types';
+import {
+  IProgram,
+  IProgramCreateOptions,
+  IProgramCreateResult,
+  IProgramUploadOptions,
+  IProgramUploadResult,
+} from './types';
 import { ProgramDoesNotExistError, ProgramHasNoMetahash, SubmitProgramError } from './errors';
-import { generateCodeHash, generateProgramId, getIdsFromKeys, validateGasLimit, validateValue } from './utils';
+import {
+  encodePayload,
+  generateCodeHash,
+  generateProgramId,
+  getIdsFromKeys,
+  validateGasLimit,
+  validateProgramId,
+  validateValue,
+} from './utils';
 import { GearApi } from './GearApi';
 import { GearGas } from './Gas';
 import { GearTransaction } from './Transaction';
-import { IProgram } from './types/interfaces';
 import { ProgramMetadata } from './metadata';
-import { encodePayload } from './utils/create-payload';
 
 export class GearProgram extends GearTransaction {
   public calculateGas: GearGas;
@@ -151,6 +165,14 @@ export class GearProgram extends GearTransaction {
     } catch (error) {
       throw new SubmitProgramError();
     }
+  }
+
+  async payRent(
+    programId: HexString,
+    blockCount: number,
+  ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>> {
+    await validateProgramId(programId, this._api);
+    return this._api.tx.gear.payProgramRent(programId, blockCount);
   }
 
   /**
