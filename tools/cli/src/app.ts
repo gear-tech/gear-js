@@ -32,6 +32,7 @@ program
     }
     runWorkflow(pathToYaml, args, options.ws)
       .catch((err) => {
+	console.log(err)
         logger.error(err, { lvl: 0 });
         process.exit(1);
       })
