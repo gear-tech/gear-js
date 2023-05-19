@@ -167,6 +167,19 @@ export class GearProgram extends GearTransaction {
     }
   }
 
+  /**
+   * ### Pay program rent
+   * @param programId
+   * @param blockCount
+   * @returns
+   * @example
+   * ```javascript
+   * const tx = await api.program.payRent('0x...', 100_000);
+   * tx.signAndSend(account, (events) => {
+   *   events.forEach(({event}) => console.log(event.toHuman()))
+   * })
+   * ```
+   */
   async payRent(
     programId: HexString,
     blockCount: number,
