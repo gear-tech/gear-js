@@ -1,9 +1,11 @@
 import assert from 'assert';
 
+
 export interface Marshal<T, S> {
     fromJSON(value: unknown): T
     toJSON(value: T): S
 }
+
 
 export const string: Marshal<string, string> = {
   fromJSON(value: unknown): string {
@@ -12,10 +14,12 @@ export const string: Marshal<string, string> = {
   },
   toJSON(value) {
     return value;
-  },
+  }
 };
 
+
 export const id = string;
+
 
 export const int: Marshal<number, number> = {
   fromJSON(value: unknown): number {
@@ -24,8 +28,9 @@ export const int: Marshal<number, number> = {
   },
   toJSON(value) {
     return value;
-  },
+  }
 };
+
 
 export const float: Marshal<number, number> = {
   fromJSON(value: unknown): number {
@@ -34,8 +39,9 @@ export const float: Marshal<number, number> = {
   },
   toJSON(value) {
     return value;
-  },
+  }
 };
+
 
 export const boolean: Marshal<boolean, boolean> = {
   fromJSON(value: unknown): boolean {
@@ -44,8 +50,9 @@ export const boolean: Marshal<boolean, boolean> = {
   },
   toJSON(value: boolean): boolean {
     return value;
-  },
+  }
 };
+
 
 export const bigint: Marshal<bigint, string> = {
   fromJSON(value: unknown): bigint {
@@ -54,8 +61,9 @@ export const bigint: Marshal<bigint, string> = {
   },
   toJSON(value: bigint): string {
     return value.toString();
-  },
+  }
 };
+
 
 export const bigdecimal: Marshal<any, string> = {
   fromJSON(value: unknown): bigint {
@@ -64,15 +72,19 @@ export const bigdecimal: Marshal<any, string> = {
   },
   toJSON(value: any): string {
     return value.toString();
-  },
+  }
 };
 
+
 // credit - https://github.com/Urigo/graphql-scalars/blob/91b4ea8df891be8af7904cf84751930cc0c6613d/src/scalars/iso-date/validator.ts#L122
-const RFC_3339_REGEX = /^(\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60))(\.\d{1,})?([Z])$/;
+const RFC_3339_REGEX =
+    /^(\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60))(\.\d{1,})?([Z])$/;
+
 
 function isIsoDateTimeString(s: string): boolean {
   return RFC_3339_REGEX.test(s);
 }
+
 
 export const datetime: Marshal<Date, string> = {
   fromJSON(value: unknown): Date {
@@ -82,8 +94,9 @@ export const datetime: Marshal<Date, string> = {
   },
   toJSON(value: Date): string {
     return value.toISOString();
-  },
+  }
 };
+
 
 export const bytes: Marshal<Uint8Array, string> = {
   fromJSON(value: unknown): Buffer {
@@ -94,21 +107,25 @@ export const bytes: Marshal<Uint8Array, string> = {
   },
   toJSON(value: Uint8Array): string {
     if (Buffer.isBuffer(value)) {
-      return `0x${value.toString('hex')}`;
+      return '0x' + value.toString('hex');
+    } else {
+      return '0x' + Buffer.from(value.buffer, value.byteOffset, value.byteLength).toString('hex');
     }
-    return `0x${Buffer.from(value.buffer, value.byteOffset, value.byteLength).toString('hex')}`;
-  },
+  }
 };
+
 
 export function fromList<T>(list: unknown, f: (val: unknown) => T): T[] {
   assert(Array.isArray(list));
-  return list.map(val => f(val));
+  return list.map((val) => f(val));
 }
+
 
 export function nonNull<T>(val: T | undefined | null): T {
   assert(val != null, 'non-nullable value is null');
   return val;
 }
+
 
 export const bigintTransformer = {
   to(x?: bigint) {
@@ -116,8 +133,9 @@ export const bigintTransformer = {
   },
   from(s?: string): bigint | undefined {
     return s == null ? undefined : BigInt(s);
-  },
+  }
 };
+
 
 export const floatTransformer = {
   to(x?: number) {
@@ -125,8 +143,9 @@ export const floatTransformer = {
   },
   from(s?: string): number | undefined {
     return s == null ? undefined : Number(s);
-  },
+  }
 };
+
 
 export const bigdecimalTransformer = {
   to(x?: any) {
@@ -134,24 +153,27 @@ export const bigdecimalTransformer = {
   },
   from(s?: any): any | undefined {
     return s == null ? undefined : decimal.BigDecimal(s);
-  },
+  }
 };
 
+
 export function enumFromJson<E extends object>(json: unknown, enumObject: E): E[keyof E] {
-  assert(typeof json === 'string', 'invalid enum value');
+  assert(typeof json == 'string', 'invalid enum value');
   const val = (enumObject as any)[json];
-  assert(typeof val === 'string', 'invalid enum value');
+  assert(typeof val == 'string', 'invalid enum value');
   return val as any;
 }
+
 
 const decimal = {
   get BigDecimal(): any {
     throw new Error('Package `@subsquid/big-decimal` is not installed');
-  },
+  }
 };
+
 
 try {
   Object.defineProperty(decimal, 'BigDecimal', {
-    value: require('@subsquid/big-decimal').BigDecimal,
+    value: require('@subsquid/big-decimal').BigDecimal
   });
 } catch (e) {}

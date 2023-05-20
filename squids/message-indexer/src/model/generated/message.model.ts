@@ -12,20 +12,20 @@ export class Message {
     @PrimaryColumn_()
       id!: string;
 
-    @Column_('text', { nullable: true })
-      payload!: string | undefined | null;
+    @Column_('text', { nullable: false })
+      payload!: string;
 
-    @Column_('text', { nullable: true })
-      destination!: string | undefined | null;
+    @Column_('text', { nullable: false })
+      destination!: string;
 
-    @Column_('text', { nullable: true })
-      source!: string | undefined | null;
+    @Column_('text', { nullable: false })
+      source!: string;
 
     @Column_('text', { nullable: true })
       replyToMessageId!: string | undefined | null;
 
-    @Column_('text', { nullable: true })
-      value!: string | undefined | null;
+    @Column_('text', { nullable: false })
+      value!: string;
 
     @Column_('text', { nullable: true })
       reply!: string | undefined | null;
@@ -36,8 +36,8 @@ export class Message {
     @Column_('varchar', { length: 15, nullable: false })
       type!: MessageType;
 
-    @Column_('text', { nullable: true })
-      blockHash!: string | undefined | null;
+    @Column_('text', { nullable: false })
+      blockHash!: string;
 
     @Column_('date', { nullable: false })
       timestamp!: Date;
@@ -56,4 +56,7 @@ export class Message {
 
     @Column_('bool', { nullable: true })
       isInMailBox!: boolean | undefined | null;
+
+    @Column_('text', { nullable: true })
+      gasLimit!: string | undefined | null;
 }

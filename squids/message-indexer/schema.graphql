@@ -18,19 +18,20 @@ enum MessageReadReason {
 
 type Message @entity {
     id: ID!
-    payload: String
-    destination: String
-    source: String
+    payload: String!
+    destination: String!
+    source: String!
     replyToMessageId: String
-    value: String
+    value: String!
     reply: String
     expiration: Int
     type: MessageType!
-    blockHash: String
+    blockHash: String!
     timestamp: String!
     entry: MessageEntryPoint
     readReason: MessageReadReason
     processedWithPanic: Boolean
     exitCode: Int
     isInMailBox: Boolean
+    gasLimit: String
 }

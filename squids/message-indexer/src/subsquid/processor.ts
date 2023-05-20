@@ -53,7 +53,7 @@ async function eventHandler(ctx: BatchContext<Store, BatchProcessorItem<typeof p
           id,
           destination,
           source,
-          value,
+          value: value || '0',
           payload,
           isInMailBox,
           replyToMessageId: details.value.replyTo,
@@ -71,7 +71,7 @@ async function eventHandler(ctx: BatchContext<Store, BatchProcessorItem<typeof p
         const { destination, id, source, entry } = item.event.args;
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        const { initPayload, value } = item.event.extrinsic.call.args;
+        const { initPayload, payload, value, gasLimit } = item.event.extrinsic.call.args;
         // eslint-disable-next-line no-underscore-dangle
         const entryStatus = entry.__kind;
         const message = plainToInstance(Message, {
@@ -81,8 +81,9 @@ async function eventHandler(ctx: BatchContext<Store, BatchProcessorItem<typeof p
           entry: entryStatus || null,
           blockHash: hash,
           timestamp: time,
-          value,
-          payload: initPayload,
+          value: value || '0',
+          gasLimit,
+          payload: initPayload || payload,
           type: MessageType.QUEUED,
         });
 
@@ -92,7 +93,10 @@ async function eventHandler(ctx: BatchContext<Store, BatchProcessorItem<typeof p
   }
 
   const messages = Array.from(messageMap.values());
-  if (messages.length >= 1) await ctx.store.save(messages);
+  if (messages.length >= 1) {
+    await ctx.store.save(messages);
+    messageMap.clear();
+  }
 }
 
 export async function run() {
