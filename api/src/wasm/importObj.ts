@@ -55,6 +55,7 @@ export default (
     gr_oom_panic: () => {},
     gr_origin: () => {},
     gr_panic: () => {},
+    gr_pay_program_rent: () => {},
     gr_program_id: () => {},
     gr_random: () => {},
     gr_read: (at: number, len: number, buffer: number) => {

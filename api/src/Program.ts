@@ -1,23 +1,31 @@
-import { Bytes, Option } from '@polkadot/types';
+import { Bytes, Option, u128, u32 } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
+import { ISubmittableResult } from '@polkadot/types/types';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { randomAsHex } from '@polkadot/util-crypto';
 
-import { IProgram, ProgramMap } from './types/interfaces';
-import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult } from './types';
 import {
-  ProgramDoesNotExistError,
-  ProgramExitedError,
-  ProgramHasNoMetahash,
-  ProgramTerminatedError,
-  SubmitProgramError,
-} from './errors';
-import { generateCodeHash, generateProgramId, getIdsFromKeys, validateGasLimit, validateValue } from './utils';
+  IProgram,
+  IProgramCreateOptions,
+  IProgramCreateResult,
+  IProgramUploadOptions,
+  IProgramUploadResult,
+} from './types';
+import { ProgramDoesNotExistError, ProgramHasNoMetahash, SubmitProgramError } from './errors';
+import {
+  encodePayload,
+  generateCodeHash,
+  generateProgramId,
+  getIdsFromKeys,
+  validateGasLimit,
+  validateProgramId,
+  validateValue,
+} from './utils';
 import { GearApi } from './GearApi';
 import { GearGas } from './Gas';
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from './metadata';
-import { encodePayload } from './utils/create-payload';
 
 export class GearProgram extends GearTransaction {
   public calculateGas: GearGas;
@@ -160,6 +168,36 @@ export class GearProgram extends GearTransaction {
   }
 
   /**
+   * ### Pay program rent
+   * @param programId
+   * @param blockCount
+   * @returns
+   * @example
+   * ```javascript
+   * const tx = await api.program.payRent('0x...', 100_000);
+   * tx.signAndSend(account, (events) => {
+   *   events.forEach(({event}) => console.log(event.toHuman()))
+   * })
+   * ```
+   */
+  async payRent(
+    programId: HexString,
+    blockCount: number,
+  ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>> {
+    await validateProgramId(programId, this._api);
+    return this._api.tx.gear.payProgramRent(programId, blockCount);
+  }
+
+  /**
+   * ### Calculate the cost of rent for a certain number of blocks
+   * @param blockCount
+   * @returns u128 number
+   */
+  calcualtePayRent(blockCount: number): u128 {
+    return this.costPerBlock.muln(blockCount) as u128;
+  }
+
+  /**
    * Get ids of all uploaded programs
    * @returns Array of program ids
    */
@@ -201,17 +239,9 @@ export class GearProgram extends GearTransaction {
    * @returns codeHash of the program
    */
   async codeHash(id: HexString): Promise<HexString> {
-    const programOption = (await this._api.query.gearProgram.programStorage(id)) as Option<ProgramMap>;
+    const program = await this._api.programStorage.getProgram(id);
 
-    if (programOption.isNone) throw new ProgramDoesNotExistError(id);
-
-    const program = programOption.unwrap()[0];
-
-    if (program.isTerminated) throw new ProgramTerminatedError(id);
-
-    if (program.isExited) throw new ProgramExitedError(program.asExited.toHex());
-
-    return program.asActive.codeHash.toHex();
+    return program.codeHash.toHex();
   }
 
   /**
@@ -235,5 +265,17 @@ export class GearProgram extends GearTransaction {
       }
       throw error;
     }
+  }
+
+  get costPerBlock(): u128 {
+    return this._api.consts.gear.programRentCostPerBlock as u128;
+  }
+
+  get rentMinimalResumePeriod(): u32 {
+    return this._api.consts.gear.programRentMinimalResumePeriod as u32;
+  }
+
+  get rentFreePeriod(): u32 {
+    return this._api.consts.gear.programRentFreePeriod as u32;
   }
 }

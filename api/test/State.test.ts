@@ -51,7 +51,7 @@ describe('Read State', () => {
 
     await program.extrinsic.signAndSend(alice, () => {});
 
-    expect(await initStatus()).toBe('success');
+    expect(await initStatus).toBe('success');
   });
 
   test('Get program state', async () => {

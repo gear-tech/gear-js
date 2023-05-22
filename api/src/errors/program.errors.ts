@@ -14,6 +14,14 @@ export class ProgramDoesNotExistError extends Error {
   }
 }
 
+export class PausedProgramDoesNotExistError extends Error {
+  name = 'PausedProgramDoesNotExistError';
+
+  constructor(id: string) {
+    super(`Program with id ${id} not found in paused program storage`);
+  }
+}
+
 export class GetGasSpentError extends Error {
   name = 'GetGasSpentError';
 

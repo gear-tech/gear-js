@@ -7,62 +7,37 @@ import {
   GearKeyring,
   GearTransaction,
   IGearEvent,
-  MessageQueued,
   MessageWaitedData,
-  MessagesDispatched,
   UserMessageSent,
   UserMessageSentData,
 } from '../src';
 
-export const checkInit = (api: GearApi, programId: string) => {
+export const checkInit = (
+  api: GearApi,
+  programId: string,
+  cb?: (status: 'ProgramSet' | 'Active' | 'Terminated', expiration?: number) => void,
+) => {
   let unsub: UnsubscribePromise;
-  let messageId: HexString;
-  const initPromise = new Promise((resolve, reject) => {
-    unsub = api.query.system.events((events) => {
-      events.forEach(({ event }) => {
-        switch (event.method) {
-          case 'MessageQueued':
-            const meEvent = event as MessageQueued;
-            if (meEvent.data.destination.eq(programId) && meEvent.data.entry.isInit) {
-              messageId = meEvent.data.id.toHex();
-            }
-            break;
-          case 'MessagesDispatched': {
-            const mdEvent = event as MessagesDispatched;
-            for (const [id, status] of mdEvent.data.statuses) {
-              if (id.eq(messageId)) {
-                if (status.isSuccess) {
-                  resolve('success');
-                  break;
-                }
-              }
-            }
-            break;
-          }
-          case 'UserMessageSent': {
-            const {
-              data: { message },
-            } = event as UserMessageSent;
-            if (message.details.isSome) {
-              const details = message.details.unwrap();
-              if (details.isReply) {
-                const reply = details.asReply;
-                if (reply.replyTo.eq(messageId) && !reply.statusCode.eq(0)) {
-                  reject(message.payload.toHuman());
-                }
-              }
-            }
-          }
+
+  return new Promise((resolve, reject) => {
+    unsub = api.gearEvents.subscribeToGearEvent('ProgramChanged', ({ data }) => {
+      if (data.id.eq(programId)) {
+        if (data.change.isProgramSet) {
+          cb && cb('ProgramSet', data.change.asProgramSet.expiration.toNumber());
+        } else if (data.change.isActive) {
+          cb && cb('Active', data.change.asActive.expiration.toNumber());
+          unsub.then((fn) => fn());
+          resolve('success');
+        } else if (data.change.isTerminated) {
+          cb && cb('Terminated');
+          unsub.then((fn) => fn());
+          reject(new Error('Program is terminated'));
+        } else {
+          reject(new Error(`Unexpected program status: ${data.change.toHuman()}`));
         }
-      });
+      }
     });
   });
-
-  return async () => {
-    const result = await initPromise;
-    (await unsub)();
-    return result;
-  };
 };
 
 export function listenToUserMessageSent(api: GearApi, programId: HexString) {
