@@ -7,7 +7,7 @@ const { subsquid } = config;
 
 export const processor = new SubstrateBatchProcessor()
   .setDataSource({ archive: subsquid.archiveProvider })
-  .addEvent(EventType.GEAR_MSG_ENQUEUED, { data: { event: { args: true, extrinsic: true } } })
+  .addEvent(EventType.GEAR_MSG_QUEUED, { data: { event: { args: true, extrinsic: true } } })
   .addEvent(EventType.GEAR_USER_MSG_SENT, { data: { event: { args: true } } })
   .addEvent(EventType.GEAR_USER_MSG_READ, { data: { event: { args: true } } })
   .addEvent(EventType.GEAR_MSG_DISPATCHED, { data: { event: { args: true } } })

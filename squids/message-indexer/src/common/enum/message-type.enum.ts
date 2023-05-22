@@ -13,5 +13,5 @@ export enum EventType {
     GEAR_MSG_DISPATCHED = 'Gear.MessagesDispatched',
     GEAR_USER_MSG_READ = 'Gear.UserMessageRead',
     GEAR_USER_MSG_SENT = 'Gear.UserMessageSent',
-    GEAR_MSG_ENQUEUED = 'Gear.MessageQueued',
+    GEAR_MSG_QUEUED = 'Gear.MessageQueued',
 }

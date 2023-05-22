@@ -21,27 +21,37 @@ async function eventHandler(ctx: BatchContext<Store, BatchProcessorItem<typeof p
 
       if (name === EventType.GEAR_USER_MSG_READ) {
         const { id, reason } = item.event.args;
-        const message = await ctx.store.findOneBy(Message, { id });
+        let updateMsg: Message | undefined;
+        updateMsg = await ctx.store.findOneBy(Message, { id });
 
-        if (message) {
+        if (!updateMsg) {
+          updateMsg = messageMap.get(id);
+        }
+
+
+        if(updateMsg) {
           // eslint-disable-next-line no-underscore-dangle
-          message.readReason = reason.value.__kind;
-          message.isInMailBox = false;
+          updateMsg.readReason = reason.value.__kind;
+          updateMsg.isInMailBox = false;
 
-          messageMap.set(message.id, message as Message);
+          messageMap.set(updateMsg.id, updateMsg as Message);
         }
       }
 
       if (name === EventType.GEAR_MSG_DISPATCHED) {
         const { statuses } = item.event.args;
-        const [id, status] = Object.entries(statuses) as [string, any];
-        const statusVal = status as any;
+        const [id, status] = statuses[0];
+        let updateMsg: Message | undefined;
 
-        const message = await ctx.store.findOneBy(Message, { id });
+        updateMsg = await ctx.store.findOneBy(Message, { id });
 
-        if (message) {
-          message.processedWithPanic = statusVal !== 'Success';
-          messageMap.set(message.id, message as Message);
+        if (!updateMsg) {
+          updateMsg = messageMap.get(id);
+        }
+
+        if(updateMsg) {
+          updateMsg.processedWithPanic = status.__kind !== 'Success';
+          messageMap.set(updateMsg.id, updateMsg as Message);
         }
       }
 
@@ -67,7 +77,7 @@ async function eventHandler(ctx: BatchContext<Store, BatchProcessorItem<typeof p
         messageMap.set(id, createMessage);
       }
 
-      if (name === EventType.GEAR_MSG_ENQUEUED) {
+      if (name === EventType.GEAR_MSG_QUEUED) {
         const { destination, id, source, entry } = item.event.args;
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
@@ -99,8 +109,12 @@ async function eventHandler(ctx: BatchContext<Store, BatchProcessorItem<typeof p
   }
 }
 
-export async function run() {
+export function run() {
   processor.run(initDB, async (ctx) => {
-    await eventHandler(ctx);
+    try {
+      await eventHandler(ctx);
+    } catch (error) {
+      console.log('🔴 Indexer error', error);
+    }
   });
 }
