@@ -1,6 +1,7 @@
 import { plainToInstance } from 'class-transformer';
 import { BatchContext, BatchProcessorItem } from '@subsquid/substrate-processor';
 import { Store } from '@subsquid/typeorm-store';
+import { In } from 'typeorm';
 
 import { processor } from './init-processor';
 import { initDB } from './init-db';
@@ -40,18 +41,37 @@ async function eventHandler(ctx: BatchContext<Store, BatchProcessorItem<typeof p
 
       if (name === EventType.GEAR_MSG_DISPATCHED) {
         const { statuses } = item.event.args;
-        const [id, status] = statuses[0];
-        let updateMsg: Message | undefined;
+        let updateMessages: Message[] = [];
+        const msgIds: string[] = [];
+        let msgIdsNotInDB: string[] = [];
+        const msgStatuses = new Map<string, string>();
 
-        updateMsg = await ctx.store.findOneBy(Message, { id });
+        statuses.forEach((msg: string) => {
+          const msgId = msg[0];
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          const { __kind } = msg[1];
 
-        if (!updateMsg) {
-          updateMsg = messageMap.get(id);
-        }
+          msgIds.push(msgId);
+          msgStatuses.set(msgId, __kind);
+        });
 
-        if(updateMsg) {
-          updateMsg.processedWithPanic = status.__kind !== 'Success';
-          messageMap.set(updateMsg.id, updateMsg as Message);
+        updateMessages = await ctx.store.find(Message, { where: { id: In(msgIds) } });
+        msgIdsNotInDB = msgIds.filter(id => updateMessages.every(msg => msg.id !== id));
+
+        msgIdsNotInDB.forEach(id => {
+          const msg = messageMap.get(id);
+          if(msg) updateMessages.push(msg);
+        });
+
+        if(updateMessages.length >= 1) {
+          updateMessages.forEach(msg => {
+            const status = msgStatuses.get(msg.id);
+            msg.processedWithPanic = status !== 'Success';
+            messageMap.set(msg.id, msg as Message);
+          });
+
+          msgStatuses.clear();
         }
       }
 
