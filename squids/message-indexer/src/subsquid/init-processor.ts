@@ -13,18 +13,4 @@ export const processor = new SubstrateBatchProcessor()
   .addEvent(EventType.GEAR_MSG_DISPATCHED, { data: { event: { args: true } } })
   .addEvent(EventType.GEAR_MSG_WAITED, { data: { event: { args: true } } })
   .addEvent(EventType.GEAR_MSG_WOKEN, { data: { event: { args: true } } })
-  .addGearMessageEnqueued('0xa6ee2facc9fe9504e685b827c5b4608da4ccd522cd462c224149a7ef4da76653', {
-    data: {
-      event: {
-        args: true,
-        phase: true,
-        call: { args: true }
-      },
-    }
-  })
-  .addGearUserMessageSent('0xa6ee2facc9fe9504e685b827c5b4608da4ccd522cd462c224149a7ef4da76653', {
-    data: {
-      event: { args: true }
-    }
-  })
   .includeAllBlocks();
