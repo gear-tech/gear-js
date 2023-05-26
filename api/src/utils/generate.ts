@@ -3,6 +3,8 @@ import { HexString } from '@polkadot/util/types';
 import { TypeRegistry } from '@polkadot/types';
 import { u8aToU8a } from '@polkadot/util';
 
+import { CreateType } from '../metadata';
+
 export function generateCodeHash(code: Buffer | Uint8Array | HexString): HexString {
   return blake2AsHex(u8aToU8a(code), 256);
 }
@@ -17,9 +19,12 @@ export function generateProgramId(
 ): HexString {
   const [code, codeHash] = typeof codeOrHash === 'string' ? [undefined, codeOrHash] : [codeOrHash, undefined];
   const codeHashU8a = codeHash ? u8aToU8a(codeHash) : blake2AsU8a(code, 256);
-  const saltU8a = new TypeRegistry().createType('Vec<u8>', salt).toU8a().slice(1);
-  const id = new Uint8Array(codeHashU8a.byteLength + saltU8a.byteLength);
-  id.set(codeHashU8a);
-  id.set(saltU8a, codeHashU8a.byteLength);
+  const saltU8a = CreateType.create('Vec<u8>', salt).toU8a().slice(1);
+  const programStrU8a = new TextEncoder().encode('program');
+  // const id = new Uint8Array(programStrU8a.byteLength + codeHashU8a.byteLength + saltU8a.byteLength);
+  const id = Uint8Array.from([...programStrU8a, ...codeHashU8a, ...saltU8a]);
+  // id.set(programStrU8a);
+  // id.set(codeHashU8a);
+  // id.set(saltU8a, codeHashU8a.byteLength);
   return blake2AsHex(id, 256);
 }
