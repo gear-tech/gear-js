@@ -21,7 +21,7 @@
     "prepare": "npm run build"
   },
   "peerDependencies": {
-    "@gear-js/api": "0.31.1",
+    "@gear-js/api": "0.31.2",
     "@polkadot/api": "10.7.1",
     "@polkadot/extension-dapp": "0.46.3",
     "react": "^18.2.0",
