@@ -2226,6 +2226,7 @@ __metadata:
     "@gear-js/common": "workspace:"
     "@polkadot/api": 10.7.1
     "@polkadot/types": 10.7.1
+    "@polkadot/wasm-crypto": 7.2.1
     "@types/amqplib": 0.10.1
     "@types/node": 18.15.11
     amqplib: 0.10.3
@@ -4050,7 +4051,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/wasm-crypto@npm:^7.2.1":
+"@polkadot/wasm-crypto@npm:7.2.1, @polkadot/wasm-crypto@npm:^7.2.1":
   version: 7.2.1
   resolution: "@polkadot/wasm-crypto@npm:7.2.1"
   dependencies:
