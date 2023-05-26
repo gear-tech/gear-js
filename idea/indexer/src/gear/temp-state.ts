@@ -1,6 +1,6 @@
 import { CodeStatus, MessageReadReason } from '@gear-js/common';
 
-import { MessageEntryPoint, MessageStatus, ProgramStatus, generateUUID } from '../common';
+import { MessageStatus, ProgramStatus, generateUUID } from '../common';
 import { Block, Code, Message, Meta, Program } from '../database';
 import { BlockService, CodeService, MessageService, MetaService, ProgramService } from '../services';
 
@@ -121,7 +121,9 @@ export class TempState {
     const program = await this.getProgram(id);
     if (program) {
       program.status = status;
-      program.expiration = expiration;
+      if (expiration) {
+        program.expiration = expiration;
+      }
     }
   }
 
@@ -138,11 +140,6 @@ export class TempState {
       const msg = await this.getMsg(id);
       if (msg) {
         msg.processedWithPanic = status !== 'Success';
-        if (status === 'Failed') {
-          if (msg.entry === MessageEntryPoint.INIT) {
-            await this.setProgramStatus(msg.destination, ProgramStatus.TERMINATED);
-          }
-        }
       }
     }
   }

@@ -5,7 +5,12 @@ import { HexString } from '@polkadot/util/types';
 import accounts from '../config/accounts';
 import { IPreparedPrograms, IProgramSpec, IUploadedPrograms } from '../interfaces';
 import { sleep } from '../utils';
-import { listenToCodeChanged, listenToMessagesDispatched, listenToUserMessageSent } from './subscriptions';
+import {
+  listenToCodeChanged,
+  listenToMessagesDispatched,
+  listenToProgramChanged,
+  listenToUserMessageSent,
+} from './subscriptions';
 import { checkPrograms } from './check';
 
 async function uploadProgram(
@@ -41,8 +46,8 @@ export async function uploadPrograms(
   const userMessages = new Map<HexString, any>();
   const collectionCodeChanged = new Map<HexString, any>();
 
-  const unsubMessagesDispatched = await listenToMessagesDispatched(api, (messageId, success) => {
-    initSuccess.set(messageId, success);
+  const unsubProgramChanged = await listenToProgramChanged(api, (programId, success) => {
+    initSuccess.set(programId, success);
   });
 
   const unsubUserMessageSent = await listenToUserMessageSent(api, (data) => {
@@ -65,7 +70,7 @@ export async function uploadPrograms(
     };
   }
   await sleep(5000);
-  unsubMessagesDispatched();
+  unsubProgramChanged();
   unsubUserMessageSent();
   unsubCodeChanged();
 

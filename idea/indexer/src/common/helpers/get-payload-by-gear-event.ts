@@ -57,14 +57,18 @@ function userMessageReadPayload({ id, reason }: UserMessageReadData): UserMessag
 }
 
 function programChangedPayload({ id, change }: ProgramChangedData): ProgramChangedInput {
-  const status = change.isActive
-    ? ProgramStatus.ACTIVE
-    : change.isInactive
-      ? ProgramStatus.EXITED
-      : change.isPaused
-        ? ProgramStatus.PAUSED
-        : ProgramStatus.UNKNOWN;
-  const expiration = change.isActive ? change.asActive.expiration.toString() : null;
+  let status: ProgramStatus;
+  let expiration: string;
+
+  if (change.isActive) status = ProgramStatus.ACTIVE;
+  else if (change.isInactive) status = ProgramStatus.EXITED;
+  else if (change.isTerminated) status = ProgramStatus.TERMINATED;
+  else if (change.isPaused) status = ProgramStatus.PAUSED;
+  else if (change.isProgramSet) status = ProgramStatus.PROGRAM_SET;
+  else status = ProgramStatus.UNKNOWN;
+
+  if (change.isActive) expiration = change.asActive.expiration.toString();
+  else if (change.isExpirationChanged) expiration = change.asExpirationChanged.expiration.toString();
 
   return { id: id.toHex(), status, expiration };
 }
