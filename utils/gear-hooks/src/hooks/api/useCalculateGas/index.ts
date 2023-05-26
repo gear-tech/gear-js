@@ -44,7 +44,7 @@ function useCreateCalculateGas(codeId: HexString | undefined, meta?: ProgramMeta
 }
 
 function useHandleCalculateGas(
-  destinationId: HexString | Buffer | undefined,
+  destinationId: HexString | undefined,
   meta?: ProgramMetadata | undefined,
   options?: Options,
 ) {
