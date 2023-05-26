@@ -3,9 +3,6 @@ const NODE_ADDRESS = process.env.REACT_APP_NODE_ADDRESS as string;
 const DEFAULT_NODES_URL = process.env.REACT_APP_DEFAULT_NODES_URL as string;
 const HCAPTCHA_SITE_KEY = process.env.REACT_APP_HCAPTCHA_SITE_KEY as string;
 
-const WASM_COMPILER_GET = `${process.env.REACT_APP_WASM_COMPILER_URL}/get-wasm`;
-const WASM_COMPILER_BUILD = `${process.env.REACT_APP_WASM_COMPILER_URL}/build`;
-
 const NODE_ADRESS_URL_PARAM = 'node';
 
 const EXAMPLES_HREF = 'https://www.gear-tech.io/developers';
@@ -104,8 +101,6 @@ export {
   NODE_ADDRESS,
   DEFAULT_NODES_URL,
   HCAPTCHA_SITE_KEY,
-  WASM_COMPILER_GET,
-  WASM_COMPILER_BUILD,
   NODE_ADRESS_URL_PARAM,
   EXAMPLES_HREF,
   DEFAULT_LIMIT,

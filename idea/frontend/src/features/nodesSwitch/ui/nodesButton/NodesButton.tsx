@@ -3,9 +3,9 @@ import { MouseEvent } from 'react';
 import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
 
-import { ReactComponent as ConnectSVG } from 'shared/assets/images/menu/connect.svg';
 import { AnimationTimeout } from 'shared/config';
 
+import { useNetworkIcon } from 'hooks';
 import styles from './NodesButton.module.scss';
 
 type Props = {
@@ -19,13 +19,15 @@ type Props = {
 };
 
 const NodesButton = ({ name, chain, version, isApiReady, isOpen, isFullWidth, onClick }: Props) => {
+  const { NetworkSVG } = useNetworkIcon();
+
   const btnClasses = clsx(buttonStyles.button, buttonStyles.light, styles.nodeInfoButton, isOpen && styles.open);
 
   return (
     <button type="button" className={btnClasses} onClick={onClick}>
-      <p className={styles.menuIconWrapper}>
-        <ConnectSVG className={buttonStyles.icon} />
-      </p>
+      {/* TODO: NetworkIcon component, same as in ./Node */}
+      <NetworkSVG className={styles.icon} />
+
       <CSSTransition in={isFullWidth} timeout={AnimationTimeout.Tiny} className={styles.nodeInfo} unmountOnExit>
         <p>
           {isApiReady ? (
