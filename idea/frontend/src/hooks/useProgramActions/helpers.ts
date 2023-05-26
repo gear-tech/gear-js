@@ -1,61 +1,21 @@
 import { UnsubscribePromise } from '@polkadot/api/types';
-import { GearApi, MessageQueued, MessagesDispatched, ProgramChanged } from '@gear-js/api';
-import { HexString } from '@polkadot/util/types';
-
-import { Method } from 'entities/explorer';
+import { GearApi } from '@gear-js/api';
 import { ProgramStatus } from 'entities/program';
 
 const waitForProgramInit = (api: GearApi, programId: string) => {
-  let messageId: HexString;
   let unsubPromise: UnsubscribePromise;
 
   const unsubscribe = async () => (await unsubPromise)();
 
   return new Promise<string>((resolve) => {
-    unsubPromise = api.query.system.events((events) => {
-      events.forEach(({ event }) => {
-        switch (event.method) {
-          case Method.MessageQueued: {
-            const meEvent = event as MessageQueued;
-
-            if (meEvent.data.destination.eq(programId) && meEvent.data.entry.isInit) {
-              messageId = meEvent.data.id.toHex();
-            }
-
-            break;
-          }
-
-          case Method.MessagesDispatched: {
-            const mdEvent = event as MessagesDispatched;
-
-            // eslint-disable-next-line no-restricted-syntax
-            for (const [id, status] of mdEvent.data.statuses) {
-              if (id.eq(messageId) && status.isFailed) {
-                resolve(ProgramStatus.Terminated);
-              }
-            }
-
-            break;
-          }
-
-          case Method.ProgramChanged: {
-            const pcEvent = event as ProgramChanged;
-
-            if (pcEvent.data.id.eq(programId)) {
-              if (pcEvent.data.change.isActive) {
-                resolve(ProgramStatus.Active);
-              } else if (pcEvent.data.change.isPaused || pcEvent.data.change.isInactive) {
-                resolve(ProgramStatus.Exited);
-              }
-            }
-
-            break;
-          }
-
-          default:
-            break;
+    unsubPromise = api.gearEvents.subscribeToGearEvent('ProgramChanged', ({ data }) => {
+      if (data.id.eq(programId)) {
+        if (data.change.isActive) {
+          resolve(ProgramStatus.Active);
+        } else if (data.change.isTerminated) {
+          resolve(ProgramStatus.Terminated);
         }
-      });
+      }
     });
   }).finally(unsubscribe);
 };

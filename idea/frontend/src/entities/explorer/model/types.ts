@@ -1,6 +1,6 @@
 import { Vec } from '@polkadot/types';
-import { FrameSystemEventRecord } from '@polkadot/types/lookup';
+import { EventRecord } from '@polkadot/types/interfaces';
 
-type EventRecords = Vec<FrameSystemEventRecord>;
+type EventRecords = Vec<EventRecord>;
 
 export type { EventRecords };
