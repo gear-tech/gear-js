@@ -22,7 +22,7 @@ beforeAll(async () => {
   programId = api.program.upload({ code, gasLimit: 20_000_000_000 }).programId;
   const init = checkInit(api, programId);
   await sendTransaction(api.program, alice, 'MessageQueued');
-  expect(await init()).toBe('success');
+  expect(await init).toBe('success');
   messageWaited = listenToMessageWaited(api);
 });
 
