@@ -1,4 +1,4 @@
-import { CodeMetadata, ProgramMap, CodeChanged, GearApi, generateCodeHash, MessageQueued } from '@gear-js/api';
+import { CodeMetadata, CodeChanged, GearApi, generateCodeHash, MessageQueued, IProgram } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
@@ -22,6 +22,7 @@ import {
   ProgramChangedInput,
   CodeChangedInput,
   MessagesDispatchedDataInput,
+  ProgramStatus,
 } from '../common';
 import { Block, Code, Message, Meta, Program } from '../database/entities';
 import { BlockService, CodeService, MessageService, MetaService, ProgramService, StatusService } from '../services';
@@ -268,17 +269,17 @@ export class GearIndexer {
     }
 
     for (const tx of extrinsics) {
-      const foundEvent = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
+      const mqEvent = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
         this.api.events.gear.MessageQueued.is(event),
       );
 
-      if (!foundEvent) {
+      if (!mqEvent) {
         continue;
       }
 
       const {
         data: { source, destination },
-      } = foundEvent.event as MessageQueued;
+      } = mqEvent.event as MessageQueued;
       const programId = destination.toHex();
       const owner = source.toHex();
       const blockHash = block.block.hash.toHex();
@@ -304,6 +305,7 @@ export class GearIndexer {
           code,
           genesis: this.genesis,
           meta,
+          status: ProgramStatus.PROGRAM_SET,
         }),
       );
     }
@@ -391,7 +393,8 @@ export class GearIndexer {
   }
 
   public async indexBlockWithMissedProgram(programId: HexString): Promise<Program | null> {
-    const progStorage = (await this.api.query.gearProgram.programStorage(programId)) as Option<ProgramMap>;
+    const progStorage = (await this.api.query.gearProgram.programStorage(programId)) as Option<IProgram>;
+
     if (progStorage.isSome) {
       const blockNumber = progStorage.unwrap()[1].toNumber();
 

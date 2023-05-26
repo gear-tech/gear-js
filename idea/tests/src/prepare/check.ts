@@ -11,12 +11,12 @@ function checkPrograms(
   const result: IPreparedPrograms = {};
 
   for (const id of Object.keys(programs)) {
-    assert(initSuccess.has(programs[id].messageId), `InitStatus of ${id} program not found`);
-    assert(programs[id].shouldSuccess === initSuccess.get(programs[id].messageId), `InitStatus of ${id} doesn't match`);
+    assert(initSuccess.has(id), `InitStatus of ${id} program not found`);
+    assert(programs[id].shouldSuccess === initSuccess.get(id), `InitStatus of ${id} doesn't match`);
 
     result[id] = {
       spec: programs[id],
-      init: initSuccess.get(programs[id].messageId),
+      init: initSuccess.get(id),
       id,
       owner: programs[id].owner,
     } as IPreparedProgram;
