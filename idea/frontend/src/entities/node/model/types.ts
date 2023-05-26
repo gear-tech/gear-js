@@ -1,6 +1,6 @@
 type Node = {
   address: string;
-  isCustom?: boolean;
+  isCustom: boolean;
   icon?: string;
 };
 

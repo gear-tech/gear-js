@@ -1,7 +1,7 @@
 const API_URL = process.env.REACT_APP_API_URL as string;
 const NODE_ADDRESS = process.env.REACT_APP_NODE_ADDRESS as string;
+const DEFAULT_NODES_URL = process.env.REACT_APP_DEFAULT_NODES_URL as string;
 const HCAPTCHA_SITE_KEY = process.env.REACT_APP_HCAPTCHA_SITE_KEY as string;
-const NODES_JSON = process.env.REACT_APP_NODES_JSON as string;
 
 const NODE_ADRESS_URL_PARAM = 'node';
 
@@ -99,6 +99,7 @@ enum AnimationTimeout {
 export {
   API_URL,
   NODE_ADDRESS,
+  DEFAULT_NODES_URL,
   HCAPTCHA_SITE_KEY,
   NODE_ADRESS_URL_PARAM,
   EXAMPLES_HREF,
@@ -107,7 +108,6 @@ export {
   ACCOUNT_ERRORS,
   PROGRAM_ERRORS,
   UPLOAD_METADATA_TIMEOUT,
-  NODES_JSON,
   LocalStorage,
   GasMethod,
   TransactionName,

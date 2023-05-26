@@ -22,6 +22,12 @@ $popupWidth: 340px;
   height: 630px;
   border: $borderModal;
 
+  &.loading {
+    @include loading();
+
+    background: $bgColor6;
+  }
+
   .closeBtn {
     position: absolute;
     top: 15px;
