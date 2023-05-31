@@ -5,12 +5,7 @@ import { HexString } from '@polkadot/util/types';
 import accounts from '../config/accounts';
 import { IPreparedPrograms, IProgramSpec, IUploadedPrograms } from '../interfaces';
 import { sleep } from '../utils';
-import {
-  listenToCodeChanged,
-  listenToMessagesDispatched,
-  listenToProgramChanged,
-  listenToUserMessageSent,
-} from './subscriptions';
+import { listenToCodeChanged, listenToProgramChanged, listenToUserMessageSent } from './subscriptions';
 import { checkPrograms } from './check';
 
 async function uploadProgram(

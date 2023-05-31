@@ -306,7 +306,7 @@ export class GearIndexer {
           timestamp: new Date(timestamp),
           code,
           genesis: this.genesis,
-          meta: this.getMeta(programId, code),
+          meta: await this.getMeta(programId, code),
           status: ProgramStatus.PROGRAM_SET,
         }),
       );
@@ -368,7 +368,7 @@ export class GearIndexer {
     const progChangedEvents = block.events
       .filter(
         ({ event: { method, data } }) =>
-          method === 'ProgramChanged' && (data as ProgramChangedData).change.isProgramSet,
+          method === EventNames.ProgramChanged && (data as ProgramChangedData).change.isProgramSet,
       )
       .map(({ event: { data } }: any) => data.id.toHex());
 
@@ -390,7 +390,7 @@ export class GearIndexer {
                 timestamp: new Date(timestamp),
                 genesis: this.genesis,
                 code,
-                meta: this.getMeta(id, code),
+                meta: await this.getMeta(id, code),
                 status: ProgramStatus.PROGRAM_SET,
               }),
             );
@@ -468,7 +468,7 @@ export class GearIndexer {
   }
 
   private async getMeta(programId: HexString, code: Code): Promise<Meta> {
-    let meta: Meta;
+    let meta: Meta | null;
     if (code?.meta) {
       meta = code.meta;
     } else {
