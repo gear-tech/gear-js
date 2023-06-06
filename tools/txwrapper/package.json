@@ -1,0 +1,7 @@
+{
+  "name": "txwrapper",
+  "packageManager": "yarn@3.3.0",
+  "dependencies": {
+    "@substrate/txwrapper-core": "^6.0.1"
+  }
+}
