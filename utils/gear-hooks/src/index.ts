@@ -15,6 +15,8 @@ import {
   SendMessageOptions,
 } from './hooks';
 
+import { withoutCommas } from './utils';
+
 import { AccountProvider, ApiProvider, AlertProvider } from './context';
 
 import {
@@ -55,6 +57,7 @@ export {
   ApiProvider,
   AlertProvider,
   useCreateHandler,
+  withoutCommas,
   DEFAULT_OPTIONS,
   DEFAULT_INFO_OPTIONS,
   DEFAULT_ERROR_OPTIONS,
