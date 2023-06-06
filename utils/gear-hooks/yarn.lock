@@ -48,14 +48,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.31.1":
-  version: 0.31.1
-  resolution: "@gear-js/api@npm:0.31.1"
+"@gear-js/api@npm:0.31.2":
+  version: 0.31.2
+  resolution: "@gear-js/api@npm:0.31.2"
   peerDependencies:
-    "@polkadot/api": 10.4.1
-    "@polkadot/wasm-crypto": ^7.1.2
-    rxjs: ^7.8.0
-  checksum: b0238ff8634a0add50990c252b3636dedd568a0f138960234ea1d32dada9b265aaabf1f6538f3763d95db4bbc5342b01fd15a63cb5a8ad409b2152920cc628d5
+    "@polkadot/api": 10.7.1
+    "@polkadot/wasm-crypto": 7.2.1
+    rxjs: 7.8.1
+  checksum: 0e0d65674130210ee1768bcdd48638c0e6c61f839e3d6e9b9e93fb81efdeca7ce261ef230f8ce294f1f4927e2ab94f575da2f42b70a6d9acb4a08fbf496919ed
   languageName: node
   linkType: hard
 
@@ -63,7 +63,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/react-hooks@workspace:."
   dependencies:
-    "@gear-js/api": 0.31.1
+    "@gear-js/api": 0.31.2
     "@polkadot/api": 10.7.1
     "@polkadot/extension-dapp": 0.46.3
     "@polkadot/extension-inject": 0.46.3
