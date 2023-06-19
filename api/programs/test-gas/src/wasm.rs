@@ -18,7 +18,7 @@ async fn main() {
         panic!("Wrong input");
     }
 
-    let response: InputStruct = msg::send_bytes_for_reply_as(msg::source(), b"PING", 0)
+    let response: InputStruct = msg::send_bytes_for_reply_as(msg::source(), b"PING", 0, 0)
         .expect("Unable to send message for reply")
         .await
         .expect("Error in async");

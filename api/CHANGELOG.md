@@ -1,3 +1,13 @@
+## master
+
+_06/19/2023_
+
+https://github.com/gear-tech/gear-js/pull/1298
+
+### Changes
+
+- New approach to generate program IDs
+
 ## 0.31.2
 
 _05/26/2023_
