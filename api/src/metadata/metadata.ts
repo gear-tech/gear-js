@@ -7,9 +7,12 @@ import { hexToU8a } from '@polkadot/util';
 
 import { TypeStructure } from '../types';
 
+const LOOKUP_REGEXP = /\bLookup\d+\b/g;
+const DIGITS_REGEXP = /\d+/;
+
 export class GearMetadata {
   private registry: Registry;
-  private regTypes: Map<number, { name: string; def: any }>;
+  private regTypes: Map<number, { name: string; def: string }>;
   portableRegistry: PortableRegistry;
 
   constructor(hexRegistry: HexString) {
@@ -21,6 +24,7 @@ export class GearMetadata {
   }
 
   private prepare() {
+    const updateTypes = [];
     for (const type of this.portableRegistry.types) {
       const name = this.portableRegistry.getName(type.id);
       const typeDef = this.portableRegistry.getTypeDef(type.id);
@@ -31,7 +35,26 @@ export class GearMetadata {
           typeDef.lookupIndex === type.id.toNumber(),
           'Lookup index of type is not equal to index in portable registry',
         );
+        if (typeDef.type.includes('Lookup')) {
+          updateTypes.push(typeDef.lookupIndex);
+        }
         this.regTypes.set(typeDef.lookupIndex, { name: typeDef.type, def: null });
+      }
+    }
+    if (updateTypes.length > 0) {
+      for (const id of updateTypes) {
+        this.regTypes.get(id).name = this.getTypeName(id);
+        for (const [type, { name, def }] of this.regTypes.entries()) {
+          if (LOOKUP_REGEXP.test(def)) {
+            const match = def.match(LOOKUP_REGEXP);
+            let newDef = def;
+            for (const m of match) {
+              const index = Number(m.match(DIGITS_REGEXP)[0]);
+              newDef = def.replace(m, this.getTypeName(index));
+            }
+            this.regTypes.set(type, { name, def: newDef });
+          }
+        }
       }
     }
   }

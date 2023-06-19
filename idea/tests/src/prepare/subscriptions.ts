@@ -19,10 +19,20 @@ async function listenToMessagesDispatched(api: GearApi, callback: (id: HexString
   });
 }
 
-async function listenToCodeChanged(api: GearApi,  callback: (logData: CodeChangedData) => void ) {
+async function listenToProgramChanged(api: GearApi, callback: (id: HexString, success: boolean) => void) {
+  return api.gearEvents.subscribeToGearEvent('ProgramChanged', ({ data }) => {
+    if (data.change.isActive) {
+      callback(data.id.toHex(), true);
+    } else if (data.change.isTerminated) {
+      callback(data.id.toHex(), false);
+    }
+  });
+}
+
+async function listenToCodeChanged(api: GearApi, callback: (logData: CodeChangedData) => void) {
   return api.gearEvents.subscribeToGearEvent('CodeChanged', (event) => {
     callback(event.data);
   });
 }
 
-export { listenToUserMessageSent, listenToMessagesDispatched, listenToCodeChanged };
+export { listenToUserMessageSent, listenToMessagesDispatched, listenToCodeChanged, listenToProgramChanged };

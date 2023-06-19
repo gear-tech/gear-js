@@ -1,23 +1,27 @@
 import { useAlert } from '@gear-js/react-hooks';
-import { Button, Radio } from '@gear-js/ui';
+import { Button, radioStyles } from '@gear-js/ui';
+import clsx from 'clsx';
 
+import { Node as NodeType } from 'entities/node';
 import { copyToClipboard } from 'shared/helpers';
 import { ReactComponent as trashSVG } from 'shared/assets/images/actions/trash.svg';
 import { ReactComponent as copyGreenSVG } from 'shared/assets/images/actions/copyGreen.svg';
+import { ICON } from 'widgets/menu/model/consts';
 
-import clsx from 'clsx';
 import styles from './Node.module.scss';
 
-type Props = {
-  address: string;
-  isCustom: boolean;
+type Props = NodeType & {
   nodeAddress: string;
   selectedNode: string;
   selectNode: (address: string) => void;
   removeLocalNode: (address: string) => void;
 };
 
-const Node = ({ address, isCustom, nodeAddress, selectedNode, selectNode, removeLocalNode }: Props) => {
+const Node = (props: Props) => {
+  const { address, isCustom, nodeAddress, selectedNode, selectNode, removeLocalNode, icon = 'gear' } = props;
+
+  const SVG = ICON[icon as keyof typeof ICON].NETWORK;
+
   const alert = useAlert();
 
   const isCurrentNode = nodeAddress === address;
@@ -34,13 +38,21 @@ const Node = ({ address, isCustom, nodeAddress, selectedNode, selectNode, remove
 
   return (
     <li id={address} className={styles.node}>
-      <Radio
-        name="node"
-        label={address}
-        className={clsx(styles.radio, isCurrentNode && styles.current)}
-        checked={selectedNode === address}
-        onChange={handleChange}
-      />
+      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+      <label className={clsx(radioStyles.label, styles.radio, isCurrentNode && styles.current)}>
+        <input
+          type="radio"
+          name="node"
+          checked={selectedNode === address}
+          onChange={handleChange}
+          className={radioStyles.input}
+        />
+
+        <SVG className={styles.icon} />
+
+        {address}
+      </label>
+
       <div className={styles.buttons}>
         <Button
           icon={copyGreenSVG}

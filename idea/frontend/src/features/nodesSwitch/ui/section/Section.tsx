@@ -22,6 +22,7 @@ const Section = memo((props: Props) => {
         key={`${node.address}-${index}`}
         address={node.address}
         isCustom={node.isCustom}
+        icon={node.icon}
         nodeAddress={nodeAddress}
         selectedNode={selectedNode}
         selectNode={selectNode}

@@ -1,3 +1,13 @@
+## 0.31.2
+
+_05/26/2023_
+
+https://github.com/gear-tech/gear-js/pull/1289
+
+### Changes
+
+- Fix registration of complex nested types from metadata.
+
 ## 0.31.1
 
 _05/19/2023_

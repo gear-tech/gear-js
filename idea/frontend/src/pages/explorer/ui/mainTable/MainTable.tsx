@@ -1,6 +1,5 @@
-import { Extrinsic } from '@polkadot/types/interfaces';
+import { Extrinsic , EventRecord } from '@polkadot/types/interfaces';
 import { Vec } from '@polkadot/types';
-import { FrameSystemEventRecord } from '@polkadot/types/lookup';
 import clsx from 'clsx';
 
 import { IdeaEvent } from 'entities/explorer';
@@ -13,7 +12,7 @@ import styles from './MainTable.module.scss';
 
 type Props = {
   extrinsics: Extrinsic[] | undefined;
-  eventRecords: Vec<FrameSystemEventRecord> | undefined;
+  eventRecords: Vec<EventRecord> | undefined;
   error: string;
 };
 
