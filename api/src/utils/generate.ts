@@ -21,10 +21,6 @@ export function generateProgramId(
   const codeHashU8a = codeHash ? u8aToU8a(codeHash) : blake2AsU8a(code, 256);
   const saltU8a = CreateType.create('Vec<u8>', salt).toU8a().slice(1);
   const programStrU8a = new TextEncoder().encode('program');
-  // const id = new Uint8Array(programStrU8a.byteLength + codeHashU8a.byteLength + saltU8a.byteLength);
   const id = Uint8Array.from([...programStrU8a, ...codeHashU8a, ...saltU8a]);
-  // id.set(programStrU8a);
-  // id.set(codeHashU8a);
-  // id.set(saltU8a, codeHashU8a.byteLength);
   return blake2AsHex(id, 256);
 }

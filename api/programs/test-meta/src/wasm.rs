@@ -42,12 +42,13 @@ unsafe extern "C" fn init() {
 
     msg::reply(res, 0).unwrap();
 }
+
 #[no_mangle]
 unsafe extern "C" fn handle() {
     let action: Action = msg::load().unwrap();
 
     match action {
-        Action::One(_) => msg::reply(EmptyStruct { empty: () }, 1000).unwrap(),
+        Action::One(_) => msg::send(msg::source(), EmptyStruct { empty: () }, 1000).unwrap(),
         _ => msg::reply(EmptyStruct { empty: () }, 0).unwrap(),
     };
 }
