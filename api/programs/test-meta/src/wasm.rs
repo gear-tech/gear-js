@@ -48,7 +48,9 @@ unsafe extern "C" fn handle() {
     let action: Action = msg::load().unwrap();
 
     match action {
-        Action::One(_) => msg::send(msg::source(), EmptyStruct { empty: () }, 1000).unwrap(),
+        Action::One(_) => {
+            msg::send_with_gas(msg::source(), EmptyStruct { empty: () }, 10000000, 1000).unwrap()
+        }
         _ => msg::reply(EmptyStruct { empty: () }, 0).unwrap(),
     };
 }
