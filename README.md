@@ -22,7 +22,7 @@ A package with helper functions to generate offline transaction using [@substrat
 
 Refer to the [txwrapper](https://github.com/gear-tech/gear-js/blob/main/tools/txwrapper/README.md) docs for details.
 
-#### [npm package](https://www.npmjs.com/package/@gear-js/gear-meta)
+#### [npm package](https://www.npmjs.com/package/@gear-js/txwrapper)
 
 ## [@gear-js/ui](https://github.com/gear-tech/gear-js/tree/main/utils/gear-ui)
 
