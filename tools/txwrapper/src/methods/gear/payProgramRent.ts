@@ -9,7 +9,7 @@ export interface PayProgramRentArgs extends Args {
   /**
    * The block count to pay for.
    */
-  blockCount: string;
+  blockCount: number;
 }
 
 /**
