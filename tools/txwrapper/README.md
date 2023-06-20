@@ -10,10 +10,7 @@
 
 # Description
 
-This package provides helper functions for offline transactions generation for Gear pallet that can be used with the [@substrate/txwrapper-core](https://github.com/paritytech/txwrapper-core) package.
-
-
-
+This package is designed to provide convenient helper functions for generating offline transactions specifically tailored for the Gear pallet. It seamlessly integrates with the  [@substrate/txwrapper-core](https://github.com/paritytech/txwrapper-core) package, enabling efficient transaction handling.
 
 
 ## Installation
