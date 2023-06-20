@@ -36,5 +36,8 @@
     "build": "rm -rf dist && tsc",
     "sendMessageExample": "ts-node examples/send-message.ts"
   },
-  "packageManager": "yarn@3.3.0"
+  "packageManager": "yarn@3.3.0",
+  "files": [
+    "dist"
+  ]
 }
