@@ -12,9 +12,9 @@
 
 This package provides helper functions for offline transactions generation for Gear pallet that can be used with the [@substrate/txwrapper-core](https://github.com/paritytech/txwrapper-core) package.
 
-Check out example of creating and sending sendMessage transaction [here](https://github.com/gear-tech/gear-js/tree/main/tools/txwrapper/examples/sendMessage.ts)
 
-Check out more usage examples [here](https://github.com/paritytech/txwrapper-core/tree/main/packages/txwrapper-examples)
+
+
 
 ## Installation
 
@@ -29,3 +29,17 @@ yarn add  @gear-js/txwrapper
 ```
 
 ---
+
+## Examples
+
+Check out example of creating and sending sendMessage transaction [here](https://github.com/gear-tech/gear-js/tree/main/tools/txwrapper/examples/sendMessage.ts)
+
+To run the example:
+1. Run the Gear node locally
+2. Run
+```
+yarn install
+yarn sendMessageExample
+```
+
+Check out more usage examples [here](https://github.com/paritytech/txwrapper-core/tree/main/packages/txwrapper-examples)
