@@ -18,7 +18,7 @@ Refer to the [api](https://github.com/gear-tech/gear-js/blob/main/api/README.md)
 
 ## [@gear-js/txwrapper](https://github.com/gear-tech/gear-js/tree/main/tools/txwrapper)
 
-A package with helper functions to generate offline transaction using [@substrate/txwrapper-core](https://github.com/paritytech/txwrapper-core) for Gear pallets
+A package designed to provide helper functions for generating offline transactions using [@substrate/txwrapper-core](https://github.com/paritytech/txwrapper-core) package specifically tailored for the Gear pallet.
 
 Refer to the [txwrapper](https://github.com/gear-tech/gear-js/blob/main/tools/txwrapper/README.md) docs for details.
 
