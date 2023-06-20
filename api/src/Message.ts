@@ -16,7 +16,7 @@ export class GearMessage extends GearTransaction {
    * @param args Message parameters
    * @param meta Program metadata obtained using `getProgramMetadata` function.
    * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.handle.input` will be used instead.
-   * @returns Submitted result
+   * @returns Submittable result
    * ```javascript
    * const programId = '0x..';
    * const hexMeta = '0x...';

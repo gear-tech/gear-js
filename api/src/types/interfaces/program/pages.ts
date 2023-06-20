@@ -5,3 +5,5 @@ export interface IGearPages {
 }
 
 export type WasmPageNumber = u32;
+
+export type GearPageNumber = u32;

@@ -21,7 +21,8 @@ export class GearProgramStorage {
    * @returns
    */
   async getProgram(id: HexString, at?: HexString): Promise<ActiveProgram> {
-    const programOption = (await this._api.query.gearProgram.programStorage(id, at)) as Option<IProgram>;
+    const api = at ? await this._api.at(at) : this._api;
+    const programOption = (await api.query.gearProgram.programStorage(id)) as Option<IProgram>;
 
     if (programOption.isNone) {
       throw new ProgramDoesNotExistError(id);
@@ -42,12 +43,13 @@ export class GearProgramStorage {
    * @param gProg
    * @returns
    */
-  async getProgramPages(programId: HexString, program: ActiveProgram): Promise<IGearPages> {
+  async getProgramPages(programId: HexString, program: ActiveProgram, at?: HexString): Promise<IGearPages> {
     const pages = {};
     for (const page of program.pagesWithData) {
       pages[page.toNumber()] = u8aToU8a(
         await this._api.provider.send('state_getStorage', [
           this._api.query.gearProgram.memoryPageStorage.key(programId, page),
+          at,
         ]),
       );
     }

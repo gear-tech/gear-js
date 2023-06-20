@@ -7,6 +7,7 @@ import {
   MessageWaken,
   MessagesDispatched,
   ProgramChanged,
+  ProgramResumeSessionStarted,
   UserMessageRead,
   UserMessageSent,
 } from './GearEvents';
@@ -22,4 +23,5 @@ export interface IGearEvent {
   ProgramChanged: ProgramChanged;
   DebugDataSnapshot: DebugDataSnapshot;
   DebugMode: DebugMode;
+  ProgramResumeSessionStarted: ProgramResumeSessionStarted;
 }
