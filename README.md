@@ -8,46 +8,46 @@
 </p>
 <hr>
 
-## [@gear-js/api](https://github.com/gear-tech/gear-js/tree/master/api)
+## [@gear-js/api](https://github.com/gear-tech/gear-js/tree/main/api)
 
 A JavaScript library that enables connection to the Gear node and allows interaction with it.
 
-Refer to the [api](https://github.com/gear-tech/gear-js/blob/master/api/README.md) docs for details.
+Refer to the [api](https://github.com/gear-tech/gear-js/blob/main/api/README.md) docs for details.
 
 #### [npm package](https://www.npmjs.com/package/@gear-js/api)
 
-## [@gear-js/gear-meta](https://github.com/gear-tech/gear-js/tree/master/utils/meta-cli)
+## [@gear-js/txwrapper](https://github.com/gear-tech/gear-js/tree/main/tools/txwrapper)
 
-A JavaScript CLI tool that provides functionality for working with `.meta.wasm` files.
+A package designed to provide helper functions for generating offline transactions using [@substrate/txwrapper-core](https://github.com/paritytech/txwrapper-core) package specifically tailored for the Gear pallet.
 
-Refer to the [meta-cli](https://github.com/gear-tech/gear-js/blob/master/utils/meta-cli/README.md) docs for details.
+Refer to the [txwrapper](https://github.com/gear-tech/gear-js/blob/main/tools/txwrapper/README.md) docs for details.
 
-#### [npm package](https://www.npmjs.com/package/@gear-js/gear-meta)
+#### [npm package](https://www.npmjs.com/package/@gear-js/txwrapper)
 
-## [@gear-js/ui](https://github.com/gear-tech/gear-js/tree/master/utils/gear-ui)
+## [@gear-js/ui](https://github.com/gear-tech/gear-js/tree/main/utils/gear-ui)
 
 React UI components used across Gear applications.
 
-Refer to the [gear-ui](https://github.com/gear-tech/gear-js/blob/master/utils/gear-ui/README.md) docs for details.
+Refer to the [gear-ui](https://github.com/gear-tech/gear-js/blob/main/utils/gear-ui/README.md) docs for details.
 
 #### [npm package](https://www.npmjs.com/package/@gear-js/ui)
 
-## [Gear Idea](https://github.com/gear-tech/gear-js/tree/master/idea)
+## [Gear Idea](https://github.com/gear-tech/gear-js/tree/main/idea)
 
 The source code of the portal for smart-contract developers and backend microservices - [idea.gear-tech.io](https://idea.gear-tech.io/).
 
-#### [frontend](https://github.com/gear-tech/gear-js/tree/master/idea/frontend)
+#### [frontend](https://github.com/gear-tech/gear-js/tree/main/idea/frontend)
 
 A React application that serves as a get-familiar with Gear to help developers write, test and upload smart contracts to a test network as well as manage accounts, balances, events and more.
 
-#### [indexer](https://github.com/gear-tech/gear-js/tree/master/idea/indexer)
+#### [indexer](https://github.com/gear-tech/gear-js/tree/main/idea/indexer)
 
 A microservice responsible for blockchain indexing and storing information about programs and their messages as well as for storing programs metadata.
 
-#### [test-balance](https://github.com/gear-tech/gear-js/tree/master/idea/test-balance)
+#### [test-balance](https://github.com/gear-tech/gear-js/tree/main/idea/test-balance)
 
 A microservice that provides the opportunity to obtain test tokens.
 
-#### [api-gateway](https://github.com/gear-tech/gear-js/tree/master/idea/api-gateway)
+#### [api-gateway](https://github.com/gear-tech/gear-js/tree/main/idea/api-gateway)
 
 A microservice that provides any interaction between data-storage / test-balance services and an external user.
