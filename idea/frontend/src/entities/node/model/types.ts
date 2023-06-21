@@ -1,6 +1,7 @@
 type Node = {
-  isCustom: boolean;
   address: string;
+  isCustom: boolean;
+  icon?: string;
 };
 
 type NodeSection = {

@@ -58,7 +58,7 @@ describe('Calculate gas', () => {
     codeId = program.codeId;
     const initStatus = checkInit(api, programId);
     await sendTransaction(program.extrinsic, alice, 'MessageQueued');
-    expect(await initStatus()).toBe('success');
+    expect(await initStatus).toBe('success');
   });
 
   test('Get init gas spent (create)', async () => {
@@ -82,7 +82,7 @@ describe('Calculate gas', () => {
     programId = program.programId;
     const initStatus = checkInit(api, programId);
     await sendTransaction(program.extrinsic, alice, 'MessageQueued');
-    expect(await initStatus()).toBe('success');
+    expect(await initStatus).toBe('success');
   });
 
   test('Get handle gas spent', async () => {

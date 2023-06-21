@@ -41,3 +41,10 @@ export async function validateCodeId(codeId: HexString, api: GearApi) {
     throw new ValidationError('Code already exists');
   }
 }
+
+export async function validateProgramId(programId: HexString, api: GearApi) {
+  const isExist = await api.program.exists(programId);
+  if (!isExist) {
+    throw new ValidationError(`Program with id ${programId} doesn't exist`);
+  }
+}

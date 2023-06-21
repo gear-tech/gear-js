@@ -7,9 +7,7 @@ const isDevSection = (section: NodeSection) => section.caption === DEVELOPMENT_S
 
 const getLocalNodes = (nodes: Node[]): Node[] =>
   nodes.reduce((result, node) => {
-    if (node.isCustom) {
-      result.push(node);
-    }
+    if (node.isCustom) result.push(node);
 
     return result;
   }, [] as Node[]);

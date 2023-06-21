@@ -1,4 +1,12 @@
-import { CodeMetadata, ProgramMap, CodeChanged, GearApi, generateCodeHash, MessageQueued } from '@gear-js/api';
+import {
+  CodeMetadata,
+  CodeChanged,
+  GearApi,
+  generateCodeHash,
+  MessageQueued,
+  IProgram,
+  ProgramChangedData,
+} from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
@@ -22,6 +30,7 @@ import {
   ProgramChangedInput,
   CodeChangedInput,
   MessagesDispatchedDataInput,
+  ProgramStatus,
 } from '../common';
 import { Block, Code, Message, Meta, Program } from '../database';
 import { BlockService, CodeService, MessageService, MetaService, ProgramService, StatusService } from '../services';
@@ -128,6 +137,7 @@ export class GearIndexer {
     const timestamp = (await this.api.blocks.getBlockTimestamp(block)).toNumber();
 
     await this.handleExtrinsics(block, timestamp);
+    await this.handleProgramsCreatedFromPrograms(block, timestamp);
     await this.handleEvents(block, timestamp);
     this.handleBlock(block, timestamp);
 
@@ -154,8 +164,9 @@ export class GearIndexer {
         }),
       );
     },
-    [EventNames.ProgramChanged]: async (data: ProgramChangedInput) =>
-      await this.tempState.setProgramStatus(data.id, data.status, data.expiration),
+    [EventNames.ProgramChanged]: async (data: ProgramChangedInput) => {
+      await this.tempState.setProgramStatus(data.id, data.status, data.expiration);
+    },
     [EventNames.MessagesDispatched]: (data: MessagesDispatchedDataInput) =>
       this.tempState.setDispatchedStatus(data.statuses),
     [EventNames.UserMessageRead]: (data: UserMessageReadInput) => this.tempState.setReadStatus(data.id, data.reason),
@@ -268,31 +279,23 @@ export class GearIndexer {
     }
 
     for (const tx of extrinsics) {
-      const foundEvent = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
+      const mqEvent = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
         this.api.events.gear.MessageQueued.is(event),
       );
 
-      if (!foundEvent) {
+      if (!mqEvent) {
         continue;
       }
 
       const {
         data: { source, destination },
-      } = foundEvent.event as MessageQueued;
+      } = mqEvent.event as MessageQueued;
       const programId = destination.toHex();
       const owner = source.toHex();
       const blockHash = block.block.hash.toHex();
 
       const codeId = tx.method.method === 'uploadProgram' ? generateCodeHash(tx.args[0].toHex()) : tx.args[0].toHex();
       const code = await this.getCode(codeId, blockHash, programId);
-
-      let meta: Meta;
-      if (code?.meta) {
-        meta = code.meta;
-      } else {
-        const metahash = await getMetahash(this.api.program, programId);
-        meta = metahash ? await this.tempState.getMeta(metahash) : null;
-      }
 
       this.tempState.addProgram(
         plainToInstance(Program, {
@@ -303,7 +306,8 @@ export class GearIndexer {
           timestamp: new Date(timestamp),
           code,
           genesis: this.genesis,
-          meta,
+          meta: await this.getMeta(programId, code),
+          status: ProgramStatus.PROGRAM_SET,
         }),
       );
     }
@@ -360,6 +364,42 @@ export class GearIndexer {
     }
   }
 
+  private async handleProgramsCreatedFromPrograms(block: SignedBlockExtended, timestamp: number) {
+    const progChangedEvents = block.events
+      .filter(
+        ({ event: { method, data } }) =>
+          method === EventNames.ProgramChanged && (data as ProgramChangedData).change.isProgramSet,
+      )
+      .map(({ event: { data } }: any) => data.id.toHex());
+
+    const blockHash = block.block.header.hash.toHex();
+
+    for (const id of progChangedEvents) {
+      const program = await this.getProgramWithoutIndexing(id);
+      if (!program) {
+        const progStorage = (await this.api.query.gearProgram.programStorage(id)) as Option<IProgram>;
+        if (progStorage.isSome) {
+          if (progStorage.unwrap().isActive) {
+            const { codeHash } = progStorage.unwrap().asActive;
+            const code = await this.getCode(codeHash.toHex(), blockHash, id);
+            this.tempState.addProgram(
+              plainToInstance(Program, {
+                id,
+                name: id,
+                blockHash,
+                timestamp: new Date(timestamp),
+                genesis: this.genesis,
+                code,
+                meta: await this.getMeta(id, code),
+                status: ProgramStatus.PROGRAM_SET,
+              }),
+            );
+          }
+        }
+      }
+    }
+  }
+
   private handleBlock(block: SignedBlockExtended, timestamp: number) {
     const blockNumber = block.block.header.number.toString();
     this.tempState.addBlock(
@@ -391,7 +431,8 @@ export class GearIndexer {
   }
 
   public async indexBlockWithMissedProgram(programId: HexString): Promise<Program | null> {
-    const progStorage = (await this.api.query.gearProgram.programStorage(programId)) as Option<ProgramMap>;
+    const progStorage = (await this.api.query.gearProgram.programStorage(programId)) as Option<IProgram>;
+
     if (progStorage.isSome) {
       const blockNumber = progStorage.unwrap()[1].toNumber();
 
@@ -402,6 +443,10 @@ export class GearIndexer {
 
     logger.error(`Program with id ${programId} not found in storage`);
     return null;
+  }
+
+  private getProgramWithoutIndexing(id: HexString): Promise<Program> {
+    return this.tempState.getProgram(id);
   }
 
   private async getProgram(id: HexString, blockHash: HexString, msgId: HexString): Promise<Program> {
@@ -420,5 +465,16 @@ export class GearIndexer {
       code = await this.indexBlockWithMissedCode(id);
     }
     return code;
+  }
+
+  private async getMeta(programId: HexString, code: Code): Promise<Meta> {
+    let meta: Meta | null;
+    if (code?.meta) {
+      meta = code.meta;
+    } else {
+      const metahash = await getMetahash(this.api.program, programId);
+      meta = metahash ? await this.tempState.getMeta(metahash) : null;
+    }
+    return meta;
   }
 }

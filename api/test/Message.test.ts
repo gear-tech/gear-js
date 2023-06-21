@@ -40,7 +40,7 @@ describe('Gear Message', () => {
     const status = checkInit(api, programId);
     const transactionData = await sendTransaction(api.program, alice, 'MessageQueued');
     expect(transactionData.destination).toBe(programId);
-    expect(await status()).toBe('success');
+    expect(await status).toBe('success');
   });
 
   test('send messages', async () => {
@@ -52,7 +52,6 @@ describe('Gear Message', () => {
         },
         value: 1_000,
         reply: '0x',
-        claim: true,
       },
     ];
 
@@ -77,22 +76,18 @@ describe('Gear Message', () => {
       expect(reply?.message.details.unwrap().isReply).toBeTruthy();
       expect(reply?.message.details.unwrap().asReply.statusCode.toNumber()).toBe(0);
       expect(reply?.message.payload.toHex()).toBe(message.reply);
-      if (message.claim) {
-        messageToClaim = reply.message.id.toHex();
-      }
     }
   });
 
   test('Read mailbox', async () => {
-    expect(messageToClaim).toBeDefined();
     const mailbox = await api.mailbox.read(decodeAddress(alice.address));
-    const filteredMB = mailbox.filter((value) => value[0].id.eq(messageToClaim));
-    expect(filteredMB).toHaveLength(1);
-    expect(filteredMB).toHaveProperty([0, 'toHuman']);
-    expect(filteredMB[0].toHuman()).toHaveLength(2);
-    expect(filteredMB).toHaveProperty([0, 0, 'id']);
-    expect(filteredMB).toHaveProperty([0, 1, 'finish']);
-    expect(filteredMB).toHaveProperty([0, 1, 'start']);
+    expect(mailbox).toHaveLength(1);
+    expect(mailbox).toHaveProperty([0, 'toHuman']);
+    expect(mailbox[0].toHuman()).toHaveLength(2);
+    expect(mailbox).toHaveProperty([0, 0, 'id']);
+    messageToClaim = mailbox[0][0].id.toHex();
+    expect(mailbox).toHaveProperty([0, 1, 'finish']);
+    expect(mailbox).toHaveProperty([0, 1, 'start']);
   });
 
   test('Read mailbox with message id', async () => {

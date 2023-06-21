@@ -1,3 +1,36 @@
+## master
+
+_06/19/2023_
+
+https://github.com/gear-tech/gear-js/pull/1298
+
+### Changes
+
+- New approach to generate program IDs
+
+## 0.31.2
+
+_05/26/2023_
+
+https://github.com/gear-tech/gear-js/pull/1289
+
+### Changes
+
+- Fix registration of complex nested types from metadata.
+
+## 0.31.1
+
+_05/19/2023_
+
+https://github.com/gear-tech/gear-js/pull/1283
+
+### Changes
+
+- Add `api.program.payRent` method to execute `programPayRent` extrinsic accorind to https://github.com/gear-tech/gear/pull/2535
+- Bump polkadot-js pkgs to `10.7.1` version
+- Update `ProgramChanged` event according to https://github.com/gear-tech/gear/pull/2507
+- Add methods to get paused programs info
+
 ## 0.31.0
 
 _04/29/2023_

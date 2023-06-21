@@ -13,6 +13,7 @@ const api = new GearApi({ providerAddress: WS_ADDRESS });
 let alice: KeyringPair;
 let codeId: HexString;
 let programId: HexString;
+let expiration: number;
 let metaHash: HexString;
 
 const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
@@ -46,16 +47,34 @@ describe('New Program', () => {
     programId = program.programId;
     codeId = program.codeId;
 
-    const status = checkInit(api, program.programId);
+    let programSetExpiration: number;
+    let activeExpiration: number;
+    let isProgramSetHappened = false;
+    let isActiveHappened = false;
+
+    const status = checkInit(api, program.programId, (st, exp) => {
+      if (st === 'ProgramSet') {
+        isProgramSetHappened = true;
+        if (exp) programSetExpiration = exp;
+      } else if (st === 'Active') {
+        isActiveHappened = true;
+        if (exp) activeExpiration = exp;
+      }
+    });
+
     const waitForReply = api.message.listenToReplies(programId);
 
     const transactionData = await sendTransaction(program.extrinsic, alice, 'MessageQueued');
 
     expect(transactionData.destination).toBe(program.programId);
-    expect(await status()).toBe('success');
+    expect(await status).toBe('success');
 
     const reply = await waitForReply(transactionData.id);
     expect(metadata.createType(metadata.types.init.output!, reply.message.payload).toJSON()).toMatchObject({ One: 1 });
+    expect(isProgramSetHappened).toBeTruthy();
+    expect(isActiveHappened).toBeTruthy();
+    expect(programSetExpiration!).toBe(activeExpiration!);
+    expiration = activeExpiration!;
   });
 
   test('Сreate program', async () => {
@@ -75,13 +94,21 @@ describe('New Program', () => {
     expect(programId).toBeDefined();
     expect(salt).toBeDefined();
 
-    const status = checkInit(api, programId);
+    const programChangedStatuses: string[] = [];
+
+    const status = checkInit(api, programId, (st) => {
+      programChangedStatuses.push(st);
+    });
+
     const waitForReply = api.message.listenToReplies(programId);
 
     const transactionData = await sendTransaction(api.program, alice, 'MessageQueued');
 
     expect(transactionData.destination).toBe(programId);
-    expect(await status()).toBe('success');
+    expect(await status).toBe('success');
+
+    expect(programChangedStatuses).toContain('ProgramSet');
+    expect(programChangedStatuses).toContain('Active');
 
     const reply = await waitForReply(transactionData.id);
     expect(metadata.createType(metadata.types.init.output!, reply.message.payload).toJSON()).toMatchObject({ One: 1 });
@@ -107,6 +134,21 @@ describe('New Program', () => {
 
   test('Not to throw error if gasLimit is correct', () => {
     expect(() => api.program.upload({ code: Buffer.from('0x00'), gasLimit: api.blockGasLimit })).not.toThrow();
+  });
+
+  test('Pay program rent', async () => {
+    const tx = await api.program.payRent(programId, 10_000);
+    const result = await sendTransaction(tx, alice, 'ProgramChanged');
+    expect(result).toHaveProperty('id');
+    expect(result.id).toBe(programId);
+    expect(result).toHaveProperty(['change', 'ExpirationChanged', 'expiration']);
+    expect(Number(result.change.ExpirationChanged.expiration.replaceAll(',', ''))).toBe(expiration + 10_000);
+  });
+
+  test('Calculate pay rent', () => {
+    const costPerBlock = api.program.costPerBlock;
+    const pay = api.program.calcualtePayRent(10_000);
+    expect(pay.toString()).toBe(costPerBlock.muln(10_000).toString());
   });
 });
 

@@ -6,7 +6,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { IProgram, SchemeProgram } from '../types/index';
-import { isMsgDispatchedSuccessfully } from './findEvents';
+import { isMsgDispatchedSuccessfully, isProgramInitialized } from './findEvents';
 import { logger } from '../utils/index';
 
 export async function uploadProgram(
@@ -49,7 +49,7 @@ export async function uploadProgram(
   );
 
   logger.info(`Program added to block ${blockHash}`, { lvl: 1 });
-  const isSuccess = await isMsgDispatchedSuccessfully(api, msgId, blockHash);
+  const isSuccess = await isProgramInitialized(api, programId, blockHash);
 
   if (isSuccess) {
     logger.info('Program initialized successfuly', { lvl: 1 });
