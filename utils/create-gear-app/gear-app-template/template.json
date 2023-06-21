@@ -8,7 +8,7 @@
     "dependencies": {
       "@gear-js/api": "0.30.6",
       "@gear-js/react-hooks": "0.5.16",
-      "@gear-js/ui": "0.5.18",
+      "@gear-js/ui": "0.5.19",
       "@mantine/form": "6.0.8",
       "@polkadot/api": "10.3.4",
       "@polkadot/extension-dapp": "0.45.5",
