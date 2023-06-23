@@ -345,7 +345,7 @@ dependencies = [
 [[package]]
 name = "galloc"
 version = "0.2.0"
-source = "git+https://github.com/gear-tech/gear.git#72b3944a3a3a4a7d5d1caaaf37f9fdf01b26f5ca"
+source = "git+https://github.com/gear-tech/gear.git#fe847046d3909871c2252a7a22794e3bcecb608e"
 dependencies = [
  "dlmalloc",
 ]
@@ -353,7 +353,7 @@ dependencies = [
 [[package]]
 name = "gcore"
 version = "0.2.0"
-source = "git+https://github.com/gear-tech/gear.git#72b3944a3a3a4a7d5d1caaaf37f9fdf01b26f5ca"
+source = "git+https://github.com/gear-tech/gear.git#fe847046d3909871c2252a7a22794e3bcecb608e"
 dependencies = [
  "gear-core-errors",
  "gsys",
@@ -364,7 +364,7 @@ dependencies = [
 [[package]]
 name = "gear-core"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#72b3944a3a3a4a7d5d1caaaf37f9fdf01b26f5ca"
+source = "git+https://github.com/gear-tech/gear.git#fe847046d3909871c2252a7a22794e3bcecb608e"
 dependencies = [
  "blake2-rfc",
  "derive_more",
@@ -383,7 +383,7 @@ dependencies = [
 [[package]]
 name = "gear-core-errors"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#72b3944a3a3a4a7d5d1caaaf37f9fdf01b26f5ca"
+source = "git+https://github.com/gear-tech/gear.git#fe847046d3909871c2252a7a22794e3bcecb608e"
 dependencies = [
  "derive_more",
  "enum-iterator",
@@ -393,7 +393,7 @@ dependencies = [
 [[package]]
 name = "gear-wasm-builder"
 version = "0.1.2"
-source = "git+https://github.com/gear-tech/gear.git#72b3944a3a3a4a7d5d1caaaf37f9fdf01b26f5ca"
+source = "git+https://github.com/gear-tech/gear.git#fe847046d3909871c2252a7a22794e3bcecb608e"
 dependencies = [
  "anyhow",
  "cargo_metadata",
@@ -416,7 +416,7 @@ dependencies = [
 [[package]]
 name = "gear-wasm-instrument"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#72b3944a3a3a4a7d5d1caaaf37f9fdf01b26f5ca"
+source = "git+https://github.com/gear-tech/gear.git#fe847046d3909871c2252a7a22794e3bcecb608e"
 dependencies = [
  "enum-iterator",
  "wasm-instrument",
@@ -425,7 +425,7 @@ dependencies = [
 [[package]]
 name = "gmeta"
 version = "0.2.0"
-source = "git+https://github.com/gear-tech/gear.git#72b3944a3a3a4a7d5d1caaaf37f9fdf01b26f5ca"
+source = "git+https://github.com/gear-tech/gear.git#fe847046d3909871c2252a7a22794e3bcecb608e"
 dependencies = [
  "blake2-rfc",
  "derive_more",
@@ -437,7 +437,7 @@ dependencies = [
 [[package]]
 name = "gmeta-codegen"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#72b3944a3a3a4a7d5d1caaaf37f9fdf01b26f5ca"
+source = "git+https://github.com/gear-tech/gear.git#fe847046d3909871c2252a7a22794e3bcecb608e"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -447,7 +447,7 @@ dependencies = [
 [[package]]
 name = "gstd"
 version = "0.2.0"
-source = "git+https://github.com/gear-tech/gear.git#72b3944a3a3a4a7d5d1caaaf37f9fdf01b26f5ca"
+source = "git+https://github.com/gear-tech/gear.git#fe847046d3909871c2252a7a22794e3bcecb608e"
 dependencies = [
  "bs58",
  "futures",
@@ -466,7 +466,7 @@ dependencies = [
 [[package]]
 name = "gstd-codegen"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#72b3944a3a3a4a7d5d1caaaf37f9fdf01b26f5ca"
+source = "git+https://github.com/gear-tech/gear.git#fe847046d3909871c2252a7a22794e3bcecb608e"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -476,7 +476,7 @@ dependencies = [
 [[package]]
 name = "gsys"
 version = "0.2.0"
-source = "git+https://github.com/gear-tech/gear.git#72b3944a3a3a4a7d5d1caaaf37f9fdf01b26f5ca"
+source = "git+https://github.com/gear-tech/gear.git#fe847046d3909871c2252a7a22794e3bcecb608e"
 
 [[package]]
 name = "hashbrown"
@@ -798,9 +798,9 @@ checksum = "f91339c0467de62360649f8d3e185ca8de4224ff281f66000de5eb2a77a79041"
 
 [[package]]
 name = "scale-info"
-version = "2.7.0"
+version = "2.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b569c32c806ec3abdf3b5869fb8bf1e0d275a7c1c9b0b05603d9464632649edf"
+checksum = "ad560913365790f17cbf12479491169f01b9d46d29cfc7422bf8c64bdc61b731"
 dependencies = [
  "cfg-if",
  "derive_more",
@@ -810,9 +810,9 @@ dependencies = [
 
 [[package]]
 name = "scale-info-derive"
-version = "2.6.0"
+version = "2.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "53012eae69e5aa5c14671942a5dd47de59d4cdcff8532a6dd0e081faf1119482"
+checksum = "19df9bd9ace6cc2fe19387c96ce677e823e07d017ceed253e7bb3d1d1bd9c73b"
 dependencies = [
  "proc-macro-crate",
  "proc-macro2",
