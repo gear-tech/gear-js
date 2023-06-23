@@ -57,7 +57,7 @@ describe('Calculate gas', () => {
     programId = program.programId;
     codeId = program.codeId;
     const initStatus = checkInit(api, programId);
-    await sendTransaction(program.extrinsic, alice, 'MessageQueued');
+    await sendTransaction(program.extrinsic, alice, ['MessageQueued']);
     expect(await initStatus).toBe('success');
   });
 
@@ -81,7 +81,7 @@ describe('Calculate gas', () => {
     );
     programId = program.programId;
     const initStatus = checkInit(api, programId);
-    await sendTransaction(program.extrinsic, alice, 'MessageQueued');
+    await sendTransaction(program.extrinsic, alice, ['MessageQueued']);
     expect(await initStatus).toBe('success');
   });
 
@@ -110,7 +110,7 @@ describe('Calculate gas', () => {
       meta,
     );
     const waitForReply = listenToUserMessageSent(api, programId);
-    await sendTransaction(tx, alice, 'MessageQueued');
+    await sendTransaction(tx, alice, ['MessageQueued']);
     const { message } = await waitForReply(null);
     expect(message.id).toBeDefined();
     messageId = message.id.toHex();
@@ -140,7 +140,7 @@ describe('Calculate gas', () => {
       },
       meta,
     );
-    const data = await sendTransaction(tx, alice, 'MessageQueued');
+    const [data] = await sendTransaction(tx, alice, ['MessageQueued']);
     expect(data).toBeDefined();
   });
 });

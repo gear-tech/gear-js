@@ -24,7 +24,7 @@ describe.skip('DebugMode', () => {
 
   test('enable debug mode', async () => {
     debug.enable();
-    const transactionData = await sendTransaction(debug.enabled, alice, 'DebugMode');
+    const [transactionData] = await sendTransaction(debug.enabled, alice, ['DebugMode']);
     expect(transactionData[0]).toBeTruthy();
   });
 
@@ -37,9 +37,9 @@ describe.skip('DebugMode', () => {
       code: readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_ping.opt.wasm')),
       gasLimit: 2_000_000_000,
     });
-    await sendTransaction(api.program.extrinsic, alice, 'MessageQueued');
+    await sendTransaction(api.program.extrinsic, alice, ['MessageQueued']);
     api.message.send({ destination: programId, payload: 'PING', gasLimit: 2_000_000_000 });
-    await sendTransaction(api.message.extrinsic, alice, 'MessageQueued');
+    await sendTransaction(api.message.extrinsic, alice, ['MessageQueued']);
     (await unsub)();
     expect(snapshots).toHaveLength(2);
     for (const snapshot of snapshots) {
@@ -56,7 +56,7 @@ describe.skip('DebugMode', () => {
 
   test('disable debug mode', async () => {
     debug.disable();
-    const transactionData = await sendTransaction(debug.enabled, alice, 'DebugMode');
+    const [transactionData] = await sendTransaction(debug.enabled, alice, ['DebugMode']);
     expect(transactionData[0]).toBeFalsy();
   });
 });

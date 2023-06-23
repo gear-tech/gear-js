@@ -9,6 +9,7 @@ import {
   MessageWakenData,
   MessagesDispatchedData,
   ProgramChangedData,
+  ProgramResumeSessionStartedData,
   TransferData,
   UserMessageReadData,
   UserMessageSentData,
@@ -39,3 +40,5 @@ export type DebugDataSnapshot = GearEvent<DebugData>;
 export type DebugMode = GearEvent<DebugModeData>;
 
 export type Transfer = GearEvent<TransferData>;
+
+export type ProgramResumeSessionStarted = GearEvent<ProgramResumeSessionStartedData>;

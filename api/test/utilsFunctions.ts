@@ -8,6 +8,7 @@ import {
   GearTransaction,
   IGearEvent,
   MessageWaitedData,
+  ProgramChangedData,
   UserMessageSent,
   UserMessageSentData,
 } from '../src';
@@ -76,18 +77,22 @@ export function listenToUserMessageSent(api: GearApi, programId: HexString) {
 export async function sendTransaction<E extends keyof IGearEvent = keyof IGearEvent>(
   submitted: GearTransaction | SubmittableExtrinsic<'promise'>,
   account: KeyringPair,
-  methodName: E,
+  methods: E[],
 ): Promise<any> {
+  const result: any = new Array(methods.length);
   return new Promise((resolve, reject) => {
     submitted
       .signAndSend(account, ({ events, status }) => {
         events.forEach(({ event: { method, data } }) => {
-          if (method === methodName && status.isFinalized) {
-            resolve(data.toHuman());
+          if (methods.includes(method as E) && status.isInBlock) {
+            result[methods.indexOf(method as E)] = data;
           } else if (method === 'ExtrinsicFailed') {
             reject(data.toString());
           }
         });
+        if (status.isInBlock) {
+          resolve(result);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -119,4 +124,25 @@ export const listenToMessageWaited = (api: GearApi) => {
     }
     return message;
   };
+};
+
+export const waitForPausedProgram = (
+  api: GearApi,
+  programId: HexString,
+  blockNumber: number,
+): Promise<[HexString, HexString]> => {
+  return new Promise((resolve) => {
+    const unsub = api.derive.chain.subscribeNewBlocks(({ block, events }) => {
+      if (block.header.number.eq(blockNumber)) {
+        const event = events.filter(
+          ({ event: { method, data } }) =>
+            method === 'ProgramChanged' &&
+            (data as ProgramChangedData).id.eq(programId) &&
+            (data as ProgramChangedData).change.isPaused,
+        );
+        unsub.then((fn) => fn());
+        resolve([(event[0].event.data as ProgramChangedData).id.toHex(), block.header.hash.toHex()]);
+      }
+    });
+  });
 };

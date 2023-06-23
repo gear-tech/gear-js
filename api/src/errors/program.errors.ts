@@ -61,3 +61,27 @@ export class ProgramHasNoMetahash extends Error {
     super(`Program with id ${id} has not metahash function`);
   }
 }
+
+export class ResumeSessionInitError extends Error {
+  name = 'ResumeSessionInitError';
+
+  constructor(programId: string, msg?: string) {
+    super(`Resume session init for program ${programId} failed. ${msg ? msg : ''}`);
+  }
+}
+
+export class ResumeSessionPushError extends Error {
+  name = 'ResumeSessionPushError';
+
+  constructor(sessionId: string | number | bigint, msg?: string) {
+    super(`Failed to push pages to session ${sessionId}. ${msg || ''}`);
+  }
+}
+
+export class ResumeSessionCommitError extends Error {
+  name = 'ResumeSessionCommitError';
+
+  constructor(sessionId: string | number | bigint, msg?: string) {
+    super(`Failed to commit session ${sessionId}. ${msg || ''}`);
+  }
+}

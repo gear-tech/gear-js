@@ -38,8 +38,8 @@ describe('Gear Message', () => {
       metadata,
     ).programId;
     const status = checkInit(api, programId);
-    const transactionData = await sendTransaction(api.program, alice, 'MessageQueued');
-    expect(transactionData.destination).toBe(programId);
+    const [txData] = await sendTransaction(api.program, alice, ['MessageQueued']);
+    expect(txData.destination.toHex()).toBe(programId);
     expect(await status).toBe('success');
   });
 
@@ -68,10 +68,10 @@ describe('Gear Message', () => {
 
       const waitForReply = api.message.listenToReplies(programId);
 
-      const transactionData = await sendTransaction(tx, alice, 'MessageQueued');
-      expect(transactionData).toBeDefined();
+      const [txData] = await sendTransaction(tx, alice, ['MessageQueued']);
+      expect(txData).toBeDefined();
 
-      const reply = await waitForReply(transactionData.id);
+      const reply = await waitForReply(txData.id.toHex());
       expect(reply?.message.details.isSome).toBeTruthy();
       expect(reply?.message.details.unwrap().isReply).toBeTruthy();
       expect(reply?.message.details.unwrap().asReply.statusCode.toNumber()).toBe(0);
@@ -104,8 +104,8 @@ describe('Gear Message', () => {
   test('Claim value from mailbox', async () => {
     expect(messageToClaim).toBeDefined();
     const submitted = api.claimValueFromMailbox.submit(messageToClaim);
-    const transactionData = await sendTransaction(submitted, alice, 'UserMessageRead');
-    expect(transactionData.id).toBe(messageToClaim);
+    const [txData] = await sendTransaction(submitted, alice, ['UserMessageRead']);
+    expect(txData.id.toHex()).toBe(messageToClaim);
     const mailbox = await api.mailbox.read(decodeAddress(alice.address));
     expect(mailbox.filter((value) => value[0][1] === messageToClaim)).toHaveLength(0);
   });
