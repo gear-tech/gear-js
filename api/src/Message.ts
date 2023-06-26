@@ -232,10 +232,10 @@ export class GearMessage extends GearTransaction {
     this._api.gearEvents
       .subscribeToGearEvent('UserMessageSent', ({ data }) => {
         if (data.message.source.eq(programId)) {
-          if (data.message.details.isSome && data.message.details.unwrap().isReply) {
-            const id = data.message.details.unwrap().asReply.replyTo.toHex();
+          if (data.message.details.isSome) {
+            const id = data.message.details.unwrap().to.toHex();
             if (!messageId || id === messageId) {
-              subject.next([data.message.details.unwrap().asReply.replyTo.toHex(), data]);
+              subject.next([data.message.details.unwrap().to.toHex(), data]);
             }
           }
         }

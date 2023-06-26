@@ -11,7 +11,7 @@
     "WasmPageNumber": "u32",
     "PageNumber": "u32",
     "ReservationId": "[u8;32]",
-    "GasReservationSlot": { "amount": "u64", "expiration": "u32" },
+    "GasReservationSlot": { "amount": "u64", "start": "u32", "finish": "u32" },
     "ActiveProgram": {
       "allocations": "BTreeSet<WasmPageNumber>",
       "pages_with_data": "BTreeSet<PageNumber>",
@@ -20,7 +20,8 @@
       "code_length_bytes": "u32",
       "code_exports": "BTreeSet<DispatchKind>",
       "static_pages": "WasmPageNumber",
-      "state": "ProgramState"
+      "state": "ProgramState",
+      "expiration_block": "BlockNumber"
     },
     "ProgramState": {
       "_enum": {

@@ -73,8 +73,7 @@ describe('Gear Message', () => {
 
       const reply = await waitForReply(txData.id.toHex());
       expect(reply?.message.details.isSome).toBeTruthy();
-      expect(reply?.message.details.unwrap().isReply).toBeTruthy();
-      expect(reply?.message.details.unwrap().asReply.statusCode.toNumber()).toBe(0);
+      expect(reply?.message.details.unwrap().code.isSuccess).toBeTruthy();
       expect(reply?.message.payload.toHex()).toBe(message.reply);
     }
   });
