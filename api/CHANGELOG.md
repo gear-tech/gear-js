@@ -1,14 +1,18 @@
 ## master
 
-_06/20/2023_
+_06/26/2023_
 
 https://github.com/gear-tech/gear-js/pull/1298
 https://github.com/gear-tech/gear-js/pull/1301
+https://github.com/gear-tech/gear-js/pull/1302
 
 ### Changes
 
 - New approach to generate program IDs
 - Support `resumeSessionInit`, `resumeSessionPush` and `resumeSessionCommit` extrinsics according to https://github.com/gear-tech/gear/pull/2622
+- Refactor `statusCode` field according to https://github.com/gear-tech/gear/pull/2823.
+- Remove `exitCode` argument from `calculateGas.reply` method
+- Refactor default types
 
 ## 0.31.2
 
