@@ -120,7 +120,7 @@ describe('Calculate gas', () => {
 
   test('Calculate reply gas', async () => {
     expect(messageId).toBeDefined();
-    const gas = await api.program.calculateGas.reply(aliceRaw, messageId, exitCode, { input: 'Reply' }, 0, true, meta);
+    const gas = await api.program.calculateGas.reply(aliceRaw, messageId, { input: 'Reply' }, 0, true, meta);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
     gasLimits.reply = gas.min_limit;

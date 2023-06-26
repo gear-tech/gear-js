@@ -91,10 +91,6 @@
             "type": "H256"
           },
           {
-            "name": "exit_code",
-            "type": "i32"
-          },
-          {
             "name": "payload",
             "type": "Vec<u8>"
           },

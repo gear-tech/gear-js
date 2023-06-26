@@ -203,7 +203,6 @@ export class GearGas {
   async reply(
     sourceId: HexString,
     messageId: HexString,
-    exitCode: number,
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
@@ -211,13 +210,6 @@ export class GearGas {
     typeIndexOrTypeName?: number,
   ): Promise<GasInfo> {
     const _payload = encodePayload(payload, meta, 'reply', typeIndexOrTypeName);
-    return this._api.rpc['gear'].calculateReplyGas(
-      sourceId,
-      messageId,
-      exitCode,
-      _payload,
-      value || 0,
-      allowOtherPanics || true,
-    );
+    return this._api.rpc['gear'].calculateReplyGas(sourceId, messageId, _payload, value || 0, allowOtherPanics || true);
   }
 }

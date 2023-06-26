@@ -60,7 +60,7 @@ export function listenToUserMessageSent(api: GearApi, programId: HexString) {
         }
 
         if (details.isSome) {
-          return details.unwrap().isReply && details.unwrap().asReply.replyTo.eq(messageId);
+          return details.unwrap().to.eq(messageId);
         } else {
           return false;
         }
