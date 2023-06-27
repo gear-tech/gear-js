@@ -14,7 +14,7 @@ https://github.com/gear-tech/gear-js/pull/1303
 - Refactor `statusCode` field according to https://github.com/gear-tech/gear/pull/2823.
 - Remove `exitCode` argument from `calculateGas.reply` method
 - Refactor default types
-- Support `gearVoucher` pallet and `sendMessageWithVoucher` and `sendReplyWithVoucher` extrinsics
+- Support `gearVoucher` pallet and `sendMessageWithVoucher` and `sendReplyWithVoucher` extrinsics according to https://github.com/gear-tech/gear/pull/2777
 
 ## 0.31.2
 

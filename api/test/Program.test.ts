@@ -23,7 +23,7 @@ const metaHex: HexString = `0x${readFileSync(TEST_META_META, 'utf-8')}`;
 
 beforeAll(async () => {
   await api.isReadyOrError;
-  [alice] = await getAccount();
+  alice = await getAccount('//Alice');
 });
 
 afterAll(async () => {

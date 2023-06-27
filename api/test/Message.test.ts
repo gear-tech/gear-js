@@ -45,7 +45,7 @@ describe('Gear Message', () => {
 
   test('send messages', async () => {
     const messages = [
-      { payload: { Two: [[8, 16]] }, reply: '0x', claim: true },
+      { payload: { Two: [[8, 16]] }, reply: '0x086f6b', claim: true },
       {
         payload: {
           One: 'Dmitriy',

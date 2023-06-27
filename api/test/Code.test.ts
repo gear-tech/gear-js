@@ -13,7 +13,7 @@ let codeId: HexString;
 
 beforeAll(async () => {
   await api.isReadyOrError;
-  [accounts['alice']] = await getAccount();
+  accounts['alice'] = await getAccount('//Alice');
 });
 
 afterAll(async () => {

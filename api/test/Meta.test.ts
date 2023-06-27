@@ -14,7 +14,7 @@ describe('Get type definitions', () => {
   test('Program Metadata', () => {
     expect(meta.types).toEqual({
       init: { input: 0, output: 3 },
-      handle: { input: 7, output: 24 },
+      handle: { input: 7, output: 4 },
       reply: { input: 4, output: 26 },
       others: { input: null, output: null },
       signal: 27,
