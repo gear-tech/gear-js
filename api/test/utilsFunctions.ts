@@ -7,6 +7,7 @@ import {
   GearKeyring,
   GearTransaction,
   IGearEvent,
+  IGearVoucherEvent,
   MessageWaitedData,
   ProgramChangedData,
   UserMessageSent,
@@ -74,11 +75,11 @@ export function listenToUserMessageSent(api: GearApi, programId: HexString) {
   };
 }
 
-export async function sendTransaction<E extends keyof IGearEvent = keyof IGearEvent>(
+export async function sendTransaction<E extends keyof IGearEvent | keyof IGearVoucherEvent>(
   submitted: GearTransaction | SubmittableExtrinsic<'promise'>,
   account: KeyringPair,
   methods: E[],
-): Promise<any> {
+): Promise<any[]> {
   const result: any = new Array(methods.length);
   return new Promise((resolve, reject) => {
     submitted
@@ -101,8 +102,8 @@ export async function sendTransaction<E extends keyof IGearEvent = keyof IGearEv
   });
 }
 
-export const getAccount = () => {
-  return Promise.all([GearKeyring.fromSuri('//Alice'), GearKeyring.fromSuri('//Bob')]);
+export const getAccount = (uri: string) => {
+  return GearKeyring.fromSuri(uri);
 };
 
 export const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time));

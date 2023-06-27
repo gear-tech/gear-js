@@ -1,9 +1,10 @@
 import { blake2AsHex, blake2AsU8a } from '@polkadot/util-crypto';
+import { stringToU8a, u8aToU8a } from '@polkadot/util';
 import { HexString } from '@polkadot/util/types';
-import { TypeRegistry } from '@polkadot/types';
-import { u8aToU8a } from '@polkadot/util';
 
 import { CreateType } from '../metadata';
+
+const VOUCHER_PREFIX = stringToU8a('modlpy/voucher__');
 
 export function generateCodeHash(code: Buffer | Uint8Array | HexString): HexString {
   return blake2AsHex(u8aToU8a(code), 256);
@@ -22,5 +23,12 @@ export function generateProgramId(
   const saltU8a = CreateType.create('Vec<u8>', salt).toU8a().slice(1);
   const programStrU8a = new TextEncoder().encode('program');
   const id = Uint8Array.from([...programStrU8a, ...codeHashU8a, ...saltU8a]);
+  return blake2AsHex(id, 256);
+}
+
+export function generateVoucherId(who: HexString, program: HexString): HexString {
+  const whoU8a = u8aToU8a(who);
+  const programU8a = u8aToU8a(program);
+  const id = Uint8Array.from([...VOUCHER_PREFIX, ...whoU8a, ...programU8a]);
   return blake2AsHex(id, 256);
 }

@@ -10,7 +10,12 @@ import {
   ProgramResumeSessionStarted,
   UserMessageRead,
   UserMessageSent,
+  VoucherIssued,
 } from './GearEvents';
+
+export interface IGearVoucherEvent {
+  VoucherIssued: VoucherIssued;
+}
 
 export interface IGearEvent {
   MessageQueued: MessageQueued;
