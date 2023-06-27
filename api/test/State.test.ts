@@ -27,7 +27,7 @@ let programId: HexString;
 
 beforeAll(async () => {
   await api.isReadyOrError;
-  [alice] = await getAccount();
+  alice = await getAccount('//Alice');
 });
 
 afterAll(async () => {

@@ -3,9 +3,14 @@ import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { ReplaySubject } from 'rxjs';
 
-import { IMessageSendOptions, IMessageSendReplyOptions } from './types';
+import {
+  IMessageSendOptions,
+  IMessageSendReplyOptions,
+  IMessageSendReplyWithVoucherOptions,
+  IMessageSendWithVoucherOptions,
+} from './types';
 import { SendMessageError, SendReplyError } from './errors';
-import { encodePayload, validateGasLimit, validateValue } from './utils';
+import { encodePayload, validateGasLimit, validateMailboxItem, validateValue, validateVoucher } from './utils';
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from './metadata';
 import { UserMessageSentData } from './events';
@@ -17,6 +22,7 @@ export class GearMessage extends GearTransaction {
    * @param meta Program metadata obtained using `getProgramMetadata` function.
    * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.handle.input` will be used instead.
    * @returns Submittable result
+   * @example
    * ```javascript
    * const programId = '0x..';
    * const hexMeta = '0x...';
@@ -45,6 +51,7 @@ export class GearMessage extends GearTransaction {
    * @param hexRegistry Registry in hex format
    * @param typeIndex Index of type in the registry.
    * @returns Submitted result
+   * @example
    * ```javascript
    * const programId = '0x..';
    * const hexRegistry = '0x...';
@@ -72,6 +79,7 @@ export class GearMessage extends GearTransaction {
    * @param metaOrHexRegistry (optional) Registry in hex format or ProgramMetadata
    * @param typeName payload type (one of the default rust types if metadata or registry don't specified)
    * @returns Submitted result
+   * @example
    * ```javascript
    * const programId = '0x..';
    *
@@ -118,11 +126,12 @@ export class GearMessage extends GearTransaction {
   }
 
   /**
-   * Sends reply message
+   * ## Send reply message
    * @param args Message parameters
    * @param meta Program metadata obtained using `getProgramMetadata` function.
    * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.reply.input` will be used instead.
    * @returns Submitted result
+   * @example
    * ```javascript
    * const replyToMessage = '0x..';
    * const hexMeta = '0x...';
@@ -146,11 +155,12 @@ export class GearMessage extends GearTransaction {
   ): SubmittableExtrinsic<'promise', ISubmittableResult>;
 
   /**
-   * Sends reply message
+   * ## Send reply message
    * @param args Message parameters
    * @param hexRegistry Registry in hex format
    * @param typeIndex Index of type in the registry.
    * @returns Submitted result
+   * @example
    * ```javascript
    * const replyToMessage = '0x..';
    * const hexRegistry = '0x...';
@@ -173,7 +183,7 @@ export class GearMessage extends GearTransaction {
   ): SubmittableExtrinsic<'promise', ISubmittableResult>;
 
   /**
-   * Sends reply message
+   * ## Send reply message
    * @param args Message parameters
    * @param metaOrHexRegistry (optional) Registry in hex format or ProgramMetadata
    * @param typeName payload type (one of the default rust types if metadata or registry don't specified)
@@ -218,6 +228,228 @@ export class GearMessage extends GearTransaction {
 
     try {
       this.extrinsic = this._api.tx.gear.sendReply(replyToId, payload, gasLimit, value);
+      return this.extrinsic;
+    } catch (error) {
+      throw new SendReplyError();
+    }
+  }
+
+  /**
+   * ## Send Message with Voucher
+   * @param args Message parameters
+   * @param meta Program metadata obtained using `getProgramMetadata` function.
+   * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.handle.input` will be used instead.
+   * @returns Submittable result
+   * @example
+   * ```javascript
+   * const programId = '0x..';
+   * const hexMeta = '0x...';
+   * const meta = getProgramMetadata(hexMeta);
+   * const accountId = '0x...'
+   *
+   * const tx = await api.message.sendWithVoucher({
+   *   destination: programId,
+   *   payload: { amazingPayload: { } },
+   *   gasLimit: 20_000_000,
+   *   account: accountId,
+   * }, meta, meta.handle.input)
+   *
+   * tx.signAndSend(account, (events) => {
+   *   events.forEach(({event}) => console.log(event.toHuman()))
+   * })
+   * ```
+   */
+  sendWithVoucher(
+    args: IMessageSendWithVoucherOptions,
+    meta: ProgramMetadata,
+    typeIndex?: number,
+  ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>;
+
+  /**
+   * ## Send Message with Voucher
+   * @param args Message parameters
+   * @param hexRegistry Registry in hex format
+   * @param typeIndex Index of type in the registry.
+   * @returns Submitted result
+   * @example
+   * ```javascript
+   * const programId = '0x..';
+   * const hexRegistry = '0x...';
+   * const accountId = '0x...'
+   *
+   * const tx = await api.message.sendWithVoucher({
+   *   destination: programId,
+   *   payload: { amazingPayload: { ... } },
+   *   gasLimit: 20_000_000
+   *   account: accountId,
+   * }, hexRegistry, 4)
+   *
+   * tx.signAndSend(account, (events) => {
+   *   events.forEach(({event}) => console.log(event.toHuman()))
+   * })
+   * ```
+   */
+  sendWithVoucher(
+    args: IMessageSendWithVoucherOptions,
+    hexRegistry: HexString,
+    typeIndex: number,
+  ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>;
+
+  /**
+   * ## Send Message with Voucher
+   * @param args Message parameters
+   * @param metaOrHexRegistry (optional) Registry in hex format or ProgramMetadata
+   * @param typeName payload type (one of the default rust types if metadata or registry don't specified)
+   * @returns Submitted result
+   * @example
+   * ```javascript
+   * const programId = '0x..';
+   * const accountId = '0x...'
+   *
+   * const tx = await api.message.sendWithVoucher({
+   *   destination: programId,
+   *   payload: 'PING',
+   *   gasLimit: 20_000_000,
+   *   account: accountId,
+   * }, undefined, 'String')
+   *
+   * tx.signAndSend(account, (events) => {
+   *   events.forEach(({event}) => console.log(event.toHuman()))
+   * })
+   * ```
+   */
+  sendWithVoucher(
+    args: IMessageSendWithVoucherOptions,
+    metaOrHexRegistry?: ProgramMetadata | HexString,
+    typeName?: string,
+  ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>;
+
+  async sendWithVoucher(
+    { destination, value, gasLimit, payload, account }: IMessageSendWithVoucherOptions,
+    metaOrHexRegistry?: ProgramMetadata | HexString,
+    typeIndexOrTypeName?: number | string,
+  ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>> {
+    validateValue(value, this._api);
+    validateGasLimit(gasLimit, this._api);
+    await validateVoucher(destination, account, this._api);
+
+    const _payload = encodePayload(payload, metaOrHexRegistry, 'handle', typeIndexOrTypeName);
+
+    try {
+      this.extrinsic = this._api.tx.gear.sendMessageWithVoucher(destination, _payload, gasLimit, value || 0);
+      return this.extrinsic;
+    } catch (error) {
+      throw new SendMessageError(error.message);
+    }
+  }
+
+  /**
+   * ### Send reply message with voucher
+   * @param args Message parameters
+   * @param meta Program metadata obtained using `getProgramMetadata` function.
+   * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.reply.input` will be used instead.
+   * @returns Submitted result
+   * @example
+   * ```javascript
+   * const replyToMessage = '0x..';
+   * const hexMeta = '0x...';
+   * const meta = getProgramMetadata(hexMeta);
+   * const accountId = '0x...'
+   *
+   * const tx = await api.message.sendReplyWithVoucher({
+   *   replyToId: replyToMessage,
+   *   payload: { amazingPayload: { } },
+   *   gasLimit: 20_000_000,
+   *   account: accountId,
+   * }, meta, meta.reply.input)
+   *
+   * tx.signAndSend(account, (events) => {
+   *   events.forEach(({event}) => console.log(event.toHuman()))
+   * })
+   * ```
+   */
+  sendReplyWithVoucher(
+    args: IMessageSendReplyWithVoucherOptions,
+    meta?: ProgramMetadata,
+    typeIndex?: number,
+  ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>;
+
+  /**
+   * ### Send reply message with voucher
+   * @param args Message parameters
+   * @param hexRegistry Registry in hex format
+   * @param typeIndex Index of type in the registry.
+   * @returns Submitted result
+   * @example
+   * ```javascript
+   * const replyToMessage = '0x..';
+   * const hexRegistry = '0x...';
+   * const accountId = '0x...'
+   *
+   * const tx = await api.message.sendReplyWithVoucher({
+   *   replyToId: replyToMessage,
+   *   payload: { amazingPayload: { } },
+   *   gasLimit: 20_000_000,
+   *   account: accountId,
+   * }, hexRegistry, 5)
+   *
+   * tx.signAndSend(account, (events) => {
+   *   events.forEach(({event}) => console.log(event.toHuman()))
+   * })
+   * ```
+   */
+  sendReplyWithVoucher(
+    args: IMessageSendReplyWithVoucherOptions,
+    hexRegistry: HexString,
+    typeIndex: number,
+  ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>;
+
+  /**
+   * ### Send reply message with voucher
+   * @param args Message parameters
+   * @param metaOrHexRegistry (optional) Registry in hex format or ProgramMetadata
+   * @param typeName payload type (one of the default rust types if metadata or registry don't specified)
+   * @returns Submitted result
+   * @example
+   * ```javascript
+   * const replyToMessage = '0x..';
+   * const hexRegistry = '0x...';
+   * const accountId = '0x...'
+   *
+   * const tx = await api.message.sendReplyWithVoucher({
+   *   replyToId: replyToMessage,
+   *   payload: { amazingPayload: { } },
+   *   gasLimit: 20_000_000,
+   *   account: accountId,
+   * }, hexRegistry, 5)
+   *
+   * tx.signAndSend(account, (events) => {
+   *   events.forEach(({event}) => console.log(event.toHuman()))
+   * })
+   * ```
+   */
+  sendReplyWithVoucher(
+    args: IMessageSendReplyWithVoucherOptions,
+    metaOrHexRegistry?: ProgramMetadata | HexString,
+    typeName?: string,
+  ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>;
+
+  async sendReplyWithVoucher(
+    { value, gasLimit, replyToId, payload, account }: IMessageSendReplyWithVoucherOptions,
+    metaOrHexRegistry?: ProgramMetadata | HexString,
+    typeIndexOrTypeName?: number | string,
+  ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>> {
+    validateValue(value, this._api);
+    validateGasLimit(gasLimit, this._api);
+
+    const { source } = await validateMailboxItem(account, replyToId, this._api);
+
+    await validateVoucher(source.toHex(), account, this._api);
+
+    const _payload = encodePayload(payload, metaOrHexRegistry, 'reply', typeIndexOrTypeName);
+
+    try {
+      this.extrinsic = this._api.tx.gear.sendReplyWithVoucher(replyToId, _payload, gasLimit, value);
       return this.extrinsic;
     } catch (error) {
       throw new SendReplyError();

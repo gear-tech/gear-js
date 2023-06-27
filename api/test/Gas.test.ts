@@ -16,7 +16,6 @@ let aliceRaw: HexString;
 let programId: HexString;
 let codeId: HexString;
 let messageId: HexString;
-let exitCode: number;
 
 const code = readFileSync(join(TARGET, 'test_gas.opt.wasm'));
 const meta = getProgramMetadata(`0x${readFileSync(TEST_GAS_META, 'utf-8')}`);
@@ -29,7 +28,7 @@ const gasLimits: { init?: u64; handle?: u64; reply?: u64 } = {
 
 beforeAll(async () => {
   await api.isReadyOrError;
-  [alice] = await getAccount();
+  alice = await getAccount('//Alice');
   aliceRaw = decodeAddress(alice.address);
 });
 

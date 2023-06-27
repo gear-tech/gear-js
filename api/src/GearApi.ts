@@ -15,6 +15,7 @@ import { GearMessage } from './Message';
 import { GearProgram } from './Program';
 import { GearProgramState } from './State';
 import { GearProgramStorage } from './Storage';
+import { GearVoucher } from './Voucher';
 import { GearWaitlist } from './Waitlist';
 
 export class GearApi extends ApiPromise {
@@ -30,6 +31,7 @@ export class GearApi extends ApiPromise {
   public claimValueFromMailbox: GearClaimValue;
   public code: GearCode;
   public waitlist: GearWaitlist;
+  public voucher: GearVoucher;
   public provider: WsProvider;
 
   constructor(options: GearApiOptions = {}) {
@@ -59,20 +61,19 @@ export class GearApi extends ApiPromise {
     });
     this.provider = provider as WsProvider;
 
-    this.isReady.then(() => {
-      this.program = new GearProgram(this);
-      this.message = new GearMessage(this);
-      this.balance = new GearBalance(this);
-      this.gearEvents = new GearEvents(this);
-      this.defaultTypes = defaultTypes;
-      this.programState = new GearProgramState(this);
-      this.blocks = new GearBlock(this);
-      this.programStorage = new GearProgramStorage(this);
-      this.claimValueFromMailbox = new GearClaimValue(this);
-      this.mailbox = new GearMailbox(this);
-      this.code = new GearCode(this);
-      this.waitlist = new GearWaitlist(this);
-    });
+    this.program = new GearProgram(this);
+    this.voucher = new GearVoucher(this);
+    this.message = new GearMessage(this);
+    this.balance = new GearBalance(this);
+    this.gearEvents = new GearEvents(this);
+    this.defaultTypes = defaultTypes;
+    this.programState = new GearProgramState(this);
+    this.blocks = new GearBlock(this);
+    this.programStorage = new GearProgramStorage(this);
+    this.claimValueFromMailbox = new GearClaimValue(this);
+    this.mailbox = new GearMailbox(this);
+    this.code = new GearCode(this);
+    this.waitlist = new GearWaitlist(this);
   }
 
   static async create(options?: GearApiOptions): Promise<GearApi> {

@@ -90,3 +90,9 @@ export interface ProgramResumeSessionStartedData extends GenericEventData {
   programId: ProgramId;
   sessionEndBlock: BlockNumber;
 }
+
+export interface VoucherIssuedData extends GenericEventData {
+  holder: AccountId32;
+  program: ProgramId;
+  value: u128;
+}
