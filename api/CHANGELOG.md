@@ -1,12 +1,13 @@
 ## master
 
-_06/27/2023_
+_06/28/2023_
 
 https://github.com/gear-tech/gear-js/pull/1298
 https://github.com/gear-tech/gear-js/pull/1301
 https://github.com/gear-tech/gear-js/pull/1302
 https://github.com/gear-tech/gear-js/pull/1303
 https://github.com/gear-tech/gear-js/pull/1305
+https://github.com/gear-tech/gear-js/pull/1306
 
 ### Changes
 
@@ -17,6 +18,7 @@ https://github.com/gear-tech/gear-js/pull/1305
 - Refactor default types
 - Support `gearVoucher` pallet and `sendMessageWithVoucher` and `sendReplyWithVoucher` extrinsics according to https://github.com/gear-tech/gear/pull/2777
 - Add `runtime_wasmBlobVersion` rpc call according to https://github.com/gear-tech/gear/pull/2760
+- New approach to metadata according to https://github.com/gear-tech/gear/pull/2829
 
 ## 0.31.2
 

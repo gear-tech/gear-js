@@ -108,7 +108,7 @@ describe('Voucher', () => {
     const tx = await api.message.sendReplyWithVoucher(
       { replyToId: msgToReply, account: charlieRaw, gasLimit: 20_000_000_000, value: 0, payload: 'Charlie' },
       metadata,
-      metadata.types.reply.input,
+      metadata.types.reply!,
     );
 
     const waitForReply = api.message.listenToReplies(programId);

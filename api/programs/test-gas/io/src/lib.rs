@@ -13,7 +13,7 @@ pub struct ProgramMetadata;
 impl Metadata for ProgramMetadata {
     type Init = InOut<InputStruct, String>;
     type Handle = InOut<InputStruct, String>;
-    type Reply = InOut<InputStruct, String>;
+    type Reply = InputStruct;
     type Others = InOut<(), ()>;
     type Signal = ();
     type State = ();

@@ -14,8 +14,8 @@ pub struct ProgramMetadata;
 impl Metadata for ProgramMetadata {
     type Init = InOut<BTreeSet<u8>, BTreeMap<String, u8>>;
     type Handle = InOut<Action, String>;
-    type Reply = InOut<String, Vec<u16>>;
     type Others = InOut<(), ()>;
+    type Reply = String;
     type Signal = H256;
     type State = Vec<Wallet>;
 }
