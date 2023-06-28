@@ -56,7 +56,9 @@ export function encodePayload(
         result = meta.createType(meta.getTypeIndexByName(payloadType), payload);
       }
     } else {
-      result = meta.createType(meta.types[type].input, payload);
+      const withType = type === 'reply' ? meta.types[type] : meta.types[type].input;
+
+      result = meta.createType(withType, payload);
     }
   } else if (reg) {
     if (typeIndex || typeIndex === 0) {

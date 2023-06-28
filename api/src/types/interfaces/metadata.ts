@@ -15,8 +15,8 @@ export type HumanTypesRepr = {
 export interface ProgramMetadataRepr extends Struct {
   init: TypesRepr;
   handle: TypesRepr;
-  reply: TypesRepr;
   others: TypesRepr;
+  reply: Option<u32>;
   signal: Option<u32>;
   state: Option<u32>;
   reg: Vec<u8>;
@@ -26,7 +26,7 @@ export interface ProgramMetadataRepr extends Struct {
 export type HumanProgramMetadataRepr = {
   init: HumanTypesRepr;
   handle: HumanTypesRepr;
-  reply: HumanTypesRepr;
+  reply: number | null;
   others: HumanTypesRepr;
   signal: number | null;
   state: number | null;
