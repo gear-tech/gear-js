@@ -8,6 +8,7 @@ https://github.com/gear-tech/gear-js/pull/1302
 https://github.com/gear-tech/gear-js/pull/1303
 https://github.com/gear-tech/gear-js/pull/1305
 https://github.com/gear-tech/gear-js/pull/1306
+https://github.com/gear-tech/gear-js/pull/1307
 
 ### Changes
 
@@ -19,7 +20,7 @@ https://github.com/gear-tech/gear-js/pull/1306
 - Support `gearVoucher` pallet and `sendMessageWithVoucher` and `sendReplyWithVoucher` extrinsics according to https://github.com/gear-tech/gear/pull/2777
 - Add `runtime_wasmBlobVersion` rpc call according to https://github.com/gear-tech/gear/pull/2760
 - New approach to metadata according to https://github.com/gear-tech/gear/pull/2829
-
+- Bump `polkadot-js` to `10.9.1`
 ## 0.31.2
 
 _05/26/2023_
