@@ -21,6 +21,7 @@ https://github.com/gear-tech/gear-js/pull/1307
 - Add `runtime_wasmBlobVersion` rpc call according to https://github.com/gear-tech/gear/pull/2760
 - New approach to metadata according to https://github.com/gear-tech/gear/pull/2829
 - Bump `polkadot-js` to `10.9.1`
+
 ## 0.31.2
 
 _05/26/2023_
