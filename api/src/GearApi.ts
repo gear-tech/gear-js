@@ -114,6 +114,11 @@ export class GearApi extends ApiPromise {
     return this.consts.gearScheduler.waitlistCost as unknown as u64;
   }
 
+  async wasmBlobVersion(): Promise<string> {
+    const result = await this.rpc['runtime'].wasmBlobVersion();
+    return result.toString();
+  }
+
   /**
    * Method provides opportunity to get informations about error occurs in ExtrinsicFailed event
    * @param event
