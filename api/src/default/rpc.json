@@ -138,6 +138,13 @@
     "transaction_unstable": {
       "submitAndWatch": { "params": [] },
       "unwatch": { "params": [] }
+    },
+    "runtime": {
+      "wasmBlobVersion": {
+        "description": "Returns the version of the WASM blob in storage.",
+        "params": [],
+        "type": "String"
+      }
     }
   }
 }

@@ -6,6 +6,7 @@ https://github.com/gear-tech/gear-js/pull/1298
 https://github.com/gear-tech/gear-js/pull/1301
 https://github.com/gear-tech/gear-js/pull/1302
 https://github.com/gear-tech/gear-js/pull/1303
+https://github.com/gear-tech/gear-js/pull/1305
 
 ### Changes
 
@@ -15,6 +16,7 @@ https://github.com/gear-tech/gear-js/pull/1303
 - Remove `exitCode` argument from `calculateGas.reply` method
 - Refactor default types
 - Support `gearVoucher` pallet and `sendMessageWithVoucher` and `sendReplyWithVoucher` extrinsics according to https://github.com/gear-tech/gear/pull/2777
+- Add `runtime_wasmBlobVersion` rpc call according to https://github.com/gear-tech/gear/pull/2760
 
 ## 0.31.2
 
