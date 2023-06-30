@@ -36,23 +36,13 @@ function checkMessages(sentMessages: Map<number, any>, specMessages: { [program:
 }
 
 function checkUserMessageSent(specMessages: { [program: string]: IMessageSpec[] }, userSentMsgs: Map<HexString, any>) {
-  console.log(specMessages);
-  console.log(userSentMsgs);
-  console.log(
+  assert(
     Object.keys(specMessages).reduce((counter, key) => {
       counter += specMessages[key].reduce((count, value) => {
         if (value.log) {
           count += 1;
         }
-        return count;
-      }, 0);
-      return counter;
-    }, 0),
-  );
-  assert(
-    Object.keys(specMessages).reduce((counter, key) => {
-      counter += specMessages[key].reduce((count, value) => {
-        if (value.log) {
+        if (value.autoReply) {
           count += 1;
         }
         return count;
