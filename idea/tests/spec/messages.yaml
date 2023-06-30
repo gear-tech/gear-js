@@ -20,3 +20,4 @@ test:
     claim: true
     account: bob
     log: '0x504f4e47'
+    autoReply: true
