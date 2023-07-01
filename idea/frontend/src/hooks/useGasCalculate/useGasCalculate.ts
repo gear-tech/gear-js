@@ -67,7 +67,6 @@ const useGasCalculate = () => {
           estimatedGas = await api.program.calculateGas.reply(
             decodedAddress,
             addressId as HexString,
-            0,
             payload,
             value,
             true,

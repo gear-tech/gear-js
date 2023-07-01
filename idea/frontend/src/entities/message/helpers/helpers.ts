@@ -15,7 +15,7 @@ const getDecodedMessagePayload = (meta: ProgramMetadata, message: IMessage) => {
     }
 
     case EntryPoint.Reply: {
-      type = isMessageQueued ? meta.types.reply.input : meta.types.reply.output;
+      type = meta.types.reply!;
       break;
     }
 
