@@ -11,11 +11,6 @@
     "build:test-balance": "yarn workspace @gear-js/test-balance build",
     "build:wasm-compiler": "yarn workspace @gear-js/wasm-compiler build",
     "test:frontend": "yarn workspace @gear-js/frontend test",
-    "build:nft": "yarn workspace @gear-js/nft build",
-    "build:auction": "yarn workspace @gear-js/auction build",
-    "build:social": "yarn workspace @gear-js/social build",
-    "build:staking": "yarn workspace @gear-js/staking build",
-    "build:upload-dapp-chain": "yarn workspace @gear-js/upload-dapp-chain build",
     "postinstall": "husky install",
     "bump:polkadot": "node dev/bump-polkadot.js && yarn install"
   },
