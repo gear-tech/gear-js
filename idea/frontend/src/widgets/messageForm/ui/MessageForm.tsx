@@ -45,7 +45,7 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
   const maxGasLimit = api.blockGasLimit.toNumber();
   const method = isReply ? GasMethod.Reply : GasMethod.Handle;
 
-  const typeIndex = isReply ? metadata?.types.reply! : metadata?.types.handle.input;
+  const typeIndex = isReply ? metadata?.types.reply : metadata?.types.handle.input;
   const isTypeIndex = typeIndex !== undefined && typeIndex !== null;
 
   const payloadFormValues = useMemo(

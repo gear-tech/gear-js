@@ -6,7 +6,7 @@ const getDecodedMessagePayload = (meta: ProgramMetadata, message: IMessage) => {
   const { entry, payload } = message;
   const isMessageQueued = message.type === 'MessageQueued';
 
-  let type: number | undefined;
+  let type: number | null;
 
   switch (entry) {
     case EntryPoint.Init: {
@@ -15,7 +15,7 @@ const getDecodedMessagePayload = (meta: ProgramMetadata, message: IMessage) => {
     }
 
     case EntryPoint.Reply: {
-      type = meta.types.reply!;
+      type = meta.types.reply;
       break;
     }
 
