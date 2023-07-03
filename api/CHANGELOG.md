@@ -1,3 +1,12 @@
+## 0.32.1
+
+_07/03/2023_
+
+https://github.com/gear-tech/gear-js/pull/1313
+### Changes
+
+- Make meta types nullable
+
 ## 0.32.0
 
 _06/28/2023_
