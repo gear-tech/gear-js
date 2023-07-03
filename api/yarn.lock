@@ -1738,7 +1738,7 @@ __metadata:
     ts-node: 10.9.1
     typescript: 5.1.5
   peerDependencies:
-    "@polkadot/api": 10.7.1
+    "@polkadot/api": 10.9.1
     "@polkadot/wasm-crypto": 7.2.1
     rxjs: 7.8.1
   languageName: unknown
