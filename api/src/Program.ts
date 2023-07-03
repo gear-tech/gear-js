@@ -127,7 +127,7 @@ export class GearProgram extends GearTransaction {
    * })
    * ```
    */
-  create(args: IProgramCreateOptions, meta?: ProgramMetadata, typeIndex?: number): IProgramCreateResult;
+  create(args: IProgramCreateOptions, meta?: ProgramMetadata, typeIndex?: number | null): IProgramCreateResult;
 
   /**
    * ### Create program from uploaded on chain code using program metadata to encode payload
@@ -152,7 +152,7 @@ export class GearProgram extends GearTransaction {
   create(
     { codeId, initPayload, value, gasLimit, ...args }: IProgramCreateOptions,
     metaOrHexRegistry?: HexString | ProgramMetadata,
-    typeIndexOrTypeName?: number | string,
+    typeIndexOrTypeName?: number | string | null,
   ): IProgramCreateResult {
     validateValue(value, this._api);
     validateGasLimit(gasLimit, this._api);

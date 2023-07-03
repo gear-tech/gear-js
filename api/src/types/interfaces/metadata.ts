@@ -8,8 +8,8 @@ export interface TypesRepr extends Struct {
 }
 
 export type HumanTypesRepr = {
-  input?: number;
-  output?: number;
+  input: number | null;
+  output: number | null;
 };
 
 export interface ProgramMetadataRepr extends Struct {
