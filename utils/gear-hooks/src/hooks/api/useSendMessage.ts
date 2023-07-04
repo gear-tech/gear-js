@@ -23,7 +23,6 @@ function useSendMessage(destination: HexString, metadata: ProgramMetadata | unde
   const alert = useContext(AlertContext);
 
   const title = 'gear.sendMessage';
-  const loadingAlertId = useRef('');
 
   const handleEventsStatus = (events: EventRecord[], onSuccess?: () => void, onError?: () => void) => {
     events.forEach(({ event: { method, section } }) => {
@@ -37,25 +36,25 @@ function useSendMessage(destination: HexString, metadata: ProgramMetadata | unde
     });
   };
 
-  const handleStatus = (result: ISubmittableResult, onSuccess?: () => void, onError?: () => void) => {
+  const handleStatus = (result: ISubmittableResult, alertId: string, onSuccess?: () => void, onError?: () => void) => {
     const { status, events } = result;
     const { isReady, isInBlock, isInvalid, isFinalized } = status;
 
     if (isInvalid) {
-      alert.update(loadingAlertId.current, 'Transaction error. Status: isInvalid', DEFAULT_ERROR_OPTIONS);
+      alert.update(alertId, 'Transaction error. Status: isInvalid', DEFAULT_ERROR_OPTIONS);
     } else if (isReady) {
-      alert.update(loadingAlertId.current, 'Ready');
+      alert.update(alertId, 'Ready');
     } else if (isInBlock) {
-      alert.update(loadingAlertId.current, 'In Block');
+      alert.update(alertId, 'In Block');
     } else if (isFinalized) {
-      alert.update(loadingAlertId.current, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
+      alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
       handleEventsStatus(events, onSuccess, onError);
     }
   };
 
   const sendMessage = (payload: AnyJson, options?: SendMessageOptions) => {
     if (account && metadata) {
-      loadingAlertId.current = alert.loading('Sign In', { title });
+      const alertId = alert.loading('Sign In', { title });
 
       const { value = 0, isOtherPanicsAllowed = false, onSuccess, onError } = options || {};
       const { address, decodedAddress, meta } = account;
@@ -71,10 +70,10 @@ function useSendMessage(destination: HexString, metadata: ProgramMetadata | unde
         .then((gasLimit) => ({ destination, gasLimit, payload, value }))
         .then((message) => api.message.send(message, metadata) && web3FromSource(source))
         .then(({ signer }) =>
-          api.message.signAndSend(address, { signer }, (result) => handleStatus(result, onSuccess, onError)),
+          api.message.signAndSend(address, { signer }, (result) => handleStatus(result, alertId, onSuccess, onError)),
         )
         .catch(({ message }: Error) => {
-          alert.update(loadingAlertId.current, message, DEFAULT_ERROR_OPTIONS);
+          alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
           onError && onError();
         });
     }
