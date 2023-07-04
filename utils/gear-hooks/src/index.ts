@@ -13,6 +13,7 @@ import {
   useApi,
   useCreateHandler,
   SendMessageOptions,
+  UseSendMessageOptions,
 } from './hooks';
 
 import { withoutCommas } from './utils';
@@ -74,4 +75,5 @@ export {
   ProviderProps,
   Account,
   SendMessageOptions,
+  UseSendMessageOptions,
 };
