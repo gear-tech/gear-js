@@ -22,6 +22,11 @@ const ModalProvider = ({ children }: Props) => {
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Escape') {
       modalProps.onClose();
+
+      // only exists in transaction modal and actually should extend onClose prop
+      // however, cuz of Object.assign(defaultProps, props) it would be overrided
+      // maybe it's worth to do a deep merge to handle such cases?
+      if (modalProps.onAbort) modalProps.onAbort();
     }
   };
 
