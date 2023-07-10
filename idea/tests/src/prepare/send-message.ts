@@ -35,9 +35,9 @@ export async function sendMessages(
   uploadedPrograms: IPreparedPrograms,
 ) {
   const sentMessages = new Map<number, HumanMessageQueuedData>();
-  const logs = new Map<HexString, any>();
+  const recievedMessages = new Map<HexString, any>();
   const unsub = await listenToUserMessageSent(api, (data) => {
-    logs.set(data.message.id.toHex(), data.toHuman());
+    recievedMessages.set(data.message.id.toHex(), data.toHuman());
   });
 
   for (const program of Object.keys(messages)) {
@@ -55,5 +55,5 @@ export async function sendMessages(
 
   await sleep();
   unsub();
-  return { sent: checkMessages(sentMessages, messages), log: checkUserMessageSent(messages, logs) };
+  return { sent: checkMessages(sentMessages, messages), log: checkUserMessageSent(messages, recievedMessages) };
 }

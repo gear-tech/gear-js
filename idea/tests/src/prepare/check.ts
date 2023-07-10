@@ -35,23 +35,23 @@ function checkMessages(sentMessages: Map<number, any>, specMessages: { [program:
   return sentMessages;
 }
 
-function checkUserMessageSent(
-  specMessages: { [program: string]: IMessageSpec[] },
-  checkUserMessageSentMessages: Map<HexString, any>,
-) {
+function checkUserMessageSent(specMessages: { [program: string]: IMessageSpec[] }, userSentMsgs: Map<HexString, any>) {
   assert(
     Object.keys(specMessages).reduce((counter, key) => {
       counter += specMessages[key].reduce((count, value) => {
         if (value.log) {
           count += 1;
         }
+        if (value.autoReply) {
+          count += 1;
+        }
         return count;
       }, 0);
       return counter;
-    }, 0) === checkUserMessageSentMessages.size,
+    }, 0) === userSentMsgs.size,
     "Some logs wasn't received",
   );
-  return checkUserMessageSentMessages;
+  return userSentMsgs;
 }
 
 function checkCollectionCode(

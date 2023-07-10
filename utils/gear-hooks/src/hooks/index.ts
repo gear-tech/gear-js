@@ -9,6 +9,7 @@ import {
   useHandleCalculateGas,
   useReplyCalculateGas,
   SendMessageOptions,
+  UseSendMessageOptions,
 } from './api';
 import { useAccount, useAlert, useApi } from './context';
 import { useCreateHandler } from './handlers';
@@ -28,4 +29,5 @@ export {
   useApi,
   useCreateHandler,
   SendMessageOptions,
+  UseSendMessageOptions,
 };

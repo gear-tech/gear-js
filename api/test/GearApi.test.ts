@@ -53,6 +53,11 @@ describe('GearApi', () => {
   test('waitlistCost', () => {
     expect(api.waitlistCost).toBeDefined();
   });
+
+  test('wasmBlobVersion', async () => {
+    const version = await api.wasmBlobVersion();
+    expect(version).toBeDefined();
+  });
 });
 
 describe('Blocks', () => {

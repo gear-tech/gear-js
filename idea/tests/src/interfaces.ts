@@ -24,6 +24,7 @@ interface IMessageSpec {
   account: Account;
   metaType?: string;
   log?: string;
+  autoReply?: boolean;
 }
 
 interface IProgramSpec {

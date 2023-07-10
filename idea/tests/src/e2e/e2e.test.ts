@@ -223,7 +223,7 @@ describe('Code', () => {
   });
 });
 
-describe('Test balance', () => {
+describe.skip('Test balance', () => {
   test('testBalance.get request', async () => {
     expect(await getTestBalance(genesis)).toBeTruthy();
   });

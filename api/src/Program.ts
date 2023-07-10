@@ -24,15 +24,18 @@ import {
 } from './utils';
 import { GearApi } from './GearApi';
 import { GearGas } from './Gas';
+import { GearResumeSession } from './ResumeSession';
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from './metadata';
 
 export class GearProgram extends GearTransaction {
   public calculateGas: GearGas;
+  public resumeSession: GearResumeSession;
 
   constructor(protected _api: GearApi) {
     super(_api);
     this.calculateGas = new GearGas(_api);
+    this.resumeSession = new GearResumeSession(_api);
   }
 
   /**
@@ -124,7 +127,7 @@ export class GearProgram extends GearTransaction {
    * })
    * ```
    */
-  create(args: IProgramCreateOptions, meta?: ProgramMetadata, typeIndex?: number): IProgramCreateResult;
+  create(args: IProgramCreateOptions, meta?: ProgramMetadata, typeIndex?: number | null): IProgramCreateResult;
 
   /**
    * ### Create program from uploaded on chain code using program metadata to encode payload
@@ -149,7 +152,7 @@ export class GearProgram extends GearTransaction {
   create(
     { codeId, initPayload, value, gasLimit, ...args }: IProgramCreateOptions,
     metaOrHexRegistry?: HexString | ProgramMetadata,
-    typeIndexOrTypeName?: number | string,
+    typeIndexOrTypeName?: number | string | null,
   ): IProgramCreateResult {
     validateValue(value, this._api);
     validateGasLimit(gasLimit, this._api);

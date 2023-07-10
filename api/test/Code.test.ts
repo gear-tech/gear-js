@@ -13,7 +13,7 @@ let codeId: HexString;
 
 beforeAll(async () => {
   await api.isReadyOrError;
-  [accounts['alice']] = await getAccount();
+  accounts['alice'] = await getAccount('//Alice');
 });
 
 afterAll(async () => {
@@ -26,10 +26,10 @@ describe('Upload code', () => {
     const { codeHash } = await api.code.upload(code);
     expect(codeHash).toBeDefined();
     codeId = codeHash;
-    const transactionData = await sendTransaction(api.code, accounts['alice'], 'CodeChanged');
-    expect(transactionData.id).toBe(codeHash);
-    expect(transactionData.change).toHaveProperty('Active');
-    expect(transactionData.change.Active).toHaveProperty('expiration');
+    const [txData] = await sendTransaction(api.code, accounts['alice'], ['CodeChanged']);
+    expect(txData.id.toHex()).toBe(codeHash);
+    expect(txData.change.isActive).toBeTruthy();
+    expect(txData.change.asActive).toHaveProperty('expiration');
   });
 
   test('Throw error when code exists', async () => {

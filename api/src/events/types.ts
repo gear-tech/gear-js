@@ -7,9 +7,15 @@ import {
   MessageWaken,
   MessagesDispatched,
   ProgramChanged,
+  ProgramResumeSessionStarted,
   UserMessageRead,
   UserMessageSent,
+  VoucherIssued,
 } from './GearEvents';
+
+export interface IGearVoucherEvent {
+  VoucherIssued: VoucherIssued;
+}
 
 export interface IGearEvent {
   MessageQueued: MessageQueued;
@@ -22,4 +28,5 @@ export interface IGearEvent {
   ProgramChanged: ProgramChanged;
   DebugDataSnapshot: DebugDataSnapshot;
   DebugMode: DebugMode;
+  ProgramResumeSessionStarted: ProgramResumeSessionStarted;
 }

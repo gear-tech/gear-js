@@ -5,9 +5,9 @@ import { bufferToU8a } from '@polkadot/util';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { GearApi, getProgramMetadata } from '../src';
+import { GearApi, decodeAddress, getProgramMetadata } from '../src';
 import { TARGET, TEST_META_META, WS_ADDRESS } from './config';
-import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
+import { checkInit, getAccount, sendTransaction, sleep, waitForPausedProgram } from './utilsFunctions';
 
 const api = new GearApi({ providerAddress: WS_ADDRESS });
 let alice: KeyringPair;
@@ -15,13 +15,15 @@ let codeId: HexString;
 let programId: HexString;
 let expiration: number;
 let metaHash: HexString;
+let expiredBN: number;
+let pausedBlockHash: HexString;
 
 const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
 const metaHex: HexString = `0x${readFileSync(TEST_META_META, 'utf-8')}`;
 
 beforeAll(async () => {
   await api.isReadyOrError;
-  [alice] = await getAccount();
+  alice = await getAccount('//Alice');
 });
 
 afterAll(async () => {
@@ -64,17 +66,28 @@ describe('New Program', () => {
 
     const waitForReply = api.message.listenToReplies(programId);
 
-    const transactionData = await sendTransaction(program.extrinsic, alice, 'MessageQueued');
+    const [pcData, mqData] = await sendTransaction(program.extrinsic, alice, ['ProgramChanged', 'MessageQueued']);
 
-    expect(transactionData.destination).toBe(program.programId);
+    expect(pcData.id.toHex()).toBe(programId);
+    expect(pcData.change.isProgramSet).toBeTruthy();
+    expect(pcData.change.asProgramSet.expiration.toNumber()).toBeGreaterThan(0);
+    expiredBN = pcData.change.asProgramSet.expiration.toNumber();
+
     expect(await status).toBe('success');
 
-    const reply = await waitForReply(transactionData.id);
+    const reply = await waitForReply(mqData.id.toHex());
     expect(metadata.createType(metadata.types.init.output!, reply.message.payload).toJSON()).toMatchObject({ One: 1 });
     expect(isProgramSetHappened).toBeTruthy();
     expect(isActiveHappened).toBeTruthy();
     expect(programSetExpiration!).toBe(activeExpiration!);
     expiration = activeExpiration!;
+  });
+
+  test.skip('Wait when program will be paused', async () => {
+    const [id, blockHash] = await waitForPausedProgram(api, programId, expiredBN);
+    expect(id).toBe(programId);
+    expect(blockHash).toBeDefined();
+    pausedBlockHash = blockHash;
   });
 
   test('Сreate program', async () => {
@@ -102,15 +115,15 @@ describe('New Program', () => {
 
     const waitForReply = api.message.listenToReplies(programId);
 
-    const transactionData = await sendTransaction(api.program, alice, 'MessageQueued');
+    const [transactionData] = await sendTransaction(api.program, alice, ['MessageQueued']);
 
-    expect(transactionData.destination).toBe(programId);
+    expect(transactionData.destination.toHex()).toBe(programId);
     expect(await status).toBe('success');
 
     expect(programChangedStatuses).toContain('ProgramSet');
     expect(programChangedStatuses).toContain('Active');
 
-    const reply = await waitForReply(transactionData.id);
+    const reply = await waitForReply(transactionData.id.toHex());
     expect(metadata.createType(metadata.types.init.output!, reply.message.payload).toJSON()).toMatchObject({ One: 1 });
   });
 
@@ -138,11 +151,12 @@ describe('New Program', () => {
 
   test('Pay program rent', async () => {
     const tx = await api.program.payRent(programId, 10_000);
-    const result = await sendTransaction(tx, alice, 'ProgramChanged');
+    const [result] = await sendTransaction(tx, alice, ['ProgramChanged']);
     expect(result).toHaveProperty('id');
-    expect(result.id).toBe(programId);
-    expect(result).toHaveProperty(['change', 'ExpirationChanged', 'expiration']);
-    expect(Number(result.change.ExpirationChanged.expiration.replaceAll(',', ''))).toBe(expiration + 10_000);
+    expect(result.id.toHex()).toBe(programId);
+    expect(result.change.isExpirationChanged).toBeTruthy();
+    expect(result.change.asExpirationChanged.expiration).toBeDefined();
+    expect(Number(result.change.asExpirationChanged.expiration.toNumber())).toBe(expiration + 10_000);
   });
 
   test('Calculate pay rent', () => {
@@ -207,5 +221,59 @@ describe('Program', () => {
     const program = await api.programStorage.getProgram(programId);
     const pages = await api.programStorage.getProgramPages(programId, program);
     expect(Object.keys(pages)).not.toHaveLength(0);
+  });
+
+  test.skip('Resume program', async () => {
+    expect(programId).toBeDefined();
+    expect(pausedBlockHash).toBeDefined();
+
+    const parentBlock = (await api.blocks.get(pausedBlockHash)).block.header.parentHash.toHex();
+
+    const program = await api.programStorage.getProgram(programId, parentBlock);
+
+    const initTx = api.program.resumeSession.init({
+      programId,
+      allocations: program.allocations,
+      codeHash: program.codeHash.toHex(),
+    });
+
+    const [txData] = await sendTransaction(initTx, alice, ['ProgramResumeSessionStarted']);
+
+    expect(txData.sessionId).toBeDefined();
+    expect(txData.accountId).toBeDefined();
+    expect(txData.accountId.toHex()).toBe(decodeAddress(alice.address));
+    expect(txData.programId).toBeDefined();
+    expect(txData.programId.toHex()).toBe(programId);
+    expect(txData.sessionEndBlock).toBeDefined();
+
+    const sessionId = txData.sessionId.toNumber();
+
+    const pages = await api.programStorage.getProgramPages(programId, program, parentBlock);
+
+    const memoryPages = Object.entries(pages);
+
+    const txs: any = [];
+
+    for (const memPage of memoryPages) {
+      txs.push(api.program.resumeSession.push({ sessionId, memoryPages: [memPage] }));
+    }
+
+    await new Promise((resolve) =>
+      api.tx.utility.batchAll(txs).signAndSend(alice, ({ events }) => {
+        events.forEach(({ event: { method } }) => {
+          if (method === 'BatchCompleted') {
+            resolve(true);
+          }
+        });
+      }),
+    );
+
+    await new Promise((resolve) =>
+      api.program.resumeSession.commit({ sessionId, blockCount: 20_000 }).signAndSend(alice, ({ status }) => {
+        if (status.isFinalized) {
+          resolve(true);
+        }
+      }),
+    );
   });
 });

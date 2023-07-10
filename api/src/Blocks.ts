@@ -16,7 +16,9 @@ export class GearBlock {
   subscribeNewHeads: PromiseResult<() => Observable<HeaderExtended>>;
 
   constructor(private api: GearApi) {
-    this.subscribeNewHeads = api.derive.chain.subscribeNewHeads;
+    api.isReady.then(() => {
+      this.subscribeNewHeads = api.derive.chain.subscribeNewHeads;
+    });
   }
 
   /**

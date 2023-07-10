@@ -16,7 +16,6 @@ let aliceRaw: HexString;
 let programId: HexString;
 let codeId: HexString;
 let messageId: HexString;
-let exitCode: number;
 
 const code = readFileSync(join(TARGET, 'test_gas.opt.wasm'));
 const meta = getProgramMetadata(`0x${readFileSync(TEST_GAS_META, 'utf-8')}`);
@@ -29,7 +28,7 @@ const gasLimits: { init?: u64; handle?: u64; reply?: u64 } = {
 
 beforeAll(async () => {
   await api.isReadyOrError;
-  [alice] = await getAccount();
+  alice = await getAccount('//Alice');
   aliceRaw = decodeAddress(alice.address);
 });
 
@@ -57,7 +56,7 @@ describe('Calculate gas', () => {
     programId = program.programId;
     codeId = program.codeId;
     const initStatus = checkInit(api, programId);
-    await sendTransaction(program.extrinsic, alice, 'MessageQueued');
+    await sendTransaction(program.extrinsic, alice, ['MessageQueued']);
     expect(await initStatus).toBe('success');
   });
 
@@ -81,7 +80,7 @@ describe('Calculate gas', () => {
     );
     programId = program.programId;
     const initStatus = checkInit(api, programId);
-    await sendTransaction(program.extrinsic, alice, 'MessageQueued');
+    await sendTransaction(program.extrinsic, alice, ['MessageQueued']);
     expect(await initStatus).toBe('success');
   });
 
@@ -110,7 +109,7 @@ describe('Calculate gas', () => {
       meta,
     );
     const waitForReply = listenToUserMessageSent(api, programId);
-    await sendTransaction(tx, alice, 'MessageQueued');
+    await sendTransaction(tx, alice, ['MessageQueued']);
     const { message } = await waitForReply(null);
     expect(message.id).toBeDefined();
     messageId = message.id.toHex();
@@ -120,7 +119,7 @@ describe('Calculate gas', () => {
 
   test('Calculate reply gas', async () => {
     expect(messageId).toBeDefined();
-    const gas = await api.program.calculateGas.reply(aliceRaw, messageId, exitCode, { input: 'Reply' }, 0, true, meta);
+    const gas = await api.program.calculateGas.reply(aliceRaw, messageId, { input: 'Reply' }, 0, true, meta);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
     gasLimits.reply = gas.min_limit;
@@ -140,7 +139,7 @@ describe('Calculate gas', () => {
       },
       meta,
     );
-    const data = await sendTransaction(tx, alice, 'MessageQueued');
+    const [data] = await sendTransaction(tx, alice, ['MessageQueued']);
     expect(data).toBeDefined();
   });
 });

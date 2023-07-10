@@ -13,8 +13,8 @@ import {
   GearEventPayload,
   ProgramChangedInput,
   UserMessageReadInput,
-  UserMessageSentInput,
   MessagesDispatchedDataInput,
+  UserMessageSentInput,
 } from '../types';
 import { CodeChangedInput } from '../types';
 
@@ -23,20 +23,13 @@ function userMessageSentPayload({ message, expiration }: UserMessageSentData): U
 
   return {
     id: id.toHex(),
-    source: source.toHex(),
     destination: destination.toHex(),
+    source: source.toHex(),
     payload: payload.toHex(),
     value: value.toString(),
-    replyToMessageId: details.isSome
-      ? details.unwrap().isReply
-        ? details.unwrap().asReply.replyTo.toHex()
-        : null
-      : null,
-    exitCode: details.isSome
-      ? details.unwrap().isReply
-        ? details.unwrap().asReply.statusCode.toNumber()
-        : null
-      : null,
+    replyToMessageId: details.isSome ? details.unwrap().to.toHex() : null,
+    //TODO: better explanation of status codes
+    exitCode: details.isSome ? (details.unwrap().code.isSuccess ? 0 : 1) : null,
     expiration: expiration.isSome ? expiration.unwrap().toNumber() : null,
   };
 }

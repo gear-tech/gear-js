@@ -1,44 +1,14 @@
 {
   "types": {
     "MessageId": "[u8;32]",
-    "ExitCode": "i32",
     "Payload": "Vec<u8>",
-    "Message": {
-      "id": "H256",
-      "source": "H256",
-      "destination": "H256",
-      "payload": "Payload",
-      "gas_limit": "u64",
-      "value": "u128",
-      "reply": "Option<(H256, ExitCode)>"
-    },
-    "PayloadStore": {
-      "outgoing": "BTreeMap<u64, Option<Payload>>",
-      "new_programs": "Vec<ProgramId>",
-      "reply": "Option<Payload>",
-      "awaken": "Vec<MessageId>",
-      "reply_was_sent": "bool"
-    },
+    "Value": "Compact<u128>",
     "Dispatch": {
       "kind": "DispatchKind",
-      "message": "Message",
-      "payload_store": "Option<PayloadStore>"
+      "message": "Message"
     },
     "DispatchKind": {
       "_enum": ["Init", "Handle", "Reply", "Signal"]
-    },
-    "QueuedMessage": {
-      "id": "H256",
-      "source": "H256",
-      "destination": "H256",
-      "payload": "Vec<u8>",
-      "value": "u128",
-      "reply": "Option<(H256, i32)>"
-    },
-    "QueuedDispatch": {
-      "kind": "DispatchKind",
-      "message": "QueuedMessage",
-      "payload_store": "Option<PayloadStore>"
     },
     "Reason": {
       "_enum": {
@@ -55,6 +25,17 @@
       "message_id": "H256",
       "program_id": "H256",
       "origin": "H256"
+    },
+    "UserStoredMessage": {
+      "id": "MessageId",
+      "source": "ProgramId",
+      "destination": "ProgramId",
+      "payload": "Payload",
+      "value": "Value"
+    },
+    "Interval": {
+      "start": "u32",
+      "finish": "u32"
     }
   }
 }

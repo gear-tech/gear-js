@@ -164,4 +164,4 @@ jobs:
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: get deployment -o name -n dev-idea | xargs -n1 -t kubectl rollout status -n dev-idea --timeout=120s
+          args: get deployment -o name -n dev-1 | xargs -n1 -t kubectl rollout status -n dev-1 --timeout=120s

@@ -18,7 +18,7 @@ function useReadWasmState<T = AnyJson>(
   const isPayload = payload !== undefined;
 
   const readWasmState = () => {
-    if (!programId || !wasm || !functionName || !isPayload) return;
+    if (!api || !programId || !wasm || !functionName || !isPayload) return;
 
     return getStateMetadata(wasm).then((stateMetadata) =>
       api.programState.readUsingWasm({ programId, wasm, fn_name: functionName, argument: payload }, stateMetadata),
@@ -30,7 +30,7 @@ function useReadWasmState<T = AnyJson>(
   useEffect(() => {
     readState(true);
     resetError();
-  }, [programId, wasm, functionName, payload]);
+  }, [api, programId, wasm, functionName, payload]);
 
   useStateSubscription(programId, readState, !!wasm && !!functionName && isPayload);
 
