@@ -4,7 +4,6 @@ import { strict as assert } from 'assert';
 config();
 
 export const checkEnv = (envName: string, defaultValue?: string) => {
-  console.log(envName);
   const env = process.env[envName];
   if (!env && defaultValue) {
     return defaultValue;

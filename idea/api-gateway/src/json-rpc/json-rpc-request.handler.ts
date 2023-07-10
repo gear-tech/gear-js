@@ -42,7 +42,7 @@ async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
 }
 
 function isExistJsonRpcMethod(method: string): boolean {
-  const methods: string[] = [...Object.values(API_METHODS)];
+  const methods: string[] = Object.values(API_METHODS);
   return methods.includes(method);
 }
 

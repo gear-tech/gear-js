@@ -1,4 +1,4 @@
-import { GearApi } from '@gear-js/api';
+import { GearApi, HexString } from '@gear-js/api';
 
 import { changeStatus } from '../routes/healthcheck.router';
 import config from '../config/configuration';
@@ -6,61 +6,39 @@ import { producer } from '../rabbitmq/producer';
 import { logger } from '../common/logger';
 
 export let api: GearApi;
+let genesisHash: HexString;
 
-let addresses = config.gear.providerAddresses;
-const MAX_RECONNECTIONS = 10; //max count reconnection for each provider address
+const addresses = config.gear.providerAddresses;
+// max number of reconnections for each node address
+const MAX_RECONNECTIONS = 10;
 let reconnectionsCounter = 0;
-let providerAdd = addresses[0];
-let connectionStatus = false;
+
+let providerAddress = addresses[0];
 
 export async function connect() {
-  if (!providerAdd) {
-    throw new Error('Not found provider address to connect');
+  if (!providerAddress) {
+    throw new Error('There are no node addresses to connect to');
   }
 
-  api = new GearApi({ providerAddress: providerAdd });
+  api = new GearApi({ providerAddress });
 
   try {
     await api.isReadyOrError;
-    connectionStatus = true;
   } catch (error) {
-    logger.error(`Failed to connect to ${providerAdd}`);
-    await retryConnectionToNode();
+    logger.error(`Failed to connect to ${providerAddress}`);
+    await reconnect();
   }
   await api.isReady;
   api.on('disconnected', () => {
-    connectionStatus = false;
-    producer.sendDeleteGenesis(getGenesisHash());
-    retryConnectionToNode();
+    producer.sendDeleteGenesis(genesisHash);
+    reconnect();
   });
-
-  connectionStatus = true;
-  logger.info(`Connected to ${await api.chain()} with genesis ${getGenesisHash()}`);
+  genesisHash = api.genesisHash.toHex();
+  logger.info(`Connected to ${await api.chain()} with genesis ${genesisHash}`);
   changeStatus('ws');
 }
 
-async function retryConnectionToNode() {
-  if (addresses.length === 0) throw new Error(`️ 📡 Unable to connect node providers 🔴`);
-
-  if (connectionStatus) return;
-
-  for (let i = 0; i <= addresses.length; i + 1) {
-    await new Promise((resolve) => {
-      setTimeout(resolve, 2000);
-    });
-
-    await reconnect();
-  }
-}
-
 async function reconnect(): Promise<void> {
-  if (connectionStatus) {
-    reconnectionsCounter = 0;
-    addresses = config.gear.providerAddresses;
-    producer.sendGenesis(getGenesisHash());
-    return;
-  }
-
   if (api) {
     await api.disconnect();
     api = null;
@@ -68,16 +46,15 @@ async function reconnect(): Promise<void> {
 
   reconnectionsCounter++;
   if (reconnectionsCounter > MAX_RECONNECTIONS) {
-    addresses = addresses.filter((address) => address !== providerAdd);
-    providerAdd = addresses[0];
+    providerAddress = addresses.filter((address) => address !== providerAddress)[0];
     reconnectionsCounter = 0;
   }
 
-  logger.info('⚙️ 📡 Reconnecting to the gear node 🟡');
+  logger.info('⚙️ 📡 Reconnecting to the gear node...');
   changeStatus('ws');
   return connect();
 }
 
-export function getGenesisHash(): string {
-  return api.genesisHash.toHex();
+export function getGenesisHash() {
+  return genesisHash;
 }
