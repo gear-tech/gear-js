@@ -17,7 +17,7 @@ export default {
     host: process.env.DB_HOST || 'localhost',
   },
   gear: {
-    providerAddresses: checkEnv('WS_PROVIDERS').split(','),
+    providerAddresses: checkEnv('WS_PROVIDER').split(','),
     accountSeed: checkEnv('TEST_ACCOUNT_SEED'),
     rootAccountSeed: checkEnv('ROOT_ACCOUNT_SEED'),
     accountBalance: checkEnv('TEST_ACCOUNT_BALANCE'),
