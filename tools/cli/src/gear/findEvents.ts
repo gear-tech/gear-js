@@ -84,7 +84,7 @@ export async function getReply(
       const reply = await new Promise((resolve) => {
         if (source.eq(programId) && details.isSome) {
           const unwrappedDetails = details.unwrap();
-          if (unwrappedDetails.isReply && unwrappedDetails.asReply.replyTo.eq(messageId)) {
+          if (unwrappedDetails.to.eq(messageId)) {
             resolve([id.toHex(), payload]);
           }
         }
