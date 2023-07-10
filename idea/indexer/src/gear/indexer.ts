@@ -124,7 +124,16 @@ export class GearIndexer {
 
   private async indexBlock(blockNumber: number, isMissed = false): Promise<void> {
     if (blockNumber === 0) return;
-    const block = await this.api.derive.chain.getBlockByNumber(blockNumber);
+
+    let block: SignedBlockExtended;
+
+    try {
+      block = await this.api.derive.chain.getBlockByNumber(blockNumber);
+    } catch (err) {
+      logger.error(`Unable to get block ${blockNumber} due to the following error`);
+      console.log(err);
+      return;
+    }
 
     const hash = block.block.header.hash.toHex();
 

@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/indexer",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Microservice for indexing Gear network",
   "author": "Gear Technologies",
   "private": true,
@@ -14,7 +14,7 @@
   },
   "license": "GPL-3.0",
   "dependencies": {
-    "@gear-js/api": "0.32.0",
+    "@gear-js/api": "0.32.2",
     "@gear-js/common": "workspace:^",
     "@polkadot/api": "10.9.1",
     "@polkadot/wasm-crypto": "7.2.1",
