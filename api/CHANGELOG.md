@@ -1,3 +1,12 @@
+## 0.32.2
+
+_10/03/2023_
+
+https://github.com/gear-tech/gear-js/pull/1320
+### Changes
+
+- Add gr_reply_deposit syscall
+
 ## 0.32.1
 
 _07/03/2023_
