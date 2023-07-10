@@ -32,6 +32,7 @@ export default (
     gr_block_timestamp: () => timestamp,
     gr_create_program_wgas: () => {},
     gr_create_program: () => {},
+    gr_reply_deposit: () => {},
     gr_debug: (payload: number, len: number) => {
       if (showDebug) {
         console.debug(
