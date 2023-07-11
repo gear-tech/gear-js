@@ -48,14 +48,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.32.0":
-  version: 0.32.0
-  resolution: "@gear-js/api@npm:0.32.0"
+"@gear-js/api@npm:0.32.3":
+  version: 0.32.3
+  resolution: "@gear-js/api@npm:0.32.3"
   peerDependencies:
-    "@polkadot/api": 10.7.1
+    "@polkadot/api": 10.9.1
     "@polkadot/wasm-crypto": 7.2.1
     rxjs: 7.8.1
-  checksum: eb91540f63d70a688687e3491a83f2c3880ac7a5ab45032d58d2b44da488241c1d5093ea83014dff62ca80f47fb88402edef903187797db3525582499d2f537c
+  checksum: 74c6c649422dcbcd25cc18991bcaa2b25eea93b2aa3ccd857fb9d4c06b330d6205764c068730fada902231f11b91dfebe9bfbbdb2be385f57669daf99ea3141d
   languageName: node
   linkType: hard
 
@@ -63,7 +63,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/react-hooks@workspace:."
   dependencies:
-    "@gear-js/api": 0.32.0
+    "@gear-js/api": 0.32.3
     "@polkadot/api": 10.9.1
     "@polkadot/extension-dapp": 0.46.5
     "@polkadot/extension-inject": 0.46.5
@@ -84,7 +84,7 @@ __metadata:
     rollup-plugin-typescript2: 0.31.2
     typescript: 4.9.5
   peerDependencies:
-    "@gear-js/api": 0.32.0
+    "@gear-js/api": 0.32.3
     "@polkadot/api": 10.9.1
     "@polkadot/extension-dapp": 0.46.5
     react: ^18.2.0
