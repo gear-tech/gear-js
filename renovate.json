@@ -24,13 +24,13 @@
     {
       "matchPaths": ["idea/api-gateway/**", "idea/common/**", "idea/indexer/**", "idea/test-balance/**"],
       "groupName": "idea-backend",
-      "reviewers": ["osipov-mit", "Almazatun"],
+      "reviewers": ["osipov-mit"],
       "addLabels": ["backend"]
     },
     {
       "matchPaths": ["idea/tests/**"],
       "groupName": "idea-tests",
-      "reviewers": ["osipov-mit", "Almazatun"],
+      "reviewers": ["osipov-mit"],
       "addLabels": ["tests"]
     },
     {
@@ -40,7 +40,7 @@
       "addLabels": ["tools"]
     },
     {
-      "matchPaths": ["utils/gear-ui/**", "utils/gear-hooks/**", "utils/create-gear-app/**"],
+      "matchPaths": ["utils/gear-ui/**", "utils/gear-hooks/**"],
       "groupName": "utils",
       "reviewers": ["nikitayutanov"],
       "addLabels": ["utils"]
