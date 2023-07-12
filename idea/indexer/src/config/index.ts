@@ -27,7 +27,7 @@ export default {
     port: Number(process.env.HEALTHCHECK_PORT || '3001'),
   },
   gear: {
-    providerAddresses: checkEnv('WS_PROVIDER').split(','),
+    providerAddresses: checkEnv('GEAR_WS_PROVIDER').split(','),
   },
   indexer: {
     batchSize: Number(process.env.BATCH_SIZE || -1),
