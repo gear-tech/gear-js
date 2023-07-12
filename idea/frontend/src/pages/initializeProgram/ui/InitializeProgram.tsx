@@ -5,8 +5,8 @@ import { useAlert } from '@gear-js/react-hooks';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useProgramActions } from 'hooks';
-
+import { fetchCodeMetadata } from 'api';
+import { useChain, useProgramActions } from 'hooks';
 import { Subheader } from 'shared/ui/subheader';
 import { UploadMetadata } from 'features/uploadMetadata';
 import { Payload } from 'hooks/useProgramActions/types';
@@ -14,7 +14,6 @@ import { ProgramForm, RenderButtonsProps, SubmitHelpers } from 'widgets/programF
 import { BackButton } from 'shared/ui/backButton';
 import { ReactComponent as PlusSVG } from 'shared/assets/images/actions/plus.svg';
 import { GasMethod } from 'shared/config';
-import { fetchCodeMetadata } from 'api';
 import { RPCError, RPCErrorCode } from 'shared/services/rpcService';
 
 import { PageParams } from '../model';
@@ -23,6 +22,8 @@ import styles from './InitializeProgram.module.scss';
 const InitializeProgram = () => {
   const alert = useAlert();
   const { codeId } = useParams() as PageParams;
+
+  const { isDevChain } = useChain();
   const { createProgram } = useProgramActions();
 
   // TODO: think about combining w/ useMetaOnUpload hook
@@ -65,6 +66,8 @@ const InitializeProgram = () => {
   );
 
   useEffect(() => {
+    if (isDevChain) return setIsUploadedMetaReady(true);
+
     fetchCodeMetadata(codeId)
       .then(({ result }) => setUploadedMetaHex(result.hex))
       .catch(({ code, message }: RPCError) => code !== RPCErrorCode.MetadataNotFound && alert.error(message))
