@@ -1,11 +1,11 @@
 import { HexString } from '@polkadot/util/types';
 import { CSSTransition } from 'react-transition-group';
 
-import { FormattedMailboxItem } from '../../model';
+import { MailboxItem } from 'features/mailbox';
 import { Message } from '../message';
 
 type Props = {
-  list: FormattedMailboxItem[];
+  list: MailboxItem[];
   onClaim: (messageId: HexString, reject: () => void) => void;
 };
 

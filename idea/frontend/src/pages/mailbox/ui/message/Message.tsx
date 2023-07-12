@@ -1,4 +1,4 @@
-import { Button, buttonStyles, Input, Textarea } from '@gear-js/ui';
+import { Button, buttonStyles, Input } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
 import { useState } from 'react';
 import clsx from 'clsx';
@@ -7,23 +7,22 @@ import { ReactComponent as sendSVG } from 'shared/assets/images/actions/send.svg
 import { ReactComponent as testBalanceSVG } from 'shared/assets/images/actions/testBalance.svg';
 import { ReactComponent as letterSVG } from 'shared/assets/images/actions/letter.svg';
 import { ReactComponent as ArrowSVG } from 'shared/assets/images/actions/arrowRight.svg';
-import { getPreformattedText } from 'shared/helpers';
 
+import { MailboxItem } from 'features/mailbox';
 import { UILink } from 'shared/ui/uiLink';
 import { generatePath } from 'react-router-dom';
 import { absoluteRoutes } from 'shared/config';
 import styles from './Message.module.scss';
-import { FormattedMailboxItem } from '../../model';
 
 type Props = {
-  value: FormattedMailboxItem;
+  value: MailboxItem;
   onClaim: (messageId: HexString, reject: () => void) => void;
 };
 
 const Message = ({ value, onClaim }: Props) => {
   const [message, interval] = value;
 
-  const { id, source, destination, payload, reply } = message;
+  const { id, source, destination, payload } = message;
   const { start, finish } = interval;
 
   const [isLoading, setIsLoading] = useState(false);
@@ -57,7 +56,6 @@ const Message = ({ value, onClaim }: Props) => {
             <Input label="Destination" gap="1/5" value={destination} readOnly block />
             <Input label="Payload" gap="1/5" value={payload} readOnly block />
             <Input label="Value" gap="1/5" value={message.value} block readOnly />
-            <Textarea label="Reply" gap="1/5" value={getPreformattedText(reply)} rows={4} block readOnly />
             <Input label="Start" gap="1/5" value={start} readOnly block />
             <Input label="Finish" gap="1/5" value={finish} readOnly block />
           </>
