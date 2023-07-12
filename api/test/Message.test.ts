@@ -19,7 +19,7 @@ const metadata = getProgramMetadata(metaHex);
 
 beforeAll(async () => {
   await api.isReadyOrError;
-  [alice] = await getAccount();
+  alice = await getAccount('//Alice');
 });
 
 afterAll(async () => {
@@ -38,21 +38,20 @@ describe('Gear Message', () => {
       metadata,
     ).programId;
     const status = checkInit(api, programId);
-    const transactionData = await sendTransaction(api.program, alice, 'MessageQueued');
-    expect(transactionData.destination).toBe(programId);
+    const [txData] = await sendTransaction(api.program, alice, ['MessageQueued']);
+    expect(txData.destination.toHex()).toBe(programId);
     expect(await status).toBe('success');
   });
 
   test('send messages', async () => {
     const messages = [
-      { payload: { Two: [[8, 16]] }, reply: '0x', claim: true },
+      { payload: { Two: [[8, 16]] }, reply: '0x086f6b', claim: true },
       {
         payload: {
           One: 'Dmitriy',
         },
         value: 1_000,
         reply: '0x',
-        claim: true,
       },
     ];
 
@@ -69,30 +68,25 @@ describe('Gear Message', () => {
 
       const waitForReply = api.message.listenToReplies(programId);
 
-      const transactionData = await sendTransaction(tx, alice, 'MessageQueued');
-      expect(transactionData).toBeDefined();
+      const [txData] = await sendTransaction(tx, alice, ['MessageQueued']);
+      expect(txData).toBeDefined();
 
-      const reply = await waitForReply(transactionData.id);
+      const reply = await waitForReply(txData.id.toHex());
       expect(reply?.message.details.isSome).toBeTruthy();
-      expect(reply?.message.details.unwrap().isReply).toBeTruthy();
-      expect(reply?.message.details.unwrap().asReply.statusCode.toNumber()).toBe(0);
+      expect(reply?.message.details.unwrap().code.isSuccess).toBeTruthy();
       expect(reply?.message.payload.toHex()).toBe(message.reply);
-      if (message.claim) {
-        messageToClaim = reply.message.id.toHex();
-      }
     }
   });
 
   test('Read mailbox', async () => {
-    expect(messageToClaim).toBeDefined();
     const mailbox = await api.mailbox.read(decodeAddress(alice.address));
-    const filteredMB = mailbox.filter((value) => value[0].id.eq(messageToClaim));
-    expect(filteredMB).toHaveLength(1);
-    expect(filteredMB).toHaveProperty([0, 'toHuman']);
-    expect(filteredMB[0].toHuman()).toHaveLength(2);
-    expect(filteredMB).toHaveProperty([0, 0, 'id']);
-    expect(filteredMB).toHaveProperty([0, 1, 'finish']);
-    expect(filteredMB).toHaveProperty([0, 1, 'start']);
+    expect(mailbox).toHaveLength(1);
+    expect(mailbox).toHaveProperty([0, 'toHuman']);
+    expect(mailbox[0].toHuman()).toHaveLength(2);
+    expect(mailbox).toHaveProperty([0, 0, 'id']);
+    messageToClaim = mailbox[0][0].id.toHex();
+    expect(mailbox).toHaveProperty([0, 1, 'finish']);
+    expect(mailbox).toHaveProperty([0, 1, 'start']);
   });
 
   test('Read mailbox with message id', async () => {
@@ -109,8 +103,8 @@ describe('Gear Message', () => {
   test('Claim value from mailbox', async () => {
     expect(messageToClaim).toBeDefined();
     const submitted = api.claimValueFromMailbox.submit(messageToClaim);
-    const transactionData = await sendTransaction(submitted, alice, 'UserMessageRead');
-    expect(transactionData.id).toBe(messageToClaim);
+    const [txData] = await sendTransaction(submitted, alice, ['UserMessageRead']);
+    expect(txData.id.toHex()).toBe(messageToClaim);
     const mailbox = await api.mailbox.read(decodeAddress(alice.address));
     expect(mailbox.filter((value) => value[0][1] === messageToClaim)).toHaveLength(0);
   });

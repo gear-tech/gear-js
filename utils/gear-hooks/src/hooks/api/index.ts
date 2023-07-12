@@ -1,5 +1,5 @@
 import { useReadFullState, useReadWasmState } from './useReadState';
-import { useSendMessage, SendMessageOptions } from './useSendMessage';
+import { useSendMessage, SendMessageOptions, UseSendMessageOptions } from './useSendMessage';
 import { useUploadProgram, useCreateProgram } from './useProgram';
 import {
   useUploadCalculateGas,
@@ -19,4 +19,5 @@ export {
   useHandleCalculateGas,
   useReplyCalculateGas,
   SendMessageOptions,
+  UseSendMessageOptions,
 };

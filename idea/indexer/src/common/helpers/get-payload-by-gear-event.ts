@@ -13,8 +13,8 @@ import {
   GearEventPayload,
   ProgramChangedInput,
   UserMessageReadInput,
-  UserMessageSentInput,
   MessagesDispatchedDataInput,
+  UserMessageSentInput,
 } from '../types';
 import { CodeChangedInput } from '../types';
 
@@ -23,20 +23,13 @@ function userMessageSentPayload({ message, expiration }: UserMessageSentData): U
 
   return {
     id: id.toHex(),
-    source: source.toHex(),
     destination: destination.toHex(),
+    source: source.toHex(),
     payload: payload.toHex(),
     value: value.toString(),
-    replyToMessageId: details.isSome
-      ? details.unwrap().isReply
-        ? details.unwrap().asReply.replyTo.toHex()
-        : null
-      : null,
-    exitCode: details.isSome
-      ? details.unwrap().isReply
-        ? details.unwrap().asReply.statusCode.toNumber()
-        : null
-      : null,
+    replyToMessageId: details.isSome ? details.unwrap().to.toHex() : null,
+    //TODO: better explanation of status codes
+    exitCode: details.isSome ? (details.unwrap().code.isSuccess ? 0 : 1) : null,
     expiration: expiration.isSome ? expiration.unwrap().toNumber() : null,
   };
 }
@@ -57,14 +50,18 @@ function userMessageReadPayload({ id, reason }: UserMessageReadData): UserMessag
 }
 
 function programChangedPayload({ id, change }: ProgramChangedData): ProgramChangedInput {
-  const status = change.isActive
-    ? ProgramStatus.ACTIVE
-    : change.isInactive
-      ? ProgramStatus.EXITED
-      : change.isPaused
-        ? ProgramStatus.PAUSED
-        : ProgramStatus.UNKNOWN;
-  const expiration = change.isActive ? change.asActive.expiration.toString() : null;
+  let status: ProgramStatus;
+  let expiration: string;
+
+  if (change.isActive) status = ProgramStatus.ACTIVE;
+  else if (change.isInactive) status = ProgramStatus.EXITED;
+  else if (change.isTerminated) status = ProgramStatus.TERMINATED;
+  else if (change.isPaused) status = ProgramStatus.PAUSED;
+  else if (change.isProgramSet) status = ProgramStatus.PROGRAM_SET;
+  else status = ProgramStatus.UNKNOWN;
+
+  if (change.isActive) expiration = change.asActive.expiration.toString();
+  else if (change.isExpirationChanged) expiration = change.asExpirationChanged.expiration.toString();
 
   return { id: id.toHex(), status, expiration };
 }

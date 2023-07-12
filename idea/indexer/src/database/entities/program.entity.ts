@@ -16,7 +16,7 @@ export class Program extends BaseEntity implements IProgram {
   public id: string;
 
   @Index()
-  @Column()
+  @Column({ nullable: true })
   public owner: string;
 
   @Column()

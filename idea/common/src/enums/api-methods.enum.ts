@@ -1,4 +1,4 @@
-enum API_METHODS {
+export enum API_METHODS {
   BLOCKS_STATUS = 'blocks.status',
   CODE_ALL = 'code.all',
   CODE_DATA = 'code.data',
@@ -21,5 +21,3 @@ enum API_METHODS {
   TEST_BALANCE_GET = 'testBalance.get',
   TEST_BALANCE_AVAILABLE = 'testBalance.available',
 }
-
-export { API_METHODS };

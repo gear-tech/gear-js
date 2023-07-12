@@ -7,7 +7,8 @@ let alice, bob;
 
 beforeAll(async () => {
   await api.isReadyOrError;
-  [alice, bob] = await getAccount();
+  alice = await getAccount('//Alice');
+  bob = await getAccount('//Bob');
 });
 
 afterAll(async () => {

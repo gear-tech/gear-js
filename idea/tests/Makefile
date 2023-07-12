@@ -1,6 +1,6 @@
 API_PATH := ../../api
-TEST_PROGRAM_TARGET_PATH := ../../api/test/programs/target/wasm32-unknown-unknown/release
-TEST_META_TXT_PATH := ../../api/test/programs/test-meta/meta.txt
+TEST_PROGRAM_TARGET_PATH := ../../api/programs/target/wasm32-unknown-unknown/release
+TEST_META_TXT_PATH := ../../api/programs/test-meta/test_meta.meta.txt
 MOVE_PROGRAM_PATH := ./wasm-test
 
 build_programs:

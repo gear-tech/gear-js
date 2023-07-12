@@ -9,6 +9,7 @@ import { TypeStructure } from '../types';
 
 const LOOKUP_REGEXP = /\bLookup\d+\b/g;
 const DIGITS_REGEXP = /\d+/;
+const OPTION_REGEXP = /^Option<[\w\][;\d]+>$/;
 
 export class GearMetadata {
   private registry: Registry;
@@ -258,7 +259,7 @@ export class GearMetadata {
     if (!typeDef.isVariant) {
       return false;
     }
-    if (!/^Option<[\w\d]+>$/.test(typeName)) {
+    if (!OPTION_REGEXP.test(typeName)) {
       return false;
     }
     if (

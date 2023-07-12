@@ -1,9 +1,9 @@
 import { BlockNumber } from '@polkadot/types/interfaces';
 import { Tuple } from '@polkadot/types';
 
-import { Interval, StoredMessage } from './base';
+import { Interval, UserStoredMessage } from './base';
 
 export interface MailboxItem extends Tuple {
-  0: StoredMessage;
+  0: UserStoredMessage;
   1: Interval<BlockNumber>;
 }

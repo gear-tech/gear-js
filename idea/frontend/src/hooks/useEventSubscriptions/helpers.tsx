@@ -17,7 +17,7 @@ const messageSentEventsHandler = (event: UserMessageSent, address: HexString, al
   const messageId = id.toHex();
   const alertOptions = { title: `${section}.${method}` };
 
-  const isError = details.isSome && details.unwrap().isReply && !details.unwrap().asReply.statusCode.eq(0);
+  const isError = details.isSome && !details.unwrap().code.isSuccess;
 
   const showAlert = isError ? alert.error : alert.success;
 

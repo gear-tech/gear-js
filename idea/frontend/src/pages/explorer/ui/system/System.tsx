@@ -1,5 +1,5 @@
 import { Vec } from '@polkadot/types';
-import { FrameSystemEventRecord } from '@polkadot/types/lookup';
+import { EventRecord } from '@polkadot/types/interfaces';
 
 import { IdeaEvent } from 'entities/explorer';
 import { Placeholder } from 'entities/placeholder';
@@ -9,7 +9,7 @@ import { Event } from '../event';
 import styles from './System.module.scss';
 
 type Props = {
-  eventRecords: Vec<FrameSystemEventRecord> | undefined;
+  eventRecords: Vec<EventRecord> | undefined;
   isError: boolean;
 };
 

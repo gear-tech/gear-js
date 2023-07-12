@@ -14,7 +14,7 @@ function useReadFullState<T = AnyJson>(
   const { api } = useContext(ApiContext); // сircular dependency fix
 
   const readFullState = () => {
-    if (!programId || !meta) return;
+    if (!api || !programId || !meta) return;
 
     return api.programState.read({ programId }, meta);
   };
@@ -24,7 +24,7 @@ function useReadFullState<T = AnyJson>(
   useEffect(() => {
     readState(true);
     resetError();
-  }, [programId, meta]);
+  }, [api, programId, meta]);
 
   useStateSubscription(programId, readState, !!meta);
 

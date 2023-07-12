@@ -10,7 +10,7 @@
     "ProgramMetadataRepr": {
       "init": "TypesRepr",
       "handle": "TypesRepr",
-      "reply": "TypesRepr",
+      "reply": "Option<u32>",
       "others": "TypesRepr",
       "signal": "Option<u32>",
       "state": "Option<u32>",

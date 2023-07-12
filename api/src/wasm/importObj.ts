@@ -32,6 +32,7 @@ export default (
     gr_block_timestamp: () => timestamp,
     gr_create_program_wgas: () => {},
     gr_create_program: () => {},
+    gr_reply_deposit: () => {},
     gr_debug: (payload: number, len: number) => {
       if (showDebug) {
         console.debug(
@@ -56,6 +57,8 @@ export default (
     gr_origin: () => {},
     gr_panic: () => {},
     gr_pay_program_rent: () => {},
+    gr_reply_code: () => {},
+    gr_signal_code: () => {},
     gr_program_id: () => {},
     gr_random: () => {},
     gr_read: (at: number, len: number, buffer: number) => {

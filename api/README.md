@@ -298,6 +298,40 @@ console.log(gas.toHuman());
 ```
 ---
 
+### Resume paused program
+
+To resume paused program use `api.program.resumeSession` methods.
+`init` - To start new session to resume program
+`push` - To push a bunch of the program pages
+`commit` - To finish resume session
+
+```javascript
+const program = await api.programStorage.getProgram(programId, oneBlockBeforePauseHash);
+const initTx = api.program.resumeSession.init({
+  programId,
+  allocations: program.allocations,
+  codeHash: program.codeHash.toHex(),
+});
+
+let sessionId: HexString;
+initTx.signAndSend(account, ({ events }) => {
+  events.forEach(({ event: { method, data }}) => {
+    if (method === 'ProgramResumeSessionStarted') {
+      sessionId = data.sessionId.toNumber();
+    }
+  })
+})
+
+const pages = await api.programStorage.getProgramPages(programId, program, oneBlockBeforePauseHash);
+for (const memPage of Object.entries(page)) {
+  const tx = api.program.resumeSession.push({ sessionId, memoryPages: [memPage] });
+  tx.signAndSend(account);
+}
+
+const tx = api.program.resumeSession.commit({ sessionId, blockCount: 20_000 });
+tx.signAndSend(account);
+```
+
 ## Work with programs and blockchain state
 
 ### Check that the address belongs to some program

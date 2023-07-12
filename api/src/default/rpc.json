@@ -91,10 +91,6 @@
             "type": "H256"
           },
           {
-            "name": "exit_code",
-            "type": "i32"
-          },
-          {
             "name": "payload",
             "type": "Vec<u8>"
           },
@@ -142,6 +138,13 @@
     "transaction_unstable": {
       "submitAndWatch": { "params": [] },
       "unwatch": { "params": [] }
+    },
+    "runtime": {
+      "wasmBlobVersion": {
+        "description": "Returns the version of the WASM blob in storage.",
+        "params": [],
+        "type": "String"
+      }
     }
   }
 }

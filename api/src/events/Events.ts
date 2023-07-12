@@ -3,9 +3,9 @@ import { HexString } from '@polkadot/util/types';
 import { UnsubscribePromise } from '@polkadot/api/types';
 
 import { IBalanceCallback, IBlocksCallback } from '../types';
+import { IGearEvent, IGearVoucherEvent } from './types';
 import { Transfer, UserMessageSent } from './GearEvents';
 import { GearApi } from '../GearApi';
-import { IGearEvent } from './types';
 
 export class GearEvents {
   private api: GearApi;
@@ -23,6 +23,19 @@ export class GearEvents {
         .filter(({ event }) => event.method === method)
         .forEach(({ event }) => {
           callback(event as IGearEvent[M]);
+        });
+    });
+  }
+
+  subscribeToGearVoucherEvent<M extends keyof IGearVoucherEvent>(
+    method: M,
+    callback: (event: IGearVoucherEvent[M]) => void | Promise<void>,
+  ) {
+    return this.api.query.system.events((events) => {
+      events
+        .filter(({ event }) => event.method === method)
+        .forEach(({ event }) => {
+          callback(event as IGearVoucherEvent[M]);
         });
     });
   }

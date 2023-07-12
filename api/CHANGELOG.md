@@ -1,3 +1,54 @@
+## 0.32.3
+
+_11/03/2023_
+
+https://github.com/gear-tech/gear-js/pull/1322
+### Changes
+
+- Update option regexp
+
+## 0.32.2
+
+_10/03/2023_
+
+https://github.com/gear-tech/gear-js/pull/1320
+### Changes
+
+- Add gr_reply_deposit syscall
+
+## 0.32.1
+
+_07/03/2023_
+
+https://github.com/gear-tech/gear-js/pull/1313
+### Changes
+
+- Make meta types nullable
+
+## 0.32.0
+
+_06/28/2023_
+
+https://github.com/gear-tech/gear-js/pull/1298
+https://github.com/gear-tech/gear-js/pull/1301
+https://github.com/gear-tech/gear-js/pull/1302
+https://github.com/gear-tech/gear-js/pull/1303
+https://github.com/gear-tech/gear-js/pull/1305
+https://github.com/gear-tech/gear-js/pull/1306
+https://github.com/gear-tech/gear-js/pull/1307
+
+### Changes
+
+- New approach to generate program IDs
+- Support `resumeSessionInit`, `resumeSessionPush` and `resumeSessionCommit` extrinsics according to https://github.com/gear-tech/gear/pull/2622
+- Refactor `statusCode` field according to https://github.com/gear-tech/gear/pull/2823.
+- Remove `exitCode` argument from `calculateGas.reply` method
+- Refactor default types
+- Support `gearVoucher` pallet and `sendMessageWithVoucher` and `sendReplyWithVoucher` extrinsics according to https://github.com/gear-tech/gear/pull/2777
+- Add `runtime_wasmBlobVersion` rpc call according to https://github.com/gear-tech/gear/pull/2760
+- New approach to metadata according to https://github.com/gear-tech/gear/pull/2829
+- Bump `polkadot-js` to `10.9.1`
+
 ## 0.31.2
 
 _05/26/2023_

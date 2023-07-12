@@ -5,6 +5,7 @@ import { HexString } from '@polkadot/util/types';
 import { GasLimit, Value } from '../types';
 import { GearApi } from '../GearApi';
 import { ValidationError } from '../errors';
+import { generateVoucherId } from './generate';
 
 export function validateValue(value: Value | undefined, api: GearApi) {
   if (!value) return;
@@ -47,4 +48,23 @@ export async function validateProgramId(programId: HexString, api: GearApi) {
   if (!isExist) {
     throw new ValidationError(`Program with id ${programId} doesn't exist`);
   }
+}
+
+export async function validateVoucher(programId: HexString, who: HexString, api: GearApi) {
+  const id = generateVoucherId(who, programId);
+
+  const balance = await api.balance.findOut(id);
+  if (balance.eqn(0)) {
+    throw new ValidationError(`Voucher with id ${id} doesn't exist`);
+  }
+}
+
+export async function validateMailboxItem(account: HexString, messageId: HexString, api: GearApi) {
+  const mailbox = await api.mailbox.read(account, messageId);
+
+  if (!mailbox) {
+    throw new Error(`There is no message with id ${messageId} in the mailbox`);
+  }
+
+  return mailbox[0];
 }

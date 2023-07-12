@@ -1,5 +1,6 @@
 import { CreateType, ProgramMetadata } from '@gear-js/api';
 import { InputWrapper } from '@gear-js/ui';
+import { useAlert } from '@gear-js/react-hooks';
 import { AnyJson, Codec } from '@polkadot/types/types';
 import { useEffect, useState } from 'react';
 import { generatePath, Link } from 'react-router-dom';
@@ -22,6 +23,8 @@ type Props = {
 const MessageInfo = ({ metadata, message, isLoading }: Props) => {
   const { id, source, value, destination, replyToMessageId, entry } = message ?? {};
 
+  const alert = useAlert();
+
   const [decodedPayload, setDecodedPayload] = useState<string>();
 
   useEffect(() => {
@@ -37,17 +40,25 @@ const MessageInfo = ({ metadata, message, isLoading }: Props) => {
 
     let payload: AnyJson | Codec;
 
-    if (!message.exitCode) {
-      if (metadata) {
-        payload = getDecodedMessagePayload(metadata, message);
+    try {
+      if (!message.exitCode) {
+        if (metadata) {
+          payload = getDecodedMessagePayload(metadata, message);
+        } else {
+          payload = CreateType.create('Bytes', message.payload).toHuman();
+        }
       } else {
-        payload = CreateType.create('Bytes', message.payload).toHuman();
+        payload = CreateType.create('String', message.payload).toHuman();
       }
-    } else {
-      payload = CreateType.create('String', message.payload).toHuman();
+    } catch (error) {
+      alert.error(String(error));
+
+      payload = message.payload;
     }
 
     setDecodedPayload(payload ? getPreformattedText(payload) : '-');
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metadata, message, isLoading]);
 
   const isPayloadLoading = decodedPayload === undefined || isLoading;

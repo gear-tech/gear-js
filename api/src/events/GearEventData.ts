@@ -12,6 +12,7 @@ import {
   MessageWokenReason,
   ProgramChangedKind,
   ProgramId,
+  ResumeProgramSessionId,
   UserMessageReadReason,
   UserMessageSentMessage,
 } from '../types';
@@ -81,4 +82,17 @@ export interface TransferData extends GenericEventData {
   from: AccountId32;
   to: AccountId32;
   amount: u128;
+}
+
+export interface ProgramResumeSessionStartedData extends GenericEventData {
+  sessionId: ResumeProgramSessionId;
+  accountId: AccountId32;
+  programId: ProgramId;
+  sessionEndBlock: BlockNumber;
+}
+
+export interface VoucherIssuedData extends GenericEventData {
+  holder: AccountId32;
+  program: ProgramId;
+  value: u128;
 }

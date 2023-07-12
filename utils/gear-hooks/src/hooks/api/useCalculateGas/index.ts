@@ -71,32 +71,18 @@ function useHandleCalculateGas(
   return calculateGas;
 }
 
-function useReplyCalculateGas(
-  messageId: HexString | undefined,
-  exitCode: number | undefined,
-  meta?: ProgramMetadata | undefined,
-  options?: Options,
-) {
+function useReplyCalculateGas(messageId: HexString | undefined, meta?: ProgramMetadata | undefined, options?: Options) {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
 
   const calculateGas = (initPayload: AnyJson) => {
     if (!account) return Promise.reject(new Error('No account address'));
     if (!messageId) return Promise.reject(new Error('No program source'));
-    if (!exitCode) return Promise.reject(new Error('No exit code'));
 
     const { decodedAddress } = account;
     const { value = 0, isOtherPanicsAllowed = false } = options || {};
 
-    return api.program.calculateGas.reply(
-      decodedAddress,
-      messageId,
-      exitCode,
-      initPayload,
-      value,
-      isOtherPanicsAllowed,
-      meta,
-    );
+    return api.program.calculateGas.reply(decodedAddress, messageId, initPayload, value, isOtherPanicsAllowed, meta);
   };
 
   return calculateGas;

@@ -8,6 +8,11 @@ import { AccountContext, AlertContext, ApiContext } from 'context';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
 import { getAutoGasLimit } from 'utils';
 
+type UseSendMessageOptions = {
+  isMaxGasLimit?: boolean;
+  disableAlerts?: boolean;
+};
+
 type SendMessageOptions = {
   value?: string | number;
   isOtherPanicsAllowed?: boolean;
@@ -17,45 +22,55 @@ type SendMessageOptions = {
 
 const MAX_GAS_LIMIT = 250000000000;
 
-function useSendMessage(destination: HexString, metadata: ProgramMetadata | undefined, isMaxGasLimit = false) {
+function useSendMessage(
+  destination: HexString,
+  metadata: ProgramMetadata | undefined,
+  { isMaxGasLimit = true, disableAlerts }: UseSendMessageOptions = {},
+) {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
   const alert = useContext(AlertContext);
 
   const title = 'gear.sendMessage';
-  const loadingAlertId = useRef('');
 
   const handleEventsStatus = (events: EventRecord[], onSuccess?: () => void, onError?: () => void) => {
     events.forEach(({ event: { method, section } }) => {
       if (method === 'MessageQueued') {
-        alert.success(`${section}.MessageQueued`);
+        if (!disableAlerts) alert.success(`${section}.MessageQueued`);
+
         onSuccess && onSuccess();
       } else if (method === 'ExtrinsicFailed') {
         alert.error('Extrinsic Failed', { title });
+
         onError && onError();
       }
     });
   };
 
-  const handleStatus = (result: ISubmittableResult, onSuccess?: () => void, onError?: () => void) => {
+  const handleStatus = (result: ISubmittableResult, alertId: string, onSuccess?: () => void, onError?: () => void) => {
     const { status, events } = result;
     const { isReady, isInBlock, isInvalid, isFinalized } = status;
 
     if (isInvalid) {
-      alert.update(loadingAlertId.current, 'Transaction error. Status: isInvalid', DEFAULT_ERROR_OPTIONS);
-    } else if (isReady) {
-      alert.update(loadingAlertId.current, 'Ready');
-    } else if (isInBlock) {
-      alert.update(loadingAlertId.current, 'In Block');
+      if (alertId) {
+        alert.update(alertId, 'Transaction error. Status: isInvalid', DEFAULT_ERROR_OPTIONS);
+      } else {
+        alert.error('Transaction error. Status: isInvalid');
+      }
+    } else if (isReady && alertId) {
+      alert.update(alertId, 'Ready');
+    } else if (isInBlock && alertId) {
+      alert.update(alertId, 'In Block');
     } else if (isFinalized) {
-      alert.update(loadingAlertId.current, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
+      if (alertId) alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
+
       handleEventsStatus(events, onSuccess, onError);
     }
   };
 
   const sendMessage = (payload: AnyJson, options?: SendMessageOptions) => {
     if (account && metadata) {
-      loadingAlertId.current = alert.loading('Sign In', { title });
+      const alertId = disableAlerts ? '' : alert.loading('Sign In', { title });
 
       const { value = 0, isOtherPanicsAllowed = false, onSuccess, onError } = options || {};
       const { address, decodedAddress, meta } = account;
@@ -71,10 +86,11 @@ function useSendMessage(destination: HexString, metadata: ProgramMetadata | unde
         .then((gasLimit) => ({ destination, gasLimit, payload, value }))
         .then((message) => api.message.send(message, metadata) && web3FromSource(source))
         .then(({ signer }) =>
-          api.message.signAndSend(address, { signer }, (result) => handleStatus(result, onSuccess, onError)),
+          api.message.signAndSend(address, { signer }, (result) => handleStatus(result, alertId, onSuccess, onError)),
         )
         .catch(({ message }: Error) => {
-          alert.update(loadingAlertId.current, message, DEFAULT_ERROR_OPTIONS);
+          if (alertId) alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
+
           onError && onError();
         });
     }
@@ -83,4 +99,4 @@ function useSendMessage(destination: HexString, metadata: ProgramMetadata | unde
   return sendMessage;
 }
 
-export { useSendMessage, SendMessageOptions };
+export { useSendMessage, SendMessageOptions, UseSendMessageOptions };
