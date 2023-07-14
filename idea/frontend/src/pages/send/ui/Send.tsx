@@ -1,27 +1,34 @@
-import { useParams } from 'react-router-dom';
 import { HexString } from '@polkadot/util/types';
+import { useParams } from 'react-router-dom';
 
+import { useMailboxItem } from 'features/mailbox';
 import { MessageForm } from 'widgets/messageForm';
-import { useMessage, useProgram } from 'hooks';
-
+import { useProgram } from 'hooks';
 import styles from './Send.module.scss';
 
+type MessageParams = {
+  programId: HexString;
+};
+
+type ReplyParams = {
+  messageId: HexString;
+};
+
 const Send = () => {
-  const { programId, messageId } = useParams();
+  const params = useParams() as MessageParams | ReplyParams;
 
-  const id = (programId || messageId) as HexString;
-  const isReply = !!messageId;
+  const isReply = 'messageId' in params;
+  const id = isReply ? params.messageId : params.programId;
 
-  const { message } = useMessage(messageId);
+  const mailboxItem = useMailboxItem(isReply ? id : undefined);
+  const [message] = mailboxItem || [];
 
-  const programSource = programId || message?.source;
+  const programSource = isReply ? message?.source : id;
   const { metadata, isLoading } = useProgram(programSource, true);
-
-  const heading = isReply ? 'Send Reply' : 'Send Message';
 
   return (
     <>
-      <h2 className={styles.heading}>{heading}</h2>
+      <h2 className={styles.heading}>{isReply ? 'Send Reply' : 'Send Message'}</h2>
       <MessageForm id={id} isReply={isReply} metadata={metadata} isLoading={isLoading} />
     </>
   );
