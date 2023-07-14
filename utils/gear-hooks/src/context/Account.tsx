@@ -2,9 +2,11 @@ import type { InjectedAccountWithMeta, InjectedExtension } from '@polkadot/exten
 import { Balance } from '@polkadot/types/interfaces';
 import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp';
 import { UnsubscribePromise } from '@polkadot/api/types';
+import { formatBalance } from '@polkadot/util';
+import { decodeAddress } from '@gear-js/api';
 import { useState, createContext, useContext, useEffect } from 'react';
 import { LOCAL_STORAGE } from 'consts';
-import { getBalance, getAccount, isLoggedIn } from 'utils';
+import { isLoggedIn } from 'utils';
 import { Account, ProviderProps } from '../types';
 import { ApiContext } from './Api';
 import { AlertContext } from './Alert';
@@ -35,6 +37,21 @@ function AccountProvider({ children }: ProviderProps) {
 
   const handleError = ({ message }: Error) => alert.error(message);
 
+  const getBalance = (balance: Balance) => {
+    const [unit] = api.registry.chainTokens;
+    const [decimals] = api.registry.chainDecimals;
+
+    const value = formatBalance(balance.toString(), {
+      decimals,
+      forceUnit: unit,
+      withSiFull: false,
+      withSi: false,
+      withUnit: unit,
+    });
+
+    return { value, unit };
+  };
+
   const switchAccount = (acc: Account) => {
     localStorage.setItem(LOCAL_STORAGE.ACCOUNT, acc.address);
     setAccount(acc);
@@ -43,7 +60,7 @@ function AccountProvider({ children }: ProviderProps) {
   const login = (acc: InjectedAccountWithMeta) =>
     api?.balance
       .findOut(acc.address)
-      .then((balance) => getAccount(acc, balance))
+      .then((balance) => ({ ...acc, balance: getBalance(balance), decodedAddress: decodeAddress(acc.address) }))
       .then(switchAccount)
       .catch(handleError);
 
