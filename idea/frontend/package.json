@@ -38,6 +38,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
+    "react-error-boundary": "^4.0.10",
     "react-final-form": "^6.5.9",
     "react-final-form-listeners": "^1.0.3",
     "react-number-format": "^4.9.3",
