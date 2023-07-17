@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
+import { ErrorBoundary } from 'react-error-boundary';
 import { useAccount, useApi } from '@gear-js/react-hooks';
 import 'simplebar-react/dist/simplebar.min.css';
 
@@ -11,12 +12,14 @@ import { MobileDisclaimer } from 'widgets/mobileDisclaimer';
 import { Routing } from 'pages';
 import { LocalStorage, NODE_ADRESS_URL_PARAM } from 'shared/config';
 import { Loader } from 'shared/ui/loader';
+import { ErrorFallback } from 'shared/ui/errorFallback';
 
 import { withProviders } from './providers';
 import './App.scss';
 
 const App = withProviders(() => {
   const { nodeAddress } = useApp();
+  const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { api, isApiReady } = useApi();
@@ -52,7 +55,11 @@ const App = withProviders(() => {
         <Menu />
         <div className="content">
           <Header />
-          {isAppReady ? <Routing /> : <Loader />}
+
+          {/* key to reset on route change */}
+          <ErrorBoundary key={pathname} fallbackRender={ErrorFallback}>
+            {isAppReady ? <Routing /> : <Loader />}
+          </ErrorBoundary>
         </div>
 
         {isMobileDisclaimerVisible && <MobileDisclaimer onCloseButtonClick={closeMobileDisclaimer} />}
