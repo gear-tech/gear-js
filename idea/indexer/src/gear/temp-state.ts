@@ -1,29 +1,30 @@
 import { CodeStatus, MessageReadReason } from '@gear-js/common';
 
 import { MessageStatus, ProgramStatus, generateUUID } from '../common';
-import { Block, Code, Message, Meta, Program } from '../database';
-import { BlockService, CodeService, MessageService, MetaService, ProgramService } from '../services';
+import { Block, Code, Message, Program } from '../database';
+import { BlockService, CodeService, MessageService, ProgramService } from '../services';
+import { RMQService } from '../rabbitmq';
 
 export class TempState {
   private programs: Map<string, Program>;
   private codes: Map<string, Code>;
   private messages: Map<string, Message>;
   private blocks: Map<string, Block>;
-  private meta: Map<string, Meta>;
   private genesis: string;
+  private metahashes: Map<string, Set<string>>;
 
   constructor(
     private programService: ProgramService,
     private messageService: MessageService,
     private codeService: CodeService,
     private blockService: BlockService,
-    private metaService: MetaService,
+    private rmq: RMQService,
   ) {
     this.programs = new Map();
     this.codes = new Map();
     this.messages = new Map();
     this.blocks = new Map();
-    this.meta = new Map();
+    this.metahashes = new Map();
   }
 
   newState(genesis: string) {
@@ -32,7 +33,7 @@ export class TempState {
     this.codes.clear();
     this.messages.clear();
     this.blocks.clear();
-    this.meta.clear();
+    this.metahashes.clear();
   }
 
   addProgram(program: Program) {
@@ -41,6 +42,13 @@ export class TempState {
         program._id = generateUUID();
       }
       this.programs.set(program.id, program);
+      if (program.metahash) {
+        if (this.metahashes.has(program.metahash)) {
+          this.metahashes.get(program.metahash).add(program.code.id);
+        } else {
+          this.metahashes.set(program.metahash, new Set([program.code.id]));
+        }
+      }
     }
   }
 
@@ -50,6 +58,13 @@ export class TempState {
         code._id = generateUUID();
       }
       this.codes.set(code.id, code);
+      if (code.metahash) {
+        if (this.metahashes.has(code.metahash)) {
+          this.metahashes.get(code.metahash).add(code.id);
+        } else {
+          this.metahashes.set(code.metahash, new Set([code.id]));
+        }
+      }
     }
   }
 
@@ -93,15 +108,6 @@ export class TempState {
     } catch (err) {
       return null;
     }
-  }
-
-  async getMeta(hash: string): Promise<Meta> {
-    if (this.meta.has(hash)) {
-      return this.meta.get(hash);
-    }
-    const meta = await this.metaService.getByHashOrCreate(hash);
-    this.meta.set(meta.hash, meta);
-    return meta;
   }
 
   async getMsg(id: string): Promise<Message> {
@@ -156,5 +162,6 @@ export class TempState {
     await this.programService.save(Array.from(this.programs.values()));
     await this.messageService.save(Array.from(this.messages.values()));
     await this.blockService.save(Array.from(this.blocks.values()));
+    await this.rmq.sendMsgToMetaStorage(this.metahashes);
   }
 }

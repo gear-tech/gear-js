@@ -2,6 +2,10 @@ import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Block {
+  constructor(props: Partial<Block>) {
+    Object.assign(this, props);
+  }
+
   @PrimaryGeneratedColumn('uuid')
   public _id: string;
 

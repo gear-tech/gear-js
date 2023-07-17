@@ -1,15 +1,8 @@
-import {
-  AddCodeNameParams,
-  CodeStatus,
-  GetAllCodeParams,
-  GetAllCodeResult,
-  GetCodeParams,
-  GetMetaByCodeParams,
-} from '@gear-js/common';
+import { AddCodeNameParams, CodeStatus, GetAllCodeParams, GetAllCodeResult, GetCodeParams } from '@gear-js/common';
 import { DataSource, Repository } from 'typeorm';
 
-import { Code, Meta } from '../database/entities';
-import { CodeNotFound, MetadataNotFound, constructQueryBuilder, PAGINATION_LIMIT } from '../common';
+import { Code } from '../database/entities';
+import { CodeNotFound, constructQueryBuilder, PAGINATION_LIMIT } from '../common';
 
 export class CodeService {
   private repo: Repository<Code>;
@@ -51,22 +44,13 @@ export class CodeService {
         id,
         genesis,
       },
-      relations: ['programs', 'meta'],
-      select: ['meta'],
+      relations: { programs: true },
     });
 
     if (!code) {
       throw new CodeNotFound();
     }
     return code;
-  }
-
-  public async getMeta(params: GetMetaByCodeParams): Promise<Meta> {
-    const code = await this.get(params);
-
-    if (!code.meta?.hex) throw new MetadataNotFound();
-
-    return code.meta;
   }
 
   public async setStatus(id: string, genesis: string, status: CodeStatus, expiration: string): Promise<Code> {

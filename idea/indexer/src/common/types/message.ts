@@ -1,7 +1,7 @@
 import { HexString } from '@polkadot/util/types';
 import { MessageReadReason } from '@gear-js/common';
 
-import { MessageStatus } from '../enums';
+import { MessageEntryPoint, MessageStatus } from '../enums';
 import { BaseDataInput } from './gear';
 
 export interface UserMessageReadInput extends BaseDataInput {
@@ -15,7 +15,7 @@ export interface UserMessageSentInput extends BaseDataInput {
   source: HexString;
   payload?: HexString;
   value?: string;
-  entry?: string;
+  entry?: MessageEntryPoint;
   replyToMessageId?: string | null;
   exitCode?: number | null;
   expiration?: number | null;

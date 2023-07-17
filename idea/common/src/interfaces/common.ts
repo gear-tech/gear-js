@@ -1,19 +1,21 @@
-interface IGenesis {
+export interface IGenesis {
   genesis: string;
 }
 
-interface IDates {
+export interface IDates {
   fromDate?: string;
   toDate?: string;
 }
 
-interface IBaseDBRecord<Timestamp extends Date | number> extends IGenesis {
+export interface IBaseDBRecord<Timestamp extends Date | number> extends IGenesis {
   blockHash: string;
   timestamp: Timestamp;
 }
 
-interface ISignature {
+export interface ISignature {
   signature: string;
 }
 
-export { IGenesis, IBaseDBRecord, ISignature, IDates };
+export interface SearchParam {
+  query?: string;
+}

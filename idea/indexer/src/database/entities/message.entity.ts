@@ -7,6 +7,11 @@ import { MessageEntryPoint, MessageType, MessageReadReason } from '../../common/
 
 @Entity()
 export class Message extends BaseEntity implements IMessage {
+  constructor(props: Partial<Message>) {
+    super();
+    Object.assign(this, props);
+  }
+
   @PrimaryColumn()
   public id: string;
 

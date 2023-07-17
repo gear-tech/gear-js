@@ -1,35 +1,42 @@
 import { Response, Request, NextFunction } from 'express';
-import { API_METHODS, IRpcRequest, JSONRPC_ERRORS } from '@gear-js/common';
+import { TEST_BALANCE_METHODS, IRpcRequest, JSONRPC_ERRORS } from '@gear-js/common';
+import { verify } from 'hcaptcha';
 
-import { getResponse, verifyCaptcha } from '../utils';
-import { testBalanceChannels } from '../rabbitmq/init-rabbitmq';
+import config from '../config';
+import { getResponse } from '../utils';
 
-async function verifyTestBalanceRequest(body: IRpcRequest) {
-  if (body.method === API_METHODS.TEST_BALANCE_GET) {
-    if (!body.params?.genesis || !testBalanceChannels.has(body.params.genesis)) {
-      return JSONRPC_ERRORS.TestBalanceIsUnavailable.name;
-    }
-    if (!body.params?.['token'] || !(await verifyCaptcha(body.params['token']))) {
-      return JSONRPC_ERRORS.Forbidden.name;
-    }
+const SECRET = config.server.captchaSecret;
+
+async function verifyCaptcha(token: string) {
+  if (!token) {
+    return false;
   }
-  return null;
+  if (process.env.TEST_ENV) {
+    return true;
+  }
+  const verfied = await verify(SECRET, token);
+  if (verfied.success) {
+    return true;
+  }
+  return false;
 }
 
-export async function testBalanceMiddleware(req: Request, res: Response, next: NextFunction) {
+export async function captchaMiddleware(req: Request, res: Response, next: NextFunction) {
   const body: IRpcRequest = req.body;
+
   if (Array.isArray(body)) {
     for (const request of body) {
-      const error = await verifyTestBalanceRequest(request);
-      if (error) {
-        return res.send(getResponse(body, error));
+      if (!(await verifyCaptcha(request.params['token']))) {
+        return res.send(getResponse(body, JSONRPC_ERRORS.Forbidden.name));
       }
     }
   } else {
-    const error = await verifyTestBalanceRequest(body);
-    if (error) {
-      return res.send(getResponse(body, error));
+    if (body.method === TEST_BALANCE_METHODS.TEST_BALANCE_GET) {
+      if (!(await verifyCaptcha(body.params['token']))) {
+        return res.send(getResponse(body, JSONRPC_ERRORS.Forbidden.name));
+      }
     }
   }
-  next();
+
+  return next();
 }

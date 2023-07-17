@@ -4,13 +4,12 @@ import {
   FindProgramParams,
   GetAllProgramsParams,
   GetAllProgramsResult,
-  GetMetaByProgramParams,
   IProgram,
   ProgramStatus,
 } from '@gear-js/common';
 
-import { MetadataNotFound, ProgramNotFound } from '../common/errors';
-import { Meta, Program } from '../database/entities';
+import { ProgramNotFound } from '../common/errors';
+import { Program } from '../database/entities';
 import { PAGINATION_LIMIT, constructQueryBuilder } from '../common';
 
 export class ProgramService {
@@ -23,7 +22,7 @@ export class ProgramService {
   public async get({ id, genesis }: FindProgramParams): Promise<Program> {
     const program = await this.repo.findOne({
       where: { id, genesis },
-      relations: ['meta', 'code'],
+      relations: ['code'],
     });
 
     if (!program) {
@@ -35,7 +34,7 @@ export class ProgramService {
   public async getWithMessages({ id, genesis }: FindProgramParams): Promise<Program> {
     const program = await this.repo.findOne({
       where: { id, genesis },
-      relations: ['meta', 'code', 'messages'],
+      relations: ['code', 'messages'],
     });
 
     if (!program) {
@@ -62,7 +61,7 @@ export class ProgramService {
       { fromDate, toDate },
       offset || 0,
       limit || PAGINATION_LIMIT,
-      ['code', { table: 'meta', columns: ['types'] }],
+      ['code'],
       { column: 'timestamp', sort: 'DESC' },
     );
 
@@ -72,16 +71,6 @@ export class ProgramService {
       programs,
       count,
     };
-  }
-
-  public async getMeta(params: GetMetaByProgramParams): Promise<Meta> {
-    const program = await this.get(params);
-
-    if (!program.meta?.hex) {
-      throw new MetadataNotFound();
-    }
-
-    return program.meta;
   }
 
   public async save(programs: Program[]): Promise<Program[]> {
@@ -107,6 +96,7 @@ export class ProgramService {
   }
 
   public async deleteRecords(genesis: string): Promise<void> {
+    // TODO: remove this method if it's not needed
     await this.repo.delete({ genesis });
   }
 

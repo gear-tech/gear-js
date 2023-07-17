@@ -13,7 +13,6 @@ import { GenericEventData } from '@polkadot/types';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { SignedBlockExtended } from '@polkadot/api-derive/types';
 import { EventNames, CodeStatus } from '@gear-js/common';
-import { plainToInstance } from 'class-transformer';
 import { VoidFn } from '@polkadot/api/types';
 import { Option } from '@polkadot/types';
 
@@ -32,10 +31,11 @@ import {
   MessagesDispatchedDataInput,
   ProgramStatus,
 } from '../common';
-import { Block, Code, Message, Meta, Program } from '../database/entities';
-import { BlockService, CodeService, MessageService, MetaService, ProgramService, StatusService } from '../services';
+import { Block, Code, Message, Program } from '../database/entities';
+import { BlockService, CodeService, MessageService, ProgramService, StatusService } from '../services';
 import { TempState } from './temp-state';
 import config from '../config';
+import { RMQService } from '../rabbitmq';
 
 export class GearIndexer {
   public api: GearApi;
@@ -51,11 +51,11 @@ export class GearIndexer {
     messageService: MessageService,
     codeService: CodeService,
     blockService: BlockService,
-    metaService: MetaService,
+    rmq: RMQService,
     private statusService?: StatusService,
     private oneTimeSync: boolean = false,
   ) {
-    this.tempState = new TempState(programService, messageService, codeService, blockService, metaService);
+    this.tempState = new TempState(programService, messageService, codeService, blockService, rmq);
   }
 
   public async run(api: GearApi, onlyBlocks?: number[]) {
@@ -163,7 +163,7 @@ export class GearIndexer {
   eventHandlers: Record<EventNames, (data: any, timestamp: number, blockHash: HexString) => Promise<void> | void> = {
     [EventNames.UserMessageSent]: async (data: UserMessageSentInput, timestamp: number, blockHash: HexString) => {
       this.tempState.addMsg(
-        plainToInstance(Message, {
+        new Message({
           ...data,
           blockHash,
           genesis: this.genesis,
@@ -258,10 +258,9 @@ export class GearIndexer {
       const metahash = await getMetahash(this.api.code, codeId);
 
       const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
-      const meta = metahash ? await this.tempState.getMeta(metahash) : null;
 
       this.tempState.addCode(
-        plainToInstance(Code, {
+        new Code({
           id: codeId,
           name: codeId,
           genesis: this.genesis,
@@ -270,7 +269,7 @@ export class GearIndexer {
           blockHash: block.block.header.hash.toHex(),
           expiration: change.isActive ? change.asActive.expiration.toString() : null,
           uploadedBy: tx.signer.inner.toHex(),
-          meta,
+          metahash,
         }),
       );
     }
@@ -307,7 +306,7 @@ export class GearIndexer {
       const code = await this.getCode(codeId, blockHash, programId);
 
       this.tempState.addProgram(
-        plainToInstance(Program, {
+        new Program({
           id: programId,
           name: programId,
           owner,
@@ -315,7 +314,7 @@ export class GearIndexer {
           timestamp: new Date(timestamp),
           code,
           genesis: this.genesis,
-          meta: await this.getMeta(programId, code),
+          metahash: await this.getMeta(programId, code),
           status: ProgramStatus.PROGRAM_SET,
         }),
       );
@@ -356,7 +355,7 @@ export class GearIndexer {
       const program = await this.getProgram(programId, blockHash, msgId);
 
       this.tempState.addMsg(
-        plainToInstance(Message, {
+        new Message({
           id: msgId,
           blockHash,
           genesis: this.genesis,
@@ -392,14 +391,14 @@ export class GearIndexer {
             const { codeHash } = progStorage.unwrap().asActive;
             const code = await this.getCode(codeHash.toHex(), blockHash, id);
             this.tempState.addProgram(
-              plainToInstance(Program, {
+              new Program({
                 id,
                 name: id,
                 blockHash,
                 timestamp: new Date(timestamp),
                 genesis: this.genesis,
                 code,
-                meta: await this.getMeta(id, code),
+                metahash: await this.getMeta(id, code),
                 status: ProgramStatus.PROGRAM_SET,
               }),
             );
@@ -412,7 +411,7 @@ export class GearIndexer {
   private handleBlock(block: SignedBlockExtended, timestamp: number) {
     const blockNumber = block.block.header.number.toString();
     this.tempState.addBlock(
-      plainToInstance(Block, {
+      new Block({
         hash: block.block.header.hash.toHex(),
         number: blockNumber,
         timestamp: new Date(timestamp),
@@ -476,14 +475,12 @@ export class GearIndexer {
     return code;
   }
 
-  private async getMeta(programId: HexString, code: Code): Promise<Meta> {
-    let meta: Meta | null;
-    if (code?.meta) {
-      meta = code.meta;
+  private async getMeta(programId: HexString, code: Code): Promise<string> {
+    if (code?.metahash) {
+      return code.metahash;
     } else {
       const metahash = await getMetahash(this.api.program, programId);
-      meta = metahash ? await this.tempState.getMeta(metahash) : null;
+      return metahash;
     }
-    return meta;
   }
 }
