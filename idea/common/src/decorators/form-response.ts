@@ -4,6 +4,7 @@ export function FormResponse(target: unknown, propertyKey: string, descriptor: T
     try {
       return { result: await originalMethod.apply(this, arguments) };
     } catch (ex) {
+      console.error(ex);
       return { error: ex.name };
     }
   };

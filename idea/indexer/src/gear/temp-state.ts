@@ -162,6 +162,8 @@ export class TempState {
     await this.programService.save(Array.from(this.programs.values()));
     await this.messageService.save(Array.from(this.messages.values()));
     await this.blockService.save(Array.from(this.blocks.values()));
-    await this.rmq.sendMsgToMetaStorage(this.metahashes);
+    if (this.metahashes.size > 0) {
+      await this.rmq.sendMsgToMetaStorage(this.metahashes);
+    }
   }
 }

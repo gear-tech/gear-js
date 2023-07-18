@@ -19,10 +19,10 @@ export class RMQService {
 
   constructor(private metaService: MetaService) {
     this.methods = {
-      [META_STORAGE_METHODS.META_ADD]: this.metaService.addMetaDetails,
-      [META_STORAGE_METHODS.META_GET]: this.metaService.getMetaByHash,
-      [META_STORAGE_METHODS.CODE_META_GET]: this.metaService.getMetaByCode,
-      [META_STORAGE_INTERNAL_METHODS.META_HASH_ADD]: this.metaService.addMeta,
+      [META_STORAGE_METHODS.META_ADD]: this.metaService.addMetaDetails.bind(this.metaService),
+      [META_STORAGE_METHODS.META_GET]: this.metaService.getMetaByHash.bind(this.metaService),
+      [META_STORAGE_METHODS.CODE_META_GET]: this.metaService.getMetaByCode.bind(this.metaService),
+      [META_STORAGE_INTERNAL_METHODS.META_HASH_ADD]: this.metaService.addMeta.bind(this.metaService),
     };
   }
 
@@ -56,23 +56,29 @@ export class RMQService {
     }
   }
 
-  private sendMsg(exchange: RabbitMQExchanges, queue: RabbitMQueues, params: any, correlationId?: string): void {
+  private sendMsg(
+    exchange: RabbitMQExchanges,
+    queue: RabbitMQueues,
+    params: any,
+    correlationId?: string,
+    method?: string,
+  ): void {
     const messageBuff = JSON.stringify(params);
-    this.channel.publish(exchange, queue, Buffer.from(messageBuff), { correlationId });
+    this.channel.publish(exchange, queue, Buffer.from(messageBuff), { correlationId, headers: { method } });
   }
 
   private async directMsgConsumer(queue: string): Promise<void> {
     try {
       await this.channel.consume(
         queue,
-        async (message) => {
-          if (!message) {
+        async (msg) => {
+          if (!msg) {
             return;
           }
-          const method = message.properties.headers.method;
+          const method = msg.properties.headers.method;
 
-          const params = JSON.parse(message.content.toString());
-          const correlationId = message.properties.correlationId;
+          const params = JSON.parse(msg.content.toString());
+          const correlationId = msg.properties.correlationId;
 
           const result = await this.handleIncomingMsg(method, params);
 
@@ -87,6 +93,7 @@ export class RMQService {
 
   @FormResponse
   private async handleIncomingMsg(method: META_STORAGE_METHODS, params: any): Promise<any> {
+    console.log(method, params);
     return this.methods[method](params);
   }
 }

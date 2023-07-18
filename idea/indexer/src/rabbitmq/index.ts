@@ -18,6 +18,7 @@ import {
   RMQServiceActions,
   RMQServices,
   FormResponse,
+  META_STORAGE_INTERNAL_METHODS,
 } from '@gear-js/common';
 
 import { logger } from '../common';
@@ -95,9 +96,9 @@ export class RMQService {
     this.mainChannel.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(msgBuff));
   }
 
-  private sendMsg(exchange: string, queue: string, params: any, correlationId?: string): void {
+  private sendMsg(exchange: string, queue: string, params: any, correlationId?: string, method?: string): void {
     const messageBuff = JSON.stringify(params);
-    this.mainChannel.publish(exchange, queue, Buffer.from(messageBuff), { correlationId });
+    this.mainChannel.publish(exchange, queue, Buffer.from(messageBuff), { correlationId, headers: { method } });
   }
 
   private async directMsgConsumer(queue: string): Promise<void> {
@@ -167,6 +168,12 @@ export class RMQService {
 
   public async sendMsgToMetaStorage(metahashes: Map<string, Set<string>>) {
     const msg = Array.from(metahashes.entries()).map(([key, value]) => [key, Array.from(value.values())]);
-    return this.sendMsg(RabbitMQExchanges.DIRECT_EX, RMQServices.META_STORAGE, msg);
+    return this.sendMsg(
+      RabbitMQExchanges.DIRECT_EX,
+      RMQServices.META_STORAGE,
+      msg,
+      null,
+      META_STORAGE_INTERNAL_METHODS.META_HASH_ADD,
+    );
   }
 }

@@ -20,7 +20,8 @@ export class MetaService {
     const codeArray: Code[] = [];
 
     for (const [hash, codeIds] of params) {
-      const meta = (await this.metaRepo.findOne({ where: { hash }, relations: { codes: true } })) || new Meta({ hash });
+      const meta =
+        (await this.metaRepo.findOne({ where: { hash }, relations: { codes: true } })) || new Meta({ hash, codes: [] });
 
       const codes = codeIds.map((id) => new Code({ id, meta }));
 
@@ -29,8 +30,8 @@ export class MetaService {
       metaArray.push(meta);
     }
 
-    await this.codeRepo.save(codeArray);
     await this.metaRepo.save(metaArray);
+    await this.codeRepo.save(codeArray);
   }
 
   async addMetaDetails(params: AddMetaDetailsParams): Promise<Omit<Meta, 'codes'>> {
