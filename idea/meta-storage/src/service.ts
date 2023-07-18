@@ -1,8 +1,7 @@
 import { Repository } from 'typeorm';
 import assert from 'assert';
 
-import { Code, Meta } from './database/entities';
-import { AppDataSource } from './database/data-source';
+import { Code, Meta, AppDataSource } from './database';
 import { MetaNotFoundError } from './util/errors';
 import { validateMetaHex } from './util/validate';
 import { AddMetaDetailsParams, AddMetahashParams, GetMetaByCodeParams, GetMetaParams } from '@gear-js/common';

@@ -1,4 +1,4 @@
-import { AppDataSource } from './database/data-source';
+import { AppDataSource } from './database';
 import { logger } from './logger';
 import { RMQService } from './rmq';
 import { MetaService } from './service';

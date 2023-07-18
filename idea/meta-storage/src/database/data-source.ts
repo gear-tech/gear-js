@@ -11,7 +11,7 @@ export const AppDataSource = new DataSource({
   password: config.db.password,
   database: config.db.name,
   entities: [Meta, Code],
-  migrations: ['./dist/database/migrations/*.js'],
+  // migrations: ['./dist/database/migrations/*.js'],
   synchronize: true,
   migrationsRun: false,
   logging: ['error', 'schema'],

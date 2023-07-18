@@ -22,7 +22,7 @@ export enum META_STORAGE_METHODS {
   META_ADD = 'meta.add',
 }
 
-export declare enum META_STORAGE_INTERNAL_METHODS {
+export enum META_STORAGE_INTERNAL_METHODS {
   META_HASH_ADD = 'meta.hash.add',
 }
 
