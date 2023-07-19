@@ -26,7 +26,7 @@ export async function captchaMiddleware(req: Request, res: Response, next: NextF
 
   if (Array.isArray(body)) {
     for (const request of body) {
-      if (!(await verifyCaptcha(request.params['token']))) {
+      if (body.method === TEST_BALANCE_METHODS.TEST_BALANCE_GET && !(await verifyCaptcha(request.params['token']))) {
         return res.send(getResponse(body, JSONRPC_ERRORS.Forbidden.name));
       }
     }

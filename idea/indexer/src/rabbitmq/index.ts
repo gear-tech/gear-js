@@ -159,7 +159,6 @@ export class RMQService {
       [INDEXER_METHODS.PROGRAM_NAME_ADD]: () => this.programService.setName(params as AddProgramNameParams),
       [INDEXER_METHODS.PROGRAM_STATE_ALL]: () => this.stateService.listByProgramId(params as GetAllStateParams),
       [INDEXER_METHODS.PROGRAM_STATE_ADD]: () => this.stateService.create(params as AddStateParams),
-      [INDEXER_METHODS.PROGRAM_STATE_GET]: () => this.stateService.get(params as GetStateParams),
       [INDEXER_METHODS.STATE_GET]: () => this.stateService.get(params as GetStateParams),
     };
 

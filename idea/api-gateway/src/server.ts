@@ -35,8 +35,8 @@ function isExistJsonRpcMethod(method: string): boolean {
   return AVAILABLE_METHODS.includes(method);
 }
 
-const indexerMethods = Object.values(INDEXER_METHODS);
-const metaStorageMethods = Object.values(META_STORAGE_METHODS);
+const indexerMethods: string[] = Object.values(INDEXER_METHODS);
+const metaStorageMethods: string[] = Object.values(META_STORAGE_METHODS);
 
 export class Server {
   private app: Express;
@@ -131,7 +131,7 @@ export class Server {
       return getResponse(procedure, null, this.rmq.isExistIndexerChannel(params.genesis));
     }
 
-    if (!this.isValidGenesis(params.genesis, method)) {
+    if (!metaStorageMethods.includes(method) && !this.isValidGenesis(params.genesis, method)) {
       return getResponse(procedure, JSONRPC_ERRORS.UnknownNetwork.name);
     }
 

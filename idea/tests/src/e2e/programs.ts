@@ -4,6 +4,7 @@ import { readFileSync } from 'fs';
 
 import request, { batchRequest } from './request';
 import { IPreparedProgram, IPreparedPrograms, IState, Passed } from '../interfaces';
+import { generateCodeHash } from '@gear-js/api';
 
 export const mapProgramStates = new Map<string, IState[]>();
 
@@ -89,7 +90,7 @@ export async function getProgramData(genesis: string, id: string): Promise<Passe
     'owner',
     'name',
     'timestamp',
-    'meta',
+    'metahash',
     'status',
     'code',
     'messages',
@@ -106,20 +107,18 @@ export async function getProgramDataInBatch(genesis: string, programId: string):
   return true;
 }
 
-export async function uploadMeta(genesis: string, program: IPreparedProgram): Promise<Passed> {
-  const metaHex: HexString = `0x${readFileSync(program.spec.pathToMetaTxt, 'utf-8')}`;
+export async function uploadMeta(program: IPreparedProgram): Promise<Passed> {
+  const hex: HexString = `0x${readFileSync(program.spec.pathToMetaTxt, 'utf-8')}`;
 
   const data = {
-    genesis,
-    id: program.id,
-    metaHex,
+    hash: generateCodeHash(hex),
+    hex,
   };
-  const response = await request('program.meta.add', data);
+  const response = await request('meta.add', data);
   expect(response).to.have.property('result');
-  expect(response.result).to.have.all.keys('types', 'hex', 'hash', 'id');
+  expect(response.result).to.have.all.keys('hex', 'hash');
   expect(response.result.hash).to.not.be.undefined;
   expect(response.result.hex).to.not.be.undefined;
-  expect(response.result.types).to.not.be.undefined;
   return true;
 }
 
@@ -149,17 +148,15 @@ export async function addProgramName(genesis: string, program: IPreparedProgram)
   return true;
 }
 
-export async function getMeta(genesis: string, id: string): Promise<Passed> {
+export async function getMeta(hash: HexString): Promise<Passed> {
   const data = {
-    genesis,
-    id,
+    hash,
   };
-  const response = await request('program.meta.get', data);
+  const response = await request('meta.get', data);
   expect(response).to.have.property('result');
-  expect(response.result).to.have.all.keys('types', 'hex', 'hash', 'id');
+  expect(response.result).to.have.all.keys('hex', 'hash');
   expect(response.result.hash).to.not.be.undefined;
   expect(response.result.hex).to.not.be.undefined;
-  expect(response.result.types).to.not.be.undefined;
   return true;
 }
 

@@ -93,7 +93,6 @@ export class RMQService {
 
   @FormResponse
   private async handleIncomingMsg(method: META_STORAGE_METHODS, params: any): Promise<any> {
-    console.log(method, params);
     return this.methods[method](params);
   }
 }

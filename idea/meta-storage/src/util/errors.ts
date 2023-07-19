@@ -1,7 +1,9 @@
+import { JSONRPC_ERRORS } from '@gear-js/common';
+
 export class MetaNotFoundError extends Error {
-  name: 'MetaNotFound';
+  name = JSONRPC_ERRORS.MetadataNotFound.name;
 }
 
 export class InvalidMetadataError extends Error {
-  name: 'InvalidMetadata';
+  name = JSONRPC_ERRORS.InvalidMetaHex.name;
 }

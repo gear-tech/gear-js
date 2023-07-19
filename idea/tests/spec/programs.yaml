@@ -1,6 +1,6 @@
 test:
   pathToOpt: ./wasm-test/test_meta.opt.wasm
-  pathToMetaTxt: ./wasm-test/meta.txt
+  pathToMetaTxt: ./wasm-test/test_meta.meta.txt
   pathStates: ["./wasm-test/test_meta_state_v1.meta.wasm", "./wasm-test/test_meta_state_v2.meta.wasm"]
   gasLimit: 200_000_000_000
   account: alice

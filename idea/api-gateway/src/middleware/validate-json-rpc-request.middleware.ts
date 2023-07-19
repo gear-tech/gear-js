@@ -15,6 +15,7 @@ export async function validateJsonRpcRequestMiddleware(req: Request, res: Respon
       return res.send(getInvalidParamsResponse(body));
     }
   }
+
   next();
 }
 

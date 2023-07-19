@@ -44,6 +44,6 @@ const server = http.createServer(reqListener);
 
 export function runHealthcheckServer() {
   server.listen(config.healthcheck.port, () => {
-    logger.info(`⚙️ Healthcheck app is running on ${config.healthcheck.port} port`);
+    logger.info(`Healthcheck app is running on ${config.healthcheck.port} port`);
   });
 }

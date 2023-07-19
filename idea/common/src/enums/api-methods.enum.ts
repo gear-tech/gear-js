@@ -12,7 +12,6 @@ export enum INDEXER_METHODS {
   PROGRAM_NAME_ADD = 'program.name.add',
   PROGRAM_STATE_ALL = 'program.state.all',
   PROGRAM_STATE_ADD = 'program.state.add',
-  PROGRAM_STATE_GET = 'program.state.get',
   STATE_GET = 'state.get',
 }
 

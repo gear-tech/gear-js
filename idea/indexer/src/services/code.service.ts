@@ -26,7 +26,7 @@ export class CodeService {
       { fromDate, toDate },
       offset || 0,
       limit || PAGINATION_LIMIT,
-      [{ table: 'meta', columns: ['types', 'hex'] }],
+      [],
       { column: 'timestamp', sort: 'DESC' },
     );
 
