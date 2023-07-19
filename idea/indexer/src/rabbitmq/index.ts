@@ -1,18 +1,6 @@
 import { Channel, connect, Connection } from 'amqplib';
 import {
-  AddCodeNameParams,
-  AddProgramNameParams,
-  AddStateParams,
   INDEXER_METHODS,
-  FindMessageParams,
-  FindProgramParams,
-  GetAllCodeParams,
-  GetAllProgramsParams,
-  GetAllStateParams,
-  GetCodeParams,
-  GetMessagesParams,
-  GetStateByCodeParams,
-  GetStateParams,
   RabbitMQExchanges,
   RabbitMQueues,
   RMQServiceActions,
@@ -29,6 +17,7 @@ export class RMQService {
   private mainChannel: Channel;
   private topicChannel: Channel;
   private connection: Connection;
+  private methods: Record<INDEXER_METHODS, (params: any) => void>;
 
   constructor(
     private blockService?: BlockService,
@@ -36,7 +25,23 @@ export class RMQService {
     private messageService?: MessageService,
     private programService?: ProgramService,
     private stateService?: StateService,
-  ) {}
+  ) {
+    this.methods = {
+      [INDEXER_METHODS.BLOCKS_STATUS]: () => this.blockService.getLastBlock.bind(this.blockService),
+      [INDEXER_METHODS.CODE_ALL]: () => this.codeService.getMany.bind(this.codeService),
+      [INDEXER_METHODS.CODE_DATA]: () => this.codeService.get.bind(this.codeService),
+      [INDEXER_METHODS.CODE_NAME_ADD]: () => this.codeService.setName.bind(this.codeService),
+      [INDEXER_METHODS.CODE_STATE_GET]: () => this.stateService.getByCodeIdAndStateId.bind(this.stateService),
+      [INDEXER_METHODS.MESSAGE_ALL]: () => this.messageService.getMany.bind(this.messageService),
+      [INDEXER_METHODS.MESSAGE_DATA]: () => this.messageService.get.bind(this.messageService),
+      [INDEXER_METHODS.PROGRAM_ALL]: () => this.programService.getAllPrograms.bind(this.programService),
+      [INDEXER_METHODS.PROGRAM_DATA]: () => this.programService.getWithMessages.bind(this.programService),
+      [INDEXER_METHODS.PROGRAM_NAME_ADD]: () => this.programService.setName.bind(this.programService),
+      [INDEXER_METHODS.PROGRAM_STATE_ALL]: () => this.stateService.listByProgramId.bind(this.stateService),
+      [INDEXER_METHODS.PROGRAM_STATE_ADD]: () => this.stateService.create.bind(this.stateService),
+      [INDEXER_METHODS.STATE_GET]: () => this.stateService.get.bind(this.stateService),
+    };
+  }
 
   public async init(consumeMessages = true): Promise<void> {
     this.connection = await connect(config.rabbitmq.url);
@@ -146,23 +151,7 @@ export class RMQService {
 
   @FormResponse
   private async handleIncomingMsg(method: INDEXER_METHODS, params: any): Promise<any> {
-    const methods = {
-      [INDEXER_METHODS.BLOCKS_STATUS]: () => this.blockService.getLastBlock(params.genesis as string),
-      [INDEXER_METHODS.CODE_ALL]: () => this.codeService.getMany(params as GetAllCodeParams),
-      [INDEXER_METHODS.CODE_DATA]: () => this.codeService.get(params as GetCodeParams),
-      [INDEXER_METHODS.CODE_NAME_ADD]: () => this.codeService.setName(params as AddCodeNameParams),
-      [INDEXER_METHODS.CODE_STATE_GET]: () => this.stateService.getByCodeIdAndStateId(params as GetStateByCodeParams),
-      [INDEXER_METHODS.MESSAGE_ALL]: () => this.messageService.getMany(params as GetMessagesParams),
-      [INDEXER_METHODS.MESSAGE_DATA]: () => this.messageService.get(params as FindMessageParams),
-      [INDEXER_METHODS.PROGRAM_ALL]: () => this.programService.getAllPrograms(params as GetAllProgramsParams),
-      [INDEXER_METHODS.PROGRAM_DATA]: () => this.programService.getWithMessages(params as FindProgramParams),
-      [INDEXER_METHODS.PROGRAM_NAME_ADD]: () => this.programService.setName(params as AddProgramNameParams),
-      [INDEXER_METHODS.PROGRAM_STATE_ALL]: () => this.stateService.listByProgramId(params as GetAllStateParams),
-      [INDEXER_METHODS.PROGRAM_STATE_ADD]: () => this.stateService.create(params as AddStateParams),
-      [INDEXER_METHODS.STATE_GET]: () => this.stateService.get(params as GetStateParams),
-    };
-
-    return methods[method]();
+    return this.methods[method](params);
   }
 
   public async sendMsgToMetaStorage(metahashes: Map<string, Set<string>>) {

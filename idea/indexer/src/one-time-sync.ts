@@ -45,7 +45,7 @@ async function bootstrap() {
     fromBlock = Number(status.height) + 1;
   }
 
-  const lastBlock = await blockService.getLastBlock(genesis);
+  const lastBlock = await blockService.getLastBlock({ genesis });
   const toBlock = Number(lastBlock.number);
 
   let syncedBlocks = await blockService.getSyncedBlockNumbers(fromBlock, toBlock, genesis);

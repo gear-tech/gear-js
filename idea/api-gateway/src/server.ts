@@ -14,6 +14,7 @@ import {
   IRpcRequest,
   IRpcResponse,
   JSONRPC_ERRORS,
+  API_GATEWAY_METHODS,
 } from '@gear-js/common';
 import { nanoid } from 'nanoid';
 
@@ -123,11 +124,11 @@ export class Server {
       return getResponse(procedure, JSONRPC_ERRORS.MethodNotFound.name);
     }
 
-    if (method === TEST_BALANCE_METHODS.TEST_BALANCE_AVAILABLE) {
+    if (method === API_GATEWAY_METHODS.TEST_BALANCE_AVAILABLE) {
       return getResponse(procedure, null, this.rmq.isExistTBChannel(params.genesis));
     }
 
-    if (procedure.method === INDEXER_METHODS.NETWORK_DATA_AVAILABLE) {
+    if (method === API_GATEWAY_METHODS.NETWORK_DATA_AVAILABLE) {
       return getResponse(procedure, null, this.rmq.isExistIndexerChannel(params.genesis));
     }
 

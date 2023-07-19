@@ -40,7 +40,7 @@ import {
   errorStateAlreadyExists,
   unknownNetworkError,
 } from './json-rpc.errors';
-import { INDEXER_METHODS, META_STORAGE_METHODS, TEST_BALANCE_METHODS } from '@gear-js/common';
+import { API_GATEWAY_METHODS, INDEXER_METHODS, META_STORAGE_METHODS, TEST_BALANCE_METHODS } from '@gear-js/common';
 
 let genesis: HexString;
 let prepared: IPrepared;
@@ -71,7 +71,7 @@ afterAll(async () => {
 });
 
 describe('Indexer methods', () => {
-  test(INDEXER_METHODS.NETWORK_DATA_AVAILABLE, async () => {
+  test(API_GATEWAY_METHODS.NETWORK_DATA_AVAILABLE, async () => {
     expect(await networkDataAvailable(genesis)).toBeTruthy();
   });
 
@@ -214,8 +214,8 @@ describe('Meta storage methods', () => {
   test(META_STORAGE_METHODS.CODE_META_GET, () => {});
 });
 
-describe.skip('Test balance methods', () => {
-  test(TEST_BALANCE_METHODS.TEST_BALANCE_AVAILABLE, async () => {
+describe('Test balance methods', () => {
+  test(API_GATEWAY_METHODS.TEST_BALANCE_AVAILABLE, async () => {
     expect(await getTestBalance(genesis)).toBeTruthy();
     expect(await getTestBalanceSeveralTimesAtATime(genesis)).toBeTruthy();
   });

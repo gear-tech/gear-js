@@ -9,7 +9,7 @@ export class BlockService {
     this.repo = dataSource.getRepository(Block);
   }
 
-  public async getLastBlock(genesis: string): Promise<Block> {
+  public async getLastBlock({ genesis }: { genesis: string }): Promise<Block> {
     const [block] = await this.repo.find({
       where: {
         genesis,

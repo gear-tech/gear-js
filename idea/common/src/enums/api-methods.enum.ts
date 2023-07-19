@@ -1,3 +1,8 @@
+export enum API_GATEWAY_METHODS {
+  NETWORK_DATA_AVAILABLE = 'networkData.available',
+  TEST_BALANCE_AVAILABLE = 'testBalance.available',
+}
+
 export enum INDEXER_METHODS {
   BLOCKS_STATUS = 'blocks.status',
   CODE_ALL = 'code.all',
@@ -6,7 +11,6 @@ export enum INDEXER_METHODS {
   CODE_STATE_GET = 'code.state.get',
   MESSAGE_ALL = 'message.all',
   MESSAGE_DATA = 'message.data',
-  NETWORK_DATA_AVAILABLE = 'networkData.available',
   PROGRAM_ALL = 'program.all',
   PROGRAM_DATA = 'program.data',
   PROGRAM_NAME_ADD = 'program.name.add',
@@ -27,5 +31,4 @@ export enum META_STORAGE_INTERNAL_METHODS {
 
 export enum TEST_BALANCE_METHODS {
   TEST_BALANCE_GET = 'testBalance.get',
-  TEST_BALANCE_AVAILABLE = 'testBalance.available',
 }
