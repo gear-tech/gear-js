@@ -184,6 +184,34 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:dev
 
+  build-and-push-meta-storage-image:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    needs: [wait-previous-run]
+    environment: dev
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Meta Storage Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: idea/meta-storage/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-meta-storage:dev
+
+
   build-and-push-test-balance-image:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
@@ -217,9 +245,10 @@ jobs:
       [
         build-and-push-indexer-image,
         build-and-push-api-gateway-image,
+        build-and-push-meta-storage-image,
         build-and-push-test-balance-image,
         build-and-push-gear-node-image,
-        wait-previous-run,
+        wait-previous-run
       ]
     runs-on: ubuntu-latest
 
@@ -244,7 +273,7 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment gear-node api-gateway-testenv frontend-nginx-testenv postgres-testenv postgres-testbalance-testenv -n $KUBE_NAMESPACE
+          args: rollout restart deployment gear-node api-gateway-testenv frontend-nginx-testenv postgres-testenv postgres-testbalance-testenv postgres-meta-storage -n $KUBE_NAMESPACE
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
@@ -254,17 +283,17 @@ jobs:
       - name: Deploy to k8s indexer
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment test-balance-testenv indexer-testenv -n $KUBE_NAMESPACE
+          args: rollout restart deployment test-balance-testenv indexer-testenv meta-storage -n $KUBE_NAMESPACE
 
       - name: Check k8s deployment test-balance-testenv
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: rollout status deployment test-balance-testenv -n $KUBE_NAMESPACE --timeout=120s
 
-      - name: Check k8s deployment indexer
+      - name: Check k8s deployment indexer and meta-storage
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout status deployment indexer-testenv -n $KUBE_NAMESPACE --timeout=120s
+          args: rollout status deployment indexer-testenv meta-storage -n $KUBE_NAMESPACE --timeout=120s
 
   run-e2e-tests:
     if: github.event.pull_request.draft == false
