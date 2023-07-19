@@ -8,7 +8,9 @@
   "dependencies": {
     "@gear-js/api": "0.32.3",
     "@polkadot/api": "10.9.1",
+    "amqplib": "0.10.3",
     "dotenv": "^16.3.1",
+    "pg": "8.10.0",
     "typeorm": "^0.3.17"
   },
   "scripts": {
