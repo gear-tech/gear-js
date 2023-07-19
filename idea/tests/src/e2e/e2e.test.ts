@@ -2,6 +2,7 @@ import { GearApi, generateCodeHash } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { waitReady } from '@polkadot/wasm-crypto';
 import { readFileSync } from 'fs';
+import { API_GATEWAY_METHODS, INDEXER_METHODS, META_STORAGE_METHODS, TEST_BALANCE_METHODS } from '@gear-js/common';
 
 import base from '../config/base';
 import {
@@ -40,7 +41,6 @@ import {
   errorStateAlreadyExists,
   unknownNetworkError,
 } from './json-rpc.errors';
-import { API_GATEWAY_METHODS, INDEXER_METHODS, META_STORAGE_METHODS, TEST_BALANCE_METHODS } from '@gear-js/common';
 
 let genesis: HexString;
 let prepared: IPrepared;

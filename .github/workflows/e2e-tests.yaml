@@ -317,8 +317,11 @@ jobs:
         with:
           node-version: 18.x
 
-      - name: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+      - name: "Install dependencies"
         run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+
+      - name: "Build: @gear-js/common"
+        run: yarn build:common
 
       - name: "Install: Nightly toolchain"
         uses: actions-rs/toolchain@v1

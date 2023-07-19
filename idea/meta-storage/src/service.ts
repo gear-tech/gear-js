@@ -1,10 +1,10 @@
 import { Repository } from 'typeorm';
 import assert from 'assert';
+import { AddMetaDetailsParams, AddMetahashParams, GetMetaByCodeParams, GetMetaParams } from '@gear-js/common';
 
 import { Code, Meta, AppDataSource } from './database';
 import { MetaNotFoundError } from './util/errors';
 import { validateMetaHex } from './util/validate';
-import { AddMetaDetailsParams, AddMetahashParams, GetMetaByCodeParams, GetMetaParams } from '@gear-js/common';
 
 export class MetaService {
   private metaRepo: Repository<Meta>;
