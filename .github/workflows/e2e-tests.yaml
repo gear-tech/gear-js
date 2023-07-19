@@ -36,7 +36,7 @@ env:
 
 jobs:
   check-labels:
-    if: contains(github.event.pull_request.labels.*.name, 'mergeoncegreen')
+    if: contains(github.event.pull_request.labels.*.name, 'A2-mergeoncegreen')
     runs-on: ubuntu-latest
 
   build-frontend-pkg:
