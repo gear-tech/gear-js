@@ -1,16 +1,23 @@
-import { useEffect, useRef } from 'react';
+import { DependencyList, EffectCallback, useEffect, useRef } from 'react';
 
-export const useChangeEffect = (callback: () => void, dependencies?: unknown[]) => {
-  const isMounted = useRef(false);
+export const useChangeEffect = (callback: EffectCallback, dependencies: DependencyList) => {
+  const mounted = useRef(false);
+
+  useEffect(
+    () => () => {
+      mounted.current = false;
+    },
+    [],
+  );
 
   useEffect(() => {
-    if (isMounted.current) {
-      callback();
+    if (mounted.current) {
+      return callback();
     }
 
-    return () => {
-      isMounted.current = true;
-    };
+    mounted.current = true;
+    return undefined;
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies);
 };

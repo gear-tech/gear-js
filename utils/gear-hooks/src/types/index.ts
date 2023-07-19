@@ -15,7 +15,7 @@ type ProviderProps = Omit<React.ProviderProps<never>, 'value'>;
 
 interface Account extends InjectedAccountWithMeta {
   decodedAddress: HexString;
-  balance: { value: string; unit: string | undefined };
+  balance: { value: string; unit: string };
 }
 
 export {
