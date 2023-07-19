@@ -27,19 +27,19 @@ export class RMQService {
     private stateService?: StateService,
   ) {
     this.methods = {
-      [INDEXER_METHODS.BLOCKS_STATUS]: () => this.blockService.getLastBlock.bind(this.blockService),
-      [INDEXER_METHODS.CODE_ALL]: () => this.codeService.getMany.bind(this.codeService),
-      [INDEXER_METHODS.CODE_DATA]: () => this.codeService.get.bind(this.codeService),
-      [INDEXER_METHODS.CODE_NAME_ADD]: () => this.codeService.setName.bind(this.codeService),
-      [INDEXER_METHODS.CODE_STATE_GET]: () => this.stateService.getByCodeIdAndStateId.bind(this.stateService),
-      [INDEXER_METHODS.MESSAGE_ALL]: () => this.messageService.getMany.bind(this.messageService),
-      [INDEXER_METHODS.MESSAGE_DATA]: () => this.messageService.get.bind(this.messageService),
-      [INDEXER_METHODS.PROGRAM_ALL]: () => this.programService.getAllPrograms.bind(this.programService),
-      [INDEXER_METHODS.PROGRAM_DATA]: () => this.programService.getWithMessages.bind(this.programService),
-      [INDEXER_METHODS.PROGRAM_NAME_ADD]: () => this.programService.setName.bind(this.programService),
-      [INDEXER_METHODS.PROGRAM_STATE_ALL]: () => this.stateService.listByProgramId.bind(this.stateService),
-      [INDEXER_METHODS.PROGRAM_STATE_ADD]: () => this.stateService.create.bind(this.stateService),
-      [INDEXER_METHODS.STATE_GET]: () => this.stateService.get.bind(this.stateService),
+      [INDEXER_METHODS.BLOCKS_STATUS]: this.blockService.getLastBlock.bind(this.blockService),
+      [INDEXER_METHODS.CODE_ALL]: this.codeService.getMany.bind(this.codeService),
+      [INDEXER_METHODS.CODE_DATA]: this.codeService.get.bind(this.codeService),
+      [INDEXER_METHODS.CODE_NAME_ADD]: this.codeService.setName.bind(this.codeService),
+      [INDEXER_METHODS.CODE_STATE_GET]: this.stateService.getByCodeIdAndStateId.bind(this.stateService),
+      [INDEXER_METHODS.MESSAGE_ALL]: this.messageService.getMany.bind(this.messageService),
+      [INDEXER_METHODS.MESSAGE_DATA]: this.messageService.get.bind(this.messageService),
+      [INDEXER_METHODS.PROGRAM_ALL]: this.programService.getAllPrograms.bind(this.programService),
+      [INDEXER_METHODS.PROGRAM_DATA]: this.programService.getWithMessages.bind(this.programService),
+      [INDEXER_METHODS.PROGRAM_NAME_ADD]: this.programService.setName.bind(this.programService),
+      [INDEXER_METHODS.PROGRAM_STATE_ALL]: this.stateService.listByProgramId.bind(this.stateService),
+      [INDEXER_METHODS.PROGRAM_STATE_ADD]: this.stateService.create.bind(this.stateService),
+      [INDEXER_METHODS.STATE_GET]: this.stateService.get.bind(this.stateService),
     };
   }
 
@@ -115,7 +115,6 @@ export class RMQService {
             return;
           }
           const method = message.properties.headers.method;
-
           const params = JSON.parse(message.content.toString());
           const correlationId = message.properties.correlationId;
 
