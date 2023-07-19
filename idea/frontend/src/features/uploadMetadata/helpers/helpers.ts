@@ -7,7 +7,7 @@ import { MetadataTypes, MedatadaTypesValue } from '../model';
 
 const isEmptyObject = (value: unknown) => isPlainObject(value) && !Object.keys(value as {}).length;
 
-// TODO: return type and types at general
+// TODO: types
 const getNamedTypes = (metadata: ProgramMetadata) => {
   const getTypes = (type: MetadataTypes | MedatadaTypesValue) => {
     if (isNullOrUndefined(type)) return type;
@@ -23,4 +23,11 @@ const getNamedTypes = (metadata: ProgramMetadata) => {
   return getTypes(metadata.types);
 };
 
-export { getNamedTypes };
+const getFlatNamedTypeEntries = (types: {}, parentKey = ''): any =>
+  Object.entries(types).flatMap(([key, value]): any => {
+    const nestedKey = parentKey ? `${parentKey}.${key}` : key;
+
+    return isPlainObject(value) ? getFlatNamedTypeEntries(value as {}, nestedKey) : [[nestedKey, value]];
+  });
+
+export { getNamedTypes, getFlatNamedTypeEntries };
