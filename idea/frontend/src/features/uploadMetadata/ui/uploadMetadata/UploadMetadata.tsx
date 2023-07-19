@@ -10,8 +10,8 @@ import { FileTypes } from 'shared/config';
 import { getPreformattedText } from 'shared/helpers';
 import { Box } from 'shared/ui/box';
 import { formStyles } from 'shared/ui/form';
-import { getMetadataProperties } from 'features/uploadMetadata/helpers';
 
+import { getNamedTypes } from '../../helpers';
 import { MetadataInput } from '../metadataInput';
 import styles from './UploadMetadata.module.scss';
 
@@ -34,16 +34,19 @@ const UploadMetadata = ({ metadata, isInputDisabled, isLoading, onReset, onUploa
   const resetMetaFile = () => setMetaFile(undefined);
   const toggleManualInput = () => setIsManualInput((prevValue) => !prevValue);
 
-  const renderMetadataProperties = (meta: ProgramMetadata) => {
-    const metadataProperties = getMetadataProperties(meta);
+  const renderTypes = (meta: ProgramMetadata) => {
+    const types = getNamedTypes(meta);
+    const registryTypes = meta.getAllTypes();
 
-    return Object.entries(metadataProperties).map(([name, value]) => {
-      const isTextarea = name === 'types';
-      const text = isTextarea ? getPreformattedText(value) : JSON.stringify(value);
-      const Component = isTextarea ? Textarea : Input;
+    return (
+      <>
+        {Object.entries(types).map(([key, value]) => (
+          <Input key={key} label={key} direction="y" value={JSON.stringify(value)} block readOnly />
+        ))}
 
-      return <Component key={name} label={name} direction="y" value={text} block readOnly />;
-    });
+        <Textarea label="types" direction="y" value={getPreformattedText(registryTypes)} block readOnly />
+      </>
+    );
   };
 
   useEffect(() => {
@@ -106,7 +109,7 @@ const UploadMetadata = ({ metadata, isInputDisabled, isLoading, onReset, onUploa
         </>
       )}
 
-      {metadata && renderMetadataProperties(metadata)}
+      {metadata && renderTypes(metadata)}
     </Box>
   );
 };

@@ -140,6 +140,8 @@ const resetFileInput = (target: HTMLInputElement | null) => {
 
 const isMobileDevice = () => isIOS() || (isAndroid() as boolean); // asserting cuz isAndroid somehow any
 
+const isNullOrUndefined = (value: unknown): value is null | undefined => value === null || value === undefined;
+
 export {
   checkWallet,
   formatDate,
@@ -160,4 +162,5 @@ export {
   enableScroll,
   resetFileInput,
   isMobileDevice,
+  isNullOrUndefined,
 };

@@ -1,3 +1,3 @@
-import { META_FIELDS } from './consts';
+import { MetadataTypes, MedatadaTypesValue } from './types';
 
-export { META_FIELDS };
+export type { MetadataTypes, MedatadaTypesValue };
