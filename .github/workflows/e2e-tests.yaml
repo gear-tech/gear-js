@@ -290,10 +290,15 @@ jobs:
         with:
           args: rollout status deployment test-balance-testenv -n $KUBE_NAMESPACE --timeout=120s
 
-      - name: Check k8s deployment indexer and meta-storage
+      - name: Check k8s deployment indexer
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout status deployment indexer-testenv meta-storage -n $KUBE_NAMESPACE --timeout=120s
+          args: rollout status deployment indexer-testenv -n $KUBE_NAMESPACE --timeout=120s
+
+      - name: Check k8s deployment meta-storage
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout status deployment meta-storage -n $KUBE_NAMESPACE --timeout=120s
 
   run-e2e-tests:
     if: github.event.pull_request.draft == false
