@@ -2,6 +2,7 @@ import { HexString } from '@polkadot/util/types';
 import { AddMetaByCodeParams, AddMetaByProgramParams } from '@gear-js/common';
 import { DataSource, Repository } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
+import { getProgramMetadata } from '@gear-js/api';
 
 import {
   generateMetahash,
@@ -11,11 +12,10 @@ import {
   CodeHasNoMeta,
   ProgramHasNoMeta,
 } from '../common';
-import { Code, Meta, Program } from '../database/entities';
+import { Code, Meta, Program } from '../database';
 import { GearHelper } from '../gear';
 import { ProgramService } from './program.service';
 import { CodeService } from './code.service';
-import { getProgramMetadata } from '@gear-js/api';
 
 export class MetaService {
   private repo: Repository<Meta>;

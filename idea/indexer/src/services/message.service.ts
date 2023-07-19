@@ -7,7 +7,7 @@ import {
   ProgramStatus,
 } from '@gear-js/common';
 
-import { Message } from '../database/entities';
+import { Message } from '../database';
 import { ProgramService } from './program.service';
 import {
   MessagesDispatchedDataInput,

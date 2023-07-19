@@ -8,7 +8,7 @@ import {
 } from '@gear-js/common';
 import { DataSource, Repository } from 'typeorm';
 
-import { Code, Meta } from '../database/entities';
+import { Code, Meta } from '../database';
 import { CodeNotFound, MetadataNotFound, constructQueryBuilder, PAGINATION_LIMIT } from '../common';
 
 export class CodeService {

@@ -6,38 +6,51 @@ import { changeStatus } from '../healthcheck';
 import { GenesisCb, logger } from '../common';
 import { GearIndexer } from './indexer';
 
+const addresses = config.gear.providerAddresses;
+
+// max number of reconnections for each node address
 const MAX_RECONNECTIONS = 10;
 let reconnectionsCounter = 0;
 
+let providerAddress = addresses[0];
+
 export async function connectToNode(indexer: GearIndexer, cb: GenesisCb) {
-  const api = new GearApi({ providerAddress: config.gear.wsProvider });
+  if (!providerAddress) {
+    throw new Error('There are no node addresses to connect to');
+  }
+
+  const api = new GearApi({ providerAddress });
+
   try {
     await api.isReadyOrError;
   } catch (error) {
-    logger.error(`Failed to connect to ${config.gear.wsProvider}`);
+    logger.error(`Failed to connect to ${providerAddress}`);
+    indexer.stop();
+    await reconnect(api, indexer, cb);
   }
   await api.isReady;
   const genesis = api.genesisHash.toHex();
 
   api.on('disconnected', () => {
-    reconnect(api, genesis, indexer, cb);
+    indexer.stop();
+    genesis && cb(RMQServiceActions.DELETE, genesis);
+    reconnect(api, indexer, cb);
   });
 
   reconnectionsCounter = 0;
-
-  indexer.run(api);
+  await indexer.run(api);
   cb(RMQServiceActions.ADD, genesis);
-
   logger.info(`⚙️ Connected to ${api.runtimeChain} with genesis ${genesis}`);
   changeStatus('gear');
 }
 
-async function reconnect(api: GearApi, genesis: string, indexer: GearIndexer, cb: GenesisCb) {
-  changeStatus('gear');
+async function reconnect(api: GearApi, indexer: GearIndexer, cb: GenesisCb) {
+  changeStatus('gear', false);
 
-  cb(RMQServiceActions.DELETE, genesis);
+  await new Promise((resolve) => {
+    setTimeout(resolve, 2000);
+  });
 
-  indexer.stop();
   try {
     await api.disconnect();
   } catch (err) {
@@ -45,15 +58,12 @@ async function reconnect(api: GearApi, genesis: string, indexer: GearIndexer, cb
   }
   reconnectionsCounter++;
 
-  if (reconnectionsCounter > MAX_RECONNECTIONS) {
-    throw new Error(`Unable to connect to ${config.gear.wsProvider}`);
+  if (reconnectionsCounter === MAX_RECONNECTIONS) {
+    providerAddress = addresses.filter((address) => address !== providerAddress)[0];
+    reconnectionsCounter = 0;
   }
 
   logger.info('⚙️ 📡 Reconnecting to the gear node...');
-
-  await new Promise((resolve) => {
-    setTimeout(resolve, 2000);
-  });
 
   return connectToNode(indexer, cb);
 }
