@@ -1,4 +1,4 @@
-import { GearApi } from '@gear-js/api';
+import { GearApi, HexString } from '@gear-js/api';
 
 import { changeStatus } from '../routes/healthcheck.router';
 import config from '../config/configuration';
@@ -6,24 +6,35 @@ import { producer } from '../rabbitmq/producer';
 import { logger } from '../common/logger';
 
 export let api: GearApi;
+let genesisHash: HexString;
 
+const addresses = config.gear.providerAddresses;
+// max number of reconnections for each node address
 const MAX_RECONNECTIONS = 10;
 let reconnectionsCounter = 0;
 
+let providerAddress = addresses[0];
+
 export async function connect() {
-  api = new GearApi({ providerAddress: config.gear.providerAddress });
+  if (!providerAddress) {
+    throw new Error('There are no node addresses to connect to');
+  }
+
+  api = new GearApi({ providerAddress });
 
   try {
     await api.isReadyOrError;
   } catch (error) {
-    logger.error(`Failed to connect to ${config.gear.providerAddress}`);
+    logger.error(`Failed to connect to ${providerAddress}`);
+    await reconnect();
   }
   await api.isReady;
   api.on('disconnected', () => {
+    producer.sendDeleteGenesis(genesisHash);
     reconnect();
   });
-
-  logger.info(`Connected to ${await api.chain()} with genesis ${getGenesisHash()}`);
+  genesisHash = api.genesisHash.toHex();
+  logger.info(`Connected to ${await api.chain()} with genesis ${genesisHash}`);
   changeStatus('ws');
 }
 
@@ -32,19 +43,18 @@ async function reconnect(): Promise<void> {
     await api.disconnect();
     api = null;
   }
+
   reconnectionsCounter++;
   if (reconnectionsCounter > MAX_RECONNECTIONS) {
-    throw new Error(`Unable to connect to ${config.gear.providerAddress}`);
+    providerAddress = addresses.filter((address) => address !== providerAddress)[0];
+    reconnectionsCounter = 0;
   }
-  logger.info('⚙️ 📡 Reconnecting to the gear node');
-  await new Promise((resolve) => {
-    setTimeout(resolve, 2000);
-  });
-  api && producer.sendDeleteGenesis(getGenesisHash());
+
+  logger.info('⚙️ 📡 Reconnecting to the gear node...');
   changeStatus('ws');
   return connect();
 }
 
-export function getGenesisHash(): string {
-  return api.genesisHash.toHex();
+export function getGenesisHash() {
+  return genesisHash;
 }

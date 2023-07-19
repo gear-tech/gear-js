@@ -1,6 +1,6 @@
 import { And, DataSource, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 
-import { Block } from '../database/entities';
+import { Block } from '../database';
 
 export class BlockService {
   private repo: Repository<Block>;

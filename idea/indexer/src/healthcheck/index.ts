@@ -9,8 +9,8 @@ export const statuses = {
   gear: false,
 };
 
-export const changeStatus = (service: 'rmq' | 'database' | 'gear') => {
-  statuses[service] = !statuses[service];
+export const changeStatus = (service: 'rmq' | 'database' | 'gear', status?: boolean) => {
+  statuses[service] = status === undefined ? !statuses[service] : status;
 };
 
 const getStatus = (service: 'rmq' | 'database' | 'gear' | 'all') => {

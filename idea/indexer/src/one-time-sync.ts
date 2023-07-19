@@ -1,4 +1,5 @@
 import { waitReady } from '@polkadot/wasm-crypto';
+import { GearApi } from '@gear-js/api';
 
 import { changeStatus, runHealthcheckServer } from './healthcheck';
 import { AppDataSource } from './database';
@@ -7,7 +8,6 @@ import { CodeService } from './services';
 import { MessageService } from './services';
 import { ProgramService } from './services';
 import { GearIndexer } from './gear';
-import { GearApi } from '@gear-js/api';
 import config from './config';
 import { logger } from './common';
 import { RMQService } from './rabbitmq';
@@ -21,17 +21,19 @@ async function bootstrap() {
 
   await waitReady();
 
+  const providerAddress = config.gear.providerAddresses[0];
+
   const blockService = new BlockService(dataSource);
   const codeService = new CodeService(dataSource);
   const programService = new ProgramService(dataSource);
   const messageService = new MessageService(dataSource, programService);
   const statusService = new StatusService(dataSource);
 
-  const api = new GearApi({ providerAddress: config.gear.wsProvider });
+  const api = new GearApi({ providerAddress });
   try {
     await api.isReadyOrError;
   } catch (error) {
-    logger.error(`Failed to connect to ${config.gear.wsProvider}`);
+    logger.error(`Failed to connect to ${providerAddress}`);
     throw error;
   }
   await api.isReady;
