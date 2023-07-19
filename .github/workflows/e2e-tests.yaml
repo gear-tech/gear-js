@@ -2,7 +2,7 @@ name: 'Gear Idea: e2e test'
 
 on:
   pull_request:
-    types: [synchronize, labeled, opened]
+    types: [synchronize, labeled, opened, reopened, ready_for_review]
     branches: [main]
     paths:
       - idea/api-gateway/**
