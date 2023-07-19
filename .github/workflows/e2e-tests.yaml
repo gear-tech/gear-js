@@ -2,7 +2,7 @@ name: 'Gear Idea: e2e test'
 
 on:
   pull_request:
-    types: [synchronize, labeled]
+    types: [synchronize, labeled, opened]
     branches: [main]
     paths:
       - idea/api-gateway/**
@@ -11,6 +11,7 @@ on:
       - idea/frontend/**
       - idea/test-balance/**
       - idea/tests/**
+      - idea/meta-storage/**
   workflow_dispatch:
 
 concurrency:
