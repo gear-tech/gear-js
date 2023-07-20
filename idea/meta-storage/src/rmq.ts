@@ -38,7 +38,7 @@ export class RMQService {
       await this.channel.assertExchange(directExchange, directExchangeType);
       await this.channel.assertQueue(RMQServices.META_STORAGE, {
         durable: true,
-        exclusive: true,
+        exclusive: false,
         autoDelete: false,
       });
 

@@ -2488,6 +2488,7 @@ __metadata:
   resolution: "@gear-js/meta-storage@workspace:idea/meta-storage"
   dependencies:
     "@gear-js/api": 0.32.3
+    "@gear-js/common": "workspace:^"
     "@polkadot/api": 10.9.1
     amqplib: 0.10.3
     dotenv: ^16.3.1
