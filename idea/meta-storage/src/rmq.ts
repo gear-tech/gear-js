@@ -20,8 +20,7 @@ export class RMQService {
   constructor(private metaService: MetaService) {
     this.methods = {
       [META_STORAGE_METHODS.META_ADD]: this.metaService.addMetaDetails.bind(this.metaService),
-      [META_STORAGE_METHODS.META_GET]: this.metaService.getMetaByHash.bind(this.metaService),
-      [META_STORAGE_METHODS.CODE_META_GET]: this.metaService.getMetaByCode.bind(this.metaService),
+      [META_STORAGE_METHODS.META_GET]: this.metaService.get.bind(this.metaService),
       [META_STORAGE_INTERNAL_METHODS.META_HASH_ADD]: this.metaService.addMeta.bind(this.metaService),
     };
   }

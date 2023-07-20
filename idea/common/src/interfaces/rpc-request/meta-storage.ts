@@ -9,9 +9,6 @@ export interface AddMetaDetailsParams {
 export type AddMetahashParams = Array<[string, Array<string>]>;
 
 export interface GetMetaParams {
-  hash: string;
-}
-
-export interface GetMetaByCodeParams {
-  id: string;
+  hash?: string;
+  codeHash?: string;
 }

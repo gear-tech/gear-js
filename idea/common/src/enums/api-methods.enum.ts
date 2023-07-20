@@ -21,7 +21,6 @@ export enum INDEXER_METHODS {
 
 export enum META_STORAGE_METHODS {
   META_GET = 'meta.get',
-  CODE_META_GET = 'code.meta.get',
   META_ADD = 'meta.add',
 }
 

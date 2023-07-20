@@ -7,3 +7,7 @@ export class MetaNotFoundError extends Error {
 export class InvalidMetadataError extends Error {
   name = JSONRPC_ERRORS.InvalidMetaHex.name;
 }
+
+export class InvalidParamsError extends Error {
+  name = JSONRPC_ERRORS.InvalidParams.name;
+}
