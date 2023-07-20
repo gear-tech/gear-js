@@ -30,6 +30,7 @@ const AVAILABLE_METHODS: string[] = [
   ...Object.values(INDEXER_METHODS),
   ...Object.values(TEST_BALANCE_METHODS),
   ...Object.values(META_STORAGE_METHODS),
+  ...Object.values(API_GATEWAY_METHODS),
 ];
 
 function isExistJsonRpcMethod(method: string): boolean {
@@ -82,30 +83,6 @@ export class Server {
     );
   }
 
-  private async jsonRpcHandler(
-    method: INDEXER_METHODS | META_STORAGE_METHODS | TEST_BALANCE_METHODS,
-    params: unknown,
-  ): Promise<RMQReply> {
-    const correlationId: string = nanoid(12);
-    const genesis = params['genesis'];
-    let replyResolve;
-    const replyPromise: Promise<RMQReply> = new Promise((resolve) => (replyResolve = resolve));
-
-    const msg: RMQMessage = { correlationId, params, genesis, method };
-
-    if (method === TEST_BALANCE_METHODS.TEST_BALANCE_GET) {
-      this.rmq.sendMsgToTestBalance(msg);
-    } else if (indexerMethods.includes(method as INDEXER_METHODS)) {
-      this.rmq.sendMsgToIndexer(msg);
-    } else if (metaStorageMethods.includes(method as META_STORAGE_METHODS)) {
-      this.rmq.sendMsgToMetaStorage(msg);
-    }
-
-    this.rmq.replies.set(correlationId, replyResolve);
-
-    return replyPromise;
-  }
-
   private async handleRequest(rpcBodyRequest: IRpcRequest | IRpcRequest[]): Promise<IRpcResponse | IRpcResponse[]> {
     if (Array.isArray(rpcBodyRequest)) {
       const promises = rpcBodyRequest.map((rpcBody) => {
@@ -139,6 +116,30 @@ export class Server {
     const { error, result } = await this.jsonRpcHandler(method, params);
 
     return getResponse(procedure, error, result);
+  }
+
+  private async jsonRpcHandler(
+    method: INDEXER_METHODS | META_STORAGE_METHODS | TEST_BALANCE_METHODS,
+    params: unknown,
+  ): Promise<RMQReply> {
+    const correlationId: string = nanoid(12);
+    const genesis = params['genesis'];
+    let replyResolve;
+    const replyPromise: Promise<RMQReply> = new Promise((resolve) => (replyResolve = resolve));
+
+    const msg: RMQMessage = { correlationId, params, genesis, method };
+
+    if (method === TEST_BALANCE_METHODS.TEST_BALANCE_GET) {
+      this.rmq.sendMsgToTestBalance(msg);
+    } else if (indexerMethods.includes(method as INDEXER_METHODS)) {
+      this.rmq.sendMsgToIndexer(msg);
+    } else if (metaStorageMethods.includes(method as META_STORAGE_METHODS)) {
+      this.rmq.sendMsgToMetaStorage(msg);
+    }
+
+    this.rmq.replies.set(correlationId, replyResolve);
+
+    return replyPromise;
   }
 
   private isValidGenesis(genesis: string, method: string): boolean {
