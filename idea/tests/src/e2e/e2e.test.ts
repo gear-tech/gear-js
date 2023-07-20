@@ -209,9 +209,8 @@ describe('Meta storage methods', () => {
         expect(await getMeta(hash)).toBeTruthy();
       }
     }
+    // TODO: request meta by codeHash
   });
-
-  test(META_STORAGE_METHODS.CODE_META_GET, () => {});
 });
 
 describe('Test balance methods', () => {
