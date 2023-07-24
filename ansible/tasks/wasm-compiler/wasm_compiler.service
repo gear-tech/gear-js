@@ -1,5 +1,0 @@
-[Service]
-Restart=on-failure
-WorkingDirectory=/home/ec2-user/wasm-compiler
-ExecStart=/usr/bin/npm run start
-EnvironmentFile=/home/ec2-user/wasm-compiler/.env
