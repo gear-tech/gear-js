@@ -14,8 +14,7 @@ export default async function (method: string, params: any) {
       params,
     }),
   });
-  const responseData: any = await response.json();
-  return responseData;
+  return response.json();
 }
 
 export async function invalidRequest(method: string, params: any) {
@@ -30,8 +29,7 @@ export async function invalidRequest(method: string, params: any) {
       params,
     }),
   });
-  const responseData: any = await response.json();
-  return responseData;
+  return response.json();
 }
 
 export async function batchRequest(method: string, params: any) {
@@ -49,6 +47,5 @@ export async function batchRequest(method: string, params: any) {
       },
     ]),
   });
-  const responseData: any = await response.json();
-  return responseData;
+  return response.json();
 }

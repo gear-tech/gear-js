@@ -11,6 +11,7 @@ enum RabbitMQExchanges {
 enum RMQServices {
   INDEXER = 'indxr',
   TEST_BALANCE = 'tb',
+  META_STORAGE = 'meta',
 }
 
 enum RMQServiceActions {

@@ -1,4 +1,4 @@
-name: Deploy Gear-js to k8s stage/prod
+name: "Gear Idea: deploy to k8s stage/prod"
 
 on:
   push:
@@ -137,6 +137,33 @@ jobs:
           file: idea/test-balance/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-test-balance:qa
+  
+  build-and-push-meta-storage-image:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    needs: [wait-previous-run]
+    environment: dev
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Meta Storage Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: idea/meta-storage/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-meta-storage:qa
 
   deploy-to-k8s-staging:
     needs: [
@@ -144,6 +171,7 @@ jobs:
         build-indexer-image-staging,
         build-api-gateway-image-staging,
         build-test-balance-image-staging,
+        build-and-push-meta-storage-image,
         wait-previous-run,
       ]
     runs-on: ubuntu-latest
@@ -159,7 +187,7 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment api-gateway frontend-nginx indexer-rpc indexer-workshop testbalance-testnet -n dev-1
+          args: rollout restart deployment api-gateway frontend-nginx indexer-rpc indexer-workshop testbalance-testnet meta-storage -n dev-1
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master

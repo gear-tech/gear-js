@@ -7,10 +7,10 @@ import { BlockService, StatusService } from './services';
 import { CodeService } from './services';
 import { MessageService } from './services';
 import { ProgramService } from './services';
-import { MetaService } from './services';
-import { GearHelper, GearIndexer } from './gear';
+import { GearIndexer } from './gear';
 import config from './config';
 import { logger } from './common';
+import { RMQService } from './rabbitmq';
 
 async function bootstrap() {
   runHealthcheckServer();
@@ -21,14 +21,11 @@ async function bootstrap() {
 
   await waitReady();
 
-  const helper = new GearHelper();
-
   const providerAddress = config.gear.providerAddresses[0];
 
   const blockService = new BlockService(dataSource);
   const codeService = new CodeService(dataSource);
   const programService = new ProgramService(dataSource);
-  const metaService = new MetaService(dataSource, programService, codeService, helper);
   const messageService = new MessageService(dataSource, programService);
   const statusService = new StatusService(dataSource);
 
@@ -50,7 +47,7 @@ async function bootstrap() {
     fromBlock = Number(status.height) + 1;
   }
 
-  const lastBlock = await blockService.getLastBlock(genesis);
+  const lastBlock = await blockService.getLastBlock({ genesis });
   const toBlock = Number(lastBlock.number);
 
   let syncedBlocks = await blockService.getSyncedBlockNumbers(fromBlock, toBlock, genesis);
@@ -64,15 +61,12 @@ async function bootstrap() {
   blocksSet.clear();
   syncedBlocks = undefined;
 
-  const indexer = new GearIndexer(
-    programService,
-    messageService,
-    codeService,
-    blockService,
-    metaService,
-    statusService,
-    true,
-  );
+  const rmq = new RMQService();
+
+  await rmq.init();
+  changeStatus('rmq');
+
+  const indexer = new GearIndexer(programService, messageService, codeService, blockService, rmq, statusService, true);
 
   if (config.indexer.batchSize > 0) {
     for (let i = 0; i <= blocks.length; i += config.indexer.batchSize) {

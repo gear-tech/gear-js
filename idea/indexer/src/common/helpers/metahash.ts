@@ -3,7 +3,7 @@ import { GearCode } from '@gear-js/api/Code';
 import { HexString } from '@polkadot/util/types';
 import { generateCodeHash } from '@gear-js/api';
 
-export async function getMetahash(tx: GearProgram | GearCode, id: HexString): Promise<null | HexString> {
+export async function getMetahash(tx: GearProgram | GearCode, id: HexString): Promise<HexString | null> {
   try {
     return await tx.metaHash(id);
   } catch (error) {

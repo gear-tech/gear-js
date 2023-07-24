@@ -1,10 +1,8 @@
-interface IPaginationResult {
+export interface IPaginationResult {
   count: number;
 }
 
-interface IPaginationParams {
+export interface IPaginationParams {
   limit?: number;
   offset?: number;
 }
-
-export { IPaginationResult, IPaginationParams };

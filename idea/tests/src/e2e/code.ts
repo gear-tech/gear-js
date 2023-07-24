@@ -52,7 +52,7 @@ async function getCodeData(genesis: string, id: HexString) {
     'blockHash',
     'timestamp',
     'programs',
-    'meta',
+    'metahash',
   ]);
   return true;
 }

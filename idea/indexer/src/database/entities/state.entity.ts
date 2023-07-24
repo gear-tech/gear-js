@@ -4,6 +4,10 @@ import { StateToCode } from './state-to-code.entity';
 
 @Entity()
 export class State implements IState {
+  constructor(props: Partial<State>) {
+    Object.assign(this, props);
+  }
+
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 

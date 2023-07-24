@@ -1,30 +1,20 @@
-import express from 'express';
-
-import { apiGatewayRouter } from './routes/api-gateway/api-gateway.router';
-import { healthcheckRouter } from './routes/healthcheck/healthcheck.router';
 import { logger } from './common/logger';
-import { initAMQ } from './rabbitmq/init-rabbitmq';
-import { runScheduler } from './common/scheduler';
-import configuration from './config/configuration';
+import { RMQService } from './rabbitmq';
+import { Server, changeStatus } from './server';
 
-const app = express();
+const bootstrap = async () => {
+  const rmq = new RMQService();
+  await rmq.init();
 
-const port = configuration.server.port;
+  logger.info('Connected to RabbitMQ');
 
-app.use(express.json({ limit: '5mb' }));
-app.use(express.urlencoded({ extended: true, limit: '5mb' }));
+  changeStatus();
 
-//Routes
-app.use('/api', apiGatewayRouter);
-app.use('/health', healthcheckRouter);
+  const server = new Server(rmq);
 
-const startApp = async () => {
-  await initAMQ();
-  await runScheduler();
+  await rmq.runScheduler();
 
-  app.listen(port, () => {
-    logger.info(`⚙️ 🚀 App successfully run on the ${port}️`);
-  });
+  server.run();
 };
 
-startApp();
+bootstrap();

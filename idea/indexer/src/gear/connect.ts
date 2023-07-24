@@ -3,7 +3,7 @@ import { RMQServiceActions } from '@gear-js/common';
 
 import config from '../config';
 import { changeStatus } from '../healthcheck';
-import { GenesisCb, logger } from '../common';
+import { logger } from '../common';
 import { GearIndexer } from './indexer';
 
 const addresses = config.gear.providerAddresses;
@@ -12,6 +12,7 @@ const addresses = config.gear.providerAddresses;
 const MAX_RECONNECTIONS = 10;
 let reconnectionsCounter = 0;
 
+type GenesisCb = (action: RMQServiceActions, genesis: string) => void;
 let providerAddress = addresses[0];
 
 export async function connectToNode(indexer: GearIndexer, cb: GenesisCb) {

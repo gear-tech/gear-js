@@ -1,5 +1,3 @@
-import { testBalanceMiddleware } from './test-balance.middleware';
-import { checkGenesisMiddleware } from './check-genesis.middleware';
-
-
-export { testBalanceMiddleware, checkGenesisMiddleware };
+export * from './test-balance.middleware';
+export * from './check-genesis.middleware';
+export * from './validate-json-rpc-request.middleware';

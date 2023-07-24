@@ -1,4 +1,3 @@
-import { IMeta } from './meta';
 import { IBaseDBRecord } from './common';
 import { ProgramStatus } from '../enums';
 
@@ -7,7 +6,7 @@ export interface IProgram extends IBaseDBRecord<number | Date> {
   id: string;
   owner: string;
   name?: string;
-  meta?: IMeta;
+  metahash?: string;
   title?: string;
   status: ProgramStatus;
 }

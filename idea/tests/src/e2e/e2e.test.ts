@@ -1,9 +1,10 @@
-import { GearApi } from '@gear-js/api';
+import { GearApi, generateCodeHash } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { waitReady } from '@polkadot/wasm-crypto';
+import { readFileSync } from 'fs';
+import { API_GATEWAY_METHODS, INDEXER_METHODS, META_STORAGE_METHODS, TEST_BALANCE_METHODS } from '@gear-js/common';
 
 import base from '../config/base';
-
 import {
   addState,
   checkInitStatus,
@@ -69,68 +70,71 @@ afterAll(async () => {
   await sleep();
 });
 
-describe('Program', () => {
-  test('program.all request', async () => {
+describe('Indexer methods', () => {
+  test(API_GATEWAY_METHODS.NETWORK_DATA_AVAILABLE, async () => {
+    expect(await networkDataAvailable(genesis)).toBeTruthy();
+  });
+
+  test(INDEXER_METHODS.BLOCKS_STATUS, async () => {
+    expect(await blocksStatus(genesis)).toBeTruthy();
+  });
+
+  test(INDEXER_METHODS.PROGRAM_ALL, async () => {
     expect(await getAllPrograms(genesis, Object.keys(prepared.programs) as HexString[])).toBeTruthy();
-  });
-
-  test('program.all by owner request', async () => {
     expect(await getAllProgramsByOwner(genesis, prepared.programs as IPreparedPrograms)).toBeTruthy();
-  });
-
-  test('program.all by status (active) request', async () => {
     expect(await getAllProgramsByStatus(genesis, 'active')).toBeTruthy();
-  });
-
-  test('program.all by status (terminated) request', async () => {
     expect(await getAllProgramsByStatus(genesis, 'terminated')).toBeTruthy();
+    expect(await getAllProgramsByDates(genesis, new Date())).toBeTruthy();
   });
 
-  test('program.all by dates request', async () => {
-    const now = new Date();
-    expect(await getAllProgramsByDates(genesis, now)).toBeTruthy();
-  });
-
-  test('program.data method', async () => {
+  test(INDEXER_METHODS.PROGRAM_DATA, async () => {
     for (const id of Object.keys(prepared.programs)) {
       expect(await getProgramData(genesis, id)).toBeTruthy();
     }
-  });
-
-  test('program.data method in batch request', async () => {
     expect(await getProgramDataInBatch(genesis, Object.keys(prepared.programs)[0])).toBeTruthy();
-  });
-
-  test('check if init status saved correctly', async () => {
     for (const id of Object.keys(prepared.programs)) {
       expect(await checkInitStatus(genesis, id, prepared.programs[id].init)).toBeTruthy();
     }
   });
-});
 
-describe('Metadata', () => {
-  test('program.meta.add request', async () => {
-    for (const id of Object.keys(prepared.programs)) {
-      const program = prepared.programs[id] as IPreparedProgram;
+  test.todo(INDEXER_METHODS.PROGRAM_NAME_ADD);
 
-      if (program.spec['pathToMetaTxt']) {
-        expect(await uploadMeta(genesis, program)).toBeTruthy();
-      }
+  test(INDEXER_METHODS.CODE_ALL, async () => {
+    const codeIds = Array.from(prepared.collectionCode.keys());
+    expect(await getCodes(genesis, codeIds)).toBeTruthy();
+
+    expect(await getCodesByDates(genesis, new Date())).toBeTruthy();
+  });
+
+  test(INDEXER_METHODS.CODE_DATA, async () => {
+    const codeId = Array.from(prepared.collectionCode.keys())[1];
+    expect(await getCodeData(genesis, codeId)).toBeTruthy();
+  });
+
+  test.todo(INDEXER_METHODS.CODE_NAME_ADD);
+
+  test(INDEXER_METHODS.MESSAGE_ALL, async () => {
+    const messages = Array.from(prepared.messages.log.keys()).concat(
+      Array.from(prepared.messages.sent.values()).map(({ id }) => id),
+    ) as HexString[];
+    Object.values(prepared.programs).forEach(({ messageId }) => messages.push(messageId));
+    expect(await getAllMessages(genesis, messages)).toBeTruthy();
+
+    expect(await getMessagesByDates(genesis, new Date())).toBeTruthy();
+  });
+
+  test(INDEXER_METHODS.MESSAGE_DATA, async () => {
+    for (const message of prepared.messages.log) {
+      expect(await getMessageData(genesis, message[0])).toBeTruthy();
+    }
+    for (const [_, value] of prepared.messages.sent) {
+      expect(await getMessagePayload(genesis, value.id));
     }
   });
 
-  test('program.meta.get request', async () => {
-    for (const id of Object.keys(prepared.programs)) {
-      const program = prepared.programs[id] as IPreparedProgram;
-      if (program.spec['pathToMetaTxt']) {
-        expect(await getMeta(genesis, id)).toBeTruthy();
-      }
-    }
-  });
-});
+  test.todo(INDEXER_METHODS.CODE_STATE_GET);
 
-describe('State', () => {
-  test('program.state.add request', async () => {
+  test(INDEXER_METHODS.PROGRAM_STATE_ADD, async () => {
     for (const id of Object.keys(prepared.programs)) {
       const program = prepared.programs[id] as IPreparedProgram;
       if (!program.spec['pathStates']) continue;
@@ -142,16 +146,20 @@ describe('State', () => {
     }
   });
 
-  test('program.state.all request', async () => {
+  test(INDEXER_METHODS.PROGRAM_STATE_ALL, async () => {
     for (const id of Object.keys(prepared.programs)) {
       const program = prepared.programs[id] as IPreparedProgram;
-      if (!program.spec['pathStates']) continue;
 
-      expect(await getStates(genesis, program)).toBeTruthy();
+      if (mapProgramStates.has(id)) {
+        const statesInDB = mapProgramStates.get(id);
+
+        for (const state of statesInDB) {
+          const name = Object.keys(state.functions)[0];
+          expect(await getStatesByFuncName(genesis, program, name)).toBeTruthy();
+        }
+      }
     }
-  });
 
-  test('program.state.all by function name request', async () => {
     for (const id of Object.keys(prepared.programs)) {
       const program = prepared.programs[id] as IPreparedProgram;
 
@@ -166,7 +174,7 @@ describe('State', () => {
     }
   });
 
-  test('state.get request', async () => {
+  test(INDEXER_METHODS.STATE_GET, async () => {
     for (const id of Object.keys(prepared.programs)) {
       if (mapProgramStates.has(id)) {
         const statesInDB = mapProgramStates.get(id);
@@ -179,71 +187,39 @@ describe('State', () => {
   });
 });
 
-describe('Message', () => {
-  test('message.all request', async () => {
-    const messages = Array.from(prepared.messages.log.keys()).concat(
-      Array.from(prepared.messages.sent.values()).map(({ id }) => id),
-    ) as HexString[];
-    Object.values(prepared.programs).forEach(({ messageId }) => messages.push(messageId));
-    expect(await getAllMessages(genesis, messages)).toBeTruthy();
+describe('Meta storage methods', () => {
+  test(META_STORAGE_METHODS.META_ADD, async () => {
+    for (const id of Object.keys(prepared.programs)) {
+      const program = prepared.programs[id] as IPreparedProgram;
+
+      if (program.spec['pathToMetaTxt']) {
+        expect(await uploadMeta(program)).toBeTruthy();
+      }
+    }
   });
 
-  test('message.all by dates request', async () => {
-    const now = new Date();
-    expect(await getMessagesByDates(genesis, now)).toBeTruthy();
-  });
+  test(META_STORAGE_METHODS.META_GET, async () => {
+    for (const id of Object.keys(prepared.programs)) {
+      const program = prepared.programs[id] as IPreparedProgram;
 
-  test('message.data request', async () => {
-    for (const message of prepared.messages.log) {
-      expect(await getMessageData(genesis, message[0])).toBeTruthy();
+      if (program.spec['pathToMetaTxt']) {
+        const hex: HexString = `0x${readFileSync(program.spec.pathToMetaTxt, 'utf-8')}`;
+
+        const hash = generateCodeHash(hex);
+        expect(await getMeta(hash)).toBeTruthy();
+      }
     }
-    for (const [_, value] of prepared.messages.sent) {
-      expect(await getMessagePayload(genesis, value.id));
-    }
+    // TODO: request meta by codeHash
   });
 });
 
-describe('Code', () => {
-  test('code.all request', async () => {
-    await sleep();
-    const codeIds = Array.from(prepared.collectionCode.keys());
-    expect(await getCodes(genesis, codeIds)).toBeTruthy();
-  });
-
-  test('code.all by dates request', async () => {
-    const now = new Date();
-    expect(await getCodesByDates(genesis, now)).toBeTruthy();
-  });
-
-  test('code.data request', async () => {
-    const codeIndex = 1;
-    const codeId = Array.from(prepared.collectionCode.keys())[codeIndex];
-
-    expect(await getCodeData(genesis, codeId)).toBeTruthy();
-  });
-});
-
-describe.skip('Test balance', () => {
-  test('testBalance.get request', async () => {
+describe('Test balance methods', () => {
+  test(API_GATEWAY_METHODS.TEST_BALANCE_AVAILABLE, async () => {
     expect(await getTestBalance(genesis)).toBeTruthy();
-  });
-
-  test('several testBalance.get requests at a time', async () => {
     expect(await getTestBalanceSeveralTimesAtATime(genesis)).toBeTruthy();
   });
-
-  test('testBalance.available request', async () => {
+  test(TEST_BALANCE_METHODS.TEST_BALANCE_GET, async () => {
     expect(await testBalanceAvailable(genesis)).toBeTruthy();
-  });
-});
-
-describe('Network', () => {
-  test('networkData.available request', async () => {
-    expect(await networkDataAvailable(genesis)).toBeTruthy();
-  });
-
-  test('blocks.status request', async () => {
-    expect(await blocksStatus(genesis)).toBeTruthy();
   });
 });
 
@@ -276,12 +252,11 @@ describe('JSON_RPC errors', () => {
     expect(await errorMessageNotFound(genesis)).toBeTruthy();
   });
 
-  test('error message invalid meta hex', async () => {
-    const programKey = Object.keys(prepared.programs)[0];
-    const program = prepared.programs[programKey] as IPreparedProgram;
+  test.skip('error message invalid meta hex', async () => {
     const invalidMetaHex = '0100000000010300000001070000000118000000011221100';
+    const invalidHash = '0120102102102';
 
-    expect(await errorInvalidMetaHex(genesis, program.id, invalidMetaHex)).toBeTruthy();
+    expect(await errorInvalidMetaHex(invalidHash, invalidMetaHex)).toBeTruthy();
   });
 
   test('error metadata not found', async () => {

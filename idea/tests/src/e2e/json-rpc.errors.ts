@@ -80,12 +80,10 @@ export async function errorMessageNotFound(genesis: string): Promise<Passed> {
   return true;
 }
 
-export async function errorInvalidMetaHex(genesis: string, programId: string, hex: string): Promise<Passed> {
-  const response = await request('program.meta.add', {
-    genesis,
-    programId,
-    metaHex: hex,
-    name: '',
+export async function errorInvalidMetaHex(hash: string, hex: string): Promise<Passed> {
+  const response = await request('meta.add', {
+    hex,
+    hash,
   });
 
   expect(response.error.message).to.equal('Invalid meta hex');

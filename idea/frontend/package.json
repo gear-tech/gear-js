@@ -19,7 +19,6 @@
     "@polkadot/react-identicon": "2.9.14",
     "@polkadot/types": "10.9.1",
     "@polkadot/util": "12.3.2",
-    "@polkadot/wasm-crypto": "7.2.1",
     "@react-aria/utils": "^3.14.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",

@@ -1,5 +1,5 @@
 import { Channel, Replies } from 'amqplib';
-import { API_METHODS } from '@gear-js/common';
+import { TEST_BALANCE_METHODS } from '@gear-js/common';
 
 import { producer } from './producer';
 import { gearService } from '../gear';
@@ -14,7 +14,7 @@ export async function directMessageConsumer(channel: Channel, queue: string): Pr
         const method = message.properties.headers.method;
         const correlationId = message.properties.correlationId;
 
-        if (method === API_METHODS.TEST_BALANCE_GET && payload.genesis === gearService.getGenesisHash()) {
+        if (method === TEST_BALANCE_METHODS.TEST_BALANCE_GET && payload.genesis === gearService.getGenesisHash()) {
           requests.push({ payload, correlationId });
         }
       },
