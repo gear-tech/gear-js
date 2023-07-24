@@ -1,4 +1,5 @@
 import { ProgramMetadata } from '@gear-js/api';
+import { useAlert } from '@gear-js/react-hooks';
 
 import { ReactComponent as MetadataDetailsSVG } from 'shared/assets/images/placeholders/metadataDetails.svg';
 import { getFlatNamedTypeEntries, getNamedTypes } from 'features/uploadMetadata';
@@ -13,11 +14,13 @@ type Props = {
 };
 
 const MetadataDetails = ({ metadata, isLoading }: Props) => {
+  const alert = useAlert();
+
   const isEmpty = !(isLoading || metadata);
   const isLoaderShowing = isLoading || !metadata;
 
   const renderRows = (meta: ProgramMetadata) => {
-    const namedTypes = getNamedTypes(meta);
+    const namedTypes = getNamedTypes(meta, (message) => alert.error(message));
     const entries = getFlatNamedTypeEntries(namedTypes);
 
     return entries.map(([key, value]: any) => (

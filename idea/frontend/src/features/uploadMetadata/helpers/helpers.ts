@@ -8,10 +8,20 @@ import { MetadataTypes, MedatadaTypesValue } from '../model';
 const isEmptyObject = (value: unknown) => isPlainObject(value) && !Object.keys(value as {}).length;
 
 // TODO: types
-const getNamedTypes = (metadata: ProgramMetadata) => {
+const getNamedTypes = (metadata: ProgramMetadata, onError: (message: string) => void) => {
+  const getName = (type: number) => {
+    try {
+      return metadata.getTypeName(type);
+    } catch (error) {
+      onError(error instanceof Error ? error.message : `Something went wrong on metadata.getTypeName(${type})`);
+      return `Can't get type name`;
+    }
+  };
+
   const getTypes = (type: MetadataTypes | MedatadaTypesValue) => {
     if (isNullOrUndefined(type)) return type;
-    if (typeof type === 'number') return metadata.getTypeName(type);
+
+    if (typeof type === 'number') return getName(type);
 
     const entries = Object.entries(type)
       .map(([key, value]) => [key, getTypes(value)])

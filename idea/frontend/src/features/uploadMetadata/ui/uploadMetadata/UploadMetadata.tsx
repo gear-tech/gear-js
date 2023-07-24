@@ -35,7 +35,7 @@ const UploadMetadata = ({ metadata, isInputDisabled, isLoading, onReset, onUploa
   const toggleManualInput = () => setIsManualInput((prevValue) => !prevValue);
 
   const renderTypes = (meta: ProgramMetadata) => {
-    const types = getNamedTypes(meta);
+    const types = getNamedTypes(meta, (message) => alert.error(message));
     const registryTypes = meta.getAllTypes();
 
     return (
