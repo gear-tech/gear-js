@@ -187,7 +187,8 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment api-gateway frontend-nginx indexer-rpc indexer-workshop testbalance-testnet testbalance-workshop meta-storage -n dev-1
+#          args: rollout restart deployment api-gateway frontend-nginx indexer-rpc indexer-workshop testbalance-testnet testbalance-workshop meta-storage -n dev-1
+          args: rollout restart deployment frontend-nginx -n dev-1
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
