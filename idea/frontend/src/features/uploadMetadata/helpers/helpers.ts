@@ -14,7 +14,7 @@ const getNamedTypes = (metadata: ProgramMetadata, onError: (message: string) => 
       return metadata.getTypeName(type);
     } catch (error) {
       onError(error instanceof Error ? error.message : `Something went wrong on metadata.getTypeName(${type})`);
-      return `Can't get type name`;
+      return `Invalid metadata`;
     }
   };
 

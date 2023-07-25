@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@gear-js/api": "0.32.4",
-    "@gear-js/react-hooks": "0.5.26",
+    "@gear-js/react-hooks": "0.5.25",
     "@gear-js/ui": "workspace:^",
     "@hcaptcha/react-hcaptcha": "^1.4.4",
     "@mantine/form": "^5.4.0",
