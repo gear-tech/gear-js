@@ -1,6 +1,15 @@
+## 0.32.4
+
+_07/25/2023_
+
+https://github.com/gear-tech/gear-js/pull/1337
+### Changes
+
+- Update option regexp
+
 ## 0.32.3
 
-_11/03/2023_
+_07/11/2023_
 
 https://github.com/gear-tech/gear-js/pull/1322
 ### Changes
@@ -9,7 +18,7 @@ https://github.com/gear-tech/gear-js/pull/1322
 
 ## 0.32.2
 
-_10/03/2023_
+_07/10/2023_
 
 https://github.com/gear-tech/gear-js/pull/1320
 ### Changes
