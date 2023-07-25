@@ -1,5 +1,6 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
+import { useMemo } from 'react';
 
 import { ReactComponent as MetadataDetailsSVG } from 'shared/assets/images/placeholders/metadataDetails.svg';
 import { getFlatNamedTypeEntries, getNamedTypes } from 'features/uploadMetadata';
@@ -19,23 +20,29 @@ const MetadataDetails = ({ metadata, isLoading }: Props) => {
   const isEmpty = !(isLoading || metadata);
   const isLoaderShowing = isLoading || !metadata;
 
-  const renderRows = (meta: ProgramMetadata) => {
-    const namedTypes = getNamedTypes(meta, (message) => alert.error(message));
-    const entries = getFlatNamedTypeEntries(namedTypes);
+  // useMemo to prevent excessive error alerts
+  const namedTypeEntries = useMemo(() => {
+    if (!metadata) return [];
 
-    return entries.map(([key, value]: any) => (
+    const namedTypes = getNamedTypes(metadata, (message) => alert.error(message));
+
+    return getFlatNamedTypeEntries(namedTypes);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [metadata]);
+
+  const renderRows = () =>
+    namedTypeEntries.map(([key, value]: any) => (
       <TableRow key={key} name={key}>
         <span className={tableStyles.value}>{String(value)}</span>
       </TableRow>
     ));
-  };
 
   return isLoaderShowing ? (
     <ContentLoader text="There is no metadata yet" isEmpty={isEmpty}>
       <MetadataDetailsSVG />
     </ContentLoader>
   ) : (
-    <Table>{renderRows(metadata)}</Table>
+    <Table>{renderRows()}</Table>
   );
 };
 

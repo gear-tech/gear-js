@@ -3,7 +3,7 @@ import { Checkbox, FileInput, Input, Textarea } from '@gear-js/ui';
 import { useAlert } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 import { isHex } from '@polkadot/util';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 
 import { FileTypes } from 'shared/config';
@@ -34,20 +34,22 @@ const UploadMetadata = ({ metadata, isInputDisabled, isLoading, onReset, onUploa
   const resetMetaFile = () => setMetaFile(undefined);
   const toggleManualInput = () => setIsManualInput((prevValue) => !prevValue);
 
-  const renderTypes = (meta: ProgramMetadata) => {
-    const types = getNamedTypes(meta, (message) => alert.error(message));
-    const registryTypes = meta.getAllTypes();
+  // useMemo to prevent excessive error alerts
+  const namedTypeEntries = useMemo(() => {
+    if (!metadata) return [];
 
-    return (
-      <>
-        {Object.entries(types).map(([key, value]) => (
-          <Input key={key} label={key} direction="y" value={JSON.stringify(value)} block readOnly />
-        ))}
+    const types = getNamedTypes(metadata, (message) => alert.error(message));
 
-        <Textarea label="types" direction="y" value={getPreformattedText(registryTypes)} block readOnly />
-      </>
-    );
-  };
+    return Object.entries(types);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [metadata]);
+
+  const registryTypes = useMemo(() => metadata?.getAllTypes(), [metadata]);
+
+  const renderTypes = () =>
+    namedTypeEntries.map(([key, value]) => (
+      <Input key={key} label={key} direction="y" value={JSON.stringify(value)} block readOnly />
+    ));
 
   useEffect(() => {
     if (!metaFile) return onReset();
@@ -109,7 +111,11 @@ const UploadMetadata = ({ metadata, isInputDisabled, isLoading, onReset, onUploa
         </>
       )}
 
-      {metadata && renderTypes(metadata)}
+      {renderTypes()}
+
+      {registryTypes && (
+        <Textarea label="types" direction="y" value={getPreformattedText(registryTypes)} block readOnly />
+      )}
     </Box>
   );
 };
