@@ -9,7 +9,23 @@ import { TypeStructure } from '../types';
 
 const LOOKUP_REGEXP = /\bLookup\d+\b/g;
 const DIGITS_REGEXP = /\d+/;
-const OPTION_REGEXP = /^Option<[\w\][;\d]+>$/;
+const OPTION_REGEXP = /^Option<[\w\][;\d<>, ]+>$/;
+
+function isOption(typeName: string, typeDef: Si1TypeDef): boolean {
+  if (!typeDef.isVariant) {
+    return false;
+  }
+  if (!OPTION_REGEXP.test(typeName)) {
+    return false;
+  }
+  if (
+    typeDef.asVariant.variants.length !== 2 ||
+    typeDef.asVariant.variants.filter((v) => v.name.eq('Some') || v.name.eq('None')).length !== 2
+  ) {
+    return false;
+  }
+  return true;
+}
 
 export class GearMetadata {
   private registry: Registry;
@@ -189,7 +205,7 @@ export class GearMetadata {
       return additionalFields
         ? {
             name,
-            kind: this.isOption(name, def) ? 'option' : 'variant',
+            kind: isOption(name, def) ? 'option' : 'variant',
             type: _variants,
           }
         : { _variants };
@@ -253,21 +269,5 @@ export class GearMetadata {
       }
     }
     return null;
-  }
-
-  private isOption(typeName: string, typeDef: Si1TypeDef) {
-    if (!typeDef.isVariant) {
-      return false;
-    }
-    if (!OPTION_REGEXP.test(typeName)) {
-      return false;
-    }
-    if (
-      typeDef.asVariant.variants.length !== 2 ||
-      typeDef.asVariant.variants.filter((v) => v.name.eq('Some') || v.name.eq('None')).length !== 2
-    ) {
-      return false;
-    }
-    return true;
   }
 }
