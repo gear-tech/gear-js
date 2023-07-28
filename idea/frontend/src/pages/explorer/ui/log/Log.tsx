@@ -29,7 +29,7 @@ const Log = ({ data }: Props) => {
   const formattedPayload = payload.toHuman();
   const isFormattedPayloadHex = isHex(formattedPayload);
 
-  const { program, metadata } = useProgram(isFormattedPayloadHex ? source.toString() : undefined);
+  const { program, metadata } = useProgram(isFormattedPayloadHex ? source.toHex() : undefined);
 
   const handlePayloadDecoding = (typeKey: TypeKey, errorCallback: () => void) => {
     if (metadata) {

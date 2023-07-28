@@ -5,7 +5,7 @@ import { useAlert } from '@gear-js/react-hooks';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { fetchCodeMetadata } from 'api';
+import { fetchMetadata } from 'api';
 import { useChain, useProgramActions } from 'hooks';
 import { Subheader } from 'shared/ui/subheader';
 import { UploadMetadata } from 'features/uploadMetadata';
@@ -68,7 +68,7 @@ const InitializeProgram = () => {
   useEffect(() => {
     if (isDevChain) return setIsUploadedMetaReady(true);
 
-    fetchCodeMetadata(codeId)
+    fetchMetadata({ codeHash: codeId as HexString })
       .then(({ result }) => setUploadedMetaHex(result.hex))
       .catch(({ code, message }: RPCError) => code !== RPCErrorCode.MetadataNotFound && alert.error(message))
       .finally(() => setIsUploadedMetaReady(true));

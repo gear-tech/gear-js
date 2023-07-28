@@ -14,10 +14,10 @@ const useMetadataUpload = () => {
   const { isDevChain } = useChain();
 
   const upload = async (params: ParamsToUploadMeta) => {
-    const { metaHex, programId, reject, resolve } = params;
+    const { metaHex, codeHash, reject, resolve } = params;
 
     try {
-      const { error } = await addMetadata({ metaHex, id: programId as HexString });
+      const { error } = await addMetadata({ hex: metaHex, codeHash: codeHash as HexString });
 
       if (error) throw new Error(error.message);
 
@@ -34,13 +34,14 @@ const useMetadataUpload = () => {
   };
 
   const uploadMetadata = async (params: ParamsToUploadMeta) => {
-    const { name, metaHex, programId, reject, resolve } = params;
+    const { name, metaHex, codeHash, reject, resolve } = params;
 
     try {
       if (!account) throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
 
       if (isDevChain) {
-        await uploadLocalMetadata(programId, metaHex, name);
+        // TODO: local meta
+        await uploadLocalMetadata(codeHash, metaHex, name);
 
         alert.success('Metadata added to the localDB successfully');
 
@@ -49,7 +50,7 @@ const useMetadataUpload = () => {
         return;
       }
 
-      upload({ programId, metaHex, reject, resolve });
+      upload({ codeHash, metaHex, reject, resolve });
     } catch (error) {
       const message = (error as Error).message;
 

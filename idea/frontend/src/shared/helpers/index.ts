@@ -7,7 +7,6 @@ import isString from 'lodash.isstring';
 
 import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from 'shared/config';
 
-import { IMeta } from 'entities/metadata';
 import { isAndroid, isIOS } from '@react-aria/utils';
 import { isHexValid, isExists } from './form';
 
@@ -123,7 +122,7 @@ const getValidation =
     }
   };
 
-const isState = (meta: IMeta | ProgramMetadata | undefined | null) =>
+const isState = (meta: ProgramMetadata | undefined | null) =>
   meta?.types.state !== undefined && meta?.types.state !== null;
 
 const disableScroll = () => document.body.classList.add('noOverflow');

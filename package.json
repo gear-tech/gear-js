@@ -7,8 +7,7 @@
     "build:api-gateway": "yarn workspace @gear-js/api-gateway build",
     "build:indexer": "yarn workspace @gear-js/indexer build",
     "build:meta-storage": "yarn workspace @gear-js/meta-storage build",
-    "build:ui": "yarn workspace @gear-js/ui build",
-    "build:frontend": "yarn build:ui && yarn workspace @gear-js/frontend build",
+    "build:frontend": "yarn workspace @gear-js/frontend build",
     "build:test-balance": "yarn workspace @gear-js/test-balance build",
     "build:wasm-compiler": "yarn workspace @gear-js/wasm-compiler build",
     "test:frontend": "yarn workspace @gear-js/frontend test",
@@ -23,8 +22,7 @@
     "lint-staged": "12.5.0"
   },
   "workspaces": [
-    "idea/*",
-    "utils/gear-ui"
+    "idea/*"
   ],
   "lint-staged": {
     "api/**/*.{js,ts}": "cd api && yarn lint:fix",

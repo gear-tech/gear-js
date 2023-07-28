@@ -14,7 +14,7 @@ const Message = () => {
   const programId = message?.program?.id;
   const isProgram = !!programId;
 
-  const { metadata, isLoading: isProgramLoading } = useProgram(programId, true);
+  const { metadata, isLoading: isProgramLoading } = useProgram(programId);
 
   return (
     <div>

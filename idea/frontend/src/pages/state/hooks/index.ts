@@ -28,16 +28,17 @@ const useStateType = () => {
   return { stateType: type, isFullState: isFull, isWasmState: isWasm, isStateTypeSelection: isSelection };
 };
 
-const useMetadata = (programId: HexString) => {
+const useMetadata = (hash: HexString) => {
   const alert = useAlert();
   const { isDevChain } = useChain();
 
   const [metadata, setMetadata] = useState<ProgramMetadata>();
 
   useEffect(() => {
-    const getMetadata = isDevChain ? getLocalProgramMeta : fetchMetadata;
+    // TODO: local meta
+    // const getMetadata = isDevChain ? getLocalProgramMeta : fetchMetadata;
 
-    getMetadata(programId)
+    fetchMetadata({ hash })
       .then(({ result }) => setMetadata(getProgramMetadata(result.hex)))
       .catch(({ message }: Error) => alert.error(message));
 

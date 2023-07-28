@@ -4,7 +4,7 @@ import { OperationCallbacks } from 'entities/hooks';
 
 type ParamsToUploadMeta = Partial<OperationCallbacks> & {
   name?: string;
-  programId: string;
+  codeHash: string;
   metaHex: HexString;
 };
 

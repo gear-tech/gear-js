@@ -1,27 +1,22 @@
-import { useEffect, useState, useMemo } from 'react';
-import { getProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata, getProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
+import { HexString } from '@polkadot/util/types';
+import { useEffect, useState } from 'react';
 
-import { fetchProgram, getLocalProgram } from 'api';
+import { fetchMetadata, fetchProgram, getLocalProgram } from 'api';
 import { IProgram } from 'entities/program';
 
-import { HexString } from '@polkadot/util/types';
 import { useChain } from './context';
 
-const useProgram = (id?: string, initLoading = false) => {
+const useProgram = (id: HexString | undefined) => {
   const alert = useAlert();
 
   const { isDevChain } = useChain();
   const getProgram = isDevChain ? getLocalProgram : fetchProgram;
 
   const [program, setProgram] = useState<IProgram>();
-  const [isLoading, setIsLoading] = useState(initLoading);
-
-  const metadata = useMemo(() => {
-    const { hex } = program?.meta || {};
-
-    if (hex) return getProgramMetadata(hex);
-  }, [program]);
+  const [metadata, setMetadata] = useState<ProgramMetadata>();
+  const [isLoading, setIsLoading] = useState(true);
 
   const updateMeta = (metaHex: HexString, programName: string) =>
     setProgram((prevProgram) => {
@@ -33,16 +28,28 @@ const useProgram = (id?: string, initLoading = false) => {
     });
 
   useEffect(() => {
-    if (id) {
-      setIsLoading(true);
+    if (!id) return;
 
-      getProgram(id)
-        .then(({ result }) => setProgram(result))
-        .catch((err) => alert.error(err.message))
-        .finally(() => setIsLoading(false));
-    }
+    setIsLoading(true);
+
+    getProgram(id)
+      .then(({ result }) => setProgram(result))
+      .catch(({ message }: Error) => alert.error(message));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  useEffect(() => {
+    if (!program) return;
+    if (!program.metahash) return setIsLoading(false);
+
+    fetchMetadata({ hash: program.metahash })
+      .then(({ result }) => getProgramMetadata(result.hex))
+      .then((result) => setMetadata(result))
+      .catch(({ message }: Error) => alert.error(message))
+      .finally(() => setIsLoading(false));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [program]);
 
   return { program, metadata, isLoading, updateMeta };
 };

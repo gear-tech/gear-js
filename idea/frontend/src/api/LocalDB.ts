@@ -18,10 +18,11 @@ const getLocalProgram = (id: string) =>
     return Promise.reject(new Error('Program not found'));
   });
 
-const getLocalProgramMeta = (id: string) =>
+const getLocalProgramMeta = (id: HexString) =>
   PROGRAMS_LOCAL_FORAGE.getItem<IProgram>(id).then((response) => {
-    if (response?.meta) {
-      return { result: response.meta };
+    // TODO: local meta
+    if (response?.metahash) {
+      return { result: response.metahash };
     }
 
     return Promise.reject(new Error('Metadata not found'));

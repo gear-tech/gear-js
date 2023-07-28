@@ -4,7 +4,7 @@ import { HexString } from '@polkadot/util/types';
 import { useState, useEffect } from 'react';
 import { generatePath, useLocation } from 'react-router-dom';
 
-import { fetchCodeMetadata } from 'api';
+import { fetchMetadata } from 'api';
 import { readFileAsync } from 'shared/helpers';
 import { RPCError, RPCErrorCode } from 'shared/services/rpcService';
 import { CustomLink } from 'shared/ui/customLink';
@@ -99,9 +99,9 @@ const useMetaOnUpload = (isCode?: boolean) => {
 
     setIsUploadedMetaReady(false);
 
-    const codeId = generateCodeHash(optBuffer);
+    const codeHash = generateCodeHash(optBuffer);
 
-    fetchCodeMetadata(codeId)
+    fetchMetadata({ codeHash })
       .then(({ result }) => setUploadedMetadata(result.hex))
       .catch(({ code, message }: RPCError) => {
         if (code !== RPCErrorCode.MetadataNotFound) alert.error(message);

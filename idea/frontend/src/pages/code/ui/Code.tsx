@@ -5,7 +5,7 @@ import { HexString } from '@polkadot/util/types';
 import { useEffect, useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
 
-import { addCodeMetadata, addCodeName, getCode } from 'api';
+import { addMetadata, addCodeName, getCode } from 'api';
 import { useChain, useModal } from 'hooks';
 import { BackButton } from 'shared/ui/backButton';
 import { absoluteRoutes } from 'shared/config';
@@ -39,7 +39,7 @@ const Code = () => {
     const id = codeId;
 
     addCodeName({ id, name })
-      .then(() => addCodeMetadata({ id, metaHex }))
+      .then(() => addMetadata({ codeHash: id, hex: metaHex }))
       .then(() => {
         alert.success('Metadata for code uploaded successfully');
         closeModal();

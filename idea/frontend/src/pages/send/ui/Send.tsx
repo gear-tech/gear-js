@@ -24,7 +24,7 @@ const Send = () => {
   const [message] = mailboxItem || [];
 
   const programSource = isReply ? message?.source : id;
-  const { metadata, isLoading } = useProgram(programSource, true);
+  const { metadata, isLoading } = useProgram(programSource);
 
   return (
     <>
