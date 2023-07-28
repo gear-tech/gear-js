@@ -25,7 +25,7 @@ const MAX_GAS_LIMIT = 250000000000;
 function useSendMessage(
   destination: HexString,
   metadata: ProgramMetadata | undefined,
-  { isMaxGasLimit = true, disableAlerts }: UseSendMessageOptions = {},
+  { isMaxGasLimit = false, disableAlerts }: UseSendMessageOptions = {},
 ) {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
