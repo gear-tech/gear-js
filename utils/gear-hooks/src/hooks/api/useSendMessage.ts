@@ -89,7 +89,11 @@ function useSendMessage(
           api.message.signAndSend(address, { signer }, (result) => handleStatus(result, alertId, onSuccess, onError)),
         )
         .catch(({ message }: Error) => {
-          if (alertId) alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
+          if (alertId) {
+            alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
+          } else {
+            alert.error(message);
+          }
 
           onError && onError();
         });
