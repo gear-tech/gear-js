@@ -25,7 +25,7 @@ const MAX_GAS_LIMIT = 250000000000;
 function useSendMessage(
   destination: HexString,
   metadata: ProgramMetadata | undefined,
-  { isMaxGasLimit = true, disableAlerts }: UseSendMessageOptions = {},
+  { isMaxGasLimit = false, disableAlerts }: UseSendMessageOptions = {},
 ) {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
@@ -89,7 +89,11 @@ function useSendMessage(
           api.message.signAndSend(address, { signer }, (result) => handleStatus(result, alertId, onSuccess, onError)),
         )
         .catch(({ message }: Error) => {
-          if (alertId) alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
+          if (alertId) {
+            alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
+          } else {
+            alert.error(message);
+          }
 
           onError && onError();
         });
