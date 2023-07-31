@@ -1,22 +1,20 @@
-enum RabbitMQueues {
+export enum RMQQueues {
   GENESISES = 'genesises',
   REPLIES = 'replies',
 }
 
-enum RabbitMQExchanges {
+export enum RMQExchanges {
   DIRECT_EX = 'direct.ex',
   TOPIC_EX = 'topic.ex',
 }
 
-enum RMQServices {
+export enum RMQServices {
   INDEXER = 'indxr',
   TEST_BALANCE = 'tb',
   META_STORAGE = 'meta',
 }
 
-enum RMQServiceActions {
+export enum RMQServiceActions {
   ADD = 'add',
   DELETE = 'delete',
 }
-
-export { RabbitMQueues, RabbitMQExchanges, RMQServiceActions, RMQServices };

@@ -19,6 +19,10 @@ export enum INDEXER_METHODS {
   STATE_GET = 'state.get',
 }
 
+export enum INDEXER_INTERNAL_METHODS {
+  META_HAS_STATE = 'meta.hasState',
+}
+
 export enum META_STORAGE_METHODS {
   META_GET = 'meta.get',
   META_ADD = 'meta.add',

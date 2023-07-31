@@ -1,5 +1,5 @@
 import { Channel, connect, Connection } from 'amqplib';
-import { RabbitMQExchanges, RabbitMQueues, RMQServiceActions, RMQServices } from '@gear-js/common';
+import { RMQExchanges, RMQQueues, RMQServiceActions, RMQServices } from '@gear-js/common';
 
 import config from '../config/configuration';
 import { gearService } from '../gear';
@@ -13,8 +13,8 @@ export async function initAMQ(): Promise<void> {
   connectionAMQP = await connectAMQP(config.rabbitmq.url);
   mainChannelAMQP = await connectionAMQP.createChannel();
   topicChannelAMQP = await connectionAMQP.createChannel();
-  const directExchange = RabbitMQExchanges.DIRECT_EX;
-  const topicExchange = RabbitMQExchanges.TOPIC_EX;
+  const directExchange = RMQExchanges.DIRECT_EX;
+  const topicExchange = RMQExchanges.TOPIC_EX;
   const genesis = gearService.getGenesisHash();
   const directExchangeType = 'direct';
   const topicExchangeType = 'topic';
@@ -22,7 +22,7 @@ export async function initAMQ(): Promise<void> {
 
   //send genesis
   const messageBuff = JSON.stringify({ service: RMQServices.TEST_BALANCE, action: RMQServiceActions.ADD, genesis });
-  mainChannelAMQP.publish(directExchange, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
+  mainChannelAMQP.publish(directExchange, RMQQueues.GENESISES, Buffer.from(messageBuff));
 
   await mainChannelAMQP.assertExchange(directExchange, directExchangeType);
   await mainChannelAMQP.assertExchange(topicExchange, topicExchangeType);

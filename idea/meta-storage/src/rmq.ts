@@ -1,11 +1,12 @@
 import { Channel, connect, Connection } from 'amqplib';
 import {
   FormResponse,
-  RabbitMQExchanges,
-  RabbitMQueues,
   RMQServices,
   META_STORAGE_METHODS,
   META_STORAGE_INTERNAL_METHODS,
+  RMQExchanges,
+  RMQQueues,
+  INDEXER_INTERNAL_METHODS,
 } from '@gear-js/common';
 
 import { logger } from './logger';
@@ -31,7 +32,7 @@ export class RMQService {
     try {
       this.channel = await this.connection.createChannel();
 
-      const directExchange = RabbitMQExchanges.DIRECT_EX;
+      const directExchange = RMQExchanges.DIRECT_EX;
       const directExchangeType = 'direct';
 
       await this.channel.assertExchange(directExchange, directExchangeType);
@@ -41,7 +42,8 @@ export class RMQService {
         autoDelete: false,
       });
 
-      await this.channel.bindQueue(RMQServices.META_STORAGE, RabbitMQExchanges.DIRECT_EX, RMQServices.META_STORAGE);
+      await this.channel.assertExchange(RMQExchanges.TOPIC_EX, 'topic', { durable: true });
+      await this.channel.bindQueue(RMQServices.META_STORAGE, RMQExchanges.DIRECT_EX, RMQServices.META_STORAGE);
 
       await this.directMsgConsumer(RMQServices.META_STORAGE);
 
@@ -56,14 +58,19 @@ export class RMQService {
   }
 
   private sendMsg(
-    exchange: RabbitMQExchanges,
-    queue: RabbitMQueues,
+    exchange: RMQExchanges,
+    queue: RMQQueues,
     params: any,
     correlationId?: string,
     method?: string,
   ): void {
     const messageBuff = JSON.stringify(params);
     this.channel.publish(exchange, queue, Buffer.from(messageBuff), { correlationId, headers: { method } });
+  }
+
+  private sendMsgToIndxrTopic(params: any, method: string) {
+    const msgBuf = Buffer.from(JSON.stringify(params));
+    this.channel.publish(RMQExchanges.TOPIC_EX, `${RMQServices.INDEXER}.meta`, msgBuf, { headers: { method } });
   }
 
   private async directMsgConsumer(queue: string): Promise<void> {
@@ -81,7 +88,7 @@ export class RMQService {
 
           const result = await this.handleIncomingMsg(method, params);
 
-          this.sendMsg(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.REPLIES, result, correlationId);
+          this.sendMsg(RMQExchanges.DIRECT_EX, RMQQueues.REPLIES, result, correlationId);
         },
         { noAck: true },
       );
@@ -91,7 +98,21 @@ export class RMQService {
   }
 
   @FormResponse
-  private async handleIncomingMsg(method: META_STORAGE_METHODS, params: any): Promise<any> {
-    return this.methods[method](params);
+  private async handleIncomingMsg(
+    method: META_STORAGE_METHODS | META_STORAGE_INTERNAL_METHODS,
+    params: any,
+  ): Promise<any> {
+    const result = await this.methods[method](params);
+
+    if (META_STORAGE_METHODS.META_ADD === method) {
+      if (result.hasState === true) {
+        this.sendMsgToIndxrTopic([{ hash: result.hash }], INDEXER_INTERNAL_METHODS.META_HAS_STATE);
+      }
+    } else if (META_STORAGE_INTERNAL_METHODS.META_HASH_ADD === method) {
+      if (result.length > 0) {
+        this.sendMsgToIndxrTopic(result, INDEXER_INTERNAL_METHODS.META_HAS_STATE);
+      }
+    }
+    return result;
   }
 }

@@ -43,4 +43,7 @@ export class Program extends BaseEntity implements IProgram {
 
   @OneToMany(() => Message, (message) => message.program)
   public messages: Message[];
+
+  @Column({ default: false })
+  public hasState: boolean;
 }

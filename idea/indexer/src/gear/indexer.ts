@@ -35,7 +35,7 @@ import { Block, Code, Message, Program } from '../database/entities';
 import { BlockService, CodeService, MessageService, ProgramService, StatusService } from '../services';
 import { TempState } from './temp-state';
 import config from '../config';
-import { RMQService } from '../rabbitmq';
+import { RMQService } from '../rmq';
 
 export class GearIndexer {
   public api: GearApi;
@@ -316,6 +316,7 @@ export class GearIndexer {
           genesis: this.genesis,
           metahash: await this.getMeta(programId, code),
           status: ProgramStatus.PROGRAM_SET,
+          hasState: code.hasState,
         }),
       );
     }

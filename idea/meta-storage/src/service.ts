@@ -4,6 +4,7 @@ import { AddMetaDetailsParams, AddMetahashParams, GetMetaParams } from '@gear-js
 import { Code, Meta, AppDataSource } from './database';
 import { InvalidParamsError, MetaNotFoundError } from './util/errors';
 import { validateMetaHex } from './util/validate';
+import { getProgramMetadata } from '@gear-js/api';
 
 export class MetaService {
   private metaRepo: Repository<Meta>;
@@ -14,7 +15,7 @@ export class MetaService {
     this.codeRepo = AppDataSource.getRepository(Code);
   }
 
-  async addMeta(params: AddMetahashParams) {
+  async addMeta(params: AddMetahashParams): Promise<string[]> {
     const metaArray: Meta[] = [];
     const codeArray: Code[] = [];
 
@@ -31,6 +32,8 @@ export class MetaService {
 
     await this.metaRepo.save(metaArray);
     await this.codeRepo.save(codeArray);
+
+    return metaArray.filter(({ hasState }) => hasState === true).map(({ hash }) => hash);
   }
 
   async addMetaDetails(params: AddMetaDetailsParams): Promise<Omit<Meta, 'codes'>> {
@@ -45,23 +48,28 @@ export class MetaService {
     }
 
     if (meta.hex) {
-      return { hex: meta.hex, hash: meta.hash };
+      return { hex: meta.hex, hash: meta.hash, hasState: meta.hasState };
     }
 
     validateMetaHex(params.hex, meta.hash);
 
     meta.hex = params.hex;
 
+    const metadata = getProgramMetadata(meta.hex);
+    if (metadata.types.state) {
+      meta.hasState = true;
+    }
+
     await this.metaRepo.save(meta);
 
-    return { hex: meta.hex, hash: meta.hash };
+    return { hex: meta.hex, hash: meta.hash, hasState: meta.hasState };
   }
 
-  async get({ hash, codeHash }: GetMetaParams): Promise<Meta> {
+  async get({ hash, codeHash }: GetMetaParams, internal = false): Promise<Partial<Meta>> {
     let meta: Meta;
 
     if (hash) {
-      meta = await this.metaRepo.findOne({ where: { hash }, select: { hash: true, hex: true } });
+      meta = await this.metaRepo.findOne({ where: { hash } });
     } else if (codeHash) {
       const code = await this.codeRepo.findOne({ where: { id: codeHash }, relations: { meta: true } });
 
@@ -76,6 +84,11 @@ export class MetaService {
       throw new MetaNotFoundError();
     }
 
-    return meta;
+    return internal ? meta : { hash: meta.hash, hex: meta.hex };
+  }
+
+  async getAllWithState(): Promise<string[]> {
+    const meta = await this.metaRepo.find({ where: { hasState: true }, select: { hash: true } });
+    return meta.map((m) => m.hash);
   }
 }

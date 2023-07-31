@@ -1,4 +1,4 @@
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import {
   AddProgramNameParams,
   FindProgramParams,
@@ -9,14 +9,16 @@ import {
 } from '@gear-js/common';
 
 import { ProgramNotFound } from '../common/errors';
-import { Program } from '../database/entities';
+import { Code, Program } from '../database/entities';
 import { PAGINATION_LIMIT, constructQueryBuilder } from '../common';
 
 export class ProgramService {
   private repo: Repository<Program>;
+  private codeRepo: Repository<Code>;
 
   constructor(dataSource: DataSource) {
     this.repo = dataSource.getRepository(Program);
+    this.codeRepo = dataSource.getRepository(Code);
   }
 
   public async get({ id, genesis }: FindProgramParams): Promise<Program> {
@@ -34,7 +36,7 @@ export class ProgramService {
   public async getWithMessages({ id, genesis }: FindProgramParams): Promise<Program> {
     const program = await this.repo.findOne({
       where: { id, genesis },
-      relations: ['code', 'messages'],
+      relations: ['code'],
     });
 
     if (!program) {
@@ -110,5 +112,23 @@ export class ProgramService {
       return this.repo.save(program);
     }
     return program;
+  }
+
+  public async hasState(hashes: Array<string>) {
+    const [programs, codes] = await Promise.all([
+      this.repo.find({ where: { metahash: In(hashes), hasState: false } }),
+      this.codeRepo.find({ where: { metahash: In(hashes), hasState: false } }),
+    ]);
+
+    for (const p of programs) {
+      p.hasState = true;
+    }
+
+    for (const c of codes) {
+      c.hasState = true;
+    }
+
+    await this.codeRepo.save(codes);
+    await this.repo.save(programs);
   }
 }
