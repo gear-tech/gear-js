@@ -17,7 +17,7 @@ jobs:
   test:
     if: github.event_name == 'pull_request'
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env: 
       RUSTUP_HOME: /tmp/rustup_home
     steps:
@@ -93,7 +93,7 @@ jobs:
   publish-to-npm:
     if: github.event_name == 'push'
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
 
