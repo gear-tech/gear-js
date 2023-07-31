@@ -211,6 +211,19 @@ describe('Meta storage methods', () => {
     }
     // TODO: request meta by codeHash
   });
+
+  test('check that *hasState* field is set to true', async () => {
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000);
+    });
+    for (const id of Object.keys(prepared.programs)) {
+      const program = prepared.programs[id] as IPreparedProgram;
+
+      if (program.spec['pathToMetaTxt']) {
+        expect(await getProgramData(genesis, program.id, true)).toBeTruthy();
+      }
+    }
+  });
 });
 
 describe('Test balance methods', () => {

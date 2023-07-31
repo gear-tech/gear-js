@@ -41,7 +41,7 @@ export class MetaService {
       throw new InvalidParamsError();
     }
 
-    const meta = await this.get(params);
+    const meta = await this.get(params, true);
 
     if (!meta) {
       throw new MetaNotFoundError();

@@ -106,8 +106,9 @@ export class RMQService {
 
     if (META_STORAGE_METHODS.META_ADD === method) {
       if (result.hasState === true) {
-        this.sendMsgToIndxrTopic([{ hash: result.hash }], INDEXER_INTERNAL_METHODS.META_HAS_STATE);
+        this.sendMsgToIndxrTopic([result.hash], INDEXER_INTERNAL_METHODS.META_HAS_STATE);
       }
+      return { hash: result.hash, hex: result.hex };
     } else if (META_STORAGE_INTERNAL_METHODS.META_HASH_ADD === method) {
       if (result.length > 0) {
         this.sendMsgToIndxrTopic(result, INDEXER_INTERNAL_METHODS.META_HAS_STATE);

@@ -33,18 +33,6 @@ export class ProgramService {
     return program;
   }
 
-  public async getWithMessages({ id, genesis }: FindProgramParams): Promise<Program> {
-    const program = await this.repo.findOne({
-      where: { id, genesis },
-      relations: ['code'],
-    });
-
-    if (!program) {
-      throw new ProgramNotFound();
-    }
-    return program;
-  }
-
   public async getAllPrograms({
     genesis,
     query,
@@ -119,7 +107,6 @@ export class ProgramService {
       this.repo.find({ where: { metahash: In(hashes), hasState: false } }),
       this.codeRepo.find({ where: { metahash: In(hashes), hasState: false } }),
     ]);
-
     for (const p of programs) {
       p.hasState = true;
     }

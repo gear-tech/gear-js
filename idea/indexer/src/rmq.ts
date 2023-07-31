@@ -36,7 +36,7 @@ export class RMQService {
       [INDEXER_METHODS.MESSAGE_ALL]: this.messageService.getMany.bind(this.messageService),
       [INDEXER_METHODS.MESSAGE_DATA]: this.messageService.get.bind(this.messageService),
       [INDEXER_METHODS.PROGRAM_ALL]: this.programService.getAllPrograms.bind(this.programService),
-      [INDEXER_METHODS.PROGRAM_DATA]: this.programService.getWithMessages.bind(this.programService),
+      [INDEXER_METHODS.PROGRAM_DATA]: this.programService.get.bind(this.programService),
       [INDEXER_METHODS.PROGRAM_NAME_ADD]: this.programService.setName.bind(this.programService),
       [INDEXER_METHODS.PROGRAM_STATE_ALL]: this.stateService.listByProgramId.bind(this.stateService),
       [INDEXER_METHODS.PROGRAM_STATE_ADD]: this.stateService.create.bind(this.stateService),
@@ -67,6 +67,16 @@ export class RMQService {
 
       await this.mainChannel.assertExchange(directExchange, directExchangeType);
       await this.topicChannel.assertExchange(topicExchange, 'topic');
+      await this.topicChannel.assertQueue(`${RMQServices.INDEXER}.meta`, {
+        durable: true,
+        exclusive: false,
+        autoDelete: false,
+      });
+      await this.topicChannel.bindQueue(
+        `${RMQServices.INDEXER}.meta`,
+        RMQExchanges.TOPIC_EX,
+        `${RMQServices.INDEXER}.meta`,
+      );
     } catch (error) {
       console.log(error);
       throw error;
@@ -96,6 +106,7 @@ export class RMQService {
     });
     await this.mainChannel.bindQueue(genesisQ, RMQExchanges.DIRECT_EX, genesisQ);
     await this.topicChannel.bindQueue(topicQ, RMQExchanges.TOPIC_EX, `${RMQServices.INDEXER}.genesises`);
+
     await this.directMsgConsumer(genesisQ);
     await this.metaMsgConsumer();
     await this.genesisesMsgConsumer(topicQ, genesis);
@@ -120,6 +131,7 @@ export class RMQService {
 
           const { method } = msg.properties.headers;
           const params = JSON.parse(msg.content.toString());
+          console.log(method, params);
           await this.handleIncomingMsg(method, params);
         },
         { noAck: true },
