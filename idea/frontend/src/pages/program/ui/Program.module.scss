@@ -16,7 +16,6 @@
 
   .programName {
     @include fadeAppear();
-
     flex: 1 1;
     overflow-wrap: anywhere;
     color: $textColor;
@@ -29,10 +28,8 @@
 
   .links {
     @include childrenMargin($marginMedium, right);
-
     white-space: nowrap;
-    margin-left: $marginMedium;
-    justify-self: flex-end;
+    margin-left: auto;
 
     .fixWidth {
       min-width: toRem(180);

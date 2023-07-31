@@ -1,7 +1,6 @@
 import { HexString } from '@polkadot/util/types';
 import { Button } from '@gear-js/ui';
 import { generatePath, useParams } from 'react-router-dom';
-import clsx from 'clsx';
 
 import { useMetadataUpload, useModal, useProgram } from 'hooks';
 import { ProgramMessages } from 'widgets/programMessages';
@@ -13,6 +12,7 @@ import { UILink } from 'shared/ui/uiLink';
 import { ReactComponent as SendSVG } from 'shared/assets/images/actions/send.svg';
 import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg';
 import { ReactComponent as AddMetaSVG } from 'shared/assets/images/actions/addMeta.svg';
+import { useMetadata } from 'features/metadata';
 
 import { ProgramDetails } from './programDetails';
 import { MetadataDetails } from './metadataDetails';
@@ -21,7 +21,8 @@ import styles from './Program.module.scss';
 const Program = () => {
   const { programId } = useParams() as PathParams;
 
-  const { program, metadata, isLoading, updateMeta } = useProgram(programId);
+  const { program, isProgramReady, updateMeta } = useProgram(programId);
+  const { metadata, isMetadataReady } = useMetadata(programId);
   const { messages, code } = program || {};
   const codeHash = code?.id;
 
@@ -47,44 +48,54 @@ const Program = () => {
 
   return (
     <div>
-      <header className={clsx(styles.header, isLoading && styles.loading)}>
-        {!isLoading && <h2 className={styles.programName}>{getShortName(program?.name || '', 36)}</h2>}
+      <header className={styles.header}>
+        {program && <h2 className={styles.programName}>{getShortName(program.name)}</h2>}
 
         <div className={styles.links}>
-          <UILink
-            to={generatePath(absoluteRoutes.sendMessage, { programId })}
-            icon={SendSVG}
-            text="Send Message"
-            color="secondary"
-            className={styles.fixWidth}
-          />
-
-          {isState(metadata) && (
+          {isProgramReady && (
             <UILink
-              to={generatePath(routes.state, { programId })}
-              icon={ReadSVG}
-              text="Read State"
+              to={generatePath(absoluteRoutes.sendMessage, { programId })}
+              icon={SendSVG}
+              text="Send Message"
               color="secondary"
               className={styles.fixWidth}
             />
           )}
 
-          {!isLoading && !metadata && (
-            <Button text="Add metadata" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
+          {isMetadataReady && (
+            <>
+              {isState(metadata) && (
+                <UILink
+                  to={generatePath(routes.state, { programId })}
+                  icon={ReadSVG}
+                  text="Read State"
+                  color="secondary"
+                  className={styles.fixWidth}
+                />
+              )}
+
+              {!metadata && (
+                <Button text="Add metadata" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
+              )}
+            </>
           )}
         </div>
       </header>
 
       <div className={styles.content}>
         <div className={styles.leftSide}>
-          <ProgramDetails program={program} isLoading={isLoading} />
+          <ProgramDetails program={program} isLoading={!isProgramReady} />
 
           <div>
             <Subheader title="Metadata" />
-            <MetadataDetails metadata={metadata} isLoading={isLoading} />
+            <MetadataDetails metadata={metadata} isLoading={!isMetadataReady} />
           </div>
         </div>
-        <ProgramMessages programId={programId as HexString} messages={sortedMessages || []} isLoading={isLoading} />
+        <ProgramMessages
+          programId={programId as HexString}
+          messages={sortedMessages || []}
+          isLoading={!isProgramReady}
+        />
       </div>
     </div>
   );

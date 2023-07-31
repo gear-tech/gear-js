@@ -6,6 +6,7 @@ import { isHex } from '@polkadot/util';
 
 import { PreformattedBlock } from 'shared/ui/preformattedBlock';
 import { useProgram } from 'hooks';
+import { useMetadata } from 'features/metadata';
 
 import styles from './Log.module.scss';
 
@@ -29,7 +30,8 @@ const Log = ({ data }: Props) => {
   const formattedPayload = payload.toHuman();
   const isFormattedPayloadHex = isHex(formattedPayload);
 
-  const { program, metadata } = useProgram(isFormattedPayloadHex ? source.toHex() : undefined);
+  const { program } = useProgram(isFormattedPayloadHex ? source.toHex() : undefined);
+  const { metadata } = useMetadata(isFormattedPayloadHex ? source.toHex() : undefined);
 
   const handlePayloadDecoding = (typeKey: TypeKey, errorCallback: () => void) => {
     if (metadata) {

@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useMailboxItem } from 'features/mailbox';
 import { MessageForm } from 'widgets/messageForm';
 import { useProgram } from 'hooks';
+import { useMetadata } from 'features/metadata';
 import styles from './Send.module.scss';
 
 type MessageParams = {
@@ -24,12 +25,13 @@ const Send = () => {
   const [message] = mailboxItem || [];
 
   const programSource = isReply ? message?.source : id;
-  const { metadata, isLoading } = useProgram(programSource);
+  const { program, isProgramReady } = useProgram(programSource);
+  const { metadata, isMetadataReady } = useMetadata(programSource);
 
   return (
     <>
       <h2 className={styles.heading}>{isReply ? 'Send Reply' : 'Send Message'}</h2>
-      <MessageForm id={id} isReply={isReply} metadata={metadata} isLoading={isLoading} />
+      <MessageForm id={id} isReply={isReply} metadata={metadata} isLoading={!isProgramReady} />
     </>
   );
 };

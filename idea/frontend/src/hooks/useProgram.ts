@@ -1,9 +1,9 @@
-import { ProgramMetadata, getProgramMetadata } from '@gear-js/api';
+import { getProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 import { useEffect, useState } from 'react';
 
-import { fetchMetadata, fetchProgram, getLocalProgram } from 'api';
+import { fetchProgram, getLocalProgram } from 'api';
 import { IProgram } from 'entities/program';
 
 import { useChain } from './context';
@@ -15,8 +15,8 @@ const useProgram = (id: HexString | undefined) => {
   const getProgram = isDevChain ? getLocalProgram : fetchProgram;
 
   const [program, setProgram] = useState<IProgram>();
-  const [metadata, setMetadata] = useState<ProgramMetadata>();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isProgramReady, setIsProgramReady] = useState(false);
+  // const [isLoading, setIsLoading] = useState(true);
 
   const updateMeta = (metaHex: HexString, programName: string) =>
     setProgram((prevProgram) => {
@@ -30,28 +30,14 @@ const useProgram = (id: HexString | undefined) => {
   useEffect(() => {
     if (!id) return;
 
-    setIsLoading(true);
-
     getProgram(id)
       .then(({ result }) => setProgram(result))
-      .catch(({ message }: Error) => alert.error(message));
+      .catch(({ message }: Error) => alert.error(message))
+      .finally(() => setIsProgramReady(true));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  useEffect(() => {
-    if (!program) return;
-    if (!program.metahash) return setIsLoading(false);
-
-    fetchMetadata({ hash: program.metahash })
-      .then(({ result }) => getProgramMetadata(result.hex))
-      .then((result) => setMetadata(result))
-      .catch(({ message }: Error) => alert.error(message))
-      .finally(() => setIsLoading(false));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [program]);
-
-  return { program, metadata, isLoading, updateMeta };
+  return { program, isProgramReady, updateMeta };
 };
 
 export { useProgram };
