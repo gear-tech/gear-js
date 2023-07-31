@@ -1,9 +1,9 @@
 import { waitReady } from '@polkadot/wasm-crypto';
 import { RMQServiceActions } from '@gear-js/common';
 
-import { changeStatus, runHealthcheckServer } from './healthcheck';
+import { changeStatus, runHealthcheckServer } from './healthcheck.server';
 import { AppDataSource } from './database';
-import { RMQService } from './rabbitmq';
+import { RMQService } from './rmq';
 import { BlockService } from './services';
 import { CodeService } from './services';
 import { MessageService } from './services';

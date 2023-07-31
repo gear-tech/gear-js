@@ -1,7 +1,7 @@
 import http from 'http';
 
-import config from '../config';
-import { logger } from '../common';
+import config from './config';
+import { logger } from './common';
 
 export const statuses = {
   rmq: false,

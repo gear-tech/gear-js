@@ -1,7 +1,7 @@
 import { waitReady } from '@polkadot/wasm-crypto';
 import { GearApi } from '@gear-js/api';
 
-import { changeStatus, runHealthcheckServer } from './healthcheck';
+import { changeStatus, runHealthcheckServer } from './healthcheck.server';
 import { AppDataSource } from './database';
 import { BlockService, StatusService } from './services';
 import { CodeService } from './services';
@@ -10,7 +10,7 @@ import { ProgramService } from './services';
 import { GearIndexer } from './gear';
 import config from './config';
 import { logger } from './common';
-import { RMQService } from './rabbitmq';
+import { RMQService } from './rmq';
 
 async function bootstrap() {
   runHealthcheckServer();

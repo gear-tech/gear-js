@@ -1,23 +1,24 @@
 import { Channel, connect, Connection } from 'amqplib';
 import {
   INDEXER_METHODS,
-  RabbitMQExchanges,
-  RabbitMQueues,
   RMQServiceActions,
   RMQServices,
   FormResponse,
   META_STORAGE_INTERNAL_METHODS,
+  RMQExchanges,
+  RMQQueues,
+  INDEXER_INTERNAL_METHODS,
 } from '@gear-js/common';
 
-import { logger } from '../common';
-import { BlockService, CodeService, MessageService, ProgramService, StateService } from '../services';
-import config from '../config';
+import { logger } from './common';
+import { BlockService, CodeService, MessageService, ProgramService, StateService } from './services';
+import config from './config';
 
 export class RMQService {
   private mainChannel: Channel;
   private topicChannel: Channel;
   private connection: Connection;
-  private methods: Record<INDEXER_METHODS, (params: any) => void>;
+  private methods: Record<INDEXER_METHODS | INDEXER_INTERNAL_METHODS, (params: any) => void>;
 
   constructor(
     private blockService?: BlockService,
@@ -35,11 +36,12 @@ export class RMQService {
       [INDEXER_METHODS.MESSAGE_ALL]: this.messageService.getMany.bind(this.messageService),
       [INDEXER_METHODS.MESSAGE_DATA]: this.messageService.get.bind(this.messageService),
       [INDEXER_METHODS.PROGRAM_ALL]: this.programService.getAllPrograms.bind(this.programService),
-      [INDEXER_METHODS.PROGRAM_DATA]: this.programService.getWithMessages.bind(this.programService),
+      [INDEXER_METHODS.PROGRAM_DATA]: this.programService.get.bind(this.programService),
       [INDEXER_METHODS.PROGRAM_NAME_ADD]: this.programService.setName.bind(this.programService),
       [INDEXER_METHODS.PROGRAM_STATE_ALL]: this.stateService.listByProgramId.bind(this.stateService),
       [INDEXER_METHODS.PROGRAM_STATE_ADD]: this.stateService.create.bind(this.stateService),
       [INDEXER_METHODS.STATE_GET]: this.stateService.get.bind(this.stateService),
+      [INDEXER_INTERNAL_METHODS.META_HAS_STATE]: this.programService.hasState.bind(this.programService),
     };
   }
 
@@ -59,12 +61,22 @@ export class RMQService {
       this.mainChannel = await this.connection.createChannel();
       this.topicChannel = await this.connection.createChannel();
 
-      const directExchange = RabbitMQExchanges.DIRECT_EX;
-      const topicExchange = RabbitMQExchanges.TOPIC_EX;
+      const directExchange = RMQExchanges.DIRECT_EX;
+      const topicExchange = RMQExchanges.TOPIC_EX;
       const directExchangeType = 'direct';
 
       await this.mainChannel.assertExchange(directExchange, directExchangeType);
       await this.topicChannel.assertExchange(topicExchange, 'topic');
+      await this.topicChannel.assertQueue(`${RMQServices.INDEXER}.meta`, {
+        durable: true,
+        exclusive: false,
+        autoDelete: false,
+      });
+      await this.topicChannel.bindQueue(
+        `${RMQServices.INDEXER}.meta`,
+        RMQExchanges.TOPIC_EX,
+        `${RMQServices.INDEXER}.meta`,
+      );
     } catch (error) {
       console.log(error);
       throw error;
@@ -74,8 +86,8 @@ export class RMQService {
   public async deleteGenesisQueue(genesis: string) {
     const routingKey = `${RMQServices.INDEXER}.${genesis}`;
     const messageBuff = JSON.stringify({ service: RMQServices.INDEXER, action: RMQServiceActions.DELETE, genesis });
-    await this.mainChannel.unbindQueue(routingKey, RabbitMQExchanges.DIRECT_EX, routingKey);
-    this.mainChannel.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
+    await this.mainChannel.unbindQueue(routingKey, RMQExchanges.DIRECT_EX, routingKey);
+    this.mainChannel.publish(RMQExchanges.DIRECT_EX, RMQQueues.GENESISES, Buffer.from(messageBuff));
   }
 
   public async addGenesisQueue(genesis: string) {
@@ -92,18 +104,41 @@ export class RMQService {
       exclusive: false,
       autoDelete: true,
     });
-    await this.mainChannel.bindQueue(genesisQ, RabbitMQExchanges.DIRECT_EX, genesisQ);
-    await this.topicChannel.bindQueue(topicQ, RabbitMQExchanges.TOPIC_EX, `${RMQServices.INDEXER}.genesises`);
+    await this.mainChannel.bindQueue(genesisQ, RMQExchanges.DIRECT_EX, genesisQ);
+    await this.topicChannel.bindQueue(topicQ, RMQExchanges.TOPIC_EX, `${RMQServices.INDEXER}.genesises`);
+
     await this.directMsgConsumer(genesisQ);
-    await this.topicMsgConsumer(topicQ, genesis);
+    await this.metaMsgConsumer();
+    await this.genesisesMsgConsumer(topicQ, genesis);
 
     const msgBuff = JSON.stringify({ service: RMQServices.INDEXER, action: RMQServiceActions.ADD, genesis });
-    this.mainChannel.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(msgBuff));
+    this.mainChannel.publish(RMQExchanges.DIRECT_EX, RMQQueues.GENESISES, Buffer.from(msgBuff));
   }
 
   private sendMsg(exchange: string, queue: string, params: any, correlationId?: string, method?: string): void {
     const messageBuff = JSON.stringify(params);
     this.mainChannel.publish(exchange, queue, Buffer.from(messageBuff), { correlationId, headers: { method } });
+  }
+
+  private async metaMsgConsumer(): Promise<void> {
+    try {
+      await this.topicChannel.consume(
+        `${RMQServices.INDEXER}.meta`,
+        async (msg) => {
+          if (!msg) {
+            return;
+          }
+
+          const { method } = msg.properties.headers;
+          const params = JSON.parse(msg.content.toString());
+          console.log(method, params);
+          await this.handleIncomingMsg(method, params);
+        },
+        { noAck: true },
+      );
+    } catch (error) {
+      logger.error(JSON.stringify(error, undefined, 2));
+    }
   }
 
   private async directMsgConsumer(queue: string): Promise<void> {
@@ -120,7 +155,7 @@ export class RMQService {
 
           const result = await this.handleIncomingMsg(method, params);
 
-          this.sendMsg(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.REPLIES, result, correlationId);
+          this.sendMsg(RMQExchanges.DIRECT_EX, RMQQueues.REPLIES, result, correlationId);
         },
         { noAck: true },
       );
@@ -129,7 +164,7 @@ export class RMQService {
     }
   }
 
-  private async topicMsgConsumer(queue: string, genesis: string): Promise<void> {
+  private async genesisesMsgConsumer(queue: string, genesis: string): Promise<void> {
     try {
       await this.topicChannel.consume(
         queue,
@@ -139,7 +174,7 @@ export class RMQService {
           }
 
           const messageBuff = JSON.stringify({ service: RMQServices.INDEXER, action: RMQServiceActions.ADD, genesis });
-          this.mainChannel.publish(RabbitMQExchanges.DIRECT_EX, RabbitMQueues.GENESISES, Buffer.from(messageBuff));
+          this.mainChannel.publish(RMQExchanges.DIRECT_EX, RMQQueues.GENESISES, Buffer.from(messageBuff));
         },
         { noAck: true },
       );
@@ -156,7 +191,7 @@ export class RMQService {
   public async sendMsgToMetaStorage(metahashes: Map<string, Set<string>>) {
     const msg = Array.from(metahashes.entries()).map(([key, value]) => [key, Array.from(value.values())]);
     return this.sendMsg(
-      RabbitMQExchanges.DIRECT_EX,
+      RMQExchanges.DIRECT_EX,
       RMQServices.META_STORAGE,
       msg,
       null,

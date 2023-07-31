@@ -2,7 +2,7 @@ import { GearApi } from '@gear-js/api';
 import { RMQServiceActions } from '@gear-js/common';
 
 import config from '../config';
-import { changeStatus } from '../healthcheck';
+import { changeStatus } from '../healthcheck.server';
 import { logger } from '../common';
 import { GearIndexer } from './indexer';
 

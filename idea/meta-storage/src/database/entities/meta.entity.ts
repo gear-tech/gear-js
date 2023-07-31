@@ -8,11 +8,14 @@ export class Meta {
   }
 
   @PrimaryColumn()
-    hash: string;
+  public hash: string;
 
   @Column({ nullable: true })
-    hex: string;
+  public hex: string;
 
   @OneToMany(() => Code, (_) => _.meta)
-    codes: Code[];
+  public codes: Code[];
+
+  @Column({ nullable: true })
+  public hasState: boolean;
 }

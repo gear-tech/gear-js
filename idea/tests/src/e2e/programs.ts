@@ -79,7 +79,7 @@ export async function getAllProgramsByDates(genesis: string, date: Date): Promis
   return true;
 }
 
-export async function getProgramData(genesis: string, id: string): Promise<Passed> {
+export async function getProgramData(genesis: string, id: string, hasState = false): Promise<Passed> {
   const response = await request('program.data', { genesis, id });
   expect(response).to.have.own.property('result');
   expect(response.result).to.have.all.keys(
@@ -93,9 +93,10 @@ export async function getProgramData(genesis: string, id: string): Promise<Passe
     'metahash',
     'status',
     'code',
-    'messages',
+    'hasState',
     'expiration',
   );
+  expect(response.result.hasState).to.eq(hasState);
   return true;
 }
 

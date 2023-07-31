@@ -40,4 +40,7 @@ export class Code extends BaseEntity implements ICode {
 
   @OneToMany(() => StateToCode, (stateToCode) => stateToCode.code)
   public stateToCodes!: StateToCode[];
+
+  @Column({ default: false })
+  public hasState: boolean;
 }

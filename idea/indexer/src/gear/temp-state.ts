@@ -3,7 +3,7 @@ import { CodeStatus, MessageReadReason } from '@gear-js/common';
 import { MessageStatus, ProgramStatus, generateUUID } from '../common';
 import { Block, Code, Message, Program } from '../database';
 import { BlockService, CodeService, MessageService, ProgramService } from '../services';
-import { RMQService } from '../rabbitmq';
+import { RMQService } from '../rmq';
 
 export class TempState {
   private programs: Map<string, Program>;
