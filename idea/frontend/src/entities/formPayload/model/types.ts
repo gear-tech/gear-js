@@ -28,7 +28,7 @@ type PayloadSchemaParams = {
   type?: string;
   deposit: BigNumber;
   metadata?: ProgramMetadata;
-  maxGasLimit: number;
+  maxGasLimit: BigNumber;
 };
 
 export type { TypeStructure, PayloadValue, PayloadSchemaModel, PayloadSchemaParams };
