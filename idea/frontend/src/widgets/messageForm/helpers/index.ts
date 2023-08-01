@@ -3,13 +3,19 @@ import isString from 'lodash.isstring';
 import isPlainObject from 'lodash.isplainobject';
 
 import { PayloadSchemaParams, PayloadValue } from 'entities/formPayload';
+import BigNumber from 'bignumber.js';
 
 const getValidationSchema = ({ deposit, maxGasLimit }: PayloadSchemaParams) =>
   yup.object().shape({
     value: yup
-      .number()
+      .string()
       .required('This field is required')
-      .test('min', `Value should be more ${deposit} or equal than 0`, (value = 0) => value === 0 || value > deposit),
+      .test(
+        'min',
+        `Minimum value is ${deposit.toString()} or 0`,
+        (value = '0') => BigNumber(value).isEqualTo(0) || BigNumber(value).isGreaterThanOrEqualTo(deposit),
+      ),
+
     gasLimit: yup
       .number()
       .required('This field is required')

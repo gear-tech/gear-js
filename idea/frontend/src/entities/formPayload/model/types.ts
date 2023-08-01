@@ -1,4 +1,5 @@
 import { ProgramMetadata, TypeKind } from '@gear-js/api';
+import BigNumber from 'bignumber.js';
 
 type TypeStructure = {
   name: string;
@@ -25,7 +26,7 @@ type PayloadSchemaModel = {
 
 type PayloadSchemaParams = {
   type?: string;
-  deposit: number;
+  deposit: BigNumber;
   metadata?: ProgramMetadata;
   maxGasLimit: number;
 };

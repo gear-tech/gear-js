@@ -2,19 +2,20 @@ import { ProgramMetadata } from '@gear-js/api';
 import { Button, Input, Textarea } from '@gear-js/ui';
 import { useApi } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
+import BigNumber from 'bignumber.js';
 import { useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { FormApi } from 'final-form';
 
 import { ReactComponent as sendSVG } from 'shared/assets/images/actions/send.svg';
-import { FormInput } from 'shared/ui/form';
+import { ValueField } from 'shared/ui/form';
 import { Box } from 'shared/ui/box';
 import { BackButton } from 'shared/ui/backButton';
 import { GasMethod } from 'shared/config';
 import { getValidation } from 'shared/helpers';
 import { GasField } from 'features/gasField';
 import { FormPayload, getPayloadFormValues, getSubmitPayload } from 'features/formPayload';
-import { useGasCalculate, useMessageActions } from 'hooks';
+import { useBalanceMultiplier, useGasCalculate, useMessageActions } from 'hooks';
 import { Result } from 'hooks/useGasCalculate/types';
 import { FormPayloadType } from 'features/formPayloadType';
 
@@ -34,6 +35,7 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
 
   const calculateGas = useGasCalculate();
   const { sendMessage, replyMessage } = useMessageActions();
+  const balanceMultiplier = useBalanceMultiplier();
 
   const [isDisabled, setIsDisabled] = useState(false);
   const [isGasDisabled, setIsGasDisabled] = useState(false);
@@ -55,7 +57,13 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
 
   const validation = useMemo(
     () => {
-      const schema = getValidationSchema({ deposit, metadata, maxGasLimit });
+      const schema = getValidationSchema({
+        // BigNumber cuz of floating point,
+        // is there a way to handle balance convertion better?
+        deposit: BigNumber(deposit).dividedBy(balanceMultiplier),
+        metadata,
+        maxGasLimit,
+      });
 
       return getValidation(schema);
     },
@@ -84,7 +92,7 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
     const payloadType = metadata ? undefined : values.payloadType;
 
     const commonValues = {
-      value: values.value.toString(),
+      value: BigNumber(values.value).multipliedBy(balanceMultiplier).toFixed(),
       payload: getSubmitPayload(values.payload),
       gasLimit: values.gasLimit.toString(),
     };
@@ -139,7 +147,7 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
               {isLoading ? (
                 <Input label="Value" gap="1/5" className={styles.loading} readOnly />
               ) : (
-                <FormInput name="value" label="Value" gap="1/5" />
+                <ValueField name="value" label="Value" gap="1/5" />
               )}
 
               {isLoading ? (

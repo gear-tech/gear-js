@@ -25,6 +25,7 @@ import { useNodeVersion } from './useNodeVersion';
 import { useMobileDisclaimer } from './useMobileDisclaimer';
 import { useMetaOnUpload } from './useMetaOnUpload';
 import { useNetworkIcon } from './useNetworkIcon';
+import { useBalanceMultiplier } from './useBalanceMultiplier';
 
 export {
   useApp,
@@ -59,4 +60,5 @@ export {
   useMobileDisclaimer,
   useMetaOnUpload,
   useNetworkIcon,
+  useBalanceMultiplier,
 };
