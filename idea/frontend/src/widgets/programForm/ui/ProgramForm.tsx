@@ -58,7 +58,7 @@ const ProgramForm = (props: Props) => {
     try {
       const info = await calculateGas(gasMethod, preparedValues, source, metadata);
       const limit = BigNumber(info.limit)
-        .dividedBy(10 ** 15)
+        .dividedBy(10 ** 9)
         .toFixed();
 
       formApi.current.change('gasLimit', limit);
@@ -78,7 +78,7 @@ const ProgramForm = (props: Props) => {
     const data: Payload = {
       value: BigNumber(value).multipliedBy(balanceMultiplier).toFixed(),
       gasLimit: BigNumber(gasLimit)
-        .multipliedBy(10 ** 15)
+        .multipliedBy(10 ** 9)
         .toFixed(),
       metaHex,
       metadata,
@@ -106,7 +106,7 @@ const ProgramForm = (props: Props) => {
       const schema = getValidationSchema({
         deposit: BigNumber(deposit).dividedBy(balanceMultiplier),
         metadata,
-        maxGasLimit: BigNumber(maxGasLimit).dividedBy(10 ** 15),
+        maxGasLimit: BigNumber(maxGasLimit).dividedBy(10 ** 9),
       });
 
       return getValidation(schema);

@@ -62,7 +62,7 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
         // is there a way to handle balance convertion better?
         deposit: BigNumber(deposit).dividedBy(balanceMultiplier),
         metadata,
-        maxGasLimit: BigNumber(maxGasLimit).dividedBy(10 ** 15),
+        maxGasLimit: BigNumber(maxGasLimit).dividedBy(10 ** 9),
       });
 
       return getValidation(schema);
@@ -95,7 +95,7 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
       value: BigNumber(values.value).multipliedBy(balanceMultiplier).toFixed(),
       payload: getSubmitPayload(values.payload),
       gasLimit: BigNumber(values.gasLimit)
-        .multipliedBy(10 ** 15)
+        .multipliedBy(10 ** 9)
         .toFixed(),
     };
 
@@ -123,7 +123,7 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
     calculateGas(method, preparedValues, null, metadata, id)
       .then((info) => {
         const limit = BigNumber(info.limit)
-          .dividedBy(10 ** 15)
+          .dividedBy(10 ** 9)
           .toFixed();
 
         formApi.current?.change('gasLimit', limit);
