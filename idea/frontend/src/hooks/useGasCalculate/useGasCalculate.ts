@@ -77,6 +77,8 @@ const useGasCalculate = () => {
           throw new Error('Unknown method');
       }
 
+      console.log('original gas limit: ', estimatedGas.min_limit.toNumber());
+
       return preparedGasInfo(estimatedGas);
     } catch (error) {
       const message = (error as Error).message;
