@@ -114,7 +114,11 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
     setIsGasDisabled(true);
 
     const { values } = formApi.current.getState();
-    const preparedValues = { ...values, payload: getSubmitPayload(values.payload) };
+    const preparedValues = {
+      ...values,
+      value: BigNumber(values.value).multipliedBy(balanceMultiplier).toFixed(),
+      payload: getSubmitPayload(values.payload),
+    };
 
     calculateGas(method, preparedValues, null, metadata, id)
       .then((info) => {
@@ -151,9 +155,9 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
               {!isLoading && !metadata && <FormPayloadType name="payloadType" label="Payload type" gap="1/5" />}
 
               {isLoading ? (
-                <Input label="Value" gap="1/5" className={styles.loading} readOnly />
+                <Input label="Value:" gap="1/5" className={styles.loading} readOnly />
               ) : (
-                <ValueField name="value" label="Value" gap="1/5" />
+                <ValueField name="value" gap="1/5" />
               )}
 
               {isLoading ? (

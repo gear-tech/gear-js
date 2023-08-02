@@ -1,11 +1,12 @@
 import { useState, useMemo, useRef, ReactChild } from 'react';
+import BigNumber from 'bignumber.js';
 import { FormApi } from 'final-form';
 import { Form } from 'react-final-form';
 import { ProgramMetadata } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 
-import { useGasCalculate, useChangeEffect } from 'hooks';
+import { useGasCalculate, useChangeEffect, useBalanceMultiplier } from 'hooks';
 import { Result } from 'hooks/useGasCalculate/types';
 import { Payload } from 'hooks/useProgramActions/types';
 import { FormPayload, getSubmitPayload, getPayloadFormValues } from 'features/formPayload';
@@ -13,7 +14,7 @@ import { FormPayloadType } from 'features/formPayloadType';
 import { GasField } from 'features/gasField';
 import { GasMethod } from 'shared/config';
 import { getValidation } from 'shared/helpers';
-import { FormInput } from 'shared/ui/form';
+import { FormInput, ValueField } from 'shared/ui/form';
 
 import styles from './ProgramForm.module.scss';
 import { getValidationSchema } from '../helpers';
@@ -39,6 +40,7 @@ const ProgramForm = (props: Props) => {
   const [isDisabled, setIsDisables] = useState(false);
   const [isGasDisabled, setIsGasDisabled] = useState(false);
 
+  const balanceMultiplier = useBalanceMultiplier();
   const calculateGas = useGasCalculate();
 
   const handleGasCalculate = async () => {
@@ -47,12 +49,19 @@ const ProgramForm = (props: Props) => {
     setIsGasDisabled(true);
 
     const { values } = formApi.current.getState();
-    const preparedValues = { ...values, payload: getSubmitPayload(values.payload) };
+    const preparedValues = {
+      ...values,
+      value: BigNumber(values.value).multipliedBy(balanceMultiplier).toFixed(),
+      payload: getSubmitPayload(values.payload),
+    };
 
     try {
       const info = await calculateGas(gasMethod, preparedValues, source, metadata);
+      const limit = BigNumber(info.limit)
+        .dividedBy(10 ** 15)
+        .toFixed();
 
-      formApi.current.change('gasLimit', info.limit);
+      formApi.current.change('gasLimit', limit);
       setGasinfo(info);
     } finally {
       setIsGasDisabled(false);
@@ -67,8 +76,10 @@ const ProgramForm = (props: Props) => {
     const { value, payload, gasLimit, programName, payloadType } = values;
 
     const data: Payload = {
-      value,
-      gasLimit,
+      value: BigNumber(value).multipliedBy(balanceMultiplier).toFixed(),
+      gasLimit: BigNumber(gasLimit)
+        .multipliedBy(10 ** 15)
+        .toFixed(),
       metaHex,
       metadata,
       programName,
@@ -92,7 +103,11 @@ const ProgramForm = (props: Props) => {
 
   const validation = useMemo(
     () => {
-      const schema = getValidationSchema({ deposit, metadata, maxGasLimit });
+      const schema = getValidationSchema({
+        deposit: BigNumber(deposit).dividedBy(balanceMultiplier),
+        metadata,
+        maxGasLimit: BigNumber(maxGasLimit).dividedBy(10 ** 15),
+      });
 
       return getValidation(schema);
     },
@@ -121,7 +136,7 @@ const ProgramForm = (props: Props) => {
 
               {!metadata && <FormPayloadType name="payloadType" label="Initial payload type" direction="y" block />}
 
-              <FormInput min={0} type="number" name="value" label="Initial value" placeholder="0" direction="y" block />
+              <ValueField name="value" direction="y" block initial />
 
               <GasField
                 name="gasLimit"
