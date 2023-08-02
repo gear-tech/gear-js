@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js';
 import { useRef, useEffect, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
@@ -7,7 +8,7 @@ import { useApi, useAlert, useAccount } from '@gear-js/react-hooks';
 import { TooltipWrapper, buttonStyles } from '@gear-js/ui';
 
 import { getTestBalance } from 'api';
-import { useBalanceTransfer, useChain, useModal } from 'hooks';
+import { useBalanceMultiplier, useBalanceTransfer, useChain, useModal } from 'hooks';
 import { RecentBlocks } from 'features/recentBlocks';
 import { HCAPTCHA_SITE_KEY, AnimationTimeout, GEAR_BALANCE_TRANSFER_VALUE } from 'shared/config';
 import { ReactComponent as TestBalanceSVG } from 'shared/assets/images/actions/testBalance.svg';
@@ -20,15 +21,17 @@ import styles from './TopSide.module.scss';
 
 const TopSide = () => {
   const alert = useAlert();
+
   const { api, isApiReady } = useApi();
   const { account, isAccountReady } = useAccount();
   const { isDevChain, isTestBalanceAvailable } = useChain();
   const { showModal, closeModal } = useModal();
-
-  const captchaRef = useRef<HCaptcha>(null);
+  const balanceMultiplier = useBalanceMultiplier();
 
   const [captchaToken, setCaptchaToken] = useState('');
   const [totalIssuance, setTotalIssuance] = useState('');
+
+  const captchaRef = useRef<HCaptcha>(null);
 
   const address = account?.address;
 
@@ -80,7 +83,9 @@ const TopSide = () => {
 
     const { source } = account.meta;
 
-    transferBalance(address, to, value, { signSource: source, onSuccess: closeModal });
+    const unitValue = BigNumber(value).multipliedBy(balanceMultiplier).toNumber();
+
+    transferBalance(address, to, unitValue, { signSource: source, onSuccess: closeModal });
   };
 
   const openTransferBalanceModal = () => showModal('transferBalance', { onSubmit: handleTransferBalanceSubmit });
