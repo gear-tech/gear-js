@@ -9,6 +9,7 @@ import { ModalProps } from 'entities/modal';
 import { checkFileFormat } from 'shared/helpers';
 import { ReactComponent as UploadFileSVG } from 'shared/assets/images/actions/uploadFile.svg';
 
+import { FileTypes } from 'shared/config';
 import styles from './UploadFileModal.module.scss';
 import { FILE_INPUT_ID } from '../model/const';
 import { DropTarget } from './dropTarget';
@@ -48,7 +49,13 @@ const UploadFileModal = ({ name, onClose, onUpload }: Props) => {
       <label htmlFor={FILE_INPUT_ID} className={labelStyles}>
         <UploadFileSVG className={buttonStyles.icon} />
         Select File
-        <input id={FILE_INPUT_ID} type="file" className={styles.fileInput} onChange={handleChange} />
+        <input
+          id={FILE_INPUT_ID}
+          type="file"
+          className={styles.fileInput}
+          onChange={handleChange}
+          accept={FileTypes.Wasm}
+        />
       </label>
       <DndProvider backend={HTML5Backend}>
         <DropTarget onUpload={handleUploadFile} />
