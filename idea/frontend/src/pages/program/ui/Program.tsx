@@ -5,7 +5,7 @@ import { generatePath, useParams } from 'react-router-dom';
 import { useMetadataUpload, useModal, useProgram } from 'hooks';
 import { ProgramMessages } from 'widgets/programMessages';
 import { PathParams } from 'shared/types';
-import { getShortName, isState } from 'shared/helpers';
+import { getShortName } from 'shared/helpers';
 import { Subheader } from 'shared/ui/subheader';
 import { absoluteRoutes, routes } from 'shared/config';
 import { UILink } from 'shared/ui/uiLink';
@@ -56,22 +56,18 @@ const Program = () => {
             />
           )}
 
-          {isMetadataReady && (
-            <>
-              {isState(metadata) && (
-                <UILink
-                  to={generatePath(routes.state, { programId })}
-                  icon={ReadSVG}
-                  text="Read State"
-                  color="secondary"
-                  className={styles.fixWidth}
-                />
-              )}
+          {program?.hasState && (
+            <UILink
+              to={generatePath(routes.state, { programId })}
+              icon={ReadSVG}
+              text="Read State"
+              color="secondary"
+              className={styles.fixWidth}
+            />
+          )}
 
-              {!metadata && (
-                <Button text="Add metadata" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
-              )}
-            </>
+          {isMetadataReady && !metadata && (
+            <Button text="Add metadata" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
           )}
         </div>
       </header>

@@ -1,5 +1,5 @@
 import type { Event } from '@polkadot/types/interfaces';
-import { GearApi, ProgramMetadata } from '@gear-js/api';
+import { GearApi } from '@gear-js/api';
 import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
 import { AnySchema, ValidationError } from 'yup';
 import { setIn } from 'final-form';
@@ -122,9 +122,6 @@ const getValidation =
     }
   };
 
-const isState = (meta: ProgramMetadata | undefined | null) =>
-  meta?.types.state !== undefined && meta?.types.state !== null;
-
 const disableScroll = () => document.body.classList.add('noOverflow');
 const enableScroll = () => document.body.classList.remove('noOverflow');
 
@@ -154,7 +151,6 @@ export {
   isNodeAddressValid,
   isHexValid,
   isExists,
-  isState,
   disableScroll,
   enableScroll,
   resetFileInput,

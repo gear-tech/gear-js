@@ -8,9 +8,7 @@ import { IdBlock } from 'shared/ui/idBlock';
 import { BulbBlock } from 'shared/ui/bulbBlock';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
 import { ActionLink } from 'shared/ui/ActionLink';
-import { isState } from 'shared/helpers';
 
-import { getProgramMetadata } from '@gear-js/api';
 import styles from './HorizontalProgramCard.module.scss';
 import { getBulbStatus } from '../../helpers';
 import { IProgram, PROGRAM_STATUS_NAME } from '../../model';
@@ -20,7 +18,7 @@ type Props = {
 };
 
 const HorizontalProgramCard = memo(({ program }: Props) => {
-  const { id: programId, name, status, timestamp } = program;
+  const { id: programId, name, status, timestamp, hasState } = program;
 
   const statusName = PROGRAM_STATUS_NAME[status];
 
@@ -44,9 +42,7 @@ const HorizontalProgramCard = memo(({ program }: Props) => {
           className={styles.sendMessage}
         />
 
-        {/* {meta && isState(getProgramMetadata(meta.hex)) && (
-          <ActionLink to={generatePath(routes.state, { programId })} icon={readSVG} text="Read State" />
-        )} */}
+        {hasState && <ActionLink to={generatePath(routes.state, { programId })} icon={readSVG} text="Read State" />}
       </div>
     </article>
   );
