@@ -69,7 +69,7 @@ const InitializeProgram = () => {
     if (isDevChain) return setIsUploadedMetaReady(true);
 
     fetchMetadata({ codeHash: codeId as HexString })
-      .then(({ result }) => setUploadedMetaHex(result.hex))
+      .then(({ result }) => result.hex && setUploadedMetaHex(result.hex))
       .catch(({ code, message }: RPCError) => code !== RPCErrorCode.MetadataNotFound && alert.error(message))
       .finally(() => setIsUploadedMetaReady(true));
 

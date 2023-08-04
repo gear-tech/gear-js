@@ -43,6 +43,7 @@ const useMetaOnUpload = (isCode?: boolean) => {
   const [optFile, setOptFile] = useState(initOptFile);
   const [optBuffer, setOptBuffer] = useState<Buffer>();
 
+  // TODO: combine with useMetadata hook?
   const [metadata, setMetadata] = useState<MetadataState>(initMeta);
   const [isUploadedMetaReady, setIsUploadedMetaReady] = useState(true);
 
@@ -102,10 +103,8 @@ const useMetaOnUpload = (isCode?: boolean) => {
     const codeHash = generateCodeHash(optBuffer);
 
     fetchMetadata({ codeHash })
-      .then(({ result }) => setUploadedMetadata(result.hex))
-      .catch(({ code, message }: RPCError) => {
-        if (code !== RPCErrorCode.MetadataNotFound) alert.error(message);
-      })
+      .then(({ result }) => result.hex && setUploadedMetadata(result.hex))
+      .catch(({ code, message }: RPCError) => code !== RPCErrorCode.MetadataNotFound && alert.error(message))
       .finally(() => setIsUploadedMetaReady(true));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

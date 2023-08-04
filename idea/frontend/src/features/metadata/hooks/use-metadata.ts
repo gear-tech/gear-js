@@ -3,32 +3,35 @@ import { useAlert, useApi } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 
 import { fetchMetadata } from 'api';
+import { RPCError, RPCErrorCode } from 'shared/services/rpcService';
 
-function useMetaHash(programId: HexString | undefined) {
+type Source = 'program' | 'code';
+
+function useMetaHash(id: HexString | undefined, source: Source = 'program') {
   const { api } = useApi();
 
   const [metaHash, setMetaHash] = useState<HexString>();
   const [isMetaHashReady, setIsMetaHashReady] = useState(false);
 
   useEffect(() => {
-    if (!programId) return;
+    if (!id) return;
 
-    api.program
-      .metaHash(programId)
+    api[source]
+      .metaHash(id)
       .then((result) => setMetaHash(result))
       // eslint-disable-next-line no-console
-      .catch(({ message }: Error) => console.error(message))
-      .finally(() => setIsMetaHashReady(true)); // if there's no meta
+      .catch(({ message }: Error) => console.error(message)) // if there's no meta
+      .finally(() => setIsMetaHashReady(true));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [programId]);
+  }, [id]);
 
   return { metaHash, isMetaHashReady };
 }
 
-function useMetadata(programId: HexString | undefined) {
+function useMetadata(id: HexString | undefined, source: Source = 'program') {
   const alert = useAlert();
-  const { metaHash, isMetaHashReady } = useMetaHash(programId);
+  const { metaHash, isMetaHashReady } = useMetaHash(id, source);
 
   const [metadata, setMetadata] = useState<ProgramMetadata>();
   const [isMetadataReady, setisMetadataReady] = useState(false);
@@ -41,8 +44,8 @@ function useMetadata(programId: HexString | undefined) {
     // const getMetadata = isDevChain ? getLocalProgramMeta : fetchMetadata;
 
     fetchMetadata({ hash: metaHash })
-      .then(({ result }) => setMetadata(getProgramMetadata(result.hex)))
-      .catch(({ message }: Error) => alert.error(message))
+      .then(({ result }) => result.hex && setMetadata(getProgramMetadata(result.hex)))
+      .catch(({ message, code }: RPCError) => code !== RPCErrorCode.MetadataNotFound && alert.error(message))
       .finally(() => setisMetadataReady(true));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMetaHashReady, metaHash]);
