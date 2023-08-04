@@ -20,18 +20,12 @@ import styles from './Program.module.scss';
 
 const Program = () => {
   const { programId } = useParams() as PathParams;
+  const { showModal, closeModal } = useModal();
+  const uploadMetadata = useMetadataUpload();
 
   const { program, isProgramReady, updateMeta } = useProgram(programId);
   const { metadata, isMetadataReady } = useMetadata(programId);
-  const { messages, code } = program || {};
-  const codeHash = code?.id;
-
-  const sortedMessages = messages?.sort(
-    (message, nextMessage) => Date.parse(nextMessage.timestamp) - Date.parse(message.timestamp),
-  );
-
-  const { showModal, closeModal } = useModal();
-  const uploadMetadata = useMetadataUpload();
+  const codeHash = program?.code?.id;
 
   const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
     if (!codeHash) return;
@@ -91,11 +85,8 @@ const Program = () => {
             <MetadataDetails metadata={metadata} isLoading={!isMetadataReady} />
           </div>
         </div>
-        <ProgramMessages
-          programId={programId as HexString}
-          messages={sortedMessages || []}
-          isLoading={!isProgramReady}
-        />
+
+        <ProgramMessages programId={programId} />
       </div>
     </div>
   );

@@ -14,10 +14,10 @@ const useWaitlist = () => {
     api.waitlist
       .read(programId)
       .then(setWaitlist)
-      .catch((error: Error) => alert.error(error.message))
+      .catch(({ message }: Error) => alert.error(message))
       .finally(() => setIsLoading(false));
 
-  return { waitlist, totalCount: waitlist.length, isLoading, fetchWaitlist };
+  return { waitlist, isLoading, fetchWaitlist };
 };
 
 export { useWaitlist };

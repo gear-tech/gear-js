@@ -1,6 +1,5 @@
 import { HexString } from '@polkadot/util/types';
 import { ICode } from 'entities/code';
-import { IMessage } from 'entities/message';
 import { IBase } from 'shared/types';
 
 import { ProgramStatus } from './consts';
@@ -10,7 +9,6 @@ interface IProgram extends IBase {
   owner: string;
   name: string;
   status: ProgramStatus;
-  messages: IMessage[];
   metahash: HexString | null;
   title: string | null;
   expiration?: number;
