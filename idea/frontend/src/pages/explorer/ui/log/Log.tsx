@@ -5,7 +5,6 @@ import { Codec } from '@polkadot/types/types';
 import { isHex } from '@polkadot/util';
 
 import { PreformattedBlock } from 'shared/ui/preformattedBlock';
-import { useProgram } from 'hooks';
 import { useMetadata } from 'features/metadata';
 
 import styles from './Log.module.scss';
@@ -30,24 +29,21 @@ const Log = ({ data }: Props) => {
   const formattedPayload = payload.toHuman();
   const isFormattedPayloadHex = isHex(formattedPayload);
 
-  const { program } = useProgram(isFormattedPayloadHex ? source.toHex() : undefined);
-  const { metadata } = useMetadata(isFormattedPayloadHex ? source.toHex() : undefined);
+  const { metadata, isMetadataReady } = useMetadata(isFormattedPayloadHex ? source.toHex() : undefined);
 
   const handlePayloadDecoding = (typeKey: TypeKey, errorCallback: () => void) => {
-    if (metadata) {
-      // TODO:
-      // const type = metadata[typeKey];
-      const type = '';
+    if (!metadata) return;
 
-      if (type) {
-        try {
-          // setDecodedPayload(CreateType.create(type, payload, metadata));
-        } catch {
-          errorCallback();
-        }
-      } else {
-        errorCallback();
-      }
+    // TODO:
+    // const type = metadata[typeKey];
+    const type = '';
+
+    if (!type) return errorCallback();
+
+    try {
+      // setDecodedPayload(CreateType.create(type, payload, metadata));
+    } catch {
+      errorCallback();
     }
   };
 
@@ -64,10 +60,15 @@ const Log = ({ data }: Props) => {
   };
 
   useEffect(() => {
-    if (metadata) handleOutputPayloadDecoding();
-    if (program && !metadata) handleInitPayloadDecoding();
+    if (!isMetadataReady) return;
+
+    if (metadata) {
+      handleOutputPayloadDecoding();
+    } else {
+      handleInitPayloadDecoding();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [metadata, program]);
+  }, [isMetadataReady, metadata]);
 
   const handleCheckboxChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
     setIsDecodedPayload(checked);

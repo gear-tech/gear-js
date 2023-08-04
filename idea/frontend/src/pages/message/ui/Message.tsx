@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 
-import { useProgram, useMessage } from 'hooks';
+import { useMessage } from 'hooks';
 import { MessageInfo } from 'entities/message';
 import { useMetadata } from 'features/metadata';
 
@@ -11,11 +11,9 @@ const Message = () => {
   const { messageId } = useParams() as PageParams;
 
   const { message, isLoading: isMesageLoading } = useMessage(messageId);
-
   const programId = message?.program?.id;
   const isProgram = !!programId;
 
-  const { program, isProgramReady } = useProgram(programId);
   const { metadata, isMetadataReady } = useMetadata(programId);
 
   return (
@@ -24,7 +22,7 @@ const Message = () => {
       <MessageInfo
         metadata={metadata}
         message={message}
-        isLoading={isMesageLoading || (isProgram && !isProgramReady)}
+        isLoading={isMesageLoading || (isProgram && !isMetadataReady)}
       />
     </div>
   );

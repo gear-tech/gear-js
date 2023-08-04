@@ -1,7 +1,7 @@
 import { Button, Input, Textarea } from '@gear-js/ui';
 import clsx from 'clsx';
 
-import { useProgram, useStateRead } from 'hooks';
+import { useStateRead } from 'hooks';
 import { useEffect } from 'react';
 import { getPreformattedText } from 'shared/helpers';
 import { BackButton } from 'shared/ui/backButton';
@@ -36,7 +36,8 @@ const Full = () => {
       </Box>
 
       <div className={styles.buttons}>
-        {isStateRead && (
+        {/* checking isMetadataReady, cuz default isStateReady is true */}
+        {isMetadataReady && isStateRead && (
           <Button text="Download JSON" color="secondary" size="large" onClick={handleDownloadJsonButtonClick} />
         )}
 
