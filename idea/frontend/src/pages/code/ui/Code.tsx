@@ -1,5 +1,6 @@
 import { useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
+import { getProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { useEffect, useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
@@ -28,11 +29,13 @@ const Code = () => {
 
   const { isDevChain } = useChain();
   const { showModal, closeModal } = useModal();
-  const { metadata, isMetadataReady } = useMetadata(codeId, 'code');
+  const { metadata, isMetadataReady, setMetadata } = useMetadata(codeId, 'code');
 
   const [code, setCode] = useState<ICode>();
   const programs = code?.programs || [];
   const isCodeReady = code !== undefined;
+
+  const setCodeName = (name: string) => setCode((prevCode) => (prevCode ? { ...prevCode, name } : prevCode));
 
   const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
     const id = codeId;
@@ -40,9 +43,12 @@ const Code = () => {
     addCodeName({ id, name })
       .then(() => addMetadata({ codeHash: id, hex: metaHex }))
       .then(() => {
+        setMetadata(getProgramMetadata(metaHex));
+        setCodeName(name);
+
         alert.success('Metadata for code uploaded successfully');
+
         closeModal();
-        // setMetadata(getProgramMetadata(metaHex));
       })
       .catch(({ message }: Error) => alert.error(message));
   };

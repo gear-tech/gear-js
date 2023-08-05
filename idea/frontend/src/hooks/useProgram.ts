@@ -1,4 +1,3 @@
-import { getProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 import { useEffect, useState } from 'react';
@@ -16,16 +15,8 @@ const useProgram = (id: HexString | undefined) => {
 
   const [program, setProgram] = useState<IProgram>();
   const [isProgramReady, setIsProgramReady] = useState(false);
-  // const [isLoading, setIsLoading] = useState(true);
 
-  const updateMeta = (metaHex: HexString, programName: string) =>
-    setProgram((prevProgram) => {
-      if (!prevProgram) return;
-
-      const meta = { ...getProgramMetadata(metaHex), hex: metaHex };
-
-      return { ...prevProgram, name: programName, meta };
-    });
+  const setProgramName = (name: string) => setProgram((prevState) => (prevState ? { ...prevState, name } : prevState));
 
   useEffect(() => {
     if (!id) return;
@@ -37,7 +28,7 @@ const useProgram = (id: HexString | undefined) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  return { program, isProgramReady, updateMeta };
+  return { program, isProgramReady, setProgramName };
 };
 
 export { useProgram };

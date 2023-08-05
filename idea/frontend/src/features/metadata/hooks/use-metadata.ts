@@ -50,7 +50,7 @@ function useMetadata(id: HexString | undefined, source: Source = 'program') {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMetaHashReady, metaHash]);
 
-  return { metadata, isMetadataReady };
+  return { metadata, isMetadataReady, setMetadata };
 }
 
 export { useMetadata };
