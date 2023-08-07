@@ -6,7 +6,7 @@ import { IBase } from 'shared/types';
 import { CodeStatus } from './consts';
 
 interface ICode extends IBase {
-  id: string;
+  id: HexString;
   name: string;
   status: CodeStatus;
   expiration: string | null;

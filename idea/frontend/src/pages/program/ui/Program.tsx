@@ -38,7 +38,7 @@ const Program = () => {
       closeModal();
     };
 
-    uploadMetadata({ name, codeHash, metaHex, resolve });
+    uploadMetadata({ codeHash, metaHex, name, programId, resolve });
   };
 
   const openUploadMetadataModal = () => showModal('metadata', { onSubmit: handleUploadMetadataSubmit });

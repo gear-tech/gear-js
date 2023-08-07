@@ -2,8 +2,9 @@ import { HexString, ProgramMetadata, getProgramMetadata } from '@gear-js/api';
 import { useAlert, useApi } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 
-import { fetchMetadata } from 'api';
+import { fetchMetadata, getLocalMetadata } from 'api';
 import { RPCError, RPCErrorCode } from 'shared/services/rpcService';
+import { useChain } from 'hooks';
 
 type Source = 'program' | 'code';
 
@@ -31,6 +32,8 @@ function useMetaHash(id: HexString | undefined, source: Source = 'program') {
 
 function useMetadata(id: HexString | undefined, source: Source = 'program') {
   const alert = useAlert();
+
+  const { isDevChain } = useChain();
   const { metaHash, isMetaHashReady } = useMetaHash(id, source);
 
   const [metadata, setMetadata] = useState<ProgramMetadata>();
@@ -40,10 +43,9 @@ function useMetadata(id: HexString | undefined, source: Source = 'program') {
     if (!isMetaHashReady) return;
     if (!metaHash) return setisMetadataReady(true);
 
-    // TODO: local meta
-    // const getMetadata = isDevChain ? getLocalProgramMeta : fetchMetadata;
+    const getMetadata = isDevChain ? getLocalMetadata : fetchMetadata;
 
-    fetchMetadata({ hash: metaHash })
+    getMetadata({ hash: metaHash })
       .then(({ result }) => result.hex && setMetadata(getProgramMetadata(result.hex)))
       .catch(({ message, code }: RPCError) => code !== RPCErrorCode.MetadataNotFound && alert.error(message))
       .finally(() => setisMetadataReady(true));

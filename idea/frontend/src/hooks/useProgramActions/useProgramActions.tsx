@@ -106,9 +106,9 @@ const useProgramActions = () => {
               () =>
                 metaHex &&
                 uploadMetadata({
-                  name,
                   codeHash: codeId,
                   metaHex,
+                  programId,
                   resolve: () => alert.success(programMessage, ALERT_OPTIONS),
                 }),
             );
@@ -133,8 +133,12 @@ const useProgramActions = () => {
       if (resolve) resolve();
 
       if (isDevChain) {
-        // TODO: local meta
-        await uploadLocalProgram({ id: programId, name: name || programId, owner: account?.decodedAddress! });
+        await uploadLocalProgram({
+          id: programId,
+          name: name || programId,
+          owner: account?.decodedAddress!,
+          code: { id: codeId },
+        });
       }
     } catch (error) {
       const message = (error as Error).message;
