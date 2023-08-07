@@ -21,6 +21,7 @@ import { CustomLink } from 'shared/ui/customLink';
 
 import { ProgramStatus } from 'entities/program';
 import { addProgramName } from 'api';
+import { getProgramMetadata } from '@gear-js/api';
 import { useMetadataUpload } from '../useMetadataUpload';
 import { waitForProgramInit } from './helpers';
 import { ALERT_OPTIONS } from './consts';
@@ -138,6 +139,7 @@ const useProgramActions = () => {
           name: name || programId,
           owner: account?.decodedAddress!,
           code: { id: codeId },
+          hasState: !!metaHex && getProgramMetadata(metaHex).types.state != null,
         });
       }
     } catch (error) {

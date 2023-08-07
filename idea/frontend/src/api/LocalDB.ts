@@ -61,7 +61,9 @@ const getLocalPrograms = (params: any) => {
   });
 };
 
-const uploadLocalProgram = (program: Pick<IProgram, 'id' | 'owner' | 'name'> & { code: { id: HexString } }) =>
+const uploadLocalProgram = (
+  program: Pick<IProgram, 'id' | 'owner' | 'name' | 'hasState'> & { code: { id: HexString } },
+) =>
   PROGRAMS_LOCAL_FORAGE.setItem(program.id, {
     ...program,
     timestamp: Date(),
