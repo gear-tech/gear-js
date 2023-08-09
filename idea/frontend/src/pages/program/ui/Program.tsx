@@ -25,7 +25,7 @@ const Program = () => {
   const uploadMetadata = useMetadataUpload();
 
   const { program, isProgramReady, setProgramName } = useProgram(programId);
-  const { metadata, isMetadataReady, setMetadata } = useMetadata(programId);
+  const { metadata, isMetadataReady, setMetadata } = useMetadata(program?.metahash);
 
   const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
     const codeHash = program?.code?.id;

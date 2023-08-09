@@ -1,7 +1,7 @@
 import { Button, Input, Textarea } from '@gear-js/ui';
 import clsx from 'clsx';
 
-import { useStateRead } from 'hooks';
+import { useProgram, useStateRead } from 'hooks';
 import { useEffect } from 'react';
 import { getPreformattedText } from 'shared/helpers';
 import { BackButton } from 'shared/ui/backButton';
@@ -15,7 +15,8 @@ import styles from './Full.module.scss';
 const Full = () => {
   const programId = useProgramId();
 
-  const { metadata, isMetadataReady } = useMetadata(programId);
+  const { program } = useProgram(programId);
+  const { metadata, isMetadataReady } = useMetadata(program?.metahash);
   const { state, isStateRead, readFullState } = useStateRead(programId);
 
   const value = getPreformattedText(state);

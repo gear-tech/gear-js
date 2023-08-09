@@ -29,11 +29,12 @@ const Code = () => {
 
   const { isDevChain } = useChain();
   const { showModal, closeModal } = useModal();
-  const { metadata, isMetadataReady, setMetadata } = useMetadata(codeId, 'code');
 
   const [code, setCode] = useState<ICode>();
   const programs = code?.programs || [];
   const isCodeReady = code !== undefined;
+
+  const { metadata, isMetadataReady, setMetadata } = useMetadata(code?.metahash);
 
   const setCodeName = (name: string) => setCode((prevCode) => (prevCode ? { ...prevCode, name } : prevCode));
 

@@ -12,9 +12,10 @@ const Message = () => {
 
   const { message, isLoading: isMesageLoading } = useMessage(messageId);
   const programId = message?.program?.id;
+  const metaHash = message?.program?.metahash;
   const isProgram = !!programId;
 
-  const { metadata, isMetadataReady } = useMetadata(programId);
+  const { metadata, isMetadataReady } = useMetadata(metaHash);
 
   return (
     <div>
