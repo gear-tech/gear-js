@@ -19,14 +19,13 @@
   ],
   "homepage": "https://github.com/gear-tech/gear-js/tree/main/utils/vara-ui#readme",
   "scripts": {
-    "dev": "vite",
+    "dev": "storybook dev -p 6006",
     "build": "tsc && vite build",
+    "build-sb": "storybook build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "sb": "storybook dev -p 6006",
-    "build-sb": "storybook build"
+    "preview": "vite preview"
   },
-  "dependencies": {
+  "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -52,6 +51,7 @@
     "storybook": "^7.2.1",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
+    "vite-plugin-dts": "^3.5.1",
     "vite-plugin-svgr": "^3.2.0"
   }
 }
