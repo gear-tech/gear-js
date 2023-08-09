@@ -44,4 +44,4 @@ function Button(props: Props) {
 }
 
 export { Button };
-export type { Props as ButtonProps };
+export type { Props };
