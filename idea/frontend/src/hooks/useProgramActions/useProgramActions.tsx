@@ -134,12 +134,15 @@ const useProgramActions = () => {
       if (resolve) resolve();
 
       if (isDevChain) {
+        const metahash = await api.code.metaHash(codeId);
+
         await uploadLocalProgram({
           id: programId,
           name: name || programId,
           owner: account?.decodedAddress!,
           code: { id: codeId },
           hasState: !!metaHex && getProgramMetadata(metaHex).types.state != null,
+          metahash,
         });
       }
     } catch (error) {

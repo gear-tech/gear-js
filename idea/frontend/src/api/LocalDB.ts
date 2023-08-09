@@ -2,9 +2,9 @@ import { HexString } from '@polkadot/util/types';
 import localForage from 'localforage';
 
 import { ProgramStatus, IProgram } from 'entities/program';
-
 import { LocalStorage } from 'shared/config';
 import { IMeta } from 'entities/metadata';
+
 import { ProgramPaginationModel } from './program';
 
 const PROGRAMS_LOCAL_FORAGE = localForage.createInstance({ name: 'programs' });
@@ -62,7 +62,7 @@ const getLocalPrograms = (params: any) => {
 };
 
 const uploadLocalProgram = (
-  program: Pick<IProgram, 'id' | 'owner' | 'name' | 'hasState'> & { code: { id: HexString } },
+  program: Pick<IProgram, 'id' | 'owner' | 'name' | 'hasState' | 'metahash'> & { code: { id: HexString } },
 ) =>
   PROGRAMS_LOCAL_FORAGE.setItem(program.id, {
     ...program,
