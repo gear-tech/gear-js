@@ -44,9 +44,6 @@ const useProgramActions = () => {
   const createProgram = (codeId: HexString, payload: Payload) => {
     const { gasLimit, value, initPayload, metadata, payloadType } = payload;
 
-    console.log('*create program* submitted (original) value: ', value);
-    console.log('*create program* submitted (original) gas limit: ', gasLimit);
-
     const program = { value, codeId, gasLimit, initPayload };
 
     const result = api.program.create(program, metadata, payloadType);
@@ -56,9 +53,6 @@ const useProgramActions = () => {
 
   const uploadProgram = async (optBuffer: Buffer, payload: Payload) => {
     const { gasLimit, value, initPayload, metadata, payloadType } = payload;
-
-    console.log('*upload program* submitted (original) value: ', value);
-    console.log('*upload program* submitted (original) gas limit: ', gasLimit);
 
     const program = { code: optBuffer, value, gasLimit, initPayload };
 

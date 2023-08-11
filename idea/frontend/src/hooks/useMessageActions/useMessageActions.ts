@@ -68,9 +68,6 @@ const useMessageActions = () => {
 
         const { meta, address } = account!;
 
-        console.log('*send message* submitted (original) value: ', message.value);
-        console.log('*send message* submitted (original) gas limit: ', message.gasLimit);
-
         api.message.send(message, metadata, payloadType);
 
         const { signer } = await web3FromSource(meta.source);
@@ -109,9 +106,6 @@ const useMessageActions = () => {
         checkWallet(account);
 
         const { meta, address } = account!;
-
-        console.log('*send reply* submitted (original) value: ', reply.value);
-        console.log('*send reply* submitted (original) gas limit: ', reply.gasLimit);
 
         api.message.sendReply(reply, metadata, payloadType);
 
