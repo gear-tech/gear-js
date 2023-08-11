@@ -1,5 +1,5 @@
-import { Input, Props } from './input';
+import { Input, InputProps } from './input';
 import inputStyles from './input.module.css';
 
 export { Input, inputStyles };
-export type { Props as InputProps };
+export type { InputProps };

@@ -1,0 +1,110 @@
+.base {
+  position: relative;
+}
+
+.textarea,
+.label {
+  font-family: Anuphan;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.009em;
+  color: #010500;
+}
+
+.textarea {
+  outline: none;
+  resize: none;
+  background-color: transparent;
+  border: none;
+  /* TODO: global */
+  box-sizing: border-box;
+
+  width: 100%;
+  padding: 8px 14px;
+
+  &:focus,
+  &:not(:placeholder-shown),
+  &.error {
+    ~ .label {
+      opacity: 0;
+    }
+
+    ~ .fieldset {
+      .legendLabel {
+        opacity: 1;
+        max-width: 100%;
+        padding: 0 4px;
+      }
+    }
+  }
+
+  &:focus {
+    ~ .fieldset {
+      border-color: #00b387;
+
+      .legendLabel {
+        color: #00b387;
+      }
+    }
+  }
+
+  &.error {
+    ~ .fieldset {
+      border-color: #fc174d;
+
+      .legendLabel {
+        color: #fc174d;
+      }
+    }
+  }
+}
+
+.label {
+  position: absolute;
+  top: 8px;
+  left: 13px;
+
+  z-index: -1;
+}
+
+.fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0 13px;
+
+  position: absolute;
+  /* TODO: variables */
+  top: -6px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  border: 1px solid #0000003b;
+  border-radius: 4px;
+
+  z-index: -1;
+}
+
+.legend,
+.message {
+  font-family: Anuphan;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.legend {
+  opacity: 0;
+  max-width: 0.01px;
+  padding: 0;
+
+  color: #313635;
+}
+
+.message {
+  margin: 4px 0 0 0;
+
+  color: #fc174d;
+}

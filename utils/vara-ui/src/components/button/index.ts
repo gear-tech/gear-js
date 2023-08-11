@@ -1,5 +1,5 @@
-import { Button, Props } from './button';
+import { Button, ButtonProps } from './button';
 import buttonStyles from './button.module.css';
 
 export { Button, buttonStyles };
-export type { Props as ButtonProps };
+export type { ButtonProps };
