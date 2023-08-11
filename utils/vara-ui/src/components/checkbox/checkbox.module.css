@@ -6,9 +6,8 @@
 
 .input {
   appearance: none;
+  cursor: inherit;
   margin: 0 10px 0 0;
-
-  cursor: pointer;
 }
 
 .checkbox {
