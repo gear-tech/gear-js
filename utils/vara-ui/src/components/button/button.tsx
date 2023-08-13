@@ -18,10 +18,21 @@ type IconProps = BaseProps & {
   icon: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | undefined }>;
 };
 
+// TODO: omit text and icon if children specified?
 type Props = TextProps | IconProps;
 
 function Button(props: Props) {
-  const { className, text, icon: Icon, disabled, isLoading, color = 'primary', size = 'default', ...attrs } = props;
+  const {
+    className,
+    text,
+    icon: Icon,
+    disabled,
+    isLoading,
+    color = 'primary',
+    size = 'default',
+    children,
+    ...attrs
+  } = props;
 
   return (
     <button
@@ -39,6 +50,8 @@ function Button(props: Props) {
       {...attrs}>
       {Icon && <Icon />}
       {text && <span>{text}</span>}
+
+      {children}
     </button>
   );
 }
