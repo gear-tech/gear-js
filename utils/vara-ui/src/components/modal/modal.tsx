@@ -10,10 +10,9 @@ type Props = {
   close: () => void;
   children?: ReactNode;
   className?: string;
-  bodyClassName?: string;
 };
 
-const Modal = ({ heading, close, children, className, bodyClassName }: Props) => {
+const Modal = ({ heading, close, children, className }: Props) => {
   const [root, setRoot] = useState<HTMLDivElement>();
 
   const handleOverlayClick = ({ target, currentTarget }: MouseEvent) => {
@@ -33,14 +32,14 @@ const Modal = ({ heading, close, children, className, bodyClassName }: Props) =>
 
   const component = (
     <div className={styles.overlay} onClick={handleOverlayClick}>
-      <div className={cx(styles.modal, className)}>
+      <div className={styles.modal}>
         <header className={styles.header}>
           <h3 className={styles.heading}>{heading}</h3>
 
           <Button icon={CrossSVG} color="transparent" onClick={close} className={styles.button} />
         </header>
 
-        {children && <div className={cx(styles.body, bodyClassName)}>{children}</div>}
+        {children && <div className={cx(styles.body, className)}>{children}</div>}
       </div>
     </div>
   );

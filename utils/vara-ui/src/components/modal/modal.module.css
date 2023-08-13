@@ -14,14 +14,15 @@
 }
 
 .modal {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 400px;
-  max-height: 80vh;
+  max-height: calc(100vh - 128px);
   padding: 32px;
   background-color: rgba(246, 248, 248, 1);
   border-radius: 4px;
   filter: drop-shadow(0px 4px 4px #00000011);
-  overflow-y: auto;
 }
 
 .header {
@@ -32,7 +33,6 @@
 
 .heading {
   margin: 0 16px 0 0;
-
   font-family: Anuphan;
   font-size: 24px;
   font-weight: 500;
@@ -43,4 +43,9 @@
 
 .button {
   align-self: flex-start;
+}
+
+.body {
+  flex: 1;
+  overflow-y: auto;
 }
