@@ -15,8 +15,6 @@
   background: transparent;
   border: none;
   outline: none;
-  /* TODO: global */
-  box-sizing: border-box;
 
   width: 100%;
   padding: 8px 14px;

@@ -40,6 +40,37 @@
   src: url('./fonts/anuphan-bold.woff2') format('woff2');
 }
 
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+
 body {
   font-family: Anuphan, sans-serif;
+
+  margin: 0;
+  cursor: default;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+img,
+svg {
+  vertical-align: middle;
+}
+
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }

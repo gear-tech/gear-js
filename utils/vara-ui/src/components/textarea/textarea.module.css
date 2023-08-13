@@ -16,8 +16,6 @@
   resize: none;
   background-color: transparent;
   border: none;
-  /* TODO: global */
-  box-sizing: border-box;
 
   width: 100%;
   padding: 8px 14px;
