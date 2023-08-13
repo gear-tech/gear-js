@@ -11,6 +11,7 @@
 .button {
   border: none;
   cursor: pointer;
+  padding: 0;
 
   display: inline-flex;
   align-items: center;
@@ -112,6 +113,14 @@
 
   &.loading {
     background-image: linear-gradient(to right, transparent 8%, #ddd 38%, transparent 54%);
+  }
+}
+
+.transparent {
+  background-color: transparent;
+
+  &:hover {
+    opacity: 0.5;
   }
 }
 

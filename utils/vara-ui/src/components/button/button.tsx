@@ -5,7 +5,7 @@ import styles from './button.module.css';
 type BaseProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   text?: string;
   icon?: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | undefined }>;
-  color?: 'primary' | 'dark' | 'light' | 'border';
+  color?: 'primary' | 'dark' | 'light' | 'border' | 'transparent';
   size?: 'default' | 'small';
   isLoading?: boolean;
 };
@@ -29,7 +29,7 @@ function Button(props: Props) {
       className={cx(
         styles.button,
         styles[color],
-        styles[size],
+        color !== 'transparent' && styles[size],
         disabled && styles.disabled,
         isLoading && styles.loading,
         !text && styles.noText,
