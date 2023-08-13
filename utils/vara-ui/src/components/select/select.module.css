@@ -4,7 +4,6 @@
 
 .select,
 .label {
-  font-family: Anuphan;
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
@@ -92,7 +91,6 @@
 
 .legend,
 .message {
-  font-family: Anuphan;
   font-size: 12px;
   font-weight: 400;
   line-height: 1;
