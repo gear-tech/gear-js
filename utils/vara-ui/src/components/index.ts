@@ -4,6 +4,7 @@ import { Textarea, TextareaProps, textareaStyles } from './textarea';
 import { Select, SelectProps, selectStyles } from './select';
 import { Checkbox, CheckboxProps, checkboxStyles } from './checkbox';
 import { Radio, RadioProps, radioStyles } from './radio';
+import { Alert, AlertProps, alertStyles } from './alert';
 
 export {
   Button,
@@ -18,6 +19,8 @@ export {
   checkboxStyles,
   Radio,
   radioStyles,
+  Alert,
+  alertStyles,
 };
 
-export type { ButtonProps, InputProps, TextareaProps, SelectProps, CheckboxProps, RadioProps };
+export type { ButtonProps, InputProps, TextareaProps, SelectProps, CheckboxProps, RadioProps, AlertProps };
