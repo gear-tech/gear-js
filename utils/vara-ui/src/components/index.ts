@@ -7,6 +7,8 @@ import { Radio, RadioProps, radioStyles } from './radio';
 import { Alert, AlertProps, alertStyles } from './alert';
 import { Modal, ModalProps, modalStyles } from './modal';
 
+import '../assets/styles/index.css';
+
 export {
   Button,
   buttonStyles,
