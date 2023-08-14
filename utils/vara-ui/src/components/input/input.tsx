@@ -9,10 +9,12 @@ type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'id' | 'size'> & {
 };
 
 function Input({ className, label, error, placeholder = ' ', size = 'default', ...attrs }: Props) {
+  const { disabled } = attrs;
+
   const id = useId();
 
   return (
-    <div className={className}>
+    <div className={cx(styles.root, className, disabled && styles.disabled)}>
       <div className={styles.base}>
         <input
           type="text"

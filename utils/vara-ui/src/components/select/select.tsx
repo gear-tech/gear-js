@@ -10,12 +10,14 @@ type Props = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'id' | 'size'> & {
 };
 
 function Select({ options, className, label, error, size = 'default', ...attrs }: Props) {
+  const { disabled } = attrs;
+
   const id = useId();
 
   const getOptions = () => options.map((option, index) => <option key={index} {...option} />);
 
   return (
-    <div className={className}>
+    <div className={cx(styles.root, className, disabled && styles.disabled)}>
       <div className={styles.base}>
         <select id={id} className={cx(styles.select, styles[size], error && styles.error)} {...attrs}>
           {getOptions()}

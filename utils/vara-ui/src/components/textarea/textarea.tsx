@@ -9,10 +9,12 @@ type Props = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'id' | 'size'> & 
 };
 
 function Textarea({ className, label, error, size = 'default', rows = 5, placeholder = ' ', ...attrs }: Props) {
+  const { disabled } = attrs;
+
   const id = useId();
 
   return (
-    <div className={className}>
+    <div className={cx(styles.root, className, disabled && styles.disabled)}>
       <div className={styles.base}>
         <textarea
           rows={rows}
