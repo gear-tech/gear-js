@@ -2,21 +2,28 @@ import { InputHTMLAttributes, ReactNode, useId } from 'react';
 import cx from 'clsx';
 import styles from './input.module.css';
 
-type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'placeholder' | 'id'> & {
+type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'id' | 'size'> & {
+  size?: 'default' | 'small';
   label?: string;
   error?: ReactNode;
 };
 
-function Input({ className, label, error, ...attrs }: Props) {
+function Input({ className, label, error, placeholder = ' ', size = 'default', ...attrs }: Props) {
   const id = useId();
 
   return (
     <div className={className}>
       <div className={styles.base}>
-        <input type="text" id={id} className={cx(styles.input, error && styles.error)} placeholder=" " {...attrs} />
+        <input
+          type="text"
+          id={id}
+          className={cx(styles.input, styles[size], error && styles.error)}
+          placeholder={placeholder}
+          {...attrs}
+        />
 
         {label && (
-          <label htmlFor={id} className={styles.label}>
+          <label htmlFor={id} className={cx(styles.label, styles[size])}>
             {label}
           </label>
         )}

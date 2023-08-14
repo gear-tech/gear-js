@@ -2,12 +2,13 @@ import { TextareaHTMLAttributes, ReactNode, useId } from 'react';
 import cx from 'clsx';
 import styles from './textarea.module.css';
 
-type Props = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'placeholder' | 'id'> & {
+type Props = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'id' | 'size'> & {
+  size?: 'default' | 'small';
   label?: string;
   error?: ReactNode;
 };
 
-function Textarea({ className, label, error, rows = 5, ...attrs }: Props) {
+function Textarea({ className, label, error, size = 'default', rows = 5, placeholder = ' ', ...attrs }: Props) {
   const id = useId();
 
   return (
@@ -16,13 +17,13 @@ function Textarea({ className, label, error, rows = 5, ...attrs }: Props) {
         <textarea
           rows={rows}
           id={id}
-          className={cx(styles.textarea, error && styles.error)}
-          placeholder=" "
+          className={cx(styles.textarea, styles[size], error && styles.error)}
+          placeholder={placeholder}
           {...attrs}
         />
 
         {label && (
-          <label htmlFor={id} className={styles.label}>
+          <label htmlFor={id} className={cx(styles.label, styles[size])}>
             {label}
           </label>
         )}

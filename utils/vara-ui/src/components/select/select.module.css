@@ -9,6 +9,14 @@
   line-height: 24px;
   letter-spacing: 0.009em;
   color: #010500;
+
+  &.default {
+    font-size: 16px;
+  }
+
+  &.small {
+    font-size: 14px;
+  }
 }
 
 .select {
@@ -58,6 +66,16 @@
         color: #fc174d;
       }
     }
+  }
+
+  &.default {
+    padding-top: 13px;
+    padding-bottom: 13px;
+  }
+
+  &.small {
+    padding-top: 8px;
+    padding-bottom: 8px;
   }
 }
 

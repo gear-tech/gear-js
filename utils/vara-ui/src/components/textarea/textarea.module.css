@@ -4,11 +4,18 @@
 
 .textarea,
 .label {
-  font-size: 16px;
   font-weight: 400;
   line-height: 24px;
   letter-spacing: 0.009em;
   color: #010500;
+
+  &.default {
+    font-size: 16px;
+  }
+
+  &.small {
+    font-size: 14px;
+  }
 }
 
 .textarea {
@@ -18,7 +25,14 @@
   border: none;
 
   width: 100%;
-  padding: 8px 14px;
+  padding-right: 14px;
+  padding-left: 14px;
+
+  &:not(:focus) {
+    &::-webkit-input-placeholder {
+      color: transparent;
+    }
+  }
 
   &:focus,
   &:not(:placeholder-shown),
@@ -54,6 +68,16 @@
         color: #fc174d;
       }
     }
+  }
+
+  &.default {
+    padding-top: 13px;
+    padding-bottom: 13px;
+  }
+
+  &.small {
+    padding-top: 8px;
+    padding-bottom: 8px;
   }
 }
 

@@ -2,13 +2,14 @@ import { SelectHTMLAttributes, OptionHTMLAttributes, ReactNode, useId } from 're
 import cx from 'clsx';
 import styles from './select.module.css';
 
-type Props = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'placeholder' | 'id'> & {
+type Props = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'id' | 'size'> & {
   options: OptionHTMLAttributes<HTMLOptionElement>[];
+  size?: 'default' | 'small';
   label?: string;
   error?: ReactNode;
 };
 
-function Select({ options, className, label, error, ...attrs }: Props) {
+function Select({ options, className, label, error, size = 'default', ...attrs }: Props) {
   const id = useId();
 
   const getOptions = () => options.map((option, index) => <option key={index} {...option} />);
@@ -16,12 +17,12 @@ function Select({ options, className, label, error, ...attrs }: Props) {
   return (
     <div className={className}>
       <div className={styles.base}>
-        <select id={id} className={cx(styles.select, error && styles.error)} {...attrs}>
+        <select id={id} className={cx(styles.select, styles[size], error && styles.error)} {...attrs}>
           {getOptions()}
         </select>
 
         {label && (
-          <label htmlFor={id} className={styles.label}>
+          <label htmlFor={id} className={cx(styles.label, styles[size])}>
             {label}
           </label>
         )}
