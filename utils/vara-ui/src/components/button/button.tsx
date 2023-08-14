@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, FunctionComponent, SVGProps } from 'react';
+import { ButtonHTMLAttributes, FunctionComponent, SVGProps, forwardRef } from 'react';
 import cx from 'clsx';
 import styles from './button.module.css';
 
@@ -21,13 +21,14 @@ type IconProps = BaseProps & {
 // TODO: omit text and icon if children specified?
 type Props = TextProps | IconProps;
 
-function Button(props: Props) {
+const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
   const {
     className,
     text,
     icon: Icon,
     disabled,
     isLoading,
+    type = 'button',
     color = 'primary',
     size = 'default',
     children,
@@ -36,7 +37,7 @@ function Button(props: Props) {
 
   return (
     <button
-      type="button"
+      type={type}
       className={cx(
         styles.button,
         styles[color],
@@ -47,6 +48,7 @@ function Button(props: Props) {
         className,
       )}
       disabled={disabled || isLoading}
+      ref={ref}
       {...attrs}>
       {Icon && <Icon />}
       {text && <span>{text}</span>}
@@ -54,7 +56,7 @@ function Button(props: Props) {
       {children}
     </button>
   );
-}
+});
 
 export { Button };
 export type { Props as ButtonProps };

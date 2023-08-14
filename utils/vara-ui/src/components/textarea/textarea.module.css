@@ -90,10 +90,17 @@
 
 .label {
   position: absolute;
-  top: 8px;
   left: 13px;
 
   z-index: -1;
+
+  &.default {
+    top: 13px;
+  }
+
+  &.small {
+    top: 8px;
+  }
 }
 
 .fieldset {
