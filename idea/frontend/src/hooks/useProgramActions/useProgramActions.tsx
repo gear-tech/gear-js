@@ -134,7 +134,7 @@ const useProgramActions = () => {
       if (resolve) resolve();
 
       if (isDevChain) {
-        const metahash = await api.code.metaHash(codeId);
+        const metahash = await api.program.metaHash(programId);
 
         await uploadLocalProgram({
           id: programId,
