@@ -21,6 +21,7 @@ import { CustomLink } from 'shared/ui/customLink';
 
 import { ProgramStatus } from 'entities/program';
 import { addProgramName } from 'api';
+import { getProgramMetadata } from '@gear-js/api';
 import { useMetadataUpload } from '../useMetadataUpload';
 import { waitForProgramInit } from './helpers';
 import { ALERT_OPTIONS } from './consts';
@@ -58,7 +59,7 @@ const useProgramActions = () => {
 
     const result = api.program.upload(program, metadata, payloadType);
 
-    return result.programId;
+    return result;
   };
 
   const handleEventsStatus = (events: EventRecord[], { reject }: OperationCallbacks) => {
@@ -79,6 +80,7 @@ const useProgramActions = () => {
     signer,
     payload,
     programId,
+    codeId,
     reject,
     resolve,
     method,
@@ -105,9 +107,9 @@ const useProgramActions = () => {
               () =>
                 metaHex &&
                 uploadMetadata({
-                  name,
-                  programId,
+                  codeHash: codeId,
                   metaHex,
+                  programId,
                   resolve: () => alert.success(programMessage, ALERT_OPTIONS),
                 }),
             );
@@ -132,7 +134,16 @@ const useProgramActions = () => {
       if (resolve) resolve();
 
       if (isDevChain) {
-        await uploadLocalProgram({ id: programId, name: name || programId, owner: account?.decodedAddress! });
+        const metahash = await api.program.metaHash(programId);
+
+        await uploadLocalProgram({
+          id: programId,
+          name: name || programId,
+          owner: account?.decodedAddress!,
+          code: { id: codeId },
+          hasState: !!metaHex && getProgramMetadata(metaHex).types.state != null,
+          metahash,
+        });
       }
     } catch (error) {
       const message = (error as Error).message;
@@ -164,6 +175,7 @@ const useProgramActions = () => {
             signer,
             payload,
             programId,
+            codeId,
             reject,
             resolve,
           });
@@ -193,7 +205,7 @@ const useProgramActions = () => {
 
         const { meta, address } = account!;
 
-        const [{ signer }, programId] = await Promise.all([
+        const [{ signer }, { programId, codeId }] = await Promise.all([
           web3FromSource(meta.source),
           uploadProgram(optBuffer, payload),
         ]);
@@ -201,7 +213,16 @@ const useProgramActions = () => {
         const { partialFee } = await api.program.paymentInfo(address, { signer });
 
         const handleConfirm = () =>
-          signAndUpload({ name, method: TransactionName.UploadProgram, signer, payload, programId, reject, resolve });
+          signAndUpload({
+            name,
+            method: TransactionName.UploadProgram,
+            signer,
+            payload,
+            programId,
+            codeId,
+            reject,
+            resolve,
+          });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),

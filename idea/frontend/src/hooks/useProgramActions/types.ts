@@ -33,6 +33,7 @@ type ParamsToSignAndUpload = ParamsToSignAndSend & {
   name?: string;
   payload: Payload;
   programId: HexString;
+  codeId: HexString;
 };
 
 export type { Payload, ParamsToUpload, ParamsToCreate, ParamsToSignAndUpload };

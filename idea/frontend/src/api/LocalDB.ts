@@ -1,31 +1,24 @@
-import { getProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import localForage from 'localforage';
 
 import { ProgramStatus, IProgram } from 'entities/program';
-
 import { LocalStorage } from 'shared/config';
+import { IMeta } from 'entities/metadata';
+
 import { ProgramPaginationModel } from './program';
 
 const PROGRAMS_LOCAL_FORAGE = localForage.createInstance({ name: 'programs' });
+const METADATA_LOCAL_FORAGE = localForage.createInstance({ name: 'metadata' });
 
 const getLocalProgram = (id: string) =>
-  PROGRAMS_LOCAL_FORAGE.getItem<IProgram>(id).then((response) => {
-    if (response) {
-      return { result: response };
-    }
+  PROGRAMS_LOCAL_FORAGE.getItem<IProgram>(id).then((response) =>
+    response ? { result: response } : Promise.reject(new Error('Program not found')),
+  );
 
-    return Promise.reject(new Error('Program not found'));
-  });
-
-const getLocalProgramMeta = (id: string) =>
-  PROGRAMS_LOCAL_FORAGE.getItem<IProgram>(id).then((response) => {
-    if (response?.meta) {
-      return { result: response.meta };
-    }
-
-    return Promise.reject(new Error('Metadata not found'));
-  });
+const getLocalMetadata = ({ hash }: { hash: HexString }) =>
+  METADATA_LOCAL_FORAGE.getItem<IMeta>(hash).then((response) =>
+    response?.hex ? { result: response } : Promise.reject(new Error('Metadata not found')),
+  );
 
 const getLocalPrograms = (params: any) => {
   const result: ProgramPaginationModel = {
@@ -64,29 +57,28 @@ const getLocalPrograms = (params: any) => {
   });
 };
 
-const uploadLocalProgram = (program: Pick<IProgram, 'id' | 'owner' | 'name'>) =>
+const uploadLocalProgram = (
+  program: Pick<IProgram, 'id' | 'owner' | 'name' | 'hasState' | 'metahash'> & { code: { id: HexString } },
+) =>
   PROGRAMS_LOCAL_FORAGE.setItem(program.id, {
     ...program,
-    meta: null,
     timestamp: Date(),
     status: ProgramStatus.Active,
     genesis: localStorage.getItem(LocalStorage.Genesis),
   });
 
-const uploadLocalMetadata = async (programId: string, metaHex: HexString, name?: string) => {
-  const { result } = await getLocalProgram(programId);
-
-  return PROGRAMS_LOCAL_FORAGE.setItem(programId, {
-    ...result,
-    name: name ?? result.name,
-    meta: { hex: metaHex, types: getProgramMetadata(metaHex).types },
-  });
-};
+const uploadLocalMetadata = async (hash: HexString, hex: HexString, programId: HexString, name?: string) =>
+  Promise.all([
+    METADATA_LOCAL_FORAGE.setItem(hash, { hex }),
+    getLocalProgram(programId)
+      .then(({ result }) => ({ ...result, name: name ?? result.name }))
+      .then((result) => PROGRAMS_LOCAL_FORAGE.setItem(programId, result)),
+  ]);
 
 export {
   getLocalProgram,
   getLocalPrograms,
-  getLocalProgramMeta,
+  getLocalMetadata,
   uploadLocalProgram,
   uploadLocalMetadata,
   PROGRAMS_LOCAL_FORAGE,

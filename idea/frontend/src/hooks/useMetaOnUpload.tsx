@@ -4,7 +4,7 @@ import { HexString } from '@polkadot/util/types';
 import { useState, useEffect } from 'react';
 import { generatePath, useLocation } from 'react-router-dom';
 
-import { fetchCodeMetadata } from 'api';
+import { fetchMetadata } from 'api';
 import { readFileAsync } from 'shared/helpers';
 import { RPCError, RPCErrorCode } from 'shared/services/rpcService';
 import { CustomLink } from 'shared/ui/customLink';
@@ -43,6 +43,7 @@ const useMetaOnUpload = (isCode?: boolean) => {
   const [optFile, setOptFile] = useState(initOptFile);
   const [optBuffer, setOptBuffer] = useState<Buffer>();
 
+  // TODO: combine with useMetadata hook?
   const [metadata, setMetadata] = useState<MetadataState>(initMeta);
   const [isUploadedMetaReady, setIsUploadedMetaReady] = useState(true);
 
@@ -99,13 +100,11 @@ const useMetaOnUpload = (isCode?: boolean) => {
 
     setIsUploadedMetaReady(false);
 
-    const codeId = generateCodeHash(optBuffer);
+    const codeHash = generateCodeHash(optBuffer);
 
-    fetchCodeMetadata(codeId)
-      .then(({ result }) => setUploadedMetadata(result.hex))
-      .catch(({ code, message }: RPCError) => {
-        if (code !== RPCErrorCode.MetadataNotFound) alert.error(message);
-      })
+    fetchMetadata({ codeHash })
+      .then(({ result }) => result.hex && setUploadedMetadata(result.hex))
+      .catch(({ code, message }: RPCError) => code !== RPCErrorCode.MetadataNotFound && alert.error(message))
       .finally(() => setIsUploadedMetaReady(true));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

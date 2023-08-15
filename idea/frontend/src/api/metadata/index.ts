@@ -1,3 +1,3 @@
-import { addMetadata, addCodeMetadata, fetchMetadata, fetchCodeMetadata } from './requests';
+import { addMetadata, fetchMetadata } from './requests';
 
-export { addMetadata, addCodeMetadata, fetchMetadata, fetchCodeMetadata };
+export { addMetadata, fetchMetadata };

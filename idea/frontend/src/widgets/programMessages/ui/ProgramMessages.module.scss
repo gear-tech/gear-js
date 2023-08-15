@@ -13,10 +13,6 @@
     @include childrenMargin(5px, right);
 
     margin-right: 12px;
-
-    .messagesBtn {
-      @include fade();
-    }
   }
 }
 
