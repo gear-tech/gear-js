@@ -41,7 +41,7 @@ const getText = (stepIndex: number) => {
       return 'Click here to select a wallet and choose an account';
 
     case 1:
-      return "Select program's and meta .wasm files, click the “Calculate gas” and “Upload program” buttons. You will be prompted to sign the transaction of the program initialization.";
+      return "Select program's .wasm and .meta files, click the “Calculate gas” and “Upload program” buttons. You will be prompted to sign the transaction of the program initialization.";
 
     case 2:
       return 'It can be used to initialize one or several instances of an identical program later';
