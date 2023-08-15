@@ -1,3 +1,3 @@
-import { getMetadataProperties } from './helpers';
+import { getNamedTypes, getFlatNamedTypeEntries } from './helpers';
 
-export { getMetadataProperties };
+export { getNamedTypes, getFlatNamedTypeEntries };

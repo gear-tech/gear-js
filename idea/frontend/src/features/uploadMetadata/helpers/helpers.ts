@@ -1,62 +1,43 @@
-import { ProgramMetadata, HumanTypesRepr } from '@gear-js/api';
-import { RegistryTypes } from '@polkadot/types/types';
+import { ProgramMetadata } from '@gear-js/api';
+import { AnyJson } from '@polkadot/types/types';
 import isPlainObject from 'lodash.isplainobject';
 
-import { META_FIELDS } from '../model';
+import { isNullOrUndefined } from 'shared/helpers';
+import { MetadataTypes, MedatadaTypesValue } from '../model';
 
-type MetaProperties = Partial<ProgramMetadata['types']> & { types?: RegistryTypes };
+const isEmptyObject = (value: unknown) => isPlainObject(value) && !Object.keys(value as {}).length;
 
-// TODO: get rid of ts-ignore
-const getMetadataProperties = (metadata: ProgramMetadata) => {
-  const valuesFromMeta = META_FIELDS.reduce((result, metaKey) => {
-    const metaValue = metadata.types[metaKey];
-    const isMetaValue = metaValue !== null && metaValue !== undefined;
-
-    if (isPlainObject(metaValue)) {
-      const types = metaValue as HumanTypesRepr;
-      const { input, output } = types;
-
-      const isInput = input !== null && input !== undefined;
-      const isOutput = output !== null && output !== undefined;
-
-      if (isInput) {
-        const typeName = metadata.getTypeName(input);
-
-        if (result[metaKey]) {
-          // @ts-ignore
-          // eslint-disable-next-line no-param-reassign
-          result[metaKey].input = typeName;
-        } else {
-          // @ts-ignore
-          // eslint-disable-next-line no-param-reassign
-          result[metaKey] = { input: typeName };
-        }
-      }
-
-      if (isOutput) {
-        const typeName = metadata.getTypeName(output);
-
-        if (result[metaKey]) {
-          // @ts-ignore
-          // eslint-disable-next-line no-param-reassign
-          result[metaKey].output = typeName;
-        } else {
-          // @ts-ignore
-          // eslint-disable-next-line no-param-reassign
-          result[metaKey] = { output: typeName };
-        }
-      }
-    } else if (isMetaValue) {
-      // eslint-disable-next-line no-param-reassign
-      result[metaKey] = metadata.getTypeName(metaValue as number);
+// TODO: types
+const getNamedTypes = (metadata: ProgramMetadata, onError: (message: string) => void) => {
+  const getName = (type: number) => {
+    try {
+      return metadata.getTypeName(type);
+    } catch (error) {
+      onError(error instanceof Error ? error.message : `Something went wrong on metadata.getTypeName(${type})`);
+      return `Invalid metadata`;
     }
+  };
 
-    return result;
-  }, {} as MetaProperties);
+  const getTypes = (type: MetadataTypes | MedatadaTypesValue) => {
+    if (isNullOrUndefined(type)) return type;
 
-  valuesFromMeta.types = metadata.getAllTypes();
+    if (typeof type === 'number') return getName(type);
 
-  return valuesFromMeta;
+    const entries = Object.entries(type)
+      .map(([key, value]) => [key, getTypes(value)])
+      .filter(([, value]) => !isNullOrUndefined(value) && !isEmptyObject(value)) as [string, AnyJson][];
+
+    return Object.fromEntries(entries);
+  };
+
+  return getTypes(metadata.types);
 };
 
-export { getMetadataProperties };
+const getFlatNamedTypeEntries = (types: {}, parentKey = ''): any =>
+  Object.entries(types).flatMap(([key, value]): any => {
+    const nestedKey = parentKey ? `${parentKey}.${key}` : key;
+
+    return isPlainObject(value) ? getFlatNamedTypeEntries(value as {}, nestedKey) : [[nestedKey, value]];
+  });
+
+export { getNamedTypes, getFlatNamedTypeEntries };

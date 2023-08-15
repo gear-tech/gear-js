@@ -3,15 +3,15 @@ import { Checkbox, FileInput, Input, Textarea } from '@gear-js/ui';
 import { useAlert } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 import { isHex } from '@polkadot/util';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 
 import { FileTypes } from 'shared/config';
 import { getPreformattedText } from 'shared/helpers';
 import { Box } from 'shared/ui/box';
 import { formStyles } from 'shared/ui/form';
-import { getMetadataProperties } from 'features/uploadMetadata/helpers';
 
+import { getNamedTypes } from '../../helpers';
 import { MetadataInput } from '../metadataInput';
 import styles from './UploadMetadata.module.scss';
 
@@ -34,17 +34,22 @@ const UploadMetadata = ({ metadata, isInputDisabled, isLoading, onReset, onUploa
   const resetMetaFile = () => setMetaFile(undefined);
   const toggleManualInput = () => setIsManualInput((prevValue) => !prevValue);
 
-  const renderMetadataProperties = (meta: ProgramMetadata) => {
-    const metadataProperties = getMetadataProperties(meta);
+  // useMemo to prevent excessive error alerts
+  const namedTypeEntries = useMemo(() => {
+    if (!metadata) return [];
 
-    return Object.entries(metadataProperties).map(([name, value]) => {
-      const isTextarea = name === 'types';
-      const text = isTextarea ? getPreformattedText(value) : JSON.stringify(value);
-      const Component = isTextarea ? Textarea : Input;
+    const types = getNamedTypes(metadata, (message) => alert.error(message));
 
-      return <Component key={name} label={name} direction="y" value={text} block readOnly />;
-    });
-  };
+    return Object.entries(types);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [metadata]);
+
+  const registryTypes = useMemo(() => metadata?.getAllTypes(), [metadata]);
+
+  const renderTypes = () =>
+    namedTypeEntries.map(([key, value]) => (
+      <Input key={key} label={key} direction="y" value={JSON.stringify(value)} block readOnly />
+    ));
 
   useEffect(() => {
     if (!metaFile) return onReset();
@@ -106,7 +111,11 @@ const UploadMetadata = ({ metadata, isInputDisabled, isLoading, onReset, onUploa
         </>
       )}
 
-      {metadata && renderMetadataProperties(metadata)}
+      {renderTypes()}
+
+      {registryTypes && (
+        <Textarea label="types" direction="y" value={getPreformattedText(registryTypes)} block readOnly />
+      )}
     </Box>
   );
 };
