@@ -4,6 +4,7 @@ import { getProgramMetadata } from '@gear-js/api';
 import { generatePath, useParams } from 'react-router-dom';
 
 import { useMetadataUpload, useModal, useProgram } from 'hooks';
+import { ProgramStatus } from 'entities/program';
 import { ProgramMessages } from 'widgets/programMessages';
 import { PathParams } from 'shared/types';
 import { getShortName } from 'shared/helpers';
@@ -48,8 +49,8 @@ const Program = () => {
       <header className={styles.header}>
         {program && <h2 className={styles.programName}>{getShortName(program.name)}</h2>}
 
-        <div className={styles.links}>
-          {isProgramReady && (
+        {program?.status === ProgramStatus.Active && (
+          <div className={styles.links}>
             <UILink
               to={generatePath(absoluteRoutes.sendMessage, { programId })}
               icon={SendSVG}
@@ -57,22 +58,22 @@ const Program = () => {
               color="secondary"
               className={styles.fixWidth}
             />
-          )}
 
-          {program?.hasState && (
-            <UILink
-              to={generatePath(routes.state, { programId })}
-              icon={ReadSVG}
-              text="Read State"
-              color="secondary"
-              className={styles.fixWidth}
-            />
-          )}
+            {program.hasState && (
+              <UILink
+                to={generatePath(routes.state, { programId })}
+                icon={ReadSVG}
+                text="Read State"
+                color="secondary"
+                className={styles.fixWidth}
+              />
+            )}
 
-          {isMetadataReady && !metadata && (
-            <Button text="Add metadata" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
-          )}
-        </div>
+            {isMetadataReady && !metadata && (
+              <Button text="Add metadata" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
+            )}
+          </div>
+        )}
       </header>
 
       <div className={styles.content}>
