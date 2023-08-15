@@ -4,8 +4,8 @@ import { HexString } from '@polkadot/util/types';
 import { OperationCallbacks, ParamsToSignAndSend } from 'entities/hooks';
 
 type Payload = {
-  value: number;
-  gasLimit: number;
+  value: string;
+  gasLimit: string;
   metaHex?: HexString;
   metadata?: ProgramMetadata | undefined;
   initPayload: string;
