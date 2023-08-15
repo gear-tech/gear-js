@@ -18,7 +18,8 @@ function useMetadata(hash: HexString | null | undefined) {
     if (hash === null) return setisMetadataReady(true);
     if (!hash) return;
 
-    const getMetadata = isDevChain ? getLocalMetadata : fetchMetadata;
+    const getMetadata = (params: { hash: HexString }) =>
+      isDevChain ? getLocalMetadata(params).catch(() => fetchMetadata(params)) : fetchMetadata(params);
 
     getMetadata({ hash })
       .then(({ result }) => result.hex && setMetadata(getProgramMetadata(result.hex)))

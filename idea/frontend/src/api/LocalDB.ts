@@ -11,13 +11,9 @@ const PROGRAMS_LOCAL_FORAGE = localForage.createInstance({ name: 'programs' });
 const METADATA_LOCAL_FORAGE = localForage.createInstance({ name: 'metadata' });
 
 const getLocalProgram = (id: string) =>
-  PROGRAMS_LOCAL_FORAGE.getItem<IProgram>(id).then((response) => {
-    if (response) {
-      return { result: response };
-    }
-
-    return Promise.reject(new Error('Program not found'));
-  });
+  PROGRAMS_LOCAL_FORAGE.getItem<IProgram>(id).then((response) =>
+    response ? { result: response } : Promise.reject(new Error('Program not found')),
+  );
 
 const getLocalMetadata = ({ hash }: { hash: HexString }) =>
   METADATA_LOCAL_FORAGE.getItem<IMeta>(hash).then((response) =>
