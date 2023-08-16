@@ -11,7 +11,7 @@
   "dependencies": {
     "@gear-js/api": "0.32.4",
     "@gear-js/react-hooks": "0.5.26",
-    "@gear-js/ui": "workspace:^",
+    "@gear-js/ui": "0.5.19",
     "@hcaptcha/react-hcaptcha": "^1.4.4",
     "@mantine/form": "^5.4.0",
     "@polkadot/api": "10.9.1",
@@ -24,6 +24,7 @@
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
     "assert": "^2.0.0",
+    "bignumber.js": "9.1.1",
     "buffer": "^6.0.3",
     "clsx": "^1.2.1",
     "final-form": "^4.20.7",

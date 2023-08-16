@@ -10,7 +10,7 @@ import { checkWallet, getExtrinsicFailedMessage } from 'shared/helpers';
 import { PROGRAM_ERRORS, TransactionName, TransactionStatus, UPLOAD_METADATA_TIMEOUT } from 'shared/config';
 import { CopiedInfo } from 'shared/ui/copiedInfo';
 
-import { addCodeMetadata, addCodeName } from 'api';
+import { addMetadata, addCodeName } from 'api';
 import { ParamsToUploadCode, ParamsToSignAndSend } from './types';
 
 const useCodeUpload = () => {
@@ -58,7 +58,7 @@ const useCodeUpload = () => {
             const id = codeId;
 
             addCodeName({ id, name: name || id })
-              .then(() => metaHex && addCodeMetadata({ id, metaHex }))
+              .then(() => metaHex && addMetadata({ codeHash: id, hex: metaHex }))
               .catch(({ message }: Error) => alert.error(message));
           }, UPLOAD_METADATA_TIMEOUT);
         } else if (status.isInvalid) {

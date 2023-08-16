@@ -36,10 +36,14 @@
 
   .inputWrapper {
     flex: 1 1;
+    display: flex;
+    align-items: center;
     padding: toRem(10) toRem(16);
 
     .field {
       width: 100%;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
   }
 }

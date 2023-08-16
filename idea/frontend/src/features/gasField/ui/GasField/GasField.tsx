@@ -1,11 +1,13 @@
+import { InputWrapper, inputStyles, InputProps, Button } from '@gear-js/ui';
 import { useForm, useField } from 'react-final-form';
 import NumberFormat, { NumberFormatProps, NumberFormatValues } from 'react-number-format';
+import BigNumber from 'bignumber.js';
 import clsx from 'clsx';
-import { InputWrapper, inputStyles, InputProps, Button } from '@gear-js/ui';
 
 import { formStyles } from 'shared/ui/form';
 import { ReactComponent as calculatorSVG } from 'shared/assets/images/actions/calculator.svg';
 import { Result } from 'hooks/useGasCalculate/types';
+import { BalanceUnit } from 'shared/ui/form/balance-unit';
 
 import { Info } from '../Info';
 import styles from './GasField.module.scss';
@@ -13,7 +15,6 @@ import styles from './GasField.module.scss';
 type Props = Omit<NumberFormatProps & InputProps, 'value' | 'onValueChange' | 'onChange'> & {
   info: Result | undefined;
   onGasCalculate: () => void;
-  block?: boolean;
 };
 
 const GasField = (props: Props) => {
@@ -23,13 +24,15 @@ const GasField = (props: Props) => {
   const { change } = useForm();
   const { input, meta } = useField(name);
 
-  const handleChange = ({ floatValue }: NumberFormatValues) => change(name, floatValue);
+  const handleChange = ({ value }: NumberFormatValues) => change(name, value);
 
   const increaseByTenPercent = () => {
-    const currentValue = +input.value;
-    const increasedValue = currentValue + Math.round(currentValue / 10);
+    const bnValue = BigNumber(input.value);
 
-    change(name, increasedValue);
+    const bnMultiplier = bnValue.multipliedBy(0.1);
+    const increasedValue = bnValue.plus(bnMultiplier);
+
+    change(name, increasedValue.toFixed());
   };
 
   const error = meta.invalid && meta.touched ? meta.error : undefined;
@@ -60,17 +63,16 @@ const GasField = (props: Props) => {
                 onFocus={input.onFocus}
                 onValueChange={handleChange}
               />
+
+              <BalanceUnit />
             </div>
+
             <Button text="+ 10%" color="light" className={styles.addButton} onClick={increaseByTenPercent} />
           </div>
-          <Button
-            icon={calculatorSVG}
-            text="Calculate gas"
-            color="light"
-            disabled={disabled}
-            onClick={onGasCalculate}
-          />
+
+          <Button icon={calculatorSVG} text="Calculate" color="light" disabled={disabled} onClick={onGasCalculate} />
         </div>
+
         {info && <Info isAwait={info.waited} reserved={info.reserved} returned={info.mayBeReturned} />}
       </div>
     </InputWrapper>

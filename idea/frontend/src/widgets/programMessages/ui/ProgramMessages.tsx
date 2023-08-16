@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { HexString } from '@polkadot/util/types';
 
-import { useWaitlist } from 'hooks';
+import { useDataLoading, useMessages, useWaitlist } from 'hooks';
 import { Subheader } from 'shared/ui/subheader';
 import { SwitchButton } from 'shared/ui/switchButton';
-import { IMessage } from 'entities/message';
 
 import { MessageFilter } from '../model/consts';
 import { Messages } from './messages';
@@ -13,33 +12,23 @@ import styles from './ProgramMessages.module.scss';
 
 type Props = {
   programId: HexString;
-  messages: IMessage[];
-  isLoading: boolean;
 };
 
-const ProgramMessages = ({ programId, messages, isLoading }: Props) => {
-  const messagesAmount = messages.length;
+type RequestParams = {
+  source: HexString;
+};
 
-  const waitlistData = useWaitlist();
-  const { waitlist, fetchWaitlist } = waitlistData;
-
+const ProgramMessages = ({ programId }: Props) => {
+  const { messages, totalCount, isLoading: isMessagesLoading, fetchMessages } = useMessages();
+  const { waitlist, isLoading: isWaitlistLoading, fetchWaitlist } = useWaitlist();
   const [activeFilter, setActiveFilter] = useState(MessageFilter.Messages);
 
-  const checkActive = (filter: MessageFilter) => filter === activeFilter;
-  const switchActiveFilter = (filter: MessageFilter) => () => setActiveFilter(filter);
+  const { loadData } = useDataLoading<RequestParams>({
+    defaultParams: { source: programId },
+    fetchData: fetchMessages,
+  });
 
-  const renderContent = () => {
-    switch (activeFilter) {
-      case MessageFilter.Messages:
-        return <Messages messages={messages} isLoading={isLoading} totalCount={messagesAmount} />;
-
-      case MessageFilter.Waitlist:
-        return <Waitlist waitlist={waitlist} isLoading={waitlistData.isLoading} totalCount={waitlistData.totalCount} />;
-
-      default:
-        return null;
-    }
-  };
+  const sortedMessages = messages.sort((msg, nextMsg) => Date.parse(nextMsg.timestamp) - Date.parse(msg.timestamp));
 
   useEffect(() => {
     fetchWaitlist(programId);
@@ -51,19 +40,26 @@ const ProgramMessages = ({ programId, messages, isLoading }: Props) => {
       <Subheader title="Messages">
         <div className={styles.filters}>
           <SwitchButton
-            text={`Messages: ${messagesAmount}`}
-            isActive={checkActive(MessageFilter.Messages)}
-            className={styles.messagesBtn}
-            onClick={switchActiveFilter(MessageFilter.Messages)}
+            text={`Messages: ${totalCount}`}
+            isActive={activeFilter === MessageFilter.Messages}
+            onClick={() => setActiveFilter(MessageFilter.Messages)}
           />
+
           <SwitchButton
-            text={`Waitlist: ${waitlistData.totalCount}`}
-            isActive={checkActive(MessageFilter.Waitlist)}
-            onClick={switchActiveFilter(MessageFilter.Waitlist)}
+            text={`Waitlist: ${waitlist.length}`}
+            isActive={activeFilter === MessageFilter.Waitlist}
+            onClick={() => setActiveFilter(MessageFilter.Waitlist)}
           />
         </div>
       </Subheader>
-      {renderContent()}
+
+      {activeFilter === MessageFilter.Messages && (
+        <Messages messages={sortedMessages} isLoading={isMessagesLoading} totalCount={totalCount} loadMore={loadData} />
+      )}
+
+      {activeFilter === MessageFilter.Waitlist && (
+        <Waitlist waitlist={waitlist} isLoading={isWaitlistLoading} totalCount={waitlist.length} />
+      )}
     </div>
   );
 };

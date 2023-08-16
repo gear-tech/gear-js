@@ -1,11 +1,11 @@
-import { getProgramMetadata, ProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
+import { getProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { useEffect, useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
 
-import { addCodeMetadata, addCodeName, getCode } from 'api';
+import { addMetadata, addCodeName, getCode } from 'api';
 import { useChain, useModal } from 'hooks';
 import { BackButton } from 'shared/ui/backButton';
 import { absoluteRoutes } from 'shared/config';
@@ -17,6 +17,7 @@ import { MetadataDetails } from 'pages/program/ui/metadataDetails';
 import { ReactComponent as PlusSVG } from 'shared/assets/images/actions/plus.svg';
 import { ReactComponent as AddMetaSVG } from 'shared/assets/images/actions/addMeta.svg';
 import { ICode } from 'entities/code';
+import { useMetadata } from 'features/metadata';
 
 import styles from './Code.module.scss';
 
@@ -24,26 +25,31 @@ type Params = { codeId: HexString };
 
 const Code = () => {
   const { codeId } = useParams() as Params;
-  const { isDevChain } = useChain();
   const alert = useAlert();
 
+  const { isDevChain } = useChain();
   const { showModal, closeModal } = useModal();
 
   const [code, setCode] = useState<ICode>();
   const programs = code?.programs || [];
+  const isCodeReady = code !== undefined;
 
-  const [metadata, setMetadata] = useState<ProgramMetadata>();
-  const isLoading = !code;
+  const { metadata, isMetadataReady, setMetadata } = useMetadata(code?.metahash);
+
+  const setCodeName = (name: string) => setCode((prevCode) => (prevCode ? { ...prevCode, name } : prevCode));
 
   const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
     const id = codeId;
 
     addCodeName({ id, name })
-      .then(() => addCodeMetadata({ id, metaHex }))
+      .then(() => addMetadata({ codeHash: id, hex: metaHex }))
       .then(() => {
-        alert.success('Metadata for code uploaded successfully');
-        closeModal();
         setMetadata(getProgramMetadata(metaHex));
+        setCodeName(name);
+
+        alert.success('Metadata for code uploaded successfully');
+
+        closeModal();
       })
       .catch(({ message }: Error) => alert.error(message));
   };
@@ -58,14 +64,6 @@ const Code = () => {
       .catch(({ message }: Error) => alert.error(message));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    const metaHex = code?.meta?.hex;
-
-    if (!metaHex) return;
-
-    setMetadata(getProgramMetadata(metaHex));
-  }, [code]);
 
   return (
     <>
@@ -83,25 +81,27 @@ const Code = () => {
 
           <div>
             <h2 className={styles.heading}>Metadata</h2>
-            <MetadataDetails metadata={metadata} isLoading={isLoading} />
+            <MetadataDetails metadata={metadata} isLoading={!isMetadataReady} />
           </div>
         </div>
 
         <div>
           <h2 className={styles.heading}>Programs</h2>
-          <ProgramsList programs={programs} totalCount={programs.length} isLoading={isLoading} />
+          <ProgramsList programs={programs} totalCount={programs.length} isLoading={!isCodeReady} />
         </div>
       </div>
 
       <div className={styles.buttons}>
-        <UILink
-          to={generatePath(absoluteRoutes.initializeProgram, { codeId })}
-          text="Create program"
-          icon={PlusSVG}
-          size="large"
-        />
+        {isCodeReady && (
+          <UILink
+            to={generatePath(absoluteRoutes.initializeProgram, { codeId })}
+            text="Create program"
+            icon={PlusSVG}
+            size="large"
+          />
+        )}
 
-        {!isDevChain && !metadata && (
+        {!isDevChain && isMetadataReady && !metadata && (
           <Button text="Add metadata" icon={AddMetaSVG} color="light" size="large" onClick={showUploadMetadataModal} />
         )}
 

@@ -1,5 +1,5 @@
 import type { Event } from '@polkadot/types/interfaces';
-import { GearApi, ProgramMetadata } from '@gear-js/api';
+import { GearApi } from '@gear-js/api';
 import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
 import { AnySchema, ValidationError } from 'yup';
 import { setIn } from 'final-form';
@@ -7,7 +7,6 @@ import isString from 'lodash.isstring';
 
 import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from 'shared/config';
 
-import { IMeta } from 'entities/metadata';
 import { isAndroid, isIOS } from '@react-aria/utils';
 import { isHexValid, isExists } from './form';
 
@@ -123,9 +122,6 @@ const getValidation =
     }
   };
 
-const isState = (meta: IMeta | ProgramMetadata | undefined | null) =>
-  meta?.types.state !== undefined && meta?.types.state !== null;
-
 const disableScroll = () => document.body.classList.add('noOverflow');
 const enableScroll = () => document.body.classList.remove('noOverflow');
 
@@ -139,6 +135,8 @@ const resetFileInput = (target: HTMLInputElement | null) => {
 };
 
 const isMobileDevice = () => isIOS() || (isAndroid() as boolean); // asserting cuz isAndroid somehow any
+
+const isNullOrUndefined = (value: unknown): value is null | undefined => value === null || value === undefined;
 
 export {
   checkWallet,
@@ -155,9 +153,9 @@ export {
   isNodeAddressValid,
   isHexValid,
   isExists,
-  isState,
   disableScroll,
   enableScroll,
   resetFileInput,
   isMobileDevice,
+  isNullOrUndefined,
 };

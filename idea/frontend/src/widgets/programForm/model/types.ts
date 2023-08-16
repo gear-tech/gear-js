@@ -1,9 +1,9 @@
 import { PayloadValue } from 'entities/formPayload';
 
 type FormValues = {
-  value: number;
+  value: string;
   payload: PayloadValue;
-  gasLimit: number;
+  gasLimit: string;
   programName: string;
   payloadType: string;
 };
