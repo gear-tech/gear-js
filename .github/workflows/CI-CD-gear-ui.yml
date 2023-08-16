@@ -30,7 +30,6 @@ jobs:
           node-version: 18.x
 
       - name: "gear-ui: Install dependencies"
-        working-directory: utils/gear-ui
         run: yarn install
 
       - name: "gear-ui: Build pkg"
@@ -58,7 +57,6 @@ jobs:
           node-version: 18.x
 
       - name: "vara-ui: Install dependencies"
-        working-directory: utils/vara-ui
         run: yarn install
 
       - name: "vara-ui: Build pkg"

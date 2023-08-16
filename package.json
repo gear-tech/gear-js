@@ -24,7 +24,8 @@
   },
   "workspaces": [
     "idea/*",
-    "utils/gear-ui"
+    "utils/gear-ui",
+    "utils/vara-ui"
   ],
   "lint-staged": {
     "api/**/*.{js,ts}": "cd api && yarn lint:fix",
