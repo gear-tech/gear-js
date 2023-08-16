@@ -22,9 +22,7 @@
     "lint-staged": "12.5.0"
   },
   "workspaces": [
-    "idea/*",
-    "utils/gear-ui",
-    "utils/vara-ui"
+    "idea/*"
   ],
   "lint-staged": {
     "api/**/*.{js,ts}": "cd api && yarn lint:fix",
