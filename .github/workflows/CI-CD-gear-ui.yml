@@ -31,15 +31,15 @@ jobs:
 
       - name: "gear-ui: Install dependencies"
         working-directory: utils/gear-ui
-        run: yarn install
+        run: npm install
 
       - name: "gear-ui: Build pkg"
         working-directory: utils/gear-ui
-        run: yarn build
+        run: npm run build
 
       - name: "gear-ui: Run tests"
         working-directory: utils/gear-ui
-        run: yarn test
+        run: npm run test
 
   vara-ui-build:
     if: github.event_name == 'pull_request'
@@ -59,11 +59,11 @@ jobs:
 
       - name: "vara-ui: Install dependencies"
         working-directory: utils/vara-ui
-        run: yarn install
+        run: npm install
 
       - name: "vara-ui: Build pkg"
         working-directory: utils/vara-ui
-        run: yarn build
+        run: npm run build
 
 
   publish-to-npm:
@@ -115,8 +115,8 @@ jobs:
         working-directory: utils/gear-ui
         run: |
           export token=$(printenv $(printenv GITHUB_ACTOR))
-          yarn install
-          yarn build
+          npm install
+          npm run build
           npm config set //registry.npmjs.org/:_authToken=$token
           npm publish
         env:
@@ -128,8 +128,8 @@ jobs:
         working-directory: utils/vara-ui
         run: |
           export token=$(printenv $(printenv GITHUB_ACTOR))
-          yarn install
-          yarn build
+          npm install
+          npm run build
           npm config set //registry.npmjs.org/:_authToken=$token
           npm publish
         env:
