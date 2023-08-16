@@ -1,0 +1,144 @@
+.root {
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.3;
+  }
+}
+
+.base {
+  position: relative;
+}
+
+.textarea,
+.label {
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.009em;
+  color: #010500;
+
+  &.default {
+    font-size: 16px;
+  }
+
+  &.small {
+    font-size: 14px;
+  }
+}
+
+.textarea {
+  outline: none;
+  resize: none;
+  background-color: transparent;
+  border: none;
+
+  width: 100%;
+  padding-right: 14px;
+  padding-left: 14px;
+
+  &:not(:focus) {
+    &::-webkit-input-placeholder {
+      color: transparent;
+    }
+  }
+
+  &:focus,
+  &:not(:placeholder-shown),
+  &.error {
+    ~ .label {
+      opacity: 0;
+    }
+
+    ~ .fieldset {
+      .legendLabel {
+        opacity: 1;
+        max-width: 100%;
+        padding: 0 4px;
+      }
+    }
+  }
+
+  &:focus {
+    ~ .fieldset {
+      border-color: #00b387;
+
+      .legendLabel {
+        color: #00b387;
+      }
+    }
+  }
+
+  &.error {
+    ~ .fieldset {
+      border-color: #fc174d;
+
+      .legendLabel {
+        color: #fc174d;
+      }
+    }
+  }
+
+  &.default {
+    padding-top: 13px;
+    padding-bottom: 13px;
+  }
+
+  &.small {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+}
+
+.label {
+  position: absolute;
+  left: 13px;
+
+  z-index: -1;
+
+  &.default {
+    top: 13px;
+  }
+
+  &.small {
+    top: 8px;
+  }
+}
+
+.fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0 13px;
+
+  position: absolute;
+  /* TODO: variables */
+  top: -6px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  border: 1px solid #0000003b;
+  border-radius: 4px;
+
+  z-index: -1;
+}
+
+.legend,
+.message {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.legend {
+  opacity: 0;
+  max-width: 0.01px;
+  padding: 0;
+
+  color: #313635;
+}
+
+.message {
+  margin: 4px 0 0 0;
+
+  color: #fc174d;
+}

@@ -1,0 +1,135 @@
+.root {
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.3;
+  }
+}
+
+.base {
+  position: relative;
+}
+
+.select,
+.label {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.009em;
+  color: #010500;
+
+  &.default {
+    font-size: 16px;
+  }
+
+  &.small {
+    font-size: 14px;
+  }
+}
+
+.select {
+  appearance: none;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+
+  width: 100%;
+  padding: 8px 14px;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.616 5.54a.5.5 0 0 0 .768 0L9.317.82A.5.5 0 0 0 8.932 0H1.068a.5.5 0 0 0-.385.82l3.933 4.72Z' fill='%230C0C0D' fill-opacity='.5'/%3E%3C/svg%3E");
+  background-position: right 14px center;
+  background-repeat: no-repeat;
+
+  &:focus,
+  &:not(:placeholder-shown),
+  &.error {
+    ~ .label {
+      opacity: 0;
+    }
+
+    ~ .fieldset {
+      .legendLabel {
+        opacity: 1;
+        max-width: 100%;
+        padding: 0 4px;
+      }
+    }
+  }
+
+  &:focus {
+    ~ .fieldset {
+      border-color: #00b387;
+
+      .legendLabel {
+        color: #00b387;
+      }
+    }
+  }
+
+  &.error {
+    ~ .fieldset {
+      border-color: #fc174d;
+
+      .legendLabel {
+        color: #fc174d;
+      }
+    }
+  }
+
+  &.default {
+    padding-top: 13px;
+    padding-bottom: 13px;
+  }
+
+  &.small {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+}
+
+.label {
+  position: absolute;
+  top: 8px;
+  left: 13px;
+
+  z-index: -1;
+}
+
+.fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0 13px;
+
+  position: absolute;
+  /* TODO: variables */
+  top: -6px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  border: 1px solid #0000003b;
+  border-radius: 4px;
+
+  z-index: -1;
+}
+
+.legend,
+.message {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.legend {
+  opacity: 0;
+  max-width: 0.01px;
+  padding: 0;
+
+  color: #313635;
+}
+
+.message {
+  margin: 4px 0 0 0;
+
+  color: #fc174d;
+}

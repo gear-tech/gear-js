@@ -1,0 +1,60 @@
+{
+  "name": "@gear-js/vara-ui",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "description": "React UI components used across Vara applications",
+  "author": "Gear Technologies",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/gear-tech/gear-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gear-tech/gear-js.git"
+  },
+  "keywords": [
+    "gear",
+    "gear-js"
+  ],
+  "homepage": "https://github.com/gear-tech/gear-js/tree/main/utils/vara-ui#readme",
+  "scripts": {
+    "dev": "storybook dev -p 6006",
+    "build": "tsc && vite build",
+    "build-sb": "storybook build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@storybook/addon-essentials": "7.2.1",
+    "@storybook/addon-interactions": "7.2.1",
+    "@storybook/addon-links": "7.2.1",
+    "@storybook/addon-onboarding": "1.0.8",
+    "@storybook/blocks": "7.2.1",
+    "@storybook/react": "7.2.1",
+    "@storybook/react-vite": "7.2.1",
+    "@storybook/testing-library": "0.2.0",
+    "@types/react": "18.2.15",
+    "@types/react-dom": "18.2.7",
+    "@typescript-eslint/eslint-plugin": "6.0.0",
+    "@typescript-eslint/parser": "6.0.0",
+    "@vitejs/plugin-react": "4.0.3",
+    "clsx": "2.0.0",
+    "eslint": "8.45.0",
+    "eslint-plugin-react-hooks": "4.6.0",
+    "eslint-plugin-react-refresh": "0.4.3",
+    "eslint-plugin-storybook": "0.6.13",
+    "storybook": "7.2.1",
+    "typescript": "5.0.2",
+    "vite": "4.4.5",
+    "vite-plugin-dts": "3.5.1",
+    "vite-plugin-svgr": "3.2.0"
+  },
+  "files": [
+    "dist"
+  ]
+}
