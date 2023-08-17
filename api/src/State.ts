@@ -4,10 +4,11 @@ import { HexString } from '@polkadot/util/types';
 import { CreateType, ProgramMetadata, StateMetadata, MetadataVersion } from './metadata';
 import { Bytes } from '@polkadot/types';
 import { GearProgramStorage } from './Storage';
-import { HumanTypesRepr } from 'types';
+import { HumanTypesRepr, TypesRepr } from 'types';
 
 interface ReadStateArgs {
   programId: HexString;
+  payload: any;
   at?: HexString;
 }
 
@@ -41,21 +42,34 @@ export class GearProgramState extends GearProgramStorage {
   }
 
   /**
-   *
-   * @param args ProgramId and hash of block where it's necessary to read state (optional)
+   * ### Read state of program (calls `read_state` rpc call)
+   * @param args ProgramId, input payload and hash of block where it's necessary to read state (optional)
    * @param meta Program metadata returned from getProgramMetadata function
    * @param type (optional) Index of type to decode state. metadata.types.state is uesd by default
+   *
+   * @example
+   * const meta = ProgramMetadata.from('0x...');
+   * const programId = '0x...';
+   *
+   * const result = await api.programState.read({ programId, payload: { id: 1 } }, meta);
+   * console.log(result.toJSON());
    */
-  async read(args: ReadStateArgs, meta: ProgramMetadata, type?: number): Promise<Codec> {
-    const state = await this._api.rpc['gear'].readState(args.programId, args.at || null);
+  async read<T extends Codec = Codec>(args: ReadStateArgs, meta: ProgramMetadata, type?: number): Promise<T> {
+    const payload =
+      meta.version === MetadataVersion.V1Rust
+        ? meta.createType((meta.types.state as HumanTypesRepr).input!, args.payload)
+        : '0x';
+
+    const state = await this._api.rpc['gear'].readState(args.programId, payload, args.at || null);
+
     if (type !== undefined) {
-      return meta.createType(type, state);
+      return meta.createType<T>(type, state);
     }
 
     if (meta.version === MetadataVersion.V1Rust) {
-      return meta.createType(meta.types.state as number, state);
+      return meta.createType<T>(meta.types.state as number, state);
     }
 
-    return meta.createType((meta.types.state as HumanTypesRepr).output, state);
+    return meta.createType<T>((meta.types.state as HumanTypesRepr).output, state);
   }
 }
