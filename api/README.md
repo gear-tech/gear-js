@@ -85,14 +85,14 @@ There're 2 types of metadata.
 
 1. `ProgramMetadata` is used to encode/decode messages to/from a program as well as to read the whole state of the program
 
-_You can use `getProgramMetadata` function to create the program metadata. The function takes metadata of the program in format of hex string. It will return object of `ProgramMetadata` class that has property `types` that contains all types of the program._
+_You can use `ProgramMetadata.from` method to create the program metadata. The method takes metadata of the program in format of hex string. It will return object of `ProgramMetadata` class that has property `types` that contains all types of the program._
 
 **You should pass an object of this class to function arguments when you want to send some extrinsics that require encoding payloads**
 
 ```javascript
-import { getProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 
-const meta = getProgramMetadata(`0x...`);
+const meta = ProgramMetadata.from(`0x...`);
 meta.types.init.input; // can be used to encode input message for init entrypoint of the program
 meta.types.init.output; // can be used to decode output message for init entrypoint of the program
 // the same thing available for all entrypoints of the program
@@ -117,7 +117,7 @@ Both `ProgramMetadata` and `StateMetadata` classes have a few methods that can h
 ```javascript
 import { ProgramMetadata } from '@gear-js/api';
 
-const meta = getProgramMetadata(`0x...`);
+const meta = ProgramMetadata.from(`0x...`);
 
 meta.getTypeName(4); // will return name of type with this index
 // or
@@ -137,7 +137,7 @@ meta.createType(4, { value: 'value' }); // to encode or decode data
 
 **_Extrinsics are used to interact with programs running on blockchain networks powered by Gear Protocol_**
 
-_In all cases of sending extrinsics, there is no need to encode the payloads by yourself. It's sufficient to pass the program metadata obtained from the `getProgramMetadata` function to the methods that creates extrinsics._
+_In all cases of sending extrinsics, there is no need to encode the payloads by yourself. It's sufficient to pass the program metadata obtained from the `ProgramMetadata.from` method to the methods that creates extrinsics._
 
 ### Upload program
 
@@ -280,7 +280,7 @@ Gas calculation returns GasInfo object contains 5 parameters:
 
 ```javascript
 const code = fs.readFileSync('demo_meta.opt.wasm');
-const meta = getProgramMetadata('0x...');
+const meta = ProgramMetadata.from('0x...');
 const gas = await gearApi.program.calculateGas.handle(
   '0x...', // source id
   '0x...', //program id

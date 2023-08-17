@@ -19,7 +19,7 @@ export class GearMessage extends GearTransaction {
   /**
    * ## Send Message
    * @param args Message parameters
-   * @param meta Program metadata obtained using `getProgramMetadata` function.
+   * @param meta Program metadata obtained using `ProgramMetadata.from` method.
    * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.handle.input` will be used instead.
    * @returns Submittable result
    * @example
@@ -128,7 +128,7 @@ export class GearMessage extends GearTransaction {
   /**
    * ## Send reply message
    * @param args Message parameters
-   * @param meta Program metadata obtained using `getProgramMetadata` function.
+   * @param meta Program metadata obtained using `ProgramMetadata.from` method.
    * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.reply.input` will be used instead.
    * @returns Submitted result
    * @example
@@ -237,7 +237,7 @@ export class GearMessage extends GearTransaction {
   /**
    * ## Send Message with Voucher
    * @param args Message parameters
-   * @param meta Program metadata obtained using `getProgramMetadata` function.
+   * @param meta Program metadata obtained using `ProgramMetadata.from` method.
    * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.handle.input` will be used instead.
    * @returns Submittable result
    * @example
@@ -346,7 +346,7 @@ export class GearMessage extends GearTransaction {
   /**
    * ### Send reply message with voucher
    * @param args Message parameters
-   * @param meta Program metadata obtained using `getProgramMetadata` function.
+   * @param meta Program metadata obtained using `ProgramMetadata.from` method.
    * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.reply.input` will be used instead.
    * @returns Submitted result
    * @example
