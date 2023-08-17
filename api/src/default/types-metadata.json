@@ -7,13 +7,22 @@
       "input": "Option<u32>",
       "output": "Option<u32>"
     },
-    "ProgramMetadataRepr": {
+    "ProgramMetadataReprRustV1": {
       "init": "TypesRepr",
       "handle": "TypesRepr",
       "reply": "Option<u32>",
       "others": "TypesRepr",
       "signal": "Option<u32>",
       "state": "Option<u32>",
+      "reg": "Vec<u8>"
+    },
+    "ProgramMetadataReprRustV2": {
+      "init": "TypesRepr",
+      "handle": "TypesRepr",
+      "reply": "Option<u32>",
+      "others": "TypesRepr",
+      "signal": "Option<u32>",
+      "state": "TypesRepr",
       "reg": "Vec<u8>"
     },
     "StateMetadataRepr": {

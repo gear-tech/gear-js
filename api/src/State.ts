@@ -1,9 +1,10 @@
 import { Codec } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
-import { CreateType, ProgramMetadata, StateMetadata } from './metadata';
+import { CreateType, ProgramMetadata, StateMetadata, VersionsRust } from './metadata';
 import { Bytes } from '@polkadot/types';
 import { GearProgramStorage } from './Storage';
+import { HumanTypesRepr } from 'types';
 
 interface ReadStateArgs {
   programId: HexString;
@@ -47,6 +48,14 @@ export class GearProgramState extends GearProgramStorage {
    */
   async read(args: ReadStateArgs, meta: ProgramMetadata, type?: number): Promise<Codec> {
     const state = await this._api.rpc['gear'].readState(args.programId, args.at || null);
-    return meta.createType(type || meta.types.state, state);
+    if (type !== undefined) {
+      return meta.createType(type, state);
+    }
+
+    if (meta.version === VersionsRust.V1) {
+      return meta.createType(meta.types.state as number, state);
+    }
+
+    return meta.createType((meta.types.state as HumanTypesRepr).output, state);
   }
 }

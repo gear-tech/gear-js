@@ -3,7 +3,7 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { GearApi, decodeAddress, generateVoucherId, getProgramMetadata } from '../src';
+import { GearApi, decodeAddress, ProgramMetadata } from '../src';
 import { TARGET, TEST_META_META, WS_ADDRESS } from './config';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 
@@ -16,7 +16,7 @@ let msgId: HexString;
 const api = new GearApi({ providerAddress: WS_ADDRESS });
 const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
 const metaHex: HexString = `0x${readFileSync(TEST_META_META, 'utf-8')}`;
-const metadata = getProgramMetadata(metaHex);
+const metadata = ProgramMetadata.from(metaHex);
 
 beforeAll(async () => {
   await api.isReadyOrError;

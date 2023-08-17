@@ -1,13 +1,13 @@
 import { TEST_META_META } from './config';
 import fs from 'fs';
 
-import { ProgramMetadata, getProgramMetadata } from '../src';
+import { ProgramMetadata } from '../src';
 
 let meta: ProgramMetadata;
 
 beforeAll(() => {
   const hex = fs.readFileSync(TEST_META_META, 'utf-8');
-  meta = getProgramMetadata(`0x${hex}`);
+  meta = ProgramMetadata.from(`0x${hex}`);
 });
 
 describe('Get type definitions', () => {
@@ -611,7 +611,7 @@ const metaHex =
 
 describe.skip('Decode complicated type', () => {
   test('Check that there is no Lookup types in type defenitions', () => {
-    meta = getProgramMetadata(metaHex);
+    meta = ProgramMetadata.from(metaHex);
 
     let isLookupTypeFound = false;
 
@@ -625,7 +625,7 @@ describe.skip('Decode complicated type', () => {
   });
 
   test('Decode payload', () => {
-    const decoded = meta.createType(meta.types.state!, payload);
+    const decoded = meta.createType(meta.types.state as number, payload);
     const json = decoded.toJSON() as any;
 
     expect(json).toHaveProperty('config');
@@ -648,7 +648,7 @@ const activitiesMetaHex =
 
 describe('Create Option type', () => {
   test('test', () => {
-    const meta = getProgramMetadata(activitiesMetaHex);
+    const meta = ProgramMetadata.from(activitiesMetaHex);
 
     const type = meta.getTypeDef(meta.types.handle.input!, true);
 
