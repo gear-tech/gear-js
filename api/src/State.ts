@@ -42,7 +42,7 @@ export class GearProgramState extends GearProgramStorage {
   }
 
   /**
-   * ### Read state of program (calls `read_state` rpc call)
+   * ### Read state of program (calls `gear_readState` rpc call)
    * @param args ProgramId, input payload and hash of block where it's necessary to read state (optional)
    * @param meta Program metadata returned from `ProgramMetadata.from` method.
    * @param type (optional) Index of type to decode state. metadata.types.state is uesd by default

@@ -26,7 +26,7 @@ export class GearMessage extends GearTransaction {
    * ```javascript
    * const programId = '0x..';
    * const hexMeta = '0x...';
-   * const meta = getProgramMetadata(hexMeta);
+   * const meta = ProgramMetadata.from(hexMeta);
    *
    * const tx = api.message.send({
    *   destination: programId,
@@ -135,7 +135,7 @@ export class GearMessage extends GearTransaction {
    * ```javascript
    * const replyToMessage = '0x..';
    * const hexMeta = '0x...';
-   * const meta = getProgramMetadata(hexMeta);
+   * const meta = ProgramMetadata.from(hexMeta);
    *
    * const tx = api.message.send({
    *   replyToId: replyToMessage,
@@ -244,7 +244,7 @@ export class GearMessage extends GearTransaction {
    * ```javascript
    * const programId = '0x..';
    * const hexMeta = '0x...';
-   * const meta = getProgramMetadata(hexMeta);
+   * const meta = ProgramMetadata.from(hexMeta);
    * const accountId = '0x...'
    *
    * const tx = await api.message.sendWithVoucher({
@@ -353,7 +353,7 @@ export class GearMessage extends GearTransaction {
    * ```javascript
    * const replyToMessage = '0x..';
    * const hexMeta = '0x...';
-   * const meta = getProgramMetadata(hexMeta);
+   * const meta = ProgramMetadata.from(hexMeta);
    * const accountId = '0x...'
    *
    * const tx = await api.message.sendReplyWithVoucher({
