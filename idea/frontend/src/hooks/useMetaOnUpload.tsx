@@ -107,7 +107,7 @@ const useMetaOnUpload = (isCode?: boolean) => {
       isDevChain
         ? api.code
             .metaHash(codeHash)
-            .then((hash) => (isDevChain ? getLocalMetadata({ hash }) : fetchMetadata({ hash })))
+            .then((hash) => getLocalMetadata({ hash }))
             .catch(() => fetchMetadata({ codeHash }))
         : fetchMetadata({ codeHash });
 
