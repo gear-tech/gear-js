@@ -3,7 +3,7 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { CreateType, GearApi, StateMetadata, ProgramMetadata, getStateMetadata } from '../src';
+import { CreateType, GearApi, ProgramMetadata, StateMetadata, getStateMetadata } from '../src';
 import { TARGET, TEST_META_META, WS_ADDRESS } from './config';
 import { checkInit, getAccount, sleep } from './utilsFunctions';
 
@@ -56,7 +56,7 @@ describe('Read State', () => {
 
   test('Get program state', async () => {
     expect(programId).toBeDefined();
-    const state = await api.programState.read({ programId }, meta);
+    const state = await api.programState.read({ programId, payload: '0x' }, meta);
     expect([
       {
         id: { decimal: 0, hex: '0x00' },
