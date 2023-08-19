@@ -1,10 +1,10 @@
 import { Codec } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
-import { CreateType, ProgramMetadata, StateMetadata, MetadataVersion } from './metadata';
+import { CreateType, MetadataVersion, ProgramMetadata, StateMetadata } from './metadata';
 import { Bytes } from '@polkadot/types';
 import { GearProgramStorage } from './Storage';
-import { HumanTypesRepr, TypesRepr } from 'types';
+import { HumanTypesRepr } from 'types';
 
 interface ReadStateArgs {
   programId: HexString;
