@@ -17,7 +17,7 @@ impl Metadata for ProgramMetadata {
     type Others = InOut<(), ()>;
     type Reply = String;
     type Signal = H256;
-    type State = Vec<Wallet>;
+    type State = InOut<(), Vec<Wallet>>;
 }
 
 #[derive(TypeInfo, Default, Decode, Encode)]
