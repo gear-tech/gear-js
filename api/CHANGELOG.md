@@ -1,3 +1,13 @@
+## master
+
+_08/21/2023_
+
+### Changes
+
+https://github.com/gear-tech/gear-js/pull/1353
+- Remove `sendMessageWithVoucher` and `sendReplyWithVoucher` methods.
+- Add optional `prepaid` and `account` fields to `api.message.send` and `api.message.sendReply` method arguments. They are used to send messages with the issued voucher.
+
 ## 0.32.4
 
 _07/25/2023_
