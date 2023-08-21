@@ -14,3 +14,5 @@ export default {
     api: checkEnv('API_ENDPOINT'),
   },
 };
+
+export const PATH_TO_PROGRAMS = './wasm-test';
