@@ -1,4 +1,4 @@
-import { GearApi, MessageQueued, getProgramMetadata } from '@gear-js/api';
+import { GearApi, MessageQueued, decodeAddress, getProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { waitReady } from '@polkadot/wasm-crypto';
 import { readFileSync } from 'fs';
@@ -173,7 +173,11 @@ describe('upload programs', () => {
     const txs = [];
     const payload_0 = meta.createType(meta.types.handle.input, { Two: [[8, 16]] }).toHex();
     txs.push(api.message.send({ destination: test_meta_id, payload: payload_0, gasLimit: 200_000_000_000 }));
-    const payload_1 = meta.createType(meta.types.handle.input, { Three: { field: { Ok: 23 } } }).toHex();
+    const payload_1 = meta
+      .createType(meta.types.handle.input, {
+        Four: { array8: new Array(8).fill(0), array32: new Array(32).fill(1), actor: decodeAddress(alice.address) },
+      })
+      .toHex();
     txs.push(api.message.send({ destination: test_meta_id, payload: payload_1, gasLimit: 200_000_000_000 }));
 
     const tx = api.tx.utility.batchAll(txs);
@@ -184,6 +188,7 @@ describe('upload programs', () => {
           if (event.method === 'ExtrinsicFailed') {
             reject(new Error(api.getExtrinsicFailedError(event).docs.join('. ')));
           } else if (event.method === 'MessageQueued') {
+            console.log(event.index.toJSON());
             const {
               data: { id, source, destination },
             } = event as MessageQueued;
