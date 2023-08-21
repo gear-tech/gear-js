@@ -99,7 +99,7 @@ describe('Calculate gas', () => {
 
   test('Send message', async () => {
     expect(gasLimits.handle).toBeDefined();
-    const tx = api.message.send(
+    const tx = await api.message.send(
       {
         destination: programId,
         payload: { input: 'Handle' },
@@ -131,7 +131,7 @@ describe('Calculate gas', () => {
 
   test('Send reply', async () => {
     expect(gasLimits.reply).toBeDefined();
-    const tx = api.message.sendReply(
+    const tx = await api.message.sendReply(
       {
         replyToId: messageId,
         payload: { input: 'Reply' },
