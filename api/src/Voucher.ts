@@ -16,10 +16,10 @@ export class GearVoucher extends GearTransaction {
    * @example
    * ```javascript
    * const programId = '0x..';
-   * const account = '0x...'
-   * const tx = api.voucher.issue(account, programId, 10000)
+   * const account = '0x...';
+   * const tx = api.voucher.issue(account, programId, 10000);
    * tx.signAndSend(account, (events) => {
-   *   events.forEach(({event}) => console.log(event.toHuman()))
+   *   events.forEach(({event}) => console.log(event.toHuman()));
    * })
    * ```
    */
@@ -30,6 +30,7 @@ export class GearVoucher extends GearTransaction {
   ): { extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>; voucherId: HexString } {
     const voucherId = generateVoucherId(to, program);
     this.extrinsic = this._api.tx.gearVoucher.issue(to, program, value);
+    this.extrinsic.signAndSend('', () => {});
     return { extrinsic: this.extrinsic, voucherId };
   }
 

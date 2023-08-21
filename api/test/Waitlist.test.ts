@@ -33,7 +33,7 @@ afterAll(async () => {
 
 describe('GearWaitlist', () => {
   test("read program's waitlist", async () => {
-    api.message.send({ destination: programId, payload: '0x00', gasLimit: 20_000_000_000 });
+    await api.message.send({ destination: programId, payload: '0x00', gasLimit: 20_000_000_000 });
     messageId = (await sendTransaction(api.message, alice, ['MessageQueued']))[0].id.toHex();
     const eventData = await messageWaited(messageId);
     expect(eventData).toBeDefined();
@@ -64,7 +64,7 @@ describe('GearWaitlist', () => {
   });
 
   test("send one more message and read program's waitlist", async () => {
-    api.message.send({ destination: programId, payload: '0x00', gasLimit: 20_000_000_000 });
+    await api.message.send({ destination: programId, payload: '0x00', gasLimit: 20_000_000_000 });
     messageId = (await sendTransaction(api.message, alice, ['MessageQueued']))[0];
     const waitlist = await api.waitlist.read(programId);
     expect(waitlist).toHaveLength(2);
