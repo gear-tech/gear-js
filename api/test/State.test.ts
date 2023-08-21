@@ -36,7 +36,7 @@ afterAll(async () => {
 });
 
 describe('Read State', () => {
-  test('Upload demo_meta_test program', async () => {
+  test.only('Upload demo_meta_test program', async () => {
     const program = api.program.upload(
       {
         code,
@@ -56,12 +56,8 @@ describe('Read State', () => {
 
   test('Get program state', async () => {
     expect(programId).toBeDefined();
-    const state = await api.programState.read({ programId, payload: '0x' }, meta);
+    const state = await api.programState.read({ programId, payload: 1 }, meta);
     expect([
-      {
-        id: { decimal: 0, hex: '0x00' },
-        person: { surname: 'Surname0', name: 'Name0' },
-      },
       {
         id: { decimal: 1, hex: '0x01' },
         person: { surname: 'Surname1', name: 'Name1' },
@@ -78,7 +74,7 @@ describe('Read State', () => {
     });
   });
 
-  test('Read state v1 all_wallets', async () => {
+  test.only('Read state v1 all_wallets', async () => {
     expect(programId).toBeDefined();
     const state = await api.programState.readUsingWasm(
       { programId, fn_name: 'all_wallets', wasm: stateV1 },

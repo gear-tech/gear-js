@@ -4,7 +4,6 @@ import { HexString } from '@polkadot/util/types';
 
 import { GearMetadata, ProgramMetadata, isProgramMeta } from '../metadata';
 import { CreateType } from '../metadata';
-import {} from '../types';
 
 export function getRegistry(metaOrHexRegistry: HexString): HexString {
   if (!metaOrHexRegistry) {
