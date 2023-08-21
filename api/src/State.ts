@@ -56,7 +56,7 @@ export class GearProgramState extends GearProgramStorage {
    */
   async read<T extends Codec = Codec>(args: ReadStateArgs, meta: ProgramMetadata, type?: number): Promise<T> {
     const payload =
-      meta.version === MetadataVersion.V1Rust
+      meta.version === MetadataVersion.V2Rust
         ? meta.createType((meta.types.state as HumanTypesRepr).input!, args.payload)
         : '0x';
 
