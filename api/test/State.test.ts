@@ -36,7 +36,7 @@ afterAll(async () => {
 });
 
 describe('Read State', () => {
-  test.only('Upload demo_meta_test program', async () => {
+  test('Upload demo_meta_test program', async () => {
     const program = api.program.upload(
       {
         code,
@@ -74,7 +74,7 @@ describe('Read State', () => {
     });
   });
 
-  test.only('Read state v1 all_wallets', async () => {
+  test('Read state v1 all_wallets', async () => {
     expect(programId).toBeDefined();
     const state = await api.programState.readUsingWasm(
       { programId, fn_name: 'all_wallets', wasm: stateV1 },
