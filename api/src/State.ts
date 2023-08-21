@@ -7,8 +7,17 @@ import { GearProgramStorage } from './Storage';
 import { HumanTypesRepr } from 'types';
 
 interface ReadStateArgs {
+  /**
+   * Program Id
+   */
   programId: HexString;
+  /**
+   * Input payload expected by the `state` function
+   */
   payload: any;
+  /**
+   * Block hash at which state state is to be received
+   */
   at?: HexString;
 }
 
@@ -43,7 +52,7 @@ export class GearProgramState extends GearProgramStorage {
 
   /**
    * ### Read state of program (calls `gear_readState` rpc call)
-   * @param args ProgramId, input payload and hash of block where it's necessary to read state (optional)
+   * @param args ProgramId, payload and hash of block where it's necessary to read state (optional)
    * @param meta Program metadata returned from `ProgramMetadata.from` method.
    * @param type (optional) Index of type to decode state. metadata.types.state is uesd by default
    *
@@ -57,7 +66,7 @@ export class GearProgramState extends GearProgramStorage {
   async read<T extends Codec = Codec>(args: ReadStateArgs, meta: ProgramMetadata, type?: number): Promise<T> {
     const payload =
       meta.version === MetadataVersion.V2Rust
-        ? Array.from(meta.createType((meta.types.state as HumanTypesRepr).input!, args.payload).toU8a())
+        ? Array.from(meta.createType((meta.types.state as HumanTypesRepr).input, args.payload).toU8a())
         : [];
     const state = await this._api.rpc['gear'].readState(args.programId, payload, args.at || null);
 
