@@ -1,11 +1,11 @@
 import { HexString } from '@polkadot/util/types';
 import { Button, Input } from '@gear-js/ui';
 import { getProgramMetadata } from '@gear-js/api';
-import { useAlert } from '@gear-js/react-hooks';
+import { useAlert, useApi } from '@gear-js/react-hooks';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { fetchMetadata } from 'api';
+import { fetchMetadata, getLocalMetadata } from 'api';
 import { useChain, useProgramActions } from 'hooks';
 import { Subheader } from 'shared/ui/subheader';
 import { UploadMetadata } from 'features/uploadMetadata';
@@ -20,8 +20,10 @@ import { PageParams } from '../model';
 import styles from './InitializeProgram.module.scss';
 
 const InitializeProgram = () => {
-  const alert = useAlert();
   const { codeId } = useParams() as PageParams;
+
+  const { api } = useApi();
+  const alert = useAlert();
 
   const { isDevChain } = useChain();
   const { createProgram } = useProgramActions();
@@ -66,9 +68,17 @@ const InitializeProgram = () => {
   );
 
   useEffect(() => {
-    if (isDevChain) return setIsUploadedMetaReady(true);
+    const codeHash = codeId;
 
-    fetchMetadata({ codeHash: codeId as HexString })
+    const getMetadata = () =>
+      isDevChain
+        ? api.code
+            .metaHash(codeId)
+            .then((hash) => getLocalMetadata({ hash }))
+            .catch(() => fetchMetadata({ codeHash }))
+        : fetchMetadata({ codeHash });
+
+    getMetadata()
       .then(({ result }) => result.hex && setUploadedMetaHex(result.hex))
       .catch(({ code, message }: RPCError) => code !== RPCErrorCode.MetadataNotFound && alert.error(message))
       .finally(() => setIsUploadedMetaReady(true));

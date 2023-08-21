@@ -4,11 +4,12 @@ import { HexString } from '@polkadot/util/types';
 import { useState, useEffect } from 'react';
 import { generatePath, useLocation } from 'react-router-dom';
 
-import { fetchMetadata } from 'api';
+import { fetchMetadata, getLocalMetadata } from 'api';
 import { readFileAsync } from 'shared/helpers';
-import { RPCError, RPCErrorCode } from 'shared/services/rpcService';
 import { CustomLink } from 'shared/ui/customLink';
 import { routes } from 'shared/config';
+import { RPCError, RPCErrorCode } from 'shared/services/rpcService';
+
 import { useChain } from './context';
 
 type MetadataState = {
@@ -96,13 +97,21 @@ const useMetaOnUpload = (isCode?: boolean) => {
   useEffect(() => {
     const isCodeCheckReady = isCodeExists !== undefined;
 
-    if (!optBuffer || (isCode && !isCodeCheckReady) || isCodeExists || isDevChain) return;
+    if (!optBuffer || (isCode && !isCodeCheckReady) || isCodeExists) return;
 
     setIsUploadedMetaReady(false);
 
     const codeHash = generateCodeHash(optBuffer);
 
-    fetchMetadata({ codeHash })
+    const getMetadata = () =>
+      isDevChain
+        ? api.code
+            .metaHash(codeHash)
+            .then((hash) => getLocalMetadata({ hash }))
+            .catch(() => fetchMetadata({ codeHash }))
+        : fetchMetadata({ codeHash });
+
+    getMetadata()
       .then(({ result }) => result.hex && setUploadedMetadata(result.hex))
       .catch(({ code, message }: RPCError) => code !== RPCErrorCode.MetadataNotFound && alert.error(message))
       .finally(() => setIsUploadedMetaReady(true));
