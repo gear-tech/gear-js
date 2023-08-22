@@ -1,9 +1,8 @@
 import { GearApi } from '@gear-js/api';
-import { RMQServiceActions } from '@gear-js/common';
+import { RMQServiceActions, logger } from '@gear-js/common';
 
 import config from '../config';
 import { changeStatus } from '../healthcheck.server';
-import { logger } from '../common';
 import { GearIndexer } from './indexer';
 
 const addresses = config.gear.providerAddresses;
@@ -33,6 +32,7 @@ export async function connectToNode(indexer: GearIndexer, cb: GenesisCb) {
   const genesis = api.genesisHash.toHex();
 
   api.on('disconnected', () => {
+    logger.warn('Disconnected from the node.');
     indexer.stop();
     genesis && cb(RMQServiceActions.DELETE, genesis);
     reconnect(api, indexer, cb);
@@ -41,7 +41,7 @@ export async function connectToNode(indexer: GearIndexer, cb: GenesisCb) {
   reconnectionsCounter = 0;
   await indexer.run(api);
   cb(RMQServiceActions.ADD, genesis);
-  logger.info(`⚙️ Connected to ${api.runtimeChain} with genesis ${genesis}`);
+  logger.info(`Connected to ${api.runtimeChain} with genesis ${genesis}`);
   changeStatus('gear');
 }
 
@@ -54,8 +54,8 @@ async function reconnect(api: GearApi, indexer: GearIndexer, cb: GenesisCb) {
 
   try {
     await api.disconnect();
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    logger.error('Disconnected from the node1', { error });
   }
   reconnectionsCounter++;
 
@@ -64,7 +64,7 @@ async function reconnect(api: GearApi, indexer: GearIndexer, cb: GenesisCb) {
     reconnectionsCounter = 0;
   }
 
-  logger.info('⚙️ 📡 Reconnecting to the gear node...');
+  logger.info('Attempting to reconnect');
 
   return connectToNode(indexer, cb);
 }

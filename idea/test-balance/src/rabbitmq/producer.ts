@@ -1,6 +1,6 @@
 import { RMQExchanges, RMQQueues, RMQServiceActions, RMQServices } from '@gear-js/common';
 
-import { mainChannelAMQP } from './init-rabbitmq';
+import { mainChannelAMQP } from './rmq';
 
 function sendGenesis(genesis: string): void {
   const messageBuff = JSON.stringify({ service: RMQServices.TEST_BALANCE, action: RMQServiceActions.ADD, genesis });

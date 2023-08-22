@@ -1,3 +1,4 @@
+import { logger } from '@gear-js/common';
 import { waitReady } from '@polkadot/wasm-crypto';
 import { GearApi } from '@gear-js/api';
 
@@ -9,7 +10,6 @@ import { MessageService } from './services';
 import { ProgramService } from './services';
 import { GearIndexer } from './gear';
 import config from './config';
-import { logger } from './common';
 import { RMQService } from './rmq';
 
 async function bootstrap() {
@@ -38,7 +38,7 @@ async function bootstrap() {
   }
   await api.isReady;
   const genesis = api.genesisHash.toHex();
-  logger.info(`⚙️ Connected to ${api.runtimeChain} with genesis ${genesis}`);
+  logger.info(`Connected to ${api.runtimeChain} with genesis ${genesis}`);
 
   let fromBlock = 1;
   const status = await statusService.getStatus(genesis);
@@ -81,7 +81,7 @@ async function bootstrap() {
 
 bootstrap()
   .then(() => process.exit(0))
-  .catch((err) => {
-    console.log(err);
+  .catch((error) => {
+    logger.error('', { error });
     process.exit(1);
   });
