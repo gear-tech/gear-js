@@ -1,10 +1,3 @@
-import { getResponse } from './utils';
-
-import express, { Express, Request, Response } from 'express';
-import { checkGenesisMiddleware, captchaMiddleware, validateJsonRpcRequestMiddleware } from './middleware';
-import { logger } from './common/logger';
-import config from './config';
-import { RMQService } from './rabbitmq';
 import {
   INDEXER_METHODS,
   META_STORAGE_METHODS,
@@ -15,8 +8,15 @@ import {
   IRpcResponse,
   JSONRPC_ERRORS,
   API_GATEWAY_METHODS,
+  logger,
 } from '@gear-js/common';
 import { nanoid } from 'nanoid';
+import express, { Express, Request, Response } from 'express';
+
+import { getResponse } from './utils';
+import { checkGenesisMiddleware, captchaMiddleware, validateJsonRpcRequestMiddleware } from './middleware';
+import config from './config';
+import { RMQService } from './rmq';
 
 const status = {
   rmq: false,
@@ -60,10 +60,8 @@ export class Server {
         try {
           const result = await this.handleRequest(req.body);
           res.json(result);
-        } catch (err) {
-          logger.error(`ApiGatewayRouter: ${err}`);
-          console.log(req.body);
-          console.log(err);
+        } catch (error) {
+          logger.error('Handle request error', { error, request: req.body });
         }
       },
     );
@@ -78,9 +76,7 @@ export class Server {
   }
 
   public run() {
-    return this.app.listen(config.server.port, () =>
-      console.log(`⚙️ 🚀 App successfully run on the ${config.server.port}`),
-    );
+    return this.app.listen(config.server.port, () => logger.info(`App successfully run on the ${config.server.port}`));
   }
 
   private async handleRequest(rpcBodyRequest: IRpcRequest | IRpcRequest[]): Promise<IRpcResponse | IRpcResponse[]> {

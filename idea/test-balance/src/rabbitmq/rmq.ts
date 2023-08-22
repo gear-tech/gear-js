@@ -1,5 +1,5 @@
 import { Channel, connect, Connection } from 'amqplib';
-import { RMQExchanges, RMQQueues, RMQServiceActions, RMQServices } from '@gear-js/common';
+import { logger, RMQExchanges, RMQQueues, RMQServiceActions, RMQServices } from '@gear-js/common';
 
 import config from '../config/configuration';
 import { gearService } from '../gear';
@@ -10,7 +10,12 @@ export let mainChannelAMQP: Channel;
 export let topicChannelAMQP: Channel;
 
 export async function initAMQ(): Promise<void> {
-  connectionAMQP = await connectAMQP(config.rabbitmq.url);
+  try {
+    connectionAMQP = await connect(config.rabbitmq.url);
+  } catch (error) {
+    logger.error('RabbitMQ connection error', { error });
+  }
+
   mainChannelAMQP = await connectionAMQP.createChannel();
   topicChannelAMQP = await connectionAMQP.createChannel();
   const directExchange = RMQExchanges.DIRECT_EX;
@@ -44,15 +49,7 @@ export async function initAMQ(): Promise<void> {
   await topicMessageConsumer(topicChannelAMQP, assertTopicQueue);
 
   connectionAMQP.on('close', (error) => {
-    console.log(new Date(), error);
+    logger.error('RabbitMQ connection closed', { error });
     process.exit(1);
   });
-}
-
-async function connectAMQP(url: string): Promise<Connection> {
-  try {
-    return connect(url);
-  } catch (error) {
-    console.error(`${new Date()} | RabbitMQ connection error`, error);
-  }
 }

@@ -1,5 +1,5 @@
 import { Channel, Replies } from 'amqplib';
-import { TEST_BALANCE_METHODS } from '@gear-js/common';
+import { TEST_BALANCE_METHODS, logger } from '@gear-js/common';
 
 import { producer } from './producer';
 import { gearService } from '../gear';
@@ -21,7 +21,7 @@ export async function directMessageConsumer(channel: Channel, queue: string): Pr
       { noAck: true },
     );
   } catch (error) {
-    console.error(`${new Date()} | Direct exchange consumer error`, error);
+    logger.error(`Direct exchange consumer error`, { error });
   }
 }
 
@@ -39,7 +39,6 @@ export async function topicMessageConsumer(channel: Channel, repliesAssertQueue:
       { noAck: true },
     );
   } catch (error) {
-    this.logger.error(new Date());
-    this.logger.error(`${new Date()} | Topic exchange consumer error ${JSON.stringify(error)}`);
+    logger.error(`Topic exchange consumer error`, { error });
   }
 }

@@ -1,9 +1,9 @@
 import { GearApi, HexString } from '@gear-js/api';
+import { logger } from '@gear-js/common';
 
-import { changeStatus } from '../routes/healthcheck.router';
+import { changeStatus } from '../healthcheck.router';
 import config from '../config/configuration';
 import { producer } from '../rabbitmq/producer';
-import { logger } from '../common/logger';
 
 export let api: GearApi;
 let genesisHash: HexString;
@@ -25,7 +25,7 @@ export async function connect() {
   try {
     await api.isReadyOrError;
   } catch (error) {
-    logger.error(`Failed to connect to ${providerAddress}`);
+    logger.error(`Failed to connect to ${providerAddress}`, { error });
     await reconnect();
   }
   await api.isReady;
@@ -50,7 +50,7 @@ async function reconnect(): Promise<void> {
     reconnectionsCounter = 0;
   }
 
-  logger.info('⚙️ 📡 Reconnecting to the gear node...');
+  logger.info('Attempting to reconnect');
   changeStatus('ws');
   return connect();
 }
