@@ -29,6 +29,10 @@ type PayloadSchemaParams = {
   deposit: BigNumber;
   metadata?: ProgramMetadata;
   maxGasLimit: BigNumber;
+  balanceMultiplier: BigNumber;
+  decimals: number;
+  gasLimitDecimals: number;
+  gasLimitMultiplier: number;
 };
 
 export type { TypeStructure, PayloadValue, PayloadSchemaModel, PayloadSchemaParams };

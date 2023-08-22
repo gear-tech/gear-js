@@ -35,7 +35,7 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
 
   const calculateGas = useGasCalculate();
   const { sendMessage, replyMessage } = useMessageActions();
-  const balanceMultiplier = useBalanceMultiplier();
+  const { balanceMultiplier, decimals } = useBalanceMultiplier();
 
   const [isDisabled, setIsDisabled] = useState(false);
   const [isGasDisabled, setIsGasDisabled] = useState(false);
@@ -63,6 +63,10 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
         deposit: BigNumber(deposit).dividedBy(balanceMultiplier),
         metadata,
         maxGasLimit: BigNumber(maxGasLimit).dividedBy(10 ** 9),
+        balanceMultiplier,
+        decimals,
+        gasLimitMultiplier: 10 ** 9,
+        gasLimitDecimals: 9,
       });
 
       return getValidation(schema);

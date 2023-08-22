@@ -40,7 +40,7 @@ const ProgramForm = (props: Props) => {
   const [isDisabled, setIsDisables] = useState(false);
   const [isGasDisabled, setIsGasDisabled] = useState(false);
 
-  const balanceMultiplier = useBalanceMultiplier();
+  const { balanceMultiplier, decimals } = useBalanceMultiplier();
   const calculateGas = useGasCalculate();
 
   const handleGasCalculate = async () => {
@@ -107,6 +107,10 @@ const ProgramForm = (props: Props) => {
         deposit: BigNumber(deposit).dividedBy(balanceMultiplier),
         metadata,
         maxGasLimit: BigNumber(maxGasLimit).dividedBy(10 ** 9),
+        balanceMultiplier,
+        decimals,
+        gasLimitMultiplier: 10 ** 9,
+        gasLimitDecimals: 9,
       });
 
       return getValidation(schema);
