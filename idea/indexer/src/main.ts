@@ -1,5 +1,5 @@
 import { waitReady } from '@polkadot/wasm-crypto';
-import { RMQServiceActions } from '@gear-js/common';
+import { RMQServiceActions, logger } from '@gear-js/common';
 
 import { changeStatus, runHealthcheckServer } from './healthcheck.server';
 import { AppDataSource } from './database';
@@ -16,6 +16,8 @@ async function bootstrap() {
   runHealthcheckServer();
 
   const dataSource = await AppDataSource.initialize();
+
+  logger.info('DB connection established');
 
   changeStatus('database');
 

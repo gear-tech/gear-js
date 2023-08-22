@@ -1,9 +1,8 @@
 import { CronJob } from 'cron';
 import { connect, Connection, Channel } from 'amqplib';
-import { RMQExchanges, RMQMessage, RMQQueues, RMQReply, RMQServiceActions, RMQServices } from '@gear-js/common';
+import { logger, RMQExchanges, RMQMessage, RMQQueues, RMQReply, RMQServiceActions, RMQServices } from '@gear-js/common';
 
-import config from '../config';
-import { logger } from '../common/logger';
+import config from './config';
 
 export class RMQService {
   private indexerChannels: Map<string, Channel>;
@@ -22,9 +21,8 @@ export class RMQService {
   public async init(): Promise<void> {
     try {
       this.connection = await connect(config.rabbitmq.url);
-    } catch (err) {
-      logger.error('Failed to connecto to RabbitMQ');
-      console.log(err);
+    } catch (error) {
+      logger.error('Failed to connect to to RabbitMQ', { error });
       process.exit(1);
     }
 
@@ -98,8 +96,7 @@ export class RMQService {
               autoDelete: true,
             });
 
-            logger.info(`Indexer: Add new genesis ${genesis}`);
-            logger.info(`Indexer genesises: ${JSON.stringify(Array.from(this.indexerChannels.keys()), undefined, 2)}`);
+            logger.info(`New indexer genesis: ${genesis}`, { all: Array.from(this.indexerChannels.keys()) });
           }
           if (service === RMQServices.TEST_BALANCE) {
             if (this.tbChannels.has(genesis)) return;
@@ -107,8 +104,7 @@ export class RMQService {
             const channel = await this.createChannel();
             this.tbChannels.set(genesis, channel);
             await channel.assertQueue(`${RMQServices.TEST_BALANCE}.${genesis}`, { durable: false, exclusive: false });
-            logger.info(`TB: Add new genesis ${genesis}`);
-            logger.info(`TB genesises: ${JSON.stringify(Array.from(this.tbChannels.keys()), undefined, 2)}`);
+            logger.info(`New test_balance genesis ${genesis}`, { all: Array.from(this.tbChannels.keys()) });
           }
         }
 
@@ -118,10 +114,7 @@ export class RMQService {
             if (channel) {
               await channel.close();
               this.indexerChannels.delete(genesis);
-              logger.info(`Indexer: Delete genesis ${genesis}`);
-              logger.info(
-                `Indexer genesises: ${JSON.stringify(Array.from(this.indexerChannels.keys()), undefined, 2)}`,
-              );
+              logger.info(`Remove indexer genesis ${genesis}`, { all: Array.from(this.indexerChannels.keys()) });
             }
           }
           if (service === RMQServices.TEST_BALANCE) {
@@ -129,8 +122,7 @@ export class RMQService {
             if (channel) {
               await channel.close();
               this.tbChannels.delete(genesis);
-              logger.info(`TB: Delete new genesis ${genesis}`);
-              logger.info(`TB genesises: ${JSON.stringify(Array.from(this.tbChannels.keys()), undefined, 2)}`);
+              logger.info(`Remove test_balance genesis ${genesis}`, { all: Array.from(this.tbChannels.keys()) });
             }
           }
         }

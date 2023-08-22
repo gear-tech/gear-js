@@ -4,6 +4,7 @@ import {
   FindMessageParams,
   GetMessagesParams,
   MessageReadReason,
+  logger,
   ProgramStatus,
 } from '@gear-js/common';
 
@@ -15,7 +16,6 @@ import {
   MessageNotFound,
   constructQueryBuilder,
   PAGINATION_LIMIT,
-  logger,
 } from '../common';
 
 export class MessageService {
@@ -79,7 +79,7 @@ export class MessageService {
       try {
         await this.repo.update({ id, genesis }, { processedWithPanic: statuses[id] === 'Success' ? false : true });
       } catch (error) {
-        logger.error(error);
+        logger.error(error.message, { error });
       }
 
       if (statuses[id] === 'Failed') {
@@ -95,7 +95,7 @@ export class MessageService {
     try {
       await this.repo.update({ id }, { readReason });
     } catch (error) {
-      logger.error(error);
+      logger.error(error.message, { error });
     }
   }
 

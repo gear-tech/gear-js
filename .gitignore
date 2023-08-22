@@ -9,3 +9,4 @@ node_modules/
 !.yarn/versions
 **/dist/
 .vscode/
+idea/tmp/

@@ -1,5 +1,6 @@
+import { logger } from '@gear-js/common';
+
 import { AppDataSource } from './database';
-import { logger } from './logger';
 import { RMQService } from './rmq';
 import { MetaService } from './service';
 

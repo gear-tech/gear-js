@@ -1,13 +1,17 @@
-import { JSONRPC_ERRORS, RMQExchanges, RMQQueues } from '@gear-js/common';
+import { logger, JSONRPC_ERRORS, RMQExchanges, RMQQueues } from '@gear-js/common';
 import { EventEmitter } from 'node:events';
 
-import { transferService } from '../services/transfer.service';
+import { transferService } from '../transfer.service';
 import { gearService } from '../gear';
-import { logger } from './logger';
 import { producer } from '../rabbitmq/producer';
-import { TBRequestParams } from './types';
+
+interface TBRequestParams {
+  payload: { address: string; genesis: string };
+  correlationId: string;
+}
 
 export const requests: Array<TBRequestParams> = [];
+
 const pushEmitter = new EventEmitter();
 
 Object.defineProperty(requests, 'push', {
@@ -47,7 +51,7 @@ export async function transferProcess(): Promise<void> {
         result = { error: JSONRPC_ERRORS.TransferLimitReached.name };
       }
     } catch (error) {
-      logger.error(error.message, error.stack);
+      logger.error(error.message, { stack: error.stack });
       result = { error: JSONRPC_ERRORS.InternalError.name };
     }
     producer.sendMessage(RMQExchanges.DIRECT_EX, RMQQueues.REPLIES, correlationId, result);

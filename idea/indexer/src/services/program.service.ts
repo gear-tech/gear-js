@@ -6,6 +6,7 @@ import {
   GetAllProgramsResult,
   IProgram,
   ProgramStatus,
+  logger,
 } from '@gear-js/common';
 
 import { ProgramNotFound } from '../common/errors';
@@ -78,10 +79,9 @@ export class ProgramService {
 
     try {
       const programs = await this.repo.save(program);
-
       return programs[0];
     } catch (error) {
-      console.log(error);
+      logger.error('Unable to set program status', { error });
     }
   }
 
