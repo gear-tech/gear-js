@@ -1,5 +1,9 @@
 use crate::{Action, Id, Person, Wallet};
-use gstd::{msg, prelude::*, BTreeMap, debug};
+use gstd::{
+    collections::{BTreeMap, BTreeSet},
+    debug, msg,
+    prelude::*,
+};
 use test_meta_io::EmptyStruct;
 
 static mut STATE: Vec<Wallet> = Vec::new();
