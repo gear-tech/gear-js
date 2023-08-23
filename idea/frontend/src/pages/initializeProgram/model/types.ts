@@ -1,5 +1,7 @@
+import { HexString } from '@gear-js/api';
+
 type PageParams = {
-  codeId: string;
+  codeId: HexString;
 };
 
 export type { PageParams };

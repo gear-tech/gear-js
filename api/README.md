@@ -214,9 +214,9 @@ try {
     value: 1000,
   };
   // In that case payload will be encoded using meta.handle_input type
-  let extrinsic = gearApi.message.send(message, meta);
+  let extrinsic = await gearApi.message.send(message, meta);
   // So if you want to use another type you can specify it
-  extrinsic = gearApi.message.send(message, meta, meta.async_handle_input);
+  extrinsic = await gearApi.message.send(message, meta, meta.async_handle_input);
 } catch (error) {
   console.error(`${error.name}: ${error.message}`);
 }
@@ -240,7 +240,7 @@ const reply = {
   gasLimit: 10000000,
   value: 1000,
 };
-const extrinsic = gearApi.message.sendReply(reply, meta);
+const extrinsic = await gearApi.message.sendReply(reply, meta);
 await extrinsic(keyring, (events) => {
   console.log(event.toHuman());
 });
@@ -331,6 +331,44 @@ for (const memPage of Object.entries(page)) {
 const tx = api.program.resumeSession.commit({ sessionId, blockCount: 20_000 });
 tx.signAndSend(account);
 ```
+
+
+### Issue a voucher
+Use `api.voucher.issue` method to issue a new voucher for a user to be used to pay for sending messages to `program_id` program.
+
+```javascript
+import { VoucherIssued } from '@gear-js/api';
+
+const programId = '0x..';
+const account = '0x...';
+const tx = api.voucher.issue(account, programId, 10000);
+tx.signAndSend(account, (events) => {
+  const voucherIssuedEvent = events.events.filter(({event: {method}}) => method === 'VoucherIssued') as VoucherIssued;
+  console.log(voucherIssuedEvent.toJSON());
+})
+```
+
+#### Check that the voucher exists for a particular user and program
+The `api.voucher.exists` method returns a boolean value indicates whether the voucher exists or not.
+```javascript
+const voucherExists = await api.voucher.exists(programId, accountId)
+```
+
+#### Send message and reply with the issued voucher
+To send message with voucher all you need to do is to set `prepaid` flag to `true` in the first argument of `api.message.send` and `api.message.sendReply` methods. Also it's good to specify account ID that is used to send the extrinsic to check whether the voucher exists or not.
+```javascript
+let extrinsic = await api.message.send({
+  destination: destination,
+  payload: somePayload,
+  gasLimit: 10000000,
+  value: 1000,
+  prepaid: true,
+  account: accountId,
+}, meta);
+```
+
+
+#### Send message and reply with issued voucher
 
 ## Work with programs and blockchain state
 

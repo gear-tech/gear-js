@@ -1,12 +1,13 @@
-import { logger } from './common/logger';
-import { RMQService } from './rabbitmq';
+import { logger } from '@gear-js/common';
+
+import { RMQService } from './rmq';
 import { Server, changeStatus } from './server';
 
 const bootstrap = async () => {
   const rmq = new RMQService();
   await rmq.init();
 
-  logger.info('Connected to RabbitMQ');
+  logger.info('RabbitMQ connection established sucessfuly');
 
   changeStatus();
 

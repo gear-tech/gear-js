@@ -56,7 +56,7 @@ describe('Gear Message', () => {
     ];
 
     for (const message of messages) {
-      const tx = api.message.send(
+      const tx = await api.message.send(
         {
           destination: programId,
           payload: message.payload,
@@ -109,8 +109,8 @@ describe('Gear Message', () => {
     expect(mailbox.filter((value) => value[0][1] === messageToClaim)).toHaveLength(0);
   });
 
-  test('Send message with specifying payload type instead of metadata', () => {
-    const tx = api.message.send({ destination: '0x', gasLimit: 1000, payload: 'PING' }, undefined, 'String');
+  test('Send message with specifying payload type instead of metadata', async () => {
+    const tx = await api.message.send({ destination: '0x', gasLimit: 1000, payload: 'PING' }, undefined, 'String');
     expect(tx.args[1].toJSON()).toBe('0x1050494e47');
   });
 });

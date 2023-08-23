@@ -1,13 +1,18 @@
 import { TransferData } from '@gear-js/api';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { BN } from '@polkadot/util';
+import { logger } from '@gear-js/common';
 
 import config from '../config/configuration';
-import { ResponseTransferBalance } from './types';
-import { transferService } from '../services/transfer.service';
+import { transferService } from '../transfer.service';
 import { createAccount } from './utils';
 import { connect, api, getGenesisHash } from './connection';
-import { logger } from '../common/logger';
+
+interface ResponseTransferBalance {
+  status?: string;
+  transferredBalance?: string;
+  error?: string;
+}
 
 let tbAccount: KeyringPair;
 let prefundedAcc: KeyringPair;
@@ -32,11 +37,11 @@ async function transferBalance(
   from: KeyringPair = tbAccount,
   balance: BN = balanceToTransfer,
 ): Promise<ResponseTransferBalance> {
-  logger.info(`Transfer value ${balance.toNumber()} from ${from.address} to ${to}`);
+  logger.info(`Transfer value`, { from: from.address, to, amount: balance.toString() });
   try {
     await transfer(to, from, balance);
   } catch (error) {
-    logger.error(error);
+    logger.error('Transfer balance error', { error });
     return { error: `Transfer balance from ${from} to ${to} failed` };
   }
   if (to !== tbAccount.address) {

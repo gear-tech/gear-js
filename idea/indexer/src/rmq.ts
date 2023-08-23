@@ -8,9 +8,9 @@ import {
   RMQExchanges,
   RMQQueues,
   INDEXER_INTERNAL_METHODS,
+  logger,
 } from '@gear-js/common';
 
-import { logger } from './common';
 import { BlockService, CodeService, MessageService, ProgramService, StateService } from './services';
 import config from './config';
 
@@ -49,7 +49,7 @@ export class RMQService {
     this.connection = await connect(config.rabbitmq.url);
 
     this.connection.on('close', (error) => {
-      console.log(new Date(), error);
+      logger.error('RabbitMQ connection lost', { error });
       process.exit(1);
     });
 
@@ -78,7 +78,7 @@ export class RMQService {
         `${RMQServices.INDEXER}.meta`,
       );
     } catch (error) {
-      console.log(error);
+      logger.error('Unable to setup rabbitmq exchanges', { error });
       throw error;
     }
   }
@@ -131,13 +131,13 @@ export class RMQService {
 
           const { method } = msg.properties.headers;
           const params = JSON.parse(msg.content.toString());
-          console.log(method, params);
+          logger.info('Message from meta-storage', { method, params });
           await this.handleIncomingMsg(method, params);
         },
         { noAck: true },
       );
     } catch (error) {
-      logger.error(JSON.stringify(error, undefined, 2));
+      logger.error('Meta message consumer error', { error });
     }
   }
 
@@ -160,7 +160,7 @@ export class RMQService {
         { noAck: true },
       );
     } catch (error) {
-      logger.error(`Direct exchange consumer ${JSON.stringify(error)}`);
+      logger.error('Direct exchange consumer error.', { error });
     }
   }
 
@@ -179,7 +179,7 @@ export class RMQService {
         { noAck: true },
       );
     } catch (error) {
-      logger.error(`Topic exchange consumer ${JSON.stringify(error)}`);
+      logger.error('Topic exchange consumer error.', { error });
     }
   }
 

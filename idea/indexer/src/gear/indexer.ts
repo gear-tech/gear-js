@@ -12,7 +12,7 @@ import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { SignedBlockExtended } from '@polkadot/api-derive/types';
-import { EventNames, CodeStatus } from '@gear-js/common';
+import { EventNames, CodeStatus, logger } from '@gear-js/common';
 import { VoidFn } from '@polkadot/api/types';
 import { Option } from '@polkadot/types';
 
@@ -23,7 +23,6 @@ import {
   eventDataHandlers,
   MessageEntryPoint,
   MessageType,
-  logger,
   UserMessageSentInput,
   UserMessageReadInput,
   ProgramChangedInput,
@@ -113,7 +112,7 @@ export class GearIndexer {
         }
       }
       if (this.api === null) {
-        console.log('api null');
+        logger.warn('api null');
         continue;
       }
 
@@ -129,9 +128,8 @@ export class GearIndexer {
 
     try {
       block = await this.api.derive.chain.getBlockByNumber(blockNumber);
-    } catch (err) {
-      logger.error(`Unable to get block ${blockNumber} due to the following error`);
-      console.log(err);
+    } catch (error) {
+      logger.error(`Unable to get block ${blockNumber}`, { error });
       return;
     }
 
@@ -152,8 +150,8 @@ export class GearIndexer {
 
     try {
       await this.tempState.save();
-    } catch (err) {
-      logger.error(`Error during saving the data of the block ${blockNumber}. ${err.message}`);
+    } catch (error) {
+      logger.error(`Error during saving the data of the block ${blockNumber}`, { error });
     }
     if (this.oneTimeSync) {
       await this.statusService.update(this.genesis, blockNumber.toString(), hash);
@@ -185,36 +183,34 @@ export class GearIndexer {
 
   private async handleEvents(block: SignedBlockExtended, timestamp: number): Promise<void> {
     const necessaryEvents = block.events.filter(({ event: { method } }) => Object.keys(EventNames).includes(method));
+    const blockHash = block.block.header.hash.toHex();
     for (const {
       event: { data, method },
     } of necessaryEvents) {
       let eventData = null;
       try {
         eventData = eventDataHandlers[method](data as GenericEventData);
-      } catch (err) {
-        logger.warn(`Unable to form event data, ${JSON.stringify({ method, data: data.toHuman() })}`);
-        console.log(err);
+      } catch (error) {
+        logger.warn('Unable to form event data.', {
+          error,
+          method,
+          data: data.toJSON(),
+          blockHash,
+        });
         continue;
       }
 
       if (eventData === null) continue;
 
-      const blockHash = block.block.header.hash.toHex();
       try {
         await this.eventHandlers[method](eventData, timestamp, blockHash);
       } catch (error) {
-        logger.warn(
-          JSON.stringify(
-            {
-              method,
-              data: eventData,
-              blockHash,
-            },
-            undefined,
-            2,
-          ),
-        );
-        console.error(error);
+        logger.warn('Unable to handle an event.', {
+          error,
+          method,
+          data: eventData,
+          blockHash,
+        });
       }
     }
   }

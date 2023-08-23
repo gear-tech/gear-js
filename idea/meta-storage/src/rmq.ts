@@ -7,9 +7,9 @@ import {
   RMQExchanges,
   RMQQueues,
   INDEXER_INTERNAL_METHODS,
+  logger,
 } from '@gear-js/common';
 
-import { logger } from './logger';
 import config from './config';
 import { MetaService } from './service';
 
@@ -48,11 +48,11 @@ export class RMQService {
       await this.directMsgConsumer(RMQServices.META_STORAGE);
 
       this.connection.on('close', (error) => {
-        console.log(new Date(), error);
+        logger.error('RabbitMQ connection closed', { error });
         process.exit(1);
       });
     } catch (error) {
-      console.log(error);
+      logger.error('Unable to setup rabbitmq exchanges', { error, stack: error.stack });
       throw error;
     }
   }
@@ -93,7 +93,7 @@ export class RMQService {
         { noAck: true },
       );
     } catch (error) {
-      logger.error(`Direct exchange consumer ${JSON.stringify(error)}`);
+      logger.error('Direct exchange consumer error.', { error, stack: error.stack });
     }
   }
 
