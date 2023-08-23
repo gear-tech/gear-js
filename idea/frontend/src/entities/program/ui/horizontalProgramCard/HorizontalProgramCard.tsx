@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Link, generatePath } from 'react-router-dom';
 
+import { CreateVoucher } from 'features/vaucher';
 import { absoluteRoutes, routes } from 'shared/config';
 import { ReactComponent as sendSVG } from 'shared/assets/images/actions/send.svg';
 import { ReactComponent as readSVG } from 'shared/assets/images/actions/read.svg';
@@ -9,9 +10,9 @@ import { BulbBlock } from 'shared/ui/bulbBlock';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
 import { ActionLink } from 'shared/ui/ActionLink';
 
-import styles from './HorizontalProgramCard.module.scss';
 import { getBulbStatus } from '../../helpers';
 import { IProgram, PROGRAM_STATUS_NAME, ProgramStatus } from '../../model';
+import styles from './HorizontalProgramCard.module.scss';
 
 type Props = {
   program: IProgram;
@@ -42,10 +43,11 @@ const HorizontalProgramCard = memo(({ program }: Props) => {
               to={generatePath(absoluteRoutes.sendMessage, { programId })}
               icon={sendSVG}
               text="Send Message"
-              className={styles.sendMessage}
             />
 
             {hasState && <ActionLink to={generatePath(routes.state, { programId })} icon={readSVG} text="Read State" />}
+
+            <CreateVoucher programId={programId} />
           </>
         )}
       </div>
