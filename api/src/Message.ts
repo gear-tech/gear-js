@@ -117,7 +117,7 @@ export class GearMessage extends GearTransaction {
     const _payload = encodePayload(payload, metaOrHexRegistry, 'handle', typeIndexOrTypeName);
 
     try {
-      this.extrinsic = this._api.tx.gear.sendMessage(destination, _payload, gasLimit, value || 0, prepaid);
+      this.extrinsic = this._api.tx.gear.sendMessage(destination, _payload, gasLimit, value || 0, prepaid || false);
       return this.extrinsic;
     } catch (error) {
       throw new SendMessageError(error.message);
@@ -237,7 +237,7 @@ export class GearMessage extends GearTransaction {
     const _payload = encodePayload(payload, metaOrHexRegistry, 'reply', typeIndexOrTypeName);
 
     try {
-      this.extrinsic = this._api.tx.gear.sendReply(replyToId, _payload, gasLimit, value, prepaid);
+      this.extrinsic = this._api.tx.gear.sendReply(replyToId, _payload, gasLimit, value, prepaid || false);
       return this.extrinsic;
     } catch (error) {
       throw new SendReplyError();
