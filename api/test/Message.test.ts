@@ -60,7 +60,7 @@ describe('Gear Message', () => {
         {
           destination: programId,
           payload: message.payload,
-          gasLimit: 2_000_000_000,
+          gasLimit: 20_000_000_000,
           value: message.value,
         },
         metadata,
