@@ -1,12 +1,12 @@
 import { Channel, connect, Connection } from 'amqplib';
 import {
   INDEXER_METHODS,
-  RMQServiceActions,
+  RMQServiceAction,
   RMQServices,
   FormResponse,
   META_STORAGE_INTERNAL_METHODS,
-  RMQExchanges,
-  RMQQueues,
+  RMQExchange,
+  RMQQueue,
   INDEXER_INTERNAL_METHODS,
   logger,
 } from '@gear-js/common';
@@ -61,33 +61,28 @@ export class RMQService {
       this.mainChannel = await this.connection.createChannel();
       this.topicChannel = await this.connection.createChannel();
 
-      const directExchange = RMQExchanges.DIRECT_EX;
-      const topicExchange = RMQExchanges.TOPIC_EX;
-      const directExchangeType = 'direct';
+      await this.mainChannel.assertExchange(RMQExchange.DIRECT_EX, 'direct');
+      await this.topicChannel.assertExchange(RMQExchange.TOPIC_EX, 'topic');
 
-      await this.mainChannel.assertExchange(directExchange, directExchangeType);
-      await this.topicChannel.assertExchange(topicExchange, 'topic');
-      await this.topicChannel.assertQueue(`${RMQServices.INDEXER}.meta`, {
+      await this.mainChannel.assertExchange('INDXR_META', 'fanout', { autoDelete: true });
+      await this.mainChannel.assertQueue('', {
         durable: true,
         exclusive: false,
         autoDelete: false,
       });
-      await this.topicChannel.bindQueue(
-        `${RMQServices.INDEXER}.meta`,
-        RMQExchanges.TOPIC_EX,
-        `${RMQServices.INDEXER}.meta`,
-      );
+      await this.mainChannel.bindQueue('', 'INDXR_META', '');
+      this.metaMsgConsumer();
     } catch (error) {
-      logger.error('Unable to setup rabbitmq exchanges', { error });
+      logger.error('Failed to setup rabbitmq exchanges', { error });
       throw error;
     }
   }
 
   public async deleteGenesisQueue(genesis: string) {
     const routingKey = `${RMQServices.INDEXER}.${genesis}`;
-    const messageBuff = JSON.stringify({ service: RMQServices.INDEXER, action: RMQServiceActions.DELETE, genesis });
-    await this.mainChannel.unbindQueue(routingKey, RMQExchanges.DIRECT_EX, routingKey);
-    this.mainChannel.publish(RMQExchanges.DIRECT_EX, RMQQueues.GENESISES, Buffer.from(messageBuff));
+    const messageBuff = JSON.stringify({ service: RMQServices.INDEXER, action: RMQServiceAction.DELETE, genesis });
+    await this.mainChannel.unbindQueue(routingKey, RMQExchange.DIRECT_EX, routingKey);
+    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, Buffer.from(messageBuff));
   }
 
   public async addGenesisQueue(genesis: string) {
@@ -97,6 +92,7 @@ export class RMQService {
       exclusive: false,
       autoDelete: true,
     });
+    await this.mainChannel.bindQueue(genesisQ, RMQExchange.DIRECT_EX, genesisQ);
 
     const topicQ = `${RMQServices.INDEXER}t.${genesis}`;
     await this.topicChannel.assertQueue(topicQ, {
@@ -104,15 +100,13 @@ export class RMQService {
       exclusive: false,
       autoDelete: true,
     });
-    await this.mainChannel.bindQueue(genesisQ, RMQExchanges.DIRECT_EX, genesisQ);
-    await this.topicChannel.bindQueue(topicQ, RMQExchanges.TOPIC_EX, `${RMQServices.INDEXER}.genesises`);
+    await this.topicChannel.bindQueue(topicQ, RMQExchange.TOPIC_EX, `${RMQServices.INDEXER}.genesises`);
 
     await this.directMsgConsumer(genesisQ);
-    await this.metaMsgConsumer();
     await this.genesisesMsgConsumer(topicQ, genesis);
 
-    const msgBuff = JSON.stringify({ service: RMQServices.INDEXER, action: RMQServiceActions.ADD, genesis });
-    this.mainChannel.publish(RMQExchanges.DIRECT_EX, RMQQueues.GENESISES, Buffer.from(msgBuff));
+    const msgBuff = JSON.stringify({ service: RMQServices.INDEXER, action: RMQServiceAction.ADD, genesis });
+    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, Buffer.from(msgBuff));
   }
 
   private sendMsg(exchange: string, queue: string, params: any, correlationId?: string, method?: string): void {
@@ -121,9 +115,15 @@ export class RMQService {
   }
 
   private async metaMsgConsumer(): Promise<void> {
+    const exchange = 'indxr_meta';
+    const channel = await this.connection.createChannel();
+    await channel.assertExchange(exchange, 'fanout', { autoDelete: true });
+    const q = await channel.assertQueue('', { exclusive: false });
+    await channel.bindQueue(q.queue, exchange, '');
+
     try {
-      await this.topicChannel.consume(
-        `${RMQServices.INDEXER}.meta`,
+      await channel.consume(
+        q.queue,
         async (msg) => {
           if (!msg) {
             return;
@@ -155,7 +155,7 @@ export class RMQService {
 
           const result = await this.handleIncomingMsg(method, params);
 
-          this.sendMsg(RMQExchanges.DIRECT_EX, RMQQueues.REPLIES, result, correlationId);
+          this.sendMsg(RMQExchange.DIRECT_EX, RMQQueue.REPLIES, result, correlationId);
         },
         { noAck: true },
       );
@@ -173,8 +173,8 @@ export class RMQService {
             return;
           }
 
-          const messageBuff = JSON.stringify({ service: RMQServices.INDEXER, action: RMQServiceActions.ADD, genesis });
-          this.mainChannel.publish(RMQExchanges.DIRECT_EX, RMQQueues.GENESISES, Buffer.from(messageBuff));
+          const messageBuff = JSON.stringify({ service: RMQServices.INDEXER, action: RMQServiceAction.ADD, genesis });
+          this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, Buffer.from(messageBuff));
         },
         { noAck: true },
       );
@@ -191,7 +191,7 @@ export class RMQService {
   public async sendMsgToMetaStorage(metahashes: Map<string, Set<string>>) {
     const msg = Array.from(metahashes.entries()).map(([key, value]) => [key, Array.from(value.values())]);
     return this.sendMsg(
-      RMQExchanges.DIRECT_EX,
+      RMQExchange.DIRECT_EX,
       RMQServices.META_STORAGE,
       msg,
       null,

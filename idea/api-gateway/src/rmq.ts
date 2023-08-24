@@ -1,6 +1,6 @@
 import { CronJob } from 'cron';
 import { connect, Connection, Channel } from 'amqplib';
-import { logger, RMQExchanges, RMQMessage, RMQQueues, RMQReply, RMQServiceActions, RMQServices } from '@gear-js/common';
+import { logger, RMQExchange, RMQMessage, RMQQueue, RMQReply, RMQServiceAction, RMQServices } from '@gear-js/common';
 
 import config from './config';
 
@@ -27,28 +27,28 @@ export class RMQService {
     }
 
     this.mainChannel = await this.connection.createChannel();
-    await this.mainChannel.assertExchange(RMQExchanges.TOPIC_EX, 'topic', { durable: true });
-    await this.mainChannel.assertExchange(RMQExchanges.DIRECT_EX, 'direct', { durable: true });
-    await this.mainChannel.assertQueue(RMQQueues.REPLIES, {
+    await this.mainChannel.assertExchange(RMQExchange.TOPIC_EX, 'topic', { durable: true });
+    await this.mainChannel.assertExchange(RMQExchange.DIRECT_EX, 'direct', { durable: true });
+    await this.mainChannel.assertQueue(RMQQueue.REPLIES, {
       durable: true,
       exclusive: false,
       autoDelete: false,
       messageTtl: 30_000,
     });
 
-    await this.mainChannel.bindQueue(RMQQueues.REPLIES, RMQExchanges.DIRECT_EX, RMQQueues.REPLIES);
+    await this.mainChannel.bindQueue(RMQQueue.REPLIES, RMQExchange.DIRECT_EX, RMQQueue.REPLIES);
 
-    await this.mainChannel.assertQueue(RMQQueues.GENESISES, {
+    await this.mainChannel.assertQueue(RMQQueue.GENESISES, {
       durable: true,
       exclusive: false,
       autoDelete: false,
       messageTtl: 30_000,
     });
 
-    await this.mainChannel.bindQueue(RMQQueues.GENESISES, RMQExchanges.DIRECT_EX, RMQQueues.GENESISES);
+    await this.mainChannel.bindQueue(RMQQueue.GENESISES, RMQExchange.DIRECT_EX, RMQQueue.GENESISES);
 
     this.metaChannel = await this.connection.createChannel();
-    this.metaChannel.assertExchange(RMQExchanges.DIRECT_EX, 'direct', { durable: true });
+    this.metaChannel.assertExchange(RMQExchange.DIRECT_EX, 'direct', { durable: true });
 
     await this.subscribeToGenesises();
     await this.subscribeToReplies();
@@ -56,7 +56,7 @@ export class RMQService {
 
   private async subscribeToReplies(): Promise<void> {
     await this.mainChannel.consume(
-      RMQQueues.REPLIES,
+      RMQQueue.REPLIES,
       (message) => {
         if (!message) {
           return;
@@ -76,7 +76,7 @@ export class RMQService {
 
   private async subscribeToGenesises() {
     await this.mainChannel.consume(
-      RMQQueues.GENESISES,
+      RMQQueue.GENESISES,
       async (message) => {
         if (!message) {
           return;
@@ -84,7 +84,7 @@ export class RMQService {
 
         const { genesis, service, action } = JSON.parse(message.content.toString());
 
-        if (action === RMQServiceActions.ADD) {
+        if (action === RMQServiceAction.ADD) {
           if (service === RMQServices.INDEXER) {
             if (this.indexerChannels.has(genesis)) return;
 
@@ -108,7 +108,7 @@ export class RMQService {
           }
         }
 
-        if (action === RMQServiceActions.DELETE) {
+        if (action === RMQServiceAction.DELETE) {
           if (service === RMQServices.INDEXER) {
             const channel = this.indexerChannels.get(genesis);
             if (channel) {
@@ -133,21 +133,21 @@ export class RMQService {
 
   private async createChannel() {
     const channel = await this.connection.createChannel();
-    channel.assertExchange(RMQExchanges.DIRECT_EX, 'direct', { durable: true });
+    channel.assertExchange(RMQExchange.DIRECT_EX, 'direct', { durable: true });
     return channel;
   }
 
   public sendMsgToIndexer({ genesis, params, correlationId, method }: RMQMessage) {
     const channel = this.indexerChannels.get(genesis);
 
-    channel.publish(RMQExchanges.DIRECT_EX, `${RMQServices.INDEXER}.${genesis}`, Buffer.from(JSON.stringify(params)), {
+    channel.publish(RMQExchange.DIRECT_EX, `${RMQServices.INDEXER}.${genesis}`, Buffer.from(JSON.stringify(params)), {
       correlationId,
       headers: { method },
     });
   }
 
   public sendMsgToMetaStorage({ params, correlationId, method }: RMQMessage) {
-    this.metaChannel.publish(RMQExchanges.DIRECT_EX, RMQServices.META_STORAGE, Buffer.from(JSON.stringify(params)), {
+    this.metaChannel.publish(RMQExchange.DIRECT_EX, RMQServices.META_STORAGE, Buffer.from(JSON.stringify(params)), {
       correlationId,
       headers: { method },
     });
@@ -157,7 +157,7 @@ export class RMQService {
     const channel = this.tbChannels.get(genesis);
 
     channel.publish(
-      RMQExchanges.DIRECT_EX,
+      RMQExchange.DIRECT_EX,
       `${RMQServices.TEST_BALANCE}.${genesis}`,
       Buffer.from(JSON.stringify(params)),
       {
@@ -168,11 +168,11 @@ export class RMQService {
   }
 
   public sendMsgIndexerGenesises() {
-    this.mainChannel.publish(RMQExchanges.TOPIC_EX, `${RMQServices.INDEXER}.genesises`, Buffer.from(''));
+    this.mainChannel.publish(RMQExchange.TOPIC_EX, `${RMQServices.INDEXER}.genesises`, Buffer.from(''));
   }
 
   public sendMsgTBGenesises() {
-    this.mainChannel.publish(RMQExchanges.TOPIC_EX, `${RMQServices.TEST_BALANCE}.genesises`, Buffer.from(''));
+    this.mainChannel.publish(RMQExchange.TOPIC_EX, `${RMQServices.TEST_BALANCE}.genesises`, Buffer.from(''));
   }
 
   public isExistTBChannel(genesis: string) {
