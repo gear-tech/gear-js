@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Link, generatePath } from 'react-router-dom';
 
-import { CreateVoucher } from 'features/vaucher';
+import { CreateVoucher } from 'features/voucher';
 import { absoluteRoutes, routes } from 'shared/config';
 import { ReactComponent as sendSVG } from 'shared/assets/images/actions/send.svg';
 import { ReactComponent as readSVG } from 'shared/assets/images/actions/read.svg';
