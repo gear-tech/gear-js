@@ -1,11 +1,12 @@
-export enum RMQQueues {
+export enum RMQQueue {
   GENESISES = 'genesises',
   REPLIES = 'replies',
 }
 
-export enum RMQExchanges {
+export enum RMQExchange {
   DIRECT_EX = 'direct.ex',
   TOPIC_EX = 'topic.ex',
+  INDXR_META = 'indxr.meta.ex',
 }
 
 export enum RMQServices {
@@ -14,7 +15,7 @@ export enum RMQServices {
   META_STORAGE = 'meta',
 }
 
-export enum RMQServiceActions {
+export enum RMQServiceAction {
   ADD = 'add',
   DELETE = 'delete',
 }

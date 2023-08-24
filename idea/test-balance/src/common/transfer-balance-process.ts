@@ -1,4 +1,4 @@
-import { logger, JSONRPC_ERRORS, RMQExchanges, RMQQueues } from '@gear-js/common';
+import { logger, JSONRPC_ERRORS, RMQExchange, RMQQueue } from '@gear-js/common';
 import { EventEmitter } from 'node:events';
 
 import { transferService } from '../transfer.service';
@@ -54,6 +54,6 @@ export async function transferProcess(): Promise<void> {
       logger.error(error.message, { stack: error.stack });
       result = { error: JSONRPC_ERRORS.InternalError.name };
     }
-    producer.sendMessage(RMQExchanges.DIRECT_EX, RMQQueues.REPLIES, correlationId, result);
+    producer.sendMessage(RMQExchange.DIRECT_EX, RMQQueue.REPLIES, correlationId, result);
   }
 }

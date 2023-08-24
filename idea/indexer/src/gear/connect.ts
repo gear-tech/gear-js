@@ -1,5 +1,5 @@
 import { GearApi } from '@gear-js/api';
-import { RMQServiceActions, logger } from '@gear-js/common';
+import { RMQServiceAction, logger } from '@gear-js/common';
 
 import config from '../config';
 import { changeStatus } from '../healthcheck.server';
@@ -11,7 +11,7 @@ const addresses = config.gear.providerAddresses;
 const MAX_RECONNECTIONS = 10;
 let reconnectionsCounter = 0;
 
-type GenesisCb = (action: RMQServiceActions, genesis: string) => void;
+type GenesisCb = (action: RMQServiceAction, genesis: string) => void;
 let providerAddress = addresses[0];
 
 export async function connectToNode(indexer: GearIndexer, cb: GenesisCb) {
@@ -34,13 +34,13 @@ export async function connectToNode(indexer: GearIndexer, cb: GenesisCb) {
   api.on('disconnected', () => {
     logger.warn('Disconnected from the node.');
     indexer.stop();
-    genesis && cb(RMQServiceActions.DELETE, genesis);
+    genesis && cb(RMQServiceAction.DELETE, genesis);
     reconnect(api, indexer, cb);
   });
 
   reconnectionsCounter = 0;
   await indexer.run(api);
-  cb(RMQServiceActions.ADD, genesis);
+  cb(RMQServiceAction.ADD, genesis);
   logger.info(`Connected to ${api.runtimeChain} with genesis ${genesis}`);
   changeStatus('gear');
 }
