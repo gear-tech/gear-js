@@ -15,7 +15,7 @@ type Props = {
 };
 
 type RequestParams = {
-  source: HexString;
+  query: HexString;
 };
 
 const ProgramMessages = ({ programId }: Props) => {
@@ -24,7 +24,7 @@ const ProgramMessages = ({ programId }: Props) => {
   const [activeFilter, setActiveFilter] = useState(MessageFilter.Messages);
 
   const { loadData } = useDataLoading<RequestParams>({
-    defaultParams: { source: programId },
+    defaultParams: { query: programId },
     fetchData: fetchMessages,
   });
 
