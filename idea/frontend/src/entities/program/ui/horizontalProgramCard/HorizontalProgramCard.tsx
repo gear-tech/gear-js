@@ -1,7 +1,8 @@
 import { memo } from 'react';
 import { Link, generatePath } from 'react-router-dom';
+import cx from 'clsx';
 
-import { CreateVoucher } from 'features/voucher';
+import { useIsVoucherExists, CreateVoucher } from 'features/voucher';
 import { absoluteRoutes, routes } from 'shared/config';
 import { ReactComponent as sendSVG } from 'shared/assets/images/actions/send.svg';
 import { ReactComponent as readSVG } from 'shared/assets/images/actions/read.svg';
@@ -20,11 +21,12 @@ type Props = {
 
 const HorizontalProgramCard = memo(({ program }: Props) => {
   const { id: programId, name, status, timestamp, hasState } = program;
-
   const statusName = PROGRAM_STATUS_NAME[status];
 
+  const isVoucherExists = useIsVoucherExists(programId);
+
   return (
-    <article className={styles.horizontalProgramCard}>
+    <article className={cx(styles.horizontalProgramCard, isVoucherExists && styles.voucher)}>
       <div className={styles.content}>
         <Link to={generatePath(absoluteRoutes.program, { programId })} className={styles.link}>
           <h2 className={styles.name}>{name}</h2>
@@ -47,7 +49,7 @@ const HorizontalProgramCard = memo(({ program }: Props) => {
 
             {hasState && <ActionLink to={generatePath(routes.state, { programId })} icon={readSVG} text="Read State" />}
 
-            <CreateVoucher programId={programId} />
+            {!isVoucherExists && <CreateVoucher programId={programId} />}
           </>
         )}
       </div>

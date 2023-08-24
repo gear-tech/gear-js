@@ -1,7 +1,5 @@
-import { useAccount, useAlert, useApi } from '@gear-js/react-hooks';
 import { HexString } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
-import { useEffect, useState } from 'react';
 
 import actionLinkStyles from 'shared/ui/ActionLink/ActionLink.module.scss';
 
@@ -13,26 +11,9 @@ type Props = {
 };
 
 const CreateVoucher = ({ programId }: Props) => {
-  const { api, isApiReady } = useApi();
-  const alert = useAlert();
+  console.log();
 
-  const { account } = useAccount();
-  const accountAddress = account?.decodedAddress;
-
-  const [isVoucherExists, setIsVoucherExists] = useState<boolean>();
-
-  useEffect(() => {
-    if (!isApiReady || !accountAddress) return;
-
-    api.voucher
-      .exists(programId, accountAddress)
-      .then((result) => setIsVoucherExists(result))
-      .catch(({ message }: Error) => alert.error(message));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isApiReady, accountAddress]);
-
-  return !isVoucherExists ? (
+  return (
     <Button
       icon={CouponSVG}
       text="Create Voucher"
@@ -41,7 +22,7 @@ const CreateVoucher = ({ programId }: Props) => {
       className={actionLinkStyles.link}
       noWrap
     />
-  ) : null;
+  );
 };
 
 export { CreateVoucher };
