@@ -32,7 +32,7 @@ const GasField = (props: Props) => {
     const bnMultiplier = bnValue.multipliedBy(0.1);
     const increasedValue = bnValue.plus(bnMultiplier);
 
-    change(name, increasedValue.toFixed());
+    change(name, increasedValue.toFixed(9));
   };
 
   const error = meta.invalid && meta.touched ? meta.error : undefined;
