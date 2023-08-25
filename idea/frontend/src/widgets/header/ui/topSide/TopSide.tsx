@@ -26,7 +26,7 @@ const TopSide = () => {
   const { account, isAccountReady } = useAccount();
   const { isDevChain, isTestBalanceAvailable } = useChain();
   const { showModal, closeModal } = useModal();
-  const balanceMultiplier = useBalanceMultiplier();
+  const { balanceMultiplier } = useBalanceMultiplier();
 
   const [captchaToken, setCaptchaToken] = useState('');
   const [totalIssuance, setTotalIssuance] = useState('');

@@ -8,7 +8,10 @@ function useBalanceMultiplier() {
   // since it renders after account is ready
   const [decimals] = isApiReady ? api.registry.chainDecimals : [0];
 
-  return BigNumber(10).exponentiatedBy(BigNumber(decimals));
+  return {
+    balanceMultiplier: BigNumber(10).exponentiatedBy(BigNumber(decimals)),
+    decimals,
+  };
 }
 
 export { useBalanceMultiplier };
