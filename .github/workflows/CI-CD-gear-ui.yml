@@ -73,22 +73,6 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v2
       
-      - name: "Check changed files"
-        shell: pwsh
-        id: check_file_changed
-        run: |
-          # Diff HEAD with the previous commit
-          $diff = git diff --name-only HEAD^ HEAD
-          # Check if a file under gear-ui has changed (added, modified, deleted)
-          $SourceDiffGearUI = $diff | Where-Object { $_ -match '^utils/gear-ui/' }
-          $HasDiffGearUI = $SourceDiffGearUI.Length -gt 0
-          $SourceDiffVaraUI = $diff | Where-Object { $_ -match '^utils/vara-ui/' }
-          $HasDiffVaraUI = $SourceDiffVaraUI.Length -gt 0
-          # Set the output
-          Write-Host "::set-output name=gearui_changed::$HasDiffGearUI"
-          Write-Host "::set-output name=varaui_changed::$HasDiffVaraUI"
-
-
       - name: Use node 18.x
         uses: actions/setup-node@v2.1.5
         with:

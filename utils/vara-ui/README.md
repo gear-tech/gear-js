@@ -14,6 +14,8 @@ A React library that provides components that are used across Vara applications.
 
 ## Installation
 
+Install package:
+
 ```sh
 npm install @gear-js/vara-ui
 ```
@@ -22,6 +24,12 @@ or
 
 ```sh
 yarn add @gear-js/vara-ui
+```
+
+Import styles in application's root:
+
+```jsx
+import '@gear-js/vara-ui/styles.css';
 ```
 
 ## Getting started
