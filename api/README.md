@@ -388,23 +388,27 @@ console.log(`Program with address ${programId} ${programExists ? 'exists' : "doe
 There are 2 ways to read state of a program.
 
 1. Read full state of a program.
-   _To read full state of the program you need to have only metadata of this program. You can call `api.programState.read` method to get the state._
+   _To read full state of the program you need to provide metadata of this program and input payload expected by the program. You can call `api.programState.read` method to get the state._
 
    ```javascript
-   await api.programState.read({ programId: `0x...` }, programMetadata);
+   await api.programState.read({ programId: `0x...`, payload: [1, 2, 3] }, programMetadata);
 
    // Also you can read the state of the program at some specific block.
-   await api.programState.read({ programId: `0x...`, at: `0x...` }, programMetadata);
+   await api.programState.read({ programId: `0x...`, payload: [1, 2, 3], at: `0x...` }, programMetadata);
    ```
 
 2. Read state using wasm.
    _If you have some program that is able to read state and return you only necessary data you need to use `api.programState.readUsingWasm` method._
+   _Note that since `state` function of gear programs expects input payload you need to provide it in the parameters of `readUsingWasm` method_
 
    ```javascript
    const wasm = readFileSync('path/to/state.meta.wasm');
+   const stateMetadata = await getStateMetadata(wasm);
+   const programMetadata = ProgramMetadata.from('0x...');
    const state = await api.programState.readUsingWasm(
-     { programId, fn_name: 'name_of_function_to_execute', wasm, argument: { input: 'payload' } },
-     wasm,
+     { programId, fn_name: 'name_of_function_to_execute', wasm, payload: [1, 2, 3], argument: { input: 'payload' } },
+     stateMetadata,
+     programMetadata
    );
    ```
 
