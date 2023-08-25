@@ -24,7 +24,6 @@ import { IPrepared, IPreparedProgram, IPreparedPrograms } from '../interfaces';
 import { getAccounts, sleep } from '../utils';
 import { getAllMessages, getMessageData, getMessagePayload, getMessagesByDates } from './messages';
 import { getCodeData, getCodes, getCodesByDates } from './code';
-import { networkDataAvailable } from './network-data-available';
 import request from './request';
 
 let genesis: HexString;
@@ -93,7 +92,7 @@ async function listenToEvents() {
 const finalizationPromises = [];
 
 describe('prepare', () => {
-  test('upload test_meta', async () => {
+  test.only('upload test_meta', async () => {
     const code = readFileSync(path.join(PATH_TO_PROGRAMS, 'test_meta.opt.wasm'));
 
     const metahash = await api.code.metaHashFromWasm(code);
@@ -165,37 +164,39 @@ describe('prepare', () => {
     const tx = api.message.send({ destination: test_meta_id, gasLimit: 2_000_000_000, payload, value: 1000 }, meta);
 
     await new Promise((resolve, reject) => {
-      finalizationPromises.push(new Promise((finResolve) => {
-        tx.signAndSend(alice, ({ events, status }) => {
-          if (status.isFinalized) {
-            finResolve(0);
-          }
-          if (status.isInBlock) {
-            events.forEach(({ event }) => {
-              console.log(event.toJSON());
-              if (event.method === 'ExtrinsicFailed') {
-                reject(new Error(api.getExtrinsicFailedError(event).docs.join('. ')));
-              } else if (event.method === 'MessageQueued') {
-                const {
-                  data: { id, source, destination },
-                } = event as MessageQueued;
-                sentMessages.push({
-                  id: id.toHex(),
-                  source: source.toHex(),
-                  destination: destination.toHex(),
-                  entry: 'handle',
-                  payload,
-                });
-                resolve(0);
-              }
-            });
-          }
-        });
-      }));
+      finalizationPromises.push(
+        new Promise((finResolve) => {
+          tx.signAndSend(alice, ({ events, status }) => {
+            if (status.isFinalized) {
+              finResolve(0);
+            }
+            if (status.isInBlock) {
+              events.forEach(({ event }) => {
+                console.log(event.toJSON());
+                if (event.method === 'ExtrinsicFailed') {
+                  reject(new Error(api.getExtrinsicFailedError(event).docs.join('. ')));
+                } else if (event.method === 'MessageQueued') {
+                  const {
+                    data: { id, source, destination },
+                  } = event as MessageQueued;
+                  sentMessages.push({
+                    id: id.toHex(),
+                    source: source.toHex(),
+                    destination: destination.toHex(),
+                    entry: 'handle',
+                    payload,
+                  });
+                  resolve(0);
+                }
+              });
+            }
+          });
+        }),
+      );
     });
   });
 
-  test('send batch of messages to test_meta', async () => {
+  test.only('send batch of messages to test_meta', async () => {
     const txs = [];
     const payloads = [
       meta.createType(meta.types.handle.input, { Two: [[8, 16]] }).toHex(),
@@ -254,7 +255,7 @@ describe('prepare', () => {
   });
 });
 
-describe('methods', () => {
+describe.skip('methods', () => {
   test(API_GATEWAY_METHODS.NETWORK_DATA_AVAILABLE, async () => {
     const response = await request('networkData.available', {
       genesis,

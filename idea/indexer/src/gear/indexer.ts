@@ -14,7 +14,7 @@ import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { SignedBlockExtended } from '@polkadot/api-derive/types';
 import { EventNames, CodeStatus, logger } from '@gear-js/common';
 import { VoidFn } from '@polkadot/api/types';
-import { Option } from '@polkadot/types';
+import { Option, Vec, GenericCall } from '@polkadot/types';
 
 import {
   getExtrinsics,
@@ -29,6 +29,7 @@ import {
   CodeChangedInput,
   MessagesDispatchedDataInput,
   ProgramStatus,
+  getBatchExtrinsics,
 } from '../common';
 import { Block, Code, Message, Program } from '../database/entities';
 import { BlockService, CodeService, MessageService, ProgramService, StatusService } from '../services';
@@ -225,6 +226,118 @@ export class GearIndexer {
     await this.handleProgramExtrinsics(block, status, timestamp);
 
     await this.handleMessageExtrinsics(block, status, timestamp);
+
+    await this.handleBatchExtrinsics(block, status, timestamp);
+  }
+
+  private async handleBatchExtrinsics(block: SignedBlockExtended, status: ExtrinsicStatus, timestamp: number) {
+    const extrinsics = getBatchExtrinsics(block);
+
+    if (extrinsics.length === 0) {
+      return;
+    }
+
+    let msgIndex = 0;
+    const blockHash = block.block.header.hash.toHex();
+    const ts = new Date(timestamp);
+    for (const tx of extrinsics) {
+      const mqEvents = filterEvents(tx.hash, block, block.events, status).events.filter(
+        ({ event: { method } }) => method.toLowerCase() === 'messagequeued',
+      );
+      for (const arg of tx.args) {
+        for (const call of arg as Vec<GenericCall>) {
+          switch (call.method.toLowerCase()) {
+            case 'sendmessage': {
+              const event = mqEvents[msgIndex].event as MessageQueued;
+              const msgId = event.data.id.toHex();
+              const destination = event.data.destination.toHex();
+              const source = event.data.source.toHex();
+              const payload = call.args[1].toHex();
+              const value = call.args[3].toString();
+              const program = await this.getProgram(destination, blockHash, msgId);
+              this.tempState.addMsg(
+                new Message({
+                  id: msgId,
+                  blockHash,
+                  genesis: this.genesis,
+                  timestamp: ts,
+                  destination,
+                  source,
+                  payload,
+                  value,
+                  program,
+                  type: MessageType.ENQUEUED,
+                  entry: MessageEntryPoint.HANDLE,
+                }),
+              );
+              msgIndex++;
+              break;
+            }
+            case 'sendreply': {
+              const event = mqEvents[msgIndex].event as MessageQueued;
+              const msgId = event.data.id.toHex();
+              const destination = event.data.destination.toHex();
+              const source = event.data.source.toHex();
+              this.tempState.addMsg(
+                new Message({
+                  id: msgId,
+                  blockHash,
+                  genesis: this.genesis,
+                  timestamp: ts,
+                  destination,
+                  source,
+                  payload: call.args[1].toHex(),
+                  value: call.args[3].toString(),
+                  program: await this.getProgram(event.data.destination.toHex(), blockHash, event.data.id.toHex()), //TODO,
+                  type: MessageType.ENQUEUED,
+                  entry: MessageEntryPoint.REPLY,
+                }),
+              );
+              msgIndex++;
+              break;
+            }
+            case 'uploadprogram': {
+              const event = mqEvents[msgIndex].event as MessageQueued;
+              const msgId = event.data.id.toHex();
+              const destination = event.data.destination.toHex();
+              const source = event.data.source.toHex();
+              this.tempState.addMsg(
+                new Message({
+                  id: msgId,
+                  blockHash,
+                  genesis: this.genesis,
+                  timestamp: ts,
+                  destination,
+                  source,
+                  payload: call.args[1].toHex(),
+                  value: call.args[3].toString(),
+                  program: await this.getProgram(event.data.destination.toHex(), blockHash, event.data.id.toHex()), //TODO,
+                  type: MessageType.ENQUEUED,
+                  entry: MessageEntryPoint.REPLY,
+                }),
+              );
+              msgIndex++;
+              break;
+            }
+            case 'createprogram': {
+              //
+              break;
+            }
+            case 'uploadcode': {
+              //
+              break;
+            }
+            default: {
+              continue;
+            }
+          }
+          // console.log(
+          //   call.method,
+          //   call.args.map((a) => a.toJSON()),
+          // );
+        }
+      }
+    }
   }
 
   private async handleCodeExtrinsics(
