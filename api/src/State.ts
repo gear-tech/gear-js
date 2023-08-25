@@ -6,7 +6,7 @@ import { Bytes } from '@polkadot/types';
 import { GearProgramStorage } from './Storage';
 import { HumanTypesRepr } from 'types';
 
-interface ReadStateArgs {
+interface ReadStateParams {
   /**
    * Program Id
    */
@@ -16,7 +16,34 @@ interface ReadStateArgs {
    */
   payload: any;
   /**
-   * Block hash at which state state is to be received
+   * Block hash at which state is to be received
+   */
+  at?: HexString;
+}
+
+interface ReadStateUsingWasmParams {
+  /**
+   * Program Id
+   */
+  programId: HexString;
+  /**
+   * Input payload expected by the `state` function of the onchain program
+   */
+  payload?: any;
+  /**
+   * Function name to execute
+   */
+  fn_name: string;
+  /**
+   * Compiled program using to read `state` of the onchain program
+   */
+  wasm: Buffer | Uint8Array | HexString;
+  /**
+   * (Optional) The argument expected by the program using to read state
+   */
+  argument?: any;
+  /**
+   * (Optional) Block hash at which state is to be read
    */
   at?: HexString;
 }
@@ -28,26 +55,35 @@ export class GearProgramState extends GearProgramStorage {
    * @param meta StateMetadata returned from getStateMetadata function
    */
   async readUsingWasm(
-    args: {
-      programId: HexString;
-      fn_name: string;
-      wasm: Buffer | Uint8Array | HexString;
-      argument?: any;
-      at?: HexString;
-    },
-    meta: StateMetadata,
+    params: ReadStateUsingWasmParams,
+    stateMeta: StateMetadata,
+    programMeta: ProgramMetadata,
   ): Promise<Codec> {
-    const fnTypes = meta?.functions[args.fn_name];
+    const fnTypes = stateMeta?.functions[params.fn_name];
+    const stateType =
+      programMeta.version === MetadataVersion.V2Rust ? (programMeta.types.state as HumanTypesRepr).input : null;
 
-    const payload =
+    const argument =
       fnTypes?.input !== undefined && fnTypes?.input !== null
-        ? Array.from(meta.createType(fnTypes.input, args.argument).toU8a())
+        ? Array.from(stateMeta.createType(fnTypes.input, params.argument).toU8a())
         : null;
 
-    const code = typeof args.wasm === 'string' ? args.wasm : CreateType.create<Bytes>('Bytes', Array.from(args.wasm));
+    const payload = isNaN(stateType)
+      ? []
+      : Array.from(programMeta.createType((programMeta.types.state as HumanTypesRepr).input, params.payload).toU8a());
 
-    const state = await this._api.rpc['gear'].readStateUsingWasm(args.programId, args.fn_name, code, payload, args.at);
-    return meta && fnTypes ? meta.createType(fnTypes.output, state) : state;
+    const code =
+      typeof params.wasm === 'string' ? params.wasm : CreateType.create<Bytes>('Bytes', Array.from(params.wasm));
+
+    const state = await this._api.rpc['gear'].readStateUsingWasm(
+      params.programId,
+      payload,
+      params.fn_name,
+      code,
+      argument,
+      params.at,
+    );
+    return stateMeta && fnTypes ? stateMeta.createType(fnTypes.output, state) : state;
   }
 
   /**
@@ -63,7 +99,7 @@ export class GearProgramState extends GearProgramStorage {
    * const result = await api.programState.read({ programId, payload: { id: 1 } }, meta);
    * console.log(result.toJSON());
    */
-  async read<T extends Codec = Codec>(args: ReadStateArgs, meta: ProgramMetadata, type?: number): Promise<T> {
+  async read<T extends Codec = Codec>(args: ReadStateParams, meta: ProgramMetadata, type?: number): Promise<T> {
     const payload =
       meta.version === MetadataVersion.V2Rust
         ? Array.from(meta.createType((meta.types.state as HumanTypesRepr).input, args.payload).toU8a())
