@@ -8,6 +8,10 @@ https://github.com/gear-tech/gear-js/pull/1353
 - Remove `sendMessageWithVoucher` and `sendReplyWithVoucher` methods according to https://github.com/gear-tech/gear/pull/3083.
 - Add optional `prepaid` and `account` fields to `api.message.send` and `api.message.sendReply` method arguments. They are used to send messages with the issued voucher.
 
+https://github.com/gear-tech/gear-js/pull/1349
+- Add `payload` parameter to `api.state.read` and `api.state.readUsingWasm` methods according to https://github.com/gear-tech/gear/pull/3059 and https://github.com/gear-tech/gear/pull/3173
+- Support new `ProgramMetadata` version.
+
 ## 0.32.4
 
 _07/25/2023_
