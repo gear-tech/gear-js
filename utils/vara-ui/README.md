@@ -29,7 +29,7 @@ yarn add @gear-js/vara-ui
 Import styles in application's root:
 
 ```jsx
-import @gear-js/vara-ui/styles.css
+import '@gear-js/vara-ui/styles.css';
 ```
 
 ## Getting started
