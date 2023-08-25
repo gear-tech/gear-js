@@ -49,7 +49,7 @@ const HorizontalProgramCard = memo(({ program }: Props) => {
 
             {hasState && <ActionLink to={generatePath(routes.state, { programId })} icon={readSVG} text="Read State" />}
 
-            {!isVoucherExists && <CreateVoucher programId={programId} />}
+            <CreateVoucher programId={programId} />
           </>
         )}
       </div>
