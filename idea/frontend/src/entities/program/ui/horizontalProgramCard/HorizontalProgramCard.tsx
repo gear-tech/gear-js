@@ -23,7 +23,7 @@ const HorizontalProgramCard = memo(({ program }: Props) => {
   const { id: programId, name, status, timestamp, hasState } = program;
   const statusName = PROGRAM_STATUS_NAME[status];
 
-  const isVoucherExists = useIsVoucherExists(programId);
+  const { isVoucherExists } = useIsVoucherExists(programId);
 
   return (
     <article className={cx(styles.horizontalProgramCard, isVoucherExists && styles.voucher)}>

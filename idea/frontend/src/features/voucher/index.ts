@@ -1,4 +1,4 @@
 import { CreateVoucher } from './ui';
-import { useIsVoucherExists } from './hooks';
+import { useIsVoucherExists, useVoucher } from './hooks';
 
-export { CreateVoucher, useIsVoucherExists };
+export { CreateVoucher, useIsVoucherExists, useVoucher };

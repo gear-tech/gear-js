@@ -11,10 +11,13 @@ import { getShortName } from 'shared/helpers';
 import { Subheader } from 'shared/ui/subheader';
 import { absoluteRoutes, routes } from 'shared/config';
 import { UILink } from 'shared/ui/uiLink';
+import { Table, TableRow } from 'shared/ui/table';
+import { BulbBlock, BulbStatus } from 'shared/ui/bulbBlock';
 import { ReactComponent as SendSVG } from 'shared/assets/images/actions/send.svg';
 import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg';
 import { ReactComponent as AddMetaSVG } from 'shared/assets/images/actions/addMeta.svg';
 import { useMetadata } from 'features/metadata';
+import { useVoucher } from 'features/voucher';
 
 import { ProgramDetails } from './programDetails';
 import { MetadataDetails } from './metadataDetails';
@@ -27,6 +30,7 @@ const Program = () => {
 
   const { program, isProgramReady, setProgramName } = useProgram(programId);
   const { metadata, isMetadataReady, setMetadata } = useMetadata(program?.metahash);
+  const { isVoucherExists, voucherValue } = useVoucher(programId);
 
   const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
     const codeHash = program?.code?.id;
@@ -79,6 +83,25 @@ const Program = () => {
       <div className={styles.content}>
         <div className={styles.leftSide}>
           <ProgramDetails program={program} isLoading={!isProgramReady} />
+
+          <div>
+            <Subheader title="Voucher details" />
+
+            <Table>
+              <TableRow name="Status">
+                <BulbBlock
+                  status={isVoucherExists ? BulbStatus.Success : BulbStatus.Error}
+                  text={isVoucherExists ? 'Available' : 'Not available'}
+                  size="large"
+                />
+              </TableRow>
+
+              <TableRow name="Amount">
+                {/* TODO: table cell component */}
+                <span className={styles.tableValue}>{voucherValue}</span>
+              </TableRow>
+            </Table>
+          </div>
 
           <div>
             <Subheader title="Metadata" />

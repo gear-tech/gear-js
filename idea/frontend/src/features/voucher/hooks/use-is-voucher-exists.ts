@@ -22,7 +22,7 @@ function useIsVoucherExists(programId: HexString) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady, accountAddress, programId]);
 
-  return isVoucherExists;
+  return { isVoucherExists };
 }
 
 export { useIsVoucherExists };
