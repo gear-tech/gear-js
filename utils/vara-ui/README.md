@@ -26,7 +26,7 @@ yarn add @gear-js/vara-ui
 
 In application's root (`App.tsx` or `index.tsx`)
 
-```
+```jsx
 import @gear-js/vara-ui/styles.css
 ```
 
