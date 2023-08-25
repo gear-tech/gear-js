@@ -3,7 +3,7 @@ import { useAccount, useAlert, useApi } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 import { useIsVoucherExists } from './use-is-voucher-exists';
 
-function useVoucher(programId: HexString) {
+function useVoucher(programId: HexString | undefined) {
   const { api } = useApi();
   const alert = useAlert();
 
@@ -14,7 +14,7 @@ function useVoucher(programId: HexString) {
   const [voucherValue, setVoucherValue] = useState('0');
 
   useEffect(() => {
-    if (!isVoucherExists || !accountAddress) return;
+    if (!programId || !isVoucherExists || !accountAddress) return;
 
     const id = generateVoucherId(accountAddress, programId);
 

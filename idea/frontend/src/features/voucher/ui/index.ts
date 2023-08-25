@@ -1,3 +1,4 @@
 import { CreateVoucher } from './create-voucher';
+import { VoucherCheckbox } from './voucher-checkbox';
 
-export { CreateVoucher };
+export { CreateVoucher, VoucherCheckbox };
