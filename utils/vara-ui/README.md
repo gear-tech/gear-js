@@ -24,6 +24,12 @@ or
 yarn add @gear-js/vara-ui
 ```
 
+In application's root (`App.tsx` or `index.tsx`)
+
+```
+import @gear-js/vara-ui/styles.css
+```
+
 ## Getting started
 
 Simple as it is, here's quick example:
