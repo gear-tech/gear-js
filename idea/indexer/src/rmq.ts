@@ -26,7 +26,9 @@ export class RMQService {
     private messageService?: MessageService,
     private programService?: ProgramService,
     private stateService?: StateService,
+    private oneTimeSync = false,
   ) {
+    if (this.oneTimeSync) return;
     this.methods = {
       [INDEXER_METHODS.BLOCKS_STATUS]: this.blockService.getLastBlock.bind(this.blockService),
       [INDEXER_METHODS.CODE_ALL]: this.codeService.getMany.bind(this.codeService),

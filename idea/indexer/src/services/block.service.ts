@@ -38,6 +38,10 @@ export class BlockService {
       endBlock = await this.repo.findOne({ where: { genesis }, order: { timestamp: 'DESC' } });
     }
 
+    if (!startBlock || !endBlock) {
+      return [];
+    }
+
     const syncedBlocks = await this.repo.find({
       where: {
         timestamp: And(MoreThanOrEqual(startBlock.timestamp), LessThanOrEqual(endBlock.timestamp)),

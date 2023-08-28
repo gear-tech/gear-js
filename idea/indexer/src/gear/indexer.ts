@@ -76,7 +76,9 @@ export class GearIndexer {
 
   public stop() {
     this.generatorLoop = false;
-    this.unsub();
+    if (this.unsub) {
+      this.unsub();
+    }
     this.api = null;
     this.newBlocks = [];
     this.lastBlockNumber = undefined;
@@ -123,6 +125,10 @@ export class GearIndexer {
 
   private async indexBlock(blockNumber: number, isMissed = false): Promise<void> {
     if (blockNumber === 0) return;
+
+    if (this.oneTimeSync) {
+      logger.info(`Index block with number ${blockNumber}`);
+    }
 
     let block: SignedBlockExtended;
 
