@@ -5,7 +5,11 @@ extern crate alloc;
 use alloc::string::String;
 use codec::{Decode, Encode};
 use gmeta::{InOut, Metadata};
-use gstd::{prelude::*, ActorId, BTreeMap, BTreeSet};
+use gstd::{
+    collections::{BTreeMap, BTreeSet},
+    prelude::*,
+    ActorId,
+};
 use primitive_types::H256;
 use scale_info::TypeInfo;
 
@@ -17,7 +21,7 @@ impl Metadata for ProgramMetadata {
     type Others = InOut<(), ()>;
     type Reply = String;
     type Signal = H256;
-    type State = Vec<Wallet>;
+    type State = InOut<Option<u32>, Vec<Wallet>>;
 }
 
 #[derive(TypeInfo, Default, Decode, Encode)]

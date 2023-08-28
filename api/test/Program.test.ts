@@ -5,7 +5,7 @@ import { bufferToU8a } from '@polkadot/util';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { GearApi, decodeAddress, getProgramMetadata } from '../src';
+import { GearApi, decodeAddress, ProgramMetadata } from '../src';
 import { TARGET, TEST_META_META, WS_ADDRESS } from './config';
 import { checkInit, getAccount, sendTransaction, sleep, waitForPausedProgram } from './utilsFunctions';
 
@@ -33,7 +33,7 @@ afterAll(async () => {
 
 describe('New Program', () => {
   test('Upload program', async () => {
-    const metadata = getProgramMetadata(metaHex);
+    const metadata = ProgramMetadata.from(metaHex);
 
     const program = api.program.upload(
       {
@@ -92,7 +92,7 @@ describe('New Program', () => {
 
   test('Сreate program', async () => {
     expect(codeId).toBeDefined();
-    const metadata = getProgramMetadata(metaHex);
+    const metadata = ProgramMetadata.from(metaHex);
 
     const { programId, salt } = api.program.create(
       {

@@ -30,7 +30,6 @@ export class GearVoucher extends GearTransaction {
   ): { extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>; voucherId: HexString } {
     const voucherId = generateVoucherId(to, program);
     this.extrinsic = this._api.tx.gearVoucher.issue(to, program, value);
-    this.extrinsic.signAndSend('', () => {});
     return { extrinsic: this.extrinsic, voucherId };
   }
 

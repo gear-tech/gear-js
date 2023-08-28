@@ -21,7 +21,7 @@ export class GearMessage extends GearTransaction {
    * ```javascript
    * const programId = '0x..';
    * const hexMeta = '0x...';
-   * const meta = getProgramMetadata(hexMeta);
+   * const meta = ProgramMetadata.from(hexMeta);
    *
    * const tx = api.message.send({
    *   destination: programId,
@@ -117,7 +117,7 @@ export class GearMessage extends GearTransaction {
     const _payload = encodePayload(payload, metaOrHexRegistry, 'handle', typeIndexOrTypeName);
 
     try {
-      this.extrinsic = this._api.tx.gear.sendMessage(destination, _payload, gasLimit, value || 0, prepaid);
+      this.extrinsic = this._api.tx.gear.sendMessage(destination, _payload, gasLimit, value || 0, prepaid || false);
       return this.extrinsic;
     } catch (error) {
       throw new SendMessageError(error.message);
@@ -127,14 +127,14 @@ export class GearMessage extends GearTransaction {
   /**
    * ## Send reply message
    * @param args Message parameters
-   * @param meta Program metadata obtained using `getProgramMetadata` function.
+   * @param meta Program metadata obtained using `ProgramMetadata.from` method.
    * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.reply.input` will be used instead.
    * @returns Submitted result
    * @example
    * ```javascript
    * const replyToMessage = '0x..';
    * const hexMeta = '0x...';
-   * const meta = getProgramMetadata(hexMeta);
+   * const meta = ProgramMetadata.from(hexMeta);
    *
    * const tx = api.message.send({
    *   replyToId: replyToMessage,
@@ -237,7 +237,7 @@ export class GearMessage extends GearTransaction {
     const _payload = encodePayload(payload, metaOrHexRegistry, 'reply', typeIndexOrTypeName);
 
     try {
-      this.extrinsic = this._api.tx.gear.sendReply(replyToId, _payload, gasLimit, value, prepaid);
+      this.extrinsic = this._api.tx.gear.sendReply(replyToId, _payload, gasLimit, value, prepaid || false);
       return this.extrinsic;
     } catch (error) {
       throw new SendReplyError();

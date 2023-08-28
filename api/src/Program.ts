@@ -41,7 +41,7 @@ export class GearProgram extends GearTransaction {
   /**
    * ### Upload program with code using program metadata to encode payload
    * @param args Program parameters
-   * @param meta (optional) Program metadata obtained using `getProgramMetadata` function.
+   * @param meta (optional) Program metadata obtained using `ProgramMetadata.from` method
    * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.init.input` will be used instead.
    * @returns Object containing program id, generated (or specified) salt, code id, prepared extrinsic
    * @example
@@ -49,7 +49,7 @@ export class GearProgram extends GearTransaction {
    * const api = await GearApi.create();
    * const code = fs.readFileSync('path/to/program.opt.wasm');
    * cosnt hexMeta = '0x...';
-   * const meta = getProgramMetadata(hexMeta);
+   * const meta = ProgramMetadata.from(hexMeta);
    * const { programId, codeId, salt, extrinsic } = api.program.upload({
    *   code,
    *   initPayload: { field: 'someValue' },
@@ -108,7 +108,7 @@ export class GearProgram extends GearTransaction {
   /**
    * ### Create program from uploaded on chain code using program metadata to encode payload
    * @param args Program parameters
-   * @param meta (optional) Program metadata obtained using `getProgramMetadata` function.
+   * @param meta (optional) Program metadata obtained using `ProgramMetadata.from` method.
    * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.init.input` will be used instead.
    * @returns Object containing program id, generated (or specified) salt, prepared extrinsic
    * @example
@@ -116,7 +116,7 @@ export class GearProgram extends GearTransaction {
    * const api = await GearApi.create();
    * const codeId = '0x...';
    * cosnt hexMeta = '0x...';
-   * const meta = getProgramMetadata(hexMeta);
+   * const meta = ProgramMetadata.from(hexMeta);
    * const { programId, codeId, salt, extrinsic } = api.program.create({
    *   code,
    *   initPayload: { field: 'someValue' },

@@ -115,6 +115,7 @@
       "readState": {
         "params": [
           { "name": "program_id", "type": "H256" },
+          { "name": "payload", "type": "Vec<u8>" },
           { "name": "at", "type": "Option<BlockHash>" }
         ],
         "type": "Bytes"
@@ -122,6 +123,7 @@
       "readStateUsingWasm": {
         "params": [
           { "name": "program_id", "type": "H256" },
+          { "name": "payload", "type": "Bytes" },
           { "name": "fn_name", "type": "Bytes" },
           { "name": "wasm", "type": "Bytes" },
           { "name": "argument", "type": "Option<Bytes>" },

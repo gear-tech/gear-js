@@ -16,13 +16,13 @@ export class GearGas {
    * @param payload Payload of init message
    * @param value Value of message
    * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
-   * @param meta (optional) Program metadata obtained using `getProgramMetadata` function.
+   * @param meta (optional) Program metadata obtained using `ProgramMetadata.from` method.
    * @param typeIndexOrTypeName  Index of type in the registry. If not specified the type index from `meta.init.input` will be used instead.
    * If meta is not passed it's possible to specify type name that can be one of the default rust types
    * @example
    * ```javascript
    * const code = fs.readFileSync('demo_meta.opt.wasm');
-   * const meta = await getProgramMetadata('0x...');
+   * const meta = ProgramMetadata.from('0x...');
    * const gas = await gearApi.program.gasSpent.init(
    *   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
    *   code,
@@ -79,7 +79,7 @@ export class GearGas {
    * @example
    * ```javascript
    * const code = fs.readFileSync('demo_meta.opt.wasm');
-   * const meta = await getProgramMetadata('0x...');
+   * const meta = ProgramMetadata.from('0x...');
    * const gas = await gearApi.program.gasSpent.init(
    *   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
    *   code,
@@ -137,7 +137,7 @@ export class GearGas {
    * @example
    * ```javascript
    * const code = fs.readFileSync('demo_meta.opt.wasm');
-   * const meta = await getProgramMetadata('0x...');
+   * const meta = ProgramMetadata.from('0x...');
    * const gas = await gearApi.program.gasSpent.handle(
    *   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
    *   '0xa178362715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
@@ -187,7 +187,7 @@ export class GearGas {
    * @example
    * ```javascript
    * const code = fs.readFileSync('demo_async.opt.wasm');
-   * const meta = await getProgramMetadata('0x...');
+   * const meta = ProgramMetadata.from('0x...');
    * const gas = await gearApi.program.gasSpent.reply(
    *   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
    *   '0x518e6bc03d274aadb3454f566f634bc2b6aef9ae6faeb832c18ae8300fd72635',

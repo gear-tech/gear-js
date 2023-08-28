@@ -1,13 +1,13 @@
 import { TEST_META_META } from './config';
 import fs from 'fs';
 
-import { ProgramMetadata, getProgramMetadata } from '../src';
+import { ProgramMetadata } from '../src';
 
 let meta: ProgramMetadata;
 
 beforeAll(() => {
   const hex = fs.readFileSync(TEST_META_META, 'utf-8');
-  meta = getProgramMetadata(`0x${hex}`);
+  meta = ProgramMetadata.from(`0x${hex}`);
 });
 
 describe('Get type definitions', () => {
@@ -18,7 +18,7 @@ describe('Get type definitions', () => {
       reply: 4,
       others: { input: null, output: null },
       signal: 26,
-      state: 27,
+      state: { input: 27, output: 29 },
     });
   });
 
@@ -492,114 +492,6 @@ describe('Get type definitions', () => {
     expect(meta.getTypeDef(26)).toEqual('H256');
     expect(meta.getTypeDef(26, true)).toEqual({ kind: 'primitive', name: 'H256', type: 'H256' });
   });
-
-  test('Get type structure 27', () => {
-    expect(meta.getTypeDef(27)).toEqual([
-      {
-        id: {
-          decimal: 'U128',
-          hex: ['U8'],
-        },
-        person: {
-          surname: 'Str',
-          name: 'Str',
-        },
-      },
-    ]);
-    expect(meta.getTypeDef(27, true)).toEqual({
-      name: 'Vec<Wallet>',
-      kind: 'sequence',
-      type: {
-        name: 'Wallet',
-        kind: 'composite',
-        type: {
-          id: {
-            name: 'Id',
-            kind: 'composite',
-            type: {
-              decimal: { name: 'U128', kind: 'primitive', type: 'U128' },
-              hex: { name: 'Vec<U8>', kind: 'sequence', type: { name: 'U8', kind: 'primitive', type: 'U8' } },
-            },
-          },
-          person: {
-            name: 'Person',
-            kind: 'composite',
-            type: {
-              surname: { name: 'Str', kind: 'primitive', type: 'Str' },
-              name: { name: 'Str', kind: 'primitive', type: 'Str' },
-            },
-          },
-        },
-      },
-    });
-  });
-
-  test('Get type structure 28', () => {
-    expect(meta.getTypeDef(28)).toEqual({
-      id: {
-        decimal: 'U128',
-        hex: ['U8'],
-      },
-      person: {
-        surname: 'Str',
-        name: 'Str',
-      },
-    });
-    expect(meta.getTypeDef(28, true)).toEqual({
-      name: 'Wallet',
-      kind: 'composite',
-      type: {
-        id: {
-          name: 'Id',
-          kind: 'composite',
-          type: {
-            decimal: { name: 'U128', kind: 'primitive', type: 'U128' },
-            hex: { name: 'Vec<U8>', kind: 'sequence', type: { name: 'U8', kind: 'primitive', type: 'U8' } },
-          },
-        },
-        person: {
-          name: 'Person',
-          kind: 'composite',
-          type: {
-            surname: { name: 'Str', kind: 'primitive', type: 'Str' },
-            name: { name: 'Str', kind: 'primitive', type: 'Str' },
-          },
-        },
-      },
-    });
-  });
-
-  test('Get type structure 29', () => {
-    expect(meta.getTypeDef(29)).toEqual({
-      decimal: 'U128',
-      hex: ['U8'],
-    });
-    expect(meta.getTypeName(29)).toEqual('Id');
-    expect(meta.getTypeIndexByName('TestMetaIoId')).toEqual(29);
-    expect(meta.getTypeDef(29, true)).toEqual({
-      name: 'Id',
-      kind: 'composite',
-      type: {
-        decimal: { name: 'U128', kind: 'primitive', type: 'U128' },
-        hex: { name: 'Vec<U8>', kind: 'sequence', type: { name: 'U8', kind: 'primitive', type: 'U8' } },
-      },
-    });
-  });
-
-  test('Get type structure 30', () => {
-    expect(meta.getTypeDef(30)).toEqual({
-      surname: 'Str',
-      name: 'Str',
-    });
-    expect(meta.getTypeDef(30, true)).toEqual({
-      name: 'Person',
-      kind: 'composite',
-      type: {
-        surname: { name: 'Str', kind: 'primitive', type: 'Str' },
-        name: { name: 'Str', kind: 'primitive', type: 'Str' },
-      },
-    });
-  });
 });
 
 const payload =
@@ -611,7 +503,7 @@ const metaHex =
 
 describe.skip('Decode complicated type', () => {
   test('Check that there is no Lookup types in type defenitions', () => {
-    meta = getProgramMetadata(metaHex);
+    meta = ProgramMetadata.from(metaHex);
 
     let isLookupTypeFound = false;
 
@@ -625,7 +517,7 @@ describe.skip('Decode complicated type', () => {
   });
 
   test('Decode payload', () => {
-    const decoded = meta.createType(meta.types.state!, payload);
+    const decoded = meta.createType(meta.types.state as number, payload);
     const json = decoded.toJSON() as any;
 
     expect(json).toHaveProperty('config');
@@ -648,7 +540,7 @@ const activitiesMetaHex =
 
 describe('Create Option type', () => {
   test('test', () => {
-    const meta = getProgramMetadata(activitiesMetaHex);
+    const meta = ProgramMetadata.from(activitiesMetaHex);
 
     const type = meta.getTypeDef(meta.types.handle.input!, true);
 

@@ -8,7 +8,7 @@ import { CreateType } from './metadata';
 import { GearApi } from './GearApi';
 import { GearTransaction } from './Transaction';
 
-const SIXTEEN_KB = 16384;
+const SIXTEEN_KB = 0x4000;
 
 export class GearResumeSession extends GearTransaction {
   constructor(protected _api: GearApi) {

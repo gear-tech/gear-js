@@ -8,7 +8,10 @@ update:
 	@cargo update --manifest-path programs/Cargo.toml
 
 build: 
-	@cargo build --release --manifest-path programs/Cargo.toml
+	@cargo +nightly build --release --manifest-path programs/Cargo.toml
+
+build-debug: 
+	@cargo +nightly build --manifest-path programs/Cargo.toml
 
 clean:
 	@rm -rvf programs/target

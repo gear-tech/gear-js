@@ -87,7 +87,7 @@ export class GearMetadata {
     this.registry.register(types);
   }
 
-  createType(typeIndex: number, payload: unknown): Codec {
+  createType<T extends Codec = Codec>(typeIndex: number, payload: unknown): T {
     const type = this.regTypes.get(typeIndex);
     assert.notStrictEqual(type, undefined, `Type with index ${typeIndex} not found in registered types`);
     return this.registry.createType(type.name, payload);
