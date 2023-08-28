@@ -3,13 +3,13 @@ import { InputWrapper, Checkbox } from '@gear-js/ui';
 import { FieldRenderProps, useField } from 'react-final-form';
 
 import { useVoucher } from '../../hooks';
-import styles from './voucher-checkbox.module.scss';
+import styles from './is-prepaid-checkbox.module.scss';
 
 type Props = {
   programId: HexString | undefined;
 };
 
-const VoucherCheckbox = ({ programId }: Props) => {
+const IsPrepaidCheckbox = ({ programId }: Props) => {
   const field = useField('isPrepaid', { type: 'checkbox' });
   const input = field.input as Omit<FieldRenderProps<HTMLInputElement>, 'type'>; // assert cuz Checkbox type is 'switch' | undefined
 
@@ -32,4 +32,4 @@ const VoucherCheckbox = ({ programId }: Props) => {
   ) : null;
 };
 
-export { VoucherCheckbox };
+export { IsPrepaidCheckbox };

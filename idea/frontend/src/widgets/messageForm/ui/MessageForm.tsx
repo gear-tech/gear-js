@@ -18,7 +18,7 @@ import { FormPayload, getPayloadFormValues, getSubmitPayload } from 'features/fo
 import { useBalanceMultiplier, useGasCalculate, useMessageActions } from 'hooks';
 import { Result } from 'hooks/useGasCalculate/types';
 import { FormPayloadType } from 'features/formPayloadType';
-import { VoucherCheckbox } from 'features/voucher';
+import { IsPrepaidCheckbox } from 'features/voucher';
 
 import { getValidationSchema, resetPayloadValue } from '../helpers';
 import { FormValues, INITIAL_VALUES } from '../model';
@@ -163,7 +163,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
 
               {!isLoading && !metadata && <FormPayloadType name="payloadType" label="Payload type" gap="1/5" />}
 
-              <VoucherCheckbox programId={programId} />
+              <IsPrepaidCheckbox programId={programId} />
 
               {isLoading ? (
                 <Input label="Value:" gap="1/5" className={styles.loading} readOnly />

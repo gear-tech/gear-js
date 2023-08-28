@@ -1,4 +1,4 @@
-import { CreateVoucher, VoucherCheckbox } from './ui';
+import { CreateVoucher, IsPrepaidCheckbox } from './ui';
 import { useIsVoucherExists, useVoucher } from './hooks';
 
-export { CreateVoucher, useIsVoucherExists, useVoucher, VoucherCheckbox };
+export { CreateVoucher, useIsVoucherExists, useVoucher, IsPrepaidCheckbox };
