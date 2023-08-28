@@ -7,13 +7,10 @@ import { BalanceUnit } from '../balance-unit';
 
 type Props = Omit<NumberFormatProps & InputProps, 'value' | 'onValueChange' | 'onChange'> & {
   name: string;
-  initial?: boolean;
 };
 
 // TODO: same input as a gas field
-const ValueField = (props: Props) => {
-  const { name, label, direction = 'x', gap, block, initial, ...other } = props;
-
+const ValueField = ({ name, label, direction = 'x', gap, block, ...other }: Props) => {
   const { change } = useForm();
   const { input, meta } = useField(name);
 
@@ -30,13 +27,7 @@ const ValueField = (props: Props) => {
   );
 
   return (
-    <InputWrapper
-      id={name}
-      label={initial ? 'Initial value:' : 'Value:'}
-      size="normal"
-      error={error}
-      direction={direction}
-      gap={gap}>
+    <InputWrapper id={name} label={label} size="normal" error={error} direction={direction} gap={gap}>
       <div className={wrapperClassName} data-testid="wrapper">
         <NumberFormat
           {...other}

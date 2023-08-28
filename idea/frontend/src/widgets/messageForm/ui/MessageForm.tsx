@@ -168,7 +168,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
               {isLoading ? (
                 <Input label="Value:" gap="1/5" className={styles.loading} readOnly />
               ) : (
-                <ValueField name="value" gap="1/5" />
+                <ValueField name="value" label="Value:" gap="1/5" />
               )}
 
               {isLoading ? (

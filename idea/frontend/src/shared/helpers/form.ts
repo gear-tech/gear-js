@@ -10,11 +10,13 @@ const isDecimal = (value: string) => {
   return decimalRegex.test(value);
 };
 
-const isAccountAddressValid = (value: string) => {
+// yup
+const isAccountAddressValid = (value = '') => {
   try {
     decodeAddress(value);
+    return true;
   } catch (error) {
-    return 'Invalid address';
+    return false;
   }
 };
 

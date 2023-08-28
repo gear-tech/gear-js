@@ -33,16 +33,18 @@ function useIssueVoucher() {
     if (status.isInvalid) alert.error(PROGRAM_ERRORS.INVALID_TRANSACTION);
   };
 
-  const issueVoucher = (address: HexString, programId: HexString, value: string, onSuccess: () => void) => {
+  const issueVoucher = async (address: HexString, programId: HexString, value: string, onSuccess: () => void) => {
     if (!account) return;
 
-    const { extrinsic } = api.voucher.issue(address, programId, value);
+    try {
+      const { extrinsic } = api.voucher.issue(address, programId, value);
 
-    web3FromSource(account.meta.source)
-      .then(({ signer }) =>
-        extrinsic.signAndSend(account.address, { signer }, (events) => handleEvents(events, onSuccess)),
-      )
-      .catch(({ message }: Error) => alert.error(message));
+      const { signer } = await web3FromSource(account.meta.source);
+
+      extrinsic.signAndSend(account.address, { signer }, (events) => handleEvents(events, onSuccess));
+    } catch (error) {
+      if (error instanceof Error) alert.error(error.message);
+    }
   };
 
   return issueVoucher;
