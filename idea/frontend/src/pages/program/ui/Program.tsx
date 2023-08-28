@@ -30,7 +30,7 @@ const Program = () => {
 
   const { program, isProgramReady, setProgramName } = useProgram(programId);
   const { metadata, isMetadataReady, setMetadata } = useMetadata(program?.metahash);
-  const { isVoucherExists, voucherValue } = useVoucher(programId);
+  const { isVoucherExists, voucherBalance } = useVoucher(programId);
 
   const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
     const codeHash = program?.code?.id;
@@ -98,7 +98,7 @@ const Program = () => {
 
               <TableRow name="Amount">
                 {/* TODO: table cell component */}
-                <span className={styles.tableValue}>{voucherValue}</span>
+                <span className={styles.tableValue}>{voucherBalance}</span>
               </TableRow>
             </Table>
           </div>

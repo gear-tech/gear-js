@@ -13,7 +13,7 @@ const IsPrepaidCheckbox = ({ programId }: Props) => {
   const field = useField('isPrepaid', { type: 'checkbox' });
   const input = field.input as Omit<FieldRenderProps<HTMLInputElement>, 'type'>; // assert cuz Checkbox type is 'switch' | undefined
 
-  const { isVoucherExists, voucherValue } = useVoucher(programId);
+  const { isVoucherExists, voucherBalance } = useVoucher(programId);
 
   return isVoucherExists ? (
     <InputWrapper
@@ -26,7 +26,7 @@ const IsPrepaidCheckbox = ({ programId }: Props) => {
       <div className={styles.checkboxWrapper}>
         <Checkbox label="Use voucher" {...input} />
 
-        <span className={styles.value}>({voucherValue})</span>
+        <span className={styles.value}>({voucherBalance})</span>
       </div>
     </InputWrapper>
   ) : null;
