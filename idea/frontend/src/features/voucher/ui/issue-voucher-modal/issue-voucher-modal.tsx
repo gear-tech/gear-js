@@ -6,7 +6,7 @@ import { ReactComponent as ApplySVG } from 'shared/assets/images/actions/apply.s
 import { isExists, isHexValid } from 'shared/helpers';
 
 import { useIssueVoucher } from '../../hooks';
-import styles from './create-voucher-modal.module.scss';
+import styles from './issue-voucher-modal.module.scss';
 
 type Props = {
   programId: HexString;
@@ -16,7 +16,7 @@ type Props = {
 const initialValues = { address: '' as HexString, value: '' };
 const validate = { address: isHexValid, value: isExists };
 
-const CreateVoucherModal = ({ programId, close }: Props) => {
+const IssueVoucherModal = ({ programId, close }: Props) => {
   const { getInputProps, onSubmit } = useForm({ initialValues, validate });
 
   const issueVoucher = useIssueVoucher();
@@ -35,4 +35,4 @@ const CreateVoucherModal = ({ programId, close }: Props) => {
   );
 };
 
-export { CreateVoucherModal };
+export { IssueVoucherModal };

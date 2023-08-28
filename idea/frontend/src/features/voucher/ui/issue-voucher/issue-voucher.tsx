@@ -5,13 +5,13 @@ import { useState } from 'react';
 import actionLinkStyles from 'shared/ui/ActionLink/ActionLink.module.scss';
 
 import { ReactComponent as CouponSVG } from '../../assets/coupon.svg';
-import { CreateVoucherModal } from '../create-voucher-modal';
+import { IssueVoucherModal } from '../issue-voucher-modal';
 
 type Props = {
   programId: HexString;
 };
 
-const CreateVoucher = ({ programId }: Props) => {
+const IssueVoucher = ({ programId }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -28,9 +28,9 @@ const CreateVoucher = ({ programId }: Props) => {
         onClick={openModal}
       />
 
-      {isModalOpen && <CreateVoucherModal programId={programId} close={closeModal} />}
+      {isModalOpen && <IssueVoucherModal programId={programId} close={closeModal} />}
     </>
   );
 };
 
-export { CreateVoucher };
+export { IssueVoucher };

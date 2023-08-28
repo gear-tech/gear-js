@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { Link, generatePath } from 'react-router-dom';
 import cx from 'clsx';
 
-import { useIsVoucherExists, CreateVoucher } from 'features/voucher';
+import { useIsVoucherExists, IssueVoucher } from 'features/voucher';
 import { absoluteRoutes, routes } from 'shared/config';
 import { ReactComponent as sendSVG } from 'shared/assets/images/actions/send.svg';
 import { ReactComponent as readSVG } from 'shared/assets/images/actions/read.svg';
@@ -49,7 +49,7 @@ const HorizontalProgramCard = memo(({ program }: Props) => {
 
             {hasState && <ActionLink to={generatePath(routes.state, { programId })} icon={readSVG} text="Read State" />}
 
-            <CreateVoucher programId={programId} />
+            <IssueVoucher programId={programId} />
           </>
         )}
       </div>

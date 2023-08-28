@@ -1,4 +1,4 @@
-import { CreateVoucher } from './create-voucher';
+import { IssueVoucher } from './issue-voucher';
 import { IsPrepaidCheckbox } from './is-prepaid-checkbox';
 
-export { CreateVoucher, IsPrepaidCheckbox };
+export { IssueVoucher, IsPrepaidCheckbox };
