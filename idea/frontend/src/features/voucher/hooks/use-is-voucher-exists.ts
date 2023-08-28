@@ -10,8 +10,11 @@ function useIsVoucherExists(programId: HexString | undefined) {
   const accountAddress = account?.decodedAddress;
 
   const [isVoucherExists, setIsVoucherExists] = useState<boolean>();
+  const isVoucherExistsReady = isVoucherExists !== undefined;
 
   useEffect(() => {
+    setIsVoucherExists(undefined);
+
     if (!programId || !isApiReady || !accountAddress) return;
 
     api.voucher
@@ -22,7 +25,7 @@ function useIsVoucherExists(programId: HexString | undefined) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady, accountAddress, programId]);
 
-  return { isVoucherExists };
+  return { isVoucherExists, isVoucherExistsReady };
 }
 
 export { useIsVoucherExists };

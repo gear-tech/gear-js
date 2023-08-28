@@ -4,10 +4,12 @@ import { useIsVoucherExists } from './use-is-voucher-exists';
 import { useVoucherBalance } from './use-voucher-balance';
 
 function useVoucher(programId: HexString | undefined) {
-  const { isVoucherExists } = useIsVoucherExists(programId);
-  const { voucherBalance } = useVoucherBalance(programId);
+  const { isVoucherExists, isVoucherExistsReady } = useIsVoucherExists(programId);
+  const { voucherBalance, isVoucherBalanceReady } = useVoucherBalance(programId);
 
-  return { isVoucherExists, voucherBalance };
+  const isVoucherReady = isVoucherExistsReady && isVoucherBalanceReady;
+
+  return { isVoucherExists, voucherBalance, isVoucherReady };
 }
 
 export { useVoucher };

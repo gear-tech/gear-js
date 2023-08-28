@@ -9,9 +9,12 @@ function useVoucherBalance(programId: HexString | undefined) {
   const { account } = useAccount();
   const accountAddress = account?.decodedAddress;
 
-  const [voucherBalance, setVoucherBalance] = useState('0');
+  const [voucherBalance, setVoucherBalance] = useState<string>();
+  const isVoucherBalanceReady = voucherBalance !== undefined;
 
   useEffect(() => {
+    setVoucherBalance(undefined);
+
     if (!programId || !accountAddress) return;
 
     const id = generateVoucherId(accountAddress, programId);
@@ -24,7 +27,7 @@ function useVoucherBalance(programId: HexString | undefined) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountAddress, programId]);
 
-  return { voucherBalance };
+  return { voucherBalance, isVoucherBalanceReady };
 }
 
 export { useVoucherBalance };
