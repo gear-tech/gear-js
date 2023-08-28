@@ -13,29 +13,35 @@ function useIssueVoucher() {
   const { account } = useAccount();
   const alert = useAlert();
 
-  const handleEventsStatus = (events: EventRecord[]) => {
+  const handleEventsStatus = (events: EventRecord[], onSuccess: () => void) => {
     events.forEach(({ event }) => {
       const { method, section } = event;
       const alertOptions = { title: `${section}.${method}` };
 
       if (method === Method.ExtrinsicFailed) return alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
-      if (method === Method.VoucherIssued) alert.success('Voucher issued', alertOptions);
+
+      if (method === Method.VoucherIssued) {
+        alert.success('Voucher issued', alertOptions);
+        onSuccess();
+      }
     });
   };
 
   // TODO: sign transaction helper
-  const handleEvents = ({ events, status }: ISubmittableResult) => {
-    if (status.isInBlock) return handleEventsStatus(events);
+  const handleEvents = ({ events, status }: ISubmittableResult, onSuccess: () => void) => {
+    if (status.isInBlock) return handleEventsStatus(events, onSuccess);
     if (status.isInvalid) alert.error(PROGRAM_ERRORS.INVALID_TRANSACTION);
   };
 
-  const issueVoucher = (address: HexString, programId: HexString, value: string) => {
+  const issueVoucher = (address: HexString, programId: HexString, value: string, onSuccess: () => void) => {
     if (!account) return;
 
     const { extrinsic } = api.voucher.issue(address, programId, value);
 
     web3FromSource(account.meta.source)
-      .then(({ signer }) => extrinsic.signAndSend(account.address, { signer }, handleEvents))
+      .then(({ signer }) =>
+        extrinsic.signAndSend(account.address, { signer }, (events) => handleEvents(events, onSuccess)),
+      )
       .catch(({ message }: Error) => alert.error(message));
   };
 

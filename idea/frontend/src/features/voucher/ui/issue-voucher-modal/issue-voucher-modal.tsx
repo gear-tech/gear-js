@@ -21,7 +21,7 @@ const IssueVoucherModal = ({ programId, close }: Props) => {
 
   const issueVoucher = useIssueVoucher();
 
-  const handleSubmit = onSubmit(({ address, value }) => issueVoucher(decodeAddress(address), programId, value));
+  const handleSubmit = onSubmit(({ address, value }) => issueVoucher(decodeAddress(address), programId, value, close));
 
   return (
     <Modal heading="Create Voucher" close={close}>
