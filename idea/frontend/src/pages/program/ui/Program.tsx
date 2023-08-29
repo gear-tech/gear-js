@@ -1,6 +1,7 @@
 import { HexString } from '@polkadot/util/types';
 import { Button } from '@gear-js/ui';
 import { ProgramMetadata } from '@gear-js/api';
+import { useAccount } from '@gear-js/react-hooks';
 import { generatePath, useParams } from 'react-router-dom';
 
 import { useMetadataUpload, useModal, useProgram } from 'hooks';
@@ -22,6 +23,8 @@ import { MetadataDetails } from './metadataDetails';
 import styles from './Program.module.scss';
 
 const Program = () => {
+  const { account } = useAccount();
+
   const { programId } = useParams() as PathParams;
   const { showModal, closeModal } = useModal();
   const uploadMetadata = useMetadataUpload();
@@ -82,7 +85,8 @@ const Program = () => {
           <ProgramDetails program={program} isLoading={!isProgramReady} />
 
           <div>
-            <Subheader title="Voucher details" />
+            {/* TODO: WithAccount HoC? or move inside VoucherTable? */}
+            {account && <Subheader title="Voucher details" />}
             <VoucherTable programId={programId} />
           </div>
 

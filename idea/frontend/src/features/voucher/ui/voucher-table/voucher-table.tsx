@@ -1,19 +1,19 @@
 import { HexString } from '@gear-js/api';
+import { useAccount } from '@gear-js/react-hooks';
 
 import { ReactComponent as VoucherPlaceholderSVG } from 'features/voucher/assets/voucher-placeholder.svg';
 import { ContentLoader } from 'pages/program/ui/contentLoader';
 import { BulbBlock, BulbStatus } from 'shared/ui/bulbBlock';
 import { Table, TableRow } from 'shared/ui/table';
 
-import { useAccount } from '@gear-js/react-hooks';
-import { useVoucher } from '../../hooks';
+import { useVoucher, withAccount } from '../../hooks';
 import styles from './voucher-table.module.scss';
 
 type Props = {
   programId: HexString;
 };
 
-const VoucherTable = ({ programId }: Props) => {
+const VoucherTable = withAccount(({ programId }: Props) => {
   const { account } = useAccount();
 
   const { isVoucherReady, isVoucherExists, voucherBalance } = useVoucher(programId);
@@ -36,6 +36,6 @@ const VoucherTable = ({ programId }: Props) => {
       <VoucherPlaceholderSVG />
     </ContentLoader>
   );
-};
+});
 
 export { VoucherTable };
