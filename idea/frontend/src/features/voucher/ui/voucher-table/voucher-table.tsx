@@ -5,6 +5,7 @@ import { ContentLoader } from 'pages/program/ui/contentLoader';
 import { BulbBlock, BulbStatus } from 'shared/ui/bulbBlock';
 import { Table, TableRow } from 'shared/ui/table';
 
+import { useAccount } from '@gear-js/react-hooks';
 import { useVoucher } from '../../hooks';
 import styles from './voucher-table.module.scss';
 
@@ -13,8 +14,9 @@ type Props = {
 };
 
 const VoucherTable = ({ programId }: Props) => {
-  const { isVoucherReady, isVoucherExists, voucherBalance } = useVoucher(programId);
+  const { account } = useAccount();
 
+  const { isVoucherReady, isVoucherExists, voucherBalance } = useVoucher(programId);
   const status = isVoucherExists ? BulbStatus.Success : BulbStatus.Error;
   const text = isVoucherExists ? 'Available' : 'Not available';
 
@@ -25,8 +27,8 @@ const VoucherTable = ({ programId }: Props) => {
       </TableRow>
 
       <TableRow name="Amount">
-        {/* TODO: table cell component */}
-        <span className={styles.tableValue}>{voucherBalance}</span>
+        <span className={styles.balance}>{voucherBalance}</span>
+        <span>{account?.balance.unit}</span>
       </TableRow>
     </Table>
   ) : (

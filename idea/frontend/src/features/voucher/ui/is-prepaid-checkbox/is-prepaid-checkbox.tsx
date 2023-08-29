@@ -2,6 +2,7 @@ import { HexString } from '@gear-js/api';
 import { InputWrapper, Checkbox } from '@gear-js/ui';
 import { FieldRenderProps, useField } from 'react-final-form';
 
+import { useAccount } from '@gear-js/react-hooks';
 import { useVoucher } from '../../hooks';
 import styles from './is-prepaid-checkbox.module.scss';
 
@@ -10,6 +11,8 @@ type Props = {
 };
 
 const IsPrepaidCheckbox = ({ programId }: Props) => {
+  const { account } = useAccount();
+
   const field = useField('isPrepaid', { type: 'checkbox' });
   const input = field.input as Omit<FieldRenderProps<HTMLInputElement>, 'type'>; // assert cuz Checkbox type is 'switch' | undefined
 
@@ -26,7 +29,9 @@ const IsPrepaidCheckbox = ({ programId }: Props) => {
       <div className={styles.checkboxWrapper}>
         <Checkbox label="Use voucher" {...input} />
 
-        <span className={styles.value}>({voucherBalance})</span>
+        <span className={styles.value}>
+          ({voucherBalance} {account?.balance.unit})
+        </span>
       </div>
     </InputWrapper>
   ) : null;
