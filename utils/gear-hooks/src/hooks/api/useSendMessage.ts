@@ -84,7 +84,8 @@ function useSendMessage(
 
       getGasLimit
         .then((gasLimit) => ({ destination, gasLimit, payload, value }))
-        .then((message) => api.message.send(message, metadata) && web3FromSource(source))
+        .then((message) => api.message.send(message, metadata))
+        .then(() => web3FromSource(source))
         .then(({ signer }) =>
           api.message.signAndSend(address, { signer }, (result) => handleStatus(result, alertId, onSuccess, onError)),
         )
