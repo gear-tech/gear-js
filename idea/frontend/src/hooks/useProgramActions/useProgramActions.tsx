@@ -4,6 +4,7 @@ import { EventRecord } from '@polkadot/types/interfaces';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
+import { ProgramMetadata } from '@gear-js/api';
 
 import { useChain, useModal } from 'hooks';
 import { uploadLocalProgram } from 'api/LocalDB';
@@ -18,10 +19,9 @@ import {
 } from 'shared/config';
 import { checkWallet, getExtrinsicFailedMessage } from 'shared/helpers';
 import { CustomLink } from 'shared/ui/customLink';
-
 import { ProgramStatus } from 'entities/program';
 import { addProgramName } from 'api';
-import { getProgramMetadata } from '@gear-js/api';
+
 import { useMetadataUpload } from '../useMetadataUpload';
 import { waitForProgramInit } from './helpers';
 import { ALERT_OPTIONS } from './consts';
@@ -141,7 +141,7 @@ const useProgramActions = () => {
           name: name || programId,
           owner: account?.decodedAddress!,
           code: { id: codeId },
-          hasState: !!metaHex && getProgramMetadata(metaHex).types.state != null,
+          hasState: !!metaHex && ProgramMetadata.from(metaHex).types.state != null,
           metahash,
         });
       }

@@ -1,4 +1,4 @@
-import { HexString, ProgramMetadata, getProgramMetadata } from '@gear-js/api';
+import { HexString, ProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 
@@ -22,7 +22,7 @@ function useMetadata(hash: HexString | null | undefined) {
       isDevChain ? getLocalMetadata(params).catch(() => fetchMetadata(params)) : fetchMetadata(params);
 
     getMetadata({ hash })
-      .then(({ result }) => result.hex && setMetadata(getProgramMetadata(result.hex)))
+      .then(({ result }) => result.hex && setMetadata(ProgramMetadata.from(result.hex)))
       .catch(({ message, code }: RPCError) => code !== RPCErrorCode.MetadataNotFound && alert.error(message))
       .finally(() => setisMetadataReady(true));
     // eslint-disable-next-line react-hooks/exhaustive-deps
