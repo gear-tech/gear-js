@@ -9,14 +9,17 @@ import { useStateSubscription } from './useStateSubscription';
 function useReadFullState<T = AnyJson>(
   programId: HexString | undefined,
   meta: ProgramMetadata | undefined,
+  payload: AnyJson | undefined,
   isReadOnError?: boolean,
 ) {
   const { api } = useContext(ApiContext); // сircular dependency fix
 
-  const readFullState = () => {
-    if (!api || !programId || !meta) return;
+  const isPayload = payload !== undefined;
 
-    return api.programState.read({ programId }, meta);
+  const readFullState = () => {
+    if (!api || !programId || !meta || !isPayload) return;
+
+    return api.programState.read({ programId, payload }, meta);
   };
 
   const { state, isStateRead, error, readState, resetError } = useHandleReadState<T>(readFullState, isReadOnError);
@@ -24,9 +27,9 @@ function useReadFullState<T = AnyJson>(
   useEffect(() => {
     readState(true);
     resetError();
-  }, [api, programId, meta]);
+  }, [api, programId, meta, payload]);
 
-  useStateSubscription(programId, readState, !!meta);
+  useStateSubscription(programId, readState, !!meta && isPayload);
 
   return { state, isStateRead, error };
 }
