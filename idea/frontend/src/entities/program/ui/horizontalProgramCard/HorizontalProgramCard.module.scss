@@ -11,6 +11,7 @@
   position: relative;
   border-radius: toRem(16);
   background-color: $bgColor4;
+  overflow: hidden;
 
   &:hover {
     background-color: $gray100;
@@ -18,12 +19,6 @@
     .content::after {
       background: radial-gradient(50% 50% at 50% 50%, rgba($successColor, 0.45) 25%, rgba(24, 24, 27, 0) 100%);
     }
-  }
-
-  &.voucher {
-    background-image: url(/features/voucher/assets/badge.svg);
-    background-position: top left;
-    background-repeat: no-repeat;
   }
 }
 
