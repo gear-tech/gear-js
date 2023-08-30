@@ -7,7 +7,7 @@ import { OnChange } from 'react-final-form-listeners';
 import { FormApi } from 'final-form';
 
 import { addState, fetchState, fetchStates } from 'api';
-import { useChain, useStateRead } from 'hooks';
+import { useChain, useProgram, useStateRead } from 'hooks';
 import { getPreformattedText, readFileAsync } from 'shared/helpers';
 import { FileTypes } from 'shared/config';
 import { BackButton } from 'shared/ui/backButton';
@@ -15,6 +15,7 @@ import { Box } from 'shared/ui/box';
 import { FormPayload, getPayloadFormValues, getSubmitPayload } from 'features/formPayload';
 import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg';
 
+import { useMetadata } from 'features/metadata';
 import { downloadJson } from '../../helpers';
 import { IState, FormValues, INITIAL_VALUES } from '../../model';
 import { useProgramId } from '../../hooks';
@@ -26,6 +27,9 @@ const Wasm = () => {
   const alert = useAlert();
 
   const programId = useProgramId();
+  const { program } = useProgram(programId);
+  const { metadata: ProgramMetadata } = useMetadata(program?.metahash);
+
   const { state, isStateRead, isState, readWasmState, resetState } = useStateRead(programId);
 
   const [metadata, setMetadata] = useState<StateMetadata>();
@@ -113,11 +117,11 @@ const Wasm = () => {
   };
 
   const handleSubmit = (values: FormValues) => {
-    if (!wasmBuffer) return;
+    if (!wasmBuffer || !ProgramMetadata) return;
 
-    const payload = getSubmitPayload(values.payload);
+    const argument = getSubmitPayload(values.payload);
 
-    readWasmState(wasmBuffer, functionName, payload);
+    readWasmState(wasmBuffer, ProgramMetadata, functionName, argument, '0x');
   };
 
   const isUploadedFunctionSelected = !!functionName && !isFileFunction;
