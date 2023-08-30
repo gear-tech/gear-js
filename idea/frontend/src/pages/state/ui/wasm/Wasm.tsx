@@ -202,6 +202,10 @@ const Wasm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFileFunction, uploadedStateId, wasmBuffer]);
 
+  const isFunctionSelected = !!functionName;
+  const isArgumentFormReady = !(isUploadedFunctionSelected && !metadata);
+  const isPayloadFormReady = !!programMetadata;
+
   return (
     <>
       <Form initialValues={INITIAL_VALUES} onSubmit={handleSubmit} validateOnBlur>
@@ -213,7 +217,7 @@ const Wasm = () => {
               <Box className={styles.box}>
                 <Input label="Program ID:" gap="1/5" value={programId} readOnly />
 
-                {!isUploadedFunctionSelected || metadata ? (
+                {isArgumentFormReady ? (
                   argumentFormValues && (
                     <FormPayload name="argument" label="Argument" values={argumentFormValues} gap="1/5" />
                   )
@@ -221,13 +225,14 @@ const Wasm = () => {
                   <Textarea label="Argument:" gap="1/5" className={styles.loading} readOnly block />
                 )}
 
-                {programMetadata ? (
-                  payloadFormValues && (
-                    <FormPayload name="payload" label="Payload" values={payloadFormValues} gap="1/5" />
-                  )
-                ) : (
-                  <Textarea label="Payload:" gap="1/5" className={styles.loading} readOnly block />
-                )}
+                {isFunctionSelected &&
+                  (isPayloadFormReady ? (
+                    payloadFormValues && (
+                      <FormPayload name="payload" label="Payload" values={payloadFormValues} gap="1/5" />
+                    )
+                  ) : (
+                    <Textarea label="Payload:" gap="1/5" className={styles.loading} readOnly block />
+                  ))}
 
                 <OnChange name="payload">{() => resetState()}</OnChange>
                 <OnChange name="argument">{() => resetState()}</OnChange>
@@ -249,7 +254,7 @@ const Wasm = () => {
               </Box>
 
               <div className={styles.buttons}>
-                {functionName && (
+                {isFunctionSelected && isArgumentFormReady && isPayloadFormReady && (
                   <Button type="submit" form="state" color="secondary" text="Read" icon={ReadSVG} size="large" />
                 )}
 

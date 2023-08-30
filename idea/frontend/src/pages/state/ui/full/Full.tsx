@@ -62,7 +62,9 @@ const Full = () => {
           </Box>
 
           <div className={styles.buttons}>
-            <Button type="submit" form="state" color="secondary" text="Read" icon={ReadSVG} size="large" />
+            {isMetadataReady && (
+              <Button type="submit" form="state" color="secondary" text="Read" icon={ReadSVG} size="large" />
+            )}
 
             {isStateRead && isState && (
               <Button text="Download JSON" color="secondary" size="large" onClick={() => downloadJson(state)} />
