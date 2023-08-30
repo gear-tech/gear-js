@@ -17,11 +17,12 @@ import {
   absoluteRoutes,
   UPLOAD_METADATA_TIMEOUT,
 } from 'shared/config';
-import { checkWallet, getExtrinsicFailedMessage } from 'shared/helpers';
+import { checkWallet, getExtrinsicFailedMessage, isNullOrUndefined } from 'shared/helpers';
 import { CustomLink } from 'shared/ui/customLink';
 import { ProgramStatus } from 'entities/program';
 import { addProgramName } from 'api';
 
+import { isHumanTypesRepr } from 'pages/state/helpers';
 import { useMetadataUpload } from '../useMetadataUpload';
 import { waitForProgramInit } from './helpers';
 import { ALERT_OPTIONS } from './consts';
@@ -135,13 +136,19 @@ const useProgramActions = () => {
 
       if (isDevChain) {
         const metahash = await api.program.metaHash(programId);
+        const meta = metaHex ? ProgramMetadata.from(metaHex) : undefined;
+
+        const hasState =
+          !!meta &&
+          (typeof meta.types.state === 'number' ||
+            (isHumanTypesRepr(meta.types.state) && !isNullOrUndefined(meta.types.state.output)));
 
         await uploadLocalProgram({
           id: programId,
           name: name || programId,
           owner: account?.decodedAddress!,
           code: { id: codeId },
-          hasState: !!metaHex && ProgramMetadata.from(metaHex).types.state != null,
+          hasState,
           metahash,
         });
       }
