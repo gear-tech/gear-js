@@ -13,23 +13,46 @@ export type HumanTypesRepr = {
 };
 
 export interface ProgramMetadataRepr extends Struct {
+  reg: Vec<u8>;
+}
+
+export interface ProgramMetadataReprRustV1 extends ProgramMetadataRepr {
   init: TypesRepr;
   handle: TypesRepr;
   others: TypesRepr;
   reply: Option<u32>;
   signal: Option<u32>;
   state: Option<u32>;
-  reg: Vec<u8>;
-  toJSON: () => HumanProgramMetadataRepr;
+  toJSON: () => HumanProgramMetadataReprRustV1;
 }
 
-export type HumanProgramMetadataRepr = {
+export type HumanProgramMetadataReprRustV1 = {
   init: HumanTypesRepr;
   handle: HumanTypesRepr;
   reply: number | null;
   others: HumanTypesRepr;
   signal: number | null;
   state: number | null;
+  reg: HexString;
+};
+
+export interface ProgramMetadataReprRustV2 extends ProgramMetadataRepr {
+  init: TypesRepr;
+  handle: TypesRepr;
+  others: TypesRepr;
+  reply: Option<u32>;
+  signal: Option<u32>;
+  state: TypesRepr;
+  toJSON: () => HumanProgramMetadataReprRustV2;
+}
+
+export type HumanProgramMetadataReprRustV2 = {
+  init: HumanTypesRepr;
+  handle: HumanTypesRepr;
+  reply: number | null;
+  others: HumanTypesRepr;
+  signal: number | null;
+  state: HumanTypesRepr;
   reg: HexString;
 };
 

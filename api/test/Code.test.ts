@@ -2,13 +2,13 @@ import { HexString } from '@polkadot/util/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { GEAR_EXAMPLES_WASM_DIR, WS_ADDRESS } from './config';
+import { TARGET, WS_ADDRESS } from './config';
 import { getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { GearApi } from '../src';
 
 const api = new GearApi({ providerAddress: WS_ADDRESS });
 const accounts = {};
-const code = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_sum.opt.wasm'));
+const code = readFileSync(join(TARGET, 'test_waitlist.opt.wasm'));
 let codeId: HexString;
 
 beforeAll(async () => {

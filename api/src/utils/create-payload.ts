@@ -4,7 +4,6 @@ import { HexString } from '@polkadot/util/types';
 
 import { GearMetadata, ProgramMetadata, isProgramMeta } from '../metadata';
 import { CreateType } from '../metadata';
-import { HumanProgramMetadataRepr } from '../types';
 
 export function getRegistry(metaOrHexRegistry: HexString): HexString {
   if (!metaOrHexRegistry) {
@@ -19,7 +18,7 @@ export function getRegistry(metaOrHexRegistry: HexString): HexString {
 export function encodePayload(
   payload: unknown,
   hexRegistryOrMeta: HexString | ProgramMetadata,
-  type: keyof Omit<HumanProgramMetadataRepr, 'reg' | 'state' | 'signal'>,
+  type: string,
   typeIndexOrPayloadType?: number | string,
 ): Array<number> {
   if (payload === undefined) {

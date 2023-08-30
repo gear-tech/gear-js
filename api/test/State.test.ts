@@ -3,7 +3,7 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { CreateType, GearApi, StateMetadata, getProgramMetadata, getStateMetadata } from '../src';
+import { CreateType, GearApi, ProgramMetadata, StateMetadata, getStateMetadata } from '../src';
 import { TARGET, TEST_META_META, WS_ADDRESS } from './config';
 import { checkInit, getAccount, sleep } from './utilsFunctions';
 
@@ -21,7 +21,7 @@ let stateV2Meta: StateMetadata;
 
 const metaHex = `0x${readFileSync(TEST_META_META, 'utf-8')}` as HexString;
 
-const meta = getProgramMetadata(metaHex);
+const meta = ProgramMetadata.from(metaHex);
 
 let programId: HexString;
 
@@ -56,12 +56,8 @@ describe('Read State', () => {
 
   test('Get program state', async () => {
     expect(programId).toBeDefined();
-    const state = await api.programState.read({ programId }, meta);
+    const state = await api.programState.read({ programId, payload: 1 }, meta);
     expect([
-      {
-        id: { decimal: 0, hex: '0x00' },
-        person: { surname: 'Surname0', name: 'Name0' },
-      },
       {
         id: { decimal: 1, hex: '0x01' },
         person: { surname: 'Surname1', name: 'Name1' },
@@ -81,8 +77,9 @@ describe('Read State', () => {
   test('Read state v1 all_wallets', async () => {
     expect(programId).toBeDefined();
     const state = await api.programState.readUsingWasm(
-      { programId, fn_name: 'all_wallets', wasm: stateV1 },
+      { programId, payload: null, fn_name: 'all_wallets', wasm: stateV1 },
       stateV1Meta,
+      meta,
     );
 
     expect(state.toJSON()).toMatchObject([
@@ -100,8 +97,9 @@ describe('Read State', () => {
   test('Read state v1 first_wallet', async () => {
     expect(programId).toBeDefined();
     const state = await api.programState.readUsingWasm(
-      { programId, fn_name: 'first_wallet', wasm: Uint8Array.from(stateV1) },
+      { programId, payload: null, fn_name: 'first_wallet', wasm: Uint8Array.from(stateV1) },
       stateV1Meta,
+      meta,
     );
 
     expect(state.toJSON()).toMatchObject({
@@ -114,8 +112,9 @@ describe('Read State', () => {
     expect(programId).toBeDefined();
     const wasmAsHex = CreateType.create('Bytes', Array.from(stateV1)).toHex();
     const state = await api.programState.readUsingWasm(
-      { programId, fn_name: 'last_wallet', wasm: wasmAsHex },
+      { programId, payload: null, fn_name: 'last_wallet', wasm: wasmAsHex },
       stateV1Meta,
+      meta,
     );
 
     expect(state.toJSON()).toMatchObject({
@@ -135,8 +134,9 @@ describe('Read State', () => {
   test('Read state v2 wallet_by_id', async () => {
     expect(programId).toBeDefined();
     const state = await api.programState.readUsingWasm(
-      { programId, fn_name: 'wallet_by_id', wasm: stateV2, argument: { decimal: 1, hex: '0x01' } },
+      { programId, payload: null, fn_name: 'wallet_by_id', wasm: stateV2, argument: { decimal: 1, hex: '0x01' } },
       stateV2Meta,
+      meta,
     );
 
     expect(state.toJSON()).toMatchObject({
@@ -148,8 +148,15 @@ describe('Read State', () => {
   test('Read state v2 wallet_by_person', async () => {
     expect(programId).toBeDefined();
     const state = await api.programState.readUsingWasm(
-      { programId, fn_name: 'wallet_by_person', wasm: stateV2, argument: { surname: 'Surname0', name: 'Name0' } },
+      {
+        programId,
+        payload: null,
+        fn_name: 'wallet_by_person',
+        wasm: stateV2,
+        argument: { surname: 'Surname0', name: 'Name0' },
+      },
       stateV2Meta,
+      meta,
     );
 
     expect(state.toJSON()).toMatchObject({
@@ -161,8 +168,9 @@ describe('Read State', () => {
   test('Read state v2 wallet_by_u128', async () => {
     expect(programId).toBeDefined();
     const state = await api.programState.readUsingWasm(
-      { programId, fn_name: 'wallet_by_u128', wasm: stateV2, argument: 1 },
+      { programId, payload: null, fn_name: 'wallet_by_u128', wasm: stateV2, argument: 1 },
       stateV2Meta,
+      meta,
     );
 
     expect(state.toJSON()).toMatchObject({

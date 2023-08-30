@@ -1,12 +1,19 @@
-## master
+## 0.33.0
 
-_08/21/2023_
+_08/29/2023_
 
 ### Changes
 
 https://github.com/gear-tech/gear-js/pull/1353
 - Remove `sendMessageWithVoucher` and `sendReplyWithVoucher` methods according to https://github.com/gear-tech/gear/pull/3083.
 - Add optional `prepaid` and `account` fields to `api.message.send` and `api.message.sendReply` method arguments. They are used to send messages with the issued voucher.
+
+https://github.com/gear-tech/gear-js/pull/1349
+- Add `payload` parameter to `api.programState.read` and `api.programState.readUsingWasm` methods according to https://github.com/gear-tech/gear/pull/3059 and https://github.com/gear-tech/gear/pull/3173
+- Support new `ProgramMetadata` version.
+
+https://github.com/gear-tech/gear-js/pull/1361
+- Support type definition for tuple structs
 
 ## 0.32.4
 

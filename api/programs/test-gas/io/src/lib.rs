@@ -16,7 +16,7 @@ impl Metadata for ProgramMetadata {
     type Reply = InputStruct;
     type Others = InOut<(), ()>;
     type Signal = ();
-    type State = ();
+    type State = InOut<(), ()>;
 }
 
 #[derive(TypeInfo, Decode, Encode)]

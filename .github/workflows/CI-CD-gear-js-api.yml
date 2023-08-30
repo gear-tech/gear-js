@@ -70,7 +70,7 @@ jobs:
 
       - name: "Prepare: build programs"
         working-directory: api/programs
-        run: cargo build --release --locked
+        run: cargo build --locked
 
       - name: "Prepare: download Gear examples"
         working-directory: api/test/wasm

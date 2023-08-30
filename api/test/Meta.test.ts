@@ -1,13 +1,13 @@
 import { TEST_META_META } from './config';
 import fs from 'fs';
 
-import { ProgramMetadata, getProgramMetadata } from '../src';
+import { ProgramMetadata } from '../src';
 
 let meta: ProgramMetadata;
 
 beforeAll(() => {
   const hex = fs.readFileSync(TEST_META_META, 'utf-8');
-  meta = getProgramMetadata(`0x${hex}`);
+  meta = ProgramMetadata.from(`0x${hex}`);
 });
 
 describe('Get type definitions', () => {
@@ -18,7 +18,7 @@ describe('Get type definitions', () => {
       reply: 4,
       others: { input: null, output: null },
       signal: 26,
-      state: 27,
+      state: { input: 27, output: 29 },
     });
   });
 
@@ -492,114 +492,6 @@ describe('Get type definitions', () => {
     expect(meta.getTypeDef(26)).toEqual('H256');
     expect(meta.getTypeDef(26, true)).toEqual({ kind: 'primitive', name: 'H256', type: 'H256' });
   });
-
-  test('Get type structure 27', () => {
-    expect(meta.getTypeDef(27)).toEqual([
-      {
-        id: {
-          decimal: 'U128',
-          hex: ['U8'],
-        },
-        person: {
-          surname: 'Str',
-          name: 'Str',
-        },
-      },
-    ]);
-    expect(meta.getTypeDef(27, true)).toEqual({
-      name: 'Vec<Wallet>',
-      kind: 'sequence',
-      type: {
-        name: 'Wallet',
-        kind: 'composite',
-        type: {
-          id: {
-            name: 'Id',
-            kind: 'composite',
-            type: {
-              decimal: { name: 'U128', kind: 'primitive', type: 'U128' },
-              hex: { name: 'Vec<U8>', kind: 'sequence', type: { name: 'U8', kind: 'primitive', type: 'U8' } },
-            },
-          },
-          person: {
-            name: 'Person',
-            kind: 'composite',
-            type: {
-              surname: { name: 'Str', kind: 'primitive', type: 'Str' },
-              name: { name: 'Str', kind: 'primitive', type: 'Str' },
-            },
-          },
-        },
-      },
-    });
-  });
-
-  test('Get type structure 28', () => {
-    expect(meta.getTypeDef(28)).toEqual({
-      id: {
-        decimal: 'U128',
-        hex: ['U8'],
-      },
-      person: {
-        surname: 'Str',
-        name: 'Str',
-      },
-    });
-    expect(meta.getTypeDef(28, true)).toEqual({
-      name: 'Wallet',
-      kind: 'composite',
-      type: {
-        id: {
-          name: 'Id',
-          kind: 'composite',
-          type: {
-            decimal: { name: 'U128', kind: 'primitive', type: 'U128' },
-            hex: { name: 'Vec<U8>', kind: 'sequence', type: { name: 'U8', kind: 'primitive', type: 'U8' } },
-          },
-        },
-        person: {
-          name: 'Person',
-          kind: 'composite',
-          type: {
-            surname: { name: 'Str', kind: 'primitive', type: 'Str' },
-            name: { name: 'Str', kind: 'primitive', type: 'Str' },
-          },
-        },
-      },
-    });
-  });
-
-  test('Get type structure 29', () => {
-    expect(meta.getTypeDef(29)).toEqual({
-      decimal: 'U128',
-      hex: ['U8'],
-    });
-    expect(meta.getTypeName(29)).toEqual('Id');
-    expect(meta.getTypeIndexByName('TestMetaIoId')).toEqual(29);
-    expect(meta.getTypeDef(29, true)).toEqual({
-      name: 'Id',
-      kind: 'composite',
-      type: {
-        decimal: { name: 'U128', kind: 'primitive', type: 'U128' },
-        hex: { name: 'Vec<U8>', kind: 'sequence', type: { name: 'U8', kind: 'primitive', type: 'U8' } },
-      },
-    });
-  });
-
-  test('Get type structure 30', () => {
-    expect(meta.getTypeDef(30)).toEqual({
-      surname: 'Str',
-      name: 'Str',
-    });
-    expect(meta.getTypeDef(30, true)).toEqual({
-      name: 'Person',
-      kind: 'composite',
-      type: {
-        surname: { name: 'Str', kind: 'primitive', type: 'Str' },
-        name: { name: 'Str', kind: 'primitive', type: 'Str' },
-      },
-    });
-  });
 });
 
 const payload =
@@ -611,7 +503,7 @@ const metaHex =
 
 describe.skip('Decode complicated type', () => {
   test('Check that there is no Lookup types in type defenitions', () => {
-    meta = getProgramMetadata(metaHex);
+    meta = ProgramMetadata.from(metaHex);
 
     let isLookupTypeFound = false;
 
@@ -625,7 +517,7 @@ describe.skip('Decode complicated type', () => {
   });
 
   test('Decode payload', () => {
-    const decoded = meta.createType(meta.types.state!, payload);
+    const decoded = meta.createType(meta.types.state as number, payload);
     const json = decoded.toJSON() as any;
 
     expect(json).toHaveProperty('config');
@@ -648,7 +540,7 @@ const activitiesMetaHex =
 
 describe('Create Option type', () => {
   test('test', () => {
-    const meta = getProgramMetadata(activitiesMetaHex);
+    const meta = ProgramMetadata.from(activitiesMetaHex);
 
     const type = meta.getTypeDef(meta.types.handle.input!, true);
 
@@ -669,5 +561,101 @@ describe('Create Option type', () => {
     });
 
     expect(Array.from(data.toU8a())).toEqual([3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  });
+});
+
+describe('Tuple Struct', () => {
+  const metaHex =
+    '0001000100000000000104000000010700000000000000010a000000a50f48000834626174746c65736869705f696f38426174746c6573686970496e6974000004012c626f745f6164647265737304011c4163746f72496400000410106773746418636f6d6d6f6e287072696d6974697665731c4163746f724964000004000801205b75383b2033325d000008000003200000000c000c0000050300100834626174746c65736869705f696f40426174746c6573686970416374696f6e00010824537461727447616d6504011473686970731401145368697073000000105475726e040110737465700c0108753800010000140834626174746c65736869705f696f1453686970730000100018011c5665633c75383e000018011c5665633c75383e000018011c5665633c75383e000018011c5665633c75383e0000180000020c001c0834626174746c65736869705f696f3c426174746c65736869705265706c7900010c2c47616d6553746172746564000000244d6f7665734d6164650400200110537465700001001c456e6447616d650400240158426174746c65736869705061727469636970616e747300020000200834626174746c65736869705f696f105374657000010c184d69737365640000001c496e6a75726564000100184b696c6c656400020000240834626174746c65736869705f696f58426174746c65736869705061727469636970616e747300010818506c617965720000000c426f7400010000280834626174746c65736869705f696f3c426174746c65736869705374617465000008011467616d65732c01505665633c284163746f7249642c2047616d65293e00012c626f745f6164647265737304011c4163746f72496400002c00000230003000000408043400340834626174746c65736869705f696f1047616d6500001c0130706c617965725f626f61726438012c5665633c456e746974793e000124626f745f626f61726438012c5665633c456e746974793e000130706c617965725f73686970731401145368697073000124626f745f736869707314011453686970730001107475726e4001784f7074696f6e3c426174746c65736869705061727469636970616e74733e00012467616d655f6f766572440110626f6f6c00012c67616d655f726573756c744001784f7074696f6e3c426174746c65736869705061727469636970616e74733e0000380000023c003c0834626174746c65736869705f696f18456e7469747900011c14456d7074790000001c556e6b6e6f776e000100204f63637570696564000200105368697000030010426f6f6d00040020426f6f6d53686970000500204465616453686970000600004004184f7074696f6e04045401240108104e6f6e6500000010536f6d650400240000010000440000050000';
+  const meta = ProgramMetadata.from(metaHex);
+
+  test('', () => {
+    expect(meta.getTypeDef(meta.types.handle.input!, true)).toEqual({
+      kind: 'variant',
+      name: 'BattleshipIoBattleshipAction',
+      type: {
+        StartGame: {
+          kind: 'composite',
+          name: null,
+          type: {
+            ships: {
+              name: 'Ships',
+              kind: 'tuple',
+              type: [
+                {
+                  name: 'Vec<U8>',
+                  kind: 'sequence',
+                  type: {
+                    name: 'U8',
+                    kind: 'primitive',
+                    type: 'U8',
+                  },
+                },
+                {
+                  name: 'Vec<U8>',
+                  kind: 'sequence',
+                  type: {
+                    name: 'U8',
+                    kind: 'primitive',
+                    type: 'U8',
+                  },
+                },
+                {
+                  name: 'Vec<U8>',
+                  kind: 'sequence',
+                  type: {
+                    name: 'U8',
+                    kind: 'primitive',
+                    type: 'U8',
+                  },
+                },
+                {
+                  name: 'Vec<U8>',
+                  kind: 'sequence',
+                  type: {
+                    name: 'U8',
+                    kind: 'primitive',
+                    type: 'U8',
+                  },
+                },
+              ],
+            },
+          },
+        },
+        Turn: {
+          kind: 'composite',
+          name: null,
+          type: {
+            step: {
+              kind: 'primitive',
+              name: 'U8',
+              type: 'U8',
+            },
+          },
+        },
+      },
+    });
+    expect(meta.getTypeDef(meta.types.handle.input!)).toEqual({
+      _variants: {
+        StartGame: {
+          ships: [['U8'], ['U8'], ['U8'], ['U8']],
+        },
+        Turn: {
+          step: 'U8',
+        },
+      },
+    });
+  });
+
+  test('create handle.input type', () => {
+    expect(
+      meta
+        .createType(meta.types.handle.input!, {
+          StartGame: {
+            ships: [[1], [1, 2], [1, 2, 3], [1, 2, 3, 4]],
+          },
+        })
+        .toHex(),
+    ).toBe('0x0004010801020c0102031001020304');
   });
 });

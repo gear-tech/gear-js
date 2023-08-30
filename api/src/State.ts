@@ -1,14 +1,9 @@
 import { Codec } from '@polkadot/types/types';
-import { HexString } from '@polkadot/util/types';
 
-import { CreateType, ProgramMetadata, StateMetadata } from './metadata';
+import { CreateType, MetadataVersion, ProgramMetadata, StateMetadata } from './metadata';
+import { HumanTypesRepr, ReadStateParams, ReadStateUsingWasmParams } from './types';
 import { Bytes } from '@polkadot/types';
 import { GearProgramStorage } from './Storage';
-
-interface ReadStateArgs {
-  programId: HexString;
-  at?: HexString;
-}
 
 export class GearProgramState extends GearProgramStorage {
   /**
@@ -17,36 +12,65 @@ export class GearProgramState extends GearProgramStorage {
    * @param meta StateMetadata returned from getStateMetadata function
    */
   async readUsingWasm(
-    args: {
-      programId: HexString;
-      fn_name: string;
-      wasm: Buffer | Uint8Array | HexString;
-      argument?: any;
-      at?: HexString;
-    },
-    meta: StateMetadata,
+    params: ReadStateUsingWasmParams,
+    stateMeta: StateMetadata,
+    programMeta: ProgramMetadata,
   ): Promise<Codec> {
-    const fnTypes = meta?.functions[args.fn_name];
+    const fnTypes = stateMeta?.functions[params.fn_name];
+    const stateType =
+      programMeta.version === MetadataVersion.V2Rust ? (programMeta.types.state as HumanTypesRepr).input : null;
 
-    const payload =
+    const argument =
       fnTypes?.input !== undefined && fnTypes?.input !== null
-        ? Array.from(meta.createType(fnTypes.input, args.argument).toU8a())
+        ? Array.from(stateMeta.createType(fnTypes.input, params.argument).toU8a())
         : null;
 
-    const code = typeof args.wasm === 'string' ? args.wasm : CreateType.create<Bytes>('Bytes', Array.from(args.wasm));
+    const payload = isNaN(stateType)
+      ? []
+      : Array.from(programMeta.createType((programMeta.types.state as HumanTypesRepr).input, params.payload).toU8a());
 
-    const state = await this._api.rpc['gear'].readStateUsingWasm(args.programId, args.fn_name, code, payload, args.at);
-    return meta && fnTypes ? meta.createType(fnTypes.output, state) : state;
+    const code =
+      typeof params.wasm === 'string' ? params.wasm : CreateType.create<Bytes>('Bytes', Array.from(params.wasm));
+
+    const state = await this._api.rpc['gear'].readStateUsingWasm(
+      params.programId,
+      payload,
+      params.fn_name,
+      code,
+      argument,
+      params.at,
+    );
+    return stateMeta && fnTypes ? stateMeta.createType(fnTypes.output, state) : state;
   }
 
   /**
-   *
-   * @param args ProgramId and hash of block where it's necessary to read state (optional)
-   * @param meta Program metadata returned from getProgramMetadata function
+   * ### Read state of program (calls `gear_readState` rpc call)
+   * @param args ProgramId, payload and hash of block where it's necessary to read state (optional)
+   * @param meta Program metadata returned from `ProgramMetadata.from` method.
    * @param type (optional) Index of type to decode state. metadata.types.state is uesd by default
+   *
+   * @example
+   * const meta = ProgramMetadata.from('0x...');
+   * const programId = '0x...';
+   *
+   * const result = await api.programState.read({ programId, payload: { id: 1 } }, meta);
+   * console.log(result.toJSON());
    */
-  async read(args: ReadStateArgs, meta: ProgramMetadata, type?: number): Promise<Codec> {
-    const state = await this._api.rpc['gear'].readState(args.programId, args.at || null);
-    return meta.createType(type || meta.types.state, state);
+  async read<T extends Codec = Codec>(args: ReadStateParams, meta: ProgramMetadata, type?: number): Promise<T> {
+    const payload =
+      meta.version === MetadataVersion.V2Rust
+        ? Array.from(meta.createType((meta.types.state as HumanTypesRepr).input, args.payload).toU8a())
+        : [];
+    const state = await this._api.rpc['gear'].readState(args.programId, payload, args.at || null);
+
+    if (type !== undefined) {
+      return meta.createType<T>(type, state);
+    }
+
+    if (meta.version === MetadataVersion.V1Rust) {
+      return meta.createType<T>(meta.types.state as number, state);
+    }
+
+    return meta.createType<T>((meta.types.state as HumanTypesRepr).output, state);
   }
 }

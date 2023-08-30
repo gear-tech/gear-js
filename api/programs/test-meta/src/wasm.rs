@@ -1,5 +1,9 @@
 use crate::{Action, Id, Person, Wallet};
-use gstd::{msg, prelude::*, BTreeMap};
+use gstd::{
+    collections::{BTreeMap, BTreeSet},
+    debug, msg,
+    prelude::*,
+};
 use test_meta_io::EmptyStruct;
 
 static mut STATE: Vec<Wallet> = Vec::new();
@@ -64,5 +68,17 @@ async fn main() {
 
 #[no_mangle]
 extern "C" fn state() {
-    msg::reply(unsafe { STATE.clone() }, 0).expect("Error in state");
+    debug!("{:?}", msg::load_bytes());
+    let input: Option<u32> = msg::load().expect("Unable to load input");
+    let mut result: Vec<Wallet> = Vec::new();
+    if input.is_some() {
+        let wallet = unsafe { STATE.get(input.unwrap() as usize) };
+        if wallet.is_some() {
+            result.push(wallet.unwrap().clone());
+        }
+    } else {
+        result = unsafe { STATE.clone() };
+    }
+
+    msg::reply(result, 0).expect("Error in state");
 }
