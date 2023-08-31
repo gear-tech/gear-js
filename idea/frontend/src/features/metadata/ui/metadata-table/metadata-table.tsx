@@ -5,15 +5,15 @@ import { useMemo } from 'react';
 import { ReactComponent as MetadataDetailsSVG } from 'shared/assets/images/placeholders/metadataDetails.svg';
 import { getFlatNamedTypeEntries, getNamedTypes } from 'features/uploadMetadata';
 import { TableRow, Table } from 'shared/ui/table';
-import tableStyles from 'shared/ui/table/ui/Table.module.scss';
 import { ContentLoader } from 'shared/ui/contentLoader';
+import tableStyles from 'shared/ui/table/ui/Table.module.scss';
 
 type Props = {
   metadata: ProgramMetadata | undefined;
   isLoading: boolean;
 };
 
-const MetadataDetails = ({ metadata, isLoading }: Props) => {
+const MetadataTable = ({ metadata, isLoading }: Props) => {
   const alert = useAlert();
 
   const isEmpty = !(isLoading || metadata);
@@ -45,4 +45,4 @@ const MetadataDetails = ({ metadata, isLoading }: Props) => {
   );
 };
 
-export { MetadataDetails };
+export { MetadataTable };
