@@ -4,4 +4,6 @@ export const getExtrinsics = ({ block: { extrinsics } }: SignedBlockExtended, me
   extrinsics.filter(({ method: { method } }) => methods.includes(method));
 
 export const getBatchExtrinsics = ({ block: { extrinsics } }: SignedBlockExtended) =>
-  extrinsics.filter(({ method: { method } }) => method.toLowerCase().startsWith('batch'));
+  extrinsics.filter(
+    ({ method: { method } }) => method.toLowerCase().startsWith('batch') || method.toLowerCase() === 'forcebatch',
+  );

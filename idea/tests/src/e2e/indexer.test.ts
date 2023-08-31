@@ -1,4 +1,4 @@
-import { GearApi, MessageQueued, ProgramMetadata, decodeAddress, generateCodeHash } from '@gear-js/api';
+import { GearApi, MessageQueued, ProgramMetadata, decodeAddress, generateCodeHash, CodeChanged } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { waitReady } from '@polkadot/wasm-crypto';
 import { readFileSync } from 'fs';
@@ -27,7 +27,7 @@ let waitlistCodeId: HexString;
 let metaCodeId: HexString;
 
 const programs: { programId: string; codeId: string; metahash?: string; hasState: boolean; status: string }[] = [];
-const codes: { codeId: string; metahash: string; hasState: boolean }[] = [];
+const codes: { codeId: string; metahash: string; hasState: boolean; status: string }[] = [];
 const sentMessages: {
   id: string;
   source: string;
@@ -111,7 +111,7 @@ describe('prepare', () => {
     metaCodeId = codeId;
     testMetaId = programId;
     programs.push({ programId, codeId, metahash, hasState: true, status: 'active' });
-    codes.push({ codeId, metahash, hasState: true });
+    codes.push({ codeId, metahash, hasState: true, status: 'active' });
     const [mqid, mqsource, mqdestination]: [string, string, string] = await new Promise((resolve, reject) => {
       finalizationPromises.push(
         new Promise((finResolve) => {
@@ -137,12 +137,72 @@ describe('prepare', () => {
     sentMessages.push({ id: mqid, source: mqsource, destination: mqdestination, entry: 'init', payload, value: '0' });
   });
 
+  test('upload code test_waitlist', async () => {
+    const code = readFileSync(path.join(PATH_TO_PROGRAMS, 'test_waitlist.opt.wasm'));
+    const { codeHash } = await api.code.upload(code);
+    waitlistCodeId = codeHash;
+    codes.push({ codeId: codeHash, metahash: null, hasState: false, status: 'active' });
+
+    await new Promise((resolve, reject) => {
+      finalizationPromises.push(
+        new Promise((finResolve) => {
+          api.code.signAndSend(alice, ({ events, status }) => {
+            if (status.isFinalized) {
+              finResolve(0);
+            }
+            if (status.isInBlock) {
+              events.forEach(({ event }) => {
+                if (event.method === 'CodeChanged') {
+                  resolve(0);
+                } else if (event.method === 'ExtrinsicFailed') {
+                  reject(new Error(api.getExtrinsicFailedError(event).docs.join('. ')));
+                }
+              });
+            }
+          });
+        }),
+      );
+    });
+  });
+
+  test('upload codes in batch', async () => {
+    const code = readFileSync(path.join(PATH_TO_PROGRAMS, 'app.opt.wasm'));
+    const fakeCode = await api.code.upload(Buffer.from('0x12'));
+    const appCode = await api.code.upload(code);
+    const txs = [fakeCode.submitted, appCode.submitted];
+    codes.push({
+      codeId: generateCodeHash(code),
+      hasState: true,
+      metahash: await api.code.metaHashFromWasm(code),
+      status: 'active',
+    });
+
+    await new Promise((resolve, reject) => {
+      finalizationPromises.push(
+        new Promise((finResolve) => {
+          api.tx.utility.forceBatch(txs).signAndSend(alice, ({ events, status }) => {
+            if (status.isFinalized) {
+              finResolve(0);
+            }
+            if (status.isInBlock) {
+              events.forEach(({ event }) => {
+                if (event.method === 'ExtrinsicSuccess') {
+                  resolve(0);
+                } else if (event.method === 'ExtrinsicFailed') {
+                  reject(new Error(api.getExtrinsicFailedError(event).docs.join('. ')));
+                }
+              });
+            }
+          });
+        }),
+      );
+    });
+  });
+
   test('upload test_waitlist', async () => {
     const code = readFileSync(path.join(PATH_TO_PROGRAMS, 'test_waitlist.opt.wasm'));
     const { programId, codeId } = api.program.upload({ code, gasLimit: 200_000_000_000 });
-    waitlistCodeId = codeId;
     programs.push({ programId, codeId, metahash: null, hasState: false, status: 'active' });
-    codes.push({ codeId, metahash: null, hasState: false });
     const [mqid, mqsource, mqdestination]: [string, string, string] = await new Promise((resolve, reject) => {
       finalizationPromises.push(
         new Promise((finResolve) => {
@@ -232,7 +292,7 @@ describe('prepare', () => {
       hasState: false,
       codeId: gasProgram.codeId,
     });
-    codes.push({ codeId: generateCodeHash(code), metahash, hasState: false });
+    codes.push({ codeId: generateCodeHash(code), metahash, hasState: false, status: 'active' });
     const metaProgram = api.program.create(
       { codeId: metaCodeId, initPayload: payloads[1], gasLimit: 2_000_000_000 },
       testMetaMeta,
@@ -389,8 +449,6 @@ describe('prepare', () => {
     });
   });
 
-  test.todo('upload code');
-  test.todo('upload codes in batch');
   test.todo('send reply');
 });
 
@@ -524,7 +582,6 @@ describe('code methods', () => {
   });
 
   test.todo(INDEXER_METHODS.CODE_NAME_ADD);
-  test.todo(INDEXER_METHODS.CODE_STATE_GET);
 });
 
 describe('message methods', () => {
@@ -616,6 +673,7 @@ describe('state methods', () => {
   test.todo(INDEXER_METHODS.PROGRAM_STATE_ADD);
   test.todo(INDEXER_METHODS.PROGRAM_STATE_ALL);
   test.todo(INDEXER_METHODS.STATE_GET);
+  test.todo(INDEXER_METHODS.CODE_STATE_GET);
 });
 
 describe.skip('Indexer methods', () => {

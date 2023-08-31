@@ -238,13 +238,14 @@ export class GearIndexer {
     }
 
     let msgIndex = 0;
-    let codeIndex = 0;
     const blockHash = block.block.header.hash.toHex();
     const ts = new Date(timestamp);
     for (const tx of extrinsics) {
       const txEvents = filterEvents(tx.hash, block, block.events, status).events;
       const mqEvents = txEvents.filter(({ event: { method } }) => method.toLowerCase() === 'messagequeued');
-      const ccEvents = txEvents.filter(({ event: { method } }) => method.toLowerCase() === 'codechanged');
+      const ccEvents = txEvents.filter(
+        ({ event: { method } }) => method.toLowerCase() === 'codechanged',
+      ) as unknown as { event: CodeChanged }[];
 
       for (const arg of tx.args) {
         for (const call of arg as Vec<GenericCall>) {
@@ -311,26 +312,36 @@ export class GearIndexer {
               const codeId = generateCodeHash(call.args[0].toHex());
               const metahash = await getMetahash(this.api.code, codeId);
 
-              const {
-                data: { change },
-              } = ccEvents[codeIndex].event as CodeChanged;
-              const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
-              const expiration = change.isActive ? change.asActive.expiration.toString() : null;
+              const event = ccEvents.find(
+                ({
+                  event: {
+                    data: { id },
+                  },
+                }) => id.toHex() === codeId,
+              );
 
-              const code = new Code({
-                id: codeId,
-                name: codeId,
-                genesis: this.genesis,
-                status: codeStatus,
-                timestamp: new Date(timestamp),
-                blockHash: block.block.header.hash.toHex(),
-                expiration,
-                uploadedBy: tx.signer.inner.toHex(),
-                metahash,
-              });
-              codeIndex++;
+              if (event) {
+                const {
+                  data: { change },
+                } = event.event;
+                const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
+                const expiration = change.isActive ? change.asActive.expiration.toString() : null;
 
-              this.tempState.addCode(code);
+                this.tempState.addCode(
+                  new Code({
+                    id: codeId,
+                    name: codeId,
+                    genesis: this.genesis,
+                    status: codeStatus,
+                    timestamp: new Date(timestamp),
+                    blockHash: block.block.header.hash.toHex(),
+                    expiration,
+                    uploadedBy: tx.signer.inner.toHex(),
+                    metahash,
+                  }),
+                );
+              }
+              const code = await this.getCode(codeId, blockHash, programId);
 
               this.tempState.addProgram(
                 new Program({
@@ -404,10 +415,20 @@ export class GearIndexer {
               break;
             }
             case 'uploadcode': {
+              const codeId = generateCodeHash(call.args[0].toHex());
+              const event = ccEvents.find(
+                ({
+                  event: {
+                    data: { id },
+                  },
+                }) => id.toHex() === codeId,
+              );
+              if (!event) {
+                continue;
+              }
               const {
-                data: { id, change },
-              } = ccEvents[codeIndex].event as CodeChanged;
-              const codeId = id.toHex();
+                data: { change },
+              } = event.event;
               const metahash = await getMetahash(this.api.code, codeId);
               const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
 
@@ -424,7 +445,6 @@ export class GearIndexer {
                   metahash,
                 }),
               );
-              codeIndex++;
               break;
             }
             default: {
