@@ -167,7 +167,7 @@ export class GearIndexer {
           blockHash,
           genesis: this.genesis,
           timestamp: new Date(timestamp),
-          type: MessageType.USER_MESS_SENT,
+          type: MessageType.MSG_SENT,
           program: await this.getProgram(data.source, blockHash, data.id),
         }),
       );
@@ -238,12 +238,14 @@ export class GearIndexer {
     }
 
     let msgIndex = 0;
+    let codeIndex = 0;
     const blockHash = block.block.header.hash.toHex();
     const ts = new Date(timestamp);
     for (const tx of extrinsics) {
-      const mqEvents = filterEvents(tx.hash, block, block.events, status).events.filter(
-        ({ event: { method } }) => method.toLowerCase() === 'messagequeued',
-      );
+      const txEvents = filterEvents(tx.hash, block, block.events, status).events;
+      const mqEvents = txEvents.filter(({ event: { method } }) => method.toLowerCase() === 'messagequeued');
+      const ccEvents = txEvents.filter(({ event: { method } }) => method.toLowerCase() === 'codechanged');
+
       for (const arg of tx.args) {
         for (const call of arg as Vec<GenericCall>) {
           switch (call.method.toLowerCase()) {
@@ -266,7 +268,7 @@ export class GearIndexer {
                   payload,
                   value,
                   program,
-                  type: MessageType.ENQUEUED,
+                  type: MessageType.QUEUED,
                   entry: MessageEntryPoint.HANDLE,
                 }),
               );
@@ -278,6 +280,9 @@ export class GearIndexer {
               const msgId = event.data.id.toHex();
               const destination = event.data.destination.toHex();
               const source = event.data.source.toHex();
+              const payload = call.args[1].toHex();
+              const value = call.args[3].toString();
+              const program = await this.getProgram(destination, blockHash, msgId);
               this.tempState.addMsg(
                 new Message({
                   id: msgId,
@@ -286,10 +291,10 @@ export class GearIndexer {
                   timestamp: ts,
                   destination,
                   source,
-                  payload: call.args[1].toHex(),
-                  value: call.args[3].toString(),
-                  program: await this.getProgram(event.data.destination.toHex(), blockHash, event.data.id.toHex()), //TODO,
-                  type: MessageType.ENQUEUED,
+                  payload,
+                  value,
+                  program,
+                  type: MessageType.QUEUED,
                   entry: MessageEntryPoint.REPLY,
                 }),
               );
@@ -299,42 +304,109 @@ export class GearIndexer {
             case 'uploadprogram': {
               const event = mqEvents[msgIndex].event as MessageQueued;
               const msgId = event.data.id.toHex();
-              const destination = event.data.destination.toHex();
+              const programId = event.data.destination.toHex();
               const source = event.data.source.toHex();
+              const codeId = generateCodeHash(call.args[0].toHex());
+              const code = await this.getCode(codeId, blockHash, programId);
+              this.tempState.addProgram(
+                new Program({
+                  id: programId,
+                  name: programId,
+                  owner: source,
+                  blockHash,
+                  timestamp: ts,
+                  code,
+                  genesis: this.genesis,
+                  metahash: await this.getMeta(programId, code),
+                  status: ProgramStatus.PROGRAM_SET,
+                  hasState: code.hasState,
+                }),
+              );
               this.tempState.addMsg(
                 new Message({
                   id: msgId,
                   blockHash,
                   genesis: this.genesis,
                   timestamp: ts,
-                  destination,
+                  destination: programId,
                   source,
                   payload: call.args[1].toHex(),
                   value: call.args[3].toString(),
-                  program: await this.getProgram(event.data.destination.toHex(), blockHash, event.data.id.toHex()), //TODO,
-                  type: MessageType.ENQUEUED,
-                  entry: MessageEntryPoint.REPLY,
+                  program: await this.getProgram(programId, blockHash, msgId),
+                  type: MessageType.QUEUED,
+                  entry: MessageEntryPoint.INIT,
                 }),
               );
               msgIndex++;
               break;
             }
             case 'createprogram': {
-              //
+              const event = mqEvents[msgIndex].event as MessageQueued;
+              const msgId = event.data.id.toHex();
+              const programId = event.data.destination.toHex();
+              const source = event.data.source.toHex();
+              const codeId = call.args[0].toHex();
+              const code = await this.getCode(codeId, blockHash, programId);
+              this.tempState.addProgram(
+                new Program({
+                  id: programId,
+                  name: programId,
+                  owner: source,
+                  blockHash,
+                  timestamp: ts,
+                  code,
+                  genesis: this.genesis,
+                  metahash: await this.getMeta(programId, code),
+                  status: ProgramStatus.PROGRAM_SET,
+                  hasState: code.hasState,
+                }),
+              );
+              this.tempState.addMsg(
+                new Message({
+                  id: msgId,
+                  blockHash,
+                  genesis: this.genesis,
+                  timestamp: ts,
+                  destination: programId,
+                  source,
+                  payload: call.args[1].toHex(),
+                  value: call.args[3].toString(),
+                  program: await this.getProgram(programId, blockHash, msgId),
+                  type: MessageType.QUEUED,
+                  entry: MessageEntryPoint.INIT,
+                }),
+              );
+              msgIndex++;
               break;
             }
             case 'uploadcode': {
-              //
+              const {
+                data: { id, change },
+              } = ccEvents[codeIndex].event as CodeChanged;
+              const codeId = id.toHex();
+              const metahash = await getMetahash(this.api.code, codeId);
+              const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
+
+              this.tempState.addCode(
+                new Code({
+                  id: codeId,
+                  name: codeId,
+                  genesis: this.genesis,
+                  status: codeStatus,
+                  timestamp: new Date(timestamp),
+                  blockHash: block.block.header.hash.toHex(),
+                  expiration: change.isActive ? change.asActive.expiration.toString() : null,
+                  uploadedBy: tx.signer.inner.toHex(),
+                  metahash,
+                }),
+              );
+              codeIndex++;
               break;
             }
             default: {
               continue;
             }
           }
-          // console.log(
-          //   call.method,
-          //   call.args.map((a) => a.toJSON()),
-          // );
         }
       }
     }
@@ -475,7 +547,7 @@ export class GearIndexer {
           payload,
           value,
           program,
-          type: MessageType.ENQUEUED,
+          type: MessageType.QUEUED,
           entry: messageEntry,
         }),
       );
