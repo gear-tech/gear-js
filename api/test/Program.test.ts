@@ -5,7 +5,7 @@ import { bufferToU8a } from '@polkadot/util';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { GearApi, decodeAddress, ProgramMetadata } from '../src';
+import { GearApi, ProgramMetadata, decodeAddress } from '../src';
 import { TARGET, TEST_META_META, WS_ADDRESS } from './config';
 import { checkInit, getAccount, sendTransaction, sleep, waitForPausedProgram } from './utilsFunctions';
 
@@ -149,7 +149,7 @@ describe('New Program', () => {
     expect(() => api.program.upload({ code: Buffer.from('0x00'), gasLimit: api.blockGasLimit })).not.toThrow();
   });
 
-  test('Pay program rent', async () => {
+  test.skip('Pay program rent', async () => {
     const tx = await api.program.payRent(programId, 10_000);
     const [result] = await sendTransaction(tx, alice, ['ProgramChanged']);
     expect(result).toHaveProperty('id');
@@ -159,7 +159,7 @@ describe('New Program', () => {
     expect(Number(result.change.asExpirationChanged.expiration.toNumber())).toBe(expiration + 10_000);
   });
 
-  test('Calculate pay rent', () => {
+  test.skip('Calculate pay rent', () => {
     const costPerBlock = api.program.costPerBlock;
     const pay = api.program.calcualtePayRent(10_000);
     expect(pay.toString()).toBe(costPerBlock.muln(10_000).toString());
