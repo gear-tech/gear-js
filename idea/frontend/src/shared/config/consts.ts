@@ -12,8 +12,6 @@ const GEAR_BALANCE_TRANSFER_VALUE = +(process.env.REACT_APP_DEFAULT_TRANSFER_BAL
 
 const ACCOUNT_ERRORS = {
   WALLET_NOT_CONNECTED: 'Wallet not connected',
-  WALLET_BALLANCE_IS_ZERO: 'Wallet balance is zero',
-  NOT_ENOUGH_FUNDS_IN_WALLET: 'Not enough funds in the wallet',
 };
 
 const PROGRAM_ERRORS = {
