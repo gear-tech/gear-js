@@ -7,16 +7,17 @@ import { OnChange } from 'react-final-form-listeners';
 import { FormApi } from 'final-form';
 
 import { addState, fetchState, fetchStates } from 'api';
-import { useChain, useStateRead } from 'hooks';
-import { getPreformattedText, readFileAsync } from 'shared/helpers';
+import { useChain, useProgram, useStateRead } from 'hooks';
+import { getPreformattedText, isNullOrUndefined, readFileAsync } from 'shared/helpers';
 import { FileTypes } from 'shared/config';
 import { BackButton } from 'shared/ui/backButton';
 import { Box } from 'shared/ui/box';
 import { FormPayload, getPayloadFormValues, getSubmitPayload } from 'features/formPayload';
 import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg';
+import { useMetadata } from 'features/metadata';
 
-import { downloadJson } from '../../helpers';
-import { IState, FormValues, INITIAL_VALUES } from '../../model';
+import { downloadJson, isHumanTypesRepr } from '../../helpers';
+import { IState, WasmFormValues, INITIAL_VALUES } from '../../model';
 import { useProgramId } from '../../hooks';
 import { WasmStates } from '../wasmStates';
 import styles from './Wasm.module.scss';
@@ -26,6 +27,9 @@ const Wasm = () => {
   const alert = useAlert();
 
   const programId = useProgramId();
+  const { program } = useProgram(programId);
+  const { metadata: programMetadata } = useMetadata(program?.metahash);
+
   const { state, isStateRead, isState, readWasmState, resetState } = useStateRead(programId);
 
   const [metadata, setMetadata] = useState<StateMetadata>();
@@ -47,19 +51,30 @@ const Wasm = () => {
   const functionId = selectedFunction.id;
   const functionName = selectedFunction.name;
   const wasmBuffer = isFileFunction ? fileWasmBuffer : uploadedWasmBuffer;
+  const isUploadedFunctionSelected = !!functionName && !isFileFunction;
 
   const uploadedFunctions = uploadedState?.functions;
   const functions = isFileFunction ? fileFunctions : uploadedFunctions;
   const functionTypes = functions?.[functionName];
-  const typeIndex = functionTypes?.input;
-  const isTypeIndex = typeIndex !== undefined && typeIndex !== null;
+  const functionTypeIndex = functionTypes?.input;
 
-  const formApi = useRef<FormApi<FormValues>>();
+  const formApi = useRef<FormApi<WasmFormValues>>();
 
   const payloadFormValues = useMemo(
-    () => (metadata && isTypeIndex ? getPayloadFormValues(metadata, typeIndex) : undefined),
+    () =>
+      programMetadata &&
+      isHumanTypesRepr(programMetadata.types.state) &&
+      !isNullOrUndefined(programMetadata.types.state.input)
+        ? getPayloadFormValues(programMetadata, programMetadata.types.state.input)
+        : undefined,
+    [programMetadata],
+  );
+
+  const argumentFormValues = useMemo(
+    () =>
+      metadata && !isNullOrUndefined(functionTypeIndex) ? getPayloadFormValues(metadata, functionTypeIndex) : undefined,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [metadata, isTypeIndex, typeIndex, functionId],
+    [metadata, functionId],
   );
 
   const resetFile = () => setFile(undefined);
@@ -112,16 +127,14 @@ const Wasm = () => {
       .finally(() => setIsStatesRequestReady(true));
   };
 
-  const handleSubmit = (values: FormValues) => {
-    if (!wasmBuffer) return;
+  const handleSubmit = (values: WasmFormValues) => {
+    if (!wasmBuffer || !programMetadata) return;
 
     const payload = getSubmitPayload(values.payload);
+    const argument = getSubmitPayload(values.argument);
 
-    readWasmState(wasmBuffer, functionName, payload);
+    readWasmState(wasmBuffer, programMetadata, functionName, argument, payload || '0x');
   };
-
-  const isUploadedFunctionSelected = !!functionName && !isFileFunction;
-  const isLoading = !metadata || (isUploadedFunctionSelected && !uploadedWasmBuffer);
 
   const setFileBufferAndFunctions = (value: File) => {
     readFileAsync(value, 'buffer')
@@ -159,6 +172,7 @@ const Wasm = () => {
   const resetUploadedState = () => setUploadedState(undefined);
   const resetUploadedWasmBuffer = () => setUploadedWasmBuffer(undefined);
   const resetPayloadValue = () => formApi.current?.change('payload', payloadFormValues?.payload);
+  const resetArgumentValue = () => formApi.current?.change('argument', argumentFormValues?.payload);
   const resetMetadata = () => setMetadata(undefined);
 
   useEffect(() => {
@@ -173,6 +187,7 @@ const Wasm = () => {
 
     resetState();
     resetPayloadValue();
+    resetArgumentValue();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [functionId]);
@@ -187,7 +202,9 @@ const Wasm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFileFunction, uploadedStateId, wasmBuffer]);
 
-  const handleDownloadJsonButtonClick = () => downloadJson(state);
+  const isFunctionSelected = !!functionName;
+  const isArgumentFormReady = !(isUploadedFunctionSelected && !metadata);
+  const isPayloadFormReady = !!programMetadata;
 
   return (
     <>
@@ -200,25 +217,44 @@ const Wasm = () => {
               <Box className={styles.box}>
                 <Input label="Program ID:" gap="1/5" value={programId} readOnly />
 
-                {payloadFormValues &&
-                  (isLoading ? (
-                    <Textarea label="Payload" gap="1/5" className={styles.loading} readOnly />
+                {isArgumentFormReady ? (
+                  argumentFormValues && (
+                    <FormPayload name="argument" label="Argument" values={argumentFormValues} gap="1/5" />
+                  )
+                ) : (
+                  <Textarea label="Argument:" gap="1/5" className={styles.loading} readOnly block />
+                )}
+
+                {isFunctionSelected &&
+                  (isPayloadFormReady ? (
+                    payloadFormValues && (
+                      <FormPayload name="payload" label="Payload" values={payloadFormValues} gap="1/5" />
+                    )
                   ) : (
-                    <FormPayload name="payload" label="Input Parameters" values={payloadFormValues} gap="1/5" />
+                    <Textarea label="Payload:" gap="1/5" className={styles.loading} readOnly block />
                   ))}
 
                 <OnChange name="payload">{() => resetState()}</OnChange>
-                {!isStateRead && (
-                  <Textarea label="Statedata:" rows={15} gap="1/5" className={styles.loading} readOnly block />
-                )}
+                <OnChange name="argument">{() => resetState()}</OnChange>
 
-                {isStateRead && isState && (
-                  <Textarea label="Statedata:" rows={15} gap="1/5" value={getPreformattedText(state)} readOnly block />
+                {isStateRead ? (
+                  isState && (
+                    <Textarea
+                      label="Statedata:"
+                      rows={15}
+                      gap="1/5"
+                      value={getPreformattedText(state)}
+                      readOnly
+                      block
+                    />
+                  )
+                ) : (
+                  <Textarea label="Statedata:" rows={15} gap="1/5" value="" className={styles.loading} readOnly block />
                 )}
               </Box>
 
               <div className={styles.buttons}>
-                {functionName && (
+                {isFunctionSelected && isArgumentFormReady && isPayloadFormReady && (
                   <Button type="submit" form="state" color="secondary" text="Read" icon={ReadSVG} size="large" />
                 )}
 
@@ -232,7 +268,7 @@ const Wasm = () => {
                 />
 
                 {isStateRead && isState && (
-                  <Button text="Download JSON" color="secondary" size="large" onClick={handleDownloadJsonButtonClick} />
+                  <Button text="Download JSON" color="secondary" size="large" onClick={() => downloadJson(state)} />
                 )}
 
                 <BackButton />
