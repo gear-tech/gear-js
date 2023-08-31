@@ -77,7 +77,7 @@ export class GearIndexer {
 
   public stop() {
     this.generatorLoop = false;
-    this.unsub();
+    this.unsub && this.unsub();
     this.api = null;
     this.newBlocks = [];
     this.lastBlockNumber = undefined;
@@ -308,6 +308,7 @@ export class GearIndexer {
               const source = event.data.source.toHex();
               const codeId = generateCodeHash(call.args[0].toHex());
               const code = await this.getCode(codeId, blockHash, programId);
+              console.log('payload', call.args[2].toHex());
               this.tempState.addProgram(
                 new Program({
                   id: programId,
@@ -330,8 +331,8 @@ export class GearIndexer {
                   timestamp: ts,
                   destination: programId,
                   source,
-                  payload: call.args[1].toHex(),
-                  value: call.args[3].toString(),
+                  payload: call.args[2].toHex(),
+                  value: call.args[4].toString(),
                   program: await this.getProgram(programId, blockHash, msgId),
                   type: MessageType.QUEUED,
                   entry: MessageEntryPoint.INIT,
@@ -369,8 +370,8 @@ export class GearIndexer {
                   timestamp: ts,
                   destination: programId,
                   source,
-                  payload: call.args[1].toHex(),
-                  value: call.args[3].toString(),
+                  payload: call.args[2].toHex(),
+                  value: call.args[4].toString(),
                   program: await this.getProgram(programId, blockHash, msgId),
                   type: MessageType.QUEUED,
                   entry: MessageEntryPoint.INIT,

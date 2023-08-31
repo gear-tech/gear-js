@@ -7,19 +7,9 @@ import * as path from 'node:path';
 import { KeyringPair } from '@polkadot/keyring/types';
 
 import base, { PATH_TO_PROGRAMS } from '../config/base';
-import {
-  addState,
-  checkInitStatus,
-  getProgramData,
-  getProgramDataInBatch,
-  getState,
-  getStatesByFuncName,
-  mapProgramStates,
-} from './programs';
+import { addState, getState, getStatesByFuncName, mapProgramStates } from './programs';
 import { IPrepared, IPreparedProgram } from '../interfaces';
 import { getAccounts, sleep } from '../utils';
-import { getAllMessages, getMessageData, getMessagePayload, getMessagesByDates } from './messages';
-import { getCodeData, getCodes, getCodesByDates } from './code';
 import request from './request';
 
 function hasAllProps(obj: any, props: string[]) {
@@ -35,9 +25,24 @@ let alice: KeyringPair;
 let test_meta_id: HexString;
 
 const programs: { programId: string; codeId: string; metahash?: string; hasState: boolean; status: string }[] = [];
-const codes = [];
-const sentMessages = [];
-const receivedMessages = [];
+const codes: { codeId: string; metahash: string; hasState: boolean }[] = [];
+const sentMessages: {
+  id: string;
+  source: string;
+  destination: string;
+  payload: string;
+  entry: string;
+  value: string;
+}[] = [];
+const receivedMessages: {
+  id: string;
+  source: string;
+  destination: string;
+  payload: string;
+  value: string;
+  replyToMessageId: string;
+  expiration: number;
+}[] = [];
 
 const metaHex = readFileSync(path.join(PATH_TO_PROGRAMS, 'test_meta.meta.txt'), 'utf-8');
 const meta = ProgramMetadata.from(metaHex);
@@ -126,7 +131,7 @@ describe('prepare', () => {
       );
     });
 
-    sentMessages.push({ id: mqid, source: mqsource, destination: mqdestination, entry: 'init', payload });
+    sentMessages.push({ id: mqid, source: mqsource, destination: mqdestination, entry: 'init', payload, value: '0' });
   });
 
   test('upload test_waitlist', async () => {
@@ -158,7 +163,14 @@ describe('prepare', () => {
       );
     });
 
-    sentMessages.push({ id: mqid, source: mqsource, destination: mqdestination, entry: 'init', payload: '0x' });
+    sentMessages.push({
+      id: mqid,
+      source: mqsource,
+      destination: mqdestination,
+      entry: 'init',
+      payload: '0x',
+      value: '0',
+    });
   });
 
   test('send message to test_meta', async () => {
@@ -189,6 +201,7 @@ describe('prepare', () => {
                     destination: destination.toHex(),
                     entry: 'handle',
                     payload,
+                    value: '1000',
                   });
                   resolve(0);
                 }
@@ -240,6 +253,7 @@ describe('prepare', () => {
                     destination: destination.toHex(),
                     entry: 'handle',
                     payload: payloads[index],
+                    value: '0',
                   });
                 } else if (event.method === 'ExtrinsicSuccess') {
                   resolve(0);
@@ -260,6 +274,12 @@ describe('prepare', () => {
       setTimeout(resolve, 5000);
     });
   });
+
+  test.todo('create program');
+  test.todo('upload and create programs in batch');
+  test.todo('upload code');
+  test.todo('upload codes in batch');
+  test.todo('send reply');
 });
 
 describe('common methods', () => {
@@ -268,8 +288,7 @@ describe('common methods', () => {
       genesis,
     });
 
-    expect(response).toHaveProperty('result');
-    expect(response.result).toBeTruthy();
+    expect(response).toHaveProperty('result', true);
   });
 
   test(INDEXER_METHODS.BLOCKS_STATUS, async () => {
@@ -286,8 +305,7 @@ describe('common methods', () => {
 describe('program methods', () => {
   test(INDEXER_METHODS.PROGRAM_ALL, async () => {
     const response = await request('program.all', { genesis });
-    expect(response).toHaveProperty('result');
-    expect(response.result.count).toBe(programs.length);
+    expect(response).toHaveProperty('result.count', programs.length);
     for (const p of programs) {
       const receivedProgram = response.result.programs.find(({ id }) => id === p.programId);
       expect(receivedProgram).toBeDefined();
@@ -299,16 +317,14 @@ describe('program methods', () => {
   test(INDEXER_METHODS.PROGRAM_ALL + ' by owner', async () => {
     const response = await request('program.all', { genesis, owner: decodeAddress(alice.address) });
     // TODO: upload program from different account
-    expect(response).toHaveProperty('result');
-    expect(response.result.count).toBe(programs.length);
+    expect(response).toHaveProperty('result.count', programs.length);
     expect(response.result.programs).toHaveLength(programs.length);
   });
 
   test(INDEXER_METHODS.PROGRAM_ALL + ' by status', async () => {
     const response = await request('program.all', { genesis, status: 'active' });
     // TODO: check terminated status
-    expect(response).toHaveProperty('result');
-    expect(response.result.count).toBe(programs.length);
+    expect(response).toHaveProperty('result.count', programs.length);
     expect(response.result.programs).toHaveLength(programs.length);
   });
 
@@ -317,8 +333,7 @@ describe('program methods', () => {
     fromDate.setMinutes(fromDate.getMinutes() - 3);
     const toDate = new Date();
     const response = await request('program.all', { genesis, fromDate, toDate });
-    expect(response).toHaveProperty('result');
-    expect(response.result.count).toBe(programs.length);
+    expect(response).toHaveProperty('result.count', programs.length);
     expect(response.result.programs).toHaveLength(programs.length);
   });
 
@@ -351,42 +366,148 @@ describe('program methods', () => {
   test.todo(INDEXER_METHODS.PROGRAM_NAME_ADD);
 });
 
-describe.skip('Indexer methods', () => {
+describe('code methods', () => {
   test(INDEXER_METHODS.CODE_ALL, async () => {
-    const codeIds = Array.from(prepared.collectionCode.keys());
-    expect(await getCodes(genesis, codeIds)).toBeTruthy();
+    const response = await request('code.all', { genesis });
+    expect(response).toHaveProperty('result');
+    hasAllProps(response.result, ['listCode', 'count']);
+    expect(response.result.count).toBe(codes.length);
+    for (const c of codes) {
+      const code = response.result.listCode.find(({ id }) => id === c.codeId);
+      expect(code).toBeDefined;
+      expect(code.metahash).toEqual(c.metahash);
+    }
+  });
 
-    expect(await getCodesByDates(genesis, new Date())).toBeTruthy();
+  test(INDEXER_METHODS.CODE_ALL + ' by dates', async () => {
+    const fromDate = new Date();
+    fromDate.setMinutes(fromDate.getMinutes() - 3);
+    const toDate = new Date();
+    const response = await request('code.all', { genesis, fromDate, toDate });
+    expect(response).toHaveProperty('result');
+    expect(response.result.count).toBe(codes.length);
   });
 
   test(INDEXER_METHODS.CODE_DATA, async () => {
-    const codeId = Array.from(prepared.collectionCode.keys())[1];
-    expect(await getCodeData(genesis, codeId)).toBeTruthy();
+    for (const c of codes) {
+      const response = await request('code.data', { genesis, id: c.codeId });
+      expect(response).toHaveProperty('result');
+      hasAllProps(response.result, [
+        'id',
+        '_id',
+        'uploadedBy',
+        'name',
+        'status',
+        'expiration',
+        'genesis',
+        'blockHash',
+        'timestamp',
+        'programs',
+        'metahash',
+        'hasState',
+      ]);
+      expect(response.result.metahash).toBe(c.metahash);
+      expect(response.result.id).toBe(c.codeId);
+    }
   });
 
   test.todo(INDEXER_METHODS.CODE_NAME_ADD);
+  test.todo(INDEXER_METHODS.CODE_STATE_GET);
+});
 
+describe('message methods', () => {
   test(INDEXER_METHODS.MESSAGE_ALL, async () => {
-    const messages = Array.from(prepared.messages.log.keys()).concat(
-      Array.from(prepared.messages.sent.values()).map(({ id }) => id),
-    ) as HexString[];
-    Object.values(prepared.programs).forEach(({ messageId }) => messages.push(messageId));
-    expect(await getAllMessages(genesis, messages)).toBeTruthy();
+    const response = await request('message.all', { genesis });
+    expect(response).toHaveProperty('result.count', sentMessages.length + receivedMessages.length);
+    hasAllProps(response.result, ['messages', 'count']);
+    expect(response.result.messages).toHaveLength(sentMessages.length + receivedMessages.length);
+  });
 
-    expect(await getMessagesByDates(genesis, new Date())).toBeTruthy();
+  test(INDEXER_METHODS.MESSAGE_ALL + ' by dates', async () => {
+    const fromDate = new Date();
+    fromDate.setMinutes(fromDate.getMinutes() - 3);
+    const toDate = new Date();
+    const response = await request('message.all', { genesis, fromDate, toDate });
+    expect(response).toHaveProperty('result.count', sentMessages.length + receivedMessages.length);
+    hasAllProps(response.result, ['messages', 'count']);
+    expect(response.result.messages).toHaveLength(sentMessages.length + receivedMessages.length);
   });
 
   test(INDEXER_METHODS.MESSAGE_DATA, async () => {
-    for (const message of prepared.messages.log) {
-      expect(await getMessageData(genesis, message[0])).toBeTruthy();
+    for (const m of sentMessages) {
+      const response = await request('message.data', { genesis, id: m.id });
+
+      expect(response).toHaveProperty('result');
+      const { result } = response;
+      hasAllProps(response.result, [
+        'id',
+        'blockHash',
+        'genesis',
+        'timestamp',
+        'destination',
+        'source',
+        'payload',
+        'entry',
+        'expiration',
+        'replyToMessageId',
+        'exitCode',
+        'processedWithPanic',
+        'value',
+        'type',
+        'readReason',
+        'program',
+      ]);
+
+      expect(result.id).toEqual(m.id);
+      expect(result.destination).toEqual(m.destination);
+      expect(result.source).toEqual(m.source);
+      expect(result.payload).toEqual(m.payload);
+      expect(result.entry).toEqual(m.entry);
+      expect(result.value).toEqual(m.value);
     }
-    for (const [_, value] of prepared.messages.sent) {
-      expect(await getMessagePayload(genesis, value.id));
+
+    for (const m of receivedMessages) {
+      const response = await request('message.data', { genesis, id: m.id });
+      expect(response).toHaveProperty('result');
+      const { result } = response;
+      hasAllProps(response.result, [
+        'id',
+        'blockHash',
+        'genesis',
+        'timestamp',
+        'destination',
+        'source',
+        'payload',
+        'entry',
+        'expiration',
+        'replyToMessageId',
+        'exitCode',
+        'processedWithPanic',
+        'value',
+        'type',
+        'readReason',
+        'program',
+      ]);
+
+      expect(result.id).toEqual(m.id);
+      expect(result.destination).toEqual(m.destination);
+      expect(result.source).toEqual(m.source);
+      console.log(m.id);
+      expect(result.payload).toEqual(m.payload);
+      expect(result.value).toEqual(m.value);
+      expect(result.expiration).toEqual(m.expiration);
+      expect(result.replyToMessageId).toEqual(m.replyToMessageId);
     }
   });
+});
 
-  test.todo(INDEXER_METHODS.CODE_STATE_GET);
+describe('state methods', () => {
+  test.todo(INDEXER_METHODS.PROGRAM_STATE_ADD);
+  test.todo(INDEXER_METHODS.PROGRAM_STATE_ALL);
+  test.todo(INDEXER_METHODS.STATE_GET);
+});
 
+describe.skip('Indexer methods', () => {
   test(INDEXER_METHODS.PROGRAM_STATE_ADD, async () => {
     for (const id of Object.keys(prepared.programs)) {
       const program = prepared.programs[id] as IPreparedProgram;
