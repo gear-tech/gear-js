@@ -14,10 +14,6 @@ const checkWallet = (account?: Account) => {
   if (!account) {
     throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
   }
-
-  if (parseInt(account.balance.value, 10) === 0) {
-    throw new Error(ACCOUNT_ERRORS.WALLET_BALLANCE_IS_ZERO);
-  }
 };
 
 const formatDate = (rawDate: string) => {
