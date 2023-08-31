@@ -1,14 +1,18 @@
 import { Button, Input, Textarea } from '@gear-js/ui';
-import clsx from 'clsx';
+import { useMemo } from 'react';
+import { Form } from 'react-final-form';
+import { OnChange } from 'react-final-form-listeners';
 
 import { useProgram, useStateRead } from 'hooks';
-import { useEffect } from 'react';
-import { getPreformattedText } from 'shared/helpers';
+import { getPreformattedText, isNullOrUndefined } from 'shared/helpers';
 import { BackButton } from 'shared/ui/backButton';
 import { Box } from 'shared/ui/box';
 import { useMetadata } from 'features/metadata';
+import { FormPayload, getPayloadFormValues, getSubmitPayload } from 'features/formPayload';
+import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg';
 
-import { downloadJson } from '../../helpers';
+import { FormValues, INITIAL_VALUES } from '../../model';
+import { downloadJson, isHumanTypesRepr } from '../../helpers';
 import { useProgramId } from '../../hooks';
 import styles from './Full.module.scss';
 
@@ -17,34 +21,60 @@ const Full = () => {
 
   const { program } = useProgram(programId);
   const { metadata, isMetadataReady } = useMetadata(program?.metahash);
-  const { state, isStateRead, readFullState } = useStateRead(programId);
+  const { state, isStateRead, isState, readFullState, resetState } = useStateRead(programId);
 
-  const value = getPreformattedText(state);
-  const className = clsx(!isStateRead && styles.loading);
+  const payloadFormValues = useMemo(
+    () =>
+      metadata && isHumanTypesRepr(metadata.types.state) && !isNullOrUndefined(metadata.types.state.input)
+        ? getPayloadFormValues(metadata, metadata.types.state.input)
+        : undefined,
+    [metadata],
+  );
 
-  useEffect(() => {
-    if (metadata) readFullState(metadata);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [metadata]);
+  const handleSubmit = ({ payload }: FormValues) => {
+    if (!metadata) return;
 
-  const handleDownloadJsonButtonClick = () => downloadJson(state);
+    readFullState(metadata, getSubmitPayload(payload) || '0x');
+  };
 
   return (
-    <>
-      <Box className={styles.box}>
-        <Input label="Program ID:" gap="1/5" value={programId} readOnly />
-        <Textarea label="Statedata:" gap="1/5" rows={15} value={value} className={className} readOnly block />
-      </Box>
+    <Form initialValues={INITIAL_VALUES} onSubmit={handleSubmit} validateOnBlur>
+      {(form) => (
+        <form id="state" onSubmit={form.handleSubmit}>
+          <Box className={styles.box}>
+            <Input label="Program ID:" gap="1/5" value={programId} readOnly />
 
-      <div className={styles.buttons}>
-        {/* checking isMetadataReady, cuz default isStateReady is true */}
-        {isMetadataReady && isStateRead && (
-          <Button text="Download JSON" color="secondary" size="large" onClick={handleDownloadJsonButtonClick} />
-        )}
+            {isMetadataReady ? (
+              payloadFormValues && <FormPayload name="payload" label="Payload" values={payloadFormValues} gap="1/5" />
+            ) : (
+              <Textarea label="Payload:" gap="1/5" className={styles.loading} block readOnly />
+            )}
 
-        <BackButton />
-      </div>
-    </>
+            <OnChange name="payload">{() => resetState()}</OnChange>
+
+            {isStateRead ? (
+              isState && (
+                <Textarea label="Statedata:" rows={15} gap="1/5" value={getPreformattedText(state)} readOnly block />
+              )
+            ) : (
+              <Textarea label="Statedata:" rows={15} gap="1/5" value="" className={styles.loading} readOnly block />
+            )}
+          </Box>
+
+          <div className={styles.buttons}>
+            {isMetadataReady && (
+              <Button type="submit" form="state" color="secondary" text="Read" icon={ReadSVG} size="large" />
+            )}
+
+            {isStateRead && isState && (
+              <Button text="Download JSON" color="secondary" size="large" onClick={() => downloadJson(state)} />
+            )}
+
+            <BackButton />
+          </div>
+        </form>
+      )}
+    </Form>
   );
 };
 
