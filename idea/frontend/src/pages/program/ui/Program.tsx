@@ -17,8 +17,8 @@ import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg
 import { ReactComponent as AddMetaSVG } from 'shared/assets/images/actions/addMeta.svg';
 import { useMetadata } from 'features/metadata';
 import { VoucherTable } from 'features/voucher';
+import { ProgramTable } from 'features/program';
 
-import { ProgramDetails } from './programDetails';
 import { MetadataDetails } from './metadataDetails';
 import styles from './Program.module.scss';
 
@@ -82,7 +82,10 @@ const Program = () => {
 
       <div className={styles.content}>
         <div className={styles.leftSide}>
-          <ProgramDetails program={program} isLoading={!isProgramReady} />
+          <div>
+            <Subheader title="Program details" />
+            <ProgramTable program={program} isProgramReady={isProgramReady} />
+          </div>
 
           <div>
             {/* TODO: WithAccount HoC? or move inside VoucherTable? */}
