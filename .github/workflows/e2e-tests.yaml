@@ -355,7 +355,6 @@ jobs:
       - name: Copy built programs
         run: |
           cp api/programs/target/wasm32-unknown-unknown/release/test_meta* idea/tests/wasm-test
-          cp api/programs/test-meta/test_meta.meta.txt idea/tests/wasm-test
 
 
       - name: Prepare&Run Tests
