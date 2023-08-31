@@ -4,9 +4,8 @@ import { useAccount } from '@gear-js/react-hooks';
 
 import { OwnerFilter } from 'api/consts';
 import { usePrograms, useDataLoading } from 'hooks';
-import { ProgramStatus, ProgramsSearch } from 'features/program';
+import { ProgramStatus, ProgramsSearch, RequestParams } from 'features/program';
 
-import { RequestParams } from '../../model/types';
 import { DEFAULT_REQUEST_PARAMS, DEFAULT_FILTER_VALUES } from '../../model/consts';
 import { ProgramsList } from '../programsList';
 

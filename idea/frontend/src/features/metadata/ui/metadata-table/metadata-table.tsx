@@ -2,7 +2,7 @@ import { ProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { useMemo } from 'react';
 
-import { ReactComponent as MetadataDetailsSVG } from 'shared/assets/images/placeholders/metadataDetails.svg';
+import { ReactComponent as TablePlaceholderSVG } from 'shared/assets/images/placeholders/table.svg';
 import { getFlatNamedTypeEntries, getNamedTypes } from 'features/uploadMetadata';
 import { TableRow, Table } from 'shared/ui/table';
 import { ContentLoader } from 'shared/ui/contentLoader';
@@ -38,7 +38,7 @@ const MetadataTable = ({ metadata, isLoading }: Props) => {
 
   return isLoaderShowing ? (
     <ContentLoader text="There is no metadata yet" isEmpty={isEmpty}>
-      <MetadataDetailsSVG />
+      <TablePlaceholderSVG />
     </ContentLoader>
   ) : (
     <Table>{renderRows()}</Table>

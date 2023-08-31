@@ -4,7 +4,7 @@ import { useScrollLoader } from 'hooks';
 import { Placeholder } from 'entities/placeholder';
 import { IProgram, ProgramCard } from 'features/program';
 import { ExamplesLink } from 'shared/ui/examplesLink';
-import { ReactComponent as HorizontalProgramCardSVG } from 'shared/assets/images/placeholders/horizontalProgramCard.svg';
+import { ReactComponent as CardPalceholderSVG } from 'shared/assets/images/placeholders/card.svg';
 
 import styles from './ProgramsList.module.scss';
 
@@ -31,7 +31,7 @@ const ProgramsList = ({ programs, isLoading, totalCount, main, loadMorePrograms 
     <div className={styles.programsList}>
       {isLoaderShowing ? (
         <Placeholder
-          block={<HorizontalProgramCardSVG className={styles.placeholderBlock} />}
+          block={<CardPalceholderSVG className={styles.placeholderBlock} />}
           title="There are no programs yet"
           description={description}
           isEmpty={isEmpty}

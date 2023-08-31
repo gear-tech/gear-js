@@ -6,8 +6,8 @@ import { IdBlock } from 'shared/ui/idBlock';
 import { Table, TableRow } from 'shared/ui/table';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
 import { ContentLoader } from 'shared/ui/contentLoader';
+import { ReactComponent as TablePlaceholderSVG } from 'shared/assets/images/placeholders/table.svg';
 
-import { ReactComponent as PlaceholderSVG } from '../../assets/program-table-placeholder.svg';
 import { IProgram } from '../../types';
 import { PROGRAM_STATUS_NAME } from '../../consts';
 import { getBulbStatus } from '../../utils';
@@ -51,7 +51,7 @@ const ProgramTable = ({ program, isProgramReady }: Props) => {
     </Table>
   ) : (
     <ContentLoader text="There is no program" isEmpty={isProgramReady && !program}>
-      <PlaceholderSVG />
+      <TablePlaceholderSVG />
     </ContentLoader>
   );
 };

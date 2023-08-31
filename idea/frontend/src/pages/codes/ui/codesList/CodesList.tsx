@@ -4,7 +4,7 @@ import { useScrollLoader } from 'hooks';
 import { Placeholder } from 'entities/placeholder';
 import { ICode, HorizontalCodeCard } from 'entities/code';
 import { ExamplesLink } from 'shared/ui/examplesLink';
-import { ReactComponent as HorizontalCodeCardSVG } from 'shared/assets/images/placeholders/horizontalProgramCard.svg';
+import { ReactComponent as CardPalceholderSVG } from 'shared/assets/images/placeholders/card.svg';
 
 import styles from './CodesList.module.scss';
 
@@ -28,7 +28,7 @@ const CodesList = (props: Props) => {
     <div className={styles.codesList}>
       {isLoaderShowing ? (
         <Placeholder
-          block={<HorizontalCodeCardSVG className={styles.placeholderBlock} />}
+          block={<CardPalceholderSVG className={styles.placeholderBlock} />}
           title="There are no codes yet"
           description="You can start experimenting right now or try to build from examples. Let`s Rock!"
           isEmpty={isEmpty}
