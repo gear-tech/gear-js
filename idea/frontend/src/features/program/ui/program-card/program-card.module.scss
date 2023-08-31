@@ -1,10 +1,10 @@
 @use '@gear-js/ui/mixins' as *;
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_mixins.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
-@use 'shared/assets/styles/_animations.scss' as *;
+@use 'shared/assets/styles/shared' as *;
+@use 'shared/assets/styles/mixins' as *;
+@use 'shared/assets/styles/variables' as *;
+@use 'shared/assets/styles/animations' as *;
 
-.horizontalProgramCard {
+.programCard {
   @include transition(background-color);
 
   display: flex;

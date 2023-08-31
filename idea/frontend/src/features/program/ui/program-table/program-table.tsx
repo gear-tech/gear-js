@@ -1,6 +1,5 @@
 import { generatePath } from 'react-router-dom';
 
-import { IProgram, PROGRAM_STATUS_NAME, getBulbStatus } from 'entities/program';
 import { routes, absoluteRoutes } from 'shared/config';
 import { BulbBlock } from 'shared/ui/bulbBlock';
 import { IdBlock } from 'shared/ui/idBlock';
@@ -9,6 +8,9 @@ import { TimestampBlock } from 'shared/ui/timestampBlock';
 import { ContentLoader } from 'shared/ui/contentLoader';
 
 import { ReactComponent as PlaceholderSVG } from '../../assets/program-table-placeholder.svg';
+import { IProgram } from '../../types';
+import { PROGRAM_STATUS_NAME } from '../../consts';
+import { getBulbStatus } from '../../utils';
 
 type Props = {
   program: IProgram | undefined;

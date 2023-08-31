@@ -5,7 +5,7 @@ import { useAccount } from '@gear-js/react-hooks';
 import { generatePath, useParams } from 'react-router-dom';
 
 import { useMetadataUpload, useModal, useProgram } from 'hooks';
-import { ProgramStatus } from 'entities/program';
+import { ProgramStatus , ProgramTable } from 'features/program';
 import { ProgramMessages } from 'widgets/programMessages';
 import { PathParams } from 'shared/types';
 import { getShortName } from 'shared/helpers';
@@ -17,7 +17,7 @@ import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg
 import { ReactComponent as AddMetaSVG } from 'shared/assets/images/actions/addMeta.svg';
 import { useMetadata } from 'features/metadata';
 import { VoucherTable } from 'features/voucher';
-import { ProgramTable } from 'features/program';
+
 
 import { MetadataDetails } from './metadataDetails';
 import styles from './Program.module.scss';

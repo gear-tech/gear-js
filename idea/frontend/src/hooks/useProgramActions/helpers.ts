@@ -1,6 +1,6 @@
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { GearApi } from '@gear-js/api';
-import { ProgramStatus } from 'entities/program';
+import { ProgramStatus } from 'features/program';
 
 const waitForProgramInit = (api: GearApi, programId: string) => {
   let unsubPromise: UnsubscribePromise;

@@ -10,20 +10,21 @@ import { BulbBlock } from 'shared/ui/bulbBlock';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
 import { ActionLink } from 'shared/ui/ActionLink';
 
-import { getBulbStatus } from '../../helpers';
-import { IProgram, PROGRAM_STATUS_NAME, ProgramStatus } from '../../model';
-import styles from './HorizontalProgramCard.module.scss';
+import { getBulbStatus } from '../../utils';
+import { IProgram } from '../../types';
+import { PROGRAM_STATUS_NAME, ProgramStatus } from '../../consts';
+import styles from './program-card.module.scss';
 
 type Props = {
   program: IProgram;
 };
 
-const HorizontalProgramCard = memo(({ program }: Props) => {
+const ProgramCard = memo(({ program }: Props) => {
   const { id: programId, name, status, timestamp, hasState } = program;
   const statusName = PROGRAM_STATUS_NAME[status];
 
   return (
-    <article className={styles.horizontalProgramCard}>
+    <article className={styles.programCard}>
       <VoucherBadge programId={programId} />
 
       <div className={styles.content}>
@@ -56,4 +57,4 @@ const HorizontalProgramCard = memo(({ program }: Props) => {
   );
 });
 
-export { HorizontalProgramCard };
+export { ProgramCard };

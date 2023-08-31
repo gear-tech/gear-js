@@ -3,7 +3,7 @@ import { HexString } from '@polkadot/util/types';
 import { useEffect, useState } from 'react';
 
 import { fetchProgram, getLocalProgram } from 'api';
-import { IProgram } from 'entities/program';
+import { IProgram } from 'features/program';
 
 import { useChain } from './context';
 

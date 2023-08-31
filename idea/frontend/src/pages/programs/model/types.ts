@@ -1,5 +1,5 @@
 import { OwnerFilter } from 'api/consts';
-import { ProgramStatus } from 'entities/program';
+import { ProgramStatus } from 'features/program';
 
 type FiltersValues = {
   owner: OwnerFilter;

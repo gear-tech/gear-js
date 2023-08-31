@@ -1,6 +1,6 @@
 import { BulbStatus } from 'shared/ui/bulbBlock';
 
-import { ProgramStatus } from '../model/consts';
+import { ProgramStatus } from './consts';
 
 const getBulbStatus = (programStatus: ProgramStatus): BulbStatus => {
   switch (programStatus) {

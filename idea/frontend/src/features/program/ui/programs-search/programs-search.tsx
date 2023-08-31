@@ -3,12 +3,12 @@ import { Input } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 
 import { Filters, FilterGroup, Radio, StatusCheckbox } from 'features/filters';
-import { ProgramStatus, PROGRAM_STATUS_NAME } from 'entities/program';
 import { AnimationTimeout } from 'shared/config';
 import { BulbStatus } from 'shared/ui/bulbBlock';
 
-import styles from './SearchSettings.module.scss';
-import { FiltersValues, RequestParams } from '../../model/types';
+import { ProgramStatus, PROGRAM_STATUS_NAME } from '../../consts';
+import { FiltersValues, RequestParams } from '../../types';
+import styles from './programs-search.module.scss';
 
 type Props = {
   initQuery: string;
@@ -17,7 +17,7 @@ type Props = {
   onSubmit: (values: RequestParams) => void;
 };
 
-const SearchSettings = ({ initQuery, isLoggedIn, initialValues, onSubmit }: Props) => {
+const ProgramsSearch = ({ initQuery, isLoggedIn, initialValues, onSubmit }: Props) => {
   const form = useForm({ initialValues: { query: initQuery } });
 
   return (
@@ -63,4 +63,4 @@ const SearchSettings = ({ initQuery, isLoggedIn, initialValues, onSubmit }: Prop
   );
 };
 
-export { SearchSettings };
+export { ProgramsSearch };

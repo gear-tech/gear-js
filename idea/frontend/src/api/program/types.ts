@@ -1,4 +1,4 @@
-import { IProgram } from 'entities/program';
+import { IProgram } from 'features/program';
 
 type FetchProgramsParams = {
   owner?: string | null;

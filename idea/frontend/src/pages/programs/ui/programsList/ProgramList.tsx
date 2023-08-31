@@ -2,7 +2,7 @@ import SimpleBar from 'simplebar-react';
 
 import { useScrollLoader } from 'hooks';
 import { Placeholder } from 'entities/placeholder';
-import { IProgram, HorizontalProgramCard } from 'entities/program';
+import { IProgram, ProgramCard } from 'features/program';
 import { ExamplesLink } from 'shared/ui/examplesLink';
 import { ReactComponent as HorizontalProgramCardSVG } from 'shared/assets/images/placeholders/horizontalProgramCard.svg';
 
@@ -41,7 +41,7 @@ const ProgramsList = ({ programs, isLoading, totalCount, main, loadMorePrograms 
       ) : (
         <SimpleBar className={styles.simpleBar} scrollableNodeProps={{ ref: scrollableNodeRef }}>
           {programs.map((program) => (
-            <HorizontalProgramCard key={program.id} program={program} />
+            <ProgramCard key={program.id} program={program} />
           ))}
         </SimpleBar>
       )}

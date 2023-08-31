@@ -1,7 +1,7 @@
 import { HexString } from '@polkadot/util/types';
 import localForage from 'localforage';
 
-import { ProgramStatus, IProgram } from 'entities/program';
+import { ProgramStatus, IProgram } from 'features/program';
 import { LocalStorage } from 'shared/config';
 import { IMeta } from 'entities/metadata';
 
