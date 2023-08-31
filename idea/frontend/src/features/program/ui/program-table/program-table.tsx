@@ -6,7 +6,7 @@ import { BulbBlock } from 'shared/ui/bulbBlock';
 import { IdBlock } from 'shared/ui/idBlock';
 import { Table, TableRow } from 'shared/ui/table';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
-import { ContentLoader } from 'pages/program/ui/contentLoader';
+import { ContentLoader } from 'shared/ui/contentLoader';
 
 import { ReactComponent as PlaceholderSVG } from '../../assets/program-table-placeholder.svg';
 

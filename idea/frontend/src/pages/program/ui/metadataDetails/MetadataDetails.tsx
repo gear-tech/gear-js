@@ -6,8 +6,7 @@ import { ReactComponent as MetadataDetailsSVG } from 'shared/assets/images/place
 import { getFlatNamedTypeEntries, getNamedTypes } from 'features/uploadMetadata';
 import { TableRow, Table } from 'shared/ui/table';
 import tableStyles from 'shared/ui/table/ui/Table.module.scss';
-
-import { ContentLoader } from '../contentLoader';
+import { ContentLoader } from 'shared/ui/contentLoader';
 
 type Props = {
   metadata: ProgramMetadata | undefined;
