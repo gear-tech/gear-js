@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { GearApi, getProgramMetadata, MessageQueuedData } from '@gear-js/api';
+import { GearApi, ProgramMetadata, MessageQueuedData } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 
 import accounts from '../config/accounts';
@@ -14,7 +14,7 @@ async function uploadProgram(
 ): Promise<{ id: HexString; source: HexString; destination: HexString }> {
   const code = readFileSync(spec.pathToOpt);
   const metaHex: HexString = spec['pathToMetaTxt'] ? `0x${readFileSync(spec.pathToMetaTxt, 'utf-8')}` : null;
-  const metaData = spec.pathToMetaTxt ? getProgramMetadata(metaHex) : undefined;
+  const metaData = spec.pathToMetaTxt ? ProgramMetadata.from(metaHex) : undefined;
   const account = (await accounts())[spec.account];
 
   api.program.upload({ code, initPayload: spec.initPayload, gasLimit: spec.gasLimit }, metaData, spec.metaType);

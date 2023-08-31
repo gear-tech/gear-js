@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { GearApi, getProgramMetadata } from '@gear-js/api';
+import { GearApi, ProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 
 import accounts from '../config/accounts';
@@ -10,11 +10,11 @@ import { sleep } from '../utils';
 
 async function sendMessage(api: GearApi, destination: HexString, spec: IMessageSpec): Promise<HumanMessageQueuedData> {
   const metaHex: HexString = `0x${readFileSync(spec.pathToMetaTxt, 'utf-8')}`;
-  const metaData = getProgramMetadata(metaHex);
+  const metaData = ProgramMetadata.from(metaHex);
 
   const account = (await accounts())[spec.account];
 
-  api.message.send({ destination, payload: spec.payload, gasLimit: spec.gasLimit, value: spec.value }, metaData);
+  await api.message.send({ destination, payload: spec.payload, gasLimit: spec.gasLimit, value: spec.value }, metaData);
 
   return new Promise((resolve) => {
     api.message.signAndSend(account, ({ events = [], status }) => {
