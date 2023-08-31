@@ -1,4 +1,4 @@
-import { GearApi, MessageQueued, decodeAddress, getProgramMetadata } from '@gear-js/api';
+import { GearApi, MessageQueued, ProgramMetadata, decodeAddress } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { waitReady } from '@polkadot/wasm-crypto';
 import { readFileSync } from 'fs';
@@ -10,21 +10,23 @@ import base, { PATH_TO_PROGRAMS } from '../config/base';
 import {
   addState,
   checkInitStatus,
-  getAllPrograms,
-  getAllProgramsByDates,
-  getAllProgramsByOwner,
-  getAllProgramsByStatus,
   getProgramData,
   getProgramDataInBatch,
   getState,
   getStatesByFuncName,
   mapProgramStates,
 } from './programs';
-import { IPrepared, IPreparedProgram, IPreparedPrograms } from '../interfaces';
+import { IPrepared, IPreparedProgram } from '../interfaces';
 import { getAccounts, sleep } from '../utils';
 import { getAllMessages, getMessageData, getMessagePayload, getMessagesByDates } from './messages';
 import { getCodeData, getCodes, getCodesByDates } from './code';
 import request from './request';
+
+function hasAllProps(obj: any, props: string[]) {
+  for (const p of props) {
+    expect(obj).toHaveProperty(p);
+  }
+}
 
 let genesis: HexString;
 let prepared: IPrepared;
@@ -32,13 +34,13 @@ let api: GearApi;
 let alice: KeyringPair;
 let test_meta_id: HexString;
 
-const programs: { programId: string; codeId: string; metahash?: string; hasState: boolean }[] = [];
+const programs: { programId: string; codeId: string; metahash?: string; hasState: boolean; status: string }[] = [];
 const codes = [];
 const sentMessages = [];
 const receivedMessages = [];
 
 const metaHex = readFileSync(path.join(PATH_TO_PROGRAMS, 'test_meta.meta.txt'), 'utf-8');
-const meta = getProgramMetadata(metaHex);
+const meta = ProgramMetadata.from(metaHex);
 
 beforeAll(async () => {
   try {
@@ -92,7 +94,7 @@ async function listenToEvents() {
 const finalizationPromises = [];
 
 describe('prepare', () => {
-  test.only('upload test_meta', async () => {
+  test('upload test_meta', async () => {
     const code = readFileSync(path.join(PATH_TO_PROGRAMS, 'test_meta.opt.wasm'));
 
     const metahash = await api.code.metaHashFromWasm(code);
@@ -100,7 +102,7 @@ describe('prepare', () => {
 
     const { programId, codeId } = api.program.upload({ code, initPayload: payload, gasLimit: 200_000_000_000 });
     test_meta_id = programId;
-    programs.push({ programId, codeId, metahash, hasState: true });
+    programs.push({ programId, codeId, metahash, hasState: true, status: 'active' });
     codes.push({ codeId, metahash, hasState: true });
     const [mqid, mqsource, mqdestination]: [string, string, string] = await new Promise((resolve, reject) => {
       finalizationPromises.push(
@@ -130,7 +132,7 @@ describe('prepare', () => {
   test('upload test_waitlist', async () => {
     const code = readFileSync(path.join(PATH_TO_PROGRAMS, 'test_waitlist.opt.wasm'));
     const { programId, codeId } = api.program.upload({ code, gasLimit: 200_000_000_000 });
-    programs.push({ programId, codeId, metahash: null, hasState: false });
+    programs.push({ programId, codeId, metahash: null, hasState: false, status: 'active' });
     codes.push({ codeId, metahash: null, hasState: false });
     const [mqid, mqsource, mqdestination]: [string, string, string] = await new Promise((resolve, reject) => {
       finalizationPromises.push(
@@ -161,7 +163,10 @@ describe('prepare', () => {
 
   test('send message to test_meta', async () => {
     const payload = meta.createType(meta.types.handle.input, { One: 'Alice' }).toHex();
-    const tx = api.message.send({ destination: test_meta_id, gasLimit: 2_000_000_000, payload, value: 1000 }, meta);
+    const tx = await api.message.send(
+      { destination: test_meta_id, gasLimit: 2_000_000_000, payload, value: 1000 },
+      meta,
+    );
 
     await new Promise((resolve, reject) => {
       finalizationPromises.push(
@@ -172,7 +177,6 @@ describe('prepare', () => {
             }
             if (status.isInBlock) {
               events.forEach(({ event }) => {
-                console.log(event.toJSON());
                 if (event.method === 'ExtrinsicFailed') {
                   reject(new Error(api.getExtrinsicFailedError(event).docs.join('. ')));
                 } else if (event.method === 'MessageQueued') {
@@ -196,7 +200,7 @@ describe('prepare', () => {
     });
   });
 
-  test.only('send batch of messages to test_meta', async () => {
+  test('send batch of messages to test_meta', async () => {
     const txs = [];
     const payloads = [
       meta.createType(meta.types.handle.input, { Two: [[8, 16]] }).toHex(),
@@ -207,8 +211,8 @@ describe('prepare', () => {
         .toHex(),
     ];
 
-    txs.push(api.message.send({ destination: test_meta_id, payload: payloads[0], gasLimit: 200_000_000_000 }));
-    txs.push(api.message.send({ destination: test_meta_id, payload: payloads[1], gasLimit: 200_000_000_000 }));
+    txs.push(await api.message.send({ destination: test_meta_id, payload: payloads[0], gasLimit: 200_000_000_000 }));
+    txs.push(await api.message.send({ destination: test_meta_id, payload: payloads[1], gasLimit: 200_000_000_000 }));
 
     const tx = api.tx.utility.batchAll(txs);
 
@@ -252,10 +256,13 @@ describe('prepare', () => {
 
   test('wait for finalization', async () => {
     await Promise.all(finalizationPromises);
+    await new Promise((resolve) => {
+      setTimeout(resolve, 5000);
+    });
   });
 });
 
-describe.skip('methods', () => {
+describe('common methods', () => {
   test(API_GATEWAY_METHODS.NETWORK_DATA_AVAILABLE, async () => {
     const response = await request('networkData.available', {
       genesis,
@@ -274,11 +281,12 @@ describe.skip('methods', () => {
     expect(response.result).toHaveProperty('timestamp');
     expect(response.result).toHaveProperty('genesis');
   });
+});
 
+describe('program methods', () => {
   test(INDEXER_METHODS.PROGRAM_ALL, async () => {
     const response = await request('program.all', { genesis });
     expect(response).toHaveProperty('result');
-    console.log(response.result);
     expect(response.result.count).toBe(programs.length);
     for (const p of programs) {
       const receivedProgram = response.result.programs.find(({ id }) => id === p.programId);
@@ -288,30 +296,62 @@ describe.skip('methods', () => {
     }
   });
 
-  test(INDEXER_METHODS.PROGRAM_ALL, async () => {});
-});
+  test(INDEXER_METHODS.PROGRAM_ALL + ' by owner', async () => {
+    const response = await request('program.all', { genesis, owner: decodeAddress(alice.address) });
+    // TODO: upload program from different account
+    expect(response).toHaveProperty('result');
+    expect(response.result.count).toBe(programs.length);
+    expect(response.result.programs).toHaveLength(programs.length);
+  });
 
-describe.skip('Indexer methods', () => {
-  test(INDEXER_METHODS.PROGRAM_ALL, async () => {
-    expect(await getAllPrograms(genesis, Object.keys(prepared.programs) as HexString[])).toBeTruthy();
-    expect(await getAllProgramsByOwner(genesis, prepared.programs as IPreparedPrograms)).toBeTruthy();
-    expect(await getAllProgramsByStatus(genesis, 'active')).toBeTruthy();
-    expect(await getAllProgramsByStatus(genesis, 'terminated')).toBeTruthy();
-    expect(await getAllProgramsByDates(genesis, new Date())).toBeTruthy();
+  test(INDEXER_METHODS.PROGRAM_ALL + ' by status', async () => {
+    const response = await request('program.all', { genesis, status: 'active' });
+    // TODO: check terminated status
+    expect(response).toHaveProperty('result');
+    expect(response.result.count).toBe(programs.length);
+    expect(response.result.programs).toHaveLength(programs.length);
+  });
+
+  test(INDEXER_METHODS.PROGRAM_ALL + ' by dates', async () => {
+    const fromDate = new Date();
+    fromDate.setMinutes(fromDate.getMinutes() - 3);
+    const toDate = new Date();
+    const response = await request('program.all', { genesis, fromDate, toDate });
+    expect(response).toHaveProperty('result');
+    expect(response.result.count).toBe(programs.length);
+    expect(response.result.programs).toHaveLength(programs.length);
   });
 
   test(INDEXER_METHODS.PROGRAM_DATA, async () => {
-    for (const id of Object.keys(prepared.programs)) {
-      expect(await getProgramData(genesis, id)).toBeTruthy();
-    }
-    expect(await getProgramDataInBatch(genesis, Object.keys(prepared.programs)[0])).toBeTruthy();
-    for (const id of Object.keys(prepared.programs)) {
-      expect(await checkInitStatus(genesis, id, prepared.programs[id].init)).toBeTruthy();
+    for (const p of programs) {
+      const response = await request('program.data', { genesis, id: p.programId });
+
+      expect(response).toHaveProperty('result');
+
+      hasAllProps(response.result, [
+        'id',
+        '_id',
+        'blockHash',
+        'genesis',
+        'owner',
+        'name',
+        'timestamp',
+        'metahash',
+        'status',
+        'code',
+        'hasState',
+        'expiration',
+      ]);
+      // expect(response.result.hasState).toBe(p.hasState); TODO: check after meta is uploaded
+      expect(response.result.status).toBe(p.status);
+      expect(response.result.metahash).toBe(p.metahash);
+      expect(response.result.code.id).toBe(p.codeId);
     }
   });
-
   test.todo(INDEXER_METHODS.PROGRAM_NAME_ADD);
+});
 
+describe.skip('Indexer methods', () => {
   test(INDEXER_METHODS.CODE_ALL, async () => {
     const codeIds = Array.from(prepared.collectionCode.keys());
     expect(await getCodes(genesis, codeIds)).toBeTruthy();
