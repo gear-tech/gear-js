@@ -5,13 +5,18 @@ import * as yup from 'yup';
 import { useModal } from 'hooks';
 import { ReactComponent as TransferBalanceSVG } from 'shared/assets/images/actions/transferBalanceSubmit.svg';
 import { FormInput, ValueField } from 'shared/ui/form';
-import { getValidation } from 'shared/helpers';
+import { getValidation, isAccountAddressValid } from 'shared/helpers';
 
+import { decodeAddress } from '@gear-js/api';
 import styles from './TransferBalanceModal.module.scss';
 
 const initialValues = { address: '', amount: '' };
+
 const validationSchema = yup.object().shape({
-  address: yup.string().required('This field is required'),
+  address: yup
+    .string()
+    .test('is-address-valid', 'Invalid address', isAccountAddressValid)
+    .required('This field is required'),
   amount: yup.string().required('This field is required'),
 });
 
@@ -26,14 +31,14 @@ const TransferBalanceModal = ({ onSubmit }: Props) => {
     <Modal heading="Transfer Balance" close={closeModal}>
       <Form
         initialValues={initialValues}
-        onSubmit={({ address, amount }: typeof initialValues) => onSubmit(address, amount)}
+        onSubmit={({ address, amount }: typeof initialValues) => onSubmit(decodeAddress(address), amount)}
         validate={getValidation(validationSchema)}
         validateOnBlur>
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
             <div className={styles.inputs}>
               <FormInput name="address" label="Address" direction="y" />
-              <ValueField name="amount" direction="y" />
+              <ValueField name="amount" label="Value:" direction="y" />
             </div>
 
             <Button type="submit" text="Send" icon={TransferBalanceSVG} block />

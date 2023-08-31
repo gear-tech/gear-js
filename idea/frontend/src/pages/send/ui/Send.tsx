@@ -32,7 +32,13 @@ const Send = () => {
   return (
     <>
       <h2 className={styles.heading}>{isReply ? 'Send Reply' : 'Send Message'}</h2>
-      <MessageForm id={id} isReply={isReply} metadata={metadata} isLoading={!isMetadataReady} />
+      <MessageForm
+        id={id}
+        programId={programSource}
+        isReply={isReply}
+        metadata={metadata}
+        isLoading={!isMetadataReady}
+      />
     </>
   );
 };

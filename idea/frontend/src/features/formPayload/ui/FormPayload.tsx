@@ -10,9 +10,9 @@ import { checkFileFormat, readFileAsync } from 'shared/helpers';
 import { FileTypes } from 'shared/config';
 import { formStyles } from 'shared/ui/form';
 
-import styles from './FormPayload.module.scss';
 import { FormPayloadValues } from '../model/types';
 import { PayloadStructure } from './payloadStructure';
+import styles from './FormPayload.module.scss';
 
 type Props = {
   name: string;
@@ -114,6 +114,7 @@ const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
           onChange={handleViewChange}
         />
       )}
+
       <div>
         {!isManualView && values ? (
           <PayloadStructure levelName={name} typeStructure={values.typeStructure} />
