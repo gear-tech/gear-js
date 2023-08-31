@@ -1,4 +1,4 @@
-import { GearApi, MessageQueued, ProgramMetadata, decodeAddress } from '@gear-js/api';
+import { GearApi, MessageQueued, ProgramMetadata, decodeAddress, generateCodeHash } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { waitReady } from '@polkadot/wasm-crypto';
 import { readFileSync } from 'fs';
@@ -22,7 +22,9 @@ let genesis: HexString;
 let prepared: IPrepared;
 let api: GearApi;
 let alice: KeyringPair;
-let test_meta_id: HexString;
+let testMetaId: HexString;
+let waitlistCodeId: HexString;
+let metaCodeId: HexString;
 
 const programs: { programId: string; codeId: string; metahash?: string; hasState: boolean; status: string }[] = [];
 const codes: { codeId: string; metahash: string; hasState: boolean }[] = [];
@@ -45,7 +47,7 @@ const receivedMessages: {
 }[] = [];
 
 const metaHex = readFileSync(path.join(PATH_TO_PROGRAMS, 'test_meta.meta.txt'), 'utf-8');
-const meta = ProgramMetadata.from(metaHex);
+const testMetaMeta = ProgramMetadata.from(metaHex);
 
 beforeAll(async () => {
   try {
@@ -103,10 +105,11 @@ describe('prepare', () => {
     const code = readFileSync(path.join(PATH_TO_PROGRAMS, 'test_meta.opt.wasm'));
 
     const metahash = await api.code.metaHashFromWasm(code);
-    const payload = meta.createType(meta.types.init.input!, [1, 2, 3]).toHex();
+    const payload = testMetaMeta.createType(testMetaMeta.types.init.input!, [1, 2, 3]).toHex();
 
     const { programId, codeId } = api.program.upload({ code, initPayload: payload, gasLimit: 200_000_000_000 });
-    test_meta_id = programId;
+    metaCodeId = codeId;
+    testMetaId = programId;
     programs.push({ programId, codeId, metahash, hasState: true, status: 'active' });
     codes.push({ codeId, metahash, hasState: true });
     const [mqid, mqsource, mqdestination]: [string, string, string] = await new Promise((resolve, reject) => {
@@ -137,6 +140,7 @@ describe('prepare', () => {
   test('upload test_waitlist', async () => {
     const code = readFileSync(path.join(PATH_TO_PROGRAMS, 'test_waitlist.opt.wasm'));
     const { programId, codeId } = api.program.upload({ code, gasLimit: 200_000_000_000 });
+    waitlistCodeId = codeId;
     programs.push({ programId, codeId, metahash: null, hasState: false, status: 'active' });
     codes.push({ codeId, metahash: null, hasState: false });
     const [mqid, mqsource, mqdestination]: [string, string, string] = await new Promise((resolve, reject) => {
@@ -173,11 +177,121 @@ describe('prepare', () => {
     });
   });
 
+  test('create program test_waitlist', async () => {
+    const { programId } = api.program.create({ codeId: waitlistCodeId, gasLimit: 2_000_000_000 });
+    programs.push({ programId, codeId: waitlistCodeId, metahash: null, hasState: false, status: 'active' });
+    const [mqid, mqsource, mqdestination]: [string, string, string] = await new Promise((resolve, reject) => {
+      finalizationPromises.push(
+        new Promise((finResolve) => {
+          api.program.signAndSend(alice, ({ events, status }) => {
+            if (status.isFinalized) {
+              finResolve(0);
+            }
+            if (status.isInBlock) {
+              events.forEach(({ event }) => {
+                if (event.method === 'ExtrinsicFailed') {
+                  reject(new Error(api.getExtrinsicFailedError(event).docs.join('. ')));
+                } else if (event.method === 'MessageQueued') {
+                  const {
+                    data: { id, source, destination },
+                  } = event as MessageQueued;
+                  resolve([id.toHex(), source.toHex(), destination.toHex()]);
+                }
+              });
+            }
+          });
+        }),
+      );
+    });
+
+    sentMessages.push({
+      id: mqid,
+      source: mqsource,
+      destination: mqdestination,
+      entry: 'init',
+      payload: '0x',
+      value: '0',
+    });
+  });
+
+  test('upload and create program in batch', async () => {
+    const txs = [];
+    const meta = ProgramMetadata.from(readFileSync(path.join(PATH_TO_PROGRAMS, 'test_gas.meta.txt'), 'utf-8'));
+    const payloads = [
+      meta.createType(meta.types.init.input, { input: 'Init' }).toHex(),
+      testMetaMeta.createType(testMetaMeta.types.init.input, [1, 2, 3]).toHex(),
+    ];
+    const code = readFileSync(path.join(PATH_TO_PROGRAMS, 'test_gas.opt.wasm'));
+    const gasProgram = api.program.upload({ code, initPayload: payloads[0], gasLimit: 2_000_000_000 }, meta);
+    txs.push(gasProgram.extrinsic);
+    const metahash = await api.code.metaHashFromWasm(code);
+    programs.push({
+      programId: gasProgram.programId,
+      status: 'active',
+      metahash,
+      hasState: false,
+      codeId: gasProgram.codeId,
+    });
+    codes.push({ codeId: generateCodeHash(code), metahash, hasState: false });
+    const metaProgram = api.program.create(
+      { codeId: metaCodeId, initPayload: payloads[1], gasLimit: 2_000_000_000 },
+      testMetaMeta,
+    );
+    programs.push({
+      programId: metaProgram.programId,
+      status: 'active',
+      metahash: await api.code.metaHash(metaCodeId),
+      hasState: true,
+      codeId: metaCodeId,
+    });
+    txs.push(metaProgram.extrinsic);
+
+    const tx = api.tx.utility.batchAll(txs);
+
+    let index = -1;
+
+    await new Promise((resolve, reject) => {
+      finalizationPromises.push(
+        new Promise((finResolve) => {
+          tx.signAndSend(alice, ({ events, status }) => {
+            if (status.isFinalized) {
+              finResolve(0);
+            }
+            if (status.isInBlock) {
+              events.forEach(({ event }) => {
+                if (event.method === 'ExtrinsicFailed') {
+                  reject(new Error(api.getExtrinsicFailedError(event).docs.join('. ')));
+                } else if (event.method === 'MessageQueued') {
+                  index++;
+                  const {
+                    data: { id, source, destination },
+                  } = event as MessageQueued;
+                  sentMessages.push({
+                    id: id.toHex(),
+                    source: source.toHex(),
+                    destination: destination.toHex(),
+                    entry: 'init',
+                    payload: payloads[index],
+                    value: '0',
+                  });
+                } else if (event.method === 'ExtrinsicSuccess') {
+                  resolve(0);
+                }
+              });
+            }
+          });
+        }),
+      );
+    });
+
+    expect(index).toBe(1);
+  });
+
   test('send message to test_meta', async () => {
-    const payload = meta.createType(meta.types.handle.input, { One: 'Alice' }).toHex();
+    const payload = testMetaMeta.createType(testMetaMeta.types.handle.input, { One: 'Alice' }).toHex();
     const tx = await api.message.send(
-      { destination: test_meta_id, gasLimit: 2_000_000_000, payload, value: 1000 },
-      meta,
+      { destination: testMetaId, gasLimit: 2_000_000_000, payload, value: 1000 },
+      testMetaMeta,
     );
 
     await new Promise((resolve, reject) => {
@@ -216,16 +330,16 @@ describe('prepare', () => {
   test('send batch of messages to test_meta', async () => {
     const txs = [];
     const payloads = [
-      meta.createType(meta.types.handle.input, { Two: [[8, 16]] }).toHex(),
-      meta
-        .createType(meta.types.handle.input, {
+      testMetaMeta.createType(testMetaMeta.types.handle.input, { Two: [[8, 16]] }).toHex(),
+      testMetaMeta
+        .createType(testMetaMeta.types.handle.input, {
           Four: { array8: new Array(8).fill(0), array32: new Array(32).fill(1), actor: decodeAddress(alice.address) },
         })
         .toHex(),
     ];
 
-    txs.push(await api.message.send({ destination: test_meta_id, payload: payloads[0], gasLimit: 200_000_000_000 }));
-    txs.push(await api.message.send({ destination: test_meta_id, payload: payloads[1], gasLimit: 200_000_000_000 }));
+    txs.push(await api.message.send({ destination: testMetaId, payload: payloads[0], gasLimit: 200_000_000_000 }));
+    txs.push(await api.message.send({ destination: testMetaId, payload: payloads[1], gasLimit: 200_000_000_000 }));
 
     const tx = api.tx.utility.batchAll(txs);
 
@@ -275,8 +389,6 @@ describe('prepare', () => {
     });
   });
 
-  test.todo('create program');
-  test.todo('upload and create programs in batch');
   test.todo('upload code');
   test.todo('upload codes in batch');
   test.todo('send reply');
@@ -492,7 +604,6 @@ describe('message methods', () => {
       expect(result.id).toEqual(m.id);
       expect(result.destination).toEqual(m.destination);
       expect(result.source).toEqual(m.source);
-      console.log(m.id);
       expect(result.payload).toEqual(m.payload);
       expect(result.value).toEqual(m.value);
       expect(result.expiration).toEqual(m.expiration);

@@ -302,23 +302,46 @@ export class GearIndexer {
               break;
             }
             case 'uploadprogram': {
-              const event = mqEvents[msgIndex].event as MessageQueued;
-              const msgId = event.data.id.toHex();
-              const programId = event.data.destination.toHex();
-              const source = event.data.source.toHex();
+              const {
+                data: { id, destination, source },
+              } = mqEvents[msgIndex].event as MessageQueued;
+              const msgId = id.toHex();
+              const programId = destination.toHex();
+              const src = source.toHex();
               const codeId = generateCodeHash(call.args[0].toHex());
-              const code = await this.getCode(codeId, blockHash, programId);
-              console.log('payload', call.args[2].toHex());
+              const metahash = await getMetahash(this.api.code, codeId);
+
+              const {
+                data: { change },
+              } = ccEvents[codeIndex].event as CodeChanged;
+              const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
+              const expiration = change.isActive ? change.asActive.expiration.toString() : null;
+
+              const code = new Code({
+                id: codeId,
+                name: codeId,
+                genesis: this.genesis,
+                status: codeStatus,
+                timestamp: new Date(timestamp),
+                blockHash: block.block.header.hash.toHex(),
+                expiration,
+                uploadedBy: tx.signer.inner.toHex(),
+                metahash,
+              });
+              codeIndex++;
+
+              this.tempState.addCode(code);
+
               this.tempState.addProgram(
                 new Program({
                   id: programId,
                   name: programId,
-                  owner: source,
+                  owner: src,
                   blockHash,
                   timestamp: ts,
                   code,
                   genesis: this.genesis,
-                  metahash: await this.getMeta(programId, code),
+                  metahash,
                   status: ProgramStatus.PROGRAM_SET,
                   hasState: code.hasState,
                 }),
@@ -330,7 +353,7 @@ export class GearIndexer {
                   genesis: this.genesis,
                   timestamp: ts,
                   destination: programId,
-                  source,
+                  source: src,
                   payload: call.args[2].toHex(),
                   value: call.args[4].toString(),
                   program: await this.getProgram(programId, blockHash, msgId),
