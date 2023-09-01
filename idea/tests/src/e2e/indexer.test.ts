@@ -1,4 +1,4 @@
-import { GearApi, MessageQueued, ProgramMetadata, decodeAddress, generateCodeHash, CodeChanged } from '@gear-js/api';
+import { GearApi, MessageQueued, ProgramMetadata, decodeAddress, generateCodeHash } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { waitReady } from '@polkadot/wasm-crypto';
 import { readFileSync } from 'fs';
@@ -7,8 +7,6 @@ import * as path from 'node:path';
 import { KeyringPair } from '@polkadot/keyring/types';
 
 import base, { PATH_TO_PROGRAMS } from '../config/base';
-import { addState, getState, getStatesByFuncName, mapProgramStates } from './programs';
-import { IPrepared, IPreparedProgram } from '../interfaces';
 import { getAccounts, sleep } from '../utils';
 import request from './request';
 
@@ -19,12 +17,12 @@ function hasAllProps(obj: any, props: string[]) {
 }
 
 let genesis: HexString;
-let prepared: IPrepared;
 let api: GearApi;
 let alice: KeyringPair;
 let testMetaId: HexString;
 let waitlistCodeId: HexString;
 let metaCodeId: HexString;
+let msgForReply: HexString;
 
 const programs: { programId: string; codeId: string; metahash?: string; hasState: boolean; status: string }[] = [];
 const codes: { codeId: string; metahash: string; hasState: boolean; status: string }[] = [];
@@ -72,12 +70,15 @@ afterAll(async () => {
 async function listenToEvents() {
   api.gearEvents.subscribeToGearEvent(
     'UserMessageSent',
-    ({
+    async ({
       data: {
         message: { id, source, destination, details, payload, value },
         expiration,
       },
     }) => {
+      if (payload.toHex() === '0x147265706c79') {
+        msgForReply = id.toHex();
+      }
       receivedMessages.push({
         id: id.toHex(),
         source: source.toHex(),
@@ -442,14 +443,49 @@ describe('prepare', () => {
     expect(index).toBe(1);
   });
 
+  test('send reply', async () => {
+    const payload = testMetaMeta.createType(testMetaMeta.types.reply, 'ok').toHex();
+    const tx = await api.message.sendReply({ replyToId: msgForReply, payload, gasLimit: 2_000_000_000 });
+
+    await new Promise((resolve, reject) => {
+      finalizationPromises.push(
+        new Promise((finResolve) => {
+          tx.signAndSend(alice, ({ events, status }) => {
+            if (status.isFinalized) {
+              finResolve(0);
+            }
+            if (status.isInBlock) {
+              events.forEach(({ event }) => {
+                if (event.method === 'ExtrinsicFailed') {
+                  reject(new Error(api.getExtrinsicFailedError(event).docs.join('. ')));
+                } else if (event.method === 'MessageQueued') {
+                  const {
+                    data: { id, source, destination },
+                  } = event as MessageQueued;
+                  sentMessages.push({
+                    id: id.toHex(),
+                    source: source.toHex(),
+                    destination: destination.toHex(),
+                    entry: 'reply',
+                    payload,
+                    value: '0',
+                  });
+                  resolve(0);
+                }
+              });
+            }
+          });
+        }),
+      );
+    });
+  });
+
   test('wait for finalization', async () => {
     await Promise.all(finalizationPromises);
     await new Promise((resolve) => {
       setTimeout(resolve, 5000);
     });
   });
-
-  test.todo('send reply');
 });
 
 describe('common methods', () => {
@@ -670,62 +706,41 @@ describe('message methods', () => {
 });
 
 describe('state methods', () => {
-  test.todo(INDEXER_METHODS.PROGRAM_STATE_ADD);
-  test.todo(INDEXER_METHODS.PROGRAM_STATE_ALL);
-  test.todo(INDEXER_METHODS.STATE_GET);
-  test.todo(INDEXER_METHODS.CODE_STATE_GET);
-});
+  let stateId: string;
 
-describe.skip('Indexer methods', () => {
   test(INDEXER_METHODS.PROGRAM_STATE_ADD, async () => {
-    for (const id of Object.keys(prepared.programs)) {
-      const program = prepared.programs[id] as IPreparedProgram;
-      if (!program.spec['pathStates']) continue;
+    const buf = readFileSync(path.join(PATH_TO_PROGRAMS, 'test_meta_state_v1.meta.wasm'), 'base64');
+    const data = {
+      genesis,
+      wasmBuffBase64: buf,
+      programId: testMetaId,
+      name: 'test_meta_state_v1.meta.wasm',
+    };
+    const response = await request('program.state.add', data);
 
-      const programStatesPath = program.spec.pathStates;
-      for (const statePath of programStatesPath) {
-        expect(await addState(genesis, program, statePath)).toBeTruthy();
-      }
-    }
+    expect(response).toHaveProperty('result.status', 'State added');
+    expect(response.result).toHaveProperty('state');
+    hasAllProps(response.result.state, ['id', 'name', 'wasmBuffBase64', 'functions']);
+    stateId = response.result.state.id;
   });
 
   test(INDEXER_METHODS.PROGRAM_STATE_ALL, async () => {
-    for (const id of Object.keys(prepared.programs)) {
-      const program = prepared.programs[id] as IPreparedProgram;
+    const response = await request('program.state.all', { genesis, programId: testMetaId });
+    expect(response).toHaveProperty('result.states');
+    expect(response).toHaveProperty('result.count', 1);
 
-      if (mapProgramStates.has(id)) {
-        const statesInDB = mapProgramStates.get(id);
-
-        for (const state of statesInDB) {
-          const name = Object.keys(state.functions)[0];
-          expect(await getStatesByFuncName(genesis, program, name)).toBeTruthy();
-        }
-      }
-    }
-
-    for (const id of Object.keys(prepared.programs)) {
-      const program = prepared.programs[id] as IPreparedProgram;
-
-      if (mapProgramStates.has(id)) {
-        const statesInDB = mapProgramStates.get(id);
-
-        for (const state of statesInDB) {
-          const name = Object.keys(state.functions)[0];
-          expect(await getStatesByFuncName(genesis, program, name)).toBeTruthy();
-        }
-      }
-    }
+    expect(response.result.states).toHaveLength(1);
   });
 
   test(INDEXER_METHODS.STATE_GET, async () => {
-    for (const id of Object.keys(prepared.programs)) {
-      if (mapProgramStates.has(id)) {
-        const statesInDB = mapProgramStates.get(id);
+    const response = await request('state.get', { genesis, id: stateId });
 
-        for (const state of statesInDB) {
-          expect(await getState(genesis, state)).toBeTruthy();
-        }
-      }
-    }
+    expect(response).toHaveProperty('result.functions');
+    expect(response).toHaveProperty('result.funcNames');
+    expect(response).toHaveProperty('result.id');
+    expect(response).toHaveProperty('result.name');
+    expect(response).toHaveProperty('result.wasmBuffBase64');
   });
+
+  test.todo(INDEXER_METHODS.CODE_STATE_GET);
 });

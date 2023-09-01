@@ -2,19 +2,19 @@ import fetch from 'node-fetch';
 import base from '../config/base';
 
 export default async function (method: string, params: any) {
+  const body = JSON.stringify({ jsonrpc: '2.0', id: Math.floor(Math.random() * 100) + 1, method, params });
   const response = await fetch(base.gear.api, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      jsonrpc: '2.0',
-      id: Math.floor(Math.random() * 100),
-      method,
-      params,
-    }),
+    body,
   });
-  return response.json();
+  const json = await response.json();
+  if (json.error) {
+    console.log(body);
+  }
+  return json;
 }
 
 export async function invalidRequest(method: string, params: any) {

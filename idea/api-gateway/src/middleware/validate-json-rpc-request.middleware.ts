@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { IRpcRequest, JSONRPC_ERRORS } from '@gear-js/common';
+import { IRpcRequest, JSONRPC_ERRORS, logger } from '@gear-js/common';
 
 export async function validateJsonRpcRequestMiddleware(req: Request, res: Response, next: NextFunction) {
   const body: IRpcRequest = req.body;
@@ -23,13 +23,14 @@ function isValidRequestParams({ id, method, jsonrpc, params }: IRpcRequest): boo
   return !!id && !!method && !!jsonrpc && !!params;
 }
 
-function getInvalidParamsResponse({ id }: IRpcRequest) {
+function getInvalidParamsResponse(req: IRpcRequest) {
+  logger.info('Invalid params error', { req });
   const response: any = {
     jsonrpc: '2.0',
   };
   const error = JSONRPC_ERRORS.InvalidParams.name;
 
-  response['id'] = id ? id : null;
+  response['id'] = req.id ? req.id : null;
   response['error'] = {
     message: JSONRPC_ERRORS[error].message,
     code: JSONRPC_ERRORS[error].code,

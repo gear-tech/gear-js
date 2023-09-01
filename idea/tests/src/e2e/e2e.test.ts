@@ -16,7 +16,6 @@ import {
   getProgramData,
   getProgramDataInBatch,
   getState,
-  getStates,
   getStatesByFuncName,
   mapProgramStates,
   uploadMeta,
