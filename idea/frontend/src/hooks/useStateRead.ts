@@ -20,13 +20,19 @@ const useStateRead = (programId: HexString) => {
       .finally(() => setIsStateRead(true));
   };
 
-  const readFullState = (metadata: ProgramMetadata) =>
-    handleStateRead(() => api.programState.read({ programId }, metadata));
+  const readFullState = (metadata: ProgramMetadata, payload: AnyJson) =>
+    handleStateRead(() => api.programState.read({ programId, payload }, metadata));
 
-  const readWasmState = (wasm: Buffer, fn_name: string, argument: AnyJson) =>
+  const readWasmState = (
+    wasm: Buffer,
+    programMetadata: ProgramMetadata,
+    fn_name: string,
+    argument: AnyJson,
+    payload: AnyJson,
+  ) =>
     handleStateRead(() =>
       getStateMetadata(wasm).then((stateMetadata) =>
-        api.programState.readUsingWasm({ programId, wasm, fn_name, argument }, stateMetadata),
+        api.programState.readUsingWasm({ programId, wasm, fn_name, argument, payload }, stateMetadata, programMetadata),
       ),
     );
 

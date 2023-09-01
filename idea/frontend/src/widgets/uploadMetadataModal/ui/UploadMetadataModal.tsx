@@ -1,4 +1,4 @@
-import { getProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 import { Button, Input, Modal } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 import { HexString } from '@polkadot/util/types';
@@ -26,7 +26,7 @@ const UploadMetadataModal = ({ onClose, onSubmit, isCode }: Props) => {
 
   const [metaHex, setMetaHex] = useState('' as HexString);
 
-  const metadata = useMemo(() => (metaHex ? getProgramMetadata(metaHex) : undefined), [metaHex]);
+  const metadata = useMemo(() => (metaHex ? ProgramMetadata.from(metaHex) : undefined), [metaHex]);
 
   const resetMetaHex = () => setMetaHex('' as HexString);
 

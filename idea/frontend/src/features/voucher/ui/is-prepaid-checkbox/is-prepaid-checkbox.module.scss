@@ -1,0 +1,15 @@
+@use 'shared/assets/styles/mixins' as *;
+
+.inputWrapper {
+  align-items: center;
+}
+
+.checkboxWrapper {
+  @include childrenMargin(10px, right);
+  display: flex;
+}
+
+.value {
+  font-weight: 500;
+  color: #2bd071;
+}

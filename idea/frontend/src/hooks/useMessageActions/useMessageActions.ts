@@ -68,8 +68,7 @@ const useMessageActions = () => {
 
         const { meta, address } = account!;
 
-        api.message.send(message, metadata, payloadType);
-
+        await api.message.send(message, metadata, payloadType);
         const { signer } = await web3FromSource(meta.source);
         const { partialFee } = await api.message.paymentInfo(address, { signer });
 
@@ -107,8 +106,7 @@ const useMessageActions = () => {
 
         const { meta, address } = account!;
 
-        api.message.sendReply(reply, metadata, payloadType);
-
+        await api.message.sendReply(reply, metadata, payloadType);
         const { signer } = await web3FromSource(meta.source);
         const { partialFee } = await api.message.paymentInfo(address, { signer });
 

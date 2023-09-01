@@ -1,4 +1,6 @@
+import { HumanTypesRepr } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
+import isPlainObject from 'lodash.isplainobject';
 
 const downloadJson = (state: AnyJson) => {
   const json = JSON.stringify(state, null, 2);
@@ -18,4 +20,6 @@ const downloadJson = (state: AnyJson) => {
   document.body.removeChild(link);
 };
 
-export { downloadJson };
+const isHumanTypesRepr = (types: number | HumanTypesRepr | null): types is HumanTypesRepr => isPlainObject(types);
+
+export { downloadJson, isHumanTypesRepr };

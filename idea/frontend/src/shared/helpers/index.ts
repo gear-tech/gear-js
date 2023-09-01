@@ -8,15 +8,11 @@ import isString from 'lodash.isstring';
 import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from 'shared/config';
 
 import { isAndroid, isIOS } from '@react-aria/utils';
-import { isHexValid, isExists, isDecimal } from './form';
+import { isHexValid, isExists, isDecimal, isAccountAddressValid } from './form';
 
 const checkWallet = (account?: Account) => {
   if (!account) {
     throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
-  }
-
-  if (parseInt(account.balance.value, 10) === 0) {
-    throw new Error(ACCOUNT_ERRORS.WALLET_BALLANCE_IS_ZERO);
   }
 };
 
@@ -159,4 +155,5 @@ export {
   isMobileDevice,
   isNullOrUndefined,
   isDecimal,
+  isAccountAddressValid,
 };

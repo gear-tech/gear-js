@@ -11,6 +11,7 @@
   position: relative;
   border-radius: toRem(16);
   background-color: $bgColor4;
+  overflow: hidden;
 
   &:hover {
     background-color: $gray100;
@@ -69,14 +70,11 @@
 }
 
 .actions {
+  @include childrenMargin(12px);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
   flex: 0.3 1;
   padding: toRem(12) toRem(24);
-
-  .sendMessage {
-    margin-bottom: 6px;
-  }
 }
