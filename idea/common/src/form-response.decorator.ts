@@ -9,7 +9,7 @@ export function FormResponse(target: unknown, propertyKey: string, descriptor: T
     } catch (error) {
       if (error.name) {
         const { name, ...err } = error;
-        if (JSONRPC_ERRORS) logger.error(name, { error: err, stack: error.stack });
+        if (name === JSONRPC_ERRORS.InternalError.name) logger.error(name, { err, stack: err.stack });
         return { error: name };
       } else {
         logger.error('Unknown error', { error, stack: error.stack });

@@ -1,27 +1,8 @@
 import { API_GATEWAY_METHODS, TEST_BALANCE_METHODS } from '@gear-js/common';
 import request from './request';
-import { GearApi, HexString } from '@gear-js/api';
-import config from './config';
-import { sleep } from './utils';
+import * as fs from 'fs';
 
-let genesis: HexString;
-let api: GearApi;
-
-beforeAll(async () => {
-  try {
-    api = await GearApi.create({ providerAddress: config.gear.wsProvider, throwOnConnect: true });
-  } catch (error) {
-    console.log(error);
-    process.exit(0);
-  }
-
-  genesis = api.genesisHash.toHex();
-});
-
-afterAll(async () => {
-  await api.disconnect();
-  await sleep();
-});
+const genesis = fs.readFileSync('./genesis', 'utf-8');
 
 describe('test-balance methods', () => {
   test(API_GATEWAY_METHODS.TEST_BALANCE_AVAILABLE, async () => {

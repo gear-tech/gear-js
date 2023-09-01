@@ -10,25 +10,6 @@ export default async function (method: string, params: any) {
     },
     body,
   });
-  const json = await response.json();
-  if (json.error) {
-    console.log(body);
-  }
-  return json;
-}
-
-export async function invalidRequest(method: string, params: any) {
-  const response = await fetch(base.gear.api, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      jsonrpc: '2.0',
-      method,
-      params,
-    }),
-  });
   return response.json();
 }
 
