@@ -100,3 +100,5 @@ export const JSONRPC_ERRORS = {
     message: 'Forbidden',
   },
 };
+
+export const errorNames = Object.values(JSONRPC_ERRORS).map(({ name }) => name);

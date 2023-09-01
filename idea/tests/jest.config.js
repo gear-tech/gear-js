@@ -4,7 +4,7 @@
  */
 
 module.exports = {
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>/e2e'],
   clearMocks: true,
   coverageProvider: 'v8',
   transformIgnorePatterns: ['node_modules/(?!@polkadot)/'],

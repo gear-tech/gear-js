@@ -1,13 +1,13 @@
+import { KeyringPair } from '@polkadot/keyring/types';
 import { GearApi, MessageQueued, ProgramMetadata, decodeAddress, generateCodeHash } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { waitReady } from '@polkadot/wasm-crypto';
-import { readFileSync } from 'fs';
 import { API_GATEWAY_METHODS, INDEXER_METHODS } from '@gear-js/common';
 import * as path from 'node:path';
-import { KeyringPair } from '@polkadot/keyring/types';
+import * as fs from 'fs';
 
-import base, { PATH_TO_PROGRAMS } from '../config/base';
-import { getAccounts, sleep } from '../utils';
+import base, { PATH_TO_PROGRAMS } from './config';
+import { getAccounts, sleep } from './utils';
 import request from './request';
 
 function hasAllProps(obj: any, props: string[]) {
@@ -44,7 +44,7 @@ const receivedMessages: {
   expiration: number;
 }[] = [];
 
-const metaHex = readFileSync(path.join(PATH_TO_PROGRAMS, 'test_meta.meta.txt'), 'utf-8');
+const metaHex = fs.readFileSync(path.join(PATH_TO_PROGRAMS, 'test_meta.meta.txt'), 'utf-8');
 const testMetaMeta = ProgramMetadata.from(metaHex);
 
 beforeAll(async () => {
@@ -56,7 +56,7 @@ beforeAll(async () => {
   }
 
   genesis = api.genesisHash.toHex();
-
+  fs.writeFileSync('./genesis', genesis, 'utf-8');
   await waitReady();
   alice = getAccounts().alice;
   listenToEvents();
@@ -103,7 +103,7 @@ const finalizationPromises = [];
 
 describe('prepare', () => {
   test('upload test_meta', async () => {
-    const code = readFileSync(path.join(PATH_TO_PROGRAMS, 'test_meta.opt.wasm'));
+    const code = fs.readFileSync(path.join(PATH_TO_PROGRAMS, 'test_meta.opt.wasm'));
 
     const metahash = await api.code.metaHashFromWasm(code);
     const payload = testMetaMeta.createType(testMetaMeta.types.init.input!, [1, 2, 3]).toHex();
@@ -139,7 +139,7 @@ describe('prepare', () => {
   });
 
   test('upload code test_waitlist', async () => {
-    const code = readFileSync(path.join(PATH_TO_PROGRAMS, 'test_waitlist.opt.wasm'));
+    const code = fs.readFileSync(path.join(PATH_TO_PROGRAMS, 'test_waitlist.opt.wasm'));
     const { codeHash } = await api.code.upload(code);
     waitlistCodeId = codeHash;
     codes.push({ codeId: codeHash, metahash: null, hasState: false, status: 'active' });
@@ -167,7 +167,7 @@ describe('prepare', () => {
   });
 
   test('upload codes in batch', async () => {
-    const code = readFileSync(path.join(PATH_TO_PROGRAMS, 'app.opt.wasm'));
+    const code = fs.readFileSync(path.join(PATH_TO_PROGRAMS, 'app.opt.wasm'));
     const fakeCode = await api.code.upload(Buffer.from('0x12'));
     const appCode = await api.code.upload(code);
     const txs = [fakeCode.submitted, appCode.submitted];
@@ -201,7 +201,7 @@ describe('prepare', () => {
   });
 
   test('upload test_waitlist', async () => {
-    const code = readFileSync(path.join(PATH_TO_PROGRAMS, 'test_waitlist.opt.wasm'));
+    const code = fs.readFileSync(path.join(PATH_TO_PROGRAMS, 'test_waitlist.opt.wasm'));
     const { programId, codeId } = api.program.upload({ code, gasLimit: 200_000_000_000 });
     programs.push({ programId, codeId, metahash: null, hasState: false, status: 'active' });
     const [mqid, mqsource, mqdestination]: [string, string, string] = await new Promise((resolve, reject) => {
@@ -277,12 +277,12 @@ describe('prepare', () => {
 
   test('upload and create program in batch', async () => {
     const txs = [];
-    const meta = ProgramMetadata.from(readFileSync(path.join(PATH_TO_PROGRAMS, 'test_gas.meta.txt'), 'utf-8'));
+    const meta = ProgramMetadata.from(fs.readFileSync(path.join(PATH_TO_PROGRAMS, 'test_gas.meta.txt'), 'utf-8'));
     const payloads = [
       meta.createType(meta.types.init.input, { input: 'Init' }).toHex(),
       testMetaMeta.createType(testMetaMeta.types.init.input, [1, 2, 3]).toHex(),
     ];
-    const code = readFileSync(path.join(PATH_TO_PROGRAMS, 'test_gas.opt.wasm'));
+    const code = fs.readFileSync(path.join(PATH_TO_PROGRAMS, 'test_gas.opt.wasm'));
     const gasProgram = api.program.upload({ code, initPayload: payloads[0], gasLimit: 2_000_000_000 }, meta);
     txs.push(gasProgram.extrinsic);
     const metahash = await api.code.metaHashFromWasm(code);
@@ -709,7 +709,7 @@ describe('state methods', () => {
   let stateId: string;
 
   test(INDEXER_METHODS.PROGRAM_STATE_ADD, async () => {
-    const buf = readFileSync(path.join(PATH_TO_PROGRAMS, 'test_meta_state_v1.meta.wasm'), 'base64');
+    const buf = fs.readFileSync(path.join(PATH_TO_PROGRAMS, 'test_meta_state_v1.meta.wasm'), 'base64');
     const data = {
       genesis,
       wasmBuffBase64: buf,
@@ -744,3 +744,5 @@ describe('state methods', () => {
 
   test.todo(INDEXER_METHODS.CODE_STATE_GET);
 });
+
+test.todo('errors tests');
