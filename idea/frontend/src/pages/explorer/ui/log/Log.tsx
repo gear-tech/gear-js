@@ -1,15 +1,18 @@
-import { ChangeEvent, useEffect, useState } from 'react';
-import { CreateType, UserMessageSentData } from '@gear-js/api';
+import { UserMessageSentData } from '@gear-js/api';
 import { Checkbox } from '@gear-js/ui';
 import { Codec } from '@polkadot/types/types';
 import { isHex } from '@polkadot/util';
+import { useEffect, useState } from 'react';
 
 import { PreformattedBlock } from 'shared/ui/preformattedBlock';
 import { useMetadata } from 'features/metadata';
+import { useProgram } from 'hooks';
+import { isNullOrUndefined } from 'shared/helpers';
 
+import { FormattedUserMessageSentData } from '../../model';
 import styles from './Log.module.scss';
 
-type TypeKey = 'handle_output' | 'init_output';
+type TypeKey = 'handle' | 'init';
 
 type Props = {
   data: UserMessageSentData;
@@ -17,69 +20,54 @@ type Props = {
 
 const Log = ({ data }: Props) => {
   const { payload, source } = data.message;
-  const formattedData = data.toHuman();
+  const formattedData = data.toHuman() as FormattedUserMessageSentData;
+  const formattedPayload = payload.toHuman(); // check if manual decoding is needed,
+  const isFormattedPayloadHex = isHex(formattedPayload); // cuz .toHuman() can decode payload w/out metadata
 
   const [error, setError] = useState('');
+  const isError = !!error;
+
   const [decodedPayload, setDecodedPayload] = useState<Codec>();
   const [isDecodedPayload, setIsDecodedPayload] = useState(false);
 
-  const isError = !!error;
-  // check if manual decoding needed,
-  // cuz data.toHuman() decodes payload without metadata by itself
-  const formattedPayload = payload.toHuman();
-  const isFormattedPayloadHex = isHex(formattedPayload);
-
-  const { metadata, isMetadataReady } = useMetadata(isFormattedPayloadHex ? source.toHex() : undefined);
+  const { program } = useProgram(isFormattedPayloadHex ? source.toHex() : undefined);
+  const { metadata, isMetadataReady } = useMetadata(program?.metahash);
 
   const handlePayloadDecoding = (typeKey: TypeKey, errorCallback: () => void) => {
     if (!metadata) return;
 
-    // TODO:
-    // const type = metadata[typeKey];
-    const type = '';
+    const type = metadata.types[typeKey].output;
 
-    if (!type) return errorCallback();
+    if (isNullOrUndefined(type)) return errorCallback();
 
     try {
-      // setDecodedPayload(CreateType.create(type, payload, metadata));
+      setDecodedPayload(metadata.createType(type, payload));
     } catch {
       errorCallback();
     }
   };
 
-  const setDecodingError = () => {
-    setError("Can't decode payload");
-  };
-
-  const handleInitPayloadDecoding = () => {
-    handlePayloadDecoding('init_output', setDecodingError);
-  };
-
-  const handleOutputPayloadDecoding = () => {
-    handlePayloadDecoding('handle_output', handleInitPayloadDecoding);
-  };
+  const handleInitPayloadDecoding = () => handlePayloadDecoding('init', () => setError("Can't decode payload"));
+  const handleOutputPayloadDecoding = () => handlePayloadDecoding('handle', handleInitPayloadDecoding);
 
   useEffect(() => {
     if (!isMetadataReady) return;
+    if (!metadata) return handleInitPayloadDecoding();
 
-    if (metadata) {
-      handleOutputPayloadDecoding();
-    } else {
-      handleInitPayloadDecoding();
-    }
+    handleOutputPayloadDecoding();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMetadataReady, metadata]);
 
-  const handleCheckboxChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
-    setIsDecodedPayload(checked);
-  };
+  const handleCheckboxChange = () => setIsDecodedPayload((prevValue) => !prevValue);
 
-  const getDecodedPayloadData = () => {
-    // is there a better way to get logData with replaced payload?
-    const { message, expiration } = formattedData as { message: {}; expiration: string };
+  const getDecodedPayloadData = () => ({
+    ...formattedData,
 
-    return { message: { ...message, payload: decodedPayload?.toHuman() }, expiration };
-  };
+    message: {
+      ...formattedData.message,
+      payload: decodedPayload?.toHuman(),
+    },
+  });
 
   return (
     <>
@@ -91,9 +79,11 @@ const Log = ({ data }: Props) => {
             onChange={handleCheckboxChange}
             disabled={isError}
           />
+
           {isError && <p className={styles.error}>{error}</p>}
         </div>
       )}
+
       <PreformattedBlock text={isDecodedPayload ? getDecodedPayloadData() : formattedData} />
     </>
   );

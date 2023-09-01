@@ -1,5 +1,5 @@
 import { FILTER_VALUES, LOCAL_STORAGE } from './consts';
-import { FilterValues } from './types';
+import { FilterValues, FormattedUserMessageSentData } from './types';
 
 export { FILTER_VALUES, LOCAL_STORAGE };
-export type { FilterValues };
+export type { FilterValues, FormattedUserMessageSentData };

@@ -1,3 +1,12 @@
+import { HexString } from '@gear-js/api';
+
 type FilterValues = { [filter: string]: boolean };
 
-export type { FilterValues };
+type FormattedUserMessageSentData = {
+  message: {
+    payload: HexString | string;
+  };
+  expiration: string | null;
+};
+
+export type { FilterValues, FormattedUserMessageSentData };
