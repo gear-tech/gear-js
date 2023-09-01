@@ -354,7 +354,7 @@ jobs:
 
       - name: "Prepare: Copy built programs"
         run: |
-          cp api/programs/target/wasm32-unknown-unknown/release/test_meta* idea/tests/wasm-test
+          cp api/programs/target/wasm32-unknown-unknown/release/* idea/tests/wasm-test
 
       - name: "Prepare: Download app.opt.wasm"
         working-directory: idea/tests/wasm-test
