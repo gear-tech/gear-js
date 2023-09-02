@@ -4,7 +4,7 @@ import { EventRecord } from '@polkadot/types/interfaces';
 import { useApi, useAlert, useAccount, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
 import { useModal } from 'hooks';
-import { Method } from 'entities/explorer';
+import { Method } from 'features/explorer';
 import { OperationCallbacks } from 'entities/hooks';
 import { checkWallet, getExtrinsicFailedMessage } from 'shared/helpers';
 import { PROGRAM_ERRORS, TransactionStatus, TransactionName } from 'shared/config';

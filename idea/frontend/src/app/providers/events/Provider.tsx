@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useApi, ProviderProps } from '@gear-js/react-hooks';
 
-import { EventRecords, IdeaEvent, Section } from 'entities/explorer';
+import { EventRecords, IdeaEvent, Section } from 'features/explorer';
 
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { EventsContext } from './Context';

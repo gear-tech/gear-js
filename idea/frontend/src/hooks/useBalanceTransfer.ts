@@ -2,7 +2,7 @@ import { AddressOrPair } from '@polkadot/api/types';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { useApi, useAlert } from '@gear-js/react-hooks';
 
-import { Method } from 'entities/explorer';
+import { Method } from 'features/explorer';
 import { getExtrinsicFailedMessage } from 'shared/helpers';
 import { web3FromSource } from '@polkadot/extension-dapp';
 

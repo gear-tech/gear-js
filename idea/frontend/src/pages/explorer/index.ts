@@ -1,5 +1,3 @@
-import { Explorer } from './ui/Explorer';
-import { Block } from './ui/block';
-import { Events } from './ui/events';
+import { Explorer } from './explorer';
 
-export { Explorer as Layout, Block, Events };
+export { Explorer };

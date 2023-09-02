@@ -2,8 +2,9 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 
 import { routes } from 'shared/config';
 import { useEvents } from 'hooks';
+import { Events, Block } from 'features/explorer';
 
-import { Program } from './program';
+import { Program } from './program/ui/Program';
 import { Programs } from './programs';
 import { Message } from './message';
 import { Messages } from './messages';
@@ -14,7 +15,7 @@ import { Codes } from './codes';
 import { InitializeProgram } from './initializeProgram';
 import { Mailbox } from './mailbox';
 import * as State from './state';
-import * as Explorer from './explorer';
+import { Explorer } from './explorer';
 import { Code } from './code';
 import { UploadCode } from './uploadCode';
 
@@ -52,9 +53,9 @@ const Routing = () => {
 
       <Route path={routes.mailbox} element={<Mailbox />} />
 
-      <Route path={routes.explorer} element={<Explorer.Layout />}>
-        <Route index element={<Explorer.Events events={events} />} />
-        <Route path={routes.block} element={<Explorer.Block />} />
+      <Route path={routes.explorer} element={<Explorer />}>
+        <Route index element={<Events events={events} />} />
+        <Route path={routes.block} element={<Block />} />
       </Route>
 
       <Route path={routes.code} element={<Code />} />
