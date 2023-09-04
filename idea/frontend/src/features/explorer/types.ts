@@ -29,10 +29,24 @@ type FormattedReplyMessageData = {
   prepaid: boolean;
 };
 
+type FormattedUploadProgramMessage = {
+  code: HexString;
+  salt: HexString;
+  initPayload: HexString;
+  gasLimit: string;
+  value: string;
+};
+
+type FormattedMessageQueued = {
+  data: { destination: HexString };
+};
+
 export type {
   FilterValues,
   FormattedUserMessageSentData,
   EventRecords,
   FormattedSendMessageData,
   FormattedReplyMessageData,
+  FormattedUploadProgramMessage,
+  FormattedMessageQueued,
 };

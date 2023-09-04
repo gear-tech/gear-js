@@ -3,6 +3,7 @@ import { DispatchInfo, Extrinsic as DotExtrinsic } from '@polkadot/types/interfa
 
 import commonStyles from 'pages/explorer/explorer.module.scss';
 
+import { FormattedMessageQueued } from '../../types';
 import { IdeaEvent } from '../../idea-event';
 import { Method, Section } from '../../consts';
 import { Extrinsic } from '../extrinsic';
@@ -46,10 +47,14 @@ const Row = ({ extrinsic, events }: Props) => {
   const rowClassName = clsx(commonStyles.row, styles.row);
   const signerClassName = clsx(commonStyles.alignRight, styles.signer);
 
+  // cuz gear.uploadProgram doesn't have any id to get metadata
+  const messageQueued = events?.find(({ method }) => method === Method.MessageQueued);
+  const formattedMessageQueued = messageQueued?.toHuman() as FormattedMessageQueued | undefined;
+
   return (
     <div className={rowClassName}>
       <div>
-        <Extrinsic extrinsic={extrinsic} />
+        <Extrinsic extrinsic={extrinsic} programId={formattedMessageQueued?.data.destination} />
       </div>
       <div>{getEvents()}</div>
       <span className={commonStyles.alignRight}>{formattedWeight && formattedWeight.refTime}</span>
