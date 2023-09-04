@@ -51,16 +51,20 @@ const Event = ({ value }: Props) => {
               <h3 className={styles.heading}>{heading}</h3>
               <ArrowSVG className={arrowClassName} />
             </header>
+
             <p className={styles.subheading}>{description}</p>
           </div>
+
           {counter && counter > 1 && <span className={styles.counter}>{`x${counter}`}</span>}
         </div>
+
         {blockId && (
           <Link to={generatePath(absoluteRoutes.block, { blockId })} className={styles.blockNumber}>
             {blockNumber}
           </Link>
         )}
       </header>
+
       {isOpen && <div className={styles.body}>{getBody()}</div>}
     </div>
   );

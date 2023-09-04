@@ -2,7 +2,11 @@ import { Extrinsic as DotExtrinsic } from '@polkadot/types/interfaces';
 import { AnyJson } from '@polkadot/types/types';
 
 import { PreformattedBlock } from 'shared/ui/preformattedBlock';
+
+import { FormattedSendMessageData } from 'features/explorer/types';
+import { Method } from '../../consts';
 import { ExpansionPanel } from '../expansion-panel';
+import { SendMessageBody } from '../send-message-body/send-message-body';
 
 type Props = {
   extrinsic: DotExtrinsic;
@@ -26,9 +30,19 @@ const Extrinsic = ({ extrinsic }: Props) => {
     return dataObject;
   }, {});
 
+  const getBody = () => {
+    switch (method) {
+      case Method.SendMessage:
+        return <SendMessageBody data={data as FormattedSendMessageData} />;
+
+      default:
+        return <PreformattedBlock text={data} />;
+    }
+  };
+
   return (
     <ExpansionPanel heading={heading} subheading={description}>
-      <PreformattedBlock text={data} />
+      {getBody()}
     </ExpansionPanel>
   );
 };

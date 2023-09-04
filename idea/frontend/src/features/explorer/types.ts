@@ -13,4 +13,12 @@ type FormattedUserMessageSentData = {
 
 type EventRecords = Vec<EventRecord>;
 
-export type { FilterValues, FormattedUserMessageSentData, EventRecords };
+type FormattedSendMessageData = {
+  destination: HexString;
+  payload: HexString | string;
+  gasLimit: string;
+  value: string;
+  prepaid: boolean;
+};
+
+export type { FilterValues, FormattedUserMessageSentData, EventRecords, FormattedSendMessageData };

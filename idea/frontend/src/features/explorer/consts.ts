@@ -15,6 +15,10 @@ enum Method {
   ExtrinsicFailed = 'ExtrinsicFailed',
   ExtrinsicSuccess = 'ExtrinsicSuccess',
   VoucherIssued = 'VoucherIssued',
+
+  // extrinsics
+  SendMessage = 'sendMessage',
+  ReplyMessage = 'replyMessage',
 }
 
 const FILTER_VALUES = {

@@ -28,6 +28,7 @@ const ExpansionPanel = ({ children, heading, subheading }: Props) => {
         </header>
         <p>{subheading}</p>
       </header>
+
       {isOpen && children}
     </div>
   );
