@@ -18,7 +18,7 @@ enum Method {
 
   // extrinsics
   SendMessage = 'sendMessage',
-  ReplyMessage = 'replyMessage',
+  SendReply = 'sendReply',
 }
 
 const FILTER_VALUES = {

@@ -3,10 +3,11 @@ import { AnyJson } from '@polkadot/types/types';
 
 import { PreformattedBlock } from 'shared/ui/preformattedBlock';
 
-import { FormattedSendMessageData } from 'features/explorer/types';
+import { FormattedReplyMessageData, FormattedSendMessageData } from '../../types';
 import { Method } from '../../consts';
 import { ExpansionPanel } from '../expansion-panel';
 import { SendMessageBody } from '../send-message-body/send-message-body';
+import { ReplyMessageBody } from '../reply-message-body';
 
 type Props = {
   extrinsic: DotExtrinsic;
@@ -34,6 +35,9 @@ const Extrinsic = ({ extrinsic }: Props) => {
     switch (method) {
       case Method.SendMessage:
         return <SendMessageBody data={data as FormattedSendMessageData} />;
+
+      case Method.SendReply:
+        return <ReplyMessageBody data={data as FormattedReplyMessageData} />;
 
       default:
         return <PreformattedBlock text={data} />;

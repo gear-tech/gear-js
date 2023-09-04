@@ -6,7 +6,7 @@ type FilterValues = { [filter: string]: boolean };
 
 type FormattedUserMessageSentData = {
   message: {
-    payload: HexString | string;
+    payload: string;
   };
   expiration: string | null;
 };
@@ -15,10 +15,24 @@ type EventRecords = Vec<EventRecord>;
 
 type FormattedSendMessageData = {
   destination: HexString;
-  payload: HexString | string;
+  payload: string;
   gasLimit: string;
   value: string;
   prepaid: boolean;
 };
 
-export type { FilterValues, FormattedUserMessageSentData, EventRecords, FormattedSendMessageData };
+type FormattedReplyMessageData = {
+  replyToId: HexString;
+  payload: string;
+  gasLimit: string;
+  value: string;
+  prepaid: boolean;
+};
+
+export type {
+  FilterValues,
+  FormattedUserMessageSentData,
+  EventRecords,
+  FormattedSendMessageData,
+  FormattedReplyMessageData,
+};
