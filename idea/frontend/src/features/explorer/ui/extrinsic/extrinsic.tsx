@@ -7,7 +7,7 @@ import { PreformattedBlock } from 'shared/ui/preformattedBlock';
 import { FormattedReplyMessageData, FormattedSendMessageData, FormattedUploadProgramMessage } from '../../types';
 import { Method } from '../../consts';
 import { ExpansionPanel } from '../expansion-panel';
-import { SendMessageBody } from '../send-message-body/send-message-body';
+import { SendMessageBody } from '../send-message-body';
 import { ReplyMessageBody } from '../reply-message-body';
 import { UploadProgramBody } from '../upload-program-body';
 
@@ -43,6 +43,7 @@ const Extrinsic = ({ extrinsic, programId }: Props) => {
         return <ReplyMessageBody data={data as FormattedReplyMessageData} />;
 
       case Method.UploadProgram:
+      case Method.CreateProgram:
         return <UploadProgramBody data={data as FormattedUploadProgramMessage} programId={programId} />;
 
       default:

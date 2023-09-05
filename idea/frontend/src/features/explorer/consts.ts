@@ -20,6 +20,7 @@ enum Method {
   SendMessage = 'sendMessage',
   SendReply = 'sendReply',
   UploadProgram = 'uploadProgram',
+  CreateProgram = 'createProgram',
 }
 
 const FILTER_VALUES = {
