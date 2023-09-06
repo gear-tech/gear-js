@@ -1,5 +1,5 @@
 import { Checkbox } from '@gear-js/ui';
-import { Codec, AnyJson } from '@polkadot/types/types';
+import { Codec } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 import { isHex } from '@polkadot/util';
 import { useEffect, useState } from 'react';
@@ -9,30 +9,39 @@ import { useMetadata } from 'features/metadata';
 import { useProgram } from 'hooks';
 import { isNullOrUndefined } from 'shared/helpers';
 
+import {
+  FormattedUserMessageSentData,
+  FormattedSendMessageData,
+  FormattedSendReplyData,
+  FormattedUploadProgramData,
+  FormattedCreateProgramData,
+} from '../../types';
 import { Method } from '../../consts';
 import styles from './decoded-preformatted-block.module.scss';
 
-type Props = {
-  programId: HexString | undefined;
-  data: { [key: string]: AnyJson };
-  method: Method;
-};
+type ProgramIdProps = { programId: HexString | undefined };
+
+type UserMessageSentProps = { data: FormattedUserMessageSentData; method: Method.UserMessageSent };
+type SendMessageProps = { data: FormattedSendMessageData; method: Method.SendMessage };
+type SendReplyProps = { data: FormattedSendReplyData; method: Method.SendReply };
+type UploadProgramProps = { data: FormattedUploadProgramData; method: Method.UploadProgram };
+type CreateProgramProps = { data: FormattedCreateProgramData; method: Method.CreateProgram };
+
+type Props = ProgramIdProps &
+  (UserMessageSentProps | SendMessageProps | SendReplyProps | UploadProgramProps | CreateProgramProps);
 
 const DecodedPreformattedBlock = ({ programId, data, method }: Props) => {
   const getPayload = () => {
     switch (method) {
       case Method.UserMessageSent:
-        // @ts-ignore
         return data.message.payload;
 
       case Method.SendMessage:
       case Method.SendReply:
-        // @ts-ignore
         return data.payload;
 
       case Method.UploadProgram:
       case Method.CreateProgram:
-        // @ts-ignorex
         return data.initPayload;
 
       default:
@@ -42,11 +51,11 @@ const DecodedPreformattedBlock = ({ programId, data, method }: Props) => {
   const payload = getPayload();
   const isFormattedPayloadHex = isHex(payload);
 
-  const [error, setError] = useState('');
-  const isError = !!error;
-
   const [decodedPayload, setDecodedPayload] = useState<Codec>();
   const [isDecodedPayload, setIsDecodedPayload] = useState(false);
+
+  const [error, setError] = useState('');
+  const isError = !!error;
 
   const { program } = useProgram(isFormattedPayloadHex ? programId : undefined);
   const { metadata } = useMetadata(program?.metahash);
@@ -98,12 +107,12 @@ const DecodedPreformattedBlock = ({ programId, data, method }: Props) => {
     }
   };
 
-  const fallbackPayloadDecode = () => decodePayload(getFallbackType(), () => setError("Can't decode payload"));
+  const fallbackDecodePayload = () => decodePayload(getFallbackType(), () => setError("Can't decode payload"));
 
   useEffect(() => {
     if (!metadata) return;
 
-    decodePayload(getType(), fallbackPayloadDecode);
+    decodePayload(getType(), fallbackDecodePayload);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metadata]);
 
@@ -114,12 +123,7 @@ const DecodedPreformattedBlock = ({ programId, data, method }: Props) => {
 
     switch (method) {
       case Method.UserMessageSent:
-        return {
-          ...data,
-
-          // @ts-ignore
-          message: { ...data.message, payload: formattedDecodedPayload },
-        };
+        return { ...data, message: { ...data.message, payload: formattedDecodedPayload } };
 
       case Method.SendMessage:
       case Method.SendReply:

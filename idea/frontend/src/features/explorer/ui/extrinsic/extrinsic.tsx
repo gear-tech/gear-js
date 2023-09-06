@@ -4,7 +4,12 @@ import { HexString } from '@polkadot/util/types';
 
 import { PreformattedBlock } from 'shared/ui/preformattedBlock';
 
-import { FormattedReplyMessageData, FormattedSendMessageData, FormattedUploadProgramMessage } from '../../types';
+import {
+  FormattedSendReplyData,
+  FormattedSendMessageData,
+  FormattedUploadProgramData,
+  FormattedCreateProgramData,
+} from '../../types';
 import { Method } from '../../consts';
 import { ExpansionPanel } from '../expansion-panel';
 import { DecodedPreformattedBlock } from '../decoded-preformatted-block';
@@ -47,7 +52,7 @@ const Extrinsic = ({ extrinsic, programId }: Props) => {
         return (
           <DecodedPreformattedBlock
             programId={programId}
-            data={data as FormattedReplyMessageData}
+            data={data as FormattedSendReplyData}
             method={Method.SendReply}
           />
         );
@@ -56,7 +61,7 @@ const Extrinsic = ({ extrinsic, programId }: Props) => {
         return (
           <DecodedPreformattedBlock
             programId={programId}
-            data={data as FormattedUploadProgramMessage}
+            data={data as FormattedUploadProgramData}
             method={Method.UploadProgram}
           />
         );
@@ -65,7 +70,7 @@ const Extrinsic = ({ extrinsic, programId }: Props) => {
         return (
           <DecodedPreformattedBlock
             programId={programId}
-            data={data as FormattedUploadProgramMessage}
+            data={data as FormattedCreateProgramData}
             method={Method.CreateProgram}
           />
         );

@@ -12,42 +12,29 @@ type FormattedUserMessageSentData = {
   expiration: string | null;
 };
 
+type FormattedMessageQueuedData = {
+  data: {
+    destination: HexString;
+  };
+};
+
+type FormattedSendData = { payload: string; gasLimit: string; value: string; prepaid: boolean };
+type FormattedSendMessageData = FormattedSendData & { destination: HexString };
+type FormattedSendReplyData = FormattedSendData & { replyToId: HexString };
+
+type FormattedProgramData = { salt: HexString; initPayload: HexString; gasLimit: string; value: string };
+type FormattedUploadProgramData = FormattedProgramData & { code: HexString };
+type FormattedCreateProgramData = FormattedProgramData & { codeId: HexString };
+
 type EventRecords = Vec<EventRecord>;
-
-type FormattedSendMessageData = {
-  destination: HexString;
-  payload: string;
-  gasLimit: string;
-  value: string;
-  prepaid: boolean;
-};
-
-type FormattedReplyMessageData = {
-  replyToId: HexString;
-  payload: string;
-  gasLimit: string;
-  value: string;
-  prepaid: boolean;
-};
-
-type FormattedUploadProgramMessage = {
-  code: HexString;
-  salt: HexString;
-  initPayload: HexString;
-  gasLimit: string;
-  value: string;
-};
-
-type FormattedMessageQueued = {
-  data: { destination: HexString };
-};
 
 export type {
   FilterValues,
   FormattedUserMessageSentData,
-  EventRecords,
+  FormattedMessageQueuedData,
   FormattedSendMessageData,
-  FormattedReplyMessageData,
-  FormattedUploadProgramMessage,
-  FormattedMessageQueued,
+  FormattedSendReplyData,
+  FormattedUploadProgramData,
+  FormattedCreateProgramData,
+  EventRecords,
 };
