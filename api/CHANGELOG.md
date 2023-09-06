@@ -1,3 +1,11 @@
+## 0.33.1
+
+_09/06/2023_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1375
+- Fix `readStateUsingWasm`
+
 ## 0.33.0
 
 _08/29/2023_
