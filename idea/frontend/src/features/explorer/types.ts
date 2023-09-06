@@ -7,6 +7,7 @@ type FilterValues = { [filter: string]: boolean };
 type FormattedUserMessageSentData = {
   message: {
     payload: string;
+    source: HexString;
   };
   expiration: string | null;
 };

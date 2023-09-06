@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { UserMessageSentData } from '@gear-js/api';
 import { useState } from 'react';
 import { generatePath, Link } from 'react-router-dom';
 import clsx from 'clsx';
@@ -11,7 +10,8 @@ import { absoluteRoutes } from 'shared/config';
 
 import { IdeaEvent } from '../../idea-event';
 import { Method } from '../../consts';
-import { Log } from '../log';
+import { FormattedUserMessageSentData } from '../../types';
+import { DecodedLogBlock } from '../decoded-log-block';
 import styles from './event.module.scss';
 
 type Props = {
@@ -35,8 +35,15 @@ const Event = ({ value }: Props) => {
 
   const isLog = method === Method.UserMessageSent;
 
-  const getContent = ({ id, data }: IdeaEvent = event) =>
-    isLog ? <Log key={id} data={data as UserMessageSentData} /> : <PreformattedBlock key={id} text={data.toHuman()} />;
+  const getContent = ({ id, data }: IdeaEvent = event) => {
+    const formattedData = data.toHuman();
+
+    return isLog ? (
+      <DecodedLogBlock key={id} data={formattedData as FormattedUserMessageSentData} />
+    ) : (
+      <PreformattedBlock key={id} text={formattedData} />
+    );
+  };
 
   const getBody = () => (isGroup ? value.map(getContent) : getContent());
 

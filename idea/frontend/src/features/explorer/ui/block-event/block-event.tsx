@@ -1,11 +1,10 @@
-import { UserMessageSentData } from '@gear-js/api';
-
 import { PreformattedBlock } from 'shared/ui/preformattedBlock';
 
+import { FormattedUserMessageSentData } from '../../types';
 import { IdeaEvent } from '../../idea-event';
 import { Method } from '../../consts';
 import { ExpansionPanel } from '../expansion-panel';
-import { Log } from '../log';
+import { DecodedLogBlock } from '../decoded-log-block';
 
 type Props = {
   value: IdeaEvent | IdeaEvent[];
@@ -21,8 +20,15 @@ const BlockEvent = ({ value }: Props) => {
 
   const isLog = method === Method.UserMessageSent;
 
-  const getContent = ({ id, data }: IdeaEvent = event) =>
-    isLog ? <Log key={id} data={data as UserMessageSentData} /> : <PreformattedBlock key={id} text={data.toHuman()} />;
+  const getContent = ({ id, data }: IdeaEvent = event) => {
+    const formattedData = data.toHuman();
+
+    return isLog ? (
+      <DecodedLogBlock key={id} data={formattedData as FormattedUserMessageSentData} />
+    ) : (
+      <PreformattedBlock key={id} text={formattedData} />
+    );
+  };
 
   const getBody = () => (isGroup ? value.map(getContent) : getContent());
 

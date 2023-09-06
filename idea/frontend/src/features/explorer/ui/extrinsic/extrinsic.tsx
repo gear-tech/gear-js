@@ -7,9 +7,7 @@ import { PreformattedBlock } from 'shared/ui/preformattedBlock';
 import { FormattedReplyMessageData, FormattedSendMessageData, FormattedUploadProgramMessage } from '../../types';
 import { Method } from '../../consts';
 import { ExpansionPanel } from '../expansion-panel';
-import { SendMessageBody } from '../send-message-body';
-import { ReplyMessageBody } from '../reply-message-body';
-import { UploadProgramBody } from '../upload-program-body';
+import { DecodedPreformattedBlock } from '../decoded-preformatted-block';
 
 type Props = {
   extrinsic: DotExtrinsic;
@@ -37,14 +35,40 @@ const Extrinsic = ({ extrinsic, programId }: Props) => {
   const getBody = () => {
     switch (method) {
       case Method.SendMessage:
-        return <SendMessageBody data={data as FormattedSendMessageData} />;
+        return (
+          <DecodedPreformattedBlock
+            programId={programId}
+            data={data as FormattedSendMessageData}
+            method={Method.SendMessage}
+          />
+        );
 
       case Method.SendReply:
-        return <ReplyMessageBody data={data as FormattedReplyMessageData} />;
+        return (
+          <DecodedPreformattedBlock
+            programId={programId}
+            data={data as FormattedReplyMessageData}
+            method={Method.SendReply}
+          />
+        );
 
       case Method.UploadProgram:
+        return (
+          <DecodedPreformattedBlock
+            programId={programId}
+            data={data as FormattedUploadProgramMessage}
+            method={Method.UploadProgram}
+          />
+        );
+
       case Method.CreateProgram:
-        return <UploadProgramBody data={data as FormattedUploadProgramMessage} programId={programId} />;
+        return (
+          <DecodedPreformattedBlock
+            programId={programId}
+            data={data as FormattedUploadProgramMessage}
+            method={Method.CreateProgram}
+          />
+        );
 
       default:
         return <PreformattedBlock text={data} />;
