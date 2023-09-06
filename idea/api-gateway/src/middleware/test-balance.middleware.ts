@@ -7,7 +7,7 @@ import { getResponse } from '../utils';
 
 const SECRET = config.server.captchaSecret;
 
-async function verifyCaptcha(token: string) {
+async function verifyCaptcha(token: string): Promise<boolean> {
   if (!token) {
     return false;
   }
@@ -15,15 +15,10 @@ async function verifyCaptcha(token: string) {
     return true;
   }
   const verfied = await verify(SECRET, token);
-  if (verfied.success) {
-    return true;
-  }
-  return false;
+  return verfied.success;
 }
 
-export async function captchaMiddleware(req: Request, res: Response, next: NextFunction) {
-  const body: IRpcRequest = req.body;
-
+export async function captchaMiddleware({ body }: Request<any, any, IRpcRequest>, res: Response, next: NextFunction) {
   if (Array.isArray(body)) {
     for (const request of body) {
       if (body.method === TEST_BALANCE_METHODS.TEST_BALANCE_GET && !(await verifyCaptcha(request.params['token']))) {

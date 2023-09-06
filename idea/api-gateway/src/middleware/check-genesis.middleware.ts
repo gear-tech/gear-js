@@ -5,9 +5,11 @@ import { getResponse } from '../utils';
 
 const metaStorageMethods: string[] = Object.values(META_STORAGE_METHODS);
 
-export async function checkGenesisMiddleware(req: Request, res: Response, next: NextFunction) {
-  const body: IRpcRequest = req.body;
-
+export async function checkGenesisMiddleware(
+  { body }: Request<any, any, IRpcRequest>,
+  res: Response,
+  next: NextFunction,
+) {
   if (Array.isArray(body)) {
     const isExistGenesis = body.every((value) => metaStorageMethods.includes(body.method) || value.params.genesis);
 
