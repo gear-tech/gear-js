@@ -131,7 +131,6 @@ export class RMQService {
 
           const { method } = msg.properties.headers;
           const params = JSON.parse(msg.content.toString());
-          logger.info('Message from meta-storage', { method, params });
           await this.handleIncomingMsg(method, params);
         },
         { noAck: true },

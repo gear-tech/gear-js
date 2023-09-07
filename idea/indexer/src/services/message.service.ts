@@ -59,13 +59,18 @@ export class MessageService {
       where.push({ genesis, readReason, expiration, timestamp: datesFilter });
     }
 
-    const [messages, count] = await this.repo.findAndCount({
-      where,
-      take: limit || PAGINATION_LIMIT,
-      skip: offset || 0,
-      relations: ['program'],
-      order: { timestamp: 'DESC', type: 'DESC' },
-    });
+    const [messages, count] = await Promise.all([
+      this.repo.find({
+        where,
+        take: limit || PAGINATION_LIMIT,
+        skip: offset || 0,
+        relations: ['program'],
+        select: { program: { id: true, name: true } },
+        order: { timestamp: 'DESC', type: 'DESC' },
+      }),
+      this.repo.count({ where: { genesis } }),
+    ]);
+
     return {
       messages,
       count,

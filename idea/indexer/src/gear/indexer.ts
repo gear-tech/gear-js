@@ -59,20 +59,20 @@ export class GearIndexer {
   }
 
   public async run(api: GearApi, onlyBlocks?: number[]) {
-    this.api = api;
-    this.genesis = this.api.genesisHash.toHex();
-    this.newBlocks = [];
-    this.generatorLoop = true;
-    if (onlyBlocks) {
-      logger.info(`Processing blocks from ${onlyBlocks[0]} to ${onlyBlocks.at(-1)}`);
-      this.newBlocks = onlyBlocks;
-      await this.indexBlocks();
-    } else {
-      this.unsub = await this.api.derive.chain.subscribeFinalizedHeads(({ number }) => {
-        this.newBlocks.push(number.toNumber());
-      });
-      this.indexBlocks();
-    }
+    // this.api = api;
+    // this.genesis = this.api.genesisHash.toHex();
+    // this.newBlocks = [];
+    // this.generatorLoop = true;
+    // if (onlyBlocks) {
+    //   logger.info(`Processing blocks from ${onlyBlocks[0]} to ${onlyBlocks.at(-1)}`);
+    //   this.newBlocks = onlyBlocks;
+    //   await this.indexBlocks();
+    // } else {
+    //   this.unsub = await this.api.derive.chain.subscribeFinalizedHeads(({ number }) => {
+    //     this.newBlocks.push(number.toNumber());
+    //   });
+    //   this.indexBlocks();
+    // }
   }
 
   public stop() {
