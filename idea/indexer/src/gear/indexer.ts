@@ -686,8 +686,12 @@ export class GearIndexer {
   private async getProgram(id: HexString, blockHash: HexString, msgId: HexString): Promise<Program> {
     let program = await this.tempState.getProgram(id);
     if (!program) {
-      logger.error(`Unable to retrieve program by id ${id} for message ${msgId} encountered in block ${blockHash}`);
-      program = await this.indexBlockWithMissedProgram(id);
+      logger.error('Failed to retrieve program', { id, blockHash, msgId } );
+      try{
+        program = await this.indexBlockWithMissedProgram(id);
+      } catch(err){
+        logger.error('Failed to index block', { method: 'getProgram', blockHash, program: id, msg: msgId });    
+      } 
     }
     return program;
   }

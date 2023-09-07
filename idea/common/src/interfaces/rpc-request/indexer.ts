@@ -5,7 +5,7 @@ import { IPaginationParams } from '../pagination';
 import { IProgram } from '../program';
 import { IState } from '../state';
 
-export interface GetMessagesParams extends IGenesis, IPaginationParams, SearchParam, IDates {
+export interface GetMessagesParams extends IGenesis, IPaginationParams,  IDates {
   destination?: string;
   source?: string;
   mailbox?: boolean;
