@@ -14,7 +14,7 @@ import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { SignedBlockExtended } from '@polkadot/api-derive/types';
 import { EventNames, CodeStatus, logger } from '@gear-js/common';
 import { VoidFn } from '@polkadot/api/types';
-import { Option } from '@polkadot/types';
+import { Option, Vec, GenericCall } from '@polkadot/types';
 
 import {
   getExtrinsics,
@@ -29,6 +29,7 @@ import {
   CodeChangedInput,
   MessagesDispatchedDataInput,
   ProgramStatus,
+  getBatchExtrinsics,
 } from '../common';
 import { Block, Code, Message, Program } from '../database/entities';
 import { BlockService, CodeService, MessageService, ProgramService, StatusService } from '../services';
@@ -172,7 +173,7 @@ export class GearIndexer {
           blockHash,
           genesis: this.genesis,
           timestamp: new Date(timestamp),
-          type: MessageType.USER_MESS_SENT,
+          type: MessageType.MSG_SENT,
           program: await this.getProgram(data.source, blockHash, data.id),
         }),
       );
@@ -231,6 +232,234 @@ export class GearIndexer {
     await this.handleProgramExtrinsics(block, status, timestamp);
 
     await this.handleMessageExtrinsics(block, status, timestamp);
+
+    await this.handleBatchExtrinsics(block, status, timestamp);
+  }
+
+  private async handleBatchExtrinsics(block: SignedBlockExtended, status: ExtrinsicStatus, timestamp: number) {
+    const extrinsics = getBatchExtrinsics(block);
+
+    if (extrinsics.length === 0) {
+      return;
+    }
+
+    let msgIndex = 0;
+    const blockHash = block.block.header.hash.toHex();
+    const ts = new Date(timestamp);
+    for (const tx of extrinsics) {
+      const txEvents = filterEvents(tx.hash, block, block.events, status).events;
+      const mqEvents = txEvents.filter(({ event: { method } }) => method.toLowerCase() === 'messagequeued');
+      const ccEvents = txEvents.filter(
+        ({ event: { method } }) => method.toLowerCase() === 'codechanged',
+      ) as unknown as { event: CodeChanged }[];
+
+      for (const arg of tx.args) {
+        for (const call of arg as Vec<GenericCall>) {
+          switch (call.method.toLowerCase()) {
+            case 'sendmessage': {
+              const event = mqEvents[msgIndex].event as MessageQueued;
+              const msgId = event.data.id.toHex();
+              const destination = event.data.destination.toHex();
+              const source = event.data.source.toHex();
+              const payload = call.args[1].toHex();
+              const value = call.args[3].toString();
+              const program = await this.getProgram(destination, blockHash, msgId);
+              this.tempState.addMsg(
+                new Message({
+                  id: msgId,
+                  blockHash,
+                  genesis: this.genesis,
+                  timestamp: ts,
+                  destination,
+                  source,
+                  payload,
+                  value,
+                  program,
+                  type: MessageType.QUEUED,
+                  entry: MessageEntryPoint.HANDLE,
+                }),
+              );
+              msgIndex++;
+              break;
+            }
+            case 'sendreply': {
+              const event = mqEvents[msgIndex].event as MessageQueued;
+              const msgId = event.data.id.toHex();
+              const destination = event.data.destination.toHex();
+              const source = event.data.source.toHex();
+              const payload = call.args[1].toHex();
+              const value = call.args[3].toString();
+              const program = await this.getProgram(destination, blockHash, msgId);
+              this.tempState.addMsg(
+                new Message({
+                  id: msgId,
+                  blockHash,
+                  genesis: this.genesis,
+                  timestamp: ts,
+                  destination,
+                  source,
+                  payload,
+                  value,
+                  program,
+                  type: MessageType.QUEUED,
+                  entry: MessageEntryPoint.REPLY,
+                }),
+              );
+              msgIndex++;
+              break;
+            }
+            case 'uploadprogram': {
+              const {
+                data: { id, destination, source },
+              } = mqEvents[msgIndex].event as MessageQueued;
+              const msgId = id.toHex();
+              const programId = destination.toHex();
+              const src = source.toHex();
+              const codeId = generateCodeHash(call.args[0].toHex());
+              const metahash = await getMetahash(this.api.code, codeId);
+
+              const event = ccEvents.find(
+                ({
+                  event: {
+                    data: { id },
+                  },
+                }) => id.toHex() === codeId,
+              );
+
+              if (event) {
+                const {
+                  data: { change },
+                } = event.event;
+                const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
+                const expiration = change.isActive ? change.asActive.expiration.toString() : null;
+
+                this.tempState.addCode(
+                  new Code({
+                    id: codeId,
+                    name: codeId,
+                    genesis: this.genesis,
+                    status: codeStatus,
+                    timestamp: new Date(timestamp),
+                    blockHash: block.block.header.hash.toHex(),
+                    expiration,
+                    uploadedBy: tx.signer.inner.toHex(),
+                    metahash,
+                  }),
+                );
+              }
+              const code = await this.getCode(codeId, blockHash, programId);
+
+              this.tempState.addProgram(
+                new Program({
+                  id: programId,
+                  name: programId,
+                  owner: src,
+                  blockHash,
+                  timestamp: ts,
+                  code,
+                  genesis: this.genesis,
+                  metahash,
+                  status: ProgramStatus.PROGRAM_SET,
+                  hasState: code.hasState,
+                }),
+              );
+              this.tempState.addMsg(
+                new Message({
+                  id: msgId,
+                  blockHash,
+                  genesis: this.genesis,
+                  timestamp: ts,
+                  destination: programId,
+                  source: src,
+                  payload: call.args[2].toHex(),
+                  value: call.args[4].toString(),
+                  program: await this.getProgram(programId, blockHash, msgId),
+                  type: MessageType.QUEUED,
+                  entry: MessageEntryPoint.INIT,
+                }),
+              );
+              msgIndex++;
+              break;
+            }
+            case 'createprogram': {
+              const event = mqEvents[msgIndex].event as MessageQueued;
+              const msgId = event.data.id.toHex();
+              const programId = event.data.destination.toHex();
+              const source = event.data.source.toHex();
+              const codeId = call.args[0].toHex();
+              const code = await this.getCode(codeId, blockHash, programId);
+              this.tempState.addProgram(
+                new Program({
+                  id: programId,
+                  name: programId,
+                  owner: source,
+                  blockHash,
+                  timestamp: ts,
+                  code,
+                  genesis: this.genesis,
+                  metahash: await this.getMeta(programId, code),
+                  status: ProgramStatus.PROGRAM_SET,
+                  hasState: code.hasState,
+                }),
+              );
+              this.tempState.addMsg(
+                new Message({
+                  id: msgId,
+                  blockHash,
+                  genesis: this.genesis,
+                  timestamp: ts,
+                  destination: programId,
+                  source,
+                  payload: call.args[2].toHex(),
+                  value: call.args[4].toString(),
+                  program: await this.getProgram(programId, blockHash, msgId),
+                  type: MessageType.QUEUED,
+                  entry: MessageEntryPoint.INIT,
+                }),
+              );
+              msgIndex++;
+              break;
+            }
+            case 'uploadcode': {
+              const codeId = generateCodeHash(call.args[0].toHex());
+              const event = ccEvents.find(
+                ({
+                  event: {
+                    data: { id },
+                  },
+                }) => id.toHex() === codeId,
+              );
+              if (!event) {
+                continue;
+              }
+              const {
+                data: { change },
+              } = event.event;
+              const metahash = await getMetahash(this.api.code, codeId);
+              const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
+
+              this.tempState.addCode(
+                new Code({
+                  id: codeId,
+                  name: codeId,
+                  genesis: this.genesis,
+                  status: codeStatus,
+                  timestamp: new Date(timestamp),
+                  blockHash: block.block.header.hash.toHex(),
+                  expiration: change.isActive ? change.asActive.expiration.toString() : null,
+                  uploadedBy: tx.signer.inner.toHex(),
+                  metahash,
+                }),
+              );
+              break;
+            }
+            default: {
+              continue;
+            }
+          }
+        }
+      }
+    }
   }
 
   private async handleCodeExtrinsics(
@@ -368,7 +597,7 @@ export class GearIndexer {
           payload,
           value,
           program,
-          type: MessageType.ENQUEUED,
+          type: MessageType.QUEUED,
           entry: messageEntry,
         }),
       );
@@ -463,8 +692,12 @@ export class GearIndexer {
   private async getProgram(id: HexString, blockHash: HexString, msgId: HexString): Promise<Program> {
     let program = await this.tempState.getProgram(id);
     if (!program) {
-      logger.error(`Unable to retrieve program by id ${id} for message ${msgId} encountered in block ${blockHash}`);
-      program = await this.indexBlockWithMissedProgram(id);
+      logger.error('Failed to retrieve program', { id, blockHash, msgId });
+      try {
+        program = await this.indexBlockWithMissedProgram(id);
+      } catch (err) {
+        logger.error('Failed to index block', { method: 'getProgram', blockHash, program: id, msg: msgId });
+      }
     }
     return program;
   }

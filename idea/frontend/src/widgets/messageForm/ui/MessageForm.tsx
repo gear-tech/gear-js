@@ -1,6 +1,6 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { Button, Input, Textarea } from '@gear-js/ui';
-import { useApi } from '@gear-js/react-hooks';
+import { useAccount, useApi } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 import BigNumber from 'bignumber.js';
 import { useMemo, useRef, useState } from 'react';
@@ -18,6 +18,7 @@ import { FormPayload, getPayloadFormValues, getSubmitPayload } from 'features/fo
 import { useBalanceMultiplier, useGasCalculate, useMessageActions } from 'hooks';
 import { Result } from 'hooks/useGasCalculate/types';
 import { FormPayloadType } from 'features/formPayloadType';
+import { IsPrepaidCheckbox } from 'features/voucher';
 
 import { getValidationSchema, resetPayloadValue } from '../helpers';
 import { FormValues, INITIAL_VALUES } from '../model';
@@ -25,13 +26,15 @@ import styles from './MessageForm.module.scss';
 
 type Props = {
   id: HexString;
+  programId: HexString | undefined;
   isReply: boolean;
   isLoading: boolean;
   metadata?: ProgramMetadata | undefined;
 };
 
-const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
+const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => {
   const { api } = useApi();
+  const { account } = useAccount();
 
   const calculateGas = useGasCalculate();
   const { sendMessage, replyMessage } = useMessageActions();
@@ -101,6 +104,8 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
       gasLimit: BigNumber(values.gasLimit)
         .multipliedBy(10 ** 9)
         .toFixed(),
+      prepaid: values.isPrepaid,
+      account: values.isPrepaid ? account?.decodedAddress : undefined,
     };
 
     if (isReply) {
@@ -158,10 +163,12 @@ const MessageForm = ({ id, isReply, metadata, isLoading }: Props) => {
 
               {!isLoading && !metadata && <FormPayloadType name="payloadType" label="Payload type" gap="1/5" />}
 
+              <IsPrepaidCheckbox programId={programId} />
+
               {isLoading ? (
                 <Input label="Value:" gap="1/5" className={styles.loading} readOnly />
               ) : (
-                <ValueField name="value" gap="1/5" />
+                <ValueField name="value" label="Value:" gap="1/5" />
               )}
 
               {isLoading ? (

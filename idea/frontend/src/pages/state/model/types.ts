@@ -6,10 +6,14 @@ type FormValues = {
   payload: PayloadValue;
 };
 
+type WasmFormValues = FormValues & {
+  argument: PayloadValue;
+};
+
 type IState = {
   id: string;
   name: string;
   functions: StateFunctions;
 };
 
-export type { FormValues, IState };
+export type { FormValues, WasmFormValues, IState };

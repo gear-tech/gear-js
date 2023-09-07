@@ -56,7 +56,7 @@ async fn main() {
             msg::send_with_gas(msg::source(), EmptyStruct { empty: () }, 10000000, 1000).unwrap()
         }
         Action::Four(_) => {
-            let response: String = msg::send_for_reply_as(msg::source(), (), 0, 0)
+            let response: String = msg::send_for_reply_as(msg::source(), "reply", 0, 0)
                 .expect("Unable to send msg for reply")
                 .await
                 .expect("Error in async");

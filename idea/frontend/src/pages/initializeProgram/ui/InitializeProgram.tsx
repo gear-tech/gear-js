@@ -1,6 +1,6 @@
 import { HexString } from '@polkadot/util/types';
 import { Button, Input } from '@gear-js/ui';
-import { getProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 import { useAlert, useApi } from '@gear-js/react-hooks';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -30,7 +30,7 @@ const InitializeProgram = () => {
 
   // TODO: think about combining w/ useMetaOnUpload hook
   const [metaHex, setMetaHex] = useState<HexString>();
-  const metadata = useMemo(() => (metaHex ? getProgramMetadata(metaHex) : undefined), [metaHex]);
+  const metadata = useMemo(() => (metaHex ? ProgramMetadata.from(metaHex) : undefined), [metaHex]);
 
   const [isMetaUploaded, setIsMetaUploaded] = useState(false);
   const [isUploadedMetaReady, setIsUploadedMetaReady] = useState(false);

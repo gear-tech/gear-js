@@ -4,7 +4,7 @@ import { AddMetaDetailsParams, AddMetahashParams, GetMetaParams } from '@gear-js
 import { Code, Meta, AppDataSource } from './database';
 import { InvalidParamsError, MetaNotFoundError } from './util/errors';
 import { validateMetaHex } from './util/validate';
-import { getProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata, MetadataVersion, HumanTypesRepr } from '@gear-js/api';
 
 export class MetaService {
   private metaRepo: Repository<Meta>;
@@ -55,9 +55,15 @@ export class MetaService {
 
     meta.hex = params.hex;
 
-    const metadata = getProgramMetadata(meta.hex);
-    if (metadata.types.state) {
-      meta.hasState = true;
+    const metadata = ProgramMetadata.from(meta.hex);
+    if (metadata.version === MetadataVersion.V1Rust) {
+      if (metadata.types.state != null) {
+        meta.hasState = true;
+      }
+    } else {
+      if ((metadata.types.state as HumanTypesRepr).output != null) {
+        meta.hasState = true;
+      }
     }
 
     await this.metaRepo.save(meta);

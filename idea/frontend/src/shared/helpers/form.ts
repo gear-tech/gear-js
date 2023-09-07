@@ -1,3 +1,4 @@
+import { decodeAddress } from '@gear-js/api';
 import { isHex } from '@polkadot/util';
 
 const isHexValid = (value: string) => (isHex(value) ? null : 'Value should be hex');
@@ -9,4 +10,14 @@ const isDecimal = (value: string) => {
   return decimalRegex.test(value);
 };
 
-export { isHexValid, isExists, isDecimal };
+// yup
+const isAccountAddressValid = (value = '') => {
+  try {
+    decodeAddress(value);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+export { isHexValid, isExists, isDecimal, isAccountAddressValid };

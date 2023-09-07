@@ -18,7 +18,7 @@ export class GearProgramState extends GearProgramStorage {
   ): Promise<Codec> {
     const fnTypes = stateMeta?.functions[params.fn_name];
     const stateType =
-      programMeta.version === MetadataVersion.V2Rust ? (programMeta.types.state as HumanTypesRepr).input : null;
+      programMeta.version === MetadataVersion.V2Rust ? (programMeta.types.state as HumanTypesRepr).input : undefined;
 
     const argument =
       fnTypes?.input !== undefined && fnTypes?.input !== null

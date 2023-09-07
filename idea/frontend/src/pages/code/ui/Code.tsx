@@ -1,6 +1,6 @@
 import { useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
-import { getProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { useEffect, useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
@@ -44,7 +44,7 @@ const Code = () => {
     addCodeName({ id, name })
       .then(() => addMetadata({ codeHash: id, hex: metaHex }))
       .then(() => {
-        setMetadata(getProgramMetadata(metaHex));
+        setMetadata(ProgramMetadata.from(metaHex));
         setCodeName(name);
 
         alert.success('Metadata for code uploaded successfully');

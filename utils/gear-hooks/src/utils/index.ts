@@ -1,5 +1,6 @@
-import { GasInfo } from '@gear-js/api';
+import { GasInfo, GearApi } from '@gear-js/api';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import { Event } from '@polkadot/types/interfaces';
 import { bnToBn } from '@polkadot/util';
 
 const isLoggedIn = ({ address }: InjectedAccountWithMeta) => localStorage.account === address;
@@ -9,4 +10,11 @@ const getAutoGasLimit = ({ waited, min_limit }: GasInfo) =>
 
 const withoutCommas = (value: string) => value.replace(/,/g, '');
 
-export { isLoggedIn, getAutoGasLimit, withoutCommas };
+const getExtrinsicFailedMessage = (api: GearApi, event: Event) => {
+  const { docs, method: errorMethod } = api.getExtrinsicFailedError(event);
+  const formattedDocs = docs.filter(Boolean).join('. ');
+
+  return `${errorMethod}: ${formattedDocs}`;
+};
+
+export { isLoggedIn, getAutoGasLimit, withoutCommas, getExtrinsicFailedMessage };

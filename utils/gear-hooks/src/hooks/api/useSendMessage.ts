@@ -3,10 +3,10 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { AnyJson, ISubmittableResult } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
-import { useContext, useRef } from 'react';
+import { useContext } from 'react';
 import { AccountContext, AlertContext, ApiContext } from 'context';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
-import { getAutoGasLimit } from 'utils';
+import { getAutoGasLimit, getExtrinsicFailedMessage } from 'utils';
 
 type UseSendMessageOptions = {
   isMaxGasLimit?: boolean;
@@ -34,13 +34,18 @@ function useSendMessage(
   const title = 'gear.sendMessage';
 
   const handleEventsStatus = (events: EventRecord[], onSuccess?: () => void, onError?: () => void) => {
-    events.forEach(({ event: { method, section } }) => {
+    events.forEach(({ event }) => {
+      const { method, section } = event;
+
       if (method === 'MessageQueued') {
         if (!disableAlerts) alert.success(`${section}.MessageQueued`);
 
         onSuccess && onSuccess();
       } else if (method === 'ExtrinsicFailed') {
-        alert.error('Extrinsic Failed', { title });
+        const message = getExtrinsicFailedMessage(api, event);
+
+        console.error(message);
+        alert.error(message, { title });
 
         onError && onError();
       }
@@ -84,11 +89,16 @@ function useSendMessage(
 
       getGasLimit
         .then((gasLimit) => ({ destination, gasLimit, payload, value }))
-        .then((message) => api.message.send(message, metadata) && web3FromSource(source))
+        .then((message) => api.message.send(message, metadata))
+        .then(() => web3FromSource(source))
         .then(({ signer }) =>
           api.message.signAndSend(address, { signer }, (result) => handleStatus(result, alertId, onSuccess, onError)),
         )
-        .catch(({ message }: Error) => {
+        .catch((error: Error) => {
+          const { message } = error;
+
+          console.error(error);
+
           if (alertId) {
             alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
           } else {

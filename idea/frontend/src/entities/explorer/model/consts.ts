@@ -14,6 +14,7 @@ enum Method {
   MessageWaken = 'MessageWaken',
   ExtrinsicFailed = 'ExtrinsicFailed',
   ExtrinsicSuccess = 'ExtrinsicSuccess',
+  VoucherIssued = 'VoucherIssued',
 }
 
 export { Section, Method };

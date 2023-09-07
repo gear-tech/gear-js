@@ -1,4 +1,4 @@
-import { generateCodeHash, getProgramMetadata, ProgramMetadata } from '@gear-js/api';
+import { generateCodeHash, ProgramMetadata } from '@gear-js/api';
 import { useAlert, useApi } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 import { useState, useEffect } from 'react';
@@ -51,9 +51,9 @@ const useMetaOnUpload = (isCode?: boolean) => {
   const [isCodeExists, setIsCodeExists] = useState<Boolean>();
 
   const setUploadedMetadata = (hex: HexString) =>
-    setMetadata({ hex, value: getProgramMetadata(hex), isUploaded: true });
+    setMetadata({ hex, value: ProgramMetadata.from(hex), isUploaded: true });
 
-  const setFileMetadata = (hex: HexString) => setMetadata({ hex, value: getProgramMetadata(hex), isUploaded: false });
+  const setFileMetadata = (hex: HexString) => setMetadata({ hex, value: ProgramMetadata.from(hex), isUploaded: false });
 
   const resetOptFile = () => setOptFile(undefined);
   const resetOptBuffer = () => setOptBuffer(undefined);

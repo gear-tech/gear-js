@@ -153,7 +153,8 @@ export class GearMetadata {
     }
 
     if (def.isComposite) {
-      let result: any = {};
+      const isTuple = def.asComposite.fields[0].name.isNone;
+      let result: any = isTuple ? [] : {};
       const name = this.getTypeName(typeIndex);
       if (name === 'ActorId') {
         return additionalFields ? { name, kind: 'actorid', type: 'actorid' } : name;
@@ -162,13 +163,14 @@ export class GearMetadata {
         if (name.isSome) {
           result[name.unwrap().toString()] = this.getTypeDef(type, additionalFields);
           continue;
-        }
-        if (def.asComposite.fields.length === 1) {
+        } else if (def.asComposite.fields.length === 1) {
           result = this.getTypeDef(type, additionalFields);
           return additionalFields ? { ...result, name: this.getTypeName(typeIndex) } : result;
+        } else {
+          result.push(this.getTypeDef(type, additionalFields));
         }
       }
-      return additionalFields ? { name, kind: 'composite', type: result } : result;
+      return additionalFields ? { name, kind: isTuple ? 'tuple' : 'composite', type: result } : result;
     }
 
     if (def.isVariant) {

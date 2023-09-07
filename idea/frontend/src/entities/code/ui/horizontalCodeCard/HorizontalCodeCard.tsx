@@ -5,11 +5,11 @@ import { absoluteRoutes, routes } from 'shared/config';
 import { IdBlock } from 'shared/ui/idBlock';
 import { ActionLink } from 'shared/ui/ActionLink';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
-import { ReactComponent as initializeProgramSVG } from 'shared/assets/images/actions/initializeProgram.svg';
-import { ReactComponent as relatedProgramsSVG } from 'shared/assets/images/actions/relatedPrograms.svg';
+import { ReactComponent as CreateProgramSVG } from 'shared/assets/images/actions/create-program.svg';
+import { ReactComponent as RelatedrelatedProgramsSVG } from 'shared/assets/images/actions/related-programs.svg';
 
-import styles from './HorizontalCodeCard.module.scss';
 import { ICode } from '../../model';
+import styles from './HorizontalCodeCard.module.scss';
 
 type Props = {
   code: ICode;
@@ -37,11 +37,16 @@ const HorizontalCodeCard = memo(({ code }: Props) => {
         {/* TODO: rename initialize to create */}
         <ActionLink
           to={generatePath(absoluteRoutes.initializeProgram, { codeId })}
-          icon={initializeProgramSVG}
+          icon={CreateProgramSVG}
           text="Create program"
-          className={styles.sendMessage}
         />
-        <ActionLink to={routes.programs} icon={relatedProgramsSVG} text="Related programs" state={{ query: codeId }} />
+
+        <ActionLink
+          to={routes.programs}
+          icon={RelatedrelatedProgramsSVG}
+          text="Related programs"
+          state={{ query: codeId }}
+        />
       </div>
     </article>
   );

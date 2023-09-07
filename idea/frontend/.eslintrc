@@ -43,7 +43,7 @@
 
     "react/jsx-props-no-spreading": [
       "error",
-      { "exceptions": ["Input", "FileInput", "Textarea", "Select", "NumberFormat", "Radio"] }
+      { "exceptions": ["Input", "FileInput", "Textarea", "Select", "NumberFormat", "Radio", "Checkbox"] }
     ] // disable for form elements, cuz @mantine/form input props needs to be desctructured
   }
 }
