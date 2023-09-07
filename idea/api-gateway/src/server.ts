@@ -111,14 +111,16 @@ export class Server {
   public async run() {
     this.redisClient.on('error', (err) => {
       logger.error('Redis Client Error', { error: err.message });
+      this.isRedisConnected = false;
     });
     this.redisClient.on('disconnected', (err) => {
       logger.warn('Redis disconnected', { error: err.message });
       this.isRedisConnected = false;
     });
-    await this.redisClient.connect();
-    this.isRedisConnected = true;
-    logger.info('Redis connected');
+    this.redisClient.connect().then(() => {
+      this.isRedisConnected = true;
+      logger.info('Redis connected');
+    });
     return this.app.listen(config.server.port, () => logger.info(`App successfully run on the ${config.server.port}`));
   }
 
