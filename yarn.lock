@@ -2268,6 +2268,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gear-js/api@npm:0.33.1":
+  version: 0.33.1
+  resolution: "@gear-js/api@npm:0.33.1"
+  peerDependencies:
+    "@polkadot/api": 10.9.1
+    "@polkadot/wasm-crypto": 7.2.1
+    rxjs: 7.8.1
+  checksum: 6de7f89e52c7a17ae0978dc9c30b9eac15a19df45193647ed3bbc2690b2f15daaf25ffcc9b3df9e0f1b57d000519461f44b2b60173b94251f5edcd2bfda104c7
+  languageName: node
+  linkType: hard
+
 "@gear-js/common@workspace:^, @gear-js/common@workspace:idea/common":
   version: 0.0.0-use.local
   resolution: "@gear-js/common@workspace:idea/common"
@@ -2283,8 +2294,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/frontend@workspace:idea/frontend"
   dependencies:
-    "@gear-js/api": 0.33.0
-    "@gear-js/react-hooks": 0.6.0
+    "@gear-js/api": 0.33.1
+    "@gear-js/react-hooks": 0.6.2
     "@gear-js/ui": 0.5.19
     "@hcaptcha/react-hcaptcha": ^1.4.4
     "@mantine/form": ^5.4.0
@@ -2388,16 +2399,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/react-hooks@npm:0.6.0":
-  version: 0.6.0
-  resolution: "@gear-js/react-hooks@npm:0.6.0"
+"@gear-js/react-hooks@npm:0.6.2":
+  version: 0.6.2
+  resolution: "@gear-js/react-hooks@npm:0.6.2"
   peerDependencies:
-    "@gear-js/api": 0.33.0
+    "@gear-js/api": 0.33.1
     "@polkadot/api": 10.9.1
     "@polkadot/extension-dapp": 0.46.5
     react: ^18.2.0
     react-transition-group: 4.4.5
-  checksum: cca03e1ddaa385a3a9f6a125fdf9f6942a1e3557794452a677fc386a8ba117ec320cecdce87cd96384429f6d7f369a74d6b851a26521d32cc121defef64e5f7c
+  checksum: ed78593b79fcc2bc3fea2dbdee567e0e7e06141cf2d67ea485b4543396454e96c855614024a502eaec15e47fced28f0b9542a57a84f3c0dc03478ace00e258ad
   languageName: node
   linkType: hard
 
