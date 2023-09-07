@@ -48,20 +48,19 @@ export class MessageService {
             ? LessThanOrEqual(new Date(toDate))
             : undefined;
 
+    const commonWhere = { genesis, readReason, expiration, timestamp: datesFilter };
     const where = [];
+
     if (destination) {
-      where.push({ genesis, destination, readReason, expiration, timestamp: datesFilter });
+      where.push({ destination, ...commonWhere });
     }
     if (source) {
-      where.push({ genesis, source, readReason, expiration, timestamp: datesFilter });
-    }
-    if (where.length === 0) {
-      where.push({ genesis, readReason, expiration, timestamp: datesFilter });
+      where.push({ source, ...commonWhere });
     }
 
     const [messages, count] = await Promise.all([
       this.repo.find({
-        where,
+        where: where.length > 0 ? where : commonWhere,
         take: limit || PAGINATION_LIMIT,
         skip: offset || 0,
         relations: ['program'],

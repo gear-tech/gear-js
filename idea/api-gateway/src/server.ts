@@ -137,7 +137,7 @@ export class Server {
     const { method, params } = procedure;
 
     if (METHODS_FOR_CACHE.includes(method)) {
-      const data = await this.redisClient.get(JSON.stringify(params));
+      const data = await this.redisClient.get(JSON.stringify({ method, params }));
       if (data) {
         const result = JSON.parse(data);
         return getResponse(procedure, null, result);
@@ -164,7 +164,7 @@ export class Server {
 
     if (result && METHODS_FOR_CACHE.includes(method)) {
       this.redisClient
-        .set(JSON.stringify(params), JSON.stringify(result), {
+        .set(JSON.stringify({ method, params }), JSON.stringify(result), {
           EX: METHODS_FOR_CACHE_WITH_EXPIRATIONS[method],
         })
         .catch((err) => {
