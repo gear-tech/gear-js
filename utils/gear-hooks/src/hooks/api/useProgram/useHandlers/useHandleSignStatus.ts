@@ -3,8 +3,8 @@ import { HexString } from '@polkadot/util/types';
 import { useContext } from 'react';
 import { DEFAULT_SUCCESS_OPTIONS, DEFAULT_ERROR_OPTIONS } from 'consts';
 import { AlertContext, ApiContext } from 'context';
+import { getExtrinsicFailedMessage } from 'utils';
 import { Callbacks, Method, HandleSignStatusParams, TransactionStatus, ProgramError } from '../types';
-import { getExtrinsicFailedMessage } from '../utils';
 
 function useHandleSignStatus() {
   const { api } = useContext(ApiContext); // сircular dependency fix

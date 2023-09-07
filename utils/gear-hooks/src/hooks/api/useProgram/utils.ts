@@ -1,14 +1,6 @@
 import { GearApi } from '@gear-js/api';
 import { UnsubscribePromise } from '@polkadot/api/types';
-import { Event } from '@polkadot/types/interfaces';
 import { ProgramStatus } from './types';
-
-const getExtrinsicFailedMessage = (api: GearApi, event: Event) => {
-  const { docs, method: errorMethod } = api.getExtrinsicFailedError(event);
-  const formattedDocs = docs.filter(Boolean).join('. ');
-
-  return `${errorMethod}: ${formattedDocs}`;
-};
 
 const waitForProgramInit = (api: GearApi, programId: string) => {
   let unsubPromise: UnsubscribePromise;
@@ -28,4 +20,4 @@ const waitForProgramInit = (api: GearApi, programId: string) => {
   }).finally(unsubscribe);
 };
 
-export { getExtrinsicFailedMessage, waitForProgramInit };
+export { waitForProgramInit };

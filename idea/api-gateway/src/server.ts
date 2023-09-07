@@ -89,7 +89,9 @@ export class Server {
       captchaMiddleware,
       async (req: Request, res: Response) => {
         try {
+          logger.debug('Request', { method: req.body.method, params: req.body.params });
           const result = await this.handleRequest(req.body);
+          logger.debug('Response', { result });
           res.json(result);
         } catch (error) {
           logger.error('Handle request error', { error, request: req.body });

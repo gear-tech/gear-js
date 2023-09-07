@@ -32,6 +32,7 @@ class RPCService {
       .post(this.url, {
         headers: { ...headers, 'Content-Type': 'application/json;charset=utf-8' },
         body: JSON.stringify(this.getRequest(method, postParams)),
+        timeout: 30000,
       })
       .json<RPCResponse<Result>>();
 

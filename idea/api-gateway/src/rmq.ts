@@ -193,8 +193,8 @@ export class RMQService {
       this.tbChannels.clear();
       this.indexerChannels.clear();
 
-      await this.sendMsgIndexerGenesises();
-      await this.sendMsgTBGenesises();
+      this.sendMsgIndexerGenesises();
+      this.sendMsgTBGenesises();
     });
 
     cron.start();

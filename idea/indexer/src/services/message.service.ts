@@ -1,4 +1,4 @@
-import { DataSource, Repository } from 'typeorm';
+import { Between, DataSource, LessThanOrEqual, MoreThan, MoreThanOrEqual, Repository } from 'typeorm';
 import {
   AllMessagesResult,
   FindMessageParams,
@@ -10,13 +10,7 @@ import {
 
 import { Message } from '../database';
 import { ProgramService } from './program.service';
-import {
-  MessagesDispatchedDataInput,
-  MessageEntryPoint,
-  MessageNotFound,
-  constructQueryBuilder,
-  PAGINATION_LIMIT,
-} from '../common';
+import { MessagesDispatchedDataInput, MessageEntryPoint, MessageNotFound, PAGINATION_LIMIT } from '../common';
 
 export class MessageService {
   private repo: Repository<Message>;
@@ -36,7 +30,6 @@ export class MessageService {
   public async getMany({
     genesis,
     source,
-    query,
     destination,
     limit,
     offset,
@@ -44,26 +37,35 @@ export class MessageService {
     fromDate,
     mailbox,
   }: GetMessagesParams): Promise<AllMessagesResult> {
-    const builder = constructQueryBuilder(
-      this.repo,
-      genesis,
-      {
-        source,
-        destination,
-        readReason: mailbox ? null : undefined,
-        expiration: mailbox ? { operator: '>', value: 0 } : undefined,
-      },
-      { fields: ['id', 'source', 'destination'], value: query },
-      { fromDate, toDate },
-      offset || 0,
-      limit || PAGINATION_LIMIT,
-      ['program'],
-      [
-        { column: 'timestamp', sort: 'DESC' },
-        { column: 'type', sort: 'ASC' },
-      ],
-    );
-    const [messages, count] = await builder.getManyAndCount();
+    const readReason = mailbox ? null : undefined;
+    const expiration = mailbox ? MoreThan(0) : undefined;
+    const datesFilter =
+      fromDate && toDate
+        ? Between(new Date(fromDate), new Date(toDate))
+        : fromDate
+          ? MoreThanOrEqual(new Date(fromDate))
+          : toDate
+            ? LessThanOrEqual(new Date(toDate))
+            : undefined;
+
+    const where = [];
+    if (destination) {
+      where.push({ genesis, destination, readReason, expiration, timestamp: datesFilter });
+    }
+    if (source) {
+      where.push({ genesis, source, readReason, expiration, timestamp: datesFilter });
+    }
+    if (where.length === 0) {
+      where.push({ genesis, readReason, expiration, timestamp: datesFilter });
+    }
+
+    const [messages, count] = await this.repo.findAndCount({
+      where,
+      take: limit || PAGINATION_LIMIT,
+      skip: offset || 0,
+      relations: ['program'],
+      order: { timestamp: 'DESC', type: 'DESC' },
+    });
     return {
       messages,
       count,
