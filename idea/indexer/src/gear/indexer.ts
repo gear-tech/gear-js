@@ -76,7 +76,9 @@ export class GearIndexer {
 
   public stop() {
     this.generatorLoop = false;
-    this.unsub();
+    if (this.unsub) {
+      this.unsub();
+    }
     this.api = null;
     this.newBlocks = [];
     this.lastBlockNumber = undefined;
@@ -431,7 +433,7 @@ export class GearIndexer {
 
       return this.tempState.getCode(codeId);
     }
-    logger.error(`Code with hash ${codeId} not found in storage`);
+    logger.error('Code not found in storage', { id: codeId });
     return null;
   }
 
@@ -446,7 +448,7 @@ export class GearIndexer {
       return this.tempState.getProgram(programId);
     }
 
-    logger.error(`Program with id ${programId} not found in storage`);
+    logger.error('Program not found in storage', { id: programId });
     return null;
   }
 
@@ -457,7 +459,7 @@ export class GearIndexer {
   private async getProgram(id: HexString, blockHash: HexString, msgId: HexString): Promise<Program> {
     let program = await this.tempState.getProgram(id);
     if (!program) {
-      logger.error(`Unable to retrieve program by id ${id} for message ${msgId} encountered in block ${blockHash}`);
+      logger.error('Unable to retrieve program', { id, msgId, blockHash });
       program = await this.indexBlockWithMissedProgram(id);
     }
     return program;
@@ -466,7 +468,7 @@ export class GearIndexer {
   private async getCode(id: HexString, blockHash: HexString, programId: HexString): Promise<Code> {
     let code = await this.tempState.getCode(id);
     if (!code) {
-      logger.error(`Unable to retrieve code by id ${id} of program ${programId} encountered in block ${blockHash}`);
+      logger.error('Unable to retrieve code', { id, programId, blockHash });
       code = await this.indexBlockWithMissedCode(id);
     }
     return code;
@@ -476,8 +478,7 @@ export class GearIndexer {
     if (code?.metahash) {
       return code.metahash;
     } else {
-      const metahash = await getMetahash(this.api.program, programId);
-      return metahash;
+      return getMetahash(this.api.program, programId);
     }
   }
 }
