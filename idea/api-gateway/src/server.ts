@@ -110,7 +110,7 @@ export class Server {
 
   public async run() {
     this.redisClient.on('error', (err) => {
-      console.error('Redis Client Error', { error: err.message });
+      logger.error('Redis Client Error', { error: err.message });
     });
     this.redisClient.on('disconnected', (err) => {
       logger.warn('Redis disconnected', { error: err.message });
@@ -136,7 +136,7 @@ export class Server {
   private async executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
     const { method, params } = procedure;
 
-    if (METHODS_FOR_CACHE.includes(method)) {
+    if (this.isRedisConnected && METHODS_FOR_CACHE.includes(method)) {
       const data = await this.redisClient.get(JSON.stringify({ method, params }));
       if (data) {
         const result = JSON.parse(data);
@@ -162,7 +162,7 @@ export class Server {
 
     const { error, result } = await this.jsonRpcHandler(method, params);
 
-    if (result && METHODS_FOR_CACHE.includes(method)) {
+    if (this.isRedisConnected && result && METHODS_FOR_CACHE.includes(method)) {
       this.redisClient
         .set(JSON.stringify({ method, params }), JSON.stringify(result), {
           EX: METHODS_FOR_CACHE_WITH_EXPIRATIONS[method],
