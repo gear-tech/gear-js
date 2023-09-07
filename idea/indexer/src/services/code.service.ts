@@ -2,7 +2,7 @@ import { AddCodeNameParams, CodeStatus, GetAllCodeParams, GetAllCodeResult, GetC
 import { DataSource, Repository } from 'typeorm';
 
 import { Code } from '../database/entities';
-import { CodeNotFound, constructQueryBuilder, PAGINATION_LIMIT } from '../common';
+import { CodeNotFound, getDatesFilter, PAGINATION_LIMIT } from '../common';
 
 export class CodeService {
   private repo: Repository<Code>;
@@ -15,22 +15,34 @@ export class CodeService {
     return this.repo.save(codes);
   }
 
-  public async getMany(params: GetAllCodeParams): Promise<GetAllCodeResult> {
-    const { genesis, query, limit, offset, name, toDate, fromDate, uploadedBy } = params;
+  public async getMany({
+    genesis,
+    query,
+    limit,
+    offset,
+    name,
+    toDate,
+    fromDate,
+    uploadedBy,
+  }: GetAllCodeParams): Promise<GetAllCodeResult> {
+    const commonWhere = { genesis, uploadedBy, name, timestamp: getDatesFilter(fromDate, toDate) };
+    const where = [];
 
-    const builder = constructQueryBuilder(
-      this.repo,
-      genesis,
-      { uploadedBy, name },
-      { fields: ['id', 'name'], value: query },
-      { fromDate, toDate },
-      offset || 0,
-      limit || PAGINATION_LIMIT,
-      [],
-      { column: 'timestamp', sort: 'DESC' },
-    );
+    if (query) {
+      where.push({ ...commonWhere, id: query });
+      where.push({ ...commonWhere, name: query });
+    }
 
-    const [listCode, count] = await builder.getManyAndCount();
+    const [listCode, count] = await Promise.all([
+      this.repo.find({
+        where: where.length > 0 ? where : commonWhere,
+        take: limit || PAGINATION_LIMIT,
+        skip: offset || 0,
+        relations: ['code'],
+        order: { timestamp: 'DESC' },
+      }),
+      this.repo.count({ where: { genesis } }),
+    ]);
 
     return {
       listCode,

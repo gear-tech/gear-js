@@ -1,4 +1,4 @@
-import { Between, DataSource, LessThanOrEqual, MoreThan, MoreThanOrEqual, Repository } from 'typeorm';
+import { DataSource, MoreThan, Repository } from 'typeorm';
 import {
   AllMessagesResult,
   FindMessageParams,
@@ -10,7 +10,13 @@ import {
 
 import { Message } from '../database';
 import { ProgramService } from './program.service';
-import { MessagesDispatchedDataInput, MessageEntryPoint, MessageNotFound, PAGINATION_LIMIT } from '../common';
+import {
+  MessagesDispatchedDataInput,
+  MessageEntryPoint,
+  MessageNotFound,
+  PAGINATION_LIMIT,
+  getDatesFilter,
+} from '../common';
 
 export class MessageService {
   private repo: Repository<Message>;
@@ -39,16 +45,8 @@ export class MessageService {
   }: GetMessagesParams): Promise<AllMessagesResult> {
     const readReason = mailbox ? null : undefined;
     const expiration = mailbox ? MoreThan(0) : undefined;
-    const datesFilter =
-      fromDate && toDate
-        ? Between(new Date(fromDate), new Date(toDate))
-        : fromDate
-          ? MoreThanOrEqual(new Date(fromDate))
-          : toDate
-            ? LessThanOrEqual(new Date(toDate))
-            : undefined;
 
-    const commonWhere = { genesis, readReason, expiration, timestamp: datesFilter };
+    const commonWhere = { genesis, readReason, expiration, timestamp: getDatesFilter(fromDate, toDate) };
     const where = [];
 
     if (destination) {
