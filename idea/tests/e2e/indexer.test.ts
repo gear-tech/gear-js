@@ -638,6 +638,13 @@ describe('message methods', () => {
     expect(response.result.messages).toHaveLength(sentMessages.length + receivedMessages.length);
   });
 
+  test(INDEXER_METHODS.MESSAGE_ALL + ' by program', async () => {
+    const response = await request('message.all', { genesis, source: testMetaId, destination: testMetaId });
+    expect(response).toHaveProperty('result.count', 11);
+    expect(response).toHaveProperty('result.messages');
+    expect(response.result.messages).toHaveLength(11);
+  });
+
   test(INDEXER_METHODS.MESSAGE_DATA, async () => {
     for (const m of sentMessages) {
       const response = await request('message.data', { genesis, id: m.id });
