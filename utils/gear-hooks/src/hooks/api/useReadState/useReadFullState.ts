@@ -1,35 +1,67 @@
-import { ProgramMetadata } from '@gear-js/api';
+import { MessagesDispatched, ProgramMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
-import { useContext, useEffect } from 'react';
-import { ApiContext } from 'context';
-import { useHandleReadState } from './useHandleReadState';
-import { useStateSubscription } from './useStateSubscription';
+import { useContext, useEffect, useState } from 'react';
+import { AlertContext, ApiContext } from 'context';
 
 function useReadFullState<T = AnyJson>(
   programId: HexString | undefined,
   meta: ProgramMetadata | undefined,
-  payload: AnyJson | undefined,
+  payload: AnyJson = '0x',
   isReadOnError?: boolean,
 ) {
   const { api } = useContext(ApiContext); // сircular dependency fix
+  const alert = useContext(AlertContext);
+
+  const [state, setState] = useState<T>();
+  const [isStateRead, setIsStateRead] = useState(true);
+  const [error, setError] = useState('');
 
   const isPayload = payload !== undefined;
 
-  const readFullState = () => {
+  const readFullState = (isInitLoad?: boolean) => {
     if (!api || !programId || !meta || !isPayload) return;
 
-    return api.programState.read({ programId, payload }, meta);
+    if (isInitLoad) setIsStateRead(false);
+
+    api.programState
+      .read({ programId, payload }, meta)
+      .then((codecState) => codecState.toHuman())
+      .then((result) => {
+        setState(result as unknown as T);
+        if (!isReadOnError) setIsStateRead(true);
+      })
+      .catch(({ message }: Error) => setError(message))
+      .finally(() => {
+        if (isReadOnError) setIsStateRead(true);
+      });
   };
 
-  const { state, isStateRead, error, readState, resetError } = useHandleReadState<T>(readFullState, isReadOnError);
+  const handleStateChange = ({ data }: MessagesDispatched) => {
+    const changedIDs = data.stateChanges.toHuman() as HexString[];
+    const isAnyChange = changedIDs.some((id) => id === programId);
+
+    if (isAnyChange) readFullState();
+  };
 
   useEffect(() => {
-    readState(true);
-    resetError();
+    if (!api || !programId || !meta || !isPayload) return;
+
+    const unsub = api.gearEvents.subscribeToGearEvent('MessagesDispatched', handleStateChange);
+
+    return () => {
+      unsub.then((unsubCallback) => unsubCallback());
+    };
   }, [api, programId, meta, payload]);
 
-  useStateSubscription(programId, readState, !!meta && isPayload);
+  useEffect(() => {
+    readFullState(true);
+    setError('');
+  }, [api, programId, meta, payload]);
+
+  useEffect(() => {
+    if (error) alert.error(error);
+  }, [error]);
 
   return { state, isStateRead, error };
 }

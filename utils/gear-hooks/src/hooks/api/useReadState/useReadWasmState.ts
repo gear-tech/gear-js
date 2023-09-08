@@ -1,10 +1,8 @@
-import { ProgramMetadata, getStateMetadata } from '@gear-js/api';
+import { MessagesDispatched, ProgramMetadata, getStateMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
-import { useContext, useEffect } from 'react';
-import { ApiContext } from 'context';
-import { useHandleReadState } from './useHandleReadState';
-import { useStateSubscription } from './useStateSubscription';
+import { useContext, useEffect, useState } from 'react';
+import { AlertContext, ApiContext } from 'context';
 
 type Args = {
   programId: HexString | undefined;
@@ -16,32 +14,67 @@ type Args = {
 };
 
 function useReadWasmState<T = AnyJson>(args: Args, isReadOnError?: boolean) {
+  const { programId, wasm, programMetadata, functionName, payload = '0x', argument } = args;
+
   const { api } = useContext(ApiContext); // сircular dependency fix
+  const alert = useContext(AlertContext);
 
-  const { programId, wasm, programMetadata, functionName, payload, argument } = args;
+  const [state, setState] = useState<T>();
+  const [isStateRead, setIsStateRead] = useState(true);
+  const [error, setError] = useState('');
+
   const isPayload = payload !== undefined;
-  const isArgument = payload !== undefined;
+  const isArgument = argument !== undefined;
 
-  const readWasmState = () => {
+  const readWasmState = (isInitLoad?: boolean) => {
     if (!api || !programId || !wasm || !programMetadata || !functionName || !isArgument || !isPayload) return;
 
-    return getStateMetadata(wasm).then((stateMetadata) =>
-      api.programState.readUsingWasm(
-        { programId, wasm, fn_name: functionName, argument, payload },
-        stateMetadata,
-        programMetadata,
-      ),
-    );
+    if (isInitLoad) setIsStateRead(false);
+
+    getStateMetadata(wasm)
+      .then((stateMetadata) =>
+        api.programState.readUsingWasm(
+          { programId, wasm, fn_name: functionName, argument, payload },
+          stateMetadata,
+          programMetadata,
+        ),
+      )
+      .then((codecState) => codecState.toHuman())
+      .then((result) => {
+        setState(result as unknown as T);
+        if (!isReadOnError) setIsStateRead(true);
+      })
+      .catch(({ message }: Error) => setError(message))
+      .finally(() => {
+        if (isReadOnError) setIsStateRead(true);
+      });
   };
 
-  const { state, isStateRead, error, readState, resetError } = useHandleReadState<T>(readWasmState, isReadOnError);
+  const handleStateChange = ({ data }: MessagesDispatched) => {
+    const changedIDs = data.stateChanges.toHuman() as HexString[];
+    const isAnyChange = changedIDs.some((id) => id === programId);
+
+    if (isAnyChange) readWasmState();
+  };
 
   useEffect(() => {
-    readState(true);
-    resetError();
+    if (!api || !programId || !wasm || !programMetadata || !functionName || !isArgument || !isPayload) return;
+
+    const unsub = api.gearEvents.subscribeToGearEvent('MessagesDispatched', handleStateChange);
+
+    return () => {
+      unsub.then((unsubCallback) => unsubCallback());
+    };
   }, [api, programId, wasm, programMetadata, functionName, argument, payload]);
 
-  useStateSubscription(programId, readState, !!wasm && !!programMetadata && !!functionName && isArgument && isPayload);
+  useEffect(() => {
+    readWasmState(true);
+    setError('');
+  }, [api, programId, wasm, programMetadata, functionName, argument, payload]);
+
+  useEffect(() => {
+    if (error) alert.error(error);
+  }, [error]);
 
   return { state, isStateRead, error };
 }
