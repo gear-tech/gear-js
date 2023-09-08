@@ -3,7 +3,7 @@ import { DispatchInfo, Extrinsic as DotExtrinsic } from '@polkadot/types/interfa
 
 import commonStyles from 'pages/explorer/explorer.module.scss';
 
-import { FormattedMessageQueued } from '../../types';
+import { FormattedMessageQueuedData } from '../../types';
 import { IdeaEvent } from '../../idea-event';
 import { Method, Section } from '../../consts';
 import { Extrinsic } from '../extrinsic';
@@ -47,9 +47,9 @@ const Row = ({ extrinsic, events }: Props) => {
   const rowClassName = clsx(commonStyles.row, styles.row);
   const signerClassName = clsx(commonStyles.alignRight, styles.signer);
 
-  // cuz gear.uploadProgram doesn't have any id to get metadata
+  // get programId for extrinsics decoding
   const messageQueued = events?.find(({ method }) => method === Method.MessageQueued);
-  const formattedMessageQueued = messageQueued?.toHuman() as FormattedMessageQueued | undefined;
+  const formattedMessageQueued = messageQueued?.toHuman() as FormattedMessageQueuedData | undefined;
 
   return (
     <div className={rowClassName}>
