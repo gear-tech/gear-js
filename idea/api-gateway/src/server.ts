@@ -72,6 +72,7 @@ export class Server {
   private app: Express;
   private redisClient: ReturnType<typeof createClient>;
   private isRedisConnected = false;
+  private isLoggedRedisError = false;
 
   constructor(private rmq: RMQService) {
     this.app = express();
@@ -110,7 +111,10 @@ export class Server {
 
   public async run() {
     this.redisClient.on('error', (err) => {
-      logger.error('Redis Client Error', { error: err.message });
+      if (!this.isLoggedRedisError) {
+        logger.error('Redis Client Error', { error: err.message });
+        this.isLoggedRedisError = true;
+      }
       this.isRedisConnected = false;
     });
     this.redisClient.on('disconnected', (err) => {
@@ -119,6 +123,7 @@ export class Server {
     });
     this.redisClient.connect().then(() => {
       this.isRedisConnected = true;
+      this.isLoggedRedisError = false;
       logger.info('Redis connected');
     });
     return this.app.listen(config.server.port, () => logger.info(`App successfully run on the ${config.server.port}`));
