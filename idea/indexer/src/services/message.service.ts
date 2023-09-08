@@ -47,25 +47,28 @@ export class MessageService {
     const expiration = mailbox ? MoreThan(0) : undefined;
 
     const commonWhere = { genesis, readReason, expiration, timestamp: getDatesFilter(fromDate, toDate) };
-    const where = [];
+    const orWhere = [];
 
     if (destination) {
-      where.push({ destination, ...commonWhere });
+      orWhere.push({ destination, ...commonWhere });
     }
     if (source) {
-      where.push({ source, ...commonWhere });
+      orWhere.push({ source, ...commonWhere });
     }
 
+    const where = orWhere.length > 0 ? orWhere : commonWhere;
+
+    console.log(where);
     const [messages, count] = await Promise.all([
       this.repo.find({
-        where: where.length > 0 ? where : commonWhere,
+        where,
         take: limit || PAGINATION_LIMIT,
         skip: offset || 0,
         relations: ['program'],
         select: { program: { id: true, name: true } },
         order: { timestamp: 'DESC', type: 'DESC' },
       }),
-      this.repo.count({ where: { genesis } }),
+      this.repo.count({ where }),
     ]);
 
     return {

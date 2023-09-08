@@ -100,3 +100,7 @@ export const JSONRPC_ERRORS = {
     message: 'Forbidden',
   },
 };
+
+export function isExistError(name: string) {
+  return Object.keys(JSONRPC_ERRORS).includes(name);
+}

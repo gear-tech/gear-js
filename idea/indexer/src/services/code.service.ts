@@ -26,22 +26,22 @@ export class CodeService {
     uploadedBy,
   }: GetAllCodeParams): Promise<GetAllCodeResult> {
     const commonWhere = { genesis, uploadedBy, name, timestamp: getDatesFilter(fromDate, toDate) };
-    const where = [];
+    const orWhere = [];
 
     if (query) {
-      where.push({ ...commonWhere, id: query });
-      where.push({ ...commonWhere, name: query });
+      orWhere.push({ ...commonWhere, id: query });
+      orWhere.push({ ...commonWhere, name: query });
     }
+    const where = orWhere.length > 0 ? orWhere : commonWhere;
 
     const [listCode, count] = await Promise.all([
       this.repo.find({
-        where: where.length > 0 ? where : commonWhere,
+        where,
         take: limit || PAGINATION_LIMIT,
         skip: offset || 0,
-        relations: ['code'],
         order: { timestamp: 'DESC' },
       }),
-      this.repo.count({ where: { genesis } }),
+      this.repo.count({ where }),
     ]);
 
     return {

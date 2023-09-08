@@ -51,24 +51,26 @@ export class ProgramService {
       timestamp: getDatesFilter(fromDate, toDate),
     };
 
-    const where = [];
+    const orWhere = [];
 
     if (query) {
-      where.push({ ...commonWhere, id: query });
-      where.push({ ...commonWhere, name: query });
-      where.push({ ...commonWhere, code: { id: query } });
+      orWhere.push({ ...commonWhere, id: query });
+      orWhere.push({ ...commonWhere, name: query });
+      orWhere.push({ ...commonWhere, code: { id: query } });
     }
+
+    const where = orWhere.length > 0 ? orWhere : commonWhere;
 
     const [programs, count] = await Promise.all([
       this.repo.find({
-        where: where.length > 0 ? where : commonWhere,
+        where,
         take: limit || PAGINATION_LIMIT,
         skip: offset || 0,
         relations: ['code'],
         select: { code: { id: true } },
         order: { timestamp: 'DESC' },
       }),
-      this.repo.count({ where: { genesis } }),
+      this.repo.count({ where }),
     ]);
 
     return {
