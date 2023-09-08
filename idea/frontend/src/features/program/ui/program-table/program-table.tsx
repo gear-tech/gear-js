@@ -37,7 +37,7 @@ const ProgramTable = ({ program, isProgramReady }: Props) => {
 
       {codeId && (
         <TableRow name="Codehash" hideOwerflow>
-          <IdBlock id={program.blockHash} to={generatePath(routes.code, { codeId })} size="big" />
+          <IdBlock id={codeId} to={generatePath(routes.code, { codeId })} size="big" />
         </TableRow>
       )}
 
