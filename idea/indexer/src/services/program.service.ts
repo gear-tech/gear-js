@@ -11,7 +11,7 @@ import {
 
 import { ProgramNotFound } from '../common/errors';
 import { Code, Program } from '../database/entities';
-import { PAGINATION_LIMIT, constructQueryBuilder } from '../common';
+import { PAGINATION_LIMIT, getDatesFilter } from '../common';
 
 export class ProgramService {
   private repo: Repository<Program>;
@@ -44,19 +44,34 @@ export class ProgramService {
     fromDate,
     status,
   }: GetAllProgramsParams): Promise<GetAllProgramsResult> {
-    const builder = constructQueryBuilder(
-      this.repo,
+    const commonWhere = {
       genesis,
-      { owner, status },
-      { fields: ['id', 'name', 'code.id'], value: query },
-      { fromDate, toDate },
-      offset || 0,
-      limit || PAGINATION_LIMIT,
-      ['code'],
-      { column: 'timestamp', sort: 'DESC' },
-    );
+      owner,
+      status: Array.isArray(status) ? In(status) : status,
+      timestamp: getDatesFilter(fromDate, toDate),
+    };
 
-    const [programs, count] = await builder.getManyAndCount();
+    const orWhere = [];
+
+    if (query) {
+      orWhere.push({ ...commonWhere, id: query });
+      orWhere.push({ ...commonWhere, name: query });
+      orWhere.push({ ...commonWhere, code: { id: query } });
+    }
+
+    const where = orWhere.length > 0 ? orWhere : commonWhere;
+
+    const [programs, count] = await Promise.all([
+      this.repo.find({
+        where,
+        take: limit || PAGINATION_LIMIT,
+        skip: offset || 0,
+        relations: ['code'],
+        select: { code: { id: true } },
+        order: { timestamp: 'DESC' },
+      }),
+      this.repo.count({ where }),
+    ]);
 
     return {
       programs,
@@ -83,11 +98,6 @@ export class ProgramService {
     } catch (error) {
       logger.error('Unable to set program status', { error });
     }
-  }
-
-  public async deleteRecords(genesis: string): Promise<void> {
-    // TODO: remove this method if it's not needed
-    await this.repo.delete({ genesis });
   }
 
   public async setName({ id, genesis, name }: AddProgramNameParams): Promise<Program> {

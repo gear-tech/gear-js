@@ -12,6 +12,7 @@ export class Message extends BaseEntity implements IMessage {
     Object.assign(this, props);
   }
 
+  @Index()
   @PrimaryColumn()
   public id: string;
 
@@ -44,6 +45,7 @@ export class Message extends BaseEntity implements IMessage {
   @Column({ nullable: true })
   public expiration: number;
 
+  @Index()
   @Column({ type: 'text', nullable: true, default: null })
   public type: MessageType;
 

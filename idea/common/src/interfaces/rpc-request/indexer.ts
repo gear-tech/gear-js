@@ -1,3 +1,4 @@
+import { ProgramStatus } from '../../enums';
 import { ICode } from '../code';
 import { IDates, IGenesis, SearchParam } from '../common';
 import { IMessage } from '../message';
@@ -5,7 +6,7 @@ import { IPaginationParams } from '../pagination';
 import { IProgram } from '../program';
 import { IState } from '../state';
 
-export interface GetMessagesParams extends IGenesis, IPaginationParams,  IDates {
+export interface GetMessagesParams extends IGenesis, IPaginationParams, IDates {
   destination?: string;
   source?: string;
   mailbox?: boolean;
@@ -20,7 +21,7 @@ export interface GetOutgoingMessagesParams extends IGenesis, IPaginationParams, 
 export interface GetAllProgramsParams extends IGenesis, IPaginationParams, SearchParam, IDates {
   publicKeyRaw?: string;
   owner?: string;
-  status?: string | string[];
+  status?: ProgramStatus | ProgramStatus[];
 }
 
 export interface GetAllStateParams extends IGenesis, SearchParam {

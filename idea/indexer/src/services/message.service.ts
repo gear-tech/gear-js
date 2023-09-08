@@ -1,4 +1,4 @@
-import { Between, DataSource, LessThanOrEqual, MoreThan, MoreThanOrEqual, Repository } from 'typeorm';
+import { DataSource, MoreThan, Repository } from 'typeorm';
 import {
   AllMessagesResult,
   FindMessageParams,
@@ -10,7 +10,13 @@ import {
 
 import { Message } from '../database';
 import { ProgramService } from './program.service';
-import { MessagesDispatchedDataInput, MessageEntryPoint, MessageNotFound, PAGINATION_LIMIT } from '../common';
+import {
+  MessagesDispatchedDataInput,
+  MessageEntryPoint,
+  MessageNotFound,
+  PAGINATION_LIMIT,
+  getDatesFilter,
+} from '../common';
 
 export class MessageService {
   private repo: Repository<Message>;
@@ -39,33 +45,32 @@ export class MessageService {
   }: GetMessagesParams): Promise<AllMessagesResult> {
     const readReason = mailbox ? null : undefined;
     const expiration = mailbox ? MoreThan(0) : undefined;
-    const datesFilter =
-      fromDate && toDate
-        ? Between(new Date(fromDate), new Date(toDate))
-        : fromDate
-          ? MoreThanOrEqual(new Date(fromDate))
-          : toDate
-            ? LessThanOrEqual(new Date(toDate))
-            : undefined;
 
-    const where = [];
+    const commonWhere = { genesis, readReason, expiration, timestamp: getDatesFilter(fromDate, toDate) };
+    const orWhere = [];
+
     if (destination) {
-      where.push({ genesis, destination, readReason, expiration, timestamp: datesFilter });
+      orWhere.push({ destination, ...commonWhere });
     }
     if (source) {
-      where.push({ genesis, source, readReason, expiration, timestamp: datesFilter });
-    }
-    if (where.length === 0) {
-      where.push({ genesis, readReason, expiration, timestamp: datesFilter });
+      orWhere.push({ source, ...commonWhere });
     }
 
-    const [messages, count] = await this.repo.findAndCount({
-      where,
-      take: limit || PAGINATION_LIMIT,
-      skip: offset || 0,
-      relations: ['program'],
-      order: { timestamp: 'DESC', type: 'DESC' },
-    });
+    const where = orWhere.length > 0 ? orWhere : commonWhere;
+
+    console.log(where);
+    const [messages, count] = await Promise.all([
+      this.repo.find({
+        where,
+        take: limit || PAGINATION_LIMIT,
+        skip: offset || 0,
+        relations: ['program'],
+        select: { program: { id: true, name: true } },
+        order: { timestamp: 'DESC', type: 'DESC' },
+      }),
+      this.repo.count({ where }),
+    ]);
+
     return {
       messages,
       count,

@@ -22,6 +22,7 @@
     "express": "4.18.1",
     "hcaptcha": "0.1.1",
     "nanoid": "3.3.4",
+    "redis": "^4.6.8",
     "rimraf": "3.0.2"
   },
   "devDependencies": {

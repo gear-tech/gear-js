@@ -12,6 +12,7 @@ import {
 } from '@gear-js/common';
 import { nanoid } from 'nanoid';
 import express, { Express, Request, Response } from 'express';
+import { createClient } from 'redis';
 
 import { getResponse } from './utils';
 import { checkGenesisMiddleware, captchaMiddleware, validateJsonRpcRequestMiddleware } from './middleware';
@@ -33,6 +34,33 @@ const AVAILABLE_METHODS: string[] = [
   ...Object.values(API_GATEWAY_METHODS),
 ];
 
+const METHODS_FOR_CACHE: string[] = [
+  INDEXER_METHODS.CODE_DATA,
+  INDEXER_METHODS.PROGRAM_DATA,
+  INDEXER_METHODS.MESSAGE_DATA,
+  INDEXER_METHODS.PROGRAM_ALL,
+  INDEXER_METHODS.MESSAGE_ALL,
+  INDEXER_METHODS.CODE_ALL,
+  INDEXER_METHODS.STATE_GET,
+  INDEXER_METHODS.CODE_STATE_GET,
+  INDEXER_METHODS.PROGRAM_STATE_ALL,
+  INDEXER_METHODS.CODE_STATE_GET,
+  META_STORAGE_METHODS.META_GET,
+];
+
+const METHODS_FOR_CACHE_WITH_EXPIRATIONS: Record<string, number> = {
+  [INDEXER_METHODS.CODE_DATA]: 60,
+  [INDEXER_METHODS.PROGRAM_DATA]: 60,
+  [INDEXER_METHODS.MESSAGE_DATA]: 60,
+  [INDEXER_METHODS.PROGRAM_ALL]: 20,
+  [INDEXER_METHODS.MESSAGE_ALL]: 20,
+  [INDEXER_METHODS.CODE_ALL]: 20,
+  [INDEXER_METHODS.STATE_GET]: 60,
+  [INDEXER_METHODS.CODE_STATE_GET]: 60,
+  [INDEXER_METHODS.PROGRAM_STATE_ALL]: 60,
+  [META_STORAGE_METHODS.META_GET]: 60,
+};
+
 function isExistJsonRpcMethod(method: string): boolean {
   return AVAILABLE_METHODS.includes(method);
 }
@@ -42,12 +70,18 @@ const metaStorageMethods: string[] = Object.values(META_STORAGE_METHODS);
 
 export class Server {
   private app: Express;
+  private redisClient: ReturnType<typeof createClient>;
+  private isRedisConnected = false;
+  private isLoggedRedisError = false;
 
   constructor(private rmq: RMQService) {
     this.app = express();
     this.app.use(express.json({ limit: '5mb' }));
     this.app.use(express.urlencoded({ extended: true, limit: '5mb' }));
     this.setupRoutes();
+    this.redisClient = createClient({
+      url: `redis://${config.redis.user}:${config.redis.password}@${config.redis.host}:${config.redis.port}`,
+    });
   }
 
   private setupRoutes() {
@@ -77,7 +111,23 @@ export class Server {
       });
   }
 
-  public run() {
+  public async run() {
+    this.redisClient.on('error', (err) => {
+      if (!this.isLoggedRedisError) {
+        logger.error('Redis Client Error', { error: err.message });
+        this.isLoggedRedisError = true;
+      }
+      this.isRedisConnected = false;
+    });
+    this.redisClient.on('disconnected', (err) => {
+      logger.warn('Redis disconnected', { error: err.message });
+      this.isRedisConnected = false;
+    });
+    this.redisClient.connect().then(() => {
+      this.isRedisConnected = true;
+      this.isLoggedRedisError = false;
+      logger.info('Redis connected');
+    });
     return this.app.listen(config.server.port, () => logger.info(`App successfully run on the ${config.server.port}`));
   }
 
@@ -94,6 +144,14 @@ export class Server {
 
   private async executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
     const { method, params } = procedure;
+
+    if (this.isRedisConnected && METHODS_FOR_CACHE.includes(method)) {
+      const data = await this.redisClient.get(JSON.stringify({ method, params }));
+      if (data) {
+        const result = JSON.parse(data);
+        return getResponse(procedure, null, result);
+      }
+    }
 
     if (!isExistJsonRpcMethod(method)) {
       return getResponse(procedure, JSONRPC_ERRORS.MethodNotFound.name);
@@ -112,6 +170,16 @@ export class Server {
     }
 
     const { error, result } = await this.jsonRpcHandler(method, params);
+
+    if (this.isRedisConnected && result && METHODS_FOR_CACHE.includes(method)) {
+      this.redisClient
+        .set(JSON.stringify({ method, params }), JSON.stringify(result), {
+          EX: METHODS_FOR_CACHE_WITH_EXPIRATIONS[method],
+        })
+        .catch((err) => {
+          logger.error('Failed to set value', { service: 'redis', msg: err.message, stack: err.stack });
+        });
+    }
 
     return getResponse(procedure, error, result);
   }
