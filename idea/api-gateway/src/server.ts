@@ -79,7 +79,9 @@ export class Server {
     this.app.use(express.json({ limit: '5mb' }));
     this.app.use(express.urlencoded({ extended: true, limit: '5mb' }));
     this.setupRoutes();
-    this.redisClient = createClient({ url: `redis://${config.redis.host}:${config.redis.port}` });
+    this.redisClient = createClient({
+      url: `redis://${config.redis.user}:${config.redis.password}@${config.redis.host}:${config.redis.port}`,
+    });
   }
 
   private setupRoutes() {

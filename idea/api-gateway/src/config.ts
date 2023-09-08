@@ -24,5 +24,7 @@ export default {
   redis: {
     host: checkEnv('REDIS_HOST', '127.0.0.1'),
     port: Number(checkEnv('REDIS_PORT', '6379')),
+    user: checkEnv('REDIS_USER', ''),
+    password: checkEnv('REDIS_PASSWORD', ''),
   },
 };
