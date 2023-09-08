@@ -60,59 +60,52 @@ const DecodedPreformattedBlock = ({ programId, data, method }: Props) => {
   const { program } = useProgram(isFormattedPayloadHex ? programId : undefined);
   const { metadata } = useMetadata(program?.metahash);
 
-  const getType = () => {
-    if (!metadata) return;
+  const getTypes = () => {
+    if (!metadata) return [];
 
     switch (method) {
       case Method.UserMessageSent:
-        return metadata.types.handle.output;
+        return [metadata.types.handle.output, metadata.types.init.output, metadata.types.others.output];
 
       case Method.SendMessage:
-        return metadata.types.handle.input;
+        return [metadata.types.handle.input, metadata.types.others.input];
 
       case Method.SendReply:
-        return metadata.types.reply;
+        return [metadata.types.reply];
 
       case Method.UploadProgram:
       case Method.CreateProgram:
-        return metadata.types.init.input;
+        return [metadata.types.init.input];
 
       default:
+        return [];
     }
   };
 
-  const getFallbackType = () => {
+  const decodeType = (type: number | null, isLastFallback: boolean) => {
     if (!metadata) return;
-
-    switch (method) {
-      case Method.UserMessageSent:
-        return metadata.types.init.output;
-
-      case Method.SendMessage:
-        return metadata.types.others.input;
-
-      default:
-    }
-  };
-
-  const decodePayload = (type: number | null | undefined, errorCallback: () => void) => {
-    if (!metadata) return;
-
-    if (isNullOrUndefined(type)) return errorCallback();
 
     try {
+      if (isNullOrUndefined(type)) throw new Error();
+
       setDecodedPayload(metadata.createType(type, payload));
+
+      return true;
     } catch {
-      errorCallback();
+      if (isLastFallback) setError("Can't decode payload");
+
+      return false;
     }
   };
-
-  const fallbackDecodePayload = () => decodePayload(getFallbackType(), () => setError("Can't decode payload"));
 
   useEffect(() => {
     if (!metadata) return;
 
-    decodePayload(getType(), fallbackDecodePayload);
+    const types = getTypes();
+    const lastTypeIndex = types.length - 1;
+
+    types.some((type, index) => decodeType(type, index === lastTypeIndex));
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metadata]);
 
