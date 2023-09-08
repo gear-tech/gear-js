@@ -48,7 +48,13 @@ async function bootstrap() {
   }
 
   const lastBlock = await blockService.getLastBlock({ genesis });
-  const toBlock = Number(lastBlock.number);
+  let lastBlockNumber: number;
+  if (lastBlock) {
+    lastBlockNumber = Number(lastBlock.number);
+  } else {
+    lastBlockNumber = (await api.rpc.chain.getBlock()).block.header.number.toNumber();
+  }
+  const toBlock = lastBlockNumber;
 
   let syncedBlocks = await blockService.getSyncedBlockNumbers(fromBlock, toBlock, genesis);
 
@@ -57,11 +63,12 @@ async function bootstrap() {
   const blocks = Array.from({ length: toBlock - fromBlock + 1 }, (_, i) => fromBlock + i).filter(
     (v) => !blocksSet.has(v),
   );
+  console.log(blocks);
 
   blocksSet.clear();
   syncedBlocks = undefined;
 
-  const rmq = new RMQService();
+  const rmq = new RMQService(null, null, null, null, null, true);
 
   await rmq.init();
   changeStatus('rmq');
@@ -82,6 +89,6 @@ async function bootstrap() {
 bootstrap()
   .then(() => process.exit(0))
   .catch((error) => {
-    logger.error('', { error });
+    logger.error('', { error, stack: error.stack });
     process.exit(1);
   });

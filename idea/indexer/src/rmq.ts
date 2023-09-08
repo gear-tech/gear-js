@@ -26,7 +26,9 @@ export class RMQService {
     private messageService?: MessageService,
     private programService?: ProgramService,
     private stateService?: StateService,
+    private oneTimeSync = false,
   ) {
+    if (this.oneTimeSync) return;
     this.methods = {
       [INDEXER_METHODS.BLOCKS_STATUS]: this.blockService.getLastBlock.bind(this.blockService),
       [INDEXER_METHODS.CODE_ALL]: this.codeService.getMany.bind(this.codeService),
@@ -131,7 +133,6 @@ export class RMQService {
 
           const { method } = msg.properties.headers;
           const params = JSON.parse(msg.content.toString());
-          logger.info('Message from meta-storage', { method, params });
           await this.handleIncomingMsg(method, params);
         },
         { noAck: true },

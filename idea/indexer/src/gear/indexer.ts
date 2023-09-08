@@ -77,7 +77,9 @@ export class GearIndexer {
 
   public stop() {
     this.generatorLoop = false;
-    this.unsub && this.unsub();
+    if (this.unsub) {
+      this.unsub();
+    }
     this.api = null;
     this.newBlocks = [];
     this.lastBlockNumber = undefined;
@@ -124,6 +126,10 @@ export class GearIndexer {
 
   private async indexBlock(blockNumber: number, isMissed = false): Promise<void> {
     if (blockNumber === 0) return;
+
+    if (this.oneTimeSync) {
+      logger.info(`Index block with number ${blockNumber}`);
+    }
 
     let block: SignedBlockExtended;
 
@@ -686,12 +692,12 @@ export class GearIndexer {
   private async getProgram(id: HexString, blockHash: HexString, msgId: HexString): Promise<Program> {
     let program = await this.tempState.getProgram(id);
     if (!program) {
-      logger.error('Failed to retrieve program', { id, blockHash, msgId } );
-      try{
+      logger.error('Failed to retrieve program', { id, blockHash, msgId });
+      try {
         program = await this.indexBlockWithMissedProgram(id);
-      } catch(err){
-        logger.error('Failed to index block', { method: 'getProgram', blockHash, program: id, msg: msgId });    
-      } 
+      } catch (err) {
+        logger.error('Failed to index block', { method: 'getProgram', blockHash, program: id, msg: msgId });
+      }
     }
     return program;
   }
