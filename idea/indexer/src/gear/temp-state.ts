@@ -44,9 +44,16 @@ export class TempState {
       this.programs.set(program.id, program);
       if (program.metahash) {
         if (this.metahashes.has(program.metahash)) {
-          this.metahashes.get(program.metahash).add(program.code.id);
+          const meta = this.metahashes.get(program.metahash);
+          if (program.code) {
+            meta.add(program.code.id);
+          }
         } else {
-          this.metahashes.set(program.metahash, new Set([program.code.id]));
+          const set = new Set<string>();
+          if (program.code) {
+            set.add(program.code.id);
+          }
+          this.metahashes.set(program.metahash, set);
         }
       }
     }
