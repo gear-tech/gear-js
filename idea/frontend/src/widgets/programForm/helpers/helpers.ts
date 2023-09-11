@@ -9,8 +9,7 @@ const getValidationSchema = ({
   maxGasLimit,
   decimals,
   balanceMultiplier,
-  gasLimitDecimals,
-  gasLimitMultiplier,
+  gasMultiplier,
 }: PayloadSchemaParams) =>
   yup.object().shape({
     value: yup
@@ -32,8 +31,8 @@ const getValidationSchema = ({
       .required('This field is required')
       .test(
         'max',
-        `Maximum amount of decimal places is ${gasLimitDecimals}`,
-        (value = '0') => !isDecimal(BigNumber(value).multipliedBy(gasLimitMultiplier).toFixed()),
+        `Exceeded maximum amount of decimal places`,
+        (value = '0') => !isDecimal(BigNumber(value).multipliedBy(gasMultiplier).toFixed()),
       )
       .test('max', `Gas limit should be less than ${maxGasLimit.toFixed()}`, (value = '0') =>
         BigNumber(value).isLessThanOrEqualTo(maxGasLimit),

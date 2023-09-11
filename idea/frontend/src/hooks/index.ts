@@ -26,6 +26,7 @@ import { useMobileDisclaimer } from './useMobileDisclaimer';
 import { useMetaOnUpload } from './useMetaOnUpload';
 import { useNetworkIcon } from './useNetworkIcon';
 import { useBalanceMultiplier } from './useBalanceMultiplier';
+import { useGasMultiplier } from './useGasMultiplier';
 
 export {
   useApp,
@@ -61,4 +62,5 @@ export {
   useMetaOnUpload,
   useNetworkIcon,
   useBalanceMultiplier,
+  useGasMultiplier,
 };

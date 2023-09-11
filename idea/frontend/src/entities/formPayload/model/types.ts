@@ -31,8 +31,7 @@ type PayloadSchemaParams = {
   maxGasLimit: BigNumber;
   balanceMultiplier: BigNumber;
   decimals: number;
-  gasLimitDecimals: number;
-  gasLimitMultiplier: number;
+  gasMultiplier: BigNumber;
 };
 
 export type { TypeStructure, PayloadValue, PayloadSchemaModel, PayloadSchemaParams };

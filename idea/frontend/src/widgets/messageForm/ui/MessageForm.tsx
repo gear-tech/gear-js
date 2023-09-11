@@ -15,7 +15,7 @@ import { GasMethod } from 'shared/config';
 import { getValidation } from 'shared/helpers';
 import { GasField } from 'features/gasField';
 import { FormPayload, getPayloadFormValues, getSubmitPayload } from 'features/formPayload';
-import { useBalanceMultiplier, useGasCalculate, useMessageActions } from 'hooks';
+import { useBalanceMultiplier, useGasCalculate, useGasMultiplier, useMessageActions } from 'hooks';
 import { Result } from 'hooks/useGasCalculate/types';
 import { FormPayloadType } from 'features/formPayloadType';
 import { IsPrepaidCheckbox } from 'features/voucher';
@@ -39,6 +39,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
   const calculateGas = useGasCalculate();
   const { sendMessage, replyMessage } = useMessageActions();
   const { balanceMultiplier, decimals } = useBalanceMultiplier();
+  const gasMultiplier = useGasMultiplier();
 
   const [isDisabled, setIsDisabled] = useState(false);
   const [isGasDisabled, setIsGasDisabled] = useState(false);
@@ -46,10 +47,10 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
 
   const formApi = useRef<FormApi<FormValues>>();
 
-  const deposit = api.existentialDeposit.toNumber();
-  const maxGasLimit = api.blockGasLimit.toNumber();
-  const method = isReply ? GasMethod.Reply : GasMethod.Handle;
+  const deposit = api.existentialDeposit.toString();
+  const maxGasLimit = api.blockGasLimit.toString();
 
+  const method = isReply ? GasMethod.Reply : GasMethod.Handle;
   const typeIndex = isReply ? metadata?.types.reply : metadata?.types.handle.input;
   const isTypeIndex = typeIndex !== undefined && typeIndex !== null;
 
@@ -65,11 +66,10 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
         // is there a way to handle balance convertion better?
         deposit: BigNumber(deposit).dividedBy(balanceMultiplier),
         metadata,
-        maxGasLimit: BigNumber(maxGasLimit).dividedBy(10 ** 9),
+        maxGasLimit: BigNumber(maxGasLimit).dividedBy(gasMultiplier),
         balanceMultiplier,
         decimals,
-        gasLimitMultiplier: 10 ** 9,
-        gasLimitDecimals: 9,
+        gasMultiplier,
       });
 
       return getValidation(schema);
@@ -101,9 +101,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
     const commonValues = {
       value: BigNumber(values.value).multipliedBy(balanceMultiplier).toFixed(),
       payload: getSubmitPayload(values.payload),
-      gasLimit: BigNumber(values.gasLimit)
-        .multipliedBy(10 ** 9)
-        .toFixed(),
+      gasLimit: BigNumber(values.gasLimit).multipliedBy(gasMultiplier).toFixed(),
       prepaid: values.isPrepaid,
       account: values.isPrepaid ? account?.decodedAddress : undefined,
     };
@@ -131,9 +129,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
 
     calculateGas(method, preparedValues, null, metadata, id)
       .then((info) => {
-        const limit = BigNumber(info.limit)
-          .dividedBy(10 ** 9)
-          .toFixed();
+        const limit = BigNumber(info.limit).dividedBy(gasMultiplier).toFixed();
 
         formApi.current?.change('gasLimit', limit);
         setGasInfo(info);
