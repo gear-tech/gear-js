@@ -4,7 +4,7 @@ import { routes } from 'shared/config';
 import { useEvents } from 'hooks';
 import { Events, Block } from 'features/explorer';
 
-import { Program } from './program/ui/Program';
+import { Program } from './program';
 import { Programs } from './programs';
 import { Message } from './message';
 import { Messages } from './messages';
