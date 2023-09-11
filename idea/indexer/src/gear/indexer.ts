@@ -227,13 +227,29 @@ export class GearIndexer {
 
     const status = this.api.createType('ExtrinsicStatus', { finalized: block.block.header.hash.toHex() });
 
-    await this.handleCodeExtrinsics(block, status, timestamp);
+    try {
+      await this.handleCodeExtrinsics(block, status, timestamp);
+    } catch (err) {
+      logger.error('Failed to handle code extrinsics', { block: block.block.hash.toHex(), err });
+    }
 
-    await this.handleProgramExtrinsics(block, status, timestamp);
+    try {
+      await this.handleProgramExtrinsics(block, status, timestamp);
+    } catch (err) {
+      logger.error('Failed to handle program extrinsics', { block: block.block.hash.toHex(), err });
+    }
 
-    await this.handleMessageExtrinsics(block, status, timestamp);
+    try {
+      await this.handleMessageExtrinsics(block, status, timestamp);
+    } catch (err) {
+      logger.error('Failed to handle message extrinsics', { block: block.block.hash.toHex(), err });
+    }
 
-    await this.handleBatchExtrinsics(block, status, timestamp);
+    try {
+      await this.handleBatchExtrinsics(block, status, timestamp);
+    } catch (err) {
+      logger.error('Failed to handle batch extrinsics', { block: block.block.hash.toHex(), err });
+    }
   }
 
   private async handleBatchExtrinsics(block: SignedBlockExtended, status: ExtrinsicStatus, timestamp: number) {
@@ -471,38 +487,6 @@ export class GearIndexer {
 
     if (extrinsics.length === 0) {
       return;
-    }
-
-    for (const tx of extrinsics) {
-      const event = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
-        this.api.events.gear.CodeChanged.is(event),
-      );
-
-      if (!event) {
-        continue;
-      }
-
-      const {
-        data: { id, change },
-      } = event.event as CodeChanged;
-      const codeId = id.toHex();
-      const metahash = await getMetahash(this.api.code, codeId);
-
-      const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
-
-      this.tempState.addCode(
-        new Code({
-          id: codeId,
-          name: codeId,
-          genesis: this.genesis,
-          status: codeStatus,
-          timestamp: new Date(timestamp),
-          blockHash: block.block.header.hash.toHex(),
-          expiration: change.isActive ? change.asActive.expiration.toString() : null,
-          uploadedBy: tx.signer.inner.toHex(),
-          metahash,
-        }),
-      );
     }
   }
 
