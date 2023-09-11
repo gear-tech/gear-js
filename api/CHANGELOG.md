@@ -1,3 +1,11 @@
+## 0.33.2
+
+_09/11/2023_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1381
+- Add `valuePerGas` parameter
+
 ## 0.33.1
 
 _09/06/2023_
