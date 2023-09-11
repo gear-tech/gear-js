@@ -83,7 +83,7 @@ const TopSide = () => {
 
     const { source } = account.meta;
 
-    const unitValue = BigNumber(value).multipliedBy(balanceMultiplier).toNumber();
+    const unitValue = BigNumber(value).multipliedBy(balanceMultiplier).toFixed();
 
     transferBalance(address, to, unitValue, { signSource: source, onSuccess: closeModal });
   };

@@ -6,7 +6,7 @@ import { ProgramMetadata } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 
-import { useGasCalculate, useChangeEffect, useBalanceMultiplier } from 'hooks';
+import { useGasCalculate, useChangeEffect, useBalanceMultiplier, useGasMultiplier } from 'hooks';
 import { Result } from 'hooks/useGasCalculate/types';
 import { Payload } from 'hooks/useProgramActions/types';
 import { FormPayload, getSubmitPayload, getPayloadFormValues } from 'features/formPayload';
@@ -41,6 +41,7 @@ const ProgramForm = (props: Props) => {
   const [isGasDisabled, setIsGasDisabled] = useState(false);
 
   const { balanceMultiplier, decimals } = useBalanceMultiplier();
+  const gasMultiplier = useGasMultiplier();
   const calculateGas = useGasCalculate();
 
   const handleGasCalculate = async () => {
@@ -57,9 +58,7 @@ const ProgramForm = (props: Props) => {
 
     try {
       const info = await calculateGas(gasMethod, preparedValues, source, metadata);
-      const limit = BigNumber(info.limit)
-        .dividedBy(10 ** 9)
-        .toFixed();
+      const limit = BigNumber(info.limit).dividedBy(gasMultiplier).toFixed();
 
       formApi.current.change('gasLimit', limit);
       setGasinfo(info);
@@ -77,9 +76,7 @@ const ProgramForm = (props: Props) => {
 
     const data: Payload = {
       value: BigNumber(value).multipliedBy(balanceMultiplier).toFixed(),
-      gasLimit: BigNumber(gasLimit)
-        .multipliedBy(10 ** 9)
-        .toFixed(),
+      gasLimit: BigNumber(gasLimit).multipliedBy(gasMultiplier).toFixed(),
       metaHex,
       metadata,
       programName,
@@ -106,11 +103,10 @@ const ProgramForm = (props: Props) => {
       const schema = getValidationSchema({
         deposit: BigNumber(deposit).dividedBy(balanceMultiplier),
         metadata,
-        maxGasLimit: BigNumber(maxGasLimit).dividedBy(10 ** 9),
+        maxGasLimit: BigNumber(maxGasLimit).dividedBy(gasMultiplier),
         balanceMultiplier,
         decimals,
-        gasLimitMultiplier: 10 ** 9,
-        gasLimitDecimals: 9,
+        gasMultiplier,
       });
 
       return getValidation(schema);
