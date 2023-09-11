@@ -2,7 +2,7 @@ import { HexString } from '@polkadot/util/types';
 
 import { RpcMethods } from 'shared/config';
 import { rpcService } from 'shared/services/rpcService';
-import { IProgram } from 'entities/program';
+import { IProgram } from 'features/program';
 
 import { FetchProgramsParams, ProgramPaginationModel } from './types';
 

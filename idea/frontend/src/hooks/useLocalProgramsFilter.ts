@@ -2,7 +2,7 @@ import { useApi } from '@gear-js/react-hooks';
 import { useEffect } from 'react';
 
 import { PROGRAMS_LOCAL_FORAGE } from 'api';
-import { IProgram } from 'entities/program';
+import { IProgram } from 'features/program';
 
 import { useChain } from './context';
 

@@ -1,6 +1,7 @@
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_mixins.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/shared' as *;
+@use 'shared/assets/styles/mixins' as *;
+@use 'shared/assets/styles/variables' as *;
+@use 'shared/assets/styles/animations' as *;
 @use '@gear-js/ui/mixins' as *;
 
 .messageInfo {
@@ -9,22 +10,34 @@
   padding: toRem(24);
   border-radius: 16px;
   background-color: $bgColor4;
+}
 
-  .text {
-    grid-template-columns: minmax(toRem(100), 0.15fr) minmax(toRem(452), 0.6fr);
+.loading {
+  > div:last-child {
+    > div {
+      @include loading;
+      position: relative;
+    }
   }
 }
 
-.replyTo {
+.link {
   align-items: center;
 
   a {
     @include transition;
+    display: inline-block;
+    max-width: 450px;
     text-decoration: underline;
-    padding: 0 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     &:hover {
       opacity: 0.5;
     }
   }
+}
+
+.copyButton {
+  margin-left: 4px;
 }

@@ -1,18 +1,18 @@
 import { CreateType, ProgramMetadata } from '@gear-js/api';
-import { InputWrapper } from '@gear-js/ui';
+import { Button, Input, InputWrapper, Textarea } from '@gear-js/ui';
 import { useAlert } from '@gear-js/react-hooks';
 import { AnyJson, Codec } from '@polkadot/types/types';
 import { useEffect, useState } from 'react';
 import { generatePath, Link } from 'react-router-dom';
-import clsx from 'clsx';
+import cx from 'clsx';
 
-import { getPreformattedText } from 'shared/helpers';
-import { FormText } from 'shared/ui/form';
+import { copyToClipboard, getPreformattedText } from 'shared/helpers';
 import { absoluteRoutes } from 'shared/config';
+import { ReactComponent as CopySVG } from 'shared/assets/images/actions/copy.svg';
 
-import styles from './MessageInfo.module.scss';
 import { IMessage } from '../../model';
 import { getDecodedMessagePayload } from '../../helpers';
+import styles from './MessageInfo.module.scss';
 
 type Props = {
   message?: IMessage;
@@ -21,7 +21,7 @@ type Props = {
 };
 
 const MessageInfo = ({ metadata, message, isLoading }: Props) => {
-  const { id, source, value, destination, replyToMessageId, entry } = message ?? {};
+  const { id, source, value, destination, replyToMessageId, entry, blockHash } = message || {};
 
   const alert = useAlert();
 
@@ -62,29 +62,42 @@ const MessageInfo = ({ metadata, message, isLoading }: Props) => {
   }, [metadata, message, isLoading]);
 
   const isPayloadLoading = decodedPayload === undefined || isLoading;
+  const loadingClassName = cx(isPayloadLoading && styles.loading);
 
   return (
     <section className={styles.messageInfo}>
-      <FormText text={id} label="Message ID" isLoading={isPayloadLoading} className={styles.text} />
-      <FormText text={source} label="Source" isLoading={isPayloadLoading} className={styles.text} />
-      <FormText text={destination} label="Destination" isLoading={isPayloadLoading} className={styles.text} />
-      <FormText text={value} label="Value" isLoading={isPayloadLoading} className={styles.text} />
-      <FormText text={decodedPayload} label="Payload" isLoading={isPayloadLoading} isTextarea className={styles.text} />
+      <Input value={id} label="Message ID" gap="1/6" className={loadingClassName} readOnly />
+      <Input value={source} label="Source" gap="1/6" className={loadingClassName} readOnly />
+      <Input value={destination} label="Destination" gap="1/6" className={loadingClassName} readOnly />
+      <Input value={value} label="Value" gap="1/6" className={loadingClassName} readOnly />
+      <Textarea value={decodedPayload} label="Payload" gap="1/6" className={loadingClassName} readOnly block />
 
-      {!isPayloadLoading && (
-        <>
-          {entry && <FormText text={entry} label="Entry" className={styles.text} />}
-          {replyToMessageId && (
-            <InputWrapper
-              label="Reply To Message ID"
-              id="replyTo"
-              direction="x"
-              size="normal"
-              className={clsx(styles.text, styles.replyTo)}>
-              <Link to={generatePath(absoluteRoutes.message, { messageId: replyToMessageId })}>{replyToMessageId}</Link>
-            </InputWrapper>
-          )}
-        </>
+      {entry && <Input value={entry} label="Entry" gap="1/6" className={loadingClassName} readOnly />}
+
+      {!isPayloadLoading && replyToMessageId && (
+        <InputWrapper label="Reply to" id="replyTo" direction="x" size="normal" gap="1/6" className={styles.link}>
+          <Link to={generatePath(absoluteRoutes.message, { messageId: replyToMessageId })}>{replyToMessageId}</Link>
+
+          <Button
+            icon={CopySVG}
+            color="transparent"
+            className={styles.copyButton}
+            onClick={() => copyToClipboard(replyToMessageId, alert)}
+          />
+        </InputWrapper>
+      )}
+
+      {!isPayloadLoading && blockHash && (
+        <InputWrapper label="Block hash" id="blockHash" direction="x" size="normal" gap="1/6" className={styles.link}>
+          <Link to={generatePath(absoluteRoutes.block, { blockId: blockHash })}>{blockHash}</Link>
+
+          <Button
+            icon={CopySVG}
+            color="transparent"
+            className={styles.copyButton}
+            onClick={() => copyToClipboard(blockHash, alert)}
+          />
+        </InputWrapper>
       )}
     </section>
   );

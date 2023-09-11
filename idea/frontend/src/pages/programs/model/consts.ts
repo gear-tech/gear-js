@@ -1,13 +1,12 @@
 import { OwnerFilter } from 'api/consts';
+import { ProgramStatus } from 'features/program';
 
-import { RequestParams, FiltersValues } from './types';
-
-const DEFAULT_FILTER_VALUES: FiltersValues = {
+const DEFAULT_FILTER_VALUES = {
   owner: OwnerFilter.All,
-  status: [],
+  status: [] as ProgramStatus[],
 };
 
-const DEFAULT_REQUEST_PARAMS: RequestParams = {
+const DEFAULT_REQUEST_PARAMS = {
   query: '',
 };
 

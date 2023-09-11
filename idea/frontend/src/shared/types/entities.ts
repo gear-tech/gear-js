@@ -1,7 +1,9 @@
+import { HexString } from '@polkadot/util/types';
+
 interface IBase {
   genesis: string;
   timestamp: string;
-  blockHash: string | null;
+  blockHash: HexString;
 }
 
 export type { IBase };

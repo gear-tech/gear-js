@@ -1,3 +1,3 @@
-import { Program } from './ui/Program';
+import { Program } from './program';
 
 export { Program };

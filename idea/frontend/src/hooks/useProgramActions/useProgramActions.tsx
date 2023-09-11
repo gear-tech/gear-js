@@ -19,7 +19,7 @@ import {
 } from 'shared/config';
 import { checkWallet, getExtrinsicFailedMessage, isNullOrUndefined } from 'shared/helpers';
 import { CustomLink } from 'shared/ui/customLink';
-import { ProgramStatus } from 'entities/program';
+import { ProgramStatus } from 'features/program';
 import { addProgramName } from 'api';
 
 import { isHumanTypesRepr } from 'pages/state/helpers';

@@ -10,14 +10,12 @@ import { useChain, useModal } from 'hooks';
 import { BackButton } from 'shared/ui/backButton';
 import { absoluteRoutes } from 'shared/config';
 import { UILink } from 'shared/ui/uiLink';
-import { Table, TableRow } from 'shared/ui/table';
-import { IdBlock } from 'shared/ui/idBlock';
 import { ProgramsList } from 'pages/programs/ui/programsList';
-import { MetadataDetails } from 'pages/program/ui/metadataDetails';
+import { MetadataTable, useMetadata } from 'features/metadata';
 import { ReactComponent as PlusSVG } from 'shared/assets/images/actions/plus.svg';
 import { ReactComponent as AddMetaSVG } from 'shared/assets/images/actions/addMeta.svg';
 import { ICode } from 'entities/code';
-import { useMetadata } from 'features/metadata';
+import { CodeTable } from 'features/code';
 
 import styles from './Code.module.scss';
 
@@ -71,17 +69,12 @@ const Code = () => {
         <div className={styles.summary}>
           <div>
             <h2 className={styles.heading}>Code Parameters</h2>
-
-            <Table>
-              <TableRow name="Code ID">
-                <IdBlock id={codeId} size="big" />
-              </TableRow>
-            </Table>
+            <CodeTable code={code} isCodeReady={isCodeReady} />
           </div>
 
           <div>
             <h2 className={styles.heading}>Metadata</h2>
-            <MetadataDetails metadata={metadata} isLoading={!isMetadataReady} />
+            <MetadataTable metadata={metadata} isLoading={!isMetadataReady} />
           </div>
         </div>
 
