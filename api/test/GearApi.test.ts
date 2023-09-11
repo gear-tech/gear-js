@@ -58,6 +58,10 @@ describe('GearApi', () => {
     const version = await api.wasmBlobVersion();
     expect(version).toBeDefined();
   });
+
+  test('valuePerGas', () => {
+    expect(api.valuePerGas).toBeDefined();
+  });
 });
 
 describe('Blocks', () => {
