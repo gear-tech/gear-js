@@ -31,11 +31,11 @@ const useBalanceTransfer = () => {
     });
   };
 
-  const transferBalance = (from: AddressOrPair, to: string, value: number, options?: Options) => {
+  const transferBalance = (from: AddressOrPair, to: string, value: string, options?: Options) => {
     try {
       const { signSource, onSuccess } = options || {};
 
-      api.balance.transfer(to, value);
+      api.tx.balances.transfer(to, value);
 
       if (signSource) {
         web3FromSource(signSource).then(({ signer }) =>
