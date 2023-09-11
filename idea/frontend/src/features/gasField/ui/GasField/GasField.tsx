@@ -8,6 +8,7 @@ import { formStyles } from 'shared/ui/form';
 import { ReactComponent as calculatorSVG } from 'shared/assets/images/actions/calculator.svg';
 import { Result } from 'hooks/useGasCalculate/types';
 import { BalanceUnit } from 'shared/ui/form/balance-unit';
+import { useGasMultiplier } from 'hooks';
 
 import { Info } from '../Info';
 import styles from './GasField.module.scss';
@@ -18,6 +19,8 @@ type Props = Omit<NumberFormatProps & InputProps, 'value' | 'onValueChange' | 'o
 };
 
 const GasField = (props: Props) => {
+  const { gasDecimals } = useGasMultiplier();
+
   const { label, disabled, className, onGasCalculate, direction = 'x', gap, block, info, ...other } = props;
   const name = 'gasLimit';
 
@@ -32,7 +35,7 @@ const GasField = (props: Props) => {
     const bnMultiplier = bnValue.multipliedBy(0.1);
     const increasedValue = bnValue.plus(bnMultiplier);
 
-    change(name, increasedValue.toFixed(9));
+    change(name, increasedValue.toFixed(gasDecimals));
   };
 
   const error = meta.invalid && meta.touched ? meta.error : undefined;

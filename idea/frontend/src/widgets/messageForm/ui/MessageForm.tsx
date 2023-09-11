@@ -39,7 +39,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
   const calculateGas = useGasCalculate();
   const { sendMessage, replyMessage } = useMessageActions();
   const { balanceMultiplier, decimals } = useBalanceMultiplier();
-  const gasMultiplier = useGasMultiplier();
+  const { gasMultiplier } = useGasMultiplier();
 
   const [isDisabled, setIsDisabled] = useState(false);
   const [isGasDisabled, setIsGasDisabled] = useState(false);

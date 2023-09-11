@@ -41,7 +41,7 @@ const ProgramForm = (props: Props) => {
   const [isGasDisabled, setIsGasDisabled] = useState(false);
 
   const { balanceMultiplier, decimals } = useBalanceMultiplier();
-  const gasMultiplier = useGasMultiplier();
+  const { gasMultiplier } = useGasMultiplier();
   const calculateGas = useGasCalculate();
 
   const handleGasCalculate = async () => {

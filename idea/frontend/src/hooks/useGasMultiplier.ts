@@ -1,4 +1,5 @@
 import { useApi } from '@gear-js/react-hooks';
+
 import { useBalanceMultiplier } from './useBalanceMultiplier';
 
 function useGasMultiplier() {
@@ -8,7 +9,10 @@ function useGasMultiplier() {
   const { balanceMultiplier } = useBalanceMultiplier();
   const gasMultiplier = balanceMultiplier.dividedBy(valuePerGas);
 
-  return gasMultiplier;
+  // TODO: find a way to calculate logarithm without number
+  const gasDecimals = Math.floor(Math.log10(gasMultiplier.toNumber()));
+
+  return { gasMultiplier, gasDecimals };
 }
 
 export { useGasMultiplier };
