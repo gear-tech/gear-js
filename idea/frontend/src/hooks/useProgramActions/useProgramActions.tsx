@@ -8,7 +8,7 @@ import { ProgramMetadata } from '@gear-js/api';
 
 import { useChain, useModal } from 'hooks';
 import { uploadLocalProgram } from 'api/LocalDB';
-import { Method } from 'entities/explorer';
+import { Method } from 'features/explorer';
 import { OperationCallbacks } from 'entities/hooks';
 import {
   PROGRAM_ERRORS,

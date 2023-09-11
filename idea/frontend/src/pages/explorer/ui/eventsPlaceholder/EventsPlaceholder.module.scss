@@ -1,6 +1,0 @@
-@use 'shared/assets/styles/mixins' as *;
-
-.placeholder {
-  @include childrenMargin(16px);
-  position: relative;
-}

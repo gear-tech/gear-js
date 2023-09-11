@@ -1,8 +1,8 @@
-@use '@gear-js/ui/mixins.scss' as *;
-@use 'shared/assets/styles/_mixins.scss' as *;
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
-@use 'shared/assets/styles/_animations.scss' as *;
+@use '@gear-js/ui/mixins' as *;
+@use 'shared/assets/styles/mixins' as *;
+@use 'shared/assets/styles/shared' as *;
+@use 'shared/assets/styles/variables' as *;
+@use 'shared/assets/styles/animations' as *;
 
 .table {
   $borderRadius: 16px;
@@ -51,43 +51,5 @@
 
   .hideOwerflow {
     overflow: hidden; // for children text-overflow
-  }
-}
-
-.expandedTableRow {
-  @include expand(toRem(52));
-
-  height: toRem(52);
-
-  .content {
-    @include fade();
-
-    padding: 0 toRem(28) toRem(16) toRem(24);
-  }
-}
-
-.expandedBtn {
-  @include transition(opacity);
-
-  width: 100%;
-  text-align: left;
-  font-family: inherit;
-}
-
-.expandedIcon {
-  justify-self: end;
-
-  svg {
-    transform: rotate(90deg);
-
-    path {
-      fill: $successColor;
-    }
-  }
-
-  &.rotated {
-    svg {
-      transform: rotate(-90deg);
-    }
   }
 }

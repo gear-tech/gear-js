@@ -5,7 +5,7 @@ import { HexString } from '@polkadot/util/types';
 import { useApi, useAlert, useAccount, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
 import { useModal } from 'hooks';
-import { Method } from 'entities/explorer';
+import { Method } from 'features/explorer';
 import { checkWallet, getExtrinsicFailedMessage } from 'shared/helpers';
 import { PROGRAM_ERRORS, TransactionName, TransactionStatus, UPLOAD_METADATA_TIMEOUT } from 'shared/config';
 import { CopiedInfo } from 'shared/ui/copiedInfo';
