@@ -4,7 +4,8 @@ import { useBalanceMultiplier } from './useBalanceMultiplier';
 
 function useGasMultiplier() {
   const { api, isApiReady } = useApi();
-  const valuePerGas = isApiReady ? api.valuePerGas.toString() : '0';
+  // '1000' is an old runtime fallback
+  const valuePerGas = isApiReady ? api.valuePerGas?.toString() || '1000' : '0';
 
   const { balanceMultiplier } = useBalanceMultiplier();
   const gasMultiplier = balanceMultiplier.dividedBy(valuePerGas);
