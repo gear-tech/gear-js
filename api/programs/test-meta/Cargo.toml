@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 gstd = { git = "https://github.com/gear-tech/gear.git" }
 scale-info = { version = "2.9.0", default-features = false, features = ["derive"] }
-codec = { package = "parity-scale-codec", version = "3.6.4", default-features = false, features = ["derive", "full"] }
+codec = { package = "parity-scale-codec", version = "3.6.5", default-features = false, features = ["derive", "full"] }
 test-meta-io = { path = "io" }
 test-meta-state-v1 = { path = "state-v1", default-features = false, optional = true }
 test-meta-state-v2 = { path = "state-v2", default-features = false, optional = true }
