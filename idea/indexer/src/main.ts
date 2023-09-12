@@ -10,7 +10,6 @@ import { MessageService } from './services';
 import { ProgramService } from './services';
 import { StateService } from './services';
 import { GearIndexer, connectToNode } from './gear';
-import { GearHelper } from './gear';
 
 async function bootstrap() {
   runHealthcheckServer();
@@ -22,8 +21,6 @@ async function bootstrap() {
   changeStatus('database');
 
   await waitReady();
-
-  const helper = new GearHelper();
 
   const blockService = new BlockService(dataSource);
   const codeService = new CodeService(dataSource);
@@ -45,7 +42,6 @@ async function bootstrap() {
       await rmq.deleteGenesisQueue(genesis);
     }
   });
-  helper.initialize(indexer);
 }
 
 bootstrap();

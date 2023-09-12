@@ -488,6 +488,38 @@ export class GearIndexer {
     if (extrinsics.length === 0) {
       return;
     }
+
+    for (const tx of extrinsics) {
+      const event = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
+        this.api.events.gear.CodeChanged.is(event),
+      );
+
+      if (!event) {
+        continue;
+      }
+
+      const {
+        data: { id, change },
+      } = event.event as CodeChanged;
+      const codeId = id.toHex();
+      const metahash = await getMetahash(this.api.code, codeId);
+
+      const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
+
+      this.tempState.addCode(
+        new Code({
+          id: codeId,
+          name: codeId,
+          genesis: this.genesis,
+          status: codeStatus,
+          timestamp: new Date(timestamp),
+          blockHash: block.block.header.hash.toHex(),
+          expiration: change.isActive ? change.asActive.expiration.toString() : null,
+          uploadedBy: tx.signer.inner.toHex(),
+          metahash,
+        }),
+      );
+    }
   }
 
   private async handleProgramExtrinsics(
@@ -654,23 +686,27 @@ export class GearIndexer {
     return null;
   }
 
-  public async indexBlockWithMissedProgram(programId: HexString): Promise<Program | null> {
-    const progStorage = (await this.api.query.gearProgram.programStorage(programId)) as Option<IProgram>;
-
-    if (progStorage.isSome) {
-      const blockNumber = progStorage.unwrap()[1].toNumber();
-
-      await this.indexMissedBlock(blockNumber);
-
-      return this.tempState.getProgram(programId);
-    }
-
-    logger.error('Program not found in storage', { id: programId });
-    return null;
-  }
-
   private getProgramWithoutIndexing(id: HexString): Promise<Program> {
     return this.tempState.getProgram(id);
+  }
+
+  async findBlockWith(programOrCodeId: HexString, curBlockHash: HexString, with_: 'program' | 'code') {
+    const bn = await this.api.blocks.getBlockNumber(curBlockHash);
+    let low = 1;
+    let high = bn.toNumber();
+    let mid = 0;
+    const key = this.api.query.gearProgram[with_ === 'program' ? 'programStorage' : 'codeStorage'].key(programOrCodeId);
+    while (low <= high) {
+      mid = Math.round((low + high) / 2);
+      const blockHash = (await this.api.rpc.chain.getBlockHash(mid)).toHex();
+      const storage = await this.api.rpc.state.queryStorageAt<Option<any>>([key], blockHash);
+      if (storage[0].isSome) {
+        high = mid - 1;
+      } else {
+        low = mid + 1;
+      }
+    }
+    return low;
   }
 
   private async getProgram(id: HexString, blockHash: HexString, msgId: HexString): Promise<Program> {
@@ -678,7 +714,9 @@ export class GearIndexer {
     if (!program) {
       logger.error('Failed to retrieve program', { id, blockHash, msgId });
       try {
-        program = await this.indexBlockWithMissedProgram(id);
+        const blockWithProgram = await this.findBlockWith(id, blockHash, 'program');
+        await this.indexMissedBlock(blockWithProgram);
+        program = await this.tempState.getProgram(id);
       } catch (err) {
         logger.error('Failed to index block', { method: 'getProgram', blockHash, program: id, msg: msgId });
       }
@@ -689,8 +727,14 @@ export class GearIndexer {
   private async getCode(id: HexString, blockHash: HexString, programId: HexString): Promise<Code> {
     let code = await this.tempState.getCode(id);
     if (!code) {
-      logger.error('Unable to retrieve code', { id, programId, blockHash });
-      code = await this.indexBlockWithMissedCode(id);
+      logger.error('Failed to retrieve code', { id, programId, blockHash });
+      try {
+        const blockWithCode = await this.findBlockWith(id, blockHash, 'code');
+        await this.indexMissedBlock(blockWithCode);
+        code = await this.tempState.getCode(id);
+      } catch (err) {
+        logger.error('Failed to index block', { method: 'getCode', blockHash, code: id, program: programId });
+      }
     }
     return code;
   }
