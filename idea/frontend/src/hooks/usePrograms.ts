@@ -5,7 +5,7 @@ import { FetchProgramsParams, ProgramPaginationModel } from 'api/program/types';
 import { IProgram } from 'features/program';
 import { DEFAULT_LIMIT } from 'shared/config';
 import { fetchPrograms } from 'api';
-import { useGetLocalPrograms } from 'features/local-indexer';
+import { LocalProgram, useGetLocalPrograms } from 'features/local-indexer';
 
 import { useChain } from './context';
 
@@ -16,13 +16,14 @@ const usePrograms = (initLoading = true) => {
   const getLocalPrograms = useGetLocalPrograms();
   const getPrograms = isDevChain ? getLocalPrograms : fetchPrograms;
 
-  const [programs, setPrograms] = useState<IProgram[]>([]);
+  const [programs, setPrograms] = useState<(IProgram | LocalProgram)[]>([]);
   const [isLoading, setIsLoading] = useState(initLoading);
   const [totalCount, setTotalCount] = useState(0);
 
   const setProgramsData = (data: ProgramPaginationModel, isReset: boolean) => {
     setTotalCount(data.count);
-    // such an implementation to support StrictMode
+
+    // such implementation to support StrictMode
     setPrograms((prevState) => (isReset ? data.programs : prevState.concat(data.programs)));
   };
 
@@ -34,16 +35,13 @@ const usePrograms = (initLoading = true) => {
 
     setIsLoading(true);
 
-    return (
-      getPrograms({ limit: DEFAULT_LIMIT, ...params })
-        // @ts-ignore
-        .then(({ result }) => setProgramsData(result, isReset))
-        .catch((error: Error) => {
-          alert.error(error.message);
-          return Promise.reject(error);
-        })
-        .finally(() => setIsLoading(false))
-    );
+    return getPrograms({ limit: DEFAULT_LIMIT, ...params })
+      .then(({ result }) => setProgramsData(result, isReset))
+      .catch((error: Error) => {
+        alert.error(error.message);
+        return Promise.reject(error);
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return { programs, isLoading, totalCount, fetchPrograms: handleGetPrograms };

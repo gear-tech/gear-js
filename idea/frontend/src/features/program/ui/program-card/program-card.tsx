@@ -9,6 +9,7 @@ import { IdBlock } from 'shared/ui/idBlock';
 import { BulbBlock } from 'shared/ui/bulbBlock';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
 import { ActionLink } from 'shared/ui/ActionLink';
+import { LocalProgram } from 'features/local-indexer';
 
 import { getBulbStatus } from '../../utils';
 import { IProgram } from '../../types';
@@ -16,11 +17,11 @@ import { PROGRAM_STATUS_NAME, ProgramStatus } from '../../consts';
 import styles from './program-card.module.scss';
 
 type Props = {
-  program: IProgram;
+  program: IProgram | LocalProgram;
 };
 
 const ProgramCard = memo(({ program }: Props) => {
-  const { id: programId, name, status, timestamp, hasState } = program;
+  const { id: programId, name, status } = program;
   const statusName = PROGRAM_STATUS_NAME[status];
 
   return (
@@ -34,7 +35,8 @@ const ProgramCard = memo(({ program }: Props) => {
         <div className={styles.otherInfo}>
           <IdBlock id={programId} size="medium" withIcon color="light" />
           <BulbBlock color="light" text={statusName} status={getBulbStatus(status)} />
-          <TimestampBlock color="light" withIcon timestamp={timestamp} />
+
+          {'timestamp' in program && <TimestampBlock color="light" withIcon timestamp={program.timestamp} />}
         </div>
       </div>
 
@@ -47,7 +49,9 @@ const ProgramCard = memo(({ program }: Props) => {
               text="Send Message"
             />
 
-            {hasState && <ActionLink to={generatePath(routes.state, { programId })} icon={readSVG} text="Read State" />}
+            {'hasState' in program && program.hasState && (
+              <ActionLink to={generatePath(routes.state, { programId })} icon={readSVG} text="Read State" />
+            )}
 
             <IssueVoucher programId={programId} />
           </>

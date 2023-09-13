@@ -1,3 +1,4 @@
+import { LocalProgram } from 'features/local-indexer';
 import { IProgram, ProgramStatus } from 'features/program';
 
 type FetchProgramsParams = {
@@ -10,7 +11,7 @@ type FetchProgramsParams = {
 
 type ProgramPaginationModel = {
   count: number;
-  programs: IProgram[];
+  programs: (IProgram | LocalProgram)[];
 };
 
 export type { FetchProgramsParams, ProgramPaginationModel };

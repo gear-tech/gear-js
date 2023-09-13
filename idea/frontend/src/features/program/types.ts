@@ -12,7 +12,6 @@ interface IProgram extends IBase {
   name: string;
   status: ProgramStatus;
   metahash: HexString | null;
-  title: string | null;
   hasState: boolean;
   expiration?: number;
   code?: ICode;
