@@ -4,7 +4,8 @@ import { useAlert } from '@gear-js/react-hooks';
 import { FetchProgramsParams, ProgramPaginationModel } from 'api/program/types';
 import { IProgram } from 'features/program';
 import { DEFAULT_LIMIT } from 'shared/config';
-import { fetchPrograms, getLocalPrograms } from 'api';
+import { fetchPrograms } from 'api';
+import { useGetLocalPrograms } from 'features/local-indexer';
 
 import { useChain } from './context';
 
@@ -12,6 +13,7 @@ const usePrograms = (initLoading = true) => {
   const alert = useAlert();
 
   const { isDevChain } = useChain();
+  const getLocalPrograms = useGetLocalPrograms();
   const getPrograms = isDevChain ? getLocalPrograms : fetchPrograms;
 
   const [programs, setPrograms] = useState<IProgram[]>([]);
@@ -32,13 +34,16 @@ const usePrograms = (initLoading = true) => {
 
     setIsLoading(true);
 
-    return getPrograms({ limit: DEFAULT_LIMIT, ...params })
-      .then(({ result }) => setProgramsData(result, isReset))
-      .catch((error) => {
-        alert.error(error.message);
-        return Promise.reject(error);
-      })
-      .finally(() => setIsLoading(false));
+    return (
+      getPrograms({ limit: DEFAULT_LIMIT, ...params })
+        // @ts-ignore
+        .then(({ result }) => setProgramsData(result, isReset))
+        .catch((error: Error) => {
+          alert.error(error.message);
+          return Promise.reject(error);
+        })
+        .finally(() => setIsLoading(false))
+    );
   };
 
   return { programs, isLoading, totalCount, fetchPrograms: handleGetPrograms };

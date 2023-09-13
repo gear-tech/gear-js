@@ -4,7 +4,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { useAccount, useApi } from '@gear-js/react-hooks';
 import 'simplebar-react/dist/simplebar.min.css';
 
-import { useApp, useChain, useEventSubscriptions, useLocalProgramsFilter, useMobileDisclaimer } from 'hooks';
+import { useApp, useChain, useEventSubscriptions, useMobileDisclaimer } from 'hooks';
 import { Menu } from 'widgets/menu';
 import { Header } from 'widgets/header';
 import { Footer } from 'widgets/footer';
@@ -30,7 +30,6 @@ const App = withProviders(() => {
   const { isMobileDisclaimerVisible, closeMobileDisclaimer } = useMobileDisclaimer();
 
   useEventSubscriptions();
-  useLocalProgramsFilter();
 
   useEffect(() => {
     const urlNodeAddress = searchParams.get(NODE_ADRESS_URL_PARAM);
