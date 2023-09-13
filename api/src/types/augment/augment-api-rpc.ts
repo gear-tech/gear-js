@@ -86,7 +86,7 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
         (
           batchIdPayload: [string | Uint8Array | H256, Bytes | Uint8Array | number[] | string][],
           at?: BlockHash | string | Uint8Array,
-        ) => Observable<Codec>
+        ) => Observable<Bytes[]>
       >;
       readStateUsingWasmBatch: AugmentedRpc<
         (

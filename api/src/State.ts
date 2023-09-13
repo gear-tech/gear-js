@@ -74,7 +74,7 @@ export class GearProgramState extends GearProgramStorage {
     return meta.createType<T>((meta.types.state as HumanTypesRepr).output, state);
   }
 
-  // async readBatch(args: ReadStateBatchParams): Promise<Codec[]> {
-
-  // }
+  async readBatch(args: ReadStateBatchParams): Promise<Bytes[]> {
+    return this._api.rpc.gear.readStateBatch(args.idPayloadBatch, args.at || null);
+  }
 }

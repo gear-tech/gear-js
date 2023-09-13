@@ -133,14 +133,14 @@
       },
       "readStateBatch": {
         "params": [
-          { "name": "batch_id_payload", "type": "Vec<(H256, Vec<u8>)>" },
+          { "name": "batch_id_payload", "type": "Vec<(H256, Bytes)>" },
           { "name": "at", "type": "Option<BlockHash>" }
         ],
         "type": "Vec<Bytes>"
       },
       "readStateUsingWasmBatch": {
         "params": [
-          { "name": "batch_id_payload", "type": "Vec<(H256, Vec<u8>)>" },
+          { "name": "batch_id_payload", "type": "Vec<(H256, Bytes)>" },
           { "name": "fn_name", "type": "Bytes" },
           { "name": "wasm", "type": "Bytes" },
           { "name": "argument", "type": "Option<Bytes>" },

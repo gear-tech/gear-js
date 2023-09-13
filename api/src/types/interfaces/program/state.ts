@@ -1,3 +1,4 @@
+import { Bytes } from '@polkadot/types-codec';
 import { HexString } from '@polkadot/util/types';
 import { ProgramMetadata } from 'metadata';
 
@@ -30,10 +31,9 @@ export interface ReadStateBatchWithDifferentMetaParams {
 
 export interface ReadStateBatchParams {
   /**
-   * Key is program id
-   * Value is input payload expected by the `state` function
+   * Array of program ids and payload to be sent expected by the `state` function
    */
-  idPayloadBatch: Record<HexString, any>;
+  idPayloadBatch: [HexString, Bytes | Uint8Array | string | number[]][];
   /**
    * Block hash at which state is to be received
    */

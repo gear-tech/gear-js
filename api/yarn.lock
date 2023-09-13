@@ -1927,7 +1927,7 @@ __metadata:
     typescript: 5.2.2
   peerDependencies:
     "@polkadot/api": 10.9.1
-    "@polkadot/wasm-crypto": 7.2.2
+    "@polkadot/wasm-crypto": 7.2.1
     rxjs: 7.8.1
   languageName: unknown
   linkType: soft
