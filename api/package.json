@@ -24,6 +24,8 @@
     "test": "jest --runInBand",
     "test:only": "jest --testPathPattern",
     "build": "rm -rf lib && rollup --config rollup.config.js",
+    "generate:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package sample-polkadotjs-typegen/interfaces --input ./src/interfaces --endpoint ./gear.json",
+    "generate:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package sample-polkadotjs-typegen/interfaces --endpoint ./gear.json --output ./src/interfaces",
     "lint": "eslint . --ext .ts --ignore-pattern lib/ --ignore-pattern node_modules/",
     "lint:fix": "eslint --fix . --ext .ts --ignore-pattern lib/ --ignore-pattern node_modules/"
   },
@@ -55,7 +57,9 @@
     "@babel/preset-env": "7.22.15",
     "@babel/preset-typescript": "7.22.15",
     "@polkadot/api": "10.9.1",
+    "@polkadot/typegen": "^10.9.1",
     "@polkadot/types": "10.9.1",
+    "@polkadot/types-codec": "^10.9.1",
     "@polkadot/wasm-crypto": "7.2.2",
     "@rollup/plugin-commonjs": "25.0.4",
     "@rollup/plugin-json": "6.0.0",

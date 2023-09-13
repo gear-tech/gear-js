@@ -1,10 +1,10 @@
-import { Bytes, Option, Vec, u8 } from '@polkadot/types';
+import { Bytes, Option } from '@polkadot/types';
+import { GearCommonCodeMetadata, GearCoreCodeInstrumentedCode } from '@polkadot/types/lookup';
 import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { u8aToHex } from '@polkadot/util';
 
-import { CodeMetadata, CodeStorage } from './types';
 import { generateCodeHash, getIdsFromKeys, validateCodeId } from './utils';
 import { CodeDoesNotExistError } from './errors';
 import { GearTransaction } from './Transaction';
@@ -32,7 +32,7 @@ export class GearCode extends GearTransaction {
    * @param codeId
    */
   async exists(codeId: string) {
-    const codeMetadata = (await this._api.query.gearProgram.metadataStorage(codeId)) as Option<CodeMetadata>;
+    const codeMetadata = (await this._api.query.gearProgram.metadataStorage(codeId)) as Option<GearCommonCodeMetadata>;
     return codeMetadata.isSome;
   }
 
@@ -40,8 +40,8 @@ export class GearCode extends GearTransaction {
    * ### Get code storage
    * @param codeId
    */
-  async storage(codeId: HexString): Promise<CodeStorage> {
-    return this._api.query.gearProgram.codeStorage(codeId) as unknown as CodeStorage;
+  async storage(codeId: HexString): Promise<Option<GearCoreCodeInstrumentedCode>> {
+    return this._api.query.gearProgram.codeStorage(codeId);
   }
 
   /**
@@ -66,7 +66,7 @@ export class GearCode extends GearTransaction {
   }
 
   async metaHash(codeId: HexString): Promise<HexString> {
-    const code = (await this._api.query.gearProgram.originalCodeStorage(codeId)) as Option<Vec<u8>>;
+    const code = (await this._api.query.gearProgram.originalCodeStorage(codeId)) as Option<Bytes>;
     if (code.isNone) {
       throw new CodeDoesNotExistError(codeId);
     }

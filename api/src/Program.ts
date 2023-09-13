@@ -1,17 +1,12 @@
 import { Bytes, Option, u128, u32 } from '@polkadot/types';
+import { GearCommonProgram } from '@polkadot/types/lookup';
 import { H256 } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { randomAsHex } from '@polkadot/util-crypto';
 
-import {
-  IProgram,
-  IProgramCreateOptions,
-  IProgramCreateResult,
-  IProgramUploadOptions,
-  IProgramUploadResult,
-} from './types';
+import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult } from './types';
 import { ProgramDoesNotExistError, ProgramHasNoMetahash, SubmitProgramError } from './errors';
 import {
   encodePayload,
@@ -232,7 +227,7 @@ export class GearProgram extends GearTransaction {
    * @returns `true` if address belongs to program, and `false` otherwise
    */
   async exists(id: HexString): Promise<boolean> {
-    const program = (await this._api.query.gearProgram.programStorage(id)) as Option<IProgram>;
+    const program = (await this._api.query.gearProgram.programStorage(id)) as Option<GearCommonProgram>;
     return program.isSome;
   }
 
@@ -255,7 +250,7 @@ export class GearProgram extends GearTransaction {
    */
   async metaHash(programId: HexString, at?: HexString): Promise<HexString> {
     try {
-      const metaHash = (await this._api.rpc['gear'].readMetahash(programId, at || null)) as H256;
+      const metaHash = (await this._api.rpc.gear.readMetahash(programId, at || null)) as H256;
       return metaHash.toHex();
     } catch (error) {
       if (error.code === 8000) {

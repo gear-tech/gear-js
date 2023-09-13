@@ -1,4 +1,5 @@
 import { HexString } from '@polkadot/util/types';
+import { ProgramMetadata } from 'metadata';
 
 export interface ReadStateParams {
   /**
@@ -9,6 +10,30 @@ export interface ReadStateParams {
    * Input payload expected by the `state` function
    */
   payload: any;
+  /**
+   * Block hash at which state is to be received
+   */
+  at?: HexString;
+}
+
+export interface ReadStateBatchWithDifferentMetaParams {
+  /**
+   * Key is program id
+   * Value is input payload expected by the `state` function and program metadata
+   */
+  idPayloadBatch: Record<HexString, { paylod: any; meta?: ProgramMetadata }>;
+  /**
+   * Block hash at which state is to be received
+   */
+  at?: HexString;
+}
+
+export interface ReadStateBatchParams {
+  /**
+   * Key is program id
+   * Value is input payload expected by the `state` function
+   */
+  idPayloadBatch: Record<HexString, any>;
   /**
    * Block hash at which state is to be received
    */

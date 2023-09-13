@@ -1,7 +1,7 @@
 import { Codec } from '@polkadot/types/types';
 
 import { CreateType, MetadataVersion, ProgramMetadata, StateMetadata } from './metadata';
-import { HumanTypesRepr, ReadStateParams, ReadStateUsingWasmParams } from './types';
+import { HumanTypesRepr, ReadStateBatchParams, ReadStateParams, ReadStateUsingWasmParams } from './types';
 import { Bytes } from '@polkadot/types';
 import { GearProgramStorage } from './Storage';
 
@@ -32,7 +32,7 @@ export class GearProgramState extends GearProgramStorage {
     const code =
       typeof params.wasm === 'string' ? params.wasm : CreateType.create<Bytes>('Bytes', Array.from(params.wasm));
 
-    const state = await this._api.rpc['gear'].readStateUsingWasm(
+    const state = await this._api.rpc.gear.readStateUsingWasm(
       params.programId,
       payload,
       params.fn_name,
@@ -61,7 +61,7 @@ export class GearProgramState extends GearProgramStorage {
       meta.version === MetadataVersion.V2Rust
         ? Array.from(meta.createType((meta.types.state as HumanTypesRepr).input, args.payload).toU8a())
         : [];
-    const state = await this._api.rpc['gear'].readState(args.programId, payload, args.at || null);
+    const state = await this._api.rpc.gear.readState(args.programId, payload, args.at || null);
 
     if (type !== undefined) {
       return meta.createType<T>(type, state);
@@ -73,4 +73,8 @@ export class GearProgramState extends GearProgramStorage {
 
     return meta.createType<T>((meta.types.state as HumanTypesRepr).output, state);
   }
+
+  // async readBatch(args: ReadStateBatchParams): Promise<Codec[]> {
+
+  // }
 }

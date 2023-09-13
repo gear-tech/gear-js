@@ -1,22 +1,18 @@
 import { AccountId32, BlockNumber } from '@polkadot/types/interfaces';
-import { BTreeMap, BTreeSet, Bool, GenericEventData, Option, Vec, u128, u32 } from '@polkadot/types';
+import { BTreeMap, BTreeSet, GenericEventData, Option, u128, u32 } from '@polkadot/types';
 import { GasNodeId, ReservationId } from 'types/interfaces/ids/gas';
-
 import {
-  CodeChangeKind,
-  CodeId,
-  DispatchStatus,
-  MessageEntry,
-  MessageId,
-  MessageWaitedReason,
-  MessageWokenReason,
-  ProgramChangedKind,
-  ProgramId,
-  ResumeProgramSessionId,
-  UserMessageReadReason,
-  UserMessageSentMessage,
-} from '../types';
-import { ProgramDetails, QueuedDispatch } from '../types';
+  GearCommonEventCodeChangeKind,
+  GearCommonEventDispatchStatus,
+  GearCommonEventMessageEntry,
+  GearCommonEventProgramChangeKind,
+  GearCommonEventReasonMessageWaitedRuntimeReason,
+  GearCommonEventReasonMessageWokenRuntimeReason,
+  GearCommonEventReasonUserMessageReadRuntimeReason,
+  GearCoreMessageUserUserMessage,
+} from '@polkadot/types/lookup';
+
+import { CodeId, MessageId, ProgramId, ResumeProgramSessionId } from '../types';
 
 export class GearEventData extends GenericEventData {
   constructor(data: GenericEventData) {
@@ -28,54 +24,45 @@ export interface MessageQueuedData extends GenericEventData {
   id: MessageId;
   source: AccountId32;
   destination: ProgramId;
-  entry: MessageEntry;
+  entry: GearCommonEventMessageEntry;
 }
 
 export interface UserMessageSentData extends GenericEventData {
-  message: UserMessageSentMessage;
+  message: GearCoreMessageUserUserMessage;
   expiration: Option<BlockNumber>;
 }
 
 export interface UserMessageReadData extends GenericEventData {
   id: MessageId;
-  reason: UserMessageReadReason;
+  reason: GearCommonEventReasonUserMessageReadRuntimeReason;
 }
 
 export interface MessagesDispatchedData extends GenericEventData {
   total: u32;
-  statuses: BTreeMap<MessageId, DispatchStatus>;
+  statuses: BTreeMap<MessageId, GearCommonEventDispatchStatus>;
   stateChanges: BTreeSet<ProgramId>;
 }
 
 export interface MessageWaitedData extends GenericEventData {
   id: MessageId;
   origin: Option<GasNodeId<MessageId, ReservationId>>;
-  reason: MessageWaitedReason;
+  reason: GearCommonEventReasonMessageWaitedRuntimeReason;
   expiration: BlockNumber;
 }
 
 export interface MessageWakenData extends GenericEventData {
   id: MessageId;
-  reason: MessageWokenReason;
+  reason: GearCommonEventReasonMessageWokenRuntimeReason;
 }
 
 export interface CodeChangedData extends GenericEventData {
   id: CodeId;
-  change: CodeChangeKind;
+  change: GearCommonEventCodeChangeKind;
 }
 
 export interface ProgramChangedData extends GenericEventData {
   id: ProgramId;
-  change: ProgramChangedKind;
-}
-
-export interface DebugData extends GenericEventData {
-  dispatchQueue: Vec<QueuedDispatch>;
-  programs: Vec<ProgramDetails>;
-}
-
-export interface DebugModeData extends GenericEventData {
-  enabled: Bool;
+  change: GearCommonEventProgramChangeKind;
 }
 
 export interface TransferData extends GenericEventData {
