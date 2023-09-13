@@ -32,8 +32,7 @@ const TransferBalanceModal = ({ onSubmit }: Props) => {
       <Form
         initialValues={initialValues}
         onSubmit={({ address, amount }: typeof initialValues) => onSubmit(decodeAddress(address), amount)}
-        validate={getValidation(validationSchema)}
-        validateOnBlur>
+        validate={getValidation(validationSchema)}>
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
             <div className={styles.inputs}>

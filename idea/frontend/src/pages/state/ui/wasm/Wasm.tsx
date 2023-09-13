@@ -208,7 +208,7 @@ const Wasm = () => {
 
   return (
     <>
-      <Form initialValues={INITIAL_VALUES} onSubmit={handleSubmit} validateOnBlur>
+      <Form initialValues={INITIAL_VALUES} onSubmit={handleSubmit}>
         {(formProps) => {
           formApi.current = formProps.form;
 

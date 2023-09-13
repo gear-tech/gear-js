@@ -38,7 +38,7 @@ const Full = () => {
   };
 
   return (
-    <Form initialValues={INITIAL_VALUES} onSubmit={handleSubmit} validateOnBlur>
+    <Form initialValues={INITIAL_VALUES} onSubmit={handleSubmit}>
       {(form) => (
         <form id="state" onSubmit={form.handleSubmit}>
           <Box className={styles.box}>
