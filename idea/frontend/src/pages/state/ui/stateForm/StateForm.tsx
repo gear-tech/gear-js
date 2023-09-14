@@ -26,7 +26,7 @@ const StateForm = (props: Props) => {
   const { onSubmit, onPayloadChange, programId, state, payloadFormValues, isLoading, isStateRead, isState } = props;
 
   return (
-    <Form initialValues={INITIAL_VALUES} onSubmit={onSubmit} validateOnBlur>
+    <Form initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
       {(formApi) => (
         <form id="state" onSubmit={formApi.handleSubmit}>
           <Box className={styles.body}>

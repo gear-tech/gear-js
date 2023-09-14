@@ -1,10 +1,11 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { DispatchError, Event } from '@polkadot/types/interfaces';
 import { u128, u64 } from '@polkadot/types';
+import { GearCommonGasMultiplier } from '@polkadot/types/lookup';
 import { RegistryError } from '@polkadot/types-codec/types';
 
-import { GasMultiplier, GearApiOptions } from './types';
 import { gearRpc, gearTypes } from './default';
+import { GearApiOptions } from './types';
 import { GearBalance } from './Balance';
 import { GearBlock } from './Blocks';
 import { GearClaimValue } from './Claim';
@@ -115,7 +116,7 @@ export class GearApi extends ApiPromise {
   }
 
   get valuePerGas(): u128 {
-    const gasMultiplier = this.consts.gearBank.gasMultiplier as GasMultiplier<u128, u64>;
+    const gasMultiplier = this.consts.gearBank.gasMultiplier as GearCommonGasMultiplier;
     if (gasMultiplier.isValuePerGas) {
       return gasMultiplier.asValuePerGas;
     }

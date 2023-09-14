@@ -1,7 +1,5 @@
 import {
   CodeChanged,
-  DebugDataSnapshot,
-  DebugMode,
   MessageQueued,
   MessageWaited,
   MessageWaken,
@@ -26,7 +24,5 @@ export interface IGearEvent {
   MessageWaken: MessageWaken;
   CodeChanged: CodeChanged;
   ProgramChanged: ProgramChanged;
-  DebugDataSnapshot: DebugDataSnapshot;
-  DebugMode: DebugMode;
   ProgramResumeSessionStarted: ProgramResumeSessionStarted;
 }

@@ -57,7 +57,7 @@ export class GearGas {
     meta?: ProgramMetadata,
     typeIndexOrTypeName?: number | string,
   ): Promise<GasInfo> {
-    return this._api.rpc['gear'].calculateInitUploadGas(
+    return this._api.rpc.gear.calculateInitUploadGas(
       sourceId,
       encodePayload(code, undefined, undefined, 'Bytes'),
       encodePayload(payload, meta, 'init', typeIndexOrTypeName),
@@ -115,13 +115,7 @@ export class GearGas {
     typeIndexOrTypeName?: number | string,
   ): Promise<GasInfo> {
     const _payload = encodePayload(payload, meta, 'init', typeIndexOrTypeName);
-    return this._api.rpc['gear'].calculateInitCreateGas(
-      sourceId,
-      codeId,
-      _payload,
-      value || 0,
-      allowOtherPanics || true,
-    );
+    return this._api.rpc.gear.calculateInitCreateGas(sourceId, codeId, _payload, value || 0, allowOtherPanics || true);
   }
 
   /**
@@ -164,7 +158,7 @@ export class GearGas {
     typeIndexOrTypeName?: number | string,
   ): Promise<GasInfo> {
     const _payload = encodePayload(payload, meta, 'handle', typeIndexOrTypeName);
-    return this._api.rpc['gear'].calculateHandleGas(
+    return this._api.rpc.gear.calculateHandleGas(
       sourceId,
       destinationId,
       _payload,
@@ -210,6 +204,6 @@ export class GearGas {
     typeIndexOrTypeName?: number,
   ): Promise<GasInfo> {
     const _payload = encodePayload(payload, meta, 'reply', typeIndexOrTypeName);
-    return this._api.rpc['gear'].calculateReplyGas(sourceId, messageId, _payload, value || 0, allowOtherPanics || true);
+    return this._api.rpc.gear.calculateReplyGas(sourceId, messageId, _payload, value || 0, allowOtherPanics || true);
   }
 }

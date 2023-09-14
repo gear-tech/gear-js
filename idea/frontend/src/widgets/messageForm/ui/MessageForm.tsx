@@ -138,7 +138,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
   };
 
   return (
-    <Form validateOnBlur initialValues={INITIAL_VALUES} validate={validation} onSubmit={handleSubmitForm}>
+    <Form initialValues={INITIAL_VALUES} validate={validation} onSubmit={handleSubmitForm}>
       {({ form, handleSubmit }) => {
         formApi.current = form;
 

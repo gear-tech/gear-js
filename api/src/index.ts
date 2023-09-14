@@ -4,7 +4,6 @@ export { GearKeyring } from './Keyring';
 export { GearProgram } from './Program';
 export { GearMessage } from './Message';
 export { GearBalance } from './Balance';
-export { DebugMode } from './DebugMode';
 export { GearMailbox } from './Mailbox';
 export { GearProgramState } from './State';
 export { GearBlock } from './Blocks';

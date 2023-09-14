@@ -40,11 +40,7 @@ const IssueVoucherModal = ({ programId, close }: Props) => {
 
   return (
     <Modal heading="Create Voucher" close={close}>
-      <Form
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-        validate={getValidation(validationSchema)}
-        validateOnBlur>
+      <Form initialValues={initialValues} onSubmit={handleSubmit} validate={getValidation(validationSchema)}>
         {(form) => (
           <form onSubmit={form.handleSubmit} className={styles.form}>
             <FormInput name="address" label="Account address" direction="y" block />

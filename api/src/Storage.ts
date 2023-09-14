@@ -1,8 +1,11 @@
+import { GearCommonActiveProgram, GearCommonProgram } from '@polkadot/types/lookup';
+import { Option, u32 } from '@polkadot/types';
+import { H256 } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
-import { Option } from '@polkadot/types';
+import { ITuple } from '@polkadot/types-codec/types';
 import { u8aToU8a } from '@polkadot/util';
 
-import { ActiveProgram, IGearPages, IProgram, PausedProgramBlockAndHash, PausedProgramMapValue } from './types';
+import { IGearPages, PausedProgramBlockAndHash } from './types';
 import {
   PausedProgramDoesNotExistError,
   ProgramDoesNotExistError,
@@ -20,9 +23,9 @@ export class GearProgramStorage {
    * @param at _(optional)_ Hash of block to query at
    * @returns
    */
-  async getProgram(id: HexString, at?: HexString): Promise<ActiveProgram> {
+  async getProgram(id: HexString, at?: HexString): Promise<GearCommonActiveProgram> {
     const api = at ? await this._api.at(at) : this._api;
-    const programOption = (await api.query.gearProgram.programStorage(id)) as Option<IProgram>;
+    const programOption = (await api.query.gearProgram.programStorage(id)) as Option<GearCommonProgram>;
 
     if (programOption.isNone) {
       throw new ProgramDoesNotExistError(id);
@@ -43,7 +46,7 @@ export class GearProgramStorage {
    * @param gProg
    * @returns
    */
-  async getProgramPages(programId: HexString, program: ActiveProgram, at?: HexString): Promise<IGearPages> {
+  async getProgramPages(programId: HexString, program: GearCommonActiveProgram, at?: HexString): Promise<IGearPages> {
     const pages = {};
     for (const page of program.pagesWithData) {
       pages[page.toNumber()] = u8aToU8a(
@@ -63,10 +66,9 @@ export class GearProgramStorage {
    * @returns
    */
   async getPausedProgramHashAndBlockNumber(id: HexString, at?: HexString): Promise<PausedProgramBlockAndHash> {
-    const storageOption = (await this._api.query.gearProgram.pausedProgramStorage(
-      id,
-      at,
-    )) as Option<PausedProgramMapValue>;
+    const storageOption = (await this._api.query.gearProgram.pausedProgramStorage(id, at)) as Option<
+      ITuple<[u32, H256]>
+    >;
 
     if (storageOption.isNone) {
       throw new PausedProgramDoesNotExistError(id);

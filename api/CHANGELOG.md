@@ -1,3 +1,12 @@
+## 0.33.3
+
+_09/14/2023_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1395
+- Support `readStateBatch` rpc call.
+- Generate augemented types
+
 ## 0.33.2
 
 _09/11/2023_
