@@ -4,7 +4,8 @@ import { EventRecord } from '@polkadot/types/interfaces';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
-import { ProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata, IProgram } from '@gear-js/api';
+import { Option } from '@polkadot/types';
 
 import { useChain, useModal } from 'hooks';
 import { uploadLocalProgram } from 'api/LocalDB';
@@ -24,7 +25,6 @@ import { addProgramName } from 'api';
 
 import { isHumanTypesRepr } from 'pages/state/helpers';
 import { useMetadataUpload } from '../useMetadataUpload';
-import { waitForProgramInit } from './helpers';
 import { ALERT_OPTIONS } from './consts';
 import { Payload, ParamsToCreate, ParamsToUpload, ParamsToSignAndUpload } from './types';
 
@@ -76,6 +76,16 @@ const useProgramActions = () => {
     });
   };
 
+  const getProgramStatus = async (id: HexString) => {
+    const option = (await api.query.gearProgram.programStorage(id)) as Option<IProgram>;
+    const { isTerminated, isExited } = option.unwrap();
+
+    if (isTerminated) return ProgramStatus.Terminated;
+    if (isExited) return ProgramStatus.Exited;
+
+    return ProgramStatus.Active;
+  };
+
   const signAndUpload = async ({
     name,
     signer,
@@ -91,8 +101,6 @@ const useProgramActions = () => {
     const programMessage = getProgramMessage(programId);
 
     try {
-      const initialization = waitForProgramInit(api, programId);
-
       await api.program.signAndSend(account!.address, { signer }, ({ status, events }) => {
         if (status.isReady) {
           alert.update(alertId, TransactionStatus.Ready);
@@ -105,53 +113,47 @@ const useProgramActions = () => {
           // timeout cuz wanna be sure that block data is ready
           setTimeout(() => {
             addProgramName({ id: programId, name: name || programId }, isDevChain).then(
-              () =>
-                metaHex &&
-                uploadMetadata({
-                  codeHash: codeId,
-                  metaHex,
-                  programId,
-                  resolve: () => alert.success(programMessage, ALERT_OPTIONS),
-                }),
+              () => metaHex && uploadMetadata({ codeHash: codeId, metaHex, programId }),
             );
           }, UPLOAD_METADATA_TIMEOUT);
+
+          getProgramStatus(programId).then(async (programStatus) => {
+            if ([ProgramStatus.Terminated, ProgramStatus.Exited].includes(programStatus)) {
+              alert.error(programMessage, ALERT_OPTIONS);
+
+              if (reject) reject();
+            } else {
+              alert.success(programMessage, ALERT_OPTIONS);
+
+              if (resolve) resolve();
+            }
+
+            if (isDevChain) {
+              const metahash = await api.code.metaHash(codeId);
+              const meta = metaHex ? ProgramMetadata.from(metaHex) : undefined;
+
+              const hasState =
+                !!meta &&
+                (typeof meta.types.state === 'number' ||
+                  (isHumanTypesRepr(meta.types.state) && !isNullOrUndefined(meta.types.state.output)));
+
+              await uploadLocalProgram({
+                id: programId,
+                name: name || programId,
+                owner: account?.decodedAddress!,
+                code: { id: codeId },
+                status: programStatus,
+                hasState,
+                metahash,
+              });
+            }
+          });
         } else if (status.isInvalid) {
           alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
 
           if (reject) reject();
         }
       });
-
-      const initStatus = await initialization;
-
-      if (initStatus === ProgramStatus.Terminated || initStatus === ProgramStatus.Exited) {
-        alert.error(programMessage, ALERT_OPTIONS);
-
-        if (reject) reject();
-
-        return;
-      }
-
-      if (resolve) resolve();
-
-      if (isDevChain) {
-        const metahash = await api.program.metaHash(programId);
-        const meta = metaHex ? ProgramMetadata.from(metaHex) : undefined;
-
-        const hasState =
-          !!meta &&
-          (typeof meta.types.state === 'number' ||
-            (isHumanTypesRepr(meta.types.state) && !isNullOrUndefined(meta.types.state.output)));
-
-        await uploadLocalProgram({
-          id: programId,
-          name: name || programId,
-          owner: account?.decodedAddress!,
-          code: { id: codeId },
-          hasState,
-          metahash,
-        });
-      }
     } catch (error) {
       const message = (error as Error).message;
 

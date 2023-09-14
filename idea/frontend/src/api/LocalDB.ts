@@ -1,7 +1,7 @@
 import { HexString } from '@polkadot/util/types';
 import localForage from 'localforage';
 
-import { ProgramStatus, IProgram } from 'features/program';
+import { IProgram } from 'features/program';
 import { LocalStorage } from 'shared/config';
 import { IMeta } from 'entities/metadata';
 
@@ -58,12 +58,11 @@ const getLocalPrograms = (params: any) => {
 };
 
 const uploadLocalProgram = (
-  program: Pick<IProgram, 'id' | 'owner' | 'name' | 'hasState' | 'metahash'> & { code: { id: HexString } },
+  program: Pick<IProgram, 'id' | 'owner' | 'name' | 'hasState' | 'metahash' | 'status'> & { code: { id: HexString } },
 ) =>
   PROGRAMS_LOCAL_FORAGE.setItem(program.id, {
     ...program,
     timestamp: Date(),
-    status: ProgramStatus.Active,
     genesis: localStorage.getItem(LocalStorage.Genesis),
   });
 
