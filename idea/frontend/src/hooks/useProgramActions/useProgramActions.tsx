@@ -143,6 +143,7 @@ const useProgramActions = () => {
                 owner: account?.decodedAddress!,
                 code: { id: codeId },
                 status: programStatus,
+                blockHash: status.asFinalized.toHex(),
                 hasState,
                 metahash,
               });

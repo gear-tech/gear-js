@@ -58,7 +58,9 @@ const getLocalPrograms = (params: any) => {
 };
 
 const uploadLocalProgram = (
-  program: Pick<IProgram, 'id' | 'owner' | 'name' | 'hasState' | 'metahash' | 'status'> & { code: { id: HexString } },
+  program: Pick<IProgram, 'id' | 'owner' | 'name' | 'hasState' | 'metahash' | 'status' | 'blockHash'> & {
+    code: { id: HexString };
+  },
 ) =>
   PROGRAMS_LOCAL_FORAGE.setItem(program.id, {
     ...program,
