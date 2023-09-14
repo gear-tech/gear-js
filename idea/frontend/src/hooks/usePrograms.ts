@@ -5,7 +5,7 @@ import { FetchProgramsParams, ProgramPaginationModel } from 'api/program/types';
 import { IProgram } from 'features/program';
 import { DEFAULT_LIMIT } from 'shared/config';
 import { fetchPrograms } from 'api';
-import { LocalProgram, useGetLocalPrograms } from 'features/local-indexer';
+import { LocalProgram, useLocalPrograms } from 'features/local-indexer';
 
 import { useChain } from './context';
 
@@ -13,7 +13,7 @@ const usePrograms = (initLoading = true) => {
   const alert = useAlert();
 
   const { isDevChain } = useChain();
-  const getLocalPrograms = useGetLocalPrograms();
+  const { getLocalPrograms } = useLocalPrograms();
   const getPrograms = isDevChain ? getLocalPrograms : fetchPrograms;
 
   const [programs, setPrograms] = useState<(IProgram | LocalProgram)[]>([]);

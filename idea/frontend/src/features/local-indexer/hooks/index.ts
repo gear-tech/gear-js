@@ -1,3 +1,4 @@
-import { useGetLocalPrograms } from './use-get-local-programs';
+import { useLocalProgram } from './use-local-program';
+import { useLocalPrograms } from './use-local-programs';
 
-export { useGetLocalPrograms };
+export { useLocalProgram, useLocalPrograms };

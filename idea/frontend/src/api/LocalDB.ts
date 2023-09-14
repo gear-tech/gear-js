@@ -37,4 +37,4 @@ const uploadLocalMetadata = async (hash: HexString, hex: HexString, programId: H
       .then((result) => PROGRAMS_LOCAL_FORAGE.setItem(programId, result)),
   ]);
 
-export { getLocalProgram, getLocalMetadata, uploadLocalProgram, uploadLocalMetadata, PROGRAMS_LOCAL_FORAGE };
+export { getLocalMetadata, uploadLocalProgram, uploadLocalMetadata, PROGRAMS_LOCAL_FORAGE };

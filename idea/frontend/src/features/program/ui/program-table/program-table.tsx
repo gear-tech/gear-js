@@ -7,19 +7,22 @@ import { Table, TableRow } from 'shared/ui/table';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
 import { ContentLoader } from 'shared/ui/contentLoader';
 import { ReactComponent as TablePlaceholderSVG } from 'shared/assets/images/placeholders/table.svg';
+import { LocalProgram } from 'features/local-indexer';
 
 import { IProgram } from '../../types';
 import { PROGRAM_STATUS_NAME } from '../../consts';
 import { getBulbStatus } from '../../utils';
 
 type Props = {
-  program: IProgram | undefined;
+  program: IProgram | LocalProgram | undefined;
   isProgramReady: boolean;
 };
 
 const ProgramTable = ({ program, isProgramReady }: Props) => {
-  const { code } = program || {};
+  const { code, timestamp } = program || {};
+
   const codeId = code?.id;
+  const blockId = program?.blockHash;
 
   return isProgramReady && program ? (
     <Table>
@@ -31,9 +34,11 @@ const ProgramTable = ({ program, isProgramReady }: Props) => {
         <BulbBlock size="large" text={PROGRAM_STATUS_NAME[program.status]} status={getBulbStatus(program.status)} />
       </TableRow>
 
-      <TableRow name="Created at">
-        <TimestampBlock size="large" timestamp={program.timestamp} />
-      </TableRow>
+      {timestamp && (
+        <TableRow name="Created at">
+          <TimestampBlock size="large" timestamp={timestamp} />
+        </TableRow>
+      )}
 
       {codeId && (
         <TableRow name="Codehash" hideOwerflow>
@@ -41,13 +46,11 @@ const ProgramTable = ({ program, isProgramReady }: Props) => {
         </TableRow>
       )}
 
-      <TableRow name="Block hash">
-        <IdBlock
-          id={program.blockHash}
-          to={generatePath(absoluteRoutes.block, { blockId: program.blockHash })}
-          size="big"
-        />
-      </TableRow>
+      {blockId && (
+        <TableRow name="Block hash">
+          <IdBlock id={blockId} to={generatePath(absoluteRoutes.block, { blockId })} size="big" />
+        </TableRow>
+      )}
     </Table>
   ) : (
     <ContentLoader text="There is no program" isEmpty={isProgramReady && !program}>
