@@ -3,7 +3,7 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { CreateType, GearApi, ProgramMetadata, StateMetadata, getStateMetadata } from '../src';
+import { CreateType, GearApi, HumanTypesRepr, ProgramMetadata, StateMetadata, getStateMetadata } from '../src';
 import { TARGET, TEST_META_META, WS_ADDRESS } from './config';
 import { checkInit, getAccount, sleep } from './utilsFunctions';
 
@@ -177,5 +177,30 @@ describe('Read State', () => {
       id: { decimal: 1, hex: '0x01' },
       person: { surname: 'Surname1', name: 'Name1' },
     });
+  });
+
+  test('Read state in batch', async () => {
+    expect(programId).toBeDefined();
+    const state = await api.programState.readBatch({
+      idPayloadBatch: [
+        [programId, Array.from(meta.createType((meta.types.state as HumanTypesRepr).input!, 0).toU8a())],
+        [programId, Array.from(meta.createType((meta.types.state as HumanTypesRepr).input!, 1).toU8a())],
+      ],
+    });
+
+    expect(state.map((item) => meta.createType((meta.types.state as HumanTypesRepr).output!, item).toJSON())).toEqual([
+      [
+        {
+          id: { decimal: 0, hex: '0x00' },
+          person: { surname: 'Surname0', name: 'Name0' },
+        },
+      ],
+      [
+        {
+          id: { decimal: 1, hex: '0x01' },
+          person: { surname: 'Surname1', name: 'Name1' },
+        },
+      ],
+    ]);
   });
 });

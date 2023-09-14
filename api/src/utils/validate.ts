@@ -1,8 +1,9 @@
 import { BN, u8aToBigInt } from '@polkadot/util';
 import { u128, u64 } from '@polkadot/types';
+import { GearCoreMessageUserUserStoredMessage } from '@polkadot/types/lookup';
 import { HexString } from '@polkadot/util/types';
 
-import { GasLimit, UserStoredMessage, Value } from '../types';
+import { GasLimit, Value } from '../types';
 import { GearApi } from '../GearApi';
 import { ValidationError } from '../errors';
 import { generateVoucherId } from './generate';
@@ -63,7 +64,7 @@ export async function validateMailboxItem(
   account: HexString,
   messageId: HexString,
   api: GearApi,
-): Promise<UserStoredMessage> {
+): Promise<GearCoreMessageUserUserStoredMessage> {
   const mailbox = await api.mailbox.read(account, messageId);
 
   if (!mailbox) {

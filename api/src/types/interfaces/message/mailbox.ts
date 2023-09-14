@@ -1,9 +1,5 @@
-import { BlockNumber } from '@polkadot/types/interfaces';
-import { Tuple } from '@polkadot/types';
+import { GearCommonStoragePrimitivesInterval, GearCoreMessageUserUserStoredMessage } from '@polkadot/types/lookup';
+import { ITuple } from '@polkadot/types-codec/types';
+import { Option } from '@polkadot/types';
 
-import { Interval, UserStoredMessage } from './base';
-
-export interface MailboxItem extends Tuple {
-  0: UserStoredMessage;
-  1: Interval<BlockNumber>;
-}
+export type MailboxItem = Option<ITuple<[GearCoreMessageUserUserStoredMessage, GearCommonStoragePrimitivesInterval]>>;

@@ -2,8 +2,6 @@ import { GenericEvent, GenericEventData } from '@polkadot/types';
 
 import {
   CodeChangedData,
-  DebugData,
-  DebugModeData,
   MessageQueuedData,
   MessageWaitedData,
   MessageWakenData,
@@ -35,10 +33,6 @@ export type MessageWaken = GearEvent<MessageWakenData>;
 export type CodeChanged = GearEvent<CodeChangedData>;
 
 export type ProgramChanged = GearEvent<ProgramChangedData>;
-
-export type DebugDataSnapshot = GearEvent<DebugData>;
-
-export type DebugMode = GearEvent<DebugModeData>;
 
 export type Transfer = GearEvent<TransferData>;
 

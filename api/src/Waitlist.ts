@@ -1,8 +1,9 @@
+import { GearCommonStoragePrimitivesInterval, GearCoreMessageStoredStoredDispatch } from '@polkadot/types/lookup';
 import { HexString } from '@polkadot/util/types';
 import { Option } from '@polkadot/types';
 
 import { GearApi } from './GearApi';
-import { WaitlistItem } from './types';
+import { ITuple } from '@polkadot/types-codec/types';
 
 export class GearWaitlist {
   constructor(private _api: GearApi) {}
@@ -18,7 +19,10 @@ export class GearWaitlist {
    * console.log(waitlist.map(item => item.toHuman()));
    * ```
    */
-  async read(programId: HexString, numberOfMessages?: number): Promise<WaitlistItem[]>;
+  async read(
+    programId: HexString,
+    numberOfMessages?: number,
+  ): Promise<ITuple<[GearCoreMessageStoredStoredDispatch, GearCommonStoragePrimitivesInterval]>[]>;
 
   /**
    * ## _Get particular message from program's waitlist_
@@ -33,12 +37,18 @@ export class GearWaitlist {
    * console.log(waitlist.toHuman());
    * ```
    */
-  async read(programId: HexString, messageId: HexString): Promise<WaitlistItem>;
+  async read(
+    programId: HexString,
+    messageId: HexString,
+  ): Promise<ITuple<[GearCoreMessageStoredStoredDispatch, GearCommonStoragePrimitivesInterval]>>;
 
   async read(
     programId: HexString,
     messageIdOrNumberOfMessages?: HexString | number,
-  ): Promise<WaitlistItem[] | WaitlistItem> {
+  ): Promise<
+    | ITuple<[GearCoreMessageStoredStoredDispatch, GearCommonStoragePrimitivesInterval]>[]
+    | ITuple<[GearCoreMessageStoredStoredDispatch, GearCommonStoragePrimitivesInterval]>
+  > {
     const [messageId, numberOfMessages] =
       typeof messageIdOrNumberOfMessages === 'string'
         ? [messageIdOrNumberOfMessages, undefined]
@@ -46,10 +56,9 @@ export class GearWaitlist {
 
     if (messageId) {
       const waitlist = await this._api.query.gearMessenger.waitlist(programId, messageId);
-      const typedWaitlist = this._api.createType(
-        'Option<(GearCoreMessageStoredStoredDispatch, GearCommonStoragePrimitivesInterval)>',
-        waitlist,
-      ) as Option<WaitlistItem>;
+      const typedWaitlist = this._api.createType<
+        Option<ITuple<[GearCoreMessageStoredStoredDispatch, GearCommonStoragePrimitivesInterval]>>
+      >('Option<(GearCoreMessageStoredStoredDispatch, GearCommonStoragePrimitivesInterval)>', waitlist);
       return typedWaitlist.unwrapOr(null);
     } else {
       const keyPrefix = this._api.query.gearMessenger.waitlist.keyPrefix(programId);
@@ -57,14 +66,15 @@ export class GearWaitlist {
       if (keysPaged.length === 0) {
         return [];
       }
-      const waitlist = (await this._api.rpc.state.queryStorageAt(keysPaged)) as Option<WaitlistItem>[];
+      const waitlist = (await this._api.rpc.state.queryStorageAt(keysPaged)) as Option<
+        ITuple<[GearCoreMessageStoredStoredDispatch, GearCommonStoragePrimitivesInterval]>
+      >[];
       return waitlist.map((item) => {
-        const typedItem = this._api.createType(
-          'Option<(GearCoreMessageStoredStoredDispatch, GearCommonStoragePrimitivesInterval)>',
-          item,
-        );
+        const typedItem = this._api.createType<
+          Option<ITuple<[GearCoreMessageStoredStoredDispatch, GearCommonStoragePrimitivesInterval]>>
+        >('Option<(GearCoreMessageStoredStoredDispatch, GearCommonStoragePrimitivesInterval)>', item);
         return typedItem.unwrapOr(null);
-      }) as WaitlistItem[];
+      });
     }
   }
 }
