@@ -14,7 +14,7 @@ type Args = {
 };
 
 function useReadWasmState<T = AnyJson>(args: Args, isReadOnError?: boolean) {
-  const { programId, wasm, programMetadata, functionName, payload = '0x', argument } = args;
+  const { programId, wasm, programMetadata, functionName, payload, argument } = args;
 
   const { api } = useContext(ApiContext); // сircular dependency fix
   const alert = useContext(AlertContext);
