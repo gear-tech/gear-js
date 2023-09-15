@@ -29,7 +29,7 @@ function useLocalPrograms() {
 
   const getSortedPrograms = (programs: (IProgram | LocalProgram)[]) =>
     programs.sort(
-      (program, nextProgram) => Date.parse(program.timestamp || '0') - Date.parse(nextProgram.timestamp || '0'),
+      (program, nextProgram) => Date.parse(nextProgram.timestamp || '0') - Date.parse(program.timestamp || '0'),
     );
 
   const getLocalPrograms = (params: FetchProgramsParams) =>

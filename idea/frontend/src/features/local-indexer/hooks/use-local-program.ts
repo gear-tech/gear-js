@@ -1,14 +1,17 @@
 import { useApi } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 import { Option } from '@polkadot/types';
-import { IProgram as StorageProgram } from '@gear-js/api';
+import { ProgramMetadata, IProgram as StorageProgram } from '@gear-js/api';
 
 import { PROGRAMS_LOCAL_FORAGE } from 'api';
 import { IProgram, ProgramStatus } from 'features/program';
+import { isState, useMetadata } from 'features/metadata';
 
 function useLocalProgram() {
   const { api } = useApi();
   const genesis = api?.genesisHash.toHex();
+
+  const { getMetadata } = useMetadata();
 
   const getProgramStatus = async (id: HexString) => {
     const option = (await api.query.gearProgram.programStorage(id)) as Option<StorageProgram>;
@@ -42,7 +45,13 @@ function useLocalProgram() {
 
     const code = codeHash ? { id: codeHash } : undefined;
 
-    return { id, name, status, code, metahash, hasState: true };
+    // TODO: on Programs page each program can make a request to backend,
+    // is there a way to optimize it?
+    const metaHex = metahash ? (await getMetadata({ hash: metahash })).result.hex : undefined;
+    const metadata = metaHex ? ProgramMetadata.from(metaHex) : undefined;
+    const hasState = isState(metadata);
+
+    return { id, name, status, code, metahash, hasState };
   };
 
   const getLocalProgram = async (id: HexString) => {
