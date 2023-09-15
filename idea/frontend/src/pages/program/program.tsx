@@ -16,7 +16,7 @@ import { ReactComponent as SendSVG } from 'shared/assets/images/actions/send.svg
 import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg';
 import { ReactComponent as AddMetaSVG } from 'shared/assets/images/actions/addMeta.svg';
 import { useMetadata, MetadataTable } from 'features/metadata';
-import { VoucherTable } from 'features/voucher';
+import { IssueVoucher, VoucherTable } from 'features/voucher';
 
 import styles from './program.module.scss';
 
@@ -87,7 +87,12 @@ const Program = () => {
 
           <div>
             {/* TODO: WithAccount HoC? or move inside VoucherTable? */}
-            {account && <Subheader title="Voucher details" />}
+            {account && (
+              <Subheader title="Voucher details">
+                <IssueVoucher programId={programId} />
+              </Subheader>
+            )}
+
             <VoucherTable programId={programId} />
           </div>
 

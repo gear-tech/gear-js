@@ -49,7 +49,7 @@ const ProgramCard = memo(({ program }: Props) => {
 
             {hasState && <ActionLink to={generatePath(routes.state, { programId })} icon={readSVG} text="Read State" />}
 
-            <IssueVoucher programId={programId} />
+            <IssueVoucher programId={programId} transparent />
           </>
         )}
       </div>
