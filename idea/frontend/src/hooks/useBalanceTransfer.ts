@@ -35,14 +35,15 @@ const useBalanceTransfer = () => {
     try {
       const { signSource, onSuccess } = options || {};
 
-      api.tx.balances.transfer(to, value);
+      // TODO: replace to api.balance.transfer after api update to support string value
+      const extrinsic = api.tx.balances.transfer(to, value);
 
       if (signSource) {
         web3FromSource(signSource).then(({ signer }) =>
-          api.balance.signAndSend(from, { signer }, ({ events }) => handleEventsStatus(events, onSuccess)),
+          extrinsic.signAndSend(from, { signer }, ({ events }) => handleEventsStatus(events, onSuccess)),
         );
       } else {
-        api.balance.signAndSend(from, ({ events }) => handleEventsStatus(events, onSuccess));
+        extrinsic.signAndSend(from, ({ events }) => handleEventsStatus(events, onSuccess));
       }
     } catch (error) {
       const { message } = error as Error;
