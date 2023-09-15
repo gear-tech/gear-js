@@ -7,7 +7,7 @@ import { AlertContext, ApiContext } from 'context';
 function useReadFullState<T = AnyJson>(
   programId: HexString | undefined,
   meta: ProgramMetadata | undefined,
-  payload: AnyJson = '0x',
+  payload: AnyJson,
   isReadOnError?: boolean,
 ) {
   const { api } = useContext(ApiContext); // сircular dependency fix
