@@ -4,6 +4,7 @@ import { CreateType, MetadataVersion, ProgramMetadata, StateMetadata } from './m
 import { HumanTypesRepr, ReadStateBatchParams, ReadStateParams, ReadStateUsingWasmParams } from './types';
 import { Bytes } from '@polkadot/types';
 import { GearProgramStorage } from './Storage';
+import { encodePayload } from './utils';
 
 export class GearProgramState extends GearProgramStorage {
   /**
@@ -47,7 +48,7 @@ export class GearProgramState extends GearProgramStorage {
    * ### Read state of program (calls `gear_readState` rpc call)
    * @param args ProgramId, payload and hash of block where it's necessary to read state (optional)
    * @param meta Program metadata returned from `ProgramMetadata.from` method.
-   * @param type (optional) Index of type to decode state. metadata.types.state is uesd by default
+   * @param type (optional) Index of type to decode state. metadata.types.state.input is uesd by default
    *
    * @example
    * const meta = ProgramMetadata.from('0x...');
@@ -57,10 +58,7 @@ export class GearProgramState extends GearProgramStorage {
    * console.log(result.toJSON());
    */
   async read<T extends Codec = Codec>(args: ReadStateParams, meta: ProgramMetadata, type?: number): Promise<T> {
-    const payload =
-      meta.version === MetadataVersion.V2Rust
-        ? Array.from(meta.createType((meta.types.state as HumanTypesRepr).input, args.payload).toU8a())
-        : [];
+    const payload = meta.version === MetadataVersion.V2Rust ? encodePayload(args.payload, meta, 'state', type) : [];
     const state = await this._api.rpc.gear.readState(args.programId, payload, args.at || null);
 
     if (type !== undefined) {
