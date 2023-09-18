@@ -7,7 +7,8 @@ import type { Bytes } from '@polkadot/types-codec';
 import type { H256 } from '@polkadot/types/interfaces/runtime';
 import type { Observable } from '@polkadot/types/types';
 
-import { GasInfo, InflationInfo } from '..';
+import { GasInfo } from '../interfaces/gas';
+import { InflationInfo } from '../common';
 
 export type __AugmentedRpc = AugmentedRpc<() => unknown>;
 

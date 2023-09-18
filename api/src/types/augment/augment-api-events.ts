@@ -15,10 +15,8 @@ import {
   GearCoreIdsMessageId,
   GearCoreIdsProgramId,
   GearCoreMessageUserUserMessage,
-} from '@polkadot/types/lookup';
+} from '../lookup';
 import type { AccountId32 } from '@polkadot/types/interfaces/runtime';
-
-export type __AugmentedEvent<ApiType extends ApiTypes> = AugmentedEvent<ApiType>;
 
 declare module '@polkadot/api-base/types/events' {
   interface AugmentedEvents<ApiType extends ApiTypes> {

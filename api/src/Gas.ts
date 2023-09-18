@@ -1,9 +1,9 @@
 import { HexString } from '@polkadot/util/types';
 
-import { PayloadType, Value } from './types';
-import { GasInfo } from './types';
+import { GasInfo, PayloadType } from './types';
 import { GearApi } from './GearApi';
 import { ProgramMetadata } from './metadata';
+import { Value } from './types/common';
 import { encodePayload } from './utils/create-payload';
 
 export class GearGas {

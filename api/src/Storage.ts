@@ -1,11 +1,10 @@
-import { GearCommonActiveProgram, GearCommonProgram } from '@polkadot/types/lookup';
 import { Option, u32 } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
 import { ITuple } from '@polkadot/types-codec/types';
 import { u8aToU8a } from '@polkadot/util';
 
-import { IGearPages, PausedProgramBlockAndHash } from './types';
+import { GearCommonActiveProgram, GearCommonProgram, IGearPages, PausedProgramBlockAndHash } from './types';
 import {
   PausedProgramDoesNotExistError,
   ProgramDoesNotExistError,

@@ -20,11 +20,8 @@ import {
   GearCoreMessageStoredStoredDispatch,
   GearCoreMessageUserUserStoredMessage,
   PalletGearBankBankAccount,
-} from '@polkadot/types/lookup';
+} from '../lookup';
 import type { Observable } from '@polkadot/types/types';
-
-export type __AugmentedQuery<ApiType extends ApiTypes> = AugmentedQuery<ApiType, () => unknown>;
-export type __QueryableStorageEntry<ApiType extends ApiTypes> = QueryableStorageEntry<ApiType>;
 
 declare module '@polkadot/api-base/types/storage' {
   interface AugmentedQueries<ApiType extends ApiTypes> {

@@ -1,8 +1,8 @@
-import typescript from 'rollup-plugin-typescript2';
+import { cpSync, writeFileSync } from 'fs';
+import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import nodeResolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import { writeFileSync, cpSync } from 'fs';
+import typescript from 'rollup-plugin-typescript2';
 
 function writePackageJson() {
   return {
