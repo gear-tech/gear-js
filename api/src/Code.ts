@@ -1,5 +1,5 @@
 import { Bytes, Option } from '@polkadot/types';
-import { GearCommonCodeMetadata, GearCoreCodeInstrumentedCode } from '@polkadot/types/lookup';
+import { GearCommonCodeMetadata, GearCoreCodeInstrumentedCode } from './types';
 import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';

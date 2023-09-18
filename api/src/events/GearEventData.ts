@@ -1,7 +1,9 @@
 import { AccountId32, BlockNumber } from '@polkadot/types/interfaces';
 import { BTreeMap, BTreeSet, GenericEventData, Option, u128, u32 } from '@polkadot/types';
-import { GasNodeId, ReservationId } from 'types/interfaces/ids/gas';
+
 import {
+  CodeId,
+  GasNodeId,
   GearCommonEventCodeChangeKind,
   GearCommonEventDispatchStatus,
   GearCommonEventMessageEntry,
@@ -10,9 +12,11 @@ import {
   GearCommonEventReasonMessageWokenRuntimeReason,
   GearCommonEventReasonUserMessageReadRuntimeReason,
   GearCoreMessageUserUserMessage,
-} from '@polkadot/types/lookup';
-
-import { CodeId, MessageId, ProgramId, ResumeProgramSessionId } from '../types';
+  MessageId,
+  ProgramId,
+  ReservationId,
+  ResumeProgramSessionId,
+} from '../types';
 
 export class GearEventData extends GenericEventData {
   constructor(data: GenericEventData) {

@@ -1,19 +1,10 @@
 import '@polkadot/api-base/types/submittable';
 
 import type { AnyNumber, ITuple } from '@polkadot/types-codec/types';
-import type {
-  ApiTypes,
-  AugmentedSubmittable,
-  SubmittableExtrinsic,
-  SubmittableExtrinsicFunction,
-} from '@polkadot/api-base/types';
+import type { ApiTypes, AugmentedSubmittable } from '@polkadot/api-base/types';
 import type { BTreeSet, Bytes, Option, Vec, bool, u128, u32, u64 } from '@polkadot/types-codec';
-import { GearCoreIdsCodeId, GearCoreIdsMessageId, GearCoreIdsProgramId } from '@polkadot/types/lookup';
+import { GearCoreIdsCodeId, GearCoreIdsMessageId, GearCoreIdsProgramId } from '../lookup';
 import type { MultiAddress } from '@polkadot/types/interfaces/runtime';
-
-export type __AugmentedSubmittable = AugmentedSubmittable<() => unknown>;
-export type __SubmittableExtrinsic<ApiType extends ApiTypes> = SubmittableExtrinsic<ApiType>;
-export type __SubmittableExtrinsicFunction<ApiType extends ApiTypes> = SubmittableExtrinsicFunction<ApiType>;
 
 declare module '@polkadot/api-base/types/submittable' {
   interface AugmentedSubmittables<ApiType extends ApiTypes> {
