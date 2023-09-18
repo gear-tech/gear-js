@@ -1,7 +1,7 @@
 import { TEST_META_META } from './config';
 import fs from 'fs';
 
-import { ProgramMetadata } from '../src';
+import { ProgramMetadata, encodePayload } from '../src';
 
 let meta: ProgramMetadata;
 
@@ -657,5 +657,11 @@ describe('Tuple Struct', () => {
         })
         .toHex(),
     ).toBe('0x0004010801020c0102031001020304');
+  });
+});
+
+describe('encodePayload', () => {
+  test('encode 0x', () => {
+    expect(encodePayload('0x', meta, 'state')).toEqual([]);
   });
 });

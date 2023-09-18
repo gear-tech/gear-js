@@ -1,3 +1,11 @@
+## 0.33.4
+
+_09/16/2023_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1400
+- Fix payload encoding in state.read method.
+
 ## 0.33.3
 
 _09/14/2023_
