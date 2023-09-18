@@ -1,12 +1,17 @@
 import { Bytes, Option, u128, u32 } from '@polkadot/types';
-import { GearCommonProgram } from '@polkadot/types/lookup';
 import { H256 } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { randomAsHex } from '@polkadot/util-crypto';
 
-import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult } from './types';
+import {
+  GearCommonProgram,
+  IProgramCreateOptions,
+  IProgramCreateResult,
+  IProgramUploadOptions,
+  IProgramUploadResult,
+} from './types';
 import { ProgramDoesNotExistError, ProgramHasNoMetahash, SubmitProgramError } from './errors';
 import {
   encodePayload,

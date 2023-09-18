@@ -1,11 +1,10 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { DispatchError, Event } from '@polkadot/types/interfaces';
 import { u128, u64 } from '@polkadot/types';
-import { GearCommonGasMultiplier } from '@polkadot/types/lookup';
 import { RegistryError } from '@polkadot/types-codec/types';
 
+import { GearApiOptions, GearCommonGasMultiplier } from './types';
 import { gearRpc, gearTypes } from './default';
-import { GearApiOptions } from './types';
 import { GearBalance } from './Balance';
 import { GearBlock } from './Blocks';
 import { GearClaimValue } from './Claim';

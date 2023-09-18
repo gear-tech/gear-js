@@ -1,2 +1,2 @@
-export * from './mailbox';
+export * from './common';
 export * from './extrinsic';

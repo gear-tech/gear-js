@@ -11,7 +11,10 @@
     "pretty": true,
     "skipLibCheck": true,
     "declaration": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "paths": {
+      "@polkadot/api/augment": ["src/types/augment/augment-api.ts"]
+    }
   },
   "include": ["src", "src/**/*.json"]
 }

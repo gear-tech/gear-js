@@ -1,12 +1,11 @@
 import '@polkadot/api-base/types/consts';
 
-import type { ApiTypes, AugmentedConst } from '@polkadot/api-base/types';
-import { FrameSupportPalletId, GearCommonGasMultiplier, PalletGearSchedule } from '@polkadot/types/lookup';
+import { GearCommonGasMultiplier, PalletGearSchedule } from '../lookup';
 import type { bool, u128, u32, u64 } from '@polkadot/types-codec';
 import type { AccountId32 } from '@polkadot/types/interfaces/runtime';
+import type { ApiTypes } from '@polkadot/api-base/types';
 import type { Codec } from '@polkadot/types-codec/types';
-
-export type __AugmentedConst<ApiType extends ApiTypes> = AugmentedConst<ApiType>;
+import { FrameSupportPalletId } from '@polkadot/types/lookup';
 
 declare module '@polkadot/api-base/types/consts' {
   interface AugmentedConsts<ApiType extends ApiTypes> {

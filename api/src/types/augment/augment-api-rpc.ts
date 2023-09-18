@@ -7,9 +7,7 @@ import type { Bytes } from '@polkadot/types-codec';
 import type { H256 } from '@polkadot/types/interfaces/runtime';
 import type { Observable } from '@polkadot/types/types';
 
-import { GasInfo } from '..';
-
-export type __AugmentedRpc = AugmentedRpc<() => unknown>;
+import { GasInfo } from '../interfaces';
 
 declare module '@polkadot/rpc-core/types/jsonrpc' {
   interface RpcInterface {
