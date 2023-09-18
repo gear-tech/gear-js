@@ -62,6 +62,12 @@ describe('GearApi', () => {
   test('valuePerGas', () => {
     expect(api.valuePerGas).toBeDefined();
   });
+
+  test('inflationInfo', async () => {
+    const info = await api.inflationInfo();
+    expect(info.inflation.toBigInt()).toBeDefined();
+    expect(info.roi.toBigInt()).toBeDefined();
+  });
 });
 
 describe('Blocks', () => {

@@ -1,5 +1,5 @@
 import * as rpc from './rpc.json';
-import * as typesDebug from './types-debug.json';
+import * as typesCommon from './types-common.json';
 import * as typesMessage from './types-message.json';
 import * as typesMetadata from './types-metadata.json';
 import * as typesProgram from './types-program.json';
@@ -10,6 +10,6 @@ const gearTypes = {
   ...transformTypes(typesMetadata).types,
   ...transformTypes(typesProgram).types,
   ...transformTypes(typesMessage).types,
-  ...transformTypes(typesDebug).types,
+  ...transformTypes(typesCommon).types,
 };
 export { gearRpc, gearTypes };

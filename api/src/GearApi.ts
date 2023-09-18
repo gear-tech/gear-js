@@ -4,8 +4,8 @@ import { u128, u64 } from '@polkadot/types';
 import { GearCommonGasMultiplier } from '@polkadot/types/lookup';
 import { RegistryError } from '@polkadot/types-codec/types';
 
+import { GearApiOptions, InflationInfo } from './types';
 import { gearRpc, gearTypes } from './default';
-import { GearApiOptions } from './types';
 import { GearBalance } from './Balance';
 import { GearBlock } from './Blocks';
 import { GearClaimValue } from './Claim';
@@ -120,6 +120,11 @@ export class GearApi extends ApiPromise {
     if (gasMultiplier.isValuePerGas) {
       return gasMultiplier.asValuePerGas;
     }
+  }
+
+  async inflationInfo(): Promise<InflationInfo> {
+    const info = await this.rpc.stakingRewards.inflationInfo();
+    return this.createType<InflationInfo>('InflationInfo', info);
   }
 
   async wasmBlobVersion(): Promise<string> {

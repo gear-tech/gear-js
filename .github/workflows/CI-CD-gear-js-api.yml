@@ -72,14 +72,6 @@ jobs:
         working-directory: api/programs
         run: cargo build --locked
 
-      - name: "Prepare: download Gear examples"
-        working-directory: api/test/wasm
-        run: |
-          mkdir examples
-          cd examples
-          wget -O ./examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
-          tar -xvf examples.tar.gz
-
       - name: "Prepare: run Gear node"
         run: |
           wget -O ./gear https://github.com/gear-tech/gear/releases/download/build/gear
