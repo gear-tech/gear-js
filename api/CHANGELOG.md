@@ -1,3 +1,11 @@
+## 0.33.5
+
+_09/18/2023_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1403
+- Export generated types from api
+
 ## 0.33.4
 
 _09/16/2023_
