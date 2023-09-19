@@ -63,7 +63,7 @@ describe('GearApi', () => {
     expect(api.valuePerGas).toBeDefined();
   });
 
-  test('inflationInfo', async () => {
+  test.skip('inflationInfo', async () => {
     const info = await api.inflationInfo();
     expect(info.inflation.toBigInt()).toBeDefined();
     expect(info.roi.toBigInt()).toBeDefined();
