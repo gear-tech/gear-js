@@ -1,13 +1,13 @@
 import express from 'express';
 
-import config from './config/configuration';
+import config from './config';
 
 import { changeStatus, healthcheckRouter } from './healthcheck.router';
 import { connectToDB } from './database/app-data-source';
-import { gearService } from './gear';
-import { initAMQ } from './rabbitmq/rmq';
-import { transferProcess } from './common/transfer-balance-process';
+import { transferProcess } from './transfer-balance-process';
 import { logger } from '@gear-js/common';
+import { transferService } from './transfer.service';
+import { rmqService } from './rmq';
 
 const app = express();
 
@@ -23,8 +23,8 @@ const startApp = async () => {
   await connectToDB();
   changeStatus('database');
 
-  await gearService.init();
-  await initAMQ();
+  await transferService.init();
+  await rmqService.init();
   changeStatus('rabbitMQ');
   transferProcess();
 };

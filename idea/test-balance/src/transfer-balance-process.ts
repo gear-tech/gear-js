@@ -1,9 +1,8 @@
 import { logger, JSONRPC_ERRORS, RMQExchange, RMQQueue } from '@gear-js/common';
 import { EventEmitter } from 'node:events';
 
-import { transferService } from '../transfer.service';
-import { gearService } from '../gear';
-import { producer } from '../rabbitmq/producer';
+import { transferService } from './transfer.service';
+import { rmqService } from './rmq';
 
 interface TBRequestParams {
   payload: { address: string; genesis: string };
@@ -45,7 +44,7 @@ export async function transferProcess(): Promise<void> {
     try {
       const isPossibleToTransfer = await transferService.isPossibleToTransfer(address, genesis);
       if (isPossibleToTransfer) {
-        const transferBalance = await gearService.transferBalance(address);
+        const transferBalance = await transferService.transferBalance(address);
         result = { result: transferBalance };
       } else {
         result = { error: JSONRPC_ERRORS.TransferLimitReached.name };
@@ -54,6 +53,6 @@ export async function transferProcess(): Promise<void> {
       logger.error(error.message, { stack: error.stack });
       result = { error: JSONRPC_ERRORS.InternalError.name };
     }
-    producer.sendMessage(RMQExchange.DIRECT_EX, RMQQueue.REPLIES, correlationId, result);
+    rmqService.sendMessage(RMQExchange.DIRECT_EX, RMQQueue.REPLIES, correlationId, result);
   }
 }
