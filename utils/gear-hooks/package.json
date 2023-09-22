@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/react-hooks",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "description": "React hooks used across Gear applications",
   "author": "Gear Technologies",
   "license": "GPL-3.0",

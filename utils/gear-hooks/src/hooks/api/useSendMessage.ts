@@ -15,6 +15,7 @@ type UseSendMessageOptions = {
 
 type SendMessageOptions = {
   value?: string | number;
+  prepaid?: boolean;
   isOtherPanicsAllowed?: boolean;
   onSuccess?: () => void;
   onError?: () => void;
@@ -77,7 +78,7 @@ function useSendMessage(
     if (account && metadata) {
       const alertId = disableAlerts ? '' : alert.loading('Sign In', { title });
 
-      const { value = 0, isOtherPanicsAllowed = false, onSuccess, onError } = options || {};
+      const { value = 0, isOtherPanicsAllowed = false, prepaid = false, onSuccess, onError } = options || {};
       const { address, decodedAddress, meta } = account;
       const { source } = meta;
 
@@ -88,7 +89,14 @@ function useSendMessage(
             .then(getAutoGasLimit);
 
       getGasLimit
-        .then((gasLimit) => ({ destination, gasLimit, payload, value }))
+        .then((gasLimit) => ({
+          destination,
+          gasLimit,
+          payload,
+          value,
+          prepaid,
+          account: prepaid ? decodedAddress : undefined,
+        }))
         .then((message) => api.message.send(message, metadata))
         .then(() => web3FromSource(source))
         .then(({ signer }) =>
