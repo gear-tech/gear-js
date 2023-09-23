@@ -1,4 +1,9 @@
 export const JSONRPC_ERRORS = {
+  InvalidRequest: {
+    name: 'InvalidRequest',
+    code: -32600,
+    message: 'Invalid Request',
+  },
   MethodNotFound: {
     name: 'MethodNotFound',
     code: -32601,
