@@ -3,11 +3,23 @@ import { IRpcRequest, JSONRPC_ERRORS, logger } from '@gear-js/common';
 
 export async function validateJsonRpcRequestMiddleware({ body }: Request, res: Response, next: NextFunction) {
   if (Array.isArray(body)) {
+    const batchResponse = [];
+    if(body.length == 0) {
+      batchResponse.push(getInvalidRequestResponse(body));
+      return res.send(batchResponse);
+    }
+    
     for (const request of body) {
-      if (!isValidRequestParams(request)) {
-        return res.send(getInvalidParamsResponse(request));
+      if (typeof request !== 'object') {
+        batchResponse.push(getInvalidRequestResponse(request));
+      } else {
+        if (!isValidRequestParams(request)) {
+          batchResponse.push(getInvalidParamsResponse(request));
+        }
       }
     }
+
+    return res.send(batchResponse);
   } else {
     if (!isValidRequestParams(body)) {
       return res.send(getInvalidParamsResponse(body));
@@ -35,3 +47,20 @@ function getInvalidParamsResponse(req: IRpcRequest) {
     },
   };
 }
+
+function getInvalidRequestResponse(req: any[]) {
+  logger.info('Invalid request error', { req });
+
+  const error = JSONRPC_ERRORS.InvalidRequest.name;
+
+  return {
+    jsonrpc: '2.0',
+    id: null,
+    error: {
+      message: JSONRPC_ERRORS[error].message,
+      code: JSONRPC_ERRORS[error].code,
+    },
+  };
+}
+
+
