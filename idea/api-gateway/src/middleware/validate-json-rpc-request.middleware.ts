@@ -4,10 +4,10 @@ import { IRpcRequest, JSONRPC_ERRORS, logger } from '@gear-js/common';
 export async function validateJsonRpcRequestMiddleware({ body }: Request, res: Response, next: NextFunction) {
   if (Array.isArray(body)) {
     const batchResponse = [];
-    if(body.length == 0) {
+    if (body.length == 0) {
       return res.send(getInvalidRequestResponse(body));
     }
-    
+
     for (const request of body) {
       if (typeof request !== 'object') {
         batchResponse.push(getInvalidRequestResponse(request));
@@ -61,5 +61,3 @@ function getInvalidRequestResponse(req: any[]) {
     },
   };
 }
-
-

@@ -1,4 +1,4 @@
-import { JSONRPC_ERRORS, IRpcRequest } from '@gear-js/common';
+import { JSONRPC_ERRORS } from '@gear-js/common';
 import { HexString, generateCodeHash } from '@gear-js/api';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -76,13 +76,7 @@ describe('jsonrpc errors', () => {
 
   test(`Invalid batch request with ${JSONRPC_ERRORS.InvalidRequest.name} 
   and ${JSONRPC_ERRORS.InvalidParams.name}`, async () => {
-    const invalidBatchRequestBody = [1, {
-      'jsonrpc': '2.0',
-      'id': 'number',
-      'params': {
-        'genesis': '0x7ff5958c448d101263b727387b073b908022bc480fc43301e0e7140bec0e40d1'
-      } 
-    }] as any[];
+    const invalidBatchRequestBody = [1, { jsonrpc: '2.0', id: 'number', params: { genesis: '0x' } }] as any[];
 
     const response = await invalidBatchRequest(invalidBatchRequestBody);
     expect(response[0]).toHaveProperty('error.code', -32600);
