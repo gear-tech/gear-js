@@ -1,9 +1,9 @@
-import { JSONRPC_ERRORS } from '@gear-js/common';
+import { JSONRPC_ERRORS, IRpcRequest } from '@gear-js/common';
 import { HexString, generateCodeHash } from '@gear-js/api';
 import * as fs from 'fs';
 import * as path from 'path';
 
-import request, { invalidRequest } from './request';
+import request, { invalidRequest, invalidBatchRequest } from './request';
 import { PATH_TO_PROGRAMS } from './config';
 
 const genesis = fs.readFileSync('./genesis', 'utf-8');
@@ -64,5 +64,31 @@ describe('jsonrpc errors', () => {
     const response = await request('meta.get', { hash: '0x' });
     expect(response).toHaveProperty('error.code', -32404);
     expect(response).toHaveProperty('error.message', 'Metadata not found');
+  });
+
+  test('Invalid batch request with empty body', async () => {
+    const invalidBatchRequestBody = [];
+
+    const response = await invalidBatchRequest(invalidBatchRequestBody);
+    expect(response[0]).toHaveProperty('error.code', -32600);
+    expect(response[0]).toHaveProperty('error.message', 'Invalid Request');
+  });
+
+  test(`Invalid batch request with ${JSONRPC_ERRORS.InvalidRequest.name} 
+  and ${JSONRPC_ERRORS.InvalidParams.name}`, async () => {
+    const invalidBatchRequestBody = [1, {
+      'jsonrpc': '2.0',
+      'id': 'number',
+      'params': {
+        'genesis': '0x7ff5958c448d101263b727387b073b908022bc480fc43301e0e7140bec0e40d1'
+      } 
+    }] as any[];
+
+    const response = await invalidBatchRequest(invalidBatchRequestBody);
+    expect(response[0]).toHaveProperty('error.code', -32600);
+    expect(response[0]).toHaveProperty('error.message', 'Invalid Request');
+
+    expect(response[1]).toHaveProperty('error.code', -32602);
+    expect(response[1]).toHaveProperty('error.message', 'Invalid params');
   });
 });
