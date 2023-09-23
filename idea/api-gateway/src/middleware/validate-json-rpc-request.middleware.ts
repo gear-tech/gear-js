@@ -5,8 +5,7 @@ export async function validateJsonRpcRequestMiddleware({ body }: Request, res: R
   if (Array.isArray(body)) {
     const batchResponse = [];
     if(body.length == 0) {
-      batchResponse.push(getInvalidRequestResponse(body));
-      return res.send(batchResponse);
+      return res.send(getInvalidRequestResponse(body));
     }
     
     for (const request of body) {
