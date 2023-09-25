@@ -9,8 +9,8 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "@gear-js/api": "0.33.5",
-    "@gear-js/react-hooks": "0.6.6",
+    "@gear-js/api": "0.33.6",
+    "@gear-js/react-hooks": "0.6.8",
     "@gear-js/ui": "0.5.19",
     "@hcaptcha/react-hcaptcha": "^1.4.4",
     "@mantine/form": "^5.4.0",
