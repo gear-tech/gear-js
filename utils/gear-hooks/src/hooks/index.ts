@@ -8,6 +8,7 @@ import {
   useCreateCalculateGas,
   useHandleCalculateGas,
   useReplyCalculateGas,
+  useIsVoucherExists,
   SendMessageOptions,
   UseSendMessageOptions,
 } from './api';
@@ -24,6 +25,7 @@ export {
   useCreateCalculateGas,
   useHandleCalculateGas,
   useReplyCalculateGas,
+  useIsVoucherExists,
   useAccount,
   useAlert,
   useApi,
