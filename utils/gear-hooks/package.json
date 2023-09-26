@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/react-hooks",
-  "version": "0.6.8",
+  "version": "0.6.9",
   "description": "React hooks used across Gear applications",
   "author": "Gear Technologies",
   "license": "GPL-3.0",
@@ -39,6 +39,7 @@
     "@types/react": "18.0.37",
     "@types/react-dom": "18.0.11",
     "@types/react-transition-group": "4.4.5",
+    "bignumber.js": "9.1.2",
     "nanoid": "4.0.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
