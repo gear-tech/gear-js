@@ -1,3 +1,3 @@
-import { useBalanceUnits } from './use-balance-units';
+import { useBalanceFormat } from './use-balance-format';
 
-export { useBalanceUnits };
+export { useBalanceFormat };

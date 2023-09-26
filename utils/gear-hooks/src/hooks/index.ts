@@ -11,7 +11,7 @@ import {
   useIsVoucherExists,
   useVoucherBalance,
   useVoucher,
-  useBalanceUnits,
+  useBalanceFormat,
   SendMessageOptions,
   UseSendMessageOptions,
 } from './api';
@@ -31,7 +31,7 @@ export {
   useIsVoucherExists,
   useVoucherBalance,
   useVoucher,
-  useBalanceUnits,
+  useBalanceFormat,
   useAccount,
   useAlert,
   useApi,

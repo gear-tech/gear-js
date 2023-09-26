@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 import { useContext, useMemo } from 'react';
 import { ApiContext } from 'context';
 
-function useBalanceUnits() {
+function useBalanceFormat() {
   const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
 
   const [decimals] = isApiReady ? api.registry.chainDecimals : [0];
@@ -42,4 +42,4 @@ function useBalanceUnits() {
   };
 }
 
-export { useBalanceUnits };
+export { useBalanceFormat };

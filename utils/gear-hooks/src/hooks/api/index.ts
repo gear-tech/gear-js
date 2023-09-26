@@ -9,7 +9,7 @@ import {
 } from './useCalculateGas';
 
 import { useIsVoucherExists, useVoucherBalance, useVoucher } from './voucher';
-import { useBalanceUnits } from './balance';
+import { useBalanceFormat } from './balance';
 
 export {
   useReadFullState,
@@ -24,7 +24,7 @@ export {
   useIsVoucherExists,
   useVoucherBalance,
   useVoucher,
-  useBalanceUnits,
+  useBalanceFormat,
   SendMessageOptions,
   UseSendMessageOptions,
 };
