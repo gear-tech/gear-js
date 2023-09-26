@@ -3,7 +3,7 @@ import { AccountContext, AlertContext, ApiContext } from 'context';
 import { useContext, useEffect, useState } from 'react';
 
 function useVoucherBalance(programId: HexString | undefined) {
-  const { api } = useContext(ApiContext);
+  const { api, isApiReady } = useContext(ApiContext);
   const alert = useContext(AlertContext);
 
   const { account } = useContext(AccountContext);
@@ -15,7 +15,7 @@ function useVoucherBalance(programId: HexString | undefined) {
   useEffect(() => {
     setVoucherBalance(undefined);
 
-    if (!programId || !accountAddress) return;
+    if (!programId || !isApiReady || !accountAddress) return;
 
     const id = generateVoucherId(accountAddress, programId);
 
@@ -25,7 +25,7 @@ function useVoucherBalance(programId: HexString | undefined) {
       .catch(({ message }: Error) => alert.error(message));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accountAddress, programId]);
+  }, [isApiReady, accountAddress, programId]);
 
   return { voucherBalance, isVoucherBalanceReady };
 }
