@@ -1,12 +1,12 @@
 import { HexString, generateVoucherId } from '@gear-js/api';
-import { useAccount, useAlert, useApi } from '@gear-js/react-hooks';
-import { useEffect, useState } from 'react';
+import { AccountContext, AlertContext, ApiContext } from 'context';
+import { useContext, useEffect, useState } from 'react';
 
 function useVoucherBalance(programId: HexString | undefined) {
-  const { api } = useApi();
-  const alert = useAlert();
+  const { api } = useContext(ApiContext);
+  const alert = useContext(AlertContext);
 
-  const { account } = useAccount();
+  const { account } = useContext(AccountContext);
   const accountAddress = account?.decodedAddress;
 
   const [voucherBalance, setVoucherBalance] = useState<string>();
