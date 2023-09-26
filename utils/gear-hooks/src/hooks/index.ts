@@ -10,6 +10,7 @@ import {
   useReplyCalculateGas,
   useIsVoucherExists,
   useVoucherBalance,
+  useVoucher,
   SendMessageOptions,
   UseSendMessageOptions,
 } from './api';
@@ -28,6 +29,7 @@ export {
   useReplyCalculateGas,
   useIsVoucherExists,
   useVoucherBalance,
+  useVoucher,
   useAccount,
   useAlert,
   useApi,
