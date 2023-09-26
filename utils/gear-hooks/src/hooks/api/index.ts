@@ -8,7 +8,7 @@ import {
   useReplyCalculateGas,
 } from './useCalculateGas';
 
-import { useIsVoucherExists } from './voucher';
+import { useIsVoucherExists, useVoucherBalance } from './voucher';
 
 export {
   useReadFullState,
@@ -21,6 +21,7 @@ export {
   useHandleCalculateGas,
   useReplyCalculateGas,
   useIsVoucherExists,
+  useVoucherBalance,
   SendMessageOptions,
   UseSendMessageOptions,
 };
