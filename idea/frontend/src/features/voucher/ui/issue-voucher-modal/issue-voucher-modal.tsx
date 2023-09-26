@@ -6,6 +6,7 @@ import * as yup from 'yup';
 
 import { useBalanceMultiplier } from 'hooks';
 import { ReactComponent as ApplySVG } from 'shared/assets/images/actions/apply.svg';
+import { ReactComponent as CloseSVG } from 'shared/assets/images/actions/close.svg';
 import { getValidation, isAccountAddressValid } from 'shared/helpers';
 import { FormInput, ValueField } from 'shared/ui/form';
 
@@ -39,14 +40,17 @@ const IssueVoucherModal = ({ programId, close }: Props) => {
   };
 
   return (
-    <Modal heading="Create Voucher" close={close}>
+    <Modal heading="Create Voucher" size="large" close={close}>
       <Form initialValues={initialValues} onSubmit={handleSubmit} validate={getValidation(validationSchema)}>
         {(form) => (
           <form onSubmit={form.handleSubmit} className={styles.form}>
             <FormInput name="address" label="Account address" direction="y" block />
             <ValueField name="value" label="Tokens amount:" direction="y" block />
 
-            <Button type="submit" icon={ApplySVG} text="Create" block />
+            <div className={styles.buttons}>
+              <Button type="submit" icon={ApplySVG} size="large" text="Create" />
+              <Button icon={CloseSVG} color="light" size="large" text="Close" onClick={close} />
+            </div>
           </form>
         )}
       </Form>
