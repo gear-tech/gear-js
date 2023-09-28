@@ -1,12 +1,12 @@
 import { HexString } from '@gear-js/api';
-import { useAccount } from '@gear-js/react-hooks';
+import { useAccount, useBalanceFormat, useVoucher } from '@gear-js/react-hooks';
 
 import { ReactComponent as VoucherPlaceholderSVG } from 'features/voucher/assets/voucher-placeholder.svg';
 import { ContentLoader } from 'shared/ui/contentLoader';
 import { BulbBlock, BulbStatus } from 'shared/ui/bulbBlock';
 import { Table, TableRow } from 'shared/ui/table';
 
-import { useVoucher, withAccount } from '../../hooks';
+import { withAccount } from '../../hooks';
 import styles from './voucher-table.module.scss';
 
 type Props = {
@@ -15,6 +15,7 @@ type Props = {
 
 const VoucherTable = withAccount(({ programId }: Props) => {
   const { account } = useAccount();
+  const { getFormattedBalanceValue } = useBalanceFormat();
 
   const { isVoucherReady, isVoucherExists, voucherBalance } = useVoucher(programId);
   const status = isVoucherExists ? BulbStatus.Success : BulbStatus.Error;
@@ -27,7 +28,7 @@ const VoucherTable = withAccount(({ programId }: Props) => {
       </TableRow>
 
       <TableRow name="Amount">
-        <span className={styles.balance}>{voucherBalance}</span>
+        <span className={styles.balance}>{voucherBalance && getFormattedBalanceValue(voucherBalance).toFixed()}</span>
         <span>{account?.balance.unit}</span>
       </TableRow>
     </Table>

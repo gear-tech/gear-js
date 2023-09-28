@@ -1,6 +1,7 @@
 import { HexString } from '@gear-js/api';
+import { useIsVoucherExists } from '@gear-js/react-hooks';
 
-import { useIsVoucherExists, withAccount } from '../../hooks';
+import { withAccount } from '../../hooks';
 import { ReactComponent as BadgeSVG } from '../../assets/badge.svg';
 import styles from './voucher-badge.module.scss';
 
