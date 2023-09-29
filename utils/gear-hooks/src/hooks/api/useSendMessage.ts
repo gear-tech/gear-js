@@ -1,4 +1,4 @@
-import { ProgramMetadata } from '@gear-js/api';
+import { GasLimit, ProgramMetadata } from '@gear-js/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { AnyJson, ISubmittableResult } from '@polkadot/types/types';
@@ -6,7 +6,7 @@ import { HexString } from '@polkadot/util/types';
 import { useContext } from 'react';
 import { AccountContext, AlertContext, ApiContext } from 'context';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
-import { getAutoGasLimit, getExtrinsicFailedMessage } from 'utils';
+import { getExtrinsicFailedMessage } from 'utils';
 
 type UseSendMessageOptions = {
   isMaxGasLimit?: boolean;
@@ -14,19 +14,18 @@ type UseSendMessageOptions = {
 };
 
 type SendMessageOptions = {
+  payload: AnyJson;
+  gasLimit: GasLimit;
   value?: string | number;
   prepaid?: boolean;
-  isOtherPanicsAllowed?: boolean;
   onSuccess?: () => void;
   onError?: () => void;
 };
 
-const MAX_GAS_LIMIT = 250000000000;
-
 function useSendMessage(
   destination: HexString,
   metadata: ProgramMetadata | undefined,
-  { isMaxGasLimit = false, disableAlerts }: UseSendMessageOptions = {},
+  { disableAlerts }: UseSendMessageOptions = {},
 ) {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
@@ -74,48 +73,43 @@ function useSendMessage(
     }
   };
 
-  const sendMessage = (payload: AnyJson, options?: SendMessageOptions) => {
-    if (account && metadata) {
-      const alertId = disableAlerts ? '' : alert.loading('Sign In', { title });
+  const sendMessage = (args: SendMessageOptions) => {
+    if (!account || !metadata) return;
 
-      const { value = 0, isOtherPanicsAllowed = false, prepaid = false, onSuccess, onError } = options || {};
-      const { address, decodedAddress, meta } = account;
-      const { source } = meta;
+    const alertId = disableAlerts ? '' : alert.loading('Sign In', { title });
 
-      const getGasLimit = isMaxGasLimit
-        ? Promise.resolve(MAX_GAS_LIMIT)
-        : api.program.calculateGas
-            .handle(decodedAddress, destination, payload, value, isOtherPanicsAllowed, metadata)
-            .then(getAutoGasLimit);
+    const { payload, gasLimit, value = 0, prepaid = false, onSuccess, onError } = args;
+    const { address, decodedAddress, meta } = account;
+    const { source } = meta;
 
-      getGasLimit
-        .then((gasLimit) => ({
-          destination,
-          gasLimit,
-          payload,
-          value,
-          prepaid,
-          account: prepaid ? decodedAddress : undefined,
-        }))
-        .then((message) => api.message.send(message, metadata))
-        .then(() => web3FromSource(source))
-        .then(({ signer }) =>
-          api.message.signAndSend(address, { signer }, (result) => handleStatus(result, alertId, onSuccess, onError)),
-        )
-        .catch((error: Error) => {
-          const { message } = error;
+    const message = {
+      destination,
+      payload,
+      gasLimit,
+      value,
+      prepaid,
+      account: prepaid ? decodedAddress : undefined,
+    };
 
-          console.error(error);
+    api.message
+      .send(message, metadata)
+      .then(() => web3FromSource(source))
+      .then(({ signer }) =>
+        api.message.signAndSend(address, { signer }, (result) => handleStatus(result, alertId, onSuccess, onError)),
+      )
+      .catch((error: Error) => {
+        const { message } = error;
 
-          if (alertId) {
-            alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
-          } else {
-            alert.error(message);
-          }
+        console.error(error);
 
-          onError && onError();
-        });
-    }
+        if (alertId) {
+          alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
+        } else {
+          alert.error(message);
+        }
+
+        onError && onError();
+      });
   };
 
   return sendMessage;
