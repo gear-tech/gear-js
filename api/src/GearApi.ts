@@ -33,6 +33,9 @@ export class GearApi extends ApiPromise {
   public waitlist: GearWaitlist;
   public voucher: GearVoucher;
   public provider: WsProvider;
+  private _nodeVersion: string;
+  private _nodeName: string;
+  private _chain: string;
 
   constructor(options: GearApiOptions = {}) {
     const { types, providerAddress, ...restOptions } = options;
@@ -74,6 +77,9 @@ export class GearApi extends ApiPromise {
     this.mailbox = new GearMailbox(this);
     this.code = new GearCode(this);
     this.waitlist = new GearWaitlist(this);
+    this.rpc.system.version().then((v) => (this._nodeVersion = v.toHuman()));
+    this.rpc.system.name().then((n) => (this._nodeName = n.toHuman()));
+    this.rpc.system.chain().then((c) => (this._chain = c.toHuman()));
   }
 
   static async create(options?: GearApiOptions): Promise<GearApi> {
@@ -86,16 +92,16 @@ export class GearApi extends ApiPromise {
     return (await this.query.balances.totalIssuance()).toHuman() as string;
   }
 
-  async chain(): Promise<string> {
-    return (await this.rpc.system.chain()).toHuman();
+  get chain(): string {
+    return this._chain;
   }
 
-  async nodeName(): Promise<string> {
-    return (await this.rpc.system.name()).toHuman();
+  get nodeName(): string {
+    return this._nodeName;
   }
 
-  async nodeVersion(): Promise<string> {
-    return (await this.rpc.system.version()).toHuman();
+  get nodeVersion(): string {
+    return this._nodeVersion;
   }
 
   get existentialDeposit(): u128 {

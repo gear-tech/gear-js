@@ -29,13 +29,13 @@ describe('Generate IDs', () => {
 
   test('demo_ping programId', () => {
     expect(generateProgramId(pingCode, '1234')).toBe(
-      '0x795e9492c45292140dbc488326342afd18965992c71f76f4a237c083c960e785',
+      '0x86220eab422209d36e01f443a98564d2c3149e845713e4924e15d55d3b4acd78',
     );
   });
 
   test('programId using codeId', () => {
     expect(generateProgramId(codeId, '1234')).toBe(
-      '0x795e9492c45292140dbc488326342afd18965992c71f76f4a237c083c960e785',
+      '0x86220eab422209d36e01f443a98564d2c3149e845713e4924e15d55d3b4acd78',
     );
   });
 });
