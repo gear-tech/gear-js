@@ -20,6 +20,21 @@
       background: radial-gradient(50% 50% at 50% 50%, rgba($successColor, 0.45) 25%, rgba(24, 24, 27, 0) 100%);
     }
   }
+
+  &.vertical {
+    .content {
+      padding: 16px;
+    }
+
+    .otherInfo {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .name {
+      max-width: 85%;
+    }
+  }
 }
 
 .link {
@@ -51,8 +66,6 @@
   .otherInfo {
     display: grid;
     grid-template-columns: 4fr 2fr 3fr;
-    position: relative;
-    z-index: 4;
     gap: 16px;
   }
 
