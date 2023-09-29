@@ -1,5 +1,5 @@
 import { GasInfo, ProgramMetadata } from '@gear-js/api';
-import { AnyJson } from '@polkadot/types/types';
+import { AnyJson, AnyNumber } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 import { useContext } from 'react';
 import { AccountContext, ApiContext } from 'context';
@@ -13,12 +13,12 @@ function useUploadCalculateGas(
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
 
-  const calculateGas = (initPayload: AnyJson): Promise<GasInfo> => {
+  const calculateGas = (initPayload: AnyJson, value: AnyNumber = 0): Promise<GasInfo> => {
     if (!account) return Promise.reject(new Error('No account address'));
     if (!code) return Promise.reject(new Error('No program source'));
 
     const { decodedAddress } = account;
-    const { value = 0, isOtherPanicsAllowed = false } = options || {};
+    const { isOtherPanicsAllowed = false } = options || {};
 
     return api.program.calculateGas.initUpload(decodedAddress, code, initPayload, value, isOtherPanicsAllowed, meta);
   };
@@ -30,12 +30,12 @@ function useCreateCalculateGas(codeId: HexString | undefined, meta?: ProgramMeta
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
 
-  const calculateGas = (initPayload: AnyJson): Promise<GasInfo> => {
+  const calculateGas = (initPayload: AnyJson, value: AnyNumber = 0): Promise<GasInfo> => {
     if (!account) return Promise.reject(new Error('No account address'));
     if (!codeId) return Promise.reject(new Error('No program source'));
 
     const { decodedAddress } = account;
-    const { value = 0, isOtherPanicsAllowed = false } = options || {};
+    const { isOtherPanicsAllowed = false } = options || {};
 
     return api.program.calculateGas.initCreate(decodedAddress, codeId, initPayload, value, isOtherPanicsAllowed, meta);
   };
@@ -51,12 +51,12 @@ function useHandleCalculateGas(
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
 
-  const calculateGas = (initPayload: AnyJson): Promise<GasInfo> => {
+  const calculateGas = (initPayload: AnyJson, value: AnyNumber = 0): Promise<GasInfo> => {
     if (!account) return Promise.reject(new Error('No account address'));
     if (!destinationId) return Promise.reject(new Error('No program source'));
 
     const { decodedAddress } = account;
-    const { value = 0, isOtherPanicsAllowed = false } = options || {};
+    const { isOtherPanicsAllowed = false } = options || {};
 
     return api.program.calculateGas.handle(
       decodedAddress,
@@ -75,12 +75,12 @@ function useReplyCalculateGas(messageId: HexString | undefined, meta?: ProgramMe
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
 
-  const calculateGas = (initPayload: AnyJson) => {
+  const calculateGas = (initPayload: AnyJson, value: AnyNumber = 0) => {
     if (!account) return Promise.reject(new Error('No account address'));
     if (!messageId) return Promise.reject(new Error('No program source'));
 
     const { decodedAddress } = account;
-    const { value = 0, isOtherPanicsAllowed = false } = options || {};
+    const { isOtherPanicsAllowed = false } = options || {};
 
     return api.program.calculateGas.reply(decodedAddress, messageId, initPayload, value, isOtherPanicsAllowed, meta);
   };

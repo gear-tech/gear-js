@@ -4,7 +4,6 @@ import { AnyJson, AnyNumber } from '@polkadot/types/types';
 type CalculateGas = (initPayload: AnyJson) => Promise<GasInfo>;
 
 type Options = {
-  value?: AnyNumber;
   isOtherPanicsAllowed?: boolean;
 };
 
