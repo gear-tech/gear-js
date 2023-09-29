@@ -3,11 +3,23 @@ import { join } from 'path';
 import { readFileSync } from 'fs';
 import { u8aToHex } from '@polkadot/util';
 
-import { generateCodeHash, generateProgramId } from '../src';
-import { TEST_WASM_DIR } from './config';
+import { GearApi, generateCodeHash, generateProgramId } from '../src';
+import { TEST_WASM_DIR, WS_ADDRESS } from './config';
+import { sleep } from './utilsFunctions';
 
 const pingCode = readFileSync(join(TEST_WASM_DIR, 'demo_ping.opt.wasm'));
 let codeId: HexString;
+
+const api = new GearApi({ providerAddress: WS_ADDRESS });
+
+beforeAll(async () => {
+  await api.isReadyOrError;
+});
+
+afterAll(async () => {
+  await api.disconnect();
+  await sleep(2000);
+});
 
 describe('Generate IDs', () => {
   test('demo_ping codeHash', () => {
@@ -28,13 +40,13 @@ describe('Generate IDs', () => {
   });
 
   test('demo_ping programId', () => {
-    expect(generateProgramId(pingCode, '1234')).toBe(
+    expect(generateProgramId(api, pingCode, '1234')).toBe(
       '0x86220eab422209d36e01f443a98564d2c3149e845713e4924e15d55d3b4acd78',
     );
   });
 
   test('programId using codeId', () => {
-    expect(generateProgramId(codeId, '1234')).toBe(
+    expect(generateProgramId(api, codeId, '1234')).toBe(
       '0x86220eab422209d36e01f443a98564d2c3149e845713e4924e15d55d3b4acd78',
     );
   });

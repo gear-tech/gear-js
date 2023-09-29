@@ -104,7 +104,7 @@ describe('Calculate gas', () => {
         destination: programId,
         payload: { input: 'Handle' },
         gasLimit: (gasLimits.handle as u64).muln(2),
-        value: 1000,
+        value: 10_000_000_000_000,
       },
       meta,
     );

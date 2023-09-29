@@ -53,7 +53,7 @@ async fn main() {
 
     match action {
         Action::One(_) => {
-            msg::send_with_gas(msg::source(), EmptyStruct { empty: () }, 10000000, 1000).unwrap()
+            msg::send_with_gas(msg::source(), EmptyStruct { empty: () }, 10000000, 10_000_000_000_000).unwrap()
         }
         Action::Four(_) => {
             let response: String = msg::send_for_reply_as(msg::source(), "reply", 0, 0)
