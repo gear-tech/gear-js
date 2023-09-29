@@ -401,7 +401,7 @@ dependencies = [
 [[package]]
 name = "galloc"
 version = "1.0.1"
-source = "git+https://github.com/gear-tech/gear.git#f9509f6bfd20a28779f305f845cbd7c53fae6558"
+source = "git+https://github.com/gear-tech/gear.git#1feb3d25e5bcd5077bd83b64079053655d4d6bce"
 dependencies = [
  "dlmalloc",
 ]
@@ -409,7 +409,7 @@ dependencies = [
 [[package]]
 name = "gcore"
 version = "1.0.1"
-source = "git+https://github.com/gear-tech/gear.git#f9509f6bfd20a28779f305f845cbd7c53fae6558"
+source = "git+https://github.com/gear-tech/gear.git#1feb3d25e5bcd5077bd83b64079053655d4d6bce"
 dependencies = [
  "gear-core-errors",
  "gear-stack-buffer",
@@ -421,7 +421,7 @@ dependencies = [
 [[package]]
 name = "gear-core"
 version = "1.0.1"
-source = "git+https://github.com/gear-tech/gear.git#f9509f6bfd20a28779f305f845cbd7c53fae6558"
+source = "git+https://github.com/gear-tech/gear.git#1feb3d25e5bcd5077bd83b64079053655d4d6bce"
 dependencies = [
  "blake2-rfc",
  "byteorder",
@@ -442,7 +442,7 @@ dependencies = [
 [[package]]
 name = "gear-core-errors"
 version = "1.0.1"
-source = "git+https://github.com/gear-tech/gear.git#f9509f6bfd20a28779f305f845cbd7c53fae6558"
+source = "git+https://github.com/gear-tech/gear.git#1feb3d25e5bcd5077bd83b64079053655d4d6bce"
 dependencies = [
  "derive_more",
  "enum-iterator",
@@ -452,7 +452,7 @@ dependencies = [
 [[package]]
 name = "gear-stack-buffer"
 version = "1.0.1"
-source = "git+https://github.com/gear-tech/gear.git#f9509f6bfd20a28779f305f845cbd7c53fae6558"
+source = "git+https://github.com/gear-tech/gear.git#1feb3d25e5bcd5077bd83b64079053655d4d6bce"
 
 [[package]]
 name = "gear-wasm"
@@ -463,7 +463,7 @@ checksum = "f745ed9eb163f4509f01d5564e37db52ec43dd23569bafdba597a5f1e4c125c9"
 [[package]]
 name = "gear-wasm-builder"
 version = "0.1.2"
-source = "git+https://github.com/gear-tech/gear.git#f9509f6bfd20a28779f305f845cbd7c53fae6558"
+source = "git+https://github.com/gear-tech/gear.git#1feb3d25e5bcd5077bd83b64079053655d4d6bce"
 dependencies = [
  "anyhow",
  "cargo_metadata",
@@ -487,7 +487,7 @@ dependencies = [
 [[package]]
 name = "gear-wasm-instrument"
 version = "1.0.1"
-source = "git+https://github.com/gear-tech/gear.git#f9509f6bfd20a28779f305f845cbd7c53fae6558"
+source = "git+https://github.com/gear-tech/gear.git#1feb3d25e5bcd5077bd83b64079053655d4d6bce"
 dependencies = [
  "enum-iterator",
  "gwasm-instrument",
@@ -507,7 +507,7 @@ dependencies = [
 [[package]]
 name = "gmeta"
 version = "1.0.1"
-source = "git+https://github.com/gear-tech/gear.git#f9509f6bfd20a28779f305f845cbd7c53fae6558"
+source = "git+https://github.com/gear-tech/gear.git#1feb3d25e5bcd5077bd83b64079053655d4d6bce"
 dependencies = [
  "blake2-rfc",
  "derive_more",
@@ -519,7 +519,7 @@ dependencies = [
 [[package]]
 name = "gmeta-codegen"
 version = "1.0.1"
-source = "git+https://github.com/gear-tech/gear.git#f9509f6bfd20a28779f305f845cbd7c53fae6558"
+source = "git+https://github.com/gear-tech/gear.git#1feb3d25e5bcd5077bd83b64079053655d4d6bce"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -529,7 +529,7 @@ dependencies = [
 [[package]]
 name = "gstd"
 version = "1.0.1"
-source = "git+https://github.com/gear-tech/gear.git#f9509f6bfd20a28779f305f845cbd7c53fae6558"
+source = "git+https://github.com/gear-tech/gear.git#1feb3d25e5bcd5077bd83b64079053655d4d6bce"
 dependencies = [
  "bs58",
  "futures",
@@ -548,7 +548,7 @@ dependencies = [
 [[package]]
 name = "gstd-codegen"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#f9509f6bfd20a28779f305f845cbd7c53fae6558"
+source = "git+https://github.com/gear-tech/gear.git#1feb3d25e5bcd5077bd83b64079053655d4d6bce"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -558,7 +558,7 @@ dependencies = [
 [[package]]
 name = "gsys"
 version = "1.0.1"
-source = "git+https://github.com/gear-tech/gear.git#f9509f6bfd20a28779f305f845cbd7c53fae6558"
+source = "git+https://github.com/gear-tech/gear.git#1feb3d25e5bcd5077bd83b64079053655d4d6bce"
 
 [[package]]
 name = "gwasm-instrument"

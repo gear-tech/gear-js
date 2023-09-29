@@ -7,7 +7,10 @@ import type { Bytes } from '@polkadot/types-codec';
 import type { H256 } from '@polkadot/types/interfaces/runtime';
 import type { Observable } from '@polkadot/types/types';
 
-import { GasInfo } from '../interfaces';
+import { GasInfo } from '../interfaces/gas';
+import { InflationInfo } from '../common';
+
+export type __AugmentedRpc = AugmentedRpc<() => unknown>;
 
 declare module '@polkadot/rpc-core/types/jsonrpc' {
   interface RpcInterface {
@@ -96,5 +99,8 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
         ) => Observable<Bytes>
       >;
     };
-  } // RpcInterface
-} // declare module
+    stakingRewards: {
+      inflationInfo: AugmentedRpc<(at?: BlockHash | string | Uint8Array) => Observable<InflationInfo>>;
+    };
+  }
+}
