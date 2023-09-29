@@ -1,5 +1,12 @@
 import { useReadFullState, useReadWasmState } from './useReadState';
+
 import { useSendMessage, SendMessageOptions, UseSendMessageOptions } from './useSendMessage';
+import {
+  useDepricatedSendMessage,
+  DepricatedSendMessageOptions,
+  UseDepricatedSendMessageOptions,
+} from './useDepricatedSendMessage';
+
 import { useUploadProgram, useCreateProgram } from './useProgram';
 import {
   useUploadCalculateGas,
@@ -25,6 +32,9 @@ export {
   useVoucherBalance,
   useVoucher,
   useBalanceFormat,
+  useDepricatedSendMessage,
+  DepricatedSendMessageOptions,
+  UseDepricatedSendMessageOptions,
   SendMessageOptions,
   UseSendMessageOptions,
 };
