@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 
-import config from '../config/configuration';
+import config from '../config';
 import { TransferBalance } from './entities/transfer.entity';
 
 export const AppDataSource = new DataSource({

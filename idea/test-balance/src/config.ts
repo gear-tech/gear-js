@@ -19,8 +19,6 @@ export default {
   gear: {
     providerAddresses: checkEnv('WS_PROVIDER').split(','),
     accountSeed: checkEnv('TEST_ACCOUNT_SEED'),
-    rootAccountSeed: checkEnv('ROOT_ACCOUNT_SEED'),
-    accountBalance: checkEnv('TEST_ACCOUNT_BALANCE'),
     balanceToTransfer: checkEnv('TEST_BALANCE_VALUE'),
   },
   rabbitmq: {

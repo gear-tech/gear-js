@@ -1,3 +1,20 @@
+## master
+
+_09/29/2023_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1416
+- Update prefix for programId generation according to https://github.com/gear-tech/gear/pull/3010
+- Support 2 approaches to programId generation depending on the network
+
+## 0.33.6
+
+_09/25/2023_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1410
+- Fix payload encoding in state.readUsingWasm method.
+
 ## 0.33.5
 
 _09/18/2023_

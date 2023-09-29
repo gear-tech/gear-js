@@ -95,7 +95,7 @@ export class GearProgram extends GearTransaction {
 
     const payload = encodePayload(args.initPayload, metaOrHexRegistry, 'init', typeIndexOrTypeName);
     const codeId = generateCodeHash(code);
-    const programId = generateProgramId(codeId, salt);
+    const programId = generateProgramId(this._api, codeId, salt);
 
     try {
       this.extrinsic = this._api.tx.gear.uploadProgram(code, salt, payload, args.gasLimit, args.value || 0);
@@ -160,7 +160,7 @@ export class GearProgram extends GearTransaction {
     const payload = encodePayload(initPayload, metaOrHexRegistry, 'init', typeIndexOrTypeName);
     const salt = args.salt || randomAsHex(20);
 
-    const programId = generateProgramId(codeId, salt);
+    const programId = generateProgramId(this._api, codeId, salt);
 
     try {
       this.extrinsic = this._api.tx.gear.createProgram(codeId, salt, payload, gasLimit, value || 0);

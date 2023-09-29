@@ -18,17 +18,14 @@ export class GearProgramState extends GearProgramStorage {
     programMeta: ProgramMetadata,
   ): Promise<Codec> {
     const fnTypes = stateMeta?.functions[params.fn_name];
-    const stateType =
-      programMeta.version === MetadataVersion.V2Rust ? (programMeta.types.state as HumanTypesRepr).input : undefined;
 
     const argument =
       fnTypes?.input !== undefined && fnTypes?.input !== null
         ? Array.from(stateMeta.createType(fnTypes.input, params.argument).toU8a())
         : null;
 
-    const payload = isNaN(stateType)
-      ? []
-      : Array.from(programMeta.createType((programMeta.types.state as HumanTypesRepr).input, params.payload).toU8a());
+    const payload =
+      programMeta.version === MetadataVersion.V2Rust ? encodePayload(params.payload, programMeta, 'state') : [];
 
     const code =
       typeof params.wasm === 'string' ? params.wasm : CreateType.create<Bytes>('Bytes', Array.from(params.wasm));
