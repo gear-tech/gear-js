@@ -61,14 +61,7 @@ describe('Calculate gas', () => {
   });
 
   test('Get init gas spent (create)', async () => {
-    const gas: GasInfo = await api.program.calculateGas.initCreate(
-      aliceRaw,
-      codeId,
-      { input: 'Init' },
-      10_000_000_000_000,
-      true,
-      meta,
-    );
+    const gas: GasInfo = await api.program.calculateGas.initCreate(aliceRaw, codeId, { input: 'Init' }, 0, true, meta);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
     expect(gas.min_limit.gtn(0)).toBeTruthy();
@@ -93,7 +86,14 @@ describe('Calculate gas', () => {
 
   test('Get handle gas spent', async () => {
     expect(programId).toBeDefined();
-    const gas = await api.program.calculateGas.handle(aliceRaw, programId, { input: 'Handle' }, 1000, true, meta);
+    const gas = await api.program.calculateGas.handle(
+      aliceRaw,
+      programId,
+      { input: 'Handle' },
+      10_000_000_000_000,
+      true,
+      meta,
+    );
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
     expect(gas.min_limit.gtn(0)).toBeTruthy();
