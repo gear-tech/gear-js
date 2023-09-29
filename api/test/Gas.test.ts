@@ -61,7 +61,14 @@ describe('Calculate gas', () => {
   });
 
   test('Get init gas spent (create)', async () => {
-    const gas: GasInfo = await api.program.calculateGas.initCreate(aliceRaw, codeId, { input: 'Init' }, 0, true, meta);
+    const gas: GasInfo = await api.program.calculateGas.initCreate(
+      aliceRaw,
+      codeId,
+      { input: 'Init' },
+      10_000_000_000_000,
+      true,
+      meta,
+    );
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
     expect(gas.min_limit.gtn(0)).toBeTruthy();
