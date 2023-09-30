@@ -1,33 +1,83 @@
-import { createContext, useEffect, useState } from 'react';
 import { GearApi } from '@gear-js/api';
+import { WsProvider, ScProvider } from '@polkadot/api';
+import * as Sc from '@substrate/connect';
+import { createContext, useEffect, useMemo, useRef, useState } from 'react';
+
 import { ProviderProps } from 'types';
-import { WsProvider } from '@polkadot/api';
+
+type WsProviderArgs = {
+  endpoint: string | string[];
+  autoConnectMs?: number | false;
+  headers?: Record<string, string>;
+  timeout?: number;
+};
+
+type ScProviderArgs = {
+  spec: string | Sc.WellKnownChain;
+  sharedSandbox?: ScProvider;
+};
+
+type ProviderArgs = WsProviderArgs | ScProviderArgs;
 
 type Value = {
   api: GearApi;
   isApiReady: boolean;
+  switchNetwork: (args: ProviderArgs) => Promise<void>;
 };
 
 type Props = ProviderProps & {
-  providerAddress: string;
-  timeout?: number;
+  initialArgs: ProviderArgs;
 };
 
 const ApiContext = createContext({} as Value);
+const { Provider } = ApiContext;
 
-function ApiProvider({ providerAddress, timeout, children }: Props) {
+function ApiProvider({ initialArgs, children }: Props) {
   const [api, setApi] = useState<GearApi>();
+  const isApiReady = !!api;
 
-  const { Provider } = ApiContext;
-  const value = { api: api as GearApi, isApiReady: !!api };
+  const providerRef = useRef<WsProvider | ScProvider>();
+
+  const switchNetwork = async (args: ProviderArgs) => {
+    // disconnect from provider instead of api,
+    // cuz on failed GearApi.create connection is already established,
+    // but api state is empty
+    if (providerRef.current) {
+      setApi(undefined);
+      await providerRef.current.disconnect();
+    }
+
+    const isLightClient = 'spec' in args;
+
+    const provider = isLightClient
+      ? new ScProvider(Sc, args.spec, args.sharedSandbox)
+      : new WsProvider(args.endpoint, args.autoConnectMs, args.headers, args.timeout);
+
+    providerRef.current = provider;
+
+    // on set autoConnectMs connection starts automatically,
+    // and in case of error it continues to execute via recursive setTimeout.
+    // cuz of this it's necessary to await empty promise,
+    // otherwise GearApi.create would be called before established connection.
+
+    // mostly it's a workaround around React.StrictMode hooks behaviour to support autoConnect,
+    // and since it's based on ref and WsProvider's implementation,
+    // it should be treated carefully
+    await (isLightClient || (args.autoConnectMs !== undefined && !args.autoConnectMs)
+      ? provider.connect()
+      : Promise.resolve());
+
+    const result = await GearApi.create({ provider });
+    setApi(result);
+  };
 
   useEffect(() => {
-    const provider = new WsProvider(providerAddress, undefined, undefined, timeout);
-
-    GearApi.create({ provider }).then(setApi);
+    switchNetwork(initialArgs);
   }, []);
 
-  return <Provider value={value}>{children}</Provider>;
+  const value = useMemo(() => ({ api, isApiReady, switchNetwork }), [api, isApiReady]);
+
+  return <Provider value={value as Value}>{children}</Provider>;
 }
 
 export { ApiContext, ApiProvider };
