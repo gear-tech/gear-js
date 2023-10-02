@@ -36,13 +36,17 @@ type Props = ProviderProps & {
   initialArgs: ProviderArgs;
 };
 
-const ApiContext = createContext({} as Value);
+const initialValue = {
+  api: undefined,
+  isApiReady: false as const,
+  switchNetwork: () => Promise.resolve(),
+};
+
+const ApiContext = createContext<Value>(initialValue);
 const { Provider } = ApiContext;
 
 function ApiProvider({ initialArgs, children }: Props) {
   const [api, setApi] = useState<GearApi>();
-  const isApiReady = !!api;
-
   const providerRef = useRef<WsProvider | ScProvider>();
 
   const switchNetwork = async (args: ProviderArgs) => {
@@ -67,7 +71,7 @@ function ApiProvider({ initialArgs, children }: Props) {
     // cuz of this it's necessary to await empty promise,
     // otherwise GearApi.create would be called before established connection.
 
-    // mostly it's a workaround around React.StrictMode hooks behaviour to support autoConnect,
+    // mostly it's a workaround around React.StrictMode hooks behavior to support autoConnect,
     // and since it's based on ref and WsProvider's implementation,
     // it should be treated carefully
     await (isLightClient || (args.autoConnectMs !== undefined && !args.autoConnectMs)
@@ -82,9 +86,13 @@ function ApiProvider({ initialArgs, children }: Props) {
     switchNetwork(initialArgs);
   }, []);
 
-  const value = useMemo(() => ({ api, isApiReady, switchNetwork }), [api, isApiReady]);
+  const value = useMemo(
+    () =>
+      api ? { api, isApiReady: true as const, switchNetwork } : { api, isApiReady: false as const, switchNetwork },
+    [api],
+  );
 
-  return <Provider value={value as Value}>{children}</Provider>;
+  return <Provider value={value}>{children}</Provider>;
 }
 
 export { ApiContext, ApiProvider };
