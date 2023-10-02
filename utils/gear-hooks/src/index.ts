@@ -18,6 +18,9 @@ import {
   useCreateHandler,
   SendMessageOptions,
   UseSendMessageOptions,
+  useDepricatedSendMessage,
+  DepricatedSendMessageOptions,
+  UseDepricatedSendMessageOptions,
 } from './hooks';
 
 import { withoutCommas } from './utils';
@@ -67,6 +70,7 @@ export {
   AlertProvider,
   useCreateHandler,
   withoutCommas,
+  useDepricatedSendMessage,
   DEFAULT_OPTIONS,
   DEFAULT_INFO_OPTIONS,
   DEFAULT_ERROR_OPTIONS,
@@ -84,4 +88,6 @@ export {
   Account,
   SendMessageOptions,
   UseSendMessageOptions,
+  DepricatedSendMessageOptions,
+  UseDepricatedSendMessageOptions,
 };
