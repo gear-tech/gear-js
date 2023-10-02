@@ -13,7 +13,7 @@ type WsProviderArgs = {
 };
 
 type ScProviderArgs = {
-  spec: string | Sc.WellKnownChain;
+  spec: string;
   sharedSandbox?: ScProvider;
 };
 
