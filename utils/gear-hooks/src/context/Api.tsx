@@ -20,10 +20,17 @@ type ScProviderArgs = {
 type ProviderArgs = WsProviderArgs | ScProviderArgs;
 
 type Value = {
-  api: GearApi;
-  isApiReady: boolean;
   switchNetwork: (args: ProviderArgs) => Promise<void>;
-};
+} & (
+  | {
+      api: undefined;
+      isApiReady: false;
+    }
+  | {
+      api: GearApi;
+      isApiReady: true;
+    }
+);
 
 type Props = ProviderProps & {
   initialArgs: ProviderArgs;

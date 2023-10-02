@@ -51,14 +51,6 @@ type Callbacks = {
   onError?: () => void;
 };
 
-type SingAndSendParams = {
-  address: string;
-  signer: Signer;
-  alertId: string;
-  programId: HexString;
-  callbacks?: Callbacks;
-};
-
 type HandleInitParams = {
   status: string;
   programId: HexString;
@@ -93,7 +85,6 @@ type UseProgram = (initPayload: AnyJson, gasLimit: GasLimit, options?: Options) 
 export { Method, TransactionStatus, ProgramStatus, TransactionName, ProgramError };
 export type {
   Callbacks,
-  SingAndSendParams,
   HandleInitParams,
   HandleErrorParams,
   HandleSignStatusParams,
