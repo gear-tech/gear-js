@@ -10,6 +10,8 @@ function useBalanceFormat() {
 
   const valuePerGas = useMemo(() => {
     try {
+      if (!isApiReady) throw new Error('API is not initialized');
+
       return api.valuePerGas.toString();
     } catch {
       return '1000';
