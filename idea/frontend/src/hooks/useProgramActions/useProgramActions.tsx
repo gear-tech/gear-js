@@ -4,8 +4,7 @@ import { EventRecord } from '@polkadot/types/interfaces';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
-import { ProgramMetadata, IProgram } from '@gear-js/api';
-import { Option } from '@polkadot/types';
+import { ProgramMetadata } from '@gear-js/api';
 
 import { useChain, useModal } from 'hooks';
 import { uploadLocalProgram } from 'api/LocalDB';
@@ -18,9 +17,10 @@ import {
   absoluteRoutes,
   UPLOAD_METADATA_TIMEOUT,
 } from 'shared/config';
-import { checkWallet, getExtrinsicFailedMessage } from 'shared/helpers';
+import { checkWallet, getExtrinsicFailedMessage, isNullOrUndefined } from 'shared/helpers';
 import { CustomLink } from 'shared/ui/customLink';
-import { ProgramStatus } from 'features/program';
+import { ProgramStatus, useProgramStatus } from 'features/program';
+import { isHumanTypesRepr } from 'features/metadata';
 import { addProgramName } from 'api';
 
 import { useMetadataUpload } from '../useMetadataUpload';
@@ -34,6 +34,7 @@ const useProgramActions = () => {
   const { isDevChain } = useChain();
 
   const { showModal } = useModal();
+  const { getProgramStatus } = useProgramStatus();
   const uploadMetadata = useMetadataUpload();
 
   const getProgramMessage = (programId: string) => (
@@ -73,16 +74,6 @@ const useProgramActions = () => {
         if (reject) reject();
       }
     });
-  };
-
-  const getProgramStatus = async (id: HexString) => {
-    const option = (await api.query.gearProgram.programStorage(id)) as Option<IProgram>;
-    const { isTerminated, isExited } = option.unwrap();
-
-    if (isTerminated) return ProgramStatus.Terminated;
-    if (isExited) return ProgramStatus.Exited;
-
-    return ProgramStatus.Active;
   };
 
   const signAndUpload = async ({
