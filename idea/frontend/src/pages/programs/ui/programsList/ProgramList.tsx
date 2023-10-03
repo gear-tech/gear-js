@@ -5,11 +5,12 @@ import { Placeholder } from 'entities/placeholder';
 import { IProgram, ProgramCard } from 'features/program';
 import { ExamplesLink } from 'shared/ui/examplesLink';
 import { ReactComponent as CardPalceholderSVG } from 'shared/assets/images/placeholders/card.svg';
+import { LocalProgram } from 'features/local-indexer';
 
 import styles from './ProgramsList.module.scss';
 
 type Props = {
-  programs: IProgram[];
+  programs: (IProgram | LocalProgram)[];
   isLoading: boolean;
   totalCount: number;
   loadMorePrograms?: () => void;

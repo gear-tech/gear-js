@@ -1,22 +1,22 @@
 import { HexString } from '@polkadot/util/types';
 
-import { ICode } from 'entities/code';
 import { IBase } from 'shared/types';
 import { OwnerFilter } from 'api/consts';
 
 import { ProgramStatus } from './consts';
 
-interface IProgram extends IBase {
+type Program = {
   id: HexString;
   owner: string;
   name: string;
   status: ProgramStatus;
   metahash: HexString | null;
-  title: string | null;
   hasState: boolean;
   expiration?: number;
-  code?: ICode;
-}
+  code?: { id: HexString };
+};
+
+type IProgram = Program & IBase;
 
 type FiltersValues = {
   owner: OwnerFilter;
@@ -29,4 +29,4 @@ type RequestParams = {
   query?: string;
 };
 
-export type { IProgram, FiltersValues, RequestParams };
+export type { Program, IProgram, FiltersValues, RequestParams };

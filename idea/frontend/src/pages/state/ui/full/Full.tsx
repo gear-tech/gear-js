@@ -7,12 +7,12 @@ import { useProgram, useStateRead } from 'hooks';
 import { getPreformattedText, isNullOrUndefined } from 'shared/helpers';
 import { BackButton } from 'shared/ui/backButton';
 import { Box } from 'shared/ui/box';
-import { useMetadata } from 'features/metadata';
+import { isHumanTypesRepr, useMetadata } from 'features/metadata';
 import { FormPayload, getPayloadFormValues, getSubmitPayload } from 'features/formPayload';
 import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg';
 
 import { FormValues, INITIAL_VALUES } from '../../model';
-import { downloadJson, isHumanTypesRepr } from '../../helpers';
+import { downloadJson } from '../../helpers';
 import { useProgramId } from '../../hooks';
 import styles from './Full.module.scss';
 

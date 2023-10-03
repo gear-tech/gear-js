@@ -14,9 +14,9 @@ import { BackButton } from 'shared/ui/backButton';
 import { Box } from 'shared/ui/box';
 import { FormPayload, getPayloadFormValues, getSubmitPayload } from 'features/formPayload';
 import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg';
-import { useMetadata } from 'features/metadata';
+import { isHumanTypesRepr, useMetadata } from 'features/metadata';
 
-import { downloadJson, isHumanTypesRepr } from '../../helpers';
+import { downloadJson } from '../../helpers';
 import { IState, WasmFormValues, INITIAL_VALUES } from '../../model';
 import { useProgramId } from '../../hooks';
 import { WasmStates } from '../wasmStates';

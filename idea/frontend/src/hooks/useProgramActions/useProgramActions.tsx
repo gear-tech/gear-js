@@ -18,12 +18,11 @@ import {
   absoluteRoutes,
   UPLOAD_METADATA_TIMEOUT,
 } from 'shared/config';
-import { checkWallet, getExtrinsicFailedMessage, isNullOrUndefined } from 'shared/helpers';
+import { checkWallet, getExtrinsicFailedMessage } from 'shared/helpers';
 import { CustomLink } from 'shared/ui/customLink';
 import { ProgramStatus } from 'features/program';
 import { addProgramName } from 'api';
 
-import { isHumanTypesRepr } from 'pages/state/helpers';
 import { useMetadataUpload } from '../useMetadataUpload';
 import { ALERT_OPTIONS } from './consts';
 import { Payload, ParamsToCreate, ParamsToUpload, ParamsToSignAndUpload } from './types';
