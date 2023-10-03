@@ -1,10 +1,9 @@
 import { useApi } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
-import { Option } from '@polkadot/types';
-import { ProgramMetadata, IProgram as StorageProgram } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 
 import { PROGRAMS_LOCAL_FORAGE } from 'api';
-import { IProgram, ProgramStatus } from 'features/program';
+import { IProgram, useProgramStatus } from 'features/program';
 import { isState, useMetadata } from 'features/metadata';
 
 function useLocalProgram() {
@@ -12,16 +11,7 @@ function useLocalProgram() {
   const genesis = api?.genesisHash.toHex();
 
   const { getMetadata } = useMetadata();
-
-  const getProgramStatus = async (id: HexString) => {
-    const option = (await api.query.gearProgram.programStorage(id)) as Option<StorageProgram>;
-    const { isTerminated, isExited } = option.unwrap();
-
-    if (isTerminated) return ProgramStatus.Terminated;
-    if (isExited) return ProgramStatus.Exited;
-
-    return ProgramStatus.Active;
-  };
+  const { getProgramStatus } = useProgramStatus();
 
   const getChainProgram = async (id: HexString) => {
     const name = id;
