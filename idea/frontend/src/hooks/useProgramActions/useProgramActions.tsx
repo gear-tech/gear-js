@@ -23,7 +23,6 @@ import { CustomLink } from 'shared/ui/customLink';
 import { ProgramStatus } from 'features/program';
 import { addProgramName } from 'api';
 
-import { isState } from 'features/metadata';
 import { useMetadataUpload } from '../useMetadataUpload';
 import { ALERT_OPTIONS } from './consts';
 import { Payload, ParamsToCreate, ParamsToUpload, ParamsToSignAndUpload } from './types';
