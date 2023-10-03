@@ -1,4 +1,4 @@
-import { GasLimit, ProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { AnyJson, ISubmittableResult } from '@polkadot/types/types';
@@ -6,26 +6,27 @@ import { HexString } from '@polkadot/util/types';
 import { useContext } from 'react';
 import { AccountContext, AlertContext, ApiContext } from 'context';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
-import { getExtrinsicFailedMessage } from 'utils';
+import { getAutoGasLimit, getExtrinsicFailedMessage } from 'utils';
 
-type UseSendMessageOptions = {
+type UseDepricatedSendMessageOptions = {
   isMaxGasLimit?: boolean;
   disableAlerts?: boolean;
 };
 
-type SendMessageOptions = {
-  payload: AnyJson;
-  gasLimit: GasLimit;
+type DepricatedSendMessageOptions = {
   value?: string | number;
   prepaid?: boolean;
+  isOtherPanicsAllowed?: boolean;
   onSuccess?: () => void;
   onError?: () => void;
 };
 
-function useSendMessage(
+const MAX_GAS_LIMIT = 250000000000;
+
+function useDepricatedSendMessage(
   destination: HexString,
   metadata: ProgramMetadata | undefined,
-  { disableAlerts }: UseSendMessageOptions = {},
+  { isMaxGasLimit = false, disableAlerts }: UseDepricatedSendMessageOptions = {},
 ) {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
@@ -73,46 +74,51 @@ function useSendMessage(
     }
   };
 
-  const sendMessage = (args: SendMessageOptions) => {
-    if (!account || !metadata) return;
+  const sendMessage = (payload: AnyJson, options?: DepricatedSendMessageOptions) => {
+    if (account && metadata) {
+      const alertId = disableAlerts ? '' : alert.loading('Sign In', { title });
 
-    const alertId = disableAlerts ? '' : alert.loading('Sign In', { title });
+      const { value = 0, isOtherPanicsAllowed = false, prepaid = false, onSuccess, onError } = options || {};
+      const { address, decodedAddress, meta } = account;
+      const { source } = meta;
 
-    const { payload, gasLimit, value = 0, prepaid = false, onSuccess, onError } = args;
-    const { address, decodedAddress, meta } = account;
-    const { source } = meta;
+      const getGasLimit = isMaxGasLimit
+        ? Promise.resolve(MAX_GAS_LIMIT)
+        : api.program.calculateGas
+            .handle(decodedAddress, destination, payload, value, isOtherPanicsAllowed, metadata)
+            .then(getAutoGasLimit);
 
-    const message = {
-      destination,
-      payload,
-      gasLimit,
-      value,
-      prepaid,
-      account: prepaid ? decodedAddress : undefined,
-    };
+      getGasLimit
+        .then((gasLimit) => ({
+          destination,
+          gasLimit,
+          payload,
+          value,
+          prepaid,
+          account: prepaid ? decodedAddress : undefined,
+        }))
+        .then((message) => api.message.send(message, metadata))
+        .then(() => web3FromSource(source))
+        .then(({ signer }) =>
+          api.message.signAndSend(address, { signer }, (result) => handleStatus(result, alertId, onSuccess, onError)),
+        )
+        .catch((error: Error) => {
+          const { message } = error;
 
-    api.message
-      .send(message, metadata)
-      .then(() => web3FromSource(source))
-      .then(({ signer }) =>
-        api.message.signAndSend(address, { signer }, (result) => handleStatus(result, alertId, onSuccess, onError)),
-      )
-      .catch((error: Error) => {
-        const { message } = error;
+          console.error(error);
 
-        console.error(error);
+          if (alertId) {
+            alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
+          } else {
+            alert.error(message);
+          }
 
-        if (alertId) {
-          alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
-        } else {
-          alert.error(message);
-        }
-
-        onError && onError();
-      });
+          onError && onError();
+        });
+    }
   };
 
   return sendMessage;
 }
 
-export { useSendMessage, SendMessageOptions, UseSendMessageOptions };
+export { useDepricatedSendMessage, DepricatedSendMessageOptions, UseDepricatedSendMessageOptions };

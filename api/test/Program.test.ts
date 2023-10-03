@@ -130,7 +130,7 @@ describe('New Program', () => {
   test('Throw error if value is incorrect', () => {
     expect(() =>
       api.program.upload({ code: Buffer.from('0x00'), gasLimit: 1000, value: api.existentialDeposit.toNumber() - 1 }),
-    ).toThrow(`Value less than minimal. Minimal value: ${api.existentialDeposit.toString()}`);
+    ).toThrow(`Value less than minimal. Minimal value: ${api.existentialDeposit.toHuman()}`);
   });
 
   test('Not to throw error if value is correct', () => {

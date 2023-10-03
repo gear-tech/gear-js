@@ -1,3 +1,14 @@
+## 0.34.0
+
+_09/29/2023_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1416
+- Update prefix for programId generation according to https://github.com/gear-tech/gear/pull/3010
+- Support 2 approaches to programId generation depending on the network
+https://github.com/gear-tech/gear-js/pull/1404
+- Support `inflationInfo` rpc call
+
 ## 0.33.6
 
 _09/25/2023_

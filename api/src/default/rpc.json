@@ -164,6 +164,12 @@
         "params": [],
         "type": "String"
       }
+    },
+    "stakingRewards": {
+      "inflationInfo": {
+        "params": [],
+        "type": "Bytes"
+      }
     }
   }
 }

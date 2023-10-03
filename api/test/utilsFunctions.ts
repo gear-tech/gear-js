@@ -4,7 +4,6 @@ import { KeyringPair } from '@polkadot/keyring/types';
 
 import {
   GearApi,
-  GearKeyring,
   GearTransaction,
   IGearEvent,
   IGearVoucherEvent,
@@ -13,6 +12,8 @@ import {
   UserMessageSent,
   UserMessageSentData,
 } from '../src';
+import { Keyring } from '@polkadot/keyring';
+import { waitReady } from '@polkadot/wasm-crypto';
 
 export const checkInit = (
   api: GearApi,
@@ -102,8 +103,10 @@ export async function sendTransaction<E extends keyof IGearEvent | keyof IGearVo
   });
 }
 
-export const getAccount = (uri: string) => {
-  return GearKeyring.fromSuri(uri);
+export const getAccount = async (uri: string) => {
+  await waitReady();
+  const keyring = new Keyring({ type: 'sr25519', ss58Format: 137 });
+  return keyring.addFromUri(uri);
 };
 
 export const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time));

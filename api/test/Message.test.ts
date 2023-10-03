@@ -50,7 +50,7 @@ describe('Gear Message', () => {
         payload: {
           One: 'Dmitriy',
         },
-        value: 1_000,
+        value: 10_000_000_000_000,
         reply: '0x',
       },
     ];

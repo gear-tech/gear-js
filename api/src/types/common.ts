@@ -1,6 +1,12 @@
-import { u128, u64 } from '@polkadot/types';
+import { Struct, u128, u64 } from '@polkadot/types';
 import { AnyNumber } from '@polkadot/types/types';
+import { Perquintill } from '@polkadot/types/interfaces';
 
 export type Value = AnyNumber | u128;
 
 export type GasLimit = AnyNumber | u64;
+
+export interface InflationInfo extends Struct {
+  inflation: Perquintill;
+  roi: Perquintill;
+}
