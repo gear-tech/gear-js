@@ -1,9 +1,9 @@
 import { Input, Button } from '@gear-js/ui';
-import { useForm } from '@mantine/form';
+import { isHex } from '@polkadot/util';
 import { HexString } from '@polkadot/util/types';
+import { useState } from 'react';
 
 import { ReactComponent as ApplySVG } from 'shared/assets/images/actions/apply.svg';
-import { isHexValid } from 'shared/helpers';
 
 import styles from './MetadataInput.module.scss';
 
@@ -11,20 +11,24 @@ type Props = {
   onSubmit: (value: HexString) => void;
 };
 
-const initialValues = { metaHex: '' as HexString };
-const validate = { metaHex: isHexValid };
-
 const MetadataInput = ({ onSubmit }: Props) => {
-  const form = useForm({ initialValues, validate });
-  const { getInputProps } = form;
+  const [value, setValue] = useState('');
 
-  const handleSubmit = form.onSubmit(({ metaHex }) => onSubmit(metaHex));
+  const handleSubmit = () => onSubmit(isHex(value) ? value : `0x${value}`);
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
-      <Input label="Metadata in hex format:" direction="y" placeholder="0x00" {...getInputProps('metaHex')} />
-      <Button type="submit" text="Apply" color="secondary" icon={ApplySVG} />
-    </form>
+    // not using form cuz MetadataInput is part of another form in the UploadMetadataModal
+    <div className={styles.form}>
+      <Input
+        label="Metadata in hex format:"
+        direction="y"
+        placeholder="0x00"
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+      />
+
+      <Button text="Apply" color="secondary" icon={ApplySVG} onClick={handleSubmit} />
+    </div>
   );
 };
 

@@ -81,7 +81,10 @@ const UploadMetadata = ({ metadata, isInputDisabled, isLoading, onReset, onUploa
   }, [metaFile]);
 
   useEffect(() => {
-    if (!metadata) resetMetaFile();
+    if (!metadata) {
+      resetMetaFile();
+      setIsManualInput(false);
+    }
   }, [metadata]);
 
   useEffect(() => {

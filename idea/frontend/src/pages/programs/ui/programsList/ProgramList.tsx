@@ -42,7 +42,7 @@ const ProgramsList = ({ programs, isLoading, totalCount, main, loadMorePrograms 
       ) : (
         <SimpleBar className={styles.simpleBar} scrollableNodeProps={{ ref: scrollableNodeRef }}>
           {programs.map((program) => (
-            <ProgramCard key={program.id} program={program} />
+            <ProgramCard key={program.id} program={program} vertical={!main} />
           ))}
         </SimpleBar>
       )}

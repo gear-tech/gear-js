@@ -9,7 +9,6 @@
   border-radius: 24px;
   background-color: $bgColorSecondary;
   margin-bottom: 32px;
-  z-index: 5;
   position: relative;
 
   &::after {
@@ -33,7 +32,7 @@
   flex: 1 1;
   position: relative;
   margin-right: 5px;
-  z-index: 2;
+  z-index: 1; // to override pseudo-element background
 
   .title {
     font-family: 'Kanit';
@@ -68,7 +67,7 @@
     height: toRem(190);
     top: toRem(20);
     left: toRem(150);
-    z-index: 2;
+    z-index: 1; // to override pseudo-element background
   }
 
   .gear2 {

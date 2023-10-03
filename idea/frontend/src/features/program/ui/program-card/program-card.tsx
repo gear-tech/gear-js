@@ -11,6 +11,7 @@ import { TimestampBlock } from 'shared/ui/timestampBlock';
 import { ActionLink } from 'shared/ui/ActionLink';
 import { LocalProgram } from 'features/local-indexer';
 
+import clsx from 'clsx';
 import { getBulbStatus } from '../../utils';
 import { IProgram } from '../../types';
 import { PROGRAM_STATUS_NAME, ProgramStatus } from '../../consts';
@@ -18,20 +19,22 @@ import styles from './program-card.module.scss';
 
 type Props = {
   program: IProgram | LocalProgram;
+  vertical?: Boolean;
 };
 
-const ProgramCard = memo(({ program }: Props) => {
+const ProgramCard = memo(({ program, vertical }: Props) => {
   const { id: programId, name, status, timestamp } = program;
   const statusName = PROGRAM_STATUS_NAME[status];
 
   return (
-    <article className={styles.programCard}>
+    <article className={clsx(styles.programCard, vertical && styles.vertical)}>
       <VoucherBadge programId={programId} />
 
       <div className={styles.content}>
         <Link to={generatePath(absoluteRoutes.program, { programId })} className={styles.link}>
           <h2 className={styles.name}>{name}</h2>
         </Link>
+
         <div className={styles.otherInfo}>
           <IdBlock id={programId} size="medium" withIcon color="light" />
           <BulbBlock color="light" text={statusName} status={getBulbStatus(status)} />
