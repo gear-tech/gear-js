@@ -9,8 +9,8 @@ export default [
   {
     input: 'src/index.ts',
     output: [
-      { file: packageJson.main, format: 'cjs' },
-      { file: packageJson.module, format: 'esm' },
+      { file: packageJson.main, format: 'cjs', inlineDynamicImports: true },
+      { file: packageJson.module, format: 'esm', inlineDynamicImports: true },
     ],
     plugins: [peerDepsExternal(), resolve(), commonjs(), typescript(), terser()],
   },

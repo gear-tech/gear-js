@@ -10,10 +10,11 @@ function useUploadCalculateGas(
   meta?: ProgramMetadata | undefined,
   options?: Options,
 ) {
-  const { api } = useContext(ApiContext); // сircular dependency fix
+  const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
 
   const calculateGas = (initPayload: AnyJson, value: AnyNumber = 0): Promise<GasInfo> => {
+    if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
     if (!account) return Promise.reject(new Error('No account address'));
     if (!code) return Promise.reject(new Error('No program source'));
 
@@ -27,10 +28,11 @@ function useUploadCalculateGas(
 }
 
 function useCreateCalculateGas(codeId: HexString | undefined, meta?: ProgramMetadata | undefined, options?: Options) {
-  const { api } = useContext(ApiContext); // сircular dependency fix
+  const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
 
   const calculateGas = (initPayload: AnyJson, value: AnyNumber = 0): Promise<GasInfo> => {
+    if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
     if (!account) return Promise.reject(new Error('No account address'));
     if (!codeId) return Promise.reject(new Error('No program source'));
 
@@ -48,10 +50,11 @@ function useHandleCalculateGas(
   meta?: ProgramMetadata | undefined,
   options?: Options,
 ) {
-  const { api } = useContext(ApiContext); // сircular dependency fix
+  const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
 
   const calculateGas = (initPayload: AnyJson, value: AnyNumber = 0): Promise<GasInfo> => {
+    if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
     if (!account) return Promise.reject(new Error('No account address'));
     if (!destinationId) return Promise.reject(new Error('No program source'));
 
@@ -72,10 +75,11 @@ function useHandleCalculateGas(
 }
 
 function useReplyCalculateGas(messageId: HexString | undefined, meta?: ProgramMetadata | undefined, options?: Options) {
-  const { api } = useContext(ApiContext); // сircular dependency fix
+  const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
 
   const calculateGas = (initPayload: AnyJson, value: AnyNumber = 0) => {
+    if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
     if (!account) return Promise.reject(new Error('No account address'));
     if (!messageId) return Promise.reject(new Error('No program source'));
 

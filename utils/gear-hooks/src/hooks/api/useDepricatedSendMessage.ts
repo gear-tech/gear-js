@@ -28,13 +28,15 @@ function useDepricatedSendMessage(
   metadata: ProgramMetadata | undefined,
   { isMaxGasLimit = false, disableAlerts }: UseDepricatedSendMessageOptions = {},
 ) {
-  const { api } = useContext(ApiContext); // сircular dependency fix
+  const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
   const alert = useContext(AlertContext);
 
   const title = 'gear.sendMessage';
 
   const handleEventsStatus = (events: EventRecord[], onSuccess?: () => void, onError?: () => void) => {
+    if (!isApiReady) return;
+
     events.forEach(({ event }) => {
       const { method, section } = event;
 
@@ -75,7 +77,7 @@ function useDepricatedSendMessage(
   };
 
   const sendMessage = (payload: AnyJson, options?: DepricatedSendMessageOptions) => {
-    if (account && metadata) {
+    if (account && metadata && isApiReady) {
       const alertId = disableAlerts ? '' : alert.loading('Sign In', { title });
 
       const { value = 0, isOtherPanicsAllowed = false, prepaid = false, onSuccess, onError } = options || {};

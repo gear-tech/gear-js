@@ -7,10 +7,12 @@ import { getExtrinsicFailedMessage } from 'utils';
 import { Callbacks, Method, HandleSignStatusParams, TransactionStatus, ProgramError } from '../types';
 
 function useHandleSignStatus() {
-  const { api } = useContext(ApiContext); // сircular dependency fix
+  const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
   const alert = useContext(AlertContext);
 
   const handleEventsStatus = (events: EventRecord[], programId: HexString, callbacks?: Callbacks) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+
     const { onError, onSuccess } = callbacks || {};
 
     events.forEach(({ event }) => {

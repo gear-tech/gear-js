@@ -27,13 +27,15 @@ function useSendMessage(
   metadata: ProgramMetadata | undefined,
   { disableAlerts }: UseSendMessageOptions = {},
 ) {
-  const { api } = useContext(ApiContext); // сircular dependency fix
+  const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
   const alert = useContext(AlertContext);
 
   const title = 'gear.sendMessage';
 
   const handleEventsStatus = (events: EventRecord[], onSuccess?: () => void, onError?: () => void) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+
     events.forEach(({ event }) => {
       const { method, section } = event;
 
@@ -74,7 +76,9 @@ function useSendMessage(
   };
 
   const sendMessage = (args: SendMessageOptions) => {
-    if (!account || !metadata) return;
+    if (!isApiReady) throw new Error('API is not initialized');
+    if (!account) throw new Error('No account address');
+    if (!metadata) throw new Error('Metadata not found');
 
     const alertId = disableAlerts ? '' : alert.loading('Sign In', { title });
 

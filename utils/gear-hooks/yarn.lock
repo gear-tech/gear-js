@@ -71,6 +71,7 @@ __metadata:
     "@polkadot/util": 12.3.2
     "@rollup/plugin-commonjs": 22.0.2
     "@rollup/plugin-node-resolve": 13.3.0
+    "@substrate/connect": 0.7.32
     "@types/react": 18.0.37
     "@types/react-dom": 18.0.11
     "@types/react-transition-group": 4.4.5
@@ -703,6 +704,16 @@ __metadata:
     eventemitter3: ^4.0.7
     smoldot: 1.0.4
   checksum: 3179d241f073318d5973deb61c9c8d9b89ae28909a594b6b9fbcdfffd030a70ba58e8428eaa9d72484810bad10c93de1ad9c440b878d0fcfaaf4559d2e6f4502
+  languageName: node
+  linkType: hard
+
+"@substrate/connect@npm:0.7.32":
+  version: 0.7.32
+  resolution: "@substrate/connect@npm:0.7.32"
+  dependencies:
+    "@substrate/connect-extension-protocol": ^1.0.1
+    smoldot: 2.0.1
+  checksum: b2cab2519a53eb5a48efc406a93a737437ddc1b4f294226cdee6a3d8576dca25943e900fd6eeccb816031cfcfa05e4a6d365cfabc72eddacf31c428a3511a8d7
   languageName: node
   linkType: hard
 
@@ -2298,6 +2309,15 @@ __metadata:
     pako: ^2.0.4
     ws: ^8.8.1
   checksum: 81ecc38b98f7ac4dd093753e85956262608dca3c8a288c20a25fe1762a6afcdbe6f3622ea30a346df3f4145e0900ef0595e56e96e9e0de83c59f0649d1ab4786
+  languageName: node
+  linkType: hard
+
+"smoldot@npm:2.0.1":
+  version: 2.0.1
+  resolution: "smoldot@npm:2.0.1"
+  dependencies:
+    ws: ^8.8.1
+  checksum: 77c1f541d039fe740157e9b81e2b13fc72dabe3ffd75644ee9958aee48d5c5458b6cc974d1e9233b1bcf3fde7af42a53a0e48452b6657405c64158a0c8168eee
   languageName: node
   linkType: hard
 
