@@ -1,6 +1,7 @@
 import { HexString } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { useState } from 'react';
+import cx from 'clsx';
 
 import actionLinkStyles from 'shared/ui/ActionLink/ActionLink.module.scss';
 
@@ -10,9 +11,10 @@ import { IssueVoucherModal } from '../issue-voucher-modal';
 
 type Props = {
   programId: HexString;
+  transparent?: boolean;
 };
 
-const IssueVoucher = withAccount(({ programId }: Props) => {
+const IssueVoucher = withAccount(({ programId, transparent }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -22,9 +24,9 @@ const IssueVoucher = withAccount(({ programId }: Props) => {
       <Button
         icon={CouponSVG}
         text="Create Voucher"
-        color="transparent"
+        color={transparent ? 'transparent' : 'secondary'}
         size="small"
-        className={actionLinkStyles.link}
+        className={cx(transparent && actionLinkStyles.link)}
         noWrap
         onClick={openModal}
       />
