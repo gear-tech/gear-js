@@ -19,13 +19,16 @@ function useLocalProgram() {
 
     let codeHash: HexString | null;
     let metahash: HexString | null;
+    let metaHex: HexString | null | undefined;
 
+    // cuz error on terminated program
     try {
-      // cuz error on terminated program
       codeHash = await api.program.codeHash(id);
     } catch {
       codeHash = null;
     }
+
+    const code = codeHash ? { id: codeHash } : undefined;
 
     try {
       metahash = await api.code.metaHash(codeHash || id);
@@ -33,11 +36,15 @@ function useLocalProgram() {
       metahash = null;
     }
 
-    const code = codeHash ? { id: codeHash } : undefined;
+    // metadata is retrived via useMetadata, so no need to log errors here
+    try {
+      metaHex = metahash ? (await getMetadata({ hash: metahash })).result.hex : undefined;
+    } catch {
+      metaHex = null;
+    }
 
     // TODO: on Programs page each program can make a request to backend,
     // is there a way to optimize it?
-    const metaHex = metahash ? (await getMetadata({ hash: metahash })).result.hex : undefined;
     const metadata = metaHex ? ProgramMetadata.from(metaHex) : undefined;
     const hasState = isState(metadata);
 
