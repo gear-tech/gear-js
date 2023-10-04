@@ -18,14 +18,16 @@ const ChainProvider = ({ children }: ProviderProps) => {
   const isChainRequestReady = isDevChain !== undefined && isTestBalanceAvailable !== undefined;
 
   useEffect(() => {
-    if (genesis) {
-      const apiRequest = new RPCService();
+    if (!genesis) return;
 
-      apiRequest.callRPC<boolean>(RpcMethods.NetworkData, { genesis }).then(({ result }) => setIsDevChain(!result));
-    }
+    const apiRequest = new RPCService();
+
+    apiRequest.callRPC<boolean>(RpcMethods.NetworkData, { genesis }).then(({ result }) => setIsDevChain(!result));
   }, [genesis]);
 
   useEffect(() => {
+    if (!genesis) return;
+
     if (isDevChain !== undefined) {
       if (isDevChain) {
         setIsTestBalanceAvailable(true);

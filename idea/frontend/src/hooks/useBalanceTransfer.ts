@@ -1,10 +1,10 @@
 import { AddressOrPair } from '@polkadot/api/types';
 import { EventRecord } from '@polkadot/types/interfaces';
+import { web3FromSource } from '@polkadot/extension-dapp';
 import { useApi, useAlert } from '@gear-js/react-hooks';
 
 import { Method } from 'features/explorer';
 import { getExtrinsicFailedMessage } from 'shared/helpers';
-import { web3FromSource } from '@polkadot/extension-dapp';
 
 type Options = {
   signSource?: string;
@@ -12,10 +12,12 @@ type Options = {
 };
 
 const useBalanceTransfer = () => {
+  const { api, isApiReady } = useApi();
   const alert = useAlert();
-  const { api } = useApi();
 
   const handleEventsStatus = (events: EventRecord[], onSuccess?: () => void) => {
+    if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
+
     events.forEach(({ event }) => {
       const { method, section } = event;
 
@@ -33,6 +35,8 @@ const useBalanceTransfer = () => {
 
   const transferBalance = (from: AddressOrPair, to: string, value: string, options?: Options) => {
     try {
+      if (!isApiReady) throw new Error('API is not initialized');
+
       const { signSource, onSuccess } = options || {};
 
       // TODO: replace to api.balance.transfer after api update to support string value

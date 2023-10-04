@@ -33,9 +33,9 @@ const NodesSwitch = ({ isButtonFullWidth }: Props) => {
 
   const ref = useOutsideClick<HTMLDivElement>(close, isModalHide);
 
-  const chain = api?.runtimeChain.toHuman();
-  const specName = api?.runtimeVersion.specName.toHuman();
-  const specVersion = api?.runtimeVersion.specVersion.toHuman();
+  const chain = isApiReady ? api.runtimeChain.toHuman() : 'Loading...';
+  const specName = isApiReady ? api.runtimeVersion.specName.toHuman() : 'Loading...';
+  const specVersion = isApiReady ? api.runtimeVersion.specVersion.toHuman() : 'Loading...';
 
   const toggleNodesPopup = () => setIsNodesOpen((prevState) => !prevState);
 

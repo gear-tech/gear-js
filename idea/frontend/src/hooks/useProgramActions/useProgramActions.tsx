@@ -29,7 +29,7 @@ import { Payload, ParamsToCreate, ParamsToUpload, ParamsToSignAndUpload } from '
 
 const useProgramActions = () => {
   const alert = useAlert();
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
   const { account } = useAccount();
   const { isDevChain } = useChain();
 
@@ -44,6 +44,8 @@ const useProgramActions = () => {
   );
 
   const createProgram = (codeId: HexString, payload: Payload) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+
     const { gasLimit, value, initPayload, metadata, payloadType } = payload;
 
     const program = { value, codeId, gasLimit, initPayload };
@@ -54,6 +56,8 @@ const useProgramActions = () => {
   };
 
   const uploadProgram = async (optBuffer: Buffer, payload: Payload) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+
     const { gasLimit, value, initPayload, metadata, payloadType } = payload;
 
     const program = { code: optBuffer, value, gasLimit, initPayload };
@@ -64,6 +68,8 @@ const useProgramActions = () => {
   };
 
   const handleEventsStatus = (events: EventRecord[], { reject }: OperationCallbacks) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+
     events.forEach(({ event }) => {
       const { method, section } = event;
       const alertOptions = { title: `${section}.${method}` };
@@ -91,6 +97,8 @@ const useProgramActions = () => {
     const programMessage = getProgramMessage(programId);
 
     try {
+      if (!isApiReady) throw new Error('API is not initialized');
+
       await api.program.signAndSend(account!.address, { signer }, ({ status, events }) => {
         if (status.isReady) {
           alert.update(alertId, TransactionStatus.Ready);
@@ -157,6 +165,7 @@ const useProgramActions = () => {
   const create = useCallback(
     async ({ codeId, payload, reject, resolve }: ParamsToCreate) => {
       try {
+        if (!isApiReady) throw new Error('API is not initialized');
         checkWallet(account);
 
         const { meta, address } = account!;
@@ -201,6 +210,7 @@ const useProgramActions = () => {
   const upload = useCallback(
     async ({ optBuffer, payload, name, reject, resolve }: ParamsToUpload) => {
       try {
+        if (!isApiReady) throw new Error('API is not initialized');
         checkWallet(account);
 
         const { meta, address } = account!;

@@ -7,13 +7,14 @@ import { IProgram, useProgramStatus } from 'features/program';
 import { isState, useMetadata } from 'features/metadata';
 
 function useLocalProgram() {
-  const { api } = useApi();
-  const genesis = api?.genesisHash.toHex();
+  const { api, isApiReady } = useApi();
 
   const { getMetadata } = useMetadata();
   const { getProgramStatus } = useProgramStatus();
 
   const getChainProgram = async (id: HexString) => {
+    if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
+
     const name = id;
     const status = await getProgramStatus(id);
 
@@ -52,10 +53,12 @@ function useLocalProgram() {
   };
 
   const getLocalProgram = async (id: HexString) => {
+    if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
+
     const localForageProgram = await PROGRAMS_LOCAL_FORAGE.getItem<IProgram>(id);
 
     const isProgramInChain = id === localForageProgram?.id;
-    const isProgramFromChain = genesis === localForageProgram?.genesis;
+    const isProgramFromChain = api.genesisHash.toHex() === localForageProgram?.genesis;
 
     return isProgramInChain && isProgramFromChain ? localForageProgram : getChainProgram(id);
   };

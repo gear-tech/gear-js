@@ -13,12 +13,14 @@ import { checkWallet, getExtrinsicFailedMessage } from 'shared/helpers';
 import { ParamsToClaimMessage } from './types';
 
 const useMessageClaim = () => {
-  const alert = useAlert();
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
   const { account } = useAccount();
+  const alert = useAlert();
   const { showModal } = useModal();
 
   const handleEventsStatus = (events: EventRecord[], reject: OperationCallbacks['resolve']) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+
     events.forEach(({ event }) => {
       const { method, section, data } = event as UserMessageRead;
       const alertOptions = { title: `${section}.${method}` };
@@ -43,6 +45,8 @@ const useMessageClaim = () => {
     const alertId = alert.loading('SignIn', { title: TransactionName.ClaimMessage });
 
     try {
+      if (!isApiReady) throw new Error('API is not initialized');
+
       await api.claimValueFromMailbox.signAndSend(account!.address, { signer }, ({ status, events }) => {
         if (status.isReady) {
           alert.update(alertId, TransactionStatus.Ready);
@@ -71,6 +75,7 @@ const useMessageClaim = () => {
   const claimMessage = useCallback(
     async ({ messageId, reject, resolve }: ParamsToClaimMessage) => {
       try {
+        if (!isApiReady) throw new Error('API is not initialized');
         checkWallet(account);
 
         const { meta, address } = account!;

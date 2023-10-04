@@ -18,7 +18,7 @@ import { Graph } from './graph';
 import { RecentBlocksList } from './recentBlocksList';
 
 const RecentBlocks = () => {
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
   const blocks = useBlocks();
 
   const [block, setBlock] = useState<IChainBlock>();
@@ -58,10 +58,12 @@ const RecentBlocks = () => {
   }, [blocks]);
 
   useEffect(() => {
+    if (!isApiReady) return;
+
     api.query.gear.blockNumber((result: U128) => setGearBlock(result.toNumber()));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isApiReady]);
 
   useEffect(() => {
     closeList();

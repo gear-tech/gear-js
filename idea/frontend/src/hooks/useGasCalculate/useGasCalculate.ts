@@ -9,9 +9,9 @@ import { Values, Code, Result } from './types';
 import { preparedGasInfo } from './helpers';
 
 const useGasCalculate = () => {
-  const alert = useAlert();
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
   const { account } = useAccount();
+  const alert = useAlert();
 
   const calculateGas = async <T extends GasMethod>(
     method: T,
@@ -23,6 +23,8 @@ const useGasCalculate = () => {
     const { value, payload } = values;
 
     try {
+      if (!isApiReady) throw new Error('API is not initialized');
+
       const isPayloadEmpty = isPlainObject(payload) && Object.keys(payload as object).length === 0;
 
       if (isPayloadEmpty) throw new Error(`Payload can't be empty`);

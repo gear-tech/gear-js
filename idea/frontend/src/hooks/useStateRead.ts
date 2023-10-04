@@ -5,8 +5,8 @@ import { useApi, useAlert } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 
 const useStateRead = (programId: HexString) => {
+  const { api, isApiReady } = useApi();
   const alert = useAlert();
-  const { api } = useApi();
 
   const [state, setState] = useState<AnyJson>();
   const [isStateRead, setIsStateRead] = useState(true);
@@ -20,8 +20,11 @@ const useStateRead = (programId: HexString) => {
       .finally(() => setIsStateRead(true));
   };
 
-  const readFullState = (metadata: ProgramMetadata, payload: AnyJson) =>
+  const readFullState = (metadata: ProgramMetadata, payload: AnyJson) => {
+    if (!isApiReady) return;
+
     handleStateRead(() => api.programState.read({ programId, payload }, metadata));
+  };
 
   const readWasmState = (
     wasm: Buffer,
@@ -29,12 +32,15 @@ const useStateRead = (programId: HexString) => {
     fn_name: string,
     argument: AnyJson,
     payload: AnyJson,
-  ) =>
+  ) => {
+    if (!isApiReady) return;
+
     handleStateRead(() =>
       getStateMetadata(wasm).then((stateMetadata) =>
         api.programState.readUsingWasm({ programId, wasm, fn_name, argument, payload }, stateMetadata, programMetadata),
       ),
     );
+  };
 
   const resetState = () => setState(undefined);
   const isState = state !== undefined; // could be null

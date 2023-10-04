@@ -19,7 +19,6 @@ import { useElementSizes } from './useElementSizes';
 import { useMessages } from './useMessages';
 import { useWaitlist } from './useWaitlist';
 import { useCodes } from './useCodes';
-import { useIsProgramExists } from './useIsProgramExists';
 import { useNodeVersion } from './useNodeVersion';
 import { useMobileDisclaimer } from './useMobileDisclaimer';
 import { useMetaOnUpload } from './useMetaOnUpload';
@@ -53,7 +52,6 @@ export {
   useBalanceTransfer,
   useEventSubscriptions,
   useCodes,
-  useIsProgramExists,
   useOnboarding,
   useNodeVersion,
   useMobileDisclaimer,

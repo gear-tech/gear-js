@@ -9,11 +9,13 @@ import { PROGRAM_ERRORS } from 'shared/config';
 import { getExtrinsicFailedMessage } from 'shared/helpers';
 
 function useIssueVoucher() {
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
   const { account } = useAccount();
   const alert = useAlert();
 
   const handleEventsStatus = (events: EventRecord[], onSuccess: () => void) => {
+    if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
+
     events.forEach(({ event }) => {
       const { method, section } = event;
       const alertOptions = { title: `${section}.${method}` };
@@ -34,7 +36,7 @@ function useIssueVoucher() {
   };
 
   const issueVoucher = async (address: HexString, programId: HexString, value: string, onSuccess: () => void) => {
-    if (!account) return;
+    if (!isApiReady || !account) return;
 
     try {
       const { extrinsic } = api.voucher.issue(address, programId, value);

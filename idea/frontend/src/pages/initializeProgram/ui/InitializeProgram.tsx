@@ -22,7 +22,7 @@ import styles from './InitializeProgram.module.scss';
 const InitializeProgram = () => {
   const { codeId } = useParams() as PageParams;
 
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
   const alert = useAlert();
 
   const { isDevChain } = useChain();
@@ -68,6 +68,8 @@ const InitializeProgram = () => {
   );
 
   useEffect(() => {
+    if (!isApiReady) return;
+
     const codeHash = codeId;
 
     const getMetadata = () =>
@@ -84,7 +86,7 @@ const InitializeProgram = () => {
       .finally(() => setIsUploadedMetaReady(true));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isApiReady]);
 
   return (
     <div className={styles.initializeProgramPage}>

@@ -9,9 +9,9 @@ import { useChain } from '../context';
 import { ParamsToUploadMeta } from './types';
 
 const useMetadataUpload = () => {
-  const { api } = useApi();
-  const alert = useAlert();
+  const { api, isApiReady } = useApi();
   const { account } = useAccount();
+  const alert = useAlert();
   const { isDevChain } = useChain();
 
   const upload = async (params: ParamsToUploadMeta) => {
@@ -38,6 +38,7 @@ const useMetadataUpload = () => {
     const { metaHex, codeHash, programId, name, reject, resolve } = params;
 
     try {
+      if (!isApiReady) throw new Error('API is not initialized');
       if (!account) throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
 
       if (isDevChain) {

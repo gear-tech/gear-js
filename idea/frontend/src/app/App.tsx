@@ -42,9 +42,9 @@ const App = withProviders(() => {
   }, [searchParams]);
 
   useEffect(() => {
-    if (isApiReady) {
-      localStorage.setItem(LocalStorage.Genesis, api.genesisHash.toHex());
-    }
+    if (!isApiReady) return;
+
+    localStorage.setItem(LocalStorage.Genesis, api.genesisHash.toHex());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady]);
 

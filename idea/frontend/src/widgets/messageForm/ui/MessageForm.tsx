@@ -33,7 +33,7 @@ type Props = {
 };
 
 const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => {
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
   const { account } = useAccount();
 
   const calculateGas = useGasCalculate();
@@ -47,8 +47,8 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
 
   const formApi = useRef<FormApi<FormValues>>();
 
-  const deposit = api.existentialDeposit.toString();
-  const maxGasLimit = api.blockGasLimit.toString();
+  const deposit = isApiReady ? api.existentialDeposit.toString() : '';
+  const maxGasLimit = isApiReady ? api.blockGasLimit.toString() : '';
 
   const method = isReply ? GasMethod.Reply : GasMethod.Handle;
   const typeIndex = isReply ? metadata?.types.reply : metadata?.types.handle.input;
