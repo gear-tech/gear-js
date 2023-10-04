@@ -2,7 +2,7 @@
 @use 'shared/assets/styles/mixins' as *;
 @use 'shared/assets/styles/variables' as *;
 @use 'shared/assets/styles/animations' as *;
-@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/variables' as ui;
 
 $popupWidth: 340px;
 
@@ -20,7 +20,7 @@ $popupWidth: 340px;
   box-shadow: inset 0px 1px 0px $gray005;
   border-radius: 16px;
   height: 630px;
-  border: $borderModal;
+  border: ui.$borderModal;
 
   &.loading {
     @include loading();
@@ -63,5 +63,30 @@ $popupWidth: 340px;
     position: relative;
     z-index: 1;
     margin-top: 26px;
+  }
+}
+
+.simpleBar {
+  @include customSimplebar;
+  flex: 1 1 440px;
+  min-height: 1px; // needed for scrolling with flex
+
+  .list {
+    @include childrenMargin($marginMedium);
+    padding-right: toRem(22);
+
+    .caption {
+      font-family: 'Kanit';
+      font-weight: 600;
+      font-size: toRem(20);
+      line-height: 1.5;
+      color: $textColor;
+      text-transform: capitalize;
+      margin-bottom: $marginTiny;
+    }
+
+    .sectionList {
+      @include childrenMargin(10px);
+    }
   }
 }

@@ -4,7 +4,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { useAccount, useApi } from '@gear-js/react-hooks';
 import 'simplebar-react/dist/simplebar.min.css';
 
-import { useApp, useChain, useEventSubscriptions, useMobileDisclaimer } from 'hooks';
+import { useChain, useEventSubscriptions, useMobileDisclaimer } from 'hooks';
 import { Menu } from 'widgets/menu';
 import { Header } from 'widgets/header';
 import { Footer } from 'widgets/footer';
@@ -13,12 +13,12 @@ import { Routing } from 'pages';
 import { LocalStorage, NODE_ADRESS_URL_PARAM } from 'shared/config';
 import { Loader } from 'shared/ui/loader';
 import { ErrorFallback } from 'shared/ui/errorFallback';
+import { INITIAL_ENDPOINT } from 'features/api';
 
 import { withProviders } from './providers';
 import './App.scss';
 
 const App = withProviders(() => {
-  const { nodeAddress } = useApp();
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -34,12 +34,12 @@ const App = withProviders(() => {
   useEffect(() => {
     const urlNodeAddress = searchParams.get(NODE_ADRESS_URL_PARAM);
 
-    if (!urlNodeAddress) {
-      searchParams.set(NODE_ADRESS_URL_PARAM, nodeAddress);
-      setSearchParams(searchParams, { replace: true });
-    }
+    if (urlNodeAddress) return;
+
+    searchParams.set(NODE_ADRESS_URL_PARAM, isApiReady ? api.provider.endpoint : INITIAL_ENDPOINT);
+    setSearchParams(searchParams, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
+  }, [isApiReady, searchParams]);
 
   useEffect(() => {
     if (!isApiReady) return;

@@ -1,14 +1,14 @@
 import { useAlert, useApi } from '@gear-js/react-hooks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 
-import { useApp, useModal, useOutsideClick } from 'hooks';
+import { useModal, useOutsideClick } from 'hooks';
 import { AnimationTimeout, LocalStorage, NODE_ADRESS_URL_PARAM } from 'shared/config';
-
 import { useNodes } from 'widgets/menu/helpers/useNodes';
-
 import { OnboardingTooltip } from 'shared/ui/onboardingTooltip';
+import { INITIAL_ENDPOINT } from 'features/api';
+
 import { NodesButton } from './nodesButton';
 import { NodesPopup } from './nodesPopup';
 
@@ -18,16 +18,17 @@ type Props = {
 
 const NodesSwitch = ({ isButtonFullWidth }: Props) => {
   const { api, isApiReady, switchNetwork } = useApi();
+  const nodeAddress = api?.provider.endpoint || '';
+
   const alert = useAlert();
 
   const { nodeSections, isNodesLoading, addLocalNode, removeLocalNode } = useNodes();
-  const { nodeAddress } = useApp();
   const { showModal, closeModal } = useModal();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [isNodesOpen, setIsNodesOpen] = useState(false);
-  const [selectedNode, setSelectedNode] = useState(nodeAddress);
+  const [selectedNode, setSelectedNode] = useState(INITIAL_ENDPOINT);
   const [isModalHide, setIsModalHidden] = useState(true);
 
   const close = () => setIsNodesOpen(false);
@@ -55,7 +56,6 @@ const NodesSwitch = ({ isButtonFullWidth }: Props) => {
   };
 
   const switchNode = () => {
-    // remove param to update it during nodeApi init
     searchParams.set(NODE_ADRESS_URL_PARAM, selectedNode);
     setSearchParams(searchParams);
 
@@ -71,6 +71,12 @@ const NodesSwitch = ({ isButtonFullWidth }: Props) => {
 
     showModal('network', { nodeSections, addNetwork: handleAddButtonClick, onClose: closeNetworkModal });
   };
+
+  useEffect(() => {
+    if (!nodeAddress) return;
+
+    setSelectedNode(nodeAddress);
+  }, [nodeAddress]);
 
   return (
     <div ref={ref}>

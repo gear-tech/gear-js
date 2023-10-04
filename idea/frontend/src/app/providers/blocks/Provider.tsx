@@ -1,5 +1,6 @@
 import { ReactNode, useState, useEffect } from 'react';
 import { useApi } from '@gear-js/react-hooks';
+import { Header } from '@polkadot/types/interfaces';
 
 import { IChainBlock } from 'entities/chainBlock';
 
@@ -24,7 +25,7 @@ const BlocksProvider = ({ children }: Props) => {
   useEffect(() => {
     if (!isApiReady) return;
 
-    const unsub = api.blocks.subscribeNewHeads((header) =>
+    const unsub = api.blocks.subscribeNewHeads((header: Header) =>
       api.blocks
         .getBlockTimestamp(header.hash)
         .then((timestamp) => getTime(timestamp.toNumber()))
