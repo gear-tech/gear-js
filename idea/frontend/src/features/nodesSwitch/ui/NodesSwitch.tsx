@@ -1,4 +1,4 @@
-import { useApi } from '@gear-js/react-hooks';
+import { useAlert, useApi } from '@gear-js/react-hooks';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
@@ -17,9 +17,10 @@ type Props = {
 };
 
 const NodesSwitch = ({ isButtonFullWidth }: Props) => {
-  const { api, isApiReady } = useApi();
-  const { nodeSections, isNodesLoading, addLocalNode, removeLocalNode } = useNodes();
+  const { api, isApiReady, switchNetwork } = useApi();
+  const alert = useAlert();
 
+  const { nodeSections, isNodesLoading, addLocalNode, removeLocalNode } = useNodes();
   const { nodeAddress } = useApp();
   const { showModal, closeModal } = useModal();
 
@@ -38,6 +39,7 @@ const NodesSwitch = ({ isButtonFullWidth }: Props) => {
   const specVersion = isApiReady ? api.runtimeVersion.specVersion.toHuman() : 'Loading...';
 
   const toggleNodesPopup = () => setIsNodesOpen((prevState) => !prevState);
+  const closeNodesPopup = () => setIsNodesOpen(false);
 
   const closeNetworkModal = () => {
     closeModal();
@@ -59,7 +61,9 @@ const NodesSwitch = ({ isButtonFullWidth }: Props) => {
 
     localStorage.setItem(LocalStorage.Node, selectedNode);
 
-    window.location.reload();
+    switchNetwork({ endpoint: selectedNode })
+      .then(() => closeNodesPopup())
+      .catch(({ message }: Error) => alert.error(message));
   };
 
   const showAddNodeModal = () => {
