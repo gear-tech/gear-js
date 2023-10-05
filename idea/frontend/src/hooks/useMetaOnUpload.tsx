@@ -76,9 +76,9 @@ const useMetaOnUpload = (isCode?: boolean) => {
   }, [optFile]);
 
   useEffect(() => {
-    setIsCodeExists(undefined);
-
     if (!isApiReady || !isCode || !optBuffer) return;
+
+    setIsCodeExists(undefined);
 
     const codeId = generateCodeHash(optBuffer);
 
@@ -95,10 +95,10 @@ const useMetaOnUpload = (isCode?: boolean) => {
   }, [isApiReady, optBuffer]);
 
   useEffect(() => {
-    setIsUploadedMetaReady(false);
-
     const isCodeCheckReady = isCodeExists !== undefined;
     if (!isApiReady || !optBuffer || (isCode && !isCodeCheckReady) || isCodeExists) return;
+
+    setIsUploadedMetaReady(false);
 
     const codeHash = generateCodeHash(optBuffer);
 
