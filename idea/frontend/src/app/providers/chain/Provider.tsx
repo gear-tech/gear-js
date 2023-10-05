@@ -14,32 +14,30 @@ const ChainProvider = ({ children }: ProviderProps) => {
 
   const [isDevChain, setIsDevChain] = useState<boolean>();
   const [isTestBalanceAvailable, setIsTestBalanceAvailable] = useState<boolean>();
-
   const isChainRequestReady = isDevChain !== undefined && isTestBalanceAvailable !== undefined;
 
   useEffect(() => {
+    setIsDevChain(undefined);
+
     if (!genesis) return;
 
-    const apiRequest = new RPCService();
-
-    apiRequest.callRPC<boolean>(RpcMethods.NetworkData, { genesis }).then(({ result }) => setIsDevChain(!result));
+    new RPCService().callRPC<boolean>(RpcMethods.NetworkData, { genesis }).then(({ result }) => setIsDevChain(!result));
   }, [genesis]);
 
   useEffect(() => {
-    if (!genesis) return;
+    setIsTestBalanceAvailable(undefined);
 
-    if (isDevChain !== undefined) {
-      if (isDevChain) {
-        setIsTestBalanceAvailable(true);
-      } else {
-        const apiRequest = new RPCService();
+    if (isDevChain === undefined) return;
 
-        apiRequest
-          .callRPC<boolean>(RpcMethods.TestBalanceAvailable, { genesis })
-          .then(({ result }) => setIsTestBalanceAvailable(result));
-      }
+    if (isDevChain) {
+      setIsTestBalanceAvailable(true);
+    } else {
+      new RPCService()
+        .callRPC<boolean>(RpcMethods.TestBalanceAvailable, { genesis })
+        .then(({ result }) => setIsTestBalanceAvailable(result));
     }
-  }, [isDevChain, genesis]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDevChain]);
 
   return <Provider value={{ isDevChain, isTestBalanceAvailable, isChainRequestReady }}>{children}</Provider>;
 };
