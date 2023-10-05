@@ -12,19 +12,19 @@ function useMetadata(hash?: HexString | null | undefined) {
   const { isDevChain } = useChain();
 
   const [metadata, setMetadata] = useState<ProgramMetadata>();
-  const [isMetadataReady, setisMetadataReady] = useState(false);
+  const [isMetadataReady, setIsMetadataReady] = useState(false);
 
   const getMetadata = (params: { hash: HexString }) =>
     isDevChain ? getLocalMetadata(params).catch(() => fetchMetadata(params)) : fetchMetadata(params);
 
   useEffect(() => {
-    if (hash === null) return setisMetadataReady(true);
+    if (hash === null) return setIsMetadataReady(true);
     if (!hash) return;
 
     getMetadata({ hash })
       .then(({ result }) => result.hex && setMetadata(ProgramMetadata.from(result.hex)))
       .catch(({ message, code }: RPCError) => code !== RPCErrorCode.MetadataNotFound && alert.error(message))
-      .finally(() => setisMetadataReady(true));
+      .finally(() => setIsMetadataReady(true));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hash]);
 

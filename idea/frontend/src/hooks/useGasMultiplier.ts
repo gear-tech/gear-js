@@ -4,16 +4,18 @@ import { useMemo } from 'react';
 import { useBalanceMultiplier } from './useBalanceMultiplier';
 
 function useGasMultiplier() {
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
 
   // '1000' is an old runtime fallback
   const valuePerGas = useMemo(() => {
     try {
+      if (!isApiReady) throw new Error('API is not initialized');
+
       return api.valuePerGas.toString();
     } catch {
       return '1000';
     }
-  }, [api]);
+  }, [api, isApiReady]);
 
   const { balanceMultiplier } = useBalanceMultiplier();
   const gasMultiplier = balanceMultiplier.dividedBy(valuePerGas);

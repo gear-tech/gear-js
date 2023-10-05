@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { MailboxItem } from './types';
 
 function useMailbox() {
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
 
   const { account } = useAccount();
   const { decodedAddress } = account || {};
@@ -13,13 +13,16 @@ function useMailbox() {
   const [mailbox, setMailbox] = useState<MailboxItem[]>();
 
   useEffect(() => {
-    if (!decodedAddress) return setMailbox(undefined);
+    setMailbox(undefined);
+
+    if (!isApiReady || !decodedAddress) return;
 
     api.mailbox
       .read(decodedAddress)
       .then((items) => items.map((item) => item.toHuman() as MailboxItem))
       .then((result) => setMailbox(result));
-  }, [api, decodedAddress]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isApiReady, decodedAddress]);
 
   // hide message on value claim e.g.
   const removeMessage = (id: HexString) =>
@@ -29,7 +32,7 @@ function useMailbox() {
 }
 
 function useMailboxItem(messageId: HexString | undefined) {
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
 
   const { account } = useAccount();
   const { decodedAddress } = account || {};
@@ -37,7 +40,9 @@ function useMailboxItem(messageId: HexString | undefined) {
   const [mailboxItem, setMailboxItem] = useState<MailboxItem>();
 
   useEffect(() => {
-    if (!decodedAddress || !messageId) return setMailboxItem(undefined);
+    setMailboxItem(undefined);
+
+    if (!isApiReady || !decodedAddress || !messageId) return;
 
     // TODO: error should be thrown in @gear-js/api
     api.mailbox
@@ -46,7 +51,8 @@ function useMailboxItem(messageId: HexString | undefined) {
         Array.isArray(item) ? (item.toHuman() as MailboxItem) : Promise.reject(new Error('Message not found')),
       )
       .then((result) => setMailboxItem(result));
-  }, [api, decodedAddress, messageId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isApiReady, decodedAddress, messageId]);
 
   return mailboxItem;
 }

@@ -12,12 +12,14 @@ import { PROGRAM_ERRORS, TransactionStatus, TransactionName } from 'shared/confi
 import { ParamsToSendMessage, ParamsToSignAndSend, ParamsToReplyMessage } from './types';
 
 const useMessageActions = () => {
-  const alert = useAlert();
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
   const { account } = useAccount();
+  const alert = useAlert();
   const { showModal } = useModal();
 
   const handleEventsStatus = (events: EventRecord[], { reject, resolve }: OperationCallbacks) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+
     events.forEach(({ event }) => {
       const { method, section } = event;
       const alertOptions = { title: `${section}.${method}` };
@@ -38,6 +40,8 @@ const useMessageActions = () => {
     const alertId = alert.loading('SignIn', { title });
 
     try {
+      if (!isApiReady) throw new Error('API is not initialized');
+
       await api.message.signAndSend(account!.address, { signer }, ({ events, status }) => {
         if (status.isReady) {
           alert.update(alertId, TransactionStatus.Ready);
@@ -64,6 +68,7 @@ const useMessageActions = () => {
   const sendMessage = useCallback(
     async ({ metadata, message, payloadType, reject, resolve }: ParamsToSendMessage) => {
       try {
+        if (!isApiReady) throw new Error('API is not initialized');
         checkWallet(account);
 
         const { meta, address } = account!;
@@ -102,6 +107,7 @@ const useMessageActions = () => {
   const replyMessage = useCallback(
     async ({ reply, metadata, payloadType, reject, resolve }: ParamsToReplyMessage) => {
       try {
+        if (!isApiReady) throw new Error('API is not initialized');
         checkWallet(account);
 
         const { meta, address } = account!;

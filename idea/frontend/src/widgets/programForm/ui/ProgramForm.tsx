@@ -32,7 +32,7 @@ type Props = {
 const ProgramForm = (props: Props) => {
   const { gasMethod, metaHex, metadata, source, renderButtons, onSubmit } = props;
 
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
 
   const formApi = useRef<FormApi<FormValues>>();
 
@@ -87,8 +87,8 @@ const ProgramForm = (props: Props) => {
     onSubmit(data, { enableButtons: () => setIsDisables(false), resetForm: formApi.current.reset });
   };
 
-  const deposit = api.existentialDeposit.toNumber();
-  const maxGasLimit = api.blockGasLimit.toNumber();
+  const deposit = isApiReady ? api.existentialDeposit.toNumber() : 0;
+  const maxGasLimit = isApiReady ? api.blockGasLimit.toNumber() : 0;
 
   const typeIndex = metadata?.types.init.input;
   const isTypeIndex = typeIndex !== undefined && typeIndex !== null;

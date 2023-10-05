@@ -1,4 +1,4 @@
-import { useApp, useModal, useBlocks, useEvents, useChain, useOnboarding } from './context';
+import { useModal, useBlocks, useEvents, useChain, useOnboarding } from './context';
 import { useMessage } from './useMessage';
 import { useOutsideClick } from './useOutsideClick';
 import { useChangeEffect } from './useChangeEffect';
@@ -19,7 +19,6 @@ import { useElementSizes } from './useElementSizes';
 import { useMessages } from './useMessages';
 import { useWaitlist } from './useWaitlist';
 import { useCodes } from './useCodes';
-import { useIsProgramExists } from './useIsProgramExists';
 import { useNodeVersion } from './useNodeVersion';
 import { useMobileDisclaimer } from './useMobileDisclaimer';
 import { useMetaOnUpload } from './useMetaOnUpload';
@@ -28,7 +27,6 @@ import { useBalanceMultiplier } from './useBalanceMultiplier';
 import { useGasMultiplier } from './useGasMultiplier';
 
 export {
-  useApp,
   useModal,
   useBlocks,
   useEvents,
@@ -53,7 +51,6 @@ export {
   useBalanceTransfer,
   useEventSubscriptions,
   useCodes,
-  useIsProgramExists,
   useOnboarding,
   useNodeVersion,
   useMobileDisclaimer,

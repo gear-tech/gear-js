@@ -9,7 +9,7 @@ import { DEFAULT_LIMIT } from 'shared/config';
 import { useChain } from 'hooks';
 
 const useCodes = (initLoading = true) => {
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
   const alert = useAlert();
   const { isDevChain } = useChain();
 
@@ -23,6 +23,16 @@ const useCodes = (initLoading = true) => {
     setCodes((prevState) => (isReset ? data.listCode : prevState.concat(data.listCode)));
   };
 
+  const getChainCodes = (isReset: boolean) => {
+    if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
+
+    return api.code
+      .all()
+      .then((ids) => ids.map((id) => ({ id, name: id })))
+      .then((listCode) => ({ listCode: listCode as ICode[], count: listCode.length }))
+      .then((result) => setCodesData(result, isReset));
+  };
+
   const fetchCodes = (params?: PaginationModel, isReset = false) => {
     if (isReset) {
       setTotalCount(0);
@@ -32,11 +42,7 @@ const useCodes = (initLoading = true) => {
     setIsLoading(true);
 
     const promise = isDevChain
-      ? api.code
-          .all()
-          .then((ids) => ids.map((id) => ({ id, name: id })))
-          .then((listCode) => ({ listCode: listCode as ICode[], count: listCode.length }))
-          .then((result) => setCodesData(result, isReset))
+      ? getChainCodes(isReset)
       : getCodes({ limit: DEFAULT_LIMIT, ...params }).then(({ result }) => setCodesData(result, isReset));
 
     return promise

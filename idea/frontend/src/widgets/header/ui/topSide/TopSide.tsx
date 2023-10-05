@@ -64,11 +64,12 @@ const TopSide = () => {
   useEffect(handleExpire, [address]);
 
   useEffect(() => {
-    if (isApiReady) {
-      api.totalIssuance().then((result) => setTotalIssuance(result.slice(0, 5)));
-    }
+    if (!isApiReady) return;
+
+    api.totalIssuance().then((result) => setTotalIssuance(result.slice(0, 5)));
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api, isApiReady]);
+  }, [isApiReady]);
 
   useEffect(() => {
     if (captchaToken) getBalanceFromService();
@@ -102,7 +103,7 @@ const TopSide = () => {
           </CSSTransition>
         )}
         <div className={styles.rightSide}>
-          {account && (
+          {isApiReady && account && (
             <CSSTransition in appear timeout={AnimationTimeout.Default}>
               <div className={styles.privateContent}>
                 {isTestBalanceAvailable && (
@@ -127,7 +128,7 @@ const TopSide = () => {
             </CSSTransition>
           )}
 
-          {isAccountReady && (
+          {isApiReady && isAccountReady && (
             <CSSTransition in appear timeout={AnimationTimeout.Default}>
               <Wallet account={account} />
             </CSSTransition>

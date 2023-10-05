@@ -10,10 +10,12 @@ import { MainTable } from '../main-table';
 import { System } from '../system';
 import styles from './block.module.scss';
 
-type Params = { blockId: string };
+type Params = {
+  blockId: string;
+};
 
 const Block = () => {
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
 
   const { blockId } = useParams() as Params;
 
@@ -30,21 +32,21 @@ const Block = () => {
   };
 
   useEffect(() => {
-    if (api) {
-      resetState();
+    if (!isApiReady) return;
 
-      const isBlockHash = isHex(blockId);
-      const id = isBlockHash ? (blockId as `0x${string}`) : Number(blockId);
+    resetState();
 
-      api.blocks
-        .get(id)
-        .then(({ block: newBlock }) => {
-          api.blocks.getEvents(newBlock.hash).then(setEventRecords);
-          setBlock(newBlock);
-        })
-        .catch(({ message }: Error) => setError(message));
-    }
-  }, [api, blockId]);
+    const id = isHex(blockId) ? blockId : Number(blockId);
+
+    api.blocks
+      .get(id)
+      .then((result) => {
+        api.blocks.getEvents(result.block.hash).then((recordsResult) => setEventRecords(recordsResult));
+        setBlock(result.block);
+      })
+      .catch(({ message }: Error) => setError(message));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isApiReady, blockId]);
 
   return (
     <div className={styles.block}>

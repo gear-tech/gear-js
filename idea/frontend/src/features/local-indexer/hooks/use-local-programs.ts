@@ -7,7 +7,7 @@ import { LocalProgram } from '../types';
 import { useLocalProgram } from './use-local-program';
 
 function useLocalPrograms() {
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
   const { getLocalProgram } = useLocalProgram();
 
   const getFilteredPrograms = (programs: (IProgram | LocalProgram)[], params: FetchProgramsParams) => {
@@ -32,14 +32,17 @@ function useLocalPrograms() {
       (program, nextProgram) => Date.parse(nextProgram.timestamp || '0') - Date.parse(program.timestamp || '0'),
     );
 
-  const getLocalPrograms = (params: FetchProgramsParams) =>
-    api.program
+  const getLocalPrograms = (params: FetchProgramsParams) => {
+    if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
+
+    return api.program
       .allUploadedPrograms()
       .then((ids) => ids.map((id) => getLocalProgram(id)))
       .then((result) => Promise.all(result))
       .then((result) => getFilteredPrograms(result, params))
       .then((result) => getSortedPrograms(result))
       .then((programs) => ({ result: { programs, count: programs.length } }));
+  };
 
   return { getLocalPrograms };
 }

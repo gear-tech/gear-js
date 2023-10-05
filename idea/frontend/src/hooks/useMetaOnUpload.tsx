@@ -34,7 +34,7 @@ const getCodeExistsAlert = (codeId: HexString) => (
 );
 
 const useMetaOnUpload = (isCode?: boolean) => {
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
   const { isDevChain } = useChain();
   const alert = useAlert();
 
@@ -76,7 +76,7 @@ const useMetaOnUpload = (isCode?: boolean) => {
   }, [optFile]);
 
   useEffect(() => {
-    if (!isCode || !optBuffer) return;
+    if (!isApiReady || !isCode || !optBuffer) return;
 
     setIsCodeExists(undefined);
 
@@ -92,12 +92,11 @@ const useMetaOnUpload = (isCode?: boolean) => {
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [optBuffer]);
+  }, [isApiReady, optBuffer]);
 
   useEffect(() => {
     const isCodeCheckReady = isCodeExists !== undefined;
-
-    if (!optBuffer || (isCode && !isCodeCheckReady) || isCodeExists) return;
+    if (!isApiReady || !optBuffer || (isCode && !isCodeCheckReady) || isCodeExists) return;
 
     setIsUploadedMetaReady(false);
 
@@ -117,7 +116,7 @@ const useMetaOnUpload = (isCode?: boolean) => {
       .finally(() => setIsUploadedMetaReady(true));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [optBuffer, isCodeExists]);
+  }, [isApiReady, optBuffer, isCodeExists]);
 
   return {
     optFile,

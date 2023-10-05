@@ -1,7 +1,7 @@
 import { useMemo, useEffect } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { useLocation, matchPath } from 'react-router-dom';
-import { useAccount } from '@gear-js/react-hooks';
+import { useAccount, useApi } from '@gear-js/react-hooks';
 
 import { AnimationTimeout } from 'shared/config';
 
@@ -11,6 +11,7 @@ import { TopSide } from './topSide';
 import { BottomSide } from './bottomSide';
 
 const Header = () => {
+  const { isApiReady } = useApi();
   const { account } = useAccount();
   const { pathname } = useLocation();
 
@@ -19,7 +20,7 @@ const Header = () => {
     [pathname],
   );
 
-  const isBottomSideVisible = withBottomSide && Boolean(account);
+  const isBottomSideVisible = withBottomSide && Boolean(isApiReady) && Boolean(account);
 
   useEffect(() => {
     const currentHeight = isBottomSideVisible ? FULL_HEADER_HEIGHT : SHORT_HEADER_HEIGHT;

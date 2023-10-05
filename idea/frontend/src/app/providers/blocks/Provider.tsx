@@ -1,6 +1,6 @@
 import { ReactNode, useState, useEffect } from 'react';
-import { Header } from '@polkadot/types/interfaces';
 import { useApi } from '@gear-js/react-hooks';
+import { Header } from '@polkadot/types/interfaces';
 
 import { IChainBlock } from 'entities/chainBlock';
 
@@ -12,7 +12,7 @@ type Props = {
 };
 
 const BlocksProvider = ({ children }: Props) => {
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
   const [blocks, setBlocks] = useState<IChainBlock[]>([]);
 
   const updateBlocks = (block: IChainBlock) =>
@@ -22,25 +22,22 @@ const BlocksProvider = ({ children }: Props) => {
       return [block, ...blocksTail];
     });
 
-  const handleSubscription = (header: Header) =>
-    api.blocks
-      .getBlockTimestamp(header.hash)
-      .then((timestamp) => getTime(timestamp.toNumber()))
-      .then((time) => getBlock(header, time))
-      .then(updateBlocks);
-
   useEffect(() => {
-    if (!api) {
-      return;
-    }
+    if (!isApiReady) return;
 
-    const unsub = api.gearEvents.subscribeToNewBlocks(handleSubscription);
+    const unsub = api.blocks.subscribeNewHeads((header: Header) =>
+      api.blocks
+        .getBlockTimestamp(header.hash)
+        .then((timestamp) => getTime(timestamp.toNumber()))
+        .then((time) => getBlock(header, time))
+        .then((result) => updateBlocks(result)),
+    );
 
     return () => {
       unsub.then((unsubscribe) => unsubscribe());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api]);
+  }, [isApiReady]);
 
   return <BlocksContext.Provider value={blocks}>{children}</BlocksContext.Provider>;
 };

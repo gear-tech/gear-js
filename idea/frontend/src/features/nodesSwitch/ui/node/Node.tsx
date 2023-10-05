@@ -11,7 +11,7 @@ import { ICON } from 'widgets/menu/model/consts';
 import styles from './Node.module.scss';
 
 type Props = NodeType & {
-  nodeAddress: string;
+  nodeAddress: string | undefined;
   selectedNode: string;
   selectNode: (address: string) => void;
   removeLocalNode: (address: string) => void;

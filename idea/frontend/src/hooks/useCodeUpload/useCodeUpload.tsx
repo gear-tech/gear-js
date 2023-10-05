@@ -14,18 +14,14 @@ import { addMetadata, addCodeName } from 'api';
 import { ParamsToUploadCode, ParamsToSignAndSend } from './types';
 
 const useCodeUpload = () => {
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
   const alert = useAlert();
   const { account } = useAccount();
   const { showModal } = useModal();
 
-  const submit = async (optBuffer: Buffer) => {
-    const { codeHash } = await api.code.upload(optBuffer);
-
-    return codeHash;
-  };
-
   const handleEventsStatus = (events: EventRecord[], codeHash: HexString, resolve?: () => void) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+
     events.forEach(({ event }) => {
       const { method, section } = event;
       const alertOptions = { title: `${section}.${method}` };
@@ -44,6 +40,8 @@ const useCodeUpload = () => {
     const alertId = alert.loading('SignIn', { title: TransactionName.SubmitCode });
 
     try {
+      if (!isApiReady) throw new Error('API is not initialized');
+
       await api.code.signAndSend(account!.address, { signer }, ({ events, status }) => {
         if (status.isReady) {
           alert.update(alertId, TransactionStatus.Ready);
@@ -75,15 +73,16 @@ const useCodeUpload = () => {
   const uploadCode = useCallback(
     async ({ optBuffer, name, metaHex, resolve }: ParamsToUploadCode) => {
       try {
+        if (!isApiReady) throw new Error('API is not initialized');
         checkWallet(account);
 
         const { address, meta } = account!;
 
-        const [codeId, { signer }] = await Promise.all([submit(optBuffer), web3FromSource(meta.source)]);
+        const [{ codeHash }, { signer }] = await Promise.all([api.code.upload(optBuffer), web3FromSource(meta.source)]);
 
         const { partialFee } = await api.code.paymentInfo(address, { signer });
 
-        const handleConfirm = () => signAndSend({ signer, name, codeId, metaHex, resolve });
+        const handleConfirm = () => signAndSend({ signer, name, codeId: codeHash, metaHex, resolve });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),

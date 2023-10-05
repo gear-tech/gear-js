@@ -1,7 +1,9 @@
 @use '@gear-js/ui/breakpoints' as *;
-@use 'shared/assets/styles/_mixins.scss' as *;
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
+@use '@gear-js/ui/mixins' as *;
+@use '@gear-js/ui/headings' as *;
+@use 'shared/assets/styles/mixins' as *;
+@use 'shared/assets/styles/shared' as *;
+@use 'shared/assets/styles/variables' as *;
 
 .footer {
   display: flex;
@@ -23,4 +25,24 @@
   font-size: 12px;
   margin-left: auto;
   margin-right: 32px;
+}
+
+.dotButton {
+  @include childrenMargin(10px, right);
+  @include transition;
+  @extend %headingFont;
+  color: $gray800;
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    opacity: 0.5;
+  }
+
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
 }

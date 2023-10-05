@@ -6,16 +6,14 @@ import { Method } from 'features/explorer';
 import { transferEventsHandler, messageSentEventsHandler } from './helpers';
 
 const useEventSubscriptions = () => {
-  const alert = useAlert();
   const { api, isApiReady } = useApi();
   const { account } = useAccount();
+  const alert = useAlert();
 
   const { address, decodedAddress } = account || {};
 
   useEffect(() => {
-    if (!isApiReady || !decodedAddress || !address) {
-      return;
-    }
+    if (!isApiReady || !decodedAddress || !address) return;
 
     const unsubs: UnsubscribePromise[] = [];
 
