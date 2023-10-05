@@ -8,6 +8,9 @@ function useNodeVersion() {
   const [commitHash, setCommitHash] = useState('');
 
   useEffect(() => {
+    setNodeVersion('');
+    setCommitHash('');
+
     if (!isApiReady) return;
 
     api.nodeVersion().then((result) => {

@@ -18,7 +18,7 @@ type Props = {
 
 const NodesSwitch = ({ isButtonFullWidth }: Props) => {
   const { api, isApiReady, switchNetwork } = useApi();
-  const nodeAddress = api?.provider.endpoint || '';
+  const nodeAddress = api?.provider.endpoint;
 
   const alert = useAlert();
 

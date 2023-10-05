@@ -15,7 +15,7 @@ import styles from './NodesPopup.module.scss';
 type Props = {
   chain: string | undefined;
   isLoading: boolean;
-  nodeAddress: string;
+  nodeAddress: string | undefined;
   nodeSections: NodeSection[];
   selectedNode: string;
   selectNode: (address: string) => void;

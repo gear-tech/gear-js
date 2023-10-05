@@ -103,7 +103,7 @@ const TopSide = () => {
           </CSSTransition>
         )}
         <div className={styles.rightSide}>
-          {account && (
+          {isApiReady && account && (
             <CSSTransition in appear timeout={AnimationTimeout.Default}>
               <div className={styles.privateContent}>
                 {isTestBalanceAvailable && (
@@ -128,7 +128,7 @@ const TopSide = () => {
             </CSSTransition>
           )}
 
-          {isAccountReady && (
+          {isApiReady && isAccountReady && (
             <CSSTransition in appear timeout={AnimationTimeout.Default}>
               <Wallet account={account} />
             </CSSTransition>
