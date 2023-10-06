@@ -1,10 +1,8 @@
 {
   "root": true,
-  "env": {
-    "browser": true,
-    "es2021": true
-  },
+  "env": { "browser": true, "es2021": true },
   "extends": [
+    "react-app",
     "plugin:react/recommended",
     "airbnb",
     "airbnb/hooks",
@@ -17,11 +15,8 @@
     "prettier"
   ],
   "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
-  "plugins": ["react", "@typescript-eslint"],
-  "ignorePatterns": ["src/global.d.ts", "config-overrides.js"],
+  "parserOptions": { "project": "./tsconfig.json" },
+  "plugins": ["react", "@typescript-eslint", "react-refresh"],
   "rules": {
     "react/require-default-props": "off", // we don"t use prop-types
 
@@ -44,6 +39,8 @@
     "react/jsx-props-no-spreading": [
       "error",
       { "exceptions": ["Input", "FileInput", "Textarea", "Select", "NumberFormat", "Radio", "Checkbox"] }
-    ] // disable for form elements, cuz @mantine/form input props needs to be desctructured
+    ], // disable for form elements, cuz @mantine/form input props needs to be desctructured
+
+    "react-refresh/only-export-components": ["warn", { "allowConstantExport": true }]
   }
 }
