@@ -1,4 +1,3 @@
-import BigNumber from 'bignumber.js';
 import { useRef, useEffect, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
@@ -8,12 +7,12 @@ import { useApi, useAlert, useAccount } from '@gear-js/react-hooks';
 import { TooltipWrapper, buttonStyles } from '@gear-js/ui';
 
 import { getTestBalance } from '@/api';
-import { useBalanceMultiplier, useBalanceTransfer, useChain, useModal } from '@/hooks';
+import { useBalanceTransfer, useChain } from '@/hooks';
 import { RecentBlocks } from '@/features/recentBlocks';
 import { HCAPTCHA_SITE_KEY, AnimationTimeout, GEAR_BALANCE_TRANSFER_VALUE } from '@/shared/config';
 import TestBalanceSVG from '@/shared/assets/images/actions/testBalance.svg?react';
-import TransferBalanceSVG from '@/shared/assets/images/actions/transferBalance.svg?react';
 import { Wallet } from '@/features/wallet';
+import { TransferBalance } from '@/features/balance';
 
 import { TotalIssuance } from '../totalIssuance';
 import styles from './TopSide.module.scss';
@@ -24,8 +23,6 @@ const TopSide = () => {
   const { api, isApiReady } = useApi();
   const { account } = useAccount();
   const { isDevChain, isTestBalanceAvailable } = useChain();
-  const { showModal, closeModal } = useModal();
-  const { balanceMultiplier } = useBalanceMultiplier();
 
   const [captchaToken, setCaptchaToken] = useState('');
   const [totalIssuance, setTotalIssuance] = useState('');
@@ -78,18 +75,6 @@ const TopSide = () => {
 
   const btnClasses = clsx(buttonStyles.button, buttonStyles.medium, buttonStyles.noText, styles.testBalanceBtn);
 
-  const handleTransferBalanceSubmit = (to: string, value: string) => {
-    if (!account || !address) return;
-
-    const { source } = account.meta;
-
-    const unitValue = BigNumber(value).multipliedBy(balanceMultiplier).toFixed();
-
-    transferBalance(address, to, unitValue, { signSource: source, onSuccess: closeModal });
-  };
-
-  const openTransferBalanceModal = () => showModal('transferBalance', { onSubmit: handleTransferBalanceSubmit });
-
   return (
     <>
       <div className={styles.topSide}>
@@ -117,9 +102,7 @@ const TopSide = () => {
                 )}
 
                 <TooltipWrapper text="Transfer balance">
-                  <button type="button" className={btnClasses} onClick={openTransferBalanceModal}>
-                    <TransferBalanceSVG />
-                  </button>
+                  <TransferBalance />
                 </TooltipWrapper>
               </div>
             </CSSTransition>
