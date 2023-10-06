@@ -1,15 +1,15 @@
 import { decodeAddress } from '@gear-js/api';
-import { Button, Modal } from '@gear-js/ui';
+import { useAccount, useBalanceFormat } from '@gear-js/react-hooks';
+import { Button, Checkbox, Modal } from '@gear-js/ui';
+import { useState } from 'react';
 import { Form } from 'react-final-form';
 import * as yup from 'yup';
 
 import { ReactComponent as CloseSVG } from 'shared/assets/images/actions/close.svg';
 import { FormInput, ValueField } from 'shared/ui/form';
 import { getValidation, isAccountAddressValid } from 'shared/helpers';
-
-import { useAccount, useBalanceFormat } from '@gear-js/react-hooks';
 import { useBalanceTransfer } from 'hooks';
-import BigNumber from 'bignumber.js';
+
 import { ReactComponent as SubmitSVG } from '../../assets/submit.svg';
 import styles from './transfer-balance-modal.module.scss';
 
@@ -20,7 +20,7 @@ const validationSchema = yup.object().shape({
     .string()
     .test('is-address-valid', 'Invalid address', isAccountAddressValid)
     .required('This field is required'),
-  amount: yup.string().required('This field is required'),
+  value: yup.string().required('This field is required'),
 });
 
 type Props = {
@@ -29,19 +29,19 @@ type Props = {
 
 const TransferBalanceModal = ({ close }: Props) => {
   const { account } = useAccount();
-  const { balanceMultiplier } = useBalanceFormat();
-
+  const { getChainBalanceValue } = useBalanceFormat();
   const transferBalance = useBalanceTransfer();
+
+  const [keepAlive, setKeepAlive] = useState(true);
 
   const onSubmit = ({ address, value }: typeof initialValues) => {
     if (!account) return;
 
-    const unitValue = BigNumber(value).multipliedBy(balanceMultiplier).toFixed();
-
+    const chainValue = getChainBalanceValue(value).toFixed();
     const signSource = account.meta.source;
     const onSuccess = close;
 
-    transferBalance(account.address, decodeAddress(address), unitValue, { signSource, onSuccess });
+    transferBalance(account.address, decodeAddress(address), chainValue, { keepAlive, signSource, onSuccess });
   };
 
   return (
@@ -52,6 +52,11 @@ const TransferBalanceModal = ({ close }: Props) => {
             <div className={styles.inputs}>
               <FormInput name="address" label="Address" direction="y" block />
               <ValueField name="value" label="Value:" direction="y" block />
+              <Checkbox
+                label="Keep Alive"
+                checked={keepAlive}
+                onChange={() => setKeepAlive((prevValue) => !prevValue)}
+              />
             </div>
 
             <div className={styles.buttons}>

@@ -8,6 +8,7 @@ import { getExtrinsicFailedMessage } from '@/shared/helpers';
 
 type Options = {
   signSource?: string;
+  keepAlive?: boolean;
   onSuccess?: () => void;
 };
 
@@ -37,10 +38,10 @@ const useBalanceTransfer = () => {
     try {
       if (!isApiReady) throw new Error('API is not initialized');
 
-      const { signSource, onSuccess } = options || {};
+      const { signSource, keepAlive, onSuccess } = options || {};
 
       // TODO: replace to api.balance.transfer after api update to support string value
-      const extrinsic = api.tx.balances.transfer(to, value);
+      const extrinsic = keepAlive ? api.tx.balances.transferKeepAlive(to, value) : api.tx.balances.transfer(to, value);
 
       if (signSource) {
         web3FromSource(signSource).then(({ signer }) =>
