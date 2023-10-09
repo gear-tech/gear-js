@@ -2285,7 +2285,7 @@ __metadata:
   resolution: "@gear-js/frontend@workspace:idea/frontend"
   dependencies:
     "@gear-js/api": 0.34.0
-    "@gear-js/react-hooks": 0.8.0
+    "@gear-js/react-hooks": 0.8.1
     "@gear-js/ui": 0.5.19
     "@hcaptcha/react-hcaptcha": ^1.4.4
     "@mantine/form": ^5.4.0
@@ -2389,16 +2389,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/react-hooks@npm:0.8.0":
-  version: 0.8.0
-  resolution: "@gear-js/react-hooks@npm:0.8.0"
+"@gear-js/react-hooks@npm:0.8.1":
+  version: 0.8.1
+  resolution: "@gear-js/react-hooks@npm:0.8.1"
   peerDependencies:
-    "@gear-js/api": 0.33.6
+    "@gear-js/api": 0.34.0
     "@polkadot/api": 10.9.1
     "@polkadot/extension-dapp": 0.46.5
     react: ^18.2.0
     react-transition-group: 4.4.5
-  checksum: da785a1221a240585ef7774ad3660ae422f01d0c57d8bc60191dcc8e6975fc0eaedadaac80faae0959cd333e9dcaed45ad0d2e003622eceb4cd1831a4dc8e49a
+  checksum: 51a4f07adbea5f99dbfc5f4d9dfa7d43e576a205eeb821d89efb8d2a168f762db5708282e247c6f7e5beea2d8d4ba60feb895d7e062e7165f7fd7d69370a4849
   languageName: node
   linkType: hard
 
