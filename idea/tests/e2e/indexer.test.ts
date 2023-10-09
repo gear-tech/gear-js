@@ -351,7 +351,7 @@ describe('prepare', () => {
   test('send message to test_meta', async () => {
     const payload = testMetaMeta.createType(testMetaMeta.types.handle.input, { One: 'Alice' }).toHex();
     const tx = await api.message.send(
-      { destination: testMetaId, gasLimit: 2_000_000_000, payload, value: 1000 },
+      { destination: testMetaId, gasLimit: 200_000_000_000, payload, value: 10_000_000_000_000 },
       testMetaMeta,
     );
 
@@ -376,7 +376,7 @@ describe('prepare', () => {
                     destination: destination.toHex(),
                     entry: 'handle',
                     payload,
-                    value: '1000',
+                    value: '10000000000000',
                   });
                   resolve(0);
                 }

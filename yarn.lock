@@ -2258,25 +2258,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:0.33.0":
-  version: 0.33.0
-  resolution: "@gear-js/api@npm:0.33.0"
+"@gear-js/api@npm:0.34.0":
+  version: 0.34.0
+  resolution: "@gear-js/api@npm:0.34.0"
   peerDependencies:
     "@polkadot/api": 10.9.1
     "@polkadot/wasm-crypto": 7.2.1
     rxjs: 7.8.1
-  checksum: 49cdd845dfc357baf2c206d628cfa879b67a091d0f2c14b212b7e9942f70bbd1b64ffe9b30a4749d492f156a61cca57936aa5a382e71465a2f7abf168ce382ca
-  languageName: node
-  linkType: hard
-
-"@gear-js/api@npm:0.33.6":
-  version: 0.33.6
-  resolution: "@gear-js/api@npm:0.33.6"
-  peerDependencies:
-    "@polkadot/api": 10.9.1
-    "@polkadot/wasm-crypto": 7.2.1
-    rxjs: 7.8.1
-  checksum: f7276094884952f4ba5b300c7b603091d1a3993b8d5de74f08c480cac4cd58d9b18e83614362b3f8236adffd6e45b1b0250748a5348c56d1db9dd4693830a06e
+  checksum: 84a567b5a9d47dbbf66d51fb0f2747ecfdc109a6eefa71ff5966a87e14d948bb6aa9185425002f2ad808df5f0e8cd28104e69e718f76cee1a2ba68c3a401c27c
   languageName: node
   linkType: hard
 
@@ -2284,7 +2273,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/common@workspace:idea/common"
   dependencies:
-    "@gear-js/api": 0.33.0
+    "@gear-js/api": 0.34.0
     "@polkadot/api": 10.9.1
     typescript: 4.7.4
     winston: 3.7.2
@@ -2295,8 +2284,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/frontend@workspace:idea/frontend"
   dependencies:
-    "@gear-js/api": 0.33.6
-    "@gear-js/react-hooks": 0.8.0
+    "@gear-js/api": 0.34.0
+    "@gear-js/react-hooks": 0.8.1
     "@gear-js/ui": 0.5.19
     "@hcaptcha/react-hcaptcha": ^1.4.4
     "@mantine/form": ^5.4.0
@@ -2365,7 +2354,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/indexer@workspace:idea/indexer"
   dependencies:
-    "@gear-js/api": 0.33.0
+    "@gear-js/api": 0.34.0
     "@gear-js/common": "workspace:^"
     "@polkadot/api": 10.9.1
     "@types/amqplib": 0.10.1
@@ -2388,7 +2377,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/meta-storage@workspace:idea/meta-storage"
   dependencies:
-    "@gear-js/api": 0.33.0
+    "@gear-js/api": 0.34.0
     "@gear-js/common": "workspace:^"
     "@polkadot/api": 10.9.1
     amqplib: 0.10.3
@@ -2400,16 +2389,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/react-hooks@npm:0.8.0":
-  version: 0.8.0
-  resolution: "@gear-js/react-hooks@npm:0.8.0"
+"@gear-js/react-hooks@npm:0.8.1":
+  version: 0.8.1
+  resolution: "@gear-js/react-hooks@npm:0.8.1"
   peerDependencies:
-    "@gear-js/api": 0.33.6
+    "@gear-js/api": 0.34.0
     "@polkadot/api": 10.9.1
     "@polkadot/extension-dapp": 0.46.5
     react: ^18.2.0
     react-transition-group: 4.4.5
-  checksum: da785a1221a240585ef7774ad3660ae422f01d0c57d8bc60191dcc8e6975fc0eaedadaac80faae0959cd333e9dcaed45ad0d2e003622eceb4cd1831a4dc8e49a
+  checksum: 51a4f07adbea5f99dbfc5f4d9dfa7d43e576a205eeb821d89efb8d2a168f762db5708282e247c6f7e5beea2d8d4ba60feb895d7e062e7165f7fd7d69370a4849
   languageName: node
   linkType: hard
 
@@ -2417,7 +2406,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/test-balance@workspace:idea/test-balance"
   dependencies:
-    "@gear-js/api": 0.33.0
+    "@gear-js/api": 0.34.0
     "@gear-js/common": "workspace:^"
     "@polkadot/api": 10.9.1
     "@types/amqplib": 0.8.2
@@ -2459,7 +2448,7 @@ __metadata:
     "@babel/plugin-transform-typescript": 7.20.2
     "@babel/preset-env": 7.20.2
     "@babel/preset-typescript": 7.18.6
-    "@gear-js/api": 0.33.0
+    "@gear-js/api": 0.34.0
     "@gear-js/common": "workspace:^"
     "@polkadot/api": 10.9.1
     "@types/jest": 29.2.3

@@ -356,11 +356,6 @@ jobs:
         run: |
           cp api/programs/target/wasm32-unknown-unknown/release/* idea/tests/wasm-test
 
-      - name: "Prepare: Download app.opt.wasm"
-        working-directory: idea/tests/wasm-test
-        run: |
-          wget -O app.opt.wasm https://github.com/gear-foundation/dapps-app/releases/download/0.1.0/app.opt.wasm
-
       - name: "Run tests"
         timeout-minutes: 7
         working-directory: idea/tests

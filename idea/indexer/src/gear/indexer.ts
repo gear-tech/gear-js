@@ -1,10 +1,10 @@
 import {
-  CodeMetadata,
   CodeChanged,
   GearApi,
+  GearCommonCodeMetadata,
+  GearCommonProgram,
   generateCodeHash,
   MessageQueued,
-  IProgram,
   ProgramChangedData,
 } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
@@ -633,7 +633,7 @@ export class GearIndexer {
     for (const id of progChangedEvents) {
       const program = await this.getProgramWithoutIndexing(id);
       if (!program) {
-        const progStorage = (await this.api.query.gearProgram.programStorage(id)) as Option<IProgram>;
+        const progStorage = (await this.api.query.gearProgram.programStorage(id)) as Option<GearCommonProgram>;
         if (progStorage.isSome) {
           if (progStorage.unwrap().isActive) {
             const { codeHash } = progStorage.unwrap().asActive;
@@ -674,7 +674,7 @@ export class GearIndexer {
   }
 
   public async indexBlockWithMissedCode(codeId: HexString): Promise<Code | null> {
-    const metaStorage = (await this.api.query.gearProgram.metadataStorage(codeId)) as Option<CodeMetadata>;
+    const metaStorage = await this.api.query.gearProgram.metadataStorage(codeId) as Option<GearCommonCodeMetadata>;
     if (metaStorage.isSome) {
       const blockNumber = metaStorage.unwrap().blockNumber.toNumber();
 
