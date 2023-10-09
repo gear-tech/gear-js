@@ -376,7 +376,7 @@ describe('prepare', () => {
                     destination: destination.toHex(),
                     entry: 'handle',
                     payload,
-                    value: '1000',
+                    value: '10000000000000',
                   });
                   resolve(0);
                 }
