@@ -53,7 +53,7 @@ const resetPayloadValue = (payload: PayloadValue): PayloadValue => {
   }
 
   if (isPlainObject(payload)) {
-    const preparedValues = Object.entries(payload).map((item) => [item[0], resetPayloadValue(item[1])]);
+    const preparedValues = Object.entries(payload!).map((item) => [item[0], resetPayloadValue(item[1])]);
 
     return Object.fromEntries(preparedValues);
   }

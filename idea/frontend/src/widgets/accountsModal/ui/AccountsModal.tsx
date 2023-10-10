@@ -17,7 +17,7 @@ import { Wallets } from './wallets';
 import styles from './AccountsModal.module.scss';
 
 type Props = ModalProps & {
-  accounts?: InjectedAccountWithMeta[];
+  accounts: InjectedAccountWithMeta[];
 };
 
 const AccountsModal = ({ accounts, onClose }: Props) => {
