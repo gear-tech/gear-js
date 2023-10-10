@@ -1,5 +1,4 @@
-import ky from 'ky';
-import { KyHeadersInit } from 'ky/distribution/types/options';
+import ky, { Options } from 'ky';
 
 import { generateRandomId } from 'shared/helpers';
 import { API_URL, LocalStorage } from 'shared/config';
@@ -27,7 +26,7 @@ class RPCService {
     };
   }
 
-  public async callRPC<Result>(method = '', postParams: Object = {}, headers: KyHeadersInit = {}) {
+  public async callRPC<Result>(method = '', postParams: Object = {}, headers: Options['headers'] = {}) {
     const response = ky
       .post(this.url, {
         headers: { ...headers, 'Content-Type': 'application/json;charset=utf-8' },
