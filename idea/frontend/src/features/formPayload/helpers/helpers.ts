@@ -3,8 +3,8 @@ import isString from 'lodash.isstring';
 import isPlainObject from 'lodash.isplainobject';
 import { toJSON, ProgramMetadata, StateMetadata } from '@gear-js/api';
 
-import { TypeStructure, PayloadValue } from 'entities/formPayload';
-import { getPreformattedText } from 'shared/helpers';
+import { TypeStructure, PayloadValue } from '@/entities/formPayload';
+import { getPreformattedText } from '@/shared/helpers';
 
 const getItemLabel = (name: string, title?: string) => (title ? `${title} (${name})` : name);
 

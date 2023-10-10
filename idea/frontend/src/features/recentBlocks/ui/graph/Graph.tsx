@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 
-import { IChainBlock } from 'entities/chainBlock';
+import { IChainBlock } from '@/entities/chainBlock';
 
 import styles from './Graph.module.scss';
 import { getRandomPercent } from '../../helpers';

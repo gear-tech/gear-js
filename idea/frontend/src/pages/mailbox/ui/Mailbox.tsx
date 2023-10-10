@@ -3,8 +3,8 @@ import { HexString } from '@polkadot/util/types';
 import { useState, useEffect } from 'react';
 import SimpleBar from 'simplebar-react';
 
-import { useMailbox } from 'features/mailbox';
-import { useMessageClaim } from 'hooks';
+import { useMailbox } from '@/features/mailbox';
+import { useMessageClaim } from '@/hooks';
 
 import { Messages } from './messages';
 import { Header } from './header';

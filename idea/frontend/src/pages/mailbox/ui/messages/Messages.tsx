@@ -1,7 +1,7 @@
 import { HexString } from '@polkadot/util/types';
 import { CSSTransition } from 'react-transition-group';
 
-import { MailboxItem } from 'features/mailbox';
+import { MailboxItem } from '@/features/mailbox';
 import { Message } from '../message';
 
 type Props = {

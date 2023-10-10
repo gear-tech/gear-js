@@ -1,5 +1,5 @@
-import FunctionPlaceholderSVG from 'shared/assets/images/placeholders/stateFunctionPlaceholder.svg?react';
-import { Placeholder } from 'entities/placeholder';
+import FunctionPlaceholderSVG from '@/shared/assets/images/placeholders/stateFunctionPlaceholder.svg?react';
+import { Placeholder } from '@/entities/placeholder';
 
 import styles from './FunctionsPlaceholder.module.scss';
 

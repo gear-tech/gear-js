@@ -1,7 +1,7 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 
-import { OperationCallbacks, ParamsToSignAndSend } from 'entities/hooks';
+import { OperationCallbacks, ParamsToSignAndSend } from '@/entities/hooks';
 
 type Payload = {
   value: string;

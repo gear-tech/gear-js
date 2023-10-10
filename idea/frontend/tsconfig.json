@@ -20,17 +20,10 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
-    // Custom
-    "baseUrl": "src",
+    // custom
+    "baseUrl": "./",
     "paths": {
-      "api/*": ["./api/*"],
-      "app/*": ["./app/*"],
-      "entities/*": ["./entities/*"],
-      "features/*": ["./features/*"],
-      "hooks/*": ["./hooks/*"],
-      "pages/*": ["./pages/*"],
-      "shared/*": ["./shared/*"],
-      "widgets/*": ["./widgets/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src"],

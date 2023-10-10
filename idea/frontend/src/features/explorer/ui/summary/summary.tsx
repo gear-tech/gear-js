@@ -2,11 +2,11 @@ import { Link } from 'react-router-dom';
 import { Block } from '@polkadot/types/interfaces';
 import clsx from 'clsx';
 
-import CodeSVG from 'shared/assets/images/actions/code.svg?react';
-import SummaryPlaceholderSVG from 'shared/assets/images/placeholders/blockSummaryPlaceholder.svg?react';
-import NumberPlaceholderSVG from 'shared/assets/images/placeholders/blockNumberPlaceholder.svg?react';
-import { Placeholder } from 'entities/placeholder';
-import commonStyles from 'pages/explorer/explorer.module.scss';
+import CodeSVG from '@/shared/assets/images/actions/code.svg?react';
+import SummaryPlaceholderSVG from '@/shared/assets/images/placeholders/blockSummaryPlaceholder.svg?react';
+import NumberPlaceholderSVG from '@/shared/assets/images/placeholders/blockNumberPlaceholder.svg?react';
+import { Placeholder } from '@/entities/placeholder';
+import commonStyles from '@/pages/explorer/explorer.module.scss';
 
 import styles from './summary.module.scss';
 

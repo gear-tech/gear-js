@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAccount } from '@gear-js/react-hooks';
 
-import { useChain, useCodes, useDataLoading } from 'hooks';
+import { useChain, useCodes, useDataLoading } from '@/hooks';
 
 import styles from './Codes.module.scss';
 import { RequestParams } from '../model/types';

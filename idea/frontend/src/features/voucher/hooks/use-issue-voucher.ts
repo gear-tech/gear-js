@@ -4,9 +4,9 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { ISubmittableResult } from '@polkadot/types/types';
 
-import { Method } from 'features/explorer';
-import { PROGRAM_ERRORS } from 'shared/config';
-import { getExtrinsicFailedMessage } from 'shared/helpers';
+import { Method } from '@/features/explorer';
+import { PROGRAM_ERRORS } from '@/shared/config';
+import { getExtrinsicFailedMessage } from '@/shared/helpers';
 
 function useIssueVoucher() {
   const { api, isApiReady } = useApi();

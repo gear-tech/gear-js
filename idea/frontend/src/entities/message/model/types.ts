@@ -1,5 +1,5 @@
-import { IProgram } from 'features/program';
-import { IBase } from 'shared/types';
+import { IProgram } from '@/features/program';
+import { IBase } from '@/shared/types';
 
 import { Type, EntryPoint, ReadReason } from './consts';
 

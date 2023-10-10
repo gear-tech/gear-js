@@ -2,9 +2,9 @@ import { CSSTransition } from 'react-transition-group';
 import { Input } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 
-import { Filters, FilterGroup, Radio, StatusCheckbox } from 'features/filters';
-import { AnimationTimeout } from 'shared/config';
-import { BulbStatus } from 'shared/ui/bulbBlock';
+import { Filters, FilterGroup, Radio, StatusCheckbox } from '@/features/filters';
+import { AnimationTimeout } from '@/shared/config';
+import { BulbStatus } from '@/shared/ui/bulbBlock';
 
 import { ProgramStatus, PROGRAM_STATUS_NAME } from '../../consts';
 import { FiltersValues, RequestParams } from '../../types';

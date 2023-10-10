@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 
-import { DEFAULT_LIMIT } from 'shared/config';
+import { DEFAULT_LIMIT } from '@/shared/config';
 
 type Props<T> = {
   initLoad?: boolean;

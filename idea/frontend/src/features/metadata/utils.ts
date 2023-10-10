@@ -1,7 +1,7 @@
 import { HumanTypesRepr, ProgramMetadata } from '@gear-js/api';
 import isPlainObject from 'lodash.isplainobject';
 
-import { isNullOrUndefined } from 'shared/helpers';
+import { isNullOrUndefined } from '@/shared/helpers';
 
 const isHumanTypesRepr = (types: number | HumanTypesRepr | null): types is HumanTypesRepr => isPlainObject(types);
 

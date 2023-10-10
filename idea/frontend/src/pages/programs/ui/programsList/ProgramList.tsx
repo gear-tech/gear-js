@@ -1,11 +1,11 @@
 import SimpleBar from 'simplebar-react';
 
-import { useScrollLoader } from 'hooks';
-import { Placeholder } from 'entities/placeholder';
-import { IProgram, ProgramCard } from 'features/program';
-import { ExamplesLink } from 'shared/ui/examplesLink';
-import CardPalceholderSVG from 'shared/assets/images/placeholders/card.svg?react';
-import { LocalProgram } from 'features/local-indexer';
+import { useScrollLoader } from '@/hooks';
+import { Placeholder } from '@/entities/placeholder';
+import { IProgram, ProgramCard } from '@/features/program';
+import { ExamplesLink } from '@/shared/ui/examplesLink';
+import CardPalceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
+import { LocalProgram } from '@/features/local-indexer';
 
 import styles from './ProgramsList.module.scss';
 

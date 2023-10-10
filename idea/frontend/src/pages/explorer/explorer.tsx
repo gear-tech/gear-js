@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
-import { ExplorerSearch } from 'features/explorer';
+import { ExplorerSearch } from '@/features/explorer';
 
 import styles from './explorer.module.scss';
 

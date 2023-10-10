@@ -3,8 +3,8 @@ import isString from 'lodash.isstring';
 import isPlainObject from 'lodash.isplainobject';
 import BigNumber from 'bignumber.js';
 
-import { PayloadSchemaParams, PayloadValue } from 'entities/formPayload';
-import { isDecimal } from 'shared/helpers';
+import { PayloadSchemaParams, PayloadValue } from '@/entities/formPayload';
+import { isDecimal } from '@/shared/helpers';
 
 const getValidationSchema = ({
   deposit,
@@ -53,7 +53,7 @@ const resetPayloadValue = (payload: PayloadValue): PayloadValue => {
   }
 
   if (isPlainObject(payload)) {
-    const preparedValues = Object.entries(payload!).map((item) => [item[0], resetPayloadValue(item[1])]);
+    const preparedValues = Object.entries(payload).map((item) => [item[0], resetPayloadValue(item[1])]);
 
     return Object.fromEntries(preparedValues);
   }

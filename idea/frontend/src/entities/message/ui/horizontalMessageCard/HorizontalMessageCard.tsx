@@ -1,13 +1,13 @@
 import clsx from 'clsx';
 import { generatePath, Link } from 'react-router-dom';
 
-import { getShortName } from 'shared/helpers';
-import { IdBlock } from 'shared/ui/idBlock';
-import { TimestampBlock } from 'shared/ui/timestampBlock';
-import FlagSVG from 'shared/assets/images/indicators/flag.svg?react';
-import DirectionSVG from 'shared/assets/images/indicators/messageDirection.svg?react';
-import { absoluteRoutes } from 'shared/config';
-import { BulbBlock, BulbStatus } from 'shared/ui/bulbBlock';
+import { getShortName } from '@/shared/helpers';
+import { IdBlock } from '@/shared/ui/idBlock';
+import { TimestampBlock } from '@/shared/ui/timestampBlock';
+import FlagSVG from '@/shared/assets/images/indicators/flag.svg?react';
+import DirectionSVG from '@/shared/assets/images/indicators/messageDirection.svg?react';
+import { absoluteRoutes } from '@/shared/config';
+import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
 
 import styles from './HorizontalMessageCard.module.scss';
 import { IMessage } from '../../model/types';

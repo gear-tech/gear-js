@@ -2,8 +2,8 @@ import { FormEvent } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { Input } from '@gear-js/ui';
 
-import { Filters, FilterGroup, Radio } from 'features/filters';
-import { AnimationTimeout } from 'shared/config';
+import { Filters, FilterGroup, Radio } from '@/features/filters';
+import { AnimationTimeout } from '@/shared/config';
 
 import { FiltersValues } from '../../model/types';
 import styles from './SearchSettings.module.scss';

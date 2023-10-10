@@ -1,8 +1,8 @@
 import { ProviderProps, useApi } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 
-import { RpcMethods } from 'shared/config';
-import { RPCService } from 'shared/services/rpcService';
+import { RpcMethods } from '@/shared/config';
+import { RPCService } from '@/shared/services/rpcService';
 
 import { ChainContext } from './Context';
 

@@ -3,7 +3,7 @@ import { useForm, useField } from 'react-final-form';
 import clsx from 'clsx';
 import { Checkbox, InputWrapper, inputStyles, InputProps } from '@gear-js/ui';
 
-import { formStyles } from 'shared/ui/form';
+import { formStyles } from '@/shared/ui/form';
 
 type Props = {
   name: string;

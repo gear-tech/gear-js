@@ -3,9 +3,9 @@ import { useForm } from '@mantine/form';
 import { HexString } from '@polkadot/util/types';
 import { generatePath, useNavigate } from 'react-router-dom';
 
-import { ModalProps } from 'entities/modal';
-import { absoluteRoutes } from 'shared/config';
-import { isHexValid } from 'shared/helpers';
+import { ModalProps } from '@/entities/modal';
+import { absoluteRoutes } from '@/shared/config';
+import { isHexValid } from '@/shared/helpers';
 
 import styles from './MessageModal.module.scss';
 

@@ -4,19 +4,19 @@ import { ProgramMetadata } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
 import { generatePath, useParams } from 'react-router-dom';
 
-import { useMetadataUpload, useModal, useProgram } from 'hooks';
-import { ProgramStatus, ProgramTable } from 'features/program';
-import { ProgramMessages } from 'widgets/programMessages';
-import { PathParams } from 'shared/types';
-import { getShortName } from 'shared/helpers';
-import { Subheader } from 'shared/ui/subheader';
-import { absoluteRoutes, routes } from 'shared/config';
-import { UILink } from 'shared/ui/uiLink';
-import SendSVG from 'shared/assets/images/actions/send.svg?react';
-import ReadSVG from 'shared/assets/images/actions/read.svg?react';
-import AddMetaSVG from 'shared/assets/images/actions/addMeta.svg?react';
-import { useMetadata, MetadataTable } from 'features/metadata';
-import { IssueVoucher, VoucherTable } from 'features/voucher';
+import { useMetadataUpload, useModal, useProgram } from '@/hooks';
+import { ProgramStatus, ProgramTable } from '@/features/program';
+import { ProgramMessages } from '@/widgets/programMessages';
+import { PathParams } from '@/shared/types';
+import { getShortName } from '@/shared/helpers';
+import { Subheader } from '@/shared/ui/subheader';
+import { absoluteRoutes, routes } from '@/shared/config';
+import { UILink } from '@/shared/ui/uiLink';
+import SendSVG from '@/shared/assets/images/actions/send.svg?react';
+import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
+import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
+import { useMetadata, MetadataTable } from '@/features/metadata';
+import { IssueVoucher, VoucherTable } from '@/features/voucher';
 
 import styles from './program.module.scss';
 

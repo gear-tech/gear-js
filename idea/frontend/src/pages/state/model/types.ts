@@ -1,6 +1,6 @@
 import { StateFunctions } from '@gear-js/api';
 
-import { PayloadValue } from 'entities/formPayload';
+import { PayloadValue } from '@/entities/formPayload';
 
 type FormValues = {
   payload: PayloadValue;

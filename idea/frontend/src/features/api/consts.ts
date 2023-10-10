@@ -1,4 +1,4 @@
-import { LocalStorage, NODE_ADDRESS } from 'shared/config';
+import { LocalStorage, NODE_ADDRESS } from '@/shared/config';
 
 import { getNodeAddressFromUrl } from './utils';
 

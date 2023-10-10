@@ -1,5 +1,5 @@
-import { OwnerFilter } from 'api/consts';
-import { ProgramStatus } from 'features/program';
+import { OwnerFilter } from '@/api/consts';
+import { ProgramStatus } from '@/features/program';
 
 const DEFAULT_FILTER_VALUES = {
   owner: OwnerFilter.All,

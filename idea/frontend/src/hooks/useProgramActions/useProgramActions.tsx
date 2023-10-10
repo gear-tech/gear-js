@@ -6,22 +6,22 @@ import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OP
 import { HexString } from '@polkadot/util/types';
 import { ProgramMetadata } from '@gear-js/api';
 
-import { useChain, useModal } from 'hooks';
-import { uploadLocalProgram } from 'api/LocalDB';
-import { Method } from 'features/explorer';
-import { OperationCallbacks } from 'entities/hooks';
+import { useChain, useModal } from '@/hooks';
+import { uploadLocalProgram } from '@/api/LocalDB';
+import { Method } from '@/features/explorer';
+import { OperationCallbacks } from '@/entities/hooks';
 import {
   PROGRAM_ERRORS,
   TransactionName,
   TransactionStatus,
   absoluteRoutes,
   UPLOAD_METADATA_TIMEOUT,
-} from 'shared/config';
-import { checkWallet, getExtrinsicFailedMessage, isNullOrUndefined } from 'shared/helpers';
-import { CustomLink } from 'shared/ui/customLink';
-import { ProgramStatus, useProgramStatus } from 'features/program';
-import { isHumanTypesRepr } from 'features/metadata';
-import { addProgramName } from 'api';
+} from '@/shared/config';
+import { checkWallet, getExtrinsicFailedMessage, isNullOrUndefined } from '@/shared/helpers';
+import { CustomLink } from '@/shared/ui/customLink';
+import { ProgramStatus, useProgramStatus } from '@/features/program';
+import { isHumanTypesRepr } from '@/features/metadata';
+import { addProgramName } from '@/api';
 
 import { useMetadataUpload } from '../useMetadataUpload';
 import { ALERT_OPTIONS } from './consts';

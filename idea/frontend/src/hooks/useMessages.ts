@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useAlert } from '@gear-js/react-hooks';
 
-import { getMessages } from 'api';
-import { MessagePaginationModel } from 'api/message/types';
-import { PaginationModel } from 'api/types';
-import { IMessage } from 'entities/message';
-import { DEFAULT_LIMIT } from 'shared/config';
+import { getMessages } from '@/api';
+import { MessagePaginationModel } from '@/api/message/types';
+import { PaginationModel } from '@/api/types';
+import { IMessage } from '@/entities/message';
+import { DEFAULT_LIMIT } from '@/shared/config';
 
 import { useChain } from './context';
 

@@ -1,8 +1,8 @@
 import { HexString } from '@polkadot/util/types';
 
-import { rpcService } from 'shared/services/rpcService';
-import { RpcMethods } from 'shared/config';
-import { IMeta } from 'entities/metadata';
+import { rpcService } from '@/shared/services/rpcService';
+import { RpcMethods } from '@/shared/config';
+import { IMeta } from '@/entities/metadata';
 
 const addMetadata = (params: { hex: HexString; codeHash: HexString }) =>
   rpcService.callRPC(RpcMethods.AddMetadata, params);

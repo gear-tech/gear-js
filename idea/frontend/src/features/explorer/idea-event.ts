@@ -2,7 +2,7 @@
 import { Compact, GenericEvent } from '@polkadot/types';
 import { BlockNumber, Event as DotEvent } from '@polkadot/types/interfaces';
 
-import { generateRandomId } from 'shared/helpers';
+import { generateRandomId } from '@/shared/helpers';
 
 class IdeaEvent extends GenericEvent {
   constructor(event: DotEvent, blockNumber?: Compact<BlockNumber>) {

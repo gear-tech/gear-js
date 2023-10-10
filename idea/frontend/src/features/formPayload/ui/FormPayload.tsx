@@ -4,11 +4,11 @@ import clsx from 'clsx';
 import { useAlert } from '@gear-js/react-hooks';
 import { Checkbox, FileInput, Textarea, InputWrapper, InputProps } from '@gear-js/ui';
 
-import { useChangeEffect } from 'hooks';
-import { PayloadValue } from 'entities/formPayload';
-import { checkFileFormat, readFileAsync } from 'shared/helpers';
-import { FileTypes } from 'shared/config';
-import { formStyles } from 'shared/ui/form';
+import { useChangeEffect } from '@/hooks';
+import { PayloadValue } from '@/entities/formPayload';
+import { checkFileFormat, readFileAsync } from '@/shared/helpers';
+import { FileTypes } from '@/shared/config';
+import { formStyles } from '@/shared/ui/form';
 
 import { FormPayloadValues } from '../model/types';
 import { PayloadStructure } from './payloadStructure';

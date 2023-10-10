@@ -3,7 +3,7 @@ import { CSSTransition } from 'react-transition-group';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
 import { NativeTypes } from 'react-dnd-html5-backend';
 
-import { AnimationTimeout } from 'shared/config';
+import { AnimationTimeout } from '@/shared/config';
 
 import styles from './DropTarget.module.scss';
 

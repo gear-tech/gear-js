@@ -4,11 +4,11 @@ import BigNumber from 'bignumber.js';
 import { Form } from 'react-final-form';
 import * as yup from 'yup';
 
-import { useBalanceMultiplier } from 'hooks';
-import ApplySVG from 'shared/assets/images/actions/apply.svg?react';
-import CloseSVG from 'shared/assets/images/actions/close.svg?react';
-import { getValidation, isAccountAddressValid } from 'shared/helpers';
-import { FormInput, ValueField } from 'shared/ui/form';
+import { useBalanceMultiplier } from '@/hooks';
+import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
+import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
+import { getValidation, isAccountAddressValid } from '@/shared/helpers';
+import { FormInput, ValueField } from '@/shared/ui/form';
 
 import { useIssueVoucher } from '../../hooks';
 import styles from './issue-voucher-modal.module.scss';

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import SimpleBar from 'simplebar-react';
 
-import EventPlaceholderSVG from 'shared/assets/images/placeholders/eventPlaceholder.svg?react';
-import { Placeholder } from 'entities/placeholder';
+import EventPlaceholderSVG from '@/shared/assets/images/placeholders/eventPlaceholder.svg?react';
+import { Placeholder } from '@/entities/placeholder';
 
 import { IdeaEvent } from '../../idea-event';
 import { FilterValues } from '../../types';

@@ -3,9 +3,9 @@ import { Input } from '@gear-js/ui';
 import { useAccount } from '@gear-js/react-hooks';
 import { useForm } from '@mantine/form';
 
-import { Filters, FilterGroup, Radio } from 'features/filters';
-import { AnimationTimeout } from 'shared/config';
-import { useChain } from 'hooks';
+import { Filters, FilterGroup, Radio } from '@/features/filters';
+import { AnimationTimeout } from '@/shared/config';
+import { useChain } from '@/hooks';
 
 import styles from './SearchSettings.module.scss';
 import { FiltersValues, RequestParams } from '../../model/types';

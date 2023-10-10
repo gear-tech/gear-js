@@ -4,10 +4,10 @@ import { HexString } from '@polkadot/util/types';
 import { isHex } from '@polkadot/util';
 import { useEffect, useState } from 'react';
 
-import { PreformattedBlock } from 'shared/ui/preformattedBlock';
-import { useMetadata } from 'features/metadata';
-import { useProgram } from 'hooks';
-import { isNullOrUndefined } from 'shared/helpers';
+import { PreformattedBlock } from '@/shared/ui/preformattedBlock';
+import { useMetadata } from '@/features/metadata';
+import { useProgram } from '@/hooks';
+import { isNullOrUndefined } from '@/shared/helpers';
 
 import {
   FormattedUserMessageSentData,

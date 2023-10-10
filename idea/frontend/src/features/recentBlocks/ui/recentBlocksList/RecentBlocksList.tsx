@@ -2,8 +2,8 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import SimpleBar from 'simplebar-react';
 import clsx from 'clsx';
 
-import { IChainBlock } from 'entities/chainBlock';
-import { AnimationTimeout } from 'shared/config';
+import { IChainBlock } from '@/entities/chainBlock';
+import { AnimationTimeout } from '@/shared/config';
 
 import styles from './RecentBlocksList.module.scss';
 import { RecentBlockItem } from '../recentBlockItem';

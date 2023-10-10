@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { DispatchInfo, Extrinsic as DotExtrinsic } from '@polkadot/types/interfaces';
 
-import commonStyles from 'pages/explorer/explorer.module.scss';
+import commonStyles from '@/pages/explorer/explorer.module.scss';
 
 import { FormattedMessageQueuedData } from '../../types';
 import { IdeaEvent } from '../../idea-event';

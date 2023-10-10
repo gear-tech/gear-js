@@ -1,9 +1,9 @@
 import { Vec } from '@polkadot/types';
 import { EventRecord } from '@polkadot/types/interfaces';
 
-import { IdeaEvent } from 'features/explorer';
-import { Placeholder } from 'entities/placeholder';
-import EventPlaceholderSVG from 'shared/assets/images/placeholders/eventPlaceholder.svg?react';
+import { IdeaEvent } from '@/features/explorer';
+import { Placeholder } from '@/entities/placeholder';
+import EventPlaceholderSVG from '@/shared/assets/images/placeholders/eventPlaceholder.svg?react';
 
 import { Event } from '../event';
 import styles from './system.module.scss';

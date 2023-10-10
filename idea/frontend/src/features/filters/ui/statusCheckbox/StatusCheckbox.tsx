@@ -5,7 +5,7 @@ import { useField, useForm } from 'react-final-form';
 import clsx from 'clsx';
 import { CheckboxProps, checkboxStyles } from '@gear-js/ui';
 
-import { BulbBlock, BulbStatus } from 'shared/ui/bulbBlock';
+import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
 
 import styles from './StatusCheckbox.module.scss';
 

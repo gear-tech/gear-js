@@ -2,9 +2,9 @@ import SimpleBar from 'simplebar-react';
 import clsx from 'clsx';
 import { WaitlistItem } from '@gear-js/api';
 
-import { Placeholder } from 'entities/placeholder';
-import { HorizontalWaitlistItem, HumanWaitlistItem } from 'entities/waitlist';
-import HorizontalMessageCardSVG from 'shared/assets/images/placeholders/horizontalMessageCard.svg?react';
+import { Placeholder } from '@/entities/placeholder';
+import { HorizontalWaitlistItem, HumanWaitlistItem } from '@/entities/waitlist';
+import HorizontalMessageCardSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
 
 import styles from '../ProgramMessages.module.scss';
 

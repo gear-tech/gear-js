@@ -1,15 +1,15 @@
 import { memo } from 'react';
 import { Link, generatePath } from 'react-router-dom';
 
-import { IssueVoucher, VoucherBadge } from 'features/voucher';
-import { absoluteRoutes, routes } from 'shared/config';
-import sendSVG from 'shared/assets/images/actions/send.svg?react';
-import readSVG from 'shared/assets/images/actions/read.svg?react';
-import { IdBlock } from 'shared/ui/idBlock';
-import { BulbBlock } from 'shared/ui/bulbBlock';
-import { TimestampBlock } from 'shared/ui/timestampBlock';
-import { ActionLink } from 'shared/ui/ActionLink';
-import { LocalProgram } from 'features/local-indexer';
+import { IssueVoucher, VoucherBadge } from '@/features/voucher';
+import { absoluteRoutes, routes } from '@/shared/config';
+import sendSVG from '@/shared/assets/images/actions/send.svg?react';
+import readSVG from '@/shared/assets/images/actions/read.svg?react';
+import { IdBlock } from '@/shared/ui/idBlock';
+import { BulbBlock } from '@/shared/ui/bulbBlock';
+import { TimestampBlock } from '@/shared/ui/timestampBlock';
+import { ActionLink } from '@/shared/ui/ActionLink';
+import { LocalProgram } from '@/features/local-indexer';
 
 import clsx from 'clsx';
 import { getBulbStatus } from '../../utils';

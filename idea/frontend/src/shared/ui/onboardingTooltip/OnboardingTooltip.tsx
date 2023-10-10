@@ -3,9 +3,9 @@ import { useAccount } from '@gear-js/react-hooks';
 import { ReactNode } from 'react';
 import clsx from 'clsx';
 
-import { useOnboarding } from 'hooks';
-import ArrowSVG from 'shared/assets/images/actions/arrowRight.svg?react';
-import CrossSVG from 'shared/assets/images/actions/close.svg?react';
+import { useOnboarding } from '@/hooks';
+import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
+import CrossSVG from '@/shared/assets/images/actions/close.svg?react';
 
 import styles from './OnboardingTooltip.module.scss';
 

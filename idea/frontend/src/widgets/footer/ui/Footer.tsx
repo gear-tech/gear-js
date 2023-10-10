@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import cx from 'clsx';
 import { useApi } from '@gear-js/react-hooks';
 
-import DotSVG from 'shared/assets/images/logos/dotLogo.svg?react';
+import DotSVG from '@/shared/assets/images/logos/dotLogo.svg?react';
 
 import { Socials } from './socials/Socials';
 import styles from './Footer.module.scss';

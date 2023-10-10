@@ -3,8 +3,8 @@ import { EventRecord } from '@polkadot/types/interfaces';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useApi, useAlert } from '@gear-js/react-hooks';
 
-import { Method } from 'features/explorer';
-import { getExtrinsicFailedMessage } from 'shared/helpers';
+import { Method } from '@/features/explorer';
+import { getExtrinsicFailedMessage } from '@/shared/helpers';
 
 type Options = {
   signSource?: string;

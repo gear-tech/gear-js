@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useAlert, useApi } from '@gear-js/react-hooks';
 
-import { getCodes } from 'api';
-import { CodePaginationModel } from 'api/code/types';
-import { PaginationModel } from 'api/types';
-import { ICode } from 'entities/code';
-import { DEFAULT_LIMIT } from 'shared/config';
-import { useChain } from 'hooks';
+import { getCodes } from '@/api';
+import { CodePaginationModel } from '@/api/code/types';
+import { PaginationModel } from '@/api/types';
+import { ICode } from '@/entities/code';
+import { DEFAULT_LIMIT } from '@/shared/config';
+import { useChain } from '@/hooks';
 
 const useCodes = (initLoading = true) => {
   const { api, isApiReady } = useApi();

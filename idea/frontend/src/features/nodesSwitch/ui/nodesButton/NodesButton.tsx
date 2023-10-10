@@ -3,9 +3,9 @@ import { MouseEvent } from 'react';
 import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
 
-import { AnimationTimeout } from 'shared/config';
+import { AnimationTimeout } from '@/shared/config';
 
-import { useNetworkIcon } from 'hooks';
+import { useNetworkIcon } from '@/hooks';
 import styles from './NodesButton.module.scss';
 
 type Props = {

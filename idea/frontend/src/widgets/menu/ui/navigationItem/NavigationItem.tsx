@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { NavLink, NavLinkProps } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 
-import { AnimationTimeout } from 'shared/config';
+import { AnimationTimeout } from '@/shared/config';
 
 import styles from '../Menu.module.scss';
 

@@ -1,6 +1,6 @@
 import { useApi } from '@gear-js/react-hooks';
 
-import { ICON, LOGO } from 'widgets/menu/model/consts';
+import { ICON, LOGO } from '@/widgets/menu/model/consts';
 
 function useNetworkIcon() {
   const { api, isApiReady } = useApi();

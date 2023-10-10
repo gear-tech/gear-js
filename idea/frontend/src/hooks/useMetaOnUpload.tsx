@@ -4,11 +4,11 @@ import { HexString } from '@polkadot/util/types';
 import { useState, useEffect } from 'react';
 import { generatePath, useLocation } from 'react-router-dom';
 
-import { fetchMetadata, getLocalMetadata } from 'api';
-import { readFileAsync } from 'shared/helpers';
-import { CustomLink } from 'shared/ui/customLink';
-import { routes } from 'shared/config';
-import { RPCError, RPCErrorCode } from 'shared/services/rpcService';
+import { fetchMetadata, getLocalMetadata } from '@/api';
+import { readFileAsync } from '@/shared/helpers';
+import { CustomLink } from '@/shared/ui/customLink';
+import { routes } from '@/shared/config';
+import { RPCError, RPCErrorCode } from '@/shared/services/rpcService';
 
 import { useChain } from './context';
 
@@ -48,7 +48,7 @@ const useMetaOnUpload = (isCode?: boolean) => {
   const [metadata, setMetadata] = useState<MetadataState>(initMeta);
   const [isUploadedMetaReady, setIsUploadedMetaReady] = useState(true);
 
-  const [isCodeExists, setIsCodeExists] = useState<Boolean>();
+  const [isCodeExists, setIsCodeExists] = useState<boolean>();
 
   const setUploadedMetadata = (hex: HexString) =>
     setMetadata({ hex, value: ProgramMetadata.from(hex), isUploaded: true });

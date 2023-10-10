@@ -1,8 +1,8 @@
 import * as yup from 'yup';
 import BigNumber from 'bignumber.js';
 
-import { PayloadSchemaParams } from 'entities/formPayload';
-import { isDecimal } from 'shared/helpers';
+import { PayloadSchemaParams } from '@/entities/formPayload';
+import { isDecimal } from '@/shared/helpers';
 
 const getValidationSchema = ({
   deposit,

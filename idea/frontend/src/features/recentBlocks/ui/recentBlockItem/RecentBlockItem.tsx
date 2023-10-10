@@ -1,10 +1,10 @@
 import clsx from 'clsx';
 import { generatePath, Link } from 'react-router-dom';
 
-import { IChainBlock } from 'entities/chainBlock';
-import TimeSVG from 'shared/assets/images/indicators/time.svg?react';
-import BlockNumberSVG from 'shared/assets/images/indicators/blockNumber.svg?react';
-import { absoluteRoutes } from 'shared/config';
+import { IChainBlock } from '@/entities/chainBlock';
+import TimeSVG from '@/shared/assets/images/indicators/time.svg?react';
+import BlockNumberSVG from '@/shared/assets/images/indicators/blockNumber.svg?react';
+import { absoluteRoutes } from '@/shared/config';
 
 import styles from './RecentBlockItem.module.scss';
 

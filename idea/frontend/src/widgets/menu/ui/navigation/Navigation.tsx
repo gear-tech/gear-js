@@ -1,11 +1,11 @@
-import { routes } from 'shared/config';
-import CodesSVG from 'shared/assets/images/menu/codes.svg?react';
-import MailboxSVG from 'shared/assets/images/menu/mailbox.svg?react';
-import ProgramsSVG from 'shared/assets/images/menu/programs.svg?react';
-import MessagesSVG from 'shared/assets/images/menu/messages.svg?react';
-import ExplorerSVG from 'shared/assets/images/menu/explorer.svg?react';
+import { routes } from '@/shared/config';
+import CodesSVG from '@/shared/assets/images/menu/codes.svg?react';
+import MailboxSVG from '@/shared/assets/images/menu/mailbox.svg?react';
+import ProgramsSVG from '@/shared/assets/images/menu/programs.svg?react';
+import MessagesSVG from '@/shared/assets/images/menu/messages.svg?react';
+import ExplorerSVG from '@/shared/assets/images/menu/explorer.svg?react';
 
-import { OnboardingTooltip } from 'shared/ui/onboardingTooltip';
+import { OnboardingTooltip } from '@/shared/ui/onboardingTooltip';
 import styles from './Navigation.module.scss';
 import { NavigationItem } from '../navigationItem';
 import { AppExamplesLink } from '../appExamplesLink';

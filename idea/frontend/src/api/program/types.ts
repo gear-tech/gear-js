@@ -1,5 +1,5 @@
-import { LocalProgram } from 'features/local-indexer';
-import { IProgram, ProgramStatus } from 'features/program';
+import { LocalProgram } from '@/features/local-indexer';
+import { IProgram, ProgramStatus } from '@/features/program';
 
 type FetchProgramsParams = {
   owner?: string | null;

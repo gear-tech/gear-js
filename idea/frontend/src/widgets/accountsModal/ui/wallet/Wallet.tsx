@@ -2,7 +2,7 @@ import { buttonStyles } from '@gear-js/ui';
 import clsx from 'clsx';
 import { FunctionComponent, SVGProps } from 'react';
 
-import ConnectSVG from 'shared/assets/images/actions/plus.svg?react';
+import ConnectSVG from '@/shared/assets/images/actions/plus.svg?react';
 
 import styles from './Wallet.module.scss';
 

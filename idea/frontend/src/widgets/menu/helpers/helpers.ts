@@ -1,5 +1,5 @@
-import { Node, NodeSection } from 'entities/node';
-import { LocalStorage } from 'shared/config';
+import { Node, NodeSection } from '@/entities/node';
+import { LocalStorage } from '@/shared/config';
 
 import { DEVELOPMENT_SECTION } from '../model/consts';
 

@@ -5,10 +5,10 @@ import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
 import { useLocation } from 'react-router-dom';
 
-import { useBlocks, useOutsideClick } from 'hooks';
-import { IChainBlock } from 'entities/chainBlock';
-import { AnimationTimeout } from 'shared/config';
-import ArrowSVG from 'shared/assets/images/actions/arrowRight.svg?react';
+import { useBlocks, useOutsideClick } from '@/hooks';
+import { IChainBlock } from '@/entities/chainBlock';
+import { AnimationTimeout } from '@/shared/config';
+import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
 
 import { useApi } from '@gear-js/react-hooks';
 import { U128 } from '@polkadot/types';

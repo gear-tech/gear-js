@@ -1,8 +1,8 @@
 import { HexString } from '@polkadot/util/types';
 
-import { RpcMethods } from 'shared/config';
-import { rpcService } from 'shared/services/rpcService';
-import { ICode } from 'entities/code';
+import { RpcMethods } from '@/shared/config';
+import { rpcService } from '@/shared/services/rpcService';
+import { ICode } from '@/entities/code';
 
 import { PaginationModel } from '../types';
 import { CodePaginationModel } from './types';

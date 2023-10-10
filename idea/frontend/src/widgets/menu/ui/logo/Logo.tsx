@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 
-import { useNetworkIcon } from 'hooks';
-import { routes } from 'shared/config';
-import IdeaSVG from 'shared/assets/images/logos/idea.svg?react';
+import { useNetworkIcon } from '@/hooks';
+import { routes } from '@/shared/config';
+import IdeaSVG from '@/shared/assets/images/logos/idea.svg?react';
 
 import styles from './Logo.module.scss';
 

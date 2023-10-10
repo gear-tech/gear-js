@@ -1,5 +1,5 @@
-import { Placeholder } from 'entities/placeholder';
-import MessagePlaceholderSVG from 'shared/assets/images/placeholders/mailboxMessage.svg?react';
+import { Placeholder } from '@/entities/placeholder';
+import MessagePlaceholderSVG from '@/shared/assets/images/placeholders/mailboxMessage.svg?react';
 
 import styles from './MessagesPlaceholder.module.scss';
 

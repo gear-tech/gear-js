@@ -2,8 +2,8 @@ import { ProviderProps, useAccount } from '@gear-js/react-hooks';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { LocalStorage, routes } from 'shared/config';
-import { disableScroll, enableScroll, isMobileDevice } from 'shared/helpers';
+import { LocalStorage, routes } from '@/shared/config';
+import { disableScroll, enableScroll, isMobileDevice } from '@/shared/helpers';
 
 import { OnboardingContext } from './Context';
 import { getHeading, getText } from './helpers';

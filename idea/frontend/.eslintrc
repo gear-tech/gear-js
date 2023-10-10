@@ -12,6 +12,16 @@
     "prettier"
   ],
 
+  "settings": {
+    "ecmaVersion": "latest",
+    "react": {
+      "version": "detect"
+    },
+    "import/resolver": {
+      "typescript": true
+    }
+  },
+
   "plugins": ["react", "react-hooks", "import", "jsx-a11y", "react-refresh"],
 
   "overrides": [
@@ -28,7 +38,12 @@
         "plugin:import/typescript"
       ],
 
-      "plugins": ["@typescript-eslint/eslint-plugin"]
+      "plugins": ["@typescript-eslint/eslint-plugin"],
+
+      "rules": {
+        "@typescript-eslint/no-unsafe-enum-comparison": "off",
+        "@typescript-eslint/no-floating-promises": "off"
+      }
     }
   ]
 }

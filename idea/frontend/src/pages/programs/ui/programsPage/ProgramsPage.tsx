@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAccount } from '@gear-js/react-hooks';
 
-import { OwnerFilter } from 'api/consts';
-import { usePrograms, useDataLoading } from 'hooks';
-import { ProgramStatus, ProgramsSearch, RequestParams } from 'features/program';
+import { OwnerFilter } from '@/api/consts';
+import { usePrograms, useDataLoading } from '@/hooks';
+import { ProgramStatus, ProgramsSearch, RequestParams } from '@/features/program';
 
 import { DEFAULT_REQUEST_PARAMS, DEFAULT_FILTER_VALUES } from '../../model/consts';
 import { ProgramsList } from '../programsList';

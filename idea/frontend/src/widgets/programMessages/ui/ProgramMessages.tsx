@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { HexString } from '@polkadot/util/types';
 
-import { useDataLoading, useMessages, useWaitlist } from 'hooks';
-import { Subheader } from 'shared/ui/subheader';
-import { SwitchButton } from 'shared/ui/switchButton';
+import { useDataLoading, useMessages, useWaitlist } from '@/hooks';
+import { Subheader } from '@/shared/ui/subheader';
+import { SwitchButton } from '@/shared/ui/switchButton';
 
 import { MessageFilter } from '../model/consts';
 import { Messages } from './messages';

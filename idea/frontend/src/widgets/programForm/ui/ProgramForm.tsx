@@ -6,15 +6,15 @@ import { ProgramMetadata } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 
-import { useGasCalculate, useChangeEffect, useBalanceMultiplier, useGasMultiplier } from 'hooks';
-import { Result } from 'hooks/useGasCalculate/types';
-import { Payload } from 'hooks/useProgramActions/types';
-import { FormPayload, getSubmitPayload, getPayloadFormValues } from 'features/formPayload';
-import { FormPayloadType } from 'features/formPayloadType';
-import { GasField } from 'features/gasField';
-import { GasMethod } from 'shared/config';
-import { getValidation } from 'shared/helpers';
-import { FormInput, ValueField } from 'shared/ui/form';
+import { useGasCalculate, useChangeEffect, useBalanceMultiplier, useGasMultiplier } from '@/hooks';
+import { Result } from '@/hooks/useGasCalculate/types';
+import { Payload } from '@/hooks/useProgramActions/types';
+import { FormPayload, getSubmitPayload, getPayloadFormValues } from '@/features/formPayload';
+import { FormPayloadType } from '@/features/formPayloadType';
+import { GasField } from '@/features/gasField';
+import { GasMethod } from '@/shared/config';
+import { getValidation } from '@/shared/helpers';
+import { FormInput, ValueField } from '@/shared/ui/form';
 
 import styles from './ProgramForm.module.scss';
 import { getValidationSchema } from '../helpers';
