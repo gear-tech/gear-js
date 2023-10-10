@@ -5,8 +5,8 @@ import { Form } from 'react-final-form';
 import * as yup from 'yup';
 
 import { useBalanceMultiplier } from 'hooks';
-import { ReactComponent as ApplySVG } from 'shared/assets/images/actions/apply.svg';
-import { ReactComponent as CloseSVG } from 'shared/assets/images/actions/close.svg';
+import ApplySVG from 'shared/assets/images/actions/apply.svg?react';
+import CloseSVG from 'shared/assets/images/actions/close.svg?react';
 import { getValidation, isAccountAddressValid } from 'shared/helpers';
 import { FormInput, ValueField } from 'shared/ui/form';
 

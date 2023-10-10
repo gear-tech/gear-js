@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { ReactNode, useState } from 'react';
 
-import { ReactComponent as ArrowSVG } from 'shared/assets/images/actions/arrowRight.svg';
+import ArrowSVG from 'shared/assets/images/actions/arrowRight.svg?react';
 
 import styles from './expansion-panel.module.scss';
 

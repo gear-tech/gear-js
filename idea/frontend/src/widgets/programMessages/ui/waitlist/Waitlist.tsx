@@ -4,7 +4,7 @@ import { WaitlistItem } from '@gear-js/api';
 
 import { Placeholder } from 'entities/placeholder';
 import { HorizontalWaitlistItem, HumanWaitlistItem } from 'entities/waitlist';
-import { ReactComponent as HorizontalMessageCardSVG } from 'shared/assets/images/placeholders/horizontalMessageCard.svg';
+import HorizontalMessageCardSVG from 'shared/assets/images/placeholders/horizontalMessageCard.svg?react';
 
 import styles from '../ProgramMessages.module.scss';
 

@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import { AnimationTimeout } from 'shared/config';
 import { getShortName, formatDate } from 'shared/helpers';
-import { ReactComponent as TimestampSVG } from 'shared/assets/images/indicators/time.svg';
+import TimestampSVG from 'shared/assets/images/indicators/time.svg?react';
 
 import styles from './Header.module.scss';
 

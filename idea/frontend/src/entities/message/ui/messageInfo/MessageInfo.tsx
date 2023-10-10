@@ -8,7 +8,7 @@ import cx from 'clsx';
 
 import { copyToClipboard, getPreformattedText } from 'shared/helpers';
 import { absoluteRoutes } from 'shared/config';
-import { ReactComponent as CopySVG } from 'shared/assets/images/actions/copy.svg';
+import CopySVG from 'shared/assets/images/actions/copy.svg?react';
 
 import { IMessage } from '../../model';
 import { getDecodedMessagePayload } from '../../helpers';

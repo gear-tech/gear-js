@@ -11,8 +11,8 @@ import { getTestBalance } from 'api';
 import { useBalanceMultiplier, useBalanceTransfer, useChain, useModal } from 'hooks';
 import { RecentBlocks } from 'features/recentBlocks';
 import { HCAPTCHA_SITE_KEY, AnimationTimeout, GEAR_BALANCE_TRANSFER_VALUE } from 'shared/config';
-import { ReactComponent as TestBalanceSVG } from 'shared/assets/images/actions/testBalance.svg';
-import { ReactComponent as TransferBalanceSVG } from 'shared/assets/images/actions/transferBalance.svg';
+import TestBalanceSVG from 'shared/assets/images/actions/testBalance.svg?react';
+import TransferBalanceSVG from 'shared/assets/images/actions/transferBalance.svg?react';
 
 import { Wallet } from '../wallet';
 import { BalanceInfo } from '../balanceInfo';

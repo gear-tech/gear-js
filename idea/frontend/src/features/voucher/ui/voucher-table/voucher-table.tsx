@@ -1,7 +1,7 @@
 import { HexString } from '@gear-js/api';
 import { useAccount, useBalanceFormat, useVoucher } from '@gear-js/react-hooks';
 
-import { ReactComponent as VoucherPlaceholderSVG } from 'features/voucher/assets/voucher-placeholder.svg';
+import VoucherPlaceholderSVG from 'features/voucher/assets/voucher-placeholder.svg?react';
 import { ContentLoader } from 'shared/ui/contentLoader';
 import { BulbBlock, BulbStatus } from 'shared/ui/bulbBlock';
 import { Table, TableRow } from 'shared/ui/table';

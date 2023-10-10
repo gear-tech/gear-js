@@ -1,7 +1,7 @@
-import { ReactComponent as PolkadotSVG } from 'shared/assets/images/wallets/polkadot.svg';
-import { ReactComponent as SubwalletSVG } from 'shared/assets/images/wallets/subwallet.svg';
-import { ReactComponent as TalismanSVG } from 'shared/assets/images/wallets/talisman.svg';
-import { ReactComponent as EnkryptSVG } from 'shared/assets/images/wallets/enkrypt.svg';
+import PolkadotSVG from 'shared/assets/images/wallets/polkadot.svg?react';
+import SubwalletSVG from 'shared/assets/images/wallets/subwallet.svg?react';
+import TalismanSVG from 'shared/assets/images/wallets/talisman.svg?react';
+import EnkryptSVG from 'shared/assets/images/wallets/enkrypt.svg?react';
 
 const WALLET = {
   'polkadot-js': { name: 'Polkadot JS', icon: PolkadotSVG },

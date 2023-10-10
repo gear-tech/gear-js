@@ -7,7 +7,7 @@ import { Button, buttonStyles } from '@gear-js/ui';
 
 import { copyToClipboard } from 'shared/helpers';
 import { AccountButton } from 'shared/ui/accountButton';
-import { ReactComponent as copyKeySVG } from 'shared/assets/images/actions/copyKey.svg';
+import copyKeySVG from 'shared/assets/images/actions/copyKey.svg?react';
 
 import styles from './AccountItem.module.scss';
 

@@ -7,7 +7,7 @@ import { Modal, buttonStyles } from '@gear-js/ui';
 
 import { ModalProps } from 'entities/modal';
 import { checkFileFormat } from 'shared/helpers';
-import { ReactComponent as UploadFileSVG } from 'shared/assets/images/actions/uploadFile.svg';
+import UploadFileSVG from 'shared/assets/images/actions/uploadFile.svg?react';
 
 import { FileTypes } from 'shared/config';
 import styles from './UploadFileModal.module.scss';

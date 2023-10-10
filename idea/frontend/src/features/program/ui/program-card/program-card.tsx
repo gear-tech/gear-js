@@ -3,8 +3,8 @@ import { Link, generatePath } from 'react-router-dom';
 
 import { IssueVoucher, VoucherBadge } from 'features/voucher';
 import { absoluteRoutes, routes } from 'shared/config';
-import { ReactComponent as sendSVG } from 'shared/assets/images/actions/send.svg';
-import { ReactComponent as readSVG } from 'shared/assets/images/actions/read.svg';
+import sendSVG from 'shared/assets/images/actions/send.svg?react';
+import readSVG from 'shared/assets/images/actions/read.svg?react';
 import { IdBlock } from 'shared/ui/idBlock';
 import { BulbBlock } from 'shared/ui/bulbBlock';
 import { TimestampBlock } from 'shared/ui/timestampBlock';

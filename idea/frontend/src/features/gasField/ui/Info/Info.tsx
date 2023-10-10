@@ -2,9 +2,9 @@ import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
 
 import { AnimationTimeout } from 'shared/config';
-import { ReactComponent as ShareSVG } from 'shared/assets/images/indicators/share.svg';
-import { ReactComponent as ShieldSVG } from 'shared/assets/images/indicators/shield.svg';
-import { ReactComponent as LoadingSVG } from 'shared/assets/images/indicators/loading.svg';
+import ShareSVG from 'shared/assets/images/indicators/share.svg?react';
+import ShieldSVG from 'shared/assets/images/indicators/shield.svg?react';
+import LoadingSVG from 'shared/assets/images/indicators/loading.svg?react';
 
 import styles from './Info.module.scss';
 

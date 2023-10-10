@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import styles from './TimestampBlock.module.scss';
 import { formatDate } from '../../helpers';
-import { ReactComponent as TimeSVG } from '../../assets/images/indicators/time.svg';
+import TimeSVG from '../../assets/images/indicators/time.svg?react';
 
 type Props = {
   size?: 'small' | 'medium' | 'large';

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { generatePath, Link } from 'react-router-dom';
 import clsx from 'clsx';
 
-import { ReactComponent as ArrowSVG } from 'shared/assets/images/actions/arrowRight.svg';
+import ArrowSVG from 'shared/assets/images/actions/arrowRight.svg?react';
 import { PreformattedBlock } from 'shared/ui/preformattedBlock';
 import { absoluteRoutes } from 'shared/config';
 

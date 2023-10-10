@@ -4,7 +4,7 @@ import { clsx } from 'clsx';
 import { useMetaOnUpload, useProgramActions } from 'hooks';
 import { formStyles } from 'shared/ui/form';
 import { BackButton } from 'shared/ui/backButton';
-import { ReactComponent as PlusSVG } from 'shared/assets/images/actions/plus.svg';
+import PlusSVG from 'shared/assets/images/actions/plus.svg?react';
 import { Subheader } from 'shared/ui/subheader';
 import { FileTypes, GasMethod } from 'shared/config';
 import { Payload } from 'hooks/useProgramActions/types';

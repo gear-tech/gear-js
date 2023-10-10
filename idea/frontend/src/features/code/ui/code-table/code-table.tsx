@@ -2,7 +2,7 @@ import { generatePath } from 'react-router-dom';
 
 import { ICode } from 'entities/code';
 import { ContentLoader } from 'shared/ui/contentLoader';
-import { ReactComponent as TablePlaceholderSVG } from 'shared/assets/images/placeholders/table.svg';
+import TablePlaceholderSVG from 'shared/assets/images/placeholders/table.svg?react';
 import { absoluteRoutes } from 'shared/config';
 import { IdBlock } from 'shared/ui/idBlock';
 import { Table, TableRow } from 'shared/ui/table';

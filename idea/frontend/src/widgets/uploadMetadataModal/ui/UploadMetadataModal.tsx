@@ -7,7 +7,7 @@ import SimpleBar from 'simplebar-react';
 
 import { ModalProps } from 'entities/modal';
 import { UploadMetadata } from 'features/uploadMetadata';
-import { ReactComponent as plusSVG } from 'shared/assets/images/actions/plus.svg';
+import plusSVG from 'shared/assets/images/actions/plus.svg?react';
 
 import { isExists } from 'shared/helpers';
 import styles from './UploadMetadataModal.module.scss';

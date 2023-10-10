@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useScrollLoader } from 'hooks';
 import { Placeholder } from 'entities/placeholder';
 import { IMessage, HorizontalMessageCard } from 'entities/message';
-import { ReactComponent as HorizontalMessageCardSVG } from 'shared/assets/images/placeholders/horizontalMessageCard.svg';
+import HorizontalMessageCardSVG from 'shared/assets/images/placeholders/horizontalMessageCard.svg?react';
 
 import styles from '../ProgramMessages.module.scss';
 

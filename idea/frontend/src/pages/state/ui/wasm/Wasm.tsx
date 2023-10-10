@@ -13,7 +13,7 @@ import { FileTypes } from 'shared/config';
 import { BackButton } from 'shared/ui/backButton';
 import { Box } from 'shared/ui/box';
 import { FormPayload, getPayloadFormValues, getSubmitPayload } from 'features/formPayload';
-import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg';
+import ReadSVG from 'shared/assets/images/actions/read.svg?react';
 import { isHumanTypesRepr, useMetadata } from 'features/metadata';
 
 import { downloadJson } from '../../helpers';

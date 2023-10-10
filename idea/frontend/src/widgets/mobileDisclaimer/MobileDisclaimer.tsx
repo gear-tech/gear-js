@@ -2,7 +2,7 @@ import { Button } from '@gear-js/ui';
 
 import { useOutsideClick } from 'hooks';
 import disclaimerImage from 'shared/assets/images/banners/mobileDisclaimer.png';
-import { ReactComponent as CloseSVG } from 'shared/assets/images/actions/close.svg';
+import CloseSVG from 'shared/assets/images/actions/close.svg?react';
 
 import styles from './MobileDisclaimer.module.scss';
 

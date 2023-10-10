@@ -4,8 +4,8 @@ import { ReactNode } from 'react';
 import clsx from 'clsx';
 
 import { useOnboarding } from 'hooks';
-import { ReactComponent as ArrowSVG } from 'shared/assets/images/actions/arrowRight.svg';
-import { ReactComponent as CrossSVG } from 'shared/assets/images/actions/close.svg';
+import ArrowSVG from 'shared/assets/images/actions/arrowRight.svg?react';
+import CrossSVG from 'shared/assets/images/actions/close.svg?react';
 
 import styles from './OnboardingTooltip.module.scss';
 

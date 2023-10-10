@@ -12,7 +12,7 @@ import { UploadMetadata } from 'features/uploadMetadata';
 import { Payload } from 'hooks/useProgramActions/types';
 import { ProgramForm, RenderButtonsProps, SubmitHelpers } from 'widgets/programForm';
 import { BackButton } from 'shared/ui/backButton';
-import { ReactComponent as PlusSVG } from 'shared/assets/images/actions/plus.svg';
+import PlusSVG from 'shared/assets/images/actions/plus.svg?react';
 import { GasMethod } from 'shared/config';
 import { RPCError, RPCErrorCode } from 'shared/services/rpcService';
 

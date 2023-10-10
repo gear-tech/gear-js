@@ -4,8 +4,8 @@ import { generatePath } from 'react-router-dom';
 import { Box } from 'shared/ui/box';
 import { UILink } from 'shared/ui/uiLink';
 import { BackButton } from 'shared/ui/backButton';
-import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg';
-import { ReactComponent as ApplySVG } from 'shared/assets/images/actions/apply.svg';
+import ReadSVG from 'shared/assets/images/actions/read.svg?react';
+import ApplySVG from 'shared/assets/images/actions/apply.svg?react';
 
 import { useProgramId } from '../../hooks';
 import styles from './Main.module.scss';

@@ -3,7 +3,7 @@ import { Vec } from '@polkadot/types';
 import clsx from 'clsx';
 
 import { Placeholder } from 'entities/placeholder';
-import { ReactComponent as MainTablePlaceholderSVG } from 'shared/assets/images/placeholders/blockMainTablePlaceholder.svg';
+import MainTablePlaceholderSVG from 'shared/assets/images/placeholders/blockMainTablePlaceholder.svg?react';
 import commonStyles from 'pages/explorer/explorer.module.scss';
 
 import { IdeaEvent } from '../../idea-event';

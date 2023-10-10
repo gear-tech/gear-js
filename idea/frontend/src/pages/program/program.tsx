@@ -12,9 +12,9 @@ import { getShortName } from 'shared/helpers';
 import { Subheader } from 'shared/ui/subheader';
 import { absoluteRoutes, routes } from 'shared/config';
 import { UILink } from 'shared/ui/uiLink';
-import { ReactComponent as SendSVG } from 'shared/assets/images/actions/send.svg';
-import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg';
-import { ReactComponent as AddMetaSVG } from 'shared/assets/images/actions/addMeta.svg';
+import SendSVG from 'shared/assets/images/actions/send.svg?react';
+import ReadSVG from 'shared/assets/images/actions/read.svg?react';
+import AddMetaSVG from 'shared/assets/images/actions/addMeta.svg?react';
 import { useMetadata, MetadataTable } from 'features/metadata';
 import { IssueVoucher, VoucherTable } from 'features/voucher';
 

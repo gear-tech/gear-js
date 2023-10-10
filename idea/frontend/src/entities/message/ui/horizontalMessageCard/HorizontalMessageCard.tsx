@@ -4,8 +4,8 @@ import { generatePath, Link } from 'react-router-dom';
 import { getShortName } from 'shared/helpers';
 import { IdBlock } from 'shared/ui/idBlock';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
-import { ReactComponent as FlagSVG } from 'shared/assets/images/indicators/flag.svg';
-import { ReactComponent as DirectionSVG } from 'shared/assets/images/indicators/messageDirection.svg';
+import FlagSVG from 'shared/assets/images/indicators/flag.svg?react';
+import DirectionSVG from 'shared/assets/images/indicators/messageDirection.svg?react';
 import { absoluteRoutes } from 'shared/config';
 import { BulbBlock, BulbStatus } from 'shared/ui/bulbBlock';
 

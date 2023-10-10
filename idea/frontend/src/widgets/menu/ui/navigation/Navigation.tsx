@@ -1,9 +1,9 @@
 import { routes } from 'shared/config';
-import { ReactComponent as CodesSVG } from 'shared/assets/images/menu/codes.svg';
-import { ReactComponent as MailboxSVG } from 'shared/assets/images/menu/mailbox.svg';
-import { ReactComponent as ProgramsSVG } from 'shared/assets/images/menu/programs.svg';
-import { ReactComponent as MessagesSVG } from 'shared/assets/images/menu/messages.svg';
-import { ReactComponent as ExplorerSVG } from 'shared/assets/images/menu/explorer.svg';
+import CodesSVG from 'shared/assets/images/menu/codes.svg?react';
+import MailboxSVG from 'shared/assets/images/menu/mailbox.svg?react';
+import ProgramsSVG from 'shared/assets/images/menu/programs.svg?react';
+import MessagesSVG from 'shared/assets/images/menu/messages.svg?react';
+import ExplorerSVG from 'shared/assets/images/menu/explorer.svg?react';
 
 import { OnboardingTooltip } from 'shared/ui/onboardingTooltip';
 import styles from './Navigation.module.scss';

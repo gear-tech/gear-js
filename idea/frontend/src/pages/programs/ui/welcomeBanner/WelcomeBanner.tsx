@@ -5,7 +5,7 @@ import { ExamplesLink } from 'shared/ui/examplesLink';
 import gear1PNG from 'shared/assets/images/banners/gear1.png';
 import gear2PNG from 'shared/assets/images/banners/gear2.png';
 import gear3PNG from 'shared/assets/images/banners/gear3.png';
-import { ReactComponent as closeSVG } from 'shared/assets/images/actions/close.svg';
+import closeSVG from 'shared/assets/images/actions/close.svg?react';
 
 import styles from './WelcomeBanner.module.scss';
 

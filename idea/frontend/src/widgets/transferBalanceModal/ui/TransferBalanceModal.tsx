@@ -3,8 +3,8 @@ import { Form } from 'react-final-form';
 import * as yup from 'yup';
 
 import { useModal } from 'hooks';
-import { ReactComponent as TransferBalanceSVG } from 'shared/assets/images/actions/transferBalanceSubmit.svg';
-import { ReactComponent as CloseSVG } from 'shared/assets/images/actions/close.svg';
+import TransferBalanceSVG from 'shared/assets/images/actions/transferBalanceSubmit.svg?react';
+import CloseSVG from 'shared/assets/images/actions/close.svg?react';
 import { FormInput, ValueField } from 'shared/ui/form';
 import { getValidation, isAccountAddressValid } from 'shared/helpers';
 

@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import clsx from 'clsx';
 
 import { formStyles } from 'shared/ui/form';
-import { ReactComponent as calculatorSVG } from 'shared/assets/images/actions/calculator.svg';
+import calculatorSVG from 'shared/assets/images/actions/calculator.svg?react';
 import { Result } from 'hooks/useGasCalculate/types';
 import { BalanceUnit } from 'shared/ui/form/balance-unit';
 import { useGasMultiplier } from 'hooks';

@@ -4,8 +4,8 @@ import clsx from 'clsx';
 
 import { Node as NodeType } from 'entities/node';
 import { copyToClipboard } from 'shared/helpers';
-import { ReactComponent as trashSVG } from 'shared/assets/images/actions/trash.svg';
-import { ReactComponent as copyGreenSVG } from 'shared/assets/images/actions/copyGreen.svg';
+import trashSVG from 'shared/assets/images/actions/trash.svg?react';
+import copyGreenSVG from 'shared/assets/images/actions/copyGreen.svg?react';
 import { ICON } from 'widgets/menu/model/consts';
 
 import styles from './Node.module.scss';

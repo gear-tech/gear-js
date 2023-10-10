@@ -2,7 +2,7 @@ import { ProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { useMemo } from 'react';
 
-import { ReactComponent as TablePlaceholderSVG } from 'shared/assets/images/placeholders/table.svg';
+import TablePlaceholderSVG from 'shared/assets/images/placeholders/table.svg?react';
 import { getFlatNamedTypeEntries, getNamedTypes } from 'features/uploadMetadata';
 import { TableRow, Table } from 'shared/ui/table';
 import { ContentLoader } from 'shared/ui/contentLoader';

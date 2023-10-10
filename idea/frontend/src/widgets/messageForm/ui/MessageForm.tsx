@@ -7,7 +7,7 @@ import { useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { FormApi } from 'final-form';
 
-import { ReactComponent as sendSVG } from 'shared/assets/images/actions/send.svg';
+import sendSVG from 'shared/assets/images/actions/send.svg?react';
 import { ValueField } from 'shared/ui/form';
 import { Box } from 'shared/ui/box';
 import { BackButton } from 'shared/ui/backButton';

@@ -2,7 +2,7 @@ import { generatePath, Link } from 'react-router-dom';
 import { Tooltip } from '@gear-js/ui';
 
 import { IdBlock } from 'shared/ui/idBlock';
-import { ReactComponent as BlockSVG } from 'shared/assets/images/indicators/block.svg';
+import BlockSVG from 'shared/assets/images/indicators/block.svg?react';
 
 import { absoluteRoutes } from 'shared/config';
 import styles from './HorizontalWaitlistItem.module.scss';

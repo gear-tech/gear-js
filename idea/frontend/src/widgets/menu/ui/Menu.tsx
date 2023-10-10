@@ -4,8 +4,8 @@ import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
 
 import { NodesSwitch } from 'features/nodesSwitch';
-import { ReactComponent as MenuButtonSVG } from 'shared/assets/images/menu/menuButton.svg';
-import { ReactComponent as GithubLogoSVG } from 'shared/assets/images/menu/github.svg';
+import MenuButtonSVG from 'shared/assets/images/menu/menuButton.svg?react';
+import GithubLogoSVG from 'shared/assets/images/menu/github.svg?react';
 import { AnimationTimeout } from 'shared/config';
 import { useNodeVersion } from 'hooks';
 

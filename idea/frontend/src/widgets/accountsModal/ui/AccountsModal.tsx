@@ -7,8 +7,8 @@ import SimpleBar from 'simplebar-react';
 
 import { ModalProps } from 'entities/modal';
 import { LocalStorage } from 'shared/config';
-import { ReactComponent as logoutSVG } from 'shared/assets/images/actions/logout.svg';
-import { ReactComponent as arrowSVG } from 'shared/assets/images/actions/arrowLeft.svg';
+import logoutSVG from 'shared/assets/images/actions/logout.svg?react';
+import arrowSVG from 'shared/assets/images/actions/arrowLeft.svg?react';
 
 import { isWeb3Injected } from '@polkadot/extension-dapp';
 import { useWallet } from '../hooks';
