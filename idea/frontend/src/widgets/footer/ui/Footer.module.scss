@@ -1,9 +1,9 @@
 @use '@gear-js/ui/breakpoints' as *;
 @use '@gear-js/ui/mixins' as *;
 @use '@gear-js/ui/headings' as *;
-@use 'shared/assets/styles/mixins' as *;
-@use 'shared/assets/styles/shared' as *;
-@use 'shared/assets/styles/variables' as *;
+@use '@/shared/assets/styles/mixins' as *;
+@use '@/shared/assets/styles/shared' as *;
+@use '@/shared/assets/styles/variables' as *;
 
 .footer {
   display: flex;

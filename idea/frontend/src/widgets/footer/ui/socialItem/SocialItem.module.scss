@@ -1,5 +1,5 @@
 @use '@gear-js/ui/mixins' as *;
-@use 'shared/assets/styles/_shared.scss' as *;
+@use '@/shared/assets/styles/_shared.scss' as *;
 
 @mixin icon($name) {
   @include transition();
@@ -7,7 +7,7 @@
   display: flex;
 
   &::before {
-    content: url('../../../../shared/assets/images/socials/#{$name}.svg');
+    content: url('@/shared/assets/images/socials/#{$name}.svg');
     font-size: 0;
   }
 

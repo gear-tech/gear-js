@@ -1,6 +1,6 @@
 @use '@gear-js/ui/breakpoints' as *;
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
+@use '@/shared/assets/styles/_shared.scss' as *;
+@use '@/shared/assets/styles/_variables.scss' as *;
 
 @keyframes stack {
   0% {

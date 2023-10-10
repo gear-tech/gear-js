@@ -1,8 +1,8 @@
 @use '@gear-js/ui/variables' as ui;
 @use '@gear-js/ui/headings' as *;
 @use '@gear-js/ui/mixins' as *;
-@use 'shared/assets/styles/variables' as shared;
-@use 'shared/assets/styles/mixins' as *;
+@use '@/shared/assets/styles/variables' as shared;
+@use '@/shared/assets/styles/mixins' as *;
 
 .event {
   @include childrenMargin(16px);

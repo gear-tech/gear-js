@@ -1,4 +1,4 @@
-@use 'shared/assets/styles/mixins' as *;
+@use '@/shared/assets/styles/mixins' as *;
 
 .header {
   grid-template-columns: repeat(2, 4fr) repeat(2, 1fr);

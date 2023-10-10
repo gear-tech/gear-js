@@ -1,8 +1,8 @@
 @use '@gear-js/ui/mixins' as *;
-@use 'shared/assets/styles/mixins' as *;
-@use 'shared/assets/styles/shared' as *;
-@use 'shared/assets/styles/variables' as *;
-@use 'shared/assets/styles/animations' as *;
+@use '@/shared/assets/styles/mixins' as *;
+@use '@/shared/assets/styles/shared' as *;
+@use '@/shared/assets/styles/variables' as *;
+@use '@/shared/assets/styles/animations' as *;
 
 .table {
   $borderRadius: 16px;

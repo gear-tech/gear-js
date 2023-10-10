@@ -1,5 +1,5 @@
 @use '@gear-js/ui/variables' as *;
-@use 'shared/assets/styles/mixins' as *;
+@use '@/shared/assets/styles/mixins' as *;
 
 .row {
   grid-template-columns: repeat(2, 4fr) repeat(2, 1fr);

@@ -1,6 +1,6 @@
 @use './styles/index.scss';
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
+@use '@/shared/assets/styles/_shared.scss' as *;
+@use '@/shared/assets/styles/_variables.scss' as *;
 
 * {
   margin: 0;
@@ -17,7 +17,7 @@ html {
 
 body {
   background-color: $bgColor;
-  background-image: url('../shared/assets/images/placeholders/greenShadowBg.png');
+  background-image: url('@/shared/assets/images/placeholders/greenShadowBg.png');
   background-repeat: no-repeat;
   background-position: right -150px top -50px;
   min-height: 100vh;

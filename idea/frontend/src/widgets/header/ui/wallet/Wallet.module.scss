@@ -1,6 +1,6 @@
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
-@use 'shared/assets/styles/animations' as *;
+@use '@/shared/assets/styles/_shared.scss' as *;
+@use '@/shared/assets/styles/_variables.scss' as *;
+@use '@/shared/assets/styles/animations' as *;
 
 .walletWrapper {
   @include fadeAppear();

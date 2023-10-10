@@ -1,4 +1,4 @@
-@use 'shared/assets/styles/mixins' as *;
+@use '@/shared/assets/styles/mixins' as *;
 
 .block {
   @include childrenMargin(60px);

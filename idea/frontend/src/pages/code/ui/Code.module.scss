@@ -1,6 +1,6 @@
 @use '@gear-js/ui/headings' as *;
-@use 'shared/assets/styles/mixins' as *;
-@use 'shared/assets/styles/variables' as *;
+@use '@/shared/assets/styles/mixins' as *;
+@use '@/shared/assets/styles/variables' as *;
 
 .heading {
   @include heading(24px, 130%, 500);

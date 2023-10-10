@@ -1,6 +1,6 @@
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_mixins.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
+@use '@/shared/assets/styles/_shared.scss' as *;
+@use '@/shared/assets/styles/_mixins.scss' as *;
+@use '@/shared/assets/styles/_variables.scss' as *;
 
 .accountItem {
   @include childrenMargin(10px, right);
@@ -10,15 +10,14 @@
 
   .accountButton {
     flex: 1 1;
-  
+
     &.active {
       cursor: default;
       background-color: $successColor;
-  
+
       &:hover {
         background-color: $successColor;
       }
     }
   }
 }
-

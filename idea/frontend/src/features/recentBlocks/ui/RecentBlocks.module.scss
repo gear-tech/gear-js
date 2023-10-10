@@ -1,9 +1,9 @@
 @use '@gear-js/ui/mixins' as *;
 @use '@gear-js/ui/variables' as ui;
-@use 'shared/assets/styles/shared' as *;
-@use 'shared/assets/styles/mixins' as *;
-@use 'shared/assets/styles/variables' as shared;
-@use 'shared/assets/styles/animations' as *;
+@use '@/shared/assets/styles/shared' as *;
+@use '@/shared/assets/styles/mixins' as *;
+@use '@/shared/assets/styles/variables' as shared;
+@use '@/shared/assets/styles/animations' as *;
 
 %enterStyles {
   background: linear-gradient(180deg, #29292b 65.67%, shared.$bgColorSecondary 100%);
