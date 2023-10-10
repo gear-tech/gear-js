@@ -2228,6 +2228,7 @@ __metadata:
     clsx: 2.0.0
     eslint: 8.51.0
     eslint-config-prettier: 9.0.0
+    eslint-import-resolver-typescript: 3.6.1
     eslint-plugin-import: 2.28.1
     eslint-plugin-jsx-a11y: 6.7.1
     eslint-plugin-react: 7.33.2
@@ -2254,6 +2255,7 @@ __metadata:
     simplebar-react: 3.2.4
     typescript: 5.2.2
     vite: 4.4.11
+    vite-plugin-eslint: 1.8.1
     vite-plugin-node-polyfills: 0.15.0
     vite-plugin-svgr: 4.1.0
     yup: 1.3.2
@@ -3517,6 +3519,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rollup/pluginutils@npm:^4.2.1":
+  version: 4.2.1
+  resolution: "@rollup/pluginutils@npm:4.2.1"
+  dependencies:
+    estree-walker: ^2.0.1
+    picomatch: ^2.2.2
+  checksum: 6bc41f22b1a0f1efec3043899e4d3b6b1497b3dea4d94292d8f83b4cf07a1073ecbaedd562a22d11913ff7659f459677b01b09e9598a98936e746780ecc93a12
+  languageName: node
+  linkType: hard
+
 "@rollup/pluginutils@npm:^5.0.1, @rollup/pluginutils@npm:^5.0.4":
   version: 5.0.5
   resolution: "@rollup/pluginutils@npm:5.0.5"
@@ -3896,7 +3908,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/estree@npm:^1.0.0":
+"@types/eslint@npm:^8.4.5":
+  version: 8.44.3
+  resolution: "@types/eslint@npm:8.44.3"
+  dependencies:
+    "@types/estree": "*"
+    "@types/json-schema": "*"
+  checksum: 3a0d152785400cb83a887a646d9c8877468e686b6fb439635c64856b70dbe91019e588d2b32bc923cd60642bf5dca7f70b2cf61eb431cf25fbdf2932f6e13dd3
+  languageName: node
+  linkType: hard
+
+"@types/estree@npm:*, @types/estree@npm:^1.0.0":
   version: 1.0.2
   resolution: "@types/estree@npm:1.0.2"
   checksum: aeedb1b2fe20cbe06f44b99b562bf9703e360bfcdf5bb3d61d248182ee1dd63500f2474e12f098ffe1f5ac3202b43b3e18ec99902d9328d5374f5512fa077e45
@@ -3988,7 +4010,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/json-schema@npm:^7.0.12, @types/json-schema@npm:^7.0.7, @types/json-schema@npm:^7.0.9":
+"@types/json-schema@npm:*, @types/json-schema@npm:^7.0.12, @types/json-schema@npm:^7.0.7, @types/json-schema@npm:^7.0.9":
   version: 7.0.13
   resolution: "@types/json-schema@npm:7.0.13"
   checksum: 345df21a678fa72fb389f35f33de77833d09d4a142bb2bcb27c18690efa4cf70fc2876e43843cefb3fbdb9fcb12cd3e970a90936df30f53bbee899865ff605ab
@@ -6713,6 +6735,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"enhanced-resolve@npm:^5.12.0":
+  version: 5.15.0
+  resolution: "enhanced-resolve@npm:5.15.0"
+  dependencies:
+    graceful-fs: ^4.2.4
+    tapable: ^2.2.0
+  checksum: fbd8cdc9263be71cc737aa8a7d6c57b43d6aa38f6cc75dde6fcd3598a130cc465f979d2f4d01bb3bf475acb43817749c79f8eef9be048683602ca91ab52e4f11
+  languageName: node
+  linkType: hard
+
 "enquirer@npm:^2.3.5":
   version: 2.4.1
   resolution: "enquirer@npm:2.4.1"
@@ -7016,7 +7048,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-module-utils@npm:^2.8.0":
+"eslint-import-resolver-typescript@npm:3.6.1":
+  version: 3.6.1
+  resolution: "eslint-import-resolver-typescript@npm:3.6.1"
+  dependencies:
+    debug: ^4.3.4
+    enhanced-resolve: ^5.12.0
+    eslint-module-utils: ^2.7.4
+    fast-glob: ^3.3.1
+    get-tsconfig: ^4.5.0
+    is-core-module: ^2.11.0
+    is-glob: ^4.0.3
+  peerDependencies:
+    eslint: "*"
+    eslint-plugin-import: "*"
+  checksum: 454fa0646533050fb57f13d27daf8c71f51b0bb9156d6a461290ccb8576d892209fcc6702a89553f3f5ea8e5b407395ca2e5de169a952c953685f1f7c46b4496
+  languageName: node
+  linkType: hard
+
+"eslint-module-utils@npm:^2.7.4, eslint-module-utils@npm:^2.8.0":
   version: 2.8.0
   resolution: "eslint-module-utils@npm:2.8.0"
   dependencies:
@@ -7411,7 +7461,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"estree-walker@npm:^2.0.2":
+"estree-walker@npm:^2.0.1, estree-walker@npm:^2.0.2":
   version: 2.0.2
   resolution: "estree-walker@npm:2.0.2"
   checksum: 6151e6f9828abe2259e57f5fd3761335bb0d2ebd76dc1a01048ccee22fabcfef3c0859300f6d83ff0d1927849368775ec5a6d265dde2f6de5a1be1721cd94efc
@@ -7570,7 +7620,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.2.9":
+"fast-glob@npm:^3.2.9, fast-glob@npm:^3.3.1":
   version: 3.3.1
   resolution: "fast-glob@npm:3.3.1"
   dependencies:
@@ -7975,6 +8025,15 @@ __metadata:
     call-bind: ^1.0.2
     get-intrinsic: ^1.1.1
   checksum: 9ceff8fe968f9270a37a1f73bf3f1f7bda69ca80f4f80850670e0e7b9444ff99323f7ac52f96567f8b5f5fbe7ac717a0d81d3407c7313e82810c6199446a5247
+  languageName: node
+  linkType: hard
+
+"get-tsconfig@npm:^4.5.0":
+  version: 4.7.2
+  resolution: "get-tsconfig@npm:4.7.2"
+  dependencies:
+    resolve-pkg-maps: ^1.0.0
+  checksum: 172358903250eff0103943f816e8a4e51d29b8e5449058bdf7266714a908a48239f6884308bd3a6ff28b09f692b9533dbebfd183ab63e4e14f073cda91f1bca9
   languageName: node
   linkType: hard
 
@@ -8600,7 +8659,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-core-module@npm:^2.13.0, is-core-module@npm:^2.9.0":
+"is-core-module@npm:^2.11.0, is-core-module@npm:^2.13.0, is-core-module@npm:^2.9.0":
   version: 2.13.0
   resolution: "is-core-module@npm:2.13.0"
   dependencies:
@@ -11166,7 +11225,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"picomatch@npm:^2.0.4, picomatch@npm:^2.2.1, picomatch@npm:^2.2.3, picomatch@npm:^2.3.1":
+"picomatch@npm:^2.0.4, picomatch@npm:^2.2.1, picomatch@npm:^2.2.2, picomatch@npm:^2.2.3, picomatch@npm:^2.3.1":
   version: 2.3.1
   resolution: "picomatch@npm:2.3.1"
   checksum: 050c865ce81119c4822c45d3c84f1ced46f93a0126febae20737bd05ca20589c564d6e9226977df859ed5e03dc73f02584a2b0faad36e896936238238b0446cf
@@ -11986,6 +12045,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"resolve-pkg-maps@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "resolve-pkg-maps@npm:1.0.0"
+  checksum: 1012afc566b3fdb190a6309cc37ef3b2dcc35dff5fa6683a9d00cd25c3247edfbc4691b91078c97adc82a29b77a2660c30d791d65dab4fc78bfc473f60289977
+  languageName: node
+  linkType: hard
+
 "resolve.exports@npm:^2.0.0":
   version: 2.0.2
   resolution: "resolve.exports@npm:2.0.2"
@@ -12114,6 +12180,20 @@ __metadata:
     hash-base: ^3.0.0
     inherits: ^2.0.1
   checksum: 006accc40578ee2beae382757c4ce2908a826b27e2b079efdcd2959ee544ddf210b7b5d7d5e80467807604244e7388427330f5c6d4cd61e6edaddc5773ccc393
+  languageName: node
+  linkType: hard
+
+"rollup@npm:^2.77.2":
+  version: 2.79.1
+  resolution: "rollup@npm:2.79.1"
+  dependencies:
+    fsevents: ~2.3.2
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  bin:
+    rollup: dist/bin/rollup
+  checksum: 6a2bf167b3587d4df709b37d149ad0300692cc5deb510f89ac7bdc77c8738c9546ae3de9322b0968e1ed2b0e984571f5f55aae28fa7de4cfcb1bc5402a4e2be6
   languageName: node
   linkType: hard
 
@@ -12962,6 +13042,13 @@ __metadata:
   version: 1.1.3
   resolution: "tapable@npm:1.1.3"
   checksum: 53ff4e7c3900051c38cc4faab428ebfd7e6ad0841af5a7ac6d5f3045c5b50e88497bfa8295b4b3fbcadd94993c9e358868b78b9fb249a76cb8b018ac8dccafd7
+  languageName: node
+  linkType: hard
+
+"tapable@npm:^2.2.0":
+  version: 2.2.1
+  resolution: "tapable@npm:2.2.1"
+  checksum: 3b7a1b4d86fa940aad46d9e73d1e8739335efd4c48322cb37d073eb6f80f5281889bf0320c6d8ffcfa1a0dd5bfdbd0f9d037e252ef972aca595330538aac4d51
   languageName: node
   linkType: hard
 
@@ -14043,6 +14130,20 @@ __metadata:
   version: 1.1.2
   resolution: "vary@npm:1.1.2"
   checksum: ae0123222c6df65b437669d63dfa8c36cee20a504101b2fcd97b8bf76f91259c17f9f2b4d70a1e3c6bbcee7f51b28392833adb6b2770b23b01abec84e369660b
+  languageName: node
+  linkType: hard
+
+"vite-plugin-eslint@npm:1.8.1":
+  version: 1.8.1
+  resolution: "vite-plugin-eslint@npm:1.8.1"
+  dependencies:
+    "@rollup/pluginutils": ^4.2.1
+    "@types/eslint": ^8.4.5
+    rollup: ^2.77.2
+  peerDependencies:
+    eslint: ">=7"
+    vite: ">=2"
+  checksum: 65598893e2063a287a690ae296ba1fc212ee50dbc810d396a6cda44ee60c6f400adb52fc4c4a5ff54a89c11100bbaaf43eada23c9a78654ab1717f097d78176f
   languageName: node
   linkType: hard
 
