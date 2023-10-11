@@ -3,11 +3,11 @@ import { useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
 
-import { NodesSwitch } from 'features/nodesSwitch';
-import { ReactComponent as MenuButtonSVG } from 'shared/assets/images/menu/menuButton.svg';
-import { ReactComponent as GithubLogoSVG } from 'shared/assets/images/menu/github.svg';
-import { AnimationTimeout } from 'shared/config';
-import { useNodeVersion } from 'hooks';
+import { NodesSwitch } from '@/features/nodesSwitch';
+import MenuButtonSVG from '@/shared/assets/images/menu/menuButton.svg?react';
+import GithubLogoSVG from '@/shared/assets/images/menu/github.svg?react';
+import { AnimationTimeout } from '@/shared/config';
+import { useNodeVersion } from '@/hooks';
 
 import styles from './Menu.module.scss';
 import { Logo } from './logo';

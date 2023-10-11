@@ -2,7 +2,7 @@ import { Extrinsic as DotExtrinsic } from '@polkadot/types/interfaces';
 import { AnyJson } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
-import { PreformattedBlock } from 'shared/ui/preformattedBlock';
+import { PreformattedBlock } from '@/shared/ui/preformattedBlock';
 
 import {
   FormattedSendReplyData,

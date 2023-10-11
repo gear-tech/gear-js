@@ -1,7 +1,7 @@
 import { useApi } from '@gear-js/react-hooks';
 
-import { IProgram } from 'features/program';
-import { FetchProgramsParams } from 'api/program';
+import { IProgram } from '@/features/program';
+import { FetchProgramsParams } from '@/api/program';
 
 import { LocalProgram } from '../types';
 import { useLocalProgram } from './use-local-program';

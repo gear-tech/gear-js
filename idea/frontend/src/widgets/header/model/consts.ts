@@ -1,4 +1,4 @@
-import { routes, absoluteRoutes } from 'shared/config';
+import { routes, absoluteRoutes } from '@/shared/config';
 
 const SHORT_HEADER_HEIGHT = '6.4375rem';
 const FULL_HEADER_HEIGHT = '10.28125rem';

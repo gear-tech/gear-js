@@ -5,11 +5,11 @@ import { HexString } from '@polkadot/util/types';
 import { useState, useMemo } from 'react';
 import SimpleBar from 'simplebar-react';
 
-import { ModalProps } from 'entities/modal';
-import { UploadMetadata } from 'features/uploadMetadata';
-import { ReactComponent as plusSVG } from 'shared/assets/images/actions/plus.svg';
+import { ModalProps } from '@/entities/modal';
+import { UploadMetadata } from '@/features/uploadMetadata';
+import plusSVG from '@/shared/assets/images/actions/plus.svg?react';
 
-import { isExists } from 'shared/helpers';
+import { isExists } from '@/shared/helpers';
 import styles from './UploadMetadataModal.module.scss';
 
 const initialValues = { name: '' };

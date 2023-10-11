@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAccount } from '@gear-js/react-hooks';
 
-import { useMessages, useDataLoading } from 'hooks';
+import { useMessages, useDataLoading } from '@/hooks';
 
 import { RequestParams, ParamsValues } from '../model/types';
 import { DEFAULT_REQUEST_PARAMS, DEFAULT_FILTER_VALUES } from '../model/consts';

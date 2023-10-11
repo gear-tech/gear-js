@@ -3,8 +3,8 @@ import isString from 'lodash.isstring';
 import isPlainObject from 'lodash.isplainobject';
 import BigNumber from 'bignumber.js';
 
-import { PayloadSchemaParams, PayloadValue } from 'entities/formPayload';
-import { isDecimal } from 'shared/helpers';
+import { PayloadSchemaParams, PayloadValue } from '@/entities/formPayload';
+import { isDecimal } from '@/shared/helpers';
 
 const getValidationSchema = ({
   deposit,

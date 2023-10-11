@@ -2,7 +2,7 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import { Button } from '@gear-js/ui';
 
-import { ReactComponent as arrowDown } from 'shared/assets/images/actions/arrowDown.svg';
+import arrowDown from '@/shared/assets/images/actions/arrowDown.svg?react';
 
 import styles from './SortBy.module.scss';
 import { Sort } from '../model/consts';

@@ -1,5 +1,5 @@
-@use 'shared/assets/styles/mixins' as *;
-@use 'shared/assets/styles/animations' as *;
+@use '@/shared/assets/styles/mixins' as *;
+@use '@/shared/assets/styles/animations' as *;
 
 .body {
   @include childrenMargin(24px);

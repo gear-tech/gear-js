@@ -1,6 +1,6 @@
-@use 'shared/assets/styles/_shared' as *;
-@use 'shared/assets/styles/_mixins' as *;
-@use 'shared/assets/styles/_variables' as *;
+@use '@/shared/assets/styles/_shared' as *;
+@use '@/shared/assets/styles/_mixins' as *;
+@use '@/shared/assets/styles/_variables' as *;
 
 @keyframes rotateGear {
   from {

@@ -5,7 +5,7 @@ import { AnySchema, ValidationError } from 'yup';
 import { setIn } from 'final-form';
 import isString from 'lodash.isstring';
 
-import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from 'shared/config';
+import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from '@/shared/config';
 
 import { isAndroid, isIOS } from '@react-aria/utils';
 import { isHexValid, isExists, isDecimal, isAccountAddressValid } from './form';
@@ -19,7 +19,7 @@ const checkWallet = (account?: Account) => {
 const formatDate = (rawDate: string) => {
   const date = new Date(rawDate);
   const time = date.toLocaleTimeString('en-GB');
-  const formatedDate = date.toLocaleDateString('en-US').replaceAll('/', '-');
+  const formatedDate = date.toLocaleDateString('en-US').replace(/\//g, '-');
 
   return `${formatedDate} ${time}`;
 };

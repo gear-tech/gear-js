@@ -1,8 +1,8 @@
 @use '@gear-js/ui/mixins' as *;
-@use 'shared/assets/styles/_mixins.scss' as *;
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
-@use 'shared/assets/styles/_animations.scss' as *;
+@use '@/shared/assets/styles/_mixins.scss' as *;
+@use '@/shared/assets/styles/_shared.scss' as *;
+@use '@/shared/assets/styles/_variables.scss' as *;
+@use '@/shared/assets/styles/_animations.scss' as *;
 
 %sideStyles {
   display: flex;
@@ -33,7 +33,7 @@
     box-shadow: 0px 0px 10px $errorColor;
     background-color: $errorColor;
   }
-  
+
   &.success::before {
     box-shadow: 0px 0px 10px $successColor;
     background-color: $successColor;
@@ -51,7 +51,7 @@
 .timestampSide {
   @include fadeAppear();
   @include childrenMargin(10px, right);
-  
+
   @extend %sideStyles;
 
   color: $gray600;

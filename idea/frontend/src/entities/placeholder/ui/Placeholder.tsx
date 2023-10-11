@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import clsx from 'clsx';
 
-import { EmptyContent } from 'shared/ui/emptyContent';
+import { EmptyContent } from '@/shared/ui/emptyContent';
 
 import styles from './Placeholder.module.scss';
 

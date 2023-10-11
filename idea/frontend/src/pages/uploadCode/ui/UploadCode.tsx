@@ -2,13 +2,13 @@ import { Button, FileInput, Input } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 import { useEffect } from 'react';
 
-import { useChain, useCodeUpload, useMetaOnUpload } from 'hooks';
-import { isExists } from 'shared/helpers';
-import { Box } from 'shared/ui/box';
-import { Subheader } from 'shared/ui/subheader';
-import { BackButton } from 'shared/ui/backButton';
-import { UploadMetadata } from 'features/uploadMetadata';
-import { ReactComponent as PlusSVG } from 'shared/assets/images/actions/plus.svg';
+import { useChain, useCodeUpload, useMetaOnUpload } from '@/hooks';
+import { isExists } from '@/shared/helpers';
+import { Box } from '@/shared/ui/box';
+import { Subheader } from '@/shared/ui/subheader';
+import { BackButton } from '@/shared/ui/backButton';
+import { UploadMetadata } from '@/features/uploadMetadata';
+import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 
 import styles from './UploadCode.module.scss';
 

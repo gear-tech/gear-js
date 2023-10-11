@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAccount } from '@gear-js/react-hooks';
 
-import { LocalStorage } from 'shared/config';
+import { LocalStorage } from '@/shared/config';
 
 import { WelcomeBanner } from './welcomeBanner';
 import { ProgramsPage } from './programsPage';

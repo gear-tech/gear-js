@@ -1,7 +1,7 @@
 import { PayloadType } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 
-import { GasMethod } from 'shared/config';
+import { GasMethod } from '@/shared/config';
 
 type Values = {
   value: string;

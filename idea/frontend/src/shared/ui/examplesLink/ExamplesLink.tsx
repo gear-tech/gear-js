@@ -3,8 +3,8 @@ import { buttonStyles } from '@gear-js/ui';
 
 import styles from './ExamplesLink.module.scss';
 import { EXAMPLES_HREF } from '../../config';
-import { ReactComponent as AppSVG } from '../../assets/images/indicators/app.svg';
-import { ReactComponent as ExternalResourceSVG } from '../../assets/images/actions/externalResource.svg';
+import AppSVG from '../../assets/images/indicators/app.svg?react';
+import ExternalResourceSVG from '../../assets/images/actions/externalResource.svg?react';
 
 const ExamplesLink = () => {
   const linkClasses = clsx(buttonStyles.button, buttonStyles.medium, buttonStyles.light, styles.link);

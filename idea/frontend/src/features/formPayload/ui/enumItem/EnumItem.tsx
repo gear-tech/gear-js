@@ -2,8 +2,8 @@ import { useState, useMemo, ChangeEvent } from 'react';
 import { useForm } from 'react-final-form';
 import { Select } from '@gear-js/ui';
 
-import { useChangeEffect } from 'hooks';
-import { Fieldset } from 'shared/ui/fieldset';
+import { useChangeEffect } from '@/hooks';
+import { Fieldset } from '@/shared/ui/fieldset';
 
 import { PayloadItemProps } from '../../model';
 import { getItemLabel, getNextLevelName, getPayloadValue } from '../../helpers';

@@ -1,13 +1,13 @@
 import { generatePath } from 'react-router-dom';
 
-import { routes, absoluteRoutes } from 'shared/config';
-import { BulbBlock } from 'shared/ui/bulbBlock';
-import { IdBlock } from 'shared/ui/idBlock';
-import { Table, TableRow } from 'shared/ui/table';
-import { TimestampBlock } from 'shared/ui/timestampBlock';
-import { ContentLoader } from 'shared/ui/contentLoader';
-import { ReactComponent as TablePlaceholderSVG } from 'shared/assets/images/placeholders/table.svg';
-import { LocalProgram } from 'features/local-indexer';
+import { routes, absoluteRoutes } from '@/shared/config';
+import { BulbBlock } from '@/shared/ui/bulbBlock';
+import { IdBlock } from '@/shared/ui/idBlock';
+import { Table, TableRow } from '@/shared/ui/table';
+import { TimestampBlock } from '@/shared/ui/timestampBlock';
+import { ContentLoader } from '@/shared/ui/contentLoader';
+import TablePlaceholderSVG from '@/shared/assets/images/placeholders/table.svg?react';
+import { LocalProgram } from '@/features/local-indexer';
 
 import { IProgram } from '../../types';
 import { PROGRAM_STATUS_NAME } from '../../consts';

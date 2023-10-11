@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
 
-import { useMessage } from 'hooks';
-import { MessageInfo } from 'entities/message';
-import { useMetadata } from 'features/metadata';
+import { useMessage } from '@/hooks';
+import { MessageInfo } from '@/entities/message';
+import { useMetadata } from '@/features/metadata';
 
 import { PageParams } from '../model';
 import { Header } from './header';

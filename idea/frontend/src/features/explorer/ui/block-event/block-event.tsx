@@ -1,4 +1,4 @@
-import { PreformattedBlock } from 'shared/ui/preformattedBlock';
+import { PreformattedBlock } from '@/shared/ui/preformattedBlock';
 
 import { FormattedUserMessageSentData } from '../../types';
 import { IdeaEvent } from '../../idea-event';

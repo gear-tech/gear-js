@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useAlert } from '@gear-js/react-hooks';
 
-import { getMessage } from 'api';
-import { IMessage } from 'entities/message';
+import { getMessage } from '@/api';
+import { IMessage } from '@/entities/message';
 
 const useMessage = (id: string | undefined, isInitLoading = false) => {
   const alert = useAlert();

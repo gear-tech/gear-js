@@ -1,6 +1,6 @@
 @use '@gear-js/ui/mixins' as *;
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
+@use '@/shared/assets/styles/_shared.scss' as *;
+@use '@/shared/assets/styles/_variables.scss' as *;
 
 .dropTarget {
   display: flex;
@@ -9,13 +9,13 @@
   height: toRem(267);
   border: 2px dashed $lineColorSecondary;
   border-radius: 24px;
-  
+
   &:global(.exit-active),
   &:global(.enter-active) {
     @include transition(border-color);
 
     .message {
-      @include transition(color); 
+      @include transition(color);
     }
   }
 
@@ -25,7 +25,7 @@
     border-color: $successColor;
 
     .message {
-      color: $successColor; 
+      color: $successColor;
     }
   }
 
@@ -33,7 +33,7 @@
     border-color: $lineColorSecondary;
 
     .message {
-      color: $gray600; 
+      color: $gray600;
     }
   }
 

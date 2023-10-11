@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { LocalStorage } from 'shared/config';
+import { LocalStorage } from '@/shared/config';
 
 import { WALLET, WalletId } from '../model';
 

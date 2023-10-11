@@ -1,9 +1,9 @@
 import { useForm } from '@mantine/form';
 import { Button, Input } from '@gear-js/ui';
 
-import { useChain } from 'hooks';
-import { IState } from 'pages/state/model';
-import { Box } from 'shared/ui/box';
+import { useChain } from '@/hooks';
+import { IState } from '@/pages/state/model';
+import { Box } from '@/shared/ui/box';
 
 import { Functions } from '../functions';
 import { FunctionsPlaceholder } from '../functionsPlaceholder/FunctionsPlaceholder';

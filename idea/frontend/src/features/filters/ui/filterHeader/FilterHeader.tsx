@@ -4,7 +4,7 @@ import { CSSTransition } from 'react-transition-group';
 import isEqual from 'lodash.isequal';
 import { Button } from '@gear-js/ui';
 
-import { AnimationTimeout } from 'shared/config';
+import { AnimationTimeout } from '@/shared/config';
 
 import styles from './FilterHeader.module.scss';
 

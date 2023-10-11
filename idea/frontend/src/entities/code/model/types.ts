@@ -1,7 +1,7 @@
 import { HexString } from '@gear-js/api';
 
-import { IProgram } from 'features/program';
-import { IBase } from 'shared/types';
+import { IProgram } from '@/features/program';
+import { IBase } from '@/shared/types';
 
 import { CodeStatus } from './consts';
 

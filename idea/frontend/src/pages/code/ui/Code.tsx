@@ -5,17 +5,17 @@ import { HexString } from '@polkadot/util/types';
 import { useEffect, useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
 
-import { addMetadata, addCodeName, getCode } from 'api';
-import { useChain, useModal } from 'hooks';
-import { BackButton } from 'shared/ui/backButton';
-import { absoluteRoutes } from 'shared/config';
-import { UILink } from 'shared/ui/uiLink';
-import { ProgramsList } from 'pages/programs/ui/programsList';
-import { MetadataTable, useMetadata } from 'features/metadata';
-import { ReactComponent as PlusSVG } from 'shared/assets/images/actions/plus.svg';
-import { ReactComponent as AddMetaSVG } from 'shared/assets/images/actions/addMeta.svg';
-import { ICode } from 'entities/code';
-import { CodeTable } from 'features/code';
+import { addMetadata, addCodeName, getCode } from '@/api';
+import { useChain, useModal } from '@/hooks';
+import { BackButton } from '@/shared/ui/backButton';
+import { absoluteRoutes } from '@/shared/config';
+import { UILink } from '@/shared/ui/uiLink';
+import { ProgramsList } from '@/pages/programs/ui/programsList';
+import { MetadataTable, useMetadata } from '@/features/metadata';
+import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
+import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
+import { ICode } from '@/entities/code';
+import { CodeTable } from '@/features/code';
 
 import styles from './Code.module.scss';
 

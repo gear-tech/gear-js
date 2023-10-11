@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { TypeStructure, PayloadValue } from 'entities/formPayload';
+import { TypeStructure, PayloadValue } from '@/entities/formPayload';
 
 type FormPayloadValues = {
   payload: PayloadValue;

@@ -1,6 +1,6 @@
 import { ProgramMetadata } from '@gear-js/api';
 
-import { IMessage, EntryPoint } from 'entities/message';
+import { IMessage, EntryPoint } from '@/entities/message';
 
 const getDecodedMessagePayload = (meta: ProgramMetadata, message: IMessage) => {
   const { entry, payload } = message;

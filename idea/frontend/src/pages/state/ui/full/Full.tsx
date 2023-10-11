@@ -3,13 +3,13 @@ import { useMemo } from 'react';
 import { Form } from 'react-final-form';
 import { OnChange } from 'react-final-form-listeners';
 
-import { useProgram, useStateRead } from 'hooks';
-import { getPreformattedText, isNullOrUndefined } from 'shared/helpers';
-import { BackButton } from 'shared/ui/backButton';
-import { Box } from 'shared/ui/box';
-import { isHumanTypesRepr, useMetadata } from 'features/metadata';
-import { FormPayload, getPayloadFormValues, getSubmitPayload } from 'features/formPayload';
-import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg';
+import { useProgram, useStateRead } from '@/hooks';
+import { getPreformattedText, isNullOrUndefined } from '@/shared/helpers';
+import { BackButton } from '@/shared/ui/backButton';
+import { Box } from '@/shared/ui/box';
+import { isHumanTypesRepr, useMetadata } from '@/features/metadata';
+import { FormPayload, getPayloadFormValues, getSubmitPayload } from '@/features/formPayload';
+import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 
 import { FormValues, INITIAL_VALUES } from '../../model';
 import { downloadJson } from '../../helpers';

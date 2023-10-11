@@ -1,6 +1,6 @@
-import { RpcMethods } from 'shared/config';
-import { rpcService } from 'shared/services/rpcService';
-import { IMessage } from 'entities/message';
+import { RpcMethods } from '@/shared/config';
+import { rpcService } from '@/shared/services/rpcService';
+import { IMessage } from '@/entities/message';
 
 import { PaginationModel } from '../types';
 import { MessagePaginationModel } from './types';

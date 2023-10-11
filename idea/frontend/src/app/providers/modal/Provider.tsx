@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useEffect, ReactNode } from 'react';
 
-import { useOnboarding } from 'hooks';
-import { disableScroll, enableScroll } from 'shared/helpers';
+import { useOnboarding } from '@/hooks';
+import { disableScroll, enableScroll } from '@/shared/helpers';
 
 import { MODALS } from './consts';
 import { ModalName, ModalProperties } from './types';

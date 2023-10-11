@@ -5,16 +5,16 @@ import { useAlert, useApi } from '@gear-js/react-hooks';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { fetchMetadata, getLocalMetadata } from 'api';
-import { useChain, useProgramActions } from 'hooks';
-import { Subheader } from 'shared/ui/subheader';
-import { UploadMetadata } from 'features/uploadMetadata';
-import { Payload } from 'hooks/useProgramActions/types';
-import { ProgramForm, RenderButtonsProps, SubmitHelpers } from 'widgets/programForm';
-import { BackButton } from 'shared/ui/backButton';
-import { ReactComponent as PlusSVG } from 'shared/assets/images/actions/plus.svg';
-import { GasMethod } from 'shared/config';
-import { RPCError, RPCErrorCode } from 'shared/services/rpcService';
+import { fetchMetadata, getLocalMetadata } from '@/api';
+import { useChain, useProgramActions } from '@/hooks';
+import { Subheader } from '@/shared/ui/subheader';
+import { UploadMetadata } from '@/features/uploadMetadata';
+import { Payload } from '@/hooks/useProgramActions/types';
+import { ProgramForm, RenderButtonsProps, SubmitHelpers } from '@/widgets/programForm';
+import { BackButton } from '@/shared/ui/backButton';
+import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
+import { GasMethod } from '@/shared/config';
+import { RPCError, RPCErrorCode } from '@/shared/services/rpcService';
 
 import { PageParams } from '../model';
 import styles from './InitializeProgram.module.scss';
@@ -50,7 +50,7 @@ const InitializeProgram = () => {
   const handleSubmit = (payload: Payload, helpers: SubmitHelpers) =>
     createProgram({
       payload,
-      codeId: codeId as HexString,
+      codeId: codeId,
       resolve: () => {
         helpers.resetForm();
         helpers.enableButtons();
@@ -95,7 +95,7 @@ const InitializeProgram = () => {
         <div className={styles.lining}>
           <Input label="Code ID" value={codeId} direction="y" className={styles.codeId} block readOnly />
           <ProgramForm
-            source={codeId as HexString}
+            source={codeId}
             metaHex={metaHex}
             metadata={metadata}
             gasMethod={GasMethod.InitCreate}

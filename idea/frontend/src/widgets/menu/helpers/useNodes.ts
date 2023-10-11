@@ -1,9 +1,9 @@
 import { useEffect, useState, useCallback } from 'react';
 
-import { NodeSection } from 'entities/node';
-import { LocalStorage } from 'shared/config';
+import { NodeSection } from '@/entities/node';
+import { LocalStorage } from '@/shared/config';
 
-import { getNodes } from 'api';
+import { getNodes } from '@/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { concatNodes, isDevSection, getLocalNodes, getLocalNodesFromLS } from './helpers';
 import { DEVELOPMENT_SECTION } from '../model/consts';

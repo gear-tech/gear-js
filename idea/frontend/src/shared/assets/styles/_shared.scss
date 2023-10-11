@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 %absoluteCenterX {
   position: absolute;
   left: 50%;
@@ -18,5 +20,5 @@
 }
 
 @function toRem($value) {
-  @return ($value / 16) + rem;
+  @return math.div($value, 16) + rem;
 }

@@ -1,4 +1,4 @@
-import { ICode } from 'entities/code';
+import { ICode } from '@/entities/code';
 
 type CodePaginationModel = {
   count: number;

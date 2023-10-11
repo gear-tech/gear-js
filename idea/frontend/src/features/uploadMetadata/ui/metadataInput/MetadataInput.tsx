@@ -3,7 +3,7 @@ import { isHex } from '@polkadot/util';
 import { HexString } from '@polkadot/util/types';
 import { useState } from 'react';
 
-import { ReactComponent as ApplySVG } from 'shared/assets/images/actions/apply.svg';
+import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 
 import styles from './MetadataInput.module.scss';
 

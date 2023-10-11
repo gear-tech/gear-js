@@ -2,9 +2,9 @@ import { useAlert } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 import { useEffect, useState } from 'react';
 
-import { fetchProgram } from 'api';
-import { IProgram } from 'features/program';
-import { LocalProgram, useLocalProgram } from 'features/local-indexer';
+import { fetchProgram } from '@/api';
+import { IProgram } from '@/features/program';
+import { LocalProgram, useLocalProgram } from '@/features/local-indexer';
 
 import { useChain } from './context';
 

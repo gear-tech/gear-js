@@ -5,8 +5,8 @@ import { buttonStyles } from '@gear-js/ui';
 import { Link } from 'react-router-dom';
 
 import { getShortName, copyToClipboard } from '../../helpers';
-import { ReactComponent as CopySVG } from '../../assets/images/actions/copyGreen.svg';
-import { ReactComponent as IdSVG } from '../../assets/images/indicators/id.svg';
+import CopySVG from '../../assets/images/actions/copyGreen.svg?react';
+import IdSVG from '../../assets/images/indicators/id.svg?react';
 import styles from './IdBlock.module.scss';
 
 type Props = {

@@ -1,7 +1,7 @@
 import { HexString } from '@polkadot/util/types';
 
-import { IBase } from 'shared/types';
-import { OwnerFilter } from 'api/consts';
+import { IBase } from '@/shared/types';
+import { OwnerFilter } from '@/api/consts';
 
 import { ProgramStatus } from './consts';
 

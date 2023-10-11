@@ -1,7 +1,7 @@
 import styles from './Loader.module.scss';
-import { ReactComponent as LoaderGear1SVG } from '../../assets/images/loader/loaderGear1.svg';
-import { ReactComponent as LoaderGear2SVG } from '../../assets/images/loader/loaderGear2.svg';
-import { ReactComponent as LoaderGear3SVG } from '../../assets/images/loader/loaderGear3.svg';
+import LoaderGear1SVG from '../../assets/images/loader/loaderGear1.svg?react';
+import LoaderGear2SVG from '../../assets/images/loader/loaderGear2.svg?react';
+import LoaderGear3SVG from '../../assets/images/loader/loaderGear3.svg?react';
 
 const Loader = () => (
   <div className={styles.loader}>

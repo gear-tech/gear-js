@@ -1,5 +1,5 @@
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
+@use '@/shared/assets/styles/_shared.scss' as *;
+@use '@/shared/assets/styles/_variables.scss' as *;
 
 .content {
   display: flex;
@@ -7,7 +7,7 @@
   justify-content: space-between;
   padding-right: toRem(15);
 
-  .title {    
+  .title {
     color: $gray800;
     font-size: toRem(24);
     font-family: 'Kanit';
@@ -20,7 +20,7 @@
     display: flex;
     align-items: center;
 
-    .text {      
+    .text {
       font-family: 'Kanit';
       font-size: $fontSizeSmall;
       color: $gray600;

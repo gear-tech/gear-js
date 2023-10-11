@@ -3,7 +3,7 @@ import { CSSTransition } from 'react-transition-group';
 import { useLocation, matchPath } from 'react-router-dom';
 import { useAccount, useApi } from '@gear-js/react-hooks';
 
-import { AnimationTimeout } from 'shared/config';
+import { AnimationTimeout } from '@/shared/config';
 
 import styles from './Header.module.scss';
 import { FULL_HEADER_HEIGHT, SHORT_HEADER_HEIGHT, PATHS_WITHOUT_BOTTOM_SIDE } from '../model/consts';

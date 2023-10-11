@@ -4,7 +4,7 @@ import { useForm } from '@mantine/form';
 import { HexString } from '@polkadot/util/types';
 import { useEffect } from 'react';
 
-import { isHexValid } from 'shared/helpers';
+import { isHexValid } from '@/shared/helpers';
 
 import styles from './Header.module.scss';
 

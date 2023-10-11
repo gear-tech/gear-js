@@ -1,9 +1,9 @@
 import { HexString } from '@polkadot/util/types';
 import localForage from 'localforage';
 
-import { IProgram } from 'features/program';
-import { LocalStorage } from 'shared/config';
-import { IMeta } from 'entities/metadata';
+import { IProgram } from '@/features/program';
+import { LocalStorage } from '@/shared/config';
+import { IMeta } from '@/entities/metadata';
 
 const PROGRAMS_LOCAL_FORAGE = localForage.createInstance({ name: 'programs' });
 const METADATA_LOCAL_FORAGE = localForage.createInstance({ name: 'metadata' });

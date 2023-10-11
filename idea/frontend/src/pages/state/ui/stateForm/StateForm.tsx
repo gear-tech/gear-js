@@ -4,9 +4,9 @@ import { HexString } from '@polkadot/util/types';
 import { Form } from 'react-final-form';
 import { OnChange } from 'react-final-form-listeners';
 
-import { getPreformattedText } from 'shared/helpers';
-import { Box } from 'shared/ui/box';
-import { FormPayload, FormPayloadValues } from 'features/formPayload';
+import { getPreformattedText } from '@/shared/helpers';
+import { Box } from '@/shared/ui/box';
+import { FormPayload, FormPayloadValues } from '@/features/formPayload';
 
 import { FormValues, INITIAL_VALUES } from '../../model';
 import styles from './StateForm.module.scss';

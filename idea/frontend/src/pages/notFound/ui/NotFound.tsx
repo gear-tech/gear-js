@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
 
-import { routes } from 'shared/config';
-import notFoundImg from 'shared/assets/images/placeholders/404.png';
+import { routes } from '@/shared/config';
+import notFoundImg from '@/shared/assets/images/placeholders/404.png';
 
 import styles from './NotFound.module.scss';
 

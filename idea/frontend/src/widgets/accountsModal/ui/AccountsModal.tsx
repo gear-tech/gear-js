@@ -5,10 +5,10 @@ import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import SimpleBar from 'simplebar-react';
 
-import { ModalProps } from 'entities/modal';
-import { LocalStorage } from 'shared/config';
-import { ReactComponent as logoutSVG } from 'shared/assets/images/actions/logout.svg';
-import { ReactComponent as arrowSVG } from 'shared/assets/images/actions/arrowLeft.svg';
+import { ModalProps } from '@/entities/modal';
+import { LocalStorage } from '@/shared/config';
+import logoutSVG from '@/shared/assets/images/actions/logout.svg?react';
+import arrowSVG from '@/shared/assets/images/actions/arrowLeft.svg?react';
 
 import { isWeb3Injected } from '@polkadot/extension-dapp';
 import { useWallet } from '../hooks';
@@ -17,7 +17,7 @@ import { Wallets } from './wallets';
 import styles from './AccountsModal.module.scss';
 
 type Props = ModalProps & {
-  accounts?: InjectedAccountWithMeta[];
+  accounts: InjectedAccountWithMeta[];
 };
 
 const AccountsModal = ({ accounts, onClose }: Props) => {
@@ -71,7 +71,7 @@ const AccountsModal = ({ accounts, onClose }: Props) => {
             )}
             {!isWalletSelection && (
               <AccountList
-                list={accounts!.filter(({ meta }) => meta.source === walletId)}
+                list={accounts.filter(({ meta }) => meta.source === walletId)}
                 address={account?.address}
                 toggleAccount={handleAccountClick}
               />

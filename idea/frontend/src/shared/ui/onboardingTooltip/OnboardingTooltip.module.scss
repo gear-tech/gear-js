@@ -1,9 +1,9 @@
 @use '@gear-js/ui/variables' as *;
 @use '@gear-js/ui/headings' as *;
 @use '@gear-js/ui/mixins' as *;
-@use 'shared/assets/styles/mixins' as *;
-@use 'shared/assets/styles/shared' as *;
-@use 'shared/assets/styles/animations' as *;
+@use '@/shared/assets/styles/mixins' as *;
+@use '@/shared/assets/styles/shared' as *;
+@use '@/shared/assets/styles/animations' as *;
 
 $position: calc(100% + 26px);
 $arrowPosition: calc(100% + 1px);

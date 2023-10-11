@@ -1,19 +1,19 @@
 import { InputWrapper, inputStyles, InputProps, Button } from '@gear-js/ui';
 import { useForm, useField } from 'react-final-form';
-import NumberFormat, { NumberFormatProps, NumberFormatValues } from 'react-number-format';
+import { NumericFormat, NumericFormatProps, NumberFormatValues } from 'react-number-format';
 import BigNumber from 'bignumber.js';
 import clsx from 'clsx';
 
-import { formStyles } from 'shared/ui/form';
-import { ReactComponent as calculatorSVG } from 'shared/assets/images/actions/calculator.svg';
-import { Result } from 'hooks/useGasCalculate/types';
-import { BalanceUnit } from 'shared/ui/form/balance-unit';
-import { useGasMultiplier } from 'hooks';
+import { formStyles } from '@/shared/ui/form';
+import calculatorSVG from '@/shared/assets/images/actions/calculator.svg?react';
+import { Result } from '@/hooks/useGasCalculate/types';
+import { BalanceUnit } from '@/shared/ui/form/balance-unit';
+import { useGasMultiplier } from '@/hooks';
 
 import { Info } from '../Info';
 import styles from './GasField.module.scss';
 
-type Props = Omit<NumberFormatProps & InputProps, 'value' | 'onValueChange' | 'onChange'> & {
+type Props = Omit<NumericFormatProps & InputProps, 'value' | 'onValueChange' | 'onChange'> & {
   info: Result | undefined;
   onGasCalculate: () => void;
 };
@@ -54,7 +54,7 @@ const GasField = (props: Props) => {
         <div className={styles.input}>
           <div className={clsx(styles.wrapper, error && styles.error)}>
             <div className={styles.inputWrapper}>
-              <NumberFormat
+              <NumericFormat
                 {...other}
                 id={name}
                 name={name}

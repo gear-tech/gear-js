@@ -6,10 +6,10 @@ import { isHex } from '@polkadot/util';
 import { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 
-import { FileTypes } from 'shared/config';
-import { getPreformattedText } from 'shared/helpers';
-import { Box } from 'shared/ui/box';
-import { formStyles } from 'shared/ui/form';
+import { FileTypes } from '@/shared/config';
+import { getPreformattedText } from '@/shared/helpers';
+import { Box } from '@/shared/ui/box';
+import { formStyles } from '@/shared/ui/form';
 
 import { getNamedTypes } from '../../helpers';
 import { MetadataInput } from '../metadataInput';

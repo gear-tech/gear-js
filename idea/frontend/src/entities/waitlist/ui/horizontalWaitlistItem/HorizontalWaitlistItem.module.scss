@@ -1,6 +1,6 @@
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_mixins.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
+@use '@/shared/assets/styles/_shared.scss' as *;
+@use '@/shared/assets/styles/_mixins.scss' as *;
+@use '@/shared/assets/styles/_variables.scss' as *;
 
 %textStyles {
   color: $gray600;
@@ -10,7 +10,7 @@
 .horizontalMessageCard {
   display: grid;
   grid-template-rows: minmax(max-content, 1fr);
-  grid-template-columns: minmax(max-content, 1fr) minmax(max-content, 1.5fr) minmax(max-content, 0.5fr) ;
+  grid-template-columns: minmax(max-content, 1fr) minmax(max-content, 1.5fr) minmax(max-content, 0.5fr);
   gap: 30px;
   align-items: center;
   position: relative;

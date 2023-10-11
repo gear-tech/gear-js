@@ -5,11 +5,11 @@ import clsx from 'clsx';
 import { useAlert } from '@gear-js/react-hooks';
 import { Modal, buttonStyles } from '@gear-js/ui';
 
-import { ModalProps } from 'entities/modal';
-import { checkFileFormat } from 'shared/helpers';
-import { ReactComponent as UploadFileSVG } from 'shared/assets/images/actions/uploadFile.svg';
+import { ModalProps } from '@/entities/modal';
+import { checkFileFormat } from '@/shared/helpers';
+import UploadFileSVG from '@/shared/assets/images/actions/uploadFile.svg?react';
 
-import { FileTypes } from 'shared/config';
+import { FileTypes } from '@/shared/config';
 import styles from './UploadFileModal.module.scss';
 import { FILE_INPUT_ID } from '../model/const';
 import { DropTarget } from './dropTarget';

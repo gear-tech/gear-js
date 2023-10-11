@@ -4,16 +4,16 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { useAccount, useApi } from '@gear-js/react-hooks';
 import 'simplebar-react/dist/simplebar.min.css';
 
-import { useChain, useEventSubscriptions, useMobileDisclaimer } from 'hooks';
-import { Menu } from 'widgets/menu';
-import { Header } from 'widgets/header';
-import { Footer } from 'widgets/footer';
-import { MobileDisclaimer } from 'widgets/mobileDisclaimer';
-import { Routing } from 'pages';
-import { LocalStorage, NODE_ADRESS_URL_PARAM } from 'shared/config';
-import { Loader } from 'shared/ui/loader';
-import { ErrorFallback } from 'shared/ui/errorFallback';
-import { INITIAL_ENDPOINT } from 'features/api';
+import { useChain, useEventSubscriptions, useMobileDisclaimer } from '@/hooks';
+import { Menu } from '@/widgets/menu';
+import { Header } from '@/widgets/header';
+import { Footer } from '@/widgets/footer';
+import { MobileDisclaimer } from '@/widgets/mobileDisclaimer';
+import { Routing } from '@/pages';
+import { LocalStorage, NODE_ADRESS_URL_PARAM } from '@/shared/config';
+import { Loader } from '@/shared/ui/loader';
+import { ErrorFallback } from '@/shared/ui/errorFallback';
+import { INITIAL_ENDPOINT } from '@/features/api';
 
 import { withProviders } from './providers';
 import './App.scss';

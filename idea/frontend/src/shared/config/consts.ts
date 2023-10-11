@@ -1,14 +1,14 @@
-const API_URL = process.env.REACT_APP_API_URL as string;
-const NODE_ADDRESS = process.env.REACT_APP_NODE_ADDRESS as string;
-const DEFAULT_NODES_URL = process.env.REACT_APP_DEFAULT_NODES_URL as string;
-const HCAPTCHA_SITE_KEY = process.env.REACT_APP_HCAPTCHA_SITE_KEY as string;
+const API_URL = import.meta.env.VITE_API_URL as string;
+const NODE_ADDRESS = import.meta.env.VITE_NODE_ADDRESS as string;
+const DEFAULT_NODES_URL = import.meta.env.VITE_DEFAULT_NODES_URL as string;
+const HCAPTCHA_SITE_KEY = import.meta.env.VITE_HCAPTCHA_SITE_KEY as string;
 
 const NODE_ADRESS_URL_PARAM = 'node';
 
 const EXAMPLES_HREF = 'https://www.gear-tech.io/developers';
 
 const DEFAULT_LIMIT = 20;
-const GEAR_BALANCE_TRANSFER_VALUE = process.env.REACT_APP_DEFAULT_TRANSFER_BALANCE_VALUE as string;
+const GEAR_BALANCE_TRANSFER_VALUE = process.env.VITE_DEFAULT_TRANSFER_BALANCE_VALUE as string;
 
 const ACCOUNT_ERRORS = {
   WALLET_NOT_CONNECTED: 'Wallet not connected',

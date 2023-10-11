@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useApi, ProviderProps } from '@gear-js/react-hooks';
 
-import { IdeaEvent, Section } from 'features/explorer';
+import { IdeaEvent, Section } from '@/features/explorer';
 
 import { EventsContext } from './Context';
 

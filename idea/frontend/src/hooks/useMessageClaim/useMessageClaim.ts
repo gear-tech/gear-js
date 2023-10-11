@@ -4,11 +4,11 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import { UserMessageRead } from '@gear-js/api';
 import { useApi, useAccount, useAlert, DEFAULT_SUCCESS_OPTIONS, DEFAULT_ERROR_OPTIONS } from '@gear-js/react-hooks';
 
-import { useModal } from 'hooks';
-import { Method } from 'features/explorer';
-import { OperationCallbacks, ParamsToSignAndSend } from 'entities/hooks';
-import { PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'shared/config';
-import { checkWallet, getExtrinsicFailedMessage } from 'shared/helpers';
+import { useModal } from '@/hooks';
+import { Method } from '@/features/explorer';
+import { OperationCallbacks, ParamsToSignAndSend } from '@/entities/hooks';
+import { PROGRAM_ERRORS, TransactionName, TransactionStatus } from '@/shared/config';
+import { checkWallet, getExtrinsicFailedMessage } from '@/shared/helpers';
 
 import { ParamsToClaimMessage } from './types';
 

@@ -1,6 +1,6 @@
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_mixins.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
+@use '@/shared/assets/styles/_shared.scss' as *;
+@use '@/shared/assets/styles/_mixins.scss' as *;
+@use '@/shared/assets/styles/_variables.scss' as *;
 @use '@gear-js/ui/mixins' as *;
 
 .recentBlockItem {

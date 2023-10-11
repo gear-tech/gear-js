@@ -1,5 +1,5 @@
-@use 'shared/assets/styles/shared' as *;
-@use 'shared/assets/styles/variables' as *;
+@use '@/shared/assets/styles/shared' as *;
+@use '@/shared/assets/styles/variables' as *;
 
 .box {
   padding: toRem(14) toRem(24) toRem(24);

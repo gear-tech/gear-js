@@ -1,5 +1,5 @@
-import { NodeSection } from 'entities/node';
-import { DEFAULT_NODES_URL } from 'shared/config';
+import { NodeSection } from '@/entities/node';
+import { DEFAULT_NODES_URL } from '@/shared/config';
 import { fetchCode, fetchCodes, addCodeName } from './code';
 import { fetchProgram, fetchPrograms, addProgramName } from './program';
 import { fetchTestBalance } from './balance';

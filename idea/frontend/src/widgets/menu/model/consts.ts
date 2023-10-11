@@ -1,10 +1,10 @@
-import { ReactComponent as GearSVG } from 'shared/assets/images/logos/gear.svg';
-import { ReactComponent as ShortGearSVG } from 'shared/assets/images/logos/shortcut/gear.svg';
-import { ReactComponent as GearNetworkSVG } from 'shared/assets/images/logos/networks/gear.svg';
+import GearSVG from '@/shared/assets/images/logos/gear.svg?react';
+import ShortGearSVG from '@/shared/assets/images/logos/shortcut/gear.svg?react';
+import GearNetworkSVG from '@/shared/assets/images/logos/networks/gear.svg?react';
 
-import { ReactComponent as VaraSVG } from 'shared/assets/images/logos/vara.svg';
-import { ReactComponent as ShortVaraSVG } from 'shared/assets/images/logos/shortcut/vara.svg';
-import { ReactComponent as NetworkVaraSVG } from 'shared/assets/images/logos/networks/vara.svg';
+import VaraSVG from '@/shared/assets/images/logos/vara.svg?react';
+import ShortVaraSVG from '@/shared/assets/images/logos/shortcut/vara.svg?react';
+import NetworkVaraSVG from '@/shared/assets/images/logos/networks/vara.svg?react';
 
 const DEVELOPMENT_SECTION = 'development';
 

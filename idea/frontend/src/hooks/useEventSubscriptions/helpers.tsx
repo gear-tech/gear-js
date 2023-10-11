@@ -3,8 +3,8 @@ import { UserMessageSent, Transfer, encodeAddress } from '@gear-js/api';
 import { AlertContainerFactory } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 
-import { absoluteRoutes } from 'shared/config';
-import { CustomLink } from 'shared/ui/customLink';
+import { absoluteRoutes } from '@/shared/config';
+import { CustomLink } from '@/shared/ui/customLink';
 
 const messageSentEventsHandler = (event: UserMessageSent, address: HexString, alert: AlertContainerFactory) => {
   const { message, method, section } = event.data;

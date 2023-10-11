@@ -1,9 +1,9 @@
 import { useAlert, useAccount, useApi } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 
-import { addMetadata } from 'api';
-import { uploadLocalMetadata } from 'api/LocalDB';
-import { ACCOUNT_ERRORS } from 'shared/config';
+import { addMetadata } from '@/api';
+import { uploadLocalMetadata } from '@/api/LocalDB';
+import { ACCOUNT_ERRORS } from '@/shared/config';
 
 import { useChain } from '../context';
 import { ParamsToUploadMeta } from './types';

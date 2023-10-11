@@ -6,15 +6,15 @@ import { Form } from 'react-final-form';
 import { OnChange } from 'react-final-form-listeners';
 import { FormApi } from 'final-form';
 
-import { addState, fetchState, fetchStates } from 'api';
-import { useChain, useProgram, useStateRead } from 'hooks';
-import { getPreformattedText, isNullOrUndefined, readFileAsync } from 'shared/helpers';
-import { FileTypes } from 'shared/config';
-import { BackButton } from 'shared/ui/backButton';
-import { Box } from 'shared/ui/box';
-import { FormPayload, getPayloadFormValues, getSubmitPayload } from 'features/formPayload';
-import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg';
-import { isHumanTypesRepr, useMetadata } from 'features/metadata';
+import { addState, fetchState, fetchStates } from '@/api';
+import { useChain, useProgram, useStateRead } from '@/hooks';
+import { getPreformattedText, isNullOrUndefined, readFileAsync } from '@/shared/helpers';
+import { FileTypes } from '@/shared/config';
+import { BackButton } from '@/shared/ui/backButton';
+import { Box } from '@/shared/ui/box';
+import { FormPayload, getPayloadFormValues, getSubmitPayload } from '@/features/formPayload';
+import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
+import { isHumanTypesRepr, useMetadata } from '@/features/metadata';
 
 import { downloadJson } from '../../helpers';
 import { IState, WasmFormValues, INITIAL_VALUES } from '../../model';

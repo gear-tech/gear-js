@@ -3,7 +3,7 @@ import { ProgramMetadata, GasInfo } from '@gear-js/api';
 import { useApi, useAlert, useAccount } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 
-import { GasMethod } from 'shared/config';
+import { GasMethod } from '@/shared/config';
 
 import { Values, Code, Result } from './types';
 import { preparedGasInfo } from './helpers';

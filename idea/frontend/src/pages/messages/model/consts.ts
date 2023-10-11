@@ -1,4 +1,4 @@
-import { OwnerFilter } from 'api/consts';
+import { OwnerFilter } from '@/api/consts';
 
 import { RequestParams, FiltersValues } from './types';
 

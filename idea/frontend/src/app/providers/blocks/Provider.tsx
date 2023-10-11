@@ -2,7 +2,7 @@ import { ReactNode, useState, useEffect } from 'react';
 import { useApi } from '@gear-js/react-hooks';
 import { Header } from '@polkadot/types/interfaces';
 
-import { IChainBlock } from 'entities/chainBlock';
+import { IChainBlock } from '@/entities/chainBlock';
 
 import { BlocksContext } from './Context';
 import { getTime, getBlock } from './helpers';

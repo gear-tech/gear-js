@@ -5,9 +5,9 @@ import { decodeAddress } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { Button, buttonStyles } from '@gear-js/ui';
 
-import { copyToClipboard } from 'shared/helpers';
-import { AccountButton } from 'shared/ui/accountButton';
-import { ReactComponent as copyKeySVG } from 'shared/assets/images/actions/copyKey.svg';
+import { copyToClipboard } from '@/shared/helpers';
+import { AccountButton } from '@/shared/ui/accountButton';
+import copyKeySVG from '@/shared/assets/images/actions/copyKey.svg?react';
 
 import styles from './AccountItem.module.scss';
 

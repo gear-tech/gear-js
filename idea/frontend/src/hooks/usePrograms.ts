@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useAlert } from '@gear-js/react-hooks';
 
-import { FetchProgramsParams, ProgramPaginationModel } from 'api/program/types';
-import { IProgram } from 'features/program';
-import { DEFAULT_LIMIT } from 'shared/config';
-import { fetchPrograms } from 'api';
-import { LocalProgram, useLocalPrograms } from 'features/local-indexer';
+import { FetchProgramsParams, ProgramPaginationModel } from '@/api/program/types';
+import { IProgram } from '@/features/program';
+import { DEFAULT_LIMIT } from '@/shared/config';
+import { fetchPrograms } from '@/api';
+import { LocalProgram, useLocalPrograms } from '@/features/local-indexer';
 
 import { useChain } from './context';
 

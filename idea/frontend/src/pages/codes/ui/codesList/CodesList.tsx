@@ -1,10 +1,10 @@
 import SimpleBar from 'simplebar-react';
 
-import { useScrollLoader } from 'hooks';
-import { Placeholder } from 'entities/placeholder';
-import { ICode, HorizontalCodeCard } from 'entities/code';
-import { ExamplesLink } from 'shared/ui/examplesLink';
-import { ReactComponent as CardPalceholderSVG } from 'shared/assets/images/placeholders/card.svg';
+import { useScrollLoader } from '@/hooks';
+import { Placeholder } from '@/entities/placeholder';
+import { ICode, HorizontalCodeCard } from '@/entities/code';
+import { ExamplesLink } from '@/shared/ui/examplesLink';
+import CardPalceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
 
 import styles from './CodesList.module.scss';
 

@@ -1,4 +1,4 @@
-import { IMessage } from 'entities/message';
+import { IMessage } from '@/entities/message';
 
 type MessagePaginationModel = {
   count: number;

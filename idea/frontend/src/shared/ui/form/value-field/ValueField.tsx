@@ -1,11 +1,11 @@
 import { inputStyles, InputProps, InputWrapper } from '@gear-js/ui';
 import { useField, useForm } from 'react-final-form';
-import NumberFormat, { NumberFormatProps, NumberFormatValues } from 'react-number-format';
+import { NumericFormat, NumericFormatProps, NumberFormatValues } from 'react-number-format';
 import clsx from 'clsx';
 
 import { BalanceUnit } from '../balance-unit';
 
-type Props = Omit<NumberFormatProps & InputProps, 'value' | 'onValueChange' | 'onChange'> & {
+type Props = Omit<NumericFormatProps & InputProps, 'value' | 'onValueChange' | 'onChange'> & {
   name: string;
 };
 
@@ -29,7 +29,7 @@ const ValueField = ({ name, label, direction = 'x', gap, block, ...other }: Prop
   return (
     <InputWrapper id={name} label={label} size="normal" error={error} direction={direction} gap={gap}>
       <div className={wrapperClassName} data-testid="wrapper">
-        <NumberFormat
+        <NumericFormat
           {...other}
           id={name}
           name={name}
