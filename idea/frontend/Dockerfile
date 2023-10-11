@@ -33,4 +33,4 @@ RUN yarn build:frontend
 
 FROM nginx:alpine
 RUN rm -vf /usr/share/nginx/html/*
-COPY --from=builder /src/idea/frontend/build /usr/share/nginx/html
+COPY --from=builder /src/idea/frontend/dist /usr/share/nginx/html
