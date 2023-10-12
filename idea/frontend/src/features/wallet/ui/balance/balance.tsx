@@ -1,7 +1,8 @@
 import { useAccount, useBalance, useBalanceFormat } from '@gear-js/react-hooks';
 import cx from 'clsx';
 
-import headerStyles from '../Header.module.scss';
+import headerStyles from '@/widgets/header/ui/Header.module.scss';
+
 import styles from './balance.module.scss';
 
 const Balance = () => {

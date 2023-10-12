@@ -2,12 +2,13 @@ import { useState } from 'react';
 
 import { LocalStorage } from '@/shared/config';
 
-import { WALLET, WalletId } from '../model';
+import { WALLET } from '../consts';
+import { WalletId } from '../types';
 
 function useWallet() {
-  const [walletId, setWalletId] = useState<WalletId | undefined>(localStorage[LocalStorage.Wallet]);
+  const [walletId, setWalletId] = useState(localStorage[LocalStorage.Wallet] as WalletId | null);
 
-  const resetWallet = () => setWalletId(undefined);
+  const resetWallet = () => setWalletId(null);
 
   const wallet = walletId ? WALLET[walletId] : undefined;
 

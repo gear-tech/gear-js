@@ -6,9 +6,9 @@ import { useAlert } from '@gear-js/react-hooks';
 import { Button, buttonStyles } from '@gear-js/ui';
 
 import { copyToClipboard } from '@/shared/helpers';
-import { AccountButton } from '@/shared/ui/accountButton';
 import copyKeySVG from '@/shared/assets/images/actions/copyKey.svg?react';
 
+import { AccountButton } from '../../account-button';
 import styles from './AccountItem.module.scss';
 
 type Props = {

@@ -13,8 +13,8 @@ import { RecentBlocks } from '@/features/recentBlocks';
 import { HCAPTCHA_SITE_KEY, AnimationTimeout, GEAR_BALANCE_TRANSFER_VALUE } from '@/shared/config';
 import TestBalanceSVG from '@/shared/assets/images/actions/testBalance.svg?react';
 import TransferBalanceSVG from '@/shared/assets/images/actions/transferBalance.svg?react';
+import { Wallet } from '@/features/wallet';
 
-import { Wallet } from '../wallet';
 import { TotalIssuance } from '../totalIssuance';
 import styles from './TopSide.module.scss';
 

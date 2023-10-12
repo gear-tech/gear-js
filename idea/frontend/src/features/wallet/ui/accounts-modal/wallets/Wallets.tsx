@@ -1,11 +1,12 @@
 import { useAccount } from '@gear-js/react-hooks';
 
-import { WALLETS, WALLET, WalletId } from '../../model';
 import { Wallet } from '../wallet';
 import styles from './Wallets.module.scss';
+import { WALLETS, WALLET } from '../../../consts';
+import { WalletId } from '../../../types';
 
 type Props = {
-  selectedWalletId: WalletId | undefined;
+  selectedWalletId: WalletId | null;
   onWalletClick: (id: WalletId) => void;
 };
 

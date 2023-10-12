@@ -6,17 +6,20 @@ import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import SimpleBar from 'simplebar-react';
 
-import { ModalProps } from '@/entities/modal';
 import { LocalStorage } from '@/shared/config';
 import logoutSVG from '@/shared/assets/images/actions/logout.svg?react';
 import arrowSVG from '@/shared/assets/images/actions/arrowLeft.svg?react';
 
-import { useWallet } from '../hooks';
-import { AccountList } from './accountList';
+import { useWallet } from '../../hooks';
 import { Wallets } from './wallets';
-import styles from './AccountsModal.module.scss';
+import { AccountList } from './accountList';
+import styles from './accounts-modal.module.scss';
 
-const AccountsModal = ({ onClose }: ModalProps) => {
+type Props = {
+  close: () => void;
+};
+
+const AccountsModal = ({ close }: Props) => {
   const { account, accounts, extensions, login, logout } = useAccount();
   const { wallet, walletId, switchWallet, resetWallet } = useWallet();
 
@@ -28,14 +31,14 @@ const AccountsModal = ({ onClose }: ModalProps) => {
 
   const handleLogoutClick = () => {
     logout();
-    onClose();
+    close();
   };
 
   const handleAccountClick = (newAccount: InjectedAccountWithMeta) => {
     if (walletId) {
       login(newAccount);
       localStorage.setItem(LocalStorage.Wallet, walletId);
-      onClose();
+      close();
     }
   };
 
@@ -58,7 +61,7 @@ const AccountsModal = ({ onClose }: ModalProps) => {
   const heading = isWalletSelection ? 'Choose Wallet' : 'Connect account';
 
   return (
-    <Modal heading={heading} close={onClose} className={modalClassName}>
+    <Modal heading={heading} close={close} className={modalClassName}>
       {isWeb3Injected ? (
         <>
           <SimpleBar className={styles.simplebar}>
