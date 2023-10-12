@@ -1,5 +1,6 @@
 import { useAccount } from '@gear-js/react-hooks';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import { isWeb3Injected } from '@polkadot/extension-dapp';
 import { Button, Modal } from '@gear-js/ui';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
@@ -10,18 +11,13 @@ import { LocalStorage } from '@/shared/config';
 import logoutSVG from '@/shared/assets/images/actions/logout.svg?react';
 import arrowSVG from '@/shared/assets/images/actions/arrowLeft.svg?react';
 
-import { isWeb3Injected } from '@polkadot/extension-dapp';
 import { useWallet } from '../hooks';
 import { AccountList } from './accountList';
 import { Wallets } from './wallets';
 import styles from './AccountsModal.module.scss';
 
-type Props = ModalProps & {
-  accounts: InjectedAccountWithMeta[];
-};
-
-const AccountsModal = ({ accounts, onClose }: Props) => {
-  const { account, extensions, login, logout } = useAccount();
+const AccountsModal = ({ onClose }: ModalProps) => {
+  const { account, accounts, extensions, login, logout } = useAccount();
   const { wallet, walletId, switchWallet, resetWallet } = useWallet();
 
   const [isWalletSelection, setIsWalletSelection] = useState(!wallet);
@@ -52,7 +48,7 @@ const AccountsModal = ({ accounts, onClose }: Props) => {
   }, [walletId]);
 
   useEffect(() => {
-    const isChosenExtensionExists = extensions.some((ext) => ext.name === walletId);
+    const isChosenExtensionExists = extensions?.some((ext) => ext.name === walletId);
 
     if (!isChosenExtensionExists) resetWallet();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -66,12 +62,11 @@ const AccountsModal = ({ accounts, onClose }: Props) => {
       {isWeb3Injected ? (
         <>
           <SimpleBar className={styles.simplebar}>
-            {isWalletSelection && (
-              <Wallets selectedWalletId={walletId} onWalletClick={switchWallet} extensions={extensions} />
-            )}
+            {isWalletSelection && <Wallets selectedWalletId={walletId} onWalletClick={switchWallet} />}
+
             {!isWalletSelection && (
               <AccountList
-                list={accounts.filter(({ meta }) => meta.source === walletId)}
+                list={accounts?.filter(({ meta }) => meta.source === walletId) || []}
                 address={account?.address}
                 toggleAccount={handleAccountClick}
               />

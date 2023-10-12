@@ -15,7 +15,6 @@ import TestBalanceSVG from '@/shared/assets/images/actions/testBalance.svg?react
 import TransferBalanceSVG from '@/shared/assets/images/actions/transferBalance.svg?react';
 
 import { Wallet } from '../wallet';
-import { BalanceInfo } from '../balanceInfo';
 import { TotalIssuance } from '../totalIssuance';
 import styles from './TopSide.module.scss';
 
@@ -23,7 +22,7 @@ const TopSide = () => {
   const alert = useAlert();
 
   const { api, isApiReady } = useApi();
-  const { account, isAccountReady } = useAccount();
+  const { account } = useAccount();
   const { isDevChain, isTestBalanceAvailable } = useChain();
   const { showModal, closeModal } = useModal();
   const { balanceMultiplier } = useBalanceMultiplier();
@@ -122,17 +121,11 @@ const TopSide = () => {
                     <TransferBalanceSVG />
                   </button>
                 </TooltipWrapper>
-
-                <BalanceInfo balance={account.balance} />
               </div>
             </CSSTransition>
           )}
 
-          {isApiReady && isAccountReady && (
-            <CSSTransition in appear timeout={AnimationTimeout.Default}>
-              <Wallet account={account} />
-            </CSSTransition>
-          )}
+          <Wallet />
         </div>
       </div>
       <HCaptcha

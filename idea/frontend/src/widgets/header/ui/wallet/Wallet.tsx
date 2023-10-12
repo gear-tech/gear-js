@@ -1,40 +1,39 @@
-import clsx from 'clsx';
-import { Account, useAccount } from '@gear-js/react-hooks';
+import cx from 'clsx';
+import { useAccount } from '@gear-js/react-hooks';
 import { Button, buttonStyles } from '@gear-js/ui';
 
 import { useModal } from '@/hooks';
 import { AccountButton } from '@/shared/ui/accountButton';
+import { OnboardingTooltip } from '@/shared/ui/onboardingTooltip';
 import substrateSVG from '@/shared/assets/images/logos/substrate.svg?react';
 
-import { OnboardingTooltip } from '@/shared/ui/onboardingTooltip';
+import { Balance } from '../balance';
 import styles from './Wallet.module.scss';
 
-type Props = {
-  account?: Account;
-};
+const Wallet = () => {
+  const { account, isAccountReady } = useAccount();
 
-const Wallet = ({ account }: Props) => {
-  const { accounts } = useAccount();
   const { showModal } = useModal();
+  const openAccountsModal = () => showModal('accounts');
 
-  const openAccountsModal = () => showModal('accounts', { accounts });
+  return isAccountReady ? (
+    account ? (
+      <div className={styles.wallet}>
+        <Balance />
 
-  const accountBtnClasses = clsx(buttonStyles.medium, styles.accountBtn);
-
-  return (
-    <OnboardingTooltip className={styles.walletWrapper} index={0}>
-      {account ? (
         <AccountButton
           name={account.meta.name}
           address={account.address}
-          className={accountBtnClasses}
+          className={cx(buttonStyles.medium, styles.accountBtn)}
           onClick={openAccountsModal}
         />
-      ) : (
+      </div>
+    ) : (
+      <OnboardingTooltip className={styles.onboardingTooltip} index={0}>
         <Button icon={substrateSVG} text="Connect" color="primary" onClick={openAccountsModal} />
-      )}
-    </OnboardingTooltip>
-  );
+      </OnboardingTooltip>
+    )
+  ) : null;
 };
 
 export { Wallet };

@@ -1,9 +1,14 @@
-@use '@/shared/assets/styles/_shared.scss' as *;
-@use '@/shared/assets/styles/_variables.scss' as *;
-@use '@/shared/assets/styles/animations' as *;
+@use '@/shared/assets/styles/shared' as *;
+@use '@/shared/assets/styles/mixins' as *;
+@use '@/shared/assets/styles/variables' as *;
 
-.walletWrapper {
-  @include fadeAppear();
+.wallet {
+  @include childrenMargin(16px, right);
+  display: flex;
+  align-items: center;
+}
+
+.onboardingTooltip {
   position: relative;
   margin-left: $margin;
 }

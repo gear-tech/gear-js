@@ -1,4 +1,4 @@
-import type { InjectedExtension } from '@polkadot/extension-inject/types';
+import { useAccount } from '@gear-js/react-hooks';
 
 import { WALLETS, WALLET, WalletId } from '../../model';
 import { Wallet } from '../wallet';
@@ -6,24 +6,25 @@ import styles from './Wallets.module.scss';
 
 type Props = {
   selectedWalletId: WalletId | undefined;
-  extensions: InjectedExtension[];
   onWalletClick: (id: WalletId) => void;
 };
 
-const Wallets = ({ selectedWalletId, extensions, onWalletClick }: Props) => {
-  const isWalletConnected = (id: string) => extensions.some(({ name }) => name === id);
+const Wallets = ({ selectedWalletId, onWalletClick }: Props) => {
+  const { extensions } = useAccount();
 
   const getWallets = () =>
     WALLETS.map((id) => {
       const walletId = id as WalletId;
       const { name, icon } = WALLET[walletId];
 
+      const isConnected = !!extensions?.some(({ name }) => name === id);
+
       return (
         <li key={id}>
           <Wallet
             name={name}
             icon={icon}
-            isConnected={isWalletConnected(id)}
+            isConnected={isConnected}
             isActive={selectedWalletId === walletId}
             onClick={() => onWalletClick(walletId)}
           />

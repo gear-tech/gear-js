@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { useContext, useMemo } from 'react';
 import { ApiContext } from 'context';
+import { formatBalance } from '@polkadot/util';
 
 function useBalanceFormat() {
   const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
@@ -32,6 +33,22 @@ function useBalanceFormat() {
   const getFormattedBalanceValue = (value: string | number) => getFormattedValue(value, balanceMultiplier);
   const getFormattedGasValue = (value: string | number) => getFormattedValue(value, gasMultiplier);
 
+  const getFormattedBalance = (balance: Exclude<Parameters<typeof formatBalance>[0], undefined>) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+
+    const [unit] = api.registry.chainTokens;
+
+    const value = formatBalance(balance, {
+      decimals,
+      forceUnit: unit,
+      withSiFull: false,
+      withSi: false,
+      withUnit: unit,
+    });
+
+    return { value, unit };
+  };
+
   return {
     balanceMultiplier,
     decimals,
@@ -41,6 +58,7 @@ function useBalanceFormat() {
     getChainGasValue,
     getFormattedBalanceValue,
     getFormattedGasValue,
+    getFormattedBalance,
   };
 }
 
