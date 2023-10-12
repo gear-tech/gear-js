@@ -77,6 +77,9 @@ export {
   DEFAULT_SUCCESS_OPTIONS,
   DEFAULT_LOADING_OPTIONS,
   AlertType,
+};
+
+export type {
   AlertOptions,
   TemplateAlertOptions,
   AlertInstance,
