@@ -1,3 +1,4 @@
+import { useBalance } from './use-balance';
 import { useBalanceFormat } from './use-balance-format';
 
-export { useBalanceFormat };
+export { useBalance, useBalanceFormat };
