@@ -1,5 +1,5 @@
 import { Balance } from '@polkadot/types/interfaces';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { AlertContext, ApiContext } from 'context';
 import { formatBalance } from '@polkadot/util';
 
@@ -27,7 +27,26 @@ function useBalance(address: string | undefined) {
     };
   }, [isApiReady, address]);
 
-  return { balance, isBalanceReady };
+  // standalone hook?
+  const formattedBalance = useMemo(() => {
+    if (!isApiReady) throw new Error('API is not initialized');
+    if (!balance) return;
+
+    const [decimals] = api.registry.chainDecimals;
+    const [unit] = api.registry.chainTokens;
+
+    const value = formatBalance(balance, {
+      decimals,
+      forceUnit: unit,
+      withSiFull: false,
+      withSi: false,
+      withUnit: unit,
+    });
+
+    return { value, unit };
+  }, [balance]);
+
+  return { balance, formattedBalance, isBalanceReady };
 }
 
 export { useBalance };
