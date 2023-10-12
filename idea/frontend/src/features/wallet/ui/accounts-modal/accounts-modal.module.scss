@@ -1,5 +1,6 @@
 @use '@gear-js/ui/breakpoints' as *;
 @use '@gear-js/ui/variables' as ui;
+@use '@gear-js/ui/headings' as *;
 @use '@/shared/assets/styles/variables' as *;
 @use '@/shared/assets/styles/mixins' as *;
 
@@ -101,19 +102,27 @@
     background-color: ui.$buttonColorLightHover;
   }
 
-  &.active {
-    background-color: $successColor;
-  }
-
-  &.active,
-  &:not(.connected) {
+  &:not(.enabled) {
     pointer-events: none;
+
+    .status {
+      opacity: 0.6;
+    }
   }
 
-  .text {
-    align-items: center;
-    font-size: 12px;
-    font-weight: 400;
+  .status {
+    text-align: right;
+
+    &Text {
+      font-size: 12px;
+      line-height: 14px;
+    }
+
+    &Accounts {
+      font-size: 10px;
+      line-height: 10px;
+      color: $successColor;
+    }
   }
 
   .connectIcon {

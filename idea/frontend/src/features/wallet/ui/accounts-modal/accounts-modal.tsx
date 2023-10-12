@@ -10,7 +10,6 @@ import { copyToClipboard } from '@/shared/helpers';
 import LogoutSVG from '@/shared/assets/images/actions/logout.svg?react';
 import ArrowSVG from '@/shared/assets/images/actions/arrowLeft.svg?react';
 import CopyKeySVG from '@/shared/assets/images/actions/copyKey.svg?react';
-import ConnectSVG from '@/shared/assets/images/actions/plus.svg?react';
 
 import { AccountButton } from '../account-button';
 import { useWallet } from '../../hooks';
@@ -42,7 +41,7 @@ const AccountsModal = ({ close }: Props) => {
 
   const getWallets = () =>
     WALLETS.map(([id, { SVG, name }]) => {
-      const isConnected = !!extensions?.some((extension) => extension.name === id);
+      const isEnabled = !!extensions?.some((extension) => extension.name === id);
 
       const accountsCount = getWalletAccounts(id)?.length;
       const accountsStatus = `${accountsCount} ${accountsCount === 1 ? 'account' : 'accounts'}`;
@@ -56,19 +55,18 @@ const AccountsModal = ({ close }: Props) => {
               buttonStyles.large,
               buttonStyles.block,
               styles.button,
-              isConnected && styles.connected,
-              // isActive && styles.active,
+              isEnabled && styles.enabled,
             )}
             onClick={() => setWalletId(id)}>
             <span>
               <SVG className={buttonStyles.icon} /> {name}
             </span>
-            <span className={styles.text}>
-              {isConnected ? 'Connected' : 'Not connected'}
-              <ConnectSVG className={styles.connectIcon} />
-            </span>
 
-            {isConnected && <p className={styles.statusAccounts}>{accountsStatus}</p>}
+            <div className={styles.status}>
+              <p className={styles.statusText}>{isEnabled ? 'Enabled' : 'Disabled'}</p>
+
+              {isEnabled && <p className={styles.statusAccounts}>{accountsStatus}</p>}
+            </div>
           </button>
         </li>
       );
