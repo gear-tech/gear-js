@@ -4,10 +4,8 @@ import { Button, Modal, buttonStyles } from '@gear-js/ui';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { isWeb3Injected } from '@polkadot/extension-dapp';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
 import SimpleBar from 'simplebar-react';
 
-import { LocalStorage } from '@/shared/config';
 import { copyToClipboard } from '@/shared/helpers';
 import LogoutSVG from '@/shared/assets/images/actions/logout.svg?react';
 import ArrowSVG from '@/shared/assets/images/actions/arrowLeft.svg?react';
@@ -16,8 +14,7 @@ import ConnectSVG from '@/shared/assets/images/actions/plus.svg?react';
 
 import { AccountButton } from '../account-button';
 import { useWallet } from '../../hooks';
-import { WALLETS, WALLET } from '../../consts';
-import { WalletId } from '../../types';
+import { WALLETS } from '../../consts';
 import styles from './accounts-modal.module.scss';
 
 type Props = {
@@ -25,15 +22,10 @@ type Props = {
 };
 
 const AccountsModal = ({ close }: Props) => {
-  const { account, accounts, extensions, login, logout } = useAccount();
+  const { account, extensions, login, logout } = useAccount();
   const alert = useAlert();
 
-  const { wallet, walletId, switchWallet, resetWallet } = useWallet();
-  const [isWalletSelection, setIsWalletSelection] = useState(!wallet);
-
-  const toggleWalletSelection = () => setIsWalletSelection((prevValue) => !prevValue);
-  const enableWalletSelection = () => setIsWalletSelection(true);
-  const disableWalletSelection = () => setIsWalletSelection(false);
+  const { wallet, walletAccounts, setWalletId, resetWalletId, getWalletAccounts } = useWallet();
 
   const handleLogoutClick = () => {
     logout();
@@ -41,38 +33,19 @@ const AccountsModal = ({ close }: Props) => {
   };
 
   const handleAccountClick = (newAccount: InjectedAccountWithMeta) => {
-    if (walletId) {
-      login(newAccount);
-      localStorage.setItem(LocalStorage.Wallet, walletId);
-      close();
-    }
+    login(newAccount);
+    close();
   };
 
-  useEffect(() => {
-    if (walletId) {
-      disableWalletSelection();
-    } else {
-      enableWalletSelection();
-    }
-  }, [walletId]);
-
-  useEffect(() => {
-    const isChosenExtensionExists = extensions?.some((ext) => ext.name === walletId);
-
-    if (!isChosenExtensionExists) resetWallet();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [extensions]);
-
   const modalClassName = clsx(styles.modal, !isWeb3Injected && styles.empty);
-  const heading = isWalletSelection ? 'Choose Wallet' : 'Connect account';
+  const heading = wallet ? 'Connect account' : 'Choose Wallet';
 
   const getWallets = () =>
-    WALLETS.map((_id) => {
-      const id = _id as WalletId;
-      const { name, icon: Icon } = WALLET[id];
+    WALLETS.map(([id, { SVG, name }]) => {
+      const isConnected = !!extensions?.some((extension) => extension.name === id);
 
-      const isActive = walletId === id;
-      const isConnected = !!extensions?.some(({ name }) => name === id);
+      const accountsCount = getWalletAccounts(id)?.length;
+      const accountsStatus = `${accountsCount} ${accountsCount === 1 ? 'account' : 'accounts'}`;
 
       return (
         <li key={id}>
@@ -84,23 +57,25 @@ const AccountsModal = ({ close }: Props) => {
               buttonStyles.block,
               styles.button,
               isConnected && styles.connected,
-              isActive && styles.active,
+              // isActive && styles.active,
             )}
-            onClick={() => switchWallet(id)}>
+            onClick={() => setWalletId(id)}>
             <span>
-              <Icon className={buttonStyles.icon} /> {name}
+              <SVG className={buttonStyles.icon} /> {name}
             </span>
             <span className={styles.text}>
               {isConnected ? 'Connected' : 'Not connected'}
               <ConnectSVG className={styles.connectIcon} />
             </span>
+
+            {isConnected && <p className={styles.statusAccounts}>{accountsStatus}</p>}
           </button>
         </li>
       );
     });
 
   const getAccounts = () =>
-    (accounts?.filter(({ meta }) => meta.source === walletId) || []).map((_account) => {
+    walletAccounts?.map((_account) => {
       const isActive = _account.address === account?.address;
 
       const handleClick = () => {
@@ -140,10 +115,10 @@ const AccountsModal = ({ close }: Props) => {
       {isWeb3Injected ? (
         <>
           <SimpleBar className={styles.simplebar}>
-            {isWalletSelection && <ul className={styles.wallets}>{getWallets()}</ul>}
+            {!wallet && <ul className={styles.wallets}>{getWallets()}</ul>}
 
-            {!isWalletSelection &&
-              ((accounts?.filter(({ meta }) => meta.source === walletId) || []).length ? (
+            {!!wallet &&
+              (walletAccounts?.length ? (
                 <ul className={styles.accountList}>{getAccounts()}</ul>
               ) : (
                 <p>
@@ -156,10 +131,10 @@ const AccountsModal = ({ close }: Props) => {
           <footer className={styles.footer}>
             {wallet && (
               <Button
-                icon={isWalletSelection ? ArrowSVG : wallet.icon}
-                text={isWalletSelection ? 'Back' : wallet.name}
+                icon={wallet ? wallet.SVG : ArrowSVG}
+                text={wallet ? wallet.name : 'Back'}
                 color="transparent"
-                onClick={toggleWalletSelection}
+                onClick={resetWalletId}
                 disabled={!wallet}
               />
             )}

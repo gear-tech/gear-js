@@ -32,7 +32,6 @@ enum LocalStorage {
   Account = 'account',
   Genesis = 'genesis',
   HideWelcomeBanner = 'hide_welcome_banner',
-  Wallet = 'wallet',
   IsNewUser = 'isNewUser',
 }
 

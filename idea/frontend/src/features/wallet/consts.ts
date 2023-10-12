@@ -1,15 +1,17 @@
-import PolkadotSVG from '@/shared/assets/images/wallets/polkadot.svg?react';
-import SubwalletSVG from '@/shared/assets/images/wallets/subwallet.svg?react';
-import TalismanSVG from '@/shared/assets/images/wallets/talisman.svg?react';
-import EnkryptSVG from '@/shared/assets/images/wallets/enkrypt.svg?react';
+import { Entries } from '@/shared/types';
+
+import PolkadotSVG from './assets/polkadot.svg?react';
+import SubwalletSVG from './assets/subwallet.svg?react';
+import TalismanSVG from './assets/talisman.svg?react';
+import EnkryptSVG from './assets/enkrypt.svg?react';
 
 const WALLET = {
-  'polkadot-js': { name: 'Polkadot JS', icon: PolkadotSVG },
-  'subwallet-js': { name: 'SubWallet', icon: SubwalletSVG },
-  talisman: { name: 'Talisman', icon: TalismanSVG },
-  enkrypt: { name: 'Enkrypt', icon: EnkryptSVG },
+  'polkadot-js': { name: 'Polkadot JS', SVG: PolkadotSVG },
+  'subwallet-js': { name: 'SubWallet', SVG: SubwalletSVG },
+  talisman: { name: 'Talisman', SVG: TalismanSVG },
+  enkrypt: { name: 'Enkrypt', SVG: EnkryptSVG },
 };
 
-const WALLETS = Object.keys(WALLET);
+const WALLETS = Object.entries(WALLET) as Entries<typeof WALLET>;
 
 export { WALLET, WALLETS };

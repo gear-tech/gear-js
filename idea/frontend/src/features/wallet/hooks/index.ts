@@ -1,18 +1,21 @@
+import { useAccount } from '@gear-js/react-hooks';
 import { useState } from 'react';
-
-import { LocalStorage } from '@/shared/config';
 
 import { WALLET } from '../consts';
 import { WalletId } from '../types';
 
 function useWallet() {
-  const [walletId, setWalletId] = useState(localStorage[LocalStorage.Wallet] as WalletId | null);
+  const { account, accounts } = useAccount();
 
-  const resetWallet = () => setWalletId(null);
-
+  const [walletId, setWalletId] = useState(account?.meta.source as WalletId | undefined);
   const wallet = walletId ? WALLET[walletId] : undefined;
 
-  return { wallet, walletId, switchWallet: setWalletId, resetWallet };
+  const getWalletAccounts = (id: WalletId) => accounts?.filter(({ meta }) => meta.source === id);
+  const walletAccounts = walletId ? getWalletAccounts(walletId) : undefined;
+
+  const resetWalletId = () => setWalletId(undefined);
+
+  return { wallet, walletAccounts, setWalletId, resetWalletId, getWalletAccounts };
 }
 
 export { useWallet };
