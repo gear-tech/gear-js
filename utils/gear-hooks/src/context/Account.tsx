@@ -1,10 +1,9 @@
-import type { InjectedAccountWithMeta, InjectedExtension } from '@polkadot/extension-inject/types';
-import { web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp';
+import type { InjectedAccountWithMeta, InjectedExtension, Unsubcall } from '@polkadot/extension-inject/types';
+import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp';
 import { decodeAddress } from '@gear-js/api';
-import { useState, createContext, useContext, useEffect, useMemo } from 'react';
+import { useState, createContext, useEffect, useMemo } from 'react';
 import { LOCAL_STORAGE } from 'consts';
 import { Account, ProviderProps } from '../types';
-import { AlertContext } from './Alert';
 
 type Value = {
   extensions: InjectedExtension[] | undefined;
@@ -28,12 +27,11 @@ const AccountContext = createContext<Value>(initialValue);
 const { Provider } = AccountContext;
 
 function AccountProvider({ children }: ProviderProps) {
-  const alert = useContext(AlertContext);
-
   const [extensions, setExtensions] = useState<InjectedExtension[]>();
   const [accounts, setAccounts] = useState<InjectedAccountWithMeta[]>();
   const [account, setAccount] = useState<InjectedAccountWithMeta>();
-  const [isAccountReady, setIsAccountReady] = useState(false);
+
+  const isAccountReady = ![extensions, accounts].includes(undefined);
 
   const login = (_account: InjectedAccountWithMeta) => {
     setAccount(_account);
@@ -46,29 +44,30 @@ function AccountProvider({ children }: ProviderProps) {
   };
 
   useEffect(() => {
-    web3Enable('Gear App')
-      .then((result) => setExtensions(result))
-      .catch(({ message }: Error) => alert.error(message));
-  }, []);
+    const unsub = new Promise<Unsubcall>((resolve) => {
+      // old issue - sometimes web3Enable executes earlier than extention (window.inejctedWeb3) is injected.
+      // therefore we're creating 200ms delay, which seemed to be enough
+      // e.g. https://github.com/polkadot-js/extension/issues/938
+      setTimeout(async () => {
+        const _extensions = await web3Enable('Gear App');
+        const _accounts = await web3Accounts();
 
-  useEffect(() => {
-    if (extensions === undefined) return;
+        const loggedInAccount = _accounts.find(({ address }) => localStorage[LOCAL_STORAGE.ACCOUNT] === address);
 
-    const unsub = web3AccountsSubscribe((result) => setAccounts(result));
+        setExtensions(_extensions);
+        setAccounts(_accounts);
+        setAccount(loggedInAccount);
+
+        // promise with resolve to return unsub callback,
+        // to safely subscribe in the same useEffect
+        resolve(web3AccountsSubscribe((result) => setAccounts(result)));
+      }, 200);
+    });
 
     return () => {
       unsub.then((unsubCallback) => unsubCallback());
     };
-  }, [extensions]);
-
-  useEffect(() => {
-    if (accounts === undefined) return;
-
-    const loggedInAccount = accounts.find(({ address }) => localStorage[LOCAL_STORAGE.ACCOUNT] === address);
-
-    setAccount(loggedInAccount);
-    setIsAccountReady(true);
-  }, [accounts]);
+  }, []);
 
   const value = useMemo(
     () => ({
