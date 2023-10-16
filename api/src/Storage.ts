@@ -50,7 +50,7 @@ export class GearProgramStorage {
     for (const page of program.pagesWithData) {
       pages[page.toNumber()] = u8aToU8a(
         await this._api.provider.send('state_getStorage', [
-          this._api.query.gearProgram.memoryPageStorage.key(programId, page),
+          this._api.query.gearProgram.memoryPageStorage2.key(programId, program.memoryInfix, page),
           at,
         ]),
       );

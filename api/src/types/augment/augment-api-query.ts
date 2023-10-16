@@ -1,9 +1,16 @@
+// Auto-generated via `yarn polkadot-types-from-chain`, do not edit
+/* eslint-disable */
+
+// import type lookup before we augment - in some environments
+// this is required to allow for ambient/previous definitions
 import '@polkadot/api-base/types/storage';
 
-import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
-import type { AnyNumber, ITuple } from '@polkadot/types-codec/types';
 import type { ApiTypes, AugmentedQuery, QueryableStorageEntry } from '@polkadot/api-base/types';
-import type { Bytes, Null, Option, U8aFixed, Vec, bool, u128, u32, u64 } from '@polkadot/types-codec';
+import type { Data } from '@polkadot/types';
+import type { BTreeMap, Bytes, Null, Option, U8aFixed, Vec, bool, u128, u32, u64 } from '@polkadot/types-codec';
+import type { AnyNumber, ITuple } from '@polkadot/types-codec/types';
+import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
+import type { Observable } from '@polkadot/types/types';
 import {
   GearCommonCodeMetadata,
   GearCommonGasProviderNodeGasNode,
@@ -21,7 +28,9 @@ import {
   GearCoreMessageUserUserStoredMessage,
   PalletGearBankBankAccount,
 } from '../lookup';
-import type { Observable } from '@polkadot/types/types';
+
+export type __AugmentedQuery<ApiType extends ApiTypes> = AugmentedQuery<ApiType, () => unknown>;
+export type __QueryableStorageEntry<ApiType extends ApiTypes> = QueryableStorageEntry<ApiType>;
 
 declare module '@polkadot/api-base/types/storage' {
   interface AugmentedQueries<ApiType extends ApiTypes> {
@@ -61,6 +70,16 @@ declare module '@polkadot/api-base/types/storage' {
       > &
         QueryableStorageEntry<ApiType, [AccountId32]>;
       unusedValue: AugmentedQuery<ApiType, () => Observable<u128>, []> & QueryableStorageEntry<ApiType, []>;
+      /**
+       * Generic query
+       **/
+      [key: string]: QueryableStorageEntry<ApiType>;
+    };
+    gearDebug: {
+      debugMode: AugmentedQuery<ApiType, () => Observable<bool>, []> & QueryableStorageEntry<ApiType, []>;
+      programsMap: AugmentedQuery<ApiType, () => Observable<BTreeMap<H256, H256>>, []> &
+        QueryableStorageEntry<ApiType, []>;
+      remapId: AugmentedQuery<ApiType, () => Observable<bool>, []> & QueryableStorageEntry<ApiType, []>;
       /**
        * Generic query
        **/
@@ -144,15 +163,16 @@ declare module '@polkadot/api-base/types/storage' {
         [GearCoreIdsCodeId]
       > &
         QueryableStorageEntry<ApiType, [GearCoreIdsCodeId]>;
-      memoryPageStorage: AugmentedQuery<
+      memoryPageStorage2: AugmentedQuery<
         ApiType,
         (
           arg1: GearCoreIdsProgramId | string | Uint8Array,
           arg2: u32 | AnyNumber | Uint8Array,
+          arg3: u32 | AnyNumber | Uint8Array,
         ) => Observable<Option<Bytes>>,
-        [GearCoreIdsProgramId, u32]
+        [GearCoreIdsProgramId, u32, u32]
       > &
-        QueryableStorageEntry<ApiType, [GearCoreIdsProgramId, u32]>;
+        QueryableStorageEntry<ApiType, [GearCoreIdsProgramId, u32, u32]>;
       metadataStorage: AugmentedQuery<
         ApiType,
         (arg: GearCoreIdsCodeId | string | Uint8Array) => Observable<Option<GearCommonCodeMetadata>>,
@@ -179,18 +199,12 @@ declare module '@polkadot/api-base/types/storage' {
         QueryableStorageEntry<ApiType, [GearCoreIdsProgramId]>;
       resumeSessions: AugmentedQuery<
         ApiType,
-        (arg: u128 | AnyNumber | Uint8Array) => Observable<Option<GearCommonPausedProgramStorageResumeSession>>,
-        [u128]
+        (arg: u32 | AnyNumber | Uint8Array) => Observable<Option<GearCommonPausedProgramStorageResumeSession>>,
+        [u32]
       > &
-        QueryableStorageEntry<ApiType, [u128]>;
-      resumeSessionsNonce: AugmentedQuery<ApiType, () => Observable<Option<u128>>, []> &
+        QueryableStorageEntry<ApiType, [u32]>;
+      resumeSessionsNonce: AugmentedQuery<ApiType, () => Observable<Option<u32>>, []> &
         QueryableStorageEntry<ApiType, []>;
-      sessionMemoryPages: AugmentedQuery<
-        ApiType,
-        (arg: u128 | AnyNumber | Uint8Array) => Observable<Option<Vec<ITuple<[u32, Bytes]>>>>,
-        [u128]
-      > &
-        QueryableStorageEntry<ApiType, [u128]>;
       waitingInitStorage: AugmentedQuery<
         ApiType,
         (arg: GearCoreIdsProgramId | string | Uint8Array) => Observable<Option<Vec<GearCoreIdsMessageId>>>,
