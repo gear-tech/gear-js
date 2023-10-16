@@ -90,6 +90,10 @@ jobs:
         with:
           cmd: install
 
+      - name: Install additional dependencies rollup-linux-x64-gnu
+        if: steps.check_file_changed.outputs.frontend_changed == 'True'
+        run : sudo yarn add @rollup/rollup-linux-x64-gnu
+        
       - name: Build frontend pkg
         if: steps.check_file_changed.outputs.frontend_changed == 'True'
         run: sudo yarn build:frontend
