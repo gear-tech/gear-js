@@ -11,6 +11,7 @@ import {
   useIsVoucherExists,
   useVoucherBalance,
   useVoucher,
+  useBalance,
   useBalanceFormat,
   useAccount,
   useAlert,
@@ -33,7 +34,7 @@ import {
   DEFAULT_ERROR_OPTIONS,
   DEFAULT_SUCCESS_OPTIONS,
   DEFAULT_LOADING_OPTIONS,
-} from 'consts';
+} from './consts';
 
 import {
   AlertType,
@@ -46,7 +47,7 @@ import {
   DefaultTemplateOptions,
   ProviderProps,
   Account,
-} from 'types';
+} from './types';
 
 export {
   useReadFullState,
@@ -61,6 +62,7 @@ export {
   useIsVoucherExists,
   useVoucherBalance,
   useVoucher,
+  useBalance,
   useBalanceFormat,
   useAccount,
   useAlert,
@@ -77,6 +79,9 @@ export {
   DEFAULT_SUCCESS_OPTIONS,
   DEFAULT_LOADING_OPTIONS,
   AlertType,
+};
+
+export type {
   AlertOptions,
   TemplateAlertOptions,
   AlertInstance,

@@ -16,7 +16,7 @@ import {
 } from './useCalculateGas';
 
 import { useIsVoucherExists, useVoucherBalance, useVoucher } from './voucher';
-import { useBalanceFormat } from './balance';
+import { useBalance, useBalanceFormat } from './balance';
 
 export {
   useReadFullState,
@@ -31,6 +31,7 @@ export {
   useIsVoucherExists,
   useVoucherBalance,
   useVoucher,
+  useBalance,
   useBalanceFormat,
   useDepricatedSendMessage,
   DepricatedSendMessageOptions,

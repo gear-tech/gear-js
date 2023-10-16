@@ -2,7 +2,7 @@ import Identicon from '@polkadot/react-identicon';
 import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
 
-import styles from './AccountButton.module.scss';
+import styles from './account-button.module.scss';
 
 type Props = {
   name?: string;

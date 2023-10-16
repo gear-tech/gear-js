@@ -1,4 +1,4 @@
-import packageJson from './package.json';
+import packageJson from './package.json' assert { type: 'json' };
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from 'rollup-plugin-typescript2';

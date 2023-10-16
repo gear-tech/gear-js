@@ -42,7 +42,13 @@
 
       "rules": {
         "@typescript-eslint/no-unsafe-enum-comparison": "off",
-        "@typescript-eslint/no-floating-promises": "off"
+        "@typescript-eslint/no-floating-promises": "off",
+        "react/display-name": "off",
+        "import/no-named-as-default": "off",
+
+        // airbnb cfg
+        "no-shadow": "error",
+        "no-shadow-restricted-names": "error"
       }
     }
   ]

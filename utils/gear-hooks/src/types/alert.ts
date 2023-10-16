@@ -41,8 +41,9 @@ type AlertContainerFactory = {
 
 type DefaultTemplateOptions = Required<Omit<AlertOptions, 'customId' | 'title'>>;
 
-export {
-  AlertType,
+export { AlertType };
+
+export type {
   AlertOptions,
   TemplateAlertOptions,
   AlertInstance,
