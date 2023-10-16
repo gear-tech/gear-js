@@ -37,12 +37,8 @@
   margin-left: auto;
 }
 
-.wallets {
+.list {
   @include childrenMargin(16px);
-}
-
-.accountList {
-  @include childrenMargin($margin);
 
   .accountButton {
     width: 100%;

@@ -3,12 +3,11 @@ import { useAccount, useAlert } from '@gear-js/react-hooks';
 import { Button, Modal, buttonStyles } from '@gear-js/ui';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { isWeb3Injected } from '@polkadot/extension-dapp';
-import clsx from 'clsx';
+import cx from 'clsx';
 import SimpleBar from 'simplebar-react';
 
 import { copyToClipboard } from '@/shared/helpers';
 import LogoutSVG from '@/shared/assets/images/actions/logout.svg?react';
-import ArrowSVG from '@/shared/assets/images/actions/arrowLeft.svg?react';
 import CopyKeySVG from '@/shared/assets/images/actions/copyKey.svg?react';
 
 import { AccountButton } from '../account-button';
@@ -22,6 +21,7 @@ type Props = {
 
 const AccountsModal = ({ close }: Props) => {
   const { account, extensions, login, logout } = useAccount();
+
   const alert = useAlert();
 
   const { wallet, walletAccounts, setWalletId, resetWalletId, getWalletAccounts } = useWallet();
@@ -36,28 +36,27 @@ const AccountsModal = ({ close }: Props) => {
     close();
   };
 
-  const modalClassName = clsx(styles.modal, !isWeb3Injected && styles.empty);
+  const modalClassName = cx(styles.modal, !isWeb3Injected && styles.empty);
   const heading = wallet ? 'Connect account' : 'Choose Wallet';
 
   const getWallets = () =>
     WALLETS.map(([id, { SVG, name }]) => {
-      const isEnabled = !!extensions?.some((extension) => extension.name === id);
+      const isEnabled = extensions?.some((extension) => extension.name === id);
 
       const accountsCount = getWalletAccounts(id)?.length;
       const accountsStatus = `${accountsCount} ${accountsCount === 1 ? 'account' : 'accounts'}`;
 
+      const buttonClassName = cx(
+        buttonStyles.button,
+        buttonStyles.large,
+        buttonStyles.block,
+        styles.button,
+        isEnabled && styles.enabled,
+      );
+
       return (
         <li key={id}>
-          <button
-            type="button"
-            className={clsx(
-              buttonStyles.button,
-              buttonStyles.large,
-              buttonStyles.block,
-              styles.button,
-              isEnabled && styles.enabled,
-            )}
-            onClick={() => setWalletId(id)}>
+          <button type="button" className={buttonClassName} onClick={() => setWalletId(id)}>
             <span>
               <SVG className={buttonStyles.icon} /> {name}
             </span>
@@ -74,35 +73,28 @@ const AccountsModal = ({ close }: Props) => {
 
   const getAccounts = () =>
     walletAccounts?.map((_account) => {
-      const isActive = _account.address === account?.address;
+      const { address, meta } = _account;
+      const isActive = address === account?.address;
 
       const handleClick = () => {
         if (isActive) return;
-
         handleAccountClick(_account);
       };
 
       const handleCopy = () => {
-        const decodedAddress = decodeAddress(_account.address);
-
+        const decodedAddress = decodeAddress(address);
         copyToClipboard(decodedAddress, alert);
       };
 
-      const accountBtnClasses = clsx(
+      const accountBtnClasses = cx(
         buttonStyles.large,
         styles.accountButton,
         isActive ? styles.active : buttonStyles.light,
       );
 
       return (
-        <li key={_account.address} className={styles.accountItem}>
-          <AccountButton
-            name={_account.meta.name}
-            address={_account.address}
-            className={accountBtnClasses}
-            onClick={handleClick}
-          />
-
+        <li key={address} className={styles.accountItem}>
+          <AccountButton name={meta.name} address={address} className={accountBtnClasses} onClick={handleClick} />
           <Button icon={CopyKeySVG} color="transparent" onClick={handleCopy} />
         </li>
       );
@@ -113,11 +105,11 @@ const AccountsModal = ({ close }: Props) => {
       {isWeb3Injected ? (
         <>
           <SimpleBar className={styles.simplebar}>
-            {!wallet && <ul className={styles.wallets}>{getWallets()}</ul>}
+            {!wallet && <ul className={styles.list}>{getWallets()}</ul>}
 
             {!!wallet &&
               (walletAccounts?.length ? (
-                <ul className={styles.accountList}>{getAccounts()}</ul>
+                <ul className={styles.list}>{getAccounts()}</ul>
               ) : (
                 <p>
                   No accounts found. Please open your Polkadot extension and create a new account or import existing.
@@ -127,15 +119,7 @@ const AccountsModal = ({ close }: Props) => {
           </SimpleBar>
 
           <footer className={styles.footer}>
-            {wallet && (
-              <Button
-                icon={wallet ? wallet.SVG : ArrowSVG}
-                text={wallet ? wallet.name : 'Back'}
-                color="transparent"
-                onClick={resetWalletId}
-                disabled={!wallet}
-              />
-            )}
+            {wallet && <Button icon={wallet.SVG} text={wallet.name} color="transparent" onClick={resetWalletId} />}
 
             <Button
               icon={LogoutSVG}
