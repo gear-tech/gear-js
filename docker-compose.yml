@@ -170,7 +170,7 @@ services:
       DB_PASSWORD: postgres
       DB_HOST: pg-indexer
       RABBIT_MQ_URL: amqp://guest:guest@rabbitmq:5672
-      GEAR_WS_PROVIDER: ws://gear-node:9944
+      GEAR_WS_PROVIDER: ws://gear-node:9944  # If you run the command without specifying the --profile option for gear-node, please provide the address of your node
 
 volumes:
   # These store application data that should persist across restarts.
