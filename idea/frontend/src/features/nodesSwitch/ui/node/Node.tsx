@@ -49,18 +49,10 @@ const Node = (props: Props) => {
         />
 
         <SVG className={styles.icon} />
-
-        {address}
+        <span>{address}</span>
       </label>
 
       <div className={styles.buttons}>
-        <Button
-          icon={copyGreenSVG}
-          color="transparent"
-          className={styles.actionBtn}
-          aria-label="Copy node address"
-          onClick={handleCopy}
-        />
         {isCustom && (
           <Button
             icon={trashSVG}
@@ -71,6 +63,14 @@ const Node = (props: Props) => {
             onClick={handleRemove}
           />
         )}
+
+        <Button
+          icon={copyGreenSVG}
+          color="transparent"
+          className={styles.actionBtn}
+          aria-label="Copy node address"
+          onClick={handleCopy}
+        />
       </div>
     </li>
   );
