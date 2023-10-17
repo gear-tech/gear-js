@@ -86,13 +86,11 @@ services:
       - 5672:5672
       - 15672:15672
     environment:
-      #RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
       RABBITMQ_DEFAULT_USER: "guest"
       RABBITMQ_DEFAULT_PASS: "guest"
       RABBITMQ_DEFAULT_VHOST: "/"
     healthcheck:
       <<: *healthcheck_defaults
-      #test: [ "CMD", "nc", "-z", "localhost", "5672" ]
       test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
     ulimits:
       nofile:
@@ -117,7 +115,6 @@ services:
       CRON_TIME: 0 */3 * * *
       REDIS_HOST: redis
       REDIS_PORT: '6379'
-      #REDIS_PASSWORD: redis
 
   meta-storage:
     <<: *restart_policy
@@ -174,13 +171,9 @@ services:
 
 volumes:
   # These store application data that should persist across restarts.
-#  gear-postgres:
   gear-postgres-meta:
   gear-postgres-indexer:
-#    external: true
   gear-redis:
-#    external: true
   gear-rabbitmq:
-#    external: true
   gear-api-gateway:
   gear-data:
