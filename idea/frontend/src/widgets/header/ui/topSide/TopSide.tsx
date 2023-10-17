@@ -101,9 +101,7 @@ const TopSide = () => {
                   </TooltipWrapper>
                 )}
 
-                <TooltipWrapper text="Transfer balance">
-                  <TransferBalance />
-                </TooltipWrapper>
+                <TransferBalance />
               </div>
             </CSSTransition>
           )}

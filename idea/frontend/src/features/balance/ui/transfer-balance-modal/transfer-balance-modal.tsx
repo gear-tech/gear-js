@@ -5,12 +5,12 @@ import { useState } from 'react';
 import { Form } from 'react-final-form';
 import * as yup from 'yup';
 
-import { ReactComponent as CloseSVG } from 'shared/assets/images/actions/close.svg';
-import { FormInput, ValueField } from 'shared/ui/form';
-import { getValidation, isAccountAddressValid } from 'shared/helpers';
-import { useBalanceTransfer } from 'hooks';
+import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
+import { FormInput, ValueField } from '@/shared/ui/form';
+import { getValidation, isAccountAddressValid } from '@/shared/helpers';
+import { useBalanceTransfer } from '@/hooks';
 
-import { ReactComponent as SubmitSVG } from '../../assets/submit.svg';
+import SubmitSVG from '../../assets/submit.svg?react';
 import styles from './transfer-balance-modal.module.scss';
 
 const initialValues = { address: '', value: '' };
