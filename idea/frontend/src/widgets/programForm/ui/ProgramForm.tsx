@@ -25,12 +25,13 @@ type Props = {
   metaHex: HexString | undefined;
   metadata: ProgramMetadata | undefined;
   gasMethod: GasMethod;
+  fileName?: string;
   renderButtons: (props: RenderButtonsProps) => ReactChild;
   onSubmit: (values: Payload, helpers: SubmitHelpers) => void;
 };
 
 const ProgramForm = (props: Props) => {
-  const { gasMethod, metaHex, metadata, source, renderButtons, onSubmit } = props;
+  const { gasMethod, metaHex, metadata, source, fileName = '', renderButtons, onSubmit } = props;
 
   const { api, isApiReady } = useApi();
 
@@ -123,7 +124,10 @@ const ProgramForm = (props: Props) => {
   }, [metadata]);
 
   return (
-    <Form initialValues={INITIAL_VALUES} validate={validation} onSubmit={handleSubmitForm}>
+    <Form
+      initialValues={{ ...INITIAL_VALUES, programName: fileName }}
+      validate={validation}
+      onSubmit={handleSubmitForm}>
       {({ form, handleSubmit }) => {
         formApi.current = form;
 
