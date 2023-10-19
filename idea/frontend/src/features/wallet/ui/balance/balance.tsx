@@ -1,4 +1,4 @@
-import { useAccount, useBalance, useBalanceFormat } from '@gear-js/react-hooks';
+import { useAccount, useApi, useBalance, useBalanceFormat } from '@gear-js/react-hooks';
 import cx from 'clsx';
 
 import headerStyles from '@/widgets/header/ui/Header.module.scss';
@@ -6,11 +6,12 @@ import headerStyles from '@/widgets/header/ui/Header.module.scss';
 import styles from './balance.module.scss';
 
 const Balance = () => {
+  const { isApiReady } = useApi();
   const { account } = useAccount();
   const { balance } = useBalance(account?.address);
   const { getFormattedBalance } = useBalanceFormat();
 
-  const formattedBalance = balance ? getFormattedBalance(balance) : undefined;
+  const formattedBalance = isApiReady && balance ? getFormattedBalance(balance) : undefined;
 
   return formattedBalance ? (
     <section className={styles.balanceSection}>
