@@ -21,9 +21,9 @@ export interface IMessageSendOptions {
    */
   value?: Value;
   /**
-   * A flag that indicates whether a voucher should be used.
+   * A flag that indicates whether the account should be kept alive after the value is sent to the program.
    */
-  prepaid?: boolean;
+  keepAlive?: boolean;
   /**
    * ID of the account sending the message
    */

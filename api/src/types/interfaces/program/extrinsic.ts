@@ -12,6 +12,7 @@ export interface IProgramUploadOptions {
   initPayload?: AnyJson;
   gasLimit: GasLimit;
   value?: Value;
+  keepAlive?: boolean;
 }
 
 export interface IProgramCreateOptions extends Omit<IProgramUploadOptions, 'code'> {

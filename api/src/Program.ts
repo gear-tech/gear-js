@@ -98,7 +98,14 @@ export class GearProgram extends GearTransaction {
     const programId = generateProgramId(this._api, codeId, salt);
 
     try {
-      this.extrinsic = this._api.tx.gear.uploadProgram(code, salt, payload, args.gasLimit, args.value || 0);
+      this.extrinsic = this._api.tx.gear.uploadProgram(
+        code,
+        salt,
+        payload,
+        args.gasLimit,
+        args.value || 0,
+        args.keepAlive || true,
+      );
       return { programId, codeId, salt, extrinsic: this.extrinsic };
     } catch (error) {
       throw new SubmitProgramError();
@@ -163,7 +170,14 @@ export class GearProgram extends GearTransaction {
     const programId = generateProgramId(this._api, codeId, salt);
 
     try {
-      this.extrinsic = this._api.tx.gear.createProgram(codeId, salt, payload, gasLimit, value || 0);
+      this.extrinsic = this._api.tx.gear.createProgram(
+        codeId,
+        salt,
+        payload,
+        gasLimit,
+        value || 0,
+        args.keepAlive || true,
+      );
       return { programId, salt, extrinsic: this.extrinsic };
     } catch (error) {
       throw new SubmitProgramError();

@@ -5,7 +5,7 @@ import { ReplaySubject } from 'rxjs';
 
 import { IMessageSendOptions, IMessageSendReplyOptions } from './types';
 import { SendMessageError, SendReplyError } from './errors';
-import { encodePayload, validateGasLimit, validateMailboxItem, validateValue, validateVoucher } from './utils';
+import { encodePayload, validateGasLimit, validateMailboxItem, validateValue } from './utils';
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from './metadata';
 import { UserMessageSentData } from './events';
@@ -38,7 +38,7 @@ export class GearMessage extends GearTransaction {
     args: IMessageSendOptions,
     meta: ProgramMetadata,
     typeIndex?: number,
-  ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>;
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
 
   /**
    * ## Send Message
@@ -66,7 +66,7 @@ export class GearMessage extends GearTransaction {
     args: IMessageSendOptions,
     hexRegistry: HexString,
     typeIndex: number,
-  ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>;
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
 
   /**
    * ## Send Message
@@ -93,7 +93,7 @@ export class GearMessage extends GearTransaction {
     args: IMessageSendOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
     typeName?: string,
-  ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>;
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
 
   /**
    * ## Send Message
@@ -102,22 +102,18 @@ export class GearMessage extends GearTransaction {
    * @param typeIndexOrTypeName type index in registry or type name
    * @returns Submitted result
    */
-  async send(
-    { destination, value, gasLimit, payload, prepaid, account }: IMessageSendOptions,
+  send(
+    { destination, value, gasLimit, payload, keepAlive }: IMessageSendOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrTypeName?: number | string,
-  ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>> {
+  ): SubmittableExtrinsic<'promise', ISubmittableResult> {
     validateValue(value, this._api);
     validateGasLimit(gasLimit, this._api);
-
-    if (prepaid && account) {
-      await validateVoucher(destination, account, this._api);
-    }
 
     const _payload = encodePayload(payload, metaOrHexRegistry, 'handle', typeIndexOrTypeName);
 
     try {
-      this.extrinsic = this._api.tx.gear.sendMessage(destination, _payload, gasLimit, value || 0, prepaid || false);
+      this.extrinsic = this._api.tx.gear.sendMessage(destination, _payload, gasLimit, value || 0, keepAlive || true);
       return this.extrinsic;
     } catch (error) {
       throw new SendMessageError(error.message);
@@ -217,27 +213,21 @@ export class GearMessage extends GearTransaction {
    */
 
   async sendReply(
-    { value, gasLimit, replyToId, payload, prepaid, account }: IMessageSendReplyOptions,
+    { value, gasLimit, replyToId, payload, keepAlive, account }: IMessageSendReplyOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrTypeName?: number | string,
   ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>> {
     validateValue(value, this._api);
     validateGasLimit(gasLimit, this._api);
 
-    let source: HexString;
     if (account) {
-      const msg = await validateMailboxItem(account, replyToId, this._api);
-      source = msg.source.toHex();
-    }
-
-    if (prepaid && account && source) {
-      await validateVoucher(source, account, this._api);
+      await validateMailboxItem(account, replyToId, this._api);
     }
 
     const _payload = encodePayload(payload, metaOrHexRegistry, 'reply', typeIndexOrTypeName);
 
     try {
-      this.extrinsic = this._api.tx.gear.sendReply(replyToId, _payload, gasLimit, value, prepaid || false);
+      this.extrinsic = this._api.tx.gear.sendReply(replyToId, _payload, gasLimit, value, keepAlive || true);
       return this.extrinsic;
     } catch (error) {
       throw new SendReplyError();

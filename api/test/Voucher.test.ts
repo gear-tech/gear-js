@@ -78,12 +78,11 @@ describe('Voucher', () => {
         },
         gasLimit: 20_000_000_000,
         account: charlieRaw,
-        prepaid: true,
       },
       metadata,
     );
 
-    const [txData] = await sendTransaction(tx, charlie, ['MessageQueued']);
+    const [txData] = await sendTransaction(api.voucher.call({ SendMessage: tx }), charlie, ['MessageQueued']);
     expect(txData).toBeDefined();
     expect(txData.id).toBeDefined();
     msgId = txData.id.toHex();
@@ -104,7 +103,6 @@ describe('Voucher', () => {
         gasLimit: 20_000_000_000,
         value: 0,
         payload: 'Charlie',
-        prepaid: true,
       },
       metadata,
       metadata.types.reply!,
@@ -112,7 +110,7 @@ describe('Voucher', () => {
 
     const waitForReply = api.message.listenToReplies(programId);
 
-    const [txData] = await sendTransaction(tx, charlie, ['MessageQueued']);
+    const [txData] = await sendTransaction(api.voucher.call({ SendReply: tx }), charlie, ['MessageQueued']);
     expect(txData).toBeDefined();
 
     const reply = await waitForReply(msgId);

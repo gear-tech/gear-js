@@ -444,6 +444,25 @@ export interface FrameSupportDispatchRawOrigin extends Enum {
   readonly type: 'Root' | 'Signed' | 'None';
 }
 
+/** @name PalletGearVoucherPrepaidCall (280) */
+export interface PalletGearVoucherPrepaidCall extends Enum {
+  readonly isSendMessage: boolean;
+  readonly asSendMessage: {
+    readonly destination: GearCoreIdsProgramId;
+    readonly payload: Bytes;
+    readonly gasLimit: u64;
+    readonly value: u128;
+  } & Struct;
+  readonly isSendReply: boolean;
+  readonly asSendReply: {
+    readonly replyToId: GearCoreIdsMessageId;
+    readonly payload: Bytes;
+    readonly gasLimit: u64;
+    readonly value: u128;
+  } & Struct;
+  readonly type: 'SendMessage' | 'SendReply';
+}
+
 /** @name GearCoreCodeInstrumentedCode (217) */
 export interface GearCoreCodeInstrumentedCode extends Struct {
   readonly code: Bytes;
