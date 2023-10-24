@@ -19,6 +19,7 @@ type SendMessageOptions = {
   value?: string | number;
   prepaid?: boolean;
   onSuccess?: (messageId: HexString) => void;
+  onInBlock?: (messageId: HexString) => void;
   onError?: () => void;
 };
 
@@ -64,6 +65,7 @@ function useSendMessage(
     result: ISubmittableResult,
     alertId: string,
     onSuccess?: (messageId: HexString) => void,
+    onInBlock?: (messageId: HexString) => void,
     onError?: () => void,
   ) => {
     const { status, events } = result;
@@ -79,6 +81,14 @@ function useSendMessage(
       alert.update(alertId, 'Ready');
     } else if (isInBlock && alertId) {
       alert.update(alertId, 'In Block');
+
+      events.forEach(({ event }) => {
+        if (event.method === 'MessageQueued') {
+          const messageId = (event as MessageQueued).data.id.toHex();
+
+          onInBlock && onInBlock(messageId);
+        }
+      });
     } else if (isFinalized) {
       if (alertId) alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
 
@@ -93,7 +103,7 @@ function useSendMessage(
 
     const alertId = disableAlerts ? '' : alert.loading('Sign In', { title });
 
-    const { payload, gasLimit, value = 0, prepaid = false, onSuccess, onError } = args;
+    const { payload, gasLimit, value = 0, prepaid = false, onSuccess, onInBlock, onError } = args;
     const { address, decodedAddress, meta } = account;
     const { source } = meta;
 
@@ -110,7 +120,9 @@ function useSendMessage(
       .send(message, metadata)
       .then(() => web3FromSource(source))
       .then(({ signer }) =>
-        api.message.signAndSend(address, { signer }, (result) => handleStatus(result, alertId, onSuccess, onError)),
+        api.message.signAndSend(address, { signer }, (result) =>
+          handleStatus(result, alertId, onSuccess, onInBlock, onError),
+        ),
       )
       .catch((error: Error) => {
         const { message } = error;
