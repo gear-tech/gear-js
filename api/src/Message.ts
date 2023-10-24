@@ -14,7 +14,7 @@ import { encodePayload, getExtrinsic, validateGasLimit, validateMailboxItem, val
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from './metadata';
 import { UserMessageSentData } from './events';
-import { VARA_GENESIS } from 'specs';
+import { VARA_GENESIS } from './specs';
 
 export class GearMessage extends GearTransaction {
   /**
