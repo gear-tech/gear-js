@@ -56,12 +56,13 @@ describe('Gear Message', () => {
     ];
 
     for (const message of messages) {
-      const tx = await api.message.send(
+      const tx = api.message.send(
         {
           destination: programId,
           payload: message.payload,
           gasLimit: 20_000_000_000,
           value: message.value,
+          keepAlive: true,
         },
         metadata,
       );

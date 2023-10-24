@@ -21,9 +21,9 @@ export interface IMessageSendOptions {
    */
   value?: Value;
   /**
-   * A flag that indicates whether a voucher should be used.
+   * A flag that indicates whether the account should be kept alive after the value is sent to the program.
    */
-  prepaid?: boolean;
+  keepAlive?: boolean;
   /**
    * ID of the account sending the message
    */
@@ -31,6 +31,20 @@ export interface IMessageSendOptions {
 }
 
 export interface IMessageSendReplyOptions extends Omit<IMessageSendOptions, 'destination'> {
+  /**
+   * Message ID to which the reply is sending
+   */
+  replyToId: HexString;
+}
+
+export interface VaraMessageSendOptions extends Omit<IMessageSendOptions, 'keepAlive'> {
+  /**
+   * A flag that indicates whether a voucher should be used
+   */
+  prepaid?: boolean;
+}
+
+export interface VaraMessageSendReplyOptions extends Omit<IMessageSendReplyOptions, 'keepAlive'> {
   /**
    * Message ID to which the reply is sending
    */

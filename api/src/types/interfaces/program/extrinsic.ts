@@ -12,9 +12,16 @@ export interface IProgramUploadOptions {
   initPayload?: AnyJson;
   gasLimit: GasLimit;
   value?: Value;
+  keepAlive?: boolean;
 }
 
 export interface IProgramCreateOptions extends Omit<IProgramUploadOptions, 'code'> {
+  codeId: HexString | Uint8Array;
+}
+
+export type VaraProgramUploadOptions = Omit<IProgramUploadOptions, 'keepAlive'>;
+
+export interface VaraProgramCreateOptions extends Omit<VaraProgramUploadOptions, 'code'> {
   codeId: HexString | Uint8Array;
 }
 

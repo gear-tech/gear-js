@@ -11,12 +11,15 @@ import {
   IProgramCreateResult,
   IProgramUploadOptions,
   IProgramUploadResult,
+  VaraProgramCreateOptions,
+  VaraProgramUploadOptions,
 } from './types';
 import { ProgramDoesNotExistError, ProgramHasNoMetahash, SubmitProgramError } from './errors';
 import {
   encodePayload,
   generateCodeHash,
   generateProgramId,
+  getExtrinsic,
   getIdsFromKeys,
   validateGasLimit,
   validateProgramId,
@@ -27,6 +30,7 @@ import { GearGas } from './Gas';
 import { GearResumeSession } from './ResumeSession';
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from './metadata';
+import { VARA_GENESIS } from './specs';
 
 export class GearProgram extends GearTransaction {
   public calculateGas: GearGas;
@@ -60,7 +64,11 @@ export class GearProgram extends GearTransaction {
    * })
    * ```
    */
-  upload(args: IProgramUploadOptions, meta?: ProgramMetadata, typeIndex?: number): IProgramUploadResult;
+  upload(
+    args: IProgramUploadOptions | VaraProgramUploadOptions,
+    meta?: ProgramMetadata,
+    typeIndex?: number,
+  ): IProgramUploadResult;
 
   /**
    * ### Upload program with code using registry in hex format to encode payload
@@ -69,7 +77,11 @@ export class GearProgram extends GearTransaction {
    * @param typeIndex Index of type in the registry.
    * @returns Object containing program id, generated (or specified) salt, code id, prepared extrinsic
    */
-  upload(args: IProgramUploadOptions, hexRegistry: HexString, typeIndex: number): IProgramUploadResult;
+  upload(
+    args: IProgramUploadOptions | VaraProgramUploadOptions,
+    hexRegistry: HexString,
+    typeIndex: number,
+  ): IProgramUploadResult;
 
   /** ### Upload program with code using type name to encode payload
    * @param args
@@ -77,13 +89,13 @@ export class GearProgram extends GearTransaction {
    * @param typeName type name (one of the default rust types if metadata or registry don't specified)
    */
   upload(
-    args: IProgramUploadOptions,
+    args: IProgramUploadOptions | VaraProgramUploadOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
     typeName?: string,
   ): IProgramUploadResult;
 
   upload(
-    args: IProgramUploadOptions,
+    args: IProgramUploadOptions | VaraProgramUploadOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrTypeName?: number | string,
   ): IProgramUploadResult {
@@ -98,9 +110,16 @@ export class GearProgram extends GearTransaction {
     const programId = generateProgramId(this._api, codeId, salt);
 
     try {
-      this.extrinsic = this._api.tx.gear.uploadProgram(code, salt, payload, args.gasLimit, args.value || 0);
+      const txArgs: any[] = [code, salt, payload, args.gasLimit, args.value || 0];
+      if (!this._api.genesisHash.eq(VARA_GENESIS)) {
+        txArgs.push('keepAlive' in args ? args.keepAlive : true);
+      }
+
+      this.extrinsic = getExtrinsic(this._api, 'gear', 'uploadProgram', txArgs);
+
       return { programId, codeId, salt, extrinsic: this.extrinsic };
     } catch (error) {
+      console.log(error);
       throw new SubmitProgramError();
     }
   }
@@ -127,7 +146,11 @@ export class GearProgram extends GearTransaction {
    * })
    * ```
    */
-  create(args: IProgramCreateOptions, meta?: ProgramMetadata, typeIndex?: number | null): IProgramCreateResult;
+  create(
+    args: IProgramCreateOptions | VaraProgramCreateOptions,
+    meta?: ProgramMetadata,
+    typeIndex?: number | null,
+  ): IProgramCreateResult;
 
   /**
    * ### Create program from uploaded on chain code using program metadata to encode payload
@@ -136,7 +159,11 @@ export class GearProgram extends GearTransaction {
    * @param typeIndex Index of type in the registry.
    * @returns Object containing program id, generated (or specified) salt, prepared extrinsic
    */
-  create(args: IProgramCreateOptions, hexRegistry: HexString, typeIndex: number): IProgramCreateResult;
+  create(
+    args: IProgramCreateOptions | VaraProgramCreateOptions,
+    hexRegistry: HexString,
+    typeIndex: number,
+  ): IProgramCreateResult;
 
   /** ## Create program using existed codeId
    * @param args
@@ -144,13 +171,13 @@ export class GearProgram extends GearTransaction {
    * @param type name type name (one of the default rust types if metadata or registry don't specified)
    */
   create(
-    args: IProgramCreateOptions,
+    args: IProgramCreateOptions | VaraProgramCreateOptions,
     metaOrHexRegistry?: HexString | ProgramMetadata,
     typeName?: number | string,
   ): IProgramCreateResult;
 
   create(
-    { codeId, initPayload, value, gasLimit, ...args }: IProgramCreateOptions,
+    { codeId, initPayload, value, gasLimit, ...args }: IProgramCreateOptions | VaraProgramCreateOptions,
     metaOrHexRegistry?: HexString | ProgramMetadata,
     typeIndexOrTypeName?: number | string | null,
   ): IProgramCreateResult {
@@ -163,7 +190,14 @@ export class GearProgram extends GearTransaction {
     const programId = generateProgramId(this._api, codeId, salt);
 
     try {
-      this.extrinsic = this._api.tx.gear.createProgram(codeId, salt, payload, gasLimit, value || 0);
+      const txArgs: any[] = [codeId, salt, payload, gasLimit, value || 0];
+
+      if (!this._api.genesisHash.eq(VARA_GENESIS)) {
+        txArgs.push('keepAlive' in args ? args.keepAlive : true);
+      }
+
+      this.extrinsic = getExtrinsic(this._api, 'gear', 'createProgram', txArgs);
+
       return { programId, salt, extrinsic: this.extrinsic };
     } catch (error) {
       throw new SubmitProgramError();
