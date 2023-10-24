@@ -36,3 +36,17 @@ export interface IMessageSendReplyOptions extends Omit<IMessageSendOptions, 'des
    */
   replyToId: HexString;
 }
+
+export interface VaraMessageSendOptions extends Omit<IMessageSendOptions, 'keepAlive'> {
+  /**
+   * A flag that indicates whether a voucher should be used
+   */
+  prepaid?: boolean;
+}
+
+export interface VaraMessageSendReplyOptions extends Omit<IMessageSendReplyOptions, 'keepAlive'> {
+  /**
+   * Message ID to which the reply is sending
+   */
+  replyToId: HexString;
+}

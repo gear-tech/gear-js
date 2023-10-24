@@ -3,12 +3,18 @@ import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { ReplaySubject } from 'rxjs';
 
-import { IMessageSendOptions, IMessageSendReplyOptions } from './types';
+import {
+  IMessageSendOptions,
+  IMessageSendReplyOptions,
+  VaraMessageSendOptions,
+  VaraMessageSendReplyOptions,
+} from './types';
 import { SendMessageError, SendReplyError } from './errors';
-import { encodePayload, validateGasLimit, validateMailboxItem, validateValue } from './utils';
+import { encodePayload, getExtrinsic, validateGasLimit, validateMailboxItem, validateValue } from './utils';
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from './metadata';
 import { UserMessageSentData } from './events';
+import { VARA_GENESIS } from 'specs';
 
 export class GearMessage extends GearTransaction {
   /**
@@ -35,7 +41,7 @@ export class GearMessage extends GearTransaction {
    * ```
    */
   send(
-    args: IMessageSendOptions,
+    args: IMessageSendOptions | VaraMessageSendOptions,
     meta: ProgramMetadata,
     typeIndex?: number,
   ): SubmittableExtrinsic<'promise', ISubmittableResult>;
@@ -63,7 +69,7 @@ export class GearMessage extends GearTransaction {
    * ```
    */
   send(
-    args: IMessageSendOptions,
+    args: IMessageSendOptions | VaraMessageSendOptions,
     hexRegistry: HexString,
     typeIndex: number,
   ): SubmittableExtrinsic<'promise', ISubmittableResult>;
@@ -90,7 +96,7 @@ export class GearMessage extends GearTransaction {
    * ```
    */
   send(
-    args: IMessageSendOptions,
+    args: IMessageSendOptions | VaraMessageSendOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
     typeName?: string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult>;
@@ -103,7 +109,7 @@ export class GearMessage extends GearTransaction {
    * @returns Submitted result
    */
   send(
-    { destination, value, gasLimit, payload, keepAlive }: IMessageSendOptions,
+    { destination, value, gasLimit, payload, ...rest }: IMessageSendOptions | VaraMessageSendOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrTypeName?: number | string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
@@ -113,7 +119,15 @@ export class GearMessage extends GearTransaction {
     const _payload = encodePayload(payload, metaOrHexRegistry, 'handle', typeIndexOrTypeName);
 
     try {
-      this.extrinsic = this._api.tx.gear.sendMessage(destination, _payload, gasLimit, value || 0, keepAlive || true);
+      const txArgs: any[] = [destination, _payload, gasLimit, value || 0];
+
+      if (this._api.genesisHash.eq(VARA_GENESIS)) {
+        txArgs.push('prepaid' in rest ? rest.prepaid : false);
+      } else {
+        txArgs.push('keepAlive' in rest ? rest.keepAlive : true);
+      }
+
+      this.extrinsic = getExtrinsic(this._api, 'gear', 'sendMessage', txArgs);
       return this.extrinsic;
     } catch (error) {
       throw new SendMessageError(error.message);
@@ -144,7 +158,7 @@ export class GearMessage extends GearTransaction {
    * ```
    */
   sendReply(
-    args: IMessageSendReplyOptions,
+    args: IMessageSendReplyOptions | VaraMessageSendReplyOptions,
     meta?: ProgramMetadata,
     typeIndex?: number,
   ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>;
@@ -172,7 +186,7 @@ export class GearMessage extends GearTransaction {
    * ```
    */
   sendReply(
-    args: IMessageSendReplyOptions,
+    args: IMessageSendReplyOptions | VaraMessageSendReplyOptions,
     hexRegistry: HexString,
     typeIndex: number,
   ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>;
@@ -199,7 +213,7 @@ export class GearMessage extends GearTransaction {
    * ```
    */
   sendReply(
-    args: IMessageSendReplyOptions,
+    args: IMessageSendReplyOptions | VaraMessageSendReplyOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
     typeName?: string,
   ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>;
@@ -213,7 +227,7 @@ export class GearMessage extends GearTransaction {
    */
 
   async sendReply(
-    { value, gasLimit, replyToId, payload, keepAlive, account }: IMessageSendReplyOptions,
+    { value, gasLimit, replyToId, payload, account, ...rest }: IMessageSendReplyOptions | VaraMessageSendReplyOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrTypeName?: number | string,
   ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>> {
@@ -227,7 +241,15 @@ export class GearMessage extends GearTransaction {
     const _payload = encodePayload(payload, metaOrHexRegistry, 'reply', typeIndexOrTypeName);
 
     try {
-      this.extrinsic = this._api.tx.gear.sendReply(replyToId, _payload, gasLimit, value, keepAlive || true);
+      const txArgs: any[] = [replyToId, _payload, gasLimit, value || 0];
+
+      if (this._api.genesisHash.eq(VARA_GENESIS)) {
+        txArgs.push('prepaid' in rest ? rest.prepaid : false);
+      } else {
+        txArgs.push('keepAlive' in rest ? rest.keepAlive : true);
+      }
+
+      this.extrinsic = getExtrinsic(this._api, 'gear', 'sendReply', txArgs);
       return this.extrinsic;
     } catch (error) {
       throw new SendReplyError();

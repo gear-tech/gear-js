@@ -19,6 +19,12 @@ export interface IProgramCreateOptions extends Omit<IProgramUploadOptions, 'code
   codeId: HexString | Uint8Array;
 }
 
+export type VaraProgramUploadOptions = Omit<IProgramUploadOptions, 'keepAlive'>;
+
+export interface VaraProgramCreateOptions extends Omit<VaraProgramUploadOptions, 'code'> {
+  codeId: HexString | Uint8Array;
+}
+
 export interface IProgramUploadResult {
   programId: HexString;
   codeId: HexString;
