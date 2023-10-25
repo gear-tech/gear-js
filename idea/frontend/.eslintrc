@@ -41,15 +41,21 @@
       "plugins": ["@typescript-eslint/eslint-plugin"],
 
       "rules": {
+        // temporary disable to migrate from airbnb cfg
         "@typescript-eslint/no-unsafe-enum-comparison": "off",
         "@typescript-eslint/no-floating-promises": "off",
         "react/display-name": "off",
         "import/no-named-as-default": "off",
         "@typescript-eslint/no-misused-promises": "off",
+        "@typescript-eslint/no-unsafe-argument": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
 
         // airbnb cfg
         "no-shadow": "error",
-        "no-shadow-restricted-names": "error"
+        "no-shadow-restricted-names": "error",
+
+        // dx
+        "@typescript-eslint/no-unused-vars": "warn"
       }
     }
   ]

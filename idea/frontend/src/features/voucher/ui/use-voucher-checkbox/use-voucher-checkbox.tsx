@@ -3,17 +3,17 @@ import { InputWrapper, Checkbox } from '@gear-js/ui';
 import { useBalanceFormat, useVoucher } from '@gear-js/react-hooks';
 import { FieldRenderProps, useField } from 'react-final-form';
 
-import styles from './is-prepaid-checkbox.module.scss';
+import styles from './use-voucher-checkbox.module.scss';
 
 type Props = {
   programId: HexString | undefined;
 };
 
-const IsPrepaidCheckbox = ({ programId }: Props) => {
+const UseVoucherCheckbox = ({ programId }: Props) => {
   const { isVoucherExists, voucherBalance } = useVoucher(programId);
   const { getFormattedBalance } = useBalanceFormat();
 
-  const field = useField('isPrepaid', { type: 'checkbox' });
+  const field = useField('withVoucher', { type: 'checkbox' });
   const input = field.input as Omit<FieldRenderProps<HTMLInputElement>, 'type'>; // assert cuz Checkbox type is 'switch' | undefined
 
   const formattedBalance = voucherBalance ? getFormattedBalance(voucherBalance) : undefined;
@@ -37,4 +37,4 @@ const IsPrepaidCheckbox = ({ programId }: Props) => {
   ) : null;
 };
 
-export { IsPrepaidCheckbox };
+export { UseVoucherCheckbox };

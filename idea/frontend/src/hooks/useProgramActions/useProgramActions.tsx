@@ -61,6 +61,7 @@ const useProgramActions = () => {
     const { gasLimit, value, initPayload, metadata, payloadType } = payload;
 
     const program = { code: optBuffer, value, gasLimit, initPayload };
+    console.log('program: ', program);
 
     const result = api.program.upload(program, metadata, payloadType);
 

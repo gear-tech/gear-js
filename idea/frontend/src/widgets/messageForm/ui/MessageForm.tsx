@@ -18,7 +18,7 @@ import { FormPayload, getPayloadFormValues, getSubmitPayload } from '@/features/
 import { useBalanceMultiplier, useGasCalculate, useGasMultiplier, useMessageActions } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
 import { FormPayloadType } from '@/features/formPayloadType';
-import { IsPrepaidCheckbox } from '@/features/voucher';
+import { UseVoucherCheckbox } from '@/features/voucher';
 
 import { getValidationSchema, resetPayloadValue } from '../helpers';
 import { FormValues, INITIAL_VALUES } from '../model';
@@ -33,7 +33,7 @@ type Props = {
 };
 
 const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => {
-  const { api, isApiReady } = useApi();
+  const { api, isApiReady, isVaraVersion } = useApi();
   const { account } = useAccount();
 
   const calculateGas = useGasCalculate();
@@ -97,21 +97,24 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
     disableSubmitButton();
 
     const payloadType = metadata ? undefined : values.payloadType;
+    const { withVoucher, keepAlive } = values;
 
-    const commonValues = {
+    const baseValues = {
       value: BigNumber(values.value).multipliedBy(balanceMultiplier).toFixed(),
       payload: getSubmitPayload(values.payload),
       gasLimit: BigNumber(values.gasLimit).multipliedBy(gasMultiplier).toFixed(),
-      prepaid: values.isPrepaid,
-      account: values.isPrepaid ? account?.decodedAddress : undefined,
     };
+
+    const commonValues = isVaraVersion
+      ? { ...baseValues, prepaid: withVoucher, account: withVoucher ? account?.decodedAddress : undefined }
+      : { ...baseValues, keepAlive };
 
     if (isReply) {
       const reply = { ...commonValues, replyToId: id };
-      replyMessage({ reply, metadata, payloadType, reject: enableSubmitButton, resolve: resetForm });
+      replyMessage({ reply, metadata, payloadType, withVoucher, reject: enableSubmitButton, resolve: resetForm });
     } else {
       const message = { ...commonValues, destination: id };
-      sendMessage({ message, metadata, payloadType, reject: enableSubmitButton, resolve: resetForm });
+      sendMessage({ message, metadata, payloadType, withVoucher, reject: enableSubmitButton, resolve: resetForm });
     }
   };
 
@@ -159,7 +162,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
 
               {!isLoading && !metadata && <FormPayloadType name="payloadType" label="Payload type" gap="1/5" />}
 
-              <IsPrepaidCheckbox programId={programId} />
+              <UseVoucherCheckbox programId={programId} />
 
               {isLoading ? (
                 <Input label="Value:" gap="1/5" className={styles.loading} readOnly />
