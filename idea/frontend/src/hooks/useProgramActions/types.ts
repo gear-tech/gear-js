@@ -6,9 +6,10 @@ import { OperationCallbacks, ParamsToSignAndSend } from '@/entities/hooks';
 type Payload = {
   value: string;
   gasLimit: string;
+  initPayload: string;
+  keepAlive: boolean;
   metaHex?: HexString;
   metadata?: ProgramMetadata | undefined;
-  initPayload: string;
   programName: string;
   payloadType?: string;
 };

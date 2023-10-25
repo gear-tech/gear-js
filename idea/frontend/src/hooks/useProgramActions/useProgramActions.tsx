@@ -29,7 +29,7 @@ import { Payload, ParamsToCreate, ParamsToUpload, ParamsToSignAndUpload } from '
 
 const useProgramActions = () => {
   const alert = useAlert();
-  const { api, isApiReady } = useApi();
+  const { api, isApiReady, isVaraVersion } = useApi();
   const { account } = useAccount();
   const { isDevChain } = useChain();
 
@@ -46,9 +46,10 @@ const useProgramActions = () => {
   const createProgram = (codeId: HexString, payload: Payload) => {
     if (!isApiReady) throw new Error('API is not initialized');
 
-    const { gasLimit, value, initPayload, metadata, payloadType } = payload;
+    const { gasLimit, value, initPayload, metadata, payloadType, keepAlive } = payload;
 
-    const program = { value, codeId, gasLimit, initPayload };
+    const baseProgram = { value, codeId, gasLimit, initPayload };
+    const program = isVaraVersion ? baseProgram : { ...baseProgram, keepAlive };
 
     const result = api.program.create(program, metadata, payloadType);
 
@@ -58,14 +59,12 @@ const useProgramActions = () => {
   const uploadProgram = (optBuffer: Buffer, payload: Payload) => {
     if (!isApiReady) throw new Error('API is not initialized');
 
-    const { gasLimit, value, initPayload, metadata, payloadType } = payload;
+    const { gasLimit, value, initPayload, metadata, payloadType, keepAlive } = payload;
 
-    const program = { code: optBuffer, value, gasLimit, initPayload };
-    console.log('program: ', program);
+    const baseProgram = { code: optBuffer, value, gasLimit, initPayload };
+    const program = isVaraVersion ? baseProgram : { ...baseProgram, keepAlive };
 
-    const result = api.program.upload(program, metadata, payloadType);
-
-    return result;
+    return api.program.upload(program, metadata, payloadType);
   };
 
   const handleEventsStatus = (events: EventRecord[], { reject }: OperationCallbacks) => {

@@ -15,10 +15,11 @@ import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
 import { getValidation } from '@/shared/helpers';
 import { FormInput, ValueField } from '@/shared/ui/form';
+import { LabeledCheckbox } from '@/shared/ui';
 
-import styles from './ProgramForm.module.scss';
 import { getValidationSchema } from '../helpers';
 import { INITIAL_VALUES, FormValues, RenderButtonsProps, SubmitHelpers } from '../model';
+import styles from './ProgramForm.module.scss';
 
 type Props = {
   source: Buffer | HexString;
@@ -33,7 +34,7 @@ type Props = {
 const ProgramForm = (props: Props) => {
   const { gasMethod, metaHex, metadata, source, fileName = '', renderButtons, onSubmit } = props;
 
-  const { api, isApiReady } = useApi();
+  const { api, isApiReady, isVaraVersion } = useApi();
 
   const formApi = useRef<FormApi<FormValues>>();
 
@@ -73,16 +74,17 @@ const ProgramForm = (props: Props) => {
 
     setIsDisables(true);
 
-    const { value, payload, gasLimit, programName, payloadType } = values;
+    const { value, payload, gasLimit, programName, payloadType, keepAlive } = values;
 
     const data: Payload = {
       value: BigNumber(value).multipliedBy(balanceMultiplier).toFixed(),
       gasLimit: BigNumber(gasLimit).multipliedBy(gasMultiplier).toFixed(),
+      payloadType: metadata ? undefined : payloadType,
+      initPayload: metadata ? getSubmitPayload(payload) : payload,
       metaHex,
       metadata,
       programName,
-      payloadType: metadata ? undefined : payloadType,
-      initPayload: metadata ? getSubmitPayload(payload) : payload,
+      keepAlive,
     };
 
     onSubmit(data, { enableButtons: () => setIsDisables(false), resetForm: formApi.current.reset });
@@ -152,6 +154,10 @@ const ProgramForm = (props: Props) => {
                 info={gasInfo}
                 block
               />
+
+              {!isVaraVersion && (
+                <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" />
+              )}
             </div>
 
             <div className={styles.buttons}>{renderButtons({ isDisabled })}</div>

@@ -6,6 +6,7 @@ type FormValues = {
   gasLimit: string;
   programName: string;
   payloadType: string;
+  keepAlive: boolean;
 };
 
 type RenderButtonsProps = {
