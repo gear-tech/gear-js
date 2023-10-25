@@ -6,9 +6,9 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@gear-js/api": "0.34.0",
+    "@gear-js/api": "0.35.1",
     "@gear-js/common": "workspace:^",
-    "@polkadot/api": "10.9.1",
+    "@polkadot/api": "10.10.1",
     "amqplib": "0.10.3",
     "dotenv": "^16.3.1",
     "pg": "8.10.0",

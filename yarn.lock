@@ -1737,12 +1737,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gear-js/api@npm:0.35.1":
+  version: 0.35.1
+  resolution: "@gear-js/api@npm:0.35.1"
+  peerDependencies:
+    "@polkadot/api": 10.10.1
+    "@polkadot/wasm-crypto": 7.2.2
+    rxjs: 7.8.1
+  checksum: 0600e7eb184eb265c4dd84722166440be69ee1a81c945127af5d1d5094475f8f18bd0d5c721cf5fa804c049bea3f64d8f1bef7a3e1cfad832a3975fd87d0e379
+  languageName: node
+  linkType: hard
+
 "@gear-js/common@workspace:^, @gear-js/common@workspace:idea/common":
   version: 0.0.0-use.local
   resolution: "@gear-js/common@workspace:idea/common"
   dependencies:
-    "@gear-js/api": 0.34.0
-    "@polkadot/api": 10.9.1
+    "@gear-js/api": 0.35.1
+    "@polkadot/api": 10.10.1
     typescript: 4.7.4
     winston: 3.7.2
   languageName: unknown
@@ -1817,9 +1828,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/indexer@workspace:idea/indexer"
   dependencies:
-    "@gear-js/api": 0.34.0
+    "@gear-js/api": 0.35.1
     "@gear-js/common": "workspace:^"
-    "@polkadot/api": 10.9.1
+    "@polkadot/api": 10.10.1
     "@types/amqplib": 0.10.1
     "@types/node": 18.15.11
     amqplib: 0.10.3
@@ -1840,9 +1851,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/meta-storage@workspace:idea/meta-storage"
   dependencies:
-    "@gear-js/api": 0.34.0
+    "@gear-js/api": 0.35.1
     "@gear-js/common": "workspace:^"
-    "@polkadot/api": 10.9.1
+    "@polkadot/api": 10.10.1
     amqplib: 0.10.3
     dotenv: ^16.3.1
     pg: 8.10.0
@@ -1891,9 +1902,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/test-balance@workspace:idea/test-balance"
   dependencies:
-    "@gear-js/api": 0.34.0
+    "@gear-js/api": 0.35.1
     "@gear-js/common": "workspace:^"
-    "@polkadot/api": 10.9.1
+    "@polkadot/api": 10.10.1
     "@types/amqplib": 0.8.2
     "@types/express": 4.17.13
     "@typescript-eslint/eslint-plugin": 4.33.0
@@ -1933,9 +1944,9 @@ __metadata:
     "@babel/plugin-transform-typescript": 7.20.2
     "@babel/preset-env": 7.20.2
     "@babel/preset-typescript": 7.18.6
-    "@gear-js/api": 0.34.0
+    "@gear-js/api": 0.35.1
     "@gear-js/common": "workspace:^"
-    "@polkadot/api": 10.9.1
+    "@polkadot/api": 10.10.1
     "@types/jest": 29.2.3
     babel-jest: 28.1.3
     dotenv: 16.0.3
