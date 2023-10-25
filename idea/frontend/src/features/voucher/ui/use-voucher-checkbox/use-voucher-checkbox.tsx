@@ -1,7 +1,7 @@
 import { HexString } from '@gear-js/api';
-import { InputWrapper, Checkbox } from '@gear-js/ui';
 import { useBalanceFormat, useVoucher } from '@gear-js/react-hooks';
-import { FieldRenderProps, useField } from 'react-final-form';
+
+import { LabeledCheckbox } from '@/shared/ui';
 
 import styles from './use-voucher-checkbox.module.scss';
 
@@ -13,27 +13,14 @@ const UseVoucherCheckbox = ({ programId }: Props) => {
   const { isVoucherExists, voucherBalance } = useVoucher(programId);
   const { getFormattedBalance } = useBalanceFormat();
 
-  const field = useField('withVoucher', { type: 'checkbox' });
-  const input = field.input as Omit<FieldRenderProps<HTMLInputElement>, 'type'>; // assert cuz Checkbox type is 'switch' | undefined
-
   const formattedBalance = voucherBalance ? getFormattedBalance(voucherBalance) : undefined;
 
   return isVoucherExists ? (
-    <InputWrapper
-      id="voucher"
-      direction="x"
-      size="normal"
-      gap="1/5"
-      label="Voucher funds:"
-      className={styles.inputWrapper}>
-      <div className={styles.checkboxWrapper}>
-        <Checkbox label="Use voucher" {...input} />
-
-        <span className={styles.value}>
-          ( {formattedBalance?.value} {formattedBalance?.unit})
-        </span>
-      </div>
-    </InputWrapper>
+    <LabeledCheckbox name="withVoucher" label="Voucher funds:" inputLabel="Use voucher">
+      <span className={styles.value}>
+        ( {formattedBalance?.value} {formattedBalance?.unit})
+      </span>
+    </LabeledCheckbox>
   ) : null;
 };
 

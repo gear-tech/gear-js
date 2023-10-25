@@ -1,0 +1,10 @@
+@use '@/shared/assets/styles/mixins' as *;
+
+.inputWrapper {
+  align-items: center;
+}
+
+.checkboxWrapper {
+  @include childrenMargin(10px, right);
+  display: flex;
+}
