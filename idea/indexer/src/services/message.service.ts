@@ -58,7 +58,6 @@ export class MessageService {
 
     const where = orWhere.length > 0 ? orWhere : commonWhere;
 
-    console.log(where);
     const [messages, count] = await Promise.all([
       this.repo.find({
         where,
