@@ -1763,15 +1763,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/frontend@workspace:idea/frontend"
   dependencies:
-    "@gear-js/api": 0.34.0
+    "@gear-js/api": 0.35.1
     "@gear-js/react-hooks": "workspace:^"
     "@gear-js/ui": 0.5.19
     "@hcaptcha/react-hcaptcha": 1.8.1
     "@mantine/form": 7.1.2
-    "@polkadot/api": 10.9.1
+    "@polkadot/api": 10.10.1
     "@polkadot/extension-dapp": 0.46.5
     "@polkadot/react-identicon": 3.6.3
-    "@polkadot/types": 10.9.1
+    "@polkadot/types": 10.10.1
     "@polkadot/util": 12.5.1
     "@react-aria/utils": 3.21.0
     "@types/lodash.isequal": 4.5.6
@@ -1867,11 +1867,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/react-hooks@workspace:utils/gear-hooks"
   dependencies:
-    "@gear-js/api": 0.34.0
-    "@polkadot/api": 10.9.1
+    "@gear-js/api": 0.35.1
+    "@polkadot/api": 10.10.1
     "@polkadot/extension-dapp": 0.46.5
     "@polkadot/extension-inject": 0.46.5
-    "@polkadot/types": 10.9.1
+    "@polkadot/types": 10.10.1
     "@polkadot/util": 12.5.1
     "@rollup/plugin-commonjs": 25.0.5
     "@rollup/plugin-node-resolve": 15.2.3
@@ -1890,8 +1890,8 @@ __metadata:
     rollup-plugin-typescript2: 0.36.0
     typescript: 5.2.2
   peerDependencies:
-    "@gear-js/api": 0.34.0
-    "@polkadot/api": 10.9.1
+    "@gear-js/api": 0.35.1
+    "@polkadot/api": 10.10.1
     "@polkadot/extension-dapp": 0.46.5
     react: 18.2.0
     react-transition-group: 4.4.5
