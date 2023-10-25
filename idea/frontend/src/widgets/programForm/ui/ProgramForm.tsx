@@ -156,7 +156,7 @@ const ProgramForm = (props: Props) => {
               />
 
               {!isVaraVersion && (
-                <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" />
+                <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" direction="y" />
               )}
             </div>
 

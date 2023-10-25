@@ -181,7 +181,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
               )}
 
               {!isVaraVersion && (
-                <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" />
+                <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" gap="1/5" />
               )}
               <UseVoucherCheckbox programId={programId} />
             </Box>

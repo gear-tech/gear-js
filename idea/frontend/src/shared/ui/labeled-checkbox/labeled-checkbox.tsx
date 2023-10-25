@@ -1,4 +1,4 @@
-import { InputWrapper, Checkbox } from '@gear-js/ui';
+import { InputWrapper, Checkbox, InputProps } from '@gear-js/ui';
 import { ReactNode } from 'react';
 import { FieldRenderProps, useField } from 'react-final-form';
 
@@ -8,15 +8,17 @@ type Props = {
   name: string;
   label: string;
   inputLabel: string;
+  direction?: InputProps['direction'];
+  gap?: InputProps['gap'];
   children?: ReactNode;
 };
 
-const LabeledCheckbox = ({ name, label, inputLabel, children }: Props) => {
+const LabeledCheckbox = ({ name, label, inputLabel, direction = 'x', gap, children }: Props) => {
   const field = useField(name, { type: 'checkbox' });
   const input = field.input as Omit<FieldRenderProps<HTMLInputElement>, 'type'>; // assert cuz Checkbox type is 'switch' | undefined
 
   return (
-    <InputWrapper id={name} direction="x" size="normal" gap="1/5" label={label} className={styles.inputWrapper}>
+    <InputWrapper size="normal" id={name} direction={direction} gap={gap} label={label} className={styles.inputWrapper}>
       <div className={styles.checkboxWrapper}>
         <Checkbox label={inputLabel} {...input} />
 

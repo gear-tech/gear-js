@@ -23,7 +23,6 @@ const App = withProviders(() => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { api, isApiReady, isVaraVersion } = useApi();
-  console.log('isVaraVersion: ', isVaraVersion);
   const { isAccountReady } = useAccount();
   const { isChainRequestReady } = useChain();
   const isAppReady = isApiReady && isAccountReady && isChainRequestReady;
