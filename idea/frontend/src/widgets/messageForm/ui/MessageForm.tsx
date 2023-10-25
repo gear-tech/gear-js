@@ -19,6 +19,7 @@ import { useBalanceMultiplier, useGasCalculate, useGasMultiplier, useMessageActi
 import { Result } from '@/hooks/useGasCalculate/types';
 import { FormPayloadType } from '@/features/formPayloadType';
 import { UseVoucherCheckbox } from '@/features/voucher';
+import { LabeledCheckbox } from '@/shared/ui';
 
 import { getValidationSchema, resetPayloadValue } from '../helpers';
 import { FormValues, INITIAL_VALUES } from '../model';
@@ -162,8 +163,6 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
 
               {!isLoading && !metadata && <FormPayloadType name="payloadType" label="Payload type" gap="1/5" />}
 
-              <UseVoucherCheckbox programId={programId} />
-
               {isLoading ? (
                 <Input label="Value:" gap="1/5" className={styles.loading} readOnly />
               ) : (
@@ -180,6 +179,11 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
                   gap="1/5"
                 />
               )}
+
+              {!isVaraVersion && (
+                <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" />
+              )}
+              <UseVoucherCheckbox programId={programId} />
             </Box>
 
             <Button

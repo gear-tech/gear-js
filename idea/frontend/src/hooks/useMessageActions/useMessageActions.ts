@@ -82,12 +82,14 @@ const useMessageActions = () => {
         const { meta, address } = account!;
 
         const sendExtrinsic = api.message.send(message, metadata, payloadType);
+        console.log('message: ', message);
         let extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
 
         if (isVaraVersion) {
           extrinsic = sendExtrinsic;
         } else {
           extrinsic = withVoucher ? api.voucher.call({ SendMessage: sendExtrinsic }) : sendExtrinsic;
+          console.log('withVoucher: ', withVoucher);
         }
 
         const { signer } = await web3FromSource(meta.source);
