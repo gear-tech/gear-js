@@ -15,9 +15,6 @@ import {
   useBalanceFormat,
   SendMessageOptions,
   UseSendMessageOptions,
-  useDepricatedSendMessage,
-  DepricatedSendMessageOptions,
-  UseDepricatedSendMessageOptions,
 } from './api';
 import { useAccount, useAlert, useApi } from './context';
 import { useCreateHandler } from './handlers';
@@ -41,9 +38,6 @@ export {
   useAlert,
   useApi,
   useCreateHandler,
-  useDepricatedSendMessage,
-  DepricatedSendMessageOptions,
-  UseDepricatedSendMessageOptions,
   SendMessageOptions,
   UseSendMessageOptions,
 };
