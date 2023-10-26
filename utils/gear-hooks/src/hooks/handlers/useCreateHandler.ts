@@ -3,9 +3,9 @@ import { AnyJson } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 import { useContext } from 'react';
 import { AlertContext } from 'context';
-import { useCreateProgram, useCreateCalculateGas } from '../api';
-import { Options } from '../api/useProgram/types';
 import { getAutoGasLimit } from 'utils';
+import { Options } from '../api/useProgram/types';
+import { useCreateProgram, useCreateCalculateGas } from '../api';
 
 function useCreateHandler(codeId: HexString | undefined, metadata?: ProgramMetadata | undefined) {
   const alert = useContext(AlertContext); // сircular dependency fix
@@ -15,7 +15,7 @@ function useCreateHandler(codeId: HexString | undefined, metadata?: ProgramMetad
 
   return (initPayload: AnyJson, options?: Options) => {
     calculateGas(initPayload)
-      .then(getAutoGasLimit)
+      .then((result) => getAutoGasLimit(result))
       .then((gasLimit) => createProgram(initPayload, gasLimit, options))
       .catch(({ message }: Error) => alert.error(message));
   };

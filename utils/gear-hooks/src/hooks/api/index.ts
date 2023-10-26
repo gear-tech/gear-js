@@ -1,6 +1,6 @@
 import { useReadFullState, useReadWasmState } from './useReadState';
 
-import { useSendMessage, SendMessageOptions, UseSendMessageOptions } from './useSendMessage';
+import { useSendMessage, SendMessageOptions, UseSendMessageOptions, VaraSendMessageOptions } from './useSendMessage';
 
 import { useUploadProgram, useCreateProgram } from './useProgram';
 import {
@@ -30,4 +30,5 @@ export {
   useBalanceFormat,
   SendMessageOptions,
   UseSendMessageOptions,
+  VaraSendMessageOptions,
 };

@@ -1,11 +1,4 @@
-import {
-  GasLimit,
-  IMessageSendOptions,
-  MessageQueued,
-  ProgramMetadata,
-  VARA_GENESIS,
-  VaraMessageSendOptions,
-} from '@gear-js/api';
+import { GasLimit, IMessageSendOptions, MessageQueued, ProgramMetadata, VaraMessageSendOptions } from '@gear-js/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { AnyJson, ISubmittableResult } from '@polkadot/types/types';
@@ -165,4 +158,4 @@ function useSendMessage(
   return sendMessage;
 }
 
-export { useSendMessage, SendMessageOptions, UseSendMessageOptions };
+export { useSendMessage, SendMessageOptions, UseSendMessageOptions, VaraSendMessageOptions };

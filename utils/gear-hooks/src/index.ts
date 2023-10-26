@@ -17,6 +17,7 @@ import {
   useAlert,
   useApi,
   useCreateHandler,
+  useSendMessageHandler,
   SendMessageOptions,
   UseSendMessageOptions,
 } from './hooks';
@@ -68,6 +69,7 @@ export {
   ApiProvider,
   AlertProvider,
   useCreateHandler,
+  useSendMessageHandler,
   withoutCommas,
   DEFAULT_OPTIONS,
   DEFAULT_INFO_OPTIONS,
