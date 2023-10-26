@@ -4,9 +4,9 @@ import { useBalanceFormat, useVoucher } from '@gear-js/react-hooks';
 import VoucherPlaceholderSVG from '@/features/voucher/assets/voucher-placeholder.svg?react';
 import { ContentLoader } from '@/shared/ui/contentLoader';
 import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
+import { withAccount } from '@/shared/ui';
 import { Table, TableRow } from '@/shared/ui/table';
 
-import { withAccount } from '../../hooks';
 import styles from './voucher-table.module.scss';
 
 type Props = {

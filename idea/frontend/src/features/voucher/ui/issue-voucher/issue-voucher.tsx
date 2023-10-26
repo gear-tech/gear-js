@@ -3,10 +3,10 @@ import { Button } from '@gear-js/ui';
 import { useState } from 'react';
 import cx from 'clsx';
 
+import { withAccount } from '@/shared/ui';
 import actionLinkStyles from '@/shared/ui/ActionLink/ActionLink.module.scss';
 
 import CouponSVG from '../../assets/coupon.svg?react';
-import { withAccount } from '../../hooks';
 import { IssueVoucherModal } from '../issue-voucher-modal';
 
 type Props = {
