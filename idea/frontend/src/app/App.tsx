@@ -22,7 +22,7 @@ const App = withProviders(() => {
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { api, isApiReady, isVaraVersion } = useApi();
+  const { api, isApiReady } = useApi();
   const { isAccountReady } = useAccount();
   const { isChainRequestReady } = useChain();
   const isAppReady = isApiReady && isAccountReady && isChainRequestReady;
