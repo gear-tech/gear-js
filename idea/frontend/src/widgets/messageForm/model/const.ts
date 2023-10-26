@@ -5,7 +5,8 @@ const INITIAL_VALUES: FormValues = {
   payload: '0x',
   gasLimit: '0',
   payloadType: 'Bytes',
-  isPrepaid: false,
+  withVoucher: false,
+  keepAlive: true,
 };
 
 export { INITIAL_VALUES };

@@ -15,12 +15,9 @@ import {
   useBalanceFormat,
   SendMessageOptions,
   UseSendMessageOptions,
-  useDepricatedSendMessage,
-  DepricatedSendMessageOptions,
-  UseDepricatedSendMessageOptions,
 } from './api';
 import { useAccount, useAlert, useApi } from './context';
-import { useCreateHandler } from './handlers';
+import { useCreateHandler, useSendMessageHandler } from './handlers';
 
 export {
   useReadFullState,
@@ -41,9 +38,7 @@ export {
   useAlert,
   useApi,
   useCreateHandler,
-  useDepricatedSendMessage,
-  DepricatedSendMessageOptions,
-  UseDepricatedSendMessageOptions,
+  useSendMessageHandler,
   SendMessageOptions,
   UseSendMessageOptions,
 };

@@ -1,4 +1,4 @@
-import { GearApi } from '@gear-js/api';
+import { GearApi, VARA_GENESIS } from '@gear-js/api';
 import { WsProvider, ScProvider } from '@polkadot/api';
 import * as Sc from '@substrate/connect';
 import { createContext, useEffect, useMemo, useRef, useState } from 'react';
@@ -24,10 +24,12 @@ type Value = {
 } & (
   | {
       api: undefined;
+      isVaraVersion: false;
       isApiReady: false;
     }
   | {
       api: GearApi;
+      isVaraVersion: boolean;
       isApiReady: true;
     }
 );
@@ -39,6 +41,7 @@ type Props = ProviderProps & {
 const initialValue = {
   api: undefined,
   isApiReady: false as const,
+  isVaraVersion: false as const,
   switchNetwork: () => Promise.resolve(),
 };
 
@@ -88,7 +91,9 @@ function ApiProvider({ initialArgs, children }: Props) {
 
   const value = useMemo(
     () =>
-      api ? { api, isApiReady: true as const, switchNetwork } : { api, isApiReady: false as const, switchNetwork },
+      api
+        ? { api, isApiReady: true as const, isVaraVersion: api.genesisHash.toHex() === VARA_GENESIS, switchNetwork }
+        : { api, isApiReady: false as const, isVaraVersion: false as const, switchNetwork },
     [api],
   );
 

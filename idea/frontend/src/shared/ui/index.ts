@@ -1,3 +1,4 @@
 import { withAccount } from './with-account';
+import { LabeledCheckbox } from './labeled-checkbox';
 
-export { withAccount };
+export { LabeledCheckbox, withAccount };

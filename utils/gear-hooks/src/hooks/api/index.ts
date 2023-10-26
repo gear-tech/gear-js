@@ -1,11 +1,6 @@
 import { useReadFullState, useReadWasmState } from './useReadState';
 
-import { useSendMessage, SendMessageOptions, UseSendMessageOptions } from './useSendMessage';
-import {
-  useDepricatedSendMessage,
-  DepricatedSendMessageOptions,
-  UseDepricatedSendMessageOptions,
-} from './useDepricatedSendMessage';
+import { useSendMessage, SendMessageOptions, UseSendMessageOptions, VaraSendMessageOptions } from './useSendMessage';
 
 import { useUploadProgram, useCreateProgram } from './useProgram';
 import {
@@ -33,9 +28,7 @@ export {
   useVoucher,
   useBalance,
   useBalanceFormat,
-  useDepricatedSendMessage,
-  DepricatedSendMessageOptions,
-  UseDepricatedSendMessageOptions,
   SendMessageOptions,
   UseSendMessageOptions,
+  VaraSendMessageOptions,
 };

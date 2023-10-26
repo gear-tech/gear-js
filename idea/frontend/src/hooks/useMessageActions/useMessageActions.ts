@@ -1,6 +1,8 @@
 import { useCallback } from 'react';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { EventRecord } from '@polkadot/types/interfaces';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { ISubmittableResult } from '@polkadot/types/types';
 import { useApi, useAlert, useAccount, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
 import { useModal } from '@/hooks';
@@ -12,7 +14,7 @@ import { PROGRAM_ERRORS, TransactionStatus, TransactionName } from '@/shared/con
 import { ParamsToSendMessage, ParamsToSignAndSend, ParamsToReplyMessage } from './types';
 
 const useMessageActions = () => {
-  const { api, isApiReady } = useApi();
+  const { api, isApiReady, isVaraVersion } = useApi();
   const { account } = useAccount();
   const alert = useAlert();
   const { showModal } = useModal();
@@ -36,13 +38,19 @@ const useMessageActions = () => {
     });
   };
 
-  const signAndSend = async ({ signer, title = TransactionName.SendMessage, reject, resolve }: ParamsToSignAndSend) => {
+  const signAndSend = async ({
+    extrinsic,
+    signer,
+    title = TransactionName.SendMessage,
+    reject,
+    resolve,
+  }: ParamsToSignAndSend) => {
     const alertId = alert.loading('SignIn', { title });
 
     try {
       if (!isApiReady) throw new Error('API is not initialized');
 
-      await api.message.signAndSend(account!.address, { signer }, ({ events, status }) => {
+      await extrinsic.signAndSend(account!.address, { signer }, ({ events, status }) => {
         if (status.isReady) {
           alert.update(alertId, TransactionStatus.Ready);
         } else if (status.isInBlock) {
@@ -66,23 +74,26 @@ const useMessageActions = () => {
   };
 
   const sendMessage = useCallback(
-    async ({ metadata, message, payloadType, reject, resolve }: ParamsToSendMessage) => {
+    async ({ metadata, message, payloadType, withVoucher, reject, resolve }: ParamsToSendMessage) => {
       try {
         if (!isApiReady) throw new Error('API is not initialized');
         checkWallet(account);
 
         const { meta, address } = account!;
 
-        await api.message.send(message, metadata, payloadType);
+        const sendExtrinsic = api.message.send(message, metadata, payloadType);
+        let extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
+
+        if (isVaraVersion) {
+          extrinsic = sendExtrinsic;
+        } else {
+          extrinsic = withVoucher ? api.voucher.call({ SendMessage: sendExtrinsic }) : sendExtrinsic;
+        }
+
         const { signer } = await web3FromSource(meta.source);
         const { partialFee } = await api.message.paymentInfo(address, { signer });
 
-        const handleConfirm = () =>
-          signAndSend({
-            signer,
-            reject,
-            resolve,
-          });
+        const handleConfirm = () => signAndSend({ extrinsic, signer, reject, resolve });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),
@@ -105,24 +116,27 @@ const useMessageActions = () => {
   );
 
   const replyMessage = useCallback(
-    async ({ reply, metadata, payloadType, reject, resolve }: ParamsToReplyMessage) => {
+    async ({ reply, metadata, payloadType, withVoucher, reject, resolve }: ParamsToReplyMessage) => {
       try {
         if (!isApiReady) throw new Error('API is not initialized');
         checkWallet(account);
 
         const { meta, address } = account!;
 
-        await api.message.sendReply(reply, metadata, payloadType);
+        const replyExtrinsic = await api.message.sendReply(reply, metadata, payloadType);
+        let extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
+
+        if (isVaraVersion) {
+          extrinsic = replyExtrinsic;
+        } else {
+          extrinsic = withVoucher ? api.voucher.call({ SendReply: replyExtrinsic }) : replyExtrinsic;
+        }
+
         const { signer } = await web3FromSource(meta.source);
         const { partialFee } = await api.message.paymentInfo(address, { signer });
 
         const handleConfirm = () =>
-          signAndSend({
-            signer,
-            title: TransactionName.SendReply,
-            reject,
-            resolve,
-          });
+          signAndSend({ extrinsic, signer, title: TransactionName.SendReply, reject, resolve });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),

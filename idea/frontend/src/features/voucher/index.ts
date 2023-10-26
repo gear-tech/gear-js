@@ -1,3 +1,3 @@
-import { IssueVoucher, IsPrepaidCheckbox, VoucherTable, VoucherBadge } from './ui';
+import { IssueVoucher, UseVoucherCheckbox, VoucherTable, VoucherBadge } from './ui';
 
-export { IssueVoucher, IsPrepaidCheckbox, VoucherTable, VoucherBadge };
+export { IssueVoucher, UseVoucherCheckbox, VoucherTable, VoucherBadge };
