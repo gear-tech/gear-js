@@ -4,10 +4,10 @@ import clsx from 'clsx';
 
 import { Node as NodeType } from '@/entities/node';
 import { copyToClipboard } from '@/shared/helpers';
-import trashSVG from '@/shared/assets/images/actions/trash.svg?react';
-import copyGreenSVG from '@/shared/assets/images/actions/copyGreen.svg?react';
+import CopyGreenSVG from '@/shared/assets/images/actions/copyGreen.svg?react';
 import { ICON } from '@/widgets/menu/model/consts';
 
+import TrashSVG from '../../assets/trash.svg?react';
 import styles from './Node.module.scss';
 
 type Props = NodeType & {
@@ -49,21 +49,13 @@ const Node = (props: Props) => {
         />
 
         <SVG className={styles.icon} />
-
-        {address}
+        <span>{address}</span>
       </label>
 
       <div className={styles.buttons}>
-        <Button
-          icon={copyGreenSVG}
-          color="transparent"
-          className={styles.actionBtn}
-          aria-label="Copy node address"
-          onClick={handleCopy}
-        />
         {isCustom && (
           <Button
-            icon={trashSVG}
+            icon={TrashSVG}
             color="transparent"
             disabled={isCurrentNode}
             className={styles.actionBtn}
@@ -71,6 +63,14 @@ const Node = (props: Props) => {
             onClick={handleRemove}
           />
         )}
+
+        <Button
+          icon={CopyGreenSVG}
+          color="transparent"
+          className={styles.actionBtn}
+          aria-label="Copy node address"
+          onClick={handleCopy}
+        />
       </div>
     </li>
   );
