@@ -243,9 +243,9 @@ export class GearMessage extends GearTransaction {
       const txArgs: any[] = [replyToId, _payload, gasLimit, value || 0];
 
       if (this._api.specVersion >= 1010) {
-        txArgs.push('prepaid' in rest ? rest.prepaid : false);
-      } else {
         txArgs.push('keepAlive' in rest ? rest.keepAlive : true);
+      } else {
+        txArgs.push('prepaid' in rest ? rest.prepaid : false);
       }
 
       this.extrinsic = getExtrinsic(this._api, 'gear', 'sendReply', txArgs);
