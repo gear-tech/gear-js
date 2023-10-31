@@ -359,7 +359,7 @@ The `api.voucher.exists` method returns a boolean value indicates whether the vo
 const voucherExists = await api.voucher.exists(programId, accountId)
 ```
 
-#### Send message and reply with the issued voucher
+#### Send a message with the issued voucher
 To send message with voucher you can use `api.voucher.call` method.
 ```javascript
 const messageTx = api.message.send({
@@ -375,8 +375,7 @@ await voucherTx.signAndSend(account, (events) => {
 });
 ```
 
-
-#### Send message and reply with issued voucher
+#### Send a reply with issued voucher
 It works in the same way as sending message with voucher
 ```javascript
 const messageTx = api.message.sendReply(...);
