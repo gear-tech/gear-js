@@ -30,7 +30,6 @@ import { GearGas } from './Gas';
 import { GearResumeSession } from './ResumeSession';
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from './metadata';
-import { VARA_GENESIS } from './specs';
 
 export class GearProgram extends GearTransaction {
   public calculateGas: GearGas;
@@ -111,7 +110,7 @@ export class GearProgram extends GearTransaction {
 
     try {
       const txArgs: any[] = [code, salt, payload, args.gasLimit, args.value || 0];
-      if (!this._api.genesisHash.eq(VARA_GENESIS)) {
+      if (this._api.specVersion >= 1010) {
         txArgs.push('keepAlive' in args ? args.keepAlive : true);
       }
 
@@ -192,7 +191,7 @@ export class GearProgram extends GearTransaction {
     try {
       const txArgs: any[] = [codeId, salt, payload, gasLimit, value || 0];
 
-      if (!this._api.genesisHash.eq(VARA_GENESIS)) {
+      if (this._api.specVersion >= 1010) {
         txArgs.push('keepAlive' in args ? args.keepAlive : true);
       }
 
