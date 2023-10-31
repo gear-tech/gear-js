@@ -103,6 +103,14 @@ export class GearApi extends ApiPromise {
     return (await this.rpc.system.version()).toHuman();
   }
 
+  get specVersion(): number {
+    return this.runtimeVersion.specVersion.toNumber();
+  }
+
+  get specName(): string {
+    return this.runtimeVersion.specName.toString();
+  }
+
   get existentialDeposit(): u128 {
     return this.consts.balances.existentialDeposit as unknown as u128;
   }

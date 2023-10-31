@@ -14,7 +14,6 @@ import { encodePayload, getExtrinsic, validateGasLimit, validateMailboxItem, val
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from './metadata';
 import { UserMessageSentData } from './events';
-import { VARA_GENESIS } from './specs';
 
 export class GearMessage extends GearTransaction {
   /**
@@ -121,10 +120,10 @@ export class GearMessage extends GearTransaction {
     try {
       const txArgs: any[] = [destination, _payload, gasLimit, value || 0];
 
-      if (this._api.genesisHash.eq(VARA_GENESIS)) {
-        txArgs.push('prepaid' in rest ? rest.prepaid : false);
-      } else {
+      if (this._api.specVersion >= 1010) {
         txArgs.push('keepAlive' in rest ? rest.keepAlive : true);
+      } else {
+        txArgs.push('prepaid' in rest ? rest.prepaid : false);
       }
 
       this.extrinsic = getExtrinsic(this._api, 'gear', 'sendMessage', txArgs);
@@ -243,10 +242,10 @@ export class GearMessage extends GearTransaction {
     try {
       const txArgs: any[] = [replyToId, _payload, gasLimit, value || 0];
 
-      if (this._api.genesisHash.eq(VARA_GENESIS)) {
-        txArgs.push('prepaid' in rest ? rest.prepaid : false);
-      } else {
+      if (this._api.specVersion >= 1010) {
         txArgs.push('keepAlive' in rest ? rest.keepAlive : true);
+      } else {
+        txArgs.push('prepaid' in rest ? rest.prepaid : false);
       }
 
       this.extrinsic = getExtrinsic(this._api, 'gear', 'sendReply', txArgs);
