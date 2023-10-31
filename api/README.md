@@ -213,6 +213,7 @@ try {
     payload: somePayload,
     gasLimit: 10000000,
     value: 1000,
+    keepAlive: true, // if set to true the account is protected against removal due to low balances.
   };
   // In that case payload will be encoded using meta.handle_input type
   let extrinsic = await gearApi.message.send(message, meta);
@@ -223,7 +224,7 @@ try {
 }
 try {
   await extrinsic.signAndSend(keyring, (event) => {
-    console.log(event.toHuman());
+    console.log(events.toHuman());
   });
 } catch (error) {
   console.error(`${error.name}: ${error.message}`);
@@ -240,10 +241,11 @@ const reply = {
   payload: somePayload,
   gasLimit: 10000000,
   value: 1000,
+  keepAlive: true,
 };
 const extrinsic = await gearApi.message.sendReply(reply, meta);
 await extrinsic(keyring, (events) => {
-  console.log(event.toHuman());
+  console.log(events.toHuman());
 });
 ```
 
@@ -342,7 +344,9 @@ import { VoucherIssued } from '@gear-js/api';
 
 const programId = '0x..';
 const account = '0x...';
+
 const tx = api.voucher.issue(account, programId, 10000);
+
 tx.signAndSend(account, (events) => {
   const voucherIssuedEvent = events.events.filter(({event: {method}}) => method === 'VoucherIssued') as VoucherIssued;
   console.log(voucherIssuedEvent.toJSON());
@@ -356,20 +360,32 @@ const voucherExists = await api.voucher.exists(programId, accountId)
 ```
 
 #### Send message and reply with the issued voucher
-To send message with voucher all you need to do is to set `prepaid` flag to `true` in the first argument of `api.message.send` and `api.message.sendReply` methods. Also it's good to specify account ID that is used to send the extrinsic to check whether the voucher exists or not.
+To send message with voucher you can use `api.voucher.call` method.
 ```javascript
-let extrinsic = await api.message.send({
+const messageTx = api.message.send({
   destination: destination,
   payload: somePayload,
   gasLimit: 10000000,
-  value: 1000,
-  prepaid: true,
-  account: accountId,
+  value: 1000
 }, meta);
+
+const voucherTx = api.voucher.call({ SendMessage: messageTx });
+await voucherTx.signAndSend(account, (events) => {
+  console.log(events.toHuman());
+});
 ```
 
 
 #### Send message and reply with issued voucher
+It works in the same way as sending message with voucher
+```javascript
+const messageTx = api.message.sendReply(...);
+
+const voucherTx = api.voucher.call({ SendReply: messageTx });
+await voucherTx.signAndSend(account, (events) => {
+  console.log(events.toHuman());
+});
+```
 
 ## Work with programs and blockchain state
 
