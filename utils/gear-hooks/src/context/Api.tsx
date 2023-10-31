@@ -92,7 +92,7 @@ function ApiProvider({ initialArgs, children }: Props) {
   const value = useMemo(
     () =>
       api
-        ? { api, isApiReady: true as const, isVaraVersion: api.genesisHash.toHex() === VARA_GENESIS, switchNetwork }
+        ? { api, isApiReady: true as const, isVaraVersion: api.specVersion < 1010, switchNetwork }
         : { api, isApiReady: false as const, isVaraVersion: false as const, switchNetwork },
     [api],
   );
