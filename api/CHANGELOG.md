@@ -1,6 +1,14 @@
+## 0.35.2
+
+_10/31/2023_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1443
+- Use runtime version for api versioning instead of genesis
+
 ## 0.35.0
 
-_09/29/2023_
+_10/24/2023_
 
 ### Changes
 https://github.com/gear-tech/gear-js/pull/1436
