@@ -25,7 +25,7 @@ type SendMessageOptions = {
   onError?: () => void;
 };
 
-type VaraSendMessageOptions = Omit<SendMessageOptions, 'keepAlive' | 'withVoucher'> & { prepaid?: boolean };
+type VaraSendMessageOptions = Omit<SendMessageOptions, 'keepAlive'>;
 
 function useSendMessage(
   destination: HexString,
@@ -107,7 +107,7 @@ function useSendMessage(
 
     const alertId = disableAlerts ? '' : alert.loading('Sign In', { title });
 
-    const { payload, gasLimit, value = 0, onSuccess, onInBlock, onError } = args;
+    const { payload, gasLimit, value = 0, withVoucher = false, onSuccess, onInBlock, onError } = args;
     const { address, decodedAddress, meta } = account;
     const { source } = meta;
 
@@ -116,8 +116,7 @@ function useSendMessage(
     let message: IMessageSendOptions | VaraMessageSendOptions;
 
     if (isVaraVersion) {
-      const prepaid = 'prepaid' in args ? args.prepaid : false;
-      message = { ...baseMessage, prepaid, account: prepaid ? decodedAddress : undefined };
+      message = { ...baseMessage, prepaid: withVoucher, account: withVoucher ? decodedAddress : undefined };
     } else {
       const keepAlive = 'keepAlive' in args ? args.keepAlive : false;
       message = { ...baseMessage, keepAlive };
@@ -131,7 +130,6 @@ function useSendMessage(
         extrinsic = sendExtrinsic;
       } else {
         // TODO: voucher call into standalone hook?
-        const withVoucher = 'withVoucher' in args ? args.withVoucher : false;
         extrinsic = withVoucher ? api.voucher.call({ SendMessage: sendExtrinsic }) : sendExtrinsic;
       }
 
