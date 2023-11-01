@@ -22,7 +22,7 @@ function useSendMessageHandler(
   const calculateGas = useHandleCalculateGas(destination, metadata);
   const sendMessage = useSendMessage(destination, metadata, options);
 
-  return (args: Omit<SendMessageOptions | VaraSendMessageOptions, 'gasLimit'>) => {
+  return (args: Omit<SendMessageOptions, 'gasLimit'> | Omit<VaraSendMessageOptions, 'gasLimit'>) => {
     if (!isApiReady) throw new Error('API is not initialized');
 
     const { payload, value } = args;
