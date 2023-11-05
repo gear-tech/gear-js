@@ -1,7 +1,7 @@
 import { Button, Modal } from '@gear-js/ui';
 import { HexString, decodeAddress } from '@gear-js/api';
 import BigNumber from 'bignumber.js';
-import { Form } from 'react-final-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { useBalanceMultiplier } from '@/hooks';
@@ -18,8 +18,9 @@ type Props = {
   close: () => void;
 };
 
-const initialValues = { address: '', value: '' };
+const defaultValues = { address: '', value: '' };
 
+// TODOFORM:
 const validationSchema = yup.object().shape({
   address: yup
     .string()
@@ -32,7 +33,9 @@ const IssueVoucherModal = ({ programId, close }: Props) => {
   const { balanceMultiplier } = useBalanceMultiplier();
   const issueVoucher = useIssueVoucher();
 
-  const handleSubmit = ({ address, value }: typeof initialValues) => {
+  const methods = useForm({ defaultValues });
+
+  const handleSubmit = ({ address, value }: typeof defaultValues) => {
     const decodedAddress = decodeAddress(address);
     const unitValue = BigNumber(value).multipliedBy(balanceMultiplier).toFixed();
 
@@ -41,19 +44,17 @@ const IssueVoucherModal = ({ programId, close }: Props) => {
 
   return (
     <Modal heading="Create Voucher" size="large" close={close}>
-      <Form initialValues={initialValues} onSubmit={handleSubmit} validate={getValidation(validationSchema)}>
-        {(form) => (
-          <form onSubmit={form.handleSubmit} className={styles.form}>
-            <FormInput name="address" label="Account address" direction="y" block />
-            <ValueField name="value" label="Tokens amount:" direction="y" block />
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(handleSubmit)} className={styles.form}>
+          <FormInput name="address" label="Account address" direction="y" block />
+          <ValueField name="value" label="Tokens amount:" direction="y" block />
 
-            <div className={styles.buttons}>
-              <Button type="submit" icon={ApplySVG} size="large" text="Create" />
-              <Button icon={CloseSVG} color="light" size="large" text="Close" onClick={close} />
-            </div>
-          </form>
-        )}
-      </Form>
+          <div className={styles.buttons}>
+            <Button type="submit" icon={ApplySVG} size="large" text="Create" />
+            <Button icon={CloseSVG} color="light" size="large" text="Close" onClick={close} />
+          </div>
+        </form>
+      </FormProvider>
     </Modal>
   );
 };
