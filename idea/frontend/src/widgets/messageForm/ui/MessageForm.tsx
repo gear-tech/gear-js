@@ -36,7 +36,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
   const { api, isApiReady, isVaraVersion } = useApi();
   const { account } = useAccount();
 
-  // TODO:
+  // TODOFORM:
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const methods = useForm<FormValues>({ defaultValues: INITIAL_VALUES });

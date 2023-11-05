@@ -1,11 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
-import { useForm, useField } from 'react-final-form';
-import clsx from 'clsx';
 import { useAlert } from '@gear-js/react-hooks';
 import { Checkbox, FileInput, Textarea, InputWrapper, InputProps } from '@gear-js/ui';
+import clsx from 'clsx';
+import { useState, useEffect, useRef } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import { useChangeEffect } from '@/hooks';
-import { PayloadValue } from '@/entities/formPayload';
 import { checkFileFormat, readFileAsync } from '@/shared/helpers';
 import { FileTypes } from '@/shared/config';
 import { formStyles } from '@/shared/ui/form';
@@ -24,18 +23,19 @@ type Props = {
 
 const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
   const alert = useAlert();
-  const { change, resetFieldState } = useForm();
-  const { input, meta } = useField<PayloadValue>(name);
+  const { setValue, register } = useFormContext();
+  // const { input, meta } = useField<PayloadValue>(name);
 
   const jsonManualPayload = useRef<string>();
 
   const [isManualView, setIsManualView] = useState(!values);
   const [manualPayloadFile, setManualPayloadFile] = useState<File>();
 
-  const changeValue = (value: PayloadValue) => {
-    change(name, value);
-    resetFieldState(name);
-  };
+  // TODOFORM: need to reset field's state?
+  // const changeValue = (value: PayloadValue) => {
+  //   change(name, value);
+  //   resetFieldState(name);
+  // };
 
   const handleViewChange = () => setIsManualView((prevState) => !prevState);
 
@@ -47,15 +47,11 @@ const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
   const dropManualPayloadFile = () => {
     resetFileData();
 
-    if (values) {
-      changeValue(values.manualPayload);
-    }
+    if (values) setValue(name, values.manualPayload);
   };
 
   const handleUploadManualPayload = async (file: File | undefined) => {
-    if (!file) {
-      return dropManualPayloadFile();
-    }
+    if (!file) return dropManualPayloadFile();
 
     try {
       if (!checkFileFormat(file, FileTypes.Json)) {
@@ -66,7 +62,7 @@ const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
 
       const fileText = await readFileAsync(file, 'text');
 
-      changeValue(fileText);
+      setValue(name, fileText);
       jsonManualPayload.current = fileText;
     } catch (error: unknown) {
       alert.error((error as Error).message);
@@ -74,27 +70,25 @@ const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
   };
 
   useEffect(() => {
-    if (!values) {
-      return;
-    }
+    if (!values) return;
 
     const payloadValue = isManualView ? jsonManualPayload.current ?? values.manualPayload : values.payload;
 
-    changeValue(payloadValue);
+    setValue(name, payloadValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isManualView]);
 
   useChangeEffect(() => {
-    if (!values && manualPayloadFile) {
-      resetFileData();
-    }
+    if (!values && manualPayloadFile) resetFileData();
 
     setIsManualView(!values);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values]);
 
+  // TODOFORM:
   // TODO: meta.error is object - final-form bug
-  const error = meta.invalid ? 'Invalid payload' : undefined;
+  // const error = meta.invalid ? 'Invalid payload' : undefined;
+  const error = '';
 
   return (
     <InputWrapper
@@ -120,14 +114,7 @@ const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
           <PayloadStructure levelName={name} typeStructure={values.typeStructure} />
         ) : (
           <>
-            <Textarea
-              {...input}
-              id={name}
-              rows={15}
-              value={input.value as string}
-              placeholder="// Enter your payload here"
-              block
-            />
+            <Textarea id={name} rows={15} placeholder="// Enter your payload here" block {...register(name)} />
             {values && (
               <FileInput
                 value={manualPayloadFile}
