@@ -40,7 +40,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const methods = useForm<FormValues>({ defaultValues: INITIAL_VALUES });
-  const { getValues, reset, setValue } = methods;
+  const { getValues, reset, setValue, register } = methods;
 
   const calculateGas = useGasCalculate();
   const { sendMessage, replyMessage } = useMessageActions();
@@ -157,7 +157,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
             <FormPayload name="payload" label="Payload" values={payloadFormValues} gap="1/5" />
           )}
 
-          {!isLoading && !metadata && <FormPayloadType name="payloadType" label="Payload type" gap="1/5" />}
+          {!isLoading && !metadata && <Input label="Payload type" gap="1/5" {...register('payloadType')} />}
 
           {isLoading ? (
             <Input label="Value:" gap="1/5" className={styles.loading} readOnly />

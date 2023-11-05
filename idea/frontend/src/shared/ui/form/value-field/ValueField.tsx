@@ -1,7 +1,7 @@
 import { inputStyles, InputProps, InputWrapper } from '@gear-js/ui';
-import { useField, useForm } from 'react-final-form';
-import { NumericFormat, NumericFormatProps, NumberFormatValues } from 'react-number-format';
 import clsx from 'clsx';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { NumericFormat, NumericFormatProps } from 'react-number-format';
 
 import { BalanceUnit } from '../balance-unit';
 
@@ -11,12 +11,13 @@ type Props = Omit<NumericFormatProps & InputProps, 'value' | 'onValueChange' | '
 
 // TODO: same input as a gas field
 const ValueField = ({ name, label, direction = 'x', gap, block, ...other }: Props) => {
-  const { change } = useForm();
-  const { input, meta } = useField(name);
+  const { setValue } = useFormContext();
+  const inputValue = useWatch({ name });
+  // const { input, meta } = useField(name);
 
-  const handleChange = ({ value }: NumberFormatValues) => change(name, value);
-
-  const error = meta.invalid && meta.touched ? meta.error : undefined;
+  // TODOFORM:
+  // const error = meta.invalid && meta.touched ? meta.error : undefined;
+  const error = '';
 
   const wrapperClassName = clsx(
     inputStyles.wrapper,
@@ -33,12 +34,10 @@ const ValueField = ({ name, label, direction = 'x', gap, block, ...other }: Prop
           {...other}
           id={name}
           name={name}
-          value={input.value}
           className={clsx(inputStyles.input, inputStyles.dark)}
           allowNegative={false}
-          onBlur={input.onBlur}
-          onFocus={input.onFocus}
-          onValueChange={handleChange}
+          value={inputValue}
+          onValueChange={({ value }) => setValue(name, value)}
           thousandSeparator
         />
 
