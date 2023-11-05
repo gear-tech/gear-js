@@ -1,7 +1,6 @@
 import { Button, Input, Textarea } from '@gear-js/ui';
-import { useMemo } from 'react';
-import { Form } from 'react-final-form';
-import { OnChange } from 'react-final-form-listeners';
+import { useEffect, useMemo } from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { useProgram, useStateRead } from '@/hooks';
 import { getPreformattedText, isNullOrUndefined } from '@/shared/helpers';
@@ -23,6 +22,18 @@ const Full = () => {
   const { metadata, isMetadataReady } = useMetadata(program?.metahash);
   const { state, isStateRead, isState, readFullState, resetState } = useStateRead(programId);
 
+  // TODOFORM:
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const methods = useForm<FormValues>({ defaultValues: INITIAL_VALUES });
+  const { control } = methods;
+  const payloadValue = useWatch({ control, name: 'payload' });
+
+  useEffect(() => {
+    resetState();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [payloadValue]);
+
   const payloadFormValues = useMemo(
     () =>
       metadata && isHumanTypesRepr(metadata.types.state) && !isNullOrUndefined(metadata.types.state.input)
@@ -38,43 +49,39 @@ const Full = () => {
   };
 
   return (
-    <Form initialValues={INITIAL_VALUES} onSubmit={handleSubmit}>
-      {(form) => (
-        <form id="state" onSubmit={form.handleSubmit}>
-          <Box className={styles.box}>
-            <Input label="Program ID:" gap="1/5" value={programId} readOnly />
+    <FormProvider {...methods}>
+      <form id="state" onSubmit={methods.handleSubmit(handleSubmit)}>
+        <Box className={styles.box}>
+          <Input label="Program ID:" gap="1/5" value={programId} readOnly />
 
-            {isMetadataReady ? (
-              payloadFormValues && <FormPayload name="payload" label="Payload" values={payloadFormValues} gap="1/5" />
-            ) : (
-              <Textarea label="Payload:" gap="1/5" className={styles.loading} block readOnly />
-            )}
+          {isMetadataReady ? (
+            payloadFormValues && <FormPayload name="payload" label="Payload" values={payloadFormValues} gap="1/5" />
+          ) : (
+            <Textarea label="Payload:" gap="1/5" className={styles.loading} block readOnly />
+          )}
 
-            <OnChange name="payload">{() => resetState()}</OnChange>
+          {isStateRead ? (
+            isState && (
+              <Textarea label="Statedata:" rows={15} gap="1/5" value={getPreformattedText(state)} readOnly block />
+            )
+          ) : (
+            <Textarea label="Statedata:" rows={15} gap="1/5" value="" className={styles.loading} readOnly block />
+          )}
+        </Box>
 
-            {isStateRead ? (
-              isState && (
-                <Textarea label="Statedata:" rows={15} gap="1/5" value={getPreformattedText(state)} readOnly block />
-              )
-            ) : (
-              <Textarea label="Statedata:" rows={15} gap="1/5" value="" className={styles.loading} readOnly block />
-            )}
-          </Box>
+        <div className={styles.buttons}>
+          {isMetadataReady && (
+            <Button type="submit" form="state" color="secondary" text="Read" icon={ReadSVG} size="large" />
+          )}
 
-          <div className={styles.buttons}>
-            {isMetadataReady && (
-              <Button type="submit" form="state" color="secondary" text="Read" icon={ReadSVG} size="large" />
-            )}
+          {isStateRead && isState && (
+            <Button text="Download JSON" color="secondary" size="large" onClick={() => downloadJson(state)} />
+          )}
 
-            {isStateRead && isState && (
-              <Button text="Download JSON" color="secondary" size="large" onClick={() => downloadJson(state)} />
-            )}
-
-            <BackButton />
-          </div>
-        </form>
-      )}
-    </Form>
+          <BackButton />
+        </div>
+      </form>
+    </FormProvider>
   );
 };
 
