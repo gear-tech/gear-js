@@ -13,7 +13,6 @@ type Props = Omit<NumericFormatProps & InputProps, 'value' | 'onValueChange' | '
 const ValueField = ({ name, label, direction = 'x', gap, block, ...other }: Props) => {
   const { setValue } = useFormContext();
   const inputValue = useWatch({ name });
-  // const { input, meta } = useField(name);
 
   // TODOFORM:
   // const error = meta.invalid && meta.touched ? meta.error : undefined;

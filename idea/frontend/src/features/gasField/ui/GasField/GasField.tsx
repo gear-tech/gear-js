@@ -1,6 +1,5 @@
 import { InputWrapper, inputStyles, InputProps, Button } from '@gear-js/ui';
-import { useForm, useField } from 'react-final-form';
-import { NumericFormat, NumericFormatProps, NumberFormatValues } from 'react-number-format';
+import { NumericFormat, NumericFormatProps } from 'react-number-format';
 import BigNumber from 'bignumber.js';
 import clsx from 'clsx';
 
@@ -12,6 +11,7 @@ import { useGasMultiplier } from '@/hooks';
 
 import { Info } from '../Info';
 import styles from './GasField.module.scss';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 type Props = Omit<NumericFormatProps & InputProps, 'value' | 'onValueChange' | 'onChange'> & {
   info: Result | undefined;
@@ -21,24 +21,24 @@ type Props = Omit<NumericFormatProps & InputProps, 'value' | 'onValueChange' | '
 const GasField = (props: Props) => {
   const { gasDecimals } = useGasMultiplier();
 
-  const { label, disabled, className, onGasCalculate, direction = 'x', gap, block, info, ...other } = props;
+  const { disabled, onGasCalculate, direction = 'x', gap, block, info, ...other } = props;
   const name = 'gasLimit';
 
-  const { change } = useForm();
-  const { input, meta } = useField(name);
-
-  const handleChange = ({ value }: NumberFormatValues) => change(name, value);
+  const { setValue } = useFormContext();
+  const inputValue = useWatch({ name });
 
   const increaseByTenPercent = () => {
-    const bnValue = BigNumber(input.value);
+    const bnValue = BigNumber(inputValue);
 
     const bnMultiplier = bnValue.multipliedBy(0.1);
     const increasedValue = bnValue.plus(bnMultiplier);
 
-    change(name, increasedValue.toFixed(gasDecimals));
+    setValue(name, increasedValue.toFixed(gasDecimals));
   };
 
-  const error = meta.invalid && meta.touched ? meta.error : undefined;
+  // TODOFORM:
+  // const error = meta.invalid && meta.touched ? meta.error : undefined;
+  const error = '';
   const inputClassName = clsx(inputStyles.input, inputStyles.dark, styles.field);
 
   return (
@@ -58,13 +58,11 @@ const GasField = (props: Props) => {
                 {...other}
                 id={name}
                 name={name}
-                value={input.value}
                 className={inputClassName}
                 allowNegative={false}
                 thousandSeparator
-                onBlur={input.onBlur}
-                onFocus={input.onFocus}
-                onValueChange={handleChange}
+                value={inputValue}
+                onValueChange={({ value }) => setValue(name, value)}
               />
 
               <BalanceUnit />
