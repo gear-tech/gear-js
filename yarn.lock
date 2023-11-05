@@ -1810,6 +1810,7 @@ __metadata:
     react-error-boundary: 4.0.11
     react-final-form: 6.5.9
     react-final-form-listeners: 1.0.3
+    react-hook-form: ^7.48.2
     react-number-format: 5.3.1
     react-router-dom: 6.16.0
     react-transition-group: 4.4.5
@@ -12076,6 +12077,15 @@ __metadata:
     final-form: ^4.20.4
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
   checksum: 2ab79b1b0230545af1b93b324e2ce61992087beda344f762e1c1306867c177ca6258651e992515fa6681a790f94380a388c18e898ffb20468562e62c83c6b289
+  languageName: node
+  linkType: hard
+
+"react-hook-form@npm:^7.48.2":
+  version: 7.48.2
+  resolution: "react-hook-form@npm:7.48.2"
+  peerDependencies:
+    react: ^16.8.0 || ^17 || ^18
+  checksum: 39652d08f78f16e5234049ceeb794d8bcd4d146772aca99c6db8c5aea8926cd4a230d02098886a441074deefbc24ffcb5ed57bc7cb0009d950115f5b3e627f12
   languageName: node
   linkType: hard
 

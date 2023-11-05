@@ -3,9 +3,8 @@ import { Button, Input, Textarea } from '@gear-js/ui';
 import { useAccount, useApi } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 import BigNumber from 'bignumber.js';
-import { useMemo, useRef, useState } from 'react';
-import { Form } from 'react-final-form';
-import { FormApi } from 'final-form';
+import { useMemo, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import sendSVG from '@/shared/assets/images/actions/send.svg?react';
 import { ValueField } from '@/shared/ui/form';
@@ -37,6 +36,12 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
   const { api, isApiReady, isVaraVersion } = useApi();
   const { account } = useAccount();
 
+  // TODO:
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const methods = useForm<FormValues>({ defaultValues: INITIAL_VALUES });
+  const { getValues, reset, setValue } = methods;
+
   const calculateGas = useGasCalculate();
   const { sendMessage, replyMessage } = useMessageActions();
   const { balanceMultiplier, decimals } = useBalanceMultiplier();
@@ -46,7 +51,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
   const [isGasDisabled, setIsGasDisabled] = useState(false);
   const [gasInfo, setGasInfo] = useState<Result>();
 
-  const formApi = useRef<FormApi<FormValues>>();
+  // const formApi = useRef<FormApi<FormValues>>();
 
   const deposit = isApiReady ? api.existentialDeposit.toString() : '';
   const maxGasLimit = isApiReady ? api.blockGasLimit.toString() : '';
@@ -83,13 +88,10 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
   const enableSubmitButton = () => setIsDisabled(false);
 
   const resetForm = () => {
-    if (!formApi.current) return;
+    const values = getValues();
+    const payload = resetPayloadValue(values.payload);
 
-    const { values } = formApi.current.getState();
-
-    formApi.current.reset();
-    formApi.current.change('payload', resetPayloadValue(values.payload));
-
+    reset({ ...INITIAL_VALUES, payload });
     enableSubmitButton();
     setGasInfo(undefined);
   };
@@ -120,11 +122,9 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
   };
 
   const handleGasCalculate = () => {
-    if (!formApi.current) return;
-
     setIsGasDisabled(true);
 
-    const { values } = formApi.current.getState();
+    const values = getValues();
     const preparedValues = {
       ...values,
       value: BigNumber(values.value).multipliedBy(balanceMultiplier).toFixed(),
@@ -135,71 +135,65 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
       .then((info) => {
         const limit = BigNumber(info.limit).dividedBy(gasMultiplier).toFixed();
 
-        formApi.current?.change('gasLimit', limit);
+        setValue('gasLimit', limit);
         setGasInfo(info);
       })
       .finally(() => setIsGasDisabled(false));
   };
 
   return (
-    <Form initialValues={INITIAL_VALUES} validate={validation} onSubmit={handleSubmitForm}>
-      {({ form, handleSubmit }) => {
-        formApi.current = form;
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(handleSubmitForm)}>
+        <Box className={styles.body}>
+          {isLoading ? (
+            <Input label="Destination:" gap="1/5" className={styles.loading} value="" readOnly />
+          ) : (
+            <Input label={isReply ? 'Message Id:' : 'Destination:'} gap="1/5" value={id} readOnly />
+          )}
 
-        return (
-          <form onSubmit={handleSubmit}>
-            <Box className={styles.body}>
-              {isLoading ? (
-                <Input label="Destination:" gap="1/5" className={styles.loading} value="" readOnly />
-              ) : (
-                <Input label={isReply ? 'Message Id:' : 'Destination:'} gap="1/5" value={id} readOnly />
-              )}
+          {isLoading ? (
+            <Textarea label="Payload" gap="1/5" className={styles.loading} readOnly />
+          ) : (
+            <FormPayload name="payload" label="Payload" values={payloadFormValues} gap="1/5" />
+          )}
 
-              {isLoading ? (
-                <Textarea label="Payload" gap="1/5" className={styles.loading} readOnly />
-              ) : (
-                <FormPayload name="payload" label="Payload" values={payloadFormValues} gap="1/5" />
-              )}
+          {!isLoading && !metadata && <FormPayloadType name="payloadType" label="Payload type" gap="1/5" />}
 
-              {!isLoading && !metadata && <FormPayloadType name="payloadType" label="Payload type" gap="1/5" />}
+          {isLoading ? (
+            <Input label="Value:" gap="1/5" className={styles.loading} readOnly />
+          ) : (
+            <ValueField name="value" label="Value:" gap="1/5" />
+          )}
 
-              {isLoading ? (
-                <Input label="Value:" gap="1/5" className={styles.loading} readOnly />
-              ) : (
-                <ValueField name="value" label="Value:" gap="1/5" />
-              )}
-
-              {isLoading ? (
-                <Input label="Gas info" gap="1/5" className={styles.loading} readOnly />
-              ) : (
-                <GasField
-                  info={gasInfo}
-                  disabled={isLoading || isGasDisabled}
-                  onGasCalculate={handleGasCalculate}
-                  gap="1/5"
-                />
-              )}
-
-              {!isVaraVersion && (
-                <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" gap="1/5" />
-              )}
-              <UseVoucherCheckbox programId={programId} />
-            </Box>
-
-            <Button
-              type="submit"
-              text="Send Message"
-              icon={sendSVG}
-              size="large"
-              color="secondary"
-              className={styles.button}
-              disabled={isLoading || isDisabled}
+          {isLoading ? (
+            <Input label="Gas info" gap="1/5" className={styles.loading} readOnly />
+          ) : (
+            <GasField
+              info={gasInfo}
+              disabled={isLoading || isGasDisabled}
+              onGasCalculate={handleGasCalculate}
+              gap="1/5"
             />
-            <BackButton />
-          </form>
-        );
-      }}
-    </Form>
+          )}
+
+          {!isVaraVersion && (
+            <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" gap="1/5" />
+          )}
+          <UseVoucherCheckbox programId={programId} />
+        </Box>
+
+        <Button
+          type="submit"
+          text="Send Message"
+          icon={sendSVG}
+          size="large"
+          color="secondary"
+          className={styles.button}
+          disabled={isLoading || isDisabled}
+        />
+        <BackButton />
+      </form>
+    </FormProvider>
   );
 };
 
