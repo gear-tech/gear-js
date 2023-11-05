@@ -16,7 +16,6 @@ import { GasField } from '@/features/gasField';
 import { FormPayload, getPayloadFormValues, getSubmitPayload } from '@/features/formPayload';
 import { useBalanceMultiplier, useGasCalculate, useGasMultiplier, useMessageActions } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
-import { FormPayloadType } from '@/features/formPayloadType';
 import { UseVoucherCheckbox } from '@/features/voucher';
 import { LabeledCheckbox } from '@/shared/ui';
 
