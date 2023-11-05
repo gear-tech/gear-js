@@ -1,21 +1,21 @@
-import { useState, useMemo, useRef, ReactChild } from 'react';
-import BigNumber from 'bignumber.js';
-import { FormApi } from 'final-form';
-import { Form } from 'react-final-form';
 import { ProgramMetadata } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
+import { Input } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
+import BigNumber from 'bignumber.js';
+import { useState, useMemo, ReactNode } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import { useGasCalculate, useChangeEffect, useBalanceMultiplier, useGasMultiplier } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
 import { Payload } from '@/hooks/useProgramActions/types';
 import { FormPayload, getSubmitPayload, getPayloadFormValues } from '@/features/formPayload';
-import { FormPayloadType } from '@/features/formPayloadType';
 import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
 import { getValidation } from '@/shared/helpers';
 import { FormInput, ValueField } from '@/shared/ui/form';
 import { LabeledCheckbox } from '@/shared/ui';
+import { resetPayloadValue } from '@/widgets/messageForm/helpers';
 
 import { getValidationSchema } from '../helpers';
 import { INITIAL_VALUES, FormValues, RenderButtonsProps, SubmitHelpers } from '../model';
@@ -27,16 +27,21 @@ type Props = {
   metadata: ProgramMetadata | undefined;
   gasMethod: GasMethod;
   fileName?: string;
-  renderButtons: (props: RenderButtonsProps) => ReactChild;
+  renderButtons: (props: RenderButtonsProps) => ReactNode;
   onSubmit: (values: Payload, helpers: SubmitHelpers) => void;
 };
 
 const ProgramForm = (props: Props) => {
   const { gasMethod, metaHex, metadata, source, fileName = '', renderButtons, onSubmit } = props;
 
-  const { api, isApiReady, isVaraVersion } = useApi();
+  const defaultValues = { ...INITIAL_VALUES, programName: fileName };
+  // TODOFORM:
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const methods = useForm<FormValues>({ defaultValues });
+  const { register, getValues, setValue, reset } = methods;
 
-  const formApi = useRef<FormApi<FormValues>>();
+  const { api, isApiReady, isVaraVersion } = useApi();
 
   const [gasInfo, setGasinfo] = useState<Result>();
   const [isDisabled, setIsDisables] = useState(false);
@@ -46,12 +51,20 @@ const ProgramForm = (props: Props) => {
   const { gasMultiplier } = useGasMultiplier();
   const calculateGas = useGasCalculate();
 
-  const handleGasCalculate = async () => {
-    if (!formApi.current) return;
+  const resetForm = () => {
+    const values = getValues();
+    const payload = resetPayloadValue(values.payload);
 
+    reset({ ...defaultValues, payload });
+    setIsDisables(false);
+    setGasinfo(undefined);
+  };
+
+  const handleGasCalculate = async () => {
     setIsGasDisabled(true);
 
-    const { values } = formApi.current.getState();
+    const values = getValues();
+
     const preparedValues = {
       ...values,
       value: BigNumber(values.value).multipliedBy(balanceMultiplier).toFixed(),
@@ -62,7 +75,7 @@ const ProgramForm = (props: Props) => {
       const info = await calculateGas(gasMethod, preparedValues, source, metadata);
       const limit = BigNumber(info.limit).dividedBy(gasMultiplier).toFixed();
 
-      formApi.current.change('gasLimit', limit);
+      setValue('gasLimit', limit);
       setGasinfo(info);
     } finally {
       setIsGasDisabled(false);
@@ -70,8 +83,6 @@ const ProgramForm = (props: Props) => {
   };
 
   const handleSubmitForm = (values: FormValues) => {
-    if (!formApi.current) return;
-
     setIsDisables(true);
 
     const { value, payload, gasLimit, programName, payloadType, keepAlive } = values;
@@ -87,7 +98,7 @@ const ProgramForm = (props: Props) => {
       keepAlive,
     };
 
-    onSubmit(data, { enableButtons: () => setIsDisables(false), resetForm: formApi.current.reset });
+    onSubmit(data, { enableButtons: () => setIsDisables(false), resetForm });
   };
 
   const deposit = isApiReady ? api.existentialDeposit.toNumber() : 0;
@@ -119,52 +130,40 @@ const ProgramForm = (props: Props) => {
   );
 
   useChangeEffect(() => {
-    if (!metadata) {
-      formApi.current?.restart();
-      setGasinfo(undefined);
-    }
+    if (!metadata) resetForm();
   }, [metadata]);
 
   return (
-    <Form
-      initialValues={{ ...INITIAL_VALUES, programName: fileName }}
-      validate={validation}
-      onSubmit={handleSubmitForm}>
-      {({ form, handleSubmit }) => {
-        formApi.current = form;
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(handleSubmitForm)}>
+        <div className={styles.formContent}>
+          <FormInput name="programName" label="Name" direction="y" placeholder="Enter program name" block />
 
-        return (
-          <form onSubmit={handleSubmit}>
-            <div className={styles.formContent}>
-              <FormInput name="programName" label="Name" direction="y" placeholder="Enter program name" block />
+          <FormPayload name="payload" label="Initial payload" direction="y" values={payloadFormValues} />
 
-              <FormPayload name="payload" label="Initial payload" direction="y" values={payloadFormValues} />
+          {!metadata && <Input label="Initial payload type" direction="y" block {...register('payloadType')} />}
 
-              {!metadata && <FormPayloadType name="payloadType" label="Initial payload type" direction="y" block />}
+          <ValueField name="value" label="Initial value:" direction="y" block />
 
-              <ValueField name="value" label="Initial value:" direction="y" block />
+          <GasField
+            name="gasLimit"
+            label="Gas limit"
+            placeholder="0"
+            disabled={isGasDisabled}
+            onGasCalculate={handleGasCalculate}
+            direction="y"
+            info={gasInfo}
+            block
+          />
 
-              <GasField
-                name="gasLimit"
-                label="Gas limit"
-                placeholder="0"
-                disabled={isGasDisabled}
-                onGasCalculate={handleGasCalculate}
-                direction="y"
-                info={gasInfo}
-                block
-              />
+          {!isVaraVersion && (
+            <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" direction="y" />
+          )}
+        </div>
 
-              {!isVaraVersion && (
-                <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" direction="y" />
-              )}
-            </div>
-
-            <div className={styles.buttons}>{renderButtons({ isDisabled })}</div>
-          </form>
-        );
-      }}
-    </Form>
+        <div className={styles.buttons}>{renderButtons({ isDisabled })}</div>
+      </form>
+    </FormProvider>
   );
 };
 
