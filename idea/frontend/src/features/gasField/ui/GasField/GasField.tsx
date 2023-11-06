@@ -1,7 +1,8 @@
 import { InputWrapper, inputStyles, InputProps, Button } from '@gear-js/ui';
-import { NumericFormat, NumericFormatProps } from 'react-number-format';
 import BigNumber from 'bignumber.js';
 import clsx from 'clsx';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { NumericFormat, NumericFormatProps } from 'react-number-format';
 
 import { formStyles } from '@/shared/ui/form';
 import calculatorSVG from '@/shared/assets/images/actions/calculator.svg?react';
@@ -11,7 +12,6 @@ import { useGasMultiplier } from '@/hooks';
 
 import { Info } from '../Info';
 import styles from './GasField.module.scss';
-import { useFormContext, useWatch } from 'react-hook-form';
 
 type Props = Omit<NumericFormatProps & InputProps, 'value' | 'onValueChange' | 'onChange'> & {
   info: Result | undefined;
@@ -24,8 +24,9 @@ const GasField = (props: Props) => {
   const { disabled, onGasCalculate, direction = 'x', gap, block, info, ...other } = props;
   const name = 'gasLimit';
 
-  const { setValue } = useFormContext();
+  const { setValue, getFieldState, formState } = useFormContext();
   const inputValue = useWatch({ name });
+  const { error } = getFieldState(name, formState);
 
   const increaseByTenPercent = () => {
     const bnValue = BigNumber(inputValue);
@@ -33,12 +34,9 @@ const GasField = (props: Props) => {
     const bnMultiplier = bnValue.multipliedBy(0.1);
     const increasedValue = bnValue.plus(bnMultiplier);
 
-    setValue(name, increasedValue.toFixed(gasDecimals));
+    setValue(name, increasedValue.toFixed(gasDecimals), { shouldValidate: true });
   };
 
-  // TODOFORM:
-  // const error = meta.invalid && meta.touched ? meta.error : undefined;
-  const error = '';
   const inputClassName = clsx(inputStyles.input, inputStyles.dark, styles.field);
 
   return (
@@ -46,7 +44,7 @@ const GasField = (props: Props) => {
       id={name}
       label="Gas limit"
       size="normal"
-      error={error}
+      error={error?.message}
       direction={direction}
       gap={gap}
       className={formStyles.field}>
@@ -62,7 +60,7 @@ const GasField = (props: Props) => {
                 allowNegative={false}
                 thousandSeparator
                 value={inputValue}
-                onValueChange={({ value }) => setValue(name, value)}
+                onValueChange={({ value }) => setValue(name, value, { shouldValidate: true })}
               />
 
               <BalanceUnit />

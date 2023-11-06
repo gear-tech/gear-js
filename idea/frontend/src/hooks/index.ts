@@ -25,6 +25,7 @@ import { useMetaOnUpload } from './useMetaOnUpload';
 import { useNetworkIcon } from './useNetworkIcon';
 import { useBalanceMultiplier } from './useBalanceMultiplier';
 import { useGasMultiplier } from './useGasMultiplier';
+import { useValidationSchema } from './use-validation-schema';
 
 export {
   useModal,
@@ -58,4 +59,5 @@ export {
   useNetworkIcon,
   useBalanceMultiplier,
   useGasMultiplier,
+  useValidationSchema,
 };

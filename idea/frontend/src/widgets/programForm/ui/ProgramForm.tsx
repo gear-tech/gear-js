@@ -1,12 +1,12 @@
 import { ProgramMetadata } from '@gear-js/api';
-import { useApi } from '@gear-js/react-hooks';
+import { useApi, useBalanceFormat } from '@gear-js/react-hooks';
 import { Input } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
-import BigNumber from 'bignumber.js';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useState, useMemo, ReactNode } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { useGasCalculate, useChangeEffect, useBalanceMultiplier, useGasMultiplier } from '@/hooks';
+import { useGasCalculate, useChangeEffect, useValidationSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
 import { Payload } from '@/hooks/useProgramActions/types';
 import { FormPayload, getSubmitPayload, getPayloadFormValues } from '@/features/formPayload';
@@ -16,7 +16,6 @@ import { FormInput, ValueField } from '@/shared/ui/form';
 import { LabeledCheckbox } from '@/shared/ui';
 import { resetPayloadValue } from '@/widgets/messageForm/helpers';
 
-import { getValidationSchema } from '../helpers';
 import { INITIAL_VALUES, FormValues, RenderButtonsProps, SubmitHelpers } from '../model';
 import styles from './ProgramForm.module.scss';
 
@@ -33,21 +32,21 @@ type Props = {
 const ProgramForm = (props: Props) => {
   const { gasMethod, metaHex, metadata, source, fileName = '', renderButtons, onSubmit } = props;
 
+  const { isVaraVersion } = useApi();
+  const { getChainBalanceValue, getFormattedGasValue, getChainGasValue } = useBalanceFormat();
+  const schema = useValidationSchema();
+
   const defaultValues = { ...INITIAL_VALUES, programName: fileName };
   // TODOFORM:
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const methods = useForm<FormValues>({ defaultValues });
+  const methods = useForm<FormValues>({ defaultValues, resolver: yupResolver(schema) });
   const { register, getValues, setValue, reset } = methods;
-
-  const { api, isApiReady, isVaraVersion } = useApi();
 
   const [gasInfo, setGasinfo] = useState<Result>();
   const [isDisabled, setIsDisables] = useState(false);
   const [isGasDisabled, setIsGasDisabled] = useState(false);
 
-  const { balanceMultiplier, decimals } = useBalanceMultiplier();
-  const { gasMultiplier } = useGasMultiplier();
   const calculateGas = useGasCalculate();
 
   const resetForm = () => {
@@ -66,15 +65,15 @@ const ProgramForm = (props: Props) => {
 
     const preparedValues = {
       ...values,
-      value: BigNumber(values.value).multipliedBy(balanceMultiplier).toFixed(),
+      value: getChainBalanceValue(values.value).toFixed(),
       payload: getSubmitPayload(values.payload),
     };
 
     try {
       const info = await calculateGas(gasMethod, preparedValues, source, metadata);
-      const limit = BigNumber(info.limit).dividedBy(gasMultiplier).toFixed();
+      const limit = getFormattedGasValue(info.limit).toFixed();
 
-      setValue('gasLimit', limit);
+      setValue('gasLimit', limit, { shouldValidate: true });
       setGasinfo(info);
     } finally {
       setIsGasDisabled(false);
@@ -87,8 +86,8 @@ const ProgramForm = (props: Props) => {
     const { value, payload, gasLimit, programName, payloadType, keepAlive } = values;
 
     const data: Payload = {
-      value: BigNumber(value).multipliedBy(balanceMultiplier).toFixed(),
-      gasLimit: BigNumber(gasLimit).multipliedBy(gasMultiplier).toFixed(),
+      value: getChainBalanceValue(value).toFixed(),
+      gasLimit: getChainGasValue(gasLimit).toFixed(),
       payloadType: metadata ? undefined : payloadType,
       initPayload: metadata ? getSubmitPayload(payload) : payload,
       metaHex,
@@ -100,33 +99,12 @@ const ProgramForm = (props: Props) => {
     onSubmit(data, { enableButtons: () => setIsDisables(false), resetForm });
   };
 
-  const deposit = isApiReady ? api.existentialDeposit.toNumber() : 0;
-  const maxGasLimit = isApiReady ? api.blockGasLimit.toNumber() : 0;
-
   const typeIndex = metadata?.types.init.input;
   const isTypeIndex = typeIndex !== undefined && typeIndex !== null;
 
   const payloadFormValues = useMemo(
     () => (metadata && isTypeIndex ? getPayloadFormValues(metadata, typeIndex) : undefined),
     [metadata, isTypeIndex, typeIndex],
-  );
-
-  const validation = useMemo(
-    () => {
-      const schema = getValidationSchema({
-        deposit: BigNumber(deposit).dividedBy(balanceMultiplier),
-        metadata,
-        maxGasLimit: BigNumber(maxGasLimit).dividedBy(gasMultiplier),
-        balanceMultiplier,
-        decimals,
-        gasMultiplier,
-      });
-
-      // return getValidation(schema);
-      return;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [metadata],
   );
 
   useChangeEffect(() => {

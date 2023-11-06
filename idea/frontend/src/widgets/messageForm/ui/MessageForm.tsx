@@ -1,8 +1,8 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { Button, Input, Textarea } from '@gear-js/ui';
-import { useAccount, useApi } from '@gear-js/react-hooks';
+import { useAccount, useApi, useBalanceFormat } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
-import BigNumber from 'bignumber.js';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -13,12 +13,12 @@ import { BackButton } from '@/shared/ui/backButton';
 import { GasMethod } from '@/shared/config';
 import { GasField } from '@/features/gasField';
 import { FormPayload, getPayloadFormValues, getSubmitPayload } from '@/features/formPayload';
-import { useBalanceMultiplier, useGasCalculate, useGasMultiplier, useMessageActions } from '@/hooks';
+import { useGasCalculate, useMessageActions, useValidationSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
 import { UseVoucherCheckbox } from '@/features/voucher';
 import { LabeledCheckbox } from '@/shared/ui';
 
-import { getValidationSchema, resetPayloadValue } from '../helpers';
+import { resetPayloadValue } from '../helpers';
 import { FormValues, INITIAL_VALUES } from '../model';
 import styles from './MessageForm.module.scss';
 
@@ -31,26 +31,24 @@ type Props = {
 };
 
 const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => {
-  const { api, isApiReady, isVaraVersion } = useApi();
+  const { isVaraVersion } = useApi();
   const { account } = useAccount();
+  const { getChainBalanceValue, getFormattedGasValue, getChainGasValue } = useBalanceFormat();
+  const schema = useValidationSchema();
 
   // TODOFORM:
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const methods = useForm<FormValues>({ defaultValues: INITIAL_VALUES });
-  const { getValues, reset, setValue, register } = methods;
+  const methods = useForm<FormValues>({ defaultValues: INITIAL_VALUES, resolver: yupResolver(schema) });
+  const { getValues, reset, setValue, register, getFieldState, formState } = methods;
+  const { error: payloadTypeError } = getFieldState('payloadType', formState);
 
   const calculateGas = useGasCalculate();
   const { sendMessage, replyMessage } = useMessageActions();
-  const { balanceMultiplier, decimals } = useBalanceMultiplier();
-  const { gasMultiplier } = useGasMultiplier();
 
   const [isDisabled, setIsDisabled] = useState(false);
   const [isGasDisabled, setIsGasDisabled] = useState(false);
   const [gasInfo, setGasInfo] = useState<Result>();
-
-  const deposit = isApiReady ? api.existentialDeposit.toString() : '';
-  const maxGasLimit = isApiReady ? api.blockGasLimit.toString() : '';
 
   const method = isReply ? GasMethod.Reply : GasMethod.Handle;
   const typeIndex = isReply ? metadata?.types.reply : metadata?.types.handle.input;
@@ -59,27 +57,6 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
   const payloadFormValues = useMemo(
     () => (metadata && isTypeIndex ? getPayloadFormValues(metadata, typeIndex) : undefined),
     [metadata, isTypeIndex, typeIndex],
-  );
-
-  const validation = useMemo(
-    () => {
-      const schema = getValidationSchema({
-        // BigNumber cuz of floating point,
-        // is there a way to handle balance convertion better?
-        deposit: BigNumber(deposit).dividedBy(balanceMultiplier),
-        metadata,
-        maxGasLimit: BigNumber(maxGasLimit).dividedBy(gasMultiplier),
-        balanceMultiplier,
-        decimals,
-        gasMultiplier,
-      });
-
-      // return getValidation(schema);
-
-      return;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [metadata],
   );
 
   const disableSubmitButton = () => setIsDisabled(true);
@@ -99,11 +76,12 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
 
     const payloadType = metadata ? undefined : values.payloadType;
     const { withVoucher, keepAlive } = values;
+    console.log('values: ', typeof values.value);
 
     const baseValues = {
-      value: BigNumber(values.value).multipliedBy(balanceMultiplier).toFixed(),
+      value: getChainBalanceValue(values.value).toFixed(),
       payload: getSubmitPayload(values.payload),
-      gasLimit: BigNumber(values.gasLimit).multipliedBy(gasMultiplier).toFixed(),
+      gasLimit: getChainGasValue(values.gasLimit).toFixed(),
     };
 
     const commonValues = isVaraVersion
@@ -123,17 +101,18 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
     setIsGasDisabled(true);
 
     const values = getValues();
+
     const preparedValues = {
       ...values,
-      value: BigNumber(values.value).multipliedBy(balanceMultiplier).toFixed(),
+      value: getChainBalanceValue(values.value).toFixed(),
       payload: getSubmitPayload(values.payload),
     };
 
     calculateGas(method, preparedValues, null, metadata, id)
       .then((info) => {
-        const limit = BigNumber(info.limit).dividedBy(gasMultiplier).toFixed();
+        const limit = getFormattedGasValue(info.limit).toFixed();
 
-        setValue('gasLimit', limit);
+        setValue('gasLimit', limit, { shouldValidate: true });
         setGasInfo(info);
       })
       .finally(() => setIsGasDisabled(false));
@@ -155,7 +134,9 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
             <FormPayload name="payload" label="Payload" values={payloadFormValues} gap="1/5" />
           )}
 
-          {!isLoading && !metadata && <Input label="Payload type" gap="1/5" {...register('payloadType')} />}
+          {!isLoading && !metadata && (
+            <Input label="Payload type" gap="1/5" {...register('payloadType')} error={payloadTypeError?.message} />
+          )}
 
           {isLoading ? (
             <Input label="Value:" gap="1/5" className={styles.loading} readOnly />

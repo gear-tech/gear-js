@@ -11,12 +11,10 @@ type Props = Omit<NumericFormatProps & InputProps, 'value' | 'onValueChange' | '
 
 // TODO: same input as a gas field
 const ValueField = ({ name, label, direction = 'x', gap, block, ...other }: Props) => {
-  const { setValue } = useFormContext();
+  const { setValue, getFieldState, formState } = useFormContext();
   const inputValue = useWatch({ name });
 
-  // TODOFORM:
-  // const error = meta.invalid && meta.touched ? meta.error : undefined;
-  const error = '';
+  const { error } = getFieldState(name, formState);
 
   const wrapperClassName = clsx(
     inputStyles.wrapper,
@@ -27,7 +25,7 @@ const ValueField = ({ name, label, direction = 'x', gap, block, ...other }: Prop
   );
 
   return (
-    <InputWrapper id={name} label={label} size="normal" error={error} direction={direction} gap={gap}>
+    <InputWrapper id={name} label={label} size="normal" error={error?.message} direction={direction} gap={gap}>
       <div className={wrapperClassName} data-testid="wrapper">
         <NumericFormat
           {...other}
@@ -36,7 +34,7 @@ const ValueField = ({ name, label, direction = 'x', gap, block, ...other }: Prop
           className={clsx(inputStyles.input, inputStyles.dark)}
           allowNegative={false}
           value={inputValue}
-          onValueChange={({ value }) => setValue(name, value)}
+          onValueChange={({ value }) => setValue(name, value, { shouldValidate: true })}
           thousandSeparator
         />
 
