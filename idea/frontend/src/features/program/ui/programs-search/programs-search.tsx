@@ -1,6 +1,6 @@
 import { Input } from '@gear-js/ui';
-import { useForm } from '@mantine/form';
 import { CSSTransition } from 'react-transition-group';
+import { useForm } from 'react-hook-form';
 
 import { Filters, FilterGroup, Radio, StatusCheckbox } from '@/features/filters';
 import { AnimationTimeout } from '@/shared/config';
@@ -18,12 +18,12 @@ type Props = {
 };
 
 const ProgramsSearch = ({ initQuery, isLoggedIn, initialValues, onSubmit }: Props) => {
-  const form = useForm({ initialValues: { query: initQuery } });
+  const form = useForm({ defaultValues: { query: initQuery } });
 
   return (
     <section className={styles.searchSettings}>
-      <form className={styles.searchForm} onSubmit={form.onSubmit(({ query }) => onSubmit({ query }))}>
-        <Input type="search" placeholder="Search by name, code hash, id..." {...form.getInputProps('query')} />
+      <form className={styles.searchForm} onSubmit={form.handleSubmit(({ query }) => onSubmit({ query }))}>
+        <Input type="search" placeholder="Search by name, code hash, id..." {...form.register('query')} />
       </form>
       <Filters initialValues={initialValues} onSubmit={onSubmit}>
         <FilterGroup name="owner" onSubmit={onSubmit}>

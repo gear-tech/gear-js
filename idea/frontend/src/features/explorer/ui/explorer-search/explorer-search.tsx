@@ -1,29 +1,35 @@
 import { Input } from '@gear-js/ui';
-import { useForm } from '@mantine/form';
 import { isHex } from '@polkadot/util';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 
 import { isNumeric } from '../../utils';
 
-const initialValues = { searchQuery: '' };
-const validate = {
-  searchQuery: (value: string) => (isNumeric(value) || isHex(value) ? null : 'Value should be number or hex'),
-};
+const defaultValues = { searchQuery: '' };
+const validate = (value: string) => (isNumeric(value) || isHex(value) ? true : 'Value should be number or hex');
 
 const ExplorerSearch = () => {
-  const { getInputProps, onSubmit, reset } = useForm({ initialValues, validate });
+  const form = useForm({ defaultValues });
+  const { register, reset, getFieldState, formState } = form;
+  const { error } = getFieldState('searchQuery', formState);
+
   const navigate = useNavigate();
 
-  const handleSubmit = onSubmit(({ searchQuery }) => {
+  const handleSubmit = ({ searchQuery }: typeof defaultValues) => {
     const path = `/explorer/${searchQuery}`;
 
     navigate(path);
     reset();
-  });
+  };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Input type="search" placeholder="Search block hash or number to query" {...getInputProps('searchQuery')} />
+    <form onSubmit={form.handleSubmit(handleSubmit)}>
+      <Input
+        type="search"
+        placeholder="Search block hash or number to query"
+        error={error?.message}
+        {...register('searchQuery', { validate })}
+      />
     </form>
   );
 };

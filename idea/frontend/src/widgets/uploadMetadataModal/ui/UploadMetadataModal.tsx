@@ -1,19 +1,17 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { Button, Input, Modal } from '@gear-js/ui';
-import { useForm } from '@mantine/form';
 import { HexString } from '@polkadot/util/types';
 import { useState, useMemo } from 'react';
+import { useForm } from 'react-hook-form';
 import SimpleBar from 'simplebar-react';
 
 import { ModalProps } from '@/entities/modal';
 import { UploadMetadata } from '@/features/uploadMetadata';
 import plusSVG from '@/shared/assets/images/actions/plus.svg?react';
 
-import { isExists } from '@/shared/helpers';
 import styles from './UploadMetadataModal.module.scss';
 
-const initialValues = { name: '' };
-const validate = { name: isExists };
+const defaultValues = { name: '' };
 
 type Props = ModalProps & {
   onSubmit: (values: { metaHex: HexString; name: string }) => void;
@@ -21,26 +19,33 @@ type Props = ModalProps & {
 };
 
 const UploadMetadataModal = ({ onClose, onSubmit, isCode }: Props) => {
-  const form = useForm({ initialValues, validate });
-  const { getInputProps } = form;
+  const form = useForm({ defaultValues });
+  const { register, getFieldState, formState } = form;
+  const { error } = getFieldState('name', formState);
+  const handleSubmit = ({ name }: typeof defaultValues) => onSubmit({ metaHex, name });
 
   const [metaHex, setMetaHex] = useState('' as HexString);
-
   const metadata = useMemo(() => (metaHex ? ProgramMetadata.from(metaHex) : undefined), [metaHex]);
-
   const resetMetaHex = () => setMetaHex('' as HexString);
-
-  const handleSubmit = form.onSubmit(({ name }) => onSubmit({ metaHex, name }));
 
   const nameInputLabel = isCode ? 'Code Name' : 'Program Name';
 
   return (
     <Modal heading="Upload metadata" size="large" className={styles.modal} close={onClose}>
       <SimpleBar className={styles.simplebar}>
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form} onSubmit={form.handleSubmit(handleSubmit)}>
           <UploadMetadata metadata={metadata} onReset={resetMetaHex} onUpload={setMetaHex} />
 
-          {metadata && <Input label={nameInputLabel} direction="y" block {...getInputProps('name')} />}
+          {metadata && (
+            <Input
+              label={nameInputLabel}
+              direction="y"
+              block
+              error={error?.message}
+              {...register('name', { required: 'Field is required' })}
+            />
+          )}
+
           {metadata && <Button type="submit" icon={plusSVG} text="Upload Metadata" />}
         </form>
       </SimpleBar>
