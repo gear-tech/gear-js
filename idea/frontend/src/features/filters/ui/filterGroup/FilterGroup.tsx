@@ -16,12 +16,12 @@ type Props<T> = {
 };
 
 const FilterGroup = <T extends FieldValues>({ name, title, withReset = false, onSubmit, children }: Props<T>) => {
-  const { handleSubmit, resetField, formState } = useFormContext<T>();
-  const { isDirty } = formState;
+  const { resetField, handleSubmit, getFieldState } = useFormContext<T>();
+  const { isDirty } = getFieldState(name);
 
   const handleFilterReset = () => {
     resetField(name);
-    handleSubmit(onSubmit);
+    handleSubmit(onSubmit)();
   };
 
   return (

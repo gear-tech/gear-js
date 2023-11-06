@@ -13,7 +13,6 @@ type Props<T> = {
   children: ReactNode;
 };
 
-// TODOFORM:
 const Filters = <T extends FieldValues>({ initialValues, children, onSubmit }: Props<T>) => {
   const methods = useForm<T>({ defaultValues: initialValues });
   const { handleSubmit, reset, formState } = methods;
@@ -21,7 +20,7 @@ const Filters = <T extends FieldValues>({ initialValues, children, onSubmit }: P
 
   const handleResetClick = () => {
     reset();
-    handleSubmit(onSubmit);
+    handleSubmit(onSubmit)();
   };
 
   return (

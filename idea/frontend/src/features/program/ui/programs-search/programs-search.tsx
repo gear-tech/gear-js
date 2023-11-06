@@ -1,6 +1,6 @@
-import { CSSTransition } from 'react-transition-group';
 import { Input } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
+import { CSSTransition } from 'react-transition-group';
 
 import { Filters, FilterGroup, Radio, StatusCheckbox } from '@/features/filters';
 import { AnimationTimeout } from '@/shared/config';
@@ -28,10 +28,12 @@ const ProgramsSearch = ({ initQuery, isLoggedIn, initialValues, onSubmit }: Prop
       <Filters initialValues={initialValues} onSubmit={onSubmit}>
         <FilterGroup name="owner" onSubmit={onSubmit}>
           <Radio name="owner" value="all" label="All programs" onSubmit={onSubmit} />
+
           <CSSTransition in={isLoggedIn} exit={false} timeout={AnimationTimeout.Medium} mountOnEnter unmountOnExit>
             <Radio name="owner" value="owner" label="My programs" className={styles.ownerFilter} onSubmit={onSubmit} />
           </CSSTransition>
         </FilterGroup>
+
         <FilterGroup title="Status" name="status" withReset onSubmit={onSubmit}>
           <StatusCheckbox
             name="status"
