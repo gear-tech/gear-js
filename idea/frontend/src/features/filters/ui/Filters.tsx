@@ -1,23 +1,44 @@
+import { Button } from '@gear-js/ui';
 import { ReactNode } from 'react';
-import { Form, FormProps } from 'react-final-form';
+import { useForm, FormProvider, FieldValues, DefaultValues } from 'react-hook-form';
+import { CSSTransition } from 'react-transition-group';
+
+import { AnimationTimeout } from '@/shared/config';
 
 import styles from './Filters.module.scss';
-import { FilterHeader } from './filterHeader';
 
-type Props<T> = FormProps<T> & {
+type Props<T> = {
+  initialValues: DefaultValues<T>;
+  onSubmit: (values: T) => void;
   children: ReactNode;
 };
 
-const Filters = <T,>({ children, ...formProps }: Props<T>) => (
-  // eslint-disable-next-line react/jsx-props-no-spreading
-  <Form {...formProps}>
-    {({ handleSubmit }) => (
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <FilterHeader />
+// TODOFORM:
+const Filters = <T extends FieldValues>({ initialValues, children, onSubmit }: Props<T>) => {
+  const methods = useForm<T>({ defaultValues: initialValues });
+  const { handleSubmit, reset, formState } = methods;
+  const { isDirty } = formState;
+
+  const handleResetClick = () => {
+    reset();
+    handleSubmit(onSubmit);
+  };
+
+  return (
+    <FormProvider {...methods}>
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <div className={styles.header}>
+          <h2 className={styles.title}>Filters</h2>
+
+          <CSSTransition in={isDirty} timeout={AnimationTimeout.Default} mountOnEnter unmountOnExit>
+            <Button text="Clear all" color="transparent" className={styles.clearAllBtn} onClick={handleResetClick} />
+          </CSSTransition>
+        </div>
+
         <div className={styles.mainFilters}>{children}</div>
       </form>
-    )}
-  </Form>
-);
+    </FormProvider>
+  );
+};
 
 export { Filters };

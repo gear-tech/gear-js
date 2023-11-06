@@ -23,3 +23,29 @@
     align-items: flex-start;
   }
 }
+
+.header {
+  @include childrenMargin($margin, right);
+
+  display: flex;
+  align-items: flex-end;
+
+  .title {
+    color: $gray800;
+    font-size: toRem(24);
+    font-family: 'Kanit';
+    line-height: 31.2px;
+    font-weight: 400;
+  }
+
+  .clearAllBtn {
+    @include fade();
+
+    font-family: 'Kanit';
+    font-size: $fontSizeSmall;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0.08em;
+    color: $successColor;
+  }
+}

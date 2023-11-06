@@ -29,14 +29,15 @@ const SearchSettings = ({ isLoggedIn, initialValues, initQuery, onSubmit }: Prop
       </form>
       {!isDevChain && (
         <Filters initialValues={initialValues} onSubmit={onSubmit}>
-          <FilterGroup name="uploadedBy">
-            <Radio name="uploadedBy" value="none" label="All codes" />
+          <FilterGroup name="uploadedBy" onSubmit={onSubmit}>
+            <Radio name="uploadedBy" value="none" label="All codes" onSubmit={onSubmit} />
             <CSSTransition in={isLoggedIn} exit={false} timeout={AnimationTimeout.Medium} mountOnEnter unmountOnExit>
               <Radio
                 name="uploadedBy"
                 value={account?.decodedAddress}
                 label="My codes"
                 className={styles.ownerFilter}
+                onSubmit={onSubmit}
               />
             </CSSTransition>
           </FilterGroup>
