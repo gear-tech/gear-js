@@ -12,7 +12,6 @@ import { Payload } from '@/hooks/useProgramActions/types';
 import { FormPayload, getSubmitPayload, getPayloadFormValues } from '@/features/formPayload';
 import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
-import { getValidation } from '@/shared/helpers';
 import { FormInput, ValueField } from '@/shared/ui/form';
 import { LabeledCheckbox } from '@/shared/ui';
 import { resetPayloadValue } from '@/widgets/messageForm/helpers';
@@ -123,7 +122,8 @@ const ProgramForm = (props: Props) => {
         gasMultiplier,
       });
 
-      return getValidation(schema);
+      // return getValidation(schema);
+      return;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [metadata],

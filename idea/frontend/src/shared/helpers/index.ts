@@ -2,7 +2,6 @@ import type { Event } from '@polkadot/types/interfaces';
 import { GearApi } from '@gear-js/api';
 import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
 import { AnySchema, ValidationError } from 'yup';
-import { setIn } from 'final-form';
 import isString from 'lodash.isstring';
 
 import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from '@/shared/config';
@@ -103,21 +102,6 @@ const getNodeAddressFromUrl = () => {
   }
 };
 
-const getValidation =
-  <T>(schema: AnySchema) =>
-  async (values: T) => {
-    try {
-      schema.validateSync(values, { abortEarly: false });
-    } catch (error: unknown) {
-      const errors = (error as ValidationError).inner.reduce(
-        (formError, innerError) => setIn(formError, innerError.path ?? '', innerError.message),
-        {},
-      );
-
-      return errors;
-    }
-  };
-
 const disableScroll = () => document.body.classList.add('noOverflow');
 const enableScroll = () => document.body.classList.remove('noOverflow');
 
@@ -141,7 +125,6 @@ export {
   copyToClipboard,
   checkFileFormat,
   getShortName,
-  getValidation,
   generateRandomId,
   getPreformattedText,
   getNodeAddressFromUrl,

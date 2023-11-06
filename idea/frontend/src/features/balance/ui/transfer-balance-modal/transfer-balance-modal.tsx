@@ -6,7 +6,7 @@ import * as yup from 'yup';
 
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { FormInput, ValueField } from '@/shared/ui/form';
-import { getValidation, isAccountAddressValid } from '@/shared/helpers';
+import { isAccountAddressValid } from '@/shared/helpers';
 import { useBalanceTransfer } from '@/hooks';
 
 import SubmitSVG from '../../assets/submit.svg?react';

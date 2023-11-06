@@ -11,7 +11,6 @@ import { ValueField } from '@/shared/ui/form';
 import { Box } from '@/shared/ui/box';
 import { BackButton } from '@/shared/ui/backButton';
 import { GasMethod } from '@/shared/config';
-import { getValidation } from '@/shared/helpers';
 import { GasField } from '@/features/gasField';
 import { FormPayload, getPayloadFormValues, getSubmitPayload } from '@/features/formPayload';
 import { useBalanceMultiplier, useGasCalculate, useGasMultiplier, useMessageActions } from '@/hooks';
@@ -50,8 +49,6 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
   const [isGasDisabled, setIsGasDisabled] = useState(false);
   const [gasInfo, setGasInfo] = useState<Result>();
 
-  // const formApi = useRef<FormApi<FormValues>>();
-
   const deposit = isApiReady ? api.existentialDeposit.toString() : '';
   const maxGasLimit = isApiReady ? api.blockGasLimit.toString() : '';
 
@@ -77,7 +74,9 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
         gasMultiplier,
       });
 
-      return getValidation(schema);
+      // return getValidation(schema);
+
+      return;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [metadata],

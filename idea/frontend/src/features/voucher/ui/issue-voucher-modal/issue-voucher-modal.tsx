@@ -7,7 +7,7 @@ import * as yup from 'yup';
 import { useBalanceMultiplier } from '@/hooks';
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
-import { getValidation, isAccountAddressValid } from '@/shared/helpers';
+import { isAccountAddressValid } from '@/shared/helpers';
 import { FormInput, ValueField } from '@/shared/ui/form';
 
 import { useIssueVoucher } from '../../hooks';
