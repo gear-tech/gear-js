@@ -1,5 +1,6 @@
 import { Button, Modal } from '@gear-js/ui';
 import { HexString, decodeAddress } from '@gear-js/api';
+import { yupResolver } from '@hookform/resolvers/yup';
 import BigNumber from 'bignumber.js';
 import { FormProvider, useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -20,8 +21,7 @@ type Props = {
 
 const defaultValues = { address: '', value: '' };
 
-// TODOFORM:
-const validationSchema = yup.object().shape({
+const schema = yup.object().shape({
   address: yup
     .string()
     .test('is-address-valid', 'Invalid address', isAccountAddressValid)
@@ -29,11 +29,13 @@ const validationSchema = yup.object().shape({
   value: yup.string().required('This field is required'),
 });
 
+const resolver = yupResolver(schema);
+
 const IssueVoucherModal = ({ programId, close }: Props) => {
   const { balanceMultiplier } = useBalanceMultiplier();
   const issueVoucher = useIssueVoucher();
 
-  const methods = useForm({ defaultValues });
+  const methods = useForm({ defaultValues, resolver });
 
   const handleSubmit = ({ address, value }: typeof defaultValues) => {
     const decodedAddress = decodeAddress(address);

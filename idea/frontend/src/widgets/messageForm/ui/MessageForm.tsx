@@ -12,13 +12,12 @@ import { Box } from '@/shared/ui/box';
 import { BackButton } from '@/shared/ui/backButton';
 import { GasMethod } from '@/shared/config';
 import { GasField } from '@/features/gasField';
-import { FormPayload, getPayloadFormValues, getSubmitPayload } from '@/features/formPayload';
+import { FormPayload, getPayloadFormValues, getResetPayloadValue, getSubmitPayload } from '@/features/formPayload';
 import { useGasCalculate, useMessageActions, useValidationSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
 import { UseVoucherCheckbox } from '@/features/voucher';
 import { LabeledCheckbox } from '@/shared/ui';
 
-import { resetPayloadValue } from '../helpers';
 import { FormValues, INITIAL_VALUES } from '../model';
 import styles from './MessageForm.module.scss';
 
@@ -64,7 +63,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
 
   const resetForm = () => {
     const values = getValues();
-    const payload = resetPayloadValue(values.payload);
+    const payload = getResetPayloadValue(values.payload);
 
     reset({ ...INITIAL_VALUES, payload });
     enableSubmitButton();

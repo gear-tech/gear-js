@@ -9,13 +9,18 @@ type Props = InputProps & {
 };
 
 const FormInput = ({ name, label, className, ...other }: Props) => {
-  const { register } = useFormContext();
+  const { register, getFieldState, formState } = useFormContext();
+  const { error } = getFieldState(name, formState);
 
-  // TODOFORM:
-  // const error = meta.invalid && meta.touched ? meta.error : undefined;
-  const error = '';
-
-  return <Input {...other} {...register(name)} label={label} error={error} className={clsx(styles.field, className)} />;
+  return (
+    <Input
+      {...other}
+      {...register(name)}
+      label={label}
+      error={error?.message}
+      className={clsx(styles.field, className)}
+    />
+  );
 };
 
 export { FormInput };

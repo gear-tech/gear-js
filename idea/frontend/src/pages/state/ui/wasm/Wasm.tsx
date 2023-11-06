@@ -10,7 +10,7 @@ import { getPreformattedText, isNullOrUndefined, readFileAsync } from '@/shared/
 import { FileTypes } from '@/shared/config';
 import { BackButton } from '@/shared/ui/backButton';
 import { Box } from '@/shared/ui/box';
-import { FormPayload, getPayloadFormValues, getSubmitPayload } from '@/features/formPayload';
+import { FormPayload, getPayloadFormValues, getResetPayloadValue, getSubmitPayload } from '@/features/formPayload';
 import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import { isHumanTypesRepr, useMetadata } from '@/features/metadata';
 
@@ -29,9 +29,6 @@ const Wasm = () => {
   // @ts-ignore
   const methods = useForm<WasmFormValues>({ defaultValues: INITIAL_VALUES });
   const { setValue, control } = methods;
-  // TODOFORM:
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   const watchValues = useWatch({ control });
 
   const programId = useProgramId();
@@ -133,15 +130,6 @@ const Wasm = () => {
       .finally(() => setIsStatesRequestReady(true));
   };
 
-  const handleSubmit = (values: WasmFormValues) => {
-    if (!wasmBuffer || !programMetadata) return;
-
-    const payload = getSubmitPayload(values.payload);
-    const argument = getSubmitPayload(values.argument);
-
-    readWasmState(wasmBuffer, programMetadata, functionName, argument, payload || '0x');
-  };
-
   const setFileBufferAndFunctions = (value: File) => {
     readFileAsync(value, 'buffer')
       .then((arrayBuffer) => Buffer.from(arrayBuffer))
@@ -177,10 +165,18 @@ const Wasm = () => {
 
   const resetUploadedState = () => setUploadedState(undefined);
   const resetUploadedWasmBuffer = () => setUploadedWasmBuffer(undefined);
-  // TODOFORM:
-  const resetPayloadValue = () => setValue('payload', payloadFormValues?.payload || '');
-  const resetArgumentValue = () => setValue('argument', argumentFormValues?.payload || '');
+  const resetPayloadValue = () => setValue('payload', getResetPayloadValue(payloadFormValues?.payload || ''));
+  const resetArgumentValue = () => setValue('argument', getResetPayloadValue(argumentFormValues?.payload || ''));
   const resetMetadata = () => setMetadata(undefined);
+
+  const handleSubmit = (values: WasmFormValues) => {
+    if (!wasmBuffer || !programMetadata) return;
+
+    const payload = getSubmitPayload(values.payload);
+    const argument = getSubmitPayload(values.argument);
+
+    readWasmState(wasmBuffer, programMetadata, functionName, argument, payload || '0x');
+  };
 
   useEffect(() => {
     resetSelectedFunction();

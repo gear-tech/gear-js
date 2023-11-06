@@ -1,3 +1,17 @@
-import { getItemLabel, getPayloadValue, getNextLevelName, getSubmitPayload, getPayloadFormValues } from './helpers';
+import {
+  getItemLabel,
+  getPayloadValue,
+  getNextLevelName,
+  getSubmitPayload,
+  getPayloadFormValues,
+  getResetPayloadValue,
+} from './helpers';
 
-export { getItemLabel, getPayloadValue, getNextLevelName, getSubmitPayload, getPayloadFormValues };
+export {
+  getItemLabel,
+  getPayloadValue,
+  getNextLevelName,
+  getSubmitPayload,
+  getPayloadFormValues,
+  getResetPayloadValue,
+};

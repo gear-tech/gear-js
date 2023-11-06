@@ -9,12 +9,11 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useGasCalculate, useChangeEffect, useValidationSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
 import { Payload } from '@/hooks/useProgramActions/types';
-import { FormPayload, getSubmitPayload, getPayloadFormValues } from '@/features/formPayload';
+import { FormPayload, getSubmitPayload, getPayloadFormValues, getResetPayloadValue } from '@/features/formPayload';
 import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
 import { FormInput, ValueField } from '@/shared/ui/form';
 import { LabeledCheckbox } from '@/shared/ui';
-import { resetPayloadValue } from '@/widgets/messageForm/helpers';
 
 import { INITIAL_VALUES, FormValues, RenderButtonsProps, SubmitHelpers } from '../model';
 import styles from './ProgramForm.module.scss';
@@ -51,7 +50,7 @@ const ProgramForm = (props: Props) => {
 
   const resetForm = () => {
     const values = getValues();
-    const payload = resetPayloadValue(values.payload);
+    const payload = getResetPayloadValue(values.payload);
 
     reset({ ...defaultValues, payload });
     setIsDisables(false);

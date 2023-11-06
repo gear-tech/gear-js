@@ -101,4 +101,29 @@ const getPayloadFormValues = (metadata: ProgramMetadata | StateMetadata, metaInd
   return { payload, manualPayload: getPreformattedText(typeDef), typeStructure: extendedTypeDef };
 };
 
-export { getItemLabel, getPayloadValue, getNextLevelName, getSubmitPayload, getPayloadFormValues };
+const getResetPayloadValue = (payload: PayloadValue): PayloadValue => {
+  if (isString(payload)) {
+    return '';
+  }
+
+  if (Array.isArray(payload)) {
+    return payload.map((value) => getResetPayloadValue(value));
+  }
+
+  if (isPlainObject(payload)) {
+    const preparedValues = Object.entries(payload!).map(([key, value]) => [key, getResetPayloadValue(value)]);
+
+    return Object.fromEntries(preparedValues);
+  }
+
+  return payload;
+};
+
+export {
+  getItemLabel,
+  getPayloadValue,
+  getNextLevelName,
+  getSubmitPayload,
+  getPayloadFormValues,
+  getResetPayloadValue,
+};

@@ -1,7 +1,6 @@
 import { FormPayloadValues } from './model';
-import { getPayloadValue, getSubmitPayload, getPayloadFormValues } from './helpers';
+import { getPayloadValue, getSubmitPayload, getPayloadFormValues, getResetPayloadValue } from './helpers';
 import { FormPayload } from './ui/FormPayload';
 
-export { FormPayload };
-export { getPayloadValue, getSubmitPayload, getPayloadFormValues };
+export { FormPayload, getPayloadValue, getSubmitPayload, getPayloadFormValues, getResetPayloadValue };
 export type { FormPayloadValues };

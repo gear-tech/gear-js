@@ -1,6 +1,7 @@
 import { decodeAddress } from '@gear-js/api';
 import { useAccount, useBalanceFormat } from '@gear-js/react-hooks';
 import { Button, Checkbox, Modal } from '@gear-js/ui';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { FormProvider, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -14,14 +15,16 @@ import styles from './transfer-balance-modal.module.scss';
 
 const defaultValues = { address: '', value: '', keepAlive: true };
 
-// TODOFORM:
-const validationSchema = yup.object().shape({
+const schema = yup.object().shape({
   address: yup
     .string()
     .test('is-address-valid', 'Invalid address', isAccountAddressValid)
     .required('This field is required'),
   value: yup.string().required('This field is required'),
+  keepAlive: yup.boolean().required(),
 });
+
+const resolver = yupResolver(schema);
 
 type Props = {
   close: () => void;
@@ -32,7 +35,7 @@ const TransferBalanceModal = ({ close }: Props) => {
   const { getChainBalanceValue } = useBalanceFormat();
   const transferBalance = useBalanceTransfer();
 
-  const methods = useForm({ defaultValues });
+  const methods = useForm({ defaultValues, resolver });
   const { register } = methods;
 
   const handleSubmit = ({ address, value, keepAlive }: typeof defaultValues) => {

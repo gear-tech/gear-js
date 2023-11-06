@@ -24,18 +24,11 @@ type Props = {
 const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
   const alert = useAlert();
   const { setValue, register } = useFormContext();
-  // const { input, meta } = useField<PayloadValue>(name);
 
   const jsonManualPayload = useRef<string>();
 
   const [isManualView, setIsManualView] = useState(!values);
   const [manualPayloadFile, setManualPayloadFile] = useState<File>();
-
-  // TODOFORM: need to reset field's state?
-  // const changeValue = (value: PayloadValue) => {
-  //   change(name, value);
-  //   resetFieldState(name);
-  // };
 
   const handleViewChange = () => setIsManualView((prevState) => !prevState);
 
@@ -85,17 +78,11 @@ const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values]);
 
-  // TODOFORM:
-  // TODO: meta.error is object - final-form bug
-  // const error = meta.invalid ? 'Invalid payload' : undefined;
-  const error = '';
-
   return (
     <InputWrapper
       id={name}
       size="normal"
       label={label}
-      error={error}
       direction={direction}
       gap={gap}
       className={clsx(formStyles.field, values && formStyles.gap16)}>
