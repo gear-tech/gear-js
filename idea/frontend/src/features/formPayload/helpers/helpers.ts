@@ -83,7 +83,8 @@ const getPayloadValue = (typeStructure: TypeStructure | null): PayloadValue => {
       return Object.fromEntries(structure);
     }
 
-    case 'primitive': {
+    case 'primitive':
+    case 'actorid': {
       return '';
     }
 
