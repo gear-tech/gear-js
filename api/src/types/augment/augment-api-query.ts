@@ -163,7 +163,7 @@ declare module '@polkadot/api-base/types/storage' {
         [GearCoreIdsCodeId]
       > &
         QueryableStorageEntry<ApiType, [GearCoreIdsCodeId]>;
-      memoryPageStorage2: AugmentedQuery<
+      memoryPages: AugmentedQuery<
         ApiType,
         (
           arg1: GearCoreIdsProgramId | string | Uint8Array,
@@ -211,9 +211,6 @@ declare module '@polkadot/api-base/types/storage' {
         [GearCoreIdsProgramId]
       > &
         QueryableStorageEntry<ApiType, [GearCoreIdsProgramId]>;
-      /**
-       * Generic query
-       **/
       [key: string]: QueryableStorageEntry<ApiType>;
     };
     gearScheduler: {
