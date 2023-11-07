@@ -1,11 +1,6 @@
 import { useReadFullState, useReadWasmState } from './useReadState';
 
-import { useSendMessage, SendMessageOptions, UseSendMessageOptions } from './useSendMessage';
-import {
-  useDepricatedSendMessage,
-  DepricatedSendMessageOptions,
-  UseDepricatedSendMessageOptions,
-} from './useDepricatedSendMessage';
+import { useSendMessage, SendMessageOptions, UseSendMessageOptions, VaraSendMessageOptions } from './useSendMessage';
 
 import { useUploadProgram, useCreateProgram } from './useProgram';
 import {
@@ -16,7 +11,7 @@ import {
 } from './useCalculateGas';
 
 import { useIsVoucherExists, useVoucherBalance, useVoucher } from './voucher';
-import { useBalanceFormat } from './balance';
+import { useBalance, useBalanceFormat } from './balance';
 
 export {
   useReadFullState,
@@ -31,10 +26,9 @@ export {
   useIsVoucherExists,
   useVoucherBalance,
   useVoucher,
+  useBalance,
   useBalanceFormat,
-  useDepricatedSendMessage,
-  DepricatedSendMessageOptions,
-  UseDepricatedSendMessageOptions,
   SendMessageOptions,
   UseSendMessageOptions,
+  VaraSendMessageOptions,
 };

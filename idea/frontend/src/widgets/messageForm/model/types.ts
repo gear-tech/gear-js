@@ -5,7 +5,8 @@ type FormValues = {
   gasLimit: string;
   payload: PayloadValue;
   payloadType: string;
-  isPrepaid: boolean;
+  withVoucher: boolean;
+  keepAlive: boolean;
 };
 
 export type { FormValues };

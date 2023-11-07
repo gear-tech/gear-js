@@ -39,9 +39,7 @@ const UploadProgram = () => {
   const handleSubmit = (payload: Payload, { enableButtons }: SubmitHelpers) => {
     if (!optFile || !optBuffer) return;
 
-    const name = payload.programName || optFile.name;
-
-    uploadProgram({ optBuffer, payload, name, resolve: resetOptFile, reject: enableButtons });
+    uploadProgram({ optBuffer, payload, resolve: resetOptFile, reject: enableButtons });
   };
 
   return (
@@ -62,6 +60,7 @@ const UploadProgram = () => {
 
           {optBuffer && (
             <ProgramForm
+              fileName={optFile?.name.split(/\.opt|\.wasm/)[0]}
               source={optBuffer}
               metaHex={metadata.hex}
               metadata={metadata.value}

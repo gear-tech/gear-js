@@ -4,6 +4,7 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 
 import { generateVoucherId, validateVoucher } from './utils';
 import { GearTransaction } from './Transaction';
+import { ICallOptions } from './types';
 
 export class GearVoucher extends GearTransaction {
   /**
@@ -31,6 +32,26 @@ export class GearVoucher extends GearTransaction {
     const voucherId = generateVoucherId(to, program);
     this.extrinsic = this._api.tx.gearVoucher.issue(to, program, value);
     return { extrinsic: this.extrinsic, voucherId };
+  }
+
+  call(params: ICallOptions) {
+    if ('SendMessage' in params) {
+      if (params.SendMessage.method.method !== 'sendMessage') {
+        throw new Error(
+          `Invalid method name. Expected 'SendMessage' but actual is ${params.SendMessage.method.method}`,
+        );
+      }
+      const [destination, payload, gasLimit, value, keepAlive] = params.SendMessage.args;
+      return this._api.tx.gearVoucher.call({ SendMessage: { destination, payload, gasLimit, value, keepAlive } });
+    } else if ('SendReply' in params) {
+      if (params.SendReply.method.method !== 'sendReply') {
+        throw new Error(`Invalid method name. Expected 'SendReply' but actual is ${params.SendReply.method.method}`);
+      }
+      const [replyToId, payload, gasLimit, value, keepAlive] = params.SendReply.args;
+      return this._api.tx.gearVoucher.call({ SendReply: { replyToId, payload, gasLimit, value, keepAlive } });
+    }
+
+    throw new Error('Invalid call params');
   }
 
   async exists(programId: HexString, accountId: HexString): Promise<boolean> {

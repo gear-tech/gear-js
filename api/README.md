@@ -51,6 +51,7 @@ const nodeVersion = await gearApi.nodeVersion();
 const genesis = gearApi.genesisHash.toHex();
 ```
 
+Since Vara and VaraTestnet can have different runtime versions, they can have different extrinsics signatures. If your application is running on the Vara Network it is more convinient to use the `VaraApi` class instead of `GearApi` and `VaraTestnetApi` for the Vara Testnet Network
 ---
 
 ## Payloads and metadata

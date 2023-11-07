@@ -9,3 +9,4 @@ export * from './address';
 export * from './signature';
 export * from './regexp';
 export * from './create-payload';
+export * from './getExtrinsic';

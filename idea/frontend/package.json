@@ -9,15 +9,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@gear-js/api": "0.34.0",
-    "@gear-js/react-hooks": "0.8.1",
+    "@gear-js/api": "0.35.2",
+    "@gear-js/react-hooks": "workspace:^",
     "@gear-js/ui": "0.5.19",
     "@hcaptcha/react-hcaptcha": "1.8.1",
     "@mantine/form": "7.1.2",
-    "@polkadot/api": "10.9.1",
+    "@polkadot/api": "10.10.1",
     "@polkadot/extension-dapp": "0.46.5",
     "@polkadot/react-identicon": "3.6.3",
-    "@polkadot/types": "10.9.1",
+    "@polkadot/types": "10.10.1",
     "@polkadot/util": "12.5.1",
     "@react-aria/utils": "3.21.0",
     "bignumber.js": "9.1.2",
@@ -66,7 +66,7 @@
     "sass": "1.69.1",
     "typescript": "5.2.2",
     "vite": "4.4.11",
-    "vite-plugin-eslint": "1.8.1",
+    "vite-plugin-checker": "0.6.2",
     "vite-plugin-node-polyfills": "0.15.0",
     "vite-plugin-svgr": "4.1.0"
   },
@@ -83,8 +83,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "lint-staged": {
-    "./**/*.{js,ts,tsx, scss}": "eslint --fix"
   }
 }

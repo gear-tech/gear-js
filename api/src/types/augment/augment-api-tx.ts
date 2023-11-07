@@ -3,7 +3,7 @@ import '@polkadot/api-base/types/submittable';
 import type { AnyNumber, ITuple } from '@polkadot/types-codec/types';
 import type { ApiTypes, AugmentedSubmittable } from '@polkadot/api-base/types';
 import type { BTreeSet, Bytes, Option, Vec, bool, u128, u32, u64 } from '@polkadot/types-codec';
-import { GearCoreIdsCodeId, GearCoreIdsMessageId, GearCoreIdsProgramId } from '../lookup';
+import { GearCoreIdsCodeId, GearCoreIdsMessageId, GearCoreIdsProgramId, PalletGearVoucherPrepaidCall } from '../lookup';
 import type { MultiAddress } from '@polkadot/types/interfaces/runtime';
 
 declare module '@polkadot/api-base/types/submittable' {
@@ -48,6 +48,7 @@ declare module '@polkadot/api-base/types/submittable' {
           initPayload: Bytes | string | Uint8Array | number[],
           gasLimit: u64 | AnyNumber | Uint8Array,
           value: u128 | AnyNumber | Uint8Array,
+          keepAlive: bool | boolean | Uint8Array,
         ) => SubmittableExtrinsic<ApiType>,
         [GearCoreIdsCodeId, Bytes, Bytes, u64, u128]
       >;
@@ -131,18 +132,11 @@ declare module '@polkadot/api-base/types/submittable' {
        * is not a program in uninitialized state. If the opposite holds true,
        * the message is not enqueued for processing.
        *
-       * If `prepaid` flag is set, the transaction fee and the gas cost will be
-       * charged against a `voucher` that must have been issued for the sender
-       * in conjunction with the `destination` program. That means that the
-       * synthetic account corresponding to the (`AccountId`, `ProgramId`) pair must
-       * exist and have sufficient funds in it. Otherwise, the call is invalidated.
-       *
        * Parameters:
        * - `destination`: the message destination.
        * - `payload`: in case of a program destination, parameters of the `handle` function.
        * - `gas_limit`: maximum amount of gas the program can spend before it is halted.
        * - `value`: balance to be transferred to the program once it's been created.
-       * - `prepaid`: a flag that indicates whether a voucher should be used.
        *
        * Emits the following events:
        * - `DispatchMessageEnqueued(MessageInfo)` when dispatch message is placed in the queue.
@@ -153,7 +147,7 @@ declare module '@polkadot/api-base/types/submittable' {
           payload: Bytes | string | Uint8Array | number[],
           gasLimit: u64 | AnyNumber | Uint8Array,
           value: u128 | AnyNumber | Uint8Array,
-          prepaid: bool | boolean | Uint8Array,
+          keepAlive: bool | boolean | Uint8Array,
         ) => SubmittableExtrinsic<ApiType>,
         [GearCoreIdsProgramId, Bytes, u64, u128, bool]
       >;
@@ -171,12 +165,6 @@ declare module '@polkadot/api-base/types/submittable' {
        *
        * NOTE: only user who is destination of the message, can claim value
        * or reply on the message from mailbox.
-       *
-       * If `prepaid` flag is set, the transaction fee and the gas cost will be
-       * charged against a `voucher` that must have been issued for the sender
-       * in conjunction with the mailboxed message source program. That means that the
-       * synthetic account corresponding to the (`AccountId`, `ProgramId`) pair must
-       * exist and have sufficient funds in it. Otherwise, the call is invalidated.
        **/
       sendReply: AugmentedSubmittable<
         (
@@ -184,7 +172,7 @@ declare module '@polkadot/api-base/types/submittable' {
           payload: Bytes | string | Uint8Array | number[],
           gasLimit: u64 | AnyNumber | Uint8Array,
           value: u128 | AnyNumber | Uint8Array,
-          prepaid: bool | boolean | Uint8Array,
+          keepAlive: bool | boolean | Uint8Array,
         ) => SubmittableExtrinsic<ApiType>,
         [GearCoreIdsMessageId, Bytes, u64, u128, bool]
       >;
@@ -263,6 +251,7 @@ declare module '@polkadot/api-base/types/submittable' {
           initPayload: Bytes | string | Uint8Array | number[],
           gasLimit: u64 | AnyNumber | Uint8Array,
           value: u128 | AnyNumber | Uint8Array,
+          keepAlive: bool | boolean | Uint8Array,
         ) => SubmittableExtrinsic<ApiType>,
         [Bytes, Bytes, Bytes, u64, u128]
       >;
@@ -272,6 +261,15 @@ declare module '@polkadot/api-base/types/submittable' {
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
     gearVoucher: {
+      /**
+       * Dispatch allowed with voucher call.
+       **/
+      call: AugmentedSubmittable<
+        (
+          call: PalletGearVoucherPrepaidCall | { SendMessage: any } | { SendReply: any } | string | Uint8Array,
+        ) => SubmittableExtrinsic<ApiType>,
+        [PalletGearVoucherPrepaidCall]
+      >;
       /**
        * Issue a new voucher for a `user` to be used to pay for sending messages
        * to `program_id` program.

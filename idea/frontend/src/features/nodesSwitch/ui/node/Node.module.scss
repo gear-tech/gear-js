@@ -1,17 +1,29 @@
-@use '@/shared/assets/styles/_shared.scss' as *;
-@use '@/shared/assets/styles/_mixins.scss' as *;
-@use '@/shared/assets/styles/_variables.scss' as *;
-@use '@/shared/assets/styles/_animations.scss' as *;
+@use '@/shared/assets/styles/shared' as *;
+@use '@/shared/assets/styles/mixins' as *;
+@use '@/shared/assets/styles/variables' as *;
+@use '@/shared/assets/styles/animations' as *;
 
 .node {
   display: flex;
+  justify-content: space-between;
   align-items: center;
 
   .radio {
     font-size: $fontSizeSmall;
     font-weight: 400;
     line-height: 1.54;
-    white-space: nowrap;
+    overflow: hidden;
+
+    .icon,
+    input {
+      flex-shrink: 0;
+    }
+
+    span {
+      // if possible, white-space would be applied instead of text-overlow
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
     &.current {
       color: $successColor;
@@ -39,8 +51,8 @@
     align-items: center;
 
     .actionBtn svg {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
     }
   }
 }

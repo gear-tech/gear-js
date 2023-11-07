@@ -328,6 +328,34 @@ export interface GearCommonEventUserMessageReadSystemReason extends Enum {
   readonly type: 'OutOfRent';
 }
 
+/** @name PalletGearVoucherPrepaidCall (280) */
+export interface PalletGearVoucherPrepaidCall extends Enum {
+  readonly isSendMessage: boolean;
+  readonly asSendMessage: {
+    readonly destination: GearCoreIdsProgramId;
+    readonly payload: Bytes;
+    readonly gasLimit: u64;
+    readonly value: u128;
+  } & Struct;
+  readonly isSendReply: boolean;
+  readonly asSendReply: {
+    readonly replyToId: GearCoreIdsMessageId;
+    readonly payload: Bytes;
+    readonly gasLimit: u64;
+    readonly value: u128;
+  } & Struct;
+  readonly type: 'SendMessage' | 'SendReply';
+}
+
+/** @name GearCoreCodeInstrumentedCode (217) */
+export interface GearCoreCodeInstrumentedCode extends Struct {
+  readonly code: Bytes;
+  readonly originalCodeLen: u32;
+  readonly exports: BTreeSet<GearCoreMessageDispatchKind>;
+  readonly staticPages: u32;
+  readonly version: u32;
+}
+
 /** @name GearCommonEventDispatchStatus (324) */
 export interface GearCommonEventDispatchStatus extends Enum {
   readonly isSuccess: boolean;

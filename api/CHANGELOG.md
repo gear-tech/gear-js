@@ -1,3 +1,22 @@
+## 0.35.2
+
+_10/31/2023_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1443
+- Use runtime version for api versioning instead of genesis
+
+## 0.35.0
+
+_10/24/2023_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1436
+- Support `gearVoucher.call` extrinsic according to https://github.com/gear-tech/gear/pull/3401
+- Support `keepAlive` field in `sendMessage`, `sendReply`, `uploadProgram` and `createProgram` extrinsics accoriding to https://github.com/gear-tech/gear/pull/3425
+- Bump `polkadot-js` version to 10.10.1
+- Support different APIs for Vara and Vara Testnet Network
+
 ## 0.34.0
 
 _09/29/2023_

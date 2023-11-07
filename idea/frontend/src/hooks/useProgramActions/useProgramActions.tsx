@@ -29,7 +29,7 @@ import { Payload, ParamsToCreate, ParamsToUpload, ParamsToSignAndUpload } from '
 
 const useProgramActions = () => {
   const alert = useAlert();
-  const { api, isApiReady } = useApi();
+  const { api, isApiReady, isVaraVersion } = useApi();
   const { account } = useAccount();
   const { isDevChain } = useChain();
 
@@ -46,25 +46,25 @@ const useProgramActions = () => {
   const createProgram = (codeId: HexString, payload: Payload) => {
     if (!isApiReady) throw new Error('API is not initialized');
 
-    const { gasLimit, value, initPayload, metadata, payloadType } = payload;
+    const { gasLimit, value, initPayload, metadata, payloadType, keepAlive } = payload;
 
-    const program = { value, codeId, gasLimit, initPayload };
+    const baseProgram = { value, codeId, gasLimit, initPayload };
+    const program = isVaraVersion ? baseProgram : { ...baseProgram, keepAlive };
 
     const result = api.program.create(program, metadata, payloadType);
 
     return result.programId;
   };
 
-  const uploadProgram = async (optBuffer: Buffer, payload: Payload) => {
+  const uploadProgram = (optBuffer: Buffer, payload: Payload) => {
     if (!isApiReady) throw new Error('API is not initialized');
 
-    const { gasLimit, value, initPayload, metadata, payloadType } = payload;
+    const { gasLimit, value, initPayload, metadata, payloadType, keepAlive } = payload;
 
-    const program = { code: optBuffer, value, gasLimit, initPayload };
+    const baseProgram = { code: optBuffer, value, gasLimit, initPayload };
+    const program = isVaraVersion ? baseProgram : { ...baseProgram, keepAlive };
 
-    const result = api.program.upload(program, metadata, payloadType);
-
-    return result;
+    return api.program.upload(program, metadata, payloadType);
   };
 
   const handleEventsStatus = (events: EventRecord[], { reject }: OperationCallbacks) => {
@@ -83,7 +83,6 @@ const useProgramActions = () => {
   };
 
   const signAndUpload = async ({
-    name,
     signer,
     payload,
     programId,
@@ -92,9 +91,10 @@ const useProgramActions = () => {
     resolve,
     method,
   }: ParamsToSignAndUpload) => {
-    const { metaHex } = payload;
+    const { metaHex, programName } = payload;
     const alertId = alert.loading('SignIn', { title: method });
     const programMessage = getProgramMessage(programId);
+    const name = programName || programId;
 
     try {
       if (!isApiReady) throw new Error('API is not initialized');
@@ -110,7 +110,7 @@ const useProgramActions = () => {
 
           // timeout cuz wanna be sure that block data is ready
           setTimeout(() => {
-            addProgramName({ id: programId, name: name || programId }, isDevChain).then(
+            addProgramName({ id: programId, name }, isDevChain).then(
               () => metaHex && uploadMetadata({ codeHash: codeId, metaHex, programId }),
             );
           }, UPLOAD_METADATA_TIMEOUT);
@@ -137,13 +137,13 @@ const useProgramActions = () => {
 
               await uploadLocalProgram({
                 id: programId,
-                name: name || programId,
-                owner: account?.decodedAddress!,
+                owner: account!.decodedAddress,
                 code: { id: codeId },
                 status: programStatus,
                 blockHash: status.asFinalized.toHex(),
                 hasState,
                 metahash,
+                name,
               });
             }
           });
@@ -179,7 +179,6 @@ const useProgramActions = () => {
 
         const handleConfirm = () =>
           signAndUpload({
-            name: payload.programName,
             method: TransactionName.CreateProgram,
             signer,
             payload,
@@ -208,7 +207,7 @@ const useProgramActions = () => {
   );
 
   const upload = useCallback(
-    async ({ optBuffer, payload, name, reject, resolve }: ParamsToUpload) => {
+    async ({ optBuffer, payload, reject, resolve }: ParamsToUpload) => {
       try {
         if (!isApiReady) throw new Error('API is not initialized');
         checkWallet(account);
@@ -224,7 +223,6 @@ const useProgramActions = () => {
 
         const handleConfirm = () =>
           signAndUpload({
-            name,
             method: TransactionName.UploadProgram,
             signer,
             payload,

@@ -11,16 +11,15 @@ import {
   useIsVoucherExists,
   useVoucherBalance,
   useVoucher,
+  useBalance,
   useBalanceFormat,
   useAccount,
   useAlert,
   useApi,
   useCreateHandler,
+  useSendMessageHandler,
   SendMessageOptions,
   UseSendMessageOptions,
-  useDepricatedSendMessage,
-  DepricatedSendMessageOptions,
-  UseDepricatedSendMessageOptions,
 } from './hooks';
 
 import { withoutCommas } from './utils';
@@ -33,7 +32,7 @@ import {
   DEFAULT_ERROR_OPTIONS,
   DEFAULT_SUCCESS_OPTIONS,
   DEFAULT_LOADING_OPTIONS,
-} from 'consts';
+} from './consts';
 
 import {
   AlertType,
@@ -46,7 +45,7 @@ import {
   DefaultTemplateOptions,
   ProviderProps,
   Account,
-} from 'types';
+} from './types';
 
 export {
   useReadFullState,
@@ -61,6 +60,7 @@ export {
   useIsVoucherExists,
   useVoucherBalance,
   useVoucher,
+  useBalance,
   useBalanceFormat,
   useAccount,
   useAlert,
@@ -69,14 +69,17 @@ export {
   ApiProvider,
   AlertProvider,
   useCreateHandler,
+  useSendMessageHandler,
   withoutCommas,
-  useDepricatedSendMessage,
   DEFAULT_OPTIONS,
   DEFAULT_INFO_OPTIONS,
   DEFAULT_ERROR_OPTIONS,
   DEFAULT_SUCCESS_OPTIONS,
   DEFAULT_LOADING_OPTIONS,
   AlertType,
+};
+
+export type {
   AlertOptions,
   TemplateAlertOptions,
   AlertInstance,
@@ -88,6 +91,4 @@ export {
   Account,
   SendMessageOptions,
   UseSendMessageOptions,
-  DepricatedSendMessageOptions,
-  UseDepricatedSendMessageOptions,
 };

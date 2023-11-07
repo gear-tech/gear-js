@@ -6,16 +6,16 @@ import { OperationCallbacks, ParamsToSignAndSend } from '@/entities/hooks';
 type Payload = {
   value: string;
   gasLimit: string;
+  initPayload: string;
+  keepAlive: boolean;
   metaHex?: HexString;
   metadata?: ProgramMetadata | undefined;
-  initPayload: string;
-  programName?: string;
+  programName: string;
   payloadType?: string;
 };
 
 type DataToUpload = {
   optBuffer: Buffer;
-  name: string;
   payload: Payload;
 };
 
@@ -30,7 +30,6 @@ type ParamsToCreate = OperationCallbacks & DataToCreate;
 
 type ParamsToSignAndUpload = ParamsToSignAndSend & {
   method: string;
-  name?: string;
   payload: Payload;
   programId: HexString;
   codeId: HexString;

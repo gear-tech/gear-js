@@ -11,15 +11,13 @@ import {
   useIsVoucherExists,
   useVoucherBalance,
   useVoucher,
+  useBalance,
   useBalanceFormat,
   SendMessageOptions,
   UseSendMessageOptions,
-  useDepricatedSendMessage,
-  DepricatedSendMessageOptions,
-  UseDepricatedSendMessageOptions,
 } from './api';
 import { useAccount, useAlert, useApi } from './context';
-import { useCreateHandler } from './handlers';
+import { useCreateHandler, useSendMessageHandler } from './handlers';
 
 export {
   useReadFullState,
@@ -34,14 +32,13 @@ export {
   useIsVoucherExists,
   useVoucherBalance,
   useVoucher,
+  useBalance,
   useBalanceFormat,
   useAccount,
   useAlert,
   useApi,
   useCreateHandler,
-  useDepricatedSendMessage,
-  DepricatedSendMessageOptions,
-  UseDepricatedSendMessageOptions,
+  useSendMessageHandler,
   SendMessageOptions,
   UseSendMessageOptions,
 };

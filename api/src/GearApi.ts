@@ -48,9 +48,14 @@ export class GearApi extends ApiPromise {
       rpc: {
         ...gearRpc,
       },
-      // it's temporarily necessary to avoid the warning "API/INIT: Not decorating unknown runtime apis: GearApi/1"
       runtime: {
         GearApi: [
+          {
+            methods: {},
+            version: 2,
+          },
+        ],
+        Vara: [
           {
             methods: {},
             version: 1,
@@ -96,6 +101,14 @@ export class GearApi extends ApiPromise {
 
   async nodeVersion(): Promise<string> {
     return (await this.rpc.system.version()).toHuman();
+  }
+
+  get specVersion(): number {
+    return this.runtimeVersion.specVersion.toNumber();
+  }
+
+  get specName(): string {
+    return this.runtimeVersion.specName.toString();
   }
 
   get existentialDeposit(): u128 {

@@ -16,14 +16,8 @@ afterAll(async () => {
   await sleep(1000);
 });
 
-describe('Subscribe to balance transfer events', () => {
+describe('Transfer balance', () => {
   test('Transfer balance', async () => {
-    const subsribeTransfer = new Promise((resolve) => {
-      api.gearEvents.subscribeToTransferEvents((event) => {
-        resolve(event.data);
-      });
-    });
-
     api.balance.transfer(bob.address, 10000);
 
     const transferData: TransferData = await new Promise((resolve, reject) => {
@@ -40,10 +34,5 @@ describe('Subscribe to balance transfer events', () => {
     expect(transferData).toHaveProperty('from');
     expect(transferData).toHaveProperty('to');
     expect(transferData).toHaveProperty('amount');
-
-    const subsribeTransferData = (await subsribeTransfer) as TransferData;
-    expect(transferData.from.toHex()).toBe(subsribeTransferData.from.toHex());
-    expect(transferData.to.toHex()).toBe(subsribeTransferData.to.toHex());
-    expect(transferData['amount'].toHex()).toBe(subsribeTransferData['amount'].toHex());
   });
 });

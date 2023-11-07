@@ -8,7 +8,7 @@ const NODE_ADRESS_URL_PARAM = 'node';
 const EXAMPLES_HREF = 'https://www.gear-tech.io/developers';
 
 const DEFAULT_LIMIT = 20;
-const GEAR_BALANCE_TRANSFER_VALUE = process.env.VITE_DEFAULT_TRANSFER_BALANCE_VALUE as string;
+const GEAR_BALANCE_TRANSFER_VALUE = import.meta.env.VITE_DEFAULT_TRANSFER_BALANCE_VALUE as string;
 
 const ACCOUNT_ERRORS = {
   WALLET_NOT_CONNECTED: 'Wallet not connected',
@@ -32,7 +32,6 @@ enum LocalStorage {
   Account = 'account',
   Genesis = 'genesis',
   HideWelcomeBanner = 'hide_welcome_banner',
-  Wallet = 'wallet',
   IsNewUser = 'isNewUser',
 }
 

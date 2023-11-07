@@ -13,13 +13,12 @@ import {
 
 type ProviderProps = Omit<React.ProviderProps<never>, 'value'>;
 
-interface Account extends InjectedAccountWithMeta {
+type Account = InjectedAccountWithMeta & {
   decodedAddress: HexString;
-  balance: { value: string; unit: string };
-}
+};
 
-export {
-  AlertType,
+export { AlertType };
+export type {
   AlertOptions,
   TemplateAlertOptions,
   AlertInstance,
