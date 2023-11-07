@@ -59,11 +59,11 @@ jobs:
 
       - name: "vara-ui: Install dependencies"
         working-directory: utils/vara-ui
-        run: npm install
+        run: yarn install
 
       - name: "vara-ui: Build pkg"
         working-directory: utils/vara-ui
-        run: npm run build
+        run: yarn build
 
 
   publish-to-npm:
