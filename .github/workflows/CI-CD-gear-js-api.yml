@@ -72,10 +72,13 @@ jobs:
         working-directory: api/programs
         run: cargo build --locked
 
-      - name: "Prepare: run Gear node"
+      - name: "Prepare: download Gear node"
         run: |
           wget -O ./gear https://github.com/gear-tech/gear/releases/download/build/gear
           chmod +x gear
+
+      - name: "Prepare: run Gear node"
+        run: |          
           nohup ./gear --dev --execution=wasm --tmp --unsafe-ws-external --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
 
       - name: "Prepare: sleep 10 seconds"
