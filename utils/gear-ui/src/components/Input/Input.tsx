@@ -25,6 +25,8 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
     size = 'normal',
     color = 'dark',
     direction = 'x',
+    onBlur,
+    onFocus,
     ...attrs
   } = props;
 
@@ -61,13 +63,19 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
         {Icon && <Icon className={styles.icon} />}
 
         <input
+          {...attrs}
           type={isSearch ? undefined : type}
           id={id}
           className={inputClassName}
           ref={inputRef}
-          onFocus={readOnly ? undefined : clearButton.show}
-          onBlur={clearButton.hide}
-          {...attrs}
+          onFocus={(e) => {
+            if (!readOnly) clearButton.show();
+            if (onFocus) onFocus(e);
+          }}
+          onBlur={(e) => {
+            clearButton.hide();
+            if (onBlur) onBlur(e);
+          }}
         />
 
         {clearButton.isVisible && (

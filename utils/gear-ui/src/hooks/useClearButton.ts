@@ -18,18 +18,17 @@ function useClearButton<T extends HTMLInputElement | HTMLTextAreaElement>(
   const show = () => setIsVisible(true);
   const hide = () => setIsVisible(false);
 
-  const resetValue = () => {
-    if (inputRef.current) {
-      inputRef.current.value = '';
-    }
-  };
-
   const handleClick = () => {
-    if (inputRef.current) {
-      resetValue();
-      const changeEvent = new Event('change', { bubbles: true });
-      inputRef.current.dispatchEvent(changeEvent);
-    }
+    if (!window || !inputRef.current) return;
+
+    const isTextarea = inputRef.current instanceof HTMLTextAreaElement;
+    const prototype = isTextarea ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;
+
+    const valueSetter = Object.getOwnPropertyDescriptor(prototype, 'value')?.set;
+    valueSetter?.call(inputRef.current, '');
+
+    const changeEvent = new Event('change', { bubbles: true });
+    inputRef.current.dispatchEvent(changeEvent);
   };
 
   const preventBlur = (e: MouseEvent<HTMLButtonElement>) => e.preventDefault();

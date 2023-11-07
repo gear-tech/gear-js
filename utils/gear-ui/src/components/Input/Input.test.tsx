@@ -100,7 +100,20 @@ describe('input tests', () => {
   });
 
   it('enters text and clicks clear button', () => {
-    render(<Input label="label" color="light" size="large" />);
+    const handleChange = jest.fn();
+    const handleFocus = jest.fn();
+    const handleBlur = jest.fn();
+
+    render(
+      <Input
+        label="label"
+        color="light"
+        size="large"
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
+      />,
+    );
 
     const inputWrapper = screen.getByTestId('inputWrapper');
     const input = screen.getByRole('textbox');
@@ -117,6 +130,14 @@ describe('input tests', () => {
 
     fireEvent.click(clearButton);
     expect(input).toHaveValue('');
+    expect(inputWrapper).toContainElement(clearButton);
+
+    fireEvent.blur(input);
+    expect(inputWrapper).not.toContainElement(clearButton);
+
+    expect(handleChange).toBeCalledTimes(2);
+    expect(handleBlur).toBeCalledTimes(1);
+    expect(handleFocus).toBeCalledTimes(1);
   });
 
   it('renders large input with light color', () => {

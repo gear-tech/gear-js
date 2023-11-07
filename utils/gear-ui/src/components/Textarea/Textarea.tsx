@@ -20,6 +20,8 @@ const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAr
     color = 'dark',
     size = 'normal',
     direction = 'x',
+    onFocus,
+    onBlur,
     ...attrs
   } = props;
 
@@ -52,13 +54,19 @@ const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAr
       tooltip={tooltip}>
       <div className={wrapperClassName} data-testid="wrapper">
         <textarea
+          {...attrs}
           id={id}
           rows={rows}
           className={textareaClassName}
           ref={inputRef}
-          onFocus={readOnly ? undefined : clearButton.show}
-          onBlur={clearButton.hide}
-          {...attrs}
+          onFocus={(e) => {
+            if (!readOnly) clearButton.show();
+            if (onFocus) onFocus(e);
+          }}
+          onBlur={(e) => {
+            clearButton.hide();
+            if (onBlur) onBlur(e);
+          }}
         />
         {clearButton.isVisible && (
           <Button
