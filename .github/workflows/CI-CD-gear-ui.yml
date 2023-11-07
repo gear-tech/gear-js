@@ -32,6 +32,8 @@ jobs:
       - name: "gear-ui: Install dependencies"
         working-directory: utils/gear-ui
         run: yarn install
+        env:
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false
 
       - name: "gear-ui: Build pkg"
         working-directory: utils/gear-ui
@@ -60,6 +62,8 @@ jobs:
       - name: "vara-ui: Install dependencies"
         working-directory: utils/vara-ui
         run: yarn install
+        env:
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false
 
       - name: "vara-ui: Build pkg"
         working-directory: utils/vara-ui
