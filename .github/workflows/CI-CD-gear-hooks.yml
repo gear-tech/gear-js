@@ -31,6 +31,8 @@ jobs:
       - name: Install dependencies
         working-directory: utils/gear-hooks
         run: yarn install
+        env:
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false
 
       - name: Build pkg
         working-directory: utils/gear-hooks
