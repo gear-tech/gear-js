@@ -18,5 +18,11 @@
     "build": "rm -rf dist && tsc",
     "start": "node dist/main.js",
     "watch": "ts-node-dev src/main.ts"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "git add"
+    ]
   }
 }

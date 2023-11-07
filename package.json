@@ -20,16 +20,12 @@
     "@typescript-eslint/parser": "5.57.1",
     "eslint": "8.28.0",
     "husky": "8.0.3",
-    "lint-staged": "12.5.0"
+    "lint-staged": "15.0.2"
   },
   "workspaces": [
     "idea/*",
     "utils/gear-hooks"
   ],
-  "lint-staged": {
-    "api/**/*.{js,ts}": "cd api && yarn lint:fix",
-    "idea/**/*.{js,ts,tsx}": "eslint --fix --ignore-pattern 'idea/frontend/**'"
-  },
   "packageManager": "yarn@3.3.0",
   "version": "1.2.0"
 }

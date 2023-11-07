@@ -47,12 +47,16 @@ export class GearProgramStorage {
    */
   async getProgramPages(programId: HexString, program: GearCommonActiveProgram, at?: HexString): Promise<IGearPages> {
     const pages = {};
+    const query =
+      this._api.specVersion >= 1020
+        ? this._api.query.gearProgram.memoryPages
+        : this._api.query.gearProgram.memoryPageStorage;
+
+    const args = this._api.specVersion >= 1020 ? [programId, program.memoryInfix] : [programId];
+
     for (const page of program.pagesWithData) {
       pages[page.toNumber()] = u8aToU8a(
-        await this._api.provider.send('state_getStorage', [
-          this._api.query.gearProgram.memoryPageStorage.key(programId, page),
-          at,
-        ]),
+        await this._api.provider.send('state_getStorage', [query.key(...args, page), at]),
       );
     }
     return pages;

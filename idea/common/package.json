@@ -15,5 +15,11 @@
   "license": "ISC",
   "devDependencies": {
     "typescript": "4.7.4"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "git add"
+    ]
   }
 }

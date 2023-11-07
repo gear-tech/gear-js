@@ -41,5 +41,11 @@
     "migration:generate": "yarn typeorm migration:generate -p -d dist/database/data-source.js",
     "migration:apply": "yarn typeorm migration:run -d dist/database/data-source.js",
     "migration:revert": "yarn typeorm migration:revert -d dist/database/data-source.js"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "git add"
+    ]
   }
 }
