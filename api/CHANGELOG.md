@@ -1,3 +1,11 @@
+## master
+
+_11/07/2023_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1447
+- Read storage of memory pages according to https://github.com/gear-tech/gear/pull/3166
+
 ## 0.35.2
 
 _10/31/2023_
