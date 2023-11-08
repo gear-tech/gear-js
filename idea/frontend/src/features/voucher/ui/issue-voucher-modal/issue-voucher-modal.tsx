@@ -1,11 +1,10 @@
 import { Button, Modal } from '@gear-js/ui';
 import { HexString, decodeAddress } from '@gear-js/api';
+import { useBalanceFormat } from '@gear-js/react-hooks';
 import { yupResolver } from '@hookform/resolvers/yup';
-import BigNumber from 'bignumber.js';
 import { FormProvider, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { useBalanceMultiplier } from '@/hooks';
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { isAccountAddressValid } from '@/shared/helpers';
@@ -32,16 +31,16 @@ const schema = yup.object().shape({
 const resolver = yupResolver(schema);
 
 const IssueVoucherModal = ({ programId, close }: Props) => {
-  const { balanceMultiplier } = useBalanceMultiplier();
+  const { getChainBalanceValue } = useBalanceFormat();
   const issueVoucher = useIssueVoucher();
 
   const methods = useForm({ defaultValues, resolver });
 
   const handleSubmit = ({ address, value }: typeof defaultValues) => {
     const decodedAddress = decodeAddress(address);
-    const unitValue = BigNumber(value).multipliedBy(balanceMultiplier).toFixed();
+    const chainValue = getChainBalanceValue(value).toFixed();
 
-    issueVoucher(decodedAddress, programId, unitValue, close);
+    issueVoucher(decodedAddress, programId, chainValue, close);
   };
 
   return (
