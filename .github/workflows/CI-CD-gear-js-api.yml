@@ -17,7 +17,7 @@ jobs:
   test:
     if: github.event_name == 'pull_request'
 
-    runs-on: ubuntu-22.04
+    runs-on: kuberunner
     env: 
       RUSTUP_HOME: /tmp/rustup_home
     steps:
@@ -73,13 +73,11 @@ jobs:
         run: cargo build --locked
 
       - name: "Prepare: download Gear node"
-        run: |
-          wget -O ./gear https://github.com/gear-tech/gear/releases/download/build/gear
-          chmod +x gear
+        run: curl --proto '=https' --tlsv1.2 -sSf https://get.gear.rs/install.sh | bash -s -- --to ./
 
       - name: "Prepare: run Gear node"
         run: |          
-          nohup ./gear --dev --execution=wasm --tmp --unsafe-ws-external --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
+          nohup ./gear --dev --execution=wasm --tmp --unsafe-ws-external --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all --no-hardware-benchmarks &
 
       - name: "Prepare: sleep 10 seconds"
         run: sleep 10
