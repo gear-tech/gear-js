@@ -1,1 +1,0 @@
-export { IndicatorValue } from './IndicatorValue';
