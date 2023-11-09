@@ -1,9 +1,8 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { DispatchError, Event } from '@polkadot/types/interfaces';
 import { u128, u64 } from '@polkadot/types';
-import { RegistryError } from '@polkadot/types-codec/types';
 
-import { GearApiOptions, GearCommonGasMultiplier, InflationInfo } from './types';
+import { ExtrinsicFailedData, GearApiOptions, GearCommonGasMultiplier, InflationInfo } from './types';
 import { gearRpc, gearTypes } from './default';
 import { GearBalance } from './Balance';
 import { GearBlock } from './Blocks';
@@ -149,9 +148,35 @@ export class GearApi extends ApiPromise {
    * @param event
    * @returns
    */
-  getExtrinsicFailedError(event: Event): RegistryError {
+  getExtrinsicFailedError(event: Event): ExtrinsicFailedData {
     const error = event.data[0] as DispatchError;
-    const { isModule, asModule } = error;
-    return isModule ? this.registry.findMetaError(asModule) : null;
+    if (error.isModule) {
+      const data = this.registry.findMetaError(error.asModule);
+      return {
+        docs: data?.docs.join(' '),
+        method: data?.method,
+        name: data?.name,
+      };
+    }
+    if (error.isCannotLookup) {
+      return {
+        docs: null,
+        method: 'CannotLookup',
+        name: 'CannotLookup',
+      };
+    }
+    if (error.isBadOrigin) {
+      return {
+        docs: null,
+        method: 'BadOrigin',
+        name: 'BadOrigin',
+      };
+    }
+
+    return {
+      docs: null,
+      method: 'Unknown error',
+      name: 'Unknown error',
+    };
   }
 }

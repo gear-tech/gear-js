@@ -7,3 +7,4 @@ export * from './api-options';
 export * from './keyring';
 export * from './metadata';
 export * from './voucher';
+export * from './extrinsic-failed';

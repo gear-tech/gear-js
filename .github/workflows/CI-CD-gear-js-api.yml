@@ -81,8 +81,8 @@ jobs:
         run: |          
           nohup ./gear --dev --execution=wasm --tmp --unsafe-ws-external --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
 
-      - name: "Prepare: sleep 10 seconds"
-        run: sleep 10
+      - name: "Prepare: sleep 3 min"
+        run: sleep 180
 
       - name: "Test: run"
         working-directory: api
