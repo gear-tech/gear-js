@@ -6,6 +6,9 @@ _11/07/2023_
 https://github.com/gear-tech/gear-js/pull/1447
 - Read storage of memory pages according to https://github.com/gear-tech/gear/pull/3166
 
+https://github.com/gear-tech/gear-js/pull/1451
+- Fix `api.getExtrinsicFailedError` method. It now returns an object with the formatted docs, method and name of the error
+
 ## 0.35.2
 
 _10/31/2023_
