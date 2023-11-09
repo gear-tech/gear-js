@@ -157,13 +157,15 @@ export class GearApi extends ApiPromise {
         method: data?.method,
         name: data?.name,
       };
-    } else if (error.isCannotLookup) {
+    }
+    if (error.isCannotLookup) {
       return {
         docs: null,
         method: 'CannotLookup',
         name: 'CannotLookup',
       };
-    } else if (error.isBadOrigin) {
+    }
+    if (error.isBadOrigin) {
       return {
         docs: null,
         method: 'BadOrigin',
