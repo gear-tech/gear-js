@@ -1,8 +1,7 @@
 import { KeyringPair } from '@polkadot/keyring/types';
-import { RegistryError } from '@polkadot/types-codec/types';
 
+import { ExtrinsicFailedData, GearApi } from '../src';
 import { getAccount, sleep } from './utilsFunctions';
-import { GearApi } from '../src';
 import { WS_ADDRESS } from './config';
 
 const api = new GearApi({ providerAddress: WS_ADDRESS });
@@ -21,7 +20,7 @@ afterAll(async () => {
 describe('Get extrinsic errors', () => {
   test('send incorrect transaction', async () => {
     const submitted = api.tx.gear.uploadProgram('0x123456', '0x123', '0x00', 1000, 0, true);
-    const error: RegistryError = await new Promise((resolve) => {
+    const error = await new Promise<ExtrinsicFailedData>((resolve) => {
       submitted.signAndSend(alice, ({ events = [] }) => {
         events.forEach(({ event }) => {
           if (api.events.system.ExtrinsicFailed.is(event)) {
@@ -30,7 +29,7 @@ describe('Get extrinsic errors', () => {
         });
       });
     });
-    expect(error.docs.join(' ')).toBe('Failed to create a program.');
+    expect(error.docs).toBe('Failed to create a program.');
     expect(error.method).toBe('ProgramConstructionFailed');
     expect(error.name).toBe('ProgramConstructionFailed');
   });
