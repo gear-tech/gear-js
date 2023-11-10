@@ -189,14 +189,17 @@ export class RMQService {
 
     const cronTime = config.scheduler.genesisHashesTime;
 
-    const cron = new CronJob(cronTime, async () => {
-      this.tbChannels.clear();
-      this.indexerChannels.clear();
+    new CronJob(
+      cronTime,
+      async () => {
+        this.tbChannels.clear();
+        this.indexerChannels.clear();
 
-      this.sendMsgIndexerGenesises();
-      this.sendMsgTBGenesises();
-    });
-
-    cron.start();
+        this.sendMsgIndexerGenesises();
+        this.sendMsgTBGenesises();
+      },
+      null,
+      true,
+    );
   }
 }

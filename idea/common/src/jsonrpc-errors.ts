@@ -99,6 +99,16 @@ export const JSONRPC_ERRORS = {
     code: -32403,
     message: 'Forbidden',
   },
+  InvalidAddress: {
+    name: 'InvalidAddress',
+    code: -32400,
+    message: 'Address is invalid',
+  },
+  NotSupportedAddress: {
+    name: 'NotSupportedAddress',
+    code: -32400,
+    message: 'Address is not supported',
+  },
 };
 
 export function isExistError(name: string) {

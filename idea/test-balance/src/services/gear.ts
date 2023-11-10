@@ -1,0 +1,138 @@
+import { KeyringPair } from '@polkadot/keyring/types';
+import { BN } from '@polkadot/util';
+import { logger } from '@gear-js/common';
+import { GearApi, TransferData } from '@gear-js/api';
+import { CronJob } from 'cron';
+
+import { createAccount } from '../utils';
+import config from '../config';
+import { changeStatus } from '../healthcheck.router';
+
+const MAX_RECONNECTIONS = 10;
+let reconnectionsCounter = 0;
+
+interface TBRequestParams {
+  addr: string;
+  correlationId: string;
+  cb: (error: string, result: string) => void;
+}
+
+export class GearService {
+  private account: KeyringPair;
+  private balanceToTransfer: BN;
+  private api: GearApi;
+  private genesis: string;
+  private providerAddress: string;
+  private queue: Array<TBRequestParams>;
+
+  constructor() {
+    this.providerAddress = config.gear.providerAddresses[0];
+  }
+
+  async init() {
+    this.account = await createAccount(config.gear.accountSeed);
+    this.balanceToTransfer = new BN(config.gear.balanceToTransfer);
+    await this.connect();
+  }
+
+  get genesisHash() {
+    return this.genesis;
+  }
+
+  async connect() {
+    if (!this.providerAddress) {
+      logger.error('There are no node addresses to connect to');
+      process.exit(1);
+    }
+
+    this.api = new GearApi({ providerAddress: this.providerAddress });
+
+    try {
+      await this.api.isReadyOrError;
+    } catch (error) {
+      logger.error(`Failed to connect to ${this.providerAddress}`, { error: error.message });
+      await this.reconnect();
+    }
+    await this.api.isReady;
+    this.api.on('disconnected', () => {
+      logger.error(`Disconnected from ${this.providerAddress}`);
+      this.reconnect();
+    });
+    this.genesis = this.api.genesisHash.toHex();
+    logger.info(`Connected to ${await this.api.chain()} with genesis ${this.genesis}`);
+    changeStatus('ws');
+  }
+
+  async reconnect(): Promise<void> {
+    this.genesis = null;
+    if (this.api) {
+      await this.api.disconnect();
+      this.api = null;
+    }
+
+    reconnectionsCounter++;
+    if (reconnectionsCounter > MAX_RECONNECTIONS) {
+      this.providerAddress = config.gear.providerAddresses.filter((address) => address !== this.providerAddress)[0];
+      reconnectionsCounter = 0;
+    }
+
+    logger.info('Attempting to reconnect');
+    changeStatus('ws');
+    return this.connect();
+  }
+
+  async sendBatch(addresses: string[]): Promise<[string[], string]> {
+    const txs = addresses.map((address) => this.api.balance.transfer(address, this.balanceToTransfer));
+    const batch = this.api.tx.utility.forceBatch(txs);
+    const transferred = [];
+    let blockHash: string;
+    await new Promise((resolve, reject) => {
+      batch.signAndSend(this.account, ({ events, status }) => {
+        if (status.isInBlock) {
+          blockHash = status.asInBlock.toHex();
+          events.forEach(({ event }) => {
+            const { method, data } = event;
+            if (method === 'Transfer') {
+              transferred.push((data as TransferData).to.toHex());
+            } else if (method === 'BatchCompleted') {
+              resolve(0);
+            } else if (method === 'ExtrinsicFailed') {
+              reject(this.api.getExtrinsicFailedError(event).docs.filter(Boolean).join('. '));
+            }
+          });
+        }
+      });
+    });
+    return [transferred, blockHash];
+  }
+
+  requestBalance(addr: string, correlationId: string, cb: (error: string, result: string) => void) {
+    this.queue.push({ addr, correlationId, cb });
+  }
+
+  async processQueue() {
+    new CronJob(
+      '*/3 * * * * *',
+      async () => {
+        if (this.queue.length === 0) {
+          return;
+        }
+        const requests = this.queue;
+        this.queue = [];
+
+        const [transferred, blockHash] = await this.sendBatch(requests.map((req) => req.addr));
+        requests.forEach((req) => {
+          if (transferred.includes(req.addr)) {
+            logger.info(`Balance transferred to ${req.addr}`, { blockHash, correlationId: req.correlationId });
+            req.cb(null, this.balanceToTransfer.toString());
+          } else {
+            logger.error(`Transfer balance to ${req.addr} failed`, { blockHash, correlationId: req.correlationId });
+            req.cb(`Transfer balance to ${req.addr} failed`, null);
+          }
+        });
+      },
+      null,
+      true,
+    );
+  }
+}
