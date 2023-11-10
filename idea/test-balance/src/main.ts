@@ -9,7 +9,7 @@ import { GearService, RMQService, TransferService } from './services';
 const app = express();
 
 const port = config.healthcheck.port;
-
+console.log(port);
 app.use('/health', healthcheckRouter);
 
 const startApp = async () => {
@@ -21,7 +21,7 @@ const startApp = async () => {
   changeStatus('database');
 
   const gearService = new GearService();
-  gearService.init();
+  await gearService.init();
 
   const transferService = new TransferService(gearService);
 

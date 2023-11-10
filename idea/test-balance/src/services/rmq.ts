@@ -1,5 +1,6 @@
 import { logger, RMQExchange, RMQQueue, RMQServiceAction, RMQServices, TEST_BALANCE_METHODS } from '@gear-js/common';
 import { Channel, connect, Connection } from 'amqplib';
+import { randomUUID } from 'node:crypto';
 
 import config from '../config';
 import { TransferService } from './transfer';
@@ -97,8 +98,12 @@ export class RMQService {
   }
 
   sendGenesis(genesis: string): void {
+    const correlationId = randomUUID();
     const messageBuff = JSON.stringify({ service: RMQServices.TEST_BALANCE, action: RMQServiceAction.ADD, genesis });
-    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, Buffer.from(messageBuff));
+    logger.info('Send genesis', { genesis, correlationId });
+    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, Buffer.from(messageBuff), {
+      headers: { correlationId },
+    });
   }
 
   sendDeleteGenesis(genesis: string): void {

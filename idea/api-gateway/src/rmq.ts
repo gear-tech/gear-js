@@ -83,6 +83,7 @@ export class RMQService {
         }
 
         const { genesis, service, action } = JSON.parse(message.content.toString());
+        logger.info('Received genesis', { genesis, service, action, correlationId: message.properties.correlationId });
 
         if (action === RMQServiceAction.ADD) {
           if (service === RMQServices.INDEXER) {
@@ -95,8 +96,6 @@ export class RMQService {
               exclusive: false,
               autoDelete: true,
             });
-
-            logger.info(`New indexer genesis: ${genesis}`, { all: Array.from(this.indexerChannels.keys()) });
           }
           if (service === RMQServices.TEST_BALANCE) {
             if (this.tbChannels.has(genesis)) return;
@@ -104,7 +103,6 @@ export class RMQService {
             const channel = await this.createChannel();
             this.tbChannels.set(genesis, channel);
             await channel.assertQueue(`${RMQServices.TEST_BALANCE}.${genesis}`, { durable: false, exclusive: false });
-            logger.info(`New test_balance genesis ${genesis}`, { all: Array.from(this.tbChannels.keys()) });
           }
         }
 

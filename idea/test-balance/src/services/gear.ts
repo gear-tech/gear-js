@@ -27,12 +27,14 @@ export class GearService {
 
   constructor() {
     this.providerAddress = config.gear.providerAddresses[0];
+    this.queue = [];
   }
 
   async init() {
     this.account = await createAccount(config.gear.accountSeed);
     this.balanceToTransfer = new BN(config.gear.balanceToTransfer);
     await this.connect();
+    this.processQueue();
   }
 
   get genesisHash() {

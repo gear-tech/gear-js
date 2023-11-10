@@ -5,11 +5,7 @@ import { AppDataSource, TransferBalance } from '../database';
 import { validateAddress } from '../utils';
 import { GearService } from './gear';
 
-interface ResponseTransferBalance {
-  status?: string;
-  transferredBalance?: string;
-  error?: string;
-}
+type ResponseTransferBalance = { result: { status: string; transferredBalance: string } } | { error: string };
 
 export class TransferService {
   private repo: Repository<TransferBalance>;
@@ -67,7 +63,7 @@ export class TransferService {
         }),
       );
       await this.setTransferDate(addr, this.gearService.genesisHash);
-      return { status: 'ok', transferredBalance: result };
+      return { result: { status: 'ok', transferredBalance: result } };
     } catch (error) {
       logger.error('Transfer balance error', { error: error.message, stack: error.stack, correlationId });
       return { error: JSONRPC_ERRORS.InternalError.name };
