@@ -175,6 +175,10 @@ const Wasm = () => {
     const payload = getSubmitPayload(values.payload);
     const argument = getSubmitPayload(values.argument);
 
+    // TOREMOVE:
+    console.log('payload: ', payload);
+    console.log('argument: ', argument);
+
     readWasmState(wasmBuffer, programMetadata, functionName, argument, payload || '0x');
   };
 

@@ -68,6 +68,10 @@ const ProgramForm = (props: Props) => {
       payload: getSubmitPayload(values.payload),
     };
 
+    // TOREMOVE:
+    console.log('payload: ', getSubmitPayload(values.payload));
+    console.log('value: ', getChainBalanceValue(values.value).toFixed());
+
     try {
       const info = await calculateGas(gasMethod, preparedValues, source, metadata);
       const limit = getFormattedGasValue(info.limit).toFixed();
@@ -94,6 +98,9 @@ const ProgramForm = (props: Props) => {
       programName,
       keepAlive,
     };
+
+    // TOREMOVE:
+    console.log('payload: ', getSubmitPayload(values.payload));
 
     onSubmit(data, { enableButtons: () => setIsDisables(false), resetForm });
   };
