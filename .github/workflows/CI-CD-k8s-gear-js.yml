@@ -11,6 +11,10 @@ on:
       - k8s/**
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+  
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -19,17 +23,11 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
 
+
 jobs:
-  wait-previous-run:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: mktcode/consecutive-workflow-action@v1 # please read security note
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           
   build-frontend-image-staging:
     runs-on: ubuntu-latest
-    needs: [wait-previous-run]
     environment: staging
     permissions:
       contents: read
@@ -61,7 +59,6 @@ jobs:
 
   build-indexer-image-staging:
     runs-on: ubuntu-latest
-    needs: [wait-previous-run]
     environment: staging
     permissions:
       contents: read
@@ -87,7 +84,6 @@ jobs:
 
   build-api-gateway-image-staging:
     runs-on: ubuntu-latest
-    needs: [wait-previous-run]
     environment: staging
     permissions:
       contents: read
@@ -113,7 +109,6 @@ jobs:
 
   build-test-balance-image-staging:
     runs-on: ubuntu-latest
-    needs: [wait-previous-run]
     environment: staging
     permissions:
       contents: read
@@ -140,7 +135,6 @@ jobs:
   build-and-push-meta-storage-image:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
-    needs: [wait-previous-run]
     environment: dev
     permissions:
       contents: read
@@ -170,8 +164,7 @@ jobs:
         build-indexer-image-staging,
         build-api-gateway-image-staging,
         build-test-balance-image-staging,
-        build-and-push-meta-storage-image,
-        wait-previous-run,
+        build-and-push-meta-storage-image
       ]
     runs-on: ubuntu-latest
 
