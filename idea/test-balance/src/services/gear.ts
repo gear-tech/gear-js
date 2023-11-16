@@ -120,6 +120,7 @@ export class GearService {
           return;
         }
         const requests = this.queue;
+        logger.info('Processing queue', { q: this.queue.map(({ addr }) => addr) });
         this.queue = [];
 
         const [transferred, blockHash] = await this.sendBatch(requests.map((req) => req.addr));
