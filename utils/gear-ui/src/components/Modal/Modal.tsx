@@ -39,7 +39,7 @@ const Modal = ({ heading, close, children, footer, className, size = 'normal' }:
   const { bodyStyle, headerRef, footerRef } = useMaxHeight();
 
   const modalClassName = clsx(styles.modal, styles[size]);
-  const bodyClassName = clsx(styles.body, className);
+  const bodyClassName = clsx(styles.body, className, !footer && styles.withoutFooter);
 
   const handleOverlayClick = ({ target, currentTarget }: MouseEvent) => {
     if (target === currentTarget) close();

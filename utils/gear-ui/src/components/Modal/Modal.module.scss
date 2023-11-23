@@ -82,6 +82,11 @@
   background-color: #29292b;
   border-left: $borderModal;
   border-right: $borderModal;
+
+  &.withoutFooter {
+    border-bottom: $borderModal;
+    border-radius: 0 0 $borderRadiusMedium $borderRadiusMedium;
+  }
 }
 
 .footer {
