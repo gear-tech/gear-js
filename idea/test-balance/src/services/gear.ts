@@ -141,6 +141,8 @@ export class GearService {
         this.queue = [];
 
         const [transferred, blockHash] = await this.sendBatch(requests.map((req) => req.addr));
+        logger.info(`Transferred`, { transferred });
+        logger.info(`req`, { addresses: requests.map((req) => req.addr) });
         requests.forEach((req) => {
           if (transferred.includes(req.addr)) {
             logger.info(`Balance transferred to ${req.addr}`, { blockHash, correlationId: req.correlationId });
