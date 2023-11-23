@@ -2,6 +2,7 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { BN } from '@polkadot/util';
 import { logger } from '@gear-js/common';
 import { GearApi, TransferData } from '@gear-js/api';
+import { randomUUID } from 'node:crypto';
 import { CronJob } from 'cron';
 
 import { createAccount } from '../utils';
@@ -88,20 +89,36 @@ export class GearService {
     const batch = this.api.tx.utility.forceBatch(txs);
     const transferred = [];
     let blockHash: string;
-    await new Promise((resolve, reject) => {
+
+    const correlationId = randomUUID({});
+
+    logger.info(`Sending batch with ${addresses.length} transfers`, { addresses, correlationId });
+
+    await new Promise((resolve) => {
       batch.signAndSend(this.account, ({ events, status }) => {
         if (status.isInBlock) {
           blockHash = status.asInBlock.toHex();
-          events.forEach(({ event }) => {
-            const { method, data } = event;
-            if (method === 'Transfer') {
-              transferred.push((data as TransferData).to.toHex());
-            } else if (method === 'BatchCompleted') {
-              resolve(0);
-            } else if (method === 'ExtrinsicFailed') {
-              reject(this.api.getExtrinsicFailedError(event).docs.filter(Boolean).join('. '));
+          logger.info(`Batch is in block`, { blockHash, correlationId });
+
+          for (const { event } of events) {
+            switch (event.method) {
+              case 'Transfer':
+                transferred.push((event.data as TransferData).to.toHex());
+                break;
+              case 'BatchCompleted':
+                logger.info(`Batch completed`, { blockHash, correlationId });
+                resolve(0);
+                break;
+              case 'ExtrinsicFailed':
+                logger.error(`Batch failed`, {
+                  blockHash,
+                  correlationId,
+                  error: this.api.getExtrinsicFailedError(event).docs.filter(Boolean).join('. '),
+                });
+                resolve(1);
+                break;
             }
-          });
+          }
         }
       });
     });
