@@ -65,7 +65,6 @@ export class TransferService {
       await this.setTransferDate(addr, this.gearService.genesisHash);
       return { result: { status: 'ok', transferredBalance: result } };
     } catch (error) {
-      logger.error('Transfer balance error', { error: error.message, stack: error.stack, correlationId });
       return { error: JSONRPC_ERRORS.InternalError.name };
     }
   }

@@ -95,32 +95,37 @@ export class GearService {
     logger.info(`Sending batch with ${addresses.length} transfers`, { addresses, correlationId });
 
     await new Promise((resolve) => {
-      batch.signAndSend(this.account, ({ events, status }) => {
-        if (status.isInBlock) {
-          blockHash = status.asInBlock.toHex();
-          logger.info(`Batch is in block`, { blockHash, correlationId });
+      batch
+        .signAndSend(this.account, ({ events, status }) => {
+          if (status.isInBlock) {
+            blockHash = status.asInBlock.toHex();
+            logger.info(`Batch is in block`, { blockHash, correlationId });
 
-          for (const { event } of events) {
-            switch (event.method) {
-              case 'Transfer':
-                transferred.push((event.data as TransferData).to.toHex());
-                break;
-              case 'ExtrinsicSuccess':
-                logger.info(`ExtrinsicSuccess`, { blockHash, correlationId });
-                resolve(0);
-                break;
-              case 'ExtrinsicFailed':
-                logger.error(`ExtrinsicFailed`, {
-                  blockHash,
-                  correlationId,
-                  error: this.api.getExtrinsicFailedError(event).docs.filter(Boolean).join('. '),
-                });
-                resolve(1);
-                break;
+            for (const { event } of events) {
+              switch (event.method) {
+                case 'Transfer':
+                  transferred.push((event.data as TransferData).to.toHex());
+                  break;
+                case 'ExtrinsicSuccess':
+                  logger.info(`ExtrinsicSuccess`, { blockHash, correlationId });
+                  resolve(0);
+                  break;
+                case 'ExtrinsicFailed':
+                  logger.error(`ExtrinsicFailed`, {
+                    blockHash,
+                    correlationId,
+                    error: this.api.getExtrinsicFailedError(event).docs.filter(Boolean).join('. '),
+                  });
+                  resolve(1);
+                  break;
+              }
             }
           }
-        }
-      });
+        })
+        .catch((error) => {
+          logger.error('Failed to send batch', { error: error.message, correlationId });
+          resolve(1);
+        });
     });
     return [transferred, blockHash];
   }
