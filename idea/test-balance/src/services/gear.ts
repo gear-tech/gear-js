@@ -18,6 +18,12 @@ interface TBRequestParams {
   cb: (error: string, result: string) => void;
 }
 
+enum TransferEvent {
+  TRANSFER = 'Transfer',
+  EXTRINSIC_SUCCESS = 'ExtrinsicSuccess',
+  EXTRINSIC_FAILED = 'ExtrinsicFailed',
+}
+
 export class GearService {
   private account: KeyringPair;
   private balanceToTransfer: BN;
@@ -94,39 +100,39 @@ export class GearService {
 
     logger.info(`Sending batch with ${addresses.length} transfers`, { addresses, correlationId });
 
-    await new Promise((resolve) => {
-      batch
-        .signAndSend(this.account, ({ events, status }) => {
-          if (status.isInBlock) {
+    try {
+      await new Promise<any>((resolve, reject) =>
+        batch
+          .signAndSend(this.account, ({ events, status }) => {
+            if (!status.isInBlock) {
+              return;
+            }
+
             blockHash = status.asInBlock.toHex();
-            logger.info(`Batch is in block`, { blockHash, correlationId });
 
             for (const { event } of events) {
               switch (event.method) {
-                case 'Transfer':
+                case TransferEvent.TRANSFER:
                   transferred.push((event.data as TransferData).to.toHex());
                   break;
-                case 'ExtrinsicSuccess':
-                  logger.info(`ExtrinsicSuccess`, { blockHash, correlationId });
-                  resolve(0);
+                case TransferEvent.EXTRINSIC_SUCCESS:
+                  resolve(null);
                   break;
-                case 'ExtrinsicFailed':
-                  logger.error(`ExtrinsicFailed`, {
-                    blockHash,
-                    correlationId,
-                    error: this.api.getExtrinsicFailedError(event).docs.filter(Boolean).join('. '),
-                  });
-                  resolve(1);
+                case TransferEvent.EXTRINSIC_FAILED:
+                  reject({ blockHash, correlationId, error: this.api.getExtrinsicFailedError(event).docs.join('. ') });
                   break;
               }
             }
-          }
-        })
-        .catch((error) => {
-          logger.error('Failed to send batch', { error: error.message, correlationId });
-          resolve(1);
-        });
-    });
+          })
+          .catch((error) => {
+            reject({ error: error.message, correlationId });
+          }),
+      );
+      logger.info(`Batch success`, { blockHash, correlationId });
+    } catch (err) {
+      logger.error(`Batch error`, { ...err });
+    }
+
     return [transferred, blockHash];
   }
 
@@ -146,8 +152,7 @@ export class GearService {
         this.queue = [];
 
         const [transferred, blockHash] = await this.sendBatch(requests.map((req) => req.addr));
-        logger.info(`Transferred`, { transferred });
-        logger.info(`req`, { addresses: requests.map((req) => req.addr) });
+
         requests.forEach((req) => {
           if (transferred.includes(req.addr)) {
             logger.info(`Balance transferred to ${req.addr}`, { blockHash, correlationId: req.correlationId });
