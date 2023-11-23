@@ -105,12 +105,12 @@ export class GearService {
               case 'Transfer':
                 transferred.push((event.data as TransferData).to.toHex());
                 break;
-              case 'BatchCompleted':
-                logger.info(`Batch completed`, { blockHash, correlationId });
+              case 'ExtrinsicSuccess':
+                logger.info(`ExtrinsicSuccess`, { blockHash, correlationId });
                 resolve(0);
                 break;
               case 'ExtrinsicFailed':
-                logger.error(`Batch failed`, {
+                logger.error(`ExtrinsicFailed`, {
                   blockHash,
                   correlationId,
                   error: this.api.getExtrinsicFailedError(event).docs.filter(Boolean).join('. '),
