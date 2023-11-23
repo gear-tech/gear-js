@@ -2,6 +2,39 @@
 @use '../../assets/styles/mixins' as *;
 @use '../../assets/styles/headings' as *;
 
+@mixin customScroll {
+  // TODO: temp solution specifically for modal,
+  // take a closer look to simplebar-react
+  overflow-y: auto;
+
+  // firefox
+  scrollbar-width: thin;
+  scrollbar-color: #fff rgba(#fff, 0.1);
+
+  // chrome
+  &::-webkit-scrollbar {
+    width: 19px;
+  }
+
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    border-style: solid;
+    border-color: transparent;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-width: 12px 9px;
+    background-color: rgba(#fff, 0.1);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-width: 12px 8px;
+    background-color: #fff;
+    border-radius: 1px;
+  }
+}
+
 .overlay {
   position: fixed;
   top: 0;
@@ -33,7 +66,6 @@
 .header {
   // border on .header and .body instead of .modal,
   // cuz otherwise .modal should have overflow: hidden
-  // and we can't cuz modal can have tooltip inside
   display: flex;
   justify-content: space-between;
   padding: 17px 32px 22px;
@@ -45,8 +77,16 @@
 }
 
 .body {
+  @include customScroll;
   padding: 32px;
   background-color: #29292b;
+  border-left: $borderModal;
+  border-right: $borderModal;
+}
+
+.footer {
+  padding: 24px 32px;
+  background-color: #222225;
   border-left: $borderModal;
   border-right: $borderModal;
   border-bottom: $borderModal;
