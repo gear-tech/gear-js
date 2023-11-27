@@ -16,13 +16,14 @@ export class Code extends BaseEntity implements ICode {
   @PrimaryColumn('uuid', { nullable: false })
   public _id: string;
 
+  @Index()
   @Column()
   public id: string;
 
-  @Index()
   @Column()
   public uploadedBy: string;
 
+  @Index()
   @Column()
   public name: string;
 

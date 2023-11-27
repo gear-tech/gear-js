@@ -54,7 +54,7 @@ describe('jsonrpc errors', () => {
     expect(response).toHaveProperty('error.message', 'Message not found');
   });
 
-  test(JSONRPC_ERRORS.MessageNotFound.name, async () => {
+  test(JSONRPC_ERRORS.InvalidMetaHex.name, async () => {
     const response = await request('meta.add', { hash, hex: '0x' });
     expect(response).toHaveProperty('error.code', -32602);
     expect(response).toHaveProperty('error.message', 'Invalid meta hex');

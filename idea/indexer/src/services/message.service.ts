@@ -1,4 +1,4 @@
-import { DataSource, MoreThan, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import {
   AllMessagesResult,
   FindMessageParams,
@@ -43,31 +43,37 @@ export class MessageService {
     fromDate,
     mailbox,
   }: GetMessagesParams): Promise<AllMessagesResult> {
-    const readReason = mailbox ? null : undefined;
-    const expiration = mailbox ? MoreThan(0) : undefined;
+    const builder = this.repo
+      .createQueryBuilder('message')
+      .leftJoin('message.program', 'program')
+      .addSelect(['program.id', 'program.name'])
+      .where({ genesis });
 
-    const commonWhere = { genesis, readReason, expiration, timestamp: getDatesFilter(fromDate, toDate) };
-    const orWhere = [];
-
-    if (destination) {
-      orWhere.push({ destination, ...commonWhere });
-    }
-    if (source) {
-      orWhere.push({ source, ...commonWhere });
+    if (mailbox) {
+      builder.andWhere('message.readReason = :readReason', { readReason: null });
+      builder.andWhere('message.expiration > :expiration', { expiration: 0 });
     }
 
-    const where = orWhere.length > 0 ? orWhere : commonWhere;
+    if (fromDate || toDate) {
+      const parameters = getDatesFilter(fromDate, toDate);
+      builder.andWhere('message.timestamp BETWEEN :fromDate AND :toDate', parameters);
+    }
+
+    if (destination && source) {
+      builder.andWhere('(message.destination = :destination OR message.source = :source)', { destination, source });
+    } else if (destination) {
+      builder.andWhere('message.destination = :destination', { destination });
+    } else if (source) {
+      builder.andWhere('message.destination = :source', { source });
+    }
 
     const [messages, count] = await Promise.all([
-      this.repo.find({
-        where,
-        take: limit || PAGINATION_LIMIT,
-        skip: offset || 0,
-        relations: ['program'],
-        select: { program: { id: true, name: true } },
-        order: { timestamp: 'DESC', type: 'DESC' },
-      }),
-      this.repo.count({ where }),
+      builder
+        .take(limit || PAGINATION_LIMIT)
+        .skip(offset || 0)
+        .orderBy('message.timestamp', 'DESC')
+        .getMany(),
+      builder.getCount(),
     ]);
 
     return {

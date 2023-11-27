@@ -17,13 +17,14 @@ export class Program extends BaseEntity implements IProgram {
   public _id: string;
 
   @Column()
+  @Index()
   public id: string;
 
-  @Index()
   @Column({ nullable: true })
   public owner: string;
 
   @Column()
+  @Index()
   public name: string;
 
   @Column({ nullable: true })
