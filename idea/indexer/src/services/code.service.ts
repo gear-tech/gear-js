@@ -25,23 +25,32 @@ export class CodeService {
     fromDate,
     uploadedBy,
   }: GetAllCodeParams): Promise<GetAllCodeResult> {
-    const commonWhere = { genesis, uploadedBy, name, timestamp: getDatesFilter(fromDate, toDate) };
-    const orWhere = [];
+    const builder = this.repo.createQueryBuilder('code').where('code.genesis = :genesis', { genesis });
+
+    if (fromDate || toDate) {
+      const parameters = getDatesFilter(fromDate, toDate);
+      builder.andWhere('code.timestamp BETWEEN :fromDate AND :toDate', parameters);
+    }
+
+    if (uploadedBy) {
+      builder.andWhere('code.uploadedBy = :uploadedBy', { uploadedBy });
+    }
+
+    if (name) {
+      builder.andWhere('code.name = :name', { name });
+    }
 
     if (query) {
-      orWhere.push({ ...commonWhere, id: query });
-      orWhere.push({ ...commonWhere, name: query });
+      builder.andWhere('(code.id = :query OR code.name = :query)', { query });
     }
-    const where = orWhere.length > 0 ? orWhere : commonWhere;
 
     const [listCode, count] = await Promise.all([
-      this.repo.find({
-        where,
-        take: limit || PAGINATION_LIMIT,
-        skip: offset || 0,
-        order: { timestamp: 'DESC' },
-      }),
-      this.repo.count({ where }),
+      builder
+        .take(limit || PAGINATION_LIMIT)
+        .skip(offset || 0)
+        .orderBy('code.timestamp', 'DESC')
+        .getMany(),
+      builder.getCount(),
     ]);
 
     return {

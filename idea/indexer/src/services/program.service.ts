@@ -44,33 +44,40 @@ export class ProgramService {
     fromDate,
     status,
   }: GetAllProgramsParams): Promise<GetAllProgramsResult> {
-    const commonWhere = {
-      genesis,
-      owner,
-      status: Array.isArray(status) ? In(status) : status,
-      timestamp: getDatesFilter(fromDate, toDate),
-    };
+    const builder = this.repo
+      .createQueryBuilder('program')
+      .leftJoin('program.code', 'code')
+      .addSelect(['code.id'])
+      .where('program.genesis = :genesis', { genesis });
 
-    const orWhere = [];
-
-    if (query) {
-      orWhere.push({ ...commonWhere, id: query });
-      orWhere.push({ ...commonWhere, name: query });
-      orWhere.push({ ...commonWhere, code: { id: query } });
+    if (owner) {
+      builder.andWhere('program.owner = :owner', { owner });
     }
 
-    const where = orWhere.length > 0 ? orWhere : commonWhere;
+    if (status) {
+      if (Array.isArray(status)) {
+        builder.andWhere('program.status = IN(:status)', { status });
+      } else {
+        builder.andWhere('program.status = :status', { status });
+      }
+    }
+
+    if (fromDate || toDate) {
+      const parameters = getDatesFilter(fromDate, toDate);
+      builder.andWhere('program.timestamp BETWEEN :fromDate AND :toDate', parameters);
+    }
+
+    if (query) {
+      builder.andWhere('(program.id ILIKE :query OR program.name ILIKE :query)', { query: `%${query}%` });
+    }
 
     const [programs, count] = await Promise.all([
-      this.repo.find({
-        where,
-        take: limit || PAGINATION_LIMIT,
-        skip: offset || 0,
-        relations: ['code'],
-        select: { code: { id: true } },
-        order: { timestamp: 'DESC' },
-      }),
-      this.repo.count({ where }),
+      builder
+        .take(limit || PAGINATION_LIMIT)
+        .skip(offset || 0)
+        .orderBy('program.timestamp', 'DESC')
+        .getMany(),
+      builder.getCount(),
     ]);
 
     return {

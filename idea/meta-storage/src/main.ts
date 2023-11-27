@@ -17,6 +17,6 @@ const main = async () => {
 };
 
 main().catch((error) => {
-  console.log(error);
+  logger.error("Can't start the indexer", { error, stack: error.stack });
   process.exit(1);
 });

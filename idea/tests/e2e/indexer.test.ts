@@ -535,12 +535,26 @@ describe('program methods', () => {
   });
 
   test(INDEXER_METHODS.PROGRAM_ALL + ' by dates', async () => {
-    const fromDate = new Date();
-    fromDate.setMinutes(fromDate.getMinutes() - 3);
     const toDate = new Date();
+    const fromDate = new Date(toDate);
+    fromDate.setMinutes(fromDate.getMinutes() - 5);
+
     const response = await request('program.all', { genesis, fromDate, toDate });
     expect(response).toHaveProperty('result.count', programs.length);
     expect(response.result.programs).toHaveLength(programs.length);
+  });
+
+  test(INDEXER_METHODS.PROGRAM_ALL + ' with query', async () => {
+    const response = await request('program.all', { genesis, query: programs[0].programId.substring(3, 17) });
+    expect(response).toHaveProperty('result.count', 1);
+    expect(response.result.programs).toHaveLength(1);
+    expect(response.result.programs[0].id).toEqual(programs[0].programId);
+  });
+
+  test(INDEXER_METHODS.PROGRAM_ALL + ' with pagination', async () => {
+    const response = await request('program.all', { genesis, limit: 1 });
+    expect(response).toHaveProperty('result.count', programs.length);
+    expect(response.result.programs).toHaveLength(1);
   });
 
   test(INDEXER_METHODS.PROGRAM_DATA, async () => {

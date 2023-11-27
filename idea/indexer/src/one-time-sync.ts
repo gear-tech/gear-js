@@ -63,7 +63,6 @@ async function bootstrap() {
   const blocks = Array.from({ length: toBlock - fromBlock + 1 }, (_, i) => fromBlock + i).filter(
     (v) => !blocksSet.has(v),
   );
-  console.log(blocks);
 
   blocksSet.clear();
   syncedBlocks = undefined;
