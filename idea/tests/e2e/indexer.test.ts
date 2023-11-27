@@ -654,9 +654,9 @@ describe('message methods', () => {
 
   test(INDEXER_METHODS.MESSAGE_ALL + ' by program', async () => {
     const response = await request('message.all', { genesis, source: testMetaId, destination: testMetaId });
-    expect(response).toHaveProperty('result.count', 10);
+    expect(response).toHaveProperty('result.count', 11);
     expect(response).toHaveProperty('result.messages');
-    expect(response.result.messages).toHaveLength(10);
+    expect(response.result.messages).toHaveLength(11);
   });
 
   test(INDEXER_METHODS.MESSAGE_DATA, async () => {
