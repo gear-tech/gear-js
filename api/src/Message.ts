@@ -3,13 +3,13 @@ import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { ReplaySubject } from 'rxjs';
 
-import {
-  IMessageSendOptions,
-  IMessageSendReplyOptions,
-  VaraMessageSendOptions,
-  VaraMessageSendReplyOptions,
-} from './types';
 import { SendMessageError, SendReplyError } from './errors';
+import {
+  V1000MessageSendOptions,
+  V1000MessageSendReplyOptions,
+  V1010MessageSendOptions,
+  V1010MessageSendReplyOptions,
+} from './types';
 import { encodePayload, getExtrinsic, validateGasLimit, validateMailboxItem, validateValue } from './utils';
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from './metadata';
@@ -21,7 +21,9 @@ export class GearMessage extends GearTransaction {
    * @param args Message parameters.
    * @param meta Program metadata obtained using `getProgramMetadata` function.
    * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.handle.input` will be used instead.
-   * @returns Submittable result
+   * @returns Submitable result
+   *
+   * _Note that parameter `prepaid` is not supported starting from `1010` runtime version._
    * @example
    * ```javascript
    * const programId = '0x..';
@@ -40,7 +42,7 @@ export class GearMessage extends GearTransaction {
    * ```
    */
   send(
-    args: IMessageSendOptions | VaraMessageSendOptions,
+    args: V1000MessageSendOptions | V1010MessageSendOptions,
     meta: ProgramMetadata,
     typeIndex?: number,
   ): SubmittableExtrinsic<'promise', ISubmittableResult>;
@@ -50,7 +52,9 @@ export class GearMessage extends GearTransaction {
    * @param args Message parameters
    * @param hexRegistry Registry in hex format
    * @param typeIndex Index of type in the registry.
-   * @returns Submitted result
+   * @returns Submitable result
+   *
+   * _Note that parameter `prepaid` is not supported starting from `1010` runtime version._
    * @example
    * ```javascript
    * const programId = '0x..';
@@ -68,7 +72,7 @@ export class GearMessage extends GearTransaction {
    * ```
    */
   send(
-    args: IMessageSendOptions | VaraMessageSendOptions,
+    args: V1000MessageSendOptions | V1010MessageSendOptions,
     hexRegistry: HexString,
     typeIndex: number,
   ): SubmittableExtrinsic<'promise', ISubmittableResult>;
@@ -78,7 +82,9 @@ export class GearMessage extends GearTransaction {
    * @param args Message parameters
    * @param metaOrHexRegistry (optional) Registry in hex format or ProgramMetadata
    * @param typeName payload type (one of the default rust types if metadata or registry don't specified)
-   * @returns Submitted result
+   * @returns Submitable result
+   *
+   * _Note that parameter `prepaid` is not supported starting from `1010` runtime version._
    * @example
    * ```javascript
    * const programId = '0x..';
@@ -95,7 +101,7 @@ export class GearMessage extends GearTransaction {
    * ```
    */
   send(
-    args: IMessageSendOptions | VaraMessageSendOptions,
+    args: V1000MessageSendOptions | V1010MessageSendOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
     typeName?: string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult>;
@@ -105,10 +111,10 @@ export class GearMessage extends GearTransaction {
    * @param message
    * @param metaOrHexRegistry Metadata
    * @param typeIndexOrTypeName type index in registry or type name
-   * @returns Submitted result
+   * @returns Submitable result
    */
   send(
-    { destination, value, gasLimit, payload, ...rest }: IMessageSendOptions | VaraMessageSendOptions,
+    { destination, value, gasLimit, payload, ...rest }: V1000MessageSendOptions | V1010MessageSendOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrTypeName?: number | string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
@@ -138,7 +144,9 @@ export class GearMessage extends GearTransaction {
    * @param args Message parameters
    * @param meta Program metadata obtained using `ProgramMetadata.from` method.
    * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.reply.input` will be used instead.
-   * @returns Submitted result
+   * @returns Submitable result
+   *
+   * _Note that parameter `prepaid` is not supported starting from `1010` runtime version._
    * @example
    * ```javascript
    * const replyToMessage = '0x..';
@@ -157,7 +165,7 @@ export class GearMessage extends GearTransaction {
    * ```
    */
   sendReply(
-    args: IMessageSendReplyOptions | VaraMessageSendReplyOptions,
+    args: V1000MessageSendReplyOptions | V1010MessageSendReplyOptions,
     meta?: ProgramMetadata,
     typeIndex?: number,
   ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>;
@@ -167,7 +175,9 @@ export class GearMessage extends GearTransaction {
    * @param args Message parameters
    * @param hexRegistry Registry in hex format
    * @param typeIndex Index of type in the registry.
-   * @returns Submitted result
+   * @returns Submitable result
+   *
+   * _Note that parameter `prepaid` is not supported starting from `1010` runtime version._
    * @example
    * ```javascript
    * const replyToMessage = '0x..';
@@ -185,7 +195,7 @@ export class GearMessage extends GearTransaction {
    * ```
    */
   sendReply(
-    args: IMessageSendReplyOptions | VaraMessageSendReplyOptions,
+    args: V1000MessageSendReplyOptions | V1010MessageSendReplyOptions,
     hexRegistry: HexString,
     typeIndex: number,
   ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>;
@@ -195,7 +205,10 @@ export class GearMessage extends GearTransaction {
    * @param args Message parameters
    * @param metaOrHexRegistry (optional) Registry in hex format or ProgramMetadata
    * @param typeName payload type (one of the default rust types if metadata or registry don't specified)
-   * @returns Submitted result
+   * @returns Submitable result
+   *
+   * _Note that parameter `prepaid` is not supported starting from `1010` runtime version._
+   * @example
    * ```javascript
    * const replyToMessage = '0x..';
    * const hexRegistry = '0x...';
@@ -212,7 +225,7 @@ export class GearMessage extends GearTransaction {
    * ```
    */
   sendReply(
-    args: IMessageSendReplyOptions | VaraMessageSendReplyOptions,
+    args: V1000MessageSendReplyOptions | V1010MessageSendReplyOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
     typeName?: string,
   ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>;
@@ -226,7 +239,14 @@ export class GearMessage extends GearTransaction {
    */
 
   async sendReply(
-    { value, gasLimit, replyToId, payload, account, ...rest }: IMessageSendReplyOptions | VaraMessageSendReplyOptions,
+    {
+      value,
+      gasLimit,
+      replyToId,
+      payload,
+      account,
+      ...rest
+    }: V1000MessageSendReplyOptions | V1010MessageSendReplyOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrTypeName?: number | string,
   ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>> {

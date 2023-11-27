@@ -51,7 +51,9 @@ const nodeVersion = await gearApi.nodeVersion();
 const genesis = gearApi.genesisHash.toHex();
 ```
 
-Since Vara and VaraTestnet can have different runtime versions, they can have different extrinsics signatures. If your application is running on the Vara Network it is more convinient to use the `VaraApi` class instead of `GearApi` and `VaraTestnetApi` for the Vara Testnet Network
+Since different networks can have different runtime versions, they can have different extrinsics / rpc calls signatures.
+In general you may use `GearApi` class to interact with the node, but it can be more convivnient to use classes based on a specific runtime version.
+For example for interacting with the network that has runtime version more than `1010` you can use the `VaraApiV1010` class.
 ---
 
 ## Payloads and metadata

@@ -6,7 +6,7 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 
 import { GasLimit, Value } from '../../common';
 
-export interface IProgramUploadOptions {
+export interface V1010ProgramUploadOptions {
   code: Buffer | Uint8Array;
   salt?: `0x${string}`;
   initPayload?: AnyJson;
@@ -15,13 +15,13 @@ export interface IProgramUploadOptions {
   keepAlive?: boolean;
 }
 
-export interface IProgramCreateOptions extends Omit<IProgramUploadOptions, 'code'> {
+export interface V1010ProgramCreateOptions extends Omit<V1010ProgramUploadOptions, 'code'> {
   codeId: HexString | Uint8Array;
 }
 
-export type VaraProgramUploadOptions = Omit<IProgramUploadOptions, 'keepAlive'>;
+export type V1000ProgramUploadOptions = Omit<V1010ProgramUploadOptions, 'keepAlive'>;
 
-export interface VaraProgramCreateOptions extends Omit<VaraProgramUploadOptions, 'code'> {
+export interface V1000ProgramCreateOptions extends Omit<V1000ProgramUploadOptions, 'code'> {
   codeId: HexString | Uint8Array;
 }
 

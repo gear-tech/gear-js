@@ -3,7 +3,7 @@ import { HexString } from '@polkadot/util/types';
 import { GasLimit, Value } from '../../common';
 import { PayloadType } from '../../payload';
 
-export interface IMessageSendOptions {
+export interface V1010MessageSendOptions {
   /**
    * The message destination
    */
@@ -30,21 +30,21 @@ export interface IMessageSendOptions {
   account?: HexString;
 }
 
-export interface IMessageSendReplyOptions extends Omit<IMessageSendOptions, 'destination'> {
+export interface V1010MessageSendReplyOptions extends Omit<V1010MessageSendOptions, 'destination'> {
   /**
    * Message ID to which the reply is sending
    */
   replyToId: HexString;
 }
 
-export interface VaraMessageSendOptions extends Omit<IMessageSendOptions, 'keepAlive'> {
+export interface V1000MessageSendOptions extends Omit<V1010MessageSendOptions, 'keepAlive'> {
   /**
    * A flag that indicates whether a voucher should be used
    */
   prepaid?: boolean;
 }
 
-export interface VaraMessageSendReplyOptions extends Omit<IMessageSendReplyOptions, 'keepAlive'> {
+export interface V1000MessageSendReplyOptions extends Omit<V1010MessageSendReplyOptions, 'keepAlive'> {
   /**
    * Message ID to which the reply is sending
    */
