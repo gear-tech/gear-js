@@ -7,12 +7,12 @@ import { randomAsHex } from '@polkadot/util-crypto';
 
 import {
   GearCommonProgram,
-  IProgramCreateOptions,
   IProgramCreateResult,
-  IProgramUploadOptions,
   IProgramUploadResult,
-  VaraProgramCreateOptions,
-  VaraProgramUploadOptions,
+  V1000ProgramCreateOptions,
+  V1000ProgramUploadOptions,
+  V1010ProgramCreateOptions,
+  V1010ProgramUploadOptions,
 } from './types';
 import { ProgramDoesNotExistError, ProgramHasNoMetahash, SubmitProgramError } from './errors';
 import {
@@ -64,7 +64,7 @@ export class GearProgram extends GearTransaction {
    * ```
    */
   upload(
-    args: IProgramUploadOptions | VaraProgramUploadOptions,
+    args: V1000ProgramUploadOptions | V1010ProgramUploadOptions,
     meta?: ProgramMetadata,
     typeIndex?: number,
   ): IProgramUploadResult;
@@ -77,7 +77,7 @@ export class GearProgram extends GearTransaction {
    * @returns Object containing program id, generated (or specified) salt, code id, prepared extrinsic
    */
   upload(
-    args: IProgramUploadOptions | VaraProgramUploadOptions,
+    args: V1000ProgramUploadOptions | V1010ProgramUploadOptions,
     hexRegistry: HexString,
     typeIndex: number,
   ): IProgramUploadResult;
@@ -88,13 +88,13 @@ export class GearProgram extends GearTransaction {
    * @param typeName type name (one of the default rust types if metadata or registry don't specified)
    */
   upload(
-    args: IProgramUploadOptions | VaraProgramUploadOptions,
+    args: V1000ProgramUploadOptions | V1010ProgramUploadOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
     typeName?: string,
   ): IProgramUploadResult;
 
   upload(
-    args: IProgramUploadOptions | VaraProgramUploadOptions,
+    args: V1000ProgramUploadOptions | V1010ProgramUploadOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrTypeName?: number | string,
   ): IProgramUploadResult {
@@ -146,7 +146,7 @@ export class GearProgram extends GearTransaction {
    * ```
    */
   create(
-    args: IProgramCreateOptions | VaraProgramCreateOptions,
+    args: V1000ProgramCreateOptions | V1010ProgramCreateOptions,
     meta?: ProgramMetadata,
     typeIndex?: number | null,
   ): IProgramCreateResult;
@@ -159,7 +159,7 @@ export class GearProgram extends GearTransaction {
    * @returns Object containing program id, generated (or specified) salt, prepared extrinsic
    */
   create(
-    args: IProgramCreateOptions | VaraProgramCreateOptions,
+    args: V1000ProgramCreateOptions | V1010ProgramCreateOptions,
     hexRegistry: HexString,
     typeIndex: number,
   ): IProgramCreateResult;
@@ -170,13 +170,13 @@ export class GearProgram extends GearTransaction {
    * @param type name type name (one of the default rust types if metadata or registry don't specified)
    */
   create(
-    args: IProgramCreateOptions | VaraProgramCreateOptions,
+    args: V1000ProgramCreateOptions | V1010ProgramCreateOptions,
     metaOrHexRegistry?: HexString | ProgramMetadata,
     typeName?: number | string,
   ): IProgramCreateResult;
 
   create(
-    { codeId, initPayload, value, gasLimit, ...args }: IProgramCreateOptions | VaraProgramCreateOptions,
+    { codeId, initPayload, value, gasLimit, ...args }: V1000ProgramCreateOptions | V1010ProgramCreateOptions,
     metaOrHexRegistry?: HexString | ProgramMetadata,
     typeIndexOrTypeName?: number | string | null,
   ): IProgramCreateResult {
