@@ -44,7 +44,7 @@ export class GearProgramState extends GearProgramStorage {
   /**
    * ### Read state of program (calls `gear_readState` rpc call)
    * @param args ProgramId, payload and hash of block where it's necessary to read state (optional)
-   * @param meta Program metadata returned from `ProgramMetadata.from` method.
+   * @param meta (optional) Program metadata returned from `ProgramMetadata.from` method. If not specified, payload will be sent and state will be returned as `Bytes`
    * @param type (optional) Index of type to decode state. metadata.types.state.input is uesd by default
    *
    * @example
@@ -54,9 +54,14 @@ export class GearProgramState extends GearProgramStorage {
    * const result = await api.programState.read({ programId, payload: { id: 1 } }, meta);
    * console.log(result.toJSON());
    */
-  async read<T extends Codec = Codec>(args: ReadStateParams, meta: ProgramMetadata, type?: number): Promise<T> {
+  async read<T extends Codec = Codec>(args: ReadStateParams, meta?: ProgramMetadata, type?: number): Promise<T> {
     const payload = meta.version === MetadataVersion.V2Rust ? encodePayload(args.payload, meta, 'state', type) : [];
+
     const state = await this._api.rpc.gear.readState(args.programId, payload, args.at || null);
+
+    if (!meta) {
+      return state as T;
+    }
 
     if (type !== undefined) {
       return meta.createType<T>(type, state);
