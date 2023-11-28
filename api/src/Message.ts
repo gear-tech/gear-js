@@ -8,7 +8,7 @@ import { SendMessageError, SendReplyError } from './errors';
 import { encodePayload, getExtrinsic, validateGasLimit, validateMailboxItem, validateValue } from './utils';
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from './metadata';
-import { SPEC_VERSION } from 'consts';
+import { SPEC_VERSION } from './consts';
 import { UserMessageSentData } from './events';
 
 export class GearMessage extends GearTransaction {

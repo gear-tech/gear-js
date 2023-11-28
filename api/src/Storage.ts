@@ -12,7 +12,7 @@ import {
   ProgramTerminatedError,
 } from './errors';
 import { GearApi } from './GearApi';
-import { SPEC_VERSION } from 'consts';
+import { SPEC_VERSION } from './consts';
 
 export class GearProgramStorage {
   constructor(protected _api: GearApi) {}

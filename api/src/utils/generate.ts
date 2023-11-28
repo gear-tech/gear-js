@@ -4,7 +4,7 @@ import { HexString } from '@polkadot/util/types';
 
 import { CreateType } from '../metadata';
 import { GearApi } from 'GearApi';
-import { SPEC_VERSION } from 'consts';
+import { SPEC_VERSION } from '../consts';
 
 const VOUCHER_PREFIX = stringToU8a('modlpy/voucher__');
 

@@ -11,10 +11,6 @@ import {
   IProgramUploadResult,
   ProgramCreateOptions,
   ProgramUploadOptions,
-  V1000ProgramCreateOptions,
-  V1000ProgramUploadOptions,
-  V1010ProgramCreateOptions,
-  V1010ProgramUploadOptions,
 } from './types';
 import { ProgramDoesNotExistError, ProgramHasNoMetahash, SubmitProgramError } from './errors';
 import {
@@ -32,7 +28,7 @@ import { GearGas } from './Gas';
 import { GearResumeSession } from './ResumeSession';
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from './metadata';
-import { SPEC_VERSION } from 'consts';
+import { SPEC_VERSION } from './consts';
 
 export class GearProgram extends GearTransaction {
   public calculateGas: GearGas;
