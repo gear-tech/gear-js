@@ -30,18 +30,20 @@ export interface V1010MessageSendOptions {
   account?: HexString;
 }
 
-export interface V1010MessageSendReplyOptions extends Omit<V1010MessageSendOptions, 'destination'> {
-  /**
-   * Message ID to which the reply is sending
-   */
-  replyToId: HexString;
-}
-
 export interface V1000MessageSendOptions extends Omit<V1010MessageSendOptions, 'keepAlive'> {
   /**
    * A flag that indicates whether a voucher should be used
    */
   prepaid?: boolean;
+}
+
+export type MessageSendOptions = V1010MessageSendOptions | V1000MessageSendOptions;
+
+export interface V1010MessageSendReplyOptions extends Omit<V1010MessageSendOptions, 'destination'> {
+  /**
+   * Message ID to which the reply is sending
+   */
+  replyToId: HexString;
 }
 
 export interface V1000MessageSendReplyOptions extends Omit<V1010MessageSendReplyOptions, 'keepAlive'> {
@@ -50,3 +52,5 @@ export interface V1000MessageSendReplyOptions extends Omit<V1010MessageSendReply
    */
   replyToId: HexString;
 }
+
+export type MessageSendReplyOptions = V1010MessageSendReplyOptions | V1000MessageSendReplyOptions;

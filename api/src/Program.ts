@@ -9,6 +9,8 @@ import {
   GearCommonProgram,
   IProgramCreateResult,
   IProgramUploadResult,
+  ProgramCreateOptions,
+  ProgramUploadOptions,
   V1000ProgramCreateOptions,
   V1000ProgramUploadOptions,
   V1010ProgramCreateOptions,
@@ -30,6 +32,7 @@ import { GearGas } from './Gas';
 import { GearResumeSession } from './ResumeSession';
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from './metadata';
+import { SPEC_VERSION } from 'consts';
 
 export class GearProgram extends GearTransaction {
   public calculateGas: GearGas;
@@ -63,11 +66,7 @@ export class GearProgram extends GearTransaction {
    * })
    * ```
    */
-  upload(
-    args: V1000ProgramUploadOptions | V1010ProgramUploadOptions,
-    meta?: ProgramMetadata,
-    typeIndex?: number,
-  ): IProgramUploadResult;
+  upload(args: ProgramUploadOptions, meta?: ProgramMetadata, typeIndex?: number): IProgramUploadResult;
 
   /**
    * ### Upload program with code using registry in hex format to encode payload
@@ -76,11 +75,7 @@ export class GearProgram extends GearTransaction {
    * @param typeIndex Index of type in the registry.
    * @returns Object containing program id, generated (or specified) salt, code id, prepared extrinsic
    */
-  upload(
-    args: V1000ProgramUploadOptions | V1010ProgramUploadOptions,
-    hexRegistry: HexString,
-    typeIndex: number,
-  ): IProgramUploadResult;
+  upload(args: ProgramUploadOptions, hexRegistry: HexString, typeIndex: number): IProgramUploadResult;
 
   /** ### Upload program with code using type name to encode payload
    * @param args
@@ -88,13 +83,13 @@ export class GearProgram extends GearTransaction {
    * @param typeName type name (one of the default rust types if metadata or registry don't specified)
    */
   upload(
-    args: V1000ProgramUploadOptions | V1010ProgramUploadOptions,
+    args: ProgramUploadOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
     typeName?: string,
   ): IProgramUploadResult;
 
   upload(
-    args: V1000ProgramUploadOptions | V1010ProgramUploadOptions,
+    args: ProgramUploadOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrTypeName?: number | string,
   ): IProgramUploadResult {
@@ -110,7 +105,7 @@ export class GearProgram extends GearTransaction {
 
     try {
       const txArgs: any[] = [code, salt, payload, args.gasLimit, args.value || 0];
-      if (this._api.specVersion >= 1010) {
+      if (this._api.specVersion >= SPEC_VERSION.V1010) {
         txArgs.push('keepAlive' in args ? args.keepAlive : true);
       }
 
@@ -145,11 +140,7 @@ export class GearProgram extends GearTransaction {
    * })
    * ```
    */
-  create(
-    args: V1000ProgramCreateOptions | V1010ProgramCreateOptions,
-    meta?: ProgramMetadata,
-    typeIndex?: number | null,
-  ): IProgramCreateResult;
+  create(args: ProgramCreateOptions, meta?: ProgramMetadata, typeIndex?: number | null): IProgramCreateResult;
 
   /**
    * ### Create program from uploaded on chain code using program metadata to encode payload
@@ -158,11 +149,7 @@ export class GearProgram extends GearTransaction {
    * @param typeIndex Index of type in the registry.
    * @returns Object containing program id, generated (or specified) salt, prepared extrinsic
    */
-  create(
-    args: V1000ProgramCreateOptions | V1010ProgramCreateOptions,
-    hexRegistry: HexString,
-    typeIndex: number,
-  ): IProgramCreateResult;
+  create(args: ProgramCreateOptions, hexRegistry: HexString, typeIndex: number): IProgramCreateResult;
 
   /** ## Create program using existed codeId
    * @param args
@@ -170,13 +157,13 @@ export class GearProgram extends GearTransaction {
    * @param type name type name (one of the default rust types if metadata or registry don't specified)
    */
   create(
-    args: V1000ProgramCreateOptions | V1010ProgramCreateOptions,
+    args: ProgramCreateOptions,
     metaOrHexRegistry?: HexString | ProgramMetadata,
     typeName?: number | string,
   ): IProgramCreateResult;
 
   create(
-    { codeId, initPayload, value, gasLimit, ...args }: V1000ProgramCreateOptions | V1010ProgramCreateOptions,
+    { codeId, initPayload, value, gasLimit, ...args }: ProgramCreateOptions,
     metaOrHexRegistry?: HexString | ProgramMetadata,
     typeIndexOrTypeName?: number | string | null,
   ): IProgramCreateResult {
@@ -191,7 +178,7 @@ export class GearProgram extends GearTransaction {
     try {
       const txArgs: any[] = [codeId, salt, payload, gasLimit, value || 0];
 
-      if (this._api.specVersion >= 1010) {
+      if (this._api.specVersion >= SPEC_VERSION.V1010) {
         txArgs.push('keepAlive' in args ? args.keepAlive : true);
       }
 

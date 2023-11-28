@@ -12,6 +12,7 @@ import {
   ProgramTerminatedError,
 } from './errors';
 import { GearApi } from './GearApi';
+import { SPEC_VERSION } from 'consts';
 
 export class GearProgramStorage {
   constructor(protected _api: GearApi) {}
@@ -48,11 +49,11 @@ export class GearProgramStorage {
   async getProgramPages(programId: HexString, program: GearCommonActiveProgram, at?: HexString): Promise<IGearPages> {
     const pages = {};
     const query =
-      this._api.specVersion >= 1030
+      this._api.specVersion >= SPEC_VERSION.V1030
         ? this._api.query.gearProgram.memoryPages
         : this._api.query.gearProgram.memoryPageStorage;
 
-    const args = this._api.specVersion >= 1030 ? [programId, program.memoryInfix] : [programId];
+    const args = this._api.specVersion >= SPEC_VERSION.V1030 ? [programId, program.memoryInfix] : [programId];
 
     for (const page of program.pagesWithData) {
       pages[page.toNumber()] = u8aToU8a(
