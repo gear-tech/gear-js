@@ -68,7 +68,7 @@ jobs:
         working-directory: utils/gear-hooks
         run: |
           export token=$(printenv $(printenv GITHUB_ACTOR))
-          npm config set //registry.npmjs.org/:_authToken=$token
+          npm config set //registry.npmjs.org/:_authToken=$token --no-workspaces
           npm publish
         env:
           osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
