@@ -72,3 +72,8 @@ jobs:
         env:
           osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
           nikitayutanov: ${{ secrets.YUTANOV_NPM_TOKEN }}
+      - name: Spool logs
+        if: always()
+        run: |
+	  cat /home/runner/.npm/_logs/*.log
+
