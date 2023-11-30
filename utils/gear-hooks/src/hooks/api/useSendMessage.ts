@@ -1,7 +1,14 @@
-import { GasLimit, IMessageSendOptions, MessageQueued, ProgramMetadata, VaraMessageSendOptions } from '@gear-js/api';
+import {
+  GasLimit,
+  IMessageSendOptions,
+  MessageQueued,
+  ProgramMetadata,
+  VaraMessageSendOptions,
+  decodeAddress,
+} from '@gear-js/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { EventRecord } from '@polkadot/types/interfaces';
-import { AnyJson, ISubmittableResult } from '@polkadot/types/types';
+import { AnyJson, IKeyringPair, ISubmittableResult } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { useContext } from 'react';
@@ -10,8 +17,8 @@ import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
 import { getExtrinsicFailedMessage } from 'utils';
 
 type UseSendMessageOptions = {
-  isMaxGasLimit?: boolean;
   disableAlerts?: boolean;
+  pair?: IKeyringPair;
 };
 
 type SendMessageOptions = {
@@ -30,7 +37,7 @@ type VaraSendMessageOptions = Omit<SendMessageOptions, 'keepAlive'>;
 function useSendMessage(
   destination: HexString,
   metadata: ProgramMetadata | undefined,
-  { disableAlerts }: UseSendMessageOptions = {},
+  { disableAlerts, pair }: UseSendMessageOptions = {},
 ) {
   const { api, isApiReady, isVaraVersion } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
@@ -116,7 +123,9 @@ function useSendMessage(
     let message: IMessageSendOptions | VaraMessageSendOptions;
 
     if (isVaraVersion) {
-      message = { ...baseMessage, prepaid: withVoucher, account: withVoucher ? decodedAddress : undefined };
+      const _account = pair ? decodeAddress(pair.address) : decodedAddress;
+
+      message = { ...baseMessage, prepaid: withVoucher, account: withVoucher ? _account : undefined };
     } else {
       const keepAlive = 'keepAlive' in args ? args.keepAlive : false;
       message = { ...baseMessage, keepAlive };
@@ -133,11 +142,15 @@ function useSendMessage(
         extrinsic = withVoucher ? api.voucher.call({ SendMessage: sendExtrinsic }) : sendExtrinsic;
       }
 
-      const { signer } = await web3FromSource(source);
+      const callback = (result: ISubmittableResult) => handleStatus(result, alertId, onSuccess, onInBlock, onError);
 
-      await extrinsic.signAndSend(address, { signer }, (result) =>
-        handleStatus(result, alertId, onSuccess, onInBlock, onError),
-      );
+      if (pair) {
+        await extrinsic.signAndSend(pair, callback);
+      } else {
+        const { signer } = await web3FromSource(source);
+
+        await extrinsic.signAndSend(address, { signer }, callback);
+      }
     } catch (error) {
       const { message } = error as Error;
 
