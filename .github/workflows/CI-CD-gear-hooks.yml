@@ -74,6 +74,5 @@ jobs:
           nikitayutanov: ${{ secrets.YUTANOV_NPM_TOKEN }}
       - name: Spool logs
         if: always()
-        run: |
-	  cat /home/runner/.npm/_logs/*.log
+        run:  cat /home/runner/.npm/_logs/*.log
 
