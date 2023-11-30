@@ -44,7 +44,7 @@ jobs:
         run: |
           export token=$(printenv $(printenv GITHUB_ACTOR))
           npm config set //registry.npmjs.org/:_authToken=$token
-          npm publish
+          npm publish -ws
         env:
           osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
           nikitayutanov: ${{ secrets.YUTANOV_NPM_TOKEN }}
