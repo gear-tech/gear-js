@@ -9,6 +9,7 @@ on:
     branches: [main]
     paths:
       - utils/gear-hooks/**
+  workflow_dispatch:
 
 jobs:
   test:
