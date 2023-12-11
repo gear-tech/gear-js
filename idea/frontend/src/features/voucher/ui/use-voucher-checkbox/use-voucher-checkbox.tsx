@@ -1,5 +1,5 @@
 import { HexString } from '@gear-js/api';
-import { useBalanceFormat, useVoucher } from '@gear-js/react-hooks';
+import { useAccountVoucher, useBalanceFormat } from '@gear-js/react-hooks';
 
 import { LabeledCheckbox } from '@/shared/ui';
 
@@ -10,7 +10,7 @@ type Props = {
 };
 
 const UseVoucherCheckbox = ({ programId }: Props) => {
-  const { isVoucherExists, voucherBalance } = useVoucher(programId);
+  const { isVoucherExists, voucherBalance } = useAccountVoucher(programId);
   const { getFormattedBalance } = useBalanceFormat();
 
   const formattedBalance = voucherBalance ? getFormattedBalance(voucherBalance) : undefined;
