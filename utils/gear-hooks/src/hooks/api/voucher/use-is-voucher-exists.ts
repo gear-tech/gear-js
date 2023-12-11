@@ -1,13 +1,10 @@
 import { HexString } from '@gear-js/api';
-import { AccountContext, AlertContext, ApiContext } from 'context';
+import { AlertContext, ApiContext } from 'context';
 import { useState, useEffect, useContext } from 'react';
 
-function useIsVoucherExists(programId: HexString | undefined) {
+function useIsVoucherExists(programId: HexString | undefined, accountAddress: HexString | undefined) {
   const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
   const alert = useContext(AlertContext);
-
-  const { account } = useContext(AccountContext);
-  const accountAddress = account?.decodedAddress;
 
   const [isVoucherExists, setIsVoucherExists] = useState<boolean>();
   const isVoucherExistsReady = isVoucherExists !== undefined;
