@@ -1,5 +1,5 @@
 import { HexString } from '@gear-js/api';
-import { useIsVoucherExists } from '@gear-js/react-hooks';
+import { useIsAccountVoucherExists } from '@gear-js/react-hooks';
 
 import { withAccount } from '@/shared/ui';
 
@@ -11,7 +11,7 @@ type Props = {
 };
 
 const VoucherBadge = withAccount(({ programId }: Props) => {
-  const { isVoucherExists } = useIsVoucherExists(programId);
+  const { isVoucherExists } = useIsAccountVoucherExists(programId);
 
   return isVoucherExists ? <BadgeSVG className={styles.badge} /> : null;
 });

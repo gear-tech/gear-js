@@ -10,7 +10,15 @@ import {
   useReplyCalculateGas,
 } from './useCalculateGas';
 
-import { useIsVoucherExists, useVoucherBalance, useVoucher } from './voucher';
+import {
+  useIsVoucherExists,
+  useVoucherBalance,
+  useVoucher,
+  useIsAccountVoucherExists,
+  useAccountVoucherBalance,
+  useAccountVoucher,
+} from './voucher';
+
 import { useBalance, useBalanceFormat } from './balance';
 
 export {
@@ -26,6 +34,9 @@ export {
   useIsVoucherExists,
   useVoucherBalance,
   useVoucher,
+  useIsAccountVoucherExists,
+  useAccountVoucherBalance,
+  useAccountVoucher,
   useBalance,
   useBalanceFormat,
   SendMessageOptions,

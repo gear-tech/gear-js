@@ -1,5 +1,5 @@
 import { HexString } from '@gear-js/api';
-import { useBalanceFormat, useVoucher } from '@gear-js/react-hooks';
+import { useAccountVoucher, useBalanceFormat } from '@gear-js/react-hooks';
 
 import VoucherPlaceholderSVG from '@/features/voucher/assets/voucher-placeholder.svg?react';
 import { ContentLoader } from '@/shared/ui/contentLoader';
@@ -14,7 +14,7 @@ type Props = {
 };
 
 const VoucherTable = withAccount(({ programId }: Props) => {
-  const { isVoucherReady, isVoucherExists, voucherBalance } = useVoucher(programId);
+  const { isVoucherReady, isVoucherExists, voucherBalance } = useAccountVoucher(programId);
   const { getFormattedBalance } = useBalanceFormat();
 
   const status = isVoucherExists ? BulbStatus.Success : BulbStatus.Error;
