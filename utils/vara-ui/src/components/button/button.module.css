@@ -40,6 +40,14 @@
   }
 }
 
+.block {
+  width: 100%;
+}
+
+.noWrap {
+  white-space: nowrap;
+}
+
 .primary {
   color: #000;
   /* TODO: gradient */

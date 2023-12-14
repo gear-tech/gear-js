@@ -8,6 +8,8 @@ type BaseProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   color?: 'primary' | 'dark' | 'light' | 'border' | 'transparent';
   size?: 'default' | 'small';
   isLoading?: boolean;
+  block?: boolean;
+  noWrap?: boolean;
 };
 
 type TextProps = BaseProps & {
@@ -39,6 +41,8 @@ const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
     color = 'primary',
     size = 'default',
     children,
+    block,
+    noWrap,
     ...attrs
   } = props;
 
@@ -52,6 +56,8 @@ const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
         disabled && styles.disabled,
         isLoading && styles.loading,
         !text && styles.noText,
+        block && styles.block,
+        noWrap && styles.noWrap,
         className,
       )}
       disabled={disabled || isLoading}
