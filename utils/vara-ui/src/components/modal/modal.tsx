@@ -1,6 +1,7 @@
-import { ReactNode, useEffect, useState, MouseEvent } from 'react';
+import { ReactNode, useEffect, useState, MouseEvent, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import cx from 'clsx';
+
 import { ReactComponent as CrossSVG } from '../../assets/images/cross.svg';
 import { Button } from '../button';
 import styles from './modal.module.css';
@@ -10,10 +11,33 @@ type Props = {
   close: () => void;
   children?: ReactNode;
   className?: string;
+  footer?: ReactNode;
 };
 
-const Modal = ({ heading, close, children, className }: Props) => {
+// TODO: same as in gear-js/ui
+function useHeight() {
+  const [height, setHeight] = useState(0);
+
+  const ref = useCallback((node: HTMLDivElement | null) => {
+    if (node) setHeight(node.getBoundingClientRect().height);
+  }, []);
+
+  return [height, ref] as const;
+}
+
+function useMaxHeight() {
+  const [modalHeight, modalRef] = useHeight();
+  const [bodyHeight, bodyRef] = useHeight();
+
+  const padding = 32;
+  const bodyStyle = { maxHeight: `calc(100vh - ${modalHeight - bodyHeight + 2 * padding}px)` };
+
+  return { bodyStyle, modalRef, bodyRef };
+}
+
+const Modal = ({ heading, close, children, className, footer }: Props) => {
   const [root, setRoot] = useState<HTMLDivElement>();
+  const { bodyStyle, modalRef, bodyRef } = useMaxHeight();
 
   const handleOverlayClick = ({ target, currentTarget }: MouseEvent) => {
     if (target === currentTarget) close();
@@ -32,14 +56,20 @@ const Modal = ({ heading, close, children, className }: Props) => {
 
   const component = (
     <div className={styles.overlay} onClick={handleOverlayClick}>
-      <div className={styles.modal}>
+      <div className={styles.modal} ref={modalRef}>
         <header className={styles.header}>
           <h3 className={styles.heading}>{heading}</h3>
 
           <Button icon={CrossSVG} color="transparent" onClick={close} className={styles.button} />
         </header>
 
-        {children && <div className={cx(styles.body, className)}>{children}</div>}
+        {children && (
+          <div className={cx(styles.body, className)} style={bodyStyle} ref={bodyRef}>
+            {children}
+          </div>
+        )}
+
+        {footer && <footer className={styles.footer}>{footer}</footer>}
       </div>
     </div>
   );

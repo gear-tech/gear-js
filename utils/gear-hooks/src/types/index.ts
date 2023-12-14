@@ -1,4 +1,4 @@
-import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { HexString } from '@polkadot/util/types';
 import {
   AlertType,

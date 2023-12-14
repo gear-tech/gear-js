@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, FunctionComponent, SVGProps, forwardRef } from 'react';
+import { ButtonHTMLAttributes, FunctionComponent, ReactNode, SVGProps, forwardRef } from 'react';
 import cx from 'clsx';
 import styles from './button.module.css';
 
@@ -8,18 +8,27 @@ type BaseProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   color?: 'primary' | 'dark' | 'light' | 'border' | 'transparent';
   size?: 'default' | 'small';
   isLoading?: boolean;
+  block?: boolean;
+  noWrap?: boolean;
 };
 
 type TextProps = BaseProps & {
   text: string;
+  children?: never;
 };
 
 type IconProps = BaseProps & {
   icon: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | undefined }>;
+  children?: never;
 };
 
-// TODO: omit text and icon if children specified?
-type Props = TextProps | IconProps;
+type ChildrenProps = BaseProps & {
+  children: ReactNode;
+  text?: never;
+  icon?: never;
+};
+
+type Props = TextProps | IconProps | ChildrenProps;
 
 const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
   const {
@@ -32,6 +41,8 @@ const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
     color = 'primary',
     size = 'default',
     children,
+    block,
+    noWrap,
     ...attrs
   } = props;
 
@@ -45,6 +56,8 @@ const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
         disabled && styles.disabled,
         isLoading && styles.loading,
         !text && styles.noText,
+        block && styles.block,
+        noWrap && styles.noWrap,
         className,
       )}
       disabled={disabled || isLoading}

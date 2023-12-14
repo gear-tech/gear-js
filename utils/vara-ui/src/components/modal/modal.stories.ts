@@ -10,8 +10,21 @@ const meta: Meta<Type> = {
 };
 
 const Default: Story = {
-  args: { heading: 'Heading', children: 'Some modal text', close: () => {} },
+  args: {
+    heading: 'Heading',
+    children: 'Some modal text',
+    close: () => {},
+  },
+};
+
+const Scroll: Story = {
+  args: {
+    heading: 'Heading',
+    children:
+      'Text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+    footer: 'Footer',
+  },
 };
 
 export default meta;
-export { Default };
+export { Default, Scroll };

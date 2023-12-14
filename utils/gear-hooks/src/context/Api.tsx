@@ -1,4 +1,4 @@
-import { GearApi, VARA_GENESIS } from '@gear-js/api';
+import { GearApi } from '@gear-js/api';
 import { WsProvider, ScProvider } from '@polkadot/api';
 import * as Sc from '@substrate/connect';
 import { createContext, useEffect, useMemo, useRef, useState } from 'react';

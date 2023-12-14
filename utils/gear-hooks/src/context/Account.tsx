@@ -1,4 +1,4 @@
-import type { InjectedAccountWithMeta, InjectedExtension, Unsubcall } from '@polkadot/extension-inject/types';
+import { InjectedAccountWithMeta, InjectedExtension, Unsubcall } from '@polkadot/extension-inject/types';
 import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp';
 import { decodeAddress } from '@gear-js/api';
 import { useState, createContext, useEffect, useMemo } from 'react';

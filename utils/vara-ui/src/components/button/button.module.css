@@ -15,6 +15,8 @@
 
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  gap: 10px;
 
   font-weight: 700;
   line-height: 18px;
@@ -36,11 +38,14 @@
     animation: blink 1s linear infinite forwards;
     background-size: 200%;
   }
+}
 
-  /* flex gap */
-  > *:not(:last-child) {
-    margin-right: 10px;
-  }
+.block {
+  width: 100%;
+}
+
+.noWrap {
+  white-space: nowrap;
 }
 
 .primary {
