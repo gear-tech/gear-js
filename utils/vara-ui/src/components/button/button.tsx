@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, FunctionComponent, SVGProps, forwardRef } from 'react';
+import { ButtonHTMLAttributes, FunctionComponent, ReactNode, SVGProps, forwardRef } from 'react';
 import cx from 'clsx';
 import styles from './button.module.css';
 
@@ -12,14 +12,21 @@ type BaseProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 type TextProps = BaseProps & {
   text: string;
+  children?: never;
 };
 
 type IconProps = BaseProps & {
   icon: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | undefined }>;
+  children?: never;
 };
 
-// TODO: omit text and icon if children specified?
-type Props = TextProps | IconProps;
+type ChildrenProps = BaseProps & {
+  children: ReactNode;
+  text?: never;
+  icon?: never;
+};
+
+type Props = TextProps | IconProps | ChildrenProps;
 
 const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
   const {

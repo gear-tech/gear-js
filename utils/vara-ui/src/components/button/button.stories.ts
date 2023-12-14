@@ -7,7 +7,7 @@ type Story = StoryObj<Type>;
 const meta: Meta<Type> = {
   title: 'Button',
   component: Button,
-  args: { children: 'Button', text: 'Button' },
+  args: { children: 'Button' },
 };
 
 const Primary: Story = {
