@@ -64,7 +64,7 @@ const Modal = ({ heading, close, children, className, footer }: Props) => {
         </header>
 
         {children && (
-          <div className={cx(styles.body, className)} style={bodyStyle} ref={bodyRef}>
+          <div className={cx(styles.customScroll, className)} style={bodyStyle} ref={bodyRef}>
             {children}
           </div>
         )}
