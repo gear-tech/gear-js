@@ -9,6 +9,10 @@ https://github.com/gear-tech/gear-js/pull/1447
 https://github.com/gear-tech/gear-js/pull/1451
 - Fix `api.getExtrinsicFailedError` method. It now returns an object with the formatted docs, method and name of the error
 
+https://github.com/gear-tech/gear-js/pull/1467
+- Support new vouchers according to https://github.com/gear-tech/gear/pull/3606
+- Bump polkadot dependencies to `10.11.2`
+
 ## 0.35.2
 
 _10/31/2023_
