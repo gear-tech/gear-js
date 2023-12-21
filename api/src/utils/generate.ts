@@ -1,12 +1,12 @@
+import { HexString, U8aLike } from '@polkadot/util/types';
 import { blake2AsHex, blake2AsU8a } from '@polkadot/util-crypto';
 import { stringToU8a, u8aToU8a } from '@polkadot/util';
-import { HexString } from '@polkadot/util/types';
 
 import { CreateType } from '../metadata';
 import { GearApi } from 'GearApi';
 import { SPEC_VERSION } from '../consts';
 
-const VOUCHER_PREFIX = stringToU8a('modlpy/voucher__');
+const VOUCHER_PREFIX = stringToU8a('voucher');
 
 export function generateCodeHash(code: Buffer | Uint8Array | HexString): HexString {
   return blake2AsHex(u8aToU8a(code), 256);
@@ -38,9 +38,8 @@ export function generateProgramId(
   return blake2AsHex(id, 256);
 }
 
-export function generateVoucherId(who: HexString, program: HexString): HexString {
-  const whoU8a = u8aToU8a(who);
-  const programU8a = u8aToU8a(program);
-  const id = Uint8Array.from([...VOUCHER_PREFIX, ...whoU8a, ...programU8a]);
+export function generateVoucherId(nonce: U8aLike): HexString {
+  const nonceU8a = u8aToU8a(nonce);
+  const id = Uint8Array.from([...VOUCHER_PREFIX, ...nonceU8a]);
   return blake2AsHex(id, 256);
 }

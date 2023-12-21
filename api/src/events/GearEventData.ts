@@ -13,6 +13,7 @@ import {
   GearCommonEventReasonUserMessageReadRuntimeReason,
   GearCoreMessageUserUserMessage,
   MessageId,
+  PalletGearVoucherInternalVoucherId,
   ProgramId,
   ReservationId,
   ResumeProgramSessionId,
@@ -83,7 +84,9 @@ export interface ProgramResumeSessionStartedData extends GenericEventData {
 }
 
 export interface VoucherIssuedData extends GenericEventData {
-  holder: AccountId32;
-  program: ProgramId;
-  value: u128;
+  voucherId: PalletGearVoucherInternalVoucherId;
 }
+
+export type VoucherUpdatedData = VoucherIssuedData;
+
+export type VoucherRevokedData = VoucherIssuedData;

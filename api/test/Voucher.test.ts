@@ -13,6 +13,9 @@ let charlieRaw: HexString;
 let programId: HexString;
 let msgId: HexString;
 
+let voucher: string;
+let validUpTo: number;
+
 const api = new GearApi({ providerAddress: WS_ADDRESS });
 const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
 const metaHex: HexString = `0x${readFileSync(TEST_META_META, 'utf-8')}`;
@@ -46,10 +49,10 @@ describe('Voucher', () => {
     expect(await status).toBe('success');
   });
 
-  test('Issue voucher', async () => {
+  test.skip('Issue voucher (deprecated)', async () => {
     expect(programId).toBeDefined();
 
-    const result = api.voucher.issue(charlieRaw, programId, 100_000_000_000_000);
+    const result = api.voucher.issueDeprecated(charlieRaw, programId, 100_000_000_000_000);
 
     const [txData] = await sendTransaction(result.extrinsic, alice, ['VoucherIssued']);
 
@@ -61,12 +64,8 @@ describe('Voucher', () => {
     expect(txData.value.toNumber()).toBe(100_000_000_000_000);
   });
 
-  test('Does voucher exist?', async () => {
-    expect(await api.voucher.exists(programId, charlieRaw)).toBeTruthy();
-  });
-
-  test('Send msg with voucher', async () => {
-    const tx = await api.message.send(
+  test.skip('Send msg with voucher (deprecated)', async () => {
+    const tx = api.message.send(
       {
         destination: programId,
         payload: {
@@ -82,13 +81,79 @@ describe('Voucher', () => {
       metadata,
     );
 
-    const [txData] = await sendTransaction(api.voucher.call({ SendMessage: tx }), charlie, ['MessageQueued']);
+    const [txData] = await sendTransaction(api.voucher.callDeprecated({ SendMessage: tx }), charlie, ['MessageQueued']);
+    expect(txData).toBeDefined();
+    expect(txData.id).toBeDefined();
+    msgId = txData.id.toHex();
+  });
+
+  test('Issue voucher', async () => {
+    expect(programId).toBeDefined();
+
+    const validity = 4;
+
+    const { extrinsic, voucherId } = await api.voucher.issue(charlieRaw, 100 * 10 ** 12, validity, [programId]);
+
+    const [txData, blockHash] = await sendTransaction(extrinsic, alice, ['VoucherIssued']);
+    validUpTo = (await api.blocks.getBlockNumber(blockHash)).toNumber() + validity;
+
+    expect(txData).toHaveProperty('voucherId');
+    expect(txData.voucherId.toHex()).toBe(voucherId);
+
+    voucher = voucherId;
+  });
+
+  test('Voucher exists', async () => {
+    expect(await api.voucher.exists(charlie.address, programId)).toBeTruthy();
+  });
+
+  test('Get all vouchers for account', async () => {
+    const vouchers = await api.voucher.getAllForAccount(charlie.address);
+    expect(Object.keys(vouchers)).toHaveLength(1);
+    expect(vouchers[voucher]).toHaveLength(1);
+    expect(vouchers[voucher][0]).toBe(programId);
+  });
+
+  test('Get voucher details', async () => {
+    const details = await api.voucher.getDetails(charlie.address, voucher);
+    expect(details).toBeDefined();
+    expect(details).toHaveProperty('programs');
+    expect(details).toHaveProperty('owner');
+    expect(details).toHaveProperty('validity');
+    expect(details.programs.isSome).toBeTruthy();
+    expect(details.programs.unwrap()).toHaveLength(1);
+    expect(details.programs.unwrap()[0].toHex()).toBe(programId);
+    expect(details.owner.toHuman()).toBe(alice.address);
+    expect(details.validity.toNumber()).toBe(validUpTo);
+  });
+
+  test('Send msg with voucher', async () => {
+    expect(voucher).toBeDefined();
+
+    const tx = api.message.send(
+      {
+        destination: programId,
+        payload: {
+          Four: {
+            array8: new Array(8).fill(0),
+            array32: new Array(32).fill(1),
+            actor: charlieRaw,
+          },
+        },
+        gasLimit: 20_000_000_000,
+        account: charlieRaw,
+      },
+      metadata,
+    );
+
+    const [txData] = await sendTransaction(api.voucher.call(voucher, { SendMessage: tx }), charlie, ['MessageQueued']);
     expect(txData).toBeDefined();
     expect(txData.id).toBeDefined();
     msgId = txData.id.toHex();
   });
 
   test('Send reply msg with voucher', async () => {
+    expect(voucher).toBeDefined();
     expect(msgId).toBeDefined();
     const mailbox = await api.mailbox.read(charlieRaw);
 
@@ -110,11 +175,30 @@ describe('Voucher', () => {
 
     const waitForReply = api.message.listenToReplies(programId);
 
-    const [txData] = await sendTransaction(api.voucher.call({ SendReply: tx }), charlie, ['MessageQueued']);
+    const [txData] = await sendTransaction(api.voucher.call(voucher, { SendReply: tx }), charlie, ['MessageQueued']);
     expect(txData).toBeDefined();
 
     const reply = await waitForReply(msgId);
     expect(reply?.message.details.isSome).toBeTruthy();
     expect(reply?.message.details.unwrap().code.isSuccess).toBeTruthy();
+  });
+
+  test('Revoke voucher', async () => {
+    expect(voucher).toBeDefined();
+    expect(validUpTo).toBeDefined();
+
+    let blockNumber = await api.rpc.chain.getHeader().then((header) => header.number.toNumber());
+
+    while (blockNumber < validUpTo) {
+      await sleep(3000);
+      blockNumber = await api.rpc.chain.getHeader().then((header) => header.number.toNumber());
+    }
+
+    const tx = api.voucher.revoke(charlie.address, voucher);
+
+    const [txData] = await sendTransaction(tx, alice, ['VoucherRevoked']);
+
+    expect(txData).toBeDefined();
+    expect(txData.voucherId.toHex()).toBe(voucher);
   });
 });

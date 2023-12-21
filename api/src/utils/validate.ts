@@ -6,7 +6,6 @@ import { HexString } from '@polkadot/util/types';
 import { GasLimit, Value } from '../types/common';
 import { GearApi } from '../GearApi';
 import { ValidationError } from '../errors';
-import { generateVoucherId } from './generate';
 
 export function validateValue(value: Value | undefined, api: GearApi) {
   if (!value) return;
@@ -48,15 +47,6 @@ export async function validateProgramId(programId: HexString, api: GearApi) {
   const isExist = await api.program.exists(programId);
   if (!isExist) {
     throw new ValidationError(`Program with id ${programId} doesn't exist`);
-  }
-}
-
-export async function validateVoucher(programId: HexString, who: HexString, api: GearApi) {
-  const id = generateVoucherId(who, programId);
-
-  const balance = await api.balance.findOut(id);
-  if (balance.eqn(0)) {
-    throw new ValidationError(`Voucher with id ${id} doesn't exist`);
   }
 }
 

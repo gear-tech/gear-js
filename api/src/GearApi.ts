@@ -59,7 +59,15 @@ export class GearApi extends ApiPromise {
             methods: {},
             version: 1,
           },
+          {
+            methods: {},
+            version: 1030,
+          },
         ],
+      },
+      signedExtensions: {
+        VoucherLegitimate: { extrinsic: {}, payload: {} },
+        StakingBlackList: { extrinsic: {}, payload: {} },
       },
       ...restOptions,
     });

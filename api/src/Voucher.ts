@@ -1,40 +1,88 @@
+import { stringToU8a, u8aToU8a } from '@polkadot/util';
+import { BalanceOf } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
+import { Option } from '@polkadot/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { blake2AsHex } from '@polkadot/util-crypto';
 
-import { generateVoucherId, validateVoucher } from './utils';
+import { ICallOptions, IUpdateVoucherParams, PalletGearVoucherInternalVoucherInfo } from './types';
 import { GearTransaction } from './Transaction';
-import { ICallOptions } from './types';
+import { generateVoucherId } from './utils';
 
 export class GearVoucher extends GearTransaction {
   /**
    * ### Issue a new voucher for a `user` to be used to pay for sending messages to `program_id` program.
-   * @param to The voucher holder account id.
-   * @param program The program id, messages to whom can be paid with the voucher.
+   * @param spender The voucher holder account id.
    * @param value The voucher amount.
-   * @returns Submittable result
+   * @param validity The number of the block until which the voucher is valid.
+   * @param programs (optional) The list of programs that the voucher can be used for. If not specified, the voucher can be used for any program.
+   * @returns The voucher id and the extrinsic to submit.
    *
    * @example
    * ```javascript
    * const programId = '0x..';
    * const account = '0x...';
-   * const tx = api.voucher.issue(account, programId, 10000);
-   * tx.signAndSend(account, (events) => {
+   * const { extrinsic, voucherId } = await api.voucher.issue(account, programId, 10000);
+   * extrinsic.signAndSend(account, (events) => {
    *   events.forEach(({event}) => console.log(event.toHuman()));
    * })
    * ```
    */
-  issue(
+  async issue(
+    spender: HexString,
+    value: number | bigint | BalanceOf,
+    validity: number,
+    programs?: HexString[],
+  ): Promise<{ extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>; voucherId: HexString }> {
+    const nonce = await this._api.query.gearVoucher.issued();
+
+    const nextNonce = nonce.unwrapOrDefault().addn(1).toArray('le', 8);
+    const voucherId = generateVoucherId(nextNonce);
+
+    this.extrinsic = this._api.tx.gearVoucher.issue(spender, value, programs || null, validity);
+    return { extrinsic: this.extrinsic, voucherId };
+  }
+
+  /**
+   * Issue a new voucher. This method is available only for runtime versions < 1040.
+   * @deprecated
+   * @param to
+   * @param program
+   * @param value
+   * @returns
+   */
+  issueDeprecated(
     to: HexString,
     program: HexString,
     value: number | bigint | string,
   ): { extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>; voucherId: HexString } {
-    const voucherId = generateVoucherId(to, program);
-    this.extrinsic = this._api.tx.gearVoucher.issue(to, program, value);
+    const whoU8a = u8aToU8a(to);
+    const programU8a = u8aToU8a(program);
+    const id = Uint8Array.from([...stringToU8a('modlpy/voucher__'), ...whoU8a, ...programU8a]);
+
+    const voucherId = blake2AsHex(id, 256);
+    this.extrinsic = this._api.tx.gearVoucher.issue.call(this, to, program, value);
     return { extrinsic: this.extrinsic, voucherId };
   }
 
-  call(params: ICallOptions) {
+  /**
+   * ### Use a voucher to send a message to a program.
+   * @param voucherId The id of the voucher to be used.
+   * @param params Either `SendMessage` or `SendReply` call options.
+   * @returns Extrinsic to submit
+   * @example
+   * ```javascript
+   * const programId = '0x..';
+   * const voucherId = '0x...';
+   * const msgTx = api.message.send(...);
+   * const tx = api.voucher.call(voucherId, { SendMessage: msgTx });
+   * tx.signAndSend(account, (events) => {
+   *  events.forEach(({event}) => console.log(event.toHuman()));
+   * })
+   * ```
+   */
+  call(voucherId: string, params: ICallOptions): SubmittableExtrinsic<'promise', ISubmittableResult> {
     if ('SendMessage' in params) {
       if (params.SendMessage.method.method !== 'sendMessage') {
         throw new Error(
@@ -42,24 +90,161 @@ export class GearVoucher extends GearTransaction {
         );
       }
       const [destination, payload, gasLimit, value, keepAlive] = params.SendMessage.args;
-      return this._api.tx.gearVoucher.call({ SendMessage: { destination, payload, gasLimit, value, keepAlive } });
+      return this._api.tx.gearVoucher.call(voucherId, {
+        SendMessage: { destination, payload, gasLimit, value, keepAlive },
+      });
     } else if ('SendReply' in params) {
       if (params.SendReply.method.method !== 'sendReply') {
         throw new Error(`Invalid method name. Expected 'SendReply' but actual is ${params.SendReply.method.method}`);
       }
       const [replyToId, payload, gasLimit, value, keepAlive] = params.SendReply.args;
-      return this._api.tx.gearVoucher.call({ SendReply: { replyToId, payload, gasLimit, value, keepAlive } });
+      return this._api.tx.gearVoucher.call(voucherId, {
+        SendReply: { replyToId, payload, gasLimit, value, keepAlive },
+      });
     }
 
     throw new Error('Invalid call params');
   }
 
-  async exists(programId: HexString, accountId: HexString): Promise<boolean> {
-    try {
-      await validateVoucher(programId, accountId, this._api);
-    } catch (_) {
+  /**
+   * Use a voucher to send a message to a program. This method is available only for runtime versions < 1040.
+   * @deprecated
+   * @param params
+   * @returns
+   */
+  callDeprecated(params: ICallOptions): SubmittableExtrinsic<'promise', ISubmittableResult> {
+    if ('SendMessage' in params) {
+      if (params.SendMessage.method.method !== 'sendMessage') {
+        throw new Error(
+          `Invalid method name. Expected 'SendMessage' but actual is ${params.SendMessage.method.method}`,
+        );
+      }
+      const [destination, payload, gasLimit, value, keepAlive] = params.SendMessage.args;
+      return this._api.tx.gearVoucher.call.call(this, {
+        SendMessage: { destination, payload, gasLimit, value, keepAlive },
+      });
+    } else if ('SendReply' in params) {
+      if (params.SendReply.method.method !== 'sendReply') {
+        throw new Error(`Invalid method name. Expected 'SendReply' but actual is ${params.SendReply.method.method}`);
+      }
+      const [replyToId, payload, gasLimit, value, keepAlive] = params.SendReply.args;
+      return this._api.tx.gearVoucher.call.call(this, {
+        SendReply: { replyToId, payload, gasLimit, value, keepAlive },
+      });
+    }
+
+    throw new Error('Invalid call params');
+  }
+
+  /**
+   * ### Revoke a voucher.
+   * @param spender The voucher holder account id.
+   * @param voucherId The id of the voucher to be revoked.
+   * @returns Extrinsic to submit
+   * @example
+   * ```javascript
+   * const spenderId = '0x...'
+   * api.voucher.revoke(spenderId, voucherId).signAndSend(account, (events) => {
+   *   events.forEach(({event}) => console.log(event.toHuman()));
+   * });
+   * ```
+   */
+  revoke(spender: string, voucherId: string): SubmittableExtrinsic<'promise', ISubmittableResult> {
+    return this._api.tx.gearVoucher.revoke(spender, voucherId);
+  }
+
+  /**
+   * ### Update a voucher.
+   * @param spender The voucher holder account id.
+   * @param voucherId The id of the voucher to be updated.
+   * @param params The update parameters.
+   * @returns Extrinsic to submit
+   *
+   * @example
+   * ```javascript
+   * const spenderId = '0x...'
+   * api.voucher.update(spenderId, voucherId, { balanceTopUp: 1000 }).signAndSend(account, (events) => {
+   *  events.forEach(({event}) => console.log(event.toHuman()));
+   * });
+   * ```
+   */
+  update(
+    spender: string,
+    voucherId: string,
+    params: IUpdateVoucherParams,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult> {
+    if (!params.moveOwnership && !params.balanceTopUp && !params.appendPrograms && !params.prolongValidity) {
+      throw new Error('At least one of the parameters must be specified');
+    }
+    return this._api.tx.gearVoucher.update(
+      spender,
+      voucherId,
+      params.moveOwnership || null,
+      params.balanceTopUp || null,
+      params.appendPrograms || null,
+      params.prolongValidity || null,
+    );
+  }
+
+  async exists(accountId: string, programId: HexString): Promise<boolean> {
+    const keyPrefixes = this._api.query.gearVoucher.vouchers.keyPrefix(accountId);
+
+    const keysPaged = await this._api.rpc.state.getKeysPaged(keyPrefixes, 1000, keyPrefixes);
+
+    if (keysPaged.length === 0) {
       return false;
     }
-    return true;
+
+    const vouchers = (await this._api.rpc.state.queryStorageAt(keysPaged)) as Option<any>[];
+
+    return !!vouchers.find((item) => {
+      const typedItem = this._api.createType<Option<PalletGearVoucherInternalVoucherInfo>>(
+        'Option<PalletGearVoucherInternalVoucherInfo>',
+        item,
+      );
+
+      if (typedItem.isNone) return false;
+
+      return (typedItem.unwrap().programs.unwrapOrDefault().toJSON() as string[]).includes(programId);
+    });
+  }
+
+  async getAllForAccount(accountId: string): Promise<Record<string, string[]>> {
+    const result: Record<string, string[]> = {};
+
+    const keyPrefix = this._api.query.gearVoucher.vouchers.keyPrefix(accountId);
+
+    const keysPaged = await this._api.rpc.state.getKeysPaged(keyPrefix, 1000, keyPrefix);
+
+    if (keysPaged.length === 0) {
+      return result;
+    }
+
+    const vouchers = (await this._api.rpc.state.queryStorageAt(keysPaged)) as Option<any>[];
+
+    vouchers.forEach((item, index) => {
+      const typedItem = this._api.createType<Option<PalletGearVoucherInternalVoucherInfo>>(
+        'Option<PalletGearVoucherInternalVoucherInfo>',
+        item,
+      );
+
+      const voucherId = '0x' + keysPaged[index].toHex().slice(keyPrefix.length);
+
+      if (typedItem.isNone) {
+        return;
+      }
+
+      const programs = typedItem.unwrap().programs.unwrapOrDefault().toJSON() as string[];
+
+      result[voucherId] = programs;
+    });
+
+    return result;
+  }
+
+  async getDetails(accountId: string, voucherId: string): Promise<PalletGearVoucherInternalVoucherInfo> {
+    const voucher = await this._api.query.gearVoucher.vouchers(accountId, voucherId);
+
+    return voucher.unwrapOr(null);
   }
 }

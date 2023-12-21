@@ -135,17 +135,6 @@ export interface PalletGearStakingRewardsCall extends Enum {
   readonly type: 'Refill' | 'ForceRefill' | 'Withdraw';
 }
 
-/** @name PalletGearVoucherCall (279) */
-export interface PalletGearVoucherCall extends Enum {
-  readonly isIssue: boolean;
-  readonly asIssue: {
-    readonly to: MultiAddress;
-    readonly program: GearCoreIdsProgramId;
-    readonly value: u128;
-  } & Struct;
-  readonly type: 'Issue';
-}
-
 /** @name PalletGearDebugCall (281) */
 export interface PalletGearDebugCall extends Enum {
   readonly isEnableDebugMode: boolean;
@@ -328,25 +317,6 @@ export interface GearCommonEventUserMessageReadSystemReason extends Enum {
   readonly type: 'OutOfRent';
 }
 
-/** @name PalletGearVoucherPrepaidCall (280) */
-export interface PalletGearVoucherPrepaidCall extends Enum {
-  readonly isSendMessage: boolean;
-  readonly asSendMessage: {
-    readonly destination: GearCoreIdsProgramId;
-    readonly payload: Bytes;
-    readonly gasLimit: u64;
-    readonly value: u128;
-  } & Struct;
-  readonly isSendReply: boolean;
-  readonly asSendReply: {
-    readonly replyToId: GearCoreIdsMessageId;
-    readonly payload: Bytes;
-    readonly gasLimit: u64;
-    readonly value: u128;
-  } & Struct;
-  readonly type: 'SendMessage' | 'SendReply';
-}
-
 /** @name GearCoreCodeInstrumentedCode (217) */
 export interface GearCoreCodeInstrumentedCode extends Struct {
   readonly code: Bytes;
@@ -469,17 +439,6 @@ export interface PalletGearStakingRewardsEvent extends Enum {
     readonly amount: u128;
   } & Struct;
   readonly type: 'Refilled' | 'Withdrawn' | 'Burned';
-}
-
-/** @name PalletGearVoucherEvent (341) */
-export interface PalletGearVoucherEvent extends Enum {
-  readonly isVoucherIssued: boolean;
-  readonly asVoucherIssued: {
-    readonly holder: AccountId32;
-    readonly program: GearCoreIdsProgramId;
-    readonly value: u128;
-  } & Struct;
-  readonly type: 'VoucherIssued';
 }
 
 /** @name PalletGearDebugEvent (343) */
@@ -1121,13 +1080,6 @@ export interface PalletGearStakingRewardsError extends Enum {
   readonly type: 'FailureToRefillPool' | 'FailureToWithdrawFromPool';
 }
 
-/** @name PalletGearVoucherError (622) */
-export interface PalletGearVoucherError extends Enum {
-  readonly isFailureToCreateVoucher: boolean;
-  readonly isFailureToRedeemVoucher: boolean;
-  readonly type: 'FailureToCreateVoucher' | 'FailureToRedeemVoucher';
-}
-
 /** @name PalletGearBankBankAccount (623) */
 export interface PalletGearBankBankAccount extends Struct {
   readonly gas: u128;
@@ -1147,4 +1099,108 @@ export interface PalletGearBankError extends Enum {
     | 'InsufficientValueBalance'
     | 'InsufficientBankBalance'
     | 'InsufficientDeposit';
+}
+
+/** @name PalletGearVoucherCall (279) */
+export interface PalletGearVoucherCall extends Enum {
+  readonly isIssue: boolean;
+  readonly asIssue: {
+    readonly spender: AccountId32;
+    readonly balance: u128;
+    readonly programs: Option<Vec<GearCoreIdsProgramId>>;
+    readonly validity: u32;
+  } & Struct;
+  readonly isCall: boolean;
+  readonly asCall: {
+    readonly voucherId: PalletGearVoucherInternalVoucherId;
+    readonly call: PalletGearVoucherInternalPrepaidCall;
+  } & Struct;
+  readonly isRevoke: boolean;
+  readonly asRevoke: {
+    readonly spender: AccountId32;
+    readonly voucherId: PalletGearVoucherInternalVoucherId;
+  } & Struct;
+  readonly isUpdate: boolean;
+  readonly asUpdate: {
+    readonly spender: AccountId32;
+    readonly voucherId: PalletGearVoucherInternalVoucherId;
+    readonly moveOwnership: Option<AccountId32>;
+    readonly balanceTopUp: Option<u128>;
+    readonly appendPrograms: Option<Vec<GearCoreIdsProgramId>>;
+    readonly prolongValidity: Option<u32>;
+  } & Struct;
+  readonly isCallDeprecated: boolean;
+  readonly asCallDeprecated: {
+    readonly call: PalletGearVoucherInternalPrepaidCall;
+  } & Struct;
+  readonly type: 'Issue' | 'Call' | 'Revoke' | 'Update' | 'CallDeprecated';
+}
+
+/** @name PalletGearVoucherInternalVoucherId (282) */
+export type PalletGearVoucherInternalVoucherId = U8aFixed;
+
+/** @name PalletGearVoucherInternalPrepaidCall (283) */
+export interface PalletGearVoucherInternalPrepaidCall extends Enum {
+  readonly isSendMessage: boolean;
+  readonly asSendMessage: {
+    readonly destination: GearCoreIdsProgramId;
+    readonly payload: Bytes;
+    readonly gasLimit: u64;
+    readonly value: u128;
+    readonly keepAlive: bool;
+  } & Struct;
+  readonly isSendReply: boolean;
+  readonly asSendReply: {
+    readonly replyToId: GearCoreIdsMessageId;
+    readonly payload: Bytes;
+    readonly gasLimit: u64;
+    readonly value: u128;
+    readonly keepAlive: bool;
+  } & Struct;
+  readonly type: 'SendMessage' | 'SendReply';
+}
+
+/** @name PalletGearVoucherEvent (345) */
+export interface PalletGearVoucherEvent extends Enum {
+  readonly isVoucherIssued: boolean;
+  readonly asVoucherIssued: {
+    readonly voucherId: PalletGearVoucherInternalVoucherId;
+  } & Struct;
+  readonly isVoucherUpdated: boolean;
+  readonly asVoucherUpdated: {
+    readonly voucherId: PalletGearVoucherInternalVoucherId;
+  } & Struct;
+  readonly isVoucherRevoked: boolean;
+  readonly asVoucherRevoked: {
+    readonly voucherId: PalletGearVoucherInternalVoucherId;
+  } & Struct;
+  readonly type: 'VoucherIssued' | 'VoucherUpdated' | 'VoucherRevoked';
+}
+
+/** @name PalletGearVoucherInternalVoucherInfo (626) */
+export interface PalletGearVoucherInternalVoucherInfo extends Struct {
+  readonly owner: AccountId32;
+  readonly programs: Option<Vec<GearCoreIdsProgramId>>;
+  readonly validity: u32;
+}
+
+/** @name PalletGearVoucherError (627) */
+export interface PalletGearVoucherError extends Enum {
+  readonly isBalanceTransfer: boolean;
+  readonly isInexistentVoucher: boolean;
+  readonly isVoucherExpired: boolean;
+  readonly isIrrevocableYet: boolean;
+  readonly isBadOrigin: boolean;
+  readonly isMaxProgramsLimitExceeded: boolean;
+  readonly isUnknownDestination: boolean;
+  readonly isInappropriateDestination: boolean;
+  readonly type:
+    | 'BalanceTransfer'
+    | 'InexistentVoucher'
+    | 'VoucherExpired'
+    | 'IrrevocableYet'
+    | 'BadOrigin'
+    | 'MaxProgramsLimitExceeded'
+    | 'UnknownDestination'
+    | 'InappropriateDestination';
 }

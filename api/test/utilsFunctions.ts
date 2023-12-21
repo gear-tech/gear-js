@@ -93,7 +93,7 @@ export async function sendTransaction<E extends keyof IGearEvent | keyof IGearVo
           }
         });
         if (status.isInBlock) {
-          resolve(result);
+          resolve([...result, status.asInBlock.toHex()]);
         }
       })
       .catch((err) => {

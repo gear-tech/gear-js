@@ -339,17 +339,18 @@ tx.signAndSend(account);
 
 
 ### Issue a voucher
-Use `api.voucher.issue` method to issue a new voucher for a user to be used to pay for sending messages to `program_id` program.
+Use `api.voucher.issue` method to issue a new voucher for a user to be used to pay for sending messages to programs.
 
 ```javascript
 import { VoucherIssued } from '@gear-js/api';
 
-const programId = '0x..';
-const account = '0x...';
+const programs = ['0x1234...', '0x5678...'];
+const spenderAddress = '0x...';
+const validForOneHour = (60 * 60) / 3; // number of blocks in one hour
 
-const tx = api.voucher.issue(account, programId, 10000);
+const { voucherId, extrinsic } = await api.voucher.issue(spenderAddress, 100 * 10 ** 12, validForOneHour, programs);
 
-tx.signAndSend(account, (events) => {
+extrinsic.signAndSend(account, (events) => {
   const voucherIssuedEvent = events.events.filter(({event: {method}}) => method === 'VoucherIssued') as VoucherIssued;
   console.log(voucherIssuedEvent.toJSON());
 })
@@ -358,7 +359,22 @@ tx.signAndSend(account, (events) => {
 #### Check that the voucher exists for a particular user and program
 The `api.voucher.exists` method returns a boolean value indicates whether the voucher exists or not.
 ```javascript
-const voucherExists = await api.voucher.exists(programId, accountId)
+const voucherExists = await api.voucher.exists(accountId, programId)
+```
+
+#### Get all voucher for an account
+The `api.voucher.getAllForAccount` method returns an object whose key is the voucher id and value is an array of programs for which the voucher can be used.
+```javascript
+const allVouchers = await api.voucher.getAllForAccount(accountId);
+```
+
+#### Get voucher details
+```javascript
+const details = api.voucher.details(spenderAddress, voucherId);
+console.log(`Voucher details:
+  owner: ${details.owner.toHuman()}
+  programs: ${details.programs.toHuman()}
+  validity: ${details.validity.toNumber()}`);
 ```
 
 #### Send a message with the issued voucher
@@ -371,7 +387,7 @@ const messageTx = api.message.send({
   value: 1000
 }, meta);
 
-const voucherTx = api.voucher.call({ SendMessage: messageTx });
+const voucherTx = api.voucher.call(voucherId, { SendMessage: messageTx });
 await voucherTx.signAndSend(account, (events) => {
   console.log(events.toHuman());
 });
@@ -382,10 +398,32 @@ It works in the same way as sending message with voucher
 ```javascript
 const messageTx = api.message.sendReply(...);
 
-const voucherTx = api.voucher.call({ SendReply: messageTx });
+const voucherTx = api.voucher.call(voucherId, { SendReply: messageTx });
 await voucherTx.signAndSend(account, (events) => {
   console.log(events.toHuman());
 });
+```
+
+#### Update voucher
+The `api.voucher.update` can be used to update the voucher. All parameters in the 3rd argument are optional, but at least one parameter must be specified.
+```javascript
+const tx = await api.voucher.update(
+  spenderAddress, 
+  voucherId,
+  {
+    moveOwnership: newOwnerAddress, // The new voucher owner
+    balanceTopUp: 1_000 * 10 ** 12, // Top up voucher balance
+    appendPrograms: ['0x9123...', '0x4567...'], // Append programs for which the voucher can be used
+    prolongValidity: 1_000_000 // Prolong the voucher validity for 1_000_000 blocks
+  }
+)
+```
+
+#### Revoke voucher
+The `api.voucher.revoke` is used to revoke an issued voucher. It's possible to revoke a voucher only after the validity period has expired.
+```javascript
+const tx = api.voucher.revoke(spenderAddress, voucherId);
+tx.signAndSend(...);
 ```
 
 ## Work with programs and blockchain state

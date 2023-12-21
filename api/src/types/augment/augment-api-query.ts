@@ -27,6 +27,8 @@ import {
   GearCoreMessageStoredStoredDispatch,
   GearCoreMessageUserUserStoredMessage,
   PalletGearBankBankAccount,
+  PalletGearVoucherInternalVoucherId,
+  PalletGearVoucherInternalVoucherInfo,
 } from '../lookup';
 
 export type __AugmentedQuery<ApiType extends ApiTypes> = AugmentedQuery<ApiType, () => unknown>;
@@ -238,6 +240,22 @@ declare module '@polkadot/api-base/types/storage' {
         [u32, GearCommonSchedulerTaskScheduledTask]
       > &
         QueryableStorageEntry<ApiType, [u32, GearCommonSchedulerTaskScheduledTask]>;
+      /**
+       * Generic query
+       **/
+      [key: string]: QueryableStorageEntry<ApiType>;
+    };
+    gearVoucher: {
+      issued: AugmentedQuery<ApiType, () => Observable<Option<u64>>, []> & QueryableStorageEntry<ApiType, []>;
+      vouchers: AugmentedQuery<
+        ApiType,
+        (
+          arg1: AccountId32 | string | Uint8Array,
+          arg2: PalletGearVoucherInternalVoucherId | string | Uint8Array,
+        ) => Observable<Option<PalletGearVoucherInternalVoucherInfo>>,
+        [AccountId32, PalletGearVoucherInternalVoucherId]
+      > &
+        QueryableStorageEntry<ApiType, [AccountId32, PalletGearVoucherInternalVoucherId]>;
       /**
        * Generic query
        **/

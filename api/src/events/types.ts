@@ -9,10 +9,14 @@ import {
   UserMessageRead,
   UserMessageSent,
   VoucherIssued,
+  VoucherRevoked,
+  VoucherUpdated,
 } from './GearEvents';
 
 export interface IGearVoucherEvent {
   VoucherIssued: VoucherIssued;
+  VoucherUpdated: VoucherUpdated;
+  VoucherRevoked: VoucherRevoked;
 }
 
 export interface IGearEvent {

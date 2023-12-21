@@ -23,10 +23,6 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       CodeTooLarge: AugmentedError<ApiType>;
       /**
-       * Voucher can't be redeemed
-       **/
-      FailureRedeemingVoucher: AugmentedError<ApiType>;
-      /**
        * Gas limit too high.
        *
        * Occurs when an extrinsic's declared `gas_limit` is greater than a block's maximum gas limit.
@@ -269,8 +265,14 @@ declare module '@polkadot/api-base/types/errors' {
       [key: string]: AugmentedError<ApiType>;
     };
     gearVoucher: {
-      FailureToCreateVoucher: AugmentedError<ApiType>;
-      FailureToRedeemVoucher: AugmentedError<ApiType>;
+      BadOrigin: AugmentedError<ApiType>;
+      BalanceTransfer: AugmentedError<ApiType>;
+      InappropriateDestination: AugmentedError<ApiType>;
+      InexistentVoucher: AugmentedError<ApiType>;
+      IrrevocableYet: AugmentedError<ApiType>;
+      MaxProgramsLimitExceeded: AugmentedError<ApiType>;
+      UnknownDestination: AugmentedError<ApiType>;
+      VoucherExpired: AugmentedError<ApiType>;
       /**
        * Generic error
        **/
