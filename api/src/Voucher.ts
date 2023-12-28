@@ -45,7 +45,7 @@ export class GearVoucher extends GearTransaction {
   }
 
   /**
-   * Issue a new voucher. This method is available only for runtime versions < 1040.
+   * Issue a new voucher. This method is available only for runtime versions < 1050.
    * @deprecated
    * @param to
    * @param program
@@ -107,7 +107,7 @@ export class GearVoucher extends GearTransaction {
   }
 
   /**
-   * Use a voucher to send a message to a program. This method is available only for runtime versions < 1040.
+   * Use a voucher to send a message to a program. This method is available only for runtime versions < 1050.
    * @deprecated
    * @param params
    * @returns
@@ -163,7 +163,7 @@ export class GearVoucher extends GearTransaction {
    * @example
    * ```javascript
    * const spenderId = '0x...'
-   * api.voucher.update(spenderId, voucherId, { balanceTopUp: 1000 }).signAndSend(account, (events) => {
+   * api.voucher.update(spenderId, voucherId, { balanceTopUp: 100 * 10 ** 12 }).signAndSend(account, (events) => {
    *  events.forEach(({event}) => console.log(event.toHuman()));
    * });
    * ```

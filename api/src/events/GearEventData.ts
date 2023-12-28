@@ -84,9 +84,18 @@ export interface ProgramResumeSessionStartedData extends GenericEventData {
 }
 
 export interface VoucherIssuedData extends GenericEventData {
+  owner: AccountId32;
+  spender: AccountId32;
   voucherId: PalletGearVoucherInternalVoucherId;
 }
 
-export type VoucherUpdatedData = VoucherIssuedData;
+export interface VoucherUpdatedData extends GenericEventData {
+  spender: AccountId32;
+  voucherId: PalletGearVoucherInternalVoucherId;
+  newOwner: AccountId32;
+}
 
-export type VoucherRevokedData = VoucherIssuedData;
+export interface VoucherRevokedData extends GenericEventData {
+  spender: AccountId32;
+  voucherId: PalletGearVoucherInternalVoucherId;
+}

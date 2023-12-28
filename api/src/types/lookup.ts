@@ -1107,7 +1107,7 @@ export interface PalletGearVoucherCall extends Enum {
   readonly asIssue: {
     readonly spender: AccountId32;
     readonly balance: u128;
-    readonly programs: Option<Vec<GearCoreIdsProgramId>>;
+    readonly programs: Option<BTreeSet<GearCoreIdsProgramId>>;
     readonly validity: u32;
   } & Struct;
   readonly isCall: boolean;
@@ -1126,7 +1126,7 @@ export interface PalletGearVoucherCall extends Enum {
     readonly voucherId: PalletGearVoucherInternalVoucherId;
     readonly moveOwnership: Option<AccountId32>;
     readonly balanceTopUp: Option<u128>;
-    readonly appendPrograms: Option<Vec<GearCoreIdsProgramId>>;
+    readonly appendPrograms: Option<Option<BTreeSet<GearCoreIdsProgramId>>>;
     readonly prolongValidity: Option<u32>;
   } & Struct;
   readonly isCallDeprecated: boolean;
@@ -1139,7 +1139,6 @@ export interface PalletGearVoucherCall extends Enum {
 /** @name PalletGearVoucherInternalVoucherId (282) */
 export type PalletGearVoucherInternalVoucherId = U8aFixed;
 
-/** @name PalletGearVoucherInternalPrepaidCall (283) */
 export interface PalletGearVoucherInternalPrepaidCall extends Enum {
   readonly isSendMessage: boolean;
   readonly asSendMessage: {
@@ -1160,47 +1159,52 @@ export interface PalletGearVoucherInternalPrepaidCall extends Enum {
   readonly type: 'SendMessage' | 'SendReply';
 }
 
-/** @name PalletGearVoucherEvent (345) */
 export interface PalletGearVoucherEvent extends Enum {
   readonly isVoucherIssued: boolean;
   readonly asVoucherIssued: {
-    readonly voucherId: PalletGearVoucherInternalVoucherId;
-  } & Struct;
-  readonly isVoucherUpdated: boolean;
-  readonly asVoucherUpdated: {
+    readonly owner: AccountId32;
+    readonly spender: AccountId32;
     readonly voucherId: PalletGearVoucherInternalVoucherId;
   } & Struct;
   readonly isVoucherRevoked: boolean;
   readonly asVoucherRevoked: {
+    readonly spender: AccountId32;
     readonly voucherId: PalletGearVoucherInternalVoucherId;
   } & Struct;
-  readonly type: 'VoucherIssued' | 'VoucherUpdated' | 'VoucherRevoked';
+  readonly isVoucherUpdated: boolean;
+  readonly asVoucherUpdated: {
+    readonly spender: AccountId32;
+    readonly voucherId: PalletGearVoucherInternalVoucherId;
+    readonly newOwner: Option<AccountId32>;
+  } & Struct;
+  readonly type: 'VoucherIssued' | 'VoucherRevoked' | 'VoucherUpdated';
 }
 
-/** @name PalletGearVoucherInternalVoucherInfo (626) */
 export interface PalletGearVoucherInternalVoucherInfo extends Struct {
   readonly owner: AccountId32;
-  readonly programs: Option<Vec<GearCoreIdsProgramId>>;
+  readonly programs: Option<BTreeSet<GearCoreIdsProgramId>>;
   readonly validity: u32;
 }
 
 /** @name PalletGearVoucherError (627) */
 export interface PalletGearVoucherError extends Enum {
-  readonly isBalanceTransfer: boolean;
-  readonly isInexistentVoucher: boolean;
-  readonly isVoucherExpired: boolean;
-  readonly isIrrevocableYet: boolean;
   readonly isBadOrigin: boolean;
+  readonly isBalanceTransfer: boolean;
+  readonly isInappropriateDestination: boolean;
+  readonly isInexistentVoucher: boolean;
+  readonly isIrrevocableYet: boolean;
   readonly isMaxProgramsLimitExceeded: boolean;
   readonly isUnknownDestination: boolean;
-  readonly isInappropriateDestination: boolean;
+  readonly isVoucherExpired: boolean;
+  readonly isZeroValidity: boolean;
   readonly type:
-    | 'BalanceTransfer'
-    | 'InexistentVoucher'
-    | 'VoucherExpired'
-    | 'IrrevocableYet'
     | 'BadOrigin'
+    | 'BalanceTransfer'
+    | 'InappropriateDestination'
+    | 'InexistentVoucher'
+    | 'IrrevocableYet'
     | 'MaxProgramsLimitExceeded'
     | 'UnknownDestination'
-    | 'InappropriateDestination';
+    | 'VoucherExpired'
+    | 'ZeroValidity';
 }

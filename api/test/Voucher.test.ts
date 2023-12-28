@@ -8,6 +8,7 @@ import { TARGET, TEST_META_META, WS_ADDRESS } from './config';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 
 let alice: KeyringPair;
+let bob: KeyringPair;
 let charlie: KeyringPair;
 let charlieRaw: HexString;
 let programId: HexString;
@@ -23,8 +24,11 @@ const metadata = ProgramMetadata.from(metaHex);
 
 beforeAll(async () => {
   await api.isReadyOrError;
-  alice = await getAccount('//Alice');
-  charlie = await getAccount('//Charlie');
+  [alice, charlie, bob] = await Promise.all([
+    getAccount('//Alice'),
+    getAccount('//Charlie'),
+    await getAccount('//Bob'),
+  ]);
   charlieRaw = decodeAddress(charlie.address);
 });
 
@@ -52,7 +56,7 @@ describe('Voucher', () => {
   test.skip('Issue voucher (deprecated)', async () => {
     expect(programId).toBeDefined();
 
-    const result = api.voucher.issueDeprecated(charlieRaw, programId, 100_000_000_000_000);
+    const result = api.voucher.issueDeprecated(charlieRaw, programId, 100e12);
 
     const [txData] = await sendTransaction(result.extrinsic, alice, ['VoucherIssued']);
 
@@ -92,13 +96,17 @@ describe('Voucher', () => {
 
     const validity = 4;
 
-    const { extrinsic, voucherId } = await api.voucher.issue(charlieRaw, 100 * 10 ** 12, validity, [programId]);
+    const { extrinsic, voucherId } = await api.voucher.issue(charlieRaw, 100e12, validity, [programId]);
 
     const [txData, blockHash] = await sendTransaction(extrinsic, alice, ['VoucherIssued']);
     validUpTo = (await api.blocks.getBlockNumber(blockHash)).toNumber() + validity;
 
     expect(txData).toHaveProperty('voucherId');
+    expect(txData).toHaveProperty('spender');
+    expect(txData).toHaveProperty('owner');
     expect(txData.voucherId.toHex()).toBe(voucherId);
+    expect(txData.spender.toHuman()).toBe(charlie.address);
+    expect(txData.owner.toHuman()).toBe(alice.address);
 
     voucher = voucherId;
   });
@@ -121,8 +129,8 @@ describe('Voucher', () => {
     expect(details).toHaveProperty('owner');
     expect(details).toHaveProperty('validity');
     expect(details.programs.isSome).toBeTruthy();
-    expect(details.programs.unwrap()).toHaveLength(1);
-    expect(details.programs.unwrap()[0].toHex()).toBe(programId);
+    expect(details.programs.unwrap().toJSON()).toHaveLength(1);
+    expect(details.programs.unwrap().toJSON()![0]).toBe(programId);
     expect(details.owner.toHuman()).toBe(alice.address);
     expect(details.validity.toNumber()).toBe(validUpTo);
   });
@@ -183,6 +191,22 @@ describe('Voucher', () => {
     expect(reply?.message.details.unwrap().code.isSuccess).toBeTruthy();
   });
 
+  test('Update voucher', async () => {
+    expect(voucher).toBeDefined();
+
+    const tx = api.voucher.update(charlie.address, voucher, { moveOwnership: bob.address, balanceTopUp: 20e12 });
+    const [txData] = await sendTransaction(tx, alice, ['VoucherUpdated']);
+
+    expect(txData).toBeDefined();
+    expect(txData).toHaveProperty('voucherId');
+    expect(txData).toHaveProperty('spender');
+    expect(txData).toHaveProperty('newOwner');
+
+    expect(txData.voucherId.toHex()).toBe(voucher);
+    expect(txData.spender.toHuman()).toBe(charlie.address);
+    expect(txData.newOwner.toHuman()).toBe(bob.address);
+  });
+
   test('Revoke voucher', async () => {
     expect(voucher).toBeDefined();
     expect(validUpTo).toBeDefined();
@@ -196,9 +220,12 @@ describe('Voucher', () => {
 
     const tx = api.voucher.revoke(charlie.address, voucher);
 
-    const [txData] = await sendTransaction(tx, alice, ['VoucherRevoked']);
+    const [txData] = await sendTransaction(tx, bob, ['VoucherRevoked']);
 
     expect(txData).toBeDefined();
+    expect(txData).toHaveProperty('voucherId');
+    expect(txData).toHaveProperty('spender');
     expect(txData.voucherId.toHex()).toBe(voucher);
+    expect(txData.spender.toHuman()).toBe(charlie.address);
   });
 });
