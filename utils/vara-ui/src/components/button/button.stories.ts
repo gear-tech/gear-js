@@ -29,7 +29,6 @@ const Light: Story = {
 const Grey: Story = {
   args: {
     color: 'grey',
-    isLoading: true,
   },
 };
 

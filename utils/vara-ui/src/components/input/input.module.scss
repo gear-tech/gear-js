@@ -34,6 +34,10 @@
   padding-right: 14px;
   padding-left: 14px;
 
+  &:-webkit-autofill {
+    background-clip: text; // transparent background on autocomplete
+  }
+
   &:not(:focus) {
     &::-webkit-input-placeholder {
       color: transparent;

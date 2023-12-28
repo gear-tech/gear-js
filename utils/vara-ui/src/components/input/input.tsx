@@ -1,6 +1,6 @@
 import { InputHTMLAttributes, ReactNode, forwardRef, useId } from 'react';
 import cx from 'clsx';
-import styles from './input.module.css';
+import styles from './input.module.scss';
 
 type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'id' | 'size'> & {
   size?: 'default' | 'small';
