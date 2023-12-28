@@ -9,8 +9,9 @@
   position: relative;
 }
 
-.textarea,
+.select,
 .label {
+  font-size: 16px;
   font-weight: 400;
   line-height: 24px;
   letter-spacing: 0.009em;
@@ -25,21 +26,18 @@
   }
 }
 
-.textarea {
-  outline: none;
-  resize: none;
+.select {
+  appearance: none;
   background-color: transparent;
+  outline: none;
   border: none;
+  cursor: pointer;
 
   width: 100%;
-  padding-right: 14px;
-  padding-left: 14px;
-
-  &:not(:focus) {
-    &::-webkit-input-placeholder {
-      color: transparent;
-    }
-  }
+  padding: 8px 14px;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.616 5.54a.5.5 0 0 0 .768 0L9.317.82A.5.5 0 0 0 8.932 0H1.068a.5.5 0 0 0-.385.82l3.933 4.72Z' fill='%230C0C0D' fill-opacity='.5'/%3E%3C/svg%3E");
+  background-position: right 14px center;
+  background-repeat: no-repeat;
 
   &:focus,
   &:not(:placeholder-shown),
@@ -89,24 +87,18 @@
 }
 
 .label {
+  pointer-events: none;
+
   position: absolute;
+  top: 8px;
   left: 13px;
-
-  z-index: -1;
-
-  &.default {
-    top: 13px;
-  }
-
-  &.small {
-    top: 8px;
-  }
 }
 
 .fieldset {
   min-width: 0;
   margin: 0;
   padding: 0 13px;
+  pointer-events: none;
 
   position: absolute;
   /* TODO: variables */
@@ -117,8 +109,6 @@
 
   border: 1px solid #0000003b;
   border-radius: 4px;
-
-  z-index: -1;
 }
 
 .legend,
@@ -132,6 +122,7 @@
 .legend {
   opacity: 0;
   max-width: 0.01px;
+  height: 1em;
   padding: 0;
 
   color: #313635;

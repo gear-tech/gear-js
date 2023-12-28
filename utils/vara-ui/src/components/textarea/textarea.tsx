@@ -1,6 +1,6 @@
 import { TextareaHTMLAttributes, ReactNode, useId, forwardRef } from 'react';
 import cx from 'clsx';
-import styles from './textarea.module.css';
+import styles from './textarea.module.scss';
 
 type Props = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'id' | 'size'> & {
   size?: 'default' | 'small';
