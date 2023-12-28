@@ -38,6 +38,18 @@
     background-clip: text; // transparent background on autocomplete
   }
 
+  // hide number input buttons
+  // chrome
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    appearance: none;
+  }
+
+  // firefox
+  &[type='number'] {
+    appearance: textfield;
+  }
+
   &:not(:focus) {
     &::-webkit-input-placeholder {
       color: transparent;
