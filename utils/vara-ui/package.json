@@ -18,7 +18,7 @@
   ],
   "homepage": "https://github.com/gear-tech/gear-js/tree/main/utils/vara-ui#readme",
   "scripts": {
-    "dev": "storybook dev -p 6006",
+    "start": "storybook dev -p 6006",
     "build": "tsc && vite build",
     "build-sb": "storybook build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -47,6 +47,7 @@
     "eslint-plugin-react-hooks": "4.6.0",
     "eslint-plugin-react-refresh": "0.4.3",
     "eslint-plugin-storybook": "0.6.13",
+    "sass": "^1.69.5",
     "storybook": "7.2.1",
     "typescript": "5.0.2",
     "vite": "4.4.5",
