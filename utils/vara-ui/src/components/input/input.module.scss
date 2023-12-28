@@ -1,17 +1,28 @@
 .root {
   &.disabled {
-    pointer-events: none;
     opacity: 0.3;
+    pointer-events: none;
   }
 }
 
 .base {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
   position: relative;
+
+  &.default {
+    padding: 13px 14px;
+  }
+
+  &.small {
+    padding: 8px 14px;
+  }
 }
 
-.select,
+.input,
 .label {
-  font-size: 16px;
   font-weight: 400;
   line-height: 24px;
   letter-spacing: 0.009em;
@@ -26,22 +37,37 @@
   }
 }
 
-.select {
-  appearance: none;
-  background-color: transparent;
-  outline: none;
+.input {
+  padding: 0;
+  background: transparent;
   border: none;
-  cursor: pointer;
-
+  outline: none;
   width: 100%;
-  padding: 8px 14px;
-  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.616 5.54a.5.5 0 0 0 .768 0L9.317.82A.5.5 0 0 0 8.932 0H1.068a.5.5 0 0 0-.385.82l3.933 4.72Z' fill='%230C0C0D' fill-opacity='.5'/%3E%3C/svg%3E");
-  background-position: right 14px center;
-  background-repeat: no-repeat;
+
+  &:-webkit-autofill {
+    background-clip: text; // transparent background on autocomplete
+  }
+
+  // hide number input buttons
+  // chrome
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    appearance: none;
+  }
+
+  // firefox
+  &[type='number'] {
+    appearance: textfield;
+  }
+
+  &:not(:focus) {
+    &::-webkit-input-placeholder {
+      color: transparent;
+    }
+  }
 
   &:focus,
-  &:not(:placeholder-shown),
-  &.error {
+  &:not(:placeholder-shown) {
     ~ .label {
       opacity: 0;
     }
@@ -66,6 +92,10 @@
   }
 
   &.error {
+    ~ .label {
+      color: #fc174d;
+    }
+
     ~ .fieldset {
       border-color: #fc174d;
 
@@ -74,30 +104,21 @@
       }
     }
   }
-
-  &.default {
-    padding-top: 13px;
-    padding-bottom: 13px;
-  }
-
-  &.small {
-    padding-top: 8px;
-    padding-bottom: 8px;
-  }
 }
 
 .label {
-  position: absolute;
-  top: 8px;
-  left: 13px;
+  pointer-events: none;
 
-  z-index: -1;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .fieldset {
   min-width: 0;
   margin: 0;
   padding: 0 13px;
+  pointer-events: none;
 
   position: absolute;
   /* TODO: variables */
@@ -108,8 +129,6 @@
 
   border: 1px solid #0000003b;
   border-radius: 4px;
-
-  z-index: -1;
 }
 
 .legend,
@@ -123,6 +142,7 @@
 .legend {
   opacity: 0;
   max-width: 0.01px;
+  height: 1em;
   padding: 0;
 
   color: #313635;

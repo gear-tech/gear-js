@@ -4,7 +4,7 @@ import cx from 'clsx';
 
 import { ReactComponent as CrossSVG } from '../../assets/images/cross.svg';
 import { Button } from '../button';
-import styles from './modal.module.css';
+import styles from './modal.module.scss';
 
 type Props = {
   heading: string;

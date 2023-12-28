@@ -1,6 +1,6 @@
 import { SelectHTMLAttributes, OptionHTMLAttributes, ReactNode, useId, forwardRef } from 'react';
 import cx from 'clsx';
-import styles from './select.module.css';
+import styles from './select.module.scss';
 
 type Props = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'id' | 'size'> & {
   options: OptionHTMLAttributes<HTMLOptionElement>[];
