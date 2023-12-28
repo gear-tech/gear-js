@@ -26,6 +26,13 @@ const Light: Story = {
   },
 };
 
+const Grey: Story = {
+  args: {
+    color: 'grey',
+    isLoading: true,
+  },
+};
+
 const Border: Story = {
   args: {
     color: 'border',
@@ -33,4 +40,4 @@ const Border: Story = {
 };
 
 export default meta;
-export { Primary, Dark, Light, Border };
+export { Primary, Dark, Light, Grey, Border };
