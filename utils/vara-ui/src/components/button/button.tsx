@@ -55,7 +55,7 @@ const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
         color !== 'transparent' && styles[size],
         disabled && styles.disabled,
         isLoading && styles.loading,
-        !text && styles.noText,
+        !text && !children && styles.noText,
         block && styles.block,
         noWrap && styles.noWrap,
         className,
