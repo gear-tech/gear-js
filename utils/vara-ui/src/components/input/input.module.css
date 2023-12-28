@@ -88,18 +88,19 @@
 }
 
 .label {
+  pointer-events: none;
+
   position: absolute;
   top: 50%;
   left: 13px;
   transform: translateY(-50%);
-
-  z-index: -1;
 }
 
 .fieldset {
   min-width: 0;
   margin: 0;
   padding: 0 13px;
+  pointer-events: none;
 
   position: absolute;
   /* TODO: variables */
@@ -110,8 +111,6 @@
 
   border: 1px solid #0000003b;
   border-radius: 4px;
-
-  z-index: -1;
 }
 
 .legend,
