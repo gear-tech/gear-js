@@ -1,6 +1,6 @@
 import { InputHTMLAttributes, forwardRef } from 'react';
 import cx from 'clsx';
-import styles from './checkbox.module.css';
+import styles from './checkbox.module.scss';
 
 type Props = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
