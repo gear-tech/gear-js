@@ -18,6 +18,7 @@ import {
   useBalanceFormat,
   SendMessageOptions,
   UseSendMessageOptions,
+  useDeriveBalancesAll,
 } from './api';
 import { useAccount, useAlert, useApi } from './context';
 import { useCreateHandler, useSendMessageHandler } from './handlers';
@@ -40,6 +41,7 @@ export {
   useAccountVoucher,
   useBalance,
   useBalanceFormat,
+  useDeriveBalancesAll,
   useAccount,
   useAlert,
   useApi,
