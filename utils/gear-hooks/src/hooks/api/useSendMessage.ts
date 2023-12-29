@@ -16,7 +16,8 @@ import { useContext } from 'react';
 import { AccountContext, AlertContext, ApiContext } from 'context';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
 import { getExtrinsicFailedMessage } from 'utils';
-import { useAccountDeriveBalancesAll } from './balance/use-derive-balances-all';
+import { useAccountDeriveBalancesAll } from './balance';
+import { useAccountVoucherBalance } from './voucher';
 
 type UseSendMessageOptions = {
   disableAlerts?: boolean;
@@ -47,6 +48,7 @@ function useSendMessage(
   const alert = useContext(AlertContext);
 
   const balances = useAccountDeriveBalancesAll();
+  const { voucherBalance } = useAccountVoucherBalance(destination);
 
   const title = 'gear.sendMessage';
 
@@ -112,20 +114,22 @@ function useSendMessage(
     }
   };
 
-  const isBalanceValid = (gasLimit: string) => {
+  const isBalanceValid = (gasLimit: string, withVoucher: boolean) => {
     if (disableCheckBalance) return true;
     if (!isApiReady) throw new Error('API is not initialized');
-    if (!balances) throw new Error('No balance for account');
+    if (!balances || !voucherBalance) throw new Error('No balance for account');
 
     const existentialDeposit = api.existentialDeposit.toString();
-    const freeBalance = BigNumber(balances.freeBalance.toString());
+
+    const { freeBalance } = balances;
+    const balance = (withVoucher ? voucherBalance : freeBalance).toString();
 
     const valuePerGas = api.valuePerGas.toString();
     const gasLimitValue = BigNumber(gasLimit).multipliedBy(valuePerGas);
 
     const transactionCost = gasLimitValue.plus(existentialDeposit);
 
-    return freeBalance.isGreaterThanOrEqualTo(transactionCost);
+    return BigNumber(balance).isGreaterThanOrEqualTo(transactionCost);
   };
 
   const sendMessage = async (args: SendMessageOptions | VaraSendMessageOptions) => {
@@ -139,13 +143,15 @@ function useSendMessage(
     const { address, decodedAddress, meta } = account;
     const { source } = meta;
 
-    if (!withVoucher && !isBalanceValid(gasLimit.toString())) {
+    if (!isBalanceValid(gasLimit.toString(), withVoucher)) {
       if (onError) onError();
 
+      const message = withVoucher ? 'Low balance on voucher' : 'Low balance on account';
+
       if (disableAlerts) {
-        alert.error('Low balance on account');
+        alert.error(message);
       } else {
-        alert.update(alertId, 'Low balance on account', DEFAULT_ERROR_OPTIONS);
+        alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
       }
 
       return;
