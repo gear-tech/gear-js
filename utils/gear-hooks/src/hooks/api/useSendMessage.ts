@@ -16,7 +16,7 @@ import { useContext } from 'react';
 import { AccountContext, AlertContext, ApiContext } from 'context';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
 import { getExtrinsicFailedMessage } from 'utils';
-import { useAccountDeriveBalancesAll } from './balance';
+import { useAccountDeriveBalancesAll, useBalanceFormat } from './balance';
 import { useAccountVoucherBalance } from './voucher';
 
 type UseSendMessageOptions = {
@@ -49,6 +49,7 @@ function useSendMessage(
 
   const balances = useAccountDeriveBalancesAll();
   const { voucherBalance } = useAccountVoucherBalance(destination);
+  const { getChainBalanceValue } = useBalanceFormat();
 
   const title = 'gear.sendMessage';
 
@@ -125,9 +126,10 @@ function useSendMessage(
     const balance = (withVoucher ? voucherBalance : freeBalance).toString();
 
     const valuePerGas = api.valuePerGas.toString();
-    const gasLimitValue = BigNumber(gasLimit).multipliedBy(valuePerGas);
+    const gasLimitValue = BigNumber(gasLimit).plus(gasLimit).multipliedBy(valuePerGas);
 
-    const transactionCost = gasLimitValue.plus(existentialDeposit);
+    const extraCost = getChainBalanceValue(5);
+    const transactionCost = gasLimitValue.plus(existentialDeposit).plus(extraCost);
 
     return BigNumber(balance).isGreaterThanOrEqualTo(transactionCost);
   };
