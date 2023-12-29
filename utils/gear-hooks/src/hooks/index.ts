@@ -16,9 +16,10 @@ import {
   useAccountVoucher,
   useBalance,
   useBalanceFormat,
+  useDeriveBalancesAll,
+  useAccountDeriveBalancesAll,
   SendMessageOptions,
   UseSendMessageOptions,
-  useDeriveBalancesAll,
 } from './api';
 import { useAccount, useAlert, useApi } from './context';
 import { useCreateHandler, useSendMessageHandler } from './handlers';
@@ -42,6 +43,7 @@ export {
   useBalance,
   useBalanceFormat,
   useDeriveBalancesAll,
+  useAccountDeriveBalancesAll,
   useAccount,
   useAlert,
   useApi,

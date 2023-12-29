@@ -19,7 +19,7 @@ import {
   useAccountVoucher,
 } from './voucher';
 
-import { useBalance, useBalanceFormat, useDeriveBalancesAll } from './balance';
+import { useBalance, useBalanceFormat, useDeriveBalancesAll, useAccountDeriveBalancesAll } from './balance';
 
 export {
   useReadFullState,
@@ -40,6 +40,7 @@ export {
   useBalance,
   useBalanceFormat,
   useDeriveBalancesAll,
+  useAccountDeriveBalancesAll,
   SendMessageOptions,
   UseSendMessageOptions,
   VaraSendMessageOptions,
