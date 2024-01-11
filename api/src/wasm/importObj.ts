@@ -28,6 +28,7 @@ export default (
       return memory.grow(pages);
     },
     free: () => {},
+    free_range: () => {},
     gr_block_height: () => block_height,
     gr_block_timestamp: () => timestamp,
     gr_create_program_wgas: () => {},

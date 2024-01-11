@@ -25,19 +25,18 @@ import {
 } from './utils';
 import { GearApi } from './GearApi';
 import { GearGas } from './Gas';
-import { GearResumeSession } from './ResumeSession';
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from './metadata';
 import { SPEC_VERSION } from './consts';
 
 export class GearProgram extends GearTransaction {
   public calculateGas: GearGas;
-  public resumeSession: GearResumeSession;
+  // public resumeSession: GearResumeSession;
 
   constructor(protected _api: GearApi) {
     super(_api);
     this.calculateGas = new GearGas(_api);
-    this.resumeSession = new GearResumeSession(_api);
+    // this.resumeSession = new GearResumeSession(_api);
   }
 
   /**

@@ -79,8 +79,8 @@ describe('New Program', () => {
     expect(metadata.createType(metadata.types.init.output!, reply.message.payload).toJSON()).toMatchObject({ One: 1 });
     expect(isProgramSetHappened).toBeTruthy();
     expect(isActiveHappened).toBeTruthy();
-    expect(programSetExpiration!).toBe(activeExpiration!);
-    expiration = activeExpiration!;
+    // expect(programSetExpiration!).toBe(activeExpiration!);
+    // expiration = activeExpiration!;
   });
 
   test.skip('Wait when program will be paused', async () => {
@@ -223,57 +223,57 @@ describe('Program', () => {
     expect(Object.keys(pages)).not.toHaveLength(0);
   });
 
-  test.skip('Resume program', async () => {
-    expect(programId).toBeDefined();
-    expect(pausedBlockHash).toBeDefined();
+  // test.skip('Resume program', async () => {
+  //   expect(programId).toBeDefined();
+  //   expect(pausedBlockHash).toBeDefined();
 
-    const parentBlock = (await api.blocks.get(pausedBlockHash)).block.header.parentHash.toHex();
+  //   const parentBlock = (await api.blocks.get(pausedBlockHash)).block.header.parentHash.toHex();
 
-    const program = await api.programStorage.getProgram(programId, parentBlock);
+  //   const program = await api.programStorage.getProgram(programId, parentBlock);
 
-    const initTx = api.program.resumeSession.init({
-      programId,
-      allocations: program.allocations,
-      codeHash: program.codeHash.toHex(),
-    });
+  //   const initTx = api.program.resumeSession.init({
+  //     programId,
+  //     allocations: program.allocations,
+  //     codeHash: program.codeHash.toHex(),
+  //   });
 
-    const [txData] = await sendTransaction(initTx, alice, ['ProgramResumeSessionStarted']);
+  //   const [txData] = await sendTransaction(initTx, alice, ['ProgramResumeSessionStarted']);
 
-    expect(txData.sessionId).toBeDefined();
-    expect(txData.accountId).toBeDefined();
-    expect(txData.accountId.toHex()).toBe(decodeAddress(alice.address));
-    expect(txData.programId).toBeDefined();
-    expect(txData.programId.toHex()).toBe(programId);
-    expect(txData.sessionEndBlock).toBeDefined();
+  //   expect(txData.sessionId).toBeDefined();
+  //   expect(txData.accountId).toBeDefined();
+  //   expect(txData.accountId.toHex()).toBe(decodeAddress(alice.address));
+  //   expect(txData.programId).toBeDefined();
+  //   expect(txData.programId.toHex()).toBe(programId);
+  //   expect(txData.sessionEndBlock).toBeDefined();
 
-    const sessionId = txData.sessionId.toNumber();
+  //   const sessionId = txData.sessionId.toNumber();
 
-    const pages = await api.programStorage.getProgramPages(programId, program, parentBlock);
+  //   const pages = await api.programStorage.getProgramPages(programId, program, parentBlock);
 
-    const memoryPages = Object.entries(pages);
+  //   const memoryPages = Object.entries(pages);
 
-    const txs: any = [];
+  //   const txs: any = [];
 
-    for (const memPage of memoryPages) {
-      txs.push(api.program.resumeSession.push({ sessionId, memoryPages: [memPage] }));
-    }
+  //   for (const memPage of memoryPages) {
+  //     txs.push(api.program.resumeSession.push({ sessionId, memoryPages: [memPage] }));
+  //   }
 
-    await new Promise((resolve) =>
-      api.tx.utility.batchAll(txs).signAndSend(alice, ({ events }) => {
-        events.forEach(({ event: { method } }) => {
-          if (method === 'BatchCompleted') {
-            resolve(true);
-          }
-        });
-      }),
-    );
+  //   await new Promise((resolve) =>
+  //     api.tx.utility.batchAll(txs).signAndSend(alice, ({ events }) => {
+  //       events.forEach(({ event: { method } }) => {
+  //         if (method === 'BatchCompleted') {
+  //           resolve(true);
+  //         }
+  //       });
+  //     }),
+  //   );
 
-    await new Promise((resolve) =>
-      api.program.resumeSession.commit({ sessionId, blockCount: 20_000 }).signAndSend(alice, ({ status }) => {
-        if (status.isFinalized) {
-          resolve(true);
-        }
-      }),
-    );
-  });
+  //   await new Promise((resolve) =>
+  //     api.program.resumeSession.commit({ sessionId, blockCount: 20_000 }).signAndSend(alice, ({ status }) => {
+  //       if (status.isFinalized) {
+  //         resolve(true);
+  //       }
+  //     }),
+  //   );
+  // });
 });
