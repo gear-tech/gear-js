@@ -2,7 +2,7 @@ import { CSSProperties, ReactNode } from 'react';
 import cx from 'clsx';
 import { ReactComponent as CrossSVG } from '../../assets/images/cross.svg';
 import { Button } from '../button';
-import styles from './alert.module.css';
+import styles from './alert.module.scss';
 
 type Options = {
   type: 'info' | 'error' | 'loading' | 'success';
