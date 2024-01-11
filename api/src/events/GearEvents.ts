@@ -12,6 +12,8 @@ import {
   UserMessageReadData,
   UserMessageSentData,
   VoucherIssuedData,
+  VoucherRevokedData,
+  VoucherUpdatedData,
 } from './GearEventData';
 
 export interface GearEvent<D extends GenericEventData> extends GenericEvent {
@@ -39,3 +41,7 @@ export type Transfer = GearEvent<TransferData>;
 export type ProgramResumeSessionStarted = GearEvent<ProgramResumeSessionStartedData>;
 
 export type VoucherIssued = GearEvent<VoucherIssuedData>;
+
+export type VoucherUpdated = GearEvent<VoucherUpdatedData>;
+
+export type VoucherRevoked = GearEvent<VoucherRevokedData>;

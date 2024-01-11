@@ -8,4 +8,4 @@ RUN wget https://get.gear.rs/gear-nightly-x86_64-unknown-linux-gnu.tar.xz
 RUN tar -xvf gear-nightly-x86_64-unknown-linux-gnu.tar.xz
 RUN chmod +x gear
 
-CMD ["/opt/gear",  "--dev", "--tmp", "--unsafe-ws-external", "--unsafe-rpc-external", "--rpc-methods", "Unsafe", "--rpc-cors", "all"]
+CMD ["/opt/gear", "--dev", "--tmp", "--unsafe-rpc-external", "--rpc-methods", "Unsafe", "--rpc-cors", "all"]

@@ -28,7 +28,7 @@
     "generate:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package sample-polkadotjs-typegen/interfaces --endpoint ./gear.json --output ./src/interfaces",
     "lint": "eslint . --ext .ts --ignore-pattern lib/ --ignore-pattern node_modules/",
     "lint:fix": "eslint --fix . --ext .ts --ignore-pattern lib/ --ignore-pattern node_modules/",
-    "get:metadata": "curl -H \"Content-Type: application/json\" -d '{\"id\":\"1\", \"jsonrpc\":\"2.0\", \"method\": \"state_getMetadata\", \"params\":[]}' http://localhost:9933 > gear.json"
+    "get:metadata": "curl -H \"Content-Type: application/json\" -d '{\"id\":\"1\", \"jsonrpc\":\"2.0\", \"method\": \"state_getMetadata\", \"params\":[]}' http://localhost:9944 > gear.json"
   },
   "exports": {
     "./cjs/package.json": "./cjs/package.json",
@@ -49,19 +49,19 @@
   },
   "license": "GPL-3.0",
   "peerDependencies": {
-    "@polkadot/api": "10.10.1",
-    "@polkadot/wasm-crypto": "7.2.2",
+    "@polkadot/api": "10.11.2",
+    "@polkadot/wasm-crypto": "7.3.2",
     "rxjs": "7.8.1"
   },
   "devDependencies": {
     "@babel/plugin-transform-typescript": "7.22.15",
     "@babel/preset-env": "7.22.15",
     "@babel/preset-typescript": "7.22.15",
-    "@polkadot/api": "10.10.1",
-    "@polkadot/typegen": "10.10.1",
-    "@polkadot/types": "10.10.1",
-    "@polkadot/types-codec": "^10.10.1",
-    "@polkadot/wasm-crypto": "7.2.2",
+    "@polkadot/api": "10.11.2",
+    "@polkadot/typegen": "10.11.2",
+    "@polkadot/types": "10.11.2",
+    "@polkadot/types-codec": "10.11.2",
+    "@polkadot/wasm-crypto": "7.3.2",
     "@rollup/plugin-commonjs": "25.0.4",
     "@rollup/plugin-json": "6.0.0",
     "@rollup/plugin-node-resolve": "15.2.1",

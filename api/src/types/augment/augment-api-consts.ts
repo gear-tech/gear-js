@@ -1,7 +1,7 @@
 import '@polkadot/api-base/types/consts';
 
 import { GearCommonGasMultiplier, PalletGearSchedule } from '../lookup';
-import type { bool, u128, u32, u64 } from '@polkadot/types-codec';
+import type { bool, u128, u32, u64, u8 } from '@polkadot/types-codec';
 import type { AccountId32 } from '@polkadot/types/interfaces/runtime';
 import type { ApiTypes } from '@polkadot/api-base/types';
 import type { Codec } from '@polkadot/types-codec/types';
@@ -24,6 +24,10 @@ declare module '@polkadot/api-base/types/consts' {
        * The maximum amount of messages that can be produced in single run.
        **/
       outgoingLimit: u32 & AugmentedConst<ApiType>;
+      /**
+       * Performance multiplier.
+       **/
+      performanceMultiplier: u32 & AugmentedConst<ApiType>;
       /**
        * The program rent cost per block.
        **/
@@ -113,6 +117,18 @@ declare module '@polkadot/api-base/types/consts' {
       [key: string]: Codec;
     };
     gearVoucher: {
+      /**
+       * Maximal duration in blocks voucher could be issued/prolonged for.
+       **/
+      maxDuration: u32 & AugmentedConst<ApiType>;
+      /**
+       * Maximal amount of programs to be specified to interact with.
+       **/
+      maxProgramsAmount: u8 & AugmentedConst<ApiType>;
+      /**
+       * Minimal duration in blocks voucher could be issued/prolonged for.
+       **/
+      minDuration: u32 & AugmentedConst<ApiType>;
       /**
        * The pallet id, used for deriving its sovereign account ID.
        **/

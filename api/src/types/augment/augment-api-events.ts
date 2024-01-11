@@ -1,7 +1,7 @@
 import '@polkadot/api-base/types/events';
 
 import type { ApiTypes, AugmentedEvent } from '@polkadot/api-base/types';
-import type { BTreeMap, BTreeSet, Option, u128, u32 } from '@polkadot/types-codec';
+import type { BTreeMap, BTreeSet, Option, u32 } from '@polkadot/types-codec';
 import {
   GearCommonEventCodeChangeKind,
   GearCommonEventDispatchStatus,
@@ -15,6 +15,7 @@ import {
   GearCoreIdsMessageId,
   GearCoreIdsProgramId,
   GearCoreMessageUserUserMessage,
+  PalletGearVoucherInternalVoucherId,
 } from '../lookup';
 import type { AccountId32 } from '@polkadot/types/interfaces/runtime';
 
@@ -105,8 +106,8 @@ declare module '@polkadot/api-base/types/events' {
        **/
       ProgramResumeSessionStarted: AugmentedEvent<
         ApiType,
-        [sessionId: u128, accountId: AccountId32, programId: GearCoreIdsProgramId, sessionEndBlock: u32],
-        { sessionId: u128; accountId: AccountId32; programId: GearCoreIdsProgramId; sessionEndBlock: u32 }
+        [sessionId: u32, accountId: AccountId32, programId: GearCoreIdsProgramId, sessionEndBlock: u32],
+        { sessionId: u32; accountId: AccountId32; programId: GearCoreIdsProgramId; sessionEndBlock: u32 }
       >;
       /**
        * The pseudo-inherent extrinsic that runs queue processing rolled back or not executed.
@@ -137,12 +138,30 @@ declare module '@polkadot/api-base/types/events' {
     };
     gearVoucher: {
       /**
-       * A new voucher issued.
+       * Voucher has been issued.
        **/
       VoucherIssued: AugmentedEvent<
         ApiType,
-        [holder: AccountId32, program: GearCoreIdsProgramId, value: u128],
-        { holder: AccountId32; program: GearCoreIdsProgramId; value: u128 }
+        [owner: AccountId32, spender: AccountId32, voucherId: PalletGearVoucherInternalVoucherId],
+        { owner: AccountId32; spender: AccountId32; voucherId: PalletGearVoucherInternalVoucherId }
+      >;
+      /**
+       * Voucher has been revoked by owner.
+       *
+       * NOTE: currently means only "refunded".
+       **/
+      VoucherRevoked: AugmentedEvent<
+        ApiType,
+        [spender: AccountId32, voucherId: PalletGearVoucherInternalVoucherId],
+        { spender: AccountId32; voucherId: PalletGearVoucherInternalVoucherId }
+      >;
+      /**
+       * Voucher has been updated.
+       **/
+      VoucherUpdated: AugmentedEvent<
+        ApiType,
+        [spender: AccountId32, voucherId: PalletGearVoucherInternalVoucherId, newOwner: Option<AccountId32>],
+        { spender: AccountId32; voucherId: PalletGearVoucherInternalVoucherId; newOwner: Option<AccountId32> }
       >;
       /**
        * Generic event

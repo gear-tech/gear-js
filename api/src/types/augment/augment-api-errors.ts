@@ -23,10 +23,6 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       CodeTooLarge: AugmentedError<ApiType>;
       /**
-       * Voucher can't be redeemed
-       **/
-      FailureRedeemingVoucher: AugmentedError<ApiType>;
-      /**
        * Gas limit too high.
        *
        * Occurs when an extrinsic's declared `gas_limit` is greater than a block's maximum gas limit.
@@ -116,6 +112,12 @@ declare module '@polkadot/api-base/types/errors' {
        * Insufficient user's bank account gas balance.
        **/
       InsufficientValueBalance: AugmentedError<ApiType>;
+      /**
+       * Generic error
+       **/
+      [key: string]: AugmentedError<ApiType>;
+    };
+    gearDebug: {
       /**
        * Generic error
        **/
@@ -269,8 +271,42 @@ declare module '@polkadot/api-base/types/errors' {
       [key: string]: AugmentedError<ApiType>;
     };
     gearVoucher: {
-      FailureToCreateVoucher: AugmentedError<ApiType>;
-      FailureToRedeemVoucher: AugmentedError<ApiType>;
+      /**
+       * The origin is not eligible to execute call.
+       **/
+      BadOrigin: AugmentedError<ApiType>;
+      /**
+       * Error trying transfer balance to/from voucher account.
+       **/
+      BalanceTransfer: AugmentedError<ApiType>;
+      /**
+       * Voucher issue/prolongation duration out of [min; max] constants.
+       **/
+      DurationOutOfBounds: AugmentedError<ApiType>;
+      /**
+       * Destination program is not in whitelisted set for voucher.
+       **/
+      InappropriateDestination: AugmentedError<ApiType>;
+      /**
+       * Voucher with given identifier doesn't exist for given spender id.
+       **/
+      InexistentVoucher: AugmentedError<ApiType>;
+      /**
+       * Voucher still valid and couldn't be revoked.
+       **/
+      IrrevocableYet: AugmentedError<ApiType>;
+      /**
+       * Try to whitelist more programs than allowed.
+       **/
+      MaxProgramsLimitExceeded: AugmentedError<ApiType>;
+      /**
+       * Failed to query destination of the prepaid call.
+       **/
+      UnknownDestination: AugmentedError<ApiType>;
+      /**
+       * Voucher has expired and couldn't be used.
+       **/
+      VoucherExpired: AugmentedError<ApiType>;
       /**
        * Generic error
        **/

@@ -3,8 +3,14 @@ import '@polkadot/api-base/types/submittable';
 import type { AnyNumber, ITuple } from '@polkadot/types-codec/types';
 import type { ApiTypes, AugmentedSubmittable } from '@polkadot/api-base/types';
 import type { BTreeSet, Bytes, Option, Vec, bool, u128, u32, u64 } from '@polkadot/types-codec';
-import { GearCoreIdsCodeId, GearCoreIdsMessageId, GearCoreIdsProgramId, PalletGearVoucherPrepaidCall } from '../lookup';
-import type { MultiAddress } from '@polkadot/types/interfaces/runtime';
+import {
+  GearCoreIdsCodeId,
+  GearCoreIdsMessageId,
+  GearCoreIdsProgramId,
+  PalletGearVoucherInternalPrepaidCall,
+  PalletGearVoucherInternalVoucherId,
+} from '../lookup';
+import type { AccountId32 } from '@polkadot/types/interfaces/runtime';
 
 declare module '@polkadot/api-base/types/submittable' {
   interface AugmentedSubmittables<ApiType extends ApiTypes> {
@@ -45,12 +51,12 @@ declare module '@polkadot/api-base/types/submittable' {
         (
           codeId: GearCoreIdsCodeId | string | Uint8Array,
           salt: Bytes | string | Uint8Array,
-          initPayload: Bytes | string | Uint8Array | number[],
+          initPayload: Bytes | string | Uint8Array,
           gasLimit: u64 | AnyNumber | Uint8Array,
           value: u128 | AnyNumber | Uint8Array,
           keepAlive: bool | boolean | Uint8Array,
         ) => SubmittableExtrinsic<ApiType>,
-        [GearCoreIdsCodeId, Bytes, Bytes, u64, u128]
+        [GearCoreIdsCodeId, Bytes, Bytes, u64, u128, bool]
       >;
       /**
        * Pay additional rent for the program.
@@ -73,10 +79,10 @@ declare module '@polkadot/api-base/types/submittable' {
        **/
       resumeSessionCommit: AugmentedSubmittable<
         (
-          sessionId: u128 | AnyNumber | Uint8Array,
+          sessionId: u32 | AnyNumber | Uint8Array,
           blockCount: u32 | AnyNumber | Uint8Array,
         ) => SubmittableExtrinsic<ApiType>,
-        [u128, u32]
+        [u32, u32]
       >;
       /**
        * Starts a resume session of the previously paused program.
@@ -113,7 +119,7 @@ declare module '@polkadot/api-base/types/submittable' {
             | [u32 | AnyNumber | Uint8Array, Bytes | string | Uint8Array][]
             | string,
         ) => SubmittableExtrinsic<ApiType>,
-        [u128, Vec<ITuple<[u32, Bytes]>>]
+        [u32, Vec<ITuple<[u32, Bytes]>>]
       >;
       /**
        * Process message queue
@@ -144,7 +150,7 @@ declare module '@polkadot/api-base/types/submittable' {
       sendMessage: AugmentedSubmittable<
         (
           destination: GearCoreIdsProgramId | string | Uint8Array,
-          payload: Bytes | string | Uint8Array | number[],
+          payload: Bytes | string | Uint8Array,
           gasLimit: u64 | AnyNumber | Uint8Array,
           value: u128 | AnyNumber | Uint8Array,
           keepAlive: bool | boolean | Uint8Array,
@@ -169,7 +175,7 @@ declare module '@polkadot/api-base/types/submittable' {
       sendReply: AugmentedSubmittable<
         (
           replyToId: GearCoreIdsMessageId | string | Uint8Array,
-          payload: Bytes | string | Uint8Array | number[],
+          payload: Bytes | string | Uint8Array,
           gasLimit: u64 | AnyNumber | Uint8Array,
           value: u128 | AnyNumber | Uint8Array,
           keepAlive: bool | boolean | Uint8Array,
@@ -248,12 +254,12 @@ declare module '@polkadot/api-base/types/submittable' {
         (
           code: Bytes | string | Uint8Array,
           salt: Bytes | string | Uint8Array,
-          initPayload: Bytes | string | Uint8Array | number[],
+          initPayload: Bytes | string | Uint8Array,
           gasLimit: u64 | AnyNumber | Uint8Array,
           value: u128 | AnyNumber | Uint8Array,
           keepAlive: bool | boolean | Uint8Array,
         ) => SubmittableExtrinsic<ApiType>,
-        [Bytes, Bytes, Bytes, u64, u128]
+        [Bytes, Bytes, Bytes, u64, u128, bool]
       >;
       /**
        * Generic tx
@@ -261,45 +267,65 @@ declare module '@polkadot/api-base/types/submittable' {
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
     gearVoucher: {
+      call: AugmentedSubmittable<
+        (
+          voucherId: PalletGearVoucherInternalVoucherId | string | Uint8Array,
+          call: PalletGearVoucherInternalPrepaidCall | { SendMessage: any } | { SendReply: any } | string | Uint8Array,
+        ) => SubmittableExtrinsic<ApiType>,
+        [PalletGearVoucherInternalVoucherId, PalletGearVoucherInternalPrepaidCall]
+      >;
       /**
        * Dispatch allowed with voucher call.
        **/
-      call: AugmentedSubmittable<
+      callDeprecated: AugmentedSubmittable<
         (
-          call: PalletGearVoucherPrepaidCall | { SendMessage: any } | { SendReply: any } | string | Uint8Array,
+          call: PalletGearVoucherInternalPrepaidCall | { SendMessage: any } | { SendReply: any } | string | Uint8Array,
         ) => SubmittableExtrinsic<ApiType>,
-        [PalletGearVoucherPrepaidCall]
+        [PalletGearVoucherInternalPrepaidCall]
       >;
-      /**
-       * Issue a new voucher for a `user` to be used to pay for sending messages
-       * to `program_id` program.
-       *
-       * The dispatch origin for this call must be _Signed_.
-       *
-       * - `to`: The voucher holder account id.
-       * - `program`: The program id, messages to whom can be paid with the voucher.
-       * NOTE: the fact a program with such id exists in storage is not checked - it's
-       * a caller's responsibility to ensure the consistency of the input parameters.
-       * - `amount`: The voucher amount.
-       *
-       * ## Complexity
-       * O(Z + C) where Z is the length of the call and C its execution weight.
-       **/
       issue: AugmentedSubmittable<
         (
-          to:
-            | MultiAddress
-            | { Id: any }
-            | { Index: any }
-            | { Raw: any }
-            | { Address32: any }
-            | { Address20: any }
-            | string
-            | Uint8Array,
-          program: GearCoreIdsProgramId | string | Uint8Array,
-          value: u128 | AnyNumber | Uint8Array,
+          spender: AccountId32 | string | Uint8Array,
+          balance: u128 | AnyNumber | Uint8Array,
+          programs:
+            | Option<Vec<GearCoreIdsProgramId>>
+            | null
+            | Uint8Array
+            | Vec<GearCoreIdsProgramId>
+            | (GearCoreIdsProgramId | string | Uint8Array)[],
+          validity: u32 | AnyNumber | Uint8Array,
         ) => SubmittableExtrinsic<ApiType>,
-        [MultiAddress, GearCoreIdsProgramId, u128]
+        [AccountId32, u128, Option<Vec<GearCoreIdsProgramId>>, u32]
+      >;
+      revoke: AugmentedSubmittable<
+        (
+          spender: AccountId32 | string | Uint8Array,
+          voucherId: PalletGearVoucherInternalVoucherId | string | Uint8Array,
+        ) => SubmittableExtrinsic<ApiType>,
+        [AccountId32, PalletGearVoucherInternalVoucherId]
+      >;
+      update: AugmentedSubmittable<
+        (
+          spender: AccountId32 | string | Uint8Array,
+          voucherId: PalletGearVoucherInternalVoucherId | string | Uint8Array,
+          moveOwnership: Option<AccountId32> | null | Uint8Array | AccountId32 | string,
+          balanceTopUp: Option<u128> | null | Uint8Array | u128 | AnyNumber,
+          appendPrograms:
+            | Option<Vec<GearCoreIdsProgramId>>
+            | null
+            | Uint8Array
+            | Vec<GearCoreIdsProgramId>
+            | (GearCoreIdsProgramId | string | Uint8Array)[],
+          prolongValidity: Option<u32> | null | Uint8Array | u32 | AnyNumber,
+        ) => SubmittableExtrinsic<ApiType>,
+        [
+          AccountId32,
+          PalletGearVoucherInternalVoucherId,
+          Option<AccountId32>,
+          Option<u128>,
+          Option<Vec<GearCoreIdsProgramId>>,
+          Option<u32>,
+        ]
       >;
       /**
        * Generic tx

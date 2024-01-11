@@ -79,7 +79,7 @@ jobs:
 
       - name: "Prepare: run Gear node"
         run: |          
-          nohup ./gear --dev --execution=wasm --tmp --unsafe-ws-external --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
+          nohup ./gear --dev --execution=wasm --tmp --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
 
       - name: "Prepare: sleep 3 min"
         run: sleep 180

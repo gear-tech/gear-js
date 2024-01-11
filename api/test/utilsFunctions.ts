@@ -85,7 +85,8 @@ export async function sendTransaction<E extends keyof IGearEvent | keyof IGearVo
   return new Promise((resolve, reject) => {
     submitted
       .signAndSend(account, ({ events, status }) => {
-        events.forEach(({ event: { method, data } }) => {
+        events.forEach(({ event }) => {
+          const { method, data } = event;
           if (methods.includes(method as E) && status.isInBlock) {
             result[methods.indexOf(method as E)] = data;
           } else if (method === 'ExtrinsicFailed') {
@@ -93,7 +94,7 @@ export async function sendTransaction<E extends keyof IGearEvent | keyof IGearVo
           }
         });
         if (status.isInBlock) {
-          resolve(result);
+          resolve([...result, status.asInBlock.toHex()]);
         }
       })
       .catch((err) => {
