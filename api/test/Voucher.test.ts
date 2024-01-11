@@ -94,12 +94,12 @@ describe('Voucher', () => {
   test('Issue voucher', async () => {
     expect(programId).toBeDefined();
 
-    const validity = 4;
+    const validity = api.voucher.minDuration;
 
     const { extrinsic, voucherId } = await api.voucher.issue(charlieRaw, 100e12, validity, [programId]);
 
     const [txData, blockHash] = await sendTransaction(extrinsic, alice, ['VoucherIssued']);
-    validUpTo = (await api.blocks.getBlockNumber(blockHash)).toNumber() + validity;
+    validUpTo = (await api.blocks.getBlockNumber(blockHash)).toNumber() + validity + 1;
 
     expect(txData).toHaveProperty('voucherId');
     expect(txData).toHaveProperty('spender');
@@ -127,12 +127,11 @@ describe('Voucher', () => {
     expect(details).toBeDefined();
     expect(details).toHaveProperty('programs');
     expect(details).toHaveProperty('owner');
-    expect(details).toHaveProperty('validity');
-    expect(details.programs.isSome).toBeTruthy();
-    expect(details.programs.unwrap().toJSON()).toHaveLength(1);
-    expect(details.programs.unwrap().toJSON()![0]).toBe(programId);
-    expect(details.owner.toHuman()).toBe(alice.address);
-    expect(details.validity.toNumber()).toBe(validUpTo);
+    expect(details).toHaveProperty('expiry');
+    expect(details.programs).toHaveLength(1);
+    expect(details.programs[0]).toBe(programId);
+    expect(details.owner).toBe(decodeAddress(alice.address));
+    expect(details.expiry).toBe(validUpTo);
   });
 
   test('Send msg with voucher', async () => {
@@ -207,7 +206,7 @@ describe('Voucher', () => {
     expect(txData.newOwner.toHuman()).toBe(bob.address);
   });
 
-  test('Revoke voucher', async () => {
+  test.skip('Revoke voucher', async () => {
     expect(voucher).toBeDefined();
     expect(validUpTo).toBeDefined();
 

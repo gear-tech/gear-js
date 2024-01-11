@@ -1,4 +1,5 @@
 import { BalanceOf } from '@polkadot/types/interfaces';
+import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 
@@ -23,4 +24,19 @@ export interface IUpdateVoucherParams {
    * Prolong the voucher validity.
    */
   prolongValidity?: number;
+}
+
+export interface IVoucherDetails {
+  /**
+   * The voucher owner.
+   */
+  owner: HexString;
+  /**
+   * The voucher validity.
+   */
+  expiry: number;
+  /**
+   * The voucher programs.
+   */
+  programs: string[];
 }

@@ -213,6 +213,9 @@ declare module '@polkadot/api-base/types/storage' {
         [GearCoreIdsProgramId]
       > &
         QueryableStorageEntry<ApiType, [GearCoreIdsProgramId]>;
+      /**
+       * Generic query
+       **/
       [key: string]: QueryableStorageEntry<ApiType>;
     };
     gearScheduler: {
@@ -246,7 +249,16 @@ declare module '@polkadot/api-base/types/storage' {
       [key: string]: QueryableStorageEntry<ApiType>;
     };
     gearVoucher: {
+      /**
+       * Storage containing amount of the total vouchers issued.
+       *
+       * Used as nonce in voucher creation.
+       **/
       issued: AugmentedQuery<ApiType, () => Observable<Option<u64>>, []> & QueryableStorageEntry<ApiType, []>;
+      /**
+       * Double map storage containing data of the voucher,
+       * associated with some spender and voucher ids.
+       **/
       vouchers: AugmentedQuery<
         ApiType,
         (

@@ -6,7 +6,7 @@ import { Option } from '@polkadot/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { blake2AsHex } from '@polkadot/util-crypto';
 
-import { ICallOptions, IUpdateVoucherParams, PalletGearVoucherInternalVoucherInfo } from './types';
+import { ICallOptions, IUpdateVoucherParams, IVoucherDetails, PalletGearVoucherInternalVoucherInfo } from './types';
 import { GearTransaction } from './Transaction';
 import { generateVoucherId } from './utils';
 
@@ -186,6 +186,12 @@ export class GearVoucher extends GearTransaction {
     );
   }
 
+  /**
+   * ### Check if a voucher exists.
+   * @param accountId
+   * @param programId
+   * @returns
+   */
   async exists(accountId: string, programId: HexString): Promise<boolean> {
     const keyPrefixes = this._api.query.gearVoucher.vouchers.keyPrefix(accountId);
 
@@ -209,6 +215,11 @@ export class GearVoucher extends GearTransaction {
     });
   }
 
+  /**
+   * ### Get all vouchers for account.
+   * @param accountId
+   * @returns
+   */
   async getAllForAccount(accountId: string): Promise<Record<string, string[]>> {
     const result: Record<string, string[]> = {};
 
@@ -242,9 +253,45 @@ export class GearVoucher extends GearTransaction {
     return result;
   }
 
-  async getDetails(accountId: string, voucherId: string): Promise<PalletGearVoucherInternalVoucherInfo> {
+  /**
+   * ### Get voucher details.
+   * @param accountId
+   * @param voucherId
+   * @returns
+   */
+  async getDetails(accountId: string, voucherId: string): Promise<IVoucherDetails> {
     const voucher = await this._api.query.gearVoucher.vouchers(accountId, voucherId);
+    if (voucher.isNone) {
+      return null;
+    }
 
-    return voucher.unwrapOr(null);
+    const { owner, programs, expiry } = voucher.unwrap();
+
+    return {
+      owner: owner.toHex(),
+      programs: programs.unwrapOrDefault().toJSON() as string[],
+      expiry: expiry.toNumber(),
+    };
+  }
+
+  /**
+   * ### Minimum duration in blocks voucher could be issued/prolonged for.
+   */
+  get minDuration(): number {
+    return this._api.consts.gearVoucher.minDuration.toNumber();
+  }
+
+  /**
+   * ### Maximum duration in blocks voucher could be issued/prolonged for.
+   */
+  get maxDuration(): number {
+    return this._api.consts.gearVoucher.maxDuration.toNumber();
+  }
+
+  /**
+   * ### Maximum amount of programs to be specified to interact with.
+   */
+  get maxProgramsAmount(): number {
+    return this._api.consts.gearVoucher.maxProgramsAmount.toNumber();
   }
 }

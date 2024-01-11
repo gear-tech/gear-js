@@ -142,24 +142,26 @@ declare module '@polkadot/api-base/types/events' {
        **/
       VoucherIssued: AugmentedEvent<
         ApiType,
-        [voucherId: PalletGearVoucherInternalVoucherId],
-        { voucherId: PalletGearVoucherInternalVoucherId }
+        [owner: AccountId32, spender: AccountId32, voucherId: PalletGearVoucherInternalVoucherId],
+        { owner: AccountId32; spender: AccountId32; voucherId: PalletGearVoucherInternalVoucherId }
       >;
       /**
-       * Voucher has been refunded and deleted by owner.
+       * Voucher has been revoked by owner.
+       *
+       * NOTE: currently means only "refunded".
        **/
       VoucherRevoked: AugmentedEvent<
         ApiType,
-        [voucherId: PalletGearVoucherInternalVoucherId],
-        { voucherId: PalletGearVoucherInternalVoucherId }
+        [spender: AccountId32, voucherId: PalletGearVoucherInternalVoucherId],
+        { spender: AccountId32; voucherId: PalletGearVoucherInternalVoucherId }
       >;
       /**
        * Voucher has been updated.
        **/
       VoucherUpdated: AugmentedEvent<
         ApiType,
-        [voucherId: PalletGearVoucherInternalVoucherId],
-        { voucherId: PalletGearVoucherInternalVoucherId }
+        [spender: AccountId32, voucherId: PalletGearVoucherInternalVoucherId, newOwner: Option<AccountId32>],
+        { spender: AccountId32; voucherId: PalletGearVoucherInternalVoucherId; newOwner: Option<AccountId32> }
       >;
       /**
        * Generic event

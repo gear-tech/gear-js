@@ -117,6 +117,12 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       [key: string]: AugmentedError<ApiType>;
     };
+    gearDebug: {
+      /**
+       * Generic error
+       **/
+      [key: string]: AugmentedError<ApiType>;
+    };
     gearGas: {
       /**
        * `GasTree::consume` called on node, which has some balance locked.
@@ -265,13 +271,41 @@ declare module '@polkadot/api-base/types/errors' {
       [key: string]: AugmentedError<ApiType>;
     };
     gearVoucher: {
+      /**
+       * The origin is not eligible to execute call.
+       **/
       BadOrigin: AugmentedError<ApiType>;
+      /**
+       * Error trying transfer balance to/from voucher account.
+       **/
       BalanceTransfer: AugmentedError<ApiType>;
+      /**
+       * Voucher issue/prolongation duration out of [min; max] constants.
+       **/
+      DurationOutOfBounds: AugmentedError<ApiType>;
+      /**
+       * Destination program is not in whitelisted set for voucher.
+       **/
       InappropriateDestination: AugmentedError<ApiType>;
+      /**
+       * Voucher with given identifier doesn't exist for given spender id.
+       **/
       InexistentVoucher: AugmentedError<ApiType>;
+      /**
+       * Voucher still valid and couldn't be revoked.
+       **/
       IrrevocableYet: AugmentedError<ApiType>;
+      /**
+       * Try to whitelist more programs than allowed.
+       **/
       MaxProgramsLimitExceeded: AugmentedError<ApiType>;
+      /**
+       * Failed to query destination of the prepaid call.
+       **/
       UnknownDestination: AugmentedError<ApiType>;
+      /**
+       * Voucher has expired and couldn't be used.
+       **/
       VoucherExpired: AugmentedError<ApiType>;
       /**
        * Generic error

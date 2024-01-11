@@ -1183,7 +1183,7 @@ export interface PalletGearVoucherEvent extends Enum {
 export interface PalletGearVoucherInternalVoucherInfo extends Struct {
   readonly owner: AccountId32;
   readonly programs: Option<BTreeSet<GearCoreIdsProgramId>>;
-  readonly validity: u32;
+  readonly expiry: u32;
 }
 
 /** @name PalletGearVoucherError (627) */

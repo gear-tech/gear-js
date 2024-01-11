@@ -118,9 +118,17 @@ declare module '@polkadot/api-base/types/consts' {
     };
     gearVoucher: {
       /**
+       * Maximal duration in blocks voucher could be issued/prolonged for.
+       **/
+      maxDuration: u32 & AugmentedConst<ApiType>;
+      /**
        * Maximal amount of programs to be specified to interact with.
        **/
       maxProgramsAmount: u8 & AugmentedConst<ApiType>;
+      /**
+       * Minimal duration in blocks voucher could be issued/prolonged for.
+       **/
+      minDuration: u32 & AugmentedConst<ApiType>;
       /**
        * The pallet id, used for deriving its sovereign account ID.
        **/
