@@ -372,9 +372,9 @@ const allVouchers = await api.voucher.getAllForAccount(accountId);
 ```javascript
 const details = api.voucher.details(spenderAddress, voucherId);
 console.log(`Voucher details:
-  owner: ${details.owner.toHuman()}
-  programs: ${details.programs.toHuman()}
-  validity: ${details.validity.toNumber()}`);
+  owner: ${details.owner}
+  programs: ${details.programs}
+  expiry: ${details.expiry}`);
 ```
 
 #### Send a message with the issued voucher
