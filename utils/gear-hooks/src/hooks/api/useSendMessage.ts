@@ -11,13 +11,17 @@ import { EventRecord } from '@polkadot/types/interfaces';
 import { AnyJson, IKeyringPair, ISubmittableResult } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
+import BigNumber from 'bignumber.js';
 import { useContext } from 'react';
 import { AccountContext, AlertContext, ApiContext } from 'context';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
 import { getExtrinsicFailedMessage } from 'utils';
+import { useAccountDeriveBalancesAll, useBalanceFormat } from './balance';
+import { useAccountVoucherBalance } from './voucher';
 
 type UseSendMessageOptions = {
   disableAlerts?: boolean;
+  disableCheckBalance?: boolean;
   pair?: IKeyringPair;
 };
 
@@ -37,11 +41,15 @@ type VaraSendMessageOptions = Omit<SendMessageOptions, 'keepAlive'>;
 function useSendMessage(
   destination: HexString,
   metadata: ProgramMetadata | undefined,
-  { disableAlerts, pair }: UseSendMessageOptions = {},
+  { disableAlerts, disableCheckBalance, pair }: UseSendMessageOptions = {},
 ) {
   const { api, isApiReady, isVaraVersion } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
   const alert = useContext(AlertContext);
+
+  const balances = useAccountDeriveBalancesAll();
+  const { voucherBalance } = useAccountVoucherBalance(destination);
+  const { getChainBalanceValue } = useBalanceFormat();
 
   const title = 'gear.sendMessage';
 
@@ -107,6 +115,25 @@ function useSendMessage(
     }
   };
 
+  const isBalanceValid = (gasLimit: string, withVoucher: boolean) => {
+    if (disableCheckBalance) return true;
+    if (!isApiReady) throw new Error('API is not initialized');
+    if (!balances || !voucherBalance) throw new Error('No balance for account');
+
+    const existentialDeposit = api.existentialDeposit.toString();
+
+    const { freeBalance } = balances;
+    const balance = (withVoucher ? voucherBalance : freeBalance).toString();
+
+    const valuePerGas = api.valuePerGas.toString();
+    const gasLimitValue = BigNumber(gasLimit).plus(gasLimit).multipliedBy(valuePerGas);
+
+    const extraCost = getChainBalanceValue(5);
+    const transactionCost = gasLimitValue.plus(existentialDeposit).plus(extraCost);
+
+    return BigNumber(balance).isGreaterThanOrEqualTo(transactionCost);
+  };
+
   const sendMessage = async (args: SendMessageOptions | VaraSendMessageOptions) => {
     if (!isApiReady) throw new Error('API is not initialized');
     if (!account) throw new Error('No account address');
@@ -117,6 +144,20 @@ function useSendMessage(
     const { payload, gasLimit, value = 0, withVoucher = false, onSuccess, onInBlock, onError } = args;
     const { address, decodedAddress, meta } = account;
     const { source } = meta;
+
+    if (!isBalanceValid(gasLimit.toString(), withVoucher)) {
+      if (onError) onError();
+
+      const message = withVoucher ? 'Low balance on voucher' : 'Low balance on account';
+
+      if (disableAlerts) {
+        alert.error(message);
+      } else {
+        alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
+      }
+
+      return;
+    }
 
     const baseMessage = { destination, payload, gasLimit, value };
 

@@ -16,6 +16,8 @@ import {
   useAccountVoucher,
   useBalance,
   useBalanceFormat,
+  useDeriveBalancesAll,
+  useAccountDeriveBalancesAll,
   SendMessageOptions,
   UseSendMessageOptions,
 } from './api';
@@ -40,6 +42,8 @@ export {
   useAccountVoucher,
   useBalance,
   useBalanceFormat,
+  useDeriveBalancesAll,
+  useAccountDeriveBalancesAll,
   useAccount,
   useAlert,
   useApi,
