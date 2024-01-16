@@ -16,6 +16,8 @@ import {
   useAccountVoucher,
   useBalance,
   useBalanceFormat,
+  useDeriveBalancesAll,
+  useAccountDeriveBalancesAll,
   useAccount,
   useAlert,
   useApi,
@@ -25,7 +27,7 @@ import {
   UseSendMessageOptions,
 } from './hooks';
 
-import { withoutCommas } from './utils';
+import { withoutCommas, getVaraAddress } from './utils';
 
 import { AccountProvider, ApiProvider, AlertProvider } from './context';
 
@@ -35,6 +37,7 @@ import {
   DEFAULT_ERROR_OPTIONS,
   DEFAULT_SUCCESS_OPTIONS,
   DEFAULT_LOADING_OPTIONS,
+  VARA_SS58_FORMAT,
 } from './consts';
 
 import {
@@ -68,6 +71,8 @@ export {
   useAccountVoucher,
   useBalance,
   useBalanceFormat,
+  useDeriveBalancesAll,
+  useAccountDeriveBalancesAll,
   useAccount,
   useAlert,
   useApi,
@@ -77,11 +82,13 @@ export {
   useCreateHandler,
   useSendMessageHandler,
   withoutCommas,
+  getVaraAddress,
   DEFAULT_OPTIONS,
   DEFAULT_INFO_OPTIONS,
   DEFAULT_ERROR_OPTIONS,
   DEFAULT_SUCCESS_OPTIONS,
   DEFAULT_LOADING_OPTIONS,
+  VARA_SS58_FORMAT,
   AlertType,
 };
 
