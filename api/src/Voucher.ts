@@ -15,8 +15,9 @@ export class GearVoucher extends GearTransaction {
    * ### Issue a new voucher for a `user` to be used to pay for sending messages to `program_id` program.
    * @param spender The voucher holder account id.
    * @param value The voucher amount.
-   * @param validity The number of the block until which the voucher is valid.
+   * @param duration (optional) The number of the block until which the voucher is valid. If not specified, the voucher is valid in `api.voucher.minDuration` blocks.
    * @param programs (optional) The list of programs that the voucher can be used for. If not specified, the voucher can be used for any program.
+   * @param codeUploading (optional) Whether the voucher can be used for uploading code.
    * @returns The voucher id and the extrinsic to submit.
    *
    * @example
@@ -32,15 +33,22 @@ export class GearVoucher extends GearTransaction {
   async issue(
     spender: HexString,
     value: number | bigint | BalanceOf,
-    validity: number,
+    duration?: number,
     programs?: HexString[],
+    codeUploading = false,
   ): Promise<{ extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>; voucherId: HexString }> {
     const nonce = await this._api.query.gearVoucher.issued();
 
     const nextNonce = nonce.unwrapOrDefault().addn(1).toArray('le', 8);
     const voucherId = generateVoucherId(nextNonce);
 
-    this.extrinsic = this._api.tx.gearVoucher.issue(spender, value, programs || null, validity);
+    this.extrinsic = this._api.tx.gearVoucher.issue(
+      spender,
+      value,
+      programs || null,
+      codeUploading,
+      duration || this.minDuration,
+    );
     return { extrinsic: this.extrinsic, voucherId };
   }
 
@@ -100,6 +108,16 @@ export class GearVoucher extends GearTransaction {
       const [replyToId, payload, gasLimit, value, keepAlive] = params.SendReply.args;
       return this._api.tx.gearVoucher.call(voucherId, {
         SendReply: { replyToId, payload, gasLimit, value, keepAlive },
+      });
+    } else if ('UploadCode' in params) {
+      if (params.UploadCode.method.method !== 'uploadCode') {
+        throw new Error(`Invalid method name. Expected 'UploadCode' but actual is ${params.UploadCode.method.method}`);
+      }
+
+      const [code] = params.UploadCode.args;
+
+      return this._api.tx.gearVoucher.call(voucherId, {
+        UploadCode: { code },
       });
     }
 
@@ -173,7 +191,13 @@ export class GearVoucher extends GearTransaction {
     voucherId: string,
     params: IUpdateVoucherParams,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
-    if (!params.moveOwnership && !params.balanceTopUp && !params.appendPrograms && !params.prolongValidity) {
+    if (
+      !params.moveOwnership &&
+      !params.balanceTopUp &&
+      !params.appendPrograms &&
+      !params.prolongDuration &&
+      (params.codeUploading === undefined || params.codeUploading === null)
+    ) {
       throw new Error('At least one of the parameters must be specified');
     }
     return this._api.tx.gearVoucher.update(
@@ -182,7 +206,8 @@ export class GearVoucher extends GearTransaction {
       params.moveOwnership || null,
       params.balanceTopUp || null,
       params.appendPrograms || null,
-      params.prolongValidity || null,
+      params.codeUploading || null,
+      params.prolongDuration || null,
     );
   }
 

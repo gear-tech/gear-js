@@ -1,0 +1,11 @@
+[package]
+name = "empty"
+version = "0.1.0"
+authors = ["Gear Technologies"]
+edition = "2021"
+
+[dependencies]
+gstd = { git = "https://github.com/gear-tech/gear.git" }
+
+[build-dependencies]
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git" }

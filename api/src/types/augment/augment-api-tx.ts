@@ -1,6 +1,6 @@
 import '@polkadot/api-base/types/submittable';
 
-import type { AnyNumber, ITuple } from '@polkadot/types-codec/types';
+import type { AnyNumber, Codec, ITuple } from '@polkadot/types-codec/types';
 import type { ApiTypes, AugmentedSubmittable } from '@polkadot/api-base/types';
 import type { BTreeSet, Bytes, Option, Vec, bool, u128, u32, u64 } from '@polkadot/types-codec';
 import {
@@ -270,7 +270,33 @@ declare module '@polkadot/api-base/types/submittable' {
       call: AugmentedSubmittable<
         (
           voucherId: PalletGearVoucherInternalVoucherId | string | Uint8Array,
-          call: PalletGearVoucherInternalPrepaidCall | { SendMessage: any } | { SendReply: any } | string | Uint8Array,
+          call:
+            | PalletGearVoucherInternalPrepaidCall
+            | {
+                SendMessage: {
+                  destination: string | Codec;
+                  payload: string | Uint8Array | Codec;
+                  gasLimit: number | bigint | Uint8Array | Codec;
+                  value: number | bigint | Uint8Array | Codec;
+                  keepAlive: boolean | Uint8Array | Codec;
+                };
+              }
+            | {
+                SendReply: {
+                  replyToId: string | Codec;
+                  payload: string | Uint8Array | Codec;
+                  gasLimit: number | bigint | Uint8Array | Codec;
+                  value: number | bigint | Uint8Array | Codec;
+                  keepAlive: boolean | Uint8Array | Codec;
+                };
+              }
+            | {
+                UploadCode: {
+                  code: string | Uint8Array | Codec;
+                };
+              }
+            | string
+            | Uint8Array,
         ) => SubmittableExtrinsic<ApiType>,
         [PalletGearVoucherInternalVoucherId, PalletGearVoucherInternalPrepaidCall]
       >;
@@ -288,14 +314,15 @@ declare module '@polkadot/api-base/types/submittable' {
           spender: AccountId32 | string | Uint8Array,
           balance: u128 | AnyNumber | Uint8Array,
           programs:
-            | Option<Vec<GearCoreIdsProgramId>>
+            | Option<BTreeSet<GearCoreIdsProgramId>>
             | null
             | Uint8Array
-            | Vec<GearCoreIdsProgramId>
-            | (GearCoreIdsProgramId | string | Uint8Array)[],
-          validity: u32 | AnyNumber | Uint8Array,
+            | BTreeSet<GearCoreIdsProgramId>
+            | string[],
+          codeUploading: bool | boolean | Uint8Array,
+          duration: u32 | AnyNumber | Uint8Array,
         ) => SubmittableExtrinsic<ApiType>,
-        [AccountId32, u128, Option<Vec<GearCoreIdsProgramId>>, u32]
+        [AccountId32, u128, Option<BTreeSet<GearCoreIdsProgramId>>, bool, u32]
       >;
       revoke: AugmentedSubmittable<
         (
@@ -311,19 +338,22 @@ declare module '@polkadot/api-base/types/submittable' {
           moveOwnership: Option<AccountId32> | null | Uint8Array | AccountId32 | string,
           balanceTopUp: Option<u128> | null | Uint8Array | u128 | AnyNumber,
           appendPrograms:
-            | Option<Vec<GearCoreIdsProgramId>>
+            | Option<Option<BTreeSet<GearCoreIdsProgramId>>>
             | null
             | Uint8Array
-            | Vec<GearCoreIdsProgramId>
-            | (GearCoreIdsProgramId | string | Uint8Array)[],
-          prolongValidity: Option<u32> | null | Uint8Array | u32 | AnyNumber,
+            | Option<BTreeSet<GearCoreIdsProgramId>>
+            | BTreeSet<GearCoreIdsProgramId>
+            | (string | Uint8Array)[],
+          codeUploading: Option<bool> | null | Uint8Array | bool | boolean,
+          prolongDuration: Option<u32> | null | Uint8Array | u32 | AnyNumber,
         ) => SubmittableExtrinsic<ApiType>,
         [
           AccountId32,
           PalletGearVoucherInternalVoucherId,
           Option<AccountId32>,
           Option<u128>,
-          Option<Vec<GearCoreIdsProgramId>>,
+          Option<Option<BTreeSet<GearCoreIdsProgramId>>>,
+          Option<bool>,
           Option<u32>,
         ]
       >;

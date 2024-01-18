@@ -5,7 +5,8 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 
 export type ICallOptions =
   | { SendMessage: SubmittableExtrinsic<'promise', ISubmittableResult> }
-  | { SendReply: SubmittableExtrinsic<'promise', ISubmittableResult> };
+  | { SendReply: SubmittableExtrinsic<'promise', ISubmittableResult> }
+  | { UploadCode: SubmittableExtrinsic<'promise', ISubmittableResult> };
 
 export interface IUpdateVoucherParams {
   /**
@@ -21,9 +22,13 @@ export interface IUpdateVoucherParams {
    */
   appendPrograms?: string[];
   /**
-   * Prolong the voucher validity.
+   * Enable or disable code uploading.
    */
-  prolongValidity?: number;
+  codeUploading?: boolean;
+  /**
+   * Prolong the duration of th voucher validity.
+   */
+  prolongDuration?: number;
 }
 
 export interface IVoucherDetails {
