@@ -201,7 +201,7 @@ export class GearMessage extends GearTransaction {
    * @param args Message parameters
    * @param metaOrHexRegistry (optional) Registry in hex format or ProgramMetadata
    * @param typeName payload type (one of the default rust types if metadata or registry don't specified)
-   * @returns Submitable result
+   * @returns Submitable extrinsic
    *
    * _Note that parameter `prepaid` is not supported starting from `1010` runtime version._
    * @example
@@ -231,7 +231,7 @@ export class GearMessage extends GearTransaction {
    * @param args Message parameters
    * @param metaOrHexRegistry Metadata
    * @param typeIndexOrTypeName type index in registry or type name
-   * @returns Submitted result
+   * @returns Submittable result
    */
 
   async sendReply(

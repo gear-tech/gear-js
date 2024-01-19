@@ -348,7 +348,9 @@ const programs = ['0x1234...', '0x5678...'];
 const spenderAddress = '0x...';
 const validForOneHour = (60 * 60) / 3; // number of blocks in one hour
 
-const { voucherId, extrinsic } = await api.voucher.issue(spenderAddress, 100 * 10 ** 12, validForOneHour, programs);
+const { voucherId, extrinsic } = await api.voucher.issue(spenderAddress, 100 * 10 ** 12, validForOneHour, programs, true);
+
+// To allow the voucher to be used for code uploading, set the last argument of the `.issue` method to true
 
 extrinsic.signAndSend(account, (events) => {
   const voucherIssuedEvent = events.events.filter(({event: {method}}) => method === 'VoucherIssued') as VoucherIssued;
@@ -400,6 +402,16 @@ const messageTx = api.message.sendReply(...);
 
 const voucherTx = api.voucher.call(voucherId, { SendReply: messageTx });
 await voucherTx.signAndSend(account, (events) => {
+  console.log(events.toHuman());
+});
+```
+
+#### Upload code with issued voucher
+```javascript
+const { extrinsic } = await api.code.upload(code);
+
+const tx = api.voucher.call(voucherId, { UploadCode: extrinsic })
+await tx.signAndSend(account, (events) => {
   console.log(events.toHuman());
 });
 ```

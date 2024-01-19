@@ -216,9 +216,9 @@ describe('Voucher', () => {
 
     const code = new Uint8Array(readFileSync(join(TARGET, 'empty.opt.wasm')).buffer);
 
-    const { submitted, codeHash } = await api.code.upload(code);
+    const { extrinsic, codeHash } = await api.code.upload(code);
 
-    const tx = api.voucher.call(voucher, { UploadCode: submitted });
+    const tx = api.voucher.call(voucher, { UploadCode: extrinsic });
 
     const [txData] = await sendTransaction(tx, charlie, ['CodeChanged']);
 
