@@ -63,6 +63,7 @@ describe('Voucher', () => {
     expect(txData).toHaveProperty('holder');
     expect(txData).toHaveProperty('program');
     expect(txData).toHaveProperty('value');
+    expect(Object.keys(txData)).toHaveLength(3);
     expect(txData.holder.toHuman()).toBe(charlie.address);
     expect(txData.program.toHex()).toBe(programId);
     expect(txData.value.toNumber()).toBe(100_000_000_000_000);
@@ -96,7 +97,7 @@ describe('Voucher', () => {
 
     const validity = api.voucher.minDuration;
 
-    const { extrinsic, voucherId } = await api.voucher.issue(charlieRaw, 100e12, validity, [programId]);
+    const { extrinsic, voucherId } = await api.voucher.issue(charlieRaw, 100e12, validity, [programId], true);
 
     const [txData, blockHash] = await sendTransaction(extrinsic, alice, ['VoucherIssued']);
     validUpTo = (await api.blocks.getBlockNumber(blockHash)).toNumber() + validity + 1;
@@ -104,11 +105,13 @@ describe('Voucher', () => {
     expect(txData).toHaveProperty('voucherId');
     expect(txData).toHaveProperty('spender');
     expect(txData).toHaveProperty('owner');
+    expect(Object.keys(txData.toJSON())).toHaveLength(3);
     expect(txData.voucherId.toHex()).toBe(voucherId);
     expect(txData.spender.toHuman()).toBe(charlie.address);
     expect(txData.owner.toHuman()).toBe(alice.address);
 
     voucher = voucherId;
+    console.log(voucher, 'expires at', validUpTo);
   });
 
   test('Voucher exists', async () => {
@@ -128,6 +131,7 @@ describe('Voucher', () => {
     expect(details).toHaveProperty('programs');
     expect(details).toHaveProperty('owner');
     expect(details).toHaveProperty('expiry');
+    expect(Object.keys(details)).toHaveLength(3);
     expect(details.programs).toHaveLength(1);
     expect(details.programs[0]).toBe(programId);
     expect(details.owner).toBe(decodeAddress(alice.address));
@@ -200,10 +204,27 @@ describe('Voucher', () => {
     expect(txData).toHaveProperty('voucherId');
     expect(txData).toHaveProperty('spender');
     expect(txData).toHaveProperty('newOwner');
+    expect(Object.keys(txData.toJSON())).toHaveLength(3);
 
     expect(txData.voucherId.toHex()).toBe(voucher);
     expect(txData.spender.toHuman()).toBe(charlie.address);
     expect(txData.newOwner.toHuman()).toBe(bob.address);
+  });
+
+  test('Upload code with voucher', async () => {
+    expect(voucher).toBeDefined();
+
+    const code = new Uint8Array(readFileSync(join(TARGET, 'empty.opt.wasm')).buffer);
+
+    const { extrinsic, codeHash } = await api.code.upload(code);
+
+    const tx = api.voucher.call(voucher, { UploadCode: extrinsic });
+
+    const [txData] = await sendTransaction(tx, charlie, ['CodeChanged']);
+
+    expect(txData).toBeDefined();
+    expect(txData.id.toHex()).toBe(codeHash);
+    expect(txData.change.isActive).toBeTruthy();
   });
 
   test.skip('Revoke voucher', async () => {
@@ -224,6 +245,7 @@ describe('Voucher', () => {
     expect(txData).toBeDefined();
     expect(txData).toHaveProperty('voucherId');
     expect(txData).toHaveProperty('spender');
+    expect(Object.keys(txData.toJSON())).toHaveLength(2);
     expect(txData.voucherId.toHex()).toBe(voucher);
     expect(txData.spender.toHuman()).toBe(charlie.address);
   });

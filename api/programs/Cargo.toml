@@ -5,6 +5,7 @@ members = [
   "test-gas",
   "test-waitlist",
   "test-meta",
+  "empty"
 ]
 
 [profile.release]

@@ -11,3 +11,4 @@ test/wasm/examples/
 
 .rollup.cache
 .yarnrc.yaml
+temp/

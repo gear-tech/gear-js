@@ -280,6 +280,14 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       BalanceTransfer: AugmentedError<ApiType>;
       /**
+       * Voucher is disabled for code uploading, but requested.
+       **/
+      CodeUploadingDisabled: AugmentedError<ApiType>;
+      /**
+       * Voucher update function tries to cut voucher ability of code upload.
+       **/
+      CodeUploadingEnabled: AugmentedError<ApiType>;
+      /**
        * Voucher issue/prolongation duration out of [min; max] constants.
        **/
       DurationOutOfBounds: AugmentedError<ApiType>;

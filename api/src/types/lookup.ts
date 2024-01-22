@@ -1108,7 +1108,8 @@ export interface PalletGearVoucherCall extends Enum {
     readonly spender: AccountId32;
     readonly balance: u128;
     readonly programs: Option<BTreeSet<GearCoreIdsProgramId>>;
-    readonly validity: u32;
+    readonly codeUploading: bool;
+    readonly duration: u32;
   } & Struct;
   readonly isCall: boolean;
   readonly asCall: {
@@ -1127,7 +1128,8 @@ export interface PalletGearVoucherCall extends Enum {
     readonly moveOwnership: Option<AccountId32>;
     readonly balanceTopUp: Option<u128>;
     readonly appendPrograms: Option<Option<BTreeSet<GearCoreIdsProgramId>>>;
-    readonly prolongValidity: Option<u32>;
+    readonly codeUploading: Option<bool>;
+    readonly prolongDuration: Option<u32>;
   } & Struct;
   readonly isCallDeprecated: boolean;
   readonly asCallDeprecated: {
@@ -1156,7 +1158,11 @@ export interface PalletGearVoucherInternalPrepaidCall extends Enum {
     readonly value: u128;
     readonly keepAlive: bool;
   } & Struct;
-  readonly type: 'SendMessage' | 'SendReply';
+  readonly isUploadCode: boolean;
+  readonly asUploadCode: {
+    readonly code: Bytes;
+  } & Struct;
+  readonly type: 'SendMessage' | 'SendReply' | 'UploadCode';
 }
 
 export interface PalletGearVoucherEvent extends Enum {
@@ -1180,9 +1186,11 @@ export interface PalletGearVoucherEvent extends Enum {
   readonly type: 'VoucherIssued' | 'VoucherRevoked' | 'VoucherUpdated';
 }
 
-export interface PalletGearVoucherInternalVoucherInfo extends Struct {
+export /** @name PalletGearVoucherInternalVoucherInfo (627) */
+interface PalletGearVoucherInternalVoucherInfo extends Struct {
   readonly owner: AccountId32;
   readonly programs: Option<BTreeSet<GearCoreIdsProgramId>>;
+  readonly codeUploading: bool;
   readonly expiry: u32;
 }
 
@@ -1196,7 +1204,9 @@ export interface PalletGearVoucherError extends Enum {
   readonly isMaxProgramsLimitExceeded: boolean;
   readonly isUnknownDestination: boolean;
   readonly isVoucherExpired: boolean;
-  readonly isZeroValidity: boolean;
+  readonly isDurationOutOfBounds: boolean;
+  readonly isCodeUploadingEnabled: boolean;
+  readonly isCodeUploadingDisabled: boolean;
   readonly type:
     | 'BadOrigin'
     | 'BalanceTransfer'
@@ -1206,5 +1216,7 @@ export interface PalletGearVoucherError extends Enum {
     | 'MaxProgramsLimitExceeded'
     | 'UnknownDestination'
     | 'VoucherExpired'
-    | 'ZeroValidity';
+    | 'DurationOutOfBounds'
+    | 'CodeUploadingEnabled'
+    | 'CodeUploadingDisabled';
 }
