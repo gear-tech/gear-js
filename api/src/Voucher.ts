@@ -32,7 +32,7 @@ export class GearVoucher extends GearTransaction {
    */
   async issue(
     spender: HexString,
-    value: number | bigint | BalanceOf,
+    value: number | bigint | BalanceOf | string,
     duration?: number,
     programs?: HexString[],
     codeUploading = false,
@@ -290,12 +290,13 @@ export class GearVoucher extends GearTransaction {
       return null;
     }
 
-    const { owner, programs, expiry } = voucher.unwrap();
+    const { owner, programs, expiry, codeUploading } = voucher.unwrap();
 
     return {
       owner: owner.toHex(),
       programs: programs.unwrapOrDefault().toJSON() as string[],
       expiry: expiry.toNumber(),
+      codeUploading: codeUploading.isTrue,
     };
   }
 
