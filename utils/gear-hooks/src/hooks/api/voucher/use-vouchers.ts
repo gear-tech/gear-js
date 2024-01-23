@@ -1,12 +1,14 @@
 import { HexString } from '@gear-js/api';
-import { useApi, useAlert, useAccount } from 'hooks/context';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+
+import { AccountContext, AlertContext, ApiContext } from 'context';
 
 function useVouchers(accountAddress: string | undefined) {
-  const { api } = useApi();
-  const alert = useAlert();
+  const { api } = useContext(ApiContext);
+  const alert = useContext(AlertContext);
 
   const [vouchers, setVouchers] = useState<Record<HexString, string[]>>();
+  const isEachVoucherReady = vouchers !== undefined;
 
   useEffect(() => {
     if (!api || !accountAddress) return setVouchers(undefined);
@@ -19,11 +21,11 @@ function useVouchers(accountAddress: string | undefined) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, accountAddress]);
 
-  return vouchers;
+  return { vouchers, isEachVoucherReady };
 }
 
 function useAccountVouchers() {
-  const { account } = useAccount();
+  const { account } = useContext(AccountContext);
 
   return useVouchers(account?.address);
 }

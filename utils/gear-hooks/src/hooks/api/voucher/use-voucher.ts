@@ -1,23 +1,31 @@
-import { HexString } from '@polkadot/util/types';
-import { useContext } from 'react';
+import { HexString, IVoucherDetails } from '@gear-js/api';
+import { useContext, useEffect, useState } from 'react';
 
-import { useIsVoucherExists } from './use-is-voucher-exists';
-import { useVoucherBalance } from './use-voucher-balance';
-import { AccountContext } from 'context';
+import { AccountContext, AlertContext, ApiContext } from 'context';
 
-function useVoucher(programId: HexString | undefined, accountAddress: HexString | undefined) {
-  const { isVoucherExists, isVoucherExistsReady } = useIsVoucherExists(programId, accountAddress);
-  const { voucherBalance, isVoucherBalanceReady } = useVoucherBalance(programId, accountAddress);
+function useVoucher(accountAddress: string | undefined, voucherId: HexString | undefined) {
+  const { api } = useContext(ApiContext);
+  const alert = useContext(AlertContext);
 
-  const isVoucherReady = isVoucherExistsReady && isVoucherBalanceReady;
+  const [voucher, setVoucher] = useState<IVoucherDetails>();
+  const isVoucherReady = voucher !== undefined;
 
-  return { isVoucherExists, voucherBalance, isVoucherReady };
+  useEffect(() => {
+    if (!api || !accountAddress || !voucherId) return setVoucher(undefined);
+
+    api.voucher
+      .getDetails(accountAddress, voucherId)
+      .then((result) => setVoucher(result))
+      .catch(({ message }) => alert.error(message));
+  }, [api, accountAddress, voucherId]);
+
+  return { voucher, isVoucherReady };
 }
 
-function useAccountVoucher(programId: HexString | undefined) {
+function useAccountVoucher(voucherId: HexString | undefined) {
   const { account } = useContext(AccountContext);
 
-  return useVoucher(programId, account?.decodedAddress);
+  return useVoucher(account?.address, voucherId);
 }
 
 export { useVoucher, useAccountVoucher };

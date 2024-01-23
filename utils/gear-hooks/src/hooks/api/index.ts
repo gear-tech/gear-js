@@ -12,10 +12,8 @@ import {
 
 import {
   useIsVoucherExists,
-  useVoucherBalance,
   useVoucher,
   useIsAccountVoucherExists,
-  useAccountVoucherBalance,
   useAccountVoucher,
   useVouchers,
   useAccountVouchers,
@@ -34,10 +32,8 @@ export {
   useHandleCalculateGas,
   useReplyCalculateGas,
   useIsVoucherExists,
-  useVoucherBalance,
   useVoucher,
   useIsAccountVoucherExists,
-  useAccountVoucherBalance,
   useAccountVoucher,
   useVouchers,
   useAccountVouchers,
