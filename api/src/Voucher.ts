@@ -53,7 +53,7 @@ export class GearVoucher extends GearTransaction {
   }
 
   /**
-   * Issue a new voucher. This method is available only for runtime versions < 1050.
+   * Issue a new voucher. This method is available only for runtime versions < 1100.
    * @deprecated
    * @param to
    * @param program
@@ -125,7 +125,7 @@ export class GearVoucher extends GearTransaction {
   }
 
   /**
-   * Use a voucher to send a message to a program. This method is available only for runtime versions < 1050.
+   * Use a voucher to send a message to a program. This method is available only for runtime versions < 1100.
    * @deprecated
    * @param params
    * @returns
