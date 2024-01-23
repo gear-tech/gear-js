@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { ReactNode, useEffect, useState, MouseEvent, useCallback } from 'react';
+import { ReactNode, useEffect, useState, MouseEvent, useCallback, ReactPortal } from 'react';
 import { createPortal } from 'react-dom';
 import { Button } from '../Button/Button';
 import { ReactComponent as xSVG } from './images/x.svg';
@@ -34,7 +34,7 @@ function useMaxHeight() {
   return { bodyStyle, headerRef, footerRef };
 }
 
-const Modal = ({ heading, close, children, footer, className, size = 'normal' }: Props) => {
+const Modal = ({ heading, close, children, footer, className, size = 'normal' }: Props): ReactPortal | null => {
   const [root, setRoot] = useState<HTMLDivElement>();
   const { bodyStyle, headerRef, footerRef } = useMaxHeight();
 
