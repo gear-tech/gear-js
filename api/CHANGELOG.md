@@ -1,12 +1,13 @@
-## master
+## 0.36.0
 
-_11/07/2023_
+_01/23/2024_
 
 ### Changes
 https://github.com/gear-tech/gear-js/pull/1447
 - Read storage of memory pages according to https://github.com/gear-tech/gear/pull/3166
 
 https://github.com/gear-tech/gear-js/pull/1451
+<i><b>Breaking changes</b></i>
 - Fix `api.getExtrinsicFailedError` method. It now returns an object with the formatted docs, method and name of the error
 
 https://github.com/gear-tech/gear-js/pull/1467
@@ -14,7 +15,7 @@ https://github.com/gear-tech/gear-js/pull/1467
 - Bump polkadot dependencies to `10.11.2`
 
 https://github.com/gear-tech/gear-js/pull/1472
-- Support `uploadCode` call for vouchers.
+- Support `uploadCode` call for vouchers according to https://github.com/gear-tech/gear/pull/3672.
 
 ## 0.35.2
 
