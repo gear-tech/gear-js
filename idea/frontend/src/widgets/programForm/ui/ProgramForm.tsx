@@ -1,5 +1,5 @@
 import { ProgramMetadata } from '@gear-js/api';
-import { useApi, useBalanceFormat } from '@gear-js/react-hooks';
+import { useBalanceFormat } from '@gear-js/react-hooks';
 import { Input } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -31,7 +31,6 @@ type Props = {
 const ProgramForm = (props: Props) => {
   const { gasMethod, metaHex, metadata, source, fileName = '', renderButtons, onSubmit } = props;
 
-  const { isVaraVersion } = useApi();
   const { getChainBalanceValue, getFormattedGasValue, getChainGasValue } = useBalanceFormat();
   const schema = useValidationSchema();
 
@@ -133,9 +132,7 @@ const ProgramForm = (props: Props) => {
             block
           />
 
-          {!isVaraVersion && (
-            <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" direction="y" />
-          )}
+          <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" direction="y" />
         </div>
 
         <div className={styles.buttons}>{renderButtons({ isDisabled })}</div>

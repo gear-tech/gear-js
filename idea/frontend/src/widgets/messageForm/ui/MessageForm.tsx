@@ -1,6 +1,6 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { Button, Input, Textarea } from '@gear-js/ui';
-import { useAccount, useApi, useBalanceFormat } from '@gear-js/react-hooks';
+import { useBalanceFormat } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMemo, useState } from 'react';
@@ -30,8 +30,6 @@ type Props = {
 };
 
 const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => {
-  const { isVaraVersion } = useApi();
-  const { account } = useAccount();
   const { getChainBalanceValue, getFormattedGasValue, getChainGasValue } = useBalanceFormat();
   const schema = useValidationSchema();
 
@@ -80,17 +78,14 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
       value: getChainBalanceValue(values.value).toFixed(),
       payload: getSubmitPayload(values.payload),
       gasLimit: getChainGasValue(values.gasLimit).toFixed(),
+      keepAlive,
     };
 
-    const commonValues = isVaraVersion
-      ? { ...baseValues, prepaid: withVoucher, account: withVoucher ? account?.decodedAddress : undefined }
-      : { ...baseValues, keepAlive };
-
     if (isReply) {
-      const reply = { ...commonValues, replyToId: id };
+      const reply = { ...baseValues, replyToId: id };
       replyMessage({ reply, metadata, payloadType, withVoucher, reject: enableSubmitButton, resolve: resetForm });
     } else {
-      const message = { ...commonValues, destination: id };
+      const message = { ...baseValues, destination: id };
       sendMessage({ message, metadata, payloadType, withVoucher, reject: enableSubmitButton, resolve: resetForm });
     }
   };
@@ -153,9 +148,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
             />
           )}
 
-          {!isVaraVersion && (
-            <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" gap="1/5" />
-          )}
+          <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" gap="1/5" />
           <UseVoucherCheckbox programId={programId} />
         </Box>
 

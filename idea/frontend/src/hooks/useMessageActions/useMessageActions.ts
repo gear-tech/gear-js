@@ -14,7 +14,7 @@ import { PROGRAM_ERRORS, TransactionStatus, TransactionName } from '@/shared/con
 import { ParamsToSendMessage, ParamsToSignAndSend, ParamsToReplyMessage } from './types';
 
 const useMessageActions = () => {
-  const { api, isApiReady, isVaraVersion } = useApi();
+  const { api, isApiReady } = useApi();
   const { account } = useAccount();
   const alert = useAlert();
   const { showModal } = useModal();
@@ -82,13 +82,8 @@ const useMessageActions = () => {
         const { meta, address } = account!;
 
         const sendExtrinsic = api.message.send(message, metadata, payloadType);
-        let extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
 
-        if (isVaraVersion) {
-          extrinsic = sendExtrinsic;
-        } else {
-          extrinsic = withVoucher ? api.voucher.call({ SendMessage: sendExtrinsic }) : sendExtrinsic;
-        }
+        const extrinsic = withVoucher ? api.voucher.call({ SendMessage: sendExtrinsic }) : sendExtrinsic;
 
         const { signer } = await web3FromSource(meta.source);
         const { partialFee } = await api.message.paymentInfo(address, { signer });
@@ -124,13 +119,8 @@ const useMessageActions = () => {
         const { meta, address } = account!;
 
         const replyExtrinsic = await api.message.sendReply(reply, metadata, payloadType);
-        let extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
 
-        if (isVaraVersion) {
-          extrinsic = replyExtrinsic;
-        } else {
-          extrinsic = withVoucher ? api.voucher.call({ SendReply: replyExtrinsic }) : replyExtrinsic;
-        }
+        const extrinsic = withVoucher ? api.voucher.call({ SendReply: replyExtrinsic }) : replyExtrinsic;
 
         const { signer } = await web3FromSource(meta.source);
         const { partialFee } = await api.message.paymentInfo(address, { signer });

@@ -1,16 +1,8 @@
-import {
-  GasLimit,
-  IMessageSendOptions,
-  MessageQueued,
-  ProgramMetadata,
-  VaraMessageSendOptions,
-  decodeAddress,
-} from '@gear-js/api';
+import { GasLimit, MessageQueued, ProgramMetadata } from '@gear-js/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { AnyJson, IKeyringPair, ISubmittableResult } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
 import BigNumber from 'bignumber.js';
 import { useContext } from 'react';
 import { AccountContext, AlertContext, ApiContext } from 'context';
@@ -36,14 +28,12 @@ type SendMessageOptions = {
   onError?: () => void;
 };
 
-type VaraSendMessageOptions = Omit<SendMessageOptions, 'keepAlive'>;
-
 function useSendMessage(
   destination: HexString,
   metadata: ProgramMetadata | undefined,
   { disableAlerts, disableCheckBalance, pair }: UseSendMessageOptions = {},
 ) {
-  const { api, isApiReady, isVaraVersion } = useContext(ApiContext); // сircular dependency fix
+  const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
   const alert = useContext(AlertContext);
 
@@ -134,7 +124,7 @@ function useSendMessage(
     return BigNumber(balance).isGreaterThanOrEqualTo(transactionCost);
   };
 
-  const sendMessage = async (args: SendMessageOptions | VaraSendMessageOptions) => {
+  const sendMessage = async (args: SendMessageOptions) => {
     if (!isApiReady) throw new Error('API is not initialized');
     if (!account) throw new Error('No account address');
     if (!metadata) throw new Error('Metadata not found');
@@ -161,27 +151,12 @@ function useSendMessage(
 
     const baseMessage = { destination, payload, gasLimit, value };
 
-    let message: IMessageSendOptions | VaraMessageSendOptions;
-
-    if (isVaraVersion) {
-      const _account = pair ? decodeAddress(pair.address) : decodedAddress;
-
-      message = { ...baseMessage, prepaid: withVoucher, account: withVoucher ? _account : undefined };
-    } else {
-      const keepAlive = 'keepAlive' in args ? args.keepAlive : false;
-      message = { ...baseMessage, keepAlive };
-    }
+    const keepAlive = 'keepAlive' in args ? args.keepAlive : false;
+    const message = { ...baseMessage, keepAlive };
 
     try {
       const sendExtrinsic = api.message.send(message, metadata);
-      let extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
-
-      if (isVaraVersion) {
-        extrinsic = sendExtrinsic;
-      } else {
-        // TODO: voucher call into standalone hook?
-        extrinsic = withVoucher ? api.voucher.call({ SendMessage: sendExtrinsic }) : sendExtrinsic;
-      }
+      const extrinsic = withVoucher ? api.voucher.call({ SendMessage: sendExtrinsic }) : sendExtrinsic;
 
       const callback = (result: ISubmittableResult) => handleStatus(result, alertId, onSuccess, onInBlock, onError);
 
@@ -210,4 +185,4 @@ function useSendMessage(
   return sendMessage;
 }
 
-export { useSendMessage, SendMessageOptions, UseSendMessageOptions, VaraSendMessageOptions };
+export { useSendMessage, SendMessageOptions, UseSendMessageOptions };

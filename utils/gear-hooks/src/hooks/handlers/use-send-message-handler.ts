@@ -3,13 +3,7 @@ import { HexString } from '@polkadot/util/types';
 import { useContext } from 'react';
 import { AlertContext, ApiContext } from 'context';
 import { getAutoGasLimit } from 'utils';
-import {
-  SendMessageOptions,
-  UseSendMessageOptions,
-  useHandleCalculateGas,
-  useSendMessage,
-  VaraSendMessageOptions,
-} from '../api';
+import { SendMessageOptions, UseSendMessageOptions, useHandleCalculateGas, useSendMessage } from '../api';
 
 function useSendMessageHandler(
   destination: HexString,
@@ -22,7 +16,7 @@ function useSendMessageHandler(
   const calculateGas = useHandleCalculateGas(destination, metadata);
   const sendMessage = useSendMessage(destination, metadata, options);
 
-  return (args: Omit<SendMessageOptions, 'gasLimit'> | Omit<VaraSendMessageOptions, 'gasLimit'>) => {
+  return (args: Omit<SendMessageOptions, 'gasLimit'>) => {
     if (!isApiReady) throw new Error('API is not initialized');
 
     const { payload, value } = args;

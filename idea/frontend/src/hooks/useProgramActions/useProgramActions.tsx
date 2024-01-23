@@ -29,7 +29,7 @@ import { Payload, ParamsToCreate, ParamsToUpload, ParamsToSignAndUpload } from '
 
 const useProgramActions = () => {
   const alert = useAlert();
-  const { api, isApiReady, isVaraVersion } = useApi();
+  const { api, isApiReady } = useApi();
   const { account } = useAccount();
   const { isDevChain } = useChain();
 
@@ -48,8 +48,7 @@ const useProgramActions = () => {
 
     const { gasLimit, value, initPayload, metadata, payloadType, keepAlive } = payload;
 
-    const baseProgram = { value, codeId, gasLimit, initPayload };
-    const program = isVaraVersion ? baseProgram : { ...baseProgram, keepAlive };
+    const program = { value, codeId, gasLimit, initPayload, keepAlive };
 
     const result = api.program.create(program, metadata, payloadType);
 
@@ -61,8 +60,7 @@ const useProgramActions = () => {
 
     const { gasLimit, value, initPayload, metadata, payloadType, keepAlive } = payload;
 
-    const baseProgram = { code: optBuffer, value, gasLimit, initPayload };
-    const program = isVaraVersion ? baseProgram : { ...baseProgram, keepAlive };
+    const program = { code: optBuffer, value, gasLimit, initPayload, keepAlive };
 
     return api.program.upload(program, metadata, payloadType);
   };
