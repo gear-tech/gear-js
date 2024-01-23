@@ -1,3 +1,11 @@
+## 0.36.1
+
+_01/23/2024_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1476
+- Add `codeUploadin` field to `VoucherDetails`
+
 ## 0.36.0
 
 _01/23/2024_
