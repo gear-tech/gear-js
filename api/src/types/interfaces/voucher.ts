@@ -37,11 +37,15 @@ export interface IVoucherDetails {
    */
   owner: HexString;
   /**
-   * The voucher validity.
+   * The block number at and after which voucher couldn't be used and can be revoked by owner.
    */
   expiry: number;
   /**
-   * The voucher programs.
+   * Set of programs this voucher could be used to interact with.
    */
   programs: string[];
+  /**
+   * Flag if this voucher's covers uploading codes as prepaid call.
+   */
+  codeUploading: boolean;
 }

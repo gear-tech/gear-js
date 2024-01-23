@@ -131,11 +131,13 @@ describe('Voucher', () => {
     expect(details).toHaveProperty('programs');
     expect(details).toHaveProperty('owner');
     expect(details).toHaveProperty('expiry');
-    expect(Object.keys(details)).toHaveLength(3);
+    expect(details).toHaveProperty('codeUploading');
+    expect(Object.keys(details)).toHaveLength(4);
     expect(details.programs).toHaveLength(1);
     expect(details.programs[0]).toBe(programId);
     expect(details.owner).toBe(decodeAddress(alice.address));
     expect(details.expiry).toBe(validUpTo);
+    expect(details.codeUploading).toBeTruthy();
   });
 
   test('Send msg with voucher', async () => {
