@@ -71,7 +71,20 @@ describe('textarea tests', () => {
   });
 
   it('enters text and clicks clear button', () => {
-    render(<Textarea label="label" color="light" size="large" />);
+    const handleChange = jest.fn();
+    const handleFocus = jest.fn();
+    const handleBlur = jest.fn();
+
+    render(
+      <Textarea
+        label="label"
+        color="light"
+        size="large"
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
+      />,
+    );
 
     const inputWrapper = screen.getByTestId('inputWrapper');
     const textarea = screen.getByRole('textbox');
@@ -88,6 +101,14 @@ describe('textarea tests', () => {
 
     fireEvent.click(clearButton);
     expect(textarea).toHaveValue('');
+    expect(inputWrapper).toContainElement(clearButton);
+
+    fireEvent.blur(textarea);
+    expect(inputWrapper).not.toContainElement(clearButton);
+
+    expect(handleChange).toBeCalledTimes(2);
+    expect(handleBlur).toBeCalledTimes(1);
+    expect(handleFocus).toBeCalledTimes(1);
   });
 
   it('renders large textarea with light color', () => {

@@ -1,37 +1,30 @@
-// TODO: remove after repo @types/react resolution drop
-// @ts-ignore
-import { ChangeEvent, useId } from 'react';
-import { useField, useForm } from 'react-final-form';
-import clsx from 'clsx';
 import { CheckboxProps, checkboxStyles } from '@gear-js/ui';
+import clsx from 'clsx';
+import { useId } from 'react';
+import { FieldValues, Path, PathValue, useFormContext } from 'react-hook-form';
 
 import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
 
 import styles from './StatusCheckbox.module.scss';
 
-type Props = Omit<CheckboxProps, 'name' | 'value' | 'onChange'> & {
-  name: string;
-  value: string;
+type Props<T> = Omit<CheckboxProps, 'name' | 'value' | 'onChange'> & {
+  onSubmit: (values: T) => void;
+  name: Path<T>;
+  value: PathValue<T, Path<T>>;
   status: BulbStatus;
 };
 
-const StatusCheckbox = ({ name, label, value, status }: Props) => {
-  const { input } = useField(name, { type: 'checkbox', value });
-  const { submit } = useForm();
-
+const StatusCheckbox = <T extends FieldValues>({ name, label, value, status, onSubmit }: Props<T>) => {
   const id = useId();
+  const { register, handleSubmit } = useFormContext<T>();
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    input.onChange(event);
-    submit();
-  };
+  const onChange = () => handleSubmit(onSubmit)();
 
   const inputClasses = clsx(checkboxStyles.input, checkboxStyles.checkbox);
 
   return (
     <label htmlFor={id} className={checkboxStyles.label}>
-      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-      <input {...input} id={id} className={inputClasses} onChange={handleChange} />
+      <input type="checkbox" id={id} value={value} className={inputClasses} {...register(name, { onChange })} />
       <BulbBlock size="large" color="primary" status={status} text={label} className={styles.status} />
     </label>
   );

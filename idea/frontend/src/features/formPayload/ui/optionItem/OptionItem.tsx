@@ -1,6 +1,6 @@
-import { useState, ChangeEvent, useMemo } from 'react';
-import { useForm } from 'react-final-form';
 import { Select } from '@gear-js/ui';
+import { useState, ChangeEvent, useMemo } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import { useChangeEffect } from '@/hooks';
 import { Fieldset } from '@/shared/ui/fieldset';
@@ -11,7 +11,7 @@ import { PayloadItemProps, OPTION_ITEM_OPTIONS, DEFAULT_OPTION_VALUE } from '../
 const OptionItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadItemProps) => {
   const { name, type } = typeStructure;
 
-  const { change } = useForm();
+  const { setValue } = useFormContext();
   const [selected, setSelected] = useState(DEFAULT_OPTION_VALUE);
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => setSelected(event.target.value);
@@ -24,7 +24,7 @@ const OptionItem = ({ title, levelName, typeStructure, renderNextItem }: Payload
   useChangeEffect(() => {
     const fieldValue = isNone ? null : parsedPayload;
 
-    change(levelName, fieldValue);
+    setValue(levelName, fieldValue);
   }, [isNone]);
 
   return (

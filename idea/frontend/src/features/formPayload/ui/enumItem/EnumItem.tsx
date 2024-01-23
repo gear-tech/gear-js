@@ -1,6 +1,6 @@
 import { useState, useMemo, ChangeEvent } from 'react';
-import { useForm } from 'react-final-form';
 import { Select } from '@gear-js/ui';
+import { useFormContext } from 'react-hook-form';
 
 import { useChangeEffect } from '@/hooks';
 import { Fieldset } from '@/shared/ui/fieldset';
@@ -13,7 +13,7 @@ const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadIt
 
   const options = useMemo(() => Object.keys(type).map((key) => ({ value: key, label: key })), [type]);
 
-  const { change } = useForm(levelName);
+  const { setValue } = useFormContext();
   const [selected, setSelected] = useState(options[0].value);
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => setSelected(event.target.value);
@@ -25,7 +25,7 @@ const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadIt
     // @ts-ignore
     const parsedStructure = getPayloadValue(type[selected]);
 
-    change(levelName, { [selected]: parsedStructure });
+    setValue(levelName, { [selected]: parsedStructure });
   }, [selected]);
 
   return (

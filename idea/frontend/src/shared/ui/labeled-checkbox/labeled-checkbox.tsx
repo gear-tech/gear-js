@@ -1,6 +1,6 @@
 import { InputWrapper, Checkbox, InputProps } from '@gear-js/ui';
 import { ReactNode } from 'react';
-import { FieldRenderProps, useField } from 'react-final-form';
+import { useFormContext } from 'react-hook-form';
 
 import styles from './labeled-checkbox.module.scss';
 
@@ -14,13 +14,12 @@ type Props = {
 };
 
 const LabeledCheckbox = ({ name, label, inputLabel, direction = 'x', gap, children }: Props) => {
-  const field = useField(name, { type: 'checkbox' });
-  const input = field.input as Omit<FieldRenderProps<HTMLInputElement>, 'type'>; // assert cuz Checkbox type is 'switch' | undefined
+  const { register } = useFormContext();
 
   return (
     <InputWrapper size="normal" id={name} direction={direction} gap={gap} label={label} className={styles.inputWrapper}>
       <div className={styles.checkboxWrapper}>
-        <Checkbox label={inputLabel} {...input} />
+        <Checkbox label={inputLabel} {...register(name)} />
 
         {children}
       </div>

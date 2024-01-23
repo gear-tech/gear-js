@@ -1,25 +1,23 @@
-import { ChangeEvent } from 'react';
-import { useField, useForm } from 'react-final-form';
-import clsx from 'clsx';
 import { Radio as UIRadio, RadioProps } from '@gear-js/ui';
+import clsx from 'clsx';
+import { FieldValues, Path, PathValue, useFormContext } from 'react-hook-form';
 
 import styles from './Radio.module.scss';
 
-type Props = Omit<RadioProps, 'name' | 'onChange'> & {
-  name: string;
+type Props<T> = Omit<RadioProps, 'name' | 'onChange' | 'onSubmit'> & {
+  onSubmit: (values: T) => void;
+  name: Path<T>;
+  value: PathValue<T, Path<T>>;
 };
 
-const Radio = ({ name, value, label, className }: Props) => {
-  const { submit } = useForm();
-  const { input } = useField(name, { type: 'radio', value });
+const Radio = <T extends FieldValues>({ name, value, label, className, onSubmit }: Props<T>) => {
+  const { register, handleSubmit } = useFormContext<T>();
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    input.onChange(event);
-    submit();
-  };
+  const onChange = () => handleSubmit(onSubmit)();
 
-  // eslint-disable-next-line react/jsx-props-no-spreading
-  return <UIRadio {...input} label={label} className={clsx(styles.radio, className)} onChange={handleChange} />;
+  return (
+    <UIRadio label={label} className={clsx(styles.radio, className)} value={value} {...register(name, { onChange })} />
+  );
 };
 
 export { Radio };

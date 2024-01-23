@@ -29,17 +29,17 @@ jobs:
         with:
           node-version: 18.x
 
-      - name: "gear-ui: Install dependencies"
+      - name: 'gear-ui: Install dependencies'
         working-directory: utils/gear-ui
-        run: npm install
+        run: yarn install
 
-      - name: "gear-ui: Build pkg"
+      - name: 'gear-ui: Build pkg'
         working-directory: utils/gear-ui
-        run: npm run build
+        run: yarn build
 
-      - name: "gear-ui: Run tests"
+      - name: 'gear-ui: Run tests'
         working-directory: utils/gear-ui
-        run: npm run test
+        run: yarn test
 
   vara-ui-build:
     if: github.event_name == 'pull_request'
@@ -57,28 +57,27 @@ jobs:
         with:
           node-version: 18.x
 
-      - name: "vara-ui: Install dependencies"
+      - name: 'vara-ui: Install dependencies'
         working-directory: utils/vara-ui
         run: npm install
 
-      - name: "vara-ui: Build pkg"
+      - name: 'vara-ui: Build pkg'
         working-directory: utils/vara-ui
         run: npm run build
-
 
   publish-to-npm:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout"
+      - name: 'Checkout'
         uses: actions/checkout@v2
-      
+
       - name: Use node 18.x
         uses: actions/setup-node@v2.1.5
         with:
           node-version: 18.x
 
-      - name: "@gear-js/ui: Check pkg version"
+      - name: '@gear-js/ui: Check pkg version'
         uses: EndBug/version-check@v1
         id: check_gear
         with:
@@ -86,7 +85,7 @@ jobs:
           file-url: https://unpkg.com/@gear-js/ui@latest/package.json
           static-checking: localIsNew
 
-      - name: "@gear-js/vara-ui: Check pkg version"
+      - name: '@gear-js/vara-ui: Check pkg version'
         uses: EndBug/version-check@v1
         id: check_vara
         with:
@@ -94,7 +93,7 @@ jobs:
           file-url: https://unpkg.com/@gear-js/vara-ui@latest/package.json
           static-checking: localIsNew
 
-      - name: "@gear-js/ui: Publish"
+      - name: '@gear-js/ui: Publish'
         if: steps.check_gear.outputs.changed == 'true'
         working-directory: utils/gear-ui
         run: |
@@ -107,7 +106,7 @@ jobs:
           osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
           nikitayutanov: ${{ secrets.YUTANOV_NPM_TOKEN }}
 
-      - name: "@gear-js/vara-ui: Publish"
+      - name: '@gear-js/vara-ui: Publish'
         if: steps.check_vara.outputs.changed == 'true'
         working-directory: utils/vara-ui
         run: |

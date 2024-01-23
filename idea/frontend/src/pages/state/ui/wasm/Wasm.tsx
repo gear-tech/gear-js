@@ -1,10 +1,8 @@
 import { getStateMetadata, StateFunctions, StateMetadata } from '@gear-js/api';
 import { Button, FileInput, Input, Textarea } from '@gear-js/ui';
 import { useAlert } from '@gear-js/react-hooks';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Form } from 'react-final-form';
-import { OnChange } from 'react-final-form-listeners';
-import { FormApi } from 'final-form';
+import { useEffect, useMemo, useState } from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { addState, fetchState, fetchStates } from '@/api';
 import { useChain, useProgram, useStateRead } from '@/hooks';
@@ -12,7 +10,7 @@ import { getPreformattedText, isNullOrUndefined, readFileAsync } from '@/shared/
 import { FileTypes } from '@/shared/config';
 import { BackButton } from '@/shared/ui/backButton';
 import { Box } from '@/shared/ui/box';
-import { FormPayload, getPayloadFormValues, getSubmitPayload } from '@/features/formPayload';
+import { FormPayload, getPayloadFormValues, getResetPayloadValue, getSubmitPayload } from '@/features/formPayload';
 import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import { isHumanTypesRepr, useMetadata } from '@/features/metadata';
 
@@ -25,6 +23,13 @@ import styles from './Wasm.module.scss';
 const Wasm = () => {
   const { isDevChain } = useChain();
   const alert = useAlert();
+
+  // TODOFORM:
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const methods = useForm<WasmFormValues>({ defaultValues: INITIAL_VALUES });
+  const { setValue, control } = methods;
+  const watchValues = useWatch({ control });
 
   const programId = useProgramId();
   const { program } = useProgram(programId);
@@ -57,8 +62,6 @@ const Wasm = () => {
   const functions = isFileFunction ? fileFunctions : uploadedFunctions;
   const functionTypes = functions?.[functionName];
   const functionTypeIndex = functionTypes?.input;
-
-  const formApi = useRef<FormApi<WasmFormValues>>();
 
   const payloadFormValues = useMemo(
     () =>
@@ -127,15 +130,6 @@ const Wasm = () => {
       .finally(() => setIsStatesRequestReady(true));
   };
 
-  const handleSubmit = (values: WasmFormValues) => {
-    if (!wasmBuffer || !programMetadata) return;
-
-    const payload = getSubmitPayload(values.payload);
-    const argument = getSubmitPayload(values.argument);
-
-    readWasmState(wasmBuffer, programMetadata, functionName, argument, payload || '0x');
-  };
-
   const setFileBufferAndFunctions = (value: File) => {
     readFileAsync(value, 'buffer')
       .then((arrayBuffer) => Buffer.from(arrayBuffer))
@@ -171,9 +165,18 @@ const Wasm = () => {
 
   const resetUploadedState = () => setUploadedState(undefined);
   const resetUploadedWasmBuffer = () => setUploadedWasmBuffer(undefined);
-  const resetPayloadValue = () => formApi.current?.change('payload', payloadFormValues?.payload);
-  const resetArgumentValue = () => formApi.current?.change('argument', argumentFormValues?.payload);
+  const resetPayloadValue = () => setValue('payload', getResetPayloadValue(payloadFormValues?.payload || ''));
+  const resetArgumentValue = () => setValue('argument', getResetPayloadValue(argumentFormValues?.payload || ''));
   const resetMetadata = () => setMetadata(undefined);
+
+  const handleSubmit = (values: WasmFormValues) => {
+    if (!wasmBuffer || !programMetadata) return;
+
+    const payload = getSubmitPayload(values.payload);
+    const argument = getSubmitPayload(values.argument);
+
+    readWasmState(wasmBuffer, programMetadata, functionName, argument, payload || '0x');
+  };
 
   useEffect(() => {
     resetSelectedFunction();
@@ -202,81 +205,68 @@ const Wasm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFileFunction, uploadedStateId, wasmBuffer]);
 
+  useEffect(() => {
+    resetState();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchValues]);
+
   const isFunctionSelected = !!functionName;
   const isArgumentFormReady = !(isUploadedFunctionSelected && !metadata);
   const isPayloadFormReady = !!programMetadata;
 
   return (
     <>
-      <Form initialValues={INITIAL_VALUES} onSubmit={handleSubmit}>
-        {(formProps) => {
-          formApi.current = formProps.form;
+      <FormProvider {...methods}>
+        <form id="state" onSubmit={methods.handleSubmit(handleSubmit)}>
+          <Box className={styles.box}>
+            <Input label="Program ID:" gap="1/5" value={programId} readOnly />
 
-          return (
-            <form id="state" onSubmit={formProps.handleSubmit}>
-              <Box className={styles.box}>
-                <Input label="Program ID:" gap="1/5" value={programId} readOnly />
+            {isArgumentFormReady ? (
+              argumentFormValues && (
+                <FormPayload name="argument" label="Argument" values={argumentFormValues} gap="1/5" />
+              )
+            ) : (
+              <Textarea label="Argument:" gap="1/5" className={styles.loading} readOnly block />
+            )}
 
-                {isArgumentFormReady ? (
-                  argumentFormValues && (
-                    <FormPayload name="argument" label="Argument" values={argumentFormValues} gap="1/5" />
-                  )
-                ) : (
-                  <Textarea label="Argument:" gap="1/5" className={styles.loading} readOnly block />
-                )}
+            {isFunctionSelected &&
+              (isPayloadFormReady ? (
+                payloadFormValues && <FormPayload name="payload" label="Payload" values={payloadFormValues} gap="1/5" />
+              ) : (
+                <Textarea label="Payload:" gap="1/5" className={styles.loading} readOnly block />
+              ))}
 
-                {isFunctionSelected &&
-                  (isPayloadFormReady ? (
-                    payloadFormValues && (
-                      <FormPayload name="payload" label="Payload" values={payloadFormValues} gap="1/5" />
-                    )
-                  ) : (
-                    <Textarea label="Payload:" gap="1/5" className={styles.loading} readOnly block />
-                  ))}
+            {isStateRead ? (
+              isState && (
+                <Textarea label="Statedata:" rows={15} gap="1/5" value={getPreformattedText(state)} readOnly block />
+              )
+            ) : (
+              <Textarea label="Statedata:" rows={15} gap="1/5" value="" className={styles.loading} readOnly block />
+            )}
+          </Box>
 
-                <OnChange name="payload">{() => resetState()}</OnChange>
-                <OnChange name="argument">{() => resetState()}</OnChange>
+          <div className={styles.buttons}>
+            {isFunctionSelected && isArgumentFormReady && isPayloadFormReady && (
+              <Button type="submit" form="state" color="secondary" text="Read" icon={ReadSVG} size="large" />
+            )}
 
-                {isStateRead ? (
-                  isState && (
-                    <Textarea
-                      label="Statedata:"
-                      rows={15}
-                      gap="1/5"
-                      value={getPreformattedText(state)}
-                      readOnly
-                      block
-                    />
-                  )
-                ) : (
-                  <Textarea label="Statedata:" rows={15} gap="1/5" value="" className={styles.loading} readOnly block />
-                )}
-              </Box>
+            <FileInput
+              value={file}
+              size="large"
+              color="secondary"
+              className={styles.input}
+              onChange={setFile}
+              accept={FileTypes.Wasm}
+            />
 
-              <div className={styles.buttons}>
-                {isFunctionSelected && isArgumentFormReady && isPayloadFormReady && (
-                  <Button type="submit" form="state" color="secondary" text="Read" icon={ReadSVG} size="large" />
-                )}
+            {isStateRead && isState && (
+              <Button text="Download JSON" color="secondary" size="large" onClick={() => downloadJson(state)} />
+            )}
 
-                <FileInput
-                  value={file}
-                  size="large"
-                  color="secondary"
-                  className={styles.input}
-                  onChange={setFile}
-                  accept={FileTypes.Wasm}
-                />
-
-                {isStateRead && isState && (
-                  <Button text="Download JSON" color="secondary" size="large" onClick={() => downloadJson(state)} />
-                )}
-
-                <BackButton />
-              </div>
-            </form>
-          );
-        }}
-      </Form>
+            <BackButton />
+          </div>
+        </form>
+      </FormProvider>
 
       <WasmStates
         uploadedStates={uploadedStates}

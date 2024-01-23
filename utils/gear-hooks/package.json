@@ -18,7 +18,7 @@
   "homepage": "https://github.com/gear-tech/gear-js/tree/master/utils/gear-hooks#readme",
   "scripts": {
     "build": "rm -rf dist && rollup -c",
-    "prepare": "npm run build"
+    "prepare": "yarn build"
   },
   "peerDependencies": {
     "@gear-js/api": "0.35.2",

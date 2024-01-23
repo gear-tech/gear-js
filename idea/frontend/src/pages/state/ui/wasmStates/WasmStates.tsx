@@ -1,5 +1,5 @@
-import { useForm } from '@mantine/form';
 import { Button, Input } from '@gear-js/ui';
+import { useForm } from 'react-hook-form';
 
 import { useChain } from '@/hooks';
 import { IState } from '@/pages/state/model';
@@ -21,7 +21,7 @@ type Props = {
   onUploadButtonClick: () => void;
 };
 
-const initialValues = { query: '' };
+const defaultValues = { query: '' };
 
 const WasmStates = (props: Props) => {
   const {
@@ -36,7 +36,9 @@ const WasmStates = (props: Props) => {
   } = props;
 
   const { isDevChain } = useChain();
-  const { getInputProps, onSubmit } = useForm({ initialValues });
+
+  const form = useForm({ defaultValues });
+  const { register } = form;
 
   const isAnyUploadedState = isStateRequestReady && uploadedStates.length > 0;
   const isUploadedStatesListEmpty = isStateRequestReady && uploadedStates.length === 0;
@@ -58,12 +60,12 @@ const WasmStates = (props: Props) => {
       );
     });
 
-  const handleSearchSubmit = onSubmit(({ query }) => onSearchSubmit(query));
+  const handleSearchSubmit = ({ query }: typeof defaultValues) => onSearchSubmit(query);
 
   return (
     <>
-      <form className={styles.form} onSubmit={handleSearchSubmit}>
-        <Input type="search" placeholder="Search by function name" {...getInputProps('query')} disabled={isDevChain} />
+      <form className={styles.form} onSubmit={form.handleSubmit(handleSearchSubmit)}>
+        <Input type="search" placeholder="Search by function name" {...register('query')} disabled={isDevChain} />
       </form>
 
       <div className={styles.wrapper}>

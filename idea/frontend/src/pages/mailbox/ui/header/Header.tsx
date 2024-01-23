@@ -1,8 +1,8 @@
 import { useAccount } from '@gear-js/react-hooks';
 import { Input } from '@gear-js/ui';
-import { useForm } from '@mantine/form';
 import { HexString } from '@polkadot/util/types';
 import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { isHexValid } from '@/shared/helpers';
 
@@ -12,17 +12,18 @@ type Props = {
   onSearchSubmit: (query: HexString) => void;
 };
 
-const initialValues = { query: '' as HexString };
-const validate = { query: isHexValid };
-const initForm = { initialValues, validate };
+const defaultValues = { query: '' as HexString };
+const validate = isHexValid;
 
 const Header = ({ onSearchSubmit }: Props) => {
   const { account } = useAccount();
   const { address } = account || {};
 
-  const { getInputProps, onSubmit, reset } = useForm(initForm);
+  const form = useForm({ defaultValues });
+  const { register, reset, getFieldState, formState } = form;
+  const { error } = getFieldState('query', formState);
 
-  const handleSubmit = onSubmit(({ query }) => onSearchSubmit(query));
+  const handleSubmit = ({ query }: typeof defaultValues) => onSearchSubmit(query);
 
   useEffect(() => {
     reset();
@@ -33,8 +34,8 @@ const Header = ({ onSearchSubmit }: Props) => {
     <header className={styles.header}>
       <h2 className={styles.heading}>Mailbox</h2>
 
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <Input type="search" placeholder="Search by ID" {...getInputProps('query')} />
+      <form onSubmit={form.handleSubmit(handleSubmit)} className={styles.form}>
+        <Input type="search" placeholder="Search by ID" error={error?.message} {...register('query', { validate })} />
       </form>
     </header>
   );

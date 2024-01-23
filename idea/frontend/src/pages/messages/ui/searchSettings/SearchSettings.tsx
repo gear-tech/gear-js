@@ -1,6 +1,6 @@
+import { Input } from '@gear-js/ui';
 import { FormEvent } from 'react';
 import { CSSTransition } from 'react-transition-group';
-import { Input } from '@gear-js/ui';
 
 import { Filters, FilterGroup, Radio } from '@/features/filters';
 import { AnimationTimeout } from '@/shared/config';
@@ -26,13 +26,26 @@ const SearchSettings = ({ isLoggedIn, initialValues, onSubmit }: Props) => {
       <form className={styles.searchForm} onSubmit={handleSubmit}>
         <Input name="search" type="search" placeholder="Search by id, source, destination..." />
       </form>
+
       <Filters initialValues={initialValues} onSubmit={onSubmit}>
-        <FilterGroup name="owner">
-          <Radio name="owner" value="all" label="All messages" />
+        <FilterGroup name="owner" onSubmit={onSubmit}>
+          <Radio name="owner" value="all" label="All messages" onSubmit={onSubmit} />
           <CSSTransition in={isLoggedIn} exit={false} timeout={AnimationTimeout.Medium} mountOnEnter unmountOnExit>
             <>
-              <Radio name="owner" value="source" label="Sent messages" className={styles.ownerFilter} />
-              <Radio name="owner" value="destination" label="Received messages" className={styles.ownerFilter} />
+              <Radio
+                name="owner"
+                value="source"
+                label="Sent messages"
+                className={styles.ownerFilter}
+                onSubmit={onSubmit}
+              />
+              <Radio
+                name="owner"
+                value="destination"
+                label="Received messages"
+                className={styles.ownerFilter}
+                onSubmit={onSubmit}
+              />
             </>
           </CSSTransition>
         </FilterGroup>

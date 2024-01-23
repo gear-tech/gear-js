@@ -1,7 +1,7 @@
 import { decodeAddress } from '@gear-js/api';
 import { isHex } from '@polkadot/util';
 
-const isHexValid = (value: string) => (isHex(value) ? null : 'Value should be hex');
+const isHexValid = (value: string) => (isHex(value) ? true : 'Value should be hex');
 const isExists = (value: string) => (!value ? 'Field is required' : null);
 
 const isDecimal = (value: string) => {

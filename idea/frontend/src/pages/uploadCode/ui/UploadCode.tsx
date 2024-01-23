@@ -1,9 +1,9 @@
 import { Button, FileInput, Input } from '@gear-js/ui';
-import { useForm } from '@mantine/form';
+import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 
+import { FileTypes } from '@/shared/config';
 import { useChain, useCodeUpload, useMetaOnUpload } from '@/hooks';
-import { isExists } from '@/shared/helpers';
 import { Box } from '@/shared/ui/box';
 import { Subheader } from '@/shared/ui/subheader';
 import { BackButton } from '@/shared/ui/backButton';
@@ -12,8 +12,7 @@ import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 
 import styles from './UploadCode.module.scss';
 
-const initialValues = { name: '' };
-const validate = { name: isExists };
+const defaultValues = { name: '' };
 
 const UploadCode = () => {
   const {
@@ -27,7 +26,10 @@ const UploadCode = () => {
     isUploadedMetaReady,
   } = useMetaOnUpload(true);
 
-  const { getInputProps, onSubmit, reset } = useForm({ initialValues, validate: metadata.hex ? validate : undefined });
+  const form = useForm({ defaultValues });
+  const { register, getFieldState, reset, formState } = form;
+  const { error } = getFieldState('name', formState);
+  const required = metadata.hex ? 'Field is required' : false;
 
   const { isDevChain } = useChain();
   const uploadCode = useCodeUpload();
@@ -37,11 +39,11 @@ const UploadCode = () => {
     resetOptFile();
   };
 
-  const handleSubmit = onSubmit(({ name }) => {
+  const handleSubmit = ({ name }: typeof defaultValues) => {
     if (!optBuffer) return;
 
     uploadCode({ optBuffer, name, metaHex: metadata.hex, resolve: resetForm });
-  });
+  };
 
   useEffect(() => {
     if (optFile) return;
@@ -50,15 +52,27 @@ const UploadCode = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [optFile]);
 
+  const handleMetadataReset = () => {
+    resetMetadata();
+    reset();
+  };
+
   return (
     <>
       <div className={styles.wrapper}>
         <div>
           <Subheader title="Enter code parameters" size="big" />
           <Box>
-            <form className={styles.form} id="uploadCodeForm" onSubmit={handleSubmit}>
-              <FileInput label="Code file" direction="y" value={optFile} onChange={setOptFile} />
-              <Input label="Code name" direction="y" {...getInputProps('name')} />
+            <form className={styles.form} id="uploadCodeForm" onSubmit={form.handleSubmit(handleSubmit)}>
+              <FileInput
+                label="Code file"
+                direction="y"
+                value={optFile}
+                accept={FileTypes.Wasm}
+                onChange={setOptFile}
+              />
+
+              <Input label="Code name" direction="y" error={error?.message} {...register('name', { required })} />
             </form>
           </Box>
         </div>
@@ -71,7 +85,7 @@ const UploadCode = () => {
               isInputDisabled={!!metadata.isUploaded}
               isLoading={!isUploadedMetaReady}
               onUpload={setFileMetadata}
-              onReset={resetMetadata}
+              onReset={handleMetadataReset}
             />
           </div>
         )}

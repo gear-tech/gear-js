@@ -7,8 +7,9 @@
     "build:api-gateway": "yarn workspace @gear-js/api-gateway build",
     "build:indexer": "yarn workspace @gear-js/indexer build",
     "build:meta-storage": "yarn workspace @gear-js/meta-storage build",
-    "build:frontend": "yarn build:hooks && yarn workspace @gear-js/frontend build",
+    "build:frontend": "yarn build:hooks && yarn build:ui && yarn workspace @gear-js/frontend build",
     "build:hooks": "yarn workspace @gear-js/react-hooks build",
+    "build:ui": "yarn workspace @gear-js/ui build",
     "build:test-balance": "yarn workspace @gear-js/test-balance build",
     "build:wasm-compiler": "yarn workspace @gear-js/wasm-compiler build",
     "test:frontend": "yarn workspace @gear-js/frontend test",
@@ -24,7 +25,8 @@
   },
   "workspaces": [
     "idea/*",
-    "utils/gear-hooks"
+    "utils/gear-hooks",
+    "utils/gear-ui"
   ],
   "packageManager": "yarn@3.3.0",
   "version": "1.2.0"

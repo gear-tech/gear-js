@@ -1,27 +1,23 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { Button, Input, Textarea } from '@gear-js/ui';
-import { useAccount, useApi } from '@gear-js/react-hooks';
+import { useAccount, useApi, useBalanceFormat } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
-import BigNumber from 'bignumber.js';
-import { useMemo, useRef, useState } from 'react';
-import { Form } from 'react-final-form';
-import { FormApi } from 'final-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useMemo, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import sendSVG from '@/shared/assets/images/actions/send.svg?react';
 import { ValueField } from '@/shared/ui/form';
 import { Box } from '@/shared/ui/box';
 import { BackButton } from '@/shared/ui/backButton';
 import { GasMethod } from '@/shared/config';
-import { getValidation } from '@/shared/helpers';
 import { GasField } from '@/features/gasField';
-import { FormPayload, getPayloadFormValues, getSubmitPayload } from '@/features/formPayload';
-import { useBalanceMultiplier, useGasCalculate, useGasMultiplier, useMessageActions } from '@/hooks';
+import { FormPayload, getPayloadFormValues, getResetPayloadValue, getSubmitPayload } from '@/features/formPayload';
+import { useGasCalculate, useMessageActions, useValidationSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
-import { FormPayloadType } from '@/features/formPayloadType';
 import { UseVoucherCheckbox } from '@/features/voucher';
 import { LabeledCheckbox } from '@/shared/ui';
 
-import { getValidationSchema, resetPayloadValue } from '../helpers';
 import { FormValues, INITIAL_VALUES } from '../model';
 import styles from './MessageForm.module.scss';
 
@@ -34,22 +30,24 @@ type Props = {
 };
 
 const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => {
-  const { api, isApiReady, isVaraVersion } = useApi();
+  const { isVaraVersion } = useApi();
   const { account } = useAccount();
+  const { getChainBalanceValue, getFormattedGasValue, getChainGasValue } = useBalanceFormat();
+  const schema = useValidationSchema();
+
+  // TODOFORM:
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const methods = useForm<FormValues>({ defaultValues: INITIAL_VALUES, resolver: yupResolver(schema) });
+  const { getValues, reset, setValue, register, getFieldState, formState } = methods;
+  const { error: payloadTypeError } = getFieldState('payloadType', formState);
 
   const calculateGas = useGasCalculate();
   const { sendMessage, replyMessage } = useMessageActions();
-  const { balanceMultiplier, decimals } = useBalanceMultiplier();
-  const { gasMultiplier } = useGasMultiplier();
 
   const [isDisabled, setIsDisabled] = useState(false);
   const [isGasDisabled, setIsGasDisabled] = useState(false);
   const [gasInfo, setGasInfo] = useState<Result>();
-
-  const formApi = useRef<FormApi<FormValues>>();
-
-  const deposit = isApiReady ? api.existentialDeposit.toString() : '';
-  const maxGasLimit = isApiReady ? api.blockGasLimit.toString() : '';
 
   const method = isReply ? GasMethod.Reply : GasMethod.Handle;
   const typeIndex = isReply ? metadata?.types.reply : metadata?.types.handle.input;
@@ -60,36 +58,14 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
     [metadata, isTypeIndex, typeIndex],
   );
 
-  const validation = useMemo(
-    () => {
-      const schema = getValidationSchema({
-        // BigNumber cuz of floating point,
-        // is there a way to handle balance convertion better?
-        deposit: BigNumber(deposit).dividedBy(balanceMultiplier),
-        metadata,
-        maxGasLimit: BigNumber(maxGasLimit).dividedBy(gasMultiplier),
-        balanceMultiplier,
-        decimals,
-        gasMultiplier,
-      });
-
-      return getValidation(schema);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [metadata],
-  );
-
   const disableSubmitButton = () => setIsDisabled(true);
   const enableSubmitButton = () => setIsDisabled(false);
 
   const resetForm = () => {
-    if (!formApi.current) return;
+    const values = getValues();
+    const payload = getResetPayloadValue(values.payload);
 
-    const { values } = formApi.current.getState();
-
-    formApi.current.reset();
-    formApi.current.change('payload', resetPayloadValue(values.payload));
-
+    reset({ ...INITIAL_VALUES, payload });
     enableSubmitButton();
     setGasInfo(undefined);
   };
@@ -101,9 +77,9 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
     const { withVoucher, keepAlive } = values;
 
     const baseValues = {
-      value: BigNumber(values.value).multipliedBy(balanceMultiplier).toFixed(),
+      value: getChainBalanceValue(values.value).toFixed(),
       payload: getSubmitPayload(values.payload),
-      gasLimit: BigNumber(values.gasLimit).multipliedBy(gasMultiplier).toFixed(),
+      gasLimit: getChainGasValue(values.gasLimit).toFixed(),
     };
 
     const commonValues = isVaraVersion
@@ -120,86 +96,81 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
   };
 
   const handleGasCalculate = () => {
-    if (!formApi.current) return;
-
     setIsGasDisabled(true);
 
-    const { values } = formApi.current.getState();
+    const values = getValues();
+
     const preparedValues = {
       ...values,
-      value: BigNumber(values.value).multipliedBy(balanceMultiplier).toFixed(),
+      value: getChainBalanceValue(values.value).toFixed(),
       payload: getSubmitPayload(values.payload),
     };
 
     calculateGas(method, preparedValues, null, metadata, id)
       .then((info) => {
-        const limit = BigNumber(info.limit).dividedBy(gasMultiplier).toFixed();
+        const limit = getFormattedGasValue(info.limit).toFixed();
 
-        formApi.current?.change('gasLimit', limit);
+        setValue('gasLimit', limit, { shouldValidate: true });
         setGasInfo(info);
       })
       .finally(() => setIsGasDisabled(false));
   };
 
   return (
-    <Form initialValues={INITIAL_VALUES} validate={validation} onSubmit={handleSubmitForm}>
-      {({ form, handleSubmit }) => {
-        formApi.current = form;
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(handleSubmitForm)}>
+        <Box className={styles.body}>
+          {isLoading ? (
+            <Input label="Destination:" gap="1/5" className={styles.loading} value="" readOnly />
+          ) : (
+            <Input label={isReply ? 'Message Id:' : 'Destination:'} gap="1/5" value={id} readOnly />
+          )}
 
-        return (
-          <form onSubmit={handleSubmit}>
-            <Box className={styles.body}>
-              {isLoading ? (
-                <Input label="Destination:" gap="1/5" className={styles.loading} value="" readOnly />
-              ) : (
-                <Input label={isReply ? 'Message Id:' : 'Destination:'} gap="1/5" value={id} readOnly />
-              )}
+          {isLoading ? (
+            <Textarea label="Payload" gap="1/5" className={styles.loading} readOnly />
+          ) : (
+            <FormPayload name="payload" label="Payload" values={payloadFormValues} gap="1/5" />
+          )}
 
-              {isLoading ? (
-                <Textarea label="Payload" gap="1/5" className={styles.loading} readOnly />
-              ) : (
-                <FormPayload name="payload" label="Payload" values={payloadFormValues} gap="1/5" />
-              )}
+          {!isLoading && !metadata && (
+            <Input label="Payload type" gap="1/5" {...register('payloadType')} error={payloadTypeError?.message} />
+          )}
 
-              {!isLoading && !metadata && <FormPayloadType name="payloadType" label="Payload type" gap="1/5" />}
+          {isLoading ? (
+            <Input label="Value:" gap="1/5" className={styles.loading} readOnly />
+          ) : (
+            <ValueField name="value" label="Value:" gap="1/5" />
+          )}
 
-              {isLoading ? (
-                <Input label="Value:" gap="1/5" className={styles.loading} readOnly />
-              ) : (
-                <ValueField name="value" label="Value:" gap="1/5" />
-              )}
-
-              {isLoading ? (
-                <Input label="Gas info" gap="1/5" className={styles.loading} readOnly />
-              ) : (
-                <GasField
-                  info={gasInfo}
-                  disabled={isLoading || isGasDisabled}
-                  onGasCalculate={handleGasCalculate}
-                  gap="1/5"
-                />
-              )}
-
-              {!isVaraVersion && (
-                <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" gap="1/5" />
-              )}
-              <UseVoucherCheckbox programId={programId} />
-            </Box>
-
-            <Button
-              type="submit"
-              text="Send Message"
-              icon={sendSVG}
-              size="large"
-              color="secondary"
-              className={styles.button}
-              disabled={isLoading || isDisabled}
+          {isLoading ? (
+            <Input label="Gas info" gap="1/5" className={styles.loading} readOnly />
+          ) : (
+            <GasField
+              info={gasInfo}
+              disabled={isLoading || isGasDisabled}
+              onGasCalculate={handleGasCalculate}
+              gap="1/5"
             />
-            <BackButton />
-          </form>
-        );
-      }}
-    </Form>
+          )}
+
+          {!isVaraVersion && (
+            <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" gap="1/5" />
+          )}
+          <UseVoucherCheckbox programId={programId} />
+        </Box>
+
+        <Button
+          type="submit"
+          text="Send Message"
+          icon={sendSVG}
+          size="large"
+          color="secondary"
+          className={styles.button}
+          disabled={isLoading || isDisabled}
+        />
+        <BackButton />
+      </form>
+    </FormProvider>
   );
 };
 

@@ -1,14 +1,14 @@
 import { InputWrapper, inputStyles, InputProps, Button } from '@gear-js/ui';
-import { useForm, useField } from 'react-final-form';
-import { NumericFormat, NumericFormatProps, NumberFormatValues } from 'react-number-format';
+import { useBalanceFormat } from '@gear-js/react-hooks';
 import BigNumber from 'bignumber.js';
 import clsx from 'clsx';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { NumericFormat, NumericFormatProps } from 'react-number-format';
 
 import { formStyles } from '@/shared/ui/form';
 import calculatorSVG from '@/shared/assets/images/actions/calculator.svg?react';
 import { Result } from '@/hooks/useGasCalculate/types';
 import { BalanceUnit } from '@/shared/ui/form/balance-unit';
-import { useGasMultiplier } from '@/hooks';
 
 import { Info } from '../Info';
 import styles from './GasField.module.scss';
@@ -19,26 +19,24 @@ type Props = Omit<NumericFormatProps & InputProps, 'value' | 'onValueChange' | '
 };
 
 const GasField = (props: Props) => {
-  const { gasDecimals } = useGasMultiplier();
+  const { gasDecimals } = useBalanceFormat();
 
-  const { label, disabled, className, onGasCalculate, direction = 'x', gap, block, info, ...other } = props;
+  const { disabled, onGasCalculate, direction = 'x', gap, block, info, ...other } = props;
   const name = 'gasLimit';
 
-  const { change } = useForm();
-  const { input, meta } = useField(name);
-
-  const handleChange = ({ value }: NumberFormatValues) => change(name, value);
+  const { setValue, getFieldState, formState } = useFormContext();
+  const inputValue = useWatch({ name });
+  const { error } = getFieldState(name, formState);
 
   const increaseByTenPercent = () => {
-    const bnValue = BigNumber(input.value);
+    const bnValue = BigNumber(inputValue);
 
     const bnMultiplier = bnValue.multipliedBy(0.1);
     const increasedValue = bnValue.plus(bnMultiplier);
 
-    change(name, increasedValue.toFixed(gasDecimals));
+    setValue(name, increasedValue.toFixed(gasDecimals), { shouldValidate: true });
   };
 
-  const error = meta.invalid && meta.touched ? meta.error : undefined;
   const inputClassName = clsx(inputStyles.input, inputStyles.dark, styles.field);
 
   return (
@@ -46,7 +44,7 @@ const GasField = (props: Props) => {
       id={name}
       label="Gas limit"
       size="normal"
-      error={error}
+      error={error?.message}
       direction={direction}
       gap={gap}
       className={formStyles.field}>
@@ -58,13 +56,11 @@ const GasField = (props: Props) => {
                 {...other}
                 id={name}
                 name={name}
-                value={input.value}
                 className={inputClassName}
                 allowNegative={false}
                 thousandSeparator
-                onBlur={input.onBlur}
-                onFocus={input.onFocus}
-                onValueChange={handleChange}
+                value={inputValue}
+                onValueChange={({ value }) => setValue(name, value, { shouldValidate: true })}
               />
 
               <BalanceUnit />
