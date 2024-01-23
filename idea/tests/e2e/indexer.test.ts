@@ -122,7 +122,7 @@ describe('prepare', () => {
             }
             events.forEach(({ event }) => {
               if (event.method === 'ExtrinsicFailed') {
-                reject(new Error(api.getExtrinsicFailedError(event).docs.join('. ')));
+                reject(new Error(api.getExtrinsicFailedError(event).docs));
               } else if (event.method === 'MessageQueued') {
                 const {
                   data: { id, source, destination },
@@ -156,7 +156,7 @@ describe('prepare', () => {
                 if (event.method === 'CodeChanged') {
                   resolve(0);
                 } else if (event.method === 'ExtrinsicFailed') {
-                  reject(new Error(api.getExtrinsicFailedError(event).docs.join('. ')));
+                  reject(new Error(api.getExtrinsicFailedError(event).docs));
                 }
               });
             }
@@ -190,7 +190,7 @@ describe('prepare', () => {
                 if (event.method === 'ExtrinsicSuccess') {
                   resolve(0);
                 } else if (event.method === 'ExtrinsicFailed') {
-                  reject(new Error(api.getExtrinsicFailedError(event).docs.join('. ')));
+                  reject(new Error(api.getExtrinsicFailedError(event).docs));
                 }
               });
             }
@@ -214,7 +214,7 @@ describe('prepare', () => {
             if (status.isInBlock) {
               events.forEach(({ event }) => {
                 if (event.method === 'ExtrinsicFailed') {
-                  reject(new Error(api.getExtrinsicFailedError(event).docs.join('. ')));
+                  reject(new Error(api.getExtrinsicFailedError(event).docs));
                 } else if (event.method === 'MessageQueued') {
                   const {
                     data: { id, source, destination },
@@ -251,7 +251,7 @@ describe('prepare', () => {
             if (status.isInBlock) {
               events.forEach(({ event }) => {
                 if (event.method === 'ExtrinsicFailed') {
-                  reject(new Error(api.getExtrinsicFailedError(event).docs.join('. ')));
+                  reject(new Error(api.getExtrinsicFailedError(event).docs));
                 } else if (event.method === 'MessageQueued') {
                   const {
                     data: { id, source, destination },
@@ -321,7 +321,7 @@ describe('prepare', () => {
             if (status.isInBlock) {
               events.forEach(({ event }) => {
                 if (event.method === 'ExtrinsicFailed') {
-                  reject(new Error(api.getExtrinsicFailedError(event).docs.join('. ')));
+                  reject(new Error(api.getExtrinsicFailedError(event).docs));
                 } else if (event.method === 'MessageQueued') {
                   index++;
                   const {
@@ -365,7 +365,7 @@ describe('prepare', () => {
             if (status.isInBlock) {
               events.forEach(({ event }) => {
                 if (event.method === 'ExtrinsicFailed') {
-                  reject(new Error(api.getExtrinsicFailedError(event).docs.join('. ')));
+                  reject(new Error(api.getExtrinsicFailedError(event).docs));
                 } else if (event.method === 'MessageQueued') {
                   const {
                     data: { id, source, destination },
@@ -416,7 +416,7 @@ describe('prepare', () => {
             if (status.isInBlock) {
               events.forEach(({ event }) => {
                 if (event.method === 'ExtrinsicFailed') {
-                  reject(new Error(api.getExtrinsicFailedError(event).docs.join('. ')));
+                  reject(new Error(api.getExtrinsicFailedError(event).docs));
                 } else if (event.method === 'MessageQueued') {
                   index++;
                   const {
@@ -457,7 +457,7 @@ describe('prepare', () => {
             if (status.isInBlock) {
               events.forEach(({ event }) => {
                 if (event.method === 'ExtrinsicFailed') {
-                  reject(new Error(api.getExtrinsicFailedError(event).docs.join('. ')));
+                  reject(new Error(api.getExtrinsicFailedError(event).docs));
                 } else if (event.method === 'MessageQueued') {
                   const {
                     data: { id, source, destination },
