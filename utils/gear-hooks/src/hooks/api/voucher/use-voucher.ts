@@ -1,7 +1,9 @@
 import { HexString } from '@polkadot/util/types';
+import { useContext } from 'react';
 
 import { useIsVoucherExists } from './use-is-voucher-exists';
 import { useVoucherBalance } from './use-voucher-balance';
+import { AccountContext } from 'context';
 
 function useVoucher(programId: HexString | undefined, accountAddress: HexString | undefined) {
   const { isVoucherExists, isVoucherExistsReady } = useIsVoucherExists(programId, accountAddress);
@@ -12,4 +14,10 @@ function useVoucher(programId: HexString | undefined, accountAddress: HexString 
   return { isVoucherExists, voucherBalance, isVoucherReady };
 }
 
-export { useVoucher };
+function useAccountVoucher(programId: HexString | undefined) {
+  const { account } = useContext(AccountContext);
+
+  return useVoucher(programId, account?.decodedAddress);
+}
+
+export { useVoucher, useAccountVoucher };
