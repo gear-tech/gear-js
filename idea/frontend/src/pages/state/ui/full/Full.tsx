@@ -45,9 +45,6 @@ const Full = () => {
   const handleSubmit = ({ payload }: FormValues) => {
     if (!metadata) return;
 
-    // TOREMOVE:
-    console.log('payload: ', getSubmitPayload(payload));
-
     readFullState(metadata, getSubmitPayload(payload) || '0x');
   };
 

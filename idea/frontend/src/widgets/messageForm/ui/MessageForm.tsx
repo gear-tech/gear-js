@@ -82,11 +82,6 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
       gasLimit: getChainGasValue(values.gasLimit).toFixed(),
     };
 
-    // TOREMOVE:
-    console.log('payload: ', getSubmitPayload(values.payload));
-    console.log('value: ', getChainBalanceValue(values.value).toFixed());
-    console.log('gasLimit: ', getChainGasValue(values.gasLimit).toFixed());
-
     const commonValues = isVaraVersion
       ? { ...baseValues, prepaid: withVoucher, account: withVoucher ? account?.decodedAddress : undefined }
       : { ...baseValues, keepAlive };
@@ -110,10 +105,6 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
       value: getChainBalanceValue(values.value).toFixed(),
       payload: getSubmitPayload(values.payload),
     };
-
-    // TOREMOVE:
-    console.log('payload: ', getSubmitPayload(values.payload));
-    console.log('value: ', getChainBalanceValue(values.value).toFixed());
 
     calculateGas(method, preparedValues, null, metadata, id)
       .then((info) => {
