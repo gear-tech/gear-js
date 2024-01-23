@@ -1,6 +1,7 @@
 import { useIsVoucherExists, useIsAccountVoucherExists } from './use-is-voucher-exists';
 import { useVoucher, useAccountVoucher } from './use-voucher';
 import { useVouchers, useAccountVouchers } from './use-vouchers';
+import { useVoucherId, useAccountVoucherId } from './use-voucher-id';
 
 export {
   useIsVoucherExists,
@@ -9,4 +10,6 @@ export {
   useAccountVoucher,
   useVouchers,
   useAccountVouchers,
+  useVoucherId,
+  useAccountVoucherId,
 };

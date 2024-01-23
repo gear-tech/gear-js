@@ -14,6 +14,8 @@ import {
   useAccountVoucher,
   useVouchers,
   useAccountVouchers,
+  useVoucherId,
+  useAccountVoucherId,
   useBalance,
   useBalanceFormat,
   useDeriveBalancesAll,
@@ -27,7 +29,7 @@ import {
   UseSendMessageOptions,
 } from './hooks';
 
-import { withoutCommas, getVaraAddress } from './utils';
+import { withoutCommas, getVaraAddress, getTypedEntries } from './utils';
 
 import { AccountProvider, ApiProvider, AlertProvider } from './context';
 
@@ -51,6 +53,7 @@ import {
   DefaultTemplateOptions,
   ProviderProps,
   Account,
+  Entries,
 } from './types';
 
 export {
@@ -69,6 +72,8 @@ export {
   useAccountVoucher,
   useVouchers,
   useAccountVouchers,
+  useVoucherId,
+  useAccountVoucherId,
   useBalance,
   useBalanceFormat,
   useDeriveBalancesAll,
@@ -83,6 +88,7 @@ export {
   useSendMessageHandler,
   withoutCommas,
   getVaraAddress,
+  getTypedEntries,
   DEFAULT_OPTIONS,
   DEFAULT_INFO_OPTIONS,
   DEFAULT_ERROR_OPTIONS,
@@ -104,4 +110,5 @@ export type {
   Account,
   SendMessageOptions,
   UseSendMessageOptions,
+  Entries,
 };

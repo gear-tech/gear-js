@@ -2,6 +2,8 @@ import { GasInfo, GearApi } from '@gear-js/api';
 import { Keyring } from '@polkadot/api';
 import { Event } from '@polkadot/types/interfaces';
 import { bnToBn } from '@polkadot/util';
+
+import { Entries } from 'types';
 import { VARA_SS58_FORMAT } from 'consts';
 
 const getAutoGasLimit = ({ waited, min_limit }: GasInfo) =>
@@ -17,4 +19,6 @@ const getExtrinsicFailedMessage = (api: GearApi, event: Event) => {
 
 const getVaraAddress = (address: string) => new Keyring().encodeAddress(address, VARA_SS58_FORMAT);
 
-export { getAutoGasLimit, withoutCommas, getExtrinsicFailedMessage, getVaraAddress };
+const getTypedEntries = <T extends object>(value: T) => Object.entries(value) as Entries<T>;
+
+export { getAutoGasLimit, withoutCommas, getExtrinsicFailedMessage, getVaraAddress, getTypedEntries };

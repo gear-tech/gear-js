@@ -17,6 +17,8 @@ import {
   useAccountVoucher,
   useVouchers,
   useAccountVouchers,
+  useVoucherId,
+  useAccountVoucherId,
 } from './voucher';
 
 import { useBalance, useBalanceFormat, useDeriveBalancesAll, useAccountDeriveBalancesAll } from './balance';
@@ -37,6 +39,8 @@ export {
   useAccountVoucher,
   useVouchers,
   useAccountVouchers,
+  useVoucherId,
+  useAccountVoucherId,
   useBalance,
   useBalanceFormat,
   useDeriveBalancesAll,
