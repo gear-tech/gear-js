@@ -1,7 +1,6 @@
 import type { Event } from '@polkadot/types/interfaces';
 import { GearApi } from '@gear-js/api';
 import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
-import { AnySchema, ValidationError } from 'yup';
 import isString from 'lodash.isstring';
 
 import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from '@/shared/config';
@@ -81,10 +80,9 @@ const getShortName = (filename: string, maxLength = 24) => {
 const getPreformattedText = (data: unknown) => JSON.stringify(data, null, 4);
 
 const getExtrinsicFailedMessage = (api: GearApi, event: Event) => {
-  const { docs, method: errorMethod } = api.getExtrinsicFailedError(event);
-  const formattedDocs = docs.filter(Boolean).join('. ');
+  const { docs, method } = api.getExtrinsicFailedError(event);
 
-  return `${errorMethod}: ${formattedDocs}`;
+  return `${method}: ${docs}`;
 };
 
 const isNodeAddressValid = (address: string) => {

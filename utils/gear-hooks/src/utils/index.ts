@@ -10,10 +10,9 @@ const getAutoGasLimit = ({ waited, min_limit }: GasInfo) =>
 const withoutCommas = (value: string) => value.replace(/,/g, '');
 
 const getExtrinsicFailedMessage = (api: GearApi, event: Event) => {
-  const { docs, method: errorMethod } = api.getExtrinsicFailedError(event);
-  const formattedDocs = docs.filter(Boolean).join('. ');
+  const { docs, method } = api.getExtrinsicFailedError(event);
 
-  return `${errorMethod}: ${formattedDocs}`;
+  return `${method}: ${docs}`;
 };
 
 const getVaraAddress = (address: string) => new Keyring().encodeAddress(address, VARA_SS58_FORMAT);
