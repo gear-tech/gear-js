@@ -119,7 +119,7 @@ export class GearService {
                   resolve(null);
                   break;
                 case TransferEvent.EXTRINSIC_FAILED:
-                  reject({ blockHash, correlationId, error: this.api.getExtrinsicFailedError(event).docs.join('. ') });
+                  reject({ blockHash, correlationId, error: this.api.getExtrinsicFailedError(event).docs });
                   break;
               }
             }
