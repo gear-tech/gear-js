@@ -9,7 +9,7 @@ import { useVouchers } from './use-vouchers';
 function useVoucherId(programId: HexString | undefined, accountAddress: string | undefined) {
   const { vouchers } = useVouchers(accountAddress);
 
-  const [voucherId, setVoucherId] = useState<HexString | ''>();
+  const [voucherId, setVoucherId] = useState<HexString>();
 
   const isVoucherIdReady = voucherId !== undefined;
   const isVoucherExists = !!(isVoucherIdReady && voucherId);
@@ -19,7 +19,9 @@ function useVoucherId(programId: HexString | undefined, accountAddress: string |
 
     if (!vouchers || !programId) return;
 
-    const [result] = getTypedEntries(vouchers).find(([, programIds]) => programIds.includes(programId)) || [''];
+    const [result] = getTypedEntries(vouchers).find(([, programIds]) => programIds.includes(programId)) || [
+      '' as HexString,
+    ];
 
     setVoucherId(result);
   }, [vouchers, accountAddress, programId]);

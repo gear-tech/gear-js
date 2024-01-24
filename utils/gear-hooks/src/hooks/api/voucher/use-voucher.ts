@@ -3,6 +3,8 @@ import { useContext, useEffect, useState } from 'react';
 
 import { AccountContext, AlertContext, ApiContext } from 'context';
 
+import { useVoucherId } from './use-voucher-id';
+
 function useVoucher(voucherId: HexString | undefined, accountAddress: string | undefined) {
   const { api } = useContext(ApiContext);
   const alert = useContext(AlertContext);
@@ -30,4 +32,17 @@ function useAccountVoucher(voucherId: HexString | undefined) {
   return useVoucher(voucherId, account?.address);
 }
 
-export { useVoucher, useAccountVoucher };
+function useProgramVoucher(programId: HexString | undefined, accountAddress: string | undefined) {
+  const { voucherId, isVoucherIdReady, isVoucherExists } = useVoucherId(programId, accountAddress);
+  const { voucher, isVoucherReady } = useVoucher(voucherId, accountAddress);
+
+  return { voucher, isVoucherReady: isVoucherExists ? isVoucherReady : isVoucherIdReady, isVoucherExists };
+}
+
+function useAccountProgramVoucher(programId: HexString | undefined) {
+  const { account } = useContext(AccountContext);
+
+  return useProgramVoucher(programId, account?.address);
+}
+
+export { useVoucher, useAccountVoucher, useProgramVoucher, useAccountProgramVoucher };

@@ -9,7 +9,7 @@ import { AccountContext, AlertContext, ApiContext } from 'context';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
 import { getExtrinsicFailedMessage } from 'utils';
 import { useAccountDeriveBalancesAll, useBalanceFormat } from './balance';
-import { useAccountVoucherBalance } from './voucher';
+// import { useAccountVoucherBalance } from './voucher';
 
 type UseSendMessageOptions = {
   disableAlerts?: boolean;
@@ -38,7 +38,7 @@ function useSendMessage(
   const alert = useContext(AlertContext);
 
   const balances = useAccountDeriveBalancesAll();
-  const { voucherBalance } = useAccountVoucherBalance(destination);
+  // const { voucherBalance } = useAccountVoucherBalance(destination);
   const { getChainBalanceValue } = useBalanceFormat();
 
   const title = 'gear.sendMessage';
@@ -108,12 +108,12 @@ function useSendMessage(
   const isBalanceValid = (gasLimit: string, withVoucher: boolean) => {
     if (disableCheckBalance) return true;
     if (!isApiReady) throw new Error('API is not initialized');
-    if (!balances || !voucherBalance) throw new Error('No balance for account');
+    // if (!balances || !voucherBalance) throw new Error('No balance for account');
 
     const existentialDeposit = api.existentialDeposit.toString();
-
-    const { freeBalance } = balances;
-    const balance = (withVoucher ? voucherBalance : freeBalance).toString();
+    //
+    // const { freeBalance } = balances;
+    // const balance = (withVoucher ? voucherBalance : freeBalance).toString();
 
     const valuePerGas = api.valuePerGas.toString();
     const gasLimitValue = BigNumber(gasLimit).plus(gasLimit).multipliedBy(valuePerGas);
@@ -121,7 +121,7 @@ function useSendMessage(
     const extraCost = getChainBalanceValue(5);
     const transactionCost = gasLimitValue.plus(existentialDeposit).plus(extraCost);
 
-    return BigNumber(balance).isGreaterThanOrEqualTo(transactionCost);
+    // return BigNumber(balance).isGreaterThanOrEqualTo(transactionCost);
   };
 
   const sendMessage = async (args: SendMessageOptions) => {
@@ -156,7 +156,7 @@ function useSendMessage(
 
     try {
       const sendExtrinsic = api.message.send(message, metadata);
-      const extrinsic = withVoucher ? api.voucher.call({ SendMessage: sendExtrinsic }) : sendExtrinsic;
+      const extrinsic = withVoucher ? api.voucher.call('0x00', { SendMessage: sendExtrinsic }) : sendExtrinsic;
 
       const callback = (result: ISubmittableResult) => handleStatus(result, alertId, onSuccess, onInBlock, onError);
 
