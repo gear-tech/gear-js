@@ -25,10 +25,12 @@ type Value = {
   | {
       api: undefined;
       isApiReady: false;
+      isV110Runtime: false;
     }
   | {
       api: GearApi;
       isApiReady: true;
+      isV110Runtime: boolean;
     }
 );
 
@@ -39,6 +41,7 @@ type Props = ProviderProps & {
 const initialValue = {
   api: undefined,
   isApiReady: false as const,
+  isV110Runtime: false as const,
   switchNetwork: () => Promise.resolve(),
 };
 
@@ -88,7 +91,9 @@ function ApiProvider({ initialArgs, children }: Props) {
 
   const value = useMemo(
     () =>
-      api ? { api, isApiReady: true as const, switchNetwork } : { api, isApiReady: false as const, switchNetwork },
+      api
+        ? { api, isApiReady: true as const, isV110Runtime: api.specVersion >= 1100, switchNetwork }
+        : { api, isApiReady: false as const, isV110Runtime: false as const, switchNetwork },
     [api],
   );
 

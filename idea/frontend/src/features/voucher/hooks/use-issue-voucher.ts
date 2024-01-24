@@ -9,7 +9,7 @@ import { PROGRAM_ERRORS } from '@/shared/config';
 import { getExtrinsicFailedMessage } from '@/shared/helpers';
 
 function useIssueVoucher() {
-  const { api, isApiReady } = useApi();
+  const { api, isApiReady, isV110Runtime } = useApi();
   const { account } = useAccount();
   const alert = useAlert();
 
@@ -39,7 +39,13 @@ function useIssueVoucher() {
     if (!isApiReady || !account) return;
 
     try {
-      const { extrinsic } = api.voucher.issue(address, programId, value);
+      const duration = undefined;
+      const programs = [programId];
+      const isValidForCode = false;
+
+      const { extrinsic } = isV110Runtime
+        ? await api.voucher.issue(address, value, duration, programs, isValidForCode)
+        : api.voucher.issueDeprecated(address, programId, value);
 
       const { signer } = await web3FromSource(account.meta.source);
 
@@ -49,7 +55,7 @@ function useIssueVoucher() {
     }
   };
 
-  return issueVoucher;
+  return { issueVoucher };
 }
 
 export { useIssueVoucher };

@@ -32,7 +32,7 @@ const resolver = yupResolver(schema);
 
 const IssueVoucherModal = ({ programId, close }: Props) => {
   const { getChainBalanceValue } = useBalanceFormat();
-  const issueVoucher = useIssueVoucher();
+  const { issueVoucher } = useIssueVoucher();
 
   const methods = useForm({ defaultValues, resolver });
 
