@@ -11,7 +11,9 @@ function useVouchers(accountAddress: string | undefined) {
   const isEachVoucherReady = vouchers !== undefined;
 
   useEffect(() => {
-    if (!api || !accountAddress) return setVouchers(undefined);
+    setVouchers(undefined);
+
+    if (!api || !accountAddress) return;
 
     api.voucher
       .getAllForAccount(accountAddress)

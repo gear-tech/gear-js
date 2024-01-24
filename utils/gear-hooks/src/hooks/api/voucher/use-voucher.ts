@@ -11,7 +11,9 @@ function useVoucher(voucherId: HexString | undefined, accountAddress: string | u
   const isVoucherReady = voucher !== undefined;
 
   useEffect(() => {
-    if (!api || !accountAddress || !voucherId) return setVoucher(undefined);
+    setVoucher(undefined);
+
+    if (!api || !accountAddress || !voucherId) return;
 
     api.voucher
       .getDetails(accountAddress, voucherId)

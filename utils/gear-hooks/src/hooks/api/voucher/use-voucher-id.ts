@@ -15,7 +15,9 @@ function useVoucherId(programId: HexString | undefined, accountAddress: string |
   const isVoucherExists = !!(isVoucherIdReady && voucherId);
 
   useEffect(() => {
-    if (!vouchers || !programId) return setVoucherId(undefined);
+    setVoucherId(undefined);
+
+    if (!vouchers || !programId) return;
 
     const [result] = getTypedEntries(vouchers).find(([, programIds]) => programIds.includes(programId)) || [''];
 
