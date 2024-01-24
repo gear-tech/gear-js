@@ -16,7 +16,7 @@ function useIsVoucherExists(programId: HexString | undefined, accountAddress: He
     if (!programId || !isApiReady || !accountAddress) return;
 
     api.voucher
-      .exists(programId, accountAddress)
+      .exists(accountAddress, programId)
       .then((result) => setIsVoucherExists(result))
       .catch(({ message }: Error) => alert.error(message));
 

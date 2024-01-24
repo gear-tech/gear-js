@@ -1,5 +1,5 @@
-import { GasLimit, IProgramCreateOptions, IProgramUploadOptions, Value } from '@gear-js/api';
-import { AnyJson, ISubmittableResult, Signer } from '@polkadot/types/types';
+import { GasLimit, ProgramCreateOptions, ProgramUploadOptions, Value } from '@gear-js/api';
+import { AnyJson, ISubmittableResult } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
 enum Method {
@@ -77,8 +77,8 @@ type Options = {
   salt?: HexString;
 };
 
-type Code = IProgramUploadOptions['code'];
-type CodeId = IProgramCreateOptions['codeId'];
+type Code = ProgramUploadOptions['code'];
+type CodeId = ProgramCreateOptions['codeId'];
 
 type UseProgram = (initPayload: AnyJson, gasLimit: GasLimit, options?: Options) => Promise<void>;
 

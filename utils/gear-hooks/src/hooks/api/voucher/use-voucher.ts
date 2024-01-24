@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 
 import { AccountContext, AlertContext, ApiContext } from 'context';
 
-function useVoucher(accountAddress: string | undefined, voucherId: HexString | undefined) {
+function useVoucher(voucherId: HexString | undefined, accountAddress: string | undefined) {
   const { api } = useContext(ApiContext);
   const alert = useContext(AlertContext);
 
@@ -25,7 +25,7 @@ function useVoucher(accountAddress: string | undefined, voucherId: HexString | u
 function useAccountVoucher(voucherId: HexString | undefined) {
   const { account } = useContext(AccountContext);
 
-  return useVoucher(account?.address, voucherId);
+  return useVoucher(voucherId, account?.address);
 }
 
 export { useVoucher, useAccountVoucher };

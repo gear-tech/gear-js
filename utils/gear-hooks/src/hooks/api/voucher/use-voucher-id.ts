@@ -6,11 +6,13 @@ import { getTypedEntries } from 'utils';
 
 import { useVouchers } from './use-vouchers';
 
-function useVoucherId(accountAddress: string | undefined, programId: HexString | undefined) {
+function useVoucherId(programId: HexString | undefined, accountAddress: string | undefined) {
   const { vouchers } = useVouchers(accountAddress);
 
   const [voucherId, setVoucherId] = useState<HexString | ''>();
+
   const isVoucherIdReady = voucherId !== undefined;
+  const isVoucherExists = !!(isVoucherIdReady && voucherId);
 
   useEffect(() => {
     if (!vouchers || !programId) return setVoucherId(undefined);
@@ -20,13 +22,13 @@ function useVoucherId(accountAddress: string | undefined, programId: HexString |
     setVoucherId(result);
   }, [vouchers, accountAddress, programId]);
 
-  return { voucherId, isVoucherIdReady };
+  return { voucherId, isVoucherIdReady, isVoucherExists };
 }
 
 function useAccountVoucherId(programId: HexString | undefined) {
   const { account } = useContext(AccountContext);
 
-  return useVoucherId(account?.address, programId);
+  return useVoucherId(programId, account?.address);
 }
 
 export { useVoucherId, useAccountVoucherId };
