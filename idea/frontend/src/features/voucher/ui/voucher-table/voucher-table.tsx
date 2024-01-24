@@ -1,5 +1,5 @@
 import { HexString } from '@gear-js/api';
-import { useAccountVoucher, useBalanceFormat } from '@gear-js/react-hooks';
+import { useAccountVoucherBalance, useBalanceFormat } from '@gear-js/react-hooks';
 
 import VoucherPlaceholderSVG from '@/features/voucher/assets/voucher-placeholder.svg?react';
 import { ContentLoader } from '@/shared/ui/contentLoader';
@@ -14,22 +14,22 @@ type Props = {
 };
 
 const VoucherTable = withAccount(({ programId }: Props) => {
-  const { isVoucherReady, isVoucherExists, voucherBalance } = useAccountVoucher(programId);
+  const { voucherBalance, isVoucherBalanceReady, isVoucherExists } = useAccountVoucherBalance(programId);
   const { getFormattedBalance } = useBalanceFormat();
 
   const status = isVoucherExists ? BulbStatus.Success : BulbStatus.Error;
   const text = isVoucherExists ? 'Available' : 'Not available';
-  const balance = voucherBalance ? getFormattedBalance(voucherBalance) : undefined;
+  const formattedBalance = getFormattedBalance(voucherBalance || '0');
 
-  return isVoucherReady ? (
+  return isVoucherBalanceReady ? (
     <Table>
       <TableRow name="Status">
         <BulbBlock status={status} text={text} size="large" />
       </TableRow>
 
       <TableRow name="Amount">
-        <span className={styles.balance}>{balance?.value}</span>
-        <span>{balance?.unit}</span>
+        <span className={styles.balance}>{formattedBalance.value}</span>
+        <span>{formattedBalance.unit}</span>
       </TableRow>
     </Table>
   ) : (
