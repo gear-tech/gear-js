@@ -1,3 +1,11 @@
+## 0.36.2
+
+_01/25/2024_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1477
+- Return support of old vouchers
+
 ## 0.36.1
 
 _01/23/2024_

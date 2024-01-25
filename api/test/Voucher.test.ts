@@ -63,7 +63,7 @@ describe('Voucher', () => {
     expect(txData).toHaveProperty('holder');
     expect(txData).toHaveProperty('program');
     expect(txData).toHaveProperty('value');
-    expect(Object.keys(txData)).toHaveLength(3);
+    expect(Object.keys(txData.toJSON())).toHaveLength(3);
     expect(txData.holder.toHuman()).toBe(charlie.address);
     expect(txData.program.toHex()).toBe(programId);
     expect(txData.value.toNumber()).toBe(100_000_000_000_000);
@@ -121,8 +121,10 @@ describe('Voucher', () => {
   test('Get all vouchers for account', async () => {
     const vouchers = await api.voucher.getAllForAccount(charlie.address);
     expect(Object.keys(vouchers)).toHaveLength(1);
-    expect(vouchers[voucher]).toHaveLength(1);
-    expect(vouchers[voucher][0]).toBe(programId);
+    expect(vouchers[voucher]).toHaveProperty('programs', [programId]);
+    expect(vouchers[voucher]).toHaveProperty('owner', decodeAddress(alice.address));
+    expect(vouchers[voucher]).toHaveProperty('expiry', validUpTo);
+    expect(vouchers[voucher]).toHaveProperty('codeUploading', true);
   });
 
   test('Get voucher details', async () => {
