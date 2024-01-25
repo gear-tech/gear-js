@@ -40,16 +40,16 @@ function useIssueVoucher() {
     programId: HexString,
     value: string,
     duration: number,
+    isCodeUploadEnabled: boolean,
     onSuccess: () => void,
   ) => {
     if (!isApiReady || !account) return;
 
     try {
       const programs = [programId];
-      const isValidForCode = false;
 
       const { extrinsic } = isV110Runtime
-        ? await api.voucher.issue(address, value, duration, programs, isValidForCode)
+        ? await api.voucher.issue(address, value, duration, programs, isCodeUploadEnabled)
         : api.voucher.issueDeprecated(address, programId, value);
 
       const { signer } = await web3FromSource(account.meta.source);

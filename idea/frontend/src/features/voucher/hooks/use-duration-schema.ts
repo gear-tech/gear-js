@@ -9,7 +9,7 @@ function useDurationSchema() {
 
     const { minDuration } = api.voucher;
 
-    return z.coerce.number().min(minDuration);
+    return z.coerce.number().min(minDuration).int();
   };
 
   const getDurationPlaceholderSchema = () => z.coerce.number().transform(() => 0);

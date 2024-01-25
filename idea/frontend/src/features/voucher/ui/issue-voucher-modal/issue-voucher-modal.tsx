@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
-import { Form, Input, ValueField } from '@/shared/ui';
+import { Form, Input, ValueField, Checkbox } from '@/shared/ui';
 
 import { ADDRESS_SCHEMA, DEFAULT_VALUES } from '../../consts';
 import { useBalanceSchema, useDurationSchema, useIssueVoucher } from '../../hooks';
@@ -27,13 +27,14 @@ const IssueVoucherModal = ({ programId, close }: Props) => {
     address: ADDRESS_SCHEMA,
     value: balanceSchema,
     duration: durationSchema,
+    isCodeUploadEnabled: z.boolean(),
   });
 
   type Values = typeof DEFAULT_VALUES;
   type Schema = z.infer<typeof schema>;
 
-  const handleSubmit = ({ address, value, duration }: Schema) =>
-    issueVoucher(address, programId, value, duration, close);
+  const handleSubmit = ({ address, value, duration, isCodeUploadEnabled }: Schema) =>
+    issueVoucher(address, programId, value, duration, isCodeUploadEnabled, close);
 
   return (
     <Modal heading="Create Voucher" size="large" close={close}>
@@ -45,7 +46,12 @@ const IssueVoucherModal = ({ programId, close }: Props) => {
         <Input name="address" label="Account address" direction="y" block />
         <ValueField name="value" label="Tokens amount:" direction="y" block />
 
-        {isV110Runtime && <Input type="number" name="duration" label="Duration (blocks)" direction="y" block />}
+        {isV110Runtime && (
+          <>
+            <Input type="number" name="duration" label="Duration (blocks)" direction="y" block />
+            <Checkbox name="isCodeUploadEnabled" label="Allow code uploading" />
+          </>
+        )}
 
         <div className={styles.buttons}>
           <Button type="submit" icon={ApplySVG} size="large" text="Create" />

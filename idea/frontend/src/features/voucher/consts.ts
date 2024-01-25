@@ -6,6 +6,7 @@ const DEFAULT_VALUES = {
   address: '',
   value: '',
   duration: '',
+  isCodeUploadEnabled: false,
 };
 
 const ADDRESS_SCHEMA = z
