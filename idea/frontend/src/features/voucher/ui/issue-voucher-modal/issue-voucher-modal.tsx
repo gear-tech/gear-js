@@ -49,7 +49,7 @@ const IssueVoucherModal = ({ programId, close }: Props) => {
         {isV110Runtime && (
           <>
             <Input type="number" name="duration" label="Duration (blocks)" direction="y" block />
-            <Checkbox name="isCodeUploadEnabled" label="Allow code uploading" />
+            <Checkbox name="isCodeUploadEnabled" label="Allow code upload" />
           </>
         )}
 
