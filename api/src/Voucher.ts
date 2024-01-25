@@ -1,4 +1,3 @@
-import { stringToU8a, u8aToU8a } from '@polkadot/util';
 import { BalanceOf } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
@@ -7,8 +6,9 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { blake2AsHex } from '@polkadot/util-crypto';
 
 import { ICallOptions, IUpdateVoucherParams, IVoucherDetails, PalletGearVoucherInternalVoucherInfo } from './types';
+import { decodeAddress, generateVoucherId } from './utils';
 import { GearTransaction } from './Transaction';
-import { generateVoucherId } from './utils';
+import { SPEC_VERSION } from './consts';
 
 export class GearVoucher extends GearTransaction {
   /**
@@ -65,9 +65,7 @@ export class GearVoucher extends GearTransaction {
     program: HexString,
     value: number | bigint | string,
   ): { extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>; voucherId: HexString } {
-    const whoU8a = u8aToU8a(to);
-    const programU8a = u8aToU8a(program);
-    const id = Uint8Array.from([...stringToU8a('modlpy/voucher__'), ...whoU8a, ...programU8a]);
+    const id = generateVoucherId(to, program);
 
     const voucherId = blake2AsHex(id, 256);
     this.extrinsic = this._api.tx.gearVoucher.issue.call(this, to, program, value);
@@ -218,6 +216,16 @@ export class GearVoucher extends GearTransaction {
    * @returns
    */
   async exists(accountId: string, programId: HexString): Promise<boolean> {
+    if (this._api.specVersion < SPEC_VERSION.V1100) {
+      const id = generateVoucherId(decodeAddress(accountId), programId);
+
+      const balance = await this._api.balance.findOut(id);
+      if (balance.eqn(0)) {
+        return false;
+      }
+      return true;
+    }
+
     const keyPrefixes = this._api.query.gearVoucher.vouchers.keyPrefix(accountId);
 
     const keysPaged = await this._api.rpc.state.getKeysPaged(keyPrefixes, 1000, keyPrefixes);
@@ -245,8 +253,8 @@ export class GearVoucher extends GearTransaction {
    * @param accountId
    * @returns
    */
-  async getAllForAccount(accountId: string): Promise<Record<string, string[]>> {
-    const result: Record<string, string[]> = {};
+  async getAllForAccount(accountId: string, programId?: HexString): Promise<Record<string, IVoucherDetails>> {
+    const result: Record<string, IVoucherDetails> = {};
 
     const keyPrefix = this._api.query.gearVoucher.vouchers.keyPrefix(accountId);
 
@@ -270,9 +278,19 @@ export class GearVoucher extends GearTransaction {
         return;
       }
 
-      const programs = typedItem.unwrap().programs.unwrapOrDefault().toJSON() as string[];
+      const details = typedItem.unwrap();
+      const programs = details.programs.unwrapOrDefault().toJSON() as string[];
 
-      result[voucherId] = programs;
+      if (details.programs.isSome && programId && !programs.includes(programId)) {
+        return;
+      }
+
+      result[voucherId] = {
+        owner: details.owner.toHex(),
+        programs,
+        expiry: details.expiry.toNumber(),
+        codeUploading: details.codeUploading.isTrue,
+      };
     });
 
     return result;
