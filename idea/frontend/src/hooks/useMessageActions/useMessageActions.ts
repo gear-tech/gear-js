@@ -96,8 +96,6 @@ const useMessageActions = () => {
 
         const sendExtrinsic = api.message.send(message, metadata, payloadType);
 
-        console.log('voucherId: ', voucherId);
-
         const extrinsic = voucherId ? getVoucherExtrinsic(voucherId, sendExtrinsic) : sendExtrinsic;
 
         const { signer } = await web3FromSource(meta.source);

@@ -1,5 +1,7 @@
 import { HexString } from '@gear-js/api';
 import { useAccountVoucherBalance, useBalanceFormat } from '@gear-js/react-hooks';
+import { useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import { LabeledCheckbox } from '@/shared/ui';
 
@@ -15,8 +17,15 @@ const UseVoucherCheckbox = ({ programId }: Props) => {
 
   const formattedBalance = voucherBalance ? getFormattedBalance(voucherBalance) : undefined;
 
+  const name = 'voucherId';
+  const { setValue } = useFormContext();
+
+  useEffect(() => {
+    setValue(name, false);
+  }, [isVoucherExists, setValue]);
+
   return isVoucherExists ? (
-    <LabeledCheckbox name="voucherId" label="Voucher funds:" inputLabel="Use voucher" gap="1/5" value={voucherId}>
+    <LabeledCheckbox name={name} label="Voucher funds:" inputLabel="Use voucher" gap="1/5" value={voucherId}>
       <span className={styles.value}>
         ({formattedBalance?.value} {formattedBalance?.unit})
       </span>
