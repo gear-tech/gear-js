@@ -1,6 +1,5 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { useBalanceFormat } from '@gear-js/react-hooks';
-import { Input } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState, useMemo, ReactNode } from 'react';
@@ -12,8 +11,7 @@ import { Payload } from '@/hooks/useProgramActions/types';
 import { FormPayload, getSubmitPayload, getPayloadFormValues, getResetPayloadValue } from '@/features/formPayload';
 import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
-import { FormInput, ValueField } from '@/shared/ui/form';
-import { LabeledCheckbox } from '@/shared/ui';
+import { Input, ValueField, LabeledCheckbox } from '@/shared/ui';
 
 import { INITIAL_VALUES, FormValues, RenderButtonsProps, SubmitHelpers } from '../model';
 import styles from './ProgramForm.module.scss';
@@ -39,7 +37,7 @@ const ProgramForm = (props: Props) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const methods = useForm<FormValues>({ defaultValues, resolver: yupResolver(schema) });
-  const { register, getValues, setValue, reset } = methods;
+  const { getValues, setValue, reset } = methods;
 
   const [gasInfo, setGasinfo] = useState<Result>();
   const [isDisabled, setIsDisables] = useState(false);
@@ -113,11 +111,11 @@ const ProgramForm = (props: Props) => {
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(handleSubmitForm)}>
         <div className={styles.formContent}>
-          <FormInput name="programName" label="Name" direction="y" placeholder="Enter program name" block />
+          <Input name="programName" label="Name" direction="y" placeholder="Enter program name" block />
 
           <FormPayload name="payload" label="Initial payload" direction="y" values={payloadFormValues} />
 
-          {!metadata && <Input label="Initial payload type" direction="y" block {...register('payloadType')} />}
+          {!metadata && <Input name="payloadType" label="Initial payload type" direction="y" block />}
 
           <ValueField name="value" label="Initial value:" direction="y" block />
 

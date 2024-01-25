@@ -10,12 +10,11 @@ const isDecimal = (value: string) => {
   return decimalRegex.test(value);
 };
 
-// yup
 const isAccountAddressValid = (value = '') => {
   try {
     decodeAddress(value);
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 };

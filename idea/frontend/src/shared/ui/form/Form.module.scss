@@ -16,12 +16,6 @@
   }
 }
 
-.field {
-  label {
-    @extend %labelStyles;
-  }
-}
-
 .text {
   @extend %labelStyles;
 

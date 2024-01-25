@@ -35,11 +35,16 @@ function useIssueVoucher() {
     if (status.isInvalid) alert.error(PROGRAM_ERRORS.INVALID_TRANSACTION);
   };
 
-  const issueVoucher = async (address: HexString, programId: HexString, value: string, onSuccess: () => void) => {
+  const issueVoucher = async (
+    address: HexString,
+    programId: HexString,
+    value: string,
+    duration: number,
+    onSuccess: () => void,
+  ) => {
     if (!isApiReady || !account) return;
 
     try {
-      const duration = undefined;
       const programs = [programId];
       const isValidForCode = false;
 

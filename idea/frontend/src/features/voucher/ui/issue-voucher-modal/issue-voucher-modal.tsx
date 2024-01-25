@@ -1,16 +1,14 @@
+import { useApi } from '@gear-js/react-hooks';
 import { Button, Modal } from '@gear-js/ui';
-import { HexString, decodeAddress } from '@gear-js/api';
-import { useBalanceFormat } from '@gear-js/react-hooks';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { FormProvider, useForm } from 'react-hook-form';
-import * as yup from 'yup';
+import { HexString } from '@gear-js/api';
+import { z } from 'zod';
 
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
-import { isAccountAddressValid } from '@/shared/helpers';
-import { FormInput, ValueField } from '@/shared/ui/form';
+import { Form, Input, ValueField } from '@/shared/ui';
 
-import { useIssueVoucher } from '../../hooks';
+import { ADDRESS_SCHEMA, DEFAULT_VALUES } from '../../consts';
+import { useBalanceSchema, useDurationSchema, useIssueVoucher } from '../../hooks';
 import styles from './issue-voucher-modal.module.scss';
 
 type Props = {
@@ -18,44 +16,42 @@ type Props = {
   close: () => void;
 };
 
-const defaultValues = { address: '', value: '' };
-
-const schema = yup.object().shape({
-  address: yup
-    .string()
-    .test('is-address-valid', 'Invalid address', isAccountAddressValid)
-    .required('This field is required'),
-  value: yup.string().required('This field is required'),
-});
-
-const resolver = yupResolver(schema);
-
 const IssueVoucherModal = ({ programId, close }: Props) => {
-  const { getChainBalanceValue } = useBalanceFormat();
+  const { isV110Runtime } = useApi();
   const { issueVoucher } = useIssueVoucher();
 
-  const methods = useForm({ defaultValues, resolver });
+  const balanceSchema = useBalanceSchema();
+  const durationSchema = useDurationSchema();
 
-  const handleSubmit = ({ address, value }: typeof defaultValues) => {
-    const decodedAddress = decodeAddress(address);
-    const chainValue = getChainBalanceValue(value).toFixed();
+  const schema = z.object({
+    address: ADDRESS_SCHEMA,
+    value: balanceSchema,
+    duration: durationSchema,
+  });
 
-    issueVoucher(decodedAddress, programId, chainValue, close);
-  };
+  type Values = typeof DEFAULT_VALUES;
+  type Schema = z.infer<typeof schema>;
+
+  const handleSubmit = ({ address, value, duration }: Schema) =>
+    issueVoucher(address, programId, value, duration, close);
 
   return (
     <Modal heading="Create Voucher" size="large" close={close}>
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(handleSubmit)} className={styles.form}>
-          <FormInput name="address" label="Account address" direction="y" block />
-          <ValueField name="value" label="Tokens amount:" direction="y" block />
+      <Form<Values, Schema>
+        defaultValues={DEFAULT_VALUES}
+        schema={schema}
+        onSubmit={handleSubmit}
+        className={styles.form}>
+        <Input name="address" label="Account address" direction="y" block />
+        <ValueField name="value" label="Tokens amount:" direction="y" block />
 
-          <div className={styles.buttons}>
-            <Button type="submit" icon={ApplySVG} size="large" text="Create" />
-            <Button icon={CloseSVG} color="light" size="large" text="Close" onClick={close} />
-          </div>
-        </form>
-      </FormProvider>
+        {isV110Runtime && <Input type="number" name="duration" label="Duration (blocks)" direction="y" block />}
+
+        <div className={styles.buttons}>
+          <Button type="submit" icon={ApplySVG} size="large" text="Create" />
+          <Button icon={CloseSVG} color="light" size="large" text="Close" onClick={close} />
+        </div>
+      </Form>
     </Modal>
   );
 };

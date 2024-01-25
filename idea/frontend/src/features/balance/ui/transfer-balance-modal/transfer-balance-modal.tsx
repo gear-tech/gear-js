@@ -6,7 +6,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
-import { FormInput, ValueField } from '@/shared/ui/form';
+import { Input, ValueField } from '@/shared/ui/form';
 import { isAccountAddressValid } from '@/shared/helpers';
 import { useBalanceTransfer } from '@/hooks';
 
@@ -53,7 +53,7 @@ const TransferBalanceModal = ({ close }: Props) => {
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(handleSubmit)}>
           <div className={styles.inputs}>
-            <FormInput name="address" label="Address" direction="y" block />
+            <Input name="address" label="Address" direction="y" block />
             <ValueField name="value" label="Value:" direction="y" block />
             <Checkbox label="Keep Alive" {...register('keepAlive')} />
           </div>
