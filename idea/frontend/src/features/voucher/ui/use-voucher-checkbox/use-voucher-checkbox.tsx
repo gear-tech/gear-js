@@ -10,15 +10,15 @@ type Props = {
 };
 
 const UseVoucherCheckbox = ({ programId }: Props) => {
-  const { voucherBalance, isVoucherExists } = useAccountVoucherBalance(programId);
+  const { voucherBalance, isVoucherExists, voucherId } = useAccountVoucherBalance(programId);
   const { getFormattedBalance } = useBalanceFormat();
 
   const formattedBalance = voucherBalance ? getFormattedBalance(voucherBalance) : undefined;
 
   return isVoucherExists ? (
-    <LabeledCheckbox name="withVoucher" label="Voucher funds:" inputLabel="Use voucher">
+    <LabeledCheckbox name="voucherId" label="Voucher funds:" inputLabel="Use voucher" gap="1/5" value={voucherId}>
       <span className={styles.value}>
-        ( {formattedBalance?.value} {formattedBalance?.unit})
+        ({formattedBalance?.value} {formattedBalance?.unit})
       </span>
     </LabeledCheckbox>
   ) : null;

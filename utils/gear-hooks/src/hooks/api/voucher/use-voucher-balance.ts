@@ -13,7 +13,7 @@ function useVoucherBalance(programId: HexString | undefined, accountAddress: str
   const voucherBalance = balance;
   const isVoucherBalanceReady = isVoucherExists ? isBalanceReady : isVoucherIdReady;
 
-  return { voucherBalance, isVoucherBalanceReady, isVoucherExists };
+  return { voucherBalance, isVoucherBalanceReady, voucherId, isVoucherExists };
 }
 
 function useAccountVoucherBalance(programId: HexString | undefined) {

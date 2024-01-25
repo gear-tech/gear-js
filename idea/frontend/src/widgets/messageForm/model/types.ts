@@ -1,3 +1,5 @@
+import { HexString } from '@gear-js/api';
+
 import { PayloadValue } from '@/entities/formPayload';
 
 type FormValues = {
@@ -5,7 +7,7 @@ type FormValues = {
   gasLimit: string;
   payload: PayloadValue;
   payloadType: string;
-  withVoucher: boolean;
+  voucherId: HexString | false;
   keepAlive: boolean;
 };
 

@@ -72,7 +72,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
     disableSubmitButton();
 
     const payloadType = metadata ? undefined : values.payloadType;
-    const { withVoucher, keepAlive } = values;
+    const { voucherId, keepAlive } = values;
 
     const baseValues = {
       value: getChainBalanceValue(values.value).toFixed(),
@@ -83,10 +83,10 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
 
     if (isReply) {
       const reply = { ...baseValues, replyToId: id };
-      replyMessage({ reply, metadata, payloadType, withVoucher, reject: enableSubmitButton, resolve: resetForm });
+      replyMessage({ reply, metadata, payloadType, voucherId, reject: enableSubmitButton, resolve: resetForm });
     } else {
       const message = { ...baseValues, destination: id };
-      sendMessage({ message, metadata, payloadType, withVoucher, reject: enableSubmitButton, resolve: resetForm });
+      sendMessage({ message, metadata, payloadType, voucherId, reject: enableSubmitButton, resolve: resetForm });
     }
   };
 

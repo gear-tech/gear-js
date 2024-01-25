@@ -36,7 +36,7 @@ function useProgramVoucher(programId: HexString | undefined, accountAddress: str
   const { voucherId, isVoucherIdReady, isVoucherExists } = useVoucherId(programId, accountAddress);
   const { voucher, isVoucherReady } = useVoucher(voucherId, accountAddress);
 
-  return { voucher, isVoucherReady: isVoucherExists ? isVoucherReady : isVoucherIdReady, isVoucherExists };
+  return { voucher, isVoucherReady: isVoucherExists ? isVoucherReady : isVoucherIdReady, voucherId, isVoucherExists };
 }
 
 function useAccountProgramVoucher(programId: HexString | undefined) {

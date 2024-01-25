@@ -1,9 +1,10 @@
-import { useCallback } from 'react';
-import { web3FromSource } from '@polkadot/extension-dapp';
-import { EventRecord } from '@polkadot/types/interfaces';
+import { HexString } from '@gear-js/api';
+import { useApi, useAlert, useAccount, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
-import { useApi, useAlert, useAccount, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
+import { web3FromSource } from '@polkadot/extension-dapp';
+import { EventRecord } from '@polkadot/types/interfaces';
+import { useCallback } from 'react';
 
 import { useModal } from '@/hooks';
 import { Method } from '@/features/explorer';
@@ -14,7 +15,7 @@ import { PROGRAM_ERRORS, TransactionStatus, TransactionName } from '@/shared/con
 import { ParamsToSendMessage, ParamsToSignAndSend, ParamsToReplyMessage } from './types';
 
 const useMessageActions = () => {
-  const { api, isApiReady } = useApi();
+  const { api, isApiReady, isV110Runtime } = useApi();
   const { account } = useAccount();
   const alert = useAlert();
   const { showModal } = useModal();
@@ -73,8 +74,20 @@ const useMessageActions = () => {
     }
   };
 
+  const getVoucherExtrinsic = (
+    id: HexString,
+    sendExtrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>,
+    type: 'message' | 'reply' = 'message',
+  ) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+
+    const args = type === 'message' ? { SendMessage: sendExtrinsic } : { SendReply: sendExtrinsic };
+
+    return isV110Runtime ? api.voucher.call(id, args) : api.voucher.callDeprecated(args);
+  };
+
   const sendMessage = useCallback(
-    async ({ metadata, message, payloadType, withVoucher, reject, resolve }: ParamsToSendMessage) => {
+    async ({ metadata, message, payloadType, voucherId, reject, resolve }: ParamsToSendMessage) => {
       try {
         if (!isApiReady) throw new Error('API is not initialized');
         checkWallet(account);
@@ -83,7 +96,9 @@ const useMessageActions = () => {
 
         const sendExtrinsic = api.message.send(message, metadata, payloadType);
 
-        const extrinsic = withVoucher ? api.voucher.call({ SendMessage: sendExtrinsic }) : sendExtrinsic;
+        console.log('voucherId: ', voucherId);
+
+        const extrinsic = voucherId ? getVoucherExtrinsic(voucherId, sendExtrinsic) : sendExtrinsic;
 
         const { signer } = await web3FromSource(meta.source);
         const { partialFee } = await api.message.paymentInfo(address, { signer });
@@ -111,7 +126,7 @@ const useMessageActions = () => {
   );
 
   const replyMessage = useCallback(
-    async ({ reply, metadata, payloadType, withVoucher, reject, resolve }: ParamsToReplyMessage) => {
+    async ({ reply, metadata, payloadType, voucherId, reject, resolve }: ParamsToReplyMessage) => {
       try {
         if (!isApiReady) throw new Error('API is not initialized');
         checkWallet(account);
@@ -120,7 +135,7 @@ const useMessageActions = () => {
 
         const replyExtrinsic = await api.message.sendReply(reply, metadata, payloadType);
 
-        const extrinsic = withVoucher ? api.voucher.call({ SendReply: replyExtrinsic }) : replyExtrinsic;
+        const extrinsic = voucherId ? getVoucherExtrinsic(voucherId, replyExtrinsic, 'reply') : replyExtrinsic;
 
         const { signer } = await web3FromSource(meta.source);
         const { partialFee } = await api.message.paymentInfo(address, { signer });
