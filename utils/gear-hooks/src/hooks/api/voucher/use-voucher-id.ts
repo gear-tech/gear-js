@@ -1,30 +1,18 @@
 import { HexString } from '@gear-js/api';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 
 import { AccountContext } from 'context';
-import { getTypedEntries } from 'utils';
 
 import { useVouchers } from './use-vouchers';
 
 function useVoucherId(programId: HexString | undefined, accountAddress: string | undefined) {
-  const { vouchers } = useVouchers(accountAddress);
+  const { vouchers, isEachVoucherReady } = useVouchers(accountAddress, programId);
 
-  const [voucherId, setVoucherId] = useState<HexString>();
+  const ids = Object.keys(vouchers || {});
+  const voucherId = ids[0] as HexString | undefined;
 
-  const isVoucherIdReady = voucherId !== undefined;
+  const isVoucherIdReady = isEachVoucherReady;
   const isVoucherExists = !!(isVoucherIdReady && voucherId);
-
-  useEffect(() => {
-    setVoucherId(undefined);
-
-    if (!vouchers || !programId) return;
-
-    const [result] = getTypedEntries(vouchers).find(([, programIds]) => programIds.includes(programId)) || [
-      '' as HexString,
-    ];
-
-    setVoucherId(result);
-  }, [vouchers, accountAddress, programId]);
 
   return { voucherId, isVoucherIdReady, isVoucherExists };
 }

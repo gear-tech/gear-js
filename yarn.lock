@@ -2324,14 +2324,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.36.1":
-  version: 0.36.1
-  resolution: "@gear-js/api@npm:0.36.1"
+"@gear-js/api@npm:0.36.2":
+  version: 0.36.2
+  resolution: "@gear-js/api@npm:0.36.2"
   peerDependencies:
     "@polkadot/api": 10.11.2
     "@polkadot/wasm-crypto": 7.3.2
     rxjs: 7.8.1
-  checksum: c1a28dea074ae3883ba4e05a1130286e59cba6f1677a1f39a2b9d10fe86eee41ca339338f4ec772c7dcb21ad86cf9dfbc235bf8e04fb1f13cb72c9767f12b316
+  checksum: fcb73edcae08e33b95bc8e8701379529125180836d52af5e8bded11546a0eadb6e50e66fc9a5305fa1c9e3a63f9de8852b456bcc0fcf40596571528b680e3de1
   languageName: node
   linkType: hard
 
@@ -2350,7 +2350,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/frontend@workspace:idea/frontend"
   dependencies:
-    "@gear-js/api": 0.36.1
+    "@gear-js/api": 0.36.2
     "@gear-js/react-hooks": "workspace:^"
     "@gear-js/ui": "workspace:^"
     "@hcaptcha/react-hcaptcha": 1.8.1
@@ -2451,7 +2451,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/react-hooks@workspace:utils/gear-hooks"
   dependencies:
-    "@gear-js/api": 0.36.1
+    "@gear-js/api": 0.36.2
     "@polkadot/api": 10.11.2
     "@polkadot/api-derive": 10.11.2
     "@polkadot/extension-dapp": 0.46.5
@@ -2475,7 +2475,7 @@ __metadata:
     rollup-plugin-typescript2: 0.36.0
     typescript: 5.2.2
   peerDependencies:
-    "@gear-js/api": 0.36.1
+    "@gear-js/api": 0.36.2
     "@polkadot/api": 10.11.2
     "@polkadot/extension-dapp": 0.46.5
     react: 18.2.0
