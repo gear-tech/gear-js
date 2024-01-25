@@ -14,7 +14,7 @@ const checkWallet = (account?: Account) => {
   }
 };
 
-const formatDate = (rawDate: string) => {
+const formatDate = (rawDate: string | number) => {
   const date = new Date(rawDate);
   const time = date.toLocaleTimeString('en-GB');
   const formatedDate = date.toLocaleDateString('en-US').replace(/\//g, '-');

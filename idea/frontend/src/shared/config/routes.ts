@@ -21,6 +21,7 @@ const routes = {
   reply: 'reply/:messageId',
   meta: '/meta/:programId',
   block: ':blockId',
+  vouchers: '/vouchers',
 };
 
 const absoluteRoutes = {

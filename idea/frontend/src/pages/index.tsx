@@ -18,6 +18,7 @@ import * as State from './state';
 import { Explorer } from './explorer';
 import { Code } from './code';
 import { UploadCode } from './uploadCode';
+import { Vouchers } from './vouchers';
 
 const Routing = () => {
   const events = useEvents();
@@ -60,6 +61,8 @@ const Routing = () => {
 
       <Route path={routes.code} element={<Code />} />
       <Route path={routes.uploadCode} element={<UploadCode />} />
+
+      <Route path={routes.vouchers} element={<Vouchers />} />
 
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Navigate to={routes.programs} replace />} />
