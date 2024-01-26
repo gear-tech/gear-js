@@ -2,7 +2,6 @@ import { HexString, IVoucherDetails } from '@gear-js/api';
 import { useState, useEffect, useContext } from 'react';
 
 import { AccountContext, AlertContext, ApiContext } from 'context';
-import { getTypedEntries } from 'utils';
 
 function useVouchers(accountAddress: string | undefined, programId?: HexString | undefined) {
   const { api } = useContext(ApiContext);
