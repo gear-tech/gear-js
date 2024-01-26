@@ -1,7 +1,7 @@
 import { useAlert, useApi } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 
-const useBlockTimestamp = (blockNumber: number) => {
+const useBlockTimestamp = (blockNumber: number | undefined) => {
   const { api, isApiReady } = useApi();
   const alert = useAlert();
 
@@ -24,7 +24,7 @@ const useBlockTimestamp = (blockNumber: number) => {
   useEffect(() => {
     setBlockTimestamp(undefined);
 
-    if (!isApiReady) return;
+    if (!isApiReady || blockNumber === undefined) return;
 
     getBlockTimestamp(blockNumber)
       .then((result) => setBlockTimestamp(result))

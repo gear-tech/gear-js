@@ -1,10 +1,10 @@
 import { useBalance, useBalanceFormat } from '@gear-js/react-hooks';
 
+import { useVoucherStatus } from '@/features/voucher';
 import { TimestampBlock } from '@/shared/ui/timestampBlock';
 import { IdBlock } from '@/shared/ui/idBlock';
 import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
 
-import { useBlockTimestamp } from '../../hooks';
 import styles from './voucher-card.module.scss';
 
 type Props = {
@@ -18,8 +18,7 @@ function VoucherCard({ id, expireBlock }: Props) {
 
   const formattedBalance = balance ? getFormattedBalance(balance) : undefined;
 
-  const { blockTimestamp } = useBlockTimestamp(expireBlock);
-  const isActive = blockTimestamp && blockTimestamp > Date.now();
+  const { expirationTimestamp, isVoucherStatusReady, isVoucherActive } = useVoucherStatus(expireBlock);
 
   return (
     <div className={styles.card}>
@@ -29,12 +28,15 @@ function VoucherCard({ id, expireBlock }: Props) {
       </h3>
 
       <footer className={styles.footer}>
-        {blockTimestamp && <TimestampBlock timestamp={blockTimestamp} withIcon />}
+        {expirationTimestamp && <TimestampBlock timestamp={expirationTimestamp} withIcon />}
 
         <IdBlock id={id} withIcon />
 
-        {blockTimestamp && (
-          <BulbBlock status={isActive ? BulbStatus.Success : BulbStatus.Error} text={isActive ? 'Active' : 'Expired'} />
+        {isVoucherStatusReady && (
+          <BulbBlock
+            status={isVoucherActive ? BulbStatus.Success : BulbStatus.Error}
+            text={isVoucherActive ? 'Active' : 'Expired'}
+          />
         )}
       </footer>
     </div>
