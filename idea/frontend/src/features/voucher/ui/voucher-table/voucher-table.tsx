@@ -1,5 +1,5 @@
 import { HexString } from '@gear-js/api';
-import { useAccountProgramVoucher, useAccountVoucherBalance, useBalanceFormat } from '@gear-js/react-hooks';
+import { useBalance, useBalanceFormat } from '@gear-js/react-hooks';
 
 import VoucherPlaceholderSVG from '@/features/voucher/assets/voucher-placeholder.svg?react';
 import { ContentLoader } from '@/shared/ui/contentLoader';
@@ -12,31 +12,25 @@ import { useVoucherStatus } from '../../hooks';
 import styles from './voucher-table.module.scss';
 
 type Props = {
-  programId: HexString;
+  id: HexString;
+  expireBlock: number;
+  owner: HexString;
+  isCodeUploadEnabled: boolean;
 };
 
-const VoucherTable = withAccount(({ programId }: Props) => {
-  const { voucher, isVoucherReady } = useAccountProgramVoucher(programId);
-  const { voucherBalance, isVoucherBalanceReady, isVoucherExists } = useAccountVoucherBalance(programId);
+const VoucherTable = withAccount(({ id, expireBlock, owner, isCodeUploadEnabled }: Props) => {
+  const { isVoucherActive, expirationTimestamp, isVoucherStatusReady } = useVoucherStatus(expireBlock);
 
-  const { isVoucherActive, expirationTimestamp, isVoucherStatusReady } = useVoucherStatus(voucher?.expiry);
-  const isStatusReady = !isVoucherExists || isVoucherStatusReady;
-
+  const { balance, isBalanceReady } = useBalance(id);
   const { getFormattedBalance } = useBalanceFormat();
-  const formattedBalance = getFormattedBalance(voucherBalance || '0');
+  const formattedBalance = getFormattedBalance(balance || '0');
 
   const getBulb = (value: boolean) => (value ? BulbStatus.Success : BulbStatus.Error);
 
-  const getStatusText = () => {
-    if (!isVoucherExists) return 'Not available';
-
-    return isVoucherActive ? 'Available' : 'Expired';
-  };
-
-  return isVoucherReady && isVoucherBalanceReady && isStatusReady ? (
+  return isBalanceReady && isVoucherStatusReady ? (
     <Table>
       <TableRow name="Status">
-        <BulbBlock status={getBulb(isVoucherExists && isVoucherActive)} text={getStatusText()} size="large" />
+        <BulbBlock status={getBulb(isVoucherActive)} text={isVoucherActive ? 'Available' : 'Expired'} size="large" />
       </TableRow>
 
       <TableRow name="Amount">
@@ -44,21 +38,21 @@ const VoucherTable = withAccount(({ programId }: Props) => {
         <span>{formattedBalance.unit}</span>
       </TableRow>
 
-      {voucher && expirationTimestamp && (
+      {expirationTimestamp && (
         <>
           <TableRow name="Issued by">
-            <IdBlock id={voucher.owner} size="big" />
+            <IdBlock id={owner} size="big" />
           </TableRow>
 
           <TableRow name="Expire at">
             <span className={styles.highlight}>{new Date(expirationTimestamp).toLocaleString()}</span>
-            <span>(#{voucher.expiry})</span>
+            <span>(#{expireBlock})</span>
           </TableRow>
 
           <TableRow name="Allow code upload">
             <BulbBlock
-              status={getBulb(voucher.codeUploading)}
-              text={voucher.codeUploading ? 'Enabled' : 'Disabled'}
+              status={getBulb(isCodeUploadEnabled)}
+              text={isCodeUploadEnabled ? 'Enabled' : 'Disabled'}
               size="large"
             />
           </TableRow>

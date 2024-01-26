@@ -49,3 +49,14 @@
     flex: 1 1;
   }
 }
+
+.simpleBar {
+  @include customSimplebar;
+  height: toRem(300);
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}

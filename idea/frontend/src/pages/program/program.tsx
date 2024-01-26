@@ -1,8 +1,9 @@
 import { HexString } from '@polkadot/util/types';
 import { Button } from '@gear-js/ui';
 import { ProgramMetadata } from '@gear-js/api';
-import { useAccount } from '@gear-js/react-hooks';
+import { useAccount, useAccountVouchers } from '@gear-js/react-hooks';
 import { generatePath, useParams } from 'react-router-dom';
+import SimpleBar from 'simplebar-react';
 
 import { useMetadataUpload, useModal, useProgram } from '@/hooks';
 import { ProgramStatus, ProgramTable } from '@/features/program';
@@ -46,6 +47,17 @@ const Program = () => {
 
   const openUploadMetadataModal = () => showModal('metadata', { onSubmit: handleUploadMetadataSubmit });
 
+  const { vouchers } = useAccountVouchers(programId);
+  const voucherEntries = Object.entries(vouchers || {});
+  const vouchersCount = voucherEntries.length;
+
+  const renderVouchers = () =>
+    voucherEntries.map(([id, { expiry, owner, codeUploading }]) => (
+      <li key={id}>
+        <VoucherTable id={id as HexString} expireBlock={expiry} owner={owner} isCodeUploadEnabled={codeUploading} />
+      </li>
+    ));
+
   return (
     <div>
       <header className={styles.header}>
@@ -85,16 +97,20 @@ const Program = () => {
             <ProgramTable program={program} isProgramReady={isProgramReady} />
           </div>
 
-          <div>
-            {/* TODO: WithAccount HoC? or move inside VoucherTable? */}
-            {account && (
-              <Subheader title="Voucher details">
-                <IssueVoucher programId={programId} />
-              </Subheader>
-            )}
+          {vouchersCount > 0 && (
+            <div>
+              {/* TODO: WithAccount HoC? or move inside VoucherTable? */}
+              {account && (
+                <Subheader title={`Vouchers: ${vouchersCount}`}>
+                  <IssueVoucher programId={programId} />
+                </Subheader>
+              )}
 
-            <VoucherTable programId={programId} />
-          </div>
+              <SimpleBar className={styles.simpleBar}>
+                <ul>{renderVouchers()}</ul>
+              </SimpleBar>
+            </div>
+          )}
 
           <div>
             <Subheader title="Metadata" />
