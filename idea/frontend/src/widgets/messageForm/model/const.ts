@@ -5,7 +5,7 @@ const INITIAL_VALUES: FormValues = {
   payload: '0x',
   gasLimit: '0',
   payloadType: 'Bytes',
-  voucherId: false,
+  voucherId: '',
   keepAlive: true,
 };
 

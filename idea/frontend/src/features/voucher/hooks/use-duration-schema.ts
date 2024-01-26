@@ -12,6 +12,7 @@ function useDurationSchema() {
     return z.coerce.number().min(minDuration).int();
   };
 
+  // TODO: probably should be done by shoudlUnregister?
   const getDurationPlaceholderSchema = () => z.coerce.number().transform(() => 0);
 
   return isV110Runtime ? getDurationSchema() : getDurationPlaceholderSchema();

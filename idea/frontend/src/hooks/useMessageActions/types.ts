@@ -1,4 +1,4 @@
-import { ProgramMetadata, MessageSendOptions, MessageSendReplyOptions, HexString } from '@gear-js/api';
+import { ProgramMetadata, MessageSendOptions, MessageSendReplyOptions } from '@gear-js/api';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 
@@ -6,14 +6,14 @@ import { OperationCallbacks, ParamsToSignAndSend as CommonParamsToSignAndSend } 
 
 type ParamsToSendMessage = OperationCallbacks & {
   message: MessageSendOptions;
-  voucherId: HexString | false;
+  voucherId: string;
   metadata?: ProgramMetadata;
   payloadType?: string;
 };
 
 type ParamsToReplyMessage = OperationCallbacks & {
   reply: MessageSendReplyOptions;
-  voucherId: HexString | false;
+  voucherId: string;
   metadata?: ProgramMetadata;
   payloadType?: string;
 };

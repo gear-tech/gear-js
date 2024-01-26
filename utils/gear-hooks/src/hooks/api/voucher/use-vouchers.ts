@@ -2,6 +2,7 @@ import { HexString, IVoucherDetails } from '@gear-js/api';
 import { useState, useEffect, useContext } from 'react';
 
 import { AccountContext, AlertContext, ApiContext } from 'context';
+import { getTypedEntries } from 'utils';
 
 function useVouchers(accountAddress: string | undefined, programId?: HexString | undefined) {
   const { api } = useContext(ApiContext);
@@ -16,8 +17,16 @@ function useVouchers(accountAddress: string | undefined, programId?: HexString |
     if (!api || !accountAddress) return;
 
     api.voucher
-      .getAllForAccount(accountAddress, programId)
-      .then((result) => setVouchers(result))
+      .getAllForAccount(accountAddress)
+      .then((result) => {
+        const programsResult = programId
+          ? Object.fromEntries(
+              Object.entries(result).filter(([, { programs }]) => !programs.length || programs.includes(programId)),
+            )
+          : result;
+
+        setVouchers(programsResult);
+      })
       .catch(({ message }) => alert.error(message));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

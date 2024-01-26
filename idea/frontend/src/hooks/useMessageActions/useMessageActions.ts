@@ -1,4 +1,3 @@
-import { HexString } from '@gear-js/api';
 import { useApi, useAlert, useAccount, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
@@ -75,7 +74,7 @@ const useMessageActions = () => {
   };
 
   const getVoucherExtrinsic = (
-    id: HexString,
+    id: string,
     sendExtrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>,
     type: 'message' | 'reply' = 'message',
   ) => {
