@@ -1,5 +1,8 @@
 import { HexString } from '@gear-js/api';
 import { useBalance, useBalanceFormat, useVoucherStatus } from '@gear-js/react-hooks';
+import { Button } from '@gear-js/ui';
+import { useState } from 'react';
+import clsx from 'clsx';
 
 import VoucherPlaceholderSVG from '@/features/voucher/assets/voucher-placeholder.svg?react';
 import { ContentLoader } from '@/shared/ui/contentLoader';
@@ -7,6 +10,7 @@ import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
 import { withAccount } from '@/shared/ui';
 import { Table, TableRow } from '@/shared/ui/table';
 import { IdBlock } from '@/shared/ui/idBlock';
+import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
 
 import styles from './voucher-table.module.scss';
 
@@ -31,38 +35,51 @@ const VoucherTable = withAccount(({ id, expireBlock, owner, isCodeUploadEnabled 
 
   const isV110Runtime = expirationTimestamp && owner && expireBlock && isCodeUploadEnabled !== undefined;
 
-  return isBalanceReady && isVoucherStatusReady ? (
-    <Table>
-      <TableRow name="Status">
-        <BulbBlock status={getBulb(isVoucherActive)} text={isVoucherActive ? 'Available' : 'Expired'} size="large" />
-      </TableRow>
+  const [isOpen, setIsOpen] = useState(false);
+  const toggle = () => setIsOpen((prevValue) => !prevValue);
 
-      <TableRow name="Amount">
-        <span className={styles.highlight}>{formattedBalance.value}</span>
-        <span>{formattedBalance.unit}</span>
-      </TableRow>
+  return isBalanceReady && isVoucherStatusReady ? (
+    <div className={styles.table}>
+      <Table>
+        <TableRow name="Status">
+          <BulbBlock status={getBulb(isVoucherActive)} text={isVoucherActive ? 'Available' : 'Expired'} size="large" />
+        </TableRow>
+        <TableRow name="Amount">
+          <span className={styles.highlight}>{formattedBalance.value}</span>
+          <span>{formattedBalance.unit}</span>
+        </TableRow>
+
+        {isV110Runtime && isOpen && (
+          <>
+            <TableRow name="Issued by">
+              <IdBlock id={owner} size="big" />
+            </TableRow>
+
+            <TableRow name="Expire at">
+              <span className={styles.highlight}>{new Date(expirationTimestamp).toLocaleString()}</span>
+              <span>(#{expireBlock})</span>
+            </TableRow>
+
+            <TableRow name="Allow code upload">
+              <BulbBlock
+                status={getBulb(isCodeUploadEnabled)}
+                text={isCodeUploadEnabled ? 'Enabled' : 'Disabled'}
+                size="large"
+              />
+            </TableRow>
+          </>
+        )}
+      </Table>
 
       {isV110Runtime && (
-        <>
-          <TableRow name="Issued by">
-            <IdBlock id={owner} size="big" />
-          </TableRow>
-
-          <TableRow name="Expire at">
-            <span className={styles.highlight}>{new Date(expirationTimestamp).toLocaleString()}</span>
-            <span>(#{expireBlock})</span>
-          </TableRow>
-
-          <TableRow name="Allow code upload">
-            <BulbBlock
-              status={getBulb(isCodeUploadEnabled)}
-              text={isCodeUploadEnabled ? 'Enabled' : 'Disabled'}
-              size="large"
-            />
-          </TableRow>
-        </>
+        <Button
+          icon={ArrowSVG}
+          color="transparent"
+          onClick={toggle}
+          className={clsx(styles.openButton, isOpen && styles.open)}
+        />
       )}
-    </Table>
+    </div>
   ) : (
     <ContentLoader text="There's no voucher" isEmpty={false}>
       <VoucherPlaceholderSVG />

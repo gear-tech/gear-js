@@ -17,7 +17,6 @@ type Props = {
 
 const HorizontalCodeCard = memo(({ code }: Props) => {
   const { id: codeId, timestamp, name } = code;
-  console.log('timestamp: ', timestamp);
 
   const to = `/code/${codeId}`;
 
