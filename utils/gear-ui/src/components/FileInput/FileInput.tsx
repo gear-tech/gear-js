@@ -17,6 +17,7 @@ import { InputWrapper } from '../utils';
 import { ReactComponent as RemoveSVG } from './images/remove.svg';
 import { ReactComponent as SelectSVG } from './images/select.svg';
 import styles from './FileInput.module.scss';
+import { useChangeEffect } from 'hooks';
 
 type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'onChange' | 'accept'> &
   Omit<InputProps, 'color'> & {
@@ -86,8 +87,7 @@ const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInput
     setFile(eventFile);
   };
 
-  // TODO: replace w/ useChangeEffect
-  useEffect(() => {
+  useChangeEffect(() => {
     if (!value) reset();
   }, [value]);
 

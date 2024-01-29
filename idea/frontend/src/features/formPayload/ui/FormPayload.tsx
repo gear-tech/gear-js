@@ -21,9 +21,20 @@ type Props = {
   values?: FormPayloadValues;
 };
 
+// TODO: temp solution to unregister manual payload on unmount,
+// since on metadata change it's messing with default payload values
+function ManualPayloadTextarea({ name }: { name: string }) {
+  const { register, unregister } = useFormContext();
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => () => unregister(name), []);
+
+  return <Textarea id={name} rows={15} placeholder="// Enter your payload here" block {...register(name)} />;
+}
+
 const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
   const alert = useAlert();
-  const { setValue, register } = useFormContext();
+  const { setValue } = useFormContext();
 
   const jsonManualPayload = useRef<string>();
 
@@ -101,7 +112,8 @@ const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
           <PayloadStructure levelName={name} typeStructure={values.typeStructure} />
         ) : (
           <>
-            <Textarea id={name} rows={15} placeholder="// Enter your payload here" block {...register(name)} />
+            <ManualPayloadTextarea name={name} />
+
             {values && (
               <FileInput
                 value={manualPayloadFile}
