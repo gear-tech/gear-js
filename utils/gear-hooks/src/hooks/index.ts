@@ -16,6 +16,8 @@ import {
   useAccountVouchers,
   useBalance,
   useBalanceFormat,
+  useApproxBlockTimestamp,
+  useVoucherStatus,
   useDeriveBalancesAll,
   useAccountDeriveBalancesAll,
   SendMessageOptions,
@@ -49,6 +51,8 @@ export {
   useApi,
   useCreateHandler,
   useSendMessageHandler,
+  useApproxBlockTimestamp,
+  useVoucherStatus,
   SendMessageOptions,
   UseSendMessageOptions,
 };

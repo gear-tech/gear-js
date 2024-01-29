@@ -3,11 +3,13 @@ import { useState, useEffect, useContext } from 'react';
 
 import { AccountContext, AlertContext, ApiContext } from 'context';
 
+type DeprecatedVoucherDetails = Partial<IVoucherDetails>;
+
 function useVouchers(accountAddress: string | undefined, programId?: HexString | undefined) {
   const { api, isApiReady, isV110Runtime } = useContext(ApiContext);
   const alert = useContext(AlertContext);
 
-  const [vouchers, setVouchers] = useState<Record<HexString, IVoucherDetails>>();
+  const [vouchers, setVouchers] = useState<Record<HexString, IVoucherDetails | DeprecatedVoucherDetails>>();
   const isEachVoucherReady = vouchers !== undefined;
 
   const getDeprecatedVouchers = async (_accountAddress: string, _programId?: HexString) => {
@@ -15,16 +17,11 @@ function useVouchers(accountAddress: string | undefined, programId?: HexString |
 
     const decodedAddress = decodeAddress(_accountAddress);
 
-    if (!_programId || (await api.voucher.exists(decodedAddress, _programId))) return {};
+    if (!_programId || !(await api.voucher.exists(decodedAddress, _programId))) return {};
 
     const voucherId = generateVoucherId(decodedAddress, _programId);
 
-    const owner = '0x00' as HexString;
-    const expiry = 1;
-    const programs = [_programId];
-    const codeUploading = false;
-
-    return { [voucherId]: { owner, expiry, programs, codeUploading } };
+    return { [voucherId]: {} };
   };
 
   const getVouchers = async (_accountAddress: string, _programId?: HexString) => {
@@ -64,3 +61,4 @@ function useAccountVouchers(programId?: HexString | undefined) {
 }
 
 export { useVouchers, useAccountVouchers };
+export type { DeprecatedVoucherDetails };

@@ -1,5 +1,5 @@
 import { HexString } from '@gear-js/api';
-import { useApi, useBalance, useBalanceFormat } from '@gear-js/react-hooks';
+import { useBalance, useBalanceFormat, useVoucherStatus } from '@gear-js/react-hooks';
 
 import VoucherPlaceholderSVG from '@/features/voucher/assets/voucher-placeholder.svg?react';
 import { ContentLoader } from '@/shared/ui/contentLoader';
@@ -8,18 +8,19 @@ import { withAccount } from '@/shared/ui';
 import { Table, TableRow } from '@/shared/ui/table';
 import { IdBlock } from '@/shared/ui/idBlock';
 
-import { useVoucherStatus } from '../../hooks';
 import styles from './voucher-table.module.scss';
 
-type Props = {
-  id: HexString;
+type V110Props = {
   expireBlock: number;
   owner: HexString;
   isCodeUploadEnabled: boolean;
 };
 
+type DeprecatedProps = Partial<V110Props>;
+
+type Props = { id: HexString } & (V110Props | DeprecatedProps);
+
 const VoucherTable = withAccount(({ id, expireBlock, owner, isCodeUploadEnabled }: Props) => {
-  const { isV110Runtime } = useApi();
   const { isVoucherActive, expirationTimestamp, isVoucherStatusReady } = useVoucherStatus(expireBlock);
 
   const { balance, isBalanceReady } = useBalance(id);
@@ -27,6 +28,8 @@ const VoucherTable = withAccount(({ id, expireBlock, owner, isCodeUploadEnabled 
   const formattedBalance = getFormattedBalance(balance || '0');
 
   const getBulb = (value: boolean) => (value ? BulbStatus.Success : BulbStatus.Error);
+
+  const isV110Runtime = expirationTimestamp && owner && expireBlock && isCodeUploadEnabled !== undefined;
 
   return isBalanceReady && isVoucherStatusReady ? (
     <Table>
@@ -39,7 +42,7 @@ const VoucherTable = withAccount(({ id, expireBlock, owner, isCodeUploadEnabled 
         <span>{formattedBalance.unit}</span>
       </TableRow>
 
-      {isV110Runtime && expirationTimestamp && (
+      {isV110Runtime && (
         <>
           <TableRow name="Issued by">
             <IdBlock id={owner} size="big" />

@@ -23,6 +23,8 @@ import {
   useApi,
   useCreateHandler,
   useSendMessageHandler,
+  useApproxBlockTimestamp,
+  useVoucherStatus,
   SendMessageOptions,
   UseSendMessageOptions,
 } from './hooks';
@@ -85,6 +87,8 @@ export {
   withoutCommas,
   getVaraAddress,
   getTypedEntries,
+  useApproxBlockTimestamp,
+  useVoucherStatus,
   DEFAULT_OPTIONS,
   DEFAULT_INFO_OPTIONS,
   DEFAULT_ERROR_OPTIONS,

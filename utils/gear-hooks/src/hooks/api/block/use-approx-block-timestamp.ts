@@ -1,9 +1,10 @@
-import { useAlert, useApi } from '@gear-js/react-hooks';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
-const useBlockTimestamp = (blockNumber: number | undefined) => {
-  const { api, isApiReady } = useApi();
-  const alert = useAlert();
+import { AlertContext, ApiContext } from 'context';
+
+const useApproxBlockTimestamp = (blockNumber: number | undefined) => {
+  const { api, isApiReady } = useContext(ApiContext);
+  const alert = useContext(AlertContext);
 
   const [blockTimestamp, setBlockTimestamp] = useState<number>();
   const isBlockTimestampReady = blockTimestamp !== undefined;
@@ -36,4 +37,4 @@ const useBlockTimestamp = (blockNumber: number | undefined) => {
   return { blockTimestamp, isBlockTimestampReady, getBlockTimestamp };
 };
 
-export { useBlockTimestamp };
+export { useApproxBlockTimestamp };

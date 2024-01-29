@@ -1,16 +1,18 @@
-import { useBalance, useBalanceFormat } from '@gear-js/react-hooks';
+import { useBalance, useBalanceFormat, useVoucherStatus } from '@gear-js/react-hooks';
 
-import { useVoucherStatus } from '@/features/voucher';
 import { TimestampBlock } from '@/shared/ui/timestampBlock';
 import { IdBlock } from '@/shared/ui/idBlock';
 import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
 
 import styles from './voucher-card.module.scss';
 
-type Props = {
-  id: string;
+type V110Props = {
   expireBlock: number;
 };
+
+type DeprecatedProps = Partial<V110Props>;
+
+type Props = { id: string } & (V110Props | DeprecatedProps);
 
 function VoucherCard({ id, expireBlock }: Props) {
   const { balance } = useBalance(id);
