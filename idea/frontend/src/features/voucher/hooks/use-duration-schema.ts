@@ -7,9 +7,9 @@ function useDurationSchema() {
   const getDurationSchema = () => {
     if (!api) throw new Error('API is not initialized');
 
-    const { minDuration } = api.voucher;
+    const { minDuration, maxDuration } = api.voucher;
 
-    return z.coerce.number().min(minDuration).int();
+    return z.coerce.number().min(minDuration).max(maxDuration).int();
   };
 
   // TODO: probably should be done by shoudlUnregister?
