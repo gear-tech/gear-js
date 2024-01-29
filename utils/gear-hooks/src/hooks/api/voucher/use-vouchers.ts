@@ -1,31 +1,54 @@
-import { HexString, IVoucherDetails } from '@gear-js/api';
+import { HexString, IVoucherDetails, decodeAddress, generateVoucherId } from '@gear-js/api';
 import { useState, useEffect, useContext } from 'react';
 
 import { AccountContext, AlertContext, ApiContext } from 'context';
 
 function useVouchers(accountAddress: string | undefined, programId?: HexString | undefined) {
-  const { api } = useContext(ApiContext);
+  const { api, isApiReady, isV110Runtime } = useContext(ApiContext);
   const alert = useContext(AlertContext);
 
   const [vouchers, setVouchers] = useState<Record<HexString, IVoucherDetails>>();
   const isEachVoucherReady = vouchers !== undefined;
+
+  const getDeprecatedVouchers = async (_accountAddress: string, _programId?: HexString) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+
+    const decodedAddress = decodeAddress(_accountAddress);
+
+    if (!_programId || (await api.voucher.exists(decodedAddress, _programId))) return {};
+
+    const voucherId = generateVoucherId(decodedAddress, _programId);
+
+    const owner = '0x00' as HexString;
+    const expiry = 1;
+    const programs = [_programId];
+    const codeUploading = false;
+
+    return { [voucherId]: { owner, expiry, programs, codeUploading } };
+  };
+
+  const getVouchers = async (_accountAddress: string, _programId?: HexString) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+
+    const _vouchers = await api.voucher.getAllForAccount(_accountAddress);
+
+    if (!_programId) return _vouchers;
+
+    const entries = Object.entries(_vouchers);
+    const entriesForProgram = entries.filter(([, { programs }]) => !programs.length || programs.includes(_programId));
+
+    return Object.fromEntries(entriesForProgram);
+  };
 
   useEffect(() => {
     setVouchers(undefined);
 
     if (!api || !accountAddress) return;
 
-    api.voucher
-      .getAllForAccount(accountAddress)
-      .then((result) => {
-        const programsResult = programId
-          ? Object.fromEntries(
-              Object.entries(result).filter(([, { programs }]) => !programs.length || programs.includes(programId)),
-            )
-          : result;
+    const get = isV110Runtime ? getVouchers : getDeprecatedVouchers;
 
-        setVouchers(programsResult);
-      })
+    get(accountAddress, programId)
+      .then((result) => setVouchers(result))
       .catch(({ message }) => alert.error(message));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,5 +1,5 @@
 import { HexString } from '@gear-js/api';
-import { useBalance, useBalanceFormat } from '@gear-js/react-hooks';
+import { useApi, useBalance, useBalanceFormat } from '@gear-js/react-hooks';
 
 import VoucherPlaceholderSVG from '@/features/voucher/assets/voucher-placeholder.svg?react';
 import { ContentLoader } from '@/shared/ui/contentLoader';
@@ -19,6 +19,7 @@ type Props = {
 };
 
 const VoucherTable = withAccount(({ id, expireBlock, owner, isCodeUploadEnabled }: Props) => {
+  const { isV110Runtime } = useApi();
   const { isVoucherActive, expirationTimestamp, isVoucherStatusReady } = useVoucherStatus(expireBlock);
 
   const { balance, isBalanceReady } = useBalance(id);
@@ -38,7 +39,7 @@ const VoucherTable = withAccount(({ id, expireBlock, owner, isCodeUploadEnabled 
         <span>{formattedBalance.unit}</span>
       </TableRow>
 
-      {expirationTimestamp && (
+      {isV110Runtime && expirationTimestamp && (
         <>
           <TableRow name="Issued by">
             <IdBlock id={owner} size="big" />

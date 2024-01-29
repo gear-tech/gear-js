@@ -3,7 +3,6 @@ import { Button } from '@gear-js/ui';
 import { ProgramMetadata } from '@gear-js/api';
 import { useAccount, useAccountVouchers } from '@gear-js/react-hooks';
 import { generatePath, useParams } from 'react-router-dom';
-import SimpleBar from 'simplebar-react';
 
 import { useMetadataUpload, useModal, useProgram } from '@/hooks';
 import { ProgramStatus, ProgramTable } from '@/features/program';
@@ -106,9 +105,7 @@ const Program = () => {
                 </Subheader>
               )}
 
-              <SimpleBar className={styles.simpleBar}>
-                <ul>{renderVouchers()}</ul>
-              </SimpleBar>
+              <ul className={styles.vouchersList}>{renderVouchers()}</ul>
             </div>
           )}
 

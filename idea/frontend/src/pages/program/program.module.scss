@@ -50,13 +50,8 @@
   }
 }
 
-.simpleBar {
-  @include customSimplebar;
-  height: toRem(300);
-
-  ul {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
+.vouchersList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
