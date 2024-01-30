@@ -18,6 +18,10 @@ import {
   useVouchers,
   useAccountVouchers,
   useVoucherStatus,
+  useVoucherBalanceDeprecated,
+  useVoucherDeprecated,
+  useAccountVoucherBalanceDeprecated,
+  useAccountVoucherDeprecated,
 } from './voucher';
 
 import { useBalance, useBalanceFormat, useDeriveBalancesAll, useAccountDeriveBalancesAll } from './balance';
@@ -46,6 +50,10 @@ export {
   useAccountDeriveBalancesAll,
   useApproxBlockTimestamp,
   useVoucherStatus,
+  useVoucherBalanceDeprecated,
+  useVoucherDeprecated,
+  useAccountVoucherBalanceDeprecated,
+  useAccountVoucherDeprecated,
   SendMessageOptions,
   UseSendMessageOptions,
 };

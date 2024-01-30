@@ -15,11 +15,11 @@ import { GasField } from '@/features/gasField';
 import { FormPayload, getPayloadFormValues, getResetPayloadValue, getSubmitPayload } from '@/features/formPayload';
 import { useGasCalculate, useMessageActions, useValidationSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
-import { VoucherSelect } from '@/features/voucher';
+import { UseVoucherCheckboxDeprecated } from '@/features/voucher';
 import { LabeledCheckbox } from '@/shared/ui';
 
-import { FormValues, INITIAL_VALUES } from '../model';
-import styles from './MessageForm.module.scss';
+import { FormValuesDeprecated, INITIAL_VALUES_DEPRECATED } from '../model';
+import styles from './message-form.module.scss';
 
 type Props = {
   id: HexString;
@@ -29,19 +29,24 @@ type Props = {
   metadata?: ProgramMetadata | undefined;
 };
 
-const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => {
+const MessageFormDeprecated = ({ id, programId, isReply, metadata, isLoading }: Props) => {
   const { getChainBalanceValue, getFormattedGasValue, getChainGasValue } = useBalanceFormat();
   const schema = useValidationSchema();
 
   // TODOFORM:
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const methods = useForm<FormValues>({ defaultValues: INITIAL_VALUES, resolver: yupResolver(schema) });
+  const methods = useForm<FormValuesDeprecated>({
+    defaultValues: INITIAL_VALUES_DEPRECATED,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    resolver: yupResolver(schema),
+  });
   const { getValues, reset, setValue, register, getFieldState, formState } = methods;
   const { error: payloadTypeError } = getFieldState('payloadType', formState);
 
   const calculateGas = useGasCalculate();
-  const { sendMessage, replyMessage } = useMessageActions();
+  const { sendMessageDeprecated, replyMessageDeprecated } = useMessageActions();
 
   const [isDisabled, setIsDisabled] = useState(false);
   const [isGasDisabled, setIsGasDisabled] = useState(false);
@@ -63,16 +68,16 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
     const values = getValues();
     const payload = getResetPayloadValue(values.payload);
 
-    reset({ ...INITIAL_VALUES, payload });
+    reset({ ...INITIAL_VALUES_DEPRECATED, payload });
     enableSubmitButton();
     setGasInfo(undefined);
   };
 
-  const handleSubmitForm = (values: FormValues) => {
+  const handleSubmitForm = (values: FormValuesDeprecated) => {
     disableSubmitButton();
 
     const payloadType = metadata ? undefined : values.payloadType;
-    const { voucherId, keepAlive } = values;
+    const { withVoucher, keepAlive } = values;
 
     const baseValues = {
       value: getChainBalanceValue(values.value).toFixed(),
@@ -83,10 +88,24 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
 
     if (isReply) {
       const reply = { ...baseValues, replyToId: id };
-      replyMessage({ reply, metadata, payloadType, voucherId, reject: enableSubmitButton, resolve: resetForm });
+      replyMessageDeprecated({
+        reply,
+        metadata,
+        payloadType,
+        withVoucher,
+        reject: enableSubmitButton,
+        resolve: resetForm,
+      });
     } else {
       const message = { ...baseValues, destination: id };
-      sendMessage({ message, metadata, payloadType, voucherId, reject: enableSubmitButton, resolve: resetForm });
+      sendMessageDeprecated({
+        message,
+        metadata,
+        payloadType,
+        withVoucher,
+        reject: enableSubmitButton,
+        resolve: resetForm,
+      });
     }
   };
 
@@ -149,7 +168,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
           )}
 
           <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" gap="1/5" />
-          <VoucherSelect programId={programId} />
+          <UseVoucherCheckboxDeprecated programId={programId} />
         </Box>
 
         <Button
@@ -167,4 +186,4 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
   );
 };
 
-export { MessageForm };
+export { MessageFormDeprecated };

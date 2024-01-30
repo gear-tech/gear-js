@@ -1,28 +1,14 @@
-import { HexString, IVoucherDetails, decodeAddress, generateVoucherId } from '@gear-js/api';
+import { HexString, IVoucherDetails } from '@gear-js/api';
 import { useState, useEffect, useContext } from 'react';
 
 import { AccountContext, AlertContext, ApiContext } from 'context';
 
-type DeprecatedVoucherDetails = Partial<IVoucherDetails>;
-
 function useVouchers(accountAddress: string | undefined, programId?: HexString | undefined) {
-  const { api, isApiReady, isV110Runtime } = useContext(ApiContext);
+  const { api, isApiReady } = useContext(ApiContext);
   const alert = useContext(AlertContext);
 
-  const [vouchers, setVouchers] = useState<Record<HexString, IVoucherDetails | DeprecatedVoucherDetails>>();
+  const [vouchers, setVouchers] = useState<Record<HexString, IVoucherDetails>>();
   const isEachVoucherReady = vouchers !== undefined;
-
-  const getDeprecatedVouchers = async (_accountAddress: string, _programId?: HexString) => {
-    if (!isApiReady) throw new Error('API is not initialized');
-
-    const decodedAddress = decodeAddress(_accountAddress);
-
-    if (!_programId || !(await api.voucher.exists(decodedAddress, _programId))) return {};
-
-    const voucherId = generateVoucherId(decodedAddress, _programId);
-
-    return { [voucherId]: {} };
-  };
 
   const getVouchers = async (_accountAddress: string, _programId?: HexString) => {
     if (!isApiReady) throw new Error('API is not initialized');
@@ -42,9 +28,7 @@ function useVouchers(accountAddress: string | undefined, programId?: HexString |
 
     if (!api || !accountAddress) return;
 
-    const get = isV110Runtime ? getVouchers : getDeprecatedVouchers;
-
-    get(accountAddress, programId)
+    getVouchers(accountAddress, programId)
       .then((result) => setVouchers(result))
       .catch(({ message }) => alert.error(message));
 
@@ -61,4 +45,3 @@ function useAccountVouchers(programId?: HexString | undefined) {
 }
 
 export { useVouchers, useAccountVouchers };
-export type { DeprecatedVoucherDetails };

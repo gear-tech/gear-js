@@ -1,12 +1,12 @@
 import { HexString } from '@gear-js/api';
 import { useAccountVouchers } from '@gear-js/react-hooks';
 import { InputWrapper } from '@gear-js/ui';
+import { useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import { Select } from '@/shared/ui';
 
-import { VoucherOption } from '../voucher-option';
-import { useFormContext } from 'react-hook-form';
-import { useEffect } from 'react';
+import { VoucherOption } from './voucher-option';
 
 type Props = {
   programId: HexString | undefined;
