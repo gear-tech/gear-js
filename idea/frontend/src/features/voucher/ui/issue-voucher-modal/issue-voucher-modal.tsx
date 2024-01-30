@@ -4,10 +4,11 @@ import { z } from 'zod';
 
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
-import { Form, Input, ValueField, Checkbox } from '@/shared/ui';
+import { Form, Input, ValueField, Checkbox, withDeprecatedFallback } from '@/shared/ui';
 
 import { ADDRESS_SCHEMA, DEFAULT_VALUES } from '../../consts';
 import { useBalanceSchema, useDurationSchema, useIssueVoucher } from '../../hooks';
+import { IssueVoucherModalDeprecated } from './issue-voucher-modal-deprecated';
 import styles from './issue-voucher-modal.module.scss';
 
 type Props = {
@@ -15,7 +16,7 @@ type Props = {
   close: () => void;
 };
 
-const IssueVoucherModal = ({ programId, close }: Props) => {
+const IssueVoucherModal = withDeprecatedFallback(({ programId, close }: Props) => {
   const { issueVoucher } = useIssueVoucher();
 
   const balanceSchema = useBalanceSchema();
@@ -53,6 +54,6 @@ const IssueVoucherModal = ({ programId, close }: Props) => {
       </Form>
     </Modal>
   );
-};
+}, IssueVoucherModalDeprecated);
 
 export { IssueVoucherModal };

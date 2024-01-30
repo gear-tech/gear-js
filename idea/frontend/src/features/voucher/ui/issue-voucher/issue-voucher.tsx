@@ -7,8 +7,7 @@ import { withAccount } from '@/shared/ui';
 import actionLinkStyles from '@/shared/ui/ActionLink/ActionLink.module.scss';
 
 import CouponSVG from '../../assets/coupon.svg?react';
-import { IssueVoucherModal, IssueVoucherModalDeprecated } from '../issue-voucher-modal';
-import { useApi } from '@gear-js/react-hooks';
+import { IssueVoucherModal } from '../issue-voucher-modal';
 
 type Props = {
   programId: HexString;
@@ -16,9 +15,6 @@ type Props = {
 };
 
 const IssueVoucher = withAccount(({ programId, transparent }: Props) => {
-  const { isV110Runtime } = useApi();
-  const Modal = isV110Runtime ? IssueVoucherModal : IssueVoucherModalDeprecated;
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -35,7 +31,7 @@ const IssueVoucher = withAccount(({ programId, transparent }: Props) => {
         onClick={openModal}
       />
 
-      {isModalOpen && <Modal programId={programId} close={closeModal} />}
+      {isModalOpen && <IssueVoucherModal programId={programId} close={closeModal} />}
     </>
   );
 });
