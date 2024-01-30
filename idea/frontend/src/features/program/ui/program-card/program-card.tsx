@@ -19,7 +19,7 @@ import styles from './program-card.module.scss';
 
 type Props = {
   program: IProgram | LocalProgram;
-  vertical?: Boolean;
+  vertical?: boolean;
 };
 
 const ProgramCard = memo(({ program, vertical }: Props) => {

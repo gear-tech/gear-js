@@ -1,7 +1,7 @@
 import { HexString } from '@polkadot/util/types';
 import { Button } from '@gear-js/ui';
 import { ProgramMetadata } from '@gear-js/api';
-import { useAccount } from '@gear-js/react-hooks';
+import { useAccount, useAccountVouchers } from '@gear-js/react-hooks';
 import { generatePath, useParams } from 'react-router-dom';
 
 import { useMetadataUpload, useModal, useProgram } from '@/hooks';
@@ -17,10 +17,12 @@ import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import { useMetadata, MetadataTable } from '@/features/metadata';
 import { IssueVoucher, VoucherTable } from '@/features/voucher';
+import { withDeprecatedFallback } from '@/shared/ui';
 
+import { ProgramDeprecated } from './program-deprecated';
 import styles from './program.module.scss';
 
-const Program = () => {
+const Program = withDeprecatedFallback(() => {
   const { account } = useAccount();
 
   const { programId } = useParams() as PathParams;
@@ -45,6 +47,17 @@ const Program = () => {
   };
 
   const openUploadMetadataModal = () => showModal('metadata', { onSubmit: handleUploadMetadataSubmit });
+
+  const { vouchers } = useAccountVouchers(programId);
+  const voucherEntries = Object.entries(vouchers || {});
+  const vouchersCount = voucherEntries.length;
+
+  const renderVouchers = () =>
+    voucherEntries.map(([id, { expiry, owner, codeUploading }]) => (
+      <li key={id}>
+        <VoucherTable id={id as HexString} expireBlock={expiry} owner={owner} isCodeUploadEnabled={codeUploading} />
+      </li>
+    ));
 
   return (
     <div>
@@ -85,16 +98,18 @@ const Program = () => {
             <ProgramTable program={program} isProgramReady={isProgramReady} />
           </div>
 
-          <div>
-            {/* TODO: WithAccount HoC? or move inside VoucherTable? */}
-            {account && (
-              <Subheader title="Voucher details">
-                <IssueVoucher programId={programId} />
-              </Subheader>
-            )}
+          {vouchersCount > 0 && (
+            <div>
+              {/* TODO: WithAccount HoC? or move inside VoucherTable? */}
+              {account && (
+                <Subheader title={`Vouchers: ${vouchersCount}`}>
+                  <IssueVoucher programId={programId} />
+                </Subheader>
+              )}
 
-            <VoucherTable programId={programId} />
-          </div>
+              <ul className={styles.vouchersList}>{renderVouchers()}</ul>
+            </div>
+          )}
 
           <div>
             <Subheader title="Metadata" />
@@ -106,6 +121,6 @@ const Program = () => {
       </div>
     </div>
   );
-};
+}, ProgramDeprecated);
 
 export { Program };

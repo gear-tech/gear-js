@@ -1,6 +1,6 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { Button, Input, Textarea } from '@gear-js/ui';
-import { useAccount, useApi, useBalanceFormat } from '@gear-js/react-hooks';
+import { useBalanceFormat } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMemo, useState } from 'react';
@@ -15,11 +15,12 @@ import { GasField } from '@/features/gasField';
 import { FormPayload, getPayloadFormValues, getResetPayloadValue, getSubmitPayload } from '@/features/formPayload';
 import { useGasCalculate, useMessageActions, useValidationSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
-import { UseVoucherCheckbox } from '@/features/voucher';
-import { LabeledCheckbox } from '@/shared/ui';
+import { VoucherSelect } from '@/features/voucher';
+import { LabeledCheckbox, withDeprecatedFallback } from '@/shared/ui';
 
 import { FormValues, INITIAL_VALUES } from '../model';
-import styles from './MessageForm.module.scss';
+import { MessageFormDeprecated } from './message-form-deprecated';
+import styles from './message-form.module.scss';
 
 type Props = {
   id: HexString;
@@ -29,9 +30,7 @@ type Props = {
   metadata?: ProgramMetadata | undefined;
 };
 
-const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => {
-  const { isVaraVersion } = useApi();
-  const { account } = useAccount();
+const MessageForm = withDeprecatedFallback(({ id, programId, isReply, metadata, isLoading }: Props) => {
   const { getChainBalanceValue, getFormattedGasValue, getChainGasValue } = useBalanceFormat();
   const schema = useValidationSchema();
 
@@ -74,24 +73,21 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
     disableSubmitButton();
 
     const payloadType = metadata ? undefined : values.payloadType;
-    const { withVoucher, keepAlive } = values;
+    const { voucherId, keepAlive } = values;
 
     const baseValues = {
       value: getChainBalanceValue(values.value).toFixed(),
       payload: getSubmitPayload(values.payload),
       gasLimit: getChainGasValue(values.gasLimit).toFixed(),
+      keepAlive,
     };
 
-    const commonValues = isVaraVersion
-      ? { ...baseValues, prepaid: withVoucher, account: withVoucher ? account?.decodedAddress : undefined }
-      : { ...baseValues, keepAlive };
-
     if (isReply) {
-      const reply = { ...commonValues, replyToId: id };
-      replyMessage({ reply, metadata, payloadType, withVoucher, reject: enableSubmitButton, resolve: resetForm });
+      const reply = { ...baseValues, replyToId: id };
+      replyMessage({ reply, metadata, payloadType, voucherId, reject: enableSubmitButton, resolve: resetForm });
     } else {
-      const message = { ...commonValues, destination: id };
-      sendMessage({ message, metadata, payloadType, withVoucher, reject: enableSubmitButton, resolve: resetForm });
+      const message = { ...baseValues, destination: id };
+      sendMessage({ message, metadata, payloadType, voucherId, reject: enableSubmitButton, resolve: resetForm });
     }
   };
 
@@ -153,10 +149,8 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
             />
           )}
 
-          {!isVaraVersion && (
-            <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" gap="1/5" />
-          )}
-          <UseVoucherCheckbox programId={programId} />
+          <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" gap="1/5" />
+          <VoucherSelect programId={programId} />
         </Box>
 
         <Button
@@ -172,6 +166,6 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
       </form>
     </FormProvider>
   );
-};
+}, MessageFormDeprecated);
 
 export { MessageForm };

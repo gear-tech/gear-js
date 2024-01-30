@@ -49,3 +49,9 @@
     flex: 1 1;
   }
 }
+
+.vouchersList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

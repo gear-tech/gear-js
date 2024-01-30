@@ -1,3 +1,3 @@
-import { MessageForm } from './ui/MessageForm';
+import { MessageForm } from './ui';
 
 export { MessageForm };

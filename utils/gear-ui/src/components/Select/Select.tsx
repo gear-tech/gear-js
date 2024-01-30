@@ -1,17 +1,20 @@
-import { OptionHTMLAttributes, SelectHTMLAttributes, forwardRef, ForwardedRef, useId } from 'react';
+import { OptionHTMLAttributes, SelectHTMLAttributes, forwardRef, ForwardedRef, useId, ReactNode } from 'react';
 import clsx from 'clsx';
 import { InputProps } from '../../types';
 import { InputWrapper } from '../utils';
 import styles from './Select.module.scss';
 
 type Props = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size'> &
-  InputProps & {
-    options: OptionHTMLAttributes<HTMLOptionElement>[];
-  };
+  InputProps &
+  (
+    | {
+        options: OptionHTMLAttributes<HTMLOptionElement>[];
+      }
+    | { children: ReactNode }
+  );
 
 const Select = forwardRef((props: Props, ref: ForwardedRef<HTMLSelectElement>) => {
   const {
-    options,
     label,
     className,
     error,
@@ -36,7 +39,8 @@ const Select = forwardRef((props: Props, ref: ForwardedRef<HTMLSelectElement>) =
 
   const id = useId();
 
-  const getOptions = () => options.map((option, index) => <option key={index} {...option} />);
+  const getOptions = () =>
+    'options' in props ? props.options.map((option, index) => <option key={index} {...option} />) : props.children;
 
   return (
     <InputWrapper

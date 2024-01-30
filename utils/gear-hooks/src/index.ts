@@ -9,11 +9,11 @@ import {
   useHandleCalculateGas,
   useReplyCalculateGas,
   useIsVoucherExists,
-  useVoucherBalance,
   useVoucher,
   useIsAccountVoucherExists,
-  useAccountVoucherBalance,
   useAccountVoucher,
+  useVouchers,
+  useAccountVouchers,
   useBalance,
   useBalanceFormat,
   useDeriveBalancesAll,
@@ -23,11 +23,17 @@ import {
   useApi,
   useCreateHandler,
   useSendMessageHandler,
+  useApproxBlockTimestamp,
+  useVoucherStatus,
+  useVoucherBalanceDeprecated,
+  useVoucherDeprecated,
+  useAccountVoucherBalanceDeprecated,
+  useAccountVoucherDeprecated,
   SendMessageOptions,
   UseSendMessageOptions,
 } from './hooks';
 
-import { withoutCommas, getVaraAddress } from './utils';
+import { withoutCommas, getVaraAddress, getTypedEntries } from './utils';
 
 import { AccountProvider, ApiProvider, AlertProvider } from './context';
 
@@ -51,6 +57,7 @@ import {
   DefaultTemplateOptions,
   ProviderProps,
   Account,
+  Entries,
 } from './types';
 
 export {
@@ -64,11 +71,11 @@ export {
   useHandleCalculateGas,
   useReplyCalculateGas,
   useIsVoucherExists,
-  useVoucherBalance,
   useVoucher,
   useIsAccountVoucherExists,
-  useAccountVoucherBalance,
   useAccountVoucher,
+  useVouchers,
+  useAccountVouchers,
   useBalance,
   useBalanceFormat,
   useDeriveBalancesAll,
@@ -83,6 +90,13 @@ export {
   useSendMessageHandler,
   withoutCommas,
   getVaraAddress,
+  getTypedEntries,
+  useApproxBlockTimestamp,
+  useVoucherStatus,
+  useVoucherBalanceDeprecated,
+  useVoucherDeprecated,
+  useAccountVoucherBalanceDeprecated,
+  useAccountVoucherDeprecated,
   DEFAULT_OPTIONS,
   DEFAULT_INFO_OPTIONS,
   DEFAULT_ERROR_OPTIONS,
@@ -104,4 +118,5 @@ export type {
   Account,
   SendMessageOptions,
   UseSendMessageOptions,
+  Entries,
 };

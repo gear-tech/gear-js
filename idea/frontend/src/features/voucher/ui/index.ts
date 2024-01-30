@@ -1,6 +1,14 @@
 import { IssueVoucher } from './issue-voucher';
-import { UseVoucherCheckbox } from './use-voucher-checkbox';
-import { VoucherTable } from './voucher-table';
+import { VoucherSelect } from './voucher-select';
+import { VoucherTable, VoucherTableDeprecated } from './voucher-table';
 import { VoucherBadge } from './voucher-badge';
+import { UseVoucherCheckboxDeprecated } from './use-voucher-checkbox-deprecated';
 
-export { IssueVoucher, UseVoucherCheckbox, VoucherTable, VoucherBadge };
+export {
+  IssueVoucher,
+  VoucherSelect,
+  VoucherTable,
+  VoucherBadge,
+  UseVoucherCheckboxDeprecated,
+  VoucherTableDeprecated,
+};

@@ -1,6 +1,6 @@
 import { useReadFullState, useReadWasmState } from './useReadState';
 
-import { useSendMessage, SendMessageOptions, UseSendMessageOptions, VaraSendMessageOptions } from './useSendMessage';
+import { useSendMessage, SendMessageOptions, UseSendMessageOptions } from './useSendMessage';
 
 import { useUploadProgram, useCreateProgram } from './useProgram';
 import {
@@ -12,14 +12,21 @@ import {
 
 import {
   useIsVoucherExists,
-  useVoucherBalance,
   useVoucher,
   useIsAccountVoucherExists,
-  useAccountVoucherBalance,
   useAccountVoucher,
+  useVouchers,
+  useAccountVouchers,
+  useVoucherStatus,
+  useVoucherBalanceDeprecated,
+  useVoucherDeprecated,
+  useAccountVoucherBalanceDeprecated,
+  useAccountVoucherDeprecated,
 } from './voucher';
 
 import { useBalance, useBalanceFormat, useDeriveBalancesAll, useAccountDeriveBalancesAll } from './balance';
+
+import { useApproxBlockTimestamp } from './block';
 
 export {
   useReadFullState,
@@ -32,16 +39,21 @@ export {
   useHandleCalculateGas,
   useReplyCalculateGas,
   useIsVoucherExists,
-  useVoucherBalance,
   useVoucher,
   useIsAccountVoucherExists,
-  useAccountVoucherBalance,
   useAccountVoucher,
+  useVouchers,
+  useAccountVouchers,
   useBalance,
   useBalanceFormat,
   useDeriveBalancesAll,
   useAccountDeriveBalancesAll,
+  useApproxBlockTimestamp,
+  useVoucherStatus,
+  useVoucherBalanceDeprecated,
+  useVoucherDeprecated,
+  useAccountVoucherBalanceDeprecated,
+  useAccountVoucherDeprecated,
   SendMessageOptions,
   UseSendMessageOptions,
-  VaraSendMessageOptions,
 };

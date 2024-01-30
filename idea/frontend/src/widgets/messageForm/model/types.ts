@@ -5,8 +5,12 @@ type FormValues = {
   gasLimit: string;
   payload: PayloadValue;
   payloadType: string;
-  withVoucher: boolean;
+  voucherId: string;
   keepAlive: boolean;
 };
 
-export type { FormValues };
+type FormValuesDeprecated = Omit<FormValues, 'voucherId'> & {
+  withVoucher: boolean;
+};
+
+export type { FormValues, FormValuesDeprecated };

@@ -35,11 +35,20 @@ function useIssueVoucher() {
     if (status.isInvalid) alert.error(PROGRAM_ERRORS.INVALID_TRANSACTION);
   };
 
-  const issueVoucher = async (address: HexString, programId: HexString, value: string, onSuccess: () => void) => {
+  const issueVoucher = async (
+    address: HexString,
+    programId: HexString,
+    value: string,
+    duration: number,
+    isCodeUploadEnabled: boolean,
+    onSuccess: () => void,
+  ) => {
     if (!isApiReady || !account) return;
 
     try {
-      const { extrinsic } = api.voucher.issue(address, programId, value);
+      const programs = [programId];
+
+      const { extrinsic } = await api.voucher.issue(address, value, duration, programs, isCodeUploadEnabled);
 
       const { signer } = await web3FromSource(account.meta.source);
 
@@ -49,7 +58,26 @@ function useIssueVoucher() {
     }
   };
 
-  return issueVoucher;
+  const issueVoucherDeprecated = async (
+    address: HexString,
+    programId: HexString,
+    value: string,
+    onSuccess: () => void,
+  ) => {
+    if (!isApiReady || !account) return;
+
+    try {
+      const { extrinsic } = api.voucher.issueDeprecated(address, programId, value);
+
+      const { signer } = await web3FromSource(account.meta.source);
+
+      extrinsic.signAndSend(account.address, { signer }, (events) => handleEvents(events, onSuccess));
+    } catch (error) {
+      if (error instanceof Error) alert.error(error.message);
+    }
+  };
+
+  return { issueVoucher, issueVoucherDeprecated };
 }
 
 export { useIssueVoucher };

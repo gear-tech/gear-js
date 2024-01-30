@@ -1,23 +1,14 @@
-import {
-  GasLimit,
-  IMessageSendOptions,
-  MessageQueued,
-  ProgramMetadata,
-  VaraMessageSendOptions,
-  decodeAddress,
-} from '@gear-js/api';
+import { GasLimit, MessageQueued, ProgramMetadata } from '@gear-js/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { AnyJson, IKeyringPair, ISubmittableResult } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
-import BigNumber from 'bignumber.js';
 import { useContext } from 'react';
+
 import { AccountContext, AlertContext, ApiContext } from 'context';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
 import { getExtrinsicFailedMessage } from 'utils';
-import { useAccountDeriveBalancesAll, useBalanceFormat } from './balance';
-import { useAccountVoucherBalance } from './voucher';
 
 type UseSendMessageOptions = {
   disableAlerts?: boolean;
@@ -30,26 +21,20 @@ type SendMessageOptions = {
   gasLimit: GasLimit;
   value?: string | number;
   keepAlive?: boolean;
-  withVoucher?: boolean;
+  voucherId?: HexString;
   onSuccess?: (messageId: HexString) => void;
   onInBlock?: (messageId: HexString) => void;
   onError?: () => void;
 };
 
-type VaraSendMessageOptions = Omit<SendMessageOptions, 'keepAlive'>;
-
 function useSendMessage(
   destination: HexString,
   metadata: ProgramMetadata | undefined,
-  { disableAlerts, disableCheckBalance, pair }: UseSendMessageOptions = {},
+  { disableAlerts, pair }: UseSendMessageOptions = {},
 ) {
-  const { api, isApiReady, isVaraVersion } = useContext(ApiContext); // сircular dependency fix
+  const { api, isApiReady, isV110Runtime } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
   const alert = useContext(AlertContext);
-
-  const balances = useAccountDeriveBalancesAll();
-  const { voucherBalance } = useAccountVoucherBalance(destination);
-  const { getChainBalanceValue } = useBalanceFormat();
 
   const title = 'gear.sendMessage';
 
@@ -115,73 +100,33 @@ function useSendMessage(
     }
   };
 
-  const isBalanceValid = (gasLimit: string, withVoucher: boolean) => {
-    if (disableCheckBalance) return true;
+  const getVoucherExtrinsic = (id: HexString, sendExtrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>) => {
     if (!isApiReady) throw new Error('API is not initialized');
-    if (!balances || !voucherBalance) throw new Error('No balance for account');
 
-    const existentialDeposit = api.existentialDeposit.toString();
+    const args = { SendMessage: sendExtrinsic };
 
-    const { freeBalance } = balances;
-    const balance = (withVoucher ? voucherBalance : freeBalance).toString();
-
-    const valuePerGas = api.valuePerGas.toString();
-    const gasLimitValue = BigNumber(gasLimit).plus(gasLimit).multipliedBy(valuePerGas);
-
-    const extraCost = getChainBalanceValue(5);
-    const transactionCost = gasLimitValue.plus(existentialDeposit).plus(extraCost);
-
-    return BigNumber(balance).isGreaterThanOrEqualTo(transactionCost);
+    return isV110Runtime ? api.voucher.call(id, args) : api.voucher.callDeprecated(args);
   };
 
-  const sendMessage = async (args: SendMessageOptions | VaraSendMessageOptions) => {
+  const sendMessage = async (args: SendMessageOptions) => {
     if (!isApiReady) throw new Error('API is not initialized');
     if (!account) throw new Error('No account address');
     if (!metadata) throw new Error('Metadata not found');
 
     const alertId = disableAlerts ? '' : alert.loading('Sign In', { title });
 
-    const { payload, gasLimit, value = 0, withVoucher = false, onSuccess, onInBlock, onError } = args;
-    const { address, decodedAddress, meta } = account;
+    const { payload, gasLimit, value = 0, voucherId, onSuccess, onInBlock, onError } = args;
+    const { address, meta } = account;
     const { source } = meta;
-
-    if (!isBalanceValid(gasLimit.toString(), withVoucher)) {
-      if (onError) onError();
-
-      const message = withVoucher ? 'Low balance on voucher' : 'Low balance on account';
-
-      if (disableAlerts) {
-        alert.error(message);
-      } else {
-        alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
-      }
-
-      return;
-    }
 
     const baseMessage = { destination, payload, gasLimit, value };
 
-    let message: IMessageSendOptions | VaraMessageSendOptions;
-
-    if (isVaraVersion) {
-      const _account = pair ? decodeAddress(pair.address) : decodedAddress;
-
-      message = { ...baseMessage, prepaid: withVoucher, account: withVoucher ? _account : undefined };
-    } else {
-      const keepAlive = 'keepAlive' in args ? args.keepAlive : false;
-      message = { ...baseMessage, keepAlive };
-    }
+    const keepAlive = 'keepAlive' in args ? args.keepAlive : false;
+    const message = { ...baseMessage, keepAlive };
 
     try {
       const sendExtrinsic = api.message.send(message, metadata);
-      let extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
-
-      if (isVaraVersion) {
-        extrinsic = sendExtrinsic;
-      } else {
-        // TODO: voucher call into standalone hook?
-        extrinsic = withVoucher ? api.voucher.call({ SendMessage: sendExtrinsic }) : sendExtrinsic;
-      }
+      const extrinsic = voucherId ? getVoucherExtrinsic(voucherId, sendExtrinsic) : sendExtrinsic;
 
       const callback = (result: ISubmittableResult) => handleStatus(result, alertId, onSuccess, onInBlock, onError);
 
@@ -210,4 +155,4 @@ function useSendMessage(
   return sendMessage;
 }
 
-export { useSendMessage, SendMessageOptions, UseSendMessageOptions, VaraSendMessageOptions };
+export { useSendMessage, SendMessageOptions, UseSendMessageOptions };
