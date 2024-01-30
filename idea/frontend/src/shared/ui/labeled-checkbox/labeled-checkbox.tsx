@@ -8,19 +8,18 @@ type Props = {
   name: string;
   label: string;
   inputLabel: string;
-  value?: string;
   direction?: InputProps['direction'];
   gap?: InputProps['gap'];
   children?: ReactNode;
 };
 
-const LabeledCheckbox = ({ name, label, inputLabel, value, direction = 'x', gap, children }: Props) => {
+const LabeledCheckbox = ({ name, label, inputLabel, direction = 'x', gap, children }: Props) => {
   const { register } = useFormContext();
 
   return (
     <InputWrapper size="normal" id={name} direction={direction} gap={gap} label={label} className={styles.inputWrapper}>
       <div className={styles.checkboxWrapper}>
-        <Checkbox label={inputLabel} value={value} {...register(name)} />
+        <Checkbox label={inputLabel} {...register(name)} />
 
         {children}
       </div>

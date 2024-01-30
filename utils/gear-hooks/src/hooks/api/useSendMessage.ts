@@ -3,11 +3,12 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { AnyJson, IKeyringPair, ISubmittableResult } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { useContext } from 'react';
+
 import { AccountContext, AlertContext, ApiContext } from 'context';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
 import { getExtrinsicFailedMessage } from 'utils';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
 
 type UseSendMessageOptions = {
   disableAlerts?: boolean;
