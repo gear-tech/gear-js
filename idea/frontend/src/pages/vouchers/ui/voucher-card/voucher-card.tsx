@@ -6,13 +6,10 @@ import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
 
 import styles from './voucher-card.module.scss';
 
-type V110Props = {
+type Props = {
+  id: string;
   expireBlock: number;
 };
-
-type DeprecatedProps = Partial<V110Props>;
-
-type Props = { id: string } & (V110Props | DeprecatedProps);
 
 function VoucherCard({ id, expireBlock }: Props) {
   const { balance } = useBalance(id);

@@ -30,8 +30,6 @@ const VoucherTable = withAccount(({ id, expireBlock, owner, isCodeUploadEnabled 
 
   const getBulb = (value: boolean) => (value ? BulbStatus.Success : BulbStatus.Error);
 
-  const isV110Runtime = expirationTimestamp && owner && expireBlock && isCodeUploadEnabled !== undefined;
-
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen((prevValue) => !prevValue);
 
@@ -46,16 +44,18 @@ const VoucherTable = withAccount(({ id, expireBlock, owner, isCodeUploadEnabled 
           <span>{formattedBalance.unit}</span>
         </TableRow>
 
-        {isV110Runtime && isOpen && (
+        {isOpen && (
           <>
             <TableRow name="Issued by">
               <IdBlock id={owner} size="big" />
             </TableRow>
 
-            <TableRow name="Expire at">
-              <span className={styles.highlight}>{new Date(expirationTimestamp).toLocaleString()}</span>
-              <span>(#{expireBlock})</span>
-            </TableRow>
+            {expirationTimestamp && (
+              <TableRow name="Expire at">
+                <span className={styles.highlight}>{new Date(expirationTimestamp).toLocaleString()}</span>
+                <span>(#{expireBlock})</span>
+              </TableRow>
+            )}
 
             <TableRow name="Allow code upload">
               <BulbBlock
@@ -68,14 +68,12 @@ const VoucherTable = withAccount(({ id, expireBlock, owner, isCodeUploadEnabled 
         )}
       </Table>
 
-      {isV110Runtime && (
-        <Button
-          icon={ArrowSVG}
-          color="transparent"
-          onClick={toggle}
-          className={clsx(styles.openButton, isOpen && styles.open)}
-        />
-      )}
+      <Button
+        icon={ArrowSVG}
+        color="transparent"
+        onClick={toggle}
+        className={clsx(styles.openButton, isOpen && styles.open)}
+      />
     </div>
   ) : (
     <ContentLoader text="There's no voucher" isEmpty={false}>

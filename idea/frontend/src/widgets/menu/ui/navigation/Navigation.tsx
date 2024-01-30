@@ -1,5 +1,3 @@
-import { useApi } from '@gear-js/react-hooks';
-
 import { routes } from '@/shared/config';
 import CodesSVG from '@/shared/assets/images/menu/codes.svg?react';
 import MailboxSVG from '@/shared/assets/images/menu/mailbox.svg?react';
@@ -8,6 +6,7 @@ import MessagesSVG from '@/shared/assets/images/menu/messages.svg?react';
 import ExplorerSVG from '@/shared/assets/images/menu/explorer.svg?react';
 import VouchersSVG from '@/shared/assets/images/menu/vouchers.svg?react';
 import { OnboardingTooltip } from '@/shared/ui/onboardingTooltip';
+import { withDeprecatedFallback } from '@/shared/ui';
 
 import { NavigationItem } from '../navigationItem';
 import { AppExamplesLink } from '../appExamplesLink';
@@ -17,9 +16,14 @@ type Props = {
   isOpen: boolean;
 };
 
-const Navigation = ({ isOpen }: Props) => {
-  const { isV110Runtime } = useApi();
+const VouchersLink = withDeprecatedFallback(
+  ({ isFullWidth }: { isFullWidth: boolean }) => (
+    <NavigationItem to={routes.vouchers} icon={<VouchersSVG />} text="Vouchers" isFullWidth={isFullWidth} />
+  ),
+  () => null,
+);
 
+const Navigation = ({ isOpen }: Props) => {
   return (
     <nav className={styles.navigation}>
       <NavigationItem to={routes.programs} icon={<ProgramsSVG />} text="Programs" isFullWidth={isOpen} />
@@ -40,9 +44,7 @@ const Navigation = ({ isOpen }: Props) => {
         <NavigationItem to={routes.mailbox} icon={<MailboxSVG />} text="Mailbox" isFullWidth={isOpen} />
       </OnboardingTooltip>
 
-      {isV110Runtime && (
-        <NavigationItem to={routes.vouchers} icon={<VouchersSVG />} text="Vouchers" isFullWidth={isOpen} />
-      )}
+      <VouchersLink isFullWidth={isOpen} />
 
       <OnboardingTooltip index={8}>
         <AppExamplesLink isFullWidth={isOpen} />
