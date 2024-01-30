@@ -9,7 +9,7 @@ import { PROGRAM_ERRORS } from '@/shared/config';
 import { getExtrinsicFailedMessage } from '@/shared/helpers';
 
 function useIssueVoucher() {
-  const { api, isApiReady, isV110Runtime } = useApi();
+  const { api, isApiReady } = useApi();
   const { account } = useAccount();
   const alert = useAlert();
 
@@ -48,9 +48,7 @@ function useIssueVoucher() {
     try {
       const programs = [programId];
 
-      const { extrinsic } = isV110Runtime
-        ? await api.voucher.issue(address, value, duration, programs, isCodeUploadEnabled)
-        : api.voucher.issueDeprecated(address, programId, value);
+      const { extrinsic } = await api.voucher.issue(address, value, duration, programs, isCodeUploadEnabled);
 
       const { signer } = await web3FromSource(account.meta.source);
 
@@ -60,7 +58,26 @@ function useIssueVoucher() {
     }
   };
 
-  return { issueVoucher };
+  const issueVoucherDeprecated = async (
+    address: HexString,
+    programId: HexString,
+    value: string,
+    onSuccess: () => void,
+  ) => {
+    if (!isApiReady || !account) return;
+
+    try {
+      const { extrinsic } = api.voucher.issueDeprecated(address, programId, value);
+
+      const { signer } = await web3FromSource(account.meta.source);
+
+      extrinsic.signAndSend(account.address, { signer }, (events) => handleEvents(events, onSuccess));
+    } catch (error) {
+      if (error instanceof Error) alert.error(error.message);
+    }
+  };
+
+  return { issueVoucher, issueVoucherDeprecated };
 }
 
 export { useIssueVoucher };

@@ -1,4 +1,3 @@
-import { useApi } from '@gear-js/react-hooks';
 import { Button, Modal } from '@gear-js/ui';
 import { HexString } from '@gear-js/api';
 import { z } from 'zod';
@@ -17,7 +16,6 @@ type Props = {
 };
 
 const IssueVoucherModal = ({ programId, close }: Props) => {
-  const { isV110Runtime } = useApi();
   const { issueVoucher } = useIssueVoucher();
 
   const balanceSchema = useBalanceSchema();
@@ -45,13 +43,8 @@ const IssueVoucherModal = ({ programId, close }: Props) => {
         className={styles.form}>
         <Input name="address" label="Account address" direction="y" block />
         <ValueField name="value" label="Tokens amount:" direction="y" block />
-
-        {isV110Runtime && (
-          <>
-            <Input type="number" name="duration" label="Duration (blocks)" direction="y" block />
-            <Checkbox name="isCodeUploadEnabled" label="Allow code upload" />
-          </>
-        )}
+        <Input type="number" name="duration" label="Duration (blocks)" direction="y" block />
+        <Checkbox name="isCodeUploadEnabled" label="Allow code upload" />
 
         <div className={styles.buttons}>
           <Button type="submit" icon={ApplySVG} size="large" text="Create" />
