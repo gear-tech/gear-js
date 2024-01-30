@@ -29,7 +29,7 @@ const UseVoucherCheckboxDeprecated = ({ programId }: Props) => {
   }, [isVoucherExists, resetField]);
 
   return isVoucherExists ? (
-    <LabeledCheckbox name={name} label="Voucher funds:" inputLabel="Use voucher">
+    <LabeledCheckbox name={name} label="Voucher funds:" inputLabel="Use voucher" gap="1/5">
       <span className={styles.value}>
         ( {formattedBalance?.value} {formattedBalance?.unit})
       </span>

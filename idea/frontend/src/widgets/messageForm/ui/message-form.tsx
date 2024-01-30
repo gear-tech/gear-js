@@ -19,8 +19,8 @@ import { VoucherSelect } from '@/features/voucher';
 import { LabeledCheckbox, withDeprecatedFallback } from '@/shared/ui';
 
 import { FormValues, INITIAL_VALUES } from '../model';
-import styles from './message-form.module.scss';
 import { MessageFormDeprecated } from './message-form-deprecated';
+import styles from './message-form.module.scss';
 
 type Props = {
   id: HexString;

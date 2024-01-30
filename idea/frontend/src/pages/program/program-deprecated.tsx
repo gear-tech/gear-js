@@ -1,7 +1,7 @@
 import { HexString } from '@polkadot/util/types';
 import { Button } from '@gear-js/ui';
 import { ProgramMetadata } from '@gear-js/api';
-import { useAccount, useAccountVouchers } from '@gear-js/react-hooks';
+import { useAccount } from '@gear-js/react-hooks';
 import { generatePath, useParams } from 'react-router-dom';
 
 import { useMetadataUpload, useModal, useProgram } from '@/hooks';
@@ -16,13 +16,11 @@ import SendSVG from '@/shared/assets/images/actions/send.svg?react';
 import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import { useMetadata, MetadataTable } from '@/features/metadata';
-import { IssueVoucher, VoucherTable } from '@/features/voucher';
-import { withDeprecatedFallback } from '@/shared/ui';
+import { VoucherTableDeprecated, IssueVoucher } from '@/features/voucher';
 
-import { ProgramDeprecated } from './program-deprecated';
 import styles from './program.module.scss';
 
-const Program = withDeprecatedFallback(() => {
+const ProgramDeprecated = () => {
   const { account } = useAccount();
 
   const { programId } = useParams() as PathParams;
@@ -47,17 +45,6 @@ const Program = withDeprecatedFallback(() => {
   };
 
   const openUploadMetadataModal = () => showModal('metadata', { onSubmit: handleUploadMetadataSubmit });
-
-  const { vouchers } = useAccountVouchers(programId);
-  const voucherEntries = Object.entries(vouchers || {});
-  const vouchersCount = voucherEntries.length;
-
-  const renderVouchers = () =>
-    voucherEntries.map(([id, { expiry, owner, codeUploading }]) => (
-      <li key={id}>
-        <VoucherTable id={id as HexString} expireBlock={expiry} owner={owner} isCodeUploadEnabled={codeUploading} />
-      </li>
-    ));
 
   return (
     <div>
@@ -98,18 +85,16 @@ const Program = withDeprecatedFallback(() => {
             <ProgramTable program={program} isProgramReady={isProgramReady} />
           </div>
 
-          {vouchersCount > 0 && (
-            <div>
-              {/* TODO: WithAccount HoC? or move inside VoucherTable? */}
-              {account && (
-                <Subheader title={`Vouchers: ${vouchersCount}`}>
-                  <IssueVoucher programId={programId} />
-                </Subheader>
-              )}
+          <div>
+            {/* TODO: WithAccount HoC? or move inside VoucherTable? */}
+            {account && (
+              <Subheader title="Voucher details">
+                <IssueVoucher programId={programId} />
+              </Subheader>
+            )}
 
-              <ul className={styles.vouchersList}>{renderVouchers()}</ul>
-            </div>
-          )}
+            <VoucherTableDeprecated programId={programId} />
+          </div>
 
           <div>
             <Subheader title="Metadata" />
@@ -121,6 +106,6 @@ const Program = withDeprecatedFallback(() => {
       </div>
     </div>
   );
-}, ProgramDeprecated);
+};
 
-export { Program };
+export { ProgramDeprecated };

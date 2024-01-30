@@ -14,15 +14,12 @@ import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
 
 import styles from './voucher-table.module.scss';
 
-type V110Props = {
+type Props = {
+  id: HexString;
   expireBlock: number;
   owner: HexString;
   isCodeUploadEnabled: boolean;
 };
-
-type DeprecatedProps = Partial<V110Props>;
-
-type Props = { id: HexString } & (V110Props | DeprecatedProps);
 
 const VoucherTable = withAccount(({ id, expireBlock, owner, isCodeUploadEnabled }: Props) => {
   const { isVoucherActive, expirationTimestamp, isVoucherStatusReady } = useVoucherStatus(expireBlock);

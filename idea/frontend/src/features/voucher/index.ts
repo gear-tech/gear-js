@@ -1,3 +1,17 @@
-import { IssueVoucher, VoucherSelect, VoucherTable, VoucherBadge, UseVoucherCheckboxDeprecated } from './ui';
+import {
+  IssueVoucher,
+  VoucherSelect,
+  VoucherTable,
+  VoucherBadge,
+  UseVoucherCheckboxDeprecated,
+  VoucherTableDeprecated,
+} from './ui';
 
-export { IssueVoucher, VoucherSelect, VoucherTable, VoucherBadge, UseVoucherCheckboxDeprecated };
+export {
+  IssueVoucher,
+  VoucherSelect,
+  VoucherTable,
+  VoucherBadge,
+  UseVoucherCheckboxDeprecated,
+  VoucherTableDeprecated,
+};
