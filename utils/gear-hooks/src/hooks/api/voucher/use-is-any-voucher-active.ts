@@ -1,0 +1,51 @@
+import { HexString } from '@gear-js/api';
+import { useState, useEffect, useContext, useMemo } from 'react';
+
+import { AccountContext, AlertContext } from 'context';
+
+import { useGetVoucherStatus } from './use-voucher-status';
+import { useVouchers } from './use-vouchers';
+
+function useIsAnyVoucherActive(accountAddress: string | undefined, programId: HexString | undefined) {
+  const { vouchers } = useVouchers(accountAddress, programId);
+  const voucherEntries = useMemo(() => Object.entries(vouchers || {}), [vouchers]);
+
+  const alert = useContext(AlertContext);
+
+  const getVoucherStatus = useGetVoucherStatus();
+
+  const [isAnyVoucherActive, setIsAnyVoucherActive] = useState<boolean>();
+  const isAnyVoucherActiveReady = isAnyVoucherActive !== undefined;
+
+  const getIsActive = async () => {
+    for (const [, { expiry }] of voucherEntries) {
+      const { isVoucherActive } = await getVoucherStatus(expiry);
+
+      if (isVoucherActive) return true;
+    }
+
+    return false;
+  };
+
+  useEffect(() => {
+    setIsAnyVoucherActive(undefined);
+
+    if (!voucherEntries.length) return;
+
+    getIsActive()
+      .then((result) => setIsAnyVoucherActive(result))
+      .catch(({ message }: Error) => alert.error(message));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [voucherEntries, getVoucherStatus]);
+
+  return { isAnyVoucherActive, isAnyVoucherActiveReady };
+}
+
+function useIsAnyAccountVoucherActive(programId: HexString | undefined) {
+  const { account } = useContext(AccountContext);
+
+  return useIsAnyVoucherActive(account?.address, programId);
+}
+
+export { useIsAnyVoucherActive, useIsAnyAccountVoucherActive };

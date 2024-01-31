@@ -1,7 +1,8 @@
 import { HexString } from '@gear-js/api';
-import { useAccountVouchers } from '@gear-js/react-hooks';
+import { useIsAnyAccountVoucherActive } from '@gear-js/react-hooks';
+import clsx from 'clsx';
 
-import { withAccount, withDeprecatedFallback } from '@/shared/ui';
+import { withDeprecatedFallback } from '@/shared/ui';
 
 import BadgeSVG from '../../assets/badge.svg?react';
 import { VoucherBadgeDeprecated } from './voucher-badge-deprecated';
@@ -11,14 +12,11 @@ type Props = {
   programId: HexString;
 };
 
-const VoucherBadge = withAccount(
-  withDeprecatedFallback(({ programId }: Props) => {
-    const { vouchers } = useAccountVouchers(programId);
-    const voucherEntries = Object.entries(vouchers || {});
-    const vouchersCount = voucherEntries.length;
+const VoucherBadge = withDeprecatedFallback(({ programId }: Props) => {
+  // TODO: take a look at performance, useVouchers is called for each program in a list
+  const { isAnyVoucherActive, isAnyVoucherActiveReady } = useIsAnyAccountVoucherActive(programId);
 
-    return vouchersCount ? <BadgeSVG className={styles.badge} /> : null;
-  }, VoucherBadgeDeprecated),
-);
+  return isAnyVoucherActiveReady ? <BadgeSVG className={clsx(!isAnyVoucherActive && styles.expired)} /> : null;
+}, VoucherBadgeDeprecated);
 
 export { VoucherBadge };

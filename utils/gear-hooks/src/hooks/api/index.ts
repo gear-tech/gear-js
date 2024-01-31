@@ -18,15 +18,18 @@ import {
   useVouchers,
   useAccountVouchers,
   useVoucherStatus,
+  useGetVoucherStatus,
   useVoucherBalanceDeprecated,
   useVoucherDeprecated,
   useAccountVoucherBalanceDeprecated,
   useAccountVoucherDeprecated,
+  useIsAnyVoucherActive,
+  useIsAnyAccountVoucherActive,
 } from './voucher';
 
 import { useBalance, useBalanceFormat, useDeriveBalancesAll, useAccountDeriveBalancesAll } from './balance';
 
-import { useApproxBlockTimestamp } from './block';
+import { useApproxBlockTimestamp, UseGetApproxBlockTimestamp } from './block';
 
 export {
   useReadFullState,
@@ -49,11 +52,15 @@ export {
   useDeriveBalancesAll,
   useAccountDeriveBalancesAll,
   useApproxBlockTimestamp,
+  UseGetApproxBlockTimestamp,
   useVoucherStatus,
+  useGetVoucherStatus,
   useVoucherBalanceDeprecated,
   useVoucherDeprecated,
   useAccountVoucherBalanceDeprecated,
   useAccountVoucherDeprecated,
+  useIsAnyVoucherActive,
+  useIsAnyAccountVoucherActive,
   SendMessageOptions,
   UseSendMessageOptions,
 };

@@ -1,13 +1,58 @@
-import { useApproxBlockTimestamp } from '../block';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
-function useVoucherStatus(expirationBlock: number | undefined) {
-  const { blockTimestamp, isBlockTimestampReady } = useApproxBlockTimestamp(expirationBlock);
+import { AlertContext, ApiContext } from 'context';
 
-  const expirationTimestamp = blockTimestamp;
-  const isVoucherStatusReady = isBlockTimestampReady;
-  const isVoucherActive = !!expirationTimestamp && expirationTimestamp > Date.now();
+import { UseGetApproxBlockTimestamp } from '../block';
 
-  return { expirationTimestamp, isVoucherStatusReady, isVoucherActive };
+type UseVoucherStatusReturn =
+  | {
+      expirationTimestamp: undefined;
+      isVoucherActive: undefined;
+      isVoucherStatusReady: false;
+    }
+  | {
+      expirationTimestamp: number;
+      isVoucherActive: boolean;
+      isVoucherStatusReady: true;
+    };
+
+function useGetVoucherStatus() {
+  const getApproxBlockTimestamp = UseGetApproxBlockTimestamp();
+
+  const getVoucherStatus = useCallback(
+    async (expirationBlock: number) => {
+      const expirationTimestamp = await getApproxBlockTimestamp(expirationBlock);
+      const isVoucherActive = expirationTimestamp > Date.now();
+
+      return { expirationTimestamp, isVoucherActive };
+    },
+    [getApproxBlockTimestamp],
+  );
+
+  return getVoucherStatus;
 }
 
-export { useVoucherStatus };
+function useVoucherStatus(expirationBlock: number | undefined) {
+  const { isApiReady } = useContext(ApiContext);
+  const alert = useContext(AlertContext);
+
+  const getVoucherStatus = useGetVoucherStatus();
+
+  const [status, setStatus] = useState<Awaited<ReturnType<ReturnType<typeof useGetVoucherStatus>>>>();
+
+  useEffect(() => {
+    setStatus(undefined);
+
+    if (!isApiReady || !expirationBlock) return;
+
+    getVoucherStatus(expirationBlock)
+      .then((result) => setStatus(result))
+      .catch(({ message }: Error) => alert.error(message));
+  }, [isApiReady, expirationBlock]);
+
+  return status === undefined
+    ? { expirationTimestamp: undefined, isVoucherActive: undefined, isVoucherStatusReady: false as const }
+    : { ...status, isVoucherStatusReady: true as const };
+}
+
+export { useVoucherStatus, useGetVoucherStatus };
