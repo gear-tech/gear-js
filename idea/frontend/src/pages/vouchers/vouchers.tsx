@@ -21,9 +21,9 @@ const Vouchers = withDeprecatedFallback(
     const isPlaceholderVisible = isEmpty || !isEachVoucherReady;
 
     const renderVouchers = () =>
-      voucherEntries.map(([id, { expiry }]) => (
+      voucherEntries.map(([id, { expiry, owner }]) => (
         <li key={id}>
-          <VoucherCard id={id} expireBlock={expiry} />
+          <VoucherCard id={id} expireBlock={expiry} owner={owner} />
         </li>
       ));
 

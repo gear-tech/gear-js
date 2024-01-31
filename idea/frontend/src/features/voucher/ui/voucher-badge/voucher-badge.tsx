@@ -16,7 +16,9 @@ const VoucherBadge = withDeprecatedFallback(({ programId }: Props) => {
   // TODO: take a look at performance, useVouchers is called for each program in a list
   const { isAnyVoucherActive, isAnyVoucherActiveReady } = useIsAnyAccountVoucherActive(programId);
 
-  return isAnyVoucherActiveReady ? <BadgeSVG className={clsx(!isAnyVoucherActive && styles.expired)} /> : null;
+  return isAnyVoucherActiveReady ? (
+    <BadgeSVG className={clsx(styles.badge, !isAnyVoucherActive && styles.expired)} />
+  ) : null;
 }, VoucherBadgeDeprecated);
 
 export { VoucherBadge };

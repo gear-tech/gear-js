@@ -1,17 +1,24 @@
-import { useBalance, useBalanceFormat, useVoucherStatus } from '@gear-js/react-hooks';
+import { HexString } from '@gear-js/api';
+import { useAlert, useBalance, useBalanceFormat, useVoucherStatus } from '@gear-js/react-hooks';
+import { Button } from '@gear-js/ui';
+import Identicon from '@polkadot/react-identicon';
 
 import { TimestampBlock } from '@/shared/ui/timestampBlock';
 import { IdBlock } from '@/shared/ui/idBlock';
 import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
+import { copyToClipboard, getShortName } from '@/shared/helpers';
+import CopySVG from '@/shared/assets/images/actions/copyGreen.svg?react';
 
 import styles from './voucher-card.module.scss';
 
 type Props = {
   id: string;
+  owner: HexString;
   expireBlock: number;
 };
 
-function VoucherCard({ id, expireBlock }: Props) {
+function VoucherCard({ id, owner, expireBlock }: Props) {
+  const alert = useAlert();
   const { balance } = useBalance(id);
   const { getFormattedBalance } = useBalanceFormat();
 
@@ -27,9 +34,19 @@ function VoucherCard({ id, expireBlock }: Props) {
       </h3>
 
       <footer className={styles.footer}>
-        {expirationTimestamp && <TimestampBlock timestamp={expirationTimestamp} withIcon />}
+        {expirationTimestamp && (
+          <TimestampBlock timestamp={expirationTimestamp} annotation={`#${expireBlock}`} withIcon />
+        )}
 
         <IdBlock id={id} withIcon />
+
+        {/* TODO: divide BlockComponent from TimestampBlock, IdBlock etc. */}
+        <div className={styles.owner}>
+          <Identicon value={owner} size={16} theme="polkadot" />
+          {getShortName(owner)}
+
+          <Button icon={CopySVG} color="transparent" onClick={() => copyToClipboard(owner, alert)} />
+        </div>
 
         {isVoucherStatusReady && (
           <BulbBlock

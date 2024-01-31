@@ -10,16 +10,26 @@ type Props = {
   color?: 'light' | 'primary';
   withIcon?: boolean;
   className?: string;
+  annotation?: string;
 };
 
-const TimestampBlock = ({ size = 'small', color = 'primary', withIcon = false, timestamp, className }: Props) => {
+const TimestampBlock = ({
+  size = 'small',
+  color = 'primary',
+  withIcon = false,
+  timestamp,
+  className,
+  annotation,
+}: Props) => {
   const textClasses = clsx(styles.value, styles[size], styles[color]);
 
   return (
     <div className={clsx(styles.timestampBlock, className)}>
       {withIcon && <TimeSVG className={styles.icon} />}
 
-      <span className={textClasses}>{formatDate(timestamp)}</span>
+      <span className={textClasses}>
+        {formatDate(timestamp)} {annotation && `(${annotation})`}
+      </span>
     </div>
   );
 };
