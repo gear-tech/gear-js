@@ -46,6 +46,24 @@
 .footer {
   padding-right: 25%;
 
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1.25fr 1.25fr 0.25fr;
+  gap: 16px;
+
+  .owner {
+    display: flex;
+    gap: 8px;
+
+    font-size: 10px;
+
+    button {
+      position: relative;
+      z-index: 4;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
 }

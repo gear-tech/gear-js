@@ -26,7 +26,8 @@ function useVouchers(accountAddress: string | undefined, programId?: HexString |
   useEffect(() => {
     setVouchers(undefined);
 
-    if (!api || !accountAddress) return;
+    const isProgramIdSpecified = arguments.length > 1;
+    if (!api || !accountAddress || (isProgramIdSpecified && !programId)) return;
 
     getVouchers(accountAddress, programId)
       .then((result) => setVouchers(result))
@@ -41,7 +42,9 @@ function useVouchers(accountAddress: string | undefined, programId?: HexString |
 function useAccountVouchers(programId?: HexString | undefined) {
   const { account } = useContext(AccountContext);
 
-  return useVouchers(account?.address, programId);
+  const args: Parameters<typeof useVouchers> = arguments.length ? [account?.address, programId] : [account?.address];
+
+  return useVouchers(...args);
 }
 
 export { useVouchers, useAccountVouchers };
