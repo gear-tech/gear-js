@@ -1,6 +1,7 @@
 import {
   IssueVoucher,
-  VoucherSelect,
+  ProgramVoucherSelect,
+  CodeVoucherSelect,
   VoucherTable,
   VoucherBadge,
   UseVoucherCheckboxDeprecated,
@@ -9,7 +10,8 @@ import {
 
 export {
   IssueVoucher,
-  VoucherSelect,
+  ProgramVoucherSelect,
+  CodeVoucherSelect,
   VoucherTable,
   VoucherBadge,
   UseVoucherCheckboxDeprecated,

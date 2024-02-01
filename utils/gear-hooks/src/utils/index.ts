@@ -3,8 +3,9 @@ import { Keyring } from '@polkadot/api';
 import { Event } from '@polkadot/types/interfaces';
 import { bnToBn } from '@polkadot/util';
 
-import { Entries } from 'types';
 import { VARA_SS58_FORMAT } from 'consts';
+
+import { Entries } from '../types';
 
 const getAutoGasLimit = ({ waited, min_limit }: GasInfo) =>
   waited ? min_limit.add(min_limit.mul(bnToBn(0.1))) : min_limit;

@@ -15,7 +15,7 @@ import { GasField } from '@/features/gasField';
 import { FormPayload, getPayloadFormValues, getResetPayloadValue, getSubmitPayload } from '@/features/formPayload';
 import { useGasCalculate, useMessageActions, useValidationSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
-import { VoucherSelect } from '@/features/voucher';
+import { ProgramVoucherSelect } from '@/features/voucher';
 import { LabeledCheckbox, withDeprecatedFallback } from '@/shared/ui';
 
 import { FormValues, INITIAL_VALUES } from '../model';
@@ -150,7 +150,7 @@ const MessageForm = withDeprecatedFallback(({ id, programId, isReply, metadata, 
           )}
 
           <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" gap="1/5" />
-          <VoucherSelect programId={programId} />
+          <ProgramVoucherSelect programId={programId} />
         </Box>
 
         <Button

@@ -9,8 +9,8 @@ import { Method } from '@/features/explorer';
 import { checkWallet, getExtrinsicFailedMessage } from '@/shared/helpers';
 import { PROGRAM_ERRORS, TransactionName, TransactionStatus, UPLOAD_METADATA_TIMEOUT } from '@/shared/config';
 import { CopiedInfo } from '@/shared/ui/copiedInfo';
-
 import { addMetadata, addCodeName } from '@/api';
+
 import { ParamsToUploadCode, ParamsToSignAndSend } from './types';
 
 const useCodeUpload = () => {
@@ -36,13 +36,13 @@ const useCodeUpload = () => {
     });
   };
 
-  const signAndSend = async ({ signer, codeId, metaHex, name, resolve }: ParamsToSignAndSend) => {
+  const signAndSend = async ({ extrinsic, signer, codeId, metaHex, name, resolve }: ParamsToSignAndSend) => {
     const alertId = alert.loading('SignIn', { title: TransactionName.SubmitCode });
 
     try {
       if (!isApiReady) throw new Error('API is not initialized');
 
-      await api.code.signAndSend(account!.address, { signer }, ({ events, status }) => {
+      await extrinsic.signAndSend(account!.address, { signer }, ({ events, status }) => {
         if (status.isReady) {
           alert.update(alertId, TransactionStatus.Ready);
         } else if (status.isInBlock) {
@@ -71,18 +71,22 @@ const useCodeUpload = () => {
   };
 
   const uploadCode = useCallback(
-    async ({ optBuffer, name, metaHex, resolve }: ParamsToUploadCode) => {
+    async ({ optBuffer, name, voucherId, metaHex, resolve }: ParamsToUploadCode) => {
       try {
         if (!isApiReady) throw new Error('API is not initialized');
         checkWallet(account);
 
         const { address, meta } = account!;
 
-        const [{ codeHash }, { signer }] = await Promise.all([api.code.upload(optBuffer), web3FromSource(meta.source)]);
+        const [code, { signer }] = await Promise.all([api.code.upload(optBuffer), web3FromSource(meta.source)]);
+
+        const codeExtrinsic = code.extrinsic;
+        const codeId = code.codeHash;
+        const extrinsic = voucherId ? api.voucher.call(voucherId, { UploadCode: codeExtrinsic }) : codeExtrinsic;
 
         const { partialFee } = await api.code.paymentInfo(address, { signer });
 
-        const handleConfirm = () => signAndSend({ signer, name, codeId: codeHash, metaHex, resolve });
+        const handleConfirm = () => signAndSend({ extrinsic, signer, name, codeId, metaHex, resolve });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),

@@ -1,6 +1,6 @@
-import { HexString } from '@gear-js/api';
-import { useAccountVouchers } from '@gear-js/react-hooks';
-import { InputWrapper } from '@gear-js/ui';
+import { HexString, IVoucherDetails } from '@gear-js/api';
+import { getTypedEntries, useAccountVouchers } from '@gear-js/react-hooks';
+import { InputWrapper, InputWrapperProps } from '@gear-js/ui';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -8,19 +8,16 @@ import { Select } from '@/shared/ui';
 
 import { VoucherOption } from './voucher-option';
 
-type Props = {
-  programId: HexString | undefined;
+type Props = Omit<InputWrapperProps, 'id' | 'label' | 'size' | 'children'> & {
+  entries: [HexString, IVoucherDetails][];
 };
 
-const VoucherSelect = ({ programId }: Props) => {
-  const { vouchers } = useAccountVouchers(programId);
-  const voucherEntries = Object.entries(vouchers || {});
-  const vouchersCount = voucherEntries.length;
-
+const VoucherSelect = ({ entries, ...props }: Props) => {
   const name = 'voucherId';
+  const vouchersCount = entries.length;
 
   const renderVouchers = () =>
-    voucherEntries.map(([id, { expiry }]) => <VoucherOption key={id} id={id as HexString} expireBlock={expiry} />);
+    entries.map(([id, { expiry }]) => <VoucherOption key={id} id={id} expireBlock={expiry} />);
 
   // TODO: should be done by react-hook-form's global shouldUnregister,
   // however due to complications of current forms it's not possible yet.
@@ -32,7 +29,7 @@ const VoucherSelect = ({ programId }: Props) => {
   }, [vouchersCount, resetField]);
 
   return vouchersCount ? (
-    <InputWrapper id={name} label="Voucher funds:" size="normal" direction="x" gap="1/5">
+    <InputWrapper id={name} label="Voucher funds" size="normal" {...props}>
       <Select name={name}>
         <option value="" label="No voucher" />
 
@@ -42,4 +39,18 @@ const VoucherSelect = ({ programId }: Props) => {
   ) : null;
 };
 
-export { VoucherSelect };
+const ProgramVoucherSelect = ({ programId }: { programId: HexString | undefined }) => {
+  const { vouchers } = useAccountVouchers(programId);
+  const entries = getTypedEntries(vouchers || {});
+
+  return <VoucherSelect entries={entries} direction="x" gap="1/5" />;
+};
+
+const CodeVoucherSelect = () => {
+  const { vouchers } = useAccountVouchers();
+  const entries = getTypedEntries(vouchers || {}).filter(([, { codeUploading }]) => codeUploading);
+
+  return <VoucherSelect entries={entries} direction="y" />;
+};
+
+export { ProgramVoucherSelect, CodeVoucherSelect };

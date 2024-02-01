@@ -4,18 +4,6 @@ import { AlertContext, ApiContext } from 'context';
 
 import { UseGetApproxBlockTimestamp } from '../block';
 
-type UseVoucherStatusReturn =
-  | {
-      expirationTimestamp: undefined;
-      isVoucherActive: undefined;
-      isVoucherStatusReady: false;
-    }
-  | {
-      expirationTimestamp: number;
-      isVoucherActive: boolean;
-      isVoucherStatusReady: true;
-    };
-
 function useGetVoucherStatus() {
   const getApproxBlockTimestamp = UseGetApproxBlockTimestamp();
 
