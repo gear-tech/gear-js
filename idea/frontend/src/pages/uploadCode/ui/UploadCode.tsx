@@ -4,7 +4,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 
 import { FileTypes } from '@/shared/config';
-import { useCodeUpload, useMetaOnUpload } from '@/hooks';
+import { useChain, useCodeUpload, useMetaOnUpload } from '@/hooks';
 import { Box } from '@/shared/ui/box';
 import { Subheader } from '@/shared/ui/subheader';
 import { BackButton } from '@/shared/ui/backButton';
@@ -22,6 +22,7 @@ const defaultValues = {
 
 const UploadCode = () => {
   const { isV110Runtime } = useApi();
+  const { isDevChain } = useChain();
 
   const {
     optFile,
@@ -80,7 +81,8 @@ const UploadCode = () => {
 
                 {optFile && (
                   <>
-                    <Input name="name" label="Code name" direction="y" />
+                    {/* since we're not storing codes in an indexeddb yet */}
+                    {!isDevChain && <Input name="name" label="Code name" direction="y" />}
 
                     {/* not using withDeprecatedFallback since code voucher call wasn't exist */}
                     {isV110Runtime && <CodeVoucherSelect />}

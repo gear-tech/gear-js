@@ -4,7 +4,7 @@ import { EventRecord } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
 import { useApi, useAlert, useAccount, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
-import { useModal } from '@/hooks';
+import { useChain, useModal } from '@/hooks';
 import { Method } from '@/features/explorer';
 import { checkWallet, getExtrinsicFailedMessage } from '@/shared/helpers';
 import { PROGRAM_ERRORS, TransactionName, TransactionStatus, UPLOAD_METADATA_TIMEOUT } from '@/shared/config';
@@ -18,6 +18,7 @@ const useCodeUpload = () => {
   const alert = useAlert();
   const { account } = useAccount();
   const { showModal } = useModal();
+  const { isDevChain } = useChain();
 
   const handleEventsStatus = (events: EventRecord[], codeHash: HexString, resolve?: () => void) => {
     if (!isApiReady) throw new Error('API is not initialized');
@@ -50,6 +51,8 @@ const useCodeUpload = () => {
           handleEventsStatus(events, codeId, resolve);
         } else if (status.isFinalized) {
           alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
+
+          if (isDevChain) return;
 
           // timeout cuz wanna be sure that block data is ready
           setTimeout(() => {
