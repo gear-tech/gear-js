@@ -1,3 +1,3 @@
-import { useApproxBlockTimestamp, UseGetApproxBlockTimestamp } from './use-approx-block-timestamp';
+import { useApproxBlockTimestamp, useGetApproxBlockTimestamp } from './use-approx-block-timestamp';
 
-export { useApproxBlockTimestamp, UseGetApproxBlockTimestamp };
+export { useApproxBlockTimestamp, useGetApproxBlockTimestamp };

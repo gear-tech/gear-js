@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 
 import { AlertContext, ApiContext } from 'context';
 
-function UseGetApproxBlockTimestamp() {
+function useGetApproxBlockTimestamp() {
   const { api, isApiReady } = useContext(ApiContext);
 
   const getApproxBlockTimestamp = useCallback(
@@ -28,7 +28,7 @@ function useApproxBlockTimestamp(blockNumber: number | undefined) {
   const { isApiReady } = useContext(ApiContext);
   const alert = useContext(AlertContext);
 
-  const getApproxBlockTimestamp = UseGetApproxBlockTimestamp();
+  const getApproxBlockTimestamp = useGetApproxBlockTimestamp();
 
   const [blockTimestamp, setBlockTimestamp] = useState<number>();
 
@@ -49,4 +49,4 @@ function useApproxBlockTimestamp(blockNumber: number | undefined) {
     : { blockTimestamp, isBlockTimestampReady: true as const };
 }
 
-export { useApproxBlockTimestamp, UseGetApproxBlockTimestamp };
+export { useApproxBlockTimestamp, useGetApproxBlockTimestamp };

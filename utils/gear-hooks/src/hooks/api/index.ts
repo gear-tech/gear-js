@@ -29,7 +29,7 @@ import {
 
 import { useBalance, useBalanceFormat, useDeriveBalancesAll, useAccountDeriveBalancesAll } from './balance';
 
-import { useApproxBlockTimestamp, UseGetApproxBlockTimestamp } from './block';
+import { useApproxBlockTimestamp, useGetApproxBlockTimestamp } from './block';
 
 export {
   useReadFullState,
@@ -52,7 +52,7 @@ export {
   useDeriveBalancesAll,
   useAccountDeriveBalancesAll,
   useApproxBlockTimestamp,
-  UseGetApproxBlockTimestamp,
+  useGetApproxBlockTimestamp,
   useVoucherStatus,
   useGetVoucherStatus,
   useVoucherBalanceDeprecated,

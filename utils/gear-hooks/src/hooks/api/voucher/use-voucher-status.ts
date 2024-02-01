@@ -2,10 +2,10 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 
 import { AlertContext, ApiContext } from 'context';
 
-import { UseGetApproxBlockTimestamp } from '../block';
+import { useGetApproxBlockTimestamp } from '../block';
 
 function useGetVoucherStatus() {
-  const getApproxBlockTimestamp = UseGetApproxBlockTimestamp();
+  const getApproxBlockTimestamp = useGetApproxBlockTimestamp();
 
   const getVoucherStatus = useCallback(
     async (expirationBlock: number) => {
