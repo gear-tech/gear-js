@@ -1,7 +1,7 @@
+import { Option, Vec } from '@polkadot/types';
 import { BalanceOf } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
-import { Option } from '@polkadot/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { blake2AsHex } from '@polkadot/util-crypto';
 
@@ -256,33 +256,20 @@ export class GearVoucher extends GearTransaction {
   async getAllForAccount(accountId: string, programId?: HexString): Promise<Record<string, IVoucherDetails>> {
     const result: Record<string, IVoucherDetails> = {};
 
-    const keyPrefix = this._api.query.gearVoucher.vouchers.keyPrefix(accountId);
+    const voucherEntries = await this._api.query.gearVoucher.vouchers.entries(accountId);
 
-    const keysPaged = await this._api.rpc.state.getKeysPaged(keyPrefix, 1000, keyPrefix);
-
-    if (keysPaged.length === 0) {
+    if (voucherEntries.length === 0) {
       return result;
     }
 
-    const vouchers = (await this._api.rpc.state.queryStorageAt(keysPaged)) as Option<any>[];
+    for (const [key, value] of voucherEntries) {
+      const voucherId = key.args[1].toHex();
+      const details = value.unwrap();
 
-    vouchers.forEach((item, index) => {
-      const typedItem = this._api.createType<Option<PalletGearVoucherInternalVoucherInfo>>(
-        'Option<PalletGearVoucherInternalVoucherInfo>',
-        item,
-      );
+      const programs = details.programs.isSome ? (details.programs.unwrap().toJSON() as string[]) : null;
 
-      const voucherId = '0x' + keysPaged[index].toHex().slice(keyPrefix.length);
-
-      if (typedItem.isNone) {
-        return;
-      }
-
-      const details = typedItem.unwrap();
-      const programs = details.programs.unwrapOrDefault().toJSON() as string[];
-
-      if (details.programs.isSome && programId && !programs.includes(programId)) {
-        return;
+      if (programId && programs !== null && !programs.includes(programId)) {
+        continue;
       }
 
       result[voucherId] = {
@@ -291,7 +278,46 @@ export class GearVoucher extends GearTransaction {
         expiry: details.expiry.toNumber(),
         codeUploading: details.codeUploading.isTrue,
       };
-    });
+    }
+
+    return result;
+  }
+
+  /**
+   * ### Get all vouchers issued by an account.
+   * If many voucher are issued, this may take a while.
+   * @param accountId - The account id of the owner of the vouchers.
+   * @returns - An array of voucher ids.
+   */
+  async getAllIssuedByAccount(accountId: string): Promise<string[]> {
+    const result: string[] = [];
+
+    const keys = await this._api.query.gearVoucher.vouchers.keys();
+
+    if (keys.length === 0) {
+      return result;
+    }
+    for (let i = 0; i < keys.length; i += 1000) {
+      const vouchers = (await this._api.rpc.state.queryStorageAt(keys.slice(i, i + 1000))) as Vec<
+        Option<PalletGearVoucherInternalVoucherInfo>
+      >;
+
+      for (let key = 0; i < vouchers.length; key++) {
+        const info = vouchers.at(key);
+
+        if (info.isNone) {
+          continue;
+        }
+
+        if (!info.unwrap().owner.eq(accountId)) {
+          continue;
+        }
+
+        const voucherId = keys[key + i].args[1].toHex();
+
+        result.push(voucherId);
+      }
+    }
 
     return result;
   }
@@ -312,7 +338,7 @@ export class GearVoucher extends GearTransaction {
 
     return {
       owner: owner.toHex(),
-      programs: programs.unwrapOrDefault().toJSON() as string[],
+      programs: programs.isSome ? (programs.unwrap().toJSON() as string[]) : null,
       expiry: expiry.toNumber(),
       codeUploading: codeUploading.isTrue,
     };
