@@ -297,26 +297,24 @@ export class GearVoucher extends GearTransaction {
     if (keys.length === 0) {
       return result;
     }
-    for (let i = 0; i < keys.length; i += 1000) {
-      const vouchers = (await this._api.rpc.state.queryStorageAt(keys.slice(i, i + 1000))) as Vec<
+    for (let keyIndex = 0; keyIndex < keys.length; keyIndex += 1000) {
+      const vouchers = (await this._api.rpc.state.queryStorageAt(keys.slice(keyIndex, keyIndex + 1000))) as Vec<
         Option<PalletGearVoucherInternalVoucherInfo>
       >;
 
-      for (let key = 0; i < vouchers.length; key++) {
-        const info = vouchers.at(key);
-
+      vouchers.forEach((info, index) => {
         if (info.isNone) {
-          continue;
+          return;
         }
 
         if (!info.unwrap().owner.eq(accountId)) {
-          continue;
+          return;
         }
 
-        const voucherId = keys[key + i].args[1].toHex();
+        const voucherId = keys[index + keyIndex].args[1].toHex();
 
         result.push(voucherId);
-      }
+      });
     }
 
     return result;
