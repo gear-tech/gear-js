@@ -13,14 +13,7 @@ function useVouchers(accountAddress: string | undefined, programId?: HexString |
   const getVouchers = async (_accountAddress: string, _programId?: HexString) => {
     if (!isApiReady) throw new Error('API is not initialized');
 
-    const _vouchers = await api.voucher.getAllForAccount(_accountAddress);
-
-    if (!_programId) return _vouchers;
-
-    const entries = Object.entries(_vouchers);
-    const entriesForProgram = entries.filter(([, { programs }]) => !programs.length || programs.includes(_programId));
-
-    return Object.fromEntries(entriesForProgram);
+    return api.voucher.getAllForAccount(_accountAddress, _programId);
   };
 
   useEffect(() => {
