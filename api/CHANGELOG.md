@@ -1,3 +1,12 @@
+## 0.36.3
+
+_02/02/2024_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1481
+- Add method to get all voucher issued by account
+- Improve vouchers query
+
 ## 0.36.2
 
 _01/25/2024_
