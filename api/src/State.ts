@@ -55,7 +55,11 @@ export class GearProgramState extends GearProgramStorage {
    * console.log(result.toJSON());
    */
   async read<T extends Codec = Codec>(args: ReadStateParams, meta?: ProgramMetadata, type?: number): Promise<T> {
-    const payload = meta.version === MetadataVersion.V2Rust ? encodePayload(args.payload, meta, 'state', type) : [];
+    const payload = meta
+      ? meta.version === MetadataVersion.V2Rust
+        ? encodePayload(args.payload, meta, 'state', type)
+        : []
+      : args.payload;
 
     const state = await this._api.rpc.gear.readState(args.programId, payload, args.at || null);
 
