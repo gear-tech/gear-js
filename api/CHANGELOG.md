@@ -6,6 +6,9 @@ _01/25/2024_
 https://github.com/gear-tech/gear-js/pull/1477
 - Return support of old vouchers
 
+https://github.com/gear-tech/gear-js/pull/1483
+- Fix reading state without meta
+
 ## 0.36.1
 
 _01/23/2024_
