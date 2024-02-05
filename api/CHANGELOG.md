@@ -1,4 +1,4 @@
-## 0.36.3
+## master
 
 _02/02/2024_
 
@@ -7,6 +7,9 @@ https://github.com/gear-tech/gear-js/pull/1481
 - Add method to get all voucher issued by account
 - Improve vouchers query
 
+https://github.com/gear-tech/gear-js/pull/1483
+- Fix reading state without meta
+
 ## 0.36.2
 
 _01/25/2024_
@@ -14,9 +17,6 @@ _01/25/2024_
 ### Changes
 https://github.com/gear-tech/gear-js/pull/1477
 - Return support of old vouchers
-
-https://github.com/gear-tech/gear-js/pull/1483
-- Fix reading state without meta
 
 ## 0.36.1
 
