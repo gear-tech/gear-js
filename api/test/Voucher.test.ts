@@ -127,6 +127,12 @@ describe('Voucher', () => {
     expect(vouchers[voucher]).toHaveProperty('codeUploading', true);
   });
 
+  test('Get all vouchers issued by account', async () => {
+    const vouchers = await api.voucher.getAllIssuedByAccount(alice.address);
+    expect(vouchers).toHaveLength(1);
+    expect(vouchers[0]).toBe(voucher);
+  });
+
   test('Get voucher details', async () => {
     const details = await api.voucher.getDetails(charlie.address, voucher);
     expect(details).toBeDefined();
@@ -135,8 +141,9 @@ describe('Voucher', () => {
     expect(details).toHaveProperty('expiry');
     expect(details).toHaveProperty('codeUploading');
     expect(Object.keys(details)).toHaveLength(4);
+    expect(details.programs).not.toBeNull();
     expect(details.programs).toHaveLength(1);
-    expect(details.programs[0]).toBe(programId);
+    expect(details.programs?.at(0)).toBe(programId);
     expect(details.owner).toBe(decodeAddress(alice.address));
     expect(details.expiry).toBe(validUpTo);
     expect(details.codeUploading).toBeTruthy();

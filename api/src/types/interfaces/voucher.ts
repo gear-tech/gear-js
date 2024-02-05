@@ -41,9 +41,9 @@ export interface IVoucherDetails {
    */
   expiry: number;
   /**
-   * Set of programs this voucher could be used to interact with.
+   * Set of programs this voucher could be used to interact with. If null, the voucher could be used with any program.
    */
-  programs: string[];
+  programs: string[] | null;
   /**
    * Flag if this voucher's covers uploading codes as prepaid call.
    */
