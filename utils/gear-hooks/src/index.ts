@@ -33,6 +33,8 @@ import {
   useAccountVoucherDeprecated,
   useIsAnyVoucherActive,
   useIsAnyAccountVoucherActive,
+  useIssuedVouchers,
+  useAccountIssuedVouchers,
   SendMessageOptions,
   UseSendMessageOptions,
 } from './hooks';
@@ -105,6 +107,8 @@ export {
   useAccountVoucherDeprecated,
   useIsAnyVoucherActive,
   useIsAnyAccountVoucherActive,
+  useIssuedVouchers,
+  useAccountIssuedVouchers,
   DEFAULT_OPTIONS,
   DEFAULT_INFO_OPTIONS,
   DEFAULT_ERROR_OPTIONS,

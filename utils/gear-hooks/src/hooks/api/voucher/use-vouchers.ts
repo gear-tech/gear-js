@@ -10,24 +10,19 @@ function useVouchers(accountAddress: string | undefined, programId?: HexString |
   const [vouchers, setVouchers] = useState<Record<HexString, IVoucherDetails>>();
   const isEachVoucherReady = vouchers !== undefined;
 
-  const getVouchers = async (_accountAddress: string, _programId?: HexString) => {
-    if (!isApiReady) throw new Error('API is not initialized');
-
-    return api.voucher.getAllForAccount(_accountAddress, _programId);
-  };
-
   useEffect(() => {
     setVouchers(undefined);
 
     const isProgramIdSpecified = arguments.length > 1;
-    if (!api || !accountAddress || (isProgramIdSpecified && !programId)) return;
+    if (!isApiReady || !accountAddress || (isProgramIdSpecified && !programId)) return;
 
-    getVouchers(accountAddress, programId)
+    api.voucher
+      .getAllForAccount(accountAddress, programId)
       .then((result) => setVouchers(result))
       .catch(({ message }) => alert.error(message));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api, accountAddress, programId]);
+  }, [isApiReady, api, accountAddress, programId]);
 
   return { vouchers, isEachVoucherReady };
 }

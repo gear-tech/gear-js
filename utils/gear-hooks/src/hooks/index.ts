@@ -26,6 +26,8 @@ import {
   useAccountVoucherDeprecated,
   useIsAnyVoucherActive,
   useIsAnyAccountVoucherActive,
+  useIssuedVouchers,
+  useAccountIssuedVouchers,
   useDeriveBalancesAll,
   useAccountDeriveBalancesAll,
   SendMessageOptions,
@@ -69,6 +71,8 @@ export {
   useAccountVoucherDeprecated,
   useIsAnyVoucherActive,
   useIsAnyAccountVoucherActive,
+  useIssuedVouchers,
+  useAccountIssuedVouchers,
   SendMessageOptions,
   UseSendMessageOptions,
 };
