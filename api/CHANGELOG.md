@@ -1,6 +1,6 @@
-## master
+## 0.36.3
 
-_02/02/2024_
+_02/06/2024_
 
 ### Changes
 https://github.com/gear-tech/gear-js/pull/1481
