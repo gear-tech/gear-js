@@ -25,6 +25,8 @@ import {
   useAccountVoucherDeprecated,
   useIsAnyVoucherActive,
   useIsAnyAccountVoucherActive,
+  useIssuedVouchers,
+  useAccountIssuedVouchers,
 } from './voucher';
 
 import { useBalance, useBalanceFormat, useDeriveBalancesAll, useAccountDeriveBalancesAll } from './balance';
@@ -61,6 +63,8 @@ export {
   useAccountVoucherDeprecated,
   useIsAnyVoucherActive,
   useIsAnyAccountVoucherActive,
+  useIssuedVouchers,
+  useAccountIssuedVouchers,
   SendMessageOptions,
   UseSendMessageOptions,
 };
