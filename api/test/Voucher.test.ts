@@ -111,7 +111,6 @@ describe('Voucher', () => {
     expect(txData.owner.toHuman()).toBe(alice.address);
 
     voucher = voucherId;
-    console.log(voucher, 'expires at', validUpTo);
   });
 
   test('Voucher exists', async () => {
@@ -238,16 +237,28 @@ describe('Voucher', () => {
     expect(txData.change.isActive).toBeTruthy();
   });
 
-  test.skip('Revoke voucher', async () => {
+  test('Decline voucher', async () => {
+    expect(voucher).toBeDefined();
+
+    const transferTx = api.balance.transfer(charlieRaw, 15 * 1e12);
+
+    await sendTransaction(transferTx, alice, ['Transfer']);
+
+    const tx = api.voucher.decline(voucher);
+
+    const [txData] = await sendTransaction(tx, charlie, ['VoucherDeclined']);
+
+    expect(txData).toBeDefined();
+    expect(txData).toHaveProperty('voucherId');
+    expect(txData).toHaveProperty('spender');
+    expect(Object.keys(txData.toJSON())).toHaveLength(2);
+    expect(txData.voucherId.toHex()).toBe(voucher);
+    expect(txData.spender.toHuman()).toBe(charlie.address);
+  });
+
+  test('Revoke voucher', async () => {
     expect(voucher).toBeDefined();
     expect(validUpTo).toBeDefined();
-
-    let blockNumber = await api.rpc.chain.getHeader().then((header) => header.number.toNumber());
-
-    while (blockNumber < validUpTo) {
-      await sleep(3000);
-      blockNumber = await api.rpc.chain.getHeader().then((header) => header.number.toNumber());
-    }
 
     const tx = api.voucher.revoke(charlie.address, voucher);
 

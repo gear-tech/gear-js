@@ -1,3 +1,11 @@
+## 0.36.4
+
+_02/12/2024_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1485
+- Add method to decline a voucher according to https://github.com/gear-tech/gear/pull/3725
+
 ## 0.36.3
 
 _02/06/2024_

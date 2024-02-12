@@ -99,3 +99,8 @@ export interface VoucherRevokedData extends GenericEventData {
   spender: AccountId32;
   voucherId: PalletGearVoucherInternalVoucherId;
 }
+
+export interface VoucherDeclinedData extends GenericEventData {
+  spender: AccountId32,
+  voucherId: PalletGearVoucherInternalVoucherId
+}

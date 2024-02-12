@@ -22,11 +22,18 @@ export class GearVoucher extends GearTransaction {
    *
    * @example
    * ```javascript
+   * import { VoucherIssued } from '@gear-js/api';
    * const programId = '0x..';
    * const account = '0x...';
-   * const { extrinsic, voucherId } = await api.voucher.issue(account, programId, 10000);
-   * extrinsic.signAndSend(account, (events) => {
-   *   events.forEach(({event}) => console.log(event.toHuman()));
+   * const { extrinsic } = await api.voucher.issue(account, programId, 10000);
+   * extrinsic.signAndSend(account, ({ events, status }) => {
+   *   if (status.isInBlock) {
+   *     const voucherIssuedEvent = events.find(({event: { method }}) => method === 'VoucherIssued')?.event as VoucherIssued;
+   *
+   *     if (voucherIssuedEvent) {
+   *       console.log('voucherId:', voucherIssuedEvent.data.voucherId);
+   *     }
+   *   }
    * })
    * ```
    */
@@ -84,7 +91,7 @@ export class GearVoucher extends GearTransaction {
    * const msgTx = api.message.send(...);
    * const tx = api.voucher.call(voucherId, { SendMessage: msgTx });
    * tx.signAndSend(account, (events) => {
-   *  events.forEach(({event}) => console.log(event.toHuman()));
+   *  events.forEach(({ event }) => console.log(event.toHuman()));
    * })
    * ```
    */
@@ -207,6 +214,15 @@ export class GearVoucher extends GearTransaction {
       params.codeUploading || null,
       params.prolongDuration || null,
     );
+  }
+
+  /**
+   * ### Decline existing and not expired voucher.
+   * @param voucherId The id of the voucher to be declined
+   * @returns Extrinsic to submit
+   */
+  decline(voucherId: string): SubmittableExtrinsic<'promise', ISubmittableResult> {
+    return this._api.tx.gearVoucher.decline(voucherId);
   }
 
   /**
