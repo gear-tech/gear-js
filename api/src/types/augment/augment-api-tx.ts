@@ -309,6 +309,10 @@ declare module '@polkadot/api-base/types/submittable' {
         ) => SubmittableExtrinsic<ApiType>,
         [PalletGearVoucherInternalPrepaidCall]
       >;
+      decline: AugmentedSubmittable<
+        (voucherId: PalletGearVoucherInternalVoucherId | string | Uint8Array) => SubmittableExtrinsic<ApiType>,
+        [PalletGearVoucherInternalVoucherId]
+      >;
       issue: AugmentedSubmittable<
         (
           spender: AccountId32 | string | Uint8Array,

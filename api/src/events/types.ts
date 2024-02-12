@@ -8,6 +8,7 @@ import {
   ProgramResumeSessionStarted,
   UserMessageRead,
   UserMessageSent,
+  VoucherDeclined,
   VoucherIssued,
   VoucherRevoked,
   VoucherUpdated,
@@ -17,6 +18,7 @@ export interface IGearVoucherEvent {
   VoucherIssued: VoucherIssued;
   VoucherUpdated: VoucherUpdated;
   VoucherRevoked: VoucherRevoked;
+  VoucherDeclined: VoucherDeclined;
 }
 
 export interface IGearEvent {

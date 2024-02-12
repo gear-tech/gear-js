@@ -11,6 +11,7 @@ import {
   TransferData,
   UserMessageReadData,
   UserMessageSentData,
+  VoucherDeclinedData,
   VoucherIssuedData,
   VoucherRevokedData,
   VoucherUpdatedData,
@@ -45,3 +46,5 @@ export type VoucherIssued = GearEvent<VoucherIssuedData>;
 export type VoucherUpdated = GearEvent<VoucherUpdatedData>;
 
 export type VoucherRevoked = GearEvent<VoucherRevokedData>;
+
+export type VoucherDeclined = GearEvent<VoucherDeclinedData>;
