@@ -441,6 +441,13 @@ const tx = api.voucher.revoke(spenderAddress, voucherId);
 tx.signAndSend(...);
 ```
 
+#### Decline voucher
+The `api.voucher.decline` can be used to decline existing and not expired voucher. It will make the voucher expired
+```javascript
+const tx = api.voucher.decline(voucherId);
+tx.signAndSend(...);
+```
+
 ## Work with programs and blockchain state
 
 ### Check that the address belongs to some program
