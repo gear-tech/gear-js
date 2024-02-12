@@ -106,7 +106,8 @@ export class GearVoucher extends GearTransaction {
       return this._api.tx.gearVoucher.call(voucherId, {
         SendMessage: { destination, payload, gasLimit, value, keepAlive },
       });
-    } else if ('SendReply' in params) {
+    }
+    if ('SendReply' in params) {
       if (params.SendReply.method.method !== 'sendReply') {
         throw new Error(`Invalid method name. Expected 'SendReply' but actual is ${params.SendReply.method.method}`);
       }
@@ -114,7 +115,8 @@ export class GearVoucher extends GearTransaction {
       return this._api.tx.gearVoucher.call(voucherId, {
         SendReply: { replyToId, payload, gasLimit, value, keepAlive },
       });
-    } else if ('UploadCode' in params) {
+    }
+    if ('UploadCode' in params) {
       if (params.UploadCode.method.method !== 'uploadCode') {
         throw new Error(`Invalid method name. Expected 'UploadCode' but actual is ${params.UploadCode.method.method}`);
       }
@@ -124,6 +126,9 @@ export class GearVoucher extends GearTransaction {
       return this._api.tx.gearVoucher.call(voucherId, {
         UploadCode: { code },
       });
+    }
+    if ('DeclineVoucher' in params) {
+      return this._api.tx.gearVoucher.call(voucherId, { DeclineVoucher: null });
     }
 
     throw new Error('Invalid call params');

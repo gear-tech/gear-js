@@ -256,6 +256,25 @@ describe('Voucher', () => {
     expect(txData.spender.toHuman()).toBe(charlie.address);
   });
 
+  test('Decline voucher with no funds', async () => {
+    const { extrinsic } = await api.voucher.issue(charlieRaw, 100e12, 1000, [programId], true);
+
+    const [txData] = await sendTransaction(extrinsic, alice, ['VoucherIssued']);
+
+    const voucherId = txData.voucherId.toHex();
+
+    const tx = api.voucher.call(voucherId, { DeclineVoucher: null });
+
+    const [txData2] = await sendTransaction(tx, charlie, ['VoucherDeclined']);
+
+    expect(txData2).toBeDefined();
+    expect(txData2).toHaveProperty('voucherId');
+    expect(txData2).toHaveProperty('spender');
+    expect(Object.keys(txData2.toJSON())).toHaveLength(2);
+    expect(txData2.voucherId.toHex()).toBe(voucherId);
+    expect(txData2.spender.toHuman()).toBe(charlie.address);
+  });
+
   test('Revoke voucher', async () => {
     expect(voucher).toBeDefined();
     expect(validUpTo).toBeDefined();

@@ -295,6 +295,7 @@ declare module '@polkadot/api-base/types/submittable' {
                   code: string | Uint8Array | Codec;
                 };
               }
+            | { DeclineVoucher: null }
             | string
             | Uint8Array,
         ) => SubmittableExtrinsic<ApiType>,
