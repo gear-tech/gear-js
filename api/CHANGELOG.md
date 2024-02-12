@@ -1,3 +1,11 @@
+## 0.36.5
+
+_02/12/2024_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1486
+- Add ability to decline voucher using voucher funds
+
 ## 0.36.4
 
 _02/12/2024_
