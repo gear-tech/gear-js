@@ -6,7 +6,8 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 export type ICallOptions =
   | { SendMessage: SubmittableExtrinsic<'promise', ISubmittableResult> }
   | { SendReply: SubmittableExtrinsic<'promise', ISubmittableResult> }
-  | { UploadCode: SubmittableExtrinsic<'promise', ISubmittableResult> };
+  | { UploadCode: SubmittableExtrinsic<'promise', ISubmittableResult> }
+  | { DeclineVoucher: null };
 
 export interface IUpdateVoucherParams {
   /**
