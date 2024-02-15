@@ -1,3 +1,11 @@
+## 0.36.6
+
+_02/15/2024_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1487
+- Add add `gr_env_vars` stub
+
 ## 0.36.5
 
 _02/12/2024_

@@ -13,14 +13,16 @@ export function getGrReply(wasm: HexString | Buffer | ArrayBuffer | Uint8Array, 
       importObj(memory, false, undefined, undefined, undefined, (payload: number, len: number) =>
         resolve(new Uint8Array(memory.buffer.slice(payload, payload + len))),
       ),
-    ).then(({ instance: { exports } }) => {
-      if (!(fn in exports)) {
-        reject(`${fn} function not found in exports`);
-      } else if (typeof exports[fn] !== 'function') {
-        reject(`${fn} is not a function`);
-      } else {
-        (exports[fn] as () => void)();
-      }
-    });
+    )
+      .then(({ instance: { exports } }) => {
+        if (!(fn in exports)) {
+          reject(`${fn} function not found in exports`);
+        } else if (typeof exports[fn] !== 'function') {
+          reject(`${fn} is not a function`);
+        } else {
+          (exports[fn] as () => void)();
+        }
+      })
+      .catch((error) => reject(error));
   });
 }
