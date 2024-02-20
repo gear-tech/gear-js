@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js';
+import { BigNumber } from 'bignumber.js';
 import { useContext, useMemo } from 'react';
 import { ApiContext } from 'context';
 import { formatBalance } from '@polkadot/util';

@@ -1,7 +1,7 @@
 import { GasInfo, GearApi } from '@gear-js/api';
 import { Keyring } from '@polkadot/api';
 import { Event } from '@polkadot/types/interfaces';
-import BigNumber from 'bignumber.js';
+import { BigNumber } from 'bignumber.js';
 
 import { VARA_SS58_FORMAT } from 'consts';
 

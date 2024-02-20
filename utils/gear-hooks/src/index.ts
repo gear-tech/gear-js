@@ -1,3 +1,5 @@
+import { BigNumber } from 'bignumber.js';
+
 import {
   useReadFullState,
   useReadWasmState,
@@ -69,6 +71,7 @@ import {
 } from './types';
 
 export {
+  BigNumber,
   useReadFullState,
   useReadWasmState,
   useSendMessage,
