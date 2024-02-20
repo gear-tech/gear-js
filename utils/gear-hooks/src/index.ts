@@ -1,3 +1,5 @@
+import { BigNumber } from 'bignumber.js';
+
 import {
   useReadFullState,
   useReadWasmState,
@@ -22,7 +24,7 @@ import {
   useAlert,
   useApi,
   useCreateHandler,
-  useSendMessageHandler,
+  useSendMessageWithGas,
   useApproxBlockTimestamp,
   useGetApproxBlockTimestamp,
   useVoucherStatus,
@@ -37,6 +39,8 @@ import {
   useAccountIssuedVouchers,
   SendMessageOptions,
   UseSendMessageOptions,
+  UseSendMessageWithGasOptions,
+  SendMessageWithGasOptions,
 } from './hooks';
 
 import { withoutCommas, getVaraAddress, getTypedEntries } from './utils';
@@ -67,6 +71,7 @@ import {
 } from './types';
 
 export {
+  BigNumber,
   useReadFullState,
   useReadWasmState,
   useSendMessage,
@@ -93,7 +98,7 @@ export {
   ApiProvider,
   AlertProvider,
   useCreateHandler,
-  useSendMessageHandler,
+  useSendMessageWithGas,
   withoutCommas,
   getVaraAddress,
   getTypedEntries,
@@ -131,4 +136,6 @@ export type {
   SendMessageOptions,
   UseSendMessageOptions,
   Entries,
+  UseSendMessageWithGasOptions,
+  SendMessageWithGasOptions,
 };
