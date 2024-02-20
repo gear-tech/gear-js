@@ -1,14 +1,28 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { useContext } from 'react';
+
 import { AlertContext, ApiContext } from 'context';
 import { getAutoGasLimit } from 'utils';
+
 import { SendMessageOptions, UseSendMessageOptions, useHandleCalculateGas, useSendMessage } from '../api';
 
-function useSendMessageHandler(
+type UseSendMessageWithGasOptions = UseSendMessageOptions &
+  (
+    | {
+        isMaxGasLimit?: boolean;
+      }
+    | {
+        gasMultiplier?: number;
+      }
+  );
+
+type SendMessageWithGasOptions = Omit<SendMessageOptions, 'gasLimit'>;
+
+function useSendMessageWithGas(
   destination: HexString,
   metadata: ProgramMetadata | undefined,
-  options?: UseSendMessageOptions & { isMaxGasLimit?: boolean },
+  options: UseSendMessageWithGasOptions = {},
 ) {
   const { api, isApiReady } = useContext(ApiContext);
   const alert = useContext(AlertContext);
@@ -16,15 +30,16 @@ function useSendMessageHandler(
   const calculateGas = useHandleCalculateGas(destination, metadata);
   const sendMessage = useSendMessage(destination, metadata, options);
 
-  return (args: Omit<SendMessageOptions, 'gasLimit'>) => {
+  return (args: SendMessageWithGasOptions) => {
     if (!isApiReady) throw new Error('API is not initialized');
 
     const { payload, value } = args;
-    const { isMaxGasLimit = false } = options || {};
+    const isMaxGasLimit = 'isMaxGasLimit' in options ? options.isMaxGasLimit : false;
+    const gasMultiplier = 'gasMultiplier' in options ? options.gasMultiplier : undefined;
 
     const getGasLimit = isMaxGasLimit
       ? Promise.resolve(api.blockGasLimit)
-      : calculateGas(payload, value).then((result) => getAutoGasLimit(result));
+      : calculateGas(payload, value).then((result) => getAutoGasLimit(result, gasMultiplier));
 
     getGasLimit
       .then((gasLimit) => sendMessage({ ...args, gasLimit }))
@@ -32,4 +47,5 @@ function useSendMessageHandler(
   };
 }
 
-export { useSendMessageHandler };
+export { useSendMessageWithGas };
+export type { UseSendMessageWithGasOptions, SendMessageWithGasOptions };
