@@ -19,7 +19,6 @@ export class Block {
   @Column({ nullable: true, type: 'timestamp' })
   public timestamp: Date;
 
-  @Index()
   @Column()
   public genesis: string;
 }

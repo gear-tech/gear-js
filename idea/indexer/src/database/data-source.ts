@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 
-import { Block, Code, Message, Program, State, StateToCode, Status } from './entities';
+import { Block, Code, Message, Program, State, Status } from './entities';
 import config from '../config';
 
 export const AppDataSource = new DataSource({
@@ -10,7 +10,7 @@ export const AppDataSource = new DataSource({
   username: config.database.user,
   password: config.database.password,
   database: config.database.name,
-  entities: [Message, Program, Code, Block, State, StateToCode, Status],
+  entities: [Message, Program, Code, Block, State, Status],
   migrations: ['./dist/database/migrations/*.js'],
   synchronize: false,
   migrationsRun: true,

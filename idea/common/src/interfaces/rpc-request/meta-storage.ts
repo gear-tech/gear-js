@@ -6,7 +6,10 @@ export interface AddMetaDetailsParams {
   hex: HexString;
 }
 
-export type AddMetahashParams = Array<[string, Array<string>]>;
+export interface AddMetahashParams {
+  codeId: string;
+  metahash: string;
+}
 
 export interface GetMetaParams {
   hash?: string;

@@ -1,4 +1,4 @@
-import { And, DataSource, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { And, DataSource, In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 
 import { Block } from '../database';
 
@@ -54,5 +54,13 @@ export class BlockService {
     });
 
     return syncedBlocks.map(({ number }) => Number(number));
+  }
+
+  async getNotSynced(numbers: number[]) {
+    const blocks = await this.repo.find({ where: { number: In(numbers.map((v) => v + '')) } });
+
+    const syncedNumbers = blocks.map((block) => Number(block.number));
+
+    return numbers.filter((number) => !syncedNumbers.includes(number)).sort((a, b) => a - b);
   }
 }

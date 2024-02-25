@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm';
-import { AddMetaDetailsParams, AddMetahashParams, GetMetaParams } from '@gear-js/common';
+import { AddMetaDetailsParams, AddMetahashParams, GetMetaParams, logger } from '@gear-js/common';
 
 import { Code, Meta, AppDataSource } from './database';
 import { InvalidParamsError, MetaNotFoundError } from './util/errors';
@@ -15,36 +15,31 @@ export class MetaService {
     this.codeRepo = AppDataSource.getRepository(Code);
   }
 
-  async addMeta(params: AddMetahashParams): Promise<string[]> {
-    const metaArray: Meta[] = [];
-    const codeArray: Code[] = [];
+  async addMeta({ metahash, codeId }: AddMetahashParams): Promise<string[]> {
+    logger.info('Adding meta', { metahash, codeId });
+    const meta =
+      (await this.metaRepo.findOne({ where: { hash: metahash }, relations: { codes: true } })) ||
+      new Meta({ hash: metahash, codes: [] });
 
-    for (const [hash, codeIds] of params) {
-      const meta =
-        (await this.metaRepo.findOne({ where: { hash }, relations: { codes: true } })) || new Meta({ hash, codes: [] });
+    const code = new Code({ id: codeId, meta });
+    meta.codes.push(code);
 
-      const codes = codeIds.map((id) => new Code({ id, meta }));
+    await this.metaRepo.save(meta);
+    await this.codeRepo.save(code);
 
-      meta.codes.push(...codes);
-      codeArray.push(...codes);
-      metaArray.push(meta);
-    }
-
-    await this.metaRepo.save(metaArray);
-    await this.codeRepo.save(codeArray);
-
-    return metaArray.filter(({ hasState }) => hasState === true).map(({ hash }) => hash);
+    return meta.hasState ? [metahash] : [];
   }
 
   async addMetaDetails(params: AddMetaDetailsParams): Promise<Omit<Meta, 'codes'>> {
+    logger.info('Adding meta details', params);
     if (!params.hash && !params.codeHash) {
       throw new InvalidParamsError();
     }
 
-    const meta = await this.get(params, true);
+    let meta = await this.get(params, true);
 
     if (!meta) {
-      throw new MetaNotFoundError();
+      meta = new Meta({ hash: params.hash });
     }
 
     if (meta.hex) {
@@ -55,7 +50,14 @@ export class MetaService {
 
     meta.hex = params.hex;
 
-    const metadata = ProgramMetadata.from(meta.hex);
+    let metadata: ProgramMetadata;
+
+    try {
+      metadata = ProgramMetadata.from(meta.hex);
+    } catch (error) {
+      throw new InvalidParamsError('Invalid metadata hex');
+    }
+
     if (metadata.version === MetadataVersion.V1Rust) {
       if (metadata.types.state != null) {
         meta.hasState = true;

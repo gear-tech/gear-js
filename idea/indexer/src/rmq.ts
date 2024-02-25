@@ -34,16 +34,16 @@ export class RMQService {
       [INDEXER_METHODS.CODE_ALL]: this.codeService.getMany.bind(this.codeService),
       [INDEXER_METHODS.CODE_DATA]: this.codeService.get.bind(this.codeService),
       [INDEXER_METHODS.CODE_NAME_ADD]: this.codeService.setName.bind(this.codeService),
-      [INDEXER_METHODS.CODE_STATE_GET]: this.stateService.getByCodeIdAndStateId.bind(this.stateService),
       [INDEXER_METHODS.MESSAGE_ALL]: this.messageService.getMany.bind(this.messageService),
-      [INDEXER_METHODS.MESSAGE_DATA]: this.messageService.get.bind(this.messageService),
+      [INDEXER_METHODS.MESSAGE_DATA]: async (params: any) => this.messageService.get(params, true),
       [INDEXER_METHODS.PROGRAM_ALL]: this.programService.getAllPrograms.bind(this.programService),
       [INDEXER_METHODS.PROGRAM_DATA]: this.programService.get.bind(this.programService),
       [INDEXER_METHODS.PROGRAM_NAME_ADD]: this.programService.setName.bind(this.programService),
       [INDEXER_METHODS.PROGRAM_STATE_ALL]: this.stateService.listByProgramId.bind(this.stateService),
       [INDEXER_METHODS.PROGRAM_STATE_ADD]: this.stateService.create.bind(this.stateService),
       [INDEXER_METHODS.STATE_GET]: this.stateService.get.bind(this.stateService),
-      [INDEXER_INTERNAL_METHODS.META_HAS_STATE]: this.programService.hasState.bind(this.programService),
+      [INDEXER_INTERNAL_METHODS.META_HAS_STATE]: async (hashes: string[]) =>
+        Promise.all([this.programService.hasState(hashes), this.codeService.hasState(hashes)]),
     };
   }
 
@@ -189,12 +189,11 @@ export class RMQService {
     return this.methods[method](params);
   }
 
-  public async sendMsgToMetaStorage(metahashes: Map<string, Set<string>>) {
-    const msg = Array.from(metahashes.entries()).map(([key, value]) => [key, Array.from(value.values())]);
-    return this.sendMsg(
+  public sendMetahashToMetaStorage(metahash: string, codeId: string) {
+    this.sendMsg(
       RMQExchange.DIRECT_EX,
       RMQServices.META_STORAGE,
-      msg,
+      { metahash, codeId },
       null,
       META_STORAGE_INTERNAL_METHODS.META_HASH_ADD,
     );

@@ -7,6 +7,7 @@ import { IState } from './state';
 
 interface AllMessagesResult extends IPaginationResult {
   messages: IMessage[];
+  programNames?: Record<string, string>;
 }
 
 interface GetAllProgramsResult extends IPaginationResult {
@@ -27,7 +28,7 @@ interface AddMetaResult {
 
 interface AddStateResult {
   status: 'State added';
-  state: IState
+  state: IState;
 }
 
 interface GetMetaResult {

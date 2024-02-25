@@ -4,7 +4,7 @@ import { RMQServiceAction, logger } from '@gear-js/common';
 import { changeStatus, runHealthcheckServer } from './healthcheck.server';
 import { AppDataSource } from './database';
 import { RMQService } from './rmq';
-import { BlockService } from './services';
+import { BlockService, StatusService } from './services';
 import { CodeService } from './services';
 import { MessageService } from './services';
 import { ProgramService } from './services';
@@ -27,13 +27,14 @@ async function bootstrap() {
   const programService = new ProgramService(dataSource);
   const stateService = new StateService(dataSource, programService);
   const messageService = new MessageService(dataSource, programService);
+  const statusService = new StatusService(dataSource);
 
   const rmq = new RMQService(blockService, codeService, messageService, programService, stateService);
 
   await rmq.init();
   changeStatus('rmq');
 
-  const indexer = new GearIndexer(programService, messageService, codeService, blockService, rmq);
+  const indexer = new GearIndexer(programService, messageService, codeService, blockService, rmq, statusService);
 
   await connectToNode(indexer, async (action, genesis) => {
     if (action === RMQServiceAction.ADD) {

@@ -1,4 +1,4 @@
-import { DataSource, Repository } from 'typeorm';
+import { Between, DataSource, FindOptionsWhere, IsNull, MoreThan, Repository } from 'typeorm';
 import {
   AllMessagesResult,
   FindMessageParams,
@@ -6,17 +6,12 @@ import {
   MessageReadReason,
   logger,
   ProgramStatus,
+  MessageType,
 } from '@gear-js/common';
 
-import { Message } from '../database';
+import { Message, Program } from '../database';
 import { ProgramService } from './program.service';
-import {
-  MessagesDispatchedDataInput,
-  MessageEntryPoint,
-  MessageNotFound,
-  PAGINATION_LIMIT,
-  getDatesFilter,
-} from '../common';
+import { MessagesDispatchedDataInput, MessageEntryPoint, MessageNotFound, PAGINATION_LIMIT } from '../common';
 
 export class MessageService {
   private repo: Repository<Message>;
@@ -25,11 +20,22 @@ export class MessageService {
     this.repo = dataSource.getRepository(Message);
   }
 
-  public async get({ id, genesis }: FindMessageParams): Promise<Message> {
-    const message = await this.repo.findOne({ where: { id, genesis }, relations: ['program'] });
+  public async get({ id, genesis }: FindMessageParams, withMetahash = false): Promise<Message> {
+    const message = await this.repo.findOne({ where: { id, genesis } });
+
     if (!message) {
       throw new MessageNotFound();
     }
+
+    if (withMetahash) {
+      const metahash = await this.programService.getMetahash(
+        message.type === MessageType.MSG_SENT ? message.source : message.destination,
+        message.genesis,
+      );
+
+      Object.assign(message, { metahash });
+    }
+
     return message;
   }
 
@@ -42,48 +48,69 @@ export class MessageService {
     toDate,
     fromDate,
     mailbox,
+    type,
+    withPrograms,
   }: GetMessagesParams): Promise<AllMessagesResult> {
-    const builder = this.repo
-      .createQueryBuilder('message')
-      .leftJoin('message.program', 'program')
-      .addSelect(['program.id', 'program.name'])
-      .where({ genesis });
+    const commonOptions: FindOptionsWhere<Message> = { genesis };
+    let options: FindOptionsWhere<Message>[] | FindOptionsWhere<Message>;
+
+    if (type) {
+      commonOptions.type = type;
+    }
 
     if (mailbox) {
-      builder.andWhere('message.readReason = :readReason', { readReason: null });
-      builder.andWhere('message.expiration > :expiration', { expiration: 0 });
+      commonOptions.readReason = IsNull();
+      commonOptions.expiration = MoreThan(0);
+      commonOptions.type = MessageType.MSG_SENT;
     }
 
     if (fromDate || toDate) {
-      const parameters = getDatesFilter(fromDate, toDate);
-      builder.andWhere('message.timestamp BETWEEN :fromDate AND :toDate', parameters);
+      commonOptions.timestamp = Between(new Date(fromDate), new Date(toDate));
     }
 
     if (destination && source) {
-      builder.andWhere('(message.destination = :destination OR message.source = :source)', { destination, source });
-    } else if (destination) {
-      builder.andWhere('message.destination = :destination', { destination });
-    } else if (source) {
-      builder.andWhere('message.destination = :source', { source });
+      options = [
+        { source, ...commonOptions },
+        { destination, ...commonOptions },
+      ];
+    } else {
+      if (destination) {
+        commonOptions.destination = destination;
+      } else if (source) {
+        commonOptions.source = source;
+      }
+      options = commonOptions;
     }
 
     const [messages, count] = await Promise.all([
-      builder
-        .take(limit || PAGINATION_LIMIT)
-        .skip(offset || 0)
-        .orderBy('message.timestamp', 'DESC')
-        .getMany(),
-      builder.getCount(),
+      this.repo.find({
+        where: options,
+        take: limit || PAGINATION_LIMIT,
+        skip: offset || 0,
+        order: { timestamp: 'DESC' },
+      }),
+      this.repo.count({ where: options }),
     ]);
 
-    return {
-      messages,
-      count,
-    };
+    const result: AllMessagesResult = { messages, count };
+
+    if (withPrograms) {
+      const programIds = new Set<string>();
+
+      messages.forEach(({ type, source, destination }) =>
+        programIds.add(type === MessageType.MSG_SENT ? source : destination),
+      );
+
+      result.programNames = await this.programService.getNames(Array.from(programIds.values()), genesis);
+    }
+
+    return result;
   }
 
-  public save(messages: Message[]): Promise<Message[]> {
-    return this.repo.save(messages);
+  public async save(messages: Message[]) {
+    if (messages.length === 0) return;
+
+    await this.repo.save(messages);
   }
 
   public async setDispatchedStatus({ statuses, genesis }: MessagesDispatchedDataInput): Promise<void> {

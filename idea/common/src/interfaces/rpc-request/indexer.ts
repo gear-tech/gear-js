@@ -1,4 +1,4 @@
-import { ProgramStatus } from '../../enums';
+import { MessageType, ProgramStatus } from '../../enums';
 import { ICode } from '../code';
 import { IDates, IGenesis, SearchParam } from '../common';
 import { IMessage } from '../message';
@@ -10,6 +10,8 @@ export interface GetMessagesParams extends IGenesis, IPaginationParams, IDates {
   destination?: string;
   source?: string;
   mailbox?: boolean;
+  type?: MessageType;
+  withPrograms?: boolean;
 }
 
 export interface FindMessageParams extends IGenesis, Pick<IMessage, 'id'> {}

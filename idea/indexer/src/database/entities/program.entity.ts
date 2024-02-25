@@ -1,9 +1,7 @@
-import { Column, Entity, JoinColumn, Index, OneToMany, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import { IProgram } from '@gear-js/common';
 
 import { BaseEntity } from './base.entity';
-import { Message } from './message.entity';
-import { Code } from './code.entity';
 import { ProgramStatus } from '../../common/enums';
 
 @Entity()
@@ -13,7 +11,7 @@ export class Program extends BaseEntity implements IProgram {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn('uuid', { nullable: false })
+  @PrimaryGeneratedColumn('uuid')
   public _id: string;
 
   @Column()
@@ -33,17 +31,11 @@ export class Program extends BaseEntity implements IProgram {
   @Column({ name: 'type', type: 'enum', enum: ProgramStatus, default: ProgramStatus.UNKNOWN })
   public status: ProgramStatus;
 
-  @ManyToOne(() => Code, (code) => code.programs, {
-    nullable: true,
-  })
-  @JoinColumn({ name: 'code_id' })
-  public code: Code;
+  @Column({ name: 'code_id' })
+  public codeId: string;
 
   @Column({ nullable: true })
   public metahash: string;
-
-  @OneToMany(() => Message, (message) => message.program)
-  public messages: Message[];
 
   @Column({ default: false })
   public hasState: boolean;

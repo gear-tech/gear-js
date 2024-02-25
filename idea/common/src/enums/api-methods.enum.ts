@@ -8,7 +8,6 @@ export enum INDEXER_METHODS {
   CODE_ALL = 'code.all',
   CODE_DATA = 'code.data',
   CODE_NAME_ADD = 'code.name.add',
-  CODE_STATE_GET = 'code.state.get',
   MESSAGE_ALL = 'message.all',
   MESSAGE_DATA = 'message.data',
   PROGRAM_ALL = 'program.all',
