@@ -7,7 +7,7 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { GasLimit, Value } from '../../common';
 
 export interface V1010ProgramUploadOptions {
-  code: Buffer | Uint8Array;
+  code: HexString | Buffer | Uint8Array;
   salt?: `0x${string}`;
   initPayload?: AnyJson;
   gasLimit: GasLimit;
