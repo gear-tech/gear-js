@@ -1,3 +1,11 @@
+## 0.36.7
+
+_02/26/2024_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1490
+- Refactor types
+
 ## 0.36.6
 
 _02/15/2024_
