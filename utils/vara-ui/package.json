@@ -45,7 +45,7 @@
     "clsx": "2.0.0",
     "eslint": "8.45.0",
     "eslint-plugin-react-hooks": "4.6.0",
-    "eslint-plugin-react-refresh": "0.4.3",
+    "eslint-plugin-react-refresh": "0.4.5",
     "eslint-plugin-storybook": "0.6.13",
     "sass": "^1.69.5",
     "storybook": "7.2.1",
