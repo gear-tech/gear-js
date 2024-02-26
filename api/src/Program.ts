@@ -92,7 +92,7 @@ export class GearProgram extends GearTransaction {
     validateGasLimit(args.gasLimit, this._api);
 
     const salt = args.salt || randomAsHex(20);
-    const code = this._api.createType('Bytes', Array.from(args.code)) as Bytes;
+    const code = typeof args.code === 'string' ? args.code : this._api.createType('Bytes', Array.from(args.code));
 
     const payload = encodePayload(args.initPayload, metaOrHexRegistry, 'init', typeIndexOrTypeName);
     const codeId = generateCodeHash(code);
