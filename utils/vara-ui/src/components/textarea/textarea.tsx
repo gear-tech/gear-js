@@ -6,16 +6,17 @@ type Props = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'id' | 'size'> & 
   size?: 'default' | 'small';
   label?: string;
   error?: ReactNode;
+  block?: boolean;
 };
 
 const Textarea = forwardRef<HTMLTextAreaElement, Props>(
-  ({ className, label, error, size = 'default', rows = 5, placeholder = ' ', ...attrs }, ref) => {
+  ({ className, label, error, size = 'default', rows = 5, placeholder = ' ', block, ...attrs }, ref) => {
     const { disabled } = attrs;
 
     const id = useId();
 
     return (
-      <div className={cx(styles.root, className, disabled && styles.disabled)}>
+      <div className={cx(styles.root, className, disabled && styles.disabled, block && styles.block)}>
         <div className={styles.base}>
           <textarea
             rows={rows}

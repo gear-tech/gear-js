@@ -7,10 +7,11 @@ type Props = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'id' | 'size'> & {
   size?: 'default' | 'small';
   label?: string;
   error?: ReactNode;
+  block?: boolean;
 };
 
 const Select = forwardRef<HTMLSelectElement, Props>(
-  ({ options, className, label, error, size = 'default', ...attrs }, ref) => {
+  ({ options, className, label, error, size = 'default', block, ...attrs }, ref) => {
     const { disabled } = attrs;
 
     const id = useId();
@@ -18,7 +19,7 @@ const Select = forwardRef<HTMLSelectElement, Props>(
     const getOptions = () => options.map((option, index) => <option key={index} {...option} />);
 
     return (
-      <div className={cx(styles.root, className, disabled && styles.disabled)}>
+      <div className={cx(styles.root, className, disabled && styles.disabled, block && styles.block)}>
         <div className={styles.base}>
           <select id={id} className={cx(styles.select, styles[size], error && styles.error)} ref={ref} {...attrs}>
             {getOptions()}
