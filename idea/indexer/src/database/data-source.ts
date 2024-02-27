@@ -14,5 +14,5 @@ export const AppDataSource = new DataSource({
   migrations: ['./dist/database/migrations/*.js'],
   synchronize: false,
   migrationsRun: true,
-  logging: ['error', 'schema'],
+  logging: ['error', 'schema', 'migration'],
 });

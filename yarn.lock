@@ -2313,36 +2313,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:0.36.0":
-  version: 0.36.0
-  resolution: "@gear-js/api@npm:0.36.0"
+"@gear-js/api@npm:0.36.7, @gear-js/api@npm:^0.36.7":
+  version: 0.36.7
+  resolution: "@gear-js/api@npm:0.36.7"
   peerDependencies:
     "@polkadot/api": 10.11.2
     "@polkadot/wasm-crypto": 7.3.2
     rxjs: 7.8.1
-  checksum: 204f6314d995df88e5b964ecbd4410bec3773482d625a020d8ca2511867c856e0b7c2fa9b7664c6bcc98b39aa619caec3263c96414988b773150e52e11fe924a
-  languageName: node
-  linkType: hard
-
-"@gear-js/api@npm:0.36.2":
-  version: 0.36.2
-  resolution: "@gear-js/api@npm:0.36.2"
-  peerDependencies:
-    "@polkadot/api": 10.11.2
-    "@polkadot/wasm-crypto": 7.3.2
-    rxjs: 7.8.1
-  checksum: fcb73edcae08e33b95bc8e8701379529125180836d52af5e8bded11546a0eadb6e50e66fc9a5305fa1c9e3a63f9de8852b456bcc0fcf40596571528b680e3de1
-  languageName: node
-  linkType: hard
-
-"@gear-js/api@npm:^0.36.6":
-  version: 0.36.6
-  resolution: "@gear-js/api@npm:0.36.6"
-  peerDependencies:
-    "@polkadot/api": 10.11.2
-    "@polkadot/wasm-crypto": 7.3.2
-    rxjs: 7.8.1
-  checksum: 61fe8cdca52178548400fbb17aaaf3dabc6b88aa6664b61cbf288fb084a9b9d04364651c11785d2a2eca5c5139c1d2d672856a38ee9bfae1e291c5fa6b46d4f5
+  checksum: 2e6568dbc5da0145ac7132e4e6a90e98bef3d07abb0b0f2460121790b01a42140cef5bac38162500c106be79cb38e85af5907df9214e3e27c7c0caad3c27ac71
   languageName: node
   linkType: hard
 
@@ -2350,7 +2328,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/common@workspace:idea/common"
   dependencies:
-    "@gear-js/api": 0.36.0
+    "@gear-js/api": 0.36.7
     "@polkadot/api": 10.11.2
     typescript: 4.7.4
     winston: 3.7.2
@@ -2361,7 +2339,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/frontend@workspace:idea/frontend"
   dependencies:
-    "@gear-js/api": 0.36.2
+    "@gear-js/api": 0.36.7
     "@gear-js/react-hooks": "workspace:^"
     "@gear-js/ui": "workspace:^"
     "@hcaptcha/react-hcaptcha": 1.8.1
@@ -2424,7 +2402,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/indexer@workspace:idea/indexer"
   dependencies:
-    "@gear-js/api": ^0.36.6
+    "@gear-js/api": ^0.36.7
     "@gear-js/common": "workspace:^"
     "@polkadot/api": 10.11.2
     "@polkadot/types": 10.11.2
@@ -2449,7 +2427,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/meta-storage@workspace:idea/meta-storage"
   dependencies:
-    "@gear-js/api": 0.36.0
+    "@gear-js/api": 0.36.7
     "@gear-js/common": "workspace:^"
     "@polkadot/api": 10.11.2
     amqplib: 0.10.3
@@ -2465,13 +2443,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/react-hooks@workspace:utils/gear-hooks"
   dependencies:
-    "@gear-js/api": 0.36.2
+    "@gear-js/api": 0.36.7
     "@polkadot/api": 10.11.2
     "@polkadot/api-derive": 10.11.2
     "@polkadot/extension-dapp": 0.46.5
     "@polkadot/extension-inject": 0.46.5
     "@polkadot/types": 10.11.2
-    "@polkadot/util": 12.5.1
+    "@polkadot/util": 12.6.2
     "@rollup/plugin-commonjs": 25.0.5
     "@rollup/plugin-node-resolve": 15.2.3
     "@substrate/connect": 0.7.33
@@ -2501,7 +2479,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/test-balance@workspace:idea/test-balance"
   dependencies:
-    "@gear-js/api": 0.36.0
+    "@gear-js/api": 0.36.7
     "@gear-js/common": "workspace:^"
     "@polkadot/api": 10.11.2
     "@types/amqplib": 0.8.2
@@ -2571,7 +2549,7 @@ __metadata:
     "@babel/plugin-transform-typescript": 7.20.2
     "@babel/preset-env": 7.20.2
     "@babel/preset-typescript": 7.18.6
-    "@gear-js/api": 0.36.0
+    "@gear-js/api": 0.36.7
     "@gear-js/common": "workspace:^"
     "@polkadot/api": 10.11.2
     "@types/jest": 29.2.3
@@ -3444,21 +3422,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/util@npm:12.5.1":
-  version: 12.5.1
-  resolution: "@polkadot/util@npm:12.5.1"
-  dependencies:
-    "@polkadot/x-bigint": 12.5.1
-    "@polkadot/x-global": 12.5.1
-    "@polkadot/x-textdecoder": 12.5.1
-    "@polkadot/x-textencoder": 12.5.1
-    "@types/bn.js": ^5.1.1
-    bn.js: ^5.2.1
-    tslib: ^2.6.2
-  checksum: 955d41c01cb3c7da72c4f5f8faed13e1af1fa9603a3a1dd9f282eb69b5ebbffb889e76c595d1252ff5f9665cb3c55f1a96f908b020dc79356f92b2d5ce1aa81e
-  languageName: node
-  linkType: hard
-
 "@polkadot/util@npm:12.6.2, @polkadot/util@npm:^12.3.2, @polkadot/util@npm:^12.5.1, @polkadot/util@npm:^12.6.2":
   version: 12.6.2
   resolution: "@polkadot/util@npm:12.6.2"
@@ -3554,16 +3517,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/x-bigint@npm:12.5.1":
-  version: 12.5.1
-  resolution: "@polkadot/x-bigint@npm:12.5.1"
-  dependencies:
-    "@polkadot/x-global": 12.5.1
-    tslib: ^2.6.2
-  checksum: 295d00b17860196c43ac4957ffb052ca68bb4319990876238e3f0925ca6ca9106810204136315491116a11a277d8a1e1fae65cc43a168505ee5a69a27404d2e0
-  languageName: node
-  linkType: hard
-
 "@polkadot/x-bigint@npm:12.6.2, @polkadot/x-bigint@npm:^12.6.2":
   version: 12.6.2
   resolution: "@polkadot/x-bigint@npm:12.6.2"
@@ -3582,15 +3535,6 @@ __metadata:
     node-fetch: ^3.3.2
     tslib: ^2.6.2
   checksum: 2f0269b17ebbb907f4f4fa777898fd8ea16ecd37abfc2c0b69cfc49bd5ab0ed38cf836a4941e85f9100192f7005731a9a8c6b135799efd17b4261c3cc1ebf844
-  languageName: node
-  linkType: hard
-
-"@polkadot/x-global@npm:12.5.1":
-  version: 12.5.1
-  resolution: "@polkadot/x-global@npm:12.5.1"
-  dependencies:
-    tslib: ^2.6.2
-  checksum: d45e3d6096674b7495992c6e45cf1a284db545c16107ba9adae241d6aefe13c27adfaf93d58a3079e6a6b63acb221eb3181c7f55dc34124b24b542154724c506
   languageName: node
   linkType: hard
 
@@ -3616,16 +3560,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/x-textdecoder@npm:12.5.1":
-  version: 12.5.1
-  resolution: "@polkadot/x-textdecoder@npm:12.5.1"
-  dependencies:
-    "@polkadot/x-global": 12.5.1
-    tslib: ^2.6.2
-  checksum: 202a9e216e9b89cc74012fa3f6c96eeb368dc3e6fa3c943f28c37c20941a6c678506cbc136946e9ff100123aa43846eab7765af074de94dfdd23f4ce2242c794
-  languageName: node
-  linkType: hard
-
 "@polkadot/x-textdecoder@npm:12.6.2":
   version: 12.6.2
   resolution: "@polkadot/x-textdecoder@npm:12.6.2"
@@ -3633,16 +3567,6 @@ __metadata:
     "@polkadot/x-global": 12.6.2
     tslib: ^2.6.2
   checksum: c7e4b7f7ff943095a96bef3e3e56216d33d6ff38c965931356a06d01594b2c523ccbeada697a31b5457b134e578618f35425e0883f45187adffa98df99a45f27
-  languageName: node
-  linkType: hard
-
-"@polkadot/x-textencoder@npm:12.5.1":
-  version: 12.5.1
-  resolution: "@polkadot/x-textencoder@npm:12.5.1"
-  dependencies:
-    "@polkadot/x-global": 12.5.1
-    tslib: ^2.6.2
-  checksum: 7a8d99d203cbd9537e55405d737667ae8cd9ad40a9e3de52f2ef7580a23d27ebf7f7c52da4e0eca6ca34dc97aae33a97bab36afb54aaa7714f54a31931f94113
   languageName: node
   linkType: hard
 
@@ -4573,7 +4497,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/bn.js@npm:^5.1.1, @types/bn.js@npm:^5.1.5":
+"@types/bn.js@npm:^5.1.5":
   version: 5.1.5
   resolution: "@types/bn.js@npm:5.1.5"
   dependencies:

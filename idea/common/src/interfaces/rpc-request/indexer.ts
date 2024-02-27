@@ -14,7 +14,9 @@ export interface GetMessagesParams extends IGenesis, IPaginationParams, IDates {
   withPrograms?: boolean;
 }
 
-export interface FindMessageParams extends IGenesis, Pick<IMessage, 'id'> {}
+export interface FindMessageParams extends IGenesis, Pick<IMessage, 'id'> {
+  withMetahash?: boolean;
+}
 
 export interface GetIncomingMessagesParams extends IGenesis, IPaginationParams, Pick<IMessage, 'destination'> {}
 

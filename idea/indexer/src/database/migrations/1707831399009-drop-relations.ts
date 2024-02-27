@@ -118,11 +118,11 @@ export class DropRelations1707831399009 implements MigrationInterface {
     `);
     await queryRunner.query(`
         ALTER TABLE "code"
-        ALTER COLUMN "_id" SET DEFAULT uuid_generate_v4()
+        ALTER COLUMN "_id" SET DEFAULT uuid_generate_v4();
     `);
     await queryRunner.query(`
         ALTER TABLE "program"
-        ALTER COLUMN "_id" SET DEFAULT uuid_generate_v4()
+        ALTER COLUMN "_id" SET DEFAULT uuid_generate_v4();
     `);
 
     const statesMap = await prepareStatesUp(queryRunner, codesMap);

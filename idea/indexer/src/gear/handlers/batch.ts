@@ -1,6 +1,6 @@
 import { CodeChanged, MessageQueued, generateCodeHash } from '@gear-js/api';
 import { filterEvents } from '@polkadot/api/util';
-import { GenericCall } from '@polkadot/types';
+import { GenericCall, GenericExtrinsic, Vec } from '@polkadot/types';
 
 import {
   CodeStatus,
@@ -40,7 +40,7 @@ export const handleBatchTxs = async ({
   genesis,
   tempState,
 }: HandlerParams) => {
-  const extrinsics = getBatchExtrinsics(block.block.extrinsics);
+  const extrinsics = getBatchExtrinsics(block.block.extrinsics as any);
 
   if (extrinsics.length === 0) {
     return;
@@ -57,9 +57,8 @@ export const handleBatchTxs = async ({
       }
     });
 
-    for (let i = 0; i < tx.args.length; i++) {
-      const { method, args } = tx.args[i] as GenericCall;
-
+    for (let i = 0; i < tx.args[0].length; i++) {
+      const { method, args } = tx.args[0][i];
       if (!Object.values(BatchCallMethods).includes(method as BatchCallMethods)) {
         continue;
       }
@@ -70,7 +69,7 @@ export const handleBatchTxs = async ({
         continue;
       }
 
-      if (method === BatchCallMethods.UPLOAD_CODE) {
+      if ([BatchCallMethods.UPLOAD_CODE, BatchCallMethods.UPLOAD_PROGRAM].includes(method as BatchCallMethods)) {
         const ccEvent = events.find(({ event: { method } }) => method === 'CodeChanged').event as CodeChanged;
 
         if (!ccEvent) {
@@ -101,27 +100,34 @@ export const handleBatchTxs = async ({
         );
       }
 
+      const mqEvent = events.find(({ event }) => event.method === BatchEventMethods.MESSAGE_QUEUED)
+        ?.event as MessageQueued;
+
+      if (!mqEvent) {
+        continue;
+      }
+
       const {
         data: { id, destination, source, entry },
-      } = events.find(({ event }) => event.method === BatchEventMethods.MESSAGE_QUEUED).event as MessageQueued;
+      } = mqEvent;
 
       const programId = destination.toHex();
 
       if ([BatchCallMethods.CREATE_PROGRAM, BatchCallMethods.UPLOAD_PROGRAM].includes(method as BatchCallMethods)) {
-        const codeId = tx.method.method === 'uploadProgram' ? generateCodeHash(tx.args[0].toHex()) : tx.args[0].toHex();
+        const codeId = method === 'uploadProgram' ? generateCodeHash(args[0].toHex()) : args[0].toHex();
 
-        tempState.addProgram(
-          new Program({
-            id: programId,
-            name: programId,
-            owner: source.toHex(),
-            blockHash,
-            timestamp,
-            codeId,
-            genesis,
-            status: ProgramStatus.PROGRAM_SET,
-          }),
-        );
+        const program = new Program({
+          id: programId,
+          name: programId,
+          owner: source.toHex(),
+          blockHash,
+          timestamp,
+          codeId,
+          genesis,
+          status: ProgramStatus.PROGRAM_SET,
+        });
+
+        tempState.addProgram(program);
       }
 
       if (

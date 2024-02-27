@@ -14,6 +14,7 @@ function hasAllProps(obj: any, props: string[]) {
   for (const p of props) {
     expect(obj).toHaveProperty(p);
   }
+  expect(Object.keys(obj)).toHaveLength(props.length);
 }
 
 let genesis: HexString;
@@ -399,10 +400,10 @@ describe('prepare', () => {
         .toHex(),
     ];
 
-    txs.push(await api.message.send({ destination: testMetaId, payload: payloads[0], gasLimit: 200_000_000_000 }));
-    txs.push(await api.message.send({ destination: testMetaId, payload: payloads[1], gasLimit: 200_000_000_000 }));
+    txs.push(api.message.send({ destination: testMetaId, payload: payloads[0], gasLimit: 200_000_000_000 }));
+    txs.push(api.message.send({ destination: testMetaId, payload: payloads[1], gasLimit: 200_000_000_000 }));
 
-    const tx = api.tx.utility.batchAll(txs);
+    const tx = api.tx.utility.batch(txs);
 
     let index = -1;
 
@@ -515,14 +516,13 @@ describe('program methods', () => {
     for (const p of programs) {
       const receivedProgram = response.result.programs.find(({ id }) => id === p.programId);
       expect(receivedProgram).toBeDefined();
-      expect(receivedProgram.code.id).toEqual(p.codeId);
+      expect(receivedProgram.codeId).toEqual(p.codeId);
       expect(receivedProgram.metahash).toEqual(p.metahash);
     }
   });
 
   test(INDEXER_METHODS.PROGRAM_ALL + ' by owner', async () => {
     const response = await request('program.all', { genesis, owner: decodeAddress(alice.address) });
-    // TODO: upload program from different account
     expect(response).toHaveProperty('result.count', programs.length);
     expect(response.result.programs).toHaveLength(programs.length);
   });
@@ -573,14 +573,14 @@ describe('program methods', () => {
         'timestamp',
         'metahash',
         'status',
-        'code',
+        'codeId',
         'hasState',
         'expiration',
       ]);
       // expect(response.result.hasState).toBe(p.hasState); TODO: check after meta is uploaded
       expect(response.result.status).toBe(p.status);
       expect(response.result.metahash).toBe(p.metahash);
-      expect(response.result.code.id).toBe(p.codeId);
+      expect(response.result.codeId).toBe(p.codeId);
     }
   });
   test.todo(INDEXER_METHODS.PROGRAM_NAME_ADD);
@@ -622,7 +622,6 @@ describe('code methods', () => {
         'genesis',
         'blockHash',
         'timestamp',
-        'programs',
         'metahash',
         'hasState',
       ]);
@@ -653,36 +652,53 @@ describe('message methods', () => {
   });
 
   test(INDEXER_METHODS.MESSAGE_ALL + ' by program', async () => {
-    const response = await request('message.all', { genesis, source: testMetaId, destination: testMetaId });
+    const response = await request('message.all', {
+      genesis,
+      source: testMetaId,
+      destination: testMetaId,
+      withPrograms: true,
+    });
     expect(response).toHaveProperty('result.count', 11);
     expect(response).toHaveProperty('result.messages');
+    hasAllProps(response.result, ['messages', 'count', 'programNames']);
     expect(response.result.messages).toHaveLength(11);
+    expect(response.result.programNames).toHaveProperty(testMetaId);
+    expect(response.result.programNames[testMetaId]).toBe(testMetaId);
   });
 
   test(INDEXER_METHODS.MESSAGE_DATA, async () => {
+    const props = [
+      'id',
+      'blockHash',
+      'genesis',
+      'timestamp',
+      'destination',
+      'source',
+      'payload',
+      'entry',
+      'expiration',
+      'replyToMessageId',
+      'exitCode',
+      'processedWithPanic',
+      'value',
+      'type',
+      'readReason',
+    ];
+
     for (const m of sentMessages) {
-      const response = await request('message.data', { genesis, id: m.id });
+      const withMetahash = Math.random() > 0.5;
+      const response = await request('message.data', { genesis, id: m.id, withMetahash });
 
       expect(response).toHaveProperty('result');
       const { result } = response;
-      hasAllProps(response.result, [
-        'id',
-        'blockHash',
-        'genesis',
-        'timestamp',
-        'destination',
-        'source',
-        'payload',
-        'entry',
-        'expiration',
-        'replyToMessageId',
-        'exitCode',
-        'processedWithPanic',
-        'value',
-        'type',
-        'readReason',
-        'program',
-      ]);
+
+      if (withMetahash) {
+        props.indexOf('metahash') === -1 && props.push('metahash');
+      } else {
+        props.indexOf('metahash') !== -1 && props.splice(props.indexOf('metahash'), 1);
+      }
+
+      hasAllProps(response.result, props);
 
       expect(result.id).toEqual(m.id);
       expect(result.destination).toEqual(m.destination);
@@ -693,27 +709,18 @@ describe('message methods', () => {
     }
 
     for (const m of receivedMessages) {
-      const response = await request('message.data', { genesis, id: m.id });
+      const withMetahash = Math.random() > 0.5;
+      const response = await request('message.data', { genesis, id: m.id, withMetahash });
       expect(response).toHaveProperty('result');
       const { result } = response;
-      hasAllProps(response.result, [
-        'id',
-        'blockHash',
-        'genesis',
-        'timestamp',
-        'destination',
-        'source',
-        'payload',
-        'entry',
-        'expiration',
-        'replyToMessageId',
-        'exitCode',
-        'processedWithPanic',
-        'value',
-        'type',
-        'readReason',
-        'program',
-      ]);
+
+      if (withMetahash) {
+        props.indexOf('metahash') === -1 && props.push('metahash');
+      } else {
+        props.indexOf('metahash') !== -1 && props.splice(props.indexOf('metahash'), 1);
+      }
+
+      hasAllProps(response.result, props);
 
       expect(result.id).toEqual(m.id);
       expect(result.destination).toEqual(m.destination);
@@ -762,8 +769,6 @@ describe('state methods', () => {
     expect(response).toHaveProperty('result.name');
     expect(response).toHaveProperty('result.wasmBuffBase64');
   });
-
-  test.todo(INDEXER_METHODS.CODE_STATE_GET);
 });
 
 test.todo('errors tests');

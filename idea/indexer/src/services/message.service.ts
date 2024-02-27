@@ -20,7 +20,7 @@ export class MessageService {
     this.repo = dataSource.getRepository(Message);
   }
 
-  public async get({ id, genesis }: FindMessageParams, withMetahash = false): Promise<Message> {
+  public async get({ id, genesis, withMetahash }: FindMessageParams): Promise<Message> {
     const message = await this.repo.findOne({ where: { id, genesis } });
 
     if (!message) {
