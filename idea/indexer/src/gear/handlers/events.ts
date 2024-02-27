@@ -83,6 +83,8 @@ const userMessageSent = (
   timestamp: Date,
   tempState: TempState,
 ) => {
+  const unwrappedDetails = details.isSome ? details.unwrap() : null;
+
   return tempState.addMsg(
     new Message({
       id: id.toHex(),
@@ -94,8 +96,9 @@ const userMessageSent = (
       payload: payload.toHex(),
       value: value.toString(),
       type: MessageType.MSG_SENT,
-      exitCode: details.isSome ? (details.unwrap().code.isSuccess ? 0 : 1) : null,
+      exitCode: unwrappedDetails ? (unwrappedDetails.code.isSuccess ? 0 : 1) : null,
       expiration: expiration.isSome ? expiration.unwrap().toNumber() : null,
+      replyToMessageId: unwrappedDetails ? unwrappedDetails.to.toHex() : null,
     }),
   );
 };

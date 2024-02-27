@@ -53,6 +53,7 @@ export const handleMsgTxs = async ({
       value,
       type: MessageType.QUEUED,
       entry: messageEntry,
+      replyToMessageId: tx.method.method === 'sendReply' ? tx.args[0].toHex() : null,
     });
   });
 };
