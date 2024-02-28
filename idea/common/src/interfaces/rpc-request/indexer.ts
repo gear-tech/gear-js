@@ -23,7 +23,6 @@ export interface GetIncomingMessagesParams extends IGenesis, IPaginationParams, 
 export interface GetOutgoingMessagesParams extends IGenesis, IPaginationParams, Pick<IMessage, 'source'> {}
 
 export interface GetAllProgramsParams extends IGenesis, IPaginationParams, SearchParam, IDates {
-  publicKeyRaw?: string;
   owner?: string;
   status?: ProgramStatus | ProgramStatus[];
 }
@@ -39,9 +38,7 @@ export interface GetAllCodeParams extends IGenesis, IPaginationParams, SearchPar
 
 export interface GetAllUserProgramsParams extends IGenesis, IPaginationParams, Pick<IProgram, 'owner'>, SearchParam {}
 
-export interface FindProgramParams extends IGenesis, Pick<IProgram, 'id'> {
-  owner?: string;
-}
+export interface FindProgramParams extends IGenesis, Pick<IProgram, 'id'> {}
 
 export interface AddCodeNameParams extends IGenesis, Pick<ICode, 'id'> {
   name: string;
