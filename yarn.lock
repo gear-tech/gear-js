@@ -2298,17 +2298,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:0.36.3":
-  version: 0.36.3
-  resolution: "@gear-js/api@npm:0.36.3"
-  peerDependencies:
-    "@polkadot/api": 10.11.2
-    "@polkadot/wasm-crypto": 7.3.2
-    rxjs: 7.8.1
-  checksum: 9fb1256e58c4face9b21dbe9ff784cb91c71c07db590fbf157c1fa5318f53e894d32a5af85c4d3b9513106401bfc964aaed50387a5cb17562200c2093977fde7
-  languageName: node
-  linkType: hard
-
 "@gear-js/api@npm:0.36.7, @gear-js/api@npm:^0.36.7":
   version: 0.36.7
   resolution: "@gear-js/api@npm:0.36.7"
@@ -2439,7 +2428,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/react-hooks@workspace:utils/gear-hooks"
   dependencies:
-    "@gear-js/api": 0.36.3
+    "@gear-js/api": 0.36.7
     "@polkadot/api": 10.11.2
     "@polkadot/api-derive": 10.11.2
     "@polkadot/extension-dapp": 0.46.5
