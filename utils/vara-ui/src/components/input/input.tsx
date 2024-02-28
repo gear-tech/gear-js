@@ -16,6 +16,7 @@ type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'id' | 'size'> & {
   size?: 'default' | 'small';
   label?: string;
   error?: ReactNode;
+  block?: boolean;
 };
 
 function useWidth() {
@@ -35,7 +36,10 @@ function useWidth() {
 }
 
 const Input = forwardRef<HTMLInputElement, Props>(
-  ({ icon: Icon, className, label, error, type = 'text', placeholder = ' ', size = 'default', ...attrs }, ref) => {
+  (
+    { icon: Icon, className, label, error, type = 'text', placeholder = ' ', size = 'default', block, ...attrs },
+    ref,
+  ) => {
     const { disabled } = attrs;
 
     const id = useId();
@@ -49,7 +53,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
     const labelStyle = { left: `${iconWidth ? padding + gap + iconWidth : padding}px` };
 
     return (
-      <div className={cx(styles.root, className, disabled && styles.disabled)}>
+      <div className={cx(styles.root, className, disabled && styles.disabled, block && styles.block)}>
         <div className={cx(styles.base, styles[size])}>
           {Icon && <Icon id={iconId} />}
 

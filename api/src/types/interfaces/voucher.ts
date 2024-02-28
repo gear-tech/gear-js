@@ -6,7 +6,8 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 export type ICallOptions =
   | { SendMessage: SubmittableExtrinsic<'promise', ISubmittableResult> }
   | { SendReply: SubmittableExtrinsic<'promise', ISubmittableResult> }
-  | { UploadCode: SubmittableExtrinsic<'promise', ISubmittableResult> };
+  | { UploadCode: SubmittableExtrinsic<'promise', ISubmittableResult> }
+  | { DeclineVoucher: null };
 
 export interface IUpdateVoucherParams {
   /**
@@ -41,9 +42,9 @@ export interface IVoucherDetails {
    */
   expiry: number;
   /**
-   * Set of programs this voucher could be used to interact with.
+   * Set of programs this voucher could be used to interact with. If null, the voucher could be used with any program.
    */
-  programs: string[];
+  programs: string[] | null;
   /**
    * Flag if this voucher's covers uploading codes as prepaid call.
    */

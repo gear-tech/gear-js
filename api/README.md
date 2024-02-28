@@ -348,13 +348,16 @@ const programs = ['0x1234...', '0x5678...'];
 const spenderAddress = '0x...';
 const validForOneHour = (60 * 60) / 3; // number of blocks in one hour
 
-const { voucherId, extrinsic } = await api.voucher.issue(spenderAddress, 100 * 10 ** 12, validForOneHour, programs, true);
+const { extrinsic } = await api.voucher.issue(spenderAddress, 100 * 10 ** 12, validForOneHour, programs, true);
 
 // To allow the voucher to be used for code uploading, set the last argument of the `.issue` method to true
 
-extrinsic.signAndSend(account, (events) => {
-  const voucherIssuedEvent = events.events.filter(({event: {method}}) => method === 'VoucherIssued') as VoucherIssued;
-  console.log(voucherIssuedEvent.toJSON());
+extrinsic.signAndSend(account, ({ events }) => {
+  const voucherIssuedEvent = events.find(({event: { method }}) => method === 'VoucherIssued')?.event as VoucherIssued;
+
+  if (voucherIssuedEvent) {
+    console.log(voucherIssuedEvent.toJSON());
+  }
 })
 ```
 
@@ -435,6 +438,13 @@ const tx = await api.voucher.update(
 The `api.voucher.revoke` is used to revoke an issued voucher. It's possible to revoke a voucher only after the validity period has expired.
 ```javascript
 const tx = api.voucher.revoke(spenderAddress, voucherId);
+tx.signAndSend(...);
+```
+
+#### Decline voucher
+The `api.voucher.decline` can be used to decline existing and not expired voucher. It will make the voucher expired
+```javascript
+const tx = api.voucher.decline(voucherId);
 tx.signAndSend(...);
 ```
 

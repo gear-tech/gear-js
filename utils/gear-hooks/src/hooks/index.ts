@@ -26,13 +26,20 @@ import {
   useAccountVoucherDeprecated,
   useIsAnyVoucherActive,
   useIsAnyAccountVoucherActive,
+  useIssuedVouchers,
+  useAccountIssuedVouchers,
   useDeriveBalancesAll,
   useAccountDeriveBalancesAll,
   SendMessageOptions,
   UseSendMessageOptions,
 } from './api';
 import { useAccount, useAlert, useApi } from './context';
-import { useCreateHandler, useSendMessageHandler } from './handlers';
+import {
+  useCreateHandler,
+  useSendMessageWithGas,
+  UseSendMessageWithGasOptions,
+  SendMessageWithGasOptions,
+} from './handlers';
 
 export {
   useReadFullState,
@@ -58,7 +65,7 @@ export {
   useAlert,
   useApi,
   useCreateHandler,
-  useSendMessageHandler,
+  useSendMessageWithGas,
   useApproxBlockTimestamp,
   useGetApproxBlockTimestamp,
   useVoucherStatus,
@@ -69,6 +76,8 @@ export {
   useAccountVoucherDeprecated,
   useIsAnyVoucherActive,
   useIsAnyAccountVoucherActive,
-  SendMessageOptions,
-  UseSendMessageOptions,
+  useIssuedVouchers,
+  useAccountIssuedVouchers,
 };
+
+export type { SendMessageOptions, UseSendMessageOptions, UseSendMessageWithGasOptions, SendMessageWithGasOptions };

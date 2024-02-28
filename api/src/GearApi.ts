@@ -90,7 +90,7 @@ export class GearApi extends ApiPromise {
 
   static async create(options?: GearApiOptions): Promise<GearApi> {
     const api = new GearApi(options);
-    await api.isReady;
+    await api.isReadyOrError;
     return api;
   }
 

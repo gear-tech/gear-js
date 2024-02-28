@@ -1162,7 +1162,8 @@ export interface PalletGearVoucherInternalPrepaidCall extends Enum {
   readonly asUploadCode: {
     readonly code: Bytes;
   } & Struct;
-  readonly type: 'SendMessage' | 'SendReply' | 'UploadCode';
+  readonly isDeclineVoucher: boolean;
+  readonly type: 'SendMessage' | 'SendReply' | 'UploadCode' | 'DeclineVoucher';
 }
 
 export interface PalletGearVoucherEvent extends Enum {

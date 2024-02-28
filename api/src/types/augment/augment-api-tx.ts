@@ -295,6 +295,7 @@ declare module '@polkadot/api-base/types/submittable' {
                   code: string | Uint8Array | Codec;
                 };
               }
+            | { DeclineVoucher: null }
             | string
             | Uint8Array,
         ) => SubmittableExtrinsic<ApiType>,
@@ -308,6 +309,10 @@ declare module '@polkadot/api-base/types/submittable' {
           call: PalletGearVoucherInternalPrepaidCall | { SendMessage: any } | { SendReply: any } | string | Uint8Array,
         ) => SubmittableExtrinsic<ApiType>,
         [PalletGearVoucherInternalPrepaidCall]
+      >;
+      decline: AugmentedSubmittable<
+        (voucherId: PalletGearVoucherInternalVoucherId | string | Uint8Array) => SubmittableExtrinsic<ApiType>,
+        [PalletGearVoucherInternalVoucherId]
       >;
       issue: AugmentedSubmittable<
         (

@@ -76,7 +76,7 @@ export function listenToUserMessageSent(api: GearApi, programId: HexString) {
   };
 }
 
-export async function sendTransaction<E extends keyof IGearEvent | keyof IGearVoucherEvent>(
+export async function sendTransaction<E extends keyof IGearEvent | keyof IGearVoucherEvent | 'Transfer'>(
   submitted: GearTransaction | SubmittableExtrinsic<'promise'>,
   account: KeyringPair,
   methods: E[],

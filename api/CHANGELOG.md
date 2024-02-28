@@ -1,3 +1,47 @@
+## 0.36.7
+
+_02/26/2024_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1490
+- Refactor types
+
+## 0.36.6
+
+_02/15/2024_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1487
+- Add add `gr_env_vars` stub
+
+## 0.36.5
+
+_02/12/2024_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1486
+- Add ability to decline voucher using voucher funds
+
+## 0.36.4
+
+_02/12/2024_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1485
+- Add method to decline a voucher according to https://github.com/gear-tech/gear/pull/3725
+
+## 0.36.3
+
+_02/06/2024_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1481
+- Add method to get all voucher issued by account
+- Improve vouchers query
+
+https://github.com/gear-tech/gear-js/pull/1483
+- Fix reading state without meta
+
 ## 0.36.2
 
 _01/25/2024_
