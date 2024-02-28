@@ -1,8 +1,7 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 import { IMessage } from '@gear-js/common';
 
 import { BaseEntity } from './base.entity';
-import { Program } from './program.entity';
 import { MessageEntryPoint, MessageType, MessageReadReason } from '../../common/enums';
 
 @Entity()
@@ -31,30 +30,24 @@ export class Message extends BaseEntity implements IMessage {
   public value: string;
 
   @Column({ nullable: true })
-  public exitCode: number;
+  public exitCode?: number;
 
   @Column({ nullable: true })
-  public replyToMessageId: string;
+  public replyToMessageId?: string;
 
   @Column({ nullable: true })
-  public processedWithPanic: boolean;
+  public processedWithPanic?: boolean;
 
   @Column({ type: 'text', nullable: true, default: null })
   public entry: MessageEntryPoint;
 
   @Column({ nullable: true })
-  public expiration: number;
+  public expiration?: number;
 
   @Index()
   @Column({ type: 'text', nullable: true, default: null })
   public type: MessageType;
 
   @Column({ type: 'text', nullable: true, default: null })
-  public readReason: MessageReadReason;
-
-  @ManyToOne(() => Program, (program) => program.messages, {
-    nullable: true,
-  })
-  @JoinColumn({ name: 'program_id' })
-  public program: Program;
+  public readReason?: MessageReadReason;
 }

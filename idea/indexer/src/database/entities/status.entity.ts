@@ -10,7 +10,7 @@ export class Status {
   public height: string;
 
   @Column({ nullable: true })
-  public hash: string;
+  public hash?: string;
 
   @Index()
   @Column()

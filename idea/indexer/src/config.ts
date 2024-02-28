@@ -3,7 +3,7 @@ import { strict as assert } from 'assert';
 
 config();
 
-export const checkEnv = (envName: string, defaultValue?: string) => {
+export const getEnv = (envName: string, defaultValue?: string) => {
   const env = process.env[envName];
   if (!env && defaultValue) {
     return defaultValue;
@@ -14,23 +14,22 @@ export const checkEnv = (envName: string, defaultValue?: string) => {
 
 export default {
   database: {
-    host: process.env.DB_HOST || 'localhost',
-    port: parseInt(process.env.DB_PORT || '5432', 10),
-    user: checkEnv('DB_USER'),
-    password: checkEnv('DB_PASSWORD'),
-    name: checkEnv('DB_NAME'),
+    host: getEnv('DB_HOST', '127.0.0.1'),
+    port: Number(getEnv('DB_PORT', '5432')),
+    user: getEnv('DB_USER'),
+    password: getEnv('DB_PASSWORD'),
+    name: getEnv('DB_NAME'),
   },
   rabbitmq: {
-    url: checkEnv('RABBIT_MQ_URL'),
+    url: getEnv('RABBIT_MQ_URL'),
   },
   healthcheck: {
-    port: Number(process.env.HEALTHCHECK_PORT || '3001'),
+    port: Number(getEnv('HEALTHCHECK_PORT', '3001')),
   },
   gear: {
-    providerAddresses: checkEnv('GEAR_WS_PROVIDER').split(','),
+    providerAddresses: getEnv('GEAR_WS_PROVIDER').split(','),
   },
   indexer: {
-    batchSize: Number(process.env.BATCH_SIZE || -1),
-    logEveryBlock: !!process.env.LOG_EVERY_BLOCK,
+    fromBlock: Number(getEnv('FROM_BLOCK', '0')),
   },
 };

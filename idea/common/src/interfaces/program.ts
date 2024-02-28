@@ -9,4 +9,5 @@ export interface IProgram extends IBaseDBRecord<number | Date> {
   metahash?: string;
   title?: string;
   status: ProgramStatus;
+  codeId: string;
 }

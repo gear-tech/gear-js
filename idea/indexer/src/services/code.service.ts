@@ -1,8 +1,8 @@
 import { AddCodeNameParams, CodeStatus, GetAllCodeParams, GetAllCodeResult, GetCodeParams } from '@gear-js/common';
-import { DataSource, Repository } from 'typeorm';
+import { Between, DataSource, FindOptionsWhere, ILike, In, Repository } from 'typeorm';
 
 import { Code } from '../database/entities';
-import { CodeNotFound, getDatesFilter, PAGINATION_LIMIT } from '../common';
+import { CodeNotFound, PAGINATION_LIMIT } from '../common';
 
 export class CodeService {
   private repo: Repository<Code>;
@@ -11,8 +11,10 @@ export class CodeService {
     this.repo = dataSource.getRepository(Code);
   }
 
-  public save(codes: Code[]) {
-    return this.repo.save(codes);
+  public async save(codes: Code[]) {
+    if (codes.length === 0) return;
+
+    await this.repo.save(codes);
   }
 
   public async getMany({
@@ -25,32 +27,38 @@ export class CodeService {
     fromDate,
     uploadedBy,
   }: GetAllCodeParams): Promise<GetAllCodeResult> {
-    const builder = this.repo.createQueryBuilder('code').where('code.genesis = :genesis', { genesis });
+    const commonOptions: FindOptionsWhere<Code> = { genesis };
+    let options: FindOptionsWhere<Code>[] | FindOptionsWhere<Code>;
 
     if (fromDate || toDate) {
-      const parameters = getDatesFilter(fromDate, toDate);
-      builder.andWhere('code.timestamp BETWEEN :fromDate AND :toDate', parameters);
+      commonOptions.timestamp = Between(new Date(fromDate), new Date(toDate));
     }
 
     if (uploadedBy) {
-      builder.andWhere('code.uploadedBy = :uploadedBy', { uploadedBy });
+      commonOptions.uploadedBy = uploadedBy;
     }
 
     if (name) {
-      builder.andWhere('code.name = :name', { name });
+      commonOptions.name = name;
     }
 
     if (query) {
-      builder.andWhere('(code.id = :query OR code.name = :query)', { query });
+      options = [
+        { id: ILike(`%${query}%`), ...commonOptions },
+        { name: ILike(`%${query}%`), ...commonOptions },
+      ];
+    } else {
+      options = commonOptions;
     }
 
     const [listCode, count] = await Promise.all([
-      builder
-        .take(limit || PAGINATION_LIMIT)
-        .skip(offset || 0)
-        .orderBy('code.timestamp', 'DESC')
-        .getMany(),
-      builder.getCount(),
+      this.repo.find({
+        where: options,
+        take: limit || PAGINATION_LIMIT,
+        skip: offset || 0,
+        order: { timestamp: 'DESC' },
+      }),
+      this.repo.count({ where: options }),
     ]);
 
     return {
@@ -65,7 +73,6 @@ export class CodeService {
         id,
         genesis,
       },
-      relations: { programs: true },
     });
 
     if (!code) {
@@ -97,5 +104,18 @@ export class CodeService {
     }
 
     return code;
+  }
+
+  public async getMetahash(codeId: string): Promise<string> {
+    const code = await this.repo.findOne({ select: { metahash: true }, where: { id: codeId } });
+    if (!code) {
+      return null;
+    }
+
+    return code.metahash;
+  }
+
+  public async hasState(hashes: Array<string>) {
+    await this.repo.update({ metahash: In(hashes) }, { hasState: true });
   }
 }

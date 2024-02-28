@@ -1,4 +1,4 @@
-import { ProgramStatus } from '../../enums';
+import { MessageType, ProgramStatus } from '../../enums';
 import { ICode } from '../code';
 import { IDates, IGenesis, SearchParam } from '../common';
 import { IMessage } from '../message';
@@ -10,16 +10,19 @@ export interface GetMessagesParams extends IGenesis, IPaginationParams, IDates {
   destination?: string;
   source?: string;
   mailbox?: boolean;
+  type?: MessageType;
+  withPrograms?: boolean;
 }
 
-export interface FindMessageParams extends IGenesis, Pick<IMessage, 'id'> {}
+export interface FindMessageParams extends IGenesis, Pick<IMessage, 'id'> {
+  withMetahash?: boolean;
+}
 
 export interface GetIncomingMessagesParams extends IGenesis, IPaginationParams, Pick<IMessage, 'destination'> {}
 
 export interface GetOutgoingMessagesParams extends IGenesis, IPaginationParams, Pick<IMessage, 'source'> {}
 
 export interface GetAllProgramsParams extends IGenesis, IPaginationParams, SearchParam, IDates {
-  publicKeyRaw?: string;
   owner?: string;
   status?: ProgramStatus | ProgramStatus[];
 }
@@ -35,9 +38,7 @@ export interface GetAllCodeParams extends IGenesis, IPaginationParams, SearchPar
 
 export interface GetAllUserProgramsParams extends IGenesis, IPaginationParams, Pick<IProgram, 'owner'>, SearchParam {}
 
-export interface FindProgramParams extends IGenesis, Pick<IProgram, 'id'> {
-  owner?: string;
-}
+export interface FindProgramParams extends IGenesis, Pick<IProgram, 'id'> {}
 
 export interface AddCodeNameParams extends IGenesis, Pick<ICode, 'id'> {
   name: string;

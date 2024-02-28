@@ -1,4 +1,5 @@
-import { DataSource, In, Repository } from 'typeorm';
+import { Between, DataSource, FindOptionsWhere, ILike, In, Repository } from 'typeorm';
+import { decodeAddress } from '@gear-js/api';
 import {
   AddProgramNameParams,
   FindProgramParams,
@@ -11,21 +12,18 @@ import {
 
 import { ProgramNotFound } from '../common/errors';
 import { Code, Program } from '../database/entities';
-import { PAGINATION_LIMIT, getDatesFilter } from '../common';
+import { PAGINATION_LIMIT } from '../common';
 
 export class ProgramService {
   private repo: Repository<Program>;
-  private codeRepo: Repository<Code>;
 
   constructor(dataSource: DataSource) {
     this.repo = dataSource.getRepository(Program);
-    this.codeRepo = dataSource.getRepository(Code);
   }
 
   public async get({ id, genesis }: FindProgramParams): Promise<Program> {
     const program = await this.repo.findOne({
       where: { id, genesis },
-      relations: ['code'],
     });
 
     if (!program) {
@@ -44,40 +42,42 @@ export class ProgramService {
     fromDate,
     status,
   }: GetAllProgramsParams): Promise<GetAllProgramsResult> {
-    const builder = this.repo
-      .createQueryBuilder('program')
-      .leftJoin('program.code', 'code')
-      .addSelect(['code.id'])
-      .where('program.genesis = :genesis', { genesis });
+    const commonOptions: FindOptionsWhere<Program> = { genesis };
+    let options: FindOptionsWhere<Program>[] | FindOptionsWhere<Program>;
 
     if (owner) {
-      builder.andWhere('program.owner = :owner', { owner });
+      commonOptions.owner = decodeAddress(owner);
     }
 
     if (status) {
       if (Array.isArray(status)) {
-        builder.andWhere('program.status = IN(:status)', { status });
+        commonOptions.status = In(status);
       } else {
-        builder.andWhere('program.status = :status', { status });
+        commonOptions.status = status;
       }
     }
 
     if (fromDate || toDate) {
-      const parameters = getDatesFilter(fromDate, toDate);
-      builder.andWhere('program.timestamp BETWEEN :fromDate AND :toDate', parameters);
+      commonOptions.timestamp = Between(new Date(fromDate), new Date(toDate));
     }
 
     if (query) {
-      builder.andWhere('(program.id ILIKE :query OR program.name ILIKE :query)', { query: `%${query}%` });
+      options = [
+        { id: ILike(`%${query}%`), ...commonOptions },
+        { name: ILike(`%${query}%`), ...commonOptions },
+      ];
+    } else {
+      options = commonOptions;
     }
 
     const [programs, count] = await Promise.all([
-      builder
-        .take(limit || PAGINATION_LIMIT)
-        .skip(offset || 0)
-        .orderBy('program.timestamp', 'DESC')
-        .getMany(),
-      builder.getCount(),
+      this.repo.find({
+        where: options,
+        take: limit || PAGINATION_LIMIT,
+        skip: offset || 0,
+        order: { timestamp: 'DESC' },
+      }),
+      this.repo.count({ where: options }),
     ]);
 
     return {
@@ -86,7 +86,9 @@ export class ProgramService {
     };
   }
 
-  public async save(programs: Program[]): Promise<Program[]> {
+  public async save(programs: Program[]) {
+    if (programs.length === 0) return;
+
     return this.repo.save(programs);
   }
 
@@ -120,19 +122,28 @@ export class ProgramService {
   }
 
   public async hasState(hashes: Array<string>) {
-    const [programs, codes] = await Promise.all([
-      this.repo.find({ where: { metahash: In(hashes), hasState: false } }),
-      this.codeRepo.find({ where: { metahash: In(hashes), hasState: false } }),
-    ]);
-    for (const p of programs) {
-      p.hasState = true;
+    await this.repo.update({ metahash: In(hashes) }, { hasState: true });
+  }
+
+  public async getMetahash(id: string, genesis: string): Promise<string> {
+    const program = await this.repo.findOne({ where: { id, genesis }, select: { metahash: true } });
+
+    if (!program) {
+      return null;
     }
 
-    for (const c of codes) {
-      c.hasState = true;
-    }
+    return program.metahash;
+  }
 
-    await this.codeRepo.save(codes);
-    await this.repo.save(programs);
+  public async getNames(ids: string[], genesis: string): Promise<Record<string, string>> {
+    const programs = await this.repo.find({ where: { id: In(ids), genesis }, select: { name: true, id: true } });
+
+    const result = {};
+
+    programs.forEach((program) => {
+      result[program.id] = program.name;
+    });
+
+    return result;
   }
 }

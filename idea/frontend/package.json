@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@gear-js/api": "0.36.3",
+    "@gear-js/api": "0.36.7",
     "@gear-js/react-hooks": "workspace:^",
     "@gear-js/ui": "workspace:^",
     "@hcaptcha/react-hcaptcha": "1.8.1",
@@ -18,7 +18,7 @@
     "@polkadot/extension-dapp": "0.46.5",
     "@polkadot/react-identicon": "3.6.3",
     "@polkadot/types": "10.11.2",
-    "@polkadot/util": "12.5.1",
+    "@polkadot/util": "12.6.2",
     "@react-aria/utils": "3.21.0",
     "bignumber.js": "9.1.2",
     "clsx": "2.0.0",
