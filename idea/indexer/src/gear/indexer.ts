@@ -151,6 +151,7 @@ export class GearIndexer {
 
       try {
         const result = await this.tempState.save();
+        await this.statusService.update(this.genesis, Math.max(...notSynced).toString());
         logger.info(`${notSynced[0]}-${notSynced.at(-1)} not synced`, {
           time: (Date.now() - start) / 1000 + 'sec',
           mem: getMem(),
