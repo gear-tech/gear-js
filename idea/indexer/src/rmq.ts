@@ -179,8 +179,11 @@ export class RMQService {
             return;
           }
 
-          const messageBuff = JSON.stringify({ service: RMQServices.INDEXER, action: RMQServiceAction.ADD, genesis });
-          this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, Buffer.from(messageBuff));
+          logger.info('Genesis request');
+
+          const params = JSON.stringify({ service: RMQServices.INDEXER, action: RMQServiceAction.ADD, genesis });
+          this.sendMsg(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, params);
+          logger.info('Genesis sent', { genesis });
         },
         { noAck: true },
       );

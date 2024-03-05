@@ -21,6 +21,8 @@ export class RMQService {
   public async init(): Promise<void> {
     try {
       this.connection = await connect(config.rabbitmq.url);
+
+      logger.info('RabbitMQ connection established sucessfuly', { url: config.rabbitmq.url });
     } catch (error) {
       logger.error('Failed to connect to to RabbitMQ', { error });
       process.exit(1);
@@ -83,7 +85,7 @@ export class RMQService {
         }
 
         const { genesis, service, action } = JSON.parse(message.content.toString());
-        logger.info('Received genesis', { genesis, service, action, correlationId: message.properties.correlationId });
+        logger.info(RMQQueue.GENESISES, { genesis, service, action, correlationId: message.properties.correlationId });
 
         if (action === RMQServiceAction.ADD) {
           if (service === RMQServices.INDEXER) {
@@ -112,7 +114,6 @@ export class RMQService {
             if (channel) {
               await channel.close();
               this.indexerChannels.delete(genesis);
-              logger.info(`Remove indexer genesis ${genesis}`, { all: Array.from(this.indexerChannels.keys()) });
             }
           }
           if (service === RMQServices.TEST_BALANCE) {
@@ -120,7 +121,6 @@ export class RMQService {
             if (channel) {
               await channel.close();
               this.tbChannels.delete(genesis);
-              logger.info(`Remove test_balance genesis ${genesis}`, { all: Array.from(this.tbChannels.keys()) });
             }
           }
         }
@@ -167,10 +167,12 @@ export class RMQService {
 
   public sendMsgIndexerGenesises() {
     this.mainChannel.publish(RMQExchange.TOPIC_EX, `${RMQServices.INDEXER}.genesises`, Buffer.from(''));
+    logger.info('Indexer genesis request sent');
   }
 
   public sendMsgTBGenesises() {
     this.mainChannel.publish(RMQExchange.TOPIC_EX, `${RMQServices.TEST_BALANCE}.genesises`, Buffer.from(''));
+    logger.info('Test balance genesis request sent');
   }
 
   public isExistTBChannel(genesis: string) {
