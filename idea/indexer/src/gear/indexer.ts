@@ -102,8 +102,9 @@ export class GearIndexer {
   }
 
   private *rangeGenerator(from: number, to: number) {
-    for (let i = from; i < to; i += 5) {
-      yield [i, i + 1, i + 2, i + 3, i + 4];
+    const batchSize = config.indexer.batchSize;
+    for (let i = from; i < to; i += batchSize) {
+      yield [...Array(batchSize).keys()].map((v) => v + i);
     }
   }
 
@@ -111,6 +112,8 @@ export class GearIndexer {
     if (this.isCheckingNotSynced) {
       return;
     }
+
+    this.isCheckingNotSynced = true;
 
     const status = await this.statusService.getStatus(this.genesis);
 
@@ -151,8 +154,12 @@ export class GearIndexer {
 
       try {
         const result = await this.tempState.save();
-        await this.statusService.update(this.genesis, Math.max(...notSynced).toString());
-        logger.info(`${notSynced[0]}-${notSynced.at(-1)} not synced`, {
+
+        const [min, max] = [Math.min(...notSynced) + '', Math.max(...notSynced) + ''];
+
+        await this.statusService.update(this.genesis, max);
+
+        logger.info(`${min}-${max} not synced`, {
           time: (Date.now() - start) / 1000 + 'sec',
           mem: getMem(),
           result: result,
@@ -168,6 +175,8 @@ export class GearIndexer {
 
     tempState = null;
     await this.statusService.update(this.genesis, currentBn.number.toString());
+
+    this.isCheckingNotSynced = false;
   }
 
   private async indexBlocks() {

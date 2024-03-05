@@ -31,5 +31,6 @@ export default {
   },
   indexer: {
     fromBlock: Number(getEnv('FROM_BLOCK', '0')),
+    batchSize: Number(getEnv('BATCH_SIZE', '5')),
   },
 };
