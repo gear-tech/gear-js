@@ -8,8 +8,8 @@ export class RMQService {
   private indexerChannels: Map<string, Channel>;
   private tbChannels: Map<string, Channel>;
   public replies: Map<string, (params: any) => RMQReply>;
-  private metaChannel: Channel;
   private connection: Connection;
+  private metaChannel: Channel;
   private mainChannel: Channel;
 
   constructor() {
@@ -196,6 +196,9 @@ export class RMQService {
         this.sendMsgIndexerGenesises();
         this.sendMsgTBGenesises();
       },
+      null,
+      true,
+      null,
       null,
       true,
     );

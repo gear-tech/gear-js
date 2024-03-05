@@ -47,17 +47,15 @@ export class RMQService {
     };
   }
 
-  public async init(consumeMessages = true): Promise<void> {
+  public async init(): Promise<void> {
     this.connection = await connect(config.rabbitmq.url);
+
+    logger.info('RabbitMQ connection established', { url: config.rabbitmq.url });
 
     this.connection.on('close', (error) => {
       logger.error('RabbitMQ connection lost', { error });
       process.exit(1);
     });
-
-    if (!consumeMessages) {
-      return;
-    }
 
     try {
       this.mainChannel = await this.connection.createChannel();
@@ -89,14 +87,17 @@ export class RMQService {
 
   public async addGenesisQueue(genesis: string) {
     const genesisQ = `${RMQServices.INDEXER}.${genesis}`;
-    await this.topicChannel.assertQueue(genesisQ, {
+
+    logger.info('Adding genesis queue', { name: genesisQ });
+
+    await this.mainChannel.assertQueue(genesisQ, {
       durable: false,
       exclusive: false,
       autoDelete: true,
     });
     await this.mainChannel.bindQueue(genesisQ, RMQExchange.DIRECT_EX, genesisQ);
 
-    const topicQ = `${RMQServices.INDEXER}t.${genesis}`;
+    const topicQ = `${RMQServices.INDEXER}.genesises.${genesis}`;
     await this.topicChannel.assertQueue(topicQ, {
       durable: false,
       exclusive: false,
@@ -108,7 +109,11 @@ export class RMQService {
     await this.genesisesMsgConsumer(topicQ, genesis);
 
     const msgBuff = JSON.stringify({ service: RMQServices.INDEXER, action: RMQServiceAction.ADD, genesis });
+
+    this.sendMsg(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, msgBuff, null);
     this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, Buffer.from(msgBuff));
+
+    logger.info('Genesis queue added', { name: genesisQ });
   }
 
   private sendMsg(exchange: string, queue: string, params: any, correlationId?: string, method?: string): void {
