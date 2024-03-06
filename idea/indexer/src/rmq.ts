@@ -181,8 +181,9 @@ export class RMQService {
           }
 
           logger.info('Genesis request');
-
-          this.sendGenesis();
+          if (this.genesis) {
+            this.sendGenesis();
+          }
         },
         { noAck: true },
       );
