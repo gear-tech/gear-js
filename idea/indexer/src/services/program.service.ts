@@ -165,10 +165,10 @@ export class ProgramService {
 
     const primaryKeysToKeep = new Set(map.values());
 
-    const toRemove = programs.filter((program) => !primaryKeysToKeep.has(program._id)).map(({ _id }) => _id);
+    const toRemove = programs.filter((program) => !primaryKeysToKeep.has(program._id));
 
     logger.info('Removing duplicate programs', { genesis, size: toRemove.length });
 
-    await this.repo.delete({ _id: In(toRemove), genesis });
+    await this.repo.remove(toRemove, { chunk: 5_000 });
   }
 }
