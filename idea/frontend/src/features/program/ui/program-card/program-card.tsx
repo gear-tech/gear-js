@@ -24,7 +24,6 @@ type Props = {
 
 const ProgramCard = memo(({ program, vertical }: Props) => {
   const { id: programId, name, status, timestamp } = program;
-  // TODO: backend
   const statusName = PROGRAM_STATUS_NAME[status];
 
   return (
