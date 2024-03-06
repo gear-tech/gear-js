@@ -138,7 +138,7 @@ export class GearIndexer {
       const notSynced = await this.blockService.getNotSynced(blockNumbers);
 
       if (notSynced.length === 0) {
-        await this.statusService.update(this.genesis, blockNumbers.at(-1).toString());
+        await this.statusService.update(this.genesis, Math.max(...blockNumbers).toString());
         continue;
       }
 
@@ -147,7 +147,7 @@ export class GearIndexer {
       tempState.newState(this.genesis);
 
       try {
-        await Promise.all(notSynced.map((blockNumber) => this.indexBlock(blockNumber, this.tempState)));
+        await Promise.all(notSynced.map((blockNumber) => this.indexBlock(blockNumber, tempState)));
       } catch (error) {
         logger.error('Error during indexing the data of the blocks', {
           blocks: notSynced,
@@ -158,7 +158,7 @@ export class GearIndexer {
       }
 
       try {
-        const result = await this.tempState.save();
+        const result = await tempState.save();
 
         const [min, max] = [Math.min(...notSynced) + '', Math.max(...notSynced) + ''];
 
