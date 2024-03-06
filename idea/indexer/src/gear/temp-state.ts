@@ -145,9 +145,25 @@ export class TempState {
 
   async save() {
     await Promise.all([
-      this.codeService.save(Array.from(this.codes.values())),
+      (async () => {
+        const codeIds = Array.from(this.codes.keys());
+        const existingCodes = await this.codeService.getManyIds(codeIds, this.genesis);
+
+        for (const { _id, id } of existingCodes) {
+          this.codes.get(id)._id = _id;
+        }
+
+        await this.codeService.save(Array.from(this.codes.values()));
+      })(),
       this.messageService.save(Array.from(this.messages.values())),
       (async () => {
+        const programIds = Array.from(this.programs.keys());
+        const existingPrograms = await this.programService.getManyIds(programIds, this.genesis);
+
+        for (const { _id, id } of existingPrograms) {
+          this.programs.get(id)._id = _id;
+        }
+
         for (const program of this.programs.values()) {
           program.metahash = await this.getMetahash(program.codeId);
         }

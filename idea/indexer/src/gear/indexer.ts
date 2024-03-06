@@ -55,6 +55,11 @@ export class GearIndexer {
 
     this.genesis = this.api.genesisHash.toHex();
 
+    await Promise.all([
+      this.programService.removeDuplicates(this.genesis),
+      this.codeService.removeDuplicates(this.genesis),
+    ]);
+
     await this.statusService.init(this.genesis);
 
     this.newBlocks = [];

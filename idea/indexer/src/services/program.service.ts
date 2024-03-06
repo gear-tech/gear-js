@@ -146,4 +146,29 @@ export class ProgramService {
 
     return result;
   }
+
+  public getManyIds(ids: string[], genesis: string) {
+    return this.repo.find({ where: { id: In(ids), genesis }, select: { id: true, _id: true } });
+  }
+
+  public async removeDuplicates(genesis: string) {
+    const programs = await this.repo.find({ where: { genesis }, select: { id: true, _id: true } });
+
+    const ids: [string, string][] = programs.map((program) => [program.id, program._id]);
+
+    const map = new Map<string, string>(ids);
+
+    if (ids.length === map.size) {
+      logger.info('No duplicates found', { genesis });
+      return;
+    }
+
+    const primaryKeysToKeep = new Set(map.keys());
+
+    const toRemove = programs.filter((program) => !primaryKeysToKeep.has(program._id)).map(({ _id }) => _id);
+
+    logger.info('Removing duplicate programs', { genesis, size: toRemove.length });
+
+    await this.repo.delete({ _id: In(toRemove), genesis });
+  }
 }
