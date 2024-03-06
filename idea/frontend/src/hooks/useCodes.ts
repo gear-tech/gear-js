@@ -46,7 +46,7 @@ const useCodes = (initLoading = true) => {
       : getCodes({ limit: DEFAULT_LIMIT, ...params }).then(({ result }) => setCodesData(result, isReset));
 
     return promise
-      .catch((error) => {
+      .catch((error: Error) => {
         alert.error(error.message);
         return Promise.reject(error);
       })

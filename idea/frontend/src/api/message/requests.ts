@@ -5,7 +5,7 @@ import { IMessage } from '@/entities/message';
 import { PaginationModel } from '../types';
 import { MessagePaginationModel } from './types';
 
-const fetchMessages = (params: PaginationModel) =>
+const fetchMessages = (params: PaginationModel & { withPrograms?: boolean }) =>
   rpcService.callRPC<MessagePaginationModel>(RpcMethods.GetAllMessages, { ...params });
 
 const fetchMessage = (id: string) => rpcService.callRPC<IMessage>(RpcMethods.GetMessage, { id });
