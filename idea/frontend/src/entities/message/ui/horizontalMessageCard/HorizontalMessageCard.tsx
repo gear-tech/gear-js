@@ -18,7 +18,10 @@ type Props = {
 };
 
 const HorizontalMessageCard = ({ message, moreInfo = false }: Props) => {
-  const { id: messageId, timestamp, type, program, exitCode } = message;
+  // TODO: backend
+  const program = { name: '0x01', id: '0x01' };
+
+  const { id: messageId, timestamp, type, exitCode } = message;
   const { source, destination } = message;
 
   const isMessageFromProgram = type === 'UserMessageSent';

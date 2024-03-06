@@ -11,8 +11,11 @@ const Message = () => {
   const { messageId } = useParams() as PageParams;
 
   const { message, isLoading: isMesageLoading } = useMessage(messageId);
-  const programId = message?.program?.id;
-  const metaHash = message?.program?.metahash;
+
+  // TODO: backend
+  const programId = '0x01';
+  const metaHash = '0x01';
+
   const isProgram = !!programId;
 
   const { metadata, isMetadataReady } = useMetadata(metaHash);

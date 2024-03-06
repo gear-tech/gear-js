@@ -7,13 +7,12 @@ import { ProgramStatus } from './consts';
 
 type Program = {
   id: HexString;
-  owner: string;
+  owner: HexString;
   name: string;
   status: ProgramStatus;
+  codeId: HexString;
   metahash: HexString | null;
   hasState: boolean;
-  expiration?: number;
-  code?: { id: HexString };
 };
 
 type IProgram = Program & IBase;

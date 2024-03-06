@@ -33,7 +33,7 @@ const Program = withDeprecatedFallback(() => {
   const { metadata, isMetadataReady, setMetadata } = useMetadata(program?.metahash);
 
   const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
-    const codeHash = program?.code?.id;
+    const codeHash = program?.codeId;
     if (!codeHash) return;
 
     const resolve = () => {

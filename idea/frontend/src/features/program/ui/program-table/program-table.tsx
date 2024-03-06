@@ -19,9 +19,7 @@ type Props = {
 };
 
 const ProgramTable = ({ program, isProgramReady }: Props) => {
-  const { code, timestamp } = program || {};
-
-  const codeId = code?.id;
+  const { codeId, timestamp } = program || {};
   const blockId = program?.blockHash;
 
   return isProgramReady && program ? (

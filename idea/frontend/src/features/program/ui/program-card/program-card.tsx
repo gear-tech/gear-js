@@ -24,6 +24,7 @@ type Props = {
 
 const ProgramCard = memo(({ program, vertical }: Props) => {
   const { id: programId, name, status, timestamp } = program;
+  // TODO: backend
   const statusName = PROGRAM_STATUS_NAME[status];
 
   return (
@@ -52,7 +53,7 @@ const ProgramCard = memo(({ program, vertical }: Props) => {
               text="Send Message"
             />
 
-            {'hasState' in program && program.hasState && (
+            {program.hasState && (
               <ActionLink to={generatePath(routes.state, { programId })} icon={readSVG} text="Read State" />
             )}
 

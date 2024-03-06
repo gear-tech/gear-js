@@ -18,6 +18,7 @@ import { ICode } from '@/entities/code';
 import { CodeTable } from '@/features/code';
 
 import styles from './Code.module.scss';
+import { IProgram } from '@/features/program';
 
 type Params = { codeId: HexString };
 
@@ -29,7 +30,9 @@ const Code = () => {
   const { showModal, closeModal } = useModal();
 
   const [code, setCode] = useState<ICode>();
-  const programs = code?.programs || [];
+
+  // TODO: backend
+  const programs: IProgram[] = [];
   const isCodeReady = code !== undefined;
 
   const { metadata, isMetadataReady, setMetadata } = useMetadata(code?.metahash);
