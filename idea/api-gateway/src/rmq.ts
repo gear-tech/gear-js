@@ -85,45 +85,56 @@ export class RMQService {
         }
 
         const { genesis, service, action } = JSON.parse(message.content.toString());
-        logger.info(RMQQueue.GENESISES, { genesis, service, action, correlationId: message.properties.correlationId });
+        logger.info(RMQQueue.GENESISES, { genesis, service, action });
 
-        if (action === RMQServiceAction.ADD) {
-          if (service === RMQServices.INDEXER) {
-            if (this.indexerChannels.has(genesis)) return;
+        switch (service) {
+          case RMQServices.INDEXER: {
+            if (action === RMQServiceAction.ADD) {
+              if (this.indexerChannels.has(genesis)) return;
 
-            const channel = await this.createChannel();
-            this.indexerChannels.set(genesis, channel);
-            await channel.assertQueue(`${RMQServices.INDEXER}.${genesis}`, {
-              durable: false,
-              exclusive: false,
-              autoDelete: true,
-            });
+              const channel = await this.createChannel();
+              this.indexerChannels.set(genesis, channel);
+              await channel.assertQueue(`${RMQServices.INDEXER}.${genesis}`, {
+                durable: false,
+                exclusive: false,
+                autoDelete: true,
+              });
+            } else if (action === RMQServiceAction.DELETE) {
+              const channel = this.indexerChannels.get(genesis);
+              if (channel) {
+                await channel.close();
+                this.indexerChannels.delete(genesis);
+              }
+            }
+            break;
           }
-          if (service === RMQServices.TEST_BALANCE) {
-            if (this.tbChannels.has(genesis)) return;
+          case RMQServices.TEST_BALANCE: {
+            if (action === RMQServiceAction.ADD) {
+              if (this.tbChannels.has(genesis)) return;
 
-            const channel = await this.createChannel();
-            this.tbChannels.set(genesis, channel);
-            await channel.assertQueue(`${RMQServices.TEST_BALANCE}.${genesis}`, { durable: false, exclusive: false });
+              const channel = await this.createChannel();
+              this.tbChannels.set(genesis, channel);
+              await channel.assertQueue(`${RMQServices.TEST_BALANCE}.${genesis}`, { durable: false, exclusive: false });
+            } else if (action === RMQServiceAction.DELETE) {
+              const channel = this.tbChannels.get(genesis);
+              if (channel) {
+                await channel.close();
+                this.tbChannels.delete(genesis);
+              }
+            }
+            break;
+          }
+          default: {
+            logger.error('Unknown service', { service, genesis, action });
           }
         }
 
-        if (action === RMQServiceAction.DELETE) {
-          if (service === RMQServices.INDEXER) {
-            const channel = this.indexerChannels.get(genesis);
-            if (channel) {
-              await channel.close();
-              this.indexerChannels.delete(genesis);
-            }
-          }
-          if (service === RMQServices.TEST_BALANCE) {
-            const channel = this.tbChannels.get(genesis);
-            if (channel) {
-              await channel.close();
-              this.tbChannels.delete(genesis);
-            }
-          }
-        }
+        logger.info(
+          'Genesises updated',
+          service === RMQServices.INDEXER
+            ? { indexer: Array.from(this.indexerChannels.keys()) }
+            : { tb: Array.from(this.tbChannels.keys()) },
+        );
       },
       { noAck: true },
     );
@@ -165,14 +176,10 @@ export class RMQService {
     );
   }
 
-  public sendMsgIndexerGenesises() {
+  public requestActiveGenesises() {
     this.mainChannel.publish(RMQExchange.TOPIC_EX, `${RMQServices.INDEXER}.genesises`, Buffer.from(''));
-    logger.info('Indexer genesis request sent');
-  }
-
-  public sendMsgTBGenesises() {
     this.mainChannel.publish(RMQExchange.TOPIC_EX, `${RMQServices.TEST_BALANCE}.genesises`, Buffer.from(''));
-    logger.info('Test balance genesis request sent');
+    logger.info(`Genesises request sent`);
   }
 
   public isExistTBChannel(genesis: string) {
@@ -184,9 +191,6 @@ export class RMQService {
   }
 
   public async runScheduler() {
-    this.sendMsgTBGenesises();
-    this.sendMsgIndexerGenesises();
-
     const cronTime = config.scheduler.genesisHashesTime;
 
     new CronJob(
@@ -195,8 +199,7 @@ export class RMQService {
         this.tbChannels.clear();
         this.indexerChannels.clear();
 
-        this.sendMsgIndexerGenesises();
-        this.sendMsgTBGenesises();
+        this.requestActiveGenesises();
       },
       null,
       true,

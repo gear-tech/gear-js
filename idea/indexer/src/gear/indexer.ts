@@ -159,11 +159,11 @@ export class GearIndexer {
 
         await this.statusService.update(this.genesis, max);
 
-        logger.info(`${min}-${max} not synced`, {
-          time: (Date.now() - start) / 1000 + 'sec',
-          mem: getMem(),
-          result: result,
-        });
+        // logger.info(`${min}-${max} not synced`, {
+        //   time: (Date.now() - start) / 1000 + 'sec',
+        //   mem: getMem(),
+        //   result: result,
+        // });
       } catch (error) {
         logger.error('Error during saving the data of the blocks', {
           blocks: notSynced,
