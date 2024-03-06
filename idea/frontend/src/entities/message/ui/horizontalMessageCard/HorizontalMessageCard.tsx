@@ -22,12 +22,12 @@ type Props = {
 const HorizontalMessageCard = ({ message, program }: Props) => {
   const { id: messageId, timestamp, type, exitCode } = message;
 
-  const isProgramMessage = type === 'UserMessageSent';
+  const isMessageFromProgram = type === 'UserMessageSent';
 
   return (
     <article className={clsx(styles.horizontalMessageCard, program && styles.moreInfo)}>
       <div className={styles.info}>
-        <DirectionSVG className={clsx(styles.directionSVG, isProgramMessage && styles.fromProgram)} />
+        <DirectionSVG className={clsx(styles.directionSVG, isMessageFromProgram && styles.fromProgram)} />
         <BulbBlock text="" status={exitCode ? BulbStatus.Error : BulbStatus.Success} />
         <IdBlock
           id={messageId}
@@ -44,7 +44,7 @@ const HorizontalMessageCard = ({ message, program }: Props) => {
         <div className={styles.fromBlock}>
           <div className={styles.fromIcon}>
             <FlagSVG />
-            <span className={styles.text}>{isProgramMessage ? 'From:' : 'To:'}</span>
+            <span className={styles.text}>{isMessageFromProgram ? 'From:' : 'To:'}</span>
           </div>
 
           <Link to={generatePath(absoluteRoutes.program, { programId: program.id })} className={styles.programLink}>

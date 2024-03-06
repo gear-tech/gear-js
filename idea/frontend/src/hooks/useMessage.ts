@@ -4,17 +4,19 @@ import { useAlert } from '@gear-js/react-hooks';
 import { getMessage } from '@/api';
 import { IMessage } from '@/entities/message';
 
-const useMessage = (id: string | undefined, isInitLoading = false) => {
+const useMessage = (id: string | undefined) => {
   const alert = useAlert();
 
   const [message, setMessage] = useState<IMessage>();
-  const [isLoading, setIsLoading] = useState(isInitLoading);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (id) {
       setIsLoading(true);
 
-      getMessage(id)
+      const withMetahash = true;
+
+      getMessage({ id, withMetahash })
         .then(({ result }) => setMessage(result))
         .catch((error: Error) => alert.error(error.message))
         .finally(() => setIsLoading(false));

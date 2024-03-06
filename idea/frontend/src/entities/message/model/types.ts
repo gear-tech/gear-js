@@ -16,6 +16,7 @@ interface IMessage extends IBase {
   processedWithPanic: boolean;
   type: Type;
   readReason: ReadReason | null;
+  metahash?: HexString | null;
 }
 
 export type { IMessage };
