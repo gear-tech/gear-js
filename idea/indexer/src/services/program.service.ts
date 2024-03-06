@@ -163,7 +163,7 @@ export class ProgramService {
       return;
     }
 
-    const primaryKeysToKeep = new Set(map.keys());
+    const primaryKeysToKeep = new Set(map.values());
 
     const toRemove = programs.filter((program) => !primaryKeysToKeep.has(program._id)).map(({ _id }) => _id);
 

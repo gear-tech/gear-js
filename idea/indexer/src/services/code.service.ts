@@ -142,7 +142,7 @@ export class CodeService {
       return;
     }
 
-    const primaryKeysToKeep = new Set(map.keys());
+    const primaryKeysToKeep = new Set(map.values());
 
     const toRemove = codes.filter((c) => !primaryKeysToKeep.has(c._id)).map(({ _id }) => _id);
 
