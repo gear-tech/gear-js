@@ -13,7 +13,7 @@ const getLocalProgram = (id: string) =>
     response ? { result: response } : Promise.reject(new Error('Program not found')),
   );
 
-const getLocalMetadata = ({ hash }: { hash: HexString }) =>
+const getLocalMetadata = (hash: HexString) =>
   METADATA_LOCAL_FORAGE.getItem<IMeta>(hash).then((response) =>
     response?.hex ? { result: response } : Promise.reject(new Error('Metadata not found')),
   );

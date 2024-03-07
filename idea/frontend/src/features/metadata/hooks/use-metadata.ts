@@ -14,14 +14,14 @@ function useMetadata(hash?: HexString | null | undefined) {
   const [metadata, setMetadata] = useState<ProgramMetadata>();
   const [isMetadataReady, setIsMetadataReady] = useState(false);
 
-  const getMetadata = (params: { hash: HexString }) =>
-    isDevChain ? getLocalMetadata(params).catch(() => fetchMetadata(params)) : fetchMetadata(params);
+  const getMetadata = (_hash: HexString) =>
+    isDevChain ? getLocalMetadata(_hash).catch(() => fetchMetadata(_hash)) : fetchMetadata(_hash);
 
   useEffect(() => {
     if (hash === null) return setIsMetadataReady(true);
     if (!hash) return;
 
-    getMetadata({ hash })
+    getMetadata(hash)
       .then(({ result }) => result.hex && setMetadata(ProgramMetadata.from(result.hex)))
       .catch(({ message, code }: RPCError) => code !== RPCErrorCode.MetadataNotFound && alert.error(message))
       .finally(() => setIsMetadataReady(true));

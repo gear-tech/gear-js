@@ -37,7 +37,7 @@ function useLocalProgram() {
 
     // metadata is retrived via useMetadata, so no need to log errors here
     try {
-      metaHex = metahash ? (await getMetadata({ hash: metahash })).result.hex : undefined;
+      metaHex = metahash ? (await getMetadata(metahash)).result.hex : undefined;
     } catch {
       metaHex = null;
     }
