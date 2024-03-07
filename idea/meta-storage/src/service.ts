@@ -1,42 +1,34 @@
 import { Repository } from 'typeorm';
 import { AddMetaDetailsParams, AddMetahashParams, GetMetaParams, logger } from '@gear-js/common';
 
-import { Code, Meta, AppDataSource } from './database';
+import { Meta, AppDataSource } from './database';
 import { InvalidParamsError, MetaNotFoundError } from './util/errors';
 import { validateMetaHex } from './util/validate';
 import { ProgramMetadata, MetadataVersion, HumanTypesRepr } from '@gear-js/api';
 
 export class MetaService {
   private metaRepo: Repository<Meta>;
-  private codeRepo: Repository<Code>;
 
   constructor() {
     this.metaRepo = AppDataSource.getRepository(Meta);
-    this.codeRepo = AppDataSource.getRepository(Code);
   }
 
-  async addMeta({ metahash, codeId }: AddMetahashParams): Promise<string[]> {
-    logger.info('Adding meta', { metahash, codeId });
-    const meta =
-      (await this.metaRepo.findOne({ where: { hash: metahash }, relations: { codes: true } })) ||
-      new Meta({ hash: metahash, codes: [] });
-
-    const code = new Code({ id: codeId, meta });
-    meta.codes.push(code);
+  async addMeta({ metahash }: AddMetahashParams): Promise<string[]> {
+    logger.info('Adding meta', { metahash });
+    const meta = (await this.metaRepo.findOne({ where: { hash: metahash } })) || new Meta({ hash: metahash });
 
     await this.metaRepo.save(meta);
-    await this.codeRepo.save(code);
 
     return meta.hasState ? [metahash] : [];
   }
 
   async addMetaDetails(params: AddMetaDetailsParams): Promise<Omit<Meta, 'codes'>> {
     logger.info('Adding meta details', params);
-    if (!params.hash && !params.codeHash) {
+    if (!params.hash) {
       throw new InvalidParamsError();
     }
 
-    let meta = await this.get(params, true);
+    let meta = await this.metaRepo.findOneBy({ hash: params.hash });
 
     if (!meta) {
       meta = new Meta({ hash: params.hash });
@@ -73,26 +65,17 @@ export class MetaService {
     return { hex: meta.hex, hash: meta.hash, hasState: meta.hasState };
   }
 
-  async get({ hash, codeHash }: GetMetaParams, internal = false): Promise<Partial<Meta>> {
-    let meta: Meta;
-
-    if (hash) {
-      meta = await this.metaRepo.findOne({ where: { hash } });
-    } else if (codeHash) {
-      const code = await this.codeRepo.findOne({ where: { id: codeHash }, relations: { meta: true } });
-
-      if (!code) {
-        throw new MetaNotFoundError();
-      }
-
-      meta = code.meta;
+  async get({ hash }: GetMetaParams): Promise<Partial<Meta>> {
+    if (!hash) {
+      throw new InvalidParamsError();
     }
+    const meta = await this.metaRepo.findOne({ where: { hash } });
 
     if (!meta) {
       throw new MetaNotFoundError();
     }
 
-    return internal ? meta : { hash: meta.hash, hex: meta.hex };
+    return meta;
   }
 
   async getAllWithState(): Promise<string[]> {

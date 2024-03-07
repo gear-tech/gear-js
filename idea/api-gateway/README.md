@@ -627,4 +627,96 @@ Response:
 
 </details>
 
+### `meta.get`
+
+Retrieves metadata for a specific metahash.
+
+<details>
+<summary>Click to expand!</summary>
+
+#### Parameters
+
+- `hash` (string): The metahash for which to retrieve metadata.
+
+#### Response
+
+- `result` (object): An object containing metadata for the metahash.
+
+#### Example
+
+Request:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "meta.get",
+  "params": {
+    "hash": "0xdc0329e1723e75bdc7984d2c608241390851d3212d6163109c20f80ebe18ecdc", 
+  },
+  "id": 1
+}
+```
+
+Response:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "hash": "0xdc0329e1723e75bdc7984d2c608241390851d3212d6163109c20f80ebe18ecdc",
+    "hex": "0x",
+  },
+  "id": 1
+}
+```
+
+</details>
+
+### `meta.add`
+
+Adds metadata for a specific metahash.
+
+<details>
+<summary>Click to expand!</summary>
+
+#### Parameters
+
+- `hash` (string): The metahash for which to retrieve metadata.
+- `hex` (string): The metadata in hex format.
+
+#### Response
+
+- `result` (object): An object containing metadata and metahash
+
+#### Example
+
+Request:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "meta.add",
+  "params": {
+    "hash": "0xdc0329e1723e75bdc7984d2c608241390851d3212d6163109c20f80ebe18ecdc", 
+    "hex": "0x"
+  },
+  "id": 1
+}
+```
+
+Response:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "hash": "0xdc0329e1723e75bdc7984d2c608241390851d3212d6163109c20f80ebe18ecdc",
+    "hex": "0x",
+  },
+  "id": 1
+}
+```
+
+</details>
+
 

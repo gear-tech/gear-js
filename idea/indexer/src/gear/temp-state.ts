@@ -44,7 +44,7 @@ export class TempState {
     this.codes.set(code.id, code);
     if (code.metahash) {
       this.metahashes.set(code.id, code.metahash);
-      this.rmq.sendMetahashToMetaStorage(code.metahash, code.id);
+      this.rmq.sendMetahashToMetaStorage(code.metahash);
     }
   }
 

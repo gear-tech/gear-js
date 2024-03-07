@@ -220,11 +220,11 @@ export class RMQService {
     return this.methods[method](params);
   }
 
-  public sendMetahashToMetaStorage(metahash: string, codeId: string) {
+  public sendMetahashToMetaStorage(metahash: string) {
     this.sendMsg(
       RMQExchange.DIRECT_EX,
       RMQServices.META_STORAGE,
-      { metahash, codeId },
+      { metahash },
       null,
       META_STORAGE_INTERNAL_METHODS.META_HASH_ADD,
     );
