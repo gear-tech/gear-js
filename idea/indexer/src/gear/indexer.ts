@@ -1,10 +1,10 @@
-import { GearApi } from '@gear-js/api';
+import { GearApi, GearCommonCodeMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { FrameSystemEventRecord } from '@polkadot/types/lookup';
 import { SignedBlock } from '@polkadot/types/interfaces';
 import { logger } from '@gear-js/common';
 import { VoidFn } from '@polkadot/api/types';
-import { Vec } from '@polkadot/types';
+import { Vec, Option } from '@polkadot/types';
 
 import { Block } from '../database/entities';
 import { BlockService, CodeService, MessageService, ProgramService, StatusService } from '../services';
@@ -120,6 +120,8 @@ export class GearIndexer {
 
     this.isCheckingNotSynced = true;
 
+    await this.indexNotSyncedCodes();
+
     const status = await this.statusService.getStatus(this.genesis);
 
     const lastBlockNumber = status ? Number(status.height) : config.indexer.fromBlock;
@@ -184,6 +186,68 @@ export class GearIndexer {
     this.isCheckingNotSynced = false;
   }
 
+  private async indexNotSyncedCodes() {
+    const allCodes = new Map(await this.api.query.gearProgram.metadataStorage.entries());
+
+    const codeIdStorageKeyMap = new Map([...allCodes.keys()].map((v) => [v.args[0].toHex(), v]));
+
+    logger.info('All codes', { count: allCodes.size });
+
+    const notSynced = await this.codeService.getAllNotInList(Array.from(codeIdStorageKeyMap.keys()), this.genesis);
+
+    if (notSynced.length === 0) {
+      return;
+    }
+
+    logger.info('Indexing not synced codes', { total: notSynced.length });
+
+    let tempState = new TempState(
+      this.programService,
+      this.messageService,
+      this.codeService,
+      this.blockService,
+      this.rmq,
+    );
+
+    try {
+      for (let i = 0; i < notSynced.length; i += config.indexer.batchSize) {
+        const start = Date.now();
+        tempState.newState(this.genesis);
+
+        const batch = notSynced.slice(i, i + config.indexer.batchSize);
+
+        await Promise.all(
+          batch.map(async (id) => {
+            const metadata = (await this.api.query.gearProgram.metadataStorage(id)) as Option<GearCommonCodeMetadata>;
+
+            if (metadata.isNone) {
+              return;
+            }
+
+            const blockNumber = metadata.unwrap().blockNumber.toNumber();
+
+            return this.indexBlock(blockNumber, tempState, true);
+          }),
+        );
+
+        logger.info(`${i}-${i + config.indexer.batchSize} not synced codes have been indexed`, {
+          count: batch.length,
+          time: (Date.now() - start) / 1000 + 'sec',
+          ...getMem(),
+        });
+      }
+
+      this.tempState.save();
+    } catch (error) {
+      logger.error('Error during indexing the data of the codes', {
+        codes: notSynced,
+        error: error.message,
+        stack: error.stack,
+      });
+    }
+    tempState = null;
+  }
+
   private async indexBlocks() {
     for await (const blockNumbers of this.blocksGenerator()) {
       if (this.api === null) {
@@ -225,7 +289,7 @@ export class GearIndexer {
     }
   }
 
-  private async indexBlock(blockNumber: number, tempState: TempState): Promise<void> {
+  private async indexBlock(blockNumber: number, tempState: TempState, onlyCode = false): Promise<void> {
     if (blockNumber === 0) return;
 
     let block: SignedBlock;
@@ -253,6 +317,10 @@ export class GearIndexer {
       blockHash: hash,
       genesis: this.genesis,
     };
+
+    if (onlyCode) {
+      return handleCodeTxs(params);
+    }
 
     await Promise.all([
       handleCodeTxs(params),

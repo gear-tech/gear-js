@@ -6,7 +6,7 @@ import {
   GetCodeParams,
   logger,
 } from '@gear-js/common';
-import { Between, DataSource, FindOptionsWhere, ILike, In, Repository } from 'typeorm';
+import { Between, DataSource, FindOptionsWhere, ILike, In, Not, Repository } from 'typeorm';
 
 import { Code } from '../database/entities';
 import { CodeNotFound, PAGINATION_LIMIT } from '../common';
@@ -149,5 +149,13 @@ export class CodeService {
     logger.info('Removing duplicate programs', { genesis, size: toRemove.length });
 
     await this.repo.remove(toRemove, { chunk: 5_000 });
+  }
+
+  public async getAllNotInList(ids: string[], genesis: string): Promise<string[]> {
+    const codes = await this.repo.find({ where: { id: In(ids), genesis }, select: { id: true } });
+
+    const syncedIds = codes.map((c) => c.id);
+
+    return ids.filter((id) => !syncedIds.includes(id));
   }
 }
