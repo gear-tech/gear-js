@@ -9,7 +9,7 @@ interface IMessage extends IBase {
   destination: HexString;
   source: HexString;
   value: string;
-  payload: HexString | null; // is nullable?
+  payload: HexString;
   entry: EntryPoint | null;
   replyToMessageId: HexString | null;
   exitCode: number | null;

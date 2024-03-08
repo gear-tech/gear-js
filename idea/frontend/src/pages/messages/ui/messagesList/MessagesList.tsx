@@ -17,6 +17,7 @@ type Props = {
 };
 
 const MessagesList = ({ messages, programNames, isLoading, totalCount, loadMorePrograms }: Props) => {
+  console.log('programNames: ', programNames);
   const hasMore = !isLoading && messages.length < totalCount;
   const isEmpty = !(isLoading || totalCount);
   const isLoaderShowing = isEmpty || (!totalCount && isLoading);
@@ -25,7 +26,7 @@ const MessagesList = ({ messages, programNames, isLoading, totalCount, loadMoreP
 
   const getProgram = ({ type, source, destination }: IMessage) => {
     const id = type === Type.UserMessageSent ? source : destination;
-    const name = programNames[id] || id;
+    const name = programNames[id]; // if there's no name, message is not from a program
 
     return { id, name };
   };
