@@ -1,9 +1,10 @@
 import { CodeStatus, MessageReadReason } from '@gear-js/common';
 
-import { MessageStatus, ProgramStatus } from '../common';
+import { MessageStatus, ProgramStatus, getMetahash } from '../common';
 import { Block, Code, Message, Program } from '../database';
 import { BlockService, CodeService, MessageService, ProgramService } from '../services';
 import { RMQService } from '../rmq';
+import { GearApi, HexString } from '@gear-js/api';
 
 export class TempState {
   private programs: Map<string, Program>;
@@ -19,6 +20,7 @@ export class TempState {
     private codeService: CodeService,
     private blockService: BlockService,
     private rmq: RMQService,
+    private api: GearApi,
   ) {
     this.programs = new Map();
     this.codes = new Map();
@@ -131,7 +133,7 @@ export class TempState {
     }
   }
 
-  async getMetahash(codeId: string) {
+  async getMetahashByCodeId(codeId: string) {
     if (this.metahashes.has(codeId)) {
       return this.metahashes.get(codeId);
     } else {
@@ -141,6 +143,10 @@ export class TempState {
       }
       return metahash;
     }
+  }
+
+  async getMetahashByProgramId(programId: HexString) {
+    return getMetahash(this.api.program, programId);
   }
 
   async save() {
@@ -165,7 +171,9 @@ export class TempState {
         }
 
         for (const program of this.programs.values()) {
-          program.metahash = await this.getMetahash(program.codeId);
+          program.metahash =
+            (await this.getMetahashByCodeId(program.codeId)) ||
+            (await this.getMetahashByProgramId(program.id as HexString));
         }
         await this.programService.save(Array.from(this.programs.values()));
       })(),

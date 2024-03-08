@@ -1,10 +1,8 @@
-import { GearApi, GearCommonCodeMetadata } from '@gear-js/api';
+import { GearApi } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
-import { FrameSystemEventRecord } from '@polkadot/types/lookup';
 import { SignedBlock } from '@polkadot/types/interfaces';
 import { logger } from '@gear-js/common';
-import { VoidFn } from '@polkadot/api/types';
-import { Vec, Option } from '@polkadot/types';
+import { ApiDecoration, VoidFn } from '@polkadot/api/types';
 
 import { Block } from '../database/entities';
 import { BlockService, CodeService, MessageService, ProgramService, StatusService } from '../services';
@@ -20,7 +18,6 @@ import {
 } from './handlers';
 import { HandlerParams } from '../common/types/indexer';
 import config from '../config';
-import { CronJob } from 'cron';
 
 const getMem = () => {
   const mem = process.memoryUsage();
@@ -47,7 +44,7 @@ export class GearIndexer {
     private rmq: RMQService,
     private statusService: StatusService,
   ) {
-    this.tempState = new TempState(programService, messageService, codeService, blockService, rmq);
+    this.tempState = new TempState(programService, messageService, codeService, blockService, rmq, this.api);
   }
 
   public async run(api: GearApi) {
@@ -65,19 +62,9 @@ export class GearIndexer {
     this.newBlocks = [];
     this.generatorLoop = true;
 
-    new CronJob(
-      '*/30 * * * *',
-      () => {
-        this.indexNotSyncedBlocks().then(() => {
-          logger.info('Not synced blocks have been indexed');
-        });
-      },
-      null,
-      true,
-      null,
-      null,
-      true,
-    );
+    this.indexNotSyncedBlocks().then(() => {
+      logger.info('Not synced blocks have been indexed');
+    });
 
     this.unsub = await this.api.derive.chain.subscribeNewHeads(({ number }) => {
       this.newBlocks.push(number.toNumber());
@@ -120,8 +107,6 @@ export class GearIndexer {
 
     this.isCheckingNotSynced = true;
 
-    await this.indexNotSyncedCodes();
-
     const status = await this.statusService.getStatus(this.genesis);
 
     const lastBlockNumber = status ? Number(status.height) : config.indexer.fromBlock;
@@ -134,6 +119,7 @@ export class GearIndexer {
       this.codeService,
       this.blockService,
       this.rmq,
+      this.api,
     );
 
     for (const blockNumbers of this.rangeGenerator(lastBlockNumber, currentBn.number.toNumber())) {
@@ -186,68 +172,6 @@ export class GearIndexer {
     this.isCheckingNotSynced = false;
   }
 
-  private async indexNotSyncedCodes() {
-    const allCodes = new Map(await this.api.query.gearProgram.metadataStorage.entries());
-
-    const codeIdStorageKeyMap = new Map([...allCodes.keys()].map((v) => [v.args[0].toHex(), v]));
-
-    logger.info('All codes', { count: allCodes.size });
-
-    const notSynced = await this.codeService.getAllNotInList(Array.from(codeIdStorageKeyMap.keys()), this.genesis);
-
-    if (notSynced.length === 0) {
-      return;
-    }
-
-    logger.info('Indexing not synced codes', { total: notSynced.length });
-
-    let tempState = new TempState(
-      this.programService,
-      this.messageService,
-      this.codeService,
-      this.blockService,
-      this.rmq,
-    );
-
-    try {
-      for (let i = 0; i < notSynced.length; i += config.indexer.batchSize) {
-        const start = Date.now();
-        tempState.newState(this.genesis);
-
-        const batch = notSynced.slice(i, i + config.indexer.batchSize);
-
-        await Promise.all(
-          batch.map(async (id) => {
-            const metadata = (await this.api.query.gearProgram.metadataStorage(id)) as Option<GearCommonCodeMetadata>;
-
-            if (metadata.isNone) {
-              return;
-            }
-
-            const blockNumber = metadata.unwrap().blockNumber.toNumber();
-
-            return this.indexBlock(blockNumber, tempState, true);
-          }),
-        );
-
-        logger.info(`${i}-${i + config.indexer.batchSize} not synced codes have been indexed`, {
-          count: batch.length,
-          time: (Date.now() - start) / 1000 + 'sec',
-          ...getMem(),
-        });
-      }
-
-      this.tempState.save();
-    } catch (error) {
-      logger.error('Error during indexing the data of the codes', {
-        codes: notSynced,
-        error: error.message,
-        stack: error.stack,
-      });
-    }
-    tempState = null;
-  }
-
   private async indexBlocks() {
     for await (const blockNumbers of this.blocksGenerator()) {
       if (this.api === null) {
@@ -289,38 +213,33 @@ export class GearIndexer {
     }
   }
 
-  private async indexBlock(blockNumber: number, tempState: TempState, onlyCode = false): Promise<void> {
+  private async indexBlock(blockNumber: number, tempState: TempState): Promise<void> {
     if (blockNumber === 0) return;
 
     let block: SignedBlock;
-    let events: Vec<FrameSystemEventRecord>;
+    let apiAt: ApiDecoration<'promise'>;
     let hash: string;
 
     try {
       hash = (await this.api.rpc.chain.getBlockHash(blockNumber)).toHex();
-      [block, events] = await Promise.all([
-        this.api.rpc.chain.getBlock(hash),
-        this.api.at(hash).then((apiAt) => apiAt.query.system.events()),
-      ]);
+      [block, apiAt] = await Promise.all([this.api.rpc.chain.getBlock(hash), this.api.at(hash)]);
     } catch (error) {
       logger.error('Unable to get block', { number: blockNumber, error: error.message });
       return;
     }
+
+    const [events, tsU64] = await Promise.all([apiAt.query.system.events(), apiAt.query.timestamp.now()]);
 
     const params: HandlerParams = {
       api: this.api,
       block,
       events,
       tempState,
-      timestamp: new Date((await this.api.blocks.getBlockTimestamp(block)).toNumber()),
+      timestamp: new Date(tsU64.toNumber()),
       status: this.api.createType('ExtrinsicStatus', { finalized: block.block.header.hash.toHex() }),
       blockHash: hash,
       genesis: this.genesis,
     };
-
-    if (onlyCode) {
-      return handleCodeTxs(params);
-    }
 
     await Promise.all([
       handleCodeTxs(params),
