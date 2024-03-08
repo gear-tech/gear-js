@@ -43,12 +43,19 @@ export class GearIndexer {
     private blockService: BlockService,
     private rmq: RMQService,
     private statusService: StatusService,
-  ) {
-    this.tempState = new TempState(programService, messageService, codeService, blockService, rmq, this.api);
-  }
+  ) {}
 
   public async run(api: GearApi) {
     this.api = api;
+
+    this.tempState = new TempState(
+      this.programService,
+      this.messageService,
+      this.codeService,
+      this.blockService,
+      this.rmq,
+      this.api,
+    );
 
     this.genesis = this.api.genesisHash.toHex();
 
