@@ -11,7 +11,7 @@ import {
 } from '@gear-js/common';
 
 import { ProgramNotFound } from '../common/errors';
-import { Code, Program } from '../database/entities';
+import { Program } from '../database/entities';
 import { PAGINATION_LIMIT } from '../common';
 
 export class ProgramService {
@@ -41,6 +41,7 @@ export class ProgramService {
     toDate,
     fromDate,
     status,
+    codeId,
   }: GetAllProgramsParams): Promise<GetAllProgramsResult> {
     const commonOptions: FindOptionsWhere<Program> = { genesis };
     let options: FindOptionsWhere<Program>[] | FindOptionsWhere<Program>;
@@ -59,6 +60,10 @@ export class ProgramService {
 
     if (fromDate || toDate) {
       commonOptions.timestamp = Between(new Date(fromDate), new Date(toDate));
+    }
+
+    if (codeId) {
+      commonOptions.codeId = codeId;
     }
 
     if (query) {

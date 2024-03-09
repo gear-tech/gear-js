@@ -296,6 +296,7 @@ Get list of programs.
 - `fromDate` (string, optional): The start date for the range within which to search for programs. The date should be in ISO 8601 format (YYYY-MM-DD)
 - `toDate` (string, optional): The end date for the range within which to search for programs. The date should be in ISO 8601 format (YYYY-MM-DD).
 - `owner` (string, optional): The public key of the user who created the program. Use this to filter programs by uploader.
+- `codeId` (string, optional): The id of the code that the program uses.
 - `status` (string | string[], optional): The status of the program. Use this to filter programs by status. Possible values are `active`, `inactive`, `programSet`, `exited`, `paused`.
 
 #### Response
