@@ -34,14 +34,13 @@ const MessageInfo = ({ metadata, message, isLoading }: Props) => {
     let payload: AnyJson | Codec;
 
     try {
-      if (message.exitCode) {
+      if (!message.exitCode) {
+        payload = metadata
+          ? getDecodedMessagePayload(metadata, message)
+          : CreateType.create('Bytes', message.payload).toHuman();
+      } else {
         payload = CreateType.create('String', message.payload).toHuman();
-        return;
       }
-
-      payload = metadata
-        ? getDecodedMessagePayload(metadata, message)
-        : CreateType.create('Bytes', message.payload).toHuman();
     } catch (error) {
       alert.error(String(error));
 
