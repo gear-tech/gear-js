@@ -102,10 +102,8 @@ const useMetaOnUpload = (isCode?: boolean) => {
 
     setIsUploadedMetaReady(false);
 
-    const codeId = generateCodeHash(optBuffer);
-
     api.code
-      .metaHash(codeId)
+      .metaHashFromWasm(optBuffer)
       .then((hash) => getMetadata(hash))
       .then(({ result }) => result.hex && setUploadedMetadata(result.hex))
       .catch(({ code, message }: RPCError) => code !== RPCErrorCode.MetadataNotFound && alert.error(message))

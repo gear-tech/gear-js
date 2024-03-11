@@ -17,7 +17,6 @@ type Props = {
 };
 
 const MessagesList = ({ messages, programNames, isLoading, totalCount, loadMorePrograms }: Props) => {
-  console.log('programNames: ', programNames);
   const hasMore = !isLoading && messages.length < totalCount;
   const isEmpty = !(isLoading || totalCount);
   const isLoaderShowing = isEmpty || (!totalCount && isLoading);
