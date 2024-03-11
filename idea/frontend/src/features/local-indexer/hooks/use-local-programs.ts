@@ -32,7 +32,7 @@ function useLocalPrograms() {
       (program, nextProgram) => Date.parse(nextProgram.timestamp || '0') - Date.parse(program.timestamp || '0'),
     );
 
-  const getLocalPrograms = (params: FetchProgramsParams) => {
+  const getLocalPrograms = async (params: FetchProgramsParams) => {
     if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
 
     return api.program

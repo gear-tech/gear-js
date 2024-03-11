@@ -9,7 +9,7 @@ import { LocalProgram, useLocalPrograms } from '@/features/local-indexer';
 
 import { useChain } from './context';
 
-const usePrograms = (query = '') => {
+const usePrograms = () => {
   const alert = useAlert();
 
   const { isDevChain } = useChain();
@@ -23,8 +23,7 @@ const usePrograms = (query = '') => {
   const setProgramsData = (data: ProgramPaginationModel, isReset: boolean) => {
     setTotalCount(data.count);
 
-    // such implementation to support StrictMode
-    setPrograms((prevState) => (isReset ? data.programs : prevState.concat(data.programs)));
+    setPrograms((prevState) => (isReset ? data.programs : [...prevState, ...data.programs]));
   };
 
   const handleGetPrograms = async (params?: FetchProgramsParams, isReset = false) => {
@@ -35,7 +34,7 @@ const usePrograms = (query = '') => {
 
     setIsLoading(true);
 
-    return getPrograms({ limit: DEFAULT_LIMIT, query, ...params })
+    return getPrograms({ limit: DEFAULT_LIMIT, ...params })
       .then(({ result }) => setProgramsData(result, isReset))
       .catch((error: Error) => {
         alert.error(error.message);
