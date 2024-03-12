@@ -59,7 +59,7 @@ export class GearProgramState extends GearProgramStorage {
       ? meta.version === MetadataVersion.V2Rust
         ? encodePayload(args.payload, meta, 'state', type)
         : []
-      : args.payload;
+      : (args.payload as Bytes | Uint8Array | number[] | string);
 
     const state = await this._api.rpc.gear.readState(args.programId, payload, args.at || null);
 
