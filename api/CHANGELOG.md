@@ -7,6 +7,7 @@ https://github.com/gear-tech/gear-js/pull/1503
 - Support calculateReplyForHandle rpc call according https://github.com/gear-tech/gear/pull/3790
 - Support new aliases for calculateGas rpc calls
 - Fix payload type
+- Bump polkadot-js dependencies to `10.12.2`
 
 ## 0.36.7
 
