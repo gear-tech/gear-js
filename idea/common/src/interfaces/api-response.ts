@@ -31,12 +31,6 @@ interface AddStateResult {
   state: IState;
 }
 
-interface GetMetaResult {
-  program: string;
-  hex: string;
-  data: string;
-}
-
 interface GetAllStateResult {
   states: IState[];
 }
@@ -54,7 +48,6 @@ interface IRpcResponse {
     | IMessage
     | IProgram[]
     | IMessage[]
-    | GetMetaResult
     | AddMetaResult
     | GetAllCodeResult
     | GetStatesResult;
@@ -73,7 +66,6 @@ export {
   AddMetaResult,
   AddStateResult,
   GetAllStateResult,
-  GetMetaResult,
   ProgramDataResult,
   IRpcResponse,
   IRpcError,

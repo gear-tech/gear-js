@@ -38,9 +38,9 @@ async function bootstrap() {
 
   await connectToNode(indexer, async (action, genesis) => {
     if (action === RMQServiceAction.ADD) {
-      await rmq.addGenesisQueue(genesis);
+      await rmq.addGenesisQ(genesis);
     } else {
-      await rmq.deleteGenesisQueue(genesis);
+      await rmq.removeGenesisQ();
     }
   });
 }

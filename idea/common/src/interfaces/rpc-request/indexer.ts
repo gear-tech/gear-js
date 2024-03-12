@@ -25,6 +25,7 @@ export interface GetOutgoingMessagesParams extends IGenesis, IPaginationParams, 
 export interface GetAllProgramsParams extends IGenesis, IPaginationParams, SearchParam, IDates {
   owner?: string;
   status?: ProgramStatus | ProgramStatus[];
+  codeId?: string;
 }
 
 export interface GetAllStateParams extends IGenesis, SearchParam {

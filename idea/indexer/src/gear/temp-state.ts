@@ -1,9 +1,10 @@
 import { CodeStatus, MessageReadReason } from '@gear-js/common';
 
-import { MessageStatus, ProgramStatus } from '../common';
+import { MessageStatus, ProgramStatus, getMetahash } from '../common';
 import { Block, Code, Message, Program } from '../database';
 import { BlockService, CodeService, MessageService, ProgramService } from '../services';
 import { RMQService } from '../rmq';
+import { GearApi, HexString } from '@gear-js/api';
 
 export class TempState {
   private programs: Map<string, Program>;
@@ -19,6 +20,7 @@ export class TempState {
     private codeService: CodeService,
     private blockService: BlockService,
     private rmq: RMQService,
+    private api: GearApi,
   ) {
     this.programs = new Map();
     this.codes = new Map();
@@ -44,7 +46,7 @@ export class TempState {
     this.codes.set(code.id, code);
     if (code.metahash) {
       this.metahashes.set(code.id, code.metahash);
-      this.rmq.sendMetahashToMetaStorage(code.metahash, code.id);
+      this.rmq.sendMetahashToMetaStorage(code.metahash);
     }
   }
 
@@ -131,7 +133,7 @@ export class TempState {
     }
   }
 
-  async getMetahash(codeId: string) {
+  async getMetahashByCodeId(codeId: string) {
     if (this.metahashes.has(codeId)) {
       return this.metahashes.get(codeId);
     } else {
@@ -143,13 +145,35 @@ export class TempState {
     }
   }
 
+  async getMetahashByProgramId(programId: HexString) {
+    return getMetahash(this.api.program, programId);
+  }
+
   async save() {
     await Promise.all([
-      this.codeService.save(Array.from(this.codes.values())),
+      (async () => {
+        const codeIds = Array.from(this.codes.keys());
+        const existingCodes = await this.codeService.getManyIds(codeIds, this.genesis);
+
+        for (const { _id, id } of existingCodes) {
+          this.codes.get(id)._id = _id;
+        }
+
+        await this.codeService.save(Array.from(this.codes.values()));
+      })(),
       this.messageService.save(Array.from(this.messages.values())),
       (async () => {
+        const programIds = Array.from(this.programs.keys());
+        const existingPrograms = await this.programService.getManyIds(programIds, this.genesis);
+
+        for (const { _id, id } of existingPrograms) {
+          this.programs.get(id)._id = _id;
+        }
+
         for (const program of this.programs.values()) {
-          program.metahash = await this.getMetahash(program.codeId);
+          program.metahash =
+            (await this.getMetahashByCodeId(program.codeId)) ||
+            (await this.getMetahashByProgramId(program.id as HexString));
         }
         await this.programService.save(Array.from(this.programs.values()));
       })(),

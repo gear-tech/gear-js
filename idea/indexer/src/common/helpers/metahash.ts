@@ -7,7 +7,6 @@ export async function getMetahash(entity: GearProgram | GearCode, id: HexString)
   try {
     return await entity.metaHash(id);
   } catch (error) {
-    console.log(error);
     return null;
   }
 }
