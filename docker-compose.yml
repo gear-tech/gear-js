@@ -46,7 +46,7 @@ services:
 
   redis:
     <<: *restart_policy
-    image: "redis:6.2.13-alpine"
+    image: "redis:6.2.14-alpine"
     healthcheck:
       <<: *healthcheck_defaults
       test: redis-cli ping
