@@ -1,5 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
-import { Code } from './code.entity';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class Meta {
@@ -12,9 +11,6 @@ export class Meta {
 
   @Column({ nullable: true })
   public hex: string;
-
-  @OneToMany(() => Code, (_) => _.meta)
-  public codes: Code[];
 
   @Column({ nullable: true })
   public hasState: boolean;

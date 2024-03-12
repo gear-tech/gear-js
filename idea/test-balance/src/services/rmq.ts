@@ -29,14 +29,12 @@ export class RMQService {
     this.mainChannel = await this.connection.createChannel();
     this.topicChannel = await this.connection.createChannel();
 
-    const directExchange = RMQExchange.DIRECT_EX;
-    const topicExchange = RMQExchange.TOPIC_EX;
     const genesis = this.gearService.genesisHash;
 
     const routingKey = `${RMQServices.TEST_BALANCE}.${genesis}`;
 
-    await this.mainChannel.assertExchange(directExchange, 'direct');
-    await this.mainChannel.assertExchange(topicExchange, 'topic');
+    await this.mainChannel.assertExchange(RMQExchange.DIRECT_EX, 'direct');
+    await this.mainChannel.assertExchange(RMQExchange.TOPIC_EX, 'topic');
 
     const assertTopicQueue = await this.topicChannel.assertQueue(`${RMQServices.TEST_BALANCE}t.${genesis}`, {
       durable: false,
@@ -48,8 +46,12 @@ export class RMQService {
       autoDelete: false,
       exclusive: false,
     });
-    await this.mainChannel.bindQueue(routingKey, directExchange, routingKey);
-    await this.mainChannel.bindQueue(assertTopicQueue.queue, topicExchange, `${RMQServices.TEST_BALANCE}.genesises`);
+    await this.mainChannel.bindQueue(routingKey, RMQExchange.DIRECT_EX, routingKey);
+    await this.mainChannel.bindQueue(
+      assertTopicQueue.queue,
+      RMQExchange.TOPIC_EX,
+      `${RMQServices.TEST_BALANCE}.genesises`,
+    );
 
     await this.directMessageConsumer(routingKey);
     await this.topicMessageConsumer(assertTopicQueue.queue);

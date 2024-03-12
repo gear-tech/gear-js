@@ -11,7 +11,7 @@ import {
 } from '@gear-js/common';
 
 import { ProgramNotFound } from '../common/errors';
-import { Code, Program } from '../database/entities';
+import { Program } from '../database/entities';
 import { PAGINATION_LIMIT } from '../common';
 
 export class ProgramService {
@@ -41,6 +41,7 @@ export class ProgramService {
     toDate,
     fromDate,
     status,
+    codeId,
   }: GetAllProgramsParams): Promise<GetAllProgramsResult> {
     const commonOptions: FindOptionsWhere<Program> = { genesis };
     let options: FindOptionsWhere<Program>[] | FindOptionsWhere<Program>;
@@ -59,6 +60,10 @@ export class ProgramService {
 
     if (fromDate || toDate) {
       commonOptions.timestamp = Between(new Date(fromDate), new Date(toDate));
+    }
+
+    if (codeId) {
+      commonOptions.codeId = codeId;
     }
 
     if (query) {
@@ -145,5 +150,32 @@ export class ProgramService {
     });
 
     return result;
+  }
+
+  public getManyIds(ids: string[], genesis: string) {
+    return this.repo.find({ where: { id: In(ids), genesis }, select: { id: true, _id: true } });
+  }
+
+  public async removeDuplicates(genesis: string) {
+    const programs = await this.repo.find({ where: { genesis }, select: { id: true, _id: true } });
+
+    const ids: [string, string][] = programs.map((program) => [program.id, program._id]);
+
+    const map = new Map<string, string>(ids);
+
+    if (ids.length === map.size) {
+      logger.info('No duplicates found', { genesis });
+      return;
+    }
+
+    const primaryKeysToKeep = new Set(map.values());
+
+    const toRemove = programs.filter((program) => !primaryKeysToKeep.has(program._id)).map(({ _id }) => _id);
+
+    logger.info('Removing duplicate programs', { genesis, size: toRemove.length });
+
+    for (let i = 0; i < toRemove.length; i += 5_000) {
+      await this.repo.delete({ _id: In(toRemove.slice(i, i + 5_000)), genesis });
+    }
   }
 }

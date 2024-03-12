@@ -296,6 +296,7 @@ Get list of programs.
 - `fromDate` (string, optional): The start date for the range within which to search for programs. The date should be in ISO 8601 format (YYYY-MM-DD)
 - `toDate` (string, optional): The end date for the range within which to search for programs. The date should be in ISO 8601 format (YYYY-MM-DD).
 - `owner` (string, optional): The public key of the user who created the program. Use this to filter programs by uploader.
+- `codeId` (string, optional): The id of the code that the program uses.
 - `status` (string | string[], optional): The status of the program. Use this to filter programs by status. Possible values are `active`, `inactive`, `programSet`, `exited`, `paused`.
 
 #### Response
@@ -620,6 +621,98 @@ Response:
     "value": "0",
     "type": "UserMessageSent",
     "readReason": null,
+  },
+  "id": 1
+}
+```
+
+</details>
+
+### `meta.get`
+
+Retrieves metadata for a specific metahash.
+
+<details>
+<summary>Click to expand!</summary>
+
+#### Parameters
+
+- `hash` (string): The metahash for which to retrieve metadata.
+
+#### Response
+
+- `result` (object): An object containing metadata for the metahash.
+
+#### Example
+
+Request:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "meta.get",
+  "params": {
+    "hash": "0xdc0329e1723e75bdc7984d2c608241390851d3212d6163109c20f80ebe18ecdc", 
+  },
+  "id": 1
+}
+```
+
+Response:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "hash": "0xdc0329e1723e75bdc7984d2c608241390851d3212d6163109c20f80ebe18ecdc",
+    "hex": "0x",
+  },
+  "id": 1
+}
+```
+
+</details>
+
+### `meta.add`
+
+Adds metadata for a specific metahash.
+
+<details>
+<summary>Click to expand!</summary>
+
+#### Parameters
+
+- `hash` (string): The metahash for which to retrieve metadata.
+- `hex` (string): The metadata in hex format.
+
+#### Response
+
+- `result` (object): An object containing metadata and metahash
+
+#### Example
+
+Request:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "meta.add",
+  "params": {
+    "hash": "0xdc0329e1723e75bdc7984d2c608241390851d3212d6163109c20f80ebe18ecdc", 
+    "hex": "0x"
+  },
+  "id": 1
+}
+```
+
+Response:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "hash": "0xdc0329e1723e75bdc7984d2c608241390851d3212d6163109c20f80ebe18ecdc",
+    "hex": "0x",
   },
   "id": 1
 }

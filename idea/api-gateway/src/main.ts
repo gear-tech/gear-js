@@ -7,8 +7,6 @@ const bootstrap = async () => {
   const rmq = new RMQService();
   await rmq.init();
 
-  logger.info('RabbitMQ connection established sucessfuly');
-
   changeStatus();
 
   const server = new Server(rmq);

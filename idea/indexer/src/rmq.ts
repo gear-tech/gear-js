@@ -13,12 +13,13 @@ import {
 
 import { BlockService, CodeService, MessageService, ProgramService, StateService } from './services';
 import config from './config';
+import { randomUUID } from 'node:crypto';
 
 export class RMQService {
   private mainChannel: Channel;
-  private topicChannel: Channel;
   private connection: Connection;
   private methods: Record<INDEXER_METHODS | INDEXER_INTERNAL_METHODS, (params: any) => void>;
+  private genesis: string;
 
   constructor(
     private blockService?: BlockService,
@@ -47,68 +48,63 @@ export class RMQService {
     };
   }
 
-  public async init(consumeMessages = true): Promise<void> {
+  public async init(): Promise<void> {
     this.connection = await connect(config.rabbitmq.url);
+
+    logger.info('RabbitMQ connection established', { url: config.rabbitmq.url });
 
     this.connection.on('close', (error) => {
       logger.error('RabbitMQ connection lost', { error });
       process.exit(1);
     });
 
-    if (!consumeMessages) {
-      return;
-    }
-
     try {
       this.mainChannel = await this.connection.createChannel();
-      this.topicChannel = await this.connection.createChannel();
 
       await this.mainChannel.assertExchange(RMQExchange.DIRECT_EX, 'direct');
-      await this.topicChannel.assertExchange(RMQExchange.TOPIC_EX, 'topic');
+      await this.mainChannel.assertExchange(RMQExchange.TOPIC_EX, 'topic');
+      await this.mainChannel.assertExchange(RMQExchange.INDXR_META, 'fanout', { autoDelete: true });
 
-      await this.mainChannel.assertExchange('INDXR_META', 'fanout', { autoDelete: true });
       await this.mainChannel.assertQueue('', {
         durable: true,
         exclusive: false,
         autoDelete: false,
       });
-      await this.mainChannel.bindQueue('', 'INDXR_META', '');
-      this.metaMsgConsumer();
+      await this.mainChannel.bindQueue('', RMQExchange.INDXR_META, '');
+
+      await this.metaMsgConsumer();
+      await this.genesisesQSetup();
     } catch (error) {
       logger.error('Failed to setup rabbitmq exchanges', { error });
       throw error;
     }
   }
 
-  public async deleteGenesisQueue(genesis: string) {
-    const routingKey = `${RMQServices.INDEXER}.${genesis}`;
-    const messageBuff = JSON.stringify({ service: RMQServices.INDEXER, action: RMQServiceAction.DELETE, genesis });
-    await this.mainChannel.unbindQueue(routingKey, RMQExchange.DIRECT_EX, routingKey);
-    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, Buffer.from(messageBuff));
+  public async removeGenesisQ() {
+    const genesis = this.genesis;
+    this.sendDeleteGenesis();
+    const qName = `${RMQServices.INDEXER}.${genesis}`;
+    this.genesis = null;
+    await this.mainChannel.unbindQueue(qName, RMQExchange.DIRECT_EX, qName);
   }
 
-  public async addGenesisQueue(genesis: string) {
-    const genesisQ = `${RMQServices.INDEXER}.${genesis}`;
-    await this.topicChannel.assertQueue(genesisQ, {
+  public async addGenesisQ(genesis: string) {
+    const qName = `${RMQServices.INDEXER}.${genesis}`;
+    this.genesis = genesis;
+
+    logger.info('Adding new queue', { qName });
+
+    await this.mainChannel.assertQueue(qName, {
       durable: false,
       exclusive: false,
       autoDelete: true,
     });
-    await this.mainChannel.bindQueue(genesisQ, RMQExchange.DIRECT_EX, genesisQ);
+    await this.mainChannel.bindQueue(qName, RMQExchange.DIRECT_EX, qName);
 
-    const topicQ = `${RMQServices.INDEXER}t.${genesis}`;
-    await this.topicChannel.assertQueue(topicQ, {
-      durable: false,
-      exclusive: false,
-      autoDelete: true,
-    });
-    await this.topicChannel.bindQueue(topicQ, RMQExchange.TOPIC_EX, `${RMQServices.INDEXER}.genesises`);
+    await this.directMsgConsumer(qName);
 
-    await this.directMsgConsumer(genesisQ);
-    await this.genesisesMsgConsumer(topicQ, genesis);
-
-    const msgBuff = JSON.stringify({ service: RMQServices.INDEXER, action: RMQServiceAction.ADD, genesis });
-    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, Buffer.from(msgBuff));
+    this.sendGenesis();
+    logger.info('Queue added', { qName });
   }
 
   private sendMsg(exchange: string, queue: string, params: any, correlationId?: string, method?: string): void {
@@ -165,17 +161,29 @@ export class RMQService {
     }
   }
 
-  private async genesisesMsgConsumer(queue: string, genesis: string): Promise<void> {
+  private async genesisesQSetup(): Promise<void> {
+    const qName = `${RMQServices.INDEXER}.${RMQQueue.GENESISES}`;
+
+    await this.mainChannel.assertQueue(qName, {
+      durable: false,
+      exclusive: false,
+      autoDelete: true,
+    });
+
+    await this.mainChannel.bindQueue(qName, RMQExchange.TOPIC_EX, qName);
+
     try {
-      await this.topicChannel.consume(
-        queue,
+      await this.mainChannel.consume(
+        qName,
         async (message) => {
           if (!message) {
             return;
           }
 
-          const messageBuff = JSON.stringify({ service: RMQServices.INDEXER, action: RMQServiceAction.ADD, genesis });
-          this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, Buffer.from(messageBuff));
+          logger.info('Genesis request');
+          if (this.genesis) {
+            this.sendGenesis();
+          }
         },
         { noAck: true },
       );
@@ -184,16 +192,39 @@ export class RMQService {
     }
   }
 
+  private sendGenesis() {
+    const correlationId = randomUUID();
+    const messageBuff = JSON.stringify({
+      service: RMQServices.INDEXER,
+      action: RMQServiceAction.ADD,
+      genesis: this.genesis,
+    });
+    logger.info('Send genesis', { genesis: this.genesis, correlationId });
+    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, Buffer.from(messageBuff), {
+      headers: { correlationId },
+    });
+  }
+
+  private sendDeleteGenesis() {
+    logger.info('Send delete genesis', { genesis: this.genesis });
+    const messageBuff = JSON.stringify({
+      service: RMQServices.INDEXER,
+      action: RMQServiceAction.DELETE,
+      genesis: this.genesis,
+    });
+    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, Buffer.from(messageBuff));
+  }
+
   @FormResponse
   private async handleIncomingMsg(method: INDEXER_METHODS, params: any): Promise<any> {
     return this.methods[method](params);
   }
 
-  public sendMetahashToMetaStorage(metahash: string, codeId: string) {
+  public sendMetahashToMetaStorage(metahash: string) {
     this.sendMsg(
       RMQExchange.DIRECT_EX,
       RMQServices.META_STORAGE,
-      { metahash, codeId },
+      { metahash },
       null,
       META_STORAGE_INTERNAL_METHODS.META_HASH_ADD,
     );

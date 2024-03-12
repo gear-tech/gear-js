@@ -1,5 +1,12 @@
-import { AddCodeNameParams, CodeStatus, GetAllCodeParams, GetAllCodeResult, GetCodeParams } from '@gear-js/common';
-import { Between, DataSource, FindOptionsWhere, ILike, In, Repository } from 'typeorm';
+import {
+  AddCodeNameParams,
+  CodeStatus,
+  GetAllCodeParams,
+  GetAllCodeResult,
+  GetCodeParams,
+  logger,
+} from '@gear-js/common';
+import { Between, DataSource, FindOptionsWhere, ILike, In, Not, Repository } from 'typeorm';
 
 import { Code } from '../database/entities';
 import { CodeNotFound, PAGINATION_LIMIT } from '../common';
@@ -117,5 +124,38 @@ export class CodeService {
 
   public async hasState(hashes: Array<string>) {
     await this.repo.update({ metahash: In(hashes) }, { hasState: true });
+  }
+
+  public getManyIds(ids: string[], genesis: string): Promise<Code[]> {
+    return this.repo.find({ where: { id: In(ids), genesis }, select: { id: true, _id: true } });
+  }
+
+  public async removeDuplicates(genesis: string) {
+    const codes = await this.repo.find({ where: { genesis }, select: { id: true, _id: true } });
+
+    const ids: [string, string][] = codes.map((c) => [c.id, c._id]);
+
+    const map = new Map<string, string>(ids);
+
+    if (ids.length === map.size) {
+      logger.info('No duplicates found', { genesis });
+      return;
+    }
+
+    const primaryKeysToKeep = new Set(map.values());
+
+    const toRemove = codes.filter((c) => !primaryKeysToKeep.has(c._id));
+
+    logger.info('Removing duplicate programs', { genesis, size: toRemove.length });
+
+    await this.repo.remove(toRemove, { chunk: 5_000 });
+  }
+
+  public async getAllNotInList(ids: string[], genesis: string): Promise<string[]> {
+    const codes = await this.repo.find({ where: { id: In(ids), genesis }, select: { id: true } });
+
+    const syncedIds = codes.map((c) => c.id);
+
+    return ids.filter((id) => !syncedIds.includes(id));
   }
 }

@@ -58,7 +58,7 @@ export class BlockService {
 
   async getNotSynced(numbers: number[]) {
     const blocks = await this.repo.find({
-      where: { number: In(numbers.map((v) => v + '')) },
+      where: { number: In(numbers.map(String)) },
       select: { number: true },
     });
 

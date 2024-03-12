@@ -1,10 +1,8 @@
 import { GearApi } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
-import { FrameSystemEventRecord } from '@polkadot/types/lookup';
 import { SignedBlock } from '@polkadot/types/interfaces';
 import { logger } from '@gear-js/common';
-import { VoidFn } from '@polkadot/api/types';
-import { Vec } from '@polkadot/types';
+import { ApiDecoration, VoidFn } from '@polkadot/api/types';
 
 import { Block } from '../database/entities';
 import { BlockService, CodeService, MessageService, ProgramService, StatusService } from '../services';
@@ -20,7 +18,6 @@ import {
 } from './handlers';
 import { HandlerParams } from '../common/types/indexer';
 import config from '../config';
-import { CronJob } from 'cron';
 
 const getMem = () => {
   const mem = process.memoryUsage();
@@ -46,33 +43,35 @@ export class GearIndexer {
     private blockService: BlockService,
     private rmq: RMQService,
     private statusService: StatusService,
-  ) {
-    this.tempState = new TempState(programService, messageService, codeService, blockService, rmq);
-  }
+  ) {}
 
   public async run(api: GearApi) {
     this.api = api;
 
+    this.tempState = new TempState(
+      this.programService,
+      this.messageService,
+      this.codeService,
+      this.blockService,
+      this.rmq,
+      this.api,
+    );
+
     this.genesis = this.api.genesisHash.toHex();
+
+    await Promise.all([
+      this.programService.removeDuplicates(this.genesis),
+      this.codeService.removeDuplicates(this.genesis),
+    ]);
 
     await this.statusService.init(this.genesis);
 
     this.newBlocks = [];
     this.generatorLoop = true;
 
-    new CronJob(
-      '*/30 * * * *',
-      () => {
-        this.indexNotSyncedBlocks().then(() => {
-          logger.info('Not synced blocks have been indexed');
-        });
-      },
-      null,
-      true,
-      null,
-      null,
-      true,
-    );
+    this.indexNotSyncedBlocks().then(() => {
+      logger.info('Not synced blocks have been indexed');
+    });
 
     this.unsub = await this.api.derive.chain.subscribeNewHeads(({ number }) => {
       this.newBlocks.push(number.toNumber());
@@ -127,13 +126,14 @@ export class GearIndexer {
       this.codeService,
       this.blockService,
       this.rmq,
+      this.api,
     );
 
     for (const blockNumbers of this.rangeGenerator(lastBlockNumber, currentBn.number.toNumber())) {
       const notSynced = await this.blockService.getNotSynced(blockNumbers);
 
       if (notSynced.length === 0) {
-        await this.statusService.update(this.genesis, blockNumbers.at(-1).toString());
+        await this.statusService.update(this.genesis, Math.max(...blockNumbers).toString());
         continue;
       }
 
@@ -142,7 +142,7 @@ export class GearIndexer {
       tempState.newState(this.genesis);
 
       try {
-        await Promise.all(notSynced.map((blockNumber) => this.indexBlock(blockNumber, this.tempState)));
+        await Promise.all(notSynced.map((blockNumber) => this.indexBlock(blockNumber, tempState)));
       } catch (error) {
         logger.error('Error during indexing the data of the blocks', {
           blocks: notSynced,
@@ -153,7 +153,7 @@ export class GearIndexer {
       }
 
       try {
-        const result = await this.tempState.save();
+        const result = await tempState.save();
 
         const [min, max] = [Math.min(...notSynced) + '', Math.max(...notSynced) + ''];
 
@@ -224,26 +224,25 @@ export class GearIndexer {
     if (blockNumber === 0) return;
 
     let block: SignedBlock;
-    let events: Vec<FrameSystemEventRecord>;
+    let apiAt: ApiDecoration<'promise'>;
     let hash: string;
 
     try {
       hash = (await this.api.rpc.chain.getBlockHash(blockNumber)).toHex();
-      [block, events] = await Promise.all([
-        this.api.rpc.chain.getBlock(hash),
-        this.api.at(hash).then((apiAt) => apiAt.query.system.events()),
-      ]);
+      [block, apiAt] = await Promise.all([this.api.rpc.chain.getBlock(hash), this.api.at(hash)]);
     } catch (error) {
       logger.error('Unable to get block', { number: blockNumber, error: error.message });
       return;
     }
+
+    const [events, tsU64] = await Promise.all([apiAt.query.system.events(), apiAt.query.timestamp.now()]);
 
     const params: HandlerParams = {
       api: this.api,
       block,
       events,
       tempState,
-      timestamp: new Date((await this.api.blocks.getBlockTimestamp(block)).toNumber()),
+      timestamp: new Date(tsU64.toNumber()),
       status: this.api.createType('ExtrinsicStatus', { finalized: block.block.header.hash.toHex() }),
       blockHash: hash,
       genesis: this.genesis,
