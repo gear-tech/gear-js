@@ -14,13 +14,13 @@ const useMetadataUpload = () => {
   const alert = useAlert();
   const { isDevChain } = useChain();
 
-  const upload = async (params: Omit<ParamsToUploadMeta, 'codeHash' | 'metaHex'> & { metahash: HexString }) => {
-    const { metahash, reject, resolve } = params;
+  const upload = async (params: Omit<ParamsToUploadMeta, 'codeHash'> & { metahash: HexString }) => {
+    const { metahash, metaHex, reject, resolve } = params;
 
     try {
       if (!isApiReady) throw new Error('API is not initialized');
 
-      const { error } = await addMetadata(metahash);
+      const { error } = await addMetadata(metahash, metaHex);
       if (error) throw new Error(error.message);
 
       alert.success('Metadata saved successfully');
@@ -52,7 +52,7 @@ const useMetadataUpload = () => {
         return;
       }
 
-      upload({ metahash, programId, reject, resolve });
+      upload({ metahash, metaHex, programId, reject, resolve });
     } catch (error) {
       const message = (error as Error).message;
 

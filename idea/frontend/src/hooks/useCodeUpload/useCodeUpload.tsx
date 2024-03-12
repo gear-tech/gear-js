@@ -63,7 +63,7 @@ const useCodeUpload = () => {
                 if (!metaHex) return;
                 const hash = await api.code.metaHash(id);
 
-                addMetadata(hash);
+                addMetadata(hash, metaHex);
               })
               .catch(({ message }: Error) => alert.error(message));
           }, UPLOAD_METADATA_TIMEOUT);

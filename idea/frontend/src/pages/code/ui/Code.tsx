@@ -47,7 +47,7 @@ const Code = () => {
         if (!isApiReady) throw new Error('API is not initialized');
 
         const hash = await api.code.metaHash(id);
-        addMetadata(hash);
+        addMetadata(hash, metaHex);
       })
       .then(() => {
         setMetadata(ProgramMetadata.from(metaHex));
