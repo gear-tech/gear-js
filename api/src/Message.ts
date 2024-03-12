@@ -317,7 +317,7 @@ export class GearMessage extends GearTransaction {
    * @example
    * ```javascript
    * const programId = '0x..';
-   * const origin = '0x...;
+   * const origin = '0x...';
    * const meta = ProgramMetadata.from('0x...');
    * const result = await api.message.calculateReply({
    *   origin,
