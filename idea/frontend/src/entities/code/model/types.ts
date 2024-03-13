@@ -1,6 +1,5 @@
 import { HexString } from '@gear-js/api';
 
-import { IProgram } from '@/features/program';
 import { IBase } from '@/shared/types';
 
 import { CodeStatus } from './consts';
@@ -9,10 +8,9 @@ interface ICode extends IBase {
   id: HexString;
   name: string;
   status: CodeStatus;
-  expiration: string | null;
-  uploadedBy: string;
   metahash: HexString | null;
-  programs?: IProgram[];
+  hasState: boolean;
+  uploadedBy?: HexString;
 }
 
 export type { ICode };

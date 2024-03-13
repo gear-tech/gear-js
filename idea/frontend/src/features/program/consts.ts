@@ -1,24 +1,21 @@
 enum ProgramStatus {
-  Unknown = 'unknown',
   Active = 'active',
+  Inactive = 'inactive',
+  ProgramSet = 'programSet',
   Terminated = 'terminated',
-  InitFailed = 'init_failed',
   Paused = 'paused',
   Exited = 'exited',
-
-  // TODO: old ones
-  // Success = 'success',
-  // Failed = 'failed',
-  // InProgress = 'in progress',
+  Unknown = 'unknown',
 }
 
 const PROGRAM_STATUS_NAME = {
-  [ProgramStatus.Unknown as const]: 'Unknown',
   [ProgramStatus.Active as const]: 'Active',
+  [ProgramStatus.Inactive as const]: 'Inactive',
+  [ProgramStatus.ProgramSet as const]: 'Program Set',
   [ProgramStatus.Terminated as const]: 'Terminated',
-  [ProgramStatus.InitFailed as const]: 'Terminated',
   [ProgramStatus.Paused as const]: 'Paused',
   [ProgramStatus.Exited as const]: 'Exited',
+  [ProgramStatus.Unknown as const]: 'Unknown',
 };
 
 export { ProgramStatus, PROGRAM_STATUS_NAME };

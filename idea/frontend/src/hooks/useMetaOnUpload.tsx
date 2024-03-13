@@ -4,18 +4,20 @@ import { HexString } from '@polkadot/util/types';
 import { useState, useEffect } from 'react';
 import { generatePath, useLocation } from 'react-router-dom';
 
-import { fetchMetadata, getLocalMetadata } from '@/api';
 import { readFileAsync } from '@/shared/helpers';
 import { CustomLink } from '@/shared/ui/customLink';
 import { routes } from '@/shared/config';
 import { RPCError, RPCErrorCode } from '@/shared/services/rpcService';
-
-import { useChain } from './context';
+import { useMetadata } from '@/features/metadata';
 
 type MetadataState = {
   value: ProgramMetadata | undefined;
   hex: HexString | undefined;
   isUploaded: boolean;
+};
+
+type Location = {
+  state: { file: File | undefined } | null;
 };
 
 const initMeta = {
@@ -35,11 +37,11 @@ const getCodeExistsAlert = (codeId: HexString) => (
 
 const useMetaOnUpload = (isCode?: boolean) => {
   const { api, isApiReady } = useApi();
-  const { isDevChain } = useChain();
+  const { getMetadata } = useMetadata();
   const alert = useAlert();
 
-  const { state } = useLocation();
-  const initOptFile = state?.file as File | undefined;
+  const { state } = useLocation() as Location;
+  const initOptFile = state?.file;
 
   const [optFile, setOptFile] = useState(initOptFile);
   const [optBuffer, setOptBuffer] = useState<Buffer>();
@@ -100,17 +102,9 @@ const useMetaOnUpload = (isCode?: boolean) => {
 
     setIsUploadedMetaReady(false);
 
-    const codeHash = generateCodeHash(optBuffer);
-
-    const getMetadata = () =>
-      isDevChain
-        ? api.code
-            .metaHash(codeHash)
-            .then((hash) => getLocalMetadata({ hash }))
-            .catch(() => fetchMetadata({ codeHash }))
-        : fetchMetadata({ codeHash });
-
-    getMetadata()
+    api.code
+      .metaHashFromWasm(optBuffer)
+      .then((hash) => getMetadata(hash))
       .then(({ result }) => result.hex && setUploadedMetadata(result.hex))
       .catch(({ code, message }: RPCError) => code !== RPCErrorCode.MetadataNotFound && alert.error(message))
       .finally(() => setIsUploadedMetaReady(true));

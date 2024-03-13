@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { useAlert } from '@gear-js/react-hooks';
+import { useState } from 'react';
 
 import { FetchProgramsParams, ProgramPaginationModel } from '@/api/program/types';
 import { IProgram } from '@/features/program';
@@ -9,7 +9,7 @@ import { LocalProgram, useLocalPrograms } from '@/features/local-indexer';
 
 import { useChain } from './context';
 
-const usePrograms = (initLoading = true) => {
+const usePrograms = () => {
   const alert = useAlert();
 
   const { isDevChain } = useChain();
@@ -17,17 +17,16 @@ const usePrograms = (initLoading = true) => {
   const getPrograms = isDevChain ? getLocalPrograms : fetchPrograms;
 
   const [programs, setPrograms] = useState<(IProgram | LocalProgram)[]>([]);
-  const [isLoading, setIsLoading] = useState(initLoading);
+  const [isLoading, setIsLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
 
   const setProgramsData = (data: ProgramPaginationModel, isReset: boolean) => {
     setTotalCount(data.count);
 
-    // such implementation to support StrictMode
-    setPrograms((prevState) => (isReset ? data.programs : prevState.concat(data.programs)));
+    setPrograms((prevState) => (isReset ? data.programs : [...prevState, ...data.programs]));
   };
 
-  const handleGetPrograms = (params?: FetchProgramsParams, isReset = false) => {
+  const handleGetPrograms = async (params?: FetchProgramsParams, isReset = false) => {
     if (isReset) {
       setTotalCount(0);
       setPrograms([]);

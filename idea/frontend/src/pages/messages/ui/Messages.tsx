@@ -12,7 +12,7 @@ import styles from './Messages.module.scss';
 const Messages = () => {
   const { account } = useAccount();
 
-  const { messages, isLoading, totalCount, fetchMessages } = useMessages();
+  const { messages, programNames, isLoading, totalCount, fetchMessages } = useMessages(true);
   const { params, loadData, changeParams } = useDataLoading<RequestParams>({
     defaultParams: DEFAULT_REQUEST_PARAMS,
     fetchData: fetchMessages,
@@ -56,7 +56,13 @@ const Messages = () => {
     <div className={styles.pageWrapper}>
       <section className={styles.messagesSection}>
         <h2 className={styles.heading}>{heading}</h2>
-        <MessagesList messages={messages} totalCount={totalCount} isLoading={isLoading} loadMorePrograms={loadData} />
+        <MessagesList
+          messages={messages}
+          programNames={programNames}
+          totalCount={totalCount}
+          isLoading={isLoading}
+          loadMorePrograms={loadData}
+        />
       </section>
       <SearchSettings isLoggedIn={isLoggedIn} initialValues={initialValues} onSubmit={handleParamsChange} />
     </div>

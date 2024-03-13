@@ -10,7 +10,7 @@ const useWaitlist = () => {
   const [waitlist, setWaitlist] = useState<WaitlistItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchWaitlist = (programId: HexString) => {
+  const fetchWaitlist = async (programId: HexString) => {
     if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
 
     return api.waitlist

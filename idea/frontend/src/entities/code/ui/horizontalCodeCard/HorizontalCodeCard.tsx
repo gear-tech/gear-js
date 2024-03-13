@@ -41,12 +41,7 @@ const HorizontalCodeCard = memo(({ code }: Props) => {
           text="Create program"
         />
 
-        <ActionLink
-          to={routes.programs}
-          icon={RelatedrelatedProgramsSVG}
-          text="Related programs"
-          state={{ query: codeId }}
-        />
+        <ActionLink to={routes.programs} icon={RelatedrelatedProgramsSVG} text="Related programs" state={{ codeId }} />
       </div>
     </article>
   );

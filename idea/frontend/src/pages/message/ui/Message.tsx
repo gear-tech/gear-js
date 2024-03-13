@@ -9,22 +9,16 @@ import { Header } from './header';
 
 const Message = () => {
   const { messageId } = useParams() as PageParams;
+  const { message, isLoading } = useMessage(messageId);
+  const { metahash, exitCode, timestamp } = message || {};
 
-  const { message, isLoading: isMesageLoading } = useMessage(messageId);
-  const programId = message?.program?.id;
-  const metaHash = message?.program?.metahash;
-  const isProgram = !!programId;
-
-  const { metadata, isMetadataReady } = useMetadata(metaHash);
+  const { metadata, isMetadataReady } = useMetadata(metahash);
 
   return (
     <div>
-      <Header messageId={messageId} exitCode={message?.exitCode} timestamp={message?.timestamp} />
-      <MessageInfo
-        metadata={metadata}
-        message={message}
-        isLoading={isMesageLoading || (isProgram && !isMetadataReady)}
-      />
+      <Header messageId={messageId} exitCode={exitCode} timestamp={timestamp} />
+
+      <MessageInfo metadata={metadata} message={message} isLoading={isLoading || !isMetadataReady} />
     </div>
   );
 };

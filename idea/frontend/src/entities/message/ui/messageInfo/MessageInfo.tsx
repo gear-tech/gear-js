@@ -28,25 +28,16 @@ const MessageInfo = ({ metadata, message, isLoading }: Props) => {
   const [decodedPayload, setDecodedPayload] = useState<string>();
 
   useEffect(() => {
-    if (isLoading) {
-      return;
-    }
-
-    if (!message) {
-      setDecodedPayload('');
-
-      return;
-    }
+    if (isLoading) return;
+    if (!message) return setDecodedPayload('');
 
     let payload: AnyJson | Codec;
 
     try {
       if (!message.exitCode) {
-        if (metadata) {
-          payload = getDecodedMessagePayload(metadata, message);
-        } else {
-          payload = CreateType.create('Bytes', message.payload).toHuman();
-        }
+        payload = metadata
+          ? getDecodedMessagePayload(metadata, message)
+          : CreateType.create('Bytes', message.payload).toHuman();
       } else {
         payload = CreateType.create('String', message.payload).toHuman();
       }

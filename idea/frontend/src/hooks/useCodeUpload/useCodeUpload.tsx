@@ -59,7 +59,12 @@ const useCodeUpload = () => {
             const id = codeId;
 
             addCodeName({ id, name: name || id })
-              .then(() => metaHex && addMetadata({ codeHash: id, hex: metaHex }))
+              .then(async () => {
+                if (!metaHex) return;
+                const hash = await api.code.metaHash(id);
+
+                addMetadata(hash, metaHex);
+              })
               .catch(({ message }: Error) => alert.error(message));
           }, UPLOAD_METADATA_TIMEOUT);
         } else if (status.isInvalid) {

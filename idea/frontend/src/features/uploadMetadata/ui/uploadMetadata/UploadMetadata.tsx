@@ -65,9 +65,9 @@ const UploadMetadata = ({ metadata, isInputDisabled, isLoading, onReset, onUploa
           if (isHex(result)) {
             onUpload(result);
           } else if (typeof result === 'string') {
-            const hexResult = `0x${result}` as HexString;
+            const hexResult = `0x${result}`;
 
-            onUpload(hexResult);
+            onUpload(hexResult as HexString);
           } else throw new Error('Error reading meta file');
         }
       };

@@ -1,4 +1,4 @@
-import { useAlert } from '@gear-js/react-hooks';
+import { useAlert, useApi } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 import { ProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
 
 import { addMetadata, addCodeName, getCode } from '@/api';
-import { useChain, useModal } from '@/hooks';
+import { useChain, useDataLoading, useModal, usePrograms } from '@/hooks';
 import { BackButton } from '@/shared/ui/backButton';
 import { absoluteRoutes } from '@/shared/config';
 import { UILink } from '@/shared/ui/uiLink';
@@ -23,13 +23,16 @@ type Params = { codeId: HexString };
 
 const Code = () => {
   const { codeId } = useParams() as Params;
+  const { api, isApiReady } = useApi();
   const alert = useAlert();
 
   const { isDevChain } = useChain();
   const { showModal, closeModal } = useModal();
 
+  const { programs, isLoading, fetchPrograms } = usePrograms();
+  const { loadData } = useDataLoading({ defaultParams: { codeId }, fetchData: fetchPrograms });
+
   const [code, setCode] = useState<ICode>();
-  const programs = code?.programs || [];
   const isCodeReady = code !== undefined;
 
   const { metadata, isMetadataReady, setMetadata } = useMetadata(code?.metahash);
@@ -40,7 +43,12 @@ const Code = () => {
     const id = codeId;
 
     addCodeName({ id, name })
-      .then(() => addMetadata({ codeHash: id, hex: metaHex }))
+      .then(async () => {
+        if (!isApiReady) throw new Error('API is not initialized');
+
+        const hash = await api.code.metaHash(id);
+        addMetadata(hash, metaHex);
+      })
       .then(() => {
         setMetadata(ProgramMetadata.from(metaHex));
         setCodeName(name);
@@ -80,7 +88,12 @@ const Code = () => {
 
         <div>
           <h2 className={styles.heading}>Programs</h2>
-          <ProgramsList programs={programs} totalCount={programs.length} isLoading={!isCodeReady} />
+          <ProgramsList
+            programs={programs}
+            totalCount={programs.length}
+            isLoading={isLoading}
+            loadMorePrograms={loadData}
+          />
         </div>
       </div>
 

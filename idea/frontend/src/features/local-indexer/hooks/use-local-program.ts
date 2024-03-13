@@ -18,28 +18,26 @@ function useLocalProgram() {
     const name = id;
     const status = await getProgramStatus(id);
 
-    let codeHash: HexString | null;
+    let codeId: HexString | null;
     let metahash: HexString | null;
     let metaHex: HexString | null | undefined;
 
     // cuz error on terminated program
     try {
-      codeHash = await api.program.codeHash(id);
+      codeId = await api.program.codeHash(id);
     } catch {
-      codeHash = null;
+      codeId = null;
     }
 
-    const code = codeHash ? { id: codeHash } : undefined;
-
     try {
-      metahash = await api.code.metaHash(codeHash || id);
+      metahash = await api.code.metaHash(codeId || id);
     } catch {
       metahash = null;
     }
 
     // metadata is retrived via useMetadata, so no need to log errors here
     try {
-      metaHex = metahash ? (await getMetadata({ hash: metahash })).result.hex : undefined;
+      metaHex = metahash ? (await getMetadata(metahash)).result.hex : undefined;
     } catch {
       metaHex = null;
     }
@@ -49,7 +47,7 @@ function useLocalProgram() {
     const metadata = metaHex ? ProgramMetadata.from(metaHex) : undefined;
     const hasState = isState(metadata);
 
-    return { id, name, status, code, metahash, hasState };
+    return { id, name, status, codeId, metahash, hasState };
   };
 
   const getLocalProgram = async (id: HexString) => {

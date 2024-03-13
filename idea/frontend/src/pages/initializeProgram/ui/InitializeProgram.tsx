@@ -5,8 +5,7 @@ import { useAlert, useApi } from '@gear-js/react-hooks';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { fetchMetadata, getLocalMetadata } from '@/api';
-import { useChain, useProgramActions } from '@/hooks';
+import { useProgramActions } from '@/hooks';
 import { Subheader } from '@/shared/ui/subheader';
 import { UploadMetadata } from '@/features/uploadMetadata';
 import { Payload } from '@/hooks/useProgramActions/types';
@@ -15,6 +14,7 @@ import { BackButton } from '@/shared/ui/backButton';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import { GasMethod } from '@/shared/config';
 import { RPCError, RPCErrorCode } from '@/shared/services/rpcService';
+import { useMetadata } from '@/features/metadata';
 
 import { PageParams } from '../model';
 import styles from './InitializeProgram.module.scss';
@@ -25,7 +25,7 @@ const InitializeProgram = () => {
   const { api, isApiReady } = useApi();
   const alert = useAlert();
 
-  const { isDevChain } = useChain();
+  const { getMetadata } = useMetadata();
   const { createProgram } = useProgramActions();
 
   // TODO: think about combining w/ useMetaOnUpload hook
@@ -70,17 +70,9 @@ const InitializeProgram = () => {
   useEffect(() => {
     if (!isApiReady) return;
 
-    const codeHash = codeId;
-
-    const getMetadata = () =>
-      isDevChain
-        ? api.code
-            .metaHash(codeId)
-            .then((hash) => getLocalMetadata({ hash }))
-            .catch(() => fetchMetadata({ codeHash }))
-        : fetchMetadata({ codeHash });
-
-    getMetadata()
+    api.code
+      .metaHash(codeId)
+      .then((hash) => getMetadata(hash))
       .then(({ result }) => result.hex && setUploadedMetaHex(result.hex))
       .catch(({ code, message }: RPCError) => code !== RPCErrorCode.MetadataNotFound && alert.error(message))
       .finally(() => setIsUploadedMetaReady(true));

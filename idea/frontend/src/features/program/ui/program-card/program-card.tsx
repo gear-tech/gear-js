@@ -52,7 +52,7 @@ const ProgramCard = memo(({ program, vertical }: Props) => {
               text="Send Message"
             />
 
-            {'hasState' in program && program.hasState && (
+            {program.hasState && (
               <ActionLink to={generatePath(routes.state, { programId })} icon={readSVG} text="Read State" />
             )}
 

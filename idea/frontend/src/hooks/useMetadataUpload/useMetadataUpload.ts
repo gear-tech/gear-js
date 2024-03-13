@@ -1,5 +1,4 @@
 import { useAlert, useAccount, useApi } from '@gear-js/react-hooks';
-import { HexString } from '@polkadot/util/types';
 
 import { addMetadata } from '@/api';
 import { uploadLocalMetadata } from '@/api/LocalDB';
@@ -7,6 +6,7 @@ import { ACCOUNT_ERRORS } from '@/shared/config';
 
 import { useChain } from '../context';
 import { ParamsToUploadMeta } from './types';
+import { HexString } from '@gear-js/api';
 
 const useMetadataUpload = () => {
   const { api, isApiReady } = useApi();
@@ -14,16 +14,16 @@ const useMetadataUpload = () => {
   const alert = useAlert();
   const { isDevChain } = useChain();
 
-  const upload = async (params: ParamsToUploadMeta) => {
-    const { metaHex, codeHash, reject, resolve } = params;
+  const upload = async (params: Omit<ParamsToUploadMeta, 'codeHash'> & { metahash: HexString }) => {
+    const { metahash, metaHex, reject, resolve } = params;
 
     try {
-      const { error } = await addMetadata({ hex: metaHex, codeHash: codeHash as HexString });
+      if (!isApiReady) throw new Error('API is not initialized');
 
+      const { error } = await addMetadata(metahash, metaHex);
       if (error) throw new Error(error.message);
 
       alert.success('Metadata saved successfully');
-
       if (resolve) resolve();
     } catch (error) {
       const message = (error as Error).message;
@@ -41,19 +41,18 @@ const useMetadataUpload = () => {
       if (!isApiReady) throw new Error('API is not initialized');
       if (!account) throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
 
-      if (isDevChain) {
-        const metaHash = await api.code.metaHash(codeHash);
+      const metahash = await api.code.metaHash(codeHash);
 
-        await uploadLocalMetadata(metaHash, metaHex, programId, name);
+      if (isDevChain) {
+        await uploadLocalMetadata(metahash, metaHex, programId, name);
 
         alert.success('Metadata added to the localDB successfully');
-
         if (resolve) resolve();
 
         return;
       }
 
-      upload({ codeHash, metaHex, programId, reject, resolve });
+      upload({ metahash, metaHex, programId, reject, resolve });
     } catch (error) {
       const message = (error as Error).message;
 
