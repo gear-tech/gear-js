@@ -51,13 +51,6 @@ const ProgramsSearch = ({ initQuery, isLoggedIn, initialValues, onSubmit }: Prop
           />
           <StatusCheckbox
             name="status"
-            value={ProgramStatus.Inactive}
-            label={PROGRAM_STATUS_NAME[ProgramStatus.Inactive]}
-            status={BulbStatus.Error}
-            onSubmit={onSubmit}
-          />
-          <StatusCheckbox
-            name="status"
             value={ProgramStatus.Terminated}
             label={PROGRAM_STATUS_NAME[ProgramStatus.Terminated]}
             status={BulbStatus.Error}

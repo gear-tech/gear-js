@@ -1,6 +1,5 @@
 enum ProgramStatus {
   Active = 'active',
-  Inactive = 'inactive',
   ProgramSet = 'programSet',
   Terminated = 'terminated',
   Paused = 'paused',
@@ -10,7 +9,6 @@ enum ProgramStatus {
 
 const PROGRAM_STATUS_NAME = {
   [ProgramStatus.Active as const]: 'Active',
-  [ProgramStatus.Inactive as const]: 'Inactive',
   [ProgramStatus.ProgramSet as const]: 'Program Set',
   [ProgramStatus.Terminated as const]: 'Terminated',
   [ProgramStatus.Paused as const]: 'Paused',

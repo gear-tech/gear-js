@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js';
-import { useContext, useMemo } from 'react';
+import { useContext } from 'react';
 import { ApiContext } from 'context';
 import { formatBalance } from '@polkadot/util';
 
@@ -7,31 +7,19 @@ function useBalanceFormat() {
   const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
 
   const [decimals] = isApiReady ? api.registry.chainDecimals : [0];
-  const balanceMultiplier = BigNumber(10).exponentiatedBy(BigNumber(decimals));
+  const valuePerGas = isApiReady ? api.valuePerGas.toString() : '1000';
 
-  const valuePerGas = useMemo(() => {
-    try {
-      if (!isApiReady) throw new Error('API is not initialized');
+  const balanceMultiplier = new BigNumber(10).exponentiatedBy(decimals);
 
-      return api.valuePerGas.toString();
-    } catch {
-      return '1000';
-    }
-  }, [api]);
+  const getChainBalanceValue = (value: string | number) => new BigNumber(value).multipliedBy(balanceMultiplier);
 
-  const gasMultiplier = balanceMultiplier.dividedBy(valuePerGas);
+  const getFormattedBalanceValue = (value: string | number) => new BigNumber(value).dividedBy(balanceMultiplier);
 
-  // TODO: find a way to calculate logarithm without number
-  const gasDecimals = useMemo(() => Math.floor(Math.log10(gasMultiplier.toNumber())), [gasMultiplier]);
+  const getChainGasValue = (value: string | number) =>
+    new BigNumber(value).multipliedBy(balanceMultiplier).dividedBy(valuePerGas).integerValue(BigNumber.ROUND_UP);
 
-  const getChainValue = (value: string | number, multiplier: BigNumber) => BigNumber(value).multipliedBy(multiplier);
-  const getFormattedValue = (value: string | number, multiplier: BigNumber) => BigNumber(value).dividedBy(multiplier);
-
-  const getChainBalanceValue = (value: string | number) => getChainValue(value, balanceMultiplier);
-  const getChainGasValue = (value: string | number) => getChainValue(value, gasMultiplier);
-
-  const getFormattedBalanceValue = (value: string | number) => getFormattedValue(value, balanceMultiplier);
-  const getFormattedGasValue = (value: string | number) => getFormattedValue(value, gasMultiplier);
+  const getFormattedGasValue = (value: string | number) =>
+    new BigNumber(value).multipliedBy(valuePerGas).dividedBy(balanceMultiplier);
 
   const getFormattedBalance = (balance: Exclude<Parameters<typeof formatBalance>[0], undefined>) => {
     if (!isApiReady) throw new Error('API is not initialized');
@@ -52,8 +40,6 @@ function useBalanceFormat() {
   return {
     balanceMultiplier,
     decimals,
-    gasMultiplier,
-    gasDecimals,
     getChainBalanceValue,
     getChainGasValue,
     getFormattedBalanceValue,
