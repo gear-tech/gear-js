@@ -6,7 +6,7 @@ import { readFileSync } from 'fs';
 import { GearApi, ProgramMetadata } from '../src';
 import { TARGET, TEST_META_META, WS_ADDRESS } from './config';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
-import { decodeAddress } from '../src/utils';
+import { decodeAddress, encodePayload } from '../src/utils';
 
 const api = new GearApi({ providerAddress: WS_ADDRESS });
 let alice: KeyringPair;
@@ -113,5 +113,29 @@ describe('Gear Message', () => {
   test('Send message with specifying payload type instead of metadata', async () => {
     const tx = await api.message.send({ destination: '0x', gasLimit: 1000, payload: 'PING' }, undefined, 'String');
     expect(tx.args[1].toJSON()).toBe('0x1050494e47');
+  });
+
+  test('calculate reply', async () => {
+    const payload = { Two: [[8, 16]] };
+
+    const origin = decodeAddress(alice.address);
+
+    await api.program.calculateGas.handle(origin, programId, { Two: [[8, 16]] }, 0, false, metadata);
+
+    const result = await api.message.calculateReply(
+      {
+        origin,
+        destination: programId,
+        payload,
+      },
+      metadata,
+    );
+
+    const resultJson = result.toJSON();
+
+    expect(resultJson).toHaveProperty('payload', '0x086f6b');
+    expect(resultJson).toHaveProperty('value');
+    expect(resultJson).toHaveProperty('code');
+    expect(Object.keys(resultJson)).toHaveLength(3);
   });
 });

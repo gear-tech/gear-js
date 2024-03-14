@@ -1,5 +1,6 @@
-import { Struct, u128, u64 } from '@polkadot/types';
+import { Struct, Vec, u128, u64, u8 } from '@polkadot/types';
 import { AnyNumber } from '@polkadot/types/types';
+import { GearCoreErrorsSimpleReplyCode } from './lookup';
 import { Perquintill } from '@polkadot/types/interfaces';
 
 export type Value = AnyNumber | u128;

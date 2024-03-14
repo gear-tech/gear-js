@@ -7,7 +7,7 @@ import type { Bytes } from '@polkadot/types-codec';
 import type { H256 } from '@polkadot/types/interfaces/runtime';
 import type { Observable } from '@polkadot/types/types';
 
-import { GasInfo } from '../interfaces/gas';
+import { GasInfo, ReplyInfo } from '../interfaces';
 import { InflationInfo } from '../common';
 
 export type __AugmentedRpc = AugmentedRpc<() => unknown>;
@@ -63,6 +63,54 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
           allowOtherPanics: boolean,
         ) => Observable<GasInfo>
       >;
+      /**
+       * Calculate gas for Init message using upload_program extrinsic
+       */
+      calculateGasForUpload: AugmentedRpc<
+        (
+          source: string | Uint8Array | H256,
+          code: Bytes | Uint8Array | number[],
+          initPayload: Bytes | Uint8Array | number[] | string,
+          value: AnyNumber,
+          allowOtherPanics: boolean,
+        ) => Observable<GasInfo>
+      >;
+      /**
+       * Calculate gas for Init message using create_program extrinsic
+       */
+      calculateGasForCreate: AugmentedRpc<
+        (
+          source: string | Uint8Array | H256,
+          codeId: string | Uint8Array | H256,
+          initPayload: Bytes | Uint8Array | number[] | string,
+          value: AnyNumber,
+          allowOtherPanics: boolean,
+        ) => Observable<GasInfo>
+      >;
+      /**
+       * Calculate gas for Handle message
+       */
+      calculateGasForHandle: AugmentedRpc<
+        (
+          source: string | Uint8Array | H256,
+          dest: string | Uint8Array | H256,
+          payload: Bytes | Uint8Array | number[] | string,
+          value: AnyNumber,
+          allowOtherPanics: boolean,
+        ) => Observable<GasInfo>
+      >;
+      /**
+       * Calculate gas for Reply message
+       */
+      calculateGasForReply: AugmentedRpc<
+        (
+          source: string | Uint8Array | H256,
+          messageId: string | Uint8Array | H256,
+          payload: Bytes | Uint8Array | number[] | string,
+          value: AnyNumber,
+          allowOtherPanics: boolean,
+        ) => Observable<GasInfo>
+      >;
       readMetahash: AugmentedRpc<
         (programId: string | Uint8Array, at?: BlockHash | string | Uint8Array) => Observable<H256>
       >;
@@ -97,6 +145,19 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
           argument?: Bytes | Uint8Array | number[] | string,
           at?: BlockHash | string | Uint8Array,
         ) => Observable<Bytes>
+      >;
+      /**
+       * Calculate reply for Handle message
+       */
+      calculateReplyForHandle: AugmentedRpc<
+        (
+          origin: string | Uint8Array | H256,
+          destination: string | Uint8Array | H256,
+          payload: Bytes | Uint8Array | number[] | string,
+          gasLimit: AnyNumber,
+          value: AnyNumber,
+          at: string | BlockHash | null,
+        ) => Observable<ReplyInfo>
       >;
     };
     stakingRewards: {

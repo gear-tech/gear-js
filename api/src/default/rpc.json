@@ -105,6 +105,110 @@
         ],
         "type": "GasInfo"
       },
+      "calculateGasForUpload": {
+        "description": "Calculate gas for Init message using upload_program extrinsic",
+        "params": [
+          {
+            "name": "source",
+            "type": "H256"
+          },
+          {
+            "name": "code",
+            "type": "Vec<u8>"
+          },
+          {
+            "name": "payload",
+            "type": "Vec<u8>"
+          },
+          {
+            "name": "value",
+            "type": "u128"
+          },
+          {
+            "name": "allow_other_panics",
+            "type": "bool"
+          }
+        ],
+        "type": "GasInfo"
+      },
+      "calculateGasForCreate": {
+        "description": "Calculate gas for Init message using create_program extrinsic",
+        "params": [
+          {
+            "name": "source",
+            "type": "H256"
+          },
+          {
+            "name": "code_id",
+            "type": "H256"
+          },
+          {
+            "name": "payload",
+            "type": "Vec<u8>"
+          },
+          {
+            "name": "value",
+            "type": "u128"
+          },
+          {
+            "name": "allow_other_panics",
+            "type": "bool"
+          }
+        ],
+        "type": "GasInfo"
+      },
+      "calculateGasForHandle": {
+        "description": "Calculate gas for Handle message",
+        "params": [
+          {
+            "name": "source",
+            "type": "H256"
+          },
+          {
+            "name": "dest",
+            "type": "H256"
+          },
+          {
+            "name": "payload",
+            "type": "Vec<u8>"
+          },
+          {
+            "name": "value",
+            "type": "u128"
+          },
+          {
+            "name": "allow_other_panics",
+            "type": "bool"
+          }
+        ],
+        "type": "GasInfo"
+      },
+      "calculateGasForReply": {
+        "description": "Calculate gas for Reply message",
+        "params": [
+          {
+            "name": "source",
+            "type": "H256"
+          },
+          {
+            "name": "message_id",
+            "type": "H256"
+          },
+          {
+            "name": "payload",
+            "type": "Vec<u8>"
+          },
+          {
+            "name": "value",
+            "type": "u128"
+          },
+          {
+            "name": "allow_other_panics",
+            "type": "bool"
+          }
+        ],
+        "type": "GasInfo"
+      },
       "readMetahash": {
         "params": [
           { "name": "program_id", "type": "H256" },
@@ -147,6 +251,36 @@
           { "name": "at", "type": "Option<BlockHash>" }
         ],
         "type": "Vec<Bytes>"
+      },
+      "calculateReplyForHandle": {
+        "description": "Calculate reply for Handle message",
+        "params": [
+          {
+            "name": "origin",
+            "type": "H256"
+          },
+          {
+            "name": "destination",
+            "type": "H256"
+          },
+          {
+            "name": "payload",
+            "type": "Bytes"
+          },
+          {
+            "name": "gasLimit",
+            "type": "u64"
+          },
+          {
+            "name": "value",
+            "type": "u128"
+          },
+          {
+            "name": "at",
+            "type": "Option<BlockHash>"
+          }
+        ],
+        "type": "ReplyInfo"
       }
     },
     "chainSpec_unstable": {

@@ -461,6 +461,26 @@ const programExists = await api.program.exists(programId);
 console.log(`Program with address ${programId} ${programExists ? 'exists' : "doesn't exist"}`);
 ```
 
+### Send message to the program and get the reply
+
+Since `v1.2.0` release of the `gear` pallet, it's possible to send a message to the program and get the reply without transaction.
+The `api.message.calculateReply` method can be used for that purpose.
+
+```javascript
+const programId = '0x..';
+const origin = '0x...'; // the address of the sender
+const meta = ProgramMetadata.from('0x...');
+const result = await api.message.calculateReply({
+  origin,
+  destination: programId,
+  payload: { myPayload: [] },
+  value: 0
+}, meta);
+
+console.log(result.toJSON());
+console.log('reply payload:', meta.createType(meta.types.handle.output, result.payload).toJSON());
+```
+
 ### Read state of a program
 
 There are 2 ways to read state of a program.

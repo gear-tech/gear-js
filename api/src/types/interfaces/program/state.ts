@@ -1,6 +1,8 @@
 import { Bytes } from '@polkadot/types-codec';
 import { HexString } from '@polkadot/util/types';
-import { ProgramMetadata } from 'metadata';
+
+import { PayloadType } from '../../payload';
+import { ProgramMetadata } from '../../../metadata';
 
 export interface ReadStateParams {
   /**
@@ -10,7 +12,7 @@ export interface ReadStateParams {
   /**
    * Input payload expected by the `state` function
    */
-  payload: any;
+  payload: PayloadType;
   /**
    * Block hash at which state is to be received
    */
@@ -48,7 +50,7 @@ export interface ReadStateUsingWasmParams {
   /**
    * Input payload expected by the `state` function of the onchain program
    */
-  payload?: any;
+  payload?: PayloadType;
   /**
    * Function name to execute
    */

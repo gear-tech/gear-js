@@ -3,9 +3,16 @@ import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { ReplaySubject } from 'rxjs';
 
-import { MessageSendOptions, MessageSendReplyOptions } from './types';
+import { ICalculateReplyForHandleOptions, MessageSendOptions, MessageSendReplyOptions, ReplyInfo } from './types';
 import { SendMessageError, SendReplyError } from './errors';
-import { encodePayload, getExtrinsic, validateGasLimit, validateMailboxItem, validateValue } from './utils';
+import {
+  decodeAddress,
+  encodePayload,
+  getExtrinsic,
+  validateGasLimit,
+  validateMailboxItem,
+  validateValue,
+} from './utils';
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from './metadata';
 import { SPEC_VERSION } from './consts';
@@ -297,5 +304,45 @@ export class GearMessage extends GearTransaction {
         });
       });
     };
+  }
+
+  /**
+   * ## Send message to the program and get the reply.
+   * This method is immutable and doesn't send any extrinsic.
+   * @param params Message parameters
+   * @param meta (optional) Program metadata obtained using `ProgramMetadata.from` method.
+   * @param typeIndexOrTypeName (optional) Index of type in the registry. If not specified the type index from `meta.handle.input` will be used instead.
+   * @returns Reply info structure
+   *
+   * @example
+   * ```javascript
+   * const programId = '0x..';
+   * const origin = '0x...';
+   * const meta = ProgramMetadata.from('0x...');
+   * const result = await api.message.calculateReply({
+   *   origin,
+   *   destination: programId,
+   *   payload: { myPayload: [] },
+   *   value: 0
+   * }, meta);
+   *
+   * console.log(result.toJSON());
+   * console.log('reply payload:', meta.createType(meta.types.handle.output, result.payload).toJSON());
+   */
+  async calculateReply(
+    { payload, origin, destination, value, gasLimit, at }: ICalculateReplyForHandleOptions,
+    meta?: ProgramMetadata,
+    typeIndexOrTypeName?: number | string,
+  ): Promise<ReplyInfo> {
+    const _payload = encodePayload(payload, meta, 'handle', typeIndexOrTypeName);
+
+    return await this._api.rpc.gear.calculateReplyForHandle(
+      decodeAddress(origin),
+      destination,
+      _payload,
+      gasLimit || this._api.blockGasLimit.toBigInt(),
+      value || 0,
+      at || null,
+    );
   }
 }

@@ -5,11 +5,12 @@ import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 
 import { GasLimit, Value } from '../../common';
+import { PayloadType } from 'types/payload';
 
 export interface V1010ProgramUploadOptions {
   code: HexString | Buffer | Uint8Array;
   salt?: `0x${string}`;
-  initPayload?: AnyJson;
+  initPayload?: PayloadType;
   gasLimit: GasLimit;
   value?: Value;
   keepAlive?: boolean;

@@ -3,6 +3,7 @@ import { HexString } from '@polkadot/util/types';
 import { GasInfo, PayloadType } from './types';
 import { GearApi } from './GearApi';
 import { ProgramMetadata } from './metadata';
+import { SPEC_VERSION } from './consts';
 import { Value } from './types/common';
 import { encodePayload } from './utils/create-payload';
 
@@ -57,7 +58,9 @@ export class GearGas {
     meta?: ProgramMetadata,
     typeIndexOrTypeName?: number | string,
   ): Promise<GasInfo> {
-    return this._api.rpc.gear.calculateInitUploadGas(
+    const method = this._api.specVersion > SPEC_VERSION.V1200 ? 'calculateGasForUpload' : 'calculateInitUploadGas';
+
+    return this._api.rpc.gear[method](
       sourceId,
       encodePayload(code, undefined, undefined, 'Bytes'),
       encodePayload(payload, meta, 'init', typeIndexOrTypeName),
@@ -114,8 +117,9 @@ export class GearGas {
     meta?: ProgramMetadata,
     typeIndexOrTypeName?: number | string,
   ): Promise<GasInfo> {
+    const method = this._api.specVersion > SPEC_VERSION.V1200 ? 'calculateGasForCreate' : 'calculateInitCreateGas';
     const _payload = encodePayload(payload, meta, 'init', typeIndexOrTypeName);
-    return this._api.rpc.gear.calculateInitCreateGas(sourceId, codeId, _payload, value || 0, allowOtherPanics || true);
+    return this._api.rpc.gear[method](sourceId, codeId, _payload, value || 0, allowOtherPanics || true);
   }
 
   /**
@@ -157,14 +161,9 @@ export class GearGas {
     meta?: ProgramMetadata,
     typeIndexOrTypeName?: number | string,
   ): Promise<GasInfo> {
+    const method = this._api.specVersion > SPEC_VERSION.V1200 ? 'calculateGasForHandle' : 'calculateHandleGas';
     const _payload = encodePayload(payload, meta, 'handle', typeIndexOrTypeName);
-    return this._api.rpc.gear.calculateHandleGas(
-      sourceId,
-      destinationId,
-      _payload,
-      value || 0,
-      allowOtherPanics || true,
-    );
+    return this._api.rpc.gear[method](sourceId, destinationId, _payload, value || 0, allowOtherPanics || true);
   }
 
   /**
@@ -203,7 +202,8 @@ export class GearGas {
     meta?: ProgramMetadata,
     typeIndexOrTypeName?: number,
   ): Promise<GasInfo> {
+    const method = this._api.specVersion > SPEC_VERSION.V1200 ? 'calculateGasForReply' : 'calculateReplyGas';
     const _payload = encodePayload(payload, meta, 'reply', typeIndexOrTypeName);
-    return this._api.rpc.gear.calculateReplyGas(sourceId, messageId, _payload, value || 0, allowOtherPanics || true);
+    return this._api.rpc.gear[method](sourceId, messageId, _payload, value || 0, allowOtherPanics || true);
   }
 }

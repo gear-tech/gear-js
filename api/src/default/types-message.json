@@ -36,6 +36,11 @@
     "Interval": {
       "start": "u32",
       "finish": "u32"
+    },
+    "ReplyInfo": {
+      "payload": "Vec<u8>",
+      "value": "u128",
+      "code": "GearCoreErrorsSimpleReplyCode"
     }
   }
 }
