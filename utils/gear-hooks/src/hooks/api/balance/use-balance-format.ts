@@ -12,6 +12,7 @@ function useBalanceFormat() {
   const balanceMultiplier = new BigNumber(10).exponentiatedBy(decimals);
 
   const getChainBalanceValue = (value: string | number) => new BigNumber(value).multipliedBy(balanceMultiplier);
+
   const getFormattedBalanceValue = (value: string | number) => new BigNumber(value).dividedBy(balanceMultiplier);
 
   const getChainGasValue = (value: string | number) =>
