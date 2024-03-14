@@ -1,5 +1,4 @@
 import { InputWrapper, inputStyles, InputProps, Button } from '@gear-js/ui';
-import { useBalanceFormat } from '@gear-js/react-hooks';
 import BigNumber from 'bignumber.js';
 import clsx from 'clsx';
 import { useFormContext, useWatch } from 'react-hook-form';
@@ -19,8 +18,6 @@ type Props = Omit<NumericFormatProps & InputProps, 'value' | 'onValueChange' | '
 };
 
 const GasField = (props: Props) => {
-  const { gasDecimals } = useBalanceFormat();
-
   const { disabled, onGasCalculate, direction = 'x', gap, block, info, ...other } = props;
   const name = 'gasLimit';
 
@@ -34,7 +31,7 @@ const GasField = (props: Props) => {
     const bnMultiplier = bnValue.multipliedBy(0.1);
     const increasedValue = bnValue.plus(bnMultiplier);
 
-    setValue(name, increasedValue.toFixed(gasDecimals), { shouldValidate: true });
+    setValue(name, increasedValue.toFixed(), { shouldValidate: true });
   };
 
   const inputClassName = clsx(inputStyles.input, inputStyles.dark, styles.field);
