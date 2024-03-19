@@ -9,7 +9,6 @@ import { GearService } from './gear';
 export class RMQService {
   private connection: Connection;
   private mainChannel: Channel;
-  private topicChannel: Channel;
 
   constructor(private transferService: TransferService, private gearService: GearService) {}
 
@@ -27,34 +26,23 @@ export class RMQService {
     });
 
     this.mainChannel = await this.connection.createChannel();
-    this.topicChannel = await this.connection.createChannel();
 
     const genesis = this.gearService.genesisHash;
 
     const routingKey = `${RMQServices.TEST_BALANCE}.${genesis}`;
 
     await this.mainChannel.assertExchange(RMQExchange.DIRECT_EX, 'direct');
-    await this.mainChannel.assertExchange(RMQExchange.TOPIC_EX, 'topic');
+    await this.mainChannel.assertExchange(RMQExchange.GENESISES, 'fanout');
 
-    const assertTopicQueue = await this.topicChannel.assertQueue(`${RMQServices.TEST_BALANCE}t.${genesis}`, {
-      durable: false,
-      autoDelete: true,
-      exclusive: false,
-    });
     await this.mainChannel.assertQueue(routingKey, {
       durable: false,
       autoDelete: false,
       exclusive: false,
     });
     await this.mainChannel.bindQueue(routingKey, RMQExchange.DIRECT_EX, routingKey);
-    await this.mainChannel.bindQueue(
-      assertTopicQueue.queue,
-      RMQExchange.TOPIC_EX,
-      `${RMQServices.TEST_BALANCE}.genesises`,
-    );
 
     await this.directMessageConsumer(routingKey);
-    await this.topicMessageConsumer(assertTopicQueue.queue);
+    await this.genesisesQSetup();
 
     this.sendGenesis(this.gearService.genesisHash);
   }
@@ -80,14 +68,25 @@ export class RMQService {
     }
   }
 
-  async topicMessageConsumer(queue: string): Promise<void> {
+  private async genesisesQSetup(): Promise<void> {
+    const qName = RMQQueue.GENESISES_REQUEST;
+
+    await this.mainChannel.assertQueue('', {
+      exclusive: true,
+      autoDelete: true,
+    });
+
+    await this.mainChannel.bindQueue('', RMQExchange.GENESISES, '');
+
     try {
-      await this.topicChannel.consume(
-        queue,
+      await this.mainChannel.consume(
+        '',
         async (message) => {
           if (!message) {
             return;
           }
+
+          logger.info('Genesis request');
           if (this.gearService.genesisHash !== null) {
             this.sendGenesis(this.gearService.genesisHash);
           }
@@ -95,7 +94,7 @@ export class RMQService {
         { noAck: true },
       );
     } catch (error) {
-      logger.error(`Topic exchange consumer error`, { error: error.message });
+      logger.error('Topic exchange consumer error.', { error });
     }
   }
 
@@ -103,14 +102,14 @@ export class RMQService {
     const correlationId = randomUUID();
     const messageBuff = JSON.stringify({ service: RMQServices.TEST_BALANCE, action: RMQServiceAction.ADD, genesis });
     logger.info('Send genesis', { genesis, correlationId });
-    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, Buffer.from(messageBuff), {
+    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESIS, Buffer.from(messageBuff), {
       headers: { correlationId },
     });
   }
 
   sendDeleteGenesis(genesis: string): void {
     const messageBuff = JSON.stringify({ service: RMQServices.TEST_BALANCE, action: RMQServiceAction.DELETE, genesis });
-    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, Buffer.from(messageBuff));
+    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESIS, Buffer.from(messageBuff));
   }
 
   sendReply(correlationId: string, params: any): void {

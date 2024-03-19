@@ -1,12 +1,13 @@
 export enum RMQQueue {
-  GENESISES = 'genesises',
+  GENESISES_REQUEST = 'genesises.request',
+  GENESIS = 'genesis',
   REPLIES = 'replies',
 }
 
 export enum RMQExchange {
   DIRECT_EX = 'direct.ex',
-  TOPIC_EX = 'topic.ex',
   INDXR_META = 'indxr.meta.ex',
+  GENESISES = 'genesises',
 }
 
 export enum RMQServices {

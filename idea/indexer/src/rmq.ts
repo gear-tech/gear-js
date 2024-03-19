@@ -62,7 +62,7 @@ export class RMQService {
       this.mainChannel = await this.connection.createChannel();
 
       await this.mainChannel.assertExchange(RMQExchange.DIRECT_EX, 'direct');
-      await this.mainChannel.assertExchange(RMQExchange.TOPIC_EX, 'topic');
+      await this.mainChannel.assertExchange(RMQExchange.GENESISES, 'fanout', { durable: true });
       await this.mainChannel.assertExchange(RMQExchange.INDXR_META, 'fanout', { autoDelete: true });
 
       await this.mainChannel.assertQueue('', {
@@ -162,19 +162,18 @@ export class RMQService {
   }
 
   private async genesisesQSetup(): Promise<void> {
-    const qName = `${RMQServices.INDEXER}.${RMQQueue.GENESISES}`;
+    const qName = RMQQueue.GENESISES_REQUEST;
 
-    await this.mainChannel.assertQueue(qName, {
-      durable: false,
-      exclusive: false,
+    await this.mainChannel.assertQueue('', {
+      exclusive: true,
       autoDelete: true,
     });
 
-    await this.mainChannel.bindQueue(qName, RMQExchange.TOPIC_EX, qName);
+    await this.mainChannel.bindQueue('', RMQExchange.GENESISES, '');
 
     try {
       await this.mainChannel.consume(
-        qName,
+        '',
         async (message) => {
           if (!message) {
             return;
@@ -200,7 +199,7 @@ export class RMQService {
       genesis: this.genesis,
     });
     logger.info('Send genesis', { genesis: this.genesis, correlationId });
-    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, Buffer.from(messageBuff), {
+    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESIS, Buffer.from(messageBuff), {
       headers: { correlationId },
     });
   }
@@ -212,7 +211,7 @@ export class RMQService {
       action: RMQServiceAction.DELETE,
       genesis: this.genesis,
     });
-    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, Buffer.from(messageBuff));
+    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESIS, Buffer.from(messageBuff));
   }
 
   @FormResponse
