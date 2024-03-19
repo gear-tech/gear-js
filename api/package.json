@@ -48,7 +48,7 @@
   },
   "license": "GPL-3.0",
   "peerDependencies": {
-    "@polkadot/api": "10.12.1",
+    "@polkadot/api": "10.12.3",
     "@polkadot/wasm-crypto": "7.3.2",
     "rxjs": "7.8.1"
   },
@@ -56,10 +56,10 @@
     "@babel/plugin-transform-typescript": "7.23.6",
     "@babel/preset-env": "7.24.0",
     "@babel/preset-typescript": "7.23.3",
-    "@polkadot/api": "10.12.2",
-    "@polkadot/typegen": "10.12.2",
-    "@polkadot/types": "10.12.2",
-    "@polkadot/types-codec": "10.12.2",
+    "@polkadot/api": "10.12.3",
+    "@polkadot/typegen": "10.12.3",
+    "@polkadot/types": "10.12.3",
+    "@polkadot/types-codec": "10.12.3",
     "@polkadot/wasm-crypto": "7.3.2",
     "@rollup/plugin-commonjs": "25.0.7",
     "@rollup/plugin-json": "6.1.0",
@@ -79,7 +79,7 @@
     "rxjs": "7.8.1",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.2",
-    "typescript": "5.3.3"
+    "typescript": "5.4.2"
   },
   "lint-staged": {
     "*.ts": [
