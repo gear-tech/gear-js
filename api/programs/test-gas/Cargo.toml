@@ -6,7 +6,7 @@ edition = "2021"
 
 [dependencies]
 gstd = { git = "https://github.com/gear-tech/gear.git" }
-scale-info = { version = "2.10.0", default-features = false, features = ["derive"] }
+scale-info = { version = "2.11.0", default-features = false, features = ["derive"] }
 codec = { package = "parity-scale-codec", version = "3.6.9", default-features = false, features = ["derive", "full"] }
 test-gas-io = { path = "io" }
 
