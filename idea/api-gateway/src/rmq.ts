@@ -177,7 +177,7 @@ export class RMQService {
   }
 
   public requestActiveGenesises() {
-    this.mainChannel.publish(RMQExchange.GENESISES, RMQQueue.GENESISES_REQUEST, Buffer.from(''));
+    this.mainChannel.publish(RMQExchange.GENESISES, '', Buffer.from(''));
     logger.info(`Genesises request sent`);
   }
 
