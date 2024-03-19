@@ -29,7 +29,7 @@ export class RMQService {
     }
 
     this.mainChannel = await this.connection.createChannel();
-    await this.mainChannel.assertExchange(RMQExchange.TOPIC_EX, 'topic', { durable: true });
+    await this.mainChannel.assertExchange(RMQExchange.GENESISES, 'fanout', { durable: true });
     await this.mainChannel.assertExchange(RMQExchange.DIRECT_EX, 'direct', { durable: true });
     await this.mainChannel.assertQueue(RMQQueue.REPLIES, {
       durable: true,
@@ -40,14 +40,14 @@ export class RMQService {
 
     await this.mainChannel.bindQueue(RMQQueue.REPLIES, RMQExchange.DIRECT_EX, RMQQueue.REPLIES);
 
-    await this.mainChannel.assertQueue(RMQQueue.GENESISES, {
+    await this.mainChannel.assertQueue(RMQQueue.GENESIS, {
       durable: true,
       exclusive: false,
       autoDelete: false,
       messageTtl: 30_000,
     });
 
-    await this.mainChannel.bindQueue(RMQQueue.GENESISES, RMQExchange.DIRECT_EX, RMQQueue.GENESISES);
+    await this.mainChannel.bindQueue(RMQQueue.GENESIS, RMQExchange.DIRECT_EX, RMQQueue.GENESIS);
 
     this.metaChannel = await this.connection.createChannel();
     this.metaChannel.assertExchange(RMQExchange.DIRECT_EX, 'direct', { durable: true });
@@ -78,14 +78,14 @@ export class RMQService {
 
   private async subscribeToGenesises() {
     await this.mainChannel.consume(
-      RMQQueue.GENESISES,
+      RMQQueue.GENESIS,
       async (message) => {
         if (!message) {
           return;
         }
 
         const { genesis, service, action } = JSON.parse(message.content.toString());
-        logger.info(RMQQueue.GENESISES, { genesis, service, action });
+        logger.info(RMQQueue.GENESIS, { genesis, service, action });
 
         switch (service) {
           case RMQServices.INDEXER: {
@@ -177,8 +177,7 @@ export class RMQService {
   }
 
   public requestActiveGenesises() {
-    this.mainChannel.publish(RMQExchange.TOPIC_EX, `${RMQServices.INDEXER}.genesises`, Buffer.from(''));
-    this.mainChannel.publish(RMQExchange.TOPIC_EX, `${RMQServices.TEST_BALANCE}.genesises`, Buffer.from(''));
+    this.mainChannel.publish(RMQExchange.GENESISES, RMQQueue.GENESISES_REQUEST, Buffer.from(''));
     logger.info(`Genesises request sent`);
   }
 

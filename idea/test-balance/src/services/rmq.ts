@@ -34,7 +34,7 @@ export class RMQService {
     const routingKey = `${RMQServices.TEST_BALANCE}.${genesis}`;
 
     await this.mainChannel.assertExchange(RMQExchange.DIRECT_EX, 'direct');
-    await this.mainChannel.assertExchange(RMQExchange.TOPIC_EX, 'topic');
+    await this.mainChannel.assertExchange(RMQExchange.GENESISES, 'fanout');
 
     const assertTopicQueue = await this.topicChannel.assertQueue(`${RMQServices.TEST_BALANCE}t.${genesis}`, {
       durable: false,
@@ -47,11 +47,7 @@ export class RMQService {
       exclusive: false,
     });
     await this.mainChannel.bindQueue(routingKey, RMQExchange.DIRECT_EX, routingKey);
-    await this.mainChannel.bindQueue(
-      assertTopicQueue.queue,
-      RMQExchange.TOPIC_EX,
-      `${RMQServices.TEST_BALANCE}.genesises`,
-    );
+    await this.mainChannel.bindQueue(assertTopicQueue.queue, RMQExchange.GENESISES, RMQQueue.GENESISES_REQUEST);
 
     await this.directMessageConsumer(routingKey);
     await this.topicMessageConsumer(assertTopicQueue.queue);
@@ -103,14 +99,14 @@ export class RMQService {
     const correlationId = randomUUID();
     const messageBuff = JSON.stringify({ service: RMQServices.TEST_BALANCE, action: RMQServiceAction.ADD, genesis });
     logger.info('Send genesis', { genesis, correlationId });
-    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, Buffer.from(messageBuff), {
+    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESIS, Buffer.from(messageBuff), {
       headers: { correlationId },
     });
   }
 
   sendDeleteGenesis(genesis: string): void {
     const messageBuff = JSON.stringify({ service: RMQServices.TEST_BALANCE, action: RMQServiceAction.DELETE, genesis });
-    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESISES, Buffer.from(messageBuff));
+    this.mainChannel.publish(RMQExchange.DIRECT_EX, RMQQueue.GENESIS, Buffer.from(messageBuff));
   }
 
   sendReply(correlationId: string, params: any): void {
