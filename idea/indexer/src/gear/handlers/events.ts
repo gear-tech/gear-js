@@ -150,7 +150,7 @@ export async function handleEvents({
   } of necessaryEvents) {
     switch (method) {
       case EventNames.ProgramChanged: {
-        promises.push(programChanged(data as ProgramChangedData, blockHash, timestamp, genesis, api, tempState));
+        await programChanged(data as ProgramChangedData, blockHash, timestamp, genesis, api, tempState);
         continue;
       }
       case EventNames.CodeChanged: {
