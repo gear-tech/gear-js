@@ -11,7 +11,7 @@
     "build:hooks": "yarn workspace @gear-js/react-hooks build",
     "build:ui": "yarn workspace @gear-js/ui build",
     "build:test-balance": "yarn workspace @gear-js/test-balance build",
-    "build:wasm-compiler": "yarn workspace @gear-js/wasm-compiler build",
+    "build:voucher-indexer": "yarn workspace @gear-js/voucher-indexer build",
     "test:frontend": "yarn workspace @gear-js/frontend test",
     "postinstall": "husky install",
     "bump:polkadot": "node dev/bump-polkadot.js && yarn install"
