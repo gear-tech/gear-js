@@ -1,6 +1,6 @@
 import { CodeStatus, MessageReadReason } from '@gear-js/common';
 
-import { MessageStatus, ProgramStatus, getMetahash } from '../common';
+import { MessageEntryPoint, MessageStatus, MessageType, ProgramStatus, getMetahash } from '../common';
 import { Block, Code, Message, Program } from '../database';
 import { BlockService, CodeService, MessageService, ProgramService } from '../services';
 import { RMQService } from '../rmq';
@@ -99,6 +99,19 @@ export class TempState {
     }
   }
 
+  async getMsgEntry(id: string): Promise<MessageEntryPoint> {
+    if (this.messages.has(id)) {
+      return this.messages.get(id).entry;
+    }
+
+    try {
+      const msg = await this.messageService.get({ id, genesis: this.genesis });
+      return msg.entry;
+    } catch (err) {
+      return null;
+    }
+  }
+
   async setProgramStatus(id: string, status: ProgramStatus, expiration?: string) {
     const program = await this.getProgram(id);
     if (program) {
@@ -160,6 +173,15 @@ export class TempState {
         }
 
         await this.codeService.save(Array.from(this.codes.values()));
+      })(),
+      (async () => {
+        for (const m of this.messages.values()) {
+          if (m.type === MessageType.MSG_SENT) {
+            if (m.replyToMessageId) {
+              m.entry = await this.getMsgEntry(m.replyToMessageId);
+            }
+          }
+        }
       })(),
       this.messageService.save(Array.from(this.messages.values())),
       (async () => {
