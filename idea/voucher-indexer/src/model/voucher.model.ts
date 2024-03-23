@@ -21,8 +21,8 @@ export class Voucher {
   @Column('bigint')
   balance!: bigint;
 
-  @Column('jsonb')
-  programs!: string[];
+  @Column('jsonb', { default: [] })
+  programs?: string[];
 
   @Column({ name: 'code_uploading' })
   codeUploading!: boolean;
