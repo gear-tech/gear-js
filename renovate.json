@@ -3,7 +3,7 @@
   "labels": ["dependencies"],
   "branchConcurrentLimit": 5,
   "branchPrefix": "renovate-",
-  "ignorePaths": ["ansible/**", ".github/**", "idea/wasm-compiler/**", "**/Dockerfile"],
+  "ignorePaths": ["ansible/**", ".github/**", "**/Dockerfile"],
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
@@ -22,7 +22,13 @@
       "addLabels": ["frontend"]
     },
     {
-      "matchPaths": ["idea/api-gateway/**", "idea/common/**", "idea/indexer/**", "idea/test-balance/**"],
+      "matchPaths": [
+        "idea/api-gateway/**",
+        "idea/common/**",
+        "idea/indexer/**",
+        "idea/test-balance/**",
+        "idea/voucher-indexer/**"
+      ],
       "groupName": "idea-backend",
       "reviewers": ["osipov-mit"],
       "addLabels": ["backend"]
