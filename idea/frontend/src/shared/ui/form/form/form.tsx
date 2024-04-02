@@ -28,7 +28,11 @@ const Form = <TFieldValues extends FieldValues, TTransformedValues extends Field
 }: Props<TFieldValues, TTransformedValues>) => {
   const resolver = schema ? zodResolver(schema) : undefined;
 
-  const methods = useForm<TFieldValues, unknown, TTransformedValues>({ defaultValues, resolver });
+  const methods = useForm<TFieldValues, unknown, TTransformedValues>({
+    defaultValues,
+    resolver,
+    shouldUnregister: true,
+  });
   const { handleSubmit } = methods;
 
   return (

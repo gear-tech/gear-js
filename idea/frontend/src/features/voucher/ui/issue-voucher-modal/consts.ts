@@ -1,11 +1,10 @@
-import { HexString, decodeAddress } from '@gear-js/api';
+import { decodeAddress } from '@gear-js/api';
 import { z } from 'zod';
 
 import { isAccountAddressValid } from '@/shared/helpers';
 
 const INPUT_NAME = {
   VOUCHER_TYPE: 'type',
-  PROGRAM_ID: 'programId',
   ACCOUNT_ADDRESS: 'address',
   VALUE: 'value',
   DURATION: 'duration',
@@ -19,7 +18,6 @@ const VOUCHER_TYPE = {
 
 const DEFAULT_VALUES = {
   [INPUT_NAME.VOUCHER_TYPE]: VOUCHER_TYPE.PROGRAM,
-  [INPUT_NAME.PROGRAM_ID]: '' as HexString,
   [INPUT_NAME.ACCOUNT_ADDRESS]: '',
   [INPUT_NAME.VALUE]: '',
   [INPUT_NAME.DURATION]: '',
