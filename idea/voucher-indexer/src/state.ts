@@ -57,7 +57,6 @@ export class BatchState {
   }
 
   public async updated(event: VoucherUpdatedArgs, tx: UpdateVoucherTxArgs, block: Block) {
-    console.log(tx);
     logger.info(`Voucher updated`, { id: event.voucherId, block: block.height });
     const atBlock = BigInt(block.height);
     const atTime = new Date(block.timestamp!);
@@ -80,7 +79,7 @@ export class BatchState {
     }
 
     if (tx.appendPrograms.__kind === 'Some') {
-      voucher.programs.push(...tx.appendPrograms.value);
+      voucher.programs!.push(...tx.appendPrograms.value);
     }
 
     if (tx.codeUploading) {
