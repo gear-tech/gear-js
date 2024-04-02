@@ -10,7 +10,7 @@ import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { isAccountAddressValid } from '@/shared/helpers';
 import { Input, ValueField } from '@/shared/ui/form';
 
-import { useIssueVoucher } from '../../hooks';
+import { useIssueVoucher } from './hooks';
 import styles from './issue-voucher-modal.module.scss';
 
 type Props = {

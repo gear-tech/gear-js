@@ -4,6 +4,12 @@
   @include childrenMargin(24px);
 }
 
+.radios {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .buttons {
   display: grid;
   grid-template-columns: 1fr 1fr;
