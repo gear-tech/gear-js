@@ -1,5 +1,6 @@
 import { GearCoreIdsMessageId, GearCoreIdsProgramId } from '@gear-js/api';
 import { Bytes, Enum, GenericCall, GenericExtrinsic, Struct, Tuple, Vec, bool, u128, u64 } from '@polkadot/types';
+import { Hash } from '@polkadot/types/interfaces';
 import { AnyTuple, ITuple } from '@polkadot/types/types';
 
 export const getExtrinsics = (extrinsics: Vec<GenericExtrinsic<AnyTuple>>, methods: string[]) =>
@@ -47,14 +48,10 @@ interface VoucherCall extends Enum {
   };
 }
 
-interface VoucherArgs extends Struct {
-  call: VoucherCall;
-}
-
 export const getVoucherExtrinsics = (extrinsics: Vec<GenericExtrinsic<AnyTuple>>) =>
   extrinsics.filter(
     ({ method: { method, section } }) => section === 'gearVoucher' && method === 'call',
-  ) as GenericExtrinsic<ITuple<[VoucherArgs]>>[];
+  ) as GenericExtrinsic<ITuple<[Hash, VoucherCall]>>[];
 
 export const getGearRunExtrinsic = (extrinsics: Vec<GenericExtrinsic<AnyTuple>>) =>
   extrinsics.find(({ method: { section, method } }) => section === 'gear' && method === 'run');

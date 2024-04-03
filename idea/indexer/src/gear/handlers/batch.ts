@@ -70,7 +70,7 @@ export const handleBatchTxs = async ({
       }
 
       if ([BatchCallMethods.UPLOAD_CODE, BatchCallMethods.UPLOAD_PROGRAM].includes(method as BatchCallMethods)) {
-        const ccEvent = events.find(({ event: { method } }) => method === 'CodeChanged').event as CodeChanged;
+        const ccEvent = events.find(({ event: { method } }) => method === 'CodeChanged')?.event as CodeChanged;
 
         if (!ccEvent) {
           continue;

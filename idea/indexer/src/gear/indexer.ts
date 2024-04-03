@@ -205,11 +205,13 @@ export class GearIndexer {
       try {
         const result = await this.tempState.save();
 
-        logger.info(`${blockNumbers[0]}-${blockNumbers.at(-1)}`, {
-          time: (Date.now() - start) / 1000 + 'sec',
-          mem: getMem(),
-          result: result,
-        });
+        if (result.c > 0 || result.p > 0 || result.m > 0) {
+          logger.info(`${blockNumbers[0]}-${blockNumbers.at(-1)}`, {
+            time: (Date.now() - start) / 1000 + 'sec',
+            mem: getMem(),
+            result: result,
+          });
+        }
       } catch (error) {
         logger.error('Error during saving the data of the blocks', {
           blocks: blockNumbers,

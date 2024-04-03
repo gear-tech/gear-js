@@ -25,7 +25,7 @@ export const handleVoucherTxs = async ({
   for (const tx of extrinsics) {
     const txEvents = filterEvents(tx.hash, block, events, status).events;
 
-    const call = tx.args[0].call;
+    const call = tx.args[1];
 
     if (call.isSendMessage) {
       const mqEvent = txEvents.find(({ event }) => event.method === 'MessageQueued');
@@ -36,17 +36,15 @@ export const handleVoucherTxs = async ({
         data: { id, source, destination, entry },
       } = mqEvent.event as MessageQueued;
 
-      const programId = destination.toHex();
-
       tempState.addMsg({
         id: id.toHex(),
         source: source.toHex(),
         blockHash,
-        destination: programId,
+        destination: destination.toHex(),
         entry: getMsgEntry(entry),
         type: MessageType.QUEUED,
         payload: call.asSendMessage.payload.toHex(),
-        value: call.asSendMessage.value.toHex(),
+        value: call.asSendMessage.value.toString(),
         timestamp,
         genesis,
       });
@@ -71,7 +69,7 @@ export const handleVoucherTxs = async ({
         entry: getMsgEntry(entry),
         type: MessageType.QUEUED,
         payload: call.asSendReply.payload.toHex(),
-        value: call.asSendReply.value.toHex(),
+        value: call.asSendReply.value.toString(),
         timestamp,
         genesis,
         replyToMessageId: call.asSendReply.replyToId.toHex(),

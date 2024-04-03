@@ -20,6 +20,7 @@ function hasAllProps(obj: any, props: string[]) {
 let genesis: HexString;
 let api: GearApi;
 let alice: KeyringPair;
+let bob: KeyringPair;
 let testMetaId: HexString;
 let waitlistCodeId: HexString;
 let metaCodeId: HexString;
@@ -59,7 +60,10 @@ beforeAll(async () => {
   genesis = api.genesisHash.toHex();
   fs.writeFileSync('./genesis', genesis, 'utf-8');
   await waitReady();
-  alice = getAccounts().alice;
+  const accounts = getAccounts();
+  alice = accounts.alice;
+  bob = accounts.bob;
+
   listenToEvents();
 });
 
@@ -481,10 +485,75 @@ describe('prepare', () => {
     });
   });
 
+  test('send message with voucher', async () => {
+    const { voucherId, extrinsic } = await api.voucher.issue(
+      decodeAddress(bob.address),
+      30 * 1e12,
+      600,
+      [testMetaId],
+      false,
+    );
+
+    await new Promise((resolve, reject) =>
+      extrinsic.signAndSend(alice, ({ events, status }) => {
+        if (status.isInBlock) {
+          if (events.find(({ event: { method } }) => method === 'ExtrinsicSuccess')) {
+            resolve(0);
+          } else {
+            reject('Extrinsic failed');
+          }
+        }
+      }),
+    );
+
+    const payload = testMetaMeta.createType(testMetaMeta.types.handle.input, { Two: [[8, 16]] }).toHex();
+
+    const msg = api.message.send({
+      destination: testMetaId,
+      gasLimit: 200_000_000_000,
+      payload,
+      value: 0,
+    });
+
+    const call = api.voucher.call(voucherId, { SendMessage: msg });
+    await new Promise((resolve, reject) => {
+      finalizationPromises.push(
+        new Promise((finResolve) => {
+          call.signAndSend(bob, ({ events, status }) => {
+            if (status.isFinalized) {
+              finResolve(0);
+            }
+            if (status.isInBlock) {
+              events.forEach(({ event }) => {
+                if (event.method === 'ExtrinsicFailed') {
+                  reject(new Error(api.getExtrinsicFailedError(event).docs));
+                } else if (event.method === 'MessageQueued') {
+                  const {
+                    data: { id, source, destination },
+                  } = event as MessageQueued;
+                  sentMessages.push({
+                    id: id.toHex(),
+                    source: source.toHex(),
+                    destination: destination.toHex(),
+                    entry: 'handle',
+                    payload,
+                    value: '0',
+                  });
+                } else if (event.method === 'ExtrinsicSuccess') {
+                  resolve(0);
+                }
+              });
+            }
+          });
+        }),
+      );
+    });
+  });
+
   test('wait for finalization', async () => {
     await Promise.all(finalizationPromises);
     await new Promise((resolve) => {
-      setTimeout(resolve, 5000);
+      setTimeout(resolve, 3000);
     });
   });
 });
@@ -635,7 +704,9 @@ describe('code methods', () => {
 
 describe('message methods', () => {
   test(INDEXER_METHODS.MESSAGE_ALL, async () => {
-    const response = await request('message.all', { genesis });
+    console.log([...sentMessages.map(({ id }) => id), ...receivedMessages.map(({ id }) => id)]);
+    const response = await request('message.all', { genesis, limit: 21 });
+    console.log(response.result.messages.map(({ id }) => id));
     expect(response).toHaveProperty('result.count', sentMessages.length + receivedMessages.length);
     hasAllProps(response.result, ['messages', 'count']);
     expect(response.result.messages).toHaveLength(sentMessages.length + receivedMessages.length);
@@ -645,7 +716,7 @@ describe('message methods', () => {
     const fromDate = new Date();
     fromDate.setMinutes(fromDate.getMinutes() - 3);
     const toDate = new Date();
-    const response = await request('message.all', { genesis, fromDate, toDate });
+    const response = await request('message.all', { genesis, fromDate, toDate, limit: 21 });
     expect(response).toHaveProperty('result.count', sentMessages.length + receivedMessages.length);
     hasAllProps(response.result, ['messages', 'count']);
     expect(response.result.messages).toHaveLength(sentMessages.length + receivedMessages.length);
@@ -658,10 +729,10 @@ describe('message methods', () => {
       destination: testMetaId,
       withPrograms: true,
     });
-    expect(response).toHaveProperty('result.count', 11);
+    expect(response).toHaveProperty('result.count', 13);
     expect(response).toHaveProperty('result.messages');
     hasAllProps(response.result, ['messages', 'count', 'programNames']);
-    expect(response.result.messages).toHaveLength(11);
+    expect(response.result.messages).toHaveLength(13);
     expect(response.result.programNames).toHaveProperty(testMetaId);
     expect(response.result.programNames[testMetaId]).toBe(testMetaId);
   });
@@ -701,6 +772,10 @@ describe('message methods', () => {
       hasAllProps(response.result, props);
 
       expect(result.id).toEqual(m.id);
+      if (result.destination !== m.destination) {
+        console.log(result);
+        console.log(m);
+      }
       expect(result.destination).toEqual(m.destination);
       expect(result.source).toEqual(m.source);
       expect(result.payload).toEqual(m.payload);
