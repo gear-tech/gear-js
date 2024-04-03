@@ -1,7 +1,7 @@
 @use '@/shared/assets/styles/mixins' as *;
 
 .form {
-  @include childrenMargin(24px);
+  @include childrenMargin(16px);
 }
 
 .radios {
@@ -46,6 +46,43 @@
     span {
       text-overflow: ellipsis;
       overflow: hidden;
+    }
+  }
+}
+
+.duration {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  div,
+  p {
+    display: flex;
+    align-items: center;
+  }
+
+  div {
+    gap: 12px;
+
+    white-space: nowrap;
+
+    p {
+      gap: 4px;
+    }
+
+    .key {
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.2);
+    }
+
+    .button {
+      color: #2bd071;
+
+      border-bottom: dashed 1px #2bd071;
+
+      // overriding @gear-js/ui
+      font-weight: 400;
+      border-radius: 0;
     }
   }
 }

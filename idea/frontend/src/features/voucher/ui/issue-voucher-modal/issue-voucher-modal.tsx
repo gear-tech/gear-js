@@ -15,6 +15,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import { AddProgramForm } from './add-program-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useApi } from '@gear-js/react-hooks';
 
 type Props = {
   programId: HexString; // TODO: drop
@@ -55,6 +56,11 @@ const IssueVoucherModal = withDeprecatedFallback(({ close }: Props) => {
     // issueVoucher(address, '0x00', value, duration, isCodeUploadEnabled, close);
   };
 
+  const { api } = useApi();
+  const { minDuration, maxDuration } = api?.voucher || { minDuration: 0, maxDuration: 0 };
+
+  const setDuration = (duration: number) => form.setValue(INPUT_NAME.DURATION, duration.toString() as '');
+
   return (
     <Modal heading="Create Voucher" size="large" close={close} className={styles.form}>
       <div className={styles.radios}>
@@ -69,7 +75,32 @@ const IssueVoucherModal = withDeprecatedFallback(({ close }: Props) => {
         <form className={styles.form} onSubmit={form.handleSubmit(handleSubmit)}>
           <Input name={INPUT_NAME.ACCOUNT_ADDRESS} label="Account address:" direction="y" block />
           <ValueField name={INPUT_NAME.VALUE} label="Tokens amount:" direction="y" block />
-          <Input type="number" name={INPUT_NAME.DURATION} label="Duration (blocks):" direction="y" block />
+
+          <div className={styles.duration}>
+            <Input type="number" name={INPUT_NAME.DURATION} label="Duration (blocks):" />
+
+            <div>
+              <p>
+                <span className={styles.key}>Min:</span>
+                <Button
+                  text={minDuration.toString()}
+                  color="transparent"
+                  className={styles.button}
+                  onClick={() => setDuration(minDuration)}
+                />
+              </p>
+
+              <p>
+                <span className={styles.key}>Max:</span>
+                <Button
+                  text={maxDuration.toString()}
+                  color="transparent"
+                  className={styles.button}
+                  onClick={() => setDuration(maxDuration)}
+                />
+              </p>
+            </div>
+          </div>
 
           <div className={styles.buttons}>
             <Button type="submit" icon={ApplySVG} size="large" text="Create" />
