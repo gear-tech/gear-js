@@ -6,6 +6,7 @@ import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { useAddProgramForm } from './hooks';
 import styles from './issue-voucher-modal.module.scss';
 import { Input } from '@/shared/ui';
+import clsx from 'clsx';
 
 type Props = {
   form: ReturnType<typeof useAddProgramForm>['form'];
@@ -33,11 +34,13 @@ const AddProgramForm = ({ form, fieldArray }: Props) => {
   return (
     <FormProvider {...form}>
       <form className={styles.addProgram} onSubmit={handleSubmit}>
-        <Input name="id" label="Program ID:" direction="y" block />
+        {/* TODO: temporary button alignment fix */}
+        <div className={clsx(styles.input, form.formState.errors['id'] && styles.error)}>
+          <Input name="id" label="Program ID:" direction="y" block />
+          <Button type="submit" text="Add" color="light" />
+        </div>
 
         {Boolean(fields.length) && <ul>{renderPrograms()}</ul>}
-
-        <Button type="submit" text="Add" color="light" size="small" block />
       </form>
     </FormProvider>
   );
