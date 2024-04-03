@@ -51,38 +51,63 @@
 }
 
 .duration {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  .heading {
+    margin-bottom: 4px;
 
-  div,
-  p {
-    display: flex;
-    align-items: center;
+    font-weight: 500;
   }
 
-  div {
-    gap: 12px;
+  .subheading {
+    margin-bottom: 12px;
 
-    white-space: nowrap;
+    color: rgba(#fff, 0.6);
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .option {
+      display: grid;
+      grid-template-columns: 1.5fr 8.5fr;
+      gap: 32px;
+    }
+
+    .blocks,
+    .blocks > div {
+      display: flex;
+      align-items: center;
+    }
 
     p {
-      gap: 4px;
+      display: flex;
+      align-items: center;
     }
 
-    .key {
-      font-weight: 300;
-      color: rgba(255, 255, 255, 0.2);
-    }
+    div {
+      gap: 12px;
 
-    .button {
-      color: #2bd071;
+      white-space: nowrap;
 
-      border-bottom: dashed 1px #2bd071;
+      p {
+        gap: 4px;
+      }
 
-      // overriding @gear-js/ui
-      font-weight: 400;
-      border-radius: 0;
+      .key {
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.2);
+      }
+
+      .button {
+        color: #2bd071;
+
+        border-bottom: dashed 1px #2bd071;
+
+        // overriding @gear-js/ui
+        font-weight: 400;
+        border-radius: 0;
+      }
     }
   }
 }
