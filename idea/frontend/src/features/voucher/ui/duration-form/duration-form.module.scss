@@ -1,47 +1,34 @@
-.options {
+.duration {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
 
-  .option {
-    display: grid;
-    grid-template-columns: 1.5fr 8.5fr;
-    gap: 32px;
-  }
+.blocks,
+.minMax {
+  display: flex;
+  gap: 12px;
+}
 
-  .blocks,
-  .blocks > div {
-    display: flex;
-    align-items: center;
-  }
-
+.minMax {
   p {
     display: flex;
     align-items: center;
+    gap: 4px;
   }
 
-  div {
-    gap: 12px;
+  span {
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.2);
+  }
 
-    white-space: nowrap;
+  button {
+    color: #2bd071;
 
-    p {
-      gap: 4px;
-    }
+    border-bottom: dashed 1px #2bd071;
 
-    .key {
-      font-weight: 300;
-      color: rgba(255, 255, 255, 0.2);
-    }
-
-    .button {
-      color: #2bd071;
-
-      border-bottom: dashed 1px #2bd071;
-
-      // overriding @gear-js/ui
-      font-weight: 400;
-      border-radius: 0;
-    }
+    // overriding @gear-js/ui
+    font-weight: 400;
+    border-radius: 0;
   }
 }

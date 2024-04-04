@@ -1,5 +1,5 @@
 import { useApi } from '@gear-js/react-hooks';
-import { Radio, Button, Select } from '@gear-js/ui';
+import { Button, Select } from '@gear-js/ui';
 import { useMemo } from 'react';
 
 import { Input } from '@/shared/ui';
@@ -28,46 +28,30 @@ const DurationForm = ({ value, onChange }: Props) => {
   );
 
   return (
-    <div className={styles.options}>
-      <div className={styles.option}>
-        <Radio label="Blocks" />
+    <div className={styles.duration}>
+      <div className={styles.blocks}>
+        <Input type="number" label="Blocks:" name={FIELD_NAME.DURATION} />
 
-        <div className={styles.blocks}>
-          <Input type="number" name={FIELD_NAME.DURATION} />
+        <div className={styles.minMax}>
+          <p>
+            <span>Min:</span>
+            <Button text={minDuration} color="transparent" onClick={() => onChange(minDuration)} />
+          </p>
 
-          <div>
-            <p>
-              <span className={styles.key}>Min:</span>
-
-              <Button
-                text={minDuration}
-                color="transparent"
-                className={styles.button}
-                onClick={() => onChange(minDuration)}
-              />
-            </p>
-
-            <p>
-              <span className={styles.key}>Max:</span>
-
-              <Button
-                text={maxDuration}
-                color="transparent"
-                className={styles.button}
-                onClick={() => onChange(maxDuration)}
-              />
-            </p>
-          </div>
+          <p>
+            <span>Max:</span>
+            <Button text={maxDuration} color="transparent" onClick={() => onChange(maxDuration)} />
+          </p>
         </div>
       </div>
 
-      <div className={styles.option}>
-        <Radio label="Time:" />
-
-        <div>
-          <Select options={customizedOptions} value={value} onChange={({ target }) => onChange(target.value)} />
-        </div>
-      </div>
+      <Select
+        label="Time:"
+        gap="1.1/8.9"
+        options={customizedOptions}
+        value={value}
+        onChange={({ target }) => onChange(target.value)}
+      />
     </div>
   );
 };
