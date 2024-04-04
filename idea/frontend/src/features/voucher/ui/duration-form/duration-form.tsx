@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { Input } from '@/shared/ui';
 
 import { FIELD_NAME } from '../../consts';
-import { getCustomOption, getOptions } from '../../utils';
+import { getMilliseconds, getPluralizedUnit, getTime } from '../../utils';
 import styles from './duration-form.module.scss';
 
 type Props = {
@@ -13,17 +13,46 @@ type Props = {
   onChange: (duration: string) => void;
 };
 
+const DURATION_UNIT = {
+  HOUR: 'hour',
+  DAY: 'day',
+  MONTH: 'month',
+} as const;
+
+const OPTIONS = [
+  { value: 1, unit: DURATION_UNIT.HOUR },
+  { value: 3, unit: DURATION_UNIT.HOUR },
+  { value: 6, unit: DURATION_UNIT.HOUR },
+  { value: 12, unit: DURATION_UNIT.HOUR },
+  { value: 1, unit: DURATION_UNIT.DAY },
+  { value: 7, unit: DURATION_UNIT.DAY },
+  { value: 14, unit: DURATION_UNIT.DAY },
+  { value: 1, unit: DURATION_UNIT.MONTH },
+  { value: 2, unit: DURATION_UNIT.MONTH },
+];
+
 const DurationForm = ({ value, onChange }: Props) => {
   const { api } = useApi();
   const blockTimeMs = api?.consts.babe.expectedBlockTime.toNumber() || 0;
   const minDuration = api?.voucher.minDuration.toString() || '0';
   const maxDuration = api?.voucher.maxDuration.toString() || '0';
 
-  const options = useMemo(() => getOptions(blockTimeMs), [blockTimeMs]);
+  const options = useMemo(
+    () =>
+      OPTIONS.map((option) => {
+        const ms = getMilliseconds(option.value, option.unit);
+        const blocks = Math.ceil(ms / blockTimeMs);
+
+        return { value: blocks.toString(), label: getPluralizedUnit(option.value, option.unit) };
+      }),
+    [blockTimeMs],
+  );
+
   const isOptionExists = useMemo(() => options.some((option) => option.value === value), [value, options]);
 
-  const customizedOptions = useMemo(
-    () => (isOptionExists ? options : [...options, getCustomOption(value, blockTimeMs)]),
+  const optionsWithValue = useMemo(
+    () =>
+      isOptionExists ? options : [...options, { label: getTime(blockTimeMs * Number(value)), value, disabled: true }],
     [blockTimeMs, value, isOptionExists, options],
   );
 
@@ -48,7 +77,7 @@ const DurationForm = ({ value, onChange }: Props) => {
       <Select
         label="Time:"
         gap="1.1/8.9"
-        options={customizedOptions}
+        options={optionsWithValue}
         value={value}
         onChange={({ target }) => onChange(target.value)}
       />

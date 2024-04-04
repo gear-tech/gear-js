@@ -28,38 +28,4 @@ function getTime(ms: number) {
   return result.trim();
 }
 
-const getOptions = (blockTimeMs: number) => {
-  const DURATION_UNIT = {
-    HOUR: 'hour',
-    DAY: 'day',
-    MONTH: 'month',
-  } as const;
-
-  const DURATION_OPTIONS = [
-    { value: 1, unit: DURATION_UNIT.HOUR },
-    { value: 3, unit: DURATION_UNIT.HOUR },
-    { value: 6, unit: DURATION_UNIT.HOUR },
-    { value: 12, unit: DURATION_UNIT.HOUR },
-    { value: 1, unit: DURATION_UNIT.DAY },
-    { value: 7, unit: DURATION_UNIT.DAY },
-    { value: 14, unit: DURATION_UNIT.DAY },
-    { value: 1, unit: DURATION_UNIT.MONTH },
-    { value: 2, unit: DURATION_UNIT.MONTH },
-  ];
-
-  return DURATION_OPTIONS.map(({ value, unit }) => {
-    const ms = getMilliseconds(value, unit);
-    const blocks = Math.ceil(ms / blockTimeMs);
-
-    return { value: blocks.toString(), label: getPluralizedUnit(value, unit) };
-  });
-};
-
-const getCustomOption = (duration: string, blockTimeMs: number) => {
-  const milliseconds = blockTimeMs * Number(duration);
-  const time = getTime(milliseconds);
-
-  return { label: time, value: duration, disabled: true };
-};
-
-export { getOptions, getCustomOption };
+export { getPluralizedUnit, getMilliseconds, getTime };
