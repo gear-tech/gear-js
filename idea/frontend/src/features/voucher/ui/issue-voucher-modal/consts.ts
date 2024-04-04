@@ -8,6 +8,7 @@ const INPUT_NAME = {
   ACCOUNT_ADDRESS: 'address',
   VALUE: 'value',
   DURATION: 'duration',
+  DURATION_SELECT: 'durationSelect',
 } as const;
 
 const VOUCHER_TYPE = {
@@ -21,6 +22,7 @@ const DEFAULT_VALUES = {
   [INPUT_NAME.ACCOUNT_ADDRESS]: '',
   [INPUT_NAME.VALUE]: '',
   [INPUT_NAME.DURATION]: '',
+  [INPUT_NAME.DURATION_SELECT]: '',
 } as const;
 
 const ADDRESS_SCHEMA = z

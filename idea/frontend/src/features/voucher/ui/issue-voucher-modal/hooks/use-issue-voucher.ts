@@ -37,7 +37,7 @@ function useIssueVoucher() {
 
   const issueVoucher = async (
     address: HexString,
-    programId: HexString,
+    programIds: HexString[] | undefined,
     value: string,
     duration: number,
     isCodeUploadEnabled: boolean,
@@ -46,9 +46,7 @@ function useIssueVoucher() {
     if (!isApiReady || !account) return;
 
     try {
-      const programs = [programId];
-
-      const { extrinsic } = await api.voucher.issue(address, value, duration, programs, isCodeUploadEnabled);
+      const { extrinsic } = await api.voucher.issue(address, value, duration, programIds, isCodeUploadEnabled);
 
       const { signer } = await web3FromSource(account.meta.source);
 

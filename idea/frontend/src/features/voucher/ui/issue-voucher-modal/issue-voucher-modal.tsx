@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
-import { Input,  ValueField, withDeprecatedFallback } from '@/shared/ui';
+import { Input, ValueField, withDeprecatedFallback } from '@/shared/ui';
 
 import { useAddProgramForm, useBalanceSchema, useDurationSchema, useIssueVoucher, useVoucherType } from './hooks';
 import { IssueVoucherModalDeprecated } from './issue-voucher-modal-deprecated';
@@ -49,12 +49,26 @@ const IssueVoucherModal = withDeprecatedFallback(({ close }: Props) => {
 
   const handleSubmit = ({ address, value, duration }: Schema) => {
     const isCodeUploadEnabled = voucherType !== VOUCHER_TYPE.PROGRAM;
-    const programs = voucherType !== VOUCHER_TYPE.CODE ? addProgramFieldArray.fields.map((field) => field.value) : null;
+    const programs =
+      voucherType !== VOUCHER_TYPE.CODE ? addProgramFieldArray.fields.map((field) => field.value) : undefined;
 
+    console.log('duration: ', duration);
     console.log('programs: ', programs);
 
-    // issueVoucher(address, '0x00', value, duration, isCodeUploadEnabled, close);
+    // issueVoucher(address, programs, value, duration, isCodeUploadEnabled, close);
   };
+
+  const duration = form.watch(INPUT_NAME.DURATION);
+  const durationSelect = form.watch(INPUT_NAME.DURATION_SELECT);
+  const setDuration = (value: string) => form.setValue(INPUT_NAME.DURATION, value as '');
+
+  useEffect(() => {
+    form.setValue(INPUT_NAME.DURATION_SELECT, duration);
+  }, [duration]);
+
+  useEffect(() => {
+    setDuration(durationSelect);
+  }, [durationSelect]);
 
   return (
     <Modal heading="Create Voucher" size="large" close={close} className={styles.form}>
@@ -77,7 +91,7 @@ const IssueVoucherModal = withDeprecatedFallback(({ close }: Props) => {
               Specify the duration in blocks or choose from the available time intervals.
             </p>
 
-            <DurationForm />
+            <DurationForm duration={duration} setDuration={setDuration} />
           </div>
 
           <div className={styles.buttons}>
