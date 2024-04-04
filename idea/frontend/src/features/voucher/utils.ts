@@ -55,8 +55,8 @@ const getOptions = (blockTimeMs: number) => {
   });
 };
 
-const getCustomOption = (duration: number, blockTimeMs: number) => {
-  const milliseconds = blockTimeMs * duration;
+const getCustomOption = (duration: string, blockTimeMs: number) => {
+  const milliseconds = blockTimeMs * Number(duration);
   const time = getTime(milliseconds);
 
   return { label: time, value: duration, disabled: true };

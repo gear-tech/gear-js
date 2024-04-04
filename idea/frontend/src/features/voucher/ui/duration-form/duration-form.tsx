@@ -23,7 +23,7 @@ const DurationForm = ({ value, onChange }: Props) => {
   const isOptionExists = useMemo(() => options.some((option) => option.value === value), [value, options]);
 
   const customizedOptions = useMemo(
-    () => (isOptionExists ? options : [...options, getCustomOption(Number(value), blockTimeMs)]),
+    () => (isOptionExists ? options : [...options, getCustomOption(value, blockTimeMs)]),
     [blockTimeMs, value, isOptionExists, options],
   );
 

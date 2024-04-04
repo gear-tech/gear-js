@@ -63,7 +63,7 @@ const ProgramsForm = ({ value, onChange }: Props) => {
 
   return (
     <FormProvider {...form}>
-      <form className={styles.addProgram} onSubmit={form.handleSubmit(handleSubmit)}>
+      <form className={styles.form} onSubmit={form.handleSubmit(handleSubmit)}>
         {/* TODO: temporary button alignment fix */}
         <div className={clsx(styles.input, form.formState.errors['id'] && styles.error)}>
           <Input name="id" label="Program ID:" direction="y" block />

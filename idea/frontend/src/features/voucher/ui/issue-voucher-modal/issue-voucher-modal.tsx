@@ -64,7 +64,7 @@ const IssueVoucherModal = withDeprecatedFallback(({ programId, close }: Props) =
   };
 
   return (
-    <Modal heading="Create Voucher" size="large" close={close} className={styles.form}>
+    <Modal heading="Create Voucher" size="large" close={close}>
       {!isForSpecificProgram && (
         <div className={styles.radios}>
           <Radio {...getVoucherTypeProps('Interact with a program', VOUCHER_TYPE.PROGRAM)} />
@@ -76,17 +76,19 @@ const IssueVoucherModal = withDeprecatedFallback(({ programId, close }: Props) =
       {!isCodeVoucher && !isForSpecificProgram && <ProgramsForm value={programs} onChange={setPrograms} />}
 
       <FormProvider {...form}>
-        <form className={styles.form} onSubmit={form.handleSubmit(handleSubmit)}>
-          <Input name={FIELD_NAME.ACCOUNT_ADDRESS} label="Account address:" direction="y" block />
-          <ValueField name={FIELD_NAME.VALUE} label="Tokens amount:" direction="y" block />
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
+          <div className={styles.inputs}>
+            <Input name={FIELD_NAME.ACCOUNT_ADDRESS} label="Account address:" direction="y" block />
+            <ValueField name={FIELD_NAME.VALUE} label="Tokens amount:" direction="y" block />
 
-          <div className={styles.duration}>
-            <h4 className={styles.heading}>Enter expiration period</h4>
-            <p className={styles.subheading}>
-              Specify the duration in blocks or choose from the available time intervals.
-            </p>
+            <div className={styles.duration}>
+              <h4 className={styles.heading}>Enter expiration period</h4>
+              <p className={styles.subheading}>
+                Specify the duration in blocks or choose from the available time intervals.
+              </p>
 
-            <DurationForm value={duration} onChange={setDuration} />
+              <DurationForm value={duration} onChange={setDuration} />
+            </div>
           </div>
 
           <div className={styles.buttons}>

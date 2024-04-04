@@ -1,7 +1,14 @@
 @use '@/shared/assets/styles/mixins' as *;
 
-.form {
-  @include childrenMargin(16px);
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.radios,
+.duration {
+  margin-bottom: 24px;
 }
 
 .radios {
