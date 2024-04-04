@@ -25,6 +25,7 @@ type Props = {
 const IssueVoucherModal = withDeprecatedFallback(({ programId, close }: Props) => {
   const balanceSchema = useBalanceSchema();
   const durationSchema = useDurationSchema();
+  const { issueVoucher } = useIssueVoucher();
 
   const schema = z.object({
     [FIELD_NAME.ACCOUNT_ADDRESS]: ADDRESS_SCHEMA,
@@ -48,8 +49,6 @@ const IssueVoucherModal = withDeprecatedFallback(({ programId, close }: Props) =
   const isCodeVoucher = voucherType === VOUCHER_TYPE.CODE;
   const duration = form.watch(FIELD_NAME.DURATION);
   const setDuration = (value: string) => form.setValue(FIELD_NAME.DURATION, value, { shouldValidate: true });
-
-  const { issueVoucher } = useIssueVoucher();
 
   useEffect(() => {
     form.reset();
