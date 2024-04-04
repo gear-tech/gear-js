@@ -1,46 +1,76 @@
+import { HexString } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
+import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
-import { FormProvider } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { Input } from '@/shared/ui';
 
-import { useAddProgramForm } from '../../hooks';
+import { useProgramIdSchema } from '../../hooks';
 import styles from './programs-form.module.scss';
 
-type Props = {
-  form: ReturnType<typeof useAddProgramForm>['form'];
-  fieldArray: ReturnType<typeof useAddProgramForm>['fieldArray'];
+const FIELD_NAME = {
+  PROGRAM_ID: 'id',
+} as const;
+
+type Values = {
+  [FIELD_NAME.PROGRAM_ID]: string;
 };
 
-const ProgramsForm = ({ form, fieldArray }: Props) => {
-  const { resetField } = form;
-  const { fields, append, remove } = fieldArray;
+type FormattedValues = {
+  [FIELD_NAME.PROGRAM_ID]: HexString;
+};
 
-  const handleSubmit = form.handleSubmit(({ id }) => {
-    append({ value: id });
-    resetField('id');
+const DEFAULT_VALUES: Values = {
+  [FIELD_NAME.PROGRAM_ID]: '',
+} as const;
+
+type Props = {
+  value: HexString[];
+  onChange: (value: (prevState: HexString[]) => HexString[]) => void;
+};
+
+const ProgramsForm = ({ value, onChange }: Props) => {
+  const programIdSchema = useProgramIdSchema(value);
+
+  const schema = z.object({
+    [FIELD_NAME.PROGRAM_ID]: programIdSchema,
   });
 
-  const renderPrograms = () =>
-    fields.map(({ id, value }, index) => (
-      <li key={id} className={styles.programId}>
-        <span>{value}</span>
+  const form = useForm<Values, unknown, FormattedValues>({
+    defaultValues: DEFAULT_VALUES,
+    resolver: zodResolver(schema),
+  });
 
-        <Button icon={CloseSVG} color="transparent" onClick={() => remove(index)} />
+  const add = (id: HexString) => onChange((prevValue) => [...prevValue, id]);
+  const remove = (id: HexString) => onChange((prevValue) => prevValue.filter((_id) => id !== _id));
+
+  const handleSubmit = ({ id }: FormattedValues) => {
+    add(id);
+    form.reset();
+  };
+
+  const renderPrograms = () =>
+    value.map((id) => (
+      <li key={id} className={styles.programId}>
+        <span>{id}</span>
+
+        <Button icon={CloseSVG} color="transparent" onClick={() => remove(id)} />
       </li>
     ));
 
   return (
     <FormProvider {...form}>
-      <form className={styles.addProgram} onSubmit={handleSubmit}>
+      <form className={styles.addProgram} onSubmit={form.handleSubmit(handleSubmit)}>
         {/* TODO: temporary button alignment fix */}
         <div className={clsx(styles.input, form.formState.errors['id'] && styles.error)}>
           <Input name="id" label="Program ID:" direction="y" block />
           <Button type="submit" text="Add" color="light" />
         </div>
 
-        {Boolean(fields.length) && <ul>{renderPrograms()}</ul>}
+        {Boolean(value.length) && <ul>{renderPrograms()}</ul>}
       </form>
     </FormProvider>
   );

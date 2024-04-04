@@ -1,30 +1,30 @@
 import { useApi } from '@gear-js/react-hooks';
-import { Radio, Button } from '@gear-js/ui';
+import { Radio, Button, Select } from '@gear-js/ui';
 import { useMemo } from 'react';
 
-import { Input, Select } from '@/shared/ui';
+import { Input } from '@/shared/ui';
 
-import { INPUT_NAME } from '../../consts';
+import { FIELD_NAME } from '../../consts';
 import { getCustomOption, getOptions } from '../../utils';
 import styles from './duration-form.module.scss';
 
 type Props = {
-  duration: string;
-  setDuration: (duration: string) => void;
+  value: string;
+  onChange: (duration: string) => void;
 };
 
-const DurationForm = ({ duration, setDuration }: Props) => {
+const DurationForm = ({ value, onChange }: Props) => {
   const { api } = useApi();
   const blockTimeMs = api?.consts.babe.expectedBlockTime.toNumber() || 0;
   const minDuration = api?.voucher.minDuration.toString() || '0';
   const maxDuration = api?.voucher.maxDuration.toString() || '0';
 
   const options = useMemo(() => getOptions(blockTimeMs), [blockTimeMs]);
-  const isOptionExists = useMemo(() => options.some(({ value }) => value === duration), [duration, options]);
+  const isOptionExists = useMemo(() => options.some((option) => option.value === value), [value, options]);
 
   const customizedOptions = useMemo(
-    () => (isOptionExists ? options : [...options, getCustomOption(Number(duration), blockTimeMs)]),
-    [blockTimeMs, duration, isOptionExists, options],
+    () => (isOptionExists ? options : [...options, getCustomOption(Number(value), blockTimeMs)]),
+    [blockTimeMs, value, isOptionExists, options],
   );
 
   return (
@@ -33,17 +33,17 @@ const DurationForm = ({ duration, setDuration }: Props) => {
         <Radio label="Blocks" />
 
         <div className={styles.blocks}>
-          <Input type="number" name={INPUT_NAME.DURATION} />
+          <Input type="number" name={FIELD_NAME.DURATION} />
 
           <div>
             <p>
               <span className={styles.key}>Min:</span>
 
               <Button
-                text={minDuration.toString()}
+                text={minDuration}
                 color="transparent"
                 className={styles.button}
-                onClick={() => setDuration(minDuration)}
+                onClick={() => onChange(minDuration)}
               />
             </p>
 
@@ -51,10 +51,10 @@ const DurationForm = ({ duration, setDuration }: Props) => {
               <span className={styles.key}>Max:</span>
 
               <Button
-                text={maxDuration.toString()}
+                text={maxDuration}
                 color="transparent"
                 className={styles.button}
-                onClick={() => setDuration(maxDuration)}
+                onClick={() => onChange(maxDuration)}
               />
             </p>
           </div>
@@ -65,7 +65,7 @@ const DurationForm = ({ duration, setDuration }: Props) => {
         <Radio label="Time:" />
 
         <div>
-          <Select name={INPUT_NAME.DURATION_SELECT} options={customizedOptions} />
+          <Select options={customizedOptions} value={value} onChange={({ target }) => onChange(target.value)} />
         </div>
       </div>
     </div>

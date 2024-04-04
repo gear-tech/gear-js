@@ -1,7 +1,7 @@
-import { Button, Modal, Radio } from '@gear-js/ui';
+import { Button, Radio, Modal } from '@gear-js/ui';
 import { HexString } from '@gear-js/api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -9,8 +9,9 @@ import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { Input, ValueField, withDeprecatedFallback } from '@/shared/ui';
 
-import { ADDRESS_SCHEMA, DEFAULT_VALUES, INPUT_NAME, VOUCHER_TYPE } from '../../consts';
-import { useAddProgramForm, useBalanceSchema, useDurationSchema, useIssueVoucher, useVoucherType } from '../../hooks';
+import { ADDRESS_SCHEMA, DEFAULT_VALUES, FIELD_NAME, VOUCHER_TYPE } from '../../consts';
+import { useBalanceSchema, useDurationSchema, useIssueVoucher, useVoucherType } from '../../hooks';
+import { Values } from '../../types';
 import { DurationForm } from '../duration-form';
 import { ProgramsForm } from '../programs-form';
 import { IssueVoucherModalDeprecated } from './issue-voucher-modal-deprecated';
@@ -22,52 +23,42 @@ type Props = {
 };
 
 const IssueVoucherModal = withDeprecatedFallback(({ close }: Props) => {
-  const { issueVoucher } = useIssueVoucher();
-
   const balanceSchema = useBalanceSchema();
   const durationSchema = useDurationSchema();
 
   const schema = z.object({
-    [INPUT_NAME.ACCOUNT_ADDRESS]: ADDRESS_SCHEMA,
-    [INPUT_NAME.VALUE]: balanceSchema,
-    [INPUT_NAME.DURATION]: durationSchema,
+    [FIELD_NAME.ACCOUNT_ADDRESS]: ADDRESS_SCHEMA,
+    [FIELD_NAME.VALUE]: balanceSchema,
+    [FIELD_NAME.DURATION]: durationSchema,
   });
 
-  type Values = typeof DEFAULT_VALUES;
   type Schema = z.infer<typeof schema>;
 
-  const form = useForm<Values, unknown, Schema>({ defaultValues: DEFAULT_VALUES, resolver: zodResolver(schema) });
+  const form = useForm<Values, unknown, Schema>({
+    defaultValues: DEFAULT_VALUES,
+    resolver: zodResolver(schema),
+  });
 
   const [voucherType, getVoucherTypeProps] = useVoucherType();
-  const { form: addProgramForm, fieldArray: addProgramFieldArray } = useAddProgramForm();
+  const [programs, setPrograms] = useState<HexString[]>([]);
+
+  const isCodeVoucher = voucherType === VOUCHER_TYPE.CODE;
+  const duration = form.watch(FIELD_NAME.DURATION);
+  const setDuration = (value: string) => form.setValue(FIELD_NAME.DURATION, value);
+
+  const { issueVoucher } = useIssueVoucher();
 
   useEffect(() => {
     form.reset();
-    addProgramForm.reset();
-  }, [voucherType, form, addProgramForm]);
+    setPrograms([]);
+  }, [voucherType, form]);
 
-  const handleSubmit = ({ address, value, duration }: Schema) => {
+  const handleSubmit = ({ address, value, duration: _duration }: Schema) => {
     const isCodeUploadEnabled = voucherType !== VOUCHER_TYPE.PROGRAM;
-    const programs =
-      voucherType !== VOUCHER_TYPE.CODE ? addProgramFieldArray.fields.map((field) => field.value) : undefined;
+    const _programs = isCodeVoucher ? undefined : programs;
 
-    console.log('duration: ', duration);
-    console.log('programs: ', programs);
-
-    // issueVoucher(address, programs, value, duration, isCodeUploadEnabled, close);
+    issueVoucher(address, _programs, value, _duration, isCodeUploadEnabled, close);
   };
-
-  const duration = form.watch(INPUT_NAME.DURATION);
-  const durationSelect = form.watch(INPUT_NAME.DURATION_SELECT);
-  const setDuration = (value: string) => form.setValue(INPUT_NAME.DURATION, value as '');
-
-  useEffect(() => {
-    form.setValue(INPUT_NAME.DURATION_SELECT, duration);
-  }, [duration]);
-
-  useEffect(() => {
-    setDuration(durationSelect);
-  }, [durationSelect]);
 
   return (
     <Modal heading="Create Voucher" size="large" close={close} className={styles.form}>
@@ -77,12 +68,12 @@ const IssueVoucherModal = withDeprecatedFallback(({ close }: Props) => {
         <Radio {...getVoucherTypeProps('Code upload only', VOUCHER_TYPE.CODE)} />
       </div>
 
-      {voucherType !== VOUCHER_TYPE.CODE && <ProgramsForm form={addProgramForm} fieldArray={addProgramFieldArray} />}
+      {!isCodeVoucher && <ProgramsForm value={programs} onChange={setPrograms} />}
 
       <FormProvider {...form}>
         <form className={styles.form} onSubmit={form.handleSubmit(handleSubmit)}>
-          <Input name={INPUT_NAME.ACCOUNT_ADDRESS} label="Account address:" direction="y" block />
-          <ValueField name={INPUT_NAME.VALUE} label="Tokens amount:" direction="y" block />
+          <Input name={FIELD_NAME.ACCOUNT_ADDRESS} label="Account address:" direction="y" block />
+          <ValueField name={FIELD_NAME.VALUE} label="Tokens amount:" direction="y" block />
 
           <div className={styles.duration}>
             <h4 className={styles.heading}>Enter expiration period</h4>
@@ -90,7 +81,7 @@ const IssueVoucherModal = withDeprecatedFallback(({ close }: Props) => {
               Specify the duration in blocks or choose from the available time intervals.
             </p>
 
-            <DurationForm duration={duration} setDuration={setDuration} />
+            <DurationForm value={duration} onChange={setDuration} />
           </div>
 
           <div className={styles.buttons}>

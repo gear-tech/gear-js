@@ -1,6 +1,6 @@
 import { useState, ChangeEvent } from 'react';
 
-import { VOUCHER_TYPE, INPUT_NAME } from '../consts';
+import { VOUCHER_TYPE, FIELD_NAME } from '../consts';
 import { VoucherType } from '../types';
 
 function useVoucherType() {
@@ -9,7 +9,7 @@ function useVoucherType() {
   const getRadioProps = (label: string, value: string) => ({
     value,
     label,
-    name: INPUT_NAME.VOUCHER_TYPE,
+    name: FIELD_NAME.VOUCHER_TYPE,
     checked: type === value,
     onChange: ({ target }: ChangeEvent<HTMLInputElement>) => setType(target.value as VoucherType),
   });
