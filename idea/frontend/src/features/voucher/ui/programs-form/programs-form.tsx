@@ -70,7 +70,7 @@ const ProgramsForm = ({ value, onChange }: Props) => {
           <Button type="submit" text="Add" color="light" />
         </div>
 
-        {Boolean(value.length) && <ul>{renderPrograms()}</ul>}
+        {Boolean(value.length) && <ul className={styles.programs}>{renderPrograms()}</ul>}
       </form>
     </FormProvider>
   );
