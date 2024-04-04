@@ -10,12 +10,14 @@ import CouponSVG from '../../assets/coupon.svg?react';
 import { IssueVoucherModal } from '../issue-voucher-modal';
 
 type Props = {
-  programId: HexString;
-  transparent?: boolean;
+  programId?: HexString;
+  buttonSize?: 'small' | 'medium';
+  buttonColor?: 'secondary' | 'light' | 'transparent';
 };
 
-const IssueVoucher = withAccount(({ programId, transparent }: Props) => {
+const IssueVoucher = withAccount(({ programId, buttonColor = 'light', buttonSize = 'medium' }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
@@ -24,11 +26,11 @@ const IssueVoucher = withAccount(({ programId, transparent }: Props) => {
       <Button
         icon={CouponSVG}
         text="Create Voucher"
-        color={transparent ? 'transparent' : 'secondary'}
-        size="small"
-        className={cx(transparent && actionLinkStyles.link)}
-        noWrap
+        size={buttonSize}
+        color={buttonColor}
+        className={cx(buttonColor === 'transparent' && actionLinkStyles.link)}
         onClick={openModal}
+        noWrap
       />
 
       {isModalOpen && <IssueVoucherModal programId={programId} close={closeModal} />}

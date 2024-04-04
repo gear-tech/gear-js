@@ -17,7 +17,6 @@ import { INITIAL_ENDPOINT } from '@/features/api';
 
 import { withProviders } from './providers';
 import './App.scss';
-import { IssueVoucherModal } from '@/features/voucher/ui/issue-voucher-modal';
 
 const App = withProviders(() => {
   const { pathname } = useLocation();
@@ -65,7 +64,6 @@ const App = withProviders(() => {
         {isMobileDisclaimerVisible && <MobileDisclaimer onCloseButtonClick={closeMobileDisclaimer} />}
       </main>
 
-      <IssueVoucherModal programId="0x00" close={() => {}} />
       <Footer />
     </>
   );

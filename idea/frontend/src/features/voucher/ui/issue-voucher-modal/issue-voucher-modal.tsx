@@ -1,7 +1,7 @@
 import { Button, Radio, Modal } from '@gear-js/ui';
 import { HexString } from '@gear-js/api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -18,11 +18,11 @@ import { IssueVoucherModalDeprecated } from './issue-voucher-modal-deprecated';
 import styles from './issue-voucher-modal.module.scss';
 
 type Props = {
-  programId: HexString; // TODO: drop
+  programId?: HexString;
   close: () => void;
 };
 
-const IssueVoucherModal = withDeprecatedFallback(({ close }: Props) => {
+const IssueVoucherModal = withDeprecatedFallback(({ programId, close }: Props) => {
   const balanceSchema = useBalanceSchema();
   const durationSchema = useDurationSchema();
 
@@ -40,7 +40,10 @@ const IssueVoucherModal = withDeprecatedFallback(({ close }: Props) => {
   });
 
   const [voucherType, getVoucherTypeProps] = useVoucherType();
-  const [programs, setPrograms] = useState<HexString[]>([]);
+
+  const isForSpecificProgram = Boolean(programId);
+  const defaultPrograms = useMemo(() => (programId ? [programId] : []), [programId]);
+  const [programs, setPrograms] = useState<HexString[]>(defaultPrograms);
 
   const isCodeVoucher = voucherType === VOUCHER_TYPE.CODE;
   const duration = form.watch(FIELD_NAME.DURATION);
@@ -50,8 +53,8 @@ const IssueVoucherModal = withDeprecatedFallback(({ close }: Props) => {
 
   useEffect(() => {
     form.reset();
-    setPrograms([]);
-  }, [voucherType, form]);
+    setPrograms(defaultPrograms);
+  }, [voucherType, form, defaultPrograms]);
 
   const handleSubmit = ({ address, value, duration: _duration }: Schema) => {
     const isCodeUploadEnabled = voucherType !== VOUCHER_TYPE.PROGRAM;
@@ -62,13 +65,15 @@ const IssueVoucherModal = withDeprecatedFallback(({ close }: Props) => {
 
   return (
     <Modal heading="Create Voucher" size="large" close={close} className={styles.form}>
-      <div className={styles.radios}>
-        <Radio {...getVoucherTypeProps('Interact with a program', VOUCHER_TYPE.PROGRAM)} />
-        <Radio {...getVoucherTypeProps('Interact with a program and upload a code', VOUCHER_TYPE.MIXED)} />
-        <Radio {...getVoucherTypeProps('Code upload only', VOUCHER_TYPE.CODE)} />
-      </div>
+      {!isForSpecificProgram && (
+        <div className={styles.radios}>
+          <Radio {...getVoucherTypeProps('Interact with a program', VOUCHER_TYPE.PROGRAM)} />
+          <Radio {...getVoucherTypeProps('Interact with a program and upload a code', VOUCHER_TYPE.MIXED)} />
+          <Radio {...getVoucherTypeProps('Code upload only', VOUCHER_TYPE.CODE)} />
+        </div>
+      )}
 
-      {!isCodeVoucher && <ProgramsForm value={programs} onChange={setPrograms} />}
+      {!isCodeVoucher && !isForSpecificProgram && <ProgramsForm value={programs} onChange={setPrograms} />}
 
       <FormProvider {...form}>
         <form className={styles.form} onSubmit={form.handleSubmit(handleSubmit)}>

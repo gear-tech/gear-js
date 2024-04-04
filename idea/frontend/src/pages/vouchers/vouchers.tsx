@@ -2,6 +2,7 @@ import { useAccountVouchers } from '@gear-js/react-hooks';
 import { Navigate } from 'react-router-dom';
 
 import { Placeholder } from '@/entities/placeholder';
+import { IssueVoucher } from '@/features/voucher';
 import { routes } from '@/shared/config';
 import { Subheader } from '@/shared/ui/subheader';
 import { withDeprecatedFallback } from '@/shared/ui';
@@ -29,7 +30,9 @@ const Vouchers = withDeprecatedFallback(
 
     return (
       <>
-        <Subheader title={`Vouchers: ${vouchersCount}`} size="big" />
+        <Subheader title={`Vouchers: ${vouchersCount}`} size="big">
+          <IssueVoucher />
+        </Subheader>
 
         {!isPlaceholderVisible ? (
           <ul className={styles.list}>{renderVouchers()}</ul>
