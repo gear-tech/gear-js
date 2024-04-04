@@ -1,0 +1,47 @@
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .option {
+    display: grid;
+    grid-template-columns: 1.5fr 8.5fr;
+    gap: 32px;
+  }
+
+  .blocks,
+  .blocks > div {
+    display: flex;
+    align-items: center;
+  }
+
+  p {
+    display: flex;
+    align-items: center;
+  }
+
+  div {
+    gap: 12px;
+
+    white-space: nowrap;
+
+    p {
+      gap: 4px;
+    }
+
+    .key {
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.2);
+    }
+
+    .button {
+      color: #2bd071;
+
+      border-bottom: dashed 1px #2bd071;
+
+      // overriding @gear-js/ui
+      font-weight: 400;
+      border-radius: 0;
+    }
+  }
+}

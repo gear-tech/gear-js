@@ -1,21 +1,20 @@
 import { Button, Modal, Radio } from '@gear-js/ui';
 import { HexString } from '@gear-js/api';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { Input, ValueField, withDeprecatedFallback } from '@/shared/ui';
 
-import { useAddProgramForm, useBalanceSchema, useDurationSchema, useIssueVoucher, useVoucherType } from './hooks';
+import { ADDRESS_SCHEMA, DEFAULT_VALUES, INPUT_NAME, VOUCHER_TYPE } from '../../consts';
+import { useAddProgramForm, useBalanceSchema, useDurationSchema, useIssueVoucher, useVoucherType } from '../../hooks';
+import { DurationForm } from '../duration-form';
+import { ProgramsForm } from '../programs-form';
 import { IssueVoucherModalDeprecated } from './issue-voucher-modal-deprecated';
 import styles from './issue-voucher-modal.module.scss';
-import { ADDRESS_SCHEMA, DEFAULT_VALUES, INPUT_NAME, VOUCHER_TYPE } from './consts';
-import { FormProvider, useForm } from 'react-hook-form';
-
-import { useEffect } from 'react';
-import { AddProgramForm } from './add-program-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { DurationForm } from './duration-form';
 
 type Props = {
   programId: HexString; // TODO: drop
@@ -78,7 +77,7 @@ const IssueVoucherModal = withDeprecatedFallback(({ close }: Props) => {
         <Radio {...getVoucherTypeProps('Code upload only', VOUCHER_TYPE.CODE)} />
       </div>
 
-      {voucherType !== VOUCHER_TYPE.CODE && <AddProgramForm form={addProgramForm} fieldArray={addProgramFieldArray} />}
+      {voucherType !== VOUCHER_TYPE.CODE && <ProgramsForm form={addProgramForm} fieldArray={addProgramFieldArray} />}
 
       <FormProvider {...form}>
         <form className={styles.form} onSubmit={form.handleSubmit(handleSubmit)}>

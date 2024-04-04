@@ -2,10 +2,11 @@ import { useApi } from '@gear-js/react-hooks';
 import { Radio, Button } from '@gear-js/ui';
 import { useMemo } from 'react';
 
-import { INPUT_NAME } from './consts';
-import { getCustomOption, getOptions } from './utils';
-import styles from './issue-voucher-modal.module.scss';
 import { Input, Select } from '@/shared/ui';
+
+import { INPUT_NAME } from '../../consts';
+import { getCustomOption, getOptions } from '../../utils';
+import styles from './duration-form.module.scss';
 
 type Props = {
   duration: string;

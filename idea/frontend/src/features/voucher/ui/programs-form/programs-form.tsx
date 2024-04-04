@@ -1,19 +1,19 @@
 import { Button } from '@gear-js/ui';
+import clsx from 'clsx';
 import { FormProvider } from 'react-hook-form';
 
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
-
-import { useAddProgramForm } from './hooks';
-import styles from './issue-voucher-modal.module.scss';
 import { Input } from '@/shared/ui';
-import clsx from 'clsx';
+
+import { useAddProgramForm } from '../../hooks';
+import styles from './programs-form.module.scss';
 
 type Props = {
   form: ReturnType<typeof useAddProgramForm>['form'];
   fieldArray: ReturnType<typeof useAddProgramForm>['fieldArray'];
 };
 
-const AddProgramForm = ({ form, fieldArray }: Props) => {
+const ProgramsForm = ({ form, fieldArray }: Props) => {
   const { resetField } = form;
   const { fields, append, remove } = fieldArray;
 
@@ -46,4 +46,4 @@ const AddProgramForm = ({ form, fieldArray }: Props) => {
   );
 };
 
-export { AddProgramForm };
+export { ProgramsForm };

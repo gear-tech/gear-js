@@ -10,46 +10,6 @@
   gap: 4px;
 }
 
-.addProgram {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  .input {
-    display: flex;
-    align-items: flex-end;
-    gap: 8px;
-
-    &.error {
-      align-items: center;
-    }
-  }
-
-  ul {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 8px;
-  }
-
-  .programId {
-    padding: 2px 8px;
-
-    display: flex;
-    align-items: center;
-
-    font-size: 12px;
-    color: rgba(#fff, 0.8);
-
-    background: rgba(#fff, 0.1);
-    border-radius: 15px;
-
-    span {
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-  }
-}
-
 .duration {
   .heading {
     margin-bottom: 4px;
@@ -61,54 +21,6 @@
     margin-bottom: 12px;
 
     color: rgba(#fff, 0.6);
-  }
-
-  .options {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
-    .option {
-      display: grid;
-      grid-template-columns: 1.5fr 8.5fr;
-      gap: 32px;
-    }
-
-    .blocks,
-    .blocks > div {
-      display: flex;
-      align-items: center;
-    }
-
-    p {
-      display: flex;
-      align-items: center;
-    }
-
-    div {
-      gap: 12px;
-
-      white-space: nowrap;
-
-      p {
-        gap: 4px;
-      }
-
-      .key {
-        font-weight: 300;
-        color: rgba(255, 255, 255, 0.2);
-      }
-
-      .button {
-        color: #2bd071;
-
-        border-bottom: dashed 1px #2bd071;
-
-        // overriding @gear-js/ui
-        font-weight: 400;
-        border-radius: 0;
-      }
-    }
   }
 }
 
