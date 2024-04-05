@@ -1,4 +1,4 @@
-name: "Gear Idea: deploy to k8s stage/prod"
+name: "Gear Idea: deploy to k8s stage"
 
 on:
   push:
