@@ -1,5 +1,4 @@
 FROM ubuntu:22.04
-MAINTAINER GEAR
 WORKDIR opt
 RUN apt update
 RUN apt install wget -y
