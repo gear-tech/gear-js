@@ -1,6 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL as string;
+const VOUCHERS_API_URL = import.meta.env.VITE_VOUCHERS_API_URL as string;
+const NODES_API_URL = import.meta.env.VITE_NODES_API_URL as string;
 const NODE_ADDRESS = import.meta.env.VITE_NODE_ADDRESS as string;
-const DEFAULT_NODES_URL = import.meta.env.VITE_DEFAULT_NODES_URL as string;
 const HCAPTCHA_SITE_KEY = import.meta.env.VITE_HCAPTCHA_SITE_KEY as string;
 
 const NODE_ADRESS_URL_PARAM = 'node';
@@ -93,8 +94,9 @@ enum AnimationTimeout {
 
 export {
   API_URL,
+  VOUCHERS_API_URL,
+  NODES_API_URL,
   NODE_ADDRESS,
-  DEFAULT_NODES_URL,
   HCAPTCHA_SITE_KEY,
   NODE_ADRESS_URL_PARAM,
   EXAMPLES_HREF,
