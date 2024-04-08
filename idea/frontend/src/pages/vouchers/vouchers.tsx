@@ -1,11 +1,9 @@
 import { useAccountVouchers } from '@gear-js/react-hooks';
 
 import { Placeholder } from '@/entities/placeholder';
-import { IssueVoucher } from '@/features/voucher';
+import { IssueVoucher, VoucherCard, VoucherCardPlaceholder } from '@/features/voucher';
 import { Subheader } from '@/shared/ui/subheader';
 
-import VoucherCardPlaceholder from './assets/voucher-card-placeholder.svg?react';
-import { VoucherCard } from './ui';
 import styles from './vouchers.module.scss';
 
 const Vouchers = () => {
