@@ -11,7 +11,7 @@ const fetchWithGuard = async <T extends object>(...args: Parameters<typeof fetch
   return response.json() as T;
 };
 
-const getVouchers = (params: { offset: number; limit: number }) => {
+const getVouchers = (params: { offset: number; limit: number; query: string }) => {
   const url = `${VOUCHERS_API_URL}/vouchers`;
   const method = 'POST';
   const body = JSON.stringify(params);

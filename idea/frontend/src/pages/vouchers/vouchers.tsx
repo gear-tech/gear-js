@@ -14,6 +14,7 @@ import { BulbStatus } from '@/shared/ui/bulbBlock';
 import { Input } from '@gear-js/ui';
 import { useMemo, useState } from 'react';
 import { useAccount } from '@gear-js/react-hooks';
+import { useForm } from 'react-hook-form';
 
 const DEFAULT_FILTER_VALUES = {
   owner: 'all',
@@ -64,21 +65,35 @@ function useVoucherFilters() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const params = useMemo(() => ({ ...getOwnerParams(), ...getStatusParams() }), [values, account]);
-  console.log('params: ', params);
 
   return [values, params, setValues] as const;
 }
 
+const DEFAULT_SEARCH_VALUES = {
+  query: '',
+};
+
+function useSearchQuery() {
+  const [query, setQuery] = useState('');
+
+  const { register, handleSubmit } = useForm({
+    defaultValues: DEFAULT_SEARCH_VALUES,
+  });
+
+  const registerSearchInput = register('query');
+  const handleSearchSubmit = handleSubmit((values) => setQuery(values.query));
+
+  return [query, registerSearchInput, handleSearchSubmit] as const;
+}
+
 const Vouchers = () => {
-  const [filterValues, filterParams, handleSubmit] = useVoucherFilters();
+  const [filterValues, filterParams, handleFiltersSubmit] = useVoucherFilters();
+  const [searchQuery, registerSearchInput, handleSearchSubmit] = useSearchQuery();
 
   const { data, isFetching, fetchNextPage, hasNextPage } = useInfiniteQuery({
-    queryKey: ['vouchers', { filterParams }] as const,
-    queryFn: ({ pageParam, queryKey }) => {
-      const [, variables] = queryKey;
-
-      return getVouchers({ limit: PAGE_SIZE, offset: pageParam, ...variables.filterParams });
-    },
+    queryKey: ['vouchers', { filterParams, searchQuery }] as const,
+    queryFn: ({ pageParam }) =>
+      getVouchers({ limit: PAGE_SIZE, offset: pageParam, query: searchQuery, ...filterParams }),
     initialPageParam: 0,
     getNextPageParam,
   });
@@ -107,8 +122,8 @@ const Vouchers = () => {
     <div className={styles.vouchers}>
       <h2 className={styles.heading}>Vouchers: {vouchersCount}</h2>
 
-      <form>
-        <Input type="search" placeholder="0x00" />
+      <form onSubmit={handleSearchSubmit}>
+        <Input type="search" placeholder="0x00" {...registerSearchInput} />
       </form>
 
       {isLoaderVisible ? (
@@ -125,20 +140,20 @@ const Vouchers = () => {
         <List items={vouchers} hasNextPage={hasNextPage} renderItem={renderVoucher} fetchMore={fetchNextPage} />
       )}
 
-      <Filters initialValues={filterValues} onSubmit={handleSubmit}>
-        <FilterGroup name="owner" onSubmit={handleSubmit}>
-          <Radio name="owner" value="all" label="All vouchers" onSubmit={handleSubmit} />
-          <Radio name="owner" value="by" label="Issued by you" onSubmit={handleSubmit} />
-          <Radio name="owner" value="to" label="Issued to you" onSubmit={handleSubmit} />
+      <Filters initialValues={filterValues} onSubmit={handleFiltersSubmit}>
+        <FilterGroup name="owner" onSubmit={handleFiltersSubmit}>
+          <Radio name="owner" value="all" label="All vouchers" onSubmit={handleFiltersSubmit} />
+          <Radio name="owner" value="by" label="Issued by you" onSubmit={handleFiltersSubmit} />
+          <Radio name="owner" value="to" label="Issued to you" onSubmit={handleFiltersSubmit} />
         </FilterGroup>
 
-        <FilterGroup name="status" title="Status" onSubmit={handleSubmit} withReset>
+        <FilterGroup name="status" title="Status" onSubmit={handleFiltersSubmit} withReset>
           <StatusCheckbox
             name="status"
             value="active"
             label="Active"
             status={BulbStatus.Success}
-            onSubmit={handleSubmit}
+            onSubmit={handleFiltersSubmit}
           />
 
           <StatusCheckbox
@@ -146,7 +161,7 @@ const Vouchers = () => {
             value="declined"
             label="Declined"
             status={BulbStatus.Error}
-            onSubmit={handleSubmit}
+            onSubmit={handleFiltersSubmit}
           />
 
           <StatusCheckbox
@@ -154,7 +169,7 @@ const Vouchers = () => {
             value="expired"
             label="Expired"
             status={BulbStatus.Exited}
-            onSubmit={handleSubmit}
+            onSubmit={handleFiltersSubmit}
           />
         </FilterGroup>
       </Filters>
