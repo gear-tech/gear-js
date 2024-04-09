@@ -1,8 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { Placeholder } from '@/entities/placeholder';
-import { IssueVoucher, VoucherCard, VoucherCardPlaceholder } from '@/features/voucher';
-import { Subheader } from '@/shared/ui/subheader';
+import { VoucherCard, VoucherCardPlaceholder } from '@/features/voucher';
 
 import { PAGE_SIZE } from './consts';
 import { List } from './list';
@@ -10,11 +9,76 @@ import { Voucher } from './types';
 import { getNextPageParam, getVouchers } from './utils';
 import { Skeleton } from './skeleton';
 import styles from './vouchers.module.scss';
+import { FilterGroup, Filters, Radio, StatusCheckbox } from '@/features/filters';
+import { BulbStatus } from '@/shared/ui/bulbBlock';
+import { Input } from '@gear-js/ui';
+import { useMemo, useState } from 'react';
+import { useAccount } from '@gear-js/react-hooks';
+
+const DEFAULT_FILTER_VALUES = {
+  owner: 'all',
+  status: [] as ('active' | 'declined' | 'expired')[],
+};
+
+function useVoucherFilters() {
+  const { account } = useAccount();
+  const [values, setValues] = useState(DEFAULT_FILTER_VALUES);
+
+  const getOwnerParams = () => {
+    if (!account) throw new Error('Account is not found');
+
+    const { decodedAddress } = account;
+    const { owner } = values;
+
+    switch (owner) {
+      case 'by':
+        return { owner: decodedAddress };
+      case 'to':
+        return { spender: decodedAddress };
+      default:
+        return {};
+    }
+  };
+
+  const getStatusParams = () => {
+    const { status } = values;
+
+    const active = status.includes('active');
+    const declined = status.includes('declined');
+    const expired = status.includes('expired');
+
+    const result = {} as Record<'declined' | 'expired', boolean>;
+
+    if (active) {
+      if (declined && expired) return {};
+
+      result.declined = false;
+      result.expired = false;
+    }
+
+    if (declined) result.declined = true;
+    if (expired) result.expired = true;
+
+    return result;
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const params = useMemo(() => ({ ...getOwnerParams(), ...getStatusParams() }), [values, account]);
+  console.log('params: ', params);
+
+  return [values, params, setValues] as const;
+}
 
 const Vouchers = () => {
+  const [filterValues, filterParams, handleSubmit] = useVoucherFilters();
+
   const { data, isFetching, fetchNextPage, hasNextPage } = useInfiniteQuery({
-    queryKey: ['vouchers'],
-    queryFn: ({ pageParam }) => getVouchers({ limit: PAGE_SIZE, offset: pageParam }),
+    queryKey: ['vouchers', { filterParams }] as const,
+    queryFn: ({ pageParam, queryKey }) => {
+      const [, variables] = queryKey;
+
+      return getVouchers({ limit: PAGE_SIZE, offset: pageParam, ...variables.filterParams });
+    },
     initialPageParam: 0,
     getNextPageParam,
   });
@@ -40,10 +104,12 @@ const Vouchers = () => {
   const renderSkeletonItem = () => <Skeleton SVG={VoucherCardPlaceholder} disabled={true} />;
 
   return (
-    <>
-      <Subheader title={`Vouchers: ${vouchersCount}`} size="big">
-        <IssueVoucher />
-      </Subheader>
+    <div className={styles.vouchers}>
+      <h2 className={styles.heading}>Vouchers: {vouchersCount}</h2>
+
+      <form>
+        <Input type="search" placeholder="0x00" />
+      </form>
 
       {isLoaderVisible ? (
         <div className={styles.placeholder}>
@@ -58,7 +124,41 @@ const Vouchers = () => {
       ) : (
         <List items={vouchers} hasNextPage={hasNextPage} renderItem={renderVoucher} fetchMore={fetchNextPage} />
       )}
-    </>
+
+      <Filters initialValues={filterValues} onSubmit={handleSubmit}>
+        <FilterGroup name="owner" onSubmit={handleSubmit}>
+          <Radio name="owner" value="all" label="All vouchers" onSubmit={handleSubmit} />
+          <Radio name="owner" value="by" label="Issued by you" onSubmit={handleSubmit} />
+          <Radio name="owner" value="to" label="Issued to you" onSubmit={handleSubmit} />
+        </FilterGroup>
+
+        <FilterGroup name="status" title="Status" onSubmit={handleSubmit} withReset>
+          <StatusCheckbox
+            name="status"
+            value="active"
+            label="Active"
+            status={BulbStatus.Success}
+            onSubmit={handleSubmit}
+          />
+
+          <StatusCheckbox
+            name="status"
+            value="declined"
+            label="Declined"
+            status={BulbStatus.Error}
+            onSubmit={handleSubmit}
+          />
+
+          <StatusCheckbox
+            name="status"
+            value="expired"
+            label="Expired"
+            status={BulbStatus.Exited}
+            onSubmit={handleSubmit}
+          />
+        </FilterGroup>
+      </Filters>
+    </div>
   );
 };
 

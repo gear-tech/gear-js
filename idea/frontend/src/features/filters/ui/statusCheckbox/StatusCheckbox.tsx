@@ -7,7 +7,7 @@ import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
 
 import styles from './StatusCheckbox.module.scss';
 
-type Props<T> = Omit<CheckboxProps, 'name' | 'value' | 'onChange'> & {
+type Props<T> = Omit<CheckboxProps, 'name' | 'value' | 'onChange' | 'onSubmit'> & {
   onSubmit: (values: T) => void;
   name: Path<T>;
   value: PathValue<T, Path<T>>;
