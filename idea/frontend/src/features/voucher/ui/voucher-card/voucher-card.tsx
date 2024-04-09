@@ -1,5 +1,5 @@
 import { HexString } from '@gear-js/api';
-import { useAlert, useBalance, useBalanceFormat, useVoucherStatus } from '@gear-js/react-hooks';
+import { useAccount, useAlert, useBalanceFormat } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 import Identicon from '@polkadot/react-identicon';
 
@@ -13,31 +13,46 @@ import styles from './voucher-card.module.scss';
 
 type Props = {
   id: string;
+  balance: string;
+  amount: string;
+  expirationBlock: string;
+  expirationTimestamp: string;
   owner: HexString;
-  expireBlock: number;
+  spender: HexString;
 };
 
-function VoucherCard({ id, owner, expireBlock }: Props) {
-  const alert = useAlert();
-  const { balance } = useBalance(id);
+function VoucherCard({ id, balance, amount, expirationBlock, expirationTimestamp, owner, spender }: Props) {
+  const { account } = useAccount();
   const { getFormattedBalance } = useBalanceFormat();
+  const alert = useAlert();
 
   const formattedBalance = balance ? getFormattedBalance(balance) : undefined;
+  const formattedAmount = amount ? getFormattedBalance(amount) : undefined;
 
-  const { expirationTimestamp, isVoucherStatusReady, isVoucherActive } = useVoucherStatus(expireBlock);
+  const isVoucherActive = Date.now() < new Date(expirationTimestamp).getTime();
+
+  const withOwnershipAnnotation = (value: string) => {
+    const isOwner = account?.decodedAddress === owner;
+    if (isOwner) return `${value} (Issued by you)`;
+
+    const isSpender = account?.decodedAddress === spender;
+    if (isSpender) return `${value} (Issued to you)`;
+
+    return value;
+  };
 
   return (
     <div className={styles.card}>
-      <h3 className={styles.balance}>
-        <span className={styles.value}>{formattedBalance?.value}</span>
-        &nbsp;{formattedBalance?.unit}
+      <h3 className={styles.heading}>
+        <span className={styles.balance}>{formattedBalance?.value}</span>
+
+        <span className={styles.amount}>
+          / {formattedAmount?.value} {formattedAmount?.unit}
+        </span>
       </h3>
 
       <footer className={styles.footer}>
-        {expirationTimestamp && (
-          <TimestampBlock timestamp={expirationTimestamp} annotation={`#${expireBlock}`} withIcon />
-        )}
-
+        <TimestampBlock timestamp={expirationTimestamp} annotation={`#${expirationBlock}`} withIcon />
         <IdBlock id={id} withIcon />
 
         {/* TODO: divide BlockComponent from TimestampBlock, IdBlock etc. */}
@@ -48,12 +63,10 @@ function VoucherCard({ id, owner, expireBlock }: Props) {
           <Button icon={CopySVG} color="transparent" onClick={() => copyToClipboard(owner, alert)} />
         </div>
 
-        {isVoucherStatusReady && (
-          <BulbBlock
-            status={isVoucherActive ? BulbStatus.Success : BulbStatus.Error}
-            text={isVoucherActive ? 'Active' : 'Expired'}
-          />
-        )}
+        <BulbBlock
+          status={isVoucherActive ? BulbStatus.Success : BulbStatus.Error}
+          text={withOwnershipAnnotation(isVoucherActive ? 'Active' : 'Expired')}
+        />
       </footer>
     </div>
   );

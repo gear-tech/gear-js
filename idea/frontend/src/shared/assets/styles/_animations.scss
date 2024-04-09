@@ -3,10 +3,10 @@
 
 @keyframes loading {
   from {
-    transform: translate(-37.5%)
+    transform: translate(-37.5%);
   }
   to {
-    transform: translate(37.5%)
+    transform: translate(37.5%);
   }
 }
 
@@ -24,12 +24,12 @@
   }
 
   &:global(.enter),
-  &:global(.exit-done){
+  &:global(.exit-done) {
     opacity: 0;
-  } 
+  }
 
   &:global(.enter-active) {
-    opacity: 1; 
+    opacity: 1;
   }
 
   &:global(.exit-active) {
@@ -37,7 +37,7 @@
   }
 
   &:global(.exit-active),
-  &:global(.enter-active){ 
+  &:global(.enter-active) {
     transition: opacity $fadeDuration $triming-function $fadeDelay;
   }
 }
@@ -46,7 +46,7 @@
 @mixin fadeAppear($fadeDelay: 0ms, $fadeDuration: $timeout, $triming-function: linear) {
   &:global(.appear) {
     opacity: 0;
-  } 
+  }
 
   &:global(.appear-done),
   &:global(.enter-done) {
@@ -54,29 +54,35 @@
   }
 
   &:global(.appear-active) {
-    opacity: 1 !important; 
+    opacity: 1 !important;
   }
 
-  &:global(.appear-active) { 
+  &:global(.appear-active) {
     transition: opacity $fadeDuration $triming-function $fadeDelay;
   }
 }
 
 @mixin loading($colorFrom: $bgColorSecondary, $colorTo: $bgColorTertiary) {
   overflow: hidden;
-  
+  position: relative;
+
   &::after {
     content: '';
     position: absolute;
     inset: 0 -150%;
-    background: linear-gradient(90deg, rgba($bgColorSecondary, 0.1) 25%,rgba($bgColorTertiary, 0.24) 37%,rgba($bgColorSecondary, 0.1) 63%);
+    background: linear-gradient(
+      90deg,
+      rgba($bgColorSecondary, 0.1) 25%,
+      rgba($bgColorTertiary, 0.24) 37%,
+      rgba($bgColorSecondary, 0.1) 63%
+    );
     animation: loading $bigTimeout ease infinite;
   }
 }
 
 @mixin expand($startHeight, $contentHeight: var(--offset-height), $duration: $timeout) {
   $endHeight: calc($contentHeight + $startHeight);
-  
+
   overflow: hidden;
 
   &:global(.enter) {
@@ -85,7 +91,7 @@
   }
 
   &:global(.enter-active) {
-    height: $endHeight
+    height: $endHeight;
   }
 
   &:global(.enter-done) {
@@ -100,7 +106,7 @@
   &:global(.exit-active) {
     height: $startHeight;
   }
-  
+
   &:global(.exit-done) {
     height: $startHeight;
   }
@@ -108,5 +114,5 @@
   &:global(.exit-active),
   &:global(.enter-active) {
     @include transition();
-  } 
+  }
 }

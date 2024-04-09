@@ -1,0 +1,14 @@
+@use '@/shared/assets/styles/animations' as *;
+
+.skeleton {
+  display: block;
+  border-radius: 16px;
+
+  svg {
+    width: 100%;
+  }
+}
+
+.loading {
+  @include loading;
+}

@@ -30,16 +30,24 @@
   }
 }
 
-.balance {
+.heading {
   margin-bottom: 8px;
 
   font-family: Kanit;
   font-size: 12px;
   font-weight: 300;
 
-  .value {
+  .balance {
     font-size: 16px;
     font-weight: 600;
+  }
+
+  .amount {
+    margin-left: 4px;
+
+    font-size: 12px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.7);
   }
 }
 
@@ -52,6 +60,7 @@
 
   .owner {
     display: flex;
+    align-items: center;
     gap: 8px;
 
     font-size: 10px;
