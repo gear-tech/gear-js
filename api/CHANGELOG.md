@@ -1,3 +1,11 @@
+## 0.37.1
+
+_04/10/2024_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1522
+- Subsribe to gear events only on finalized blocks
+
 ## 0.37.0
 
 _03/12/2024_
