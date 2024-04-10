@@ -103,7 +103,7 @@ const Program = withDeprecatedFallback(() => {
               {/* TODO: WithAccount HoC? or move inside VoucherTable? */}
               {account && (
                 <Subheader title={`Vouchers: ${vouchersCount}`}>
-                  <IssueVoucher programId={programId} />
+                  <IssueVoucher programId={programId} buttonColor="secondary" buttonSize="small" />
                 </Subheader>
               )}
 

@@ -14,7 +14,7 @@ import { useIssueVoucher } from '../../hooks';
 import styles from './issue-voucher-modal.module.scss';
 
 type Props = {
-  programId: HexString;
+  programId?: HexString;
   close: () => void;
 };
 
@@ -40,7 +40,8 @@ const IssueVoucherModalDeprecated = ({ programId, close }: Props) => {
     const decodedAddress = decodeAddress(address);
     const chainValue = getChainBalanceValue(value).toFixed();
 
-    issueVoucherDeprecated(decodedAddress, programId, chainValue, close);
+    // voucher without specified programId is not supported in deprecated versions
+    issueVoucherDeprecated(decodedAddress, programId!, chainValue, close);
   };
 
   return (

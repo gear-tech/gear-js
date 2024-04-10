@@ -89,7 +89,7 @@ const ProgramDeprecated = () => {
             {/* TODO: WithAccount HoC? or move inside VoucherTable? */}
             {account && (
               <Subheader title="Voucher details">
-                <IssueVoucher programId={programId} />
+                <IssueVoucher programId={programId} buttonColor="secondary" buttonSize="small" />
               </Subheader>
             )}
 

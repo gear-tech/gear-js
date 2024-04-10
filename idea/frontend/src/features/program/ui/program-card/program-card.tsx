@@ -56,7 +56,7 @@ const ProgramCard = memo(({ program, vertical }: Props) => {
               <ActionLink to={generatePath(routes.state, { programId })} icon={readSVG} text="Read State" />
             )}
 
-            <IssueVoucher programId={programId} transparent />
+            <IssueVoucher programId={programId} buttonColor="transparent" buttonSize="small" />
           </>
         )}
       </div>

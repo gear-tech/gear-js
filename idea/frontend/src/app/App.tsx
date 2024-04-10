@@ -63,6 +63,7 @@ const App = withProviders(() => {
 
         {isMobileDisclaimerVisible && <MobileDisclaimer onCloseButtonClick={closeMobileDisclaimer} />}
       </main>
+
       <Footer />
     </>
   );
