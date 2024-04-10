@@ -17,14 +17,30 @@ export class GearEvents {
   subscribeToGearEvent<M extends keyof IGearEvent>(
     method: M,
     callback: (event: IGearEvent[M]) => void | Promise<void>,
+    blocks: 'finalized' | 'latest' = 'latest',
   ) {
-    return this.api.query.system.events((events) => {
-      events
-        .filter(({ event }) => event.method === method)
-        .forEach(({ event }) => {
-          callback(event as IGearEvent[M]);
-        });
-    });
+    if (blocks === 'latest') {
+      return this.api.query.system.events((events) => {
+        events
+          .filter(({ event }) => event.method === method)
+          .forEach(({ event }) => {
+            callback(event as IGearEvent[M]);
+          });
+      });
+    } else {
+      return this.api.rpc.chain.subscribeFinalizedHeads(async (header) => {
+        await this.api
+          .at(header.hash)
+          .then((apiAt) => apiAt.query.system.events())
+          .then((events) =>
+            events
+              .filter(({ event }) => event.method === method)
+              .forEach(({ event }) => {
+                callback(event as IGearEvent[M]);
+              }),
+          );
+      });
+    }
   }
 
   subscribeToGearVoucherEvent<M extends keyof IGearVoucherEvent>(
