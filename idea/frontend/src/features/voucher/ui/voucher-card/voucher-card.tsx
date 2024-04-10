@@ -14,7 +14,7 @@ import { RevokeVoucher } from '../revoke-voucher';
 import { DeclineVoucher } from '../decline-voucher';
 
 type Props = {
-  id: string;
+  id: HexString;
   balance: string;
   amount: string;
   expirationBlock: string;
@@ -53,6 +53,7 @@ function VoucherCard({ id, balance, amount, expirationBlock, expirationTimestamp
 
     return isActive ? 'Active' : 'Expired';
   };
+  console.log('isDeclined: ', isDeclined);
 
   return (
     <div className={styles.card}>
@@ -81,8 +82,9 @@ function VoucherCard({ id, balance, amount, expirationBlock, expirationTimestamp
         </footer>
       </div>
 
-      {isOwner && isActive && isDeclined && <RevokeVoucher />}
-      {isSpender && isActive && <DeclineVoucher />}
+      {/* if owner and spender are the same person, is it still necessary to decline first? */}
+      {isOwner && isActive && isDeclined && <RevokeVoucher spender={spender} id={id} />}
+      {isSpender && isActive && <DeclineVoucher id={id} />}
     </div>
   );
 }
