@@ -41,7 +41,6 @@ const IssueVoucherModal = ({ programId, close }: Props) => {
 
   const [voucherType, getVoucherTypeProps] = useVoucherType();
 
-  const isForSpecificProgram = Boolean(programId);
   const defaultPrograms = useMemo(() => (programId ? [programId] : []), [programId]);
   const [programs, setPrograms] = useState<HexString[]>(defaultPrograms);
 
@@ -63,15 +62,13 @@ const IssueVoucherModal = ({ programId, close }: Props) => {
 
   return (
     <Modal heading="Create Voucher" size="large" close={close}>
-      {!isForSpecificProgram && (
-        <div className={styles.radios}>
-          <Radio {...getVoucherTypeProps('Interact with a program', VOUCHER_TYPE.PROGRAM)} />
-          <Radio {...getVoucherTypeProps('Interact with a program and upload a code', VOUCHER_TYPE.MIXED)} />
-          <Radio {...getVoucherTypeProps('Code upload only', VOUCHER_TYPE.CODE)} />
-        </div>
-      )}
+      <div className={styles.radios}>
+        <Radio {...getVoucherTypeProps('Interact with a program', VOUCHER_TYPE.PROGRAM)} />
+        <Radio {...getVoucherTypeProps('Interact with a program and upload a code', VOUCHER_TYPE.MIXED)} />
+        <Radio {...getVoucherTypeProps('Code upload only', VOUCHER_TYPE.CODE)} />
+      </div>
 
-      {!isCodeVoucher && !isForSpecificProgram && <ProgramsForm value={programs} onChange={setPrograms} />}
+      {!isCodeVoucher && <ProgramsForm value={programs} onChange={setPrograms} />}
 
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
