@@ -1,6 +1,5 @@
 import { HexString } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
-import { useState } from 'react';
 import cx from 'clsx';
 
 import { withAccount } from '@/shared/ui';
@@ -8,6 +7,7 @@ import actionLinkStyles from '@/shared/ui/ActionLink/ActionLink.module.scss';
 
 import CouponSVG from '../../assets/coupon.svg?react';
 import { IssueVoucherModal } from '../issue-voucher-modal';
+import { useModal } from '../../hooks';
 
 type Props = {
   programId?: HexString;
@@ -16,10 +16,7 @@ type Props = {
 };
 
 const IssueVoucher = withAccount(({ programId, buttonColor = 'light', buttonSize = 'medium' }: Props) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const [isModalOpen, openModal, closeModal] = useModal();
 
   return (
     <>
