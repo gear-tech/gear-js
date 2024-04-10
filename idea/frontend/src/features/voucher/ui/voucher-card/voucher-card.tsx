@@ -11,6 +11,7 @@ import CopySVG from '@/shared/assets/images/actions/copyGreen.svg?react';
 
 import styles from './voucher-card.module.scss';
 import { RevokeVoucher } from '../revoke-voucher';
+import { DeclineVoucher } from '../decline-voucher';
 
 type Props = {
   id: string;
@@ -20,26 +21,37 @@ type Props = {
   expirationTimestamp: string;
   owner: HexString;
   spender: HexString;
+  isDeclined: boolean;
 };
 
-function VoucherCard({ id, balance, amount, expirationBlock, expirationTimestamp, owner, spender }: Props) {
+function VoucherCard({ id, balance, amount, expirationBlock, expirationTimestamp, owner, spender, isDeclined }: Props) {
   const { account } = useAccount();
   const { getFormattedBalance } = useBalanceFormat();
   const alert = useAlert();
 
   const formattedBalance = balance ? getFormattedBalance(balance) : undefined;
   const formattedAmount = amount ? getFormattedBalance(amount) : undefined;
-
-  const isVoucherActive = Date.now() < new Date(expirationTimestamp).getTime();
+  const isActive = Date.now() < new Date(expirationTimestamp).getTime();
+  const isOwner = account?.decodedAddress === owner;
+  const isSpender = account?.decodedAddress === spender;
 
   const withOwnershipAnnotation = (value: string) => {
-    const isOwner = account?.decodedAddress === owner;
     if (isOwner) return `${value} (Issued by you)`;
-
-    const isSpender = account?.decodedAddress === spender;
     if (isSpender) return `${value} (Issued to you)`;
 
     return value;
+  };
+
+  const getStatus = () => {
+    if (isDeclined) return BulbStatus.Exited;
+
+    return isActive ? BulbStatus.Success : BulbStatus.Error;
+  };
+
+  const getStatusText = () => {
+    if (isDeclined) return 'Declined';
+
+    return isActive ? 'Active' : 'Expired';
   };
 
   return (
@@ -65,14 +77,12 @@ function VoucherCard({ id, balance, amount, expirationBlock, expirationTimestamp
             <Button icon={CopySVG} color="transparent" onClick={() => copyToClipboard(owner, alert)} />
           </div>
 
-          <BulbBlock
-            status={isVoucherActive ? BulbStatus.Success : BulbStatus.Error}
-            text={withOwnershipAnnotation(isVoucherActive ? 'Active' : 'Expired')}
-          />
+          <BulbBlock status={getStatus()} text={withOwnershipAnnotation(getStatusText())} />
         </footer>
       </div>
 
-      <RevokeVoucher />
+      {isOwner && isActive && isDeclined && <RevokeVoucher />}
+      {isSpender && isActive && <DeclineVoucher />}
     </div>
   );
 }

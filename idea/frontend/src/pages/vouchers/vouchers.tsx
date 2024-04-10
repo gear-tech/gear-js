@@ -104,7 +104,7 @@ const Vouchers = () => {
   const isEmpty = !(isFetching || vouchersCount);
   const isLoaderVisible = isEmpty || (!vouchersCount && isFetching);
 
-  const renderVoucher = ({ id, balance, amount, expiryAtBlock, expiryAt, owner, spender }: Voucher) => (
+  const renderVoucher = ({ id, balance, amount, expiryAtBlock, expiryAt, owner, spender, isDeclined }: Voucher) => (
     <VoucherCard
       id={id}
       balance={balance}
@@ -113,6 +113,7 @@ const Vouchers = () => {
       expirationTimestamp={expiryAt}
       owner={owner}
       spender={spender}
+      isDeclined={isDeclined}
     />
   );
 

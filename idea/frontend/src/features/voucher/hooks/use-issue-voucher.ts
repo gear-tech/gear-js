@@ -7,6 +7,7 @@ import { ISubmittableResult } from '@polkadot/types/types';
 import { Method } from '@/features/explorer';
 import { PROGRAM_ERRORS } from '@/shared/config';
 import { getExtrinsicFailedMessage } from '@/shared/helpers';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
 
 function useIssueVoucher() {
   const { api, isApiReady } = useApi();
@@ -21,6 +22,7 @@ function useIssueVoucher() {
       const alertOptions = { title: `${section}.${method}` };
 
       if (method === Method.ExtrinsicFailed) return alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
+      console.log('method: ', method);
 
       if (method === Method.VoucherIssued) {
         alert.success('Voucher issued', alertOptions);
@@ -35,19 +37,10 @@ function useIssueVoucher() {
     if (status.isInvalid) alert.error(PROGRAM_ERRORS.INVALID_TRANSACTION);
   };
 
-  const issueVoucher = async (
-    address: HexString,
-    programIds: HexString[] | undefined,
-    value: string,
-    duration: number,
-    isCodeUploadEnabled: boolean,
-    onSuccess: () => void,
-  ) => {
-    if (!isApiReady || !account) return;
+  const signAndSend = async (extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>, onSuccess: () => void) => {
+    if (!account) throw new Error('Account is not found');
 
     try {
-      const { extrinsic } = await api.voucher.issue(address, value, duration, programIds, isCodeUploadEnabled);
-
       const { signer } = await web3FromSource(account.meta.source);
 
       extrinsic.signAndSend(account.address, { signer }, (events) => handleEvents(events, onSuccess));
@@ -56,7 +49,35 @@ function useIssueVoucher() {
     }
   };
 
-  return { issueVoucher };
+  const issueVoucher = async (
+    address: HexString,
+    programIds: HexString[] | undefined,
+    value: string,
+    duration: number,
+    isCodeUploadEnabled: boolean,
+    onSuccess: () => void,
+  ) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+
+    const { extrinsic } = await api.voucher.issue(address, value, duration, programIds, isCodeUploadEnabled);
+    signAndSend(extrinsic, onSuccess);
+  };
+
+  const declineVoucher = (id: HexString, onSuccess: () => void) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+
+    const extrinsic = api.voucher.decline(id);
+    signAndSend(extrinsic, onSuccess);
+  };
+
+  const revokeVoucher = (spenderId: HexString, id: HexString, onSuccess: () => void) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+
+    const extrinsic = api.voucher.revoke(spenderId, id);
+    signAndSend(extrinsic, onSuccess);
+  };
+
+  return { issueVoucher, declineVoucher, revokeVoucher };
 }
 
 export { useIssueVoucher };
