@@ -2,7 +2,6 @@ import { Codec, Registry } from '@polkadot/types/types';
 import { PortableRegistry, TypeRegistry } from '@polkadot/types';
 import { Si1LookupTypeId, Si1TypeDef } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
-import assert from 'assert';
 import { hexToU8a } from '@polkadot/util';
 
 import { TypeStructure } from '../types';
@@ -48,10 +47,10 @@ export class GearMetadata {
       if (name !== undefined) {
         this.regTypes.set(type.id.toNumber(), { name: this.portableRegistry.getName(type.id), def: typeDef.type });
       } else {
-        assert(
-          typeDef.lookupIndex === type.id.toNumber(),
-          'Lookup index of type is not equal to index in portable registry',
-        );
+        if (typeDef.lookupIndex !== type.id.toNumber()) {
+          throw new Error('Lookup index of type is not equal to index in portable registry');
+        }
+
         if (typeDef.type.includes('Lookup')) {
           updateTypes.push(typeDef.lookupIndex);
         }
@@ -89,7 +88,9 @@ export class GearMetadata {
 
   createType<T extends Codec = Codec>(typeIndex: number, payload: unknown): T {
     const type = this.regTypes.get(typeIndex);
-    assert.notStrictEqual(type, undefined, `Type with index ${typeIndex} not found in registered types`);
+    if (type === undefined) {
+      throw new Error(`Type with index ${typeIndex} not found in registered types`);
+    }
     return this.registry.createType(type.name, payload);
   }
 

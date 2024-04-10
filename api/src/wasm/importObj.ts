@@ -1,6 +1,5 @@
 import { TypeRegistry, u64 } from '@polkadot/types';
 import { BlockNumber } from '@polkadot/types/interfaces';
-import assert from 'assert';
 
 export default (
   memory: WebAssembly.Memory,
@@ -65,7 +64,9 @@ export default (
     gr_program_id: () => {},
     gr_random: () => {},
     gr_read: (at: number, len: number, buffer: number) => {
-      assert.notStrictEqual(inputValue, undefined, 'Input value not found');
+      if (inputValue === undefined) {
+        throw new Error('Input value not found');
+      }
       new Uint8Array(memory.buffer).set(inputValue.slice(at, len), buffer);
     },
     gr_reply_commit_wgas: () => {},
@@ -93,7 +94,9 @@ export default (
     gr_send: () => {},
     gr_send_input: () => {},
     gr_size: (size_ptr: number) => {
-      assert.notStrictEqual(inputValue, undefined, 'Input value not found');
+      if (inputValue === undefined) {
+        throw new Error('Input value not found');
+      }
       const len = new TypeRegistry().createType('u32', inputValue.byteLength).toU8a();
       for (let i = 0; i < len.length; i++) {
         new Uint8Array(memory.buffer)[size_ptr + i] = len[i];
