@@ -17,12 +17,10 @@ import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import { useMetadata, MetadataTable } from '@/features/metadata';
 import { IssueVoucher, VoucherTable } from '@/features/voucher';
-import { withDeprecatedFallback } from '@/shared/ui';
 
-import { ProgramDeprecated } from './program-deprecated';
 import styles from './program.module.scss';
 
-const Program = withDeprecatedFallback(() => {
+const Program = () => {
   const { account } = useAccount();
 
   const { programId } = useParams() as PathParams;
@@ -121,6 +119,6 @@ const Program = withDeprecatedFallback(() => {
       </div>
     </div>
   );
-}, ProgramDeprecated);
+};
 
 export { Program };

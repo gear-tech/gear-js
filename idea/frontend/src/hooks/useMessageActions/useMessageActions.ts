@@ -9,13 +9,7 @@ import { OperationCallbacks } from '@/entities/hooks';
 import { checkWallet, getExtrinsicFailedMessage } from '@/shared/helpers';
 import { PROGRAM_ERRORS, TransactionStatus, TransactionName } from '@/shared/config';
 
-import {
-  ParamsToSendMessage,
-  ParamsToSignAndSend,
-  ParamsToReplyMessage,
-  ParamsToSendMessageDeprecated,
-  ParamsToReplyMessageDeprecated,
-} from './types';
+import { ParamsToSendMessage, ParamsToSignAndSend, ParamsToReplyMessage } from './types';
 
 const useMessageActions = () => {
   const { api, isApiReady } = useApi();
@@ -152,81 +146,7 @@ const useMessageActions = () => {
     [api, account],
   );
 
-  const sendMessageDeprecated = useCallback(
-    async ({ metadata, message, payloadType, withVoucher, reject, resolve }: ParamsToSendMessageDeprecated) => {
-      try {
-        if (!isApiReady) throw new Error('API is not initialized');
-        checkWallet(account);
-
-        const { meta, address } = account!;
-
-        const sendExtrinsic = api.message.send(message, metadata, payloadType);
-        const extrinsic = withVoucher ? api.voucher.callDeprecated({ SendMessage: sendExtrinsic }) : sendExtrinsic;
-
-        const { signer } = await web3FromSource(meta.source);
-        const { partialFee } = await api.message.paymentInfo(address, { signer });
-
-        const handleConfirm = () => signAndSend({ extrinsic, signer, reject, resolve });
-
-        showModal('transaction', {
-          fee: partialFee.toHuman(),
-          name: TransactionName.SendMessage,
-          addressTo: message.destination as string,
-          addressFrom: address,
-          onAbort: reject,
-          onConfirm: handleConfirm,
-        });
-      } catch (error) {
-        const errorMessage = (error as Error).message;
-
-        alert.error(errorMessage);
-
-        if (reject) reject();
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [api, account],
-  );
-
-  const replyMessageDeprecated = useCallback(
-    async ({ reply, metadata, payloadType, withVoucher, reject, resolve }: ParamsToReplyMessageDeprecated) => {
-      try {
-        if (!isApiReady) throw new Error('API is not initialized');
-        checkWallet(account);
-
-        const { meta, address } = account!;
-
-        const replyExtrinsic = await api.message.sendReply(reply, metadata, payloadType);
-
-        const extrinsic = withVoucher ? api.voucher.callDeprecated({ SendReply: replyExtrinsic }) : replyExtrinsic;
-
-        const { signer } = await web3FromSource(meta.source);
-        const { partialFee } = await api.message.paymentInfo(address, { signer });
-
-        const handleConfirm = () =>
-          signAndSend({ extrinsic, signer, title: TransactionName.SendReply, reject, resolve });
-
-        showModal('transaction', {
-          fee: partialFee.toHuman(),
-          name: TransactionName.SendReply,
-          addressTo: reply.replyToId,
-          addressFrom: address,
-          onAbort: reject,
-          onConfirm: handleConfirm,
-        });
-      } catch (error) {
-        const errorMessage = (error as Error).message;
-
-        alert.error(errorMessage);
-
-        if (reject) reject();
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [api, account],
-  );
-
-  return { sendMessage, replyMessage, sendMessageDeprecated, replyMessageDeprecated };
+  return { sendMessage, replyMessage };
 };
 
 export { useMessageActions };

@@ -18,18 +18,9 @@ type ParamsToReplyMessage = OperationCallbacks & {
   payloadType?: string;
 };
 
-type ParamsToSendMessageDeprecated = Omit<ParamsToSendMessage, 'voucherId'> & { withVoucher: boolean };
-type ParamsToReplyMessageDeprecated = Omit<ParamsToReplyMessage, 'voucherId'> & { withVoucher: boolean };
-
 type ParamsToSignAndSend = CommonParamsToSignAndSend & {
   extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
   title?: string;
 };
 
-export type {
-  ParamsToSendMessage,
-  ParamsToReplyMessage,
-  ParamsToSignAndSend,
-  ParamsToSendMessageDeprecated,
-  ParamsToReplyMessageDeprecated,
-};
+export type { ParamsToSendMessage, ParamsToReplyMessage, ParamsToSignAndSend };

@@ -1,5 +1,4 @@
 import { Button, FileInput } from '@gear-js/ui';
-import { useApi } from '@gear-js/react-hooks';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 
@@ -21,7 +20,6 @@ const defaultValues = {
 };
 
 const UploadCode = () => {
-  const { isV110Runtime } = useApi();
   const { isDevChain } = useChain();
 
   const {
@@ -83,9 +81,7 @@ const UploadCode = () => {
                   <>
                     {/* since we're not storing codes in an indexeddb yet */}
                     {!isDevChain && <Input name="name" label="Code name" direction="y" />}
-
-                    {/* not using withDeprecatedFallback since code voucher call wasn't exist */}
-                    {isV110Runtime && <CodeVoucherSelect />}
+                    <CodeVoucherSelect />
                   </>
                 )}
               </form>

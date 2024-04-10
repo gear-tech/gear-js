@@ -3,7 +3,6 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { AnyJson, IKeyringPair, ISubmittableResult } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { useContext } from 'react';
 
 import { AccountContext, AlertContext, ApiContext } from 'context';
@@ -32,7 +31,7 @@ function useSendMessage(
   metadata: ProgramMetadata | undefined,
   { disableAlerts, pair }: UseSendMessageOptions = {},
 ) {
-  const { api, isApiReady, isV110Runtime } = useContext(ApiContext); // сircular dependency fix
+  const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
   const alert = useContext(AlertContext);
 
@@ -100,14 +99,6 @@ function useSendMessage(
     }
   };
 
-  const getVoucherExtrinsic = (id: HexString, sendExtrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>) => {
-    if (!isApiReady) throw new Error('API is not initialized');
-
-    const args = { SendMessage: sendExtrinsic };
-
-    return isV110Runtime ? api.voucher.call(id, args) : api.voucher.callDeprecated(args);
-  };
-
   const sendMessage = async (args: SendMessageOptions) => {
     if (!isApiReady) throw new Error('API is not initialized');
     if (!account) throw new Error('No account address');
@@ -126,7 +117,7 @@ function useSendMessage(
 
     try {
       const sendExtrinsic = api.message.send(message, metadata);
-      const extrinsic = voucherId ? getVoucherExtrinsic(voucherId, sendExtrinsic) : sendExtrinsic;
+      const extrinsic = voucherId ? api.voucher.call(voucherId, { SendMessage: sendExtrinsic }) : sendExtrinsic;
 
       const callback = (result: ISubmittableResult) => handleStatus(result, alertId, onSuccess, onInBlock, onError);
 
