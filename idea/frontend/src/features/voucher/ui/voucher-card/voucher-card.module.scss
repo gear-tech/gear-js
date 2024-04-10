@@ -1,4 +1,9 @@
 .card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+
   padding: 12px 24px;
 
   background-color: #222225;
@@ -6,6 +11,11 @@
 
   position: relative;
   overflow: hidden;
+
+  button {
+    position: relative;
+    z-index: 1;
+  }
 
   &::after {
     content: '';
@@ -52,10 +62,8 @@
 }
 
 .footer {
-  padding-right: 25%;
-
   display: grid;
-  grid-template-columns: 1fr 1.25fr 1.25fr 0.25fr;
+  grid-template-columns: 1fr 1.25fr 1.25fr 1fr;
   gap: 16px;
 
   .owner {
@@ -65,14 +73,9 @@
 
     font-size: 10px;
 
-    button {
-      position: relative;
-      z-index: 4;
-
-      svg {
-        width: 16px;
-        height: 16px;
-      }
+    button svg {
+      width: 16px;
+      height: 16px;
     }
   }
 }

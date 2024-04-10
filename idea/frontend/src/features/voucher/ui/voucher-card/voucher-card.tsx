@@ -10,6 +10,7 @@ import { copyToClipboard, getShortName } from '@/shared/helpers';
 import CopySVG from '@/shared/assets/images/actions/copyGreen.svg?react';
 
 import styles from './voucher-card.module.scss';
+import { RevokeVoucher } from '../revoke-voucher';
 
 type Props = {
   id: string;
@@ -43,31 +44,35 @@ function VoucherCard({ id, balance, amount, expirationBlock, expirationTimestamp
 
   return (
     <div className={styles.card}>
-      <h3 className={styles.heading}>
-        <span className={styles.balance}>{formattedBalance?.value}</span>
+      <div>
+        <h3 className={styles.heading}>
+          <span className={styles.balance}>{formattedBalance?.value}</span>
 
-        <span className={styles.amount}>
-          / {formattedAmount?.value} {formattedAmount?.unit}
-        </span>
-      </h3>
+          <span className={styles.amount}>
+            / {formattedAmount?.value} {formattedAmount?.unit}
+          </span>
+        </h3>
 
-      <footer className={styles.footer}>
-        <TimestampBlock timestamp={expirationTimestamp} annotation={`#${expirationBlock}`} withIcon />
-        <IdBlock id={id} withIcon />
+        <footer className={styles.footer}>
+          <TimestampBlock timestamp={expirationTimestamp} annotation={`#${expirationBlock}`} withIcon />
+          <IdBlock id={id} withIcon />
 
-        {/* TODO: divide BlockComponent from TimestampBlock, IdBlock etc. */}
-        <div className={styles.owner}>
-          <Identicon value={owner} size={16} theme="polkadot" />
-          {getShortName(owner)}
+          {/* TODO: divide BlockComponent from TimestampBlock, IdBlock etc. */}
+          <div className={styles.owner}>
+            <Identicon value={owner} size={16} theme="polkadot" />
+            {getShortName(owner)}
 
-          <Button icon={CopySVG} color="transparent" onClick={() => copyToClipboard(owner, alert)} />
-        </div>
+            <Button icon={CopySVG} color="transparent" onClick={() => copyToClipboard(owner, alert)} />
+          </div>
 
-        <BulbBlock
-          status={isVoucherActive ? BulbStatus.Success : BulbStatus.Error}
-          text={withOwnershipAnnotation(isVoucherActive ? 'Active' : 'Expired')}
-        />
-      </footer>
+          <BulbBlock
+            status={isVoucherActive ? BulbStatus.Success : BulbStatus.Error}
+            text={withOwnershipAnnotation(isVoucherActive ? 'Active' : 'Expired')}
+          />
+        </footer>
+      </div>
+
+      <RevokeVoucher />
     </div>
   );
 }
