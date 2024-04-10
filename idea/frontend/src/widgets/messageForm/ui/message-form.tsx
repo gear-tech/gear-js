@@ -16,10 +16,9 @@ import { FormPayload, getPayloadFormValues, getResetPayloadValue, getSubmitPaylo
 import { useGasCalculate, useMessageActions, useValidationSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
 import { ProgramVoucherSelect } from '@/features/voucher';
-import { LabeledCheckbox, withDeprecatedFallback } from '@/shared/ui';
+import { LabeledCheckbox } from '@/shared/ui';
 
 import { FormValues, INITIAL_VALUES } from '../model';
-import { MessageFormDeprecated } from './message-form-deprecated';
 import styles from './message-form.module.scss';
 
 type Props = {
@@ -30,7 +29,7 @@ type Props = {
   metadata?: ProgramMetadata | undefined;
 };
 
-const MessageForm = withDeprecatedFallback(({ id, programId, isReply, metadata, isLoading }: Props) => {
+const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => {
   const { getChainBalanceValue, getFormattedGasValue, getChainGasValue } = useBalanceFormat();
   const schema = useValidationSchema();
 
@@ -166,6 +165,6 @@ const MessageForm = withDeprecatedFallback(({ id, programId, isReply, metadata, 
       </form>
     </FormProvider>
   );
-}, MessageFormDeprecated);
+};
 
 export { MessageForm };

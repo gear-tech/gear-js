@@ -9,8 +9,4 @@ type FormValues = {
   keepAlive: boolean;
 };
 
-type FormValuesDeprecated = Omit<FormValues, 'voucherId'> & {
-  withVoucher: boolean;
-};
-
-export type { FormValues, FormValuesDeprecated };
+export type { FormValues };

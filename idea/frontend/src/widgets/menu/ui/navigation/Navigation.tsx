@@ -6,7 +6,6 @@ import MessagesSVG from '@/shared/assets/images/menu/messages.svg?react';
 import ExplorerSVG from '@/shared/assets/images/menu/explorer.svg?react';
 import VouchersSVG from '@/shared/assets/images/menu/vouchers.svg?react';
 import { OnboardingTooltip } from '@/shared/ui/onboardingTooltip';
-import { withDeprecatedFallback } from '@/shared/ui';
 
 import { NavigationItem } from '../navigationItem';
 import { AppExamplesLink } from '../appExamplesLink';
@@ -15,13 +14,6 @@ import styles from './Navigation.module.scss';
 type Props = {
   isOpen: boolean;
 };
-
-const VouchersLink = withDeprecatedFallback(
-  ({ isFullWidth }: { isFullWidth: boolean }) => (
-    <NavigationItem to={routes.vouchers} icon={<VouchersSVG />} text="Vouchers" isFullWidth={isFullWidth} />
-  ),
-  () => null,
-);
 
 const Navigation = ({ isOpen }: Props) => {
   return (
@@ -44,7 +36,7 @@ const Navigation = ({ isOpen }: Props) => {
         <NavigationItem to={routes.mailbox} icon={<MailboxSVG />} text="Mailbox" isFullWidth={isOpen} />
       </OnboardingTooltip>
 
-      <VouchersLink isFullWidth={isOpen} />
+      <NavigationItem to={routes.vouchers} icon={<VouchersSVG />} text="Vouchers" isFullWidth={isOpen} />
 
       <OnboardingTooltip index={8}>
         <AppExamplesLink isFullWidth={isOpen} />

@@ -1,5 +1,5 @@
-import { FormValues, FormValuesDeprecated } from './types';
-import { INITIAL_VALUES, INITIAL_VALUES_DEPRECATED } from './const';
+import { FormValues } from './types';
+import { INITIAL_VALUES } from './const';
 
-export type { FormValues, FormValuesDeprecated };
-export { INITIAL_VALUES, INITIAL_VALUES_DEPRECATED };
+export type { FormValues };
+export { INITIAL_VALUES };

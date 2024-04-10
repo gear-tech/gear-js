@@ -7,14 +7,13 @@ import { z } from 'zod';
 
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
-import { Input, ValueField, withDeprecatedFallback } from '@/shared/ui';
+import { Input, ValueField } from '@/shared/ui';
 
 import { ADDRESS_SCHEMA, DEFAULT_VALUES, FIELD_NAME, VOUCHER_TYPE } from '../../consts';
 import { useBalanceSchema, useDurationSchema, useIssueVoucher, useVoucherType } from '../../hooks';
 import { Values } from '../../types';
 import { DurationForm } from '../duration-form';
 import { ProgramsForm } from '../programs-form';
-import { IssueVoucherModalDeprecated } from './issue-voucher-modal-deprecated';
 import styles from './issue-voucher-modal.module.scss';
 
 type Props = {
@@ -22,7 +21,7 @@ type Props = {
   close: () => void;
 };
 
-const IssueVoucherModal = withDeprecatedFallback(({ programId, close }: Props) => {
+const IssueVoucherModal = ({ programId, close }: Props) => {
   const balanceSchema = useBalanceSchema();
   const durationSchema = useDurationSchema();
   const { issueVoucher } = useIssueVoucher();
@@ -98,6 +97,6 @@ const IssueVoucherModal = withDeprecatedFallback(({ programId, close }: Props) =
       </FormProvider>
     </Modal>
   );
-}, IssueVoucherModalDeprecated);
+};
 
 export { IssueVoucherModal };
