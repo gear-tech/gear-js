@@ -1,3 +1,4 @@
+import { useAccount } from '@gear-js/react-hooks';
 import { Input } from '@gear-js/ui';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
@@ -15,8 +16,10 @@ import { useSearchQuery, useVoucherFilters } from './hooks';
 import styles from './vouchers.module.scss';
 
 const Vouchers = () => {
-  const [filterValues, filterParams, handleFiltersSubmit] = useVoucherFilters();
+  const { account } = useAccount();
+
   const [searchQuery, registerSearchInput, handleSearchSubmit] = useSearchQuery();
+  const [filterValues, filterParams, handleFiltersSubmit] = useVoucherFilters();
 
   const { data, isFetching, hasNextPage, fetchNextPage, refetch } = useInfiniteQuery({
     queryKey: ['vouchers', filterParams, searchQuery],
@@ -77,8 +80,13 @@ const Vouchers = () => {
       <Filters initialValues={filterValues} onSubmit={handleFiltersSubmit}>
         <FilterGroup name="owner" onSubmit={handleFiltersSubmit}>
           <Radio name="owner" value="all" label="All vouchers" onSubmit={handleFiltersSubmit} />
-          <Radio name="owner" value="by" label="Issued by you" onSubmit={handleFiltersSubmit} />
-          <Radio name="owner" value="to" label="Issued to you" onSubmit={handleFiltersSubmit} />
+
+          {account && (
+            <>
+              <Radio name="owner" value="by" label="Issued by you" onSubmit={handleFiltersSubmit} />
+              <Radio name="owner" value="to" label="Issued to you" onSubmit={handleFiltersSubmit} />
+            </>
+          )}
         </FilterGroup>
 
         <FilterGroup name="status" title="Status" onSubmit={handleFiltersSubmit} withReset>
