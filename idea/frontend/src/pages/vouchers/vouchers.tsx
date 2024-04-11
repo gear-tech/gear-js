@@ -1,90 +1,18 @@
+import { Input } from '@gear-js/ui';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { Placeholder } from '@/entities/placeholder';
 import { IssueVoucher, VoucherCard, VoucherCardPlaceholder } from '@/features/voucher';
+import { FilterGroup, Filters, Radio, StatusCheckbox } from '@/features/filters';
+import { BulbStatus } from '@/shared/ui/bulbBlock';
 
 import { PAGE_SIZE } from './consts';
 import { List } from './list';
 import { Voucher } from './types';
 import { getNextPageParam, getVouchers } from './utils';
 import { Skeleton } from './skeleton';
+import { useSearchQuery, useVoucherFilters } from './hooks';
 import styles from './vouchers.module.scss';
-import { FilterGroup, Filters, Radio, StatusCheckbox } from '@/features/filters';
-import { BulbStatus } from '@/shared/ui/bulbBlock';
-import { Input } from '@gear-js/ui';
-import { useMemo, useState } from 'react';
-import { useAccount } from '@gear-js/react-hooks';
-import { useForm } from 'react-hook-form';
-
-const DEFAULT_FILTER_VALUES = {
-  owner: 'all',
-  status: [] as ('active' | 'declined' | 'expired')[],
-};
-
-function useVoucherFilters() {
-  const { account } = useAccount();
-  const [values, setValues] = useState(DEFAULT_FILTER_VALUES);
-
-  const getOwnerParams = () => {
-    if (!account) return {};
-
-    const { decodedAddress } = account;
-    const { owner } = values;
-
-    switch (owner) {
-      case 'by':
-        return { owner: decodedAddress };
-      case 'to':
-        return { spender: decodedAddress };
-      default:
-        return {};
-    }
-  };
-
-  const getStatusParams = () => {
-    const { status } = values;
-
-    const active = status.includes('active');
-    const declined = status.includes('declined');
-    const expired = status.includes('expired');
-
-    const result = {} as Record<'declined' | 'expired', boolean>;
-
-    if (active) {
-      if (declined && expired) return {};
-
-      result.declined = false;
-      result.expired = false;
-    }
-
-    if (declined) result.declined = true;
-    if (expired) result.expired = true;
-
-    return result;
-  };
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const params = useMemo(() => ({ ...getOwnerParams(), ...getStatusParams() }), [values, account]);
-
-  return [values, params, setValues] as const;
-}
-
-const DEFAULT_SEARCH_VALUES = {
-  query: '',
-};
-
-function useSearchQuery() {
-  const [query, setQuery] = useState('');
-
-  const { register, handleSubmit } = useForm({
-    defaultValues: DEFAULT_SEARCH_VALUES,
-  });
-
-  const registerSearchInput = register('query');
-  const handleSearchSubmit = handleSubmit((values) => setQuery(values.query));
-
-  return [query, registerSearchInput, handleSearchSubmit] as const;
-}
 
 const Vouchers = () => {
   const [filterValues, filterParams, handleFiltersSubmit] = useVoucherFilters();
