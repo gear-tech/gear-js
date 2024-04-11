@@ -57,7 +57,7 @@ const Vouchers = () => {
       </header>
 
       <form onSubmit={handleSearchSubmit}>
-        <Input type="search" placeholder="0x00" {...registerSearchInput} />
+        <Input type="search" placeholder="Search by id..." {...registerSearchInput} />
       </form>
 
       {isLoaderVisible ? (
