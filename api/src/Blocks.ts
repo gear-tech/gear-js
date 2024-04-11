@@ -1,5 +1,5 @@
 import { AnyNumber, AnyTuple } from '@polkadot/types/types';
-import { BlockHash, BlockNumber, SignedBlock } from '@polkadot/types/interfaces';
+import { BlockHash, BlockNumber, Header, SignedBlock } from '@polkadot/types/interfaces';
 import { Compact, GenericExtrinsic, Vec, u64 } from '@polkadot/types';
 import { isHex, isNumber, isU8a } from '@polkadot/util';
 import { FrameSystemEventRecord } from '@polkadot/types/lookup';
@@ -131,5 +131,48 @@ export class GearBlock {
    */
   async getFinalizedHead(): Promise<BlockHash> {
     return this.api.rpc.chain.getFinalizedHead();
+  }
+
+  async subscribeToHeadsFrom(
+    from: number | HexString,
+    cb: (header: Header) => Promise<void> | void,
+    blocks: 'finalized' | 'latest' = 'latest',
+  ): Promise<() => void> {
+    let blockNumber = typeof from === 'string' ? (await this.getBlockNumber(from)).toNumber() : from;
+
+    const lastHeader =
+      blocks === 'finalized'
+        ? await this.api.rpc.chain.getHeader(await this.getFinalizedHead())
+        : await this.api.rpc.chain.getHeader();
+
+    let lastHeadNumber = lastHeader.number.toNumber();
+
+    let unsubscribed = false;
+
+    const unsub = await this.api.rpc.chain[blocks === 'finalized' ? 'subscribeFinalizedHeads' : 'subscribeNewHeads'](
+      (header) => {
+        lastHeadNumber = header.number.toNumber();
+        if (blockNumber >= lastHeadNumber) {
+          cb(header);
+        }
+      },
+    );
+
+    let oldBlocksSub = async () => {
+      while (!unsubscribed && lastHeadNumber > blockNumber) {
+        const hash = await this.api.rpc.chain.getBlockHash(blockNumber);
+        const header = await this.api.rpc.chain.getHeader(hash);
+        await cb(header);
+        blockNumber++;
+      }
+    };
+
+    oldBlocksSub();
+
+    return () => {
+      unsubscribed = true;
+      oldBlocksSub = null;
+      unsub();
+    };
   }
 }

@@ -100,6 +100,23 @@ describe('Blocks', () => {
     const blockNumber = await api.blocks.getBlockNumber(hash.toHex());
     expect(blockNumber.toNumber()).toBe(1);
   });
+
+  test('subscribe heads from', async () => {
+    const blocks: number[] = [];
+
+    const unsub = await api.blocks.subscribeToHeadsFrom(1, (header) => {
+      if (blocks.includes(header.number.toNumber())) throw new Error('Block already exists in the array');
+      blocks.push(header.number.toNumber());
+    });
+
+    await sleep(7_000);
+
+    unsub();
+
+    for (let i = 1; i < Math.max(...blocks); i++) {
+      expect(blocks).toContain(i);
+    }
+  });
 });
 
 describe('Runtime consts', () => {

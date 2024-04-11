@@ -2,16 +2,7 @@ import { SubmittableExtrinsic, UnsubscribePromise } from '@polkadot/api/types';
 import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 
-import {
-  GearApi,
-  GearTransaction,
-  IGearEvent,
-  IGearVoucherEvent,
-  MessageWaitedData,
-  ProgramChangedData,
-  UserMessageSent,
-  UserMessageSentData,
-} from '../src';
+import { GearApi, GearTransaction, IGearEvent, IGearVoucherEvent, MessageWaitedData, ProgramChangedData } from '../src';
 import { Keyring } from '@polkadot/keyring';
 import { waitReady } from '@polkadot/wasm-crypto';
 
@@ -42,39 +33,6 @@ export const checkInit = (
     });
   });
 };
-
-export function listenToUserMessageSent(api: GearApi, programId: HexString) {
-  const messages: UserMessageSent[] = [];
-  const unsub = api.gearEvents.subscribeToGearEvent('UserMessageSent', (event) => {
-    if (event.data.message.source.eq(programId)) {
-      messages.push(event);
-    }
-  });
-  return async (messageId: HexString | null): Promise<UserMessageSentData> => {
-    const message = messages.find(
-      ({
-        data: {
-          message: { details },
-        },
-      }) => {
-        if (messageId === null) {
-          return details.isNone;
-        }
-
-        if (details.isSome) {
-          return details.unwrap().to.eq(messageId);
-        } else {
-          return false;
-        }
-      },
-    );
-    (await unsub)();
-    if (!message) {
-      throw new Error('UserMessageSent not found');
-    }
-    return message.data;
-  };
-}
 
 export async function sendTransaction<E extends keyof IGearEvent | keyof IGearVoucherEvent | 'Transfer'>(
   submitted: GearTransaction | SubmittableExtrinsic<'promise'>,

@@ -6,7 +6,7 @@ import { u64 } from '@polkadot/types-codec';
 
 import { GearApi, ProgramMetadata } from '../src';
 import { TARGET, TEST_GAS_META, WS_ADDRESS } from './config';
-import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep } from './utilsFunctions';
+import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { GasInfo } from '../src/types';
 import { decodeAddress } from '../src/utils';
 
@@ -115,9 +115,12 @@ describe('Calculate gas', () => {
       },
       meta,
     );
-    const waitForReply = listenToUserMessageSent(api, programId);
-    await sendTransaction(tx, alice, ['MessageQueued']);
-    const { message } = await waitForReply(null);
+    const [_, blockHash] = await sendTransaction(tx, alice, ['MessageQueued']);
+
+    const {
+      data: { message },
+    } = await api.message.getReplyEvent(programId, null, blockHash);
+
     expect(message.id).toBeDefined();
     messageId = message.id.toHex();
     expect(message.details).toBeDefined();
