@@ -26,7 +26,7 @@ function useVoucherFilters() {
   const [values, setValues] = useState(DEFAULT_FILTER_VALUES);
 
   const getOwnerParams = () => {
-    if (!account) throw new Error('Account is not found');
+    if (!account) return {};
 
     const { decodedAddress } = account;
     const { owner } = values;
@@ -91,7 +91,7 @@ const Vouchers = () => {
   const [searchQuery, registerSearchInput, handleSearchSubmit] = useSearchQuery();
 
   const { data, isFetching, fetchNextPage, hasNextPage } = useInfiniteQuery({
-    queryKey: ['vouchers', { filterParams, searchQuery }] as const,
+    queryKey: ['vouchers', filterParams, searchQuery],
     queryFn: ({ pageParam }) =>
       getVouchers({ limit: PAGE_SIZE, offset: pageParam, query: searchQuery, ...filterParams }),
     initialPageParam: 0,

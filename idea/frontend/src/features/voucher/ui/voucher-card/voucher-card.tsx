@@ -53,7 +53,6 @@ function VoucherCard({ id, balance, amount, expirationBlock, expirationTimestamp
 
     return isActive ? 'Active' : 'Expired';
   };
-  console.log('isDeclined: ', isDeclined);
 
   return (
     <div className={styles.card}>
@@ -83,8 +82,8 @@ function VoucherCard({ id, balance, amount, expirationBlock, expirationTimestamp
       </div>
 
       {/* if owner and spender are the same person, is it still necessary to decline first? */}
-      {isOwner && isActive && isDeclined && <RevokeVoucher spender={spender} id={id} />}
-      {isSpender && isActive && <DeclineVoucher id={id} />}
+      {isOwner && (!isActive || isDeclined) && <RevokeVoucher spender={spender} id={id} />}
+      {isSpender && isActive && !isDeclined && <DeclineVoucher id={id} />}
     </div>
   );
 }
