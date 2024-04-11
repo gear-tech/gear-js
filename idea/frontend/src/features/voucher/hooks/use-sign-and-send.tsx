@@ -41,34 +41,40 @@ function useSignAndSend() {
 
   const handleStatus = ({ events, status }: ISubmittableResult, method: string, options: Options) => {
     const { isInvalid, isReady, isInBlock, isFinalized } = status;
-    const { onReady, onInBlock } = options;
-
-    if (isInvalid) throw new Error('Transaction Error. Status: isInvalid');
-
-    if (isReady) return onReady();
-    if (isInBlock) return onInBlock();
-
-    if (isFinalized) events.forEach(({ event }) => handleEvent(event, method, options));
-  };
-
-  const signAndSend = async (extrinsic: Extrinsic, method: string, options?: Partial<Options>) => {
-    if (!account) throw new Error('Account is not found');
-
-    const optionsWithDefaults = { ...DEFAULT_OPTIONS, ...options };
-    const { onError, onFinally } = optionsWithDefaults;
+    const { onReady, onInBlock, onError, onFinally } = options;
 
     try {
-      const { address, meta } = account;
-      const { signer } = await web3FromSource(meta.source);
+      if (isInvalid) throw new Error('Transaction Error. Status: isInvalid');
 
-      // TODO: test errors
-      extrinsic.signAndSend(address, { signer }, (result) => handleStatus(result, method, optionsWithDefaults));
+      if (isReady) return onReady();
+      if (isInBlock) return onInBlock();
+
+      if (isFinalized) events.forEach(({ event }) => handleEvent(event, method, options));
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
 
       onError(message);
       onFinally();
     }
+  };
+
+  const signAndSend = (extrinsic: Extrinsic, method: string, options?: Partial<Options>) => {
+    if (!account) throw new Error('Account is not found');
+    const { address, meta } = account;
+
+    const optionsWithDefaults = { ...DEFAULT_OPTIONS, ...options };
+    const { onError, onFinally } = optionsWithDefaults;
+
+    web3FromSource(meta.source)
+      .then(({ signer }) =>
+        extrinsic.signAndSend(address, { signer }, (result) => handleStatus(result, method, optionsWithDefaults)),
+      )
+      .catch((error: unknown) => {
+        const message = error instanceof Error ? error.message : String(error);
+
+        onError(message);
+        onFinally();
+      });
   };
 
   return signAndSend;
