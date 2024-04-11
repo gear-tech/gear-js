@@ -14,7 +14,6 @@ const Observer = ({ onIntersection }: Props) => {
       if (!isIntersecting) return;
 
       onIntersection();
-      console.log('fetch');
     });
 
     observer.observe(observerRef.current);
@@ -24,7 +23,8 @@ const Observer = ({ onIntersection }: Props) => {
     };
   }, [onIntersection]);
 
-  return <span ref={observerRef} />;
+  // height monkey patch to make it work with simplebar
+  return <span ref={observerRef} style={{ display: 'block', height: '1px' }} />;
 };
 
 export { Observer };
