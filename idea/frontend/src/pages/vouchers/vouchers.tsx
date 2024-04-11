@@ -92,8 +92,7 @@ const Vouchers = () => {
 
   const { data, isFetching, hasNextPage, fetchNextPage, refetch } = useInfiniteQuery({
     queryKey: ['vouchers', filterParams, searchQuery],
-    queryFn: ({ pageParam }) =>
-      getVouchers({ limit: PAGE_SIZE, offset: pageParam, query: searchQuery, ...filterParams }),
+    queryFn: ({ pageParam }) => getVouchers({ limit: PAGE_SIZE, offset: pageParam, id: searchQuery, ...filterParams }),
     initialPageParam: 0,
     getNextPageParam,
   });
