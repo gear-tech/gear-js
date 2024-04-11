@@ -22,9 +22,22 @@ type Props = {
   owner: HexString;
   spender: HexString;
   isDeclined: boolean;
+  onRevoke: () => void;
+  onDecline: () => void;
 };
 
-function VoucherCard({ id, balance, amount, expirationBlock, expirationTimestamp, owner, spender, isDeclined }: Props) {
+function VoucherCard({
+  id,
+  balance,
+  amount,
+  expirationBlock,
+  expirationTimestamp,
+  owner,
+  spender,
+  isDeclined,
+  onRevoke,
+  onDecline,
+}: Props) {
   const { account } = useAccount();
   const { getFormattedBalance } = useBalanceFormat();
   const alert = useAlert();
@@ -43,9 +56,9 @@ function VoucherCard({ id, balance, amount, expirationBlock, expirationTimestamp
   };
 
   const getStatus = () => {
-    if (isDeclined) return BulbStatus.Exited;
+    if (isDeclined) return BulbStatus.Error;
 
-    return isActive ? BulbStatus.Success : BulbStatus.Error;
+    return isActive ? BulbStatus.Success : BulbStatus.Exited;
   };
 
   const getStatusText = () => {
@@ -82,8 +95,8 @@ function VoucherCard({ id, balance, amount, expirationBlock, expirationTimestamp
       </div>
 
       {/* if owner and spender are the same person, is it still necessary to decline first? */}
-      {isOwner && (!isActive || isDeclined) && <RevokeVoucher spender={spender} id={id} />}
-      {isSpender && isActive && !isDeclined && <DeclineVoucher id={id} />}
+      {isOwner && (!isActive || isDeclined) && <RevokeVoucher spender={spender} id={id} onSubmit={onRevoke} />}
+      {isSpender && isActive && !isDeclined && <DeclineVoucher id={id} onSubmit={onDecline} />}
     </div>
   );
 }

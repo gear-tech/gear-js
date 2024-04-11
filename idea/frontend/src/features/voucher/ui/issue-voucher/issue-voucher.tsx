@@ -13,9 +13,10 @@ type Props = {
   programId?: HexString;
   buttonSize?: 'small' | 'medium';
   buttonColor?: 'secondary' | 'light' | 'transparent';
+  onSubmit?: () => void;
 };
 
-const IssueVoucher = withAccount(({ programId, buttonColor = 'light', buttonSize = 'medium' }: Props) => {
+const IssueVoucher = withAccount(({ programId, buttonColor = 'light', buttonSize = 'medium', onSubmit }: Props) => {
   const [isModalOpen, openModal, closeModal] = useModal();
 
   return (
@@ -30,7 +31,7 @@ const IssueVoucher = withAccount(({ programId, buttonColor = 'light', buttonSize
         noWrap
       />
 
-      {isModalOpen && <IssueVoucherModal programId={programId} close={closeModal} />}
+      {isModalOpen && <IssueVoucherModal programId={programId} close={closeModal} onSubmit={onSubmit} />}
     </>
   );
 });

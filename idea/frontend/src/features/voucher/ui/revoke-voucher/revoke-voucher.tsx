@@ -11,9 +11,10 @@ import styles from './revoke-voucher.module.scss';
 type Props = {
   spender: HexString;
   id: HexString;
+  onSubmit: () => void;
 };
 
-const RevokeVoucher = ({ spender, id }: Props) => {
+const RevokeVoucher = ({ spender, id, onSubmit }: Props) => {
   const { isApiReady, api } = useApi();
   const alert = useAlert();
   const signAndSend = useSignAndSend();
@@ -29,6 +30,8 @@ const RevokeVoucher = ({ spender, id }: Props) => {
     const extrinsic = api.voucher.revoke(spender, id);
 
     const onSuccess = () => {
+      onSubmit();
+
       alert.success('Voucher has been revoked');
       closeModal();
     };

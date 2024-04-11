@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { Placeholder } from '@/entities/placeholder';
-import { VoucherCard, VoucherCardPlaceholder } from '@/features/voucher';
+import { IssueVoucher, VoucherCard, VoucherCardPlaceholder } from '@/features/voucher';
 
 import { PAGE_SIZE } from './consts';
 import { List } from './list';
@@ -90,7 +90,7 @@ const Vouchers = () => {
   const [filterValues, filterParams, handleFiltersSubmit] = useVoucherFilters();
   const [searchQuery, registerSearchInput, handleSearchSubmit] = useSearchQuery();
 
-  const { data, isFetching, fetchNextPage, hasNextPage } = useInfiniteQuery({
+  const { data, isFetching, hasNextPage, fetchNextPage, refetch } = useInfiniteQuery({
     queryKey: ['vouchers', filterParams, searchQuery],
     queryFn: ({ pageParam }) =>
       getVouchers({ limit: PAGE_SIZE, offset: pageParam, query: searchQuery, ...filterParams }),
@@ -114,6 +114,8 @@ const Vouchers = () => {
       owner={owner}
       spender={spender}
       isDeclined={isDeclined}
+      onRevoke={refetch}
+      onDecline={refetch}
     />
   );
 
@@ -121,7 +123,11 @@ const Vouchers = () => {
 
   return (
     <div className={styles.vouchers}>
-      <h2 className={styles.heading}>Vouchers: {vouchersCount}</h2>
+      <header className={styles.header}>
+        <h2 className={styles.heading}>Vouchers: {vouchersCount}</h2>
+
+        <IssueVoucher onSubmit={refetch} />
+      </header>
 
       <form onSubmit={handleSearchSubmit}>
         <Input type="search" placeholder="0x00" {...registerSearchInput} />

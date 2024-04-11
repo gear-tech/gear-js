@@ -10,9 +10,10 @@ import styles from './decline-voucher.module.scss';
 
 type Props = {
   id: HexString;
+  onSubmit: () => void;
 };
 
-const DeclineVoucher = ({ id }: Props) => {
+const DeclineVoucher = ({ id, onSubmit }: Props) => {
   const { isApiReady, api } = useApi();
   const alert = useAlert();
   const signAndSend = useSignAndSend();
@@ -28,6 +29,8 @@ const DeclineVoucher = ({ id }: Props) => {
     const extrinsic = api.voucher.decline(id);
 
     const onSuccess = () => {
+      onSubmit();
+
       alert.success('Voucher has been declined');
       closeModal();
     };

@@ -15,8 +15,9 @@ const getVouchers = (params: { offset: number; limit: number; query: string }) =
   const url = `${VOUCHERS_API_URL}/vouchers`;
   const method = 'POST';
   const body = JSON.stringify(params);
+  const headers = { 'Content-Type': 'application/json' };
 
-  return fetchWithGuard<VouchersResponse>(url, { method, body });
+  return fetchWithGuard<VouchersResponse>(url, { method, body, headers });
 };
 
 const getNextPageParam = (lastPage: VouchersResponse, allPages: VouchersResponse[]) => {

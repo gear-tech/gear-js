@@ -20,9 +20,10 @@ import styles from './issue-voucher-modal.module.scss';
 type Props = {
   programId?: HexString;
   close: () => void;
+  onSubmit?: () => void;
 };
 
-const IssueVoucherModal = ({ programId, close }: Props) => {
+const IssueVoucherModal = ({ programId, close, onSubmit = () => {} }: Props) => {
   const { isApiReady, api } = useApi();
   const alert = useAlert();
 
@@ -70,6 +71,8 @@ const IssueVoucherModal = ({ programId, close }: Props) => {
     const { extrinsic } = await api.voucher.issue(address, value, Number(duration), programIds, isCodeUploadEnabled);
 
     const onSuccess = () => {
+      onSubmit();
+
       alert.success('Voucher issued');
       close();
     };

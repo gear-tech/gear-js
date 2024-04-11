@@ -8,6 +8,11 @@
   align-items: flex-start;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
 .heading {
   @include heading(24px, 31px, 500);
   color: $gray800;
