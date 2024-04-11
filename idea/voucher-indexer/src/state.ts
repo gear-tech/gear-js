@@ -105,13 +105,8 @@ export class BatchState {
 
   public async revoked(event: VoucherUpdatedArgs, block: Block) {
     logger.info(`Voucher revoked`, { id: event.voucherId, block: block.height });
-    const voucher = await this._getVoucher(event.voucherId);
 
-    if (!voucher) {
-      return;
-    }
-
-    this._revoked.add(voucher.id);
+    this._revoked.add(event.voucherId);
   }
 
   public transfer(event: BalanceTransferArgs) {

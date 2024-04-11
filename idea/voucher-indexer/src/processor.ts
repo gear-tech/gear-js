@@ -35,7 +35,7 @@ export const processor = new SubstrateBatchProcessor()
       timestamp: true,
     },
   })
-  .setBlockRange({ from: 4_000_000 });
+  .setBlockRange({ from: config.network.fromBlock });
 
 export type Fields = SubstrateBatchProcessorFields<typeof processor>;
 export type Block = BlockHeader<Fields>;

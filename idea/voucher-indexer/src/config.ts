@@ -15,6 +15,7 @@ export const config = {
   network: {
     archive: getEnv('SQUID_ARCHIVE', 'vara'),
     rpcEndpoint: getEnv('RPC_ENDPOINT', 'http://localhost:9944'),
+    fromBlock: Number(getEnv('FROM_BLOCK', '0')),
   },
   db: {
     host: getEnv('DB_HOST', 'localhost'),
