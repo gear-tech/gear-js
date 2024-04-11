@@ -2,12 +2,8 @@ import { DataSource, Repository } from 'typeorm';
 import { config } from './config';
 import { Voucher } from './model';
 
-interface GetVouchersParams {
-  owner?: string;
-  spender?: string;
+interface GetVouchersParams extends Partial<Pick<Voucher, 'owner' | 'spender' | 'codeUploading' | 'id' | 'programs'>> {
   declined?: boolean;
-  codeUploading?: boolean;
-  programs?: string[];
   expired?: boolean;
   limit?: number;
   offset?: number;
@@ -38,6 +34,7 @@ export class VoucherService {
   }
 
   public async getVouchers({
+    id,
     owner,
     spender,
     declined,
@@ -48,6 +45,14 @@ export class VoucherService {
     expired,
   }: GetVouchersParams) {
     const qb = this._repo.createQueryBuilder('v');
+
+    if (id) {
+      if (id.length === 66) {
+        qb.andWhere('v.id = :id', { id });
+      } else {
+        qb.andWhere('v.id LIKE :id', { id: `%${id}%` });
+      }
+    }
 
     if (declined !== undefined) {
       qb.andWhere('v.isDeclined = :declined', { declined });
