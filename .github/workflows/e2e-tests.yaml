@@ -101,6 +101,7 @@ jobs:
   build-and-push-gear-node-image:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
+    needs: [check-labels]
     environment: dev
     permissions:
       contents: read
@@ -127,6 +128,7 @@ jobs:
   build-and-push-indexer-image:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
+    needs: [check-labels]
     environment: dev
     permissions:
       contents: read
@@ -153,6 +155,7 @@ jobs:
   build-and-push-api-gateway-image:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
+    needs: [check-labels]
     environment: dev
     permissions:
       contents: read
@@ -179,6 +182,7 @@ jobs:
   build-and-push-meta-storage-image:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
+    needs: [check-labels]
     environment: dev
     permissions:
       contents: read
@@ -202,10 +206,10 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-meta-storage:dev
 
-
   build-and-push-test-balance-image:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
+    needs: [check-labels]
     environment: dev
     permissions:
       contents: read
