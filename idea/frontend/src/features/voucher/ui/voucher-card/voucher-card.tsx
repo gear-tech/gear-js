@@ -7,8 +7,8 @@ import { IdBlock } from '@/shared/ui/idBlock';
 import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
 import { copyToClipboard, getShortName } from '@/shared/helpers';
 import CopySVG from '@/shared/assets/images/actions/copyGreen.svg?react';
-import { Voucher } from '@/pages/vouchers/types';
 
+import { Voucher } from '../../types';
 import { RevokeVoucher } from '../revoke-voucher';
 import { DeclineVoucher } from '../decline-voucher';
 import styles from './voucher-card.module.scss';

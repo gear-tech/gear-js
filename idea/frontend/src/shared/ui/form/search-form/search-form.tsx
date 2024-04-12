@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Input } from '@/shared/ui';
+import { Input } from '../input';
 
 type Props = {
   onSubmit: (query: string) => void;

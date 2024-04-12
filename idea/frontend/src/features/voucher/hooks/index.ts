@@ -5,6 +5,8 @@ import { useVoucherType } from './use-voucher-type';
 import { useModal } from './use-modal';
 import { useLoading } from './use-loading';
 import { useSignAndSend } from './use-sign-and-send';
+import { useVouchers } from './use-vouchers';
+import { useVoucherFilters } from './use-voucher-filters';
 
 export {
   useBalanceSchema,
@@ -14,4 +16,6 @@ export {
   useModal,
   useLoading,
   useSignAndSend,
+  useVouchers,
+  useVoucherFilters,
 };

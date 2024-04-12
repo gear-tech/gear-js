@@ -2,15 +2,18 @@ import { useAccount } from '@gear-js/react-hooks';
 import { useState } from 'react';
 
 import { Placeholder } from '@/entities/placeholder';
-import { IssueVoucher, VoucherCard, VoucherCardPlaceholder } from '@/features/voucher';
+import {
+  IssueVoucher,
+  Voucher,
+  VoucherCard,
+  VoucherCardPlaceholder,
+  useVoucherFilters,
+  useVouchers,
+} from '@/features/voucher';
 import { FilterGroup, Filters, Radio, StatusRadio } from '@/features/filters';
 import { BulbStatus } from '@/shared/ui/bulbBlock';
+import { List, SearchForm, Skeleton } from '@/shared/ui';
 
-import { Voucher } from './types';
-import { useVoucherFilters, useVouchers } from './hooks';
-import { List } from './list';
-import { SearchForm } from './search-form';
-import { Skeleton } from './skeleton';
 import styles from './vouchers.module.scss';
 
 const Vouchers = () => {

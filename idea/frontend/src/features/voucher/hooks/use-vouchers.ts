@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { PAGE_SIZE } from '../consts';
+import { DEFAULT_LIMIT } from '@/shared/config';
+
 import { getVouchers, getNextPageParam } from '../utils';
 import { VouchersParams } from '../types';
 
@@ -9,7 +10,7 @@ type FilterParams = Partial<Pick<VouchersParams, 'declined' | 'expired' | 'owner
 function useVouchers(id: string, filterParams: FilterParams) {
   const { data, isFetching, hasNextPage, fetchNextPage, refetch } = useInfiniteQuery({
     queryKey: ['vouchers', id, filterParams],
-    queryFn: ({ pageParam }) => getVouchers({ limit: PAGE_SIZE, offset: pageParam, id, ...filterParams }),
+    queryFn: ({ pageParam }) => getVouchers({ limit: DEFAULT_LIMIT, offset: pageParam, id, ...filterParams }),
     initialPageParam: 0,
     getNextPageParam,
   });
