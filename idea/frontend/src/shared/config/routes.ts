@@ -9,23 +9,17 @@ const routes = {
   initializeProgram: ':codeId/initialize',
   messages: '/messages',
   message: ':messageId',
-  editor: '/editor',
   mailbox: '/mailbox',
-  examples: '/examples',
   explorer: '/explorer',
-  termsOfUse: '/terms-of-use',
-  privacyPolicy: '/privacy-policy',
   state: '/state/:programId',
   send: '/send',
   sendMessage: 'message/:programId',
   reply: 'reply/:messageId',
-  meta: '/meta/:programId',
   block: ':blockId',
   vouchers: '/vouchers',
 };
 
 const absoluteRoutes = {
-  meta: `/meta/:programId`,
   program: `${routes.programs}/${routes.program}`,
   uploadProgram: `${routes.programs}/${routes.uploadProgram}`,
   initializeProgram: `${routes.codes}/${routes.initializeProgram}`,
