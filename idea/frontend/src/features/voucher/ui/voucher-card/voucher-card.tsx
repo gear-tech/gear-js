@@ -53,7 +53,7 @@ function VoucherCard({ voucher, onChange }: Props) {
 
   return (
     <div className={styles.card}>
-      <div>
+      <div className={styles.body}>
         <h3 className={styles.heading}>
           <span className={styles.balance}>{formattedBalance?.value}</span>
 
@@ -78,9 +78,11 @@ function VoucherCard({ voucher, onChange }: Props) {
         </footer>
       </div>
 
-      {isOwner && !isDeclined && <UpdateVoucher voucher={voucher} onSubmit={onChange} />}
-      {isOwner && (!isActive || isDeclined) && <RevokeVoucher spender={spender} id={id} onSubmit={onChange} />}
-      {isSpender && isActive && !isDeclined && <DeclineVoucher id={id} onSubmit={onChange} />}
+      <div className={styles.buttons}>
+        {isOwner && !isDeclined && <UpdateVoucher voucher={voucher} onSubmit={onChange} />}
+        {isOwner && (!isActive || isDeclined) && <RevokeVoucher spender={spender} id={id} onSubmit={onChange} />}
+        {isSpender && isActive && !isDeclined && <DeclineVoucher id={id} onSubmit={onChange} />}
+      </div>
     </div>
   );
 }

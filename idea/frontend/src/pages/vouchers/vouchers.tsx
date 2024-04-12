@@ -39,6 +39,7 @@ const Vouchers = () => {
       </header>
 
       <SearchForm
+        placeholder="Search by id..."
         onSubmit={setSearchQuery}
         getSchema={(schema) => schema.refine((value) => isHex(value), 'Value should be hex')}
       />
