@@ -1,30 +1,29 @@
-import { Input } from '@gear-js/ui';
 import { CSSTransition } from 'react-transition-group';
-import { useForm } from 'react-hook-form';
 
 import { Filters, FilterGroup, Radio, StatusCheckbox } from '@/features/filters';
 import { AnimationTimeout } from '@/shared/config';
 import { BulbStatus } from '@/shared/ui/bulbBlock';
+import { SearchForm } from '@/shared/ui';
 
 import { ProgramStatus, PROGRAM_STATUS_NAME } from '../../consts';
 import { FiltersValues, RequestParams } from '../../types';
 import styles from './programs-search.module.scss';
 
 type Props = {
-  initQuery: string;
   isLoggedIn: boolean;
   initialValues: FiltersValues;
   onSubmit: (values: RequestParams) => void;
 };
 
-const ProgramsSearch = ({ initQuery, isLoggedIn, initialValues, onSubmit }: Props) => {
-  const form = useForm({ defaultValues: { query: initQuery } });
-
+const ProgramsSearch = ({ isLoggedIn, initialValues, onSubmit }: Props) => {
   return (
     <section className={styles.searchSettings}>
-      <form className={styles.searchForm} onSubmit={form.handleSubmit(({ query }) => onSubmit({ query }))}>
-        <Input type="search" placeholder="Search by name, code hash, id..." {...form.register('query')} />
-      </form>
+      <SearchForm
+        placeholder="Search by name, code hash, id..."
+        className={styles.searchForm}
+        onSubmit={(query) => onSubmit({ query })}
+      />
+
       <Filters initialValues={initialValues} onSubmit={onSubmit}>
         <FilterGroup name="owner" onSubmit={onSubmit}>
           <Radio name="owner" value="all" label="All programs" onSubmit={onSubmit} />

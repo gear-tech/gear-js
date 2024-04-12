@@ -4,30 +4,39 @@ import { z } from 'zod';
 
 import { Input } from '../input';
 
-type Props = {
+type Props<T> = {
   onSubmit: (query: string) => void;
+  placeholder?: string;
+  className?: string;
+  getSchema?: (defaultSchema: z.ZodString) => z.ZodType<T>;
 };
 
-const DEFAULT_SEARCH_VALUES = {
-  query: '',
-};
+const FIELD_NAME = {
+  QUERY: 'query',
+} as const;
 
-const SearchForm = ({ onSubmit }: Props) => {
+const DEFAULT_VALUES = {
+  [FIELD_NAME.QUERY]: '',
+} as const;
+
+const QUERY_SCHEMA = z.string().trim();
+
+const SearchForm = <T,>({ placeholder, className, onSubmit, getSchema }: Props<T>) => {
   const schema = z.object({
-    query: z.string().trim(),
+    [FIELD_NAME.QUERY]: (getSchema ? getSchema(QUERY_SCHEMA) : QUERY_SCHEMA).or(z.literal('')),
   });
 
   const form = useForm({
-    defaultValues: DEFAULT_SEARCH_VALUES,
+    defaultValues: DEFAULT_VALUES,
     resolver: zodResolver(schema),
   });
 
-  const handleSubmit = form.handleSubmit((values) => onSubmit(values.query));
+  const handleSubmit = form.handleSubmit((values) => onSubmit(values[FIELD_NAME.QUERY]));
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={handleSubmit}>
-        <Input name="query" type="search" placeholder="Search by id..." />
+      <form onSubmit={handleSubmit} className={className}>
+        <Input name={FIELD_NAME.QUERY} type="search" placeholder={placeholder} />
       </form>
     </FormProvider>
   );

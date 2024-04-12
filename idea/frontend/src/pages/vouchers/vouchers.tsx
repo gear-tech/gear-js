@@ -1,4 +1,5 @@
 import { useAccount } from '@gear-js/react-hooks';
+import { isHex } from '@polkadot/util';
 import { useState } from 'react';
 
 import { Placeholder } from '@/entities/placeholder';
@@ -37,7 +38,10 @@ const Vouchers = () => {
         <IssueVoucher onSubmit={refetch} />
       </header>
 
-      <SearchForm onSubmit={setSearchQuery} />
+      <SearchForm
+        onSubmit={setSearchQuery}
+        getSchema={(schema) => schema.refine((value) => isHex(value), 'Value should be hex')}
+      />
 
       {isLoaderVisible ? (
         <div className={styles.placeholder}>

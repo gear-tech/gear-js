@@ -13,4 +13,10 @@ const isAccountAddressValid = (value = '') => {
   }
 };
 
-export { isHexValid, isExists, isAccountAddressValid };
+const isNumeric = (value: string) => {
+  const digitsRegex = /^\d+$/;
+
+  return digitsRegex.test(value);
+};
+
+export { isHexValid, isExists, isAccountAddressValid, isNumeric };
