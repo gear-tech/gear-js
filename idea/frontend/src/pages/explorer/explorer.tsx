@@ -15,10 +15,10 @@ const Explorer = () => {
 
       <SearchForm
         placeholder="Search block hash or number to query"
-        onSubmit={(block) => navigate(`/explorer/${block}`)}
         getSchema={(schema) =>
           schema.refine((value) => isNumeric(value) || isHex(value), 'Value should be number or hex')
         }
+        onSubmit={(block) => navigate(`/explorer/${block}`)}
       />
 
       <Outlet />

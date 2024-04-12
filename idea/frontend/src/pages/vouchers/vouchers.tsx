@@ -40,8 +40,8 @@ const Vouchers = () => {
 
       <SearchForm
         placeholder="Search by id..."
-        onSubmit={setSearchQuery}
         getSchema={(schema) => schema.refine((value) => isHex(value), 'Value should be hex')}
+        onSubmit={(query) => setSearchQuery(query)}
       />
 
       {isLoaderVisible ? (
@@ -49,7 +49,7 @@ const Vouchers = () => {
           <Placeholder
             block={renderSkeleton()}
             title="There are no vouchers yet"
-            description="Wait until someone will issue a voucher for you"
+            description="Wait until someone will issue a voucher for you, or issue voucher by yourself"
             blocksCount={5}
             isEmpty={isEmpty}
           />

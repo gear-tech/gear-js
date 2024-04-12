@@ -107,7 +107,7 @@ const UpdateVoucherModal = ({ voucher, close, onSubmit }: Props) => {
               block
             />
 
-            <ValueField name={FIELD_NAME.VALUE} label="Increase voucher balance:" direction="y" block />
+            <ValueField name={FIELD_NAME.VALUE} label="Increase balance:" direction="y" block />
 
             <div className={styles.duration}>
               <h4 className={styles.heading}>Prolong expiration period</h4>
