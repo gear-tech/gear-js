@@ -194,14 +194,14 @@ describe('Voucher', () => {
       metadata.types.reply!,
     );
 
-    const waitForReply = api.message.listenToReplies(programId);
-
-    const [txData] = await sendTransaction(api.voucher.call(voucher, { SendReply: tx }), charlie, ['MessageQueued']);
+    const [txData, blockHash] = await sendTransaction(api.voucher.call(voucher, { SendReply: tx }), charlie, [
+      'MessageQueued',
+    ]);
     expect(txData).toBeDefined();
 
-    const reply = await waitForReply(msgId);
-    expect(reply?.message.details.isSome).toBeTruthy();
-    expect(reply?.message.details.unwrap().code.isSuccess).toBeTruthy();
+    const reply = await api.message.getReplyEvent(programId, msgId, blockHash);
+    expect(reply.data.message.details.isSome).toBeTruthy();
+    expect(reply.data.message.details.unwrap().code.isSuccess).toBeTruthy();
   });
 
   test('Update voucher', async () => {

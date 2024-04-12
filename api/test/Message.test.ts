@@ -67,15 +67,14 @@ describe('Gear Message', () => {
         metadata,
       );
 
-      const waitForReply = api.message.listenToReplies(programId);
-
-      const [txData] = await sendTransaction(tx, alice, ['MessageQueued']);
+      const [txData, blockHash] = await sendTransaction(tx, alice, ['MessageQueued']);
       expect(txData).toBeDefined();
+      expect(blockHash).toBeDefined();
 
-      const reply = await waitForReply(txData.id.toHex());
-      expect(reply?.message.details.isSome).toBeTruthy();
-      expect(reply?.message.details.unwrap().code.isSuccess).toBeTruthy();
-      expect(reply?.message.payload.toHex()).toBe(message.reply);
+      const reply = await api.message.getReplyEvent(programId, txData.id.toHex(), blockHash);
+      expect(reply.data.message.details.isSome).toBeTruthy();
+      expect(reply.data.message.details.unwrap().code.isSuccess).toBeTruthy();
+      expect(reply.data.message.payload.toHex()).toBe(message.reply);
     }
   });
 

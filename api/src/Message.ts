@@ -1,10 +1,11 @@
-import { SubmittableExtrinsic, VoidFn } from '@polkadot/api/types';
+import { SubmittableExtrinsic, UnsubscribePromise, VoidFn } from '@polkadot/api/types';
 import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { ReplaySubject } from 'rxjs';
 
 import { ICalculateReplyForHandleOptions, MessageSendOptions, MessageSendReplyOptions, ReplyInfo } from './types';
 import { SendMessageError, SendReplyError } from './errors';
+import { UserMessageSent, UserMessageSentData } from './events';
 import {
   decodeAddress,
   encodePayload,
@@ -16,7 +17,6 @@ import {
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from './metadata';
 import { SPEC_VERSION } from './consts';
-import { UserMessageSentData } from './events';
 
 export class GearMessage extends GearTransaction {
   /**
@@ -271,6 +271,39 @@ export class GearMessage extends GearTransaction {
     }
   }
 
+  /**
+   * ## Get event with reply message
+   * @param msgId - id of sent message
+   * @param txBlock - number or hash of block where the message was sent
+   * @returns UserMessageSent event
+   */
+  async getReplyEvent(programId: HexString, msgId: HexString | null, txBlock: HexString | number) {
+    let unsub: UnsubscribePromise;
+
+    const replyEvent = new Promise<UserMessageSent>((resolve) => {
+      unsub = this._api.gearEvents.subscribeToGearEvent(
+        'UserMessageSent',
+        (event) => {
+          if (event.data.message.source.eq(programId) === false) return;
+
+          if (msgId === null) {
+            resolve(event);
+          }
+
+          if (event.data.message.details.isSome && event.data.message.details.unwrap().to.toHex() === msgId) {
+            resolve(event);
+          }
+        },
+        txBlock,
+      );
+    });
+
+    (await unsub)();
+
+    return replyEvent;
+  }
+
+  /** @deprecated */
   listenToReplies(programId: HexString, bufferSize = 5) {
     let unsub: VoidFn;
     const subject = new ReplaySubject<[HexString, UserMessageSentData]>(bufferSize);

@@ -64,9 +64,10 @@ describe('New Program', () => {
       }
     });
 
-    const waitForReply = api.message.listenToReplies(programId);
-
-    const [pcData, mqData] = await sendTransaction(program.extrinsic, alice, ['ProgramChanged', 'MessageQueued']);
+    const [pcData, mqData, blockHash] = await sendTransaction(program.extrinsic, alice, [
+      'ProgramChanged',
+      'MessageQueued',
+    ]);
 
     expect(pcData.id.toHex()).toBe(programId);
     expect(pcData.change.isProgramSet).toBeTruthy();
@@ -75,12 +76,12 @@ describe('New Program', () => {
 
     expect(await status).toBe('success');
 
-    const reply = await waitForReply(mqData.id.toHex());
-    expect(metadata.createType(metadata.types.init.output!, reply.message.payload).toJSON()).toMatchObject({ One: 1 });
+    const reply = await api.message.getReplyEvent(programId, mqData.id.toHex(), blockHash);
+    expect(metadata.createType(metadata.types.init.output!, reply.data.message.payload).toJSON()).toMatchObject({
+      One: 1,
+    });
     expect(isProgramSetHappened).toBeTruthy();
     expect(isActiveHappened).toBeTruthy();
-    // expect(programSetExpiration!).toBe(activeExpiration!);
-    // expiration = activeExpiration!;
   });
 
   test.skip('Wait when program will be paused', async () => {
@@ -113,9 +114,7 @@ describe('New Program', () => {
       programChangedStatuses.push(st);
     });
 
-    const waitForReply = api.message.listenToReplies(programId);
-
-    const [transactionData] = await sendTransaction(api.program, alice, ['MessageQueued']);
+    const [transactionData, blockHash] = await sendTransaction(api.program, alice, ['MessageQueued']);
 
     expect(transactionData.destination.toHex()).toBe(programId);
     expect(await status).toBe('success');
@@ -123,8 +122,10 @@ describe('New Program', () => {
     expect(programChangedStatuses).toContain('ProgramSet');
     expect(programChangedStatuses).toContain('Active');
 
-    const reply = await waitForReply(transactionData.id.toHex());
-    expect(metadata.createType(metadata.types.init.output!, reply.message.payload).toJSON()).toMatchObject({ One: 1 });
+    const reply = await api.message.getReplyEvent(programId, transactionData.id.toHex(), blockHash);
+    expect(metadata.createType(metadata.types.init.output!, reply.data.message.payload).toJSON()).toMatchObject({
+      One: 1,
+    });
   });
 
   test('Throw error if value is incorrect', () => {

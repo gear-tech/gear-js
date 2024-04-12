@@ -1,4 +1,4 @@
-import { FrameSystemAccountInfo } from '@polkadot/types/lookup';
+import { FrameSystemAccountInfo, FrameSystemEventRecord } from '@polkadot/types/lookup';
 import { HexString } from '@polkadot/util/types';
 import { UnsubscribePromise } from '@polkadot/api/types';
 
@@ -6,6 +6,7 @@ import { IBalanceCallback, IBlocksCallback } from '../types';
 import { IGearEvent, IGearVoucherEvent } from './types';
 import { Transfer, UserMessageSent } from './GearEvents';
 import { GearApi } from '../GearApi';
+import { Vec } from '@polkadot/types-codec';
 
 export class GearEvents {
   private api: GearApi;
@@ -17,30 +18,40 @@ export class GearEvents {
   subscribeToGearEvent<M extends keyof IGearEvent>(
     method: M,
     callback: (event: IGearEvent[M]) => void | Promise<void>,
+    fromBlock?: number | HexString,
     blocks: 'finalized' | 'latest' = 'latest',
   ) {
-    if (blocks === 'latest') {
-      return this.api.query.system.events((events) => {
-        events
-          .filter(({ event }) => event.method === method)
-          .forEach(({ event }) => {
-            callback(event as IGearEvent[M]);
-          });
-      });
-    } else {
-      return this.api.rpc.chain.subscribeFinalizedHeads(async (header) => {
-        await this.api
-          .at(header.hash)
-          .then((apiAt) => apiAt.query.system.events())
-          .then((events) =>
-            events
-              .filter(({ event }) => event.method === method)
-              .forEach(({ event }) => {
-                callback(event as IGearEvent[M]);
-              }),
-          );
-      });
+    const handler = (events: Vec<FrameSystemEventRecord>) => {
+      events
+        .filter(({ event }) => event.method === method)
+        .forEach(({ event }) => {
+          callback(event as IGearEvent[M]);
+        });
+    };
+
+    if (fromBlock) {
+      return this.api.blocks.subscribeToHeadsFrom(
+        fromBlock,
+        (header) => {
+          this.api
+            .at(header.hash)
+            .then((apiAt) => apiAt.query.system.events())
+            .then(handler);
+        },
+        blocks,
+      );
     }
+
+    if (blocks === 'latest') {
+      return this.api.query.system.events(handler);
+    }
+
+    return this.api.rpc.chain.subscribeFinalizedHeads((header) => {
+      this.api
+        .at(header.hash)
+        .then((apiAt) => apiAt.query.system.events())
+        .then(handler);
+    });
   }
 
   subscribeToGearVoucherEvent<M extends keyof IGearVoucherEvent>(
