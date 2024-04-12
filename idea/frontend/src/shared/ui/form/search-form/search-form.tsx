@@ -2,13 +2,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { asOptionalField } from '@/shared/helpers';
+
 import { Input } from '../input';
 
-type Props<T> = {
+type Props<T extends z.ZodTypeAny> = {
   onSubmit: (query: string) => void;
   placeholder?: string;
   className?: string;
-  getSchema?: (defaultSchema: z.ZodString) => z.ZodType<T>;
+  getSchema?: (defaultSchema: z.ZodString) => T;
 };
 
 const FIELD_NAME = {
@@ -21,9 +23,9 @@ const DEFAULT_VALUES = {
 
 const QUERY_SCHEMA = z.string().trim();
 
-const SearchForm = <T,>({ placeholder, className, onSubmit, getSchema }: Props<T>) => {
+const SearchForm = <T extends z.ZodTypeAny>({ placeholder, className, onSubmit, getSchema }: Props<T>) => {
   const schema = z.object({
-    [FIELD_NAME.QUERY]: (getSchema ? getSchema(QUERY_SCHEMA) : QUERY_SCHEMA).or(z.literal('')),
+    [FIELD_NAME.QUERY]: asOptionalField(getSchema ? getSchema(QUERY_SCHEMA) : QUERY_SCHEMA),
   });
 
   const form = useForm({

@@ -78,7 +78,7 @@ function VoucherCard({ voucher, onChange }: Props) {
         </footer>
       </div>
 
-      {isOwner && !isActive && <UpdateVoucher onSubmit={onChange} />}
+      {isOwner && !isDeclined && <UpdateVoucher voucher={voucher} onSubmit={onChange} />}
       {isOwner && (!isActive || isDeclined) && <RevokeVoucher spender={spender} id={id} onSubmit={onChange} />}
       {isSpender && isActive && !isDeclined && <DeclineVoucher id={id} onSubmit={onChange} />}
     </div>

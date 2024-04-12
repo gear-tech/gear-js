@@ -49,7 +49,7 @@ const IssueVoucherModal = ({ programId, close, onSubmit = () => {} }: Props) => 
   const [voucherType, getVoucherTypeProps] = useVoucherType();
 
   const defaultPrograms = useMemo(() => (programId ? [programId] : []), [programId]);
-  const [programs, setPrograms] = useState<HexString[]>(defaultPrograms);
+  const [programs, setPrograms] = useState(defaultPrograms);
 
   const isCodeVoucher = voucherType === VOUCHER_TYPE.CODE;
   const duration = form.watch(FIELD_NAME.DURATION);
