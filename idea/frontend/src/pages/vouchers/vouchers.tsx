@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { Placeholder } from '@/entities/placeholder';
 import { IssueVoucher, VoucherCard, VoucherCardPlaceholder } from '@/features/voucher';
-import { FilterGroup, Filters, Radio, StatusCheckbox } from '@/features/filters';
+import { FilterGroup, Filters, Radio, StatusRadio } from '@/features/filters';
 import { BulbStatus } from '@/shared/ui/bulbBlock';
 
 import { Voucher } from './types';
@@ -63,7 +63,7 @@ const Vouchers = () => {
         </FilterGroup>
 
         <FilterGroup name="status" title="Status" onSubmit={handleFiltersSubmit} withReset>
-          <StatusCheckbox
+          <StatusRadio
             name="status"
             value="active"
             label="Active"
@@ -71,7 +71,7 @@ const Vouchers = () => {
             onSubmit={handleFiltersSubmit}
           />
 
-          <StatusCheckbox
+          <StatusRadio
             name="status"
             value="declined"
             label="Declined"
@@ -79,7 +79,7 @@ const Vouchers = () => {
             onSubmit={handleFiltersSubmit}
           />
 
-          <StatusCheckbox
+          <StatusRadio
             name="status"
             value="expired"
             label="Expired"

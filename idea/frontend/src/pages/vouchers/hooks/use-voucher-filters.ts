@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 
 const DEFAULT_FILTER_VALUES = {
   owner: 'all',
-  status: [] as ('active' | 'declined' | 'expired')[],
+  status: '',
 };
 
 function useVoucherFilters() {
@@ -29,23 +29,9 @@ function useVoucherFilters() {
   const getStatusParams = () => {
     const { status } = values;
 
-    const active = status.includes('active');
-    const declined = status.includes('declined');
-    const expired = status.includes('expired');
+    if (status === 'active') return { declined: false, expired: false };
 
-    const result = {} as Record<'declined' | 'expired', boolean>;
-
-    if (active) {
-      if (declined && expired) return {};
-
-      result.declined = false;
-      result.expired = false;
-    }
-
-    if (declined) result.declined = true;
-    if (expired) result.expired = true;
-
-    return result;
+    return status ? { [status]: true } : {};
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,30 +1,27 @@
-import { CheckboxProps, checkboxStyles } from '@gear-js/ui';
+import { RadioProps, radioStyles } from '@gear-js/ui';
 import clsx from 'clsx';
-import { useId } from 'react';
 import { FieldValues, Path, PathValue, useFormContext } from 'react-hook-form';
 
 import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
 
-type Props<T> = Omit<CheckboxProps, 'name' | 'value' | 'onChange' | 'onSubmit'> & {
+type Props<T> = Omit<RadioProps, 'name' | 'value' | 'onChange' | 'onSubmit'> & {
   onSubmit: (values: T) => void;
   name: Path<T>;
   value: PathValue<T, Path<T>>;
   status: BulbStatus;
 };
 
-const StatusCheckbox = <T extends FieldValues>({ name, label, value, status, onSubmit }: Props<T>) => {
-  const id = useId();
+const StatusRadio = <T extends FieldValues>({ name, label, value, status, onSubmit }: Props<T>) => {
   const { register, handleSubmit } = useFormContext<T>();
 
   const onChange = () => handleSubmit(onSubmit)();
 
   return (
-    <label htmlFor={id} className={checkboxStyles.label}>
+    <label className={radioStyles.label}>
       <input
-        type="checkbox"
-        id={id}
+        type="radio"
         value={value}
-        className={clsx(checkboxStyles.input, checkboxStyles.checkbox)}
+        className={clsx(radioStyles.input, radioStyles.radio)}
         {...register(name, { onChange })}
       />
 
@@ -33,4 +30,4 @@ const StatusCheckbox = <T extends FieldValues>({ name, label, value, status, onS
   );
 };
 
-export { StatusCheckbox };
+export { StatusRadio };
