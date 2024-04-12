@@ -27,7 +27,7 @@ const Vouchers = () => {
   const isEmpty = !(isLoading || count);
   const isLoaderVisible = isEmpty || (!count && isLoading);
 
-  const renderVoucher = (voucher: Voucher) => <VoucherCard voucher={voucher} onRevoke={refetch} onDecline={refetch} />;
+  const renderVoucher = (voucher: Voucher) => <VoucherCard voucher={voucher} onChange={refetch} />;
   const renderSkeleton = () => <Skeleton SVG={VoucherCardPlaceholder} disabled={true} />;
 
   return (

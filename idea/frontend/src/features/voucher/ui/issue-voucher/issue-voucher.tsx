@@ -3,11 +3,11 @@ import { Button } from '@gear-js/ui';
 import cx from 'clsx';
 
 import { withAccount } from '@/shared/ui';
-import actionLinkStyles from '@/shared/ui/ActionLink/ActionLink.module.scss';
 
 import CouponSVG from '../../assets/coupon.svg?react';
 import { IssueVoucherModal } from '../issue-voucher-modal';
 import { useModal } from '../../hooks';
+import styles from './issue-voucher.module.scss';
 
 type Props = {
   programId?: HexString;
@@ -26,7 +26,7 @@ const IssueVoucher = withAccount(({ programId, buttonColor = 'light', buttonSize
         text="Create Voucher"
         size={buttonSize}
         color={buttonColor}
-        className={cx(buttonColor === 'transparent' && actionLinkStyles.link)}
+        className={cx(buttonColor === 'transparent' && styles.link)}
         onClick={openModal}
         noWrap
       />

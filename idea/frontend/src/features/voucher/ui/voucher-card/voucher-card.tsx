@@ -12,14 +12,14 @@ import { Voucher } from '../../types';
 import { RevokeVoucher } from '../revoke-voucher';
 import { DeclineVoucher } from '../decline-voucher';
 import styles from './voucher-card.module.scss';
+import { UpdateVoucher } from '../update-voucher';
 
 type Props = {
   voucher: Voucher;
-  onRevoke: () => void;
-  onDecline: () => void;
+  onChange: () => void;
 };
 
-function VoucherCard({ voucher, onRevoke, onDecline }: Props) {
+function VoucherCard({ voucher, onChange }: Props) {
   const { id, balance, amount, expiryAt, expiryAtBlock, owner, spender, isDeclined } = voucher;
 
   const { account } = useAccount();
@@ -78,9 +78,9 @@ function VoucherCard({ voucher, onRevoke, onDecline }: Props) {
         </footer>
       </div>
 
-      {/* if owner and spender are the same person, is it still necessary to decline first? */}
-      {isOwner && (!isActive || isDeclined) && <RevokeVoucher spender={spender} id={id} onSubmit={onRevoke} />}
-      {isSpender && isActive && !isDeclined && <DeclineVoucher id={id} onSubmit={onDecline} />}
+      {isOwner && !isActive && <UpdateVoucher onSubmit={onChange} />}
+      {isOwner && (!isActive || isDeclined) && <RevokeVoucher spender={spender} id={id} onSubmit={onChange} />}
+      {isSpender && isActive && !isDeclined && <DeclineVoucher id={id} onSubmit={onChange} />}
     </div>
   );
 }
