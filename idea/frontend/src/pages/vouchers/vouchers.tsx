@@ -1,72 +1,45 @@
 import { useAccount } from '@gear-js/react-hooks';
-import { Input } from '@gear-js/ui';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 
 import { Placeholder } from '@/entities/placeholder';
 import { IssueVoucher, VoucherCard, VoucherCardPlaceholder } from '@/features/voucher';
 import { FilterGroup, Filters, Radio, StatusCheckbox } from '@/features/filters';
 import { BulbStatus } from '@/shared/ui/bulbBlock';
 
-import { PAGE_SIZE } from './consts';
-import { List } from './list';
 import { Voucher } from './types';
-import { getNextPageParam, getVouchers } from './utils';
+import { useVoucherFilters, useVouchers } from './hooks';
+import { List } from './list';
+import { SearchForm } from './search-form';
 import { Skeleton } from './skeleton';
-import { useSearchQuery, useVoucherFilters } from './hooks';
 import styles from './vouchers.module.scss';
 
 const Vouchers = () => {
   const { account } = useAccount();
 
-  const [searchQuery, registerSearchInput, handleSearchSubmit] = useSearchQuery();
+  const [searchQuery, setSearchQuery] = useState('');
   const [filterValues, filterParams, handleFiltersSubmit] = useVoucherFilters();
+  const [vouchers, count, isLoading, hasMore, fetchMore, refetch] = useVouchers(searchQuery, filterParams);
 
-  const { data, isFetching, hasNextPage, fetchNextPage, refetch } = useInfiniteQuery({
-    queryKey: ['vouchers', filterParams, searchQuery],
-    queryFn: ({ pageParam }) => getVouchers({ limit: PAGE_SIZE, offset: pageParam, id: searchQuery, ...filterParams }),
-    initialPageParam: 0,
-    getNextPageParam,
-  });
+  const isEmpty = !(isLoading || count);
+  const isLoaderVisible = isEmpty || (!count && isLoading);
 
-  const vouchers = data?.pages.flatMap((page) => page.vouchers) || [];
-  const vouchersCount = data?.pages[0]?.count || 0;
-
-  const isEmpty = !(isFetching || vouchersCount);
-  const isLoaderVisible = isEmpty || (!vouchersCount && isFetching);
-
-  const renderVoucher = ({ id, balance, amount, expiryAtBlock, expiryAt, owner, spender, isDeclined }: Voucher) => (
-    <VoucherCard
-      id={id}
-      balance={balance}
-      amount={amount}
-      expirationBlock={expiryAtBlock}
-      expirationTimestamp={expiryAt}
-      owner={owner}
-      spender={spender}
-      isDeclined={isDeclined}
-      onRevoke={refetch}
-      onDecline={refetch}
-    />
-  );
-
-  const renderSkeletonItem = () => <Skeleton SVG={VoucherCardPlaceholder} disabled={true} />;
+  const renderVoucher = (voucher: Voucher) => <VoucherCard voucher={voucher} onRevoke={refetch} onDecline={refetch} />;
+  const renderSkeleton = () => <Skeleton SVG={VoucherCardPlaceholder} disabled={true} />;
 
   return (
     <div className={styles.vouchers}>
       <header className={styles.header}>
-        <h2 className={styles.heading}>Vouchers: {vouchersCount}</h2>
+        <h2 className={styles.heading}>Vouchers: {count}</h2>
 
         <IssueVoucher onSubmit={refetch} />
       </header>
 
-      <form onSubmit={handleSearchSubmit}>
-        <Input type="search" placeholder="Search by id..." {...registerSearchInput} />
-      </form>
+      <SearchForm onSubmit={setSearchQuery} />
 
       {isLoaderVisible ? (
         <div className={styles.placeholder}>
           <Placeholder
-            block={renderSkeletonItem()}
+            block={renderSkeleton()}
             title="There are no vouchers yet"
             description="Wait until someone will issue a voucher for you"
             blocksCount={5}
@@ -74,7 +47,7 @@ const Vouchers = () => {
           />
         </div>
       ) : (
-        <List items={vouchers} hasNextPage={hasNextPage} renderItem={renderVoucher} fetchMore={fetchNextPage} />
+        <List items={vouchers} hasMore={hasMore} renderItem={renderVoucher} fetchMore={fetchMore} />
       )}
 
       <Filters initialValues={filterValues} onSubmit={handleFiltersSubmit}>

@@ -1,4 +1,3 @@
-import { HexString } from '@gear-js/api';
 import { useAccount, useAlert, useBalanceFormat } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 import Identicon from '@polkadot/react-identicon';
@@ -8,43 +7,28 @@ import { IdBlock } from '@/shared/ui/idBlock';
 import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
 import { copyToClipboard, getShortName } from '@/shared/helpers';
 import CopySVG from '@/shared/assets/images/actions/copyGreen.svg?react';
+import { Voucher } from '@/pages/vouchers/types';
 
-import styles from './voucher-card.module.scss';
 import { RevokeVoucher } from '../revoke-voucher';
 import { DeclineVoucher } from '../decline-voucher';
+import styles from './voucher-card.module.scss';
 
 type Props = {
-  id: HexString;
-  balance: string;
-  amount: string;
-  expirationBlock: string;
-  expirationTimestamp: string;
-  owner: HexString;
-  spender: HexString;
-  isDeclined: boolean;
+  voucher: Voucher;
   onRevoke: () => void;
   onDecline: () => void;
 };
 
-function VoucherCard({
-  id,
-  balance,
-  amount,
-  expirationBlock,
-  expirationTimestamp,
-  owner,
-  spender,
-  isDeclined,
-  onRevoke,
-  onDecline,
-}: Props) {
+function VoucherCard({ voucher, onRevoke, onDecline }: Props) {
+  const { id, balance, amount, expiryAt, expiryAtBlock, owner, spender, isDeclined } = voucher;
+
   const { account } = useAccount();
   const { getFormattedBalance } = useBalanceFormat();
   const alert = useAlert();
 
   const formattedBalance = balance ? getFormattedBalance(balance) : undefined;
   const formattedAmount = amount ? getFormattedBalance(amount) : undefined;
-  const isActive = Date.now() < new Date(expirationTimestamp).getTime();
+  const isActive = Date.now() < new Date(expiryAt).getTime();
   const isOwner = account?.decodedAddress === owner;
   const isSpender = account?.decodedAddress === spender;
 
@@ -79,7 +63,7 @@ function VoucherCard({
         </h3>
 
         <footer className={styles.footer}>
-          <TimestampBlock timestamp={expirationTimestamp} annotation={`#${expirationBlock}`} withIcon />
+          <TimestampBlock timestamp={expiryAt} annotation={`#${expiryAtBlock}`} withIcon />
           <IdBlock id={id} withIcon />
 
           {/* TODO: divide BlockComponent from TimestampBlock, IdBlock etc. */}

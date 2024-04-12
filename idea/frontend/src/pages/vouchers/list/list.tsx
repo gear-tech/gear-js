@@ -6,12 +6,12 @@ import styles from './list.module.scss';
 
 type Props<T> = {
   items: T[];
-  hasNextPage: boolean;
+  hasMore: boolean;
   renderItem: (item: T) => ReactNode;
   fetchMore: () => void;
 };
 
-function List<T>({ items, hasNextPage, renderItem, fetchMore }: Props<T>) {
+function List<T>({ items, hasMore, renderItem, fetchMore }: Props<T>) {
   // TODO: replace key with id
   const renderItems = () => items.map((item, index) => <li key={index}>{renderItem(item)}</li>);
 
@@ -21,7 +21,7 @@ function List<T>({ items, hasNextPage, renderItem, fetchMore }: Props<T>) {
     <SimpleBar className={styles.simplebar}>
       <ul className={styles.list}>{renderItems()}</ul>
 
-      {hasNextPage && <Observer onIntersection={fetchMore} />}
+      {hasMore && <Observer onIntersection={fetchMore} />}
     </SimpleBar>
   );
 }

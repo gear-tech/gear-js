@@ -1,4 +1,4 @@
 import { useVoucherFilters } from './use-voucher-filters';
-import { useSearchQuery } from './use-search-query';
+import { useVouchers } from './use-vouchers';
 
-export { useVoucherFilters, useSearchQuery };
+export { useVoucherFilters, useVouchers };

@@ -17,9 +17,19 @@ type Voucher = {
   isDeclined: boolean;
 };
 
+type VouchersParams = {
+  limit: number;
+  offset: number;
+  id: HexString;
+  owner: string;
+  spender: string;
+  declined: boolean;
+  expired: boolean;
+};
+
 type VouchersResponse = {
   vouchers: Voucher[];
   count: number;
 };
 
-export type { Voucher, VouchersResponse };
+export type { Voucher, VouchersParams, VouchersResponse };
