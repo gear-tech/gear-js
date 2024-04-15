@@ -1,4 +1,4 @@
-import { useAccount } from '@gear-js/react-hooks';
+import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS, useAccount, useAlert } from '@gear-js/react-hooks';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { Event } from '@polkadot/types/interfaces';
 import { ISubmittableResult } from '@polkadot/types/types';
@@ -10,51 +10,61 @@ type Extrinsic = SubmittableExtrinsic<'promise', ISubmittableResult>;
 
 type Options = {
   onSuccess: () => void;
-  onError: (error: string) => void;
+  onError: () => void;
   onFinally: () => void;
-  onReady: () => void;
-  onInBlock: () => void;
 };
 
 const DEFAULT_OPTIONS: Options = {
   onSuccess: () => {},
   onError: () => {},
   onFinally: () => {},
-  onReady: () => {},
-  onInBlock: () => {},
 } as const;
 
 function useSignAndSend() {
   const { account } = useAccount();
+  const alert = useAlert();
   const getExtrinsicFailedMessage = useExtrinsicFailedMessage();
 
   const handleEvent = (event: Event, method: string, options: Options) => {
-    const { onSuccess, onFinally } = options;
+    const { onSuccess, onError, onFinally } = options;
+    const alertOptions = { title: `${event.section}.${event.method}` };
 
-    if (event.method === 'ExtrinsicFailed') throw new Error(getExtrinsicFailedMessage(event));
+    if (event.method === 'ExtrinsicFailed') {
+      const message = getExtrinsicFailedMessage(event);
+      alert.error(message, alertOptions);
+
+      onError();
+      onFinally();
+      return;
+    }
 
     if (event.method === method) {
+      alert.success('Success', alertOptions);
+
       onSuccess();
       onFinally();
     }
   };
 
-  const handleStatus = ({ events, status }: ISubmittableResult, method: string, options: Options) => {
+  const handleStatus = ({ events, status }: ISubmittableResult, method: string, options: Options, alertId: string) => {
     const { isInvalid, isReady, isInBlock, isFinalized } = status;
-    const { onReady, onInBlock, onError, onFinally } = options;
+    const { onError, onFinally } = options;
 
-    try {
-      if (isInvalid) throw new Error('Transaction Error. Status: isInvalid');
+    if (isInvalid) {
+      alert.update(alertId, 'Transaction error. Status: isInvalid', DEFAULT_ERROR_OPTIONS);
 
-      if (isReady) return onReady();
-      if (isInBlock) return onInBlock();
-
-      if (isFinalized) events.forEach(({ event }) => handleEvent(event, method, options));
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-
-      onError(message);
+      onError();
       onFinally();
+      return;
+    }
+
+    if (isReady) return alert.update(alertId, 'Ready');
+    if (isInBlock) return alert.update(alertId, 'InBlock');
+
+    if (isFinalized) {
+      alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
+
+      events.forEach(({ event }) => handleEvent(event, method, options));
     }
   };
 
@@ -65,14 +75,20 @@ function useSignAndSend() {
     const optionsWithDefaults = { ...DEFAULT_OPTIONS, ...options };
     const { onError, onFinally } = optionsWithDefaults;
 
+    const alertTitle = `${extrinsic.method.section}.${extrinsic.method.method}`;
+    const alertId = alert.loading(`SignIn`, { title: alertTitle });
+
     web3FromSource(meta.source)
       .then(({ signer }) =>
-        extrinsic.signAndSend(address, { signer }, (result) => handleStatus(result, method, optionsWithDefaults)),
+        extrinsic.signAndSend(address, { signer }, (result) =>
+          handleStatus(result, method, optionsWithDefaults, alertId),
+        ),
       )
       .catch((error: unknown) => {
         const message = error instanceof Error ? error.message : String(error);
+        alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
 
-        onError(message);
+        onError();
         onFinally();
       });
   };

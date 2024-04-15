@@ -1,5 +1,5 @@
 import { HexString } from '@gear-js/api';
-import { useAlert, useApi } from '@gear-js/react-hooks';
+import { useApi } from '@gear-js/react-hooks';
 import { Button, Checkbox, Modal } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
@@ -26,7 +26,6 @@ type Props = {
 
 const UpdateVoucherModal = ({ voucher, close, onSubmit }: Props) => {
   const { isApiReady, api } = useApi();
-  const alert = useAlert();
 
   const signAndSend = useSignAndSend();
   const [isLoading, enableLoading, disableLoading] = useLoading();
@@ -71,15 +70,10 @@ const UpdateVoucherModal = ({ voucher, close, onSubmit }: Props) => {
 
     const onSuccess = () => {
       onSubmit();
-
-      alert.success('Voucher updated');
       close();
     };
 
-    const onError = (message: string) => {
-      alert.error(message);
-      disableLoading();
-    };
+    const onError = disableLoading;
 
     signAndSend(extrinsic, 'VoucherUpdated', { onSuccess, onError });
   };

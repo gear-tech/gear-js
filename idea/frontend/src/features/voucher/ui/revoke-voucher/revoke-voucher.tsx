@@ -1,11 +1,11 @@
 import { HexString } from '@gear-js/api';
-import { useApi, useAlert } from '@gear-js/react-hooks';
+import { useApi } from '@gear-js/react-hooks';
 import { Button, Modal } from '@gear-js/ui';
 
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 
 import RemoveSVG from '../../assets/remove.svg?react';
-import { useLoading, useModal, useSignAndSend } from '../../hooks';
+import { useModal, useSignAndSend } from '../../hooks';
 import styles from './revoke-voucher.module.scss';
 
 type Props = {
@@ -16,32 +16,18 @@ type Props = {
 
 const RevokeVoucher = ({ spender, id, onSubmit }: Props) => {
   const { isApiReady, api } = useApi();
-  const alert = useAlert();
   const signAndSend = useSignAndSend();
 
   const [isModalOpen, openModal, closeModal] = useModal();
-  const [isLoading, enableLoading, disableLoading] = useLoading();
 
   const handleSubmitClick = () => {
     if (!isApiReady) throw new Error('API is not initialized');
 
-    enableLoading();
-
     const extrinsic = api.voucher.revoke(spender, id);
+    const onSuccess = onSubmit;
 
-    const onSuccess = () => {
-      onSubmit();
-
-      alert.success('Voucher has been revoked');
-      closeModal();
-    };
-
-    const onError = (error: string) => {
-      alert.error(error);
-      disableLoading();
-    };
-
-    signAndSend(extrinsic, 'VoucherRevoked', { onSuccess, onError });
+    signAndSend(extrinsic, 'VoucherRevoked', { onSuccess });
+    closeModal();
   };
 
   return (
@@ -55,7 +41,7 @@ const RevokeVoucher = ({ spender, id, onSubmit }: Props) => {
           </p>
 
           <div className={styles.buttons}>
-            <Button icon={RemoveSVG} text="Submit" onClick={handleSubmitClick} disabled={isLoading} />
+            <Button icon={RemoveSVG} text="Submit" onClick={handleSubmitClick} />
             <Button icon={CloseSVG} text="Cancel" color="light" onClick={closeModal} />
           </div>
         </Modal>
