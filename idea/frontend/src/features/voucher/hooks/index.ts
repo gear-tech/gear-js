@@ -4,7 +4,6 @@ import { useProgramIdSchema } from './use-program-id-schema';
 import { useVoucherType } from './use-voucher-type';
 import { useModal } from './use-modal';
 import { useLoading } from './use-loading';
-import { useSignAndSend } from './use-sign-and-send';
 import { useVouchers } from './use-vouchers';
 import { useVoucherFilters } from './use-voucher-filters';
 
@@ -15,7 +14,6 @@ export {
   useVoucherType,
   useModal,
   useLoading,
-  useSignAndSend,
   useVouchers,
   useVoucherFilters,
 };

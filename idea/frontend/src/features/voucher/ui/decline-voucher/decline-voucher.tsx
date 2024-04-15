@@ -2,10 +2,11 @@ import { HexString } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 import { Button, Modal } from '@gear-js/ui';
 
+import { useSignAndSend } from '@/hooks';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 
 import RemoveSVG from '../../assets/remove.svg?react';
-import { useModal, useSignAndSend } from '../../hooks';
+import { useModal } from '../../hooks';
 import styles from './decline-voucher.module.scss';
 
 type Props = {

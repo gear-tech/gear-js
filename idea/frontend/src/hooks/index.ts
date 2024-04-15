@@ -24,6 +24,7 @@ import { useMobileDisclaimer } from './useMobileDisclaimer';
 import { useMetaOnUpload } from './useMetaOnUpload';
 import { useNetworkIcon } from './useNetworkIcon';
 import { useValidationSchema } from './use-validation-schema';
+import { useSignAndSend } from './use-sign-and-send';
 
 export {
   useModal,
@@ -56,4 +57,5 @@ export {
   useMetaOnUpload,
   useNetworkIcon,
   useValidationSchema,
+  useSignAndSend,
 };
