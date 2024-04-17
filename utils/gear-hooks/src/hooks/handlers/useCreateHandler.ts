@@ -14,10 +14,15 @@ function useCreateHandler(codeId: HexString | undefined, metadata?: ProgramMetad
   const calculateGas = useCreateCalculateGas(codeId, metadata);
 
   return (initPayload: AnyJson, options?: Options) => {
+    const { onError = () => {} } = options || {};
+
     calculateGas(initPayload)
       .then((result) => getAutoGasLimit(result))
       .then((gasLimit) => createProgram(initPayload, gasLimit, options))
-      .catch(({ message }: Error) => alert.error(message));
+      .catch(({ message }: Error) => {
+        alert.error(message);
+        onError();
+      });
   };
 }
 

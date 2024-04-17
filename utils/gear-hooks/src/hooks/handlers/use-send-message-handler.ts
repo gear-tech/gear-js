@@ -33,7 +33,7 @@ function useSendMessageWithGas(
   return (args: SendMessageWithGasOptions) => {
     if (!isApiReady) throw new Error('API is not initialized');
 
-    const { payload, value } = args;
+    const { payload, value, onError = () => {} } = args;
     const isMaxGasLimit = 'isMaxGasLimit' in options ? options.isMaxGasLimit : false;
     const gasMultiplier = 'gasMultiplier' in options ? options.gasMultiplier : undefined;
 
@@ -43,7 +43,10 @@ function useSendMessageWithGas(
 
     getGasLimit
       .then((gasLimit) => sendMessage({ ...args, gasLimit }))
-      .catch(({ message }: Error) => alert.error(message));
+      .catch(({ message }: Error) => {
+        alert.error(message);
+        onError();
+      });
   };
 }
 
