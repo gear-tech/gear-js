@@ -26,6 +26,8 @@ const initMeta = {
   isUploaded: false,
 };
 
+const NO_METAHASH_ERROR = 'metahash function not found in exports';
+
 const getCodeExistsAlert = (codeId: HexString) => (
   <>
     <p>Code already exists</p>
@@ -106,7 +108,12 @@ const useMetaOnUpload = (isCode?: boolean) => {
       .metaHashFromWasm(optBuffer)
       .then((hash) => getMetadata(hash))
       .then(({ result }) => result.hex && setUploadedMetadata(result.hex))
-      .catch(({ code, message }: RPCError) => code !== RPCErrorCode.MetadataNotFound && alert.error(message))
+      .catch((error: unknown) => {
+        if (typeof error === 'string' && error === NO_METAHASH_ERROR) return;
+        if (error instanceof RPCError && error.code === RPCErrorCode.MetadataNotFound) return;
+
+        alert.error(error instanceof Error ? error.message : String(error));
+      })
       .finally(() => setIsUploadedMetaReady(true));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
