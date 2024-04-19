@@ -1,0 +1,15 @@
+.text {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.buttons {
+  margin-top: 24px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+
+  svg path {
+    fill: #fff;
+  }
+}

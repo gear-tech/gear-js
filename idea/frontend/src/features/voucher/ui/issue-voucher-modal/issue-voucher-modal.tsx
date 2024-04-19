@@ -1,16 +1,18 @@
-import { Button, Radio, Modal } from '@gear-js/ui';
 import { HexString } from '@gear-js/api';
+import { useApi } from '@gear-js/react-hooks';
+import { Button, Radio, Modal } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { useSignAndSend } from '@/hooks';
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { Input, ValueField } from '@/shared/ui';
 
 import { ADDRESS_SCHEMA, DEFAULT_VALUES, FIELD_NAME, VOUCHER_TYPE } from '../../consts';
-import { useBalanceSchema, useDurationSchema, useIssueVoucher, useVoucherType } from '../../hooks';
+import { useBalanceSchema, useDurationSchema, useVoucherType, useLoading } from '../../hooks';
 import { Values } from '../../types';
 import { DurationForm } from '../duration-form';
 import { ProgramsForm } from '../programs-form';
@@ -19,12 +21,17 @@ import styles from './issue-voucher-modal.module.scss';
 type Props = {
   programId?: HexString;
   close: () => void;
+  onSubmit?: () => void;
 };
 
-const IssueVoucherModal = ({ programId, close }: Props) => {
+const IssueVoucherModal = ({ programId, close, onSubmit = () => {} }: Props) => {
+  const { isApiReady, api } = useApi();
+
+  const signAndSend = useSignAndSend();
+  const [isLoading, enableLoading, disableLoading] = useLoading();
+
   const balanceSchema = useBalanceSchema();
   const durationSchema = useDurationSchema();
-  const { issueVoucher } = useIssueVoucher();
 
   const schema = z.object({
     [FIELD_NAME.ACCOUNT_ADDRESS]: ADDRESS_SCHEMA,
@@ -42,7 +49,7 @@ const IssueVoucherModal = ({ programId, close }: Props) => {
   const [voucherType, getVoucherTypeProps] = useVoucherType();
 
   const defaultPrograms = useMemo(() => (programId ? [programId] : []), [programId]);
-  const [programs, setPrograms] = useState<HexString[]>(defaultPrograms);
+  const [programs, setPrograms] = useState(defaultPrograms);
 
   const isCodeVoucher = voucherType === VOUCHER_TYPE.CODE;
   const duration = form.watch(FIELD_NAME.DURATION);
@@ -53,11 +60,24 @@ const IssueVoucherModal = ({ programId, close }: Props) => {
     setPrograms(defaultPrograms);
   }, [voucherType, form, defaultPrograms]);
 
-  const handleSubmit = ({ address, value, duration: _duration }: Schema) => {
-    const isCodeUploadEnabled = voucherType !== VOUCHER_TYPE.PROGRAM;
-    const _programs = isCodeVoucher ? undefined : programs;
+  const handleSubmit = async ({ address, value }: Schema) => {
+    if (!isApiReady) throw new Error('API is not initialized');
 
-    issueVoucher(address, _programs, value, _duration, isCodeUploadEnabled, close);
+    enableLoading();
+
+    const isCodeUploadEnabled = voucherType !== VOUCHER_TYPE.PROGRAM;
+    const programIds = isCodeVoucher ? undefined : programs;
+
+    const { extrinsic } = await api.voucher.issue(address, value, Number(duration), programIds, isCodeUploadEnabled);
+
+    const onSuccess = () => {
+      onSubmit();
+      close();
+    };
+
+    const onError = disableLoading;
+
+    signAndSend(extrinsic, 'VoucherIssued', { onSuccess, onError });
   };
 
   return (
@@ -87,7 +107,7 @@ const IssueVoucherModal = ({ programId, close }: Props) => {
           </div>
 
           <div className={styles.buttons}>
-            <Button type="submit" icon={ApplySVG} size="large" text="Create" />
+            <Button type="submit" icon={ApplySVG} size="large" text="Create" disabled={isLoading} />
             <Button icon={CloseSVG} color="light" size="large" text="Close" onClick={close} />
           </div>
         </form>

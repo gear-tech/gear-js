@@ -6,7 +6,7 @@ import isString from 'lodash.isstring';
 import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from '@/shared/config';
 
 import { isAndroid, isIOS } from '@react-aria/utils';
-import { isHexValid, isExists, isAccountAddressValid } from './form';
+import { isHexValid, isExists, isAccountAddressValid, isNumeric, asOptionalField } from './form';
 
 const checkWallet = (account?: Account) => {
   if (!account) {
@@ -136,4 +136,6 @@ export {
   isMobileDevice,
   isNullOrUndefined,
   isAccountAddressValid,
+  isNumeric,
+  asOptionalField,
 };

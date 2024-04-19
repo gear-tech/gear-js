@@ -1,0 +1,19 @@
+@use '@/shared/assets/styles/shared' as *;
+@use '@/shared/assets/styles/mixins' as *;
+@use '@/shared/assets/styles/variables' as *;
+
+.simplebar {
+  @include customSimplebar;
+
+  height: calc($contentHeight - toRem(31.19) - $margin);
+
+  :global(.simplebar-content) {
+    margin-right: $margin;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

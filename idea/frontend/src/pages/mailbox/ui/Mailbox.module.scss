@@ -1,6 +1,25 @@
+@use '@gear-js/ui/headings' as *;
 @use '@/shared/assets/styles/mixins' as *;
 @use '@/shared/assets/styles/variables' as *;
 @use '@/shared/assets/styles/shared' as *;
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.heading {
+  @include heading(24px, 31px, 500);
+  color: $gray800;
+}
+
+.form {
+  // probably default width of input should be fixed in @gear-js/ui?
+  width: 100%;
+  max-width: 450px;
+}
 
 .simpleBar {
   @include customSimplebar;

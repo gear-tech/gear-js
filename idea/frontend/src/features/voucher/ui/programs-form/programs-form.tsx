@@ -29,10 +29,11 @@ const DEFAULT_VALUES: Values = {
 
 type Props = {
   value: HexString[];
+  voucherValue?: HexString[];
   onChange: (value: (prevState: HexString[]) => HexString[]) => void;
 };
 
-const ProgramsForm = ({ value, onChange }: Props) => {
+const ProgramsForm = ({ value, voucherValue = [], onChange }: Props) => {
   const programIdSchema = useProgramIdSchema(value);
 
   const schema = z.object({
@@ -52,6 +53,13 @@ const ProgramsForm = ({ value, onChange }: Props) => {
     form.reset();
   };
 
+  const renderPreviousPrograms = () =>
+    voucherValue.map((id) => (
+      <li key={id} className={styles.programId}>
+        <span>{id}</span>
+      </li>
+    ));
+
   const renderPrograms = () =>
     value.map((id) => (
       <li key={id} className={styles.programId}>
@@ -64,13 +72,18 @@ const ProgramsForm = ({ value, onChange }: Props) => {
   return (
     <FormProvider {...form}>
       <form className={styles.form} onSubmit={form.handleSubmit(handleSubmit)}>
-        {/* TODO: temporary button alignment fix */}
+        {/*  temporary button alignment fix */}
         <div className={clsx(styles.input, form.formState.errors['id'] && styles.error)}>
           <Input name="id" label="Program ID:" direction="y" block />
           <Button type="submit" text="Add" color="light" />
         </div>
 
-        {Boolean(value.length) && <ul className={styles.programs}>{renderPrograms()}</ul>}
+        {Boolean([...voucherValue, ...value].length) && (
+          <ul className={styles.programs}>
+            {renderPreviousPrograms()}
+            {renderPrograms()}
+          </ul>
+        )}
       </form>
     </FormProvider>
   );

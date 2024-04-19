@@ -5,9 +5,7 @@ import { FieldValues, Path, PathValue, useFormContext } from 'react-hook-form';
 
 import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
 
-import styles from './StatusCheckbox.module.scss';
-
-type Props<T> = Omit<CheckboxProps, 'name' | 'value' | 'onChange'> & {
+type Props<T> = Omit<CheckboxProps, 'name' | 'value' | 'onChange' | 'onSubmit'> & {
   onSubmit: (values: T) => void;
   name: Path<T>;
   value: PathValue<T, Path<T>>;
@@ -20,12 +18,17 @@ const StatusCheckbox = <T extends FieldValues>({ name, label, value, status, onS
 
   const onChange = () => handleSubmit(onSubmit)();
 
-  const inputClasses = clsx(checkboxStyles.input, checkboxStyles.checkbox);
-
   return (
     <label htmlFor={id} className={checkboxStyles.label}>
-      <input type="checkbox" id={id} value={value} className={inputClasses} {...register(name, { onChange })} />
-      <BulbBlock size="large" color="primary" status={status} text={label} className={styles.status} />
+      <input
+        type="checkbox"
+        id={id}
+        value={value}
+        className={clsx(checkboxStyles.input, checkboxStyles.checkbox)}
+        {...register(name, { onChange })}
+      />
+
+      <BulbBlock size="large" color="primary" weight="normal" status={status} text={label} />
     </label>
   );
 };

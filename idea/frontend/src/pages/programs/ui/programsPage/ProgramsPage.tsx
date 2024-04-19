@@ -57,6 +57,7 @@ const ProgramsPage = () => {
     <div className={styles.pageWrapper}>
       <section className={styles.programsSection}>
         <h2 className={styles.heading}>{heading}</h2>
+
         <ProgramsList
           programs={programs}
           totalCount={totalCount}
@@ -65,12 +66,8 @@ const ProgramsPage = () => {
           main
         />
       </section>
-      <ProgramsSearch
-        initQuery={params.query || ''}
-        isLoggedIn={isLoggedIn}
-        initialValues={initialValues}
-        onSubmit={handleParamsChange}
-      />
+
+      <ProgramsSearch isLoggedIn={isLoggedIn} initialValues={initialValues} onSubmit={handleParamsChange} />
     </div>
   );
 };

@@ -38,7 +38,6 @@
 }
 
 .status {
-  line-height: 1.3;
   margin-left: $marginSmall;
 
   &.small {
@@ -46,9 +45,12 @@
   }
 
   &.large {
-    font-size: $fontSize;
     font-family: 'Kanit';
-    font-weight: 600;
+    font-size: $fontSize;
+
+    .bold {
+      font-weight: 600;
+    }
   }
 
   &.primary {

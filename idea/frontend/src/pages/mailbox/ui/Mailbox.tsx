@@ -1,24 +1,21 @@
-import { useAccount } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
-import { useState, useEffect } from 'react';
+import { isHex } from '@polkadot/util';
+import { useState } from 'react';
 import SimpleBar from 'simplebar-react';
 
 import { useMailbox } from '@/features/mailbox';
 import { useMessageClaim } from '@/hooks';
+import { SearchForm } from '@/shared/ui';
 
 import { Messages } from './messages';
-import { Header } from './header';
 import { MessagesPlaceholder } from './messagesPlaceholder';
 import styles from './Mailbox.module.scss';
 
 const Mailbox = () => {
-  const { account } = useAccount();
-  const { address } = account || {};
-
   const claimMessage = useMessageClaim();
   const { mailbox, removeMessage } = useMailbox();
 
-  const [searchQuery, setSearchQuery] = useState('' as HexString);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const list = searchQuery ? mailbox?.filter(([message]) => message.id === searchQuery) : mailbox;
   const isAnyMessage = list && list.length > 0;
@@ -28,13 +25,18 @@ const Mailbox = () => {
     claimMessage({ messageId, resolve: () => removeMessage(messageId), reject });
   };
 
-  useEffect(() => {
-    setSearchQuery('' as HexString);
-  }, [address]);
-
   return (
     <>
-      <Header onSearchSubmit={setSearchQuery} />
+      <header className={styles.header}>
+        <h2 className={styles.heading}>Mailbox</h2>
+
+        <SearchForm
+          placeholder="Search by id..."
+          getSchema={(schema) => schema.refine((value) => isHex(value), 'Value should be hex')}
+          onSubmit={setSearchQuery}
+          className={styles.form}
+        />
+      </header>
 
       {isAnyMessage ? (
         <SimpleBar className={styles.simpleBar}>

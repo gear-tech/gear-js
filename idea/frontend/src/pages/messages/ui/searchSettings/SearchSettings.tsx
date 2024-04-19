@@ -1,31 +1,26 @@
-import { Input } from '@gear-js/ui';
-import { FormEvent } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
 import { Filters, FilterGroup, Radio } from '@/features/filters';
 import { AnimationTimeout } from '@/shared/config';
+import { SearchForm } from '@/shared/ui';
 
-import { FiltersValues } from '../../model/types';
+import { FiltersValues, ParamsValues } from '../../model/types';
 import styles from './SearchSettings.module.scss';
 
 type Props = {
   isLoggedIn: boolean;
   initialValues: FiltersValues;
-  onSubmit: (values: FiltersValues) => void;
+  onSubmit: (values: ParamsValues) => void;
 };
 
 const SearchSettings = ({ isLoggedIn, initialValues, onSubmit }: Props) => {
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    // @ts-ignore
-    onSubmit({ query: event.target.search.value });
-  };
-
   return (
     <section className={styles.searchSettings}>
-      <form className={styles.searchForm} onSubmit={handleSubmit}>
-        <Input name="search" type="search" placeholder="Search by id, source, destination..." />
-      </form>
+      <SearchForm
+        placeholder="Search by id, source, destination..."
+        className={styles.searchForm}
+        onSubmit={(query) => onSubmit({ query })}
+      />
 
       <Filters initialValues={initialValues} onSubmit={onSubmit}>
         <FilterGroup name="owner" onSubmit={onSubmit}>

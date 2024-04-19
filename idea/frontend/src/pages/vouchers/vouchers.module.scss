@@ -1,7 +1,21 @@
-.list {
+@use '@gear-js/ui/headings' as *;
+@use '@/shared/assets/styles/variables' as *;
+
+.vouchers {
+  display: grid;
+  grid-template-columns: 7.75fr 2.25fr;
+  gap: 16px 24px;
+  align-items: flex-start;
+}
+
+.header {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  justify-content: space-between;
+}
+
+.heading {
+  @include heading(24px, 31px, 500);
+  color: $gray800;
 }
 
 .placeholder {

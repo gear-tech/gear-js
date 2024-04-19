@@ -14,7 +14,7 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-  
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -25,7 +25,7 @@ env:
 
 
 jobs:
-          
+
   build-frontend-image-staging:
     runs-on: ubuntu-latest
     environment: staging
@@ -53,9 +53,10 @@ jobs:
           build-args: |
             VITE_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
             VITE_API_URL=${{ secrets.REACT_APP_API_URL }}
-            VITE_DEFAULT_NODES_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
             VITE_DEFAULT_TRANSFER_BALANCE_VALUE=${{ secrets.REACT_APP_DEFAULT_TRANSFER_BALANCE_VALUE }}
             VITE_HCAPTCHA_SITE_KEY=${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
+            VITE_NODES_API_URL= ${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
+            VITE_VOUCHERS_API_URL=${{ secrets.VITE_VOUCHERS_API_URL }}
 
   build-indexer-image-staging:
     runs-on: ubuntu-latest
@@ -131,7 +132,7 @@ jobs:
           file: idea/test-balance/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-test-balance:qa
-  
+
   build-and-push-meta-storage-image:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest

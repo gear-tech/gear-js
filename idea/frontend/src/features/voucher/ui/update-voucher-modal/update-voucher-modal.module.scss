@@ -1,0 +1,38 @@
+@use '@/shared/assets/styles/mixins' as *;
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.radios,
+.duration {
+  margin-bottom: 24px;
+}
+
+.radios {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.duration {
+  .heading {
+    margin-bottom: 4px;
+
+    font-weight: 500;
+  }
+
+  .subheading {
+    margin-bottom: 12px;
+
+    color: rgba(#fff, 0.6);
+  }
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}

@@ -1,5 +1,4 @@
-import { Button, Input } from '@gear-js/ui';
-import { useForm } from 'react-hook-form';
+import { Button } from '@gear-js/ui';
 
 import { useChain } from '@/hooks';
 import { IState } from '@/pages/state/model';
@@ -9,6 +8,7 @@ import { Functions } from '../functions';
 import { FunctionsPlaceholder } from '../functionsPlaceholder/FunctionsPlaceholder';
 import { ExpansionPanel } from '../expansionPanel';
 import styles from './WasmStates.module.scss';
+import { SearchForm } from '@/shared/ui';
 
 type Props = {
   uploadedStates: IState[];
@@ -20,8 +20,6 @@ type Props = {
   onSearchSubmit: (value: string) => void;
   onUploadButtonClick: () => void;
 };
-
-const defaultValues = { query: '' };
 
 const WasmStates = (props: Props) => {
   const {
@@ -36,9 +34,6 @@ const WasmStates = (props: Props) => {
   } = props;
 
   const { isDevChain } = useChain();
-
-  const form = useForm({ defaultValues });
-  const { register } = form;
 
   const isAnyUploadedState = isStateRequestReady && uploadedStates.length > 0;
   const isUploadedStatesListEmpty = isStateRequestReady && uploadedStates.length === 0;
@@ -60,13 +55,9 @@ const WasmStates = (props: Props) => {
       );
     });
 
-  const handleSearchSubmit = ({ query }: typeof defaultValues) => onSearchSubmit(query);
-
   return (
     <>
-      <form className={styles.form} onSubmit={form.handleSubmit(handleSearchSubmit)}>
-        <Input type="search" placeholder="Search by function name" {...register('query')} disabled={isDevChain} />
-      </form>
+      <SearchForm placeholder="Search by function name..." onSubmit={onSearchSubmit} disabled={isDevChain} />
 
       <div className={styles.wrapper}>
         {fileFunctions && (

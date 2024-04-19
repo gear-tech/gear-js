@@ -1,7 +1,0 @@
-@use '@/shared/assets/styles/_shared.scss' as *;
-@use '@/shared/assets/styles/_variables.scss' as *;
-
-.status > span {
-  font-weight: 400 !important;
-  line-height: toRem(20);
-}

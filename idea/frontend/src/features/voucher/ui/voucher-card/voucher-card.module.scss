@@ -1,4 +1,9 @@
 .card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+
   padding: 12px 24px;
 
   background-color: #222225;
@@ -6,6 +11,11 @@
 
   position: relative;
   overflow: hidden;
+
+  button {
+    position: relative;
+    z-index: 1;
+  }
 
   &::after {
     content: '';
@@ -30,40 +40,51 @@
   }
 }
 
-.balance {
+.heading {
   margin-bottom: 8px;
 
   font-family: Kanit;
   font-size: 12px;
   font-weight: 300;
 
-  .value {
+  .balance {
     font-size: 16px;
     font-weight: 600;
+  }
+
+  .amount {
+    margin-left: 4px;
+
+    font-size: 12px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.7);
   }
 }
 
 .footer {
-  padding-right: 25%;
-
   display: grid;
-  grid-template-columns: 1fr 1.25fr 1.25fr 0.25fr;
+  grid-template-columns: 1fr 1.25fr 1.25fr 1fr;
   gap: 16px;
 
   .owner {
     display: flex;
+    align-items: center;
     gap: 8px;
 
     font-size: 10px;
 
-    button {
-      position: relative;
-      z-index: 4;
-
-      svg {
-        width: 16px;
-        height: 16px;
-      }
+    button svg {
+      width: 16px;
+      height: 16px;
     }
   }
+}
+
+.body {
+  width: 90%;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
 }
