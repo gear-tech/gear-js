@@ -1,4 +1,4 @@
-import { useAccount, useAlert, useBalanceFormat } from '@gear-js/react-hooks';
+import { getVaraAddress, useAccount, useAlert, useBalanceFormat } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 import Identicon from '@polkadot/react-identicon';
 
@@ -11,8 +11,8 @@ import CopySVG from '@/shared/assets/images/actions/copyGreen.svg?react';
 import { Voucher } from '../../types';
 import { RevokeVoucher } from '../revoke-voucher';
 import { DeclineVoucher } from '../decline-voucher';
-import styles from './voucher-card.module.scss';
 import { UpdateVoucher } from '../update-voucher';
+import styles from './voucher-card.module.scss';
 
 type Props = {
   voucher: Voucher;
@@ -20,7 +20,8 @@ type Props = {
 };
 
 function VoucherCard({ voucher, onChange }: Props) {
-  const { id, balance, amount, expiryAt, expiryAtBlock, owner, spender, isDeclined } = voucher;
+  const { id, balance, amount, expiryAt, expiryAtBlock, owner: decodedOwnerAddress, spender, isDeclined } = voucher;
+  const ownerAddress = getVaraAddress(decodedOwnerAddress);
 
   const { account } = useAccount();
   const { getFormattedBalance } = useBalanceFormat();
@@ -29,7 +30,7 @@ function VoucherCard({ voucher, onChange }: Props) {
   const formattedBalance = balance ? getFormattedBalance(balance) : undefined;
   const formattedAmount = amount ? getFormattedBalance(amount) : undefined;
   const isActive = Date.now() < new Date(expiryAt).getTime();
-  const isOwner = account?.decodedAddress === owner;
+  const isOwner = account?.decodedAddress === decodedOwnerAddress;
   const isSpender = account?.decodedAddress === spender;
 
   const withOwnershipAnnotation = (value: string) => {
@@ -68,10 +69,10 @@ function VoucherCard({ voucher, onChange }: Props) {
 
           {/* TODO: divide BlockComponent from TimestampBlock, IdBlock etc. */}
           <div className={styles.owner}>
-            <Identicon value={owner} size={16} theme="polkadot" />
-            {getShortName(owner)}
+            <Identicon value={ownerAddress} size={16} theme="polkadot" />
+            {getShortName(ownerAddress)}
 
-            <Button icon={CopySVG} color="transparent" onClick={() => copyToClipboard(owner, alert)} />
+            <Button icon={CopySVG} color="transparent" onClick={() => copyToClipboard(ownerAddress, alert)} />
           </div>
 
           <BulbBlock status={getStatus()} text={withOwnershipAnnotation(getStatusText())} />
