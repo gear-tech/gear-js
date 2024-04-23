@@ -2,7 +2,7 @@ import { InjectedAccountWithMeta, InjectedExtension, Unsubcall } from '@polkadot
 import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp';
 import { decodeAddress } from '@gear-js/api';
 import { useState, createContext, useEffect, useMemo } from 'react';
-import { LOCAL_STORAGE } from 'consts';
+import { LOCAL_STORAGE, VARA_SS58_FORMAT } from 'consts';
 import { Account, ProviderProps } from '../types';
 
 type Value = {
@@ -49,8 +49,9 @@ function AccountProvider({ children }: ProviderProps) {
       // therefore we're creating 200ms delay, which seemed to be enough
       // e.g. https://github.com/polkadot-js/extension/issues/938
       setTimeout(async () => {
+        const ss58Format = VARA_SS58_FORMAT;
         const _extensions = await web3Enable('Gear App');
-        const _accounts = await web3Accounts();
+        const _accounts = await web3Accounts({ ss58Format });
 
         const loggedInAccount = _accounts.find(({ address }) => localStorage[LOCAL_STORAGE.ACCOUNT] === address);
 
@@ -60,7 +61,7 @@ function AccountProvider({ children }: ProviderProps) {
 
         // promise with resolve to return unsub callback,
         // to safely subscribe in the same useEffect
-        resolve(web3AccountsSubscribe((result) => setAccounts(result)));
+        resolve(web3AccountsSubscribe((result) => setAccounts(result), { ss58Format }));
       }, 200);
     });
 
