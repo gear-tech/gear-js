@@ -36,7 +36,7 @@
   padding-left: 14px;
 
   &:not(:focus) {
-    &::-webkit-input-placeholder {
+    &::placeholder {
       color: transparent;
     }
   }
