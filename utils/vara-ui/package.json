@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/vara-ui",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "type": "module",
   "description": "React UI components used across Vara applications",
   "author": "Gear Technologies",
