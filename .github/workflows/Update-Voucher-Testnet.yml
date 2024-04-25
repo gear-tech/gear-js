@@ -1,4 +1,4 @@
-name: "Deploy Voucher app to k8s"
+name: "Deploy Develop Voucher app to k8s testnet"
 
 on:
   push:
