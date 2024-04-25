@@ -61,7 +61,7 @@
   }
 
   &:not(:focus) {
-    &::-webkit-input-placeholder {
+    &::placeholder {
       color: transparent;
     }
   }

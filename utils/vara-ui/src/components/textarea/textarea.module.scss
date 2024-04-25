@@ -30,13 +30,14 @@
   resize: none;
   background-color: transparent;
   border: none;
+  font: inherit;
 
   width: 100%;
   padding-right: 14px;
   padding-left: 14px;
 
   &:not(:focus) {
-    &::-webkit-input-placeholder {
+    &::placeholder {
       color: transparent;
     }
   }
