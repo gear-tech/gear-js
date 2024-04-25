@@ -1,4 +1,4 @@
-name: "Deploy Voucher app to k8s"
+name: "Deploy Production Voucher app to k8s mainnet"
 
 on:
   push:
@@ -45,10 +45,10 @@ jobs:
         with:
           file: idea/voucher-indexer/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-voucher:qa
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-voucher:prod
 
 
-  deploy-to-k8s-testnet:
+  deploy-to-k8s-mainnet:
     needs: [build-voucher-image]
     runs-on: ubuntu-latest
 
@@ -63,7 +63,7 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment voucher-testnet -n prod-idea
+          args: rollout restart deployment voucher-mainnet -n prod-idea
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
