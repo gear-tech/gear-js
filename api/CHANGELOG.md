@@ -1,3 +1,12 @@
+## 0.38.0
+
+_04/26/2024_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1538
+- Remove `balances.transfer` method
+- `api.balance.transfer` method now accepts one more argument `keepAlive` that is set to `true` by default
+
 ## 0.37.2
 
 _04/11/2024_
