@@ -91,7 +91,7 @@ export class GearService {
   }
 
   async sendBatch(addresses: string[]): Promise<[string[], string]> {
-    const txs = addresses.map((address) => this.api.balance.transfer(address, this.balanceToTransfer));
+    const txs = addresses.map((address) => this.api.tx.balances.transferKeepAlive(address, this.balanceToTransfer));
     const batch = this.api.tx.utility.forceBatch(txs);
     const transferred = [];
     let blockHash: string;
