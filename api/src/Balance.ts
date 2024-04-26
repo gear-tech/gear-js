@@ -12,8 +12,12 @@ export class GearBalance extends GearTransaction {
     return this._api.createType('Balance', balance.free) as Balance;
   }
 
-  transfer(to: string, value: number | BN): SubmittableExtrinsic<'promise', ISubmittableResult> {
-    this.extrinsic = this._api.tx.balances.transfer(to, value);
+  transfer(
+    to: string,
+    value: number | BN,
+    keepAlive = true,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult> {
+    this.extrinsic = this._api.tx.balances[keepAlive ? 'transferKeepAlive' : 'transferAllowDeath'](to, value);
     return this.extrinsic;
   }
 }
