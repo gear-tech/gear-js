@@ -64,7 +64,8 @@ jobs:
             VITE_DEFAULT_TRANSFER_BALANCE_VALUE=${{ secrets.REACT_APP_DEFAULT_TRANSFER_BALANCE_VALUE }}
             VITE_HCAPTCHA_SITE_KEY=${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
             VITE_NODES_API_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
-            VITE_VOUCHERS_API_URL=${{ secrets.VITE_VOUCHERS_API_URL }}
+            VITE_MAINNET_VOUCHERS_API_URL=${{ secrets.VITE_MAINNET_VOUCHERS_API_URL }}
+            VITE_TESTNET_VOUCHERS_API_URL=${{ secrets.VITE_TESTNET_VOUCHERS_API_URL }}
 
   build-indexer-image-prod:
     runs-on: ubuntu-latest
