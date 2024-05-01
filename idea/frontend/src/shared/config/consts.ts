@@ -1,8 +1,17 @@
 const API_URL = import.meta.env.VITE_API_URL as string;
-const VOUCHERS_API_URL = import.meta.env.VITE_VOUCHERS_API_URL as string;
 const NODES_API_URL = import.meta.env.VITE_NODES_API_URL as string;
 const NODE_ADDRESS = import.meta.env.VITE_NODE_ADDRESS as string;
 const HCAPTCHA_SITE_KEY = import.meta.env.VITE_HCAPTCHA_SITE_KEY as string;
+
+const GENESIS = {
+  MAINNET: '0xfe1b4c55fd4d668101126434206571a7838a8b6b93a6d1b95d607e78e6c53763',
+  TESTNET: '0x525639f713f397dcf839bd022cd821f367ebcf179de7b9253531f8adbe5436d6',
+} as const;
+
+const VOUCHERS_API_URL = {
+  [GENESIS.MAINNET]: import.meta.env.VITE_MAINNET_VOUCHERS_API_URL as string,
+  [GENESIS.TESTNET]: import.meta.env.VITE_TESTNET_VOUCHERS_API_URL as string,
+} as const;
 
 const NODE_ADRESS_URL_PARAM = 'node';
 
@@ -105,6 +114,7 @@ export {
   ACCOUNT_ERRORS,
   PROGRAM_ERRORS,
   UPLOAD_METADATA_TIMEOUT,
+  GENESIS,
   LocalStorage,
   GasMethod,
   TransactionName,

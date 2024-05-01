@@ -1,4 +1,4 @@
-import { DEFAULT_LIMIT, VOUCHERS_API_URL } from '@/shared/config';
+import { DEFAULT_LIMIT } from '@/shared/config';
 
 import { VouchersResponse } from './types';
 
@@ -40,13 +40,12 @@ const fetchWithGuard = async <T extends object>(...args: Parameters<typeof fetch
   return response.json() as T;
 };
 
-const getVouchers = (params: { offset: number; limit: number; id: string }) => {
-  const url = `${VOUCHERS_API_URL}/vouchers`;
+const getVouchers = (url: string, params: { offset: number; limit: number; id: string }) => {
   const method = 'POST';
   const body = JSON.stringify(params);
   const headers = { 'Content-Type': 'application/json' };
 
-  return fetchWithGuard<VouchersResponse>(url, { method, body, headers });
+  return fetchWithGuard<VouchersResponse>(`${url}/vouchers`, { method, body, headers });
 };
 
 const getNextPageParam = (lastPage: VouchersResponse, allPages: VouchersResponse[]) => {
