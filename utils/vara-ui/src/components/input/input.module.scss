@@ -43,6 +43,7 @@
   border: none;
   outline: none;
   width: 100%;
+  font: inherit;
 
   &:-webkit-autofill {
     background-clip: text; // transparent background on autocomplete
