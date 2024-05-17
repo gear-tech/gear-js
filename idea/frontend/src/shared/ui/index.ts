@@ -4,6 +4,9 @@ import { Input, ValueField, Checkbox, Radio, Select, SearchForm } from './form';
 import { withDeprecatedFallback } from './with-deprecated-fallback';
 import { List } from './list';
 import { Skeleton } from './skeleton';
+import { PreformattedBlock } from './preformattedBlock';
+import { Subheader } from './subheader';
+import { UILink } from './uiLink';
 
 export {
   LabeledCheckbox,
@@ -17,4 +20,7 @@ export {
   List,
   Skeleton,
   SearchForm,
+  PreformattedBlock,
+  Subheader,
+  UILink,
 };

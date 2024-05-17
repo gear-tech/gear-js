@@ -1,0 +1,40 @@
+type Error = enum {
+  PartIdCantBeZero,
+  BadConfig,
+  PartAlreadyExists,
+  ZeroLengthPassed,
+  PartDoesNotExist,
+  WrongPartFormat,
+  NotAllowedToCall,
+};
+
+type Part = enum {
+  Fixed: FixedPart,
+  Slot: SlotPart,
+};
+
+type FixedPart = struct {
+  z: opt u32,
+  metadata_uri: str,
+};
+
+type SlotPart = struct {
+  equippable: vec actor_id,
+  z: opt u32,
+  metadata_uri: str,
+};
+
+constructor {
+  New : ();
+};
+
+service {
+  AddEquippables : (part_id: u32, collection_ids: vec actor_id) -> result (struct { u32, vec actor_id }, Error);
+  AddParts : (parts: map (u32, Part)) -> result (map (u32, Part), Error);
+  RemoveEquippable : (part_id: u32, collection_id: actor_id) -> result (struct { u32, actor_id }, Error);
+  RemoveParts : (part_ids: vec u32) -> result (vec u32, Error);
+  ResetEquippables : (part_id: u32) -> result (null, Error);
+  SetEquippablesToAll : (part_id: u32) -> result (null, Error);
+  query Equippable : (part_id: u32, collection_id: actor_id) -> result (bool, Error);
+  query Part : (part_id: u32) -> opt Part;
+}

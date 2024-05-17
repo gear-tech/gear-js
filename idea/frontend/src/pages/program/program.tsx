@@ -8,14 +8,14 @@ import { ProgramStatus, ProgramTable } from '@/features/program';
 import { ProgramMessages } from '@/widgets/programMessages';
 import { PathParams } from '@/shared/types';
 import { getShortName } from '@/shared/helpers';
-import { Subheader } from '@/shared/ui/subheader';
+import { Subheader, UILink, PreformattedBlock } from '@/shared/ui';
 import { absoluteRoutes, routes } from '@/shared/config';
-import { UILink } from '@/shared/ui/uiLink';
 import SendSVG from '@/shared/assets/images/actions/send.svg?react';
 import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import { useMetadata, MetadataTable } from '@/features/metadata';
 import { IssueVoucher, VoucherTable } from '@/features/voucher';
+import { useIdl } from '@/features/sails';
 
 import styles from './program.module.scss';
 
@@ -28,6 +28,7 @@ const Program = () => {
 
   const { program, isProgramReady, setProgramName } = useProgram(programId);
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(program?.metahash);
+  const idl = useIdl();
 
   const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
     const codeHash = program?.codeId;
@@ -112,6 +113,13 @@ const Program = () => {
             <Subheader title="Metadata" />
             <MetadataTable metadata={metadata} isLoading={!isMetadataReady} />
           </div>
+
+          {idl && (
+            <div>
+              <Subheader title="IDL" />
+              <PreformattedBlock text={idl} />
+            </div>
+          )}
         </div>
 
         <ProgramMessages programId={programId} />

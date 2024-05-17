@@ -1,0 +1,52 @@
+type Error = enum {
+  NotAuthorized,
+  ZeroResourceId,
+  ResourceAlreadyExists,
+  ResourceNotFound,
+  WrongResourceType,
+  PartNotFound,
+};
+
+type Resource = enum {
+  Basic: BasicResource,
+  Slot: SlotResource,
+  Composed: ComposedResource,
+};
+
+type BasicResource = struct {
+  src: str,
+  thumb: opt str,
+  metadata_uri: str,
+};
+
+type SlotResource = struct {
+  src: str,
+  thumb: str,
+  metadata_uri: str,
+  base: actor_id,
+  slot: u32,
+};
+
+type ComposedResource = struct {
+  src: str,
+  thumb: str,
+  metadata_uri: str,
+  base: actor_id,
+  parts: vec u32,
+};
+
+constructor {
+  New : ();
+};
+
+service RmrkResource {
+  AddPartToResource : (resource_id: u8, part_id: u32) -> result (u32, Error);
+  AddResourceEntry : (resource_id: u8, resource: Resource) -> result (struct { u8, Resource }, Error);
+  query Resource : (resource_id: u8) -> result (Resource, Error);
+
+  events {
+    ResourceAdded: struct { resource_id: u8 };
+    PartAdded: struct { resource_id: u8, part_id: u32 };
+  }
+};
+
