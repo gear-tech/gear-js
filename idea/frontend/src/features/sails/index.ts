@@ -1,3 +1,4 @@
 import { useIdl } from './hooks';
+import { PayloadForm } from './ui';
 
-export { useIdl };
+export { useIdl, PayloadForm };
