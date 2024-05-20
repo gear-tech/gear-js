@@ -1,4 +1,4 @@
-import { Fieldset } from '@/shared/ui/fieldset';
+import { Fieldset } from '@/shared/ui';
 
 import { FixedSizeArrayDef } from '../../types';
 

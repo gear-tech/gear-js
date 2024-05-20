@@ -1,15 +1,16 @@
-import { Fieldset } from '@/shared/ui/fieldset';
+import { Fieldset } from '@/shared/ui';
 
 import { UserDefinedDef } from '../../types';
 
 type Props = {
   def: UserDefinedDef;
+  renderField: () => JSX.Element | undefined;
 };
 
-function UserDefinedField({ def }: Props) {
+function UserDefinedField({ def, renderField }: Props) {
   const { name } = def;
 
-  return <Fieldset legend={name}>user</Fieldset>;
+  return <Fieldset legend={name}>{renderField()}</Fieldset>;
 }
 
 export { UserDefinedField };

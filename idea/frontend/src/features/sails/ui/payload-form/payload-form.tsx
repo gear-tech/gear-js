@@ -1,9 +1,11 @@
 import { HexString } from '@gear-js/api';
-import { Input, Select } from '@gear-js/ui';
+import { Select } from '@gear-js/ui';
 import { useState, useEffect } from 'react';
 
+import { Fieldset } from '@/shared/ui';
+
 import { useParsedIdl } from '../../hooks';
-import { ISailsFuncArg } from '../../types';
+import { ISailsFuncArg, TypeDef } from '../../types';
 import { EnumField } from '../enum-field';
 import { UserDefinedField } from '../user-defined-field';
 import { StructField } from '../struct-field';
@@ -12,13 +14,15 @@ import { ResultField } from '../result-field';
 import { VecField } from '../vec-field';
 import { MapField } from '../map-field';
 import { FixedSizeArrayField } from '../fixed-size-array-field';
+import { PrimitiveField } from '../primitive-field';
+import styles from './payload-form.module.scss';
 
 type Props = {
   programId: HexString;
 };
 
 function PayloadForm({ programId }: Props) {
-  const { idl } = useParsedIdl(programId);
+  const { sails, idl } = useParsedIdl(programId);
 
   const [serviceName] = Object.keys(idl?.services || {});
   const functions = idl?.services[serviceName].functions || {};
@@ -31,42 +35,40 @@ function PayloadForm({ programId }: Props) {
     setFunctionName(defaultFunctionName);
   }, [defaultFunctionName]);
 
-  const renderFields = (args: ISailsFuncArg[]) =>
-    args.map((arg) => {
-      const { name, type, typeDef } = arg;
+  const renderField = (def: TypeDef) => {
+    if (def.isEnum) return <EnumField key={''} def={def.asEnum} renderField={renderField} />;
+    if (def.isStruct) return <StructField key={''} def={def.asStruct} renderField={renderField} />;
+    if (def.isOptional) return <OptionalField key={''} def={def.asOptional} renderField={renderField} />;
+    if (def.isResult) return <ResultField key={''} def={def.asResult} />;
+    if (def.isVec) return <VecField key={''} def={def.asVec} />;
+    if (def.isMap) return <MapField key={''} def={def.asMap} />;
+    if (def.isFixedSizeArray) return <FixedSizeArrayField key={''} def={def.asFixedSizeArray} />;
 
-      if (typeDef.isEnum) return <EnumField key={''} def={typeDef.asEnum} />;
+    if (def.isUserDefined) {
+      if (!sails) return;
 
-      if (typeDef.isStruct) return <StructField key={''} def={typeDef.asStruct} />;
+      const name = def.asUserDefined.name;
+      const nextDef = sails.getTypeDef(name);
 
-      if (typeDef.isOptional) return <OptionalField key={''} def={typeDef.asOptional} />;
+      return <UserDefinedField key={name} def={def.asUserDefined} renderField={() => renderField(nextDef)} />;
+    }
 
-      if (typeDef.isResult) return <ResultField key={''} def={typeDef.asResult} />;
+    if (def.isPrimitive) return <PrimitiveField key={''} def={def.asPrimitive} />;
+  };
 
-      if (typeDef.isVec) return <VecField key={''} def={typeDef.asVec} />;
-
-      if (typeDef.isMap) return <MapField key={''} def={typeDef.asMap} />;
-
-      if (typeDef.isFixedSizeArray) return <FixedSizeArrayField key={''} def={typeDef.asFixedSizeArray} />;
-
-      if (typeDef.isUserDefined) return <UserDefinedField key={''} def={typeDef.asUserDefined} />;
-
-      if (typeDef.isPrimitive) {
-        const label = `${name} (${type})`;
-
-        return <Input key={label} direction="y" label={label} />;
-      }
-    });
+  const renderFields = (args: ISailsFuncArg[]) => args.map(({ typeDef }) => renderField(typeDef));
 
   return (
-    <form>
-      <Select
-        options={functionNames.map((name) => ({ label: name, value: name }))}
-        value={functionName}
-        onChange={({ target }) => setFunctionName(target.value)}
-      />
+    <form className={styles.form}>
+      <Fieldset legend={serviceName}>
+        <Select
+          options={functionNames.map((name) => ({ label: name, value: name }))}
+          value={functionName}
+          onChange={({ target }) => setFunctionName(target.value)}
+        />
 
-      {functionName && renderFields(functions[functionName].args)}
+        {functionName && renderFields(functions[functionName].args)}
+      </Fieldset>
     </form>
   );
 }

@@ -7,6 +7,7 @@ import { Skeleton } from './skeleton';
 import { PreformattedBlock } from './preformattedBlock';
 import { Subheader } from './subheader';
 import { UILink } from './uiLink';
+import { Fieldset } from './fieldset';
 
 export {
   LabeledCheckbox,
@@ -23,4 +24,5 @@ export {
   PreformattedBlock,
   Subheader,
   UILink,
+  Fieldset,
 };
