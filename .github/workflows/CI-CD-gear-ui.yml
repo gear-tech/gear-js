@@ -42,7 +42,6 @@ jobs:
           static-checking: localIsNew
 
       - name: '@gear-js/ui: Publish'
-        if: steps.check_gear.outputs.changed == 'true'
         working-directory: utils/gear-ui
         run: |
           export token=$(printenv $(printenv GITHUB_ACTOR))
@@ -55,7 +54,6 @@ jobs:
           nikitayutanov: ${{ secrets.YUTANOV_NPM_TOKEN }}
 
       - name: '@gear-js/vara-ui: Publish'
-        if: steps.check_vara.outputs.changed == 'true'
         working-directory: utils/vara-ui
         run: |
           export token=$(printenv $(printenv GITHUB_ACTOR))
