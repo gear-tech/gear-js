@@ -11,71 +11,19 @@ on:
     paths:
       - utils/gear-ui/**
       - utils/vara-ui/**
+  workflow_dispatch:
 
 jobs:
-  gear-ui-test:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cancel previous workflow runs
-        uses: styfle/cancel-workflow-action@0.4.0
-        with:
-          access_token: ${{ github.token }}
-
-      - uses: actions/checkout@v2
-
-      - name: Install NodeJS 18.x
-        uses: actions/setup-node@v2.1.5
-        with:
-          node-version: 18.x
-
-      - name: 'gear-ui: Install dependencies'
-        working-directory: utils/gear-ui
-        run: yarn install
-
-      - name: 'gear-ui: Build pkg'
-        working-directory: utils/gear-ui
-        run: yarn build
-
-      - name: 'gear-ui: Run tests'
-        working-directory: utils/gear-ui
-        run: yarn test
-
-  vara-ui-build:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cancel previous workflow runs
-        uses: styfle/cancel-workflow-action@0.4.0
-        with:
-          access_token: ${{ github.token }}
-
-      - uses: actions/checkout@v2
-
-      - name: Install NodeJS 18.x
-        uses: actions/setup-node@v2.1.5
-        with:
-          node-version: 18.x
-
-      - name: 'vara-ui: Install dependencies'
-        working-directory: utils/vara-ui
-        run: npm install
-
-      - name: 'vara-ui: Build pkg'
-        working-directory: utils/vara-ui
-        run: npm run build
-
   publish-to-npm:
-    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v2
 
       - name: Use node 18.x
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: 18.18.1
+          node-version: 18.x
 
       - name: '@gear-js/ui: Check pkg version'
         uses: EndBug/version-check@v1
