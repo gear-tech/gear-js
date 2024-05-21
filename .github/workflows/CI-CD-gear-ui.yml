@@ -47,8 +47,8 @@ jobs:
           export token=$(printenv $(printenv GITHUB_ACTOR))
           npm install
           npm run build
-          npm config set //registry.npmjs.org/:_authToken=$token --no-workspaces
-          npm publish
+          npm config set //registry.npmjs.org/:_authToken=$token 
+          npm publish --no-workspaces
         env:
           osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
           nikitayutanov: ${{ secrets.YUTANOV_NPM_TOKEN }}
@@ -59,8 +59,8 @@ jobs:
           export token=$(printenv $(printenv GITHUB_ACTOR))
           npm install
           npm run build
-          npm config set //registry.npmjs.org/:_authToken=$token --no-workspaces
-          npm publish
+          npm config set //registry.npmjs.org/:_authToken=$token 
+          npm publish --no-workspaces
         env:
           osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
           nikitayutanov: ${{ secrets.YUTANOV_NPM_TOKEN }}
