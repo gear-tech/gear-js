@@ -55,10 +55,10 @@ export class GearProgramStorage {
 
     const args = this._api.specVersion >= SPEC_VERSION.V1100 ? [programId, program.memoryInfix] : [programId];
 
-    for (const page of program.pagesWithData) {
-      pages[page.toNumber()] = u8aToU8a(
-        await this._api.provider.send('state_getStorage', [query.key(...args, page), at]),
-      );
+    for (const [start, end] of program.pagesWithData.inner) {
+      for (let page = start.toNumber(); page <= end.toNumber(); page++) {
+        pages[page] = u8aToU8a(await this._api.provider.send('state_getStorage', [query.key(...args, page), at]));
+      }
     }
     return pages;
   }

@@ -563,10 +563,12 @@ export interface GearCommonProgram extends Enum {
   readonly type: 'Active' | 'Exited' | 'Terminated';
 }
 
-/** @name GearCommonActiveProgram (581) */
+/** @name GearCommonActiveProgram (593) */
 export interface GearCommonActiveProgram extends Struct {
-  readonly allocations: BTreeSet<u32>;
-  readonly pagesWithData: BTreeSet<u32>;
+  readonly allocations: {
+    readonly inner: BTreeMap<u32, u32>;
+  } & Struct;
+  readonly pagesWithData: NumeratedTreeIntervalsTree;
   readonly memoryInfix: u32;
   readonly gasReservationMap: BTreeMap<GearCoreIdsReservationId, GearCoreReservationGasReservationSlot>;
   readonly codeHash: H256;
@@ -574,6 +576,11 @@ export interface GearCommonActiveProgram extends Struct {
   readonly staticPages: u32;
   readonly state: GearCommonProgramState;
   readonly expirationBlock: u32;
+}
+
+/** @name NumeratedTreeIntervalsTree (598) */
+export interface NumeratedTreeIntervalsTree extends Struct {
+  readonly inner: BTreeMap<u32, u32>;
 }
 
 /** @name GearCoreReservationGasReservationSlot (586) */
