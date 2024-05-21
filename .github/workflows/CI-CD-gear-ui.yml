@@ -21,9 +21,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Use node 18.x
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 18.18.1
 
       - name: '@gear-js/ui: Check pkg version'
         uses: EndBug/version-check@v1
@@ -47,8 +47,8 @@ jobs:
           export token=$(printenv $(printenv GITHUB_ACTOR))
           npm install
           npm run build
-          npm config set //registry.npmjs.org/:_authToken=$token 
-          npm publish --no-workspaces
+          npm config set //registry.npmjs.org/:_authToken=$token --no-workspaces
+          npm publish
         env:
           osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
           nikitayutanov: ${{ secrets.YUTANOV_NPM_TOKEN }}
@@ -59,8 +59,8 @@ jobs:
           export token=$(printenv $(printenv GITHUB_ACTOR))
           npm install
           npm run build
-          npm config set //registry.npmjs.org/:_authToken=$token 
-          npm publish --no-workspaces
+          npm config set //registry.npmjs.org/:_authToken=$token --no-workspaces
+          npm publish
         env:
           osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
           nikitayutanov: ${{ secrets.YUTANOV_NPM_TOKEN }}
