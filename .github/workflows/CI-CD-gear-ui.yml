@@ -73,9 +73,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Use node 18.x
-        uses: actions/setup-node@v2.1.5
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 18.18.1
 
       - name: '@gear-js/ui: Check pkg version'
         uses: EndBug/version-check@v1
