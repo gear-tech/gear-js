@@ -11,6 +11,7 @@ on:
     paths:
       - utils/gear-ui/**
       - utils/vara-ui/**
+  workflow_dispatch:
 
 jobs:
   gear-ui-test:
