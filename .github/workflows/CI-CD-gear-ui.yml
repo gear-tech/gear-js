@@ -41,13 +41,11 @@ jobs:
           file-url: https://unpkg.com/@gear-js/vara-ui@latest/package.json
           static-checking: localIsNew
           
-      - name: Build pkg
-        working-directory: utils/gear-ui
-        run: yarn build
-        
       - name: '@gear-js/ui: Publish'
         working-directory: utils/gear-ui
         run: |
+          yarn install
+          yarn build
           export token=$(printenv $(printenv GITHUB_ACTOR))
           npm config set //registry.npmjs.org/:_authToken=$token 
           npm publish
