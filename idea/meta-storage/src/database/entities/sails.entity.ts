@@ -8,11 +8,11 @@ export class SailsIdl {
   }
 
   @PrimaryColumn()
-    id: string;
+  public id: string;
 
   @Column()
-    data: string;
+  public data: string;
 
   @OneToMany(() => Code, (code) => code.id)
-    codes: Code[];
+  public codes: Code[];
 }

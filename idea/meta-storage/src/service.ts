@@ -92,7 +92,13 @@ export class MetaService {
   }
 
   async addIdl({ codeId, data }) {
+    if (!codeId || !data) {
+      throw new InvalidParamsError();
+    }
+
     const hash = getHash(data);
+
+    logger.info('Adding IDL', { codeId, hash });
 
     let sails = await this.sailsRepo.findOne({ where: { id: hash } });
 
@@ -108,6 +114,8 @@ export class MetaService {
 
     await this.sailsRepo.save(sails);
     await this.codeRepo.save(code);
+
+    return { status: 'Sails idl added' };
   }
 
   async getIdl({ codeId }) {

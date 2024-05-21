@@ -345,6 +345,10 @@ jobs:
         working-directory: api/programs
         run: cargo build --release
 
+      - name: "Prepare: Build test programs"
+        working-directory: idea/tests/programs
+        run: cargo build --release
+
       - name: "Prepare: Copy built programs"
         run: |
           cp api/programs/target/wasm32-unknown-unknown/release/* idea/tests/wasm-test

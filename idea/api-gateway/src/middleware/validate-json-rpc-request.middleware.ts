@@ -17,21 +17,20 @@ export async function validateJsonRpcRequestMiddleware({ body }: Request, res: R
   next();
 }
 
-function isValidRequestParams({ id, method, jsonrpc, params }: IRpcRequest): boolean {
-  return !!id && !!method && !!jsonrpc && !!params;
-}
+const isValidRequestParams = ({ id, method, jsonrpc, params }: IRpcRequest): boolean =>
+  !!id && !!method && !!jsonrpc && !!params;
 
 function getInvalidParamsResponse(req: IRpcRequest) {
   logger.info('Invalid params error', { req });
 
-  const error = JSONRPC_ERRORS.InvalidParams.name;
+  const error = JSONRPC_ERRORS.InvalidParams;
 
   return {
     jsonrpc: '2.0',
     id: req.id || null,
     error: {
-      message: JSONRPC_ERRORS[error].message,
-      code: JSONRPC_ERRORS[error].code,
+      message: error.message,
+      code: error.code,
     },
   };
 }

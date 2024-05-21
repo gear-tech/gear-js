@@ -8,8 +8,8 @@ export class Code {
   }
 
   @PrimaryColumn()
-    id: string;
+  public id: string;
 
-  @ManyToOne(() => SailsIdl, (sails) => sails.codes)
-    sails: SailsIdl;
+  @ManyToOne(() => SailsIdl, (sails) => sails.id)
+  public sails: SailsIdl;
 }
