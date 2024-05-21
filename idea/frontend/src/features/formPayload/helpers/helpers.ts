@@ -4,7 +4,7 @@ import isPlainObject from 'lodash.isplainobject';
 import { toJSON, ProgramMetadata, StateMetadata } from '@gear-js/api';
 
 import { TypeStructure, PayloadValue } from '@/entities/formPayload';
-import { getPreformattedText } from '@/shared/helpers';
+import { getPreformattedText, isNumeric } from '@/shared/helpers';
 
 const getItemLabel = (name: string, title?: string) => (title ? `${title} (${name})` : name);
 
@@ -13,7 +13,9 @@ const getNextLevelName = (currentLevelName: string, nextLevelName: string | numb
 
 const getSubmitPayload = (payload: PayloadValue): any => {
   if (isString(payload)) {
-    return toJSON(payload.trim());
+    const trimmedPayload = payload.trim();
+
+    return isNumeric(trimmedPayload) ? trimmedPayload : toJSON(trimmedPayload);
   }
 
   if (isPlainObject(payload)) {
