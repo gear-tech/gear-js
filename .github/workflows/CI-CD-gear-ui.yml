@@ -45,9 +45,9 @@ jobs:
         working-directory: utils/gear-ui
         run: |
           export token=$(printenv $(printenv GITHUB_ACTOR))
-          npm install
+          npm install --no-workspaces
           npm run build
-          npm config set //registry.npmjs.org/:_authToken=$token --no-workspaces
+          npm config set //registry.npmjs.org/:_authToken=$token 
           npm publish
         env:
           osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
@@ -57,9 +57,9 @@ jobs:
         working-directory: utils/vara-ui
         run: |
           export token=$(printenv $(printenv GITHUB_ACTOR))
-          npm install
+          npm install --no-workspaces
           npm run build
-          npm config set //registry.npmjs.org/:_authToken=$token --no-workspaces
+          npm config set //registry.npmjs.org/:_authToken=$token
           npm publish
         env:
           osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
