@@ -13,6 +13,6 @@ members = [
 
 [workspace.dependencies]
 sails-rtl = { git = "https://github.com/gear-tech/sails" }
-gstd = { package = "gstd", version = "*" }
-gwasm-builder = { package = "gear-wasm-builder", version = "*" }
+gstd = "1.4.1"
+gwasm-builder = { package = "gear-wasm-builder", version = "1.4.1" }
 sails-idl-gen = { git = "https://github.com/gear-tech/sails"  }
