@@ -8,7 +8,7 @@ type Props = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size'> &
   InputProps &
   (
     | {
-        options: OptionHTMLAttributes<HTMLOptionElement>[];
+        options: OptionHTMLAttributes<HTMLOptionElement>[] | Readonly<OptionHTMLAttributes<HTMLOptionElement>[]>;
       }
     | { children: ReactNode }
   );

@@ -3,7 +3,7 @@ import cx from 'clsx';
 import styles from './select.module.scss';
 
 type Props = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'id' | 'size'> & {
-  options: OptionHTMLAttributes<HTMLOptionElement>[];
+  options: OptionHTMLAttributes<HTMLOptionElement>[] | Readonly<OptionHTMLAttributes<HTMLOptionElement>[]>;
   size?: 'default' | 'small';
   label?: string;
   error?: ReactNode;
