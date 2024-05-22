@@ -70,13 +70,15 @@ const WasmStates = (props: Props) => {
               onChange={(id) => onFunctionChange({ id, name: id, isFileFunction: true })}
             />
 
-            <Button
-              text="Upload"
-              color="secondary"
-              size="small"
-              className={styles.uploadFileButton}
-              onClick={onUploadButtonClick}
-            />
+            {!isDevChain && (
+              <Button
+                text="Upload"
+                color="secondary"
+                size="small"
+                className={styles.uploadFileButton}
+                onClick={onUploadButtonClick}
+              />
+            )}
           </Box>
         )}
 

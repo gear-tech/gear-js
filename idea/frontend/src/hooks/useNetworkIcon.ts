@@ -7,7 +7,7 @@ function useNetworkIcon() {
 
   const genesis = isApiReady ? api.genesisHash.toHex() : undefined;
 
-  const genesisLogo = genesis ? LOGO[genesis] : undefined;
+  const genesisLogo = genesis ? LOGO[genesis as keyof typeof LOGO] : undefined;
   const logo = genesisLogo || ICON.gear;
 
   const { SVG, SHORT_SVG: ShortSVG, NETWORK: NetworkSVG } = logo;

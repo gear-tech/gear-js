@@ -40,8 +40,9 @@ const useBalanceTransfer = () => {
 
       const { signSource, keepAlive, onSuccess } = options || {};
 
-      // TODO: replace to api.balance.transfer after api update to support string value
-      const extrinsic = keepAlive ? api.tx.balances.transferKeepAlive(to, value) : api.tx.balances.transfer(to, value);
+      const extrinsic = keepAlive
+        ? api.tx.balances.transferKeepAlive(to, value)
+        : api.tx.balances.transferAllowDeath(to, value);
 
       if (signSource) {
         web3FromSource(signSource).then(({ signer }) =>
