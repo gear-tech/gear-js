@@ -31,7 +31,7 @@ describe('meta-storage methods', () => {
     expect(response.result).toHaveProperty('hex', meta);
   });
 
-  test.only(META_STORAGE_METHODS.SAILS_ADD, async () => {
+  test(META_STORAGE_METHODS.SAILS_ADD, async () => {
     const codehash = generateCodeHash(pingCode);
     const response = await request(META_STORAGE_METHODS.SAILS_ADD, { codeId: codehash, data: pingIdl });
 
@@ -39,7 +39,7 @@ describe('meta-storage methods', () => {
     expect(response.result).toHaveProperty('status', 'Sails idl added');
   });
 
-  test.only(META_STORAGE_METHODS.SAILS_GET, async () => {
+  test(META_STORAGE_METHODS.SAILS_GET, async () => {
     const codehash = generateCodeHash(pingCode);
     const response = await request(META_STORAGE_METHODS.SAILS_GET, { codeId: codehash });
 
