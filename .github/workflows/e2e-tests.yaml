@@ -309,17 +309,12 @@ jobs:
         uses: actions/setup-node@v2.1.5
         with:
           node-version: 20.x
+          
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown        
 
-      - name: "Install dependencies"
-        run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
-
-      - name: "Build: @gear-js/common"
-        run: yarn build:common
-      
       - name: "Prepare: Build test programs"
         working-directory: api/programs
         run: cargo build --release
@@ -330,6 +325,12 @@ jobs:
       - name: "Prepare: Build test programs"
         working-directory: idea/tests/programs
         run: cargo build --release
+
+      - name: "Install dependencies"
+        run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+
+      - name: "Build: @gear-js/common"
+        run: yarn build:common
 
       - name: "Run tests"
         timeout-minutes: 7
