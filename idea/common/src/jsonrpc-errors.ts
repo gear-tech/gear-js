@@ -109,6 +109,11 @@ export const JSONRPC_ERRORS = {
     code: -32400,
     message: 'Address is not supported',
   },
+  SailsIdlNotFound: {
+    name: 'SailsIdlNotFound',
+    code: -32404,
+    message: 'Sails IDL not found',
+  },
 };
 
 export function isExistError(name: string) {

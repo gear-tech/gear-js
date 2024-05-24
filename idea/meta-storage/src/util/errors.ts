@@ -11,3 +11,7 @@ export class InvalidMetadataError extends Error {
 export class InvalidParamsError extends Error {
   name = JSONRPC_ERRORS.InvalidParams.name;
 }
+
+export class SailsIdlNotFoundError extends Error {
+  name = JSONRPC_ERRORS.SailsIdlNotFound.name;
+}

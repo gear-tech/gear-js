@@ -23,6 +23,8 @@ export class RMQService {
     this.methods = {
       [META_STORAGE_METHODS.META_ADD]: this.metaService.addMetaDetails.bind(this.metaService),
       [META_STORAGE_METHODS.META_GET]: this.metaService.get.bind(this.metaService),
+      [META_STORAGE_METHODS.SAILS_ADD]: this.metaService.addIdl.bind(this.metaService),
+      [META_STORAGE_METHODS.SAILS_GET]: this.metaService.getIdl.bind(this.metaService),
       [META_STORAGE_INTERNAL_METHODS.META_HASH_ADD]: this.metaService.addMeta.bind(this.metaService),
     };
   }
@@ -81,9 +83,13 @@ export class RMQService {
           const params = JSON.parse(msg.content.toString());
           const correlationId = msg.properties.correlationId;
 
-          const result = await this.handleIncomingMsg(method, params);
+          try {
+            const result = await this.handleIncomingMsg(method, params);
 
-          this.sendMsg(RMQExchange.DIRECT_EX, RMQQueue.REPLIES, result, correlationId);
+            this.sendMsg(RMQExchange.DIRECT_EX, RMQQueue.REPLIES, result, correlationId);
+          } catch (error) {
+            logger.error('Failed to handle incoming message', { error: error.message, stack: error.stack });
+          }
         },
         { noAck: true },
       );

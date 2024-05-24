@@ -13,3 +13,8 @@ export interface GetMetaParams {
   hash: string;
   hex: HexString;
 }
+
+export interface AddSailsIdlParams {
+  codeId: string;
+  data: string;
+}

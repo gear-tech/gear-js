@@ -25,6 +25,8 @@ export enum INDEXER_INTERNAL_METHODS {
 export enum META_STORAGE_METHODS {
   META_GET = 'meta.get',
   META_ADD = 'meta.add',
+  SAILS_ADD = 'sails.add',
+  SAILS_GET = 'sails.get',
 }
 
 export enum META_STORAGE_INTERNAL_METHODS {
