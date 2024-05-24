@@ -21,7 +21,7 @@
     "@typescript-eslint/parser": "5.57.1",
     "eslint": "8.57.0",
     "husky": "8.0.3",
-    "lint-staged": "15.0.2"
+    "lint-staged": "15.2.4"
   },
   "workspaces": [
     "idea/*",
