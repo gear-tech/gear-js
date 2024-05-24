@@ -1,0 +1,18 @@
+[workspace.package]
+version = "0.0.1"
+authors = ["Gear Technologies"]
+edition = "2021"
+license = "GPL-3.0"
+
+[workspace]
+resolver = "2"
+members = [
+  "ping-sails/app",
+  "ping-sails/wasm",
+]
+
+[workspace.dependencies]
+sails-rtl = { git = "https://github.com/gear-tech/sails" }
+gstd = "1.4.1"
+gwasm-builder = { package = "gear-wasm-builder", version = "1.4.1" }
+sails-idl-gen = { git = "https://github.com/gear-tech/sails"  }

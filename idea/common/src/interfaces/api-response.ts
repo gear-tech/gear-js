@@ -38,6 +38,11 @@ interface GetAllStateResult {
 interface ProgramDataResult extends Omit<IProgram, 'meta'> {
   meta?: { meta?: string };
 }
+
+interface AddSailsResult {
+  status: 'Sails idl added';
+}
+
 interface IRpcResponse {
   jsonrpc: '2.0';
   id: number;
@@ -50,7 +55,8 @@ interface IRpcResponse {
     | IMessage[]
     | AddMetaResult
     | GetAllCodeResult
-    | GetStatesResult;
+    | GetStatesResult
+    | AddSailsResult;
   error?: IRpcError;
 }
 
@@ -70,4 +76,5 @@ export {
   IRpcResponse,
   IRpcError,
   GetStatesResult,
+  AddSailsResult,
 };

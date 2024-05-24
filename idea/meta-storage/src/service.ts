@@ -1,16 +1,24 @@
-import { Repository } from 'typeorm';
 import { AddMetaDetailsParams, AddMetahashParams, GetMetaParams, logger } from '@gear-js/common';
-
-import { Meta, AppDataSource } from './database';
-import { InvalidParamsError, MetaNotFoundError } from './util/errors';
-import { validateMetaHex } from './util/validate';
 import { ProgramMetadata, MetadataVersion, HumanTypesRepr } from '@gear-js/api';
+import { Repository } from 'typeorm';
+import * as crypto from 'crypto';
+
+import { Meta, AppDataSource, SailsIdl } from './database';
+import { InvalidParamsError, MetaNotFoundError, SailsIdlNotFoundError } from './util/errors';
+import { validateMetaHex } from './util/validate';
+import { Code } from './database/entities/code.entity';
+
+const getHash = (data: string) => crypto.createHash('sha256').update(data).digest('hex');
 
 export class MetaService {
   private metaRepo: Repository<Meta>;
+  private sailsRepo: Repository<SailsIdl>;
+  private codeRepo: Repository<Code>;
 
   constructor() {
     this.metaRepo = AppDataSource.getRepository(Meta);
+    this.sailsRepo = AppDataSource.getRepository(SailsIdl);
+    this.codeRepo = AppDataSource.getRepository(Code);
   }
 
   async addMeta({ metahash }: AddMetahashParams): Promise<string[]> {
@@ -81,5 +89,42 @@ export class MetaService {
   async getAllWithState(): Promise<string[]> {
     const meta = await this.metaRepo.find({ where: { hasState: true }, select: { hash: true } });
     return meta.map((m) => m.hash);
+  }
+
+  async addIdl({ codeId, data }) {
+    if (!codeId || !data) {
+      throw new InvalidParamsError();
+    }
+
+    const hash = getHash(data);
+
+    logger.info('Adding IDL', { codeId, hash });
+
+    let sails = await this.sailsRepo.findOne({ where: { id: hash } });
+
+    if (!sails) {
+      const code = await this.codeRepo.findOne({ where: { id: codeId } });
+      if (code) {
+        throw new InvalidParamsError('Code already has IDL');
+      }
+      sails = new SailsIdl({ id: hash, data });
+    }
+
+    const code = new Code({ id: codeId, sails });
+
+    await this.sailsRepo.save(sails);
+    await this.codeRepo.save(code);
+
+    return { status: 'Sails idl added' };
+  }
+
+  async getIdl({ codeId }) {
+    const code = await this.codeRepo.findOne({ where: { id: codeId }, relations: { sails: true } });
+
+    if (!code) {
+      throw new SailsIdlNotFoundError();
+    }
+
+    return code.sails.data;
   }
 }
