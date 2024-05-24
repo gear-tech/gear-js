@@ -10,19 +10,21 @@
       "matchFileNames": ["api/package.json"],
       "groupName": "api",
       "reviewers": ["osipov-mit"],
-      "addLabels": ["api"],
+      "addLabels": ["D0-api"],
       "rangeStrategy": "pin"
     },
     {
-      "matchFileNames": [
-        "idea/frontend/package.json",
-        "utils/gear-ui/package.json",
-        "utils/gear-hooks/package.json",
-        "utils/vara-ui/package.json"
-      ],
+      "matchFileNames": ["idea/frontend/package.json"],
       "groupName": "frontend",
       "reviewers": ["nikitayutanov"],
-      "addLabels": ["frontend"],
+      "addLabels": ["D1-idea"],
+      "rangeStrategy": "pin"
+    },
+    {
+      "matchFileNames": ["utils/gear-ui/package.json", "utils/gear-hooks/package.json", "utils/vara-ui/package.json"],
+      "groupName": "frontend",
+      "reviewers": ["nikitayutanov"],
+      "addLabels": ["D2-tools"],
       "rangeStrategy": "pin"
     },
     {
@@ -36,14 +38,14 @@
       ],
       "groupName": "backend",
       "reviewers": ["osipov-mit"],
-      "addLabels": ["backend"],
+      "addLabels": ["D1-idea"],
       "rangeStrategy": "pin"
     },
     {
       "matchFileNames": ["tools/cli/package.json", "tools/txwrapper/package.json"],
       "groupName": "tools",
       "reviewers": ["osipov-mit"],
-      "addLabels": ["tools"],
+      "addLabels": ["D2-tools"],
       "rangeStrategy": "pin"
     },
     {
