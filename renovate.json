@@ -1,6 +1,6 @@
 {
   "extends": ["config:recommended"],
-  "labels": ["dependencies"],
+  "labels": ["D4-dependencies"],
   "branchConcurrentLimit": 5,
   "branchPrefix": "renovate-",
   "ignorePaths": [".github/**", "**/Dockerfile"],
