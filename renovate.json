@@ -3,7 +3,8 @@
   "labels": ["dependencies"],
   "branchConcurrentLimit": 5,
   "branchPrefix": "renovate-",
-  "ignorePaths": ["ansible/**", ".github/**", "**/Dockerfile"],
+  "ignorePaths": [".github/**", "**/Dockerfile"],
+  "schedule": ["schedule:earlyMondays"],
   "packageRules": [
     {
       "matchFileNames": ["api/package.json"],
@@ -39,7 +40,7 @@
       "rangeStrategy": "pin"
     },
     {
-      "matchFileNames": ["tools/cli/package.json"],
+      "matchFileNames": ["tools/cli/package.json", "tools/txwrapper/package.json"],
       "groupName": "tools",
       "reviewers": ["osipov-mit"],
       "addLabels": ["tools"],
