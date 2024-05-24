@@ -9,7 +9,7 @@ import {
   MessageType,
 } from '@gear-js/common';
 
-import { Message, Program } from '../database';
+import { Message } from '../database';
 import { ProgramService } from './program.service';
 import { MessagesDispatchedDataInput, MessageEntryPoint, MessageNotFound, PAGINATION_LIMIT } from '../common';
 
@@ -85,9 +85,9 @@ export class MessageService {
     const [messages, count] = await Promise.all([
       this.repo.find({
         where: options,
-        take: limit || PAGINATION_LIMIT,
+        take: Math.min(limit || PAGINATION_LIMIT, 100),
         skip: offset || 0,
-        order: { timestamp: 'DESC' },
+        order: { timestamp: 'DESC', type: 'DESC' },
       }),
       this.repo.count({ where: options }),
     ]);
