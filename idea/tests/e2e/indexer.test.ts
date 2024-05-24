@@ -8,7 +8,7 @@ import * as fs from 'fs';
 
 import base, { PATH_TO_PROGRAMS } from './config';
 import { getAccounts, sleep } from './utils';
-import request from './request';
+import { jsonrpcRequest } from './request';
 
 function hasAllProps(obj: any, props: string[]) {
   for (const p of props) {
@@ -560,7 +560,7 @@ describe('prepare', () => {
 
 describe('common methods', () => {
   test(API_GATEWAY_METHODS.NETWORK_DATA_AVAILABLE, async () => {
-    const response = await request('networkData.available', {
+    const response = await jsonrpcRequest('networkData.available', {
       genesis,
     });
 
@@ -568,7 +568,7 @@ describe('common methods', () => {
   });
 
   test(INDEXER_METHODS.BLOCKS_STATUS, async () => {
-    const response = await request('blocks.status', { genesis });
+    const response = await jsonrpcRequest('blocks.status', { genesis });
 
     expect(response).toHaveProperty('result');
     expect(response.result).toHaveProperty('number');
@@ -580,7 +580,7 @@ describe('common methods', () => {
 
 describe('program methods', () => {
   test(INDEXER_METHODS.PROGRAM_ALL, async () => {
-    const response = await request('program.all', { genesis });
+    const response = await jsonrpcRequest('program.all', { genesis });
     expect(response).toHaveProperty('result.count', programs.length);
     for (const p of programs) {
       const receivedProgram = response.result.programs.find(({ id }) => id === p.programId);
@@ -591,13 +591,13 @@ describe('program methods', () => {
   });
 
   test(INDEXER_METHODS.PROGRAM_ALL + ' by owner', async () => {
-    const response = await request('program.all', { genesis, owner: decodeAddress(alice.address) });
+    const response = await jsonrpcRequest('program.all', { genesis, owner: decodeAddress(alice.address) });
     expect(response).toHaveProperty('result.count', programs.length);
     expect(response.result.programs).toHaveLength(programs.length);
   });
 
   test(INDEXER_METHODS.PROGRAM_ALL + ' by status', async () => {
-    const response = await request('program.all', { genesis, status: 'active' });
+    const response = await jsonrpcRequest('program.all', { genesis, status: 'active' });
     // TODO: check terminated status
     expect(response).toHaveProperty('result.count', programs.length);
     expect(response.result.programs).toHaveLength(programs.length);
@@ -608,27 +608,27 @@ describe('program methods', () => {
     const fromDate = new Date(toDate);
     fromDate.setMinutes(fromDate.getMinutes() - 5);
 
-    const response = await request('program.all', { genesis, fromDate, toDate });
+    const response = await jsonrpcRequest('program.all', { genesis, fromDate, toDate });
     expect(response).toHaveProperty('result.count', programs.length);
     expect(response.result.programs).toHaveLength(programs.length);
   });
 
   test(INDEXER_METHODS.PROGRAM_ALL + ' with query', async () => {
-    const response = await request('program.all', { genesis, query: programs[0].programId.substring(3, 17) });
+    const response = await jsonrpcRequest('program.all', { genesis, query: programs[0].programId.substring(3, 17) });
     expect(response).toHaveProperty('result.count', 1);
     expect(response.result.programs).toHaveLength(1);
     expect(response.result.programs[0].id).toEqual(programs[0].programId);
   });
 
   test(INDEXER_METHODS.PROGRAM_ALL + ' with pagination', async () => {
-    const response = await request('program.all', { genesis, limit: 1 });
+    const response = await jsonrpcRequest('program.all', { genesis, limit: 1 });
     expect(response).toHaveProperty('result.count', programs.length);
     expect(response.result.programs).toHaveLength(1);
   });
 
   test(INDEXER_METHODS.PROGRAM_DATA, async () => {
     for (const p of programs) {
-      const response = await request('program.data', { genesis, id: p.programId });
+      const response = await jsonrpcRequest('program.data', { genesis, id: p.programId });
 
       expect(response).toHaveProperty('result');
 
@@ -657,7 +657,7 @@ describe('program methods', () => {
 
 describe('code methods', () => {
   test(INDEXER_METHODS.CODE_ALL, async () => {
-    const response = await request('code.all', { genesis });
+    const response = await jsonrpcRequest('code.all', { genesis });
     expect(response).toHaveProperty('result');
     hasAllProps(response.result, ['listCode', 'count']);
     expect(response.result.count).toBe(codes.length);
@@ -672,14 +672,14 @@ describe('code methods', () => {
     const fromDate = new Date();
     fromDate.setMinutes(fromDate.getMinutes() - 3);
     const toDate = new Date();
-    const response = await request('code.all', { genesis, fromDate, toDate });
+    const response = await jsonrpcRequest('code.all', { genesis, fromDate, toDate });
     expect(response).toHaveProperty('result');
     expect(response.result.count).toBe(codes.length);
   });
 
   test(INDEXER_METHODS.CODE_DATA, async () => {
     for (const c of codes) {
-      const response = await request('code.data', { genesis, id: c.codeId });
+      const response = await jsonrpcRequest('code.data', { genesis, id: c.codeId });
       expect(response).toHaveProperty('result');
       hasAllProps(response.result, [
         'id',
@@ -704,9 +704,7 @@ describe('code methods', () => {
 
 describe('message methods', () => {
   test(INDEXER_METHODS.MESSAGE_ALL, async () => {
-    console.log([...sentMessages.map(({ id }) => id), ...receivedMessages.map(({ id }) => id)]);
-    const response = await request('message.all', { genesis, limit: 21 });
-    console.log(response.result.messages.map(({ id }) => id));
+    const response = await jsonrpcRequest('message.all', { genesis, limit: 21 });
     expect(response).toHaveProperty('result.count', sentMessages.length + receivedMessages.length);
     hasAllProps(response.result, ['messages', 'count']);
     expect(response.result.messages).toHaveLength(sentMessages.length + receivedMessages.length);
@@ -716,14 +714,14 @@ describe('message methods', () => {
     const fromDate = new Date();
     fromDate.setMinutes(fromDate.getMinutes() - 3);
     const toDate = new Date();
-    const response = await request('message.all', { genesis, fromDate, toDate, limit: 21 });
+    const response = await jsonrpcRequest('message.all', { genesis, fromDate, toDate, limit: 21 });
     expect(response).toHaveProperty('result.count', sentMessages.length + receivedMessages.length);
     hasAllProps(response.result, ['messages', 'count']);
     expect(response.result.messages).toHaveLength(sentMessages.length + receivedMessages.length);
   });
 
   test(INDEXER_METHODS.MESSAGE_ALL + ' by program', async () => {
-    const response = await request('message.all', {
+    const response = await jsonrpcRequest('message.all', {
       genesis,
       source: testMetaId,
       destination: testMetaId,
@@ -758,7 +756,7 @@ describe('message methods', () => {
 
     for (const m of sentMessages) {
       const withMetahash = Math.random() > 0.5;
-      const response = await request('message.data', { genesis, id: m.id, withMetahash });
+      const response = await jsonrpcRequest('message.data', { genesis, id: m.id, withMetahash });
 
       expect(response).toHaveProperty('result');
       const { result } = response;
@@ -785,7 +783,7 @@ describe('message methods', () => {
 
     for (const m of receivedMessages) {
       const withMetahash = Math.random() > 0.5;
-      const response = await request('message.data', { genesis, id: m.id, withMetahash });
+      const response = await jsonrpcRequest('message.data', { genesis, id: m.id, withMetahash });
       expect(response).toHaveProperty('result');
       const { result } = response;
 
@@ -819,7 +817,7 @@ describe('state methods', () => {
       programId: testMetaId,
       name: 'test_meta_state_v1.meta.wasm',
     };
-    const response = await request('program.state.add', data);
+    const response = await jsonrpcRequest('program.state.add', data);
 
     expect(response).toHaveProperty('result.status', 'State added');
     expect(response.result).toHaveProperty('state');
@@ -828,7 +826,7 @@ describe('state methods', () => {
   });
 
   test(INDEXER_METHODS.PROGRAM_STATE_ALL, async () => {
-    const response = await request('program.state.all', { genesis, programId: testMetaId });
+    const response = await jsonrpcRequest('program.state.all', { genesis, programId: testMetaId });
     expect(response).toHaveProperty('result.states');
     expect(response).toHaveProperty('result.count', 1);
 
@@ -836,7 +834,7 @@ describe('state methods', () => {
   });
 
   test(INDEXER_METHODS.STATE_GET, async () => {
-    const response = await request('state.get', { genesis, id: stateId });
+    const response = await jsonrpcRequest('state.get', { genesis, id: stateId });
 
     expect(response).toHaveProperty('result.functions');
     expect(response).toHaveProperty('result.funcNames');

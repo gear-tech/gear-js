@@ -1,47 +1,29 @@
-import fetch from 'node-fetch';
 import base from './config';
 
-export default async function (method: string, params: any) {
-  const body = JSON.stringify({ jsonrpc: '2.0', id: Math.floor(Math.random() * 100) + 1, method, params });
+export async function baseRequest(body: any) {
   const response = await fetch(base.gear.api, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body,
+    body: JSON.stringify(body),
   });
   return response.json();
 }
 
-export async function invalidRequest(method: string, params: any) {
-  const response = await fetch(base.gear.api, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
+export async function jsonrpcRequest(method: string, params: any) {
+  const body = { jsonrpc: '2.0', id: Math.floor(Math.random() * 100) + 1, method, params };
+
+  return baseRequest(body);
+}
+
+export function batchRequest(body: { method: string; params: any }[]) {
+  return baseRequest(
+    body.map((item) => ({
       jsonrpc: '2.0',
-      method,
-      params,
-    }),
-  });
-  return response.json();
-}
-
-export async function batchRequest(method: string, params: any) {
-  const response = await fetch(base.gear.api, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify([
-      {
-        jsonrpc: '2.0',
-        id: Math.floor(Math.random() * 100),
-        method,
-        params,
-      },
-    ]),
-  });
-  return response.json();
+      id: Math.floor(Math.random() * 100),
+      method: item.method,
+      params: item.params,
+    })),
+  );
 }

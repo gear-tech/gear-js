@@ -1,5 +1,5 @@
 import { META_STORAGE_METHODS } from '@gear-js/common';
-import request from './request';
+import { jsonrpcRequest } from './request';
 import * as fs from 'fs';
 import * as path from 'path';
 import { PATH_TO_PROGRAMS } from './config';
@@ -16,7 +16,7 @@ const hash = generateCodeHash(meta);
 
 describe('meta-storage methods', () => {
   test(META_STORAGE_METHODS.META_ADD, async () => {
-    const response = await request('meta.add', { hash, hex: meta });
+    const response = await jsonrpcRequest('meta.add', { hash, hex: meta });
 
     expect(response).toHaveProperty('result');
     expect(response.result).toHaveProperty('hash');
@@ -24,7 +24,7 @@ describe('meta-storage methods', () => {
   });
 
   test(META_STORAGE_METHODS.META_GET, async () => {
-    const response = await request('meta.get', { hash });
+    const response = await jsonrpcRequest('meta.get', { hash });
 
     expect(response).toHaveProperty('result');
     expect(response.result).toHaveProperty('hash', hash);
@@ -33,7 +33,7 @@ describe('meta-storage methods', () => {
 
   test(META_STORAGE_METHODS.SAILS_ADD, async () => {
     const codehash = generateCodeHash(pingCode);
-    const response = await request(META_STORAGE_METHODS.SAILS_ADD, { codeId: codehash, data: pingIdl });
+    const response = await jsonrpcRequest(META_STORAGE_METHODS.SAILS_ADD, { codeId: codehash, data: pingIdl });
 
     expect(response).toHaveProperty('result');
     expect(response.result).toHaveProperty('status', 'Sails idl added');
@@ -41,7 +41,7 @@ describe('meta-storage methods', () => {
 
   test(META_STORAGE_METHODS.SAILS_GET, async () => {
     const codehash = generateCodeHash(pingCode);
-    const response = await request(META_STORAGE_METHODS.SAILS_GET, { codeId: codehash });
+    const response = await jsonrpcRequest(META_STORAGE_METHODS.SAILS_GET, { codeId: codehash });
 
     expect(response).toHaveProperty('result');
     expect(response.result).toBe(pingIdl);

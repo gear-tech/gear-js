@@ -1,10 +1,18 @@
-import { AddMetaDetailsParams, AddMetahashParams, GetMetaParams, logger } from '@gear-js/common';
+import {
+  AddMetaDetailsParams,
+  AddMetahashParams,
+  GetMetaParams,
+  InvalidMetadataError,
+  InvalidParamsError,
+  logger,
+  MetaNotFoundError,
+  SailsIdlNotFoundError,
+} from '@gear-js/common';
 import { ProgramMetadata, MetadataVersion, HumanTypesRepr } from '@gear-js/api';
 import { Repository } from 'typeorm';
 import * as crypto from 'crypto';
 
 import { Meta, AppDataSource, SailsIdl } from './database';
-import { InvalidParamsError, MetaNotFoundError, SailsIdlNotFoundError } from './util/errors';
 import { validateMetaHex } from './util/validate';
 import { Code } from './database/entities/code.entity';
 
@@ -55,7 +63,7 @@ export class MetaService {
     try {
       metadata = ProgramMetadata.from(meta.hex);
     } catch (error) {
-      throw new InvalidParamsError('Invalid metadata hex');
+      throw new InvalidMetadataError('Invalid metadata hex');
     }
 
     if (metadata.version === MetadataVersion.V1Rust) {

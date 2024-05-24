@@ -1,5 +1,3 @@
-import { logger } from '@gear-js/common';
-
 import { RMQService } from './rmq';
 import { Server, changeStatus } from './server';
 
