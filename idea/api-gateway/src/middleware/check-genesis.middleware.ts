@@ -11,10 +11,14 @@ export async function checkGenesisMiddleware(
   next: NextFunction,
 ) {
   if (Array.isArray(body)) {
-    const isExistGenesis = body.every((value) => metaStorageMethods.includes(body.method) || value.params.genesis);
+    for (let i = 0; i < body.length; i++) {
+      if (metaStorageMethods.includes(body[i].method) || body[i]?.__error) {
+        continue;
+      }
 
-    if (!isExistGenesis) {
-      return res.send(getResponse(body, JSONRPC_ERRORS.NoGenesisFound.name));
+      if (!body[i]?.params?.genesis) {
+        body[i] = { __error: getResponse(body[i], JSONRPC_ERRORS.NoGenesisFound.name) };
+      }
     }
   } else {
     if (metaStorageMethods.includes(body.method)) {

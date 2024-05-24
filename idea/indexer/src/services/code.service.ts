@@ -5,11 +5,12 @@ import {
   GetAllCodeResult,
   GetCodeParams,
   logger,
+  CodeNotFound,
 } from '@gear-js/common';
 import { Between, DataSource, FindOptionsWhere, ILike, In, Not, Repository } from 'typeorm';
 
 import { Code } from '../database/entities';
-import { CodeNotFound, PAGINATION_LIMIT } from '../common';
+import { PAGINATION_LIMIT } from '../common';
 
 export class CodeService {
   private repo: Repository<Code>;

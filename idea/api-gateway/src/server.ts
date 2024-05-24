@@ -9,6 +9,7 @@ import {
   JSONRPC_ERRORS,
   API_GATEWAY_METHODS,
   logger,
+  IRpcRequestAfterMiddleware,
 } from '@gear-js/common';
 import { nanoid } from 'nanoid';
 import express, { Express, Request, Response } from 'express';
@@ -118,14 +119,31 @@ export class Server {
     return this.app.listen(config.server.port, () => logger.info(`App successfully run on the ${config.server.port}`));
   }
 
-  private async handleRequest(rpcBodyRequest: IRpcRequest | IRpcRequest[]): Promise<IRpcResponse | IRpcResponse[]> {
+  private async handleRequest(
+    rpcBodyRequest: IRpcRequest | IRpcRequestAfterMiddleware[],
+  ): Promise<IRpcResponse | IRpcResponse[]> {
     if (Array.isArray(rpcBodyRequest)) {
-      const promises = rpcBodyRequest.map((rpcBody) => {
-        return this.executeProcedure(rpcBody);
+      const promises = rpcBodyRequest.map(async (rpcBody) => {
+        if ('__error' in rpcBody) {
+          return rpcBody.__error;
+        } else {
+          try {
+            return await this.executeProcedure(rpcBody);
+          } catch (error) {
+            return getResponse(rpcBody, error.name in JSONRPC_ERRORS ? error.name : JSONRPC_ERRORS.InternalError.name);
+          }
+        }
       });
       return Promise.all(promises);
     } else {
-      return this.executeProcedure(rpcBodyRequest);
+      try {
+        return this.executeProcedure(rpcBodyRequest);
+      } catch (error) {
+        return getResponse(
+          rpcBodyRequest,
+          error.name in JSONRPC_ERRORS ? error.name : JSONRPC_ERRORS.InternalError.name,
+        );
+      }
     }
   }
 
