@@ -1,10 +1,9 @@
 {
-  "extends": ["config:recommended"],
+  "extends": ["config:recommended", "schedule:earlyMondays"],
   "labels": ["D4-dependencies"],
   "branchConcurrentLimit": 5,
   "branchPrefix": "renovate-",
   "ignorePaths": [".github/**", "**/Dockerfile"],
-  "schedule": ["schedule:earlyMondays"],
   "packageRules": [
     {
       "matchFileNames": ["api/package.json"],
