@@ -1,60 +1,55 @@
 {
-  "extends": ["config:base"],
+  "extends": ["config:recommended"],
   "labels": ["dependencies"],
   "branchConcurrentLimit": 5,
   "branchPrefix": "renovate-",
   "ignorePaths": ["ansible/**", ".github/**", "**/Dockerfile"],
   "packageRules": [
     {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "matchDepTypes": ["devDependencies"]
-    },
-    {
-      "matchPaths": ["api/**"],
+      "matchFileNames": ["api/package.json"],
       "groupName": "api",
       "reviewers": ["osipov-mit"],
-      "addLabels": ["api"]
+      "addLabels": ["api"],
+      "rangeStrategy": "pin"
     },
     {
-      "matchPaths": ["idea/frontend/**"],
-      "groupName": "idea-frontend",
-      "reviewers": ["nikitayutanov"],
-      "addLabels": ["frontend"]
-    },
-    {
-      "matchPaths": [
-        "idea/api-gateway/**",
-        "idea/common/**",
-        "idea/indexer/**",
-        "idea/test-balance/**",
-        "idea/voucher-indexer/**"
+      "matchFileNames": [
+        "idea/frontend/package.json",
+        "utils/gear-ui/package.json",
+        "utils/gear-hooks/package.json",
+        "utils/vara-ui/package.json"
       ],
-      "groupName": "idea-backend",
-      "reviewers": ["osipov-mit"],
-      "addLabels": ["backend"]
+      "groupName": "frontend",
+      "reviewers": ["nikitayutanov"],
+      "addLabels": ["frontend"],
+      "rangeStrategy": "pin"
     },
     {
-      "matchPaths": ["idea/tests/**"],
-      "groupName": "idea-tests",
+      "matchFileNames": [
+        "idea/api-gateway/package.json",
+        "idea/common/package.json",
+        "idea/indexer/package.json",
+        "idea/test-balance/package.json",
+        "idea/voucher-indexer/package.json",
+        "idea/tests/package.json"
+      ],
+      "groupName": "backend",
       "reviewers": ["osipov-mit"],
-      "addLabels": ["tests"]
+      "addLabels": ["backend"],
+      "rangeStrategy": "pin"
     },
     {
-      "matchPaths": ["tools/cli/**"],
+      "matchFileNames": ["tools/cli/package.json"],
       "groupName": "tools",
       "reviewers": ["osipov-mit"],
-      "addLabels": ["tools"]
+      "addLabels": ["tools"],
+      "rangeStrategy": "pin"
     },
     {
-      "matchPaths": ["utils/gear-ui/**", "utils/gear-hooks/**"],
-      "groupName": "utils",
-      "reviewers": ["nikitayutanov"],
-      "addLabels": ["utils"]
-    },
-    {
-      "matchPaths": ["./package.json"],
+      "matchFileNames": ["package.json"],
       "groupName": "repo",
-      "reviewers": ["osipov-mit"]
+      "reviewers": ["osipov-mit"],
+      "rangeStrategy": "pin"
     }
   ]
 }
