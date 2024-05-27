@@ -1,1 +1,1 @@
-export default 160;
+export default 1310;
