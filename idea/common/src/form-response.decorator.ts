@@ -1,4 +1,4 @@
-import { JSONRPC_ERRORS, isExistError } from './jsonrpc-errors';
+import { JSONRPC_ERRORS, isExistError } from './errors/jsonrpc-errors';
 import { logger } from './logger';
 
 export function FormResponse(target: unknown, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) {

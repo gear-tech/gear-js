@@ -2,15 +2,16 @@ import {
   AddStateParams,
   AddStateResult,
   GetAllStateParams,
-  GetStateByCodeParams,
   GetStateParams,
   GetStatesResult,
+  ProgramNotFound,
+  StateAlreadyExists,
+  StateNotFound,
 } from '@gear-js/common';
 import { DataSource, Repository } from 'typeorm';
 import { generateCodeHash, getStateMetadata } from '@gear-js/api';
 
 import { State } from '../database';
-import { ProgramNotFound, StateAlreadyExists, StateNotFound } from '../common';
 import { ProgramService } from './program.service';
 
 export class StateService {

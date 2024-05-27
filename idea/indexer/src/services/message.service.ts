@@ -7,11 +7,12 @@ import {
   logger,
   ProgramStatus,
   MessageType,
+  MessageNotFound,
 } from '@gear-js/common';
 
 import { Message } from '../database';
 import { ProgramService } from './program.service';
-import { MessagesDispatchedDataInput, MessageEntryPoint, MessageNotFound, PAGINATION_LIMIT } from '../common';
+import { MessagesDispatchedDataInput, MessageEntryPoint, PAGINATION_LIMIT } from '../common';
 
 export class MessageService {
   private repo: Repository<Message>;

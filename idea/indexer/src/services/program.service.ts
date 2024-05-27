@@ -6,11 +6,12 @@ import {
   GetAllProgramsParams,
   GetAllProgramsResult,
   IProgram,
+  InvalidParamsError,
+  ProgramNotFound,
   ProgramStatus,
   logger,
 } from '@gear-js/common';
 
-import { ProgramNotFound } from '../common/errors';
 import { Program } from '../database/entities';
 import { PAGINATION_LIMIT } from '../common';
 
@@ -22,6 +23,10 @@ export class ProgramService {
   }
 
   public async get({ id, genesis }: FindProgramParams): Promise<Program> {
+    if (!id) {
+      throw new InvalidParamsError('Program ID is required');
+    }
+
     const program = await this.repo.findOne({
       where: { id, genesis },
     });
