@@ -20,6 +20,11 @@ export interface SendReplyArgs extends Args {
    * The value to be transferred to the program.
    */
   value: string | number;
+
+  /**
+   * A flag that indicates whether the account should be kept alive after the value is sent to the program.
+   */
+  keepAlive: boolean;
 }
 
 /**

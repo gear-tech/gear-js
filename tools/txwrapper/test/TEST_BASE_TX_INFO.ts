@@ -2,7 +2,7 @@ import METADATA_HEX from './METADATA_HEX';
 import SPEC_VERSION from './SPEC_VERSION';
 
 export default {
-  address: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY', // seed "//Alice"
+  address: 'kGkLEU3e3XXkJp2WK4eNpVmSab5xUNL9QtmLPh8QfCL2EgotW', // seed "//Alice"
   blockHash: '0x753a7c960b1ab127334afa81a3a7d4e4af9355d91d35404e4663413055b97b94',
   blockNumber: 7621828,
   eraPeriod: 2400,

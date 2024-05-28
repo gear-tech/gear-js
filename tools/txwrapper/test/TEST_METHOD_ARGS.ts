@@ -12,22 +12,21 @@ export default {
       initPayload: '0x',
       gasLimit: 100_000_000_000,
       value: 0,
-    },
-    payProgramRent: {
-      programId: '0xd1af58fc299327124b22a54359150894eda348899e0d431c86ad03bd3cdbc0bc',
-      blockCount: 1_000_000,
+      keepAlive: true,
     },
     sendMessage: {
       destination: '0xd1af58fc299327124b22a54359150894eda348899e0d431c86ad03bd3cdbc0bc',
       payload: '0x50494e47',
       gasLimit: 100_000_000_000,
       value: 0,
+      keepAlive: true,
     },
     sendReply: {
       replyToId: '0xd1af58fc299327124b22a54359150894eda348899e0d431c86ad03bd3cdbc0bc',
       payload: '0x504f4e47',
       gasLimit: 100_000_000_000,
       value: 10_000_000,
+      keepAlive: true,
     },
     uploadCode: {
       code: CODE_TO_UPLOAD,
@@ -38,6 +37,7 @@ export default {
       initPayload: '0x',
       gasLimit: 100_000_000_000,
       value: 0,
+      keepAlive: true,
     },
   },
 };

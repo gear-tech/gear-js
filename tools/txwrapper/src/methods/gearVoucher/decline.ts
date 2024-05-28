@@ -1,35 +1,26 @@
 import { Args, BaseTxInfo, defineMethod, OptionsWithMeta, UnsignedTransaction } from '@substrate/txwrapper-core';
 
-export interface PayProgramRentArgs extends Args {
+export interface DeclineArgs extends Args {
   /**
-   * The program id.
+   * The id of the voucher to be declined.
    */
-  programId: string;
-
-  /**
-   * The block count to pay for.
-   */
-  blockCount: number;
+  voucherId: string;
 }
 
 /**
- * Construct a payProgramRent transaction offline.
+ * Construct a decline voucher transaction offline.
  *
  * @param args - Arguments specific to this method.
  * @param info - Information required to construct the transaction.
  * @param options - Registry and metadata used for constructing the method.
  */
-export function payProgramRent(
-  args: PayProgramRentArgs,
-  info: BaseTxInfo,
-  options: OptionsWithMeta,
-): UnsignedTransaction {
+export function decline(args: DeclineArgs, info: BaseTxInfo, options: OptionsWithMeta): UnsignedTransaction {
   return defineMethod(
     {
       method: {
         args,
-        name: 'payProgramRent',
-        pallet: 'gear',
+        name: 'decline',
+        pallet: 'gearVoucher',
       },
       ...info,
     },
