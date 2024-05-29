@@ -18,6 +18,7 @@ import {
 } from './handlers';
 import { HandlerParams } from '../common/types/indexer';
 import config from '../config';
+import { CronJob } from 'cron';
 
 const getMem = () => {
   const mem = process.memoryUsage();
@@ -35,6 +36,7 @@ export class GearIndexer {
   private generatorLoop: boolean;
   private tempState: TempState;
   private isCheckingNotSynced: boolean;
+  private _lastProcessedBlock: number;
 
   constructor(
     private programService: ProgramService,
@@ -66,6 +68,8 @@ export class GearIndexer {
 
     await this.statusService.init(this.genesis);
 
+    this._lastProcessedBlock = +(await this.blockService.getLastBlock({ genesis: this.genesis })).number;
+
     this.newBlocks = [];
     this.generatorLoop = true;
 
@@ -77,6 +81,8 @@ export class GearIndexer {
       this.newBlocks.push(number.toNumber());
     });
     this.indexBlocks();
+
+    this._checkBlockProcessing();
   }
 
   public stop() {
@@ -233,7 +239,7 @@ export class GearIndexer {
       hash = (await this.api.rpc.chain.getBlockHash(blockNumber)).toHex();
       [block, apiAt] = await Promise.all([this.api.rpc.chain.getBlock(hash), this.api.at(hash)]);
     } catch (error) {
-      logger.error('Unable to get block', { number: blockNumber, error: error.message });
+      logger.error('Unable to get block', { number: blockNumber, hash, error: error.message });
       return;
     }
 
@@ -268,5 +274,19 @@ export class GearIndexer {
         genesis: this.genesis,
       }),
     );
+  }
+
+  private _checkBlockProcessing() {
+    const job = new CronJob('*/1 * * * *', async () => {
+      const lastBlock = await this.blockService.getLastBlock({ genesis: this.genesis });
+
+      if (+lastBlock.number <= this._lastProcessedBlock) {
+        logger.error('Block processing is stuck', { lastBlock: this._lastProcessedBlock });
+      } else {
+        this._lastProcessedBlock = +lastBlock.number;
+      }
+    });
+
+    job.start();
   }
 }
