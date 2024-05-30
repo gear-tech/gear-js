@@ -68,7 +68,7 @@ export class GearIndexer {
 
     await this.statusService.init(this.genesis);
 
-    this._lastProcessedBlock = +(await this.blockService.getLastBlock({ genesis: this.genesis })).number;
+    this._lastProcessedBlock = +(await this.blockService.getLastBlock({ genesis: this.genesis }))?.number || 0;
 
     this.newBlocks = [];
     this.generatorLoop = true;
@@ -280,7 +280,7 @@ export class GearIndexer {
     const job = new CronJob('*/1 * * * *', async () => {
       const lastBlock = await this.blockService.getLastBlock({ genesis: this.genesis });
 
-      if (+lastBlock.number <= this._lastProcessedBlock) {
+      if (+lastBlock?.number <= this._lastProcessedBlock) {
         logger.error('Block processing is stuck', { lastBlock: this._lastProcessedBlock });
       } else {
         this._lastProcessedBlock = +lastBlock.number;
