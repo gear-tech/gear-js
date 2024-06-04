@@ -7,7 +7,7 @@ import { useIdl } from './use-idl';
 
 function useParsedIdl(programId: HexString) {
   const { api, isApiReady } = useApi();
-  const idl = useIdl();
+  const idl = useIdl(true);
 
   const { data } = useQuery({
     queryKey: ['parsedIdl'],

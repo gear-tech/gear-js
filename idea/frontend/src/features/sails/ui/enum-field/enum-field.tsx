@@ -1,8 +1,6 @@
 import { Select } from '@gear-js/ui';
 import { useState } from 'react';
 
-import { Fieldset } from '@/shared/ui';
-
 import { EnumDef, TypeDef } from '../../types';
 
 type Props = {
@@ -18,11 +16,11 @@ function EnumField({ def, renderField }: Props) {
   const variant = variants[variantIndex];
 
   return (
-    <Fieldset legend={'Enum Field'}>
+    <>
       <Select options={options} value={variantIndex} onChange={({ target }) => setVariantIndex(Number(target.value))} />
 
       {renderField(variant.def)}
-    </Fieldset>
+    </>
   );
 }
 

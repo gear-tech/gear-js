@@ -70,7 +70,6 @@ const useProgramActions = () => {
 
     events.forEach(({ event }) => {
       const { method, section } = event;
-      console.log('method: ', method);
       const alertOptions = { title: `${section}.${method}` };
 
       if (method === Method.ExtrinsicFailed) {

@@ -35,10 +35,10 @@ function PayloadForm({ programId }: Props) {
     setFunctionName(defaultFunctionName);
   }, [defaultFunctionName]);
 
-  const renderField = (def: TypeDef) => {
+  const renderField = (def: TypeDef, name: string = '') => {
     if (def.isEnum) return <EnumField key={''} def={def.asEnum} renderField={renderField} />;
     if (def.isStruct) return <StructField key={''} def={def.asStruct} renderField={renderField} />;
-    if (def.isOptional) return <OptionalField key={''} def={def.asOptional} renderField={renderField} />;
+    if (def.isOptional) return <OptionalField key={''} def={def.asOptional} name={name} renderField={renderField} />;
     if (def.isResult) return <ResultField key={''} def={def.asResult} />;
     if (def.isVec) return <VecField key={''} def={def.asVec} />;
     if (def.isMap) return <MapField key={''} def={def.asMap} />;
@@ -47,16 +47,16 @@ function PayloadForm({ programId }: Props) {
     if (def.isUserDefined) {
       if (!sails) return;
 
-      const name = def.asUserDefined.name;
-      const nextDef = sails.getTypeDef(name);
+      const nextDefName = def.asUserDefined.name;
+      const nextDef = sails.getTypeDef(nextDefName);
 
-      return <UserDefinedField key={name} def={def.asUserDefined} renderField={() => renderField(nextDef)} />;
+      return <UserDefinedField key={nextDefName} def={def.asUserDefined} renderField={() => renderField(nextDef)} />;
     }
 
-    if (def.isPrimitive) return <PrimitiveField key={''} def={def.asPrimitive} />;
+    if (def.isPrimitive) return <PrimitiveField key={''} def={def.asPrimitive} name={name} />;
   };
 
-  const renderFields = (args: ISailsFuncArg[]) => args.map(({ typeDef }) => renderField(typeDef));
+  const renderFields = (args: ISailsFuncArg[]) => args.map(({ typeDef, name }) => renderField(typeDef, name));
 
   return (
     <form className={styles.form}>

@@ -1,19 +1,17 @@
-import { Fieldset } from '@/shared/ui';
-
 import { StructDef, TypeDef } from '../../types';
 
 type Props = {
   def: StructDef;
-  renderField: (def: TypeDef) => JSX.Element | undefined;
+  renderField: (def: TypeDef, label: string) => JSX.Element | undefined;
 };
 
 function StructField({ def, renderField }: Props) {
   const { fields } = def;
 
   // TODO: specify keys?
-  const renderFields = () => fields.map((field) => renderField(field.def));
+  const renderFields = () => fields.map((field) => renderField(field.def, field.name));
 
-  return <Fieldset legend={'Struct Field'}>{renderFields()}</Fieldset>;
+  return renderFields();
 }
 
 export { StructField };
