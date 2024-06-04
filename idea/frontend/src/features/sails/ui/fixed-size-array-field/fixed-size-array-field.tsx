@@ -1,9 +1,9 @@
 import { Fieldset } from '@/shared/ui';
 
-import { FixedSizeArrayDef } from '../../types';
+import { TypeDef } from '../../types';
 
 type Props = {
-  def: FixedSizeArrayDef;
+  def: TypeDef;
 };
 
 function FixedSizeArrayField({ def }: Props) {

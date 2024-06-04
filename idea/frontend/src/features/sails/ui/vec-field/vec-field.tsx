@@ -1,13 +1,14 @@
 import { Textarea } from '@gear-js/ui';
 
-import { VecDef } from '../../types';
+import { TypeDef } from '../../types';
 
 type Props = {
-  def: VecDef;
+  def: TypeDef;
+  label: string;
 };
 
-function VecField({ def }: Props) {
-  return <Textarea label="Vec Field" />;
+function VecField({ def, label }: Props) {
+  return <Textarea direction="y" label={label} />;
 }
 
 export { VecField };

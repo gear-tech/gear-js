@@ -3,11 +3,16 @@ import { useApi } from '@gear-js/react-hooks';
 import { useQuery } from '@tanstack/react-query';
 import { Sails } from 'sails-js';
 
+import rmrkCatalogUrl from '../assets/rmrk-catalog.idl?url';
+import rmrkResourceUrl from '../assets/rmrk-resource.idl?url';
+import thisThatSvcUrl from '../assets/this-that-svc.idl?url';
+import ftUrl from '../assets/ft.idl?url';
+
 import { useIdl } from './use-idl';
 
 function useParsedIdl(programId: HexString) {
   const { api, isApiReady } = useApi();
-  const idl = useIdl(true);
+  const idl = useIdl(ftUrl);
 
   const { data } = useQuery({
     queryKey: ['parsedIdl'],
@@ -17,6 +22,8 @@ function useParsedIdl(programId: HexString) {
       if (!idl) throw new Error('IDL not found');
 
       const sails = (await Sails.new()).setApi(api).setProgramId(programId);
+
+      console.log(sails.parseIdl(idl).scaleCodecTypes);
 
       return { sails, idl: sails.parseIdl(idl) };
     },

@@ -1,15 +1,15 @@
 import { Select } from '@gear-js/ui';
 import { useState } from 'react';
 
-import { EnumDef, TypeDef } from '../../types';
+import { TypeDef } from '../../types';
 
 type Props = {
-  def: EnumDef;
+  def: TypeDef;
   renderField: (def: TypeDef) => JSX.Element | undefined;
 };
 
 function EnumField({ def, renderField }: Props) {
-  const { variants } = def;
+  const { variants } = def.asEnum;
   const options = variants.map(({ name }, index) => ({ label: name, value: index }));
 
   const [variantIndex, setVariantIndex] = useState(options[0].value);

@@ -1,0 +1,27 @@
+type DoThatParam = struct {
+  p1: u32,
+  p2: str,
+  p3: ManyVariants,
+};
+
+type ManyVariants = enum {
+  One,
+  Two: u32,
+  Three: opt u256,
+  Four: struct { a: u32, b: opt u16 },
+  Five: struct { str, h256 },
+  Six: struct { u32 },
+};
+
+type TupleStruct = struct {
+  bool,
+};
+
+service {
+  DoThat : (param: DoThatParam) -> result (struct { str, u32 }, struct { str });
+  DoThis : (p1: u32, p2: str, p3: struct { opt str, u8 }, p4: TupleStruct) -> struct { str, u32 };
+  Noop : () -> null;
+  query That : () -> result (str, str);
+  query This : () -> u32;
+};
+

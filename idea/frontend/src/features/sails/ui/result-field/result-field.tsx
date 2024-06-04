@@ -1,8 +1,8 @@
 import { Select } from '@gear-js/ui';
-import { ResultDef } from '../../types';
+import { TypeDef } from '../../types';
 
 type Props = {
-  def: ResultDef;
+  def: TypeDef;
 };
 
 function ResultField({ def }: Props) {

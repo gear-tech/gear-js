@@ -3,6 +3,7 @@ import { Select } from '@gear-js/ui';
 import { useState, useEffect } from 'react';
 
 import { Fieldset } from '@/shared/ui';
+import { generateRandomId } from '@/shared/helpers';
 
 import { useParsedIdl } from '../../hooks';
 import { ISailsFuncArg, TypeDef } from '../../types';
@@ -16,6 +17,7 @@ import { MapField } from '../map-field';
 import { FixedSizeArrayField } from '../fixed-size-array-field';
 import { PrimitiveField } from '../primitive-field';
 import styles from './payload-form.module.scss';
+import { getLabel, getType } from '../../utils';
 
 type Props = {
   programId: HexString;
@@ -35,28 +37,37 @@ function PayloadForm({ programId }: Props) {
     setFunctionName(defaultFunctionName);
   }, [defaultFunctionName]);
 
-  const renderField = (def: TypeDef, name: string = '') => {
-    if (def.isEnum) return <EnumField key={''} def={def.asEnum} renderField={renderField} />;
-    if (def.isStruct) return <StructField key={''} def={def.asStruct} renderField={renderField} />;
-    if (def.isOptional) return <OptionalField key={''} def={def.asOptional} name={name} renderField={renderField} />;
-    if (def.isResult) return <ResultField key={''} def={def.asResult} />;
-    if (def.isVec) return <VecField key={''} def={def.asVec} />;
-    if (def.isMap) return <MapField key={''} def={def.asMap} />;
-    if (def.isFixedSizeArray) return <FixedSizeArrayField key={''} def={def.asFixedSizeArray} />;
+  const getFieldComponent = (def: TypeDef) => {
+    if (def.isEnum) return EnumField;
+    if (def.isStruct) return StructField;
+    if (def.isOptional) return OptionalField;
+    if (def.isResult) return ResultField;
+    if (def.isVec) return VecField;
+    if (def.isMap) return MapField;
+    if (def.isFixedSizeArray) return FixedSizeArrayField;
+    if (def.isUserDefined) return UserDefinedField;
+    if (def.isPrimitive) return PrimitiveField;
 
-    if (def.isUserDefined) {
-      if (!sails) return;
-
-      const nextDefName = def.asUserDefined.name;
-      const nextDef = sails.getTypeDef(nextDefName);
-
-      return <UserDefinedField key={nextDefName} def={def.asUserDefined} renderField={() => renderField(nextDef)} />;
-    }
-
-    if (def.isPrimitive) return <PrimitiveField key={''} def={def.asPrimitive} name={name} />;
+    throw new Error('Unknown field type: ' + JSON.stringify(def));
   };
 
-  const renderFields = (args: ISailsFuncArg[]) => args.map(({ typeDef, name }) => renderField(typeDef, name));
+  const renderField = (def: TypeDef, name: string = '') => {
+    if (!sails) throw new Error('Sails is not defined');
+    if (!def) return; // in case of empty enum variant, EnumVariant.def sails-js type is inaccurate at the moment
+
+    const key = generateRandomId();
+    const label = getLabel(name, getType(def));
+    const Field = getFieldComponent(def);
+
+    return <Field key={key} def={def} sails={sails} label={label} renderField={renderField} />;
+  };
+
+  const renderFields = (args: ISailsFuncArg[]) =>
+    args.map(({ typeDef, name, type }) => {
+      // console.log('type: ', type);
+
+      return renderField(typeDef, name);
+    });
 
   return (
     <form className={styles.form}>

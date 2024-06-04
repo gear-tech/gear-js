@@ -1,12 +1,12 @@
-import { StructDef, TypeDef } from '../../types';
+import { TypeDef } from '../../types';
 
 type Props = {
-  def: StructDef;
+  def: TypeDef;
   renderField: (def: TypeDef, label: string) => JSX.Element | undefined;
 };
 
 function StructField({ def, renderField }: Props) {
-  const { fields } = def;
+  const { fields } = def.asStruct;
 
   // TODO: specify keys?
   const renderFields = () => fields.map((field) => renderField(field.def, field.name));

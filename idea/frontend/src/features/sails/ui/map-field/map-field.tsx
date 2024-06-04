@@ -1,13 +1,14 @@
 import { Textarea } from '@gear-js/ui';
 
-import { MapDef } from '../../types';
+import { TypeDef } from '../../types';
 
 type Props = {
-  def: MapDef;
+  def: TypeDef;
+  label: string;
 };
 
-function MapField({ def }: Props) {
-  return <Textarea label="Map Field" />;
+function MapField({ def, label }: Props) {
+  return <Textarea direction="y" label={label} />;
 }
 
 export { MapField };
