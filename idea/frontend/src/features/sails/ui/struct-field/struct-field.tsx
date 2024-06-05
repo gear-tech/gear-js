@@ -2,7 +2,7 @@ import { TypeDef } from '../../types';
 
 type Props = {
   def: TypeDef;
-  renderField: (def: TypeDef, label: string) => JSX.Element | undefined;
+  renderField: (def: TypeDef, name: string) => JSX.Element | undefined;
 };
 
 function StructField({ def, renderField }: Props) {

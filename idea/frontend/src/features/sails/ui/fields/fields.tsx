@@ -12,7 +12,6 @@ import { MapField } from '../map-field';
 import { FixedSizeArrayField } from '../fixed-size-array-field';
 import { PrimitiveField } from '../primitive-field';
 import { ISailsFuncArg, TypeDef } from '../../types';
-import { getLabel, getType } from '../../utils';
 
 type Props = {
   sails: Sails;
@@ -39,10 +38,9 @@ function Fields({ sails, args }: Props) {
     if (!def) return; // in case of empty enum variant, EnumVariant.def sails-js type is inaccurate at the moment
 
     const key = generateRandomId();
-    const label = getLabel(name, getType(def));
     const Field = getFieldComponent(def);
 
-    return <Field key={key} def={def} sails={sails} label={label} renderField={renderField} />;
+    return <Field key={key} def={def} sails={sails} name={name} renderField={renderField} />;
   };
 
   return args.map(({ typeDef, name }) => renderField(typeDef, name));

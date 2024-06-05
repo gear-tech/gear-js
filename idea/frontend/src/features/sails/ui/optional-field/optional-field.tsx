@@ -4,10 +4,11 @@ import { useState } from 'react';
 import { Fieldset } from '@/shared/ui';
 
 import { TypeDef } from '../../types';
+import { getLabel, getType } from '../../utils';
 
 type Props = {
   def: TypeDef;
-  label: string;
+  name: string;
   renderField: (def: TypeDef) => JSX.Element | undefined;
 };
 
@@ -16,8 +17,9 @@ const OPTIONS = [
   { label: 'Some', value: 1 },
 ];
 
-function OptionalField({ def, label, renderField }: Props) {
+function OptionalField({ def, name, renderField }: Props) {
   const [isSome, setIsSome] = useState(OPTIONS[0].value);
+  const label = getLabel(name, getType(def));
 
   return (
     <Fieldset legend={label}>

@@ -12,7 +12,7 @@ import { useIdl } from './use-idl';
 
 function useParsedIdl(programId: HexString) {
   const { api, isApiReady } = useApi();
-  const idl = useIdl(ftUrl);
+  const idl = useIdl(rmrkResourceUrl);
 
   const { data } = useQuery({
     queryKey: ['parsedIdl'],
