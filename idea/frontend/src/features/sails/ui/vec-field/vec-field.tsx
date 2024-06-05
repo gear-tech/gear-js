@@ -1,4 +1,4 @@
-import { Textarea } from '@gear-js/ui';
+import { Textarea } from '@/shared/ui';
 
 import { TypeDef } from '../../types';
 import { getLabel, getType } from '../../utils';
@@ -6,12 +6,11 @@ import { getLabel, getType } from '../../utils';
 type Props = {
   def: TypeDef;
   name: string;
+  label: string;
 };
 
-function VecField({ def, name }: Props) {
-  const label = getLabel(name, getType(def));
-
-  return <Textarea direction="y" label={label} />;
+function VecField({ def, name, label }: Props) {
+  return <Textarea direction="y" name={name} label={getLabel(label, getType(def))} />;
 }
 
 export { VecField };

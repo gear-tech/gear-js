@@ -91,7 +91,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
   };
 
   const handleGasCalculate = () => {
-    setIsGasDisabled(true);
+    // setIsGasDisabled(true);
 
     const values = getValues();
 
@@ -101,14 +101,16 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
       payload: getSubmitPayload(values.payload),
     };
 
-    calculateGas(method, preparedValues, null, metadata, id)
-      .then((info) => {
-        const limit = getFormattedGasValue(info.limit).toFixed();
+    console.log('payload: ', getSubmitPayload(values.payload));
 
-        setValue('gasLimit', limit, { shouldValidate: true });
-        setGasInfo(info);
-      })
-      .finally(() => setIsGasDisabled(false));
+    // calculateGas(method, preparedValues, null, metadata, id)
+    //   .then((info) => {
+    //     const limit = getFormattedGasValue(info.limit).toFixed();
+
+    //     setValue('gasLimit', limit, { shouldValidate: true });
+    //     setGasInfo(info);
+    //   })
+    //   .finally(() => setIsGasDisabled(false));
   };
 
   return (

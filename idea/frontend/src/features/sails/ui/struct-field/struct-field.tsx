@@ -1,15 +1,17 @@
 import { TypeDef } from '../../types';
+import { getNestedName } from '../../utils';
 
 type Props = {
   def: TypeDef;
-  renderField: (def: TypeDef, name: string) => JSX.Element | undefined;
+  name: string;
+  renderField: (def: TypeDef, label: string, name: string) => JSX.Element | undefined;
 };
 
-function StructField({ def, renderField }: Props) {
+function StructField({ def, name, renderField }: Props) {
   const { fields } = def.asStruct;
 
-  // TODO: specify keys?
-  const renderFields = () => fields.map((field) => renderField(field.def, field.name));
+  // TODO: consider tuple
+  const renderFields = () => fields.map((field) => renderField(field.def, field.name, getNestedName(name, field.name)));
 
   return renderFields();
 }

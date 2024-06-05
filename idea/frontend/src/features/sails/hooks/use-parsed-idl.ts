@@ -23,8 +23,6 @@ function useParsedIdl(programId: HexString) {
 
       const sails = (await Sails.new()).setApi(api).setProgramId(programId);
 
-      console.log(sails.parseIdl(idl).scaleCodecTypes);
-
       return { sails, idl: sails.parseIdl(idl) };
     },
 

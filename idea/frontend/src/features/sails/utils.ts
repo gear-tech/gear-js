@@ -53,5 +53,6 @@ const getType = (def: TypeDef): string => {
 };
 
 const getLabel = (name: string, type: string) => (name && type ? `${name} (${type})` : name || type || '');
+const getNestedName = (name: string, nestedName: string) => `${name}.${nestedName}`;
 
-export { getPrimitiveType, getType, getLabel };
+export { getPrimitiveType, getType, getLabel, getNestedName };

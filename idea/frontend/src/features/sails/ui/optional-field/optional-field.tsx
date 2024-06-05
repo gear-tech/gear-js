@@ -9,7 +9,8 @@ import { getLabel, getType } from '../../utils';
 type Props = {
   def: TypeDef;
   name: string;
-  renderField: (def: TypeDef) => JSX.Element | undefined;
+  label: string;
+  renderField: (def: TypeDef, label: string, name: string) => JSX.Element | undefined;
 };
 
 const OPTIONS = [
@@ -17,15 +18,14 @@ const OPTIONS = [
   { label: 'Some', value: 1 },
 ];
 
-function OptionalField({ def, name, renderField }: Props) {
+function OptionalField({ def, name, label, renderField }: Props) {
   const [isSome, setIsSome] = useState(OPTIONS[0].value);
-  const label = getLabel(name, getType(def));
 
   return (
-    <Fieldset legend={label}>
+    <Fieldset legend={getLabel(label, getType(def))}>
       <Select options={OPTIONS} value={isSome} onChange={({ target }) => setIsSome(Number(target.value))} />
 
-      {Boolean(isSome) && renderField(def.asOptional.def)}
+      {Boolean(isSome) && renderField(def.asOptional.def, '', name)}
     </Fieldset>
   );
 }

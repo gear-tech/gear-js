@@ -1,6 +1,6 @@
 import { withAccount } from './with-account';
 import { LabeledCheckbox } from './labeled-checkbox';
-import { Input, ValueField, Checkbox, Radio, Select, SearchForm, Fieldset } from './form';
+import { Input, ValueField, Checkbox, Radio, Select, SearchForm, Fieldset, Textarea } from './form';
 import { withDeprecatedFallback } from './with-deprecated-fallback';
 import { List } from './list';
 import { Skeleton } from './skeleton';
@@ -24,4 +24,5 @@ export {
   Subheader,
   UILink,
   Fieldset,
+  Textarea,
 };

@@ -1,18 +1,20 @@
+import { Sails } from 'sails-js';
+
 import { Fieldset } from '@/shared/ui';
 
 import { TypeDef } from '../../types';
-import { Sails } from 'sails-js';
 
 type Props = {
   def: TypeDef;
   sails: Sails;
-  renderField: (def: TypeDef) => JSX.Element | undefined;
+  name: string;
+  renderField: (def: TypeDef, label: string, name: string) => JSX.Element | undefined;
 };
 
-function UserDefinedField({ def, sails, renderField }: Props) {
-  const { name } = def.asUserDefined;
+function UserDefinedField({ def, sails, name, renderField }: Props) {
+  const defName = def.asUserDefined.name;
 
-  return <Fieldset legend={name}>{renderField(sails.getTypeDef(name))}</Fieldset>;
+  return <Fieldset legend={defName}>{renderField(sails.getTypeDef(defName), '', name)}</Fieldset>;
 }
 
 export { UserDefinedField };

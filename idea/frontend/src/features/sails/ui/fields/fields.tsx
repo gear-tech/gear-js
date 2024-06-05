@@ -33,17 +33,17 @@ function Fields({ sails, args }: Props) {
     throw new Error('Unknown field type: ' + JSON.stringify(def));
   };
 
-  const renderField = (def: TypeDef, name: string = '') => {
+  const renderField = (def: TypeDef, label: string = '', name: string = '') => {
     if (!sails) throw new Error('Sails is not defined');
     if (!def) return; // in case of empty enum variant, EnumVariant.def sails-js type is inaccurate at the moment
 
     const key = generateRandomId();
     const Field = getFieldComponent(def);
 
-    return <Field key={key} def={def} sails={sails} name={name} renderField={renderField} />;
+    return <Field key={key} def={def} sails={sails} name={name} label={label} renderField={renderField} />;
   };
 
-  return args.map(({ typeDef, name }) => renderField(typeDef, name));
+  return args.map(({ typeDef, name }, index) => renderField(typeDef, name, index.toString()));
 }
 
 export { Fields };
