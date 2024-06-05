@@ -1,4 +1,4 @@
-import { Fieldset } from '@/shared/ui/fieldset';
+import { Fieldset } from '@/shared/ui';
 
 import { PayloadItemProps } from '../../model';
 import { getItemLabel, getNextLevelName } from '../../helpers';

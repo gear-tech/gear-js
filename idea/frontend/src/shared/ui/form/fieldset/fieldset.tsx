@@ -1,7 +1,7 @@
 import { HTMLAttributes } from 'react';
 import clsx from 'clsx';
 
-import styles from './Fieldset.module.scss';
+import styles from './fieldset.module.scss';
 
 type Props = HTMLAttributes<HTMLFieldSetElement> & {
   legend?: string;
