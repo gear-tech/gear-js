@@ -52,7 +52,12 @@ const getType = (def: TypeDef): string => {
   throw new Error('Unknown type: ' + JSON.stringify(def));
 };
 
-const getLabel = (name: string, type: string) => (name && type ? `${name} (${type})` : name || type || '');
+const getLabel = (name: string, def: TypeDef) => {
+  const type = getType(def);
+
+  return name ? `${name} (${type})` : type;
+};
+
 const getNestedName = (name: string, nestedName: string) => `${name}.${nestedName}`;
 
 export { getPrimitiveType, getType, getLabel, getNestedName };

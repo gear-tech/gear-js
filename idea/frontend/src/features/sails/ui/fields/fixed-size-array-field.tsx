@@ -1,7 +1,7 @@
 import { Fieldset } from '@/shared/ui';
 
 import { TypeDef } from '../../types';
-import { getLabel, getNestedName, getType } from '../../utils';
+import { getLabel, getNestedName } from '../../utils';
 
 type Props = {
   def: TypeDef;
@@ -18,7 +18,7 @@ function FixedSizeArrayField({ def, name, label, renderField }: Props) {
       .fill(arrayDef)
       .map((field, index) => renderField(field.def, '', getNestedName(name, index.toString())));
 
-  return <Fieldset legend={getLabel(label, getType(def))}>{renderFields()}</Fieldset>;
+  return <Fieldset legend={getLabel(label, def)}>{renderFields()}</Fieldset>;
 }
 
 export { FixedSizeArrayField };

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Fieldset } from '@/shared/ui';
 
 import { TypeDef } from '../../types';
-import { getLabel, getNestedName, getType } from '../../utils';
+import { getLabel, getNestedName } from '../../utils';
 
 type Props = {
   def: TypeDef;
@@ -24,7 +24,7 @@ function ResultField({ def, name, label, renderField }: Props) {
   const [result, setResult] = useState<Result>(OPTIONS[0].value);
 
   return (
-    <Fieldset legend={getLabel(label, getType(def))}>
+    <Fieldset legend={getLabel(label, def)}>
       <Select options={OPTIONS} value={result} onChange={({ target }) => setResult(target.value as Result)} />
 
       {renderField(def.asResult[result].def, '', getNestedName(name, result))}

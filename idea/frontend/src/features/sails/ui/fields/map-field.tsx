@@ -1,7 +1,7 @@
 import { Textarea } from '@/shared/ui';
 
 import { TypeDef } from '../../types';
-import { getLabel, getType } from '../../utils';
+import { getLabel } from '../../utils';
 
 type Props = {
   def: TypeDef;
@@ -10,7 +10,7 @@ type Props = {
 };
 
 function MapField({ def, name, label }: Props) {
-  return <Textarea direction="y" name={name} label={getLabel(label, getType(def))} />;
+  return <Textarea direction="y" name={name} label={getLabel(label, def)} />;
 }
 
 export { MapField };

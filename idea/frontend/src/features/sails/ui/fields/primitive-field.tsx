@@ -1,7 +1,7 @@
 import { Input } from '@/shared/ui';
 
 import { TypeDef } from '../../types';
-import { getLabel, getType } from '../../utils';
+import { getLabel } from '../../utils';
 
 type Props = {
   def: TypeDef;
@@ -10,7 +10,7 @@ type Props = {
 };
 
 function PrimitiveField({ def, name, label }: Props) {
-  return <Input name={name} direction="y" label={getLabel(label, getType(def))} />;
+  return <Input name={name} direction="y" label={getLabel(label, def)} />;
 }
 
 export { PrimitiveField };

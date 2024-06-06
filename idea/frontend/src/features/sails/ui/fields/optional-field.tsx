@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Fieldset } from '@/shared/ui';
 
 import { TypeDef } from '../../types';
-import { getLabel, getType } from '../../utils';
+import { getLabel } from '../../utils';
 
 type Props = {
   def: TypeDef;
@@ -22,7 +22,7 @@ function OptionalField({ def, name, label, renderField }: Props) {
   const [isSome, setIsSome] = useState(OPTIONS[0].value);
 
   return (
-    <Fieldset legend={getLabel(label, getType(def))}>
+    <Fieldset legend={getLabel(label, def)}>
       <Select options={OPTIONS} value={isSome} onChange={({ target }) => setIsSome(Number(target.value))} />
 
       {Boolean(isSome) && renderField(def.asOptional.def, '', name)}
