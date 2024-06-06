@@ -16,6 +16,7 @@ type MapDef = TypeDef['asMap'];
 type FixedSizeArrayDef = TypeDef['asFixedSizeArray'];
 
 type Result = typeof RESULT[keyof typeof RESULT];
+type PayloadValue = string | null | Array<PayloadValue> | { [key: string]: PayloadValue };
 
 export type {
   ISailsFuncArg,
@@ -30,4 +31,5 @@ export type {
   MapDef,
   FixedSizeArrayDef,
   Result,
+  PayloadValue,
 };
