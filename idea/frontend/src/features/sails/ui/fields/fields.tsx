@@ -2,15 +2,15 @@ import { Sails } from 'sails-js';
 
 import { generateRandomId } from '@/shared/helpers';
 
-import { EnumField } from '../enum-field';
-import { UserDefinedField } from '../user-defined-field';
-import { StructField } from '../struct-field';
-import { OptionalField } from '../optional-field';
-import { ResultField } from '../result-field';
-import { VecField } from '../vec-field';
-import { MapField } from '../map-field';
-import { FixedSizeArrayField } from '../fixed-size-array-field';
-import { PrimitiveField } from '../primitive-field';
+import { EnumField } from './enum-field';
+import { UserDefinedField } from './user-defined-field';
+import { StructField } from './struct-field';
+import { OptionalField } from './optional-field';
+import { ResultField } from './result-field';
+import { VecField } from './vec-field';
+import { MapField } from './map-field';
+import { FixedSizeArrayField } from './fixed-size-array-field';
+import { PrimitiveField } from './primitive-field';
 import { ISailsFuncArg, TypeDef } from '../../types';
 
 type Props = {
