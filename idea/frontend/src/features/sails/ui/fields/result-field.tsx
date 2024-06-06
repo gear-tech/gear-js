@@ -3,7 +3,8 @@ import { useState } from 'react';
 
 import { Fieldset } from '@/shared/ui';
 
-import { TypeDef } from '../../types';
+import { RESULT } from '../../consts';
+import { Result, TypeDef } from '../../types';
 import { getLabel, getNestedName } from '../../utils';
 
 type Props = {
@@ -14,11 +15,9 @@ type Props = {
 };
 
 const OPTIONS = [
-  { label: 'Ok', value: 'ok' },
-  { label: 'Err', value: 'err' },
+  { label: 'Ok', value: RESULT.OK },
+  { label: 'Err', value: RESULT.ERR },
 ] as const;
-
-type Result = typeof OPTIONS[number]['value'];
 
 function ResultField({ def, name, label, renderField }: Props) {
   const [result, setResult] = useState<Result>(OPTIONS[0].value);

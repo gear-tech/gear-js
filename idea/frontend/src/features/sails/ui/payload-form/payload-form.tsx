@@ -1,13 +1,14 @@
 import { HexString } from '@gear-js/api';
 import { Button, Select } from '@gear-js/ui';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import { Fieldset } from '@/shared/ui';
 
-import { useParsedIdl } from '../../hooks';
 import { Fields } from '../fields';
+import { useParsedIdl } from '../../hooks';
+import { getDefaultPayloadValue } from '../../utils';
 import styles from './payload-form.module.scss';
-import { FormProvider, useForm } from 'react-hook-form';
 
 type Props = {
   programId: HexString;
@@ -38,14 +39,16 @@ function PayloadForm({ programId }: Props) {
     setFunctionName(defaultFunctionName);
   }, [defaultFunctionName]);
 
-  const defaultValues = {};
-  const shouldUnregister = true;
+  const defaultValues = useMemo(
+    () => (sails && args ? getDefaultPayloadValue(sails, args) : undefined),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [serviceName, functionName],
+  );
 
-  const form = useForm({ defaultValues, shouldUnregister });
+  const form = useForm({ values: defaultValues });
 
   const handleSubmit = form.handleSubmit((values) => {
     console.log('values: ', values);
-    console.log('args: ', Object.values(values));
   });
 
   return (

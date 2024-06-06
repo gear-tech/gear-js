@@ -1,4 +1,4 @@
-import { PrimitiveDef, TypeDef } from './types';
+import { PrimitiveDef, TypeDef } from '../types';
 
 const getPrimitiveType = (def: PrimitiveDef) => {
   if (def.isNull) return 'Null';
@@ -52,12 +52,4 @@ const getType = (def: TypeDef): string => {
   throw new Error('Unknown type: ' + JSON.stringify(def));
 };
 
-const getLabel = (name: string, def: TypeDef) => {
-  const type = getType(def);
-
-  return name ? `${name} (${type})` : type;
-};
-
-const getNestedName = (name: string, nestedName: string) => `${name}.${nestedName}`;
-
-export { getPrimitiveType, getType, getLabel, getNestedName };
+export { getType };

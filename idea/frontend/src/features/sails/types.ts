@@ -1,4 +1,5 @@
 import { Sails } from 'sails-js';
+import { RESULT } from './consts';
 
 // TODO: import from sails-js
 type ISailsFuncArg = InstanceType<typeof Sails>['services'][string]['functions'][string]['args'][number];
@@ -14,6 +15,8 @@ type VecDef = TypeDef['asVec'];
 type MapDef = TypeDef['asMap'];
 type FixedSizeArrayDef = TypeDef['asFixedSizeArray'];
 
+type Result = typeof RESULT[keyof typeof RESULT];
+
 export type {
   ISailsFuncArg,
   TypeDef,
@@ -26,4 +29,5 @@ export type {
   VecDef,
   MapDef,
   FixedSizeArrayDef,
+  Result,
 };
