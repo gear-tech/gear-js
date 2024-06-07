@@ -1,6 +1,6 @@
 import { TypeDef } from '../types';
 import { getType } from './type';
-import { getDefaultPayloadValue } from './payload';
+import { getDefaultValue, getDefaultPayloadValue } from './payload';
 
 const getLabel = (name: string, def: TypeDef) => {
   const type = getType(def);
@@ -10,4 +10,4 @@ const getLabel = (name: string, def: TypeDef) => {
 
 const getNestedName = (name: string, nestedName: string) => `${name}.${nestedName}`;
 
-export { getLabel, getNestedName, getDefaultPayloadValue };
+export { getLabel, getNestedName, getDefaultValue, getDefaultPayloadValue };

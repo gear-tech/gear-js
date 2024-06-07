@@ -16,7 +16,7 @@ import {
   VecDef,
 } from '../types';
 
-const initGetDefaultValue = (sails: Sails) => {
+const getDefaultValue = (sails: Sails) => {
   const getResultValue = ({ [RESULT.OK]: { def } }: ResultDef) => ({ [RESULT.OK]: getValue(def) });
   const getVecValue = ({ def }: VecDef) => getPreformattedText([getValue(def)]);
   const getFixedSizeArrayValue = ({ len, def }: FixedSizeArrayDef) => new Array<PayloadValue>(len).fill(getValue(def));
@@ -48,10 +48,9 @@ const initGetDefaultValue = (sails: Sails) => {
 };
 
 const getDefaultPayloadValue = (sails: Sails, args: ISailsFuncArg[]) => {
-  const getDefaultValue = initGetDefaultValue(sails);
-  const result = args.map(({ typeDef }, index) => [index, getDefaultValue(typeDef)] as const);
+  const result = args.map(({ typeDef }, index) => [index, getDefaultValue(sails)(typeDef)] as const);
 
   return Object.fromEntries(result);
 };
 
-export { getDefaultPayloadValue };
+export { getDefaultValue, getDefaultPayloadValue };

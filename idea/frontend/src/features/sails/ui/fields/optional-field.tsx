@@ -1,12 +1,15 @@
 import { Select } from '@gear-js/ui';
 import { useState } from 'react';
+import { Sails } from 'sails-js';
 
 import { Fieldset } from '@/shared/ui';
 
+import { useSetPayloadValue } from '../../hooks';
 import { TypeDef } from '../../types';
-import { getLabel } from '../../utils';
+import { getDefaultValue, getLabel } from '../../utils';
 
 type Props = {
+  sails: Sails;
   def: TypeDef;
   name: string;
   label: string;
@@ -18,14 +21,17 @@ const OPTIONS = [
   { label: 'Some', value: 1 },
 ];
 
-function OptionalField({ def, name, label, renderField }: Props) {
+function OptionalField({ sails, def, name, label, renderField }: Props) {
+  const optionalDef = def.asOptional.def;
+
   const [isSome, setIsSome] = useState(OPTIONS[0].value);
+  useSetPayloadValue(name, isSome ? getDefaultValue(sails)(optionalDef) : null, isSome);
 
   return (
     <Fieldset legend={getLabel(label, def)}>
       <Select options={OPTIONS} value={isSome} onChange={({ target }) => setIsSome(Number(target.value))} />
 
-      {Boolean(isSome) && renderField(def.asOptional.def, '', name)}
+      {Boolean(isSome) && renderField(optionalDef, '', name)}
     </Fieldset>
   );
 }

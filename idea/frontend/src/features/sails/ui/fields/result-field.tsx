@@ -1,13 +1,16 @@
 import { Select } from '@gear-js/ui';
 import { useState } from 'react';
+import { Sails } from 'sails-js';
 
 import { Fieldset } from '@/shared/ui';
 
 import { RESULT } from '../../consts';
+import { useSetPayloadValue } from '../../hooks';
 import { Result, TypeDef } from '../../types';
-import { getLabel, getNestedName } from '../../utils';
+import { getDefaultValue, getLabel, getNestedName } from '../../utils';
 
 type Props = {
+  sails: Sails;
   def: TypeDef;
   name: string;
   label: string;
@@ -19,14 +22,17 @@ const OPTIONS = [
   { label: 'Err', value: RESULT.ERR },
 ] as const;
 
-function ResultField({ def, name, label, renderField }: Props) {
+function ResultField({ sails, def, name, label, renderField }: Props) {
   const [result, setResult] = useState<Result>(OPTIONS[0].value);
+  const resultDef = def.asResult[result].def;
+
+  useSetPayloadValue(name, { [result]: getDefaultValue(sails)(resultDef) }, result);
 
   return (
     <Fieldset legend={getLabel(label, def)}>
       <Select options={OPTIONS} value={result} onChange={({ target }) => setResult(target.value as Result)} />
 
-      {renderField(def.asResult[result].def, '', getNestedName(name, result))}
+      {renderField(resultDef, '', getNestedName(name, result))}
     </Fieldset>
   );
 }
