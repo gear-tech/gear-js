@@ -7,8 +7,9 @@ import { Fieldset } from '@/shared/ui';
 
 import { Fields } from '../fields';
 import { useParsedIdl } from '../../hooks';
-import { getDefaultPayloadValue } from '../../utils';
+import { getDefaultPayloadValue, getPayloadSchema } from '../../utils';
 import styles from './payload-form.module.scss';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 type Props = {
   programId: HexString;
@@ -45,7 +46,16 @@ function PayloadForm({ programId }: Props) {
     [serviceName, functionName],
   );
 
-  const form = useForm({ values: defaultValues });
+  const schema = useMemo(
+    () => (sails && args ? getPayloadSchema(sails, args) : undefined),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [serviceName, functionName],
+  );
+
+  const form = useForm({
+    values: defaultValues,
+    resolver: schema ? zodResolver(schema) : undefined,
+  });
 
   const handleSubmit = form.handleSubmit((values) => {
     console.log('values: ', values);

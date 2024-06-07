@@ -1,4 +1,5 @@
 import { Sails } from 'sails-js';
+import { z } from 'zod';
 
 import { getPreformattedText } from '@/shared/helpers';
 
@@ -53,4 +54,59 @@ const getDefaultPayloadValue = (sails: Sails, args: ISailsFuncArg[]) => {
   return Object.fromEntries(result);
 };
 
-export { getDefaultValue, getDefaultPayloadValue };
+const asJSON = <T extends z.ZodTypeAny>(schema: T) =>
+  schema.transform((value, ctx) => {
+    try {
+      return JSON.parse(value) as PayloadValue[];
+    } catch (e) {
+      ctx.addIssue({ code: 'custom', message: 'Invalid JSON' });
+      return z.NEVER;
+    }
+  });
+
+const getPayloadSchema = (sails: Sails, args: ISailsFuncArg[]) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const getSchema = (def: TypeDef): z.ZodType<unknown> => {
+    if (def.isPrimitive) return z.string().trim();
+
+    if (def.isOptional) return z.union([z.null(), getSchema(def.asOptional.def)]);
+
+    if (def.isResult)
+      return z.union([
+        z.object({ [RESULT.OK]: getSchema(def.asResult[RESULT.OK].def) }),
+        z.object({ [RESULT.ERR]: getSchema(def.asResult[RESULT.ERR].def) }),
+      ]);
+
+    if (def.isVec) return asJSON(z.string().trim());
+
+    if (def.isFixedSizeArray) return z.array(getSchema(def.asFixedSizeArray.def)).length(def.asFixedSizeArray.len);
+
+    if (def.isMap) return asJSON(z.string().trim());
+
+    if (def.isUserDefined) return getSchema(sails.getTypeDef(def.asUserDefined.name));
+
+    if (def.isStruct) {
+      const fieldsSchema = def.asStruct.fields.map(
+        (field, index) => [field.name || index, getSchema(field.def)] as const,
+      );
+
+      return z.object(Object.fromEntries(fieldsSchema));
+    }
+
+    if (def.isEnum) {
+      const variants = def.asEnum.variants.map(
+        (variant) => [variant.name, variant.def ? getSchema(variant.def) : z.null()] as const,
+      );
+
+      return z.object(Object.fromEntries(variants));
+    }
+
+    throw new Error('Unknown type: ' + JSON.stringify(def));
+  };
+
+  const result = args.map(({ typeDef }, index) => [index, getSchema(typeDef)] as const);
+
+  return z.object(Object.fromEntries(result)).transform((value) => Object.values(value));
+};
+
+export { getDefaultValue, getDefaultPayloadValue, getPayloadSchema };
