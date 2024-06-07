@@ -1,19 +1,25 @@
+import { Fieldset } from '@/shared/ui';
+
 import { TypeDef } from '../../types';
-import { getNestedName } from '../../utils';
+import { getLabel, getNestedName } from '../../utils';
 
 type Props = {
   def: TypeDef;
   name: string;
+  label: string;
   renderField: (def: TypeDef, label: string, name: string) => JSX.Element | undefined;
 };
 
-function StructField({ def, name, renderField }: Props) {
+function StructField({ def, name, label, renderField }: Props) {
   const { fields } = def.asStruct;
 
-  // TODO: consider tuple
-  const renderFields = () => fields.map((field) => renderField(field.def, field.name, getNestedName(name, field.name)));
+  const renderFields = () =>
+    fields.map((field, index) =>
+      renderField(field.def, field.name, getNestedName(name, field.name || index.toString())),
+    );
 
-  return renderFields();
+  // not sure if label should refer to fieldset display
+  return label ? <Fieldset legend={getLabel(label, def)}>{renderFields()}</Fieldset> : renderFields();
 }
 
 export { StructField };

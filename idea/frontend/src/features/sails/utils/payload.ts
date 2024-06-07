@@ -24,12 +24,8 @@ const initGetDefaultValue = (sails: Sails) => {
   const getUserDefinedValue = ({ name }: UserDefinedDef) => getValue(sails.getTypeDef(name));
   const getEnumValue = ({ variants: [{ def, name }] }: EnumDef) => ({ [name]: def ? getValue(def) : null });
 
-  const getStructValue = ({ isTuple, fields }: StructDef) => {
-    // not sure about tuple
-    console.log(isTuple);
-    if (isTuple) return `[${fields.map((field) => getValue(field.def)).join(', ')}]`;
-
-    const result = fields.map(({ name, def }) => [name, getValue(def)] as const);
+  const getStructValue = ({ fields }: StructDef) => {
+    const result = fields.map(({ name, def }, index) => [name || index, getValue(def)] as const);
 
     return Object.fromEntries(result);
   };
