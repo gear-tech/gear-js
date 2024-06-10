@@ -12,7 +12,7 @@ import { useIdl } from './use-idl';
 
 function useParsedIdl(programId: HexString) {
   const { api, isApiReady } = useApi();
-  const idl = useIdl(rmrkResourceUrl);
+  const idl = useIdl(ftUrl);
 
   const { data } = useQuery({
     queryKey: ['parsedIdl'],
@@ -22,8 +22,9 @@ function useParsedIdl(programId: HexString) {
       if (!idl) throw new Error('IDL not found');
 
       const sails = (await Sails.new()).setApi(api).setProgramId(programId);
+      const parsedIdl = sails.parseIdl(idl);
 
-      return { sails, idl: sails.parseIdl(idl) };
+      return { sails, idl: parsedIdl };
     },
 
     enabled: isApiReady && Boolean(idl),

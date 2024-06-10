@@ -1,23 +1,3 @@
-type Init = struct {
-  name: str,
-  symbol: str,
-  decimals: u8,
-  description: str,
-  external_links: ExternalLinks,
-  initial_supply: u256,
-  max_supply: u256,
-  admin_id: ActorId,
-};
-
-type ExternalLinks = struct {
-  image: str,
-  website: opt str,
-  telegram: opt str,
-  twitter: opt str,
-  discord: opt str,
-  tokenomics: opt str,
-};
-
 type ActorId = struct {
   [u8, 32],
 };
@@ -28,37 +8,30 @@ type Role = enum {
   Minter,
 };
 
-type Error = enum {
-  Paused,
-};
-
 constructor {
-  New : (init: Init);
+  New : (name: str, symbol: str, decimals: u8);
 };
 
 service Admin {
   AllowancesReserve : (additional: u32) -> null;
   BalancesReserve : (additional: u32) -> null;
+  BatchMint : (to: vec ActorId, values: vec u256) -> bool;
   Burn : (from: actor_id, value: u256) -> bool;
   GrantRole : (to: actor_id, role: Role) -> bool;
   Kill : (inheritor: actor_id) -> null;
   Mint : (to: actor_id, value: u256) -> bool;
-  MintBatch : (to: vec actor_id, values: vec u256) -> bool;
   RemoveRole : (from: actor_id, role: Role) -> bool;
-  TransferToUsers : (to: vec actor_id, value: u256) -> bool;
   query Allowances : (skip: u32, take: u32) -> vec struct { struct { actor_id, actor_id }, u256 };
   query Balances : (skip: u32, take: u32) -> vec struct { actor_id, u256 };
-  query Description : () -> str;
-  query ExternalLinks : () -> ExternalLinks;
+  query HasRole : (actor: actor_id, role: str) -> bool;
   query MapsData : () -> struct { struct { u32, u32 }, struct { u32, u32 } };
-  query MaxSupply : () -> u256;
+  query Roles : () -> vec str;
 
   events {
-    BatchMinted: struct { to: vec actor_id, values: vec u256 };
     Minted: struct { to: actor_id, value: u256 };
     Burned: struct { from: actor_id, value: u256 };
     Killed: struct { inheritor: actor_id };
-    TransferredToUsers: struct { from: actor_id, to: vec actor_id, value: u256 };
+    BatchMinted: struct { to: vec ActorId, values: vec u256 };
   }
 };
 
@@ -83,7 +56,6 @@ service Pausable {
   DelegateAdmin : (actor: actor_id) -> bool;
   Pause : () -> bool;
   Unpause : () -> bool;
-  query EnsureUnpaused : () -> result (null, Error);
   query IsPaused : () -> bool;
 
   events {
@@ -91,4 +63,3 @@ service Pausable {
     Unpaused;
   }
 };
-

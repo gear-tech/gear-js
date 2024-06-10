@@ -65,7 +65,7 @@ const asJSON = <T extends z.ZodTypeAny>(schema: T) =>
   });
 
 const getPayloadSchema = (sails: Sails, args: ISailsFuncArg[]) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // TODO: types
   const getSchema = (def: TypeDef): z.ZodType<unknown> => {
     if (def.isPrimitive) return z.string().trim();
 
@@ -94,11 +94,14 @@ const getPayloadSchema = (sails: Sails, args: ISailsFuncArg[]) => {
     }
 
     if (def.isEnum) {
-      const variants = def.asEnum.variants.map(
-        (variant) => [variant.name, variant.def ? getSchema(variant.def) : z.null()] as const,
+      const variants = def.asEnum.variants.map((variant) =>
+        z.object({ [variant.name]: variant.def ? getSchema(variant.def) : z.null() } as const),
       );
 
-      return z.object(Object.fromEntries(variants));
+      // TODO: types
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return z.union(variants);
     }
 
     throw new Error('Unknown type: ' + JSON.stringify(def));
