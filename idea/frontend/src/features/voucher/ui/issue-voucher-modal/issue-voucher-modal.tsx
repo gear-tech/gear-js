@@ -60,14 +60,19 @@ const IssueVoucherModal = ({ programId, close, onSubmit = () => {} }: Props) => 
     setPrograms(defaultPrograms);
   }, [voucherType, form, defaultPrograms]);
 
+  const getProgramIdsToIssue = () => {
+    if (isCodeVoucher) return [];
+
+    return programs.length ? programs : undefined;
+  };
+
   const handleSubmit = async ({ address, value }: Schema) => {
     if (!isApiReady) throw new Error('API is not initialized');
 
     enableLoading();
 
     const isCodeUploadEnabled = voucherType !== VOUCHER_TYPE.PROGRAM;
-    const programIds = isCodeVoucher ? undefined : programs;
-
+    const programIds = getProgramIdsToIssue();
     const { extrinsic } = await api.voucher.issue(address, value, Number(duration), programIds, isCodeUploadEnabled);
 
     const onSuccess = () => {
