@@ -1,5 +1,5 @@
 import type { Event } from '@polkadot/types/interfaces';
-import { GearApi } from '@gear-js/api';
+import { GearApi, HexString } from '@gear-js/api';
 import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
 import isString from 'lodash.isstring';
 
@@ -116,6 +116,12 @@ const isMobileDevice = () => isIOS() || (isAndroid() as boolean); // asserting c
 
 const isNullOrUndefined = (value: unknown): value is null | undefined => value === null || value === undefined;
 
+const isHex = (value: string): value is HexString => {
+  const HEX_REGEX = /^0x[\da-fA-F]+$/;
+
+  return value === '0x' || (HEX_REGEX.test(value) && value.length % 2 === 0);
+};
+
 export {
   checkWallet,
   formatDate,
@@ -138,4 +144,5 @@ export {
   isAccountAddressValid,
   isNumeric,
   asOptionalField,
+  isHex,
 };
