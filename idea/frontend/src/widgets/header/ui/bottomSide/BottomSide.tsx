@@ -7,16 +7,16 @@ import uploadFileSVG from '@/shared/assets/images/actions/uploadFile.svg?react';
 import sendMessageSVG from '@/shared/assets/images/actions/send.svg?react';
 import { OnboardingTooltip } from '@/shared/ui/onboardingTooltip';
 import { absoluteRoutes, routes } from '@/shared/config';
+import { useCodeFileHandler } from '@/features/code';
 
 import styles from './BottomSide.module.scss';
 
 const BottomSide = () => {
   const navigate = useNavigate();
-
   const { showModal } = useModal();
 
   const onProgramUpload = (file: File) => navigate(absoluteRoutes.uploadProgram, { state: { file } });
-  const onCodeUpload = (file: File) => navigate(routes.uploadCode, { state: { file } });
+  const onCodeUpload = useCodeFileHandler((file) => navigate(routes.uploadCode, { state: { file } }));
 
   const handleUploadCodeClick = () => showModal('uploadFile', { name: 'code', onUpload: onCodeUpload });
   const handleUploadProgramClick = () => showModal('uploadFile', { name: 'program', onUpload: onProgramUpload });

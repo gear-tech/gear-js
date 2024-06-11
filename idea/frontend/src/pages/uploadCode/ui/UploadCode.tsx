@@ -10,6 +10,7 @@ import { BackButton } from '@/shared/ui/backButton';
 import { UploadMetadata } from '@/features/uploadMetadata';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import { CodeVoucherSelect } from '@/features/voucher';
+import { useCodeFileHandler } from '@/features/code';
 import { Input } from '@/shared/ui';
 
 import styles from './UploadCode.module.scss';
@@ -31,11 +32,12 @@ const UploadCode = () => {
     setFileMetadata,
     resetMetadata,
     isUploadedMetaReady,
-  } = useMetaOnUpload(true);
+  } = useMetaOnUpload();
 
   const methods = useForm({ defaultValues });
   const { reset, handleSubmit } = methods;
 
+  const handleFileInputChange = useCodeFileHandler(setOptFile);
   const uploadCode = useCodeUpload();
 
   const resetForm = () => {
@@ -74,7 +76,7 @@ const UploadCode = () => {
                   direction="y"
                   value={optFile}
                   accept={FileTypes.Wasm}
-                  onChange={setOptFile}
+                  onChange={handleFileInputChange}
                 />
 
                 {optFile && (

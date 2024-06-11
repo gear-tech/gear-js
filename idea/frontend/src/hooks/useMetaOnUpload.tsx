@@ -1,12 +1,9 @@
-import { generateCodeHash, ProgramMetadata } from '@gear-js/api';
+import { ProgramMetadata } from '@gear-js/api';
 import { useAlert, useApi } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 import { useState, useEffect } from 'react';
-import { generatePath, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
-import { readFileAsync } from '@/shared/helpers';
-import { CustomLink } from '@/shared/ui/customLink';
-import { routes } from '@/shared/config';
 import { RPCError, RPCErrorCode } from '@/shared/services/rpcService';
 import { useMetadata } from '@/features/metadata';
 
@@ -28,31 +25,18 @@ const initMeta = {
 
 const NO_METAHASH_ERROR = 'metahash function not found in exports';
 
-const getCodeExistsAlert = (codeId: HexString) => (
-  <>
-    <p>Code already exists</p>
-    <p>
-      ID: <CustomLink to={generatePath(routes.code, { codeId })} text={codeId} />
-    </p>
-  </>
-);
-
-const useMetaOnUpload = (isCode?: boolean) => {
+const useMetaOnUpload = () => {
   const { api, isApiReady } = useApi();
   const { getMetadata } = useMetadata();
+  const { state } = useLocation() as Location;
   const alert = useAlert();
 
-  const { state } = useLocation() as Location;
-  const initOptFile = state?.file;
-
-  const [optFile, setOptFile] = useState(initOptFile);
+  const [optFile, setOptFile] = useState(state?.file);
   const [optBuffer, setOptBuffer] = useState<Buffer>();
 
   // TODO: combine with useMetadata hook?
   const [metadata, setMetadata] = useState<MetadataState>(initMeta);
   const [isUploadedMetaReady, setIsUploadedMetaReady] = useState(true);
-
-  const [isCodeExists, setIsCodeExists] = useState<boolean>();
 
   const setUploadedMetadata = (hex: HexString) =>
     setMetadata({ hex, value: ProgramMetadata.from(hex), isUploaded: true });
@@ -71,7 +55,8 @@ const useMetaOnUpload = (isCode?: boolean) => {
       return;
     }
 
-    readFileAsync(optFile, 'buffer')
+    optFile
+      .arrayBuffer()
       .then((arrayBuffer) => Buffer.from(arrayBuffer))
       .then((result) => setOptBuffer(result))
       .catch(({ message }: Error) => alert.error(message));
@@ -80,27 +65,7 @@ const useMetaOnUpload = (isCode?: boolean) => {
   }, [optFile]);
 
   useEffect(() => {
-    if (!isApiReady || !isCode || !optBuffer) return;
-
-    setIsCodeExists(undefined);
-
-    const codeId = generateCodeHash(optBuffer);
-
-    api.code.exists(codeId).then((result) => {
-      setIsCodeExists(result);
-
-      if (!result) return;
-
-      resetOptFile();
-      alert.error(getCodeExistsAlert(codeId));
-    });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isApiReady, optBuffer]);
-
-  useEffect(() => {
-    const isCodeCheckReady = isCodeExists !== undefined;
-    if (!isApiReady || !optBuffer || (isCode && !isCodeCheckReady) || isCodeExists) return;
+    if (!isApiReady || !optBuffer) return;
 
     setIsUploadedMetaReady(false);
 
@@ -117,7 +82,7 @@ const useMetaOnUpload = (isCode?: boolean) => {
       .finally(() => setIsUploadedMetaReady(true));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isApiReady, optBuffer, isCodeExists]);
+  }, [isApiReady, optBuffer]);
 
   return {
     optFile,
