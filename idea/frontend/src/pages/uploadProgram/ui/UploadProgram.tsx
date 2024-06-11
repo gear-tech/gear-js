@@ -76,7 +76,7 @@ const UploadProgram = () => {
         <Subheader size="big" title="Add metadata" />
         <UploadMetadata
           metadata={metadata.value}
-          isInputDisabled={!!metadata.isUploaded}
+          isInputDisabled={metadata.isUploaded}
           isLoading={!isUploadedMetaReady}
           onReset={resetMetadata}
           onUpload={setFileMetadata}

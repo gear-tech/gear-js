@@ -25,7 +25,7 @@ const initMeta = {
 
 const NO_METAHASH_ERROR = 'metahash function not found in exports';
 
-const useMetaOnUpload = () => {
+const useMetaOnUpload = (codeId?: HexString) => {
   const { api, isApiReady } = useApi();
   const { getMetadata } = useMetadata();
   const { state } = useLocation() as Location;
@@ -65,12 +65,14 @@ const useMetaOnUpload = () => {
   }, [optFile]);
 
   useEffect(() => {
-    if (!isApiReady || !optBuffer) return;
+    if (!isApiReady || (!codeId && !optBuffer)) return;
 
     setIsUploadedMetaReady(false);
 
-    api.code
-      .metaHashFromWasm(optBuffer)
+    // assertion cuz typescript is dumb
+    const getMetahash = codeId ? api.code.metaHash(codeId) : api.code.metaHashFromWasm(optBuffer!);
+
+    getMetahash
       .then((hash) => getMetadata(hash))
       .then(({ result }) => result.hex && setUploadedMetadata(result.hex))
       .catch((error: unknown) => {
