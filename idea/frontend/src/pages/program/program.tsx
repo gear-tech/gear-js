@@ -1,6 +1,5 @@
 import { HexString } from '@polkadot/util/types';
 import { Button } from '@gear-js/ui';
-import { ProgramMetadata } from '@gear-js/api';
 import { useAccount, useAccountVouchers } from '@gear-js/react-hooks';
 import { generatePath, useParams } from 'react-router-dom';
 
@@ -28,14 +27,14 @@ const Program = () => {
   const uploadMetadata = useMetadataUpload();
 
   const { program, isProgramReady, setProgramName } = useProgram(programId);
-  const { metadata, isMetadataReady, setMetadata } = useMetadata(program?.metahash);
+  const { metadata, isMetadataReady, setMetadataHex } = useMetadata(program?.metahash);
 
   const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
     const codeHash = program?.codeId;
     if (!codeHash) return;
 
     const resolve = () => {
-      setMetadata(ProgramMetadata.from(metaHex));
+      setMetadataHex(metaHex);
       setProgramName(name);
 
       closeModal();

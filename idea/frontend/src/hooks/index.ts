@@ -21,7 +21,6 @@ import { useWaitlist } from './useWaitlist';
 import { useCodes } from './useCodes';
 import { useNodeVersion } from './useNodeVersion';
 import { useMobileDisclaimer } from './useMobileDisclaimer';
-import { useMetaOnUpload } from './useMetaOnUpload';
 import { useNetworkIcon } from './useNetworkIcon';
 import { useValidationSchema } from './use-validation-schema';
 import { useSignAndSend } from './use-sign-and-send';
@@ -54,7 +53,6 @@ export {
   useOnboarding,
   useNodeVersion,
   useMobileDisclaimer,
-  useMetaOnUpload,
   useNetworkIcon,
   useValidationSchema,
   useSignAndSend,

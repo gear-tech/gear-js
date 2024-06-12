@@ -1,7 +1,7 @@
 import { Button, Input } from '@gear-js/ui';
 import { useParams } from 'react-router-dom';
 
-import { useMetaOnUpload, useProgramActions } from '@/hooks';
+import { useProgramActions } from '@/hooks';
 import { Subheader } from '@/shared/ui/subheader';
 import { UploadMetadata } from '@/features/uploadMetadata';
 import { Payload } from '@/hooks/useProgramActions/types';
@@ -9,14 +9,16 @@ import { ProgramForm, RenderButtonsProps, SubmitHelpers } from '@/widgets/progra
 import { BackButton } from '@/shared/ui/backButton';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import { GasMethod } from '@/shared/config';
+import { useMetadataHash, useMetadataWithFile } from '@/features/metadata';
 
 import { PageParams } from '../model';
 import styles from './InitializeProgram.module.scss';
 
 const InitializeProgram = () => {
   const { codeId } = useParams() as PageParams;
+  const metadataHash = useMetadataHash(codeId);
+  const metadata = useMetadataWithFile(metadataHash);
   const { createProgram } = useProgramActions();
-  const { metadata, setFileMetadata, resetMetadata, isUploadedMetaReady } = useMetaOnUpload(codeId);
 
   const handleSubmit = (payload: Payload, helpers: SubmitHelpers) =>
     createProgram({
@@ -25,8 +27,7 @@ const InitializeProgram = () => {
       resolve: () => {
         helpers.resetForm();
         helpers.enableButtons();
-
-        if (!metadata.isUploaded) resetMetadata();
+        metadata.reset();
       },
       reject: helpers.enableButtons,
     });
@@ -61,10 +62,10 @@ const InitializeProgram = () => {
 
         <UploadMetadata
           metadata={metadata.value}
-          isInputDisabled={metadata.isUploaded}
-          isLoading={!isUploadedMetaReady}
-          onReset={resetMetadata}
-          onUpload={setFileMetadata}
+          isInputDisabled={metadata.isFromStorage}
+          isLoading={!metadata.isReady}
+          onReset={metadata.reset}
+          onMetadataUpload={metadata.set}
         />
       </section>
     </div>

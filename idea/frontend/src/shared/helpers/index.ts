@@ -1,7 +1,6 @@
 import type { Event } from '@polkadot/types/interfaces';
 import { GearApi, HexString } from '@gear-js/api';
 import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
-import isString from 'lodash.isstring';
 
 import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from '@/shared/config';
 
@@ -114,12 +113,16 @@ const resetFileInput = (target: HTMLInputElement | null) => {
 
 const isMobileDevice = () => isIOS() || (isAndroid() as boolean); // asserting cuz isAndroid somehow any
 
-const isNullOrUndefined = (value: unknown): value is null | undefined => value === null || value === undefined;
+const isUndefined = (value: unknown): value is undefined => value === undefined;
 
-const isHex = (value: string): value is HexString => {
+const isNullOrUndefined = (value: unknown): value is null | undefined => value === null || isUndefined(value);
+
+const isString = (value: unknown): value is string => typeof value === 'string';
+
+const isHex = (value: unknown): value is HexString => {
   const HEX_REGEX = /^0x[\da-fA-F]+$/;
 
-  return value === '0x' || (HEX_REGEX.test(value) && value.length % 2 === 0);
+  return isString(value) && (value === '0x' || (HEX_REGEX.test(value) && value.length % 2 === 0));
 };
 
 export {
@@ -144,5 +147,7 @@ export {
   isAccountAddressValid,
   isNumeric,
   asOptionalField,
+  isString,
+  isUndefined,
   isHex,
 };

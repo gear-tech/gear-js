@@ -24,6 +24,7 @@ const UploadMetadataModal = ({ onClose, onSubmit, isCode }: Props) => {
   const { error } = getFieldState('name', formState);
   const handleSubmit = ({ name }: typeof defaultValues) => onSubmit({ metaHex, name });
 
+  // TODO: state as in useMetadataWithFile
   const [metaHex, setMetaHex] = useState('' as HexString);
   const metadata = useMemo(() => (metaHex ? ProgramMetadata.from(metaHex) : undefined), [metaHex]);
   const resetMetaHex = () => setMetaHex('' as HexString);

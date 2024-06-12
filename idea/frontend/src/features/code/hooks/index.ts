@@ -1,3 +1,4 @@
-import { useCodeFileHandler } from './use-code-file-handler';
+import { useWasmFileHandler } from './use-wasm-file-handler';
+import { useWasmFile } from './use-wasm-file';
 
-export { useCodeFileHandler };
+export { useWasmFileHandler, useWasmFile };

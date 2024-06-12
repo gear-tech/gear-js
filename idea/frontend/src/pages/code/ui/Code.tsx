@@ -1,6 +1,5 @@
 import { useAlert, useApi } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
-import { ProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 import { useEffect, useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
@@ -35,7 +34,7 @@ const Code = () => {
   const [code, setCode] = useState<ICode>();
   const isCodeReady = code !== undefined;
 
-  const { metadata, isMetadataReady, setMetadata } = useMetadata(code?.metahash);
+  const { metadata, isMetadataReady, setMetadataHex } = useMetadata(code?.metahash);
 
   const setCodeName = (name: string) => setCode((prevCode) => (prevCode ? { ...prevCode, name } : prevCode));
 
@@ -50,7 +49,7 @@ const Code = () => {
         addMetadata(hash, metaHex);
       })
       .then(() => {
-        setMetadata(ProgramMetadata.from(metaHex));
+        setMetadataHex(metaHex);
         setCodeName(name);
 
         alert.success('Metadata for code uploaded successfully');

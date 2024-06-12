@@ -1,7 +1,7 @@
 import { Button, FileInput } from '@gear-js/ui';
-import { clsx } from 'clsx';
+import cx from 'clsx';
 
-import { useMetaOnUpload, useProgramActions } from '@/hooks';
+import { useProgramActions } from '@/hooks';
 import { formStyles } from '@/shared/ui/form';
 import { BackButton } from '@/shared/ui/backButton';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
@@ -10,24 +10,22 @@ import { FileTypes, GasMethod } from '@/shared/config';
 import { Payload } from '@/hooks/useProgramActions/types';
 import { UploadMetadata } from '@/features/uploadMetadata';
 import { ProgramForm, RenderButtonsProps, SubmitHelpers } from '@/widgets/programForm';
+import { useMetadataHash, useMetadataWithFile } from '@/features/metadata';
+import { useWasmFile } from '@/features/code';
 
 import styles from './UploadProgram.module.scss';
 
 const UploadProgram = () => {
-  const {
-    optFile,
-    setOptFile,
-    resetOptFile,
-    optBuffer,
-    metadata,
-    setFileMetadata,
-    resetMetadata,
-    isUploadedMetaReady,
-  } = useMetaOnUpload();
+  const file = useWasmFile();
+  const metadataHash = useMetadataHash(file.buffer);
+  const metadata = useMetadataWithFile(metadataHash);
+
+  const reset = () => {
+    file.reset();
+    metadata.reset();
+  };
 
   const { uploadProgram } = useProgramActions();
-
-  const fileInputClassName = clsx(formStyles.field, formStyles.gap16, styles.fileInput);
 
   const renderButtons = ({ isDisabled }: RenderButtonsProps) => (
     <>
@@ -37,9 +35,9 @@ const UploadProgram = () => {
   );
 
   const handleSubmit = (payload: Payload, { enableButtons }: SubmitHelpers) => {
-    if (!optFile || !optBuffer) return;
+    if (!file.buffer) return;
 
-    uploadProgram({ optBuffer, payload, resolve: resetOptFile, reject: enableButtons });
+    uploadProgram({ optBuffer: file.buffer, payload, resolve: file.reset, reject: enableButtons });
   };
 
   return (
@@ -49,19 +47,19 @@ const UploadProgram = () => {
 
         <div className={styles.lining}>
           <FileInput
-            value={optFile}
+            value={file.value}
             label="Program file"
             direction="y"
             color="primary"
-            className={fileInputClassName}
-            onChange={setOptFile}
+            className={cx(formStyles.field, formStyles.gap16, styles.fileInput)}
+            onChange={(value) => (value ? file.handleChange(value) : reset())}
             accept={FileTypes.Wasm}
           />
 
-          {optBuffer && (
+          {file.buffer && (
             <ProgramForm
-              fileName={optFile?.name.split(/\.opt|\.wasm/)[0]}
-              source={optBuffer}
+              fileName={file.value?.name.split(/\.opt|\.wasm/)[0]}
+              source={file.buffer}
               metaHex={metadata.hex}
               metadata={metadata.value}
               gasMethod={GasMethod.InitUpdate}
@@ -74,12 +72,13 @@ const UploadProgram = () => {
 
       <section className={styles.pageSection}>
         <Subheader size="big" title="Add metadata" />
+
         <UploadMetadata
           metadata={metadata.value}
-          isInputDisabled={metadata.isUploaded}
-          isLoading={!isUploadedMetaReady}
-          onReset={resetMetadata}
-          onUpload={setFileMetadata}
+          isInputDisabled={metadata.isFromStorage}
+          isLoading={file.value && !metadata.isReady}
+          onReset={metadata.reset}
+          onMetadataUpload={metadata.set}
         />
       </section>
     </div>

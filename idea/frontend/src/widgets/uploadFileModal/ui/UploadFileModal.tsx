@@ -1,64 +1,52 @@
-import { ChangeEvent } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import clsx from 'clsx';
-import { useAlert } from '@gear-js/react-hooks';
 import { Modal, buttonStyles } from '@gear-js/ui';
+import cx from 'clsx';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
+import { useNavigate } from 'react-router-dom';
 
 import { ModalProps } from '@/entities/modal';
-import { checkFileFormat } from '@/shared/helpers';
 import UploadFileSVG from '@/shared/assets/images/actions/uploadFile.svg?react';
+import { FileTypes, absoluteRoutes, routes } from '@/shared/config';
+import { useWasmFileHandler } from '@/features/code';
 
-import { FileTypes } from '@/shared/config';
-import styles from './UploadFileModal.module.scss';
 import { FILE_INPUT_ID } from '../model/const';
 import { DropTarget } from './dropTarget';
+import styles from './UploadFileModal.module.scss';
 
 type Props = ModalProps & {
-  name: string;
-  onUpload: (file: File) => void;
+  name: 'code' | 'program';
 };
 
-const UploadFileModal = ({ name, onClose, onUpload }: Props) => {
-  const alert = useAlert();
+const UploadFileModal = ({ name, onClose }: Props) => {
+  const navigate = useNavigate();
 
-  const handleUploadFile = (file: File | undefined) => {
-    try {
-      if (!file) throw new Error('Empty file!');
-      if (!checkFileFormat(file)) throw new Error('Wrong file format');
+  const handleChange = useWasmFileHandler(name, (file, buffer) => {
+    if (!file || !buffer) return;
 
-      onUpload(file);
-      onClose();
-    } catch (error) {
-      const { message } = error as Error;
+    const route = name === 'program' ? absoluteRoutes.uploadProgram : routes.uploadCode;
 
-      alert.error(message);
-    }
-  };
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-
-    handleUploadFile(file);
-  };
-
-  const labelStyles = clsx(buttonStyles.button, buttonStyles.medium, buttonStyles.primary, styles.fileLabel);
+    navigate(route, { state: { file, buffer } });
+    onClose();
+  });
 
   return (
     <Modal heading={`Upload new ${name}`} className={styles.modalContent} close={onClose}>
-      <label htmlFor={FILE_INPUT_ID} className={labelStyles}>
+      <label
+        htmlFor={FILE_INPUT_ID}
+        className={cx(buttonStyles.button, buttonStyles.medium, buttonStyles.primary, styles.fileLabel)}>
         <UploadFileSVG className={buttonStyles.icon} />
         Select File
         <input
           id={FILE_INPUT_ID}
           type="file"
           className={styles.fileInput}
-          onChange={handleChange}
+          onChange={({ target }) => handleChange(target.files?.[0])}
           accept={FileTypes.Wasm}
         />
       </label>
+
       <DndProvider backend={HTML5Backend}>
-        <DropTarget onUpload={handleUploadFile} />
+        <DropTarget onUpload={handleChange} />
       </DndProvider>
     </Modal>
   );

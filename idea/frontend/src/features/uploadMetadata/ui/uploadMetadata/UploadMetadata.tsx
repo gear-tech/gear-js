@@ -16,9 +16,10 @@ import styles from './UploadMetadata.module.scss';
 type Props = {
   metadata: ProgramMetadata | undefined;
   onReset: () => void;
-  onUpload: (metaHex: HexString) => void;
+  onUpload?: (metaHex: HexString) => void;
   isInputDisabled?: boolean;
   isLoading?: boolean;
+  onMetadataUpload?: (metaHex: HexString) => void;
 };
 
 const FILE_EXTENSION = {
@@ -28,7 +29,7 @@ const FILE_EXTENSION = {
 
 const getFileExtension = ({ name }: File) => name.substring(name.lastIndexOf('.') + 1, name.length);
 
-const UploadMetadata = ({ metadata, isInputDisabled, isLoading, onReset, onUpload }: Props) => {
+const UploadMetadata = ({ metadata, isInputDisabled, isLoading, onReset, onMetadataUpload }: Props) => {
   const alert = useAlert();
 
   // TODO: refactor, no need to use state there
@@ -67,10 +68,7 @@ const UploadMetadata = ({ metadata, isInputDisabled, isLoading, onReset, onUploa
 
     const text = await value.text();
 
-    if (extension === FILE_EXTENSION.TXT) {
-      const metadataHex = isHex(text) ? text : (`0x${text}` as const);
-      return onUpload(metadataHex);
-    }
+    if (extension === FILE_EXTENSION.TXT) return onMetadataUpload?.(isHex(text) ? text : (`0x${text}` as const));
 
     if (extension === FILE_EXTENSION.IDL) {
       console.log('idl');
