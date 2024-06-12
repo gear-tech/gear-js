@@ -1,16 +1,17 @@
 import { Button, FileInput } from '@gear-js/ui';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useEffect } from 'react';
 
 import { FileTypes } from '@/shared/config';
-import { useChain, useCodeUpload, useMetaOnUpload } from '@/hooks';
+import { useChain, useCodeUpload } from '@/hooks';
 import { Box } from '@/shared/ui/box';
 import { Subheader } from '@/shared/ui/subheader';
 import { BackButton } from '@/shared/ui/backButton';
 import { UploadMetadata } from '@/features/uploadMetadata';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import { CodeVoucherSelect } from '@/features/voucher';
+import { useWasmFile } from '@/features/code';
 import { Input } from '@/shared/ui';
+import { useMetadataHash, useMetadataWithFile } from '@/features/metadata';
 
 import styles from './UploadCode.module.scss';
 
@@ -22,16 +23,9 @@ const defaultValues = {
 const UploadCode = () => {
   const { isDevChain } = useChain();
 
-  const {
-    optFile,
-    setOptFile,
-    resetOptFile,
-    optBuffer,
-    metadata,
-    setFileMetadata,
-    resetMetadata,
-    isUploadedMetaReady,
-  } = useMetaOnUpload(true);
+  const file = useWasmFile('code');
+  const metahash = useMetadataHash(file.buffer);
+  const metadata = useMetadataWithFile(metahash);
 
   const methods = useForm({ defaultValues });
   const { reset, handleSubmit } = methods;
@@ -40,24 +34,18 @@ const UploadCode = () => {
 
   const resetForm = () => {
     reset();
-    resetOptFile();
+    file.reset();
+    metadata.reset();
   };
 
   const onSubmit = (data: typeof defaultValues) => {
-    if (!optBuffer) return;
+    if (!file.buffer) return;
 
-    uploadCode({ optBuffer, metaHex: metadata.hex, resolve: resetForm, ...data });
+    uploadCode({ optBuffer: file.buffer, metaHex: metadata.hex, resolve: resetForm, ...data });
   };
 
-  useEffect(() => {
-    if (optFile) return;
-
-    resetForm();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [optFile]);
-
   const handleMetadataReset = () => {
-    resetMetadata();
+    metadata.reset();
     reset();
   };
 
@@ -72,12 +60,12 @@ const UploadCode = () => {
                 <FileInput
                   label="Code file"
                   direction="y"
-                  value={optFile}
+                  value={file.value}
                   accept={FileTypes.Wasm}
-                  onChange={setOptFile}
+                  onChange={(value) => (value ? file.handleChange(value) : resetForm())}
                 />
 
-                {optFile && (
+                {file.value && (
                   <>
                     {/* since we're not storing codes in an indexeddb yet */}
                     {!isDevChain && <Input name="name" label="Code name" direction="y" />}
@@ -91,18 +79,19 @@ const UploadCode = () => {
 
         <div>
           <Subheader size="big" title="Add metadata" />
+
           <UploadMetadata
             metadata={metadata.value}
-            isInputDisabled={!!metadata.isUploaded}
-            isLoading={!isUploadedMetaReady}
-            onUpload={setFileMetadata}
+            isInputDisabled={metadata.isFromStorage}
+            isLoading={file.value && !metadata.isReady}
+            onMetadataUpload={metadata.set}
             onReset={handleMetadataReset}
           />
         </div>
       </div>
 
       <div className={styles.buttons}>
-        {optFile && <Button type="submit" text="Upload code" icon={PlusSVG} size="large" form="uploadCodeForm" />}
+        {file.value && <Button type="submit" text="Upload code" icon={PlusSVG} size="large" form="uploadCodeForm" />}
         <BackButton />
       </div>
     </>

@@ -1,38 +1,40 @@
 import { ProgramMetadata } from '@gear-js/api';
-import { Checkbox, FileInput, Input, Textarea } from '@gear-js/ui';
+import { FileInput, Input, Textarea } from '@gear-js/ui';
 import { useAlert } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
-import { isHex } from '@polkadot/util';
 import { useEffect, useMemo, useState } from 'react';
-import clsx from 'clsx';
+import cx from 'clsx';
 
 import { FileTypes } from '@/shared/config';
-import { getPreformattedText } from '@/shared/helpers';
+import { getPreformattedText, isHex } from '@/shared/helpers';
 import { Box } from '@/shared/ui/box';
 import { formStyles } from '@/shared/ui/form';
 
 import { getNamedTypes } from '../../helpers';
-import { MetadataInput } from '../metadataInput';
 import styles from './UploadMetadata.module.scss';
 
 type Props = {
   metadata: ProgramMetadata | undefined;
   onReset: () => void;
-  onUpload: (metaHex: HexString) => void;
+  onMetadataUpload: (metaHex: HexString) => void;
   isInputDisabled?: boolean;
   isLoading?: boolean;
 };
 
-const UploadMetadata = ({ metadata, isInputDisabled, isLoading, onReset, onUpload }: Props) => {
+const FILE_EXTENSION = {
+  TXT: 'txt',
+  IDL: 'idl',
+};
+
+const getFileExtension = ({ name }: File) => name.substring(name.lastIndexOf('.') + 1, name.length);
+
+const UploadMetadata = ({ metadata, isInputDisabled, isLoading, onReset, onMetadataUpload }: Props) => {
   const alert = useAlert();
 
-  const [metaFile, setMetaFile] = useState<File>();
-  const [isManualInput, setIsManualInput] = useState(false);
+  // TODO: refactor, no need to use state there
+  const [file, setFile] = useState<File>();
 
-  const className = clsx(styles.box, isLoading && styles.loading);
-
-  const resetMetaFile = () => setMetaFile(undefined);
-  const toggleManualInput = () => setIsManualInput((prevValue) => !prevValue);
+  const resetMetaFile = () => setFile(undefined);
 
   // useMemo to prevent excessive error alerts
   const namedTypeEntries = useMemo(() => {
@@ -52,66 +54,38 @@ const UploadMetadata = ({ metadata, isInputDisabled, isLoading, onReset, onUploa
     ));
 
   useEffect(() => {
-    if (!metaFile) return onReset();
-
-    try {
-      const reader = new FileReader();
-      reader.readAsText(metaFile, 'UTF-8');
-
-      reader.onload = ({ target }) => {
-        if (target) {
-          const { result } = target;
-
-          if (isHex(result)) {
-            onUpload(result);
-          } else if (typeof result === 'string') {
-            const hexResult = `0x${result}`;
-
-            onUpload(hexResult as HexString);
-          } else throw new Error('Error reading meta file');
-        }
-      };
-    } catch (error) {
-      const message = (error as Error).message;
-
-      alert.error(message);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [metaFile]);
-
-  useEffect(() => {
-    if (!metadata) {
-      resetMetaFile();
-      setIsManualInput(false);
-    }
+    if (!metadata) resetMetaFile();
   }, [metadata]);
 
-  useEffect(() => {
-    onReset();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isManualInput]);
+  const handleFileInputChange = async (value: File | undefined) => {
+    if (!value) return onReset();
+
+    const extension = getFileExtension(value);
+    if (![FILE_EXTENSION.TXT, FILE_EXTENSION.IDL].includes(extension)) return alert.error('Invalid file extension');
+
+    setFile(value);
+
+    const text = await value.text();
+
+    if (extension === FILE_EXTENSION.TXT) return onMetadataUpload?.(isHex(text) ? text : (`0x${text}` as const));
+
+    if (extension === FILE_EXTENSION.IDL) {
+      console.log('idl');
+    }
+  };
 
   return (
-    <Box className={className}>
+    <Box className={cx(styles.box, isLoading && styles.loading)}>
       {!isInputDisabled && !isLoading && (
-        <>
-          <Checkbox label="Manual input" type="switch" checked={isManualInput} onChange={toggleManualInput} />
-
-          {isManualInput ? (
-            <MetadataInput onSubmit={onUpload} />
-          ) : (
-            <FileInput
-              value={metaFile}
-              color="primary"
-              label="Upload the meta.txt file"
-              direction="y"
-              className={clsx(formStyles.field, formStyles.gap16)}
-              onChange={setMetaFile}
-              accept={FileTypes.Text}
-            />
-          )}
-        </>
+        <FileInput
+          value={file}
+          color="primary"
+          label="Upload the meta.txt file"
+          direction="y"
+          className={cx(formStyles.field, formStyles.gap16)}
+          onChange={handleFileInputChange}
+          accept={[FileTypes.Text, FileTypes.Idl]}
+        />
       )}
 
       {renderTypes()}

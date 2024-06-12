@@ -1,8 +1,4 @@
-import { HexString } from '@polkadot/util/types';
 import { Button, Input } from '@gear-js/ui';
-import { ProgramMetadata } from '@gear-js/api';
-import { useAlert, useApi } from '@gear-js/react-hooks';
-import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useProgramActions } from '@/hooks';
@@ -13,39 +9,16 @@ import { ProgramForm, RenderButtonsProps, SubmitHelpers } from '@/widgets/progra
 import { BackButton } from '@/shared/ui/backButton';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import { GasMethod } from '@/shared/config';
-import { RPCError, RPCErrorCode } from '@/shared/services/rpcService';
-import { useMetadata } from '@/features/metadata';
+import { useMetadataHash, useMetadataWithFile } from '@/features/metadata';
 
 import { PageParams } from '../model';
 import styles from './InitializeProgram.module.scss';
 
 const InitializeProgram = () => {
   const { codeId } = useParams() as PageParams;
-
-  const { api, isApiReady } = useApi();
-  const alert = useAlert();
-
-  const { getMetadata } = useMetadata();
+  const metadataHash = useMetadataHash(codeId);
+  const metadata = useMetadataWithFile(metadataHash);
   const { createProgram } = useProgramActions();
-
-  // TODO: think about combining w/ useMetaOnUpload hook
-  const [metaHex, setMetaHex] = useState<HexString>();
-  const metadata = useMemo(() => (metaHex ? ProgramMetadata.from(metaHex) : undefined), [metaHex]);
-
-  const [isMetaUploaded, setIsMetaUploaded] = useState(false);
-  const [isUploadedMetaReady, setIsUploadedMetaReady] = useState(false);
-
-  const setUploadedMetaHex = (value: HexString) => {
-    setMetaHex(value);
-    setIsMetaUploaded(true);
-  };
-
-  const setFileMetaHex = (value: HexString) => {
-    setMetaHex(value);
-    setIsMetaUploaded(false);
-  };
-
-  const resetMetaHex = () => setMetaHex(undefined);
 
   const handleSubmit = (payload: Payload, helpers: SubmitHelpers) =>
     createProgram({
@@ -54,8 +27,7 @@ const InitializeProgram = () => {
       resolve: () => {
         helpers.resetForm();
         helpers.enableButtons();
-
-        if (!isMetaUploaded) resetMetaHex();
+        metadata.reset();
       },
       reject: helpers.enableButtons,
     });
@@ -67,29 +39,17 @@ const InitializeProgram = () => {
     </>
   );
 
-  useEffect(() => {
-    if (!isApiReady) return;
-
-    api.code
-      .metaHash(codeId)
-      .then((hash) => getMetadata(hash))
-      .then(({ result }) => result.hex && setUploadedMetaHex(result.hex))
-      .catch(({ code, message }: RPCError) => code !== RPCErrorCode.MetadataNotFound && alert.error(message))
-      .finally(() => setIsUploadedMetaReady(true));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isApiReady]);
-
   return (
     <div className={styles.initializeProgramPage}>
       <section className={styles.pageSection}>
         <Subheader size="big" title="Enter program parameters" />
         <div className={styles.lining}>
           <Input label="Code ID" value={codeId} direction="y" className={styles.codeId} block readOnly />
+
           <ProgramForm
             source={codeId}
-            metaHex={metaHex}
-            metadata={metadata}
+            metaHex={metadata.hex}
+            metadata={metadata.value}
             gasMethod={GasMethod.InitCreate}
             renderButtons={renderButtons}
             onSubmit={handleSubmit}
@@ -99,12 +59,13 @@ const InitializeProgram = () => {
 
       <section className={styles.pageSection}>
         <Subheader size="big" title="Add metadata" />
+
         <UploadMetadata
-          metadata={metadata}
-          isInputDisabled={isMetaUploaded}
-          isLoading={!isUploadedMetaReady}
-          onReset={resetMetaHex}
-          onUpload={setFileMetaHex}
+          metadata={metadata.value}
+          isInputDisabled={metadata.isFromStorage}
+          isLoading={!metadata.isReady}
+          onReset={metadata.reset}
+          onMetadataUpload={metadata.set}
         />
       </section>
     </div>

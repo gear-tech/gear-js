@@ -24,6 +24,7 @@ const UploadMetadataModal = ({ onClose, onSubmit, isCode }: Props) => {
   const { error } = getFieldState('name', formState);
   const handleSubmit = ({ name }: typeof defaultValues) => onSubmit({ metaHex, name });
 
+  // TODO: state as in useMetadataWithFile
   const [metaHex, setMetaHex] = useState('' as HexString);
   const metadata = useMemo(() => (metaHex ? ProgramMetadata.from(metaHex) : undefined), [metaHex]);
   const resetMetaHex = () => setMetaHex('' as HexString);
@@ -34,7 +35,7 @@ const UploadMetadataModal = ({ onClose, onSubmit, isCode }: Props) => {
     <Modal heading="Upload metadata" size="large" className={styles.modal} close={onClose}>
       <SimpleBar className={styles.simplebar}>
         <form className={styles.form} onSubmit={form.handleSubmit(handleSubmit)}>
-          <UploadMetadata metadata={metadata} onReset={resetMetaHex} onUpload={setMetaHex} />
+          <UploadMetadata metadata={metadata} onReset={resetMetaHex} onMetadataUpload={setMetaHex} />
 
           {metadata && (
             <Input
