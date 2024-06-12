@@ -16,10 +16,9 @@ import styles from './UploadMetadata.module.scss';
 type Props = {
   metadata: ProgramMetadata | undefined;
   onReset: () => void;
-  onUpload?: (metaHex: HexString) => void;
+  onMetadataUpload: (metaHex: HexString) => void;
   isInputDisabled?: boolean;
   isLoading?: boolean;
-  onMetadataUpload?: (metaHex: HexString) => void;
 };
 
 const FILE_EXTENSION = {
