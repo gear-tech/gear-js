@@ -73,9 +73,9 @@ export class GearIndexer {
     this.newBlocks = [];
     this.generatorLoop = true;
 
-    this.indexNotSyncedBlocks().then(() => {
-      logger.info('Not synced blocks have been indexed');
-    });
+    // this.indexNotSyncedBlocks().then(() => {
+    // logger.info('Not synced blocks have been indexed');
+    // });
 
     this.unsub = await this.api.derive.chain.subscribeNewHeads(({ number }) => {
       this.newBlocks.push(number.toNumber());
