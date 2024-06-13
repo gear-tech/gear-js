@@ -35,6 +35,8 @@ export async function connectToNode(indexer: GearIndexer, cb: GenesisCb) {
 
   logger.info(`Connected to ${api.runtimeChain} with genesis ${genesis}`);
 
+  cb(RMQServiceAction.ADD, genesis);
+
   api.on('disconnected', () => {
     logger.warn('Disconnected from the node.');
     indexer.stop();
