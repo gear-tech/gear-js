@@ -73,9 +73,19 @@ export class GearIndexer {
     this.newBlocks = [];
     this.generatorLoop = true;
 
-    this.indexNotSyncedBlocks().then(() => {
-      logger.info('Not synced blocks have been indexed');
-    });
+    new CronJob(
+      '0 0 * * * *',
+      () => {
+        this.indexNotSyncedBlocks().then(() => {
+          logger.info('Not synced blocks have been indexed');
+        });
+      },
+      null,
+      true,
+      'UTC',
+      null,
+      true,
+    );
 
     this.unsub = await this.api.derive.chain.subscribeNewHeads(({ number }) => {
       this.newBlocks.push(number.toNumber());
@@ -106,10 +116,23 @@ export class GearIndexer {
     }
   }
 
-  private *rangeGenerator(from: number, to: number) {
+  private async *rangeGenerator(from: number, to: number) {
     const batchSize = config.indexer.batchSize;
+
+    let notSynced = [];
+
     for (let i = from; i < to; i += batchSize) {
-      yield [...Array(batchSize).keys()].map((v) => v + i);
+      const batch = [...Array(batchSize).keys()].map((v) => v + i);
+
+      notSynced.push(...(await this.blockService.getNotSynced(batch)));
+
+      if (notSynced.length < batchSize) {
+        continue;
+      }
+
+      yield notSynced;
+
+      notSynced = [];
     }
   }
 
@@ -135,12 +158,10 @@ export class GearIndexer {
       this.api,
     );
 
-    for (const blockNumbers of this.rangeGenerator(lastBlockNumber, currentBn.number.toNumber())) {
-      const notSynced = await this.blockService.getNotSynced(blockNumbers);
-
-      if (notSynced.length === 0) {
-        await this.statusService.update(this.genesis, Math.max(...blockNumbers).toString());
-        continue;
+    for await (const blockNumbers of this.rangeGenerator(lastBlockNumber, currentBn.number.toNumber())) {
+      if (this.api === null) {
+        this.isCheckingNotSynced = false;
+        return;
       }
 
       const start = Date.now();
@@ -148,10 +169,10 @@ export class GearIndexer {
       tempState.newState(this.genesis);
 
       try {
-        await Promise.all(notSynced.map((blockNumber) => this.indexBlock(blockNumber, tempState)));
+        await Promise.all(blockNumbers.map((blockNumber) => this.indexBlock(blockNumber, tempState)));
       } catch (error) {
-        logger.error('Error during indexing the data of the blocks', {
-          blocks: notSynced,
+        logger.error('Failed to index blocks (not synced)', {
+          blocks: blockNumbers,
           error: error.message,
           stack: error.stack,
         });
@@ -161,7 +182,7 @@ export class GearIndexer {
       try {
         const result = await tempState.save();
 
-        const [min, max] = [Math.min(...notSynced) + '', Math.max(...notSynced) + ''];
+        const [min, max] = [Math.min(...blockNumbers) + '', Math.max(...blockNumbers) + ''];
 
         await this.statusService.update(this.genesis, max);
 
@@ -171,12 +192,16 @@ export class GearIndexer {
           result: result,
         });
       } catch (error) {
-        logger.error('Error during saving the data of the blocks', {
-          blocks: notSynced,
+        logger.error('Failed to save block data (not synced)', {
+          blocks: blockNumbers,
           error: error.message,
           stack: error.stack,
         });
       }
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, 1000);
+      });
     }
 
     tempState = null;
@@ -200,7 +225,7 @@ export class GearIndexer {
       try {
         await Promise.all(blockNumbers.map((blockNumber) => this.indexBlock(blockNumber, this.tempState)));
       } catch (error) {
-        logger.error('Error during indexing the data of the blocks', {
+        logger.error('Failed to index blocks', {
           blocks: blockNumbers,
           error: error.message,
           stack: error.stack,
@@ -219,7 +244,7 @@ export class GearIndexer {
           });
         }
       } catch (error) {
-        logger.error('Error during saving the data of the blocks', {
+        logger.error('Failed to save block data', {
           blocks: blockNumbers,
           error: error.message,
           stack: error.stack,

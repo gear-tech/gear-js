@@ -31,6 +31,8 @@ export async function connectToNode(indexer: GearIndexer, cb: GenesisCb) {
 
   const genesis = api.genesisHash.toHex();
 
+  cb(RMQServiceAction.ADD, genesis);
+
   logger.info(`Connected to ${api.runtimeChain} with genesis ${genesis}`);
 
   api.on('disconnected', () => {
@@ -41,8 +43,9 @@ export async function connectToNode(indexer: GearIndexer, cb: GenesisCb) {
   });
 
   reconnectionsCounter = 0;
+
   await indexer.run(api);
-  cb(RMQServiceAction.ADD, genesis);
+
   changeStatus('gear');
 }
 
