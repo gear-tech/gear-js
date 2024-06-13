@@ -17,7 +17,9 @@ function useWasmFile(type: WasmFileType = WASM_FILE_TYPE.PROGRAM) {
   const { state } = useLocation() as Location;
 
   const [file, setFile] = useState(state?.file);
-  const [buffer, setBuffer] = useState(state?.buffer);
+
+  // browser's history api serizalizes Buffer instance, therefore we need to convert it
+  const [buffer, setBuffer] = useState(state?.buffer ? Buffer.from(state.buffer) : undefined);
 
   const handleFileChange = useWasmFileHandler(type, (value, bufferValue) => {
     setFile(value);

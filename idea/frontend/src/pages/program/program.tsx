@@ -8,14 +8,14 @@ import { ProgramStatus, ProgramTable } from '@/features/program';
 import { ProgramMessages } from '@/widgets/programMessages';
 import { PathParams } from '@/shared/types';
 import { getShortName } from '@/shared/helpers';
-import { Subheader, UILink, PreformattedBlock } from '@/shared/ui';
+import { Subheader, UILink } from '@/shared/ui';
 import { absoluteRoutes, routes } from '@/shared/config';
 import SendSVG from '@/shared/assets/images/actions/send.svg?react';
 import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import { useMetadata, MetadataTable } from '@/features/metadata';
 import { IssueVoucher, VoucherTable } from '@/features/voucher';
-import { useIdl } from '@/features/sails';
+import { IDL, useIdl } from '@/features/sails';
 
 import styles from './program.module.scss';
 
@@ -117,7 +117,7 @@ const Program = () => {
           {idl && (
             <div>
               <Subheader title="IDL" />
-              <PreformattedBlock text={idl} />
+              <IDL value={idl} />
             </div>
           )}
         </div>

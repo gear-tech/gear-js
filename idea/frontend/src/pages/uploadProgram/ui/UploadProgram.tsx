@@ -1,31 +1,33 @@
 import { Button, FileInput } from '@gear-js/ui';
 import cx from 'clsx';
 
-import { useProgramActions } from '@/hooks';
+import { useContractApiWithFile, useProgramActions } from '@/hooks';
 import { formStyles } from '@/shared/ui/form';
 import { BackButton } from '@/shared/ui/backButton';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import { Subheader } from '@/shared/ui/subheader';
 import { FileTypes, GasMethod } from '@/shared/config';
 import { Payload } from '@/hooks/useProgramActions/types';
-import { UploadMetadata } from '@/features/uploadMetadata';
 import { ProgramForm, RenderButtonsProps, SubmitHelpers } from '@/widgets/programForm';
-import { useMetadataHash, useMetadataWithFile } from '@/features/metadata';
 import { useWasmFile } from '@/features/code';
 
 import styles from './UploadProgram.module.scss';
+import { UploadMetadata } from '@/features/uploadMetadata';
 
 const UploadProgram = () => {
-  const file = useWasmFile();
-  const metadataHash = useMetadataHash(file.buffer);
-  const metadata = useMetadataWithFile(metadataHash);
+  const wasmFile = useWasmFile();
+  const { metadata, sails, isLoading, ...contractApi } = useContractApiWithFile(wasmFile.buffer);
+  const { uploadProgram } = useProgramActions();
 
   const reset = () => {
-    file.reset();
-    metadata.reset();
+    wasmFile.reset();
+    contractApi.reset();
   };
 
-  const { uploadProgram } = useProgramActions();
+  const handleWasmFileChange = (value: File | undefined) => {
+    contractApi.reset();
+    wasmFile.handleChange(value);
+  };
 
   const renderButtons = ({ isDisabled }: RenderButtonsProps) => (
     <>
@@ -35,9 +37,9 @@ const UploadProgram = () => {
   );
 
   const handleSubmit = (payload: Payload, { enableButtons }: SubmitHelpers) => {
-    if (!file.buffer) return;
+    if (!wasmFile.buffer) return;
 
-    uploadProgram({ optBuffer: file.buffer, payload, resolve: file.reset, reject: enableButtons });
+    uploadProgram({ optBuffer: wasmFile.buffer, payload, resolve: reset, reject: enableButtons });
   };
 
   return (
@@ -47,19 +49,19 @@ const UploadProgram = () => {
 
         <div className={styles.lining}>
           <FileInput
-            value={file.value}
+            value={wasmFile.value}
             label="Program file"
             direction="y"
             color="primary"
             className={cx(formStyles.field, formStyles.gap16, styles.fileInput)}
-            onChange={(value) => (value ? file.handleChange(value) : reset())}
+            onChange={handleWasmFileChange}
             accept={FileTypes.Wasm}
           />
 
-          {file.buffer && (
+          {wasmFile.buffer && (
             <ProgramForm
-              fileName={file.value?.name.split(/\.opt|\.wasm/)[0]}
-              source={file.buffer}
+              fileName={wasmFile.value?.name.split(/\.opt|\.wasm/)[0]}
+              source={wasmFile.buffer}
               metaHex={metadata.hex}
               metadata={metadata.value}
               gasMethod={GasMethod.InitUpdate}
@@ -71,14 +73,15 @@ const UploadProgram = () => {
       </section>
 
       <section className={styles.pageSection}>
-        <Subheader size="big" title="Add metadata" />
+        <Subheader size="big" title="Add metadata/sails" />
 
         <UploadMetadata
+          value={contractApi.file}
+          onChange={contractApi.handleChange}
           metadata={metadata.value}
-          isInputDisabled={metadata.isFromStorage}
-          isLoading={file.value && !metadata.isReady}
-          onReset={metadata.reset}
-          onMetadataUpload={metadata.set}
+          idl={sails.idl}
+          isDisabled={contractApi.isFromStorage}
+          isLoading={isLoading}
         />
       </section>
     </div>

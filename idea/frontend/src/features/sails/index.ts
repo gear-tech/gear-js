@@ -1,4 +1,4 @@
-import { useIdl } from './hooks';
-import { PayloadForm } from './ui';
+import { useIdl, useSails, useSailsWithFile } from './hooks';
+import { PayloadForm, IDL } from './ui';
 
-export { useIdl, PayloadForm };
+export { useIdl, PayloadForm, IDL, useSails, useSailsWithFile };

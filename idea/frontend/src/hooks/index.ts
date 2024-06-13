@@ -24,6 +24,7 @@ import { useMobileDisclaimer } from './useMobileDisclaimer';
 import { useNetworkIcon } from './useNetworkIcon';
 import { useValidationSchema } from './use-validation-schema';
 import { useSignAndSend } from './use-sign-and-send';
+import { useContractApiWithFile } from './use-contract-api-with-file';
 
 export {
   useModal,
@@ -56,4 +57,5 @@ export {
   useNetworkIcon,
   useValidationSchema,
   useSignAndSend,
+  useContractApiWithFile,
 };
