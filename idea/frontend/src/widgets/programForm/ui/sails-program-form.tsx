@@ -31,6 +31,7 @@ type FormattedValues = z.infer<ReturnType<typeof useTransactionSchema>>;
 type Props = {
   source: Buffer | HexString;
   sails: Sails;
+  idl: string;
   gasMethod: GasMethod;
   fileName?: string;
   renderButtons: (props: RenderButtonsProps) => ReactNode;
@@ -44,7 +45,7 @@ const DEFAULT_VALUES = {
   keepAlive: true,
 };
 
-const SailsProgramForm = ({ gasMethod, sails, source, fileName = '', renderButtons, onSubmit }: Props) => {
+const SailsProgramForm = ({ gasMethod, sails, idl, source, fileName = '', renderButtons, onSubmit }: Props) => {
   const { getFormattedGasValue } = useBalanceFormat();
 
   const constructor = useConstructor(sails);
@@ -79,7 +80,7 @@ const SailsProgramForm = ({ gasMethod, sails, source, fileName = '', renderButto
     setIsDisabled(true);
 
     const payloadType = 'Bytes';
-    const submitValues = { ...values, initPayload: values.payload, payloadType };
+    const submitValues = { ...values, initPayload: values.payload, payloadType, idl };
 
     onSubmit(submitValues, { enableButtons: () => setIsDisabled(false), resetForm: () => {} });
   });
