@@ -34,7 +34,7 @@ const Send = () => {
     <>
       <h2 className={styles.heading}>{isReply ? 'Send Reply' : 'Send Message'}</h2>
 
-      {programId && <PayloadForm programId={programId} />}
+      {/* {programId && <PayloadForm programId={programId} />} */}
 
       <MessageForm id={id} programId={programId} isReply={isReply} metadata={metadata} isLoading={!isMetadataReady} />
     </>

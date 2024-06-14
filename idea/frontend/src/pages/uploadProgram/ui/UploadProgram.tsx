@@ -8,11 +8,11 @@ import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import { Subheader } from '@/shared/ui/subheader';
 import { FileTypes, GasMethod } from '@/shared/config';
 import { Payload } from '@/hooks/useProgramActions/types';
-import { ProgramForm, RenderButtonsProps, SubmitHelpers } from '@/widgets/programForm';
+import { ProgramForm, RenderButtonsProps, SailsProgramForm, SubmitHelpers } from '@/widgets/programForm';
 import { useWasmFile } from '@/features/code';
+import { UploadMetadata } from '@/features/uploadMetadata';
 
 import styles from './UploadProgram.module.scss';
-import { UploadMetadata } from '@/features/uploadMetadata';
 
 const UploadProgram = () => {
   const wasmFile = useWasmFile();
@@ -58,12 +58,23 @@ const UploadProgram = () => {
             accept={FileTypes.Wasm}
           />
 
-          {wasmFile.buffer && (
+          {wasmFile.buffer && !sails.value && (
             <ProgramForm
               fileName={wasmFile.value?.name.split(/\.opt|\.wasm/)[0]}
               source={wasmFile.buffer}
               metaHex={metadata.hex}
               metadata={metadata.value}
+              gasMethod={GasMethod.InitUpdate}
+              renderButtons={renderButtons}
+              onSubmit={handleSubmit}
+            />
+          )}
+
+          {wasmFile.buffer && sails.value && (
+            <SailsProgramForm
+              fileName={wasmFile.value?.name.split(/\.opt|\.wasm/)[0]}
+              source={wasmFile.buffer}
+              sails={sails.value}
               gasMethod={GasMethod.InitUpdate}
               renderButtons={renderButtons}
               onSubmit={handleSubmit}

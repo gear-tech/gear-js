@@ -1,4 +1,5 @@
 import { Sails } from 'sails-js';
+
 import { RESULT } from './consts';
 
 // TODO: import from sails-js

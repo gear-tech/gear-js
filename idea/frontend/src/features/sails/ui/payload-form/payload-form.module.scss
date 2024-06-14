@@ -1,7 +1,11 @@
 .form {
-  margin-bottom: 16px;
+  div:nth-child(2) {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 
-  label {
-    font-size: 14px;
+    & label {
+      font-size: 14px;
+    }
   }
 }

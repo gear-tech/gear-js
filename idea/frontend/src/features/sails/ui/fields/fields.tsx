@@ -1,7 +1,9 @@
 import { Sails } from 'sails-js';
 
 import { generateRandomId } from '@/shared/helpers';
+import { Fieldset } from '@/shared/ui';
 
+import { ISailsFuncArg, TypeDef } from '../../types';
 import { EnumField } from './enum-field';
 import { UserDefinedField } from './user-defined-field';
 import { StructField } from './struct-field';
@@ -11,7 +13,7 @@ import { VecField } from './vec-field';
 import { MapField } from './map-field';
 import { FixedSizeArrayField } from './fixed-size-array-field';
 import { PrimitiveField } from './primitive-field';
-import { ISailsFuncArg, TypeDef } from '../../types';
+import { getNestedName } from '../../utils';
 
 type Props = {
   sails: Sails;
@@ -43,7 +45,10 @@ function Fields({ sails, args }: Props) {
     return <Field key={key} def={def} sails={sails} name={name} label={label} renderField={renderField} />;
   };
 
-  return args.map(({ typeDef, name }, index) => renderField(typeDef, name, index.toString()));
+  const renderFields = () =>
+    args.map(({ typeDef, name }, index) => renderField(typeDef, name, getNestedName('payload', index.toString())));
+
+  return <Fieldset>{renderFields()}</Fieldset>;
 }
 
 export { Fields };
