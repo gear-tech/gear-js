@@ -1,9 +1,9 @@
 import { Sails } from 'sails-js';
 
-import { generateRandomId } from '@/shared/helpers';
 import { Fieldset } from '@/shared/ui';
 
 import { ISailsFuncArg, TypeDef } from '../../types';
+import { getNestedName } from '../../utils';
 import { EnumField } from './enum-field';
 import { UserDefinedField } from './user-defined-field';
 import { StructField } from './struct-field';
@@ -13,7 +13,6 @@ import { VecField } from './vec-field';
 import { MapField } from './map-field';
 import { FixedSizeArrayField } from './fixed-size-array-field';
 import { PrimitiveField } from './primitive-field';
-import { getNestedName } from '../../utils';
 
 type Props = {
   sails: Sails;
@@ -39,10 +38,9 @@ function Fields({ sails, args }: Props) {
     if (!sails) throw new Error('Sails is not defined');
     if (!def) return; // in case of empty enum variant, EnumVariant.def sails-js type is inaccurate at the moment
 
-    const key = generateRandomId();
     const Field = getFieldComponent(def);
 
-    return <Field key={key} def={def} sails={sails} name={name} label={label} renderField={renderField} />;
+    return <Field key={name} def={def} sails={sails} name={name} label={label} renderField={renderField} />;
   };
 
   const renderFields = () =>
