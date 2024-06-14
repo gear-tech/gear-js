@@ -3,6 +3,8 @@
   "private": true,
   "scripts": {
     "build:backend": "yarn build:common && yarn workspaces foreach -ptR --from '{@gear-js/api-gateway,@gear-js/indexer,@gear-js/meta-storage,@gear-js/test-balance}' run build",
+    "build:indexer-db": "yarn workspace @gear-js/indexer-db build",
+    "build:squid": "yarn workspace @gear-js/indexer-squid build",
     "build:common": "yarn workspace @gear-js/common build",
     "build:api-gateway": "yarn workspace @gear-js/api-gateway build",
     "build:indexer": "yarn workspace @gear-js/indexer build",
