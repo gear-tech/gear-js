@@ -14,4 +14,4 @@ RUN yarn build:squid
 
 WORKDIR /src/idea/squid
 
-CMD ["yarn migration:apply", "&&", "node", "lib/main.js"]
+CMD ["sh run.sh & tail -f /dev/null"]

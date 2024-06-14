@@ -2561,6 +2561,7 @@ __metadata:
   dependencies:
     "@gear-js/api": 0.38.1
     "@gear-js/indexer-db": "workspace:^"
+    "@polkadot/api": 11.0.2
     "@subsquid/graphql-server": 4.5.1
     "@subsquid/ss58": 2.0.2
     "@subsquid/substrate-metadata-explorer": 3.1.2
