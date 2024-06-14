@@ -1,3 +1,4 @@
+import { HexString } from '@gear-js/api';
 import { Sails } from 'sails-js';
 import { z } from 'zod';
 
@@ -64,8 +65,8 @@ const asJSON = <T extends z.ZodTypeAny>(schema: T) =>
     }
   });
 
-const getPayloadSchema = (sails: Sails, args: ISailsFuncArg[]) => {
-  // TODO: types
+// TODO: types
+const getPayloadSchema = (sails: Sails, args: ISailsFuncArg[], encode: (..._args: unknown[]) => HexString) => {
   const getSchema = (def: TypeDef): z.ZodType<unknown> => {
     if (def.isPrimitive) return z.string().trim();
 
@@ -109,7 +110,7 @@ const getPayloadSchema = (sails: Sails, args: ISailsFuncArg[]) => {
 
   const result = args.map(({ typeDef }, index) => [index, getSchema(typeDef)] as const);
 
-  return z.object(Object.fromEntries(result)).transform((value) => Object.values(value));
+  return z.object(Object.fromEntries(result)).transform((value) => encode(Object.values(value)));
 };
 
 export { getDefaultValue, getDefaultPayloadValue, getPayloadSchema };

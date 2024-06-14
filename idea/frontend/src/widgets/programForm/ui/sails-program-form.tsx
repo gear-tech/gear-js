@@ -6,17 +6,27 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { Sails } from 'sails-js';
 import { z } from 'zod';
 
-import { useGasCalculate } from '@/hooks';
+import { useGasCalculate, useTransactionSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
 import { Payload } from '@/hooks/useProgramActions/types';
-import { getSubmitPayload, getResetPayloadValue } from '@/features/formPayload';
 import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
 import { Input, ValueField, LabeledCheckbox } from '@/shared/ui';
 import { PayloadForm, useConstructor } from '@/features/sails';
+import { PayloadValue } from '@/features/sails/types';
 
 import { RenderButtonsProps, SubmitHelpers } from '../model';
 import styles from './ProgramForm.module.scss';
+
+type Values = {
+  value: string;
+  gasLimit: string;
+  programName: string;
+  keepAlive: boolean;
+  payload: PayloadValue;
+};
+
+type FormattedValues = z.infer<ReturnType<typeof useTransactionSchema>>;
 
 type Props = {
   source: Buffer | HexString;
@@ -35,13 +45,12 @@ const DEFAULT_VALUES = {
 };
 
 const SailsProgramForm = ({ gasMethod, sails, source, fileName = '', renderButtons, onSubmit }: Props) => {
-  const { getChainBalanceValue, getFormattedGasValue, getChainGasValue } = useBalanceFormat();
+  const { getFormattedGasValue } = useBalanceFormat();
 
   const constructor = useConstructor(sails);
   const defaultValues = { ...DEFAULT_VALUES, payload: constructor.defaultValues, programName: fileName };
-  const schema = z.object({ payload: constructor.schema });
-  const form = useForm({ values: defaultValues, resolver: zodResolver(schema) });
-  const { getValues, setValue, reset } = form;
+  const schema = useTransactionSchema(constructor.schema);
+  const form = useForm<Values, unknown, FormattedValues>({ values: defaultValues, resolver: zodResolver(schema) });
 
   const [gasInfo, setGasinfo] = useState<Result>();
   const [isDisabled, setIsDisabled] = useState(false);
@@ -49,33 +58,16 @@ const SailsProgramForm = ({ gasMethod, sails, source, fileName = '', renderButto
 
   const calculateGas = useGasCalculate();
 
-  const resetForm = () => {
-    const values = getValues();
-    const payload = getResetPayloadValue(values.payload);
-
-    // reset({ ...defaultValues, payload });
-    setIsDisabled(false);
-    setGasinfo(undefined);
-  };
-
   const handleGasCalculate = async () => {
     setIsGasDisabled(true);
 
-    const values = getValues();
-    const payloadType = 'Bytes';
-
-    const preparedValues = {
-      ...values,
-      payloadType,
-      value: getChainBalanceValue(values.value).toFixed(),
-      payload: getSubmitPayload(values.payload),
-    };
+    const values = form.getValues();
 
     try {
-      const info = await calculateGas(gasMethod, preparedValues, source);
+      const info = await calculateGas(gasMethod, schema.parse(values), source);
       const limit = getFormattedGasValue(info.limit).toFixed();
 
-      setValue('gasLimit', limit, { shouldValidate: true });
+      form.setValue('gasLimit', limit, { shouldValidate: true });
       setGasinfo(info);
     } finally {
       setIsGasDisabled(false);
@@ -84,27 +76,13 @@ const SailsProgramForm = ({ gasMethod, sails, source, fileName = '', renderButto
 
   const handleSubmit = form.handleSubmit((values) => {
     console.log('values: ', values);
-    // setIsDisabled(true);
+    setIsDisabled(true);
 
-    // const { value, payload, gasLimit, programName, payloadType, keepAlive } = values;
+    const payloadType = 'Bytes';
+    const submitValues = { ...values, initPayload: values.payload, payloadType };
 
-    // const data = {
-    //   value: getChainBalanceValue(value).toFixed(),
-    //   gasLimit: getChainGasValue(gasLimit).toFixed(),
-    // payloadType: metadata ? undefined : payloadType,
-    // initPayload: metadata ? getSubmitPayload(payload) : payload,
-    // metaHex,
-    // metadata,
-    //   programName,
-    //   keepAlive,
-    // };
-
-    // onSubmit(data, { enableButtons: () => setIsDisables(false), resetForm });
+    onSubmit(submitValues, { enableButtons: () => setIsDisabled(false), resetForm: () => {} });
   });
-
-  // useChangeEffect(() => {
-  //   if (!metadata) resetForm();
-  // }, [metadata]);
 
   return (
     <FormProvider {...form}>
@@ -112,7 +90,7 @@ const SailsProgramForm = ({ gasMethod, sails, source, fileName = '', renderButto
         <div className={styles.formContent}>
           <Input name="programName" label="Name" direction="y" placeholder="Enter program name" block />
 
-          {sails && <PayloadForm sails={sails} select={constructor.select} args={constructor.args} />}
+          <PayloadForm sails={sails} select={constructor.select} args={constructor.args} />
 
           <ValueField name="value" label="Initial value:" direction="y" block />
 

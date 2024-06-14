@@ -22,7 +22,7 @@ import { useCodes } from './useCodes';
 import { useNodeVersion } from './useNodeVersion';
 import { useMobileDisclaimer } from './useMobileDisclaimer';
 import { useNetworkIcon } from './useNetworkIcon';
-import { useValidationSchema } from './use-validation-schema';
+import { useValidationSchema, useBalanceSchema, useTransactionSchema } from './schemas';
 import { useSignAndSend } from './use-sign-and-send';
 import { useContractApiWithFile } from './use-contract-api-with-file';
 
@@ -58,4 +58,6 @@ export {
   useValidationSchema,
   useSignAndSend,
   useContractApiWithFile,
+  useBalanceSchema,
+  useTransactionSchema,
 };

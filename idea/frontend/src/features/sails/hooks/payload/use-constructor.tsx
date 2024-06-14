@@ -10,7 +10,7 @@ function useConstructor(sails: Sails) {
   const options = names.map((name) => ({ label: name, value: name }));
 
   const [name, setName] = useState<string>(names[0]);
-  const { args } = ctors[name];
+  const { args, encodePayload } = ctors[name];
 
   const handleChange = ({ target }: ChangeEvent<HTMLSelectElement>) => setName(target.value);
 
@@ -21,7 +21,7 @@ function useConstructor(sails: Sails) {
   );
 
   const schema = useMemo(
-    () => getPayloadSchema(sails, args),
+    () => getPayloadSchema(sails, args, encodePayload),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [name],
   );

@@ -16,7 +16,7 @@ function useService(sails: Sails) {
   const functionOptions = functionNames.map((_name) => ({ label: _name, value: _name }));
 
   const [functionName, setFunctionName] = useState(functionNames[0]);
-  const { args } = functions[functionName];
+  const { args, encodePayload } = functions[functionName];
 
   const handleChange = ({ target }: ChangeEvent<HTMLSelectElement>) => {
     setName(target.value);
@@ -32,7 +32,7 @@ function useService(sails: Sails) {
   );
 
   const schema = useMemo(
-    () => getPayloadSchema(sails, args),
+    () => getPayloadSchema(sails, args, encodePayload),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [name, functionName],
   );

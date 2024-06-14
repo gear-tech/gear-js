@@ -11,13 +11,13 @@ function useBalanceSchema() {
     const decimals = api.registry.chainDecimals.toString();
     const existentialDeposit = api.existentialDeposit.toString();
 
-    const minValueMessage = `Minimum value is ${getFormattedBalanceValue(existentialDeposit).toFixed()}`;
+    const minValueMessage = `Minimum value is 0 or ${getFormattedBalanceValue(existentialDeposit).toFixed()}`;
     const integerMessage = `Maximum amount of decimal places is ${decimals}`;
 
     return z
       .string()
       .transform((value) => getChainBalanceValue(value))
-      .refine((value) => value.isGreaterThanOrEqualTo(existentialDeposit), minValueMessage)
+      .refine((value) => value.isEqualTo(0) || value.isGreaterThanOrEqualTo(existentialDeposit), minValueMessage)
       .refine((value) => value.isInteger(), integerMessage)
       .transform((value) => value.toFixed());
   };
