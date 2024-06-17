@@ -42,7 +42,7 @@ const UploadCode = () => {
   const handleSubmit = form.handleSubmit((data: typeof defaultValues) => {
     if (!file.buffer) return;
 
-    uploadCode({ optBuffer: file.buffer, metaHex: metadata.hex, resolve: resetForm, ...data });
+    uploadCode({ optBuffer: file.buffer, metaHex: metadata.hex, idl: sails.idl, resolve: resetForm, ...data });
   });
 
   return (

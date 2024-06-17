@@ -10,6 +10,7 @@ import { checkWallet, getExtrinsicFailedMessage } from '@/shared/helpers';
 import { PROGRAM_ERRORS, TransactionName, TransactionStatus, UPLOAD_METADATA_TIMEOUT } from '@/shared/config';
 import { CopiedInfo } from '@/shared/ui/copiedInfo';
 import { addMetadata, addCodeName } from '@/api';
+import { addIdl } from '@/features/sails';
 
 import { ParamsToUploadCode, ParamsToSignAndSend } from './types';
 
@@ -37,7 +38,7 @@ const useCodeUpload = () => {
     });
   };
 
-  const signAndSend = async ({ extrinsic, signer, codeId, metaHex, name, resolve }: ParamsToSignAndSend) => {
+  const signAndSend = async ({ extrinsic, signer, codeId, metaHex, idl, name, resolve }: ParamsToSignAndSend) => {
     const alertId = alert.loading('SignIn', { title: TransactionName.SubmitCode });
 
     try {
@@ -60,10 +61,9 @@ const useCodeUpload = () => {
 
             addCodeName({ id, name: name || id })
               .then(async () => {
-                if (!metaHex) return;
-                const hash = await api.code.metaHash(id);
-
-                addMetadata(hash, metaHex);
+                // TODO: no need to upload if meta/idl is from storage
+                if (metaHex) addMetadata(await api.code.metaHash(id), metaHex);
+                if (idl) addIdl(id, idl);
               })
               .catch(({ message }: Error) => alert.error(message));
           }, UPLOAD_METADATA_TIMEOUT);
@@ -79,7 +79,7 @@ const useCodeUpload = () => {
   };
 
   const uploadCode = useCallback(
-    async ({ optBuffer, name, voucherId, metaHex, resolve }: ParamsToUploadCode) => {
+    async ({ optBuffer, name, voucherId, metaHex, idl, resolve }: ParamsToUploadCode) => {
       try {
         if (!isApiReady) throw new Error('API is not initialized');
         checkWallet(account);
@@ -94,7 +94,7 @@ const useCodeUpload = () => {
 
         const { partialFee } = await api.code.paymentInfo(address, { signer });
 
-        const handleConfirm = () => signAndSend({ extrinsic, signer, name, codeId, metaHex, resolve });
+        const handleConfirm = () => signAndSend({ extrinsic, signer, name, codeId, metaHex, idl, resolve });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),

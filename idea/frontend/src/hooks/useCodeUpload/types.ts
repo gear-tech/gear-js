@@ -9,6 +9,7 @@ type ParamsToUploadCode = {
   name: string;
   voucherId: string;
   metaHex: HexString | undefined;
+  idl: string | undefined;
   resolve: () => void;
 };
 
@@ -17,6 +18,7 @@ type ParamsToSignAndSend = Omit<CommonParamsToSignAndSend, 'reject'> & {
   name: string;
   codeId: HexString;
   metaHex: HexString | undefined;
+  idl: string | undefined;
 };
 
 export type { ParamsToUploadCode, ParamsToSignAndSend };
