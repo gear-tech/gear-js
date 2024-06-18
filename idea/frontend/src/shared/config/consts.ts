@@ -2,6 +2,7 @@ const API_URL = import.meta.env.VITE_API_URL as string;
 const NODES_API_URL = import.meta.env.VITE_NODES_API_URL as string;
 const NODE_ADDRESS = import.meta.env.VITE_NODE_ADDRESS as string;
 const HCAPTCHA_SITE_KEY = import.meta.env.VITE_HCAPTCHA_SITE_KEY as string;
+const GTM_ID = import.meta.env.GTM_ID as string | undefined;
 
 const GENESIS = {
   MAINNET: '0xfe1b4c55fd4d668101126434206571a7838a8b6b93a6d1b95d607e78e6c53763',
@@ -108,6 +109,7 @@ export {
   NODES_API_URL,
   NODE_ADDRESS,
   HCAPTCHA_SITE_KEY,
+  GTM_ID,
   NODE_ADRESS_URL_PARAM,
   EXAMPLES_HREF,
   DEFAULT_LIMIT,

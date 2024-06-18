@@ -61,17 +61,13 @@ const UploadMetadata = ({ metadata, isInputDisabled, isLoading, onReset, onMetad
     if (!value) return onReset();
 
     const extension = getFileExtension(value);
-    if (![FILE_EXTENSION.TXT, FILE_EXTENSION.IDL].includes(extension)) return alert.error('Invalid file extension');
+    if (![FILE_EXTENSION.TXT].includes(extension)) return alert.error('Invalid file extension');
 
     setFile(value);
 
     const text = await value.text();
 
-    if (extension === FILE_EXTENSION.TXT) return onMetadataUpload?.(isHex(text) ? text : (`0x${text}` as const));
-
-    if (extension === FILE_EXTENSION.IDL) {
-      console.log('idl');
-    }
+    onMetadataUpload(isHex(text) ? text : (`0x${text}` as const));
   };
 
   return (
@@ -84,7 +80,7 @@ const UploadMetadata = ({ metadata, isInputDisabled, isLoading, onReset, onMetad
           direction="y"
           className={cx(formStyles.field, formStyles.gap16)}
           onChange={handleFileInputChange}
-          accept={[FileTypes.Text, FileTypes.Idl]}
+          accept={[FileTypes.Text]}
         />
       )}
 

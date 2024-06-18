@@ -2505,6 +2505,7 @@ __metadata:
     "@types/node": 20.8.4
     "@types/react": 18.2.36
     "@types/react-dom": 18.2.14
+    "@types/react-gtm-module": 2.0.3
     "@types/react-transition-group": 4.4.7
     "@typescript-eslint/eslint-plugin": 6.7.5
     "@typescript-eslint/parser": 6.7.5
@@ -2530,6 +2531,7 @@ __metadata:
     react-dnd-html5-backend: 16.0.1
     react-dom: 18.2.0
     react-error-boundary: 4.0.11
+    react-gtm-module: 2.0.11
     react-hook-form: 7.48.2
     react-number-format: 5.3.1
     react-router-dom: 6.16.0
@@ -6310,6 +6312,13 @@ __metadata:
   dependencies:
     "@types/react": "*"
   checksum: 83bb3ddcd7894f20a9a6cbc2befe75d8b76984734020c455b4c50cad625a4025250d8e1d247ef6264e484d47d5a94f2dd11f77c1dcac6a5de998cb447d85b720
+  languageName: node
+  linkType: hard
+
+"@types/react-gtm-module@npm:2.0.3":
+  version: 2.0.3
+  resolution: "@types/react-gtm-module@npm:2.0.3"
+  checksum: b4b892c9efe93f6f624a42ffe5de37ef7615139191eccc127f7dc2006a70b0540aacb0dc882e3452c344498fdc7f2d4eafc53fe3a33696c1e60fc6852ac650f5
   languageName: node
   linkType: hard
 
@@ -15972,6 +15981,13 @@ __metadata:
   peerDependencies:
     react: ">=16.13.1"
   checksum: b3c157fea4e8f78411e9aa0fbf5241f6907b66ede1cd8b7bb22faaeb0339ebeb3dc8e63bf90ef3f740bfa8fd994ca6edf975089cd371b664ad6c2735e7512d38
+  languageName: node
+  linkType: hard
+
+"react-gtm-module@npm:2.0.11":
+  version: 2.0.11
+  resolution: "react-gtm-module@npm:2.0.11"
+  checksum: 93b4659f0d10248f59113a3eb488ea8848712cab2e28b7c45d080b373d6736a96b9855d637c4447819493366bf25185c3f88e6b4107a8f06d8ab2a39f7a725b9
   languageName: node
   linkType: hard
 
