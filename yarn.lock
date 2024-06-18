@@ -2530,6 +2530,7 @@ __metadata:
     react-dnd-html5-backend: 16.0.1
     react-dom: 18.2.0
     react-error-boundary: 4.0.11
+    react-ga4: 2.1.0
     react-hook-form: 7.48.2
     react-number-format: 5.3.1
     react-router-dom: 6.16.0
@@ -15972,6 +15973,13 @@ __metadata:
   peerDependencies:
     react: ">=16.13.1"
   checksum: b3c157fea4e8f78411e9aa0fbf5241f6907b66ede1cd8b7bb22faaeb0339ebeb3dc8e63bf90ef3f740bfa8fd994ca6edf975089cd371b664ad6c2735e7512d38
+  languageName: node
+  linkType: hard
+
+"react-ga4@npm:2.1.0":
+  version: 2.1.0
+  resolution: "react-ga4@npm:2.1.0"
+  checksum: f7fb41141418d4ad14756f1126a1e9958db37d4d84ae6cd798043dc03a390b6dba74d69311af0349f0b9580a43bda8930138194ccc29c4100efe446e2d6eb057
   languageName: node
   linkType: hard
 
