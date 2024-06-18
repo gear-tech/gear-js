@@ -8,7 +8,7 @@ import { RPCError, RPCErrorCode } from '@/shared/services/rpcService';
 
 import { getIdl } from '../api';
 
-function useSails(codeId: HexString | undefined) {
+function useSails(codeId: HexString | null | undefined) {
   const alert = useAlert();
 
   const getSails = async () => {

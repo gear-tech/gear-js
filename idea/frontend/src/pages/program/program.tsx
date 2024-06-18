@@ -15,7 +15,7 @@ import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import { useMetadata, MetadataTable } from '@/features/metadata';
 import { IssueVoucher, VoucherTable } from '@/features/voucher';
-import { IDL, useIdl } from '@/features/sails';
+import { IDL, useSails } from '@/features/sails';
 
 import styles from './program.module.scss';
 
@@ -28,7 +28,7 @@ const Program = () => {
 
   const { program, isProgramReady, setProgramName } = useProgram(programId);
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(program?.metahash);
-  const idl = useIdl();
+  const { idl, isLoading: isSailsLoading } = useSails(program?.codeId);
 
   const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
     const codeHash = program?.codeId;
@@ -110,16 +110,15 @@ const Program = () => {
           )}
 
           <div>
-            <Subheader title="Metadata" />
-            <MetadataTable metadata={metadata} isLoading={!isMetadataReady} />
-          </div>
+            {metadata && <Subheader title="Metadata" />}
+            {idl && <Subheader title="IDL" />}
 
-          {idl && (
-            <div>
-              <Subheader title="IDL" />
-              <IDL value={idl} />
-            </div>
-          )}
+            {(metadata || !isMetadataReady || isSailsLoading) && (
+              <MetadataTable metadata={metadata} isLoading={!isMetadataReady || isSailsLoading} />
+            )}
+
+            {idl && <IDL value={idl} />}
+          </div>
         </div>
 
         <ProgramMessages programId={programId} />
