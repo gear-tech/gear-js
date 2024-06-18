@@ -5,7 +5,7 @@ import { useContractApiWithFile, useProgramActions } from '@/hooks';
 import { Subheader } from '@/shared/ui/subheader';
 import { UploadMetadata } from '@/features/uploadMetadata';
 import { Payload } from '@/hooks/useProgramActions/types';
-import { ProgramForm, RenderButtonsProps, SubmitHelpers } from '@/widgets/programForm';
+import { ProgramForm, RenderButtonsProps, SailsProgramForm, SubmitHelpers } from '@/widgets/programForm';
 import { BackButton } from '@/shared/ui/backButton';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import { GasMethod } from '@/shared/config';
@@ -44,14 +44,25 @@ const InitializeProgram = () => {
         <div className={styles.lining}>
           <Input label="Code ID" value={codeId} direction="y" className={styles.codeId} block readOnly />
 
-          <ProgramForm
-            source={codeId}
-            metaHex={metadata.hex}
-            metadata={metadata.value}
-            gasMethod={GasMethod.InitCreate}
-            renderButtons={renderButtons}
-            onSubmit={handleSubmit}
-          />
+          {sails.value && sails.idl ? (
+            <SailsProgramForm
+              source={codeId}
+              sails={sails.value}
+              idl={sails.idl}
+              gasMethod={GasMethod.InitCreate}
+              renderButtons={renderButtons}
+              onSubmit={handleSubmit}
+            />
+          ) : (
+            <ProgramForm
+              source={codeId}
+              metaHex={metadata.hex}
+              metadata={metadata.value}
+              gasMethod={GasMethod.InitCreate}
+              renderButtons={renderButtons}
+              onSubmit={handleSubmit}
+            />
+          )}
         </div>
       </section>
 

@@ -82,6 +82,7 @@ const SailsProgramForm = ({ gasMethod, sails, idl, source, fileName = '', render
     const payloadType = 'Bytes';
     const submitValues = { ...values, initPayload: values.payload, payloadType, idl };
 
+    // TODO: reset form (init program page). do we need to reset on sails change?
     onSubmit(submitValues, { enableButtons: () => setIsDisabled(false), resetForm: () => {} });
   });
 
