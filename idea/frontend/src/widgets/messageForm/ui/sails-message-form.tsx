@@ -67,28 +67,16 @@ const SailsMessageForm = ({ id, programId, isReply, sails }: Props) => {
 
   const handleSubmitForm = form.handleSubmit((values) => {
     console.log('values: ', values);
-    // disableSubmitButton();
+    disableSubmitButton();
 
     const payloadType = 'Bytes';
-    const voucherId = '';
+    const voucherId = ''; // TODO: VOUCHER ID SHOULD BE FROM FORM VALUES!
+    const reject = enableSubmitButton;
+    const resolve = resetForm;
 
-    // const payloadType = metadata ? undefined : values.payloadType;
-    // const { voucherId, keepAlive } = values;
+    if (isReply) return replyMessage({ reply: { ...values, replyToId: id }, payloadType, voucherId, reject, resolve });
 
-    // const baseValues = {
-    //   value: getChainBalanceValue(values.value).toFixed(),
-    //   payload: getSubmitPayload(values.payload),
-    //   gasLimit: getChainGasValue(values.gasLimit).toFixed(),
-    //   keepAlive,
-    // };
-
-    // if (isReply) {
-    //   const reply = { ...baseValues, replyToId: id };
-    //   replyMessage({ reply, metadata, payloadType, voucherId, reject: enableSubmitButton, resolve: resetForm });
-    // } else {
-    const message = { ...values, destination: id };
-    sendMessage({ message, payloadType, voucherId, reject: enableSubmitButton, resolve: resetForm });
-    // }
+    sendMessage({ message: { ...values, destination: id }, payloadType, voucherId, reject, resolve });
   });
 
   const handleGasCalculate = () => {
