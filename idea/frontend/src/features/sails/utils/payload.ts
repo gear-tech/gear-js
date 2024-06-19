@@ -110,7 +110,7 @@ const getPayloadSchema = (sails: Sails, args: ISailsFuncArg[], encode: (..._args
 
   const result = args.map(({ typeDef }, index) => [index, getSchema(typeDef)] as const);
 
-  return z.object(Object.fromEntries(result)).transform((value) => encode(Object.values(value)));
+  return z.object(Object.fromEntries(result)).transform((value) => encode(...Object.values(value)));
 };
 
 export { getDefaultValue, getDefaultPayloadValue, getPayloadSchema };

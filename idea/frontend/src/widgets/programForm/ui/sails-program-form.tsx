@@ -92,7 +92,7 @@ const SailsProgramForm = ({ gasMethod, sails, idl, source, fileName = '', render
         <div className={styles.formContent}>
           <Input name="programName" label="Name" direction="y" placeholder="Enter program name" block />
 
-          <PayloadForm sails={sails} select={constructor.select} args={constructor.args} />
+          <PayloadForm direction="y" sails={sails} select={constructor.select} args={constructor.args} />
 
           <ValueField name="value" label="Initial value:" direction="y" block />
 
