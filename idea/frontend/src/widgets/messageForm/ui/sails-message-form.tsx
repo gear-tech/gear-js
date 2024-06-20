@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Sails } from 'sails-js';
+import { z } from 'zod';
 
 import sendSVG from '@/shared/assets/images/actions/send.svg?react';
 import { ValueField } from '@/shared/ui/form';
@@ -12,12 +13,11 @@ import { Box } from '@/shared/ui/box';
 import { BackButton } from '@/shared/ui/backButton';
 import { GasMethod } from '@/shared/config';
 import { GasField } from '@/features/gasField';
-import { getResetPayloadValue } from '@/features/formPayload';
 import { useGasCalculate, useMessageActions, useTransactionSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
 import { ProgramVoucherSelect } from '@/features/voucher';
 import { LabeledCheckbox } from '@/shared/ui';
-import { PayloadForm, useService } from '@/features/sails';
+import { PayloadForm, getResetPayloadValue, useService, PayloadValue } from '@/features/sails';
 
 import styles from './message-form.module.scss';
 
@@ -36,13 +36,23 @@ const DEFAULT_VALUES = {
   keepAlive: true,
 };
 
+type Values = {
+  value: string;
+  gasLimit: string;
+  programName: string;
+  keepAlive: boolean;
+  payload: PayloadValue;
+};
+
+type FormattedValues = z.infer<ReturnType<typeof useTransactionSchema>>;
+
 const SailsMessageForm = ({ id, programId, isReply, sails }: Props) => {
   const { getFormattedGasValue } = useBalanceFormat();
   const service = useService(sails);
 
   const defaultValues = { ...DEFAULT_VALUES, payload: service.defaultValues };
   const schema = useTransactionSchema(service.schema);
-  const form = useForm({ values: defaultValues, resolver: zodResolver(schema) });
+  const form = useForm<Values, unknown, FormattedValues>({ values: defaultValues, resolver: zodResolver(schema) });
 
   const calculateGas = useGasCalculate();
   const { sendMessage, replyMessage } = useMessageActions();
@@ -58,9 +68,9 @@ const SailsMessageForm = ({ id, programId, isReply, sails }: Props) => {
 
   const resetForm = () => {
     const values = form.getValues();
-    const payload = getResetPayloadValue(values.payload);
+    const resetValue = { ...DEFAULT_VALUES, payload: getResetPayloadValue(values.payload) };
 
-    // reset({ ...INITIAL_VALUES, payload });
+    form.reset(resetValue);
     enableSubmitButton();
     setGasInfo(undefined);
   };

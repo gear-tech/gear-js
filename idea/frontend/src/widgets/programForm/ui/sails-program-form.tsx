@@ -12,8 +12,7 @@ import { Payload } from '@/hooks/useProgramActions/types';
 import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
 import { Input, ValueField, LabeledCheckbox } from '@/shared/ui';
-import { PayloadForm, useConstructor } from '@/features/sails';
-import { PayloadValue } from '@/features/sails/types';
+import { PayloadForm, useConstructor, PayloadValue } from '@/features/sails';
 
 import { RenderButtonsProps, SubmitHelpers } from '../model';
 import styles from './ProgramForm.module.scss';

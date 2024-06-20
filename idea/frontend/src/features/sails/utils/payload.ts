@@ -2,7 +2,7 @@ import { HexString } from '@gear-js/api';
 import { Sails } from 'sails-js';
 import { z } from 'zod';
 
-import { getPreformattedText } from '@/shared/helpers';
+import { getPreformattedText, isString } from '@/shared/helpers';
 
 import { RESULT } from '../consts';
 import {
@@ -113,4 +113,16 @@ const getPayloadSchema = (sails: Sails, args: ISailsFuncArg[], encode: (..._args
   return z.object(Object.fromEntries(result)).transform((value) => encode(...Object.values(value)));
 };
 
-export { getDefaultValue, getDefaultPayloadValue, getPayloadSchema };
+const getResetPayloadValue = (value: PayloadValue): PayloadValue => {
+  if (isString(value)) return '';
+  if (Array.isArray(value)) return value.map((_value) => getResetPayloadValue(_value));
+
+  if (typeof value === 'object' && value !== null)
+    return Object.fromEntries(
+      Object.entries(value).map(([key, _value]) => [key, getResetPayloadValue(_value)] as const),
+    );
+
+  return value;
+};
+
+export { getDefaultValue, getDefaultPayloadValue, getPayloadSchema, getResetPayloadValue };
