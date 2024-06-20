@@ -13,11 +13,11 @@ import { Box } from '@/shared/ui/box';
 import { BackButton } from '@/shared/ui/backButton';
 import { GasMethod } from '@/shared/config';
 import { GasField } from '@/features/gasField';
-import { useGasCalculate, useMessageActions, useTransactionSchema } from '@/hooks';
+import { useBalanceSchema, useGasCalculate, useGasLimitSchema, useMessageActions } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
 import { ProgramVoucherSelect } from '@/features/voucher';
 import { LabeledCheckbox } from '@/shared/ui';
-import { PayloadForm, getResetPayloadValue, useService, PayloadValue } from '@/features/sails';
+import { PayloadForm, getResetPayloadValue, useService, PayloadValue, PayloadValueSchema } from '@/features/sails';
 
 import styles from './message-form.module.scss';
 
@@ -28,30 +28,42 @@ type Props = {
   sails: Sails;
 };
 
-// TODO: DROP PROGRAM NAME!
 const DEFAULT_VALUES = {
   value: '0',
   gasLimit: '0',
-  programName: 'name',
+  voucherId: '',
   keepAlive: true,
 };
 
 type Values = {
   value: string;
   gasLimit: string;
-  programName: string;
+  voucherId: string;
   keepAlive: boolean;
   payload: PayloadValue;
 };
 
-type FormattedValues = z.infer<ReturnType<typeof useTransactionSchema>>;
+const useSchema = (payloadSchema: PayloadValueSchema) => {
+  const balanceSchema = useBalanceSchema();
+  const gasLimitSchema = useGasLimitSchema();
+
+  return z.object({
+    payload: payloadSchema,
+    value: balanceSchema,
+    gasLimit: gasLimitSchema,
+    keepAlive: z.boolean(),
+    voucherId: z.string().trim(),
+  });
+};
+
+type FormattedValues = z.infer<ReturnType<typeof useSchema>>;
 
 const SailsMessageForm = ({ id, programId, isReply, sails }: Props) => {
   const { getFormattedGasValue } = useBalanceFormat();
   const service = useService(sails);
 
   const defaultValues = { ...DEFAULT_VALUES, payload: service.defaultValues };
-  const schema = useTransactionSchema(service.schema);
+  const schema = useSchema(service.schema);
   const form = useForm<Values, unknown, FormattedValues>({ values: defaultValues, resolver: zodResolver(schema) });
 
   const calculateGas = useGasCalculate();
@@ -75,12 +87,13 @@ const SailsMessageForm = ({ id, programId, isReply, sails }: Props) => {
     setGasInfo(undefined);
   };
 
-  const handleSubmitForm = form.handleSubmit((values) => {
+  const handleSubmitForm = form.handleSubmit(({ voucherId, ...values }) => {
+    console.log('voucherId: ', voucherId);
     console.log('values: ', values);
+
     disableSubmitButton();
 
     const payloadType = 'Bytes';
-    const voucherId = ''; // TODO: VOUCHER ID SHOULD BE FROM FORM VALUES!
     const reject = enableSubmitButton;
     const resolve = resetForm;
 

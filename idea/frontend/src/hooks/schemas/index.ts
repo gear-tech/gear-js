@@ -1,5 +1,5 @@
 import { useValidationSchema } from './use-validation-schema';
 import { useBalanceSchema } from './use-balance-schema';
-import { useTransactionSchema } from './use-transaction-schema';
+import { useGasLimitSchema } from './use-gas-limit-schema';
 
-export { useValidationSchema, useBalanceSchema, useTransactionSchema };
+export { useValidationSchema, useBalanceSchema, useGasLimitSchema };

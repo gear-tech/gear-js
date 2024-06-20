@@ -2,7 +2,7 @@ import { useIdl, useSails, useSailsWithFile, useConstructor, useService } from '
 import { PayloadForm, IDL } from './ui';
 import { addIdl } from './api';
 import { getResetPayloadValue } from './utils';
-import { PayloadValue } from './types';
+import { PayloadValue, PayloadValueSchema } from './types';
 
 export {
   useIdl,
@@ -16,4 +16,4 @@ export {
   getResetPayloadValue,
 };
 
-export type { PayloadValue };
+export type { PayloadValue, PayloadValueSchema };

@@ -6,13 +6,13 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { Sails } from 'sails-js';
 import { z } from 'zod';
 
-import { useGasCalculate, useTransactionSchema } from '@/hooks';
+import { useBalanceSchema, useGasCalculate, useGasLimitSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
 import { Payload } from '@/hooks/useProgramActions/types';
 import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
 import { Input, ValueField, LabeledCheckbox } from '@/shared/ui';
-import { PayloadForm, useConstructor, PayloadValue } from '@/features/sails';
+import { PayloadForm, useConstructor, PayloadValue, PayloadValueSchema } from '@/features/sails';
 
 import { RenderButtonsProps, SubmitHelpers } from '../model';
 import styles from './ProgramForm.module.scss';
@@ -25,7 +25,20 @@ type Values = {
   payload: PayloadValue;
 };
 
-type FormattedValues = z.infer<ReturnType<typeof useTransactionSchema>>;
+const useSchema = (payloadSchema: PayloadValueSchema) => {
+  const balanceSchema = useBalanceSchema();
+  const gasLimitSchema = useGasLimitSchema();
+
+  return z.object({
+    payload: payloadSchema,
+    value: balanceSchema,
+    gasLimit: gasLimitSchema,
+    keepAlive: z.boolean(),
+    programName: z.string().trim().min(1),
+  });
+};
+
+type FormattedValues = z.infer<ReturnType<typeof useSchema>>;
 
 type Props = {
   source: Buffer | HexString;
@@ -49,7 +62,7 @@ const SailsProgramForm = ({ gasMethod, sails, idl, source, fileName = '', render
 
   const constructor = useConstructor(sails);
   const defaultValues = { ...DEFAULT_VALUES, payload: constructor.defaultValues, programName: fileName };
-  const schema = useTransactionSchema(constructor.schema);
+  const schema = useSchema(constructor.schema);
   const form = useForm<Values, unknown, FormattedValues>({ values: defaultValues, resolver: zodResolver(schema) });
 
   const [gasInfo, setGasinfo] = useState<Result>();
