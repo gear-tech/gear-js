@@ -1,3 +1,5 @@
+import { HexString } from '@gear-js/api';
+
 const API_URL = import.meta.env.VITE_API_URL as string;
 const NODES_API_URL = import.meta.env.VITE_NODES_API_URL as string;
 const NODE_ADDRESS = import.meta.env.VITE_NODE_ADDRESS as string;
@@ -13,6 +15,9 @@ const VOUCHERS_API_URL = {
   [GENESIS.MAINNET]: import.meta.env.VITE_MAINNET_VOUCHERS_API_URL as string,
   [GENESIS.TESTNET]: import.meta.env.VITE_TESTNET_VOUCHERS_API_URL as string,
 } as const;
+
+const DNS_API_URL = import.meta.env.VITE_DNS_API_URL as string;
+const DNS_CONTRACT_ADDRESS = import.meta.env.VITE_DNS_CONTRACT_ADDRESS as HexString;
 
 const NODE_ADRESS_URL_PARAM = 'node';
 
@@ -106,6 +111,8 @@ enum AnimationTimeout {
 export {
   API_URL,
   VOUCHERS_API_URL,
+  DNS_API_URL,
+  DNS_CONTRACT_ADDRESS,
   NODES_API_URL,
   NODE_ADDRESS,
   HCAPTCHA_SITE_KEY,

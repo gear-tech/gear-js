@@ -18,6 +18,7 @@ const routes = {
   reply: 'reply/:messageId',
   block: ':blockId',
   vouchers: '/vouchers',
+  dns: '/dns',
 };
 
 const absoluteRoutes = {
