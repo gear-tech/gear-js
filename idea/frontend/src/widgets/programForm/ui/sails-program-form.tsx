@@ -12,7 +12,7 @@ import { Payload } from '@/hooks/useProgramActions/types';
 import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
 import { Input, ValueField, LabeledCheckbox } from '@/shared/ui';
-import { PayloadForm, useConstructor, PayloadValue, PayloadValueSchema } from '@/features/sails';
+import { PayloadForm, useConstructor, PayloadValue, PayloadValueSchema, getResetPayloadValue } from '@/features/sails';
 
 import { RenderButtonsProps, SubmitHelpers } from '../model';
 import styles from './ProgramForm.module.scss';
@@ -71,6 +71,15 @@ const SailsProgramForm = ({ gasMethod, sails, idl, source, fileName = '', render
 
   const calculateGas = useGasCalculate();
 
+  const resetForm = () => {
+    const values = form.getValues();
+    const resetValues = { ...DEFAULT_VALUES, payload: getResetPayloadValue(values.payload) };
+
+    form.reset(resetValues);
+    setGasinfo(undefined);
+    setIsDisabled(false);
+  };
+
   const handleGasCalculate = async () => {
     setIsGasDisabled(true);
 
@@ -88,14 +97,12 @@ const SailsProgramForm = ({ gasMethod, sails, idl, source, fileName = '', render
   };
 
   const handleSubmit = form.handleSubmit((values) => {
-    console.log('values: ', values);
     setIsDisabled(true);
 
     const payloadType = 'Bytes';
     const submitValues = { ...values, initPayload: values.payload, payloadType, idl };
 
-    // TODO: reset form (init program page). do we need to reset on sails change?
-    onSubmit(submitValues, { enableButtons: () => setIsDisabled(false), resetForm: () => {} });
+    onSubmit(submitValues, { enableButtons: () => setIsDisabled(false), resetForm });
   });
 
   return (
