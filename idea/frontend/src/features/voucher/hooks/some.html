@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piano Chords</title>
+    <style>
+        body {
+            display: flex;
+        }
+        .chords {
+            width: 30%;
+            padding: 20px;
+            border-right: 2px solid #000;
+        }
+        .keyboard {
+            width: 70%;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        .key {
+            width: 40px;
+            height: 200px;
+            border: 1px solid #000;
+            margin: 2px;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            font-size: 14px;
+            user-select: none;
+        }
+        .key.black {
+            width: 30px;
+            height: 120px;
+            background: black;
+            color: white;
+            position: absolute;
+            right: -15px;
+            z-index: 1;
+        }
+        .key.active {
+            background: yellow;
+        }
+        .key.white {
+            background: white;
+        }
+        .black-keys {
+            display: flex;
+            position: relative;
+            left: 20px;
+        }
+        .white-keys {
+            display: flex;
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="chords">
+        <h2>Saved Chords</h2>
+        <div id="chord-list"></div>
+        <button id="save-chord">Save Chord</button>
+    </div>
+    <div class="keyboard">
+        <div class="white-keys" id="white-keys"></div>
+        <div class="black-keys" id="black-keys"></div>
+    </div>
+    <script>
+        const notes = ['F', 'G', 'A', 'B', 'C', 'D', 'E'];
+        const whiteKeys = [];
+        const blackKeys = [];
+
+        for (let i = 0; i < 2; i++) {
+            notes.forEach(note => {
+                const key = document.createElement('div');
+                key.className = 'key white';
+                key.dataset.note = note + (i + 4);
+                key.innerText = note + (i + 4);
+                whiteKeys.push(key);
+            });
+        }
+
+        whiteKeys.forEach((key, index) => {
+            if (key.dataset.note[0] !== 'B' && key.dataset.note[0] !== 'E') {
+                const blackKey = document.createElement('div');
+                blackKey.className = 'key black';
+                blackKey.dataset.note = key.dataset.note[0] + '#' + key.dataset.note[1];
+                blackKey.innerText = key.dataset.note[0] + '#' + key.dataset.note[1];
+                blackKeys.push(blackKey);
+            }
+        });
+
+        const whiteKeysContainer = document.getElementById('white-keys');
+        whiteKeys.forEach(key => whiteKeysContainer.appendChild(key));
+        
+        const blackKeysContainer = document.getElementById('black-keys');
+        blackKeys.forEach(key => blackKeysContainer.appendChild(key));
+
+        const toggleKey = (key) => {
+            key.classList.toggle('active');
+        };
+
+        const getActiveKeys = () => {
+            return Array.from(document.querySelectorAll('.key.active')).map(key => key.dataset.note);
+        };
+
+        const saveChord = () => {
+            const activeKeys = getActiveKeys();
+            if (activeKeys.length > 0) {
+                let chords = JSON.parse(localStorage.getItem('chords') || '[]');
+                chords.push(activeKeys);
+                localStorage.setItem('chords', JSON.stringify(chords));
+                updateChordList();
+            }
+        };
+
+        const updateChordList = () => {
+            const chordList = document.getElementById('chord-list');
+            chordList.innerHTML = '';
+            const chords = JSON.parse(localStorage.getItem('chords') || '[]');
+            chords.forEach((chord, index) => {
+                const chordItem = document.createElement('div');
+                chordItem.innerText = `Chord ${index + 1}: ${chord.join(', ')}`;
+                chordItem.dataset.index = index;
+                chordItem.addEventListener('click', () => loadChord(index));
+                chordList.appendChild(chordItem);
+            });
+        };
+
+        const loadChord = (index) => {
+            const chords = JSON.parse(localStorage.getItem('chords') || '[]');
+            const chord = chords[index];
+            document.querySelectorAll('.key').forEach(key => key.classList.remove('active'));
+            chord.forEach(note => {
+                const key = document.querySelector(`.key[data-note="${note}"]`);
+                if (key) key.classList.add('active');
+            });
+        };
+
+        document.querySelectorAll('.key').forEach(key => {
+            key.addEventListener('click', () => toggleKey(key));
+        });
+
+        document.getElementById('save-chord').addEventListener('click', saveChord);
+
+        updateChordList();
+    </script>
+</body>
+</html>

@@ -58,6 +58,8 @@ jobs:
             VITE_NODES_API_URL= ${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
             VITE_MAINNET_VOUCHERS_API_URL=${{ secrets.VITE_MAINNET_VOUCHERS_API_URL }}
             VITE_TESTNET_VOUCHERS_API_URL=${{ secrets.VITE_TESTNET_VOUCHERS_API_URL }}
+            VITE_DNS_API_URL=${{ secrets.VITE_DNS_API_URL }}
+            VITE_DNS_CONTRACT_ADDRESS=${{ secrets.VITE_DNS_CONTRACT_ADDRESS }}
 
   build-indexer-image-staging:
     runs-on: ubuntu-latest
