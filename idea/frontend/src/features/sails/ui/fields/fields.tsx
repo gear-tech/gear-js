@@ -46,7 +46,7 @@ function Fields({ sails, args }: Props) {
   const renderFields = () =>
     args.map(({ typeDef, name }, index) => renderField(typeDef, name, getNestedName('payload', index.toString())));
 
-  return <Fieldset>{renderFields()}</Fieldset>;
+  return args.length ? <Fieldset>{renderFields()}</Fieldset> : null;
 }
 
 export { Fields };
