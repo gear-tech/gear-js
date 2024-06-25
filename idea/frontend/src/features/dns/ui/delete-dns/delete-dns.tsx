@@ -5,11 +5,10 @@ import cx from 'clsx';
 import { withAccount } from '@/shared/ui';
 
 import DnsSVG from '../../assets/trash.svg?react';
-import { useLoading, useModal } from '../../hooks';
+import { useModal } from '../../hooks';
 import { ConfirmModal } from '../confirn-modal';
 import styles from './delete-dns.module.scss';
-import { DeleteProgram } from '../../sails';
-import { useAccount, useAlert } from '@gear-js/react-hooks';
+import { useDnsActions } from '../../sails';
 
 type Props = {
   name: string;
@@ -21,26 +20,15 @@ type Props = {
 
 const DeleteDns = withAccount(({ buttonColor = 'transparent', buttonSize = 'medium', onSubmit, name }: Props) => {
   const [isModalOpen, openModal, closeModal] = useModal();
-  const alert = useAlert();
-  const [isLoading, enableLoading, disableLoading] = useLoading();
-  const { account } = useAccount();
+  const { isLoading, deleteProgram } = useDnsActions();
   const text = `DNS '${name}' will be deleted. Are you sure?`;
 
   const onConfirm = async () => {
-    if (account) {
-      try {
-        enableLoading();
-        await DeleteProgram(account, name);
-
-        onSubmit?.();
-        closeModal();
-      } catch (error) {
-        const errorMessage = (error as Error).message;
-        alert.error(errorMessage);
-      } finally {
-        disableLoading();
-      }
-    }
+    const resolve = () => {
+      onSubmit?.();
+      closeModal();
+    };
+    deleteProgram(name, { resolve });
   };
 
   return (

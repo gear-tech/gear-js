@@ -68,7 +68,6 @@ jobs:
             VITE_MAINNET_VOUCHERS_API_URL=${{ secrets.VITE_MAINNET_VOUCHERS_API_URL }}
             VITE_TESTNET_VOUCHERS_API_URL=${{ secrets.VITE_TESTNET_VOUCHERS_API_URL }}
             VITE_DNS_API_URL=${{ secrets.VITE_MAINNET_DNS_API_URL }}
-            VITE_DNS_CONTRACT_ADDRESS=${{ secrets.VITE_MAINNET_DNS_CONTRACT_ADDRESS }}
 
   build-indexer-image-prod:
     runs-on: ubuntu-latest

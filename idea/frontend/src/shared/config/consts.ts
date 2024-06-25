@@ -17,7 +17,6 @@ const VOUCHERS_API_URL = {
 } as const;
 
 const DNS_API_URL = import.meta.env.VITE_DNS_API_URL as string;
-const DNS_CONTRACT_ADDRESS = import.meta.env.VITE_DNS_CONTRACT_ADDRESS as HexString;
 
 const NODE_ADRESS_URL_PARAM = 'node';
 
@@ -112,7 +111,6 @@ export {
   API_URL,
   VOUCHERS_API_URL,
   DNS_API_URL,
-  DNS_CONTRACT_ADDRESS,
   NODES_API_URL,
   NODE_ADDRESS,
   HCAPTCHA_SITE_KEY,
