@@ -3,7 +3,7 @@ import { ProgramMetadata } from '@gear-js/api';
 import { MESSAGE_ENTRY_POINT } from './consts';
 import { Message } from './types';
 
-const getDecodedMessagePayload = (meta: ProgramMetadata, message: Message) => {
+const getDecodedMessagePayload = (message: Message, meta: ProgramMetadata) => {
   const { entry, payload } = message;
   const isMessageQueued = message.type === 'MessageQueued';
 
