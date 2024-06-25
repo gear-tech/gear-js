@@ -1,7 +1,5 @@
-import { useAccount, useAlert, useApi } from '@gear-js/react-hooks';
 import { Button, Modal } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { web3FromSource } from '@polkadot/extension-dapp';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
@@ -9,9 +7,8 @@ import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { Input } from '@/shared/ui';
 
 import { DEFAULT_VALUES, FIELD_NAME, DnsSchema, dnsSchema } from '../../consts';
-import { useLoading } from '../../hooks';
 import { Values } from '../../types';
-import { AddNewProgram } from '../../sails';
+import { useDnsActions } from '../../sails';
 
 import styles from './create-dns-modal.module.scss';
 
@@ -22,31 +19,19 @@ type Props = {
 };
 
 const CreateDnsModal = ({ close, onSubmit = () => {}, initialValues }: Props) => {
-  const { account } = useAccount();
-  const alert = useAlert();
-
-  const [isLoading, enableLoading, disableLoading] = useLoading();
-
   const form = useForm<Values, unknown, DnsSchema>({
     defaultValues: initialValues || DEFAULT_VALUES,
     resolver: zodResolver(dnsSchema),
   });
 
-  const handleSubmit = async ({ name, address }: DnsSchema) => {
-    if (account) {
-      try {
-        enableLoading();
-        await AddNewProgram(account, name, address);
+  const { isLoading, addNewProgram } = useDnsActions();
 
-        onSubmit();
-        close();
-      } catch (error) {
-        const errorMessage = (error as Error).message;
-        alert.error(errorMessage);
-      } finally {
-        disableLoading();
-      }
-    }
+  const handleSubmit = async ({ name, address }: DnsSchema) => {
+    const resolve = () => {
+      onSubmit();
+      close();
+    };
+    addNewProgram(name, address, { resolve });
   };
 
   return (

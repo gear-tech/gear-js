@@ -12,7 +12,7 @@ import {
   useDns,
   CreateDns,
   useDnsSort,
-  useSetSailsApi,
+  useInitDnsProgram,
 } from '@/features/dns';
 import { List, SearchForm, Skeleton } from '@/shared/ui';
 
@@ -20,7 +20,7 @@ import styles from './dns.module.scss';
 
 const DnsPage = () => {
   const { account } = useAccount();
-  useSetSailsApi();
+  useInitDnsProgram();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filterValues, filterParams, handleFiltersSubmit] = useDnsFilters();
