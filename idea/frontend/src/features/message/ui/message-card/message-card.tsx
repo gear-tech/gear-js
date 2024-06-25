@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { generatePath, Link } from 'react-router-dom';
 
+import { Message } from '@/features/message';
 import { getShortName } from '@/shared/helpers';
 import { IdBlock } from '@/shared/ui/idBlock';
 import { TimestampBlock } from '@/shared/ui/timestampBlock';
@@ -9,17 +10,15 @@ import DirectionSVG from '@/shared/assets/images/indicators/messageDirection.svg
 import { absoluteRoutes } from '@/shared/config';
 import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
 
-import { IMessage } from '../../model/types';
-
-import styles from './HorizontalMessageCard.module.scss';
+import styles from './message-card.module.scss';
 import { HexString } from '@gear-js/api';
 
 type Props = {
-  message: IMessage;
+  message: Message;
   program?: { id: HexString; name: string | undefined };
 };
 
-const HorizontalMessageCard = ({ message, program }: Props) => {
+const MessageCard = ({ message, program }: Props) => {
   const { id: messageId, timestamp, type, exitCode } = message;
   const isUserMessageSent = type === 'UserMessageSent';
 
@@ -61,4 +60,4 @@ const HorizontalMessageCard = ({ message, program }: Props) => {
   );
 };
 
-export { HorizontalMessageCard };
+export { MessageCard };
