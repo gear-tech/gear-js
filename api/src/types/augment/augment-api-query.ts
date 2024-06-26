@@ -1,13 +1,8 @@
-// Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
-
-// import type lookup before we augment - in some environments
-// this is required to allow for ambient/previous definitions
 import '@polkadot/api-base/types/storage';
 
 import type { ApiTypes, AugmentedQuery, QueryableStorageEntry } from '@polkadot/api-base/types';
-import type { Data } from '@polkadot/types';
-import type { BTreeMap, Bytes, Null, Option, U8aFixed, Vec, bool, u128, u32, u64 } from '@polkadot/types-codec';
+import type { BTreeMap, Bytes, Null, Option, U8aFixed, bool, u128, u32, u64 } from '@polkadot/types-codec';
 import type { AnyNumber, ITuple } from '@polkadot/types-codec/types';
 import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
 import type { Observable } from '@polkadot/types/types';
@@ -15,17 +10,18 @@ import {
   GearCommonCodeMetadata,
   GearCommonGasProviderNodeGasNode,
   GearCommonGasProviderNodeGasNodeId,
-  GearCommonPausedProgramStorageResumeSession,
-  GearCommonProgram,
   GearCommonSchedulerTaskScheduledTask,
   GearCommonStorageComplicatedDequeueLinkedNode,
   GearCommonStoragePrimitivesInterval,
-  GearCoreCodeInstrumentedCode,
-  GearCoreIdsCodeId,
-  GearCoreIdsMessageId,
-  GearCoreIdsProgramId,
+  GearCoreCodeInstrumentedInstrumentedCode,
+  GearCoreMessageStoredStoredDelayedDispatch,
   GearCoreMessageStoredStoredDispatch,
   GearCoreMessageUserUserStoredMessage,
+  GearCoreProgram,
+  GprimitivesActorId,
+  GprimitivesCodeId,
+  GprimitivesMessageId,
+  NumeratedTreeIntervalsTree,
   PalletGearBankBankAccount,
   PalletGearVoucherInternalVoucherId,
   PalletGearVoucherInternalVoucherInfo,
@@ -71,6 +67,13 @@ declare module '@polkadot/api-base/types/storage' {
         [AccountId32]
       > &
         QueryableStorageEntry<ApiType, [AccountId32]>;
+      onFinalizeTransfers: AugmentedQuery<
+        ApiType,
+        (arg: AccountId32 | string | Uint8Array) => Observable<Option<u128>>,
+        [AccountId32]
+      > &
+        QueryableStorageEntry<ApiType, [AccountId32]>;
+      onFinalizeValue: AugmentedQuery<ApiType, () => Observable<u128>, []> & QueryableStorageEntry<ApiType, []>;
       unusedValue: AugmentedQuery<ApiType, () => Observable<u128>, []> & QueryableStorageEntry<ApiType, []>;
       /**
        * Generic query
@@ -112,107 +115,95 @@ declare module '@polkadot/api-base/types/storage' {
       dispatches: AugmentedQuery<
         ApiType,
         (
-          arg: GearCoreIdsMessageId | string | Uint8Array,
+          arg: GprimitivesMessageId | string | Uint8Array,
         ) => Observable<Option<GearCommonStorageComplicatedDequeueLinkedNode>>,
-        [GearCoreIdsMessageId]
+        [GprimitivesMessageId]
       > &
-        QueryableStorageEntry<ApiType, [GearCoreIdsMessageId]>;
+        QueryableStorageEntry<ApiType, [GprimitivesMessageId]>;
       dispatchStash: AugmentedQuery<
         ApiType,
         (
-          arg: GearCoreIdsMessageId | string | Uint8Array,
-        ) => Observable<Option<ITuple<[GearCoreMessageStoredStoredDispatch, GearCommonStoragePrimitivesInterval]>>>,
-        [GearCoreIdsMessageId]
+          arg: GprimitivesMessageId | string | Uint8Array,
+        ) => Observable<
+          Option<ITuple<[GearCoreMessageStoredStoredDelayedDispatch, GearCommonStoragePrimitivesInterval]>>
+        >,
+        [GprimitivesMessageId]
       > &
-        QueryableStorageEntry<ApiType, [GearCoreIdsMessageId]>;
+        QueryableStorageEntry<ApiType, [GprimitivesMessageId]>;
       head: AugmentedQuery<ApiType, () => Observable<Option<U8aFixed>>, []> & QueryableStorageEntry<ApiType, []>;
       mailbox: AugmentedQuery<
         ApiType,
         (
           arg1: AccountId32 | string | Uint8Array,
-          arg2: GearCoreIdsMessageId | string | Uint8Array,
+          arg2: GprimitivesMessageId | string | Uint8Array,
         ) => Observable<Option<ITuple<[GearCoreMessageUserUserStoredMessage, GearCommonStoragePrimitivesInterval]>>>,
-        [AccountId32, GearCoreIdsMessageId]
+        [AccountId32, GprimitivesMessageId]
       > &
-        QueryableStorageEntry<ApiType, [AccountId32, GearCoreIdsMessageId]>;
+        QueryableStorageEntry<ApiType, [AccountId32, GprimitivesMessageId]>;
       queueProcessing: AugmentedQuery<ApiType, () => Observable<Option<bool>>, []> & QueryableStorageEntry<ApiType, []>;
       sent: AugmentedQuery<ApiType, () => Observable<Option<u32>>, []> & QueryableStorageEntry<ApiType, []>;
       tail: AugmentedQuery<ApiType, () => Observable<Option<U8aFixed>>, []> & QueryableStorageEntry<ApiType, []>;
       waitlist: AugmentedQuery<
         ApiType,
         (
-          arg1: GearCoreIdsProgramId | string | Uint8Array,
-          arg2: GearCoreIdsMessageId | string | Uint8Array,
+          arg1: GprimitivesActorId | string | Uint8Array,
+          arg2: GprimitivesMessageId | string | Uint8Array,
         ) => Observable<Option<ITuple<[GearCoreMessageStoredStoredDispatch, GearCommonStoragePrimitivesInterval]>>>,
-        [GearCoreIdsProgramId, GearCoreIdsMessageId]
+        [GprimitivesActorId, GprimitivesMessageId]
       > &
-        QueryableStorageEntry<ApiType, [GearCoreIdsProgramId, GearCoreIdsMessageId]>;
+        QueryableStorageEntry<ApiType, [GprimitivesActorId, GprimitivesMessageId]>;
       /**
        * Generic query
        **/
       [key: string]: QueryableStorageEntry<ApiType>;
     };
     gearProgram: {
+      allocationsStorage: AugmentedQuery<
+        ApiType,
+        (arg: GprimitivesActorId | string | Uint8Array) => Observable<Option<NumeratedTreeIntervalsTree>>,
+        [GprimitivesActorId]
+      > &
+        QueryableStorageEntry<ApiType, [GprimitivesActorId]>;
       codeLenStorage: AugmentedQuery<
         ApiType,
-        (arg: GearCoreIdsCodeId | string | Uint8Array) => Observable<Option<u32>>,
-        [GearCoreIdsCodeId]
+        (arg: GprimitivesCodeId | string | Uint8Array) => Observable<Option<u32>>,
+        [GprimitivesCodeId]
       > &
-        QueryableStorageEntry<ApiType, [GearCoreIdsCodeId]>;
+        QueryableStorageEntry<ApiType, [GprimitivesCodeId]>;
       codeStorage: AugmentedQuery<
         ApiType,
-        (arg: GearCoreIdsCodeId | string | Uint8Array) => Observable<Option<GearCoreCodeInstrumentedCode>>,
-        [GearCoreIdsCodeId]
+        (arg: GprimitivesCodeId | string | Uint8Array) => Observable<Option<GearCoreCodeInstrumentedInstrumentedCode>>,
+        [GprimitivesCodeId]
       > &
-        QueryableStorageEntry<ApiType, [GearCoreIdsCodeId]>;
+        QueryableStorageEntry<ApiType, [GprimitivesCodeId]>;
       memoryPages: AugmentedQuery<
         ApiType,
         (
-          arg1: GearCoreIdsProgramId | string | Uint8Array,
+          arg1: GprimitivesActorId | string | Uint8Array,
           arg2: u32 | AnyNumber | Uint8Array,
           arg3: u32 | AnyNumber | Uint8Array,
         ) => Observable<Option<Bytes>>,
-        [GearCoreIdsProgramId, u32, u32]
+        [GprimitivesActorId, u32, u32]
       > &
-        QueryableStorageEntry<ApiType, [GearCoreIdsProgramId, u32, u32]>;
+        QueryableStorageEntry<ApiType, [GprimitivesActorId, u32, u32]>;
       metadataStorage: AugmentedQuery<
         ApiType,
-        (arg: GearCoreIdsCodeId | string | Uint8Array) => Observable<Option<GearCommonCodeMetadata>>,
-        [GearCoreIdsCodeId]
+        (arg: GprimitivesCodeId | string | Uint8Array) => Observable<Option<GearCommonCodeMetadata>>,
+        [GprimitivesCodeId]
       > &
-        QueryableStorageEntry<ApiType, [GearCoreIdsCodeId]>;
+        QueryableStorageEntry<ApiType, [GprimitivesCodeId]>;
       originalCodeStorage: AugmentedQuery<
         ApiType,
-        (arg: GearCoreIdsCodeId | string | Uint8Array) => Observable<Option<Bytes>>,
-        [GearCoreIdsCodeId]
+        (arg: GprimitivesCodeId | string | Uint8Array) => Observable<Option<Bytes>>,
+        [GprimitivesCodeId]
       > &
-        QueryableStorageEntry<ApiType, [GearCoreIdsCodeId]>;
-      pausedProgramStorage: AugmentedQuery<
-        ApiType,
-        (arg: GearCoreIdsProgramId | string | Uint8Array) => Observable<Option<ITuple<[u32, H256]>>>,
-        [GearCoreIdsProgramId]
-      > &
-        QueryableStorageEntry<ApiType, [GearCoreIdsProgramId]>;
+        QueryableStorageEntry<ApiType, [GprimitivesCodeId]>;
       programStorage: AugmentedQuery<
         ApiType,
-        (arg: GearCoreIdsProgramId | string | Uint8Array) => Observable<Option<GearCommonProgram>>,
-        [GearCoreIdsProgramId]
+        (arg: GprimitivesActorId | string | Uint8Array) => Observable<Option<GearCoreProgram>>,
+        [GprimitivesActorId]
       > &
-        QueryableStorageEntry<ApiType, [GearCoreIdsProgramId]>;
-      resumeSessions: AugmentedQuery<
-        ApiType,
-        (arg: u32 | AnyNumber | Uint8Array) => Observable<Option<GearCommonPausedProgramStorageResumeSession>>,
-        [u32]
-      > &
-        QueryableStorageEntry<ApiType, [u32]>;
-      resumeSessionsNonce: AugmentedQuery<ApiType, () => Observable<Option<u32>>, []> &
-        QueryableStorageEntry<ApiType, []>;
-      waitingInitStorage: AugmentedQuery<
-        ApiType,
-        (arg: GearCoreIdsProgramId | string | Uint8Array) => Observable<Option<Vec<GearCoreIdsMessageId>>>,
-        [GearCoreIdsProgramId]
-      > &
-        QueryableStorageEntry<ApiType, [GearCoreIdsProgramId]>;
+        QueryableStorageEntry<ApiType, [GprimitivesActorId]>;
       /**
        * Generic query
        **/

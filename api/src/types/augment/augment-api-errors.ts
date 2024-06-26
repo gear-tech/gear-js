@@ -1,6 +1,6 @@
 import '@polkadot/api-base/types/errors';
 
-import type { ApiTypes, AugmentedError } from '@polkadot/api-base/types';
+import type { ApiTypes } from '@polkadot/api-base/types';
 
 declare module '@polkadot/api-base/types/errors' {
   interface AugmentedErrors<ApiType extends ApiTypes> {
@@ -81,10 +81,6 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       ResumePeriodLessThanMinimal: AugmentedError<ApiType>;
       /**
-       * Value doesn't cover ExistentialDeposit.
-       **/
-      ValueLessThanMinimal: AugmentedError<ApiType>;
-      /**
        * Generic error
        **/
       [key: string]: AugmentedError<ApiType>;
@@ -112,6 +108,11 @@ declare module '@polkadot/api-base/types/errors' {
        * Insufficient user's bank account gas balance.
        **/
       InsufficientValueBalance: AugmentedError<ApiType>;
+      /**
+       * Overflow during funds transfer.
+       * **Must be unreachable in Gear main protocol.**
+       **/
+      Overflow: AugmentedError<ApiType>;
       /**
        * Generic error
        **/
@@ -244,13 +245,9 @@ declare module '@polkadot/api-base/types/errors' {
     gearProgram: {
       CannotFindDataForPage: AugmentedError<ApiType>;
       DuplicateItem: AugmentedError<ApiType>;
-      DuplicateResumeSession: AugmentedError<ApiType>;
       NotActiveProgram: AugmentedError<ApiType>;
-      NotSessionOwner: AugmentedError<ApiType>;
       ProgramCodeNotFound: AugmentedError<ApiType>;
       ProgramNotFound: AugmentedError<ApiType>;
-      ResumeSessionFailed: AugmentedError<ApiType>;
-      ResumeSessionNotFound: AugmentedError<ApiType>;
       /**
        * Generic error
        **/

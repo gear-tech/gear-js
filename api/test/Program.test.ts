@@ -221,7 +221,7 @@ describe('Program', () => {
     expect(programId).toBeDefined();
     const program = await api.programStorage.getProgram(programId);
     const pages = await api.programStorage.getProgramPages(programId, program);
-    expect(Object.keys(pages)).not.toHaveLength(0);
+    expect(Object.keys(pages)).toHaveLength(2);
   });
 
   // test.skip('Resume program', async () => {

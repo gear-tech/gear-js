@@ -6,9 +6,8 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { blake2AsHex } from '@polkadot/util-crypto';
 
 import { ICallOptions, IUpdateVoucherParams, IVoucherDetails, PalletGearVoucherInternalVoucherInfo } from './types';
-import { decodeAddress, generateVoucherId } from './utils';
 import { GearTransaction } from './Transaction';
-import { SPEC_VERSION } from './consts';
+import { generateVoucherId } from './utils';
 
 export class GearVoucher extends GearTransaction {
   /**
@@ -237,16 +236,6 @@ export class GearVoucher extends GearTransaction {
    * @returns
    */
   async exists(accountId: string, programId: HexString): Promise<boolean> {
-    if (this._api.specVersion < SPEC_VERSION.V1100) {
-      const id = generateVoucherId(decodeAddress(accountId), programId);
-
-      const balance = await this._api.balance.findOut(id);
-      if (balance.eqn(0)) {
-        return false;
-      }
-      return true;
-    }
-
     const keyPrefixes = this._api.query.gearVoucher.vouchers.keyPrefix(accountId);
 
     const keysPaged = await this._api.rpc.state.getKeysPaged(keyPrefixes, 1000, keyPrefixes);

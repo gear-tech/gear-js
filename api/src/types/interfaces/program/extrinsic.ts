@@ -16,19 +16,13 @@ export interface V1010ProgramUploadOptions {
   keepAlive?: boolean;
 }
 
-export type V1000ProgramUploadOptions = Omit<V1010ProgramUploadOptions, 'keepAlive'>;
-
-export type ProgramUploadOptions = V1010ProgramUploadOptions | V1000ProgramUploadOptions;
+export type ProgramUploadOptions = V1010ProgramUploadOptions;
 
 export interface V1010ProgramCreateOptions extends Omit<V1010ProgramUploadOptions, 'code'> {
   codeId: HexString | Uint8Array;
 }
 
-export interface V1000ProgramCreateOptions extends Omit<V1000ProgramUploadOptions, 'code'> {
-  codeId: HexString | Uint8Array;
-}
-
-export type ProgramCreateOptions = V1010ProgramCreateOptions | V1000ProgramCreateOptions;
+export type ProgramCreateOptions = V1010ProgramCreateOptions;
 
 export interface IProgramUploadResult {
   programId: HexString;

@@ -1,7 +1,7 @@
 import '@polkadot/api-base/types/consts';
 
 import { GearCommonGasMultiplier, PalletGearSchedule } from '../lookup';
-import type { bool, u128, u32, u64, u8 } from '@polkadot/types-codec';
+import type { Option, bool, u128, u32, u64, u8 } from '@polkadot/types-codec';
 import type { AccountId32 } from '@polkadot/types/interfaces/runtime';
 import type { ApiTypes } from '@polkadot/api-base/types';
 import type { Codec } from '@polkadot/types-codec/types';
@@ -21,7 +21,11 @@ declare module '@polkadot/api-base/types/consts' {
        **/
       mailboxThreshold: u64 & AugmentedConst<ApiType>;
       /**
-       * The maximum amount of messages that can be produced in single run.
+       * The maximum amount of bytes in outgoing messages during message execution.
+       **/
+      outgoingBytesLimit: u32 & AugmentedConst<ApiType>;
+      /**
+       * The maximum amount of messages that can be produced in during all message executions.
        **/
       outgoingLimit: u32 & AugmentedConst<ApiType>;
       /**
@@ -53,6 +57,10 @@ declare module '@polkadot/api-base/types/consts' {
        * The amount of blocks for processing resume session.
        **/
       programResumeSessionDuration: u32 & AugmentedConst<ApiType>;
+      /**
+       * The account id of the rent pool if any.
+       **/
+      rentPoolId: Option<AccountId32> & AugmentedConst<ApiType>;
       /**
        * Amount of reservations can exist for 1 program.
        **/

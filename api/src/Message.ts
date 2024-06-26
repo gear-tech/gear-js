@@ -16,7 +16,6 @@ import {
 } from './utils';
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from './metadata';
-import { SPEC_VERSION } from './consts';
 
 export class GearMessage extends GearTransaction {
   /**
@@ -117,7 +116,7 @@ export class GearMessage extends GearTransaction {
    * @returns Submitable result
    */
   send(
-    { destination, value, gasLimit, payload, ...rest }: MessageSendOptions,
+    { destination, value, gasLimit, payload, keepAlive }: MessageSendOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrTypeName?: number | string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
@@ -127,13 +126,7 @@ export class GearMessage extends GearTransaction {
     const _payload = encodePayload(payload, metaOrHexRegistry, 'handle', typeIndexOrTypeName);
 
     try {
-      const txArgs: any[] = [destination, _payload, gasLimit, value || 0];
-
-      if (this._api.specVersion >= SPEC_VERSION.V1010) {
-        txArgs.push('keepAlive' in rest ? rest.keepAlive : true);
-      } else {
-        txArgs.push('prepaid' in rest ? rest.prepaid : false);
-      }
+      const txArgs: any[] = [destination, _payload, gasLimit, value || 0, keepAlive || true];
 
       this.extrinsic = getExtrinsic(this._api, 'gear', 'sendMessage', txArgs);
       return this.extrinsic;
@@ -242,7 +235,7 @@ export class GearMessage extends GearTransaction {
    */
 
   async sendReply(
-    { value, gasLimit, replyToId, payload, account, ...rest }: MessageSendReplyOptions,
+    { value, gasLimit, replyToId, payload, account, keepAlive }: MessageSendReplyOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrTypeName?: number | string,
   ): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>> {
@@ -256,13 +249,7 @@ export class GearMessage extends GearTransaction {
     const _payload = encodePayload(payload, metaOrHexRegistry, 'reply', typeIndexOrTypeName);
 
     try {
-      const txArgs: any[] = [replyToId, _payload, gasLimit, value || 0];
-
-      if (this._api.specVersion >= SPEC_VERSION.V1010) {
-        txArgs.push('keepAlive' in rest ? rest.keepAlive : true);
-      } else {
-        txArgs.push('prepaid' in rest ? rest.prepaid : false);
-      }
+      const txArgs: any[] = [replyToId, _payload, gasLimit, value || 0, keepAlive || true];
 
       this.extrinsic = getExtrinsic(this._api, 'gear', 'sendReply', txArgs);
       return this.extrinsic;

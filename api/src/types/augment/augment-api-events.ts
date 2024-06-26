@@ -1,7 +1,6 @@
 import '@polkadot/api-base/types/events';
 
-import type { ApiTypes, AugmentedEvent } from '@polkadot/api-base/types';
-import type { BTreeMap, BTreeSet, Option, u32 } from '@polkadot/types-codec';
+import type { BTreeMap, BTreeSet, Option, bool, u32 } from '@polkadot/types-codec';
 import {
   GearCommonEventCodeChangeKind,
   GearCommonEventDispatchStatus,
@@ -11,13 +10,15 @@ import {
   GearCommonEventReasonMessageWokenRuntimeReason,
   GearCommonEventReasonUserMessageReadRuntimeReason,
   GearCommonGasProviderNodeGasNodeId,
-  GearCoreIdsCodeId,
-  GearCoreIdsMessageId,
-  GearCoreIdsProgramId,
   GearCoreMessageUserUserMessage,
+  GprimitivesActorId,
+  GprimitivesCodeId,
+  GprimitivesMessageId,
+  PalletGearDebugDebugData,
   PalletGearVoucherInternalVoucherId,
 } from '../lookup';
 import type { AccountId32 } from '@polkadot/types/interfaces/runtime';
+import type { ApiTypes } from '@polkadot/api-base/types';
 
 declare module '@polkadot/api-base/types/events' {
   interface AugmentedEvents<ApiType extends ApiTypes> {
@@ -27,8 +28,8 @@ declare module '@polkadot/api-base/types/events' {
        **/
       CodeChanged: AugmentedEvent<
         ApiType,
-        [id: GearCoreIdsCodeId, change: GearCommonEventCodeChangeKind],
-        { id: GearCoreIdsCodeId; change: GearCommonEventCodeChangeKind }
+        [id: GprimitivesCodeId, change: GearCommonEventCodeChangeKind],
+        { id: GprimitivesCodeId; change: GearCommonEventCodeChangeKind }
       >;
       /**
        * User sends message to program, which was successfully
@@ -37,15 +38,15 @@ declare module '@polkadot/api-base/types/events' {
       MessageQueued: AugmentedEvent<
         ApiType,
         [
-          id: GearCoreIdsMessageId,
+          id: GprimitivesMessageId,
           source: AccountId32,
-          destination: GearCoreIdsProgramId,
+          destination: GprimitivesActorId,
           entry: GearCommonEventMessageEntry,
         ],
         {
-          id: GearCoreIdsMessageId;
+          id: GprimitivesMessageId;
           source: AccountId32;
-          destination: GearCoreIdsProgramId;
+          destination: GprimitivesActorId;
           entry: GearCommonEventMessageEntry;
         }
       >;
@@ -56,13 +57,13 @@ declare module '@polkadot/api-base/types/events' {
         ApiType,
         [
           total: u32,
-          statuses: BTreeMap<GearCoreIdsMessageId, GearCommonEventDispatchStatus>,
-          stateChanges: BTreeSet<GearCoreIdsProgramId>,
+          statuses: BTreeMap<GprimitivesMessageId, GearCommonEventDispatchStatus>,
+          stateChanges: BTreeSet<GprimitivesActorId>,
         ],
         {
           total: u32;
-          statuses: BTreeMap<GearCoreIdsMessageId, GearCommonEventDispatchStatus>;
-          stateChanges: BTreeSet<GearCoreIdsProgramId>;
+          statuses: BTreeMap<GprimitivesMessageId, GearCommonEventDispatchStatus>;
+          stateChanges: BTreeSet<GprimitivesActorId>;
         }
       >;
       /**
@@ -72,13 +73,13 @@ declare module '@polkadot/api-base/types/events' {
       MessageWaited: AugmentedEvent<
         ApiType,
         [
-          id: GearCoreIdsMessageId,
+          id: GprimitivesMessageId,
           origin: Option<GearCommonGasProviderNodeGasNodeId>,
           reason: GearCommonEventReasonMessageWaitedRuntimeReason,
           expiration: u32,
         ],
         {
-          id: GearCoreIdsMessageId;
+          id: GprimitivesMessageId;
           origin: Option<GearCommonGasProviderNodeGasNodeId>;
           reason: GearCommonEventReasonMessageWaitedRuntimeReason;
           expiration: u32;
@@ -90,24 +91,16 @@ declare module '@polkadot/api-base/types/events' {
        **/
       MessageWoken: AugmentedEvent<
         ApiType,
-        [id: GearCoreIdsMessageId, reason: GearCommonEventReasonMessageWokenRuntimeReason],
-        { id: GearCoreIdsMessageId; reason: GearCommonEventReasonMessageWokenRuntimeReason }
+        [id: GprimitivesMessageId, reason: GearCommonEventReasonMessageWokenRuntimeReason],
+        { id: GprimitivesMessageId; reason: GearCommonEventReasonMessageWokenRuntimeReason }
       >;
       /**
        * Any data related to programs changed.
        **/
       ProgramChanged: AugmentedEvent<
         ApiType,
-        [id: GearCoreIdsProgramId, change: GearCommonEventProgramChangeKind],
-        { id: GearCoreIdsProgramId; change: GearCommonEventProgramChangeKind }
-      >;
-      /**
-       * Program resume session has been started.
-       **/
-      ProgramResumeSessionStarted: AugmentedEvent<
-        ApiType,
-        [sessionId: u32, accountId: AccountId32, programId: GearCoreIdsProgramId, sessionEndBlock: u32],
-        { sessionId: u32; accountId: AccountId32; programId: GearCoreIdsProgramId; sessionEndBlock: u32 }
+        [id: GprimitivesActorId, change: GearCommonEventProgramChangeKind],
+        { id: GprimitivesActorId; change: GearCommonEventProgramChangeKind }
       >;
       /**
        * The pseudo-inherent extrinsic that runs queue processing rolled back or not executed.
@@ -120,8 +113,8 @@ declare module '@polkadot/api-base/types/events' {
        **/
       UserMessageRead: AugmentedEvent<
         ApiType,
-        [id: GearCoreIdsMessageId, reason: GearCommonEventReasonUserMessageReadRuntimeReason],
-        { id: GearCoreIdsMessageId; reason: GearCommonEventReasonUserMessageReadRuntimeReason }
+        [id: GprimitivesMessageId, reason: GearCommonEventReasonUserMessageReadRuntimeReason],
+        { id: GprimitivesMessageId; reason: GearCommonEventReasonUserMessageReadRuntimeReason }
       >;
       /**
        * Somebody sent a message to the user.
@@ -136,7 +129,26 @@ declare module '@polkadot/api-base/types/events' {
        **/
       [key: string]: AugmentedEvent<ApiType>;
     };
+    gearDebug: {
+      /**
+       * A snapshot of the debug data: programs and message queue ('debug mode' only)
+       **/
+      DebugDataSnapshot: AugmentedEvent<ApiType, [PalletGearDebugDebugData]>;
+      DebugMode: AugmentedEvent<ApiType, [bool]>;
+      /**
+       * Generic event
+       **/
+      [key: string]: AugmentedEvent<ApiType>;
+    };
     gearVoucher: {
+      /**
+       * Voucher has been declined (set to expired state).
+       **/
+      VoucherDeclined: AugmentedEvent<
+        ApiType,
+        [spender: AccountId32, voucherId: PalletGearVoucherInternalVoucherId],
+        { spender: AccountId32; voucherId: PalletGearVoucherInternalVoucherId }
+      >;
       /**
        * Voucher has been issued.
        **/
