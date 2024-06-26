@@ -13,11 +13,11 @@ import styles from './edit-dns-modal.module.scss';
 
 type Props = {
   close: () => void;
-  onSubmit?: () => void;
+  onSuccess?: () => void;
   initialValues?: DnsSchema;
 };
 
-const EditDnsModal = ({ close, onSubmit = () => {}, initialValues }: Props) => {
+const EditDnsModal = ({ close, onSuccess = () => {}, initialValues }: Props) => {
   const { isLoading, changeProgramId } = useDnsActions();
 
   const form = useForm<Values, unknown, DnsSchema>({
@@ -27,7 +27,7 @@ const EditDnsModal = ({ close, onSubmit = () => {}, initialValues }: Props) => {
 
   const handleSubmit = async ({ name, address }: DnsSchema) => {
     const resolve = () => {
-      onSubmit();
+      onSuccess();
       close();
     };
 

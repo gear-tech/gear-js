@@ -3,7 +3,7 @@ import { SortDirection } from '../types';
 
 const DEFAULT_SORT_VALUES = {
   orderByField: 'updatedAt',
-  orderByDirection: 'ASC' as SortDirection,
+  orderByDirection: 'DESC' as SortDirection,
 };
 
 function useDnsSort() {

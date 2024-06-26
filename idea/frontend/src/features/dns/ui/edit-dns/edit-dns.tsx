@@ -15,11 +15,11 @@ type Props = {
   programId?: HexString;
   buttonSize?: 'small' | 'medium';
   buttonColor?: 'secondary' | 'light' | 'transparent';
-  onSubmit?: () => void;
+  onSuccess?: () => void;
 };
 
 const EditDns = withAccount(
-  ({ buttonColor = 'transparent', buttonSize = 'medium', onSubmit, initialValues }: Props) => {
+  ({ buttonColor = 'transparent', buttonSize = 'medium', onSuccess, initialValues }: Props) => {
     const [isModalOpen, openModal, closeModal] = useModal();
 
     return (
@@ -34,7 +34,7 @@ const EditDns = withAccount(
           noWrap
         />
 
-        {isModalOpen && <EditDnsModal close={closeModal} onSubmit={onSubmit} initialValues={initialValues} />}
+        {isModalOpen && <EditDnsModal close={closeModal} onSuccess={onSuccess} initialValues={initialValues} />}
       </>
     );
   },

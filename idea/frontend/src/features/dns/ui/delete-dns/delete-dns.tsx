@@ -15,17 +15,17 @@ type Props = {
   programId?: HexString;
   buttonSize?: 'small' | 'medium';
   buttonColor?: 'secondary' | 'light' | 'transparent';
-  onSubmit?: () => void;
+  onSuccess?: () => void;
 };
 
-const DeleteDns = withAccount(({ buttonColor = 'transparent', buttonSize = 'medium', onSubmit, name }: Props) => {
+const DeleteDns = withAccount(({ buttonColor = 'transparent', buttonSize = 'medium', onSuccess, name }: Props) => {
   const [isModalOpen, openModal, closeModal] = useModal();
   const { isLoading, deleteProgram } = useDnsActions();
   const text = `DNS '${name}' will be deleted. Are you sure?`;
 
   const onConfirm = async () => {
     const resolve = () => {
-      onSubmit?.();
+      onSuccess?.();
       closeModal();
     };
     deleteProgram(name, { resolve });

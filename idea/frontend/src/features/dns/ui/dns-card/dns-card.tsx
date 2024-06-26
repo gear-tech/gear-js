@@ -8,10 +8,10 @@ import styles from './dns-card.module.scss';
 
 type Props = {
   dns: Dns;
-  onSubmit?: () => void;
+  onSuccess?: () => void;
 };
 
-function DnsCard({ dns, onSubmit }: Props) {
+function DnsCard({ dns, onSuccess }: Props) {
   const { name, address, updatedAt, createdBy } = dns;
   const { account } = useAccount();
 
@@ -28,8 +28,8 @@ function DnsCard({ dns, onSubmit }: Props) {
       <div className={styles.actions}>
         {isEditable && (
           <>
-            <EditDns initialValues={{ name, address }} onSubmit={onSubmit} />
-            <DeleteDns name={name} onSubmit={onSubmit} />
+            <EditDns initialValues={{ name, address }} onSuccess={onSuccess} />
+            <DeleteDns name={name} onSuccess={onSuccess} />
           </>
         )}
       </div>

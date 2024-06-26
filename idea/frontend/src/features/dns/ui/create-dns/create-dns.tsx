@@ -13,10 +13,10 @@ type Props = {
   programId?: HexString;
   buttonSize?: 'small' | 'medium';
   buttonColor?: 'secondary' | 'light' | 'transparent';
-  onSubmit?: () => void;
+  onSuccess?: () => void;
 };
 
-const CreateDns = withAccount(({ buttonColor = 'light', buttonSize = 'medium', onSubmit }: Props) => {
+const CreateDns = withAccount(({ buttonColor = 'light', buttonSize = 'medium', onSuccess }: Props) => {
   const [isModalOpen, openModal, closeModal] = useModal();
 
   return (
@@ -31,7 +31,7 @@ const CreateDns = withAccount(({ buttonColor = 'light', buttonSize = 'medium', o
         noWrap
       />
 
-      {isModalOpen && <CreateDnsModal close={closeModal} onSubmit={onSubmit} />}
+      {isModalOpen && <CreateDnsModal close={closeModal} onSuccess={onSuccess} />}
     </>
   );
 });

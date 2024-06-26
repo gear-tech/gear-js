@@ -30,7 +30,10 @@ const DnsPage = () => {
   const isEmpty = !(isLoading || count);
   const isLoaderVisible = isEmpty || (!count && isLoading);
 
-  const renderDns = (dnsItem: Dns) => <DnsCard dns={dnsItem} onSubmit={refetch} />;
+  // 500ms to handle event by indexer
+  const onSuccess = () => setTimeout(() => refetch(), 500);
+
+  const renderDns = (dnsItem: Dns) => <DnsCard dns={dnsItem} onSuccess={onSuccess} />;
   const renderSkeleton = () => <Skeleton SVG={DnsCardPlaceholder} disabled={true} />;
 
   return (
@@ -38,7 +41,7 @@ const DnsPage = () => {
       <header className={styles.header}>
         <SortBy count={count} title="dDNS" onChange={() => toggleDirection()} />
 
-        <CreateDns onSubmit={refetch} />
+        <CreateDns onSuccess={onSuccess} />
       </header>
 
       <SearchForm placeholder="Search by name, address" onSubmit={(query) => setSearchQuery(query)} />
