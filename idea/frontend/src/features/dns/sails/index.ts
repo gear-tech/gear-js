@@ -1,9 +1,9 @@
 import { TransactionBuilder } from 'sails-js';
 import { HexString } from '@gear-js/api';
-import { ActorId, Program } from './lib';
+import { Program } from './lib';
 
 import { useEffect, useState } from 'react';
-import { Account, useAccount, useAlert, useApi } from '@gear-js/react-hooks';
+import { useAccount, useAlert, useApi } from '@gear-js/react-hooks';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { DNS_API_URL, TransactionName } from '@/shared/config';
 import { useLoading } from '../hooks';
