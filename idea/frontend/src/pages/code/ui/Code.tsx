@@ -17,6 +17,7 @@ import { ICode } from '@/entities/code';
 import { CodeTable } from '@/features/code';
 
 import styles from './Code.module.scss';
+import { IDL, useSails } from '@/features/sails';
 
 type Params = { codeId: HexString };
 
@@ -27,20 +28,23 @@ const Code = () => {
   const { isDevChain } = useChain();
   const { showModal, closeModal } = useModal();
 
-  const { programs, isLoading, fetchPrograms } = usePrograms();
+  const { programs, isLoading: isProgramsRequestLoading, fetchPrograms } = usePrograms();
   const { loadData } = useDataLoading({ defaultParams: { codeId }, fetchData: fetchPrograms });
 
   const [code, setCode] = useState<ICode>();
   const isCodeReady = code !== undefined;
 
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(code?.metahash);
+  const { idl, isLoading: isSailsLoading, refetch: refetchSails } = useSails(codeId);
+  const isLoading = !isMetadataReady || isSailsLoading;
 
   const setCodeName = (name: string) => setCode((prevCode) => (prevCode ? { ...prevCode, name } : prevCode));
 
   const showUploadMetadataModal = () => {
-    const onSuccess = (name: string, metadataHex: HexString) => {
+    const onSuccess = (name: string, metadataHex?: HexString) => {
       setCodeName(name);
-      setMetadataHex(metadataHex);
+
+      return metadataHex ? setMetadataHex(metadataHex) : refetchSails();
     };
 
     showModal('metadata', { codeId, onClose: closeModal, onSuccess });
@@ -65,8 +69,13 @@ const Code = () => {
           </div>
 
           <div>
-            <h2 className={styles.heading}>Metadata</h2>
-            <MetadataTable metadata={metadata} isLoading={!isMetadataReady} />
+            {metadata && <h2 className={styles.heading}>Metadata</h2>}
+            {idl && <h2 className={styles.heading}>IDL</h2>}
+
+            {(isLoading || metadata) && <MetadataTable metadata={metadata} isLoading={isLoading} />}
+            {/* temp solution for a placeholder */}
+            {!isLoading && !metadata && !idl && <MetadataTable metadata={metadata} isLoading={isLoading} />}
+            {idl && <IDL value={idl} />}
           </div>
         </div>
 
@@ -75,7 +84,7 @@ const Code = () => {
           <ProgramsList
             programs={programs}
             totalCount={programs.length}
-            isLoading={isLoading}
+            isLoading={isProgramsRequestLoading}
             loadMorePrograms={loadData}
           />
         </div>
@@ -91,8 +100,14 @@ const Code = () => {
           />
         )}
 
-        {!isDevChain && isMetadataReady && !metadata && (
-          <Button text="Add metadata" icon={AddMetaSVG} color="light" size="large" onClick={showUploadMetadataModal} />
+        {!isDevChain && !isLoading && !metadata && !idl && (
+          <Button
+            text="Add metadata/sails"
+            icon={AddMetaSVG}
+            color="light"
+            size="large"
+            onClick={showUploadMetadataModal}
+          />
         )}
 
         <BackButton />

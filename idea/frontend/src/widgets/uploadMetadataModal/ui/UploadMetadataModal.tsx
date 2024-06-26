@@ -1,17 +1,18 @@
+import { useAlert, useApi } from '@gear-js/react-hooks';
 import { Button, Modal } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@polkadot/util/types';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { addCodeName, addMetadata, addProgramName } from '@/api';
 import { addIdl } from '@/features/sails';
-import { useContractApiWithFile, useMetadataUpload } from '@/hooks';
+import { useChain, useContractApiWithFile } from '@/hooks';
 import { ModalProps } from '@/entities/modal';
 import { UploadMetadata } from '@/features/uploadMetadata';
 import { Input } from '@/shared/ui';
 
 import styles from './UploadMetadataModal.module.scss';
-import { useAlert } from '@gear-js/react-hooks';
 
 const FIELD_NAME = {
   NAME: 'name',
@@ -28,42 +29,51 @@ const SCHEMA = z.object({
 type Props = ModalProps & {
   codeId: HexString;
   programId?: HexString;
-  onSuccess: (name: string, metadataHex: HexString) => void;
+  onSuccess: (name: string, metadataHex?: HexString) => void;
 };
 
-const UploadMetadataModal = ({ codeId, programId, onSuccess, onClose }: Props) => {
+const UploadMetadataModal = ({ codeId, programId, onClose, onSuccess }: Props) => {
+  const { api, isApiReady } = useApi();
+  const { isDevChain } = useChain();
   const alert = useAlert();
 
   // useContractApiWithFile is based on meta-storage requests, we don't need them here
   const { metadata, sails, ...contractApi } = useContractApiWithFile(undefined);
-  const uploadMetadata = useMetadataUpload();
 
   const form = useForm({
     defaultValues: DEFAULT_VALUES,
     resolver: zodResolver(SCHEMA),
   });
 
-  const handleSubmit = form.handleSubmit(({ name }) => {
-    console.log(name);
+  const handleSubmit = form.handleSubmit(async ({ name }) => {
+    if (!isApiReady) throw new Error('API is not initialized');
 
-    // if (!metadata.hex) return alert.error('M')
+    try {
+      if (programId) {
+        await addProgramName({ name, id: programId }, isDevChain);
+      } else {
+        await addCodeName({ name, id: codeId });
+      }
 
-    if (metadata.hex) {
-      if (!programId) throw new Error('ProgramId is not found');
+      if (metadata.hex) {
+        const metahash = await api.code.metaHash(codeId);
+        await addMetadata(metahash, metadata.hex);
 
-      onSuccess(name, metadata.hex);
+        onSuccess(name, metadata.hex);
+        onClose();
+      }
 
-      return console.log('submitting metadata...');
+      if (sails.idl) {
+        await addIdl(codeId, sails.idl);
 
-      // uploadMetadata({ programId, codeHash: codeId, metaHex: metadata.hex });
+        onSuccess(name);
+        onClose();
+      }
+
+      throw new Error('Metadata/sails file is required');
+    } catch (error) {
+      alert.error(error instanceof Error ? error.message : String(error));
     }
-
-    if (sails.idl) {
-      return console.log('submitting idl...');
-      // addIdl(codeId, sails.idl);
-    }
-
-    alert.error('Metadata/sails file is required');
   });
 
   return (

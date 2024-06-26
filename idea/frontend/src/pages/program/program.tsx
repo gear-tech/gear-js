@@ -3,10 +3,9 @@ import { Button } from '@gear-js/ui';
 import { useAccount, useAccountVouchers } from '@gear-js/react-hooks';
 import { generatePath, useParams } from 'react-router-dom';
 
-import { useModal, useProgram } from '@/hooks';
+import { useChain, useModal, useProgram } from '@/hooks';
 import { ProgramStatus, ProgramTable } from '@/features/program';
 import { ProgramMessages } from '@/widgets/programMessages';
-import { PathParams } from '@/shared/types';
 import { getShortName } from '@/shared/helpers';
 import { Subheader, UILink } from '@/shared/ui';
 import { absoluteRoutes, routes } from '@/shared/config';
@@ -19,25 +18,30 @@ import { IDL, useSails } from '@/features/sails';
 
 import styles from './program.module.scss';
 
+type Params = {
+  programId: HexString;
+};
+
 const Program = () => {
   const { account } = useAccount();
-
-  const { programId } = useParams() as PathParams;
+  const { programId } = useParams() as Params;
   const { showModal, closeModal } = useModal();
+  const { isDevChain } = useChain();
 
   const { program, isProgramReady, setProgramName } = useProgram(programId);
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(program?.metahash);
-  const { idl, sails, isLoading: isSailsLoading } = useSails(program?.codeId);
+  const { idl, sails, isLoading: isSailsLoading, refetch: refetchSails } = useSails(program?.codeId);
   const isLoading = !isMetadataReady || isSailsLoading;
   const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => Object.keys(queries).length) : false;
 
   const openUploadMetadataModal = () => {
     if (!program) throw new Error('Program is not found');
-    if (!program.codeId) throw new Error('CodeId is not found'); // TODO: check local program
+    if (!program.codeId) throw new Error('CodeId is not found'); // TODO: take a look at local program
 
-    const onSuccess = (name: string, metadataHex: HexString) => {
+    const onSuccess = (name: string, metadataHex?: HexString) => {
       setProgramName(name);
-      setMetadataHex(metadataHex);
+
+      return metadataHex ? setMetadataHex(metadataHex) : refetchSails();
     };
 
     showModal('metadata', { programId, codeId: program.codeId, onClose: closeModal, onSuccess });
@@ -79,9 +83,9 @@ const Program = () => {
               />
             )}
 
-            {/* {!isLoading && !metadata && !idl && ( */}
-            <Button text="Add metadata" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
-            {/* )} */}
+            {!isDevChain && !isLoading && !metadata && !idl && (
+              <Button text="Add metadata/sails" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
+            )}
           </div>
         )}
       </header>
@@ -111,6 +115,8 @@ const Program = () => {
             {idl && <Subheader title="IDL" />}
 
             {(metadata || isLoading) && <MetadataTable metadata={metadata} isLoading={isLoading} />}
+            {/* temp solution for a placeholder */}
+            {!isLoading && !metadata && !idl && <MetadataTable metadata={metadata} isLoading={isLoading} />}
             {idl && <IDL value={idl} />}
           </div>
         </div>

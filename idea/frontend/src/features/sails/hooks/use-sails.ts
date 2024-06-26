@@ -20,7 +20,7 @@ function useSails(codeId: HexString | null | undefined) {
     return { idl: result, sails };
   };
 
-  const { data, isPending, error } = useQuery({
+  const { data, isPending, error, refetch } = useQuery({
     queryKey: ['idl', codeId],
     queryFn: getSails,
     enabled: Boolean(codeId),
@@ -36,7 +36,7 @@ function useSails(codeId: HexString | null | undefined) {
 
   const isLoading = isPending;
 
-  return { ...data, isLoading } || { idl: undefined, sails: undefined, isLoading };
+  return { ...data, isLoading, refetch };
 }
 
 export { useSails };
