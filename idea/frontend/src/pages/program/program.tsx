@@ -28,7 +28,9 @@ const Program = () => {
 
   const { program, isProgramReady, setProgramName } = useProgram(programId);
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(program?.metahash);
-  const { idl, isLoading: isSailsLoading } = useSails(program?.codeId);
+  const { idl, sails, isLoading: isSailsLoading } = useSails(program?.codeId);
+  const isLoading = !isMetadataReady || isSailsLoading;
+  const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => Object.keys(queries).length) : false;
 
   const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
     const codeHash = program?.codeId;
@@ -72,9 +74,9 @@ const Program = () => {
               className={styles.fixWidth}
             />
 
-            {program.hasState && (
+            {!isLoading && (program.hasState || isAnyQuery) && (
               <UILink
-                to={generatePath(routes.state, { programId })}
+                to={generatePath(metadata ? routes.state : routes.sailsState, { programId })}
                 icon={ReadSVG}
                 text="Read State"
                 color="secondary"
@@ -82,7 +84,7 @@ const Program = () => {
               />
             )}
 
-            {isMetadataReady && !metadata && (
+            {!isLoading && !metadata && !idl && (
               <Button text="Add metadata" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
             )}
           </div>
@@ -113,10 +115,7 @@ const Program = () => {
             {metadata && <Subheader title="Metadata" />}
             {idl && <Subheader title="IDL" />}
 
-            {(metadata || !isMetadataReady || isSailsLoading) && (
-              <MetadataTable metadata={metadata} isLoading={!isMetadataReady || isSailsLoading} />
-            )}
-
+            {(metadata || isLoading) && <MetadataTable metadata={metadata} isLoading={isLoading} />}
             {idl && <IDL value={idl} />}
           </div>
         </div>
