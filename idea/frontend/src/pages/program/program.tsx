@@ -3,7 +3,7 @@ import { Button } from '@gear-js/ui';
 import { useAccount, useAccountVouchers } from '@gear-js/react-hooks';
 import { generatePath, useParams } from 'react-router-dom';
 
-import { useMetadataUpload, useModal, useProgram } from '@/hooks';
+import { useModal, useProgram } from '@/hooks';
 import { ProgramStatus, ProgramTable } from '@/features/program';
 import { ProgramMessages } from '@/widgets/programMessages';
 import { PathParams } from '@/shared/types';
@@ -24,7 +24,6 @@ const Program = () => {
 
   const { programId } = useParams() as PathParams;
   const { showModal, closeModal } = useModal();
-  const uploadMetadata = useMetadataUpload();
 
   const { program, isProgramReady, setProgramName } = useProgram(programId);
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(program?.metahash);
@@ -32,21 +31,17 @@ const Program = () => {
   const isLoading = !isMetadataReady || isSailsLoading;
   const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => Object.keys(queries).length) : false;
 
-  const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
-    const codeHash = program?.codeId;
-    if (!codeHash) return;
+  const openUploadMetadataModal = () => {
+    if (!program) throw new Error('Program is not found');
+    if (!program.codeId) throw new Error('CodeId is not found'); // TODO: check local program
 
-    const resolve = () => {
-      setMetadataHex(metaHex);
+    const onSuccess = (name: string, metadataHex: HexString) => {
       setProgramName(name);
-
-      closeModal();
+      setMetadataHex(metadataHex);
     };
 
-    uploadMetadata({ codeHash, metaHex, name, programId, resolve });
+    showModal('metadata', { programId, codeId: program.codeId, onClose: closeModal, onSuccess });
   };
-
-  const openUploadMetadataModal = () => showModal('metadata', { onSubmit: handleUploadMetadataSubmit });
 
   const { vouchers } = useAccountVouchers(programId);
   const voucherEntries = Object.entries(vouchers || {});
@@ -84,9 +79,9 @@ const Program = () => {
               />
             )}
 
-            {!isLoading && !metadata && !idl && (
-              <Button text="Add metadata" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
-            )}
+            {/* {!isLoading && !metadata && !idl && ( */}
+            <Button text="Add metadata" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
+            {/* )} */}
           </div>
         )}
       </header>

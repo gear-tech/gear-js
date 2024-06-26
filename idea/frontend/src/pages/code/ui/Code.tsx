@@ -1,10 +1,10 @@
-import { useAlert, useApi } from '@gear-js/react-hooks';
+import { useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
 import { useEffect, useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
 
-import { addMetadata, addCodeName, getCode } from '@/api';
+import { getCode } from '@/api';
 import { useChain, useDataLoading, useModal, usePrograms } from '@/hooks';
 import { BackButton } from '@/shared/ui/backButton';
 import { absoluteRoutes } from '@/shared/config';
@@ -22,7 +22,6 @@ type Params = { codeId: HexString };
 
 const Code = () => {
   const { codeId } = useParams() as Params;
-  const { api, isApiReady } = useApi();
   const alert = useAlert();
 
   const { isDevChain } = useChain();
@@ -38,28 +37,14 @@ const Code = () => {
 
   const setCodeName = (name: string) => setCode((prevCode) => (prevCode ? { ...prevCode, name } : prevCode));
 
-  const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
-    const id = codeId;
+  const showUploadMetadataModal = () => {
+    const onSuccess = (name: string, metadataHex: HexString) => {
+      setCodeName(name);
+      setMetadataHex(metadataHex);
+    };
 
-    addCodeName({ id, name })
-      .then(async () => {
-        if (!isApiReady) throw new Error('API is not initialized');
-
-        const hash = await api.code.metaHash(id);
-        addMetadata(hash, metaHex);
-      })
-      .then(() => {
-        setMetadataHex(metaHex);
-        setCodeName(name);
-
-        alert.success('Metadata for code uploaded successfully');
-
-        closeModal();
-      })
-      .catch(({ message }: Error) => alert.error(message));
+    showModal('metadata', { codeId, onClose: closeModal, onSuccess });
   };
-
-  const showUploadMetadataModal = () => showModal('metadata', { onSubmit: handleUploadMetadataSubmit, isCode: true });
 
   useEffect(() => {
     if (isDevChain) return;

@@ -1,38 +1,77 @@
-import { Button, Input, Modal } from '@gear-js/ui';
+import { Button, Modal } from '@gear-js/ui';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@polkadot/util/types';
-import { useForm } from 'react-hook-form';
-import SimpleBar from 'simplebar-react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-import { useContractApiWithFile } from '@/hooks';
+import { addIdl } from '@/features/sails';
+import { useContractApiWithFile, useMetadataUpload } from '@/hooks';
 import { ModalProps } from '@/entities/modal';
 import { UploadMetadata } from '@/features/uploadMetadata';
-import plusSVG from '@/shared/assets/images/actions/plus.svg?react';
+import { Input } from '@/shared/ui';
 
 import styles from './UploadMetadataModal.module.scss';
+import { useAlert } from '@gear-js/react-hooks';
 
-const defaultValues = { name: '' };
+const FIELD_NAME = {
+  NAME: 'name',
+} as const;
 
-type Props = ModalProps & {
-  onSubmit: (values: { metaHex: HexString; name: string }) => void;
-  isCode?: boolean;
+const DEFAULT_VALUES = {
+  [FIELD_NAME.NAME]: '',
 };
 
-// TODO sails: currently, UploadMetadata serves as a monkey patch from the original implementation.
-// useContractApiWithFile is based on meta-storage requests, we don't need them here
-const UploadMetadataModal = ({ onClose, onSubmit, isCode }: Props) => {
+const SCHEMA = z.object({
+  [FIELD_NAME.NAME]: z.string().trim().min(1),
+});
+
+type Props = ModalProps & {
+  codeId: HexString;
+  programId?: HexString;
+  onSuccess: (name: string, metadataHex: HexString) => void;
+};
+
+const UploadMetadataModal = ({ codeId, programId, onSuccess, onClose }: Props) => {
+  const alert = useAlert();
+
+  // useContractApiWithFile is based on meta-storage requests, we don't need them here
   const { metadata, sails, ...contractApi } = useContractApiWithFile(undefined);
+  const uploadMetadata = useMetadataUpload();
 
-  const form = useForm({ defaultValues });
-  const { register, getFieldState, formState } = form;
-  const { error } = getFieldState('name', formState);
-  const handleSubmit = ({ name }: typeof defaultValues) => onSubmit({ metaHex: metadata.hex!, name });
+  const form = useForm({
+    defaultValues: DEFAULT_VALUES,
+    resolver: zodResolver(SCHEMA),
+  });
 
-  const nameInputLabel = isCode ? 'Code Name' : 'Program Name';
+  const handleSubmit = form.handleSubmit(({ name }) => {
+    console.log(name);
+
+    // if (!metadata.hex) return alert.error('M')
+
+    if (metadata.hex) {
+      if (!programId) throw new Error('ProgramId is not found');
+
+      onSuccess(name, metadata.hex);
+
+      return console.log('submitting metadata...');
+
+      // uploadMetadata({ programId, codeHash: codeId, metaHex: metadata.hex });
+    }
+
+    if (sails.idl) {
+      return console.log('submitting idl...');
+      // addIdl(codeId, sails.idl);
+    }
+
+    alert.error('Metadata/sails file is required');
+  });
 
   return (
     <Modal heading="Upload metadata/sails" size="large" className={styles.modal} close={onClose}>
-      <SimpleBar className={styles.simplebar}>
-        <form className={styles.form} onSubmit={form.handleSubmit(handleSubmit)}>
+      <FormProvider {...form}>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <Input name={FIELD_NAME.NAME} label={programId ? 'Program Name' : 'Code Name'} direction="y" block />
+
           <UploadMetadata
             value={contractApi.file}
             onChange={contractApi.handleChange}
@@ -40,19 +79,9 @@ const UploadMetadataModal = ({ onClose, onSubmit, isCode }: Props) => {
             idl={sails.idl}
           />
 
-          {metadata && (
-            <Input
-              label={nameInputLabel}
-              direction="y"
-              block
-              error={error?.message}
-              {...register('name', { required: 'Field is required' })}
-            />
-          )}
-
-          {metadata && <Button type="submit" icon={plusSVG} text="Upload Metadata" />}
+          <Button type="submit" text="Submit" block />
         </form>
-      </SimpleBar>
+      </FormProvider>
     </Modal>
   );
 };
