@@ -11,19 +11,24 @@ import { MESSAGE_ENTRY_POINT } from '@/features/message/consts';
 
 const isHexEmpty = (value: HexString) => /^0x0*$/.test(value);
 
-const getSailsDecodedMessagePayload = (message: Message, sails: Sails): AnyJson => {
+const getSailsDecodedMessagePayload = (
+  message: Message,
+  sails: Sails,
+): { value: AnyJson; serviceName?: string; functionName?: string } => {
   const { destination, payload, type, entry } = message;
   const serviceName = getServiceNamePrefix(payload);
 
-  if (entry === MESSAGE_ENTRY_POINT.INIT) return sails.ctors[serviceName].decodePayload(payload);
+  if (entry === MESSAGE_ENTRY_POINT.INIT)
+    return { value: sails.ctors[serviceName].decodePayload(payload), serviceName };
 
   const isReply = isHexEmpty(destination);
   const functionName = getFnNamePrefix(payload);
 
-  if (isReply) return sails.services[serviceName].events[functionName].decode(payload) as AnyJson;
+  if (isReply)
+    return { value: sails.services[serviceName].events[functionName].decode(payload), serviceName, functionName };
 
   const method = type === MESSAGE_TYPE.MESSAGE_QUEUED ? 'decodePayload' : 'decodeResult';
-  return sails.services[serviceName].functions[functionName][method](payload);
+  return { value: sails.services[serviceName].functions[functionName][method](payload), serviceName, functionName };
 };
 
 const getDecodedMessagePayload = (
@@ -35,15 +40,15 @@ const getDecodedMessagePayload = (
   const { payload, exitCode } = message;
 
   try {
-    if (exitCode) return CreateType.create('String', payload).toHuman();
-    if (metadata) return getMetadataDecodedMessagePayload(message, metadata);
+    if (exitCode) return { value: CreateType.create('String', payload).toHuman() };
+    if (metadata) return { value: getMetadataDecodedMessagePayload(message, metadata) };
     if (sails) return getSailsDecodedMessagePayload(message, sails);
 
-    return CreateType.create('Bytes', payload).toHuman();
+    return { value: CreateType.create('Bytes', payload).toHuman() };
   } catch (error) {
     onError(error instanceof Error ? error.message : String(error));
 
-    return payload;
+    return { payload };
   }
 };
 

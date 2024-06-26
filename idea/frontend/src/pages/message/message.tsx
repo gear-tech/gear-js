@@ -66,14 +66,38 @@ const Message = () => {
         <Input value={destination} label="Destination" gap="1/6" className={loadingClassName} readOnly />
         <Input value={value} label="Value" gap="1/6" className={loadingClassName} readOnly />
 
-        <Textarea
-          value={decodedPayload ? getPreformattedText(decodedPayload) : '-'}
-          label="Payload"
-          gap="1/6"
-          className={loadingClassName}
-          readOnly
-          block
-        />
+        {decodedPayload && (
+          <>
+            {'serviceName' in decodedPayload && (
+              <Input
+                value={decodedPayload.serviceName}
+                label="Service"
+                gap="1/6"
+                className={loadingClassName}
+                readOnly
+              />
+            )}
+
+            {'functionName' in decodedPayload && (
+              <Input
+                value={decodedPayload.functionName}
+                label="Function"
+                gap="1/6"
+                className={loadingClassName}
+                readOnly
+              />
+            )}
+
+            <Textarea
+              value={decodedPayload.value ? getPreformattedText(decodedPayload.value) : '-'}
+              label="Payload"
+              gap="1/6"
+              className={loadingClassName}
+              readOnly
+              block
+            />
+          </>
+        )}
 
         {entry && <Input value={entry} label="Entry" gap="1/6" className={loadingClassName} readOnly />}
 
