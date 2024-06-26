@@ -75,12 +75,12 @@ const useDnsActions = () => {
   };
 
   const addNewProgram = (name: string, program_id: HexString, options?: ResolveRejectOptions) => {
-    const getTransactionBuilder = async () => dnsProgram.dns.addNewProgram(name, program_id as unknown as ActorId);
+    const getTransactionBuilder = async () => dnsProgram.dns.addNewProgram(name, program_id);
     return sendMessage({ getTransactionBuilder, options });
   };
 
   const changeProgramId = (name: string, program_id: HexString, options?: ResolveRejectOptions) => {
-    const getTransactionBuilder = async () => dnsProgram.dns.changeProgramId(name, program_id as unknown as ActorId);
+    const getTransactionBuilder = async () => dnsProgram.dns.changeProgramId(name, program_id);
     return sendMessage({ getTransactionBuilder, options });
   };
 
