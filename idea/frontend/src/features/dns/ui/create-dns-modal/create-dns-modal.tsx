@@ -14,11 +14,11 @@ import styles from './create-dns-modal.module.scss';
 
 type Props = {
   close: () => void;
-  onSubmit?: () => void;
+  onSuccess?: () => void;
   initialValues?: DnsSchema;
 };
 
-const CreateDnsModal = ({ close, onSubmit = () => {}, initialValues }: Props) => {
+const CreateDnsModal = ({ close, onSuccess = () => {}, initialValues }: Props) => {
   const form = useForm<Values, unknown, DnsSchema>({
     defaultValues: initialValues || DEFAULT_VALUES,
     resolver: zodResolver(dnsSchema),
@@ -28,7 +28,7 @@ const CreateDnsModal = ({ close, onSubmit = () => {}, initialValues }: Props) =>
 
   const handleSubmit = async ({ name, address }: DnsSchema) => {
     const resolve = () => {
-      onSubmit();
+      onSuccess();
       close();
     };
     addNewProgram(name, address, { resolve });

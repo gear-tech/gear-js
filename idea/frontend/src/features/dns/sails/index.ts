@@ -32,41 +32,45 @@ const useDnsActions = () => {
     if (!account || !api) {
       return;
     }
-    const { resolve, reject } = options || {};
+    const { resolve: onSuccess, reject: onError } = options || {};
     const { signer } = await web3FromSource(account.meta.source);
     // ! TODO: calculate fee by sails
     // const { partialFee } = await api.message.paymentInfo(account.address, { signer });
 
-    const onConfirm = async () => {
-      if (account) {
-        try {
-          enableLoading();
-          const transaction = await getTransactionBuilder();
+    return new Promise<void>((resolve, reject) => {
+      const onConfirm = async () => {
+        if (account) {
+          try {
+            enableLoading();
+            const transaction = await getTransactionBuilder();
 
-          transaction.withAccount(account.address, { signer });
+            transaction.withAccount(account.address, { signer });
 
-          await transaction.calculateGas();
-          const result = await transaction.signAndSend();
-          await result.response().then(() => {
-            if (resolve) resolve();
-          });
-        } catch (error) {
-          const errorMessage = (error as Error).message;
-          alert.error(errorMessage);
-          if (reject) reject();
-        } finally {
-          disableLoading();
+            await transaction.calculateGas();
+            const result = await transaction.signAndSend();
+            await result.response().then(() => {
+              if (onSuccess) onSuccess();
+            });
+            return resolve();
+          } catch (error) {
+            const errorMessage = (error as Error).message;
+            alert.error(errorMessage);
+            if (onError) onError();
+            return reject();
+          } finally {
+            disableLoading();
+          }
         }
-      }
-    };
+      };
 
-    showModal('transaction', {
-      fee: '0',
-      name: TransactionName.SendMessage,
-      addressFrom: account.address,
-      addressTo: dnsProgram.programId,
-      onAbort: reject,
-      onConfirm,
+      showModal('transaction', {
+        fee: '0',
+        name: TransactionName.SendMessage,
+        addressFrom: account.address,
+        addressTo: dnsProgram.programId,
+        onAbort: reject,
+        onConfirm,
+      });
     });
   };
 
