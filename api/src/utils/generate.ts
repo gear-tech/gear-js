@@ -4,7 +4,6 @@ import { stringToU8a, u8aToU8a } from '@polkadot/util';
 
 import { CreateType } from '../metadata';
 import { GearApi } from 'GearApi';
-import { SPEC_VERSION } from '../consts';
 
 const VOUCHER_PREFIX_BEFORE_1100 = stringToU8a('modlpy/voucher__');
 const VOUCHER_PREFIX = stringToU8a('voucher');
@@ -33,7 +32,7 @@ export function generateProgramId(
   const [code, codeHash] = typeof codeOrHash === 'string' ? [undefined, codeOrHash] : [codeOrHash, undefined];
   const codeHashU8a = codeHash ? u8aToU8a(codeHash) : blake2AsU8a(code, 256);
   const saltU8a = CreateType.create('Vec<u8>', salt).toU8a().slice(1);
-  const prefix = api.specVersion >= SPEC_VERSION.V1010 ? 'program_from_user' : 'program';
+  const prefix = 'program_from_user';
   const programStrU8a = new TextEncoder().encode(prefix);
   const id = Uint8Array.from([...programStrU8a, ...codeHashU8a, ...saltU8a]);
   return blake2AsHex(id, 256);

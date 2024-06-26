@@ -1,4 +1,4 @@
-import { Bytes, Option, u128, u32 } from '@polkadot/types';
+import { Option, u128, u32 } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
@@ -6,7 +6,7 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { randomAsHex } from '@polkadot/util-crypto';
 
 import {
-  GearCommonProgram,
+  GearCoreProgram,
   IProgramCreateResult,
   IProgramUploadResult,
   ProgramCreateOptions,
@@ -27,7 +27,6 @@ import { GearApi } from './GearApi';
 import { GearGas } from './Gas';
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from './metadata';
-import { SPEC_VERSION } from './consts';
 
 export class GearProgram extends GearTransaction {
   public calculateGas: GearGas;
@@ -99,10 +98,7 @@ export class GearProgram extends GearTransaction {
     const programId = generateProgramId(this._api, codeId, salt);
 
     try {
-      const txArgs: any[] = [code, salt, payload, args.gasLimit, args.value || 0];
-      if (this._api.specVersion >= SPEC_VERSION.V1010) {
-        txArgs.push('keepAlive' in args ? args.keepAlive : true);
-      }
+      const txArgs: any[] = [code, salt, payload, args.gasLimit, args.value || 0, args.keepAlive];
 
       this.extrinsic = getExtrinsic(this._api, 'gear', 'uploadProgram', txArgs);
 
@@ -171,11 +167,7 @@ export class GearProgram extends GearTransaction {
     const programId = generateProgramId(this._api, codeId, salt);
 
     try {
-      const txArgs: any[] = [codeId, salt, payload, gasLimit, value || 0];
-
-      if (this._api.specVersion >= SPEC_VERSION.V1010) {
-        txArgs.push('keepAlive' in args ? args.keepAlive : true);
-      }
+      const txArgs: any[] = [codeId, salt, payload, gasLimit, value || 0, args.keepAlive];
 
       this.extrinsic = getExtrinsic(this._api, 'gear', 'createProgram', txArgs);
 
@@ -247,7 +239,7 @@ export class GearProgram extends GearTransaction {
    * @returns `true` if address belongs to program, and `false` otherwise
    */
   async exists(id: HexString): Promise<boolean> {
-    const program = (await this._api.query.gearProgram.programStorage(id)) as Option<GearCommonProgram>;
+    const program = (await this._api.query.gearProgram.programStorage(id)) as Option<GearCoreProgram>;
     return program.isSome;
   }
 

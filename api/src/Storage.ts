@@ -1,10 +1,10 @@
-import { Option, u32 } from '@polkadot/types';
+import { Bytes, Option, u32 } from '@polkadot/types';
+import { u8aToNumber, u8aToU8a } from '@polkadot/util';
 import { H256 } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
 import { ITuple } from '@polkadot/types-codec/types';
-import { u8aToU8a } from '@polkadot/util';
 
-import { GearCommonActiveProgram, GearCommonProgram, IGearPages, PausedProgramBlockAndHash } from './types';
+import { GearCoreProgram, GearCoreProgramActiveProgram, IGearPages, PausedProgramBlockAndHash } from './types';
 import {
   PausedProgramDoesNotExistError,
   ProgramDoesNotExistError,
@@ -12,7 +12,6 @@ import {
   ProgramTerminatedError,
 } from './errors';
 import { GearApi } from './GearApi';
-import { SPEC_VERSION } from './consts';
 
 export class GearProgramStorage {
   constructor(protected _api: GearApi) {}
@@ -23,9 +22,9 @@ export class GearProgramStorage {
    * @param at _(optional)_ Hash of block to query at
    * @returns
    */
-  async getProgram(id: HexString, at?: HexString): Promise<GearCommonActiveProgram> {
+  async getProgram(id: HexString, at?: HexString): Promise<GearCoreProgramActiveProgram> {
     const api = at ? await this._api.at(at) : this._api;
-    const programOption = (await api.query.gearProgram.programStorage(id)) as Option<GearCommonProgram>;
+    const programOption = (await api.query.gearProgram.programStorage(id)) as Option<GearCoreProgram>;
 
     if (programOption.isNone) {
       throw new ProgramDoesNotExistError(id);
@@ -46,20 +45,30 @@ export class GearProgramStorage {
    * @param gProg
    * @returns
    */
-  async getProgramPages(programId: HexString, program: GearCommonActiveProgram, at?: HexString): Promise<IGearPages> {
+  async getProgramPages(
+    programId: HexString,
+    program: GearCoreProgramActiveProgram,
+    at?: HexString,
+  ): Promise<IGearPages> {
     const pages = {};
-    const query =
-      this._api.specVersion >= SPEC_VERSION.V1100
-        ? this._api.query.gearProgram.memoryPages
-        : this._api.query.gearProgram.memoryPageStorage;
 
-    const args = this._api.specVersion >= SPEC_VERSION.V1100 ? [programId, program.memoryInfix] : [programId];
+    const blockAt = at || (await this._api.rpc.chain.getHeader()).hash.toHex();
 
-    for (const [start, end] of program.pagesWithData.inner) {
-      for (let page = start.toNumber(); page <= end.toNumber(); page++) {
-        pages[page] = u8aToU8a(await this._api.provider.send('state_getStorage', [query.key(...args, page), at]));
-      }
+    const apiAt = await this._api.at(blockAt);
+
+    const keys = await apiAt.query.gearProgram.memoryPages.keys(programId, program.memoryInfix);
+
+    const pageNumbers = keys.map((k) => {
+      const u8aAddr = k.toU8a();
+      const page = u8aAddr.slice(u8aAddr.length - 4);
+      return u8aToNumber(page, { isLe: true });
+    });
+
+    for (let i = 0; i < pageNumbers.length; i++) {
+      const page = pageNumbers[i];
+      pages[page] = (await this._api.rpc.state.getStorage<Bytes>(keys[i].toHex(), blockAt)).toU8a();
     }
+
     return pages;
   }
 
