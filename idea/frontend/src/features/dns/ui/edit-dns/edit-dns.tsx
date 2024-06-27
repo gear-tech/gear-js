@@ -3,12 +3,12 @@ import { Button } from '@gear-js/ui';
 import cx from 'clsx';
 
 import { withAccount } from '@/shared/ui';
+import EditSVG from '@/shared/assets/images/actions/edit.svg?react';
 
-import DnsSVG from '../../assets/edit.svg?react';
 import { EditDnsModal } from '../edit-dns-modal';
 import { useModal } from '../../hooks';
+import { DnsSchema } from '../../types';
 import styles from './edit-dns.module.scss';
-import { DnsSchema } from '../../consts';
 
 type Props = {
   initialValues: DnsSchema;
@@ -25,7 +25,7 @@ const EditDns = withAccount(
     return (
       <>
         <Button
-          icon={DnsSVG}
+          icon={EditSVG}
           text="Change program address"
           size={buttonSize}
           color={buttonColor}
