@@ -1,21 +1,23 @@
 import { HexString } from '@gear-js/api';
-
+import { AnyJson } from '@polkadot/types/types';
 import { Sails } from 'sails-js';
 import { z } from 'zod';
+
 import { RESULT } from '../../consts';
-import { PayloadValue, ISailsFuncArg, TypeDef } from '../../types';
+import { ISailsFuncArg, TypeDef } from '../../types';
 
 const asJSON = <T extends z.ZodTypeAny>(schema: T) =>
   schema.transform((value, ctx) => {
     try {
-      return JSON.parse(value) as PayloadValue[];
+      return JSON.parse(value) as AnyJson;
     } catch (e) {
       ctx.addIssue({ code: 'custom', message: 'Invalid JSON' });
       return z.NEVER;
     }
   });
 
-// TODO: types
+const isUnion = <T>(arr: T[]): arr is [T, T, ...T[]] => arr.length >= 2;
+
 const getPayloadSchema = (sails: Sails, args: ISailsFuncArg[], encode: (..._args: unknown[]) => HexString) => {
   const getSchema = (def: TypeDef): z.ZodType<unknown> => {
     if (def.isPrimitive) return z.string().trim();
@@ -49,10 +51,7 @@ const getPayloadSchema = (sails: Sails, args: ISailsFuncArg[], encode: (..._args
         z.object({ [variant.name]: variant.def ? getSchema(variant.def) : z.null() } as const),
       );
 
-      // TODO: types
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      return z.union(variants);
+      return isUnion(variants) ? z.union(variants) : variants[0] || z.null();
     }
 
     throw new Error('Unknown type: ' + JSON.stringify(def));
