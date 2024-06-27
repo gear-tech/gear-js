@@ -1,13 +1,13 @@
-import { TransactionBuilder } from 'sails-js';
 import { HexString } from '@gear-js/api';
-import { Program } from './lib';
-
-import { useEffect, useState } from 'react';
 import { useAccount, useAlert, useApi } from '@gear-js/react-hooks';
 import { web3FromSource } from '@polkadot/extension-dapp';
+import { useEffect, useState } from 'react';
+import { TransactionBuilder } from 'sails-js';
+
+import { useLoading, useModal } from '@/hooks';
 import { DNS_API_URL, TransactionName } from '@/shared/config';
-import { useLoading } from '../hooks';
-import { useModal } from '@/hooks';
+
+import { Program } from './lib';
 
 let dnsProgram: Program;
 

@@ -3,8 +3,8 @@ import { Button } from '@gear-js/ui';
 import cx from 'clsx';
 
 import { withAccount } from '@/shared/ui';
+import EditSVG from '@/shared/assets/images/actions/edit.svg?react';
 
-import DnsSVG from '../../assets/edit.svg?react';
 import { useModal } from '../../hooks';
 import styles from './create-dns.module.scss';
 import { CreateDnsModal } from '../create-dns-modal';
@@ -22,7 +22,7 @@ const CreateDns = withAccount(({ buttonColor = 'light', buttonSize = 'medium', o
   return (
     <>
       <Button
-        icon={DnsSVG}
+        icon={EditSVG}
         text="Create dDNS"
         size={buttonSize}
         color={buttonColor}

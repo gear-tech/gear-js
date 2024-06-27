@@ -1,10 +1,12 @@
 import { useModal, useBlocks, useEvents, useChain, useOnboarding } from './context';
+import { useLoading } from './useLoading';
 import { useMessage } from './useMessage';
 import { useOutsideClick } from './useOutsideClick';
 import { useChangeEffect } from './useChangeEffect';
 import { useProgram } from './useProgram';
 import { useMessageActions } from './useMessageActions';
 import { usePrograms } from './usePrograms';
+import { useProgramIdSchema } from './useProgramIdSchema';
 import { useCodeUpload } from './useCodeUpload';
 import { useMessageClaim } from './useMessageClaim';
 import { useProgramActions } from './useProgramActions';
@@ -28,11 +30,13 @@ import { useContractApiWithFile } from './use-contract-api-with-file';
 
 export {
   useModal,
+  useLoading,
   useBlocks,
   useEvents,
   useChain,
   useProgram,
   usePrograms,
+  useProgramIdSchema,
   useMessage,
   useMessages,
   useWaitlist,

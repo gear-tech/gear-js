@@ -3,8 +3,8 @@ import { Button } from '@gear-js/ui';
 import cx from 'clsx';
 
 import { withAccount } from '@/shared/ui';
+import TrashSVG from '@/shared/assets/images/actions/trash.svg?react';
 
-import DnsSVG from '../../assets/trash.svg?react';
 import { useModal } from '../../hooks';
 import { ConfirmModal } from '../confirn-modal';
 import styles from './delete-dns.module.scss';
@@ -34,7 +34,7 @@ const DeleteDns = withAccount(({ buttonColor = 'transparent', buttonSize = 'medi
   return (
     <>
       <Button
-        icon={DnsSVG}
+        icon={TrashSVG}
         text="Delete DNS"
         size={buttonSize}
         color={buttonColor}

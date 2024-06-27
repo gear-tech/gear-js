@@ -4,8 +4,8 @@ import { Button, Modal } from '@gear-js/ui';
 
 import { useSignAndSend } from '@/hooks';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
+import RemoveSVG from '@/shared/assets/images/actions/remove.svg?react';
 
-import RemoveSVG from '../../assets/remove.svg?react';
 import { useModal } from '../../hooks';
 import styles from './revoke-voucher.module.scss';
 

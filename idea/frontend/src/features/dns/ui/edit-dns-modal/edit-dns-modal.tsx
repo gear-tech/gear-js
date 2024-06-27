@@ -6,19 +6,21 @@ import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { Input } from '@/shared/ui';
 
-import { DEFAULT_VALUES, FIELD_NAME, DnsSchema, dnsSchema } from '../../consts';
-import { Values } from '../../types';
+import { DEFAULT_VALUES, FIELD_NAME } from '../../consts';
+import { DnsSchema, Values } from '../../types';
 import { useDnsActions } from '../../sails';
 import styles from './edit-dns-modal.module.scss';
+import { useDnsSchema } from '../../hooks/use-dns-schema';
 
 type Props = {
   close: () => void;
   onSuccess?: () => void;
-  initialValues?: DnsSchema;
+  initialValues?: Values;
 };
 
 const EditDnsModal = ({ close, onSuccess = () => {}, initialValues }: Props) => {
   const { isLoading, changeProgramId } = useDnsActions();
+  const dnsSchema = useDnsSchema();
 
   const form = useForm<Values, unknown, DnsSchema>({
     defaultValues: initialValues || DEFAULT_VALUES,

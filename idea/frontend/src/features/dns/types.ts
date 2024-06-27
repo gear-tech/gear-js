@@ -6,6 +6,11 @@ type Values = {
   [FIELD_NAME.DNS_NAME]: string;
 };
 
+type DnsSchema = {
+  [FIELD_NAME.DNS_ADDRESS]: HexString;
+  [FIELD_NAME.DNS_NAME]: string;
+};
+
 type Dns = {
   id: string; // same as 'name' at contract
   name: string;
@@ -33,4 +38,4 @@ type DnsResponse = {
   count: number;
 };
 
-export type { Values, Dns, DnsParams, DnsResponse, DnsFilterParams, DnsSortParams, SortDirection };
+export type { Values, DnsSchema, Dns, DnsParams, DnsResponse, DnsFilterParams, DnsSortParams, SortDirection };

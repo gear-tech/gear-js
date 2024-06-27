@@ -1,6 +1,6 @@
 import { Button } from '@gear-js/ui';
 
-import EditSVG from '../../assets/edit.svg?react';
+import EditSVG from '@/shared/assets/images/actions/edit.svg?react';
 import { UpdateVoucherModal } from '../update-voucher-modal';
 import { useModal } from '../../hooks';
 import { Voucher } from '../../types';

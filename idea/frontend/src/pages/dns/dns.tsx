@@ -5,7 +5,7 @@ import { Placeholder } from '@/entities/placeholder';
 import { FilterGroup, Filters, Radio } from '@/features/filters';
 import { SortBy } from '@/features/sortBy';
 import {
-  Dns,
+  Dns as DnsType,
   DnsCard,
   DnsCardPlaceholder,
   useDnsFilters,
@@ -18,7 +18,7 @@ import { List, SearchForm, Skeleton } from '@/shared/ui';
 
 import styles from './dns.module.scss';
 
-const DnsPage = () => {
+const Dns = () => {
   const { account } = useAccount();
   useInitDnsProgram();
 
@@ -33,7 +33,7 @@ const DnsPage = () => {
   // 500ms to handle event by indexer
   const onSuccess = () => setTimeout(() => refetch(), 500);
 
-  const renderDns = (dnsItem: Dns) => <DnsCard dns={dnsItem} onSuccess={onSuccess} />;
+  const renderDns = (dnsItem: DnsType) => <DnsCard dns={dnsItem} onSuccess={onSuccess} />;
   const renderSkeleton = () => <Skeleton SVG={DnsCardPlaceholder} disabled={true} />;
 
   return (
@@ -64,4 +64,4 @@ const DnsPage = () => {
   );
 };
 
-export { DnsPage as Dns };
+export { Dns };

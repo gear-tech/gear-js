@@ -6,11 +6,12 @@ import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { Input } from '@/shared/ui';
 
-import { DEFAULT_VALUES, FIELD_NAME, DnsSchema, dnsSchema } from '../../consts';
-import { Values } from '../../types';
+import { DEFAULT_VALUES, FIELD_NAME } from '../../consts';
+import { DnsSchema, Values } from '../../types';
 import { useDnsActions } from '../../sails';
 
 import styles from './create-dns-modal.module.scss';
+import { useDnsSchema } from '../../hooks/use-dns-schema';
 
 type Props = {
   close: () => void;
@@ -19,6 +20,8 @@ type Props = {
 };
 
 const CreateDnsModal = ({ close, onSuccess = () => {}, initialValues }: Props) => {
+  const dnsSchema = useDnsSchema();
+
   const form = useForm<Values, unknown, DnsSchema>({
     defaultValues: initialValues || DEFAULT_VALUES,
     resolver: zodResolver(dnsSchema),
