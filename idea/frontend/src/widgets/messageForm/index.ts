@@ -1,3 +1,3 @@
-import { MessageForm } from './ui';
+import { MessageForm, SailsMessageForm } from './ui';
 
-export { MessageForm };
+export { MessageForm, SailsMessageForm };

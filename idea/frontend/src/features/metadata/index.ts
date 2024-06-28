@@ -1,5 +1,5 @@
 import { useMetadata, useMetadataHash, useMetadataWithFile } from './hooks';
-import { MetadataTable } from './ui';
+import { MetadataTable, MetadataPreview } from './ui';
 import { isHumanTypesRepr, isState } from './utils';
 
-export { useMetadata, useMetadataHash, useMetadataWithFile, MetadataTable, isHumanTypesRepr, isState };
+export { useMetadata, useMetadataHash, useMetadataWithFile, MetadataTable, MetadataPreview, isHumanTypesRepr, isState };

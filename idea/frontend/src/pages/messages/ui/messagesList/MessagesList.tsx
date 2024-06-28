@@ -3,13 +3,13 @@ import SimpleBar from 'simplebar-react';
 
 import { useScrollLoader } from '@/hooks';
 import { Placeholder } from '@/entities/placeholder';
-import { IMessage, HorizontalMessageCard, Type } from '@/entities/message';
+import { MESSAGE_TYPE, Message, MessageCard } from '@/features/message';
 import HorizontalMessageCardSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
 
 import styles from './MessagesList.module.scss';
 
 type Props = {
-  messages: IMessage[];
+  messages: Message[];
   programNames: Record<HexString, string>;
   isLoading: boolean;
   totalCount: number;
@@ -23,8 +23,8 @@ const MessagesList = ({ messages, programNames, isLoading, totalCount, loadMoreP
 
   const scrollableNodeRef = useScrollLoader<HTMLDivElement>(loadMorePrograms, hasMore);
 
-  const getProgram = ({ type, source, destination }: IMessage) => {
-    const id = type === Type.UserMessageSent ? source : destination;
+  const getProgram = ({ type, source, destination }: Message) => {
+    const id = type === MESSAGE_TYPE.USER_MESSAGE_SENT ? source : destination;
     const name = programNames[id]; // if there's no name, message is not from a program
 
     return { id, name };
@@ -42,7 +42,7 @@ const MessagesList = ({ messages, programNames, isLoading, totalCount, loadMoreP
       ) : (
         <SimpleBar className={styles.simpleBar} scrollableNodeProps={{ ref: scrollableNodeRef }}>
           {messages.map((message) => (
-            <HorizontalMessageCard key={message.id} message={message} program={getProgram(message)} />
+            <MessageCard key={message.id} message={message} program={getProgram(message)} />
           ))}
         </SimpleBar>
       )}

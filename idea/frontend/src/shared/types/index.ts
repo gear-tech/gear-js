@@ -1,4 +1,3 @@
-import { PathParams } from './routes';
 import { IBase } from './entities';
 
 // in case Object.entries return value is immutable
@@ -7,4 +6,4 @@ type Entries<T> = {
   [K in keyof T]: [K, T[K]];
 }[keyof T][];
 
-export type { PathParams, IBase, Entries };
+export type { IBase, Entries };

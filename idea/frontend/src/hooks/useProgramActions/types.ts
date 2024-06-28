@@ -12,6 +12,7 @@ type Payload = {
   metadata?: ProgramMetadata | undefined;
   programName: string;
   payloadType?: string;
+  idl?: string;
 };
 
 type DataToUpload = {

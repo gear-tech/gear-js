@@ -40,7 +40,7 @@ const ProgramForm = (props: Props) => {
   const { getValues, setValue, reset } = methods;
 
   const [gasInfo, setGasinfo] = useState<Result>();
-  const [isDisabled, setIsDisables] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
   const [isGasDisabled, setIsGasDisabled] = useState(false);
 
   const calculateGas = useGasCalculate();
@@ -50,7 +50,7 @@ const ProgramForm = (props: Props) => {
     const payload = getResetPayloadValue(values.payload);
 
     reset({ ...defaultValues, payload });
-    setIsDisables(false);
+    setIsDisabled(false);
     setGasinfo(undefined);
   };
 
@@ -77,7 +77,7 @@ const ProgramForm = (props: Props) => {
   };
 
   const handleSubmitForm = (values: FormValues) => {
-    setIsDisables(true);
+    setIsDisabled(true);
 
     const { value, payload, gasLimit, programName, payloadType, keepAlive } = values;
 
@@ -92,7 +92,7 @@ const ProgramForm = (props: Props) => {
       keepAlive,
     };
 
-    onSubmit(data, { enableButtons: () => setIsDisables(false), resetForm });
+    onSubmit(data, { enableButtons: () => setIsDisabled(false), resetForm });
   };
 
   const typeIndex = metadata?.types.init.input;

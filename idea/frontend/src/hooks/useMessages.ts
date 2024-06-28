@@ -5,7 +5,7 @@ import { useAlert } from '@gear-js/react-hooks';
 import { getMessages } from '@/api';
 import { MessagePaginationModel } from '@/api/message/types';
 import { PaginationModel } from '@/api/types';
-import { IMessage } from '@/entities/message';
+import { Message } from '@/features/message';
 import { DEFAULT_LIMIT } from '@/shared/config';
 
 import { useChain } from './context';
@@ -15,7 +15,7 @@ const useMessages = (withPrograms = false) => {
   const { isDevChain } = useChain();
 
   const [programNames, setProgramNames] = useState<Record<HexString, string>>({});
-  const [messages, setMessages] = useState<IMessage[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
 

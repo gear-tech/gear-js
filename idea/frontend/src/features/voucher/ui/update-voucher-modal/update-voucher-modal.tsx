@@ -6,14 +6,14 @@ import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useSignAndSend } from '@/hooks';
+import { useBalanceSchema, useSignAndSend } from '@/hooks';
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { asOptionalField } from '@/shared/helpers';
 import { Input, ValueField } from '@/shared/ui';
 
 import { ADDRESS_SCHEMA, DEFAULT_VALUES, FIELD_NAME } from '../../consts';
-import { useBalanceSchema, useDurationSchema, useLoading } from '../../hooks';
+import { useDurationSchema, useLoading } from '../../hooks';
 import { Values, Voucher } from '../../types';
 import { DurationForm } from '../duration-form';
 import { ProgramsForm } from '../programs-form';

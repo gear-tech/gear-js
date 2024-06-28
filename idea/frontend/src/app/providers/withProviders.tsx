@@ -18,10 +18,10 @@ const providers = [
   AccountProvider,
   OnboardingProvider,
   ChainProvider,
-  ModalProvider,
   EventsProvider,
   BlocksProvider,
   QueryProvider,
+  ModalProvider,
 ];
 
 const withProviders = (Component: ComponentType) => () =>

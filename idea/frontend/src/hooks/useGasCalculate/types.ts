@@ -6,7 +6,6 @@ import { GasMethod } from '@/shared/config';
 type Values = {
   value: string;
   payload: PayloadType;
-  payloadType: string;
 };
 
 type Code<T> = T extends GasMethod.InitUpdate ? Buffer : T extends GasMethod.InitCreate ? HexString : null;

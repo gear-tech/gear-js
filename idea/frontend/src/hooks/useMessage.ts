@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { useAlert } from '@gear-js/react-hooks';
 
 import { getMessage } from '@/api';
-import { IMessage } from '@/entities/message';
+import { Message } from '@/features/message';
 
 const useMessage = (id: string | undefined) => {
   const alert = useAlert();
 
-  const [message, setMessage] = useState<IMessage>();
+  const [message, setMessage] = useState<Message>();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
