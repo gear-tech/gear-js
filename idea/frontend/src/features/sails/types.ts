@@ -6,6 +6,10 @@ import { getPayloadSchema } from './utils';
 // TODO: import from sails-js
 type ISailsFuncArg = InstanceType<typeof Sails>['services'][string]['functions'][string]['args'][number];
 type TypeDef = ReturnType<InstanceType<typeof Sails>['getTypeDef']>;
+type Ctors = InstanceType<typeof Sails>['ctors'];
+type Services = InstanceType<typeof Sails>['services'];
+type SailsService = Services[string];
+type Functions = SailsService[keyof SailsService];
 
 type PrimitiveDef = TypeDef['asPrimitive'];
 type EnumDef = TypeDef['asEnum'];
@@ -36,4 +40,7 @@ export type {
   Result,
   PayloadValue,
   PayloadValueSchema,
+  Ctors,
+  Services,
+  Functions,
 };

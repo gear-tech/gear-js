@@ -60,7 +60,7 @@ type FormattedValues = z.infer<ReturnType<typeof useSchema>>;
 
 const SailsMessageForm = ({ id, programId, isReply, sails }: Props) => {
   const { getFormattedGasValue } = useBalanceFormat();
-  const service = useService(sails);
+  const service = useService(sails, 'functions');
 
   const defaultValues = { ...DEFAULT_VALUES, payload: service.defaultValues };
   const schema = useSchema(service.schema);
