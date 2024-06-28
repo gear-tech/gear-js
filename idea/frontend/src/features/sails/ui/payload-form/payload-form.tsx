@@ -27,8 +27,8 @@ function PayloadForm({ sails, select, args, gap, direction = 'x', ...props }: Pr
 
   return (
     <InputWrapper id="payload" label="Payload" size="normal" gap={gap} direction={direction} className={styles.form}>
-      {isFunction && <Select direction="y" {...props.functionSelect} />}
       <Select direction="y" {...select} />
+      {isFunction && <Select direction="y" {...props.functionSelect} />}
 
       <Fields sails={sails} args={args} />
     </InputWrapper>

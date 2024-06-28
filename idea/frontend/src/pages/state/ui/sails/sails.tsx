@@ -4,7 +4,8 @@ import { Button, Input, Textarea } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnyJson } from '@polkadot/types/types';
 import { useMutation } from '@tanstack/react-query';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { Sails as SailsType, ZERO_ADDRESS } from 'sails-js';
 import { z } from 'zod';
 
@@ -20,17 +21,19 @@ import { downloadJson } from '../../helpers';
 import { useProgramId } from '../../hooks';
 import styles from '../full/Full.module.scss';
 
-// TODO: would be better if useQuery (useService) could accept undefined sails?
-// TODO: reset on value change?
 const StateForm = ({ programId, sails }: { programId: HexString; sails: SailsType }) => {
   const { api } = useApi();
   const { account } = useAccount();
   const alert = useAlert();
+  // would be better if useService could accept undefined sails?
   const { select, functionSelect, args, decodePayload, ...query } = useService(sails, 'queries');
 
   const defaultValues = { ...INITIAL_VALUES, payload: query.defaultValues };
   const schema = query.schema ? z.object({ payload: query.schema }) : undefined;
   const form = useForm({ values: defaultValues, resolver: schema ? zodResolver(schema) : undefined });
+  // take a look at: https://github.com/react-hook-form/react-hook-form/issues/7068,
+  // works for now but might need to be changed, form.watch for example is not working
+  const payloadValue = useWatch({ control: form.control, name: 'payload' });
 
   const readQuery = async (payload: PayloadValue | undefined): Promise<AnyJson> => {
     if (!api) throw new Error('API is not initialized');
@@ -47,11 +50,16 @@ const StateForm = ({ programId, sails }: { programId: HexString; sails: SailsTyp
     return decodePayload(result.payload.toHex());
   };
 
-  // TODO: decode numbers bigger than 64 bits (BigInt)
+  // decode numbers bigger than 64 bits (BigInt)?
   const state = useMutation({ mutationFn: readQuery, onError: ({ message }) => alert.error(message) });
   const isStateExists = !isUndefined(state.data);
 
   const handleSubmit = form.handleSubmit(({ payload }) => state.mutate(payload));
+
+  useEffect(() => {
+    state.reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [payloadValue]);
 
   return (
     <FormProvider {...form}>
