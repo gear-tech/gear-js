@@ -25,22 +25,28 @@ const Message = () => {
   const { messageId } = useParams() as Params;
   const alert = useAlert();
 
-  const { message, isLoading: isMessageLoading } = useMessage(messageId);
+  const { message, isLoading } = useMessage(messageId);
   const { metahash, exitCode, timestamp, id, source, value, destination, replyToMessageId, entry, blockHash } =
     message || {};
 
   const { metadata, isMetadataReady } = useMetadata(metahash);
   const { sails, isLoading: isSailsLoading } = useMessageSails(message);
-  const isLoading = isMessageLoading || !isMetadataReady || isSailsLoading;
+  const isPayloadLoading = !isMetadataReady || isSailsLoading;
 
   const decodedPayload = useMemo(
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    () => (message && !isLoading ? getDecodedMessagePayload(message, metadata, sails, alert.error) : undefined),
+    () => (message && !isPayloadLoading ? getDecodedMessagePayload(message, metadata, sails, alert.error) : undefined),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [message, metadata, sails, isLoading],
+    [message, metadata, sails, isPayloadLoading],
   );
 
-  const loadingClassName = cx(isLoading && styles.loading);
+  const getFormattedPayload = () => {
+    if (!decodedPayload) return '';
+    return decodedPayload.value ? getPreformattedText(decodedPayload.value) : '-';
+  };
+
+  const inputClassName = cx(isLoading && styles.loading);
+  const payloadClassName = cx(isPayloadLoading && styles.loading);
 
   return (
     <div>
@@ -61,45 +67,22 @@ const Message = () => {
       </header>
 
       <section className={styles.messageInfo}>
-        <Input value={id} label="Message ID" gap="1/6" className={loadingClassName} readOnly />
-        <Input value={source} label="Source" gap="1/6" className={loadingClassName} readOnly />
-        <Input value={destination} label="Destination" gap="1/6" className={loadingClassName} readOnly />
-        <Input value={value} label="Value" gap="1/6" className={loadingClassName} readOnly />
+        <Input value={id} label="Message ID" gap="1/6" className={inputClassName} readOnly />
+        <Input value={source} label="Source" gap="1/6" className={inputClassName} readOnly />
+        <Input value={destination} label="Destination" gap="1/6" className={inputClassName} readOnly />
+        <Input value={value} label="Value" gap="1/6" className={inputClassName} readOnly />
 
-        {decodedPayload && (
-          <>
-            {'serviceName' in decodedPayload && (
-              <Input
-                value={decodedPayload.serviceName}
-                label="Service"
-                gap="1/6"
-                className={loadingClassName}
-                readOnly
-              />
-            )}
-
-            {'functionName' in decodedPayload && (
-              <Input
-                value={decodedPayload.functionName}
-                label="Function"
-                gap="1/6"
-                className={loadingClassName}
-                readOnly
-              />
-            )}
-
-            <Textarea
-              value={decodedPayload.value ? getPreformattedText(decodedPayload.value) : '-'}
-              label="Payload"
-              gap="1/6"
-              className={loadingClassName}
-              readOnly
-              block
-            />
-          </>
+        {decodedPayload && 'serviceName' in decodedPayload && (
+          <Input value={decodedPayload.serviceName} label="Service" gap="1/6" className={inputClassName} readOnly />
         )}
 
-        {entry && <Input value={entry} label="Entry" gap="1/6" className={loadingClassName} readOnly />}
+        {decodedPayload && 'functionName' in decodedPayload && (
+          <Input value={decodedPayload.functionName} label="Function" gap="1/6" className={inputClassName} readOnly />
+        )}
+
+        <Textarea value={getFormattedPayload()} label="Payload" gap="1/6" className={payloadClassName} readOnly block />
+
+        {entry && <Input value={entry} label="Entry" gap="1/6" className={inputClassName} readOnly />}
 
         {replyToMessageId && (
           <InputWrapper label="Reply to" id="replyTo" direction="x" size="normal" gap="1/6" className={styles.link}>
