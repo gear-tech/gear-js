@@ -7,7 +7,7 @@ import { useSelect } from './use-select';
 function useConstructor(sails: Sails) {
   const { ctors } = sails;
 
-  const select = useSelect(ctors);
+  const select = useSelect(ctors, { label: 'Constructor' });
   const { args, encodePayload } = ctors[select.value];
 
   const defaultValues = useMemo(

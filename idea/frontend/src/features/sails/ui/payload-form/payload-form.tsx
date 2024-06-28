@@ -22,38 +22,13 @@ type ServiceProps = BaseProps & {
 
 type Props = ConstructorProps | ServiceProps;
 
-function PayloadForm({ sails, select, args, direction = 'x', gap, ...props }: Props) {
-  const isService = 'functionSelect' in props;
+function PayloadForm({ sails, select, args, gap, direction = 'x', ...props }: Props) {
+  const isFunction = 'functionSelect' in props;
 
   return (
     <InputWrapper id="payload" label="Payload" size="normal" gap={gap} direction={direction} className={styles.form}>
-      {isService ? (
-        <>
-          <Select
-            label="Service"
-            direction="y"
-            options={select.options}
-            value={select.value}
-            onChange={select.handleChange}
-          />
-
-          <Select
-            label="Function"
-            direction="y"
-            options={props.functionSelect.options}
-            value={props.functionSelect.value}
-            onChange={props.functionSelect.handleChange}
-          />
-        </>
-      ) : (
-        <Select
-          label="Constructor"
-          direction="y"
-          options={select.options}
-          value={select.value}
-          onChange={select.handleChange}
-        />
-      )}
+      {isFunction && <Select direction="y" {...props.functionSelect} />}
+      <Select direction="y" {...select} />
 
       <Fields sails={sails} args={args} />
     </InputWrapper>

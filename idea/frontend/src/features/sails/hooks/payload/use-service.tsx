@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { ChangeEvent, useMemo } from 'react';
 import { Sails } from 'sails-js';
 
 import { getDefaultPayloadValue, getPayloadSchema } from '../../utils';
@@ -7,16 +7,16 @@ import { useSelect } from './use-select';
 function useService(sails: Sails, key: 'functions' | 'queries') {
   const { services } = sails;
 
-  const handleSelectChange = (value: string) => {
+  const onSelectChange = (value: string) => {
     const [defaultFunction] = Object.keys(services[value][key]);
 
-    functionSelect.setValue(defaultFunction);
+    functionSelect.onChange({ target: { value: defaultFunction } } as ChangeEvent<HTMLSelectElement>);
   };
 
-  const select = useSelect(services, handleSelectChange);
+  const select = useSelect(services, { onChange: onSelectChange, label: 'Service' });
 
   const functions = services[select.value][key];
-  const functionSelect = useSelect(functions);
+  const functionSelect = useSelect(functions, { label: key === 'functions' ? 'Function' : 'Query' });
   const { args, encodePayload, decodePayload } = functions[functionSelect.value];
 
   const defaultValues = useMemo(
