@@ -5,10 +5,10 @@ import clsx from 'clsx';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { useProgramIdSchema } from '@/hooks';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { Input } from '@/shared/ui';
 
-import { useProgramIdSchema } from '../../hooks';
 import styles from './programs-form.module.scss';
 
 const FIELD_NAME = {
