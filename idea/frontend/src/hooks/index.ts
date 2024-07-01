@@ -27,6 +27,7 @@ import { useNetworkIcon } from './useNetworkIcon';
 import { useValidationSchema, useBalanceSchema, useGasLimitSchema } from './schemas';
 import { useSignAndSend } from './use-sign-and-send';
 import { useContractApiWithFile } from './use-contract-api-with-file';
+import { useModalState } from './use-modal-state';
 
 export {
   useModal,
@@ -64,4 +65,5 @@ export {
   useContractApiWithFile,
   useBalanceSchema,
   useGasLimitSchema,
+  useModalState,
 };

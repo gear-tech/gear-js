@@ -1,20 +1,14 @@
 import { DEFAULT_LIMIT } from '@/shared/config';
+import { fetchWithGuard } from '@/shared/helpers';
 
 import { DnsParams, DnsResponse } from './types';
+import { DNS_API_URL } from './consts';
 
-const fetchWithGuard = async <T extends object>(...args: Parameters<typeof fetch>) => {
-  const response = await fetch(...args);
-
-  if (!response.ok) throw new Error(response.statusText);
-
-  return response.json() as T;
-};
-
-const getDns = (url: string, params: DnsParams) => {
+const getDns = (params: DnsParams) => {
   const method = 'GET';
-  const queryParams = new URLSearchParams(params as unknown as Record<string, string>);
-
-  return fetchWithGuard<DnsResponse>(`${url}/dns?${queryParams}`, { method });
+  const url = new URL(`${DNS_API_URL}/dns`);
+  Object.entries(params).forEach(([key, value]) => url.searchParams.append(key, String(value)));
+  return fetchWithGuard<DnsResponse>(url.toString(), { method });
 };
 
 const getNextPageParam = (lastPage: DnsResponse, allPages: DnsResponse[]) => {

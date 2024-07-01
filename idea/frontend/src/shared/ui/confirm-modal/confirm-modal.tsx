@@ -1,3 +1,4 @@
+import { FC, SVGProps } from 'react';
 import { Button, Modal } from '@gear-js/ui';
 
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
@@ -9,26 +10,27 @@ type Props = {
   title: string;
   text: string;
   confirmText: string;
+  cancelText?: string;
   close: () => void;
   onSubmit: () => void;
+  confirmIcon?: FC<SVGProps<SVGSVGElement>>;
   isLoading?: boolean;
 };
 
-const ConfirmModal = ({ title, text, close, onSubmit, confirmText, isLoading }: Props) => {
+const ConfirmModal = ({ title, text, close, onSubmit, confirmText, confirmIcon, isLoading }: Props) => {
   return (
-    <Modal heading={title} size="large" close={close}>
+    <Modal heading={title} close={close}>
       <p className={styles.text}>{text}</p>
 
       <div className={styles.buttons}>
         <Button
-          icon={ApplySVG}
+          icon={confirmIcon || ApplySVG}
           color="primary"
-          size="large"
           text={confirmText}
           onClick={onSubmit}
           disabled={isLoading}
         />
-        <Button icon={CloseSVG} color="light" size="large" text="Close" onClick={close} />
+        <Button icon={CloseSVG} color="light" text="Cancel" onClick={close} />
       </div>
     </Modal>
   );

@@ -15,7 +15,7 @@ export class Program {
   public readonly dns: Dns;
 
   constructor(public api: GearApi, public programId?: `0x${string}`) {
-    const types: Record<string, any> = {
+    const types = {
       ActorId: '([u8; 32])',
       ContractInfo: { admin: 'ActorId', program_id: 'ActorId', registration_time: 'String' },
     };

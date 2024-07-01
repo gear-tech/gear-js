@@ -1,9 +1,6 @@
 @use '@/shared/assets/styles/mixins' as *;
 
-.inputs {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.text {
   margin-bottom: 32px;
 }
 

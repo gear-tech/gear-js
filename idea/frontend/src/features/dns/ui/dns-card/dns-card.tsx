@@ -8,14 +8,14 @@ import styles from './dns-card.module.scss';
 
 type Props = {
   dns: Dns;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 };
 
 function DnsCard({ dns, onSuccess }: Props) {
   const { name, address, updatedAt, createdBy } = dns;
   const { account } = useAccount();
 
-  const isEditable = createdBy === account?.decodedAddress;
+  const isOwner = createdBy === account?.decodedAddress;
 
   return (
     <div className={styles.card}>
@@ -25,14 +25,12 @@ function DnsCard({ dns, onSuccess }: Props) {
         <TimestampBlock timestamp={updatedAt} withIcon />
       </div>
 
-      <div className={styles.actions}>
-        {isEditable && (
-          <>
-            <EditDns initialValues={{ name, address }} onSuccess={onSuccess} />
-            <DeleteDns name={name} onSuccess={onSuccess} />
-          </>
-        )}
-      </div>
+      {isOwner && (
+        <div className={styles.actions}>
+          <EditDns initialValues={{ name, address }} onSuccess={onSuccess} />
+          <DeleteDns name={name} onSuccess={onSuccess} />
+        </div>
+      )}
     </div>
   );
 }

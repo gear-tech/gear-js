@@ -1,43 +1,44 @@
-import { HexString } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
-import cx from 'clsx';
 
+import { useModalState } from '@/hooks';
 import { withAccount } from '@/shared/ui';
 import EditSVG from '@/shared/assets/images/actions/edit.svg?react';
 
-import { EditDnsModal } from '../edit-dns-modal';
-import { useModal } from '../../hooks';
 import { DnsSchema } from '../../types';
+import { DnsModal } from '../dns-modal';
 import styles from './edit-dns.module.scss';
 
 type Props = {
   initialValues: DnsSchema;
-  programId?: HexString;
-  buttonSize?: 'small' | 'medium';
-  buttonColor?: 'secondary' | 'light' | 'transparent';
-  onSuccess?: () => void;
+  onSuccess: () => void;
 };
 
-const EditDns = withAccount(
-  ({ buttonColor = 'transparent', buttonSize = 'medium', onSuccess, initialValues }: Props) => {
-    const [isModalOpen, openModal, closeModal] = useModal();
+const EditDns = withAccount(({ onSuccess, initialValues }: Props) => {
+  const [isModalOpen, openModal, closeModal] = useModalState();
 
-    return (
-      <>
-        <Button
-          icon={EditSVG}
-          text="Change program address"
-          size={buttonSize}
-          color={buttonColor}
-          className={cx(buttonColor === 'transparent' && styles.link)}
-          onClick={openModal}
-          noWrap
+  return (
+    <>
+      <Button
+        icon={EditSVG}
+        text="Change program address"
+        size="medium"
+        color="transparent"
+        className={styles.link}
+        onClick={openModal}
+        noWrap
+      />
+
+      {isModalOpen && (
+        <DnsModal
+          close={closeModal}
+          onSuccess={onSuccess}
+          initialValues={initialValues}
+          heading="Change program address"
+          submitText="Submit"
         />
-
-        {isModalOpen && <EditDnsModal close={closeModal} onSuccess={onSuccess} initialValues={initialValues} />}
-      </>
-    );
-  },
-);
+      )}
+    </>
+  );
+});
 
 export { EditDns };

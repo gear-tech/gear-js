@@ -1,37 +1,23 @@
-import { HexString } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
-import cx from 'clsx';
 
+import { useModalState } from '@/hooks';
 import { withAccount } from '@/shared/ui';
 import EditSVG from '@/shared/assets/images/actions/edit.svg?react';
 
-import { useModal } from '../../hooks';
-import styles from './create-dns.module.scss';
-import { CreateDnsModal } from '../create-dns-modal';
+import { DnsModal } from '../dns-modal';
 
 type Props = {
-  programId?: HexString;
-  buttonSize?: 'small' | 'medium';
-  buttonColor?: 'secondary' | 'light' | 'transparent';
-  onSuccess?: () => void;
+  onSuccess: () => void;
 };
 
-const CreateDns = withAccount(({ buttonColor = 'light', buttonSize = 'medium', onSuccess }: Props) => {
-  const [isModalOpen, openModal, closeModal] = useModal();
+const CreateDns = withAccount(({ onSuccess }: Props) => {
+  const [isModalOpen, openModal, closeModal] = useModalState();
 
   return (
     <>
-      <Button
-        icon={EditSVG}
-        text="Create dDNS"
-        size={buttonSize}
-        color={buttonColor}
-        className={cx(buttonColor === 'transparent' && styles.link)}
-        onClick={openModal}
-        noWrap
-      />
+      <Button icon={EditSVG} text="Create dDNS" size="medium" color="light" onClick={openModal} noWrap />
 
-      {isModalOpen && <CreateDnsModal close={closeModal} onSuccess={onSuccess} />}
+      {isModalOpen && <DnsModal close={closeModal} onSuccess={onSuccess} heading="Create DNS" submitText="Create" />}
     </>
   );
 });

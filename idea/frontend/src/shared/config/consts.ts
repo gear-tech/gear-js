@@ -16,8 +16,6 @@ const VOUCHERS_API_URL = {
   [GENESIS.TESTNET]: import.meta.env.VITE_TESTNET_VOUCHERS_API_URL as string,
 } as const;
 
-const DNS_API_URL = import.meta.env.VITE_DNS_API_URL as string;
-
 const NODE_ADRESS_URL_PARAM = 'node';
 
 const EXAMPLES_HREF = 'https://www.gear-tech.io/developers';
@@ -110,7 +108,6 @@ enum AnimationTimeout {
 export {
   API_URL,
   VOUCHERS_API_URL,
-  DNS_API_URL,
   NODES_API_URL,
   NODE_ADDRESS,
   HCAPTCHA_SITE_KEY,

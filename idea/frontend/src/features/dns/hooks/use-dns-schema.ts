@@ -3,7 +3,6 @@ import { z } from 'zod';
 import { FIELD_NAME, NAME_SCHEMA } from '../consts';
 
 const useDnsSchema = () => {
-  // ! TODO: useQueryState
   const programIdSchema = useProgramIdSchema([]);
 
   const dnsSchema = z.object({

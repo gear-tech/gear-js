@@ -1,9 +1,11 @@
-import { decodeAddress } from '@gear-js/api';
 import { z } from 'zod';
 
-import { isAccountAddressValid } from '@/shared/helpers';
+import { Values } from '../types';
+import { Program } from './sails';
 
-import { Values } from './types';
+const DNS_API_URL = import.meta.env.VITE_DNS_API_URL as string;
+
+const DNS_PROGRAM_QUERY_KEY = ['dnsProgram'];
 
 const FIELD_NAME = {
   DNS_NAME: 'name',
@@ -18,4 +20,4 @@ const DEFAULT_VALUES: Values = {
 const domainNameRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const NAME_SCHEMA = z.string().trim().regex(domainNameRegex, 'Invalid domain name');
 
-export { FIELD_NAME, DEFAULT_VALUES, NAME_SCHEMA };
+export { DNS_API_URL, DNS_PROGRAM_QUERY_KEY, FIELD_NAME, DEFAULT_VALUES, NAME_SCHEMA, Program };
