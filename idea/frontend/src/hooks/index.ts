@@ -26,6 +26,7 @@ import { useMobileDisclaimer } from './useMobileDisclaimer';
 import { useNetworkIcon } from './useNetworkIcon';
 import { useValidationSchema } from './use-validation-schema';
 import { useSignAndSend } from './use-sign-and-send';
+import { useModalState } from './use-modal-state';
 
 export {
   useModal,
@@ -60,4 +61,5 @@ export {
   useNetworkIcon,
   useValidationSchema,
   useSignAndSend,
+  useModalState,
 };

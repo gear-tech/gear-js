@@ -1,15 +1,15 @@
 import { HexString } from '@gear-js/api';
 import { useAccount, useAlert, useApi } from '@gear-js/react-hooks';
 import { web3FromSource } from '@polkadot/extension-dapp';
-import { useEffect, useState } from 'react';
 import { TransactionBuilder } from 'sails-js';
 
 import { useLoading, useModal } from '@/hooks';
-import { DNS_API_URL, TransactionName } from '@/shared/config';
+import { TransactionName } from '@/shared/config';
 
-import { Program } from './lib';
+import { Program } from '../consts';
+import { useQueryClient } from '@tanstack/react-query';
 
-let dnsProgram: Program;
+const DNS_PROGRAM_QUERY_KEY = ['dnsProgram'];
 
 type ResolveRejectOptions = {
   resolve?: () => void;
@@ -17,7 +17,7 @@ type ResolveRejectOptions = {
 };
 
 type SendDnsMessage = {
-  getTransactionBuilder: () => Promise<TransactionBuilder<null>>;
+  getTransactionBuilder: () => TransactionBuilder<null>;
   options?: ResolveRejectOptions;
 };
 
@@ -27,9 +27,12 @@ const useDnsActions = () => {
   const { account } = useAccount();
   const alert = useAlert();
   const { api } = useApi();
+  const queryClient = useQueryClient();
+  const state = queryClient.getQueryState<Program>(DNS_PROGRAM_QUERY_KEY);
+  const dnsProgram = state?.data;
 
   const sendMessage = async ({ getTransactionBuilder, options }: SendDnsMessage) => {
-    if (!account || !api) {
+    if (!account || !api || !dnsProgram) {
       return;
     }
     const { resolve: onSuccess, reject: onError } = options || {};
@@ -42,7 +45,7 @@ const useDnsActions = () => {
         if (account) {
           try {
             enableLoading();
-            const transaction = await getTransactionBuilder();
+            const transaction = getTransactionBuilder();
 
             transaction.withAccount(account.address, { signer });
 
@@ -75,40 +78,24 @@ const useDnsActions = () => {
   };
 
   const addNewProgram = (name: string, program_id: HexString, options?: ResolveRejectOptions) => {
-    const getTransactionBuilder = async () => dnsProgram.dns.addNewProgram(name, program_id);
+    if (!dnsProgram) throw new Error('dnsProgram is not initialized');
+    const getTransactionBuilder = () => dnsProgram.dns.addNewProgram(name, program_id);
     return sendMessage({ getTransactionBuilder, options });
   };
 
   const changeProgramId = (name: string, program_id: HexString, options?: ResolveRejectOptions) => {
-    const getTransactionBuilder = async () => dnsProgram.dns.changeProgramId(name, program_id);
+    if (!dnsProgram) throw new Error('dnsProgram is not initialized');
+    const getTransactionBuilder = () => dnsProgram.dns.changeProgramId(name, program_id);
     return sendMessage({ getTransactionBuilder, options });
   };
 
   const deleteProgram = (name: string, options?: ResolveRejectOptions) => {
-    const getTransactionBuilder = async () => dnsProgram.dns.deleteProgram(name);
+    if (!dnsProgram) throw new Error('dnsProgram is not initialized');
+    const getTransactionBuilder = () => dnsProgram.dns.deleteProgram(name);
     return sendMessage({ getTransactionBuilder, options });
   };
 
   return { isLoading, addNewProgram, changeProgramId, deleteProgram };
 };
 
-const useInitDnsProgram = () => {
-  const { isApiReady, api } = useApi();
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (!dnsProgram && !isLoading && isApiReady && api) {
-      setIsLoading(true);
-
-      fetch(`${DNS_API_URL}/dns/contract`).then((response) => {
-        response.json().then(({ contract }) => {
-          const programId = contract;
-          dnsProgram = new Program(api, programId);
-          setIsLoading(false);
-        });
-      });
-    }
-  }, [isApiReady, api]);
-};
-
-export { useInitDnsProgram, Program, useDnsActions };
+export { useDnsActions };

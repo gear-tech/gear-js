@@ -1,31 +1,25 @@
-import { HexString } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
-import cx from 'clsx';
 
-import { withAccount } from '@/shared/ui';
+import { useModalState } from '@/hooks';
 import TrashSVG from '@/shared/assets/images/actions/trash.svg?react';
 
-import { useModal } from '../../hooks';
 import { ConfirmModal } from '../confirn-modal';
+import { useDnsActions } from '../../hooks/use-dns-actions';
 import styles from './delete-dns.module.scss';
-import { useDnsActions } from '../../sails';
 
 type Props = {
   name: string;
-  programId?: HexString;
-  buttonSize?: 'small' | 'medium';
-  buttonColor?: 'secondary' | 'light' | 'transparent';
-  onSuccess?: () => void;
+  onSuccess: () => void;
 };
 
-const DeleteDns = withAccount(({ buttonColor = 'transparent', buttonSize = 'medium', onSuccess, name }: Props) => {
-  const [isModalOpen, openModal, closeModal] = useModal();
+const DeleteDns = ({ name, onSuccess }: Props) => {
+  const [isModalOpen, openModal, closeModal] = useModalState();
   const { isLoading, deleteProgram } = useDnsActions();
   const text = `DNS '${name}' will be deleted. Are you sure?`;
 
   const onConfirm = async () => {
     const resolve = () => {
-      onSuccess?.();
+      onSuccess();
       closeModal();
     };
     deleteProgram(name, { resolve });
@@ -36,9 +30,9 @@ const DeleteDns = withAccount(({ buttonColor = 'transparent', buttonSize = 'medi
       <Button
         icon={TrashSVG}
         text="Delete DNS"
-        size={buttonSize}
-        color={buttonColor}
-        className={cx(buttonColor === 'transparent' && styles.link)}
+        size="medium"
+        color="transparent"
+        className={styles.link}
         onClick={openModal}
         noWrap
       />
@@ -54,6 +48,6 @@ const DeleteDns = withAccount(({ buttonColor = 'transparent', buttonSize = 'medi
       )}
     </>
   );
-});
+};
 
 export { DeleteDns };
