@@ -36,6 +36,7 @@ import {
   UseSendMessageWithGasOptions,
   SendMessageWithGasOptions,
 } from './handlers';
+import { useProgram, UseProgramParameters } from './sails';
 
 export {
   useReadFullState,
@@ -70,6 +71,13 @@ export {
   useIsAnyAccountVoucherActive,
   useIssuedVouchers,
   useAccountIssuedVouchers,
+  useProgram,
 };
 
-export type { SendMessageOptions, UseSendMessageOptions, UseSendMessageWithGasOptions, SendMessageWithGasOptions };
+export type {
+  SendMessageOptions,
+  UseSendMessageOptions,
+  UseSendMessageWithGasOptions,
+  SendMessageWithGasOptions,
+  UseProgramParameters,
+};
