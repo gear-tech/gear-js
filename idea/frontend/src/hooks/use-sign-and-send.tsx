@@ -3,12 +3,14 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { Event } from '@polkadot/types/interfaces';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { web3FromSource } from '@polkadot/extension-dapp';
+import { ReactNode } from 'react';
 
 import { useExtrinsicFailedMessage } from './use-extrinsic-failed-message';
 
 type Extrinsic = SubmittableExtrinsic<'promise', ISubmittableResult>;
 
 type Options = {
+  successAlert: ReactNode;
   onSuccess: () => void;
   onError: () => void;
   onFinally: () => void;
@@ -16,6 +18,7 @@ type Options = {
 };
 
 const DEFAULT_OPTIONS = {
+  successAlert: 'Success',
   onSuccess: () => {},
   onError: () => {},
   onFinally: () => {},
@@ -28,7 +31,7 @@ function useSignAndSend() {
   const getExtrinsicFailedMessage = useExtrinsicFailedMessage();
 
   const handleEvent = (event: Event, method: string, options: Options) => {
-    const { onSuccess, onError, onFinally } = options;
+    const { successAlert, onSuccess, onError, onFinally } = options;
     const alertOptions = { title: `${event.section}.${event.method}` };
 
     if (event.method === 'ExtrinsicFailed') {
@@ -41,7 +44,7 @@ function useSignAndSend() {
     }
 
     if (event.method === method) {
-      alert.success('Success', alertOptions);
+      alert.success(successAlert, alertOptions);
 
       onSuccess();
       onFinally();

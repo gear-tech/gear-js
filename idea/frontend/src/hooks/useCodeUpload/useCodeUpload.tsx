@@ -1,9 +1,9 @@
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { HexString } from '@polkadot/util/types';
-import { useApi, useAlert, useAccount } from '@gear-js/react-hooks';
+import { useApi, useAccount } from '@gear-js/react-hooks';
 
 import { useChain, useModal, useSignAndSend } from '@/hooks';
-import { TransactionName, UPLOAD_METADATA_TIMEOUT } from '@/shared/config';
+import { UPLOAD_METADATA_TIMEOUT } from '@/shared/config';
 import { CopiedInfo } from '@/shared/ui/copiedInfo';
 import { addMetadata, addCodeName } from '@/api';
 import { addIdl } from '@/features/sails';
@@ -12,7 +12,6 @@ import { ParamsToUploadCode } from './types';
 
 const useCodeUpload = () => {
   const { api, isApiReady } = useApi();
-  const alert = useAlert();
   const { account } = useAccount();
   const { showModal } = useModal();
   const { isDevChain } = useChain();
@@ -57,17 +56,18 @@ const useCodeUpload = () => {
     const extrinsic = voucherId ? api.voucher.call(voucherId, { UploadCode: codeExtrinsic }) : codeExtrinsic;
     const { partialFee } = await api.code.paymentInfo(address, { signer });
 
-    const onSuccess = () => {
-      alert.success(<CopiedInfo title="Code hash" info={codeHash} />);
-      resolve();
-    };
-
     const onFinalized = () => handleMetadataUpload(codeHash, name, metaHex, idl);
-    const onConfirm = () => signAndSend(extrinsic, 'CodeChanged', { onSuccess, onFinalized });
+
+    const onConfirm = () =>
+      signAndSend(extrinsic, 'CodeChanged', {
+        successAlert: <CopiedInfo title="Code hash" info={codeHash} />,
+        onSuccess: resolve,
+        onFinalized,
+      });
 
     showModal('transaction', {
       fee: partialFee.toHuman(),
-      name: TransactionName.SubmitCode,
+      name: `${extrinsic.method.section}.${extrinsic.method.method}`,
       addressFrom: address,
       onConfirm,
     });

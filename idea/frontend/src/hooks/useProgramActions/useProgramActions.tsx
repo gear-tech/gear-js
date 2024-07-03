@@ -1,5 +1,5 @@
 import { generatePath } from 'react-router-dom';
-import { useApi, useAccount, useAlert } from '@gear-js/react-hooks';
+import { useApi, useAccount } from '@gear-js/react-hooks';
 import { HexString, IProgramCreateResult, IProgramUploadResult, ProgramMetadata } from '@gear-js/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { ISubmittableResult } from '@polkadot/types/types';
@@ -9,7 +9,7 @@ import { uploadLocalProgram } from '@/api/LocalDB';
 import { absoluteRoutes, UPLOAD_METADATA_TIMEOUT } from '@/shared/config';
 import { isNullOrUndefined } from '@/shared/helpers';
 import { CustomLink } from '@/shared/ui/customLink';
-import { ProgramStatus, useProgramStatus } from '@/features/program';
+import { useProgramStatus } from '@/features/program';
 import { isHumanTypesRepr } from '@/features/metadata';
 import { addProgramName } from '@/api';
 import { addIdl } from '@/features/sails';
@@ -18,7 +18,6 @@ import { useMetadataUpload } from '../useMetadataUpload';
 import { Payload } from './types';
 
 const useProgramActions = () => {
-  const alert = useAlert();
   const { api, isApiReady } = useApi();
   const { account } = useAccount();
   const { isDevChain } = useChain();
@@ -28,7 +27,7 @@ const useProgramActions = () => {
   const { getProgramStatus } = useProgramStatus();
   const uploadMetadata = useMetadataUpload();
 
-  const getProgramMessage = (programId: string) => (
+  const getSuccessAlert = (programId: string) => (
     <p>
       ID: <CustomLink to={generatePath(absoluteRoutes.program, { programId })} text={programId} />
     </p>
@@ -46,30 +45,16 @@ const useProgramActions = () => {
 
     // timeout cuz wanna be sure that block data is ready
     setTimeout(async () => {
-      await addProgramName({ id: programId, name }, isDevChain);
-
+      if (!isDevChain) await addProgramName({ id: programId, name });
       if (metaHex) uploadMetadata({ codeHash: codeId, metaHex, programId });
       if (idl) addIdl(codeId, idl);
     }, UPLOAD_METADATA_TIMEOUT);
-
-    const programMessage = getProgramMessage(programId);
-    const programStatus = await getProgramStatus(programId);
-
-    if (programStatus === ProgramStatus.Terminated) {
-      alert.error(programMessage, { title: 'Program is terminated' });
-    }
-
-    if (programStatus === ProgramStatus.Exited) {
-      alert.error(programMessage, { title: 'Program is exited' });
-    }
-    if (programStatus === ProgramStatus.Active) {
-      alert.success(programMessage, { title: 'Program is active' });
-    }
 
     if (!isDevChain) return;
     if (!isApiReady) throw new Error('API is not initialized');
     if (!account) throw new Error('Account not found');
 
+    const programStatus = await getProgramStatus(programId);
     const metahash = await api.code.metaHash(codeId);
     const meta = metaHex ? ProgramMetadata.from(metaHex) : undefined;
 
@@ -104,8 +89,9 @@ const useProgramActions = () => {
     const { signer } = await web3FromSource(meta.source);
     const { partialFee } = await api.program.paymentInfo(address, { signer });
 
+    const successAlert = getSuccessAlert(programId);
     const onFinalized = (result: ISubmittableResult) => handleMetadataUpload(programId, codeId, payload, result);
-    const onConfirm = () => signAndSend(extrinsic, 'ProgramChanged', { onSuccess, onError, onFinalized });
+    const onConfirm = () => signAndSend(extrinsic, 'ProgramChanged', { successAlert, onSuccess, onError, onFinalized });
 
     showModal('transaction', {
       fee: partialFee.toHuman(),
