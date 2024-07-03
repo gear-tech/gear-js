@@ -1,18 +1,14 @@
-import { useCallback } from 'react';
 import { web3FromSource } from '@polkadot/extension-dapp';
-import { EventRecord } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
-import { useApi, useAlert, useAccount, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
+import { useApi, useAlert, useAccount } from '@gear-js/react-hooks';
 
-import { useChain, useModal } from '@/hooks';
-import { Method } from '@/features/explorer';
-import { checkWallet, getExtrinsicFailedMessage } from '@/shared/helpers';
-import { PROGRAM_ERRORS, TransactionName, TransactionStatus, UPLOAD_METADATA_TIMEOUT } from '@/shared/config';
+import { useChain, useModal, useSignAndSend } from '@/hooks';
+import { TransactionName, UPLOAD_METADATA_TIMEOUT } from '@/shared/config';
 import { CopiedInfo } from '@/shared/ui/copiedInfo';
 import { addMetadata, addCodeName } from '@/api';
 import { addIdl } from '@/features/sails';
 
-import { ParamsToUploadCode, ParamsToSignAndSend } from './types';
+import { ParamsToUploadCode } from './types';
 
 const useCodeUpload = () => {
   const { api, isApiReady } = useApi();
@@ -20,99 +16,62 @@ const useCodeUpload = () => {
   const { account } = useAccount();
   const { showModal } = useModal();
   const { isDevChain } = useChain();
+  const signAndSend = useSignAndSend();
 
-  const handleEventsStatus = (events: EventRecord[], codeHash: HexString, resolve?: () => void) => {
+  // will be refactored in the upcoming local indexer refactoring
+  const handleMetadataUpload = (
+    codeId: HexString,
+    codeName: string,
+    metaHex: HexString | undefined,
+    idl: string | undefined,
+  ) => {
     if (!isApiReady) throw new Error('API is not initialized');
+    if (isDevChain) return;
 
-    events.forEach(({ event }) => {
-      const { method, section } = event;
-      const alertOptions = { title: `${section}.${method}` };
+    // timeout cuz wanna be sure that block data is ready
+    setTimeout(async () => {
+      const id = codeId;
+      const name = codeName || id;
 
-      if (method === Method.ExtrinsicFailed) {
-        alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
-      } else if (method === Method.CodeChanged) {
-        alert.success(<CopiedInfo title="Code hash" info={codeHash} />, alertOptions);
+      await addCodeName({ id, name });
+      if (idl) addIdl(codeId, idl);
 
-        if (resolve) resolve();
-      }
+      if (!metaHex) return;
+      const hash = await api.code.metaHash(id);
+
+      addMetadata(hash, metaHex);
+    }, UPLOAD_METADATA_TIMEOUT);
+  };
+
+  return async ({ optBuffer, name, voucherId, metaHex, idl, resolve }: ParamsToUploadCode) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+    if (!account) throw new Error('Account not found');
+
+    const { address, meta } = account;
+
+    const [{ codeHash, extrinsic: codeExtrinsic }, { signer }] = await Promise.all([
+      api.code.upload(optBuffer),
+      web3FromSource(meta.source),
+    ]);
+
+    const extrinsic = voucherId ? api.voucher.call(voucherId, { UploadCode: codeExtrinsic }) : codeExtrinsic;
+    const { partialFee } = await api.code.paymentInfo(address, { signer });
+
+    const onSuccess = () => {
+      alert.success(<CopiedInfo title="Code hash" info={codeHash} />);
+      resolve();
+    };
+
+    const onFinalized = () => handleMetadataUpload(codeHash, name, metaHex, idl);
+    const onConfirm = () => signAndSend(extrinsic, 'CodeChanged', { onSuccess, onFinalized });
+
+    showModal('transaction', {
+      fee: partialFee.toHuman(),
+      name: TransactionName.SubmitCode,
+      addressFrom: address,
+      onConfirm,
     });
   };
-
-  const signAndSend = async ({ extrinsic, signer, codeId, metaHex, idl, name, resolve }: ParamsToSignAndSend) => {
-    const alertId = alert.loading('SignIn', { title: TransactionName.SubmitCode });
-
-    try {
-      if (!isApiReady) throw new Error('API is not initialized');
-
-      await extrinsic.signAndSend(account!.address, { signer }, ({ events, status }) => {
-        if (status.isReady) {
-          alert.update(alertId, TransactionStatus.Ready);
-        } else if (status.isInBlock) {
-          alert.update(alertId, TransactionStatus.InBlock);
-          handleEventsStatus(events, codeId, resolve);
-        } else if (status.isFinalized) {
-          alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
-
-          if (isDevChain) return;
-
-          // timeout cuz wanna be sure that block data is ready
-          setTimeout(() => {
-            const id = codeId;
-
-            addCodeName({ id, name: name || id })
-              .then(async () => {
-                // TODO: no need to upload if meta/idl is from storage
-                if (metaHex) addMetadata(await api.code.metaHash(id), metaHex);
-                if (idl) addIdl(id, idl);
-              })
-              .catch(({ message }: Error) => alert.error(message));
-          }, UPLOAD_METADATA_TIMEOUT);
-        } else if (status.isInvalid) {
-          alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
-        }
-      });
-    } catch (error) {
-      const message = (error as Error).message;
-
-      alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
-    }
-  };
-
-  const uploadCode = useCallback(
-    async ({ optBuffer, name, voucherId, metaHex, idl, resolve }: ParamsToUploadCode) => {
-      try {
-        if (!isApiReady) throw new Error('API is not initialized');
-        checkWallet(account);
-
-        const { address, meta } = account!;
-
-        const [code, { signer }] = await Promise.all([api.code.upload(optBuffer), web3FromSource(meta.source)]);
-
-        const codeExtrinsic = code.extrinsic;
-        const codeId = code.codeHash;
-        const extrinsic = voucherId ? api.voucher.call(voucherId, { UploadCode: codeExtrinsic }) : codeExtrinsic;
-
-        const { partialFee } = await api.code.paymentInfo(address, { signer });
-
-        const handleConfirm = () => signAndSend({ extrinsic, signer, name, codeId, metaHex, idl, resolve });
-
-        showModal('transaction', {
-          fee: partialFee.toHuman(),
-          name: TransactionName.SubmitCode,
-          addressFrom: address,
-          onConfirm: handleConfirm,
-        });
-      } catch (error) {
-        const message = (error as Error).message;
-
-        alert.error(message);
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [api, account],
-  );
-
-  return uploadCode;
 };
 
 export { useCodeUpload };
