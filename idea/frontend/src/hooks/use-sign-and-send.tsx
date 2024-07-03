@@ -12,12 +12,14 @@ type Options = {
   onSuccess: () => void;
   onError: () => void;
   onFinally: () => void;
+  onFinalized: (value: ISubmittableResult) => void;
 };
 
-const DEFAULT_OPTIONS: Options = {
+const DEFAULT_OPTIONS = {
   onSuccess: () => {},
   onError: () => {},
   onFinally: () => {},
+  onFinalized: () => {},
 } as const;
 
 function useSignAndSend() {
@@ -46,9 +48,10 @@ function useSignAndSend() {
     }
   };
 
-  const handleStatus = ({ events, status }: ISubmittableResult, method: string, options: Options, alertId: string) => {
+  const handleStatus = (result: ISubmittableResult, method: string, options: Options, alertId: string) => {
+    const { events, status } = result;
     const { isInvalid, isReady, isInBlock, isFinalized } = status;
-    const { onError, onFinally } = options;
+    const { onError, onFinally, onFinalized } = options;
 
     if (isInvalid) {
       alert.update(alertId, 'Transaction error. Status: isInvalid', DEFAULT_ERROR_OPTIONS);
@@ -63,6 +66,8 @@ function useSignAndSend() {
 
     if (isFinalized) {
       alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
+
+      onFinalized(result);
 
       events.forEach(({ event }) => handleEvent(event, method, options));
     }

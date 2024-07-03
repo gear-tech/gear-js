@@ -1,3 +1,4 @@
+import { useApi } from '@gear-js/react-hooks';
 import { Button, FileInput } from '@gear-js/ui';
 import cx from 'clsx';
 
@@ -15,9 +16,10 @@ import { UploadMetadata } from '@/features/uploadMetadata';
 import styles from './UploadProgram.module.scss';
 
 const UploadProgram = () => {
+  const { api, isApiReady } = useApi();
   const wasmFile = useWasmFile();
   const { metadata, sails, isLoading, ...contractApi } = useContractApiWithFile(wasmFile.buffer);
-  const { uploadProgram } = useProgramActions();
+  const uploadProgram = useProgramActions();
 
   const reset = () => {
     wasmFile.reset();
@@ -37,9 +39,14 @@ const UploadProgram = () => {
   );
 
   const handleSubmit = (payload: Payload, { enableButtons }: SubmitHelpers) => {
-    if (!wasmFile.buffer) return;
+    if (!isApiReady) throw new Error('API is not initialized');
+    if (!wasmFile.buffer) throw new Error('File is not found');
 
-    uploadProgram({ optBuffer: wasmFile.buffer, payload, resolve: reset, reject: enableButtons });
+    const { gasLimit, value, initPayload, payloadType, keepAlive } = payload;
+    const program = { code: wasmFile.buffer, value, gasLimit, initPayload, keepAlive };
+    const result = api.program.upload(program, payload.metadata, payloadType);
+
+    uploadProgram(result, result.codeId, payload, reset, enableButtons);
   };
 
   return (
