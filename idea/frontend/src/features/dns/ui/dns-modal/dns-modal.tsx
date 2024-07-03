@@ -46,7 +46,7 @@ const DnsModal = ({ heading, submitText, close, onSuccess, initialValues }: Prop
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <div className={styles.inputs}>
-            <Input name={FIELD_NAME.DNS_NAME} label="Name:" direction="y" block />
+            <Input name={FIELD_NAME.DNS_NAME} label="Name:" direction="y" block disabled={isEditMode} />
             <Input name={FIELD_NAME.DNS_ADDRESS} label="Program address:" direction="y" block />
           </div>
 

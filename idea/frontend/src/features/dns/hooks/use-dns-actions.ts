@@ -1,9 +1,10 @@
 import { HexString } from '@gear-js/api';
-import { useAccount, useAlert, useApi } from '@gear-js/react-hooks';
+import { useAccount } from '@gear-js/react-hooks';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { TransactionBuilder } from 'sails-js';
 
-import { useLoading, useModal } from '@/hooks';
+import { Method } from '@/features/explorer';
+import { useLoading, useModal, useSignAndSend } from '@/hooks';
 import { TransactionName } from '@/shared/config';
 
 import { Program } from '../consts';
@@ -25,55 +26,40 @@ const useDnsActions = () => {
   const [isLoading, enableLoading, disableLoading] = useLoading();
   const { showModal } = useModal();
   const { account } = useAccount();
-  const alert = useAlert();
-  const { api } = useApi();
+  const signAndSend = useSignAndSend();
   const queryClient = useQueryClient();
   const state = queryClient.getQueryState<Program>(DNS_PROGRAM_QUERY_KEY);
   const dnsProgram = state?.data;
 
   const sendMessage = async ({ getTransactionBuilder, options }: SendDnsMessage) => {
-    if (!account || !api || !dnsProgram) {
+    if (!account || !dnsProgram) {
       return;
     }
     const { resolve: onSuccess, reject: onError } = options || {};
     const { signer } = await web3FromSource(account.meta.source);
-    // ! TODO: calculate fee by sails
-    // const { partialFee } = await api.message.paymentInfo(account.address, { signer });
+    const transaction = getTransactionBuilder();
+    transaction.withAccount(account.address, { signer });
+    await transaction.calculateGas();
 
-    return new Promise<void>((resolve, reject) => {
-      const onConfirm = async () => {
-        if (account) {
-          try {
-            enableLoading();
-            const transaction = getTransactionBuilder();
+    const extrinsic = transaction.extrinsic;
+    const { partialFee } = await extrinsic.paymentInfo(account.address, { signer });
 
-            transaction.withAccount(account.address, { signer });
-
-            await transaction.calculateGas();
-            const result = await transaction.signAndSend();
-            await result.response().then(() => {
-              if (onSuccess) onSuccess();
-            });
-            return resolve();
-          } catch (error) {
-            const errorMessage = (error as Error).message;
-            alert.error(errorMessage);
-            if (onError) onError();
-            return reject();
-          } finally {
-            disableLoading();
-          }
-        }
-      };
-
-      showModal('transaction', {
-        fee: '0',
-        name: TransactionName.SendMessage,
-        addressFrom: account.address,
-        addressTo: dnsProgram.programId,
-        onAbort: reject,
-        onConfirm,
+    const handleConfirm = () => {
+      enableLoading();
+      signAndSend(extrinsic, Method.MessageQueued, {
+        onSuccess,
+        onError,
+        onFinally: () => disableLoading(),
       });
+    };
+
+    showModal('transaction', {
+      fee: partialFee.toHuman(),
+      name: TransactionName.SendMessage,
+      addressFrom: account.address,
+      addressTo: dnsProgram.programId,
+      onAbort: onError,
+      onConfirm: handleConfirm,
     });
   };
 
