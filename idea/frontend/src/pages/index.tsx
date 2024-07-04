@@ -19,6 +19,7 @@ import { Explorer } from './explorer';
 import { Code } from './code';
 import { UploadCode } from './uploadCode';
 import { Vouchers } from './vouchers';
+import { Dns } from './dns';
 
 const Routing = () => {
   const events = useEvents();
@@ -64,6 +65,7 @@ const Routing = () => {
       <Route path={routes.uploadCode} element={<UploadCode />} />
 
       <Route path={routes.vouchers} element={<Vouchers />} />
+      <Route path={routes.dns} element={<Dns />} />
 
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Navigate to={routes.programs} replace />} />

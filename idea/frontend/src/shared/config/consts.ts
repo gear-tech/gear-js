@@ -1,3 +1,5 @@
+import { HexString } from '@gear-js/api';
+
 const API_URL = import.meta.env.VITE_API_URL as string;
 const NODES_API_URL = import.meta.env.VITE_NODES_API_URL as string;
 const NODE_ADDRESS = import.meta.env.VITE_NODE_ADDRESS as string;

@@ -38,6 +38,8 @@ const Navigation = ({ isOpen }: Props) => {
 
       <NavigationItem to={routes.vouchers} icon={<VouchersSVG />} text="Vouchers" isFullWidth={isOpen} />
 
+      <NavigationItem to={routes.dns} icon={<ExplorerSVG />} text="dDNS" isFullWidth={isOpen} />
+
       <OnboardingTooltip index={8}>
         <AppExamplesLink isFullWidth={isOpen} />
       </OnboardingTooltip>

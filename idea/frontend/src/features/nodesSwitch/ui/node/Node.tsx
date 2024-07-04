@@ -5,9 +5,9 @@ import clsx from 'clsx';
 import { Node as NodeType } from '@/entities/node';
 import { copyToClipboard } from '@/shared/helpers';
 import CopyGreenSVG from '@/shared/assets/images/actions/copyGreen.svg?react';
+import TrashSVG from '@/shared/assets/images/actions/trash.svg?react';
 import { ICON } from '@/widgets/menu/model/consts';
 
-import TrashSVG from '../../assets/trash.svg?react';
 import styles from './Node.module.scss';
 
 type Props = NodeType & {
