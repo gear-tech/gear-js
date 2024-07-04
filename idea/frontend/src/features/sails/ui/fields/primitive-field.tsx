@@ -1,6 +1,7 @@
+import { TypeDef } from 'sails-js';
+
 import { Input } from '@/shared/ui';
 
-import { TypeDef } from '../../types';
 import { getLabel } from '../../utils';
 
 type Props = {

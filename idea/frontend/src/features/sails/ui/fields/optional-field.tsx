@@ -1,11 +1,10 @@
 import { Select } from '@gear-js/ui';
 import { useState } from 'react';
-import { Sails } from 'sails-js';
+import { Sails, TypeDef } from 'sails-js';
 
 import { Fieldset } from '@/shared/ui';
 
 import { useSetPayloadValue } from '../../hooks';
-import { TypeDef } from '../../types';
 import { getDefaultValue, getLabel } from '../../utils';
 
 type Props = {

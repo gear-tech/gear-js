@@ -1,9 +1,8 @@
 import { Select } from '@gear-js/ui';
 import { useState } from 'react';
-import { Sails } from 'sails-js';
+import { Sails, TypeDef } from 'sails-js';
 
 import { useSetPayloadValue } from '../../hooks';
-import { TypeDef } from '../../types';
 import { getNestedName, getDefaultValue } from '../../utils';
 
 type Props = {

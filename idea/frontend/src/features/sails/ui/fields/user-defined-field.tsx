@@ -1,8 +1,7 @@
-import { Sails } from 'sails-js';
+import { Sails, TypeDef } from 'sails-js';
 
 import { Fieldset } from '@/shared/ui';
 
-import { TypeDef } from '../../types';
 import { getLabel } from '../../utils';
 
 type Props = {

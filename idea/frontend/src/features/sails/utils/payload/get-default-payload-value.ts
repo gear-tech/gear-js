@@ -1,20 +1,19 @@
-import { Sails } from 'sails-js';
+import {
+  EnumDef,
+  FixedSizeArrayDef,
+  MapDef,
+  ResultDef,
+  Sails,
+  StructDef,
+  TypeDef,
+  UserDefinedDef,
+  VecDef,
+} from 'sails-js';
 
 import { getPreformattedText } from '@/shared/helpers';
 
 import { RESULT } from '../../consts';
-import {
-  ResultDef,
-  VecDef,
-  FixedSizeArrayDef,
-  PayloadValue,
-  MapDef,
-  UserDefinedDef,
-  EnumDef,
-  StructDef,
-  TypeDef,
-  ISailsFuncArg,
-} from '../../types';
+import { PayloadValue, ISailsFuncArg } from '../../types';
 
 const getDefaultValue = (sails: Sails) => {
   const getResultValue = ({ [RESULT.OK]: { def } }: ResultDef) => ({ [RESULT.OK]: getValue(def) });

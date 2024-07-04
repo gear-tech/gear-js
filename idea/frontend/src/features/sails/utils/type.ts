@@ -1,4 +1,4 @@
-import { PrimitiveDef, TypeDef } from '../types';
+import { PrimitiveDef, TypeDef } from 'sails-js';
 
 const getPrimitiveType = (def: PrimitiveDef) => {
   if (def.isNull) return 'Null';

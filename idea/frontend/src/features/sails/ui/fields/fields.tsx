@@ -1,8 +1,8 @@
-import { Sails } from 'sails-js';
+import { Sails, TypeDef } from 'sails-js';
 
 import { Fieldset } from '@/shared/ui';
 
-import { ISailsFuncArg, TypeDef } from '../../types';
+import { ISailsFuncArg } from '../../types';
 import { getNestedName } from '../../utils';
 import { EnumField } from './enum-field';
 import { UserDefinedField } from './user-defined-field';

@@ -1,10 +1,10 @@
 import { HexString } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
-import { Sails } from 'sails-js';
+import { Sails, TypeDef } from 'sails-js';
 import { z } from 'zod';
 
 import { RESULT } from '../../consts';
-import { ISailsFuncArg, TypeDef } from '../../types';
+import { ISailsFuncArg } from '../../types';
 
 const asJSON = <T extends z.ZodTypeAny>(schema: T) =>
   schema.transform((value, ctx) => {
