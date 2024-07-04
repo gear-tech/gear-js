@@ -1,22 +1,5 @@
-@use '@/shared/assets/styles/mixins' as *;
-
-.simplebar {
-  @include customSimplebar;
-  max-height: 75vh;
-  margin-right: -16px;
-
-  :global(.simplebar-content) {
-    margin-right: 16px;
-  }
-}
-
 .form {
-  @include childrenMargin(32px);
   display: flex;
   flex-direction: column;
-  align-items: center;
-
-  > *:first-child {
-    width: 100%;
-  }
+  gap: 24px;
 }

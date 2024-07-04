@@ -22,6 +22,7 @@ import { CustomLink } from '@/shared/ui/customLink';
 import { ProgramStatus, useProgramStatus } from '@/features/program';
 import { isHumanTypesRepr } from '@/features/metadata';
 import { addProgramName } from '@/api';
+import { addIdl } from '@/features/sails';
 
 import { useMetadataUpload } from '../useMetadataUpload';
 import { ALERT_OPTIONS } from './consts';
@@ -70,7 +71,6 @@ const useProgramActions = () => {
 
     events.forEach(({ event }) => {
       const { method, section } = event;
-      console.log('method: ', method);
       const alertOptions = { title: `${section}.${method}` };
 
       if (method === Method.ExtrinsicFailed) {
@@ -90,7 +90,7 @@ const useProgramActions = () => {
     resolve,
     method,
   }: ParamsToSignAndUpload) => {
-    const { metaHex, programName } = payload;
+    const { metaHex, programName, idl } = payload;
     const alertId = alert.loading('SignIn', { title: method });
     const programMessage = getProgramMessage(programId);
     const name = programName || programId;
@@ -109,9 +109,11 @@ const useProgramActions = () => {
 
           // timeout cuz wanna be sure that block data is ready
           setTimeout(() => {
-            addProgramName({ id: programId, name }, isDevChain).then(
-              () => metaHex && uploadMetadata({ codeHash: codeId, metaHex, programId }),
-            );
+            addProgramName({ id: programId, name }, isDevChain).then(() => {
+              // TODO: no need to upload if meta/idl is from storage
+              if (metaHex) uploadMetadata({ codeHash: codeId, metaHex, programId });
+              if (idl) addIdl(codeId, idl);
+            });
           }, UPLOAD_METADATA_TIMEOUT);
 
           getProgramStatus(programId).then(async (programStatus) => {

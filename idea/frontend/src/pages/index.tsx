@@ -50,6 +50,7 @@ const Routing = () => {
         <Route path=":programId" element={<State.Main />} />
         <Route path="full/:programId" element={<State.Full />} />
         <Route path="wasm/:programId" element={<State.Wasm />} />
+        <Route path="sails/:programId" element={<State.Sails />} />
       </Route>
 
       <Route path={routes.mailbox} element={<Mailbox />} />

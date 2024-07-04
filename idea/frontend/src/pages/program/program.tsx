@@ -3,47 +3,49 @@ import { Button } from '@gear-js/ui';
 import { useAccount, useAccountVouchers } from '@gear-js/react-hooks';
 import { generatePath, useParams } from 'react-router-dom';
 
-import { useMetadataUpload, useModal, useProgram } from '@/hooks';
+import { useChain, useModal, useProgram } from '@/hooks';
 import { ProgramStatus, ProgramTable } from '@/features/program';
 import { ProgramMessages } from '@/widgets/programMessages';
-import { PathParams } from '@/shared/types';
 import { getShortName } from '@/shared/helpers';
-import { Subheader } from '@/shared/ui/subheader';
+import { Subheader, UILink } from '@/shared/ui';
 import { absoluteRoutes, routes } from '@/shared/config';
-import { UILink } from '@/shared/ui/uiLink';
 import SendSVG from '@/shared/assets/images/actions/send.svg?react';
 import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import { useMetadata, MetadataTable } from '@/features/metadata';
 import { IssueVoucher, VoucherTable } from '@/features/voucher';
+import { IDL, useSails } from '@/features/sails';
 
 import styles from './program.module.scss';
 
+type Params = {
+  programId: HexString;
+};
+
 const Program = () => {
   const { account } = useAccount();
-
-  const { programId } = useParams() as PathParams;
+  const { programId } = useParams() as Params;
   const { showModal, closeModal } = useModal();
-  const uploadMetadata = useMetadataUpload();
+  const { isDevChain } = useChain();
 
   const { program, isProgramReady, setProgramName } = useProgram(programId);
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(program?.metahash);
+  const { idl, sails, isLoading: isSailsLoading, refetch: refetchSails } = useSails(program?.codeId);
+  const isLoading = !isMetadataReady || isSailsLoading;
+  const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => Object.keys(queries).length) : false;
 
-  const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
-    const codeHash = program?.codeId;
-    if (!codeHash) return;
+  const openUploadMetadataModal = () => {
+    if (!program) throw new Error('Program is not found');
+    if (!program.codeId) throw new Error('CodeId is not found'); // TODO: take a look at local program
 
-    const resolve = () => {
-      setMetadataHex(metaHex);
+    const onSuccess = (name: string, metadataHex?: HexString) => {
       setProgramName(name);
 
-      closeModal();
+      return metadataHex ? setMetadataHex(metadataHex) : refetchSails();
     };
 
-    uploadMetadata({ codeHash, metaHex, name, programId, resolve });
+    showModal('metadata', { programId, codeId: program.codeId, onClose: closeModal, onSuccess });
   };
-
-  const openUploadMetadataModal = () => showModal('metadata', { onSubmit: handleUploadMetadataSubmit });
 
   const { vouchers } = useAccountVouchers(programId);
   const voucherEntries = Object.entries(vouchers || {});
@@ -71,9 +73,9 @@ const Program = () => {
               className={styles.fixWidth}
             />
 
-            {program.hasState && (
+            {!isLoading && (program.hasState || isAnyQuery) && (
               <UILink
-                to={generatePath(routes.state, { programId })}
+                to={generatePath(metadata ? routes.state : routes.sailsState, { programId })}
                 icon={ReadSVG}
                 text="Read State"
                 color="secondary"
@@ -81,8 +83,8 @@ const Program = () => {
               />
             )}
 
-            {isMetadataReady && !metadata && (
-              <Button text="Add metadata" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
+            {!isDevChain && !isLoading && !metadata && !idl && (
+              <Button text="Add metadata/sails" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
             )}
           </div>
         )}
@@ -109,8 +111,13 @@ const Program = () => {
           )}
 
           <div>
-            <Subheader title="Metadata" />
-            <MetadataTable metadata={metadata} isLoading={!isMetadataReady} />
+            {metadata && <Subheader title="Metadata" />}
+            {idl && <Subheader title="IDL" />}
+
+            {(metadata || isLoading) && <MetadataTable metadata={metadata} isLoading={isLoading} />}
+            {/* temp solution for a placeholder */}
+            {!isLoading && !metadata && !idl && <MetadataTable metadata={metadata} isLoading={isLoading} />}
+            {idl && <IDL value={idl} />}
           </div>
         </div>
 
