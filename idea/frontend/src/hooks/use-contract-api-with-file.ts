@@ -52,7 +52,7 @@ function useContractApiWithFile(codeIdOrBuffer: HexString | Buffer | undefined) 
 
     if (extension === FILE_EXTENSION.IDL) {
       metadata.reset();
-      await sails.set(text);
+      sails.set(text);
     }
   };
 

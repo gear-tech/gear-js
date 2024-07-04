@@ -1,3 +1,4 @@
+import { useApi } from '@gear-js/react-hooks';
 import { Button, Input } from '@gear-js/ui';
 import { useParams } from 'react-router-dom';
 
@@ -14,21 +15,26 @@ import { PageParams } from '../model';
 import styles from './InitializeProgram.module.scss';
 
 const InitializeProgram = () => {
+  const { api, isApiReady } = useApi();
   const { codeId } = useParams() as PageParams;
   const { metadata, sails, isLoading, ...contractApi } = useContractApiWithFile(codeId);
-  const { createProgram } = useProgramActions();
+  const createProgram = useProgramActions();
 
-  const handleSubmit = (payload: Payload, helpers: SubmitHelpers) =>
-    createProgram({
-      payload,
-      codeId: codeId,
-      resolve: () => {
-        helpers.resetForm();
-        helpers.enableButtons();
-        metadata.reset();
-      },
-      reject: helpers.enableButtons,
-    });
+  const handleSubmit = (payload: Payload, helpers: SubmitHelpers) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+
+    const { gasLimit, value, initPayload, payloadType, keepAlive } = payload;
+    const program = { value, codeId, gasLimit, initPayload, keepAlive };
+    const result = api.program.create(program, payload.metadata, payloadType);
+
+    const onSuccess = () => {
+      helpers.resetForm();
+      helpers.enableButtons();
+      metadata.reset();
+    };
+
+    createProgram(result, codeId, payload, onSuccess, helpers.enableButtons);
+  };
 
   const renderButtons = ({ isDisabled }: RenderButtonsProps) => (
     <>

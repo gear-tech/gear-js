@@ -50,7 +50,7 @@ const UploadMetadataModal = ({ codeId, programId, onClose, onSuccess }: Props) =
 
     try {
       if (programId) {
-        await addProgramName({ name, id: programId }, isDevChain);
+        if (!isDevChain) await addProgramName({ name, id: programId });
       } else {
         await addCodeName({ name, id: codeId });
       }
