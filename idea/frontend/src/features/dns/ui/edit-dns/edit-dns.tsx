@@ -1,7 +1,6 @@
 import { Button } from '@gear-js/ui';
 
 import { useModalState } from '@/hooks';
-import { withAccount } from '@/shared/ui';
 import EditSVG from '@/shared/assets/images/actions/edit.svg?react';
 
 import { DnsSchema } from '../../types';
@@ -13,7 +12,7 @@ type Props = {
   onSuccess: () => void;
 };
 
-const EditDns = withAccount(({ onSuccess, initialValues }: Props) => {
+const EditDns = ({ onSuccess, initialValues }: Props) => {
   const [isModalOpen, openModal, closeModal] = useModalState();
 
   return (
@@ -39,6 +38,6 @@ const EditDns = withAccount(({ onSuccess, initialValues }: Props) => {
       )}
     </>
   );
-});
+};
 
 export { EditDns };
