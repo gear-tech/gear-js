@@ -2,6 +2,7 @@ import { HexString } from '@gear-js/api';
 import { useState } from 'react';
 import { Sails } from 'sails-js';
 
+import { SAILS } from '../consts';
 import { useSails } from './use-sails';
 
 function useSailsWithFile(codeId: HexString | undefined) {
@@ -10,8 +11,8 @@ function useSailsWithFile(codeId: HexString | undefined) {
   const [fileSails, setFileSails] = useState<Sails>();
   const [fileIdl, setFileIdl] = useState<string>();
 
-  const set = async (_idl: string) => {
-    setFileSails((await Sails.new()).parseIdl(_idl));
+  const set = (_idl: string) => {
+    setFileSails(SAILS.parseIdl(_idl));
     setFileIdl(_idl);
   };
 

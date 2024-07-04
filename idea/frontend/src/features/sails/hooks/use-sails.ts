@@ -2,11 +2,11 @@ import { HexString } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { Sails } from 'sails-js';
 
 import { RPCError, RPCErrorCode } from '@/shared/services/rpcService';
 
 import { getIdl } from '../api';
+import { SAILS } from '../consts';
 
 function useSails(codeId: HexString | null | undefined) {
   const alert = useAlert();
@@ -15,7 +15,7 @@ function useSails(codeId: HexString | null | undefined) {
     if (!codeId) throw new Error('Code ID is not found');
 
     const { result } = await getIdl(codeId);
-    const sails = (await Sails.new()).parseIdl(result);
+    const sails = SAILS.parseIdl(result);
 
     return { idl: result, sails };
   };
