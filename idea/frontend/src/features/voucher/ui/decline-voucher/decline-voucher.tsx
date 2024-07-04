@@ -2,11 +2,9 @@ import { HexString } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
-import { useSignAndSend } from '@/hooks';
+import { useModalState, useSignAndSend } from '@/hooks';
 import RemoveSVG from '@/shared/assets/images/actions/remove.svg?react';
 import { ConfirmModal } from '@/shared/ui/confirm-modal';
-
-import { useModal } from '../../hooks';
 
 type Props = {
   id: HexString;
@@ -17,7 +15,7 @@ const DeclineVoucher = ({ id, onSubmit }: Props) => {
   const { isApiReady, api } = useApi();
   const signAndSend = useSignAndSend();
 
-  const [isModalOpen, openModal, closeModal] = useModal();
+  const [isModalOpen, openModal, closeModal] = useModalState();
 
   const handleSubmitClick = () => {
     if (!isApiReady) throw new Error('API is not initialized');

@@ -2,8 +2,8 @@ import { Button } from '@gear-js/ui';
 
 import { useModalState } from '@/hooks';
 import TrashSVG from '@/shared/assets/images/actions/trash.svg?react';
+import { ConfirmModal } from '@/shared/ui/confirm-modal';
 
-import { ConfirmModal } from '../confirn-modal';
 import { useDnsActions } from '../../hooks/use-dns-actions';
 import styles from './delete-dns.module.scss';
 

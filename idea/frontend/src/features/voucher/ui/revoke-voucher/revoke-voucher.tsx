@@ -2,11 +2,10 @@ import { HexString } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 import { Button, Modal } from '@gear-js/ui';
 
-import { useSignAndSend } from '@/hooks';
+import { useModalState, useSignAndSend } from '@/hooks';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import RemoveSVG from '@/shared/assets/images/actions/remove.svg?react';
 
-import { useModal } from '../../hooks';
 import styles from './revoke-voucher.module.scss';
 
 type Props = {
@@ -19,7 +18,7 @@ const RevokeVoucher = ({ spender, id, onSubmit }: Props) => {
   const { isApiReady, api } = useApi();
   const signAndSend = useSignAndSend();
 
-  const [isModalOpen, openModal, closeModal] = useModal();
+  const [isModalOpen, openModal, closeModal] = useModalState();
 
   const handleSubmitClick = () => {
     if (!isApiReady) throw new Error('API is not initialized');

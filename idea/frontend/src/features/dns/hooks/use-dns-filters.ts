@@ -18,7 +18,7 @@ function useDnsFilters() {
     return owner === 'all' ? {} : { createdBy: decodedAddress };
   };
 
-  const params = useMemo(() => ({ ...getOwnerParams() }), [values, account]);
+  const params = useMemo(() => getOwnerParams(), [values, account]);
 
   return [values, params, setValues] as const;
 }

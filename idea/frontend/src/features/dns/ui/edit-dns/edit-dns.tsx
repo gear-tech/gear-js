@@ -3,12 +3,12 @@ import { Button } from '@gear-js/ui';
 import { useModalState } from '@/hooks';
 import EditSVG from '@/shared/assets/images/actions/edit.svg?react';
 
-import { DnsSchema } from '../../types';
+import { Values } from '../../types';
 import { DnsModal } from '../dns-modal';
 import styles from './edit-dns.module.scss';
 
 type Props = {
-  initialValues: DnsSchema;
+  initialValues: Values;
   onSuccess: () => void;
 };
 

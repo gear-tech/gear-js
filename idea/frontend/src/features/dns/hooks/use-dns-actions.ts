@@ -7,10 +7,8 @@ import { Method } from '@/features/explorer';
 import { useLoading, useModal, useSignAndSend } from '@/hooks';
 import { TransactionName } from '@/shared/config';
 
-import { Program } from '../consts';
+import { DNS_PROGRAM_QUERY_KEY, Program } from '../consts';
 import { useQueryClient } from '@tanstack/react-query';
-
-const DNS_PROGRAM_QUERY_KEY = ['dnsProgram'];
 
 type ResolveRejectOptions = {
   resolve?: () => void;

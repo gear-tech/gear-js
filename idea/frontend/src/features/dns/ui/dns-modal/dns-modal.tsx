@@ -1,13 +1,14 @@
 import { Button, Modal } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { Input } from '@/shared/ui';
 
 import { DEFAULT_VALUES, FIELD_NAME } from '../../consts';
-import { DnsSchema, Values } from '../../types';
+import { Values } from '../../types';
 import { useDnsActions, useDnsSchema } from '../../hooks';
 
 import styles from './dns-modal.module.scss';
@@ -23,6 +24,8 @@ type Props = {
 const DnsModal = ({ heading, submitText, close, onSuccess, initialValues }: Props) => {
   const dnsSchema = useDnsSchema();
   const isEditMode = Boolean(initialValues);
+
+  type DnsSchema = z.infer<typeof dnsSchema>;
 
   const form = useForm<Values, unknown, DnsSchema>({
     defaultValues: initialValues || DEFAULT_VALUES,

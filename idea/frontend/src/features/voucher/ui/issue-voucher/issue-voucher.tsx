@@ -2,11 +2,11 @@ import { HexString } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import cx from 'clsx';
 
+import { useModalState } from '@/hooks';
 import { withAccount } from '@/shared/ui';
 
 import CouponSVG from '../../assets/coupon.svg?react';
 import { IssueVoucherModal } from '../issue-voucher-modal';
-import { useModal } from '../../hooks';
 import styles from './issue-voucher.module.scss';
 
 type Props = {
@@ -17,7 +17,7 @@ type Props = {
 };
 
 const IssueVoucher = withAccount(({ programId, buttonColor = 'light', buttonSize = 'medium', onSubmit }: Props) => {
-  const [isModalOpen, openModal, closeModal] = useModal();
+  const [isModalOpen, openModal, closeModal] = useModalState();
 
   return (
     <>
