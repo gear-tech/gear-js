@@ -39,6 +39,7 @@ import {
   SendMessageWithGasOptions,
   useProgram,
   UseProgramParameters,
+  useTransaction,
 } from './hooks';
 
 import { withoutCommas, getVaraAddress, getTypedEntries } from './utils';
@@ -109,6 +110,7 @@ export {
   useIssuedVouchers,
   useAccountIssuedVouchers,
   useProgram,
+  useTransaction,
   DEFAULT_OPTIONS,
   DEFAULT_INFO_OPTIONS,
   DEFAULT_ERROR_OPTIONS,
