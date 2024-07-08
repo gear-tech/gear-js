@@ -12,7 +12,6 @@ import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
 import { Input, ValueField, LabeledCheckbox } from '@/shared/ui';
 import { PayloadForm, useConstructor, PayloadValue, PayloadValueSchema, getResetPayloadValue } from '@/features/sails';
-import { asOptionalField } from '@/shared/helpers';
 
 import { RenderButtonsProps, SubmitHelpers } from '../model';
 import styles from './ProgramForm.module.scss';
@@ -34,7 +33,7 @@ const useSchema = (payloadSchema: PayloadValueSchema) => {
     value: balanceSchema,
     gasLimit: gasLimitSchema,
     keepAlive: z.boolean(),
-    programName: asOptionalField(z.string().trim().min(1)),
+    programName: z.string().trim(),
   });
 };
 

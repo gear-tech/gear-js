@@ -38,7 +38,7 @@ const Program = () => {
     if (!program.codeId) throw new Error('CodeId is not found'); // TODO: take a look at local program
 
     const onSuccess = (name: string, metadataHex?: HexString) => {
-      setProgramName(name);
+      if (name) setProgramName(name);
 
       return metadataHex ? setMetadataHex(metadataHex) : refetchSails();
     };

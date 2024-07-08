@@ -26,7 +26,7 @@ function useMetadata(hash?: HexString | null | undefined) {
 
     if (!hash) return;
 
-    getMetadata(hash)
+    getLocalMetadata(hash)
       .then(({ result }) => result.hex && setMetadataHex(result.hex))
       .catch(({ message, code }: RPCError) => code !== RPCErrorCode.MetadataNotFound && alert.error(message))
       .finally(() => setIsMetadataReady(true));

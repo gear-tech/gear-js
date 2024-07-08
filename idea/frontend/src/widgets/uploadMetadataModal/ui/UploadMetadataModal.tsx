@@ -24,7 +24,7 @@ const DEFAULT_VALUES = {
 };
 
 const SCHEMA = z.object({
-  [FIELD_NAME.NAME]: z.string().trim().min(1),
+  [FIELD_NAME.NAME]: z.string().trim(),
 });
 
 type Props = ModalProps & {
@@ -40,7 +40,6 @@ const UploadMetadataModal = ({ codeId, programId, metadataHash, onClose, onSucce
 
   // useContractApiWithFile is based on meta-storage requests, we don't need them here
   const { metadata, sails, ...contractApi } = useContractApiWithFile(undefined);
-  console.log('metadata: ', metadata);
 
   const form = useForm({
     defaultValues: DEFAULT_VALUES,
@@ -49,17 +48,17 @@ const UploadMetadataModal = ({ codeId, programId, metadataHash, onClose, onSucce
 
   const handleSubmit = form.handleSubmit(async ({ name }) => {
     try {
-      if (programId) {
-        const _addName = isDevChain ? addLocalProgramName : addProgramName;
-
-        await _addName(programId, name);
-      } else if (!isDevChain) {
-        await addCodeName({ name, id: codeId });
+      if (name) {
+        if (programId) {
+          const _addProgramName = isDevChain ? addLocalProgramName : addProgramName;
+          await _addProgramName(programId, name);
+        } else if (!isDevChain) {
+          await addCodeName({ name, id: codeId });
+        }
       }
 
       if (metadataHash && metadata.hex) {
         const _addMetadata = isDevChain ? addLocalMetadata : addMetadata;
-
         await _addMetadata(metadataHash, metadata.hex);
 
         onSuccess(name, metadata.hex);
@@ -83,7 +82,9 @@ const UploadMetadataModal = ({ codeId, programId, metadataHash, onClose, onSucce
     <Modal heading="Upload metadata/sails" size="large" className={styles.modal} close={onClose}>
       <FormProvider {...form}>
         <form className={styles.form} onSubmit={handleSubmit}>
-          <Input name={FIELD_NAME.NAME} label={programId ? 'Program Name' : 'Code Name'} direction="y" block />
+          {(programId || !isDevChain) && (
+            <Input name={FIELD_NAME.NAME} label={programId ? 'Program Name' : 'Code Name'} direction="y" block />
+          )}
 
           <UploadMetadata
             value={contractApi.file}
