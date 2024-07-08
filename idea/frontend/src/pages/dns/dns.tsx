@@ -46,10 +46,10 @@ const Dns = () => {
             block={renderSkeleton()}
             title="There is no dDNS yet"
             description="Create a new dDNS right now."
-            children={<CreateDns onSuccess={refetch} color="primary" />}
             blocksCount={5}
-            isEmpty={isEmpty}
-          />
+            isEmpty={isEmpty}>
+            <CreateDns onSuccess={refetch} color="primary" />
+          </Placeholder>
         </div>
       ) : (
         <List items={dns} hasMore={hasMore} renderItem={renderDns} fetchMore={fetchMore} />
