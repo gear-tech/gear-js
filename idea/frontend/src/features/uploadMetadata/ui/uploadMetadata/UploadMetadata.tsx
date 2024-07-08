@@ -30,7 +30,7 @@ const UploadMetadata = ({ value, metadata, idl, isDisabled, isLoading, onChange 
           direction="y"
           className={cx(formStyles.field, formStyles.gap16)}
           onChange={onChange}
-          accept={[FileTypes.Text, FileTypes.Idl]}
+          accept={FileTypes.Text}
         />
       )}
 
