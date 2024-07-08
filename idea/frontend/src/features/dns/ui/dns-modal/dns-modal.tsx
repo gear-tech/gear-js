@@ -61,7 +61,7 @@ const DnsModal = ({ heading, submitText, close, onSuccess, initialValues }: Prop
             />
             <Input
               name={FIELD_NAME.DNS_ADDRESS}
-              label="Specify account address:"
+              label="Specify program address:"
               direction="y"
               placeholder="0x"
               block
