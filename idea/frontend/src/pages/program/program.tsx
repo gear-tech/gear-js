@@ -44,7 +44,13 @@ const Program = () => {
       return metadataHex ? setMetadataHex(metadataHex) : refetchSails();
     };
 
-    showModal('metadata', { programId, codeId: program.codeId, onClose: closeModal, onSuccess });
+    showModal('metadata', {
+      programId,
+      metadataHash: program.metahash,
+      codeId: program.codeId,
+      onClose: closeModal,
+      onSuccess,
+    });
   };
 
   const { vouchers } = useAccountVouchers(programId);

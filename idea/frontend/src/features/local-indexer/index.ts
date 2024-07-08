@@ -1,5 +1,5 @@
-import { useLocalProgram, useLocalPrograms } from './hooks';
-import { LocalProgram } from './types';
+import { useLocalProgram, useLocalPrograms, useLocalCode } from './hooks';
+import { LocalProgram, LocalCode } from './types';
 
-export { useLocalProgram, useLocalPrograms };
-export type { LocalProgram };
+export { useLocalProgram, useLocalPrograms, useLocalCode };
+export type { LocalProgram, LocalCode };

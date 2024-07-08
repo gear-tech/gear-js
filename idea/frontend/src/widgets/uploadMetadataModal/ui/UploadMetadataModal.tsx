@@ -1,11 +1,11 @@
-import { useAlert, useApi } from '@gear-js/react-hooks';
+import { useAlert } from '@gear-js/react-hooks';
 import { Button, Modal } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@polkadot/util/types';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { addCodeName, addMetadata, addProgramName } from '@/api';
+import { addCodeName, addLocalProgramName, addMetadata, addProgramName, uploadLocalMetadata } from '@/api';
 import { addIdl } from '@/features/sails';
 import { useChain, useContractApiWithFile } from '@/hooks';
 import { ModalProps } from '@/entities/modal';
@@ -28,17 +28,18 @@ const SCHEMA = z.object({
 
 type Props = ModalProps & {
   codeId: HexString;
+  metadataHash: HexString | null | undefined;
   programId?: HexString;
   onSuccess: (name: string, metadataHex?: HexString) => void;
 };
 
-const UploadMetadataModal = ({ codeId, programId, onClose, onSuccess }: Props) => {
-  const { api, isApiReady } = useApi();
+const UploadMetadataModal = ({ codeId, programId, metadataHash, onClose, onSuccess }: Props) => {
   const { isDevChain } = useChain();
   const alert = useAlert();
 
   // useContractApiWithFile is based on meta-storage requests, we don't need them here
   const { metadata, sails, ...contractApi } = useContractApiWithFile(undefined);
+  console.log('metadata: ', metadata);
 
   const form = useForm({
     defaultValues: DEFAULT_VALUES,
@@ -46,18 +47,19 @@ const UploadMetadataModal = ({ codeId, programId, onClose, onSuccess }: Props) =
   });
 
   const handleSubmit = form.handleSubmit(async ({ name }) => {
-    if (!isApiReady) throw new Error('API is not initialized');
-
     try {
       if (programId) {
-        if (!isDevChain) await addProgramName({ name, id: programId });
-      } else {
+        const _addName = isDevChain ? addLocalProgramName : addProgramName;
+
+        await _addName(programId, name);
+      } else if (!isDevChain) {
         await addCodeName({ name, id: codeId });
       }
 
-      if (metadata.hex) {
-        const metahash = await api.code.metaHash(codeId);
-        await addMetadata(metahash, metadata.hex);
+      if (metadataHash && metadata.hex) {
+        const _addMetadata = isDevChain ? uploadLocalMetadata : addMetadata;
+
+        await _addMetadata(metadataHash, metadata.hex);
 
         onSuccess(name, metadata.hex);
         onClose();

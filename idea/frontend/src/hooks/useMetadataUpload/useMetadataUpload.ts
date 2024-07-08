@@ -35,7 +35,7 @@ const useMetadataUpload = () => {
   };
 
   const uploadMetadata = async (params: ParamsToUploadMeta) => {
-    const { metaHex, codeHash, programId, name, reject, resolve } = params;
+    const { metaHex, codeHash, programId, reject, resolve } = params;
 
     try {
       if (!isApiReady) throw new Error('API is not initialized');
@@ -44,7 +44,7 @@ const useMetadataUpload = () => {
       const metahash = await api.code.metaHash(codeHash);
 
       if (isDevChain) {
-        await uploadLocalMetadata(metahash, metaHex, programId, name);
+        await uploadLocalMetadata(metahash, metaHex);
 
         alert.success('Metadata added to the localDB successfully');
         if (resolve) resolve();

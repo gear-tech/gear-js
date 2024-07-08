@@ -45,7 +45,7 @@ const useProgramActions = () => {
 
     // timeout cuz wanna be sure that block data is ready
     setTimeout(async () => {
-      if (!isDevChain) await addProgramName({ id: programId, name });
+      if (!isDevChain) await addProgramName(programId, name);
       if (metaHex) uploadMetadata({ codeHash: codeId, metaHex, programId });
       if (idl) addIdl(codeId, idl);
     }, UPLOAD_METADATA_TIMEOUT);
@@ -66,7 +66,7 @@ const useProgramActions = () => {
     uploadLocalProgram({
       id: programId,
       owner: account.decodedAddress,
-      code: { id: codeId },
+      codeId,
       status: programStatus,
       blockHash: result.status.asFinalized.toHex(),
       hasState,
