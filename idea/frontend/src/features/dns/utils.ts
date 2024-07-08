@@ -1,7 +1,7 @@
 import { DEFAULT_LIMIT } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/helpers';
 
-import { DnsParams, DnsResponse } from './types';
+import { Dns, DnsParams, DnsResponse } from './types';
 import { DNS_API_URL } from './consts';
 
 const getDns = (params: DnsParams) => {
@@ -9,6 +9,12 @@ const getDns = (params: DnsParams) => {
   const url = new URL(`${DNS_API_URL}/dns`);
   Object.entries(params).forEach(([key, value]) => url.searchParams.append(key, String(value)));
   return fetchWithGuard<DnsResponse>(url.toString(), { method });
+};
+
+const getSingleDns = (name: string) => {
+  const method = 'GET';
+  const url = new URL(`${DNS_API_URL}/dns/by_name/${name}`);
+  return fetchWithGuard<Dns>(url.toString(), { method });
 };
 
 const getNextPageParam = (lastPage: DnsResponse, allPages: DnsResponse[]) => {
@@ -19,4 +25,4 @@ const getNextPageParam = (lastPage: DnsResponse, allPages: DnsResponse[]) => {
   return fetchedCount < totalCount ? fetchedCount : undefined;
 };
 
-export { getDns, getNextPageParam };
+export { getDns, getSingleDns, getNextPageParam };

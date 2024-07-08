@@ -11,6 +11,7 @@ type Props = {
   withIcon?: boolean;
   className?: string;
   annotation?: string;
+  prefix?: string;
 };
 
 const TimestampBlock = ({
@@ -19,6 +20,7 @@ const TimestampBlock = ({
   withIcon = false,
   timestamp,
   className,
+  prefix,
   annotation,
 }: Props) => {
   const textClasses = clsx(styles.value, styles[size], styles[color]);
@@ -28,7 +30,7 @@ const TimestampBlock = ({
       {withIcon && <TimeSVG className={styles.icon} />}
 
       <span className={textClasses}>
-        {formatDate(timestamp)} {annotation && `(${annotation})`}
+        {prefix} {formatDate(timestamp)} {annotation && `(${annotation})`}
       </span>
     </div>
   );

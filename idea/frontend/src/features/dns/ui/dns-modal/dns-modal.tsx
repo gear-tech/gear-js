@@ -1,5 +1,6 @@
 import { Button, Modal } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
+import clsx from 'clsx';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -29,7 +30,7 @@ const DnsModal = ({ heading, submitText, close, onSuccess, initialValues }: Prop
 
   const form = useForm<Values, unknown, DnsSchema>({
     defaultValues: initialValues || DEFAULT_VALUES,
-    resolver: zodResolver(dnsSchema),
+    resolver: zodResolver(dnsSchema, { async: true }),
   });
 
   const { isLoading, addNewProgram, changeProgramId } = useDnsActions();
@@ -49,13 +50,27 @@ const DnsModal = ({ heading, submitText, close, onSuccess, initialValues }: Prop
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <div className={styles.inputs}>
-            <Input name={FIELD_NAME.DNS_NAME} label="Name:" direction="y" block disabled={isEditMode} />
-            <Input name={FIELD_NAME.DNS_ADDRESS} label="Program address:" direction="y" block />
+            <Input
+              name={FIELD_NAME.DNS_NAME}
+              className={clsx(isEditMode && styles.inputDisabled)}
+              label={isEditMode ? 'dDNS name:' : 'Enter dDNS name:'}
+              direction="y"
+              placeholder="New nDNS"
+              block
+              disabled={isEditMode}
+            />
+            <Input
+              name={FIELD_NAME.DNS_ADDRESS}
+              label="Specify program address:"
+              direction="y"
+              placeholder="0x"
+              block
+            />
           </div>
 
           <div className={styles.buttons}>
             <Button type="submit" icon={ApplySVG} size="large" text={submitText} disabled={isLoading} />
-            <Button icon={CloseSVG} color="light" size="large" text="Close" onClick={close} />
+            <Button icon={CloseSVG} color="light" size="large" text="Cancel" onClick={close} />
           </div>
         </form>
       </FormProvider>

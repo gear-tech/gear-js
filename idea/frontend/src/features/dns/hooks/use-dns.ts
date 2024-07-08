@@ -3,13 +3,12 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { DEFAULT_LIMIT } from '@/shared/config';
 
 import { getDns, getNextPageParam } from '../utils';
-import { DnsFilterParams, DnsSortParams } from '../types';
+import { DnsFilterParams } from '../types';
 
-function useDns(search: string, filterParams: DnsFilterParams, sortParams: DnsSortParams) {
+function useDns(search: string, filterParams: DnsFilterParams) {
   const { data, isLoading, hasNextPage, fetchNextPage, refetch } = useInfiniteQuery({
-    queryKey: ['dns', search, filterParams, sortParams],
-    queryFn: ({ pageParam }) =>
-      getDns({ limit: DEFAULT_LIMIT, offset: pageParam, search, ...filterParams, ...sortParams }),
+    queryKey: ['dns', search, filterParams],
+    queryFn: ({ pageParam }) => getDns({ limit: DEFAULT_LIMIT, offset: pageParam, search, ...filterParams }),
     initialPageParam: 0,
     getNextPageParam,
   });

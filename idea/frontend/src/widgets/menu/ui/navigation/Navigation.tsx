@@ -5,6 +5,7 @@ import ProgramsSVG from '@/shared/assets/images/menu/programs.svg?react';
 import MessagesSVG from '@/shared/assets/images/menu/messages.svg?react';
 import ExplorerSVG from '@/shared/assets/images/menu/explorer.svg?react';
 import VouchersSVG from '@/shared/assets/images/menu/vouchers.svg?react';
+import DnsSVG from '@/shared/assets/images/menu/dns.svg?react';
 import { OnboardingTooltip } from '@/shared/ui/onboardingTooltip';
 
 import { NavigationItem } from '../navigationItem';
@@ -38,7 +39,7 @@ const Navigation = ({ isOpen }: Props) => {
 
       <NavigationItem to={routes.vouchers} icon={<VouchersSVG />} text="Vouchers" isFullWidth={isOpen} />
 
-      <NavigationItem to={routes.dns} icon={<ExplorerSVG />} text="dDNS" isFullWidth={isOpen} />
+      <NavigationItem to={routes.dns} icon={<DnsSVG />} text="dDNS" isFullWidth={isOpen} />
 
       <OnboardingTooltip index={8}>
         <AppExamplesLink isFullWidth={isOpen} />

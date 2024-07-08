@@ -10,6 +10,7 @@ type Dns = {
   id: string; // same as 'name' at contract
   name: string;
   address: HexString; // same as 'program_id' at contract
+  admin: HexString | null;
   createdBy: HexString;
   createdAt: string;
   updatedAt: string;
@@ -25,12 +26,11 @@ type DnsParams = {
   orderByDirection: SortDirection;
 };
 
-type DnsFilterParams = Pick<DnsParams, 'createdBy'>;
-type DnsSortParams = Pick<DnsParams, 'orderByDirection' | 'orderByField'>;
+type DnsFilterParams = Pick<DnsParams, 'createdBy' | 'orderByDirection' | 'orderByField'>;
 
 type DnsResponse = {
   data: Dns[];
   count: number;
 };
 
-export type { Values, Dns, DnsParams, DnsResponse, DnsFilterParams, DnsSortParams, SortDirection };
+export type { Values, Dns, DnsParams, DnsResponse, DnsFilterParams, SortDirection };
