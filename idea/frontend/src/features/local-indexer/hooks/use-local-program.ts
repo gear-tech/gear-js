@@ -2,9 +2,11 @@ import { useApi } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 import { ProgramMetadata } from '@gear-js/api';
 
-import { PROGRAMS_LOCAL_FORAGE } from '@/api';
-import { IProgram, useProgramStatus } from '@/features/program';
+import { useProgramStatus } from '@/features/program';
 import { isState, useMetadata } from '@/features/metadata';
+
+import { PROGRAMS_LOCAL_FORAGE } from '../consts';
+import { LocalProgram } from '../types';
 
 function useLocalProgram() {
   const { api, isApiReady } = useApi();
@@ -53,7 +55,7 @@ function useLocalProgram() {
   const getLocalProgram = async (id: HexString) => {
     if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
 
-    const localForageProgram = await PROGRAMS_LOCAL_FORAGE.getItem<IProgram>(id);
+    const localForageProgram = await PROGRAMS_LOCAL_FORAGE.getItem<LocalProgram>(id);
 
     const isProgramInChain = id === localForageProgram?.id;
     const isProgramFromChain = api.genesisHash.toHex() === localForageProgram?.genesis;

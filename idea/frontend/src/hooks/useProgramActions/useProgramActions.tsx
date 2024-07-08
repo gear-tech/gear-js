@@ -4,7 +4,7 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import { ISubmittableResult } from '@polkadot/types/types';
 
 import { useChain, useModal, useSignAndSend } from '@/hooks';
-import { uploadLocalMetadata, uploadLocalProgram } from '@/api/LocalDB';
+import { addLocalMetadata, addLocalProgram } from '@/features/local-indexer';
 import { absoluteRoutes } from '@/shared/config';
 import { isNullOrUndefined } from '@/shared/helpers';
 import { CustomLink } from '@/shared/ui/customLink';
@@ -50,7 +50,7 @@ const useProgramActions = () => {
         (typeof metadata.value.types.state === 'number' ||
           (isHumanTypesRepr(metadata.value.types.state) && !isNullOrUndefined(metadata.value.types.state.output)));
 
-      await uploadLocalProgram({
+      await addLocalProgram({
         id: programId,
         owner: account.decodedAddress,
         codeId,
@@ -65,7 +65,7 @@ const useProgramActions = () => {
     if (!isDevChain) await addProgramName(programId, name);
 
     if (metadata && metadata.hash && metadata.hex && !metadata.isFromStorage) {
-      const addMetadata = isDevChain ? uploadLocalMetadata : addStorageMetadata;
+      const addMetadata = isDevChain ? addLocalMetadata : addStorageMetadata;
 
       await addMetadata(metadata.hash, metadata.hex);
     }

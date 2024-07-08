@@ -1,8 +1,8 @@
 import { useAlert, useAccount, useApi } from '@gear-js/react-hooks';
 
 import { addMetadata } from '@/api';
-import { uploadLocalMetadata } from '@/api/LocalDB';
 import { ACCOUNT_ERRORS } from '@/shared/config';
+import { addLocalMetadata } from '@/features/local-indexer';
 
 import { useChain } from '../context';
 import { ParamsToUploadMeta } from './types';
@@ -44,7 +44,7 @@ const useMetadataUpload = () => {
       const metahash = await api.code.metaHash(codeHash);
 
       if (isDevChain) {
-        await uploadLocalMetadata(metahash, metaHex);
+        await addLocalMetadata(metahash, metaHex);
 
         alert.success('Metadata added to the localDB successfully');
         if (resolve) resolve();

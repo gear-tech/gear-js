@@ -5,7 +5,7 @@ import { IBase } from '@/shared/types';
 import { ICode } from '@/entities/code';
 
 type LocalProgram = Pick<Program, 'id' | 'name' | 'status' | 'hasState'> &
-  Partial<Pick<IBase, 'timestamp' | 'blockHash'>> & {
+  Partial<Pick<IBase, 'timestamp' | 'blockHash' | 'genesis'>> & {
     codeId: HexString | null;
     owner?: HexString;
     metahash?: HexString | null;

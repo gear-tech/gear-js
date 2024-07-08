@@ -5,12 +5,13 @@ import { HexString } from '@polkadot/util/types';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { addCodeName, addLocalProgramName, addMetadata, addProgramName, uploadLocalMetadata } from '@/api';
+import { addCodeName, addMetadata, addProgramName } from '@/api';
 import { addIdl } from '@/features/sails';
 import { useChain, useContractApiWithFile } from '@/hooks';
 import { ModalProps } from '@/entities/modal';
 import { UploadMetadata } from '@/features/uploadMetadata';
 import { Input } from '@/shared/ui';
+import { addLocalMetadata, addLocalProgramName } from '@/features/local-indexer';
 
 import styles from './UploadMetadataModal.module.scss';
 
@@ -57,7 +58,7 @@ const UploadMetadataModal = ({ codeId, programId, metadataHash, onClose, onSucce
       }
 
       if (metadataHash && metadata.hex) {
-        const _addMetadata = isDevChain ? uploadLocalMetadata : addMetadata;
+        const _addMetadata = isDevChain ? addLocalMetadata : addMetadata;
 
         await _addMetadata(metadataHash, metadata.hex);
 

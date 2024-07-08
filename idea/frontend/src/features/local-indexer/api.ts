@@ -1,12 +1,11 @@
-import { HexString } from '@polkadot/util/types';
+import { HexString } from '@gear-js/api';
 import localForage from 'localforage';
 
-import { LocalStorage } from '@/shared/config';
 import { IMeta } from '@/entities/metadata';
-import { LocalProgram } from '@/features/local-indexer';
+import { LocalStorage } from '@/shared/config';
 
-const PROGRAMS_LOCAL_FORAGE = localForage.createInstance({ name: 'programs' });
-const METADATA_LOCAL_FORAGE = localForage.createInstance({ name: 'metadata' });
+import { METADATA_LOCAL_FORAGE, PROGRAMS_LOCAL_FORAGE } from './consts';
+import { LocalProgram } from './types';
 
 const getLocalEntity =
   <T>(db: typeof localForage, type: string) =>
@@ -21,7 +20,7 @@ const getLocalEntity =
 const getLocalProgram = getLocalEntity<LocalProgram>(PROGRAMS_LOCAL_FORAGE, 'Program');
 const getLocalMetadata = getLocalEntity<IMeta>(METADATA_LOCAL_FORAGE, 'Metadata');
 
-const uploadLocalProgram = (program: LocalProgram) => {
+const addLocalProgram = (program: LocalProgram) => {
   const timestamp = Date();
   const genesis = localStorage.getItem(LocalStorage.Genesis);
 
@@ -34,13 +33,6 @@ const addLocalProgramName = async (id: HexString, name: string) => {
   return PROGRAMS_LOCAL_FORAGE.setItem(id, { ...result, name });
 };
 
-const uploadLocalMetadata = async (hash: HexString, hex: HexString) => METADATA_LOCAL_FORAGE.setItem(hash, { hex });
+const addLocalMetadata = async (hash: HexString, hex: HexString) => METADATA_LOCAL_FORAGE.setItem(hash, { hex });
 
-export {
-  getLocalProgram,
-  getLocalMetadata,
-  uploadLocalProgram,
-  addLocalProgramName,
-  uploadLocalMetadata,
-  PROGRAMS_LOCAL_FORAGE,
-};
+export { getLocalProgram, getLocalMetadata, addLocalProgram, addLocalProgramName, addLocalMetadata };
