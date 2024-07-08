@@ -4,7 +4,7 @@ import { HexString } from '@polkadot/util/types';
 import { useProgramStatus } from '@/features/program';
 
 import { PROGRAMS_LOCAL_FORAGE } from '../consts';
-import { LocalProgram } from '../types';
+import { DBProgram } from '../types';
 
 function useLocalProgram() {
   const { api, isApiReady } = useApi();
@@ -39,15 +39,14 @@ function useLocalProgram() {
     const status = await getProgramStatus(id);
     const codeId = await getCodeId(id);
     const metahash = await getMetadataHash(id);
-    const hasState = false;
 
-    return { id, name, status, codeId, metahash, hasState };
+    return { id, name, status, codeId, metahash };
   };
 
   const getLocalProgram = async (id: HexString) => {
     if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
 
-    const localForageProgram = await PROGRAMS_LOCAL_FORAGE.getItem<LocalProgram>(id);
+    const localForageProgram = await PROGRAMS_LOCAL_FORAGE.getItem<DBProgram>(id);
 
     const isProgramInChain = id === localForageProgram?.id;
     const isProgramFromChain = api.genesisHash.toHex() === localForageProgram?.genesis;

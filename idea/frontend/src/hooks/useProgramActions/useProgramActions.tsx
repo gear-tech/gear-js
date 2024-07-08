@@ -6,10 +6,9 @@ import { ISubmittableResult } from '@polkadot/types/types';
 import { useChain, useModal, useSignAndSend } from '@/hooks';
 import { addLocalMetadata, addLocalProgram } from '@/features/local-indexer';
 import { absoluteRoutes } from '@/shared/config';
-import { isNullOrUndefined } from '@/shared/helpers';
 import { CustomLink } from '@/shared/ui/customLink';
 import { useProgramStatus } from '@/features/program';
-import { isHumanTypesRepr } from '@/features/metadata';
+import { isState } from '@/features/metadata';
 import { addMetadata as addStorageMetadata, addProgramName } from '@/api';
 import { addIdl } from '@/features/sails';
 
@@ -40,26 +39,18 @@ const useProgramActions = () => {
     if (!account) throw new Error('Account not found');
 
     const name = programName || programId;
+    const genesis = api.genesisHash.toHex();
+    const timestamp = Date();
 
     if (isDevChain) {
-      const programStatus = await getProgramStatus(programId);
+      const id = programId;
+      const owner = account.decodedAddress;
+      const metahash = metadata?.hash || null;
+      const status = await getProgramStatus(programId);
+      const hasState = !!metadata && !!metadata.value ? isState(metadata.value) : false;
+      const blockHash = result.status.asFinalized.toHex();
 
-      const hasState =
-        !!metadata &&
-        !!metadata.value &&
-        (typeof metadata.value.types.state === 'number' ||
-          (isHumanTypesRepr(metadata.value.types.state) && !isNullOrUndefined(metadata.value.types.state.output)));
-
-      await addLocalProgram({
-        id: programId,
-        owner: account.decodedAddress,
-        codeId,
-        status: programStatus,
-        blockHash: result.status.asFinalized.toHex(),
-        hasState,
-        metahash: metadata?.hash,
-        name,
-      });
+      await addLocalProgram({ id, owner, codeId, status, blockHash, hasState, metahash, name, genesis, timestamp });
     }
 
     if (!isDevChain) await addProgramName(programId, name);
