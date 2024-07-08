@@ -25,13 +25,13 @@ const uploadLocalProgram = (program: LocalProgram) => {
   const timestamp = Date();
   const genesis = localStorage.getItem(LocalStorage.Genesis);
 
-  PROGRAMS_LOCAL_FORAGE.setItem(program.id, { ...program, timestamp, genesis });
+  return PROGRAMS_LOCAL_FORAGE.setItem(program.id, { ...program, timestamp, genesis });
 };
 
 const addLocalProgramName = async (id: HexString, name: string) => {
   const { result } = await getLocalProgram(id);
 
-  PROGRAMS_LOCAL_FORAGE.setItem(id, { ...result, name });
+  return PROGRAMS_LOCAL_FORAGE.setItem(id, { ...result, name });
 };
 
 const uploadLocalMetadata = async (hash: HexString, hex: HexString) => METADATA_LOCAL_FORAGE.setItem(hash, { hex });

@@ -1,21 +1,19 @@
 import { generatePath } from 'react-router-dom';
 import { useApi, useAccount } from '@gear-js/react-hooks';
-import { HexString, IProgramCreateResult, IProgramUploadResult, ProgramMetadata } from '@gear-js/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { ISubmittableResult } from '@polkadot/types/types';
 
 import { useChain, useModal, useSignAndSend } from '@/hooks';
-import { uploadLocalProgram } from '@/api/LocalDB';
-import { absoluteRoutes, UPLOAD_METADATA_TIMEOUT } from '@/shared/config';
+import { uploadLocalMetadata, uploadLocalProgram } from '@/api/LocalDB';
+import { absoluteRoutes } from '@/shared/config';
 import { isNullOrUndefined } from '@/shared/helpers';
 import { CustomLink } from '@/shared/ui/customLink';
 import { useProgramStatus } from '@/features/program';
 import { isHumanTypesRepr } from '@/features/metadata';
-import { addProgramName } from '@/api';
+import { addMetadata as addStorageMetadata, addProgramName } from '@/api';
 import { addIdl } from '@/features/sails';
 
-import { useMetadataUpload } from '../useMetadataUpload';
-import { Payload } from './types';
+import { ContractApi, Program, Values } from './types';
 
 const useProgramActions = () => {
   const { api, isApiReady } = useApi();
@@ -25,7 +23,6 @@ const useProgramActions = () => {
 
   const { showModal } = useModal();
   const { getProgramStatus } = useProgramStatus();
-  const uploadMetadata = useMetadataUpload();
 
   const getSuccessAlert = (programId: string) => (
     <p>
@@ -33,52 +30,55 @@ const useProgramActions = () => {
     </p>
   );
 
-  // will be refactored in the upcoming local indexer refactoring
   const handleMetadataUpload = async (
-    programId: HexString,
-    codeId: HexString,
-    payload: Payload,
+    { programId, codeId }: Program,
+    { metadata, sails }: ContractApi,
+    { programName }: Values,
     result: ISubmittableResult,
   ) => {
-    const { programName, metaHex, idl } = payload;
-    const name = programName || programId;
-
-    // timeout cuz wanna be sure that block data is ready
-    setTimeout(async () => {
-      if (!isDevChain) await addProgramName(programId, name);
-      if (metaHex) uploadMetadata({ codeHash: codeId, metaHex, programId });
-      if (idl) addIdl(codeId, idl);
-    }, UPLOAD_METADATA_TIMEOUT);
-
-    if (!isDevChain) return;
     if (!isApiReady) throw new Error('API is not initialized');
     if (!account) throw new Error('Account not found');
 
-    const programStatus = await getProgramStatus(programId);
-    const metahash = await api.code.metaHash(codeId);
-    const meta = metaHex ? ProgramMetadata.from(metaHex) : undefined;
+    const name = programName || programId;
 
-    const hasState =
-      !!meta &&
-      (typeof meta.types.state === 'number' ||
-        (isHumanTypesRepr(meta.types.state) && !isNullOrUndefined(meta.types.state.output)));
+    if (isDevChain) {
+      const programStatus = await getProgramStatus(programId);
 
-    uploadLocalProgram({
-      id: programId,
-      owner: account.decodedAddress,
-      codeId,
-      status: programStatus,
-      blockHash: result.status.asFinalized.toHex(),
-      hasState,
-      metahash,
-      name,
-    });
+      const hasState =
+        !!metadata &&
+        !!metadata.value &&
+        (typeof metadata.value.types.state === 'number' ||
+          (isHumanTypesRepr(metadata.value.types.state) && !isNullOrUndefined(metadata.value.types.state.output)));
+
+      await uploadLocalProgram({
+        id: programId,
+        owner: account.decodedAddress,
+        codeId,
+        status: programStatus,
+        blockHash: result.status.asFinalized.toHex(),
+        hasState,
+        metahash: metadata?.hash,
+        name,
+      });
+    }
+
+    if (!isDevChain) await addProgramName(programId, name);
+
+    if (metadata && metadata.hash && metadata.hex && !metadata.isFromStorage) {
+      const addMetadata = isDevChain ? uploadLocalMetadata : addStorageMetadata;
+
+      await addMetadata(metadata.hash, metadata.hex);
+    }
+
+    if (sails && sails.idl && !sails.isFromStorage) {
+      await addIdl(codeId, sails.idl);
+    }
   };
 
   return async (
-    { programId, extrinsic }: IProgramCreateResult | IProgramUploadResult,
-    codeId: HexString,
-    payload: Payload,
+    program: Program,
+    contractApi: ContractApi,
+    values: Values,
     onSuccess?: () => void,
     onError?: () => void,
   ) => {
@@ -89,13 +89,15 @@ const useProgramActions = () => {
     const { signer } = await web3FromSource(meta.source);
     const { partialFee } = await api.program.paymentInfo(address, { signer });
 
-    const successAlert = getSuccessAlert(programId);
-    const onFinalized = (result: ISubmittableResult) => handleMetadataUpload(programId, codeId, payload, result);
-    const onConfirm = () => signAndSend(extrinsic, 'ProgramChanged', { successAlert, onSuccess, onError, onFinalized });
+    const successAlert = getSuccessAlert(program.programId);
+    const onFinalized = (result: ISubmittableResult) => handleMetadataUpload(program, contractApi, values, result);
+
+    const onConfirm = () =>
+      signAndSend(program.extrinsic, 'ProgramChanged', { successAlert, onSuccess, onError, onFinalized });
 
     showModal('transaction', {
       fee: partialFee.toHuman(),
-      name: `${extrinsic.method.section}.${extrinsic.method.method}`,
+      name: `${program.extrinsic.method.section}.${program.extrinsic.method.method}`,
       addressFrom: address,
       onAbort: onError,
       onConfirm,

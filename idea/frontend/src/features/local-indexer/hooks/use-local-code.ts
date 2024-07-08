@@ -13,7 +13,7 @@ function useLocalCode(id: HexString) {
     if (!isApiReady) throw new Error('API is not initialized');
 
     try {
-      return api.code.metaHash(id);
+      return await api.code.metaHash(id);
     } catch (error) {
       return null;
     }

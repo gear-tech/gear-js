@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useContractApiWithFile, useProgramActions } from '@/hooks';
 import { Subheader } from '@/shared/ui/subheader';
 import { UploadMetadata } from '@/features/uploadMetadata';
-import { Payload } from '@/hooks/useProgramActions/types';
+import { Values } from '@/hooks/useProgramActions/types';
 import { ProgramForm, RenderButtonsProps, SailsProgramForm, SubmitHelpers } from '@/widgets/programForm';
 import { BackButton } from '@/shared/ui/backButton';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
@@ -20,12 +20,12 @@ const InitializeProgram = () => {
   const { metadata, sails, isLoading, ...contractApi } = useContractApiWithFile(codeId);
   const createProgram = useProgramActions();
 
-  const handleSubmit = (payload: Payload, helpers: SubmitHelpers) => {
+  const handleSubmit = (payload: Values, helpers: SubmitHelpers) => {
     if (!isApiReady) throw new Error('API is not initialized');
 
-    const { gasLimit, value, initPayload, payloadType, keepAlive } = payload;
+    const { gasLimit, value, payload: initPayload, payloadType, keepAlive } = payload;
     const program = { value, codeId, gasLimit, initPayload, keepAlive };
-    const result = api.program.create(program, payload.metadata, payloadType);
+    const result = api.program.create(program, metadata.value, payloadType);
 
     const onSuccess = () => {
       helpers.resetForm();
@@ -33,7 +33,7 @@ const InitializeProgram = () => {
       metadata.reset();
     };
 
-    createProgram(result, codeId, payload, onSuccess, helpers.enableButtons);
+    createProgram({ ...result, codeId }, { metadata, sails }, payload, onSuccess, helpers.enableButtons);
   };
 
   const renderButtons = ({ isDisabled }: RenderButtonsProps) => (
@@ -62,7 +62,6 @@ const InitializeProgram = () => {
           ) : (
             <ProgramForm
               source={codeId}
-              metaHex={metadata.hex}
               metadata={metadata.value}
               gasMethod={GasMethod.InitCreate}
               renderButtons={renderButtons}

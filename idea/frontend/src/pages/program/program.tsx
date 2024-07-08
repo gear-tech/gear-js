@@ -3,7 +3,7 @@ import { Button } from '@gear-js/ui';
 import { useAccount, useAccountVouchers } from '@gear-js/react-hooks';
 import { generatePath, useParams } from 'react-router-dom';
 
-import { useChain, useModal, useProgram } from '@/hooks';
+import { useModal, useProgram } from '@/hooks';
 import { ProgramStatus, ProgramTable } from '@/features/program';
 import { ProgramMessages } from '@/widgets/programMessages';
 import { getShortName } from '@/shared/helpers';
@@ -26,7 +26,6 @@ const Program = () => {
   const { account } = useAccount();
   const { programId } = useParams() as Params;
   const { showModal, closeModal } = useModal();
-  const { isDevChain } = useChain();
 
   const { program, isProgramReady, setProgramName } = useProgram(programId);
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(program?.metahash);
@@ -89,7 +88,7 @@ const Program = () => {
               />
             )}
 
-            {!isDevChain && !isLoading && !metadata && !idl && (
+            {!isLoading && !metadata && !idl && (
               <Button text="Add metadata/sails" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
             )}
           </div>
