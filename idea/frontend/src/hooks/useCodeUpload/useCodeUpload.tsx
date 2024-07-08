@@ -3,7 +3,6 @@ import { HexString } from '@polkadot/util/types';
 import { useApi, useAccount } from '@gear-js/react-hooks';
 
 import { useChain, useModal, useSignAndSend } from '@/hooks';
-import { UPLOAD_METADATA_TIMEOUT } from '@/shared/config';
 import { CopiedInfo } from '@/shared/ui/copiedInfo';
 import { addMetadata, addCodeName } from '@/api';
 import { addIdl } from '@/features/sails';
@@ -17,32 +16,21 @@ const useCodeUpload = () => {
   const { isDevChain } = useChain();
   const signAndSend = useSignAndSend();
 
-  // will be refactored in the upcoming local indexer refactoring
-  const handleMetadataUpload = (
+  const handleMetadataUpload = async (
     codeId: HexString,
     codeName: string,
-    metaHex: HexString | undefined,
-    idl: string | undefined,
+    metadata: ParamsToUploadCode['metadata'],
+    sails: ParamsToUploadCode['sails'],
   ) => {
-    if (!isApiReady) throw new Error('API is not initialized');
-    if (isDevChain) return;
+    const id = codeId;
+    const name = codeName || id;
 
-    // timeout cuz wanna be sure that block data is ready
-    setTimeout(async () => {
-      const id = codeId;
-      const name = codeName || id;
-
-      await addCodeName({ id, name });
-      if (idl) addIdl(codeId, idl);
-
-      if (!metaHex) return;
-      const hash = await api.code.metaHash(id);
-
-      addMetadata(hash, metaHex);
-    }, UPLOAD_METADATA_TIMEOUT);
+    if (!isDevChain) await addCodeName({ id, name });
+    if (sails.idl && !sails.isFromStorage) addIdl(codeId, sails.idl);
+    if (metadata.hash && metadata.hex && !metadata.isFromStorage) addMetadata(metadata.hash, metadata.hex);
   };
 
-  return async ({ optBuffer, name, voucherId, metaHex, idl, resolve }: ParamsToUploadCode) => {
+  return async ({ optBuffer, name, voucherId, metadata, sails, resolve }: ParamsToUploadCode) => {
     if (!isApiReady) throw new Error('API is not initialized');
     if (!account) throw new Error('Account not found');
 
@@ -56,7 +44,7 @@ const useCodeUpload = () => {
     const extrinsic = voucherId ? api.voucher.call(voucherId, { UploadCode: codeExtrinsic }) : codeExtrinsic;
     const { partialFee } = await api.code.paymentInfo(address, { signer });
 
-    const onFinalized = () => handleMetadataUpload(codeHash, name, metaHex, idl);
+    const onFinalized = () => handleMetadataUpload(codeHash, name, metadata, sails);
 
     const onConfirm = () =>
       signAndSend(extrinsic, 'CodeChanged', {

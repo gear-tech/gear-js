@@ -1,11 +1,20 @@
+import { ProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 
 type ParamsToUploadCode = {
   optBuffer: Buffer;
   name: string;
   voucherId: string;
-  metaHex: HexString | undefined;
-  idl: string | undefined;
+  metadata: {
+    hash: HexString | null | undefined;
+    hex: HexString | undefined;
+    value: ProgramMetadata | undefined;
+    isFromStorage: boolean;
+  };
+  sails: {
+    idl: string | undefined;
+    isFromStorage: boolean;
+  };
   resolve: () => void;
 };
 

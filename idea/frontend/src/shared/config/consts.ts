@@ -37,8 +37,6 @@ const PROGRAM_ERRORS = {
   PROGRAM_INIT_FAILED: 'Program initialization failed',
 };
 
-const UPLOAD_METADATA_TIMEOUT = 2000;
-
 enum LocalStorage {
   Node = 'node',
   Nodes = 'nodes',
@@ -118,7 +116,6 @@ export {
   GEAR_BALANCE_TRANSFER_VALUE,
   ACCOUNT_ERRORS,
   PROGRAM_ERRORS,
-  UPLOAD_METADATA_TIMEOUT,
   GENESIS,
   LocalStorage,
   GasMethod,
