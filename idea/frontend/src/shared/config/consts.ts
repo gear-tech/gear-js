@@ -94,6 +94,7 @@ enum FileTypes {
   Wasm = 'application/wasm',
   Json = 'application/json',
   Text = 'text/plain',
+  Idl = '.idl',
 }
 
 enum AnimationTimeout {
