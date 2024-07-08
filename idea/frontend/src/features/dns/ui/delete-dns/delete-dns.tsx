@@ -1,7 +1,7 @@
 import { Button } from '@gear-js/ui';
 
 import { useModalState } from '@/hooks';
-import TrashSVG from '@/shared/assets/images/actions/trash.svg?react';
+import TrashSVG from '@/shared/assets/images/actions/trashOutlined.svg?react';
 import { ConfirmModal } from '@/shared/ui/confirm-modal';
 
 import { useDnsActions } from '../../hooks/use-dns-actions';
@@ -27,15 +27,7 @@ const DeleteDns = ({ name, onSuccess }: Props) => {
 
   return (
     <>
-      <Button
-        icon={TrashSVG}
-        text="Delete DNS"
-        size="medium"
-        color="transparent"
-        className={styles.link}
-        onClick={openModal}
-        noWrap
-      />
+      <Button icon={TrashSVG} size="large" color="transparent" className={styles.link} onClick={openModal} noWrap />
       {isModalOpen && (
         <ConfirmModal
           close={closeModal}

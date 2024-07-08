@@ -65,19 +65,6 @@
   display: grid;
   grid-template-columns: 1fr 1.25fr 1.25fr 1fr;
   gap: 16px;
-
-  .owner {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    font-size: 10px;
-
-    button svg {
-      width: 16px;
-      height: 16px;
-    }
-  }
 }
 
 .body {

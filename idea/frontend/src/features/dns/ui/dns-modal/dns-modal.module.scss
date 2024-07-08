@@ -12,6 +12,10 @@
   }
 }
 
+.inputDisabled > div:last-child > div {
+  background: rgba(217, 217, 217, 0.05);
+}
+
 .buttons {
   display: grid;
   grid-template-columns: 1fr 1fr;

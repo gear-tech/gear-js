@@ -17,15 +17,7 @@ const EditDns = ({ onSuccess, initialValues }: Props) => {
 
   return (
     <>
-      <Button
-        icon={EditSVG}
-        text="Change program address"
-        size="medium"
-        color="transparent"
-        className={styles.link}
-        onClick={openModal}
-        noWrap
-      />
+      <Button icon={EditSVG} size="large" color="transparent" className={styles.link} onClick={openModal} noWrap />
 
       {isModalOpen && (
         <DnsModal

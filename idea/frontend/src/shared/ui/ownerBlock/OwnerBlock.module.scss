@@ -1,0 +1,29 @@
+@use '@/shared/assets/styles/_variables.scss' as *;
+
+.ownerBlock {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  font-size: 10px;
+
+  button svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.primary {
+  color: $textColor;
+}
+
+.light {
+  color: $gray600;
+}
+
+.button {
+  color: $successColor;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 13px;
+}

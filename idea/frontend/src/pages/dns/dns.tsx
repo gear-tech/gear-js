@@ -3,7 +3,6 @@ import { useState } from 'react';
 
 import { Placeholder } from '@/entities/placeholder';
 import { FilterGroup, Filters, Radio } from '@/features/filters';
-import { SortBy } from '@/features/sortBy';
 import {
   Dns as DnsType,
   DnsCard,
@@ -11,7 +10,6 @@ import {
   useDnsFilters,
   useDns,
   CreateDns,
-  useDnsSort,
   useInitDnsProgram,
 } from '@/features/dns';
 import { List, SearchForm, Skeleton } from '@/shared/ui';
@@ -24,9 +22,8 @@ const Dns = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filterValues, filterParams, handleFiltersSubmit] = useDnsFilters();
-  const [sortValues, toggleDirection] = useDnsSort();
 
-  const [dns, count, isLoading, hasMore, fetchMore, refetch] = useDns(searchQuery, filterParams, sortValues);
+  const [dns, count, isLoading, hasMore, fetchMore, refetch] = useDns(searchQuery, filterParams);
   const isEmpty = !(isLoading || count);
   const isLoaderVisible = isEmpty || (!count && isLoading);
 
@@ -36,23 +33,35 @@ const Dns = () => {
   return (
     <div className={styles.dns}>
       <header className={styles.header}>
-        <SortBy count={count} title="dDNS" onChange={() => toggleDirection()} />
+        <h2 className={styles.heading}>Decentralized DNS: {count}</h2>
 
-        <CreateDns onSuccess={refetch} />
+        {!isEmpty && <CreateDns onSuccess={refetch} />}
       </header>
 
       <SearchForm placeholder="Search by name, address" onSubmit={(query) => setSearchQuery(query)} />
 
       {isLoaderVisible ? (
         <div className={styles.placeholder}>
-          <Placeholder block={renderSkeleton()} title="There are no dns yet" blocksCount={5} isEmpty={isEmpty} />
+          <Placeholder
+            block={renderSkeleton()}
+            title="There is no dDNS yet"
+            description="Create a new dDNS right now."
+            children={<CreateDns onSuccess={refetch} color="primary" />}
+            blocksCount={5}
+            isEmpty={isEmpty}
+          />
         </div>
       ) : (
         <List items={dns} hasMore={hasMore} renderItem={renderDns} fetchMore={fetchMore} />
       )}
 
-      <Filters initialValues={filterValues} onSubmit={handleFiltersSubmit}>
-        <FilterGroup name="owner" onSubmit={handleFiltersSubmit}>
+      <Filters initialValues={filterValues} onSubmit={handleFiltersSubmit} title="Sort & Filter">
+        <FilterGroup name="orderByDirection" onSubmit={handleFiltersSubmit}>
+          <Radio name="orderByDirection" value="DESC" label="Newest first" onSubmit={handleFiltersSubmit} />
+          {account && <Radio name="orderByDirection" value="ASC" label="Oldest first" onSubmit={handleFiltersSubmit} />}
+        </FilterGroup>
+
+        <FilterGroup name="owner" onSubmit={handleFiltersSubmit} title="dDNS ownership">
           <Radio name="owner" value="all" label="All DNS" onSubmit={handleFiltersSubmit} />
           {account && <Radio name="owner" value="owner" label="My DNS" onSubmit={handleFiltersSubmit} />}
         </FilterGroup>

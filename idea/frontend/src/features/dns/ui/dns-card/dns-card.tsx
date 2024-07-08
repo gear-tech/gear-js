@@ -1,7 +1,9 @@
-import { IdBlock } from '@/shared/ui/idBlock';
-import { TimestampBlock } from '@/shared/ui/timestampBlock';
-import { Dns } from '../../types';
 import { useAccount } from '@gear-js/react-hooks';
+
+import { TimestampBlock } from '@/shared/ui/timestampBlock';
+import { IdBlock, OwnerBlock } from '@/shared/ui';
+
+import { Dns } from '../../types';
 import { EditDns } from '../edit-dns';
 import { DeleteDns } from '../delete-dns';
 import styles from './dns-card.module.scss';
@@ -12,17 +14,22 @@ type Props = {
 };
 
 function DnsCard({ dns, onSuccess }: Props) {
-  const { name, address, updatedAt, createdBy } = dns;
+  const { name, address, updatedAt, createdAt, createdBy, admin } = dns;
   const { account } = useAccount();
 
   const isOwner = createdBy === account?.decodedAddress;
+  const timePrefix = updatedAt === createdAt ? 'Created at:' : 'Updated at:';
+  const ownerButtonText = admin === account?.decodedAddress ? '(you)' : undefined;
 
   return (
     <div className={styles.card}>
-      <div className={styles.content}>
+      <div>
         <h3 className={styles.heading}>{name}</h3>
-        <IdBlock id={address} size="medium" withIcon color="light" />
-        <TimestampBlock timestamp={updatedAt} withIcon />
+        <div className={styles.footer}>
+          <TimestampBlock timestamp={updatedAt} withIcon prefix={timePrefix} color="light" />
+          <IdBlock id={address} size="medium" withIcon color="light" />
+          {admin && <OwnerBlock ownerAddress={admin} color="light" buttonText={ownerButtonText} />}
+        </div>
       </div>
 
       {isOwner && (

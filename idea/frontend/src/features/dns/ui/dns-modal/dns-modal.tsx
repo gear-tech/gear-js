@@ -12,6 +12,7 @@ import { Values } from '../../types';
 import { useDnsActions, useDnsSchema } from '../../hooks';
 
 import styles from './dns-modal.module.scss';
+import clsx from 'clsx';
 
 type Props = {
   close: () => void;
@@ -49,13 +50,27 @@ const DnsModal = ({ heading, submitText, close, onSuccess, initialValues }: Prop
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <div className={styles.inputs}>
-            <Input name={FIELD_NAME.DNS_NAME} label="Name:" direction="y" block disabled={isEditMode} />
-            <Input name={FIELD_NAME.DNS_ADDRESS} label="Program address:" direction="y" block />
+            <Input
+              name={FIELD_NAME.DNS_NAME}
+              className={clsx(isEditMode && styles.inputDisabled)}
+              label={isEditMode ? 'dDNS name:' : 'Enter dDNS name:'}
+              direction="y"
+              placeholder="New nDNS"
+              block
+              disabled={isEditMode}
+            />
+            <Input
+              name={FIELD_NAME.DNS_ADDRESS}
+              label="Specify account address:"
+              direction="y"
+              placeholder="0x"
+              block
+            />
           </div>
 
           <div className={styles.buttons}>
             <Button type="submit" icon={ApplySVG} size="large" text={submitText} disabled={isLoading} />
-            <Button icon={CloseSVG} color="light" size="large" text="Close" onClick={close} />
+            <Button icon={CloseSVG} color="light" size="large" text="Cancel" onClick={close} />
           </div>
         </form>
       </FormProvider>
