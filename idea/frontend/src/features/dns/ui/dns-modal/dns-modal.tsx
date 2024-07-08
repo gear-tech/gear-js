@@ -1,5 +1,6 @@
 import { Button, Modal } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
+import clsx from 'clsx';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -12,7 +13,6 @@ import { Values } from '../../types';
 import { useDnsActions, useDnsSchema } from '../../hooks';
 
 import styles from './dns-modal.module.scss';
-import clsx from 'clsx';
 
 type Props = {
   close: () => void;
@@ -30,7 +30,7 @@ const DnsModal = ({ heading, submitText, close, onSuccess, initialValues }: Prop
 
   const form = useForm<Values, unknown, DnsSchema>({
     defaultValues: initialValues || DEFAULT_VALUES,
-    resolver: zodResolver(dnsSchema),
+    resolver: zodResolver(dnsSchema, { async: true }),
   });
 
   const { isLoading, addNewProgram, changeProgramId } = useDnsActions();
