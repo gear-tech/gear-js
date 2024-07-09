@@ -133,6 +133,8 @@ const fetchWithGuard = async <T extends object>(...args: Parameters<typeof fetch
   return response.json() as T;
 };
 
+const getErrorMessage = (error: unknown) => (error instanceof Error ? error.message : String(error));
+
 export {
   checkWallet,
   formatDate,
@@ -159,4 +161,5 @@ export {
   isUndefined,
   isHex,
   fetchWithGuard,
+  getErrorMessage,
 };

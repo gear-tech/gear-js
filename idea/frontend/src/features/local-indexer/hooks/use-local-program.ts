@@ -1,51 +1,57 @@
+import { ProgramMetadata } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
-import { ProgramMetadata } from '@gear-js/api';
 
-import { PROGRAMS_LOCAL_FORAGE } from '@/api';
-import { IProgram, useProgramStatus } from '@/features/program';
-import { isState, useMetadata } from '@/features/metadata';
+import { IMeta } from '@/entities/metadata';
+import { isState } from '@/features/metadata';
+import { useProgramStatus } from '@/features/program';
+
+import { METADATA_LOCAL_FORAGE, PROGRAMS_LOCAL_FORAGE } from '../consts';
+import { DBProgram } from '../types';
 
 function useLocalProgram() {
   const { api, isApiReady } = useApi();
-
-  const { getMetadata } = useMetadata();
   const { getProgramStatus } = useProgramStatus();
+
+  // TODO: useMetadataHash hook or util?
+  const getMetadataHash = async (id: HexString) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+
+    try {
+      return await api.program.metaHash(id);
+    } catch {
+      return null;
+    }
+  };
+
+  const getCodeId = async (id: HexString) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+
+    // cuz error on terminated program
+    try {
+      return await api.program.codeHash(id);
+    } catch {
+      return null;
+    }
+  };
+
+  const getHasState = async (metahash: HexString | null) => {
+    if (!metahash) return false;
+
+    const localForageMetadata = metahash ? await METADATA_LOCAL_FORAGE.getItem<IMeta>(metahash) : undefined;
+    const metadata = localForageMetadata?.hex ? ProgramMetadata.from(localForageMetadata.hex) : undefined;
+
+    return isState(metadata);
+  };
 
   const getChainProgram = async (id: HexString) => {
     if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
 
     const name = id;
     const status = await getProgramStatus(id);
-
-    let codeId: HexString | null;
-    let metahash: HexString | null;
-    let metaHex: HexString | null | undefined;
-
-    // cuz error on terminated program
-    try {
-      codeId = await api.program.codeHash(id);
-    } catch {
-      codeId = null;
-    }
-
-    try {
-      metahash = await api.code.metaHash(codeId || id);
-    } catch {
-      metahash = null;
-    }
-
-    // metadata is retrived via useMetadata, so no need to log errors here
-    try {
-      metaHex = metahash ? (await getMetadata(metahash)).result.hex : undefined;
-    } catch {
-      metaHex = null;
-    }
-
-    // TODO: on Programs page each program can make a request to backend,
-    // is there a way to optimize it?
-    const metadata = metaHex ? ProgramMetadata.from(metaHex) : undefined;
-    const hasState = isState(metadata);
+    const codeId = await getCodeId(id);
+    const metahash = await getMetadataHash(id);
+    const hasState = await getHasState(metahash);
 
     return { id, name, status, codeId, metahash, hasState };
   };
@@ -53,7 +59,7 @@ function useLocalProgram() {
   const getLocalProgram = async (id: HexString) => {
     if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
 
-    const localForageProgram = await PROGRAMS_LOCAL_FORAGE.getItem<IProgram>(id);
+    const localForageProgram = await PROGRAMS_LOCAL_FORAGE.getItem<DBProgram>(id);
 
     const isProgramInChain = id === localForageProgram?.id;
     const isProgramFromChain = api.genesisHash.toHex() === localForageProgram?.genesis;

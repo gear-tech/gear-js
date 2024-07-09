@@ -2,9 +2,10 @@ import { HexString, ProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { useEffect, useMemo, useState } from 'react';
 
-import { fetchMetadata, getLocalMetadata } from '@/api';
+import { fetchMetadata } from '@/api';
 import { RPCError, RPCErrorCode } from '@/shared/services/rpcService';
 import { useChain } from '@/hooks';
+import { getLocalMetadata } from '@/features/local-indexer';
 
 function useMetadata(hash?: HexString | null | undefined) {
   const alert = useAlert();

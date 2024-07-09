@@ -9,7 +9,7 @@ import { CodePaginationModel } from './types';
 
 const fetchCode = (id: string) => rpcService.callRPC<ICode>(RpcMethods.GetCode, { id });
 
-const addCodeName = (params: { id: HexString; name: string }) => rpcService.callRPC(RpcMethods.AddCodeName, params);
+const addCodeName = (id: HexString, name: string) => rpcService.callRPC(RpcMethods.AddCodeName, { id, name });
 
 const fetchCodes = (params: PaginationModel) => rpcService.callRPC<CodePaginationModel>(RpcMethods.GetAllCodes, params);
 

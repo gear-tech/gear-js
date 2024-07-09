@@ -8,7 +8,7 @@ import { BackButton } from '@/shared/ui/backButton';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import { Subheader } from '@/shared/ui/subheader';
 import { FileTypes, GasMethod } from '@/shared/config';
-import { Payload } from '@/hooks/useProgramActions/types';
+import { Values } from '@/hooks/useProgramActions/types';
 import { ProgramForm, RenderButtonsProps, SailsProgramForm, SubmitHelpers } from '@/widgets/programForm';
 import { useWasmFile } from '@/features/code';
 import { UploadMetadata } from '@/features/uploadMetadata';
@@ -38,15 +38,15 @@ const UploadProgram = () => {
     </>
   );
 
-  const handleSubmit = (payload: Payload, { enableButtons }: SubmitHelpers) => {
+  const handleSubmit = (values: Values, { enableButtons }: SubmitHelpers) => {
     if (!isApiReady) throw new Error('API is not initialized');
     if (!wasmFile.buffer) throw new Error('File is not found');
 
-    const { gasLimit, value, initPayload, payloadType, keepAlive } = payload;
+    const { gasLimit, value, payload: initPayload, payloadType, keepAlive } = values;
     const program = { code: wasmFile.buffer, value, gasLimit, initPayload, keepAlive };
-    const result = api.program.upload(program, payload.metadata, payloadType);
+    const result = api.program.upload(program, metadata.value, payloadType);
 
-    uploadProgram(result, result.codeId, payload, reset, enableButtons);
+    uploadProgram(result, { metadata, sails }, values, reset, enableButtons);
   };
 
   return (
@@ -69,7 +69,6 @@ const UploadProgram = () => {
             <ProgramForm
               fileName={wasmFile.value?.name.split(/\.opt|\.wasm/)[0]}
               source={wasmFile.buffer}
-              metaHex={metadata.hex}
               metadata={metadata.value}
               gasMethod={GasMethod.InitUpdate}
               renderButtons={renderButtons}

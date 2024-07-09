@@ -8,7 +8,6 @@ import { z } from 'zod';
 
 import { useBalanceSchema, useGasCalculate, useGasLimitSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
-import { Payload } from '@/hooks/useProgramActions/types';
 import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
 import { Input, ValueField, LabeledCheckbox } from '@/shared/ui';
@@ -34,7 +33,7 @@ const useSchema = (payloadSchema: PayloadValueSchema) => {
     value: balanceSchema,
     gasLimit: gasLimitSchema,
     keepAlive: z.boolean(),
-    programName: z.string().trim().min(1),
+    programName: z.string().trim(),
   });
 };
 
@@ -47,7 +46,7 @@ type Props = {
   gasMethod: GasMethod;
   fileName?: string;
   renderButtons: (props: RenderButtonsProps) => ReactNode;
-  onSubmit: (values: Payload, helpers: SubmitHelpers) => void;
+  onSubmit: (values: FormattedValues, helpers: SubmitHelpers) => void;
 };
 
 const DEFAULT_VALUES = {

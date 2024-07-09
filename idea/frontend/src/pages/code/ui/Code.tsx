@@ -1,10 +1,7 @@
-import { useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
-import { useEffect, useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
 
-import { getCode } from '@/api';
 import { useChain, useDataLoading, useModal, usePrograms } from '@/hooks';
 import { BackButton } from '@/shared/ui/backButton';
 import { absoluteRoutes } from '@/shared/config';
@@ -13,51 +10,49 @@ import { ProgramsList } from '@/pages/programs/ui/programsList';
 import { MetadataTable, useMetadata } from '@/features/metadata';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
-import { ICode } from '@/entities/code';
-import { CodeTable } from '@/features/code';
+import { CodeTable, useCode as useStorageCode } from '@/features/code';
+import { IDL, useSails } from '@/features/sails';
+import { useLocalCode } from '@/features/local-indexer';
 
 import styles from './Code.module.scss';
-import { IDL, useSails } from '@/features/sails';
 
-type Params = { codeId: HexString };
+type Params = {
+  codeId: HexString;
+};
 
 const Code = () => {
-  const { codeId } = useParams() as Params;
-  const alert = useAlert();
-
   const { isDevChain } = useChain();
   const { showModal, closeModal } = useModal();
+
+  const { codeId } = useParams() as Params;
+  const storageCode = useStorageCode(codeId);
+  const localCode = useLocalCode(codeId);
+  const code = isDevChain ? localCode : storageCode;
 
   const { programs, isLoading: isProgramsRequestLoading, fetchPrograms } = usePrograms();
   const { loadData } = useDataLoading({ defaultParams: { codeId }, fetchData: fetchPrograms });
 
-  const [code, setCode] = useState<ICode>();
-  const isCodeReady = code !== undefined;
-
-  const { metadata, isMetadataReady, setMetadataHex } = useMetadata(code?.metahash);
+  const { metadata, isMetadataReady, setMetadataHex } = useMetadata(code.data?.metahash);
   const { idl, isLoading: isSailsLoading, refetch: refetchSails } = useSails(codeId);
   const isLoading = !isMetadataReady || isSailsLoading;
 
-  const setCodeName = (name: string) => setCode((prevCode) => (prevCode ? { ...prevCode, name } : prevCode));
-
   const showUploadMetadataModal = () => {
-    const onSuccess = (name: string, metadataHex?: HexString) => {
-      setCodeName(name);
+    const onSuccess = (_name: string, metadataHex?: HexString) => {
+      code.refetch();
 
       return metadataHex ? setMetadataHex(metadataHex) : refetchSails();
     };
 
-    showModal('metadata', { codeId, onClose: closeModal, onSuccess });
+    const isNameEditable = !isDevChain;
+
+    showModal('metadata', {
+      codeId,
+      metadataHash: code.data?.metahash,
+      isNameEditable,
+      onClose: closeModal,
+      onSuccess,
+    });
   };
-
-  useEffect(() => {
-    if (isDevChain) return;
-
-    getCode(codeId)
-      .then(({ result }) => setCode(result))
-      .catch(({ message }: Error) => alert.error(message));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <>
@@ -65,7 +60,7 @@ const Code = () => {
         <div className={styles.summary}>
           <div>
             <h2 className={styles.heading}>Code Parameters</h2>
-            <CodeTable code={code} isCodeReady={isCodeReady} />
+            <CodeTable code={code.data} isCodeReady={!code.isPending} />
           </div>
 
           <div>
@@ -91,7 +86,7 @@ const Code = () => {
       </div>
 
       <div className={styles.buttons}>
-        {isCodeReady && (
+        {!code.isPending && (
           <UILink
             to={generatePath(absoluteRoutes.initializeProgram, { codeId })}
             text="Create program"
@@ -100,7 +95,7 @@ const Code = () => {
           />
         )}
 
-        {!isDevChain && !isLoading && !metadata && !idl && (
+        {!isLoading && !metadata && !idl && (
           <Button
             text="Add metadata/sails"
             icon={AddMetaSVG}

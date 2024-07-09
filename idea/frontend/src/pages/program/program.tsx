@@ -3,7 +3,7 @@ import { Button } from '@gear-js/ui';
 import { useAccount, useAccountVouchers } from '@gear-js/react-hooks';
 import { generatePath, useParams } from 'react-router-dom';
 
-import { useChain, useModal, useProgram } from '@/hooks';
+import { useModal, useProgram } from '@/hooks';
 import { ProgramStatus, ProgramTable } from '@/features/program';
 import { ProgramMessages } from '@/widgets/programMessages';
 import { getShortName } from '@/shared/helpers';
@@ -26,7 +26,6 @@ const Program = () => {
   const { account } = useAccount();
   const { programId } = useParams() as Params;
   const { showModal, closeModal } = useModal();
-  const { isDevChain } = useChain();
 
   const { program, isProgramReady, setProgramName } = useProgram(programId);
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(program?.metahash);
@@ -39,12 +38,23 @@ const Program = () => {
     if (!program.codeId) throw new Error('CodeId is not found'); // TODO: take a look at local program
 
     const onSuccess = (name: string, metadataHex?: HexString) => {
-      setProgramName(name);
+      if (name) setProgramName(name);
 
       return metadataHex ? setMetadataHex(metadataHex) : refetchSails();
     };
 
-    showModal('metadata', { programId, codeId: program.codeId, onClose: closeModal, onSuccess });
+    // if program is not saved in storage, we can't change the name.
+    // kinda tricky, treat carefully. worth to consider different approach
+    const isStorageProgram = 'blockHash' in program;
+
+    showModal('metadata', {
+      programId,
+      metadataHash: program.metahash,
+      codeId: program.codeId,
+      isNameEditable: isStorageProgram,
+      onClose: closeModal,
+      onSuccess,
+    });
   };
 
   const { vouchers } = useAccountVouchers(programId);
@@ -83,7 +93,7 @@ const Program = () => {
               />
             )}
 
-            {!isDevChain && !isLoading && !metadata && !idl && (
+            {!isLoading && !metadata && !idl && (
               <Button text="Add metadata/sails" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
             )}
           </div>

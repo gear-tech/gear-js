@@ -1,16 +1,32 @@
-import { ProgramMetadata } from '@gear-js/api';
+import { IProgramCreateResult, IProgramUploadResult, ProgramMetadata } from '@gear-js/api';
+import { AnyJson } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
-type Payload = {
-  value: string;
-  gasLimit: string;
-  initPayload: string;
-  keepAlive: boolean;
-  metaHex?: HexString;
-  metadata?: ProgramMetadata | undefined;
-  programName: string;
-  payloadType?: string;
-  idl?: string;
+type Program = (IProgramCreateResult | IProgramUploadResult) & {
+  codeId: HexString;
 };
 
-export type { Payload };
+type ContractApi = {
+  metadata?: {
+    hash: HexString | null | undefined;
+    hex: HexString | undefined;
+    value: ProgramMetadata | undefined;
+    isFromStorage: boolean;
+  };
+
+  sails?: {
+    idl: string | undefined;
+    isFromStorage: boolean;
+  };
+};
+
+type Values = {
+  value: string;
+  gasLimit: string;
+  payload: AnyJson;
+  keepAlive: boolean;
+  programName: string;
+  payloadType?: string;
+};
+
+export type { Program, ContractApi, Values };

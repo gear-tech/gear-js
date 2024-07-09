@@ -2,11 +2,9 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import { HexString } from '@polkadot/util/types';
 import { useApi, useAccount } from '@gear-js/react-hooks';
 
-import { useChain, useModal, useSignAndSend } from '@/hooks';
-import { UPLOAD_METADATA_TIMEOUT } from '@/shared/config';
+import { useAddCodeName, useAddMetadata, useModal, useSignAndSend } from '@/hooks';
 import { CopiedInfo } from '@/shared/ui/copiedInfo';
-import { addMetadata, addCodeName } from '@/api';
-import { addIdl } from '@/features/sails';
+import { useAddIdl } from '@/features/sails';
 
 import { ParamsToUploadCode } from './types';
 
@@ -14,35 +12,24 @@ const useCodeUpload = () => {
   const { api, isApiReady } = useApi();
   const { account } = useAccount();
   const { showModal } = useModal();
-  const { isDevChain } = useChain();
+
+  const addMetadata = useAddMetadata();
+  const addIdl = useAddIdl();
+  const addCodeName = useAddCodeName();
   const signAndSend = useSignAndSend();
 
-  // will be refactored in the upcoming local indexer refactoring
-  const handleMetadataUpload = (
+  const handleMetadataUpload = async (
     codeId: HexString,
     codeName: string,
-    metaHex: HexString | undefined,
-    idl: string | undefined,
+    metadata: ParamsToUploadCode['metadata'],
+    sails: ParamsToUploadCode['sails'],
   ) => {
-    if (!isApiReady) throw new Error('API is not initialized');
-    if (isDevChain) return;
-
-    // timeout cuz wanna be sure that block data is ready
-    setTimeout(async () => {
-      const id = codeId;
-      const name = codeName || id;
-
-      await addCodeName({ id, name });
-      if (idl) addIdl(codeId, idl);
-
-      if (!metaHex) return;
-      const hash = await api.code.metaHash(id);
-
-      addMetadata(hash, metaHex);
-    }, UPLOAD_METADATA_TIMEOUT);
+    await addCodeName(codeId, codeName || codeId);
+    if (metadata.hash && metadata.hex && !metadata.isFromStorage) addMetadata(metadata.hash, metadata.hex);
+    if (sails.idl && !sails.isFromStorage) addIdl(codeId, sails.idl);
   };
 
-  return async ({ optBuffer, name, voucherId, metaHex, idl, resolve }: ParamsToUploadCode) => {
+  return async ({ optBuffer, name, voucherId, metadata, sails, resolve }: ParamsToUploadCode) => {
     if (!isApiReady) throw new Error('API is not initialized');
     if (!account) throw new Error('Account not found');
 
@@ -56,7 +43,7 @@ const useCodeUpload = () => {
     const extrinsic = voucherId ? api.voucher.call(voucherId, { UploadCode: codeExtrinsic }) : codeExtrinsic;
     const { partialFee } = await api.code.paymentInfo(address, { signer });
 
-    const onFinalized = () => handleMetadataUpload(codeHash, name, metaHex, idl);
+    const onFinalized = () => handleMetadataUpload(codeHash, name, metadata, sails);
 
     const onConfirm = () =>
       signAndSend(extrinsic, 'CodeChanged', {

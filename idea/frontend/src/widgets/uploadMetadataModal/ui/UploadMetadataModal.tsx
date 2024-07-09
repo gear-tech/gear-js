@@ -1,13 +1,11 @@
-import { useAlert, useApi } from '@gear-js/react-hooks';
 import { Button, Modal } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@polkadot/util/types';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { addCodeName, addMetadata, addProgramName } from '@/api';
-import { addIdl } from '@/features/sails';
-import { useChain, useContractApiWithFile } from '@/hooks';
+import { useAddIdl } from '@/features/sails';
+import { useAddCodeName, useAddMetadata, useAddProgramName, useContractApiWithFile } from '@/hooks';
 import { ModalProps } from '@/entities/modal';
 import { UploadMetadata } from '@/features/uploadMetadata';
 import { Input } from '@/shared/ui';
@@ -23,19 +21,22 @@ const DEFAULT_VALUES = {
 };
 
 const SCHEMA = z.object({
-  [FIELD_NAME.NAME]: z.string().trim().min(1),
+  [FIELD_NAME.NAME]: z.string().trim(),
 });
 
 type Props = ModalProps & {
   codeId: HexString;
+  metadataHash: HexString | null | undefined;
+  isNameEditable: boolean;
   programId?: HexString;
   onSuccess: (name: string, metadataHex?: HexString) => void;
 };
 
-const UploadMetadataModal = ({ codeId, programId, onClose, onSuccess }: Props) => {
-  const { api, isApiReady } = useApi();
-  const { isDevChain } = useChain();
-  const alert = useAlert();
+const UploadMetadataModal = ({ codeId, programId, isNameEditable, metadataHash, onClose, onSuccess }: Props) => {
+  const addMetadata = useAddMetadata();
+  const addIdl = useAddIdl();
+  const addProgramName = useAddProgramName();
+  const addCodeName = useAddCodeName();
 
   // useContractApiWithFile is based on meta-storage requests, we don't need them here
   const { metadata, sails, ...contractApi } = useContractApiWithFile(undefined);
@@ -46,41 +47,38 @@ const UploadMetadataModal = ({ codeId, programId, onClose, onSuccess }: Props) =
   });
 
   const handleSubmit = form.handleSubmit(async ({ name }) => {
-    if (!isApiReady) throw new Error('API is not initialized');
-
-    try {
+    if (name) {
       if (programId) {
-        if (!isDevChain) await addProgramName({ name, id: programId });
+        await addProgramName(programId, name);
       } else {
-        await addCodeName({ name, id: codeId });
+        await addCodeName(codeId, name);
       }
-
-      if (metadata.hex) {
-        const metahash = await api.code.metaHash(codeId);
-        await addMetadata(metahash, metadata.hex);
-
-        onSuccess(name, metadata.hex);
-        onClose();
-      }
-
-      if (sails.idl) {
-        await addIdl(codeId, sails.idl);
-
-        onSuccess(name);
-        onClose();
-      }
-
-      throw new Error('Metadata/sails file is required');
-    } catch (error) {
-      alert.error(error instanceof Error ? error.message : String(error));
     }
+
+    if (metadataHash && metadata.hex) {
+      await addMetadata(metadataHash, metadata.hex);
+
+      onSuccess(name, metadata.hex);
+      return onClose();
+    }
+
+    if (sails.idl) {
+      await addIdl(codeId, sails.idl);
+
+      onSuccess(name);
+      return onClose();
+    }
+
+    throw new Error('Metadata/sails file is required');
   });
 
   return (
     <Modal heading="Upload metadata/sails" size="large" className={styles.modal} close={onClose}>
       <FormProvider {...form}>
         <form className={styles.form} onSubmit={handleSubmit}>
-          <Input name={FIELD_NAME.NAME} label={programId ? 'Program Name' : 'Code Name'} direction="y" block />
+          {isNameEditable && (
+            <Input name={FIELD_NAME.NAME} label={programId ? 'Program Name' : 'Code Name'} direction="y" block />
+          )}
 
           <UploadMetadata
             value={contractApi.file}

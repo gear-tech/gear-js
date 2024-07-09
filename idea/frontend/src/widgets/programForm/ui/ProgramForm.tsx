@@ -7,7 +7,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { useGasCalculate, useChangeEffect, useValidationSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
-import { Payload } from '@/hooks/useProgramActions/types';
 import { FormPayload, getSubmitPayload, getPayloadFormValues, getResetPayloadValue } from '@/features/formPayload';
 import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
@@ -18,16 +17,15 @@ import styles from './ProgramForm.module.scss';
 
 type Props = {
   source: Buffer | HexString;
-  metaHex: HexString | undefined;
   metadata: ProgramMetadata | undefined;
   gasMethod: GasMethod;
   fileName?: string;
   renderButtons: (props: RenderButtonsProps) => ReactNode;
-  onSubmit: (values: Payload, helpers: SubmitHelpers) => void;
+  onSubmit: (values: FormValues, helpers: SubmitHelpers) => void;
 };
 
 const ProgramForm = (props: Props) => {
-  const { gasMethod, metaHex, metadata, source, fileName = '', renderButtons, onSubmit } = props;
+  const { gasMethod, metadata, source, fileName = '', renderButtons, onSubmit } = props;
 
   const { getChainBalanceValue, getFormattedGasValue, getChainGasValue } = useBalanceFormat();
   const schema = useValidationSchema();
@@ -81,13 +79,11 @@ const ProgramForm = (props: Props) => {
 
     const { value, payload, gasLimit, programName, payloadType, keepAlive } = values;
 
-    const data: Payload = {
+    const data = {
       value: getChainBalanceValue(value).toFixed(),
       gasLimit: getChainGasValue(gasLimit).toFixed(),
       payloadType: metadata ? undefined : payloadType,
-      initPayload: metadata ? getSubmitPayload(payload) : payload,
-      metaHex,
-      metadata,
+      payload: metadata ? getSubmitPayload(payload) : payload,
       programName,
       keepAlive,
     };

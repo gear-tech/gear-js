@@ -16,6 +16,7 @@ function useMetadataWithFile(hash: HexString | null | undefined) {
   const isStorageMetadata = Boolean(storageMetadataHex);
 
   return {
+    hash,
     value: metadata,
     hex: metadataHex,
     isReady: isMetadataReady,
