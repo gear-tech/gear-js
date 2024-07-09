@@ -10,7 +10,7 @@ import { useProgramIdSchema } from './useProgramIdSchema';
 import { useCodeUpload } from './useCodeUpload';
 import { useMessageClaim } from './useMessageClaim';
 import { useProgramActions } from './useProgramActions';
-import { useMetadataUpload } from './useMetadataUpload';
+import { useAddMetadata } from './use-add-metadata';
 import { useBalanceTransfer } from './useBalanceTransfer';
 import { useEventSubscriptions } from './useEventSubscriptions';
 import { useGasCalculate } from './useGasCalculate';
@@ -52,7 +52,7 @@ export {
   useGasCalculate,
   useProgramActions,
   useMessageActions,
-  useMetadataUpload,
+  useAddMetadata,
   useBalanceTransfer,
   useEventSubscriptions,
   useCodes,

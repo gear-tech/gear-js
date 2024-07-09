@@ -3,13 +3,13 @@ import { useApi, useAccount } from '@gear-js/react-hooks';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { ISubmittableResult } from '@polkadot/types/types';
 
-import { useChain, useModal, useSignAndSend } from '@/hooks';
-import { addLocalMetadata, addLocalProgram } from '@/features/local-indexer';
+import { useAddMetadata, useChain, useModal, useSignAndSend } from '@/hooks';
+import { addLocalProgram } from '@/features/local-indexer';
 import { absoluteRoutes } from '@/shared/config';
 import { CustomLink } from '@/shared/ui/customLink';
 import { useProgramStatus } from '@/features/program';
 import { isState } from '@/features/metadata';
-import { addMetadata as addStorageMetadata, addProgramName } from '@/api';
+import { addProgramName } from '@/api';
 import { addIdl } from '@/features/sails';
 
 import { ContractApi, Program, Values } from './types';
@@ -18,7 +18,9 @@ const useProgramActions = () => {
   const { api, isApiReady } = useApi();
   const { account } = useAccount();
   const { isDevChain } = useChain();
+
   const signAndSend = useSignAndSend();
+  const addMetadata = useAddMetadata();
 
   const { showModal } = useModal();
   const { getProgramStatus } = useProgramStatus();
@@ -55,15 +57,8 @@ const useProgramActions = () => {
 
     if (!isDevChain) await addProgramName(programId, name);
 
-    if (metadata && metadata.hash && metadata.hex && !metadata.isFromStorage) {
-      const addMetadata = isDevChain ? addLocalMetadata : addStorageMetadata;
-
-      await addMetadata(metadata.hash, metadata.hex);
-    }
-
-    if (sails && sails.idl && !sails.isFromStorage) {
-      await addIdl(codeId, sails.idl);
-    }
+    if (metadata && metadata.hash && metadata.hex && !metadata.isFromStorage) addMetadata(metadata.hash, metadata.hex);
+    if (sails && sails.idl && !sails.isFromStorage) addIdl(codeId, sails.idl);
   };
 
   return async (

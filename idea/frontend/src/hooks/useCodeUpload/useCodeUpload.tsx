@@ -2,9 +2,9 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import { HexString } from '@polkadot/util/types';
 import { useApi, useAccount } from '@gear-js/react-hooks';
 
-import { useChain, useModal, useSignAndSend } from '@/hooks';
+import { useAddMetadata, useChain, useModal, useSignAndSend } from '@/hooks';
 import { CopiedInfo } from '@/shared/ui/copiedInfo';
-import { addMetadata, addCodeName } from '@/api';
+import { addCodeName } from '@/api';
 import { addIdl } from '@/features/sails';
 
 import { ParamsToUploadCode } from './types';
@@ -14,6 +14,8 @@ const useCodeUpload = () => {
   const { account } = useAccount();
   const { showModal } = useModal();
   const { isDevChain } = useChain();
+
+  const addMetadata = useAddMetadata();
   const signAndSend = useSignAndSend();
 
   const handleMetadataUpload = async (
@@ -26,8 +28,8 @@ const useCodeUpload = () => {
     const name = codeName || id;
 
     if (!isDevChain) await addCodeName({ id, name });
-    if (sails.idl && !sails.isFromStorage) addIdl(codeId, sails.idl);
     if (metadata.hash && metadata.hex && !metadata.isFromStorage) addMetadata(metadata.hash, metadata.hex);
+    if (sails.idl && !sails.isFromStorage) addIdl(codeId, sails.idl);
   };
 
   return async ({ optBuffer, name, voucherId, metadata, sails, resolve }: ParamsToUploadCode) => {

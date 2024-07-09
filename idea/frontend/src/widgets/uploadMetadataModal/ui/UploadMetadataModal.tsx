@@ -5,13 +5,13 @@ import { HexString } from '@polkadot/util/types';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { addCodeName, addMetadata, addProgramName } from '@/api';
+import { addCodeName, addProgramName } from '@/api';
 import { addIdl } from '@/features/sails';
-import { useChain, useContractApiWithFile } from '@/hooks';
+import { useAddMetadata, useChain, useContractApiWithFile } from '@/hooks';
 import { ModalProps } from '@/entities/modal';
 import { UploadMetadata } from '@/features/uploadMetadata';
 import { Input } from '@/shared/ui';
-import { addLocalMetadata, addLocalProgramName } from '@/features/local-indexer';
+import { addLocalProgramName } from '@/features/local-indexer';
 
 import styles from './UploadMetadataModal.module.scss';
 
@@ -37,6 +37,7 @@ type Props = ModalProps & {
 const UploadMetadataModal = ({ codeId, programId, metadataHash, onClose, onSuccess }: Props) => {
   const { isDevChain } = useChain();
   const alert = useAlert();
+  const addMetadata = useAddMetadata();
 
   // useContractApiWithFile is based on meta-storage requests, we don't need them here
   const { metadata, sails, ...contractApi } = useContractApiWithFile(undefined);
@@ -58,8 +59,7 @@ const UploadMetadataModal = ({ codeId, programId, metadataHash, onClose, onSucce
       }
 
       if (metadataHash && metadata.hex) {
-        const _addMetadata = isDevChain ? addLocalMetadata : addMetadata;
-        await _addMetadata(metadataHash, metadata.hex);
+        await addMetadata(metadataHash, metadata.hex);
 
         onSuccess(name, metadata.hex);
         onClose();
