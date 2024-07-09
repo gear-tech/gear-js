@@ -4,7 +4,7 @@ import { Program } from '@/features/program';
 import { IBase } from '@/shared/types';
 import { ICode } from '@/entities/code';
 
-type ChainProgram = Pick<Program, 'id' | 'name' | 'status' | 'metahash'> & {
+type ChainProgram = Pick<Program, 'id' | 'name' | 'status' | 'metahash' | 'hasState'> & {
   codeId: HexString | null;
 };
 

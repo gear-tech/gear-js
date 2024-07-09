@@ -1,9 +1,12 @@
+import { ProgramMetadata } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 
+import { IMeta } from '@/entities/metadata';
+import { isState } from '@/features/metadata';
 import { useProgramStatus } from '@/features/program';
 
-import { PROGRAMS_LOCAL_FORAGE } from '../consts';
+import { METADATA_LOCAL_FORAGE, PROGRAMS_LOCAL_FORAGE } from '../consts';
 import { DBProgram } from '../types';
 
 function useLocalProgram() {
@@ -15,7 +18,7 @@ function useLocalProgram() {
     if (!isApiReady) throw new Error('API is not initialized');
 
     try {
-      return await api.code.metaHash(id);
+      return await api.program.metaHash(id);
     } catch {
       return null;
     }
@@ -32,6 +35,15 @@ function useLocalProgram() {
     }
   };
 
+  const getHasState = async (metahash: HexString | null) => {
+    if (!metahash) return false;
+
+    const localForageMetadata = metahash ? await METADATA_LOCAL_FORAGE.getItem<IMeta>(metahash) : undefined;
+    const metadata = localForageMetadata?.hex ? ProgramMetadata.from(localForageMetadata.hex) : undefined;
+
+    return isState(metadata);
+  };
+
   const getChainProgram = async (id: HexString) => {
     if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
 
@@ -39,8 +51,9 @@ function useLocalProgram() {
     const status = await getProgramStatus(id);
     const codeId = await getCodeId(id);
     const metahash = await getMetadataHash(id);
+    const hasState = await getHasState(metahash);
 
-    return { id, name, status, codeId, metahash };
+    return { id, name, status, codeId, metahash, hasState };
   };
 
   const getLocalProgram = async (id: HexString) => {

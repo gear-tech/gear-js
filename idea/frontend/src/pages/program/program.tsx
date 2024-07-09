@@ -78,7 +78,7 @@ const Program = () => {
               className={styles.fixWidth}
             />
 
-            {!isLoading && 'hasState' in program && (program.hasState || isAnyQuery) && (
+            {!isLoading && (program.hasState || isAnyQuery) && (
               <UILink
                 to={generatePath(metadata ? routes.state : routes.sailsState, { programId })}
                 icon={ReadSVG}
