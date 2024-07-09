@@ -23,8 +23,8 @@ type Props = {
 };
 
 const DnsModal = ({ heading, submitText, close, onSuccess, initialValues }: Props) => {
-  const dnsSchema = useDnsSchema();
   const isEditMode = Boolean(initialValues);
+  const dnsSchema = useDnsSchema(isEditMode);
 
   type DnsSchema = z.infer<typeof dnsSchema>;
 
