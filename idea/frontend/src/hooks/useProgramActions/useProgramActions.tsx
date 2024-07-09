@@ -9,7 +9,7 @@ import { absoluteRoutes } from '@/shared/config';
 import { CustomLink } from '@/shared/ui/customLink';
 import { useProgramStatus } from '@/features/program';
 import { isState } from '@/features/metadata';
-import { addIdl } from '@/features/sails';
+import { useAddIdl } from '@/features/sails';
 
 import { ContractApi, Program, Values } from './types';
 
@@ -18,9 +18,10 @@ const useProgramActions = () => {
   const { account } = useAccount();
   const { isDevChain } = useChain();
 
-  const signAndSend = useSignAndSend();
   const addMetadata = useAddMetadata();
+  const addIdl = useAddIdl();
   const addProgramName = useAddProgramName();
+  const signAndSend = useSignAndSend();
 
   const { showModal } = useModal();
   const { getProgramStatus } = useProgramStatus();

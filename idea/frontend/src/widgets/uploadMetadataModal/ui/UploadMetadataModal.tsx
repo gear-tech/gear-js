@@ -1,11 +1,10 @@
-import { useAlert } from '@gear-js/react-hooks';
 import { Button, Modal } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@polkadot/util/types';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { addIdl } from '@/features/sails';
+import { useAddIdl } from '@/features/sails';
 import { useAddCodeName, useAddMetadata, useAddProgramName, useChain, useContractApiWithFile } from '@/hooks';
 import { ModalProps } from '@/entities/modal';
 import { UploadMetadata } from '@/features/uploadMetadata';
@@ -34,9 +33,9 @@ type Props = ModalProps & {
 
 const UploadMetadataModal = ({ codeId, programId, metadataHash, onClose, onSuccess }: Props) => {
   const { isDevChain } = useChain();
-  const alert = useAlert();
 
   const addMetadata = useAddMetadata();
+  const addIdl = useAddIdl();
   const addProgramName = useAddProgramName();
   const addCodeName = useAddCodeName();
 
@@ -49,33 +48,29 @@ const UploadMetadataModal = ({ codeId, programId, metadataHash, onClose, onSucce
   });
 
   const handleSubmit = form.handleSubmit(async ({ name }) => {
-    try {
-      if (name) {
-        if (programId) {
-          await addProgramName(programId, name);
-        } else {
-          await addCodeName(codeId, name);
-        }
+    if (name) {
+      if (programId) {
+        await addProgramName(programId, name);
+      } else {
+        await addCodeName(codeId, name);
       }
-
-      if (metadataHash && metadata.hex) {
-        await addMetadata(metadataHash, metadata.hex);
-
-        onSuccess(name, metadata.hex);
-        onClose();
-      }
-
-      if (sails.idl) {
-        await addIdl(codeId, sails.idl);
-
-        onSuccess(name);
-        onClose();
-      }
-
-      throw new Error('Metadata/sails file is required');
-    } catch (error) {
-      alert.error(error instanceof Error ? error.message : String(error));
     }
+
+    if (metadataHash && metadata.hex) {
+      await addMetadata(metadataHash, metadata.hex);
+
+      onSuccess(name, metadata.hex);
+      onClose();
+    }
+
+    if (sails.idl) {
+      await addIdl(codeId, sails.idl);
+
+      onSuccess(name);
+      onClose();
+    }
+
+    throw new Error('Metadata/sails file is required');
   });
 
   return (

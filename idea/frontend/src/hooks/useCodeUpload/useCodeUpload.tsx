@@ -4,7 +4,7 @@ import { useApi, useAccount } from '@gear-js/react-hooks';
 
 import { useAddCodeName, useAddMetadata, useModal, useSignAndSend } from '@/hooks';
 import { CopiedInfo } from '@/shared/ui/copiedInfo';
-import { addIdl } from '@/features/sails';
+import { useAddIdl } from '@/features/sails';
 
 import { ParamsToUploadCode } from './types';
 
@@ -14,6 +14,7 @@ const useCodeUpload = () => {
   const { showModal } = useModal();
 
   const addMetadata = useAddMetadata();
+  const addIdl = useAddIdl();
   const addCodeName = useAddCodeName();
   const signAndSend = useSignAndSend();
 
