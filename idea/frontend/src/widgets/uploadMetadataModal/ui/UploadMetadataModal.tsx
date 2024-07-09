@@ -5,7 +5,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useAddIdl } from '@/features/sails';
-import { useAddCodeName, useAddMetadata, useAddProgramName, useChain, useContractApiWithFile } from '@/hooks';
+import { useAddCodeName, useAddMetadata, useAddProgramName, useContractApiWithFile } from '@/hooks';
 import { ModalProps } from '@/entities/modal';
 import { UploadMetadata } from '@/features/uploadMetadata';
 import { Input } from '@/shared/ui';
@@ -27,13 +27,12 @@ const SCHEMA = z.object({
 type Props = ModalProps & {
   codeId: HexString;
   metadataHash: HexString | null | undefined;
+  isNameEditable: boolean;
   programId?: HexString;
   onSuccess: (name: string, metadataHex?: HexString) => void;
 };
 
-const UploadMetadataModal = ({ codeId, programId, metadataHash, onClose, onSuccess }: Props) => {
-  const { isDevChain } = useChain();
-
+const UploadMetadataModal = ({ codeId, programId, isNameEditable, metadataHash, onClose, onSuccess }: Props) => {
   const addMetadata = useAddMetadata();
   const addIdl = useAddIdl();
   const addProgramName = useAddProgramName();
@@ -77,7 +76,7 @@ const UploadMetadataModal = ({ codeId, programId, metadataHash, onClose, onSucce
     <Modal heading="Upload metadata/sails" size="large" className={styles.modal} close={onClose}>
       <FormProvider {...form}>
         <form className={styles.form} onSubmit={handleSubmit}>
-          {(programId || !isDevChain) && (
+          {isNameEditable && (
             <Input name={FIELD_NAME.NAME} label={programId ? 'Program Name' : 'Code Name'} direction="y" block />
           )}
 

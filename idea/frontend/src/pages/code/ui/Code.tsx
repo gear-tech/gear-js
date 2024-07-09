@@ -43,7 +43,15 @@ const Code = () => {
       return metadataHex ? setMetadataHex(metadataHex) : refetchSails();
     };
 
-    showModal('metadata', { codeId, metadataHash: code.data?.metahash, onClose: closeModal, onSuccess });
+    const isNameEditable = !isDevChain;
+
+    showModal('metadata', {
+      codeId,
+      metadataHash: code.data?.metahash,
+      isNameEditable,
+      onClose: closeModal,
+      onSuccess,
+    });
   };
 
   return (

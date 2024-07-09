@@ -43,10 +43,15 @@ const Program = () => {
       return metadataHex ? setMetadataHex(metadataHex) : refetchSails();
     };
 
+    // if program is not saved in storage, we can't change the name.
+    // kinda tricky, treat carefully. worth to consider different approach
+    const isStorageProgram = 'blockHash' in program;
+
     showModal('metadata', {
       programId,
       metadataHash: program.metahash,
       codeId: program.codeId,
+      isNameEditable: isStorageProgram,
       onClose: closeModal,
       onSuccess,
     });
