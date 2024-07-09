@@ -60,14 +60,14 @@ const UploadMetadataModal = ({ codeId, programId, metadataHash, onClose, onSucce
       await addMetadata(metadataHash, metadata.hex);
 
       onSuccess(name, metadata.hex);
-      onClose();
+      return onClose();
     }
 
     if (sails.idl) {
       await addIdl(codeId, sails.idl);
 
       onSuccess(name);
-      onClose();
+      return onClose();
     }
 
     throw new Error('Metadata/sails file is required');
