@@ -11,7 +11,7 @@ const useAddMetadata = () => {
   const alert = useAlert();
   const { isDevChain } = useChain();
 
-  return async (hash: HexString, hex: HexString) =>
+  return (hash: HexString, hex: HexString) =>
     (isDevChain ? addLocalMetadata : addStorageMetadata)(hash, hex)
       .then(() => alert.success('Metadata saved successfully'))
       .catch((error) => alert.error(getErrorMessage(error)));

@@ -5,13 +5,12 @@ import { HexString } from '@polkadot/util/types';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { addCodeName, addProgramName } from '@/api';
+import { addCodeName } from '@/api';
 import { addIdl } from '@/features/sails';
-import { useAddMetadata, useChain, useContractApiWithFile } from '@/hooks';
+import { useAddMetadata, useAddProgramName, useChain, useContractApiWithFile } from '@/hooks';
 import { ModalProps } from '@/entities/modal';
 import { UploadMetadata } from '@/features/uploadMetadata';
 import { Input } from '@/shared/ui';
-import { addLocalProgramName } from '@/features/local-indexer';
 
 import styles from './UploadMetadataModal.module.scss';
 
@@ -38,6 +37,7 @@ const UploadMetadataModal = ({ codeId, programId, metadataHash, onClose, onSucce
   const { isDevChain } = useChain();
   const alert = useAlert();
   const addMetadata = useAddMetadata();
+  const addProgramName = useAddProgramName();
 
   // useContractApiWithFile is based on meta-storage requests, we don't need them here
   const { metadata, sails, ...contractApi } = useContractApiWithFile(undefined);
@@ -51,8 +51,7 @@ const UploadMetadataModal = ({ codeId, programId, metadataHash, onClose, onSucce
     try {
       if (name) {
         if (programId) {
-          const _addProgramName = isDevChain ? addLocalProgramName : addProgramName;
-          await _addProgramName(programId, name);
+          await addProgramName(programId, name);
         } else if (!isDevChain) {
           await addCodeName({ name, id: codeId });
         }
