@@ -12,6 +12,7 @@ import { useMessageClaim } from './useMessageClaim';
 import { useProgramActions } from './useProgramActions';
 import { useAddMetadata } from './use-add-metadata';
 import { useAddProgramName } from './use-add-program-name';
+import { useAddCodeName } from './use-add-code-name';
 import { useBalanceTransfer } from './useBalanceTransfer';
 import { useEventSubscriptions } from './useEventSubscriptions';
 import { useGasCalculate } from './useGasCalculate';
@@ -55,6 +56,7 @@ export {
   useMessageActions,
   useAddMetadata,
   useAddProgramName,
+  useAddCodeName,
   useBalanceTransfer,
   useEventSubscriptions,
   useCodes,

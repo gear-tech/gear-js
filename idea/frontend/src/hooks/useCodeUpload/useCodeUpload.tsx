@@ -2,9 +2,8 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import { HexString } from '@polkadot/util/types';
 import { useApi, useAccount } from '@gear-js/react-hooks';
 
-import { useAddMetadata, useChain, useModal, useSignAndSend } from '@/hooks';
+import { useAddCodeName, useAddMetadata, useModal, useSignAndSend } from '@/hooks';
 import { CopiedInfo } from '@/shared/ui/copiedInfo';
-import { addCodeName } from '@/api';
 import { addIdl } from '@/features/sails';
 
 import { ParamsToUploadCode } from './types';
@@ -13,9 +12,9 @@ const useCodeUpload = () => {
   const { api, isApiReady } = useApi();
   const { account } = useAccount();
   const { showModal } = useModal();
-  const { isDevChain } = useChain();
 
   const addMetadata = useAddMetadata();
+  const addCodeName = useAddCodeName();
   const signAndSend = useSignAndSend();
 
   const handleMetadataUpload = async (
@@ -24,10 +23,7 @@ const useCodeUpload = () => {
     metadata: ParamsToUploadCode['metadata'],
     sails: ParamsToUploadCode['sails'],
   ) => {
-    const id = codeId;
-    const name = codeName || id;
-
-    if (!isDevChain) await addCodeName({ id, name });
+    await addCodeName(codeId, codeName || codeId);
     if (metadata.hash && metadata.hex && !metadata.isFromStorage) addMetadata(metadata.hash, metadata.hex);
     if (sails.idl && !sails.isFromStorage) addIdl(codeId, sails.idl);
   };

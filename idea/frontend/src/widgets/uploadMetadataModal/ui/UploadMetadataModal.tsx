@@ -5,9 +5,8 @@ import { HexString } from '@polkadot/util/types';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { addCodeName } from '@/api';
 import { addIdl } from '@/features/sails';
-import { useAddMetadata, useAddProgramName, useChain, useContractApiWithFile } from '@/hooks';
+import { useAddCodeName, useAddMetadata, useAddProgramName, useChain, useContractApiWithFile } from '@/hooks';
 import { ModalProps } from '@/entities/modal';
 import { UploadMetadata } from '@/features/uploadMetadata';
 import { Input } from '@/shared/ui';
@@ -36,8 +35,10 @@ type Props = ModalProps & {
 const UploadMetadataModal = ({ codeId, programId, metadataHash, onClose, onSuccess }: Props) => {
   const { isDevChain } = useChain();
   const alert = useAlert();
+
   const addMetadata = useAddMetadata();
   const addProgramName = useAddProgramName();
+  const addCodeName = useAddCodeName();
 
   // useContractApiWithFile is based on meta-storage requests, we don't need them here
   const { metadata, sails, ...contractApi } = useContractApiWithFile(undefined);
@@ -52,8 +53,8 @@ const UploadMetadataModal = ({ codeId, programId, metadataHash, onClose, onSucce
       if (name) {
         if (programId) {
           await addProgramName(programId, name);
-        } else if (!isDevChain) {
-          await addCodeName({ name, id: codeId });
+        } else {
+          await addCodeName(codeId, name);
         }
       }
 

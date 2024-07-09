@@ -3,9 +3,9 @@ import { useAlert } from '@gear-js/react-hooks';
 
 import { addProgramName } from '@/api';
 import { addLocalProgramName } from '@/features/local-indexer';
+import { getErrorMessage } from '@/shared/helpers';
 
 import { useChain } from './context';
-import { getErrorMessage } from '@/shared/helpers';
 
 function useAddProgramName() {
   const { isDevChain } = useChain();
