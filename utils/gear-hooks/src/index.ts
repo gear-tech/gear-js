@@ -41,6 +41,7 @@ import {
   UseProgramParameters,
   useTransaction,
   useQuery,
+  useEvent,
 } from './hooks';
 
 import { withoutCommas, getVaraAddress, getTypedEntries } from './utils';
@@ -113,6 +114,7 @@ export {
   useProgram,
   useTransaction,
   useQuery,
+  useEvent,
   DEFAULT_OPTIONS,
   DEFAULT_INFO_OPTIONS,
   DEFAULT_ERROR_OPTIONS,
