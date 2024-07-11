@@ -36,7 +36,18 @@ import {
   UseSendMessageWithGasOptions,
   SendMessageWithGasOptions,
 } from './handlers';
-import { useProgram, UseProgramParameters, useTransaction, useQuery, useEvent } from './sails';
+import {
+  useProgram,
+  UseProgramParameters,
+  useTransaction,
+  UseTransactionParameters,
+  useQuery,
+  UseQueryParameters,
+  useEvent,
+  UseEventParameters,
+  useSails,
+  UseSailsParameters,
+} from './sails';
 
 export {
   useReadFullState,
@@ -75,6 +86,7 @@ export {
   useTransaction,
   useQuery,
   useEvent,
+  useSails,
 };
 
 export type {
@@ -83,4 +95,8 @@ export type {
   UseSendMessageWithGasOptions,
   SendMessageWithGasOptions,
   UseProgramParameters,
+  UseTransactionParameters,
+  UseQueryParameters,
+  UseEventParameters,
+  UseSailsParameters,
 };

@@ -46,3 +46,4 @@ function useEvent<
 }
 
 export { useEvent };
+export type { UseEventParameters };

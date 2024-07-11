@@ -67,3 +67,4 @@ function useQuery<
 }
 
 export { useQuery };
+export type { UseQueryParameters };

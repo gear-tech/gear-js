@@ -9,11 +9,17 @@ type FunctionName<T> = {
 
 type NonServiceKeys = 'api' | 'registry' | 'programId' | 'newCtorFromCode' | 'newCtorFromCodeId';
 
+type UseTransactionParameters<TProgram, TServiceName, TFunctionName> = {
+  program: TProgram | undefined;
+  serviceName: TServiceName;
+  functionName: TFunctionName;
+};
+
 function useTransaction<
   TProgram,
   TServiceName extends Exclude<keyof TProgram, NonServiceKeys>,
   TFunctionName extends FunctionName<TProgram[TServiceName]>,
->(program: TProgram | undefined, serviceName: TServiceName, functionName: TFunctionName) {
+>({ program, serviceName, functionName }: UseTransactionParameters<TProgram, TServiceName, TFunctionName>) {
   const { account } = useAccount();
 
   type FunctionType = TProgram[TServiceName][TFunctionName] extends (...args: infer A) => TransactionBuilder<infer R>
@@ -35,3 +41,4 @@ function useTransaction<
 }
 
 export { useTransaction };
+export type { UseTransactionParameters };
