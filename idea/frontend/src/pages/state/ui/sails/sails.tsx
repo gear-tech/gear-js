@@ -26,7 +26,7 @@ const StateForm = ({ programId, sails }: { programId: HexString; sails: SailsTyp
   const { account } = useAccount();
   const alert = useAlert();
   // would be better if useService could accept undefined sails?
-  const { select, functionSelect, args, decodePayload, ...query } = useService(sails, 'queries');
+  const { select, functionSelect, args, decodeResult, ...query } = useService(sails, 'queries');
 
   const defaultValues = { ...INITIAL_VALUES, payload: query.defaultValues };
   const schema = query.schema ? z.object({ payload: query.schema }) : undefined;
@@ -37,7 +37,7 @@ const StateForm = ({ programId, sails }: { programId: HexString; sails: SailsTyp
 
   const readQuery = async (payload: PayloadValue | undefined): Promise<AnyJson> => {
     if (!api) throw new Error('API is not initialized');
-    if (!decodePayload) throw new Error('Sails is not found');
+    if (!decodeResult) throw new Error('Sails is not found');
 
     const result = await api.message.calculateReply({
       destination: programId,
@@ -47,7 +47,7 @@ const StateForm = ({ programId, sails }: { programId: HexString; sails: SailsTyp
       payload,
     });
 
-    return decodePayload(result.payload.toHex());
+    return decodeResult(result.payload.toHex());
   };
 
   // decode numbers bigger than 64 bits (BigInt)?
