@@ -17,7 +17,7 @@ function useService(sails: Sails, key: 'functions' | 'queries') {
 
   const functions = services[select.value][key];
   const functionSelect = useSelect(functions, { label: key === 'functions' ? 'Function' : 'Query' });
-  const { args, encodePayload, decodePayload } = functions[functionSelect.value];
+  const { args, encodePayload, decodeResult } = functions[functionSelect.value];
 
   const defaultValues = useMemo(
     () => getDefaultPayloadValue(sails, args),
@@ -31,7 +31,7 @@ function useService(sails: Sails, key: 'functions' | 'queries') {
     [select.value, functionSelect.value],
   );
 
-  return { select, functionSelect, defaultValues, schema, args, decodePayload };
+  return { select, functionSelect, defaultValues, schema, args, decodeResult };
 }
 
 export { useService };
