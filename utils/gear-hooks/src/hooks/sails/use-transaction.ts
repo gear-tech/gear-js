@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useAccount } from '@gear-js/react-hooks';
-import { web3FromSource } from '@polkadot/extension-dapp';
+import { HexString } from '@gear-js/api';
+import { SignerOptions } from '@polkadot/api/types';
+import { IKeyringPair } from '@polkadot/types/types';
+import { useMutation } from '@tanstack/react-query';
 import { TransactionBuilder } from 'sails-js';
+
+import { usePrepareTransaction } from './use-prepare-transaction';
 
 type FunctionName<T> = {
   [K in keyof T]: T[K] extends (...args: any[]) => TransactionBuilder<any> ? K : never;
@@ -15,28 +19,59 @@ type UseTransactionParameters<TProgram, TServiceName, TFunctionName> = {
   functionName: TFunctionName;
 };
 
+type CalculateGasParameters = {
+  allowOtherPanics?: boolean;
+  increaseGas?: number;
+};
+
+type AccountParameters = {
+  addressOrPair: string | IKeyringPair;
+  signerOptions?: Partial<SignerOptions>;
+};
+
+type SignAndSendOptions<T> = {
+  args: T;
+  value?: bigint;
+  voucherId?: HexString;
+  gasLimit?: bigint | CalculateGasParameters;
+  account?: AccountParameters;
+};
+
+// TODO: if there's no parameters - prepared transaction mode
 function useTransaction<
   TProgram,
   TServiceName extends Exclude<keyof TProgram, NonServiceKeys>,
   TFunctionName extends FunctionName<TProgram[TServiceName]>,
 >({ program, serviceName, functionName }: UseTransactionParameters<TProgram, TServiceName, TFunctionName>) {
-  const { account } = useAccount();
+  const { getTransactionAsync } = usePrepareTransaction({ program, serviceName, functionName });
 
   type FunctionType = TProgram[TServiceName][TFunctionName] extends (...args: infer A) => TransactionBuilder<infer R>
     ? (...args: A) => TransactionBuilder<R>
     : never;
 
-  return async (...args: Parameters<FunctionType>) => {
-    if (!program) throw new Error('Program is not found');
-    if (!account) throw new Error('Account is not found');
+  type Return = ReturnType<FunctionType> extends TransactionBuilder<infer R> ? R : never;
 
-    const transaction = (program[serviceName][functionName] as FunctionType)(...args) as ReturnType<FunctionType>;
+  const sendTransaction = async (
+    transactionOrOptions: TransactionBuilder<Return> | SignAndSendOptions<Parameters<FunctionType>>,
+  ) => {
+    const transaction =
+      transactionOrOptions instanceof TransactionBuilder
+        ? transactionOrOptions
+        : await getTransactionAsync(transactionOrOptions);
 
-    const { address, meta } = account;
-    const { signer } = await web3FromSource(meta.source);
-    transaction.withAccount(address, { signer });
+    // would make sense to await isFinalized and response properties?
+    return transaction.signAndSend();
+  };
 
-    return transaction;
+  const mutation = useMutation({
+    mutationKey: ['sendTransaction'],
+    mutationFn: sendTransaction,
+  });
+
+  return {
+    sendTransaction: mutation.mutate,
+    sendTransactionAsync: mutation.mutateAsync,
+    ...mutation,
   };
 }
 

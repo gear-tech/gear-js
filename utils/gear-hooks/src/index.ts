@@ -37,11 +37,18 @@ import {
   UseSendMessageOptions,
   UseSendMessageWithGasOptions,
   SendMessageWithGasOptions,
+  useSails,
+  UseSailsParameters,
   useProgram,
   UseProgramParameters,
+  usePrepareTransaction,
+  UsePrepareTransactionParameters,
   useTransaction,
+  UseTransactionParameters,
   useQuery,
+  UseQueryParameters,
   useEvent,
+  UseEventParameters,
 } from './hooks';
 
 import { withoutCommas, getVaraAddress, getTypedEntries } from './utils';
@@ -112,6 +119,7 @@ export {
   useIssuedVouchers,
   useAccountIssuedVouchers,
   useProgram,
+  usePrepareTransaction,
   useTransaction,
   useQuery,
   useEvent,
@@ -139,5 +147,10 @@ export type {
   Entries,
   UseSendMessageWithGasOptions,
   SendMessageWithGasOptions,
+  UseSailsParameters,
   UseProgramParameters,
+  UsePrepareTransactionParameters,
+  UseTransactionParameters,
+  UseQueryParameters,
+  UseEventParameters,
 };

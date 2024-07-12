@@ -36,3 +36,4 @@ function useSails({ programId, idl }: UseSailsParameters = DEFAULT_PARAMETERS) {
 }
 
 export { useSails };
+export { UseSailsParameters };
