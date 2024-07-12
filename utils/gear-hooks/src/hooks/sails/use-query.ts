@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ICalculateReplyForHandleOptions } from '@gear-js/api';
-import { useAccount } from '@gear-js/react-hooks';
-import { UseQueryOptions, useQuery as useReactQuery } from '@tanstack/react-query';
+import { HexString, ICalculateReplyForHandleOptions } from '@gear-js/api';
+import { useAccount, useApi } from '@gear-js/react-hooks';
+import { useQueryClient, UseQueryOptions, useQuery as useReactQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { ZERO_ADDRESS } from 'sails-js';
 
 type PromiseReturn<T> = T extends (...args: any[]) => Promise<infer R> ? R : never;
@@ -27,6 +28,7 @@ type UseQueryParameters<TProgram, TServiceName, TQueryName, TArgs, TQueryReturn>
   args: TArgs;
   calculateReply?: CalculateReplyOptions;
   query?: QueryOptions<TQueryReturn>;
+  watch?: boolean;
 };
 
 function useQuery<
@@ -43,7 +45,11 @@ function useQuery<
   args,
   calculateReply,
   query,
+  watch,
 }: UseQueryParameters<TProgram, TServiceName, TQueryName, TArgs, TQueryReturn>) {
+  const { api, isApiReady } = useApi();
+  const queryClient = useQueryClient();
+
   const { account } = useAccount();
   const originAddress = account?.decodedAddress || ZERO_ADDRESS;
 
@@ -57,14 +63,34 @@ function useQuery<
 
   // depends on useProgram/program implementation, programId may not be available
   const programId = program && typeof program === 'object' && 'programId' in program ? program.programId : undefined;
+  const queryKey = ['query', programId, originAddress, serviceName, functionName, args, calculateReply];
 
-  return useReactQuery({
+  const result = useReactQuery({
     ...query,
-    queryKey: ['query', programId, originAddress, serviceName, functionName, args, calculateReply],
+    queryKey,
     queryFn: getQuery,
     enabled: Boolean(program) && (query?.enabled ?? true),
   });
+
+  useEffect(() => {
+    if (!isApiReady || !watch) return;
+
+    const unsub = api.gearEvents.subscribeToGearEvent('MessagesDispatched', ({ data }) => {
+      const changedIDs = data.stateChanges.toHuman() as HexString[];
+      const isAnyChange = changedIDs.some((id) => id === programId);
+
+      if (!isAnyChange) return;
+
+      queryClient.invalidateQueries({ queryKey });
+    });
+
+    return () => {
+      unsub.then((unsubCallback) => unsubCallback());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [api, programId, watch]);
+
+  return result;
 }
 
 export { useQuery };
-export type { UseQueryParameters };
