@@ -2,13 +2,13 @@ import { ProgramMetadata } from '@gear-js/api';
 import { FileInput } from '@gear-js/ui';
 import cx from 'clsx';
 
-import { IDL } from '@/features/sails';
+import { MetadataPreview } from '@/features/metadata';
+import { IdlPreview } from '@/features/sails';
 import { FileTypes } from '@/shared/config';
 import { Box } from '@/shared/ui/box';
 import { formStyles } from '@/shared/ui/form';
 
 import styles from './UploadMetadata.module.scss';
-import { MetadataPreview } from '@/features/metadata';
 
 type Props = {
   value: File | undefined;
@@ -35,7 +35,7 @@ const UploadMetadata = ({ value, metadata, idl, isDisabled, isLoading, onChange 
       )}
 
       {metadata && <MetadataPreview value={metadata} />}
-      {idl && <IDL value={idl} />}
+      {idl && <IdlPreview value={idl} />}
     </Box>
   );
 };
