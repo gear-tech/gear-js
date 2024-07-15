@@ -1,9 +1,10 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { FileInput } from '@gear-js/ui';
 import cx from 'clsx';
+import { Sails } from 'sails-js';
 
 import { MetadataPreview } from '@/features/metadata';
-import { IdlPreview } from '@/features/sails';
+import { SailsPreview } from '@/features/sails';
 import { FileTypes } from '@/shared/config';
 import { Box } from '@/shared/ui/box';
 import { formStyles } from '@/shared/ui/form';
@@ -15,11 +16,12 @@ type Props = {
   onChange: (file: File | undefined) => void;
   metadata: ProgramMetadata | undefined;
   idl: string | undefined;
+  sails?: Sails | undefined;
   isDisabled?: boolean;
   isLoading?: boolean;
 };
 
-const UploadMetadata = ({ value, metadata, idl, isDisabled, isLoading, onChange }: Props) => {
+const UploadMetadata = ({ value, metadata, idl, sails, isDisabled, isLoading, onChange }: Props) => {
   return (
     <Box className={cx(styles.box, isLoading && styles.loading)}>
       {!isDisabled && !isLoading && (
@@ -35,7 +37,7 @@ const UploadMetadata = ({ value, metadata, idl, isDisabled, isLoading, onChange 
       )}
 
       {metadata && <MetadataPreview value={metadata} />}
-      {idl && <IdlPreview value={idl} />}
+      {sails && <SailsPreview value={sails} />}
     </Box>
   );
 };

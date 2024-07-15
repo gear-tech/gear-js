@@ -1,6 +1,6 @@
 import { PayloadForm } from './payload-form';
 import { IDL } from './idl';
 import { ProgramEvents } from './program-events';
-import { IdlPreview } from './idl-preview';
+import { SailsPreview } from './sails-preview';
 
-export { PayloadForm, IDL, ProgramEvents, IdlPreview };
+export { PayloadForm, IDL, ProgramEvents, SailsPreview };
