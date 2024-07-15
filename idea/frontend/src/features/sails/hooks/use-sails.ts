@@ -35,7 +35,7 @@ function useSails(codeId: HexString | null | undefined) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
-  const isLoading = isPending;
+  const isLoading = codeId !== null && isPending;
 
   return { ...data, isLoading, refetch };
 }
