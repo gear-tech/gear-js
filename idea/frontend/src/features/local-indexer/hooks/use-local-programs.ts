@@ -11,7 +11,7 @@ function useLocalPrograms() {
   const { getLocalProgram } = useLocalProgram();
 
   const getFilteredPrograms = (programs: (IProgram | LocalProgram)[], params: FetchProgramsParams) => {
-    const { query, owner, status } = params;
+    const { query, owner, status, codeId } = params;
 
     return programs.filter((program) => {
       const { id, name } = program;
@@ -19,7 +19,8 @@ function useLocalPrograms() {
       if (
         (!query || id.includes(query) || name.includes(query)) &&
         (!owner || ('owner' in program && program.owner === owner)) &&
-        (!status || ('status' in program && status.includes(program.status)))
+        (!status || status.includes(program.status)) &&
+        (!codeId || program.codeId === codeId)
       )
         return true;
 
