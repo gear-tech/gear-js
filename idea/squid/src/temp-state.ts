@@ -193,16 +193,24 @@ export class TempState {
         this._ctx.store.save(Array.from(this.events.values())),
       ]);
 
-      this._ctx.log.info(
-        {
-          programs: this.programs.size,
-          codes: this.codes.size,
-          msgsFrom: this.messagesFromProgram.size,
-          msgsTo: this.messagesToProgram.size,
-          events: this.events.size,
-        },
-        'Data saved',
-      );
+      if (
+        this.programs.size ||
+        this.codes.size ||
+        this.messagesFromProgram.size ||
+        this.messagesToProgram.size ||
+        this.events.size
+      ) {
+        this._ctx.log.info(
+          {
+            programs: this.programs.size || undefined,
+            codes: this.codes.size || undefined,
+            msgsFrom: this.messagesFromProgram.size || undefined,
+            msgsTo: this.messagesToProgram.size || undefined,
+            events: this.events.size || undefined,
+          },
+          'Data saved',
+        );
+      }
     } catch (error) {
       this._ctx.log.error({ error: error.message, stack: error.stack }, 'Failed to save data');
       throw error;
