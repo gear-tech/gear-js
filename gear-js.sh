@@ -16,14 +16,13 @@ elif [ "$command" = "run" ]; then
     echo "Running squid"
     case $pkg in
         "squid")
+            cd idea/squid
             if [ -f "$SQUID_TYPEORM_MIGRATION_BIN" ]; then
                 node $SQUID_TYPEORM_MIGRATION_BIN apply
             else
-                cd idea/squid
-                node $SQUID_TYPEORM_MIGRATION_BIN apply
-                cd ../../
+                node ../../$SQUID_TYPEORM_MIGRATION_BIN apply
             fi
-            node idea/squid/lib/main.js
+            node lib/main.js
             ;;
         *)
             echo "Invalid package"
