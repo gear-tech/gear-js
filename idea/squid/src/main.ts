@@ -2,7 +2,6 @@ import { TypeormDatabase, Store } from '@subsquid/typeorm-store';
 import { generateCodeHash } from '@gear-js/api';
 import { ZERO_ADDRESS } from 'sails-js';
 import { Code, Event as EventModel, MessageFromProgram, MessageToProgram, Program } from './model';
-import { BaseEntity } from './model/entities/base.entity';
 
 import { processor, ProcessorContext } from './processor';
 import { TempState } from './temp-state';
@@ -17,7 +16,8 @@ import {
 import { isCreateProgram, isUploadCode, isUploadProgram } from './types/calls';
 import { isSendMessageCall, isSendReplyCall } from './types/calls/message';
 import { isVoucherCall } from './types/calls/voucher';
-import { CodeStatus, MessageReadReason, ProgramStatus } from './model/enums';
+import { CodeStatus, MessageReadReason, ProgramStatus } from './model';
+import { getMetahash } from './util';
 
 let tempState: TempState;
 
@@ -27,7 +27,7 @@ const handler = async (ctx: ProcessorContext<Store>) => {
   tempState.newState(ctx);
 
   for (const block of ctx.blocks) {
-    const common: BaseEntity = {
+    const common = {
       timestamp: new Date((block.header as any).timestamp),
       blockHash: block.header.hash,
       blockNumber: block.header.height.toString(),
@@ -131,12 +131,17 @@ const handler = async (ctx: ProcessorContext<Store>) => {
                   : ProgramStatus.Terminated,
           );
         } else {
-          ctx.log.error(event.args, 'Uknown program status');
+          ctx.log.error(event.args, 'Unknown program status');
         }
       } else if (isCodeChanged(event)) {
         if (isUploadCode(event.call) || isUploadProgram(event.call) || isVoucherCall(event.call)) {
           tempState.addCode(
-            new Code({ ...common, id: event.args.id, uploadedBy: (event.extrinsic as any)?.signature?.address?.value }),
+            new Code({
+              ...common,
+              id: event.args.id,
+              uploadedBy: (event.extrinsic as any)?.signature?.address?.value,
+              metahash: await getMetahash(event.call),
+            }),
           );
         }
         const status = event.args.change.__kind;

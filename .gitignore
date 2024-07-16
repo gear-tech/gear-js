@@ -14,3 +14,4 @@ idea/tmp/
 .env
 idea/squid/lib/
 idea/indexer-db/lib/
+.spec.json

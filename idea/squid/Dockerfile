@@ -10,8 +10,9 @@ COPY ./idea/indexer-db idea/indexer-db
 COPY ./idea/squid idea/squid
 
 RUN yarn install
+RUN yarn build:indexer-db
 RUN yarn build:squid
 
 WORKDIR /src/idea/squid
 
-CMD ["sh run.sh & tail -f /dev/null"]
+CMD ["run.sh"]

@@ -1,8 +1,7 @@
-import { EntitySchema } from 'typeorm';
 import { DataSource } from 'typeorm';
 import { Code, Event, MessageFromProgram, MessageToProgram, Program } from './entities';
 
-interface DbConfig {
+export interface DbConfig {
   host: string;
   port: number;
   username: string;

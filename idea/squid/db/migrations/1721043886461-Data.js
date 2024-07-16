@@ -1,8 +1,8 @@
-module.exports = class Data1718366049125 {
-    name = 'Data1718366049125'
+module.exports = class Data1721043886461 {
+    name = 'Data1721043886461'
 
     async up(db) {
-        await db.query(`CREATE TABLE "program" ("block_hash" character varying(66), "block_number" character varying NOT NULL, "timestamp" TIMESTAMP NOT NULL, "id" character varying NOT NULL, "owner" character varying, "name" character varying, "expiration" character varying, "status" text NOT NULL DEFAULT 'unknown', "code_id" character varying NOT NULL, CONSTRAINT "PK_3bade5945afbafefdd26a3a29fb" PRIMARY KEY ("id"))`)
+        await db.query(`CREATE TABLE "program" ("block_hash" character varying(66), "block_number" character varying NOT NULL, "timestamp" TIMESTAMP NOT NULL, "id" character varying NOT NULL, "owner" character varying, "name" character varying, "expiration" character varying, "status" text NOT NULL DEFAULT 'unknown', "code_id" character varying NOT NULL, "meta_type" character varying, "metahash" character varying, "has_state" boolean NOT NULL DEFAULT false, CONSTRAINT "PK_3bade5945afbafefdd26a3a29fb" PRIMARY KEY ("id"))`)
         await db.query(`CREATE INDEX "IDX_2156fc4598c9a1b865d85b5f1e" ON "program" ("name") `)
         await db.query(`CREATE TABLE "code" ("block_hash" character varying(66), "block_number" character varying NOT NULL, "timestamp" TIMESTAMP NOT NULL, "id" character varying NOT NULL, "uploaded_by" character varying, "name" character varying, "status" text NOT NULL, "expiration" character varying, "metahash" character varying, "has_state" boolean, "meta_type" character varying, CONSTRAINT "PK_367e70f79a9106b8e802e1a9825" PRIMARY KEY ("id"))`)
         await db.query(`CREATE TABLE "message_from_program" ("block_hash" character varying(66), "block_number" character varying NOT NULL, "timestamp" TIMESTAMP NOT NULL, "id" character varying NOT NULL, "destination" character varying NOT NULL, "source" character varying NOT NULL, "payload" character varying, "value" character varying NOT NULL DEFAULT '0', "exit_code" integer, "reply_to_msg_id" character varying, "expiration" integer, "read_reason" text, CONSTRAINT "PK_3b63d6cbfc0d932d08089decbab" PRIMARY KEY ("id"))`)

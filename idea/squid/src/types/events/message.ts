@@ -1,5 +1,5 @@
 import { Events, MessageStatus } from '../../common';
-import { MessageEntryPoint } from '../../model/enums';
+import { MessageEntryPoint } from '../../model';
 import { Event } from '../../processor';
 
 export interface IMessageQueuedArgs {

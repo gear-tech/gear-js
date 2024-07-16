@@ -28,9 +28,10 @@ export class Code extends BaseEntity {
   @Column({ nullable: true })
   public metahash?: string;
 
+  // TODO: remove later
   @Column({ nullable: true })
   public hasState?: boolean;
-
+  // TODO: remove later
   @Column({ nullable: true, name: 'meta_type' })
   public metaType?: MetaType;
 }

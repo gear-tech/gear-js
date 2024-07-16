@@ -2,48 +2,54 @@ import { Store } from '@subsquid/typeorm-store';
 import { HexString } from '@gear-js/api';
 import { getServiceNamePrefix, getFnNamePrefix } from 'sails-js';
 
-import { Code, Event, MessageFromProgram, MessageToProgram, Program } from './model';
+import {
+  ProgramStatus,
+  CodeStatus,
+  MessageReadReason,
+  Code,
+  Event,
+  MessageFromProgram,
+  MessageToProgram,
+  Program,
+} from './model';
 import { ProcessorContext } from './processor';
-import { ProgramStatus, CodeStatus, MessageReadReason } from './model/enums';
 import { MessageStatus } from './common';
 
 export class TempState {
   private programs: Map<string, Program>;
+  private newPrograms: Set<string>;
   private codes: Map<string, Code>;
   private messagesFromProgram: Map<string, MessageFromProgram>;
   private messagesToProgram: Map<string, MessageToProgram>;
   private events: Map<string, Event>;
-  private metahashes: Map<string, string>;
   private _ctx: ProcessorContext<Store>;
 
   constructor() {
     this.programs = new Map();
     this.codes = new Map();
-    this.metahashes = new Map();
     this.messagesFromProgram = new Map();
     this.messagesToProgram = new Map();
     this.events = new Map();
+    this.newPrograms = new Set();
   }
 
   newState(ctx: ProcessorContext<Store>) {
     this._ctx = ctx;
     this.programs.clear();
     this.codes.clear();
-    this.metahashes.clear();
     this.messagesFromProgram.clear();
     this.messagesToProgram.clear();
     this.events.clear();
+    this.newPrograms.clear();
   }
 
   addProgram(program: Program) {
     this.programs.set(program.id, program);
+    this.newPrograms.add(program.id);
   }
 
   addCode(code: Code) {
     this.codes.set(code.id, code);
-    if (code.metahash) {
-      this.metahashes.set(code.id, code.metahash);
-    }
   }
 
   addMsgToProgram(msg: MessageToProgram) {
@@ -164,6 +170,21 @@ export class TempState {
 
   async save() {
     try {
+      if (this.newPrograms.size > 0) {
+        await Promise.all(
+          Array.from(this.newPrograms.keys()).map(async (id) => {
+            const p = this.programs.get(id);
+            if (p) {
+              const code = await this.getCode(p.codeId);
+              if (code) {
+                p.metahash = code.metahash;
+                p.metaType = code.metaType;
+              }
+            }
+          }),
+        );
+      }
+
       await Promise.all([
         this._ctx.store.save(Array.from(this.codes.values())),
         this._ctx.store.save(Array.from(this.programs.values())),
@@ -171,6 +192,17 @@ export class TempState {
         this._ctx.store.save(Array.from(this.messagesToProgram.values())),
         this._ctx.store.save(Array.from(this.events.values())),
       ]);
+
+      this._ctx.log.info(
+        {
+          programs: this.programs.size,
+          codes: this.codes.size,
+          msgsFrom: this.messagesFromProgram.size,
+          msgsTo: this.messagesToProgram.size,
+          events: this.events.size,
+        },
+        'Data saved',
+      );
     } catch (error) {
       this._ctx.log.error({ error: error.message, stack: error.stack }, 'Failed to save data');
       throw error;

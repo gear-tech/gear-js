@@ -28,4 +28,14 @@ export class Program extends BaseEntity {
 
   @Column({ name: 'code_id' })
   public codeId: string;
+
+  @Column({ name: 'meta_type', nullable: true })
+  public metaType?: 'sails' | 'meta';
+
+  // TODO: remove later
+  @Column({ nullable: true })
+  public metahash: string;
+  // TODO: remove later
+  @Column({ default: false })
+  public hasState: boolean;
 }

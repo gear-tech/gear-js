@@ -1,1 +1,1 @@
-export * from '@gear-js/indexer-db';
+export * from 'indexer-db';
