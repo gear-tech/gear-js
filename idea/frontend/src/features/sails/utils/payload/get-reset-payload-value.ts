@@ -4,6 +4,7 @@ import { PayloadValue } from '../../types';
 
 const getResetPayloadValue = (value: PayloadValue): PayloadValue => {
   if (isString(value)) return '';
+  if (typeof value === 'boolean') return false;
   if (Array.isArray(value)) return value.map((_value) => getResetPayloadValue(_value));
 
   if (typeof value === 'object' && value !== null)

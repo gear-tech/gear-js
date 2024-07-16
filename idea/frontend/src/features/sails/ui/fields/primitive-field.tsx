@@ -1,6 +1,6 @@
 import { TypeDef } from 'sails-js';
 
-import { Input } from '@/shared/ui';
+import { Checkbox, Input } from '@/shared/ui';
 
 import { getLabel } from '../../utils';
 
@@ -11,7 +11,11 @@ type Props = {
 };
 
 function PrimitiveField({ def, name, label }: Props) {
-  return <Input name={name} direction="y" label={getLabel(label, def)} />;
+  const props = { name, label: getLabel(label, def) };
+
+  if (def.asPrimitive.isBool) return <Checkbox {...props} />;
+
+  return <Input direction="y" {...props} />;
 }
 
 export { PrimitiveField };
