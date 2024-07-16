@@ -2,7 +2,7 @@ import { ReactNode, useState, useEffect } from 'react';
 import { useApi } from '@gear-js/react-hooks';
 import { Header } from '@polkadot/types/interfaces';
 
-import { IChainBlock } from '@/entities/chainBlock';
+import { RecentBlock } from '@/features/recentBlocks';
 
 import { BlocksContext } from './Context';
 import { getTime, getBlock } from './helpers';
@@ -13,9 +13,9 @@ type Props = {
 
 const BlocksProvider = ({ children }: Props) => {
   const { api, isApiReady } = useApi();
-  const [blocks, setBlocks] = useState<IChainBlock[]>([]);
+  const [blocks, setBlocks] = useState<RecentBlock[]>([]);
 
-  const updateBlocks = (block: IChainBlock) =>
+  const updateBlocks = (block: RecentBlock) =>
     setBlocks((prevBlocks) => {
       const blocksTail = prevBlocks.length > 9 ? prevBlocks.slice(0, -1) : prevBlocks;
 

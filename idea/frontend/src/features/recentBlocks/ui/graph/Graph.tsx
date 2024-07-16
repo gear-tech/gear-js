@@ -1,13 +1,12 @@
 import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 
-import { IChainBlock } from '@/entities/chainBlock';
-
-import styles from './Graph.module.scss';
 import { getRandomPercent } from '../../helpers';
+import { RecentBlock } from '../../types';
+import styles from './Graph.module.scss';
 
 type Props = {
-  blocks: IChainBlock[];
+  blocks: RecentBlock[];
   className?: string;
 };
 

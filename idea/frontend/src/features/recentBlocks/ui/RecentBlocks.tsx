@@ -1,27 +1,25 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
+import { useApi } from '@gear-js/react-hooks';
+import { U128 } from '@polkadot/types';
 import { useState, useEffect } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
 import { useLocation } from 'react-router-dom';
 
 import { useBlocks, useOutsideClick } from '@/hooks';
-import { IChainBlock } from '@/entities/chainBlock';
 import { AnimationTimeout } from '@/shared/config';
 import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
 
-import { useApi } from '@gear-js/react-hooks';
-import { U128 } from '@polkadot/types';
-import styles from './RecentBlocks.module.scss';
+import { RecentBlock } from '../types';
 import { getMinWidth } from '../helpers';
 import { Graph } from './graph';
 import { RecentBlocksList } from './recentBlocksList';
+import styles from './RecentBlocks.module.scss';
 
 const RecentBlocks = () => {
   const { api, isApiReady } = useApi();
   const blocks = useBlocks();
 
-  const [block, setBlock] = useState<IChainBlock>();
+  const [block, setBlock] = useState<RecentBlock>();
   const [gearBlock, setGearBlock] = useState<number>();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -81,6 +79,7 @@ const RecentBlocks = () => {
     <div className={styles.recentBlocksWrapper}>
       <CSSTransition in={isOpen} timeout={AnimationTimeout.Default}>
         <section ref={sectionRef} className={blocksClasses}>
+          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
           <div className={styles.content} onClick={toggleList}>
             <Graph blocks={blocks} className={styles.graph} />
 
