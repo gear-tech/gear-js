@@ -9,6 +9,7 @@ COPY .yarnrc.yml .
 COPY gear-js.sh .
 COPY ./idea/indexer-db idea/indexer-db
 COPY ./idea/squid idea/squid
+RUN chmod +x ./gear-js.sh
 
 RUN yarn install
 RUN ./gear-js.sh build indexer-db
