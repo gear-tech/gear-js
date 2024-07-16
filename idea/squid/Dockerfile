@@ -15,4 +15,4 @@ RUN yarn install
 RUN ./gear-js.sh build indexer-db
 RUN ./gear-js.sh build squid
 
-CMD ["/bin/sh", "-c", "gear-js.sh run squid"]
+CMD ["/bin/sh", "-c", "/src/gear-js.sh run squid"]
