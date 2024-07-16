@@ -35,7 +35,4 @@ export class Program extends BaseEntity {
   // TODO: remove later
   @Column({ nullable: true })
   public metahash: string;
-  // TODO: remove later
-  @Column({ default: false, name: 'has_state' })
-  public hasState: boolean;
 }

@@ -1,4 +1,4 @@
-import { MethodNotFound } from '../errors';
+import { GenesisNotFound, MethodNotFound, NetworkNotSupported } from '../errors';
 import { JsonRpcRequest, JsonRpcResponse } from '../types';
 
 type Constructor<T = any> = new (...args: any[]) => T;
@@ -13,14 +13,14 @@ export function JsonRpcMethod(name: string) {
 
 export interface IJsonRpc {
   _getMethod(name: string): (...args: any[]) => Promise<void>;
-  handleRequest({ method, params, id }: JsonRpcRequest): Promise<JsonRpcResponse>;
+  handleRequest({ method, params, id }: JsonRpcRequest): Promise<JsonRpcResponse | JsonRpcResponse[]>;
 }
 
 export class JsonRpcBase implements IJsonRpc {
   _getMethod(name: string): (...args: any[]) => Promise<void> {
     throw new Error('Method not implemented.');
   }
-  handleRequest({ method, params, id }: JsonRpcRequest): Promise<JsonRpcResponse> {
+  handleRequest({ method, params, id }: JsonRpcRequest): Promise<JsonRpcResponse | JsonRpcResponse[]> {
     throw new Error('Method not implemented.');
   }
 }
@@ -28,6 +28,11 @@ export class JsonRpcBase implements IJsonRpc {
 export function JsonRpc<TBase extends Constructor<JsonRpcBase>>(Base: TBase) {
   return class Jsonrpc extends Base {
     private __methods = new Set(Object.keys(rpcMethods));
+    private __genesises: Set<string>;
+
+    setGenesises(genesises: string[]) {
+      this.__genesises = new Set(genesises);
+    }
 
     _getMethod(name: string) {
       if (!this.__methods.has(name)) {
@@ -36,8 +41,23 @@ export function JsonRpc<TBase extends Constructor<JsonRpcBase>>(Base: TBase) {
       return rpcMethods[name];
     }
 
-    async handleRequest({ method, params, id }: JsonRpcRequest): Promise<JsonRpcResponse> {
+    async handleRequest(req: JsonRpcRequest | JsonRpcRequest[]): Promise<JsonRpcResponse | JsonRpcResponse[]> {
+      if (Array.isArray(req)) {
+        return Promise.all(req.map((r) => this.executeMethod(r)));
+      } else {
+        return this.executeMethod(req);
+      }
+    }
+
+    async executeMethod({ method, params, id }: JsonRpcRequest): Promise<JsonRpcResponse> {
       try {
+        if (!params.genesis) {
+          throw new GenesisNotFound();
+        }
+        if (!this.__genesises.has(params.genesis)) {
+          throw new NetworkNotSupported(params.genesis);
+        }
+
         const result = await this._getMethod(method).apply(this, [params]);
         return {
           jsonrpc: '2.0',

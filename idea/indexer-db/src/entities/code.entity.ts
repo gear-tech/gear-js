@@ -25,13 +25,10 @@ export class Code extends BaseEntity {
   @Column({ nullable: true })
   public expiration?: string;
 
-  @Column({ nullable: true })
-  public metahash?: string;
+  @Column({ nullable: true, name: 'meta_type' })
+  public metaType?: MetaType;
 
   // TODO: remove later
   @Column({ nullable: true })
-  public hasState?: boolean;
-  // TODO: remove later
-  @Column({ nullable: true, name: 'meta_type' })
-  public metaType?: MetaType;
+  public metahash?: string;
 }

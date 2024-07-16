@@ -26,7 +26,7 @@ export class JsonRpcServer extends JsonRpc(JsonRpcBase) {
     super();
     this._app = express();
     this._app.use(express.json());
-    this._app.use(validateGenesisMiddleware(Array.from(this._services.keys())));
+    this.setGenesises(Array.from(this._services.keys()));
     this._app.post('/api', async (req, res) => {
       const result = await this.handleRequest(req.body);
       res.json(result);
