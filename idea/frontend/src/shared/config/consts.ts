@@ -1,6 +1,5 @@
-import { HexString } from '@gear-js/api';
-
 const API_URL = import.meta.env.VITE_API_URL as string;
+const INDEXER_API_URL = import.meta.env.VITE_INDEXER_API_URL as string;
 const NODES_API_URL = import.meta.env.VITE_NODES_API_URL as string;
 const NODE_ADDRESS = import.meta.env.VITE_NODE_ADDRESS as string;
 const HCAPTCHA_SITE_KEY = import.meta.env.VITE_HCAPTCHA_SITE_KEY as string;
@@ -105,6 +104,7 @@ enum AnimationTimeout {
 
 export {
   API_URL,
+  INDEXER_API_URL,
   VOUCHERS_API_URL,
   NODES_API_URL,
   NODE_ADDRESS,
