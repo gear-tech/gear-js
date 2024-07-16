@@ -5,6 +5,9 @@ pkg="$2"
 
 SQUID_TYPEORM_MIGRATION_BIN="node_modules/.bin/squid-typeorm-migration"
 
+SQUID_PATH="idea/squid"
+EXPLORER_PATH="idea/explorer"
+
 
 if [ "$command" == "install" ]; then
     echo "Installing dependencies"
@@ -16,7 +19,7 @@ elif [ "$command" = "run" ]; then
     echo "Running squid"
     case $pkg in
         "squid")
-            cd idea/squid
+            cd $SQUID_PATH
             if [ -f "$SQUID_TYPEORM_MIGRATION_BIN" ]; then
                 node $SQUID_TYPEORM_MIGRATION_BIN apply
             else
@@ -25,7 +28,7 @@ elif [ "$command" = "run" ]; then
             node lib/main.js
             ;;
         "explorer")
-            cd idea/explorer
+            cd $EXPLORER_PATH
             node dist/main.js
             ;;
         *)

@@ -1,3 +1,4 @@
+import { MethodNotFound } from '../errors';
 import { JsonRpcRequest, JsonRpcResponse } from '../types';
 
 type Constructor<T = any> = new (...args: any[]) => T;
@@ -26,7 +27,12 @@ export class JsonRpcBase implements IJsonRpc {
 
 export function JsonRpc<TBase extends Constructor<JsonRpcBase>>(Base: TBase) {
   return class Jsonrpc extends Base {
+    private __methods = new Set(Object.keys(rpcMethods));
+
     _getMethod(name: string) {
+      if (!this.__methods.has(name)) {
+        throw new MethodNotFound();
+      }
       return rpcMethods[name];
     }
 
