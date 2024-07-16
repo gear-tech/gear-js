@@ -1,5 +1,3 @@
-ls
-pwd
-yarn migration:apply
+node node_modules/.bin/squid-typeorm-migration apply
 
-yarn start
+node lib/main.js
