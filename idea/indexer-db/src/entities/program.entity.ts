@@ -36,6 +36,6 @@ export class Program extends BaseEntity {
   @Column({ nullable: true })
   public metahash: string;
   // TODO: remove later
-  @Column({ default: false })
+  @Column({ default: false, name: 'has_state' })
   public hasState: boolean;
 }

@@ -24,6 +24,10 @@ elif [ "$command" = "run" ]; then
             fi
             node lib/main.js
             ;;
+        "explorer")
+            cd idea/explorer
+            node dist/main.js
+            ;;
         *)
             echo "Invalid package"
             ;;

@@ -15,8 +15,8 @@ COPY idea/common ./idea/common
 
 RUN yarn install
 
-RUN yarn build:common
-RUN yarn build:indexer-db
-RUN yarn build:explorer
+RUN ./gear-js.sh build common
+RUN ./gear-js.sh build indexer-db
+RUN ./gear-js.sh build explorer
 
-CMD ["node", "idea/explorer/dist/main.js"]
+CMD ["/bin/sh", "-c", "/src/gear-js.sh run explorer"]
