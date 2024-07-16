@@ -3,7 +3,7 @@
 command="$1"
 pkg="$2"
 
-SQUID_TYPEORM_MIGRATION_BIN=node_modules/.bin/squid-typeorm-migration
+SQUID_TYPEORM_MIGRATION_BIN="node_modules/.bin/squid-typeorm-migration"
 
 
 if [ "$command" == "install" ]; then
