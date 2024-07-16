@@ -15,13 +15,13 @@ type Props = {
   value: File | undefined;
   onChange: (file: File | undefined) => void;
   metadata: ProgramMetadata | undefined;
-  idl: string | undefined;
+  idl?: string | undefined;
   sails?: Sails | undefined;
   isDisabled?: boolean;
   isLoading?: boolean;
 };
 
-const UploadMetadata = ({ value, metadata, idl, sails, isDisabled, isLoading, onChange }: Props) => {
+const UploadMetadata = ({ value, metadata, sails, isDisabled, isLoading, onChange }: Props) => {
   return (
     <Box className={cx(styles.box, isLoading && styles.loading)}>
       {!isDisabled && !isLoading && (

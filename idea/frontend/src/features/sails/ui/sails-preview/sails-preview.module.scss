@@ -1,0 +1,29 @@
+@use '@gear-js/ui/headings' as *;
+
+.button {
+  @extend %headingFont;
+
+  padding: 4px 0;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  font-size: 14px;
+  color: #fff;
+
+  background-color: transparent;
+  transition: opacity 0.25s;
+
+  &:hover {
+    opacity: 0.75;
+  }
+
+  svg {
+    transition: transform 0.25s;
+  }
+
+  &.open svg {
+    transform: rotate(90deg);
+  }
+}
