@@ -39,7 +39,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Data Storage Docker image
+      - name: Build and push Explorer Image
         uses: docker/build-push-action@master
         with:
           file: idea/explorer/Dockerfile
@@ -64,7 +64,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Api Gateway Docker image
+      - name: Build and push Squid Image
         uses: docker/build-push-action@master
         with:
           file: idea/squid/Dockerfile
