@@ -7,6 +7,7 @@ COPY yarn.lock .
 COPY tsconfig.json .
 COPY .yarn .yarn
 COPY .yarnrc.yml .
+COPY gear-js.sh .
 
 
 COPY idea/indexer-db ./idea/indexer-db
