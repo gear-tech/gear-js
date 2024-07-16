@@ -8,7 +8,7 @@ import { disableScroll, enableScroll, isMobileDevice } from '@/shared/helpers';
 import { OnboardingContext } from './Context';
 import { getHeading, getText } from './helpers';
 
-const steps = ['wallet', 'program', 'code', 'codes', 'message', 'messages', 'explorer', 'mailbox', 'apps', 'node'];
+const steps = ['wallet', 'program', 'code', 'codes', 'message', 'explorer', 'mailbox', 'apps', 'node'];
 
 const { Provider } = OnboardingContext;
 

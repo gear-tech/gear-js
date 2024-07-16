@@ -7,7 +7,6 @@ import { Events, Block } from '@/features/explorer';
 import { Program } from './program';
 import { Programs } from './programs';
 import { Message } from './message';
-import { Messages } from './messages';
 import { UploadProgram } from './uploadProgram';
 import { NotFound } from './notFound';
 import { Send } from './send';
@@ -32,10 +31,7 @@ const Routing = () => {
         <Route path={routes.program} element={<Program />} />
       </Route>
 
-      <Route path={routes.messages}>
-        <Route index element={<Messages />} />
-        <Route path={routes.message} element={<Message />} />
-      </Route>
+      <Route path={routes.message} element={<Message />} />
 
       <Route path={routes.send}>
         <Route path={routes.reply} element={<Send />} />

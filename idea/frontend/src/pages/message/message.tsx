@@ -8,7 +8,7 @@ import cx from 'clsx';
 
 import { useMessage } from '@/hooks';
 import { useMetadata } from '@/features/metadata';
-import { AnimationTimeout, absoluteRoutes } from '@/shared/config';
+import { AnimationTimeout, absoluteRoutes, routes } from '@/shared/config';
 import { copyToClipboard, formatDate, getPreformattedText, getShortName, isUndefined } from '@/shared/helpers';
 import TimestampSVG from '@/shared/assets/images/indicators/time.svg?react';
 import CopySVG from '@/shared/assets/images/actions/copy.svg?react';
@@ -86,7 +86,7 @@ const Message = () => {
 
         {replyToMessageId && (
           <InputWrapper label="Reply to" id="replyTo" direction="x" size="normal" gap="1/6" className={styles.link}>
-            <Link to={generatePath(absoluteRoutes.message, { messageId: replyToMessageId })}>{replyToMessageId}</Link>
+            <Link to={generatePath(routes.message, { messageId: replyToMessageId })}>{replyToMessageId}</Link>
 
             <Button
               icon={CopySVG}

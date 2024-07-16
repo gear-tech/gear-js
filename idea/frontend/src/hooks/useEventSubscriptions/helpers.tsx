@@ -3,7 +3,7 @@ import { UserMessageSent, Transfer, encodeAddress } from '@gear-js/api';
 import { AlertContainerFactory } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 
-import { absoluteRoutes } from '@/shared/config';
+import { routes } from '@/shared/config';
 import { CustomLink } from '@/shared/ui/customLink';
 
 const messageSentEventsHandler = (event: UserMessageSent, address: HexString, alert: AlertContainerFactory) => {
@@ -24,7 +24,7 @@ const messageSentEventsHandler = (event: UserMessageSent, address: HexString, al
   showAlert(
     <>
       <p>
-        ID: <CustomLink to={generatePath(absoluteRoutes.message, { messageId })} text={messageId} />
+        ID: <CustomLink to={generatePath(routes.message, { messageId })} text={messageId} />
       </p>
       {isError && <p>{payload.toHuman() as string}</p>}
     </>,

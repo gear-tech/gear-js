@@ -7,7 +7,7 @@ import { IdBlock } from '@/shared/ui/idBlock';
 import { TimestampBlock } from '@/shared/ui/timestampBlock';
 import FlagSVG from '@/shared/assets/images/indicators/flag.svg?react';
 import DirectionSVG from '@/shared/assets/images/indicators/messageDirection.svg?react';
-import { absoluteRoutes } from '@/shared/config';
+import { absoluteRoutes, routes } from '@/shared/config';
 import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
 
 import styles from './message-card.module.scss';
@@ -27,13 +27,7 @@ const MessageCard = ({ message, program }: Props) => {
       <div className={styles.info}>
         <DirectionSVG className={clsx(styles.directionSVG, isUserMessageSent && styles.fromDirection)} />
         <BulbBlock text="" status={exitCode ? BulbStatus.Error : BulbStatus.Success} />
-        <IdBlock
-          id={messageId}
-          size="large"
-          withIcon
-          maxCharts={18}
-          to={generatePath(absoluteRoutes.message, { messageId })}
-        />
+        <IdBlock id={messageId} size="large" withIcon maxCharts={18} to={generatePath(routes.message, { messageId })} />
       </div>
 
       <TimestampBlock size="medium" color="light" timestamp={timestamp} withIcon />
