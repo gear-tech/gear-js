@@ -1,0 +1,9 @@
+@use '@/shared/assets/styles/shared' as *;
+@use '@/shared/assets/styles/variables' as *;
+
+.link {
+  color: $gray800;
+  height: toRem(20);
+  width: toRem(20);
+  margin-bottom: 0;
+}

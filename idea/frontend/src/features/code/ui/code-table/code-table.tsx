@@ -6,9 +6,10 @@ import TablePlaceholderSVG from '@/shared/assets/images/placeholders/table.svg?r
 import { absoluteRoutes } from '@/shared/config';
 import { IdBlock } from '@/shared/ui/idBlock';
 import { Table, TableRow } from '@/shared/ui/table';
+import { LocalCode } from '@/features/local-indexer/types';
 
 type Props = {
-  code: ICode | undefined;
+  code: ICode | LocalCode | undefined;
   isCodeReady: boolean;
 };
 
@@ -19,9 +20,15 @@ const CodeTable = ({ code, isCodeReady }: Props) =>
         <IdBlock id={code.id} size="big" />
       </TableRow>
 
-      <TableRow name="Block hash">
-        <IdBlock id={code.blockHash} to={generatePath(absoluteRoutes.block, { blockId: code.blockHash })} size="big" />
-      </TableRow>
+      {'blockHash' in code && (
+        <TableRow name="Block hash">
+          <IdBlock
+            id={code.blockHash}
+            to={generatePath(absoluteRoutes.block, { blockId: code.blockHash })}
+            size="big"
+          />
+        </TableRow>
+      )}
     </Table>
   ) : (
     <ContentLoader text="There is no program" isEmpty={isCodeReady && !code}>

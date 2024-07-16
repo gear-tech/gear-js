@@ -3,13 +3,13 @@ import clsx from 'clsx';
 
 import { useScrollLoader } from '@/hooks';
 import { Placeholder } from '@/entities/placeholder';
-import { IMessage, HorizontalMessageCard } from '@/entities/message';
+import { Message, MessageCard } from '@/features/message';
 import HorizontalMessageCardSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
 
 import styles from '../ProgramMessages.module.scss';
 
 type Props = {
-  messages: IMessage[];
+  messages: Message[];
   isLoading: boolean;
   totalCount: number;
   loadMore: () => void;
@@ -22,7 +22,7 @@ const Messages = ({ messages, isLoading, totalCount, loadMore }: Props) => {
 
   const scrollableNodeRef = useScrollLoader<HTMLDivElement>(loadMore, hasMore);
 
-  const renderMessages = () => messages.map((message) => <HorizontalMessageCard key={message.id} message={message} />);
+  const renderMessages = () => messages.map((message) => <MessageCard key={message.id} message={message} />);
 
   return (
     <SimpleBar

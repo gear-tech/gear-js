@@ -5,7 +5,7 @@ type FormValues = {
   payload: PayloadValue;
   gasLimit: string;
   programName: string;
-  payloadType: string;
+  payloadType: string | undefined;
   keepAlive: boolean;
 };
 

@@ -1,13 +1,10 @@
 import { HexString } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
-import { Button, Modal } from '@gear-js/ui';
+import { Button } from '@gear-js/ui';
 
-import { useSignAndSend } from '@/hooks';
-import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
-
-import RemoveSVG from '../../assets/remove.svg?react';
-import { useModal } from '../../hooks';
-import styles from './decline-voucher.module.scss';
+import { useModalState, useSignAndSend } from '@/hooks';
+import RemoveSVG from '@/shared/assets/images/actions/remove.svg?react';
+import { ConfirmModal } from '@/shared/ui/confirm-modal';
 
 type Props = {
   id: HexString;
@@ -18,7 +15,7 @@ const DeclineVoucher = ({ id, onSubmit }: Props) => {
   const { isApiReady, api } = useApi();
   const signAndSend = useSignAndSend();
 
-  const [isModalOpen, openModal, closeModal] = useModal();
+  const [isModalOpen, openModal, closeModal] = useModalState();
 
   const handleSubmitClick = () => {
     if (!isApiReady) throw new Error('API is not initialized');
@@ -35,17 +32,14 @@ const DeclineVoucher = ({ id, onSubmit }: Props) => {
       <Button icon={RemoveSVG} onClick={openModal} color="transparent" />
 
       {isModalOpen && (
-        <Modal heading="Decline Voucher" close={closeModal}>
-          <p className={styles.text}>
-            This action cannot be undone. If you change your mind, voucher&apos;s owner will have to issue a new voucher
-            manually.
-          </p>
-
-          <div className={styles.buttons}>
-            <Button icon={RemoveSVG} text="Submit" onClick={handleSubmitClick} />
-            <Button icon={CloseSVG} text="Cancel" color="light" onClick={closeModal} />
-          </div>
-        </Modal>
+        <ConfirmModal
+          title="Decline Voucher"
+          text="This action cannot be undone. If you change your mind, voucher's owner will have to issue a new voucher manually."
+          confirmText="Submit"
+          confirmIcon={RemoveSVG}
+          onSubmit={handleSubmitClick}
+          close={closeModal}
+        />
       )}
     </>
   );

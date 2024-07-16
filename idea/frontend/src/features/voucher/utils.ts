@@ -1,4 +1,5 @@
 import { DEFAULT_LIMIT } from '@/shared/config';
+import { fetchWithGuard } from '@/shared/helpers';
 
 import { VouchersResponse } from './types';
 
@@ -31,14 +32,6 @@ function getTime(ms: number) {
 
   return result.trim();
 }
-
-const fetchWithGuard = async <T extends object>(...args: Parameters<typeof fetch>) => {
-  const response = await fetch(...args);
-
-  if (!response.ok) throw new Error(response.statusText);
-
-  return response.json() as T;
-};
 
 const getVouchers = (url: string, params: { offset: number; limit: number; id: string }) => {
   const method = 'POST';

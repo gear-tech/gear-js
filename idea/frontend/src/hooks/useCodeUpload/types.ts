@@ -1,22 +1,21 @@
+import { ProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
-import { ISubmittableResult } from '@polkadot/types/types';
-
-import { ParamsToSignAndSend as CommonParamsToSignAndSend } from '@/entities/hooks';
 
 type ParamsToUploadCode = {
   optBuffer: Buffer;
   name: string;
   voucherId: string;
-  metaHex: HexString | undefined;
+  metadata: {
+    hash: HexString | null | undefined;
+    hex: HexString | undefined;
+    value: ProgramMetadata | undefined;
+    isFromStorage: boolean;
+  };
+  sails: {
+    idl: string | undefined;
+    isFromStorage: boolean;
+  };
   resolve: () => void;
 };
 
-type ParamsToSignAndSend = Omit<CommonParamsToSignAndSend, 'reject'> & {
-  extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
-  name: string;
-  codeId: HexString;
-  metaHex: HexString | undefined;
-};
-
-export type { ParamsToUploadCode, ParamsToSignAndSend };
+export type { ParamsToUploadCode };

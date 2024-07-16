@@ -3,21 +3,26 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { Event } from '@polkadot/types/interfaces';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { web3FromSource } from '@polkadot/extension-dapp';
+import { ReactNode } from 'react';
 
 import { useExtrinsicFailedMessage } from './use-extrinsic-failed-message';
 
 type Extrinsic = SubmittableExtrinsic<'promise', ISubmittableResult>;
 
 type Options = {
+  successAlert: ReactNode;
   onSuccess: () => void;
   onError: () => void;
   onFinally: () => void;
+  onFinalized: (value: ISubmittableResult) => void;
 };
 
-const DEFAULT_OPTIONS: Options = {
+const DEFAULT_OPTIONS = {
+  successAlert: 'Success',
   onSuccess: () => {},
   onError: () => {},
   onFinally: () => {},
+  onFinalized: () => {},
 } as const;
 
 function useSignAndSend() {
@@ -26,7 +31,7 @@ function useSignAndSend() {
   const getExtrinsicFailedMessage = useExtrinsicFailedMessage();
 
   const handleEvent = (event: Event, method: string, options: Options) => {
-    const { onSuccess, onError, onFinally } = options;
+    const { successAlert, onSuccess, onError, onFinally } = options;
     const alertOptions = { title: `${event.section}.${event.method}` };
 
     if (event.method === 'ExtrinsicFailed') {
@@ -39,16 +44,17 @@ function useSignAndSend() {
     }
 
     if (event.method === method) {
-      alert.success('Success', alertOptions);
+      alert.success(successAlert, alertOptions);
 
       onSuccess();
       onFinally();
     }
   };
 
-  const handleStatus = ({ events, status }: ISubmittableResult, method: string, options: Options, alertId: string) => {
+  const handleStatus = (result: ISubmittableResult, method: string, options: Options, alertId: string) => {
+    const { events, status } = result;
     const { isInvalid, isReady, isInBlock, isFinalized } = status;
-    const { onError, onFinally } = options;
+    const { onError, onFinally, onFinalized } = options;
 
     if (isInvalid) {
       alert.update(alertId, 'Transaction error. Status: isInvalid', DEFAULT_ERROR_OPTIONS);
@@ -63,6 +69,8 @@ function useSignAndSend() {
 
     if (isFinalized) {
       alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
+
+      onFinalized(result);
 
       events.forEach(({ event }) => handleEvent(event, method, options));
     }

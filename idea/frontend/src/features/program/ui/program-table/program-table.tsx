@@ -19,8 +19,8 @@ type Props = {
 };
 
 const ProgramTable = ({ program, isProgramReady }: Props) => {
-  const { codeId, timestamp } = program || {};
-  const blockId = program?.blockHash;
+  const { codeId } = program || {};
+  const blockId = program && 'blockHash' in program ? program.blockHash : undefined;
 
   return isProgramReady && program ? (
     <Table>
@@ -32,9 +32,9 @@ const ProgramTable = ({ program, isProgramReady }: Props) => {
         <BulbBlock size="large" text={PROGRAM_STATUS_NAME[program.status]} status={getBulbStatus(program.status)} />
       </TableRow>
 
-      {timestamp && (
+      {'timestamp' in program && (
         <TableRow name="Created at">
-          <TimestampBlock size="large" timestamp={timestamp} />
+          <TimestampBlock size="large" timestamp={program.timestamp} />
         </TableRow>
       )}
 

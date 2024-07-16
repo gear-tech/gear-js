@@ -12,11 +12,13 @@ const routes = {
   mailbox: '/mailbox',
   explorer: '/explorer',
   state: '/state/:programId',
+  sailsState: '/state/sails/:programId',
   send: '/send',
   sendMessage: 'message/:programId',
   reply: 'reply/:messageId',
   block: ':blockId',
   vouchers: '/vouchers',
+  dns: '/dns',
 };
 
 const absoluteRoutes = {

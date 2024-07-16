@@ -125,6 +125,16 @@ const isHex = (value: unknown): value is HexString => {
   return isString(value) && (value === '0x' || (HEX_REGEX.test(value) && value.length % 2 === 0));
 };
 
+const fetchWithGuard = async <T extends object>(...args: Parameters<typeof fetch>) => {
+  const response = await fetch(...args);
+
+  if (!response.ok) throw new Error(response.statusText);
+
+  return response.json() as T;
+};
+
+const getErrorMessage = (error: unknown) => (error instanceof Error ? error.message : String(error));
+
 export {
   checkWallet,
   formatDate,
@@ -150,4 +160,6 @@ export {
   isString,
   isUndefined,
   isHex,
+  fetchWithGuard,
+  getErrorMessage,
 };

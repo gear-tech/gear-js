@@ -1,255 +1,94 @@
-import { useCallback } from 'react';
 import { generatePath } from 'react-router-dom';
-import { EventRecord } from '@polkadot/types/interfaces';
+import { useApi, useAccount } from '@gear-js/react-hooks';
 import { web3FromSource } from '@polkadot/extension-dapp';
-import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
-import { HexString } from '@polkadot/util/types';
-import { ProgramMetadata } from '@gear-js/api';
+import { ISubmittableResult } from '@polkadot/types/types';
 
-import { useChain, useModal } from '@/hooks';
-import { uploadLocalProgram } from '@/api/LocalDB';
-import { Method } from '@/features/explorer';
-import { OperationCallbacks } from '@/entities/hooks';
-import {
-  PROGRAM_ERRORS,
-  TransactionName,
-  TransactionStatus,
-  absoluteRoutes,
-  UPLOAD_METADATA_TIMEOUT,
-} from '@/shared/config';
-import { checkWallet, getExtrinsicFailedMessage, isNullOrUndefined } from '@/shared/helpers';
+import { useAddMetadata, useAddProgramName, useChain, useModal, useSignAndSend } from '@/hooks';
+import { addLocalProgram } from '@/features/local-indexer';
+import { absoluteRoutes } from '@/shared/config';
 import { CustomLink } from '@/shared/ui/customLink';
-import { ProgramStatus, useProgramStatus } from '@/features/program';
-import { isHumanTypesRepr } from '@/features/metadata';
-import { addProgramName } from '@/api';
+import { useProgramStatus } from '@/features/program';
+import { isState } from '@/features/metadata';
+import { useAddIdl } from '@/features/sails';
 
-import { useMetadataUpload } from '../useMetadataUpload';
-import { ALERT_OPTIONS } from './consts';
-import { Payload, ParamsToCreate, ParamsToUpload, ParamsToSignAndUpload } from './types';
+import { ContractApi, Program, Values } from './types';
 
 const useProgramActions = () => {
-  const alert = useAlert();
   const { api, isApiReady } = useApi();
   const { account } = useAccount();
   const { isDevChain } = useChain();
 
+  const addMetadata = useAddMetadata();
+  const addIdl = useAddIdl();
+  const addProgramName = useAddProgramName();
+  const signAndSend = useSignAndSend();
+
   const { showModal } = useModal();
   const { getProgramStatus } = useProgramStatus();
-  const uploadMetadata = useMetadataUpload();
 
-  const getProgramMessage = (programId: string) => (
+  const getSuccessAlert = (programId: string) => (
     <p>
       ID: <CustomLink to={generatePath(absoluteRoutes.program, { programId })} text={programId} />
     </p>
   );
 
-  const createProgram = (codeId: HexString, payload: Payload) => {
+  const handleMetadataUpload = async (
+    { programId, codeId }: Program,
+    { metadata, sails }: ContractApi,
+    { programName }: Values,
+    result: ISubmittableResult,
+  ) => {
     if (!isApiReady) throw new Error('API is not initialized');
+    if (!account) throw new Error('Account not found');
 
-    const { gasLimit, value, initPayload, metadata, payloadType, keepAlive } = payload;
+    const name = programName || programId;
+    const genesis = api.genesisHash.toHex();
+    const timestamp = Date();
 
-    const program = { value, codeId, gasLimit, initPayload, keepAlive };
+    if (isDevChain) {
+      const id = programId;
+      const owner = account.decodedAddress;
+      const metahash = metadata?.hash || null;
+      const status = await getProgramStatus(programId);
+      const hasState = !!metadata && !!metadata.value ? isState(metadata.value) : false;
+      const blockHash = result.status.asFinalized.toHex();
 
-    const result = api.program.create(program, metadata, payloadType);
+      await addLocalProgram({ id, owner, codeId, status, blockHash, hasState, metahash, name, genesis, timestamp });
+    }
 
-    return result.programId;
+    if (!isDevChain) await addProgramName(programId, name);
+    if (metadata && metadata.hash && metadata.hex && !metadata.isFromStorage) addMetadata(metadata.hash, metadata.hex);
+    if (sails && sails.idl && !sails.isFromStorage) addIdl(codeId, sails.idl);
   };
 
-  const uploadProgram = (optBuffer: Buffer, payload: Payload) => {
+  return async (
+    program: Program,
+    contractApi: ContractApi,
+    values: Values,
+    onSuccess?: () => void,
+    onError?: () => void,
+  ) => {
     if (!isApiReady) throw new Error('API is not initialized');
+    if (!account) throw new Error('Account not found');
 
-    const { gasLimit, value, initPayload, metadata, payloadType, keepAlive } = payload;
+    const { meta, address } = account;
+    const { signer } = await web3FromSource(meta.source);
+    const { partialFee } = await api.program.paymentInfo(address, { signer });
 
-    const program = { code: optBuffer, value, gasLimit, initPayload, keepAlive };
+    const successAlert = getSuccessAlert(program.programId);
+    const onFinalized = (result: ISubmittableResult) => handleMetadataUpload(program, contractApi, values, result);
 
-    return api.program.upload(program, metadata, payloadType);
-  };
+    const onConfirm = () =>
+      signAndSend(program.extrinsic, 'ProgramChanged', { successAlert, onSuccess, onError, onFinalized });
 
-  const handleEventsStatus = (events: EventRecord[], { reject }: OperationCallbacks) => {
-    if (!isApiReady) throw new Error('API is not initialized');
-
-    events.forEach(({ event }) => {
-      const { method, section } = event;
-      console.log('method: ', method);
-      const alertOptions = { title: `${section}.${method}` };
-
-      if (method === Method.ExtrinsicFailed) {
-        alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
-
-        if (reject) reject();
-      }
+    showModal('transaction', {
+      fee: partialFee.toHuman(),
+      name: `${program.extrinsic.method.section}.${program.extrinsic.method.method}`,
+      addressFrom: address,
+      onAbort: onError,
+      onConfirm,
     });
   };
-
-  const signAndUpload = async ({
-    signer,
-    payload,
-    programId,
-    codeId,
-    reject,
-    resolve,
-    method,
-  }: ParamsToSignAndUpload) => {
-    const { metaHex, programName } = payload;
-    const alertId = alert.loading('SignIn', { title: method });
-    const programMessage = getProgramMessage(programId);
-    const name = programName || programId;
-
-    try {
-      if (!isApiReady) throw new Error('API is not initialized');
-
-      await api.program.signAndSend(account!.address, { signer }, ({ status, events }) => {
-        if (status.isReady) {
-          alert.update(alertId, TransactionStatus.Ready);
-        } else if (status.isInBlock) {
-          alert.update(alertId, TransactionStatus.InBlock);
-        } else if (status.isFinalized) {
-          alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
-          handleEventsStatus(events, { reject, resolve });
-
-          // timeout cuz wanna be sure that block data is ready
-          setTimeout(() => {
-            addProgramName({ id: programId, name }, isDevChain).then(
-              () => metaHex && uploadMetadata({ codeHash: codeId, metaHex, programId }),
-            );
-          }, UPLOAD_METADATA_TIMEOUT);
-
-          getProgramStatus(programId).then(async (programStatus) => {
-            if ([ProgramStatus.Terminated, ProgramStatus.Exited].includes(programStatus)) {
-              alert.error(programMessage, ALERT_OPTIONS);
-
-              if (reject) reject();
-            } else {
-              alert.success(programMessage, ALERT_OPTIONS);
-
-              if (resolve) resolve();
-            }
-
-            if (isDevChain) {
-              const metahash = await api.code.metaHash(codeId);
-              const meta = metaHex ? ProgramMetadata.from(metaHex) : undefined;
-
-              const hasState =
-                !!meta &&
-                (typeof meta.types.state === 'number' ||
-                  (isHumanTypesRepr(meta.types.state) && !isNullOrUndefined(meta.types.state.output)));
-
-              await uploadLocalProgram({
-                id: programId,
-                owner: account!.decodedAddress,
-                code: { id: codeId },
-                status: programStatus,
-                blockHash: status.asFinalized.toHex(),
-                hasState,
-                metahash,
-                name,
-              });
-            }
-          });
-        } else if (status.isInvalid) {
-          alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
-
-          if (reject) reject();
-        }
-      });
-    } catch (error) {
-      const message = (error as Error).message;
-
-      alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
-
-      if (reject) reject();
-    }
-  };
-
-  const create = useCallback(
-    async ({ codeId, payload, reject, resolve }: ParamsToCreate) => {
-      try {
-        if (!isApiReady) throw new Error('API is not initialized');
-        checkWallet(account);
-
-        const { meta, address } = account!;
-
-        const [{ signer }, programId] = await Promise.all([
-          web3FromSource(meta.source),
-          createProgram(codeId, payload),
-        ]);
-
-        const { partialFee } = await api.program.paymentInfo(address, { signer });
-
-        const handleConfirm = () =>
-          signAndUpload({
-            method: TransactionName.CreateProgram,
-            signer,
-            payload,
-            programId,
-            codeId,
-            reject,
-            resolve,
-          });
-
-        showModal('transaction', {
-          fee: partialFee.toHuman(),
-          name: TransactionName.CreateProgram,
-          addressFrom: address,
-          onAbort: reject,
-          onConfirm: handleConfirm,
-        });
-      } catch (error) {
-        const message = (error as Error).message;
-
-        alert.error(message);
-        if (reject) reject();
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [api, account, uploadMetadata],
-  );
-
-  const upload = useCallback(
-    async ({ optBuffer, payload, reject, resolve }: ParamsToUpload) => {
-      try {
-        if (!isApiReady) throw new Error('API is not initialized');
-        checkWallet(account);
-
-        const { meta, address } = account!;
-
-        const [{ signer }, { programId, codeId }] = await Promise.all([
-          web3FromSource(meta.source),
-          uploadProgram(optBuffer, payload),
-        ]);
-
-        const { partialFee } = await api.program.paymentInfo(address, { signer });
-
-        const handleConfirm = () =>
-          signAndUpload({
-            method: TransactionName.UploadProgram,
-            signer,
-            payload,
-            programId,
-            codeId,
-            reject,
-            resolve,
-          });
-
-        showModal('transaction', {
-          fee: partialFee.toHuman(),
-          name: TransactionName.UploadProgram,
-          addressFrom: address,
-          onAbort: reject,
-          onConfirm: handleConfirm,
-        });
-      } catch (error) {
-        const message = (error as Error).message;
-
-        alert.error(message);
-        if (reject) reject();
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [api, account, uploadMetadata],
-  );
-
-  return { uploadProgram: upload, createProgram: create };
 };
 
 export { useProgramActions };

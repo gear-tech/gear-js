@@ -1,14 +1,18 @@
 import { useModal, useBlocks, useEvents, useChain, useOnboarding } from './context';
+import { useLoading } from './useLoading';
 import { useMessage } from './useMessage';
 import { useOutsideClick } from './useOutsideClick';
 import { useChangeEffect } from './useChangeEffect';
 import { useProgram } from './useProgram';
 import { useMessageActions } from './useMessageActions';
 import { usePrograms } from './usePrograms';
+import { useProgramIdSchema } from './useProgramIdSchema';
 import { useCodeUpload } from './useCodeUpload';
 import { useMessageClaim } from './useMessageClaim';
 import { useProgramActions } from './useProgramActions';
-import { useMetadataUpload } from './useMetadataUpload';
+import { useAddMetadata } from './use-add-metadata';
+import { useAddProgramName } from './use-add-program-name';
+import { useAddCodeName } from './use-add-code-name';
 import { useBalanceTransfer } from './useBalanceTransfer';
 import { useEventSubscriptions } from './useEventSubscriptions';
 import { useGasCalculate } from './useGasCalculate';
@@ -22,16 +26,20 @@ import { useCodes } from './useCodes';
 import { useNodeVersion } from './useNodeVersion';
 import { useMobileDisclaimer } from './useMobileDisclaimer';
 import { useNetworkIcon } from './useNetworkIcon';
-import { useValidationSchema } from './use-validation-schema';
+import { useValidationSchema, useBalanceSchema, useGasLimitSchema } from './schemas';
 import { useSignAndSend } from './use-sign-and-send';
+import { useContractApiWithFile } from './use-contract-api-with-file';
+import { useModalState } from './use-modal-state';
 
 export {
   useModal,
+  useLoading,
   useBlocks,
   useEvents,
   useChain,
   useProgram,
   usePrograms,
+  useProgramIdSchema,
   useMessage,
   useMessages,
   useWaitlist,
@@ -46,7 +54,9 @@ export {
   useGasCalculate,
   useProgramActions,
   useMessageActions,
-  useMetadataUpload,
+  useAddMetadata,
+  useAddProgramName,
+  useAddCodeName,
   useBalanceTransfer,
   useEventSubscriptions,
   useCodes,
@@ -56,4 +66,8 @@ export {
   useNetworkIcon,
   useValidationSchema,
   useSignAndSend,
+  useContractApiWithFile,
+  useBalanceSchema,
+  useGasLimitSchema,
+  useModalState,
 };

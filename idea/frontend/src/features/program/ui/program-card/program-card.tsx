@@ -23,7 +23,7 @@ type Props = {
 };
 
 const ProgramCard = memo(({ program, vertical }: Props) => {
-  const { id: programId, name, status, timestamp } = program;
+  const { id: programId, name, status } = program;
   const statusName = PROGRAM_STATUS_NAME[status];
 
   return (
@@ -39,7 +39,7 @@ const ProgramCard = memo(({ program, vertical }: Props) => {
           <IdBlock id={programId} size="medium" withIcon color="light" />
           <BulbBlock color="light" text={statusName} status={getBulbStatus(status)} />
 
-          {timestamp && <TimestampBlock color="light" withIcon timestamp={timestamp} />}
+          {'timestamp' in program && <TimestampBlock color="light" withIcon timestamp={program.timestamp} />}
         </div>
       </div>
 

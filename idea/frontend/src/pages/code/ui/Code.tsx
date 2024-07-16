@@ -1,10 +1,7 @@
-import { useAlert, useApi } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
-import { useEffect, useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
 
-import { addMetadata, addCodeName, getCode } from '@/api';
 import { useChain, useDataLoading, useModal, usePrograms } from '@/hooks';
 import { BackButton } from '@/shared/ui/backButton';
 import { absoluteRoutes } from '@/shared/config';
@@ -13,62 +10,49 @@ import { ProgramsList } from '@/pages/programs/ui/programsList';
 import { MetadataTable, useMetadata } from '@/features/metadata';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
-import { ICode } from '@/entities/code';
-import { CodeTable } from '@/features/code';
+import { CodeTable, useCode as useStorageCode } from '@/features/code';
+import { IDL, useSails } from '@/features/sails';
+import { useLocalCode } from '@/features/local-indexer';
 
 import styles from './Code.module.scss';
 
-type Params = { codeId: HexString };
+type Params = {
+  codeId: HexString;
+};
 
 const Code = () => {
-  const { codeId } = useParams() as Params;
-  const { api, isApiReady } = useApi();
-  const alert = useAlert();
-
   const { isDevChain } = useChain();
   const { showModal, closeModal } = useModal();
 
-  const { programs, isLoading, fetchPrograms } = usePrograms();
+  const { codeId } = useParams() as Params;
+  const storageCode = useStorageCode(codeId);
+  const localCode = useLocalCode(codeId);
+  const code = isDevChain ? localCode : storageCode;
+
+  const { programs, isLoading: isProgramsRequestLoading, fetchPrograms } = usePrograms();
   const { loadData } = useDataLoading({ defaultParams: { codeId }, fetchData: fetchPrograms });
 
-  const [code, setCode] = useState<ICode>();
-  const isCodeReady = code !== undefined;
+  const { metadata, isMetadataReady, setMetadataHex } = useMetadata(code.data?.metahash);
+  const { idl, isLoading: isSailsLoading, refetch: refetchSails } = useSails(codeId);
+  const isLoading = !isMetadataReady || isSailsLoading;
 
-  const { metadata, isMetadataReady, setMetadataHex } = useMetadata(code?.metahash);
+  const showUploadMetadataModal = () => {
+    const onSuccess = (_name: string, metadataHex?: HexString) => {
+      code.refetch();
 
-  const setCodeName = (name: string) => setCode((prevCode) => (prevCode ? { ...prevCode, name } : prevCode));
+      return metadataHex ? setMetadataHex(metadataHex) : refetchSails();
+    };
 
-  const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
-    const id = codeId;
+    const isNameEditable = !isDevChain;
 
-    addCodeName({ id, name })
-      .then(async () => {
-        if (!isApiReady) throw new Error('API is not initialized');
-
-        const hash = await api.code.metaHash(id);
-        addMetadata(hash, metaHex);
-      })
-      .then(() => {
-        setMetadataHex(metaHex);
-        setCodeName(name);
-
-        alert.success('Metadata for code uploaded successfully');
-
-        closeModal();
-      })
-      .catch(({ message }: Error) => alert.error(message));
+    showModal('metadata', {
+      codeId,
+      metadataHash: code.data?.metahash,
+      isNameEditable,
+      onClose: closeModal,
+      onSuccess,
+    });
   };
-
-  const showUploadMetadataModal = () => showModal('metadata', { onSubmit: handleUploadMetadataSubmit, isCode: true });
-
-  useEffect(() => {
-    if (isDevChain) return;
-
-    getCode(codeId)
-      .then(({ result }) => setCode(result))
-      .catch(({ message }: Error) => alert.error(message));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <>
@@ -76,12 +60,17 @@ const Code = () => {
         <div className={styles.summary}>
           <div>
             <h2 className={styles.heading}>Code Parameters</h2>
-            <CodeTable code={code} isCodeReady={isCodeReady} />
+            <CodeTable code={code.data} isCodeReady={!code.isPending} />
           </div>
 
           <div>
-            <h2 className={styles.heading}>Metadata</h2>
-            <MetadataTable metadata={metadata} isLoading={!isMetadataReady} />
+            {metadata && <h2 className={styles.heading}>Metadata</h2>}
+            {idl && <h2 className={styles.heading}>IDL</h2>}
+
+            {(isLoading || metadata) && <MetadataTable metadata={metadata} isLoading={isLoading} />}
+            {/* temp solution for a placeholder */}
+            {!isLoading && !metadata && !idl && <MetadataTable metadata={metadata} isLoading={isLoading} />}
+            {idl && <IDL value={idl} />}
           </div>
         </div>
 
@@ -90,14 +79,14 @@ const Code = () => {
           <ProgramsList
             programs={programs}
             totalCount={programs.length}
-            isLoading={isLoading}
+            isLoading={isProgramsRequestLoading}
             loadMorePrograms={loadData}
           />
         </div>
       </div>
 
       <div className={styles.buttons}>
-        {isCodeReady && (
+        {!code.isPending && (
           <UILink
             to={generatePath(absoluteRoutes.initializeProgram, { codeId })}
             text="Create program"
@@ -106,8 +95,14 @@ const Code = () => {
           />
         )}
 
-        {!isDevChain && isMetadataReady && !metadata && (
-          <Button text="Add metadata" icon={AddMetaSVG} color="light" size="large" onClick={showUploadMetadataModal} />
+        {!isLoading && !metadata && !idl && (
+          <Button
+            text="Add metadata/sails"
+            icon={AddMetaSVG}
+            color="light"
+            size="large"
+            onClick={showUploadMetadataModal}
+          />
         )}
 
         <BackButton />

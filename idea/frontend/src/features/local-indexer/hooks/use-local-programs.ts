@@ -11,7 +11,7 @@ function useLocalPrograms() {
   const { getLocalProgram } = useLocalProgram();
 
   const getFilteredPrograms = (programs: (IProgram | LocalProgram)[], params: FetchProgramsParams) => {
-    const { query, owner, status } = params;
+    const { query, owner, status, codeId } = params;
 
     return programs.filter((program) => {
       const { id, name } = program;
@@ -19,7 +19,8 @@ function useLocalPrograms() {
       if (
         (!query || id.includes(query) || name.includes(query)) &&
         (!owner || ('owner' in program && program.owner === owner)) &&
-        (!status || ('status' in program && status.includes(program.status)))
+        (!status || status.includes(program.status)) &&
+        (!codeId || program.codeId === codeId)
       )
         return true;
 
@@ -29,7 +30,9 @@ function useLocalPrograms() {
 
   const getSortedPrograms = (programs: (IProgram | LocalProgram)[]) =>
     programs.sort(
-      (program, nextProgram) => Date.parse(nextProgram.timestamp || '0') - Date.parse(program.timestamp || '0'),
+      (program, nextProgram) =>
+        Date.parse('timestamp' in nextProgram ? nextProgram.timestamp : '0') -
+        Date.parse('timestamp' in program ? program.timestamp : '0'),
     );
 
   const getLocalPrograms = async (params: FetchProgramsParams) => {

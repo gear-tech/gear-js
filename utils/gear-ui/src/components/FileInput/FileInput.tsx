@@ -8,10 +8,9 @@ import {
   ChangeEvent,
   useId,
   InputHTMLAttributes,
-  useEffect,
 } from 'react';
 import { InputProps } from '../../types';
-import { getFileSize, isFileTypeValid } from '../../utils';
+import { getFileSize } from '../../utils';
 import { Button, ButtonProps } from '../Button/Button';
 import { InputWrapper } from '../utils';
 import { ReactComponent as RemoveSVG } from './images/remove.svg';
@@ -77,15 +76,7 @@ const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInput
     reset();
   };
 
-  const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    const eventFile = target.files?.[0];
-
-    const isFileValid = !eventFile || (accept ? isFileTypeValid(eventFile, accept) : true);
-
-    if (!isFileValid) throw new Error('Wrong file format');
-
-    setFile(eventFile);
-  };
+  const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => setFile(target.files?.[0]);
 
   useChangeEffect(() => {
     if (!value) reset();

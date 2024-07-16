@@ -3,7 +3,7 @@ import { Select } from '@gear-js/ui';
 import { useFormContext } from 'react-hook-form';
 
 import { useChangeEffect } from '@/hooks';
-import { Fieldset } from '@/shared/ui/fieldset';
+import { Fieldset } from '@/shared/ui';
 
 import { PayloadItemProps } from '../../model';
 import { getItemLabel, getNextLevelName, getPayloadValue } from '../../helpers';

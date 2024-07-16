@@ -13,7 +13,8 @@ type Props = {
 
 const PreformattedBlock = ({ text, className }: Props) => (
   <SimpleBar className={clsx(styles.simpleBar, className)}>
-    <pre>{getPreformattedText(text)}</pre>
+    {/* string check cuz of sails idl */}
+    <pre>{typeof text === 'string' ? text : getPreformattedText(text)}</pre>
   </SimpleBar>
 );
 

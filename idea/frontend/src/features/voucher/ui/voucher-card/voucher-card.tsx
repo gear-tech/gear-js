@@ -13,6 +13,7 @@ import { RevokeVoucher } from '../revoke-voucher';
 import { DeclineVoucher } from '../decline-voucher';
 import { UpdateVoucher } from '../update-voucher';
 import styles from './voucher-card.module.scss';
+import { OwnerBlock } from '@/shared/ui';
 
 type Props = {
   voucher: Voucher;
@@ -68,12 +69,7 @@ function VoucherCard({ voucher, onChange }: Props) {
           <IdBlock id={id} withIcon />
 
           {/* TODO: divide BlockComponent from TimestampBlock, IdBlock etc. */}
-          <div className={styles.owner}>
-            <Identicon value={ownerAddress} size={16} theme="polkadot" />
-            {getShortName(ownerAddress)}
-
-            <Button icon={CopySVG} color="transparent" onClick={() => copyToClipboard(ownerAddress, alert)} />
-          </div>
+          <OwnerBlock ownerAddress={ownerAddress} />
 
           <BulbBlock status={getStatus()} text={withOwnershipAnnotation(getStatusText())} />
         </footer>

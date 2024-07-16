@@ -2,7 +2,7 @@ import { Button, FileInput } from '@gear-js/ui';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { FileTypes } from '@/shared/config';
-import { useChain, useCodeUpload } from '@/hooks';
+import { useChain, useCodeUpload, useContractApiWithFile } from '@/hooks';
 import { Box } from '@/shared/ui/box';
 import { Subheader } from '@/shared/ui/subheader';
 import { BackButton } from '@/shared/ui/backButton';
@@ -11,7 +11,6 @@ import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import { CodeVoucherSelect } from '@/features/voucher';
 import { useWasmFile } from '@/features/code';
 import { Input } from '@/shared/ui';
-import { useMetadataHash, useMetadataWithFile } from '@/features/metadata';
 
 import styles from './UploadCode.module.scss';
 
@@ -22,32 +21,29 @@ const defaultValues = {
 
 const UploadCode = () => {
   const { isDevChain } = useChain();
+  const form = useForm({ defaultValues });
 
   const file = useWasmFile('code');
-  const metahash = useMetadataHash(file.buffer);
-  const metadata = useMetadataWithFile(metahash);
-
-  const methods = useForm({ defaultValues });
-  const { reset, handleSubmit } = methods;
-
+  const { metadata, sails, isLoading, ...contractApi } = useContractApiWithFile(file.buffer);
   const uploadCode = useCodeUpload();
 
   const resetForm = () => {
-    reset();
+    form.reset();
     file.reset();
     metadata.reset();
   };
 
-  const onSubmit = (data: typeof defaultValues) => {
+  const handleWasmFileChange = (value: File | undefined) => {
+    form.reset();
+    contractApi.reset();
+    file.handleChange(value);
+  };
+
+  const handleSubmit = form.handleSubmit((data: typeof defaultValues) => {
     if (!file.buffer) return;
 
-    uploadCode({ optBuffer: file.buffer, metaHex: metadata.hex, resolve: resetForm, ...data });
-  };
-
-  const handleMetadataReset = () => {
-    metadata.reset();
-    reset();
-  };
+    uploadCode({ optBuffer: file.buffer, metadata, sails, resolve: resetForm, ...data });
+  });
 
   return (
     <>
@@ -55,14 +51,14 @@ const UploadCode = () => {
         <div>
           <Subheader title="Enter code parameters" size="big" />
           <Box>
-            <FormProvider {...methods}>
-              <form className={styles.form} id="uploadCodeForm" onSubmit={handleSubmit(onSubmit)}>
+            <FormProvider {...form}>
+              <form className={styles.form} id="uploadCodeForm" onSubmit={handleSubmit}>
                 <FileInput
                   label="Code file"
                   direction="y"
                   value={file.value}
                   accept={FileTypes.Wasm}
-                  onChange={(value) => (value ? file.handleChange(value) : resetForm())}
+                  onChange={handleWasmFileChange}
                 />
 
                 {file.value && (
@@ -78,14 +74,15 @@ const UploadCode = () => {
         </div>
 
         <div>
-          <Subheader size="big" title="Add metadata" />
+          <Subheader size="big" title="Add metadata/sails" />
 
           <UploadMetadata
+            value={contractApi.file}
+            onChange={contractApi.handleChange}
             metadata={metadata.value}
-            isInputDisabled={metadata.isFromStorage}
-            isLoading={file.value && !metadata.isReady}
-            onMetadataUpload={metadata.set}
-            onReset={handleMetadataReset}
+            idl={sails.idl}
+            isDisabled={contractApi.isFromStorage}
+            isLoading={isLoading}
           />
         </div>
       </div>

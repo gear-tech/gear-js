@@ -11,9 +11,10 @@ type Props<T> = {
   initialValues: DefaultValues<T>;
   onSubmit: (values: T) => void;
   children: ReactNode;
+  title?: string;
 };
 
-const Filters = <T extends FieldValues>({ initialValues, children, onSubmit }: Props<T>) => {
+const Filters = <T extends FieldValues>({ initialValues, children, onSubmit, title = 'Filters' }: Props<T>) => {
   const methods = useForm<T>({ defaultValues: initialValues });
   const { handleSubmit, reset, formState } = methods;
   const { isDirty } = formState;
@@ -27,7 +28,7 @@ const Filters = <T extends FieldValues>({ initialValues, children, onSubmit }: P
     <FormProvider {...methods}>
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <div className={styles.header}>
-          <h2 className={styles.title}>Filters</h2>
+          <h2 className={styles.title}>{title}</h2>
 
           <CSSTransition in={isDirty} timeout={AnimationTimeout.Default} mountOnEnter unmountOnExit>
             <Button text="Clear all" color="transparent" className={styles.clearAllBtn} onClick={handleResetClick} />
