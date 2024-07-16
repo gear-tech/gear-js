@@ -2536,7 +2536,7 @@ __metadata:
     react-number-format: 5.3.1
     react-router-dom: 6.16.0
     react-transition-group: 4.4.5
-    sails-js: 0.1.5
+    sails-js: 0.1.8
     sass: 1.69.1
     simplebar-react: 3.2.4
     typescript: 5.2.2
@@ -16754,9 +16754,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sails-js@npm:0.1.5":
-  version: 0.1.5
-  resolution: "sails-js@npm:0.1.5"
+"sails-js@npm:0.1.8":
+  version: 0.1.8
+  resolution: "sails-js@npm:0.1.8"
   dependencies:
     commander: 12.1.0
   peerDependencies:
@@ -16765,7 +16765,7 @@ __metadata:
     "@polkadot/types": ^11.0.1
   bin:
     sails-js: app.js
-  checksum: 858df7a601946812bb0ffda96c0dffc6ac58dc9be46bea0e65aab73a1b06fba613de5d44f70b1bf8bfff1d550e45f321b19a3a64257e634a2b615cc29183ac89
+  checksum: d3fce31881a6cafb2b65cffc79deaa371475e1207761f64f7fcdfb76d85d1bd748df075d80ec8deb6447d28b8177a1625bf33e7f5ee52202c19a41e1e993fe5a
   languageName: node
   linkType: hard
 

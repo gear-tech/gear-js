@@ -1,6 +1,6 @@
 import { CreateType, HexString, ProgramMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
-import { Sails, getServiceNamePrefix, getFnNamePrefix } from 'sails-js';
+import { Sails, getServiceNamePrefix, getFnNamePrefix, getCtorNamePrefix } from 'sails-js';
 
 import {
   MESSAGE_TYPE,
@@ -16,11 +16,14 @@ const getSailsDecodedMessagePayload = (
   sails: Sails,
 ): { value: AnyJson; serviceName?: string; functionName?: string } => {
   const { destination, payload, type, entry } = message;
-  const serviceName = getServiceNamePrefix(payload);
 
-  if (entry === MESSAGE_ENTRY_POINT.INIT)
+  if (entry === MESSAGE_ENTRY_POINT.INIT) {
+    const serviceName = getCtorNamePrefix(payload);
+
     return { value: sails.ctors[serviceName].decodePayload(payload), serviceName };
+  }
 
+  const serviceName = getServiceNamePrefix(payload);
   const isReply = isHexEmpty(destination);
   const functionName = getFnNamePrefix(payload);
 
