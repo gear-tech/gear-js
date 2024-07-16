@@ -20,4 +20,4 @@ RUN ./gear-js.sh build common
 RUN ./gear-js.sh build indexer-db
 RUN ./gear-js.sh build explorer
 
-CMD ["/bin/sh", "-c", "/app/gear-js.sh run explorer"]
+CMD ["/bin/sh", "-c", "/src/gear-js.sh run explorer"]
