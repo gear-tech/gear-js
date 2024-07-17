@@ -10,7 +10,10 @@ function useAddCodeName() {
   const alert = useAlert();
 
   return (id: HexString, name: string) =>
-    isDevChain ? Promise.resolve() : addCodeName(id, name).catch((error) => alert.error(error));
+    // timeout is gonna be removed in the upcoming indexer update, delay is needed for block data to be indexed
+    setTimeout(() => {
+      isDevChain ? Promise.resolve() : addCodeName(id, name).catch((error) => alert.error(error));
+    }, 2000);
 }
 
 export { useAddCodeName };
