@@ -20,7 +20,6 @@ import { useStateRead } from './useStateRead';
 import { useDataLoading } from './useDataLoading';
 import { useScrollLoader } from './useScrollLoader';
 import { useElementSizes } from './useElementSizes';
-import { useMessages } from './useMessages';
 import { useCodes } from './useCodes';
 import { useNodeVersion } from './useNodeVersion';
 import { useMobileDisclaimer } from './useMobileDisclaimer';
@@ -40,7 +39,6 @@ export {
   usePrograms,
   useProgramIdSchema,
   useMessage,
-  useMessages,
   useStateRead,
   useCodeUpload,
   useDataLoading,

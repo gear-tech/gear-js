@@ -1,19 +1,22 @@
 import ky, { Options } from 'ky';
 
 import { generateRandomId } from '@/shared/helpers';
-import { API_URL, LocalStorage } from '@/shared/config';
+import { API_URL, INDEXER_API_URL, LocalStorage } from '@/shared/config';
 
 import { RPCError } from './RPCError';
 import { RPCRequest, RPCResponse, RPCSuccessResponse } from './types';
 
 class RPCService {
-  protected readonly url = API_URL;
+  private url: string;
+
+  constructor(url: string) {
+    this.url = url;
+  }
 
   private static getGenesis() {
     return localStorage.getItem(LocalStorage.Genesis) as string;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   private getRequest(method: string, postParams: object): RPCRequest {
     return {
       id: generateRandomId(),
@@ -26,7 +29,7 @@ class RPCService {
     };
   }
 
-  public async callRPC<Result>(method = '', postParams: Object = {}, headers: Options['headers'] = {}) {
+  public async callRPC<Result>(method = '', postParams = {}, headers: Options['headers'] = {}) {
     const response = ky
       .post(this.url, {
         headers: { ...headers, 'Content-Type': 'application/json;charset=utf-8' },
@@ -45,6 +48,7 @@ class RPCService {
   }
 }
 
-const rpcService = new RPCService();
+const rpcService = new RPCService(API_URL);
+const INDEXER_RPC_SERVICE = new RPCService(INDEXER_API_URL);
 
-export { rpcService, RPCService };
+export { rpcService, INDEXER_RPC_SERVICE };

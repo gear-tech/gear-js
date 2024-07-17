@@ -3,17 +3,19 @@
 @use '@/shared/assets/styles/variables' as *;
 @use '@/shared/assets/styles/animations' as *;
 
-.programMessages {
-  position: sticky;
-  align-self: flex-start;
-  top: 16px;
-  flex: 1 1;
+.messages {
+  display: grid;
+  grid-template-columns: 7fr 3fr;
+  gap: 24px;
+}
 
-  .filters {
-    @include childrenMargin(5px, right);
+.heading {
+  margin-bottom: 16px;
 
-    margin-right: 12px;
-  }
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 15.6px;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .simpleBar {
@@ -34,4 +36,8 @@
 
 .placeholderBlock {
   height: toRem(60.8);
+}
+
+.search {
+  margin-bottom: 12px;
 }

@@ -72,7 +72,7 @@ const Program = () => {
       </li>
     ));
 
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(1);
 
   const renderTabs = () =>
     TABS.map((tab, index) => (
