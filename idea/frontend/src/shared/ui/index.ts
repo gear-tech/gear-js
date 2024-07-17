@@ -10,6 +10,7 @@ import { OwnerBlock } from './ownerBlock';
 import { Subheader } from './subheader';
 import { UILink } from './uiLink';
 import { Box } from './box';
+import { ProgramTabLayout } from './program-tab-layout';
 
 export {
   LabeledCheckbox,
@@ -31,4 +32,5 @@ export {
   Fieldset,
   Textarea,
   Box,
+  ProgramTabLayout,
 };
