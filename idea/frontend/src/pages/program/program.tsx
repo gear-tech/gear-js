@@ -5,7 +5,6 @@ import { generatePath, useParams } from 'react-router-dom';
 
 import { useModal, useProgram } from '@/hooks';
 import { ProgramStatus, ProgramTable } from '@/features/program';
-import { ProgramMessages } from '@/widgets/programMessages';
 import { getShortName } from '@/shared/helpers';
 import { Subheader, UILink } from '@/shared/ui';
 import { absoluteRoutes, routes } from '@/shared/config';
@@ -15,6 +14,7 @@ import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import { useMetadata, MetadataTable } from '@/features/metadata';
 import { IssueVoucher, VoucherTable } from '@/features/voucher';
 import { IDL, useSails } from '@/features/sails';
+import { ProgramMessages } from '@/features/message';
 
 import styles from './program.module.scss';
 import { useState } from 'react';

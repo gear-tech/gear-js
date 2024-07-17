@@ -21,7 +21,6 @@ import { useDataLoading } from './useDataLoading';
 import { useScrollLoader } from './useScrollLoader';
 import { useElementSizes } from './useElementSizes';
 import { useMessages } from './useMessages';
-import { useWaitlist } from './useWaitlist';
 import { useCodes } from './useCodes';
 import { useNodeVersion } from './useNodeVersion';
 import { useMobileDisclaimer } from './useMobileDisclaimer';
@@ -42,7 +41,6 @@ export {
   useProgramIdSchema,
   useMessage,
   useMessages,
-  useWaitlist,
   useStateRead,
   useCodeUpload,
   useDataLoading,
