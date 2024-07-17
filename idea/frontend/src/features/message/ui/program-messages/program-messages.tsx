@@ -5,16 +5,15 @@ import SimpleBar from 'simplebar-react';
 import { useDataLoading, useScrollLoader } from '@/hooks';
 
 import { Placeholder } from '@/entities/placeholder';
-import HorizontalMessageCardSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
+import MessageCardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
 import { FilterGroup, Filters, Radio } from '@/features/filters';
-import { List, SearchForm } from '@/shared/ui';
+import { List, SearchForm, Skeleton } from '@/shared/ui';
 
 import { useMessagesToProgram, useMessagesFromProgram } from '../../hooks';
 import { MessageCard } from '../message-card';
 import styles from './program-messages.module.scss';
 import { useState } from 'react';
 import { isHex } from '@/shared/helpers';
-import { MessageFromProgram, MessageToProgram } from '../../api';
 
 type Props = {
   programId: HexString;
@@ -41,40 +40,19 @@ const ProgramMessages = ({ programId }: Props) => {
   const fromMessages = useMessagesFromProgram({ source: programId }, !isToProgram);
   const messages = isToProgram ? toMessages : fromMessages;
 
-  // const hasMore = false;
-  // const isEmpty = true;
-  // const isLoaderShowing = false;
-
-  // const sortedMessages = [];
-
-  // const renderMessages = () => sortedMessages.map((message) => <MessageCard key={message.id} message={message} />);
-
   return (
     <div className={styles.messages}>
       <div>
-        {/* <h3 className={styles.heading}>Messages: {totalCount}</h3> */}
+        <h3 className={styles.heading}>Messages: {messages.data?.count}</h3>
 
         <List
-          items={messages.data?.result || []}
+          items={messages.data?.result}
           hasMore={messages.hasNextPage}
+          isLoading={messages.isLoading}
           renderItem={(message) => <MessageCard message={message} />}
+          renderSkeleton={() => <Skeleton SVG={MessageCardPlaceholderSVG} disabled />}
           fetchMore={messages.fetchNextPage}
         />
-
-        {/* <SimpleBar
-          className={clsx(styles.simpleBar, isLoaderShowing && styles.noOverflow)}
-          scrollableNodeProps={{ ref: scrollableNodeRef }}>
-          {isLoaderShowing ? (
-            <Placeholder
-              block={<HorizontalMessageCardSVG className={styles.placeholderBlock} />}
-              title="There are no messages yet"
-              isEmpty={isEmpty}
-              blocksCount={8}
-            />
-          ) : (
-            renderMessages()
-          )}
-        </SimpleBar> */}
       </div>
 
       <div>

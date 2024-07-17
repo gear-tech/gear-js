@@ -12,8 +12,13 @@
   }
 }
 
+.placeholder,
 .list {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.placeholder {
+  position: relative;
 }
