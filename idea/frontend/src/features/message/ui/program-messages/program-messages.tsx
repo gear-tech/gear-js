@@ -1,19 +1,14 @@
 import { HexString } from '@gear-js/api';
-import clsx from 'clsx';
-import SimpleBar from 'simplebar-react';
+import { useState } from 'react';
 
-import { useDataLoading, useScrollLoader } from '@/hooks';
-
-import { Placeholder } from '@/entities/placeholder';
 import MessageCardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
 import { FilterGroup, Filters, Radio } from '@/features/filters';
 import { List, SearchForm, Skeleton } from '@/shared/ui';
+import { isHex } from '@/shared/helpers';
 
 import { useMessagesToProgram, useMessagesFromProgram } from '../../hooks';
 import { MessageCard } from '../message-card';
 import styles from './program-messages.module.scss';
-import { useState } from 'react';
-import { isHex } from '@/shared/helpers';
 
 type Props = {
   programId: HexString;
@@ -36,8 +31,8 @@ const ProgramMessages = ({ programId }: Props) => {
   const [filters, setFilters] = useState(DEFAULT_FILTER_VALUES);
   const isToProgram = filters[FILTER_NAME] === FILTER_VALUE.TO;
 
-  const toMessages = useMessagesToProgram({ destination: programId }, isToProgram);
-  const fromMessages = useMessagesFromProgram({ source: programId }, !isToProgram);
+  const toMessages = useMessagesToProgram({ destination: programId, source: searchQuery }, isToProgram);
+  const fromMessages = useMessagesFromProgram({ source: programId, destination: searchQuery }, !isToProgram);
   const messages = isToProgram ? toMessages : fromMessages;
 
   return (
@@ -49,7 +44,7 @@ const ProgramMessages = ({ programId }: Props) => {
           items={messages.data?.result}
           hasMore={messages.hasNextPage}
           isLoading={messages.isLoading}
-          renderItem={(message) => <MessageCard message={message} />}
+          renderItem={(message) => <MessageCard isToDirection={isToProgram} message={message} />}
           renderSkeleton={() => <Skeleton SVG={MessageCardPlaceholderSVG} disabled />}
           fetchMore={messages.fetchNextPage}
         />
@@ -57,9 +52,9 @@ const ProgramMessages = ({ programId }: Props) => {
 
       <div>
         <SearchForm
-          onSubmit={setSearchQuery}
           getSchema={(schema) => schema.refine((value) => isHex(value), 'Value should be hex')}
-          placeholder="Search by id, source, destination..."
+          onSubmit={setSearchQuery}
+          placeholder="Search by id..."
           className={styles.search}
         />
 

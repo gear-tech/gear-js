@@ -1,5 +1,3 @@
-import { HexString } from '@gear-js/api';
-
 import { IBase } from '@/shared/types';
 
 import { MessageEntryPoint, MessageReadReason } from '../types';
@@ -10,14 +8,14 @@ type PaginationParameters = {
 };
 
 type MessagesToProgramParameters = PaginationParameters & {
-  destination?: HexString;
-  source?: HexString;
+  destination?: string;
+  source?: string;
   entry?: MessageEntryPoint; // maybe no need to export from types
 };
 
 type MessagesFromProgramParameters = PaginationParameters & {
-  destination?: HexString;
-  source?: HexString;
+  destination?: string;
+  source?: string;
   isInMailbox?: boolean;
 };
 

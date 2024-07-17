@@ -1,5 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
+import { DEFAULT_LIMIT } from '@/shared/config';
+
 import {
   getMessagesFromProgram,
   getMessagesToProgram,
@@ -8,7 +10,6 @@ import {
   PaginationResponse,
 } from '../api';
 import { useErrorAlert } from './use-error-alert';
-import { DEFAULT_LIMIT } from '@/shared/config';
 
 const getNextPageParam = <T>({ result, count }: PaginationResponse<T>, allPages: PaginationResponse<T>[]) => {
   const lastPageCount = result.length;
