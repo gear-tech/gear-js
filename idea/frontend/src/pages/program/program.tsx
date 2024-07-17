@@ -17,10 +17,14 @@ import { IssueVoucher, VoucherTable } from '@/features/voucher';
 import { IDL, useSails } from '@/features/sails';
 
 import styles from './program.module.scss';
+import { useState } from 'react';
+import cx from 'clsx';
 
 type Params = {
   programId: HexString;
 };
+
+const TABS = ['Metadata/Sails', 'Messages'];
 
 const Program = () => {
   const { account } = useAccount();
@@ -68,8 +72,21 @@ const Program = () => {
       </li>
     ));
 
+  const [tabIndex, setTabIndex] = useState(0);
+
+  const renderTabs = () =>
+    TABS.map((tab, index) => (
+      <button
+        key={tab}
+        type="button"
+        onClick={() => setTabIndex(index)}
+        className={cx(styles.button, index === tabIndex && styles.active)}>
+        {tab}
+      </button>
+    ));
+
   return (
-    <div>
+    <div className={styles.container}>
       <header className={styles.header}>
         {program && <h2 className={styles.programName}>{getShortName(program.name)}</h2>}
 
@@ -100,16 +117,25 @@ const Program = () => {
         )}
       </header>
 
-      <div className={styles.content}>
-        <div className={styles.leftSide}>
-          <div>
-            <Subheader title="Program details" />
-            <ProgramTable program={program} isProgramReady={isProgramReady} />
-          </div>
+      <ProgramTable program={program} isProgramReady={isProgramReady} />
 
+      <div>
+        <header className={styles.tabs}>{renderTabs()}</header>
+
+        {tabIndex === 0 && (
+          <>
+            {metadata && <MetadataTable metadata={metadata} isLoading={isLoading} />}
+            {idl && <IDL value={idl} />}
+          </>
+        )}
+
+        {tabIndex === 1 && <ProgramMessages programId={programId} />}
+      </div>
+
+      {/* <div className={styles.leftSide}>
           {vouchersCount > 0 && (
             <div>
-              {/* TODO: WithAccount HoC? or move inside VoucherTable? */}
+              {/* TODO: WithAccount HoC? or move inside VoucherTable?
               {account && (
                 <Subheader title={`Vouchers: ${vouchersCount}`}>
                   <IssueVoucher programId={programId} buttonColor="secondary" buttonSize="small" />
@@ -125,14 +151,13 @@ const Program = () => {
             {idl && <Subheader title="IDL" />}
 
             {(metadata || isLoading) && <MetadataTable metadata={metadata} isLoading={isLoading} />}
-            {/* temp solution for a placeholder */}
+            {/* temp solution for a placeholder 
             {!isLoading && !metadata && !idl && <MetadataTable metadata={metadata} isLoading={isLoading} />}
             {idl && <IDL value={idl} />}
           </div>
-        </div>
+        </div> */}
 
-        <ProgramMessages programId={programId} />
-      </div>
+      {/* <ProgramMessages programId={programId} /> */}
     </div>
   );
 };

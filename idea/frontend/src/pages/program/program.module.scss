@@ -3,12 +3,16 @@
 @use '@/shared/assets/styles/animations' as *;
 @use '@/shared/assets/styles/shared' as *;
 
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 0 toRem(28) 0;
-  border-bottom: 1px solid $gray007;
 
   &.loading {
     justify-content: flex-end;
@@ -37,16 +41,31 @@
   }
 }
 
-.content {
-  @include childrenMargin($margineLarge, right);
-
+.tabs {
   display: flex;
-  margin-top: $marginMedium;
+  gap: 32px;
 
-  .leftSide {
-    @include childrenMargin($marginMedium);
+  margin-bottom: 16px;
 
-    flex: 1 1;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+
+  .button {
+    padding-bottom: 16px;
+
+    font-family: Kanit;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20.8px;
+    color: rgba(255, 255, 255, 0.6);
+
+    background-color: transparent;
+    transition: color 0.25s, box-shadow 0.25s;
+
+    &.active {
+      color: #2bd071;
+
+      box-shadow: 0 2px 0 0 #2bd071;
+    }
   }
 }
 
