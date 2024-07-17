@@ -29,11 +29,11 @@ const ProgramMessages = ({ programId }: Props) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const [filters, setFilters] = useState(DEFAULT_FILTER_VALUES);
-  const isToProgram = filters[FILTER_NAME] === FILTER_VALUE.TO;
+  const isToDirection = filters[FILTER_NAME] === FILTER_VALUE.TO;
 
-  const toMessages = useMessagesToProgram({ destination: programId, source: searchQuery }, isToProgram);
-  const fromMessages = useMessagesFromProgram({ source: programId, destination: searchQuery }, !isToProgram);
-  const messages = isToProgram ? toMessages : fromMessages;
+  const toMessages = useMessagesToProgram({ destination: programId, source: searchQuery }, isToDirection);
+  const fromMessages = useMessagesFromProgram({ source: programId, destination: searchQuery }, !isToDirection);
+  const messages = isToDirection ? toMessages : fromMessages;
 
   return (
     <div className={styles.messages}>
@@ -44,7 +44,7 @@ const ProgramMessages = ({ programId }: Props) => {
           items={messages.data?.result}
           hasMore={messages.hasNextPage}
           isLoading={messages.isLoading}
-          renderItem={(message) => <MessageCard isToDirection={isToProgram} message={message} />}
+          renderItem={(message) => <MessageCard isToDirection={isToDirection} message={message} />}
           renderSkeleton={() => <Skeleton SVG={MessageCardPlaceholderSVG} disabled />}
           fetchMore={messages.fetchNextPage}
         />
@@ -54,7 +54,7 @@ const ProgramMessages = ({ programId }: Props) => {
         <SearchForm
           getSchema={(schema) => schema.refine((value) => isHex(value), 'Value should be hex')}
           onSubmit={setSearchQuery}
-          placeholder="Search by id..."
+          placeholder={isToDirection ? 'Search by source...' : 'Search by destination...'}
           className={styles.search}
         />
 
