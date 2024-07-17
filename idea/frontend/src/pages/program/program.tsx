@@ -146,15 +146,7 @@ const Program = () => {
             </div>
           )}
 
-          <div>
-            {metadata && <Subheader title="Metadata" />}
-            {idl && <Subheader title="IDL" />}
-
-            {(metadata || isLoading) && <MetadataTable metadata={metadata} isLoading={isLoading} />}
-            {/* temp solution for a placeholder 
-            {!isLoading && !metadata && !idl && <MetadataTable metadata={metadata} isLoading={isLoading} />}
-            {idl && <IDL value={idl} />}
-          </div>
+         
         </div> */}
 
       {/* <ProgramMessages programId={programId} /> */}

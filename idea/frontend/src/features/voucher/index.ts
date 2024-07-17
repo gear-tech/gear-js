@@ -1,5 +1,14 @@
-import { IssueVoucher, ProgramVoucherSelect, CodeVoucherSelect, VoucherTable, VoucherBadge, VoucherCard } from './ui';
-import VoucherCardPlaceholder from './assets/voucher-card-placeholder.svg?react';
+import {
+  IssueVoucher,
+  ProgramVoucherSelect,
+  CodeVoucherSelect,
+  VoucherTable,
+  VoucherBadge,
+  VoucherCard,
+  VoucherFilters,
+  Vouchers,
+} from './ui';
+
 import { useVouchers, useVoucherFilters } from './hooks';
 import { Voucher } from './types';
 
@@ -10,9 +19,10 @@ export {
   VoucherTable,
   VoucherBadge,
   VoucherCard,
-  VoucherCardPlaceholder,
+  VoucherFilters,
   useVouchers,
   useVoucherFilters,
+  Vouchers,
 };
 
 export type { Voucher };
