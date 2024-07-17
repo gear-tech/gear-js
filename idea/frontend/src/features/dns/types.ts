@@ -10,7 +10,7 @@ type Dns = {
   id: string; // same as 'name' at contract
   name: string;
   address: HexString; // same as 'program_id' at contract
-  admin: HexString | null;
+  admins: HexString[];
   createdBy: HexString;
   createdAt: string;
   updatedAt: string;
