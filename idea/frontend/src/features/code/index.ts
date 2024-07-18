@@ -1,4 +1,5 @@
+import { useCode, useCodes } from './api';
 import { CodeTable } from './ui';
-import { useWasmFileHandler, useWasmFile, useCode } from './hooks';
+import { useWasmFileHandler, useWasmFile } from './hooks';
 
-export { CodeTable, useWasmFileHandler, useWasmFile, useCode };
+export { CodeTable, useWasmFileHandler, useWasmFile, useCode, useCodes };
