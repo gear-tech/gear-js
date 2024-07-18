@@ -1,8 +1,8 @@
 import { HexString } from '@gear-js/api';
 
 import { Program } from '@/features/program';
+import { Code } from '@/features/code';
 import { IBase } from '@/shared/types';
-import { ICode } from '@/entities/code';
 
 type ChainProgram = Pick<Program, 'id' | 'name' | 'status'> & {
   codeId: HexString | null;
@@ -12,6 +12,6 @@ type DBProgram = IBase & Pick<Program, 'id' | 'name' | 'status' | 'metahash' | '
 
 type LocalProgram = ChainProgram | DBProgram;
 
-type LocalCode = Pick<ICode, 'id' | 'name' | 'metahash'>;
+type LocalCode = Pick<Code, 'id' | 'name' | 'metahash'>;
 
 export type { DBProgram, LocalProgram, LocalCode };

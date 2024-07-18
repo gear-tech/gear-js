@@ -1,3 +1,3 @@
-import { fetchCode, fetchCodes, addCodeName } from './requests';
+import { addCodeName } from './requests';
 
-export { fetchCode, fetchCodes, addCodeName };
+export { addCodeName };

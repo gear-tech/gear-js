@@ -1,11 +1,10 @@
-import { useState } from 'react';
 import { useAccount } from '@gear-js/react-hooks';
+import { useState } from 'react';
 
-import { useCodes } from '@/features/code';
+import { CodeCard, useCodes } from '@/features/code';
 import { Filters, FilterGroup, Radio } from '@/features/filters';
 import { List, SearchForm, Skeleton } from '@/shared/ui';
 import { Code } from '@/features/code/api';
-import { HorizontalCodeCard } from '@/entities/code';
 import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
 
 import styles from './Codes.module.scss';
@@ -25,7 +24,7 @@ const Codes = () => {
     uploadedBy: filterValues.owner === 'user' ? account?.decodedAddress : undefined,
   });
 
-  const renderItem = (code: Code) => <HorizontalCodeCard code={code} />;
+  const renderItem = (code: Code) => <CodeCard code={code} />;
   const renderSkeleton = () => <Skeleton SVG={CardPlaceholderSVG} disabled />;
 
   return (

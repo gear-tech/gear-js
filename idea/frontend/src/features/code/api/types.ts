@@ -1,9 +1,9 @@
 import { HexString } from '@gear-js/api';
 
 import { PaginationParameters } from '@/api';
-
-import { CodeStatus } from '@/entities/code';
 import { IBase } from '@/shared/types';
+
+import { CodeStatus } from '../consts';
 
 type GetCodesParameters = PaginationParameters & {
   uploadedBy?: string;

@@ -1,7 +1,7 @@
 import { NodeSection } from '@/entities/node';
 import { NODES_API_URL } from '@/shared/config';
 
-import { fetchCode, fetchCodes, addCodeName } from './code';
+import { addCodeName } from './code';
 import { addProgramName } from './program';
 import { fetchTestBalance } from './balance';
 import { fetchMessage, fetchMessages } from './message';
@@ -22,8 +22,6 @@ export {
   addState,
   fetchStates,
   fetchState,
-  fetchCode as getCode,
-  fetchCodes as getCodes,
   fetchMessage as getMessage,
   fetchMessages as getMessages,
   fetchTestBalance as getTestBalance,
