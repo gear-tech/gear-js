@@ -2,7 +2,7 @@ import { NodeSection } from '@/entities/node';
 import { NODES_API_URL } from '@/shared/config';
 
 import { fetchCode, fetchCodes, addCodeName } from './code';
-import { fetchProgram, fetchPrograms, addProgramName } from './program';
+import { addProgramName } from './program';
 import { fetchTestBalance } from './balance';
 import { fetchMessage, fetchMessages } from './message';
 import { fetchMetadata, addMetadata } from './metadata';
@@ -15,9 +15,7 @@ const getNodes = () => fetch(NODES_API_URL).then((result) => result.json() as un
 export {
   INFINITE_QUERY,
   getNodes,
-  fetchProgram,
   addProgramName,
-  fetchPrograms,
   addMetadata,
   addCodeName,
   fetchMetadata,

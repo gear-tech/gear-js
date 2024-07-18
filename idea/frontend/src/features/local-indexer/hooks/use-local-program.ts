@@ -35,6 +35,7 @@ function useLocalProgram() {
     }
   };
 
+  // TODO: remove
   const getHasState = async (metahash: HexString | null) => {
     if (!metahash) return false;
 

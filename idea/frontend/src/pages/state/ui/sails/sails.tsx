@@ -9,7 +9,7 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { Sails as SailsType, ZERO_ADDRESS } from 'sails-js';
 import { z } from 'zod';
 
-import { useProgram } from '@/hooks';
+import { useProgram } from '@/features/program';
 import { getPreformattedText, isUndefined } from '@/shared/helpers';
 import { BackButton } from '@/shared/ui/backButton';
 import { Box } from '@/shared/ui/box';
@@ -96,7 +96,7 @@ const StateForm = ({ programId, sails }: { programId: HexString; sails: SailsTyp
 
 const Sails = () => {
   const programId = useProgramId();
-  const { program } = useProgram(programId);
+  const { data: program } = useProgram(programId);
   const { sails } = useSails(program?.codeId);
 
   return sails ? <StateForm programId={programId} sails={sails} /> : null;

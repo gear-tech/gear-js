@@ -3,9 +3,7 @@ import { useLoading } from './useLoading';
 import { useMessage } from './useMessage';
 import { useOutsideClick } from './useOutsideClick';
 import { useChangeEffect } from './useChangeEffect';
-import { useProgram } from './useProgram';
 import { useMessageActions } from './useMessageActions';
-import { usePrograms } from './usePrograms';
 import { useProgramIdSchema } from './useProgramIdSchema';
 import { useCodeUpload } from './useCodeUpload';
 import { useMessageClaim } from './useMessageClaim';
@@ -36,8 +34,6 @@ export {
   useBlocks,
   useEvents,
   useChain,
-  useProgram,
-  usePrograms,
   useProgramIdSchema,
   useMessage,
   useStateRead,

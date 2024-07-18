@@ -5,7 +5,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { addState, fetchState, fetchStates } from '@/api';
-import { useChain, useProgram, useStateRead } from '@/hooks';
+import { useChain, useStateRead } from '@/hooks';
+import { useProgram } from '@/features/program';
 import { getPreformattedText, isNullOrUndefined, readFileAsync } from '@/shared/helpers';
 import { FileTypes } from '@/shared/config';
 import { BackButton } from '@/shared/ui/backButton';
@@ -32,7 +33,7 @@ const Wasm = () => {
   const watchValues = useWatch({ control });
 
   const programId = useProgramId();
-  const { program } = useProgram(programId);
+  const { data: program } = useProgram(programId);
   const { metadata: programMetadata } = useMetadata(program?.metahash);
 
   const { state, isStateRead, isState, readWasmState, resetState } = useStateRead(programId);

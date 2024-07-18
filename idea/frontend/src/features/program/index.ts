@@ -1,7 +1,6 @@
-import { useProgram, usePrograms, Program as IndexerProgram } from './api';
+import { useProgram, usePrograms, Program, ProgramsParameters } from './api';
 import { ProgramTable, Programs, ProgramFilters } from './ui';
 import { useProgramStatus, useProgramFilters } from './hooks';
-import { Program, IProgram } from './types';
 import { ProgramStatus } from './consts';
 
 export {
@@ -15,4 +14,4 @@ export {
   usePrograms,
 };
 
-export type { Program, IProgram, IndexerProgram };
+export type { Program, ProgramsParameters };

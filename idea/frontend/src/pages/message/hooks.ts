@@ -1,6 +1,6 @@
 import { MESSAGE_TYPE, Message } from '@/features/message';
+import { useProgram } from '@/features/program';
 import { useSails } from '@/features/sails';
-import { useProgram } from '@/hooks';
 
 function useMessageSails(message: Message | undefined) {
   const getProgramId = () => {
@@ -10,7 +10,7 @@ function useMessageSails(message: Message | undefined) {
     return type === MESSAGE_TYPE.USER_MESSAGE_SENT ? source : destination;
   };
 
-  const { program } = useProgram(getProgramId());
+  const { data: program } = useProgram(getProgramId());
 
   return useSails(program?.codeId);
 }

@@ -1,6 +1,3 @@
-import { INDEXER_RPC_SERVICE } from '@/shared/services/rpcService';
-
-import { METHOD } from './consts';
 import {
   MessageToProgram,
   MessageFromProgram,
@@ -8,14 +5,10 @@ import {
   MessagesFromProgramParameters,
   PaginationResponse,
 } from './types';
+import { useMessagesToProgram, useMessagesFromProgram } from './hooks';
 
-const getMessagesToProgram = (parameters: MessagesToProgramParameters) =>
-  INDEXER_RPC_SERVICE.callRPC<PaginationResponse<MessageToProgram>>(METHOD.TO_PROGRAM, parameters);
+export { useMessagesToProgram, useMessagesFromProgram };
 
-const getMessagesFromProgram = (parameters: MessagesFromProgramParameters) =>
-  INDEXER_RPC_SERVICE.callRPC<PaginationResponse<MessageFromProgram>>(METHOD.FROM_PROGRAM, parameters);
-
-export { getMessagesToProgram, getMessagesFromProgram };
 export type {
   MessageToProgram,
   MessageFromProgram,

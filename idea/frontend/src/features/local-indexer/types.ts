@@ -4,11 +4,11 @@ import { Program } from '@/features/program';
 import { IBase } from '@/shared/types';
 import { ICode } from '@/entities/code';
 
-type ChainProgram = Pick<Program, 'id' | 'name' | 'status' | 'metahash' | 'hasState'> & {
+type ChainProgram = Pick<Program, 'id' | 'name' | 'status'> & {
   codeId: HexString | null;
 };
 
-type DBProgram = IBase & Pick<Program, 'id' | 'name' | 'status' | 'metahash' | 'codeId' | 'owner' | 'hasState'>;
+type DBProgram = IBase & Pick<Program, 'id' | 'name' | 'status' | 'metahash' | 'codeId' | 'owner'>;
 
 type LocalProgram = ChainProgram | DBProgram;
 

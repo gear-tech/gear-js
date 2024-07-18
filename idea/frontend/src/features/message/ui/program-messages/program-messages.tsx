@@ -6,7 +6,7 @@ import { FilterGroup, Filters, Radio } from '@/features/filters';
 import { List, ProgramTabLayout, SearchForm, Skeleton } from '@/shared/ui';
 import { isHex } from '@/shared/helpers';
 
-import { useMessagesToProgram, useMessagesFromProgram } from '../../hooks';
+import { useMessagesToProgram, useMessagesFromProgram } from '../../api';
 import { MessageCard } from '../message-card';
 
 type Props = {

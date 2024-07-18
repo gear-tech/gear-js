@@ -2,7 +2,8 @@ import { Button, Input, Textarea } from '@gear-js/ui';
 import { useEffect, useMemo } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
-import { useProgram, useStateRead } from '@/hooks';
+import { useProgram } from '@/features/program';
+import { useStateRead } from '@/hooks';
 import { getPreformattedText, isNullOrUndefined } from '@/shared/helpers';
 import { BackButton } from '@/shared/ui/backButton';
 import { Box } from '@/shared/ui/box';
@@ -18,7 +19,7 @@ import styles from './Full.module.scss';
 const Full = () => {
   const programId = useProgramId();
 
-  const { program } = useProgram(programId);
+  const { data: program } = useProgram(programId);
   const { metadata, isMetadataReady } = useMetadata(program?.metahash);
   const { state, isStateRead, isState, readFullState, resetState } = useStateRead(programId);
 

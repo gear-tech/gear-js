@@ -2,11 +2,11 @@ import { Button } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
 import { generatePath, useParams } from 'react-router-dom';
 
-import { useChain, useDataLoading, useModal, usePrograms } from '@/hooks';
+import { useChain, useModal } from '@/hooks';
 import { BackButton } from '@/shared/ui/backButton';
 import { absoluteRoutes } from '@/shared/config';
 import { UILink } from '@/shared/ui/uiLink';
-import { Programs } from '@/features/program';
+import { Programs, usePrograms } from '@/features/program';
 import { MetadataTable, useMetadata } from '@/features/metadata';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
@@ -29,8 +29,7 @@ const Code = () => {
   const localCode = useLocalCode(codeId);
   const code = isDevChain ? localCode : storageCode;
 
-  const { programs, isLoading: isProgramsRequestLoading, fetchPrograms } = usePrograms();
-  const { loadData } = useDataLoading({ defaultParams: { codeId }, fetchData: fetchPrograms });
+  const programs = usePrograms({ codeId });
 
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(code.data?.metahash);
   const { idl, isLoading: isSailsLoading, refetch: refetchSails } = useSails(codeId);
@@ -77,12 +76,13 @@ const Code = () => {
         <div>
           <h2 className={styles.heading}>Programs</h2>
 
-          {/* <ProgramsList
-            programs={programs}
-            totalCount={programs.length}
-            isLoading={isProgramsRequestLoading}
-            loadMorePrograms={loadData}
-          /> */}
+          <Programs
+            items={programs.data?.result}
+            isLoading={programs.isLoading}
+            hasMore={programs.hasNextPage}
+            fetchMore={programs.fetchNextPage}
+            vertical
+          />
         </div>
       </div>
 
