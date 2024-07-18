@@ -1,5 +1,6 @@
 import { Link, generatePath } from 'react-router-dom';
 
+import { LocalCode } from '@/features/local-indexer';
 import { absoluteRoutes, routes } from '@/shared/config';
 import { IdBlock } from '@/shared/ui';
 import { ActionLink } from '@/shared/ui/ActionLink';
@@ -11,11 +12,11 @@ import { Code } from '../../api';
 import styles from './code-card.module.scss';
 
 type Props = {
-  code: Code;
+  code: Code | LocalCode;
 };
 
 function CodeCard({ code }: Props) {
-  const { id, timestamp, name } = code;
+  const { id, name } = code;
 
   const to = `/code/${id}`;
 
@@ -26,10 +27,10 @@ function CodeCard({ code }: Props) {
           {name || 'Code'}
         </Link>
 
-        {timestamp && (
+        {'timestamp' in code && (
           <div className={styles.otherInfo}>
             <IdBlock id={id} size="medium" withIcon color="light" />
-            <TimestampBlock color="light" withIcon timestamp={timestamp} />
+            <TimestampBlock color="light" withIcon timestamp={code.timestamp} />
           </div>
         )}
       </div>

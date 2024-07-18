@@ -18,7 +18,6 @@ import { useStateRead } from './useStateRead';
 import { useDataLoading } from './useDataLoading';
 import { useScrollLoader } from './useScrollLoader';
 import { useElementSizes } from './useElementSizes';
-import { useCodes } from './useCodes';
 import { useNodeVersion } from './useNodeVersion';
 import { useMobileDisclaimer } from './useMobileDisclaimer';
 import { useNetworkIcon } from './useNetworkIcon';
@@ -52,7 +51,6 @@ export {
   useAddCodeName,
   useBalanceTransfer,
   useEventSubscriptions,
-  useCodes,
   useOnboarding,
   useNodeVersion,
   useMobileDisclaimer,

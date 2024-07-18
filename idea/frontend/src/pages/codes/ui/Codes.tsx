@@ -1,10 +1,12 @@
 import { useAccount } from '@gear-js/react-hooks';
 import { useState } from 'react';
 
-import { CodeCard, useCodes } from '@/features/code';
+import { CodeCard, useCodes, Code } from '@/features/code';
+import { LocalCode, useLocalCodes } from '@/features/local-indexer';
 import { Filters, FilterGroup, Radio } from '@/features/filters';
+import { useChain } from '@/hooks';
 import { List, SearchForm, Skeleton } from '@/shared/ui';
-import { Code } from '@/features/code/api';
+
 import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
 
 import styles from './Codes.module.scss';
@@ -15,16 +17,21 @@ const DEFAULT_FILTER_VALUES = {
 
 const Codes = () => {
   const { account } = useAccount();
+  const { isDevChain } = useChain();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filterValues, setFilterValues] = useState(DEFAULT_FILTER_VALUES);
 
-  const codes = useCodes({
+  const filterParams = {
     query: searchQuery,
     uploadedBy: filterValues.owner === 'user' ? account?.decodedAddress : undefined,
-  });
+  };
 
-  const renderItem = (code: Code) => <CodeCard code={code} />;
+  const storageCodes = useCodes(filterParams);
+  const localCodes = useLocalCodes(filterParams);
+  const codes = isDevChain ? localCodes : storageCodes;
+
+  const renderItem = (code: Code | LocalCode) => <CodeCard code={code} />;
   const renderSkeleton = () => <Skeleton SVG={CardPlaceholderSVG} disabled />;
 
   return (
@@ -42,21 +49,23 @@ const Codes = () => {
         renderSkeleton={renderSkeleton}
       />
 
-      <Filters initialValues={DEFAULT_FILTER_VALUES} onSubmit={setFilterValues}>
-        <FilterGroup name="owner" onSubmit={setFilterValues}>
-          <Radio name="owner" value="all" label="All codes" onSubmit={setFilterValues} />
+      {!isDevChain && (
+        <Filters initialValues={DEFAULT_FILTER_VALUES} onSubmit={setFilterValues}>
+          <FilterGroup name="owner" onSubmit={setFilterValues}>
+            <Radio name="owner" value="all" label="All codes" onSubmit={setFilterValues} />
 
-          {account && (
-            <Radio
-              name="owner"
-              value="user"
-              label="My codes"
-              className={styles.ownerFilter}
-              onSubmit={setFilterValues}
-            />
-          )}
-        </FilterGroup>
-      </Filters>
+            {account && (
+              <Radio
+                name="owner"
+                value="user"
+                label="My codes"
+                className={styles.ownerFilter}
+                onSubmit={setFilterValues}
+              />
+            )}
+          </FilterGroup>
+        </Filters>
+      )}
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { useCode, useCodes } from './hooks';
-import { Code } from './types';
+import { Code, GetCodesParameters } from './types';
 
 export { useCode, useCodes };
-export type { Code };
+export type { Code, GetCodesParameters };
