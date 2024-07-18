@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import { generatePath, Link } from 'react-router-dom';
 
 import { absoluteRoutes, routes } from '@/shared/config';
@@ -8,14 +7,14 @@ import { TimestampBlock } from '@/shared/ui/timestampBlock';
 import CreateProgramSVG from '@/shared/assets/images/actions/create-program.svg?react';
 import RelatedrelatedProgramsSVG from '@/shared/assets/images/actions/related-programs.svg?react';
 
-import { ICode } from '../../model';
 import styles from './HorizontalCodeCard.module.scss';
+import { Code } from '@/features/code/api';
 
 type Props = {
-  code: ICode;
+  code: Code;
 };
 
-const HorizontalCodeCard = memo(({ code }: Props) => {
+const HorizontalCodeCard = ({ code }: Props) => {
   const { id: codeId, timestamp, name } = code;
 
   const to = `/code/${codeId}`;
@@ -24,7 +23,7 @@ const HorizontalCodeCard = memo(({ code }: Props) => {
     <article className={styles.horizontalCodeCard}>
       <div className={styles.content}>
         <Link to={to} className={styles.name}>
-          {name}
+          {name || 'Code'}
         </Link>
         {timestamp && (
           <div className={styles.otherInfo}>
@@ -45,6 +44,6 @@ const HorizontalCodeCard = memo(({ code }: Props) => {
       </div>
     </article>
   );
-});
+};
 
 export { HorizontalCodeCard };

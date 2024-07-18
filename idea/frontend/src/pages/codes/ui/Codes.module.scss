@@ -1,18 +1,18 @@
-@use '@/shared/assets/styles/mixins' as *;
-@use '@/shared/assets/styles/variables' as *;
 @use '@gear-js/ui/headings' as *;
+@use '@/shared/assets/styles/variables' as *;
 
-.pageWrapper {
-  @include childrenMargin(22px, right);
-
-  display: flex;
-
-  .codesSection {
-    flex: 1 1;
-  }
+.container {
+  display: grid;
+  grid-template-columns: 7.75fr 2.25fr;
+  gap: 16px 24px;
+  align-items: flex-start;
 }
 
 .heading {
   @include heading(24px, 1.3, 500);
   color: $gray800;
+}
+
+.search {
+  margin-bottom: 12px;
 }
