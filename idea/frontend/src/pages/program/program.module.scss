@@ -1,6 +1,5 @@
 @use '@/shared/assets/styles/mixins' as *;
 @use '@/shared/assets/styles/variables' as *;
-@use '@/shared/assets/styles/animations' as *;
 @use '@/shared/assets/styles/shared' as *;
 
 .container {
@@ -14,12 +13,7 @@
   align-items: center;
   justify-content: space-between;
 
-  &.loading {
-    justify-content: flex-end;
-  }
-
-  .programName {
-    @include fadeAppear();
+  .name {
     flex: 1 1;
     overflow-wrap: anywhere;
     color: $textColor;
@@ -42,10 +36,10 @@
 }
 
 .tabs {
+  margin-bottom: 16px;
+
   display: flex;
   gap: 32px;
-
-  margin-bottom: 16px;
 
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 
@@ -67,10 +61,4 @@
       box-shadow: 0 2px 0 0 #2bd071;
     }
   }
-}
-
-.vouchersList {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 }

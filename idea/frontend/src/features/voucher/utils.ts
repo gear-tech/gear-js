@@ -33,7 +33,7 @@ function getTime(ms: number) {
   return result.trim();
 }
 
-const getVouchers = (url: string, params: { offset: number; limit: number; id: string }) => {
+const getVouchers = (url: string, params: { programs?: string[]; offset: number; limit: number; id: string }) => {
   const method = 'POST';
   const body = JSON.stringify(params);
   const headers = { 'Content-Type': 'application/json' };

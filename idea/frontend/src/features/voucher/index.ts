@@ -2,11 +2,10 @@ import {
   IssueVoucher,
   ProgramVoucherSelect,
   CodeVoucherSelect,
-  VoucherTable,
   VoucherBadge,
-  VoucherCard,
   VoucherFilters,
   Vouchers,
+  ProgramVouchers,
 } from './ui';
 
 import { useVouchers, useVoucherFilters } from './hooks';
@@ -16,13 +15,12 @@ export {
   IssueVoucher,
   ProgramVoucherSelect,
   CodeVoucherSelect,
-  VoucherTable,
   VoucherBadge,
-  VoucherCard,
   VoucherFilters,
   useVouchers,
   useVoucherFilters,
   Vouchers,
+  ProgramVouchers,
 };
 
 export type { Voucher };

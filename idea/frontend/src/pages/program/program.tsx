@@ -1,18 +1,17 @@
 import { HexString } from '@polkadot/util/types';
 import { Button } from '@gear-js/ui';
-import { useAccount, useAccountVouchers } from '@gear-js/react-hooks';
 import { generatePath, useParams } from 'react-router-dom';
 
 import { useModal, useProgram } from '@/hooks';
 import { ProgramStatus, ProgramTable } from '@/features/program';
 import { getShortName } from '@/shared/helpers';
-import { Subheader, UILink } from '@/shared/ui';
+import { UILink } from '@/shared/ui';
 import { absoluteRoutes, routes } from '@/shared/config';
 import SendSVG from '@/shared/assets/images/actions/send.svg?react';
 import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import { useMetadata, MetadataTable } from '@/features/metadata';
-import { IssueVoucher, VoucherTable } from '@/features/voucher';
+import { ProgramVouchers } from '@/features/voucher';
 import { IDL, useSails } from '@/features/sails';
 import { ProgramMessages } from '@/features/message';
 
@@ -24,10 +23,9 @@ type Params = {
   programId: HexString;
 };
 
-const TABS = ['Metadata/Sails', 'Messages'];
+const TABS = ['Metadata/Sails', 'Messages', 'Vouchers'];
 
 const Program = () => {
-  const { account } = useAccount();
   const { programId } = useParams() as Params;
   const { showModal, closeModal } = useModal();
 
@@ -61,18 +59,7 @@ const Program = () => {
     });
   };
 
-  const { vouchers } = useAccountVouchers(programId);
-  const voucherEntries = Object.entries(vouchers || {});
-  const vouchersCount = voucherEntries.length;
-
-  const renderVouchers = () =>
-    voucherEntries.map(([id, { expiry, owner, codeUploading }]) => (
-      <li key={id}>
-        <VoucherTable id={id as HexString} expireBlock={expiry} owner={owner} isCodeUploadEnabled={codeUploading} />
-      </li>
-    ));
-
-  const [tabIndex, setTabIndex] = useState(1);
+  const [tabIndex, setTabIndex] = useState(2);
 
   const renderTabs = () =>
     TABS.map((tab, index) => (
@@ -88,7 +75,7 @@ const Program = () => {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        {program && <h2 className={styles.programName}>{getShortName(program.name)}</h2>}
+        {program && <h2 className={styles.name}>{getShortName(program.name)}</h2>}
 
         {program?.status === ProgramStatus.Active && (
           <div className={styles.links}>
@@ -130,26 +117,8 @@ const Program = () => {
         )}
 
         {tabIndex === 1 && <ProgramMessages programId={programId} />}
+        {tabIndex === 2 && <ProgramVouchers programId={programId} />}
       </div>
-
-      {/* <div className={styles.leftSide}>
-          {vouchersCount > 0 && (
-            <div>
-              {/* TODO: WithAccount HoC? or move inside VoucherTable?
-              {account && (
-                <Subheader title={`Vouchers: ${vouchersCount}`}>
-                  <IssueVoucher programId={programId} buttonColor="secondary" buttonSize="small" />
-                </Subheader>
-              )}
-
-              <ul className={styles.vouchersList}>{renderVouchers()}</ul>
-            </div>
-          )}
-
-         
-        </div> */}
-
-      {/* <ProgramMessages programId={programId} /> */}
     </div>
   );
 };
