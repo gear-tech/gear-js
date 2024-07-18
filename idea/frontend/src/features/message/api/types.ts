@@ -1,11 +1,8 @@
 import { IBase } from '@/shared/types';
 
-import { MessageEntryPoint, MessageReadReason } from '../types';
+import { PaginationParameters, PaginationResponse } from '@/api';
 
-type PaginationParameters = {
-  limit?: number;
-  offset?: number;
-};
+import { MessageEntryPoint, MessageReadReason } from '../types';
 
 type MessagesToProgramParameters = PaginationParameters & {
   destination?: string;
@@ -39,20 +36,10 @@ type MessageFromProgram = Message & {
   readReason?: MessageReadReason | null; // maybe no need to export from types
 };
 
-type PaginationResponse<T> = {
-  result: T[];
-  count: number;
-};
-
-type MessagesToProgramResponse = PaginationResponse<MessageToProgram>;
-type MessagesFromProgramResponse = PaginationResponse<MessageFromProgram>;
-
 export type {
   MessageToProgram,
   MessageFromProgram,
   MessagesToProgramParameters,
   MessagesFromProgramParameters,
   PaginationResponse,
-  MessagesToProgramResponse,
-  MessagesFromProgramResponse,
 };

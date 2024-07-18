@@ -5,17 +5,15 @@ import {
   MessageToProgram,
   MessageFromProgram,
   MessagesToProgramParameters,
-  MessagesToProgramResponse,
   MessagesFromProgramParameters,
-  MessagesFromProgramResponse,
   PaginationResponse,
 } from './types';
 
 const getMessagesToProgram = (parameters: MessagesToProgramParameters) =>
-  INDEXER_RPC_SERVICE.callRPC<MessagesToProgramResponse>(METHOD.TO_PROGRAM, parameters);
+  INDEXER_RPC_SERVICE.callRPC<PaginationResponse<MessageToProgram>>(METHOD.TO_PROGRAM, parameters);
 
 const getMessagesFromProgram = (parameters: MessagesFromProgramParameters) =>
-  INDEXER_RPC_SERVICE.callRPC<MessagesFromProgramResponse>(METHOD.FROM_PROGRAM, parameters);
+  INDEXER_RPC_SERVICE.callRPC<PaginationResponse<MessageFromProgram>>(METHOD.FROM_PROGRAM, parameters);
 
 export { getMessagesToProgram, getMessagesFromProgram };
 export type {

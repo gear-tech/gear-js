@@ -28,6 +28,7 @@ import { useValidationSchema, useBalanceSchema, useGasLimitSchema } from './sche
 import { useSignAndSend } from './use-sign-and-send';
 import { useContractApiWithFile } from './use-contract-api-with-file';
 import { useModalState } from './use-modal-state';
+import { useErrorAlert } from './use-error-alert';
 
 export {
   useModal,
@@ -66,4 +67,5 @@ export {
   useBalanceSchema,
   useGasLimitSchema,
   useModalState,
+  useErrorAlert,
 };

@@ -8,4 +8,14 @@ type PaginationModel = {
   query?: string;
 };
 
-export type { PaginationModel };
+type PaginationParameters = {
+  limit?: number;
+  offset?: number;
+};
+
+type PaginationResponse<T> = {
+  result: T[];
+  count: number;
+};
+
+export type { PaginationModel, PaginationParameters, PaginationResponse };

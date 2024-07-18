@@ -9,13 +9,14 @@ import { ContentLoader } from '@/shared/ui/contentLoader';
 import TablePlaceholderSVG from '@/shared/assets/images/placeholders/table.svg?react';
 import { LocalProgram } from '@/features/local-indexer';
 
-import { IProgram } from '../../types';
+import { Program } from '../../api';
+
 import { PROGRAM_STATUS_NAME } from '../../consts';
 import { getBulbStatus } from '../../utils';
 import styles from './program-table.module.scss';
 
 type Props = {
-  program: IProgram | LocalProgram | undefined;
+  program: Program | LocalProgram | undefined;
   isProgramReady: boolean;
 };
 
@@ -23,7 +24,14 @@ const ProgramTable = ({ program, isProgramReady }: Props) => {
   const { codeId } = program || {};
   const blockId = program && 'blockHash' in program ? program.blockHash : undefined;
 
-  return isProgramReady && program ? (
+  if (!isProgramReady || !program)
+    return (
+      <ContentLoader text="There is no program" isEmpty={isProgramReady && !program}>
+        <TablePlaceholderSVG />
+      </ContentLoader>
+    );
+
+  return (
     <div className={styles.table}>
       <Table>
         <TableRow name="Program ID">
@@ -55,10 +63,6 @@ const ProgramTable = ({ program, isProgramReady }: Props) => {
         )}
       </Table>
     </div>
-  ) : (
-    <ContentLoader text="There is no program" isEmpty={isProgramReady && !program}>
-      <TablePlaceholderSVG />
-    </ContentLoader>
   );
 };
 

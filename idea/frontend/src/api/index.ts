@@ -6,6 +6,7 @@ import { fetchTestBalance } from './balance';
 import { fetchMessage, fetchMessages } from './message';
 import { fetchMetadata, addMetadata } from './metadata';
 import { addState, fetchStates, fetchState } from './state';
+import { PaginationParameters, PaginationResponse } from './types';
 
 const getNodes = () => fetch(NODES_API_URL).then((result) => result.json() as unknown as NodeSection[]);
 
@@ -26,3 +27,5 @@ export {
   fetchMessages as getMessages,
   fetchTestBalance as getTestBalance,
 };
+
+export type { PaginationParameters, PaginationResponse };

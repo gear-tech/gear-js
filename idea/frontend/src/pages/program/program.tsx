@@ -1,23 +1,23 @@
 import { HexString } from '@polkadot/util/types';
 import { Button } from '@gear-js/ui';
+import cx from 'clsx';
+import { useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
 
-import { useModal, useProgram } from '@/hooks';
-import { ProgramStatus, ProgramTable } from '@/features/program';
+import { useModal } from '@/hooks';
+import { ProgramStatus, ProgramTable, useProgram } from '@/features/program';
 import { getShortName } from '@/shared/helpers';
 import { UILink } from '@/shared/ui';
 import { absoluteRoutes, routes } from '@/shared/config';
 import SendSVG from '@/shared/assets/images/actions/send.svg?react';
 import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
-import { useMetadata, MetadataTable } from '@/features/metadata';
+import { useMetadata, MetadataTable, isState } from '@/features/metadata';
 import { ProgramVouchers } from '@/features/voucher';
 import { IDL, useSails } from '@/features/sails';
 import { ProgramMessages } from '@/features/message';
 
 import styles from './program.module.scss';
-import { useState } from 'react';
-import cx from 'clsx';
 
 type Params = {
   programId: HexString;
@@ -29,18 +29,20 @@ const Program = () => {
   const { programId } = useParams() as Params;
   const { showModal, closeModal } = useModal();
 
-  const { program, isProgramReady, setProgramName } = useProgram(programId);
+  const { data: program, isLoading: isProgramLoading, refetch: refetchProgram } = useProgram(programId);
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(program?.metahash);
   const { idl, sails, isLoading: isSailsLoading, refetch: refetchSails } = useSails(program?.codeId);
   const isLoading = !isMetadataReady || isSailsLoading;
   const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => Object.keys(queries).length) : false;
+
+  const [tabIndex, setTabIndex] = useState(0);
 
   const openUploadMetadataModal = () => {
     if (!program) throw new Error('Program is not found');
     if (!program.codeId) throw new Error('CodeId is not found'); // TODO: take a look at local program
 
     const onSuccess = (name: string, metadataHex?: HexString) => {
-      if (name) setProgramName(name);
+      if (name) refetchProgram();
 
       return metadataHex ? setMetadataHex(metadataHex) : refetchSails();
     };
@@ -59,8 +61,6 @@ const Program = () => {
     });
   };
 
-  const [tabIndex, setTabIndex] = useState(2);
-
   const renderTabs = () =>
     TABS.map((tab, index) => (
       <button
@@ -75,7 +75,8 @@ const Program = () => {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        {program && <h2 className={styles.name}>{getShortName(program.name)}</h2>}
+        {/* why program name is nullable? */}
+        {program && <h2 className={styles.name}>{getShortName(program.name || '')}</h2>}
 
         {program?.status === ProgramStatus.Active && (
           <div className={styles.links}>
@@ -87,7 +88,7 @@ const Program = () => {
               className={styles.fixWidth}
             />
 
-            {!isLoading && (program.hasState || isAnyQuery) && (
+            {!isLoading && (isState(metadata) || isAnyQuery) && (
               <UILink
                 to={generatePath(metadata ? routes.state : routes.sailsState, { programId })}
                 icon={ReadSVG}
@@ -104,7 +105,7 @@ const Program = () => {
         )}
       </header>
 
-      <ProgramTable program={program} isProgramReady={isProgramReady} />
+      <ProgramTable program={program} isProgramReady={!isProgramLoading} />
 
       <div>
         <header className={styles.tabs}>{renderTabs()}</header>
