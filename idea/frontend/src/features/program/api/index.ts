@@ -1,5 +1,5 @@
-import { useProgram } from './hooks';
+import { useProgram, usePrograms } from './hooks';
 import { Program } from './types';
 
-export { useProgram };
+export { useProgram, usePrograms };
 export type { Program };

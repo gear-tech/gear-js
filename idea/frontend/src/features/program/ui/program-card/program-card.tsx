@@ -1,28 +1,25 @@
-import { memo } from 'react';
+import clsx from 'clsx';
 import { Link, generatePath } from 'react-router-dom';
 
 import { IssueVoucher, VoucherBadge } from '@/features/voucher';
-import { absoluteRoutes, routes } from '@/shared/config';
+import { absoluteRoutes } from '@/shared/config';
 import sendSVG from '@/shared/assets/images/actions/send.svg?react';
-import readSVG from '@/shared/assets/images/actions/read.svg?react';
 import { IdBlock } from '@/shared/ui/idBlock';
 import { BulbBlock } from '@/shared/ui/bulbBlock';
 import { TimestampBlock } from '@/shared/ui/timestampBlock';
 import { ActionLink } from '@/shared/ui/ActionLink';
-import { LocalProgram } from '@/features/local-indexer';
 
-import clsx from 'clsx';
+import { Program } from '../../api';
 import { getBulbStatus } from '../../utils';
-import { IProgram } from '../../types';
 import { PROGRAM_STATUS_NAME, ProgramStatus } from '../../consts';
 import styles from './program-card.module.scss';
 
 type Props = {
-  program: IProgram | LocalProgram;
+  program: Program;
   vertical?: boolean;
 };
 
-const ProgramCard = memo(({ program, vertical }: Props) => {
+const ProgramCard = ({ program, vertical }: Props) => {
   const { id: programId, name, status } = program;
   const statusName = PROGRAM_STATUS_NAME[status];
 
@@ -52,16 +49,12 @@ const ProgramCard = memo(({ program, vertical }: Props) => {
               text="Send Message"
             />
 
-            {program.hasState && (
-              <ActionLink to={generatePath(routes.state, { programId })} icon={readSVG} text="Read State" />
-            )}
-
             <IssueVoucher programId={programId} buttonColor="transparent" buttonSize="small" />
           </>
         )}
       </div>
     </article>
   );
-});
+};
 
 export { ProgramCard };

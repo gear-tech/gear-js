@@ -7,7 +7,7 @@ import { Program, ProgramsParameters, SetProgramMetaParameters } from './types';
 
 const getProgram = (id: string) => INDEXER_RPC_SERVICE.callRPC<Program>(METHOD.DATA, { id });
 
-const getPrograms = (parameters: ProgramsParameters) =>
+const getPrograms = (parameters?: ProgramsParameters) =>
   INDEXER_RPC_SERVICE.callRPC<PaginationResponse<Program>>(METHOD.ALL, parameters);
 
 // figure out return type

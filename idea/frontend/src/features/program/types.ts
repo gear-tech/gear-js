@@ -22,10 +22,4 @@ type FiltersValues = {
   status: ProgramStatus[];
 };
 
-type RequestParams = {
-  owner?: string;
-  status?: ProgramStatus[];
-  query?: string;
-};
-
-export type { Program, IProgram, FiltersValues, RequestParams };
+export type { Program, IProgram, FiltersValues };

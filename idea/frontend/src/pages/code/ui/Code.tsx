@@ -6,7 +6,7 @@ import { useChain, useDataLoading, useModal, usePrograms } from '@/hooks';
 import { BackButton } from '@/shared/ui/backButton';
 import { absoluteRoutes } from '@/shared/config';
 import { UILink } from '@/shared/ui/uiLink';
-import { ProgramsList } from '@/pages/programs/ui/programsList';
+import { Programs } from '@/features/program';
 import { MetadataTable, useMetadata } from '@/features/metadata';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
@@ -76,12 +76,13 @@ const Code = () => {
 
         <div>
           <h2 className={styles.heading}>Programs</h2>
-          <ProgramsList
+
+          {/* <ProgramsList
             programs={programs}
             totalCount={programs.length}
             isLoading={isProgramsRequestLoading}
             loadMorePrograms={loadData}
-          />
+          /> */}
         </div>
       </div>
 

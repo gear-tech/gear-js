@@ -1,10 +1,10 @@
-import type { Event } from '@polkadot/types/interfaces';
 import { GearApi, HexString } from '@gear-js/api';
 import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
+import type { Event } from '@polkadot/types/interfaces';
+import { isAndroid, isIOS } from '@react-aria/utils';
 
 import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from '@/shared/config';
 
-import { isAndroid, isIOS } from '@react-aria/utils';
 import { isHexValid, isExists, isAccountAddressValid, isNumeric, asOptionalField } from './form';
 
 const checkWallet = (account?: Account) => {

@@ -9,7 +9,7 @@ type ProgramsParameters = PaginationParameters & {
   owner?: string;
   name?: string;
   codeId?: string;
-  status?: ProgramStatus;
+  status?: ProgramStatus[];
   query?: string;
 };
 

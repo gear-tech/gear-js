@@ -11,6 +11,7 @@ import { Subheader } from './subheader';
 import { UILink } from './uiLink';
 import { Box } from './box';
 import { ProgramTabLayout } from './program-tab-layout';
+import { BulbStatus } from './bulbBlock';
 
 export {
   LabeledCheckbox,
@@ -33,4 +34,5 @@ export {
   Textarea,
   Box,
   ProgramTabLayout,
+  BulbStatus,
 };

@@ -1,38 +1,20 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { useErrorAlert } from '@/hooks/use-error-alert';
-import { DEFAULT_LIMIT } from '@/shared/config';
+import { INFINITE_QUERY } from '@/api';
+import { useErrorAlert } from '@/hooks';
 
 import {
   getMessagesFromProgram,
   getMessagesToProgram,
   MessagesToProgramParameters,
   MessagesFromProgramParameters,
-  PaginationResponse,
 } from '../api';
-
-const getNextPageParam = <T>({ result, count }: PaginationResponse<T>, allPages: PaginationResponse<T>[]) => {
-  const lastPageCount = result.length;
-  const fetchedCount = (allPages.length - 1) * DEFAULT_LIMIT + lastPageCount;
-
-  return fetchedCount < count ? fetchedCount : undefined;
-};
-
-const select = <T>({ pages }: { pages: PaginationResponse<T>[] }) => ({
-  result: pages.flatMap((page) => page.result),
-  count: pages[0].count,
-});
-
-const DEFAULT_INFINITE_QUERY_OPTIONS = {
-  initialPageParam: 0,
-  getNextPageParam,
-  select,
-} as const;
 
 function useMessagesToProgram(parameters: MessagesToProgramParameters, enabled: boolean) {
   const query = useInfiniteQuery({
-    ...DEFAULT_INFINITE_QUERY_OPTIONS,
-    select, // problem with return type if desctructured from options
+    initialPageParam: INFINITE_QUERY.INITIAL_PAGE_PARAM,
+    getNextPageParam: INFINITE_QUERY.GET_NEXT_PAGE_PARAM,
+    select: INFINITE_QUERY.SELECT,
 
     queryKey: ['messagesToProgram', parameters],
     queryFn: async () => (await getMessagesToProgram(parameters)).result,
@@ -46,8 +28,9 @@ function useMessagesToProgram(parameters: MessagesToProgramParameters, enabled: 
 
 function useMessagesFromProgram(parameters: MessagesFromProgramParameters, enabled: boolean) {
   const query = useInfiniteQuery({
-    ...DEFAULT_INFINITE_QUERY_OPTIONS,
-    select, // problem with return type if desctructured from options
+    initialPageParam: INFINITE_QUERY.INITIAL_PAGE_PARAM,
+    getNextPageParam: INFINITE_QUERY.GET_NEXT_PAGE_PARAM,
+    select: INFINITE_QUERY.SELECT,
 
     queryKey: ['messagesFromProgram', parameters],
     queryFn: async () => (await getMessagesFromProgram(parameters)).result,

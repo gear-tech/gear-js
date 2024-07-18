@@ -11,10 +11,10 @@ type Item<T> = T extends (infer U)[] ? U : never;
 type Props<T extends unknown[]> = {
   items: T | undefined;
   hasMore: boolean;
-  isLoading?: boolean;
+  isLoading: boolean;
   renderItem: (item: Item<T>) => ReactNode;
   fetchMore: () => void;
-  renderSkeleton?: () => ReactNode;
+  renderSkeleton: () => ReactNode;
 };
 
 function List<T extends unknown[]>({ items, hasMore, isLoading, renderItem, fetchMore, renderSkeleton }: Props<T>) {
@@ -24,7 +24,7 @@ function List<T extends unknown[]>({ items, hasMore, isLoading, renderItem, fetc
   const count = items?.length;
   const isEmpty = !isLoading && !count;
 
-  if ((isLoading || isEmpty) && renderSkeleton)
+  if (isLoading || isEmpty)
     return (
       <div className={styles.placeholder}>
         <Placeholder
