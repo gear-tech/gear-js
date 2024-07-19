@@ -38,7 +38,7 @@ const Codes = () => {
     <div className={styles.container}>
       <h2 className={styles.heading}>Codes: {codes.data?.count}</h2>
 
-      <SearchForm placeholder="Search by name, id..." onSubmit={setSearchQuery} className={styles.search} />
+      <SearchForm placeholder="Search by name, id..." onSubmit={setSearchQuery} />
 
       <List
         items={codes.data?.result}

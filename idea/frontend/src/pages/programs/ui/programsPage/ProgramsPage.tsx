@@ -14,7 +14,7 @@ const ProgramsPage = () => {
     <div className={styles.container}>
       <h2 className={styles.heading}>Programs: {programs.data?.count}</h2>
 
-      <SearchForm placeholder="Search by name, code hash, id..." className={styles.search} onSubmit={setSearchQuery} />
+      <SearchForm placeholder="Search by name, code hash, id..." onSubmit={setSearchQuery} />
 
       <Programs
         items={programs.data?.result}
