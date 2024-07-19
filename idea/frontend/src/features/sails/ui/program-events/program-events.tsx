@@ -1,5 +1,6 @@
-import { useState } from 'react';
 import { HexString } from '@gear-js/api';
+import { useState } from 'react';
+import { Sails } from 'sails-js';
 
 import { List, ProgramTabLayout, SearchForm, Skeleton } from '@/shared/ui';
 import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
@@ -9,14 +10,15 @@ import { EventCard } from '../event-card';
 
 type Props = {
   programId: HexString;
+  sails: Sails | undefined;
 };
 
-function ProgramEvents({ programId }: Props) {
+function ProgramEvents({ programId, sails }: Props) {
   const [searchQuery, setSearchQuery] = useState('');
 
   const events = useEvents({ source: programId, name: searchQuery });
 
-  const renderEvent = (event: EventType) => <EventCard event={event} />;
+  const renderEvent = (event: EventType) => <EventCard event={event} sails={sails} />;
   const renderEventSkeleton = () => <Skeleton SVG={CardPlaceholderSVG} disabled />;
 
   const renderList = () => (

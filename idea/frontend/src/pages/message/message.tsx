@@ -34,10 +34,9 @@ const Message = () => {
 
   const message = messageToProgram.data || messageFromProgram.data;
   const isLoading = messageToProgram.isLoading || messageFromProgram.isLoading;
-
   const { timestamp, id, source, value, destination, replyToMessageId, blockHash } = message || {};
 
-  const { data: program } = useProgram(message?.destination || message?.source);
+  const { data: program } = useProgram(messageToProgram.data ? message?.destination : message?.source);
   const { metadata, isMetadataReady } = useMetadata(program?.metahash);
   const { sails, isLoading: isSailsLoading } = useSails(program?.codeId);
   const isPayloadLoading = !isMetadataReady || isSailsLoading;
@@ -46,7 +45,7 @@ const Message = () => {
     () =>
       message && !isPayloadLoading
         ? // eslint-disable-next-line @typescript-eslint/unbound-method
-          getDecodedMessagePayload(message, metadata, sails, Boolean(messageToProgram.data), alert.error)
+          getDecodedMessagePayload(message, Boolean(messageToProgram.data), metadata, sails, alert.error)
         : undefined,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [message, metadata, sails, isPayloadLoading],

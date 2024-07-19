@@ -1,6 +1,8 @@
+import { AnyJson } from '@polkadot/types/types';
 import clsx from 'clsx';
 import { useState } from 'react';
 import { generatePath } from 'react-router-dom';
+import { Sails } from 'sails-js';
 
 import { absoluteRoutes } from '@/shared/config';
 import { PreformattedBlock, UILink } from '@/shared/ui';
@@ -12,10 +14,21 @@ import LinkSVG from '../../assets/link.svg?react';
 import { EventType } from '../../api';
 import styles from './event-card.module.scss';
 
-function EventCard({ event }: { event: EventType }) {
+type Props = {
+  event: EventType;
+  sails: Sails | undefined;
+};
+
+function EventCard({ event, sails }: Props) {
   const { service, name, blockNumber, blockHash, payload } = event;
 
   const [isOpen, setIsOpen] = useState(false);
+
+  const getDecodedPayload = () => {
+    if (!sails || !service || !name || !payload) return payload;
+
+    return sails.services[service].events[name].decode(payload) as AnyJson;
+  };
 
   return (
     <div className={styles.card}>
@@ -24,9 +37,7 @@ function EventCard({ event }: { event: EventType }) {
           type="button"
           onClick={() => setIsOpen((prevValue) => !prevValue)}
           className={clsx(styles.button, isOpen && styles.open)}>
-          <span>
-            {service || 'service'}.{name || 'name'}
-          </span>
+          <span>{service && name ? `${service}.${name}` : 'Event'}</span>
 
           <ArrowSVG />
         </button>
@@ -47,7 +58,7 @@ function EventCard({ event }: { event: EventType }) {
         </div>
       </header>
 
-      {isOpen && <PreformattedBlock text={payload} />}
+      {isOpen && <PreformattedBlock text={getDecodedPayload()} />}
     </div>
   );
 }

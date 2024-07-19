@@ -1,3 +1,5 @@
+import { HexString } from '@gear-js/api';
+
 import { IBase } from '@/shared/types';
 
 type GetEventsParameters = {
@@ -9,7 +11,7 @@ type GetEventsParameters = {
 type EventType = IBase & {
   id: string;
   source: string;
-  payload: string | null;
+  payload: HexString | null;
   service?: string | null;
   name?: string | null;
 };

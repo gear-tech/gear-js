@@ -13,32 +13,43 @@ const isMessageWithError = (message: MessageToProgram | MessageFromProgram) =>
 
 const getPayload = ({ payload }: MessageToProgram | MessageFromProgram) => payload || '0x';
 
-const getTypeIndex = (message: MessageToProgram | MessageFromProgram, meta: ProgramMetadata) => {
+const getTypeIndex = (
+  message: MessageToProgram | MessageFromProgram,
+  isMessageQueued: boolean,
+  meta: ProgramMetadata,
+) => {
+  const returnMethod = isMessageQueued ? 'input' : 'output';
+
   if ('entry' in message) {
     switch (message.entry) {
       case MESSAGE_ENTRY_POINT.INIT:
-        return meta.types.init.input;
+        return meta.types.init[returnMethod];
 
       case MESSAGE_ENTRY_POINT.REPLY:
         return meta.types.reply;
 
       case MESSAGE_ENTRY_POINT.HANDLE:
-        return meta.types.handle.input;
+        return meta.types.handle[returnMethod];
 
       default:
-        return meta.types.others.input;
+        return meta.types.others[returnMethod];
     }
   }
 
   const payload = getPayload(message);
-  const typeIndexes = [meta.types.handle.output, meta.types.init.output, meta.types.reply, meta.types.others.output];
+
+  const typeIndexes = [
+    meta.types.handle[returnMethod],
+    meta.types.init[returnMethod],
+    meta.types.reply,
+    meta.types.others[returnMethod],
+  ];
 
   return typeIndexes.find((index) => {
     if (isNullOrUndefined(index)) return false;
 
     try {
       meta.createType(index, payload);
-      console.log(index);
       return true;
     } catch {
       return false;
@@ -46,11 +57,15 @@ const getTypeIndex = (message: MessageToProgram | MessageFromProgram, meta: Prog
   });
 };
 
-const getMetadataDecodedMessagePayload = (message: MessageToProgram | MessageFromProgram, meta: ProgramMetadata) => {
+const getMetadataDecodedMessagePayload = (
+  message: MessageToProgram | MessageFromProgram,
+  isMessageQueued: boolean,
+  meta: ProgramMetadata,
+) => {
   const payload = getPayload(message);
-  const typeIndex = getTypeIndex(message, meta);
+  const typeIndex = getTypeIndex(message, isMessageQueued, meta);
 
-  return isNullOrUndefined(typeIndex) ? payload : meta.createType(typeIndex, payload);
+  return isNullOrUndefined(typeIndex) ? payload : meta.createType(typeIndex, payload).toHuman();
 };
 
 const getSailsDecodedMessagePayload = (
@@ -63,7 +78,7 @@ const getSailsDecodedMessagePayload = (
   const functionName = getFnNamePrefix(payload);
 
   const constructor = sails.ctors[serviceName];
-  const func = sails.services[serviceName].functions[functionName];
+  const func = sails.services[serviceName]?.functions[functionName];
 
   if (constructor && !func) return { value: constructor.decodePayload(payload), serviceName };
 
@@ -73,17 +88,16 @@ const getSailsDecodedMessagePayload = (
 
 const getDecodedMessagePayload = (
   message: MessageToProgram | MessageFromProgram,
+  isMessageQueued: boolean,
   metadata: ProgramMetadata | undefined,
   sails: Sails | undefined,
-  isMessageQueued: boolean,
   onError: (value: string) => void,
 ) => {
   const payload = getPayload(message);
 
   try {
     if (isMessageWithError(message)) return { value: CreateType.create('String', payload).toHuman() };
-    if (metadata) return { value: getMetadataDecodedMessagePayload(message, metadata) };
-
+    if (metadata) return { value: getMetadataDecodedMessagePayload(message, isMessageQueued, metadata) };
     if (sails) return getSailsDecodedMessagePayload(message, isMessageQueued, sails);
 
     return { value: CreateType.create('Bytes', payload).toHuman() };

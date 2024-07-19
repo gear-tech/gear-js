@@ -10,6 +10,7 @@ import { routes } from '@/shared/config';
 import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
 
 import { MessageFromProgram, MessageToProgram } from '../../api';
+import { isMessageWithError } from '../../utils';
 import styles from './message-card.module.scss';
 
 type Props = {
@@ -20,15 +21,11 @@ type Props = {
 const MessageCard = ({ isToDirection, message }: Props) => {
   const { id, timestamp, destination, source } = message;
 
-  const isError =
-    ('exitCode' in message && Boolean(message.exitCode)) ||
-    ('processedWithPanic' in message && message.processedWithPanic);
-
   return (
     <div className={styles.card}>
       <div className={cx(styles.direction, isToDirection && styles.to)}>
         <DirectionSVG />
-        <BulbBlock text="" status={isError ? BulbStatus.Error : BulbStatus.Success} />
+        <BulbBlock text="" status={isMessageWithError(message) ? BulbStatus.Error : BulbStatus.Success} />
       </div>
 
       <IdBlock id={id} withIcon maxCharts={18} to={generatePath(routes.message, { messageId: id })} />
