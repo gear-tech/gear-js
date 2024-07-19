@@ -14,7 +14,6 @@ import {
   ParamMsgToProgram,
   ParamSetProgramMeta,
 } from './types';
-import { validateGenesisMiddleware } from './middlewares';
 import { Cache } from './middlewares/caching';
 import { redisConnect } from './middlewares/redis';
 import { Retry } from './middlewares/retry';
@@ -53,7 +52,7 @@ export class JsonRpcServer extends JsonRpc(JsonRpcBase) {
   }
 
   @JsonRpcMethod('code.setMeta')
-  @Retry(100, 'Code meta is being set')
+  @Retry(20, 'Code meta is being set')
   async codeSetMeta(params: ParamGetCode) {
     return this._services.get(params.genesis).code.setMeta(params);
   }
@@ -71,7 +70,7 @@ export class JsonRpcServer extends JsonRpc(JsonRpcBase) {
   }
 
   @JsonRpcMethod('program.setMeta')
-  @Retry(100, 'Program meta is being set')
+  @Retry(20, 'Program meta is being set')
   async programSetMeta(params: ParamSetProgramMeta) {
     return this._services.get(params.genesis).program.setMeta(params);
   }

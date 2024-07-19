@@ -13,7 +13,7 @@ export class ParamGetPrograms extends ParamPagination {
   readonly owner?: string;
   readonly name?: string;
   readonly codeId?: string;
-  readonly status?: ProgramStatus;
+  readonly status?: ProgramStatus | ProgramStatus[];
   readonly query?: string;
 }
 

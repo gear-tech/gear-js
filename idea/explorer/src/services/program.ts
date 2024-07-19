@@ -1,5 +1,5 @@
 import { Program } from 'indexer-db';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Repository, ILike } from 'typeorm';
 import { Pagination } from '../decorators';
 import { ParamGetProgram, ParamGetPrograms, ParamSetProgramMeta, ResManyResult } from '../types';
 import { ProgramNotFound } from '../errors';
@@ -48,14 +48,20 @@ export class ProgramService {
     }
 
     if (status) {
-      qb.andWhere('program.status = :status', { status });
+      if (Array.isArray(status)) {
+        qb.andWhere('program.status IN (:...status)', { status });
+      } else {
+        qb.andWhere('program.status = :status', { status });
+      }
     }
 
     if (query) {
-      qb.andWhere('program.id ILIKE %:query% OR program.name ILIKE %:query%', { query });
+      qb.andWhere('(program.id ILIKE :query OR program.name ILIKE :query)', { query: `%${query}%` });
     }
 
     qb.orderBy('program.timestamp', 'DESC').limit(limit).offset(offset);
+
+    console.log(qb.getSql(), qb.getParameters());
 
     const [result, count] = await Promise.all([qb.getMany(), qb.getCount()]);
 
@@ -69,7 +75,7 @@ export class ProgramService {
       throw new ProgramNotFound();
     }
 
-    if (name && !program.name) {
+    if (name && program.name === program.id) {
       program.name = name;
     }
 
