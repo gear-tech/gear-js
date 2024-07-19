@@ -5,7 +5,13 @@
 .simplebar {
   @include customSimplebar;
 
-  height: calc($contentHeight - toRem(31.19) - $margin);
+  &.large {
+    height: calc($contentHeight - toRem(32) - $margin);
+  }
+
+  &.small {
+    height: calc($contentHeight - toRem(320) - $margin);
+  }
 
   :global(.simplebar-content) {
     margin-right: $margin;

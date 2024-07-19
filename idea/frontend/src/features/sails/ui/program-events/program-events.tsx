@@ -27,6 +27,7 @@ function ProgramEvents({ programId, sails }: Props) {
       hasMore={events.hasNextPage}
       isLoading={events.isLoading}
       noItems={{ heading: 'There are no events yet.' }}
+      size="small"
       fetchMore={events.fetchNextPage}
       renderItem={renderEvent}
       renderSkeleton={renderEventSkeleton}

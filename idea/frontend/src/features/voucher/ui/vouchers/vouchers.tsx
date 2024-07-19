@@ -9,6 +9,7 @@ type Props = {
   isLoading: boolean;
   hasMore: boolean;
   noItemsSubheading?: string;
+  size?: 'small';
   onVoucherChange: () => void;
   fetchMore: () => void;
 };

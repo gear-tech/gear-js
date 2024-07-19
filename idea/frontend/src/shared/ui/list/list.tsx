@@ -1,3 +1,4 @@
+import cx from 'clsx';
 import { ReactNode } from 'react';
 import SimpleBar from 'simplebar-react';
 
@@ -13,6 +14,7 @@ type Props<T extends unknown[]> = {
   hasMore: boolean;
   isLoading: boolean;
   noItems: { heading: string; subheading?: string };
+  size?: 'small' | 'large';
   renderItem: (item: Item<T>) => ReactNode;
   fetchMore: () => void;
   renderSkeleton: () => ReactNode;
@@ -23,6 +25,7 @@ function List<T extends unknown[]>({
   hasMore,
   isLoading,
   noItems,
+  size = 'large',
   renderItem,
   fetchMore,
   renderSkeleton,
@@ -49,7 +52,7 @@ function List<T extends unknown[]>({
   return (
     // TODO: add loading and empty states,
     // TODO: replace simplebar with css?
-    <SimpleBar className={styles.simplebar}>
+    <SimpleBar className={cx(styles.simplebar, styles[size])}>
       <ul className={styles.list}>{renderItems()}</ul>
 
       {hasMore && <Observer onIntersection={fetchMore} />}

@@ -81,7 +81,6 @@ const Code = () => {
             isLoading={programs.isLoading}
             hasMore={programs.hasNextPage}
             fetchMore={programs.fetchNextPage}
-            vertical
           />
         </div>
       </div>

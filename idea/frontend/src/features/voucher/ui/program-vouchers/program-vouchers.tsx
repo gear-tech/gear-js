@@ -23,6 +23,7 @@ function ProgramVouchers({ programId }: Props) {
       items={vouchers}
       isLoading={isLoading}
       hasMore={hasMore}
+      size="small"
       onVoucherChange={refetch}
       fetchMore={fetchMore}
     />
