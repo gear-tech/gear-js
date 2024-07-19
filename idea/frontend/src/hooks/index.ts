@@ -14,8 +14,6 @@ import { useBalanceTransfer } from './useBalanceTransfer';
 import { useEventSubscriptions } from './useEventSubscriptions';
 import { useGasCalculate } from './useGasCalculate';
 import { useStateRead } from './useStateRead';
-import { useDataLoading } from './useDataLoading';
-import { useScrollLoader } from './useScrollLoader';
 import { useElementSizes } from './useElementSizes';
 import { useNodeVersion } from './useNodeVersion';
 import { useMobileDisclaimer } from './useMobileDisclaimer';
@@ -35,10 +33,8 @@ export {
   useProgramIdSchema,
   useStateRead,
   useCodeUpload,
-  useDataLoading,
   useOutsideClick,
   useChangeEffect,
-  useScrollLoader,
   useMessageClaim,
   useElementSizes,
   useGasCalculate,

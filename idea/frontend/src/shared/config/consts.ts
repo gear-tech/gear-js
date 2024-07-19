@@ -69,22 +69,11 @@ enum TransactionStatus {
 }
 
 enum RpcMethods {
-  GetProgram = 'program.data',
-  GetAllPrograms = 'program.all',
   AddMetadata = 'meta.add',
-  AddProgramName = 'program.name.add',
-  AddCodeName = 'code.name.add',
   GetMetadata = 'meta.get',
-  GetMessage = 'message.data',
-  GetAllMessages = 'message.all',
-  GetCode = 'code.data',
-  GetAllCodes = 'code.all',
   GetTestBalance = 'testBalance.get',
   NetworkData = 'networkData.available',
   TestBalanceAvailable = 'testBalance.available',
-  AddState = 'program.state.add',
-  GetStates = 'program.state.all',
-  GetState = 'state.get',
 }
 
 enum FileTypes {
