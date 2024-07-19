@@ -54,7 +54,7 @@ const useProgramActions = () => {
       await addLocalProgram({ id, owner, codeId, status, blockHash, metahash, name, genesis, timestamp });
     }
 
-    if (!isDevChain) await addProgramName(programId, name);
+    if (!isDevChain) await addProgramName({ id: programId, name, metaHex: metadata?.hex, idl: sails?.idl });
     if (metadata && metadata.hash && metadata.hex && !metadata.isFromStorage) addMetadata(metadata.hash, metadata.hex);
     if (sails && sails.idl && !sails.isFromStorage) addIdl(codeId, sails.idl);
   };

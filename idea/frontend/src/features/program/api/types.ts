@@ -14,7 +14,7 @@ type ProgramsParameters = PaginationParameters & {
 };
 
 type SetProgramMetaParameters = {
-  id: string;
+  id: HexString;
   name?: string;
   metaType?: 'sails' | 'meta';
 };

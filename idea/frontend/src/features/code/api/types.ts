@@ -13,7 +13,7 @@ type GetCodesParameters = PaginationParameters & {
 };
 
 type SetCodeMetaParameters = {
-  id: string;
+  id: HexString;
   name?: string;
   metaType?: 'sails' | 'meta';
 };
