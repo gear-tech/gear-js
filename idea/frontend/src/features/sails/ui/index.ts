@@ -1,4 +1,5 @@
 import { PayloadForm } from './payload-form';
 import { IDL } from './idl';
+import { ProgramEvents } from './program-events';
 
-export { PayloadForm, IDL };
+export { PayloadForm, IDL, ProgramEvents };

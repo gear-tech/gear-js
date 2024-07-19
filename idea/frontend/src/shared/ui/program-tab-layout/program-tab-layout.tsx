@@ -5,7 +5,7 @@ type Props = {
   count: number | undefined;
   renderList: () => JSX.Element;
   renderSearch: () => JSX.Element;
-  renderFilters: () => JSX.Element;
+  renderFilters?: () => JSX.Element;
 };
 
 function ProgramTabLayout({ heading, count, renderList, renderSearch, renderFilters }: Props) {
@@ -21,8 +21,7 @@ function ProgramTabLayout({ heading, count, renderList, renderSearch, renderFilt
 
       <div>
         <div className={styles.search}>{renderSearch()}</div>
-
-        {renderFilters()}
+        {renderFilters && renderFilters()}
       </div>
     </div>
   );

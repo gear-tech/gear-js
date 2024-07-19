@@ -1,0 +1,67 @@
+.card {
+  padding: 12px 24px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  background-color: #222225;
+  border-radius: 16px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  font-family: Kanit;
+  font-weight: 500;
+  color: #fff;
+
+  background-color: transparent;
+  transition: opacity 0.25s;
+
+  &:hover {
+    opacity: 0.75;
+  }
+
+  svg {
+    transition: transform 0.25s;
+    transform: rotate(90deg);
+
+    path {
+      fill: #2bd071;
+    }
+  }
+
+  &.open svg {
+    transform: rotate(-90deg);
+  }
+}
+
+.props {
+  display: flex;
+  gap: 24px;
+}
+
+.blockhash {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 10px;
+  line-height: 13px;
+
+  .codeSVG {
+    width: 14px;
+
+    path {
+      fill: rgba(255, 255, 255, 0.6);
+    }
+  }
+}

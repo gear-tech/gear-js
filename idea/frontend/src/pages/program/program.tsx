@@ -14,7 +14,7 @@ import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import { useMetadata, MetadataTable, isState } from '@/features/metadata';
 import { ProgramVouchers } from '@/features/voucher';
-import { IDL, useSails } from '@/features/sails';
+import { IDL, ProgramEvents, useSails } from '@/features/sails';
 import { ProgramMessages } from '@/features/message';
 
 import styles from './program.module.scss';
@@ -23,7 +23,7 @@ type Params = {
   programId: HexString;
 };
 
-const TABS = ['Metadata/Sails', 'Messages', 'Vouchers'];
+const TABS = ['Metadata/Sails', 'Messages', 'Vouchers', 'Events'];
 
 const Program = () => {
   const { programId } = useParams() as Params;
@@ -35,7 +35,7 @@ const Program = () => {
   const isLoading = !isMetadataReady || isSailsLoading;
   const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => Object.keys(queries).length) : false;
 
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(3);
 
   const openUploadMetadataModal = () => {
     if (!program) throw new Error('Program is not found');
@@ -119,6 +119,7 @@ const Program = () => {
 
         {tabIndex === 1 && <ProgramMessages programId={programId} />}
         {tabIndex === 2 && <ProgramVouchers programId={programId} />}
+        {tabIndex === 3 && <ProgramEvents programId={programId} />}
       </div>
     </div>
   );

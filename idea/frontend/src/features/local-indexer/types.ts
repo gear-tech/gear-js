@@ -8,7 +8,7 @@ type ChainProgram = Pick<Program, 'id' | 'name' | 'status'> & {
   codeId: HexString | null;
 };
 
-type DBProgram = IBase & Pick<Program, 'id' | 'name' | 'status' | 'metahash' | 'codeId' | 'owner'>;
+type DBProgram = Omit<IBase, 'blockNumber'> & Pick<Program, 'id' | 'name' | 'status' | 'metahash' | 'codeId' | 'owner'>;
 
 type LocalProgram = ChainProgram | DBProgram;
 
