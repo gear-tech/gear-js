@@ -10,7 +10,6 @@ import TablePlaceholderSVG from '@/shared/assets/images/placeholders/table.svg?r
 import { LocalProgram } from '@/features/local-indexer';
 
 import { Program } from '../../api';
-
 import { PROGRAM_STATUS_NAME } from '../../consts';
 import { getBulbStatus } from '../../utils';
 import styles from './program-table.module.scss';
@@ -26,9 +25,15 @@ const ProgramTable = ({ program, isProgramReady }: Props) => {
 
   if (!isProgramReady || !program)
     return (
-      <ContentLoader text="There is no program" isEmpty={isProgramReady && !program}>
-        <TablePlaceholderSVG />
-      </ContentLoader>
+      <div className={styles.table}>
+        <ContentLoader text="There is no program" isEmpty={isProgramReady && !program}>
+          <TablePlaceholderSVG />
+        </ContentLoader>
+
+        <ContentLoader text="There is no program" isEmpty={isProgramReady && !program}>
+          <TablePlaceholderSVG />
+        </ContentLoader>
+      </div>
     );
 
   return (

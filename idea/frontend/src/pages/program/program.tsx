@@ -35,7 +35,7 @@ const Program = () => {
   const isLoading = !isMetadataReady || isSailsLoading;
   const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => Object.keys(queries).length) : false;
 
-  const [tabIndex, setTabIndex] = useState(3);
+  const [tabIndex, setTabIndex] = useState(0);
 
   const openUploadMetadataModal = () => {
     if (!program) throw new Error('Program is not found');
@@ -76,7 +76,7 @@ const Program = () => {
     <div className={styles.container}>
       <header className={styles.header}>
         {/* why program name is nullable? */}
-        {program && <h2 className={styles.name}>{getShortName(program.name || '')}</h2>}
+        {program && <h2 className={styles.name}>{getShortName(program.name || 'Program Name')}</h2>}
 
         {program?.status === ProgramStatus.Active && (
           <div className={styles.links}>
@@ -107,14 +107,16 @@ const Program = () => {
 
       <ProgramTable program={program} isProgramReady={!isProgramLoading} />
 
-      <div>
+      <div className={styles.body}>
         <header className={styles.tabs}>{renderTabs()}</header>
 
         {tabIndex === 0 && (
-          <>
-            {metadata && <MetadataTable metadata={metadata} isLoading={isLoading} />}
+          <div className={cx(styles.metadata, idl && styles.idl)}>
+            {(isLoading || metadata) && <MetadataTable metadata={metadata} isLoading={isLoading} />}
+            {/* temp solution for a placeholder */}
+            {!isLoading && !metadata && !idl && <MetadataTable metadata={metadata} isLoading={isLoading} />}
             {idl && <IDL value={idl} />}
-          </>
+          </div>
         )}
 
         {tabIndex === 1 && <ProgramMessages programId={programId} />}
