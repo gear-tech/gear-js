@@ -13,7 +13,7 @@ export class ParamGetCodes extends ParamPagination {
   readonly uploadedBy?: string;
   readonly name?: string;
   @IsOneOf(Object.values(CodeStatus), false)
-  readonly status?: CodeStatus;
+  readonly status?: CodeStatus | CodeStatus[];
   readonly query?: string;
 }
 

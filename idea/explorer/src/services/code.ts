@@ -36,11 +36,15 @@ export class CodeService {
     }
 
     if (status) {
-      qb.andWhere('code.status = :status', { status });
+      if (Array.isArray(status)) {
+        qb.andWhere('code.status IN (:...status)', { status });
+      } else {
+        qb.andWhere('code.status = :status', { status });
+      }
     }
 
     if (query) {
-      qb.andWhere('code.id ILIKE %:query% OR code.name ILIKE %:query%', { query });
+      qb.andWhere('(code.id ILIKE :query OR code.name ILIKE :query)', { query: `%${query}%` });
     }
 
     qb.orderBy('code.timestamp', 'DESC').limit(limit).offset(offset);
