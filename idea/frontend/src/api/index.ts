@@ -2,7 +2,6 @@ import { NodeSection } from '@/entities/node';
 import { NODES_API_URL } from '@/shared/config';
 
 import { fetchTestBalance } from './balance';
-import { fetchMessage, fetchMessages } from './message';
 import { fetchMetadata, addMetadata } from './metadata';
 import { addState, fetchStates, fetchState } from './state';
 import { PaginationParameters, PaginationResponse } from './types';
@@ -18,8 +17,6 @@ export {
   addState,
   fetchStates,
   fetchState,
-  fetchMessage as getMessage,
-  fetchMessages as getMessages,
   fetchTestBalance as getTestBalance,
 };
 

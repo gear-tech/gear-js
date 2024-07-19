@@ -21,7 +21,8 @@ const MessageCard = ({ isToDirection, message }: Props) => {
   const { id, timestamp, destination, source } = message;
 
   const isError =
-    ('exitCode' in message && !message.exitCode) || ('processedWithPanic' in message && message.processedWithPanic);
+    ('exitCode' in message && Boolean(message.exitCode)) ||
+    ('processedWithPanic' in message && message.processedWithPanic);
 
   return (
     <div className={styles.card}>

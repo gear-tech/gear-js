@@ -1,6 +1,5 @@
 import { useModal, useBlocks, useEvents, useChain, useOnboarding } from './context';
 import { useLoading } from './useLoading';
-import { useMessage } from './useMessage';
 import { useOutsideClick } from './useOutsideClick';
 import { useChangeEffect } from './useChangeEffect';
 import { useMessageActions } from './useMessageActions';
@@ -34,7 +33,6 @@ export {
   useEvents,
   useChain,
   useProgramIdSchema,
-  useMessage,
   useStateRead,
   useCodeUpload,
   useDataLoading,

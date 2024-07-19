@@ -1,5 +1,6 @@
-import { IBase } from '@/shared/types';
+import { HexString } from '@gear-js/api';
 
+import { IBase } from '@/shared/types';
 import { PaginationParameters, PaginationResponse } from '@/api';
 
 import { MessageEntryPoint, MessageReadReason } from '../types';
@@ -16,21 +17,21 @@ type MessagesFromProgramParameters = PaginationParameters & {
   isInMailbox?: boolean;
 };
 
-type Message = IBase & {
-  id: string;
-  destination: string;
-  source: string;
+type MessageBase = IBase & {
+  id: HexString;
+  destination: HexString;
+  source: HexString;
   value: string;
-  payload: string | null;
-  replyToMessageId?: string | null;
+  payload: HexString | null;
+  replyToMessageId?: HexString | null;
 };
 
-type MessageToProgram = Message & {
+type MessageToProgram = MessageBase & {
   entry: MessageEntryPoint | null;
   processedWithPanic?: boolean | null;
 };
 
-type MessageFromProgram = Message & {
+type MessageFromProgram = MessageBase & {
   exitCode?: number | null;
   expiration?: number | null;
   readReason?: MessageReadReason | null; // maybe no need to export from types
