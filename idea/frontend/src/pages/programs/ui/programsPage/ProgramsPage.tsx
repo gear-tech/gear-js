@@ -20,6 +20,7 @@ const ProgramsPage = () => {
         items={programs.data?.result}
         isLoading={programs.isLoading}
         hasMore={programs.hasNextPage}
+        noItemsSubheading="You can start experimenting right now or try to build from examples. Let's Rock!"
         fetchMore={programs.fetchNextPage}
       />
 

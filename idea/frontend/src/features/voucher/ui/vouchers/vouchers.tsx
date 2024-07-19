@@ -5,25 +5,24 @@ import { Voucher } from '../../types';
 import { VoucherCard } from '../voucher-card';
 
 type Props = {
-  list: Voucher[] | undefined;
+  items: Voucher[] | undefined;
   isLoading: boolean;
   hasMore: boolean;
+  noItemsSubheading?: string;
   onVoucherChange: () => void;
   fetchMore: () => void;
 };
 
-function Vouchers({ list, isLoading, hasMore, onVoucherChange, fetchMore }: Props) {
+function Vouchers({ onVoucherChange, noItemsSubheading, ...props }: Props) {
   const renderVoucher = (voucher: Voucher) => <VoucherCard voucher={voucher} onChange={onVoucherChange} />;
   const renderSkeleton = () => <Skeleton SVG={VoucherCardPlaceholder} disabled={true} />;
 
   return (
     <List
-      items={list}
-      hasMore={hasMore}
-      isLoading={isLoading}
+      {...props}
+      noItems={{ heading: 'There are no vouchers yet', subheading: noItemsSubheading }}
       renderItem={renderVoucher}
       renderSkeleton={renderSkeleton}
-      fetchMore={fetchMore}
     />
   );
 }

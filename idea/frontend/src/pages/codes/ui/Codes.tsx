@@ -44,6 +44,10 @@ const Codes = () => {
         items={codes.data?.result}
         hasMore={codes.hasNextPage}
         isLoading={codes.isLoading}
+        noItems={{
+          heading: 'There are no codes yet.',
+          subheading: "You can start experimenting right now or try to build from examples. Let's Rock!",
+        }}
         fetchMore={codes.fetchNextPage}
         renderItem={renderItem}
         renderSkeleton={renderSkeleton}

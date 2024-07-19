@@ -12,12 +12,21 @@ type Props<T extends unknown[]> = {
   items: T | undefined;
   hasMore: boolean;
   isLoading: boolean;
+  noItems: { heading: string; subheading?: string };
   renderItem: (item: Item<T>) => ReactNode;
   fetchMore: () => void;
   renderSkeleton: () => ReactNode;
 };
 
-function List<T extends unknown[]>({ items, hasMore, isLoading, renderItem, fetchMore, renderSkeleton }: Props<T>) {
+function List<T extends unknown[]>({
+  items,
+  hasMore,
+  isLoading,
+  noItems,
+  renderItem,
+  fetchMore,
+  renderSkeleton,
+}: Props<T>) {
   // TODO: replace key with id
   const renderItems = () => items?.map((item, index) => <li key={index}>{renderItem(item as Item<T>)}</li>);
 
@@ -29,8 +38,8 @@ function List<T extends unknown[]>({ items, hasMore, isLoading, renderItem, fetc
       <div className={styles.placeholder}>
         <Placeholder
           block={renderSkeleton()}
-          title="There are no vouchers yet"
-          description="Wait until someone will issue a voucher for you, or issue voucher by yourself"
+          title={noItems.heading}
+          description={noItems.subheading}
           blocksCount={5}
           isEmpty={isEmpty}
         />

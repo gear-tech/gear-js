@@ -32,6 +32,7 @@ const Dns = () => {
         items={dns}
         isLoading={isLoading}
         hasMore={hasMore}
+        noItems={{ heading: 'There are no DNS records yet.' }}
         renderItem={renderDns}
         fetchMore={fetchMore}
         renderSkeleton={renderSkeleton}

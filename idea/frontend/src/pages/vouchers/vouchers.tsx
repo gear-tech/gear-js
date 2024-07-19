@@ -32,9 +32,10 @@ const Vouchers = () => {
       />
 
       <VouchersFeature
-        list={vouchers}
+        items={vouchers}
         isLoading={isLoading}
         hasMore={hasMore}
+        noItemsSubheading="Wait until someone will issue a voucher for you, or issue voucher by yourself"
         onVoucherChange={refetch}
         fetchMore={fetchMore}
       />

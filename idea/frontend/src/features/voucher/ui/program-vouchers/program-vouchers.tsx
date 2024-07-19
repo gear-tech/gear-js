@@ -19,7 +19,13 @@ function ProgramVouchers({ programId }: Props) {
   const [vouchers, count, isLoading, hasMore, fetchMore, refetch] = useVouchers(searchQuery, filterParams, programId);
 
   const renderList = () => (
-    <Vouchers list={vouchers} isLoading={isLoading} hasMore={hasMore} onVoucherChange={refetch} fetchMore={fetchMore} />
+    <Vouchers
+      items={vouchers}
+      isLoading={isLoading}
+      hasMore={hasMore}
+      onVoucherChange={refetch}
+      fetchMore={fetchMore}
+    />
   );
 
   const renderSearch = () => (

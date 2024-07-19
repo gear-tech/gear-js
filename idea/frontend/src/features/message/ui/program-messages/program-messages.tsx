@@ -39,6 +39,7 @@ const ProgramMessages = ({ programId }: Props) => {
       items={messages.data?.result}
       hasMore={messages.hasNextPage}
       isLoading={messages.isLoading}
+      noItems={{ heading: 'There are no messages yet.' }}
       renderItem={(message) => <MessageCard isToDirection={isToDirection} message={message} />}
       renderSkeleton={() => <Skeleton SVG={MessageCardPlaceholderSVG} disabled />}
       fetchMore={messages.fetchNextPage}
