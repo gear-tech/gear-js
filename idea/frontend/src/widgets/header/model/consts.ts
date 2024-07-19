@@ -10,8 +10,8 @@ const PATHS_WITHOUT_BOTTOM_SIDE = [
   absoluteRoutes.initializeProgram,
   routes.state,
   routes.code,
-  '/state/full/:programId',
-  '/state/wasm/:programId',
+  routes.state,
+  routes.sailsState,
 ];
 
 export { SHORT_HEADER_HEIGHT, FULL_HEADER_HEIGHT, PATHS_WITHOUT_BOTTOM_SIDE };

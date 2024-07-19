@@ -99,7 +99,12 @@ const Sails = () => {
   const { data: program } = useProgram(programId);
   const { sails } = useSails(program?.codeId);
 
-  return sails ? <StateForm programId={programId} sails={sails} /> : null;
+  return (
+    <>
+      <h2 className={styles.heading}>Read Program State</h2>
+      {sails ? <StateForm programId={programId} sails={sails} /> : null}
+    </>
+  );
 };
 
 export { Sails };
