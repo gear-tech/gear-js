@@ -13,7 +13,7 @@ function useAddProgramName() {
   const { isDevChain } = useChain();
   const alert = useAlert();
 
-  return ({ metaHex, idl, ...parameters }: Params) => {
+  return async ({ metaHex, idl, ...parameters }: Params) => {
     let metaType: 'meta' | 'sails' | undefined;
     if (metaHex) metaType = 'meta';
     if (idl) metaType = 'sails';
