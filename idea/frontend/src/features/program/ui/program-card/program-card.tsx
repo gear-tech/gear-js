@@ -8,6 +8,7 @@ import { IdBlock } from '@/shared/ui/idBlock';
 import { BulbBlock } from '@/shared/ui/bulbBlock';
 import { TimestampBlock } from '@/shared/ui/timestampBlock';
 import { ActionLink } from '@/shared/ui/ActionLink';
+import { LocalProgram } from '@/features/local-indexer';
 
 import { Program } from '../../api';
 import { getBulbStatus } from '../../utils';
@@ -15,7 +16,7 @@ import { PROGRAM_STATUS_NAME, ProgramStatus } from '../../consts';
 import styles from './program-card.module.scss';
 
 type Props = {
-  program: Program;
+  program: Program | LocalProgram;
   vertical?: boolean;
 };
 

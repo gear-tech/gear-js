@@ -43,7 +43,7 @@ function useLocalPrograms() {
       .then((result) => Promise.all(result))
       .then((result) => getFilteredPrograms(result, params))
       .then((result) => getSortedPrograms(result))
-      .then((programs) => ({ result: { programs, count: programs.length } }));
+      .then((result) => ({ result: { result, count: result.length } }));
   };
 
   return { getLocalPrograms };

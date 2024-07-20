@@ -66,7 +66,7 @@ const checkFileFormat = (file: File, types: string | string[] = FileTypes.Wasm) 
 
 const generateRandomId = () => Math.floor(Math.random() * 100000000);
 
-const getShortName = (filename: string, maxLength = 16) => {
+const getShortName = (filename: string, maxLength = 24) => {
   const transformedFileName = filename;
 
   const halfLenght = Math.floor(maxLength / 2);
