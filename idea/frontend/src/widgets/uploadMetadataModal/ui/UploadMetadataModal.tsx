@@ -48,10 +48,11 @@ const UploadMetadataModal = ({ codeId, programId, isNameEditable, metadataHash, 
 
   const handleSubmit = form.handleSubmit(async ({ name }) => {
     if (name) {
-      const addName = programId ? addProgramName : addCodeName;
-      const id = programId || codeId;
-
-      await addName({ id, name, metaHex: metadata.hex, idl: sails.idl });
+      if (programId) {
+        await addProgramName({ id: programId, codeId, name, idl: sails.idl });
+      } else {
+        await addCodeName({ id: codeId, name, idl: sails.idl });
+      }
     }
 
     if (metadataHash && metadata.hex) {
