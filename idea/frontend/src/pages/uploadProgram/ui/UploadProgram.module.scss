@@ -1,33 +1,11 @@
-@use '@/shared/assets/styles/mixins' as *;
-@use '@/shared/assets/styles/variables' as *;
-@use '@/shared/assets/styles/shared' as *;
-
-.uploadProgramPage {
-  @include childrenMargin($marginBig, right);
+.container {
   display: flex;
-  margin-bottom: 32px;
-
-  > * {
-    flex-basis: 50%;
-    display: flex;
-    flex-direction: column;
-
-    > *:nth-child(2) {
-      flex: 1;
-    }
-  }
+  flex-direction: column;
+  gap: 32px;
 }
 
-.pageSection {
-  flex: 1 1;
-}
-
-.lining {
-  padding: toRem(14) toRem(24) toRem(24);
-  border-radius: $borderRadius;
-  background-color: $bgColor4;
-
-  .fileInput:not(:only-child) {
-    margin-bottom: $marginMedium;
-  }
+.program {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }

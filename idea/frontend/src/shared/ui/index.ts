@@ -12,6 +12,7 @@ import { UILink } from './uiLink';
 import { Box } from './box';
 import { ProgramTabLayout } from './program-tab-layout';
 import { BulbStatus } from './bulbBlock';
+import { BackButton } from './backButton';
 
 export {
   LabeledCheckbox,
@@ -35,4 +36,5 @@ export {
   Box,
   ProgramTabLayout,
   BulbStatus,
+  BackButton,
 };

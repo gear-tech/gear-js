@@ -1,17 +1,16 @@
 import { useApi } from '@gear-js/react-hooks';
-import { Button, FileInput } from '@gear-js/ui';
+import { FileInput } from '@gear-js/ui';
 import cx from 'clsx';
 
 import { useContractApiWithFile, useProgramActions } from '@/hooks';
 import { formStyles } from '@/shared/ui/form';
-import { BackButton } from '@/shared/ui/backButton';
-import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import { Subheader } from '@/shared/ui/subheader';
 import { FileTypes, GasMethod } from '@/shared/config';
 import { Values } from '@/hooks/useProgramActions/types';
-import { ProgramForm, RenderButtonsProps, SailsProgramForm, SubmitHelpers } from '@/widgets/programForm';
+import { ProgramForm, SailsProgramForm, SubmitHelpers } from '@/widgets/programForm';
 import { useWasmFile } from '@/features/code';
 import { UploadMetadata } from '@/features/uploadMetadata';
+import { Box } from '@/shared/ui';
 
 import styles from './UploadProgram.module.scss';
 
@@ -31,13 +30,6 @@ const UploadProgram = () => {
     wasmFile.handleChange(value);
   };
 
-  const renderButtons = ({ isDisabled }: RenderButtonsProps) => (
-    <>
-      <Button icon={PlusSVG} type="submit" text="Upload Program" size="large" disabled={isDisabled} />
-      <BackButton />
-    </>
-  );
-
   const handleSubmit = (values: Values, { enableButtons }: SubmitHelpers) => {
     if (!isApiReady) throw new Error('API is not initialized');
     if (!wasmFile.buffer) throw new Error('File is not found');
@@ -50,20 +42,22 @@ const UploadProgram = () => {
   };
 
   return (
-    <div className={styles.uploadProgramPage}>
-      <section className={styles.pageSection}>
+    <div className={styles.container}>
+      <section>
         <Subheader size="big" title="Enter program parameters" />
 
-        <div className={styles.lining}>
-          <FileInput
-            value={wasmFile.value}
-            label="Program file"
-            direction="y"
-            color="primary"
-            className={cx(formStyles.field, formStyles.gap16, styles.fileInput)}
-            onChange={handleWasmFileChange}
-            accept={FileTypes.Wasm}
-          />
+        <div className={styles.program}>
+          <Box>
+            <FileInput
+              value={wasmFile.value}
+              label="Program file"
+              direction="y"
+              color="primary"
+              className={cx(formStyles.field, formStyles.gap16)}
+              onChange={handleWasmFileChange}
+              accept={FileTypes.Wasm}
+            />
+          </Box>
 
           {wasmFile.buffer && !sails.value && (
             <ProgramForm
@@ -71,7 +65,6 @@ const UploadProgram = () => {
               source={wasmFile.buffer}
               metadata={metadata.value}
               gasMethod={GasMethod.InitUpdate}
-              renderButtons={renderButtons}
               onSubmit={handleSubmit}
             />
           )}
@@ -83,14 +76,13 @@ const UploadProgram = () => {
               sails={sails.value}
               idl={sails.idl}
               gasMethod={GasMethod.InitUpdate}
-              renderButtons={renderButtons}
               onSubmit={handleSubmit}
             />
           )}
         </div>
       </section>
 
-      <section className={styles.pageSection}>
+      <section>
         <Subheader size="big" title="Add metadata/sails" />
 
         <UploadMetadata

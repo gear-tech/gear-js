@@ -1,7 +1,8 @@
 import { useBalanceFormat } from '@gear-js/react-hooks';
+import { Button } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState, ReactNode } from 'react';
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Sails } from 'sails-js';
 import { z } from 'zod';
@@ -10,10 +11,11 @@ import { useBalanceSchema, useGasCalculate, useGasLimitSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
 import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
-import { Input, ValueField, LabeledCheckbox } from '@/shared/ui';
+import { Input, ValueField, LabeledCheckbox, Box, BackButton } from '@/shared/ui';
 import { PayloadForm, useConstructor, PayloadValue, PayloadValueSchema, getResetPayloadValue } from '@/features/sails';
+import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 
-import { RenderButtonsProps, SubmitHelpers } from '../model';
+import { SubmitHelpers } from '../model';
 import styles from './ProgramForm.module.scss';
 
 type Values = {
@@ -45,7 +47,6 @@ type Props = {
   idl: string;
   gasMethod: GasMethod;
   fileName?: string;
-  renderButtons: (props: RenderButtonsProps) => ReactNode;
   onSubmit: (values: FormattedValues, helpers: SubmitHelpers) => void;
 };
 
@@ -56,7 +57,7 @@ const DEFAULT_VALUES = {
   keepAlive: true,
 };
 
-const SailsProgramForm = ({ gasMethod, sails, idl, source, fileName = '', renderButtons, onSubmit }: Props) => {
+const SailsProgramForm = ({ gasMethod, sails, idl, source, fileName = '', onSubmit }: Props) => {
   const { getFormattedGasValue } = useBalanceFormat();
 
   const constructor = useConstructor(sails);
@@ -106,11 +107,9 @@ const SailsProgramForm = ({ gasMethod, sails, idl, source, fileName = '', render
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={handleSubmit}>
-        <div className={styles.formContent}>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <Box className={styles.inputs}>
           <Input name="programName" label="Name" direction="y" placeholder="Enter program name" block />
-
-          <PayloadForm direction="y" sails={sails} select={constructor.select} args={constructor.args} />
 
           <ValueField name="value" label="Initial value:" direction="y" block />
 
@@ -126,9 +125,14 @@ const SailsProgramForm = ({ gasMethod, sails, idl, source, fileName = '', render
           />
 
           <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" direction="y" />
-        </div>
+        </Box>
 
-        <div className={styles.buttons}>{renderButtons({ isDisabled })}</div>
+        <Box>
+          <PayloadForm direction="y" sails={sails} select={constructor.select} args={constructor.args} />
+        </Box>
+
+        <BackButton />
+        <Button icon={PlusSVG} type="submit" text="Submit" size="large" disabled={isDisabled} />
       </form>
     </FormProvider>
   );

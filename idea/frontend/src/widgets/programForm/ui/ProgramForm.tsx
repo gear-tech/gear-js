@@ -1,8 +1,9 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { useBalanceFormat } from '@gear-js/react-hooks';
+import { Button } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState, useMemo, ReactNode } from 'react';
+import { useState, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { useGasCalculate, useChangeEffect, useValidationSchema } from '@/hooks';
@@ -10,9 +11,10 @@ import { Result } from '@/hooks/useGasCalculate/types';
 import { FormPayload, getSubmitPayload, getPayloadFormValues, getResetPayloadValue } from '@/features/formPayload';
 import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
-import { Input, ValueField, LabeledCheckbox } from '@/shared/ui';
+import { Input, ValueField, LabeledCheckbox, Box, BackButton } from '@/shared/ui';
+import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 
-import { INITIAL_VALUES, FormValues, RenderButtonsProps, SubmitHelpers } from '../model';
+import { INITIAL_VALUES, FormValues, SubmitHelpers } from '../model';
 import styles from './ProgramForm.module.scss';
 
 type Props = {
@@ -20,13 +22,10 @@ type Props = {
   metadata: ProgramMetadata | undefined;
   gasMethod: GasMethod;
   fileName?: string;
-  renderButtons: (props: RenderButtonsProps) => ReactNode;
   onSubmit: (values: FormValues, helpers: SubmitHelpers) => void;
 };
 
-const ProgramForm = (props: Props) => {
-  const { gasMethod, metadata, source, fileName = '', renderButtons, onSubmit } = props;
-
+const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: Props) => {
   const { getChainBalanceValue, getFormattedGasValue, getChainGasValue } = useBalanceFormat();
   const schema = useValidationSchema();
 
@@ -105,11 +104,9 @@ const ProgramForm = (props: Props) => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(handleSubmitForm)}>
-        <div className={styles.formContent}>
+      <form onSubmit={methods.handleSubmit(handleSubmitForm)} className={styles.form}>
+        <Box className={styles.inputs}>
           <Input name="programName" label="Name" direction="y" placeholder="Enter program name" block />
-
-          <FormPayload name="payload" label="Initial payload" direction="y" values={payloadFormValues} />
 
           {!metadata && <Input name="payloadType" label="Initial payload type" direction="y" block />}
 
@@ -127,9 +124,14 @@ const ProgramForm = (props: Props) => {
           />
 
           <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" direction="y" />
-        </div>
+        </Box>
 
-        <div className={styles.buttons}>{renderButtons({ isDisabled })}</div>
+        <Box>
+          <FormPayload name="payload" label="Initial payload" direction="y" values={payloadFormValues} />
+        </Box>
+
+        <BackButton />
+        <Button icon={PlusSVG} type="submit" text="Submit" size="large" disabled={isDisabled} />
       </form>
     </FormProvider>
   );

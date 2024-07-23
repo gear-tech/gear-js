@@ -1,15 +1,14 @@
 import { useApi } from '@gear-js/react-hooks';
-import { Button, Input } from '@gear-js/ui';
+import { Input } from '@gear-js/ui';
 import { useParams } from 'react-router-dom';
 
 import { useContractApiWithFile, useProgramActions } from '@/hooks';
 import { Subheader } from '@/shared/ui/subheader';
 import { UploadMetadata } from '@/features/uploadMetadata';
 import { Values } from '@/hooks/useProgramActions/types';
-import { ProgramForm, RenderButtonsProps, SailsProgramForm, SubmitHelpers } from '@/widgets/programForm';
-import { BackButton } from '@/shared/ui/backButton';
-import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
+import { ProgramForm, SailsProgramForm, SubmitHelpers } from '@/widgets/programForm';
 import { GasMethod } from '@/shared/config';
+import { Box } from '@/shared/ui';
 
 import { PageParams } from '../model';
 import styles from './InitializeProgram.module.scss';
@@ -36,19 +35,15 @@ const InitializeProgram = () => {
     createProgram({ ...result, codeId }, { metadata, sails }, payload, onSuccess, helpers.enableButtons);
   };
 
-  const renderButtons = ({ isDisabled }: RenderButtonsProps) => (
-    <>
-      <Button icon={PlusSVG} type="submit" text="Create Program" disabled={isDisabled} />
-      <BackButton />
-    </>
-  );
-
   return (
-    <div className={styles.initializeProgramPage}>
-      <section className={styles.pageSection}>
+    <div className={styles.container}>
+      <section>
         <Subheader size="big" title="Enter program parameters" />
-        <div className={styles.lining}>
-          <Input label="Code ID" value={codeId} direction="y" className={styles.codeId} block readOnly />
+
+        <div className={styles.program}>
+          <Box>
+            <Input label="Code ID" value={codeId} direction="y" block readOnly />
+          </Box>
 
           {sails.value && sails.idl ? (
             <SailsProgramForm
@@ -56,7 +51,6 @@ const InitializeProgram = () => {
               sails={sails.value}
               idl={sails.idl}
               gasMethod={GasMethod.InitCreate}
-              renderButtons={renderButtons}
               onSubmit={handleSubmit}
             />
           ) : (
@@ -64,14 +58,13 @@ const InitializeProgram = () => {
               source={codeId}
               metadata={metadata.value}
               gasMethod={GasMethod.InitCreate}
-              renderButtons={renderButtons}
               onSubmit={handleSubmit}
             />
           )}
         </div>
       </section>
 
-      <section className={styles.pageSection}>
+      <section>
         <Subheader size="big" title="Add metadata/sails" />
 
         <UploadMetadata

@@ -1,24 +1,11 @@
-@use '@/shared/assets/styles/_shared.scss' as *;
-@use '@/shared/assets/styles/_mixins.scss' as *;
-@use '@/shared/assets/styles/_variables.scss' as *;
-
-.initializeProgramPage {
-  @include childrenMargin($marginBig, right);
-
+.container {
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 32px;
 }
 
-.pageSection {
-  flex: 1 1;
-}
-
-.lining {
-  padding: toRem(14) toRem(24) toRem(24);
-  border-radius: $borderRadius;
-  background-color: $bgColor4;
-
-  .codeId:not(:only-child) {
-    margin-bottom: $marginMedium;
-  }
+.program {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }

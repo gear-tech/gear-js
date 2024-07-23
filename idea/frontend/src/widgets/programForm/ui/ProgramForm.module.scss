@@ -1,12 +1,11 @@
-@use '@/shared/assets/styles/_mixins.scss' as *;
-@use '@/shared/assets/styles/_variables.scss' as *;
-
-.formContent {
-  @include childrenMargin($marginMedium);
-
-  margin-bottom: $marginBig;
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
 }
 
-.buttons {
-  @include childrenMargin($margin, right);
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
