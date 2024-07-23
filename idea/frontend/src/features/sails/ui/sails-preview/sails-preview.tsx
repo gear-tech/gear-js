@@ -24,7 +24,7 @@ function Accordion({ heading, children }: { heading: string; children: ReactNode
   const toggle = () => setIsOpen((prevValue) => !prevValue);
 
   return (
-    <div>
+    <div className={styles.accordion}>
       <button type="button" onClick={toggle} className={cx(styles.button, isOpen && styles.open)}>
         <ArrowSVG />
         <span>{heading}</span>
@@ -56,8 +56,10 @@ function SailsPreview({ value }: Props) {
       .map(([name, func]) => getFunc(name, func))
       .join('\n');
 
+  const serviceEntries = Object.entries(services);
+
   const renderServices = () =>
-    Object.entries(services).map(([name, { functions, queries, events }]) => (
+    serviceEntries.map(([name, { functions, queries, events }]) => (
       <Accordion key={name} heading={name}>
         <Accordion heading="Functions">
           <PreformattedBlock text={getFunctions(functions, getServiceFunction)} />
@@ -83,7 +85,7 @@ function SailsPreview({ value }: Props) {
         <PreformattedBlock text={getFunctions(ctors, getConstructorFunction)} />
       </Accordion>
 
-      <Accordion heading="Services">{renderServices()}</Accordion>
+      <Accordion heading={`Services (${serviceEntries.length})`}>{renderServices()}</Accordion>
     </div>
   );
 }

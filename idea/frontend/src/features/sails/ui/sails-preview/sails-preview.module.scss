@@ -27,3 +27,7 @@
     transform: rotate(90deg);
   }
 }
+
+.accordion > .accordion {
+  padding-left: 8px;
+}
