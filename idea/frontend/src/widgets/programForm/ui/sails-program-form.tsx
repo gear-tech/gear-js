@@ -64,7 +64,6 @@ const SailsProgramForm = ({ gasMethod, sails, idl, source, fileName = '', onSubm
   const form = useForm<Values, unknown, FormattedValues>({ values: defaultValues, resolver: zodResolver(schema) });
 
   const [gasInfo, setGasinfo] = useState<Result>();
-  const [isDisabled, setIsDisabled] = useState(false);
   const [isGasDisabled, setIsGasDisabled] = useState(false);
 
   const calculateGas = useGasCalculate();
@@ -75,7 +74,6 @@ const SailsProgramForm = ({ gasMethod, sails, idl, source, fileName = '', onSubm
 
     form.reset(resetValues);
     setGasinfo(undefined);
-    setIsDisabled(false);
   };
 
   const handleGasCalculate = async () => {
@@ -95,12 +93,10 @@ const SailsProgramForm = ({ gasMethod, sails, idl, source, fileName = '', onSubm
   };
 
   const handleSubmit = form.handleSubmit((values) => {
-    setIsDisabled(true);
-
     const payloadType = 'Bytes';
     const submitValues = { ...values, initPayload: values.payload, payloadType, idl };
 
-    onSubmit(submitValues, { enableButtons: () => setIsDisabled(false), resetForm });
+    onSubmit(submitValues, { resetForm });
   });
 
   return (

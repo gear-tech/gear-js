@@ -2,7 +2,7 @@ import { useApi } from '@gear-js/react-hooks';
 import { Button, Input } from '@gear-js/ui';
 import { useParams } from 'react-router-dom';
 
-import { useContractApiWithFile, useProgramActions } from '@/hooks';
+import { useContractApiWithFile, useLoading, useProgramActions } from '@/hooks';
 import { Subheader } from '@/shared/ui/subheader';
 import { UploadMetadata } from '@/features/uploadMetadata';
 import { Values } from '@/hooks/useProgramActions/types';
@@ -19,9 +19,12 @@ const InitializeProgram = () => {
   const { codeId } = useParams() as PageParams;
   const { metadata, sails, isLoading, ...contractApi } = useContractApiWithFile(codeId);
   const createProgram = useProgramActions();
+  const [isSubmitting, enableSubmitting, disableSubmitting] = useLoading();
 
   const handleSubmit = (payload: Values, helpers: SubmitHelpers) => {
     if (!isApiReady) throw new Error('API is not initialized');
+
+    enableSubmitting();
 
     const { gasLimit, value, payload: initPayload, payloadType, keepAlive } = payload;
     const program = { value, codeId, gasLimit, initPayload, keepAlive };
@@ -29,11 +32,11 @@ const InitializeProgram = () => {
 
     const onSuccess = () => {
       helpers.resetForm();
-      helpers.enableButtons();
       metadata.reset();
+      disableSubmitting();
     };
 
-    createProgram({ ...result, codeId }, { metadata, sails }, payload, onSuccess, helpers.enableButtons);
+    createProgram({ ...result, codeId }, { metadata, sails }, payload, onSuccess, disableSubmitting);
   };
 
   return (
@@ -80,7 +83,7 @@ const InitializeProgram = () => {
 
       <div className={styles.buttons}>
         <BackButton />
-        <Button type="submit" icon={PlusSVG} text="Submit" size="large" />
+        <Button type="submit" icon={PlusSVG} text="Submit" size="large" disabled={isSubmitting} />
       </div>
     </div>
   );

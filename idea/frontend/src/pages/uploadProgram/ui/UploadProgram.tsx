@@ -1,11 +1,11 @@
 import { useApi } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
-import { useContractApiWithFile, useProgramActions } from '@/hooks';
+import { useContractApiWithFile, useLoading, useProgramActions } from '@/hooks';
 import { Subheader } from '@/shared/ui/subheader';
 import { GasMethod } from '@/shared/config';
 import { Values } from '@/hooks/useProgramActions/types';
-import { ProgramForm, SailsProgramForm, SubmitHelpers } from '@/widgets/programForm';
+import { ProgramForm, SailsProgramForm } from '@/widgets/programForm';
 import { useWasmFile } from '@/features/code';
 import { ProgramFileInput } from '@/features/program';
 import { UploadMetadata } from '@/features/uploadMetadata';
@@ -19,26 +19,30 @@ const UploadProgram = () => {
   const wasmFile = useWasmFile();
   const { metadata, sails, isLoading, ...contractApi } = useContractApiWithFile(wasmFile.buffer);
   const uploadProgram = useProgramActions();
-
-  const reset = () => {
-    wasmFile.reset();
-    contractApi.reset();
-  };
+  const [isSubmitting, enableSubmitting, disableSubmitting] = useLoading();
 
   const handleWasmFileChange = (value: File | undefined) => {
     contractApi.reset();
     wasmFile.handleChange(value);
   };
 
-  const handleSubmit = (values: Values, { enableButtons }: SubmitHelpers) => {
+  const handleSubmit = (values: Values) => {
     if (!isApiReady) throw new Error('API is not initialized');
     if (!wasmFile.buffer) throw new Error('File is not found');
+
+    enableSubmitting();
 
     const { gasLimit, value, payload: initPayload, payloadType, keepAlive } = values;
     const program = { code: wasmFile.buffer, value, gasLimit, initPayload, keepAlive };
     const result = api.program.upload(program, metadata.value, payloadType);
 
-    uploadProgram(result, { metadata, sails }, values, reset, enableButtons);
+    const onSuccess = () => {
+      wasmFile.reset();
+      contractApi.reset();
+      disableSubmitting();
+    };
+
+    uploadProgram(result, { metadata, sails }, values, onSuccess, disableSubmitting);
   };
 
   return (
@@ -94,7 +98,7 @@ const UploadProgram = () => {
       {wasmFile.buffer && (
         <div className={styles.buttons}>
           <BackButton />
-          <Button type="submit" icon={PlusSVG} text="Submit" size="large" />
+          <Button type="submit" icon={PlusSVG} text="Submit" size="large" disabled={isSubmitting} />
         </div>
       )}
     </div>

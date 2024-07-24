@@ -35,7 +35,6 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
   const { getValues, setValue, reset } = methods;
 
   const [gasInfo, setGasinfo] = useState<Result>();
-  const [isDisabled, setIsDisabled] = useState(false);
   const [isGasDisabled, setIsGasDisabled] = useState(false);
 
   const calculateGas = useGasCalculate();
@@ -45,7 +44,6 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
     const payload = getResetPayloadValue(values.payload);
 
     reset({ ...defaultValues, payload });
-    setIsDisabled(false);
     setGasinfo(undefined);
   };
 
@@ -72,8 +70,6 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
   };
 
   const handleSubmitForm = (values: FormValues) => {
-    setIsDisabled(true);
-
     const { value, payload, gasLimit, programName, payloadType, keepAlive } = values;
 
     const data = {
@@ -85,7 +81,7 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
       keepAlive,
     };
 
-    onSubmit(data, { enableButtons: () => setIsDisabled(false), resetForm });
+    onSubmit(data, { resetForm });
   };
 
   const typeIndex = metadata?.types.init.input;
