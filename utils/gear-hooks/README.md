@@ -29,14 +29,15 @@ yarn add @gear-js/react-hooks
 Simple as it is, here's quick example:
 
 ```jsx
-import { useReadState } from '@gear-js/react-hooks';
-import metaWasm from 'assets/wasm/meta.wasm';
+import { ProgramMetadata } from '@gear-js/api';
+import { useReadFullState } from '@gear-js/react-hooks';
 
 function State() {
-  const programId = '0x01';
-  const payload = { key: 'value' };
+  const programId = '0x...';
+  const metadataHex = '0x...';
+  const payload = null;
 
-  const state = useReadState(programId, metaWasm, payload);
+  const { state } = useReadFullState(programId, ProgramMetadata.from(METADATA_HEX), payload);
 
   return <div>{JSON.stringify(state)}</div>;
 }
