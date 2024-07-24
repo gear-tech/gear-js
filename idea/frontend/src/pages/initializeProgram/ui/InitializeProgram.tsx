@@ -1,5 +1,5 @@
 import { useApi } from '@gear-js/react-hooks';
-import { Button, Input } from '@gear-js/ui';
+import { Button } from '@gear-js/ui';
 import { useParams } from 'react-router-dom';
 
 import { useContractApiWithFile, useLoading, useProgramActions } from '@/hooks';
@@ -8,7 +8,7 @@ import { UploadMetadata } from '@/features/uploadMetadata';
 import { Values } from '@/hooks/useProgramActions/types';
 import { ProgramForm, SailsProgramForm, SubmitHelpers } from '@/widgets/programForm';
 import { GasMethod } from '@/shared/config';
-import { BackButton, Box } from '@/shared/ui';
+import { BackButton } from '@/shared/ui';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 
 import { PageParams } from '../model';
@@ -44,28 +44,22 @@ const InitializeProgram = () => {
       <section>
         <Subheader size="big" title="Enter program parameters" />
 
-        <div className={styles.program}>
-          <Box>
-            <Input label="Code ID" value={codeId} direction="y" block readOnly />
-          </Box>
-
-          {sails.value && sails.idl ? (
-            <SailsProgramForm
-              source={codeId}
-              sails={sails.value}
-              idl={sails.idl}
-              gasMethod={GasMethod.InitCreate}
-              onSubmit={handleSubmit}
-            />
-          ) : (
-            <ProgramForm
-              source={codeId}
-              metadata={metadata.value}
-              gasMethod={GasMethod.InitCreate}
-              onSubmit={handleSubmit}
-            />
-          )}
-        </div>
+        {sails.value && sails.idl ? (
+          <SailsProgramForm
+            source={codeId}
+            sails={sails.value}
+            idl={sails.idl}
+            gasMethod={GasMethod.InitCreate}
+            onSubmit={handleSubmit}
+          />
+        ) : (
+          <ProgramForm
+            source={codeId}
+            metadata={metadata.value}
+            gasMethod={GasMethod.InitCreate}
+            onSubmit={handleSubmit}
+          />
+        )}
       </section>
 
       <section>

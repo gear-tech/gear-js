@@ -1,5 +1,6 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { useBalanceFormat } from '@gear-js/react-hooks';
+import { Input as GearInput } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState, useMemo } from 'react';
@@ -11,6 +12,7 @@ import { FormPayload, getSubmitPayload, getPayloadFormValues, getResetPayloadVal
 import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
 import { Input, ValueField, LabeledCheckbox, Box } from '@/shared/ui';
+import { isHex } from '@/shared/helpers';
 
 import { INITIAL_VALUES, FormValues, SubmitHelpers } from '../model';
 import styles from './ProgramForm.module.scss';
@@ -100,6 +102,8 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
     <FormProvider {...methods}>
       <form id="programForm" onSubmit={methods.handleSubmit(handleSubmitForm)} className={styles.form}>
         <Box className={styles.inputs}>
+          {isHex(source) && <GearInput label="Code ID" direction="y" value={source} readOnly block />}
+
           <Input name="programName" label="Name" direction="y" placeholder="Enter program name" block />
 
           {!metadata && <Input name="payloadType" label="Initial payload type" direction="y" block />}

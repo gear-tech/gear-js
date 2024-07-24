@@ -1,4 +1,5 @@
 import { useBalanceFormat } from '@gear-js/react-hooks';
+import { Input as GearInput } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
@@ -12,6 +13,7 @@ import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
 import { Input, ValueField, LabeledCheckbox, Box } from '@/shared/ui';
 import { PayloadForm, useConstructor, PayloadValue, PayloadValueSchema, getResetPayloadValue } from '@/features/sails';
+import { isHex } from '@/shared/helpers';
 
 import { SubmitHelpers } from '../model';
 import styles from './ProgramForm.module.scss';
@@ -101,8 +103,10 @@ const SailsProgramForm = ({ gasMethod, sails, idl, source, fileName = '', onSubm
 
   return (
     <FormProvider {...form}>
-      <form  id="programForm" onSubmit={handleSubmit} className={styles.form}>
+      <form id="programForm" onSubmit={handleSubmit} className={styles.form}>
         <Box className={styles.inputs}>
+          {isHex(source) && <GearInput label="Code ID" direction="y" value={source} readOnly block />}
+
           <Input name="programName" label="Name" direction="y" placeholder="Enter program name" block />
 
           <ValueField name="value" label="Initial value:" direction="y" block />
