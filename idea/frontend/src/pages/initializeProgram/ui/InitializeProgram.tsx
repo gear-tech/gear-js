@@ -82,8 +82,8 @@ const InitializeProgram = () => {
       </section>
 
       <div className={styles.buttons}>
-        <BackButton />
-        <Button type="submit" form="programForm" icon={PlusSVG} text="Submit" size="large" disabled={isSubmitting} />
+        <BackButton size="medium" />
+        <Button type="submit" form="programForm" icon={PlusSVG} text="Submit" disabled={isSubmitting} />
       </div>
     </div>
   );
