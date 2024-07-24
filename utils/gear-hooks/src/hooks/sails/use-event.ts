@@ -1,15 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect } from 'react';
-
-type NonServiceKeys = 'api' | 'registry' | 'programId' | 'newCtorFromCode' | 'newCtorFromCodeId';
-
-type FunctionName<T> = {
-  [K in keyof T]: T[K] extends (...args: any[]) => Promise<() => void> ? K : never;
-}[keyof T];
-
-type Event<T> = T extends (...args: infer P) => Promise<() => void> ? (...args: P) => Promise<() => void> : never;
-
-type CallbackArgs<T> = T extends (...args: infer P) => void | Promise<void> ? P : never;
+import { EventReturn, FunctionName, ServiceName, Event, EventCallbackArgs } from './types';
 
 type UseEventParameters<TProgram, TServiceName, TFunctionName, TCallbackArgs extends any[]> = {
   program: TProgram | undefined;
@@ -20,10 +11,10 @@ type UseEventParameters<TProgram, TServiceName, TFunctionName, TCallbackArgs ext
 
 function useEvent<
   TProgram,
-  TServiceName extends Exclude<keyof TProgram, NonServiceKeys>,
-  TFunctionName extends FunctionName<TProgram[TServiceName]>,
+  TServiceName extends ServiceName<TProgram>,
+  TFunctionName extends FunctionName<TProgram[TServiceName], EventReturn>,
   TEvent extends Event<TProgram[TServiceName][TFunctionName]>,
-  TCallbackArgs extends CallbackArgs<Parameters<TEvent>[0]>,
+  TCallbackArgs extends EventCallbackArgs<TEvent>,
 >({
   program,
   serviceName,
@@ -36,7 +27,7 @@ function useEvent<
   useEffect(() => {
     if (!program) return;
 
-    const unsub = (program[serviceName][functionName] as TEvent)(onData) as Promise<() => void>;
+    const unsub = (program[serviceName][functionName] as TEvent)(onData) as EventReturn;
 
     return () => {
       unsub.then((unsubCallback) => unsubCallback());

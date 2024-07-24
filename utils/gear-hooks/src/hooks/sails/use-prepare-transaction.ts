@@ -1,65 +1,38 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { HexString } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
-import { SignerOptions } from '@polkadot/api/types';
 import { web3FromSource } from '@polkadot/extension-dapp';
-import { IKeyringPair } from '@polkadot/types/types';
 import { useMutation } from '@tanstack/react-query';
-import { TransactionBuilder } from 'sails-js';
 
-type FunctionName<T> = {
-  [K in keyof T]: T[K] extends (...args: any[]) => TransactionBuilder<any> ? K : never;
-}[keyof T];
-
-type NonServiceKeys = 'api' | 'registry' | 'programId' | 'newCtorFromCode' | 'newCtorFromCodeId';
-
-type UsePrepareTransactionParameters<TProgram, TServiceName, TFunctionName> = {
-  program: TProgram | undefined;
-  serviceName: TServiceName;
-  functionName: TFunctionName;
-};
-
-type CalculateGasParameters = {
-  allowOtherPanics?: boolean;
-  increaseGas?: number;
-};
-
-type AccountParameters = {
-  addressOrPair: string | IKeyringPair;
-  signerOptions?: Partial<SignerOptions>;
-};
-
-type SignAndSendOptions<T> = {
-  args: T;
-  value?: bigint;
-  voucherId?: HexString;
-  gasLimit?: bigint | CalculateGasParameters;
-  account?: AccountParameters;
-};
+import {
+  FunctionName,
+  ServiceName,
+  GenericTransactionReturn,
+  Transaction,
+  TransactionReturn,
+  UsePrepareTransactionParameters,
+  SignAndSendOptions,
+} from './types';
 
 function usePrepareTransaction<
   TProgram,
-  TServiceName extends Exclude<keyof TProgram, NonServiceKeys>,
-  TFunctionName extends FunctionName<TProgram[TServiceName]>,
+  TServiceName extends ServiceName<TProgram>,
+  TFunctionName extends FunctionName<TProgram[TServiceName], GenericTransactionReturn>,
+  TTransaction extends Transaction<TProgram[TServiceName][TFunctionName]>,
+  TTransactionReturn extends TransactionReturn<TTransaction>,
 >({ program, serviceName, functionName }: UsePrepareTransactionParameters<TProgram, TServiceName, TFunctionName>) {
   const { account: connectedAccount } = useAccount();
 
-  type FunctionType = TProgram[TServiceName][TFunctionName] extends (...args: infer A) => TransactionBuilder<infer R>
-    ? (...args: A) => TransactionBuilder<R>
-    : never;
-
-  type Return = ReturnType<FunctionType> extends TransactionBuilder<infer R> ? R : never;
-
-  const getTransaction = async ({
+  const prepareTransaction = async ({
     args,
     value,
     voucherId,
     account,
     gasLimit,
-  }: SignAndSendOptions<Parameters<FunctionType>>) => {
+  }: SignAndSendOptions<Parameters<TTransaction>>) => {
     if (!program) throw new Error('Program is not found');
 
-    const transaction = (program[serviceName][functionName] as FunctionType)(...args) as TransactionBuilder<Return>;
+    // spreading args to avoid TS error
+    const transaction = (program[serviceName][functionName] as TTransaction)(...[...args]) as TTransactionReturn;
 
     if (account) {
       const { addressOrPair, signerOptions } = account;
@@ -86,13 +59,13 @@ function usePrepareTransaction<
   };
 
   const mutation = useMutation({
-    mutationKey: ['getTransaction'],
-    mutationFn: getTransaction,
+    mutationKey: ['prepareTransaction'],
+    mutationFn: prepareTransaction,
   });
 
   return {
-    getTransaction: mutation.mutate,
-    getTransactionAsync: mutation.mutateAsync,
+    prepareTransaction: mutation.mutate,
+    prepareTransactionAsync: mutation.mutateAsync,
     ...mutation,
   };
 }

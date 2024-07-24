@@ -1,8 +1,6 @@
+import { useApi } from '@gear-js/react-hooks';
 import { GearApi, HexString } from '@gear-js/api';
 import { UseQueryOptions, useQuery } from '@tanstack/react-query';
-import { useContext } from 'react';
-
-import { ApiContext } from 'context';
 
 type Program<T> = {
   new (api: GearApi, programId?: HexString): T;
@@ -17,7 +15,7 @@ type UseProgramParameters<T> = {
 };
 
 function useProgram<T>({ library, id, query }: UseProgramParameters<T>) {
-  const { api, isApiReady } = useContext(ApiContext);
+  const { api, isApiReady } = useApi();
 
   const getProgram = () => {
     if (!isApiReady) throw new Error('API is not initialized');

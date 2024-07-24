@@ -5,18 +5,7 @@ import { useQueryClient, UseQueryOptions, useQuery as useReactQuery } from '@tan
 import { useEffect } from 'react';
 import { ZERO_ADDRESS } from 'sails-js';
 
-type PromiseReturn<T> = T extends (...args: any[]) => Promise<infer R> ? R : never;
-type EventReturn = () => void;
-
-type QueryName<T> = {
-  [K in keyof T]: PromiseReturn<T[K]> extends EventReturn ? never : K;
-}[keyof T];
-
-type NonServiceKeys = 'api' | 'registry' | 'programId' | 'newCtorFromCode' | 'newCtorFromCodeId';
-
-type ExcludeConfigArgs<T> = T extends [...infer U, any, any?, any?] ? U : T;
-type NonConfigArgs<T> = T extends (...args: infer P) => Promise<any> ? ExcludeConfigArgs<P> : never;
-type Query<T> = T extends (..._args: infer P) => Promise<infer R> ? (..._args: P) => Promise<R> : never;
+import { Query, QueryArgs, QueryName, QueryReturn, ServiceName } from './types';
 
 type CalculateReplyOptions = Pick<ICalculateReplyForHandleOptions, 'at' | 'value'>;
 type QueryOptions<T> = Omit<UseQueryOptions<T>, 'queryKey' | 'queryFn'>; // TODO: pass generics
@@ -33,11 +22,11 @@ type UseQueryParameters<TProgram, TServiceName, TQueryName, TArgs, TQueryReturn>
 
 function useQuery<
   TProgram,
-  TServiceName extends Exclude<keyof TProgram, NonServiceKeys>,
+  TServiceName extends ServiceName<TProgram>,
   TQueryName extends QueryName<TProgram[TServiceName]>,
   TQuery extends Query<TProgram[TServiceName][TQueryName]>,
-  TArgs extends NonConfigArgs<TQuery>,
-  TQueryReturn extends Awaited<ReturnType<TQuery>>,
+  TArgs extends QueryArgs<TQuery>,
+  TQueryReturn extends QueryReturn<TQuery>,
 >({
   program,
   serviceName,
@@ -94,3 +83,4 @@ function useQuery<
 }
 
 export { useQuery };
+export type { UseQueryParameters };
