@@ -98,7 +98,7 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(handleSubmitForm)} className={styles.form}>
+      <form id="programForm" onSubmit={methods.handleSubmit(handleSubmitForm)} className={styles.form}>
         <Box className={styles.inputs}>
           <Input name="programName" label="Name" direction="y" placeholder="Enter program name" block />
 

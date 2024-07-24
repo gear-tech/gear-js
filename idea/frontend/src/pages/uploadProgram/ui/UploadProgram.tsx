@@ -98,7 +98,7 @@ const UploadProgram = () => {
       {wasmFile.buffer && (
         <div className={styles.buttons}>
           <BackButton />
-          <Button type="submit" icon={PlusSVG} text="Submit" size="large" disabled={isSubmitting} />
+          <Button type="submit" form="programForm" icon={PlusSVG} text="Submit" size="large" disabled={isSubmitting} />
         </div>
       )}
     </div>

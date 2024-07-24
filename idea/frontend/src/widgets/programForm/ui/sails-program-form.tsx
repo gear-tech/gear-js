@@ -101,7 +101,7 @@ const SailsProgramForm = ({ gasMethod, sails, idl, source, fileName = '', onSubm
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={handleSubmit} className={styles.form}>
+      <form  id="programForm" onSubmit={handleSubmit} className={styles.form}>
         <Box className={styles.inputs}>
           <Input name="programName" label="Name" direction="y" placeholder="Enter program name" block />
 
