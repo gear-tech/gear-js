@@ -6,13 +6,14 @@ import { getPreformattedText } from '@/shared/helpers';
 import { PreformattedBlock } from '@/shared/ui';
 
 import ArrowSVG from '../../assets/arrow.svg?react';
-import { ISailsFuncArg, SailsService } from '../../types';
+import {
+  ISailsCtorFuncParams,
+  ISailsFuncArg,
+  SailsServiceEvent,
+  SailsServiceFunc,
+  SailsServiceQuery,
+} from '../../types';
 import styles from './sails-preview.module.scss';
-
-type ISailsCtorFuncParams = Sails['ctors'][string];
-type SailsServiceFunc = SailsService['functions'][string];
-type SailsServiceQuery = SailsService['queries'][string];
-type SailsServiceEvent = SailsService['events'][string];
 
 type Props = {
   value: Sails;
@@ -77,8 +78,6 @@ function SailsPreview({ value }: Props) {
 
   return (
     <div>
-      <PreformattedBlock text="0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" />
-
       <Accordion heading="Types">
         <PreformattedBlock text={getPreformattedText(scaleCodecTypes)} />
       </Accordion>
