@@ -1,5 +1,5 @@
 import { useApi } from '@gear-js/react-hooks';
-import { Input } from '@gear-js/ui';
+import { Button, Input } from '@gear-js/ui';
 import { useParams } from 'react-router-dom';
 
 import { useContractApiWithFile, useProgramActions } from '@/hooks';
@@ -8,7 +8,8 @@ import { UploadMetadata } from '@/features/uploadMetadata';
 import { Values } from '@/hooks/useProgramActions/types';
 import { ProgramForm, SailsProgramForm, SubmitHelpers } from '@/widgets/programForm';
 import { GasMethod } from '@/shared/config';
-import { Box } from '@/shared/ui';
+import { BackButton, Box } from '@/shared/ui';
+import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 
 import { PageParams } from '../model';
 import styles from './InitializeProgram.module.scss';
@@ -76,6 +77,11 @@ const InitializeProgram = () => {
           isLoading={isLoading}
         />
       </section>
+
+      <div className={styles.buttons}>
+        <BackButton />
+        <Button type="submit" icon={PlusSVG} text="Submit" size="large" />
+      </div>
     </div>
   );
 };

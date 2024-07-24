@@ -1,0 +1,15 @@
+.input {
+  // overriding @gear-js/ui
+  width: auto;
+  padding: 8px 16px;
+  background-color: #222225;
+  border-radius: 8px;
+
+  span {
+    display: none;
+  }
+
+  button:first-child {
+    margin-right: 16px;
+  }
+}

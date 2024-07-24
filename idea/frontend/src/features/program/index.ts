@@ -1,5 +1,5 @@
 import { useProgram, usePrograms, Program, ProgramsParameters, setProgramMeta } from './api';
-import { ProgramTable, Programs, ProgramFilters } from './ui';
+import { ProgramTable, Programs, ProgramFilters, ProgramFileInput } from './ui';
 import { useProgramStatus, useProgramFilters } from './hooks';
 import { ProgramStatus } from './consts';
 
@@ -13,6 +13,7 @@ export {
   useProgram,
   usePrograms,
   setProgramMeta,
+  ProgramFileInput,
 };
 
 export type { Program, ProgramsParameters };

@@ -9,3 +9,19 @@
   flex-direction: column;
   gap: 16px;
 }
+
+.buttons {
+  padding: 0 16px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+
+  position: sticky;
+  bottom: 32px;
+}
+
+.header {
+  justify-content: flex-start;
+  gap: 24px;
+}

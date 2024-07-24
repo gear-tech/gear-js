@@ -7,7 +7,7 @@ const BackButton = () => {
   const navigate = useNavigate();
   const goBack = () => navigate(-1);
 
-  return <Button text="Cancel" icon={closeSVG} size="large" color="light" onClick={goBack} />;
+  return <Button text="Cancel" icon={closeSVG} size="large" color="grey" onClick={goBack} />;
 };
 
 export { BackButton };

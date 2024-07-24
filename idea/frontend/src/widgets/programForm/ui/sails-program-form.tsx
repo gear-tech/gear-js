@@ -1,5 +1,4 @@
 import { useBalanceFormat } from '@gear-js/react-hooks';
-import { Button } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
@@ -11,9 +10,8 @@ import { useBalanceSchema, useGasCalculate, useGasLimitSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
 import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
-import { Input, ValueField, LabeledCheckbox, Box, BackButton } from '@/shared/ui';
+import { Input, ValueField, LabeledCheckbox, Box } from '@/shared/ui';
 import { PayloadForm, useConstructor, PayloadValue, PayloadValueSchema, getResetPayloadValue } from '@/features/sails';
-import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 
 import { SubmitHelpers } from '../model';
 import styles from './ProgramForm.module.scss';
@@ -130,9 +128,6 @@ const SailsProgramForm = ({ gasMethod, sails, idl, source, fileName = '', onSubm
         <Box>
           <PayloadForm direction="y" sails={sails} select={constructor.select} args={constructor.args} />
         </Box>
-
-        <BackButton />
-        <Button icon={PlusSVG} type="submit" text="Submit" size="large" disabled={isDisabled} />
       </form>
     </FormProvider>
   );

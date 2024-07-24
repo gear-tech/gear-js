@@ -1,6 +1,5 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { useBalanceFormat } from '@gear-js/react-hooks';
-import { Button } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState, useMemo } from 'react';
@@ -11,8 +10,7 @@ import { Result } from '@/hooks/useGasCalculate/types';
 import { FormPayload, getSubmitPayload, getPayloadFormValues, getResetPayloadValue } from '@/features/formPayload';
 import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
-import { Input, ValueField, LabeledCheckbox, Box, BackButton } from '@/shared/ui';
-import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
+import { Input, ValueField, LabeledCheckbox, Box } from '@/shared/ui';
 
 import { INITIAL_VALUES, FormValues, SubmitHelpers } from '../model';
 import styles from './ProgramForm.module.scss';
@@ -129,9 +127,6 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
         <Box>
           <FormPayload name="payload" label="Initial payload" direction="y" values={payloadFormValues} />
         </Box>
-
-        <BackButton />
-        <Button icon={PlusSVG} type="submit" text="Submit" size="large" disabled={isDisabled} />
       </form>
     </FormProvider>
   );

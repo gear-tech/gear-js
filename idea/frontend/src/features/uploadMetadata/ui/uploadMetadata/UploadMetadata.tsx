@@ -7,7 +7,6 @@ import { MetadataPreview } from '@/features/metadata';
 import { SailsPreview } from '@/features/sails';
 import { FileTypes } from '@/shared/config';
 import { Box } from '@/shared/ui/box';
-import { formStyles } from '@/shared/ui/form';
 
 import styles from './UploadMetadata.module.scss';
 
@@ -30,7 +29,6 @@ const UploadMetadata = ({ value, metadata, sails, isDisabled, isLoading, onChang
           color="primary"
           label="Upload the meta.txt/sails.idl file"
           direction="y"
-          className={cx(formStyles.field, formStyles.gap16)}
           onChange={onChange}
           accept={[FileTypes.Text, FileTypes.Idl]}
         />

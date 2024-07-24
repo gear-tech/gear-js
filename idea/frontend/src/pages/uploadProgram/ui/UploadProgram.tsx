@@ -1,16 +1,16 @@
 import { useApi } from '@gear-js/react-hooks';
-import { FileInput } from '@gear-js/ui';
-import cx from 'clsx';
+import { Button } from '@gear-js/ui';
 
 import { useContractApiWithFile, useProgramActions } from '@/hooks';
-import { formStyles } from '@/shared/ui/form';
 import { Subheader } from '@/shared/ui/subheader';
-import { FileTypes, GasMethod } from '@/shared/config';
+import { GasMethod } from '@/shared/config';
 import { Values } from '@/hooks/useProgramActions/types';
 import { ProgramForm, SailsProgramForm, SubmitHelpers } from '@/widgets/programForm';
 import { useWasmFile } from '@/features/code';
+import { ProgramFileInput } from '@/features/program';
 import { UploadMetadata } from '@/features/uploadMetadata';
-import { Box } from '@/shared/ui';
+import { BackButton, Box } from '@/shared/ui';
+import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 
 import styles from './UploadProgram.module.scss';
 
@@ -44,21 +44,17 @@ const UploadProgram = () => {
   return (
     <div className={styles.container}>
       <section>
-        <Subheader size="big" title="Enter program parameters" />
+        <Subheader size="big" title="Enter program parameters" className={styles.header}>
+          {wasmFile.value && <ProgramFileInput value={wasmFile.value} onChange={handleWasmFileChange} />}
+        </Subheader>
+
+        {!wasmFile.value && (
+          <Box>
+            <ProgramFileInput value={wasmFile.value} onChange={handleWasmFileChange} />
+          </Box>
+        )}
 
         <div className={styles.program}>
-          <Box>
-            <FileInput
-              value={wasmFile.value}
-              label="Program file"
-              direction="y"
-              color="primary"
-              className={cx(formStyles.field, formStyles.gap16)}
-              onChange={handleWasmFileChange}
-              accept={FileTypes.Wasm}
-            />
-          </Box>
-
           {wasmFile.buffer && !sails.value && (
             <ProgramForm
               fileName={wasmFile.value?.name.split(/\.opt|\.wasm/)[0]}
@@ -94,6 +90,13 @@ const UploadProgram = () => {
           isLoading={isLoading}
         />
       </section>
+
+      {wasmFile.buffer && (
+        <div className={styles.buttons}>
+          <BackButton />
+          <Button type="submit" icon={PlusSVG} text="Submit" size="large" />
+        </div>
+      )}
     </div>
   );
 };
