@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HexString, ICalculateReplyForHandleOptions } from '@gear-js/api';
-import { useAccount, useApi } from '@gear-js/react-hooks';
 import { useQueryClient, UseQueryOptions, useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { ZERO_ADDRESS } from 'sails-js';
+
+import { AccountContext, ApiContext } from 'context';
 
 import { Query, QueryArgs, QueryName, QueryReturn, ServiceName } from './types';
 
@@ -36,10 +37,10 @@ function useProgramQuery<
   query,
   watch,
 }: UseProgramQueryParameters<TProgram, TServiceName, TQueryName, TArgs, TQueryReturn>) {
-  const { api, isApiReady } = useApi();
+  const { api, isApiReady } = useContext(ApiContext);
   const queryClient = useQueryClient();
 
-  const { account } = useAccount();
+  const { account } = useContext(AccountContext);
   const originAddress = account?.decodedAddress || ZERO_ADDRESS;
 
   const getQuery = () => {

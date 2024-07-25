@@ -1,7 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useAccount } from '@gear-js/react-hooks';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useMutation } from '@tanstack/react-query';
+import { useContext } from 'react';
+
+import { AccountContext } from 'context';
 
 import {
   FunctionName,
@@ -24,7 +25,7 @@ function usePrepareProgramTransaction<
   serviceName,
   functionName,
 }: UsePrepareProgramTransactionParameters<TProgram, TServiceName, TFunctionName>) {
-  const { account: connectedAccount } = useAccount();
+  const { account: connectedAccount } = useContext(AccountContext);
 
   const prepareTransaction = async ({
     args,

@@ -1,7 +1,9 @@
 import { HexString } from '@gear-js/api';
-import { useApi } from '@gear-js/react-hooks';
 import { useQuery } from '@tanstack/react-query';
+import { useContext } from 'react';
 import { Sails } from 'sails-js';
+
+import { ApiContext } from 'context';
 
 type UseSailsParameters = {
   programId?: HexString | undefined;
@@ -14,7 +16,7 @@ const DEFAULT_PARAMETERS = {
 } as const;
 
 function useSails({ programId, idl }: UseSailsParameters = DEFAULT_PARAMETERS) {
-  const { api, isApiReady } = useApi();
+  const { api, isApiReady } = useContext(ApiContext);
 
   const getSails = async () => {
     if (!isApiReady) throw new Error('API is not initialized');
