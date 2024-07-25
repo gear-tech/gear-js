@@ -50,6 +50,8 @@ export class MessageService {
     entry,
     limit,
     offset,
+    service,
+    fn,
   }: ParamGetMsgsToProgram): Promise<ResManyResult<MessageToProgram>> {
     const qb = this._repoTo.createQueryBuilder('msg');
 
@@ -63,6 +65,14 @@ export class MessageService {
 
     if (entry) {
       qb.andWhere('msg.entry = :entry', { entry });
+    }
+
+    if (service) {
+      qb.andWhere('msg.service = :service', { service: service.toLowerCase() });
+    }
+
+    if (fn) {
+      qb.andWhere('msg.fn = :fn', { fn: fn.toLowerCase() });
     }
 
     qb.orderBy('msg.timestamp', 'DESC').limit(limit).offset(offset);
@@ -82,6 +92,8 @@ export class MessageService {
     isInMailbox,
     limit,
     offset,
+    service,
+    fn,
   }: ParamGetMsgsFromProgram): Promise<ResManyResult<MessageFromProgram>> {
     const qb = this._repoFrom.createQueryBuilder('msg');
 
@@ -95,6 +107,14 @@ export class MessageService {
 
     if (isInMailbox) {
       qb.andWhere('msg.readReson = NULL').andWhere('msg.expiration != NULL');
+    }
+
+    if (service) {
+      qb.andWhere('msg.service = :service', { service: service.toLowerCase() });
+    }
+
+    if (fn) {
+      qb.andWhere('msg.fn = :fn', { fn: fn.toLowerCase() });
     }
 
     qb.orderBy('msg.timestamp', 'DESC').limit(limit).offset(offset);

@@ -16,10 +16,14 @@ export class ParamGetMsgsToProgram extends ParamPagination {
   readonly source?: string;
   @IsOneOf(Object.values(MessageEntryPoint), false)
   readonly entry?: MessageEntryPoint;
+  readonly service?: string;
+  readonly fn?: string;
 }
 
 export class ParamGetMsgsFromProgram extends ParamPagination {
   readonly destination?: string;
   readonly source?: string;
   readonly isInMailbox?: boolean;
+  readonly service?: string;
+  readonly fn?: string;
 }

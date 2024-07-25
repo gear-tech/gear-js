@@ -10,12 +10,16 @@ import {
 
 import { Events } from './common';
 import { config } from './config';
+import { hostname } from 'os';
 
 export const processor = new SubstrateBatchProcessor()
   .setGateway(config.squid.gateway)
   .setRpcEndpoint({
     url: config.squid.rpc,
     rateLimit: config.squid.rate,
+    headers: {
+      'User-Agent': hostname(),
+    },
   })
   .addEvent({
     name: [Events.MessageQueued, Events.CodeChanged],

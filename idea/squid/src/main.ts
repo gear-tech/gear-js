@@ -1,7 +1,7 @@
 import { TypeormDatabase, Store } from '@subsquid/typeorm-store';
 import { generateCodeHash } from '@gear-js/api';
 import { ZERO_ADDRESS } from 'sails-js';
-import { Code, Event as EventModel, MessageFromProgram, MessageToProgram, Program } from './model';
+import { Code, Event as EventModel, MessageEntryPoint, MessageFromProgram, MessageToProgram, Program } from './model';
 
 import { processor, ProcessorContext } from './processor';
 import { TempState } from './temp-state';
@@ -42,7 +42,7 @@ const handler = async (ctx: ProcessorContext<Store>) => {
           id: event.args.id,
           source: event.args.source,
           destination: event.args.destination,
-          entry: event.args.entry,
+          entry: event.args.entry.__kind.toLowerCase() as MessageEntryPoint,
         });
 
         if (isUploadProgram(call)) {
@@ -93,29 +93,21 @@ const handler = async (ctx: ProcessorContext<Store>) => {
 
         tempState.addMsgToProgram(msg);
       } else if (isUserMessageSent(event)) {
+        const msg = new MessageFromProgram({
+          ...common,
+          id: event.args.message.id,
+          source: event.args.message.source,
+          destination: event.args.message.destination,
+          payload: event.args.message.payload,
+          value: event.args.message.value,
+          replyToMessageId: event.args.message.details?.to || null,
+          expiration: event.args.expirtaion || null,
+          exitCode: event.args.message.details?.code?.__kind === 'Success' ? 0 : 1,
+        });
         if (event.args.message.destination === ZERO_ADDRESS) {
-          tempState.addEvent(
-            new EventModel({
-              ...common,
-              id: event.args.message.id,
-              source: event.args.message.source,
-              payload: event.args.message.payload,
-            }),
-          );
+          tempState.addEvent(msg);
         } else {
-          tempState.addMsgFromProgram(
-            new MessageFromProgram({
-              ...common,
-              id: event.args.message.id,
-              source: event.args.message.source,
-              destination: event.args.message.destination,
-              payload: event.args.message.payload,
-              value: event.args.message.value,
-              replyToMessageId: event.args.message.details?.to || null,
-              expiration: event.args.expirtaion || null,
-              exitCode: event.args.message.details?.code?.__kind === 'Success' ? 0 : 1,
-            }),
-          );
+          tempState.addMsgFromProgram(msg);
         }
       } else if (isProgramChanged(event)) {
         if (PROGRAM_STATUSES.includes(event.args.change.__kind)) {

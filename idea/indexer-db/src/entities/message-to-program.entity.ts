@@ -35,4 +35,10 @@ export class MessageToProgram extends BaseEntity {
 
   @Column({ type: 'text', nullable: true, default: null })
   public entry: MessageEntryPoint;
+
+  @Column({ nullable: true })
+  public service?: string;
+
+  @Column({ nullable: true })
+  public fn?: string;
 }

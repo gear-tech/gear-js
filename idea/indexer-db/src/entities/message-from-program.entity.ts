@@ -38,4 +38,10 @@ export class MessageFromProgram extends BaseEntity {
 
   @Column({ type: 'text', nullable: true, default: null, name: 'read_reason' })
   public readReason?: MessageReadReason;
+
+  @Column({ nullable: true })
+  public service?: string;
+
+  @Column({ nullable: true })
+  public fn?: string;
 }

@@ -15,6 +15,25 @@ import {
 import { ProcessorContext } from './processor';
 import { MessageStatus } from './common';
 
+function getServiceAndFn(payload: string) {
+  let service: string = null;
+  let name: string = null;
+  try {
+    service = getServiceNamePrefix(payload as HexString) || null;
+    if (/[^\x20-\x7E]/.test(service)) {
+      return [null, null];
+    }
+    name = getFnNamePrefix(payload as HexString) || null;
+    if (/[^\x20-\x7E]/.test(name)) {
+      return [null, null];
+    }
+  } catch (_) {
+    return [null, null];
+  }
+
+  return [service, name];
+}
+
 export class TempState {
   private programs: Map<string, Program>;
   private newPrograms: Set<string>;
@@ -53,35 +72,43 @@ export class TempState {
   }
 
   addMsgToProgram(msg: MessageToProgram) {
+    const [service, name] = getServiceAndFn(msg.payload);
+
+    msg.service = service;
+    msg.fn = name;
+
     this.messagesToProgram.set(msg.id, msg);
   }
 
   addMsgFromProgram(msg: MessageFromProgram) {
+    const [service, name] = getServiceAndFn(msg.payload);
+
+    msg.service = service;
+    msg.fn = name;
+
     this.messagesFromProgram.set(msg.id, msg);
   }
 
-  addEvent(event: Event) {
-    try {
-      event.service = getServiceNamePrefix(event.payload as HexString) || null;
-      if (/[^\x20-\x7E]/.test(event.service)) {
-        event.service = null;
-      }
-    } catch (_) {
-      event.service = null;
-    }
+  addEvent(msg: MessageFromProgram) {
+    const [service, name] = getServiceAndFn(msg.payload);
 
-    if (event.service) {
-      try {
-        event.name = getFnNamePrefix(event.payload as HexString) || null;
-        if (/[^\x20-\x7E]/.test(event.name)) {
-          event.name = null;
-        }
-      } catch (_) {
-        event.name = null;
-      }
+    if (service === null || name === null) {
+      this.addMsgFromProgram(msg);
+    } else {
+      this.events.set(
+        msg.id,
+        new Event({
+          timestamp: msg.timestamp,
+          blockHash: msg.blockHash,
+          blockNumber: msg.blockNumber,
+          id: msg.id,
+          source: msg.source,
+          payload: msg.payload,
+          service,
+          name,
+        }),
+      );
     }
-
-    this.events.set(event.id, event);
   }
 
   async getProgram(id: string): Promise<Program> {

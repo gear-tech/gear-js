@@ -6,7 +6,9 @@ export interface IMessageQueuedArgs {
   id: string;
   source: string;
   destination: string;
-  entry: MessageEntryPoint;
+  entry: {
+    __kind: string;
+  };
 }
 
 export type EMessageQueuedEvent = {
