@@ -11,17 +11,17 @@ import {
   SignAndSendOptions,
   Transaction,
   TransactionReturn,
-  UseTransactionParameters,
+  UseSendProgramTransactionParameters,
 } from './types';
 
 // TODO: if there's no parameters - prepared transaction mode
-function useTransaction<
+function useSendProgramTransaction<
   TProgram,
   TServiceName extends ServiceName<TProgram>,
   TFunctionName extends FunctionName<TProgram[TServiceName], GenericTransactionReturn>,
   TTransaction extends Transaction<TProgram[TServiceName][TFunctionName]>,
   TTransactionReturn extends TransactionReturn<TTransaction>,
->({ program, serviceName, functionName }: UseTransactionParameters<TProgram, TServiceName, TFunctionName>) {
+>({ program, serviceName, functionName }: UseSendProgramTransactionParameters<TProgram, TServiceName, TFunctionName>) {
   const { prepareTransactionAsync } = usePrepareTransaction({ program, serviceName, functionName });
 
   const sendTransaction = async (
@@ -48,5 +48,5 @@ function useTransaction<
   };
 }
 
-export { useTransaction };
-export type { UseTransactionParameters };
+export { useSendProgramTransaction };
+export type { UseSendProgramTransactionParameters };

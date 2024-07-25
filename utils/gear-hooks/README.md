@@ -85,14 +85,14 @@ const { data } = useProgram({
 console.log(data);
 ```
 
-### useSendTransaction
+### useSendProgramTransaction
 
 Returns a mutation to sign and send the transaction with minimum efforts.
 
 Can be used as a direct shortcut to [Transaction Builder](https://github.com/gear-tech/sails/blob/master/js/README.md#transaction-builder) `signAndSend` method:
 
 ```jsx
-import { useProgram, useSendTransaction } from '@gear-js/react-hooks';
+import { useProgram, useSendProgramTransaction } from '@gear-js/react-hooks';
 import { Program } from './lib';
 
 function SendTransaction() {
@@ -101,7 +101,7 @@ function SendTransaction() {
     id: '0x...',
   });
 
-  const { sendTransactionAsync } = useSendTransaction({
+  const { sendTransactionAsync } = useSendProgramTransaction({
     program,
     serviceName: 'service',
     functionName: 'function',
@@ -136,7 +136,7 @@ export { SendTransaction };
 Or in pair with [usePrepareTransaction](#usePrepareTransaction):
 
 ```jsx
-import { useProgram, usePrepareTransaction, useSendTransaction } from '@gear-js/react-hooks';
+import { useProgram, usePrepareTransaction, useSendProgramTransaction } from '@gear-js/react-hooks';
 import { Program } from './lib';
 
 function SendPreparedTransaction() {
@@ -151,7 +151,7 @@ function SendPreparedTransaction() {
     functionName: 'function',
   });
 
-  const { sendTransactionAsync } = useSendTransaction({
+  const { sendTransactionAsync } = useSendProgramTransaction({
     program,
     serviceName: 'service',
     functionName: 'function',

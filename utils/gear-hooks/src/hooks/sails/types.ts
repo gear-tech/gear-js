@@ -20,17 +20,17 @@ type Transaction<T> = T extends (...args: infer P) => GenericTransactionReturn<i
   : never;
 
 // unwrapping value and wrapping it again,
-// cuz somehow useTransaction is not able to interpret usePrepareTransaction's return type
+// cuz somehow useSendProgramTransaction is not able to interpret usePrepareTransaction's return type
 type _TransactionReturn<T> = ReturnType<Transaction<T>> extends GenericTransactionReturn<infer R> ? R : never;
 type TransactionReturn<T> = GenericTransactionReturn<_TransactionReturn<T>>;
 
-type UseTransactionParameters<TProgram, TServiceName, TFunctionName> = {
+type UseSendProgramTransactionParameters<TProgram, TServiceName, TFunctionName> = {
   program: TProgram | undefined;
   serviceName: TServiceName;
   functionName: TFunctionName;
 };
 
-type UsePrepareTransactionParameters<TProgram, TServiceName, TFunctionName> = UseTransactionParameters<
+type UsePrepareTransactionParameters<TProgram, TServiceName, TFunctionName> = UseSendProgramTransactionParameters<
   TProgram,
   TServiceName,
   TFunctionName
@@ -81,7 +81,7 @@ export type {
   GenericTransactionReturn,
   Transaction,
   TransactionReturn,
-  UseTransactionParameters,
+  UseSendProgramTransactionParameters,
   UsePrepareTransactionParameters,
   SignAndSendOptions,
   EventReturn,
