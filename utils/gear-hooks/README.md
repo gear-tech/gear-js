@@ -238,12 +238,12 @@ function LogTransactionFeeButton() {
 export { LogTransactionFeeButton };
 ```
 
-### useReadQuery
+### useProgramQuery
 
 Returns a query with readed program's state.
 
 ```jsx
-import { useProgram, useReadQuery } from '@gear-js/react-hooks';
+import { useProgram, useProgramQuery } from '@gear-js/react-hooks';
 import { Program } from './lib';
 
 function State() {
@@ -252,7 +252,7 @@ function State() {
     id: '0x...',
   });
 
-  const { data } = useReadQuery({
+  const { data } = useProgramQuery({
     program,
     serviceName: 'service',
     functionName: 'function',

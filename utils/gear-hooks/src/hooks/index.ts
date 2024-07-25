@@ -43,8 +43,8 @@ import {
   UsePrepareProgramTransactionParameters,
   useSendProgramTransaction,
   UseSendProgramTransactionParameters,
-  useQuery,
-  UseQueryParameters,
+  useProgramQuery,
+  UseProgramQueryParameters,
   useEvent,
   UseEventParameters,
   useSails,
@@ -88,7 +88,7 @@ export {
   useProgram,
   usePrepareProgramTransaction,
   useSendProgramTransaction,
-  useQuery,
+  useProgramQuery,
   useEvent,
 };
 
@@ -100,7 +100,7 @@ export type {
   UseProgramParameters,
   UsePrepareProgramTransactionParameters,
   UseSendProgramTransactionParameters,
-  UseQueryParameters,
+  UseProgramQueryParameters,
   UseEventParameters,
   UseSailsParameters,
 };

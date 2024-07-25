@@ -45,8 +45,8 @@ import {
   UsePrepareProgramTransactionParameters,
   useSendProgramTransaction,
   UseSendProgramTransactionParameters,
-  useQuery,
-  UseQueryParameters,
+  useProgramQuery,
+  UseProgramQueryParameters,
   useEvent,
   UseEventParameters,
 } from './hooks';
@@ -121,7 +121,7 @@ export {
   useProgram,
   usePrepareProgramTransaction,
   useSendProgramTransaction,
-  useQuery,
+  useProgramQuery,
   useEvent,
   DEFAULT_OPTIONS,
   DEFAULT_INFO_OPTIONS,
@@ -151,6 +151,6 @@ export type {
   UseProgramParameters,
   UsePrepareProgramTransactionParameters,
   UseSendProgramTransactionParameters,
-  UseQueryParameters,
+  UseProgramQueryParameters,
   UseEventParameters,
 };

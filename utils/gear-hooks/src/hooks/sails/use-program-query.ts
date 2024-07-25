@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HexString, ICalculateReplyForHandleOptions } from '@gear-js/api';
 import { useAccount, useApi } from '@gear-js/react-hooks';
-import { useQueryClient, UseQueryOptions, useQuery as useReactQuery } from '@tanstack/react-query';
+import { useQueryClient, UseQueryOptions, useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { ZERO_ADDRESS } from 'sails-js';
 
@@ -10,7 +10,7 @@ import { Query, QueryArgs, QueryName, QueryReturn, ServiceName } from './types';
 type CalculateReplyOptions = Pick<ICalculateReplyForHandleOptions, 'at' | 'value'>;
 type QueryOptions<T> = Omit<UseQueryOptions<T>, 'queryKey' | 'queryFn'>; // TODO: pass generics
 
-type UseQueryParameters<TProgram, TServiceName, TQueryName, TArgs, TQueryReturn> = {
+type UseProgramQueryParameters<TProgram, TServiceName, TQueryName, TArgs, TQueryReturn> = {
   program: TProgram | undefined;
   serviceName: TServiceName;
   functionName: TQueryName;
@@ -20,7 +20,7 @@ type UseQueryParameters<TProgram, TServiceName, TQueryName, TArgs, TQueryReturn>
   watch?: boolean;
 };
 
-function useQuery<
+function useProgramQuery<
   TProgram,
   TServiceName extends ServiceName<TProgram>,
   TQueryName extends QueryName<TProgram[TServiceName]>,
@@ -35,7 +35,7 @@ function useQuery<
   calculateReply,
   query,
   watch,
-}: UseQueryParameters<TProgram, TServiceName, TQueryName, TArgs, TQueryReturn>) {
+}: UseProgramQueryParameters<TProgram, TServiceName, TQueryName, TArgs, TQueryReturn>) {
   const { api, isApiReady } = useApi();
   const queryClient = useQueryClient();
 
@@ -53,13 +53,6 @@ function useQuery<
   // depends on useProgram/program implementation, programId may not be available
   const programId = program && typeof program === 'object' && 'programId' in program ? program.programId : undefined;
   const queryKey = ['query', programId, originAddress, serviceName, functionName, args, calculateReply];
-
-  const result = useReactQuery({
-    ...query,
-    queryKey,
-    queryFn: getQuery,
-    enabled: Boolean(program) && (query?.enabled ?? true),
-  });
 
   useEffect(() => {
     if (!isApiReady || !watch) return;
@@ -79,8 +72,13 @@ function useQuery<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, programId, watch]);
 
-  return result;
+  return useQuery({
+    ...query,
+    queryKey,
+    queryFn: getQuery,
+    enabled: Boolean(program) && (query?.enabled ?? true),
+  });
 }
 
-export { useQuery };
-export type { UseQueryParameters };
+export { useProgramQuery };
+export type { UseProgramQueryParameters };
