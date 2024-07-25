@@ -1,14 +1,13 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
-import { useContext } from 'react';
-import { AlertContext } from 'context';
+import { useAlert } from 'context';
 import { getAutoGasLimit } from 'utils';
 import { Options } from '../api/useProgram/types';
 import { useCreateProgram, useCreateCalculateGas } from '../api';
 
 function useCreateHandler(codeId: HexString | undefined, metadata?: ProgramMetadata | undefined) {
-  const alert = useContext(AlertContext); // сircular dependency fix
+  const alert = useAlert();
 
   const createProgram = useCreateProgram(codeId, metadata);
   const calculateGas = useCreateCalculateGas(codeId, metadata);

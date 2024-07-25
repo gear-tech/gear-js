@@ -1,4 +1,14 @@
-import { useState, useRef, useEffect, useCallback, useMemo, ReactNode, ComponentType, createContext } from 'react';
+import {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+  ReactNode,
+  ComponentType,
+  createContext,
+  useContext,
+} from 'react';
 import { createPortal } from 'react-dom';
 import { TransitionGroup } from 'react-transition-group';
 import { nanoid } from 'nanoid/non-secure';
@@ -146,4 +156,6 @@ const AlertProvider = ({ children, template: Template, containerClassName }: Pro
   );
 };
 
-export { AlertContext, AlertProvider };
+const useAlert = () => useContext(AlertContext);
+
+export { AlertProvider, useAlert };

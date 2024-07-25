@@ -1,8 +1,7 @@
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useMutation } from '@tanstack/react-query';
-import { useContext } from 'react';
 
-import { AccountContext } from 'context';
+import { useAccount } from 'context';
 
 import {
   FunctionName,
@@ -25,7 +24,7 @@ function usePrepareProgramTransaction<
   serviceName,
   functionName,
 }: UsePrepareProgramTransactionParameters<TProgram, TServiceName, TFunctionName>) {
-  const { account: connectedAccount } = useContext(AccountContext);
+  const { account: connectedAccount } = useAccount();
 
   const prepareTransaction = async ({
     args,

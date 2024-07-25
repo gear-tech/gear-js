@@ -1,7 +1,7 @@
 import { HexString } from '@gear-js/api';
-import { useState, useEffect, useContext, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
-import { AccountContext, AlertContext } from 'context';
+import { useAccount, useAlert } from 'context';
 
 import { useGetVoucherStatus } from './use-voucher-status';
 import { useVouchers } from './use-vouchers';
@@ -10,7 +10,7 @@ function useIsAnyVoucherActive(accountAddress: string | undefined, programId: He
   const { vouchers } = useVouchers(accountAddress, programId);
   const voucherEntries = useMemo(() => Object.entries(vouchers || {}), [vouchers]);
 
-  const alert = useContext(AlertContext);
+  const alert = useAlert();
 
   const getVoucherStatus = useGetVoucherStatus();
 
@@ -43,7 +43,7 @@ function useIsAnyVoucherActive(accountAddress: string | undefined, programId: He
 }
 
 function useIsAnyAccountVoucherActive(programId: HexString | undefined) {
-  const { account } = useContext(AccountContext);
+  const { account } = useAccount();
 
   return useIsAnyVoucherActive(account?.address, programId);
 }

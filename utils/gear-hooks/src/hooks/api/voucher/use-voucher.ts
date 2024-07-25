@@ -1,11 +1,11 @@
 import { HexString, IVoucherDetails } from '@gear-js/api';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { AccountContext, AlertContext, ApiContext } from 'context';
+import { useAccount, useAlert, useApi } from 'context';
 
 function useVoucher(voucherId: HexString | undefined, accountAddress: string | undefined) {
-  const { api } = useContext(ApiContext);
-  const alert = useContext(AlertContext);
+  const { api } = useApi();
+  const alert = useAlert();
 
   const [voucher, setVoucher] = useState<IVoucherDetails>();
   const isVoucherReady = voucher !== undefined;
@@ -25,7 +25,7 @@ function useVoucher(voucherId: HexString | undefined, accountAddress: string | u
 }
 
 function useAccountVoucher(voucherId: HexString | undefined) {
-  const { account } = useContext(AccountContext);
+  const { account } = useAccount();
 
   return useVoucher(voucherId, account?.address);
 }

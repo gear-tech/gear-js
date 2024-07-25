@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { AccountContext, AlertContext, ApiContext } from 'context';
+import { useAccount, useAlert, useApi } from 'context';
 
 function useIssuedVouchers(accountAddress: string | undefined) {
-  const { api, isApiReady } = useContext(ApiContext);
-  const alert = useContext(AlertContext);
+  const { api, isApiReady } = useApi();
+  const alert = useAlert();
 
   const [vouchers, setVouchers] = useState<string[]>();
   const isEachVoucherReady = vouchers !== undefined;
@@ -24,7 +24,7 @@ function useIssuedVouchers(accountAddress: string | undefined) {
 }
 
 function useAccountIssuedVouchers() {
-  const { account } = useContext(AccountContext);
+  const { account } = useAccount();
 
   return useIssuedVouchers(account?.address);
 }

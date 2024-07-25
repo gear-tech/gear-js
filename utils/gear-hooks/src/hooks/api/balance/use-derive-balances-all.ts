@@ -1,9 +1,9 @@
 import { DeriveBalancesAll } from '@polkadot/api-derive/types';
-import { useContext, useEffect, useState } from 'react';
-import { AccountContext, ApiContext } from 'context';
+import { useEffect, useState } from 'react';
+import { useAccount, useApi } from 'context';
 
 function useDeriveBalancesAll(accountAddress: string | undefined) {
-  const { api, isApiReady } = useContext(ApiContext);
+  const { api, isApiReady } = useApi();
 
   const [balances, setBalances] = useState<DeriveBalancesAll>();
 
@@ -22,7 +22,7 @@ function useDeriveBalancesAll(accountAddress: string | undefined) {
 }
 
 function useAccountDeriveBalancesAll() {
-  const { account } = useContext(AccountContext);
+  const { account } = useAccount();
 
   return useDeriveBalancesAll(account?.address);
 }

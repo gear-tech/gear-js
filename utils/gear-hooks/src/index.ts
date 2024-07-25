@@ -1,5 +1,7 @@
 import { BigNumber } from 'bignumber.js';
 
+import { useAccount, useApi, useAlert } from './context';
+
 import {
   useReadFullState,
   useReadWasmState,
@@ -20,9 +22,6 @@ import {
   useBalanceFormat,
   useDeriveBalancesAll,
   useAccountDeriveBalancesAll,
-  useAccount,
-  useAlert,
-  useApi,
   useCreateHandler,
   useSendMessageWithGas,
   useApproxBlockTimestamp,

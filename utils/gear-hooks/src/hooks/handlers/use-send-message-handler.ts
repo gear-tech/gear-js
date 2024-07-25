@@ -1,8 +1,7 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
-import { useContext } from 'react';
 
-import { AlertContext, ApiContext } from 'context';
+import { useAlert, useApi } from 'context';
 import { getAutoGasLimit } from 'utils';
 
 import { SendMessageOptions, UseSendMessageOptions, useHandleCalculateGas, useSendMessage } from '../api';
@@ -24,8 +23,8 @@ function useSendMessageWithGas(
   metadata: ProgramMetadata | undefined,
   options: UseSendMessageWithGasOptions = {},
 ) {
-  const { api, isApiReady } = useContext(ApiContext);
-  const alert = useContext(AlertContext);
+  const { api, isApiReady } = useApi();
+  const alert = useAlert();
 
   const calculateGas = useHandleCalculateGas(destination, metadata);
   const sendMessage = useSendMessage(destination, metadata, options);

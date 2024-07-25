@@ -1,8 +1,8 @@
 import { MessagesDispatched, ProgramMetadata, getStateMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
-import { useContext, useEffect, useState } from 'react';
-import { AlertContext, ApiContext } from 'context';
+import { useEffect, useState } from 'react';
+import { useAlert, useApi } from 'context';
 
 type Args = {
   programId: HexString | undefined;
@@ -16,8 +16,8 @@ type Args = {
 function useReadWasmState<T = AnyJson>(args: Args, isReadOnError?: boolean) {
   const { programId, wasm, programMetadata, functionName, payload, argument } = args;
 
-  const { api } = useContext(ApiContext); // сircular dependency fix
-  const alert = useContext(AlertContext);
+  const { api } = useApi();
+  const alert = useAlert();
 
   const [state, setState] = useState<T>();
   const [isStateRead, setIsStateRead] = useState(true);

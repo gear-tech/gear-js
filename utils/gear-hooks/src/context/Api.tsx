@@ -1,7 +1,7 @@
 import { GearApi } from '@gear-js/api';
 import { WsProvider, ScProvider } from '@polkadot/api';
 import * as Sc from '@substrate/connect';
-import { createContext, useEffect, useMemo, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { ProviderProps } from 'types';
 
@@ -100,4 +100,6 @@ function ApiProvider({ initialArgs, children }: Props) {
   return <Provider value={value}>{children}</Provider>;
 }
 
-export { ApiContext, ApiProvider };
+const useApi = () => useContext(ApiContext);
+
+export { ApiProvider, useApi };

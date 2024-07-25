@@ -29,7 +29,6 @@ import {
   SendMessageOptions,
   UseSendMessageOptions,
 } from './api';
-import { useAccount, useAlert, useApi } from './context';
 import {
   useCreateHandler,
   useSendMessageWithGas,
@@ -71,9 +70,6 @@ export {
   useBalanceFormat,
   useDeriveBalancesAll,
   useAccountDeriveBalancesAll,
-  useAccount,
-  useAlert,
-  useApi,
   useCreateHandler,
   useSendMessageWithGas,
   useApproxBlockTimestamp,
