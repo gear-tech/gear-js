@@ -268,12 +268,12 @@ function State() {
 }
 ```
 
-### useEvent
+### useProgramEvent
 
 Initialized subscription to a particular program event.
 
 ```jsx
-import { useProgram, useEvent } from '@gear-js/react-hooks';
+import { useProgram, useProgramEvent } from '@gear-js/react-hooks';
 import { Routing } from './pages';
 import { Program } from './lib';
 
@@ -283,7 +283,7 @@ function App() {
     id: '0x...',
   });
 
-  useEvent({
+  useProgramEvent({
     program,
     serviceName: 'service',
     functionName: 'function',

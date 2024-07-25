@@ -45,8 +45,8 @@ import {
   UseSendProgramTransactionParameters,
   useProgramQuery,
   UseProgramQueryParameters,
-  useEvent,
-  UseEventParameters,
+  useProgramEvent,
+  UseProgramEventParameters,
   useSails,
   UseSailsParameters,
 } from './sails';
@@ -89,7 +89,7 @@ export {
   usePrepareProgramTransaction,
   useSendProgramTransaction,
   useProgramQuery,
-  useEvent,
+  useProgramEvent,
 };
 
 export type {
@@ -101,6 +101,6 @@ export type {
   UsePrepareProgramTransactionParameters,
   UseSendProgramTransactionParameters,
   UseProgramQueryParameters,
-  UseEventParameters,
+  UseProgramEventParameters,
   UseSailsParameters,
 };

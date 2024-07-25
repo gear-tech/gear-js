@@ -2,14 +2,14 @@
 import { useEffect } from 'react';
 import { EventReturn, FunctionName, ServiceName, Event, EventCallbackArgs } from './types';
 
-type UseEventParameters<TProgram, TServiceName, TFunctionName, TCallbackArgs extends any[]> = {
+type UseProgramEventParameters<TProgram, TServiceName, TFunctionName, TCallbackArgs extends any[]> = {
   program: TProgram | undefined;
   serviceName: TServiceName;
   functionName: TFunctionName;
   onData: (...args: TCallbackArgs) => void;
 };
 
-function useEvent<
+function useProgramEvent<
   TProgram,
   TServiceName extends ServiceName<TProgram>,
   TFunctionName extends FunctionName<TProgram[TServiceName], EventReturn>,
@@ -20,7 +20,7 @@ function useEvent<
   serviceName,
   functionName,
   onData,
-}: UseEventParameters<TProgram, TServiceName, TFunctionName, TCallbackArgs>) {
+}: UseProgramEventParameters<TProgram, TServiceName, TFunctionName, TCallbackArgs>) {
   // depends on useProgram/program implementation, programId may not be available
   const programId = program && typeof program === 'object' && 'programId' in program ? program.programId : undefined;
 
@@ -36,5 +36,5 @@ function useEvent<
   }, [programId, serviceName, functionName]);
 }
 
-export { useEvent };
-export type { UseEventParameters };
+export { useProgramEvent };
+export type { UseProgramEventParameters };

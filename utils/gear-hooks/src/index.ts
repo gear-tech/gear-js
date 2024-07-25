@@ -47,8 +47,8 @@ import {
   UseSendProgramTransactionParameters,
   useProgramQuery,
   UseProgramQueryParameters,
-  useEvent,
-  UseEventParameters,
+  useProgramEvent,
+  UseProgramEventParameters,
 } from './hooks';
 
 import { withoutCommas, getVaraAddress, getTypedEntries } from './utils';
@@ -122,7 +122,7 @@ export {
   usePrepareProgramTransaction,
   useSendProgramTransaction,
   useProgramQuery,
-  useEvent,
+  useProgramEvent,
   DEFAULT_OPTIONS,
   DEFAULT_INFO_OPTIONS,
   DEFAULT_ERROR_OPTIONS,
@@ -152,5 +152,5 @@ export type {
   UsePrepareProgramTransactionParameters,
   UseSendProgramTransactionParameters,
   UseProgramQueryParameters,
-  UseEventParameters,
+  UseProgramEventParameters,
 };
