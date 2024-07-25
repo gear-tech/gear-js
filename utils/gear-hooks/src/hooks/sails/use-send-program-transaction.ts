@@ -3,7 +3,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { TransactionBuilder } from 'sails-js';
 
-import { usePrepareTransaction } from './use-prepare-transaction';
+import { usePrepareProgramTransaction } from './use-prepare-program-transaction';
 import {
   FunctionName,
   GenericTransactionReturn,
@@ -22,7 +22,7 @@ function useSendProgramTransaction<
   TTransaction extends Transaction<TProgram[TServiceName][TFunctionName]>,
   TTransactionReturn extends TransactionReturn<TTransaction>,
 >({ program, serviceName, functionName }: UseSendProgramTransactionParameters<TProgram, TServiceName, TFunctionName>) {
-  const { prepareTransactionAsync } = usePrepareTransaction({ program, serviceName, functionName });
+  const { prepareTransactionAsync } = usePrepareProgramTransaction({ program, serviceName, functionName });
 
   const sendTransaction = async (
     transactionOrOptions: TTransactionReturn | SignAndSendOptions<Parameters<TTransaction>>,

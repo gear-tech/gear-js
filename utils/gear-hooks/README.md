@@ -133,10 +133,10 @@ function SendTransaction() {
 export { SendTransaction };
 ```
 
-Or in pair with [usePrepareTransaction](#usePrepareTransaction):
+Or in pair with [usePrepareProgramTransaction](#usePrepareProgramTransaction):
 
 ```jsx
-import { useProgram, usePrepareTransaction, useSendProgramTransaction } from '@gear-js/react-hooks';
+import { useProgram, usePrepareProgramTransaction, useSendProgramTransaction } from '@gear-js/react-hooks';
 import { Program } from './lib';
 
 function SendPreparedTransaction() {
@@ -145,7 +145,7 @@ function SendPreparedTransaction() {
     id: '0x...',
   });
 
-  const { sendTransactionAsync } = usePrepareTransaction({
+  const { sendTransactionAsync } = usePrepareProgramTransaction({
     program,
     serviceName: 'service',
     functionName: 'function',
@@ -188,7 +188,7 @@ function SendPreparedTransaction() {
 export { SendPreparedTransaction };
 ```
 
-### usePrepareTransaction
+### usePrepareProgramTransaction
 
 Returns a mutation that retrieves the intermediate transaction state.
 
@@ -197,7 +197,7 @@ This can be useful for eagerly obtaining values such as `gasLimit`, `extrinsic`,
 For example, it can be used to perform validation checks before sending the transaction.
 
 ```jsx
-import { useProgram, usePrepareTransaction } from '@gear-js/react-hooks';
+import { useProgram, usePrepareProgramTransaction } from '@gear-js/react-hooks';
 import { Program } from './lib';
 
 function LogTransactionFeeButton() {
@@ -206,7 +206,7 @@ function LogTransactionFeeButton() {
     id: '0x...',
   });
 
-  const { data, prepareTransactionAsync } = usePrepareTransaction({
+  const { data, prepareTransactionAsync } = usePrepareProgramTransaction({
     program,
     serviceName: 'service',
     functionName: 'function',

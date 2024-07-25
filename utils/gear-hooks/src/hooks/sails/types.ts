@@ -20,7 +20,7 @@ type Transaction<T> = T extends (...args: infer P) => GenericTransactionReturn<i
   : never;
 
 // unwrapping value and wrapping it again,
-// cuz somehow useSendProgramTransaction is not able to interpret usePrepareTransaction's return type
+// cuz somehow useSendProgramTransaction is not able to interpret usePrepareProgramTransaction's return type
 type _TransactionReturn<T> = ReturnType<Transaction<T>> extends GenericTransactionReturn<infer R> ? R : never;
 type TransactionReturn<T> = GenericTransactionReturn<_TransactionReturn<T>>;
 
@@ -30,11 +30,8 @@ type UseSendProgramTransactionParameters<TProgram, TServiceName, TFunctionName> 
   functionName: TFunctionName;
 };
 
-type UsePrepareTransactionParameters<TProgram, TServiceName, TFunctionName> = UseSendProgramTransactionParameters<
-  TProgram,
-  TServiceName,
-  TFunctionName
->;
+type UsePrepareProgramTransactionParameters<TProgram, TServiceName, TFunctionName> =
+  UseSendProgramTransactionParameters<TProgram, TServiceName, TFunctionName>;
 
 type CalculateGasParameters = {
   allowOtherPanics?: boolean;
@@ -82,7 +79,7 @@ export type {
   Transaction,
   TransactionReturn,
   UseSendProgramTransactionParameters,
-  UsePrepareTransactionParameters,
+  UsePrepareProgramTransactionParameters,
   SignAndSendOptions,
   EventReturn,
   Event,

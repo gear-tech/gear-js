@@ -9,17 +9,21 @@ import {
   GenericTransactionReturn,
   Transaction,
   TransactionReturn,
-  UsePrepareTransactionParameters,
+  UsePrepareProgramTransactionParameters,
   SignAndSendOptions,
 } from './types';
 
-function usePrepareTransaction<
+function usePrepareProgramTransaction<
   TProgram,
   TServiceName extends ServiceName<TProgram>,
   TFunctionName extends FunctionName<TProgram[TServiceName], GenericTransactionReturn>,
   TTransaction extends Transaction<TProgram[TServiceName][TFunctionName]>,
   TTransactionReturn extends TransactionReturn<TTransaction>,
->({ program, serviceName, functionName }: UsePrepareTransactionParameters<TProgram, TServiceName, TFunctionName>) {
+>({
+  program,
+  serviceName,
+  functionName,
+}: UsePrepareProgramTransactionParameters<TProgram, TServiceName, TFunctionName>) {
   const { account: connectedAccount } = useAccount();
 
   const prepareTransaction = async ({
@@ -70,5 +74,5 @@ function usePrepareTransaction<
   };
 }
 
-export { usePrepareTransaction };
-export type { UsePrepareTransactionParameters };
+export { usePrepareProgramTransaction };
+export type { UsePrepareProgramTransactionParameters };
