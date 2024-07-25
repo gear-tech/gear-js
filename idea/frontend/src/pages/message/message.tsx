@@ -34,9 +34,9 @@ const Message = () => {
 
   const message = messageToProgram.data || messageFromProgram.data;
   const isLoading = messageToProgram.isLoading || messageFromProgram.isLoading;
-  const { timestamp, id, source, value, destination, replyToMessageId, blockHash } = message || {};
+  const { timestamp, id, source, value, destination, replyToMessageId, blockHash, service, fn } = message || {};
 
-  const { data: program } = useProgram(messageToProgram.data ? message?.destination : message?.source);
+  const { data: program } = useProgram(messageToProgram.data ? destination : source);
   const { metadata, isMetadataReady } = useMetadata(program?.metahash);
   const { sails, isLoading: isSailsLoading } = useSails(program?.codeId);
   const isPayloadLoading = !isMetadataReady || isSailsLoading;
@@ -50,11 +50,6 @@ const Message = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [message, metadata, sails, isPayloadLoading],
   );
-
-  const getFormattedPayload = () => {
-    if (!decodedPayload) return '';
-    return decodedPayload.value ? getPreformattedText(decodedPayload.value) : '-';
-  };
 
   const inputClassName = cx(isLoading && styles.loading);
   const payloadClassName = cx(isPayloadLoading && styles.loading);
@@ -81,15 +76,17 @@ const Message = () => {
         <Input value={destination} label="Destination" gap="1/6" className={inputClassName} readOnly />
         <Input value={value} label="Value" gap="1/6" className={inputClassName} readOnly />
 
-        {decodedPayload && 'serviceName' in decodedPayload && (
-          <Input value={decodedPayload.serviceName} label="Service" gap="1/6" className={inputClassName} readOnly />
-        )}
+        {service && <Input value={service} label="Service" gap="1/6" className={inputClassName} readOnly />}
+        {fn && <Input value={fn} label="Function" gap="1/6" className={inputClassName} readOnly />}
 
-        {decodedPayload && 'functionName' in decodedPayload && (
-          <Input value={decodedPayload.functionName} label="Function" gap="1/6" className={inputClassName} readOnly />
-        )}
-
-        <Textarea value={getFormattedPayload()} label="Payload" gap="1/6" className={payloadClassName} readOnly block />
+        <Textarea
+          value={decodedPayload ? getPreformattedText(decodedPayload) : '-'}
+          label="Payload"
+          gap="1/6"
+          className={payloadClassName}
+          readOnly
+          block
+        />
 
         {message && 'entry' in message && message.entry && (
           <Input value={message.entry} label="Entry" gap="1/6" className={inputClassName} readOnly />

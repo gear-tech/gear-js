@@ -1,7 +1,6 @@
 import cx from 'clsx';
 import { generatePath } from 'react-router-dom';
 
-import { getShortName } from '@/shared/helpers';
 import { IdBlock } from '@/shared/ui/idBlock';
 import { TimestampBlock } from '@/shared/ui/timestampBlock';
 import FlagSVG from '@/shared/assets/images/indicators/flag.svg?react';
@@ -19,7 +18,7 @@ type Props = {
 };
 
 const MessageCard = ({ isToDirection, message }: Props) => {
-  const { id, timestamp, destination, source } = message;
+  const { id, timestamp, service, fn } = message;
 
   return (
     <div className={styles.card}>
@@ -32,11 +31,13 @@ const MessageCard = ({ isToDirection, message }: Props) => {
 
       <TimestampBlock color="light" timestamp={timestamp} withIcon />
 
-      <div className={styles.address}>
-        <FlagSVG />
-        <span>{isToDirection ? 'From' : 'To'}:</span>
-        <span>{getShortName(isToDirection ? source : destination)}</span>
-      </div>
+      {(service || fn) && (
+        <div className={styles.service}>
+          <FlagSVG />
+
+          <span>{service && fn ? `${service}.${fn}` : service || fn}</span>
+        </div>
+      )}
     </div>
   );
 };

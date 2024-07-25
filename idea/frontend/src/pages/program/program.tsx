@@ -19,11 +19,11 @@ import { ProgramMessages } from '@/features/message';
 
 import styles from './program.module.scss';
 
+const TABS = ['Metadata/Sails', 'Messages', 'Vouchers', 'Events'];
+
 type Params = {
   programId: HexString;
 };
-
-const TABS = ['Metadata/Sails', 'Messages', 'Vouchers', 'Events'];
 
 const Program = () => {
   const { programId } = useParams() as Params;
@@ -75,7 +75,6 @@ const Program = () => {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        {/* why program name is nullable? */}
         {program && <h2 className={styles.name}>{getShortName(program.name || 'Program Name')}</h2>}
 
         {program?.status === ProgramStatus.Active && (

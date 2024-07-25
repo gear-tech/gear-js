@@ -72,7 +72,7 @@ const getSailsDecodedMessagePayload = (
   message: MessageToProgram | MessageFromProgram,
   isMessageQueued: boolean,
   sails: Sails,
-): { value: AnyJson; serviceName?: string; functionName?: string } => {
+): AnyJson => {
   const payload = getPayload(message);
   const serviceName = getServiceNamePrefix(payload);
   const functionName = getFnNamePrefix(payload);
@@ -80,10 +80,10 @@ const getSailsDecodedMessagePayload = (
   const constructor = sails.ctors[serviceName];
   const func = sails.services[serviceName]?.functions[functionName];
 
-  if (constructor && !func) return { value: constructor.decodePayload(payload), serviceName };
+  if (constructor && !func) return constructor.decodePayload(payload);
 
   const method = isMessageQueued ? 'decodePayload' : 'decodeResult';
-  return { value: func[method](payload), serviceName, functionName };
+  return func[method](payload);
 };
 
 const getDecodedMessagePayload = (
@@ -96,15 +96,15 @@ const getDecodedMessagePayload = (
   const payload = getPayload(message);
 
   try {
-    if (isMessageWithError(message)) return { value: CreateType.create('String', payload).toHuman() };
+    if (isMessageWithError(message)) return CreateType.create('String', payload).toHuman();
     if (metadata) return { value: getMetadataDecodedMessagePayload(message, isMessageQueued, metadata) };
     if (sails) return getSailsDecodedMessagePayload(message, isMessageQueued, sails);
 
-    return { value: CreateType.create('Bytes', payload).toHuman() };
+    return CreateType.create('Bytes', payload).toHuman();
   } catch (error) {
     onError(error instanceof Error ? error.message : String(error));
 
-    return { value: payload };
+    return payload;
   }
 };
 
