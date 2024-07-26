@@ -1,4 +1,4 @@
-import { useAccount } from '@gear-js/react-hooks';
+import { useApi } from '@gear-js/react-hooks';
 import { Button, Modal } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { Checkbox, Input, ValueField } from '@/shared/ui';
-import { useBalanceTransfer, useBalanceSchema } from '@/hooks';
+import { useBalanceSchema, useSignAndSend } from '@/hooks';
 import { ACCOUNT_ADDRESS_SCHEMA } from '@/shared/config';
 
 import SubmitSVG from '../../assets/submit.svg?react';
@@ -40,8 +40,8 @@ type Props = {
 };
 
 const TransferBalanceModal = ({ defaultAddress = '', close }: Props) => {
-  const { account } = useAccount();
-  const transferBalance = useBalanceTransfer();
+  const { api, isApiReady } = useApi();
+  const signAndSend = useSignAndSend();
 
   const schema = useSchema();
 
@@ -51,11 +51,15 @@ const TransferBalanceModal = ({ defaultAddress = '', close }: Props) => {
   });
 
   const handleSubmit = form.handleSubmit(({ address, value, keepAlive }) => {
-    if (!account) throw new Error('Account is not found');
+    if (!isApiReady) throw new Error('API is not initialized');
 
-    const signSource = account.meta.source;
     const onSuccess = close;
-    transferBalance(account.address, address, value, { keepAlive, signSource, onSuccess });
+
+    const extrinsic = keepAlive
+      ? api.tx.balances.transferKeepAlive(address, value)
+      : api.tx.balances.transferAllowDeath(address, value);
+
+    signAndSend(extrinsic, 'Transfer', { onSuccess });
   });
 
   return (
