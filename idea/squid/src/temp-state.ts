@@ -31,7 +31,7 @@ function getServiceAndFn(payload: string) {
     return [null, null];
   }
 
-  return [service, name];
+  return service === null || name === null ? [null, null] : [service, name];
 }
 
 export class TempState {
