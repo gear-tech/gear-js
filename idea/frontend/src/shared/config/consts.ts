@@ -1,3 +1,8 @@
+import { decodeAddress } from '@gear-js/api';
+import { z } from 'zod';
+
+import { isAccountAddressValid } from '../helpers';
+
 const API_URL = import.meta.env.VITE_API_URL as string;
 const INDEXER_API_URL = import.meta.env.VITE_INDEXER_API_URL as string;
 const NODES_API_URL = import.meta.env.VITE_NODES_API_URL as string;
@@ -91,6 +96,13 @@ enum AnimationTimeout {
   Big = 1000,
 }
 
+const ACCOUNT_ADDRESS_SCHEMA = z
+  .string()
+  .trim()
+  .min(0)
+  .refine((value) => isAccountAddressValid(value), 'Invalid address')
+  .transform((value) => decodeAddress(value));
+
 export {
   API_URL,
   INDEXER_API_URL,
@@ -106,6 +118,7 @@ export {
   ACCOUNT_ERRORS,
   PROGRAM_ERRORS,
   GENESIS,
+  ACCOUNT_ADDRESS_SCHEMA,
   LocalStorage,
   GasMethod,
   TransactionName,
