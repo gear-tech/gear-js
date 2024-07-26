@@ -10,3 +10,16 @@
   grid-template-columns: 1fr 1fr;
   gap: 32px;
 }
+
+.balance {
+  margin-top: 8px;
+
+  display: flex;
+  gap: 8px;
+
+  .text {
+    font-family: Kanit;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.7);
+  }
+}

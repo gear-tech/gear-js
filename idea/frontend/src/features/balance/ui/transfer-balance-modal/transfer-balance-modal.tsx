@@ -1,4 +1,4 @@
-import { useApi } from '@gear-js/react-hooks';
+import { useAccount, useApi, useDeriveBalancesAll } from '@gear-js/react-hooks';
 import { Button, Modal } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -10,6 +10,7 @@ import { useBalanceSchema, useLoading, useSignAndSend } from '@/hooks';
 import { ACCOUNT_ADDRESS_SCHEMA } from '@/shared/config';
 
 import SubmitSVG from '../../assets/submit.svg?react';
+import { Balance } from '../balance';
 import styles from './transfer-balance-modal.module.scss';
 
 const FIELD_NAME = {
@@ -41,6 +42,9 @@ type Props = {
 
 const TransferBalanceModal = ({ defaultAddress = '', close }: Props) => {
   const { api, isApiReady } = useApi();
+  const { account } = useAccount();
+  const balance = useDeriveBalancesAll(account?.address);
+
   const [isLoading, enableLoading, disableLoading] = useLoading();
   const signAndSend = useSignAndSend();
 
@@ -72,7 +76,16 @@ const TransferBalanceModal = ({ defaultAddress = '', close }: Props) => {
         <form onSubmit={handleSubmit}>
           <div className={styles.inputs}>
             <Input name={FIELD_NAME.ADDRESS} label="Address" direction="y" block />
-            <ValueField name={FIELD_NAME.VALUE} label="Value" direction="y" block />
+
+            <div>
+              <ValueField name={FIELD_NAME.VALUE} label="Value" direction="y" block />
+
+              <div className={styles.balance}>
+                <p className={styles.text}>Your transferrable balance:</p>
+                <Balance value={balance?.availableBalance} />
+              </div>
+            </div>
+
             <Checkbox name={FIELD_NAME.KEEP_ALIVE} label="Keep Alive" />
           </div>
 
