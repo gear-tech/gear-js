@@ -17,9 +17,10 @@ import styles from './program-table.module.scss';
 type Props = {
   program: Program | LocalProgram | undefined;
   isProgramReady: boolean;
+  renderBalance: () => JSX.Element;
 };
 
-const ProgramTable = ({ program, isProgramReady }: Props) => {
+const ProgramTable = ({ program, isProgramReady, renderBalance }: Props) => {
   const { codeId } = program || {};
   const blockId = program && 'blockHash' in program ? program.blockHash : undefined;
 
@@ -39,6 +40,12 @@ const ProgramTable = ({ program, isProgramReady }: Props) => {
   return (
     <div className={styles.table}>
       <Table>
+        <TableRow name="Program Balance">{renderBalance()}</TableRow>
+
+        <TableRow name="Program ID">
+          <IdBlock id={program.id} size="big" />
+        </TableRow>
+
         <TableRow name="Program ID">
           <IdBlock id={program.id} size="big" />
         </TableRow>
