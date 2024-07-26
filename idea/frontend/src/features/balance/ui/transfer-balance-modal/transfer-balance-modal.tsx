@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { Checkbox, Input, ValueField } from '@/shared/ui';
-import { useBalanceSchema, useSignAndSend } from '@/hooks';
+import { useBalanceSchema, useLoading, useSignAndSend } from '@/hooks';
 import { ACCOUNT_ADDRESS_SCHEMA } from '@/shared/config';
 
 import SubmitSVG from '../../assets/submit.svg?react';
@@ -41,6 +41,7 @@ type Props = {
 
 const TransferBalanceModal = ({ defaultAddress = '', close }: Props) => {
   const { api, isApiReady } = useApi();
+  const [isLoading, enableLoading, disableLoading] = useLoading();
   const signAndSend = useSignAndSend();
 
   const schema = useSchema();
@@ -53,13 +54,16 @@ const TransferBalanceModal = ({ defaultAddress = '', close }: Props) => {
   const handleSubmit = form.handleSubmit(({ address, value, keepAlive }) => {
     if (!isApiReady) throw new Error('API is not initialized');
 
+    enableLoading();
+
     const onSuccess = close;
+    const onError = disableLoading;
 
     const extrinsic = keepAlive
       ? api.tx.balances.transferKeepAlive(address, value)
       : api.tx.balances.transferAllowDeath(address, value);
 
-    signAndSend(extrinsic, 'Transfer', { onSuccess });
+    signAndSend(extrinsic, 'Transfer', { onSuccess, onError });
   });
 
   return (
@@ -73,7 +77,7 @@ const TransferBalanceModal = ({ defaultAddress = '', close }: Props) => {
           </div>
 
           <div className={styles.buttons}>
-            <Button type="submit" icon={SubmitSVG} text="Send" size="large" />
+            <Button type="submit" icon={SubmitSVG} text="Send" size="large" disabled={isLoading} />
             <Button icon={CloseSVG} text="Close" size="large" color="light" onClick={close} />
           </div>
         </form>
