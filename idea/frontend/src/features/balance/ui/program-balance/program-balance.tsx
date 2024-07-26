@@ -32,7 +32,7 @@ function ProgramBalance({ id }: Props) {
         {account && <Button icon={PlusSVG} color="transparent" onClick={openModal} />}
       </div>
 
-      {isModalOpen && <TransferBalanceModal close={closeModal} />}
+      {isModalOpen && <TransferBalanceModal defaultAddress={id} close={closeModal} />}
     </>
   );
 }

@@ -19,7 +19,6 @@ const FIELD_NAME = {
 } as const;
 
 const DEFAULT_VALUES = {
-  [FIELD_NAME.ADDRESS]: '',
   [FIELD_NAME.VALUE]: '',
   [FIELD_NAME.KEEP_ALIVE]: true,
 };
@@ -36,15 +35,20 @@ function useSchema() {
 }
 
 type Props = {
+  defaultAddress?: string;
   close: () => void;
 };
 
-const TransferBalanceModal = ({ close }: Props) => {
+const TransferBalanceModal = ({ defaultAddress = '', close }: Props) => {
   const { account } = useAccount();
   const transferBalance = useBalanceTransfer();
 
   const schema = useSchema();
-  const form = useForm({ defaultValues: DEFAULT_VALUES, resolver: zodResolver(schema) });
+
+  const form = useForm({
+    defaultValues: { ...DEFAULT_VALUES, [FIELD_NAME.ADDRESS]: defaultAddress },
+    resolver: zodResolver(schema),
+  });
 
   const handleSubmit = form.handleSubmit(({ address, value, keepAlive }) => {
     if (!account) throw new Error('Account is not found');
@@ -60,7 +64,7 @@ const TransferBalanceModal = ({ close }: Props) => {
         <form onSubmit={handleSubmit}>
           <div className={styles.inputs}>
             <Input name={FIELD_NAME.ADDRESS} label="Address" direction="y" block />
-            <ValueField name={FIELD_NAME.VALUE} label="Value:" direction="y" block />
+            <ValueField name={FIELD_NAME.VALUE} label="Value" direction="y" block />
             <Checkbox name={FIELD_NAME.KEEP_ALIVE} label="Keep Alive" />
           </div>
 
