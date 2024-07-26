@@ -46,19 +46,9 @@ const ProgramTable = ({ program, isProgramReady, renderBalance }: Props) => {
           <IdBlock id={program.id} size="big" />
         </TableRow>
 
-        <TableRow name="Program ID">
-          <IdBlock id={program.id} size="big" />
-        </TableRow>
-
         <TableRow name="Status">
           <BulbBlock size="large" text={PROGRAM_STATUS_NAME[program.status]} status={getBulbStatus(program.status)} />
         </TableRow>
-
-        {'timestamp' in program && (
-          <TableRow name="Created at">
-            <TimestampBlock size="large" timestamp={program.timestamp} />
-          </TableRow>
-        )}
       </Table>
 
       <Table>
@@ -71,6 +61,12 @@ const ProgramTable = ({ program, isProgramReady, renderBalance }: Props) => {
         {blockId && (
           <TableRow name="Block hash">
             <IdBlock id={blockId} to={generatePath(absoluteRoutes.block, { blockId })} size="big" />
+          </TableRow>
+        )}
+
+        {'timestamp' in program && (
+          <TableRow name="Created at">
+            <TimestampBlock size="large" timestamp={program.timestamp} />
           </TableRow>
         )}
       </Table>

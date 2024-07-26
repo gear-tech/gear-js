@@ -6,8 +6,8 @@ import { useModalState } from '@/hooks';
 
 import PlusSVG from '../../assets/plus.svg?react';
 import { Balance } from '../balance';
-import styles from './program-balance.module.scss';
 import { TransferBalanceModal } from '../transfer-balance-modal';
+import styles from './program-balance.module.scss';
 
 type Props = {
   id: HexString;
