@@ -14,6 +14,7 @@ import { TransitionGroup } from 'react-transition-group';
 import { nanoid } from 'nanoid/non-secure';
 import { Transition } from 'components';
 import { DEFAULT_INFO_OPTIONS, DEFAULT_ERROR_OPTIONS, DEFAULT_LOADING_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
+
 import {
   ProviderProps,
   AlertTimer,
@@ -22,7 +23,7 @@ import {
   TemplateAlertOptions,
   AlertTemplateProps,
   AlertContainerFactory,
-} from 'types';
+} from '../types';
 
 type Props = ProviderProps & {
   template: ComponentType<AlertTemplateProps>;
@@ -85,7 +86,7 @@ const AlertProvider = ({ children, template: Template, containerClassName }: Pro
   );
 
   const update = useCallback(
-    (alertId: string, content: ReactNode, options?: AlertOptions) => {
+    (alertId: string, content: ReactNode, options?: Partial<AlertOptions>) => {
       removeTimer(alertId);
 
       setAlerts((prevState) =>

@@ -5,8 +5,6 @@ import { Program } from './sails';
 
 const DNS_API_URL = import.meta.env.VITE_DNS_API_URL as string;
 
-const DNS_PROGRAM_QUERY_KEY = ['dnsProgram'];
-
 const FIELD_NAME = {
   DNS_NAME: 'name',
   DNS_ADDRESS: 'address',
@@ -20,4 +18,10 @@ const DEFAULT_VALUES: Values = {
 const domainNameRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const NAME_SCHEMA = z.string().trim().regex(domainNameRegex, 'Invalid domain name');
 
-export { DNS_API_URL, DNS_PROGRAM_QUERY_KEY, FIELD_NAME, DEFAULT_VALUES, NAME_SCHEMA, Program };
+const FUNCTION_NAME = {
+  ADD_PROGRAM: 'addNewProgram',
+  CHANGE_PROGRAM_ID: 'changeProgramId',
+  DELETE_PROGRAM: 'deleteProgram',
+} as const;
+
+export { DNS_API_URL, FIELD_NAME, DEFAULT_VALUES, NAME_SCHEMA, FUNCTION_NAME, Program };
