@@ -59,7 +59,14 @@ function usePrepareProgramTransaction<
       await transaction.calculateGas(allowOtherPanics, increaseGas);
     }
 
-    return transaction;
+    // maybe worth to make it optional via parameters.
+    // would require function overload with some generics magic to return correct types only for specified values,
+    // so for now it's fine
+    const awaited = {
+      fee: await transaction.transactionFee(),
+    };
+
+    return { transaction, awaited };
   };
 
   const mutation = useMutation({

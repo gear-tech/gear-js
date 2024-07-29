@@ -27,13 +27,22 @@ function useSendProgramTransaction<
   const sendTransaction = async (
     transactionOrOptions: TTransactionReturn | SignAndSendOptions<Parameters<TTransaction>>,
   ) => {
-    const transaction =
+    const { transaction } =
       transactionOrOptions instanceof TransactionBuilder
-        ? transactionOrOptions
+        ? { transaction: transactionOrOptions }
         : await prepareTransactionAsync(transactionOrOptions);
 
-    // would make sense to await isFinalized and response properties?
-    return transaction.signAndSend();
+    const result = await transaction.signAndSend();
+
+    // maybe worth to make it optional via parameters.
+    // would require function overload with some generics magic to return correct types only for specified values,
+    // so for now it's fine
+    const awaited = {
+      response: await result.response(),
+      isFinalized: await result.isFinalized,
+    };
+
+    return { result, awaited };
   };
 
   const mutation = useMutation({

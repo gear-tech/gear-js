@@ -37,16 +37,15 @@ const useSendDnsTransaction = <T extends FunctionName>(functionName: T) => {
     if (!id) throw new Error('DNS program ID is not found');
     if (!account) throw new Error('Account is not found');
 
+    enableLoading();
+
     const onFinally = disableLoading;
 
     try {
-      enableLoading();
-
-      const transaction = await prepareTransactionAsync({ args });
-      const fee = await transaction.transactionFee();
+      const { transaction, awaited } = await prepareTransactionAsync({ args });
 
       showModal('transaction', {
-        fee: fee.toString(),
+        fee: awaited.fee.toString(),
         name: TransactionName.SendMessage,
         addressFrom: account.address,
         addressTo: id,
