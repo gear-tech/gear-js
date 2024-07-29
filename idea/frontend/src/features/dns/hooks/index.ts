@@ -1,7 +1,6 @@
 import { useDns } from './use-dns';
 import { useDnsFilters } from './use-dns-filters';
-import { useDnsActions } from './use-dns-actions';
-import { useInitDnsProgram } from './use-init-dns-program';
+import { useSendDnsTransaction } from './use-send-dns-transaction';
 import { useDnsSchema } from './use-dns-schema';
 
-export { useDns, useDnsFilters, useDnsActions, useInitDnsProgram, useDnsSchema };
+export { useDns, useDnsFilters, useSendDnsTransaction, useDnsSchema };

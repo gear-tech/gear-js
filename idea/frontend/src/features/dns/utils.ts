@@ -1,8 +1,17 @@
+import { HexString } from '@gear-js/api';
+
 import { DEFAULT_LIMIT } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/helpers';
 
 import { Dns, DnsParams, DnsResponse } from './types';
 import { DNS_API_URL } from './consts';
+
+const getDnsProgramId = async () => {
+  const url = `${DNS_API_URL}/dns/contract`;
+  const method = 'GET';
+
+  return (await fetchWithGuard<{ contract: HexString }>(url, { method })).contract;
+};
 
 const getDns = (params: DnsParams) => {
   const method = 'GET';
@@ -25,4 +34,4 @@ const getNextPageParam = (lastPage: DnsResponse, allPages: DnsResponse[]) => {
   return fetchedCount < totalCount ? fetchedCount : undefined;
 };
 
-export { getDns, getSingleDns, getNextPageParam };
+export { getDnsProgramId, getDns, getSingleDns, getNextPageParam };

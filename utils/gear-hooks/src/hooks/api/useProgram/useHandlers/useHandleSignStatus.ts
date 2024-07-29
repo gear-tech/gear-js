@@ -1,14 +1,13 @@
 import { EventRecord } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
-import { useContext } from 'react';
 import { DEFAULT_SUCCESS_OPTIONS, DEFAULT_ERROR_OPTIONS } from 'consts';
-import { AlertContext, ApiContext } from 'context';
+import { useAlert, useApi } from 'context';
 import { getExtrinsicFailedMessage } from 'utils';
 import { Callbacks, Method, HandleSignStatusParams, TransactionStatus, ProgramError } from '../types';
 
 function useHandleSignStatus() {
-  const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
-  const alert = useContext(AlertContext);
+  const { api, isApiReady } = useApi();
+  const alert = useAlert();
 
   const handleEventsStatus = (events: EventRecord[], programId: HexString, callbacks?: Callbacks) => {
     if (!isApiReady) throw new Error('API is not initialized');

@@ -1,9 +1,8 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
-
-import { AlertContext, ApiContext } from 'context';
+import { useCallback, useEffect, useState } from 'react';
+import { useApi, useAlert } from 'context';
 
 function useGetApproxBlockTimestamp() {
-  const { api, isApiReady } = useContext(ApiContext);
+  const { api, isApiReady } = useApi();
 
   const getApproxBlockTimestamp = useCallback(
     async (blockNumber: number) => {
@@ -25,8 +24,8 @@ function useGetApproxBlockTimestamp() {
 }
 
 function useApproxBlockTimestamp(blockNumber: number | undefined) {
-  const { isApiReady } = useContext(ApiContext);
-  const alert = useContext(AlertContext);
+  const { isApiReady } = useApi();
+  const alert = useAlert();
 
   const getApproxBlockTimestamp = useGetApproxBlockTimestamp();
 

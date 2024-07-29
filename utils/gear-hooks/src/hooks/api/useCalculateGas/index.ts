@@ -1,8 +1,7 @@
 import { GasInfo, ProgramMetadata } from '@gear-js/api';
 import { AnyJson, AnyNumber } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
-import { useContext } from 'react';
-import { AccountContext, ApiContext } from 'context';
+import { useApi, useAccount } from 'context';
 import { Options } from './types';
 
 function useUploadCalculateGas(
@@ -10,8 +9,8 @@ function useUploadCalculateGas(
   meta?: ProgramMetadata | undefined,
   options?: Options,
 ) {
-  const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
-  const { account } = useContext(AccountContext);
+  const { api, isApiReady } = useApi();
+  const { account } = useAccount();
 
   const calculateGas = (initPayload: AnyJson, value: AnyNumber = 0): Promise<GasInfo> => {
     if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
@@ -28,8 +27,8 @@ function useUploadCalculateGas(
 }
 
 function useCreateCalculateGas(codeId: HexString | undefined, meta?: ProgramMetadata | undefined, options?: Options) {
-  const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
-  const { account } = useContext(AccountContext);
+  const { api, isApiReady } = useApi();
+  const { account } = useAccount();
 
   const calculateGas = (initPayload: AnyJson, value: AnyNumber = 0): Promise<GasInfo> => {
     if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
@@ -50,8 +49,8 @@ function useHandleCalculateGas(
   meta?: ProgramMetadata | undefined,
   options?: Options,
 ) {
-  const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
-  const { account } = useContext(AccountContext);
+  const { api, isApiReady } = useApi();
+  const { account } = useAccount();
 
   const calculateGas = (initPayload: AnyJson, value: AnyNumber = 0): Promise<GasInfo> => {
     if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
@@ -75,8 +74,8 @@ function useHandleCalculateGas(
 }
 
 function useReplyCalculateGas(messageId: HexString | undefined, meta?: ProgramMetadata | undefined, options?: Options) {
-  const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
-  const { account } = useContext(AccountContext);
+  const { api, isApiReady } = useApi();
+  const { account } = useAccount();
 
   const calculateGas = (initPayload: AnyJson, value: AnyNumber = 0) => {
     if (!isApiReady) return Promise.reject(new Error('API is not initialized'));

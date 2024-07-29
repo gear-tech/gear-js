@@ -1,5 +1,7 @@
 import { BigNumber } from 'bignumber.js';
 
+import { useAccount, useApi, useAlert } from './context';
+
 import {
   useReadFullState,
   useReadWasmState,
@@ -20,9 +22,6 @@ import {
   useBalanceFormat,
   useDeriveBalancesAll,
   useAccountDeriveBalancesAll,
-  useAccount,
-  useAlert,
-  useApi,
   useCreateHandler,
   useSendMessageWithGas,
   useApproxBlockTimestamp,
@@ -37,6 +36,18 @@ import {
   UseSendMessageOptions,
   UseSendMessageWithGasOptions,
   SendMessageWithGasOptions,
+  useSails,
+  UseSailsParameters,
+  useProgram,
+  UseProgramParameters,
+  usePrepareProgramTransaction,
+  UsePrepareProgramTransactionParameters,
+  useSendProgramTransaction,
+  UseSendProgramTransactionParameters,
+  useProgramQuery,
+  UseProgramQueryParameters,
+  useProgramEvent,
+  UseProgramEventParameters,
 } from './hooks';
 
 import { withoutCommas, getVaraAddress, getTypedEntries } from './utils';
@@ -106,6 +117,11 @@ export {
   useIsAnyAccountVoucherActive,
   useIssuedVouchers,
   useAccountIssuedVouchers,
+  useProgram,
+  usePrepareProgramTransaction,
+  useSendProgramTransaction,
+  useProgramQuery,
+  useProgramEvent,
   DEFAULT_OPTIONS,
   DEFAULT_INFO_OPTIONS,
   DEFAULT_ERROR_OPTIONS,
@@ -130,4 +146,10 @@ export type {
   Entries,
   UseSendMessageWithGasOptions,
   SendMessageWithGasOptions,
+  UseSailsParameters,
+  UseProgramParameters,
+  UsePrepareProgramTransactionParameters,
+  UseSendProgramTransactionParameters,
+  UseProgramQueryParameters,
+  UseProgramEventParameters,
 };

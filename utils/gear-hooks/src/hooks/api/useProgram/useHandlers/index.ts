@@ -1,11 +1,10 @@
-import { useContext } from 'react';
 import { DEFAULT_ERROR_OPTIONS } from 'consts';
-import { AlertContext } from 'context';
+import { useAlert } from 'context';
 import { HandleInitParams, ProgramStatus, HandleErrorParams } from '../types';
 import { useHandleSignStatus } from './useHandleSignStatus';
 
 function useHandlers() {
-  const alert = useContext(AlertContext);
+  const alert = useAlert();
 
   const handleSignStatus = useHandleSignStatus();
 
