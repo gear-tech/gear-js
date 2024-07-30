@@ -1,66 +1,97 @@
-import { decodeAddress } from '@gear-js/api';
-import { useAccount, useBalanceFormat } from '@gear-js/react-hooks';
-import { Button, Checkbox, Modal } from '@gear-js/ui';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { useAccount, useApi, useDeriveBalancesAll } from '@gear-js/react-hooks';
+import { Button, Modal } from '@gear-js/ui';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
-import * as yup from 'yup';
+import { z } from 'zod';
 
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
-import { Input, ValueField } from '@/shared/ui/form';
-import { isAccountAddressValid } from '@/shared/helpers';
-import { useBalanceTransfer } from '@/hooks';
+import { Checkbox, Input, ValueField } from '@/shared/ui';
+import { useBalanceSchema, useLoading, useSignAndSend } from '@/hooks';
+import { ACCOUNT_ADDRESS_SCHEMA } from '@/shared/config';
 
 import SubmitSVG from '../../assets/submit.svg?react';
+import { Balance } from '../balance';
 import styles from './transfer-balance-modal.module.scss';
 
-const defaultValues = { address: '', value: '', keepAlive: true };
+const FIELD_NAME = {
+  ADDRESS: 'address',
+  VALUE: 'value',
+  KEEP_ALIVE: 'keepAlive',
+} as const;
 
-const schema = yup.object().shape({
-  address: yup
-    .string()
-    .test('is-address-valid', 'Invalid address', isAccountAddressValid)
-    .required('This field is required'),
-  value: yup.string().required('This field is required'),
-  keepAlive: yup.boolean().required(),
-});
+const DEFAULT_VALUES = {
+  [FIELD_NAME.VALUE]: '',
+  [FIELD_NAME.KEEP_ALIVE]: true,
+};
 
-const resolver = yupResolver(schema);
+function useSchema() {
+  const balanceSchema = useBalanceSchema();
+
+  return z.object({
+    // address can be a program id too, but we don't need to validate it's existence. account address schema should do the work
+    [FIELD_NAME.ADDRESS]: ACCOUNT_ADDRESS_SCHEMA,
+    [FIELD_NAME.VALUE]: balanceSchema,
+    [FIELD_NAME.KEEP_ALIVE]: z.boolean(),
+  });
+}
 
 type Props = {
+  defaultAddress?: string;
   close: () => void;
 };
 
-const TransferBalanceModal = ({ close }: Props) => {
+const TransferBalanceModal = ({ defaultAddress = '', close }: Props) => {
+  const { api, isApiReady } = useApi();
   const { account } = useAccount();
-  const { getChainBalanceValue } = useBalanceFormat();
-  const transferBalance = useBalanceTransfer();
+  const balance = useDeriveBalancesAll(account?.address);
 
-  const methods = useForm({ defaultValues, resolver });
-  const { register } = methods;
+  const [isLoading, enableLoading, disableLoading] = useLoading();
+  const signAndSend = useSignAndSend();
 
-  const handleSubmit = ({ address, value, keepAlive }: typeof defaultValues) => {
-    if (!account) return;
+  const schema = useSchema();
 
-    const chainValue = getChainBalanceValue(value).toFixed();
-    const signSource = account.meta.source;
+  const form = useForm({
+    defaultValues: { ...DEFAULT_VALUES, [FIELD_NAME.ADDRESS]: defaultAddress },
+    resolver: zodResolver(schema),
+  });
+
+  const handleSubmit = form.handleSubmit(({ address, value, keepAlive }) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+
+    enableLoading();
+
     const onSuccess = close;
+    const onError = disableLoading;
 
-    transferBalance(account.address, decodeAddress(address), chainValue, { keepAlive, signSource, onSuccess });
-  };
+    const extrinsic = keepAlive
+      ? api.tx.balances.transferKeepAlive(address, value)
+      : api.tx.balances.transferAllowDeath(address, value);
+
+    signAndSend(extrinsic, 'Transfer', { onSuccess, onError });
+  });
 
   return (
     <Modal heading="Transfer Balance" size="large" close={close}>
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(handleSubmit)}>
+      <FormProvider {...form}>
+        <form onSubmit={handleSubmit}>
           <div className={styles.inputs}>
-            <Input name="address" label="Address" direction="y" block />
-            <ValueField name="value" label="Value:" direction="y" block />
-            <Checkbox label="Keep Alive" {...register('keepAlive')} />
+            <Input name={FIELD_NAME.ADDRESS} label="Address" direction="y" block />
+
+            <div>
+              <ValueField name={FIELD_NAME.VALUE} label="Value" direction="y" block />
+
+              <div className={styles.balance}>
+                <p className={styles.text}>Your transferrable balance:</p>
+                <Balance value={balance?.availableBalance} />
+              </div>
+            </div>
+
+            <Checkbox name={FIELD_NAME.KEEP_ALIVE} label="Keep Alive" />
           </div>
 
           <div className={styles.buttons}>
-            <Button type="submit" text="Send" size="large" icon={SubmitSVG} />
-            <Button icon={CloseSVG} color="light" size="large" text="Close" onClick={close} />
+            <Button type="submit" icon={SubmitSVG} text="Send" size="large" disabled={isLoading} />
+            <Button icon={CloseSVG} text="Close" size="large" color="light" onClick={close} />
           </div>
         </form>
       </FormProvider>

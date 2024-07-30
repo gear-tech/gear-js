@@ -17,9 +17,10 @@ import styles from './program-table.module.scss';
 type Props = {
   program: Program | LocalProgram | undefined;
   isProgramReady: boolean;
+  renderBalance: () => JSX.Element;
 };
 
-const ProgramTable = ({ program, isProgramReady }: Props) => {
+const ProgramTable = ({ program, isProgramReady, renderBalance }: Props) => {
   const { codeId } = program || {};
   const blockId = program && 'blockHash' in program ? program.blockHash : undefined;
 
@@ -39,6 +40,8 @@ const ProgramTable = ({ program, isProgramReady }: Props) => {
   return (
     <div className={styles.table}>
       <Table>
+        <TableRow name="Program Balance">{renderBalance()}</TableRow>
+
         <TableRow name="Program ID">
           <IdBlock id={program.id} size="big" />
         </TableRow>
@@ -46,12 +49,6 @@ const ProgramTable = ({ program, isProgramReady }: Props) => {
         <TableRow name="Status">
           <BulbBlock size="large" text={PROGRAM_STATUS_NAME[program.status]} status={getBulbStatus(program.status)} />
         </TableRow>
-
-        {'timestamp' in program && (
-          <TableRow name="Created at">
-            <TimestampBlock size="large" timestamp={program.timestamp} />
-          </TableRow>
-        )}
       </Table>
 
       <Table>
@@ -64,6 +61,12 @@ const ProgramTable = ({ program, isProgramReady }: Props) => {
         {blockId && (
           <TableRow name="Block hash">
             <IdBlock id={blockId} to={generatePath(absoluteRoutes.block, { blockId })} size="big" />
+          </TableRow>
+        )}
+
+        {'timestamp' in program && (
+          <TableRow name="Created at">
+            <TimestampBlock size="large" timestamp={program.timestamp} />
           </TableRow>
         )}
       </Table>

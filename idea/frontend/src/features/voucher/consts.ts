@@ -1,8 +1,3 @@
-import { decodeAddress } from '@gear-js/api';
-import { z } from 'zod';
-
-import { isAccountAddressValid } from '@/shared/helpers';
-
 import { Values } from './types';
 
 const FIELD_NAME = {
@@ -29,11 +24,4 @@ const DEFAULT_FILTER_VALUES = {
   status: '',
 };
 
-const ADDRESS_SCHEMA = z
-  .string()
-  .trim()
-  .min(0)
-  .refine((value) => isAccountAddressValid(value), 'Invalid address')
-  .transform((value) => decodeAddress(value));
-
-export { FIELD_NAME, VOUCHER_TYPE, DEFAULT_VALUES, DEFAULT_FILTER_VALUES, ADDRESS_SCHEMA };
+export { FIELD_NAME, VOUCHER_TYPE, DEFAULT_VALUES, DEFAULT_FILTER_VALUES };

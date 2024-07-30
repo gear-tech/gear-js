@@ -11,8 +11,9 @@ import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { asOptionalField } from '@/shared/helpers';
 import { Input, ValueField } from '@/shared/ui';
+import { ACCOUNT_ADDRESS_SCHEMA } from '@/shared/config';
 
-import { ADDRESS_SCHEMA, DEFAULT_VALUES, FIELD_NAME } from '../../consts';
+import { DEFAULT_VALUES, FIELD_NAME } from '../../consts';
 import { useDurationSchema } from '../../hooks';
 import { Values, Voucher } from '../../types';
 import { DurationForm } from '../duration-form';
@@ -35,7 +36,7 @@ const UpdateVoucherModal = ({ voucher, close, onSubmit }: Props) => {
   const durationSchema = useDurationSchema();
 
   const schema = z.object({
-    [FIELD_NAME.ACCOUNT_ADDRESS]: asOptionalField(ADDRESS_SCHEMA),
+    [FIELD_NAME.ACCOUNT_ADDRESS]: asOptionalField(ACCOUNT_ADDRESS_SCHEMA),
     [FIELD_NAME.VALUE]: asOptionalField(balanceSchema),
     [FIELD_NAME.DURATION]: asOptionalField(durationSchema),
   });

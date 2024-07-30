@@ -17,6 +17,8 @@ import { ProgramVouchers } from '@/features/voucher';
 import { IDL, ProgramEvents, useSails } from '@/features/sails';
 import { ProgramMessages } from '@/features/message';
 
+import { ProgramBalance } from '@/features/balance';
+
 import styles from './program.module.scss';
 
 const TABS = ['Metadata/Sails', 'Messages', 'Vouchers', 'Events'];
@@ -104,7 +106,11 @@ const Program = () => {
         )}
       </header>
 
-      <ProgramTable program={program} isProgramReady={!isProgramLoading} />
+      <ProgramTable
+        program={program}
+        isProgramReady={!isProgramLoading}
+        renderBalance={() => <ProgramBalance id={programId} />}
+      />
 
       <div className={styles.body}>
         <header className={styles.tabs}>{renderTabs()}</header>
