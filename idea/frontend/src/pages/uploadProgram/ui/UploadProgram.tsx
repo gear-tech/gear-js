@@ -58,27 +58,27 @@ const UploadProgram = () => {
           </Box>
         )}
 
-        <div className={styles.program}>
-          {wasmFile.buffer && !sails.value && (
-            <ProgramForm
-              fileName={wasmFile.value?.name.split(/\.opt|\.wasm/)[0]}
-              source={wasmFile.buffer}
-              metadata={metadata.value}
-              gasMethod={GasMethod.InitUpdate}
-              onSubmit={handleSubmit}
-            />
-          )}
-
-          {wasmFile.buffer && sails.value && sails.idl && (
-            <SailsProgramForm
-              fileName={wasmFile.value?.name.split(/\.opt|\.wasm/)[0]}
-              source={wasmFile.buffer}
-              sails={sails.value}
-              gasMethod={GasMethod.InitUpdate}
-              onSubmit={handleSubmit}
-            />
-          )}
-        </div>
+        {wasmFile.buffer && (
+          <div className={styles.program}>
+            {sails.value ? (
+              <SailsProgramForm
+                fileName={wasmFile.value?.name.split(/\.opt|\.wasm/)[0]}
+                source={wasmFile.buffer}
+                sails={sails.value}
+                gasMethod={GasMethod.InitUpdate}
+                onSubmit={handleSubmit}
+              />
+            ) : (
+              <ProgramForm
+                fileName={wasmFile.value?.name.split(/\.opt|\.wasm/)[0]}
+                source={wasmFile.buffer}
+                metadata={metadata.value}
+                gasMethod={GasMethod.InitUpdate}
+                onSubmit={handleSubmit}
+              />
+            )}
+          </div>
+        )}
       </section>
 
       <section>
