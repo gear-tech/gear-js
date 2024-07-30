@@ -1,9 +1,8 @@
 name: 'Deploy new squid and indexer to k8s'
 
-
 on:
   push:
-    branches: 
+    branches:
       - 'main'
       - 'idea-release'
     paths:
@@ -89,7 +88,7 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-squid:${{ env.tag }}
 
   deploy-to-k8s:
-    needs: 
+    needs:
       - build-explorer-image
       - build-squid-image
     runs-on: ubuntu-latest
@@ -107,10 +106,10 @@ jobs:
         run: |
           if [ "${{ github.ref }}" == "refs/heads/idea-release" ]; then
             echo "namespace=prod-idea" >> $GITHUB_ENV
-            echo "deployments=explorer-mainnet squid-mainnet explorer-testnet squid-testnet" >> $GITHUB_ENV
+            echo "deployments=explorer squid-mainnet squid-testnet" >> $GITHUB_ENV
           else
             echo "namespace=dev-1" >> $GITHUB_ENV
-            echo "deployments=explorer-testnet squid-testnet" >> $GITHUB_ENV
+            echo "deployments=explorer squid-testnet" >> $GITHUB_ENV
 
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
