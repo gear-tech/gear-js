@@ -1,62 +1,44 @@
-import clsx from 'clsx';
-import { generatePath, Link } from 'react-router-dom';
+import cx from 'clsx';
+import { generatePath } from 'react-router-dom';
 
-import { Message } from '@/features/message';
-import { getShortName } from '@/shared/helpers';
 import { IdBlock } from '@/shared/ui/idBlock';
 import { TimestampBlock } from '@/shared/ui/timestampBlock';
 import FlagSVG from '@/shared/assets/images/indicators/flag.svg?react';
 import DirectionSVG from '@/shared/assets/images/indicators/messageDirection.svg?react';
-import { absoluteRoutes } from '@/shared/config';
+import { routes } from '@/shared/config';
 import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
 
+import { MessageFromProgram, MessageToProgram } from '../../api';
+import { isMessageWithError } from '../../utils';
 import styles from './message-card.module.scss';
-import { HexString } from '@gear-js/api';
 
 type Props = {
-  message: Message;
-  program?: { id: HexString; name: string | undefined };
+  isToDirection: boolean;
+  message: MessageToProgram | MessageFromProgram;
 };
 
-const MessageCard = ({ message, program }: Props) => {
-  const { id: messageId, timestamp, type, exitCode } = message;
-  const isUserMessageSent = type === 'UserMessageSent';
+const MessageCard = ({ isToDirection, message }: Props) => {
+  const { id, timestamp, service, fn } = message;
 
   return (
-    <article className={clsx(styles.horizontalMessageCard, program && styles.moreInfo)}>
-      <div className={styles.info}>
-        <DirectionSVG className={clsx(styles.directionSVG, isUserMessageSent && styles.fromDirection)} />
-        <BulbBlock text="" status={exitCode ? BulbStatus.Error : BulbStatus.Success} />
-        <IdBlock
-          id={messageId}
-          size="large"
-          withIcon
-          maxCharts={18}
-          to={generatePath(absoluteRoutes.message, { messageId })}
-        />
+    <div className={styles.card}>
+      <div className={cx(styles.direction, isToDirection && styles.to)}>
+        <DirectionSVG />
+        <BulbBlock text="" status={isMessageWithError(message) ? BulbStatus.Error : BulbStatus.Success} />
       </div>
 
-      <TimestampBlock size="medium" color="light" timestamp={timestamp} withIcon />
+      <IdBlock id={id} withIcon maxCharts={18} to={generatePath(routes.message, { messageId: id })} />
 
-      {program && (
-        <div className={styles.fromBlock}>
-          <div className={styles.fromIcon}>
-            <FlagSVG />
-            <span className={styles.text}>{isUserMessageSent ? 'From:' : 'To:'}</span>
-          </div>
+      <TimestampBlock color="light" timestamp={timestamp} withIcon />
 
-          {/* if there's no name, message is not from a program */}
-          {/* think about more straightforward logic and naming */}
-          {program.name ? (
-            <Link to={generatePath(absoluteRoutes.program, { programId: program.id })} className={styles.programLink}>
-              {getShortName(program.name)}
-            </Link>
-          ) : (
-            <p className={styles.text}>{getShortName(program.id)}</p>
-          )}
+      {(service || fn) && (
+        <div className={styles.service}>
+          <FlagSVG />
+
+          <span>{service && fn ? `${service}.${fn}` : service || fn}</span>
         </div>
       )}
-    </article>
+    </div>
   );
 };
 

@@ -1,6 +1,5 @@
-import { HexString } from '@gear-js/api';
-
 const API_URL = import.meta.env.VITE_API_URL as string;
+const INDEXER_API_URL = import.meta.env.VITE_INDEXER_API_URL as string;
 const NODES_API_URL = import.meta.env.VITE_NODES_API_URL as string;
 const NODE_ADDRESS = import.meta.env.VITE_NODE_ADDRESS as string;
 const HCAPTCHA_SITE_KEY = import.meta.env.VITE_HCAPTCHA_SITE_KEY as string;
@@ -70,22 +69,11 @@ enum TransactionStatus {
 }
 
 enum RpcMethods {
-  GetProgram = 'program.data',
-  GetAllPrograms = 'program.all',
   AddMetadata = 'meta.add',
-  AddProgramName = 'program.name.add',
-  AddCodeName = 'code.name.add',
   GetMetadata = 'meta.get',
-  GetMessage = 'message.data',
-  GetAllMessages = 'message.all',
-  GetCode = 'code.data',
-  GetAllCodes = 'code.all',
   GetTestBalance = 'testBalance.get',
   NetworkData = 'networkData.available',
   TestBalanceAvailable = 'testBalance.available',
-  AddState = 'program.state.add',
-  GetStates = 'program.state.all',
-  GetState = 'state.get',
 }
 
 enum FileTypes {
@@ -105,6 +93,7 @@ enum AnimationTimeout {
 
 export {
   API_URL,
+  INDEXER_API_URL,
   VOUCHERS_API_URL,
   NODES_API_URL,
   NODE_ADDRESS,

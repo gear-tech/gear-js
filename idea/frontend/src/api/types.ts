@@ -1,11 +1,11 @@
-type PaginationModel = {
-  publicKeyRaw?: string | null;
-  source?: string | null;
-  destination?: string | null;
+type PaginationParameters = {
   limit?: number;
   offset?: number;
-  type?: string;
-  query?: string;
 };
 
-export type { PaginationModel };
+type PaginationResponse<T> = {
+  result: T[];
+  count: number;
+};
+
+export type { PaginationParameters, PaginationResponse };

@@ -1,3 +1,4 @@
+import { HexString } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
@@ -8,14 +9,21 @@ import { VouchersParams } from '../types';
 
 type FilterParams = Partial<Pick<VouchersParams, 'declined' | 'expired' | 'owner' | 'spender'>>;
 
-function useVouchers(id: string, filterParams: FilterParams) {
+function useVouchers(id: string, filterParams: FilterParams, programId?: HexString) {
   const { api } = useApi();
   const genesis = api?.genesisHash.toHex();
   const url = genesis ? VOUCHERS_API_URL[genesis as keyof typeof VOUCHERS_API_URL] : undefined;
 
   const { data, isLoading, hasNextPage, fetchNextPage, refetch } = useInfiniteQuery({
-    queryKey: ['vouchers', id, filterParams, url],
-    queryFn: ({ pageParam }) => getVouchers(url!, { limit: DEFAULT_LIMIT, offset: pageParam, id, ...filterParams }),
+    queryKey: ['vouchers', id, filterParams, url, programId],
+    queryFn: ({ pageParam }) =>
+      getVouchers(url!, {
+        limit: DEFAULT_LIMIT,
+        offset: pageParam,
+        programs: programId ? [programId] : undefined,
+        id,
+        ...filterParams,
+      }),
     initialPageParam: 0,
     getNextPageParam,
     enabled: Boolean(url),

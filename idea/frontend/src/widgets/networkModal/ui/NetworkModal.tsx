@@ -13,7 +13,7 @@ type Props = ModalProps & {
   nodeSections: NodeSection[];
   addNetwork: (address: string) => void;
 };
-// TODO: use Final Form
+
 const NetworkModal = ({ nodeSections, addNetwork, onClose }: Props) => {
   const alert = useAlert();
 

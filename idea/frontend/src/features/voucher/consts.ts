@@ -24,6 +24,11 @@ const DEFAULT_VALUES: Values = {
   [FIELD_NAME.DURATION]: '',
 };
 
+const DEFAULT_FILTER_VALUES = {
+  owner: 'all',
+  status: '',
+};
+
 const ADDRESS_SCHEMA = z
   .string()
   .trim()
@@ -31,4 +36,4 @@ const ADDRESS_SCHEMA = z
   .refine((value) => isAccountAddressValid(value), 'Invalid address')
   .transform((value) => decodeAddress(value));
 
-export { FIELD_NAME, VOUCHER_TYPE, DEFAULT_VALUES, ADDRESS_SCHEMA };
+export { FIELD_NAME, VOUCHER_TYPE, DEFAULT_VALUES, DEFAULT_FILTER_VALUES, ADDRESS_SCHEMA };

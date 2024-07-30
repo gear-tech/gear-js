@@ -1,5 +1,5 @@
 import { getLocalMetadata, addLocalProgram, addLocalProgramName, addLocalMetadata } from './api';
-import { useLocalProgram, useLocalPrograms, useLocalCode } from './hooks';
+import { useLocalProgram, useLocalPrograms, useLocalCode, useLocalCodes } from './hooks';
 import { LocalProgram, LocalCode } from './types';
 
 export {
@@ -10,6 +10,7 @@ export {
   useLocalProgram,
   useLocalPrograms,
   useLocalCode,
+  useLocalCodes,
 };
 
 export type { LocalProgram, LocalCode };

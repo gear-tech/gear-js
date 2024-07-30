@@ -1,0 +1,8 @@
+.table {
+  display: flex;
+  gap: 32px;
+
+  > * {
+    flex: 1;
+  }
+}

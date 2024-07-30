@@ -1,5 +1,5 @@
 import { ProgramTable } from './program-table';
-import { ProgramCard } from './program-card';
-import { ProgramsSearch } from './programs-search';
+import { ProgramFilters } from './program-filters';
+import { Programs } from './programs';
 
-export { ProgramTable, ProgramCard, ProgramsSearch };
+export { ProgramTable, Programs, ProgramFilters };

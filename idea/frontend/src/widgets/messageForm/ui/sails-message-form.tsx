@@ -88,9 +88,6 @@ const SailsMessageForm = ({ id, programId, isReply, sails }: Props) => {
   };
 
   const handleSubmitForm = form.handleSubmit(({ voucherId, ...values }) => {
-    console.log('voucherId: ', voucherId);
-    console.log('values: ', values);
-
     disableSubmitButton();
 
     const payloadType = 'Bytes';

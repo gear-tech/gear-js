@@ -1,14 +1,13 @@
-import { generatePath } from 'react-router-dom';
 import { useApi, useAccount } from '@gear-js/react-hooks';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { ISubmittableResult } from '@polkadot/types/types';
+import { generatePath } from 'react-router-dom';
 
 import { useAddMetadata, useAddProgramName, useChain, useModal, useSignAndSend } from '@/hooks';
 import { addLocalProgram } from '@/features/local-indexer';
 import { absoluteRoutes } from '@/shared/config';
 import { CustomLink } from '@/shared/ui/customLink';
 import { useProgramStatus } from '@/features/program';
-import { isState } from '@/features/metadata';
 import { useAddIdl } from '@/features/sails';
 
 import { ContractApi, Program, Values } from './types';
@@ -50,13 +49,12 @@ const useProgramActions = () => {
       const owner = account.decodedAddress;
       const metahash = metadata?.hash || null;
       const status = await getProgramStatus(programId);
-      const hasState = !!metadata && !!metadata.value ? isState(metadata.value) : false;
       const blockHash = result.status.asFinalized.toHex();
 
-      await addLocalProgram({ id, owner, codeId, status, blockHash, hasState, metahash, name, genesis, timestamp });
+      await addLocalProgram({ id, owner, codeId, status, blockHash, metahash, name, genesis, timestamp });
     }
 
-    if (!isDevChain) await addProgramName(programId, name);
+    if (!isDevChain) await addProgramName({ id: programId, codeId, name, metaHex: metadata?.hex, idl: sails?.idl });
     if (metadata && metadata.hash && metadata.hex && !metadata.isFromStorage) addMetadata(metadata.hash, metadata.hex);
     if (sails && sails.idl && !sails.isFromStorage) addIdl(codeId, sails.idl);
   };

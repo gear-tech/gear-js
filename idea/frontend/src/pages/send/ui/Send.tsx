@@ -4,8 +4,8 @@ import { useParams } from 'react-router-dom';
 import { useMailboxItem } from '@/features/mailbox';
 import { MessageForm, SailsMessageForm } from '@/widgets/messageForm';
 import { useMetadata } from '@/features/metadata';
-import { useProgram } from '@/hooks';
 import { useSails } from '@/features/sails';
+import { useProgram } from '@/features/program';
 
 import styles from './Send.module.scss';
 
@@ -28,7 +28,7 @@ const Send = () => {
 
   const programId = isReply ? message?.source : id;
 
-  const { program } = useProgram(programId);
+  const { data: program } = useProgram(programId);
   const { metadata, isMetadataReady } = useMetadata(program?.metahash);
   const { sails } = useSails(program?.codeId);
 

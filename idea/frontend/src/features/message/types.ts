@@ -23,4 +23,4 @@ type Message = IBase & {
   metahash?: HexString | null;
 };
 
-export type { Message };
+export type { Message, MessageReadReason, MessageEntryPoint };

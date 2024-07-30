@@ -1,44 +1,48 @@
 import { HexString } from '@polkadot/util/types';
 import { Button } from '@gear-js/ui';
-import { useAccount, useAccountVouchers } from '@gear-js/react-hooks';
+import cx from 'clsx';
+import { useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
 
-import { useModal, useProgram } from '@/hooks';
-import { ProgramStatus, ProgramTable } from '@/features/program';
-import { ProgramMessages } from '@/widgets/programMessages';
+import { useModal } from '@/hooks';
+import { ProgramStatus, ProgramTable, useProgram } from '@/features/program';
 import { getShortName } from '@/shared/helpers';
-import { Subheader, UILink } from '@/shared/ui';
+import { UILink } from '@/shared/ui';
 import { absoluteRoutes, routes } from '@/shared/config';
 import SendSVG from '@/shared/assets/images/actions/send.svg?react';
 import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
-import { useMetadata, MetadataTable } from '@/features/metadata';
-import { IssueVoucher, VoucherTable } from '@/features/voucher';
-import { IDL, useSails } from '@/features/sails';
+import { useMetadata, MetadataTable, isState } from '@/features/metadata';
+import { ProgramVouchers } from '@/features/voucher';
+import { IDL, ProgramEvents, useSails } from '@/features/sails';
+import { ProgramMessages } from '@/features/message';
 
 import styles from './program.module.scss';
+
+const TABS = ['Metadata/Sails', 'Messages', 'Vouchers', 'Events'];
 
 type Params = {
   programId: HexString;
 };
 
 const Program = () => {
-  const { account } = useAccount();
   const { programId } = useParams() as Params;
   const { showModal, closeModal } = useModal();
 
-  const { program, isProgramReady, setProgramName } = useProgram(programId);
+  const { data: program, isLoading: isProgramLoading, refetch: refetchProgram } = useProgram(programId);
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(program?.metahash);
   const { idl, sails, isLoading: isSailsLoading, refetch: refetchSails } = useSails(program?.codeId);
   const isLoading = !isMetadataReady || isSailsLoading;
   const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => Object.keys(queries).length) : false;
+
+  const [tabIndex, setTabIndex] = useState(0);
 
   const openUploadMetadataModal = () => {
     if (!program) throw new Error('Program is not found');
     if (!program.codeId) throw new Error('CodeId is not found'); // TODO: take a look at local program
 
     const onSuccess = (name: string, metadataHex?: HexString) => {
-      if (name) setProgramName(name);
+      if (name) refetchProgram();
 
       return metadataHex ? setMetadataHex(metadataHex) : refetchSails();
     };
@@ -57,21 +61,21 @@ const Program = () => {
     });
   };
 
-  const { vouchers } = useAccountVouchers(programId);
-  const voucherEntries = Object.entries(vouchers || {});
-  const vouchersCount = voucherEntries.length;
-
-  const renderVouchers = () =>
-    voucherEntries.map(([id, { expiry, owner, codeUploading }]) => (
-      <li key={id}>
-        <VoucherTable id={id as HexString} expireBlock={expiry} owner={owner} isCodeUploadEnabled={codeUploading} />
-      </li>
+  const renderTabs = () =>
+    TABS.map((tab, index) => (
+      <button
+        key={tab}
+        type="button"
+        onClick={() => setTabIndex(index)}
+        className={cx(styles.button, index === tabIndex && styles.active)}>
+        {tab}
+      </button>
     ));
 
   return (
-    <div>
+    <div className={styles.container}>
       <header className={styles.header}>
-        {program && <h2 className={styles.programName}>{getShortName(program.name)}</h2>}
+        {program && <h2 className={styles.name}>{getShortName(program.name || 'Program Name')}</h2>}
 
         {program?.status === ProgramStatus.Active && (
           <div className={styles.links}>
@@ -83,7 +87,7 @@ const Program = () => {
               className={styles.fixWidth}
             />
 
-            {!isLoading && (program.hasState || isAnyQuery) && (
+            {!isLoading && (isState(metadata) || isAnyQuery) && (
               <UILink
                 to={generatePath(metadata ? routes.state : routes.sailsState, { programId })}
                 icon={ReadSVG}
@@ -100,38 +104,23 @@ const Program = () => {
         )}
       </header>
 
-      <div className={styles.content}>
-        <div className={styles.leftSide}>
-          <div>
-            <Subheader title="Program details" />
-            <ProgramTable program={program} isProgramReady={isProgramReady} />
-          </div>
+      <ProgramTable program={program} isProgramReady={!isProgramLoading} />
 
-          {vouchersCount > 0 && (
-            <div>
-              {/* TODO: WithAccount HoC? or move inside VoucherTable? */}
-              {account && (
-                <Subheader title={`Vouchers: ${vouchersCount}`}>
-                  <IssueVoucher programId={programId} buttonColor="secondary" buttonSize="small" />
-                </Subheader>
-              )}
+      <div className={styles.body}>
+        <header className={styles.tabs}>{renderTabs()}</header>
 
-              <ul className={styles.vouchersList}>{renderVouchers()}</ul>
-            </div>
-          )}
-
-          <div>
-            {metadata && <Subheader title="Metadata" />}
-            {idl && <Subheader title="IDL" />}
-
-            {(metadata || isLoading) && <MetadataTable metadata={metadata} isLoading={isLoading} />}
+        {tabIndex === 0 && (
+          <div className={cx(styles.metadata, idl && styles.idl)}>
+            {(isLoading || metadata) && <MetadataTable metadata={metadata} isLoading={isLoading} />}
             {/* temp solution for a placeholder */}
             {!isLoading && !metadata && !idl && <MetadataTable metadata={metadata} isLoading={isLoading} />}
             {idl && <IDL value={idl} />}
           </div>
-        </div>
+        )}
 
-        <ProgramMessages programId={programId} />
+        {tabIndex === 1 && <ProgramMessages programId={programId} />}
+        {tabIndex === 2 && <ProgramVouchers programId={programId} />}
+        {tabIndex === 3 && !isSailsLoading && <ProgramEvents programId={programId} sails={sails} />}
       </div>
     </div>
   );

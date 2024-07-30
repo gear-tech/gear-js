@@ -1,0 +1,18 @@
+.container {
+  display: grid;
+  grid-template-columns: 7fr 3fr;
+  gap: 24px;
+}
+
+.heading {
+  margin-bottom: 16px;
+
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 15.6px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.search {
+  margin-bottom: 12px;
+}

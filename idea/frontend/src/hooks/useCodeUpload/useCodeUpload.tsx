@@ -24,7 +24,7 @@ const useCodeUpload = () => {
     metadata: ParamsToUploadCode['metadata'],
     sails: ParamsToUploadCode['sails'],
   ) => {
-    await addCodeName(codeId, codeName || codeId);
+    await addCodeName({ id: codeId, name: codeName, metaHex: metadata.hex, idl: sails.idl });
     if (metadata.hash && metadata.hex && !metadata.isFromStorage) addMetadata(metadata.hash, metadata.hex);
     if (sails.idl && !sails.isFromStorage) addIdl(codeId, sails.idl);
   };

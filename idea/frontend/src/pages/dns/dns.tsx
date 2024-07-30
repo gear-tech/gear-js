@@ -1,7 +1,6 @@
 import { useAccount } from '@gear-js/react-hooks';
 import { useState } from 'react';
 
-import { Placeholder } from '@/entities/placeholder';
 import { FilterGroup, Filters, Radio } from '@/features/filters';
 import { Dns as DnsType, DnsCard, DnsCardPlaceholder, useDnsFilters, useDns, CreateDns } from '@/features/dns';
 import { List, SearchForm, Skeleton } from '@/shared/ui';
@@ -15,8 +14,6 @@ const Dns = () => {
   const [filterValues, filterParams, handleFiltersSubmit] = useDnsFilters();
 
   const [dns, count, isLoading, hasMore, fetchMore, refetch] = useDns(searchQuery, filterParams);
-  const isEmpty = !(isLoading || count);
-  const isLoaderVisible = isEmpty || (!count && isLoading);
 
   const renderDns = (dnsItem: DnsType) => <DnsCard dns={dnsItem} onSuccess={refetch} />;
   const renderSkeleton = () => <Skeleton SVG={DnsCardPlaceholder} disabled={true} />;
@@ -26,25 +23,20 @@ const Dns = () => {
       <header className={styles.header}>
         <h2 className={styles.heading}>Decentralized DNS: {count}</h2>
 
-        {!isEmpty && <CreateDns onSuccess={refetch} />}
+        {!isLoading && <CreateDns onSuccess={refetch} />}
       </header>
 
       <SearchForm placeholder="Search by name, address" onSubmit={(query) => setSearchQuery(query)} />
 
-      {isLoaderVisible ? (
-        <div className={styles.placeholder}>
-          <Placeholder
-            block={renderSkeleton()}
-            title="There is no dDNS yet"
-            description="Create a new dDNS right now."
-            blocksCount={5}
-            isEmpty={isEmpty}>
-            <CreateDns onSuccess={refetch} color="primary" />
-          </Placeholder>
-        </div>
-      ) : (
-        <List items={dns} hasMore={hasMore} renderItem={renderDns} fetchMore={fetchMore} />
-      )}
+      <List
+        items={dns}
+        isLoading={isLoading}
+        hasMore={hasMore}
+        noItems={{ heading: 'There are no DNS records yet.' }}
+        renderItem={renderDns}
+        fetchMore={fetchMore}
+        renderSkeleton={renderSkeleton}
+      />
 
       <Filters initialValues={filterValues} onSubmit={handleFiltersSubmit} title="Sort & Filter">
         <FilterGroup name="orderByDirection" onSubmit={handleFiltersSubmit}>

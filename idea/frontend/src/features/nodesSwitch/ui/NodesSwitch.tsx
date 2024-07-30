@@ -80,7 +80,7 @@ const NodesSwitch = ({ isButtonFullWidth }: Props) => {
 
   return (
     <div ref={ref}>
-      <OnboardingTooltip index={9}>
+      <OnboardingTooltip index={8}>
         <NodesButton
           name={specName}
           chain={chain}

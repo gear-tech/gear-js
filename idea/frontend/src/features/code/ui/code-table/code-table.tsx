@@ -1,6 +1,5 @@
 import { generatePath } from 'react-router-dom';
 
-import { ICode } from '@/entities/code';
 import { ContentLoader } from '@/shared/ui/contentLoader';
 import TablePlaceholderSVG from '@/shared/assets/images/placeholders/table.svg?react';
 import { absoluteRoutes } from '@/shared/config';
@@ -8,8 +7,10 @@ import { IdBlock } from '@/shared/ui/idBlock';
 import { Table, TableRow } from '@/shared/ui/table';
 import { LocalCode } from '@/features/local-indexer/types';
 
+import { Code } from '../../api';
+
 type Props = {
-  code: ICode | LocalCode | undefined;
+  code: Code | LocalCode | undefined;
   isCodeReady: boolean;
 };
 

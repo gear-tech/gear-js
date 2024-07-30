@@ -50,7 +50,6 @@ const getDefaultValue = (sails: Sails) => {
 
 const getDefaultPayloadValue = (sails: Sails, args: ISailsFuncArg[]) => {
   const result = args.map(({ typeDef }, index) => [index, getDefaultValue(sails)(typeDef)] as const);
-  console.log('Object.fromEntries(result): ', Object.fromEntries(result));
 
   return Object.fromEntries(result);
 };
