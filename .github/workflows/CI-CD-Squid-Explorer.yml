@@ -1,4 +1,4 @@
-name: 'Deploy new squid and indexer to k8s'
+name: 'Deploy new squid and indexer'
 
 on:
   push:
@@ -47,6 +47,7 @@ jobs:
             echo "tag=prod" >> $GITHUB_ENV
           else
             echo "tag=qa" >> $GITHUB_ENV
+          fi
 
       - name: Build and push Data Storage Docker image
         uses: docker/build-push-action@master
@@ -79,6 +80,7 @@ jobs:
             echo "tag=prod" >> $GITHUB_ENV
           else
             echo "tag=qa" >> $GITHUB_ENV
+          fi
 
       - name: Build and push Api Gateway Docker image
         uses: docker/build-push-action@master
@@ -106,10 +108,11 @@ jobs:
         run: |
           if [ "${{ github.ref }}" == "refs/heads/idea-release" ]; then
             echo "namespace=prod-idea" >> $GITHUB_ENV
-            echo "deployments=explorer-testnet squid-testnet explorer-mainnet squid-mainnet" >> $GITHUB_ENV
+            echo "deployments=explorer squid-testnet squid-mainnet" >> $GITHUB_ENV
           else
             echo "namespace=dev-1" >> $GITHUB_ENV
-            echo "deployments=explorer-testnet squid-testnet" >> $GITHUB_ENV
+            echo "deployments=explorer squid-testnet" >> $GITHUB_ENV
+          fi
 
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
