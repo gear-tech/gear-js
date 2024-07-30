@@ -106,10 +106,10 @@ jobs:
         run: |
           if [ "${{ github.ref }}" == "refs/heads/idea-release" ]; then
             echo "namespace=prod-idea" >> $GITHUB_ENV
-            echo "deployments=explorer squid-mainnet squid-testnet" >> $GITHUB_ENV
+            echo "deployments=explorer-testnet squid-testnet explorer-mainnet squid-mainnet" >> $GITHUB_ENV
           else
             echo "namespace=dev-1" >> $GITHUB_ENV
-            echo "deployments=explorer squid-testnet" >> $GITHUB_ENV
+            echo "deployments=explorer-testnet squid-testnet" >> $GITHUB_ENV
 
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
