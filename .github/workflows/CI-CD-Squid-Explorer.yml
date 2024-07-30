@@ -2,7 +2,9 @@ name: 'Deploy new squid and indexer to k8s stage'
 
 on:
   push:
-    branches: ['do-squid-indexer']
+    branches: 
+      - 'main'
+      - 'idea-release'
     paths:
       - idea/explorer/**
       - idea/squid/**
@@ -21,9 +23,8 @@ env:
   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
 
 jobs:
-  build-explorer-image-staging:
+  build-explorer-image:
     runs-on: ubuntu-latest
-    environment: staging
     permissions:
       contents: read
       packages: write
@@ -38,17 +39,24 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set image tag
+        id: tag
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/idea-release" ]; then
+            echo "tag=prod" >> $GITHUB_ENV
+          else
+            echo "tag=qa" >> $GITHUB_ENV
 
       - name: Build and push Data Storage Docker image
         uses: docker/build-push-action@master
         with:
           file: idea/explorer/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-explorer:qa
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-explorer:${{ env.tag }}
 
-  build-squid-image-staging:
+  build-squid-image:
     runs-on: ubuntu-latest
-    environment: staging
     permissions:
       contents: read
       packages: write
@@ -64,19 +72,25 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set image tag
+        id: tag
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/idea-release" ]; then
+            echo "tag=prod" >> $GITHUB_ENV
+          else
+            echo "tag=qa" >> $GITHUB_ENV
+
       - name: Build and push Api Gateway Docker image
         uses: docker/build-push-action@master
         with:
           file: idea/squid/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-squid:qa
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-squid:${{ env.tag }}
 
-  deploy-to-k8s-staging:
-    needs:
-      [
-        build-explorer-image-staging,
-        build-squid-image-staging
-      ]
+  deploy-to-k8s:
+    needs: 
+      - build-explorer-image
+      - build-squid-image
     runs-on: ubuntu-latest
 
     steps:
@@ -87,12 +101,22 @@ jobs:
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Set deployment variables
+        id: vars
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/idea-release" ]; then
+            echo "namespace=prod-idea" >> $GITHUB_ENV
+            echo "deployments=explorer-mainnet squid-mainnet" >> $GITHUB_ENV
+          else
+            echo "namespace=dev-1" >> $GITHUB_ENV
+            echo "deployments=explorer-testnet squid-testnet" >> $GITHUB_ENV
+
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment explorer-testnet squid-testnet -n dev-1
+          args: rollout restart deployment ${{ env.deployments }} -n ${{ env.namespace }}
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: get deployment -o name -n dev-1 | xargs -n1 -t kubectl rollout status -n dev-1 --timeout=120s
+          args: get deployment -o name -n ${{ env.namespace }} | xargs -n1 -t kubectl rollout status -n ${{ env.namespace }} --timeout=120s
