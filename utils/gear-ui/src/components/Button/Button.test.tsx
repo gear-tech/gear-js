@@ -43,7 +43,7 @@ describe('button tests', () => {
     expect(button).toHaveClass(styles.medium);
   });
 
-  it('renders small/large button with secondary, light and gradient colors', () => {
+  it('renders small/medium/large button with secondary, light, grey and gradient colors', () => {
     const { rerender } = render(<Button text="button text" color="secondary" size="small" />);
 
     const button = screen.getByRole('button');
@@ -54,6 +54,9 @@ describe('button tests', () => {
 
     rerender(<Button text="button text" color="lightGreen" size="large" />);
     expect(button).toHaveClass(styles.lightGreen, styles.large);
+
+    rerender(<Button text="button text" color="grey" size="medium" />);
+    expect(button).toHaveClass(styles.grey, styles.medium);
 
     rerender(<Button text="button text" color="gradient" size="large" />);
     expect(button).toHaveClass(styles.gradient, styles.large);

@@ -11,6 +11,7 @@ function useMetadata(hash?: HexString | null | undefined) {
   const alert = useAlert();
   const { isDevChain } = useChain();
 
+  // TODO: no need to store metadataHex, it's only used on metadata upload and there it's retrived from the file
   const [metadataHex, setMetadataHex] = useState<HexString>();
   const metadata = useMemo(() => (metadataHex ? ProgramMetadata.from(metadataHex) : undefined), [metadataHex]);
 

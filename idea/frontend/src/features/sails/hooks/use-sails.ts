@@ -18,7 +18,7 @@ function useSails(codeId: HexString | null | undefined) {
 
     const { result } = await getIdl(codeId);
 
-    return { idl: result, sails: sails.parseIdl(result) };
+    return sails.parseIdl(result);
   };
 
   const { data, isPending, error, refetch } = useQuery({
@@ -37,7 +37,7 @@ function useSails(codeId: HexString | null | undefined) {
 
   const isLoading = codeId !== null && isPending;
 
-  return { ...data, isLoading, refetch };
+  return { sails: data, isLoading, refetch };
 }
 
 export { useSails };

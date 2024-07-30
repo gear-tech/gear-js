@@ -14,7 +14,6 @@ type RenderButtonsProps = {
 };
 
 type SubmitHelpers = {
-  enableButtons: () => void;
   resetForm: () => void;
 };
 

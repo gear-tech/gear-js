@@ -1,12 +1,12 @@
 import { useSails, useSailsWithFile, useConstructor, useService, useAddIdl } from './hooks';
-import { PayloadForm, IDL, ProgramEvents } from './ui';
+import { PayloadForm, SailsPreview, ProgramEvents } from './ui';
 import { getResetPayloadValue } from './utils';
 import { PayloadValue, PayloadValueSchema } from './types';
 
 export {
   PayloadForm,
-  IDL,
   ProgramEvents,
+  SailsPreview,
   useSails,
   useSailsWithFile,
   useConstructor,

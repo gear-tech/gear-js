@@ -80,7 +80,7 @@ const UploadCode = () => {
             value={contractApi.file}
             onChange={contractApi.handleChange}
             metadata={metadata.value}
-            idl={sails.idl}
+            sails={sails.value}
             isDisabled={contractApi.isFromStorage}
             isLoading={isLoading}
           />

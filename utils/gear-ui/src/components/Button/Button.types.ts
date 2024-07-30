@@ -4,7 +4,7 @@ import { SVGComponent } from '../../types';
 interface BaseProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string;
   icon?: SVGComponent;
-  color?: 'primary' | 'secondary' | 'light' | 'lightGreen' | 'gradient' | 'transparent';
+  color?: 'primary' | 'secondary' | 'light' | 'lightGreen' | 'gradient' | 'grey' | 'transparent';
   size?: 'large' | 'medium' | 'small';
   block?: boolean;
   noWrap?: boolean;

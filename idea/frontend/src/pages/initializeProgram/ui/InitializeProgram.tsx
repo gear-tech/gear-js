@@ -1,15 +1,15 @@
 import { useApi } from '@gear-js/react-hooks';
-import { Button, Input } from '@gear-js/ui';
+import { Button } from '@gear-js/ui';
 import { useParams } from 'react-router-dom';
 
-import { useContractApiWithFile, useProgramActions } from '@/hooks';
+import { useContractApiWithFile, useLoading, useProgramActions } from '@/hooks';
 import { Subheader } from '@/shared/ui/subheader';
 import { UploadMetadata } from '@/features/uploadMetadata';
 import { Values } from '@/hooks/useProgramActions/types';
-import { ProgramForm, RenderButtonsProps, SailsProgramForm, SubmitHelpers } from '@/widgets/programForm';
-import { BackButton } from '@/shared/ui/backButton';
-import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
+import { ProgramForm, SailsProgramForm, SubmitHelpers } from '@/widgets/programForm';
 import { GasMethod } from '@/shared/config';
+import { BackButton } from '@/shared/ui';
+import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 
 import { PageParams } from '../model';
 import styles from './InitializeProgram.module.scss';
@@ -19,9 +19,12 @@ const InitializeProgram = () => {
   const { codeId } = useParams() as PageParams;
   const { metadata, sails, isLoading, ...contractApi } = useContractApiWithFile(codeId);
   const createProgram = useProgramActions();
+  const [isSubmitting, enableSubmitting, disableSubmitting] = useLoading();
 
   const handleSubmit = (payload: Values, helpers: SubmitHelpers) => {
     if (!isApiReady) throw new Error('API is not initialized');
+
+    enableSubmitting();
 
     const { gasLimit, value, payload: initPayload, payloadType, keepAlive } = payload;
     const program = { value, codeId, gasLimit, initPayload, keepAlive };
@@ -29,60 +32,52 @@ const InitializeProgram = () => {
 
     const onSuccess = () => {
       helpers.resetForm();
-      helpers.enableButtons();
       metadata.reset();
+      disableSubmitting();
     };
 
-    createProgram({ ...result, codeId }, { metadata, sails }, payload, onSuccess, helpers.enableButtons);
+    createProgram({ ...result, codeId }, { metadata, sails }, payload, onSuccess, disableSubmitting);
   };
 
-  const renderButtons = ({ isDisabled }: RenderButtonsProps) => (
-    <>
-      <Button icon={PlusSVG} type="submit" text="Create Program" disabled={isDisabled} />
-      <BackButton />
-    </>
-  );
-
   return (
-    <div className={styles.initializeProgramPage}>
-      <section className={styles.pageSection}>
+    <div className={styles.container}>
+      <section>
         <Subheader size="big" title="Enter program parameters" />
-        <div className={styles.lining}>
-          <Input label="Code ID" value={codeId} direction="y" className={styles.codeId} block readOnly />
 
-          {sails.value && sails.idl ? (
-            <SailsProgramForm
-              source={codeId}
-              sails={sails.value}
-              idl={sails.idl}
-              gasMethod={GasMethod.InitCreate}
-              renderButtons={renderButtons}
-              onSubmit={handleSubmit}
-            />
-          ) : (
-            <ProgramForm
-              source={codeId}
-              metadata={metadata.value}
-              gasMethod={GasMethod.InitCreate}
-              renderButtons={renderButtons}
-              onSubmit={handleSubmit}
-            />
-          )}
-        </div>
+        {sails.value ? (
+          <SailsProgramForm
+            source={codeId}
+            sails={sails.value}
+            gasMethod={GasMethod.InitCreate}
+            onSubmit={handleSubmit}
+          />
+        ) : (
+          <ProgramForm
+            source={codeId}
+            metadata={metadata.value}
+            gasMethod={GasMethod.InitCreate}
+            onSubmit={handleSubmit}
+          />
+        )}
       </section>
 
-      <section className={styles.pageSection}>
+      <section>
         <Subheader size="big" title="Add metadata/sails" />
 
         <UploadMetadata
           value={contractApi.file}
           onChange={contractApi.handleChange}
           metadata={metadata.value}
-          idl={sails.idl}
+          sails={sails.value}
           isDisabled={contractApi.isFromStorage}
           isLoading={isLoading}
         />
       </section>
+
+      <div className={styles.buttons}>
+        <BackButton size="medium" />
+        <Button type="submit" form="programForm" icon={PlusSVG} text="Submit" disabled={isSubmitting} />
+      </div>
     </div>
   );
 };

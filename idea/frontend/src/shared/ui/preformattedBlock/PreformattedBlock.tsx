@@ -1,4 +1,3 @@
-import { AnyJson } from '@polkadot/types/types';
 import clsx from 'clsx';
 import SimpleBar from 'simplebar-react';
 
@@ -7,7 +6,7 @@ import { getPreformattedText } from '@/shared/helpers';
 import styles from './PreformattedBlock.module.scss';
 
 type Props = {
-  text: AnyJson;
+  text: unknown; // turn back to AnyJson, if component will not be used in SailsPreview
   className?: string;
 };
 

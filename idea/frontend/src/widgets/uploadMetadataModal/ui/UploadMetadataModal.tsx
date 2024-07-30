@@ -84,7 +84,7 @@ const UploadMetadataModal = ({ codeId, programId, isNameEditable, metadataHash, 
             value={contractApi.file}
             onChange={contractApi.handleChange}
             metadata={metadata.value}
-            idl={sails.idl}
+            sails={sails.value}
           />
 
           <Button type="submit" text="Submit" block />

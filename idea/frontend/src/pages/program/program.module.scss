@@ -66,12 +66,4 @@
 .body {
   display: flex;
   flex-direction: column;
-
-  .metadata {
-    align-self: start;
-
-    &.idl {
-      width: 50%;
-    }
-  }
 }
