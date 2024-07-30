@@ -3,22 +3,13 @@ import { useState } from 'react';
 
 import { Placeholder } from '@/entities/placeholder';
 import { FilterGroup, Filters, Radio } from '@/features/filters';
-import {
-  Dns as DnsType,
-  DnsCard,
-  DnsCardPlaceholder,
-  useDnsFilters,
-  useDns,
-  CreateDns,
-  useInitDnsProgram,
-} from '@/features/dns';
+import { Dns as DnsType, DnsCard, DnsCardPlaceholder, useDnsFilters, useDns, CreateDns } from '@/features/dns';
 import { List, SearchForm, Skeleton } from '@/shared/ui';
 
 import styles from './dns.module.scss';
 
 const Dns = () => {
   const { account } = useAccount();
-  useInitDnsProgram();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filterValues, filterParams, handleFiltersSubmit] = useDnsFilters();

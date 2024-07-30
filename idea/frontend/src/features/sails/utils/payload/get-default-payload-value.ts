@@ -2,6 +2,7 @@ import {
   EnumDef,
   FixedSizeArrayDef,
   MapDef,
+  PrimitiveDef,
   ResultDef,
   Sails,
   StructDef,
@@ -16,6 +17,7 @@ import { RESULT } from '../../consts';
 import { PayloadValue, ISailsFuncArg } from '../../types';
 
 const getDefaultValue = (sails: Sails) => {
+  const getPrimitiveValue = (def: PrimitiveDef) => (def.isBool ? false : '');
   const getResultValue = ({ [RESULT.OK]: { def } }: ResultDef) => ({ [RESULT.OK]: getValue(def) });
   const getVecValue = ({ def }: VecDef) => getPreformattedText([getValue(def)]);
   const getFixedSizeArrayValue = ({ len, def }: FixedSizeArrayDef) => new Array<PayloadValue>(len).fill(getValue(def));
@@ -30,7 +32,7 @@ const getDefaultValue = (sails: Sails) => {
   };
 
   const getValue = (def: TypeDef): PayloadValue => {
-    if (def.isPrimitive) return '';
+    if (def.isPrimitive) return getPrimitiveValue(def.asPrimitive);
     if (def.isOptional) return null;
     if (def.isResult) return getResultValue(def.asResult);
     if (def.isVec) return getVecValue(def.asVec);
@@ -48,6 +50,7 @@ const getDefaultValue = (sails: Sails) => {
 
 const getDefaultPayloadValue = (sails: Sails, args: ISailsFuncArg[]) => {
   const result = args.map(({ typeDef }, index) => [index, getDefaultValue(sails)(typeDef)] as const);
+  console.log('Object.fromEntries(result): ', Object.fromEntries(result));
 
   return Object.fromEntries(result);
 };

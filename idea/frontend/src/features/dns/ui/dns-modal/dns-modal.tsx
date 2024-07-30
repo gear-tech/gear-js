@@ -8,10 +8,9 @@ import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { Input } from '@/shared/ui';
 
-import { DEFAULT_VALUES, FIELD_NAME } from '../../consts';
+import { DEFAULT_VALUES, FIELD_NAME, FUNCTION_NAME } from '../../consts';
 import { Values } from '../../types';
-import { useDnsActions, useDnsSchema } from '../../hooks';
-
+import { useDnsSchema, useSendDnsTransaction } from '../../hooks';
 import styles from './dns-modal.module.scss';
 
 type Props = {
@@ -26,29 +25,28 @@ const DnsModal = ({ heading, submitText, close, onSuccess, initialValues }: Prop
   const isEditMode = Boolean(initialValues);
   const dnsSchema = useDnsSchema(isEditMode);
 
-  type DnsSchema = z.infer<typeof dnsSchema>;
-
-  const form = useForm<Values, unknown, DnsSchema>({
+  const form = useForm<Values, unknown, z.infer<typeof dnsSchema>>({
     defaultValues: initialValues || DEFAULT_VALUES,
     resolver: zodResolver(dnsSchema, { async: true }),
   });
 
-  const { isLoading, addNewProgram, changeProgramId } = useDnsActions();
+  const addProgram = useSendDnsTransaction(FUNCTION_NAME.ADD_PROGRAM);
+  const changeProgramId = useSendDnsTransaction(FUNCTION_NAME.CHANGE_PROGRAM_ID);
+  const { sendTransaction, isLoading } = isEditMode ? changeProgramId : addProgram;
 
-  const handleSubmit = ({ name, address }: DnsSchema) => {
-    const resolve = () => {
+  const handleSubmit = form.handleSubmit(({ name, address }) => {
+    const _onSuccess = () => {
       onSuccess();
       close();
     };
 
-    const handler = isEditMode ? changeProgramId : addNewProgram;
-    handler(name, address, { resolve });
-  };
+    sendTransaction([name, address], _onSuccess);
+  });
 
   return (
     <Modal heading={heading} size="large" close={close}>
       <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)}>
+        <form onSubmit={handleSubmit}>
           <div className={styles.inputs}>
             <Input
               name={FIELD_NAME.DNS_NAME}

@@ -1,10 +1,9 @@
-import { BigNumber } from 'bignumber.js';
-import { useContext } from 'react';
-import { ApiContext } from 'context';
 import { formatBalance } from '@polkadot/util';
+import { BigNumber } from 'bignumber.js';
+import { useApi } from 'context';
 
 function useBalanceFormat() {
-  const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
+  const { api, isApiReady } = useApi();
 
   const [decimals] = isApiReady ? api.registry.chainDecimals : [0];
   const valuePerGas = isApiReady ? api.valuePerGas.toString() : '1000';

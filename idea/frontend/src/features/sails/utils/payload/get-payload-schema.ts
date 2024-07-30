@@ -20,7 +20,7 @@ const isUnion = <T>(arr: T[]): arr is [T, T, ...T[]] => arr.length >= 2;
 
 const getPayloadSchema = (sails: Sails, args: ISailsFuncArg[], encode: (..._args: unknown[]) => HexString) => {
   const getSchema = (def: TypeDef): z.ZodType<unknown> => {
-    if (def.isPrimitive) return z.string().trim();
+    if (def.isPrimitive) return def.asPrimitive.isBool ? z.boolean() : z.string().trim();
 
     if (def.isOptional) return z.union([z.null(), getSchema(def.asOptional.def)]);
 

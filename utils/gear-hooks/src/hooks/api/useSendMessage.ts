@@ -3,9 +3,8 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { AnyJson, IKeyringPair, ISubmittableResult } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
-import { useContext } from 'react';
 
-import { AccountContext, AlertContext, ApiContext } from 'context';
+import { useAccount, useAlert, useApi } from 'context';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
 import { getExtrinsicFailedMessage } from 'utils';
 
@@ -31,9 +30,9 @@ function useSendMessage(
   metadata: ProgramMetadata | undefined,
   { disableAlerts, pair }: UseSendMessageOptions = {},
 ) {
-  const { api, isApiReady } = useContext(ApiContext); // сircular dependency fix
-  const { account } = useContext(AccountContext);
-  const alert = useContext(AlertContext);
+  const { api, isApiReady } = useApi();
+  const { account } = useAccount();
+  const alert = useAlert();
 
   const title = 'gear.sendMessage';
 

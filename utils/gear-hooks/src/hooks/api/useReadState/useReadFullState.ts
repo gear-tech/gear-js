@@ -1,8 +1,8 @@
 import { MessagesDispatched, ProgramMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
-import { useContext, useEffect, useState } from 'react';
-import { AlertContext, ApiContext } from 'context';
+import { useEffect, useState } from 'react';
+import { useAlert, useApi } from 'context';
 
 function useReadFullState<T = AnyJson>(
   programId: HexString | undefined,
@@ -10,8 +10,8 @@ function useReadFullState<T = AnyJson>(
   payload: AnyJson,
   isReadOnError?: boolean,
 ) {
-  const { api } = useContext(ApiContext); // сircular dependency fix
-  const alert = useContext(AlertContext);
+  const { api } = useApi();
+  const alert = useAlert();
 
   const [state, setState] = useState<T>();
   const [isStateRead, setIsStateRead] = useState(true);

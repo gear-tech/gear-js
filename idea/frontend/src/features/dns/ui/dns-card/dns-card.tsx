@@ -14,8 +14,9 @@ type Props = {
 };
 
 function DnsCard({ dns, onSuccess }: Props) {
-  const { name, address, updatedAt, createdAt, createdBy, admin } = dns;
+  const { name, address, updatedAt, createdAt, createdBy, admins } = dns;
   const { account } = useAccount();
+  const admin = admins[0];
 
   const isOwner = createdBy === account?.decodedAddress;
   const timePrefix = updatedAt === createdAt ? 'Created at:' : 'Updated at:';

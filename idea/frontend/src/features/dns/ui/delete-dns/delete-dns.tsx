@@ -4,7 +4,8 @@ import { useModalState } from '@/hooks';
 import TrashSVG from '@/shared/assets/images/actions/trashOutlined.svg?react';
 import { ConfirmModal } from '@/shared/ui/confirm-modal';
 
-import { useDnsActions } from '../../hooks/use-dns-actions';
+import { FUNCTION_NAME } from '../../consts';
+import { useSendDnsTransaction } from '../../hooks';
 import styles from './delete-dns.module.scss';
 
 type Props = {
@@ -14,26 +15,27 @@ type Props = {
 
 const DeleteDns = ({ name, onSuccess }: Props) => {
   const [isModalOpen, openModal, closeModal] = useModalState();
-  const { isLoading, deleteProgram } = useDnsActions();
-  const text = `DNS '${name}' will be deleted. Are you sure?`;
+  const { isLoading, sendTransaction } = useSendDnsTransaction(FUNCTION_NAME.DELETE_PROGRAM);
 
-  const onConfirm = async () => {
-    const resolve = () => {
+  const onConfirm = () => {
+    const _onSuccess = () => {
       onSuccess();
       closeModal();
     };
-    deleteProgram(name, { resolve });
+
+    sendTransaction([name], _onSuccess);
   };
 
   return (
     <>
       <Button icon={TrashSVG} size="large" color="transparent" className={styles.link} onClick={openModal} noWrap />
+
       {isModalOpen && (
         <ConfirmModal
           close={closeModal}
           onSubmit={onConfirm}
           title="Delete DNS"
-          text={text}
+          text={`DNS '${name}' will be deleted. Are you sure?`}
           confirmText="Delete"
           isLoading={isLoading}
         />

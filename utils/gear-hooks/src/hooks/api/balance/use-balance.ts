@@ -1,10 +1,10 @@
 import { Balance } from '@polkadot/types/interfaces';
-import { useContext, useEffect, useState } from 'react';
-import { AlertContext, ApiContext } from 'context';
+import { useEffect, useState } from 'react';
+import { useAlert, useApi } from 'context';
 
 function useBalance(address: string | undefined) {
-  const { api, isApiReady } = useContext(ApiContext);
-  const alert = useContext(AlertContext);
+  const { api, isApiReady } = useApi();
+  const alert = useAlert();
 
   const [balance, setBalance] = useState<Balance>();
   const isBalanceReady = balance !== undefined;

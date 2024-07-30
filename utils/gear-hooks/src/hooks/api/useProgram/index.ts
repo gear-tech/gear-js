@@ -1,8 +1,7 @@
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { GasLimit, ProgramMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
-import { useContext } from 'react';
-import { AccountContext, AlertContext, ApiContext } from 'context';
+import { useAccount, useAlert, useApi } from 'context';
 import { TransactionName, Options, Code, CodeId, UseProgram } from './types';
 import { useHandlers } from './useHandlers';
 import { waitForProgramInit } from './utils';
@@ -25,9 +24,9 @@ function useProgram(
   metadata?: ProgramMetadata | undefined,
   payloadType?: string | undefined,
 ): UseProgram {
-  const alert = useContext(AlertContext); // сircular dependency fix
-  const { api, isApiReady } = useContext(ApiContext);
-  const { account } = useContext(AccountContext);
+  const alert = useAlert();
+  const { api, isApiReady } = useApi();
+  const { account } = useAccount();
 
   const { handleSignStatus, handleInitStatus, handleError } = useHandlers();
 
