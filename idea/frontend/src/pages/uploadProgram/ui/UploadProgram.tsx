@@ -74,7 +74,6 @@ const UploadProgram = () => {
               fileName={wasmFile.value?.name.split(/\.opt|\.wasm/)[0]}
               source={wasmFile.buffer}
               sails={sails.value}
-              idl={sails.idl}
               gasMethod={GasMethod.InitUpdate}
               onSubmit={handleSubmit}
             />

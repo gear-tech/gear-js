@@ -7,16 +7,15 @@ import { generatePath, useParams } from 'react-router-dom';
 import { useModal } from '@/hooks';
 import { ProgramStatus, ProgramTable, useProgram } from '@/features/program';
 import { getShortName } from '@/shared/helpers';
-import { UILink } from '@/shared/ui';
+import { Box, UILink } from '@/shared/ui';
 import { absoluteRoutes, routes } from '@/shared/config';
 import SendSVG from '@/shared/assets/images/actions/send.svg?react';
 import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import { useMetadata, MetadataTable, isState } from '@/features/metadata';
 import { ProgramVouchers } from '@/features/voucher';
-import { IDL, ProgramEvents, useSails } from '@/features/sails';
+import { ProgramEvents, SailsPreview, useSails } from '@/features/sails';
 import { ProgramMessages } from '@/features/message';
-
 import { ProgramBalance } from '@/features/balance';
 
 import styles from './program.module.scss';
@@ -33,7 +32,7 @@ const Program = () => {
 
   const { data: program, isLoading: isProgramLoading, refetch: refetchProgram } = useProgram(programId);
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(program?.metahash);
-  const { idl, sails, isLoading: isSailsLoading, refetch: refetchSails } = useSails(program?.codeId);
+  const { sails, isLoading: isSailsLoading, refetch: refetchSails } = useSails(program?.codeId);
   const isLoading = !isMetadataReady || isSailsLoading;
   const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => Object.keys(queries).length) : false;
 
@@ -99,7 +98,7 @@ const Program = () => {
               />
             )}
 
-            {!isLoading && !metadata && !idl && (
+            {!isLoading && !metadata && !sails && (
               <Button text="Add metadata/sails" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
             )}
           </div>
@@ -115,14 +114,14 @@ const Program = () => {
       <div className={styles.body}>
         <header className={styles.tabs}>{renderTabs()}</header>
 
-        {tabIndex === 0 && (
-          <div className={cx(styles.metadata, idl && styles.idl)}>
-            {(isLoading || metadata) && <MetadataTable metadata={metadata} isLoading={isLoading} />}
-            {/* temp solution for a placeholder */}
-            {!isLoading && !metadata && !idl && <MetadataTable metadata={metadata} isLoading={isLoading} />}
-            {idl && <IDL value={idl} />}
-          </div>
-        )}
+        {tabIndex === 0 &&
+          (sails ? (
+            <Box>
+              <SailsPreview value={sails} />
+            </Box>
+          ) : (
+            <MetadataTable metadata={metadata} isLoading={isLoading} />
+          ))}
 
         {tabIndex === 1 && <ProgramMessages programId={programId} />}
         {tabIndex === 2 && <ProgramVouchers programId={programId} />}

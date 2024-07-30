@@ -14,8 +14,7 @@ type Props = {
   value: File | undefined;
   onChange: (file: File | undefined) => void;
   metadata: ProgramMetadata | undefined;
-  idl?: string | undefined;
-  sails?: Sails | undefined;
+  sails: Sails | undefined;
   isDisabled?: boolean;
   isLoading?: boolean;
 };

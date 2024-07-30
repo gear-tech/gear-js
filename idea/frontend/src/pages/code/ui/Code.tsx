@@ -11,8 +11,9 @@ import { MetadataTable, useMetadata } from '@/features/metadata';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import { CodeTable, useCode as useStorageCode } from '@/features/code';
-import { IDL, useSails } from '@/features/sails';
+import { SailsPreview, useSails } from '@/features/sails';
 import { useLocalCode } from '@/features/local-indexer';
+import { Box } from '@/shared/ui';
 
 import styles from './Code.module.scss';
 
@@ -32,7 +33,7 @@ const Code = () => {
   const programs = usePrograms({ codeId });
 
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(code.data?.metahash);
-  const { idl, isLoading: isSailsLoading, refetch: refetchSails } = useSails(codeId);
+  const { sails, isLoading: isSailsLoading, refetch: refetchSails } = useSails(codeId);
   const isLoading = !isMetadataReady || isSailsLoading;
 
   const showUploadMetadataModal = () => {
@@ -63,13 +64,15 @@ const Code = () => {
           </div>
 
           <div>
-            {metadata && <h2 className={styles.heading}>Metadata</h2>}
-            {idl && <h2 className={styles.heading}>IDL</h2>}
+            <h2 className={styles.heading}>Metadata/Sails</h2>
 
-            {(isLoading || metadata) && <MetadataTable metadata={metadata} isLoading={isLoading} />}
-            {/* temp solution for a placeholder */}
-            {!isLoading && !metadata && !idl && <MetadataTable metadata={metadata} isLoading={isLoading} />}
-            {idl && <IDL value={idl} />}
+            {sails ? (
+              <Box>
+                <SailsPreview value={sails} />
+              </Box>
+            ) : (
+              <MetadataTable metadata={metadata} isLoading={isLoading} />
+            )}
           </div>
         </div>
 
@@ -95,7 +98,7 @@ const Code = () => {
           />
         )}
 
-        {!isLoading && !metadata && !idl && (
+        {!isLoading && !metadata && !sails && (
           <Button
             text="Add metadata/sails"
             icon={AddMetaSVG}

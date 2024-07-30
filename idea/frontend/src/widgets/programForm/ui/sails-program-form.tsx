@@ -44,7 +44,6 @@ type FormattedValues = z.infer<ReturnType<typeof useSchema>>;
 type Props = {
   source: Buffer | HexString;
   sails: Sails;
-  idl: string;
   gasMethod: GasMethod;
   fileName?: string;
   onSubmit: (values: FormattedValues, helpers: SubmitHelpers) => void;
@@ -57,7 +56,7 @@ const DEFAULT_VALUES = {
   keepAlive: true,
 };
 
-const SailsProgramForm = ({ gasMethod, sails, idl, source, fileName = '', onSubmit }: Props) => {
+const SailsProgramForm = ({ gasMethod, sails, source, fileName = '', onSubmit }: Props) => {
   const { getFormattedGasValue } = useBalanceFormat();
 
   const constructor = useConstructor(sails);
@@ -96,7 +95,7 @@ const SailsProgramForm = ({ gasMethod, sails, idl, source, fileName = '', onSubm
 
   const handleSubmit = form.handleSubmit((values) => {
     const payloadType = 'Bytes';
-    const submitValues = { ...values, initPayload: values.payload, payloadType, idl };
+    const submitValues = { ...values, initPayload: values.payload, payloadType };
 
     onSubmit(submitValues, { resetForm });
   });

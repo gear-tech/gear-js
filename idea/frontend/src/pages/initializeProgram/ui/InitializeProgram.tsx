@@ -44,11 +44,10 @@ const InitializeProgram = () => {
       <section>
         <Subheader size="big" title="Enter program parameters" />
 
-        {sails.value && sails.idl ? (
+        {sails.value ? (
           <SailsProgramForm
             source={codeId}
             sails={sails.value}
-            idl={sails.idl}
             gasMethod={GasMethod.InitCreate}
             onSubmit={handleSubmit}
           />
@@ -69,7 +68,7 @@ const InitializeProgram = () => {
           value={contractApi.file}
           onChange={contractApi.handleChange}
           metadata={metadata.value}
-          idl={sails.idl}
+          sails={sails.value}
           isDisabled={contractApi.isFromStorage}
           isLoading={isLoading}
         />
