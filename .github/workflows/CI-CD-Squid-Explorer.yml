@@ -1,5 +1,6 @@
 name: 'Deploy new squid and indexer to k8s'
 
+
 on:
   push:
     branches: 
