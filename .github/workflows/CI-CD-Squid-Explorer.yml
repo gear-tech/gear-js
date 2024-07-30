@@ -1,10 +1,10 @@
-name: 'Deploy new squid and indexer to k8s stage'
+name: 'Deploy new squid and indexer to k8s'
 
 on:
   push:
     branches: 
       - 'main'
-      - 'stable'
+      - 'idea-release'
     paths:
       - idea/explorer/**
       - idea/squid/**
@@ -43,7 +43,7 @@ jobs:
       - name: Set image tag
         id: tag
         run: |
-          if [ "${{ github.ref }}" == "refs/heads/stable" ]; then
+          if [ "${{ github.ref }}" == "refs/heads/idea-release" ]; then
             echo "tag=prod" >> $GITHUB_ENV
           else
             echo "tag=qa" >> $GITHUB_ENV
@@ -75,7 +75,7 @@ jobs:
       - name: Set image tag
         id: tag
         run: |
-          if [ "${{ github.ref }}" == "refs/heads/stable" ]; then
+          if [ "${{ github.ref }}" == "refs/heads/idea-release" ]; then
             echo "tag=prod" >> $GITHUB_ENV
           else
             echo "tag=qa" >> $GITHUB_ENV
@@ -104,7 +104,7 @@ jobs:
       - name: Set deployment variables
         id: vars
         run: |
-          if [ "${{ github.ref }}" == "refs/heads/stable" ]; then
+          if [ "${{ github.ref }}" == "refs/heads/idea-release" ]; then
             echo "namespace=prod-idea" >> $GITHUB_ENV
             echo "deployments=explorer-mainnet squid-mainnet" >> $GITHUB_ENV
           else
