@@ -51,14 +51,16 @@ const { Provider } = ApiContext;
 function ApiProvider({ initialArgs, children }: Props) {
   const [api, setApi] = useState<GearApi>();
   const providerRef = useRef<WsProvider | ScProvider>();
+  const providerUnsubRef = useRef<() => void>();
 
   const switchNetwork = async (args: ProviderArgs) => {
     // disconnect from provider instead of api,
     // cuz on failed GearApi.create connection is already established,
     // but api state is empty
-    if (providerRef.current) {
+    if (providerRef.current && providerUnsubRef.current) {
       setApi(undefined);
       await providerRef.current.disconnect();
+      providerUnsubRef.current();
     }
 
     const isLightClient = 'spec' in args;
@@ -68,21 +70,9 @@ function ApiProvider({ initialArgs, children }: Props) {
       : new WsProvider(args.endpoint, args.autoConnectMs, args.headers, args.timeout);
 
     providerRef.current = provider;
+    providerUnsubRef.current = provider.on('connected', async () => setApi(await GearApi.create({ provider })));
 
-    // on set autoConnectMs connection starts automatically,
-    // and in case of error it continues to execute via recursive setTimeout.
-    // cuz of this it's necessary to await empty promise,
-    // otherwise GearApi.create would be called before established connection.
-
-    // mostly it's a workaround around React.StrictMode hooks behavior to support autoConnect,
-    // and since it's based on ref and WsProvider's implementation,
-    // it should be treated carefully
-    await (isLightClient || (args.autoConnectMs !== undefined && !args.autoConnectMs)
-      ? provider.connect()
-      : Promise.resolve());
-
-    const result = await GearApi.create({ provider });
-    setApi(result);
+    if (isLightClient) await provider.connect();
   };
 
   useEffect(() => {
