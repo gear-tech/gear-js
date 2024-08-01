@@ -1,3 +1,13 @@
+## 0.38.2
+_08/01/2024_
+
+_Compatible with [1.4.2](https://github.com/gear-tech/gear/releases/tag/v1.4.2) release_
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1584
+- Remove supporting old runtime versions
+- Bump dependencies
+
 ## 0.38.1
 
 _05/22/2024_
