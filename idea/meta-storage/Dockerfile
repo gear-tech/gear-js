@@ -8,6 +8,8 @@ COPY .yarn .yarn
 COPY .yarnrc.yml .
 COPY ./idea/common idea/common
 COPY ./idea/meta-storage idea/meta-storage
+RUN npm cache clean --force
+RUN yarn cache clean
 RUN yarn install
 RUN yarn build:common
 RUN yarn build:meta-storage

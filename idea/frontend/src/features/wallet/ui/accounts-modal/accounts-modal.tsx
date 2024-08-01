@@ -1,4 +1,3 @@
-import { decodeAddress } from '@gear-js/api';
 import { useAccount, useAlert } from '@gear-js/react-hooks';
 import { Button, Modal, buttonStyles } from '@gear-js/ui';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
@@ -81,11 +80,6 @@ const AccountsModal = ({ close }: Props) => {
         handleAccountClick(_account);
       };
 
-      const handleCopy = () => {
-        const decodedAddress = decodeAddress(address);
-        copyToClipboard(decodedAddress, alert);
-      };
-
       const accountBtnClasses = cx(
         buttonStyles.large,
         styles.accountButton,
@@ -95,7 +89,7 @@ const AccountsModal = ({ close }: Props) => {
       return (
         <li key={address} className={styles.accountItem}>
           <AccountButton name={meta.name} address={address} className={accountBtnClasses} onClick={handleClick} />
-          <Button icon={CopyKeySVG} color="transparent" onClick={handleCopy} />
+          <Button icon={CopyKeySVG} color="transparent" onClick={() => copyToClipboard(address, alert)} />
         </li>
       );
     });

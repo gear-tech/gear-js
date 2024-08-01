@@ -1,6 +1,6 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-import { AlertContext, ApiContext } from 'context';
+import { useAlert, useApi } from 'context';
 
 import { useGetApproxBlockTimestamp } from '../block';
 
@@ -21,8 +21,8 @@ function useGetVoucherStatus() {
 }
 
 function useVoucherStatus(expirationBlock: number | undefined) {
-  const { isApiReady } = useContext(ApiContext);
-  const alert = useContext(AlertContext);
+  const { isApiReady } = useApi();
+  const alert = useAlert();
 
   const getVoucherStatus = useGetVoucherStatus();
 

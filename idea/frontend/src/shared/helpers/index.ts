@@ -1,10 +1,10 @@
-import type { Event } from '@polkadot/types/interfaces';
 import { GearApi, HexString } from '@gear-js/api';
 import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
+import type { Event } from '@polkadot/types/interfaces';
+import { isAndroid, isIOS } from '@react-aria/utils';
 
 import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from '@/shared/config';
 
-import { isAndroid, isIOS } from '@react-aria/utils';
 import { isHexValid, isExists, isAccountAddressValid, isNumeric, asOptionalField } from './form';
 
 const checkWallet = (account?: Account) => {
@@ -125,6 +125,16 @@ const isHex = (value: unknown): value is HexString => {
   return isString(value) && (value === '0x' || (HEX_REGEX.test(value) && value.length % 2 === 0));
 };
 
+const fetchWithGuard = async <T extends object>(...args: Parameters<typeof fetch>) => {
+  const response = await fetch(...args);
+
+  if (!response.ok) throw new Error(response.statusText);
+
+  return response.json() as T;
+};
+
+const getErrorMessage = (error: unknown) => (error instanceof Error ? error.message : String(error));
+
 export {
   checkWallet,
   formatDate,
@@ -150,4 +160,6 @@ export {
   isString,
   isUndefined,
   isHex,
+  fetchWithGuard,
+  getErrorMessage,
 };

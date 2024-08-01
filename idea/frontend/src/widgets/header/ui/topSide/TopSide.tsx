@@ -7,7 +7,7 @@ import { useApi, useAlert, useAccount } from '@gear-js/react-hooks';
 import { TooltipWrapper, buttonStyles } from '@gear-js/ui';
 
 import { getTestBalance } from '@/api';
-import { useBalanceTransfer, useChain } from '@/hooks';
+import { useChain, useSignAndSend } from '@/hooks';
 import { RecentBlocks } from '@/features/recentBlocks';
 import { HCAPTCHA_SITE_KEY, AnimationTimeout, GEAR_BALANCE_TRANSFER_VALUE } from '@/shared/config';
 import TestBalanceSVG from '@/shared/assets/images/actions/testBalance.svg?react';
@@ -18,41 +18,36 @@ import { TotalIssuance } from '../totalIssuance';
 import styles from './TopSide.module.scss';
 
 const TopSide = () => {
+  const { api, isApiReady } = useApi();
   const alert = useAlert();
 
-  const { api, isApiReady } = useApi();
   const { account } = useAccount();
+  const address = account?.address;
+
   const { isDevChain, isTestBalanceAvailable } = useChain();
+  const signAndSend = useSignAndSend();
 
   const [captchaToken, setCaptchaToken] = useState('');
   const [totalIssuance, setTotalIssuance] = useState('');
 
   const captchaRef = useRef<HCaptcha>(null);
 
-  const address = account?.address;
-
-  const transferBalance = useBalanceTransfer();
-
   const getBalanceFromService = () => {
-    if (address) getTestBalance({ address, token: captchaToken }).catch(({ message }: Error) => alert.error(message));
+    if (!address) throw new Error('Account is not found');
+
+    getTestBalance({ address, token: captchaToken }).catch(({ message }: Error) => alert.error(message));
   };
 
-  const handleTestBalanceClick = () => {
-    if (captchaToken) {
-      getBalanceFromService();
-
-      return;
-    }
-
-    captchaRef.current?.execute();
-  };
+  const handleTestBalanceClick = () => (captchaToken ? getBalanceFromService() : captchaRef.current?.execute());
 
   const getBalanceFromAlice = async () => {
-    if (!address) return;
+    if (!isApiReady) throw new Error('API is not initialized');
+    if (!address) throw new Error('Account is not found');
 
-    const alice = await GearKeyring.fromSuri('//Alice');
+    const alicePair = await GearKeyring.fromSuri('//Alice');
+    const extrinsic = api.tx.balances.transferKeepAlive(address, GEAR_BALANCE_TRANSFER_VALUE);
 
-    transferBalance(alice, address, GEAR_BALANCE_TRANSFER_VALUE);
+    signAndSend(extrinsic, 'Transfer', { addressOrPair: alicePair });
   };
 
   const handleExpire = () => setCaptchaToken('');

@@ -1,4 +1,6 @@
-import { CodeTable } from './ui';
+import { useCode, useCodes, Code, GetCodesParameters, setCodeMeta } from './api';
+import { CodeTable, CodeCard } from './ui';
 import { useWasmFileHandler, useWasmFile } from './hooks';
 
-export { CodeTable, useWasmFileHandler, useWasmFile };
+export { CodeTable, CodeCard, useWasmFileHandler, useWasmFile, useCode, useCodes, setCodeMeta };
+export type { Code, GetCodesParameters };

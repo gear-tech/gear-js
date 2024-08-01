@@ -1,73 +1,83 @@
-import { Button, Input } from '@gear-js/ui';
+import { useApi } from '@gear-js/react-hooks';
+import { Button } from '@gear-js/ui';
 import { useParams } from 'react-router-dom';
 
-import { useProgramActions } from '@/hooks';
+import { useContractApiWithFile, useLoading, useProgramActions } from '@/hooks';
 import { Subheader } from '@/shared/ui/subheader';
 import { UploadMetadata } from '@/features/uploadMetadata';
-import { Payload } from '@/hooks/useProgramActions/types';
-import { ProgramForm, RenderButtonsProps, SubmitHelpers } from '@/widgets/programForm';
-import { BackButton } from '@/shared/ui/backButton';
-import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
+import { Values } from '@/hooks/useProgramActions/types';
+import { ProgramForm, SailsProgramForm, SubmitHelpers } from '@/widgets/programForm';
 import { GasMethod } from '@/shared/config';
-import { useMetadataHash, useMetadataWithFile } from '@/features/metadata';
+import { BackButton } from '@/shared/ui';
+import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 
 import { PageParams } from '../model';
 import styles from './InitializeProgram.module.scss';
 
 const InitializeProgram = () => {
+  const { api, isApiReady } = useApi();
   const { codeId } = useParams() as PageParams;
-  const metadataHash = useMetadataHash(codeId);
-  const metadata = useMetadataWithFile(metadataHash);
-  const { createProgram } = useProgramActions();
+  const { metadata, sails, isLoading, ...contractApi } = useContractApiWithFile(codeId);
+  const createProgram = useProgramActions();
+  const [isSubmitting, enableSubmitting, disableSubmitting] = useLoading();
 
-  const handleSubmit = (payload: Payload, helpers: SubmitHelpers) =>
-    createProgram({
-      payload,
-      codeId: codeId,
-      resolve: () => {
-        helpers.resetForm();
-        helpers.enableButtons();
-        metadata.reset();
-      },
-      reject: helpers.enableButtons,
-    });
+  const handleSubmit = (payload: Values, helpers: SubmitHelpers) => {
+    if (!isApiReady) throw new Error('API is not initialized');
 
-  const renderButtons = ({ isDisabled }: RenderButtonsProps) => (
-    <>
-      <Button icon={PlusSVG} type="submit" text="Create Program" disabled={isDisabled} />
-      <BackButton />
-    </>
-  );
+    enableSubmitting();
+
+    const { gasLimit, value, payload: initPayload, payloadType, keepAlive } = payload;
+    const program = { value, codeId, gasLimit, initPayload, keepAlive };
+    const result = api.program.create(program, metadata.value, payloadType);
+
+    const onSuccess = () => {
+      helpers.resetForm();
+      metadata.reset();
+      disableSubmitting();
+    };
+
+    createProgram({ ...result, codeId }, { metadata, sails }, payload, onSuccess, disableSubmitting);
+  };
 
   return (
-    <div className={styles.initializeProgramPage}>
-      <section className={styles.pageSection}>
+    <div className={styles.container}>
+      <section>
         <Subheader size="big" title="Enter program parameters" />
-        <div className={styles.lining}>
-          <Input label="Code ID" value={codeId} direction="y" className={styles.codeId} block readOnly />
 
-          <ProgramForm
+        {sails.value ? (
+          <SailsProgramForm
             source={codeId}
-            metaHex={metadata.hex}
-            metadata={metadata.value}
+            sails={sails.value}
             gasMethod={GasMethod.InitCreate}
-            renderButtons={renderButtons}
             onSubmit={handleSubmit}
           />
-        </div>
+        ) : (
+          <ProgramForm
+            source={codeId}
+            metadata={metadata.value}
+            gasMethod={GasMethod.InitCreate}
+            onSubmit={handleSubmit}
+          />
+        )}
       </section>
 
-      <section className={styles.pageSection}>
-        <Subheader size="big" title="Add metadata" />
+      <section>
+        <Subheader size="big" title="Add metadata/sails" />
 
         <UploadMetadata
+          value={contractApi.file}
+          onChange={contractApi.handleChange}
           metadata={metadata.value}
-          isInputDisabled={metadata.isFromStorage}
-          isLoading={!metadata.isReady}
-          onReset={metadata.reset}
-          onMetadataUpload={metadata.set}
+          sails={sails.value}
+          isDisabled={contractApi.isFromStorage}
+          isLoading={isLoading}
         />
       </section>
+
+      <div className={styles.buttons}>
+        <BackButton size="medium" />
+        <Button type="submit" form="programForm" icon={PlusSVG} text="Submit" disabled={isSubmitting} />
+      </div>
     </div>
   );
 };

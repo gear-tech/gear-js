@@ -1,65 +1,82 @@
 import { HexString } from '@polkadot/util/types';
 import { Button } from '@gear-js/ui';
-import { useAccount, useAccountVouchers } from '@gear-js/react-hooks';
+import cx from 'clsx';
+import { useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
 
-import { useMetadataUpload, useModal, useProgram } from '@/hooks';
-import { ProgramStatus, ProgramTable } from '@/features/program';
-import { ProgramMessages } from '@/widgets/programMessages';
-import { PathParams } from '@/shared/types';
+import { useModal } from '@/hooks';
+import { ProgramStatus, ProgramTable, useProgram } from '@/features/program';
 import { getShortName } from '@/shared/helpers';
-import { Subheader } from '@/shared/ui/subheader';
+import { Box, UILink } from '@/shared/ui';
 import { absoluteRoutes, routes } from '@/shared/config';
-import { UILink } from '@/shared/ui/uiLink';
 import SendSVG from '@/shared/assets/images/actions/send.svg?react';
 import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
-import { useMetadata, MetadataTable } from '@/features/metadata';
-import { IssueVoucher, VoucherTable } from '@/features/voucher';
+import { useMetadata, MetadataTable, isState } from '@/features/metadata';
+import { ProgramVouchers } from '@/features/voucher';
+import { ProgramEvents, SailsPreview, useSails } from '@/features/sails';
+import { ProgramMessages } from '@/features/message';
+import { ProgramBalance } from '@/features/balance';
 
 import styles from './program.module.scss';
 
+const TABS = ['Metadata/Sails', 'Messages', 'Vouchers', 'Events'];
+
+type Params = {
+  programId: HexString;
+};
+
 const Program = () => {
-  const { account } = useAccount();
-
-  const { programId } = useParams() as PathParams;
+  const { programId } = useParams() as Params;
   const { showModal, closeModal } = useModal();
-  const uploadMetadata = useMetadataUpload();
 
-  const { program, isProgramReady, setProgramName } = useProgram(programId);
+  const { data: program, isLoading: isProgramLoading, refetch: refetchProgram } = useProgram(programId);
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(program?.metahash);
+  const { sails, isLoading: isSailsLoading, refetch: refetchSails } = useSails(program?.codeId);
+  const isLoading = !isMetadataReady || isSailsLoading;
+  const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => Object.keys(queries).length) : false;
 
-  const handleUploadMetadataSubmit = ({ metaHex, name }: { metaHex: HexString; name: string }) => {
-    const codeHash = program?.codeId;
-    if (!codeHash) return;
+  const [tabIndex, setTabIndex] = useState(0);
 
-    const resolve = () => {
-      setMetadataHex(metaHex);
-      setProgramName(name);
+  const openUploadMetadataModal = () => {
+    if (!program) throw new Error('Program is not found');
+    if (!program.codeId) throw new Error('CodeId is not found'); // TODO: take a look at local program
 
-      closeModal();
+    const onSuccess = (name: string, metadataHex?: HexString) => {
+      if (name) refetchProgram();
+
+      return metadataHex ? setMetadataHex(metadataHex) : refetchSails();
     };
 
-    uploadMetadata({ codeHash, metaHex, name, programId, resolve });
+    // if program is not saved in storage, we can't change the name.
+    // kinda tricky, treat carefully. worth to consider different approach
+    const isStorageProgram = 'blockHash' in program;
+
+    showModal('metadata', {
+      programId,
+      metadataHash: program.metahash,
+      codeId: program.codeId,
+      isNameEditable: isStorageProgram,
+      onClose: closeModal,
+      onSuccess,
+    });
   };
 
-  const openUploadMetadataModal = () => showModal('metadata', { onSubmit: handleUploadMetadataSubmit });
-
-  const { vouchers } = useAccountVouchers(programId);
-  const voucherEntries = Object.entries(vouchers || {});
-  const vouchersCount = voucherEntries.length;
-
-  const renderVouchers = () =>
-    voucherEntries.map(([id, { expiry, owner, codeUploading }]) => (
-      <li key={id}>
-        <VoucherTable id={id as HexString} expireBlock={expiry} owner={owner} isCodeUploadEnabled={codeUploading} />
-      </li>
+  const renderTabs = () =>
+    TABS.map((tab, index) => (
+      <button
+        key={tab}
+        type="button"
+        onClick={() => setTabIndex(index)}
+        className={cx(styles.button, index === tabIndex && styles.active)}>
+        {tab}
+      </button>
     ));
 
   return (
-    <div>
+    <div className={styles.container}>
       <header className={styles.header}>
-        {program && <h2 className={styles.programName}>{getShortName(program.name)}</h2>}
+        {program && <h2 className={styles.name}>{getShortName(program.name || 'Program Name')}</h2>}
 
         {program?.status === ProgramStatus.Active && (
           <div className={styles.links}>
@@ -71,9 +88,9 @@ const Program = () => {
               className={styles.fixWidth}
             />
 
-            {program.hasState && (
+            {!isLoading && (isState(metadata) || isAnyQuery) && (
               <UILink
-                to={generatePath(routes.state, { programId })}
+                to={generatePath(metadata ? routes.state : routes.sailsState, { programId })}
                 icon={ReadSVG}
                 text="Read State"
                 color="secondary"
@@ -81,40 +98,34 @@ const Program = () => {
               />
             )}
 
-            {isMetadataReady && !metadata && (
-              <Button text="Add metadata" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
+            {!isLoading && !metadata && !sails && (
+              <Button text="Add metadata/sails" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
             )}
           </div>
         )}
       </header>
 
-      <div className={styles.content}>
-        <div className={styles.leftSide}>
-          <div>
-            <Subheader title="Program details" />
-            <ProgramTable program={program} isProgramReady={isProgramReady} />
-          </div>
+      <ProgramTable
+        program={program}
+        isProgramReady={!isProgramLoading}
+        renderBalance={() => <ProgramBalance id={programId} />}
+      />
 
-          {vouchersCount > 0 && (
-            <div>
-              {/* TODO: WithAccount HoC? or move inside VoucherTable? */}
-              {account && (
-                <Subheader title={`Vouchers: ${vouchersCount}`}>
-                  <IssueVoucher programId={programId} buttonColor="secondary" buttonSize="small" />
-                </Subheader>
-              )}
+      <div className={styles.body}>
+        <header className={styles.tabs}>{renderTabs()}</header>
 
-              <ul className={styles.vouchersList}>{renderVouchers()}</ul>
-            </div>
-          )}
+        {tabIndex === 0 &&
+          (sails ? (
+            <Box>
+              <SailsPreview value={sails} />
+            </Box>
+          ) : (
+            <MetadataTable metadata={metadata} isLoading={isLoading} />
+          ))}
 
-          <div>
-            <Subheader title="Metadata" />
-            <MetadataTable metadata={metadata} isLoading={!isMetadataReady} />
-          </div>
-        </div>
-
-        <ProgramMessages programId={programId} />
+        {tabIndex === 1 && <ProgramMessages programId={programId} />}
+        {tabIndex === 2 && <ProgramVouchers programId={programId} />}
+        {tabIndex === 3 && !isSailsLoading && <ProgramEvents programId={programId} sails={sails} />}
       </div>
     </div>
   );

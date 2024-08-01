@@ -1,10 +1,7 @@
 import { useAccount } from '@gear-js/react-hooks';
 import { useMemo, useState } from 'react';
 
-const DEFAULT_FILTER_VALUES = {
-  owner: 'all',
-  status: '',
-};
+import { DEFAULT_FILTER_VALUES } from '../consts';
 
 function useVoucherFilters() {
   const { account } = useAccount();
@@ -37,7 +34,7 @@ function useVoucherFilters() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const params = useMemo(() => ({ ...getOwnerParams(), ...getStatusParams() }), [values, account]);
 
-  return [values, params, setValues] as const;
+  return [params, setValues] as const;
 }
 
 export { useVoucherFilters };

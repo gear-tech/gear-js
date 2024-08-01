@@ -2,9 +2,11 @@ import { HexString } from '@polkadot/util/types';
 import { useParams } from 'react-router-dom';
 
 import { useMailboxItem } from '@/features/mailbox';
-import { MessageForm } from '@/widgets/messageForm';
+import { MessageForm, SailsMessageForm } from '@/widgets/messageForm';
 import { useMetadata } from '@/features/metadata';
-import { useProgram } from '@/hooks';
+import { useSails } from '@/features/sails';
+import { useProgram } from '@/features/program';
+
 import styles from './Send.module.scss';
 
 type MessageParams = {
@@ -24,21 +26,21 @@ const Send = () => {
   const mailboxItem = useMailboxItem(isReply ? id : undefined);
   const [message] = mailboxItem || [];
 
-  const programSource = isReply ? message?.source : id;
+  const programId = isReply ? message?.source : id;
 
-  const { program } = useProgram(programSource);
+  const { data: program } = useProgram(programId);
   const { metadata, isMetadataReady } = useMetadata(program?.metahash);
+  const { sails } = useSails(program?.codeId);
 
   return (
     <>
       <h2 className={styles.heading}>{isReply ? 'Send Reply' : 'Send Message'}</h2>
-      <MessageForm
-        id={id}
-        programId={programSource}
-        isReply={isReply}
-        metadata={metadata}
-        isLoading={!isMetadataReady}
-      />
+
+      {sails ? (
+        <SailsMessageForm id={id} programId={programId} isReply={isReply} sails={sails} />
+      ) : (
+        <MessageForm id={id} programId={programId} isReply={isReply} metadata={metadata} isLoading={!isMetadataReady} />
+      )}
     </>
   );
 };

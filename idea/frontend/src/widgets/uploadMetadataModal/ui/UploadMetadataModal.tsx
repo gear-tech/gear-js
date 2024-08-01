@@ -1,55 +1,95 @@
-import { ProgramMetadata } from '@gear-js/api';
-import { Button, Input, Modal } from '@gear-js/ui';
+import { Button, Modal } from '@gear-js/ui';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { HexString } from '@polkadot/util/types';
-import { useState, useMemo } from 'react';
-import { useForm } from 'react-hook-form';
-import SimpleBar from 'simplebar-react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
+import { useAddIdl } from '@/features/sails';
+import { useAddCodeName, useAddMetadata, useAddProgramName, useContractApiWithFile } from '@/hooks';
 import { ModalProps } from '@/entities/modal';
 import { UploadMetadata } from '@/features/uploadMetadata';
-import plusSVG from '@/shared/assets/images/actions/plus.svg?react';
+import { Input } from '@/shared/ui';
 
 import styles from './UploadMetadataModal.module.scss';
 
-const defaultValues = { name: '' };
+const FIELD_NAME = {
+  NAME: 'name',
+} as const;
 
-type Props = ModalProps & {
-  onSubmit: (values: { metaHex: HexString; name: string }) => void;
-  isCode?: boolean;
+const DEFAULT_VALUES = {
+  [FIELD_NAME.NAME]: '',
 };
 
-const UploadMetadataModal = ({ onClose, onSubmit, isCode }: Props) => {
-  const form = useForm({ defaultValues });
-  const { register, getFieldState, formState } = form;
-  const { error } = getFieldState('name', formState);
-  const handleSubmit = ({ name }: typeof defaultValues) => onSubmit({ metaHex, name });
+const SCHEMA = z.object({
+  [FIELD_NAME.NAME]: z.string().trim(),
+});
 
-  // TODO: state as in useMetadataWithFile
-  const [metaHex, setMetaHex] = useState('' as HexString);
-  const metadata = useMemo(() => (metaHex ? ProgramMetadata.from(metaHex) : undefined), [metaHex]);
-  const resetMetaHex = () => setMetaHex('' as HexString);
+type Props = ModalProps & {
+  codeId: HexString;
+  metadataHash: HexString | null | undefined;
+  isNameEditable: boolean;
+  programId?: HexString;
+  onSuccess: (name: string, metadataHex?: HexString) => void;
+};
 
-  const nameInputLabel = isCode ? 'Code Name' : 'Program Name';
+const UploadMetadataModal = ({ codeId, programId, isNameEditable, metadataHash, onClose, onSuccess }: Props) => {
+  const addMetadata = useAddMetadata();
+  const addIdl = useAddIdl();
+  const addProgramName = useAddProgramName();
+  const addCodeName = useAddCodeName();
+
+  // useContractApiWithFile is based on meta-storage requests, we don't need them here
+  const { metadata, sails, ...contractApi } = useContractApiWithFile(undefined);
+
+  const form = useForm({
+    defaultValues: DEFAULT_VALUES,
+    resolver: zodResolver(SCHEMA),
+  });
+
+  const handleSubmit = form.handleSubmit(async ({ name }) => {
+    if (name) {
+      if (programId) {
+        await addProgramName({ id: programId, codeId, name, idl: sails.idl });
+      } else {
+        await addCodeName({ id: codeId, name, idl: sails.idl });
+      }
+    }
+
+    if (metadataHash && metadata.hex) {
+      await addMetadata(metadataHash, metadata.hex);
+
+      onSuccess(name, metadata.hex);
+      return onClose();
+    }
+
+    if (sails.idl) {
+      await addIdl(codeId, sails.idl);
+
+      onSuccess(name);
+      return onClose();
+    }
+
+    throw new Error('Metadata/sails file is required');
+  });
 
   return (
-    <Modal heading="Upload metadata" size="large" className={styles.modal} close={onClose}>
-      <SimpleBar className={styles.simplebar}>
-        <form className={styles.form} onSubmit={form.handleSubmit(handleSubmit)}>
-          <UploadMetadata metadata={metadata} onReset={resetMetaHex} onMetadataUpload={setMetaHex} />
-
-          {metadata && (
-            <Input
-              label={nameInputLabel}
-              direction="y"
-              block
-              error={error?.message}
-              {...register('name', { required: 'Field is required' })}
-            />
+    <Modal heading="Upload metadata/sails" size="large" className={styles.modal} close={onClose}>
+      <FormProvider {...form}>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          {isNameEditable && (
+            <Input name={FIELD_NAME.NAME} label={programId ? 'Program Name' : 'Code Name'} direction="y" block />
           )}
 
-          {metadata && <Button type="submit" icon={plusSVG} text="Upload Metadata" />}
+          <UploadMetadata
+            value={contractApi.file}
+            onChange={contractApi.handleChange}
+            metadata={metadata.value}
+            sails={sails.value}
+          />
+
+          <Button type="submit" text="Submit" block />
         </form>
-      </SimpleBar>
+      </FormProvider>
     </Modal>
   );
 };

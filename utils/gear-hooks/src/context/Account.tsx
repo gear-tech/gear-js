@@ -1,7 +1,7 @@
 import { InjectedAccountWithMeta, InjectedExtension, Unsubcall } from '@polkadot/extension-inject/types';
 import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp';
 import { decodeAddress } from '@gear-js/api';
-import { useState, createContext, useEffect, useMemo } from 'react';
+import { useState, createContext, useEffect, useMemo, useContext } from 'react';
 import { LOCAL_STORAGE, VARA_SS58_FORMAT } from 'consts';
 import { Account, ProviderProps } from '../types';
 
@@ -85,4 +85,6 @@ function AccountProvider({ children }: ProviderProps) {
   return <Provider value={value}>{children}</Provider>;
 }
 
-export { AccountContext, AccountProvider };
+const useAccount = () => useContext(AccountContext);
+
+export { AccountProvider, useAccount };

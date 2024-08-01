@@ -8,7 +8,7 @@ enum AlertType {
 }
 
 type AlertOptions = {
-  type?: 'info' | 'error' | 'loading' | 'success';
+  type: 'info' | 'error' | 'loading' | 'success';
   style?: CSSProperties;
   title?: string;
   timeout?: number;

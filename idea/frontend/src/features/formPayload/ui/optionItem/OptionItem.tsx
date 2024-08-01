@@ -3,7 +3,7 @@ import { useState, ChangeEvent, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { useChangeEffect } from '@/hooks';
-import { Fieldset } from '@/shared/ui/fieldset';
+import { Fieldset } from '@/shared/ui';
 
 import { getItemLabel, getPayloadValue } from '../../helpers';
 import { PayloadItemProps, OPTION_ITEM_OPTIONS, DEFAULT_OPTION_VALUE } from '../../model';

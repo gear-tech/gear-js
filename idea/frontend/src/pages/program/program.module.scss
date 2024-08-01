@@ -1,21 +1,19 @@
 @use '@/shared/assets/styles/mixins' as *;
 @use '@/shared/assets/styles/variables' as *;
-@use '@/shared/assets/styles/animations' as *;
 @use '@/shared/assets/styles/shared' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
 
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 0 toRem(28) 0;
-  border-bottom: 1px solid $gray007;
 
-  &.loading {
-    justify-content: flex-end;
-  }
-
-  .programName {
-    @include fadeAppear();
+  .name {
     flex: 1 1;
     overflow-wrap: anywhere;
     color: $textColor;
@@ -37,21 +35,35 @@
   }
 }
 
-.content {
-  @include childrenMargin($margineLarge, right);
+.tabs {
+  margin-bottom: 16px;
 
   display: flex;
-  margin-top: $marginMedium;
+  gap: 32px;
 
-  .leftSide {
-    @include childrenMargin($marginMedium);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 
-    flex: 1 1;
+  .button {
+    padding-bottom: 16px;
+
+    font-family: Kanit;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20.8px;
+    color: rgba(255, 255, 255, 0.6);
+
+    background-color: transparent;
+    transition: color 0.25s, box-shadow 0.25s;
+
+    &.active {
+      color: #2bd071;
+
+      box-shadow: 0 2px 0 0 #2bd071;
+    }
   }
 }
 
-.vouchersList {
+.body {
   display: flex;
   flex-direction: column;
-  gap: 16px;
 }

@@ -6,13 +6,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useSignAndSend } from '@/hooks';
+import { useLoading, useBalanceSchema, useSignAndSend } from '@/hooks';
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { Input, ValueField } from '@/shared/ui';
+import { ACCOUNT_ADDRESS_SCHEMA } from '@/shared/config';
 
-import { ADDRESS_SCHEMA, DEFAULT_VALUES, FIELD_NAME, VOUCHER_TYPE } from '../../consts';
-import { useBalanceSchema, useDurationSchema, useVoucherType, useLoading } from '../../hooks';
+import { DEFAULT_VALUES, FIELD_NAME, VOUCHER_TYPE } from '../../consts';
+import { useDurationSchema, useVoucherType } from '../../hooks';
 import { Values } from '../../types';
 import { DurationForm } from '../duration-form';
 import { ProgramsForm } from '../programs-form';
@@ -34,7 +35,7 @@ const IssueVoucherModal = ({ programId, close, onSubmit = () => {} }: Props) => 
   const durationSchema = useDurationSchema();
 
   const schema = z.object({
-    [FIELD_NAME.ACCOUNT_ADDRESS]: ADDRESS_SCHEMA,
+    [FIELD_NAME.ACCOUNT_ADDRESS]: ACCOUNT_ADDRESS_SCHEMA,
     [FIELD_NAME.VALUE]: balanceSchema,
     [FIELD_NAME.DURATION]: durationSchema,
   });

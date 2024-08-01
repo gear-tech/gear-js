@@ -1,69 +1,75 @@
-import { useEffect, useState } from 'react';
 import { useAccount } from '@gear-js/react-hooks';
+import { useState } from 'react';
 
-import { useChain, useCodes, useDataLoading } from '@/hooks';
+import { CodeCard, useCodes, Code } from '@/features/code';
+import { LocalCode, useLocalCodes } from '@/features/local-indexer';
+import { Filters, FilterGroup, Radio } from '@/features/filters';
+import { useChain } from '@/hooks';
+import { List, SearchForm, Skeleton } from '@/shared/ui';
+
+import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
 
 import styles from './Codes.module.scss';
-import { RequestParams } from '../model/types';
-import { DEFAULT_REQUEST_PARAMS, DEFAULT_FILTER_VALUES } from '../model/consts';
-import { CodesList } from './codesList';
-import { SearchSettings } from './searchSettings';
+
+const DEFAULT_FILTER_VALUES = {
+  owner: 'all',
+};
 
 const Codes = () => {
   const { account } = useAccount();
   const { isDevChain } = useChain();
 
-  const { codes, isLoading, totalCount, fetchCodes } = useCodes();
-  const { params, loadData, changeParams } = useDataLoading<RequestParams>({
-    defaultParams: DEFAULT_REQUEST_PARAMS,
-    fetchData: fetchCodes,
-  });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterValues, setFilterValues] = useState(DEFAULT_FILTER_VALUES);
 
-  const [initialValues, setInitialValues] = useState(DEFAULT_FILTER_VALUES);
-
-  const decodedAddress = account?.decodedAddress;
-
-  const getUploadedByParam = (value: string) => (value === 'none' ? undefined : value);
-
-  const handleParamsChange = ({ query, uploadedBy }: RequestParams) => {
-    changeParams((prevParams) => ({
-      query: query ?? prevParams.query,
-      uploadedBy: uploadedBy ? getUploadedByParam(uploadedBy) : prevParams.uploadedBy,
-    }));
+  const filterParams = {
+    query: searchQuery,
+    uploadedBy: filterValues.owner === 'user' ? account?.decodedAddress : undefined,
   };
 
-  useEffect(
-    () => {
-      const { uploadedBy } = params;
+  const storageCodes = useCodes(filterParams);
+  const localCodes = useLocalCodes(filterParams);
+  const codes = isDevChain ? localCodes : storageCodes;
 
-      if (!uploadedBy) return;
-
-      changeParams((prevParams) => ({ ...prevParams, uploadedBy: decodedAddress }));
-
-      // TODO: monkey patch to rerender on user logout
-      // this is bad, Filters component should be refactored
-      setInitialValues((prevValues) => ({ uploadedBy: decodedAddress || 'none', isRerender: !prevValues.isRerender }));
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [decodedAddress],
-  );
-
-  const isLoggedIn = Boolean(account);
-
-  const { query } = params;
-  const filteredCodes = isDevChain && query ? codes.filter(({ id }) => id.includes(query)) : codes;
-  const count = isDevChain ? filteredCodes.length : totalCount;
-
-  const heading = `Codes: ${count}`;
+  const renderItem = (code: Code | LocalCode) => <CodeCard code={code} />;
+  const renderSkeleton = () => <Skeleton SVG={CardPlaceholderSVG} disabled />;
 
   return (
-    <div className={styles.pageWrapper}>
-      <section className={styles.codesSection}>
-        <h2 className={styles.heading}>{heading}</h2>
-        <CodesList codes={filteredCodes} totalCount={count} isLoading={isLoading} loadMorePrograms={loadData} />
-      </section>
+    <div className={styles.container}>
+      <h2 className={styles.heading}>Codes: {codes.data?.count}</h2>
 
-      <SearchSettings isLoggedIn={isLoggedIn} initialValues={initialValues} onSubmit={handleParamsChange} />
+      <SearchForm placeholder="Search by name, id..." onSubmit={setSearchQuery} />
+
+      <List
+        items={codes.data?.result}
+        hasMore={codes.hasNextPage}
+        isLoading={codes.isLoading}
+        noItems={{
+          heading: 'There are no codes yet.',
+          subheading: "You can start experimenting right now or try to build from examples. Let's Rock!",
+        }}
+        fetchMore={codes.fetchNextPage}
+        renderItem={renderItem}
+        renderSkeleton={renderSkeleton}
+      />
+
+      {!isDevChain && (
+        <Filters initialValues={DEFAULT_FILTER_VALUES} onSubmit={setFilterValues}>
+          <FilterGroup name="owner" onSubmit={setFilterValues}>
+            <Radio name="owner" value="all" label="All codes" onSubmit={setFilterValues} />
+
+            {account && (
+              <Radio
+                name="owner"
+                value="user"
+                label="My codes"
+                className={styles.ownerFilter}
+                onSubmit={setFilterValues}
+              />
+            )}
+          </FilterGroup>
+        </Filters>
+      )}
     </div>
   );
 };

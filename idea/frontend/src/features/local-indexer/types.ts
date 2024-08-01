@@ -1,8 +1,17 @@
-import { Program } from '@/features/program';
-import { IBase } from '@/shared/types';
 import { HexString } from '@gear-js/api';
 
-type LocalProgram = Pick<Program, 'id' | 'name' | 'status' | 'metahash' | 'hasState'> &
-  Partial<Pick<IBase, 'timestamp' | 'blockHash'>> & { codeId: HexString | null };
+import { Program } from '@/features/program';
+import { Code } from '@/features/code';
+import { IBase } from '@/shared/types';
 
-export type { LocalProgram };
+type ChainProgram = Pick<Program, 'id' | 'name' | 'status'> & {
+  codeId: HexString | null;
+};
+
+type DBProgram = Omit<IBase, 'blockNumber'> & Pick<Program, 'id' | 'name' | 'status' | 'metahash' | 'codeId' | 'owner'>;
+
+type LocalProgram = ChainProgram | DBProgram;
+
+type LocalCode = Pick<Code, 'id' | 'name' | 'metahash'>;
+
+export type { DBProgram, LocalProgram, LocalCode };

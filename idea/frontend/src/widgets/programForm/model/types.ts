@@ -5,7 +5,7 @@ type FormValues = {
   payload: PayloadValue;
   gasLimit: string;
   programName: string;
-  payloadType: string;
+  payloadType: string | undefined;
   keepAlive: boolean;
 };
 
@@ -14,7 +14,6 @@ type RenderButtonsProps = {
 };
 
 type SubmitHelpers = {
-  enableButtons: () => void;
   resetForm: () => void;
 };
 

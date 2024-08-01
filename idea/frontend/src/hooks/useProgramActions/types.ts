@@ -1,38 +1,32 @@
-import { ProgramMetadata } from '@gear-js/api';
+import { IProgramCreateResult, IProgramUploadResult, ProgramMetadata } from '@gear-js/api';
+import { AnyJson } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
-import { OperationCallbacks, ParamsToSignAndSend } from '@/entities/hooks';
+type Program = (IProgramCreateResult | IProgramUploadResult) & {
+  codeId: HexString;
+};
 
-type Payload = {
+type ContractApi = {
+  metadata?: {
+    hash: HexString | null | undefined;
+    hex: HexString | undefined;
+    value: ProgramMetadata | undefined;
+    isFromStorage: boolean;
+  };
+
+  sails?: {
+    idl: string | undefined;
+    isFromStorage: boolean;
+  };
+};
+
+type Values = {
   value: string;
   gasLimit: string;
-  initPayload: string;
+  payload: AnyJson;
   keepAlive: boolean;
-  metaHex?: HexString;
-  metadata?: ProgramMetadata | undefined;
   programName: string;
   payloadType?: string;
 };
 
-type DataToUpload = {
-  optBuffer: Buffer;
-  payload: Payload;
-};
-
-type DataToCreate = {
-  codeId: HexString;
-  payload: Payload;
-};
-
-type ParamsToUpload = OperationCallbacks & DataToUpload;
-
-type ParamsToCreate = OperationCallbacks & DataToCreate;
-
-type ParamsToSignAndUpload = ParamsToSignAndSend & {
-  method: string;
-  payload: Payload;
-  programId: HexString;
-  codeId: HexString;
-};
-
-export type { Payload, ParamsToUpload, ParamsToCreate, ParamsToSignAndUpload };
+export type { Program, ContractApi, Values };

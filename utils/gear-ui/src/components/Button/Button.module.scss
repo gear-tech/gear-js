@@ -106,6 +106,14 @@
   }
 }
 
+.grey {
+  background-color: #414141;
+
+  &:hover {
+    background-color: #5e5e60;
+  }
+}
+
 .gradient {
   background-image: $buttonColorGradient;
   position: relative;

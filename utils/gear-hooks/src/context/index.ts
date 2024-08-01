@@ -1,5 +1,5 @@
-import { AccountContext, AccountProvider } from './Account';
-import { ApiContext, ApiProvider } from './Api';
-import { AlertContext, AlertProvider } from './Alert';
+import { AccountProvider, useAccount } from './Account';
+import { ApiProvider, useApi } from './Api';
+import { AlertProvider, useAlert } from './Alert';
 
-export { AccountContext, AccountProvider, ApiContext, ApiProvider, AlertContext, AlertProvider };
+export { AccountProvider, useAccount, ApiProvider, useApi, AlertProvider, useAlert };

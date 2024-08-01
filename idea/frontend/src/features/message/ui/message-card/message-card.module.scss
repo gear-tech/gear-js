@@ -1,0 +1,37 @@
+@use '@/shared/assets/styles/variables' as *;
+
+.card {
+  display: grid;
+  align-items: center;
+  grid-template-columns: auto 0.5fr 0.5fr 1fr;
+  gap: 32px;
+
+  padding: 16px 24px;
+
+  background-color: $bgColorSecondary;
+  box-shadow: 0px 4px 4px $bgColor;
+  border-radius: 16px;
+}
+
+.direction {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &.to svg {
+    transform: rotate(180deg);
+
+    path {
+      fill: $blue;
+    }
+  }
+}
+
+.service {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.6);
+}

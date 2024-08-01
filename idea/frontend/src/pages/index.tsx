@@ -7,7 +7,6 @@ import { Events, Block } from '@/features/explorer';
 import { Program } from './program';
 import { Programs } from './programs';
 import { Message } from './message';
-import { Messages } from './messages';
 import { UploadProgram } from './uploadProgram';
 import { NotFound } from './notFound';
 import { Send } from './send';
@@ -19,6 +18,7 @@ import { Explorer } from './explorer';
 import { Code } from './code';
 import { UploadCode } from './uploadCode';
 import { Vouchers } from './vouchers';
+import { Dns } from './dns';
 
 const Routing = () => {
   const events = useEvents();
@@ -31,10 +31,7 @@ const Routing = () => {
         <Route path={routes.program} element={<Program />} />
       </Route>
 
-      <Route path={routes.messages}>
-        <Route index element={<Messages />} />
-        <Route path={routes.message} element={<Message />} />
-      </Route>
+      <Route path={routes.message} element={<Message />} />
 
       <Route path={routes.send}>
         <Route path={routes.reply} element={<Send />} />
@@ -46,11 +43,8 @@ const Routing = () => {
         <Route path={routes.initializeProgram} element={<InitializeProgram />} />
       </Route>
 
-      <Route path="/state" element={<State.Layout />}>
-        <Route path=":programId" element={<State.Main />} />
-        <Route path="full/:programId" element={<State.Full />} />
-        <Route path="wasm/:programId" element={<State.Wasm />} />
-      </Route>
+      <Route path={routes.state} element={<State.Full />} />
+      <Route path={routes.sailsState} element={<State.Sails />} />
 
       <Route path={routes.mailbox} element={<Mailbox />} />
 
@@ -63,6 +57,7 @@ const Routing = () => {
       <Route path={routes.uploadCode} element={<UploadCode />} />
 
       <Route path={routes.vouchers} element={<Vouchers />} />
+      <Route path={routes.dns} element={<Dns />} />
 
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Navigate to={routes.programs} replace />} />

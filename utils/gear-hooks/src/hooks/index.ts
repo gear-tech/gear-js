@@ -29,13 +29,26 @@ import {
   SendMessageOptions,
   UseSendMessageOptions,
 } from './api';
-import { useAccount, useAlert, useApi } from './context';
 import {
   useCreateHandler,
   useSendMessageWithGas,
   UseSendMessageWithGasOptions,
   SendMessageWithGasOptions,
 } from './handlers';
+import {
+  useProgram,
+  UseProgramParameters,
+  usePrepareProgramTransaction,
+  UsePrepareProgramTransactionParameters,
+  useSendProgramTransaction,
+  UseSendProgramTransactionParameters,
+  useProgramQuery,
+  UseProgramQueryParameters,
+  useProgramEvent,
+  UseProgramEventParameters,
+  useSails,
+  UseSailsParameters,
+} from './sails';
 
 export {
   useReadFullState,
@@ -57,9 +70,6 @@ export {
   useBalanceFormat,
   useDeriveBalancesAll,
   useAccountDeriveBalancesAll,
-  useAccount,
-  useAlert,
-  useApi,
   useCreateHandler,
   useSendMessageWithGas,
   useApproxBlockTimestamp,
@@ -70,6 +80,23 @@ export {
   useIsAnyAccountVoucherActive,
   useIssuedVouchers,
   useAccountIssuedVouchers,
+  useSails,
+  useProgram,
+  usePrepareProgramTransaction,
+  useSendProgramTransaction,
+  useProgramQuery,
+  useProgramEvent,
 };
 
-export type { SendMessageOptions, UseSendMessageOptions, UseSendMessageWithGasOptions, SendMessageWithGasOptions };
+export type {
+  SendMessageOptions,
+  UseSendMessageOptions,
+  UseSendMessageWithGasOptions,
+  SendMessageWithGasOptions,
+  UseProgramParameters,
+  UsePrepareProgramTransactionParameters,
+  UseSendProgramTransactionParameters,
+  UseProgramQueryParameters,
+  UseProgramEventParameters,
+  UseSailsParameters,
+};

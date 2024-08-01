@@ -9,7 +9,6 @@ const NO_METAHASH_ERROR = 'metahash function not found in exports';
 
 function useMetadataHash(codeIdOrBuffer: HexString | Buffer | undefined) {
   const { api, isApiReady } = useApi();
-  const queryKey = ['metadataHash', codeIdOrBuffer];
 
   const getMetadataHash = async () => {
     if (!isApiReady) throw new Error('API is not initialized');
@@ -28,7 +27,7 @@ function useMetadataHash(codeIdOrBuffer: HexString | Buffer | undefined) {
   };
 
   const { data } = useQuery({
-    queryKey,
+    queryKey: ['metadataHash', codeIdOrBuffer],
     queryFn: getMetadataHash,
     enabled: isApiReady && Boolean(codeIdOrBuffer),
   });

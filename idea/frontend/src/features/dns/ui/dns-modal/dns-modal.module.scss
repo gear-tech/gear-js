@@ -1,0 +1,23 @@
+@use '@/shared/assets/styles/mixins' as *;
+@use '@/shared/assets/styles/variables' as *;
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+
+  :disabled {
+    color: $gray600;
+  }
+}
+
+.inputDisabled > div:last-child > div {
+  background: rgba(217, 217, 217, 0.05);
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}

@@ -11,7 +11,7 @@ import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
 import { MailboxItem } from '@/features/mailbox';
 import { UILink } from '@/shared/ui/uiLink';
 import { generatePath } from 'react-router-dom';
-import { absoluteRoutes } from '@/shared/config';
+import { absoluteRoutes, routes } from '@/shared/config';
 import styles from './Message.module.scss';
 
 type Props = {
@@ -70,7 +70,7 @@ const Message = ({ value, onClaim }: Props) => {
           color="transparent"
         />
         <UILink
-          to={generatePath(absoluteRoutes.message, { messageId: id })}
+          to={generatePath(routes.message, { messageId: id })}
           text="Go to message"
           icon={letterSVG}
           color="transparent"

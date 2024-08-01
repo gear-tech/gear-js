@@ -4,6 +4,7 @@
 
 .simpleBar {
   @include customSimplebar;
+  width: calc(100% - 0.33px); // somehow it fixes horizontal overflow on sails preview, need to investigate
   padding: toRem(16) toRem(24);
   color: $borderColor2;
   background-color: $gray003;

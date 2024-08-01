@@ -1,86 +1,105 @@
-import { Button, FileInput } from '@gear-js/ui';
-import cx from 'clsx';
+import { useApi } from '@gear-js/react-hooks';
+import { Button } from '@gear-js/ui';
 
-import { useProgramActions } from '@/hooks';
-import { formStyles } from '@/shared/ui/form';
-import { BackButton } from '@/shared/ui/backButton';
-import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
+import { useContractApiWithFile, useLoading, useProgramActions } from '@/hooks';
 import { Subheader } from '@/shared/ui/subheader';
-import { FileTypes, GasMethod } from '@/shared/config';
-import { Payload } from '@/hooks/useProgramActions/types';
-import { UploadMetadata } from '@/features/uploadMetadata';
-import { ProgramForm, RenderButtonsProps, SubmitHelpers } from '@/widgets/programForm';
-import { useMetadataHash, useMetadataWithFile } from '@/features/metadata';
+import { GasMethod } from '@/shared/config';
+import { Values } from '@/hooks/useProgramActions/types';
+import { ProgramForm, SailsProgramForm } from '@/widgets/programForm';
 import { useWasmFile } from '@/features/code';
+import { ProgramFileInput } from '@/features/program';
+import { UploadMetadata } from '@/features/uploadMetadata';
+import { BackButton, Box } from '@/shared/ui';
+import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 
 import styles from './UploadProgram.module.scss';
 
 const UploadProgram = () => {
-  const file = useWasmFile();
-  const metadataHash = useMetadataHash(file.buffer);
-  const metadata = useMetadataWithFile(metadataHash);
+  const { api, isApiReady } = useApi();
+  const wasmFile = useWasmFile();
+  const { metadata, sails, isLoading, ...contractApi } = useContractApiWithFile(wasmFile.buffer);
+  const uploadProgram = useProgramActions();
+  const [isSubmitting, enableSubmitting, disableSubmitting] = useLoading();
 
-  const reset = () => {
-    file.reset();
-    metadata.reset();
+  const handleWasmFileChange = (value: File | undefined) => {
+    contractApi.reset();
+    wasmFile.handleChange(value);
   };
 
-  const { uploadProgram } = useProgramActions();
+  const handleSubmit = (values: Values) => {
+    if (!isApiReady) throw new Error('API is not initialized');
+    if (!wasmFile.buffer) throw new Error('File is not found');
 
-  const renderButtons = ({ isDisabled }: RenderButtonsProps) => (
-    <>
-      <Button icon={PlusSVG} type="submit" text="Upload Program" size="large" disabled={isDisabled} />
-      <BackButton />
-    </>
-  );
+    enableSubmitting();
 
-  const handleSubmit = (payload: Payload, { enableButtons }: SubmitHelpers) => {
-    if (!file.buffer) return;
+    const { gasLimit, value, payload: initPayload, payloadType, keepAlive } = values;
+    const program = { code: wasmFile.buffer, value, gasLimit, initPayload, keepAlive };
+    const result = api.program.upload(program, metadata.value, payloadType);
 
-    uploadProgram({ optBuffer: file.buffer, payload, resolve: file.reset, reject: enableButtons });
+    const onSuccess = () => {
+      wasmFile.reset();
+      contractApi.reset();
+      disableSubmitting();
+    };
+
+    uploadProgram(result, { metadata, sails }, values, onSuccess, disableSubmitting);
   };
 
   return (
-    <div className={styles.uploadProgramPage}>
-      <section className={styles.pageSection}>
-        <Subheader size="big" title="Enter program parameters" />
+    <div className={styles.container}>
+      <section>
+        <Subheader size="big" title="Enter program parameters" className={styles.header}>
+          {wasmFile.value && <ProgramFileInput value={wasmFile.value} onChange={handleWasmFileChange} />}
+        </Subheader>
 
-        <div className={styles.lining}>
-          <FileInput
-            value={file.value}
-            label="Program file"
-            direction="y"
-            color="primary"
-            className={cx(formStyles.field, formStyles.gap16, styles.fileInput)}
-            onChange={(value) => (value ? file.handleChange(value) : reset())}
-            accept={FileTypes.Wasm}
-          />
+        {!wasmFile.value && (
+          <Box>
+            <ProgramFileInput value={wasmFile.value} onChange={handleWasmFileChange} />
+          </Box>
+        )}
 
-          {file.buffer && (
-            <ProgramForm
-              fileName={file.value?.name.split(/\.opt|\.wasm/)[0]}
-              source={file.buffer}
-              metaHex={metadata.hex}
-              metadata={metadata.value}
-              gasMethod={GasMethod.InitUpdate}
-              renderButtons={renderButtons}
-              onSubmit={handleSubmit}
-            />
-          )}
-        </div>
+        {wasmFile.buffer && (
+          <div className={styles.program}>
+            {sails.value ? (
+              <SailsProgramForm
+                fileName={wasmFile.value?.name.split(/\.opt|\.wasm/)[0]}
+                source={wasmFile.buffer}
+                sails={sails.value}
+                gasMethod={GasMethod.InitUpdate}
+                onSubmit={handleSubmit}
+              />
+            ) : (
+              <ProgramForm
+                fileName={wasmFile.value?.name.split(/\.opt|\.wasm/)[0]}
+                source={wasmFile.buffer}
+                metadata={metadata.value}
+                gasMethod={GasMethod.InitUpdate}
+                onSubmit={handleSubmit}
+              />
+            )}
+          </div>
+        )}
       </section>
 
-      <section className={styles.pageSection}>
-        <Subheader size="big" title="Add metadata" />
+      <section>
+        <Subheader size="big" title="Add metadata/sails" />
 
         <UploadMetadata
+          value={contractApi.file}
+          onChange={contractApi.handleChange}
           metadata={metadata.value}
-          isInputDisabled={metadata.isFromStorage}
-          isLoading={file.value && !metadata.isReady}
-          onReset={metadata.reset}
-          onMetadataUpload={metadata.set}
+          sails={sails.value}
+          isDisabled={contractApi.isFromStorage}
+          isLoading={isLoading}
         />
       </section>
+
+      {wasmFile.buffer && (
+        <div className={styles.buttons}>
+          <BackButton size="medium" />
+          <Button type="submit" form="programForm" icon={PlusSVG} text="Submit" disabled={isSubmitting} />
+        </div>
+      )}
     </div>
   );
 };

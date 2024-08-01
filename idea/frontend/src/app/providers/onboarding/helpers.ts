@@ -16,18 +16,15 @@ const getHeading = (stepIndex: number) => {
       return 'This option allows you to send a message to a program';
 
     case 5:
-      return 'The list of messages can be found here';
-
-    case 6:
       return 'Explorer';
 
-    case 7:
+    case 6:
       return 'Mailbox';
 
-    case 8:
+    case 7:
       return 'App examples';
 
-    case 9:
+    case 8:
       return 'Network switcher';
 
     default:
@@ -53,18 +50,15 @@ const getText = (stepIndex: number) => {
       return "Copy destination program's address where to send a message and provide necessary details in the Payload section, click the “Calculate gas” and “Send message” buttons. You will be prompted to sign the transaction for the message sending.";
 
     case 5:
-      return 'You can navigate to necessary messages using search by program id, message id or applying filters';
-
-    case 6:
       return 'Here you can get details about recent network events, search by block hash or block number or apply filters';
 
-    case 7:
+    case 6:
       return 'Here you can check messages sent from programs to currently connected account.';
 
-    case 8:
+    case 7:
       return 'If you do not have a program to upload, check a broad library of smart-contract examples created by Gear team and find what best fits your use cases. You can take it as is or adapt to your needs.';
 
-    case 9:
+    case 8:
       return "Select the network you're working with, connect to your local test net or localhost Gear node";
 
     default:

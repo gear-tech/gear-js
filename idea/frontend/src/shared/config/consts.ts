@@ -1,4 +1,10 @@
+import { decodeAddress } from '@gear-js/api';
+import { z } from 'zod';
+
+import { isAccountAddressValid } from '../helpers';
+
 const API_URL = import.meta.env.VITE_API_URL as string;
+const INDEXER_API_URL = import.meta.env.VITE_INDEXER_API_URL as string;
 const NODES_API_URL = import.meta.env.VITE_NODES_API_URL as string;
 const NODE_ADDRESS = import.meta.env.VITE_NODE_ADDRESS as string;
 const HCAPTCHA_SITE_KEY = import.meta.env.VITE_HCAPTCHA_SITE_KEY as string;
@@ -35,8 +41,6 @@ const PROGRAM_ERRORS = {
   PROGRAM_INIT_FAILED: 'Program initialization failed',
 };
 
-const UPLOAD_METADATA_TIMEOUT = 2000;
-
 enum LocalStorage {
   Node = 'node',
   Nodes = 'nodes',
@@ -70,22 +74,11 @@ enum TransactionStatus {
 }
 
 enum RpcMethods {
-  GetProgram = 'program.data',
-  GetAllPrograms = 'program.all',
   AddMetadata = 'meta.add',
-  AddProgramName = 'program.name.add',
-  AddCodeName = 'code.name.add',
   GetMetadata = 'meta.get',
-  GetMessage = 'message.data',
-  GetAllMessages = 'message.all',
-  GetCode = 'code.data',
-  GetAllCodes = 'code.all',
   GetTestBalance = 'testBalance.get',
   NetworkData = 'networkData.available',
   TestBalanceAvailable = 'testBalance.available',
-  AddState = 'program.state.add',
-  GetStates = 'program.state.all',
-  GetState = 'state.get',
 }
 
 enum FileTypes {
@@ -103,8 +96,16 @@ enum AnimationTimeout {
   Big = 1000,
 }
 
+const ACCOUNT_ADDRESS_SCHEMA = z
+  .string()
+  .trim()
+  .min(0)
+  .refine((value) => isAccountAddressValid(value), 'Invalid address')
+  .transform((value) => decodeAddress(value));
+
 export {
   API_URL,
+  INDEXER_API_URL,
   VOUCHERS_API_URL,
   NODES_API_URL,
   NODE_ADDRESS,
@@ -116,8 +117,8 @@ export {
   GEAR_BALANCE_TRANSFER_VALUE,
   ACCOUNT_ERRORS,
   PROGRAM_ERRORS,
-  UPLOAD_METADATA_TIMEOUT,
   GENESIS,
+  ACCOUNT_ADDRESS_SCHEMA,
   LocalStorage,
   GasMethod,
   TransactionName,

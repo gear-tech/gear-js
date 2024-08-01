@@ -4,9 +4,9 @@ import { HexString } from '@polkadot/util/types';
 import { isHex } from '@polkadot/util';
 import { useEffect, useState } from 'react';
 
-import { PreformattedBlock } from '@/shared/ui/preformattedBlock';
+import { useProgram } from '@/features/program';
 import { useMetadata } from '@/features/metadata';
-import { useProgram } from '@/hooks';
+import { PreformattedBlock } from '@/shared/ui/preformattedBlock';
 import { isNullOrUndefined } from '@/shared/helpers';
 
 import {
@@ -57,7 +57,7 @@ const DecodedPreformattedBlock = ({ programId, data, method }: Props) => {
   const [error, setError] = useState('');
   const isError = !!error;
 
-  const { program } = useProgram(isFormattedPayloadHex ? programId : undefined);
+  const { data: program } = useProgram(isFormattedPayloadHex ? programId : undefined);
   const { metadata } = useMetadata(program?.metahash);
 
   const getTypes = () => {

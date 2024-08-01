@@ -1,33 +1,27 @@
-@use '@/shared/assets/styles/_mixins.scss' as *;
-@use '@/shared/assets/styles/_variables.scss' as *;
-@use '@/shared/assets/styles/_shared.scss' as *;
-
-.uploadProgramPage {
-  @include childrenMargin($marginBig, right);
+.container {
   display: flex;
-  margin-bottom: 32px;
-
-  > * {
-    flex-basis: 50%;
-    display: flex;
-    flex-direction: column;
-
-    > *:nth-child(2) {
-      flex: 1;
-    }
-  }
+  flex-direction: column;
+  gap: 32px;
 }
 
-.pageSection {
-  flex: 1 1;
+.program {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.lining {
-  padding: toRem(14) toRem(24) toRem(24);
-  border-radius: $borderRadius;
-  background-color: $bgColor4;
+.buttons {
+  padding: 0 16px;
 
-  .fileInput:not(:only-child) {
-    margin-bottom: $marginMedium;
-  }
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+
+  position: sticky;
+  bottom: 32px;
+}
+
+.header {
+  justify-content: flex-start;
+  gap: 24px;
 }

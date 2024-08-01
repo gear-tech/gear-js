@@ -1,59 +1,57 @@
 import { useModal, useBlocks, useEvents, useChain, useOnboarding } from './context';
-import { useMessage } from './useMessage';
+import { useLoading } from './useLoading';
 import { useOutsideClick } from './useOutsideClick';
 import { useChangeEffect } from './useChangeEffect';
-import { useProgram } from './useProgram';
 import { useMessageActions } from './useMessageActions';
-import { usePrograms } from './usePrograms';
+import { useProgramIdSchema } from './useProgramIdSchema';
 import { useCodeUpload } from './useCodeUpload';
 import { useMessageClaim } from './useMessageClaim';
 import { useProgramActions } from './useProgramActions';
-import { useMetadataUpload } from './useMetadataUpload';
-import { useBalanceTransfer } from './useBalanceTransfer';
+import { useAddMetadata } from './use-add-metadata';
+import { useAddProgramName } from './use-add-program-name';
+import { useAddCodeName } from './use-add-code-name';
 import { useEventSubscriptions } from './useEventSubscriptions';
 import { useGasCalculate } from './useGasCalculate';
 import { useStateRead } from './useStateRead';
-import { useDataLoading } from './useDataLoading';
-import { useScrollLoader } from './useScrollLoader';
 import { useElementSizes } from './useElementSizes';
-import { useMessages } from './useMessages';
-import { useWaitlist } from './useWaitlist';
-import { useCodes } from './useCodes';
 import { useNodeVersion } from './useNodeVersion';
 import { useMobileDisclaimer } from './useMobileDisclaimer';
 import { useNetworkIcon } from './useNetworkIcon';
-import { useValidationSchema } from './use-validation-schema';
+import { useValidationSchema, useBalanceSchema, useGasLimitSchema } from './schemas';
 import { useSignAndSend } from './use-sign-and-send';
+import { useContractApiWithFile } from './use-contract-api-with-file';
+import { useModalState } from './use-modal-state';
+import { useErrorAlert } from './use-error-alert';
 
 export {
   useModal,
+  useLoading,
   useBlocks,
   useEvents,
   useChain,
-  useProgram,
-  usePrograms,
-  useMessage,
-  useMessages,
-  useWaitlist,
+  useProgramIdSchema,
   useStateRead,
   useCodeUpload,
-  useDataLoading,
   useOutsideClick,
   useChangeEffect,
-  useScrollLoader,
   useMessageClaim,
   useElementSizes,
   useGasCalculate,
   useProgramActions,
   useMessageActions,
-  useMetadataUpload,
-  useBalanceTransfer,
+  useAddMetadata,
+  useAddProgramName,
+  useAddCodeName,
   useEventSubscriptions,
-  useCodes,
   useOnboarding,
   useNodeVersion,
   useMobileDisclaimer,
   useNetworkIcon,
   useValidationSchema,
   useSignAndSend,
+  useContractApiWithFile,
+  useBalanceSchema,
+  useGasLimitSchema,
+  useModalState,
+  useErrorAlert,
 };

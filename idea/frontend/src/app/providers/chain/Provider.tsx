@@ -2,7 +2,7 @@ import { ProviderProps, useApi } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 
 import { RpcMethods } from '@/shared/config';
-import { RPCService } from '@/shared/services/rpcService';
+import { rpcService } from '@/shared/services/rpcService';
 
 import { ChainContext } from './Context';
 
@@ -21,7 +21,7 @@ const ChainProvider = ({ children }: ProviderProps) => {
 
     if (!genesis) return;
 
-    new RPCService().callRPC<boolean>(RpcMethods.NetworkData, { genesis }).then(({ result }) => setIsDevChain(!result));
+    rpcService.callRPC<boolean>(RpcMethods.NetworkData, { genesis }).then(({ result }) => setIsDevChain(!result));
   }, [genesis]);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const ChainProvider = ({ children }: ProviderProps) => {
     if (isDevChain) {
       setIsTestBalanceAvailable(true);
     } else {
-      new RPCService()
+      rpcService
         .callRPC<boolean>(RpcMethods.TestBalanceAvailable, { genesis })
         .then(({ result }) => setIsTestBalanceAvailable(result));
     }

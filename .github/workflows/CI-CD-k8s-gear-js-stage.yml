@@ -1,4 +1,4 @@
-name: "Gear Idea: deploy to k8s stage"
+name: 'Gear Idea: deploy to k8s stage'
 
 on:
   push:
@@ -23,9 +23,7 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
 
-
 jobs:
-
   build-frontend-image-staging:
     runs-on: ubuntu-latest
     environment: staging
@@ -58,6 +56,8 @@ jobs:
             VITE_NODES_API_URL= ${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
             VITE_MAINNET_VOUCHERS_API_URL=${{ secrets.VITE_MAINNET_VOUCHERS_API_URL }}
             VITE_TESTNET_VOUCHERS_API_URL=${{ secrets.VITE_TESTNET_VOUCHERS_API_URL }}
+            VITE_INDEXER_API_URL=${{ secrets.VITE_INDEXER_API_URL }}
+            VITE_DNS_API_URL=${{ secrets.VITE_DNS_API_URL }}
 
   build-indexer-image-staging:
     runs-on: ubuntu-latest
@@ -161,12 +161,13 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-meta-storage:qa
 
   deploy-to-k8s-staging:
-    needs: [
+    needs:
+      [
         build-frontend-image-staging,
         build-indexer-image-staging,
         build-api-gateway-image-staging,
         build-test-balance-image-staging,
-        build-and-push-meta-storage-image
+        build-and-push-meta-storage-image,
       ]
     runs-on: ubuntu-latest
 

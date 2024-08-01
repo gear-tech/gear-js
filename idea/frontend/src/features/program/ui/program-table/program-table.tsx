@@ -9,51 +9,68 @@ import { ContentLoader } from '@/shared/ui/contentLoader';
 import TablePlaceholderSVG from '@/shared/assets/images/placeholders/table.svg?react';
 import { LocalProgram } from '@/features/local-indexer';
 
-import { IProgram } from '../../types';
+import { Program } from '../../api';
 import { PROGRAM_STATUS_NAME } from '../../consts';
 import { getBulbStatus } from '../../utils';
+import styles from './program-table.module.scss';
 
 type Props = {
-  program: IProgram | LocalProgram | undefined;
+  program: Program | LocalProgram | undefined;
   isProgramReady: boolean;
+  renderBalance: () => JSX.Element;
 };
 
-const ProgramTable = ({ program, isProgramReady }: Props) => {
-  const { codeId, timestamp } = program || {};
-  const blockId = program?.blockHash;
+const ProgramTable = ({ program, isProgramReady, renderBalance }: Props) => {
+  const { codeId } = program || {};
+  const blockId = program && 'blockHash' in program ? program.blockHash : undefined;
 
-  return isProgramReady && program ? (
-    <Table>
-      <TableRow name="Program ID">
-        <IdBlock id={program.id} size="big" />
-      </TableRow>
+  if (!isProgramReady || !program)
+    return (
+      <div className={styles.table}>
+        <ContentLoader text="There is no program" isEmpty={isProgramReady && !program}>
+          <TablePlaceholderSVG />
+        </ContentLoader>
 
-      <TableRow name="Status">
-        <BulbBlock size="large" text={PROGRAM_STATUS_NAME[program.status]} status={getBulbStatus(program.status)} />
-      </TableRow>
+        <ContentLoader text="There is no program" isEmpty={isProgramReady && !program}>
+          <TablePlaceholderSVG />
+        </ContentLoader>
+      </div>
+    );
 
-      {timestamp && (
-        <TableRow name="Created at">
-          <TimestampBlock size="large" timestamp={timestamp} />
+  return (
+    <div className={styles.table}>
+      <Table>
+        <TableRow name="Program Balance">{renderBalance()}</TableRow>
+
+        <TableRow name="Program ID">
+          <IdBlock id={program.id} size="big" />
         </TableRow>
-      )}
 
-      {codeId && (
-        <TableRow name="Codehash" hideOwerflow>
-          <IdBlock id={codeId} to={generatePath(routes.code, { codeId })} size="big" />
+        <TableRow name="Status">
+          <BulbBlock size="large" text={PROGRAM_STATUS_NAME[program.status]} status={getBulbStatus(program.status)} />
         </TableRow>
-      )}
+      </Table>
 
-      {blockId && (
-        <TableRow name="Block hash">
-          <IdBlock id={blockId} to={generatePath(absoluteRoutes.block, { blockId })} size="big" />
-        </TableRow>
-      )}
-    </Table>
-  ) : (
-    <ContentLoader text="There is no program" isEmpty={isProgramReady && !program}>
-      <TablePlaceholderSVG />
-    </ContentLoader>
+      <Table>
+        {codeId && (
+          <TableRow name="Codehash" hideOwerflow>
+            <IdBlock id={codeId} to={generatePath(routes.code, { codeId })} size="big" />
+          </TableRow>
+        )}
+
+        {blockId && (
+          <TableRow name="Block hash">
+            <IdBlock id={blockId} to={generatePath(absoluteRoutes.block, { blockId })} size="big" />
+          </TableRow>
+        )}
+
+        {'timestamp' in program && (
+          <TableRow name="Created at">
+            <TimestampBlock size="large" timestamp={program.timestamp} />
+          </TableRow>
+        )}
+      </Table>
+    </div>
   );
 };
 

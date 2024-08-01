@@ -1,0 +1,21 @@
+{
+  "name": "indexer-db",
+  "packageManager": "yarn@3.3.0",
+  "dependencies": {
+    "typeorm": "0.3.20"
+  },
+  "devDependencies": {
+    "typescript": "5.4.5"
+  },
+  "scripts": {
+    "build": "rm -rf lib && tsc"
+  },
+  "main": "lib/index.js",
+  "types": "src/index.ts",
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "git add"
+    ]
+  }
+}

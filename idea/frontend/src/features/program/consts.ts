@@ -1,3 +1,5 @@
+import { OwnerFilter } from '@/api/consts';
+
 enum ProgramStatus {
   Active = 'active',
   ProgramSet = 'programSet',
@@ -16,4 +18,9 @@ const PROGRAM_STATUS_NAME = {
   [ProgramStatus.Unknown as const]: 'Unknown',
 };
 
-export { ProgramStatus, PROGRAM_STATUS_NAME };
+const DEFAULT_FILTER_VALUES = {
+  owner: OwnerFilter.All,
+  status: [] as ProgramStatus[],
+};
+
+export { ProgramStatus, PROGRAM_STATUS_NAME, DEFAULT_FILTER_VALUES };
