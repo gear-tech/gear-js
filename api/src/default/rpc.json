@@ -283,15 +283,12 @@
         "type": "ReplyInfo"
       }
     },
-    "chainSpec_unstable": {
+    "chainSpec_v1": {
       "chainName": { "params": [], "type": "String" },
       "properties": { "params": [], "type": "String" },
       "genesisHash": { "params": [], "type": "H256" }
     },
-    "transaction_unstable": {
-      "submitAndWatch": { "params": [] },
-      "unwatch": { "params": [] }
-    },
+
     "runtime": {
       "wasmBlobVersion": {
         "description": "Returns the version of the WASM blob in storage.",
@@ -303,6 +300,17 @@
       "inflationInfo": {
         "params": [],
         "type": "Bytes"
+      }
+    },
+    "gearBuiltin": {
+      "queryId": {
+        "params": [
+          {
+            "name": "builtin_id",
+            "type": "u64"
+          }
+        ],
+        "type": "H256"
       }
     }
   }

@@ -2,7 +2,7 @@ import { Bytes, Option } from '@polkadot/types';
 import { HexString } from '@polkadot/util/types';
 import { u8aToHex } from '@polkadot/util';
 
-import { CodeUploadResult, GearCommonCodeMetadata, GearCoreCodeInstrumentedCode } from './types';
+import { CodeUploadResult, GearCommonCodeMetadata, GearCoreCodeInstrumentedInstrumentedCode } from './types';
 import { generateCodeHash, getIdsFromKeys, validateCodeId } from './utils';
 import { CodeDoesNotExistError } from './errors';
 import { GearTransaction } from './Transaction';
@@ -36,7 +36,7 @@ export class GearCode extends GearTransaction {
    * ### Get code storage
    * @param codeId
    */
-  async storage(codeId: HexString): Promise<Option<GearCoreCodeInstrumentedCode>> {
+  async storage(codeId: HexString): Promise<Option<GearCoreCodeInstrumentedInstrumentedCode>> {
     return this._api.query.gearProgram.codeStorage(codeId);
   }
 
