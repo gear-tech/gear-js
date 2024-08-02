@@ -13,6 +13,7 @@ import { AccountButton } from '../account-button';
 import { useWallet } from '../../hooks';
 import { WALLETS } from '../../consts';
 import styles from './accounts-modal.module.scss';
+import { useNewAccount } from '@/app/providers/account';
 
 type Props = {
   close: () => void;
@@ -20,6 +21,7 @@ type Props = {
 
 const AccountsModal = ({ close }: Props) => {
   const { account, extensions, login, logout } = useAccount();
+  const { wallets } = useNewAccount();
 
   const alert = useAlert();
 
@@ -40,9 +42,10 @@ const AccountsModal = ({ close }: Props) => {
 
   const getWallets = () =>
     WALLETS.map(([id, { SVG, name }]) => {
-      const isEnabled = extensions?.some((extension) => extension.name === id);
+      const _wallet = wallets?.[id];
+      const isConnected = _wallet?.status === 'connected';
 
-      const accountsCount = getWalletAccounts(id)?.length;
+      const accountsCount = _wallet?.accounts?.length;
       const accountsStatus = `${accountsCount} ${accountsCount === 1 ? 'account' : 'accounts'}`;
 
       const buttonClassName = cx(
@@ -50,20 +53,20 @@ const AccountsModal = ({ close }: Props) => {
         buttonStyles.large,
         buttonStyles.block,
         styles.button,
-        isEnabled && styles.enabled,
+        styles.enabled,
       );
 
       return (
         <li key={id}>
-          <button type="button" className={buttonClassName} onClick={() => setWalletId(id)}>
+          <button type="button" className={buttonClassName} onClick={() => _wallet?.connect()}>
             <span>
               <SVG className={buttonStyles.icon} /> {name}
             </span>
 
             <div className={styles.status}>
-              <p className={styles.statusText}>{isEnabled ? 'Enabled' : 'Disabled'}</p>
+              <p className={styles.statusText}>{isConnected ? 'Enabled' : 'Disabled'}</p>
 
-              {isEnabled && <p className={styles.statusAccounts}>{accountsStatus}</p>}
+              {isConnected && <p className={styles.statusAccounts}>{accountsStatus}</p>}
             </div>
           </button>
         </li>
