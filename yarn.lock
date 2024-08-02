@@ -2504,8 +2504,8 @@ __metadata:
     "@types/lodash.isplainobject": 4.0.7
     "@types/lodash.isstring": 4.0.7
     "@types/node": 20.8.4
-    "@types/react": 18.2.36
-    "@types/react-dom": 18.2.14
+    "@types/react": 18.3.3
+    "@types/react-dom": 18.3.0
     "@types/react-gtm-module": 2.0.3
     "@types/react-transition-group": 4.4.7
     "@typescript-eslint/eslint-plugin": 6.7.5
@@ -2605,8 +2605,8 @@ __metadata:
     "@rollup/plugin-node-resolve": 15.2.3
     "@substrate/connect": 0.8.10
     "@tanstack/react-query": 5.29.0
-    "@types/react": 18.2.28
-    "@types/react-dom": 18.2.13
+    "@types/react": 18.3.3
+    "@types/react-dom": 18.3.0
     "@types/react-transition-group": 4.4.7
     bignumber.js: 9.1.2
     nanoid: 5.0.1
@@ -6446,15 +6446,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:18.2.13":
-  version: 18.2.13
-  resolution: "@types/react-dom@npm:18.2.13"
-  dependencies:
-    "@types/react": "*"
-  checksum: 22ba066b141dca5a5a9227fae0afc7c94b470fff8e8a38ade72649da57a8ea04d0cb2ba3e22005e7d8e772d49bddd28855b1dd98e6defd033bba6afb6edff883
-  languageName: node
-  linkType: hard
-
 "@types/react-dom@npm:18.2.14":
   version: 18.2.14
   resolution: "@types/react-dom@npm:18.2.14"
@@ -6464,7 +6455,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^18.0.0":
+"@types/react-dom@npm:18.3.0, @types/react-dom@npm:^18.0.0":
   version: 18.3.0
   resolution: "@types/react-dom@npm:18.3.0"
   dependencies:
@@ -6489,24 +6480,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*":
+"@types/react@npm:*, @types/react@npm:18.3.3":
   version: 18.3.3
   resolution: "@types/react@npm:18.3.3"
   dependencies:
     "@types/prop-types": "*"
     csstype: ^3.0.2
   checksum: c63d6a78163244e2022b01ef79b0baec4fe4da3475dc4a90bb8accefad35ef0c43560fd0312e5974f92a0f1108aa4d669ac72d73d66396aa060ea03b5d2e3873
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:18.2.28":
-  version: 18.2.28
-  resolution: "@types/react@npm:18.2.28"
-  dependencies:
-    "@types/prop-types": "*"
-    "@types/scheduler": "*"
-    csstype: ^3.0.2
-  checksum: 81381bedeba83278f4c9febb0b83e0bd3f42a25897a50b9cb36ef53651d34b3d50f87ebf11211ea57ea575131f85d31e93e496ce46478a00b0f9bf7b26b5917a
   languageName: node
   linkType: hard
 
