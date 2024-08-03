@@ -3,19 +3,17 @@ import { useState } from 'react';
 
 import { WALLET } from '../consts';
 import { WalletId } from '../types';
+import { useNewAccount } from '@/app/providers/account';
 
 function useWallet() {
-  const { account, accounts } = useAccount();
+  const { account } = useNewAccount();
 
   const [walletId, setWalletId] = useState(account?.meta.source as WalletId | undefined);
   const wallet = walletId ? WALLET[walletId] : undefined;
 
-  const getWalletAccounts = (id: WalletId) => accounts?.filter(({ meta }) => meta.source === id);
-  const walletAccounts = walletId ? getWalletAccounts(walletId) : undefined;
-
   const resetWalletId = () => setWalletId(undefined);
 
-  return { wallet, walletAccounts, setWalletId, resetWalletId, getWalletAccounts };
+  return { wallet, walletId, setWalletId, resetWalletId };
 }
 
 export { useWallet };

@@ -1,6 +1,5 @@
-import { useAccount, useAlert } from '@gear-js/react-hooks';
+import { useAlert } from '@gear-js/react-hooks';
 import { Button, Modal, buttonStyles } from '@gear-js/ui';
-import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { isWeb3Injected } from '@polkadot/extension-dapp';
 import cx from 'clsx';
 import SimpleBar from 'simplebar-react';
@@ -20,20 +19,14 @@ type Props = {
 };
 
 const AccountsModal = ({ close }: Props) => {
-  const { account, extensions, login, logout } = useAccount();
-  const { wallets } = useNewAccount();
+  const { wallets, account, login, logout } = useNewAccount();
 
   const alert = useAlert();
 
-  const { wallet, walletAccounts, setWalletId, resetWalletId, getWalletAccounts } = useWallet();
+  const { wallet, walletId, setWalletId, resetWalletId } = useWallet();
 
   const handleLogoutClick = () => {
     logout();
-    close();
-  };
-
-  const handleAccountClick = (newAccount: InjectedAccountWithMeta) => {
-    login(newAccount);
     close();
   };
 
@@ -58,7 +51,10 @@ const AccountsModal = ({ close }: Props) => {
 
       return (
         <li key={id}>
-          <button type="button" className={buttonClassName} onClick={() => _wallet?.connect()}>
+          <button
+            type="button"
+            className={buttonClassName}
+            onClick={() => (isConnected ? setWalletId(id) : _wallet?.connect())}>
             <span>
               <SVG className={buttonStyles.icon} /> {name}
             </span>
@@ -73,6 +69,8 @@ const AccountsModal = ({ close }: Props) => {
       );
     });
 
+  const walletAccounts = wallets && walletId ? wallets[walletId].accounts : undefined;
+
   const getAccounts = () =>
     walletAccounts?.map((_account) => {
       const { address, meta } = _account;
@@ -80,7 +78,9 @@ const AccountsModal = ({ close }: Props) => {
 
       const handleClick = () => {
         if (isActive) return;
-        handleAccountClick(_account);
+
+        login(_account);
+        close();
       };
 
       const accountBtnClasses = cx(
