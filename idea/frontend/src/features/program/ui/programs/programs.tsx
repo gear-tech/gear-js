@@ -1,5 +1,5 @@
 import { List, Skeleton } from '@/shared/ui';
-import CardPalceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
+import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
 import { LocalProgram } from '@/features/local-indexer';
 
 import { Program } from '../../api';
@@ -19,7 +19,7 @@ function Programs({ vertical, noItemsSubheading, ...props }: Props) {
     <ProgramCard key={program.id} program={program} vertical={vertical} />
   );
 
-  const renderSkeleton = () => <Skeleton SVG={CardPalceholderSVG} disabled />;
+  const renderSkeleton = () => <Skeleton SVG={CardPlaceholderSVG} disabled />;
 
   return (
     <List

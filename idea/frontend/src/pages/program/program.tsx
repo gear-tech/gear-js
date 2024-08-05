@@ -20,7 +20,7 @@ import { ProgramBalance } from '@/features/balance';
 
 import styles from './program.module.scss';
 
-const TABS = ['Metadata/Sails', 'Messages', 'Vouchers', 'Events'];
+const TABS = ['Metadata/Sails', 'Messages', 'Events', 'Vouchers'];
 
 type Params = {
   programId: HexString;
