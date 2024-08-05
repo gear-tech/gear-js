@@ -69,7 +69,7 @@ const AccountsModal = ({ close }: Props) => {
       );
     });
 
-  const walletAccounts = wallets && walletId ? wallets[walletId].accounts : undefined;
+  const walletAccounts = wallets && walletId ? wallets[walletId]?.accounts : undefined;
 
   const getAccounts = () =>
     walletAccounts?.map((_account) => {
