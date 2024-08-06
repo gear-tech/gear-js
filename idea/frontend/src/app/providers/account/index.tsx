@@ -9,6 +9,7 @@ import { getLoggedInAccount, getWallets } from './utils';
 type Value = {
   wallets: Wallets | undefined;
   account: Account | undefined;
+  isAccountReady: boolean;
   login: (account: Account) => void;
   logout: () => void;
 };
@@ -16,6 +17,7 @@ type Value = {
 const DEFAULT_VALUE = {
   wallets: undefined,
   account: undefined,
+  isAccountReady: false,
   login: () => {},
   logout: () => {},
 } as const;
@@ -33,6 +35,7 @@ function AccountProvider({ appName = 'Gear dApp', children }: Props) {
   const [wallets, setWallets] = useState<Wallets>();
   const [account, setAccount] = useState<Account>();
   const unsubsRef = useRef<Unsubcall[]>([]);
+  const isAccountReady = !!wallets;
 
   const login = (_account: Account) => {
     setAccount(_account);
@@ -72,7 +75,10 @@ function AccountProvider({ appName = 'Gear dApp', children }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const value = useMemo(() => ({ wallets, account, login, logout }), [wallets, account]);
+  const value = useMemo(
+    () => ({ wallets, account, isAccountReady, login, logout }),
+    [wallets, account, isAccountReady],
+  );
 
   return <Provider value={value}>{children}</Provider>;
 }
