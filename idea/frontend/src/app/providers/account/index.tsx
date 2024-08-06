@@ -1,5 +1,6 @@
 import { Account, ProviderProps } from '@gear-js/react-hooks';
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { Unsubcall } from '@polkadot/extension-inject/types';
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { LOCAL_STORAGE_KEY, DEFAULT_INJECT_TIMEOUT_MS } from './consts';
 import { Wallet, Wallets } from './types';
@@ -31,6 +32,7 @@ type Props = ProviderProps & {
 function AccountProvider({ appName = 'Gear dApp', children }: Props) {
   const [wallets, setWallets] = useState<Wallets>();
   const [account, setAccount] = useState<Account>();
+  const unsubsRef = useRef<Unsubcall[]>([]);
 
   const login = (_account: Account) => {
     setAccount(_account);
@@ -50,17 +52,23 @@ function AccountProvider({ appName = 'Gear dApp', children }: Props) {
   const handleWalletChange = (id: string, wallet: Wallet) =>
     setWallets((prevWallets) => (prevWallets ? { ...prevWallets, [id]: wallet } : prevWallets));
 
+  const registerUnsub = (unsub: Unsubcall) => unsubsRef.current.push(unsub);
+
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      // TODO: unsubs
       // TODO: what if logged in account will be removed?
-      getWallets(appName, handleAccountsChange, handleWalletChange).then((result) => {
+      getWallets(appName, handleAccountsChange, handleWalletChange, registerUnsub).then((result) => {
         setWallets(result);
         setAccount(getLoggedInAccount(result));
       });
     }, DEFAULT_INJECT_TIMEOUT_MS);
 
-    return () => clearTimeout(timeoutId);
+    return () => {
+      clearTimeout(timeoutId);
+
+      unsubsRef.current.forEach((unsub) => unsub());
+      unsubsRef.current = [];
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

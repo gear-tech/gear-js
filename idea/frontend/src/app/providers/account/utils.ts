@@ -1,6 +1,12 @@
 import { decodeAddress } from '@gear-js/api';
 import { Account } from '@gear-js/react-hooks';
-import { InjectedAccount, Injected, InjectedWindowProvider, InjectedWindow } from '@polkadot/extension-inject/types';
+import {
+  InjectedAccount,
+  Injected,
+  InjectedWindowProvider,
+  InjectedWindow,
+  Unsubcall,
+} from '@polkadot/extension-inject/types';
 
 import { LOCAL_STORAGE_KEY, WALLET_STATUS } from './consts';
 import { Wallet, Wallets } from './types';
@@ -16,14 +22,14 @@ const watchAccounts = (id: string, { accounts }: Injected, onChange: (_id: strin
   const { subscribe } = accounts;
   let isFirstCall = true;
 
-  return new Promise<Account[]>((resolve) => {
-    subscribe((accs) => {
+  return new Promise<[Account[], Unsubcall]>((resolve) => {
+    const unsub = subscribe((accs) => {
       const result = accs.map((account) => getAccount(id, account));
 
       if (!isFirstCall) return onChange(id, result);
 
       isFirstCall = false;
-      resolve(result);
+      resolve([result, unsub]);
     });
   });
 };
@@ -56,6 +62,7 @@ const getConnectedWallet = async (
   id: string,
   wallet: InjectedWindowProvider,
   onAccountsChange: (_id: string, value: Account[]) => void,
+  registerUnsub: (unsub: Unsubcall) => void,
 ) => {
   const connect = wallet.connect || wallet.enable;
 
@@ -64,7 +71,9 @@ const getConnectedWallet = async (
   const { version } = wallet;
   const status = WALLET_STATUS.CONNECTED;
   const connectedWallet = await connect(origin);
-  const accounts = await watchAccounts(id, connectedWallet, onAccountsChange);
+
+  const [accounts, accountsUnsub] = await watchAccounts(id, connectedWallet, onAccountsChange);
+  registerUnsub(accountsUnsub);
 
   return {
     id,
@@ -81,12 +90,13 @@ const getInjectedWallet = (
   wallet: InjectedWindowProvider,
   onAccountsChange: (_id: string, value: Account[]) => void,
   onConnect: (_id: string, _wallet: Wallet) => void,
+  registerUnsub: (unsub: Unsubcall) => void,
 ) => {
   const { version } = wallet;
   const status = WALLET_STATUS.INJECTED;
 
   const connect = async () => {
-    const connectedWallet = await getConnectedWallet(origin, id, wallet, onAccountsChange);
+    const connectedWallet = await getConnectedWallet(origin, id, wallet, onAccountsChange, registerUnsub);
 
     addLocalStorageWalletId(id);
     onConnect(id, connectedWallet);
@@ -99,6 +109,7 @@ const getWallets = async (
   origin: string,
   onAccountsChange: (_id: string, value: Account[]) => void,
   onWalletConnect: (_id: string, _wallet: Wallet) => void,
+  registerUnsub: (unsub: Unsubcall) => void,
 ) => {
   const { injectedWeb3 } = window as unknown as InjectedWindow;
   if (!injectedWeb3) return {};
@@ -108,8 +119,8 @@ const getWallets = async (
       [
         id,
         getLocalStorageWalletIds().includes(id)
-          ? await getConnectedWallet(origin, id, wallet, onAccountsChange)
-          : getInjectedWallet(origin, id, wallet, onAccountsChange, onWalletConnect),
+          ? await getConnectedWallet(origin, id, wallet, onAccountsChange, registerUnsub)
+          : getInjectedWallet(origin, id, wallet, onAccountsChange, onWalletConnect, registerUnsub),
       ] as const,
   );
 
