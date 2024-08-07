@@ -10,6 +10,7 @@ import { getLoggedInAccount, getWallets } from './utils';
 type Value = {
   wallets: Wallets | undefined;
   account: Account | undefined;
+  isAnyWallet: boolean;
   isAccountReady: boolean;
   signer: Signer | undefined;
   login: (account: Account) => void;
@@ -19,6 +20,7 @@ type Value = {
 const DEFAULT_VALUE = {
   wallets: undefined,
   account: undefined,
+  isAnyWallet: false,
   isAccountReady: false,
   signer: undefined,
   login: () => {},
@@ -38,6 +40,7 @@ function AccountProvider({ appName = 'Gear dApp', children }: Props) {
   const [account, setAccount] = useState<Account>();
   const unsubsRef = useRef<Unsubcall[]>([]);
 
+  const isAnyWallet = Object.keys(wallets || {}).length > 0;
   const isAccountReady = !!wallets;
   const signer = wallets && account ? wallets[account.meta.source].signer : undefined;
 
@@ -83,8 +86,8 @@ function AccountProvider({ appName = 'Gear dApp', children }: Props) {
   }, []);
 
   const value = useMemo(
-    () => ({ wallets, account, isAccountReady, signer, login, logout }),
-    [wallets, account, isAccountReady, signer],
+    () => ({ wallets, account, isAnyWallet, isAccountReady, signer, login, logout }),
+    [wallets, account, isAnyWallet, isAccountReady, signer],
   );
 
   return <Provider value={value}>{children}</Provider>;

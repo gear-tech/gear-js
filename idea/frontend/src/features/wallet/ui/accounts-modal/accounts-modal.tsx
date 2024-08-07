@@ -1,8 +1,6 @@
 import { useAccount, useAlert } from '@gear-js/react-hooks';
 import { Button, Modal, buttonStyles } from '@gear-js/ui';
-import { isWeb3Injected } from '@polkadot/extension-dapp';
 import cx from 'clsx';
-import SimpleBar from 'simplebar-react';
 
 import { copyToClipboard } from '@/shared/helpers';
 import LogoutSVG from '@/shared/assets/images/actions/logout.svg?react';
@@ -18,8 +16,7 @@ type Props = {
 };
 
 const AccountsModal = ({ close }: Props) => {
-  const { wallets, account, login, logout } = useAccount();
-
+  const { wallets, isAnyWallet, account, login, logout } = useAccount();
   const alert = useAlert();
 
   const { wallet, walletId, setWalletId, resetWalletId } = useWallet();
@@ -29,15 +26,13 @@ const AccountsModal = ({ close }: Props) => {
     close();
   };
 
-  const modalClassName = cx(styles.modal, !isWeb3Injected && styles.empty);
-  const heading = wallet ? 'Connect account' : 'Choose Wallet';
-
-  const getWallets = () =>
+  const renderWallets = () =>
     WALLETS.map(([id, { SVG, name }]) => {
-      const _wallet = wallets?.[id];
-      const isConnected = _wallet?.status === 'connected';
+      const { status, accounts, connect } = wallets?.[id] || {};
+      const isEnabled = Boolean(status);
+      const isConnected = status === 'connected';
 
-      const accountsCount = _wallet?.accounts?.length;
+      const accountsCount = accounts?.length;
       const accountsStatus = `${accountsCount} ${accountsCount === 1 ? 'account' : 'accounts'}`;
 
       const buttonClassName = cx(
@@ -45,7 +40,7 @@ const AccountsModal = ({ close }: Props) => {
         buttonStyles.large,
         buttonStyles.block,
         styles.button,
-        styles.enabled,
+        isEnabled && styles.enabled,
       );
 
       return (
@@ -53,7 +48,7 @@ const AccountsModal = ({ close }: Props) => {
           <button
             type="button"
             className={buttonClassName}
-            onClick={() => (isConnected ? setWalletId(id) : _wallet?.connect())}>
+            onClick={() => (isConnected ? setWalletId(id) : connect?.())}>
             <span>
               <SVG className={buttonStyles.icon} /> {name}
             </span>
@@ -70,7 +65,7 @@ const AccountsModal = ({ close }: Props) => {
 
   const walletAccounts = wallets && walletId ? wallets[walletId]?.accounts : undefined;
 
-  const getAccounts = () =>
+  const renderAccoounts = () =>
     walletAccounts?.map((_account) => {
       const { address, meta } = _account;
       const isActive = address === account?.address;
@@ -96,35 +91,29 @@ const AccountsModal = ({ close }: Props) => {
       );
     });
 
+  const renderFooter = () =>
+    (wallet || account) && (
+      <div className={styles.footer}>
+        {wallet && <Button icon={wallet.SVG} text={wallet.name} color="transparent" onClick={resetWalletId} />}
+        {account && <Button icon={LogoutSVG} text="Logout" color="transparent" onClick={handleLogoutClick} />}
+      </div>
+    );
+
   return (
-    <Modal heading={heading} close={close} className={modalClassName}>
-      {isWeb3Injected ? (
+    <Modal heading={wallet ? 'Connect account' : 'Choose Wallet'} close={close} footer={renderFooter()}>
+      {isAnyWallet ? (
         <>
-          <SimpleBar className={styles.simplebar}>
-            {!wallet && <ul className={styles.list}>{getWallets()}</ul>}
+          {!wallet && <ul className={styles.list}>{renderWallets()}</ul>}
 
-            {!!wallet &&
-              (walletAccounts?.length ? (
-                <ul className={styles.list}>{getAccounts()}</ul>
-              ) : (
-                <p>
-                  No accounts found. Please open your Polkadot extension and create a new account or import existing.
-                  Then reload this page.
-                </p>
-              ))}
-          </SimpleBar>
-
-          <footer className={styles.footer}>
-            {wallet && <Button icon={wallet.SVG} text={wallet.name} color="transparent" onClick={resetWalletId} />}
-
-            <Button
-              icon={LogoutSVG}
-              text="Logout"
-              color="transparent"
-              className={styles.logoutButton}
-              onClick={handleLogoutClick}
-            />
-          </footer>
+          {!!wallet &&
+            (walletAccounts?.length ? (
+              <ul className={styles.list}>{renderAccoounts()}</ul>
+            ) : (
+              <p>
+                No accounts found. Please open your Polkadot extension and create a new account or import existing. Then
+                reload this page.
+              </p>
+            ))}
         </>
       ) : (
         <p>

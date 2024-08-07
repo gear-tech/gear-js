@@ -1,5 +1,5 @@
 import { useAccount } from '@gear-js/react-hooks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { WALLET } from '../consts';
 import { WalletId } from '../types';
@@ -7,8 +7,13 @@ import { WalletId } from '../types';
 function useWallet() {
   const { account } = useAccount();
 
-  const [walletId, setWalletId] = useState(account?.meta.source as WalletId | undefined);
+  const defaultWalletId = account?.meta.source as WalletId | undefined;
+  const [walletId, setWalletId] = useState(defaultWalletId);
   const wallet = walletId ? WALLET[walletId] : undefined;
+
+  useEffect(() => {
+    setWalletId(defaultWalletId);
+  }, [defaultWalletId]);
 
   const resetWalletId = () => setWalletId(undefined);
 

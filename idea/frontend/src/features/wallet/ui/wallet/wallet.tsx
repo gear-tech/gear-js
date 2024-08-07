@@ -12,8 +12,7 @@ import { Balance } from '../balance';
 import styles from './wallet.module.scss';
 
 const Wallet = () => {
-  const isAccountReady = true;
-  const { account } = useAccount();
+  const { account, isAccountReady } = useAccount();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
