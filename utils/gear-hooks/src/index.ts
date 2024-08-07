@@ -117,6 +117,7 @@ export {
   useIsAnyAccountVoucherActive,
   useIssuedVouchers,
   useAccountIssuedVouchers,
+  useSails,
   useProgram,
   usePrepareProgramTransaction,
   useSendProgramTransaction,
