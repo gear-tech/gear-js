@@ -52,10 +52,15 @@ function AccountProvider({ appName = 'Gear dApp', children }: Props) {
     localStorage.removeItem(LOCAL_STORAGE_KEY.ACCOUNT_ADDRESS);
   };
 
-  const handleAccountsChange = (id: string, accounts: Account[]) =>
+  const handleAccountsChange = (id: string, accounts: Account[]) => {
+    const isLoggedInAccountExists = accounts.some(({ address }) => address === account?.address);
+
+    if (!isLoggedInAccountExists) logout();
+
     setWallets((prevWallets) =>
       prevWallets ? { ...prevWallets, [id]: { ...prevWallets[id], accounts } } : prevWallets,
     );
+  };
 
   const handleWalletChange = (id: string, wallet: Wallet) =>
     setWallets((prevWallets) => (prevWallets ? { ...prevWallets, [id]: wallet } : prevWallets));
@@ -64,7 +69,6 @@ function AccountProvider({ appName = 'Gear dApp', children }: Props) {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      // TODO: what if logged in account will be removed?
       getWallets(appName, handleAccountsChange, handleWalletChange, registerUnsub).then((result) => {
         setWallets(result);
         setAccount(getLoggedInAccount(result));

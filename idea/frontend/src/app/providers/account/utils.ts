@@ -64,27 +64,31 @@ const getConnectedWallet = async (
   onAccountsChange: (_id: string, value: Account[]) => void,
   registerUnsub: (unsub: Unsubcall) => void,
 ) => {
-  const connect = wallet.connect || wallet.enable;
+  try {
+    const connect = wallet.connect || wallet.enable;
 
-  if (!connect) throw new Error('Connection method is not found');
+    if (!connect) throw new Error('Connection method is not found');
 
-  const { version } = wallet;
-  const status = WALLET_STATUS.CONNECTED;
+    const { version } = wallet;
+    const status = WALLET_STATUS.CONNECTED;
 
-  const connectedWallet = await connect(origin);
-  const { signer } = connectedWallet;
+    const connectedWallet = await connect(origin);
+    const { signer } = connectedWallet;
 
-  const [accounts, accountsUnsub] = await watchAccounts(id, connectedWallet, onAccountsChange);
-  registerUnsub(accountsUnsub);
+    const [accounts, accountsUnsub] = await watchAccounts(id, connectedWallet, onAccountsChange);
+    registerUnsub(accountsUnsub);
 
-  return {
-    id,
-    version,
-    status,
-    accounts,
-    signer,
-    connect: () => Promise.reject(new Error('Wallet is already connected')),
-  };
+    return {
+      id,
+      version,
+      status,
+      accounts,
+      signer,
+      connect: () => Promise.reject(new Error('Wallet is already connected')),
+    };
+  } catch (error) {
+    console.error('Error while connecting wallet', error);
+  }
 };
 
 const getInjectedWallet = (
@@ -101,6 +105,7 @@ const getInjectedWallet = (
   const connect = async () => {
     try {
       const connectedWallet = await getConnectedWallet(origin, id, wallet, onAccountsChange, registerUnsub);
+      if (!connectedWallet) return;
 
       addLocalStorageWalletId(id);
       onConnect(id, connectedWallet);
@@ -121,24 +126,17 @@ const getWallets = async (
   const { injectedWeb3 } = window as unknown as InjectedWindow;
   if (!injectedWeb3) return {};
 
-  const promiseEntries = Object.entries(injectedWeb3).map(async ([id, wallet]) => {
-    let result: Wallet;
-
-    if (getLocalStorageWalletIds().includes(id)) {
-      // in case if wallet was connected before, but extension got removed or permission was revoked
-      try {
-        result = await getConnectedWallet(origin, id, wallet, onAccountsChange, registerUnsub);
-      } catch (error) {
-        console.error('Error while connecting wallet', error);
-
-        result = getInjectedWallet(origin, id, wallet, onAccountsChange, onWalletConnect, registerUnsub);
-      }
-    } else {
-      result = getInjectedWallet(origin, id, wallet, onAccountsChange, onWalletConnect, registerUnsub);
-    }
-
-    return [id, result] as const;
-  });
+  const promiseEntries = Object.entries(injectedWeb3).map(
+    async ([id, wallet]) =>
+      [
+        id,
+        getLocalStorageWalletIds().includes(id)
+          ? (await getConnectedWallet(origin, id, wallet, onAccountsChange, registerUnsub)) ||
+            // in case if wallet was connected before, but extension was removed/permission was revoked
+            getInjectedWallet(origin, id, wallet, onAccountsChange, onWalletConnect, registerUnsub)
+          : getInjectedWallet(origin, id, wallet, onAccountsChange, onWalletConnect, registerUnsub),
+      ] as const,
+  );
 
   return Object.fromEntries(await Promise.all(promiseEntries));
 };
