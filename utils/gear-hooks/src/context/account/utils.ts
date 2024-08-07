@@ -1,5 +1,5 @@
 import { decodeAddress } from '@gear-js/api';
-import { Account } from '@gear-js/react-hooks';
+import { Keyring } from '@polkadot/api';
 import {
   InjectedAccount,
   Injected,
@@ -8,15 +8,20 @@ import {
   Unsubcall,
 } from '@polkadot/extension-inject/types';
 
+import { VARA_SS58_FORMAT } from '../../consts';
 import { LOCAL_STORAGE_KEY, WALLET_STATUS } from './consts';
-import { Wallet, Wallets } from './types';
+import { Account, Wallet, Wallets } from './types';
 
-const getAccount = (source: string, { address, name, genesisHash, type }: InjectedAccount) => ({
-  address,
-  decodedAddress: decodeAddress(address),
-  meta: { source, name, genesisHash },
-  type,
-});
+const getAccount = (source: string, { address, name, genesisHash, type }: InjectedAccount) => {
+  const decodedAddress = decodeAddress(address);
+
+  return {
+    address: new Keyring().encodeAddress(decodedAddress, VARA_SS58_FORMAT),
+    decodedAddress,
+    meta: { source, name, genesisHash },
+    type,
+  };
+};
 
 const watchAccounts = (id: string, { accounts }: Injected, onChange: (_id: string, value: Account[]) => void) => {
   const { subscribe } = accounts;
@@ -132,7 +137,8 @@ const getWallets = async (
         id,
         getLocalStorageWalletIds().includes(id)
           ? (await getConnectedWallet(origin, id, wallet, onAccountsChange, registerUnsub)) ||
-            // in case if wallet was connected before, but extension was removed/permission was revoked
+            // in case if wallet was connected, but extension's auth access is not present,
+            // localStorage entry still exists and we're trying to establish connection again
             getInjectedWallet(origin, id, wallet, onAccountsChange, onWalletConnect, registerUnsub)
           : getInjectedWallet(origin, id, wallet, onAccountsChange, onWalletConnect, registerUnsub),
       ] as const,

@@ -1,10 +1,10 @@
-import { Account, ProviderProps } from '@gear-js/react-hooks';
 import { Unsubcall } from '@polkadot/extension-inject/types';
 import { Signer } from '@polkadot/types/types';
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
+import { ProviderProps } from '../../types';
 import { LOCAL_STORAGE_KEY, DEFAULT_INJECT_TIMEOUT_MS } from './consts';
-import { Wallet, Wallets } from './types';
+import { Account, Wallet, Wallets } from './types';
 import { getLoggedInAccount, getWallets } from './utils';
 
 type Value = {
@@ -27,7 +27,6 @@ const DEFAULT_VALUE = {
 
 const AccountContext = createContext<Value>(DEFAULT_VALUE);
 const { Provider } = AccountContext;
-
 const useAccount = () => useContext(AccountContext);
 
 type Props = ProviderProps & {
@@ -54,7 +53,6 @@ function AccountProvider({ appName = 'Gear dApp', children }: Props) {
 
   const handleAccountsChange = (id: string, accounts: Account[]) => {
     const isLoggedInAccountExists = accounts.some(({ address }) => address === account?.address);
-
     if (!isLoggedInAccountExists) logout();
 
     setWallets((prevWallets) =>
@@ -92,4 +90,4 @@ function AccountProvider({ appName = 'Gear dApp', children }: Props) {
   return <Provider value={value}>{children}</Provider>;
 }
 
-export { AccountProvider as NewAccountProvider, useAccount as useNewAccount };
+export { AccountProvider, useAccount };

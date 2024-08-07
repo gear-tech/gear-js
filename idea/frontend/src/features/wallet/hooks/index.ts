@@ -3,10 +3,9 @@ import { useState } from 'react';
 
 import { WALLET } from '../consts';
 import { WalletId } from '../types';
-import { useNewAccount } from '@/app/providers/account';
 
 function useWallet() {
-  const { account } = useNewAccount();
+  const { account } = useAccount();
 
   const [walletId, setWalletId] = useState(account?.meta.source as WalletId | undefined);
   const wallet = walletId ? WALLET[walletId] : undefined;

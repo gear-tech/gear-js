@@ -10,7 +10,6 @@ import { EventsProvider } from './events';
 import { ChainProvider } from './chain';
 import { OnboardingProvider } from './onboarding';
 import { QueryProvider } from './query';
-import { NewAccountProvider } from './account';
 
 const providers = [
   BrowserRouter,
@@ -23,7 +22,6 @@ const providers = [
   BlocksProvider,
   QueryProvider,
   ModalProvider,
-  NewAccountProvider,
 ];
 
 const withProviders = (Component: ComponentType) => () =>

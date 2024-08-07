@@ -10,11 +10,10 @@ import { AccountsModal } from '../accounts-modal';
 import { AccountButton } from '../account-button';
 import { Balance } from '../balance';
 import styles from './wallet.module.scss';
-import { useNewAccount } from '@/app/providers/account';
 
 const Wallet = () => {
   const isAccountReady = true;
-  const { account } = useNewAccount();
+  const { account } = useAccount();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 

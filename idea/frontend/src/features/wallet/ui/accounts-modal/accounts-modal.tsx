@@ -1,4 +1,4 @@
-import { useAlert } from '@gear-js/react-hooks';
+import { useAccount, useAlert } from '@gear-js/react-hooks';
 import { Button, Modal, buttonStyles } from '@gear-js/ui';
 import { isWeb3Injected } from '@polkadot/extension-dapp';
 import cx from 'clsx';
@@ -12,14 +12,13 @@ import { AccountButton } from '../account-button';
 import { useWallet } from '../../hooks';
 import { WALLETS } from '../../consts';
 import styles from './accounts-modal.module.scss';
-import { useNewAccount } from '@/app/providers/account';
 
 type Props = {
   close: () => void;
 };
 
 const AccountsModal = ({ close }: Props) => {
-  const { wallets, account, login, logout } = useNewAccount();
+  const { wallets, account, login, logout } = useAccount();
 
   const alert = useAlert();
 

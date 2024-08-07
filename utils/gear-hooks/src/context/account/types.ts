@@ -21,4 +21,4 @@ type Wallet = {
 
 type Wallets = Record<string, Wallet>;
 
-export type { WalletStatus, Wallet, Wallets };
+export type { WalletStatus, Account, Wallet, Wallets };
