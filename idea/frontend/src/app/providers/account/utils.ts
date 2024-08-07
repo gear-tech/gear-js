@@ -70,7 +70,9 @@ const getConnectedWallet = async (
 
   const { version } = wallet;
   const status = WALLET_STATUS.CONNECTED;
+
   const connectedWallet = await connect(origin);
+  const { signer } = connectedWallet;
 
   const [accounts, accountsUnsub] = await watchAccounts(id, connectedWallet, onAccountsChange);
   registerUnsub(accountsUnsub);
@@ -80,6 +82,7 @@ const getConnectedWallet = async (
     version,
     status,
     accounts,
+    signer,
     connect: () => Promise.reject(new Error('Wallet is already connected')),
   };
 };

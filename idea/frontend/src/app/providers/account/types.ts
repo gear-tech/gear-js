@@ -1,5 +1,6 @@
 import { HexString } from '@gear-js/api';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import { Signer } from '@polkadot/types/types';
 
 import { WALLET_STATUS } from './consts';
 
@@ -14,6 +15,7 @@ type Wallet = {
   status: WalletStatus;
   version?: string;
   accounts?: Account[];
+  signer?: Signer;
   connect: () => Promise<void>;
 };
 

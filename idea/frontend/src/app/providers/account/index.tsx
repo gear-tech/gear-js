@@ -1,5 +1,6 @@
 import { Account, ProviderProps } from '@gear-js/react-hooks';
 import { Unsubcall } from '@polkadot/extension-inject/types';
+import { Signer } from '@polkadot/types/types';
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { LOCAL_STORAGE_KEY, DEFAULT_INJECT_TIMEOUT_MS } from './consts';
@@ -10,6 +11,7 @@ type Value = {
   wallets: Wallets | undefined;
   account: Account | undefined;
   isAccountReady: boolean;
+  signer: Signer | undefined;
   login: (account: Account) => void;
   logout: () => void;
 };
@@ -18,6 +20,7 @@ const DEFAULT_VALUE = {
   wallets: undefined,
   account: undefined,
   isAccountReady: false,
+  signer: undefined,
   login: () => {},
   logout: () => {},
 } as const;
@@ -35,7 +38,9 @@ function AccountProvider({ appName = 'Gear dApp', children }: Props) {
   const [wallets, setWallets] = useState<Wallets>();
   const [account, setAccount] = useState<Account>();
   const unsubsRef = useRef<Unsubcall[]>([]);
+
   const isAccountReady = !!wallets;
+  const signer = wallets && account ? wallets[account.meta.source].signer : undefined;
 
   const login = (_account: Account) => {
     setAccount(_account);
@@ -76,8 +81,8 @@ function AccountProvider({ appName = 'Gear dApp', children }: Props) {
   }, []);
 
   const value = useMemo(
-    () => ({ wallets, account, isAccountReady, login, logout }),
-    [wallets, account, isAccountReady],
+    () => ({ wallets, account, isAccountReady, signer, login, logout }),
+    [wallets, account, isAccountReady, signer],
   );
 
   return <Provider value={value}>{children}</Provider>;
