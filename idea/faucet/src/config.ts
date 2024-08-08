@@ -21,9 +21,6 @@ export default {
     accountSeed: checkEnv('TEST_ACCOUNT_SEED'),
     balanceToTransfer: checkEnv('TEST_BALANCE_VALUE'),
   },
-  rabbitmq: {
-    url: checkEnv('RABBIT_MQ_URL'),
-  },
   server: {
     port: parseInt(process.env.PORT || '3010'),
   },

@@ -2,7 +2,6 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { BN } from '@polkadot/util';
 import { logger } from '@gear-js/common';
 import { GearApi, TransferData } from '@gear-js/api';
-import { randomUUID } from 'node:crypto';
 import { CronJob } from 'cron';
 
 import { createAccount } from '../utils';
@@ -14,7 +13,6 @@ let reconnectionsCounter = 0;
 
 interface TBRequestParams {
   addr: string;
-  correlationId: string;
   cb: (error: string, result: string) => void;
 }
 
@@ -96,9 +94,7 @@ export class GearService {
     const transferred = [];
     let blockHash: string;
 
-    const correlationId = randomUUID({});
-
-    logger.info(`Sending batch with ${addresses.length} transfers`, { addresses, correlationId });
+    logger.info(`Sending batch with ${addresses.length} transfers`, { addresses });
 
     try {
       await new Promise<any>((resolve, reject) =>
@@ -119,16 +115,16 @@ export class GearService {
                   resolve(null);
                   break;
                 case TransferEvent.EXTRINSIC_FAILED:
-                  reject({ blockHash, correlationId, error: this.api.getExtrinsicFailedError(event).docs });
+                  reject({ blockHash, error: this.api.getExtrinsicFailedError(event).docs });
                   break;
               }
             }
           })
           .catch((error) => {
-            reject({ error: error.message, correlationId });
+            reject({ error: error.message });
           }),
       );
-      logger.info(`Batch success`, { blockHash, correlationId });
+      logger.info(`Batch success`, { blockHash });
     } catch (err) {
       logger.error(`Batch error`, { ...err });
     }
@@ -136,8 +132,8 @@ export class GearService {
     return [transferred, blockHash];
   }
 
-  requestBalance(addr: string, correlationId: string, cb: (error: string, result: string) => void) {
-    this.queue.push({ addr, correlationId, cb });
+  requestBalance(addr: string, cb: (error: string, result: string) => void) {
+    this.queue.push({ addr, cb });
   }
 
   async processQueue() {
@@ -155,10 +151,10 @@ export class GearService {
 
         requests.forEach((req) => {
           if (transferred.includes(req.addr)) {
-            logger.info(`Balance transferred to ${req.addr}`, { blockHash, correlationId: req.correlationId });
+            logger.info(`Balance transferred to ${req.addr}`, { blockHash });
             req.cb(null, this.balanceToTransfer.toString());
           } else {
-            logger.error(`Transfer balance to ${req.addr} failed`, { blockHash, correlationId: req.correlationId });
+            logger.error(`Transfer balance to ${req.addr} failed`, { blockHash });
             req.cb(`Transfer balance to ${req.addr} failed`, null);
           }
         });

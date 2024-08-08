@@ -33,28 +33,25 @@ export class TransferService {
     return isLastTransferEarlierThanToday(transfer);
   }
 
-  async transferBalance(
-    { address, genesis }: { address: string; genesis: string },
-    correlationId: string,
-  ): Promise<ResponseTransferBalance> {
+  async transferBalance({ address, genesis }: { address: string; genesis: string }): Promise<ResponseTransferBalance> {
     let addr: string;
     try {
       addr = validateAddress(address);
     } catch (err) {
-      logger.error('Invalid address', { address, correlationId });
+      logger.error('Invalid address', { address });
       return { error: JSONRPC_ERRORS.InvalidAddress.name };
     }
 
     const isAllowed = await this.isPossibleToTransfer(addr, genesis);
 
     if (!isAllowed) {
-      logger.info(`Transfer limit reached`, { addr, correlationId });
+      logger.info(`Transfer limit reached`, { addr });
       return { error: JSONRPC_ERRORS.TransferLimitReached.name };
     }
 
     try {
       const result = await new Promise<string>((resolve, reject) =>
-        this.gearService.requestBalance(addr, correlationId, (error, result) => {
+        this.gearService.requestBalance(addr, (error, result) => {
           if (error) {
             reject(error);
           } else {
