@@ -23,5 +23,6 @@ export default {
   },
   server: {
     port: parseInt(process.env.PORT || '3010'),
+    captchaSecret: checkEnv('CAPTCH_SECRET'),
   },
 };

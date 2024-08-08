@@ -15,7 +15,7 @@ app.use('/health', healthcheckRouter);
 
 const startApp = async () => {
   app.listen(port, () => {
-    logger.info(`Healthckech server is running on port ${port}`);
+    logger.info(`Server is running on port ${port}`);
   });
 
   await connectToDB();

@@ -2502,6 +2502,7 @@ __metadata:
     eslint-config-prettier: 8.5.0
     eslint-plugin-prettier: 3.4.1
     express: 4.18.1
+    hcaptcha: 0.1.1
     nodemon: 2.0.16
     pg: 8.7.1
     postgres: 1.0.2

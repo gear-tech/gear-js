@@ -2,12 +2,14 @@ import { Request, Response, Router } from 'express';
 
 import { GearService, TransferService } from './services';
 import { logger } from '@gear-js/common';
+import { captchaMiddleware } from './middleware/balance.middleware';
 
 export class BalanceService {
   private router = Router({});
 
   constructor(private transferService: TransferService, private gearService: GearService) {}
   init() {
+    this.router.use(captchaMiddleware);
     this.router.post('/balance', this.handleBalance.bind(this));
   }
 
