@@ -42,6 +42,3 @@ mod exports {
 // Empty exports while compiling into wasm
 #[cfg(not(feature = "std"))]
 mod exports {}
-
-// Public exports
-pub use exports::*;

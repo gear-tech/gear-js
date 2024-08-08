@@ -17,7 +17,6 @@ test-meta-state-v2 = { path = "state-v2", default-features = false, optional = t
 test-meta-io = { path = "io" }
 gear-wasm-builder.workspace = true
 
-
 [features]
 default = ["std"]
 std = ["codec/std"]
