@@ -7,12 +7,13 @@ import {
   InjectedWindow,
   Unsubcall,
 } from '@polkadot/extension-inject/types';
+import { Signer } from '@polkadot/types/types';
 
 import { VARA_SS58_FORMAT } from '../../consts';
 import { LOCAL_STORAGE_KEY, WALLET_STATUS } from './consts';
 import { Account, Wallet, Wallets } from './types';
 
-const getAccount = (source: string, { address, name, genesisHash, type }: InjectedAccount) => {
+const getAccount = (source: string, signer: Signer, { address, name, genesisHash, type }: InjectedAccount) => {
   const decodedAddress = decodeAddress(address);
 
   return {
@@ -20,16 +21,21 @@ const getAccount = (source: string, { address, name, genesisHash, type }: Inject
     decodedAddress,
     meta: { source, name, genesisHash },
     type,
+    signer,
   };
 };
 
-const watchAccounts = (id: string, { accounts }: Injected, onChange: (_id: string, value: Account[]) => void) => {
+const watchAccounts = (
+  id: string,
+  { accounts, signer }: Injected,
+  onChange: (_id: string, value: Account[]) => void,
+) => {
   const { subscribe } = accounts;
   let isFirstCall = true;
 
   return new Promise<[Account[], Unsubcall]>((resolve) => {
     const unsub = subscribe((accs) => {
-      const result = accs.map((account) => getAccount(id, account));
+      const result = accs.map((account) => getAccount(id, signer, account));
 
       if (!isFirstCall) return onChange(id, result);
 
@@ -108,15 +114,11 @@ const getInjectedWallet = (
   const status = WALLET_STATUS.INJECTED;
 
   const connect = async () => {
-    try {
-      const connectedWallet = await getConnectedWallet(origin, id, wallet, onAccountsChange, registerUnsub);
-      if (!connectedWallet) return;
+    const connectedWallet = await getConnectedWallet(origin, id, wallet, onAccountsChange, registerUnsub);
+    if (!connectedWallet) return;
 
-      addLocalStorageWalletId(id);
-      onConnect(id, connectedWallet);
-    } catch (error) {
-      console.error('Error while connecting wallet', error);
-    }
+    addLocalStorageWalletId(id);
+    onConnect(id, connectedWallet);
   };
 
   return { id, version, status, connect };

@@ -1,5 +1,4 @@
 import { useApi, useAlert, useAccount } from '@gear-js/react-hooks';
-import { web3FromSource } from '@polkadot/extension-dapp';
 import { useCallback } from 'react';
 
 import { useModal, useSignAndSend } from '@/hooks';
@@ -22,13 +21,12 @@ const useMessageActions = () => {
         if (!isApiReady) throw new Error('API is not initialized');
         checkWallet(account);
 
-        const { meta, address } = account!;
+        const { address, signer } = account!;
 
         const sendExtrinsic = api.message.send(message, metadata, payloadType);
 
         const extrinsic = voucherId ? api.voucher.call(voucherId, { SendMessage: sendExtrinsic }) : sendExtrinsic;
 
-        const { signer } = await web3FromSource(meta.source);
         const { partialFee } = await api.message.paymentInfo(address, { signer });
 
         const handleConfirm = () =>
@@ -60,13 +58,12 @@ const useMessageActions = () => {
         if (!isApiReady) throw new Error('API is not initialized');
         checkWallet(account);
 
-        const { meta, address } = account!;
+        const { address, signer } = account!;
 
         const replyExtrinsic = await api.message.sendReply(reply, metadata, payloadType);
 
         const extrinsic = voucherId ? api.voucher.call(voucherId, { SendReply: replyExtrinsic }) : replyExtrinsic;
 
-        const { signer } = await web3FromSource(meta.source);
         const { partialFee } = await api.message.paymentInfo(address, { signer });
 
         const handleConfirm = () =>

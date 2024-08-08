@@ -1,5 +1,4 @@
 import { Unsubcall } from '@polkadot/extension-inject/types';
-import { Signer } from '@polkadot/types/types';
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { ProviderProps } from '../../types';
@@ -12,7 +11,6 @@ type Value = {
   account: Account | undefined;
   isAnyWallet: boolean;
   isAccountReady: boolean;
-  signer: Signer | undefined;
   login: (account: Account) => void;
   logout: () => void;
 };
@@ -22,7 +20,6 @@ const DEFAULT_VALUE = {
   account: undefined,
   isAnyWallet: false,
   isAccountReady: false,
-  signer: undefined,
   login: () => {},
   logout: () => {},
 } as const;
@@ -42,7 +39,6 @@ function AccountProvider({ appName = 'Gear dApp', children }: Props) {
 
   const isAnyWallet = Object.keys(wallets || {}).length > 0;
   const isAccountReady = !!wallets;
-  const signer = wallets && account ? wallets[account.meta.source].signer : undefined;
 
   const login = (_account: Account) => {
     setAccount(_account);
@@ -86,8 +82,8 @@ function AccountProvider({ appName = 'Gear dApp', children }: Props) {
   }, []);
 
   const value = useMemo(
-    () => ({ wallets, account, isAnyWallet, isAccountReady, signer, login, logout }),
-    [wallets, account, isAnyWallet, isAccountReady, signer],
+    () => ({ wallets, account, isAnyWallet, isAccountReady, login, logout }),
+    [wallets, account, isAnyWallet, isAccountReady],
   );
 
   return <Provider value={value}>{children}</Provider>;

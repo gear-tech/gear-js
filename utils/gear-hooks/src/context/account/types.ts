@@ -8,6 +8,7 @@ type WalletStatus = typeof WALLET_STATUS[keyof typeof WALLET_STATUS];
 
 type Account = InjectedAccountWithMeta & {
   decodedAddress: HexString;
+  signer: Signer;
 };
 
 type Wallet = {
@@ -15,7 +16,6 @@ type Wallet = {
   status: WalletStatus;
   version?: string;
   accounts?: Account[];
-  signer?: Signer;
   connect: () => Promise<void>;
 };
 

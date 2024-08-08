@@ -23,7 +23,6 @@
   "peerDependencies": {
     "@gear-js/api": "0.38.1",
     "@polkadot/api": "11.0.2",
-    "@polkadot/extension-dapp": "0.46.5",
     "@tanstack/react-query": "5.29.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -31,7 +30,6 @@
   },
   "dependencies": {
     "@polkadot/api-derive": "11.0.2",
-    "@polkadot/extension-inject": "0.46.5",
     "@polkadot/util": "12.6.2",
     "@substrate/connect": "0.8.10",
     "bignumber.js": "9.1.2",
@@ -41,7 +39,7 @@
   "devDependencies": {
     "@gear-js/api": "0.38.1",
     "@polkadot/api": "11.0.2",
-    "@polkadot/extension-dapp": "0.46.5",
+    "@polkadot/extension-inject": "0.51.1",
     "@polkadot/types": "11.0.2",
     "@rollup/plugin-commonjs": "25.0.5",
     "@rollup/plugin-node-resolve": "15.2.3",

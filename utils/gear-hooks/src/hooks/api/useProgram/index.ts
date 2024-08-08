@@ -1,4 +1,3 @@
-import { web3FromSource } from '@polkadot/extension-dapp';
 import { GasLimit, ProgramMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { useAccount, useAlert, useApi } from 'context';
@@ -44,8 +43,7 @@ function useProgram(
     const program = { [codeKey]: codeOrCodeId, initPayload, gasLimit, value, salt };
     const callbacks = { onSuccess, onError };
 
-    const { meta, address } = account;
-    const { source } = meta;
+    const { address, signer } = account;
 
     // @ts-ignore
     const { programId } = api.program[method](program, metadata, payloadType);
@@ -53,12 +51,8 @@ function useProgram(
     const alertId = alert.loading('SignIn', { title });
     const initialization = waitForProgramInit(api, programId);
 
-    return web3FromSource(source)
-      .then(({ signer }) =>
-        api.program.signAndSend(address, { signer }, (result) =>
-          handleSignStatus({ result, callbacks, alertId, programId }),
-        ),
-      )
+    return api.program
+      .signAndSend(address, { signer }, (result) => handleSignStatus({ result, callbacks, alertId, programId }))
       .then(() => initialization)
       .then((status) => handleInitStatus({ status, programId, onError }))
       .catch(({ message }: Error) => handleError({ message, alertId, onError }));
