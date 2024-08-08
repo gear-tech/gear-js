@@ -1,13 +1,23 @@
 [workspace]
 resolver = "2"
 
-members = [
-  "test-gas",
-  "test-waitlist",
-  "test-meta",
-  "empty"
-]
+members = ["test-gas", "test-waitlist", "test-meta", "empty"]
 
 [profile.release]
 lto = true
 opt-level = 's'
+
+[workspace.dependencies]
+gstd = { git = "https://github.com/gear-tech/gear.git" }
+scale-info = { version = "2.11.0", default-features = false, features = [
+    "derive",
+] }
+codec = { package = "parity-scale-codec", version = "3.6.9", default-features = false, features = [
+    "derive",
+    "full",
+] }
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", features = [
+    "metawasm",
+] }
+gmeta = { git = "https://github.com/gear-tech/gear.git" }
+primitive-types = { version = "0.12.2", default-features = false }

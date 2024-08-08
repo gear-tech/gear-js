@@ -21,27 +21,10 @@
 // Reexport of types
 pub use test_gas_io::*;
 
-// For wasm compilation
-#[cfg(not(feature = "std"))]
 mod wasm;
 
-// Exports for native usage as dependency in other crates
-#[cfg(feature = "std")]
 mod exports {
     mod code {
         include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
     }
-
-    // Binary itself
-    pub use code::WASM_BINARY_OPT as WASM_BINARY;
-
-    // Metadata of the binary, defining types and registry for JS
-    pub use code::WASM_METADATA;
 }
-
-// Empty exports while compiling into wasm
-#[cfg(not(feature = "std"))]
-mod exports {}
-
-// Public exports
-pub use exports::*;
