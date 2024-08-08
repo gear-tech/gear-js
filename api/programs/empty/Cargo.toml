@@ -5,7 +5,7 @@ authors = ["Gear Technologies"]
 edition = "2021"
 
 [dependencies]
-gstd = { git = "https://github.com/gear-tech/gear.git" }
+gstd.workspace = true
 
 [build-dependencies]
-gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git" }
+gear-wasm-builder.workspace = true

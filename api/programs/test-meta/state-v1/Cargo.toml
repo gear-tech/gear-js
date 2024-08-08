@@ -4,12 +4,12 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-gstd = { git = "https://github.com/gear-tech/gear.git", features = ["debug"] }
-gmeta = { git = "https://github.com/gear-tech/gear.git", features = ["codegen"] }
+gmeta = { workspace = true, features = ["codegen"] }
+gstd.workspace = true
 test-meta-io = { path = "../io" }
 
 [build-dependencies]
-gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", features = ["metawasm"] }
+gear-wasm-builder = { workspace = true, features = ["metawasm"] }
 
 [features]
 default = ["std"]
