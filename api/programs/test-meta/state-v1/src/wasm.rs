@@ -1,5 +1,5 @@
 use gmeta::metawasm;
-use gstd::{debug, prelude::*};
+use gstd::prelude::*;
 use test_meta_io::Wallet;
 
 #[metawasm]

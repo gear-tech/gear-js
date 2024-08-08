@@ -10,15 +10,15 @@ on:
       - api/**
   workflow_dispatch:
 
-env: 
-  NIGHTLY_TOOLCHAIN_VERSION: ${{ vars.NIGHTLY_TOOLCHAIN_VERSION }}
+env:
+  BINARYEN_VERSION: version_111
 
 jobs:
   test:
     if: github.event_name == 'pull_request'
 
     runs-on: ubuntu-22.04
-    env: 
+    env:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
       - name: Cancel previous workflow runs
@@ -27,64 +27,47 @@ jobs:
           access_token: ${{ github.token }}
       - uses: actions/checkout@v3
 
-      - name: "Install: NodeJS 18.x"
-        uses: actions/setup-node@v3
+      - name: 'Install: NodeJS 20.x'
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 20.x
 
-      - name: "Install: Set cargo path"
-        run: echo "/tmp/cargo/bin" >> $GITHUB_PATH
-
-      - name: "Install: Nightly toolchain"
-        uses: actions-rs/toolchain@v1
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: nightly
-          target: wasm32-unknown-unknown
-          components: llvm-tools-preview
-      
-      - name: "Install: Show specific nightly version"
-        if: ${{ env.NIGHTLY_TOOLCHAIN_VERSION != '' }}
-        run: echo $NIGHTLY_TOOLCHAIN_VERSION | sed 's/-/ - /g'
+          targets: wasm32-unknown-unknown
+          components: clippy, rustfmt
 
-      - name: "Install: Specific nightly toolchain"
-        if: ${{ env.NIGHTLY_TOOLCHAIN_VERSION != '' }}
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: nightly-${{ env.NIGHTLY_TOOLCHAIN_VERSION }}
-          target: wasm32-unknown-unknown
-          components: llvm-tools-preview
-
-      - name: "Install: Pin to specific nightly toolchain"
-        if: ${{ env.NIGHTLY_TOOLCHAIN_VERSION != '' }}
+      - name: 'Install: binaryen'
         run: |
-          rm -rf $RUSTUP_HOME/toolchains/nightly-x86_64-unknown-linux-gnu
-          ln -s $RUSTUP_HOME/toolchains/nightly-$NIGHTLY_TOOLCHAIN_VERSION-x86_64-unknown-linux-gnu $RUSTUP_HOME/toolchains/nightly-x86_64-unknown-linux-gnu
-      
-      - name: "Install: pkg dependencies"
+          wget -c https://github.com/WebAssembly/binaryen/releases/download/$BINARYEN_VERSION/binaryen-$BINARYEN_VERSION-x86_64-linux.tar.gz -O - | tar -xz -C .
+          sudo cp binaryen-$BINARYEN_VERSION/bin/wasm-opt /usr/bin/
+
+      - name: 'Install: pkg dependencies'
         working-directory: api
         run: yarn install
 
-      - name: "Build: @gear-js/api"
+      - name: 'Build: @gear-js/api'
         working-directory: api
         run: yarn build
 
-      - name: "Prepare: build programs"
+      - name: 'Prepare: build programs'
         working-directory: api/programs
         run: cargo build --locked
 
-      - name: "Prepare: download Gear node"
+      - name: 'Prepare: download Gear node'
         run: |
           wget -O ./gear https://github.com/gear-tech/gear/releases/download/build/gear
           chmod +x gear
 
-      - name: "Prepare: run Gear node"
-        run: |          
+      - name: 'Prepare: run Gear node'
+        run: |
           nohup ./gear --dev --execution=wasm --tmp --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
 
-      - name: "Prepare: sleep 3 min"
+      - name: 'Prepare: sleep 3 min'
         run: sleep 180
 
-      - name: "Test: run"
+      - name: 'Test: run'
         working-directory: api
         run: yarn test
 
