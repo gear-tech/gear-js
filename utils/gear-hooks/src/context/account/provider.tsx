@@ -29,10 +29,10 @@ const { Provider } = AccountContext;
 const useAccount = () => useContext(AccountContext);
 
 type Props = ProviderProps & {
-  appName?: string;
+  appName: string;
 };
 
-function AccountProvider({ appName = 'Gear dApp', children }: Props) {
+function AccountProvider({ appName, children }: Props) {
   const [wallets, setWallets] = useState<Wallets>();
   const [account, setAccount] = useState<Account>();
   const unsubsRef = useRef<Unsubcall[]>([]);
