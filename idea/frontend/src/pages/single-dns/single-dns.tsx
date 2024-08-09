@@ -1,4 +1,5 @@
 import { HexString } from '@gear-js/api';
+import { useAccount } from '@gear-js/react-hooks';
 import { useParams } from 'react-router-dom';
 
 import { useSingleDns, EditDns, DeleteDns, AdminCard } from '@/features/dns';
@@ -11,10 +12,13 @@ type Params = {
 };
 
 function SingleDns() {
+  const { account } = useAccount();
   const { address } = useParams() as Params;
 
-  const { data, refetch } = useSingleDns(address);
+  const { data, isLoading, refetch } = useSingleDns(address);
   const { name, createdAt, admins } = data || {};
+
+  const isAdmin = account && admins ? admins.includes(account.decodedAddress) : false;
 
   console.log('data: ', data);
 
@@ -28,10 +32,12 @@ function SingleDns() {
           {/* same as in program page, maybe worth to share */}
           <h2 className={styles.heading}>{name}</h2>
 
-          <div className={styles.buttons}>
-            <EditDns initialValues={{ name, address }} onSuccess={refetch} />
-            <DeleteDns name={name} onSuccess={refetch} />
-          </div>
+          {isAdmin && (
+            <div className={styles.buttons}>
+              <EditDns initialValues={{ name, address }} onSuccess={refetch} />
+              <DeleteDns name={name} onSuccess={refetch} />
+            </div>
+          )}
         </header>
       )}
 
@@ -55,8 +61,8 @@ function SingleDns() {
         <List
           items={admins}
           hasMore={false}
-          isLoading={false}
-          noItems={{ heading: '', subheading: undefined }}
+          isLoading={isLoading}
+          noItems={{ heading: 'There are no admins yet' }}
           renderItem={renderAdminCard}
           renderSkeleton={renderAdminSkeleton}
           fetchMore={() => {}}

@@ -3,7 +3,7 @@ import { getVaraAddress } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 import Identicon from '@polkadot/react-identicon';
 
-import TrashSVG from '@/shared/assets/images/actions/trashOutlined.svg?react';
+// import TrashSVG from '@/shared/assets/images/actions/trashOutlined.svg?react';
 import CopySVG from '@/shared/assets/images/actions/copyGreen.svg?react';
 
 import styles from './admin-card.module.scss';
@@ -28,7 +28,8 @@ function AdminCard({ index, address }: Props) {
         </div>
       </div>
 
-      <Button icon={TrashSVG} color="transparent" />
+      {/* TODO: remove admin */}
+      {/* <Button icon={TrashSVG} color="transparent" /> */}
     </div>
   );
 }

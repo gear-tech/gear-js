@@ -5,6 +5,7 @@ import { routes } from '@/shared/config';
 import { TimestampBlock } from '@/shared/ui/timestampBlock';
 import { IdBlock, OwnerBlock } from '@/shared/ui';
 
+import AdminSVG from '../../assets/admin.svg?react';
 import { Dns } from '../../types';
 import { EditDns } from '../edit-dns';
 import { DeleteDns } from '../delete-dns';
@@ -16,13 +17,11 @@ type Props = {
 };
 
 function DnsCard({ dns, onSuccess }: Props) {
-  const { name, address, updatedAt, createdAt, createdBy, admins } = dns;
+  const { name, address, updatedAt, createdAt, admins } = dns;
   const { account } = useAccount();
-  const admin = admins[0];
 
-  const isOwner = createdBy === account?.decodedAddress;
+  const isAdmin = account && admins ? admins.includes(account.decodedAddress) : false;
   const timePrefix = updatedAt === createdAt ? 'Created at:' : 'Updated at:';
-  const ownerButtonText = admin === account?.decodedAddress ? '(you)' : undefined;
 
   return (
     <div className={styles.card}>
@@ -35,11 +34,18 @@ function DnsCard({ dns, onSuccess }: Props) {
           <TimestampBlock timestamp={updatedAt} withIcon prefix={timePrefix} color="light" />
           <IdBlock id={address} size="medium" withIcon color="light" />
 
-          {admin && <OwnerBlock ownerAddress={admin} color="light" buttonText={ownerButtonText} />}
+          {admins.length === 1 ? (
+            <OwnerBlock ownerAddress={admins[0]} color="light" buttonText={isAdmin ? '(you)' : ''} />
+          ) : (
+            <div className={styles.admins}>
+              <AdminSVG />
+              <span className={styles.admins}>{admins.length} admins</span>
+            </div>
+          )}
         </div>
       </div>
 
-      {isOwner && (
+      {isAdmin && (
         <div className={styles.actions}>
           <EditDns initialValues={{ name, address }} onSuccess={onSuccess} secondary />
           <DeleteDns name={name} onSuccess={onSuccess} secondary />
