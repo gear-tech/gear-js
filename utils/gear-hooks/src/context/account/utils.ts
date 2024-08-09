@@ -1,49 +1,24 @@
 import { decodeAddress } from '@gear-js/api';
 import { Keyring } from '@polkadot/api';
-import {
-  InjectedAccount,
-  Injected,
-  InjectedWindowProvider,
-  InjectedWindow,
-  Unsubcall,
-} from '@polkadot/extension-inject/types';
+import { InjectedAccount, InjectedWindowProvider, InjectedWindow, Unsubcall } from '@polkadot/extension-inject/types';
 import { Signer } from '@polkadot/types/types';
 
 import { VARA_SS58_FORMAT } from '../../consts';
 import { LOCAL_STORAGE_KEY, WALLET_STATUS } from './consts';
 import { Account, Wallet, Wallets } from './types';
 
-const getAccount = (source: string, signer: Signer, { address, name, genesisHash, type }: InjectedAccount) => {
-  const decodedAddress = decodeAddress(address);
+const getAccounts = (source: string, signer: Signer, accounts: InjectedAccount[]): Account[] =>
+  accounts.map(({ address, name, genesisHash, type }) => {
+    const decodedAddress = decodeAddress(address);
 
-  return {
-    address: new Keyring().encodeAddress(decodedAddress, VARA_SS58_FORMAT),
-    decodedAddress,
-    meta: { source, name, genesisHash },
-    type,
-    signer,
-  };
-};
-
-const watchAccounts = (
-  id: string,
-  { accounts, signer }: Injected,
-  onChange: (_id: string, value: Account[]) => void,
-) => {
-  const { subscribe } = accounts;
-  let isFirstCall = true;
-
-  return new Promise<[Account[], Unsubcall]>((resolve) => {
-    const unsub = subscribe((accs) => {
-      const result = accs.map((account) => getAccount(id, signer, account));
-
-      if (!isFirstCall) return onChange(id, result);
-
-      isFirstCall = false;
-      resolve([result, unsub]);
-    });
+    return {
+      address: new Keyring().encodeAddress(decodedAddress, VARA_SS58_FORMAT),
+      decodedAddress,
+      meta: { source, name, genesisHash },
+      type,
+      signer,
+    };
   });
-};
 
 const getLoggedInAccount = (_wallets: Wallets) => {
   const localStorageAccountAddress = localStorage.getItem(LOCAL_STORAGE_KEY.ACCOUNT_ADDRESS);
@@ -83,10 +58,20 @@ const getConnectedWallet = async (
     const { version } = wallet;
     const status = WALLET_STATUS.CONNECTED;
 
+    // if auth popup closed/rejected,
+    // polkadot-js extension will not resolve promise at all
     const connectedWallet = await connect(origin);
     const { signer } = connectedWallet;
 
-    const [accounts, accountsUnsub] = await watchAccounts(id, connectedWallet, onAccountsChange);
+    // every other extension will throw error there
+    // it is hacky, but works for right now. worth to consider better solution to handle loading state
+    const accounts = getAccounts(id, signer, await connectedWallet.accounts.get());
+
+    // probably it instantly writes to state on a first call. need to investigate
+    const accountsUnsub = connectedWallet.accounts.subscribe((result) =>
+      onAccountsChange(id, getAccounts(id, signer, result)),
+    );
+
     registerUnsub(accountsUnsub);
 
     return {
@@ -94,7 +79,6 @@ const getConnectedWallet = async (
       version,
       status,
       accounts,
-      signer,
       connect: () => Promise.reject(new Error('Wallet is already connected')),
     };
   } catch (error) {
