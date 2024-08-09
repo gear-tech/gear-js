@@ -15,6 +15,7 @@
   position: relative;
   overflow: hidden;
 
+  .heading,
   button {
     position: relative;
     z-index: 1;
@@ -44,17 +45,24 @@
 }
 
 .heading {
+  display: block;
+  margin-bottom: toRem(6);
+
+  font-family: Kanit;
   font-size: 16px;
   font-weight: 600;
 
-  font-family: Kanit;
+  transition: opacity 0.25s;
+
+  &:hover {
+    opacity: 0.5;
+  }
 }
 
 .footer {
   display: grid;
   grid-template-columns: 2fr 2fr 2fr;
   gap: toRem(46);
-  margin-top: toRem(6);
 }
 
 .actions {

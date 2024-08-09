@@ -1,5 +1,7 @@
 import { useAccount } from '@gear-js/react-hooks';
+import { generatePath, Link } from 'react-router-dom';
 
+import { routes } from '@/shared/config';
 import { TimestampBlock } from '@/shared/ui/timestampBlock';
 import { IdBlock, OwnerBlock } from '@/shared/ui';
 
@@ -25,10 +27,14 @@ function DnsCard({ dns, onSuccess }: Props) {
   return (
     <div className={styles.card}>
       <div>
-        <h3 className={styles.heading}>{name}</h3>
+        <Link to={generatePath(routes.singleDns, { name })} className={styles.heading}>
+          {name}
+        </Link>
+
         <div className={styles.footer}>
           <TimestampBlock timestamp={updatedAt} withIcon prefix={timePrefix} color="light" />
           <IdBlock id={address} size="medium" withIcon color="light" />
+
           {admin && <OwnerBlock ownerAddress={admin} color="light" buttonText={ownerButtonText} />}
         </div>
       </div>

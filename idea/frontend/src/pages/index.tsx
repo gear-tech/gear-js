@@ -19,6 +19,7 @@ import { Code } from './code';
 import { UploadCode } from './uploadCode';
 import { Vouchers } from './vouchers';
 import { Dns } from './dns';
+import { SingleDns } from './single-dns';
 
 const Routing = () => {
   const events = useEvents();
@@ -57,7 +58,11 @@ const Routing = () => {
       <Route path={routes.uploadCode} element={<UploadCode />} />
 
       <Route path={routes.vouchers} element={<Vouchers />} />
-      <Route path={routes.dns} element={<Dns />} />
+
+      <Route path={routes.dns}>
+        <Route index element={<Dns />} />
+        <Route path={routes.singleDns} element={<SingleDns />} />
+      </Route>
 
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Navigate to={routes.programs} replace />} />
