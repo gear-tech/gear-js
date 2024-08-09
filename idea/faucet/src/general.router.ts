@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express';
+import express, { Request, Response, Router } from 'express';
 
 import { GearService, TransferService } from './services';
 import { logger } from '@gear-js/common';
@@ -9,6 +9,7 @@ export class BalanceService {
 
   constructor(private transferService: TransferService, private gearService: GearService) {}
   init() {
+    this.router.use(express.json());
     this.router.use(captchaMiddleware);
     this.router.post('/balance', this.handleBalance.bind(this));
   }
