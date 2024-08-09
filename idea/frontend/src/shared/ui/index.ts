@@ -13,6 +13,8 @@ import { Box } from './box';
 import { ProgramTabLayout } from './program-tab-layout';
 import { BulbStatus } from './bulbBlock';
 import { BackButton } from './backButton';
+import { TimestampBlock } from './timestampBlock';
+import { Table, TableRow } from './table';
 
 export {
   LabeledCheckbox,
@@ -37,4 +39,7 @@ export {
   ProgramTabLayout,
   BulbStatus,
   BackButton,
+  TimestampBlock,
+  Table,
+  TableRow,
 };

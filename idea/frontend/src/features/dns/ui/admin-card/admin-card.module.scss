@@ -1,0 +1,26 @@
+.card {
+  padding: 16px 24px;
+
+  display: flex;
+  justify-content: space-between;
+
+  background-color: #202022;
+  border-radius: 8px;
+}
+
+.summary {
+  display: flex;
+  gap: 24px;
+}
+
+.address,
+.count {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.address {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

@@ -27,7 +27,7 @@ function DnsCard({ dns, onSuccess }: Props) {
   return (
     <div className={styles.card}>
       <div>
-        <Link to={generatePath(routes.singleDns, { name })} className={styles.heading}>
+        <Link to={generatePath(routes.singleDns, { address })} className={styles.heading}>
           {name}
         </Link>
 
@@ -41,8 +41,8 @@ function DnsCard({ dns, onSuccess }: Props) {
 
       {isOwner && (
         <div className={styles.actions}>
-          <EditDns initialValues={{ name, address }} onSuccess={onSuccess} />
-          <DeleteDns name={name} onSuccess={onSuccess} />
+          <EditDns initialValues={{ name, address }} onSuccess={onSuccess} secondary />
+          <DeleteDns name={name} onSuccess={onSuccess} secondary />
         </div>
       )}
     </div>

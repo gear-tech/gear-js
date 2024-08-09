@@ -18,7 +18,7 @@ const routes = {
   block: ':blockId',
   vouchers: '/vouchers',
   dns: '/dns',
-  singleDns: ':name',
+  singleDns: ':address',
 };
 
 const absoluteRoutes = {
