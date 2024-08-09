@@ -109,15 +109,12 @@ const AccountsModal = ({ close }: Props) => {
             (walletAccounts?.length ? (
               <ul className={styles.list}>{renderAccoounts()}</ul>
             ) : (
-              <p>
-                No accounts found. Please open your Polkadot extension and create a new account or import existing. Then
-                reload this page.
-              </p>
+              <p>No accounts found. Please open your extension and create a new account or import existing.</p>
             ))}
         </>
       ) : (
         <p>
-          Wallet extension was not found or disconnected. Please check how to install a supported wallet and create an
+          Wallet extensions were not found or disconnected. Please check how to install a supported wallet and create an
           account{' '}
           <a
             href="https://wiki.gear-tech.io/docs/idea/account/create-account"

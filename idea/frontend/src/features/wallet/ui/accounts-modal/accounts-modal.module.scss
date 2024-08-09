@@ -16,7 +16,10 @@
 
 .footer {
   display: flex;
-  justify-content: space-between;
+
+  button:nth-child(2) {
+    margin-left: auto;
+  }
 }
 
 .list {

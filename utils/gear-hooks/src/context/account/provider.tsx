@@ -38,7 +38,7 @@ function AccountProvider({ appName = 'Gear dApp', children }: Props) {
   const unsubsRef = useRef<Unsubcall[]>([]);
 
   const isAnyWallet = Object.keys(wallets || {}).length > 0;
-  const isAccountReady = !!wallets;
+  const isAccountReady = Boolean(wallets);
 
   const login = (_account: Account) => {
     setAccount(_account);
