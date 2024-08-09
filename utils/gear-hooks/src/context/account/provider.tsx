@@ -51,12 +51,14 @@ function AccountProvider({ appName = 'Gear dApp', children }: Props) {
   };
 
   const handleAccountsChange = (id: string, accounts: Account[]) => {
-    const isLoggedInAccountExists = accounts.some(({ address }) => address === account?.address);
-    if (!isLoggedInAccountExists) logout();
-
     setWallets((prevWallets) =>
       prevWallets ? { ...prevWallets, [id]: { ...prevWallets[id], accounts } } : prevWallets,
     );
+
+    if (!account || id !== account.meta.source) return;
+
+    const isLoggedInAccountExists = accounts.some(({ address }) => address === account.address);
+    if (!isLoggedInAccountExists) logout();
   };
 
   const handleWalletChange = (id: string, wallet: Wallet) =>

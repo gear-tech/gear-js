@@ -82,7 +82,7 @@ const getConnectedWallet = async (
       connect: () => Promise.reject(new Error('Wallet is already connected')),
     };
   } catch (error) {
-    console.error('Error while connecting wallet', error);
+    console.error('Error while connecting wallet: ', error);
   }
 };
 
