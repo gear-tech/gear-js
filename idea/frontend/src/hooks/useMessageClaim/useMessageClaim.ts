@@ -1,12 +1,11 @@
 import { useCallback } from 'react';
 import { EventRecord } from '@polkadot/types/interfaces';
-import { web3FromSource } from '@polkadot/extension-dapp';
 import { UserMessageRead } from '@gear-js/api';
 import { useApi, useAccount, useAlert, DEFAULT_SUCCESS_OPTIONS, DEFAULT_ERROR_OPTIONS } from '@gear-js/react-hooks';
 
 import { useModal } from '@/hooks';
 import { Method } from '@/features/explorer';
-import { OperationCallbacks, ParamsToSignAndSend } from '@/entities/hooks';
+import { OperationCallbacks } from '@/entities/hooks';
 import { PROGRAM_ERRORS, TransactionName, TransactionStatus } from '@/shared/config';
 import { checkWallet, getExtrinsicFailedMessage } from '@/shared/helpers';
 
@@ -30,7 +29,7 @@ const useMessageClaim = () => {
         const reasonKey = Object.keys(reason)[0];
         const reasonValue = reason[reasonKey];
 
-        const message = `${data.id.toHuman()}\n ${reasonKey}: ${reasonValue}`;
+        const message = `${data.id.toHuman() as string}\n ${reasonKey}: ${reasonValue}`;
 
         alert.success(message, alertOptions);
       } else if (method === Method.ExtrinsicFailed) {
@@ -41,13 +40,15 @@ const useMessageClaim = () => {
     });
   };
 
-  const signAndSend = async ({ signer, reject, resolve }: ParamsToSignAndSend) => {
+  const signAndSend = async ({ reject, resolve }: OperationCallbacks) => {
     const alertId = alert.loading('SignIn', { title: TransactionName.ClaimMessage });
 
     try {
       if (!isApiReady) throw new Error('API is not initialized');
+      if (!account) throw new Error('Account not found');
+      const { address, signer } = account;
 
-      await api.claimValueFromMailbox.signAndSend(account!.address, { signer }, ({ status, events }) => {
+      await api.claimValueFromMailbox.signAndSend(address, { signer }, ({ status, events }) => {
         if (status.isReady) {
           alert.update(alertId, TransactionStatus.Ready);
         } else if (status.isInBlock) {
@@ -78,19 +79,13 @@ const useMessageClaim = () => {
         if (!isApiReady) throw new Error('API is not initialized');
         checkWallet(account);
 
-        const { meta, address } = account!;
+        const { address, signer } = account!;
 
         api.claimValueFromMailbox.submit(messageId);
 
-        const { signer } = await web3FromSource(meta.source);
         const { partialFee } = await api.claimValueFromMailbox.paymentInfo(address, { signer });
 
-        const handleConfirm = () =>
-          signAndSend({
-            signer,
-            reject,
-            resolve,
-          });
+        const handleConfirm = () => signAndSend({ reject, resolve });
 
         showModal('transaction', {
           fee: partialFee.toHuman(),

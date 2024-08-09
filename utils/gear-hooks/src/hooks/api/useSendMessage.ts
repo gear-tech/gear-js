@@ -1,5 +1,4 @@
 import { GasLimit, MessageQueued, ProgramMetadata } from '@gear-js/api';
-import { web3FromSource } from '@polkadot/extension-dapp';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { AnyJson, IKeyringPair, ISubmittableResult } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
@@ -106,8 +105,7 @@ function useSendMessage(
     const alertId = disableAlerts ? '' : alert.loading('Sign In', { title });
 
     const { payload, gasLimit, value = 0, voucherId, onSuccess, onInBlock, onError } = args;
-    const { address, meta } = account;
-    const { source } = meta;
+    const { address, signer } = account;
 
     const baseMessage = { destination, payload, gasLimit, value };
 
@@ -123,8 +121,6 @@ function useSendMessage(
       if (pair) {
         await extrinsic.signAndSend(pair, callback);
       } else {
-        const { signer } = await web3FromSource(source);
-
         await extrinsic.signAndSend(address, { signer }, callback);
       }
     } catch (error) {

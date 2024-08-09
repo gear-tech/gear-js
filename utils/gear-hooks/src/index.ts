@@ -1,6 +1,16 @@
 import { BigNumber } from 'bignumber.js';
 
-import { useAccount, useApi, useAlert } from './context';
+import {
+  AccountProvider,
+  useAccount,
+  WALLET_STATUS,
+  Account,
+  Wallet,
+  ApiProvider,
+  useApi,
+  AlertProvider,
+  useAlert,
+} from './context';
 
 import {
   useReadFullState,
@@ -52,8 +62,6 @@ import {
 
 import { withoutCommas, getVaraAddress, getTypedEntries } from './utils';
 
-import { AccountProvider, ApiProvider, AlertProvider } from './context';
-
 import {
   DEFAULT_OPTIONS,
   DEFAULT_INFO_OPTIONS,
@@ -73,7 +81,6 @@ import {
   AlertContainerFactory,
   DefaultTemplateOptions,
   ProviderProps,
-  Account,
   Entries,
 } from './types';
 
@@ -98,10 +105,11 @@ export {
   useBalanceFormat,
   useDeriveBalancesAll,
   useAccountDeriveBalancesAll,
-  useAccount,
   useAlert,
   useApi,
   AccountProvider,
+  useAccount,
+  WALLET_STATUS,
   ApiProvider,
   AlertProvider,
   useCreateHandler,
@@ -142,6 +150,7 @@ export type {
   DefaultTemplateOptions,
   ProviderProps,
   Account,
+  Wallet,
   SendMessageOptions,
   UseSendMessageOptions,
   Entries,
