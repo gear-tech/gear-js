@@ -47,11 +47,11 @@ function SingleDns() {
 
       <div className={styles.table}>
         <Table>
-          <TableRow name="Program ID">{address && <IdBlock id={address} />}</TableRow>
+          <TableRow name="Program ID">{address && <IdBlock id={address} size="big" />}</TableRow>
         </Table>
 
         <Table>
-          <TableRow name="Created at">{createdAt && <TimestampBlock timestamp={createdAt} />}</TableRow>
+          <TableRow name="Created at">{createdAt && <TimestampBlock timestamp={createdAt} size="large" />}</TableRow>
         </Table>
       </div>
 
