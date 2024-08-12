@@ -22,6 +22,7 @@ const FUNCTION_NAME = {
   ADD_PROGRAM: 'addNewProgram',
   CHANGE_PROGRAM_ID: 'changeProgramId',
   DELETE_PROGRAM: 'deleteProgram',
+  ADD_ADMIN: 'addAdminToProgram',
 } as const;
 
 export { DNS_API_URL, FIELD_NAME, DEFAULT_VALUES, NAME_SCHEMA, FUNCTION_NAME, Program };

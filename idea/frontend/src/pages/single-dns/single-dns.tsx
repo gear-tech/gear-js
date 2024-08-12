@@ -2,7 +2,7 @@ import { HexString } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
 import { useParams } from 'react-router-dom';
 
-import { useSingleDns, EditDns, DeleteDns, AdminCard } from '@/features/dns';
+import { useSingleDns, EditDns, DeleteDns, AdminCard, AddAdmin } from '@/features/dns';
 import { IdBlock, List, SearchForm, Table, TableRow, TimestampBlock } from '@/shared/ui';
 
 import styles from './single-dns.module.scss';
@@ -27,7 +27,7 @@ function SingleDns() {
 
   return (
     <div className={styles.container}>
-      {name && (
+      {name && admins && (
         <header className={styles.header}>
           {/* same as in program page, maybe worth to share */}
           <h2 className={styles.heading}>{name}</h2>
@@ -36,6 +36,7 @@ function SingleDns() {
             <div className={styles.buttons}>
               <EditDns initialValues={{ name, address }} onSuccess={refetch} />
               <DeleteDns name={name} onSuccess={refetch} />
+              <AddAdmin name={name} admins={admins} onSuccess={refetch} />
             </div>
           )}
         </header>

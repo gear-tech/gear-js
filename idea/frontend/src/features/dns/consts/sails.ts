@@ -69,4 +69,17 @@ export class Dns {
       this._program.programId,
     );
   }
+
+  public addAdminToProgram(name: string, new_admin: ActorId): TransactionBuilder<null> {
+    if (!this._program.programId) throw new Error('Program ID is not set');
+    return new TransactionBuilder<null>(
+      this._program.api,
+      this._program.registry,
+      'send_message',
+      ['Dns', 'AddAdminToProgram', name, new_admin],
+      '(String, String, String, ActorId)',
+      'Null',
+      this._program.programId,
+    );
+  }
 }
