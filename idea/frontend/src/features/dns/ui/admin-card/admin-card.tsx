@@ -1,9 +1,6 @@
 import { HexString } from '@gear-js/api';
-import { getVaraAddress } from '@gear-js/react-hooks';
-import { Button } from '@gear-js/ui';
-import Identicon from '@polkadot/react-identicon';
 
-import CopySVG from '@/shared/assets/images/actions/copyGreen.svg?react';
+import { OwnerBlock } from '@/shared/ui';
 
 import { RemoveAdmin } from '../remove-admin';
 import styles from './admin-card.module.scss';
@@ -24,12 +21,7 @@ function AdminCard({ index, address, name, admins, isAdmin, onSuccess }: Props) 
     <div className={styles.card}>
       <div className={styles.summary}>
         <div className={styles.count}>{getDoubleDigit(index + 1)}</div>
-
-        <div className={styles.address}>
-          <Identicon size={16} theme="polkadot" value={address} />
-          {getVaraAddress(address)}
-          <Button icon={CopySVG} color="transparent" />
-        </div>
+        <OwnerBlock ownerAddress={address} maxLength={false} />
       </div>
 
       {isAdmin && admins.length > 0 && <RemoveAdmin name={name} address={address} onSuccess={onSuccess} />}
