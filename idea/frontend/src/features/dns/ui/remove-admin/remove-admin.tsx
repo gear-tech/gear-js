@@ -8,6 +8,7 @@ import { ConfirmModal } from '@/shared/ui';
 
 import { FUNCTION_NAME } from '../../consts';
 import { useSendDnsTransaction } from '../../hooks';
+import { getShortName } from '@/shared/helpers';
 
 type Props = {
   name: string;
@@ -36,7 +37,10 @@ function RemoveAdmin({ name, address, onSuccess }: Props) {
       {isModalOpen && (
         <ConfirmModal
           title="Remove Admin"
-          text={`Admin with address ${getVaraAddress(address)} will be removed. Would you like to proceed?`}
+          text={`Admin with address ${getShortName(
+            getVaraAddress(address),
+            16,
+          )} will be removed. Would you like to proceed?`}
           onSubmit={handleSubmit}
           close={closeModal}
         />
