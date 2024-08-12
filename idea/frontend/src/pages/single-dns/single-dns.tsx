@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useSingleDns, EditDns, DeleteDns, AdminCard, AddAdmin } from '@/features/dns';
-import { IdBlock, List, SearchForm, Table, TableRow, TimestampBlock } from '@/shared/ui';
+import { IdBlock, List, SearchForm, Skeleton, Table, TableRow, TimestampBlock } from '@/shared/ui';
 import { ACCOUNT_ADDRESS_SCHEMA } from '@/shared/config';
+import CardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
 
 import styles from './single-dns.module.scss';
 
@@ -24,7 +25,7 @@ function SingleDns() {
   const [searchQuery, setSearchQuery] = useState('');
   const searchedAdmins = admins?.filter((admin) => admin.includes(searchQuery));
 
-  const renderAdminSkeleton = () => null;
+  const renderAdminSkeleton = () => <Skeleton SVG={CardPlaceholderSVG} disabled />;
 
   const renderAdminCard = (_address: HexString, index: number) =>
     name &&
@@ -50,13 +51,26 @@ function SingleDns() {
       )}
 
       <div className={styles.table}>
-        <Table>
-          <TableRow name="Program ID">{address && <IdBlock id={address} size="big" />}</TableRow>
-        </Table>
+        {address && createdAt ? (
+          <>
+            <Table>
+              <TableRow name="Program ID">
+                <IdBlock id={address} size="big" />
+              </TableRow>
+            </Table>
 
-        <Table>
-          <TableRow name="Created at">{createdAt && <TimestampBlock timestamp={createdAt} size="large" />}</TableRow>
-        </Table>
+            <Table>
+              <TableRow name="Created at">
+                <TimestampBlock timestamp={createdAt} size="large" />
+              </TableRow>
+            </Table>
+          </>
+        ) : (
+          <>
+            <Skeleton SVG={CardPlaceholderSVG} />
+            <Skeleton SVG={CardPlaceholderSVG} />
+          </>
+        )}
       </div>
 
       <div>
@@ -67,6 +81,7 @@ function SingleDns() {
             placeholder="Search by address"
             onSubmit={setSearchQuery}
             getSchema={() => ACCOUNT_ADDRESS_SCHEMA}
+            disabled={isLoading}
           />
         </header>
 
