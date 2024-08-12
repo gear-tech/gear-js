@@ -24,7 +24,7 @@ function AdminCard({ index, address, name, admins, isAdmin, onSuccess }: Props) 
         <OwnerBlock ownerAddress={address} maxLength={false} />
       </div>
 
-      {isAdmin && admins.length > 0 && <RemoveAdmin name={name} address={address} onSuccess={onSuccess} />}
+      {isAdmin && admins.length > 1 && <RemoveAdmin name={name} address={address} onSuccess={onSuccess} />}
     </div>
   );
 }
