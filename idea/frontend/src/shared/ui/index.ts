@@ -15,6 +15,7 @@ import { BulbStatus } from './bulbBlock';
 import { BackButton } from './backButton';
 import { TimestampBlock } from './timestampBlock';
 import { Table, TableRow } from './table';
+import { ConfirmModal } from './confirm-modal';
 
 export {
   LabeledCheckbox,
@@ -43,4 +44,5 @@ export {
   TimestampBlock,
   Table,
   TableRow,
+  ConfirmModal,
 };

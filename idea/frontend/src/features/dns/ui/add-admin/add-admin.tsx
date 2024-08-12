@@ -49,7 +49,7 @@ function AddAdminModal({ name, admins, onSuccess, close }: Pick<ModalProps, 'clo
   });
 
   return (
-    <Modal heading="Add admin" size="large" close={close}>
+    <Modal heading="Add Admin" size="large" close={close}>
       <FormProvider {...form}>
         <form onSubmit={handleSubmit} className={styles.form}>
           <Input name={FIELD_NAME.ADDRESS} label="Account address" direction="y" block />

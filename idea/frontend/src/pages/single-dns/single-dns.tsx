@@ -20,10 +20,13 @@ function SingleDns() {
 
   const isAdmin = account && admins ? admins.includes(account.decodedAddress) : false;
 
-  console.log('data: ', data);
-
   const renderAdminSkeleton = () => null;
-  const renderAdminCard = (_address: HexString, index: number) => <AdminCard index={index} address={_address} />;
+
+  const renderAdminCard = (_address: HexString, index: number) =>
+    name &&
+    admins && (
+      <AdminCard index={index} address={_address} name={name} admins={admins} isAdmin={isAdmin} onSuccess={refetch} />
+    );
 
   return (
     <div className={styles.container}>

@@ -82,4 +82,17 @@ export class Dns {
       this._program.programId,
     );
   }
+
+  public removeAdminFromProgram(name: string, admin_to_remove: ActorId): TransactionBuilder<null> {
+    if (!this._program.programId) throw new Error('Program ID is not set');
+    return new TransactionBuilder<null>(
+      this._program.api,
+      this._program.registry,
+      'send_message',
+      ['Dns', 'RemoveAdminFromProgram', name, admin_to_remove],
+      '(String, String, String, ActorId)',
+      'Null',
+      this._program.programId,
+    );
+  }
 }

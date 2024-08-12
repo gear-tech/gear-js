@@ -3,19 +3,23 @@ import { getVaraAddress } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 import Identicon from '@polkadot/react-identicon';
 
-// import TrashSVG from '@/shared/assets/images/actions/trashOutlined.svg?react';
 import CopySVG from '@/shared/assets/images/actions/copyGreen.svg?react';
 
+import { RemoveAdmin } from '../remove-admin';
 import styles from './admin-card.module.scss';
 
 type Props = {
   index: number;
   address: HexString;
+  name: string;
+  admins: HexString[];
+  isAdmin: boolean;
+  onSuccess: () => void;
 };
 
-function AdminCard({ index, address }: Props) {
-  const getDoubleDigit = (num: number) => (num < 10 ? `0${num}` : num);
+const getDoubleDigit = (num: number) => (num < 10 ? `0${num}` : num);
 
+function AdminCard({ index, address, name, admins, isAdmin, onSuccess }: Props) {
   return (
     <div className={styles.card}>
       <div className={styles.summary}>
@@ -28,8 +32,7 @@ function AdminCard({ index, address }: Props) {
         </div>
       </div>
 
-      {/* TODO: remove admin */}
-      {/* <Button icon={TrashSVG} color="transparent" /> */}
+      {isAdmin && admins.length > 0 && <RemoveAdmin name={name} address={address} onSuccess={onSuccess} />}
     </div>
   );
 }
