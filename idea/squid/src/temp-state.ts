@@ -15,8 +15,13 @@ import {
   MessageToProgram,
   Program,
 } from './model';
-import { ProcessorContext } from './processor';
+import { Block, ProcessorContext } from './processor';
 import { MessageStatus } from './common';
+
+const gearProgramModule = xxhashAsHex('GearProgram', 128);
+const programStorageMethod = xxhashAsHex('ProgramStorage', 128);
+
+const PROGRAM_STORAGE_PREFIX = gearProgramModule + programStorageMethod.slice(2);
 
 function getServiceAndFn(payload: string) {
   let service: string = null;
@@ -45,6 +50,10 @@ export class TempState {
   private messagesToProgram: Map<string, MessageToProgram>;
   private events: Map<string, Event>;
   private _ctx: ProcessorContext<Store>;
+  private _metadata: Metadata;
+  private _registry: TypeRegistry;
+  private _specVersion: number;
+  private _programStorageTy: string;
 
   constructor() {
     this.programs = new Map();
@@ -206,35 +215,40 @@ export class TempState {
     }
   }
 
-  async getCodeId(programId: string, blockhash: string) {
-    const module = xxhashAsHex('GearProgram', 128);
-    const method = xxhashAsHex('ProgramStorage', 128);
+  async getCodeId(programId: string, block: Block) {
+    const param = PROGRAM_STORAGE_PREFIX + programId.slice(2);
 
-    const storagePrefix = module + method.slice(2);
+    const calls = [{ method: 'state_getStorage', params: [param, block.hash] }];
 
-    const param = storagePrefix + programId.slice(2);
+    const isMetadataRequired = !this._specVersion || block.specVersion !== this._specVersion;
 
-    const [storage, runtimeMetadata] = await this._ctx._chain.rpc.batchCall([
-      { method: 'state_getStorage', params: [param, blockhash] },
-      { method: 'state_getMetadata', params: [blockhash] },
-    ]);
+    if (isMetadataRequired) {
+      calls.push({ method: 'state_getMetadata', params: [block.hash] });
+    }
 
-    const registry = new TypeRegistry();
-    const meta = new Metadata(registry, runtimeMetadata);
+    const [storage, metadata] = await this._ctx._chain.rpc.batchCall(calls);
 
-    const gearProgramPallet = meta.asLatest.pallets.find(({ name }) => name.toString() === 'GearProgram');
-    const programStorage = gearProgramPallet.storage
-      .unwrap()
-      .items.find(({ name }) => name.toString() === 'ProgramStorage');
+    if (isMetadataRequired) {
+      this._registry = new TypeRegistry();
+      this._metadata = new Metadata(this._registry, metadata);
+      this._specVersion = block.specVersion;
 
-    const ty = meta.asLatest.lookup.getTypeDef(programStorage.type.asMap.value);
+      const gearProgramPallet = this._metadata.asLatest.pallets.find(({ name }) => name.toString() === 'GearProgram');
+      const programStorage = gearProgramPallet.storage
+        .unwrap()
+        .items.find(({ name }) => name.toString() === 'ProgramStorage');
 
-    const types = getAllNeccesaryTypes(meta, programStorage.type.asMap.value);
+      const tydef = this._metadata.asLatest.lookup.getTypeDef(programStorage.type.asMap.value);
 
-    registry.register(types);
-    registry.setKnownTypes(types);
+      this._programStorageTy = tydef.lookupName;
 
-    const decoded = registry.createType<any>(ty.lookupName, storage);
+      const types = getAllNeccesaryTypes(this._metadata, programStorage.type.asMap.value);
+
+      this._registry.register(types);
+      this._registry.setKnownTypes(types);
+    }
+
+    const decoded = this._registry.createType<any>(this._programStorageTy, storage);
 
     return decoded.isActive ? decoded.asActive.codeHash.toHex() : '0x';
   }
