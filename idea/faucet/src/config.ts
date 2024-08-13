@@ -22,7 +22,7 @@ export default {
   },
   gear: {
     providerAddresses: checkEnv('WS_PROVIDER', 'wss://rpc-node.gear-tech.io:443').split(','),
-    accountSeed: checkEnv('TEST_ACCOUNT_SEED', '0x8999321253e3a76e31d91767d0e2a915223210e008089a0d34e1919c0d84da5'),
+    accountSeed: checkEnv('TEST_ACCOUNT_SEED', '//Alice'),
     balanceToTransfer: checkEnv('TEST_BALANCE_VALUE', '1000000'),
   },
   server: {
