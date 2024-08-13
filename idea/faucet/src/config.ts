@@ -2,27 +2,31 @@ import { config } from 'dotenv';
 import { strict as assert } from 'assert';
 config();
 
-const checkEnv = (envName: string) => {
+const checkEnv = (envName: string, defaultValue?: string) => {
   const env = process.env[envName];
+  if (!env && defaultValue) {
+    return defaultValue;
+  }
+
   assert.notStrictEqual(env, undefined, `${envName} is not specified`);
   return env;
 };
 
 export default {
   db: {
-    port: parseInt(process.env.DB_PORT, 10) || 5432,
-    user: checkEnv('DB_USER'),
-    password: checkEnv('DB_PASSWORD'),
-    name: checkEnv('DB_NAME'),
-    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(checkEnv(process.env.DB_PORT, '5432')),
+    user: checkEnv('DB_USER', 'postgres'),
+    password: checkEnv('DB_PASSWORD', 'postgres'),
+    name: checkEnv('DB_NAME', 'name'),
+    host: checkEnv(process.env.DB_HOST, 'localhost'),
   },
   gear: {
-    providerAddresses: checkEnv('WS_PROVIDER').split(','),
-    accountSeed: checkEnv('TEST_ACCOUNT_SEED'),
-    balanceToTransfer: checkEnv('TEST_BALANCE_VALUE'),
+    providerAddresses: checkEnv('WS_PROVIDER', 'wss://rpc-node.gear-tech.io:443').split(','),
+    accountSeed: checkEnv('TEST_ACCOUNT_SEED', '0x8999321253e3a76e31d91767d0e2a915223210e008089a0d34e1919c0d84da5'),
+    balanceToTransfer: checkEnv('TEST_BALANCE_VALUE', '1000000'),
   },
   server: {
-    port: parseInt(process.env.PORT || '3010'),
-    captchaSecret: checkEnv('CAPTCH_SECRET'),
+    port: parseInt(checkEnv(process.env.PORT, '3010')),
+    captchaSecret: checkEnv('CAPTCH_SECRET', '0x234567898765432'),
   },
 };
