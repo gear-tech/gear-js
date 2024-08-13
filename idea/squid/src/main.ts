@@ -124,7 +124,7 @@ const handler = async (ctx: ProcessorContext<Store>) => {
                 new Program({
                   ...common,
                   id,
-                  codeId: await tempState.getCodeId(id, common.blockHash),
+                  codeId: await tempState.getCodeId(id, block.header),
                   owner: null,
                   name: id,
                   status: ProgramStatus.ProgramSet,
