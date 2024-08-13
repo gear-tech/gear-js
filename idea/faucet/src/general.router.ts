@@ -1,8 +1,14 @@
 import express, { Request, Response, Router } from 'express';
 
 import { GearService, TransferService } from './services';
-import { logger } from '@gear-js/common';
+import { JSONRPC_ERRORS, logger } from '@gear-js/common';
 import { captchaMiddleware } from './middleware/balance.middleware';
+
+const errors = {
+  [JSONRPC_ERRORS.InvalidAddress.name]: 403,
+  [JSONRPC_ERRORS.TransferLimitReached.name]: 403,
+  [JSONRPC_ERRORS.InternalError.name]: 500,
+};
 
 export class BalanceService {
   private router = Router({});
@@ -31,7 +37,16 @@ export class BalanceService {
 
     this.transferService
       .transferBalance(payload)
-      .then((result) => res.json(result))
+      .then((response) => {
+        if ('result' in response) {
+          return res.json(response.result);
+        }
+
+        const error = errors[response.error];
+        if (error) {
+          return res.status(error).json({ error: response.error });
+        }
+      })
       .catch((error) => {
         logger.error(`Balance error`, { error });
         res.status(500);
