@@ -1,0 +1,69 @@
+openapi: 3.0.0
+info:
+  title: API documentation
+  version: 1.1.0
+components:
+  schemas:
+    Balance:
+      type: object
+      properties:
+        token:
+          type: string
+          description: hCaptcha token
+        payload:
+          type: object
+          description: Balance payload
+          properties:
+            address:
+              type: string
+              description: Public wallet address
+            genesis:
+              type: string
+              description: Genesis block hash
+      required:
+        - token
+        - payload
+
+paths:
+  /balance:
+    post:
+      summary: Add test balance
+      description: Add currency to balance. It's limited to 1 addition per day.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Balance'
+            example:
+              payload:
+                address: 'public wallet seed'
+                genesis: 'node genesis'
+              token: 'hCaptcha token'
+      responses:
+        '200':
+          description: Currency added successfully
+          content:
+            application/json:
+              example: { 'status': 'ok', 'transferredBalance': '1000000' }
+        '400':
+          description: Bad request, missing or invalid parameters
+          content:
+            application/json:
+              example: { error: 'Address and genesis are required' }
+        '403':
+          description: Forbidden, transfer limit reached or invalid address
+          content:
+            application/json:
+              examples:
+                invalidAddress:
+                  summary: Invalid Address
+                  value: { error: 'InvalidAddress' }
+                transferLimitReached:
+                  summary: Transfer Limit Reached
+                  value: { error: 'TransferLimitReached' }
+        '500':
+          description: A server internal error
+          content:
+            application/json:
+              example: { error: 'InternalError' }

@@ -1,5 +1,7 @@
 import { logger } from '@gear-js/common';
 import express from 'express';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
 
 import config from './config';
 import { changeStatus, healthcheckRouter } from './healthcheck.router';
@@ -8,6 +10,8 @@ import { GearService, TransferService } from './services';
 import { BalanceService } from './general.router';
 
 const app = express();
+const swaggerDocument = YAML.load('./swagger.yaml');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const port = config.server.port;
 
