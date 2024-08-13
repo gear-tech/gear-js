@@ -14,7 +14,7 @@ export class Program extends BaseEntity {
   public id: string;
 
   @Column({ nullable: true })
-  public owner: string;
+  public owner?: string;
 
   @Column({ nullable: true })
   @Index()

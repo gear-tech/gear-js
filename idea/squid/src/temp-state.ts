@@ -1,6 +1,9 @@
 import { Store } from '@subsquid/typeorm-store';
 import { HexString } from '@gear-js/api';
 import { getServiceNamePrefix, getFnNamePrefix } from 'sails-js';
+import { xxhashAsHex } from '@polkadot/util-crypto';
+import { TypeRegistry, Metadata } from '@polkadot/types';
+import { SiLookupTypeId } from '@polkadot/types/interfaces';
 
 import {
   ProgramStatus,
@@ -164,13 +167,21 @@ export class TempState {
     }
   }
 
-  async setProgramStatus(id: string, status: ProgramStatus, expiration?: string) {
+  async isProgramIndexed(id: string): Promise<boolean> {
+    return !!(await this.getProgram(id));
+  }
+
+  async setProgramStatus(id: string, blockhash: string, status: ProgramStatus, expiration?: string) {
     const program = await this.getProgram(id);
-    if (program) {
-      program.status = status;
-      if (expiration) {
-        program.expiration = expiration;
-      }
+
+    if (!program) {
+      this._ctx.log.error(`setProgramStatus :: Program ${id} not found`);
+      return;
+    }
+
+    program.status = status;
+    if (expiration) {
+      program.expiration = expiration;
     }
   }
 
@@ -193,6 +204,39 @@ export class TempState {
     if (msg) {
       msg.readReason = reason;
     }
+  }
+
+  async getCodeId(programId: string, blockhash: string) {
+    const module = xxhashAsHex('GearProgram', 128);
+    const method = xxhashAsHex('ProgramStorage', 128);
+
+    const storagePrefix = module + method.slice(2);
+
+    const param = storagePrefix + programId.slice(2);
+
+    const [storage, runtimeMetadata] = await this._ctx._chain.rpc.batchCall([
+      { method: 'state_getStorage', params: [param, blockhash] },
+      { method: 'state_getMetadata', params: [blockhash] },
+    ]);
+
+    const registry = new TypeRegistry();
+    const meta = new Metadata(registry, runtimeMetadata);
+
+    const gearProgramPallet = meta.asLatest.pallets.find(({ name }) => name.toString() === 'GearProgram');
+    const programStorage = gearProgramPallet.storage
+      .unwrap()
+      .items.find(({ name }) => name.toString() === 'ProgramStorage');
+
+    const ty = meta.asLatest.lookup.getTypeDef(programStorage.type.asMap.value);
+
+    const types = getAllNeccesaryTypes(meta, programStorage.type.asMap.value);
+
+    registry.register(types);
+    registry.setKnownTypes(types);
+
+    const decoded = registry.createType<any>(ty.lookupName, storage);
+
+    return decoded.isActive ? decoded.asActive.codeHash.toHex() : '0x';
   }
 
   async save() {
@@ -244,3 +288,31 @@ export class TempState {
     }
   }
 }
+
+const getAllNeccesaryTypes = (metadata: Metadata, tyindex: SiLookupTypeId | number): Record<string, string> => {
+  if (!tyindex) {
+    return {};
+  }
+
+  const tydef = metadata.asLatest.lookup.getTypeDef(tyindex);
+
+  let types = {};
+
+  if (tydef.sub) {
+    if (Array.isArray(tydef.sub)) {
+      for (const sub of tydef.sub) {
+        types = { ...types, ...getAllNeccesaryTypes(metadata, sub.lookupIndex) };
+      }
+    } else {
+      types = getAllNeccesaryTypes(metadata, tydef.sub.lookupIndex);
+    }
+  }
+
+  if (!tydef.lookupName) {
+    return types;
+  }
+
+  types[tydef.lookupName] = tydef.type;
+
+  return types;
+};

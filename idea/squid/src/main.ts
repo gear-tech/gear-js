@@ -1,7 +1,7 @@
 import { TypeormDatabase, Store } from '@subsquid/typeorm-store';
 import { generateCodeHash } from '@gear-js/api';
 import { ZERO_ADDRESS } from 'sails-js';
-import { Code, Event as EventModel, MessageEntryPoint, MessageFromProgram, MessageToProgram, Program } from './model';
+import { Code, MessageEntryPoint, MessageFromProgram, MessageToProgram, MetaType, Program } from './model';
 
 import { processor, ProcessorContext } from './processor';
 import { TempState } from './temp-state';
@@ -110,29 +110,52 @@ const handler = async (ctx: ProcessorContext<Store>) => {
           tempState.addMsgFromProgram(msg);
         }
       } else if (isProgramChanged(event)) {
-        if (PROGRAM_STATUSES.includes(event.args.change.__kind)) {
-          const status = event.args.change.__kind;
-          await tempState.setProgramStatus(
-            event.args.id,
-            status === 'ProgramSet'
-              ? ProgramStatus.ProgramSet
-              : status === 'Active'
-                ? ProgramStatus.Active
-                : status === 'Inactive'
-                  ? ProgramStatus.Exited
-                  : ProgramStatus.Terminated,
-          );
+        const {
+          args: {
+            change: { __kind: statusKind },
+            id,
+          },
+          call,
+        } = event;
+        if (PROGRAM_STATUSES.includes(statusKind)) {
+          if (statusKind === 'ProgramSet' && !call) {
+            if (!(await tempState.isProgramIndexed(id))) {
+              tempState.addProgram(
+                new Program({
+                  ...common,
+                  id,
+                  codeId: await tempState.getCodeId(id, common.blockHash),
+                  owner: null,
+                  name: id,
+                  status: ProgramStatus.ProgramSet,
+                }),
+              );
+            }
+          } else {
+            const status =
+              statusKind === 'ProgramSet'
+                ? ProgramStatus.ProgramSet
+                : statusKind === 'Active'
+                  ? ProgramStatus.Active
+                  : statusKind === 'Inactive'
+                    ? ProgramStatus.Exited
+                    : ProgramStatus.Terminated;
+
+            await tempState.setProgramStatus(id, block.header.hash, status);
+          }
         } else {
           ctx.log.error(event.args, 'Unknown program status');
         }
       } else if (isCodeChanged(event)) {
         if (isUploadCode(event.call) || isUploadProgram(event.call) || isVoucherCall(event.call)) {
+          const metahash = await getMetahash(event.call);
           tempState.addCode(
             new Code({
               ...common,
               id: event.args.id,
               uploadedBy: (event.extrinsic as any)?.signature?.address?.value,
-              metahash: await getMetahash(event.call),
+              metahash,
+              metaType: metahash ? MetaType.Meta : null,
             }),
           );
         }
