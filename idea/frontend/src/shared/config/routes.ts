@@ -18,6 +18,7 @@ const routes = {
   block: ':blockId',
   vouchers: '/vouchers',
   dns: '/dns',
+  singleDns: ':address',
 };
 
 const absoluteRoutes = {
@@ -27,6 +28,7 @@ const absoluteRoutes = {
   sendMessage: `${routes.send}/${routes.sendMessage}`,
   reply: `${routes.send}/${routes.reply}`,
   block: `${routes.explorer}/${routes.block}`,
+  singleDns: `${routes.dns}/${routes.singleDns}`,
 };
 
 export { routes, absoluteRoutes };

@@ -15,7 +15,7 @@ type Props<T extends unknown[]> = {
   isLoading: boolean;
   noItems: { heading: string; subheading?: string };
   size?: 'small' | 'large';
-  renderItem: (item: Item<T>) => ReactNode;
+  renderItem: (item: Item<T>, index: number) => ReactNode;
   fetchMore: () => void;
   renderSkeleton: () => ReactNode;
 };
@@ -31,7 +31,7 @@ function List<T extends unknown[]>({
   renderSkeleton,
 }: Props<T>) {
   // TODO: replace key with id
-  const renderItems = () => items?.map((item, index) => <li key={index}>{renderItem(item as Item<T>)}</li>);
+  const renderItems = () => items?.map((item, index) => <li key={index}>{renderItem(item as Item<T>, index)}</li>);
 
   const count = items?.length;
   const isEmpty = !isLoading && !count;

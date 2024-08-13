@@ -9,15 +9,23 @@ import styles from './edit-dns.module.scss';
 
 type Props = {
   initialValues: Values;
+  secondary?: boolean;
   onSuccess: () => void;
 };
 
-const EditDns = ({ onSuccess, initialValues }: Props) => {
+const EditDns = ({ onSuccess, secondary, initialValues }: Props) => {
   const [isModalOpen, openModal, closeModal] = useModalState();
 
   return (
     <>
-      <Button icon={EditSVG} size="large" color="transparent" className={styles.link} onClick={openModal} noWrap />
+      <Button
+        icon={EditSVG}
+        text={secondary ? undefined : 'Edit'}
+        color={secondary ? 'transparent' : 'secondary'}
+        className={secondary ? undefined : styles.button}
+        onClick={openModal}
+        noWrap
+      />
 
       {isModalOpen && (
         <DnsModal

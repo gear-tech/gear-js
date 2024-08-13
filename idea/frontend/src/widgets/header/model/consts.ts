@@ -8,6 +8,7 @@ const PATHS_WITHOUT_BOTTOM_SIDE = [
   absoluteRoutes.sendMessage,
   absoluteRoutes.reply,
   absoluteRoutes.initializeProgram,
+  absoluteRoutes.singleDns,
   routes.state,
   routes.code,
   routes.state,

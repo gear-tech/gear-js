@@ -1,6 +1,6 @@
 import { withAccount } from './with-account';
 import { LabeledCheckbox } from './labeled-checkbox';
-import { Input, ValueField, Checkbox, Radio, Select, SearchForm, Fieldset, Textarea } from './form';
+import { Input, ValueField, Checkbox, Radio, Select, SearchForm, Fieldset, Textarea, FormButtons } from './form';
 import { withDeprecatedFallback } from './with-deprecated-fallback';
 import { List } from './list';
 import { Skeleton } from './skeleton';
@@ -13,6 +13,9 @@ import { Box } from './box';
 import { ProgramTabLayout } from './program-tab-layout';
 import { BulbStatus } from './bulbBlock';
 import { BackButton } from './backButton';
+import { TimestampBlock } from './timestampBlock';
+import { Table, TableRow } from './table';
+import { ConfirmModal } from './confirm-modal';
 
 export {
   LabeledCheckbox,
@@ -33,8 +36,13 @@ export {
   UILink,
   Fieldset,
   Textarea,
+  FormButtons,
   Box,
   ProgramTabLayout,
   BulbStatus,
   BackButton,
+  TimestampBlock,
+  Table,
+  TableRow,
+  ConfirmModal,
 };
