@@ -55,10 +55,13 @@ function AccountProvider({ appName, children }: Props) {
       prevWallets ? { ...prevWallets, [id]: { ...prevWallets[id], accounts } } : prevWallets,
     );
 
-    if (!account || id !== account.meta.source) return;
+    setAccount((prevAccount) => {
+      if (!prevAccount || id !== prevAccount.meta.source) return;
 
-    const isLoggedInAccountExists = accounts.some(({ address }) => address === account.address);
-    if (!isLoggedInAccountExists) logout();
+      const isLoggedIn = Boolean(accounts.length) && accounts.some(({ address }) => address === prevAccount.address);
+
+      if (isLoggedIn) return prevAccount;
+    });
   };
 
   const handleWalletChange = (id: string, wallet: Wallet) =>
