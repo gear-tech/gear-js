@@ -1,6 +1,7 @@
 import {
   AddMetaDetailsParams,
   AddMetahashParams,
+  AddSailsIdlParams,
   GetMetaParams,
   InvalidMetadataError,
   InvalidParamsError,
@@ -31,9 +32,6 @@ export class MetaService {
 
   async addMetaDetails(params: AddMetaDetailsParams): Promise<Omit<Meta, 'codes'>> {
     logger.info('Adding meta details', params);
-    if (!params.hash) {
-      throw new InvalidParamsError();
-    }
 
     let meta = await this.metaRepo.findOneBy({ hash: params.hash });
 
@@ -73,9 +71,6 @@ export class MetaService {
   }
 
   async get({ hash }: GetMetaParams): Promise<Partial<Meta>> {
-    if (!hash) {
-      throw new InvalidParamsError();
-    }
     const meta = await this.metaRepo.findOne({ where: { hash } });
 
     if (!meta) {
@@ -90,11 +85,7 @@ export class MetaService {
     return meta.map((m) => m.hash);
   }
 
-  async addIdl({ codeId, data }) {
-    if (!codeId || !data) {
-      throw new InvalidParamsError();
-    }
-
+  async addIdl({ codeId, data }: AddSailsIdlParams) {
     const hash = getHash(data);
 
     logger.info('Adding IDL', { codeId, hash });
@@ -117,7 +108,7 @@ export class MetaService {
     return { status: 'Sails idl added' };
   }
 
-  async getIdl({ codeId }) {
+  async getIdl({ codeId }: { codeId: string }) {
     const code = await this.codeRepo.findOne({ where: { id: codeId }, relations: { sails: true } });
 
     if (!code) {

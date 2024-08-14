@@ -15,4 +15,4 @@ RUN yarn build:common
 RUN yarn build:meta-storage
 WORKDIR /src/idea/meta-storage
 
-CMD ["node", "dist/main"]
+CMD ["node", "dist/src/server.js"]

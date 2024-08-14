@@ -1,7 +1,23 @@
 import express, { Request, Response, Router } from 'express';
-import { logger } from '@gear-js/common';
+import {
+  InvalidMetadataError,
+  InvalidParamsError,
+  logger,
+  MetaNotFoundError,
+  SailsIdlNotFoundError,
+} from '@gear-js/common';
 
 import { MetaService } from './service';
+
+const errorChecker = (err: Error) => {
+  if (err instanceof InvalidParamsError || err instanceof InvalidMetadataError) {
+    return 400;
+  } else if (err instanceof MetaNotFoundError || err instanceof SailsIdlNotFoundError) {
+    return 404;
+  }
+
+  return 500;
+};
 
 export class MetaRouter {
   private router = Router({});
@@ -29,7 +45,12 @@ export class MetaRouter {
     this.metaService
       .get({ hash: hash.toString(), hex: undefined })
       .then((meta) => res.json(meta))
-      .catch((err) => {
+      .catch((err: Error) => {
+        const errorCode = errorChecker(err);
+        if (errorCode !== 500) {
+          return res.status(errorCode).json({ error: err.name });
+        }
+
         logger.error('Error getting meta details', { error: err });
         res.status(500).json({ error: 'Internal server error' });
       });
@@ -45,7 +66,12 @@ export class MetaRouter {
     this.metaService
       .addMetaDetails({ hash, hex })
       .then((meta) => res.json(meta))
-      .catch((err) => {
+      .catch((err: Error) => {
+        const errorCode = errorChecker(err);
+        if (errorCode !== 500) {
+          return res.status(errorCode).json({ error: err.name });
+        }
+
         logger.error('Error adding meta details', { error: err });
         res.status(500).json({ error: 'Internal server error' });
       });
@@ -59,9 +85,14 @@ export class MetaRouter {
     }
 
     this.metaService
-      .getIdl({ codeId })
-      .then((ids) => res.json(ids))
-      .catch((err) => {
+      .getIdl({ codeId: codeId.toString() })
+      .then((data) => res.json({ codeId, data }))
+      .catch((err: Error) => {
+        const errorCode = errorChecker(err);
+        if (errorCode !== 500) {
+          return res.status(errorCode).json({ error: err.name });
+        }
+
         logger.error('Error getting sails', { error: err });
         res.status(500).json({ error: 'Internal server error' });
       });
@@ -77,7 +108,12 @@ export class MetaRouter {
     this.metaService
       .addIdl({ codeId, data })
       .then((ids) => res.json(ids))
-      .catch((err) => {
+      .catch((err: Error) => {
+        const errorCode = errorChecker(err);
+        if (errorCode !== 500) {
+          return res.status(errorCode).json({ error: err.name });
+        }
+
         logger.error('Error adding sails', { error: err });
         res.status(500).json({ error: 'Internal server error' });
       });
