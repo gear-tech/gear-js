@@ -1,4 +1,4 @@
-import { useAccount, useAlert, usePrepareProgramTransaction, useProgram } from '@gear-js/react-hooks';
+import { useAccount, useAlert, useBalanceFormat, usePrepareProgramTransaction, useProgram } from '@gear-js/react-hooks';
 import { useQuery } from '@tanstack/react-query';
 
 import { Method } from '@/features/explorer';
@@ -15,6 +15,7 @@ type FunctionName = typeof FUNCTION_NAME[keyof typeof FUNCTION_NAME];
 
 const useSendDnsTransaction = <T extends FunctionName>(functionName: T) => {
   const { account } = useAccount();
+  const { getFormattedBalance } = useBalanceFormat();
   const alert = useAlert();
 
   const [isLoading, enableLoading, disableLoading] = useLoading();
@@ -43,9 +44,10 @@ const useSendDnsTransaction = <T extends FunctionName>(functionName: T) => {
 
     try {
       const { transaction, awaited } = await prepareTransactionAsync({ args });
+      const formattedFee = getFormattedBalance(awaited.fee.toString());
 
       showModal('transaction', {
-        fee: awaited.fee.toString(),
+        fee: `${formattedFee.value} ${formattedFee.unit}`,
         name: TransactionName.SendMessage,
         addressFrom: account.address,
         addressTo: id,
