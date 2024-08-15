@@ -5,11 +5,12 @@ on:
     types: [synchronize, labeled, opened, reopened, ready_for_review]
     branches: [main]
     paths:
-      - idea/faucet/**
+      - 'idea/faucet/**'
+      - 'idea/meta-storage-2/**'
 
 jobs:
   run-faucet-unit-tests:
-    if: github.event.pull_request.draft == false
+    if: 'github.event.pull_request.draft == false'
     runs-on: ubuntu-latest
 
     steps:
@@ -33,7 +34,7 @@ jobs:
         run: yarn test
 
   run-meta-storage-unit-tests:
-    if: github.event.pull_request.draft == false
+    if: 'github.event.pull_request.draft == false'
     runs-on: ubuntu-latest
 
     steps:
