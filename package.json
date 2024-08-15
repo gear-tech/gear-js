@@ -14,6 +14,7 @@
     "build:hooks": "yarn workspace @gear-js/react-hooks build",
     "build:ui": "yarn workspace @gear-js/ui build",
     "build:test-balance": "yarn workspace @gear-js/test-balance build",
+    "build:faucet": "yarn workspace @gear-js/faucet build",
     "build:voucher-indexer": "yarn workspace @gear-js/voucher-indexer build",
     "test:frontend": "yarn workspace @gear-js/frontend test",
     "postinstall": "husky install",

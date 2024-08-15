@@ -124,8 +124,8 @@ const Program = () => {
           ))}
 
         {tabIndex === 1 && <ProgramMessages programId={programId} />}
-        {tabIndex === 2 && <ProgramVouchers programId={programId} />}
-        {tabIndex === 3 && !isSailsLoading && <ProgramEvents programId={programId} sails={sails} />}
+        {tabIndex === 2 && !isSailsLoading && <ProgramEvents programId={programId} sails={sails} />}
+        {tabIndex === 3 && <ProgramVouchers programId={programId} />}
       </div>
     </div>
   );

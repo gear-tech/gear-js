@@ -10,10 +10,11 @@ import styles from './delete-dns.module.scss';
 
 type Props = {
   name: string;
+  secondary?: boolean;
   onSuccess: () => void;
 };
 
-const DeleteDns = ({ name, onSuccess }: Props) => {
+const DeleteDns = ({ name, secondary, onSuccess }: Props) => {
   const [isModalOpen, openModal, closeModal] = useModalState();
   const { isLoading, sendTransaction } = useSendDnsTransaction(FUNCTION_NAME.DELETE_PROGRAM);
 
@@ -28,7 +29,14 @@ const DeleteDns = ({ name, onSuccess }: Props) => {
 
   return (
     <>
-      <Button icon={TrashSVG} size="large" color="transparent" className={styles.link} onClick={openModal} noWrap />
+      <Button
+        icon={TrashSVG}
+        text={secondary ? undefined : 'Delete'}
+        color={secondary ? 'transparent' : 'grey'}
+        className={secondary ? undefined : styles.button}
+        onClick={openModal}
+        noWrap
+      />
 
       {isModalOpen && (
         <ConfirmModal

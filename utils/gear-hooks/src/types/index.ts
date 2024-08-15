@@ -1,5 +1,3 @@
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { HexString } from '@polkadot/util/types';
 import {
   AlertType,
   AlertOptions,
@@ -12,10 +10,6 @@ import {
 } from './alert';
 
 type ProviderProps = Omit<React.ProviderProps<never>, 'value'>;
-
-type Account = InjectedAccountWithMeta & {
-  decodedAddress: HexString;
-};
 
 // in case Object.entries return value is immutable
 // ref: https://stackoverflow.com/a/60142095
@@ -33,6 +27,5 @@ export type {
   AlertContainerFactory,
   DefaultTemplateOptions,
   ProviderProps,
-  Account,
   Entries,
 };

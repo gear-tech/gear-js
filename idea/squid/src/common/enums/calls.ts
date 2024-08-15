@@ -8,4 +8,5 @@ export const enum Calls {
   Batch = 'Utility.batch',
   ForceBatch = 'Utility.force_batch',
   VoucherCall = 'GearVoucher.call',
+  GearRun = 'Gear.run',
 }

@@ -1,6 +1,9 @@
 import { Store } from '@subsquid/typeorm-store';
 import { HexString } from '@gear-js/api';
 import { getServiceNamePrefix, getFnNamePrefix } from 'sails-js';
+import { xxhashAsHex } from '@polkadot/util-crypto';
+import { TypeRegistry, Metadata } from '@polkadot/types';
+import { SiLookupTypeId } from '@polkadot/types/interfaces';
 
 import {
   ProgramStatus,
@@ -12,8 +15,13 @@ import {
   MessageToProgram,
   Program,
 } from './model';
-import { ProcessorContext } from './processor';
+import { Block, ProcessorContext } from './processor';
 import { MessageStatus } from './common';
+
+const gearProgramModule = xxhashAsHex('GearProgram', 128);
+const programStorageMethod = xxhashAsHex('ProgramStorage', 128);
+
+const PROGRAM_STORAGE_PREFIX = gearProgramModule + programStorageMethod.slice(2);
 
 function getServiceAndFn(payload: string) {
   let service: string = null;
@@ -42,6 +50,10 @@ export class TempState {
   private messagesToProgram: Map<string, MessageToProgram>;
   private events: Map<string, Event>;
   private _ctx: ProcessorContext<Store>;
+  private _metadata: Metadata;
+  private _registry: TypeRegistry;
+  private _specVersion: number;
+  private _programStorageTy: string;
 
   constructor() {
     this.programs = new Map();
@@ -164,13 +176,21 @@ export class TempState {
     }
   }
 
-  async setProgramStatus(id: string, status: ProgramStatus, expiration?: string) {
+  async isProgramIndexed(id: string): Promise<boolean> {
+    return !!(await this.getProgram(id));
+  }
+
+  async setProgramStatus(id: string, blockhash: string, status: ProgramStatus, expiration?: string) {
     const program = await this.getProgram(id);
-    if (program) {
-      program.status = status;
-      if (expiration) {
-        program.expiration = expiration;
-      }
+
+    if (!program) {
+      this._ctx.log.error(`setProgramStatus :: Program ${id} not found`);
+      return;
+    }
+
+    program.status = status;
+    if (expiration) {
+      program.expiration = expiration;
     }
   }
 
@@ -193,6 +213,44 @@ export class TempState {
     if (msg) {
       msg.readReason = reason;
     }
+  }
+
+  async getCodeId(programId: string, block: Block) {
+    const param = PROGRAM_STORAGE_PREFIX + programId.slice(2);
+
+    const calls = [{ method: 'state_getStorage', params: [param, block.hash] }];
+
+    const isMetadataRequired = !this._specVersion || block.specVersion !== this._specVersion;
+
+    if (isMetadataRequired) {
+      calls.push({ method: 'state_getMetadata', params: [block.hash] });
+    }
+
+    const [storage, metadata] = await this._ctx._chain.rpc.batchCall(calls);
+
+    if (isMetadataRequired) {
+      this._registry = new TypeRegistry();
+      this._metadata = new Metadata(this._registry, metadata);
+      this._specVersion = block.specVersion;
+
+      const gearProgramPallet = this._metadata.asLatest.pallets.find(({ name }) => name.toString() === 'GearProgram');
+      const programStorage = gearProgramPallet.storage
+        .unwrap()
+        .items.find(({ name }) => name.toString() === 'ProgramStorage');
+
+      const tydef = this._metadata.asLatest.lookup.getTypeDef(programStorage.type.asMap.value);
+
+      this._programStorageTy = tydef.lookupName;
+
+      const types = getAllNeccesaryTypes(this._metadata, programStorage.type.asMap.value);
+
+      this._registry.register(types);
+      this._registry.setKnownTypes(types);
+    }
+
+    const decoded = this._registry.createType<any>(this._programStorageTy, storage);
+
+    return decoded.isActive ? decoded.asActive.codeHash.toHex() : '0x';
   }
 
   async save() {
@@ -244,3 +302,31 @@ export class TempState {
     }
   }
 }
+
+const getAllNeccesaryTypes = (metadata: Metadata, tyindex: SiLookupTypeId | number): Record<string, string> => {
+  if (!tyindex) {
+    return {};
+  }
+
+  const tydef = metadata.asLatest.lookup.getTypeDef(tyindex);
+
+  let types = {};
+
+  if (tydef.sub) {
+    if (Array.isArray(tydef.sub)) {
+      for (const sub of tydef.sub) {
+        types = { ...types, ...getAllNeccesaryTypes(metadata, sub.lookupIndex) };
+      }
+    } else {
+      types = getAllNeccesaryTypes(metadata, tydef.sub.lookupIndex);
+    }
+  }
+
+  if (!tydef.lookupName) {
+    return types;
+  }
+
+  types[tydef.lookupName] = tydef.type;
+
+  return types;
+};

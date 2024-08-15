@@ -1,5 +1,4 @@
 import { useApi, useAccount } from '@gear-js/react-hooks';
-import { web3FromSource } from '@polkadot/extension-dapp';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { generatePath } from 'react-router-dom';
 
@@ -69,8 +68,7 @@ const useProgramActions = () => {
     if (!isApiReady) throw new Error('API is not initialized');
     if (!account) throw new Error('Account not found');
 
-    const { meta, address } = account;
-    const { signer } = await web3FromSource(meta.source);
+    const { address, signer } = account;
     const { partialFee } = await api.program.paymentInfo(address, { signer });
 
     const successAlert = getSuccessAlert(program.programId);

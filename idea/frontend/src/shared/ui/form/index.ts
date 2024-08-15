@@ -7,5 +7,6 @@ import { Select } from './select';
 import { SearchForm } from './search-form';
 import { Fieldset } from './fieldset';
 import { Textarea } from './textarea';
+import { FormButtons } from './form-buttons';
 
-export { formStyles, Input, ValueField, Checkbox, Radio, Select, SearchForm, Fieldset, Textarea };
+export { formStyles, Input, ValueField, Checkbox, Radio, Select, SearchForm, Fieldset, Textarea, FormButtons };

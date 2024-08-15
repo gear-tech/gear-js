@@ -6,10 +6,6 @@ import {
   DEFAULT_LOADING_OPTIONS,
 } from './alert';
 
-const LOCAL_STORAGE = {
-  ACCOUNT: 'account',
-};
-
 const VARA_SS58_FORMAT = 137;
 
 export {
@@ -18,6 +14,5 @@ export {
   DEFAULT_ERROR_OPTIONS,
   DEFAULT_SUCCESS_OPTIONS,
   DEFAULT_LOADING_OPTIONS,
-  LOCAL_STORAGE,
   VARA_SS58_FORMAT,
 };

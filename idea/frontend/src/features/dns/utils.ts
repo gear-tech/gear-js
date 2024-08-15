@@ -16,13 +16,17 @@ const getDnsProgramId = async () => {
 const getDns = (params: DnsParams) => {
   const method = 'GET';
   const url = new URL(`${DNS_API_URL}/dns`);
+
   Object.entries(params).forEach(([key, value]) => url.searchParams.append(key, String(value)));
+
   return fetchWithGuard<DnsResponse>(url.toString(), { method });
 };
 
-const getSingleDns = (name: string) => {
+const getSingleDns = (params: { address: HexString } | { name: string }) => {
   const method = 'GET';
-  const url = new URL(`${DNS_API_URL}/dns/by_name/${name}`);
+  const [key, value] = Object.entries(params)[0];
+  const url = new URL(`${DNS_API_URL}/dns/by_${key}/${value}`);
+
   return fetchWithGuard<Dns>(url.toString(), { method });
 };
 

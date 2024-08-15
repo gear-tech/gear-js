@@ -1,4 +1,3 @@
-import { web3FromSource } from '@polkadot/extension-dapp';
 import { useMutation } from '@tanstack/react-query';
 
 import { useAccount } from 'context';
@@ -44,8 +43,7 @@ function usePrepareProgramTransaction<
     } else {
       if (!connectedAccount) throw new Error('Account is not found');
 
-      const { address, meta } = connectedAccount;
-      const { signer } = await web3FromSource(meta.source);
+      const { address, signer } = connectedAccount;
       transaction.withAccount(address, { signer });
     }
 

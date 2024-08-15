@@ -9,8 +9,8 @@ const useDnsSchema = (isEditMode?: boolean) => {
 
   const dnsNameSchema = isEditMode
     ? NAME_SCHEMA
-    : NAME_SCHEMA.refine(async (value) => {
-        const result = await getSingleDns(value).catch(() => {
+    : NAME_SCHEMA.refine(async (name) => {
+        const result = await getSingleDns({ name }).catch(() => {
           // empty
         });
         return !result;

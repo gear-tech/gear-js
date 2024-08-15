@@ -47,7 +47,8 @@ export const processor = new SubstrateBatchProcessor()
     block: {
       timestamp: true,
     },
-  });
+  })
+  .setBlockRange({ from: config.squid.fromBlock, to: config.squid.toBlock });
 
 export type Fields = SubstrateBatchProcessorFields<typeof processor>;
 export type Block = BlockHeader<Fields>;

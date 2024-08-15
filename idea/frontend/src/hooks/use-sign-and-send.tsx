@@ -2,7 +2,6 @@ import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS, useAccount, useAlert } 
 import { AddressOrPair, SubmittableExtrinsic } from '@polkadot/api/types';
 import { Event } from '@polkadot/types/interfaces';
 import { ISubmittableResult } from '@polkadot/types/types';
-import { web3FromSource } from '@polkadot/extension-dapp';
 import { ReactNode } from 'react';
 
 import { getErrorMessage } from '@/shared/helpers';
@@ -82,7 +81,7 @@ function useSignAndSend() {
 
   return (extrinsic: Extrinsic, method: string, options?: Partial<Options>) => {
     if (!account) throw new Error('Account is not found');
-    const { address, meta } = account;
+    const { address, signer } = account;
 
     const optionsWithDefaults = { ...DEFAULT_OPTIONS, ...options };
     const { onError, onFinally, addressOrPair } = optionsWithDefaults;
@@ -95,7 +94,7 @@ function useSignAndSend() {
     const signAndSend = () =>
       addressOrPair
         ? extrinsic.signAndSend(addressOrPair, statusCallback)
-        : web3FromSource(meta.source).then(({ signer }) => extrinsic.signAndSend(address, { signer }, statusCallback));
+        : extrinsic.signAndSend(address, { signer }, statusCallback);
 
     signAndSend().catch((error) => {
       alert.update(alertId, getErrorMessage(error), DEFAULT_ERROR_OPTIONS);

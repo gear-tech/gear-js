@@ -1,4 +1,3 @@
-import { web3FromSource } from '@polkadot/extension-dapp';
 import { HexString } from '@polkadot/util/types';
 import { useApi, useAccount } from '@gear-js/react-hooks';
 
@@ -33,12 +32,8 @@ const useCodeUpload = () => {
     if (!isApiReady) throw new Error('API is not initialized');
     if (!account) throw new Error('Account not found');
 
-    const { address, meta } = account;
-
-    const [{ codeHash, extrinsic: codeExtrinsic }, { signer }] = await Promise.all([
-      api.code.upload(optBuffer),
-      web3FromSource(meta.source),
-    ]);
+    const { address, signer } = account;
+    const { codeHash, extrinsic: codeExtrinsic } = await api.code.upload(optBuffer);
 
     const extrinsic = voucherId ? api.voucher.call(voucherId, { UploadCode: codeExtrinsic }) : codeExtrinsic;
     const { partialFee } = await api.code.paymentInfo(address, { signer });
