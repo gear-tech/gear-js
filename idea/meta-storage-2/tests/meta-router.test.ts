@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { Express } from 'express';
-import { main } from '../src/main';
+import { main } from '../src/app';
 import { MetaService } from '../src/service';
 import { InvalidMetadataError, InvalidParamsError, MetaNotFoundError, SailsIdlNotFoundError } from '@gear-js/common';
 

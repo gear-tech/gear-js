@@ -1,6 +1,6 @@
 import { logger } from '@gear-js/common';
 import { AppDataSource } from './database';
-import { main } from './main';
+import { main } from './app';
 import { MetaService } from './service';
 import config from './config';
 

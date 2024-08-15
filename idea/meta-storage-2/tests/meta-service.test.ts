@@ -118,19 +118,6 @@ describe('MetaService', () => {
     });
   });
 
-  describe('Get all hashs with state equals true', () => {
-    it('should return hashes of all metas with state', async () => {
-      const mockMetas = [{ hash: 'hash1' }, { hash: 'hash2' }];
-
-      mockMetaRepo.find.mockResolvedValue(mockMetas);
-
-      const result = await metaService.getAllWithState();
-
-      expect(mockMetaRepo.find).toHaveBeenCalledWith({ where: { hasState: true }, select: { hash: true } });
-      expect(result).toEqual(['hash1', 'hash2']);
-    });
-  });
-
   describe('Add IDL', () => {
     it('should add IDL and return status', async () => {
       const params: AddSailsIdlParams = { codeId: validCodeId, data: validData };

@@ -80,11 +80,6 @@ export class MetaService {
     return meta;
   }
 
-  async getAllWithState(): Promise<string[]> {
-    const meta = await this.metaRepo.find({ where: { hasState: true }, select: { hash: true } });
-    return meta.map((m) => m.hash);
-  }
-
   async addIdl({ codeId, data }: AddSailsIdlParams) {
     const hash = getHash(data);
 
