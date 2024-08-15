@@ -19,7 +19,7 @@ type Props = {
 function RemoveAdmin({ name, address, onSuccess }: Props) {
   const [isModalOpen, openModal, closeModal] = useModalState();
 
-  const { sendTransaction } = useSendDnsTransaction(FUNCTION_NAME.REMOVE_ADMIN);
+  const { sendTransaction, isLoading } = useSendDnsTransaction(FUNCTION_NAME.REMOVE_ADMIN);
 
   const handleSubmit = () => {
     const _onSuccess = () => {
@@ -43,6 +43,7 @@ function RemoveAdmin({ name, address, onSuccess }: Props) {
           )} will be removed. Would you like to proceed?`}
           onSubmit={handleSubmit}
           close={closeModal}
+          isLoading={isLoading}
         />
       )}
     </>
