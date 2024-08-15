@@ -1,0 +1,228 @@
+openapi: 3.0.3
+info:
+  title: Meta Service API
+  description: API for managing meta details and sails.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+paths:
+  /meta:
+    get:
+      summary: Get meta details
+      description: Fetch meta details using a hash.
+      parameters:
+        - in: query
+          name: hash
+          schema:
+            type: string
+          required: true
+          description: The hash of the meta details to retrieve.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hash:
+                    type: string
+                    description: Hash of the meta details.
+                  hex:
+                    type: string
+                    description: Hexadecimal representation of the meta details.
+                  hasState:
+                    type: boolean
+                    description: Indicates if the meta has state.
+        '400':
+          description: Missing or invalid hash
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Missing hash
+        '404':
+          description: Meta details not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Meta details not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    post:
+      summary: Add meta details
+      description: Add new meta details using hash and hex.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - hash
+                - hex
+              properties:
+                hash:
+                  type: string
+                  description: Hash of the meta details.
+                hex:
+                  type: string
+                  description: Hexadecimal representation of the meta details.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hash:
+                    type: string
+                    description: Hash of the meta details.
+                  hex:
+                    type: string
+                    description: Hexadecimal representation of the meta details.
+                  hasState:
+                    type: boolean
+                    description: Indicates if the meta has state.
+        '400':
+          description: Missing or invalid hash or hex
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Missing hash or hex
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /sails:
+    get:
+      summary: Get sails data
+      description: Fetch sails data using a codeId.
+      parameters:
+        - in: query
+          name: codeId
+          schema:
+            type: string
+          required: true
+          description: The codeId for which the sails data is requested.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  codeId:
+                    type: string
+                    description: The codeId used in the request.
+                  data:
+                    type: string
+                    description: The sails data associated with the codeId.
+        '400':
+          description: Missing or invalid codeId
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Missing codeId
+        '404':
+          description: Sails data not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Sails data not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    post:
+      summary: Add sails data
+      description: Add new sails data using codeId and data.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - codeId
+                - data
+              properties:
+                codeId:
+                  type: string
+                  description: The codeId for which the sails data is provided.
+                data:
+                  type: string
+                  description: The sails data to be added.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Sails idl added
+        '400':
+          description: Missing or invalid codeId or data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Missing codeId or data
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error

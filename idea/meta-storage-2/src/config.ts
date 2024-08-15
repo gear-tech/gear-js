@@ -16,9 +16,9 @@ export default {
   db: {
     host: getEnv('DB_HOST', 'localhost'),
     port: parseInt(getEnv('DB_PORT', '5432'), 10),
-    user: getEnv('DB_USER'),
-    password: getEnv('DB_PASSWORD'),
-    name: getEnv('DB_NAME'),
+    user: getEnv('DB_USER', 'postgres'),
+    password: getEnv('DB_PASSWORD', 'postgres'),
+    name: getEnv('DB_NAME', 'meta'),
   },
   server: {
     port: getEnv('SERVER_PORT', '3000'),

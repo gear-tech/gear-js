@@ -24,7 +24,7 @@
   },
   "scripts": {
     "build": "rm -rf dist && tsc",
-    "test": "jest --clearCache && jest --runInBand",
+    "test": "jest --clearCache && jest --runInBand --silent",
     "start": "node dist/src/server.js",
     "watch": "clear && ts-node-dev src/server.ts"
   },
