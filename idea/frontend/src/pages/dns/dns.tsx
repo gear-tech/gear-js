@@ -41,7 +41,7 @@ const Dns = () => {
       <Filters initialValues={filterValues} onSubmit={handleFiltersSubmit} title="Sort & Filter">
         <FilterGroup name="orderByDirection" onSubmit={handleFiltersSubmit}>
           <Radio name="orderByDirection" value="DESC" label="Newest first" onSubmit={handleFiltersSubmit} />
-          {account && <Radio name="orderByDirection" value="ASC" label="Oldest first" onSubmit={handleFiltersSubmit} />}
+          <Radio name="orderByDirection" value="ASC" label="Oldest first" onSubmit={handleFiltersSubmit} />
         </FilterGroup>
 
         <FilterGroup name="owner" onSubmit={handleFiltersSubmit} title="dDNS ownership">
