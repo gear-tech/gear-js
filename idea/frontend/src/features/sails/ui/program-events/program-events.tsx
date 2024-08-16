@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { Sails } from 'sails-js';
 
 import { FilterGroup, Filters, Radio } from '@/features/filters';
-import { List, ProgramTabLayout, SearchForm, Skeleton } from '@/shared/ui';
+import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
 import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
 
 import { useEvents, EventType } from '../../api';
@@ -23,14 +23,10 @@ const DEFAULT_FILTER_VALUES = {
 };
 
 function ProgramEvents({ programId, sails }: Props) {
-  const [searchQuery, setSearchQuery] = useState('');
   const [filterValues, setFilterValues] = useState(DEFAULT_FILTER_VALUES);
 
   const filterParams = useMemo(() => {
-    const value = filterValues[FILTER_NAME.METHOD];
-    if (!value) return {};
-
-    const [service, name] = value.split('.');
+    const [service, name] = filterValues[FILTER_NAME.METHOD].split('.');
 
     return { service, name };
   }, [filterValues]);
@@ -43,7 +39,7 @@ function ProgramEvents({ programId, sails }: Props) {
     );
   }, [sails]);
 
-  const events = useEvents({ source: programId, name: searchQuery, ...filterParams });
+  const events = useEvents({ source: programId, ...filterParams });
 
   const renderEvent = (event: EventType) => <EventCard event={event} sails={sails} />;
   const renderEventSkeleton = () => <Skeleton SVG={CardPlaceholderSVG} disabled />;
@@ -58,14 +54,6 @@ function ProgramEvents({ programId, sails }: Props) {
       fetchMore={events.fetchNextPage}
       renderItem={renderEvent}
       renderSkeleton={renderEventSkeleton}
-    />
-  );
-
-  const renderSearch = () => (
-    <SearchForm
-      placeholder="Search by name..."
-      onSubmit={setSearchQuery}
-      disabled={events.isLoading || Boolean(filterValues[FILTER_NAME.METHOD])}
     />
   );
 
@@ -87,7 +75,6 @@ function ProgramEvents({ programId, sails }: Props) {
       heading="Events"
       count={events.data?.count}
       renderList={renderList}
-      renderSearch={renderSearch}
       renderFilters={renderFilters}
     />
   );

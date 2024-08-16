@@ -6,7 +6,7 @@ type Props = {
   heading: string;
   count: number | undefined;
   renderList: () => ReactNode;
-  renderSearch: () => ReactNode;
+  renderSearch?: () => ReactNode;
   renderFilters?: () => ReactNode;
 };
 
@@ -21,10 +21,12 @@ function ProgramTabLayout({ heading, count, renderList, renderSearch, renderFilt
         {renderList()}
       </div>
 
-      <div>
-        <div className={styles.search}>{renderSearch()}</div>
-        {renderFilters && renderFilters()}
-      </div>
+      {(renderSearch || renderFilters) && (
+        <div>
+          {renderSearch && <div className={styles.search}>{renderSearch()}</div>}
+          {renderFilters && renderFilters()}
+        </div>
+      )}
     </div>
   );
 }
