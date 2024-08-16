@@ -1,11 +1,13 @@
+import { ReactNode } from 'react';
+
 import styles from './program-tab-layout.module.scss';
 
 type Props = {
   heading: string;
   count: number | undefined;
-  renderList: () => JSX.Element;
-  renderSearch: () => JSX.Element;
-  renderFilters?: () => JSX.Element;
+  renderList: () => ReactNode;
+  renderSearch: () => ReactNode;
+  renderFilters?: () => ReactNode;
 };
 
 function ProgramTabLayout({ heading, count, renderList, renderSearch, renderFilters }: Props) {
