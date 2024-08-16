@@ -5,15 +5,13 @@ on:
     types: [synchronize, labeled, opened, reopened, ready_for_review]
     branches: [main]
     paths:
-      - idea/faucet/**
-
-  workflow_dispatch:
+      - 'idea/faucet/**'
+      - 'idea/meta-storage-2/**'
 
 jobs:
   run-faucet-unit-tests:
-    if: github.event.pull_request.draft == false
+    if: 'github.event.pull_request.draft == false'
     runs-on: ubuntu-latest
-    environment: dev
 
     steps:
       - name: Checkout repository
@@ -33,4 +31,28 @@ jobs:
       - name: 'Run tests'
         timeout-minutes: 3
         working-directory: idea/faucet
+        run: yarn test
+
+  run-meta-storage-unit-tests:
+    if: 'github.event.pull_request.draft == false'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install NodeJS 18.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 18.x
+
+      - name: 'Install dependencies'
+        run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+
+      - name: 'Build: @gear-js/common'
+        run: yarn build:common
+
+      - name: 'Run tests'
+        timeout-minutes: 3
+        working-directory: idea/meta-storage-2
         run: yarn test
