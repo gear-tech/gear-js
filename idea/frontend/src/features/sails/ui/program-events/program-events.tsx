@@ -41,9 +41,6 @@ function ProgramEvents({ programId, sails }: Props) {
 
   const events = useEvents({ source: programId, ...filterParams });
 
-  const renderEvent = (event: EventType) => <EventCard event={event} sails={sails} />;
-  const renderEventSkeleton = () => <Skeleton SVG={CardPlaceholderSVG} disabled />;
-
   const renderList = () => (
     <List
       items={events.data?.result}
@@ -52,8 +49,8 @@ function ProgramEvents({ programId, sails }: Props) {
       noItems={{ heading: 'There are no events yet.' }}
       size="small"
       fetchMore={events.fetchNextPage}
-      renderItem={renderEvent}
-      renderSkeleton={renderEventSkeleton}
+      renderItem={(event: EventType) => <EventCard event={event} sails={sails} />}
+      renderSkeleton={() => <Skeleton SVG={CardPlaceholderSVG} disabled />}
     />
   );
 
