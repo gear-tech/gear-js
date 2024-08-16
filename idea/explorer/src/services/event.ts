@@ -32,11 +32,11 @@ export class EventService {
     }
 
     if (service) {
-      builder.andWhere('event.service = :service', { service: service.toLowerCase() });
+      builder.andWhere('event.service ILIKE :service', { service: `%${service.toLowerCase()}%` });
     }
 
     if (name) {
-      builder.andWhere('event.name = :name', { name: name.toLowerCase() });
+      builder.andWhere('event.name ILIKE :name', { name: `%${name.toLowerCase()}%` });
     }
 
     builder.orderBy('event.timestamp', 'DESC').take(limit).skip(offset);
