@@ -12,7 +12,6 @@ import CodeSVG from '@/shared/assets/images/actions/code.svg?react';
 
 import LinkSVG from '../../assets/link.svg?react';
 import { EventType } from '../../api';
-import { getEventMethod } from '../../utils';
 import styles from './event-card.module.scss';
 
 type Props = {
@@ -38,7 +37,7 @@ function EventCard({ event, sails }: Props) {
           type="button"
           onClick={() => setIsOpen((prevValue) => !prevValue)}
           className={clsx(styles.button, isOpen && styles.open)}>
-          <span>{getEventMethod(event)}</span>
+          <span>{service && name ? `${service}.${name}` : service || name}</span>
 
           <ArrowSVG />
         </button>

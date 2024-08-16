@@ -1,5 +1,5 @@
 import { HexString } from '@gear-js/api';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Sails } from 'sails-js';
 
 import { FilterGroup, Filters, Radio } from '@/features/filters';
@@ -7,7 +7,6 @@ import { List, ProgramTabLayout, SearchForm, Skeleton } from '@/shared/ui';
 import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
 
 import { useEvents, EventType } from '../../api';
-import { getEventMethod } from '../../utils';
 import { EventCard } from '../event-card';
 
 type Props = {
@@ -37,17 +36,14 @@ function ProgramEvents({ programId, sails }: Props) {
   }, [filterValues]);
 
   const events = useEvents({ source: programId, name: searchQuery, ...filterParams });
-  const [methods, setMethods] = useState<string[]>();
 
-  useEffect(() => {
-    if (!events.data || methods) return;
+  const methods = useMemo(() => {
+    if (!sails) return;
 
-    const result = events.data.result.map(getEventMethod).filter(Boolean) as string[];
-    const unqiueMethods = Array.from(new Set(result));
-
-    setMethods(unqiueMethods);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [events]);
+    return Object.entries(sails.services).flatMap(([name, service]) =>
+      Object.keys(service.events).map((eventName) => `${name}.${eventName}`),
+    );
+  }, [sails]);
 
   const renderEvent = (event: EventType) => <EventCard event={event} sails={sails} />;
   const renderEventSkeleton = () => <Skeleton SVG={CardPlaceholderSVG} disabled />;
