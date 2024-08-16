@@ -89,10 +89,12 @@ const ProgramMessages = ({ programId, sails }: Props) => {
 
   const renderFilters = () => (
     <Filters initialValues={DEFAULT_FILTER_VALUES} onSubmit={setFilters}>
-      <FilterGroup name={FILTER_NAME.OWNER} onSubmit={setFilters}>
-        <Radio name={FILTER_NAME.OWNER} value={FILTER_VALUE.OWNER.ALL} label="All messages" onSubmit={setFilters} />
-        <Radio name={FILTER_NAME.OWNER} value={FILTER_VALUE.OWNER.OWNER} label="My messages" onSubmit={setFilters} />
-      </FilterGroup>
+      {account && (
+        <FilterGroup name={FILTER_NAME.OWNER} onSubmit={setFilters}>
+          <Radio name={FILTER_NAME.OWNER} value={FILTER_VALUE.OWNER.ALL} label="All messages" onSubmit={setFilters} />
+          <Radio name={FILTER_NAME.OWNER} value={FILTER_VALUE.OWNER.OWNER} label="My messages" onSubmit={setFilters} />
+        </FilterGroup>
+      )}
 
       <FilterGroup title="Direction" name={FILTER_NAME.DIRECTION} onSubmit={setFilters}>
         <Radio
