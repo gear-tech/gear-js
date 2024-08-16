@@ -25,15 +25,18 @@ const DEFAULT_FILTER_VALUES = {
 
 function ProgramEvents({ programId, sails }: Props) {
   const [searchQuery, setSearchQuery] = useState('');
-
   const [filterValues, setFilterValues] = useState(DEFAULT_FILTER_VALUES);
+
   const filterParams = useMemo(() => {
-    const [service, name] = filterValues[FILTER_NAME.METHOD].split('.');
+    const value = filterValues[FILTER_NAME.METHOD];
+    if (!value) return {};
+
+    const [service, name] = value.split('.');
 
     return { service, name };
   }, [filterValues]);
 
-  const events = useEvents({ source: programId, ...filterParams });
+  const events = useEvents({ source: programId, name: searchQuery, ...filterParams });
   const [methods, setMethods] = useState<string[]>();
 
   useEffect(() => {
@@ -62,7 +65,13 @@ function ProgramEvents({ programId, sails }: Props) {
     />
   );
 
-  const renderSearch = () => <SearchForm placeholder="Search by name..." onSubmit={setSearchQuery} />;
+  const renderSearch = () => (
+    <SearchForm
+      placeholder="Search by name..."
+      onSubmit={setSearchQuery}
+      disabled={events.isLoading || Boolean(filterValues[FILTER_NAME.METHOD])}
+    />
+  );
 
   const renderFilters = () =>
     methods?.length ? (
