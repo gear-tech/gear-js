@@ -35,8 +35,6 @@ function ProgramEvents({ programId, sails }: Props) {
     return { service, name };
   }, [filterValues]);
 
-  const events = useEvents({ source: programId, name: searchQuery, ...filterParams });
-
   const methods = useMemo(() => {
     if (!sails) return;
 
@@ -44,6 +42,8 @@ function ProgramEvents({ programId, sails }: Props) {
       Object.keys(service.events).map((eventName) => `${name}.${eventName}`),
     );
   }, [sails]);
+
+  const events = useEvents({ source: programId, name: searchQuery, ...filterParams });
 
   const renderEvent = (event: EventType) => <EventCard event={event} sails={sails} />;
   const renderEventSkeleton = () => <Skeleton SVG={CardPlaceholderSVG} disabled />;
@@ -73,7 +73,7 @@ function ProgramEvents({ programId, sails }: Props) {
     methods?.length ? (
       <Filters initialValues={filterValues} onSubmit={setFilterValues}>
         <FilterGroup name={FILTER_NAME.METHOD} onSubmit={setFilterValues}>
-          <Radio label="All" name={FILTER_NAME.METHOD} value="" onSubmit={setFilterValues} />
+          <Radio label="None" name={FILTER_NAME.METHOD} value="" onSubmit={setFilterValues} />
 
           {methods.map((method) => (
             <Radio key={method} name={FILTER_NAME.METHOD} value={method} label={method} onSubmit={setFilterValues} />

@@ -123,7 +123,7 @@ const Program = () => {
             <MetadataTable metadata={metadata} isLoading={isLoading} />
           ))}
 
-        {tabIndex === 1 && <ProgramMessages programId={programId} />}
+        {tabIndex === 1 && <ProgramMessages programId={programId} sails={sails} />}
         {tabIndex === 2 && !isSailsLoading && <ProgramEvents programId={programId} sails={sails} />}
         {tabIndex === 3 && <ProgramVouchers programId={programId} />}
       </div>
