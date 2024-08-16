@@ -56,7 +56,7 @@ export class ProgramService {
     }
 
     if (query) {
-      qb.andWhere('(program.id ILIKE :query OR program.name ILIKE :query)', { query: `%${query}%` });
+      qb.andWhere('(program.id ILIKE :query OR program.name ILIKE :query)', { query: `%${query.toLowerCase()}%` });
     }
 
     qb.orderBy('program.timestamp', 'DESC').limit(limit).offset(offset);

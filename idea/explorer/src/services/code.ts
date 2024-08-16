@@ -44,7 +44,7 @@ export class CodeService {
     }
 
     if (query) {
-      qb.andWhere('(code.id ILIKE :query OR code.name ILIKE :query)', { query: `%${query}%` });
+      qb.andWhere('(code.id ILIKE :query OR code.name ILIKE :query)', { query: `%${query.toLowerCase()}%` });
     }
 
     qb.orderBy('code.timestamp', 'DESC').limit(limit).offset(offset);

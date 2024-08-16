@@ -68,11 +68,11 @@ export class MessageService {
     }
 
     if (service) {
-      qb.andWhere('msg.service = :service', { service: service.toLowerCase() });
+      qb.andWhere('msg.service ILIKE :service', { service: `%${service.toLowerCase()}%` });
     }
 
     if (fn) {
-      qb.andWhere('msg.fn = :fn', { fn: fn.toLowerCase() });
+      qb.andWhere('msg.fn ILIKE :fn', { fn: `%${fn.toLowerCase()}%` });
     }
 
     qb.orderBy('msg.timestamp', 'DESC').limit(limit).offset(offset);
@@ -110,11 +110,11 @@ export class MessageService {
     }
 
     if (service) {
-      qb.andWhere('msg.service = :service', { service: service.toLowerCase() });
+      qb.andWhere('msg.service ILIKE :service', { service: `%${service.toLowerCase()}%` });
     }
 
     if (fn) {
-      qb.andWhere('msg.fn = :fn', { fn: fn.toLowerCase() });
+      qb.andWhere('msg.fn ILIKE :fn', { fn: `%${fn.toLowerCase()}%` });
     }
 
     qb.orderBy('msg.timestamp', 'DESC').limit(limit).offset(offset);
