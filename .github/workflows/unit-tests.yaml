@@ -12,6 +12,8 @@ jobs:
   run-faucet-unit-tests:
     if: 'github.event.pull_request.draft == false'
     runs-on: ubuntu-latest
+    env:
+      TEST_ENV: true
 
     steps:
       - name: Checkout repository

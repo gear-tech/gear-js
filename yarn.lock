@@ -2493,6 +2493,7 @@ __metadata:
     "@polkadot/api": 11.0.2
     "@types/express": 4.17.13
     "@types/jest": ^29.5.12
+    "@types/supertest": ^6.0.2
     "@typescript-eslint/eslint-plugin": 4.33.0
     "@typescript-eslint/parser": 4.33.0
     chalk: 4.1.2
@@ -2508,6 +2509,7 @@ __metadata:
     nodemon: 2.0.16
     pg: 8.7.1
     postgres: 1.0.2
+    supertest: ^7.0.0
     swagger-ui-express: ^5.0.1
     ts-jest: ^29.2.4
     ts-node-dev: 2.0.0
