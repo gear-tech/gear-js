@@ -1,4 +1,4 @@
-import { useBalanceFormat } from '@gear-js/react-hooks';
+import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
 import { Button, Input } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,6 +18,7 @@ import { Result } from '@/hooks/useGasCalculate/types';
 import { ProgramVoucherSelect } from '@/features/voucher';
 import { LabeledCheckbox } from '@/shared/ui';
 import { PayloadForm, getResetPayloadValue, useService, PayloadValue, PayloadValueSchema } from '@/features/sails';
+import { getErrorMessage } from '@/shared/helpers';
 
 import styles from './message-form.module.scss';
 
@@ -60,6 +61,7 @@ type FormattedValues = z.infer<ReturnType<typeof useSchema>>;
 
 const SailsMessageForm = ({ id, programId, isReply, sails }: Props) => {
   const { getFormattedGasValue } = useBalanceFormat();
+  const alert = useAlert();
   const service = useService(sails, 'functions');
 
   const defaultValues = { ...DEFAULT_VALUES, payload: service.defaultValues };
@@ -99,19 +101,22 @@ const SailsMessageForm = ({ id, programId, isReply, sails }: Props) => {
     sendMessage({ message: { ...values, destination: id }, payloadType, voucherId, reject, resolve });
   });
 
-  const handleGasCalculate = () => {
+  const handleGasCalculate = async () => {
     setIsGasDisabled(true);
 
     const values = form.getValues();
 
-    calculateGas(method, schema.parse(values), null, undefined, id)
-      .then((info) => {
-        const limit = getFormattedGasValue(info.limit).toFixed();
+    try {
+      const info = await calculateGas(method, schema.parse(values), null, undefined, id);
+      const limit = getFormattedGasValue(info.limit).toFixed();
 
-        form.setValue('gasLimit', limit, { shouldValidate: true });
-        setGasInfo(info);
-      })
-      .finally(() => setIsGasDisabled(false));
+      form.setValue('gasLimit', limit, { shouldValidate: true });
+      setGasInfo(info);
+    } catch (error) {
+      alert.error(getErrorMessage(error));
+    } finally {
+      setIsGasDisabled(false);
+    }
   };
 
   return (
