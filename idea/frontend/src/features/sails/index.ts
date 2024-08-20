@@ -1,7 +1,7 @@
 import { useSails, useSailsWithFile, useConstructor, useService, useAddIdl } from './hooks';
 import { PayloadForm, SailsPreview, ProgramEvents } from './ui';
 import { getResetPayloadValue } from './utils';
-import { PayloadValue, PayloadValueSchema } from './types';
+import { PayloadValue, PayloadValueSchema, SailsService, SailsServiceFunc } from './types';
 
 export {
   PayloadForm,
@@ -15,4 +15,4 @@ export {
   useAddIdl,
 };
 
-export type { PayloadValue, PayloadValueSchema };
+export type { PayloadValue, PayloadValueSchema, SailsService, SailsServiceFunc };

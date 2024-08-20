@@ -28,7 +28,11 @@ const DEFAULT_FILTER_VALUES = {
 function ProgramEvents({ programId, sails }: Props) {
   const [filterValues, setFilterValues] = useState(DEFAULT_FILTER_VALUES);
 
-  const events = useEvents({ source: programId, service: filterValues.serviceName, name: filterValues.eventName });
+  const events = useEvents({
+    source: programId,
+    service: filterValues[FILTER_NAME.SERVICE_NAME],
+    name: filterValues[FILTER_NAME.EVENT_NAME],
+  });
 
   const renderList = () => (
     <List
