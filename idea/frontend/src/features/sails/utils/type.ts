@@ -20,6 +20,13 @@ const getPrimitiveType = (def: PrimitiveDef) => {
   if (def.isMessageId) return 'MessageId';
   if (def.isH256) return 'H256';
   if (def.isU256) return 'U256';
+  if (def.isH160) return 'H160';
+  if (def.isNonZeroU8) return 'NonZeroU8';
+  if (def.isNonZeroU16) return 'NonZeroU16';
+  if (def.isNonZeroU32) return 'NonZeroU32';
+  if (def.isNonZeroU64) return 'NonZeroU64';
+  if (def.isNonZeroU128) return 'NonZeroU128';
+  if (def.isNonZeroU256) return 'NonZeroU256';
 
   throw new Error('Unknown primitive type');
 };
