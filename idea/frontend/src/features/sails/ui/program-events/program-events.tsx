@@ -1,5 +1,5 @@
 import { HexString } from '@gear-js/api';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Sails } from 'sails-js';
 
 import { FilterGroup, Filters, Radio } from '@/features/filters';
@@ -7,6 +7,7 @@ import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
 import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
 
 import { useEvents, EventType } from '../../api';
+import { SailsService, SailsServiceEvent } from '../../types';
 import { EventCard } from '../event-card';
 
 type Props = {
@@ -15,31 +16,19 @@ type Props = {
 };
 
 const FILTER_NAME = {
-  METHOD: 'method',
+  SERVICE_NAME: 'serviceName',
+  EVENT_NAME: 'eventName',
 } as const;
 
 const DEFAULT_FILTER_VALUES = {
-  [FILTER_NAME.METHOD]: '',
+  [FILTER_NAME.SERVICE_NAME]: '',
+  [FILTER_NAME.EVENT_NAME]: '',
 };
 
 function ProgramEvents({ programId, sails }: Props) {
   const [filterValues, setFilterValues] = useState(DEFAULT_FILTER_VALUES);
 
-  const filterParams = useMemo(() => {
-    const [service, name] = filterValues[FILTER_NAME.METHOD].split('.');
-
-    return { service, name };
-  }, [filterValues]);
-
-  const methods = useMemo(() => {
-    if (!sails) return;
-
-    return Object.entries(sails.services).flatMap(([name, service]) =>
-      Object.keys(service.events).map((eventName) => `${name}.${eventName}`),
-    );
-  }, [sails]);
-
-  const events = useEvents({ source: programId, ...filterParams });
+  const events = useEvents({ source: programId, service: filterValues.serviceName, name: filterValues.eventName });
 
   const renderList = () => (
     <List
@@ -54,18 +43,37 @@ function ProgramEvents({ programId, sails }: Props) {
     />
   );
 
-  const renderFilters = () =>
-    methods?.length ? (
-      <Filters initialValues={filterValues} onSubmit={setFilterValues}>
-        <FilterGroup name={FILTER_NAME.METHOD} onSubmit={setFilterValues}>
-          <Radio label="None" name={FILTER_NAME.METHOD} value="" onSubmit={setFilterValues} />
+  const renderFilterGroup = (
+    heading: string,
+    name: typeof FILTER_NAME[keyof typeof FILTER_NAME],
+    data: Record<string, SailsService | SailsServiceEvent>,
+    onSubmit: (values: typeof filterValues) => void = setFilterValues,
+  ) => (
+    <FilterGroup title={heading} name={name} onSubmit={onSubmit}>
+      <Radio label="None" value="" name={name} onSubmit={onSubmit} />
 
-          {methods.map((method) => (
-            <Radio key={method} name={FILTER_NAME.METHOD} value={method} label={method} onSubmit={setFilterValues} />
-          ))}
-        </FilterGroup>
+      {Object.keys(data).map((fnName) => (
+        <Radio key={fnName} value={fnName} label={fnName} name={name} onSubmit={onSubmit} />
+      ))}
+    </FilterGroup>
+  );
+
+  const renderFilters = () => {
+    if (!sails) return null;
+
+    const { services } = sails;
+    const serviceName = filterValues[FILTER_NAME.SERVICE_NAME];
+
+    const handleServiceNameChange = (values: typeof filterValues) =>
+      setFilterValues({ ...values, [FILTER_NAME.EVENT_NAME]: '' });
+
+    return (
+      <Filters initialValues={DEFAULT_FILTER_VALUES} values={filterValues} onSubmit={setFilterValues}>
+        {renderFilterGroup('Service', FILTER_NAME.SERVICE_NAME, services, handleServiceNameChange)}
+        {serviceName && renderFilterGroup('Event', FILTER_NAME.EVENT_NAME, services[serviceName].events)}
       </Filters>
-    ) : null;
+    );
+  };
 
   return (
     <ProgramTabLayout
