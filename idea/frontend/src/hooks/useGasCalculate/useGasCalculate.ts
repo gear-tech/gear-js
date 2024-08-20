@@ -1,6 +1,6 @@
 import isPlainObject from 'lodash.isplainobject';
 import { ProgramMetadata, GasInfo } from '@gear-js/api';
-import { useApi, useAlert, useAccount } from '@gear-js/react-hooks';
+import { useApi, useAccount } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 
 import { GasMethod } from '@/shared/config';
@@ -11,7 +11,6 @@ import { preparedGasInfo } from './helpers';
 const useGasCalculate = () => {
   const { api, isApiReady } = useApi();
   const { account } = useAccount();
-  const alert = useAlert();
 
   const calculateGas = async <T extends GasMethod>(
     method: T,
@@ -81,10 +80,6 @@ const useGasCalculate = () => {
 
       return preparedGasInfo(estimatedGas);
     } catch (error) {
-      const message = (error as Error).message;
-
-      alert.error(message);
-
       return Promise.reject(error);
     }
   };

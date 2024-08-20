@@ -1,4 +1,4 @@
-import { useBalanceFormat } from '@gear-js/react-hooks';
+import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
 import { Input as GearInput } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,7 +13,7 @@ import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
 import { Input, ValueField, LabeledCheckbox, Box } from '@/shared/ui';
 import { PayloadForm, useConstructor, PayloadValue, PayloadValueSchema, getResetPayloadValue } from '@/features/sails';
-import { isHex } from '@/shared/helpers';
+import { getErrorMessage, isHex } from '@/shared/helpers';
 
 import { SubmitHelpers } from '../model';
 import styles from './ProgramForm.module.scss';
@@ -58,6 +58,7 @@ const DEFAULT_VALUES = {
 
 const SailsProgramForm = ({ gasMethod, sails, source, fileName = '', onSubmit }: Props) => {
   const { getFormattedGasValue } = useBalanceFormat();
+  const alert = useAlert();
 
   const constructor = useConstructor(sails);
   const defaultValues = { ...DEFAULT_VALUES, payload: constructor.defaultValues, programName: fileName };
@@ -88,6 +89,8 @@ const SailsProgramForm = ({ gasMethod, sails, source, fileName = '', onSubmit }:
 
       form.setValue('gasLimit', limit, { shouldValidate: true });
       setGasinfo(info);
+    } catch (error) {
+      alert.error(getErrorMessage(error));
     } finally {
       setIsGasDisabled(false);
     }

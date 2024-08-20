@@ -1,5 +1,5 @@
 import { ProgramMetadata } from '@gear-js/api';
-import { useBalanceFormat } from '@gear-js/react-hooks';
+import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
 import { Input as GearInput } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -12,7 +12,7 @@ import { FormPayload, getSubmitPayload, getPayloadFormValues, getResetPayloadVal
 import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
 import { Input, ValueField, LabeledCheckbox, Box } from '@/shared/ui';
-import { isHex } from '@/shared/helpers';
+import { getErrorMessage, isHex } from '@/shared/helpers';
 
 import { INITIAL_VALUES, FormValues, SubmitHelpers } from '../model';
 import styles from './ProgramForm.module.scss';
@@ -27,6 +27,7 @@ type Props = {
 
 const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: Props) => {
   const { getChainBalanceValue, getFormattedGasValue, getChainGasValue } = useBalanceFormat();
+  const alert = useAlert();
   const schema = useValidationSchema();
 
   const defaultValues = { ...INITIAL_VALUES, programName: fileName };
@@ -66,6 +67,8 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
 
       setValue('gasLimit', limit, { shouldValidate: true });
       setGasinfo(info);
+    } catch (error) {
+      alert.error(getErrorMessage(error));
     } finally {
       setIsGasDisabled(false);
     }

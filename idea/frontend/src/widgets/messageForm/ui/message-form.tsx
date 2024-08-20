@@ -1,6 +1,6 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { Button, Input, Textarea } from '@gear-js/ui';
-import { useBalanceFormat } from '@gear-js/react-hooks';
+import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMemo, useState } from 'react';
@@ -17,6 +17,7 @@ import { useGasCalculate, useMessageActions, useValidationSchema } from '@/hooks
 import { Result } from '@/hooks/useGasCalculate/types';
 import { ProgramVoucherSelect } from '@/features/voucher';
 import { LabeledCheckbox } from '@/shared/ui';
+import { getErrorMessage } from '@/shared/helpers';
 
 import { FormValues, INITIAL_VALUES } from '../model';
 import styles from './message-form.module.scss';
@@ -31,6 +32,7 @@ type Props = {
 
 const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => {
   const { getChainBalanceValue, getFormattedGasValue, getChainGasValue } = useBalanceFormat();
+  const alert = useAlert();
   const schema = useValidationSchema();
 
   // TODOFORM:
@@ -108,6 +110,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
         setValue('gasLimit', limit, { shouldValidate: true });
         setGasInfo(info);
       })
+      .catch((error) => alert.error(getErrorMessage(error)))
       .finally(() => setIsGasDisabled(false));
   };
 
