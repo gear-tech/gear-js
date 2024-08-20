@@ -5,8 +5,8 @@ import { Sails } from 'sails-js';
 
 import MessageCardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
 import { FilterGroup, Filters, Radio } from '@/features/filters';
-import { SailsService, SailsServiceFunc } from '@/features/sails';
 import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
+import { SailsFilterGroup } from '@/features/sails';
 
 import { useMessagesToProgram, useMessagesFromProgram } from '../../api';
 import { MessageCard } from '../message-card';
@@ -85,25 +85,23 @@ const ProgramMessages = ({ programId, sails }: Props) => {
     const handleServiceNameChange = (values: typeof filters) =>
       setFilters({ ...values, [FILTER_NAME.FUNCTION_NAME]: '' });
 
-    const renderFilterGroup = (
-      heading: string,
-      name: typeof FILTER_NAME[keyof typeof FILTER_NAME],
-      data: Record<string, SailsService | SailsServiceFunc>,
-      onSubmit: (values: typeof filters) => void = setFilters,
-    ) => (
-      <FilterGroup title={heading} name={name} onSubmit={onSubmit}>
-        <Radio label="None" value="" name={name} onSubmit={onSubmit} />
-
-        {Object.keys(data).map((fnName) => (
-          <Radio key={fnName} value={fnName} label={fnName} name={name} onSubmit={onSubmit} />
-        ))}
-      </FilterGroup>
-    );
-
     return (
       <>
-        {renderFilterGroup('Service', FILTER_NAME.SERVICE_NAME, services, handleServiceNameChange)}
-        {serviceName && renderFilterGroup('Function', FILTER_NAME.FUNCTION_NAME, services[serviceName].functions)}
+        <SailsFilterGroup
+          heading="Service"
+          name={FILTER_NAME.SERVICE_NAME}
+          functions={services}
+          onSubmit={handleServiceNameChange}
+        />
+
+        {serviceName && (
+          <SailsFilterGroup
+            heading="Function"
+            name={FILTER_NAME.FUNCTION_NAME}
+            functions={services[serviceName].functions}
+            onSubmit={setFilters}
+          />
+        )}
       </>
     );
   };

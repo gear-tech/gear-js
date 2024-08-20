@@ -2,13 +2,13 @@ import { HexString } from '@gear-js/api';
 import { useState } from 'react';
 import { Sails } from 'sails-js';
 
-import { FilterGroup, Filters, Radio } from '@/features/filters';
+import { Filters } from '@/features/filters';
 import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
 import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
 
 import { useEvents, EventType } from '../../api';
-import { SailsService, SailsServiceEvent } from '../../types';
 import { EventCard } from '../event-card';
+import { SailsFilterGroup } from '../sails-filter-group';
 
 type Props = {
   programId: HexString;
@@ -47,21 +47,6 @@ function ProgramEvents({ programId, sails }: Props) {
     />
   );
 
-  const renderFilterGroup = (
-    heading: string,
-    name: typeof FILTER_NAME[keyof typeof FILTER_NAME],
-    data: Record<string, SailsService | SailsServiceEvent>,
-    onSubmit: (values: typeof filterValues) => void = setFilterValues,
-  ) => (
-    <FilterGroup title={heading} name={name} onSubmit={onSubmit}>
-      <Radio label="None" value="" name={name} onSubmit={onSubmit} />
-
-      {Object.keys(data).map((fnName) => (
-        <Radio key={fnName} value={fnName} label={fnName} name={name} onSubmit={onSubmit} />
-      ))}
-    </FilterGroup>
-  );
-
   const renderFilters = () => {
     if (!sails) return null;
 
@@ -73,8 +58,21 @@ function ProgramEvents({ programId, sails }: Props) {
 
     return (
       <Filters initialValues={DEFAULT_FILTER_VALUES} values={filterValues} onSubmit={setFilterValues}>
-        {renderFilterGroup('Service', FILTER_NAME.SERVICE_NAME, services, handleServiceNameChange)}
-        {serviceName && renderFilterGroup('Event', FILTER_NAME.EVENT_NAME, services[serviceName].events)}
+        <SailsFilterGroup
+          heading="Service"
+          name={FILTER_NAME.SERVICE_NAME}
+          functions={services}
+          onSubmit={handleServiceNameChange}
+        />
+
+        {serviceName && (
+          <SailsFilterGroup
+            heading="Event"
+            name={FILTER_NAME.EVENT_NAME}
+            functions={serviceName ? services[serviceName].events : undefined}
+            onSubmit={setFilterValues}
+          />
+        )}
       </Filters>
     );
   };
