@@ -124,7 +124,7 @@ const SailsProgramForm = ({ gasMethod, sails, source, fileName = '', onSubmit }:
             block
           />
 
-          <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" direction="y" />
+          <LabeledCheckbox name="keepAlive" label="Account protection:" inputLabel="Keep alive" direction="y" />
         </Box>
 
         <Box>
