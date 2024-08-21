@@ -17,7 +17,8 @@ function usePrograms(parameters: ProgramsParameters) {
     select: INFINITE_QUERY.SELECT,
 
     queryKey: ['programs', parameters],
-    queryFn: async () => (await (isDevChain ? getLocalPrograms : getPrograms)(parameters)).result,
+    queryFn: async ({ pageParam }) =>
+      (await (isDevChain ? getLocalPrograms : getPrograms)({ ...parameters, offset: pageParam })).result,
   });
 
   useErrorAlert(query.error);

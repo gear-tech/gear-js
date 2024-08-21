@@ -15,11 +15,11 @@ function useMessagesToProgram(parameters: MessagesToProgramParameters, enabled: 
     select: INFINITE_QUERY.SELECT,
 
     queryKey: ['messagesToProgram', parameters, isDevChain],
-    queryFn: async () => {
+    queryFn: async ({ pageParam }) => {
       // TODO: separate into standalone hook
       if (isDevChain) return { result: [], count: 0 };
 
-      return (await getMessagesToProgram(parameters)).result;
+      return (await getMessagesToProgram({ ...parameters, offset: pageParam })).result;
     },
     enabled,
   });
@@ -38,11 +38,11 @@ function useMessagesFromProgram(parameters: MessagesFromProgramParameters, enabl
     select: INFINITE_QUERY.SELECT,
 
     queryKey: ['messagesFromProgram', parameters, isDevChain],
-    queryFn: async () => {
+    queryFn: async ({ pageParam }) => {
       // TODO: separate into standalone hook
       if (isDevChain) return { result: [], count: 0 };
 
-      return (await getMessagesFromProgram(parameters)).result;
+      return (await getMessagesFromProgram({ ...parameters, offset: pageParam })).result;
     },
     enabled,
   });

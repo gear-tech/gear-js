@@ -1,8 +1,9 @@
 import { HexString } from '@gear-js/api';
 
+import { PaginationParameters } from '@/api';
 import { IBase } from '@/shared/types';
 
-type GetEventsParameters = {
+type GetEventsParameters = PaginationParameters & {
   service?: string;
   name?: string;
   source?: string;

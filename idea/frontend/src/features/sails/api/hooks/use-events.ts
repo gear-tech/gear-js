@@ -9,7 +9,7 @@ function useEvents(parameters: GetEventsParameters) {
 
   const query = useInfiniteQuery({
     queryKey: ['events', parameters],
-    queryFn: async () => (await getEvents(parameters)).result,
+    queryFn: async ({ pageParam }) => (await getEvents({ ...parameters, offset: pageParam })).result,
     initialPageParam: INFINITE_QUERY.INITIAL_PAGE_PARAM,
     getNextPageParam: INFINITE_QUERY.GET_NEXT_PAGE_PARAM,
     select: INFINITE_QUERY.SELECT,
