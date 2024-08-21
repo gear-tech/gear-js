@@ -11,7 +11,7 @@ function useCodes(parameters: GetCodesParameters) {
 
   const query = useInfiniteQuery({
     queryKey: ['codes', parameters],
-    queryFn: async () => (await getCodes(parameters)).result,
+    queryFn: async ({ pageParam }) => (await getCodes({ ...parameters, offset: pageParam })).result,
     initialPageParam: INFINITE_QUERY.INITIAL_PAGE_PARAM,
     getNextPageParam: INFINITE_QUERY.GET_NEXT_PAGE_PARAM,
     select: INFINITE_QUERY.SELECT,
