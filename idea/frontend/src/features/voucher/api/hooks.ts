@@ -7,7 +7,7 @@ import { API_URL } from './consts';
 import { getVouchers, getNextPageParam } from './utils';
 import { VouchersParameters } from './types';
 
-function useVouchers(parameters: VouchersParameters) {
+function useVouchers(parameters: VouchersParameters, enabled?: boolean) {
   const { api } = useApi();
   const genesis = api?.genesisHash.toHex();
   const url = genesis ? API_URL[genesis as keyof typeof API_URL] : undefined;
@@ -22,7 +22,7 @@ function useVouchers(parameters: VouchersParameters) {
     getNextPageParam,
     select: ({ pages }) => ({ vouchers: pages.flatMap((page) => page.vouchers), count: pages[0].count }),
 
-    enabled: Boolean(url),
+    enabled: Boolean(url) && (enabled ?? true),
   });
 }
 

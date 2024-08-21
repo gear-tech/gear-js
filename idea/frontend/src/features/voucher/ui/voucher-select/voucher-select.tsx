@@ -1,25 +1,42 @@
-import { HexString, IVoucherDetails } from '@gear-js/api';
-import { getTypedEntries, useAccountVouchers } from '@gear-js/react-hooks';
+import { HexString } from '@gear-js/api';
+import { useAccount, useBalanceFormat } from '@gear-js/react-hooks';
 import { InputWrapper, InputWrapperProps } from '@gear-js/ui';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { Select } from '@/shared/ui';
 
-import { VoucherOption } from './voucher-option';
+import { useVouchers, Voucher } from '../../api';
 
 type Props = Omit<InputWrapperProps, 'id' | 'label' | 'size' | 'children'> & {
-  entries: [HexString, IVoucherDetails][];
+  vouchers: Voucher[];
 };
 
-const VoucherSelect = ({ entries, ...props }: Props) => {
+const VoucherSelect = ({ vouchers, ...props }: Props) => {
   const name = 'voucherId';
-  const vouchersCount = entries.length;
+  const vouchersCount = vouchers.length;
+
+  const { getFormattedBalance } = useBalanceFormat();
 
   const renderVouchers = () =>
-    entries.map(([id, { expiry }]) => <VoucherOption key={id} id={id} expireBlock={expiry} />);
+    vouchers.map(({ id, expiryAt, expiryAtBlock, balance }) => {
+      const formattedBalance = balance ? getFormattedBalance(balance) : undefined;
+      const expirationDate = new Date(expiryAt);
+      const isActive = Date.now() < expirationDate.getTime();
 
-  // TODO: should be done by react-hook-form's global shouldUnregister,
+      return (
+        <option
+          key={id}
+          label={`${formattedBalance?.value} ${
+            formattedBalance?.unit
+          }. Expires: ${expirationDate.toLocaleString()} (#${expiryAtBlock})`}
+          value={id}
+          disabled={!isActive}
+        />
+      );
+    });
+
+  // TODO: probably should be done by react-hook-form's global shouldUnregister,
   // however due to complications of current forms it's not possible yet.
   // take a look at this problem after forms refactoring
   const { resetField } = useFormContext();
@@ -40,17 +57,22 @@ const VoucherSelect = ({ entries, ...props }: Props) => {
 };
 
 const ProgramVoucherSelect = ({ programId }: { programId: HexString | undefined }) => {
-  const { vouchers } = useAccountVouchers(programId);
-  const entries = getTypedEntries(vouchers || {});
+  const { account } = useAccount();
 
-  return <VoucherSelect entries={entries} direction="x" gap="1/5" />;
+  const { data } = useVouchers(
+    { programs: programId ? [programId] : undefined, spender: account?.decodedAddress },
+    Boolean(programId && account),
+  );
+
+  return <VoucherSelect vouchers={data?.vouchers || []} direction="x" gap="1/5" />;
 };
 
 const CodeVoucherSelect = () => {
-  const { vouchers } = useAccountVouchers();
-  const entries = getTypedEntries(vouchers || {}).filter(([, { codeUploading }]) => codeUploading);
+  const { account } = useAccount();
 
-  return <VoucherSelect entries={entries} direction="y" />;
+  const { data } = useVouchers({ codeUploading: true, spender: account?.decodedAddress }, Boolean(account));
+
+  return <VoucherSelect vouchers={data?.vouchers || []} direction="y" />;
 };
 
 export { ProgramVoucherSelect, CodeVoucherSelect };
