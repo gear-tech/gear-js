@@ -12,18 +12,18 @@ function useVouchers(parameters: VouchersParameters) {
   const genesis = api?.genesisHash.toHex();
   const url = genesis ? API_URL[genesis as keyof typeof API_URL] : undefined;
 
-  const { data, isLoading, hasNextPage, fetchNextPage, refetch } = useInfiniteQuery({
+  return useInfiniteQuery({
     queryKey: ['vouchers', url, parameters],
     queryFn: ({ pageParam }) => getVouchers(url!, { ...parameters, limit: DEFAULT_LIMIT, offset: pageParam }),
+
+    // TODO: if indexer would return object with 'result' key instead of 'vouchers' key,
+    // we would be able to reuse INFINITE_QUERY config from api consts
     initialPageParam: 0,
     getNextPageParam,
+    select: ({ pages }) => ({ vouchers: pages.flatMap((page) => page.vouchers), count: pages[0].count }),
+
     enabled: Boolean(url),
   });
-
-  const vouchers = data?.pages.flatMap((page) => page.vouchers) || [];
-  const vouchersCount = data?.pages[0].count || 0;
-
-  return [vouchers, vouchersCount, isLoading, hasNextPage, fetchNextPage, refetch] as const;
 }
 
 export { useVouchers };

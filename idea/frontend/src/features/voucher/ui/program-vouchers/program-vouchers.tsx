@@ -17,7 +17,7 @@ function ProgramVouchers({ programId }: Props) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterParams, handleFiltersSubmit] = useVoucherFilters();
 
-  const [vouchers, count, isLoading, hasMore, fetchMore, refetch] = useVouchers({
+  const { data, isLoading, hasNextPage, refetch, fetchNextPage } = useVouchers({
     id: searchQuery as HexString,
     programs: [programId],
     ...filterParams,
@@ -25,12 +25,12 @@ function ProgramVouchers({ programId }: Props) {
 
   const renderList = () => (
     <Vouchers
-      items={vouchers}
+      items={data?.vouchers}
       isLoading={isLoading}
-      hasMore={hasMore}
+      hasMore={hasNextPage}
       size="small"
       onVoucherChange={refetch}
-      fetchMore={fetchMore}
+      fetchMore={fetchNextPage}
     />
   );
 
@@ -47,7 +47,7 @@ function ProgramVouchers({ programId }: Props) {
   return (
     <ProgramTabLayout
       heading="Vouchers"
-      count={count}
+      count={data?.count}
       renderList={renderList}
       renderSearch={renderSearch}
       renderFilters={renderFilters}

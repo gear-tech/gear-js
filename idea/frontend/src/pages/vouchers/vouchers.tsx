@@ -16,7 +16,7 @@ import styles from './vouchers.module.scss';
 const Vouchers = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterParams, handleFiltersSubmit] = useVoucherFilters();
-  const [vouchers, count, isLoading, hasMore, fetchMore, refetch] = useVouchers({
+  const { data, isLoading, hasNextPage, refetch, fetchNextPage } = useVouchers({
     id: searchQuery as HexString,
     ...filterParams,
   });
@@ -24,7 +24,7 @@ const Vouchers = () => {
   return (
     <div className={styles.vouchers}>
       <header className={styles.header}>
-        <h2 className={styles.heading}>Vouchers: {count}</h2>
+        <h2 className={styles.heading}>Vouchers: {data?.count}</h2>
 
         <IssueVoucher onSubmit={refetch} />
       </header>
@@ -36,12 +36,12 @@ const Vouchers = () => {
       />
 
       <VouchersFeature
-        items={vouchers}
+        items={data?.vouchers}
         isLoading={isLoading}
-        hasMore={hasMore}
+        hasMore={hasNextPage}
         noItemsSubheading="Wait until someone will issue a voucher for you, or issue voucher by yourself"
         onVoucherChange={refetch}
-        fetchMore={fetchMore}
+        fetchMore={fetchNextPage}
       />
 
       <VoucherFilters onSubmit={handleFiltersSubmit} />
