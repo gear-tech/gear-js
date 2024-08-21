@@ -1,14 +1,10 @@
-import { getVaraAddress, useAccount, useAlert, useBalanceFormat } from '@gear-js/react-hooks';
-import { Button } from '@gear-js/ui';
-import Identicon from '@polkadot/react-identicon';
+import { getVaraAddress, useAccount, useBalanceFormat } from '@gear-js/react-hooks';
 
 import { TimestampBlock } from '@/shared/ui/timestampBlock';
 import { IdBlock } from '@/shared/ui/idBlock';
 import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
-import { copyToClipboard, getShortName } from '@/shared/helpers';
-import CopySVG from '@/shared/assets/images/actions/copyGreen.svg?react';
 
-import { Voucher } from '../../types';
+import { Voucher } from '../../api';
 import { RevokeVoucher } from '../revoke-voucher';
 import { DeclineVoucher } from '../decline-voucher';
 import { UpdateVoucher } from '../update-voucher';
@@ -26,7 +22,6 @@ function VoucherCard({ voucher, onChange }: Props) {
 
   const { account } = useAccount();
   const { getFormattedBalance } = useBalanceFormat();
-  const alert = useAlert();
 
   const formattedBalance = balance ? getFormattedBalance(balance) : undefined;
   const formattedAmount = amount ? getFormattedBalance(amount) : undefined;

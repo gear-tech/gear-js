@@ -1,7 +1,7 @@
 import { Skeleton, List } from '@/shared/ui';
 
 import VoucherCardPlaceholder from '../../assets/voucher-card-placeholder.svg?react';
-import { Voucher } from '../../types';
+import { Voucher } from '../../api';
 import { VoucherCard } from '../voucher-card';
 
 type Props = {

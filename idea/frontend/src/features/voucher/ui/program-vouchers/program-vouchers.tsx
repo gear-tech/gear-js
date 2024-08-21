@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { isHex } from '@/shared/helpers';
 import { ProgramTabLayout, SearchForm } from '@/shared/ui';
 
-import { useVoucherFilters, useVouchers } from '../../hooks';
+import { useVouchers } from '../../api';
+import { useVoucherFilters } from '../../hooks';
 import { Vouchers } from '../vouchers';
 import { VoucherFilters } from '../voucher-filters';
 
@@ -16,7 +17,11 @@ function ProgramVouchers({ programId }: Props) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterParams, handleFiltersSubmit] = useVoucherFilters();
 
-  const [vouchers, count, isLoading, hasMore, fetchMore, refetch] = useVouchers(searchQuery, filterParams, programId);
+  const [vouchers, count, isLoading, hasMore, fetchMore, refetch] = useVouchers({
+    id: searchQuery as HexString,
+    programs: [programId],
+    ...filterParams,
+  });
 
   const renderList = () => (
     <Vouchers

@@ -1,3 +1,4 @@
+import { HexString } from '@gear-js/api';
 import { isHex } from '@polkadot/util';
 import { useState } from 'react';
 
@@ -15,7 +16,10 @@ import styles from './vouchers.module.scss';
 const Vouchers = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterParams, handleFiltersSubmit] = useVoucherFilters();
-  const [vouchers, count, isLoading, hasMore, fetchMore, refetch] = useVouchers(searchQuery, filterParams);
+  const [vouchers, count, isLoading, hasMore, fetchMore, refetch] = useVouchers({
+    id: searchQuery as HexString,
+    ...filterParams,
+  });
 
   return (
     <div className={styles.vouchers}>

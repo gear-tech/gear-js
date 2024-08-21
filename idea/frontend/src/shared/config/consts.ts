@@ -15,11 +15,6 @@ const GENESIS = {
   TESTNET: '0x525639f713f397dcf839bd022cd821f367ebcf179de7b9253531f8adbe5436d6',
 } as const;
 
-const VOUCHERS_API_URL = {
-  [GENESIS.MAINNET]: import.meta.env.VITE_MAINNET_VOUCHERS_API_URL as string,
-  [GENESIS.TESTNET]: import.meta.env.VITE_TESTNET_VOUCHERS_API_URL as string,
-} as const;
-
 const NODE_ADRESS_URL_PARAM = 'node';
 
 const EXAMPLES_HREF = 'https://www.gear-tech.io/developers';
@@ -106,7 +101,6 @@ const ACCOUNT_ADDRESS_SCHEMA = z
 export {
   API_URL,
   INDEXER_API_URL,
-  VOUCHERS_API_URL,
   NODES_API_URL,
   NODE_ADDRESS,
   HCAPTCHA_SITE_KEY,
