@@ -151,7 +151,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
             />
           )}
 
-          <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" gap="1/5" />
+          <LabeledCheckbox name="keepAlive" label="Account protection:" inputLabel="Keep alive" gap="1/5" />
           <ProgramVoucherSelect programId={programId} />
         </Box>
 

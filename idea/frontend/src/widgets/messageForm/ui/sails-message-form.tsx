@@ -137,7 +137,7 @@ const SailsMessageForm = ({ id, programId, isReply, sails }: Props) => {
 
           <GasField info={gasInfo} disabled={isGasDisabled} onGasCalculate={handleGasCalculate} gap="1/5" />
 
-          <LabeledCheckbox name="keepAlive" label="Account existence:" inputLabel="Keep alive" gap="1/5" />
+          <LabeledCheckbox name="keepAlive" label="Account protection:" inputLabel="Keep alive" gap="1/5" />
           <ProgramVoucherSelect programId={programId} />
         </Box>
 
