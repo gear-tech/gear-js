@@ -23,7 +23,7 @@
 
     display: flex;
     align-items: center;
-    margin-bottom: $margin;
+    margin-bottom: 8px;
 
     .title {
       @extend %textStyles;

@@ -28,6 +28,7 @@ export type {
   Services,
   Functions,
   ISailsCtorFuncParams,
+  SailsService,
   SailsServiceFunc,
   SailsServiceQuery,
   SailsServiceEvent,

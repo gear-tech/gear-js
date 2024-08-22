@@ -27,11 +27,15 @@
   }
 }
 
-.service {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.name {
+  font-family: Kanit;
+  font-weight: 500;
+  color: #fff;
 
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.6);
+  background-color: transparent;
+  transition: opacity 0.25s;
+
+  &:hover {
+    opacity: 0.75;
+  }
 }

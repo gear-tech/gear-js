@@ -75,6 +75,7 @@ const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAr
             onClick={clearButton.handleClick}
             onMouseDown={clearButton.preventBlur}
             className={styles.clearButton}
+            disabled={disabled}
           />
         )}
       </div>

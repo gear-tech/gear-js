@@ -85,10 +85,19 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
             onClick={clearButton.handleClick}
             onMouseDown={clearButton.preventBlur}
             className={styles.clearButton}
+            disabled={disabled}
           />
         )}
 
-        {isSearch && <Button type="submit" icon={SearchSVG} color="transparent" className={styles.searchButton} />}
+        {isSearch && (
+          <Button
+            type="submit"
+            icon={SearchSVG}
+            color="transparent"
+            className={styles.searchButton}
+            disabled={disabled}
+          />
+        )}
       </div>
     </InputWrapper>
   );

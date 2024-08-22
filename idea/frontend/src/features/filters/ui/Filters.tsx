@@ -11,11 +11,12 @@ type Props<T> = {
   initialValues: DefaultValues<T>;
   onSubmit: (values: T) => void;
   children: ReactNode;
+  values?: T;
   title?: string;
 };
 
-const Filters = <T extends FieldValues>({ initialValues, children, onSubmit, title = 'Filters' }: Props<T>) => {
-  const methods = useForm<T>({ defaultValues: initialValues });
+const Filters = <T extends FieldValues>({ initialValues, values, children, onSubmit, title = 'Filters' }: Props<T>) => {
+  const methods = useForm<T>({ defaultValues: initialValues, values, resetOptions: { keepDefaultValues: true } });
   const { handleSubmit, reset, formState } = methods;
   const { isDirty } = formState;
 

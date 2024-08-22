@@ -30,12 +30,6 @@ function EventCard({ event, sails }: Props) {
     return sails.services[service].events[name].decode(payload) as AnyJson;
   };
 
-  const getHeading = () => {
-    if (!service && !name) return 'Event';
-
-    return service && name ? `${service}.${name}` : service || name;
-  };
-
   return (
     <div className={styles.card}>
       <header className={styles.header}>
@@ -43,7 +37,7 @@ function EventCard({ event, sails }: Props) {
           type="button"
           onClick={() => setIsOpen((prevValue) => !prevValue)}
           className={clsx(styles.button, isOpen && styles.open)}>
-          <span>{getHeading()}</span>
+          <span>{service && name ? `${service}.${name}` : service || name}</span>
 
           <ArrowSVG />
         </button>
