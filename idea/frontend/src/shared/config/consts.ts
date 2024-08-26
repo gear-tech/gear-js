@@ -77,7 +77,6 @@ enum RpcMethods {
   AddMetadata = 'meta.add',
   GetMetadata = 'meta.get',
   GetTestBalance = 'testBalance.get',
-  NetworkData = 'networkData.available',
   TestBalanceAvailable = 'testBalance.available',
 }
 
