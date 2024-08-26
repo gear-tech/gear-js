@@ -1,7 +1,7 @@
 import { ProviderProps, useApi } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 
-import { RpcMethods } from '@/shared/config';
+import { GENESIS, RpcMethods } from '@/shared/config';
 import { rpcService } from '@/shared/services/rpcService';
 
 import { ChainContext } from './Context';
@@ -11,18 +11,10 @@ const { Provider } = ChainContext;
 const ChainProvider = ({ children }: ProviderProps) => {
   const { api } = useApi();
   const genesis = api?.genesisHash.toHex();
+  const isDevChain = genesis ? genesis !== GENESIS.MAINNET && genesis !== GENESIS.TESTNET : undefined;
 
-  const [isDevChain, setIsDevChain] = useState<boolean>();
   const [isTestBalanceAvailable, setIsTestBalanceAvailable] = useState<boolean>();
   const isChainRequestReady = isDevChain !== undefined && isTestBalanceAvailable !== undefined;
-
-  useEffect(() => {
-    setIsDevChain(undefined);
-
-    if (!genesis) return;
-
-    rpcService.callRPC<boolean>(RpcMethods.NetworkData, { genesis }).then(({ result }) => setIsDevChain(!result));
-  }, [genesis]);
 
   useEffect(() => {
     setIsTestBalanceAvailable(undefined);
