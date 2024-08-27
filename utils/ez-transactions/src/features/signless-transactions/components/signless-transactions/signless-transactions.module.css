@@ -1,0 +1,75 @@
+.container {
+  width: 100%;
+}
+
+.sessionContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: #F7F9FA;
+  border: 1px solid #00FFC4;
+  border-radius: 4px;
+
+}
+
+.titleWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.expiredTitleWrapper {
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 26px;
+}
+
+.buttons {
+  display: flex;
+  gap: 4px;
+
+  &:not(:last-child) {
+    margin-bottom: 12px;
+  }
+
+  .enableButton {
+    color: #d00;
+    gap: 8px;
+
+    & .itemIcon path {
+      fill: #d00;
+    }
+  }
+
+  
+}
+
+.closeButton {
+  background: #E9E9E9;
+  display: flex;
+  justify-content: center;
+}
+
+.enableButton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19.2px;
+}
+
+.expiredButtons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

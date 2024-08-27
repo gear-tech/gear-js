@@ -12,6 +12,7 @@
     "build:meta-storage": "yarn workspace @gear-js/meta-storage build",
     "build:frontend": "yarn build:hooks && yarn build:ui && yarn workspace @gear-js/frontend build",
     "build:hooks": "yarn workspace @gear-js/react-hooks build",
+    "build:ez-transactions": "yarn workspace @gear-js/ez-transactions build",
     "build:ui": "yarn workspace @gear-js/ui build",
     "build:test-balance": "yarn workspace @gear-js/test-balance build",
     "build:faucet": "yarn workspace @gear-js/faucet build",
@@ -31,6 +32,7 @@
   "workspaces": [
     "idea/*",
     "utils/gear-hooks",
+    "utils/ez-transactions",
     "utils/gear-ui"
   ],
   "packageManager": "yarn@3.3.0",

@@ -1,0 +1,76 @@
+.enableButton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19.2px;
+}
+
+.closeButton {
+  background: #E9E9E9;
+  display: flex;
+  justify-content: center;
+}
+
+.switchContainer {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.switcherWrapper {
+  padding-top: 7px;
+}
+
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.headingWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.heading {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 26px;
+  letter-spacing: 0.03em;
+  text-align: center;
+}
+
+.descr {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 12px;
+  letter-spacing: 0.15000000596046448px;
+  text-align: left;
+  color: #898B94;
+}
+
+.loader {
+  width: 16px;
+  height: 16px;
+  border: 2px dotted #000000;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  animation: rotation 2s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} 

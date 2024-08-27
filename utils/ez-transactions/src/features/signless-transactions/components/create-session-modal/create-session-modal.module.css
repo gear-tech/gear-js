@@ -1,0 +1,20 @@
+.form {
+  /* TODO: if there's margin-bottom on top element (?), label overflow is broken  */
+  /* remove after @gear-js/vara-ui fix */
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  &:not(:last-child) {
+    margin-bottom: 32px;
+  }
+}
+
+.button {
+  /* TODO: button 'block' props should handle this */
+  /* remove after @gear-js/vara-ui fix  */
+  width: 100%;
+  justify-content: center;
+}
+
