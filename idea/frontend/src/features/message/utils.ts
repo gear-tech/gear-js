@@ -96,7 +96,7 @@ const getDecodedMessagePayload = (
   const payload = getPayload(message);
 
   try {
-    if (isMessageWithError(message)) return CreateType.create('String', payload).toHuman();
+    if (!isMessageQueued && isMessageWithError(message)) return CreateType.create('String', payload).toHuman();
     if (metadata) return { value: getMetadataDecodedMessagePayload(message, isMessageQueued, metadata) };
     if (sails) return getSailsDecodedMessagePayload(message, isMessageQueued, sails);
 
