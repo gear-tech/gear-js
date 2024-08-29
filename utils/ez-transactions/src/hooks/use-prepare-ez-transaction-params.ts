@@ -2,7 +2,6 @@ import { useAccount } from '@gear-js/react-hooks';
 import { useEzTransactions } from '../context';
 
 const usePrepareEzTransactionParams = () => {
-  const gasLimit = 250_000_000_000n;
   const { account } = useAccount();
   const { signless, gasless } = useEzTransactions();
   const { pair, voucher } = signless;
@@ -22,7 +21,7 @@ const usePrepareEzTransactionParams = () => {
       sessionForAccount,
       account: sendFromPair ? { addressOrPair: pair } : undefined,
       voucherId,
-      gasLimit,
+      gasLimit: { increaseGas: 10 },
     };
   };
 

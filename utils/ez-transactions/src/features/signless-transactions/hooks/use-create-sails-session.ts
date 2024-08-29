@@ -21,6 +21,8 @@ function useCreateSailsSession(programId: HexString, program: BaseProgram) {
     functionName: 'deleteSessionFromAccount',
   });
 
+  const gasLimit = { increaseGas: 10 };
+
   const createSession = async (
     session: Session,
     voucherValue: number,
@@ -38,7 +40,6 @@ function useCreateSailsSession(programId: HexString, program: BaseProgram) {
         .toHex();
 
       const { signature } = await signHex(account, hexToSign);
-      const gasLimit = 250_000_000_000n; // TODO: replace with calculation after release fix
 
       const { transaction } = await prepareCreateSession({
         account: { addressOrPair: pair },
@@ -60,6 +61,7 @@ function useCreateSailsSession(programId: HexString, program: BaseProgram) {
       account: pair ? { addressOrPair: pair.address } : undefined,
       args: [{ key, duration, allowed_actions }, null],
       voucherId,
+      gasLimit,
     });
     const messageExtrinsic = transaction.extrinsic;
 
@@ -67,7 +69,7 @@ function useCreateSailsSession(programId: HexString, program: BaseProgram) {
   };
 
   const deleteSession = async (key: HexString, pair: KeyringPair, options: Options) => {
-    const { transaction } = await prepareDeleteSession({ args: [] });
+    const { transaction } = await prepareDeleteSession({ args: [], gasLimit });
     signAndSendDeleteSession(transaction.extrinsic, key, pair, options);
   };
 
