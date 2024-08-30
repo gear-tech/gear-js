@@ -180,7 +180,7 @@ export class TempState {
     return !!(await this.getProgram(id));
   }
 
-  async setProgramStatus(id: string, blockhash: string, status: ProgramStatus, expiration?: string) {
+  async setProgramStatus(id: string, status: ProgramStatus, expiration?: string) {
     const program = await this.getProgram(id);
 
     if (!program) {

@@ -54,7 +54,7 @@ export async function handleMessageQueued({ ctx, block, event, common, tempState
 
   if (!handler) {
     console.log(call);
-    throw new Error('Unkown call with message');
+    throw new Error('Unknown call with message');
   }
 
   handler({ block, call, common, ctx, event, msg, tempState });
@@ -115,7 +115,7 @@ export async function handleProgramChanged({ ctx, event, common, tempState, bloc
           ? ProgramStatus.Exited
           : ProgramStatus.Terminated;
 
-      await tempState.setProgramStatus(id, block.header.hash, status);
+      await tempState.setProgramStatus(id, status);
     }
   } else {
     ctx.log.error(event.args, 'Unknown program status');
@@ -129,6 +129,7 @@ export async function handleCodeChanged({ event, common, tempState }: IHandleEve
       new Code({
         ...common,
         id: event.args.id,
+        name: event.args.id,
         uploadedBy: (event.extrinsic as any)?.signature?.address?.value,
         metahash,
         metaType: metahash ? MetaType.Meta : null,
