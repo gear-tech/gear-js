@@ -38,7 +38,7 @@ export function handleVoucherCall({ ctx, msg, call }: IHandleCallProps) {
     msg.replyToMessageId = call.args.call.replyToId;
     msg.value = call.args.call.value;
   } else {
-    ctx.log.error(call, 'Unkown voucher call');
+    ctx.log.error(call, 'Unknown voucher call');
   }
 }
 
