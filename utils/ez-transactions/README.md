@@ -1,6 +1,7 @@
 # @gear-js/ez-transactions
 
-A package for providing gasless and signless transactions
+A package for providing gasless and signless transactions.
+This frontend solution interacts with a blockchain program, allowing users to make transactions without paying gas fees or signing on-chain transactions.
 
 ## Install:
 
@@ -8,7 +9,9 @@ A package for providing gasless and signless transactions
 yarn add @gear-js/ez-transactions
 ```
 
-## Use gasless-transactions
+## Gasless-transactions
+
+The gas fees, which are usually required to execute transactions on the blockchain, are covered by a backend service provided by the dApp developer. When a user initiates a transaction, the backend issue a [voucher](https://wiki.vara.network/docs/api/vouchers) for that specific user. This voucher effectively covers the gas cost for the transaction, allowing the user to execute it without having to pay any fees themselves.
 
 ### Provider
 
@@ -55,7 +58,12 @@ You can use `voucherId` to get all required details via methods provided with `@
 
 ## Use signless-transactions
 
-Signless transactions require the implementation of a session service for a program. The provider may use a Sails-generated program or metadata.
+To streamline the process further, the frontend of the application creates a temporary sub-account for the user. This sub-account is granted the necessary permissions by the user to automatically sign transactions on their behalf. This means that users don’t need to manually sign each transaction with their private key, enhancing convenience.
+The main account issue a [voucher](https://wiki.vara.network/docs/api/vouchers) to the sub-account to cover gas fees.
+
+Signless transactions require the implementation of a session service for a program.
+
+Programs can be written either in [Sails](https://github.com/gear-tech/sails?tab=readme-ov-file#sails-) or using [metadata](https://wiki.vara.network/docs/build/gstd/metadata). So the provider may use a [Sails-generated program](https://github.com/gear-tech/sails/blob/master/js/README.md#generate-library-from-idl) or metadata:
 
 ### Sails program based provider
 
@@ -100,6 +108,13 @@ const { pair, session, isSessionReady, voucher, isLoading, setIsLoading, isActiv
 ```
 
 ## Use gasless and signless transaction together
+
+Combined Workflow:
+
+- The frontend generates a sub-account with limited permissions.
+- This sub-account then communicates with the backend to request a gas voucher.
+- The voucher is applied to the transaction, covering the gas fees.
+- The sub-account automatically signs the transaction, completing the process without requiring any manual input from the user.
 
 `EzTransactionsProvider` implements logic that allows the use of gasless and signless transactions together, e.g. disabling gasless when signless is active and requesting a voucher before a signless session is created. It uses both the signless and gasless contexts, so it needs to be wrapped by `GaslessTransactionsProvider` and `SignlessTransactionsProvider`.
 
