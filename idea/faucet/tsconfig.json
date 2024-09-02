@@ -6,5 +6,6 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "strict": false
-  }
+  },
+  "exclude": ["tests", "jest.config.js"]
 }

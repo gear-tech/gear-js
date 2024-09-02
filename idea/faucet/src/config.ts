@@ -17,7 +17,7 @@ export default {
     port: parseInt(checkEnv(process.env.DB_PORT, '5432')),
     user: checkEnv('DB_USER', 'postgres'),
     password: checkEnv('DB_PASSWORD', 'postgres'),
-    name: checkEnv('DB_NAME', 'name'),
+    name: checkEnv('DB_NAME', 'faucet'),
     host: checkEnv(process.env.DB_HOST, 'localhost'),
   },
   gear: {

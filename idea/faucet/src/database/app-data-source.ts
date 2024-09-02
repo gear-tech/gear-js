@@ -15,6 +15,6 @@ export const AppDataSource = new DataSource({
   migrations: [],
 });
 
-export async function connectToDB(): Promise<void> {
-  await AppDataSource.initialize();
+export async function connectToDB(): Promise<DataSource> {
+  return AppDataSource.initialize();
 }
