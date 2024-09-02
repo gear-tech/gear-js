@@ -1,7 +1,4 @@
 import { TypeormDatabase, Store } from '@subsquid/typeorm-store';
-import { generateCodeHash } from '@gear-js/api';
-import { ZERO_ADDRESS } from 'sails-js';
-import { Code, MessageEntryPoint, MessageFromProgram, MessageToProgram, MetaType, Program } from './model';
 
 import { processor, ProcessorContext } from './processor';
 import { TempState } from './temp-state';
@@ -13,15 +10,26 @@ import {
   isUserMessageRead,
   isUserMessageSent,
 } from './types';
-import { isCreateProgram, isUploadCode, isUploadProgram } from './types/calls';
-import { isSendMessageCall, isSendReplyCall } from './types/calls/message';
-import { isVoucherCall } from './types/calls/voucher';
-import { CodeStatus, MessageReadReason, ProgramStatus } from './model';
-import { getMetahash } from './util';
+import {
+  handleCodeChanged,
+  handleMessageQueued,
+  handleMessagesDispatched,
+  handleProgramChanged,
+  handleUserMessageRead,
+  handleUserMessageSent,
+  IHandleEventProps,
+} from './event.route';
 
 let tempState: TempState;
 
-const PROGRAM_STATUSES = ['ProgramSet', 'Active', 'Terminated', 'Inactive'];
+const callHandlers: Array<{ pattern: (obj: any) => boolean; handler: (args: IHandleEventProps) => Promise<void> }> = [
+  { pattern: isMessageQueued, handler: handleMessageQueued },
+  { pattern: isUserMessageSent, handler: handleUserMessageSent },
+  { pattern: isProgramChanged, handler: handleProgramChanged },
+  { pattern: isCodeChanged, handler: handleCodeChanged },
+  { pattern: isMessagesDispatched, handler: handleMessagesDispatched },
+  { pattern: isUserMessageRead, handler: handleUserMessageRead },
+];
 
 const handler = async (ctx: ProcessorContext<Store>) => {
   tempState.newState(ctx);
@@ -34,149 +42,13 @@ const handler = async (ctx: ProcessorContext<Store>) => {
     };
 
     for (const event of block.events) {
-      if (isMessageQueued(event)) {
-        const call = event.call;
+      const { handler } = callHandlers.find(({ pattern }) => pattern(event));
 
-        const msg = new MessageToProgram({
-          ...common,
-          id: event.args.id,
-          source: event.args.source,
-          destination: event.args.destination,
-          entry: event.args.entry.__kind.toLowerCase() as MessageEntryPoint,
-        });
-
-        if (isUploadProgram(call)) {
-          const codeId = generateCodeHash(call.args.code);
-          tempState.addProgram(
-            new Program({
-              ...common,
-              id: event.args.destination,
-              codeId,
-              owner: event.args.source,
-              name: event.args.destination,
-            }),
-          );
-          msg.payload = call.args.initPayload;
-          msg.value = call.args.value;
-        } else if (isSendMessageCall(call)) {
-          msg.payload = call.args.payload;
-          msg.value = call.args.value;
-        } else if (isVoucherCall(call)) {
-          if (call.args.call.__kind === 'SendMessage') {
-            msg.payload = call.args.call.payload;
-            msg.value = call.args.call.value;
-          } else if (call.args.call.__kind === 'SendReply') {
-            msg.payload = call.args.call.payload;
-            msg.replyToMessageId = call.args.call.replyToId;
-            msg.value = call.args.call.value;
-          } else {
-            ctx.log.error(call, 'Unkown voucher call');
-          }
-        } else if (isCreateProgram(call)) {
-          tempState.addProgram(
-            new Program({
-              ...common,
-              id: event.args.destination,
-              codeId: call.args.codeId,
-              owner: event.args.source,
-              name: event.args.destination,
-            }),
-          );
-        } else if (isSendReplyCall(call)) {
-          msg.payload = call.args.payload;
-          msg.value = call.args.value;
-          msg.replyToMessageId = call.args.replyToId;
-        } else {
-          console.log(call);
-          throw new Error('Unkown call with message');
-        }
-
-        tempState.addMsgToProgram(msg);
-      } else if (isUserMessageSent(event)) {
-        const msg = new MessageFromProgram({
-          ...common,
-          id: event.args.message.id,
-          source: event.args.message.source,
-          destination: event.args.message.destination,
-          payload: event.args.message.payload,
-          value: event.args.message.value,
-          replyToMessageId: event.args.message.details?.to || null,
-          expiration: event.args.expirtaion || null,
-          exitCode: event.args.message.details?.code?.__kind === 'Success' ? 0 : 1,
-        });
-        if (event.args.message.destination === ZERO_ADDRESS) {
-          tempState.addEvent(msg);
-        } else {
-          tempState.addMsgFromProgram(msg);
-        }
-      } else if (isProgramChanged(event)) {
-        const {
-          args: {
-            change: { __kind: statusKind },
-            id,
-          },
-          call,
-        } = event;
-        if (PROGRAM_STATUSES.includes(statusKind)) {
-          if (statusKind === 'ProgramSet' && !call) {
-            if (!(await tempState.isProgramIndexed(id))) {
-              tempState.addProgram(
-                new Program({
-                  ...common,
-                  id,
-                  codeId: await tempState.getCodeId(id, block.header),
-                  owner: null,
-                  name: id,
-                  status: ProgramStatus.ProgramSet,
-                }),
-              );
-            }
-          } else {
-            const status =
-              statusKind === 'ProgramSet'
-                ? ProgramStatus.ProgramSet
-                : statusKind === 'Active'
-                  ? ProgramStatus.Active
-                  : statusKind === 'Inactive'
-                    ? ProgramStatus.Exited
-                    : ProgramStatus.Terminated;
-
-            await tempState.setProgramStatus(id, block.header.hash, status);
-          }
-        } else {
-          ctx.log.error(event.args, 'Unknown program status');
-        }
-      } else if (isCodeChanged(event)) {
-        if (isUploadCode(event.call) || isUploadProgram(event.call) || isVoucherCall(event.call)) {
-          const metahash = await getMetahash(event.call);
-          tempState.addCode(
-            new Code({
-              ...common,
-              id: event.args.id,
-              uploadedBy: (event.extrinsic as any)?.signature?.address?.value,
-              metahash,
-              metaType: metahash ? MetaType.Meta : null,
-            }),
-          );
-        }
-        const status = event.args.change.__kind;
-        await tempState.setCodeStatus(event.args.id, status === 'Active' ? CodeStatus.Active : CodeStatus.Inactive);
-      } else if (isMessagesDispatched(event)) {
-        await Promise.all(event.args.statuses.map((s) => tempState.setDispatchedStatus(s[0], s[1].__kind)));
-      } else if (isUserMessageRead(event)) {
-        let reason: MessageReadReason;
-
-        if (event.args.reason.value.__kind === 'OutOfRent') {
-          reason = MessageReadReason.OutOfRent;
-        } else if (event.args.reason.value.__kind === 'MessageClaimed') {
-          reason = MessageReadReason.Claimed;
-        } else if (event.args.reason.value.__kind === 'MessageReplied') {
-          reason = MessageReadReason.Replied;
-        } else {
-          ctx.log.error(event.args, 'Unknown message read reason');
-        }
-        await tempState.setReadStatus(event.args.id, reason);
+      if (!handler) {
+        continue;
       }
+
+      await handler({ block, common, ctx, event, tempState });
     }
   }
 
