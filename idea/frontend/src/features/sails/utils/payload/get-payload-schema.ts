@@ -16,6 +16,9 @@ const asJSON = <T extends z.ZodTypeAny>(schema: T) =>
     }
   });
 
+// cuz we need to cast to tuple schemas array that was mapped
+const asTuple = <T extends z.ZodTypeAny>(schema: T[]) => z.tuple(schema as [T, ...T[]]);
+
 const isUnion = <T>(arr: T[]): arr is [T, T, ...T[]] => arr.length >= 2;
 
 const getPayloadSchema = (sails: Sails, args: ISailsFuncArg[], encode: (..._args: unknown[]) => HexString) => {
@@ -39,9 +42,11 @@ const getPayloadSchema = (sails: Sails, args: ISailsFuncArg[], encode: (..._args
     if (def.isUserDefined) return getSchema(sails.getTypeDef(def.asUserDefined.name));
 
     if (def.isStruct) {
-      const fieldsSchema = def.asStruct.fields.map(
-        (field, index) => [field.name || index, getSchema(field.def)] as const,
-      );
+      const { isTuple, fields } = def.asStruct;
+
+      if (isTuple) return asTuple(fields.map((field) => getSchema(field.def)));
+
+      const fieldsSchema = fields.map((field, index) => [field.name || index, getSchema(field.def)] as const);
 
       return z.object(Object.fromEntries(fieldsSchema));
     }
