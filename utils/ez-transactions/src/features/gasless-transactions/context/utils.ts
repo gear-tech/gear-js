@@ -4,9 +4,9 @@ import { VoucherStatus } from './types';
 async function guardedFetch<T extends object>(...args: Parameters<typeof fetch>) {
   const response = await fetch(...args);
 
-  if (!response.ok) throw new Error(response.statusText);
+  const result = (await response.json()) as T | { error: string; message: string };
 
-  const result = (await response.json()) as T | { error: string };
+  if (!response.ok) throw new Error('message' in result ? result.message : response.statusText);
 
   if ('error' in result) throw new Error(result.error);
 
