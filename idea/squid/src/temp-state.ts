@@ -1,6 +1,6 @@
 import { Store } from '@subsquid/typeorm-store';
 import { HexString } from '@gear-js/api';
-import { getServiceNamePrefix, getFnNamePrefix } from 'sails-js';
+import { getServiceNamePrefix, getFnNamePrefix, getCtorNamePrefix } from 'sails-js';
 import { xxhashAsHex } from '@polkadot/util-crypto';
 import { TypeRegistry, Metadata } from '@polkadot/types';
 import { SiLookupTypeId } from '@polkadot/types/interfaces';
@@ -14,6 +14,7 @@ import {
   MessageFromProgram,
   MessageToProgram,
   Program,
+  MessageEntryPoint,
 } from './model';
 import { Block, ProcessorContext } from './processor';
 import { MessageStatus } from './common';

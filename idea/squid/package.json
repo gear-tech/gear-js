@@ -23,7 +23,7 @@
     "dotenv": "16.4.5",
     "indexer-db": "workspace:^",
     "pg": "8.11.5",
-    "sails-js": "0.1.4",
+    "sails-js": "^0.1.9",
     "typeorm": "0.3.20"
   },
   "devDependencies": {
