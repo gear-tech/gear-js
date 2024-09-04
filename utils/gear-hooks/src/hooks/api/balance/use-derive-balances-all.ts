@@ -1,30 +1,50 @@
 import { DeriveBalancesAll } from '@polkadot/api-derive/types';
-import { useEffect, useState } from 'react';
-import { useAccount, useApi } from 'context';
+import { useQuery, useQueryClient, UseQueryOptions } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
-function useDeriveBalancesAll(accountAddress: string | undefined) {
+import { useApi } from 'context';
+
+type QueryOptions = UseQueryOptions<DeriveBalancesAll, Error, DeriveBalancesAll, (string | undefined)[]>;
+
+type UseDeriveBalancesAllParameters = {
+  address: string | undefined;
+  watch?: boolean;
+  query?: QueryOptions;
+};
+
+function useDeriveBalancesAll({ address, watch, query }: UseDeriveBalancesAllParameters) {
   const { api, isApiReady } = useApi();
 
-  const [balances, setBalances] = useState<DeriveBalancesAll>();
+  const queryClient = useQueryClient();
+  const queryKey = ['deriveBalancesAll', api?.provider.endpoint, address];
+
+  const getDeriveBalancesAll = () => {
+    if (!isApiReady) throw new Error('API is not initialized');
+    if (!address) throw new Error('Address is not found');
+
+    return api.derive.balances.all(address);
+  };
 
   useEffect(() => {
-    if (!accountAddress || !isApiReady) return;
+    if (!isApiReady || !address || !watch) return;
 
-    const unsub = api.derive.balances.all(accountAddress, (result) => setBalances(result));
+    // two api calls are made on first render, it can be optimized
+    // also, what should happen if watch is enabled, but query itself is disabled?
+    const unsub = api.derive.balances.all(address, (result) => {
+      queryClient.setQueryData(queryKey, result);
+    });
 
     return () => {
-      setBalances(undefined);
-      unsub.then((unsubCallback) => unsubCallback()).catch(console.error);
+      unsub.then((unsubCallback) => unsubCallback());
     };
-  }, [accountAddress, api, isApiReady]);
+  }, [api, address, watch]);
 
-  return balances;
+  return useQuery({
+    queryKey,
+    queryFn: getDeriveBalancesAll,
+    enabled: isApiReady && Boolean(address) && (query?.enabled ?? true),
+  });
 }
 
-function useAccountDeriveBalancesAll() {
-  const { account } = useAccount();
-
-  return useDeriveBalancesAll(account?.address);
-}
-
-export { useDeriveBalancesAll, useAccountDeriveBalancesAll };
+export { useDeriveBalancesAll };
+export type { UseDeriveBalancesAllParameters };

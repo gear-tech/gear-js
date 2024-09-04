@@ -31,7 +31,7 @@ import {
   useBalance,
   useBalanceFormat,
   useDeriveBalancesAll,
-  useAccountDeriveBalancesAll,
+  UseDeriveBalancesAllParameters,
   useCreateHandler,
   useSendMessageWithGas,
   useApproxBlockTimestamp,
@@ -104,7 +104,6 @@ export {
   useBalance,
   useBalanceFormat,
   useDeriveBalancesAll,
-  useAccountDeriveBalancesAll,
   useAlert,
   useApi,
   AccountProvider,
@@ -162,4 +161,5 @@ export type {
   UseSendProgramTransactionParameters,
   UseProgramQueryParameters,
   UseProgramEventParameters,
+  UseDeriveBalancesAllParameters,
 };

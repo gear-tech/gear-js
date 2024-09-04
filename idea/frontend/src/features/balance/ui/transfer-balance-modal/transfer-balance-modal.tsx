@@ -43,7 +43,7 @@ type Props = {
 const TransferBalanceModal = ({ defaultAddress = '', close }: Props) => {
   const { api, isApiReady } = useApi();
   const { account } = useAccount();
-  const balance = useDeriveBalancesAll(account?.address);
+  const { data: balance } = useDeriveBalancesAll({ address: account?.address });
 
   const [isLoading, enableLoading, disableLoading] = useLoading();
   const signAndSend = useSignAndSend();

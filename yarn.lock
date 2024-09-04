@@ -2680,9 +2680,9 @@ __metadata:
   peerDependencies:
     "@gear-js/api": 0.38.1
     "@polkadot/api": 11.0.2
-    "@tanstack/react-query": 5.29.0
-    react: 18.2.0
-    react-dom: 18.2.0
+    "@tanstack/react-query": ^5.29.0
+    react: ^18.2.0
+    react-dom: ^18.2.0
     sails-js: 0.1.8
   languageName: unknown
   linkType: soft
