@@ -1,8 +1,9 @@
 import { useAccount, useApi, useBalanceFormat, useDeriveBalancesAll } from '@gear-js/react-hooks';
-import cx from 'clsx';
+import { Button } from '@gear-js/ui';
 
-import headerStyles from '@/widgets/header/ui/Header.module.scss';
+import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
 
+import VaraSVG from '../../assets/vara.svg?react';
 import styles from './balance.module.scss';
 
 const Balance = () => {
@@ -12,17 +13,28 @@ const Balance = () => {
   const { getFormattedBalance } = useBalanceFormat();
 
   const formattedBalance = isApiReady && balance ? getFormattedBalance(balance.freeBalance) : undefined;
+  const splittedBalance = formattedBalance?.value.split('.');
 
-  return formattedBalance ? (
-    <section className={styles.balanceSection}>
-      <h2 className={cx(headerStyles.title, styles.title)}>Balance:</h2>
+  if (!splittedBalance) return null;
 
-      <p className={headerStyles.content}>
-        <span className={cx(headerStyles.value, styles.value)}>{formattedBalance.value}</span>
-        <span className={styles.unit}>{formattedBalance.unit}</span>
-      </p>
+  return (
+    <section className={styles.container}>
+      <VaraSVG />
+
+      <div>
+        <h4 className={styles.heading}>Total balance:</h4>
+
+        <div className={styles.balance}>
+          <p>
+            <span className={styles.value}>{splittedBalance[0]}</span>
+            <span className={styles.unit}>.{splittedBalance[1]}</span>
+          </p>
+
+          <Button icon={ArrowSVG} color="transparent" className={styles.button} />
+        </div>
+      </div>
     </section>
-  ) : null;
+  );
 };
 
 export { Balance };

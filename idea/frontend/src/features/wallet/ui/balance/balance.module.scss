@@ -1,22 +1,39 @@
 @use '@/shared/assets/styles/shared' as *;
 @use '@/shared/assets/styles/variables' as *;
 
-.balanceSection {
-  .title {
-    color: $gray800;
-    font-weight: 400;
-  }
+.container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
-  .unit {
-    color: $gray700;
-    font-size: $fontSize;
-    font-weight: 400;
-    line-height: 18.2px;
-  }
+.heading {
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 13px;
+  color: rgba(#9cdcb7, 0.7);
+}
 
-  .value {
-    color: $textColor;
-    font-weight: 500;
-    line-height: 19.8px;
-  }
+.balance {
+  display: flex;
+  align-items: flex-end;
+}
+
+.value {
+  font-family: Kanit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20.8px;
+}
+
+.unit {
+  font-family: Kanit;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 15.6px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.button svg {
+  transform: rotate(90deg);
 }

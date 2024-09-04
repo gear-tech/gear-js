@@ -1,18 +1,14 @@
 import { useRef, useEffect, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
-import clsx from 'clsx';
 import { GearKeyring } from '@gear-js/api';
 import { useApi, useAlert, useAccount } from '@gear-js/react-hooks';
-import { TooltipWrapper, buttonStyles } from '@gear-js/ui';
 
 import { getTestBalance } from '@/api';
 import { useChain, useSignAndSend } from '@/hooks';
 import { RecentBlocks } from '@/features/recentBlocks';
 import { HCAPTCHA_SITE_KEY, AnimationTimeout, GEAR_BALANCE_TRANSFER_VALUE } from '@/shared/config';
-import TestBalanceSVG from '@/shared/assets/images/actions/testBalance.svg?react';
 import { Wallet } from '@/features/wallet';
-import { TransferBalance } from '@/features/balance';
 
 import { TotalIssuance } from '../totalIssuance';
 import styles from './TopSide.module.scss';
@@ -68,42 +64,21 @@ const TopSide = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [captchaToken]);
 
-  const btnClasses = clsx(buttonStyles.button, buttonStyles.medium, buttonStyles.noText, styles.testBalanceBtn);
-
   return (
     <>
-      <div className={styles.topSide}>
+      <div className={styles.container}>
         {isApiReady && (
           <CSSTransition in appear timeout={AnimationTimeout.Default}>
-            <div className={styles.leftSide}>
+            <div className={styles.main}>
               <TotalIssuance totalIssuance={totalIssuance} />
               <RecentBlocks />
             </div>
           </CSSTransition>
         )}
-        <div className={styles.rightSide}>
-          {isApiReady && account && (
-            <CSSTransition in appear timeout={AnimationTimeout.Default}>
-              <div className={styles.privateContent}>
-                {isTestBalanceAvailable && (
-                  <TooltipWrapper text="Get test balance">
-                    <button
-                      type="button"
-                      className={btnClasses}
-                      onClick={isDevChain ? getBalanceFromAlice : handleTestBalanceClick}>
-                      <TestBalanceSVG />
-                    </button>
-                  </TooltipWrapper>
-                )}
 
-                <TransferBalance />
-              </div>
-            </CSSTransition>
-          )}
-
-          <Wallet />
-        </div>
+        <Wallet />
       </div>
+
       <HCaptcha
         ref={captchaRef}
         size="invisible"
