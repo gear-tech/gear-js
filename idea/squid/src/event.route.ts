@@ -31,7 +31,10 @@ export interface IHandleEventProps {
   block: Block<Fields>;
 }
 
-const callHandlers: Array<{ pattern: (obj: any) => boolean; handler: (args: IHandleCallProps) => void }> = [
+const callHandlers: Array<{
+  pattern: (obj: any) => boolean;
+  handler: (args: IHandleCallProps) => Promise<void> | void;
+}> = [
   { pattern: isUploadProgram, handler: handleUploadProgram },
   { pattern: isSendMessageCall, handler: handleSendMessageCall },
   { pattern: isVoucherCall, handler: handleVoucherCall },
@@ -57,7 +60,7 @@ export async function handleMessageQueued({ ctx, block, event, common, tempState
     throw new Error('Unknown call with message');
   }
 
-  handler({ block, call, common, ctx, event, msg, tempState });
+  await handler({ block, call, common, ctx, event, msg, tempState });
 
   tempState.addMsgToProgram(msg);
 }
@@ -74,6 +77,12 @@ export async function handleUserMessageSent({ event, common, tempState }: IHandl
     expiration: event.args.expirtaion || null,
     exitCode: event.args.message.details?.code?.__kind === 'Success' ? 0 : 1,
   });
+
+  const parentId = await tempState.getMessageId(msg.id);
+  if (parentId) {
+    msg.parentId = parentId;
+  }
+
   if (event.args.message.destination === ZERO_ADDRESS) {
     tempState.addEvent(msg);
   } else {
@@ -141,6 +150,7 @@ export async function handleCodeChanged({ event, common, tempState }: IHandleEve
 }
 
 export async function handleMessagesDispatched({ event, tempState }: IHandleEventProps) {
+  await tempState.removeMessagesId(event.args.id);
   await Promise.all(event.args.statuses.map((s) => tempState.setDispatchedStatus(s[0], s[1].__kind)));
 }
 

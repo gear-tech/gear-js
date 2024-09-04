@@ -24,9 +24,11 @@ export function handleUploadProgram({ msg, event, common, tempState, call }: IHa
   msg.value = call.args.value;
 }
 
-export function handleSendMessageCall({ msg, call }: IHandleCallProps) {
+export async function handleSendMessageCall({ msg, call, tempState }: IHandleCallProps) {
   msg.payload = call.args.payload;
   msg.value = call.args.value;
+
+  await tempState.saveMessagesId(msg.id);
 }
 
 export function handleVoucherCall({ ctx, msg, call }: IHandleCallProps) {

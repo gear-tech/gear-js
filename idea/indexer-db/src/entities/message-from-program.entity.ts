@@ -24,6 +24,9 @@ export class MessageFromProgram extends BaseEntity {
   @Column({ nullable: true })
   public payload: string;
 
+  @Column({ nullable: true })
+  public parentId: string;
+
   @Column({ default: '0' })
   public value: string;
 

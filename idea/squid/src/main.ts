@@ -19,10 +19,11 @@ import {
   handleUserMessageSent,
   IHandleEventProps,
 } from './event.route';
+import { createClient, RedisClientType } from 'redis';
 
 let tempState: TempState;
 
-const callHandlers: Array<{ pattern: (obj: any) => boolean; handler: (args: IHandleEventProps) => Promise<void> }> = [
+const eventHandlers: Array<{ pattern: (obj: any) => boolean; handler: (args: IHandleEventProps) => Promise<void> }> = [
   { pattern: isMessageQueued, handler: handleMessageQueued },
   { pattern: isUserMessageSent, handler: handleUserMessageSent },
   { pattern: isProgramChanged, handler: handleProgramChanged },
@@ -42,7 +43,7 @@ const handler = async (ctx: ProcessorContext<Store>) => {
     };
 
     for (const event of block.events) {
-      const { handler } = callHandlers.find(({ pattern }) => pattern(event));
+      const { handler } = eventHandlers.find(({ pattern }) => pattern(event));
 
       if (!handler) {
         continue;
@@ -55,8 +56,12 @@ const handler = async (ctx: ProcessorContext<Store>) => {
   await tempState.save();
 };
 
+interface RedisClient extends RedisClientType<any, any, any> {}
+
 const main = async () => {
-  tempState = new TempState();
+  const redisClient: RedisClient = createClient();
+  await redisClient.connect();
+  tempState = new TempState(redisClient);
   processor.run(new TypeormDatabase({ supportHotBlocks: true }), handler);
 };
 

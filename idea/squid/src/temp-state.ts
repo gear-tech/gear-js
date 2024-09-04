@@ -17,6 +17,8 @@ import {
 } from './model';
 import { Block, ProcessorContext } from './processor';
 import { MessageStatus } from './common';
+import { RedisClientType } from '@redis/client';
+import { generateChildMessageId } from './util';
 
 const gearProgramModule = xxhashAsHex('GearProgram', 128);
 const programStorageMethod = xxhashAsHex('ProgramStorage', 128);
@@ -54,8 +56,10 @@ export class TempState {
   private _registry: TypeRegistry;
   private _specVersion: number;
   private _programStorageTy: string;
+  private _redis: RedisClientType;
 
-  constructor() {
+  constructor(redisClient: RedisClientType) {
+    this._redis = redisClient;
     this.programs = new Map();
     this.codes = new Map();
     this.messagesFromProgram = new Map();
@@ -300,6 +304,20 @@ export class TempState {
       this._ctx.log.error({ error: error.message, stack: error.stack }, 'Failed to save data');
       throw error;
     }
+  }
+
+  async saveMessagesId(parentId: string) {
+    const ids = generateChildMessageId(parentId);
+    this._redis.mSet(ids);
+  }
+
+  async removeMessagesId(parentId: string) {
+    const ids = generateChildMessageId(parentId);
+    this._redis.del(Object.keys(ids));
+  }
+
+  async getMessageId(childId: string) {
+    return this._redis.get(childId);
   }
 }
 

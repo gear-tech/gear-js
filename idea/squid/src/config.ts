@@ -10,4 +10,7 @@ export const config = {
     fromBlock: parseInt(process.env.FROM_BLOCK || '0'),
     toBlock: parseInt(process.env.TO_BLOCK) || undefined,
   },
+  redis: {
+    port: parseInt(process.env.REDIS_PORT) || 6379,
+  },
 };
