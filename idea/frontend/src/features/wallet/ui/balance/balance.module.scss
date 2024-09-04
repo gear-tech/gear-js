@@ -1,10 +1,21 @@
-@use '@/shared/assets/styles/shared' as *;
-@use '@/shared/assets/styles/variables' as *;
-
 .container {
+  position: relative;
+}
+
+.button {
   display: flex;
   align-items: center;
   gap: 12px;
+
+  background-color: transparent;
+  color: inherit;
+  text-align: inherit;
+
+  transition: opacity 0.25s;
+
+  &:hover {
+    opacity: 0.65;
+  }
 }
 
 .heading {
@@ -34,6 +45,11 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
-.button svg {
+.arrow {
   transform: rotate(90deg);
+  transition: transform 0.25s;
+
+  &.open {
+    transform: rotate(-90deg);
+  }
 }

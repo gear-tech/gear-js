@@ -81,7 +81,7 @@ const TransferBalanceModal = ({ defaultAddress = '', close }: Props) => {
               <ValueField name={FIELD_NAME.VALUE} label="Value" direction="y" block />
 
               <div className={styles.balance}>
-                <p className={styles.text}>Your transferrable balance:</p>
+                <p className={styles.text}>Your transferable balance:</p>
                 <Balance value={balance?.availableBalance} />
               </div>
             </div>
