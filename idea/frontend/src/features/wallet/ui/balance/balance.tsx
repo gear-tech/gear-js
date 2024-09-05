@@ -2,6 +2,7 @@ import { useAccount, useApi, useBalanceFormat, useDeriveBalancesAll } from '@gea
 
 import { useModalState } from '@/hooks';
 import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
+import { Balance as BalanceValue } from '@/features/balance/ui/balance';
 
 import VaraSVG from '../../assets/vara.svg?react';
 import styles from './balance.module.scss';
@@ -31,11 +32,7 @@ const Balance = () => {
           <h4 className={styles.heading}>Total balance:</h4>
 
           <div className={styles.balance}>
-            <p>
-              <span className={styles.value}>{splittedBalance[0]}</span>
-              <span className={styles.unit}>.{splittedBalance[1]}</span>
-            </p>
-
+            <BalanceValue value={balance.freeBalance} />
             <ArrowSVG className={clsx(styles.arrow, isOpen && styles.open)} />
           </div>
         </div>

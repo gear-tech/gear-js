@@ -1,10 +1,32 @@
 .value {
+  margin-right: 1px;
+
   font-family: Kanit;
   font-weight: 600;
+
+  &.primary {
+    font-size: 16px;
+    line-height: 20.8px;
+  }
+
+  &.secondary {
+    font-size: 14px;
+    line-height: 18.2px;
+  }
 }
 
 .unit {
   font-family: Kanit;
   font-weight: 300;
   color: rgba(255, 255, 255, 0.7);
+
+  &.primary {
+    font-size: 12px;
+    line-height: 15.6px;
+  }
+
+  &.secondary {
+    font-size: 14px;
+    line-height: 18.2px;
+  }
 }

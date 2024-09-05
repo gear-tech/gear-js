@@ -82,7 +82,7 @@ const TransferBalanceModal = ({ defaultAddress = '', close }: Props) => {
 
               <div className={styles.balance}>
                 <p className={styles.text}>Your transferable balance:</p>
-                <Balance value={balance?.availableBalance} />
+                <Balance value={balance?.availableBalance} variant="secondary" />
               </div>
             </div>
 

@@ -22,7 +22,7 @@ function ProgramBalance({ id }: Props) {
   return (
     <>
       <div className={styles.balance}>
-        <Balance value={balance} />
+        <Balance value={balance} variant="secondary" />
 
         {account && <Button icon={PlusSVG} color="transparent" onClick={openModal} />}
       </div>

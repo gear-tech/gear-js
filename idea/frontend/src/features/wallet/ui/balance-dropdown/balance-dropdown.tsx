@@ -1,6 +1,8 @@
 import { useDeriveBalancesAll } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
+import { Balance as BalanceValue } from '@/features/balance/ui/balance/balance';
+
 import VaraSVG from '../../assets/vara.svg?react';
 import SwapSVG from '../../assets/swap.svg?react';
 import GiftSVG from '../../assets/gift.svg?react';
@@ -15,11 +17,7 @@ function Balance({ heading, value }: { heading: string; value: string }) {
   return (
     <span className={styles.balance}>
       <span className={styles.heading}>{heading}:</span>
-
-      <span>
-        <span className={styles.value}>{value}</span>
-        <span className={styles.unit}>.01 VARA</span>
-      </span>
+      <BalanceValue value={value} />
     </span>
   );
 }
@@ -29,7 +27,6 @@ function BalanceDropdown({ balance, onHeaderClick }: Props) {
     <div className={styles.dropdown}>
       <button type="button" className={styles.header} onClick={onHeaderClick}>
         <VaraSVG />
-
         <Balance heading="Total Balance" value="1000" />
       </button>
 

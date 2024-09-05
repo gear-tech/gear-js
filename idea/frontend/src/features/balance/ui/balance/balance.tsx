@@ -1,25 +1,32 @@
-import { useBalanceFormat } from '@gear-js/react-hooks';
+import { useApi, useBalanceFormat } from '@gear-js/react-hooks';
 import { Balance as BalanceType } from '@polkadot/types/interfaces';
+import cx from 'clsx';
 
 import styles from './balance.module.scss';
 
 type Props = {
-  value: BalanceType | undefined;
+  value: BalanceType | string | undefined;
+  variant?: 'primary' | 'secondary';
+  hideUnit?: boolean;
 };
 
-function Balance({ value }: Props) {
+function Balance({ value, variant = 'primary', hideUnit }: Props) {
+  const { isApiReady } = useApi();
   const { getFormattedBalance } = useBalanceFormat();
 
-  if (!value) return null;
+  if (!value || !isApiReady) return null;
 
   const balance = getFormattedBalance(value);
+  const splittedBalance = balance.value.split('.');
 
   return (
-    <p>
-      <span className={styles.value}>{balance.value}</span>
-      &nbsp;
-      <span className={styles.unit}>{balance.unit}</span>
-    </p>
+    // span cuz used inside of button
+    <span>
+      <span className={cx(styles.value, styles[variant])}>{splittedBalance[0]}</span>
+      <span className={cx(styles.unit, styles[variant])}>
+        .{splittedBalance[1]} {!hideUnit && balance.unit}
+      </span>
+    </span>
   );
 }
 

@@ -1,7 +1,7 @@
-@use '@/shared/assets/styles/mixins' as *;
-
 .inputs {
-  @include childrenMargin(24px);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
   margin-bottom: 32px;
 }
 

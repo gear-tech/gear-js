@@ -30,21 +30,6 @@
   align-items: flex-end;
 }
 
-.value {
-  font-family: Kanit;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 20.8px;
-}
-
-.unit {
-  font-family: Kanit;
-  font-size: 12px;
-  font-weight: 300;
-  line-height: 15.6px;
-  color: rgba(255, 255, 255, 0.7);
-}
-
 .arrow {
   transform: rotate(90deg);
   transition: transform 0.25s;
