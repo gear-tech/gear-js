@@ -12,6 +12,7 @@ import { Wallet } from '@/features/wallet';
 
 import { TotalIssuance } from '../totalIssuance';
 import styles from './TopSide.module.scss';
+import { BalanceDropdown } from '@/features/balance';
 
 const TopSide = () => {
   const { api, isApiReady } = useApi();
@@ -76,7 +77,10 @@ const TopSide = () => {
           </CSSTransition>
         )}
 
-        <Wallet />
+        <div className={styles.wallet}>
+          <BalanceDropdown />
+          <Wallet />
+        </div>
       </div>
 
       <HCaptcha

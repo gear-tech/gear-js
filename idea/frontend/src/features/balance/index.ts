@@ -1,3 +1,3 @@
-import { TransferBalance, ProgramBalance } from './ui';
+import { TransferBalance, ProgramBalance, BalanceDropdown } from './ui';
 
-export { TransferBalance, ProgramBalance };
+export { TransferBalance, ProgramBalance, BalanceDropdown };
