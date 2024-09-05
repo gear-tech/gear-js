@@ -9,7 +9,7 @@ type QueryOptions = UseQueryOptions<DeriveBalancesAll, Error, DeriveBalancesAll,
 type UseDeriveBalancesAllParameters = {
   address: string | undefined;
   watch?: boolean;
-  query?: QueryOptions;
+  query?: Omit<QueryOptions, 'queryKey' | 'queryFn'>;
 };
 
 function useDeriveBalancesAll({ address, watch, query }: UseDeriveBalancesAllParameters) {
@@ -30,6 +30,7 @@ function useDeriveBalancesAll({ address, watch, query }: UseDeriveBalancesAllPar
 
     // two api calls are made on first render, it can be optimized
     // also, what should happen if watch is enabled, but query itself is disabled?
+    // should watch be in a queryKey?
     const unsub = api.derive.balances.all(address, (result) => {
       queryClient.setQueryData(queryKey, result);
     });
@@ -43,6 +44,7 @@ function useDeriveBalancesAll({ address, watch, query }: UseDeriveBalancesAllPar
     queryKey,
     queryFn: getDeriveBalancesAll,
     enabled: isApiReady && Boolean(address) && (query?.enabled ?? true),
+    ...query,
   });
 }
 

@@ -8,7 +8,7 @@ import SubstrateSVG from '@/shared/assets/images/logos/substrate.svg?react';
 
 import { AccountsModal } from '../accounts-modal';
 import { AccountButton } from '../account-button';
-import { Balance } from '../balance';
+import { BalanceDropdown } from '../balance-dropdown';
 import styles from './wallet.module.scss';
 
 const Wallet = () => {
@@ -22,7 +22,7 @@ const Wallet = () => {
   return (
     <>
       <div className={styles.wallet}>
-        <Balance />
+        <BalanceDropdown />
 
         {isAccountReady &&
           (account ? (

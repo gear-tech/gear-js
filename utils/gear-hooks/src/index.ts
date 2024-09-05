@@ -58,6 +58,8 @@ import {
   UseProgramQueryParameters,
   useProgramEvent,
   UseProgramEventParameters,
+  useDeriveStakingAccount,
+  UseDeriveStakingAccountParameters,
 } from './hooks';
 
 import { withoutCommas, getVaraAddress, getTypedEntries } from './utils';
@@ -130,6 +132,7 @@ export {
   useSendProgramTransaction,
   useProgramQuery,
   useProgramEvent,
+  useDeriveStakingAccount,
   DEFAULT_OPTIONS,
   DEFAULT_INFO_OPTIONS,
   DEFAULT_ERROR_OPTIONS,
@@ -162,4 +165,5 @@ export type {
   UseProgramQueryParameters,
   UseProgramEventParameters,
   UseDeriveBalancesAllParameters,
+  UseDeriveStakingAccountParameters,
 };

@@ -28,6 +28,8 @@ import {
   UseDeriveBalancesAllParameters,
   SendMessageOptions,
   UseSendMessageOptions,
+  useDeriveStakingAccount,
+  UseDeriveStakingAccountParameters,
 } from './api';
 import {
   useCreateHandler,
@@ -85,6 +87,7 @@ export {
   useSendProgramTransaction,
   useProgramQuery,
   useProgramEvent,
+  useDeriveStakingAccount,
 };
 
 export type {
@@ -99,4 +102,5 @@ export type {
   UseProgramEventParameters,
   UseSailsParameters,
   UseDeriveBalancesAllParameters,
+  UseDeriveStakingAccountParameters,
 };
