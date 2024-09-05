@@ -1,7 +1,6 @@
 import { useAccount, useDeriveBalancesAll, useDeriveStakingAccount } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 import { Balance as BalanceType } from '@polkadot/types/interfaces';
-import { BN, BN_ZERO } from '@polkadot/util';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 
@@ -14,7 +13,7 @@ import SwapSVG from '../../assets/swap.svg?react';
 import GiftSVG from '../../assets/gift.svg?react';
 import styles from './balance-dropdown.module.scss';
 
-function BalanceContainer({ heading, value }: { heading: string; value: BalanceType | string }) {
+function BalanceContainer({ heading, value }: { heading: string; value: BalanceType | string | bigint }) {
   return (
     <span className={styles.balance}>
       <span className={styles.heading}>{heading}:</span>
@@ -30,22 +29,21 @@ const BalanceDropdown = () => {
   const [isOpen, open, close] = useModalState();
 
   const getUnbondingBalance = () => {
-    if (!stakingAccount?.unlocking) return BN_ZERO;
+    if (!stakingAccount?.unlocking) return 0n;
 
-    const filtered = stakingAccount.unlocking
-      .filter(({ remainingEras, value }) => value.gt(BN_ZERO) && remainingEras.gt(BN_ZERO))
-      .map((unlock) => unlock.value);
+    return stakingAccount.unlocking.reduce((acc, unlock) => {
+      const remainingEras = BigInt(unlock.remainingEras.toString());
+      const value = unlock.value.toBigInt();
 
-    const total = filtered.reduce((acc, value) => acc.iadd(value), new BN(0));
-
-    return total;
+      return remainingEras > 0 && value > 0 ? acc + value : acc;
+    }, 0n);
   };
 
   const stakingBalance = useMemo(() => {
     if (!stakingAccount) return;
 
-    const bonded = stakingAccount.stakingLedger.active.unwrap();
-    const redeemable = stakingAccount.redeemable || BN_ZERO;
+    const bonded = stakingAccount.stakingLedger.active.unwrap().toBigInt();
+    const redeemable = stakingAccount.redeemable?.toBigInt() || 0n;
     const unbonding = getUnbondingBalance();
 
     return { bonded, redeemable, unbonding };
@@ -53,6 +51,10 @@ const BalanceDropdown = () => {
   }, [stakingAccount]);
 
   if (!balance || !stakingBalance) return null;
+
+  const { freeBalance, reservedBalance, availableBalance, lockedBalance } = balance;
+  const { bonded, redeemable, unbonding } = stakingBalance;
+  const totalBalance = freeBalance.add(reservedBalance).toString();
 
   return (
     <div className={styles.container}>
@@ -64,7 +66,7 @@ const BalanceDropdown = () => {
           <h4 className={styles.heading}>Total balance:</h4>
 
           <div className={styles.balance}>
-            <Balance value={balance.freeBalance} />
+            <Balance value={totalBalance} />
             <ArrowSVG className={clsx(styles.arrow, isOpen && styles.open)} />
           </div>
         </div>
@@ -74,27 +76,17 @@ const BalanceDropdown = () => {
         <div className={styles.dropdown}>
           <button type="button" className={styles.header} onClick={close}>
             <VaraSVG />
-
-            <BalanceContainer
-              heading="Total Balance"
-              value={balance.freeBalance.add(balance.reservedBalance).toString()}
-            />
+            <BalanceContainer heading="Total Balance" value={totalBalance} />
           </button>
 
           <div className={styles.body}>
             {/* should be changed to allBalances?.transferable after @polkadot/api 12.4 update*/}
-            <BalanceContainer heading="Transferable" value={balance.availableBalance} />
-            <BalanceContainer heading="Locked" value={balance.lockedBalance} />
+            <BalanceContainer heading="Transferable" value={availableBalance} />
+            <BalanceContainer heading="Locked" value={lockedBalance} />
 
-            {stakingBalance.bonded.gtn(0) && <BalanceContainer heading="Bonded" value={stakingBalance.bonded} />}
-
-            {stakingBalance.redeemable.gtn(0) && (
-              <BalanceContainer heading="Redeemable" value={stakingBalance.redeemable.toString()} />
-            )}
-
-            {stakingBalance.unbonding.gtn(0) && (
-              <BalanceContainer heading="Unbonding" value={stakingBalance.unbonding.toString()} />
-            )}
+            {bonded > 0 && <BalanceContainer heading="Bonded" value={bonded} />}
+            {redeemable > 0 && <BalanceContainer heading="Redeemable" value={redeemable} />}
+            {unbonding > 0 && <BalanceContainer heading="Unbonding" value={unbonding} />}
           </div>
 
           <footer className={styles.footer}>

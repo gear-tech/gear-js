@@ -5,7 +5,7 @@ import cx from 'clsx';
 import styles from './balance.module.scss';
 
 type Props = {
-  value: BalanceType | string | undefined;
+  value: BalanceType | string | bigint | undefined;
   variant?: 'primary' | 'secondary';
   hideUnit?: boolean;
 };
