@@ -52,36 +52,34 @@ const BalanceDropdown = () => {
 
   if (!balance || !stakingBalance) return null;
 
-  const { freeBalance, reservedBalance, availableBalance, lockedBalance } = balance;
+  // availableBalance should be changed to transferableBalance after @polkadot/api 12.4 update
+  const { freeBalance, reservedBalance, availableBalance: transferable, lockedBalance } = balance;
   const { bonded, redeemable, unbonding } = stakingBalance;
-  const totalBalance = freeBalance.add(reservedBalance).toString();
 
   return (
     <div className={styles.container}>
       <button type="button" className={styles.button} onClick={isOpen ? close : open}>
         <VaraSVG />
 
-        {/* TODO: change to span */}
-        <div>
-          <h4 className={styles.heading}>Total balance:</h4>
+        <span className={styles.balance}>
+          <span className={styles.heading}>Transferable Balance:</span>
 
-          <div className={styles.balance}>
-            <Balance value={totalBalance} />
+          <span>
+            <Balance value={transferable} hideUnit />
             <ArrowSVG className={clsx(styles.arrow, isOpen && styles.open)} />
-          </div>
-        </div>
+          </span>
+        </span>
       </button>
 
       {isOpen && (
         <div className={styles.dropdown}>
           <button type="button" className={styles.header} onClick={close}>
             <VaraSVG />
-            <BalanceContainer heading="Total Balance" value={totalBalance} />
+            <BalanceContainer heading="Total Balance" value={freeBalance.add(reservedBalance).toString()} />
           </button>
 
           <div className={styles.body}>
-            {/* should be changed to allBalances?.transferable after @polkadot/api 12.4 update*/}
-            <BalanceContainer heading="Transferable" value={availableBalance} />
+            <BalanceContainer heading="Transferable" value={transferable} />
             <BalanceContainer heading="Locked" value={lockedBalance} />
 
             {bonded > 0 && <BalanceContainer heading="Bonded" value={bonded} />}

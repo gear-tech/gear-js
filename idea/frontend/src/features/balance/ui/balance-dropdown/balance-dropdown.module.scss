@@ -2,48 +2,56 @@
   position: relative;
 }
 
+.button,
+.dropdown {
+  .heading {
+    font-size: 10px;
+    line-height: 13px;
+  }
+}
+
+.button,
+.header {
+  background-color: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+}
+
 .button {
   display: flex;
   align-items: center;
   gap: 12px;
-
-  background-color: transparent;
-  color: inherit;
-  text-align: inherit;
 
   transition: opacity 0.25s;
 
   &:hover {
     opacity: 0.65;
   }
-}
 
-.heading {
-  font-size: 10px;
-  font-weight: 400;
-  line-height: 13px;
-  color: rgba(#9cdcb7, 0.7);
-}
+  .balance {
+    display: flex;
+    flex-direction: column;
+  }
 
-// TODO: fix override
-.balance {
-  display: flex;
-  align-items: flex-end;
-}
+  .heading {
+    color: rgba(#9cdcb7, 0.7);
+  }
 
-.arrow {
-  transform: rotate(90deg);
-  transition: transform 0.25s;
+  .arrow {
+    transform: rotate(90deg);
+    transition: transform 0.25s;
 
-  &.open {
-    transform: rotate(-90deg);
+    &.open {
+      transform: rotate(-90deg);
+    }
   }
 }
 
 .dropdown {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: -2px; // -2 to overlap button
+  right: -2px;
   z-index: 2;
 
   background-color: #242529;
@@ -62,15 +70,11 @@
     align-items: center;
     gap: 12px;
 
-    background-color: transparent;
-    color: inherit;
-    font: inherit;
-    text-align: inherit;
-
-    transition: opacity 0.25s;
+    border-radius: 12px 12px 0 0; // overriding hover bg color
+    transition: background-color 0.25s;
 
     &:hover {
-      opacity: 0.65;
+      background-color: #414141;
     }
   }
 
@@ -89,9 +93,6 @@
     justify-content: space-between;
 
     .heading {
-      font-size: 10px;
-      font-weight: 400;
-      line-height: 13px;
       color: rgba(255, 255, 255, 0.7);
     }
   }
