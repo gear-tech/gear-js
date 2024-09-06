@@ -25,14 +25,14 @@ import {
   useAccountIssuedVouchers,
 } from './voucher';
 
+import { useBalance, useBalanceFormat } from './balance';
+
 import {
-  useBalance,
-  useBalanceFormat,
   useDeriveBalancesAll,
   UseDeriveBalancesAllParameters,
   useDeriveStakingAccount,
   UseDeriveStakingAccountParameters,
-} from './balance';
+} from './derive';
 
 import { useApproxBlockTimestamp, useGetApproxBlockTimestamp } from './block';
 
