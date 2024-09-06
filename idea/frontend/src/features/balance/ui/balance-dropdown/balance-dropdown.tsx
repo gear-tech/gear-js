@@ -84,7 +84,7 @@ function Dropdown({
 
 function BalanceDropdown() {
   const { account } = useAccount();
-  const { data: balance } = useDeriveBalancesAll({ address: account?.address });
+  const { data: balance } = useDeriveBalancesAll({ address: account?.address, watch: true });
   const [isOpen, open, close] = useModalState();
 
   if (!balance) return null;
