@@ -1,3 +1,4 @@
-import { TransferBalance, ProgramBalance, BalanceDropdown } from './ui';
+import { ProgramBalance, BalanceDropdown } from './ui';
+import { getIsTestBalanceAvailable } from './api';
 
-export { TransferBalance, ProgramBalance, BalanceDropdown };
+export { ProgramBalance, BalanceDropdown, getIsTestBalanceAvailable };

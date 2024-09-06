@@ -1,29 +1,20 @@
-import { Button, TooltipWrapper } from '@gear-js/ui';
-import { useState } from 'react';
+import { Button } from '@gear-js/ui';
 
-import { withAccount } from '@/shared/ui';
+import { useModalState } from '@/hooks';
 
-import TransferSVG from '../../assets/transfer.svg?react';
+import SwapSVG from '../../assets/swap.svg?react';
 import { TransferBalanceModal } from '../transfer-balance-modal';
-import styles from './transfer-balance.module.scss';
 
-const TransferBalance = withAccount(() => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const TransferBalance = () => {
+  const [isModalOpen, openModal, closeModal] = useModalState();
 
   return (
     <>
-      <TooltipWrapper text="Transfer balance">
-        <Button
-          icon={TransferSVG}
-          tooltip="Transfer balance"
-          className={styles.button}
-          onClick={() => setIsModalOpen(true)}
-        />
-      </TooltipWrapper>
+      <Button icon={SwapSVG} text="Transfer" color="grey" size="small" noWrap onClick={openModal} />
 
-      {isModalOpen && <TransferBalanceModal close={() => setIsModalOpen(false)} />}
+      {isModalOpen && <TransferBalanceModal close={closeModal} />}
     </>
   );
-});
+};
 
 export { TransferBalance };

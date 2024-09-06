@@ -1,7 +1,5 @@
 import { useAccount, useDeriveBalancesAll, useDeriveStakingAccount } from '@gear-js/react-hooks';
-import { Button } from '@gear-js/ui';
 import { Balance as BalanceType } from '@polkadot/types/interfaces';
-import clsx from 'clsx';
 import { useMemo } from 'react';
 
 import { useModalState } from '@/hooks';
@@ -9,8 +7,8 @@ import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
 import { Balance } from '@/features/balance/ui/balance';
 
 import VaraSVG from '../../assets/vara.svg?react';
-import SwapSVG from '../../assets/swap.svg?react';
-import GiftSVG from '../../assets/gift.svg?react';
+import { TransferBalance } from '../transfer-balance';
+import { GetTestBalance } from '../get-test-balance';
 import styles from './balance-dropdown.module.scss';
 
 function BalanceContainer({ heading, value }: { heading: string; value: BalanceType | string | bigint }) {
@@ -66,7 +64,7 @@ const BalanceDropdown = () => {
 
           <span>
             <Balance value={transferable} hideUnit />
-            <ArrowSVG className={clsx(styles.arrow, isOpen && styles.open)} />
+            <ArrowSVG className={styles.arrow} />
           </span>
         </span>
       </button>
@@ -88,8 +86,8 @@ const BalanceDropdown = () => {
           </div>
 
           <footer className={styles.footer}>
-            <Button icon={GiftSVG} text="Get Test Balance" color="secondary" size="small" noWrap />
-            <Button icon={SwapSVG} text="Transfer" color="grey" size="small" noWrap />
+            <GetTestBalance />
+            <TransferBalance />
           </footer>
         </div>
       )}
