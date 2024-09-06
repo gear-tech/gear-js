@@ -19,7 +19,7 @@ function useDeriveStakingAccount({ address, watch, query }: UseDeriveStakingAcco
   const queryKey = ['deriveStakingAccount', api?.provider.endpoint, address];
 
   const getDeriveStakingAccount = () => {
-    if (!isApiReady) throw new Error('API not initialized');
+    if (!isApiReady) throw new Error('API is not initialized');
     if (!address) throw new Error('Address not found');
 
     return api.derive.staking.account(address);
@@ -38,11 +38,10 @@ function useDeriveStakingAccount({ address, watch, query }: UseDeriveStakingAcco
     return () => {
       unsub.then((unsubCallback) => unsubCallback());
     };
-  }, [api, address]);
+  }, [api, address, watch]);
 
-  // should watch be in a queryKey?
   return useQuery({
-    queryKey: ['deriveStakingAccount', api?.provider.endpoint, address],
+    queryKey,
     queryFn: getDeriveStakingAccount,
     enabled: isApiReady && Boolean(address) && (query?.enabled ?? true),
     ...query,

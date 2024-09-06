@@ -20,7 +20,7 @@ function useDeriveBalancesAll({ address, watch, query }: UseDeriveBalancesAllPar
 
   const getDeriveBalancesAll = () => {
     if (!isApiReady) throw new Error('API is not initialized');
-    if (!address) throw new Error('Address is not found');
+    if (!address) throw new Error('Address not found');
 
     return api.derive.balances.all(address);
   };
