@@ -22,11 +22,19 @@ function BalanceContainer({ heading, value }: { heading: string; value: BalanceT
   );
 }
 
-const BalanceDropdown = () => {
+function Dropdown({
+  total,
+  transferable,
+  lockedBalance,
+  onHeaderClick,
+}: {
+  total: string;
+  transferable: BalanceType;
+  lockedBalance: BalanceType;
+  onHeaderClick: () => void;
+}) {
   const { account } = useAccount();
-  const { data: balance } = useDeriveBalancesAll({ address: account?.address });
   const { data: stakingAccount } = useDeriveStakingAccount({ address: account?.address });
-  const [isOpen, open, close] = useModalState();
 
   const getUnbondingBalance = () => {
     if (!stakingAccount?.unlocking) return 0n;
@@ -40,21 +48,49 @@ const BalanceDropdown = () => {
   };
 
   const stakingBalance = useMemo(() => {
-    if (!stakingAccount) return;
-
-    const bonded = stakingAccount.stakingLedger.active.unwrap().toBigInt();
-    const redeemable = stakingAccount.redeemable?.toBigInt() || 0n;
+    const bonded = stakingAccount?.stakingLedger.active.unwrap().toBigInt() || 0n;
+    const redeemable = stakingAccount?.redeemable?.toBigInt() || 0n;
     const unbonding = getUnbondingBalance();
 
     return { bonded, redeemable, unbonding };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stakingAccount]);
 
-  if (!balance || !stakingBalance) return null;
+  const { bonded, redeemable, unbonding } = stakingBalance;
+
+  return (
+    <div className={styles.dropdown}>
+      <button type="button" className={styles.header} onClick={onHeaderClick}>
+        <VaraSVG />
+        <BalanceContainer heading="Total Balance" value={total} />
+      </button>
+
+      <div className={styles.body}>
+        <BalanceContainer heading="Transferable" value={transferable} />
+        <BalanceContainer heading="Locked" value={lockedBalance} />
+
+        {bonded > 0 && <BalanceContainer heading="Bonded" value={bonded} />}
+        {redeemable > 0 && <BalanceContainer heading="Redeemable" value={redeemable} />}
+        {unbonding > 0 && <BalanceContainer heading="Unbonding" value={unbonding} />}
+      </div>
+
+      <footer className={styles.footer}>
+        <GetTestBalance />
+        <TransferBalance />
+      </footer>
+    </div>
+  );
+}
+
+function BalanceDropdown() {
+  const { account } = useAccount();
+  const { data: balance } = useDeriveBalancesAll({ address: account?.address });
+  const [isOpen, open, close] = useModalState();
+
+  if (!balance) return null;
 
   // availableBalance should be changed to transferableBalance after @polkadot/api 12.4 update
   const { freeBalance, reservedBalance, availableBalance: transferable, lockedBalance } = balance;
-  const { bonded, redeemable, unbonding } = stakingBalance;
 
   return (
     <div className={styles.container}>
@@ -72,29 +108,15 @@ const BalanceDropdown = () => {
       </button>
 
       <CSSTransition in={isOpen} timeout={AnimationTimeout.Default} mountOnEnter unmountOnExit>
-        <div className={styles.dropdown}>
-          <button type="button" className={styles.header} onClick={close}>
-            <VaraSVG />
-            <BalanceContainer heading="Total Balance" value={freeBalance.add(reservedBalance).toString()} />
-          </button>
-
-          <div className={styles.body}>
-            <BalanceContainer heading="Transferable" value={transferable} />
-            <BalanceContainer heading="Locked" value={lockedBalance} />
-
-            {bonded > 0 && <BalanceContainer heading="Bonded" value={bonded} />}
-            {redeemable > 0 && <BalanceContainer heading="Redeemable" value={redeemable} />}
-            {unbonding > 0 && <BalanceContainer heading="Unbonding" value={unbonding} />}
-          </div>
-
-          <footer className={styles.footer}>
-            <GetTestBalance />
-            <TransferBalance />
-          </footer>
-        </div>
+        <Dropdown
+          total={freeBalance.add(reservedBalance).toString()}
+          transferable={transferable}
+          lockedBalance={lockedBalance}
+          onHeaderClick={close}
+        />
       </CSSTransition>
     </div>
   );
-};
+}
 
 export { BalanceDropdown };
