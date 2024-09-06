@@ -1,12 +1,14 @@
 import { useAccount, useDeriveBalancesAll, useDeriveStakingAccount } from '@gear-js/react-hooks';
 import { Balance as BalanceType } from '@polkadot/types/interfaces';
 import { useMemo } from 'react';
+import { CSSTransition } from 'react-transition-group';
 
 import { useModalState } from '@/hooks';
 import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
-import { Balance } from '@/features/balance/ui/balance';
+import { AnimationTimeout } from '@/shared/config';
 
 import VaraSVG from '../../assets/vara.svg?react';
+import { Balance } from '../balance';
 import { TransferBalance } from '../transfer-balance';
 import { GetTestBalance } from '../get-test-balance';
 import styles from './balance-dropdown.module.scss';
@@ -69,7 +71,7 @@ const BalanceDropdown = () => {
         </span>
       </button>
 
-      {isOpen && (
+      <CSSTransition in={isOpen} timeout={AnimationTimeout.Default} mountOnEnter unmountOnExit>
         <div className={styles.dropdown}>
           <button type="button" className={styles.header} onClick={close}>
             <VaraSVG />
@@ -90,7 +92,7 @@ const BalanceDropdown = () => {
             <TransferBalance />
           </footer>
         </div>
-      )}
+      </CSSTransition>
     </div>
   );
 };

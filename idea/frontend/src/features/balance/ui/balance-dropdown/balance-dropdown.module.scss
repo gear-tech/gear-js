@@ -43,6 +43,17 @@
   }
 }
 
+@keyframes reveal {
+  from {
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(-100%);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0);
+  }
+}
+
 .dropdown {
   position: absolute;
   top: -2px; // -2 to overlap button
@@ -52,6 +63,14 @@
   background-color: #242529;
   border-radius: 12px;
   box-shadow: inset 0 1px 0 0 #ffffff0d, 0 20px 76px 0 #000000;
+
+  &:global(.enter) {
+    animation: reveal 0.25s ease-in-out forwards;
+  }
+
+  &:global(.exit) {
+    animation: reveal 0.25s ease-in-out forwards reverse;
+  }
 
   .header,
   .footer {
