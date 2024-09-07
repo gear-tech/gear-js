@@ -87,7 +87,13 @@ export async function handleUserMessageSent({ event, common, tempState }: IHandl
   }
 }
 
-const PROGRAM_STATUSES = ['ProgramSet', 'Active', 'Terminated', 'Inactive'];
+const statuses = {
+  Active: ProgramStatus.Active,
+  Inactive: ProgramStatus.Exited,
+  Terminated: ProgramStatus.Terminated,
+  ProgramSet: ProgramStatus.ProgramSet,
+};
+const PROGRAM_STATUSES = Object.keys(statuses);
 
 export async function handleProgramChanged({ ctx, event, common, tempState, block }: IHandleEventProps) {
   const {
@@ -98,8 +104,8 @@ export async function handleProgramChanged({ ctx, event, common, tempState, bloc
     call,
   } = event;
   if (PROGRAM_STATUSES.includes(statusKind)) {
-    if (statusKind === 'ProgramSet' && !call) {
-      if (!(await tempState.isProgramIndexed(id))) {
+    if (statusKind === 'ProgramSet') {
+      if (!call && !(await tempState.isProgramIndexed(id))) {
         tempState.addProgram(
           new Program({
             ...common,
@@ -112,14 +118,7 @@ export async function handleProgramChanged({ ctx, event, common, tempState, bloc
         );
       }
     } else {
-      const status =
-        statusKind === 'ProgramSet'
-          ? ProgramStatus.ProgramSet
-          : statusKind === 'Active'
-          ? ProgramStatus.Active
-          : statusKind === 'Inactive'
-          ? ProgramStatus.Exited
-          : ProgramStatus.Terminated;
+      const status = statuses[statusKind];
 
       await tempState.setProgramStatus(id, status);
     }

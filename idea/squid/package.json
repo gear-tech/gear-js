@@ -24,7 +24,7 @@
     "indexer-db": "workspace:^",
     "pg": "8.11.5",
     "redis": "^4.7.0",
-    "sails-js": "0.1.4",
+    "sails-js": "^0.1.9",
     "typeorm": "0.3.20"
   },
   "devDependencies": {

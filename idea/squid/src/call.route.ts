@@ -1,5 +1,5 @@
 import { generateCodeHash } from '@gear-js/api';
-import { MessageToProgram, Program } from './model';
+import { MessageToProgram, Program, ProgramStatus } from './model';
 
 import { IHandleEventProps } from './event.route';
 import { Call } from './processor';
@@ -18,6 +18,7 @@ export function handleUploadProgram({ msg, event, common, tempState, call }: IHa
       codeId,
       owner: event.args.source,
       name: event.args.destination,
+      status: ProgramStatus.ProgramSet,
     }),
   );
   msg.payload = call.args.initPayload;
@@ -42,7 +43,7 @@ export function handleVoucherCall({ ctx, msg, call }: IHandleCallProps) {
   }
 }
 
-export function handleCreateProgram({ event, common, tempState, call }: IHandleCallProps) {
+export function handleCreateProgram({ msg, event, common, tempState, call }: IHandleCallProps) {
   tempState.addProgram(
     new Program({
       ...common,
@@ -50,8 +51,12 @@ export function handleCreateProgram({ event, common, tempState, call }: IHandleC
       codeId: call.args.codeId,
       owner: event.args.source,
       name: event.args.destination,
+      status: ProgramStatus.ProgramSet,
     }),
   );
+
+  msg.payload = call.args.initPayload;
+  msg.value = call.args.value;
 }
 
 export function handleSendReplyCall({ msg, call }: IHandleCallProps) {
