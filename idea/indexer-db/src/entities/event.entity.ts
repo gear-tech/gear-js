@@ -21,6 +21,9 @@ export class Event extends BaseEntity {
   public payload: string;
 
   @Column({ nullable: true })
+  public parentId: string;
+
+  @Column({ nullable: true })
   public service?: string;
 
   @Column({ nullable: true })

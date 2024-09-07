@@ -78,10 +78,7 @@ export async function handleUserMessageSent({ event, common, tempState }: IHandl
     exitCode: event.args.message.details?.code?.__kind === 'Success' ? 0 : 1,
   });
 
-  const parentId = await tempState.getMessageId(msg.id);
-  if (parentId) {
-    msg.parentId = parentId;
-  }
+  msg.parentId = await tempState.getMessageId(msg.id);
 
   if (event.args.message.destination === ZERO_ADDRESS) {
     tempState.addEvent(msg);
@@ -150,8 +147,12 @@ export async function handleCodeChanged({ event, common, tempState }: IHandleEve
 }
 
 export async function handleMessagesDispatched({ event, tempState }: IHandleEventProps) {
-  await tempState.removeMessagesId(event.args.id);
-  await Promise.all(event.args.statuses.map((s) => tempState.setDispatchedStatus(s[0], s[1].__kind)));
+  await Promise.all(
+    event.args.statuses.map((s) => {
+      tempState.removeMessagesId(s[0]);
+      return tempState.setDispatchedStatus(s[0], s[1].__kind);
+    }),
+  );
 }
 
 const reasons = {

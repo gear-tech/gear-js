@@ -26,17 +26,18 @@ export async function getMetahash(call: CUploadCode | CUploadProgram | CVoucherC
   return null;
 }
 
-export function generateChildMessageId(messageId: string) {
-  const msgId = u8aToU8a(messageId);
+export async function findChildMessageId(parentId: string, idToFind: string, startNonce: number = 0) {
+  const msgId = u8aToU8a(parentId);
   const prefix = stringToU8a('outgoing');
-  const result: { [property: `0x${string}`]: string } = {};
 
-  for (let i = 0; i < 512; i++) {
+  for (let i = startNonce; i < 512; i++) {
     const nonce = CreateType.create('u32', i).toU8a();
+    const childId = blake2AsHex(u8aConcat(prefix, msgId, nonce));
 
-    const temp = blake2AsHex(u8aConcat(prefix, msgId, nonce));
-    result[temp] = messageId;
+    if (childId === idToFind) {
+      return { parentId, nonce: i };
+    }
   }
 
-  return result;
+  throw Error('Child id not found');
 }
