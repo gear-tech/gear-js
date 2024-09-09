@@ -33,7 +33,7 @@ export interface IHandleEventProps {
 
 const callHandlers: Array<{
   pattern: (obj: any) => boolean;
-  handler: (args: IHandleCallProps) => Promise<void> | void;
+  handler: (args: IHandleCallProps) => void;
 }> = [
   { pattern: isUploadProgram, handler: handleUploadProgram },
   { pattern: isSendMessageCall, handler: handleSendMessageCall },
@@ -60,7 +60,7 @@ export async function handleMessageQueued({ ctx, block, event, common, tempState
     throw new Error('Unknown call with message');
   }
 
-  await handler({ block, call, common, ctx, event, msg, tempState });
+  handler({ block, call, common, ctx, event, msg, tempState });
 
   tempState.addMsgToProgram(msg);
 }
@@ -78,7 +78,9 @@ export async function handleUserMessageSent({ event, common, tempState }: IHandl
     exitCode: event.args.message.details?.code?.__kind === 'Success' ? 0 : 1,
   });
 
-  msg.parentId = await tempState.getMessageId(msg.id);
+  if (!msg.replyToMessageId) {
+    msg.parentId = await tempState.getMessageId(msg.id);
+  }
 
   if (event.args.message.destination === ZERO_ADDRESS) {
     tempState.addEvent(msg);

@@ -26,13 +26,14 @@ export async function getMetahash(call: CUploadCode | CUploadProgram | CVoucherC
   return null;
 }
 
+const prefix = stringToU8a('outgoing');
+const nonces = Array.from({ length: 512 }, (_v, i) => CreateType.create('u32', i).toU8a());
+
 export async function findChildMessageId(parentId: string, idToFind: string, startNonce: number = 0) {
   const msgId = u8aToU8a(parentId);
-  const prefix = stringToU8a('outgoing');
 
-  for (let i = startNonce; i < 512; i++) {
-    const nonce = CreateType.create('u32', i).toU8a();
-    const childId = blake2AsHex(u8aConcat(prefix, msgId, nonce));
+  for (let i = startNonce; i < nonces.length; i++) {
+    const childId = blake2AsHex(u8aConcat(prefix, msgId, nonces[i]));
 
     if (childId === idToFind) {
       return { parentId, nonce: i };
