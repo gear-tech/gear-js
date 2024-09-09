@@ -3,7 +3,7 @@ import { Balance as BalanceType } from '@polkadot/types/interfaces';
 import { useMemo } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
-import { useModalState } from '@/hooks';
+import { useModalState, useOutsideClick } from '@/hooks';
 import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
 import { AnimationTimeout } from '@/shared/config';
 
@@ -22,17 +22,14 @@ function BalanceContainer({ heading, value }: { heading: string; value: BalanceT
   );
 }
 
-function Dropdown({
-  total,
-  transferable,
-  lockedBalance,
-  onHeaderClick,
-}: {
+type Props = {
   total: string;
   transferable: BalanceType;
   lockedBalance: BalanceType;
   onHeaderClick: () => void;
-}) {
+};
+
+function Dropdown({ total, transferable, lockedBalance, onHeaderClick }: Props) {
   const { account } = useAccount();
   const { data: stakingAccount } = useDeriveStakingAccount({ address: account?.address });
 
@@ -76,7 +73,7 @@ function Dropdown({
 
       <footer className={styles.footer}>
         <GetTestBalance />
-        <TransferBalance />
+        <TransferBalance onClick={onHeaderClick} />
       </footer>
     </div>
   );
@@ -86,6 +83,7 @@ function BalanceDropdown() {
   const { account } = useAccount();
   const { data: balance } = useDeriveBalancesAll({ address: account?.address, watch: true });
   const [isOpen, open, close] = useModalState();
+  const ref = useOutsideClick<HTMLDivElement>(close);
 
   if (!balance) return null;
 
@@ -93,7 +91,7 @@ function BalanceDropdown() {
   const { freeBalance, reservedBalance, availableBalance: transferable, lockedBalance } = balance;
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} ref={ref}>
       <button type="button" className={styles.button} onClick={isOpen ? close : open}>
         <VaraSVG />
 

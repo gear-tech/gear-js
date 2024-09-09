@@ -37,10 +37,10 @@ function useSchema() {
 
 type Props = {
   defaultAddress?: string;
-  close: () => void;
+  onClose: () => void;
 };
 
-const TransferBalanceModal = ({ defaultAddress = '', close }: Props) => {
+const TransferBalanceModal = ({ defaultAddress = '', onClose }: Props) => {
   const { api, isApiReady } = useApi();
   const { account } = useAccount();
   const { data: balance } = useDeriveBalancesAll({ address: account?.address });
@@ -60,7 +60,7 @@ const TransferBalanceModal = ({ defaultAddress = '', close }: Props) => {
 
     enableLoading();
 
-    const onSuccess = close;
+    const onSuccess = onClose;
     const onError = disableLoading;
 
     const extrinsic = keepAlive
@@ -71,7 +71,7 @@ const TransferBalanceModal = ({ defaultAddress = '', close }: Props) => {
   });
 
   return (
-    <Modal heading="Transfer Balance" size="large" close={close}>
+    <Modal heading="Transfer Balance" size="large" close={onClose}>
       <FormProvider {...form}>
         <form onSubmit={handleSubmit}>
           <div className={styles.inputs}>
@@ -91,7 +91,7 @@ const TransferBalanceModal = ({ defaultAddress = '', close }: Props) => {
 
           <div className={styles.buttons}>
             <Button type="submit" icon={SubmitSVG} text="Send" size="large" disabled={isLoading} />
-            <Button icon={CloseSVG} text="Close" size="large" color="light" onClick={close} />
+            <Button icon={CloseSVG} text="Close" size="large" color="light" onClick={onClose} />
           </div>
         </form>
       </FormProvider>
