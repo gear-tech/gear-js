@@ -55,6 +55,8 @@
 }
 
 .dropdown {
+  min-width: 300px;
+
   position: absolute;
   top: -2px; // -2 to overlap button
   right: -2px;
@@ -113,6 +115,10 @@
 
   .footer {
     display: flex;
-    gap: 12px;
+    gap: 6px;
+
+    > * {
+      flex: 1;
+    }
   }
 }
