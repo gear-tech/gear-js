@@ -1,8 +1,8 @@
 import { ProviderProps, useApi } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 
-import { GENESIS, RpcMethods } from '@/shared/config';
-import { rpcService } from '@/shared/services/rpcService';
+import { getIsTestBalanceAvailable } from '@/features/balance';
+import { GENESIS } from '@/shared/config';
 
 import { ChainContext } from './Context';
 
@@ -24,9 +24,7 @@ const ChainProvider = ({ children }: ProviderProps) => {
     if (isDevChain) {
       setIsTestBalanceAvailable(true);
     } else {
-      rpcService
-        .callRPC<boolean>(RpcMethods.TestBalanceAvailable, { genesis })
-        .then(({ result }) => setIsTestBalanceAvailable(result));
+      getIsTestBalanceAvailable(genesis!).then(({ result }) => setIsTestBalanceAvailable(result));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDevChain]);

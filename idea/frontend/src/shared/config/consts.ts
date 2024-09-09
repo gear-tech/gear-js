@@ -76,8 +76,6 @@ enum TransactionStatus {
 enum RpcMethods {
   AddMetadata = 'meta.add',
   GetMetadata = 'meta.get',
-  GetTestBalance = 'testBalance.get',
-  TestBalanceAvailable = 'testBalance.available',
 }
 
 enum FileTypes {

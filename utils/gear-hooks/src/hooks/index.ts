@@ -25,9 +25,11 @@ import {
   useIssuedVouchers,
   useAccountIssuedVouchers,
   useDeriveBalancesAll,
-  useAccountDeriveBalancesAll,
+  UseDeriveBalancesAllParameters,
   SendMessageOptions,
   UseSendMessageOptions,
+  useDeriveStakingAccount,
+  UseDeriveStakingAccountParameters,
 } from './api';
 import {
   useCreateHandler,
@@ -69,7 +71,6 @@ export {
   useBalance,
   useBalanceFormat,
   useDeriveBalancesAll,
-  useAccountDeriveBalancesAll,
   useCreateHandler,
   useSendMessageWithGas,
   useApproxBlockTimestamp,
@@ -86,6 +87,7 @@ export {
   useSendProgramTransaction,
   useProgramQuery,
   useProgramEvent,
+  useDeriveStakingAccount,
 };
 
 export type {
@@ -99,4 +101,6 @@ export type {
   UseProgramQueryParameters,
   UseProgramEventParameters,
   UseSailsParameters,
+  UseDeriveBalancesAllParameters,
+  UseDeriveStakingAccountParameters,
 };

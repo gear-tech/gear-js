@@ -1,0 +1,118 @@
+.container {
+  position: relative;
+}
+
+.button,
+.dropdown {
+  .heading {
+    font-size: 10px;
+    line-height: 13px;
+  }
+}
+
+.button,
+.header {
+  background-color: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  transition: opacity 0.25s;
+
+  &:hover {
+    opacity: 0.65;
+  }
+
+  .balance {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .heading {
+    color: rgba(#9cdcb7, 0.7);
+  }
+
+  .arrow {
+    transform: rotate(90deg);
+  }
+}
+
+@keyframes reveal {
+  from {
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(-100%);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0);
+  }
+}
+
+.dropdown {
+  position: absolute;
+  top: -2px; // -2 to overlap button
+  right: -2px;
+  z-index: 2;
+
+  background-color: #242529;
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 0 #ffffff0d, 0 20px 76px 0 #000000;
+
+  &:global(.enter) {
+    animation: reveal 0.25s ease-in-out forwards;
+  }
+
+  &:global(.exit) {
+    animation: reveal 0.25s ease-in-out forwards reverse;
+  }
+
+  .header,
+  .footer {
+    padding: 16px 20px;
+  }
+
+  .header {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    border-radius: 12px 12px 0 0; // overriding hover bg color
+    transition: background-color 0.25s;
+
+    &:hover {
+      background-color: #414141;
+    }
+  }
+
+  .body {
+    margin: 0 2px;
+    padding: 12px 18px 12px 54px;
+
+    background-color: rgba(0, 0, 0, 0.47);
+  }
+
+  .balance {
+    flex: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .heading {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+
+  .footer {
+    display: flex;
+    gap: 12px;
+  }
+}

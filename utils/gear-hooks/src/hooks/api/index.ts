@@ -25,7 +25,14 @@ import {
   useAccountIssuedVouchers,
 } from './voucher';
 
-import { useBalance, useBalanceFormat, useDeriveBalancesAll, useAccountDeriveBalancesAll } from './balance';
+import { useBalance, useBalanceFormat } from './balance';
+
+import {
+  useDeriveBalancesAll,
+  UseDeriveBalancesAllParameters,
+  useDeriveStakingAccount,
+  UseDeriveStakingAccountParameters,
+} from './derive';
 
 import { useApproxBlockTimestamp, useGetApproxBlockTimestamp } from './block';
 
@@ -48,7 +55,6 @@ export {
   useBalance,
   useBalanceFormat,
   useDeriveBalancesAll,
-  useAccountDeriveBalancesAll,
   useApproxBlockTimestamp,
   useGetApproxBlockTimestamp,
   useVoucherStatus,
@@ -57,6 +63,9 @@ export {
   useIsAnyAccountVoucherActive,
   useIssuedVouchers,
   useAccountIssuedVouchers,
+  useDeriveStakingAccount,
   SendMessageOptions,
   UseSendMessageOptions,
+  UseDeriveBalancesAllParameters,
+  UseDeriveStakingAccountParameters,
 };
