@@ -1,12 +1,4 @@
-@use '@/shared/assets/styles/shared' as *;
-@use '@/shared/assets/styles/mixins' as *;
 @use '@/shared/assets/styles/variables' as *;
-
-.wallet {
-  @include childrenMargin(16px, right);
-  display: flex;
-  align-items: center;
-}
 
 .accountBtn {
   background-color: $bgColorSecondary;

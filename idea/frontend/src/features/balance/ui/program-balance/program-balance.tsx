@@ -2,11 +2,10 @@ import { HexString } from '@gear-js/api';
 import { useAccount, useBalance } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
-import { useModalState } from '@/hooks';
+import { useModal } from '@/hooks';
 
 import PlusSVG from '../../assets/plus.svg?react';
 import { Balance } from '../balance';
-import { TransferBalanceModal } from '../transfer-balance-modal';
 import styles from './program-balance.module.scss';
 
 type Props = {
@@ -16,19 +15,16 @@ type Props = {
 function ProgramBalance({ id }: Props) {
   const { account } = useAccount();
   const { balance } = useBalance(id);
-
-  const [isModalOpen, openModal, closeModal] = useModalState();
+  const { showModal } = useModal();
 
   return (
-    <>
-      <div className={styles.balance}>
-        <Balance value={balance} />
+    <div className={styles.balance}>
+      <Balance value={balance} variant="secondary" />
 
-        {account && <Button icon={PlusSVG} color="transparent" onClick={openModal} />}
-      </div>
-
-      {isModalOpen && <TransferBalanceModal defaultAddress={id} close={closeModal} />}
-    </>
+      {account && (
+        <Button icon={PlusSVG} color="transparent" onClick={() => showModal('transfer', { defaultAddress: id })} />
+      )}
+    </div>
   );
 }
 

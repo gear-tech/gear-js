@@ -31,7 +31,7 @@ import {
   useBalance,
   useBalanceFormat,
   useDeriveBalancesAll,
-  useAccountDeriveBalancesAll,
+  UseDeriveBalancesAllParameters,
   useCreateHandler,
   useSendMessageWithGas,
   useApproxBlockTimestamp,
@@ -58,6 +58,8 @@ import {
   UseProgramQueryParameters,
   useProgramEvent,
   UseProgramEventParameters,
+  useDeriveStakingAccount,
+  UseDeriveStakingAccountParameters,
 } from './hooks';
 
 import { withoutCommas, getVaraAddress, getTypedEntries } from './utils';
@@ -104,7 +106,6 @@ export {
   useBalance,
   useBalanceFormat,
   useDeriveBalancesAll,
-  useAccountDeriveBalancesAll,
   useAlert,
   useApi,
   AccountProvider,
@@ -131,6 +132,7 @@ export {
   useSendProgramTransaction,
   useProgramQuery,
   useProgramEvent,
+  useDeriveStakingAccount,
   DEFAULT_OPTIONS,
   DEFAULT_INFO_OPTIONS,
   DEFAULT_ERROR_OPTIONS,
@@ -162,4 +164,6 @@ export type {
   UseSendProgramTransactionParameters,
   UseProgramQueryParameters,
   UseProgramEventParameters,
+  UseDeriveBalancesAllParameters,
+  UseDeriveStakingAccountParameters,
 };

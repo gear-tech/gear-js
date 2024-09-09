@@ -4,13 +4,14 @@
 @use '@/shared/assets/styles/variables' as *;
 @use '@/shared/assets/styles/animations' as *;
 
-.topSide {
+.container {
   display: flex;
   position: relative;
+  justify-content: space-between;
   align-items: center;
 }
 
-.leftSide {
+.main {
   @include fadeAppear();
   @include childrenMargin($margineLarge, right);
 
@@ -18,36 +19,8 @@
   align-items: center;
 }
 
-.rightSide {
-  @include childrenMargin(16px, right);
+.wallet {
   display: flex;
   align-items: center;
-  margin-left: auto;
-
-  .privateContent {
-    @include fadeAppear();
-    @include childrenMargin(16px, right);
-    display: flex;
-    align-items: center;
-
-    .testBalanceBtn {
-      background-color: $green007;
-
-      svg path {
-        @include transition();
-
-        fill: $successColor;
-      }
-
-      &:hover {
-        background-color: $successColor;
-
-        svg path {
-          @include transition();
-
-          fill: $textColor;
-        }
-      }
-    }
-  }
+  gap: 16px;
 }

@@ -1,29 +1,23 @@
-import { Button, TooltipWrapper } from '@gear-js/ui';
-import { useState } from 'react';
+import { Button } from '@gear-js/ui';
 
-import { withAccount } from '@/shared/ui';
+import { useModal } from '@/hooks';
 
-import TransferSVG from '../../assets/transfer.svg?react';
-import { TransferBalanceModal } from '../transfer-balance-modal';
-import styles from './transfer-balance.module.scss';
+import SwapSVG from '../../assets/swap.svg?react';
 
-const TransferBalance = withAccount(() => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+type Props = {
+  onClick: () => void;
+};
 
-  return (
-    <>
-      <TooltipWrapper text="Transfer balance">
-        <Button
-          icon={TransferSVG}
-          tooltip="Transfer balance"
-          className={styles.button}
-          onClick={() => setIsModalOpen(true)}
-        />
-      </TooltipWrapper>
+const TransferBalance = ({ onClick }: Props) => {
+  // modal from a provider, cuz otherwise outside click on balance dropdown will close it
+  const { showModal } = useModal();
 
-      {isModalOpen && <TransferBalanceModal close={() => setIsModalOpen(false)} />}
-    </>
-  );
-});
+  const handleClick = () => {
+    onClick();
+    showModal('transfer');
+  };
+
+  return <Button icon={SwapSVG} text="Transfer" color="grey" size="small" noWrap onClick={handleClick} />;
+};
 
 export { TransferBalance };
