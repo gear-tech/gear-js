@@ -79,15 +79,11 @@ export class TempState {
     this.events.clear();
     this.newPrograms.clear();
 
-    const temp = Object.fromEntries(
-      Object.entries(await this._redis.hGetAll('myHash')).map(([key, value]) => [key, Number(value)]),
-    );
-
-    Object.keys(temp).forEach((key) => {
-      temp[key] = Number(temp[key]);
+    const temp = Object.entries(await this._redis.hGetAll('msg'));
+    this.cachedMessages = {};
+    temp.forEach(([key, value]) => {
+      this.cachedMessages[key] = Number(value);
     });
-
-    this.cachedMessages = temp;
   }
 
   addProgram(program: Program) {
@@ -105,7 +101,7 @@ export class TempState {
     msg.service = service;
     msg.fn = name;
 
-    this.saveMessagesId(msg.id);
+    this.saveParentMsgId(msg.id);
 
     this.messagesToProgram.set(msg.id, msg);
   }
@@ -316,12 +312,12 @@ export class TempState {
         );
       }
 
-      const toDelete = Object.keys(this.cachedMessages);
+      const toDelete = await this._redis.hKeys('msg');
       if (toDelete.length > 0) {
-        await this._redis.hDel('myHash', toDelete);
+        await this._redis.hDel('msg', toDelete);
       }
-      if (this.cachedMessages.length > 0) {
-        await this._redis.hSet('myHash', this.cachedMessages);
+      if (Object.keys(this.cachedMessages).length > 0) {
+        await this._redis.hSet('msg', this.cachedMessages);
       }
     } catch (error) {
       this._ctx.log.error({ error: error.message, stack: error.stack }, 'Failed to save data');
@@ -329,11 +325,12 @@ export class TempState {
     }
   }
 
-  saveMessagesId(parentId: string, nonce: number = 0) {
+  saveParentMsgId(parentId: string, nonce: number = 0) {
     this.cachedMessages[parentId] = nonce;
+    return parentId;
   }
 
-  removeMessagesId(parentId: string) {
+  removeParentMsgId(parentId: string) {
     delete this.cachedMessages[parentId];
   }
 
@@ -343,9 +340,8 @@ export class TempState {
     });
 
     return Promise.any(finder)
-      .then(async ({ parentId, nonce }) => {
-        this.saveMessagesId(parentId, nonce);
-        return parentId;
+      .then(({ parentId, nonce }) => {
+        return this.saveParentMsgId(parentId, nonce);
       })
       .catch<null>(() => null);
   }

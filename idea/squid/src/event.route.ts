@@ -150,7 +150,7 @@ export async function handleCodeChanged({ event, common, tempState }: IHandleEve
 export async function handleMessagesDispatched({ event, tempState }: IHandleEventProps) {
   await Promise.all(
     event.args.statuses.map((s) => {
-      tempState.removeMessagesId(s[0]);
+      tempState.removeParentMsgId(s[0]);
       return tempState.setDispatchedStatus(s[0], s[1].__kind);
     }),
   );
