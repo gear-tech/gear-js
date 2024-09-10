@@ -312,10 +312,7 @@ export class TempState {
         );
       }
 
-      const toDelete = await this._redis.hKeys('msg');
-      if (toDelete.length > 0) {
-        await this._redis.hDel('msg', toDelete);
-      }
+      await this._redis.del('msg');
       if (Object.keys(this.cachedMessages).length > 0) {
         await this._redis.hSet('msg', this.cachedMessages);
       }
