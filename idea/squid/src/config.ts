@@ -11,6 +11,9 @@ export const config = {
     toBlock: parseInt(process.env.TO_BLOCK) || undefined,
   },
   redis: {
+    host: process.env.REDIS_HOST || '127.0.0.1',
     port: parseInt(process.env.REDIS_PORT) || 6379,
+    user: process.env.REDIS_USER || '',
+    password: process.env.REDIS_PASSWORD || '',
   },
 };

@@ -78,9 +78,7 @@ export async function handleUserMessageSent({ event, common, tempState }: IHandl
     exitCode: !event.args.message.details?.code ? null : event.args.message.details.code.__kind === 'Success' ? 0 : 1,
   });
 
-  if (!msg.replyToMessageId) {
-    msg.parentId = await tempState.getMessageId(msg.id);
-  }
+  msg.parentId = msg.replyToMessageId ? msg.replyToMessageId : await tempState.getMessageId(msg.id);
 
   if (event.args.message.destination === ZERO_ADDRESS) {
     tempState.addEvent(msg);

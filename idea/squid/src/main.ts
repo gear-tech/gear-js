@@ -20,6 +20,7 @@ import {
   IHandleEventProps,
 } from './event.route';
 import { createClient, RedisClientType } from 'redis';
+import { config } from './config';
 
 let tempState: TempState;
 
@@ -59,7 +60,14 @@ const handler = async (ctx: ProcessorContext<Store>) => {
 interface RedisClient extends RedisClientType<any, any, any> {}
 
 const main = async () => {
-  const redisClient: RedisClient = createClient();
+  const redisClient: RedisClient = createClient({
+    username: config.redis.user,
+    password: config.redis.password,
+    socket: {
+      host: config.redis.host,
+      port: config.redis.port,
+    },
+  });
   await redisClient.connect();
   tempState = new TempState(redisClient);
   processor.run(new TypeormDatabase({ supportHotBlocks: true }), handler);

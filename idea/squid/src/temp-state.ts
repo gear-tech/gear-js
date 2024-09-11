@@ -79,6 +79,8 @@ export class TempState {
     this.events.clear();
     this.newPrograms.clear();
 
+    this._redis.on('error', (error) => this._ctx.log.error(error));
+
     const temp = Object.entries(await this._redis.hGetAll('msg'));
     this.cachedMessages = {};
     temp.forEach(([key, value]) => {
