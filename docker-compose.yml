@@ -26,7 +26,7 @@ x-healthcheck-defaults: &healthcheck_defaults
 x-database-defaults: &postgres_defaults
     <<: *restart_policy
     # Using the same postgres version as Sentry dev for consistency purposes
-    image: "postgres:14.5"
+    image: "postgres:14.13"
     healthcheck:
       <<: *healthcheck_defaults
       # Using default user "postgres"
