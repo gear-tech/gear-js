@@ -21,6 +21,7 @@ import {
 } from './event.route';
 import { createClient, RedisClientType } from 'redis';
 import { config } from './config';
+import { GearApi } from '@gear-js/api';
 
 let tempState: TempState;
 
@@ -59,7 +60,7 @@ const handler = async (ctx: ProcessorContext<Store>) => {
 
 interface RedisClient extends RedisClientType<any, any, any> {}
 
-const main = async () => {
+const main = async (api: GearApi) => {
   const redisClient: RedisClient = createClient({
     username: config.redis.user,
     password: config.redis.password,
@@ -69,11 +70,15 @@ const main = async () => {
     },
   });
   await redisClient.connect();
-  tempState = new TempState(redisClient);
+
+  tempState = new TempState(redisClient, api.genesisHash.toHex());
+  api.disconnect();
   processor.run(new TypeormDatabase({ supportHotBlocks: true }), handler);
 };
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+GearApi.create({ providerAddress: config.squid.rpc })
+  .then(main)
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });

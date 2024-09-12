@@ -52,6 +52,7 @@ export class TempState {
   private messagesToProgram: Map<string, MessageToProgram>;
   private events: Map<string, Event>;
   private cachedMessages: { [key: string]: number };
+  private genesisHash: string;
   private _ctx: ProcessorContext<Store>;
   private _metadata: Metadata;
   private _registry: TypeRegistry;
@@ -59,8 +60,10 @@ export class TempState {
   private _programStorageTy: string;
   private _redis: RedisClientType;
 
-  constructor(redisClient: RedisClientType) {
+  constructor(redisClient: RedisClientType, genesisHash: string) {
+    console.log(genesisHash);
     this._redis = redisClient;
+    this.genesisHash = genesisHash;
     this.programs = new Map();
     this.codes = new Map();
     this.messagesFromProgram = new Map();
@@ -81,7 +84,7 @@ export class TempState {
 
     this._redis.on('error', (error) => this._ctx.log.error(error));
 
-    const temp = Object.entries(await this._redis.hGetAll('msg'));
+    const temp = Object.entries(await this._redis.hGetAll(this.genesisHash));
     this.cachedMessages = {};
     temp.forEach(([key, value]) => {
       this.cachedMessages[key] = Number(value);
@@ -314,9 +317,9 @@ export class TempState {
         );
       }
 
-      await this._redis.del('msg');
+      await this._redis.del(this.genesisHash);
       if (Object.keys(this.cachedMessages).length > 0) {
-        await this._redis.hSet('msg', this.cachedMessages);
+        await this._redis.hSet(this.genesisHash, this.cachedMessages);
       }
     } catch (error) {
       this._ctx.log.error({ error: error.message, stack: error.stack }, 'Failed to save data');
