@@ -20,7 +20,7 @@ export class Event extends BaseEntity {
   @Column({ nullable: true })
   public payload: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, name: 'parent_id' })
   public parentId: string;
 
   @Column({ nullable: true })

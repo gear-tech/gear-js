@@ -8,4 +8,5 @@ export interface ParamGetEvents extends ParamPagination, ParamGenesis {
   service?: string;
   name?: string;
   source?: string;
+  parentId?: string;
 }
