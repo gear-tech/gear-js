@@ -61,7 +61,6 @@ export class TempState {
   private _redis: RedisClientType;
 
   constructor(redisClient: RedisClientType, genesisHash: string) {
-    console.log(genesisHash);
     this._redis = redisClient;
     this.genesisHash = genesisHash;
     this.programs = new Map();
