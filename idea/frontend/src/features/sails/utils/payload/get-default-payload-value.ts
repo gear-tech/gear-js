@@ -1,15 +1,15 @@
+import { Sails } from 'sails-js';
 import {
-  EnumDef,
-  FixedSizeArrayDef,
-  MapDef,
-  PrimitiveDef,
-  ResultDef,
-  Sails,
-  StructDef,
-  TypeDef,
-  UserDefinedDef,
-  VecDef,
-} from 'sails-js';
+  ISailsEnumDef,
+  ISailsFixedSizeArrayDef,
+  ISailsMapDef,
+  ISailsPrimitiveDef,
+  ISailsResultDef,
+  ISailsStructDef,
+  ISailsTypeDef,
+  ISailsUserDefinedDef,
+  ISailsVecDef,
+} from 'sails-js-types';
 
 import { getPreformattedText } from '@/shared/helpers';
 
@@ -17,15 +17,16 @@ import { RESULT } from '../../consts';
 import { PayloadValue, ISailsFuncArg } from '../../types';
 
 const getDefaultValue = (sails: Sails) => {
-  const getPrimitiveValue = (def: PrimitiveDef) => (def.isBool ? false : '');
-  const getResultValue = ({ [RESULT.OK]: { def } }: ResultDef) => ({ [RESULT.OK]: getValue(def) });
-  const getVecValue = ({ def }: VecDef) => getPreformattedText([getValue(def)]);
-  const getFixedSizeArrayValue = ({ len, def }: FixedSizeArrayDef) => new Array<PayloadValue>(len).fill(getValue(def));
-  const getMapValue = ({ key, value }: MapDef) => getPreformattedText([[getValue(key.def), getValue(value.def)]]);
-  const getUserDefinedValue = ({ name }: UserDefinedDef) => getValue(sails.getTypeDef(name));
-  const getEnumValue = ({ variants: [{ def, name }] }: EnumDef) => ({ [name]: def ? getValue(def) : null });
+  const getPrimitiveValue = (def: ISailsPrimitiveDef) => (def.isBool ? false : '');
+  const getResultValue = ({ [RESULT.OK]: { def } }: ISailsResultDef) => ({ [RESULT.OK]: getValue(def) });
+  const getVecValue = ({ def }: ISailsVecDef) => getPreformattedText([getValue(def)]);
+  const getFixedSizeArrayValue = ({ len, def }: ISailsFixedSizeArrayDef) =>
+    new Array<PayloadValue>(len).fill(getValue(def));
+  const getMapValue = ({ key, value }: ISailsMapDef) => getPreformattedText([[getValue(key.def), getValue(value.def)]]);
+  const getUserDefinedValue = ({ name }: ISailsUserDefinedDef) => getValue(sails.getTypeDef(name));
+  const getEnumValue = ({ variants: [{ def, name }] }: ISailsEnumDef) => ({ [name]: def ? getValue(def) : null });
 
-  const getStructValue = ({ isTuple, fields }: StructDef) => {
+  const getStructValue = ({ isTuple, fields }: ISailsStructDef) => {
     if (isTuple) return fields.map(({ def }) => getValue(def));
 
     const result = fields.map(({ name, def }, index) => [name || index, getValue(def)] as const);
@@ -33,7 +34,7 @@ const getDefaultValue = (sails: Sails) => {
     return Object.fromEntries(result);
   };
 
-  const getValue = (def: TypeDef): PayloadValue => {
+  const getValue = (def: ISailsTypeDef): PayloadValue => {
     if (def.isPrimitive) return getPrimitiveValue(def.asPrimitive);
     if (def.isOptional) return null;
     if (def.isResult) return getResultValue(def.asResult);

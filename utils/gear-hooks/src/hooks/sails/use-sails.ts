@@ -1,6 +1,7 @@
 import { HexString } from '@gear-js/api';
 import { useQuery } from '@tanstack/react-query';
 import { Sails } from 'sails-js';
+import { SailsIdlParser } from 'sails-js-parser';
 
 import { useApi } from 'context';
 
@@ -20,7 +21,8 @@ function useSails({ programId, idl }: UseSailsParameters = DEFAULT_PARAMETERS) {
   const getSails = async () => {
     if (!isApiReady) throw new Error('API is not initialized');
 
-    const sails = await Sails.new();
+    const parser = await SailsIdlParser.new();
+    const sails = new Sails(parser);
 
     sails.setApi(api);
     if (programId) sails.setProgramId(programId);

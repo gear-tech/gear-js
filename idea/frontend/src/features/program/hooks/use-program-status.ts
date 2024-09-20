@@ -1,5 +1,5 @@
 import { useApi } from '@gear-js/react-hooks';
-import { HexString, GearCommonProgram } from '@gear-js/api';
+import { HexString, GearCoreProgram } from '@gear-js/api';
 import { Option } from '@polkadot/types';
 
 import { ProgramStatus } from '../consts';
@@ -10,7 +10,7 @@ const useProgramStatus = () => {
   const getProgramStatus = async (id: HexString) => {
     if (!isApiReady) return Promise.reject(new Error('API is not initialized'));
 
-    const option = (await api.query.gearProgram.programStorage(id)) as Option<GearCommonProgram>;
+    const option = (await api.query.gearProgram.programStorage(id)) as Option<GearCoreProgram>;
     const { isTerminated, isExited } = option.unwrap();
 
     if (isTerminated) return ProgramStatus.Terminated;
