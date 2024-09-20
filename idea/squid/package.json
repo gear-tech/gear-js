@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@gear-js/api": "0.38.1",
-    "@polkadot/api": "11.0.2",
+    "@polkadot/api": "12.0.1",
     "@subsquid/graphql-server": "4.5.1",
     "@subsquid/ss58": "2.0.2",
     "@subsquid/substrate-processor": "8.3.0",
