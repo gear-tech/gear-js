@@ -47,6 +47,12 @@
   background-color: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
   z-index: 10;
+
+  @media screen and (max-width: 768px) {
+    padding: 0;
+
+    align-items: flex-end;
+  }
 }
 
 .modal {
@@ -60,9 +66,17 @@
   border-radius: 4px;
   filter: drop-shadow(0px 4px 4px #00000011);
 
+  @media screen and (max-width: 768px) {
+    max-width: unset;
+  }
+
   > * {
-    /* every standalone item for body scrollbar padding */
+    /* applying x-padding to every child, to preserve body scrollbar padding */
     padding: 0 32px;
+
+    @media screen and (max-width: 768px) {
+      padding: 0 16px;
+    }
   }
 }
 
