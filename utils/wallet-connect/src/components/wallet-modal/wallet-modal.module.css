@@ -1,0 +1,85 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .account {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+}
+
+.status {
+  display: flex;
+  flex-direction: column;
+
+  font-size: 12px;
+  line-height: 1;
+  text-align: right;
+
+  .statusText {
+    font-weight: 600;
+
+    &.gear {
+      color: #fff;
+    }
+
+    &.vara {
+      color: #a2a2a2;
+    }
+  }
+
+  .statusAccounts {
+    font-weight: 800;
+
+    &.gear {
+      color: #2bd071;
+    }
+
+    &.vara {
+      color: #02f8bf;
+    }
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.copyButton,
+.logoutButton {
+  &.gear svg path {
+    fill: #fff;
+  }
+}
+
+.editIcon {
+  &.gear {
+    margin-left: 10px;
+
+    path {
+      fill: #fff;
+    }
+  }
+}
+
+.text {
+  &.gear {
+    color: #fff;
+  }
+
+  &.vara {
+    color: #000;
+  }
+
+  a {
+    text-decoration: underline;
+    transition: opacity 0.25s;
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+}
