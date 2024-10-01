@@ -10,6 +10,8 @@ import {
   ParamGetMsgsToProgram,
   ParamGetProgram,
   ParamGetPrograms,
+  ParamGetVoucher,
+  ParamGetVouchers,
   ParamMsgFromProgram,
   ParamMsgToProgram,
   ParamSetProgramMeta,
@@ -17,6 +19,7 @@ import {
 import { Cache } from './middlewares/caching';
 import { redisConnect } from './middlewares/redis';
 import { Retry } from './middlewares/retry';
+import { VoucherNotFound } from './errors';
 
 export class JsonRpcServer extends JsonRpc(JsonRpcBase) {
   private _app: Express;
@@ -29,6 +32,52 @@ export class JsonRpcServer extends JsonRpc(JsonRpcBase) {
     this._app.post('/api', async (req, res) => {
       const result = await this.handleRequest(req.body);
       res.json(result);
+    });
+
+    this._app.get('/api/voucher/:id', async (req, res) => {
+      const { genesis } = req.query;
+      if (!genesis) {
+        res.status(400).json({ error: 'Genesis not found in the request' });
+        return;
+      }
+
+      const voucherService = this._services.get(genesis.toString())?.voucher;
+      if (!voucherService) {
+        res.status(400).json({ error: 'Network is not supported' });
+        return;
+      }
+
+      try {
+        const voucher = await voucherService.getVoucher({ id: req.params.id, genesis: genesis.toString() });
+        res.json(voucher);
+      } catch (error) {
+        if (error instanceof VoucherNotFound) {
+          res.json(null);
+          return;
+        }
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+
+    this._app.post('/api/vouchers', async (req, res) => {
+      const { genesis } = req.query;
+      if (!genesis) {
+        res.status(400).json({ error: 'Genesis not found in the request' });
+        return;
+      }
+
+      const voucherService = this._services.get(genesis.toString())?.voucher;
+      if (!voucherService) {
+        res.status(400).json({ error: 'Network is not supported' });
+        return;
+      }
+
+      try {
+        const vouchers = await voucherService.getVouchers(req.body);
+        res.json(vouchers);
+      } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+      }
     });
   }
 
@@ -109,5 +158,17 @@ export class JsonRpcServer extends JsonRpc(JsonRpcBase) {
   @Cache(300)
   async eventData(params: ParamGetEvent) {
     return this._services.get(params.genesis).event.getEvent(params);
+  }
+
+  @JsonRpcMethod('voucher.all')
+  @Cache(15)
+  async voucherAll(params: ParamGetVouchers) {
+    return this._services.get(params.genesis).voucher.getVouchers(params);
+  }
+
+  @JsonRpcMethod('voucher.data')
+  @Cache(15)
+  async voucherData(params: ParamGetVoucher) {
+    return this._services.get(params.genesis).voucher.getVoucher(params);
   }
 }
