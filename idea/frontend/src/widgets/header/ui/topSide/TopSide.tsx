@@ -1,10 +1,11 @@
+import { useApi } from '@gear-js/react-hooks';
+import { Wallet } from '@gear-js/wallet-connect';
 import { useEffect, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
-import { useApi } from '@gear-js/react-hooks';
 
 import { RecentBlocks } from '@/features/recentBlocks';
-import { Wallet } from '@/features/wallet';
 import { BalanceDropdown } from '@/features/balance';
+import { OnboardingTooltip } from '@/shared/ui/onboardingTooltip';
 import { AnimationTimeout } from '@/shared/config';
 
 import { TotalIssuance } from '../totalIssuance';
@@ -35,7 +36,10 @@ const TopSide = () => {
 
       <div className={styles.wallet}>
         <BalanceDropdown />
-        <Wallet />
+
+        <OnboardingTooltip index={0}>
+          <Wallet variant="gear" displayBalance={false} />
+        </OnboardingTooltip>
       </div>
     </div>
   );
