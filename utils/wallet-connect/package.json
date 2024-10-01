@@ -18,9 +18,8 @@
   ],
   "homepage": "https://github.com/gear-tech/gear-js/tree/main/utils/wallet-connect#readme",
   "scripts": {
-    "start": "storybook dev -p 6006",
-    "build": "tsc && vite build",
-    "build-sb": "storybook build",
+    "start": "vite --open --port 3000",
+    "build": "vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -41,14 +40,8 @@
     "@gear-js/react-hooks": "0.13.0",
     "@gear-js/ui": "0.5.28",
     "@gear-js/vara-ui": "0.0.11",
-    "@storybook/addon-essentials": "7.2.1",
-    "@storybook/addon-interactions": "7.2.1",
-    "@storybook/addon-links": "7.2.1",
-    "@storybook/addon-onboarding": "1.0.11",
-    "@storybook/blocks": "7.2.1",
-    "@storybook/react": "7.2.1",
-    "@storybook/react-vite": "7.2.1",
-    "@storybook/testing-library": "0.2.2",
+    "@polkadot/react-identicon": "3.10.1",
+    "@tanstack/react-query": "5.56.2",
     "@types/react": "18.3.2",
     "@types/react-dom": "18.3.0",
     "@typescript-eslint/eslint-plugin": "6.0.0",
@@ -58,21 +51,16 @@
     "eslint": "8.57.0",
     "eslint-plugin-react-hooks": "4.6.2",
     "eslint-plugin-react-refresh": "0.4.7",
-    "eslint-plugin-storybook": "0.8.0",
     "sass": "1.77.2",
-    "storybook": "7.2.1",
     "typescript": "5.0.2",
     "vite": "4.4.5",
     "vite-plugin-dts": "3.5.1",
+    "vite-plugin-node-polyfills": "0.22.0",
     "vite-plugin-svgr": "3.2.0"
   },
   "files": [
     "dist"
   ],
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "dependencies": {
-    "@tanstack/react-query": "^5.56.2",
-    "vite-plugin-node-polyfills": "^0.22.0"
-  }
+  "main": "dist/wallet-connect.js",
+  "types": "dist/index.d.ts"
 }
