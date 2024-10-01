@@ -10,26 +10,20 @@
 
 ## Description
 
-A React library that provides components that are used across Vara applications.
+A React library to connect supported Substrate-based wallets in a standardized and consistent way across decentralized applications.
 
 ## Installation
 
 Install package:
 
 ```sh
-npm install @gear-js/vara-ui
+npm install @gear-js/wallet-connect
 ```
 
 or
 
 ```sh
-yarn add @gear-js/vara-ui
-```
-
-Import styles in application's root:
-
-```jsx
-import '@gear-js/vara-ui/styles.css';
+yarn add @gear-js/wallet-connect
 ```
 
 ## Getting started
@@ -37,16 +31,56 @@ import '@gear-js/vara-ui/styles.css';
 Simple as it is, here's quick example:
 
 ```jsx
-import { Button } from '@gear-js/vara-ui';
-import { ReactComponent as ArrowSVG } from './images/arrow.svg';
+import { Wallet } from '@gear-js/wallet-connect';
+import Logo from './logo.svg?react';
 
-function BackButton() {
-  const handleClick = () => {
-    console.log('Going back!');
-  };
+function Header() {
+  return (
+    <header>
+      <Logo />
 
-  return <Button text="Go back" icon={ArrowSVG} onClick={handleClick} />;
+      <Wallet
+        variant="vara" // 'vara' (default) or 'gear' theme variation
+        displayBalance={true} // true (default) or false
+      />
+    </header>
+  );
 }
 
-export { BackButton };
+export { Header };
+```
+
+## Vara UI Theme
+
+Wallet is available in two theme variations - `vara` and `gear`.
+
+Be aware that in order for `vara` variation to work as expected, `@gear-js/vara-ui` should be installed with configured global styles:
+
+```jsx
+import { Wallet } from '@gear-js/wallet-connect';
+import '@gear-js/vara-ui/dist/style.css';
+
+function VaraWallet() {
+  return <Wallet variant="vara" />;
+}
+
+export { VaraWallet };
+```
+
+In order for `gear` variation to work as expected, `@gear-js/ui` should be installed with configured global `index.scss`:
+
+```scss
+@use '@gear-js/ui/resets';
+@use '@gear-js/ui/typography';
+```
+
+```jsx
+import { Wallet } from '@gear-js/wallet-connect';
+import './index.scss';
+
+function GearWallet() {
+  return <Wallet variant="gear" />;
+}
+
+export { GearWallet };
 ```
