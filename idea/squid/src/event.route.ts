@@ -1,27 +1,57 @@
 import { Store } from '@subsquid/typeorm-store';
 import { Block } from '@subsquid/substrate-processor';
 import { ZERO_ADDRESS } from 'sails-js';
-import { Code, MessageEntryPoint, MessageFromProgram, MessageToProgram, MetaType, Program } from './model';
+import {
+  Code,
+  MessageEntryPoint,
+  MessageFromProgram,
+  MessageToProgram,
+  MetaType,
+  Program,
+  CodeStatus,
+  MessageReadReason,
+  ProgramStatus,
+  Voucher,
+} from './model';
 
 import { Event, Fields, ProcessorContext } from './processor';
 import { TempState } from './temp-state';
-import { isCreateProgram, isUploadCode, isUploadProgram } from './types/calls';
-import { isSendMessageCall, isSendReplyCall } from './types/calls/message';
-import { isVoucherCall } from './types/calls/voucher';
-import { CodeStatus, MessageReadReason, ProgramStatus } from './model';
+import {
+  isCreateProgram,
+  isUploadCode,
+  isUploadProgram,
+  isSendMessageCall,
+  isSendReplyCall,
+  isVoucherCall,
+} from './types/calls';
+import {} from './model';
 import { getMetahash } from './util';
 import {
-  IHandleCallProps,
   handleCreateProgram,
   handleSendMessageCall,
   handleSendReplyCall,
   handleUploadProgram,
   handleVoucherCall,
 } from './call.route';
+import {
+  ECodeChanged,
+  EProgramChanged,
+  EMessageQueuedEvent,
+  EMessagesDispatched,
+  EUserMessageRead,
+  EUserMessageSent,
+} from './types';
+import {
+  EBalanceTransfer,
+  EVoucherDeclined,
+  EVoucherIssued,
+  EVoucherRevoked,
+  EVoucherUpdated,
+} from './types/events/voucher';
 
-export interface IHandleEventProps {
+export interface IHandleEventProps<E = Event> {
   ctx: ProcessorContext<Store>;
-  event: Event;
+  event: E;
   common: {
     timestamp: Date;
     blockHash: string;
@@ -31,7 +61,7 @@ export interface IHandleEventProps {
   block: Block<Fields>;
 }
 
-const callHandlers: Array<{ pattern: (obj: any) => boolean; handler: (args: IHandleCallProps) => void }> = [
+const callHandlers = [
   { pattern: isUploadProgram, handler: handleUploadProgram },
   { pattern: isSendMessageCall, handler: handleSendMessageCall },
   { pattern: isVoucherCall, handler: handleVoucherCall },
@@ -39,7 +69,13 @@ const callHandlers: Array<{ pattern: (obj: any) => boolean; handler: (args: IHan
   { pattern: isSendReplyCall, handler: handleSendReplyCall },
 ];
 
-export async function handleMessageQueued({ ctx, block, event, common, tempState }: IHandleEventProps) {
+export async function handleMessageQueued({
+  ctx,
+  block,
+  event,
+  common,
+  tempState,
+}: IHandleEventProps<EMessageQueuedEvent>) {
   const call = event.call;
 
   const msg = new MessageToProgram({
@@ -62,7 +98,7 @@ export async function handleMessageQueued({ ctx, block, event, common, tempState
   tempState.addMsgToProgram(msg);
 }
 
-export async function handleUserMessageSent({ event, common, tempState }: IHandleEventProps) {
+export async function handleUserMessageSent({ event, common, tempState }: IHandleEventProps<EUserMessageSent>) {
   const msg = new MessageFromProgram({
     ...common,
     id: event.args.message.id,
@@ -89,7 +125,13 @@ const statuses = {
 };
 const PROGRAM_STATUSES = Object.keys(statuses);
 
-export async function handleProgramChanged({ ctx, event, common, tempState, block }: IHandleEventProps) {
+export async function handleProgramChanged({
+  ctx,
+  event,
+  common,
+  tempState,
+  block,
+}: IHandleEventProps<EProgramChanged>) {
   const {
     args: {
       change: { __kind: statusKind },
@@ -99,7 +141,7 @@ export async function handleProgramChanged({ ctx, event, common, tempState, bloc
   } = event;
   if (PROGRAM_STATUSES.includes(statusKind)) {
     if (statusKind === 'ProgramSet') {
-      if (!call && !(await tempState.isProgramIndexed(id))) {
+      if (call?.name.toLowerCase() === 'gear.run' && !(await tempState.isProgramIndexed(id))) {
         tempState.addProgram(
           new Program({
             ...common,
@@ -121,7 +163,7 @@ export async function handleProgramChanged({ ctx, event, common, tempState, bloc
   }
 }
 
-export async function handleCodeChanged({ event, common, tempState }: IHandleEventProps) {
+export async function handleCodeChanged({ event, common, tempState }: IHandleEventProps<ECodeChanged>) {
   if (isUploadCode(event.call) || isUploadProgram(event.call) || isVoucherCall(event.call)) {
     const metahash = await getMetahash(event.call);
     tempState.addCode(
@@ -139,7 +181,7 @@ export async function handleCodeChanged({ event, common, tempState }: IHandleEve
   await tempState.setCodeStatus(event.args.id, status === 'Active' ? CodeStatus.Active : CodeStatus.Inactive);
 }
 
-export async function handleMessagesDispatched({ event, tempState }: IHandleEventProps) {
+export async function handleMessagesDispatched({ event, tempState }: IHandleEventProps<EMessagesDispatched>) {
   await Promise.all(event.args.statuses.map((s) => tempState.setDispatchedStatus(s[0], s[1].__kind)));
 }
 
@@ -149,7 +191,7 @@ const reasons = {
   MessageReplied: MessageReadReason.Replied,
 };
 
-export async function handleUserMessageRead({ ctx, event, tempState }: IHandleEventProps) {
+export async function handleUserMessageRead({ ctx, event, tempState }: IHandleEventProps<EUserMessageRead>) {
   const reason: MessageReadReason = reasons[event.args.reason.value.__kind];
 
   if (!reason) {
@@ -157,4 +199,102 @@ export async function handleUserMessageRead({ ctx, event, tempState }: IHandleEv
   }
 
   await tempState.setReadStatus(event.args.id, reason);
+}
+
+const VOUCHERS_FROM_SPEC_VERSION = 1100;
+
+export function handleIsVoucherIssued({ event, block, tempState, common }: IHandleEventProps<EVoucherIssued>) {
+  if (block.header.specVersion < VOUCHERS_FROM_SPEC_VERSION) return;
+
+  const { call } = event;
+
+  const balance = BigInt(call.args.balance);
+  const atBlock = BigInt(common.blockNumber);
+  const atTime = common.timestamp;
+
+  const voucher = new Voucher({
+    id: event.args.voucherId,
+    owner: event.args.owner,
+    spender: event.args.spender,
+    amount: balance,
+    balance: BigInt(0), // it will be set by transfer event
+    programs: call.args.programs,
+    codeUploading: call.args.codeUploading,
+    expiryAtBlock: atBlock + BigInt(call.args.duration),
+    expiryAt: new Date(atTime.getTime() + call.args.duration * 3000),
+    issuedAtBlock: atBlock,
+    issuedAt: atTime,
+    updatedAtBlock: atBlock,
+    updatedAt: atTime,
+  });
+
+  tempState.addVoucher(voucher);
+}
+
+export async function handleIsVoucherUpdated({
+  ctx,
+  event,
+  block,
+  tempState,
+  common,
+}: IHandleEventProps<EVoucherUpdated>) {
+  if (block.header.specVersion < VOUCHERS_FROM_SPEC_VERSION) return;
+
+  const { call } = event;
+
+  const atBlock = BigInt(common.blockNumber);
+  const atTime = common.timestamp;
+
+  const voucher = await tempState.getVoucher(event.args.voucherId);
+
+  if (!voucher) {
+    ctx.log.error(`handleIsVoucherUpdated :: Voucher ${event.args.voucherId} not found`);
+    return;
+  }
+
+  voucher.updatedAtBlock = atBlock;
+  voucher.updatedAt = atTime;
+
+  if (call.args.moveOwnership) {
+    voucher.owner = call.args.moveOwnership;
+  }
+
+  if (call.args.balanceTopUp) {
+    voucher.amount = BigInt(voucher.amount) + BigInt(call.args.balanceTopUp);
+  }
+
+  if (call.args.appendPrograms.__kind === 'Some') {
+    voucher.programs!.push(...call.args.appendPrograms.value);
+  }
+
+  if (call.args.codeUploading) {
+    voucher.codeUploading = call.args.codeUploading;
+  }
+
+  if (call.args.prolongDuration) {
+    voucher.expiryAtBlock = atBlock + BigInt(call.args.prolongDuration);
+    voucher.expiryAt = new Date(atTime.getTime() + call.args.prolongDuration * 3000);
+  }
+}
+
+export async function handleIsVoucherDeclined({ event, block, tempState }: IHandleEventProps<EVoucherDeclined>) {
+  if (block.header.specVersion < VOUCHERS_FROM_SPEC_VERSION) return;
+
+  tempState.setVoucherDeclined(event.args.voucherId);
+}
+
+export function handleIsVoucherRevoked({ event, block, tempState }: IHandleEventProps<EVoucherRevoked>) {
+  if (block.header.specVersion < VOUCHERS_FROM_SPEC_VERSION) return;
+
+  tempState.setVoucherRevoked(event.args.voucherId);
+}
+
+export function handleBalanceTransfer({ event, block, tempState }: IHandleEventProps<EBalanceTransfer>) {
+  if (block.header.specVersion < VOUCHERS_FROM_SPEC_VERSION) return;
+
+  const fromBalance = tempState.getTransfer(event.args.from);
+  const toBalance = tempState.getTransfer(event.args.to);
+
+  tempState.setTransfer(event.args.from, fromBalance - BigInt(event.args.amount));
+  tempState.setTransfer(event.args.to, toBalance + BigInt(event.args.amount));
 }

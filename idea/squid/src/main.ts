@@ -9,26 +9,40 @@ import {
   isProgramChanged,
   isUserMessageRead,
   isUserMessageSent,
+  isVoucherIssued,
+  isVoucherUpdated,
+  isVoucherDeclined,
+  isVoucherRevoked,
+  isBalanceTransfer,
 } from './types';
 import {
   handleCodeChanged,
+  handleBalanceTransfer,
+  handleIsVoucherDeclined,
+  handleIsVoucherIssued,
+  handleIsVoucherRevoked,
+  handleIsVoucherUpdated,
   handleMessageQueued,
   handleMessagesDispatched,
   handleProgramChanged,
   handleUserMessageRead,
   handleUserMessageSent,
-  IHandleEventProps,
 } from './event.route';
 
 let tempState: TempState;
 
-const callHandlers: Array<{ pattern: (obj: any) => boolean; handler: (args: IHandleEventProps) => Promise<void> }> = [
+const callHandlers = [
   { pattern: isMessageQueued, handler: handleMessageQueued },
   { pattern: isUserMessageSent, handler: handleUserMessageSent },
   { pattern: isProgramChanged, handler: handleProgramChanged },
   { pattern: isCodeChanged, handler: handleCodeChanged },
   { pattern: isMessagesDispatched, handler: handleMessagesDispatched },
   { pattern: isUserMessageRead, handler: handleUserMessageRead },
+  { pattern: isVoucherIssued, handler: handleIsVoucherIssued },
+  { pattern: isVoucherUpdated, handler: handleIsVoucherUpdated },
+  { pattern: isVoucherDeclined, handler: handleIsVoucherDeclined },
+  { pattern: isVoucherRevoked, handler: handleIsVoucherRevoked },
+  { pattern: isBalanceTransfer, handler: handleBalanceTransfer },
 ];
 
 const handler = async (ctx: ProcessorContext<Store>) => {
@@ -42,13 +56,11 @@ const handler = async (ctx: ProcessorContext<Store>) => {
     };
 
     for (const event of block.events) {
-      const { handler } = callHandlers.find(({ pattern }) => pattern(event));
+      const { handler } = callHandlers.find(({ pattern }) => pattern(event)) || {};
 
-      if (!handler) {
-        continue;
+      if (handler) {
+        await handler({ block, common, ctx, event, tempState });
       }
-
-      await handler({ block, common, ctx, event, tempState });
     }
   }
 
