@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Balance } from '../balance';
 import { WalletModal } from '../wallet-modal';
 import { UI_CONFIG } from '../ui-config';
-import styles from './wallet.module.css';
+import styles from './wallet.module.scss';
 
 type Props = {
   variant?: 'gear' | 'vara';

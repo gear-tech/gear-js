@@ -3,7 +3,7 @@ import * as Vara from '@gear-js/vara-ui';
 import Identicon from '@polkadot/react-identicon';
 import cx from 'clsx';
 
-import styles from './account-button.module.css';
+import styles from './account-button.module.scss';
 
 type Props<T extends Vara.ButtonProps | Gear.ButtonProps> = {
   name: string | undefined;

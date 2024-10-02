@@ -6,7 +6,7 @@ import { createRoot } from 'react-dom/client';
 import { Wallet } from '../components';
 
 import '@gear-js/vara-ui/dist/style.css';
-import './index.css';
+import './index.scss';
 
 // eslint-disable-next-line react-refresh/only-export-components
 function App() {

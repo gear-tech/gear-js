@@ -3,7 +3,7 @@ import * as Gear from '@gear-js/ui';
 import cx from 'clsx';
 import { FunctionComponent, ReactNode, SVGProps } from 'react';
 
-import styles from './wallet-button.module.css';
+import styles from './wallet-button.module.scss';
 
 type Props = {
   children: ReactNode;
