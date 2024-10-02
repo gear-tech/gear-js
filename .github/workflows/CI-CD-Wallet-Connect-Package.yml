@@ -37,6 +37,7 @@ jobs:
         run: yarn run build
 
   publish-to-npm:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
