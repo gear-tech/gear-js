@@ -56,7 +56,6 @@ jobs:
           static-checking: localIsNew
 
       - name: '@gear-js/wallet-connect: Publish'
-        if: steps.check_gear.outputs.changed == 'true'
         working-directory: utils/wallet-connect
         run: |
           export token=$(printenv $(printenv GITHUB_ACTOR))
