@@ -23,7 +23,7 @@ function App() {
 
       <div>
         <h1>Gear</h1>
-        <Wallet variant="gear" />
+        <Wallet theme="gear" />
       </div>
     </main>
   );
