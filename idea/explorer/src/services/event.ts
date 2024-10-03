@@ -24,11 +24,15 @@ export class EventService {
   }
 
   @Pagination()
-  async getEvents({ source, service, name, limit, offset }: ParamGetEvents): Promise<ResManyResult<Event>> {
+  async getEvents({ source, parentId, service, name, limit, offset }: ParamGetEvents): Promise<ResManyResult<Event>> {
     const builder = this._repo.createQueryBuilder('event');
 
     if (source) {
       builder.andWhere('event.source = :source', { source });
+    }
+
+    if (parentId) {
+      builder.andWhere('event.parent_id = :parentId', { parentId });
     }
 
     if (service) {

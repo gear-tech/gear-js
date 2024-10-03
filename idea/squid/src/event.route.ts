@@ -31,7 +31,10 @@ export interface IHandleEventProps {
   block: Block<Fields>;
 }
 
-const callHandlers: Array<{ pattern: (obj: any) => boolean; handler: (args: IHandleCallProps) => void }> = [
+const callHandlers: Array<{
+  pattern: (obj: any) => boolean;
+  handler: (args: IHandleCallProps) => void;
+}> = [
   { pattern: isUploadProgram, handler: handleUploadProgram },
   { pattern: isSendMessageCall, handler: handleSendMessageCall },
   { pattern: isVoucherCall, handler: handleVoucherCall },
@@ -72,8 +75,11 @@ export async function handleUserMessageSent({ event, common, tempState }: IHandl
     value: event.args.message.value,
     replyToMessageId: event.args.message.details?.to || null,
     expiration: event.args.expirtaion || null,
-    exitCode: event.args.message.details?.code?.__kind === 'Success' ? 0 : 1,
+    exitCode: !event.args.message.details?.code ? null : event.args.message.details.code.__kind === 'Success' ? 0 : 1,
   });
+
+  msg.parentId = msg.replyToMessageId ? msg.replyToMessageId : await tempState.getMessageId(msg.id);
+
   if (event.args.message.destination === ZERO_ADDRESS) {
     tempState.addEvent(msg);
   } else {
@@ -140,7 +146,12 @@ export async function handleCodeChanged({ event, common, tempState }: IHandleEve
 }
 
 export async function handleMessagesDispatched({ event, tempState }: IHandleEventProps) {
-  await Promise.all(event.args.statuses.map((s) => tempState.setDispatchedStatus(s[0], s[1].__kind)));
+  await Promise.all(
+    event.args.statuses.map((s) => {
+      tempState.removeParentMsgId(s[0]);
+      return tempState.setDispatchedStatus(s[0], s[1].__kind);
+    }),
+  );
 }
 
 const reasons = {

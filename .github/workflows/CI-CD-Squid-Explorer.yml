@@ -54,7 +54,7 @@ jobs:
         with:
           file: idea/explorer/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-explorer:${{ env.tag }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-explorer-latest:${{ env.tag }}
 
   build-squid-image:
     runs-on: ubuntu-latest
@@ -87,7 +87,7 @@ jobs:
         with:
           file: idea/squid/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-squid:${{ env.tag }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-squid-latest:${{ env.tag }}
 
   deploy-to-k8s:
     needs:
@@ -108,10 +108,10 @@ jobs:
         run: |
           if [ "${{ github.ref }}" == "refs/heads/idea-release" ]; then
             echo "namespace=prod-idea" >> $GITHUB_ENV
-            echo "deployments=explorer squid-testnet squid-mainnet" >> $GITHUB_ENV
+            echo "deployments=explorer-latest squid-testnet-latest squid-mainnet-latest" >> $GITHUB_ENV
           else
             echo "namespace=dev-1" >> $GITHUB_ENV
-            echo "deployments=explorer squid-testnet" >> $GITHUB_ENV
+            echo "deployments=explorer-latest squid-testnet-latest" >> $GITHUB_ENV
           fi
 
       - name: Deploy to k8s

@@ -19,10 +19,13 @@ import {
   handleUserMessageSent,
   IHandleEventProps,
 } from './event.route';
+import { createClient, RedisClientType } from 'redis';
+import { config } from './config';
+import { GearApi } from '@gear-js/api';
 
 let tempState: TempState;
 
-const callHandlers: Array<{ pattern: (obj: any) => boolean; handler: (args: IHandleEventProps) => Promise<void> }> = [
+const eventHandlers: Array<{ pattern: (obj: any) => boolean; handler: (args: IHandleEventProps) => Promise<void> }> = [
   { pattern: isMessageQueued, handler: handleMessageQueued },
   { pattern: isUserMessageSent, handler: handleUserMessageSent },
   { pattern: isProgramChanged, handler: handleProgramChanged },
@@ -42,7 +45,7 @@ const handler = async (ctx: ProcessorContext<Store>) => {
     };
 
     for (const event of block.events) {
-      const { handler } = callHandlers.find(({ pattern }) => pattern(event));
+      const { handler } = eventHandlers.find(({ pattern }) => pattern(event));
 
       if (!handler) {
         continue;
@@ -55,12 +58,27 @@ const handler = async (ctx: ProcessorContext<Store>) => {
   await tempState.save();
 };
 
-const main = async () => {
-  tempState = new TempState();
+interface RedisClient extends RedisClientType<any, any, any> {}
+
+const main = async (api: GearApi) => {
+  const redisClient: RedisClient = createClient({
+    username: config.redis.user,
+    password: config.redis.password,
+    socket: {
+      host: config.redis.host,
+      port: config.redis.port,
+    },
+  });
+  await redisClient.connect();
+
+  tempState = new TempState(redisClient, api.genesisHash.toHex());
+  api.disconnect();
   processor.run(new TypeormDatabase({ supportHotBlocks: true }), handler);
 };
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+GearApi.create({ providerAddress: config.squid.rpc })
+  .then(main)
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
