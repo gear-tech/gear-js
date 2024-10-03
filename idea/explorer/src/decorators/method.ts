@@ -1,13 +1,22 @@
-import { GenesisNotFound, MethodNotFound, NetworkNotSupported } from '../errors';
+import { Router } from 'express';
+import { GenesisNotFound, MethodNotFound, NetworkNotSupported, VoucherNotFound } from '../errors';
 import { JsonRpcRequest, JsonRpcResponse } from '../types';
 
 type Constructor<T = any> = new (...args: any[]) => T;
+type AllowedMethods = 'get' | 'post';
 
 const rpcMethods: Record<string, (...args: any[]) => Promise<void>> = {};
+const restHandlers = new Array<{ method: AllowedMethods; path: string; handler: (...args: any[]) => Promise<any> }>();
 
 export function JsonRpcMethod(name: string) {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     rpcMethods[name] = descriptor.value;
+  };
+}
+
+export function RestHandler(method: AllowedMethods, path: string) {
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    restHandlers.push({ method, path, handler: descriptor.value });
   };
 }
 
@@ -75,6 +84,39 @@ export function JsonRpc<TBase extends Constructor<JsonRpcBase>>(Base: TBase) {
           },
         };
       }
+    }
+
+    createRestRouter(): Router {
+      const router = Router();
+
+      for (const { method, path, handler } of restHandlers) {
+        router[method](path, async (req, res) => {
+          const { genesis } = req.query;
+          if (!genesis) {
+            res.status(400).json({ error: 'Genesis not found in the request' });
+            return;
+          }
+
+          if (!this.__genesises.has(genesis.toString())) {
+            res.status(400).json({ error: 'Network is not supported' });
+            return;
+          }
+
+          try {
+            const result = await handler.apply(this, [{ ...req.body, ...req.params, genesis: genesis.toString() }]);
+            res.json(result);
+          } catch (err) {
+            if (err instanceof VoucherNotFound) {
+              res.json(null);
+              return;
+            }
+            console.log(err.message);
+            res.status(500).json({ error: 'Internal server error' });
+          }
+        });
+      }
+
+      return router;
     }
   };
 }

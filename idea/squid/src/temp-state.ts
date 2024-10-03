@@ -52,7 +52,7 @@ export class TempState {
   private messagesToProgram: Map<string, MessageToProgram>;
   private events: Map<string, Event>;
   private vouchers: Map<string, Voucher>;
-  private revoked: Set<string>;
+  private revokedVouchers: Set<string>;
   private transfers: Map<string, bigint>;
   private _ctx: ProcessorContext<Store>;
   private _metadata: Metadata;
@@ -68,7 +68,7 @@ export class TempState {
     this.events = new Map();
     this.newPrograms = new Set();
     this.vouchers = new Map();
-    this.revoked = new Set();
+    this.revokedVouchers = new Set();
     this.transfers = new Map();
   }
 
@@ -81,7 +81,7 @@ export class TempState {
     this.events.clear();
     this.newPrograms.clear();
     this.vouchers.clear();
-    this.revoked.clear();
+    this.revokedVouchers.clear();
     this.transfers.clear();
   }
 
@@ -260,7 +260,7 @@ export class TempState {
   }
 
   setVoucherRevoked(id: string) {
-    this.revoked.add(id);
+    this.revokedVouchers.add(id);
   }
 
   setTransfer(id: string, amount: bigint) {
@@ -315,9 +315,9 @@ export class TempState {
           this.vouchers.get(id)!.balance += this.transfers.get(id)!;
           this.transfers.delete(id);
         }
-        if (this.revoked.has(id)) {
+        if (this.revokedVouchers.has(id)) {
           this.vouchers.delete(id);
-          this.revoked.delete(id);
+          this.revokedVouchers.delete(id);
         }
       }
 
@@ -327,8 +327,8 @@ export class TempState {
       await this._ctx.store.save(vouchers);
     }
 
-    if (this.revoked.size > 0) {
-      const revoked = Array.from(this.revoked);
+    if (this.revokedVouchers.size > 0) {
+      const revoked = Array.from(this.revokedVouchers);
       await this._ctx.store.remove(Voucher, revoked);
     }
 

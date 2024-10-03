@@ -1,5 +1,5 @@
 import express, { Express } from 'express';
-import { JsonRpc, JsonRpcBase, JsonRpcMethod } from './decorators/method';
+import { JsonRpc, JsonRpcBase, JsonRpcMethod, RestHandler } from './decorators/method';
 import { AllInOneService } from './services/all-in-one';
 import {
   ParamGetCode,
@@ -34,51 +34,7 @@ export class JsonRpcServer extends JsonRpc(JsonRpcBase) {
       res.json(result);
     });
 
-    this._app.get('/api/voucher/:id', async (req, res) => {
-      const { genesis } = req.query;
-      if (!genesis) {
-        res.status(400).json({ error: 'Genesis not found in the request' });
-        return;
-      }
-
-      const voucherService = this._services.get(genesis.toString())?.voucher;
-      if (!voucherService) {
-        res.status(400).json({ error: 'Network is not supported' });
-        return;
-      }
-
-      try {
-        const voucher = await voucherService.getVoucher({ id: req.params.id, genesis: genesis.toString() });
-        res.json(voucher);
-      } catch (error) {
-        if (error instanceof VoucherNotFound) {
-          res.json(null);
-          return;
-        }
-        res.status(500).json({ error: 'Internal server error' });
-      }
-    });
-
-    this._app.post('/api/vouchers', async (req, res) => {
-      const { genesis } = req.query;
-      if (!genesis) {
-        res.status(400).json({ error: 'Genesis not found in the request' });
-        return;
-      }
-
-      const voucherService = this._services.get(genesis.toString())?.voucher;
-      if (!voucherService) {
-        res.status(400).json({ error: 'Network is not supported' });
-        return;
-      }
-
-      try {
-        const vouchers = await voucherService.getVouchers(req.body);
-        res.json(vouchers);
-      } catch (error) {
-        res.status(500).json({ error: 'Internal server error' });
-      }
-    });
+    this._app.use(this.createRestRouter());
   }
 
   public async run() {
@@ -161,13 +117,15 @@ export class JsonRpcServer extends JsonRpc(JsonRpcBase) {
   }
 
   @JsonRpcMethod('voucher.all')
-  @Cache(15)
+  @RestHandler('post', '/api/vouchers')
+  @Cache(60)
   async voucherAll(params: ParamGetVouchers) {
     return this._services.get(params.genesis).voucher.getVouchers(params);
   }
 
   @JsonRpcMethod('voucher.data')
-  @Cache(15)
+  @RestHandler('get', '/api/voucher/:id')
+  @Cache(300)
   async voucherData(params: ParamGetVoucher) {
     return this._services.get(params.genesis).voucher.getVoucher(params);
   }

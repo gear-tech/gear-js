@@ -203,7 +203,7 @@ export async function handleUserMessageRead({ ctx, event, tempState }: IHandleEv
 
 const VOUCHERS_FROM_SPEC_VERSION = 1100;
 
-export function handleIsVoucherIssued({ event, block, tempState, common }: IHandleEventProps<EVoucherIssued>) {
+export function handleVoucherIssued({ event, block, tempState, common }: IHandleEventProps<EVoucherIssued>) {
   if (block.header.specVersion < VOUCHERS_FROM_SPEC_VERSION) return;
 
   const { call } = event;
@@ -231,7 +231,7 @@ export function handleIsVoucherIssued({ event, block, tempState, common }: IHand
   tempState.addVoucher(voucher);
 }
 
-export async function handleIsVoucherUpdated({
+export async function handleVoucherUpdated({
   ctx,
   event,
   block,
@@ -277,13 +277,13 @@ export async function handleIsVoucherUpdated({
   }
 }
 
-export async function handleIsVoucherDeclined({ event, block, tempState }: IHandleEventProps<EVoucherDeclined>) {
+export async function handleVoucherDeclined({ event, block, tempState }: IHandleEventProps<EVoucherDeclined>) {
   if (block.header.specVersion < VOUCHERS_FROM_SPEC_VERSION) return;
 
   tempState.setVoucherDeclined(event.args.voucherId);
 }
 
-export function handleIsVoucherRevoked({ event, block, tempState }: IHandleEventProps<EVoucherRevoked>) {
+export function handleVoucherRevoked({ event, block, tempState }: IHandleEventProps<EVoucherRevoked>) {
   if (block.header.specVersion < VOUCHERS_FROM_SPEC_VERSION) return;
 
   tempState.setVoucherRevoked(event.args.voucherId);
