@@ -12,34 +12,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  wallet-connect-test:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cancel previous workflow runs
-        uses: styfle/cancel-workflow-action@0.4.0
-        with:
-          access_token: ${{ github.token }}
-
-      - uses: actions/checkout@v2
-
-      - name: Install NodeJS 18.x
-        uses: actions/setup-node@v2.1.5
-        with:
-          node-version: 18.x
-
-      - name: 'gear-js-wallet: Install dependencies'
-        working-directory: utils/wallet-connect
-        run: yarn install
-
-      - name: 'gear-js-wallet: Build pkg'
-        working-directory: utils/wallet-connect
-        run: yarn build
-
-      - name: 'gear-js-wallet: Run tests'
-        working-directory: utils/wallet-connect
-        run: yarn test
-
   wallet-connect-build:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
@@ -56,13 +28,13 @@ jobs:
         with:
           node-version: 18.x
 
-      - name: 'vara-ui: Install dependencies'
+      - name: 'wallet-connect: Install dependencies'
         working-directory: utils/wallet-connect
-        run: npm install
+        run: yarn install
 
-      - name: 'vara-ui: Build pkg'
+      - name: 'vwallet-connect: Build pkg'
         working-directory: utils/wallet-connect
-        run: npm run build
+        run: yarn run build
 
   publish-to-npm:
     if: github.event_name == 'push'
@@ -81,15 +53,14 @@ jobs:
         id: check_gear
         with:
           file-name: utils/wallet-connect/package.json
-          file-url: https://unpkg.com/@gear-js/ui@latest/package.json
+          file-url: https://unpkg.com/@gear-js/wallet-connect@latest/package.json
           static-checking: localIsNew
 
       - name: '@gear-js/wallet-connect: Publish'
-        if: steps.check_gear.outputs.changed == 'true'
         working-directory: utils/wallet-connect
         run: |
           export token=$(printenv $(printenv GITHUB_ACTOR))
-          npm install
+          yarn install
           npm run build
           npm config set //registry.npmjs.org/:_authToken=$token --no-workspaces
           npm publish

@@ -10,9 +10,10 @@
     "build:api-gateway": "yarn workspace @gear-js/api-gateway build",
     "build:indexer": "yarn workspace @gear-js/indexer build",
     "build:meta-storage": "yarn workspace @gear-js/meta-storage build",
-    "build:frontend": "yarn build:hooks && yarn build:ui && yarn workspace @gear-js/frontend build",
+    "build:frontend": "yarn build:hooks && yarn build:ui && yarn build:wallet-connect && yarn workspace @gear-js/frontend build",
     "build:hooks": "yarn workspace @gear-js/react-hooks build",
     "build:ui": "yarn workspace @gear-js/ui build",
+    "build:wallet-connect": "yarn workspace @gear-js/wallet-connect build",
     "build:test-balance": "yarn workspace @gear-js/test-balance build",
     "build:faucet": "yarn workspace @gear-js/faucet build",
     "build:voucher-indexer": "yarn workspace @gear-js/voucher-indexer build",
@@ -31,7 +32,8 @@
   "workspaces": [
     "idea/*",
     "utils/gear-hooks",
-    "utils/gear-ui"
+    "utils/gear-ui",
+    "utils/wallet-connect"
   ],
   "packageManager": "yarn@3.3.0",
   "version": "1.2.0"
