@@ -7,14 +7,14 @@ import { UI_CONFIG } from '../ui-config';
 import styles from './wallet.module.scss';
 
 type Props = {
-  variant?: 'gear' | 'vara';
+  theme?: 'gear' | 'vara';
   displayBalance?: boolean;
 
   // temp solution to support responsiveness in dApps MenuHandler, until it's supported here
   accountButtonClassName?: string;
 };
 
-function Wallet({ variant = 'vara', displayBalance = true, accountButtonClassName }: Props) {
+function Wallet({ theme = 'vara', displayBalance = true, accountButtonClassName }: Props) {
   const { account, isAccountReady } = useAccount();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,12 +22,12 @@ function Wallet({ variant = 'vara', displayBalance = true, accountButtonClassNam
   const closeModal = () => setIsModalOpen(false);
 
   if (!isAccountReady) return null;
-  const { Button, AccountButton } = UI_CONFIG[variant];
+  const { Button, AccountButton } = UI_CONFIG[theme];
 
   return (
     <>
       <div className={styles.wallet}>
-        {displayBalance && <Balance variant={variant} />}
+        {displayBalance && <Balance theme={theme} />}
 
         {account ? (
           <div className={accountButtonClassName}>
@@ -38,7 +38,7 @@ function Wallet({ variant = 'vara', displayBalance = true, accountButtonClassNam
         )}
       </div>
 
-      {isModalOpen && <WalletModal variant={variant} close={closeModal} />}
+      {isModalOpen && <WalletModal theme={theme} close={closeModal} />}
     </>
   );
 }

@@ -5,10 +5,10 @@ import { ReactComponent as VaraSVG } from '../../assets/vara.svg';
 import styles from './balance.module.scss';
 
 type Props = {
-  variant: 'gear' | 'vara';
+  theme: 'gear' | 'vara';
 };
 
-function Balance({ variant }: Props) {
+function Balance({ theme }: Props) {
   const { isApiReady } = useApi();
   const { account } = useAccount();
   const { getFormattedBalance } = useBalanceFormat();
@@ -22,7 +22,7 @@ function Balance({ variant }: Props) {
     <div className={styles.balance}>
       <VaraSVG />
 
-      <p className={cx(styles.text, styles[variant])}>
+      <p className={cx(styles.text, styles[theme])}>
         <span className={styles.value}>{balance.value}</span>
         <span className={styles.unit}>{balance.unit}</span>
       </p>

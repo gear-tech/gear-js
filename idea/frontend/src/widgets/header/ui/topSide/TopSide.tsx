@@ -38,7 +38,7 @@ const TopSide = () => {
         <BalanceDropdown />
 
         <OnboardingTooltip index={0}>
-          <Wallet variant="gear" displayBalance={false} />
+          <Wallet theme="gear" displayBalance={false} />
         </OnboardingTooltip>
       </div>
     </div>
