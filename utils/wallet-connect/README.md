@@ -52,9 +52,7 @@ export { Header };
 
 ## Vara UI Theme
 
-Wallet is available in two theme variations - `vara` and `gear`.
-
-Be aware that in order for `vara` theme to work as expected, `@gear-js/vara-ui` should be installed with configured global styles:
+Be aware that in order for `vara` theme to work as expected, `@gear-js/vara-ui` package should be installed with configured global styles:
 
 ```jsx
 import { Wallet } from '@gear-js/wallet-connect';
@@ -67,7 +65,9 @@ function VaraWallet() {
 export { VaraWallet };
 ```
 
-In order for `gear` theme to work as expected, `@gear-js/ui` should be installed with configured global `index.scss`:
+## Gear UI Theme
+
+In order for `gear` theme to work as expected, `@gear-js/ui` package should be installed with configured global `index.scss`:
 
 ```scss
 @use '@gear-js/ui/resets';
