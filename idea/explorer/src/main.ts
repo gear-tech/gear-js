@@ -2,7 +2,7 @@ import { createDbConnection, DbConfig } from 'indexer-db';
 import { readFileSync } from 'fs';
 import { AllInOneService } from './services/all-in-one';
 import { config } from './config';
-import { JsonRpcServer } from './jsonrpc';
+import { HybridApiServer } from './server';
 import { retryMethodsJob } from './middlewares/retry';
 
 const main = async () => {
@@ -15,7 +15,7 @@ const main = async () => {
     services.set(genesis, new AllInOneService(dataSource));
   }
 
-  const server = new JsonRpcServer(services);
+  const server = new HybridApiServer(services);
 
   await server.run();
 

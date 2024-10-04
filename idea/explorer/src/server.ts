@@ -1,5 +1,5 @@
 import express, { Express } from 'express';
-import { JsonRpc, JsonRpcBase, JsonRpcMethod, RestHandler } from './decorators/method';
+import { HybridApi, HybridApiBase, JsonRpcMethod, RestHandler } from './decorators/method';
 import { AllInOneService } from './services/all-in-one';
 import {
   ParamGetCode,
@@ -19,9 +19,8 @@ import {
 import { Cache } from './middlewares/caching';
 import { redisConnect } from './middlewares/redis';
 import { Retry } from './middlewares/retry';
-import { VoucherNotFound } from './errors';
 
-export class JsonRpcServer extends JsonRpc(JsonRpcBase) {
+export class HybridApiServer extends HybridApi(HybridApiBase) {
   private _app: Express;
 
   constructor(private _services: Map<string, AllInOneService>) {
