@@ -1,0 +1,66 @@
+{
+  "name": "@gear-js/wallet-connect",
+  "version": "0.1.1",
+  "type": "module",
+  "description": "React library to connect Substrate based wallets to Gear dApps",
+  "author": "Gear Technologies",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/gear-tech/gear-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gear-tech/gear-js.git"
+  },
+  "keywords": [
+    "gear",
+    "gear-js"
+  ],
+  "homepage": "https://github.com/gear-tech/gear-js/tree/main/utils/wallet-connect#readme",
+  "scripts": {
+    "start": "vite --open --port 3000",
+    "build": "vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "peerDependencies": {
+    "@gear-js/react-hooks": "^0.13.0",
+    "@gear-js/ui": "^0.5.28",
+    "@gear-js/vara-ui": "^0.0.11"
+  },
+  "peerDependenciesMeta": {
+    "@gear-js/ui": {
+      "optional": true
+    },
+    "@gear-js/vara-ui": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@gear-js/react-hooks": "0.13.0",
+    "@gear-js/ui": "0.5.28",
+    "@gear-js/vara-ui": "0.0.11",
+    "@polkadot/react-identicon": "3.10.1",
+    "@tanstack/react-query": "5.56.2",
+    "@types/react": "18.3.2",
+    "@types/react-dom": "18.3.0",
+    "@typescript-eslint/eslint-plugin": "6.0.0",
+    "@typescript-eslint/parser": "6.0.0",
+    "@vitejs/plugin-react": "4.3.0",
+    "clsx": "2.1.1",
+    "eslint": "8.57.0",
+    "eslint-plugin-react-hooks": "4.6.2",
+    "eslint-plugin-react-refresh": "0.4.7",
+    "sass": "1.77.2",
+    "typescript": "5.0.2",
+    "vite": "4.4.5",
+    "vite-plugin-dts": "3.5.1",
+    "vite-plugin-node-polyfills": "0.22.0",
+    "vite-plugin-svgr": "3.2.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "dist/wallet-connect.js",
+  "types": "dist/index.d.ts"
+}

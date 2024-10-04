@@ -19,6 +19,8 @@ import {
 import { Block, ProcessorContext } from './processor';
 import { MessageStatus } from './common';
 import { In } from 'typeorm';
+import { RedisClientType } from '@redis/client';
+import { findChildMessageId } from './util';
 
 const gearProgramModule = xxhashAsHex('GearProgram', 128);
 const programStorageMethod = xxhashAsHex('ProgramStorage', 128);
@@ -54,13 +56,18 @@ export class TempState {
   private vouchers: Map<string, Voucher>;
   private revokedVouchers: Set<string>;
   private transfers: Map<string, bigint>;
+  private cachedMessages: { [key: string]: number };
+  private genesisHash: string;
   private _ctx: ProcessorContext<Store>;
   private _metadata: Metadata;
   private _registry: TypeRegistry;
   private _specVersion: number;
   private _programStorageTy: string;
+  private _redis: RedisClientType;
 
-  constructor() {
+  constructor(redisClient: RedisClientType, genesisHash: string) {
+    this._redis = redisClient;
+    this.genesisHash = genesisHash;
     this.programs = new Map();
     this.codes = new Map();
     this.messagesFromProgram = new Map();
@@ -70,9 +77,10 @@ export class TempState {
     this.vouchers = new Map();
     this.revokedVouchers = new Set();
     this.transfers = new Map();
+    this.cachedMessages = {};
   }
 
-  newState(ctx: ProcessorContext<Store>) {
+  async newState(ctx: ProcessorContext<Store>) {
     this._ctx = ctx;
     this.programs.clear();
     this.codes.clear();
@@ -83,6 +91,14 @@ export class TempState {
     this.vouchers.clear();
     this.revokedVouchers.clear();
     this.transfers.clear();
+
+    this._redis.on('error', (error) => this._ctx.log.error(error));
+
+    const temp = Object.entries(await this._redis.hGetAll(this.genesisHash));
+    this.cachedMessages = {};
+    temp.forEach(([key, value]) => {
+      this.cachedMessages[key] = Number(value);
+    });
   }
 
   addProgram(program: Program) {
@@ -99,6 +115,8 @@ export class TempState {
 
     msg.service = service;
     msg.fn = name;
+
+    this.saveParentMsgId(msg.id);
 
     this.messagesToProgram.set(msg.id, msg);
   }
@@ -125,6 +143,7 @@ export class TempState {
           blockHash: msg.blockHash,
           blockNumber: msg.blockNumber,
           id: msg.id,
+          parentId: msg.parentId,
           source: msg.source,
           payload: msg.payload,
           service,
@@ -393,10 +412,36 @@ export class TempState {
           'Data saved',
         );
       }
+
+      await this._redis.del(this.genesisHash);
+      if (Object.keys(this.cachedMessages).length > 0) {
+        await this._redis.hSet(this.genesisHash, this.cachedMessages);
+      }
     } catch (error) {
       this._ctx.log.error({ error: error.message, stack: error.stack }, 'Failed to save data');
       throw error;
     }
+  }
+
+  saveParentMsgId(parentId: string, nonce: number = 0) {
+    this.cachedMessages[parentId] = nonce;
+    return parentId;
+  }
+
+  removeParentMsgId(parentId: string) {
+    delete this.cachedMessages[parentId];
+  }
+
+  async getMessageId(childId: string) {
+    const finder = Object.entries(this.cachedMessages).map(([parentId, nonce]) => {
+      return findChildMessageId(parentId, childId, Number(nonce));
+    });
+
+    return Promise.any(finder)
+      .then(({ parentId, nonce }) => {
+        return this.saveParentMsgId(parentId, nonce);
+      })
+      .catch<null>(() => null);
   }
 }
 

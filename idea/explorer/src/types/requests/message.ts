@@ -23,6 +23,7 @@ export class ParamGetMsgsToProgram extends ParamPagination {
 export class ParamGetMsgsFromProgram extends ParamPagination {
   readonly destination?: string;
   readonly source?: string;
+  readonly parentId?: string;
   readonly isInMailbox?: boolean;
   readonly service?: string;
   readonly fn?: string;

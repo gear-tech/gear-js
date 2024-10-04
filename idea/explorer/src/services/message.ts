@@ -89,6 +89,7 @@ export class MessageService {
   async getMsgsFrom({
     source,
     destination,
+    parentId,
     isInMailbox,
     limit,
     offset,
@@ -103,6 +104,10 @@ export class MessageService {
 
     if (destination) {
       qb.andWhere('msg.destination = :destination', { destination });
+    }
+
+    if (parentId) {
+      qb.andWhere('msg.parent_id = :parentId', { parentId });
     }
 
     if (isInMailbox) {

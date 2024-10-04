@@ -1,0 +1,69 @@
+name: 'CI-CD @gear-js/wallet-connect'
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - utils/wallet-connect/**
+  push:
+    branches: [main]
+    paths:
+      - utils/wallet-connect/**
+  workflow_dispatch:
+
+jobs:
+  wallet-connect-build:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel previous workflow runs
+        uses: styfle/cancel-workflow-action@0.4.0
+        with:
+          access_token: ${{ github.token }}
+
+      - uses: actions/checkout@v2
+
+      - name: Install NodeJS 18.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 18.x
+
+      - name: 'wallet-connect: Install dependencies'
+        working-directory: utils/wallet-connect
+        run: yarn install
+
+      - name: 'vwallet-connect: Build pkg'
+        working-directory: utils/wallet-connect
+        run: yarn run build
+
+  publish-to-npm:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+
+      - name: Use node 18.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 18.x
+
+      - name: '@gear-js/wallet-connect: Check pkg version'
+        uses: EndBug/version-check@v1
+        id: check_gear
+        with:
+          file-name: utils/wallet-connect/package.json
+          file-url: https://unpkg.com/@gear-js/wallet-connect@latest/package.json
+          static-checking: localIsNew
+
+      - name: '@gear-js/wallet-connect: Publish'
+        working-directory: utils/wallet-connect
+        run: |
+          export token=$(printenv $(printenv GITHUB_ACTOR))
+          yarn install
+          npm run build
+          npm config set //registry.npmjs.org/:_authToken=$token --no-workspaces
+          npm publish
+        env:
+          osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
+          nikitayutanov: ${{ secrets.YUTANOV_NPM_TOKEN }}
