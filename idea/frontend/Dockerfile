@@ -11,6 +11,7 @@ COPY .yarn .yarn
 COPY ./idea/frontend ./idea/frontend
 COPY ./utils/gear-hooks ./utils/gear-hooks
 COPY ./utils/gear-ui ./utils/gear-ui
+COPY ./utils/wallet-connect ./utils/wallet-connect
 
 RUN yarn install --mode=skip-build
 
