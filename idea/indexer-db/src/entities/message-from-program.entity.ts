@@ -22,29 +22,29 @@ export class MessageFromProgram extends BaseEntity {
   public source: string;
 
   @Column({ nullable: true })
-  public payload: string;
+  public payload: string | null;
 
   @Column({ nullable: true, name: 'parent_id' })
-  public parentId: string;
+  public parentId: string | null;
 
   @Column({ default: '0' })
   public value: string;
 
   @Column({ nullable: true, name: 'exit_code' })
-  public exitCode?: number;
+  public exitCode?: number | null;
 
   @Column({ nullable: true, name: 'reply_to_msg_id' })
-  public replyToMessageId?: string;
+  public replyToMessageId?: string | null;
 
   @Column({ nullable: true })
-  public expiration?: number;
+  public expiration?: number | null;
 
   @Column({ type: 'text', nullable: true, default: null, name: 'read_reason' })
-  public readReason?: MessageReadReason;
+  public readReason?: MessageReadReason | null;
 
   @Column({ nullable: true })
-  public service?: string;
+  public service?: string | null;
 
   @Column({ nullable: true })
-  public fn?: string;
+  public fn?: string | null;
 }

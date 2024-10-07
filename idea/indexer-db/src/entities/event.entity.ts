@@ -18,14 +18,14 @@ export class Event extends BaseEntity {
   public source: string;
 
   @Column({ nullable: true })
-  public payload: string;
+  public payload: string | null;
 
   @Column({ nullable: true, name: 'parent_id' })
-  public parentId: string;
+  public parentId: string | null;
 
   @Column({ nullable: true })
-  public service?: string;
+  public service?: string | null;
 
   @Column({ nullable: true })
-  public name?: string;
+  public name?: string | null;
 }
