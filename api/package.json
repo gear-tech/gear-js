@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/api",
-  "version": "0.38.2",
+  "version": "0.38.3",
   "description": "A JavaScript library that provides functionality to connect GEAR Component APIs.",
   "main": "cjs/index.js",
   "module": "index.js",
@@ -48,7 +48,7 @@
   },
   "license": "GPL-3.0",
   "peerDependencies": {
-    "@polkadot/api": "12.0.1",
+    "@polkadot/api": "13.2.1",
     "@polkadot/wasm-crypto": "7.3.2",
     "rxjs": "7.8.1"
   },
@@ -56,10 +56,10 @@
     "@babel/plugin-transform-typescript": "7.25.2",
     "@babel/preset-env": "7.25.3",
     "@babel/preset-typescript": "7.24.7",
-    "@polkadot/api": "12.2.3",
-    "@polkadot/typegen": "12.2.3",
-    "@polkadot/types": "12.2.3",
-    "@polkadot/types-codec": "12.2.3",
+    "@polkadot/api": "13.2.1",
+    "@polkadot/typegen": "13.2.1",
+    "@polkadot/types": "13.2.1",
+    "@polkadot/types-codec": "13.2.1",
     "@polkadot/wasm-crypto": "7.3.2",
     "@rollup/plugin-commonjs": "26.0.1",
     "@rollup/plugin-json": "6.1.0",
