@@ -14,14 +14,14 @@ export class Program extends BaseEntity {
   public id: string;
 
   @Column({ nullable: true })
-  public owner?: string;
+  public owner?: string | null;
 
   @Column({ nullable: true })
   @Index()
-  public name: string;
+  public name: string | null;
 
   @Column({ nullable: true })
-  public expiration: string;
+  public expiration: string | null;
 
   @Column({ type: 'text', default: ProgramStatus.Unknown })
   public status: ProgramStatus;
@@ -30,9 +30,9 @@ export class Program extends BaseEntity {
   public codeId: string;
 
   @Column({ name: 'meta_type', nullable: true })
-  public metaType?: 'sails' | 'meta';
+  public metaType?: 'sails' | 'meta' | null;
 
   // TODO: remove later
   @Column({ nullable: true })
-  public metahash: string;
+  public metahash: string | null;
 }

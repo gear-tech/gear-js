@@ -76,7 +76,7 @@ export async function handleMessageQueued({
   common,
   tempState,
 }: IHandleEventProps<EMessageQueuedEvent>) {
-  const call = event.call;
+  const call = event.call!;
 
   const msg = new MessageToProgram({
     ...common,
@@ -86,7 +86,7 @@ export async function handleMessageQueued({
     entry: event.args.entry.__kind.toLowerCase() as MessageEntryPoint,
   });
 
-  const { handler } = callHandlers.find(({ pattern }) => pattern(call));
+  const { handler } = callHandlers.find(({ pattern }) => pattern(call)) || {};
 
   if (!handler) {
     console.log(call);
@@ -214,7 +214,7 @@ const VOUCHERS_FROM_SPEC_VERSION = 1100;
 export function handleVoucherIssued({ event, block, tempState, common }: IHandleEventProps<EVoucherIssued>) {
   if (block.header.specVersion < VOUCHERS_FROM_SPEC_VERSION) return;
 
-  const { call } = event;
+  const call = event.call!;
 
   const balance = BigInt(call.args.balance);
   const atBlock = BigInt(common.blockNumber);
@@ -248,7 +248,7 @@ export async function handleVoucherUpdated({
 }: IHandleEventProps<EVoucherUpdated>) {
   if (block.header.specVersion < VOUCHERS_FROM_SPEC_VERSION) return;
 
-  const { call } = event;
+  const call = event.call!;
 
   const atBlock = BigInt(common.blockNumber);
   const atTime = common.timestamp;

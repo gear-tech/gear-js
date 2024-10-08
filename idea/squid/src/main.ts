@@ -34,7 +34,7 @@ import { GearApi } from '@gear-js/api';
 
 let tempState: TempState;
 
-const callHandlers = [
+const eventHandlers = [
   { pattern: isMessageQueued, handler: handleMessageQueued },
   { pattern: isUserMessageSent, handler: handleUserMessageSent },
   { pattern: isProgramChanged, handler: handleProgramChanged },
@@ -53,13 +53,13 @@ const handler = async (ctx: ProcessorContext<Store>) => {
 
   for (const block of ctx.blocks) {
     const common = {
-      timestamp: new Date((block.header as any).timestamp),
+      timestamp: new Date(block.header.timestamp!),
       blockHash: block.header.hash,
       blockNumber: block.header.height.toString(),
     };
 
     for (const event of block.events) {
-      const { handler } = callHandlers.find(({ pattern }) => pattern(event)) || {};
+      const { handler } = eventHandlers.find(({ pattern }) => pattern(event)) || {};
 
       if (handler) {
         await handler({ block, common, ctx, event, tempState });

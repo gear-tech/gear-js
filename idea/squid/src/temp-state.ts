@@ -27,23 +27,27 @@ const programStorageMethod = xxhashAsHex('ProgramStorage', 128);
 
 const PROGRAM_STORAGE_PREFIX = gearProgramModule + programStorageMethod.slice(2);
 
-function getServiceAndFn(payload: string) {
-  let service: string = null;
-  let name: string = null;
+function getServiceAndFn(payload: string | null) {
+  if (payload === null) {
+    return [null, null];
+  }
+
+  let service: string | null = null;
+  let name: string | null = null;
   try {
     service = getServiceNamePrefix(payload as HexString) || null;
-    if (/[^\x20-\x7E]/.test(service)) {
+    if (service === null || /[^\x20-\x7E]/.test(service)) {
       return [null, null];
     }
     name = getFnNamePrefix(payload as HexString) || null;
-    if (/[^\x20-\x7E]/.test(name)) {
+    if (name === null || /[^\x20-\x7E]/.test(name)) {
       return [null, null];
     }
   } catch (_) {
     return [null, null];
   }
 
-  return service === null || name === null ? [null, null] : [service, name];
+  return [service, name];
 }
 
 export class TempState {
@@ -157,12 +161,12 @@ export class TempState {
     this.vouchers.set(voucher.id, voucher);
   }
 
-  async getProgram(id: string): Promise<Program> {
+  async getProgram(id: string): Promise<Program | null> {
     if (this.programs.has(id)) {
-      return this.programs.get(id);
+      return this.programs.get(id) ?? null;
     }
     try {
-      const program = await this._ctx.store.findOneBy(Program, { id });
+      const program = (await this._ctx.store.findOneBy(Program, { id }))!;
 
       this.programs.set(program.id, program);
       return program;
@@ -171,12 +175,12 @@ export class TempState {
     }
   }
 
-  async getCode(id: string): Promise<Code> {
+  async getCode(id: string): Promise<Code | null> {
     if (this.codes.has(id)) {
-      return this.codes.get(id);
+      return this.codes.get(id) ?? null;
     }
     try {
-      const code = await this._ctx.store.findOneBy(Code, { id });
+      const code = (await this._ctx.store.findOneBy(Code, { id }))!;
       this.codes.set(code.id, code);
       return code;
     } catch (err) {
@@ -184,12 +188,12 @@ export class TempState {
     }
   }
 
-  async getMsgToProgram(id: string): Promise<MessageToProgram> {
+  async getMsgToProgram(id: string): Promise<MessageToProgram | null> {
     if (this.messagesToProgram.has(id)) {
-      return this.messagesToProgram.get(id);
+      return this.messagesToProgram.get(id) ?? null;
     }
     try {
-      const msg = await this._ctx.store.findOneBy(MessageToProgram, { id });
+      const msg = (await this._ctx.store.findOneBy(MessageToProgram, { id }))!;
       this.messagesToProgram.set(msg.id, msg);
       return msg;
     } catch (err) {
@@ -197,12 +201,12 @@ export class TempState {
     }
   }
 
-  async getMsgFromProgram(id: string): Promise<MessageFromProgram> {
+  async getMsgFromProgram(id: string): Promise<MessageFromProgram | null> {
     if (this.messagesFromProgram.has(id)) {
-      return this.messagesFromProgram.get(id);
+      return this.messagesFromProgram.get(id) ?? null;
     }
     try {
-      const msg = await this._ctx.store.findOneBy(MessageFromProgram, { id });
+      const msg = (await this._ctx.store.findOneBy(MessageFromProgram, { id }))!;
       this.messagesFromProgram.set(msg.id, msg);
       return msg;
     } catch (err) {
@@ -210,12 +214,12 @@ export class TempState {
     }
   }
 
-  async getVoucher(id: string): Promise<Voucher> {
+  async getVoucher(id: string): Promise<Voucher | null> {
     if (this.vouchers.has(id)) {
-      return this.vouchers.get(id);
+      return this.vouchers.get(id) ?? null;
     }
     try {
-      const voucher = await this._ctx.store.findOneBy(Voucher, { id });
+      const voucher = (await this._ctx.store.findOneBy(Voucher, { id }))!;
       voucher.balance = BigInt(voucher.balance);
       this.vouchers.set(voucher.id, voucher);
       return voucher;
@@ -304,14 +308,14 @@ export class TempState {
       this._metadata = new Metadata(this._registry, metadata);
       this._specVersion = block.specVersion;
 
-      const gearProgramPallet = this._metadata.asLatest.pallets.find(({ name }) => name.toString() === 'GearProgram');
+      const gearProgramPallet = this._metadata.asLatest.pallets.find(({ name }) => name.toString() === 'GearProgram')!;
       const programStorage = gearProgramPallet.storage
         .unwrap()
-        .items.find(({ name }) => name.toString() === 'ProgramStorage');
+        .items.find(({ name }) => name.toString() === 'ProgramStorage')!;
 
       const tydef = this._metadata.asLatest.lookup.getTypeDef(programStorage.type.asMap.value);
 
-      this._programStorageTy = tydef.lookupName;
+      this._programStorageTy = tydef.lookupName!;
 
       const types = getAllNeccesaryTypes(this._metadata, programStorage.type.asMap.value);
 
@@ -377,7 +381,7 @@ export class TempState {
             if (p) {
               const code = await this.getCode(p.codeId);
               if (code) {
-                p.metahash = code.metahash;
+                p.metahash = code.metahash!;
                 p.metaType = code.metaType;
               }
             }
@@ -457,10 +461,10 @@ const getAllNeccesaryTypes = (metadata: Metadata, tyindex: SiLookupTypeId | numb
   if (tydef.sub) {
     if (Array.isArray(tydef.sub)) {
       for (const sub of tydef.sub) {
-        types = { ...types, ...getAllNeccesaryTypes(metadata, sub.lookupIndex) };
+        types = { ...types, ...getAllNeccesaryTypes(metadata, sub.lookupIndex!) };
       }
     } else {
-      types = getAllNeccesaryTypes(metadata, tydef.sub.lookupIndex);
+      types = getAllNeccesaryTypes(metadata, tydef.sub.lookupIndex!);
     }
   }
 
