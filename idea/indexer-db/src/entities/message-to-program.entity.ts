@@ -22,23 +22,23 @@ export class MessageToProgram extends BaseEntity {
   public source: string;
 
   @Column({ nullable: true })
-  public payload: string;
+  public payload: string | null;
 
   @Column({ default: '0' })
   public value: string;
 
   @Column({ nullable: true, name: 'reply_to_msg_id' })
-  public replyToMessageId?: string;
+  public replyToMessageId?: string | null;
 
   @Column({ nullable: true, name: 'processed_with_panic' })
-  public processedWithPanic?: boolean;
+  public processedWithPanic?: boolean | null;
 
   @Column({ type: 'text', nullable: true, default: null })
-  public entry: MessageEntryPoint;
+  public entry: MessageEntryPoint | null;
 
   @Column({ nullable: true })
-  public service?: string;
+  public service?: string | null;
 
   @Column({ nullable: true })
-  public fn?: string;
+  public fn?: string | null;
 }

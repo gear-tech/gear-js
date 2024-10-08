@@ -43,7 +43,7 @@ const callHandlers: Array<{
 ];
 
 export async function handleMessageQueued({ ctx, block, event, common, tempState }: IHandleEventProps) {
-  const call = event.call;
+  const call = event.call!;
 
   const msg = new MessageToProgram({
     ...common,
@@ -53,7 +53,7 @@ export async function handleMessageQueued({ ctx, block, event, common, tempState
     entry: event.args.entry.__kind.toLowerCase() as MessageEntryPoint,
   });
 
-  const { handler } = callHandlers.find(({ pattern }) => pattern(call));
+  const { handler } = callHandlers.find(({ pattern }) => pattern(call)) || {};
 
   if (!handler) {
     console.log(call);

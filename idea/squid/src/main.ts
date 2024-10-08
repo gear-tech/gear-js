@@ -39,19 +39,17 @@ const handler = async (ctx: ProcessorContext<Store>) => {
 
   for (const block of ctx.blocks) {
     const common = {
-      timestamp: new Date((block.header as any).timestamp),
+      timestamp: new Date(block.header.timestamp!),
       blockHash: block.header.hash,
       blockNumber: block.header.height.toString(),
     };
 
     for (const event of block.events) {
-      const { handler } = eventHandlers.find(({ pattern }) => pattern(event));
+      const { handler } = eventHandlers.find(({ pattern }) => pattern(event)) || {};
 
-      if (!handler) {
-        continue;
+      if (handler) {
+        await handler({ block, common, ctx, event, tempState });
       }
-
-      await handler({ block, common, ctx, event, tempState });
     }
   }
 

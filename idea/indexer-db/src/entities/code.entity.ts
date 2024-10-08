@@ -26,9 +26,9 @@ export class Code extends BaseEntity {
   public expiration?: string;
 
   @Column({ nullable: true, name: 'meta_type' })
-  public metaType?: MetaType;
+  public metaType?: MetaType | null;
 
   // TODO: remove later
   @Column({ nullable: true })
-  public metahash?: string;
+  public metahash?: string | null;
 }
