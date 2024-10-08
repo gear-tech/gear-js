@@ -1,8 +1,7 @@
 import { Events, MessageStatus } from '../../common';
-import { MessageEntryPoint } from '../../model';
 import { Event } from '../../processor';
 
-export interface IMessageQueuedArgs {
+export interface AMessageQueued {
   id: string;
   source: string;
   destination: string;
@@ -12,7 +11,7 @@ export interface IMessageQueuedArgs {
 }
 
 export type EMessageQueuedEvent = {
-  args: IMessageQueuedArgs;
+  args: AMessageQueued;
 } & Omit<Event, 'args'>;
 
 export const isMessageQueued = (event: Event): event is EMessageQueuedEvent => event.name === Events.MessageQueued;

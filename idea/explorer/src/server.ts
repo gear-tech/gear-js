@@ -1,5 +1,5 @@
 import express, { Express } from 'express';
-import { JsonRpc, JsonRpcBase, JsonRpcMethod } from './decorators/method';
+import { HybridApi, HybridApiBase, JsonRpcMethod, RestHandler } from './decorators/method';
 import { AllInOneService } from './services/all-in-one';
 import {
   ParamGetCode,
@@ -10,6 +10,8 @@ import {
   ParamGetMsgsToProgram,
   ParamGetProgram,
   ParamGetPrograms,
+  ParamGetVoucher,
+  ParamGetVouchers,
   ParamMsgFromProgram,
   ParamMsgToProgram,
   ParamSetProgramMeta,
@@ -18,7 +20,7 @@ import { Cache } from './middlewares/caching';
 import { redisConnect } from './middlewares/redis';
 import { Retry } from './middlewares/retry';
 
-export class JsonRpcServer extends JsonRpc(JsonRpcBase) {
+export class HybridApiServer extends HybridApi(HybridApiBase) {
   private _app: Express;
 
   constructor(private _services: Map<string, AllInOneService>) {
@@ -30,6 +32,8 @@ export class JsonRpcServer extends JsonRpc(JsonRpcBase) {
       const result = await this.handleRequest(req.body);
       res.json(result);
     });
+
+    this._app.use(this.createRestRouter());
   }
 
   public async run() {
@@ -109,5 +113,19 @@ export class JsonRpcServer extends JsonRpc(JsonRpcBase) {
   @Cache(300)
   async eventData(params: ParamGetEvent) {
     return this._services.get(params.genesis).event.getEvent(params);
+  }
+
+  @JsonRpcMethod('voucher.all')
+  @RestHandler('post', '/api/vouchers')
+  @Cache(60)
+  async voucherAll(params: ParamGetVouchers) {
+    return this._services.get(params.genesis).voucher.getVouchers(params);
+  }
+
+  @JsonRpcMethod('voucher.data')
+  @RestHandler('get', '/api/voucher/:id')
+  @Cache(300)
+  async voucherData(params: ParamGetVoucher) {
+    return this._services.get(params.genesis).voucher.getVoucher(params);
   }
 }
