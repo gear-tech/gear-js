@@ -21,15 +21,15 @@
     "prepare": "yarn build"
   },
   "peerDependencies": {
-    "@gear-js/api": "0.38.2",
-    "@polkadot/api": "12.0.1",
+    "@gear-js/api": "0.38.3",
+    "@polkadot/api": "13.2.1",
     "@tanstack/react-query": "^5.56.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sails-js": "0.2.0"
+    "sails-js": "0.3.0"
   },
   "dependencies": {
-    "@polkadot/api-derive": "12.0.1",
+    "@polkadot/api-derive": "13.2.1",
     "@polkadot/extension-inject": "0.51.1",
     "@polkadot/util": "12.6.2",
     "@substrate/connect": "0.8.10",
@@ -39,9 +39,9 @@
     "sails-js-parser": "0.0.1"
   },
   "devDependencies": {
-    "@gear-js/api": "0.38.2",
-    "@polkadot/api": "12.0.1",
-    "@polkadot/types": "12.0.1",
+    "@gear-js/api": "0.38.3",
+    "@polkadot/api": "13.2.1",
+    "@polkadot/types": "13.2.1",
     "@rollup/plugin-commonjs": "25.0.5",
     "@rollup/plugin-node-resolve": "15.2.3",
     "@tanstack/react-query": "5.56.2",
@@ -54,7 +54,7 @@
     "rollup-plugin-peer-deps-external": "2.2.4",
     "rollup-plugin-terser": "7.0.2",
     "rollup-plugin-typescript2": "0.36.0",
-    "sails-js": "0.2.0",
+    "sails-js": "0.3.0",
     "typescript": "5.5.4"
   },
   "main": "dist/cjs/index.js",
