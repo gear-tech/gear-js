@@ -2613,7 +2613,7 @@ __metadata:
     react-router-dom: 6.16.0
     react-transition-group: 4.4.5
     sails-js: 0.3.0
-    sails-js-parser: 0.0.1
+    sails-js-parser: 0.1.0
     sails-js-types: 0.0.1
     sass: 1.69.1
     simplebar-react: 3.2.4
@@ -18511,6 +18511,15 @@ __metadata:
   peerDependencies:
     sails-js-types: 0.0.1
   checksum: b6ce5b187833e98620fa63c3ecf10e53dfb1605e7b2bc6d9f9e306ea26fa22f78928e8748d15300b85d6bb3af5e46f43b37b248b34212e7f6b0f9bd49f656999
+  languageName: node
+  linkType: hard
+
+"sails-js-parser@npm:0.1.0":
+  version: 0.1.0
+  resolution: "sails-js-parser@npm:0.1.0"
+  peerDependencies:
+    sails-js-types: 0.0.1
+  checksum: 3b0120456de702dbe88c66f63f37bf9470f8e71e17d58bb2d5db00236474ced1de17089b8b512e6be1756918a9bf140c4d87536102da992ba192f08fa9d2625c
   languageName: node
   linkType: hard
 
