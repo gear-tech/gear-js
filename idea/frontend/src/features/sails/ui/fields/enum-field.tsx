@@ -1,15 +1,16 @@
 import { Select } from '@gear-js/ui';
 import { useState } from 'react';
-import { Sails, TypeDef } from 'sails-js';
+import { Sails } from 'sails-js';
+import { ISailsTypeDef } from 'sails-js-types';
 
 import { useSetPayloadValue } from '../../hooks';
 import { getNestedName, getDefaultValue } from '../../utils';
 
 type Props = {
   sails: Sails;
-  def: TypeDef;
+  def: ISailsTypeDef;
   name: string;
-  renderField: (def: TypeDef, label: string, name: string) => JSX.Element | undefined;
+  renderField: (def: ISailsTypeDef, label: string, name: string) => JSX.Element | undefined;
 };
 
 function EnumField({ sails, def, name, renderField }: Props) {

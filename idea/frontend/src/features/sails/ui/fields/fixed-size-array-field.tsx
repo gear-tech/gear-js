@@ -1,14 +1,14 @@
-import { TypeDef } from 'sails-js';
+import { ISailsTypeDef } from 'sails-js-types';
 
 import { Fieldset } from '@/shared/ui';
 
 import { getLabel, getNestedName } from '../../utils';
 
 type Props = {
-  def: TypeDef;
+  def: ISailsTypeDef;
   name: string;
   label: string;
-  renderField: (def: TypeDef, name: string, label: string) => JSX.Element | undefined;
+  renderField: (def: ISailsTypeDef, name: string, label: string) => JSX.Element | undefined;
 };
 
 function FixedSizeArrayField({ def, name, label, renderField }: Props) {

@@ -1,6 +1,6 @@
-import { PrimitiveDef, TypeDef } from 'sails-js';
+import { ISailsPrimitiveDef, ISailsTypeDef } from 'sails-js-types';
 
-const getPrimitiveType = (def: PrimitiveDef) => {
+const getPrimitiveType = (def: ISailsPrimitiveDef) => {
   if (def.isNull) return 'Null';
   if (def.isBool) return 'Bool';
   if (def.isChar) return 'Char';
@@ -31,7 +31,7 @@ const getPrimitiveType = (def: PrimitiveDef) => {
   throw new Error('Unknown primitive type');
 };
 
-const getType = (def: TypeDef): string => {
+const getType = (def: ISailsTypeDef): string => {
   if (def.isPrimitive) return getPrimitiveType(def.asPrimitive);
   if (def.isOptional) return `Option<${getType(def.asOptional.def)}>`;
   if (def.isResult) return `Result<${getType(def.asResult.ok.def)}, ${getType(def.asResult.err.def)}>`;
