@@ -58,7 +58,6 @@ jobs:
             VITE_TESTNET_VOUCHERS_API_URL=${{ secrets.VITE_TESTNET_VOUCHERS_API_URL }}
             VITE_INDEXER_API_URL=${{ secrets.VITE_INDEXER_API_URL }}
             VITE_TESTNET_DNS_API_URL=${{ secrets.VITE_TESTNET_DNS_API_URL }}
-            VITE_DNS_API_URL=${{ secrets.VITE_DNS_API_URL }}
 
   build-indexer-image-staging:
     runs-on: ubuntu-latest
