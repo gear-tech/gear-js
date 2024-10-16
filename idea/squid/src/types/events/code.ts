@@ -1,13 +1,13 @@
 import { Events } from '../../common';
 import { Event } from '../../processor';
 
-export interface ICodeChanged {
+export interface ACodeChanged {
   id: string;
   change: {
     __kind: 'Active';
   };
 }
 
-export type CCodeChanged = Omit<Event, 'args'> & { args: ICodeChanged };
+export type ECodeChanged = Omit<Event, 'args'> & { args: ACodeChanged };
 
-export const isCodeChanged = (obj: any): obj is CCodeChanged => obj.name === Events.CodeChanged;
+export const isCodeChanged = (obj: any): obj is ECodeChanged => obj.name === Events.CodeChanged;

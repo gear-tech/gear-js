@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { Code, Event, MessageFromProgram, MessageToProgram, Program } from './entities';
+import { Code, Event, MessageFromProgram, MessageToProgram, Program, Voucher } from './entities';
 
 export interface DbConfig {
   host: string;
@@ -17,7 +17,7 @@ export const createDbConnection = async ({ host, port, username, password, datab
     username,
     password,
     database,
-    entities: [Code, Program, MessageToProgram, MessageFromProgram, Event],
+    entities: [Code, Program, MessageToProgram, MessageFromProgram, Event, Voucher],
     synchronize: false,
     migrationsRun: false,
     logging: ['error', 'schema', 'migration'],

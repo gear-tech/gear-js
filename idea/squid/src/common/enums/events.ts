@@ -5,4 +5,9 @@ export const enum Events {
   MessagesDispatched = 'Gear.MessagesDispatched',
   ProgramChanged = 'Gear.ProgramChanged',
   CodeChanged = 'Gear.CodeChanged',
+  VoucherIssued = 'GearVoucher.VoucherIssued',
+  VoucherUpdated = 'GearVoucher.VoucherUpdated',
+  VoucherRevoked = 'GearVoucher.VoucherRevoked',
+  VoucherDeclined = 'GearVoucher.VoucherDeclined',
+  Transfer = 'Balances.Transfer',
 }

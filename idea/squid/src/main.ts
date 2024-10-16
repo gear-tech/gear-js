@@ -9,15 +9,24 @@ import {
   isProgramChanged,
   isUserMessageRead,
   isUserMessageSent,
+  isVoucherIssued,
+  isVoucherUpdated,
+  isVoucherDeclined,
+  isVoucherRevoked,
+  isBalanceTransfer,
 } from './types';
 import {
   handleCodeChanged,
+  handleBalanceTransfer,
+  handleVoucherDeclined,
+  handleVoucherIssued,
+  handleVoucherRevoked,
+  handleVoucherUpdated,
   handleMessageQueued,
   handleMessagesDispatched,
   handleProgramChanged,
   handleUserMessageRead,
   handleUserMessageSent,
-  IHandleEventProps,
 } from './event.route';
 import { createClient, RedisClientType } from 'redis';
 import { config } from './config';
@@ -25,13 +34,18 @@ import { GearApi } from '@gear-js/api';
 
 let tempState: TempState;
 
-const eventHandlers: Array<{ pattern: (obj: any) => boolean; handler: (args: IHandleEventProps) => Promise<void> }> = [
+const eventHandlers = [
   { pattern: isMessageQueued, handler: handleMessageQueued },
   { pattern: isUserMessageSent, handler: handleUserMessageSent },
   { pattern: isProgramChanged, handler: handleProgramChanged },
   { pattern: isCodeChanged, handler: handleCodeChanged },
   { pattern: isMessagesDispatched, handler: handleMessagesDispatched },
   { pattern: isUserMessageRead, handler: handleUserMessageRead },
+  { pattern: isVoucherIssued, handler: handleVoucherIssued },
+  { pattern: isVoucherUpdated, handler: handleVoucherUpdated },
+  { pattern: isVoucherDeclined, handler: handleVoucherDeclined },
+  { pattern: isVoucherRevoked, handler: handleVoucherRevoked },
+  { pattern: isBalanceTransfer, handler: handleBalanceTransfer },
 ];
 
 const handler = async (ctx: ProcessorContext<Store>) => {
