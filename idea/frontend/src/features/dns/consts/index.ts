@@ -1,9 +1,14 @@
 import { z } from 'zod';
 
+import { GENESIS } from '@/shared/config';
+
 import { Values } from '../types';
 import { Program } from './sails';
 
-const DNS_API_URL = import.meta.env.VITE_DNS_API_URL as string;
+const API_URL = {
+  [GENESIS.MAINNET]: import.meta.env.VITE_MAINNET_DNS_API_URL as string,
+  [GENESIS.TESTNET]: import.meta.env.VITE_TESTNET_DNS_API_URL as string,
+} as const;
 
 const FIELD_NAME = {
   DNS_NAME: 'name',
@@ -26,4 +31,4 @@ const FUNCTION_NAME = {
   REMOVE_ADMIN: 'removeAdminFromProgram',
 } as const;
 
-export { DNS_API_URL, FIELD_NAME, DEFAULT_VALUES, NAME_SCHEMA, FUNCTION_NAME, Program };
+export { API_URL, FIELD_NAME, DEFAULT_VALUES, NAME_SCHEMA, FUNCTION_NAME, Program };

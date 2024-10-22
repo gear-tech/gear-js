@@ -1,4 +1,11 @@
-import { useAccount, useAlert, useBalanceFormat, usePrepareProgramTransaction, useProgram } from '@gear-js/react-hooks';
+import {
+  useAccount,
+  useAlert,
+  useApi,
+  useBalanceFormat,
+  usePrepareProgramTransaction,
+  useProgram,
+} from '@gear-js/react-hooks';
 import { useQuery } from '@tanstack/react-query';
 
 import { Method } from '@/features/explorer';
@@ -14,6 +21,8 @@ const SERVICE_NAME = 'dns' as const;
 type FunctionName = typeof FUNCTION_NAME[keyof typeof FUNCTION_NAME];
 
 const useSendDnsTransaction = <T extends FunctionName>(functionName: T) => {
+  const { api, isApiReady } = useApi();
+
   const { account } = useAccount();
   const { getFormattedBalance } = useBalanceFormat();
   const alert = useAlert();
@@ -22,7 +31,14 @@ const useSendDnsTransaction = <T extends FunctionName>(functionName: T) => {
   const { showModal } = useModal();
   const signAndSend = useSignAndSend();
 
-  const { data: id } = useQuery({ queryKey: ['dnsProgramId'], queryFn: getDnsProgramId });
+  const getQuery = () => {
+    if (!isApiReady) throw new Error('API is not initialized');
+    const genesis = api.genesisHash.toHex();
+
+    return getDnsProgramId({ genesis });
+  };
+
+  const { data: id } = useQuery({ queryKey: ['dnsProgramId'], queryFn: getQuery, enabled: isApiReady });
   const { data: program } = useProgram({ library: Program, id });
 
   const { prepareTransactionAsync } = usePrepareProgramTransaction({

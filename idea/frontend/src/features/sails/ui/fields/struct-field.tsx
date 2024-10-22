@@ -1,14 +1,14 @@
-import { TypeDef } from 'sails-js';
+import { ISailsTypeDef } from 'sails-js-types';
 
 import { Fieldset } from '@/shared/ui';
 
 import { getLabel, getNestedName } from '../../utils';
 
 type Props = {
-  def: TypeDef;
+  def: ISailsTypeDef;
   name: string;
   label: string;
-  renderField: (def: TypeDef, label: string, name: string) => JSX.Element | undefined;
+  renderField: (def: ISailsTypeDef, label: string, name: string) => JSX.Element | undefined;
 };
 
 function StructField({ def, name, label, renderField }: Props) {

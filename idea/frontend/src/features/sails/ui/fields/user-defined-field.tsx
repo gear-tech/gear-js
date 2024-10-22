@@ -1,15 +1,16 @@
-import { Sails, TypeDef } from 'sails-js';
+import { Sails } from 'sails-js';
+import { ISailsTypeDef } from 'sails-js-types';
 
 import { Fieldset } from '@/shared/ui';
 
 import { getLabel } from '../../utils';
 
 type Props = {
-  def: TypeDef;
+  def: ISailsTypeDef;
   sails: Sails;
   name: string;
   label: string;
-  renderField: (def: TypeDef, label: string, name: string) => JSX.Element | undefined;
+  renderField: (def: ISailsTypeDef, label: string, name: string) => JSX.Element | undefined;
 };
 
 function UserDefinedField({ def, sails, name, label, renderField }: Props) {

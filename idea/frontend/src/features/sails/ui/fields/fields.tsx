@@ -1,4 +1,5 @@
-import { Sails, TypeDef } from 'sails-js';
+import { Sails } from 'sails-js';
+import { ISailsTypeDef } from 'sails-js-types';
 
 import { Fieldset } from '@/shared/ui';
 
@@ -20,7 +21,7 @@ type Props = {
 };
 
 function Fields({ sails, args }: Props) {
-  const getFieldComponent = (def: TypeDef) => {
+  const getFieldComponent = (def: ISailsTypeDef) => {
     if (def.isEnum) return EnumField;
     if (def.isStruct) return StructField;
     if (def.isOptional) return OptionalField;
@@ -34,7 +35,7 @@ function Fields({ sails, args }: Props) {
     throw new Error('Unknown field type: ' + JSON.stringify(def));
   };
 
-  const renderField = (def: TypeDef, label: string = '', name: string = '') => {
+  const renderField = (def: ISailsTypeDef, label: string = '', name: string = '') => {
     if (!sails) throw new Error('Sails is not defined');
     if (!def) return; // in case of empty enum variant, EnumVariant.def sails-js type is inaccurate at the moment
 

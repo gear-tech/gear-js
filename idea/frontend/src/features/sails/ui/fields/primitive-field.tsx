@@ -1,11 +1,11 @@
-import { TypeDef } from 'sails-js';
+import { ISailsTypeDef } from 'sails-js-types';
 
 import { Checkbox, Input } from '@/shared/ui';
 
 import { getLabel } from '../../utils';
 
 type Props = {
-  def: TypeDef;
+  def: ISailsTypeDef;
   name: string;
   label: string;
 };

@@ -1,6 +1,7 @@
 import { Select } from '@gear-js/ui';
 import { useState } from 'react';
-import { Sails, TypeDef } from 'sails-js';
+import { Sails } from 'sails-js';
+import { ISailsTypeDef } from 'sails-js-types';
 
 import { Fieldset } from '@/shared/ui';
 
@@ -9,10 +10,10 @@ import { getDefaultValue, getLabel } from '../../utils';
 
 type Props = {
   sails: Sails;
-  def: TypeDef;
+  def: ISailsTypeDef;
   name: string;
   label: string;
-  renderField: (def: TypeDef, label: string, name: string) => JSX.Element | undefined;
+  renderField: (def: ISailsTypeDef, label: string, name: string) => JSX.Element | undefined;
 };
 
 const OPTIONS = [
