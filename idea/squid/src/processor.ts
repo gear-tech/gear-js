@@ -31,8 +31,14 @@ export const processor = new SubstrateBatchProcessor()
     call: false,
     extrinsic: false,
   })
+  .addEvent({
+    name: [Events.VoucherDeclined, Events.VoucherIssued, Events.VoucherRevoked, Events.VoucherUpdated, Events.Transfer],
+    call: true,
+    extrinsic: false,
+  })
   .setFields({
     event: {
+      name: true,
       args: true,
     },
     extrinsic: {

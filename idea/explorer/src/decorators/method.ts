@@ -1,13 +1,22 @@
-import { GenesisNotFound, MethodNotFound, NetworkNotSupported } from '../errors';
+import { Router } from 'express';
+import { GenesisNotFound, MethodNotFound, NetworkNotSupported, VoucherNotFound } from '../errors';
 import { JsonRpcRequest, JsonRpcResponse } from '../types';
 
 type Constructor<T = any> = new (...args: any[]) => T;
+type AllowedMethods = 'get' | 'post';
 
 const rpcMethods: Record<string, (...args: any[]) => Promise<void>> = {};
+const restHandlers = new Array<{ method: AllowedMethods; path: string; handler: (...args: any[]) => Promise<any> }>();
 
 export function JsonRpcMethod(name: string) {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     rpcMethods[name] = descriptor.value;
+  };
+}
+
+export function RestHandler(method: AllowedMethods, path: string) {
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    restHandlers.push({ method, path, handler: descriptor.value });
   };
 }
 
@@ -16,16 +25,23 @@ export interface IJsonRpc {
   handleRequest({ method, params, id }: JsonRpcRequest): Promise<JsonRpcResponse | JsonRpcResponse[]>;
 }
 
-export class JsonRpcBase implements IJsonRpc {
+export interface IRestApi {
+  createRestRouter(): Router;
+}
+
+export class HybridApiBase implements IJsonRpc, IRestApi {
   _getMethod(name: string): (...args: any[]) => Promise<void> {
     throw new Error('Method not implemented.');
   }
   handleRequest({ method, params, id }: JsonRpcRequest): Promise<JsonRpcResponse | JsonRpcResponse[]> {
     throw new Error('Method not implemented.');
   }
+  createRestRouter(): Router {
+    throw new Error('Method not implemented.');
+  }
 }
 
-export function JsonRpc<TBase extends Constructor<JsonRpcBase>>(Base: TBase) {
+export function HybridApi<TBase extends Constructor<HybridApiBase>>(Base: TBase) {
   return class Jsonrpc extends Base {
     private __methods = new Set(Object.keys(rpcMethods));
     private __genesises: Set<string>;
@@ -75,6 +91,39 @@ export function JsonRpc<TBase extends Constructor<JsonRpcBase>>(Base: TBase) {
           },
         };
       }
+    }
+
+    createRestRouter(): Router {
+      const router = Router();
+
+      for (const { method, path, handler } of restHandlers) {
+        router[method](path, async (req, res) => {
+          const { genesis } = req.body;
+          if (!genesis) {
+            res.status(400).json({ error: 'Genesis not found in the request' });
+            return;
+          }
+
+          if (!this.__genesises.has(genesis)) {
+            res.status(400).json({ error: 'Network is not supported' });
+            return;
+          }
+
+          try {
+            const result = await handler.apply(this, [{ ...req.body, ...req.params, genesis }]);
+            res.json(result);
+          } catch (err) {
+            if (err instanceof VoucherNotFound) {
+              res.json(null);
+              return;
+            }
+            console.log(err.message);
+            res.status(500).json({ error: 'Internal server error' });
+          }
+        });
+      }
+
+      return router;
     }
   };
 }

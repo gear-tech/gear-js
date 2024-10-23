@@ -14,9 +14,11 @@ import {
   MessageFromProgram,
   MessageToProgram,
   Program,
+  Voucher,
 } from './model';
 import { Block, ProcessorContext } from './processor';
 import { MessageStatus } from './common';
+import { In } from 'typeorm';
 import { RedisClientType } from '@redis/client';
 import { findChildMessageId } from './util';
 
@@ -55,6 +57,9 @@ export class TempState {
   private messagesFromProgram: Map<string, MessageFromProgram>;
   private messagesToProgram: Map<string, MessageToProgram>;
   private events: Map<string, Event>;
+  private vouchers: Map<string, Voucher>;
+  private revokedVouchers: Set<string>;
+  private transfers: Map<string, bigint>;
   private cachedMessages: { [key: string]: number };
   private genesisHash: string;
   private _ctx: ProcessorContext<Store>;
@@ -73,6 +78,9 @@ export class TempState {
     this.messagesToProgram = new Map();
     this.events = new Map();
     this.newPrograms = new Set();
+    this.vouchers = new Map();
+    this.revokedVouchers = new Set();
+    this.transfers = new Map();
     this.cachedMessages = {};
   }
 
@@ -84,6 +92,9 @@ export class TempState {
     this.messagesToProgram.clear();
     this.events.clear();
     this.newPrograms.clear();
+    this.vouchers.clear();
+    this.revokedVouchers.clear();
+    this.transfers.clear();
 
     this._redis.on('error', (error) => this._ctx.log.error(error));
 
@@ -146,6 +157,10 @@ export class TempState {
     }
   }
 
+  addVoucher(voucher: Voucher) {
+    this.vouchers.set(voucher.id, voucher);
+  }
+
   async getProgram(id: string): Promise<Program | null> {
     if (this.programs.has(id)) {
       return this.programs.get(id) ?? null;
@@ -199,6 +214,24 @@ export class TempState {
     }
   }
 
+  async getVoucher(id: string): Promise<Voucher | null> {
+    if (this.vouchers.has(id)) {
+      return this.vouchers.get(id) ?? null;
+    }
+    try {
+      const voucher = (await this._ctx.store.findOneBy(Voucher, { id }))!;
+      voucher.balance = BigInt(voucher.balance);
+      this.vouchers.set(voucher.id, voucher);
+      return voucher;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  getTransfer(id: string, defaultReturn: bigint = BigInt(0)) {
+    return this.transfers.get(id) || defaultReturn;
+  }
+
   async isProgramIndexed(id: string): Promise<boolean> {
     return !!(await this.getProgram(id));
   }
@@ -236,6 +269,25 @@ export class TempState {
     if (msg) {
       msg.readReason = reason;
     }
+  }
+
+  async setVoucherDeclined(id: string) {
+    const voucher = await this.getVoucher(id);
+
+    if (!voucher) {
+      this._ctx.log.error(`setVoucherDeclined :: Voucher ${id} not found`);
+      return;
+    }
+
+    voucher.isDeclined = true;
+  }
+
+  setVoucherRevoked(id: string) {
+    this.revokedVouchers.add(id);
+  }
+
+  setTransfer(id: string, amount: bigint) {
+    this.transfers.set(id, amount);
   }
 
   async getCodeId(programId: string, block: Block) {
@@ -276,6 +328,50 @@ export class TempState {
     return decoded.isActive ? decoded.asActive.codeHash.toHex() : '0x';
   }
 
+  async saveVouchers() {
+    let added = 0;
+    if (this.vouchers.size > 0) {
+      const voucherIds = Array.from(this.vouchers.keys());
+
+      for (const id of voucherIds) {
+        if (this.transfers.has(id)) {
+          this.vouchers.get(id)!.balance += this.transfers.get(id)!;
+          this.transfers.delete(id);
+        }
+        if (this.revokedVouchers.has(id)) {
+          this.vouchers.delete(id);
+          this.revokedVouchers.delete(id);
+        }
+      }
+
+      const vouchers = Array.from(this.vouchers.values());
+
+      added = vouchers.length;
+      await this._ctx.store.save(vouchers);
+    }
+
+    if (this.revokedVouchers.size > 0) {
+      const revoked = Array.from(this.revokedVouchers);
+      await this._ctx.store.remove(Voucher, revoked);
+    }
+
+    const trasnferIds = Array.from(this.transfers.keys());
+    if (trasnferIds.length > 0) {
+      const voucherTransfers = await this._ctx.store.find(Voucher, { where: { id: In(trasnferIds) } });
+
+      if (voucherTransfers.length > 0) {
+        for (const voucher of voucherTransfers) {
+          const balance = this.transfers.get(voucher.id)!;
+          voucher.balance = BigInt(voucher.balance) + balance;
+        }
+
+        await this._ctx.store.save(voucherTransfers);
+      }
+    }
+
+    return added;
+  }
+
   async save() {
     try {
       if (this.newPrograms.size > 0) {
@@ -299,6 +395,7 @@ export class TempState {
         this._ctx.store.save(Array.from(this.messagesFromProgram.values())),
         this._ctx.store.save(Array.from(this.messagesToProgram.values())),
         this._ctx.store.save(Array.from(this.events.values())),
+        this.saveVouchers(),
       ]);
 
       if (
