@@ -132,6 +132,10 @@ declare module '@polkadot/api-base/types/submittable' {
         [H160, Bytes]
       >;
       /**
+       * See [`Pallet::pause`].
+       **/
+      unpause: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
+      /**
        * Generic tx
        **/
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
