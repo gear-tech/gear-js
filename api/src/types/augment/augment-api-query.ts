@@ -2,7 +2,20 @@
 import '@polkadot/api-base/types/storage';
 
 import type { ApiTypes, AugmentedQuery, QueryableStorageEntry } from '@polkadot/api-base/types';
-import type { BTreeMap, Bytes, Null, Option, U8aFixed, bool, u128, u32, u64 } from '@polkadot/types-codec';
+import type {
+  BTreeMap,
+  Bytes,
+  Null,
+  Option,
+  U256,
+  U8aFixed,
+  Vec,
+  bool,
+  u128,
+  u16,
+  u32,
+  u64,
+} from '@polkadot/types-codec';
 import type { AnyNumber, ITuple } from '@polkadot/types-codec/types';
 import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
 import type { Observable } from '@polkadot/types/types';
@@ -85,6 +98,23 @@ declare module '@polkadot/api-base/types/storage' {
       programsMap: AugmentedQuery<ApiType, () => Observable<BTreeMap<H256, H256>>, []> &
         QueryableStorageEntry<ApiType, []>;
       remapId: AugmentedQuery<ApiType, () => Observable<bool>, []> & QueryableStorageEntry<ApiType, []>;
+      /**
+       * Generic query
+       **/
+      [key: string]: QueryableStorageEntry<ApiType>;
+    };
+    gearEthBridge: {
+      authoritySetHash: AugmentedQuery<ApiType, () => Observable<Option<H256>>, []> &
+        QueryableStorageEntry<ApiType, []>;
+      clearTimer: AugmentedQuery<ApiType, () => Observable<Option<u32>>, []> & QueryableStorageEntry<ApiType, []>;
+      initialized: AugmentedQuery<ApiType, () => Observable<bool>, []> & QueryableStorageEntry<ApiType, []>;
+      messageNonce: AugmentedQuery<ApiType, () => Observable<U256>, []> & QueryableStorageEntry<ApiType, []>;
+      palletVersion: AugmentedQuery<ApiType, () => Observable<u16>, []> & QueryableStorageEntry<ApiType, []>;
+      paused: AugmentedQuery<ApiType, () => Observable<bool>, []> & QueryableStorageEntry<ApiType, []>;
+      queue: AugmentedQuery<ApiType, () => Observable<Vec<H256>>, []> & QueryableStorageEntry<ApiType, []>;
+      queueChanged: AugmentedQuery<ApiType, () => Observable<bool>, []> & QueryableStorageEntry<ApiType, []>;
+      queueMerkleRoot: AugmentedQuery<ApiType, () => Observable<Option<H256>>, []> & QueryableStorageEntry<ApiType, []>;
+      sessionsTimer: AugmentedQuery<ApiType, () => Observable<u32>, []> & QueryableStorageEntry<ApiType, []>;
       /**
        * Generic query
        **/
