@@ -3,6 +3,13 @@
     "InflationInfo": {
       "inflation": "u64",
       "roi": "u64"
+    },
+    "Proof": {
+      "root": "H256",
+      "proof": "Vec<H256>",
+      "number_of_leaves": "u64",
+      "leaf_index": "u64",
+      "leaf": "H256"
     }
   }
 }
