@@ -140,6 +140,47 @@ declare module '@polkadot/api-base/types/events' {
        **/
       [key: string]: AugmentedEvent<ApiType>;
     };
+    gearEthBridge: {
+      /**
+       * Grandpa validator's keys set was hashed and set in storage at
+       * first block of the last session in the era.
+       **/
+      AuthoritySetHashChanged: AugmentedEvent<ApiType, [H256]>;
+      /**
+       * Bridge got cleared on initialization of the second block in a new era.
+       **/
+      BridgeCleared: AugmentedEvent<ApiType, []>;
+      /**
+       * Optimistically, single-time called event defining that pallet
+       * got initialized and started processing session changes,
+       * as well as putting initial zeroed queue merkle root.
+       **/
+      BridgeInitialized: AugmentedEvent<ApiType, []>;
+      /**
+       * Bridge was paused and temporary doesn't process any incoming requests.
+       **/
+      BridgePaused: AugmentedEvent<ApiType, []>;
+      /**
+       * Bridge was unpaused and from now on processes any incoming requests.
+       **/
+      BridgeUnpaused: AugmentedEvent<ApiType, []>;
+      /**
+       * A new message was queued for bridging.
+       **/
+      MessageQueued: AugmentedEvent<
+        ApiType,
+        [message: PalletGearEthBridgeInternalEthMessage, hash_: H256],
+        { message: PalletGearEthBridgeInternalEthMessage; hash_: H256 }
+      >;
+      /**
+       * Merkle root of the queue changed: new messages queued within the block.
+       **/
+      QueueMerkleRootChanged: AugmentedEvent<ApiType, [H256]>;
+      /**
+       * Generic event
+       **/
+      [key: string]: AugmentedEvent<ApiType>;
+    };
     gearVoucher: {
       /**
        * Voucher has been declined (set to expired state).

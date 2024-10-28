@@ -128,11 +128,14 @@ declare module '@polkadot/api-base/types/submittable' {
        * See [`Pallet::send_eth_message`].
        **/
       sendEthMessage: AugmentedSubmittable<
-        (destination: H160, payload: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>,
+        (
+          destination: H160 | string | Uint8Array,
+          payload: Bytes | string | Uint8Array,
+        ) => SubmittableExtrinsic<ApiType>,
         [H160, Bytes]
       >;
       /**
-       * See [`Pallet::pause`].
+       * See [`Pallet::unpause`].
        **/
       unpause: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
       /**

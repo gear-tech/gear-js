@@ -124,6 +124,35 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       [key: string]: AugmentedError<ApiType>;
     };
+    gearEthBridge: {
+      /**
+       * The error happens when bridge got called before
+       * proper initialization after deployment.
+       **/
+      BridgeIsNotYetInitialized: AugmentedError<ApiType>;
+      /**
+       * The error happens when bridge got called when paused.
+       **/
+      BridgeIsPaused: AugmentedError<ApiType>;
+      /**
+       * The error happens when bridging thorough builtin and message value
+       * is inapplicable to operation or insufficient.
+       **/
+      IncorrectValueApplied: AugmentedError<ApiType>;
+      /**
+       * The error happens when bridging message sent with too big payload.
+       **/
+      MaxPayloadSizeExceeded: AugmentedError<ApiType>;
+      /**
+       * The error happens when bridging queue capacity exceeded,
+       * so message couldn't be sent.
+       **/
+      QueueCapacityExceeded: AugmentedError<ApiType>;
+      /**
+       * Generic error
+       **/
+      [key: string]: AugmentedError<ApiType>;
+    };
     gearGas: {
       /**
        * `GasTree::consume` called on node, which has some balance locked.
