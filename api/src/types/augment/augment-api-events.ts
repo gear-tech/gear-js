@@ -15,9 +15,10 @@ import {
   GprimitivesCodeId,
   GprimitivesMessageId,
   PalletGearDebugDebugData,
+  PalletGearEthBridgeInternalEthMessage,
   PalletGearVoucherInternalVoucherId,
 } from '../lookup';
-import type { AccountId32 } from '@polkadot/types/interfaces/runtime';
+import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
 import type { ApiTypes } from '@polkadot/api-base/types';
 
 declare module '@polkadot/api-base/types/events' {

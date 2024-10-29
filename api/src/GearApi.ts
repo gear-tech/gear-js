@@ -16,6 +16,7 @@ import { GearProgramState } from './State';
 import { GearProgramStorage } from './Storage';
 import { GearVoucher } from './Voucher';
 import { GearWaitlist } from './Waitlist';
+import { GearEthBridge } from './EthBridge';
 
 export class GearApi extends ApiPromise {
   public program: GearProgram;
@@ -31,6 +32,7 @@ export class GearApi extends ApiPromise {
   public code: GearCode;
   public waitlist: GearWaitlist;
   public voucher: GearVoucher;
+  public ethBridge: GearEthBridge;
   public provider: WsProvider;
 
   constructor(options: GearApiOptions = {}) {
@@ -87,6 +89,7 @@ export class GearApi extends ApiPromise {
     this.mailbox = new GearMailbox(this);
     this.code = new GearCode(this);
     this.waitlist = new GearWaitlist(this);
+    this.ethBridge = new GearEthBridge(this);
   }
 
   static async create(options?: GearApiOptions): Promise<GearApi> {
