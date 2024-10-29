@@ -1,9 +1,9 @@
 export class BuiltinQueryIdError extends Error {
   name = 'BuiltInQueryIdError';
-  message = 'Unable to query id from builtin';
+  message = 'Unable to query builtin id';
 
   constructor(message?: string) {
     super();
-    this.message = `${this.message} ${message}`;
+    this.message = `${this.message}. ${message}`;
   }
 }
