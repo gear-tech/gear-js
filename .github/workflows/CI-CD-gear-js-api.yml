@@ -36,7 +36,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
-          components: clippy, rustfmt
+          components: clippy, rustfmt, llvm-tools, rust-src
 
       - name: 'Install: binaryen'
         run: |
