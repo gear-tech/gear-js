@@ -53,7 +53,7 @@ jobs:
 
       - name: 'Prepare: build programs'
         working-directory: api/programs
-        run: cargo build --locked
+        run: cargo build --release
 
       - name: 'Prepare: download Gear node'
         run: |
