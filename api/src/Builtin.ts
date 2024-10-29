@@ -1,7 +1,7 @@
 import { HexString } from 'types';
 import { GearApi } from './GearApi';
 import { u64 } from '@polkadot/types-codec';
-import { BuiltinQueryIdError } from 'errors';
+import { BuiltinQueryIdError } from './errors';
 
 export class GearBuiltin {
   constructor(private _api: GearApi) {}
