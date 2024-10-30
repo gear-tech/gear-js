@@ -6,3 +6,4 @@ export * from './claim.errors';
 export * from './blocks.errors';
 export * from './validation.errors';
 export * from './ethBridge.errors';
+export * from './builtin.errors';

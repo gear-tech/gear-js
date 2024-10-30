@@ -3,7 +3,7 @@ import '@polkadot/rpc-core/types/jsonrpc';
 import type { AnyNumber, Codec } from '@polkadot/types-codec/types';
 import type { AugmentedRpc } from '@polkadot/rpc-core/types';
 import type { BlockHash } from '@polkadot/types/interfaces/chain';
-import type { Bytes } from '@polkadot/types-codec';
+import type { Bytes, u64 } from '@polkadot/types-codec';
 import type { H256 } from '@polkadot/types/interfaces/runtime';
 import type { Observable } from '@polkadot/types/types';
 
@@ -167,6 +167,9 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
       merkleProof: AugmentedRpc<
         (hash: string | Uint8Array | H256, at?: BlockHash | string | Uint8Array) => Observable<Proof>
       >;
+    };
+    gearBuiltin: {
+      queryId: AugmentedRpc<(builtinId: u64) => Observable<H256>>;
     };
   }
 }
