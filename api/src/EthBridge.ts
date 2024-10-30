@@ -1,25 +1,30 @@
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { GearApi } from './GearApi';
 import { ISubmittableResult } from '@polkadot/types/types';
-import { HexString, Proof } from 'types';
+import { HexString, Proof } from './types';
+import { AuthoritySetHashError, ClearTimerError, GetQueueMerkleRootError } from './errors';
 
 export class GearEthBridge {
   constructor(private api: GearApi) {}
 
-  async authoritySetHash(): Promise<HexString | null> {
+  async authoritySetHash(): Promise<HexString> {
     const result = await this.api.query.gearEthBridge.authoritySetHash();
 
     try {
       const hash = result.unwrap();
       return hash.toHex();
-    } catch {
-      return null;
+    } catch (err) {
+      throw new AuthoritySetHashError(err);
     }
   }
 
   async clearTimer(): Promise<number> {
     const result = await this.api.query.gearEthBridge.clearTimer();
-    return result.unwrapOrDefault().toNumber();
+    try {
+      return result.unwrap().toNumber();
+    } catch (err) {
+      throw new ClearTimerError(err);
+    }
   }
 
   async isInitialized(): Promise<boolean> {
@@ -29,7 +34,6 @@ export class GearEthBridge {
 
   async getMessageNonce(): Promise<bigint> {
     const result = await this.api.query.gearEthBridge.messageNonce();
-
     return result.toBigInt();
   }
 
@@ -48,13 +52,14 @@ export class GearEthBridge {
     return result.toHuman();
   }
 
-  async getQueueMerkleRoot(): Promise<HexString | null> {
+  async getQueueMerkleRoot(): Promise<HexString> {
     const result = await this.api.query.gearEthBridge.queueMerkleRoot();
+
     try {
       const hash = result.unwrap();
       return hash.toHex();
-    } catch {
-      return null;
+    } catch (err) {
+      throw new GetQueueMerkleRootError(err);
     }
   }
 
