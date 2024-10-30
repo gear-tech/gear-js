@@ -10,21 +10,21 @@ export class GearEthBridge {
   async authoritySetHash(): Promise<HexString> {
     const result = await this.api.query.gearEthBridge.authoritySetHash();
 
-    try {
-      const hash = result.unwrap();
-      return hash.toHex();
-    } catch (err) {
-      throw new AuthoritySetHashError(err);
+    if (result.isNone) {
+      throw new AuthoritySetHashError();
     }
+
+    return result.unwrap().toHex();
   }
 
   async clearTimer(): Promise<number> {
     const result = await this.api.query.gearEthBridge.clearTimer();
-    try {
-      return result.unwrap().toNumber();
-    } catch (err) {
-      throw new ClearTimerError(err);
+
+    if (result.isNone) {
+      throw new ClearTimerError();
     }
+
+    return result.unwrap().toNumber();
   }
 
   async isInitialized(): Promise<boolean> {
@@ -55,12 +55,11 @@ export class GearEthBridge {
   async getQueueMerkleRoot(): Promise<HexString> {
     const result = await this.api.query.gearEthBridge.queueMerkleRoot();
 
-    try {
-      const hash = result.unwrap();
-      return hash.toHex();
-    } catch (err) {
-      throw new GetQueueMerkleRootError(err);
+    if (result.isNone) {
+      throw new GetQueueMerkleRootError();
     }
+
+    return result.unwrap().toHex();
   }
 
   async getSessionsTimer(): Promise<number> {
