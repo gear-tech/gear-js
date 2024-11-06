@@ -17,4 +17,5 @@ export class ParamGetVouchers extends ParamPagination {
   readonly codeUploading?: boolean;
   readonly declined?: boolean;
   readonly expired?: boolean;
+  readonly includeAllPrograms?: boolean;
 }

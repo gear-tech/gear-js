@@ -5,6 +5,7 @@ import { Voucher } from './model';
 interface GetVouchersParams extends Partial<Pick<Voucher, 'owner' | 'spender' | 'codeUploading' | 'id' | 'programs'>> {
   declined?: boolean;
   expired?: boolean;
+  includeAllPrograms?: boolean;
   limit?: number;
   offset?: number;
 }
@@ -43,6 +44,7 @@ export class VoucherService {
     limit,
     offset,
     expired,
+    includeAllPrograms,
   }: GetVouchersParams) {
     const qb = this._repo.createQueryBuilder('v');
 
@@ -62,15 +64,20 @@ export class VoucherService {
       qb.andWhere('v.codeUploading = :codeUploading', { codeUploading });
     }
 
-    if (programs) {
-      let where = '(';
-      let params: Record<string, string> = {};
+    if (programs || includeAllPrograms) {
+      const params: Record<string, string> = {};
 
-      for (let i = 0; i < programs.length; i++) {
-        where += `${i > 0 ? ' OR ' : ''}v.programs::jsonb ? :p${i}`;
-        params[`p${i}`] = programs[i];
+      const conditions =
+        programs?.map((_, i) => {
+          params[`p${i}`] = programs[i];
+          return `v.programs::jsonb ? :p${i}`;
+        }) || [];
+
+      if (includeAllPrograms) {
+        conditions.push(`jsonb_array_length(v.programs) = 0`);
       }
-      qb.andWhere(where + ')', params);
+
+      qb.andWhere(`(${conditions.join(' OR ')})`, params);
       console.log(qb.getQuery());
     }
 
