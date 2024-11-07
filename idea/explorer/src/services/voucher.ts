@@ -34,6 +34,7 @@ export class VoucherService {
     limit,
     offset,
     expired,
+    includeAllPrograms,
   }: ParamGetVouchers): Promise<ResManyResult<Voucher>> {
     const qb = this._repo.createQueryBuilder('v');
 
@@ -53,16 +54,20 @@ export class VoucherService {
       qb.andWhere('v.codeUploading = :codeUploading', { codeUploading });
     }
 
-    if (programs) {
-      let where = '(';
-      let params: Record<string, string> = {};
+    if (programs || includeAllPrograms) {
+      const params: Record<string, string> = {};
 
-      for (let i = 0; i < programs.length; i++) {
-        where += `${i > 0 ? ' OR ' : ''}v.programs::jsonb ? :p${i}`;
-        params[`p${i}`] = programs[i];
+      const conditions =
+        programs?.map((_, i) => {
+          params[`p${i}`] = programs[i];
+          return `v.programs::jsonb ? :p${i}`;
+        }) || [];
+
+      if (includeAllPrograms) {
+        conditions.push(`jsonb_array_length(v.programs) = 0`);
       }
-      qb.andWhere(where + ')', params);
-      console.log(qb.getQuery());
+
+      qb.andWhere(`(${conditions.join(' OR ')})`, params);
     }
 
     if (expired !== undefined) {
