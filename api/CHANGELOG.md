@@ -1,3 +1,26 @@
+## 0.39.0
+
+_30/10/2024_
+
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1659
+https://github.com/gear-tech/gear-js/pull/1658
+- Support `Builtin` pallet
+- Support `gearEthBridge` pallet
+
+## 0.38.3
+
+_07/10/2024_
+
+
+### Changes
+https://github.com/gear-tech/gear-js/pull/1649
+- Bump @polkadot/api to 13.2.1
+- Bump @polkadot/typegen to 13.2.1
+- Bump @polkadot/types to 13.2.1
+- Bump @polkadot/types-codec to 13.2.1
+
 ## 0.38.2
 _08/01/2024_
 
