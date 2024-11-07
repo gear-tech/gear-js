@@ -329,7 +329,6 @@ export class TempState {
   }
 
   async saveVouchers() {
-    let added = 0;
     if (this.vouchers.size > 0) {
       const voucherIds = Array.from(this.vouchers.keys());
 
@@ -340,13 +339,11 @@ export class TempState {
         }
         if (this.revokedVouchers.has(id)) {
           this.vouchers.delete(id);
-          this.revokedVouchers.delete(id);
         }
       }
 
       const vouchers = Array.from(this.vouchers.values());
 
-      added = vouchers.length;
       await this._ctx.store.save(vouchers);
     }
 
@@ -355,8 +352,8 @@ export class TempState {
       await this._ctx.store.remove(Voucher, revoked);
     }
 
-    const trasnferIds = Array.from(this.transfers.keys());
-    if (trasnferIds.length > 0) {
+    if (this.transfers.size > 0) {
+      const trasnferIds = Array.from(this.transfers.keys());
       const voucherTransfers = await this._ctx.store.find(Voucher, { where: { id: In(trasnferIds) } });
 
       if (voucherTransfers.length > 0) {
@@ -368,8 +365,6 @@ export class TempState {
         await this._ctx.store.save(voucherTransfers);
       }
     }
-
-    return added;
   }
 
   async save() {
