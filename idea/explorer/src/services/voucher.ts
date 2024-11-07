@@ -68,7 +68,6 @@ export class VoucherService {
       }
 
       qb.andWhere(`(${conditions.join(' OR ')})`, params);
-      console.log(qb.getQuery());
     }
 
     if (expired !== undefined) {
