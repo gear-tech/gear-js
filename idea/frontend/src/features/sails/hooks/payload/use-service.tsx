@@ -13,7 +13,11 @@ function useService(sails: Sails, key: 'functions' | 'queries') {
     functionSelect.onChange({ target: { value: defaultFunction } } as ChangeEvent<HTMLSelectElement>);
   };
 
-  const select = useSelect(services, { onChange: onSelectChange, label: 'Service' });
+  const nonEmptyServices = Object.fromEntries(
+    Object.entries(services).filter(([, service]) => Object.keys(service[key]).length > 0),
+  );
+
+  const select = useSelect(nonEmptyServices, { onChange: onSelectChange, label: 'Service' });
 
   const functions = services[select.value][key];
   const functionSelect = useSelect(functions, { label: key === 'functions' ? 'Function' : 'Query' });
