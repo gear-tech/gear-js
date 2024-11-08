@@ -6,6 +6,7 @@ import { MessageForm, SailsMessageForm } from '@/widgets/messageForm';
 import { useMetadata } from '@/features/metadata';
 import { useSails } from '@/features/sails';
 import { useProgram } from '@/features/program';
+import { isAnyKey } from '@/shared/helpers';
 
 import styles from './Send.module.scss';
 
@@ -31,12 +32,13 @@ const Send = () => {
   const { data: program } = useProgram(programId);
   const { metadata, isMetadataReady } = useMetadata(program?.metahash);
   const { sails } = useSails(program?.codeId);
+  const isAnyFunction = sails ? Object.values(sails.services).some(({ functions }) => isAnyKey(functions)) : false;
 
   return (
     <>
       <h2 className={styles.heading}>{isReply ? 'Send Reply' : 'Send Message'}</h2>
 
-      {sails ? (
+      {sails && isAnyFunction ? (
         <SailsMessageForm id={id} programId={programId} isReply={isReply} sails={sails} />
       ) : (
         <MessageForm id={id} programId={programId} isReply={isReply} metadata={metadata} isLoading={!isMetadataReady} />
