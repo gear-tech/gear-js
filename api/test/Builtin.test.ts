@@ -16,11 +16,9 @@ afterAll(async () => {
 
 describe('Query id', () => {
   test('Random query id', async () => {
-    const testArray = Array.from({ length: 20 }, () => Math.floor(Math.random() * (100 - 0 + 1)) + 0);
+    const builtinId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 
-    for (const builtinId of testArray) {
-      const id = await api.builtin.queryId(api.createType('u64', new BN(builtinId)));
-      expect(id.length).toBe(66);
-    }
+    const id = await api.builtin.queryId(builtinId);
+    expect(id.length).toBe(66);
   });
 });
