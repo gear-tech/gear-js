@@ -135,6 +135,8 @@ const fetchWithGuard = async <T extends object>(...args: Parameters<typeof fetch
 
 const getErrorMessage = (error: unknown) => (error instanceof Error ? error.message : String(error));
 
+const isAnyKey = (value: Record<string, unknown>) => Object.keys(value).length > 0;
+
 export {
   checkWallet,
   formatDate,
@@ -162,4 +164,5 @@ export {
   isHex,
   fetchWithGuard,
   getErrorMessage,
+  isAnyKey,
 };

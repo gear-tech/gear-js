@@ -2,7 +2,7 @@ import cx from 'clsx';
 import { ReactNode, useState } from 'react';
 import { Sails } from 'sails-js';
 
-import { getPreformattedText } from '@/shared/helpers';
+import { getPreformattedText, isAnyKey } from '@/shared/helpers';
 import { PreformattedBlock } from '@/shared/ui';
 
 import ArrowSVG from '../../assets/arrow.svg?react';
@@ -56,9 +56,6 @@ function SailsPreview({ value }: Props) {
     Object.entries(funcs)
       .map(([name, func]) => getFunc(name, func))
       .join('\n');
-
-  const isAnyKey = (functions: Record<string, SailsServiceFunc | SailsServiceQuery | SailsServiceEvent>) =>
-    Object.keys(functions).length > 0;
 
   const serviceEntries = Object.entries(services);
 

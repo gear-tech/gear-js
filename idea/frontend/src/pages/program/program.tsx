@@ -6,7 +6,7 @@ import { generatePath, useParams } from 'react-router-dom';
 
 import { useModal } from '@/hooks';
 import { ProgramStatus, ProgramTable, useProgram } from '@/features/program';
-import { getShortName } from '@/shared/helpers';
+import { getShortName, isAnyKey } from '@/shared/helpers';
 import { Box, UILink } from '@/shared/ui';
 import { absoluteRoutes, routes } from '@/shared/config';
 import SendSVG from '@/shared/assets/images/actions/send.svg?react';
@@ -34,7 +34,7 @@ const Program = () => {
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(program?.metahash);
   const { sails, isLoading: isSailsLoading, refetch: refetchSails } = useSails(program?.codeId);
   const isLoading = !isMetadataReady || isSailsLoading;
-  const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => Object.keys(queries).length) : false;
+  const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => isAnyKey(queries)) : false;
 
   const [tabIndex, setTabIndex] = useState(0);
 

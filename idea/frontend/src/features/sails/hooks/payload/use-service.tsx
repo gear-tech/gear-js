@@ -1,6 +1,8 @@
 import { ChangeEvent, useMemo } from 'react';
 import { Sails } from 'sails-js';
 
+import { isAnyKey } from '@/shared/helpers';
+
 import { getDefaultPayloadValue, getPayloadSchema } from '../../utils';
 import { useSelect } from './use-select';
 
@@ -13,9 +15,7 @@ function useService(sails: Sails, key: 'functions' | 'queries') {
     functionSelect.onChange({ target: { value: defaultFunction } } as ChangeEvent<HTMLSelectElement>);
   };
 
-  const nonEmptyServices = Object.fromEntries(
-    Object.entries(services).filter(([, service]) => Object.keys(service[key]).length > 0),
-  );
+  const nonEmptyServices = Object.fromEntries(Object.entries(services).filter(([, service]) => isAnyKey(service[key])));
 
   const select = useSelect(nonEmptyServices, { onChange: onSelectChange, label: 'Service' });
 
