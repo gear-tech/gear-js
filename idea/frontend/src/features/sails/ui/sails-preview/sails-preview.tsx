@@ -57,22 +57,31 @@ function SailsPreview({ value }: Props) {
       .map(([name, func]) => getFunc(name, func))
       .join('\n');
 
+  const isAnyKey = (functions: Record<string, SailsServiceFunc | SailsServiceQuery | SailsServiceEvent>) =>
+    Object.keys(functions).length > 0;
+
   const serviceEntries = Object.entries(services);
 
   const renderServices = () =>
     serviceEntries.map(([name, { functions, queries, events }]) => (
       <Accordion key={name} heading={name}>
-        <Accordion heading="Functions">
-          <PreformattedBlock text={getFunctions(functions, getServiceFunction)} />
-        </Accordion>
+        {isAnyKey(functions) && (
+          <Accordion heading="Functions">
+            <PreformattedBlock text={getFunctions(functions, getServiceFunction)} />
+          </Accordion>
+        )}
 
-        <Accordion heading="Queries">
-          <PreformattedBlock text={getFunctions(queries, getServiceFunction)} />
-        </Accordion>
+        {isAnyKey(queries) && (
+          <Accordion heading="Queries">
+            <PreformattedBlock text={getFunctions(queries, getServiceFunction)} />
+          </Accordion>
+        )}
 
-        <Accordion heading="Events">
-          <PreformattedBlock text={getFunctions(events, getEventFunction)} />
-        </Accordion>
+        {isAnyKey(events) && (
+          <Accordion heading="Events">
+            <PreformattedBlock text={getFunctions(events, getEventFunction)} />
+          </Accordion>
+        )}
       </Accordion>
     ));
 
