@@ -32,6 +32,7 @@ type VouchersParams = {
   id: HexString;
   owner: string;
   spender: string;
+  programs: HexString[];
   declined: boolean;
   expired: boolean;
 };

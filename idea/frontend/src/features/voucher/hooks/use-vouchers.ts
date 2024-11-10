@@ -1,35 +1,32 @@
 import { HexString } from '@gear-js/api';
-import { useApi } from '@gear-js/react-hooks';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { DEFAULT_LIMIT, VOUCHERS_API_URL } from '@/shared/config';
+import { DEFAULT_LIMIT } from '@/shared/config';
 
-import { getVouchers, getNextPageParam } from '../utils';
 import { VouchersParams } from '../types';
+import { getVouchers } from '../requests';
+import { INFINITE_QUERY } from '@/api';
 
 type FilterParams = Partial<Pick<VouchersParams, 'declined' | 'expired' | 'owner' | 'spender'>>;
 
 function useVouchers(id: string, filterParams: FilterParams, programId?: HexString) {
-  const { api } = useApi();
-  const genesis = api?.genesisHash.toHex();
-  const url = genesis ? VOUCHERS_API_URL[genesis as keyof typeof VOUCHERS_API_URL] : undefined;
-
   const { data, isLoading, hasNextPage, fetchNextPage, refetch } = useInfiniteQuery({
-    queryKey: ['vouchers', id, filterParams, url, programId],
-    queryFn: ({ pageParam }) =>
-      getVouchers(url!, {
-        limit: DEFAULT_LIMIT,
-        offset: pageParam,
-        programs: programId ? [programId] : undefined,
-        id,
-        ...filterParams,
-      }),
-    initialPageParam: 0,
-    getNextPageParam,
-    enabled: Boolean(url),
+    initialPageParam: INFINITE_QUERY.INITIAL_PAGE_PARAM,
+    getNextPageParam: INFINITE_QUERY.GET_NEXT_PAGE_PARAM,
+    queryKey: ['vouchers', id, filterParams, programId],
+    queryFn: async ({ pageParam }) =>
+      (
+        await getVouchers({
+          limit: DEFAULT_LIMIT,
+          offset: pageParam,
+          programs: programId ? [programId] : undefined,
+          id: id as HexString,
+          ...filterParams,
+        })
+      ).result,
   });
 
-  const vouchers = data?.pages.flatMap((page) => page.vouchers) || [];
+  const vouchers = data?.pages.flatMap((page) => page.result) || [];
   const vouchersCount = data?.pages[0].count || 0;
 
   return [vouchers, vouchersCount, isLoading, hasNextPage, fetchNextPage, refetch] as const;
