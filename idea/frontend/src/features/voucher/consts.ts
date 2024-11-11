@@ -24,9 +24,4 @@ const DEFAULT_FILTER_VALUES = {
   status: '',
 };
 
-const METHOD = {
-  DATA: 'voucher.data',
-  ALL: 'voucher.all',
-} as const;
-
-export { FIELD_NAME, VOUCHER_TYPE, DEFAULT_VALUES, DEFAULT_FILTER_VALUES, METHOD };
+export { FIELD_NAME, VOUCHER_TYPE, DEFAULT_VALUES, DEFAULT_FILTER_VALUES };

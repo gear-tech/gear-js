@@ -9,7 +9,6 @@ import {
 } from './ui';
 
 import { useVouchers, useVoucherFilters } from './hooks';
-import { Voucher } from './types';
 
 export {
   IssueVoucher,
@@ -22,5 +21,3 @@ export {
   Vouchers,
   ProgramVouchers,
 };
-
-export type { Voucher };

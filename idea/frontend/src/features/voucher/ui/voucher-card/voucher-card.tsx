@@ -8,12 +8,12 @@ import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
 import { copyToClipboard, getShortName } from '@/shared/helpers';
 import CopySVG from '@/shared/assets/images/actions/copyGreen.svg?react';
 
-import { Voucher } from '../../types';
 import { RevokeVoucher } from '../revoke-voucher';
 import { DeclineVoucher } from '../decline-voucher';
 import { UpdateVoucher } from '../update-voucher';
 import styles from './voucher-card.module.scss';
 import { OwnerBlock } from '@/shared/ui';
+import { Voucher } from '../../api/types';
 
 type Props = {
   voucher: Voucher;
