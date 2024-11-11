@@ -8,7 +8,7 @@ import type { H256 } from '@polkadot/types/interfaces/runtime';
 import type { Observable } from '@polkadot/types/types';
 
 import { GasInfo, ReplyInfo } from '../interfaces';
-import { InflationInfo } from '../common';
+import { InflationInfo, Proof } from '../common';
 
 export type __AugmentedRpc = AugmentedRpc<() => unknown>;
 
@@ -162,6 +162,11 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
     };
     stakingRewards: {
       inflationInfo: AugmentedRpc<(at?: BlockHash | string | Uint8Array) => Observable<InflationInfo>>;
+    };
+    gearEthBridge: {
+      merkleProof: AugmentedRpc<
+        (hash: string | Uint8Array | H256, at?: BlockHash | string | Uint8Array) => Observable<Proof>
+      >;
     };
     gearBuiltin: {
       queryId: AugmentedRpc<(builtinId: u64) => Observable<H256>>;

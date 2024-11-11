@@ -1,6 +1,6 @@
 import '@polkadot/api-base/types/submittable';
 
-import type { AccountId32, Percent } from '@polkadot/types/interfaces/runtime';
+import type { AccountId32, H160, Percent } from '@polkadot/types/interfaces/runtime';
 import type { BTreeSet, Bytes, Option, bool, u128, u32, u64 } from '@polkadot/types-codec';
 import {
   GprimitivesActorId,
@@ -114,6 +114,30 @@ declare module '@polkadot/api-base/types/submittable' {
         (fraction: Percent | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>,
         [Percent]
       >;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
+    };
+    gearEthBridge: {
+      /**
+       * See [`Pallet::pause`].
+       **/
+      pause: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
+      /**
+       * See [`Pallet::send_eth_message`].
+       **/
+      sendEthMessage: AugmentedSubmittable<
+        (
+          destination: H160 | string | Uint8Array,
+          payload: Bytes | string | Uint8Array,
+        ) => SubmittableExtrinsic<ApiType>,
+        [H160, Bytes]
+      >;
+      /**
+       * See [`Pallet::unpause`].
+       **/
+      unpause: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
       /**
        * Generic tx
        **/

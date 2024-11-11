@@ -312,6 +312,21 @@
         ],
         "type": "H256"
       }
+    },
+    "gearEthBridge": {
+      "merkleProof": {
+        "params": [
+          {
+            "name": "hash",
+            "type": "H256"
+          },
+          {
+            "name": "at",
+            "type": "Option<BlockHash>"
+          }
+        ],
+        "type": "Proof"
+      }
     }
   }
 }

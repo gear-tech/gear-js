@@ -2,7 +2,7 @@
 import '@polkadot/api-base/types/storage';
 
 import type { ApiTypes, AugmentedQuery, QueryableStorageEntry } from '@polkadot/api-base/types';
-import type { BTreeMap, Bytes, Null, Option, U8aFixed, bool, u128, u32, u64 } from '@polkadot/types-codec';
+import type { BTreeMap, Bytes, Null, Option, U256, U8aFixed, Vec, bool, u128, u32, u64 } from '@polkadot/types-codec';
 import type { AnyNumber, ITuple } from '@polkadot/types-codec/types';
 import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
 import type { Observable } from '@polkadot/types/types';
@@ -85,6 +85,84 @@ declare module '@polkadot/api-base/types/storage' {
       programsMap: AugmentedQuery<ApiType, () => Observable<BTreeMap<H256, H256>>, []> &
         QueryableStorageEntry<ApiType, []>;
       remapId: AugmentedQuery<ApiType, () => Observable<bool>, []> & QueryableStorageEntry<ApiType, []>;
+      /**
+       * Generic query
+       **/
+      [key: string]: QueryableStorageEntry<ApiType>;
+    };
+    gearEthBridge: {
+      /**
+       * Primary storage.
+       *
+       * Keeps hash of queued validator keys for the next era.
+       *
+       * **Invariant**: Key exists in storage since first block of some era's last
+       * session, until initialization of the second block of the next era.
+       **/
+      authoritySetHash: AugmentedQuery<ApiType, () => Observable<Option<H256>>, []> &
+        QueryableStorageEntry<ApiType, []>;
+      /**
+       * Operational storage.
+       *
+       * Defines in how many on_initialize hooks queue, queue merkle root and
+       * grandpa keys hash should be cleared.
+       *
+       * **Invariant**: set to 2 on_init hooks when new session with authorities
+       * set change, then decreasing to zero on each new block hook. When equals
+       * to zero, reset is performed.
+       **/
+      clearTimer: AugmentedQuery<ApiType, () => Observable<Option<u32>>, []> & QueryableStorageEntry<ApiType, []>;
+      /**
+       * Lifecycle storage.
+       *
+       * Defines if pallet got initialized and focused on common session changes.
+       **/
+      initialized: AugmentedQuery<ApiType, () => Observable<bool>, []> & QueryableStorageEntry<ApiType, []>;
+      /**
+       * Operational storage.
+       *
+       * Keeps next message's nonce for bridging. Must be increased on each use.
+       **/
+      messageNonce: AugmentedQuery<ApiType, () => Observable<U256>, []> & QueryableStorageEntry<ApiType, []>;
+      /**
+       * Lifecycle storage.
+       *
+       * Defines if pallet is accepting any mutable requests. Governance-ruled.
+       **/
+      paused: AugmentedQuery<ApiType, () => Observable<bool>, []> & QueryableStorageEntry<ApiType, []>;
+      /**
+       * Primary storage.
+       *
+       * Keeps bridge's queued messages keccak hashes.
+       **/
+      queue: AugmentedQuery<ApiType, () => Observable<Vec<H256>>, []> & QueryableStorageEntry<ApiType, []>;
+      /**
+       * Operational storage.
+       *
+       * Defines if queue was changed within the block, it's necessary to
+       * update queue merkle root by the end of the block.
+       **/
+      queueChanged: AugmentedQuery<ApiType, () => Observable<bool>, []> & QueryableStorageEntry<ApiType, []>;
+      /**
+       * Primary storage.
+       *
+       * Keeps merkle root of the bridge's queued messages.
+       *
+       * **Invariant**: Key exists since pallet initialization. If queue is empty,
+       * zeroed hash set in storage.
+       **/
+      queueMerkleRoot: AugmentedQuery<ApiType, () => Observable<Option<H256>>, []> & QueryableStorageEntry<ApiType, []>;
+      /**
+       * Operational storage.
+       *
+       * Declares timer of the session changes (`on_new_session` calls),
+       * when `queued_validators` must be stored within the pallet.
+       *
+       * **Invariant**: reducing each time on new session, it equals 0 only
+       * since storing grandpa keys hash until next session change,
+       * when it becomes `SessionPerEra - 1`.
+       **/
+      sessionsTimer: AugmentedQuery<ApiType, () => Observable<u32>, []> & QueryableStorageEntry<ApiType, []>;
       /**
        * Generic query
        **/

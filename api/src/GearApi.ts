@@ -16,6 +16,7 @@ import { GearProgramState } from './State';
 import { GearProgramStorage } from './Storage';
 import { GearVoucher } from './Voucher';
 import { GearWaitlist } from './Waitlist';
+import { GearEthBridge } from './EthBridge';
 import { GearBuiltin } from './Builtin';
 
 export class GearApi extends ApiPromise {
@@ -32,6 +33,7 @@ export class GearApi extends ApiPromise {
   public code: GearCode;
   public waitlist: GearWaitlist;
   public voucher: GearVoucher;
+  public ethBridge: GearEthBridge;
   public builtin: GearBuiltin;
   public provider: WsProvider;
 
@@ -89,6 +91,7 @@ export class GearApi extends ApiPromise {
     this.mailbox = new GearMailbox(this);
     this.code = new GearCode(this);
     this.waitlist = new GearWaitlist(this);
+    this.ethBridge = new GearEthBridge(this);
     this.builtin = new GearBuiltin(this);
   }
 

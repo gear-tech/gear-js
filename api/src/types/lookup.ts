@@ -1,6 +1,6 @@
 import '@polkadot/types/lookup';
 
-import type { AccountId32, H256, MultiAddress, Percent } from '@polkadot/types/interfaces/runtime';
+import type { AccountId32, H160, H256, MultiAddress, Percent } from '@polkadot/types/interfaces/runtime';
 import type {
   BTreeMap,
   BTreeSet,
@@ -10,6 +10,7 @@ import type {
   Null,
   Option,
   Struct,
+  U256,
   U8aFixed,
   Vec,
   bool,
@@ -183,6 +184,18 @@ export interface PalletGearVoucherInternalPrepaidCall extends Enum {
   } & Struct;
   readonly isDeclineVoucher: boolean;
   readonly type: 'SendMessage' | 'SendReply' | 'UploadCode' | 'DeclineVoucher';
+}
+
+/** @name PalletGearEthBridgeCall (277) */
+export interface PalletGearEthBridgeCall extends Enum {
+  readonly isPause: boolean;
+  readonly isUnpause: boolean;
+  readonly isSendEthMessage: boolean;
+  readonly asSendEthMessage: {
+    readonly destination: H160;
+    readonly payload: Bytes;
+  } & Struct;
+  readonly type: 'Pause' | 'Unpause' | 'SendEthMessage';
 }
 
 /** @name PalletGearDebugCall (279) */
@@ -514,19 +527,37 @@ export interface PalletGearVoucherEvent extends Enum {
   readonly type: 'VoucherIssued' | 'VoucherRevoked' | 'VoucherUpdated' | 'VoucherDeclined';
 }
 
-/** @name PalletGearDebugEvent (339) */
-export interface PalletGearDebugEvent extends Enum {
-  readonly isDebugMode: boolean;
-  readonly asDebugMode: bool;
-  readonly isDebugDataSnapshot: boolean;
-  readonly asDebugDataSnapshot: PalletGearDebugDebugData;
-  readonly type: 'DebugMode' | 'DebugDataSnapshot';
+/** @name PalletGearEthBridgeEvent (339) */
+export interface PalletGearEthBridgeEvent extends Enum {
+  readonly isAuthoritySetHashChanged: boolean;
+  readonly asAuthoritySetHashChanged: H256;
+  readonly isBridgeCleared: boolean;
+  readonly isBridgeInitialized: boolean;
+  readonly isBridgePaused: boolean;
+  readonly isBridgeUnpaused: boolean;
+  readonly isMessageQueued: boolean;
+  readonly asMessageQueued: {
+    readonly message: PalletGearEthBridgeInternalEthMessage;
+    readonly hash_: H256;
+  } & Struct;
+  readonly isQueueMerkleRootChanged: boolean;
+  readonly asQueueMerkleRootChanged: H256;
+  readonly type:
+    | 'AuthoritySetHashChanged'
+    | 'BridgeCleared'
+    | 'BridgeInitialized'
+    | 'BridgePaused'
+    | 'BridgeUnpaused'
+    | 'MessageQueued'
+    | 'QueueMerkleRootChanged';
 }
 
-/** @name PalletGearDebugDebugData (340) */
-export interface PalletGearDebugDebugData extends Struct {
-  readonly dispatchQueue: Vec<GearCoreMessageStoredStoredDispatch>;
-  readonly programs: Vec<PalletGearDebugProgramDetails>;
+/** @name PalletGearEthBridgeInternalEthMessage (340) */
+export interface PalletGearEthBridgeInternalEthMessage extends Struct {
+  readonly nonce: U256;
+  readonly source: H256;
+  readonly destination: H160;
+  readonly payload: Bytes;
 }
 
 /** @name GearCoreMessageStoredStoredDispatch (342) */
@@ -545,14 +576,19 @@ export interface GearCoreMessageDispatchKind extends Enum {
   readonly type: 'Init' | 'Handle' | 'Reply' | 'Signal';
 }
 
-/** @name GearCoreMessageStoredStoredMessage (344) */
-export interface GearCoreMessageStoredStoredMessage extends Struct {
-  readonly id: GprimitivesMessageId;
-  readonly source: GprimitivesActorId;
-  readonly destination: GprimitivesActorId;
-  readonly payload: Bytes;
-  readonly value: Compact<u128>;
-  readonly details: Option<GearCoreMessageCommonMessageDetails>;
+/** @name PalletGearDebugEvent (344) */
+export interface PalletGearDebugEvent extends Enum {
+  readonly isDebugMode: boolean;
+  readonly asDebugMode: bool;
+  readonly isDebugDataSnapshot: boolean;
+  readonly asDebugDataSnapshot: PalletGearDebugDebugData;
+  readonly type: 'DebugMode' | 'DebugDataSnapshot';
+}
+
+/** @name PalletGearDebugDebugData (345) */
+export interface PalletGearDebugDebugData extends Struct {
+  readonly dispatchQueue: Vec<GearCoreMessageStoredStoredDispatch>;
+  readonly programs: Vec<PalletGearDebugProgramDetails>;
 }
 
 /** @name GearCoreMessageCommonMessageDetails (346) */
@@ -576,6 +612,16 @@ export interface GearCoreErrorsSimpleSignalCode extends Enum {
   readonly asExecution: GearCoreErrorsSimpleSimpleExecutionError;
   readonly isRemovedFromWaitlist: boolean;
   readonly type: 'Execution' | 'RemovedFromWaitlist';
+}
+
+/** @name GearCoreMessageStoredStoredMessage (349) */
+export interface GearCoreMessageStoredStoredMessage extends Struct {
+  readonly id: GprimitivesMessageId;
+  readonly source: GprimitivesActorId;
+  readonly destination: GprimitivesActorId;
+  readonly payload: Bytes;
+  readonly value: Compact<u128>;
+  readonly details: Option<GearCoreMessageCommonMessageDetails>;
 }
 
 /** @name GearCoreMessageContextContextStore (350) */
@@ -1209,3 +1255,18 @@ export interface PalletSudoError extends Enum {
 
 /** @name PalletGearDebugError (645) */
 type PalletGearDebugError = Null;
+
+/** @name PalletGearEthBridgeError (652) */
+export interface PalletGearEthBridgeError extends Enum {
+  readonly isBridgeIsNotYetInitialized: boolean;
+  readonly isBridgeIsPaused: boolean;
+  readonly isMaxPayloadSizeExceeded: boolean;
+  readonly isQueueCapacityExceeded: boolean;
+  readonly isIncorrectValueApplied: boolean;
+  readonly type:
+    | 'BridgeIsNotYetInitialized'
+    | 'BridgeIsPaused'
+    | 'MaxPayloadSizeExceeded'
+    | 'QueueCapacityExceeded'
+    | 'IncorrectValueApplied';
+}

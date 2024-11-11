@@ -88,6 +88,26 @@ declare module '@polkadot/api-base/types/consts' {
        **/
       [key: string]: Codec;
     };
+    gearEthBridge: {
+      /**
+       * Constant defining maximal payload size in bytes of message for bridging.
+       **/
+      maxPayloadSize: u32 & AugmentedConst<ApiType>;
+      /**
+       * Constant defining maximal amount of messages that are able to be
+       * bridged within the single staking era.
+       **/
+      queueCapacity: u32 & AugmentedConst<ApiType>;
+      /**
+       * Constant defining amount of sessions in manager for keys rotation.
+       * Similar to `pallet_staking::SessionsPerEra`.
+       **/
+      sessionsPerEra: u32 & AugmentedConst<ApiType>;
+      /**
+       * Generic const
+       **/
+      [key: string]: Codec;
+    };
     gearGas: {
       /**
        * The maximum amount of gas that can be used within a single block.
