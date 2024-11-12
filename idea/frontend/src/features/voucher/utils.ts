@@ -1,5 +1,3 @@
-import { DEFAULT_LIMIT } from '@/shared/config';
-
 const MULTIPLIER = { MS: 1000, S: 60, M: 60, H: 24, D: 30 };
 
 function getMilliseconds(value: number, unit: 'hour' | 'day' | 'month') {

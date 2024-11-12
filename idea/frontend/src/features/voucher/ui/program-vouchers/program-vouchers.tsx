@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { isHex } from '@/shared/helpers';
 import { ProgramTabLayout, SearchForm } from '@/shared/ui';
 
-import { useVoucherFilters, useVouchers } from '../../hooks';
+import { useVouchers } from '../../api';
+import { useVoucherFilters } from '../../hooks';
 import { Vouchers } from '../vouchers';
 import { VoucherFilters } from '../voucher-filters';
 

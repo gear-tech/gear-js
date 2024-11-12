@@ -2,9 +2,10 @@ import { Button } from '@gear-js/ui';
 
 import EditSVG from '@/shared/assets/images/actions/edit.svg?react';
 import { useModalState } from '@/hooks';
+
+import { Voucher } from '../../api';
 import { UpdateVoucherModal } from '../update-voucher-modal';
 import styles from './update-voucher.module.scss';
-import { Voucher } from '../../api/types';
 
 type Props = {
   voucher: Voucher;

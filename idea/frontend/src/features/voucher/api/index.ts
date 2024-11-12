@@ -1,4 +1,5 @@
-import { getVoucher, getVouchers } from './requests';
-import { METHOD } from './consts';
+import { useVouchers } from './hooks';
+import { Voucher } from './types';
 
-export { getVoucher, getVouchers, METHOD };
+export { useVouchers };
+export type { Voucher };
