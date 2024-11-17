@@ -2,7 +2,7 @@
 
 extern crate alloc;
 
-use alloc::string::String;
+use alloc::{string::String, vec::Vec};
 use codec::{Decode, Encode};
 use gmeta::{InOut, Metadata};
 use gstd::{
@@ -16,12 +16,35 @@ use scale_info::TypeInfo;
 pub struct ProgramMetadata;
 
 impl Metadata for ProgramMetadata {
-    type Init = InOut<BTreeSet<u8>, BTreeMap<String, u8>>;
+    type Init = InOut<InitInput, InitOutput>;
     type Handle = InOut<Action, String>;
+    type Reply = ReplyType;
     type Others = InOut<(), ()>;
-    type Reply = String;
     type Signal = H256;
     type State = InOut<Option<u32>, Vec<Wallet>>;
+}
+
+#[derive(TypeInfo, Decode, Encode)]
+pub enum InitInput {
+    InputStruct(InputStruct),
+    BTreeSetInput(BTreeSet<u8>),
+}
+
+#[derive(TypeInfo, Decode, Encode)]
+pub enum InitOutput {
+    Text(String),
+    BTreeMapOutput(BTreeMap<String, u8>),
+}
+
+#[derive(TypeInfo, Decode, Encode)]
+pub struct InputStruct {
+    pub input: String,
+}
+
+#[derive(TypeInfo, Decode, Encode)]
+pub enum ReplyType {
+    TextReply(String),
+    StructReply(InputStruct),
 }
 
 #[derive(TypeInfo, Default, Decode, Encode)]
@@ -42,6 +65,7 @@ pub enum Action {
     Four(SomeStruct<u128, u8>),
     Five(SomeStruct<String, X>),
     Six(ActorId, EmptyStruct),
+    Input(String),
 }
 
 #[derive(TypeInfo, Encode, Decode, Clone)]

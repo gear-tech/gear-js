@@ -1,0 +1,22 @@
+[package]
+name = "test-meta-union"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+test-union-io = { path = "io" }
+gstd = { git = "https://github.com/gear-tech/gear.git" }
+codec = { package = "parity-scale-codec", version = "3.6.9", default-features = false, features = [
+    "derive",
+    "full",
+] }
+
+[build-dependencies]
+test-union-io = { path = "io" }
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", features = [
+    "metawasm",
+] }
+
+[features]
+default = ["std"]
+std = ["codec/std"]
