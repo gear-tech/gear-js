@@ -24,29 +24,6 @@ impl Metadata for ProgramMetadata {
     type State = InOut<Option<u32>, Vec<Wallet>>;
 }
 
-#[derive(TypeInfo, Decode, Encode)]
-pub enum InitInput {
-    InputStruct(InputStruct),
-    BTreeSetInput(BTreeSet<u8>),
-}
-
-#[derive(TypeInfo, Decode, Encode)]
-pub enum InitOutput {
-    Text(String),
-    BTreeMapOutput(BTreeMap<String, u8>),
-}
-
-#[derive(TypeInfo, Decode, Encode)]
-pub struct InputStruct {
-    pub input: String,
-}
-
-#[derive(TypeInfo, Decode, Encode)]
-pub enum ReplyType {
-    TextReply(String),
-    StructReply(InputStruct),
-}
-
 #[derive(TypeInfo, Default, Decode, Encode)]
 pub struct SomeStruct<P1, P2> {
     array8: [P1; 8],
@@ -95,4 +72,27 @@ pub struct Wallet {
 pub enum State {
     DappMeta(String),
     Data(Vec<Wallet>),
+}
+
+#[derive(TypeInfo, Decode, Encode)]
+pub enum InitInput {
+    InputStruct(InputStruct),
+    BTreeSetInput(BTreeSet<u8>),
+}
+
+#[derive(TypeInfo, Decode, Encode)]
+pub enum InitOutput {
+    Text(String),
+    BTreeMapOutput(BTreeMap<String, u8>),
+}
+
+#[derive(TypeInfo, Decode, Encode)]
+pub struct InputStruct {
+    pub input: String,
+}
+
+#[derive(TypeInfo, Decode, Encode)]
+pub enum ReplyType {
+    TextReply(String),
+    StructReply(InputStruct),
 }

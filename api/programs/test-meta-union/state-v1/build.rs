@@ -16,29 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-#![no_std]
-
-// Reexport of types
-pub use test_union_io::*;
-
-// For wasm compilation
-#[cfg(not(feature = "std"))]
-mod wasm;
-
-// Exports for native usage as dependency in other crates
-#[cfg(feature = "std")]
-mod exports {
-    mod code {
-        include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
-    }
-
-    // Binary itself
-    pub use code::WASM_BINARY_OPT as WASM_BINARY;
-
-    // Metadata of the binary, defining types and registry for JS
-    pub use code::WASM_METADATA;
+fn main() {
+    gear_wasm_builder::build_metawasm();
 }
-
-// Empty exports while compiling into wasm
-#[cfg(not(feature = "std"))]
-mod exports {}

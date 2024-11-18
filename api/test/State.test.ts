@@ -4,13 +4,13 @@ import { join } from 'path';
 import { readFileSync } from 'fs';
 
 import { CreateType, GearApi, HumanTypesRepr, ProgramMetadata, StateMetadata, getStateMetadata } from '../src';
-import { TARGET, TEST_META_META, WS_ADDRESS } from './config';
+import { TARGET, TEST_META_UNION, WS_ADDRESS } from './config';
 import { checkInit, getAccount, sleep } from './utilsFunctions';
 
 const api = new GearApi({ providerAddress: WS_ADDRESS });
 let alice: KeyringPair;
 
-const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
+const code = readFileSync(join(TARGET, 'test_meta_union.opt.wasm'));
 
 const stateV1 = readFileSync(join(TARGET, 'test_meta_state_v1.meta.wasm'));
 
@@ -19,7 +19,7 @@ let stateV1Meta: StateMetadata;
 const stateV2 = readFileSync(join(TARGET, 'test_meta_state_v2.meta.wasm'));
 let stateV2Meta: StateMetadata;
 
-const metaHex = `0x${readFileSync(TEST_META_META, 'utf-8')}` as HexString;
+const metaHex = `0x${readFileSync(TEST_META_UNION, 'utf-8')}` as HexString;
 
 const meta = ProgramMetadata.from(metaHex);
 
@@ -40,7 +40,7 @@ describe('Read State', () => {
     const program = api.program.upload(
       {
         code,
-        initPayload: [1, 2, 3],
+        initPayload: { BTreeSetInput: [1, 2, 3] },
         gasLimit: 200_000_000_000,
       },
       meta,

@@ -1,13 +1,11 @@
 [package]
-name = "test-waitlist"
+name = "test-union"
 version = "0.1.0"
 authors = ["Gear Technologies"]
 edition = "2021"
 
 [dependencies]
 gstd.workspace = true
-scale-info.workspace = true
-codec.workspace = true
 
 [build-dependencies]
 gear-wasm-builder.workspace = true

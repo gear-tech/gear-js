@@ -1,0 +1,18 @@
+[workspace]
+resolver = "2"
+
+members = ["test-meta-union", 'test-union']
+
+[workspace.dependencies]
+gmeta = { git = "https://github.com/gear-tech/gear.git" }
+gstd = { git = "https://github.com/gear-tech/gear.git" }
+scale-info = { version = "2.11.0", default-features = false, features = [
+    "derive",
+] }
+codec = { package = "parity-scale-codec", version = "3.6.9", default-features = false, features = [
+    "derive",
+    "full",
+] }
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", features = [
+    "metawasm",
+] }

@@ -8,7 +8,7 @@ import { GearApi } from '../src';
 
 const api = new GearApi({ providerAddress: WS_ADDRESS });
 const accounts = {};
-const code = readFileSync(join(TARGET, 'test_waitlist.opt.wasm'));
+const code = readFileSync(join(TARGET, 'test_union.opt.wasm'));
 let codeId: HexString;
 
 beforeAll(async () => {

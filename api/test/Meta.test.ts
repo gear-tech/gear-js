@@ -1,4 +1,4 @@
-import { TEST_META_META } from './config';
+import { TEST_META_UNION } from './config';
 import fs from 'fs';
 
 import { ProgramMetadata, encodePayload } from '../src';
@@ -6,19 +6,19 @@ import { ProgramMetadata, encodePayload } from '../src';
 let meta: ProgramMetadata;
 
 beforeAll(() => {
-  const hex = fs.readFileSync(TEST_META_META, 'utf-8');
+  const hex = fs.readFileSync(TEST_META_UNION, 'utf-8');
   meta = ProgramMetadata.from(`0x${hex}`);
 });
 
 describe('Get type definitions', () => {
   test('Program Metadata', () => {
     expect(meta.types).toEqual({
-      init: { input: 0, output: 3 },
-      handle: { input: 7, output: 4 },
-      reply: 4,
+      init: { input: 0, output: 6 },
+      handle: { input: 10, output: 2 },
+      reply: 29,
       others: { input: null, output: null },
-      signal: 26,
-      state: { input: 27, output: 29 },
+      signal: 30,
+      state: { input: 31, output: 33 },
     });
   });
 

@@ -6,7 +6,7 @@ import { join } from 'path';
 import { readFileSync } from 'fs';
 
 import { GearApi, ProgramMetadata, decodeAddress } from '../src';
-import { TARGET, TEST_META_META, WS_ADDRESS } from './config';
+import { TARGET, TEST_META_UNION, WS_ADDRESS } from './config';
 import { checkInit, getAccount, sendTransaction, sleep, waitForPausedProgram } from './utilsFunctions';
 
 const api = new GearApi({ providerAddress: WS_ADDRESS });
@@ -18,8 +18,8 @@ let metaHash: HexString;
 let expiredBN: number;
 let pausedBlockHash: HexString;
 
-const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
-const metaHex: HexString = `0x${readFileSync(TEST_META_META, 'utf-8')}`;
+const code = readFileSync(join(TARGET, 'test_meta_union.opt.wasm'));
+const metaHex: HexString = `0x${readFileSync(TEST_META_UNION, 'utf-8')}`;
 
 beforeAll(async () => {
   await api.isReadyOrError;
@@ -91,7 +91,7 @@ describe('New Program', () => {
     pausedBlockHash = blockHash;
   });
 
-  test('Сreate program', async () => {
+  test('Create program', async () => {
     expect(codeId).toBeDefined();
     const metadata = ProgramMetadata.from(metaHex);
 

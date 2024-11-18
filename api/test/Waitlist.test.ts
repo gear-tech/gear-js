@@ -9,7 +9,7 @@ import { readFileSync } from 'fs';
 
 const api = new GearApi({ providerAddress: WS_ADDRESS });
 
-const CODE_PATH = join(TARGET, 'test_waitlist.opt.wasm');
+const CODE_PATH = join(TARGET, 'test_union.opt.wasm');
 let alice: KeyringPair;
 let programId: HexString;
 let messageId: HexString;
