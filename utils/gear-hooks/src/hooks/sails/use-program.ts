@@ -1,21 +1,24 @@
 import { GearApi, HexString } from '@gear-js/api';
-import { UseQueryOptions, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { useApi } from 'context';
+
+import { QueryParameters } from './types';
 
 type Program<T> = {
   new (api: GearApi, programId?: HexString): T;
 };
 
-type QueryOptions<T> = Omit<UseQueryOptions<T, undefined, T, (string | undefined)[]>, 'queryKey' | 'queryFn'>;
-
-type UseProgramParameters<T> = {
-  library: Program<T>;
+type UseProgramParameters<TQueryFnData, TData> = QueryParameters<TQueryFnData, TData> & {
+  library: Program<TQueryFnData>;
   id: HexString | undefined;
-  query?: QueryOptions<T>;
 };
 
-function useProgram<T>({ library, id, query }: UseProgramParameters<T>) {
+function useProgram<TQueryFnData, TData = TQueryFnData>({
+  library,
+  id,
+  query,
+}: UseProgramParameters<TQueryFnData, TData>) {
   const { api, isApiReady } = useApi();
 
   const getProgram = () => {
