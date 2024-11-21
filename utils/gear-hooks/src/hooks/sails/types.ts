@@ -2,6 +2,7 @@
 import { HexString } from '@gear-js/api';
 import { SignerOptions } from '@polkadot/api/types';
 import { IKeyringPair } from '@polkadot/types/types';
+import { UseQueryOptions } from '@tanstack/react-query';
 import { TransactionBuilder } from 'sails-js';
 
 type NonServiceKeys = 'api' | 'registry' | 'programId' | 'newCtorFromCode' | 'newCtorFromCodeId';
@@ -72,6 +73,12 @@ type Query<T> = T extends (...args: infer P) => Promise<infer R> ? (...args: P) 
 type QueryArgs<T> = NonConfigArgs<T>;
 type QueryReturn<T> = Awaited<ReturnType<Query<T>>>;
 
+// tanstack/react-query
+
+type QueryParameters<TQueryFnData, TData> = {
+  query: Omit<UseQueryOptions<TQueryFnData, Error, TData, (string | undefined)[]>, 'queryKey' | 'queryFn'>;
+};
+
 export type {
   ServiceName,
   FunctionName,
@@ -88,4 +95,5 @@ export type {
   Query,
   QueryArgs,
   QueryReturn,
+  QueryParameters,
 };
