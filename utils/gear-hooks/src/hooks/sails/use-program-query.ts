@@ -3,9 +3,10 @@ import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 import { ZERO_ADDRESS } from 'sails-js';
 
+import { QueryParameters } from 'types';
 import { useAccount, useApi } from 'context';
 
-import { Query, QueryArgs, QueryName, QueryParameters, QueryReturn, ServiceName } from './types';
+import { Query, QueryArgs, QueryName, QueryReturn, ServiceName } from './types';
 
 type CalculateReplyOptions = Pick<ICalculateReplyForHandleOptions, 'at' | 'value'>;
 

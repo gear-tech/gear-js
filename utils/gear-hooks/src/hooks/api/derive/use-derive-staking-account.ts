@@ -1,18 +1,20 @@
 import { DeriveStakingAccount } from '@polkadot/api-derive/types';
-import { useQuery, useQueryClient, UseQueryOptions } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
 import { useApi } from 'context';
+import { QueryParameters } from 'types';
 
-type QueryOptions = UseQueryOptions<DeriveStakingAccount, Error, DeriveStakingAccount, (string | undefined)[]>;
-
-type UseDeriveStakingAccountParameters = {
+type UseDeriveStakingAccountParameters<T> = QueryParameters<DeriveStakingAccount, T> & {
   address: string | undefined;
   watch?: boolean;
-  query?: Omit<QueryOptions, 'queryKey' | 'queryFn'>;
 };
 
-function useDeriveStakingAccount({ address, watch, query }: UseDeriveStakingAccountParameters) {
+function useDeriveStakingAccount<T = DeriveStakingAccount>({
+  address,
+  watch,
+  query,
+}: UseDeriveStakingAccountParameters<T>) {
   const { api, isApiReady } = useApi();
 
   const queryClient = useQueryClient();
@@ -41,10 +43,10 @@ function useDeriveStakingAccount({ address, watch, query }: UseDeriveStakingAcco
   }, [api, address, watch]);
 
   return useQuery({
+    ...query,
     queryKey,
     queryFn: getDeriveStakingAccount,
     enabled: isApiReady && Boolean(address) && (query?.enabled ?? true),
-    ...query,
   });
 }
 

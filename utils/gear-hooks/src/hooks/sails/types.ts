@@ -73,12 +73,6 @@ type Query<T> = T extends (...args: infer P) => Promise<infer R> ? (...args: P) 
 type QueryArgs<T> = NonConfigArgs<T>;
 type QueryReturn<T> = Awaited<ReturnType<Query<T>>>;
 
-// tanstack/react-query
-
-type QueryParameters<TQueryFnData, TData> = {
-  query?: Omit<UseQueryOptions<TQueryFnData, Error, TData, (string | undefined)[]>, 'queryKey' | 'queryFn'>;
-};
-
 export type {
   ServiceName,
   FunctionName,
@@ -95,5 +89,4 @@ export type {
   Query,
   QueryArgs,
   QueryReturn,
-  QueryParameters,
 };
