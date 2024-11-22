@@ -1,9 +1,11 @@
 import { DeriveStakingAccount } from '@polkadot/api-derive/types';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
 import { useApi } from 'context';
 import { QueryParameters } from 'types';
+
+import { useQuery } from '../../use-query';
 
 type UseDeriveStakingAccountParameters<T> = QueryParameters<DeriveStakingAccount, T> & {
   address: string | undefined;

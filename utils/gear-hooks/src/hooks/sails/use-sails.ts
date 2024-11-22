@@ -1,10 +1,11 @@
 import { HexString } from '@gear-js/api';
-import { useQuery } from '@tanstack/react-query';
 import { Sails } from 'sails-js';
 import { SailsIdlParser } from 'sails-js-parser';
 
 import { QueryParameters } from 'types';
 import { useApi } from 'context';
+
+import { useQuery } from '../use-query';
 
 type UseSailsParameters<T> = QueryParameters<Sails, T> & {
   programId?: HexString | undefined;

@@ -1,8 +1,9 @@
 import { GearApi, HexString } from '@gear-js/api';
-import { useQuery } from '@tanstack/react-query';
 
 import { QueryParameters } from 'types';
 import { useApi } from 'context';
+
+import { useQuery } from '../use-query';
 
 type Program<T> = {
   new (api: GearApi, programId?: HexString): T;
