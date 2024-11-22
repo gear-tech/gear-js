@@ -66,7 +66,7 @@ type QueryName<T> = {
   [K in keyof T]: PromiseReturn<T[K]> extends Awaited<EventReturn> ? never : K;
 }[keyof T];
 
-type ExcludeConfigArgs<T> = T extends [...infer U, any, any?, any?] ? U : T;
+type ExcludeConfigArgs<T> = T extends [...infer U, any?, any?, any?] ? U : T;
 type NonConfigArgs<T> = T extends (...args: infer P) => Promise<any> ? ExcludeConfigArgs<P> : never;
 
 type Query<T> = T extends (...args: infer P) => Promise<infer R> ? (...args: P) => Promise<R> : never;
