@@ -1,7 +1,6 @@
 import { HexString, ICalculateReplyForHandleOptions } from '@gear-js/api';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
-import { ZERO_ADDRESS } from 'sails-js';
 
 import { QueryParameters } from 'types';
 import { useAccount, useApi } from 'context';
@@ -19,6 +18,7 @@ type UseProgramQueryParameters<TProgram, TServiceName, TQueryName, TArgs, TQuery
   serviceName: TServiceName;
   functionName: TQueryName;
   args: TArgs;
+  originAddress?: string;
   calculateReply?: CalculateReplyOptions;
   watch?: boolean;
 };
@@ -39,12 +39,13 @@ function useProgramQuery<
   calculateReply,
   query,
   watch,
+  ...params
 }: UseProgramQueryParameters<TProgram, TServiceName, TQueryName, TArgs, TQueryReturn, TData>) {
   const { api, isApiReady } = useApi();
   const queryClient = useQueryClient();
 
   const { account } = useAccount();
-  const originAddress = account?.decodedAddress || ZERO_ADDRESS;
+  const originAddress = 'originAddress' in params ? params.originAddress : account?.decodedAddress;
 
   const getQuery = () => {
     if (!program) throw new Error('Program is not found');

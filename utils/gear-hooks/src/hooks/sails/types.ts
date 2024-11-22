@@ -2,7 +2,6 @@
 import { HexString } from '@gear-js/api';
 import { SignerOptions } from '@polkadot/api/types';
 import { IKeyringPair } from '@polkadot/types/types';
-import { UseQueryOptions } from '@tanstack/react-query';
 import { TransactionBuilder } from 'sails-js';
 
 type NonServiceKeys = 'api' | 'registry' | 'programId' | 'newCtorFromCode' | 'newCtorFromCodeId';
