@@ -2,12 +2,13 @@ import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
 
-import { CreateType, GearApi, MessageWaitedData } from '../src';
-import { TARGET, WS_ADDRESS } from './config';
+import { CreateType, MessageWaitedData } from '../src';
+import { TARGET } from './config';
 import { checkInit, getAccount, listenToMessageWaited, sendTransaction, sleep } from './utilsFunctions';
 import { readFileSync } from 'fs';
+import { getApi } from './common';
 
-const api = new GearApi({ providerAddress: WS_ADDRESS });
+const api = getApi();
 
 const CODE_PATH = join(TARGET, 'test_waitlist.opt.wasm');
 let alice: KeyringPair;

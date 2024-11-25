@@ -1,9 +1,7 @@
-import { GearApi } from '../src';
 import { sleep } from './utilsFunctions';
-import { WS_ADDRESS } from './config';
-import { BN } from '@polkadot/util';
+import { getApi } from './common';
 
-const api = new GearApi({ providerAddress: WS_ADDRESS });
+const api = getApi();
 
 beforeAll(async () => {
   await api.isReadyOrError;
@@ -16,7 +14,7 @@ afterAll(async () => {
 
 describe('Query id', () => {
   test('Random query id', async () => {
-    const builtinId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+    const builtinId = Math.floor(Math.random() * (Number.MAX_SAFE_INTEGER / 2));
 
     const id = await api.builtin.queryId(builtinId);
     expect(id.length).toBe(66);

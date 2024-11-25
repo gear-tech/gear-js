@@ -1,10 +1,10 @@
 import { KeyringPair } from '@polkadot/keyring/types';
 
-import { ExtrinsicFailedData, GearApi } from '../src';
+import { ExtrinsicFailedData } from '../src';
 import { getAccount, sleep } from './utilsFunctions';
-import { WS_ADDRESS } from './config';
+import { getApi } from './common';
 
-const api = new GearApi({ providerAddress: WS_ADDRESS });
+const api = getApi();
 let alice: KeyringPair;
 
 beforeAll(async () => {

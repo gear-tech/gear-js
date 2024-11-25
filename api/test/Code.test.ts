@@ -2,11 +2,11 @@ import { HexString } from '@polkadot/util/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { TARGET, WS_ADDRESS } from './config';
+import { TARGET } from './config';
 import { getAccount, sendTransaction, sleep } from './utilsFunctions';
-import { GearApi } from '../src';
+import { getApi } from './common';
 
-const api = new GearApi({ providerAddress: WS_ADDRESS });
+const api = getApi();
 const accounts = {};
 const code = readFileSync(join(TARGET, 'test_waitlist.opt.wasm'));
 let codeId: HexString;
