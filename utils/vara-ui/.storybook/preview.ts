@@ -1,4 +1,5 @@
 import type { Preview } from '@storybook/react';
+import { themes } from '@storybook/theming';
 import '../src/assets/styles/index.css';
 
 const preview: Preview = {
@@ -18,6 +19,11 @@ const preview: Preview = {
           value: '#f3f9f8',
         },
       ],
+    },
+    darkMode: {
+      darkClass: 'dark-theme',
+      stylePreview: true,
+      dark: { ...themes.dark, appPreviewBg: 'black' },
     },
   },
 };
