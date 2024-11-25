@@ -1,8 +1,8 @@
-import { GearApi, TransferData } from '../src';
+import { TransferData } from '../src';
 import { getAccount, sleep } from './utilsFunctions';
-import { WS_ADDRESS } from './config';
+import { getApi } from './common';
 
-const api = new GearApi({ providerAddress: WS_ADDRESS });
+const api = getApi();
 let alice, bob;
 
 beforeAll(async () => {
