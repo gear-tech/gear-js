@@ -13,9 +13,10 @@ import { asOptionalField } from '@/shared/helpers';
 import { Input, ValueField } from '@/shared/ui';
 import { ACCOUNT_ADDRESS_SCHEMA } from '@/shared/config';
 
+import { Voucher } from '../../api';
 import { DEFAULT_VALUES, FIELD_NAME } from '../../consts';
 import { useDurationSchema } from '../../hooks';
-import { Values, Voucher } from '../../types';
+import { Values } from '../../types';
 import { DurationForm } from '../duration-form';
 import { ProgramsForm } from '../programs-form';
 import styles from './update-voucher-modal.module.scss';

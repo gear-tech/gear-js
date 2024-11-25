@@ -12,6 +12,9 @@ export class StateMetadata extends GearMetadata {
   }
 }
 
+/**
+ * @deprecated - This functionality is deprecated and will be removed from both the API and the runtime. Use `api.message.calculateReply` instead.
+ */
 export async function getStateMetadata(wasmBytes: Buffer | Uint8Array): Promise<StateMetadata> {
   const memory = new WebAssembly.Memory({ initial: 17 });
 

@@ -35,7 +35,9 @@ function getMetadataTypeName(version: number): string {
       throw new Error('Metadata: Invalid metadata version');
   }
 }
-
+/**
+ * @deprecated - This functionality is deprecated and will be removed from both the API and the runtime. Use `api.message.calculateReply` instead.
+ */
 export class ProgramMetadata extends GearMetadata {
   public types: Omit<HumanProgramMetadataReprRustV1, 'reg'> | Omit<HumanProgramMetadataReprRustV2, 'reg'>;
   public lang: Lang;

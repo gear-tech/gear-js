@@ -1,14 +1,14 @@
 import { HexString } from 'types';
 import { GearApi } from './GearApi';
-import { u64 } from '@polkadot/types-codec';
 import { BuiltinQueryIdError } from './errors';
 
 export class GearBuiltin {
   constructor(private _api: GearApi) {}
 
-  async queryId(builtinId: u64): Promise<HexString> {
+  async queryId(builtinId: number | bigint): Promise<HexString> {
     try {
-      const result = await this._api.rpc.gearBuiltin.queryId(builtinId);
+      const valueId = this._api.createType('u64', BigInt(builtinId));
+      const result = await this._api.rpc.gearBuiltin.queryId(valueId);
       return result.toHex();
     } catch (err) {
       throw new BuiltinQueryIdError(err.message);

@@ -261,7 +261,7 @@ dependencies = [
  "proc-macro2",
  "quote",
  "rustc_version",
- "syn 2.0.87",
+ "syn",
 ]
 
 [[package]]
@@ -281,7 +281,7 @@ checksum = "cb7330aeadfbe296029522e6c40f315320aba36fc43a5b3632f3795348f3bd22"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.87",
+ "syn",
 ]
 
 [[package]]
@@ -318,7 +318,7 @@ checksum = "a1ab991c1362ac86c61ab6f556cff143daa22e5a15e4e189df818b2fd19fe65b"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.87",
+ "syn",
 ]
 
 [[package]]
@@ -416,16 +416,16 @@ dependencies = [
 
 [[package]]
 name = "galloc"
-version = "1.6.2"
-source = "git+https://github.com/gear-tech/gear.git#9d480cab5b2d4fdaf091e65eb9e365d6e3b0e074"
+version = "1.7.0"
+source = "git+https://github.com/gear-tech/gear.git#dbb751dc46bfe8e2c7dc0634c6a79912eb4ec96b"
 dependencies = [
  "gear-dlmalloc",
 ]
 
 [[package]]
 name = "gcore"
-version = "1.6.2"
-source = "git+https://github.com/gear-tech/gear.git#9d480cab5b2d4fdaf091e65eb9e365d6e3b0e074"
+version = "1.7.0"
+source = "git+https://github.com/gear-tech/gear.git#dbb751dc46bfe8e2c7dc0634c6a79912eb4ec96b"
 dependencies = [
  "gear-core-errors",
  "gear-stack-buffer",
@@ -435,8 +435,8 @@ dependencies = [
 
 [[package]]
 name = "gear-core"
-version = "1.6.2"
-source = "git+https://github.com/gear-tech/gear.git#9d480cab5b2d4fdaf091e65eb9e365d6e3b0e074"
+version = "1.7.0"
+source = "git+https://github.com/gear-tech/gear.git#dbb751dc46bfe8e2c7dc0634c6a79912eb4ec96b"
 dependencies = [
  "blake2",
  "byteorder",
@@ -461,8 +461,8 @@ dependencies = [
 
 [[package]]
 name = "gear-core-errors"
-version = "1.6.2"
-source = "git+https://github.com/gear-tech/gear.git#9d480cab5b2d4fdaf091e65eb9e365d6e3b0e074"
+version = "1.7.0"
+source = "git+https://github.com/gear-tech/gear.git#dbb751dc46bfe8e2c7dc0634c6a79912eb4ec96b"
 dependencies = [
  "derive_more 0.99.18",
  "enum-iterator",
@@ -495,8 +495,8 @@ dependencies = [
 
 [[package]]
 name = "gear-ss58"
-version = "1.6.2"
-source = "git+https://github.com/gear-tech/gear.git#9d480cab5b2d4fdaf091e65eb9e365d6e3b0e074"
+version = "1.7.0"
+source = "git+https://github.com/gear-tech/gear.git#dbb751dc46bfe8e2c7dc0634c6a79912eb4ec96b"
 dependencies = [
  "blake2",
  "bs58",
@@ -505,8 +505,8 @@ dependencies = [
 
 [[package]]
 name = "gear-stack-buffer"
-version = "1.6.2"
-source = "git+https://github.com/gear-tech/gear.git#9d480cab5b2d4fdaf091e65eb9e365d6e3b0e074"
+version = "1.7.0"
+source = "git+https://github.com/gear-tech/gear.git#dbb751dc46bfe8e2c7dc0634c6a79912eb4ec96b"
 
 [[package]]
 name = "gear-wasm"
@@ -516,8 +516,8 @@ checksum = "bbfbfa701dc65e683fcd2fb24f046bcef22634acbdf47ad14724637dc39ad05b"
 
 [[package]]
 name = "gear-wasm-builder"
-version = "1.6.2"
-source = "git+https://github.com/gear-tech/gear.git#9d480cab5b2d4fdaf091e65eb9e365d6e3b0e074"
+version = "1.7.0"
+source = "git+https://github.com/gear-tech/gear.git#dbb751dc46bfe8e2c7dc0634c6a79912eb4ec96b"
 dependencies = [
  "anyhow",
  "cargo_metadata",
@@ -539,8 +539,8 @@ dependencies = [
 
 [[package]]
 name = "gear-wasm-instrument"
-version = "1.6.2"
-source = "git+https://github.com/gear-tech/gear.git#9d480cab5b2d4fdaf091e65eb9e365d6e3b0e074"
+version = "1.7.0"
+source = "git+https://github.com/gear-tech/gear.git#dbb751dc46bfe8e2c7dc0634c6a79912eb4ec96b"
 dependencies = [
  "derive_more 0.99.18",
  "enum-iterator",
@@ -549,8 +549,8 @@ dependencies = [
 
 [[package]]
 name = "gear-wasm-optimizer"
-version = "1.6.2"
-source = "git+https://github.com/gear-tech/gear.git#9d480cab5b2d4fdaf091e65eb9e365d6e3b0e074"
+version = "1.7.0"
+source = "git+https://github.com/gear-tech/gear.git#dbb751dc46bfe8e2c7dc0634c6a79912eb4ec96b"
 dependencies = [
  "anyhow",
  "colored",
@@ -575,8 +575,8 @@ dependencies = [
 
 [[package]]
 name = "gmeta"
-version = "1.6.2"
-source = "git+https://github.com/gear-tech/gear.git#9d480cab5b2d4fdaf091e65eb9e365d6e3b0e074"
+version = "1.7.0"
+source = "git+https://github.com/gear-tech/gear.git#dbb751dc46bfe8e2c7dc0634c6a79912eb4ec96b"
 dependencies = [
  "blake2",
  "derive_more 0.99.18",
@@ -587,18 +587,18 @@ dependencies = [
 
 [[package]]
 name = "gmeta-codegen"
-version = "1.6.2"
-source = "git+https://github.com/gear-tech/gear.git#9d480cab5b2d4fdaf091e65eb9e365d6e3b0e074"
+version = "1.7.0"
+source = "git+https://github.com/gear-tech/gear.git#dbb751dc46bfe8e2c7dc0634c6a79912eb4ec96b"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.87",
+ "syn",
 ]
 
 [[package]]
 name = "gprimitives"
-version = "1.6.2"
-source = "git+https://github.com/gear-tech/gear.git#9d480cab5b2d4fdaf091e65eb9e365d6e3b0e074"
+version = "1.7.0"
+source = "git+https://github.com/gear-tech/gear.git#dbb751dc46bfe8e2c7dc0634c6a79912eb4ec96b"
 dependencies = [
  "derive_more 0.99.18",
  "gear-ss58",
@@ -610,8 +610,8 @@ dependencies = [
 
 [[package]]
 name = "gstd"
-version = "1.6.2"
-source = "git+https://github.com/gear-tech/gear.git#9d480cab5b2d4fdaf091e65eb9e365d6e3b0e074"
+version = "1.7.0"
+source = "git+https://github.com/gear-tech/gear.git#dbb751dc46bfe8e2c7dc0634c6a79912eb4ec96b"
 dependencies = [
  "arrayvec",
  "const_format",
@@ -629,19 +629,19 @@ dependencies = [
 
 [[package]]
 name = "gstd-codegen"
-version = "1.6.2"
-source = "git+https://github.com/gear-tech/gear.git#9d480cab5b2d4fdaf091e65eb9e365d6e3b0e074"
+version = "1.7.0"
+source = "git+https://github.com/gear-tech/gear.git#dbb751dc46bfe8e2c7dc0634c6a79912eb4ec96b"
 dependencies = [
  "gprimitives",
  "proc-macro2",
  "quote",
- "syn 2.0.87",
+ "syn",
 ]
 
 [[package]]
 name = "gsys"
-version = "1.6.2"
-source = "git+https://github.com/gear-tech/gear.git#9d480cab5b2d4fdaf091e65eb9e365d6e3b0e074"
+version = "1.7.0"
+source = "git+https://github.com/gear-tech/gear.git#dbb751dc46bfe8e2c7dc0634c6a79912eb4ec96b"
 
 [[package]]
 name = "gwasm-instrument"
@@ -664,9 +664,9 @@ dependencies = [
 
 [[package]]
 name = "hashbrown"
-version = "0.15.1"
+version = "0.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3a9bfc1af68b1726ea47d3d5109de126281def866b33970e10fbab11b5dafab3"
+checksum = "bf151400ff0baff5465007dd2f3e717f3fe502074ca563069ce3a6629d07b289"
 
 [[package]]
 name = "hex"
@@ -717,13 +717,13 @@ dependencies = [
 
 [[package]]
 name = "impl-trait-for-tuples"
-version = "0.2.2"
+version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "11d7a9f6330b71fea57921c9b61c47ee6e84f72d394754eff6163ae67e7395eb"
+checksum = "a0eb5a3343abf848c0984fe4604b2b105da9539376e24fc0a3b0007411ae4fd9"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 1.0.109",
+ "syn",
 ]
 
 [[package]]
@@ -733,7 +733,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "707907fe3c25f5424cce2cb7e1cbcafee6bdbe735ca90ef77c29e84591e5b9da"
 dependencies = [
  "equivalent",
- "hashbrown 0.15.1",
+ "hashbrown 0.15.2",
 ]
 
 [[package]]
@@ -753,9 +753,9 @@ dependencies = [
 
 [[package]]
 name = "itoa"
-version = "1.0.11"
+version = "1.0.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "49f1f14873335454500d59611f1cf4a4b0f786f9ac11f4312a78e4cf2566695b"
+checksum = "540654e97a3f4470a492cd30ff187bc95d89557a903a2bbf112e2fae98104ef2"
 
 [[package]]
 name = "js-sys"
@@ -816,8 +816,8 @@ dependencies = [
 
 [[package]]
 name = "numerated"
-version = "1.6.2"
-source = "git+https://github.com/gear-tech/gear.git#9d480cab5b2d4fdaf091e65eb9e365d6e3b0e074"
+version = "1.7.0"
+source = "git+https://github.com/gear-tech/gear.git#dbb751dc46bfe8e2c7dc0634c6a79912eb4ec96b"
 dependencies = [
  "derive_more 0.99.18",
  "num-traits",
@@ -843,28 +843,29 @@ dependencies = [
 
 [[package]]
 name = "parity-scale-codec"
-version = "3.6.12"
+version = "3.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "306800abfa29c7f16596b5970a588435e3d5b3149683d00c12b699cc19f895ee"
+checksum = "8be4817d39f3272f69c59fe05d0535ae6456c2dc2fa1ba02910296c7e0a5c590"
 dependencies = [
  "arrayvec",
  "bitvec",
  "byte-slice-cast",
  "impl-trait-for-tuples",
  "parity-scale-codec-derive",
+ "rustversion",
  "serde",
 ]
 
 [[package]]
 name = "parity-scale-codec-derive"
-version = "3.6.12"
+version = "3.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d830939c76d294956402033aee57a6da7b438f2294eb94864c37b0569053a42c"
+checksum = "8781a75c6205af67215f382092b6e0a4ff3734798523e69073d4bcd294ec767b"
 dependencies = [
  "proc-macro-crate",
  "proc-macro2",
  "quote",
- "syn 1.0.109",
+ "syn",
 ]
 
 [[package]]
@@ -914,9 +915,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.89"
+version = "1.0.92"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f139b0662de085916d1fb67d2b4169d1addddda1919e696f3252b740b629986e"
+checksum = "37d3544b3f2748c54e147655edb5025752e2303145b5aefb3c3ea2c78b973bb0"
 dependencies = [
  "unicode-ident",
 ]
@@ -982,9 +983,9 @@ dependencies = [
 
 [[package]]
 name = "rustix"
-version = "0.38.40"
+version = "0.38.41"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "99e4ea3e1cdc4b559b8e5650f9c8e5998e3e5c1343b4eaf034565f32318d63c0"
+checksum = "d7f649912bc1495e167a6edee79151c84b1bad49748cb4f1f1167f459f6224f6"
 dependencies = [
  "bitflags",
  "errno",
@@ -994,6 +995,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustversion"
+version = "1.0.18"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0e819f2bc632f285be6d7cd36e25940d45b2391dd6d9b939e79de557f7014248"
+
+[[package]]
 name = "ryu"
 version = "1.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1001,9 +1008,9 @@ checksum = "f3cb5ba0dc43242ce17de99c180e96db90b235b8a9fdc9543c96d2209116bd9f"
 
 [[package]]
 name = "scale-info"
-version = "2.11.5"
+version = "2.11.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1aa7ffc1c0ef49b0452c6e2986abf2b07743320641ffd5fc63d552458e3b779b"
+checksum = "346a3b32eba2640d17a9cb5927056b08f3de90f65b72fe09402c2ad07d684d0b"
 dependencies = [
  "cfg-if",
  "derive_more 1.0.0",
@@ -1013,14 +1020,14 @@ dependencies = [
 
 [[package]]
 name = "scale-info-derive"
-version = "2.11.5"
+version = "2.11.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "46385cc24172cf615450267463f937c10072516359b3ff1cb24228a4a08bf951"
+checksum = "c6630024bf739e2179b91fb424b28898baf819414262c5d376677dbff1fe7ebf"
 dependencies = [
  "proc-macro-crate",
  "proc-macro2",
  "quote",
- "syn 2.0.87",
+ "syn",
 ]
 
 [[package]]
@@ -1049,7 +1056,7 @@ checksum = "ad1e866f866923f252f05c889987993144fb74e722403468a4ebd70c3cd756c0"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.87",
+ "syn",
 ]
 
 [[package]]
@@ -1099,20 +1106,9 @@ checksum = "13c2bddecc57b384dee18652358fb23172facb8a2c51ccc10d74c157bdea3292"
 
 [[package]]
 name = "syn"
-version = "1.0.109"
+version = "2.0.89"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "72b64191b275b66ffe2469e8af2c1cfe3bafa67b529ead792a6d0160888b4237"
-dependencies = [
- "proc-macro2",
- "quote",
- "unicode-ident",
-]
-
-[[package]]
-name = "syn"
-version = "2.0.87"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "25aa4ce346d03a6dcd68dd8b4010bcb74e54e62c90c573f394c46eae99aba32d"
+checksum = "44d46482f1c1c87acd84dea20c1bf5ebff4c757009ed6bf19cfd36fb10e92c4e"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1193,7 +1189,7 @@ checksum = "4fee6c4efc90059e10f81e6d42c60a18f76588c3d74cb83a0b242a2b6c7504c1"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.87",
+ "syn",
 ]
 
 [[package]]
@@ -1250,9 +1246,9 @@ dependencies = [
 
 [[package]]
 name = "unicode-ident"
-version = "1.0.13"
+version = "1.0.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e91b56cd4cadaeb79bbf1a5645f6b4f8dc5bde8834ad5894a8db35fda9efa1fe"
+checksum = "adb9e6ca4f869e1180728b7950e35922a7fc6397f7b641499e8f3ef06e50dc83"
 
 [[package]]
 name = "unicode-xid"
@@ -1294,7 +1290,7 @@ dependencies = [
  "once_cell",
  "proc-macro2",
  "quote",
- "syn 2.0.87",
+ "syn",
  "wasm-bindgen-shared",
 ]
 
@@ -1316,7 +1312,7 @@ checksum = "26c6ab57572f7a24a4985830b120de1594465e5d500f24afe89e16b4e833ef68"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.87",
+ "syn",
  "wasm-bindgen-backend",
  "wasm-bindgen-shared",
 ]
@@ -1553,5 +1549,5 @@ checksum = "fa4f8080344d4671fb4e831a13ad1e68092748387dfc4f55e356242fae12ce3e"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.87",
+ "syn",
 ]

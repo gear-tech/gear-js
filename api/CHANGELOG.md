@@ -4,10 +4,10 @@ _30/10/2024_
 
 
 ### Changes
-https://github.com/gear-tech/gear-js/pull/1659
-https://github.com/gear-tech/gear-js/pull/1658
-- Support `Builtin` pallet
-- Support `gearEthBridge` pallet
+- Support `Builtin` pallet in https://github.com/gear-tech/gear-js/pull/1659
+- Support `gearEthBridge` pallet in https://github.com/gear-tech/gear-js/pull/1658
+- Deprecate old way to read state and ProgramMetadata class in https://github.com/gear-tech/gear-js/pull/1669
+- Bump `@polkadot/*` dependencies in https://github.com/gear-tech/gear-js/pull/1673
 
 ## 0.38.3
 

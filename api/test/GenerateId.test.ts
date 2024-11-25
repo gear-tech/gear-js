@@ -3,14 +3,15 @@ import { join } from 'path';
 import { readFileSync } from 'fs';
 import { u8aToHex } from '@polkadot/util';
 
-import { GearApi, generateCodeHash, generateProgramId } from '../src';
-import { TEST_WASM_DIR, WS_ADDRESS } from './config';
+import { generateCodeHash, generateProgramId } from '../src';
+import { TEST_WASM_DIR } from './config';
 import { sleep } from './utilsFunctions';
+import { getApi } from './common';
 
 const pingCode = readFileSync(join(TEST_WASM_DIR, 'demo_ping.opt.wasm'));
 let codeId: HexString;
 
-const api = new GearApi({ providerAddress: WS_ADDRESS });
+const api = getApi();
 
 beforeAll(async () => {
   await api.isReadyOrError;

@@ -5,11 +5,12 @@ import { bufferToU8a } from '@polkadot/util';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { GearApi, ProgramMetadata, decodeAddress } from '../src';
-import { TARGET, TEST_META_UNION, WS_ADDRESS } from './config';
+import { TARGET, TEST_META_UNION } from './config';
+import { ProgramMetadata } from '../src';
 import { checkInit, getAccount, sendTransaction, sleep, waitForPausedProgram } from './utilsFunctions';
+import { getApi } from './common';
 
-const api = new GearApi({ providerAddress: WS_ADDRESS });
+const api = getApi();
 let alice: KeyringPair;
 let codeId: HexString;
 let programId: HexString;
