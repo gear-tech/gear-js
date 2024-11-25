@@ -1,55 +1,45 @@
-use gstd::{collections::BTreeMap, debug, msg, prelude::*};
-use test_union_io::{Action, EmptyStruct, Id, InitInput, InputStruct, Person, Wallet};
+use gstd::{collections::{BTreeMap, BTreeSet}, debug, msg, prelude::*};
+use test_union_io::{Action, EmptyStruct, Id, InputStruct, Person, Wallet};
 
 static mut STATE: Vec<Wallet> = Vec::new();
 
 #[no_mangle]
 pub unsafe extern "C" fn init() {
-    let input: InitInput = msg::load().expect("Failed to load InitInput");
+    let _: BTreeSet<u8> = msg::load().expect("Failed to load init arguments");
 
-    match input {
-        InitInput::InputStruct(payload) => {
-            if payload.input != "Init" {
-                panic!("Wrong input");
-            }
-            msg::reply("Init", 0).expect("Unable to send relpy");
-        }
-        InitInput::BTreeSetInput(_) => {
-            let mut res: BTreeMap<String, u8> = BTreeMap::new();
+    let mut res: BTreeMap<String, u8> = BTreeMap::new();
 
-            STATE.insert(
-                0,
-                Wallet {
-                    id: Id {
-                        decimal: 0,
-                        hex: Vec::from([0]),
-                    },
-                    person: Person {
-                        surname: "Surname0".into(),
-                        name: "Name0".into(),
-                    },
-                },
-            );
+    STATE.insert(
+        0,
+        Wallet {
+            id: Id {
+                decimal: 0,
+                hex: Vec::from([0]),
+            },
+            person: Person {
+                surname: "Surname0".into(),
+                name: "Name0".into(),
+            },
+        },
+    );
 
-            STATE.insert(
-                1,
-                Wallet {
-                    id: Id {
-                        decimal: 1,
-                        hex: Vec::from([1]),
-                    },
-                    person: Person {
-                        surname: "Surname1".into(),
-                        name: "Name1".into(),
-                    },
-                },
-            );
+    STATE.insert(
+        1,
+        Wallet {
+            id: Id {
+                decimal: 1,
+                hex: Vec::from([1]),
+            },
+            person: Person {
+                surname: "Surname1".into(),
+                name: "Name1".into(),
+            },
+        },
+    );
 
-            res.insert("One".into(), 1);
+    res.insert("One".into(), 1);
 
-            msg::reply(res, 0).unwrap();
-        }
-    }
+    msg::reply(res, 0).unwrap();
 }
 
 #[gstd::async_main]

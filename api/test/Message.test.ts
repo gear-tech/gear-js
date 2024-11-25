@@ -32,7 +32,7 @@ describe('Gear Message', () => {
     programId = api.program.upload(
       {
         code,
-        initPayload: { BTreeSetInput: [1, 2, 3] },
+        initPayload: [1, 2, 3],
         gasLimit: 200_000_000_000,
       },
       metadata,

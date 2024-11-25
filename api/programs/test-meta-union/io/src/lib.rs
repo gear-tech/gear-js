@@ -16,7 +16,7 @@ use scale_info::TypeInfo;
 pub struct ProgramMetadata;
 
 impl Metadata for ProgramMetadata {
-    type Init = InOut<InitInput, InitOutput>;
+    type Init = InOut<BTreeSet<u8>, BTreeMap<String, u8>>;
     type Handle = InOut<Action, String>;
     type Reply = ReplyType;
     type Others = InOut<(), ()>;
@@ -40,8 +40,6 @@ pub enum Action {
     Two(Vec<X>),
     Three { field1: Result<(u8, String), i32> },
     Four(SomeStruct<u128, u8>),
-    Five(SomeStruct<String, X>),
-    Six(ActorId, EmptyStruct),
     Input(String),
 }
 
@@ -72,18 +70,6 @@ pub struct Wallet {
 pub enum State {
     DappMeta(String),
     Data(Vec<Wallet>),
-}
-
-#[derive(TypeInfo, Decode, Encode)]
-pub enum InitInput {
-    InputStruct(InputStruct),
-    BTreeSetInput(BTreeSet<u8>),
-}
-
-#[derive(TypeInfo, Decode, Encode)]
-pub enum InitOutput {
-    Text(String),
-    BTreeMapOutput(BTreeMap<String, u8>),
 }
 
 #[derive(TypeInfo, Decode, Encode)]

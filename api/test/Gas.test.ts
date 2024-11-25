@@ -39,14 +39,7 @@ afterAll(async () => {
 
 describe('Calculate gas', () => {
   test('Get init gas spent (upload)', async () => {
-    const gas: GasInfo = await api.program.calculateGas.initUpload(
-      aliceRaw,
-      code,
-      { InputStruct: { input: 'Init' } },
-      0,
-      true,
-      meta,
-    );
+    const gas: GasInfo = await api.program.calculateGas.initUpload(aliceRaw, code, [1, 2, 3], 0, true, meta);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
     expect(gas.min_limit.gtn(0)).toBeTruthy();
@@ -59,10 +52,7 @@ describe('Calculate gas', () => {
 
   test('Upload program', async () => {
     expect(gasLimits.init).toBeDefined();
-    const program = api.program.upload(
-      { code, gasLimit: gasLimits.init as u64, initPayload: { InputStruct: { input: 'Init' } } },
-      meta,
-    );
+    const program = api.program.upload({ code, gasLimit: gasLimits.init as u64, initPayload: [1, 2, 3] }, meta);
     programId = program.programId;
     codeId = program.codeId;
     const initStatus = checkInit(api, programId);
@@ -71,14 +61,7 @@ describe('Calculate gas', () => {
   });
 
   test('Get init gas spent (create)', async () => {
-    const gas: GasInfo = await api.program.calculateGas.initCreate(
-      aliceRaw,
-      codeId,
-      { InputStruct: { input: 'Init' } },
-      0,
-      true,
-      meta,
-    );
+    const gas: GasInfo = await api.program.calculateGas.initCreate(aliceRaw, codeId, [1, 2, 3], 0, true, meta);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
     expect(gas.min_limit.gtn(0)).toBeTruthy();
@@ -91,10 +74,7 @@ describe('Calculate gas', () => {
 
   test('Create program', async () => {
     expect(gasLimits.init).toBeDefined();
-    const program = api.program.create(
-      { codeId, gasLimit: gasLimits.init as u64, initPayload: { InputStruct: { input: 'Init' } } },
-      meta,
-    );
+    const program = api.program.create({ codeId, gasLimit: gasLimits.init as u64, initPayload: [1, 2, 3] }, meta);
     programId = program.programId;
     const initStatus = checkInit(api, programId);
     await sendTransaction(program.extrinsic, alice, ['MessageQueued']);
