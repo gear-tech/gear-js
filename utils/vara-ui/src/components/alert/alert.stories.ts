@@ -53,5 +53,25 @@ const Info: Story = {
   },
 };
 
+const NotificationWarning: Story = {
+  args: {
+    alert: {
+      id: '0',
+      content: 'Text',
+      options: { type: 'notification-warning', isClosed: true, title: 'Heading' },
+    },
+  },
+};
+
+const NotificationInfo: Story = {
+  args: {
+    alert: {
+      id: '0',
+      content: 'Text',
+      options: { type: 'notification-info', isClosed: true, title: 'Heading' },
+    },
+  },
+};
+
 export default meta;
-export { Success, Error, Loading, Info };
+export { Success, Error, Loading, Info, NotificationWarning, NotificationInfo };
