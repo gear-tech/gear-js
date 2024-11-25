@@ -6,8 +6,12 @@ import { Bytes } from '@polkadot/types';
 import { GearProgramStorage } from './Storage';
 import { encodePayload } from './utils';
 
+/**
+ * @deprecated - This functionality is deprecated and will be removed from both the API and the runtime. Use `api.message.calculateReply` instead.
+ */
 export class GearProgramState extends GearProgramStorage {
   /**
+   * @deprecated - This functionality is deprecated and will be removed from both the API and the runtime. Use `api.message.calculateReply` instead.
    * ## Read state using meta wasm file
    * @param args
    * @param meta StateMetadata returned from getStateMetadata function
@@ -43,6 +47,7 @@ export class GearProgramState extends GearProgramStorage {
 
   /**
    * ### Read state of program (calls `gear_readState` rpc call)
+   * @deprecated - This functionality is deprecated and will be removed from both the API and the runtime. Use `api.message.calculateReply` instead.
    * @param args ProgramId, payload and hash of block where it's necessary to read state (optional)
    * @param meta (optional) Program metadata returned from `ProgramMetadata.from` method. If not specified, payload will be sent and state will be returned as `Bytes`
    * @param type (optional) Index of type to decode state. metadata.types.state.input is uesd by default
@@ -78,6 +83,9 @@ export class GearProgramState extends GearProgramStorage {
     return meta.createType<T>((meta.types.state as HumanTypesRepr).output, state);
   }
 
+  /**
+   * @deprecated - This functionality is deprecated and will be removed from both the API and the runtime. Use `api.message.calculateReply` instead.
+   */
   async readBatch(args: ReadStateBatchParams): Promise<Bytes[]> {
     return this._api.rpc.gear.readStateBatch(args.idPayloadBatch, args.at || null);
   }
