@@ -26,6 +26,7 @@ const preview: Preview = {
       dark: { ...themes.dark, appPreviewBg: 'black' },
     },
   },
+  tags: ['autodocs'],
 };
 
 export default preview;
