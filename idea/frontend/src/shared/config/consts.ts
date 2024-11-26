@@ -17,7 +17,7 @@ const GENESIS = {
 
 const NODE_ADRESS_URL_PARAM = 'node';
 
-const EXAMPLES_HREF = 'https://www.gear-tech.io/developers';
+const EXAMPLES_HREF = 'https://wiki.vara.network/docs/examples';
 
 const DEFAULT_LIMIT = 20;
 const GEAR_BALANCE_TRANSFER_VALUE = import.meta.env.VITE_DEFAULT_TRANSFER_BALANCE_VALUE as string;
