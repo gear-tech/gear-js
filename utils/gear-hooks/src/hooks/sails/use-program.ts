@@ -1,8 +1,8 @@
 import { GearApi, HexString } from '@gear-js/api';
 
-import { QueryParameters } from 'types';
 import { useApi } from 'context';
 
+import { QueryParameters } from '../../types';
 import { useQuery } from '../use-query';
 
 type Program<T> = {

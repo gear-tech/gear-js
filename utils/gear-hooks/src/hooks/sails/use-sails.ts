@@ -2,9 +2,9 @@ import { HexString } from '@gear-js/api';
 import { Sails } from 'sails-js';
 import { SailsIdlParser } from 'sails-js-parser';
 
-import { QueryParameters } from 'types';
 import { useApi } from 'context';
 
+import { QueryParameters } from '../../types';
 import { useQuery } from '../use-query';
 
 type UseSailsParameters<T> = QueryParameters<Sails, T> & {

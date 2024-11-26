@@ -3,8 +3,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
 import { useApi } from 'context';
-import { QueryParameters } from 'types';
 
+import { QueryParameters } from '../../../types';
 import { useQuery } from '../../use-query';
 
 type UseDeriveBalancesAllParameters<T> = QueryParameters<DeriveBalancesAll, T> & {
