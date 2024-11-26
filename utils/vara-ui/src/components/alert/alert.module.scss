@@ -16,9 +16,11 @@
 .notification {
   padding: 16px;
   border-radius: 8px;
+
   .body {
     padding-left: 32px;
   }
+
   .header::before {
     margin-right: 12px;
   }
