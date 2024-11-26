@@ -225,7 +225,7 @@ describe('Voucher', () => {
   test('Upload code with voucher', async () => {
     expect(voucher).toBeDefined();
 
-    const code = new Uint8Array(readFileSync(join(TARGET, 'test_union.opt.wasm')).buffer);
+    const code = new Uint8Array(readFileSync(join(TARGET, 'test_union.wasm')).buffer);
 
     const { extrinsic, codeHash } = await api.code.upload(code);
 
