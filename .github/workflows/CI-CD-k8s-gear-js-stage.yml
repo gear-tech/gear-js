@@ -4,10 +4,9 @@ on:
   push:
     branches: ['main']
     paths:
-      - idea/api-gateway/**
-      - idea/indexer/**
+      - idea/meta-storage-2/**
+      - idea/faucet/**
       - idea/frontend/**
-      - idea/test-balance/**
       - k8s/**
   workflow_dispatch:
 
