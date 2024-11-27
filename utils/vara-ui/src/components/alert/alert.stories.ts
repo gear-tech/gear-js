@@ -9,18 +9,18 @@ const meta: Meta<Type> = {
   component: Alert,
 };
 
-const Success: Story = {
+export const Success: Story = {
   args: {
     alert: {
       id: '0',
       content:
         'Backups of this machine are stopped. There has no connection with machine. Please restore the connection with the machine to resume backups restore the connection with the machine.',
-      options: { type: 'success', isClosed: true },
+      options: { type: 'success', isClosed: true, footer: 'YYYY-MM-DD / 00:00:00' },
     },
   },
 };
 
-const Error: Story = {
+export const Error: Story = {
   args: {
     alert: {
       id: '0',
@@ -31,7 +31,7 @@ const Error: Story = {
   },
 };
 
-const Loading: Story = {
+export const Loading: Story = {
   args: {
     alert: {
       id: '0',
@@ -42,7 +42,7 @@ const Loading: Story = {
   },
 };
 
-const Info: Story = {
+export const Info: Story = {
   args: {
     alert: {
       id: '0',
@@ -53,25 +53,24 @@ const Info: Story = {
   },
 };
 
-const NotificationWarning: Story = {
+export const NotificationHighPriority: Story = {
   args: {
     alert: {
       id: '0',
       content: 'Text',
-      options: { type: 'notification-warning', isClosed: true, title: 'Heading' },
+      options: { type: 'notification-high', isClosed: true, title: 'Heading' },
     },
   },
 };
 
-const NotificationInfo: Story = {
+export const NotificationLowPriority: Story = {
   args: {
     alert: {
       id: '0',
       content: 'Text',
-      options: { type: 'notification-info', isClosed: true, title: 'Heading' },
+      options: { type: 'notification-low', isClosed: true, title: 'Heading' },
     },
   },
 };
 
 export default meta;
-export { Success, Error, Loading, Info, NotificationWarning, NotificationInfo };

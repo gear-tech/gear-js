@@ -1,11 +1,16 @@
 import { CSSProperties, ReactNode } from 'react';
 import cx from 'clsx';
-import CrossSVG from '../../assets/images/cross.svg?react';
 import { Button } from '../button';
 import styles from './alert.module.scss';
+import CrossSVG from '../../assets/images/cross.svg?react';
+import SuccessIcon from '../../assets/images/success.svg?react';
+import ErrorIcon from '../../assets/images/error.svg?react';
+import InfoIcon from '../../assets/images/info.svg?react';
+import WarningIcon from '../../assets/images/warning.svg?react';
+import LoadingIcon from '../../assets/images/loading.svg?react';
 
 type Options = {
-  type: 'info' | 'error' | 'loading' | 'success' | 'notification-warning' | 'notification-info';
+  type: 'info' | 'error' | 'loading' | 'success' | 'notification-high' | 'notification-low';
   style?: CSSProperties;
   title?: string;
   footer?: string;
@@ -24,17 +29,27 @@ type Props = {
   close: () => void;
 };
 
+const Icons: Record<Options['type'], JSX.Element> = {
+  success: <SuccessIcon />,
+  error: <ErrorIcon />,
+  info: <InfoIcon />,
+  loading: <LoadingIcon />,
+  'notification-low': <WarningIcon />,
+  'notification-high': <WarningIcon />,
+};
+
 function Alert({ alert, close }: Props) {
   const { content, options } = alert;
   const { type, title, style, isClosed, footer } = options;
   const isNotification = type.startsWith('notification');
 
   return (
-    <div className={cx(styles.alert, isNotification && styles.notification)} style={style}>
-      <header className={cx(styles.header, styles[type])}>
+    <div className={cx(styles.alert, isNotification && styles.notification, styles[type])} style={style}>
+      <header className={cx(styles.header)}>
+        {type && <div className={styles.icon}>{Icons[type]}</div>}
         {title || type}
 
-        {isClosed && <Button icon={CrossSVG} color="transparent" className={styles.button} onClick={close} />}
+        {isClosed && <Button icon={CrossSVG} color="transparent" className={styles.close} onClick={close} />}
       </header>
 
       <div className={styles.body}>{content}</div>
