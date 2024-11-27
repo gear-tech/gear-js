@@ -18,10 +18,10 @@ export default {
     user: checkEnv('DB_USER', 'postgres'),
     password: checkEnv('DB_PASSWORD', 'postgres'),
     name: checkEnv('DB_NAME', 'faucet'),
-    host: checkEnv(process.env.DB_HOST, 'localhost'),
+    host: checkEnv('DB_HOST', 'localhost'),
   },
   gear: {
-    providerAddresses: checkEnv('WS_PROVIDER', 'wss://rpc-node.gear-tech.io:443').split(','),
+    providerAddresses: checkEnv('WS_PROVIDER').split(','),
     accountSeed: checkEnv('TEST_ACCOUNT_SEED', '//Alice'),
     balanceToTransfer: checkEnv('TEST_BALANCE_VALUE', '1000000'),
   },
