@@ -25,6 +25,6 @@ COPY --from=builder /src/idea/common/package.json ./idea/common/
 
 COPY --from=builder /src/idea/faucet/dist ./idea/faucet/dist
 COPY --from=builder /src/idea/faucet/node_modules/ ./idea/faucet/node_modules/
-COPY --from=builder /src/idea/faucet/package.json /src/idea/faucet/.env ./idea/faucet/
+COPY --from=builder /src/idea/faucet/package.json ./idea/faucet/
 
 CMD ["node", "idea/faucet/dist/server.js"]
