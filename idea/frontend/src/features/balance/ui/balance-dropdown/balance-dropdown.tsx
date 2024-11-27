@@ -87,8 +87,7 @@ function BalanceDropdown() {
 
   if (!balance) return null;
 
-  // availableBalance should be changed to transferableBalance after @polkadot/api 12.4 update
-  const { freeBalance, reservedBalance, availableBalance: transferable, lockedBalance } = balance;
+  const { freeBalance, reservedBalance, transferable, availableBalance, lockedBalance } = balance;
 
   return (
     <div className={styles.container} ref={ref}>
@@ -99,7 +98,7 @@ function BalanceDropdown() {
           <span className={styles.heading}>Transferable Balance:</span>
 
           <span>
-            <Balance value={transferable} hideUnit />
+            <Balance value={transferable || availableBalance} hideUnit />
             <ArrowSVG className={styles.arrow} />
           </span>
         </span>
@@ -108,7 +107,7 @@ function BalanceDropdown() {
       <CSSTransition in={isOpen} timeout={AnimationTimeout.Default} mountOnEnter unmountOnExit>
         <Dropdown
           total={freeBalance.add(reservedBalance).toString()}
-          transferable={transferable}
+          transferable={transferable || availableBalance}
           lockedBalance={lockedBalance}
           onHeaderClick={close}
         />
