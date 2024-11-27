@@ -14,7 +14,9 @@ function Balance({ theme }: Props) {
   const { getFormattedBalance } = useBalanceFormat();
 
   const { data: balances } = useDeriveBalancesAll({ address: account?.decodedAddress, watch: true });
-  const balance = isApiReady && balances ? getFormattedBalance(balances.freeBalance) : undefined;
+
+  const balance =
+    isApiReady && balances ? getFormattedBalance(balances.transferable || balances.availableBalance) : undefined;
 
   if (!balance) return null;
 

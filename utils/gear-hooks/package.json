@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/react-hooks",
-  "version": "0.13.2",
+  "version": "0.14.0",
   "description": "React hooks used across Gear applications",
   "author": "Gear Technologies",
   "license": "GPL-3.0",
@@ -21,27 +21,27 @@
     "prepare": "yarn build"
   },
   "peerDependencies": {
-    "@gear-js/api": "0.38.3",
-    "@polkadot/api": "13.2.1",
+    "@gear-js/api": "0.39.0",
+    "@polkadot/api": "14.3.1",
     "@tanstack/react-query": "^5.56.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sails-js": "0.3.0"
   },
   "dependencies": {
-    "@polkadot/api-derive": "13.2.1",
-    "@polkadot/extension-inject": "0.51.1",
-    "@polkadot/util": "12.6.2",
-    "@substrate/connect": "0.8.10",
+    "@polkadot/api-derive": "14.3.1",
+    "@polkadot/extension-inject": "0.56.2",
+    "@polkadot/util": "13.2.3",
+    "@substrate/connect": "2.1.0",
     "bignumber.js": "9.1.2",
     "nanoid": "5.0.1",
     "react-transition-group": "4.4.5",
     "sails-js-parser": "0.0.1"
   },
   "devDependencies": {
-    "@gear-js/api": "0.38.3",
-    "@polkadot/api": "13.2.1",
-    "@polkadot/types": "13.2.1",
+    "@gear-js/api": "0.39.0",
+    "@polkadot/api": "14.3.1",
+    "@polkadot/types": "14.3.1",
     "@rollup/plugin-commonjs": "25.0.5",
     "@rollup/plugin-node-resolve": "15.2.3",
     "@tanstack/react-query": "5.56.2",
