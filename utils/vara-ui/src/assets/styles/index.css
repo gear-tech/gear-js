@@ -1,44 +1,4 @@
-@font-face {
-  font-family: Anuphan;
-  font-weight: 100;
-  src: url('./fonts/anuphan-thin.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: Anuphan;
-  font-weight: 200;
-  src: url('./fonts/anuphan-extra-light.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: Anuphan;
-  font-weight: 300;
-  src: url('./fonts/anuphan-light.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: Anuphan;
-  font-weight: 400;
-  src: url('./fonts/anuphan-regular.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: Anuphan;
-  font-weight: 500;
-  src: url('./fonts/anuphan-medium.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: Anuphan;
-  font-weight: 600;
-  src: url('./fonts/anuphan-semi-bold.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: Anuphan;
-  font-weight: 700;
-  src: url('./fonts/anuphan-bold.woff2') format('woff2');
-}
+@import url('non.geist');
 
 :root {
   --white: 0, 0%, 100%;
@@ -53,8 +13,7 @@
 }
 
 body {
-  font-family: Anuphan, sans-serif;
-
+  font-family: 'Geist Variable', sans-serif;
   margin: 0;
   cursor: default;
 }
