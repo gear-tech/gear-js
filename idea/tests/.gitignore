@@ -1,9 +1,0 @@
-./wasm/
-.env
-dist/
-.yarn/
-wasm-test/*
-!wasm-test/app.opt.wasm
-genesis
-
-target/
