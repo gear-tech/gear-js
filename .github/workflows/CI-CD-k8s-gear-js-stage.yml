@@ -83,11 +83,19 @@ jobs:
           file: idea/faucet/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-faucet:qa
+          build-args: |
+            WS_PROVIDER=${{ secrets.WS_PROVIDER_FAUCET }}
+            TEST_ACCOUNT_SEED=${{ secrets.TEST_ACCOUNT_SEED_FAUCET }}
+            TEST_BALANCE_VALUE=${{ secrets.TEST_BALANCE_VALUE_FAUCET }}
+            DB_NAME=${{ secrets.DB_NAME_FAUCET }}
+            DB_USER=${{ secrets.DB_USER_FAUCET }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD_FAUCET }}
+            DB_HOST=${{ secrets.DB_HOST_FAUCET }}
 
   build-meta-storage-image-staging:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
-    environment: dev
+    environment: staging
     permissions:
       contents: read
       packages: write
