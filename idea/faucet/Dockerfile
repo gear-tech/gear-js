@@ -20,7 +20,7 @@ COPY --from=builder /src/package.json .
 COPY --from=builder /src/node_modules/ ./node_modules/
 
 COPY --from=builder /src/idea/common/dist ./idea/common/dist
-COPY --from=builder /src/idea/common/node_modules/ ./idea/common/node_modules/
+#COPY --from=builder /src/idea/common/node_modules/ ./idea/common/node_modules/
 COPY --from=builder /src/idea/common/package.json ./idea/common/
 
 COPY --from=builder /src/idea/faucet/dist ./idea/faucet/dist
