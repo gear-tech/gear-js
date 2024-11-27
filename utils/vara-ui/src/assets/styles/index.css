@@ -40,6 +40,12 @@
   src: url('./fonts/anuphan-bold.woff2') format('woff2');
 }
 
+:root {
+  --white: 0, 0%, 100%;
+  --black: 0, 0%, 0%;
+  --primary: 166, 100%, 50%;
+}
+
 *,
 ::after,
 ::before {
