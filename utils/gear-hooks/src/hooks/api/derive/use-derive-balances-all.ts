@@ -1,18 +1,18 @@
 import { DeriveBalancesAll } from '@polkadot/api-derive/types';
-import { useQuery, useQueryClient, UseQueryOptions } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
 import { useApi } from 'context';
 
-type QueryOptions = UseQueryOptions<DeriveBalancesAll, Error, DeriveBalancesAll, (string | undefined)[]>;
+import { QueryParameters } from '../../../types';
+import { useQuery } from '../../use-query';
 
-type UseDeriveBalancesAllParameters = {
+type UseDeriveBalancesAllParameters<T> = QueryParameters<DeriveBalancesAll, T> & {
   address: string | undefined;
   watch?: boolean;
-  query?: Omit<QueryOptions, 'queryKey' | 'queryFn'>;
 };
 
-function useDeriveBalancesAll({ address, watch, query }: UseDeriveBalancesAllParameters) {
+function useDeriveBalancesAll<T = DeriveBalancesAll>({ address, watch, query }: UseDeriveBalancesAllParameters<T>) {
   const { api, isApiReady } = useApi();
 
   const queryClient = useQueryClient();
@@ -41,10 +41,10 @@ function useDeriveBalancesAll({ address, watch, query }: UseDeriveBalancesAllPar
   }, [api, address, watch]);
 
   return useQuery({
+    ...query,
     queryKey,
     queryFn: getDeriveBalancesAll,
     enabled: isApiReady && Boolean(address) && (query?.enabled ?? true),
-    ...query,
   });
 }
 

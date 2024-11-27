@@ -1,11 +1,13 @@
 import { HexString } from '@gear-js/api';
-import { useQuery } from '@tanstack/react-query';
 import { Sails } from 'sails-js';
 import { SailsIdlParser } from 'sails-js-parser';
 
 import { useApi } from 'context';
 
-type UseSailsParameters = {
+import { QueryParameters } from '../../types';
+import { useQuery } from '../use-query';
+
+type UseSailsParameters<T> = QueryParameters<Sails, T> & {
   programId?: HexString | undefined;
   idl?: string | undefined;
 };
@@ -13,9 +15,10 @@ type UseSailsParameters = {
 const DEFAULT_PARAMETERS = {
   programId: undefined,
   idl: undefined,
+  query: {},
 } as const;
 
-function useSails({ programId, idl }: UseSailsParameters = DEFAULT_PARAMETERS) {
+function useSails<T = Sails>({ programId, idl, query }: UseSailsParameters<T> = DEFAULT_PARAMETERS) {
   const { api, isApiReady } = useApi();
 
   const getSails = async () => {
@@ -32,9 +35,10 @@ function useSails({ programId, idl }: UseSailsParameters = DEFAULT_PARAMETERS) {
   };
 
   return useQuery({
+    ...query,
     queryKey: ['sails', api?.provider.endpoint, programId, idl],
     queryFn: getSails,
-    enabled: isApiReady,
+    enabled: isApiReady && (query?.enabled ?? true),
   });
 }
 

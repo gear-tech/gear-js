@@ -24,7 +24,7 @@
     "preview": "vite preview"
   },
   "peerDependencies": {
-    "@gear-js/react-hooks": "^0.13.1",
+    "@gear-js/react-hooks": "^0.13.2",
     "@gear-js/ui": "^0.5.28",
     "@gear-js/vara-ui": "^0.0.11"
   },
@@ -37,7 +37,7 @@
     }
   },
   "devDependencies": {
-    "@gear-js/react-hooks": "0.13.1",
+    "@gear-js/react-hooks": "0.13.2",
     "@gear-js/ui": "0.5.28",
     "@gear-js/vara-ui": "0.0.11",
     "@polkadot/react-identicon": "3.10.1",

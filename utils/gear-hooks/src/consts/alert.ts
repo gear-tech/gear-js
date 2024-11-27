@@ -1,4 +1,4 @@
-import { AlertType, DefaultTemplateOptions } from 'types';
+import { AlertType, DefaultTemplateOptions } from '../types';
 
 const DEFAULT_OPTIONS = {
   style: { marginBottom: '10px' },
