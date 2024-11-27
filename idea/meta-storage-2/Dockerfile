@@ -7,12 +7,11 @@ COPY tsconfig.json .
 COPY .yarn .yarn
 COPY .yarnrc.yml .
 COPY ./idea/common idea/common
-COPY ./idea/meta-storage idea/meta-storage
-RUN npm cache clean --force
-RUN yarn cache clean
+COPY ./idea/meta-storage-2 idea/meta-storage-2
+
 RUN yarn install
 RUN yarn build:common
-RUN yarn build:meta-storage
-WORKDIR /src/idea/meta-storage
+RUN yarn workspace @gear-js/meta-storage-2 build
 
-CMD ["node", "dist/src/server.js"]
+WORKDIR /src/idea/meta-storage-2
+CMD ["node", "dist/server.js"]
