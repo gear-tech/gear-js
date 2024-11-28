@@ -51,7 +51,7 @@ export class GearGas {
    */
   async initUpload(
     sourceId: HexString,
-    code: HexString | Buffer | Uint8Array,
+    code: HexString | Uint8Array,
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
