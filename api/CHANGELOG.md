@@ -1,6 +1,13 @@
+## 0.40.0
+_28/11/2024
+
+- Bump `@polkadot/*` dependencies to `15.0.1` in https://github.com/gear-tech/gear-js/pull/1677
+- Remove `Buffer` type from everywhere in https://github.com/gear-tech/gear-js/pull/1677
+- Add `readState` function not used anymore
+
 ## 0.39.0
 
-_30/10/2024_
+_27/11/2024_
 
 
 ### Changes

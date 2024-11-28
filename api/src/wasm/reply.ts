@@ -14,7 +14,8 @@ export function getGrReply(wasm: HexString | ArrayBuffer | Uint8Array, fn: strin
         resolve(new Uint8Array(memory.buffer.slice(payload, payload + len))),
       ),
     )
-      .then(({ exports }) => {
+      // @ts-ignore
+      .then(({ instance: { exports } }) => {
         if (!(fn in exports)) {
           reject(`${fn} function not found in exports`);
         } else if (typeof exports[fn] !== 'function') {
