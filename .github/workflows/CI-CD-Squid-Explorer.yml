@@ -54,7 +54,7 @@ jobs:
         with:
           file: idea/explorer/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-explorer:${{ env.tag }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-explorer-v2:${{ env.tag }}
 
   build-squid-image:
     runs-on: ubuntu-latest
