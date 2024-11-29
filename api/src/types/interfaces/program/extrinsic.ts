@@ -8,7 +8,7 @@ import { GasLimit, Value } from '../../common';
 import { PayloadType } from 'types/payload';
 
 export interface V1010ProgramUploadOptions {
-  code: HexString | Buffer | Uint8Array;
+  code: HexString | Uint8Array;
   salt?: `0x${string}`;
   initPayload?: PayloadType;
   gasLimit: GasLimit;

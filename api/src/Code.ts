@@ -14,7 +14,7 @@ export class GearCode extends GearTransaction {
    * @param code
    * @returns Code hash
    */
-  async upload(code: Buffer | Uint8Array): Promise<CodeUploadResult> {
+  async upload(code: Uint8Array): Promise<CodeUploadResult> {
     const codeHash = generateCodeHash(code);
     await validateCodeId(codeHash, this._api);
 
@@ -72,7 +72,7 @@ export class GearCode extends GearTransaction {
     return u8aToHex(metahash);
   }
 
-  async metaHashFromWasm(wasm: Buffer | ArrayBuffer | HexString | Uint8Array) {
+  async metaHashFromWasm(wasm: ArrayBuffer | HexString | Uint8Array) {
     const metahash = await getGrReply(wasm, 'metahash');
 
     return u8aToHex(metahash);

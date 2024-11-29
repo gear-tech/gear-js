@@ -1,4 +1,4 @@
-import { HexString } from '@polkadot/util/types';
+import { HexString, U8aLike } from '@polkadot/util/types';
 
 import { GasInfo, PayloadType } from './types';
 import { GearApi } from './GearApi';
@@ -51,7 +51,7 @@ export class GearGas {
    */
   async initUpload(
     sourceId: HexString,
-    code: HexString | Buffer | Uint8Array,
+    code: U8aLike,
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,

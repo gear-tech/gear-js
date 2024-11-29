@@ -11,13 +11,13 @@ import { getApi } from './common';
 const api = getApi();
 let alice: KeyringPair;
 
-const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
+const code = Uint8Array.from(readFileSync(join(TARGET, 'test_meta.opt.wasm')));
 
-const stateV1 = readFileSync(join(TARGET, 'test_meta_state_v1.meta.wasm'));
+const stateV1 = Uint8Array.from(readFileSync(join(TARGET, 'test_meta_state_v1.meta.wasm')));
 
 let stateV1Meta: StateMetadata;
 
-const stateV2 = readFileSync(join(TARGET, 'test_meta_state_v2.meta.wasm'));
+const stateV2 = Uint8Array.from(readFileSync(join(TARGET, 'test_meta_state_v2.meta.wasm')));
 let stateV2Meta: StateMetadata;
 
 const metaHex = `0x${readFileSync(TEST_META_META, 'utf-8')}` as HexString;
