@@ -1,4 +1,4 @@
-import { TEST_META_UNION } from './config';
+import { TEST_META } from './config';
 import fs from 'fs';
 
 import { ProgramMetadata, encodePayload } from '../src';
@@ -6,7 +6,7 @@ import { ProgramMetadata, encodePayload } from '../src';
 let meta: ProgramMetadata;
 
 beforeAll(() => {
-  const hex = fs.readFileSync(TEST_META_UNION, 'utf-8');
+  const hex = fs.readFileSync(TEST_META, 'utf-8');
   meta = ProgramMetadata.from(`0x${hex}`);
 });
 
@@ -133,7 +133,7 @@ describe('Get type definitions', () => {
       },
     });
     expect(meta.getTypeDef(7, true)).toEqual({
-      name: 'TestUnionIoAction',
+      name: 'TestIoAction',
       kind: 'variant',
       type: {
         One: {
@@ -422,7 +422,7 @@ describe('Get type definitions', () => {
       },
     });
     expect(meta.getTypeDef(21, true)).toEqual({
-      name: 'TestUnionIoReplyType',
+      name: 'TestIoReplyType',
       kind: 'variant',
       type: {
         TextReply: {

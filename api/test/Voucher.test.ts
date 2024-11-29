@@ -3,7 +3,7 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { TARGET, TEST_META_UNION } from './config';
+import { TARGET, TEST_META } from './config';
 import { ProgramMetadata, decodeAddress } from '../src';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { getApi } from './common';
@@ -19,8 +19,8 @@ let voucher: string;
 let validUpTo: number;
 
 const api = getApi();
-const code = readFileSync(join(TARGET, 'test_meta_union.opt.wasm'));
-const metaHex: HexString = `0x${readFileSync(TEST_META_UNION, 'utf-8')}`;
+const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
+const metaHex: HexString = `0x${readFileSync(TEST_META, 'utf-8')}`;
 const metadata = ProgramMetadata.from(metaHex);
 
 beforeAll(async () => {
@@ -225,7 +225,7 @@ describe('Voucher', () => {
   test('Upload code with voucher', async () => {
     expect(voucher).toBeDefined();
 
-    const code = new Uint8Array(readFileSync(join(TARGET, 'test_union.wasm')).buffer);
+    const code = new Uint8Array(readFileSync(join(TARGET, 'test.wasm')).buffer);
 
     const { extrinsic, codeHash } = await api.code.upload(code);
 

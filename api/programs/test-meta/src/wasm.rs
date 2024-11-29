@@ -1,5 +1,5 @@
 use gstd::{collections::{BTreeMap, BTreeSet}, debug, msg, prelude::*};
-use test_union_io::{Action, EmptyStruct, Id, InputStruct, Person, Wallet};
+use test_io::{Action, EmptyStruct, Id, InputStruct, Person, Wallet};
 
 static mut STATE: Vec<Wallet> = Vec::new();
 

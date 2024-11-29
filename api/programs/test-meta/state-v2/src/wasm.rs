@@ -1,6 +1,6 @@
 use gmeta::metawasm;
 use gstd::prelude::*;
-use test_union_io::{Id, Person, Wallet};
+use test_io::{Id, Person, Wallet};
 
 #[metawasm]
 pub mod metafns {

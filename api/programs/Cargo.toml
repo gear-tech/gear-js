@@ -1,7 +1,7 @@
 [workspace]
 resolver = "2"
 
-members = ["test-meta-union", 'test-union']
+members = ["test-meta", 'test']
 
 [workspace.dependencies]
 gmeta = { git = "https://github.com/gear-tech/gear.git" }

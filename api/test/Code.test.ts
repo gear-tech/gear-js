@@ -8,7 +8,7 @@ import { getApi } from './common';
 
 const api = getApi();
 const accounts = {};
-const code = readFileSync(join(TARGET, 'test_union.opt.wasm'));
+const code = readFileSync(join(TARGET, 'test.opt.wasm'));
 let codeId: HexString;
 
 beforeAll(async () => {

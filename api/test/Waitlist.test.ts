@@ -10,7 +10,7 @@ import { getApi } from './common';
 
 const api = getApi();
 
-const CODE_PATH = join(TARGET, 'test_union.opt.wasm');
+const CODE_PATH = join(TARGET, 'test.opt.wasm');
 let alice: KeyringPair;
 let programId: HexString;
 let messageId: HexString;

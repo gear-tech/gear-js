@@ -3,7 +3,7 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { TARGET, TEST_META_UNION } from './config';
+import { TARGET, TEST_META } from './config';
 import { ProgramMetadata } from '../src';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { decodeAddress } from '../src/utils';
@@ -14,8 +14,8 @@ let alice: KeyringPair;
 let programId: HexString;
 let messageToClaim: HexString;
 
-const code = readFileSync(join(TARGET, 'test_meta_union.opt.wasm'));
-const metaHex: HexString = `0x${readFileSync(TEST_META_UNION, 'utf-8')}`;
+const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
+const metaHex: HexString = `0x${readFileSync(TEST_META, 'utf-8')}`;
 const metadata = ProgramMetadata.from(metaHex);
 
 beforeAll(async () => {

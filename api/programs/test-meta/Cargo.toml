@@ -1,18 +1,18 @@
 [package]
-name = "test-meta-union"
+name = "test-meta"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 gstd.workspace = true
 codec.workspace = true
-test-union-io = { path = "io" }
+test-io = { path = "io" }
 test-meta-state-v1 = { path = "state-v1", default-features = false, optional = true }
 test-meta-state-v2 = { path = "state-v2", default-features = false, optional = true }
 
 [build-dependencies]
 gear-wasm-builder.workspace = true
-test-union-io = { path = "io" }
+test-io = { path = "io" }
 
 [features]
 default = ["std"]
