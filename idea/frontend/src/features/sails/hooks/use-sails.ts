@@ -16,9 +16,9 @@ function useSails(codeId: HexString | null | undefined) {
     if (!sails) throw new Error('Sails is not initialized');
     if (!codeId) throw new Error('Code ID is not found');
 
-    const { result } = await getIdl(codeId);
+    const { data } = await getIdl(codeId);
 
-    return sails.parseIdl(result);
+    return sails.parseIdl(data);
   };
 
   const { data, isPending, error, refetch } = useQuery({
