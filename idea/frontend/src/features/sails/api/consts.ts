@@ -3,4 +3,8 @@ const METHOD = {
   GET_EVENTS: 'event.all',
 } as const;
 
-export { METHOD };
+const errorMessage = {
+  sailsIdlNotFound: 'SailsIdlNotFound',
+};
+
+export { METHOD, errorMessage };

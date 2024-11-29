@@ -2,11 +2,11 @@ import { HexString, ProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { useEffect, useMemo, useState } from 'react';
 
-import { RPCError, RPCErrorCode } from '@/shared/services/rpcService';
 import { useChain } from '@/hooks';
 import { getLocalMetadata } from '@/features/local-indexer';
 
 import { fetchMetadata } from '../api/requests';
+import { errorMessage } from '../consts';
 
 function useMetadata(hash?: HexString | null | undefined) {
   const alert = useAlert();
@@ -30,7 +30,7 @@ function useMetadata(hash?: HexString | null | undefined) {
 
     getMetadata(hash)
       .then(({ result }) => result.hex && setMetadataHex(result.hex))
-      .catch(({ message, code }: RPCError) => code !== RPCErrorCode.MetadataNotFound && alert.error(message))
+      .catch(({ message }) => message !== errorMessage.metadataNotFound && alert.error(message))
       .finally(() => setIsMetadataReady(true));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hash]);

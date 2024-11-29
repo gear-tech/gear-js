@@ -131,7 +131,10 @@ const fetchWithGuard = async <T extends object>(...args: Parameters<typeof fetch
   }
   const response = await fetch(...args);
 
-  if (!response.ok) throw new Error(response.statusText);
+  if (!response.ok) {
+    const result = await response.json();
+    throw new Error('error' in result ? result.error : response.statusText);
+  }
 
   return response.json() as T;
 };

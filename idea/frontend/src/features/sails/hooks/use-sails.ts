@@ -3,10 +3,9 @@ import { useAlert } from '@gear-js/react-hooks';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
-import { RPCError, RPCErrorCode } from '@/shared/services/rpcService';
-
 import { getIdl } from '../api';
 import { useSailsInit } from './use-sails-init';
+import { errorMessage } from '../api/consts';
 
 function useSails(codeId: HexString | null | undefined) {
   const sails = useSailsInit();
@@ -29,7 +28,7 @@ function useSails(codeId: HexString | null | undefined) {
 
   useEffect(() => {
     if (!error) return;
-    if (error instanceof RPCError && error.code === RPCErrorCode.MetadataNotFound) return;
+    if (error.message === errorMessage.sailsIdlNotFound) return;
 
     alert.error(error.message);
     // eslint-disable-next-line react-hooks/exhaustive-deps
