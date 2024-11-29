@@ -4,13 +4,13 @@ import { DEFAULT_LIMIT } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/helpers';
 
 import { Dns, DnsParams, DnsResponse } from './types';
-import { API_URL } from './consts';
+import { DNS_API_URL } from './consts';
 
 type Genesis = {
   genesis: HexString;
 };
 
-const getUrl = (genesis: HexString, path: string) => `${API_URL[genesis as keyof typeof API_URL]}/${path}`;
+const getUrl = (genesis: HexString, path: string) => `${DNS_API_URL[genesis as keyof typeof DNS_API_URL]}/${path}`;
 
 const getDnsProgramId = async ({ genesis }: Genesis) => {
   const method = 'GET';

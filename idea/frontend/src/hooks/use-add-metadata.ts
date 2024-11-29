@@ -1,7 +1,7 @@
 import { HexString } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 
-import { addMetadata as addStorageMetadata } from '@/api';
+import { addMetadata as addStorageMetadata } from '@/features/metadata';
 import { addLocalMetadata } from '@/features/local-indexer';
 import { getErrorMessage } from '@/shared/helpers';
 

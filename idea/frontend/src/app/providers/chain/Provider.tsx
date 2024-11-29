@@ -20,9 +20,8 @@ const ChainProvider = ({ children }: ProviderProps) => {
 
     if (isDevChain === undefined) return;
 
-    if (isDevChain || genesis === GENESIS.TESTNET) {
-      setIsTestBalanceAvailable(true);
-    }
+    setIsTestBalanceAvailable(isDevChain || genesis === GENESIS.TESTNET);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDevChain]);
 

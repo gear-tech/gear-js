@@ -3,11 +3,9 @@ import { z } from 'zod';
 
 import { isAccountAddressValid } from '../helpers';
 
-const API_URL = import.meta.env.VITE_API_URL as string;
 const INDEXER_API_URL = import.meta.env.VITE_INDEXER_API_URL as string;
 const NODES_API_URL = import.meta.env.VITE_NODES_API_URL as string;
-const FAUCET_API_URL = import.meta.env.VITE_FAUCET_API_URL as string;
-const META_STORAGE_API_URL = import.meta.env.VITE_META_STORAGE_API_URL as string;
+const METADATA_STORAGE_API_URL = import.meta.env.VITE_METADATA_STORAGE_API_URL as string;
 const NODE_ADDRESS = import.meta.env.VITE_NODE_ADDRESS as string;
 const HCAPTCHA_SITE_KEY = import.meta.env.VITE_HCAPTCHA_SITE_KEY as string;
 const GTM_ID = import.meta.env.VITE_GTM_ID as string | undefined;
@@ -37,6 +35,8 @@ const PROGRAM_ERRORS = {
   INVALID_TRANSACTION: 'Transaction error. Status: isInvalid',
   PROGRAM_INIT_FAILED: 'Program initialization failed',
 };
+
+const CONTENT_TYPE_HEADERS = { 'Content-Type': 'application/json;charset=utf-8' };
 
 enum LocalStorage {
   Node = 'node',
@@ -98,11 +98,9 @@ const ACCOUNT_ADDRESS_SCHEMA = z
   .transform((value) => decodeAddress(value));
 
 export {
-  API_URL,
   INDEXER_API_URL,
   NODES_API_URL,
-  FAUCET_API_URL,
-  META_STORAGE_API_URL,
+  METADATA_STORAGE_API_URL,
   NODE_ADDRESS,
   HCAPTCHA_SITE_KEY,
   GTM_ID,
@@ -114,6 +112,7 @@ export {
   PROGRAM_ERRORS,
   GENESIS,
   ACCOUNT_ADDRESS_SCHEMA,
+  CONTENT_TYPE_HEADERS,
   LocalStorage,
   GasMethod,
   TransactionName,
