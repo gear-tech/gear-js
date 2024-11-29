@@ -126,6 +126,9 @@ const isHex = (value: unknown): value is HexString => {
 };
 
 const fetchWithGuard = async <T extends object>(...args: Parameters<typeof fetch>) => {
+  if (args?.[1]?.method === 'POST') {
+    args[1].headers = { 'Content-Type': 'application/json;charset=utf-8', ...args[1]?.headers };
+  }
   const response = await fetch(...args);
 
   if (!response.ok) throw new Error(response.statusText);

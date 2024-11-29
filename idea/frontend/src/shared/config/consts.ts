@@ -36,8 +36,6 @@ const PROGRAM_ERRORS = {
   PROGRAM_INIT_FAILED: 'Program initialization failed',
 };
 
-const CONTENT_TYPE_HEADERS = { 'Content-Type': 'application/json;charset=utf-8' };
-
 enum LocalStorage {
   Node = 'node',
   Nodes = 'nodes',
@@ -112,7 +110,6 @@ export {
   PROGRAM_ERRORS,
   GENESIS,
   ACCOUNT_ADDRESS_SCHEMA,
-  CONTENT_TYPE_HEADERS,
   LocalStorage,
   GasMethod,
   TransactionName,

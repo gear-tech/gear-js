@@ -1,7 +1,7 @@
 import { HexString } from '@gear-js/api';
 
 import { PaginationResponse } from '@/api';
-import { CONTENT_TYPE_HEADERS, METADATA_STORAGE_API_URL } from '@/shared/config';
+import { METADATA_STORAGE_API_URL } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/helpers';
 import { INDEXER_RPC_SERVICE } from '@/shared/services/rpcService';
 
@@ -18,7 +18,6 @@ const getIdl = (codeId: HexString) => {
 const addIdl = (codeId: HexString, data: string) =>
   fetchWithGuard(`${METADATA_STORAGE_API_URL}/sails`, {
     method: 'POST',
-    headers: CONTENT_TYPE_HEADERS,
     body: JSON.stringify({ codeId, data }),
   });
 

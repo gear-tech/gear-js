@@ -1,6 +1,6 @@
 import { HexString } from '@polkadot/util/types';
 
-import { CONTENT_TYPE_HEADERS, METADATA_STORAGE_API_URL } from '@/shared/config';
+import { METADATA_STORAGE_API_URL } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/helpers';
 import { GetMetaResponse } from './types';
 
@@ -14,7 +14,6 @@ const fetchMetadata = (hash: HexString) => {
 const addMetadata = (hash: HexString, hex: HexString) =>
   fetchWithGuard(`${METADATA_STORAGE_API_URL}/meta`, {
     method: 'POST',
-    headers: CONTENT_TYPE_HEADERS,
     body: JSON.stringify({ hash, hex }),
   });
 
