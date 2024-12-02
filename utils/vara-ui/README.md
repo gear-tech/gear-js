@@ -38,7 +38,7 @@ Simple as it is, here's quick example:
 
 ```jsx
 import { Button } from '@gear-js/vara-ui';
-import { ReactComponent as ArrowSVG } from './images/arrow.svg';
+import { ReactComponent as ArrowSVG } from './images/arrow.svg?import';
 
 function BackButton() {
   const handleClick = () => {
