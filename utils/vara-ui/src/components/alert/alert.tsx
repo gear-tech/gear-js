@@ -1,6 +1,6 @@
 import { CSSProperties, ReactNode } from 'react';
 import cx from 'clsx';
-import { ReactComponent as CrossSVG } from '../../assets/images/cross.svg';
+import CrossSVG from '../../assets/images/cross.svg?react';
 import { Button } from '../button';
 import styles from './alert.module.scss';
 
