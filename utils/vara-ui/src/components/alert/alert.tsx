@@ -27,8 +27,8 @@ type Props = {
 
 function Alert({ alert, close }: Props) {
   const { content, options, footer } = alert;
-  const { type, title, style, isClosed } = options;
-  const isNotification = type.startsWith('notification');
+  const { type, title, style, isClosed, variant } = options;
+  const isNotification = variant === 'notification';
 
   return (
     <div className={cx(styles.alert, isNotification && styles.notification)} style={style}>
