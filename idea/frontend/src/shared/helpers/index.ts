@@ -125,14 +125,18 @@ const isHex = (value: unknown): value is HexString => {
   return isString(value) && (value === '0x' || (HEX_REGEX.test(value) && value.length % 2 === 0));
 };
 
-const fetchWithGuard = async <T extends object>(...args: Parameters<typeof fetch>) => {
-  if (args?.[1]?.method === 'POST') {
-    args[1].headers = { 'Content-Type': 'application/json;charset=utf-8', ...args[1]?.headers };
+const fetchWithGuard = async <T extends object>(url: URL | string, method: 'GET' | 'POST', params?: object) => {
+  const request = { method } as RequestInit;
+
+  if (method === 'POST') {
+    request.headers = { 'Content-Type': 'application/json;charset=utf-8' };
+    request.body = JSON.stringify(params);
   }
-  const response = await fetch(...args);
+
+  const response = await fetch(url, request);
 
   if (!response.ok) {
-    const result = await response.json();
+    const result = await response.json().catch(() => ({}));
     throw new Error('error' in result ? result.error : response.statusText);
   }
 

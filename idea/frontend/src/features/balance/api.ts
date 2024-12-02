@@ -8,8 +8,5 @@ type GetTestBalanceParameters = {
 };
 
 const getTestBalance = ({ token, address }: GetTestBalanceParameters) =>
-  fetchWithGuard(`${FAUCET_API_URL}/balance`, {
-    method: 'POST',
-    body: JSON.stringify({ token, payload: { address, genesis: GENESIS.TESTNET } }),
-  });
+  fetchWithGuard(`${FAUCET_API_URL}/balance`, 'POST', { token, payload: { address, genesis: GENESIS.TESTNET } });
 export { getTestBalance };
