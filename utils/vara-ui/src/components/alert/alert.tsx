@@ -1,11 +1,12 @@
 import { CSSProperties, ReactNode } from 'react';
 import cx from 'clsx';
-import { ReactComponent as CrossSVG } from '../../assets/images/cross.svg';
+import CrossSVG from '../../assets/images/cross.svg?react';
 import { Button } from '../button';
 import styles from './alert.module.scss';
 
 type Options = {
   type: 'info' | 'error' | 'loading' | 'success';
+  variant?: 'alert' | 'notification';
   style?: CSSProperties;
   title?: string;
   timeout?: number;
@@ -15,6 +16,7 @@ type Options = {
 type AlertType = {
   id: string;
   content: ReactNode;
+  footer?: ReactNode;
   options: Options;
 };
 
@@ -24,11 +26,12 @@ type Props = {
 };
 
 function Alert({ alert, close }: Props) {
-  const { content, options } = alert;
-  const { type, title, style, isClosed } = options;
+  const { content, options, footer } = alert;
+  const { type, title, style, isClosed, variant } = options;
+  const isNotification = variant === 'notification';
 
   return (
-    <div className={styles.alert} style={style}>
+    <div className={cx(styles.alert, isNotification && styles.notification)} style={style}>
       <header className={cx(styles.header, styles[type])}>
         {title || type}
 
@@ -36,6 +39,8 @@ function Alert({ alert, close }: Props) {
       </header>
 
       <div className={styles.body}>{content}</div>
+
+      {footer && <p className={styles.footer}>{footer}</p>}
     </div>
   );
 }
