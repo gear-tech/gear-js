@@ -1,7 +1,7 @@
 import ky, { Options } from 'ky';
 
 import { generateRandomId } from '@/shared/helpers';
-import { API_URL, INDEXER_API_URL, LocalStorage } from '@/shared/config';
+import { INDEXER_API_URL, LocalStorage } from '@/shared/config';
 
 import { RPCError } from './RPCError';
 import { RPCRequest, RPCResponse, RPCSuccessResponse } from './types';
@@ -48,7 +48,6 @@ class RPCService {
   }
 }
 
-const rpcService = new RPCService(API_URL);
 const INDEXER_RPC_SERVICE = new RPCService(INDEXER_API_URL);
 
-export { rpcService, INDEXER_RPC_SERVICE };
+export { INDEXER_RPC_SERVICE };
