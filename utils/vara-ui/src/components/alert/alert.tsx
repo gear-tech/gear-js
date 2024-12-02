@@ -5,10 +5,10 @@ import { Button } from '../button';
 import styles from './alert.module.scss';
 
 type Options = {
-  type: 'info' | 'error' | 'loading' | 'success' | 'notification-warning' | 'notification-info';
+  type: 'info' | 'error' | 'loading' | 'success';
+  variant?: 'alert' | 'notification';
   style?: CSSProperties;
   title?: string;
-  footer?: string;
   timeout?: number;
   isClosed?: boolean;
 };
@@ -16,6 +16,7 @@ type Options = {
 type AlertType = {
   id: string;
   content: ReactNode;
+  footer?: ReactNode;
   options: Options;
 };
 
@@ -25,8 +26,8 @@ type Props = {
 };
 
 function Alert({ alert, close }: Props) {
-  const { content, options } = alert;
-  const { type, title, style, isClosed, footer } = options;
+  const { content, options, footer } = alert;
+  const { type, title, style, isClosed } = options;
   const isNotification = type.startsWith('notification');
 
   return (
