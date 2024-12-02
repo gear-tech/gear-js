@@ -17,11 +17,11 @@ const preview: Preview = {
       current: 'light',
       light: {
         ...themes.light,
-        appPreviewBg: 'hsla(0, 0%, 100%, 1)',
+        appPreviewBg: '#ffffff',
       },
       dark: {
         ...themes.dark,
-        appPreviewBg: 'hsla(240, 3%, 12%, 1)',
+        appPreviewBg: '#1e1e20',
       },
     },
   },
