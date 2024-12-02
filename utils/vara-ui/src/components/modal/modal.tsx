@@ -2,7 +2,7 @@ import { ReactNode, useEffect, useState, MouseEvent, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import cx from 'clsx';
 
-import { ReactComponent as CrossSVG } from '../../assets/images/cross.svg';
+import CrossSVG from '../../assets/images/cross.svg?react';
 import { Button } from '../button';
 import styles from './modal.module.scss';
 

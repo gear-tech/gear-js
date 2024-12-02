@@ -11,21 +11,21 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
-    backgrounds: {
-      default: 'default',
-      values: [
-        {
-          name: 'default',
-          value: '#f3f9f8',
-        },
-      ],
-    },
     darkMode: {
       darkClass: 'dark-theme',
       stylePreview: true,
-      dark: { ...themes.dark, appPreviewBg: 'black' },
+      current: 'light',
+      light: {
+        ...themes.light,
+        appPreviewBg: '#ffffff',
+      },
+      dark: {
+        ...themes.dark,
+        appPreviewBg: '#1e1e20',
+      },
     },
   },
+  tags: ['autodocs'],
 };
 
 export default preview;
