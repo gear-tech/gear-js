@@ -1,28 +1,36 @@
 import { InputHTMLAttributes, forwardRef } from 'react';
 import cx from 'clsx';
 import styles from './checkbox.module.scss';
+import type { ICheckboxSizes, ICheckboxTypes } from './helpers.ts';
 
 type Props = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
-  type?: 'switch';
+  type?: ICheckboxTypes;
+  checkboxSize?: ICheckboxSizes;
+  hasError?: boolean;
 };
 
-const Checkbox = forwardRef<HTMLInputElement, Props>(({ label, className, type, ...attrs }, ref) => {
-  const { disabled } = attrs;
+const Checkbox = forwardRef<HTMLInputElement, Props>(
+  ({ label, className, type = 'checkbox', checkboxSize = 'md', hasError, ...attrs }, ref) => {
+    const { disabled } = attrs;
 
-  return (
-    <label className={cx(styles.label, className, disabled && styles.disabled)}>
-      <input
-        type="checkbox"
-        className={cx(styles.input, type === 'switch' ? styles.switch : styles.checkbox)}
-        ref={ref}
-        {...attrs}
-      />
+    return (
+      <label
+        className={cx(
+          styles.label,
+          className,
+          hasError && styles.error,
+          disabled && styles.disabled,
+          styles[checkboxSize],
+        )}
+        aria-invalid={hasError}>
+        <input type="checkbox" className={cx(styles.input, styles[type])} ref={ref} {...attrs} />
 
-      {label}
-    </label>
-  );
-});
+        {label}
+      </label>
+    );
+  },
+);
 
 export { Checkbox };
 export type { Props as CheckboxProps };
