@@ -147,6 +147,13 @@
   }
 }
 
+:global(.dark-theme) {
+  .primary {
+    /* TODO: customize colors */
+    color: brown;
+  }
+}
+
 .default {
   padding: 16px 32px;
   font-size: 18px;

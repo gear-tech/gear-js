@@ -19,7 +19,7 @@ let metaHash: HexString;
 let expiredBN: number;
 let pausedBlockHash: HexString;
 
-const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
+const code = Uint8Array.from(readFileSync(join(TARGET, 'test_meta.opt.wasm')));
 const metaHex: HexString = `0x${readFileSync(TEST_META, 'utf-8')}`;
 
 beforeAll(async () => {
@@ -131,24 +131,24 @@ describe('New Program', () => {
 
   test('Throw error if value is incorrect', () => {
     expect(() =>
-      api.program.upload({ code: Buffer.from('0x00'), gasLimit: 1000, value: api.existentialDeposit.toNumber() - 1 }),
+      api.program.upload({ code: Uint8Array.from([0]), gasLimit: 1000, value: api.existentialDeposit.toNumber() - 1 }),
     ).toThrow(`Value less than minimal. Minimal value: ${api.existentialDeposit.toHuman()}`);
   });
 
   test('Not to throw error if value is correct', () => {
     expect(() =>
-      api.program.upload({ code: Buffer.from('0x00'), gasLimit: 1000, value: api.existentialDeposit.toNumber() }),
+      api.program.upload({ code: Uint8Array.from([0]), gasLimit: 1000, value: api.existentialDeposit.toNumber() }),
     ).not.toThrow();
   });
 
   test('Throw error if gasLimit too high', () => {
-    expect(() => api.program.upload({ code: Buffer.from('0x00'), gasLimit: api.blockGasLimit.addn(1) })).toThrow(
+    expect(() => api.program.upload({ code: Uint8Array.from([0]), gasLimit: api.blockGasLimit.addn(1) })).toThrow(
       `GasLimit too high. Maximum gasLimit value is ${api.blockGasLimit.toHuman()}`,
     );
   });
 
   test('Not to throw error if gasLimit is correct', () => {
-    expect(() => api.program.upload({ code: Buffer.from('0x00'), gasLimit: api.blockGasLimit })).not.toThrow();
+    expect(() => api.program.upload({ code: Uint8Array.from([0]), gasLimit: api.blockGasLimit })).not.toThrow();
   });
 
   test.skip('Pay program rent', async () => {

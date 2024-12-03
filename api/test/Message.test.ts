@@ -14,7 +14,7 @@ let alice: KeyringPair;
 let programId: HexString;
 let messageToClaim: HexString;
 
-const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
+const code = Uint8Array.from(readFileSync(join(TARGET, 'test_meta.opt.wasm')));
 const metaHex: HexString = `0x${readFileSync(TEST_META, 'utf-8')}`;
 const metadata = ProgramMetadata.from(metaHex);
 

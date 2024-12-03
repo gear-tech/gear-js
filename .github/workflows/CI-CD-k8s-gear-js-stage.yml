@@ -4,10 +4,9 @@ on:
   push:
     branches: ['main']
     paths:
-      - idea/api-gateway/**
-      - idea/indexer/**
+      - idea/meta-storage-2/**
+      - idea/faucet/**
       - idea/frontend/**
-      - idea/test-balance/**
       - k8s/**
   workflow_dispatch:
 
@@ -50,17 +49,18 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:qa
           build-args: |
             VITE_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
-            VITE_API_URL=${{ secrets.REACT_APP_API_URL }}
             VITE_DEFAULT_TRANSFER_BALANCE_VALUE=${{ secrets.REACT_APP_DEFAULT_TRANSFER_BALANCE_VALUE }}
             VITE_HCAPTCHA_SITE_KEY=${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
             VITE_NODES_API_URL= ${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
+            VITE_FAUCET_API_URL= ${{ secrets.VITE_FAUCET_API_URL }}
+            VITE_METADATA_STORAGE_API_URL= ${{ secrets.VITE_METADATA_STORAGE_API_URL }}
             VITE_MAINNET_VOUCHERS_API_URL=${{ secrets.VITE_MAINNET_VOUCHERS_API_URL }}
             VITE_TESTNET_VOUCHERS_API_URL=${{ secrets.VITE_TESTNET_VOUCHERS_API_URL }}
             VITE_INDEXER_API_URL=${{ secrets.VITE_INDEXER_API_URL }}
             VITE_TESTNET_DNS_API_URL=${{ secrets.VITE_TESTNET_DNS_API_URL }}
             VITE_MAINNET_DNS_API_URL=${{ secrets.VITE_MAINNET_DNS_API_URL }}
 
-  build-indexer-image-staging:
+  build-faucet-image-staging:
     runs-on: ubuntu-latest
     environment: staging
     permissions:
@@ -81,64 +81,14 @@ jobs:
       - name: Build and push Data Storage Docker image
         uses: docker/build-push-action@master
         with:
-          file: idea/indexer/Dockerfile
+          file: idea/faucet/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-indexer:qa
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-faucet:qa
 
-  build-api-gateway-image-staging:
-    runs-on: ubuntu-latest
-    environment: staging
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Api Gateway Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/api-gateway/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:qa
-
-  build-test-balance-image-staging:
-    runs-on: ubuntu-latest
-    environment: staging
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Test Balance Docker image
-        uses: docker/build-push-action@master
-        with:
-          file: idea/test-balance/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-test-balance:qa
-
-  build-and-push-meta-storage-image:
+  build-meta-storage-image-staging:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
-    environment: dev
+    environment: staging
     permissions:
       contents: read
       packages: write
@@ -157,7 +107,7 @@ jobs:
       - name: Build and push Meta Storage Docker image
         uses: docker/build-push-action@master
         with:
-          file: idea/meta-storage/Dockerfile
+          file: idea/meta-storage-2/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-meta-storage:qa
 
@@ -165,10 +115,8 @@ jobs:
     needs:
       [
         build-frontend-image-staging,
-        build-indexer-image-staging,
-        build-api-gateway-image-staging,
-        build-test-balance-image-staging,
-        build-and-push-meta-storage-image,
+        build-faucet-image-staging,
+        build-meta-storage-image-staging
       ]
     runs-on: ubuntu-latest
 
@@ -183,7 +131,7 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment api-gateway frontend-nginx indexer-workshop indexer-testnet testbalance-workshop meta-storage -n dev-1
+          args: rollout restart deployment frontend-nginx faucet meta-storage -n dev-1
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master

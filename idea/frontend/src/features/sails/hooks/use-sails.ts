@@ -3,10 +3,9 @@ import { useAlert } from '@gear-js/react-hooks';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
-import { RPCError, RPCErrorCode } from '@/shared/services/rpcService';
-
 import { getIdl } from '../api';
 import { useSailsInit } from './use-sails-init';
+import { errorMessage } from '../api/consts';
 
 function useSails(codeId: HexString | null | undefined) {
   const sails = useSailsInit();
@@ -16,9 +15,9 @@ function useSails(codeId: HexString | null | undefined) {
     if (!sails) throw new Error('Sails is not initialized');
     if (!codeId) throw new Error('Code ID is not found');
 
-    const { result } = await getIdl(codeId);
+    const { data } = await getIdl(codeId);
 
-    return sails.parseIdl(result);
+    return sails.parseIdl(data);
   };
 
   const { data, isPending, error, refetch } = useQuery({
@@ -29,7 +28,7 @@ function useSails(codeId: HexString | null | undefined) {
 
   useEffect(() => {
     if (!error) return;
-    if (error instanceof RPCError && error.code === RPCErrorCode.MetadataNotFound) return;
+    if (error.message === errorMessage.sailsIdlNotFound) return;
 
     alert.error(error.message);
     // eslint-disable-next-line react-hooks/exhaustive-deps

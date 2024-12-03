@@ -3,30 +3,20 @@ import { blake2AsHex, blake2AsU8a } from '@polkadot/util-crypto';
 import { stringToU8a, u8aToU8a } from '@polkadot/util';
 
 import { CreateType } from '../metadata';
-import { GearApi } from 'GearApi';
 
 const VOUCHER_PREFIX_BEFORE_1100 = stringToU8a('modlpy/voucher__');
 const VOUCHER_PREFIX = stringToU8a('voucher');
 
-export function generateCodeHash(code: Buffer | Uint8Array | HexString): HexString {
+export function generateCodeHash(code: Uint8Array | HexString): HexString {
   return blake2AsHex(u8aToU8a(code), 256);
 }
 
-export function generateProgramId(
-  api: GearApi,
-  codeId: HexString | Uint8Array,
-  salt: string | HexString | Uint8Array,
-): HexString;
+export function generateProgramId(codeId: HexString | Uint8Array, salt: string | HexString | Uint8Array): HexString;
+
+export function generateProgramId(code: Uint8Array, salt: string | HexString | Uint8Array): HexString;
 
 export function generateProgramId(
-  api: GearApi,
-  code: Buffer | Uint8Array,
-  salt: string | HexString | Uint8Array,
-): HexString;
-
-export function generateProgramId(
-  api: GearApi,
-  codeOrHash: Buffer | Uint8Array | HexString,
+  codeOrHash: Uint8Array | HexString,
   salt: string | HexString | Uint8Array,
 ): HexString {
   const [code, codeHash] = typeof codeOrHash === 'string' ? [undefined, codeOrHash] : [codeOrHash, undefined];

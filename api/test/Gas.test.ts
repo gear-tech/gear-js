@@ -1,4 +1,5 @@
 import { HexString } from '@polkadot/util/types';
+import { bufferToU8a } from '@polkadot/util';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
@@ -18,7 +19,7 @@ let programId: HexString;
 let codeId: HexString;
 let messageId: HexString;
 
-const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
+const code = Uint8Array.from(readFileSync(join(TARGET, 'test_meta.opt.wasm')));
 const meta = ProgramMetadata.from(`0x${readFileSync(TEST_META, 'utf-8')}`);
 
 const gasLimits: { init?: u64; handle?: u64; reply?: u64 } = {

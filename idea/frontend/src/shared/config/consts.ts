@@ -3,9 +3,9 @@ import { z } from 'zod';
 
 import { isAccountAddressValid } from '../helpers';
 
-const API_URL = import.meta.env.VITE_API_URL as string;
 const INDEXER_API_URL = import.meta.env.VITE_INDEXER_API_URL as string;
 const NODES_API_URL = import.meta.env.VITE_NODES_API_URL as string;
+const METADATA_STORAGE_API_URL = import.meta.env.VITE_METADATA_STORAGE_API_URL as string;
 const NODE_ADDRESS = import.meta.env.VITE_NODE_ADDRESS as string;
 const HCAPTCHA_SITE_KEY = import.meta.env.VITE_HCAPTCHA_SITE_KEY as string;
 const GTM_ID = import.meta.env.VITE_GTM_ID as string | undefined;
@@ -17,7 +17,7 @@ const GENESIS = {
 
 const NODE_ADRESS_URL_PARAM = 'node';
 
-const EXAMPLES_HREF = 'https://www.gear-tech.io/developers';
+const EXAMPLES_HREF = 'https://wiki.vara.network/docs/examples';
 
 const DEFAULT_LIMIT = 20;
 const GEAR_BALANCE_TRANSFER_VALUE = import.meta.env.VITE_DEFAULT_TRANSFER_BALANCE_VALUE as string;
@@ -96,9 +96,9 @@ const ACCOUNT_ADDRESS_SCHEMA = z
   .transform((value) => decodeAddress(value));
 
 export {
-  API_URL,
   INDEXER_API_URL,
   NODES_API_URL,
+  METADATA_STORAGE_API_URL,
   NODE_ADDRESS,
   HCAPTCHA_SITE_KEY,
   GTM_ID,

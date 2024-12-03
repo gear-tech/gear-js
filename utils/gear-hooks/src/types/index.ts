@@ -8,6 +8,7 @@ import {
   AlertContainerFactory,
   DefaultTemplateOptions,
 } from './alert';
+import { QueryParameters } from './query';
 
 type ProviderProps = Omit<React.ProviderProps<never>, 'value'>;
 
@@ -28,4 +29,5 @@ export type {
   DefaultTemplateOptions,
   ProviderProps,
   Entries,
+  QueryParameters,
 };
