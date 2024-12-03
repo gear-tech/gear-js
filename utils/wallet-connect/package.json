@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/wallet-connect",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "description": "React library to connect Substrate based wallets to Gear dApps",
   "author": "Gear Technologies",
@@ -24,7 +24,7 @@
     "preview": "vite preview"
   },
   "peerDependencies": {
-    "@gear-js/react-hooks": "^0.14.0",
+    "@gear-js/react-hooks": "^0.14.1",
     "@gear-js/ui": "^0.5.28",
     "@gear-js/vara-ui": "^0.0.11"
   },
@@ -37,7 +37,7 @@
     }
   },
   "devDependencies": {
-    "@gear-js/react-hooks": "0.14.0",
+    "@gear-js/react-hooks": "0.14.1",
     "@gear-js/ui": "0.5.28",
     "@gear-js/vara-ui": "0.0.11",
     "@polkadot/react-identicon": "3.11.3",

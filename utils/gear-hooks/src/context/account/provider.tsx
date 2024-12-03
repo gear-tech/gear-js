@@ -56,7 +56,7 @@ function AccountProvider({ appName, children }: Props) {
     );
 
     setAccount((prevAccount) => {
-      if (!prevAccount || id !== prevAccount.meta.source) return;
+      if (!prevAccount || id !== prevAccount.meta.source) return prevAccount;
 
       const isLoggedIn = Boolean(accounts.length) && accounts.some(({ address }) => address === prevAccount.address);
 
