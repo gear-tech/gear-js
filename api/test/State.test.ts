@@ -3,7 +3,7 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { TARGET, TEST_META } from './config';
+import { TARGET, TEST_META, TEST_META_CODE } from './config';
 import { CreateType, HumanTypesRepr, ProgramMetadata, StateMetadata, getStateMetadata } from '../src';
 import { checkInit, getAccount, sleep } from './utilsFunctions';
 import { getApi } from './common';
@@ -11,7 +11,7 @@ import { getApi } from './common';
 const api = getApi();
 let alice: KeyringPair;
 
-const code = Uint8Array.from(readFileSync(join(TARGET, 'test_meta.opt.wasm')));
+const code = Uint8Array.from(readFileSync(TEST_META_CODE));
 
 const stateV1 = Uint8Array.from(readFileSync(join(TARGET, 'test_meta_state_v1.meta.wasm')));
 

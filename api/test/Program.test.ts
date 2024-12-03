@@ -2,10 +2,9 @@ import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { blake2AsHex } from '@polkadot/util-crypto';
 import { bufferToU8a } from '@polkadot/util';
-import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { TARGET, TEST_META } from './config';
+import { TEST_META, TEST_META_CODE } from './config';
 import { ProgramMetadata } from '../src';
 import { checkInit, getAccount, sendTransaction, sleep, waitForPausedProgram } from './utilsFunctions';
 import { getApi } from './common';
@@ -19,7 +18,7 @@ let metaHash: HexString;
 let expiredBN: number;
 let pausedBlockHash: HexString;
 
-const code = Uint8Array.from(readFileSync(join(TARGET, 'test_meta.opt.wasm')));
+const code = Uint8Array.from(readFileSync(TEST_META_CODE));
 const metaHex: HexString = `0x${readFileSync(TEST_META, 'utf-8')}`;
 
 beforeAll(async () => {

@@ -1,16 +1,14 @@
 import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
-import { join } from 'path';
 
 import { CreateType, MessageWaitedData } from '../src';
-import { TARGET } from './config';
+import { TEST_CODE } from './config';
 import { checkInit, getAccount, listenToMessageWaited, sendTransaction, sleep } from './utilsFunctions';
 import { readFileSync } from 'fs';
 import { getApi } from './common';
 
 const api = getApi();
 
-const CODE_PATH = join(TARGET, 'test.opt.wasm');
 let alice: KeyringPair;
 let programId: HexString;
 let messageId: HexString;
@@ -18,7 +16,7 @@ let messageWaited: (messageId: HexString) => Promise<MessageWaitedData>;
 
 beforeAll(async () => {
   await api.isReadyOrError;
-  const code = Uint8Array.from(readFileSync(CODE_PATH));
+  const code = Uint8Array.from(readFileSync(TEST_CODE));
   alice = await getAccount('//Alice');
   programId = api.program.upload({ code, gasLimit: 20_000_000_000 }).programId;
   const init = checkInit(api, programId);
