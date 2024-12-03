@@ -14,7 +14,7 @@ const Success: Story = {
     alert: {
       id: '0',
       content:
-        'Backups of this machine are stopped. There has no connection with machine. Please restore the connection with the machine to resume backups restore the connection with the machine.',
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, commodi dolore eaque eos est exercitationem inventore laboriosam modi perferendis voluptas!',
       options: { type: 'success', isClosed: true },
     },
   },
@@ -25,7 +25,7 @@ const Error: Story = {
     alert: {
       id: '0',
       content:
-        'Backups of this machine are stopped. There has no connection with machine. Please restore the connection with the machine to resume backups restore the connection with the machine.',
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, commodi dolore eaque eos est exercitationem inventore laboriosam modi perferendis voluptas!',
       options: { type: 'error', isClosed: true },
     },
   },
@@ -36,7 +36,7 @@ const Loading: Story = {
     alert: {
       id: '0',
       content:
-        'Backups of this machine are stopped. There has no connection with machine. Please restore the connection with the machine to resume backups restore the connection with the machine.',
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, commodi dolore eaque eos est exercitationem inventore laboriosam modi perferendis voluptas!',
       options: { type: 'loading', isClosed: true },
     },
   },
@@ -47,7 +47,7 @@ const Info: Story = {
     alert: {
       id: '0',
       content:
-        'Backups of this machine are stopped. There has no connection with machine. Please restore the connection with the machine to resume backups restore the connection with the machine.',
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, commodi dolore eaque eos est exercitationem inventore laboriosam modi perferendis voluptas!',
       options: { type: 'info', isClosed: true },
     },
   },
@@ -58,7 +58,7 @@ const WithFooter: Story = {
     alert: {
       id: '0',
       content:
-        'Backups of this machine are stopped. There has no connection with machine. Please restore the connection with the machine to resume backups restore the connection with the machine.',
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, commodi dolore eaque eos est exercitationem inventore laboriosam modi perferendis voluptas!',
       footer: 'YYYY-MM-DD / 00:00:00',
       options: { type: 'info', isClosed: true },
     },
@@ -85,5 +85,47 @@ const NotificationInfo: Story = {
   },
 };
 
+const NotificationSuccess: Story = {
+  args: {
+    alert: {
+      id: '0',
+      content: 'Text',
+      options: { type: 'success', variant: 'notification', isClosed: true, title: 'Heading' },
+    },
+  },
+};
+
+const NotificationLoading: Story = {
+  args: {
+    alert: {
+      id: '0',
+      content: 'Text',
+      options: { type: 'loading', variant: 'notification', isClosed: true, title: 'Heading' },
+    },
+  },
+};
+
+const NotificationWithFooter: Story = {
+  args: {
+    alert: {
+      id: '0',
+      content: 'Text',
+      footer: 'YYYY-MM-DD / 00:00:00',
+      options: { type: 'info', variant: 'notification', isClosed: true, title: 'Heading' },
+    },
+  },
+};
+
 export default meta;
-export { Success, Error, Loading, Info, WithFooter, NotificationError, NotificationInfo };
+export {
+  Success,
+  Error,
+  Loading,
+  Info,
+  WithFooter,
+  NotificationSuccess,
+  NotificationError,
+  NotificationLoading,
+  NotificationInfo,
+  NotificationWithFooter,
+};
