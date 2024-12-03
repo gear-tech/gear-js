@@ -1,16 +1,21 @@
 import { CSSProperties, ReactNode } from 'react';
 import cx from 'clsx';
-import CrossSVG from '../../assets/images/cross.svg?react';
-import { Button } from '../button';
 import styles from './alert.module.scss';
+import CrossSVG from '../../assets/images/cross.svg?react';
+import { alertIcons } from './icons.tsx';
+
+type IAlertVariants = 'alert' | 'notification';
+type IAlertTypes = 'info' | 'error' | 'loading' | 'success';
+type IAlertIcons = Record<IAlertVariants, Record<IAlertTypes, ReactNode>>;
 
 type Options = {
-  type: 'info' | 'error' | 'loading' | 'success';
-  variant?: 'alert' | 'notification';
+  type: IAlertTypes;
+  variant?: IAlertVariants;
   style?: CSSProperties;
   title?: string;
   timeout?: number;
   isClosed?: boolean;
+  icons?: IAlertIcons;
 };
 
 type AlertType = {
@@ -27,15 +32,20 @@ type Props = {
 
 function Alert({ alert, close }: Props) {
   const { content, options, footer } = alert;
-  const { type, title, style, isClosed, variant } = options;
-  const isNotification = variant === 'notification';
+  const { variant = 'alert', type = 'info', title, style, isClosed, icons = alertIcons } = options;
 
   return (
-    <div className={cx(styles.alert, isNotification && styles.notification)} style={style}>
-      <header className={cx(styles.header, styles[type])}>
-        {title || type}
+    <div className={cx(styles.wrapper, styles[variant], styles[type])} style={style}>
+      <header className={cx(styles.header)}>
+        {type && <div className={styles.icon}>{icons[variant][type]}</div>}
 
-        {isClosed && <Button icon={CrossSVG} color="transparent" className={styles.button} onClick={close} />}
+        <h2 className={styles.title}>{title || type}</h2>
+
+        {isClosed && (
+          <button type="button" className={styles.close} onClick={close}>
+            <CrossSVG />
+          </button>
+        )}
       </header>
 
       <div className={styles.body}>{content}</div>
@@ -46,4 +56,4 @@ function Alert({ alert, close }: Props) {
 }
 
 export { Alert };
-export type { Props as AlertProps };
+export type { Props as AlertProps, IAlertVariants, IAlertTypes, IAlertIcons };
