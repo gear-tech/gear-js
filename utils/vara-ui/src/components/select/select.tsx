@@ -1,10 +1,11 @@
 import { SelectHTMLAttributes, OptionHTMLAttributes, ReactNode, useId, forwardRef } from 'react';
 import cx from 'clsx';
 import styles from './select.module.scss';
+import type { ISelectSizes } from './helpers.ts';
 
 type Props = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'id' | 'size'> & {
   options: OptionHTMLAttributes<HTMLOptionElement>[] | Readonly<OptionHTMLAttributes<HTMLOptionElement>[]>;
-  size?: 'default' | 'small';
+  size?: ISelectSizes;
   label?: string;
   error?: ReactNode;
   block?: boolean;
@@ -21,7 +22,12 @@ const Select = forwardRef<HTMLSelectElement, Props>(
     return (
       <div className={cx(styles.root, className, disabled && styles.disabled, block && styles.block)}>
         <div className={styles.base}>
-          <select id={id} className={cx(styles.select, styles[size], error && styles.error)} ref={ref} {...attrs}>
+          <select
+            id={id}
+            className={cx(styles.select, styles[size], error && styles.error)}
+            ref={ref}
+            disabled={disabled}
+            {...attrs}>
             {getOptions()}
           </select>
 

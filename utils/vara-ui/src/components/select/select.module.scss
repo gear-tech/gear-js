@@ -1,29 +1,30 @@
 .root {
   &.disabled {
-    pointer-events: none;
-    opacity: 0.3;
+    cursor: not-allowed;
+
+    * {
+      pointer-events: none;
+    }
+
+    .fieldset {
+      background-color: #eceded;
+      border-color: #d0d5dd;
+    }
+
+    .select:disabled {
+      cursor: not-allowed;
+    }
+
+    .select,
+    .label {
+      color: #58696e80;
+    }
   }
 }
 
 .base {
   position: relative;
-}
-
-.select,
-.label {
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 24px;
-  letter-spacing: 0.009em;
-  color: #010500;
-
-  &.default {
-    font-size: 16px;
-  }
-
-  &.small {
-    font-size: 14px;
-  }
+  user-select: none;
 }
 
 .select {
@@ -58,32 +59,37 @@
 
   &:focus {
     ~ .fieldset {
-      border-color: #00b387;
+      border-color: #53eece;
 
       .legendLabel {
-        color: #00b387;
+        color: #53eece;
       }
     }
   }
 
   &.error {
     ~ .fieldset {
-      border-color: #fc174d;
+      border-color: #ff3231cc;
 
       .legendLabel {
-        color: #fc174d;
+        color: #ff3231cc;
       }
     }
   }
 
   &.default {
-    padding-top: 13px;
-    padding-bottom: 13px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+
+  &.medium {
+    padding-top: 9px;
+    padding-bottom: 9px;
   }
 
   &.small {
-    padding-top: 8px;
-    padding-bottom: 8px;
+    padding-top: 6px;
+    padding-bottom: 6px;
   }
 }
 
@@ -93,6 +99,26 @@
   position: absolute;
   top: 8px;
   left: 13px;
+}
+
+.select,
+.label {
+  font-weight: 400;
+  line-height: 24px;
+  color: #000000;
+
+  &.default {
+    font-size: 16px;
+  }
+
+  &.medium {
+    font-size: 16px;
+  }
+
+  &.small {
+    font-size: 14px;
+    line-height: 20px;
+  }
 }
 
 .fieldset {
@@ -107,9 +133,12 @@
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: -1;
 
-  border: 1px solid #0000003b;
   border-radius: 4px;
+  background-color: #ffffff;
+  border: 1px solid #d0d5dd;
+  box-shadow: 0 1px 2px 0 #1018280d;
 }
 
 .legend,
@@ -117,7 +146,6 @@
   font-size: 12px;
   font-weight: 400;
   line-height: 1;
-  letter-spacing: 0.01em;
 }
 
 .legend {
@@ -137,4 +165,72 @@
 
 .block {
   width: 100%;
+}
+
+:global(.dark-theme) {
+  .root {
+    &.disabled {
+      .fieldset {
+        background-color: #282c301a;
+        border-color: #ffffff0a;
+      }
+
+      .input,
+      .label {
+        color: #9cacb166;
+      }
+    }
+  }
+
+  .fieldset {
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    box-shadow: 0 1px 2px 0 #1018280d;
+  }
+
+  .label,
+  .select {
+    color: #828b8e;
+  }
+
+  .select {
+    color: #f6f6f6e5;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.616 5.54a.5.5 0 0 0 .768 0L9.317.82A.5.5 0 0 0 8.932 0H1.068a.5.5 0 0 0-.385.82l3.933 4.72Z' fill='%23828B8E'/%3E%3C/svg%3E");
+
+    &:focus::placeholder {
+      color: #828b8e;
+    }
+
+    &:focus {
+      ~ .fieldset {
+        border-color: #0fa885;
+
+        .legendLabel {
+          color: #0fa885;
+        }
+      }
+    }
+
+    &.error {
+      ~ .label {
+        color: #d73b4f;
+      }
+
+      ~ .fieldset {
+        border-color: #d73b4f;
+
+        .legendLabel {
+          color: #d73b4f;
+        }
+      }
+    }
+
+    .message {
+      color: #d73b4f;
+    }
+  }
+
+  .legend {
+    color: #828b8e;
+  }
 }
