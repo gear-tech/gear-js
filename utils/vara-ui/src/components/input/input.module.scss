@@ -1,41 +1,47 @@
 .root {
   &.disabled {
-    opacity: 0.3;
-    pointer-events: none;
+    cursor: not-allowed;
+
+    * {
+      pointer-events: none;
+    }
+
+    .fieldset {
+      background-color: #eceded;
+      border-color: #d0d5dd;
+    }
+
+    .input:disabled {
+      cursor: not-allowed;
+    }
+
+    .input,
+    .label {
+      color: #58696e80;
+    }
   }
 }
 
 .base {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
-
-  position: relative;
+  user-select: none;
 
   &.default {
-    padding: 13px 14px;
+    padding: 14px 14px;
+  }
+
+  &.medium {
+    padding: 9px 14px;
   }
 
   &.small {
-    padding: 8px 14px;
+    padding: 6px 14px;
   }
 }
 
-.input,
-.label {
-  font-weight: 400;
-  line-height: 24px;
-  letter-spacing: 0.009em;
-  color: #010500;
-
-  &.default {
-    font-size: 16px;
-  }
-
-  &.small {
-    font-size: 14px;
-  }
-}
 
 .input {
   padding: 0;
@@ -67,6 +73,10 @@
     }
   }
 
+  &::placeholder {
+    color: #58696e;
+  }
+
   &:focus,
   &:not(:placeholder-shown) {
     ~ .label {
@@ -84,24 +94,25 @@
 
   &:focus {
     ~ .fieldset {
-      border-color: #00b387;
+      border-color: #53eece;
+
 
       .legendLabel {
-        color: #00b387;
+        color: #53eece;
       }
     }
   }
 
   &.error {
     ~ .label {
-      color: #fc174d;
+      color: #ff3231cc;
     }
 
     ~ .fieldset {
-      border-color: #fc174d;
+      border-color: #ff3231cc;
 
       .legendLabel {
-        color: #fc174d;
+        color: #ff3231cc;
       }
     }
   }
@@ -113,6 +124,26 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
+}
+
+.input,
+.label {
+  font-weight: 400;
+  line-height: 24px;
+  color: #000000;
+
+  &.default {
+    font-size: 16px;
+  }
+
+  &.medium {
+    font-size: 16px;
+  }
+
+  &.small {
+    font-size: 14px;
+    line-height: 20px;
+  }
 }
 
 .fieldset {
@@ -127,9 +158,12 @@
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: -1;
 
-  border: 1px solid #0000003b;
   border-radius: 4px;
+  background-color: #ffffff;
+  border: 1px solid #d0d5dd;
+  box-shadow: 0 1px 2px 0 #1018280d;
 }
 
 .legend,
@@ -137,7 +171,6 @@
   font-size: 12px;
   font-weight: 400;
   line-height: 1;
-  letter-spacing: 0.01em;
 }
 
 .legend {
@@ -145,16 +178,77 @@
   max-width: 0.01px;
   height: 1em;
   padding: 0;
-
   color: #313635;
 }
 
 .message {
   margin: 4px 0 0 0;
-
-  color: #fc174d;
+  color: #ff3231cc;
 }
 
 .block {
   width: 100%;
+}
+
+:global(.dark-theme) {
+  .root {
+    &.disabled {
+      .fieldset {
+        background-color: #282c301a;
+        border-color: #ffffff0a;
+      }
+
+      .input,
+      .label {
+        color: #9cacb166;
+      }
+    }
+  }
+
+  .fieldset {
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    box-shadow: 0 1px 2px 0 #1018280d;
+  }
+
+  .label,
+  .input {
+    color: #828b8e;
+  }
+
+  .input {
+    color: #f6f6f6e5;
+
+    &:focus::placeholder {
+      color: #828b8e;
+    }
+
+    &:focus {
+      ~ .fieldset {
+        border-color: #0fa885;
+
+        .legendLabel {
+          color: #0fa885;
+        }
+      }
+    }
+
+    &.error {
+      ~ .label {
+        color: #d73b4f;
+      }
+
+      ~ .fieldset {
+        border-color: #d73b4f;
+
+        .legendLabel {
+          color: #d73b4f;
+        }
+      }
+    }
+
+    .message {
+      color: #d73b4f;
+    }
+  }
 }
