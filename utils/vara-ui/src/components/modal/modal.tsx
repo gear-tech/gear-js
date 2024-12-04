@@ -60,7 +60,9 @@ const Modal = ({ heading, close, children, className, footer }: Props) => {
         <header className={styles.header}>
           <h3 className={styles.heading}>{heading}</h3>
 
-          <Button icon={CrossSVG} color="transparent" onClick={close} className={styles.button} />
+          <button type="button" onClick={close} className={styles.close}>
+            <CrossSVG />
+          </button>
         </header>
 
         {children && (
