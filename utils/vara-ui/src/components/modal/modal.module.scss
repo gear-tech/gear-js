@@ -45,7 +45,7 @@
   align-items: center;
   padding: 0 32px;
   background-color: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
   z-index: 10;
 
   @media screen and (max-width: 768px) {
@@ -61,9 +61,8 @@
   gap: 20px;
   width: 100%;
   padding: 30px 0;
-  background-color: rgba(246, 248, 248, 1);
+  background-color: #ffffff;
   border-radius: 4px;
-  filter: drop-shadow(0px 4px 4px #00000011);
 
   @media screen and (max-width: 768px) {
     max-width: unset;
@@ -86,8 +85,8 @@
 
 .heading {
   font-size: 24px;
-  font-weight: 500;
-  line-height: 24px;
+  font-weight: 700;
+  line-height: 1.2;
   letter-spacing: 0;
 
   color: #000;
@@ -111,4 +110,46 @@
 
 .large {
   max-width: 660px;
+}
+
+.close {
+  display: inline-flex;
+  align-self: flex-start;
+  height: 20px;
+  padding: 0;
+
+  color: #000;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity 250ms ease;
+
+  &:hover, &:focus-visible {
+    opacity: 0.6;
+  }
+
+  &:active {
+    opacity: 0.4;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+
+:global(.dark-theme) {
+  .modal {
+    color: #f6f6f6cc;
+    background-color: #262628;
+  }
+
+  .close {
+    color: #f6f6f6e5;
+  }
+
+  .heading {
+    color: #f6f6f6e5;
+  }
 }
