@@ -1,28 +1,30 @@
 .root {
   &.disabled {
-    pointer-events: none;
-    opacity: 0.3;
+    cursor: not-allowed;
+
+    * {
+      pointer-events: none;
+    }
+
+    .fieldset {
+      background-color: #eceded;
+      border-color: #d0d5dd;
+    }
+
+    .textarea:disabled {
+      cursor: not-allowed;
+    }
+
+    .textarea,
+    .label {
+      color: #58696e80;
+    }
   }
 }
 
 .base {
   position: relative;
-}
-
-.textarea,
-.label {
-  font-weight: 400;
-  line-height: 24px;
-  letter-spacing: 0.009em;
-  color: #010500;
-
-  &.default {
-    font-size: 16px;
-  }
-
-  &.small {
-    font-size: 14px;
-  }
+  user-select: none;
 }
 
 .textarea {
@@ -35,6 +37,10 @@
   width: 100%;
   padding-right: 14px;
   padding-left: 14px;
+
+  &::placeholder {
+    color: #58696e;
+  }
 
   &:not(:focus) {
     &::placeholder {
@@ -60,32 +66,41 @@
 
   &:focus {
     ~ .fieldset {
-      border-color: #00b387;
+      border-color: #53eece;
 
       .legendLabel {
-        color: #00b387;
+        color: #53eece;
       }
     }
   }
 
   &.error {
+    ~ .label {
+      color: #ff3231cc;
+    }
+
     ~ .fieldset {
-      border-color: #fc174d;
+      border-color: #ff3231cc;
 
       .legendLabel {
-        color: #fc174d;
+        color: #ff3231cc;
       }
     }
   }
 
   &.default {
-    padding-top: 13px;
-    padding-bottom: 13px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+
+  &.medium {
+    padding-top: 9px;
+    padding-bottom: 9px;
   }
 
   &.small {
-    padding-top: 8px;
-    padding-bottom: 8px;
+    padding-top: 6px;
+    padding-bottom: 6px;
   }
 }
 
@@ -96,11 +111,35 @@
   left: 13px;
 
   &.default {
-    top: 13px;
+    top: 14px;
+  }
+
+  &.medium {
+    top: 9px;
   }
 
   &.small {
-    top: 8px;
+    top: 6px;
+  }
+}
+
+.textarea,
+.label {
+  font-weight: 400;
+  line-height: 24px;
+  color: #000000;
+
+  &.default {
+    font-size: 16px;
+  }
+
+  &.medium {
+    font-size: 16px;
+  }
+
+  &.small {
+    font-size: 14px;
+    line-height: 20px;
   }
 }
 
@@ -116,9 +155,12 @@
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: -1;
 
-  border: 1px solid #0000003b;
   border-radius: 4px;
+  background-color: #ffffff;
+  border: 1px solid #d0d5dd;
+  box-shadow: 0 1px 2px 0 #1018280d;
 }
 
 .legend,
@@ -126,7 +168,6 @@
   font-size: 12px;
   font-weight: 400;
   line-height: 1;
-  letter-spacing: 0.01em;
 }
 
 .legend {
@@ -140,10 +181,73 @@
 
 .message {
   margin: 4px 0 0 0;
-
-  color: #fc174d;
+  color: #ff3231cc;
 }
 
 .block {
   width: 100%;
+}
+
+
+:global(.dark-theme) {
+  .root {
+    &.disabled {
+      .fieldset {
+        background-color: #282c301a;
+        border-color: #ffffff0a;
+      }
+
+      .textarea,
+      .label {
+        color: #9cacb166;
+      }
+    }
+  }
+
+  .fieldset {
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    box-shadow: 0 1px 2px 0 #1018280d;
+  }
+
+  .label,
+  .textarea {
+    color: #828b8e;
+  }
+
+  .textarea {
+    color: #f6f6f6e5;
+
+    &:focus::placeholder {
+      color: #828b8e;
+    }
+
+    &:focus {
+      ~ .fieldset {
+        border-color: #0fa885;
+
+        .legendLabel {
+          color: #0fa885;
+        }
+      }
+    }
+
+    &.error {
+      ~ .label {
+        color: #d73b4f;
+      }
+
+      ~ .fieldset {
+        border-color: #d73b4f;
+
+        .legendLabel {
+          color: #d73b4f;
+        }
+      }
+    }
+
+    .message {
+      color: #d73b4f;
+    }
+  }
 }
