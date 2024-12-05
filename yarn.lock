@@ -2691,7 +2691,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/react-hooks@0.14.1, @gear-js/react-hooks@workspace:^, @gear-js/react-hooks@workspace:utils/gear-hooks":
+"@gear-js/react-hooks@0.14.2, @gear-js/react-hooks@workspace:^, @gear-js/react-hooks@workspace:utils/gear-hooks":
   version: 0.0.0-use.local
   resolution: "@gear-js/react-hooks@workspace:utils/gear-hooks"
   dependencies:
@@ -2838,7 +2838,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/wallet-connect@workspace:utils/wallet-connect"
   dependencies:
-    "@gear-js/react-hooks": 0.14.1
+    "@gear-js/react-hooks": 0.14.2
     "@gear-js/ui": 0.5.28
     "@gear-js/vara-ui": 0.0.11
     "@polkadot/react-identicon": 3.11.3
@@ -2859,7 +2859,7 @@ __metadata:
     vite-plugin-node-polyfills: 0.22.0
     vite-plugin-svgr: 3.2.0
   peerDependencies:
-    "@gear-js/react-hooks": ^0.14.1
+    "@gear-js/react-hooks": ^0.14.2
     "@gear-js/ui": ^0.5.28
     "@gear-js/vara-ui": ^0.0.11
   peerDependenciesMeta:
