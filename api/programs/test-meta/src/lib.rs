@@ -19,7 +19,7 @@
 #![no_std]
 
 // Reexport of types
-pub use test_meta_io::*;
+pub use test_io::*;
 
 // For wasm compilation
 #[cfg(not(feature = "std"))]

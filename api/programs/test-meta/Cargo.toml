@@ -3,19 +3,16 @@ name = "test-meta"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 gstd.workspace = true
-scale-info.workspace = true
 codec.workspace = true
-test-meta-io = { path = "io" }
+test-io = { path = "io" }
 test-meta-state-v1 = { path = "state-v1", default-features = false, optional = true }
 test-meta-state-v2 = { path = "state-v2", default-features = false, optional = true }
 
 [build-dependencies]
-test-meta-io = { path = "io" }
 gear-wasm-builder.workspace = true
+test-io = { path = "io" }
 
 [features]
 default = ["std"]

@@ -1,16 +1,11 @@
-use crate::{Action, Id, Person, Wallet};
-use gstd::{
-    collections::{BTreeMap, BTreeSet},
-    debug, msg,
-    prelude::*,
-};
-use test_meta_io::EmptyStruct;
+use gstd::{collections::{BTreeMap, BTreeSet}, debug, msg, prelude::*};
+use test_io::{Action, EmptyStruct, Id, InputStruct, Person, Wallet};
 
 static mut STATE: Vec<Wallet> = Vec::new();
 
 #[no_mangle]
-unsafe extern "C" fn init() {
-    let _: BTreeSet<u8> = msg::load().expect("Unable to decode message");
+pub unsafe extern "C" fn init() {
+    let _: BTreeSet<u8> = msg::load().expect("Failed to load init arguments");
 
     let mut res: BTreeMap<String, u8> = BTreeMap::new();
 
@@ -49,12 +44,16 @@ unsafe extern "C" fn init() {
 
 #[gstd::async_main]
 async fn main() {
-    let action: Action = msg::load().unwrap();
+    let action: Action = msg::load().expect("Failed to load Action");
 
     match action {
-        Action::One(_) => {
-            msg::send_with_gas(msg::source(), EmptyStruct { empty: () }, 10000000, 10_000_000_000_000).unwrap()
-        }
+        Action::One(_) => msg::send_with_gas(
+            msg::source(),
+            EmptyStruct { empty: () },
+            10000000,
+            10_000_000_000_000,
+        )
+        .unwrap(),
         Action::Four(_) => {
             let response: String = msg::send_for_reply_as(msg::source(), "reply", 0, 0)
                 .expect("Unable to send msg for reply")
@@ -62,12 +61,27 @@ async fn main() {
                 .expect("Error in async");
             msg::reply(response, 0).unwrap()
         }
+        Action::Input(input) => {
+            if input != "Handle" {
+                panic!("Wrong input");
+            }
+
+            let response: InputStruct = msg::send_bytes_for_reply_as(msg::source(), b"PING", 0, 0)
+                .expect("Unable to send message for reply")
+                .await
+                .expect("Error in async");
+
+            if response.input != "Reply" {
+                panic!("Wrong input");
+            }
+            msg::reply_bytes(b"ok", 0).unwrap()
+        }
         _ => msg::reply("ok", 0).unwrap(),
     };
 }
 
 #[no_mangle]
-extern "C" fn state() {
+pub unsafe extern "C" fn state() {
     debug!("{:?}", msg::load_bytes());
     let input: Option<u32> = msg::load().expect("Unable to load input");
     let mut result: Vec<Wallet> = Vec::new();

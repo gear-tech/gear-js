@@ -1,11 +1,11 @@
 [package]
-name = "test-meta-io"
+name = "test-io"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+primitive-types = { version = "0.12.2", default-features = false }
+gmeta = { workspace = true, features = ["codegen"] }
+gstd.workspace = true
 scale-info.workspace = true
 codec.workspace = true
-gstd.workspace = true
-gmeta.workspace = true
-primitive-types.workspace = true

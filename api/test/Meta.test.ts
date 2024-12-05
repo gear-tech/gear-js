@@ -1,4 +1,4 @@
-import { TEST_META_META } from './config';
+import { TEST_META } from './config';
 import fs from 'fs';
 
 import { ProgramMetadata, encodePayload } from '../src';
@@ -6,7 +6,7 @@ import { ProgramMetadata, encodePayload } from '../src';
 let meta: ProgramMetadata;
 
 beforeAll(() => {
-  const hex = fs.readFileSync(TEST_META_META, 'utf-8');
+  const hex = fs.readFileSync(TEST_META, 'utf-8');
   meta = ProgramMetadata.from(`0x${hex}`);
 });
 
@@ -15,10 +15,10 @@ describe('Get type definitions', () => {
     expect(meta.types).toEqual({
       init: { input: 0, output: 3 },
       handle: { input: 7, output: 4 },
-      reply: 4,
+      reply: 21,
       others: { input: null, output: null },
-      signal: 26,
-      state: { input: 27, output: 29 },
+      signal: 23,
+      state: { input: 24, output: 26 },
     });
   });
 
@@ -129,23 +129,22 @@ describe('Get type definitions', () => {
           array32: ['U8', 32],
           actor: 'ActorId',
         },
-        Five: {
-          array8: ['Str', 8],
-          array32: [['U8', 'U16'], 32],
-          actor: 'ActorId',
-        },
-        Six: ['ActorId', { empty: null }],
+        Input: 'Str',
       },
     });
     expect(meta.getTypeDef(7, true)).toEqual({
-      name: 'TestMetaIoAction',
+      name: 'TestIoAction',
       kind: 'variant',
       type: {
         One: {
-          kind: 'option',
           name: 'Option<Str>',
+          kind: 'option',
           type: {
-            None: { name: 'None', kind: 'none', type: null },
+            None: {
+              name: 'None',
+              kind: 'none',
+              type: null,
+            },
             Some: {
               name: 'Str',
               kind: 'primitive',
@@ -160,14 +159,22 @@ describe('Get type definitions', () => {
             name: 'X',
             kind: 'tuple',
             type: [
-              { name: 'U8', kind: 'primitive', type: 'U8' },
-              { name: 'U16', kind: 'primitive', type: 'U16' },
+              {
+                name: 'U8',
+                kind: 'primitive',
+                type: 'U8',
+              },
+              {
+                name: 'U16',
+                kind: 'primitive',
+                type: 'U16',
+              },
             ],
           },
         },
         Three: {
-          kind: 'composite',
           name: null,
+          kind: 'composite',
           type: {
             field1: {
               name: 'Result<(U8, Str), I32>',
@@ -177,8 +184,16 @@ describe('Get type definitions', () => {
                   name: '(U8, Str)',
                   kind: 'tuple',
                   type: [
-                    { name: 'U8', kind: 'primitive', type: 'U8' },
-                    { name: 'Str', kind: 'primitive', type: 'Str' },
+                    {
+                      name: 'U8',
+                      kind: 'primitive',
+                      type: 'U8',
+                    },
+                    {
+                      name: 'Str',
+                      kind: 'primitive',
+                      type: 'Str',
+                    },
                   ],
                 },
                 Err: {
@@ -197,55 +212,34 @@ describe('Get type definitions', () => {
             array8: {
               name: '[U128;8]',
               kind: 'array',
-              type: { type: 'U128', name: 'U128', kind: 'primitive' },
+              type: {
+                name: 'U128',
+                kind: 'primitive',
+                type: 'U128',
+              },
               len: 8,
             },
-            array32: { name: '[U8;32]', kind: 'array', type: { type: 'U8', name: 'U8', kind: 'primitive' }, len: 32 },
-            actor: { name: 'ActorId', kind: 'actorid', type: 'actorid' },
-          },
-        },
-        Five: {
-          name: 'SomeStruct<Str, X>',
-          kind: 'composite',
-          type: {
-            array8: { name: '[Str;8]', kind: 'array', type: { type: 'Str', name: 'Str', kind: 'primitive' }, len: 8 },
             array32: {
-              name: '[X;32]',
+              name: '[U8;32]',
               kind: 'array',
               type: {
-                name: 'X',
-                kind: 'tuple',
-                type: [
-                  { name: 'U8', kind: 'primitive', type: 'U8' },
-                  { name: 'U16', kind: 'primitive', type: 'U16' },
-                ],
+                name: 'U8',
+                kind: 'primitive',
+                type: 'U8',
               },
               len: 32,
             },
-            actor: { name: 'ActorId', kind: 'actorid', type: 'actorid' },
-          },
-        },
-        Six: {
-          kind: 'tuple',
-          name: null,
-          type: [
-            {
-              kind: 'actorid',
+            actor: {
               name: 'ActorId',
+              kind: 'actorid',
               type: 'actorid',
             },
-            {
-              kind: 'composite',
-              name: 'EmptyStruct',
-              type: {
-                empty: {
-                  kind: 'empty',
-                  name: '()',
-                  type: null,
-                },
-              },
-            },
-          ],
+          },
+        },
+        Input: {
+          name: 'Str',
+          kind: 'primitive',
+          type: 'Str',
         },
       },
     });
@@ -420,77 +414,261 @@ describe('Get type definitions', () => {
 
   test('Get type structure 21', () => {
     expect(meta.getTypeDef(21)).toEqual({
-      array8: ['Str', 8],
-      array32: [['U8', 'U16'], 32],
-      actor: 'ActorId',
+      _variants: {
+        TextReply: 'Str',
+        StructReply: {
+          input: 'Str',
+        },
+      },
     });
     expect(meta.getTypeDef(21, true)).toEqual({
-      name: 'SomeStruct<Str, X>',
-      kind: 'composite',
+      name: 'TestIoReplyType',
+      kind: 'variant',
       type: {
-        array8: { name: '[Str;8]', kind: 'array', type: { type: 'Str', name: 'Str', kind: 'primitive' }, len: 8 },
-        array32: {
-          name: '[X;32]',
-          kind: 'array',
-          type: {
-            name: 'X',
-            kind: 'tuple',
-            type: [
-              { name: 'U8', kind: 'primitive', type: 'U8' },
-              { name: 'U16', kind: 'primitive', type: 'U16' },
-            ],
-          },
-          len: 32,
+        TextReply: {
+          name: 'Str',
+          kind: 'primitive',
+          type: 'Str',
         },
-        actor: { name: 'ActorId', kind: 'actorid', type: 'actorid' },
+        StructReply: {
+          name: 'InputStruct',
+          kind: 'composite',
+          type: {
+            input: {
+              name: 'Str',
+              kind: 'primitive',
+              type: 'Str',
+            },
+          },
+        },
       },
     });
   });
 
   test('Get type structure 22', () => {
-    expect(meta.getTypeDef(22)).toEqual(['Str', 8]);
+    expect(meta.getTypeDef(22)).toEqual({
+      input: 'Str',
+    });
     expect(meta.getTypeDef(22, true)).toEqual({
-      name: '[Str;8]',
-      kind: 'array',
-      type: { type: 'Str', name: 'Str', kind: 'primitive' },
-      len: 8,
+      name: 'InputStruct',
+      kind: 'composite',
+      type: {
+        input: {
+          name: 'Str',
+          kind: 'primitive',
+          type: 'Str',
+        },
+      },
     });
   });
 
   test('Get type structure 23', () => {
-    expect(meta.getTypeDef(23)).toEqual([['U8', 'U16'], 32]);
+    expect(meta.getTypeDef(23)).toEqual('H256');
     expect(meta.getTypeDef(23, true)).toEqual({
-      name: '[X;32]',
-      kind: 'array',
-      type: {
-        name: 'X',
-        kind: 'tuple',
-        type: [
-          { name: 'U8', kind: 'primitive', type: 'U8' },
-          { name: 'U16', kind: 'primitive', type: 'U16' },
-        ],
-      },
-      len: 32,
+      name: 'H256',
+      kind: 'primitive',
+      type: 'H256',
     });
   });
 
   test('Get type structure 24', () => {
-    expect(meta.getTypeDef(24)).toEqual({ empty: null });
+    expect(meta.getTypeDef(24)).toEqual({
+      _variants: {
+        None: null,
+        Some: 'U32',
+      },
+    });
     expect(meta.getTypeDef(24, true)).toEqual({
-      name: 'EmptyStruct',
-      kind: 'composite',
-      type: { empty: { name: '()', kind: 'empty', type: null } },
+      name: 'Option<U32>',
+      kind: 'option',
+      type: {
+        None: {
+          name: 'None',
+          kind: 'none',
+          type: null,
+        },
+        Some: {
+          name: 'U32',
+          kind: 'primitive',
+          type: 'U32',
+        },
+      },
     });
   });
 
   test('Get type structure 25', () => {
-    expect(meta.getTypeDef(25)).toEqual(null);
-    expect(meta.getTypeDef(25, true)).toEqual({ name: '()', kind: 'empty', type: null });
+    expect(meta.getTypeDef(25)).toEqual('U32');
+    expect(meta.getTypeDef(25, true)).toEqual({
+      name: 'U32',
+      kind: 'primitive',
+      type: 'U32',
+    });
   });
 
   test('Get type structure 26', () => {
-    expect(meta.getTypeDef(26)).toEqual('H256');
-    expect(meta.getTypeDef(26, true)).toEqual({ kind: 'primitive', name: 'H256', type: 'H256' });
+    expect(meta.getTypeDef(26)).toEqual([
+      {
+        id: {
+          decimal: 'U128',
+          hex: ['U8'],
+        },
+        person: {
+          surname: 'Str',
+          name: 'Str',
+        },
+      },
+    ]);
+    expect(meta.getTypeDef(26, true)).toEqual({
+      name: 'Vec<Wallet>',
+      kind: 'sequence',
+      type: {
+        name: 'Wallet',
+        kind: 'composite',
+        type: {
+          id: {
+            name: 'Id',
+            kind: 'composite',
+            type: {
+              decimal: {
+                name: 'U128',
+                kind: 'primitive',
+                type: 'U128',
+              },
+              hex: {
+                name: 'Vec<U8>',
+                kind: 'sequence',
+                type: {
+                  name: 'U8',
+                  kind: 'primitive',
+                  type: 'U8',
+                },
+              },
+            },
+          },
+          person: {
+            name: 'Person',
+            kind: 'composite',
+            type: {
+              surname: {
+                name: 'Str',
+                kind: 'primitive',
+                type: 'Str',
+              },
+              name: {
+                name: 'Str',
+                kind: 'primitive',
+                type: 'Str',
+              },
+            },
+          },
+        },
+      },
+    });
+  });
+
+  test('Get type structure 27', () => {
+    expect(meta.getTypeDef(27)).toEqual({
+      id: {
+        decimal: 'U128',
+        hex: ['U8'],
+      },
+      person: {
+        surname: 'Str',
+        name: 'Str',
+      },
+    });
+    expect(meta.getTypeDef(27, true)).toEqual({
+      name: 'Wallet',
+      kind: 'composite',
+      type: {
+        id: {
+          name: 'Id',
+          kind: 'composite',
+          type: {
+            decimal: {
+              name: 'U128',
+              kind: 'primitive',
+              type: 'U128',
+            },
+            hex: {
+              name: 'Vec<U8>',
+              kind: 'sequence',
+              type: {
+                name: 'U8',
+                kind: 'primitive',
+                type: 'U8',
+              },
+            },
+          },
+        },
+        person: {
+          name: 'Person',
+          kind: 'composite',
+          type: {
+            surname: {
+              name: 'Str',
+              kind: 'primitive',
+              type: 'Str',
+            },
+            name: {
+              name: 'Str',
+              kind: 'primitive',
+              type: 'Str',
+            },
+          },
+        },
+      },
+    });
+  });
+
+  test('Get type structure 28', () => {
+    expect(meta.getTypeDef(28)).toEqual({
+      decimal: 'U128',
+      hex: ['U8'],
+    });
+    expect(meta.getTypeDef(28, true)).toEqual({
+      name: 'Id',
+      kind: 'composite',
+      type: {
+        decimal: {
+          name: 'U128',
+          kind: 'primitive',
+          type: 'U128',
+        },
+        hex: {
+          name: 'Vec<U8>',
+          kind: 'sequence',
+          type: {
+            name: 'U8',
+            kind: 'primitive',
+            type: 'U8',
+          },
+        },
+      },
+    });
+  });
+
+  test('Get type structure 29', () => {
+    expect(meta.getTypeDef(29)).toEqual({
+      surname: 'Str',
+      name: 'Str',
+    });
+    expect(meta.getTypeDef(29, true)).toEqual({
+      name: 'Person',
+      kind: 'composite',
+      type: {
+        surname: {
+          name: 'Str',
+          kind: 'primitive',
+          type: 'Str',
+        },
+        name: {
+          name: 'Str',
+          kind: 'primitive',
+          type: 'Str',
+        },
+      },
+    });
   });
 });
 

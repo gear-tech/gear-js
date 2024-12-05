@@ -1,12 +1,10 @@
 import { HexString } from '@polkadot/util/types';
-import { bufferToU8a } from '@polkadot/util';
 import { KeyringPair } from '@polkadot/keyring/types';
-import { join } from 'path';
 import { readFileSync } from 'fs';
 import { u64 } from '@polkadot/types-codec';
 
+import { TEST_META, TEST_META_CODE } from './config';
 import { ProgramMetadata } from '../src';
-import { TARGET, TEST_GAS_META } from './config';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { GasInfo } from '../src/types';
 import { decodeAddress } from '../src/utils';
@@ -19,8 +17,8 @@ let programId: HexString;
 let codeId: HexString;
 let messageId: HexString;
 
-const code = Uint8Array.from(readFileSync(join(TARGET, 'test_gas.opt.wasm')));
-const meta = ProgramMetadata.from(`0x${readFileSync(TEST_GAS_META, 'utf-8')}`);
+const code = Uint8Array.from(readFileSync(TEST_META_CODE));
+const meta = ProgramMetadata.from(`0x${readFileSync(TEST_META, 'utf-8')}`);
 
 const gasLimits: { init?: u64; handle?: u64; reply?: u64 } = {
   init: undefined,
@@ -41,7 +39,7 @@ afterAll(async () => {
 
 describe('Calculate gas', () => {
   test('Get init gas spent (upload)', async () => {
-    const gas: GasInfo = await api.program.calculateGas.initUpload(aliceRaw, code, { input: 'Init' }, 0, true, meta);
+    const gas: GasInfo = await api.program.calculateGas.initUpload(aliceRaw, code, [1, 2, 3], 0, true, meta);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
     expect(gas.min_limit.gtn(0)).toBeTruthy();
@@ -54,7 +52,7 @@ describe('Calculate gas', () => {
 
   test('Upload program', async () => {
     expect(gasLimits.init).toBeDefined();
-    const program = api.program.upload({ code, gasLimit: gasLimits.init as u64, initPayload: { input: 'Init' } }, meta);
+    const program = api.program.upload({ code, gasLimit: gasLimits.init as u64, initPayload: [1, 2, 3] }, meta);
     programId = program.programId;
     codeId = program.codeId;
     const initStatus = checkInit(api, programId);
@@ -63,7 +61,7 @@ describe('Calculate gas', () => {
   });
 
   test('Get init gas spent (create)', async () => {
-    const gas: GasInfo = await api.program.calculateGas.initCreate(aliceRaw, codeId, { input: 'Init' }, 0, true, meta);
+    const gas: GasInfo = await api.program.calculateGas.initCreate(aliceRaw, codeId, [1, 2, 3], 0, true, meta);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
     expect(gas.min_limit.gtn(0)).toBeTruthy();
@@ -76,10 +74,7 @@ describe('Calculate gas', () => {
 
   test('Create program', async () => {
     expect(gasLimits.init).toBeDefined();
-    const program = api.program.create(
-      { codeId, gasLimit: gasLimits.init as u64, initPayload: { input: 'Init' } },
-      meta,
-    );
+    const program = api.program.create({ codeId, gasLimit: gasLimits.init as u64, initPayload: [1, 2, 3] }, meta);
     programId = program.programId;
     const initStatus = checkInit(api, programId);
     await sendTransaction(program.extrinsic, alice, ['MessageQueued']);
@@ -111,7 +106,7 @@ describe('Calculate gas', () => {
     const tx = await api.message.send(
       {
         destination: programId,
-        payload: { input: 'Handle' },
+        payload: { Input: 'Handle' },
         gasLimit: (gasLimits.handle as u64).muln(2),
         value: 10_000_000_000_000,
       },
@@ -131,7 +126,14 @@ describe('Calculate gas', () => {
 
   test('Calculate reply gas', async () => {
     expect(messageId).toBeDefined();
-    const gas = await api.program.calculateGas.reply(aliceRaw, messageId, { input: 'Reply' }, 0, true, meta);
+    const gas = await api.program.calculateGas.reply(
+      aliceRaw,
+      messageId,
+      { StructReply: { input: 'Reply' } },
+      0,
+      true,
+      meta,
+    );
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
     gasLimits.reply = gas.min_limit;
@@ -146,7 +148,7 @@ describe('Calculate gas', () => {
     const tx = await api.message.sendReply(
       {
         replyToId: messageId,
-        payload: { input: 'Reply' },
+        payload: { StructReply: { input: 'Reply' } },
         gasLimit: gasLimits.reply!,
       },
       meta,

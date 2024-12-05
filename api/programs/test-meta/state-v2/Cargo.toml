@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 gstd.workspace = true
 gmeta = { workspace = true, features = ["codegen"] }
-test-meta-io = { path = "../io" }
+test-io = { path = "../io" }
 
 [build-dependencies]
 gear-wasm-builder = { workspace = true, features = ["metawasm"] }
