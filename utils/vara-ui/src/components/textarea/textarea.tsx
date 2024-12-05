@@ -1,9 +1,10 @@
 import { TextareaHTMLAttributes, ReactNode, useId, forwardRef } from 'react';
 import cx from 'clsx';
 import styles from './textarea.module.scss';
+import type { ITextareaSizes } from './helpers.ts';
 
 type Props = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'id' | 'size'> & {
-  size?: 'default' | 'small';
+  size?: ITextareaSizes;
   label?: string;
   error?: ReactNode;
   block?: boolean;
@@ -24,6 +25,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, Props>(
             className={cx(styles.textarea, styles[size], error && styles.error)}
             placeholder={placeholder}
             ref={ref}
+            disabled={disabled}
             {...attrs}
           />
 
