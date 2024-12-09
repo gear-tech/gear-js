@@ -1,5 +1,6 @@
-import { Alert, AlertProps } from './alert';
+import { Alert, AlertProps, AlertTypes, AlertVariants } from './alert';
 import alertStyles from './alert.module.scss';
+import { alertIcons } from './icons.tsx';
 
-export { Alert, alertStyles };
-export type { AlertProps };
+export { Alert, alertStyles, alertIcons };
+export type { AlertProps, AlertTypes, AlertVariants };
