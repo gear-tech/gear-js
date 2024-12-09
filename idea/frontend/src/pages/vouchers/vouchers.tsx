@@ -1,5 +1,5 @@
 import { isHex } from '@polkadot/util';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   IssueVoucher,
@@ -11,9 +11,20 @@ import {
 import { SearchForm } from '@/shared/ui';
 
 import styles from './vouchers.module.scss';
+import { useSearchParams } from 'react-router-dom';
 
 const Vouchers = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
+
+  useEffect(() => {
+    if (searchQuery) {
+      searchParams.set('search', searchQuery);
+    } else {
+      searchParams.delete('search');
+    }
+    setSearchParams(searchParams, { replace: true });
+  }, [searchQuery]);
   const [filterParams, handleFiltersSubmit] = useVoucherFilters();
   const [vouchers, count, isLoading, hasMore, fetchMore, refetch] = useVouchers(searchQuery, filterParams);
 
@@ -28,6 +39,7 @@ const Vouchers = () => {
       <SearchForm
         placeholder="Search by id..."
         getSchema={(schema) => schema.refine((value) => isHex(value), 'Value should be hex')}
+        query={searchQuery}
         onSubmit={(query) => setSearchQuery(query)}
       />
 
@@ -40,7 +52,13 @@ const Vouchers = () => {
         fetchMore={fetchMore}
       />
 
-      <VoucherFilters onSubmit={handleFiltersSubmit} />
+      <VoucherFilters
+        onSubmit={handleFiltersSubmit}
+        values={{
+          owner: filterParams.owner ? 'by' : filterParams.spender ? 'to' : 'all',
+          status: filterParams.declined ? 'declined' : filterParams.expired ? 'expired' : 'active',
+        }}
+      />
     </div>
   );
 };
