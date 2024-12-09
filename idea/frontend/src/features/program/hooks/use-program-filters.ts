@@ -28,7 +28,11 @@ function useProgramFilters(query: string) {
   useEffect(() => {
     Object.entries(filterValues).forEach(([key, value]: [string, string | string[]]) => {
       value = Array.isArray(value) ? value.join(',') : value;
-      if (key in DEFAULT_FILTER_VALUES && value) searchParams.set(key, value);
+      if (key in DEFAULT_FILTER_VALUES && value) {
+        searchParams.set(key, value);
+      } else {
+        searchParams.delete(key);
+      }
     });
     setSearchParams(searchParams, { replace: true });
   }, [filterValues]);

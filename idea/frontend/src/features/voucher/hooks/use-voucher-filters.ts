@@ -17,7 +17,11 @@ function useVoucherFilters() {
 
   useEffect(() => {
     Object.entries(values).forEach(([key, value]) => {
-      if (key in DEFAULT_FILTER_VALUES && value) searchParams.set(key, value);
+      if (key in DEFAULT_FILTER_VALUES && value) {
+        searchParams.set(key, value);
+      } else {
+        searchParams.delete(key);
+      }
     });
     setSearchParams(searchParams, { replace: true });
   }, [values]);

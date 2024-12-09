@@ -63,7 +63,11 @@ const ProgramMessages = ({ programId, sails }: Props) => {
 
   useEffect(() => {
     Object.entries(filters).forEach(([key, value]) => {
-      if (key in DEFAULT_FILTER_VALUES && value) searchParams.set(key, value);
+      if (key in DEFAULT_FILTER_VALUES && value) {
+        searchParams.set(key, value);
+      } else {
+        searchParams.delete(key);
+      }
     });
     setSearchParams(searchParams, { replace: true });
   }, [filters]);

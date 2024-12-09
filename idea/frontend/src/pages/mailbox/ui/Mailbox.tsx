@@ -1,6 +1,6 @@
 import { HexString } from '@polkadot/util/types';
 import { isHex } from '@polkadot/util';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SimpleBar from 'simplebar-react';
 
 import { useMailbox } from '@/features/mailbox';
@@ -10,12 +10,23 @@ import { SearchForm } from '@/shared/ui';
 import { Messages } from './messages';
 import { MessagesPlaceholder } from './messagesPlaceholder';
 import styles from './Mailbox.module.scss';
+import { useSearchParams } from 'react-router-dom';
 
 const Mailbox = () => {
   const claimMessage = useMessageClaim();
   const { mailbox, removeMessage } = useMailbox();
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
+
+  useEffect(() => {
+    if (searchQuery) {
+      searchParams.set('search', searchQuery);
+    } else {
+      searchParams.delete('search');
+    }
+    setSearchParams(searchParams, { replace: true });
+  }, [searchQuery]);
 
   const list = searchQuery ? mailbox?.filter(([message]) => message.id === searchQuery) : mailbox;
   const isAnyMessage = list && list.length > 0;
@@ -34,6 +45,7 @@ const Mailbox = () => {
           placeholder="Search by id..."
           getSchema={(schema) => schema.refine((value) => isHex(value), 'Value should be hex')}
           onSubmit={setSearchQuery}
+          query={searchQuery}
           className={styles.form}
         />
       </header>

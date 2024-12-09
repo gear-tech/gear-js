@@ -11,7 +11,11 @@ const ProgramsPage = () => {
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
 
   useEffect(() => {
-    if (searchQuery) searchParams.set('search', searchQuery);
+    if (searchQuery) {
+      searchParams.set('search', searchQuery);
+    } else {
+      searchParams.delete('search');
+    }
     setSearchParams(searchParams, { replace: true });
   }, [searchQuery]);
   const [defaultFilterValues, handleFiltersSubmit, filterParams] = useProgramFilters(searchQuery);

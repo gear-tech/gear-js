@@ -19,7 +19,11 @@ function ProgramVouchers({ programId }: Props) {
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
 
   useEffect(() => {
-    if (searchQuery) searchParams.set('search', searchQuery);
+    if (searchQuery) {
+      searchParams.set('search', searchQuery);
+    } else {
+      searchParams.delete('search');
+    }
     setSearchParams(searchParams, { replace: true });
   }, [searchQuery]);
   const [filterParams, handleFiltersSubmit] = useVoucherFilters();
