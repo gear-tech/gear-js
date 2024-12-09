@@ -7,6 +7,7 @@ import cx from 'clsx';
 
 import {
   getDecodedMessagePayload,
+  isMessageFromProgramWithError,
   isMessageWithError,
   useMessageFromProgram,
   useMessageToProgram,
@@ -34,8 +35,9 @@ const Message = () => {
 
   const message = messageToProgram.data || messageFromProgram.data;
   const isLoading = messageToProgram.isLoading || messageFromProgram.isLoading;
+  const isToDirection = Boolean(messageToProgram.data);
   const { timestamp, id, source, value, destination, replyToMessageId, blockHash, service, fn } = message || {};
-  const hideServiceAndFn = messageFromProgram.data && messageFromProgram.data.exitCode !== 0;
+  const showServiceAndFn = !isMessageFromProgramWithError(message);
 
   const { data: program } = useProgram(messageToProgram.data ? destination : source);
   const { metadata, isMetadataReady } = useMetadata(program?.metahash);
@@ -46,7 +48,7 @@ const Message = () => {
     () =>
       message && !isPayloadLoading
         ? // eslint-disable-next-line @typescript-eslint/unbound-method
-          getDecodedMessagePayload(message, Boolean(messageToProgram.data), metadata, sails, alert.error)
+          getDecodedMessagePayload(message, isToDirection, metadata, sails, alert.error)
         : undefined,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [message, metadata, sails, isPayloadLoading],
@@ -77,10 +79,10 @@ const Message = () => {
         <Input value={destination} label="Destination" gap="1/6" className={inputClassName} readOnly />
         <Input value={value} label="Value" gap="1/6" className={inputClassName} readOnly />
 
-        {service && !hideServiceAndFn && (
+        {service && showServiceAndFn && (
           <Input value={service} label="Service" gap="1/6" className={inputClassName} readOnly />
         )}
-        {fn && !hideServiceAndFn && <Input value={fn} label="Function" gap="1/6" className={inputClassName} readOnly />}
+        {fn && showServiceAndFn && <Input value={fn} label="Function" gap="1/6" className={inputClassName} readOnly />}
 
         <Textarea
           value={decodedPayload ? getPreformattedText(decodedPayload) : '-'}
