@@ -1,5 +1,5 @@
 import { useMessageToProgram, useMessageFromProgram } from './api';
-import { isMessageWithError, getDecodedMessagePayload } from './utils';
+import { isMessageFromProgramWithError, isMessageWithError, getDecodedMessagePayload } from './utils';
 import { ProgramMessages } from './ui';
 import { MESSAGE_TYPE } from './consts';
 import { Message } from './types';
@@ -7,6 +7,7 @@ import { Message } from './types';
 export {
   useMessageToProgram,
   useMessageFromProgram,
+  isMessageFromProgramWithError,
   isMessageWithError,
   getDecodedMessagePayload,
   ProgramMessages,

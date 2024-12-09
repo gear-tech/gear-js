@@ -7,9 +7,11 @@ import { isNullOrUndefined } from '@/shared/helpers';
 import { MessageToProgram, MessageFromProgram } from './api';
 import { MESSAGE_ENTRY_POINT } from './consts';
 
+const isMessageFromProgramWithError = (message?: MessageToProgram | MessageFromProgram) =>
+  message && 'exitCode' in message && Boolean(message.exitCode);
+
 const isMessageWithError = (message: MessageToProgram | MessageFromProgram) =>
-  ('exitCode' in message && Boolean(message.exitCode)) ||
-  ('processedWithPanic' in message && message.processedWithPanic);
+  isMessageFromProgramWithError(message) || ('processedWithPanic' in message && message.processedWithPanic);
 
 const getPayload = ({ payload }: MessageToProgram | MessageFromProgram) => payload || '0x';
 
@@ -108,4 +110,4 @@ const getDecodedMessagePayload = (
   }
 };
 
-export { isMessageWithError, getDecodedMessagePayload };
+export { isMessageFromProgramWithError, isMessageWithError, getDecodedMessagePayload };

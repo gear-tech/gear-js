@@ -8,7 +8,7 @@ import { routes } from '@/shared/config';
 import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
 
 import { MessageFromProgram, MessageToProgram } from '../../api';
-import { isMessageWithError } from '../../utils';
+import { isMessageFromProgramWithError, isMessageWithError } from '../../utils';
 import styles from './message-card.module.scss';
 
 type Props = {
@@ -19,7 +19,7 @@ type Props = {
 const MessageCard = ({ isToDirection, message }: Props) => {
   const { id, timestamp, service, fn } = message;
 
-  const hasName = Boolean(service || fn);
+  const hasName = Boolean(service || fn) && !isMessageFromProgramWithError(message);
   const to = generatePath(routes.message, { messageId: id });
 
   return (
