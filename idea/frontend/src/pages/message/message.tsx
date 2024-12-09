@@ -35,6 +35,7 @@ const Message = () => {
   const message = messageToProgram.data || messageFromProgram.data;
   const isLoading = messageToProgram.isLoading || messageFromProgram.isLoading;
   const { timestamp, id, source, value, destination, replyToMessageId, blockHash, service, fn } = message || {};
+  const hideServiceAndFn = messageFromProgram.data && messageFromProgram.data.exitCode !== 0;
 
   const { data: program } = useProgram(messageToProgram.data ? destination : source);
   const { metadata, isMetadataReady } = useMetadata(program?.metahash);
@@ -76,8 +77,10 @@ const Message = () => {
         <Input value={destination} label="Destination" gap="1/6" className={inputClassName} readOnly />
         <Input value={value} label="Value" gap="1/6" className={inputClassName} readOnly />
 
-        {service && <Input value={service} label="Service" gap="1/6" className={inputClassName} readOnly />}
-        {fn && <Input value={fn} label="Function" gap="1/6" className={inputClassName} readOnly />}
+        {service && !hideServiceAndFn && (
+          <Input value={service} label="Service" gap="1/6" className={inputClassName} readOnly />
+        )}
+        {fn && !hideServiceAndFn && <Input value={fn} label="Function" gap="1/6" className={inputClassName} readOnly />}
 
         <Textarea
           value={decodedPayload ? getPreformattedText(decodedPayload) : '-'}

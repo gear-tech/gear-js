@@ -19,7 +19,8 @@ type Props = {
 const MessageCard = ({ isToDirection, message }: Props) => {
   const { id, timestamp, service, fn } = message;
 
-  const hasName = Boolean(service || fn);
+  const hideServiceAndFn = 'exitCode' in message && message.exitCode !== 0;
+  const hasName = Boolean(service || fn) && !hideServiceAndFn;
   const to = generatePath(routes.message, { messageId: id });
 
   return (
