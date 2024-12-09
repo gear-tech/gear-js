@@ -4,18 +4,16 @@ import styles from './alert.module.scss';
 import CrossSVG from '../../assets/images/cross.svg?react';
 import { alertIcons } from './icons.tsx';
 
-type IAlertVariants = 'alert' | 'notification';
-type IAlertTypes = 'info' | 'error' | 'loading' | 'success';
-type IAlertIcons = Record<IAlertVariants, Record<IAlertTypes, ReactNode>>;
+type AlertVariants = 'alert' | 'notification';
+type AlertTypes = 'info' | 'error' | 'loading' | 'success';
 
 type Options = {
-  type: IAlertTypes;
-  variant?: IAlertVariants;
+  type: AlertTypes;
+  variant?: AlertVariants;
   style?: CSSProperties;
   title?: string;
   timeout?: number;
   isClosed?: boolean;
-  icons?: IAlertIcons;
 };
 
 type AlertType = {
@@ -32,12 +30,12 @@ type Props = {
 
 function Alert({ alert, close }: Props) {
   const { content, options, footer } = alert;
-  const { variant = 'alert', type = 'info', title, style, isClosed, icons = alertIcons } = options;
+  const { variant = 'alert', type = 'info', title, style, isClosed } = options;
 
   return (
     <div className={cx(styles.wrapper, styles[variant], styles[type])} style={style}>
       <header className={cx(styles.header)}>
-        {type && <div className={styles.icon}>{icons[variant][type]}</div>}
+        {type && <div className={styles.icon}>{alertIcons[variant][type]}</div>}
 
         <h2 className={styles.title}>{title || type}</h2>
 
@@ -56,4 +54,4 @@ function Alert({ alert, close }: Props) {
 }
 
 export { Alert };
-export type { Props as AlertProps, IAlertVariants, IAlertTypes, IAlertIcons };
+export type { Props as AlertProps, AlertVariants, AlertTypes };
