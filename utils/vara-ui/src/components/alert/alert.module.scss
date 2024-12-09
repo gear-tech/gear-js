@@ -19,7 +19,6 @@
   flex-direction: column;
   background-color: #fff;
   box-shadow: 0 10px 20px 0 rgba(92, 92, 92, 0.15);
-  user-select: none;
 }
 
 .header {
@@ -147,6 +146,7 @@
     font-size: 17px;
     font-weight: 700;
     line-height: 1.4;
+    color: #000000;
   }
 
   .body,
@@ -157,15 +157,6 @@
   .close {
     top: 16px;
     right: 16px;
-  }
-
-  &.success,
-  &.error,
-  &.info,
-  &.loading {
-    .title {
-      color: #000;
-    }
   }
 }
 
@@ -219,13 +210,8 @@
 
   // Variants
   .notification {
-    &.success,
-    &.error,
-    &.info,
-    &.loading {
-      .title {
-        color: #fff;
-      }
+    .title {
+      color: #fff;
     }
   }
 }
