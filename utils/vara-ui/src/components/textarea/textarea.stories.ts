@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { Textarea } from './textarea';
+import { textareaSizes } from './helpers';
 
 type Type = typeof Textarea;
 type Story = StoryObj<Type>;
@@ -7,6 +8,21 @@ type Story = StoryObj<Type>;
 const meta: Meta<Type> = {
   title: 'Textarea',
   component: Textarea,
+  args: {
+    label: '',
+    size: 'default',
+    disabled: false,
+    block: false,
+    placeholder: 'Placeholder',
+  },
+  argTypes: {
+    disabled: { control: 'boolean' },
+    block: { control: 'boolean' },
+    size: {
+      options: textareaSizes,
+      control: { type: 'select' },
+    },
+  },
 };
 
 const Default: Story = {
