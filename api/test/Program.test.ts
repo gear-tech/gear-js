@@ -2,11 +2,10 @@ import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { blake2AsHex } from '@polkadot/util-crypto';
 import { bufferToU8a } from '@polkadot/util';
-import { join } from 'path';
 import { readFileSync } from 'fs';
 
+import { TEST_META, TEST_META_CODE } from './config';
 import { ProgramMetadata } from '../src';
-import { TARGET, TEST_META_META } from './config';
 import { checkInit, getAccount, sendTransaction, sleep, waitForPausedProgram } from './utilsFunctions';
 import { getApi } from './common';
 
@@ -19,8 +18,8 @@ let metaHash: HexString;
 let expiredBN: number;
 let pausedBlockHash: HexString;
 
-const code = Uint8Array.from(readFileSync(join(TARGET, 'test_meta.opt.wasm')));
-const metaHex: HexString = `0x${readFileSync(TEST_META_META, 'utf-8')}`;
+const code = Uint8Array.from(readFileSync(TEST_META_CODE));
+const metaHex: HexString = `0x${readFileSync(TEST_META, 'utf-8')}`;
 
 beforeAll(async () => {
   await api.isReadyOrError;
@@ -92,7 +91,7 @@ describe('New Program', () => {
     pausedBlockHash = blockHash;
   });
 
-  test('Сreate program', async () => {
+  test('Create program', async () => {
     expect(codeId).toBeDefined();
     const metadata = ProgramMetadata.from(metaHex);
 

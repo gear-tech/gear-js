@@ -1,15 +1,11 @@
 [package]
-name = "test-gas"
+name = "test"
 version = "0.1.0"
 authors = ["Gear Technologies"]
 edition = "2021"
 
 [dependencies]
 gstd.workspace = true
-scale-info.workspace = true
-codec.workspace = true
-test-gas-io = { path = "io" }
 
 [build-dependencies]
 gear-wasm-builder.workspace = true
-test-gas-io = { path = "io" }
