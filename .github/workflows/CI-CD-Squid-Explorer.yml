@@ -44,7 +44,7 @@ jobs:
         id: tag
         run: |
           if [ "${{ github.ref }}" == "refs/heads/idea-release" ]; then
-            echo "tag=prod" >> $GITHUB_ENV
+            echo "tag=production" >> $GITHUB_ENV
           else
             echo "tag=qa" >> $GITHUB_ENV
           fi
@@ -108,7 +108,7 @@ jobs:
         run: |
           if [ "${{ github.ref }}" == "refs/heads/idea-release" ]; then
             echo "namespace=prod-idea" >> $GITHUB_ENV
-            echo "deployments=squid-testnet-v2 squid-mainnet-v2" >> $GITHUB_ENV
+            echo "deployments=squid-testnet-v2 squid-mainnet-v2" explorer >> $GITHUB_ENV
           else
             echo "namespace=dev-1" >> $GITHUB_ENV
             echo "deployments=squid-testnet-v2" >> $GITHUB_ENV
