@@ -19,7 +19,7 @@ const LabeledCheckbox = ({ name, label, inputLabel, direction = 'x', gap, childr
   return (
     <InputWrapper size="normal" id={name} direction={direction} gap={gap} label={label} className={styles.inputWrapper}>
       <div className={styles.checkboxWrapper}>
-        <Checkbox label={inputLabel} {...register(name)} />
+        <Checkbox label={inputLabel} id={name} {...register(name)} />
 
         {children}
       </div>
