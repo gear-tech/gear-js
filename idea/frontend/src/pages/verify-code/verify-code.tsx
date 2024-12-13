@@ -50,20 +50,19 @@ function VerifyCode() {
   const { codeId } = useParams<{ codeId: HexString }>();
 
   const form = useForm({ defaultValues: { ...DEFAULT_VALUES, [FIELD_NAME.CODE_ID]: codeId } });
+  const projectIdType = form.watch(FIELD_NAME.PROJECT_ID_TYPE);
 
-  const handleSubmit = form.handleSubmit(
-    ({ version, repoLink, projectIdType, projectId, network, buildIdl, codeId: codeIdValue }) => {
-      console.log({
-        version,
-        network,
-        codeId: codeIdValue,
-        repo_link: repoLink,
-        project_name: projectIdType === PROJECT_ID_TYPE.NAME ? projectId : '',
-        cargo_toml_path: projectIdType === PROJECT_ID_TYPE.CARGO_TOML_PATH ? projectId : '',
-        build_idl: buildIdl,
-      });
-    },
-  );
+  const handleSubmit = form.handleSubmit(({ version, repoLink, projectId, network, buildIdl, codeId: codeIdValue }) => {
+    console.log({
+      version,
+      network,
+      codeId: codeIdValue,
+      repo_link: repoLink,
+      project_name: projectIdType === PROJECT_ID_TYPE.NAME ? projectId : '',
+      cargo_toml_path: projectIdType === PROJECT_ID_TYPE.CARGO_TOML_PATH ? projectId : '',
+      build_idl: buildIdl,
+    });
+  });
 
   return (
     <>
@@ -93,7 +92,10 @@ function VerifyCode() {
                   label="Path to Cargo.toml"
                 />
 
-                <Input name={FIELD_NAME.PROJECT_ID} />
+                <Input
+                  name={FIELD_NAME.PROJECT_ID}
+                  placeholder={projectIdType === PROJECT_ID_TYPE.NAME ? 'Name' : 'folder/Cargo.toml'}
+                />
               </Box>
             </InputWrapper>
 
