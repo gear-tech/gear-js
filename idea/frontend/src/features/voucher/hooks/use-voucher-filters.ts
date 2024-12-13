@@ -1,11 +1,30 @@
 import { useAccount } from '@gear-js/react-hooks';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { DEFAULT_FILTER_VALUES } from '../consts';
+import { useSearchParams } from 'react-router-dom';
 
 function useVoucherFilters() {
   const { account } = useAccount();
-  const [values, setValues] = useState(DEFAULT_FILTER_VALUES);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [values, setValues] = useState(() => {
+    const params = Object.fromEntries(searchParams.entries());
+    return {
+      owner: params.owner || DEFAULT_FILTER_VALUES.owner,
+      status: params.status || DEFAULT_FILTER_VALUES.status,
+    };
+  });
+
+  useEffect(() => {
+    Object.entries(values).forEach(([key, value]) => {
+      if (key in DEFAULT_FILTER_VALUES && value) {
+        searchParams.set(key, value);
+      } else {
+        searchParams.delete(key);
+      }
+    });
+    setSearchParams(searchParams, { replace: true });
+  }, [values]);
 
   const getOwnerParams = () => {
     if (!account) return {};

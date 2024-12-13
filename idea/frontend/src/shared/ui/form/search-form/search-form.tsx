@@ -8,6 +8,7 @@ import { Input } from '../input';
 
 type Props<T extends z.ZodTypeAny> = {
   onSubmit: (query: string) => void;
+  query?: string;
   placeholder?: string;
   className?: string;
   disabled?: boolean;
@@ -24,13 +25,23 @@ const DEFAULT_VALUES = {
 
 const QUERY_SCHEMA = z.string().trim();
 
-const SearchForm = <T extends z.ZodTypeAny>({ placeholder, className, disabled, onSubmit, getSchema }: Props<T>) => {
+const SearchForm = <T extends z.ZodTypeAny>({
+  placeholder,
+  className,
+  disabled,
+  query,
+  onSubmit,
+  getSchema,
+}: Props<T>) => {
   const schema = z.object({
     [FIELD_NAME.QUERY]: asOptionalField(getSchema ? getSchema(QUERY_SCHEMA) : QUERY_SCHEMA),
   });
 
+  const value = query ? { query } : undefined;
+
   const form = useForm({
     defaultValues: DEFAULT_VALUES,
+    values: value,
     resolver: zodResolver(schema),
   });
 
