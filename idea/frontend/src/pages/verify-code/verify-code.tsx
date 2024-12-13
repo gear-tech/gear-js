@@ -1,9 +1,11 @@
 import { HexString } from '@gear-js/api';
+import { useApi } from '@gear-js/react-hooks';
 import { Button, InputWrapper } from '@gear-js/ui';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
+import { GENESIS } from '@/shared/config';
 import { BackButton, Box, Input, LabeledCheckbox, Radio, Select } from '@/shared/ui';
 
 import styles from './verify-code.module.scss';
@@ -24,9 +26,14 @@ const DOCKER_IMAGE_VERSION_OPTIONS = [
   { label: 'v0.3.0', value: '3' },
 ] as const;
 
+const NETWORK = {
+  [GENESIS.MAINNET]: 'vara_mainnet',
+  [GENESIS.TESTNET]: 'vara_testnet',
+} as const;
+
 const NETWORK_OPTIONS = [
-  { label: 'Mainnet', value: 'vara_mainnet' },
-  { label: 'Testnet', value: 'vara_testnet' },
+  { label: 'Mainnet', value: NETWORK[GENESIS.MAINNET] },
+  { label: 'Testnet', value: NETWORK[GENESIS.TESTNET] },
 ] as const;
 
 const PROJECT_ID_TYPE = {
@@ -49,7 +56,18 @@ const INPUT_GAP = '1.5/8.5';
 function VerifyCode() {
   const { codeId } = useParams<{ codeId: HexString }>();
 
-  const form = useForm({ defaultValues: { ...DEFAULT_VALUES, [FIELD_NAME.CODE_ID]: codeId } });
+  const { api } = useApi();
+  const genesisHash = api?.genesisHash.toHex();
+  const readOnlyNetwork = codeId && genesisHash ? NETWORK[genesisHash as keyof typeof NETWORK] : undefined;
+
+  const form = useForm({
+    defaultValues: {
+      ...DEFAULT_VALUES,
+      [FIELD_NAME.CODE_ID]: codeId,
+      [FIELD_NAME.NETWORK]: readOnlyNetwork || DEFAULT_VALUES[FIELD_NAME.NETWORK],
+    },
+  });
+
   const projectIdType = form.watch(FIELD_NAME.PROJECT_ID_TYPE);
 
   const handleSubmit = form.handleSubmit(({ version, repoLink, projectId, network, buildIdl, codeId: codeIdValue }) => {
@@ -99,7 +117,13 @@ function VerifyCode() {
               </Box>
             </InputWrapper>
 
-            <Select name={FIELD_NAME.NETWORK} label="Network" options={NETWORK_OPTIONS} gap={INPUT_GAP} />
+            <Select
+              name={FIELD_NAME.NETWORK}
+              label="Network"
+              options={NETWORK_OPTIONS}
+              gap={INPUT_GAP}
+              disabled={Boolean(readOnlyNetwork)}
+            />
 
             <LabeledCheckbox name={FIELD_NAME.BUILD_IDL} label="Build IDL" inputLabel="" gap={INPUT_GAP} />
           </Box>
