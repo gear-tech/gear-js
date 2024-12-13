@@ -1,14 +1,15 @@
 import { HexString } from '@gear-js/api';
-import { useApi } from '@gear-js/react-hooks';
+import { useAlert, useApi } from '@gear-js/react-hooks';
 import { Button, InputWrapper } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { z } from 'zod';
 
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import { GENESIS } from '@/shared/config';
-import { isHex } from '@/shared/helpers';
+import { getErrorMessage, isHex } from '@/shared/helpers';
 import { BackButton, Box, Input, LabeledCheckbox, Radio, Select } from '@/shared/ui';
 
 import styles from './verify-code.module.scss';
@@ -45,12 +46,13 @@ const PROJECT_ID_TYPE = {
 } as const;
 
 const DEFAULT_VALUES = {
-  [FIELD_NAME.DOCKER_IMAGE_VERSION]: DOCKER_IMAGE_VERSION_OPTIONS[0].value,
+  [FIELD_NAME.DOCKER_IMAGE_VERSION]: DOCKER_IMAGE_VERSION_OPTIONS[0]
+    .value as typeof DOCKER_IMAGE_VERSION_OPTIONS[number]['value'],
   [FIELD_NAME.CODE_ID]: '',
   [FIELD_NAME.REPO_LINK]: '',
   [FIELD_NAME.PROJECT_ID_TYPE]: PROJECT_ID_TYPE.NAME as typeof PROJECT_ID_TYPE[keyof typeof PROJECT_ID_TYPE],
   [FIELD_NAME.PROJECT_ID]: '',
-  [FIELD_NAME.NETWORK]: NETWORK_OPTIONS[0].value,
+  [FIELD_NAME.NETWORK]: NETWORK_OPTIONS[0].value as typeof NETWORK_OPTIONS[number]['value'],
   [FIELD_NAME.BUILD_IDL]: false,
 };
 
@@ -69,19 +71,24 @@ const SCHEMA = z.object({
   [FIELD_NAME.BUILD_IDL]: z.boolean(),
 });
 
+type Values = typeof DEFAULT_VALUES;
+type FormattedValues = z.infer<typeof SCHEMA>;
+
 const INPUT_GAP = '1.5/8.5';
 
 function VerifyCode() {
   const { codeId } = useParams<{ codeId: HexString }>();
 
-  const { api } = useApi();
-  const genesisHash = api?.genesisHash.toHex();
+  const { api, isApiReady } = useApi();
+  const genesisHash = isApiReady ? api.genesisHash.toHex() : undefined;
   const readOnlyNetwork = codeId && genesisHash ? NETWORK[genesisHash as keyof typeof NETWORK] : undefined;
 
-  const form = useForm({
+  const alert = useAlert();
+
+  const form = useForm<Values, unknown, FormattedValues>({
     defaultValues: {
       ...DEFAULT_VALUES,
-      [FIELD_NAME.CODE_ID]: codeId,
+      [FIELD_NAME.CODE_ID]: codeId || '',
       [FIELD_NAME.NETWORK]: readOnlyNetwork || DEFAULT_VALUES[FIELD_NAME.NETWORK],
     },
 
@@ -90,24 +97,35 @@ function VerifyCode() {
 
   const projectIdType = form.watch(FIELD_NAME.PROJECT_ID_TYPE);
 
-  const handleSubmit = form.handleSubmit(({ version, repoLink, projectId, network, buildIdl, codeId: codeIdValue }) => {
-    console.log({
-      version,
-      network,
-      codeId: codeIdValue,
-      repo_link: repoLink,
-      project_name: projectIdType === PROJECT_ID_TYPE.NAME ? projectId : '',
-      cargo_toml_path: projectIdType === PROJECT_ID_TYPE.CARGO_TOML_PATH ? projectId : '',
-      build_idl: buildIdl,
-    });
+  const { mutateAsync, isPending } = useMutation({
+    mutationKey: ['verifyCode'],
+    mutationFn: (values: FormattedValues) => Promise.resolve(values),
   });
+
+  const handleSubmit = (values: FormattedValues) => {
+    mutateAsync(values)
+      .then(({ version, repoLink, projectId, network, buildIdl, codeId: codeIdValue }) => {
+        console.log({
+          version,
+          network,
+          codeId: codeIdValue,
+          repo_link: repoLink,
+          project_name: projectIdType === PROJECT_ID_TYPE.NAME ? projectId : '',
+          cargo_toml_path: projectIdType === PROJECT_ID_TYPE.CARGO_TOML_PATH ? projectId : '',
+          build_idl: buildIdl,
+        });
+
+        alert.success('Code verified successfully');
+      })
+      .catch((error) => alert.error(getErrorMessage(error)));
+  };
 
   return (
     <>
       <h1 className={styles.heading}>Verify Code </h1>
 
       <FormProvider {...form}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
           <Box className={styles.box}>
             <Select
               name={FIELD_NAME.DOCKER_IMAGE_VERSION}
@@ -149,7 +167,15 @@ function VerifyCode() {
           </Box>
 
           <footer className={styles.buttons}>
-            <Button type="submit" icon={ApplySVG} text="Verify" color="secondary" size="large" />
+            <Button
+              type="submit"
+              icon={ApplySVG}
+              text="Verify"
+              color="secondary"
+              size="large"
+              disabled={!isApiReady || isPending}
+            />
+
             <BackButton />
           </footer>
         </form>
