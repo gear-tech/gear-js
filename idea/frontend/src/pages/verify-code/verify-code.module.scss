@@ -1,0 +1,23 @@
+.heading {
+  margin-bottom: 32px;
+
+  font-family: Kanit;
+  font-size: 24px;
+  font-weight: 500;
+  color: rgba(#fff, 0.8);
+}
+
+.box {
+  margin-bottom: 24px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.buttons {
+  display: flex;
+  gap: 16px;
+}
