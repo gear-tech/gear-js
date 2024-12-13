@@ -1,10 +1,10 @@
 import { HexString } from '@gear-js/api';
-import { Button } from '@gear-js/ui';
+import { Button, InputWrapper } from '@gear-js/ui';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
-import { BackButton, Box, Input, Select } from '@/shared/ui';
+import { BackButton, Box, Input, Radio, Select } from '@/shared/ui';
 
 import styles from './verify-code.module.scss';
 
@@ -12,6 +12,8 @@ const FIELD_NAME = {
   DOCKER_IMAGE_VERSION: 'version',
   CODE_ID: 'codeId',
   REPO_LINK: 'repoLink',
+  PROJECT_ID_TYPE: 'projectIdType',
+  PROJECT_ID: 'projectId',
   NETWORK: 'network',
 } as const;
 
@@ -49,6 +51,14 @@ function VerifyCode() {
             <Input name={FIELD_NAME.CODE_ID} label="Code Hash" gap={gap} />
 
             <Input name={FIELD_NAME.REPO_LINK} label="Link to Repository" gap={gap} />
+
+            <InputWrapper id="project" label="Project" direction="x" size="normal" gap={gap}>
+              <Box className={styles.nestedBox}>
+                <Radio name={FIELD_NAME.PROJECT_ID_TYPE} label="Name of the Project" />
+                <Radio name={FIELD_NAME.PROJECT_ID_TYPE} label="Path to Cargo.toml" />
+                <Input name={FIELD_NAME.PROJECT_ID} />
+              </Box>
+            </InputWrapper>
 
             <Select name={FIELD_NAME.NETWORK} label="Network" options={NETWORK_OPTIONS} gap={gap} />
           </Box>

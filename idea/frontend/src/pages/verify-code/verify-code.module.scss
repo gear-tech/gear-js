@@ -9,12 +9,18 @@
 
 .box {
   margin-bottom: 24px;
-  padding-top: 24px;
-  padding-bottom: 24px;
 
   display: flex;
   flex-direction: column;
   gap: 48px;
+}
+
+.nestedBox {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  background-color: rgba(#fff, 0.03);
 }
 
 .buttons {
