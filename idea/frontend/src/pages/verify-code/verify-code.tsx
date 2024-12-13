@@ -1,11 +1,14 @@
 import { HexString } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 import { Button, InputWrapper } from '@gear-js/ui';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
+import { z } from 'zod';
 
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import { GENESIS } from '@/shared/config';
+import { isHex } from '@/shared/helpers';
 import { BackButton, Box, Input, LabeledCheckbox, Radio, Select } from '@/shared/ui';
 
 import styles from './verify-code.module.scss';
@@ -51,6 +54,21 @@ const DEFAULT_VALUES = {
   [FIELD_NAME.BUILD_IDL]: false,
 };
 
+const SCHEMA = z.object({
+  [FIELD_NAME.DOCKER_IMAGE_VERSION]: z.string(),
+
+  [FIELD_NAME.CODE_ID]: z // TODO: is there any case to validate that code hash is existing in the CURRENT network?
+    .string()
+    .trim()
+    .refine((value) => isHex(value), { message: 'Value should be hex' }),
+
+  [FIELD_NAME.REPO_LINK]: z.string().trim(), // TODO: url validation
+  [FIELD_NAME.PROJECT_ID_TYPE]: z.string(),
+  [FIELD_NAME.PROJECT_ID]: z.string().trim(), // TODO: name/path validation
+  [FIELD_NAME.NETWORK]: z.string(),
+  [FIELD_NAME.BUILD_IDL]: z.boolean(),
+});
+
 const INPUT_GAP = '1.5/8.5';
 
 function VerifyCode() {
@@ -66,6 +84,8 @@ function VerifyCode() {
       [FIELD_NAME.CODE_ID]: codeId,
       [FIELD_NAME.NETWORK]: readOnlyNetwork || DEFAULT_VALUES[FIELD_NAME.NETWORK],
     },
+
+    resolver: zodResolver(SCHEMA),
   });
 
   const projectIdType = form.watch(FIELD_NAME.PROJECT_ID_TYPE);
