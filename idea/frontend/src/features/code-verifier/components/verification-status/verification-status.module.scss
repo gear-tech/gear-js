@@ -1,0 +1,27 @@
+.status {
+  padding: 4px 8px;
+
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 15.6px;
+
+  border-radius: 20px;
+}
+
+.verified {
+  color: #2bd071;
+
+  background-color: rgba(#2bd071, 0.1);
+}
+
+.pending {
+  color: #f2c94c;
+
+  background-color: rgba(#f2c94c, 0.1);
+}
+
+.failed {
+  color: #f24a4a;
+
+  background-color: rgba(#f24a4a, 0.1);
+}
