@@ -4,9 +4,10 @@ import { Button, InputWrapper } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
+import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 
+import { CODE_VERIFIER_ROUTES } from '@/features/code-verifier';
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import { GENESIS } from '@/shared/config';
 import { getErrorMessage, isHex } from '@/shared/helpers';
@@ -76,8 +77,24 @@ type FormattedValues = z.infer<typeof SCHEMA>;
 
 const INPUT_GAP = '1.5/8.5';
 
+type VerifyCodeParameters = {
+  build_idl: boolean;
+  code_id: string;
+  network: string;
+  project: { Name: string } | { PathToCargoToml: string };
+  repo_link: string;
+  version: string;
+};
+
+const verifyCode = (parameters: VerifyCodeParameters) => {
+  console.log(parameters);
+
+  return Promise.resolve({ id: '1' });
+};
+
 function VerifyCode() {
   const { codeId } = useParams<{ codeId: HexString }>();
+  const navigate = useNavigate();
 
   const { api, isApiReady } = useApi();
   const genesisHash = isApiReady ? api.genesisHash.toHex() : undefined;
@@ -99,23 +116,17 @@ function VerifyCode() {
 
   const { mutateAsync, isPending } = useMutation({
     mutationKey: ['verifyCode'],
-    mutationFn: (values: FormattedValues) => Promise.resolve(values),
+    mutationFn: verifyCode,
   });
 
-  const handleSubmit = (values: FormattedValues) => {
-    mutateAsync(values)
-      .then(({ version, repoLink, projectId, network, buildIdl, codeId: codeIdValue }) => {
-        console.log({
-          version,
-          network,
-          codeId: codeIdValue,
-          repo_link: repoLink,
-          project_name: projectIdType === PROJECT_ID_TYPE.NAME ? projectId : '',
-          cargo_toml_path: projectIdType === PROJECT_ID_TYPE.CARGO_TOML_PATH ? projectId : '',
-          build_idl: buildIdl,
-        });
+  const handleSubmit = ({ version, repoLink, projectId, network, buildIdl, codeId: codeIdValue }: FormattedValues) => {
+    const project = projectIdType === PROJECT_ID_TYPE.NAME ? { Name: projectId } : { PathToCargoToml: projectId };
 
-        alert.success('Code verified successfully');
+    mutateAsync({ version, network, project, code_id: codeIdValue, repo_link: repoLink, build_idl: buildIdl })
+      .then(({ id }) => {
+        navigate(generatePath(CODE_VERIFIER_ROUTES.REQUEST_STATUS, { id }));
+
+        alert.success('Code verification request sent');
       })
       .catch((error) => alert.error(getErrorMessage(error)));
   };

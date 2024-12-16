@@ -1,4 +1,4 @@
 import { VerifyCodeLink } from './components';
-import { VERIFY_CODE_ROUTE } from './consts';
+import { CODE_VERIFIER_ROUTES } from './consts';
 
-export { VerifyCodeLink, VERIFY_CODE_ROUTE };
+export { VerifyCodeLink, CODE_VERIFIER_ROUTES };
