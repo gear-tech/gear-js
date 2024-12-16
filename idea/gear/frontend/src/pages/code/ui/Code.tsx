@@ -13,6 +13,7 @@ import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import { CodeTable, useCode as useStorageCode } from '@/features/code';
 import { SailsPreview, useSails } from '@/features/sails';
 import { useLocalCode } from '@/features/local-indexer';
+import { useIsCodeVerified, VerificationStatus, VerifyCodeLink } from '@/features/code-verifier';
 import { Box } from '@/shared/ui';
 
 import styles from './Code.module.scss';
@@ -30,6 +31,7 @@ const Code = () => {
   const localCode = useLocalCode(codeId);
   const code = isDevChain ? localCode : storageCode;
 
+  const { data: isCodeVerified } = useIsCodeVerified(codeId);
   const programs = usePrograms({ codeId });
 
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(code.data?.metahash);
@@ -59,7 +61,12 @@ const Code = () => {
       <div className={styles.code}>
         <div className={styles.summary}>
           <div>
-            <h2 className={styles.heading}>Code Parameters</h2>
+            <header className={styles.codeHeader}>
+              <h2 className={styles.heading}>Code Parameters</h2>
+
+              {isCodeVerified && <VerificationStatus value="verified" />}
+            </header>
+
             <CodeTable code={code.data} isCodeReady={!code.isPending} />
           </div>
 
@@ -77,7 +84,11 @@ const Code = () => {
         </div>
 
         <div>
-          <h2 className={styles.heading}>Programs</h2>
+          <header className={styles.programsHeader}>
+            <h2 className={styles.heading}>Programs</h2>
+
+            {typeof isCodeVerified === 'boolean' && !isCodeVerified && <VerifyCodeLink codeId={codeId} />}
+          </header>
 
           <Programs
             items={programs.data?.result}

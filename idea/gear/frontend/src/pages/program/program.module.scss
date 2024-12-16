@@ -8,16 +8,23 @@
   gap: 32px;
 }
 
+.headingContainer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 32px;
 
   .name {
     flex: 1 1;
     overflow-wrap: anywhere;
     color: $textColor;
-    font-size: toRem(40);
+    font-size: 28px;
     font-family: 'Kanit';
     line-height: 1.1;
     font-weight: 700;
