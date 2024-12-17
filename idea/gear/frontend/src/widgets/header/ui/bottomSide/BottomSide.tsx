@@ -6,9 +6,9 @@ import uploadCodeSVG from '@/shared/assets/images/actions/uploadCode.svg?react';
 import uploadFileSVG from '@/shared/assets/images/actions/uploadFile.svg?react';
 import sendMessageSVG from '@/shared/assets/images/actions/send.svg?react';
 import { OnboardingTooltip } from '@/shared/ui/onboardingTooltip';
+import { VerifyLink } from '@/features/code-verifier';
 
 import styles from './BottomSide.module.scss';
-import { VerifyLink } from '@/features/code-verifier';
 
 const BottomSide = () => {
   const { showModal } = useModal();

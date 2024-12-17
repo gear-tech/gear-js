@@ -38,19 +38,39 @@ const DEFAULT_VALUES = {
   [FIELD_NAME.BUILD_IDL]: false,
 };
 
-const SCHEMA = z.object({
-  [FIELD_NAME.DOCKER_IMAGE_VERSION]: z.string(),
+const SEMVER_REGEX = /^\d+\.\d+\.\d+$/;
+const GITHUB_REPO_URL_REGEX = /^(https?:\/\/)?(www\.)?github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(\/)?$/;
+const CARGO_TOML_PATH_REGEX = /^(?:\.\/)?(?:[^/]+\/)*Cargo\.toml$/;
 
-  [FIELD_NAME.CODE_ID]: z // TODO: is there any case to validate that code hash is existing in the CURRENT network?
-    .string()
-    .trim()
-    .refine((value) => isHex(value), { message: 'Value should be hex' }),
+const SCHEMA = z
+  .object({
+    [FIELD_NAME.DOCKER_IMAGE_VERSION]: z
+      .string()
+      .trim()
+      .refine((value) => SEMVER_REGEX.test(value), { message: 'Invalid version format' }),
 
-  [FIELD_NAME.REPO_LINK]: z.string().trim(), // TODO: url validation
-  [FIELD_NAME.PROJECT_ID_TYPE]: z.string(),
-  [FIELD_NAME.PROJECT_ID]: z.string().trim(), // TODO: name/path validation
-  [FIELD_NAME.NETWORK]: z.string(),
-  [FIELD_NAME.BUILD_IDL]: z.boolean(),
-});
+    [FIELD_NAME.CODE_ID]: z
+      .string()
+      .trim()
+      .refine((value) => isHex(value, 256), { message: 'Invalid hex' }),
+
+    [FIELD_NAME.REPO_LINK]: z
+      .string()
+      .trim()
+      .refine((value) => GITHUB_REPO_URL_REGEX.test(value), { message: 'Invalid GitHub repository URL' }),
+
+    [FIELD_NAME.PROJECT_ID_TYPE]: z.string(),
+    [FIELD_NAME.PROJECT_ID]: z.string().trim().min(1),
+    [FIELD_NAME.NETWORK]: z.string(),
+    [FIELD_NAME.BUILD_IDL]: z.boolean(),
+  })
+  .refine(
+    ({ projectIdType, projectId }) =>
+      projectIdType === PROJECT_ID_TYPE.CARGO_TOML_PATH ? CARGO_TOML_PATH_REGEX.test(projectId) : true,
+    {
+      message: 'Invalid path to Cargo.toml',
+      path: [FIELD_NAME.PROJECT_ID],
+    },
+  );
 
 export { DEFAULT_VALUES, SCHEMA, NETWORK, FIELD_NAME, PROJECT_ID_TYPE, NETWORK_OPTIONS };
