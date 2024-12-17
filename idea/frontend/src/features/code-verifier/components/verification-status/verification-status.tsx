@@ -3,13 +3,14 @@ import styles from './verification-status.module.scss';
 import { Skeleton } from '@/shared/ui';
 
 type Props = {
-  value: 'verified' | 'failed' | 'pending';
+  value: 'verified' | 'failed' | 'pending' | 'in_progress';
 };
 
 const TEXT = {
   verified: 'Verified',
   failed: 'Failed',
-  pending: 'In Progress',
+  pending: 'Pending',
+  in_progress: 'In Progress',
 } as const;
 
 function VerificationStatus({ value }: Props) {

@@ -8,7 +8,7 @@ type VerifyParameters = {
 };
 
 type StatusResponse = {
-  status: 'pending' | 'verified' | 'failed';
+  status: 'pending' | 'verified' | 'failed' | 'in_progress';
   failed_reason: string;
   created_at: number;
 };
