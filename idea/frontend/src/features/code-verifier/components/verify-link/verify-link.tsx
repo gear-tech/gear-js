@@ -16,7 +16,7 @@ type Props = {
 function VerifyLink({ codeId, className }: Props) {
   return (
     <UILink
-      to={generatePath(VERIFY_ROUTES.MAIN + '/' + VERIFY_ROUTES.CODE, { codeId: codeId || null })}
+      to={generatePath(VERIFY_ROUTES.CODE, { codeId: codeId || null })}
       icon={ApplySVG}
       text="Verify Code"
       color="lightGreen"

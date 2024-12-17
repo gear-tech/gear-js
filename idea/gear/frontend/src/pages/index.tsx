@@ -67,10 +67,8 @@ const Routing = () => {
         <Route path={routes.singleDns} element={<SingleDns />} />
       </Route>
 
-      <Route path={VERIFY_ROUTES.MAIN}>
-        <Route path={VERIFY_ROUTES.CODE} element={<Verify />} />
-        <Route path={VERIFY_ROUTES.STATUS} element={<VerificationStatus />} />
-      </Route>
+      <Route path={VERIFY_ROUTES.CODE} element={<Verify />} />
+      <Route path={VERIFY_ROUTES.STATUS} element={<VerificationStatus />} />
 
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Navigate to={routes.programs} replace />} />
