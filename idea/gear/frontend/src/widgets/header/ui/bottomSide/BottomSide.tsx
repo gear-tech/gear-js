@@ -8,7 +8,7 @@ import sendMessageSVG from '@/shared/assets/images/actions/send.svg?react';
 import { OnboardingTooltip } from '@/shared/ui/onboardingTooltip';
 
 import styles from './BottomSide.module.scss';
-import { VerifyCodeLink } from '@/features/code-verifier';
+import { VerifyLink } from '@/features/code-verifier';
 
 const BottomSide = () => {
   const { showModal } = useModal();
@@ -42,7 +42,7 @@ const BottomSide = () => {
         />
       </OnboardingTooltip>
 
-      <VerifyCodeLink className={clsx(styles.fixSize, styles.verifyCode)} />
+      <VerifyLink className={clsx(styles.fixSize, styles.verifyCode)} />
     </div>
   );
 };

@@ -6,17 +6,17 @@ import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import { UILink } from '@/shared/ui';
 
 import { VERIFY_ROUTES } from '../../consts';
-import styles from './verify-code-link.module.scss';
+import styles from './verify-link.module.scss';
 
 type Props = {
   codeId?: HexString;
   className?: string;
 };
 
-function VerifyCodeLink({ codeId, className }: Props) {
+function VerifyLink({ codeId, className }: Props) {
   return (
     <UILink
-      to={generatePath(VERIFY_ROUTES.MAIN + '/' + VERIFY_ROUTES.REQUEST, { codeId: codeId || null })}
+      to={generatePath(VERIFY_ROUTES.MAIN + '/' + VERIFY_ROUTES.CODE, { codeId: codeId || null })}
       icon={ApplySVG}
       text="Verify Code"
       color="lightGreen"
@@ -25,4 +25,4 @@ function VerifyCodeLink({ codeId, className }: Props) {
   );
 }
 
-export { VerifyCodeLink };
+export { VerifyLink };

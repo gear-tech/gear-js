@@ -17,7 +17,7 @@ import { ProgramVouchers } from '@/features/voucher';
 import { ProgramEvents, SailsPreview, useSails } from '@/features/sails';
 import { ProgramMessages } from '@/features/message';
 import { ProgramBalance } from '@/features/balance';
-import { useIsCodeVerified, VerificationStatus, VerifyCodeLink } from '@/features/code-verifier';
+import { useIsCodeVerified, VerificationStatus, VerifyLink } from '@/features/code-verifier';
 
 import styles from './program.module.scss';
 
@@ -112,7 +112,7 @@ const Program = () => {
           )}
 
           {program?.codeId && typeof isCodeVerified === 'boolean' && !isCodeVerified && (
-            <VerifyCodeLink codeId={program.codeId} className={styles.fixWidth} />
+            <VerifyLink codeId={program.codeId} className={styles.fixWidth} />
           )}
         </div>
       </header>

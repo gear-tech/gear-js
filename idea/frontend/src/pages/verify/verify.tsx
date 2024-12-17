@@ -13,7 +13,7 @@ import { GENESIS } from '@/shared/config';
 import { getErrorMessage, isHex } from '@/shared/helpers';
 import { BackButton, Box, Input, LabeledCheckbox, Radio, Select } from '@/shared/ui';
 
-import styles from './verify-code.module.scss';
+import styles from './verify.module.scss';
 
 const FIELD_NAME = {
   DOCKER_IMAGE_VERSION: 'version',
@@ -92,7 +92,7 @@ const verifyCode = (parameters: VerifyCodeParameters) => {
   return Promise.resolve({ id: '1' });
 };
 
-function VerifyCode() {
+function Verify() {
   const { codeId } = useParams<{ codeId: HexString }>();
   const navigate = useNavigate();
 
@@ -124,7 +124,7 @@ function VerifyCode() {
 
     mutateAsync({ version, network, project, code_id: codeIdValue, repo_link: repoLink, build_idl: buildIdl })
       .then(({ id }) => {
-        navigate(generatePath(VERIFY_ROUTES.REQUEST_STATUS, { id }));
+        navigate(generatePath(VERIFY_ROUTES.STATUS, { id }));
 
         alert.success('Code verification request sent');
       })
@@ -195,4 +195,4 @@ function VerifyCode() {
   );
 }
 
-export { VerifyCode };
+export { Verify };

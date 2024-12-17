@@ -13,7 +13,7 @@ import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import { CodeTable, useCode as useStorageCode } from '@/features/code';
 import { SailsPreview, useSails } from '@/features/sails';
 import { useLocalCode } from '@/features/local-indexer';
-import { useIsCodeVerified, VerificationStatus, VerifyCodeLink } from '@/features/code-verifier';
+import { useIsCodeVerified, VerificationStatus, VerifyLink } from '@/features/code-verifier';
 import { Box } from '@/shared/ui';
 
 import styles from './Code.module.scss';
@@ -87,7 +87,7 @@ const Code = () => {
           <header className={styles.programsHeader}>
             <h2 className={styles.heading}>Programs</h2>
 
-            {typeof isCodeVerified === 'boolean' && !isCodeVerified && <VerifyCodeLink codeId={codeId} />}
+            {typeof isCodeVerified === 'boolean' && !isCodeVerified && <VerifyLink codeId={codeId} />}
           </header>
 
           <Programs

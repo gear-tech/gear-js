@@ -1,4 +1,4 @@
-import { VerifyCodeLink } from './verify-code-link';
+import { VerifyLink } from './verify-link';
 import { VerificationStatus } from './verification-status';
 
-export { VerifyCodeLink, VerificationStatus };
+export { VerifyLink, VerificationStatus };

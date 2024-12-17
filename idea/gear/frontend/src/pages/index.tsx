@@ -21,8 +21,8 @@ import { UploadCode } from './uploadCode';
 import { Vouchers } from './vouchers';
 import { Dns } from './dns';
 import { SingleDns } from './single-dns';
-import { VerifyCode } from './verify-code';
-import { VerifyStatus } from './verify-status';
+import { Verify } from './verify';
+import { VerificationStatus } from './verification-status';
 
 const Routing = () => {
   const events = useEvents();
@@ -68,8 +68,8 @@ const Routing = () => {
       </Route>
 
       <Route path={VERIFY_ROUTES.MAIN}>
-        <Route path={VERIFY_ROUTES.REQUEST} element={<VerifyCode />} />
-        <Route path={VERIFY_ROUTES.REQUEST_STATUS} element={<VerifyStatus />} />
+        <Route path={VERIFY_ROUTES.CODE} element={<Verify />} />
+        <Route path={VERIFY_ROUTES.STATUS} element={<VerificationStatus />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

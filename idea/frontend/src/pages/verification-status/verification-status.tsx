@@ -7,17 +7,17 @@ import { useParams } from 'react-router-dom';
 import TablePlaceholderSVG from '@/shared/assets/images/placeholders/table.svg?react';
 import CopySVG from '@/shared/assets/images/actions/copyGreen.svg?react';
 import RefreshSVG from '@/features/code-verifier/assets/refresh.svg?react';
-import { getVerificationStatus, VerificationStatus } from '@/features/code-verifier';
+import { getVerificationStatus, VerificationStatus as Status } from '@/features/code-verifier';
 import { Box, IdBlock, Skeleton, Table, TableRow } from '@/shared/ui';
 import { copyToClipboard } from '@/shared/helpers';
 
-import styles from './verify-status.module.scss';
+import styles from './verification-status.module.scss';
 
 type Params = {
   id: string;
 };
 
-function VerifyStatus() {
+function VerificationStatus() {
   const { id } = useParams() as Params;
   const alert = useAlert();
 
@@ -37,7 +37,7 @@ function VerifyStatus() {
         <div>
           <h1 className={styles.heading}>Verify Code</h1>
 
-          {data && !isFetching ? <VerificationStatus value={data.status} /> : <VerificationStatus.Skeleton />}
+          {data && !isFetching ? <Status value={data.status} /> : <Status.Skeleton />}
         </div>
 
         <Button icon={RefreshSVG} text="Check Status" color="secondary" onClick={() => refetch()} />
@@ -80,4 +80,4 @@ function VerifyStatus() {
   );
 }
 
-export { VerifyStatus };
+export { VerificationStatus };
