@@ -1,10 +1,9 @@
-import { HexString } from '@gear-js/api';
 import { useAlert, useApi } from '@gear-js/react-hooks';
 import { Button, InputWrapper } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
-import { generatePath, useNavigate, useParams } from 'react-router-dom';
+import { generatePath, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
@@ -13,6 +12,7 @@ import { BackButton, Box, Input, LabeledCheckbox, Radio, Select } from '@/shared
 
 import { verifyCode } from '../../api';
 import { VERIFY_ROUTES } from '../../consts';
+import { useDefaultCodeId } from '../../hooks';
 import { DEFAULT_VALUES, SCHEMA, NETWORK, FIELD_NAME, PROJECT_ID_TYPE, NETWORK_OPTIONS } from './consts';
 import styles from './verify-form.module.scss';
 
@@ -22,19 +22,19 @@ type FormattedValues = z.infer<typeof SCHEMA>;
 const INPUT_GAP = '1.5/8.5';
 
 function VerifyForm() {
-  const { codeId } = useParams<{ codeId: HexString }>();
+  const defaultCodeId = useDefaultCodeId();
   const navigate = useNavigate();
 
   const { api, isApiReady } = useApi();
   const genesisHash = isApiReady ? api.genesisHash.toHex() : undefined;
-  const readOnlyNetwork = codeId && genesisHash ? NETWORK[genesisHash as keyof typeof NETWORK] : undefined;
+  const readOnlyNetwork = defaultCodeId && genesisHash ? NETWORK[genesisHash as keyof typeof NETWORK] : undefined;
 
   const alert = useAlert();
 
   const form = useForm<Values, unknown, FormattedValues>({
     defaultValues: {
       ...DEFAULT_VALUES,
-      [FIELD_NAME.CODE_ID]: codeId || '',
+      [FIELD_NAME.CODE_ID]: defaultCodeId || '',
       [FIELD_NAME.NETWORK]: readOnlyNetwork || DEFAULT_VALUES[FIELD_NAME.NETWORK],
     },
 
@@ -71,7 +71,7 @@ function VerifyForm() {
             gap={INPUT_GAP}
           />
 
-          <Input name={FIELD_NAME.CODE_ID} label="Code Hash" gap={INPUT_GAP} readOnly={Boolean(codeId)} />
+          <Input name={FIELD_NAME.CODE_ID} label="Code Hash" gap={INPUT_GAP} readOnly={Boolean(defaultCodeId)} />
           <Input name={FIELD_NAME.REPO_LINK} label="Link to Repository" gap={INPUT_GAP} />
 
           <InputWrapper id="project" label="Project" direction="x" size="normal" gap={INPUT_GAP}>

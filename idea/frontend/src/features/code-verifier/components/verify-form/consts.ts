@@ -1,7 +1,8 @@
-import { isHex } from '@polkadot/util';
 import { z } from 'zod';
 
 import { GENESIS } from '@/shared/config';
+
+import { isCodeIdValid } from '../../utils';
 
 const FIELD_NAME = {
   DOCKER_IMAGE_VERSION: 'version',
@@ -52,7 +53,7 @@ const SCHEMA = z
     [FIELD_NAME.CODE_ID]: z
       .string()
       .trim()
-      .refine((value) => isHex(value, 256), { message: 'Invalid hex' }),
+      .refine((value) => isCodeIdValid(value), { message: 'Invalid hex' }),
 
     [FIELD_NAME.REPO_LINK]: z
       .string()
