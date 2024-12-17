@@ -1,7 +1,7 @@
-const CODE_VERIFIER_ROUTES = {
+const VERIFY_ROUTES = {
   MAIN: '/verify',
   REQUEST: ':codeId?',
   REQUEST_STATUS: 'status/:id',
 } as const;
 
-export { CODE_VERIFIER_ROUTES };
+export { VERIFY_ROUTES };

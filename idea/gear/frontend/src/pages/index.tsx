@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { routes } from '@/shared/config';
 import { useEvents } from '@/hooks';
 import { Events, Block } from '@/features/explorer';
-import { CODE_VERIFIER_ROUTES } from '@/features/code-verifier';
+import { VERIFY_ROUTES } from '@/features/code-verifier';
 
 import { Program } from './program';
 import { Programs } from './programs';
@@ -67,9 +67,9 @@ const Routing = () => {
         <Route path={routes.singleDns} element={<SingleDns />} />
       </Route>
 
-      <Route path={CODE_VERIFIER_ROUTES.MAIN}>
-        <Route path={CODE_VERIFIER_ROUTES.REQUEST} element={<VerifyCode />} />
-        <Route path={CODE_VERIFIER_ROUTES.REQUEST_STATUS} element={<VerifyStatus />} />
+      <Route path={VERIFY_ROUTES.MAIN}>
+        <Route path={VERIFY_ROUTES.REQUEST} element={<VerifyCode />} />
+        <Route path={VERIFY_ROUTES.REQUEST_STATUS} element={<VerifyStatus />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

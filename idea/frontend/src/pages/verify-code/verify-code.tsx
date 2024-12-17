@@ -7,7 +7,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 
-import { CODE_VERIFIER_ROUTES } from '@/features/code-verifier';
+import { VERIFY_ROUTES } from '@/features/code-verifier';
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import { GENESIS } from '@/shared/config';
 import { getErrorMessage, isHex } from '@/shared/helpers';
@@ -124,7 +124,7 @@ function VerifyCode() {
 
     mutateAsync({ version, network, project, code_id: codeIdValue, repo_link: repoLink, build_idl: buildIdl })
       .then(({ id }) => {
-        navigate(generatePath(CODE_VERIFIER_ROUTES.REQUEST_STATUS, { id }));
+        navigate(generatePath(VERIFY_ROUTES.REQUEST_STATUS, { id }));
 
         alert.success('Code verification request sent');
       })
