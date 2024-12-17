@@ -4,14 +4,20 @@ import { FunctionComponent, SVGProps } from 'react';
 import styles from './skeleton.module.scss';
 
 type Props = {
-  SVG: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | undefined }>;
+  width?: string;
+  height?: string;
+  borderRadius?: string;
+  SVG?: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | undefined }>;
   disabled?: boolean;
+  className?: string;
 };
 
-const Skeleton = ({ SVG, disabled }: Props) => {
+const Skeleton = ({ width, height, borderRadius, SVG, disabled, className }: Props) => {
   return (
-    <span className={clsx(styles.skeleton, !disabled && styles.loading)}>
-      <SVG />
+    <span
+      className={clsx(styles.skeleton, !disabled && styles.loading, className)}
+      style={{ width, height, borderRadius }}>
+      {SVG && <SVG />}
     </span>
   );
 };

@@ -1,0 +1,24 @@
+.box {
+  margin-bottom: 24px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.nestedBox {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  background-color: rgba(#fff, 0.03);
+}
+
+.buildIdl {
+  align-items: center;
+}
+
+.buttons {
+  display: flex;
+  gap: 16px;
+}

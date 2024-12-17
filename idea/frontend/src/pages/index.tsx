@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { routes } from '@/shared/config';
 import { useEvents } from '@/hooks';
 import { Events, Block } from '@/features/explorer';
+import { VERIFY_ROUTES } from '@/features/code-verifier';
 
 import { Program } from './program';
 import { Programs } from './programs';
@@ -20,6 +21,8 @@ import { UploadCode } from './uploadCode';
 import { Vouchers } from './vouchers';
 import { Dns } from './dns';
 import { SingleDns } from './single-dns';
+import { Verify } from './verify';
+import { VerificationStatus } from './verification-status';
 
 const Routing = () => {
   const events = useEvents();
@@ -63,6 +66,9 @@ const Routing = () => {
         <Route index element={<Dns />} />
         <Route path={routes.singleDns} element={<SingleDns />} />
       </Route>
+
+      <Route path={VERIFY_ROUTES.CODE} element={<Verify />} />
+      <Route path={VERIFY_ROUTES.STATUS} element={<VerificationStatus />} />
 
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Navigate to={routes.programs} replace />} />

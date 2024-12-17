@@ -17,6 +17,7 @@ import { ProgramVouchers } from '@/features/voucher';
 import { ProgramEvents, SailsPreview, useSails } from '@/features/sails';
 import { ProgramMessages } from '@/features/message';
 import { ProgramBalance } from '@/features/balance';
+import { useIsCodeVerified, VerificationStatus, VerifyLink } from '@/features/code-verifier';
 
 import styles from './program.module.scss';
 
@@ -33,6 +34,8 @@ const Program = () => {
   const { data: program, isLoading: isProgramLoading, refetch: refetchProgram } = useProgram(programId);
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(program?.metahash);
   const { sails, isLoading: isSailsLoading, refetch: refetchSails } = useSails(program?.codeId);
+  const { data: isCodeVerified } = useIsCodeVerified(program?.codeId);
+
   const isLoading = !isMetadataReady || isSailsLoading;
   const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => isAnyKey(queries)) : false;
 
@@ -76,33 +79,42 @@ const Program = () => {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        {program && <h2 className={styles.name}>{getShortName(program.name || 'Program Name')}</h2>}
+        <div className={styles.headingContainer}>
+          {program && <h2 className={styles.name}>{getShortName(program.name || 'Program Name')}</h2>}
+          {!isCodeVerified && <VerificationStatus value="verified" />}
+        </div>
 
-        {program?.status === ProgramStatus.Active && (
-          <div className={styles.links}>
-            <UILink
-              to={generatePath(absoluteRoutes.sendMessage, { programId })}
-              icon={SendSVG}
-              text="Send Message"
-              color="secondary"
-              className={styles.fixWidth}
-            />
-
-            {!isLoading && (isState(metadata) || isAnyQuery) && (
+        <div className={styles.links}>
+          {program?.status === ProgramStatus.Active && (
+            <>
               <UILink
-                to={generatePath(metadata ? routes.state : routes.sailsState, { programId })}
-                icon={ReadSVG}
-                text="Read State"
+                to={generatePath(absoluteRoutes.sendMessage, { programId })}
+                icon={SendSVG}
+                text="Send Message"
                 color="secondary"
                 className={styles.fixWidth}
               />
-            )}
 
-            {!isLoading && !metadata && !sails && (
-              <Button text="Add metadata/sails" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
-            )}
-          </div>
-        )}
+              {!isLoading && (isState(metadata) || isAnyQuery) && (
+                <UILink
+                  to={generatePath(metadata ? routes.state : routes.sailsState, { programId })}
+                  icon={ReadSVG}
+                  text="Read State"
+                  color="secondary"
+                  className={styles.fixWidth}
+                />
+              )}
+
+              {!isLoading && !metadata && !sails && (
+                <Button text="Add metadata" icon={AddMetaSVG} color="light" onClick={openUploadMetadataModal} />
+              )}
+            </>
+          )}
+
+          {program?.codeId && typeof isCodeVerified === 'boolean' && !isCodeVerified && (
+            <VerifyLink codeId={program.codeId} className={styles.fixWidth} />
+          )}
+        </div>
       </header>
 
       <ProgramTable
