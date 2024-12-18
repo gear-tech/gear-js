@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/vara-ui",
-  "version": "0.0.11",
+  "version": "0.1.0",
   "type": "module",
   "description": "React UI components used across Vara applications",
   "author": "Gear Technologies",
@@ -19,7 +19,11 @@
   "homepage": "https://github.com/gear-tech/gear-js/tree/main/utils/vara-ui#readme",
   "scripts": {
     "start": "storybook dev -p 6006",
-    "build": "tsc && vite build",
+    "build-base": "tsc && vite build --mode base",
+    "build-deprecated": "tsc && vite build --mode deprecated",
+    "copy-deprecated-css": "cp dist-temp/style.css dist/style-deprecated.css",
+    "rm-deprecated-dts": "rm dist/index-deprecated.d.ts",
+    "build": "npm run build-base && npm run build-deprecated && npm run copy-deprecated-css && npm run rm-deprecated-dts",
     "build-sb": "storybook build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
