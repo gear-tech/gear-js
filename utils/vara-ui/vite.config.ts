@@ -5,19 +5,30 @@ import svgr from 'vite-plugin-svgr';
 import dts from 'vite-plugin-dts';
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react(), svgr(), dts()],
+export default defineConfig(({ mode }) => {
+  // since vite merges styles to a single css,
+  // we will run build two times to copy separate css file to support deprecated font
+  const outDir = mode === 'deprecated' ? 'dist-temp' : 'dist';
 
-  build: {
-    lib: {
-      entry: resolve(__dirname, 'src/components/index.ts'),
-      formats: ['es'],
-    },
-    rollupOptions: {
-      external: ['react', 'react-dom'],
-      output: {
-        globals: { react: 'React', 'react-dom': 'ReactDOM' },
+  return {
+    plugins: [react(), svgr(), dts({ outDir })],
+
+    build: {
+      lib: {
+        entry: resolve(__dirname, `src/components/${mode === 'deprecated' ? 'index-deprecated' : 'index'}.ts`),
+        formats: ['es'],
+        outDir,
+        emptyOutDir: true,
+      },
+
+      rollupOptions: {
+        external: ['react', 'react-dom'],
+
+        output: {
+          globals: { react: 'React', 'react-dom': 'ReactDOM' },
+          dir: outDir,
+        },
       },
     },
-  },
+  };
 });
