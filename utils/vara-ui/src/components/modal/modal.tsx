@@ -11,6 +11,7 @@ type Props = {
   close: () => void;
   children?: ReactNode;
   className?: string;
+  headerAddon?: ReactNode;
   footer?: ReactNode;
   maxWidth?: 'small' | 'medium' | 'large' | string;
 };
@@ -36,7 +37,7 @@ function useMaxHeight() {
   return { bodyStyle, modalRef, bodyRef };
 }
 
-const Modal = ({ heading, close, children, className, footer, maxWidth = 'small' }: Props) => {
+const Modal = ({ heading, close, children, className, headerAddon, footer, maxWidth = 'small' }: Props) => {
   const [root, setRoot] = useState<HTMLDivElement>();
   const { bodyStyle, modalRef, bodyRef } = useMaxHeight();
 
@@ -64,7 +65,10 @@ const Modal = ({ heading, close, children, className, footer, maxWidth = 'small'
         style={isCustomMaxWidth ? { maxWidth } : undefined}
         ref={modalRef}>
         <header className={styles.header}>
-          <h3 className={styles.heading}>{heading}</h3>
+          <div className={styles.headingContainer}>
+            <h3 className={styles.heading}>{heading}</h3>
+            {headerAddon}
+          </div>
 
           <Button icon={CrossSVG} color="transparent" onClick={close} className={styles.button} />
         </header>

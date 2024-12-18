@@ -93,6 +93,12 @@
   letter-spacing: 0;
 
   color: #000;
+
+  &Container {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
 }
 
 .small {

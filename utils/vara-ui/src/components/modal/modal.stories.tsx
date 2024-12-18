@@ -1,4 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
+
+import { Button } from '../button';
 import { Modal } from './modal';
 
 type Type = typeof Modal;
@@ -82,5 +84,24 @@ const CustomMaxWidth: Story = {
   },
 };
 
+const WithHeaderAddon: Story = {
+  args: {
+    heading: 'Heading',
+    headerAddon: <Button text="Click" size="small" />,
+    children: 'Some modal text',
+    close: () => {},
+  },
+};
+
 export default meta;
-export { Default, Scroll, Mobile, MobileScroll, SmallMaxWidth, MediumMaxWidth, LargeMaxWidth, CustomMaxWidth };
+export {
+  Default,
+  Scroll,
+  Mobile,
+  MobileScroll,
+  SmallMaxWidth,
+  MediumMaxWidth,
+  LargeMaxWidth,
+  CustomMaxWidth,
+  WithHeaderAddon,
+};
