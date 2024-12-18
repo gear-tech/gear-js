@@ -13,7 +13,7 @@ type Props = {
   className?: string;
   headerAddon?: ReactNode;
   footer?: ReactNode;
-  maxWidth?: 'small' | 'medium' | 'large' | string;
+  maxWidth?: 'small' | 'medium' | 'large' | (string & NonNullable<unknown>);
 };
 
 // TODO: same as in gear-js/ui
