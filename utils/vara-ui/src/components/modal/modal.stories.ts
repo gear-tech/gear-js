@@ -46,5 +46,41 @@ const MobileScroll: Story = {
   parameters: { viewport: { defaultViewport: 'mobile1' } },
 };
 
+const SmallMaxWidth: Story = {
+  args: {
+    heading: 'Heading',
+    children: 'Some modal text',
+    close: () => {},
+    maxWidth: 'small',
+  },
+};
+
+const MediumMaxWidth: Story = {
+  args: {
+    heading: 'Heading',
+    children: 'Some modal text',
+    close: () => {},
+    maxWidth: 'medium',
+  },
+};
+
+const LargeMaxWidth: Story = {
+  args: {
+    heading: 'Heading',
+    children: 'Some modal text',
+    close: () => {},
+    maxWidth: 'large',
+  },
+};
+
+const CustomMaxWidth: Story = {
+  args: {
+    heading: 'Heading',
+    children: 'Some modal text',
+    close: () => {},
+    maxWidth: '768px',
+  },
+};
+
 export default meta;
-export { Default, Scroll, Mobile, MobileScroll };
+export { Default, Scroll, Mobile, MobileScroll, SmallMaxWidth, MediumMaxWidth, LargeMaxWidth, CustomMaxWidth };

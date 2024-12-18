@@ -12,6 +12,7 @@ type Props = {
   children?: ReactNode;
   className?: string;
   footer?: ReactNode;
+  maxWidth?: 'small' | 'medium' | 'large' | string;
 };
 
 // TODO: same as in gear-js/ui
@@ -35,7 +36,7 @@ function useMaxHeight() {
   return { bodyStyle, modalRef, bodyRef };
 }
 
-const Modal = ({ heading, close, children, className, footer }: Props) => {
+const Modal = ({ heading, close, children, className, footer, maxWidth = 'small' }: Props) => {
   const [root, setRoot] = useState<HTMLDivElement>();
   const { bodyStyle, modalRef, bodyRef } = useMaxHeight();
 
@@ -54,9 +55,14 @@ const Modal = ({ heading, close, children, className, footer }: Props) => {
     };
   }, []);
 
+  const isCustomMaxWidth = !['small', 'medium', 'large'].includes(maxWidth);
+
   const component = (
     <div className={styles.overlay} onClick={handleOverlayClick}>
-      <div className={styles.modal} ref={modalRef}>
+      <div
+        className={cx(styles.modal, !isCustomMaxWidth && styles[maxWidth])}
+        style={isCustomMaxWidth ? { maxWidth } : undefined}
+        ref={modalRef}>
         <header className={styles.header}>
           <h3 className={styles.heading}>{heading}</h3>
 
