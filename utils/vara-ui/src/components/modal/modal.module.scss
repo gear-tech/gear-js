@@ -60,7 +60,6 @@
   flex-direction: column;
   gap: 20px;
   width: 100%;
-  max-width: 400px;
   padding: 30px 0;
   background-color: rgba(246, 248, 248, 1);
   border-radius: 4px;
@@ -86,12 +85,30 @@
 }
 
 .heading {
-  margin: 0 16px 0 0;
-
   font-size: 24px;
   font-weight: 500;
   line-height: 24px;
   letter-spacing: 0;
 
   color: #000;
+
+  &Container {
+    margin-right: 16px;
+
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+}
+
+.small {
+  max-width: 460px;
+}
+
+.medium {
+  max-width: 560px;
+}
+
+.large {
+  max-width: 660px;
 }
