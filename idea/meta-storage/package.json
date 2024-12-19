@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/meta-storage",
-  "packageManager": "yarn@3.3.0",
+  "packageManager": "yarn@3.8.7",
   "devDependencies": {
     "ts-node-dev": "^2.0.0",
     "typescript": "5.5.3"
