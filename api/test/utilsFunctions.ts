@@ -5,6 +5,8 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { GearApi, GearTransaction, IGearEvent, IGearVoucherEvent, MessageWaitedData, ProgramChangedData } from '../src';
 import { Keyring } from '@polkadot/keyring';
 import { waitReady } from '@polkadot/wasm-crypto';
+import { TypeRegistry } from '@polkadot/types';
+import { Codec } from '@polkadot/types-codec/types';
 
 export const checkInit = (
   api: GearApi,
@@ -108,4 +110,35 @@ export const waitForPausedProgram = (
       }
     });
   });
+};
+
+const registry = new TypeRegistry();
+
+registry.register({
+  Action: {
+    _enum: {
+      One: 'Option<Text>',
+      Two: '(u8, u16)',
+      Three: null,
+      Four: null,
+      Input: 'Text',
+      Wait: null,
+    },
+  },
+  Init: 'BTreeMap<String, u8>',
+  ReplyType: {
+    _enum: {
+      TextReply: 'Text',
+    },
+  },
+});
+
+export const createPayload = (type: string, data: unknown): Codec => {
+  const payload = registry.createType(type, data);
+
+  if (!payload) {
+    throw new Error(`Type ${type} is not registered in the registry.`);
+  }
+
+  return payload;
 };

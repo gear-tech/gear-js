@@ -2,9 +2,8 @@ import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { readFileSync } from 'fs';
 
-import { TEST_META, TEST_META_CODE } from './config';
-import { ProgramMetadata } from '../src';
-import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
+import { TEST_CODE } from './config';
+import { checkInit, createPayload, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { decodeAddress } from '../src/utils';
 import { getApi } from './common';
 
@@ -13,9 +12,7 @@ let alice: KeyringPair;
 let programId: HexString;
 let messageToClaim: HexString;
 
-const code = Uint8Array.from(readFileSync(TEST_META_CODE));
-const metaHex: HexString = `0x${readFileSync(TEST_META, 'utf-8')}`;
-const metadata = ProgramMetadata.from(metaHex);
+const code = Uint8Array.from(readFileSync(TEST_CODE));
 
 beforeAll(async () => {
   await api.isReadyOrError;
@@ -29,14 +26,11 @@ afterAll(async () => {
 
 describe('Gear Message', () => {
   test('upload test_meta', async () => {
-    programId = api.program.upload(
-      {
-        code,
-        initPayload: [1, 2, 3],
-        gasLimit: 200_000_000_000,
-      },
-      metadata,
-    ).programId;
+    programId = api.program.upload({
+      code,
+      initPayload: [1, 2, 3],
+      gasLimit: 200_000_000_000,
+    }).programId;
     const status = checkInit(api, programId);
     const [txData] = await sendTransaction(api.program, alice, ['MessageQueued']);
     expect(txData.destination.toHex()).toBe(programId);
@@ -45,27 +39,22 @@ describe('Gear Message', () => {
 
   test('send messages', async () => {
     const messages = [
-      { payload: { Two: [[8, 16]] }, reply: '0x086f6b', claim: true },
+      { payload: createPayload('Action', { Two: [8, 16] }), reply: '0x086f6b', claim: true },
       {
-        payload: {
-          One: 'Dmitriy',
-        },
+        payload: createPayload('Action', { One: 'Dmitriy' }),
         value: 10_000_000_000_000,
         reply: '0x',
       },
     ];
 
     for (const message of messages) {
-      const tx = api.message.send(
-        {
-          destination: programId,
-          payload: message.payload,
-          gasLimit: 20_000_000_000,
-          value: message.value,
-          keepAlive: true,
-        },
-        metadata,
-      );
+      const tx = api.message.send({
+        destination: programId,
+        payload: message.payload.toHex(),
+        gasLimit: 20_000_000_000,
+        value: message.value,
+        keepAlive: true,
+      });
 
       const [txData, blockHash] = await sendTransaction(tx, alice, ['MessageQueued']);
       expect(txData).toBeDefined();
@@ -115,20 +104,17 @@ describe('Gear Message', () => {
   });
 
   test('calculate reply', async () => {
-    const payload = { Two: [[8, 16]] };
+    const payload = createPayload('Action', { Two: [8, 16] }).toHex();
 
     const origin = decodeAddress(alice.address);
 
-    await api.program.calculateGas.handle(origin, programId, { Two: [[8, 16]] }, 0, false, metadata);
+    await api.program.calculateGas.handle(origin, programId, payload, 0, false);
 
-    const result = await api.message.calculateReply(
-      {
-        origin,
-        destination: programId,
-        payload,
-      },
-      metadata,
-    );
+    const result = await api.message.calculateReply({
+      origin,
+      destination: programId,
+      payload,
+    });
 
     const resultJson = result.toJSON();
 

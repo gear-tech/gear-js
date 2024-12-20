@@ -3,7 +3,7 @@ import { KeyringPair } from '@polkadot/keyring/types';
 
 import { CreateType, MessageWaitedData } from '../src';
 import { TEST_CODE } from './config';
-import { checkInit, getAccount, listenToMessageWaited, sendTransaction, sleep } from './utilsFunctions';
+import { checkInit, createPayload, getAccount, listenToMessageWaited, sendTransaction, sleep } from './utilsFunctions';
 import { readFileSync } from 'fs';
 import { getApi } from './common';
 
@@ -18,7 +18,7 @@ beforeAll(async () => {
   await api.isReadyOrError;
   const code = Uint8Array.from(readFileSync(TEST_CODE));
   alice = await getAccount('//Alice');
-  programId = api.program.upload({ code, gasLimit: 20_000_000_000 }).programId;
+  programId = api.program.upload({ code, initPayload: [1, 2, 3], gasLimit: 20_000_000_000 }).programId;
   const init = checkInit(api, programId);
   await sendTransaction(api.program, alice, ['MessageQueued']);
   expect(await init).toBe('success');
@@ -32,7 +32,11 @@ afterAll(async () => {
 
 describe('GearWaitlist', () => {
   test("read program's waitlist", async () => {
-    await api.message.send({ destination: programId, payload: '0x00', gasLimit: 20_000_000_000 });
+    await api.message.send({
+      destination: programId,
+      payload: createPayload('Action', { Wait: null }).toHex(),
+      gasLimit: 20_000_000_000,
+    });
     messageId = (await sendTransaction(api.message, alice, ['MessageQueued']))[0].id.toHex();
     const eventData = await messageWaited(messageId);
     expect(eventData).toBeDefined();
@@ -63,7 +67,11 @@ describe('GearWaitlist', () => {
   });
 
   test("send one more message and read program's waitlist", async () => {
-    await api.message.send({ destination: programId, payload: '0x00', gasLimit: 20_000_000_000 });
+    await api.message.send({
+      destination: programId,
+      payload: createPayload('Action', { Wait: null }).toHex(),
+      gasLimit: 20_000_000_000,
+    });
     messageId = (await sendTransaction(api.message, alice, ['MessageQueued']))[0];
     const waitlist = await api.waitlist.read(programId);
     expect(waitlist).toHaveLength(2);

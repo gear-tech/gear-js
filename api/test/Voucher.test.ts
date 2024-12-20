@@ -3,9 +3,9 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { TARGET, TEST_META, TEST_META_CODE } from './config';
-import { ProgramMetadata, decodeAddress } from '../src';
-import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
+import { TARGET, TEST_CODE } from './config';
+import { decodeAddress } from '../src';
+import { checkInit, createPayload, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { getApi } from './common';
 
 let alice: KeyringPair;
@@ -19,9 +19,7 @@ let voucher: string;
 let validUpTo: number;
 
 const api = getApi();
-const code = Uint8Array.from(readFileSync(TEST_META_CODE));
-const metaHex: HexString = `0x${readFileSync(TEST_META, 'utf-8')}`;
-const metadata = ProgramMetadata.from(metaHex);
+const code = Uint8Array.from(readFileSync(TEST_CODE));
 
 beforeAll(async () => {
   await api.isReadyOrError;
@@ -40,14 +38,11 @@ afterAll(async () => {
 
 describe('Voucher', () => {
   test('Upload test_meta program', async () => {
-    programId = api.program.upload(
-      {
-        code,
-        initPayload: [1, 2, 3],
-        gasLimit: 200_000_000_000,
-      },
-      metadata,
-    ).programId;
+    programId = api.program.upload({
+      code,
+      initPayload: [1, 2, 3],
+      gasLimit: 200_000_000_000,
+    }).programId;
     const status = checkInit(api, programId);
     const [txData] = await sendTransaction(api.program, alice, ['MessageQueued']);
     expect(txData.destination.toHex()).toBe(programId);
@@ -71,21 +66,12 @@ describe('Voucher', () => {
   });
 
   test.skip('Send msg with voucher (deprecated)', async () => {
-    const tx = api.message.send(
-      {
-        destination: programId,
-        payload: {
-          Four: {
-            array8: new Array(8).fill(0),
-            array32: new Array(32).fill(1),
-            actor: charlieRaw,
-          },
-        },
-        gasLimit: 20_000_000_000,
-        account: charlieRaw,
-      },
-      metadata,
-    );
+    const tx = api.message.send({
+      destination: programId,
+      payload: createPayload('Action', { Four: null }).toHex(),
+      gasLimit: 20_000_000_000,
+      account: charlieRaw,
+    });
 
     const [txData] = await sendTransaction(api.voucher.callDeprecated({ SendMessage: tx }), charlie, ['MessageQueued']);
     expect(txData).toBeDefined();
@@ -152,21 +138,12 @@ describe('Voucher', () => {
   test('Send msg with voucher', async () => {
     expect(voucher).toBeDefined();
 
-    const tx = api.message.send(
-      {
-        destination: programId,
-        payload: {
-          Four: {
-            array8: new Array(8).fill(0),
-            array32: new Array(32).fill(1),
-            actor: charlieRaw,
-          },
-        },
-        gasLimit: 20_000_000_000,
-        account: charlieRaw,
-      },
-      metadata,
-    );
+    const tx = api.message.send({
+      destination: programId,
+      payload: createPayload('Action', { Four: null }).toHex(),
+      gasLimit: 20_000_000_000,
+      account: charlieRaw,
+    });
 
     const [txData] = await sendTransaction(api.voucher.call(voucher, { SendMessage: tx }), charlie, ['MessageQueued']);
     expect(txData).toBeDefined();
@@ -183,17 +160,13 @@ describe('Voucher', () => {
 
     const msgToReply = mailbox[0][0].id.toHex();
 
-    const tx = await api.message.sendReply(
-      {
-        replyToId: msgToReply,
-        account: charlieRaw,
-        gasLimit: 20_000_000_000,
-        value: 0,
-        payload: { TextReply: 'Charlie' },
-      },
-      metadata,
-      metadata.types.reply!,
-    );
+    const tx = await api.message.sendReply({
+      replyToId: msgToReply,
+      account: charlieRaw,
+      gasLimit: 20_000_000_000,
+      value: 0,
+      payload: createPayload('ReplyType', { TextReply: 'Charlie' }).toHex(),
+    });
 
     const [txData, blockHash] = await sendTransaction(api.voucher.call(voucher, { SendReply: tx }), charlie, [
       'MessageQueued',

@@ -6,6 +6,7 @@ edition = "2021"
 
 [dependencies]
 gstd.workspace = true
+codec.workspace = true
 
 [build-dependencies]
 gear-wasm-builder.workspace = true
