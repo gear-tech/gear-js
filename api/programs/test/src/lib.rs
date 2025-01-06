@@ -11,7 +11,6 @@ use gstd::{
 pub enum Action {
     One(Option<String>),
     Two((u8, u16)),
-    Three(),
     Four(),
     Input(String),
     Wait(),

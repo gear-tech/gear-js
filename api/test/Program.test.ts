@@ -176,12 +176,6 @@ describe('Program', () => {
     expect(codeHash).toBe(codeId);
   });
 
-  // test('Get metahash by program id', async () => {
-  //   expect(programId).toBeDefined();
-  //   metaHash = await api.program.metaHash(programId);
-  //   expect(metaHash).toBe(blake2AsHex(metaHex, 256));
-  // });
-
   test.skip('Get metahash by codeId', async () => {
     expect(programId).toBeDefined();
     expect(codeId).toBeDefined();

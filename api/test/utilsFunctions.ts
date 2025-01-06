@@ -119,7 +119,6 @@ registry.register({
     _enum: {
       One: 'Option<Text>',
       Two: '(u8, u16)',
-      Three: null,
       Four: null,
       Input: 'Text',
       Wait: null,
