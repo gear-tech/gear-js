@@ -1,3 +1,5 @@
+@use '../../utils' as *;
+
 @keyframes rotating {
   to {
     transform: rotate(360deg);
@@ -12,13 +14,16 @@
   z-index: 20;
 }
 
-// Base styles
-.wrapper {
+.container {
   position: relative;
   display: flex;
   flex-direction: column;
   background-color: #fff;
   box-shadow: 0 10px 20px 0 rgba(92, 92, 92, 0.15);
+
+  @include darkMode() {
+    background-color: #272b2f;
+  }
 }
 
 .header {
@@ -62,6 +67,10 @@
   cursor: pointer;
   transition: opacity 250ms ease;
 
+  @include darkMode() {
+    color: #fff;
+  }
+
   &:hover,
   &:focus-visible {
     opacity: 0.6;
@@ -89,6 +98,10 @@
 
   overflow: hidden;
   text-overflow: ellipsis;
+
+  @include darkMode() {
+    color: #fff;
+  }
 }
 
 .footer {
@@ -96,12 +109,23 @@
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
+
+  @include darkMode() {
+    color: rgba(245, 245, 245, 0.8);
+  }
 }
 
-// Types
 .success {
   .header {
     color: #0dd3a2;
+  }
+
+  @include darkMode() {
+    box-shadow: 0 0 0 1px rgba(0, 255, 196, 0.6);
+
+    .header {
+      color: #00ffc4;
+    }
   }
 }
 
@@ -109,11 +133,27 @@
   .header {
     color: #ff3333;
   }
+
+  @include darkMode() {
+    box-shadow: 0 0 0 1px rgba(255, 56, 89, 0.6);
+
+    .header {
+      color: rgb(255, 56, 86);
+    }
+  }
 }
 
 .info {
   .header {
     color: #000;
+  }
+
+  @include darkMode() {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6);
+
+    .header {
+      color: #ffffff;
+    }
   }
 }
 
@@ -122,12 +162,19 @@
     color: #3a74e9;
   }
 
-  .icon svg {
+  .icon {
     animation: rotating 1s linear infinite;
+  }
+
+  @include darkMode() {
+    box-shadow: 0 0 0 1px rgba(58, 172, 233, 0.6);
+
+    .header {
+      color: rgba(58, 172, 233, 1);
+    }
   }
 }
 
-// Variants
 .alert {
   gap: 8px;
   padding: 24px 48px 24px 24px;
@@ -148,6 +195,10 @@
     font-weight: 700;
     line-height: 1.4;
     color: #000000;
+
+    @include darkMode() {
+      color: #fff;
+    }
   }
 
   .body,
@@ -158,61 +209,5 @@
   .button {
     top: 16px;
     right: 16px;
-  }
-}
-
-// Theming
-:global(.dark-theme) {
-  .wrapper {
-    background-color: #272b2f;
-  }
-
-  .button,
-  .body {
-    color: #ffffff;
-  }
-
-  .footer {
-    color: rgba(245, 245, 245, 0.8);
-  }
-
-  // Types
-  .success {
-    box-shadow: 0 0 0 1px rgba(0, 255, 196, 0.6);
-
-    .header {
-      color: #00ffc4;
-    }
-  }
-
-  .error {
-    box-shadow: 0 0 0 1px rgba(255, 56, 89, 0.6);
-
-    .header {
-      color: rgb(255, 56, 86);
-    }
-  }
-
-  .info {
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6);
-
-    .header {
-      color: #ffffff;
-    }
-  }
-
-  .loading {
-    box-shadow: 0 0 0 1px rgba(58, 172, 233, 0.6);
-
-    .header {
-      color: rgba(58, 172, 233, 1);
-    }
-  }
-
-  // Variants
-  .notification {
-    .title {
-      color: #fff;
-    }
   }
 }

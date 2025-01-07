@@ -7,7 +7,7 @@ import SuccessSVG from './assets/success.svg?react';
 import WarningSVG from './assets/warning.svg?react';
 import InfoSVG from './assets/info.svg?react';
 import LoadingSVG from './assets/loading.svg?react';
-import WarningCircleSVG from './assets/warning-circle.svg';
+import WarningCircleSVG from './assets/warning-circle.svg?react';
 import styles from './alert.module.scss';
 
 type Options = {
@@ -44,7 +44,7 @@ function Alert({ alert, close }: Props) {
   const SVG = variant === 'alert' || type === 'loading' ? ICONS[type] : WarningCircleSVG;
 
   return (
-    <div className={cx(styles.wrapper, styles[variant], styles[type])} style={style}>
+    <div className={cx(styles.container, styles[variant], styles[type])} style={style}>
       <header className={styles.header}>
         <SVG className={styles.icon} />
         <h2 className={styles.title}>{title || type}</h2>
