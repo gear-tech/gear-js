@@ -1,5 +1,21 @@
-@mixin darkMode {
-  :global(.dark-theme) & {
+@mixin darkMode() {
+  body:global(.dark-theme) & {
     @content;
+  }
+}
+
+@mixin lightMode() {
+  body:not(:global(.dark-theme)) & {
+    @content;
+  }
+}
+
+@mixin lightDark($property, $lightValue, $darkValue) {
+  @include lightMode() {
+    #{$property}: $lightValue;
+  }
+
+  @include darkMode() {
+    #{$property}: $darkValue;
   }
 }

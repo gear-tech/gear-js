@@ -15,14 +15,15 @@
 }
 
 .container {
+  @include lightDark(background-color, #fff, #272b2f);
+
   display: flex;
   flex-direction: column;
 
-  background-color: #fff;
-  box-shadow: 0 10px 20px 0 rgba(92, 92, 92, 0.15);
+  border: 1px solid transparent;
 
-  @include darkMode() {
-    background-color: #272b2f;
+  @include lightMode() {
+    box-shadow: 0 10px 20px 0 rgba(92, 92, 92, 0.15);
   }
 }
 
@@ -36,13 +37,9 @@
 }
 
 .button {
+  @include lightDark(color, #000, #fff);
+
   margin-left: auto;
-
-  color: #000;
-
-  @include darkMode() {
-    color: #fff;
-  }
 
   svg {
     width: 20px;
@@ -51,25 +48,18 @@
 }
 
 .body {
-  color: #525251;
+  @include lightDark(color, #525251, #fff);
 
   overflow: hidden;
   text-overflow: ellipsis;
-
-  @include darkMode() {
-    color: #fff;
-  }
 }
 
 .footer {
-  color: #9babb0;
+  @include lightDark(color, #9babb0, rgba(245, 245, 245, 0.8));
+
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
-
-  @include darkMode() {
-    color: rgba(245, 245, 245, 0.8);
-  }
 }
 
 .alert {
@@ -106,14 +96,11 @@
   }
 
   .title {
+    @include lightDark(color, #000, #fff);
+
     font-size: 17px;
     font-weight: 700;
     line-height: 1.4;
-    color: #000;
-
-    @include darkMode() {
-      color: #fff;
-    }
   }
 
   .body,
@@ -129,61 +116,45 @@
 }
 
 .success {
-  .header {
-    color: #0dd3a2;
+  @include darkMode() {
+    border-color: rgba(0, 255, 196, 0.6);
   }
 
-  @include darkMode() {
-    box-shadow: 0 0 0 1px rgba(0, 255, 196, 0.6);
-
-    .header {
-      color: #00ffc4;
-    }
+  .header {
+    @include lightDark(color, #0dd3a2, #00ffc4);
   }
 }
 
 .error {
-  .header {
-    color: #ff3333;
+  @include darkMode() {
+    border-color: rgba(255, 55, 87, 0.6);
   }
 
-  @include darkMode() {
-    box-shadow: 0 0 0 1px rgba(255, 56, 89, 0.6);
-
-    .header {
-      color: rgb(255, 56, 86);
-    }
+  .header {
+    @include lightDark(color, #ff3231, #ff3757);
   }
 }
 
 .info {
-  .header {
-    color: #000;
+  @include darkMode() {
+    border-color: rgba(255, 255, 255, 0.6);
   }
 
-  @include darkMode() {
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6);
-
-    .header {
-      color: #ffffff;
-    }
+  .header {
+    @include lightDark(color, #000, #fff);
   }
 }
 
 .loading {
+  @include darkMode() {
+    border-color: rgba(58, 172, 233, 0.6);
+  }
+
   .header {
-    color: #3a74e9;
+    @include lightDark(color, #3a74e9, rgba(58, 172, 233, 1));
   }
 
   .icon {
     animation: rotating 1s linear infinite;
-  }
-
-  @include darkMode() {
-    box-shadow: 0 0 0 1px rgba(58, 172, 233, 0.6);
-
-    .header {
-      color: rgba(58, 172, 233, 1);
-    }
   }
 }
