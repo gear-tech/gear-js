@@ -46,7 +46,7 @@
   }
 }
 
-.close {
+.button {
   position: absolute;
   top: 18px;
   right: 18px;
@@ -62,7 +62,8 @@
   cursor: pointer;
   transition: opacity 250ms ease;
 
-  &:hover, &:focus-visible {
+  &:hover,
+  &:focus-visible {
     opacity: 0.6;
   }
 
@@ -154,7 +155,7 @@
     padding: 0 0 0 32px;
   }
 
-  .close {
+  .button {
     top: 16px;
     right: 16px;
   }
@@ -166,7 +167,7 @@
     background-color: #272b2f;
   }
 
-  .close,
+  .button,
   .body {
     color: #ffffff;
   }

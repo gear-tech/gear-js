@@ -1,15 +1,18 @@
 import { CSSProperties, ReactNode } from 'react';
 import cx from 'clsx';
-import styles from './alert.module.scss';
-import CrossSVG from '../../assets/images/cross.svg?react';
-import { alertIcons } from './icons.tsx';
 
-type AlertVariants = 'alert' | 'notification';
-type AlertTypes = 'info' | 'error' | 'loading' | 'success';
+import CrossSVG from '../../assets/images/cross.svg?react';
+import { Button } from '../button';
+import SuccessSVG from './assets/success.svg?react';
+import WarningSVG from './assets/warning.svg?react';
+import InfoSVG from './assets/info.svg?react';
+import LoadingSVG from './assets/loading.svg?react';
+import WarningCircleSVG from './assets/warning-circle.svg';
+import styles from './alert.module.scss';
 
 type Options = {
-  type: AlertTypes;
-  variant?: AlertVariants;
+  type: 'info' | 'error' | 'loading' | 'success';
+  variant?: 'alert' | 'notification';
   style?: CSSProperties;
   title?: string;
   timeout?: number;
@@ -19,8 +22,8 @@ type Options = {
 type AlertType = {
   id: string;
   content: ReactNode;
-  footer?: ReactNode;
   options: Options;
+  footer?: ReactNode;
 };
 
 type Props = {
@@ -28,22 +31,25 @@ type Props = {
   close: () => void;
 };
 
+const ICONS = {
+  success: SuccessSVG,
+  error: WarningSVG,
+  info: InfoSVG,
+  loading: LoadingSVG,
+} as const;
+
 function Alert({ alert, close }: Props) {
   const { content, options, footer } = alert;
-  const { variant = 'alert', type = 'info', title, style, isClosed } = options;
+  const { variant = 'alert', type, title, style, isClosed } = options;
+  const SVG = variant === 'alert' || type === 'loading' ? ICONS[type] : WarningCircleSVG;
 
   return (
     <div className={cx(styles.wrapper, styles[variant], styles[type])} style={style}>
-      <header className={cx(styles.header)}>
-        {type && <div className={styles.icon}>{alertIcons[variant][type]}</div>}
-
+      <header className={styles.header}>
+        <SVG className={styles.icon} />
         <h2 className={styles.title}>{title || type}</h2>
 
-        {isClosed && (
-          <button type="button" className={styles.close} onClick={close}>
-            <CrossSVG />
-          </button>
-        )}
+        {isClosed && <Button icon={CrossSVG} color="transparent" className={styles.button} onClick={close} />}
       </header>
 
       <div className={styles.body}>{content}</div>
@@ -54,4 +60,4 @@ function Alert({ alert, close }: Props) {
 }
 
 export { Alert };
-export type { Props as AlertProps, AlertVariants, AlertTypes };
+export type { Props as AlertProps };
