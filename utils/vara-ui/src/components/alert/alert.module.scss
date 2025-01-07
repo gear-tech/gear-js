@@ -15,9 +15,9 @@
 }
 
 .container {
-  position: relative;
   display: flex;
   flex-direction: column;
+
   background-color: #fff;
   box-shadow: 0 10px 20px 0 rgba(92, 92, 92, 0.15);
 
@@ -29,55 +29,19 @@
 .header {
   display: flex;
   align-items: center;
-  gap: 8px;
 }
 
 .title {
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.5;
-  letter-spacing: 0;
   text-transform: capitalize;
 }
 
-.icon {
-  display: flex;
-  align-items: center;
-  align-self: center;
-
-  svg {
-    width: 20px;
-    height: 20px;
-  }
-}
-
 .button {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-
-  display: inline-flex;
-  align-self: flex-start;
-  height: 20px;
-  padding: 0;
+  margin-left: auto;
 
   color: #000;
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: opacity 250ms ease;
 
   @include darkMode() {
     color: #fff;
-  }
-
-  &:hover,
-  &:focus-visible {
-    opacity: 0.6;
-  }
-
-  &:active {
-    opacity: 0.4;
   }
 
   svg {
@@ -87,14 +51,7 @@
 }
 
 .body {
-  padding-top: 4px;
-  padding-bottom: 6px;
-
   color: #525251;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 20px;
-  letter-spacing: 0;
 
   overflow: hidden;
   text-overflow: ellipsis;
@@ -112,6 +69,62 @@
 
   @include darkMode() {
     color: rgba(245, 245, 245, 0.8);
+  }
+}
+
+.alert {
+  gap: 8px;
+  padding: 24px 48px 24px 24px;
+  border-radius: 4px;
+
+  .header {
+    gap: 8px;
+  }
+
+  .title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  .body {
+    padding: 4px 0 6px;
+
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+}
+
+.notification {
+  gap: 4px;
+  padding: 16px 48px 16px 16px;
+  border-radius: 8px;
+
+  .header {
+    gap: 12px;
+  }
+
+  .title {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #000;
+
+    @include darkMode() {
+      color: #fff;
+    }
+  }
+
+  .body,
+  .footer {
+    padding-left: 28px;
+  }
+
+  .body {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.4;
   }
 }
 
@@ -172,42 +185,5 @@
     .header {
       color: rgba(58, 172, 233, 1);
     }
-  }
-}
-
-.alert {
-  gap: 8px;
-  padding: 24px 48px 24px 24px;
-  border-radius: 4px;
-}
-
-.notification {
-  gap: 4px;
-  padding: 16px 48px 16px 16px;
-  border-radius: 8px;
-
-  .header {
-    gap: 12px;
-  }
-
-  .title {
-    font-size: 17px;
-    font-weight: 700;
-    line-height: 1.4;
-    color: #000000;
-
-    @include darkMode() {
-      color: #fff;
-    }
-  }
-
-  .body,
-  .footer {
-    padding: 0 0 0 32px;
-  }
-
-  .button {
-    top: 16px;
-    right: 16px;
   }
 }
