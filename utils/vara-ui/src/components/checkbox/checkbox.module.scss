@@ -2,15 +2,25 @@
 
 .label {
   --color: #000;
-  --background-color: transparent;
-  --border-color: #d0d5dd;
-  --disabled-background-color: #eceded;
+
+  --checkbox-background-color: transparent;
+  --checkbox-border-color: #d0d5dd;
+  --checkbox-disabled-background-color: #eceded;
+
+  --switch-color: #909090;
+  --checked-switch-color: #0ed3a3;
+  --disabled-switch-color: rgba(144, 144, 144, 0.3);
 
   @include darkMode() {
     --color: #fff;
-    --background-color: rgba(255, 255, 255, 0.03);
-    --border-color: rgba(255, 255, 255, 0.04);
-    --disabled-background-color: rgba(40, 44, 48, 0.1);
+
+    --checkbox-background-color: rgba(255, 255, 255, 0.03);
+    --checkbox-border-color: rgba(255, 255, 255, 0.04);
+    --checkbox-disabled-background-color: rgba(40, 44, 48, 0.1);
+
+    --switch-color: rgba(255, 255, 255, 0.08);
+    --checked-switch-color: #00ffc4;
+    --disabled-switch-color: rgba(255, 255, 255, 0.03);
   }
 
   display: flex;
@@ -36,38 +46,76 @@
 
   &::after {
     content: '';
-    opacity: 0;
 
     position: absolute;
     top: 0;
+    bottom: 0;
     left: 0;
+    right: 0;
 
-    width: 100%;
-    height: 100%;
-
-    background-color: #000;
-    mask: url(./assets/check.svg) center / cover no-repeat;
-
-    transition-duration: 250ms;
-    transition-property: background-color, opacity;
-    transition-timing-function: ease;
+    transition: all 0.25s ease;
   }
 
-  &:has(:checked) {
+  .checkbox & {
     &::after {
-      opacity: 1;
+      opacity: 0;
+
+      width: 100%;
+      height: 100%;
+
+      background-color: #000;
+      mask: url(./assets/check.svg) center / cover no-repeat;
+    }
+
+    &:has(:checked) {
+      &::after {
+        opacity: 1;
+      }
+    }
+
+    &:has(:disabled) {
+      &::after {
+        background-color: var(--checkbox-border-color);
+      }
+    }
+
+    &:has([aria-invalid='true']:not(:disabled)) {
+      &::after {
+        background-color: #fff;
+      }
     }
   }
 
-  &:has(:disabled) {
+  .switch & {
     &::after {
-      background-color: var(--border-color);
-    }
-  }
+      left: 4px;
 
-  &:has([aria-invalid='true']:not(:disabled)) {
-    &::after {
-      background-color: #fff;
+      width: 7px;
+      height: 7px;
+      margin: auto 0;
+
+      background-color: var(--switch-color);
+      border-radius: 50%;
+    }
+
+    &:has(:checked) {
+      &::after {
+        left: calc(100% - 11px);
+
+        background-color: var(--checked-switch-color);
+      }
+    }
+
+    &:has(:disabled) {
+      &::after {
+        background-color: var(--disabled-switch-color);
+      }
+    }
+
+    &:has([aria-invalid='true']:not(:disabled)) {
+      &::after {
+        background-color: rgba(255, 51, 51, 0.8);
+      }
     }
   }
 }
@@ -76,71 +124,72 @@
   appearance: none;
   margin: 0;
   cursor: inherit;
-}
 
-.checkbox {
-  width: var(--size);
-  height: var(--size);
+  transition: all 0.25s ease;
 
-  background-color: var(--background-color);
-  border: 1px solid var(--border-color);
-  border-radius: 2px;
+  .checkbox & {
+    width: var(--checkbox-size);
+    height: var(--checkbox-size);
 
-  transition-duration: 250ms;
-  transition-property: background-color, border-color;
-  transition-timing-function: ease;
+    background-color: var(--checkbox-background-color);
+    border: 1px solid var(--checkbox-border-color);
+    border-radius: 2px;
 
-  &:disabled {
-    background-color: var(--disabled-background-color);
-  }
-
-  &:not(:disabled) {
-    &:checked {
-      border-color: #00ffc4;
-      background-color: #00ffc4;
+    &:disabled {
+      background-color: var(--checkbox-disabled-background-color);
     }
 
-    &[aria-invalid='true'] {
-      border-color: rgba(255, 51, 51, 0.8);
-
+    &:not(:disabled) {
       &:checked {
-        background-color: rgba(255, 51, 51, 0.8);
+        border-color: #00ffc4;
+        background-color: #00ffc4;
+      }
+
+      &[aria-invalid='true'] {
+        border-color: rgba(255, 51, 51, 0.8);
+
+        &:checked {
+          background-color: rgba(255, 51, 51, 0.8);
+        }
       }
     }
   }
-}
 
-.switch {
-  width: 25px;
-  height: 15px;
+  .switch & {
+    width: 25px;
+    height: 15px;
 
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 26 15' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0.5' y='0.5' width='25' height='14' rx='7' fill='white'/%3E%3Crect x='0.5' y='0.5' width='25' height='14' rx='7' stroke='%23909090'/%3E%3Ccircle cx='7.5' cy='7.5' r='3.5' fill='%23909090'/%3E%3C/svg%3E%0A");
+    border: 1px solid var(--switch-color);
+    border-radius: 16px;
 
-  &:checked {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 26 15' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0.5' y='0.5' width='25' height='14' rx='7' stroke='%230ED3A3'/%3E%3Ccircle cx='18.5' cy='7.5' r='3.5' fill='%230ED3A3'/%3E%3C/svg%3E%0A");
-  }
+    &:disabled {
+      border-color: var(--disabled-switch-color);
+    }
 
-  :global(.dark-theme) & {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 26 15' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0.5' y='0.5' width='25' height='14' rx='7' stroke='white' stroke-opacity='0.08'/%3E%3Ccircle cx='7.5' cy='7.5' r='3.5' fill='white' fill-opacity='0.08'/%3E%3C/svg%3E%0A");
+    &:not(:disabled) {
+      &:checked {
+        border-color: var(--checked-switch-color);
+      }
 
-    &:checked {
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 26 15' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0.5' y='0.5' width='25' height='14' rx='7' stroke='%2300FFC4'/%3E%3Ccircle cx='18.5' cy='7.5' r='3.5' fill='%2300FFC4'/%3E%3C/svg%3E%0A");
+      &[aria-invalid='true'] {
+        border-color: rgba(255, 51, 51, 0.8);
+      }
     }
   }
 }
 
 .default {
   --gap: 12px;
-  --size: 18px;
   --font-size: 14px;
   --line-height: 20px;
+
+  --checkbox-size: 18px;
 }
 
 .small {
   --gap: 10px;
-  --size: 15px;
   --font-size: 12px;
   --line-height: 22px;
+
+  --checkbox-size: 15px;
 }
