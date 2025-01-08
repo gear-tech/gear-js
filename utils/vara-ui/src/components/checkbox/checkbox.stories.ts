@@ -1,6 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { Checkbox } from './checkbox';
-import { checkboxSizes, checkboxTypes } from './helpers';
 
 type Type = typeof Checkbox;
 type Story = StoryObj<Type>;
@@ -11,17 +10,17 @@ const meta: Meta<Type> = {
   args: {
     label: 'Label',
     disabled: false,
-    checkboxSize: 'md',
+    size: 'default',
     type: 'checkbox',
-    hasError: false,
+    error: undefined,
   },
   argTypes: {
-    checkboxSize: {
-      options: checkboxSizes,
+    size: {
+      options: ['small', 'default'],
       control: { type: 'select' },
     },
     type: {
-      options: checkboxTypes,
+      options: ['checkbox', 'switch'],
       control: { type: 'select' },
     },
   },

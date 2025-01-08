@@ -1,119 +1,119 @@
+@use '../../utils' as *;
+
 .label {
+  --color: #000;
+  --background-color: transparent;
+  --border-color: #d0d5dd;
+  --disabled-background-color: #eceded;
+
+  @include darkMode() {
+    --color: #fff;
+    --background-color: rgba(255, 255, 255, 0.03);
+    --border-color: rgba(255, 255, 255, 0.04);
+    --disabled-background-color: rgba(40, 44, 48, 0.1);
+  }
+
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--gap);
+
+  font-size: var(--font-size);
+  font-weight: 400;
+  line-height: var(--line-height);
+  color: var(--color);
+
   cursor: pointer;
-  user-select: none;
 
-  &:has(.checkbox) {
-    position: relative;
+  &:has(:disabled) {
+    pointer-events: none;
+  }
+}
 
+.inputWrapper {
+  display: flex;
+
+  position: relative;
+
+  &::after {
+    content: '';
+    opacity: 0;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: #000;
+    mask: url(./assets/check.svg) center / cover no-repeat;
+
+    transition-duration: 250ms;
+    transition-property: background-color, opacity;
+    transition-timing-function: ease;
+  }
+
+  &:has(:checked) {
     &::after {
-      content: '';
-      position: absolute;
-      top: 3px;
-      left: 3px;
-      width: var(--checkbox-size);
-      height: var(--checkbox-size);
-      border-color: #00ffc466;
-      background-color: #000000;
-      mask-image: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 9.00008L7 14.0001L16 5.00008L14.59 3.58008L7 11.1701L3.41 7.59008L2 9.00008Z' fill='black'/%3E%3C/svg%3E%0A");
-      opacity: 0;
-      transition-duration: 250ms;
-      transition-property: background-color, opacity;
-      transition-timing-function: ease;
-    }
-
-    &:has(:checked) {
-      &::after {
-        opacity: 1;
-      }
-
-      &:has(:disabled) {
-        &::after {
-          background-color: rgba(208, 213, 221, 1);
-        }
-      }
+      opacity: 1;
     }
   }
 
-  //Show disabled state even if an error displayed
-  &[aria-invalid=true]:not(.disabled) {
-    .checkbox {
+  &:has(:disabled) {
+    &::after {
+      background-color: var(--border-color);
+    }
+  }
+
+  &:has([aria-invalid='true']:not(:disabled)) {
+    &::after {
+      background-color: #fff;
+    }
+  }
+}
+
+.input {
+  appearance: none;
+  margin: 0;
+  cursor: inherit;
+}
+
+.checkbox {
+  width: var(--size);
+  height: var(--size);
+
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 2px;
+
+  transition-duration: 250ms;
+  transition-property: background-color, border-color;
+  transition-timing-function: ease;
+
+  &:disabled {
+    background-color: var(--disabled-background-color);
+  }
+
+  &:not(:disabled) {
+    &:checked {
+      border-color: #00ffc4;
+      background-color: #00ffc4;
+    }
+
+    &[aria-invalid='true'] {
       border-color: rgba(255, 51, 51, 0.8);
 
       &:checked {
         background-color: rgba(255, 51, 51, 0.8);
       }
     }
-
-    &:has(.checkbox) {
-      &::after {
-        background-color: #ffffff !important;
-      }
-    }
-  }
-}
-
-.disabled {
-  cursor: not-allowed;
-}
-
-.input {
-  appearance: none;
-  cursor: inherit;
-  margin: 0;
-
-  outline: none;
-  outline-offset: 2px;
-
-  &:disabled {
-    cursor: not-allowed;
-  }
-
-  &:focus-visible {
-    outline: rgba(0, 255, 196, 1) 2px solid;
-  }
-}
-
-// Types
-.checkbox {
-  flex-basis: var(--checkbox-size);
-  width: var(--checkbox-size);
-  height: var(--checkbox-size);
-
-  border: 1px solid rgba(208, 213, 221, 1);
-  border-radius: 2px;
-  transition-duration: 250ms;
-  transition-property: background-color, border-color;
-  transition-timing-function: ease;
-
-  &:hover {
-    border-color: rgba(0, 255, 196, 0.4);
-  }
-
-  &:focus-visible {
-    border-color: rgba(0, 255, 196, 0.6);
-  }
-
-  &:active {
-    border-color: rgba(0, 255, 196, 0.8);
-  }
-
-  &:checked {
-    border-color: rgba(0, 255, 196, 1);
-    background-color: rgba(0, 255, 196, 1);
-  }
-
-  &:disabled {
-    background-color: rgba(237, 238, 238, 1);
-    border-color: rgba(208, 213, 221, 1);
   }
 }
 
 .switch {
-  width: 26px;
+  width: 25px;
   height: 15px;
+
   background-size: contain;
   background-repeat: no-repeat;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 26 15' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0.5' y='0.5' width='25' height='14' rx='7' fill='white'/%3E%3Crect x='0.5' y='0.5' width='25' height='14' rx='7' stroke='%23909090'/%3E%3Ccircle cx='7.5' cy='7.5' r='3.5' fill='%23909090'/%3E%3C/svg%3E%0A");
@@ -131,68 +131,16 @@
   }
 }
 
-// Sizes
-.md {
-  --checkbox-size: 18px;
-
-  font-size: 14px;
-  line-height: 20px;
-
-  .checkbox {
-    margin: 3px;
-  }
+.default {
+  --gap: 12px;
+  --size: 18px;
+  --font-size: 14px;
+  --line-height: 20px;
 }
 
-.sm {
-  --checkbox-size: 15px;
-
-  font-size: 12px;
-  line-height: 20px;
-
-  .checkbox {
-    margin: 2.5px;
-  }
-}
-
-:global(.dark-theme) {
-  .label {
-    color: #ffffff;
-
-    &:has(.checkbox) {
-      &:has(:checked) {
-        &:has(:disabled) {
-          &::after {
-            background-color: rgba(255, 255, 255, 0.04);
-          }
-        }
-      }
-    }
-  }
-
-  .checkbox {
-    background-color: rgba(255, 255, 255, 0.03);
-    border-color: rgba(255, 255, 255, 0.04);
-
-    &:hover {
-      border-color: rgba(0, 255, 196, 0.4);
-    }
-
-    &:focus-visible {
-      border-color: rgba(0, 255, 196, 0.6);
-    }
-
-    &:active {
-      border-color: rgba(0, 255, 196, 0.8);
-    }
-
-    &:checked {
-      border-color: rgba(0, 255, 196, 1);
-      background-color: rgba(0, 255, 196, 1);
-    }
-
-    &:disabled {
-      background-color: rgba(39, 43, 47, 0.1);
-      border-color: rgba(255, 255, 255, 0.04);
-    }
-  }
+.small {
+  --gap: 10px;
+  --size: 15px;
+  --font-size: 12px;
+  --line-height: 22px;
 }

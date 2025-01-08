@@ -1,30 +1,28 @@
 import { InputHTMLAttributes, forwardRef } from 'react';
 import cx from 'clsx';
-import styles from './checkbox.module.scss';
-import type { ICheckboxSizes, ICheckboxTypes } from './helpers.ts';
 
-type Props = InputHTMLAttributes<HTMLInputElement> & {
+import styles from './checkbox.module.scss';
+
+type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
   label: string;
-  type?: ICheckboxTypes;
-  checkboxSize?: ICheckboxSizes;
-  hasError?: boolean;
+  type?: 'switch' | 'checkbox';
+  size?: 'small' | 'default';
+  error?: string;
 };
 
 const Checkbox = forwardRef<HTMLInputElement, Props>(
-  ({ label, className, type = 'checkbox', checkboxSize = 'md', hasError, ...attrs }, ref) => {
-    const { disabled } = attrs;
-
+  ({ label, className, type = 'checkbox', size = 'default', error, ...attrs }, ref) => {
     return (
-      <label
-        className={cx(
-          styles.label,
-          className,
-          hasError && styles.error,
-          disabled && styles.disabled,
-          styles[checkboxSize],
-        )}
-        aria-invalid={hasError}>
-        <input type="checkbox" className={cx(styles.input, styles[type])} ref={ref} {...attrs} />
+      <label className={cx(styles.label, className, styles[size])}>
+        <span className={styles.inputWrapper}>
+          <input
+            type="checkbox"
+            className={cx(styles.input, styles[type])}
+            ref={ref}
+            aria-invalid={Boolean(error)}
+            {...attrs}
+          />
+        </span>
 
         {label}
       </label>
