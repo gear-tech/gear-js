@@ -7,7 +7,23 @@ type Story = StoryObj<Type>;
 const meta: Meta<Type> = {
   title: 'Checkbox',
   component: Checkbox,
-  args: { label: 'Label' },
+  args: {
+    label: 'Label',
+    disabled: false,
+    size: 'default',
+    type: 'checkbox',
+    error: undefined,
+  },
+  argTypes: {
+    size: {
+      options: ['small', 'default'],
+      control: { type: 'select' },
+    },
+    type: {
+      options: ['checkbox', 'switch'],
+      control: { type: 'select' },
+    },
+  },
 };
 
 const Default: Story = {
