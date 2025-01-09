@@ -6,7 +6,18 @@ import styles from './button.module.scss';
 type BaseProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   text?: string;
   icon?: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | undefined }>;
-  color?: 'primary' | 'dark' | 'light' | 'grey' | 'border' | 'transparent' | 'danger';
+  color?:
+    | 'primary'
+    | 'blend'
+    | 'contrast'
+    /** @deprecated use 'contrast' instead */
+    | 'dark'
+    /** @deprecated use 'blend' instead */
+    | 'light'
+    | 'grey'
+    | 'border'
+    | 'transparent'
+    | 'danger';
   size?: 'x-small' | 'small' | 'medium' | 'default' | 'x-large';
   isLoading?: boolean;
   block?: boolean;

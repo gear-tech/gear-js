@@ -89,6 +89,7 @@
   }
 }
 
+.contrast,
 .dark {
   @include lightDark(--background-color, #000, #fff);
   @include lightDark(--spinner-color, #fff, #000);
@@ -106,8 +107,8 @@
   }
 }
 
+.blend,
 .light {
-  @include lightDark(--background-color, #fff, #1d1d1f);
   @include lightDark(--spinner-color, #fff, #000);
 
   @include darkMode {
