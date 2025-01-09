@@ -1,8 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
+
+import CrossSVG from '../../assets/images/cross.svg?react';
 import { Button } from './button';
-import ArrowIcon from '../../assets/images/arrow-right.svg?react';
-import LightningIcon from '../../assets/images/lightning.svg?react';
-import { buttonColors, buttonSizes } from './helpers.ts';
 
 type Type = typeof Button;
 type Story = StoryObj<Type>;
@@ -25,35 +24,36 @@ const meta: Meta<Type> = {
     block: { control: 'boolean' },
     noWrap: { control: 'boolean' },
     size: {
-      options: buttonSizes,
+      options: ['x-small', 'small', 'medium', 'default', 'x-large'],
       control: { type: 'select' },
     },
     color: {
-      options: buttonColors,
+      options: ['primary', 'dark', 'light', 'grey', 'border', 'transparent', 'danger'],
       control: { type: 'select' },
     },
   },
 };
 
-export const Default: Story = {};
-export const Border: Story = { args: { color: 'border' } };
-export const Grey: Story = { args: { color: 'grey' } };
-export const Transparent: Story = { args: { color: 'transparent' } };
-export const Dark: Story = { args: { color: 'dark' } };
-export const Light: Story = { args: { color: 'light' } };
-export const Destructive: Story = { args: { color: 'destructive' } };
-export const NoText: Story = { args: { color: 'primary', children: undefined, icon: ArrowIcon } };
-export const WithChildrenAndIcons: Story = {
+const Default: Story = {};
+const Border: Story = { args: { color: 'border' } };
+const Grey: Story = { args: { color: 'grey' } };
+const Transparent: Story = { args: { color: 'transparent' } };
+const Dark: Story = { args: { color: 'dark' } };
+const Light: Story = { args: { color: 'light' } };
+const Danger: Story = { args: { color: 'danger' } };
+const NoText: Story = { args: { color: 'primary', children: undefined, icon: CrossSVG } };
+const WithChildrenAndIcons: Story = {
   args: {
     color: 'primary',
     children: (
       <>
-        <LightningIcon />
+        <CrossSVG />
         Hello!
-        <LightningIcon />
+        <CrossSVG />
       </>
     ),
   },
 };
 
 export default meta;
+export { Default, Border, Grey, Transparent, Dark, Light, Danger, NoText, WithChildrenAndIcons };

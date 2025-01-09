@@ -1,44 +1,71 @@
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+@use '../../utils.scss' as *;
 
-  padding: 0;
-
-  font-family: inherit;
-  font-weight: 600;
-  line-height: 24px;
-
-  border: none;
-  border-radius: 4px;
-  transition-property: color, background-color, box-shadow;
-  transition-duration: 250ms;
-
-  cursor: pointer;
-  outline: none;
-  outline-offset: 2px;
-
-  &:disabled {
-    cursor: not-allowed;
+@keyframes spin {
+  from {
+    transform: rotate(0);
   }
 
-  &:focus-visible {
-    outline: rgba(0, 255, 196, 1) 2px solid;
-  }
-
-  svg {
-    color: currentColor;
-    stroke: currentColor;
-    aspect-ratio: 1/1;
-    width: 100%;
-    height: 100%;
-    max-width: var(--icon-size);
-    max-height: var(--icon-size);
+  to {
+    transform: rotate(360deg);
   }
 }
 
-// Utils
+.button,
+.content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.button {
+  border: none;
+  cursor: pointer;
+  padding: var(--padding, 0);
+  font-family: inherit;
+
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 12px;
+  color: var(--color, #000);
+
+  background-color: var(--background-color, transparent);
+  background-image: var(--background-image);
+  border-radius: 4px;
+  box-shadow: var(--box-shadow);
+  transition: all 0.25s;
+
+  &:disabled {
+    pointer-events: none;
+  }
+
+  &:not(.loading):disabled {
+    @include lightDark(--background-color, rgba(88, 105, 110, 0.04), rgba(88, 105, 110, 0.1));
+    @include lightDark(--color, rgba(88, 105, 110, 0.5), rgba(156, 172, 177, 0.4));
+
+    --box-shadow: none;
+  }
+
+  &.loading {
+    > * {
+      visibility: hidden;
+    }
+
+    &::before {
+      content: '';
+
+      position: absolute;
+
+      width: var(--spinner-size);
+      height: var(--spinner-size);
+
+      background-color: var(--spinner-color, #000);
+      mask: url(./assets/spinner.svg) center/cover no-repeat;
+      animation: spin 1s ease-in-out infinite;
+    }
+  }
+}
+
 .block {
   width: 100%;
 }
@@ -47,486 +74,153 @@
   white-space: nowrap;
 }
 
-.noText {
-  aspect-ratio: 1/1;
-
-  :only-child {
-    --icon-size: 100%;
-  }
-}
-
-// Color variants
 .primary {
-  color: rgba(30, 30, 32, 1);
-  background-color: rgba(0, 255, 196, 1);
+  --background-color: #00ffc4;
+  --box-shadow: 0px 1.6px 3.2px 0px #00ffc466;
 
-  &:enabled {
-    &:not(:focus-visible,:active) {
-      box-shadow: 0 1.6px 3.2px 0 rgba(0, 255, 196, 0.4);
-    }
-
-    &:hover {
-      background-color: #2effce;
-      box-shadow: 0 1.6px 3.2px 0 rgba(0, 255, 196, 0.4), 0 0.4px 1.2px 0 rgba(0, 255, 196, 0.2) inset;
-    }
-
-    &:focus-visible {
-      background-color: #0dd3a2;
-      box-shadow: 0 0.4px 1.2px 0 rgba(0, 0, 0, 0.2) inset;
-    }
-
-    &:active {
-      background-color: #0abd90;
-      box-shadow: 0 0.4px 1.2px 0 rgba(0, 0, 0, 0.2) inset;
-    }
+  &:hover {
+    --background-color: #30ffcf;
+    --box-shadow: 0px 1.6px 3.2px 0px #00ffc466, 0px 0.4px 1.2px 0px #00000033 inset;
   }
 
   &.loading {
-    @extend .loader-dark;
-
-    &::before {
-      background-color: #0abd90;
-      box-shadow: 0 1.6px 3.2px 0 rgba(0, 255, 196, 0.4);
-    }
+    --background-color: #0abe92;
+    --box-shadow: 0px 0.4px 1.2px 0px #00000033 inset;
   }
 }
 
 .dark {
-  color: #ffffff;
-  background-color: #000000;
+  @include lightDark(--background-color, #000, #fff);
+  @include lightDark(--spinner-color, #fff, #000);
+  @include lightDark(--color, #fff, #000);
 
-  &:enabled {
-    &:hover {
-      background-color: rgba(64, 64, 64, 1);
-    }
-
-    &:focus-visible {
-      background-color: rgba(38, 38, 38, 1);
-    }
-
-    &:active {
-      background-color: rgba(23, 23, 23, 1);
-    }
+  &:hover {
+    /* TODO: icon color (?) */
+    @include lightDark(--background-color, #404040, #d0d1d2);
   }
 
   &.loading {
-    @extend .loader-white;
-
-    &::before {
-      background-color: rgba(23, 23, 23, 1);
+    @include darkMode() {
+      --background-color: #babdbe;
     }
   }
 }
 
 .light {
-  color: #000000;
-  background-color: #ffffff;
+  @include lightDark(--background-color, #fff, #1d1d1f);
+  @include lightDark(--spinner-color, #fff, #000);
 
-  &:enabled {
-    &:hover {
-      background-color: rgba(208, 209, 210, 1);
-    }
+  @include darkMode {
+    --color: #fff;
+  }
 
-    &:focus-visible {
-      background-color: rgba(197, 199, 201, 1);
-    }
-
-    &:active {
-      background-color: rgba(187, 189, 191, 1);
-    }
+  &:hover {
+    @include lightDark(--background-color, rgba(243, 245, 247, 0.8), rgba(88, 105, 110, 0.1));
   }
 
   &.loading {
-    &::before {
-      background-color: rgba(187, 189, 191, 1);
-    }
+    @include lightDark(--background-color, #262628, #f0f0f6);
   }
 }
 
 .grey {
-  color: #000000;
-  background-color: rgba(228, 228, 231, 1);
+  @include lightDark(--background-color, #e5e5e7, rgba(88, 105, 110, 0.1));
 
-  &:enabled {
-    &:hover {
-      background-color: rgba(223, 223, 226, 1);
-    }
+  @include darkMode {
+    --color: #fff;
+    --spinner-color: #fff;
+  }
 
-    &:focus-visible {
-      background-color: rgba(207, 207, 211, 1);
-    }
-
-    &:active {
-      background-color: rgba(189, 189, 194, 1);
-    }
+  &:hover {
+    @include lightDark(--background-color, #dddde1, rgba(88, 105, 110, 0.3));
   }
 
   &.loading {
-    &::before {
-      background-color: rgba(189, 189, 194, 1);
-    }
+    @include lightDark(--background-color, #bdbdc2, rgba(88, 105, 110, 0.8));
   }
 }
 
 .border {
-  color: #000000;
-  background-color: #ffffff;
-  box-shadow: 0 0 0 2px currentColor inset;
+  --spinner-color: #fff;
 
-  &:enabled {
-    &:hover, &:focus-visible, &:active {
-      color: #ffffff;
-    }
+  &:not(:hover):not(:disabled) {
+    @include lightDark(--box-shadow, inset 0px 0px 0px 2px #000, inset 0px 0px 0px 2px #fff);
 
-    &:hover {
-      background-color: rgba(41, 48, 50, 1);
-      box-shadow: unset;
-    }
-
-    &:focus-visible {
-      background-color: rgba(30, 30, 32, 1);
-      box-shadow: unset;
-    }
-
-    &:active {
-      background-color: #000000;
-      box-shadow: unset;
+    @include darkMode() {
+      --color: #fff;
     }
   }
 
-  &:disabled {
-    box-shadow: 0 0 0 2px transparent inset;
+  &:hover {
+    @include lightDark(--background-color, #2a3133, rgba(88, 105, 110, 0.3));
+    --color: #fff;
   }
 
   &.loading {
-    &::before {
-      background-color: #000000;
-      box-shadow: unset;
-    }
+    @include lightDark(--background-color, #000, rgba(88, 105, 110, 0.8));
+  }
+}
 
-    @extend .loader-white;
+.danger {
+  --color: #fff;
+  --background-color: #eb5757;
+  --spinner-color: #fff;
+
+  &:hover {
+    --background-color: #f04949;
+  }
+
+  &.loading {
+    --background-color: #dd3131;
   }
 }
 
 .transparent {
-  color: #000000;
-  background-color: transparent;
+  --spinner-size: 16px;
 
-  &:enabled {
-    &:hover {
-      background-color: rgba(243, 245, 247, 0.8);
-    }
-
-    &:focus-visible {
-      background-color: #000000;
-      color: #ffffff;
-    }
-
-    &:active {
-      background-color: rgba(37, 37, 39, 1);
-      color: #ffffff;
-    }
+  @include darkMode() {
+    --color: #fff;
+    --spinner-color: #fff;
   }
 
-  &.loading {
-    &::before {
-      background-color: rgba(37, 37, 39, 1);
-    }
-
-    @extend .loader-white;
-  }
-}
-
-.destructive {
-  color: #ffffff;
-  background-color: rgba(235, 86, 86, 1);
-
-  &:enabled {
-    &:hover {
-      background-color: rgba(240, 71, 71, 1);
-    }
-
-    &:focus-visible {
-      background-color: rgba(235, 61, 61, 1);
-    }
-
-    &:active {
-      background-color: rgba(220, 50, 50, 1);
-    }
+  &:hover {
+    opacity: 0.5;
   }
 
-  &.loading {
-    &::before {
-      background-color: rgba(220, 50, 50, 1);
-    }
-
-    @extend .loader-white;
-  }
-}
-
-// Global states
-.disabled {
-  background-color: rgba(89, 105, 110, 0.04);
-  color: rgba(89, 105, 110, 0.5);
-}
-
-@keyframes spinner {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.loading {
-  --spinner-size: 24px;
-
-  position: relative;
-  overflow: hidden;
-  color: transparent !important;
-
-  &::before {
-    content: '';
-    position: absolute;
-    z-index: 1;
-    inset: 0;
-  }
-
-  @extend .loader-dark;
-
-  &::after {
-    content: '';
-    position: absolute;
-    z-index: 1;
-    width: var(--spinner-size);
-    height: var(--spinner-size);
-    animation: spinner 1s steps(8, end) infinite;
-    background-repeat: no-repeat;
-    background-size: contain;
-  }
-}
-
-// Sizes
-.x-large {
-  --icon-size: 24px;
-
-  padding: 14px 28px;
-  font-size: 18px;
-
-  &.noText {
-    padding: 10px;
-    max-height: 52px;
-  }
-}
-
-.default,
-.large {
-  --icon-size: 24px;
-
-  padding: 12px 24px;
-  font-size: 16px;
-
-  &.noText {
-    padding: 8px;
-    max-height: 48px;
-  }
-}
-
-.medium {
-  --icon-size: 20px;
-
-  padding: 10px 24px;
-  font-size: 16px;
-
-  &.noText {
-    padding: 6px;
-    max-height: 44px;
-  }
-}
-
-.small {
-  --icon-size: 20px;
-
-  padding: 8px 24px;
-  font-size: 16px;
-
-  &.noText {
-    padding: 4px;
-    max-height: 40px;
-  }
-
-  &.loading {
-    --spinner-size: 20px;
+  &:not(.loading):disabled {
+    --background-color: transparent;
   }
 }
 
 .x-small {
-  --icon-size: 16px;
+  --padding: 10px 16px;
+  --spinner-size: 20px;
+}
 
-  padding: 4px 16px;
-  font-size: 16px;
+.small {
+  --padding: 14px 24px;
+  --spinner-size: 20px;
 
   &.noText {
-    padding: 4px;
-    max-height: 32px;
-  }
-
-  &.loading {
-    --spinner-size: 20px;
+    --padding: 12px 16px;
   }
 }
 
-// Theming
-:global(.dark-theme) {
-  .border {
-    color: #ffffff;
-    background-color: #1e1e20;
-    box-shadow: 0 0 0 2px #f5f5f5 inset;
+.medium {
+  --padding: 16px 24px;
+  --spinner-size: 24px;
+}
 
-    &:enabled {
-      &:hover {
-        background-color: rgba(89, 105, 110, 0.3);
-      }
+.default {
+  --padding: 18px 24px;
+  --spinner-size: 24px;
 
-      &:focus-visible {
-        background-color: rgba(89, 105, 110, 0.6);
-      }
-
-      &:active {
-        background-color: rgba(89, 105, 110, 0.8);
-      }
-    }
-
-    &.loading {
-      &::before {
-        background-color: rgba(89, 105, 110, 0.8);
-      }
-    }
-  }
-
-  .grey {
-    color: #ffffff;
-    background-color: rgba(89, 105, 110, 0.1);
-
-    &:enabled {
-      &:hover {
-        background-color: rgba(89, 105, 110, 0.3);
-      }
-
-      &:focus-visible {
-        background-color: rgba(89, 105, 110, 0.6);
-      }
-
-      &:active {
-        background-color: rgba(89, 105, 110, 0.8);
-      }
-    }
-
-    &.loading {
-      &::before {
-        background-color: rgba(89, 105, 110, 0.8);
-      }
-    }
-  }
-
-  .transparent {
-    color: #ffffff;
-    background-color: transparent;
-
-    &:enabled {
-      &:hover {
-        background-color: rgba(89, 105, 110, 0.1);
-      }
-
-      &:focus-visible {
-        background-color: #ffffff;
-        color: #000000;
-      }
-
-      &:active {
-        background-color: rgba(239, 239, 245, 1);
-        color: #000000;
-      }
-    }
-
-    &.loading {
-      &::before {
-        background-color: rgba(239, 239, 245, 1);
-      }
-
-      @extend .loader-dark;
-    }
-  }
-
-  .light {
-    color: #ffffff;
-    background-color: #000000;
-
-    &:enabled {
-      &:hover {
-        background-color: rgba(64, 64, 64, 1);
-      }
-
-      &:focus-visible {
-        background-color: rgba(38, 38, 38, 1);
-      }
-
-      &:active {
-        background-color: rgba(23, 23, 23, 1);
-      }
-    }
-
-    &.loading {
-      &::before {
-        background-color: rgba(23, 23, 23, 1);
-      }
-    }
-  }
-
-  .dark {
-    color: #000000;
-    background-color: #ffffff;
-
-    &:enabled {
-      &:hover {
-        background-color: rgba(208, 209, 210, 1);
-      }
-
-      &:focus-visible {
-        background-color: rgba(197, 199, 201, 1);
-      }
-
-      &:active {
-        background-color: rgba(187, 189, 191, 1);
-      }
-    }
-
-    &.loading {
-      @extend .loader-dark;
-
-      &::before {
-        background-color: rgba(187, 189, 191, 1);
-      }
-    }
-  }
-
-  .disabled {
-    color: rgba(155, 171, 176, 0.4);
-    background-color: rgba(89, 105, 110, 0.1);
-  }
-
-  .loading {
-    @extend .loader-white;
+  &.noText {
+    --padding: 15px 16px;
   }
 }
 
-// mixins
-.loader-white {
-  &::after {
-    background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='12' r='2' fill='white' fill-opacity='0.24'/%3E%3Ccircle cx='21.999' cy='12' r='2' fill='white' fill-opacity='0.24'/%3E%3Ccircle cx='12.001' cy='2' r='2' fill='white' fill-opacity='0.24'/%3E%3Ccircle cx='12.001' cy='22' r='2' fill='white'/%3E%3Ccircle cx='19.0713' cy='4.92889' r='2' transform='rotate(45 19.0713 4.92889)' fill='white' fill-opacity='0.24'/%3E%3Ccircle cx='4.92871' cy='19.0711' r='2' transform='rotate(45 4.92871 19.0711)' fill='white' fill-opacity='0.24'/%3E%3Ccircle cx='19.072' cy='19.071' r='2' transform='rotate(135 19.072 19.071)' fill='white' fill-opacity='0.24'/%3E%3Ccircle cx='4.92939' cy='4.92896' r='2' transform='rotate(135 4.92939 4.92896)' fill='white' fill-opacity='0.24'/%3E%3C/svg%3E%0A");
-  }
-}
-
-.loader-dark {
-  &::after {
-    background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='12' r='2' fill='%2358696E' fill-opacity='0.5'/%3E%3Ccircle cx='21.999' cy='12' r='2' fill='%2358696E' fill-opacity='0.5'/%3E%3Ccircle cx='12.001' cy='2' r='2' fill='%2358696E' fill-opacity='0.5'/%3E%3Ccircle cx='12.001' cy='22' r='2' fill='black'/%3E%3Ccircle cx='19.0713' cy='4.92889' r='2' transform='rotate(45 19.0713 4.92889)' fill='%2358696E' fill-opacity='0.5'/%3E%3Ccircle cx='4.92871' cy='19.0711' r='2' transform='rotate(45 4.92871 19.0711)' fill='%2358696E' fill-opacity='0.5'/%3E%3Ccircle cx='19.072' cy='19.071' r='2' transform='rotate(135 19.072 19.071)' fill='%2358696E' fill-opacity='0.5'/%3E%3Ccircle cx='4.92939' cy='4.92896' r='2' transform='rotate(135 4.92939 4.92896)' fill='%2358696E' fill-opacity='0.5'/%3E%3C/svg%3E%0A");
-  }
+.x-large {
+  --padding: 20px 28px;
+  --spinner-size: 24px;
 }

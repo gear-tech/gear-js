@@ -1,13 +1,13 @@
 import { ButtonHTMLAttributes, FunctionComponent, ReactNode, SVGProps, forwardRef } from 'react';
 import cx from 'clsx';
+
 import styles from './button.module.scss';
-import type { IButtonColors, IButtonSizes } from './helpers.ts';
 
 type BaseProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   text?: string;
   icon?: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | undefined }>;
-  color?: IButtonColors;
-  size?: IButtonSizes;
+  color?: 'primary' | 'dark' | 'light' | 'grey' | 'border' | 'transparent' | 'danger';
+  size?: 'x-small' | 'small' | 'medium' | 'default' | 'x-large';
   isLoading?: boolean;
   block?: boolean;
   noWrap?: boolean;
@@ -53,8 +53,7 @@ const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
       className={cx(
         styles.button,
         styles[color],
-        styles[size],
-        disabled && styles.disabled,
+        color !== 'transparent' && styles[size],
         isLoading && styles.loading,
         !text && !children && styles.noText,
         block && styles.block,
@@ -65,9 +64,7 @@ const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
       ref={ref}
       {...attrs}>
       {Icon && <Icon />}
-      {text && <span>{text}</span>}
-
-      {children}
+      {(text || children) && <span className={styles.content}>{text || children}</span>}
     </button>
   );
 });
