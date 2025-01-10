@@ -97,7 +97,7 @@ function WalletModal({ theme = 'vara', close }: Props) {
       ) : (
         <p className={cx(styles.text, themeClassName)}>
           A compatible wallet was not found or is disabled. Install it following the{' '}
-          <a href="https://wiki.vara-network.io/docs/account/create-account/" target="_blank" rel="noreferrer">
+          <a href="https://wiki.vara.network/docs/account" target="_blank" rel="noreferrer">
             instructions
           </a>
           .
