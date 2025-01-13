@@ -1,49 +1,26 @@
-import { SelectHTMLAttributes, OptionHTMLAttributes, ReactNode, useId, forwardRef } from 'react';
-import cx from 'clsx';
-import styles from './select.module.scss';
-import type { ISelectSizes } from './helpers.ts';
+import { SelectHTMLAttributes, OptionHTMLAttributes, forwardRef, useMemo } from 'react';
 
-type Props = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'id' | 'size'> & {
-  options: OptionHTMLAttributes<HTMLOptionElement>[] | Readonly<OptionHTMLAttributes<HTMLOptionElement>[]>;
-  size?: ISelectSizes;
-  label?: string;
-  error?: ReactNode;
-  block?: boolean;
-};
+import { LabelContainer, LabelContainerProps } from '../label-container';
+import styles from './select.module.scss';
+
+type Props = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'id' | 'size'> &
+  LabelContainerProps & {
+    options: OptionHTMLAttributes<HTMLOptionElement>[] | Readonly<OptionHTMLAttributes<HTMLOptionElement>[]>;
+  };
 
 const Select = forwardRef<HTMLSelectElement, Props>(
-  ({ options, className, label, error, size = 'default', block, ...attrs }, ref) => {
-    const { disabled } = attrs;
-
-    const id = useId();
-
-    const getOptions = () => options.map((option, index) => <option key={index} {...option} />);
+  ({ options, className, label, error, size, block, ...attrs }, ref) => {
+    const optionsToRender = useMemo(
+      () => options.map((option, index) => <option key={index} {...option} />),
+      [options],
+    );
 
     return (
-      <div className={cx(styles.root, className, disabled && styles.disabled, block && styles.block)}>
-        <div className={styles.base}>
-          <select
-            id={id}
-            className={cx(styles.select, styles[size], error && styles.error)}
-            ref={ref}
-            disabled={disabled}
-            {...attrs}>
-            {getOptions()}
-          </select>
-
-          {label && (
-            <label htmlFor={id} className={cx(styles.label, styles[size])}>
-              {label}
-            </label>
-          )}
-
-          <fieldset className={styles.fieldset}>
-            <legend className={cx(styles.legend, label && styles.legendLabel)}>{label}&#8203;</legend>
-          </fieldset>
-        </div>
-
-        {error && <p className={styles.message}>{error}</p>}
-      </div>
+      <LabelContainer className={className} label={label} error={error} size={size} block={block}>
+        <select className={styles.select} ref={ref} aria-invalid={Boolean(error)} {...attrs}>
+          {optionsToRender}
+        </select>
+      </LabelContainer>
     );
   },
 );

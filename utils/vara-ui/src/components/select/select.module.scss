@@ -1,236 +1,31 @@
-.root {
-  &.disabled {
-    cursor: not-allowed;
-
-    * {
-      pointer-events: none;
-    }
-
-    .fieldset {
-      background-color: #eceded;
-      border-color: #d0d5dd;
-    }
-
-    .select:disabled {
-      cursor: not-allowed;
-    }
-
-    .select,
-    .label {
-      color: #58696e80;
-    }
-  }
-}
-
-.base {
-  position: relative;
-  user-select: none;
-}
+@use '../../utils' as *;
 
 .select {
+  @include lightDark(color, #000, rgba(246, 246, 246, 0.9));
+
   appearance: none;
-  background-color: transparent;
-  outline: none;
+  padding: 0 32px 0 0;
   border: none;
+  outline: none;
+  width: 100%;
+  font-family: inherit;
+  font-size: var(--input-font-size);
+  font-weight: 400;
+  line-height: var(--input-line-height);
   cursor: pointer;
-  font: inherit;
 
-  width: 100%;
-  padding: 8px 32px 8px 14px;
-  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.616 5.54a.5.5 0 0 0 .768 0L9.317.82A.5.5 0 0 0 8.932 0H1.068a.5.5 0 0 0-.385.82l3.933 4.72Z' fill='%230C0C0D' fill-opacity='.5'/%3E%3C/svg%3E");
-  background-position: right 14px center;
-  background-repeat: no-repeat;
+  background: transparent url(./assets/arrow.svg) center right no-repeat;
 
-  &:focus,
-  &:not(:placeholder-shown),
-  &.error {
-    ~ .label {
-      opacity: 0;
-    }
-
-    ~ .fieldset {
-      .legendLabel {
-        opacity: 1;
-        max-width: 100%;
-        padding: 0 4px;
-      }
-    }
+  &:not(:disabled)[aria-invalid='true'] {
+    @include lightDark(color, #ff3231, #ff3757);
   }
 
-  &:focus {
-    ~ .fieldset {
-      border-color: #53eece;
-
-      .legendLabel {
-        color: #53eece;
-      }
-    }
+  &:disabled,
+  &:disabled::placeholder {
+    @include lightDark(color, rgba(88, 105, 110, 0.5), rgba(156, 172, 177, 0.4));
   }
 
-  &.error {
-    ~ .fieldset {
-      border-color: #ff3231cc;
-
-      .legendLabel {
-        color: #ff3231cc;
-      }
-    }
-  }
-
-  &.default {
-    padding-top: 14px;
-    padding-bottom: 14px;
-  }
-
-  &.medium {
-    padding-top: 9px;
-    padding-bottom: 9px;
-  }
-
-  &.small {
-    padding-top: 6px;
-    padding-bottom: 6px;
-  }
-}
-
-.label {
-  pointer-events: none;
-
-  position: absolute;
-  top: 8px;
-  left: 13px;
-}
-
-.select,
-.label {
-  font-weight: 400;
-  line-height: 24px;
-  color: #000000;
-
-  &.default {
-    font-size: 16px;
-  }
-
-  &.medium {
-    font-size: 16px;
-  }
-
-  &.small {
-    font-size: 14px;
-    line-height: 20px;
-  }
-}
-
-.fieldset {
-  min-width: 0;
-  margin: 0;
-  padding: 0 13px;
-  pointer-events: none;
-
-  position: absolute;
-  /* TODO: variables */
-  top: -6px;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: -1;
-
-  border-radius: 4px;
-  background-color: #ffffff;
-  border: 1px solid #d0d5dd;
-  box-shadow: 0 1px 2px 0 #1018280d;
-}
-
-.legend,
-.message {
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1;
-}
-
-.legend {
-  opacity: 0;
-  max-width: 0.01px;
-  height: 1em;
-  padding: 0;
-
-  color: #313635;
-}
-
-.message {
-  margin: 4px 0 0 0;
-
-  color: #fc174d;
-}
-
-.block {
-  width: 100%;
-}
-
-:global(.dark-theme) {
-  .root {
-    &.disabled {
-      .fieldset {
-        background-color: #282c301a;
-        border-color: #ffffff0a;
-      }
-
-      .input,
-      .label {
-        color: #9cacb166;
-      }
-    }
-  }
-
-  .fieldset {
-    background-color: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    box-shadow: 0 1px 2px 0 #1018280d;
-  }
-
-  .label,
-  .select {
-    color: #828b8e;
-  }
-
-  .select {
-    color: #f6f6f6e5;
-    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.616 5.54a.5.5 0 0 0 .768 0L9.317.82A.5.5 0 0 0 8.932 0H1.068a.5.5 0 0 0-.385.82l3.933 4.72Z' fill='%23828B8E'/%3E%3C/svg%3E");
-
-    &:focus::placeholder {
-      color: #828b8e;
-    }
-
-    &:focus {
-      ~ .fieldset {
-        border-color: #0fa885;
-
-        .legendLabel {
-          color: #0fa885;
-        }
-      }
-    }
-
-    &.error {
-      ~ .label {
-        color: #d73b4f;
-      }
-
-      ~ .fieldset {
-        border-color: #d73b4f;
-
-        .legendLabel {
-          color: #d73b4f;
-        }
-      }
-    }
-
-    .message {
-      color: #d73b4f;
-    }
-  }
-
-  .legend {
-    color: #828b8e;
+  &::placeholder {
+    @include lightDark(color, #58696e, #828b8e);
   }
 }
