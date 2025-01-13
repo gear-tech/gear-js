@@ -1,47 +1,16 @@
-import { TextareaHTMLAttributes, ReactNode, useId, forwardRef } from 'react';
-import cx from 'clsx';
-import styles from './textarea.module.scss';
-import type { ITextareaSizes } from './helpers.ts';
+import { TextareaHTMLAttributes, forwardRef } from 'react';
 
-type Props = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'id' | 'size'> & {
-  size?: ITextareaSizes;
-  label?: string;
-  error?: ReactNode;
-  block?: boolean;
-};
+import { LabelContainer, LabelContainerProps } from '../label-container';
+import styles from './textarea.module.scss';
+
+type Props = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'id' | 'size'> & LabelContainerProps;
 
 const Textarea = forwardRef<HTMLTextAreaElement, Props>(
-  ({ className, label, error, size = 'default', rows = 5, placeholder = ' ', block, ...attrs }, ref) => {
-    const { disabled } = attrs;
-
-    const id = useId();
-
+  ({ className, label, error, size, rows = 5, block, ...attrs }, ref) => {
     return (
-      <div className={cx(styles.root, className, disabled && styles.disabled, block && styles.block)}>
-        <div className={styles.base}>
-          <textarea
-            rows={rows}
-            id={id}
-            className={cx(styles.textarea, styles[size], error && styles.error)}
-            placeholder={placeholder}
-            ref={ref}
-            disabled={disabled}
-            {...attrs}
-          />
-
-          {label && (
-            <label htmlFor={id} className={cx(styles.label, styles[size])}>
-              {label}
-            </label>
-          )}
-
-          <fieldset className={styles.fieldset}>
-            <legend className={cx(styles.legend, label && styles.legendLabel)}>{label}&#8203;</legend>
-          </fieldset>
-        </div>
-
-        {error && <p className={styles.message}>{error}</p>}
-      </div>
+      <LabelContainer className={className} label={label} error={error} size={size} block={block}>
+        <textarea rows={rows} className={styles.textarea} ref={ref} aria-invalid={Boolean(error)} {...attrs} />
+      </LabelContainer>
     );
   },
 );

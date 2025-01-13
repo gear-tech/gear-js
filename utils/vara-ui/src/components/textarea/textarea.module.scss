@@ -1,253 +1,29 @@
-.root {
-  &.disabled {
-    cursor: not-allowed;
-
-    * {
-      pointer-events: none;
-    }
-
-    .fieldset {
-      background-color: #eceded;
-      border-color: #d0d5dd;
-    }
-
-    .textarea:disabled {
-      cursor: not-allowed;
-    }
-
-    .textarea,
-    .label {
-      color: #58696e80;
-    }
-  }
-}
-
-.base {
-  position: relative;
-  user-select: none;
-}
+@use '../../utils.scss' as *;
 
 .textarea {
-  outline: none;
-  resize: none;
-  background-color: transparent;
-  border: none;
-  font: inherit;
+  @include lightDark(color, #000, rgba(246, 246, 246, 0.9));
 
+  padding: 0;
+  background: transparent;
+  border: none;
+  outline: none;
   width: 100%;
-  padding-right: 14px;
-  padding-left: 14px;
+  font-family: inherit;
+  font-size: var(--input-font-size);
+  font-weight: 400;
+  line-height: var(--input-line-height);
+  resize: none;
+
+  &:not(:disabled)[aria-invalid='true'] {
+    @include lightDark(color, #ff3231, #ff3757);
+  }
+
+  &:disabled,
+  &:disabled::placeholder {
+    @include lightDark(color, rgba(88, 105, 110, 0.5), rgba(156, 172, 177, 0.4));
+  }
 
   &::placeholder {
-    color: #58696e;
-  }
-
-  &:not(:focus) {
-    &::placeholder {
-      color: transparent;
-    }
-  }
-
-  &:focus,
-  &:not(:placeholder-shown),
-  &.error {
-    ~ .label {
-      opacity: 0;
-    }
-
-    ~ .fieldset {
-      .legendLabel {
-        opacity: 1;
-        max-width: 100%;
-        padding: 0 4px;
-      }
-    }
-  }
-
-  &:focus {
-    ~ .fieldset {
-      border-color: #53eece;
-
-      .legendLabel {
-        color: #53eece;
-      }
-    }
-  }
-
-  &.error {
-    ~ .label {
-      color: #ff3231cc;
-    }
-
-    ~ .fieldset {
-      border-color: #ff3231cc;
-
-      .legendLabel {
-        color: #ff3231cc;
-      }
-    }
-  }
-
-  &.default {
-    padding-top: 14px;
-    padding-bottom: 14px;
-  }
-
-  &.medium {
-    padding-top: 9px;
-    padding-bottom: 9px;
-  }
-
-  &.small {
-    padding-top: 6px;
-    padding-bottom: 6px;
-  }
-}
-
-.label {
-  pointer-events: none;
-
-  position: absolute;
-  left: 13px;
-
-  &.default {
-    top: 14px;
-  }
-
-  &.medium {
-    top: 9px;
-  }
-
-  &.small {
-    top: 6px;
-  }
-}
-
-.textarea,
-.label {
-  font-weight: 400;
-  line-height: 24px;
-  color: #000000;
-
-  &.default {
-    font-size: 16px;
-  }
-
-  &.medium {
-    font-size: 16px;
-  }
-
-  &.small {
-    font-size: 14px;
-    line-height: 20px;
-  }
-}
-
-.fieldset {
-  min-width: 0;
-  margin: 0;
-  padding: 0 13px;
-  pointer-events: none;
-
-  position: absolute;
-  /* TODO: variables */
-  top: -6px;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: -1;
-
-  border-radius: 4px;
-  background-color: #ffffff;
-  border: 1px solid #d0d5dd;
-  box-shadow: 0 1px 2px 0 #1018280d;
-}
-
-.legend,
-.message {
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1;
-}
-
-.legend {
-  opacity: 0;
-  max-width: 0.01px;
-  height: 1em;
-  padding: 0;
-
-  color: #313635;
-}
-
-.message {
-  margin: 4px 0 0 0;
-  color: #ff3231cc;
-}
-
-.block {
-  width: 100%;
-}
-
-
-:global(.dark-theme) {
-  .root {
-    &.disabled {
-      .fieldset {
-        background-color: #282c301a;
-        border-color: #ffffff0a;
-      }
-
-      .textarea,
-      .label {
-        color: #9cacb166;
-      }
-    }
-  }
-
-  .fieldset {
-    background-color: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    box-shadow: 0 1px 2px 0 #1018280d;
-  }
-
-  .label,
-  .textarea {
-    color: #828b8e;
-  }
-
-  .textarea {
-    color: #f6f6f6e5;
-
-    &:focus::placeholder {
-      color: #828b8e;
-    }
-
-    &:focus {
-      ~ .fieldset {
-        border-color: #0fa885;
-
-        .legendLabel {
-          color: #0fa885;
-        }
-      }
-    }
-
-    &.error {
-      ~ .label {
-        color: #d73b4f;
-      }
-
-      ~ .fieldset {
-        border-color: #d73b4f;
-
-        .legendLabel {
-          color: #d73b4f;
-        }
-      }
-    }
-
-    .message {
-      color: #d73b4f;
-    }
+    @include lightDark(color, #58696e, #828b8e);
   }
 }
