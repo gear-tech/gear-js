@@ -1,30 +1,36 @@
 @use '../../utils.scss' as *;
 
-.root {
-  &.disabled {
-    pointer-events: none;
-  }
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
 }
 
-.base {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.label {
+  @include lightDark(color, #58696e, #828b8e);
 
+  font-size: var(--label-font-size);
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.inputWrapper {
+  @include lightDark(border, 1px solid #d0d5dd, 1px solid rgba(255, 255, 255, 0.04));
+
+  display: flex;
+  gap: 4px;
+
+  padding: var(--input-y-padding) 14px;
+
+  border-radius: 4px;
   box-shadow: 0px 1px 2px 0px #1018280d;
 
-  position: relative;
-
-  &.large {
-    padding: 15px 14px;
+  &:focus-within {
+    @include lightDark(border-color, rgba(0, 255, 196, 0.6), rgba(0, 255, 196, 0.6));
   }
 
-  &.medium {
-    padding: 10px 14px;
-  }
-
-  &.small {
-    padding: 6px 14px;
+  &:has(:not(:disabled)[aria-invalid='true']) {
+    @include lightDark(border-color, rgba(255, 50, 49, 0.8), #d73b4f);
   }
 
   &:has(:disabled) {
@@ -32,35 +38,23 @@
   }
 }
 
-.input,
-.label {
-  @include lightDark(color, #000, rgba(246, 246, 246, 0.9));
-
-  font-weight: 400;
-
-  &.large {
-    font-size: 16px;
-    line-height: 22px;
-  }
-
-  &.medium {
-    font-size: 16px;
-    line-height: 22px;
-  }
-
-  &.small {
-    font-size: 14px;
-    line-height: 20px;
-  }
+.icon {
+  width: var(--input-line-height);
+  height: var(--input-line-height);
 }
 
 .input {
+  @include lightDark(color, #000, rgba(246, 246, 246, 0.9));
+
   padding: 0;
   background: transparent;
   border: none;
   outline: none;
   width: 100%;
-  font: inherit;
+  font-family: inherit;
+  font-size: var(--input-font-size);
+  font-weight: 400;
+  line-height: var(--input-line-height);
 
   &:-webkit-autofill {
     background-clip: text; // transparent background on autocomplete
@@ -78,121 +72,64 @@
     appearance: textfield;
   }
 
-  &:not(:focus) {
-    &::placeholder {
-      color: transparent;
-    }
+  &:not(:disabled)[aria-invalid='true'] {
+    @include lightDark(color, #ff3231, #ff3757);
   }
 
-  &:focus,
-  &:not(:placeholder-shown) {
-    ~ .label {
-      opacity: 0;
-    }
-
-    ~ .fieldset {
-      .legendLabel {
-        opacity: 1;
-        max-width: 100%;
-        padding: 0 4px;
-      }
-    }
-  }
-
-  &:not(:disabled) {
-    &:focus {
-      ~ .fieldset {
-        @include lightDark(border-color, #53eece, #0ea886);
-
-        .legendLabel {
-          @include lightDark(color, #53eece, #0ea886);
-        }
-      }
-    }
-
-    &.error {
-      ~ .label {
-        @include lightDark(color, #ff3231, #d73b4f);
-      }
-
-      ~ .fieldset {
-        @include lightDark(border-color, #ff3231, #d73b4f);
-
-        .legendLabel {
-          @include lightDark(color, #ff3231, #d73b4f);
-        }
-      }
-    }
-  }
-
-  &:disabled {
+  &:disabled,
+  &:disabled::placeholder {
     @include lightDark(color, rgba(88, 105, 110, 0.5), rgba(156, 172, 177, 0.4));
+  }
 
-    ~ .label {
-      @include lightDark(color, rgba(88, 105, 110, 0.5), rgba(156, 172, 177, 0.4));
-    }
-
-    ~ .fieldset {
-      .legendLabel {
-        @include lightDark(color, rgba(88, 105, 110, 0.5), rgba(156, 172, 177, 0.4));
-      }
-    }
+  &::placeholder {
+    @include lightDark(color, #58696e, #828b8e);
   }
 }
 
-.label {
-  pointer-events: none;
+.error {
+  @include lightDark(color, #ff3231, #ff3757);
 
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-}
+  padding: 0 14px;
 
-.fieldset {
-  @include lightDark(border, 1px solid #d0d5dd, 1px solid rgba(255, 255, 255, 0.04));
-
-  min-width: 0;
-  margin: 0;
-  padding: 0 13px;
-  pointer-events: none;
-
-  position: absolute;
-  /* TODO: variables */
-  top: -6px;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
-  border-radius: 4px;
-}
-
-.legend,
-.message {
   font-size: 12px;
   font-weight: 400;
-  line-height: 1;
-  letter-spacing: 0.01em;
-}
+  line-height: 21.6px;
 
-.legend {
-  opacity: 0;
-  max-width: 0.01px;
-  height: 1em;
-  padding: 0;
-
-  color: #313635;
-}
-
-.message {
-  @include lightDark(color, #ff3231, #d73b4f);
-
-  margin: 4px 0 0 0;
-
-  &.disabled {
-    @include lightDark(color, rgba(88, 105, 110, 0.5), rgba(156, 172, 177, 0.4));
+  :has(:disabled) & {
+    @include lightDark(color, #58696e, #828b8e);
   }
 }
 
 .block {
   width: 100%;
+}
+
+.small {
+  --gap: 4px;
+
+  --input-y-padding: 6px;
+  --input-font-size: 12px;
+  --input-line-height: 20px;
+
+  --label-font-size: 12px;
+}
+
+.medium {
+  --gap: 6px;
+
+  --input-y-padding: 10px;
+  --input-font-size: 16px;
+  --input-line-height: 22px;
+
+  --label-font-size: 14px;
+}
+
+.large {
+  --gap: 6px;
+
+  --input-y-padding: 15px;
+  --input-font-size: 16px;
+  --input-line-height: 22px;
+
+  --label-font-size: 14px;
 }

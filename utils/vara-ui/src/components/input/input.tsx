@@ -1,13 +1,4 @@
-import {
-  InputHTMLAttributes,
-  ReactNode,
-  forwardRef,
-  useId,
-  FunctionComponent,
-  SVGProps,
-  useState,
-  useEffect,
-} from 'react';
+import { InputHTMLAttributes, ReactNode, forwardRef, FunctionComponent, SVGProps } from 'react';
 import cx from 'clsx';
 
 import styles from './input.module.scss';
@@ -20,66 +11,20 @@ type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'id' | 'size'> & {
   block?: boolean;
 };
 
-function useWidth() {
-  const [width, setWidth] = useState(0);
-  const id = useId();
-
-  useEffect(() => {
-    // not using ref to obatain node, cuz forwardRef for svg disabled in svgr by default
-    const node = document.getElementById(id);
-
-    if (!node) return;
-
-    setWidth(node.getBoundingClientRect().width);
-  }, [id]);
-
-  return [width, id] as const;
-}
-
 const Input = forwardRef<HTMLInputElement, Props>(
-  (
-    { icon: Icon, className, label, error, type = 'text', placeholder = ' ', size = 'medium', block, ...attrs },
-    ref,
-  ) => {
-    const { disabled } = attrs;
-
-    const id = useId();
-
-    // TODO: find a better way to display icon
-    // input, label and fieldset should have the same parent to detect input's state,
-    // therefore label requires position absolute
-    const [iconWidth, iconId] = useWidth();
-    const padding = 14;
-    const gap = 8;
-    const labelStyle = { left: `${iconWidth ? padding + gap + iconWidth : padding}px` };
-
+  ({ icon: Icon, className, label, error, type = 'text', size = 'medium', block, ...attrs }, ref) => {
     return (
-      <div className={cx(styles.root, className, disabled && styles.disabled, block && styles.block)}>
-        <div className={cx(styles.base, styles[size])}>
-          {Icon && <Icon id={iconId} />}
+      <label className={cx(styles.container, styles[size], className, block && styles.block)}>
+        {label && <span className={styles.label}>{label}</span>}
 
-          <input
-            type={type}
-            id={id}
-            className={cx(styles.input, styles[size], error && styles.error)}
-            placeholder={placeholder}
-            ref={ref}
-            {...attrs}
-          />
+        <span className={styles.inputWrapper}>
+          {Icon && <Icon className={styles.icon} />}
 
-          {label && (
-            <label htmlFor={id} className={cx(styles.label, styles[size])} style={labelStyle}>
-              {label}
-            </label>
-          )}
+          <input className={styles.input} type={type} ref={ref} aria-invalid={Boolean(error)} {...attrs} />
+        </span>
 
-          <fieldset className={styles.fieldset}>
-            <legend className={cx(styles.legend, label && styles.legendLabel)}>{label}&#8203;</legend>
-          </fieldset>
-        </div>
-
-        {error && <p className={cx(styles.message, disabled && styles.disabled)}>{error}</p>}
-      </div>
+        {error && <span className={styles.error}>{error}</span>}
+      </label>
     );
   },
 );
