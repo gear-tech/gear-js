@@ -1,6 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { Input } from './input';
-import { inputSizes } from './helpers';
 
 type Type = typeof Input;
 type Story = StoryObj<Type>;
@@ -10,7 +9,7 @@ const meta: Meta<Type> = {
   component: Input,
   args: {
     label: '',
-    size: 'default',
+    size: 'medium',
     icon: undefined,
     disabled: false,
     block: false,
@@ -21,7 +20,7 @@ const meta: Meta<Type> = {
     disabled: { control: 'boolean' },
     block: { control: 'boolean' },
     size: {
-      options: inputSizes,
+      options: ['large', 'medium', 'small'],
       control: { type: 'select' },
     },
     type: { control: 'select', options: ['text', 'number', 'password', 'email'] },

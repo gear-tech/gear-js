@@ -9,12 +9,12 @@ import {
   useEffect,
 } from 'react';
 import cx from 'clsx';
+
 import styles from './input.module.scss';
-import type { IInputSizes } from './helpers.ts';
 
 type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'id' | 'size'> & {
   icon?: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | undefined }>;
-  size?: IInputSizes;
+  size?: 'small' | 'medium' | 'large';
   label?: string;
   error?: ReactNode;
   block?: boolean;
@@ -25,7 +25,7 @@ function useWidth() {
   const id = useId();
 
   useEffect(() => {
-    // not using ref to get node, because forwardRef for svg disabled in svgr by default
+    // not using ref to obatain node, cuz forwardRef for svg disabled in svgr by default
     const node = document.getElementById(id);
 
     if (!node) return;
@@ -38,7 +38,7 @@ function useWidth() {
 
 const Input = forwardRef<HTMLInputElement, Props>(
   (
-    { icon: Icon, className, label, error, type = 'text', placeholder = ' ', size = 'default', block, ...attrs },
+    { icon: Icon, className, label, error, type = 'text', placeholder = ' ', size = 'medium', block, ...attrs },
     ref,
   ) => {
     const { disabled } = attrs;
@@ -64,7 +64,6 @@ const Input = forwardRef<HTMLInputElement, Props>(
             className={cx(styles.input, styles[size], error && styles.error)}
             placeholder={placeholder}
             ref={ref}
-            disabled={disabled}
             {...attrs}
           />
 
@@ -79,7 +78,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
           </fieldset>
         </div>
 
-        {error && <p className={styles.message}>{error}</p>}
+        {error && <p className={cx(styles.message, disabled && styles.disabled)}>{error}</p>}
       </div>
     );
   },

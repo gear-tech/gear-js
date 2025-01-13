@@ -1,47 +1,58 @@
+@use '../../utils.scss' as *;
+
 .root {
   &.disabled {
-    cursor: not-allowed;
-
-    * {
-      pointer-events: none;
-    }
-
-    .fieldset {
-      background-color: #eceded;
-      border-color: #d0d5dd;
-    }
-
-    .input:disabled {
-      cursor: not-allowed;
-    }
-
-    .input,
-    .label {
-      color: #58696e80;
-    }
+    pointer-events: none;
   }
 }
 
 .base {
-  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
-  user-select: none;
 
-  &.default {
-    padding: 14px 14px;
+  box-shadow: 0px 1px 2px 0px #1018280d;
+
+  position: relative;
+
+  &.large {
+    padding: 15px 14px;
   }
 
   &.medium {
-    padding: 9px 14px;
+    padding: 10px 14px;
   }
 
   &.small {
     padding: 6px 14px;
   }
+
+  &:has(:disabled) {
+    @include lightDark(background-color, #eceded, rgba(40, 44, 48, 0.1));
+  }
 }
 
+.input,
+.label {
+  @include lightDark(color, #000, rgba(246, 246, 246, 0.9));
+
+  font-weight: 400;
+
+  &.large {
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  &.medium {
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  &.small {
+    font-size: 14px;
+    line-height: 20px;
+  }
+}
 
 .input {
   padding: 0;
@@ -73,10 +84,6 @@
     }
   }
 
-  &::placeholder {
-    color: #58696e;
-  }
-
   &:focus,
   &:not(:placeholder-shown) {
     ~ .label {
@@ -92,27 +99,42 @@
     }
   }
 
-  &:focus {
-    ~ .fieldset {
-      border-color: #53eece;
+  &:not(:disabled) {
+    &:focus {
+      ~ .fieldset {
+        @include lightDark(border-color, #53eece, #0ea886);
 
+        .legendLabel {
+          @include lightDark(color, #53eece, #0ea886);
+        }
+      }
+    }
 
-      .legendLabel {
-        color: #53eece;
+    &.error {
+      ~ .label {
+        @include lightDark(color, #ff3231, #d73b4f);
+      }
+
+      ~ .fieldset {
+        @include lightDark(border-color, #ff3231, #d73b4f);
+
+        .legendLabel {
+          @include lightDark(color, #ff3231, #d73b4f);
+        }
       }
     }
   }
 
-  &.error {
+  &:disabled {
+    @include lightDark(color, rgba(88, 105, 110, 0.5), rgba(156, 172, 177, 0.4));
+
     ~ .label {
-      color: #ff3231cc;
+      @include lightDark(color, rgba(88, 105, 110, 0.5), rgba(156, 172, 177, 0.4));
     }
 
     ~ .fieldset {
-      border-color: #ff3231cc;
-
       .legendLabel {
-        color: #ff3231cc;
+        @include lightDark(color, rgba(88, 105, 110, 0.5), rgba(156, 172, 177, 0.4));
       }
     }
   }
@@ -126,27 +148,9 @@
   transform: translateY(-50%);
 }
 
-.input,
-.label {
-  font-weight: 400;
-  line-height: 24px;
-  color: #000000;
-
-  &.default {
-    font-size: 16px;
-  }
-
-  &.medium {
-    font-size: 16px;
-  }
-
-  &.small {
-    font-size: 14px;
-    line-height: 20px;
-  }
-}
-
 .fieldset {
+  @include lightDark(border, 1px solid #d0d5dd, 1px solid rgba(255, 255, 255, 0.04));
+
   min-width: 0;
   margin: 0;
   padding: 0 13px;
@@ -158,12 +162,8 @@
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: -1;
 
   border-radius: 4px;
-  background-color: #ffffff;
-  border: 1px solid #d0d5dd;
-  box-shadow: 0 1px 2px 0 #1018280d;
 }
 
 .legend,
@@ -171,6 +171,7 @@
   font-size: 12px;
   font-weight: 400;
   line-height: 1;
+  letter-spacing: 0.01em;
 }
 
 .legend {
@@ -178,77 +179,20 @@
   max-width: 0.01px;
   height: 1em;
   padding: 0;
+
   color: #313635;
 }
 
 .message {
+  @include lightDark(color, #ff3231, #d73b4f);
+
   margin: 4px 0 0 0;
-  color: #ff3231cc;
+
+  &.disabled {
+    @include lightDark(color, rgba(88, 105, 110, 0.5), rgba(156, 172, 177, 0.4));
+  }
 }
 
 .block {
   width: 100%;
-}
-
-:global(.dark-theme) {
-  .root {
-    &.disabled {
-      .fieldset {
-        background-color: #282c301a;
-        border-color: #ffffff0a;
-      }
-
-      .input,
-      .label {
-        color: #9cacb166;
-      }
-    }
-  }
-
-  .fieldset {
-    background-color: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    box-shadow: 0 1px 2px 0 #1018280d;
-  }
-
-  .label,
-  .input {
-    color: #828b8e;
-  }
-
-  .input {
-    color: #f6f6f6e5;
-
-    &:focus::placeholder {
-      color: #828b8e;
-    }
-
-    &:focus {
-      ~ .fieldset {
-        border-color: #0fa885;
-
-        .legendLabel {
-          color: #0fa885;
-        }
-      }
-    }
-
-    &.error {
-      ~ .label {
-        color: #d73b4f;
-      }
-
-      ~ .fieldset {
-        border-color: #d73b4f;
-
-        .legendLabel {
-          color: #d73b4f;
-        }
-      }
-    }
-
-    .message {
-      color: #d73b4f;
-    }
-  }
 }
