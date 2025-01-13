@@ -2651,6 +2651,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@gear-js/logger@workspace:utils/gear-logger":
+  version: 0.0.0-use.local
+  resolution: "@gear-js/logger@workspace:utils/gear-logger"
+  dependencies:
+    typescript: 4.7.4
+    winston: 3.7.2
+  languageName: unknown
+  linkType: soft
+
 "@gear-js/meta-storage-2@workspace:idea/meta-storage-2":
   version: 0.0.0-use.local
   resolution: "@gear-js/meta-storage-2@workspace:idea/meta-storage-2"

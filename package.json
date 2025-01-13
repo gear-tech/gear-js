@@ -33,7 +33,8 @@
     "idea/*",
     "utils/gear-hooks",
     "utils/gear-ui",
-    "utils/wallet-connect"
+    "utils/wallet-connect",
+    "utils/gear-logger"
   ],
   "packageManager": "yarn@3.3.0",
   "version": "1.2.0"
