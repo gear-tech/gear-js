@@ -28,4 +28,15 @@
   &::placeholder {
     @include lightDark(color, #58696e, #828b8e);
   }
+
+  &:focus {
+    // setting background color to override default styles for options container,
+    // otherwise there's some padding in firefox and color difference is visible
+    @include lightDark(background-color, #fff, #1d1d1f);
+  }
+
+  option {
+    @include lightDark(color, #000, rgba(246, 246, 246, 0.8));
+    @include lightDark(background-color, #fff, #262628);
+  }
 }
