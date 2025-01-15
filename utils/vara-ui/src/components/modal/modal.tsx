@@ -70,13 +70,11 @@ const Modal = ({ heading, close, children, className, headerAddon, footer, maxWi
             {headerAddon}
           </div>
 
-          <button type="button" onClick={close} className={styles.close}>
-            <CrossSVG />
-          </button>
+          <Button icon={CrossSVG} color="transparent" onClick={close} className={styles.button} />
         </header>
 
         {children && (
-          <div className={cx(styles.customScroll, className)} style={bodyStyle} ref={bodyRef}>
+          <div className={cx(styles.body, styles.customScroll, className)} style={bodyStyle} ref={bodyRef}>
             {children}
           </div>
         )}
