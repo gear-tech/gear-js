@@ -3,7 +3,7 @@
 .container {
   @include lightDark(--thumb-color, #e5e5e7, rgba(255, 255, 255, 0.1));
 
-  overflow-y: auto;
+  overflow: auto;
 
   /* firefox */
   @-moz-document url-prefix() {
@@ -15,6 +15,10 @@
   &::-webkit-scrollbar {
     height: 16px;
     width: 16px;
+  }
+
+  &::-webkit-scrollbar-corner {
+    background-color: transparent;
   }
 
   &::-webkit-scrollbar-track,
