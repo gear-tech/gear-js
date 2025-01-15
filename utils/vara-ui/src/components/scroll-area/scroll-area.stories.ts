@@ -6,7 +6,7 @@ type Type = typeof ScrollArea;
 type Story = StoryObj<Type>;
 
 const meta: Meta<Type> = {
-  title: 'Radio',
+  title: 'ScrollArea',
   component: ScrollArea,
   args: {},
 };

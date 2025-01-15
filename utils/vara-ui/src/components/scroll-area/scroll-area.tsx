@@ -1,11 +1,14 @@
+import cx from 'clsx';
 import { PropsWithChildren } from 'react';
 
 import styles from './scroll-area.module.scss';
 
-type Props = PropsWithChildren;
+type Props = PropsWithChildren & {
+  className?: string;
+};
 
-function ScrollArea({ children }: Props) {
-  return <div className={styles.scrollArea}>{children}</div>;
+function ScrollArea({ children, className }: Props) {
+  return <div className={cx(styles.container, className)}>{children}</div>;
 }
 
 export { ScrollArea };

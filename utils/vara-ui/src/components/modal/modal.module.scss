@@ -30,42 +30,6 @@
   }
 }
 
-.customScroll {
-  /* TODO: same as in gear-js/ui  */
-  /* TODO: temp solution specifically for modal,
-  take a closer look to simplebar-react */
-  overflow-y: auto;
-
-  /* firefox */
-  @-moz-document url-prefix() {
-    scrollbar-width: thin;
-    scrollbar-color: #a2a2a2 rgba(0, 0, 0, 0.1);
-  }
-
-  /* chrome */
-  &::-webkit-scrollbar {
-    width: 19px;
-  }
-
-  &::-webkit-scrollbar-track,
-  &::-webkit-scrollbar-thumb {
-    background-clip: padding-box;
-    border-style: solid;
-    border-color: transparent;
-  }
-
-  &::-webkit-scrollbar-track {
-    border-width: 0 9px;
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-
-  &::-webkit-scrollbar-thumb {
-    border-width: 0 8px;
-    background-color: #a2a2a2;
-    border-radius: 1px;
-  }
-}
-
 .overlay {
   position: fixed;
   top: 0;
@@ -100,6 +64,7 @@
 
   width: 100%;
   max-width: var(--max-width);
+  max-height: calc(100vh - 32px * 2);
   padding: 32px 0;
 
   border-radius: 8px;
