@@ -1,24 +1,91 @@
+@use '../../utils.scss' as *;
+
 .label {
+  @include lightDark(color, #000, #fff);
+
   display: flex;
   align-items: center;
   cursor: pointer;
 
-  &.disabled {
+  font-size: var(--font-size);
+  font-weight: 400;
+  line-height: var(--line-height);
+
+  &:has(:disabled) {
     pointer-events: none;
-    opacity: 0.3;
   }
 }
 
 .input {
   appearance: none;
   cursor: inherit;
-  margin: 0 10px 0 0;
+  margin: 0;
+}
 
-  width: 15px;
-  height: 15px;
-  background-image: url("data:image/svg+xml,%3Csvg width='15' height='15' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='7.5' cy='7.5' r='7' stroke='%23909090'/%3E%3C/svg%3E");
+.box {
+  @include lightDark(background-color, transparent, rgba(255, 255, 255, 0.03));
+  @include lightDark(--border-color, #d0d5dd, rgba(255, 255, 255, 0.04));
+  @include lightDark(--checked-color, #0ed3a3, #00ffc4);
+  @include lightDark(--error-color, rgba(255, 50, 49, 0.8), #d73b4f);
+  @include lightDark(--disabled-color, #eceded, rgba(40, 44, 48, 0.1));
 
-  &:checked {
-    background-image: url("data:image/svg+xml,%3Csvg width='15' height='15' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='7.5' cy='7.5' r='3.5' fill='%230ED3A3'/%3E%3Ccircle cx='7.5' cy='7.5' r='7' stroke='%230ED3A3'/%3E%3C/svg%3E");
+  width: var(--size);
+  height: var(--size);
+  margin-right: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+
+  &::before {
+    content: '';
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    transition: background-color 0.25s ease;
+
+    .input:not(:disabled):checked + & {
+      background-color: var(--checked-color);
+    }
+
+    .input:not(:disabled):checked[aria-invalid='true'] + & {
+      background-color: var(--error-color);
+    }
+
+    .input:disabled:checked + & {
+      background-color: var(--border-color);
+    }
   }
+
+  .input:not(:disabled):checked + & {
+    border-color: var(--checked-color);
+  }
+
+  .input:not(:disabled)[aria-invalid='true'] + & {
+    border-color: var(--error-color);
+  }
+
+  .input:disabled:not(:checked) + & {
+    background-color: var(--disabled-color);
+  }
+}
+
+.small {
+  --size: 15px;
+  --font-size: 12px;
+  --line-height: 22px;
+}
+
+.default {
+  --size: 18px;
+  --font-size: 14px;
+  --line-height: 24px;
 }
