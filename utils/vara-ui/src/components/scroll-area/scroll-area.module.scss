@@ -1,35 +1,34 @@
+@use '../../utils' as *;
+
 .container {
-  /* TODO: same as in gear-js/ui  */
-  /* TODO: temp solution specifically for modal,
-  take a closer look to simplebar-react */
+  @include lightDark(--thumb-color, #e5e5e7, rgba(255, 255, 255, 0.1));
+
   overflow-y: auto;
 
   /* firefox */
   @-moz-document url-prefix() {
+    scrollbar-color: var(--thumb-color) transparent;
     scrollbar-width: thin;
-    scrollbar-color: #a2a2a2 rgba(0, 0, 0, 0.1);
   }
 
   /* chrome */
   &::-webkit-scrollbar {
-    width: 19px;
+    height: 16px;
+    width: 16px;
   }
 
   &::-webkit-scrollbar-track,
   &::-webkit-scrollbar-thumb {
     background-clip: padding-box;
-    border-style: solid;
-    border-color: transparent;
-  }
-
-  &::-webkit-scrollbar-track {
-    border-width: 0 9px;
-    background-color: rgba(0, 0, 0, 0.1);
+    border: 4px solid transparent;
   }
 
   &::-webkit-scrollbar-thumb {
-    border-width: 0 8px;
-    background-color: #a2a2a2;
-    border-radius: 1px;
+    background-color: var(--thumb-color);
+    border-radius: 8px;
+
+    &:hover {
+      @include lightDark(--thumb-color, rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.15));
+    }
   }
 }
