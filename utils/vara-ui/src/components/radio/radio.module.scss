@@ -1,98 +1,91 @@
+@use '../../utils.scss' as *;
+
 .label {
+  @include lightDark(color, #000, #fff);
+
   display: flex;
   align-items: center;
-  gap: 8px;
   cursor: pointer;
-  font-size: 14px;
-  line-height: 20px;
-  width: fit-content;
-  user-select: none;
 
-  &.disabled {
-    cursor: not-allowed;
-  }
-}
-
-.wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  color: #d0d5dd;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: currentColor;
-    border-radius: 100%;
-    opacity: 0;
-    width: 35%;
-    height: 35%;
-  }
-
-  &:has(:checked) {
-    color: #0ed3a3;
-
-    &::before {
-      opacity: 1;
-    }
-  }
+  font-size: var(--font-size);
+  font-weight: 400;
+  line-height: var(--line-height);
 
   &:has(:disabled) {
-    color: #eceded;
+    pointer-events: none;
   }
 }
 
 .input {
   appearance: none;
-  flex-shrink: 0;
-  margin: 0;
-  width: 75%;
-  height: 75%;
-
-  color: inherit;
-  border: 1px solid currentColor;
-  border-radius: 100%;
   cursor: inherit;
+  margin: 0;
+}
+
+.box {
+  @include lightDark(background-color, transparent, rgba(255, 255, 255, 0.03));
+  @include lightDark(--border-color, #d0d5dd, rgba(255, 255, 255, 0.04));
+  @include lightDark(--checked-color, #0ed3a3, #00ffc4);
+  @include lightDark(--error-color, rgba(255, 50, 49, 0.8), #d73b4f);
+  @include lightDark(--disabled-color, #eceded, rgba(40, 44, 48, 0.1));
+
+  width: var(--size);
+  height: var(--size);
+  margin-right: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+
+  &::before {
+    content: '';
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    transition: background-color 0.25s ease;
+
+    .input:not(:disabled):checked + & {
+      background-color: var(--checked-color);
+    }
+
+    .input:not(:disabled):checked[aria-invalid='true'] + & {
+      background-color: var(--error-color);
+    }
+
+    .input:disabled:checked + & {
+      background-color: var(--border-color);
+    }
+  }
+
+  .input:not(:disabled):checked + & {
+    border-color: var(--checked-color);
+  }
+
+  .input:not(:disabled)[aria-invalid='true'] + & {
+    border-color: var(--error-color);
+  }
+
+  .input:disabled:not(:checked) + & {
+    background-color: var(--disabled-color);
+  }
 }
 
 .small {
-  font-size: 12px;
-  line-height: 22px;
-
-  .wrapper {
-    width: 20px;
-    height: 20px;
-  }
+  --size: 15px;
+  --font-size: 12px;
+  --line-height: 22px;
 }
 
-:global(.dark-theme) {
-  .label {
-    color: #ffffff;
-  }
-
-  .wrapper {
-    color: #ffffff0a;
-
-    .input {
-      background-color: #ffffff08;
-    }
-
-    &:has(:checked) {
-      color: #00ffc4;
-
-      .input {
-        background-color: transparent;
-      }
-    }
-
-    &:has(:disabled) {
-      color: #58696e1a;
-    }
-  }
+.default {
+  --size: 18px;
+  --font-size: 14px;
+  --line-height: 24px;
 }

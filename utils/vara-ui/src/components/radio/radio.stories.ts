@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
+
 import { Radio } from './radio';
-import { radioSizes } from './helpers';
 
 type Type = typeof Radio;
 type Story = StoryObj<Type>;
@@ -11,15 +11,15 @@ const meta: Meta<Type> = {
   args: {
     label: 'Label',
     disabled: false,
-    // checked: false,
+    error: undefined,
   },
   argTypes: {
     size: {
-      options: radioSizes,
+      options: ['small', 'default'],
       control: { type: 'select' },
     },
     disabled: { control: 'boolean' },
-    // checked: { control: 'boolean' },
+    error: { control: 'text' },
   },
 };
 

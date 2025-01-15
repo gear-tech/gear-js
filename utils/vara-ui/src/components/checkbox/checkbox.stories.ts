@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
+
 import { Checkbox } from './checkbox';
 
 type Type = typeof Checkbox;
@@ -23,6 +24,7 @@ const meta: Meta<Type> = {
       options: ['checkbox', 'switch'],
       control: { type: 'select' },
     },
+    error: { control: 'text' },
   },
 };
 
