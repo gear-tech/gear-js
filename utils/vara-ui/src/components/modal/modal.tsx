@@ -74,7 +74,7 @@ const Modal = ({ heading, close, children, className, headerAddon, footer, maxWi
         </header>
 
         {children && (
-          <div className={cx(styles.customScroll, className)} style={bodyStyle} ref={bodyRef}>
+          <div className={cx(styles.body, styles.customScroll, className)} style={bodyStyle} ref={bodyRef}>
             {children}
           </div>
         )}
