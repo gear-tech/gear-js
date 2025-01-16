@@ -1,6 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
 
 import { Tooltip } from './tooltip';
+import { Button } from '../button';
 
 type Type = typeof Tooltip;
 type Story = StoryObj<Type>;
@@ -11,7 +12,11 @@ const meta: Meta<Type> = {
   args: {
     position: 'top',
     value: 'Tooltip',
-    children: <button style={{ marginLeft: '256px', marginTop: '256px' }}>Hover my insanely long text</button>,
+    children: (
+      <div style={{ maxWidth: '256px', margin: '64px auto 0' }}>
+        <Button text="Hover me" block />
+      </div>
+    ),
   },
   argTypes: {
     position: {
