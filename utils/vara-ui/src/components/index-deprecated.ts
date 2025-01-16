@@ -8,6 +8,7 @@ import { Alert, AlertProps, alertStyles } from './alert';
 import { Modal, ModalProps, modalStyles } from './modal';
 import { LabelContainer, LabelContainerProps, labelContainerStyles } from './label-container';
 import { ScrollArea, ScrollAreaProps, scrollAreaStyles } from './scroll-area';
+import { Tooltip, TooltipProps, tooltipStyles } from './tooltip';
 
 import '../assets/styles/index-deprecated.css';
 
@@ -32,6 +33,8 @@ export {
   labelContainerStyles,
   ScrollArea,
   scrollAreaStyles,
+  Tooltip,
+  tooltipStyles,
 };
 
 export type {
@@ -45,4 +48,5 @@ export type {
   ModalProps,
   LabelContainerProps,
   ScrollAreaProps,
+  TooltipProps,
 };
