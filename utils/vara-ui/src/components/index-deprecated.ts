@@ -6,6 +6,7 @@ import { Checkbox, CheckboxProps, checkboxStyles } from './checkbox';
 import { Radio, RadioProps, radioStyles } from './radio';
 import { Alert, AlertProps, alertStyles } from './alert';
 import { Modal, ModalProps, modalStyles } from './modal';
+import { Tooltip, TooltipProps, tooltipStyles } from './tooltip';
 
 import '../assets/styles/index-deprecated.css';
 
@@ -26,6 +27,18 @@ export {
   alertStyles,
   Modal,
   modalStyles,
+  Tooltip,
+  tooltipStyles,
 };
 
-export type { ButtonProps, InputProps, TextareaProps, SelectProps, CheckboxProps, RadioProps, AlertProps, ModalProps };
+export type {
+  ButtonProps,
+  InputProps,
+  TextareaProps,
+  SelectProps,
+  CheckboxProps,
+  RadioProps,
+  AlertProps,
+  ModalProps,
+  TooltipProps,
+};
