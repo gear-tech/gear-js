@@ -35,7 +35,7 @@ function Tooltip({ value, position = 'top', children }: Props) {
   const [style, setStyle] = useState<CSSProperties>();
 
   const handleMouseOver = (event: MouseEvent) => {
-    const anchor = event.target as HTMLElement | null;
+    const anchor = event.currentTarget as HTMLElement | null;
     if (!anchor) return;
 
     setStyle(getPosition(anchor, position));
