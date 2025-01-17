@@ -37,14 +37,7 @@
 }
 
 .button {
-  @include lightDark(color, #000, #fff);
-
   margin-left: auto;
-
-  svg {
-    width: 20px;
-    height: 20px;
-  }
 }
 
 .body {
