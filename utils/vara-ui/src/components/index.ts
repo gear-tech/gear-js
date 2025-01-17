@@ -7,6 +7,7 @@ import { Radio, RadioProps, radioStyles } from './radio';
 import { Alert, AlertProps, alertStyles } from './alert';
 import { Modal, ModalProps, modalStyles } from './modal';
 import { LabelContainer, LabelContainerProps, labelContainerStyles } from './label-container';
+import { Tooltip, TooltipProps, tooltipStyles } from './tooltip';
 
 import '../assets/styles/index.css';
 
@@ -29,6 +30,8 @@ export {
   modalStyles,
   LabelContainer,
   labelContainerStyles,
+  Tooltip,
+  tooltipStyles,
 };
 
 export type {
@@ -41,4 +44,5 @@ export type {
   AlertProps,
   ModalProps,
   LabelContainerProps,
+  TooltipProps,
 };
