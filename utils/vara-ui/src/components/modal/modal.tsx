@@ -1,9 +1,10 @@
-import { ReactNode, useEffect, useState, MouseEvent, useCallback } from 'react';
+import { ReactNode, useEffect, useState, MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
 import cx from 'clsx';
 
 import CrossSVG from '../../assets/images/cross.svg?react';
 import { Button } from '../button';
+import { ScrollArea } from '../scroll-area';
 import styles from './modal.module.scss';
 
 type Props = {
@@ -16,30 +17,8 @@ type Props = {
   maxWidth?: 'small' | 'medium' | 'large' | (string & NonNullable<unknown>);
 };
 
-// TODO: same as in gear-js/ui
-function useHeight() {
-  const [height, setHeight] = useState(0);
-
-  const ref = useCallback((node: HTMLDivElement | null) => {
-    if (node) setHeight(node.getBoundingClientRect().height);
-  }, []);
-
-  return [height, ref] as const;
-}
-
-function useMaxHeight() {
-  const [modalHeight, modalRef] = useHeight();
-  const [bodyHeight, bodyRef] = useHeight();
-
-  const padding = 32;
-  const bodyStyle = { maxHeight: `calc(100vh - ${modalHeight - bodyHeight + 2 * padding}px)` };
-
-  return { bodyStyle, modalRef, bodyRef };
-}
-
 const Modal = ({ heading, close, children, className, headerAddon, footer, maxWidth = 'small' }: Props) => {
   const [root, setRoot] = useState<HTMLDivElement>();
-  const { bodyStyle, modalRef, bodyRef } = useMaxHeight();
 
   const handleOverlayClick = ({ target, currentTarget }: MouseEvent) => {
     if (target === currentTarget) close();
@@ -62,8 +41,7 @@ const Modal = ({ heading, close, children, className, headerAddon, footer, maxWi
     <div className={styles.overlay} onClick={handleOverlayClick}>
       <div
         className={cx(styles.modal, !isCustomMaxWidth && styles[maxWidth])}
-        style={isCustomMaxWidth ? { maxWidth } : undefined}
-        ref={modalRef}>
+        style={isCustomMaxWidth ? { maxWidth } : undefined}>
         <header className={styles.header}>
           <div className={styles.headingContainer}>
             <h3 className={styles.heading}>{heading}</h3>
@@ -73,11 +51,7 @@ const Modal = ({ heading, close, children, className, headerAddon, footer, maxWi
           <Button icon={CrossSVG} color="transparent" onClick={close} className={styles.button} />
         </header>
 
-        {children && (
-          <div className={cx(styles.body, styles.customScroll, className)} style={bodyStyle} ref={bodyRef}>
-            {children}
-          </div>
-        )}
+        {children && <ScrollArea className={cx(styles.body, className)}>{children}</ScrollArea>}
 
         {footer && <footer className={styles.footer}>{footer}</footer>}
       </div>

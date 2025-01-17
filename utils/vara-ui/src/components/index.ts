@@ -7,6 +7,7 @@ import { Radio, RadioProps, radioStyles } from './radio';
 import { Alert, AlertProps, alertStyles } from './alert';
 import { Modal, ModalProps, modalStyles } from './modal';
 import { LabelContainer, LabelContainerProps, labelContainerStyles } from './label-container';
+import { ScrollArea, ScrollAreaProps, scrollAreaStyles } from './scroll-area';
 
 import '../assets/styles/index.css';
 
@@ -29,6 +30,8 @@ export {
   modalStyles,
   LabelContainer,
   labelContainerStyles,
+  ScrollArea,
+  scrollAreaStyles,
 };
 
 export type {
@@ -41,4 +44,5 @@ export type {
   AlertProps,
   ModalProps,
   LabelContainerProps,
+  ScrollAreaProps,
 };
