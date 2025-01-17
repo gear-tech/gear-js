@@ -212,6 +212,10 @@
 .x-small {
   --padding: 8px 16px;
   --spinner-size: 20px;
+
+  &.noText {
+    --padding: 8px;
+  }
 }
 
 .small {
@@ -219,13 +223,17 @@
   --spinner-size: 20px;
 
   &.noText {
-    --padding: 12px 16px;
+    --padding: 12px;
   }
 }
 
 .medium {
   --padding: 14px 24px;
   --spinner-size: 24px;
+
+  &.noText {
+    --padding: 14px;
+  }
 }
 
 .default {
@@ -233,7 +241,7 @@
   --spinner-size: 24px;
 
   &.noText {
-    --padding: 15px 16px;
+    --padding: 16px;
   }
 }
 
@@ -241,4 +249,8 @@
   --padding: 17px 28px;
   --spinner-size: 24px;
   --font-size: 18px;
+
+  &.noText {
+    --padding: 17px;
+  }
 }
