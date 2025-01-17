@@ -69,6 +69,17 @@
 .icon {
   width: 1em;
   height: 1em;
+
+  &,
+  * {
+    &[stroke]:not([stroke='none']) {
+      stroke: currentColor;
+    }
+
+    &[fill]:not([fill='none']) {
+      fill: currentColor;
+    }
+  }
 }
 
 .block {
