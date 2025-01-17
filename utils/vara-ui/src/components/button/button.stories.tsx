@@ -28,7 +28,7 @@ const meta: Meta<Type> = {
       control: { type: 'select' },
     },
     color: {
-      options: ['primary', 'blend', 'contrast', 'grey', 'border', 'transparent', 'danger'],
+      options: ['primary', 'plain', 'contrast', 'grey', 'border', 'transparent', 'danger'],
       control: { type: 'select' },
     },
   },
@@ -39,7 +39,7 @@ const Border: Story = { args: { color: 'border' } };
 const Grey: Story = { args: { color: 'grey' } };
 const Transparent: Story = { args: { color: 'transparent' } };
 const Contrast: Story = { args: { color: 'contrast' } };
-const Blend: Story = { args: { color: 'blend' } };
+const Blend: Story = { args: { color: 'plain' } };
 const Danger: Story = { args: { color: 'danger' } };
 const NoText: Story = { args: { color: 'primary', children: undefined, icon: CrossSVG } };
 const WithChildrenAndIcons: Story = {
