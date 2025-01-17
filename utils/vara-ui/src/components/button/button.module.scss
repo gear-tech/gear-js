@@ -24,9 +24,9 @@
   padding: var(--padding, 0);
   font-family: inherit;
 
-  font-size: 16px;
+  font-size: var(--font-size, 16px);
   font-weight: 600;
-  line-height: 12px;
+  line-height: 1;
   color: var(--color, #000);
 
   background-color: var(--background-color, transparent);
@@ -64,6 +64,11 @@
       animation: spin 1s ease-in-out infinite;
     }
   }
+}
+
+.icon {
+  width: 1em;
+  height: 1em;
 }
 
 .block {
@@ -194,12 +199,12 @@
 }
 
 .x-small {
-  --padding: 10px 16px;
+  --padding: 8px 16px;
   --spinner-size: 20px;
 }
 
 .small {
-  --padding: 14px 24px;
+  --padding: 12px 24px;
   --spinner-size: 20px;
 
   &.noText {
@@ -208,12 +213,12 @@
 }
 
 .medium {
-  --padding: 16px 24px;
+  --padding: 14px 24px;
   --spinner-size: 24px;
 }
 
 .default {
-  --padding: 18px 24px;
+  --padding: 16px 24px;
   --spinner-size: 24px;
 
   &.noText {
@@ -222,6 +227,7 @@
 }
 
 .x-large {
-  --padding: 20px 28px;
+  --padding: 17px 28px;
   --spinner-size: 24px;
+  --font-size: 18px;
 }
