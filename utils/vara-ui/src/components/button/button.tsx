@@ -53,7 +53,7 @@ const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
       className={cx(
         styles.button,
         styles[color],
-        color !== 'transparent' && styles[size],
+        styles[size],
         isLoading && styles.loading,
         !text && !children && styles.noText,
         block && styles.block,

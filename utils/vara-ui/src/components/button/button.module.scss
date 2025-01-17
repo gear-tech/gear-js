@@ -15,7 +15,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .button {
@@ -26,7 +26,7 @@
 
   font-size: var(--font-size, 16px);
   font-weight: 600;
-  line-height: 1;
+  line-height: var(--icon-size);
   color: var(--color, #000);
 
   background-color: var(--background-color, transparent);
@@ -67,8 +67,8 @@
 }
 
 .icon {
-  width: 1em;
-  height: 1em;
+  width: var(--icon-size);
+  height: var(--icon-size);
 
   &,
   * {
@@ -191,7 +191,7 @@
 }
 
 .transparent {
-  --spinner-size: 16px;
+  --padding: 0 !important; // overriding size classes
 
   @include darkMode() {
     --color: #fff;
@@ -203,13 +203,14 @@
   }
 
   &:not(.loading):disabled {
-    --background-color: transparent;
+    @include lightDark(--background-color, transparent, transparent);
   }
 }
 
 .x-small {
   --padding: 8px 16px;
   --spinner-size: 20px;
+  --icon-size: 16px;
 
   &.noText {
     --padding: 8px;
@@ -217,38 +218,42 @@
 }
 
 .small {
-  --padding: 12px 24px;
+  --padding: 10px 24px;
   --spinner-size: 20px;
+  --icon-size: 20px;
+
+  &.noText {
+    --padding: 10px;
+  }
+}
+
+.medium {
+  --padding: 12px 24px;
+  --spinner-size: 24px;
+  --icon-size: 20px;
 
   &.noText {
     --padding: 12px;
   }
 }
 
-.medium {
-  --padding: 14px 24px;
-  --spinner-size: 24px;
-
-  &.noText {
-    --padding: 14px;
-  }
-}
-
 .default {
-  --padding: 16px 24px;
+  --padding: 12px 24px;
   --spinner-size: 24px;
+  --icon-size: 24px;
 
   &.noText {
-    --padding: 16px;
+    --padding: 12px;
   }
 }
 
 .x-large {
-  --padding: 17px 28px;
+  --padding: 14px 28px;
   --spinner-size: 24px;
   --font-size: 18px;
+  --icon-size: 24px;
 
   &.noText {
-    --padding: 17px;
+    --padding: 14px;
   }
 }
