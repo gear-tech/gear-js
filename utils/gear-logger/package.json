@@ -1,0 +1,26 @@
+{
+  "name": "@gear-js/logger",
+  "version": "0.1.0",
+  "author": "Gear Technologies",
+  "bugs": {
+    "url": "https://github.com/gear-tech/gear-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gear-tech/gear-js.git"
+  },
+  "keywords": [
+    "gear",
+    "gear-js"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsc"
+  },
+  "dependencies": {
+    "winston": "3.7.2"
+  },
+  "devDependencies": {
+    "typescript": "4.7.4"
+  },
+  "type": "module"
+}
