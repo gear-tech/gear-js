@@ -1,6 +1,6 @@
 {
   "name": "indexer-db",
-  "packageManager": "yarn@3.3.0",
+  "packageManager": "yarn@3.8.7",
   "dependencies": {
     "typeorm": "0.3.20"
   },

@@ -1,6 +1,6 @@
 {
   "name": "explorer",
-  "packageManager": "yarn@3.3.0",
+  "packageManager": "yarn@3.8.7",
   "dependencies": {
     "@gear-js/common": "workspace:^",
     "class-validator": "0.14.1",
