@@ -36,7 +36,7 @@ const Modal = ({ heading, close, children, className, headerAddon, footer, maxWi
             {headerAddon}
           </div>
 
-          <Button icon={CrossSVG} color="transparent" onClick={close} className={styles.button} />
+          <Button icon={CrossSVG} color="transparent" size="medium" onClick={close} />
         </header>
 
         {children && <ScrollArea className={cx(styles.body, className)}>{children}</ScrollArea>}

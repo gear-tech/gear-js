@@ -49,7 +49,9 @@ function Alert({ alert, close }: Props) {
         <SVG className={styles.icon} />
         <h2 className={styles.title}>{title || type}</h2>
 
-        {isClosed && <Button icon={CrossSVG} color="transparent" className={styles.button} onClick={close} />}
+        {isClosed && (
+          <Button icon={CrossSVG} color="transparent" size="medium" className={styles.button} onClick={close} />
+        )}
       </header>
 
       <div className={styles.body}>{content}</div>
