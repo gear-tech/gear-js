@@ -2,11 +2,10 @@ import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { blake2AsHex } from '@polkadot/util-crypto';
 import { bufferToU8a } from '@polkadot/util';
-import { join } from 'path';
 import { readFileSync } from 'fs';
 
+import { TEST_META, TEST_META_CODE } from './config';
 import { ProgramMetadata } from '../src';
-import { TARGET, TEST_META_META } from './config';
 import { checkInit, getAccount, sendTransaction, sleep, waitForPausedProgram } from './utilsFunctions';
 import { getApi } from './common';
 
@@ -19,8 +18,8 @@ let metaHash: HexString;
 let expiredBN: number;
 let pausedBlockHash: HexString;
 
-const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
-const metaHex: HexString = `0x${readFileSync(TEST_META_META, 'utf-8')}`;
+const code = Uint8Array.from(readFileSync(TEST_META_CODE));
+const metaHex: HexString = `0x${readFileSync(TEST_META, 'utf-8')}`;
 
 beforeAll(async () => {
   await api.isReadyOrError;
@@ -92,7 +91,7 @@ describe('New Program', () => {
     pausedBlockHash = blockHash;
   });
 
-  test('Сreate program', async () => {
+  test('Create program', async () => {
     expect(codeId).toBeDefined();
     const metadata = ProgramMetadata.from(metaHex);
 
@@ -131,24 +130,24 @@ describe('New Program', () => {
 
   test('Throw error if value is incorrect', () => {
     expect(() =>
-      api.program.upload({ code: Buffer.from('0x00'), gasLimit: 1000, value: api.existentialDeposit.toNumber() - 1 }),
+      api.program.upload({ code: Uint8Array.from([0]), gasLimit: 1000, value: api.existentialDeposit.toNumber() - 1 }),
     ).toThrow(`Value less than minimal. Minimal value: ${api.existentialDeposit.toHuman()}`);
   });
 
   test('Not to throw error if value is correct', () => {
     expect(() =>
-      api.program.upload({ code: Buffer.from('0x00'), gasLimit: 1000, value: api.existentialDeposit.toNumber() }),
+      api.program.upload({ code: Uint8Array.from([0]), gasLimit: 1000, value: api.existentialDeposit.toNumber() }),
     ).not.toThrow();
   });
 
   test('Throw error if gasLimit too high', () => {
-    expect(() => api.program.upload({ code: Buffer.from('0x00'), gasLimit: api.blockGasLimit.addn(1) })).toThrow(
+    expect(() => api.program.upload({ code: Uint8Array.from([0]), gasLimit: api.blockGasLimit.addn(1) })).toThrow(
       `GasLimit too high. Maximum gasLimit value is ${api.blockGasLimit.toHuman()}`,
     );
   });
 
   test('Not to throw error if gasLimit is correct', () => {
-    expect(() => api.program.upload({ code: Buffer.from('0x00'), gasLimit: api.blockGasLimit })).not.toThrow();
+    expect(() => api.program.upload({ code: Uint8Array.from([0]), gasLimit: api.blockGasLimit })).not.toThrow();
   });
 
   test.skip('Pay program rent', async () => {

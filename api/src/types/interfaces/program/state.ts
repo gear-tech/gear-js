@@ -58,7 +58,7 @@ export interface ReadStateUsingWasmParams {
   /**
    * Compiled program using to read `state` of the onchain program
    */
-  wasm: Buffer | Uint8Array | HexString;
+  wasm: Uint8Array | HexString;
   /**
    * (Optional) The argument expected by the program using to read state
    */

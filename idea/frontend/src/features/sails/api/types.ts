@@ -17,4 +17,9 @@ type EventType = IBase & {
   name?: string | null;
 };
 
-export type { GetEventsParameters, EventType };
+type GetIdlResponse = {
+  codeId: string;
+  data: string;
+};
+
+export type { GetEventsParameters, EventType, GetIdlResponse };

@@ -2,7 +2,7 @@ import { ReactNode, useEffect, useState, MouseEvent, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import cx from 'clsx';
 
-import { ReactComponent as CrossSVG } from '../../assets/images/cross.svg';
+import CrossSVG from '../../assets/images/cross.svg?react';
 import { Button } from '../button';
 import styles from './modal.module.scss';
 
@@ -11,7 +11,9 @@ type Props = {
   close: () => void;
   children?: ReactNode;
   className?: string;
+  headerAddon?: ReactNode;
   footer?: ReactNode;
+  maxWidth?: 'small' | 'medium' | 'large' | (string & NonNullable<unknown>);
 };
 
 // TODO: same as in gear-js/ui
@@ -35,7 +37,7 @@ function useMaxHeight() {
   return { bodyStyle, modalRef, bodyRef };
 }
 
-const Modal = ({ heading, close, children, className, footer }: Props) => {
+const Modal = ({ heading, close, children, className, headerAddon, footer, maxWidth = 'small' }: Props) => {
   const [root, setRoot] = useState<HTMLDivElement>();
   const { bodyStyle, modalRef, bodyRef } = useMaxHeight();
 
@@ -54,17 +56,25 @@ const Modal = ({ heading, close, children, className, footer }: Props) => {
     };
   }, []);
 
+  const isCustomMaxWidth = !['small', 'medium', 'large'].includes(maxWidth);
+
   const component = (
     <div className={styles.overlay} onClick={handleOverlayClick}>
-      <div className={styles.modal} ref={modalRef}>
+      <div
+        className={cx(styles.modal, !isCustomMaxWidth && styles[maxWidth])}
+        style={isCustomMaxWidth ? { maxWidth } : undefined}
+        ref={modalRef}>
         <header className={styles.header}>
-          <h3 className={styles.heading}>{heading}</h3>
+          <div className={styles.headingContainer}>
+            <h3 className={styles.heading}>{heading}</h3>
+            {headerAddon}
+          </div>
 
           <Button icon={CrossSVG} color="transparent" onClick={close} className={styles.button} />
         </header>
 
         {children && (
-          <div className={cx(styles.customScroll, className)} style={bodyStyle} ref={bodyRef}>
+          <div className={cx(styles.body, styles.customScroll, className)} style={bodyStyle} ref={bodyRef}>
             {children}
           </div>
         )}

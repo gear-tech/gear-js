@@ -1,14 +1,13 @@
 import { HexString } from '@polkadot/util/types';
-import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { TARGET } from './config';
+import { TEST_CODE } from './config';
 import { getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { getApi } from './common';
 
 const api = getApi();
 const accounts = {};
-const code = readFileSync(join(TARGET, 'test_waitlist.opt.wasm'));
+const code = Uint8Array.from(readFileSync(TEST_CODE));
 let codeId: HexString;
 
 beforeAll(async () => {

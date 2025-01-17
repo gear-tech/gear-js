@@ -1,20 +1,12 @@
-import { HexString } from '@gear-js/api';
-
-import { rpcService } from '@/shared/services/rpcService';
-
-const METHOD = {
-  GET_TEST_BALANCE: 'testBalance.get',
-  IS_TEST_BALANCE_AVAILABLE: 'testBalance.available',
-} as const;
+import { GENESIS } from '@/shared/config';
+import { fetchWithGuard } from '@/shared/helpers';
+import { FAUCET_API_URL } from './consts';
 
 type GetTestBalanceParameters = {
   token: string;
   address: string;
 };
 
-const getIsTestBalanceAvailable = (genesis: HexString) =>
-  rpcService.callRPC<boolean>(METHOD.IS_TEST_BALANCE_AVAILABLE, { genesis });
-
-const getTestBalance = (params: GetTestBalanceParameters) => rpcService.callRPC(METHOD.GET_TEST_BALANCE, params);
-
-export { getIsTestBalanceAvailable, getTestBalance };
+const getTestBalance = ({ token, address }: GetTestBalanceParameters) =>
+  fetchWithGuard(`${FAUCET_API_URL}/balance`, 'POST', { token, payload: { address, genesis: GENESIS.TESTNET } });
+export { getTestBalance };

@@ -3,8 +3,8 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
+import { TARGET, TEST_META, TEST_META_CODE } from './config';
 import { ProgramMetadata, decodeAddress } from '../src';
-import { TARGET, TEST_META_META } from './config';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { getApi } from './common';
 
@@ -19,8 +19,8 @@ let voucher: string;
 let validUpTo: number;
 
 const api = getApi();
-const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
-const metaHex: HexString = `0x${readFileSync(TEST_META_META, 'utf-8')}`;
+const code = Uint8Array.from(readFileSync(TEST_META_CODE));
+const metaHex: HexString = `0x${readFileSync(TEST_META, 'utf-8')}`;
 const metadata = ProgramMetadata.from(metaHex);
 
 beforeAll(async () => {
@@ -189,7 +189,7 @@ describe('Voucher', () => {
         account: charlieRaw,
         gasLimit: 20_000_000_000,
         value: 0,
-        payload: 'Charlie',
+        payload: { TextReply: 'Charlie' },
       },
       metadata,
       metadata.types.reply!,
@@ -225,7 +225,7 @@ describe('Voucher', () => {
   test('Upload code with voucher', async () => {
     expect(voucher).toBeDefined();
 
-    const code = new Uint8Array(readFileSync(join(TARGET, 'empty.opt.wasm')).buffer);
+    const code = new Uint8Array(readFileSync(join(TARGET, 'test.wasm')).buffer);
 
     const { extrinsic, codeHash } = await api.code.upload(code);
 

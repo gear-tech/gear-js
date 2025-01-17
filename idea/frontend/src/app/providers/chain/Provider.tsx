@@ -1,7 +1,6 @@
 import { ProviderProps, useApi } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 
-import { getIsTestBalanceAvailable } from '@/features/balance';
 import { GENESIS } from '@/shared/config';
 
 import { ChainContext } from './Context';
@@ -21,11 +20,8 @@ const ChainProvider = ({ children }: ProviderProps) => {
 
     if (isDevChain === undefined) return;
 
-    if (isDevChain) {
-      setIsTestBalanceAvailable(true);
-    } else {
-      getIsTestBalanceAvailable(genesis!).then(({ result }) => setIsTestBalanceAvailable(result));
-    }
+    setIsTestBalanceAvailable(isDevChain || genesis === GENESIS.TESTNET);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDevChain]);
 
