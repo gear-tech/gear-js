@@ -74,7 +74,7 @@ const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
       disabled={disabled || isLoading}
       ref={ref}
       {...attrs}>
-      {Icon && <Icon />}
+      {Icon && <Icon className={styles.icon} />}
       {(text || children) && <span className={styles.content}>{text || children}</span>}
     </button>
   );
