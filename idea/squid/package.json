@@ -30,7 +30,7 @@
   "devDependencies": {
     "@subsquid/substrate-metadata-explorer": "3.1.2",
     "@subsquid/substrate-typegen": "8.1.0",
-    "@subsquid/typeorm-codegen": "2.0.0",
+    "@subsquid/typeorm-codegen": "2.0.2",
     "@types/node": "20.12.7",
     "@types/redis": "^4.0.11",
     "ts-node-dev": "^2.0.0",
