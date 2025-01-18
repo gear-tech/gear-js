@@ -105,6 +105,9 @@ jobs:
       - name: 'Install dependencies'
         run: yarn install
 
+      - name: 'Build'
+        run: yarn build:gear-idea-backend
+
       - name: 'Run tests'
         timeout-minutes: 3
         run: yarn test:gear-idea-backend
