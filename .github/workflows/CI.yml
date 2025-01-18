@@ -107,7 +107,7 @@ jobs:
 
       - name: 'Run tests'
         timeout-minutes: 3
-        run: test:gear-idea-backend
+        run: yarn test:gear-idea-backend
 
   test-ui:
     runs-on: ubuntu-latest
