@@ -20,8 +20,6 @@ function useVouchers(accountAddress: string | undefined, programId?: HexString |
       .getAllForAccount(accountAddress, programId)
       .then((result) => setVouchers(result))
       .catch(({ message }) => alert.error(message));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady, api, accountAddress, programId]);
 
   return { vouchers, isEachVoucherReady };

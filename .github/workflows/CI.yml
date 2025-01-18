@@ -1,0 +1,156 @@
+name: 'CI'
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  BINARYEN_VERSION: version_111
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: action/checkout@v4
+
+      - name: "Install Node.js 20.x"
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: "Install dependencies"
+        run: yarn install
+
+      - name: "Run linter"
+        run: yarn lint
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: action/checkout@v4
+
+      - name: "Install Node.js 20.x"
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: "Install dependencies"
+        run: yarn install
+
+      - name: "Build all packages"
+        run: yarn build:all
+
+  test-api:
+    runs-on: ubuntu-22.04
+    env:
+      RUSTUP_HOME: /tmp/rustup_home
+    steps:
+      - name: Cancel previous workflow runs
+        uses: styfle/cancel-workflow-action@0.4.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v3
+
+      - name: 'Install: NodeJS 20.x'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+          components: clippy, rustfmt, llvm-tools, rust-src
+
+      - name: 'Install: binaryen'
+        run: |
+          wget -c https://github.com/WebAssembly/binaryen/releases/download/$BINARYEN_VERSION/binaryen-$BINARYEN_VERSION-x86_64-linux.tar.gz -O - | tar -xz -C .
+          sudo cp binaryen-$BINARYEN_VERSION/bin/wasm-opt /usr/bin/
+
+      - name: 'Install dependencies'
+        run: yarn install
+
+      - name: 'Build: @gear-js/api'
+        run: yarn build:gear-api
+
+      - name: 'Prepare: build programs'
+        run: cargo build --release
+
+      - name: 'Prepare: download Gear node'
+        run: |
+          wget -O ./gear https://github.com/gear-tech/gear/releases/download/build/gear
+          chmod +x gear
+
+      - name: 'Prepare: run Gear node'
+        run: |
+          nohup ./gear --dev --execution=wasm --tmp --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
+
+      - name: 'Prepare: sleep 3 min'
+        run: sleep 180
+
+      - name: 'Test: run'
+        run: yarn test:gear-api
+
+  test-idea-backend:
+    runs-on: ubuntu-latest
+    env:
+      TEST_ENV: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install NodeJS 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: 'Install dependencies'
+        run: yarn install
+
+      - name: 'Run tests'
+        timeout-minutes: 3
+        run: test:gear-idea-backend
+
+  test-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install NodeJS 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: 'Install dependencies'
+        run: yarn install
+
+      - name: 'Build pkg'
+        run: yarn build
+
+      - name: 'gear-ui: Run tests'
+        run: yarn test:ui
+
+  test-txwrapper:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel previous workflow runs
+        uses: styfle/cancel-workflow-action@0.4.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v4
+
+      - name: "Install: NodeJS 20.x"
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: "Install dependencies"
+        run: yarn install
+
+      - name: "Test: run"
+        run: yarn test:txwrapper
