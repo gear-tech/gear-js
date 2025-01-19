@@ -7,6 +7,7 @@
   },
   "scripts": {
     "start": "node lib/main.js",
+    "run-with-migrations": "squid-typeorm-migration apply && node lib/main.js",
     "dev": "npx ts-node-dev src/main.ts",
     "build": "rm -rf lib && npx tsc --build",
     "migration:generate": "squid-typeorm-migration generate",

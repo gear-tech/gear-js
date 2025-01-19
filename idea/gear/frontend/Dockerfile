@@ -1,19 +1,10 @@
-FROM node:18-alpine AS builder
-MAINTAINER GEAR
+FROM node:20-alpine AS builder
 
 WORKDIR /src
 
-COPY package.json .
-COPY yarn.lock .
-COPY tsconfig.json .
-COPY .yarnrc.yml .
-COPY .yarn .yarn
-COPY ./idea/frontend ./idea/frontend
-COPY ./utils/gear-hooks ./utils/gear-hooks
-COPY ./utils/gear-ui ./utils/gear-ui
-COPY ./utils/wallet-connect ./utils/wallet-connect
+COPY . .
 
-RUN yarn install --mode=skip-build
+RUN yarn workspaces focus gear-idea-frontend @gear-js/api @gear-js/react-hooks @gear-js/ui @gear-js/wallet-connect @gear-js/vara-ui gear-js
 
 ARG VITE_NODE_ADDRESS \
     VITE_NODES_API_URL \
@@ -27,7 +18,7 @@ ARG VITE_NODE_ADDRESS \
     VITE_INDEXER_API_URL \
     VITE_MAINNET_DNS_API_URL \
     VITE_TESTNET_DNS_API_URL
-    
+
 ENV VITE_NODE_ADDRESS=${VITE_NODE_ADDRESS} \
     VITE_NODES_API_URL=${VITE_NODES_API_URL} \
     VITE_FAUCET_API_URL=${VITE_FAUCET_API_URL} \
@@ -40,11 +31,9 @@ ENV VITE_NODE_ADDRESS=${VITE_NODE_ADDRESS} \
     VITE_INDEXER_API_URL=${VITE_INDEXER_API_URL} \
     VITE_MAINNET_DNS_API_URL=${VITE_MAINNET_DNS_API_URL} \
     VITE_TESTNET_DNS_API_URL=${VITE_TESTNET_DNS_API_URL}
-    
-    
 
-RUN yarn build:frontend
+RUN yarn build:gear-idea-frontend
 
 FROM nginx:alpine
 RUN rm -vf /usr/share/nginx/html/*
-COPY --from=builder /src/idea/frontend/dist /usr/share/nginx/html
+COPY --from=builder /src/idea/gear/frontend/dist /usr/share/nginx/html

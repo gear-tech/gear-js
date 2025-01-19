@@ -90,8 +90,6 @@ jobs:
 
   test-idea-backend:
     runs-on: ubuntu-latest
-    env:
-      TEST_ENV: true
 
     steps:
       - name: Checkout repository
@@ -106,7 +104,9 @@ jobs:
         run: yarn install
 
       - name: 'Build'
-        run: yarn build:gear-idea-backend
+        run: |
+          yarn build:gear-api
+          yarn build:gear-idea-backend
 
       - name: 'Run tests'
         timeout-minutes: 3

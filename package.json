@@ -33,8 +33,12 @@
   "scripts": {
     "clean": "lerna run clean --parallel && lerna clean -y && rm -rf node_modules",
     "build:gear-api": "lerna run build --scope @gear-js/api",
-    "build:gear-idea-backend": "lerna run build --scope gear-idea-common --scope gear-idea-explorer --scope gear-idea-faucet --scope gear-idea-indexer-db --scope gear-idea-meta-storage --scope gear-idea-squid",
-    "build:gear-idea-frontend": "lerna run build --scope gear-idea-frontend --scope @gear-js/ui @gear-js/react-hooks --scope @gear-js/wallet-connect",
+    "build:gear-idea-explorer": "lerna run build --scope @gear-js/api --scope gear-idea-common --scope gear-idea-explorer --scope gear-idea-indexer-db",
+    "build:gear-idea-faucet": "lerna run build --scope @gear-js/api --scope gear-idea-faucet",
+    "build:gear-idea-meta-storage": "lerna run build --scope @gear-js/api --scope gear-idea-meta-storage",
+    "build:gear-idea-squid": "lerna run build --scope @gear-js/api --scope gear-idea-indexer-db --scope gear-idea-squid",
+    "build:gear-idea-backend": "lerna run build --scope @gear-js/api --scope gear-idea-common --scope gear-idea-explorer --scope gear-idea-faucet --scope gear-idea-indexer-db --scope gear-idea-meta-storage --scope gear-idea-squid",
+    "build:gear-idea-frontend": "lerna run build --scope gear-idea-frontend --scope @gear-js/ui --scope @gear-js/vara-ui --scope @gear-js/react-hooks --scope @gear-js/wallet-connect --scope @gear-js/api",
     "build:ui": "lerna run build --parallel --scope @gear-js/ui --scope @gear-js/vara-ui",
     "build:hooks": "lerna run build --scope @gear-js/react-hooks",
     "build:wallet-connect": "lerna run build --scope @gear-js/wallet-connect --scope @gear-js/react-hooks --scope @gear-js/ui --scope @gear-js/vara-ui",
@@ -50,7 +54,8 @@
     "test": "lerna run test --parallel",
     "lint": "npx eslint",
     "lint:fix": "npx eslint --fix",
-    "update:polkadot": "node scripts/update-polkadot.mjs"
+    "update:polkadot": "node scripts/update-polkadot.mjs",
+    "bump:gear-idea": "node update-gear-idea-version.mjs"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
