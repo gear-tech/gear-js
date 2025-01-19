@@ -2,9 +2,9 @@
   "name": "@gear-js/api",
   "version": "0.40.0",
   "description": "A JavaScript library that provides functionality to connect GEAR Component APIs.",
-  "main": "cjs/index.js",
-  "module": "index.js",
-  "types": "index.d.ts",
+  "main": "lib/cjs/index.js",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
   "type": "module",
   "author": "Gear Technologies",
   "bugs": {
@@ -21,7 +21,7 @@
     "gear-api"
   ],
   "scripts": {
-    "test": "npx jest --runInBand",
+    "test": "bash run-tests.sh",
     "test:only": "npx jest --testPathPattern",
     "build": "rm -rf lib && npx rollup --config rollup.config.js",
     "generate:defs": "npx ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package sample-polkadotjs-typegen/interfaces --input ./temp --endpoint ws://127.0.0.1:9944",
@@ -29,33 +29,36 @@
     "clean": "echo \"clean @gear-js/api\" && rm -rf lib"
   },
   "exports": {
-    "./cjs/package.json": "./cjs/package.json",
-    "./cjs/*": "./cjs/*.js",
+    "./cjs/package.json": "./lib/cjs/package.json",
+    "./cjs/*": "./lib/cjs/*.js",
     ".": {
-      "import": "./index.js",
-      "require": "./cjs/index.js",
-      "types": "./index.d.ts"
+      "import": "./lib/index.js",
+      "require": "./lib/cjs/index.js",
+      "types": "./lib/index.d.ts"
     },
     "./types": {
-      "import": "./types/index.d.ts"
+      "import": "./lib/types/index.d.ts"
     },
     "./utils": {
-      "import": "./utils/index.js",
-      "require": "./cjs/utils/index.js",
-      "types": "./utils/index.d.ts"
+      "import": "./lib/utils/index.js",
+      "require": "./lib/cjs/utils/index.js",
+      "types": "./lib/utils/index.d.ts"
     }
   },
   "license": "GPL-3.0",
   "peerDependencies": {
-    "@polkadot/api": "15.0.1",
+    "@polkadot/api": "15.3.1",
     "@polkadot/wasm-crypto": "7.4.1",
     "rxjs": "7.8.1"
   },
   "devDependencies": {
-    "@polkadot/api": "15.0.1",
-    "@polkadot/typegen": "15.0.1",
-    "@polkadot/types": "15.0.1",
+    "@polkadot/api": "15.3.1",
+    "@polkadot/typegen": "15.3.1",
+    "@polkadot/types": "15.3.1",
     "@polkadot/wasm-crypto": "7.4.1",
     "rxjs": "7.8.1"
-  }
+  },
+  "files": [
+    "lib"
+  ]
 }

@@ -9,7 +9,7 @@ async function verifyCaptcha(token: string): Promise<boolean> {
   if (!token) {
     return false;
   }
-  if (process.env.TEST_ENV) {
+  if (process.env.NODE_ENV === 'test') {
     return true;
   }
   const verfied = await verify(SECRET, token);

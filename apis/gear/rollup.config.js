@@ -9,10 +9,10 @@ function writePackageJson() {
     name: 'write-package-json',
     closeBundle() {
       writeFileSync('./lib/cjs/package.json', JSON.stringify({ type: 'commonjs' }));
-      cpSync('./package.json', 'lib/package.json');
     },
   };
 }
+
 function cpReadme() {
   return {
     name: 'cp-readme',

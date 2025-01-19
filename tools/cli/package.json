@@ -13,8 +13,8 @@
     "clean": "echo \"clean @gear-js/cli\" && rm -rf dist"
   },
   "dependencies": {
-    "@gear-js/api": "0.32.1",
-    "@polkadot/api": "10.9.1",
+    "@gear-js/api": "0.40.0",
+    "@polkadot/api": "15.3.1",
     "chalk": "4",
     "commander": "10.0.1",
     "inquirer": "9.2.6",

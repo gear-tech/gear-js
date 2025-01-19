@@ -47,8 +47,10 @@
     "test:gear-idea-backend": "lerna run test --parallel --scope gear-idea-meta-storage --scope gear-idea-faucet",
     "test:txwrapper": "lerna run test --scope @gear-js/txwrapper",
     "test:ui": "lerna run test --scope @gear-js/ui",
+    "test": "lerna run test --parallel",
     "lint": "npx eslint",
-    "lint:fix": "npx eslint --fix"
+    "lint:fix": "npx eslint --fix",
+    "update:polkadot": "node scripts/update-polkadot.mjs"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",

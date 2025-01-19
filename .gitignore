@@ -10,6 +10,7 @@ dist/
 dist-temp/
 dist-ssr/
 .rollup.cache
+tmp/
 
 .idea
 .DS_Store
