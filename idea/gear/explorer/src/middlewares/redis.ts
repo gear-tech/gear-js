@@ -9,8 +9,7 @@ let isLoggedRedisError = false;
 
 export let client: RedisClientType;
 
-// TODO: reconnect
-
+// TODO(#1718): implement redis reconnection in case of disconnect
 export async function redisConnect() {
   client = createClient({
     url: `redis://${config.redis.user}:${config.redis.password}@${config.redis.host}:${config.redis.port}`,
