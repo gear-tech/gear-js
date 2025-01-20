@@ -3,16 +3,21 @@
     <img src="https://github.com/gear-tech/gear/blob/master/images/logo-grey.png" width="400" alt="GEAR">
   </a>
 </p>
+<h3 align="center">
+    Gear-JS API
+</h3>
 <p align=center>
     <a href="https://github.com/gear-tech/gear-js/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-GPL%203.0-success"></a>
 </p>
 <hr>
 
-## Description
+# Description
 
-The Gear-JS API provides a set of utilities, libraries and tools that enable JavaScript applications to interact with smart contracts running in the Gear-based networks via queries to a Gear node.
+The `@gear-js/api` library offers tools and methods for developers to interact with the Gear Protocol and build applications on top of it.
 
-## Installation
+Built on top of the [@polkadot-js/api](https://github.com/polkadot-js/api) library, it extends functionality by providing additional methods and classes specific to the Gear Protocol.
+
+# Installation
 
 ```sh
 npm install @gear-js/api
@@ -26,7 +31,7 @@ yarn add @gear-js/api
 
 ---
 
-## Getting started
+# Getting started
 
 Start an API connection to a running node on localhost:
 
@@ -54,11 +59,12 @@ const genesis = gearApi.genesisHash.toHex();
 Since different networks can have different runtime versions, they can have different extrinsics / rpc calls signatures.
 In general you may use `GearApi` class to interact with the node, but it can be more convivnient to use classes based on a specific runtime version.
 For example for interacting with the network that has runtime version more than `1010` you can use the `VaraApiV1010` class.
+
 ---
 
-## Payloads and metadata
+# Payloads and metadata
 
-### Encode / decode payloads
+## Encode / decode payloads
 
 _It's necessary to send only bytes to interact with programs on blockchain._
 _For that purpose we use the `scale-codec` implementation from `@polkadot-js`_
@@ -82,7 +88,7 @@ result.toU8a(); // - encodes the value as a Unit8Array
 result.toJSON(); // - converts the value to JSON
 ```
 
-### Getting metadata
+# Getting metadata
 
 There're 2 types of metadata.
 
@@ -136,13 +142,13 @@ meta.createType(4, { value: 'value' }); // to encode or decode data
 
 ---
 
-## Gear extrinsics
+# Gear extrinsics
 
 **_Extrinsics are used to interact with programs running on blockchain networks powered by Gear Protocol_**
 
 _In all cases of sending extrinsics, there is no need to encode the payloads by yourself. It's sufficient to pass the program metadata obtained from the `ProgramMetadata.from` method to the methods that creates extrinsics._
 
-### Upload program
+## Upload program
 
 Use `api.program.upload` method to create `upload_program` extrinsic
 
@@ -163,7 +169,7 @@ await extrinsic.signAndSend(keyring, (event) => {
 });
 ```
 
-### Upload code
+## Upload code
 
 Use `api.code.upload` method to create `upload_code` extrinsic
 
@@ -183,7 +189,7 @@ gearApi.code.signAndSend(alice, () => {
 });
 ```
 
-### Create program from the code uploaded on chain
+## Create program from the code uploaded on chain
 
 Use `api.program.create` method to create `create_program` extrinsic
 
@@ -204,7 +210,7 @@ await extrinsic.signAndSend(keyring, (event) => {
 });
 ```
 
-### Send a message
+## Send a message
 
 Use `api.message.send` method to create `send_message` extrinsic
 
@@ -233,7 +239,7 @@ try {
 }
 ```
 
-### Send a reply message
+## Send a reply message
 
 Use `api.message.reply` method to create `send_reply` extrinsic
 
@@ -251,7 +257,7 @@ await extrinsic(keyring, (events) => {
 });
 ```
 
-### Get a transaction fee
+## Get a transaction fee
 
 To get a transaction fee before sending a transaction you can use `paymentInfo` method.
 
@@ -264,7 +270,7 @@ const transactionFee = paymentInfo.partialFee.toNumber();
 consolg.log(transactionFee);
 ```
 
-### Calculate gas for messages
+## Calculate gas for messages
 
 To find out the minimum gas amount to send extrinsic, use `gearApi.program.calculateGas.[method]`.
 There are 4 methods to use:
@@ -281,7 +287,7 @@ Gas calculation returns GasInfo object contains 5 parameters:
 - `may_be_returned` - value that can be returned in some cases
 - `waited` - notifies that the message will be added to waitlist
 
-#### Example of using `calculateGas.handle` method
+### Example of using `calculateGas.handle` method
 
 ```javascript
 const code = fs.readFileSync('demo_meta.opt.wasm');
@@ -303,7 +309,7 @@ console.log(gas.toHuman());
 ```
 ---
 
-### Resume paused program
+## Resume paused program
 
 To resume paused program use `api.program.resumeSession` methods.
 `init` - To start new session to resume program
@@ -338,7 +344,7 @@ tx.signAndSend(account);
 ```
 
 
-### Issue a voucher
+## Issue a voucher
 Use `api.voucher.issue` method to issue a new voucher for a user to be used to pay for sending messages to programs.
 
 ```javascript
@@ -361,19 +367,19 @@ extrinsic.signAndSend(account, ({ events }) => {
 })
 ```
 
-#### Check that the voucher exists for a particular user and program
+### Check that the voucher exists for a particular user and program
 The `api.voucher.exists` method returns a boolean value indicates whether the voucher exists or not.
 ```javascript
 const voucherExists = await api.voucher.exists(accountId, programId)
 ```
 
-#### Get all voucher for an account
+### Get all voucher for an account
 The `api.voucher.getAllForAccount` method returns an object whose key is the voucher id and value is an array of programs for which the voucher can be used.
 ```javascript
 const allVouchers = await api.voucher.getAllForAccount(accountId);
 ```
 
-#### Get voucher details
+### Get voucher details
 ```javascript
 const details = api.voucher.details(spenderAddress, voucherId);
 console.log(`Voucher details:
@@ -382,7 +388,7 @@ console.log(`Voucher details:
   expiry: ${details.expiry}`);
 ```
 
-#### Send a message with the issued voucher
+### Send a message with the issued voucher
 To send message with voucher you can use `api.voucher.call` method.
 ```javascript
 const messageTx = api.message.send({
@@ -398,7 +404,7 @@ await voucherTx.signAndSend(account, (events) => {
 });
 ```
 
-#### Send a reply with issued voucher
+### Send a reply with issued voucher
 It works in the same way as sending message with voucher
 ```javascript
 const messageTx = api.message.sendReply(...);
@@ -409,7 +415,7 @@ await voucherTx.signAndSend(account, (events) => {
 });
 ```
 
-#### Upload code with issued voucher
+### Upload code with issued voucher
 ```javascript
 const { extrinsic } = await api.code.upload(code);
 
@@ -419,11 +425,11 @@ await tx.signAndSend(account, (events) => {
 });
 ```
 
-#### Update voucher
+### Update voucher
 The `api.voucher.update` can be used to update the voucher. All parameters in the 3rd argument are optional, but at least one parameter must be specified.
 ```javascript
 const tx = await api.voucher.update(
-  spenderAddress, 
+  spenderAddress,
   voucherId,
   {
     moveOwnership: newOwnerAddress, // The new voucher owner
@@ -434,23 +440,23 @@ const tx = await api.voucher.update(
 )
 ```
 
-#### Revoke voucher
+### Revoke voucher
 The `api.voucher.revoke` is used to revoke an issued voucher. It's possible to revoke a voucher only after the validity period has expired.
 ```javascript
 const tx = api.voucher.revoke(spenderAddress, voucherId);
 tx.signAndSend(...);
 ```
 
-#### Decline voucher
+### Decline voucher
 The `api.voucher.decline` can be used to decline existing and not expired voucher. It will make the voucher expired
 ```javascript
 const tx = api.voucher.decline(voucherId);
 tx.signAndSend(...);
 ```
 
-## Work with programs and blockchain state
+# Work with programs and blockchain state
 
-### Check that the address belongs to some program
+## Check that the address belongs to some program
 
 To find out if an address belongs to a program use the `api.program.exists` method.
 
@@ -461,7 +467,7 @@ const programExists = await api.program.exists(programId);
 console.log(`Program with address ${programId} ${programExists ? 'exists' : "doesn't exist"}`);
 ```
 
-### Send message to the program and get the reply
+## Send message to the program and get the reply
 
 Since `v1.2.0` release of the `gear` pallet, it's possible to send a message to the program and get the reply without transaction.
 The `api.message.calculateReply` method can be used for that purpose.
@@ -481,7 +487,7 @@ console.log(result.toJSON());
 console.log('reply payload:', meta.createType(meta.types.handle.output, result.payload).toJSON());
 ```
 
-### Read state of a program
+## Read state of a program
 
 There are 2 ways to read state of a program.
 
@@ -510,7 +516,7 @@ There are 2 ways to read state of a program.
    );
    ```
 
-### Get ids of all uploaded codes
+## Get ids of all uploaded codes
 
 To get all ids of uploaded codes use `api.code.all` method. It returns array of code ids
 
@@ -519,11 +525,11 @@ const codeIds = await gearApi.code.all();
 console.log(codeIds);
 ```
 
-### Mailbox
+## Mailbox
 
 The mailbox contains messages that are waiting for user action.
 
-#### Read
+### Read
 
 To read the mailbox use `api.mailbox.read` method.
 
@@ -533,7 +539,7 @@ const mailbox = await api.mailbox.read('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcN
 console.log(mailbox);
 ```
 
-### Claim value
+## Claim value
 
 To claim value from a message in the mailbox use `api.mailbox.claimValue.submit` method.
 
@@ -543,7 +549,7 @@ const submitted = await api.mailbox.claimValue.submit(messageId);
 await api.mailbox.claimValue.signAndSend(...);
 ```
 
-### Waitlist
+## Waitlist
 
 To read the program's waitlist use `api.waitlist.read` method.
 
@@ -556,9 +562,9 @@ console.log(waitlist);
 
 ---
 
-## Events
+# Events
 
-### Subscribe to all events
+## Subscribe to all events
 
 ```javascript
 const unsub = await gearApi.query.system.events((events) => {
@@ -568,7 +574,7 @@ const unsub = await gearApi.query.system.events((events) => {
 unsub();
 ```
 
-### Check what the event is
+## Check what the event is
 
 ```javascript
 gearApi.query.system.events((events) => {
@@ -586,7 +592,7 @@ gearApi.query.system.events((events) => {
 });
 ```
 
-### Subscribe to specific gear events
+## Subscribe to specific gear events
 
 There is an oportunity to subscribe to a specific event of the Gear pallet without filtering events manually.
 
@@ -611,37 +617,37 @@ unsub();
 
 ---
 
-## Blocks
+# Blocks
 
-### Get block data
+## Get block data
 
 ```javascript
 const data = await gearApi.blocks.get(blockNumberOrBlockHash);
 console.log(data.toHuman());
 ```
 
-### Get block timestamp
+## Get block timestamp
 
 ```javascript
 const ts = await gearApi.blocks.getBlockTimestamp(blockNumberOrBlockHash);
 console.log(ts.toNumber());
 ```
 
-### Get blockHash by block number
+## Get blockHash by block number
 
 ```javascript
 const hash = await gearApi.blocks.getBlockHash(blockNumber);
 console.log(hash.toHex());
 ```
 
-### Get block number by blockhash
+## Get block number by blockhash
 
 ```javascript
 const hash = await gearApi.blocks.getBlockNumber(blockHash);
 console.log(hash.toNumber());
 ```
 
-### Get all block's events
+## Get all block's events
 
 ```javascript
 const events = await gearApi.blocks.getEvents(blockHash);
@@ -650,7 +656,7 @@ events.forEach((event) => {
 });
 ```
 
-### Get all block's extrinsics
+## Get all block's extrinsics
 
 ```javascript
 const extrinsics = await gearApi.blocks.getExtrinsics(blockHash);
@@ -661,9 +667,9 @@ extrinsics.forEach((extrinsic) => {
 
 ---
 
-## Keyring
+# Keyring
 
-### Create keyring
+## Create keyring
 
 To create keyring you can use static methods of `GearKeyring` class.
 
@@ -715,7 +721,7 @@ const { seed } = GearKeyring.generateSeed(mnemonic);
 
 </details>
 
-### Sign data
+## Sign data
 
 <details>
 <summary>Example</summary>
@@ -738,7 +744,7 @@ const verified = signatureIsValid(publicKey, signature, message);
 
 </details>
 
-### Convert public keys into ss58 format and back
+## Convert public keys into ss58 format and back
 
 Use `encodeAddress` and `decodeAddress` functions to convert the public key into ss58 format and back.
 

@@ -10,7 +10,7 @@
   "bugs": {
     "url": "https://github.com/gear-tech/gear-js/issues"
   },
-  "homepage": "https://github.com/gear-tech/gear-js/tree/master/api#readme",
+  "homepage": "https://github.com/gear-tech/gear-js/tree/master/apis/gear#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gear-tech/gear-js.git"
