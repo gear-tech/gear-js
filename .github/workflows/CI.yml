@@ -68,7 +68,7 @@ jobs:
           sudo cp binaryen-$BINARYEN_VERSION/bin/wasm-opt /usr/bin/
 
       - name: 'Install dependencies'
-        run: yarn install
+        run: yarn workspaces focus gear-js @gear-js/api
 
       - name: 'Prepare: build programs'
         run: cargo build --release
@@ -88,7 +88,23 @@ jobs:
       - name: 'Test: run'
         run: yarn test:gear-api
 
-  test-idea-backend:
+  check-gear-idea-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Install: NodeJS 20.x"
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: "Install dependencies"
+        run: yarn workspaces focus gear-js
+
+      - name: "Check"
+        run: yarn check:gear-idea-version
+
+  test-gear-idea-backend:
     runs-on: ubuntu-latest
 
     steps:

@@ -6,8 +6,17 @@ import globals from 'globals';
 import reactrefresh from 'eslint-plugin-react-refresh';
 import react from 'eslint-plugin-react';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
+import json from '@eslint/json';
 
 export default [
+  {
+    ...json.configs.recommended,
+    files: ['**/*.json'],
+    language: 'json/jsonc',
+    rules: {
+      'json/no-duplicate-keys': 'error',
+    },
+  },
   ...[eslint.configs.recommended, ...tseslint.configs.recommended].map((conf) => ({
     ...conf,
     files: ['apis/**/src/**/*.{ts,js}', 'idea/**/src/**/*.{ts,js}', 'utils/**/src/**/*.{ts,js,tsx,jsx}'],

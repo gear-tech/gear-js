@@ -1,13 +1,13 @@
+import { ROOT_DIR } from './common.mjs';
 import rootPkg from '../package.json' with { type: 'json' };
 import * as path from 'path';
 import * as fs from 'fs';
 
 const { workspaces } = rootPkg;
-const rootDir = path.resolve(import.meta.dirname, '../');
 
 for (const pkg of workspaces) {
   console.log(`Updating dependencies for ${pkg}...`);
-  const pkgPath = path.join(rootDir, pkg, 'package.json');
+  const pkgPath = path.join(ROOT_DIR, pkg, 'package.json');
   const pkgJson = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
 
   const versions = new Map();

@@ -3274,6 +3274,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@eslint/json@npm:^0.9.1":
+  version: 0.9.1
+  resolution: "@eslint/json@npm:0.9.1"
+  dependencies:
+    "@eslint/core": "npm:^0.10.0"
+    "@eslint/plugin-kit": "npm:^0.2.5"
+    "@humanwhocodes/momoa": "npm:^3.3.4"
+  checksum: 10c0/156b6b9441dced9d403ada109f4eb1f21d6e5288dfd27e91f4856e8ba2a68aeb1a2da924c371966ee2894cf6104f76098d7a9e57eacd09a0b46b5edafffc316f
+  languageName: node
+  linkType: hard
+
 "@eslint/object-schema@npm:^2.1.5":
   version: 2.1.5
   resolution: "@eslint/object-schema@npm:2.1.5"
@@ -3627,6 +3638,13 @@ __metadata:
   version: 1.0.1
   resolution: "@humanwhocodes/module-importer@npm:1.0.1"
   checksum: 10c0/909b69c3b86d482c26b3359db16e46a32e0fb30bd306a3c176b8313b9e7313dba0f37f519de6aa8b0a1921349e505f259d19475e123182416a506d7f87e7f529
+  languageName: node
+  linkType: hard
+
+"@humanwhocodes/momoa@npm:^3.3.4":
+  version: 3.3.6
+  resolution: "@humanwhocodes/momoa@npm:3.3.6"
+  checksum: 10c0/296f704a57353afba05e8573797cb2982bf1fea43fb78578c59276467e9913c174bdda2da63c1559ac349455ba2099946d0ca87c303e7928e251cf9282582af9
   languageName: node
   linkType: hard
 
@@ -14703,6 +14721,7 @@ __metadata:
     "@babel/preset-typescript": "npm:^7.26.0"
     "@eslint/eslintrc": "npm:^3.2.0"
     "@eslint/js": "npm:^9.18.0"
+    "@eslint/json": "npm:^0.9.1"
     "@rollup/plugin-commonjs": "npm:^28.0.2"
     "@rollup/plugin-image": "npm:^3.0.3"
     "@rollup/plugin-json": "npm:^6.1.0"

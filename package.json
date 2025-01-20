@@ -54,8 +54,9 @@
     "test": "lerna run test --parallel",
     "lint": "npx eslint",
     "lint:fix": "npx eslint --fix",
-    "update:polkadot": "node scripts/update-polkadot.mjs",
-    "bump:gear-idea": "node update-gear-idea-version.mjs"
+    "bump:polkadot": "node scripts/update-polkadot.mjs",
+    "bump:gear-idea": "node scripts/update-gear-idea-version.mjs",
+    "check:gear-idea-version": "node scripts/check-gear-idea-version.mjs"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
@@ -64,6 +65,7 @@
     "@babel/preset-typescript": "^7.26.0",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
+    "@eslint/json": "^0.9.1",
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-image": "^3.0.3",
     "@rollup/plugin-json": "^6.1.0",
