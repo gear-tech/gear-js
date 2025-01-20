@@ -13,35 +13,41 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout"
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action
+
+      - name: 'Checkout'
         uses: actions/checkout@v4
 
-      - name: "Install Node.js 20.x"
+      - name: 'Install Node.js 20.x'
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
 
-      - name: "Install dependencies"
+      - name: 'Install dependencies'
         run: yarn install
 
-      - name: "Run linter"
+      - name: 'Run linter'
         run: yarn lint
 
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout"
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action
+
+      - name: 'Checkout'
         uses: actions/checkout@v4
 
-      - name: "Install Node.js 20.x"
+      - name: 'Install Node.js 20.x'
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
 
-      - name: "Install dependencies"
+      - name: 'Install dependencies'
         run: yarn install
 
-      - name: "Build all packages"
+      - name: 'Build all packages'
         run: yarn build:all
 
   test-api:
@@ -49,7 +55,11 @@ jobs:
     env:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
-      - uses: actions/checkout@v4
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action
+
+      - name: 'Checkout'
+        uses: actions/checkout@v4
 
       - name: 'Install: NodeJS 20.x'
         uses: actions/setup-node@v4
@@ -91,24 +101,31 @@ jobs:
   check-gear-idea-version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action
 
-      - name: "Install: NodeJS 20.x"
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Install: NodeJS 20.x'
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
 
-      - name: "Install dependencies"
+      - name: 'Install dependencies'
         run: yarn workspaces focus gear-js
 
-      - name: "Check"
+      - name: 'Check'
         run: yarn check:gear-idea-version
 
   test-gear-idea-backend:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action
+
+      - name: 'Checkout'
         uses: actions/checkout@v4
 
       - name: Install NodeJS 20.x
@@ -131,7 +148,11 @@ jobs:
   test-ui:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action
+
+      - name: 'Checkout'
+        uses: actions/checkout@v4
 
       - name: Install NodeJS 20.x
         uses: actions/setup-node@v4
@@ -147,19 +168,19 @@ jobs:
   test-txwrapper:
     runs-on: ubuntu-latest
     steps:
-      - name: Cancel previous workflow runs
-        uses: styfle/cancel-workflow-action@0.4.0
-        with:
-          access_token: ${{ github.token }}
-      - uses: actions/checkout@v4
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action
 
-      - name: "Install: NodeJS 20.x"
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Install: NodeJS 20.x'
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
 
-      - name: "Install dependencies"
+      - name: 'Install dependencies'
         run: yarn install
 
-      - name: "Test: run"
+      - name: 'Test: run'
         run: yarn test:txwrapper
