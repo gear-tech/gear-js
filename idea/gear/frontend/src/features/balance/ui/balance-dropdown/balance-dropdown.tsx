@@ -50,7 +50,7 @@ function Dropdown({ total, transferable, lockedBalance, onHeaderClick }: Props) 
     const unbonding = getUnbondingBalance();
 
     return { bonded, redeemable, unbonding };
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stakingAccount]);
 
   const { bonded, redeemable, unbonding } = stakingBalance;

@@ -50,17 +50,15 @@ const RecentBlocks = () => {
     if (lastBlock.hash !== block?.hash) {
       setTimeInstance(0);
     }
-
     setBlock(lastBlock);
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blocks]);
 
   useEffect(() => {
     if (!isApiReady) return;
 
     api.query.gear.blockNumber((result: U128) => setGearBlock(result.toNumber()));
-
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady]);
 
   useEffect(() => {

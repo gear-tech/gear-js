@@ -12,13 +12,13 @@ function useConstructor(sails: Sails) {
 
   const defaultValues = useMemo(
     () => getDefaultPayloadValue(sails, args),
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [select.value],
   );
 
   const schema = useMemo(
     () => getPayloadSchema(sails, args, encodePayload),
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [select.value],
   );
 

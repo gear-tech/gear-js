@@ -19,8 +19,7 @@ const TopSide = () => {
     if (!isApiReady) return;
 
     api.totalIssuance().then((result) => setTotalIssuance(result.slice(0, 5)));
-
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady]);
 
   return (

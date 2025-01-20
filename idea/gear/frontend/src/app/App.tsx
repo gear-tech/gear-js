@@ -38,14 +38,14 @@ const App = withProviders(() => {
 
     searchParams.set(NODE_ADRESS_URL_PARAM, isApiReady ? api.provider.endpoint : INITIAL_ENDPOINT);
     setSearchParams(searchParams, { replace: true });
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady, searchParams]);
 
   useEffect(() => {
     if (!isApiReady) return;
 
     localStorage.setItem(LocalStorage.Genesis, api.genesisHash.toHex());
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady]);
 
   return (

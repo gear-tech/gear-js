@@ -26,7 +26,7 @@ type Props = {
 function ManualPayloadTextarea({ name }: { name: string }) {
   const { register, unregister } = useFormContext();
 
-   
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => () => unregister(name), []);
 
   return <Textarea id={name} rows={15} placeholder="// Enter your payload here" block {...register(name)} />;
@@ -79,14 +79,13 @@ const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
     const payloadValue = isManualView ? jsonManualPayload.current ?? values.manualPayload : values.payload;
 
     setValue(name, payloadValue);
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isManualView]);
 
   useChangeEffect(() => {
     if (!values && manualPayloadFile) resetFileData();
 
     setIsManualView(!values);
-     
   }, [values]);
 
   return (

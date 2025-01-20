@@ -26,7 +26,7 @@ const MetadataTable = ({ metadata, isLoading }: Props) => {
     const namedTypes = getNamedTypes(metadata, (message) => alert.error(message));
 
     return getFlatNamedTypeEntries(namedTypes);
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metadata]);
 
   const renderRows = () =>

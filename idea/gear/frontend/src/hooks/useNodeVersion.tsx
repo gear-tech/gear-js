@@ -19,7 +19,7 @@ function useNodeVersion() {
       setNodeVersion(result);
       setCommitHash(commitHashResult);
     });
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady]);
 
   return { nodeVersion, commitHash };

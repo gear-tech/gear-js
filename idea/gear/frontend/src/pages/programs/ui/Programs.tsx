@@ -20,7 +20,7 @@ const Programs = () => {
 
   useEffect(() => {
     setIsBannerVisible(initIsBannerVisible);
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
 
   return (

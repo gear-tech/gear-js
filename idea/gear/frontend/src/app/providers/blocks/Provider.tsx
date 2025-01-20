@@ -36,7 +36,7 @@ const BlocksProvider = ({ children }: Props) => {
     return () => {
       unsub.then((unsubscribe) => unsubscribe());
     };
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady]);
 
   return <BlocksContext.Provider value={blocks}>{children}</BlocksContext.Provider>;

@@ -50,7 +50,6 @@ function useMailboxItem(messageId: HexString | undefined) {
         Array.isArray(item) ? (item.toHuman() as MailboxItem) : Promise.reject(new Error('Message not found')),
       )
       .then((result) => setMailboxItem(result));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady, decodedAddress, messageId]);
 
   return mailboxItem;

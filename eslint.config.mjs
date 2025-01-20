@@ -104,7 +104,7 @@ export default [
       'no-shadow': 'error',
       'no-shadow-restricted-names': 'error',
       '@typescript-eslint/no-unused-vars': 'warn',
-      'react-hooks/exhaustive-deps': 'off', // TODO: if necessary, than fix all problems and enable
+      'react-hooks/exhaustive-deps': 'error',
     },
   },
 ];

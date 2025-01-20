@@ -67,7 +67,7 @@ const ModalProvider = ({ children }: Props) => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown, false);
     };
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalName, modalProps]);
 
   const currentModal = useMemo(() => {

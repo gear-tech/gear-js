@@ -47,10 +47,10 @@ const Message = () => {
   const decodedPayload = useMemo(
     () =>
       message && !isPayloadLoading
-        ?  
+        ?
           getDecodedMessagePayload(message, isToDirection, metadata, sails, alert.error)
         : undefined,
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [message, metadata, sails, isPayloadLoading],
   );
 

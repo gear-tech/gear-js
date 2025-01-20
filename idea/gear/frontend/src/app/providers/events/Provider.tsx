@@ -29,7 +29,7 @@ const EventsProvider = ({ children }: ProviderProps) => {
     return () => {
       unsub.then((unsubscribe) => unsubscribe());
     };
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady]);
 
   return <EventsContext.Provider value={events}>{children}</EventsContext.Provider>;

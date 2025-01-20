@@ -20,7 +20,7 @@ function MetadataPreview({ value }: Props) {
     const types = getNamedTypes(value, (message) => alert.error(message));
 
     return Object.entries(types);
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const registryTypes = useMemo(() => value.getAllTypes(), [value]);

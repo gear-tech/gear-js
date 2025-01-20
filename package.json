@@ -4,6 +4,9 @@
   "author": "Gear Technologies",
   "license": "GPL-3.0",
   "repository": "git@github.com:gear-tech/gear-js.git",
+  "engines": {
+    "node": ">=20"
+  },
   "bugs": {
     "url": "https://github.com/gear-tech/gear-js/issues"
   },

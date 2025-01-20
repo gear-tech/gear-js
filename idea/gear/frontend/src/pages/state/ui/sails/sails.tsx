@@ -58,7 +58,7 @@ const StateForm = ({ programId, sails }: { programId: HexString; sails: SailsTyp
 
   useEffect(() => {
     state.reset();
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [payloadValue]);
 
   return (

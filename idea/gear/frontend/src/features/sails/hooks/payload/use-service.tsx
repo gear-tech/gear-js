@@ -25,13 +25,13 @@ function useService(sails: Sails, key: 'functions' | 'queries') {
 
   const defaultValues = useMemo(
     () => getDefaultPayloadValue(sails, args),
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [select.value, functionSelect.value],
   );
 
   const schema = useMemo(
     () => getPayloadSchema(sails, args, encodePayload),
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [select.value, functionSelect.value],
   );
 

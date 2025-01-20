@@ -45,7 +45,7 @@ const Block = () => {
         setBlock(result.block);
       })
       .catch(({ message }: Error) => setError(message));
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady, blockId]);
 
   return (
