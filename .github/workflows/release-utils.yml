@@ -1,0 +1,105 @@
+name: 'Release utils'
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - utils/gear-hooks/package.json
+      - utils/gear-ui/package.json
+      - utils/vara-ui/package.json
+      - utils/wallet-connect/package.json
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Install Node.js 20.x'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: "Install dependencies"
+        run: yarn install
+
+      - name: "Build utils"
+        run: yarn build:utils
+
+      - name: '@gear-js/ui: Check pkg version'
+        uses: EndBug/version-check@v1
+        id: check_gear_ui
+        with:
+          file-name: utils/gear-ui/package.json
+          file-url: https://unpkg.com/@gear-js/ui@latest/package.json
+          static-checking: localIsNew
+
+      - name: '@gear-js/vara-ui: Check pkg version'
+        uses: EndBug/version-check@v1
+        id: check_vara_ui
+        with:
+          file-name: utils/vara-ui/package.json
+          file-url: https://unpkg.com/@gear-js/vara-ui@latest/package.json
+          static-checking: localIsNew
+
+      - name: '@gear-js/wallet-connect: Check pkg version'
+        uses: EndBug/version-check@v1
+        id: check_wallet
+        with:
+          file-name: utils/wallet-connect/package.json
+          file-url: https://unpkg.com/@gear-js/wallet-connect@latest/package.json
+          static-checking: localIsNew
+
+      - name: '@gear-js/react-hooks: Check package version'
+        uses: EndBug/version-check@v1
+        id: check_hooks
+        with:
+          file-name: utils/gear-ui/package.json
+          file-url: https://unpkg.com/@gear-js/react-hooks@latest/package.json
+          static-checking: localIsNew
+
+      - name: '@gear-js/ui: Publish'
+        if: steps.check_gear_ui.outputs.changed == 'true'
+        working-directory: utils/gear-ui
+        run: |
+          export token=$(printenv $(printenv GITHUB_ACTOR))
+          npm config set //registry.npmjs.org/:_authToken=$token --no-workspaces
+          npm publish
+        env:
+          osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
+          nikitayutanov: ${{ secrets.YUTANOV_NPM_TOKEN }}
+
+      - name: '@gear-js/vara-ui: Publish'
+        if: steps.check_vara_ui.outputs.changed == 'true'
+        working-directory: utils/vara-ui
+        run: |
+          export token=$(printenv $(printenv GITHUB_ACTOR))
+          npm config set //registry.npmjs.org/:_authToken=$token --no-workspaces
+          npm publish
+        env:
+          osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
+          nikitayutanov: ${{ secrets.YUTANOV_NPM_TOKEN }}
+
+      - name: '@gear-js/wallet-connect: Publish'
+        if: steps.check_wallet.outputs.changed == 'true'
+        working-directory: utils/wallet-connect
+        run: |
+          export token=$(printenv $(printenv GITHUB_ACTOR))
+          npm config set //registry.npmjs.org/:_authToken=$token --no-workspaces
+          npm publish
+        env:
+          osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
+          nikitayutanov: ${{ secrets.YUTANOV_NPM_TOKEN }}
+
+      - name: '@gear-js/hooks: Publish'
+        if: steps.check_hooks.outputs.changed == 'true'
+        working-directory: utils/gear-hooks
+        run: |
+          export token=$(printenv $(printenv GITHUB_ACTOR))
+          npm config set //registry.npmjs.org/:_authToken=$token --no-workspaces
+          npm publish
+        env:
+          osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
+          nikitayutanov: ${{ secrets.YUTANOV_NPM_TOKEN }}

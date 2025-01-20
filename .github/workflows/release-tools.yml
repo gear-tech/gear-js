@@ -1,0 +1,66 @@
+name: 'Release tools'
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - tools/txwrapper/package.json
+      - tools/cli/package.json
+  workflow_dispatch:
+
+jobs:
+  publish-to-npm:
+    if: github.event_name == 'push'
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use node 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: "@gear-js/txwrapper: Check package version"
+        uses: EndBug/version-check@v1
+        id: check_txwrapper
+        with:
+          file-name: tools/txwrapper/package.json
+          file-url: https://unpkg.com/@gear-js/txwrapper@latest/package.json
+          static-checking: localIsNew
+
+      - name: "@gear-js/cli: Check package version"
+        uses: EndBug/version-check@v1
+        id: check_cli
+        with:
+          file-name: tools/cli/package.json
+          file-url: https://unpkg.com/@gear-js/cli@latest/package.json
+          static-checking: localIsNew
+
+      - name: Install dependencies
+        if: steps.check.outputs.changed == 'true' || steps.check_cli.outputs.changed == 'true'
+        run: yarn install
+
+      - name: Build
+        if: steps.check.outputs.changed == 'true' || steps.check_cli.outputs.changed == 'true'
+        run: yarn build:tools
+
+      - name: "@gear-js/txwrapper: Publish"
+        if: steps.check_txwrapper.outputs.changed == 'true'
+        working-directory: tools/txwrapper
+        run: |
+          export token=$(printenv $(printenv GITHUB_ACTOR))
+          npm config set //registry.npmjs.org/:_authToken=$token
+          npm publish
+        env:
+          osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
+
+      - name: Publish
+        if: steps.check_cli.outputs.changed == 'true'
+        working-directory: tools/cli
+        run: |
+          export token=$(printenv $(printenv GITHUB_ACTOR))
+          npm config set //registry.npmjs.org/:_authToken=$token
+          npm publish
+        env:
+          osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}

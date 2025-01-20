@@ -1,0 +1,58 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: /
+    open-pull-requests-limit: 5
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(repo):"
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
+  - package-ecosystem: "npm"
+    directory: "/apis/gear"
+    open-pull-requests-limit: 5
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(api):"
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
+  - package-ecosystem: "npm"
+    directories:
+      - "/idea/gear/*"
+    open-pull-requests-limit: 5
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(gear-idea):"
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
+  - package-ecosystem: "npm"
+    directory: "/utils/*"
+    open-pull-requests-limit: 5
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(utils):"
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
+  - package-ecosystem: "npm"
+    directory: "/tools/*"
+    open-pull-requests-limit: 5
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(tools):"
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"

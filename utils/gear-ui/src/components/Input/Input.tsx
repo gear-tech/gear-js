@@ -103,5 +103,7 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
   );
 });
 
+// TODO: either fix only-export-components or remove rule
+// eslint-disable-next-line react-refresh/only-export-components
 export { Input, styles as inputStyles };
 export type { Props as InputProps };

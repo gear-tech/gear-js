@@ -92,4 +92,6 @@ function ApiProvider({ initialArgs, children }: Props) {
 
 const useApi = () => useContext(ApiContext);
 
+// TODO: either fix only-export-components or remove rule
+// eslint-disable-next-line react-refresh/only-export-components
 export { ApiProvider, useApi };

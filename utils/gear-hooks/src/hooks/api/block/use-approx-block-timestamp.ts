@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useApi, useAlert } from 'context';
+import { INumber } from '@polkadot/types/types';
 
 function useGetApproxBlockTimestamp() {
   const { api, isApiReady } = useApi();
@@ -11,7 +12,7 @@ function useGetApproxBlockTimestamp() {
       const { block } = await api.rpc.chain.getBlock();
       const currentBlockNumber = block.header.number.toNumber();
 
-      const blockTime = api.consts.babe.expectedBlockTime.toNumber();
+      const blockTime = (api.consts.babe.expectedBlockTime as INumber).toNumber();
 
       const timeDifference = (blockNumber - currentBlockNumber) * blockTime;
 
@@ -39,8 +40,6 @@ function useApproxBlockTimestamp(blockNumber: number | undefined) {
     getApproxBlockTimestamp(blockNumber)
       .then((result) => setBlockTimestamp(result))
       .catch(({ message }: Error) => alert.error(message));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady, blockNumber]);
 
   return blockTimestamp === undefined

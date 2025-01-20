@@ -2,12 +2,13 @@ name: 'Gear Idea: deploy to k8s stage'
 
 on:
   push:
-    branches: ['main']
+    branches: ['main', 'stable']
     paths:
-      - idea/meta-storage-2/**
-      - idea/faucet/**
-      - idea/frontend/**
-      - k8s/**
+      - idea/gear/meta-storage/package.json
+      - idea/gear/faucet/package.json
+      - idea/gear/frontend/package.json
+      - idea/gear/squid/package.json
+      - idea/gear/explorer/package.json
   workflow_dispatch:
 
 concurrency:
@@ -23,16 +24,60 @@ env:
   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
 
 jobs:
-  build-frontend-image-staging:
+  check-version:
     runs-on: ubuntu-latest
-    environment: staging
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get current version
+        id: cur_version
+        run: echo "VERSION=$(jq -r .version idea/gear/common/package.json)" >> $GITHUB_OUTPUT
+
+      - name: Get previous version
+        id: prev_version
+        run: echo "VERSION=$(git show HEAD~1:idea/gear/common/package.json | jq -r .version)" >> $GITHUB_OUTPUT
+
+      - name: Compare versions and set SKIP env
+        run: |
+          if [ "${{ steps.cur_version.outputs.VERSION }}" == "${{ steps.prev_version.outputs.VERSION }}" ]; then
+            echo "SKIP=true" >> $GITHUB_ENV
+          fi
+
+  set-env-tag:
+    runs-on: ubuntu-latest
+    needs: [check-version]
+    if: ${{ env.SKIP != 'true' }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get environment
+        id: get_env
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/stable" ]; then
+            echo "ENVIRONMENT=production" >> $GITHUB_ENV
+          else
+            echo "ENVIRONMENT=staging" >> $GITHUB_ENV
+          fi
+
+  build-frontend-image:
+    runs-on: ubuntu-latest
+    needs: [set-env-tag]
+    environment: ${{ env.ENVIRONMENT }}
     permissions:
       contents: read
       packages: write
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Log in to the github container registry
         uses: docker/login-action@master
@@ -41,12 +86,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Frontend Docker image
+      - name: Build and push "gear-idea-frontend" Docker image
         uses: docker/build-push-action@master
         with:
-          file: idea/frontend/Dockerfile
+          file: idea/gear/frontend/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:qa
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-frontend:${{ env.ENVIRONMENT }}
           build-args: |
             VITE_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
             VITE_DEFAULT_TRANSFER_BALANCE_VALUE=${{ secrets.REACT_APP_DEFAULT_TRANSFER_BALANCE_VALUE }}
@@ -60,16 +105,17 @@ jobs:
             VITE_TESTNET_DNS_API_URL=${{ secrets.VITE_TESTNET_DNS_API_URL }}
             VITE_MAINNET_DNS_API_URL=${{ secrets.VITE_MAINNET_DNS_API_URL }}
 
-  build-faucet-image-staging:
+  build-faucet-image:
     runs-on: ubuntu-latest
-    environment: staging
+    needs: [set-env-tag]
+    environment: ${{ env.ENVIRONMENT }}
     permissions:
       contents: read
       packages: write
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Log in to the github container registry
         uses: docker/login-action@master
@@ -78,24 +124,24 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Data Storage Docker image
+      - name: Build and push "gear-idea-faucet" Docker image
         uses: docker/build-push-action@master
         with:
-          file: idea/faucet/Dockerfile
+          file: idea/gear/faucet/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-faucet:qa
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-faucet:${{ env.ENVIRONMENT }}
 
-  build-meta-storage-image-staging:
-    if: github.event.pull_request.draft == false
+  build-meta-storage-image:
     runs-on: ubuntu-latest
-    environment: staging
+    needs: [set-env-tag]
+    environment: ${{ env.ENVIRONMENT }}
     permissions:
       contents: read
       packages: write
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Log in to the github container registry
         uses: docker/login-action@master
@@ -104,19 +150,73 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Meta Storage Docker image
+      - name: Build and push "gear-idea-meta-storage" image
         uses: docker/build-push-action@master
         with:
-          file: idea/meta-storage-2/Dockerfile
+          file: idea/gear/meta-storage/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-meta-storage:qa
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-meta-storage:${{ env.ENVIRONMENT }}
 
-  deploy-to-k8s-staging:
+  build-squid-image:
+    runs-on: ubuntu-latest
+    needs: [set-env-tag]
+    environment: ${{ env.ENVIRONMENT }}
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push "gear-idea-squid" image
+        uses: docker/build-push-action@master
+        with:
+          file: idea/gear/squid/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-squid:${{ env.ENVIRONMENT }}
+
+  build-explorer-image:
+    runs-on: ubuntu-latest
+    needs: [set-env-tag]
+    environment: ${{ env.ENVIRONMENT }}
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push "gear-idea-explorer" image
+        uses: docker/build-push-action@master
+        with:
+          file: idea/gear/explorer/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-explorer:${{ env.ENVIRONMENT }}
+
+  deploy-to-k8s:
     needs:
       [
-        build-frontend-image-staging,
-        build-faucet-image-staging,
-        build-meta-storage-image-staging
+        build-frontend-image,
+        build-faucet-image,
+        build-meta-storage,
+        build-squid-image,
+        build-squid-explorer
       ]
     runs-on: ubuntu-latest
 
@@ -128,12 +228,24 @@ jobs:
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Get deployment variables
+        id: deployment_vars
+        run: |
+          if [ "${{ env.ENVIRONMENT }}" == "production" ]; then
+            echo "namespace=prod-idea" >> $GITHUB_OUTPUT
+            echo "deployments=squid-testnet-v2 squid-mainnet-v2 explorer faucet frontend-nginx meta-storage-main"
+          else
+            echo "namespace=dev-1" >> $GITHUB_OUTPUT
+            echo "deployments=squid-testnet-v2 explorer frontend-nginx meta-storage faucet"
+          fi
+
+
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment frontend-nginx faucet meta-storage -n dev-1
+          args: rollout restart deployment ${{ steps.deployment_vars.outputs.deployments }} -n ${{ steps.deployment_vars.outputs.namespace }}
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: get deployment -o name -n dev-1 | xargs -n1 -t kubectl rollout status -n dev-1 --timeout=120s
+          args: get deployment -o name -n ${{ steps.deployment_vars.outputs.namespace }} | xargs -n1 -t kubectl rollout status -n ${{ steps.namespace.outputs.namespace }} --timeout=120s

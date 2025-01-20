@@ -1,0 +1,41 @@
+import { ProgramMetadata } from '@gear-js/api';
+import { useAlert } from '@gear-js/react-hooks';
+import { Input, Textarea } from '@gear-js/ui';
+import { useMemo } from 'react';
+
+import { getNamedTypes } from '@/features/uploadMetadata';
+import { getPreformattedText } from '@/shared/helpers';
+
+type Props = {
+  value: ProgramMetadata;
+};
+
+function MetadataPreview({ value }: Props) {
+  const alert = useAlert();
+
+  // useMemo to prevent excessive error alerts
+  const namedTypeEntries = useMemo(() => {
+    if (!value) return [];
+
+    const types = getNamedTypes(value, (message) => alert.error(message));
+
+    return Object.entries(types);
+     
+  }, [value]);
+
+  const registryTypes = useMemo(() => value.getAllTypes(), [value]);
+
+  const renderTypes = () =>
+    namedTypeEntries.map(([key, _value]) => (
+      <Input key={key} label={key} direction="y" value={JSON.stringify(_value)} block readOnly />
+    ));
+
+  return (
+    <>
+      {renderTypes()}
+      <Textarea label="types" direction="y" value={getPreformattedText(registryTypes)} block readOnly />
+    </>
+  );
+}
+
+export { MetadataPreview };

@@ -22,7 +22,7 @@
   "license": "GPL-3.0",
   "author": "Gear Technologies",
   "devDependencies": {
-    "@polkadot/api": "11.1.1",
+    "@polkadot/api": "15.3.1",
     "@substrate/txwrapper-dev": "7.4.0",
     "@types/jest": "29.5.12",
     "@types/node-fetch": "2.6.11",
@@ -35,10 +35,10 @@
   },
   "scripts": {
     "test": "jest",
-    "build": "rm -rf dist && tsc",
-    "sendMessageExample": "ts-node examples/send-message.ts"
+    "build": "rm -rf dist && npx tsc",
+    "sendMessageExample": "npx ts-node examples/send-message.ts",
+    "clean": "echo \"clean @gear-js/txwrapper\" && rm -rf dist"
   },
-  "packageManager": "yarn@3.3.0",
   "files": [
     "dist"
   ]

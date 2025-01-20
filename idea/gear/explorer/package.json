@@ -1,0 +1,26 @@
+{
+  "name": "gear-idea-explorer",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "class-validator": "0.14.1",
+    "cron": "^3.1.7",
+    "dotenv": "^16.4.5",
+    "express": "4.19.2",
+    "gear-idea-common": "1.0.0",
+    "gear-idea-indexer-db": "1.0.0",
+    "nanoid": "^5.0.7",
+    "pg": "8.12.0",
+    "redis": "^4.6.15",
+    "reflect-metadata": "^0.2.2"
+  },
+  "devDependencies": {
+    "@types/express": "4.17.21"
+  },
+  "scripts": {
+    "build": "rm -rf dist && npx tsc",
+    "dev": "npx ts-node-dev src/main.ts",
+    "start": "node dist/main.js",
+    "clean": "echo \"clean gear-idea-explorer\" && rm -rf dist"
+  }
+}

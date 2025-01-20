@@ -83,7 +83,6 @@ function AccountProvider({ appName, children }: Props) {
       unsubsRef.current.forEach((unsub) => unsub());
       unsubsRef.current = [];
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const value = useMemo(
@@ -94,4 +93,6 @@ function AccountProvider({ appName, children }: Props) {
   return <Provider value={value}>{children}</Provider>;
 }
 
+// TODO: either fix only-export-components or remove rule
+// eslint-disable-next-line react-refresh/only-export-components
 export { AccountProvider, useAccount };

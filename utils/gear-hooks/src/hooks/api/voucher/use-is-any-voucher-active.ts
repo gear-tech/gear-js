@@ -35,8 +35,6 @@ function useIsAnyVoucherActive(accountAddress: string | undefined, programId: He
     getIsActive()
       .then((result) => setIsAnyVoucherActive(result))
       .catch(({ message }: Error) => alert.error(message));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [voucherEntries, getVoucherStatus]);
 
   return { isAnyVoucherActive, isAnyVoucherActiveReady };

@@ -11,23 +11,20 @@ export default defineConfig({
     react(),
     svgr(),
     nodePolyfills(),
-
     dts({
       exclude: ['src/preview'],
     }),
   ],
-
   build: {
     lib: {
       entry: resolve(__dirname, 'src/components/index.ts'),
       formats: ['es'],
     },
-
     rollupOptions: {
       external: ['react', '@gear-js/react-hooks', '@gear-js/ui', '@gear-js/vara-ui'],
       output: {
         globals: { react: 'React' },
-        intro: 'import "./style.css";',
+        intro: 'import "./wallet-connect.css";',
       },
     },
   },

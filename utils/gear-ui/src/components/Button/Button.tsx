@@ -35,5 +35,7 @@ const Button = forwardRef((props: Props, ref: ForwardedRef<HTMLButtonElement>) =
   );
 });
 
+// TODO: either fix only-export-components or remove rule
+// eslint-disable-next-line react-refresh/only-export-components
 export { Button, styles as buttonStyles };
 export type { Props as ButtonProps };

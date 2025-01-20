@@ -20,5 +20,7 @@ const Checkbox = forwardRef(({ label, className, type, ...attrs }: Props, ref: F
   );
 });
 
+// TODO: either fix only-export-components or remove rule
+// eslint-disable-next-line react-refresh/only-export-components
 export { Checkbox, styles as checkboxStyles };
 export type { Props as CheckboxProps };
