@@ -11,6 +11,6 @@
   "dependencies": {
     "@gear-js/api": "0.40.0",
     "@polkadot/api": "15.3.1",
-    "winston": "3.7.2"
+    "winston": "3.17.0"
   }
 }
