@@ -1,3 +1,35 @@
+@use '../../utils.scss' as *;
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
 .customScroll {
   /* TODO: same as in gear-js/ui  */
   /* TODO: temp solution specifically for modal,
@@ -38,15 +70,19 @@
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 10;
+
   width: 100%;
   height: 100%;
+  padding: 0 32px;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 32px;
+
   background-color: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
-  z-index: 10;
+  backdrop-filter: blur(20px);
+  animation: fadeIn 0.25s ease;
 
   @media screen and (max-width: 768px) {
     padding: 0;
@@ -56,22 +92,31 @@
 }
 
 .modal {
+  @include lightDark(background-color, #fff, #262628);
+
   display: flex;
   flex-direction: column;
   gap: 20px;
+
   width: 100%;
-  padding: 30px 0;
-  background-color: rgba(246, 248, 248, 1);
-  border-radius: 4px;
+  max-width: var(--max-width);
+  padding: 32px 0;
+
+  border-radius: 8px;
   filter: drop-shadow(0px 4px 4px #00000011);
+  animation-name: fadeIn, scaleIn;
+  animation-duration: 0.25s;
+  animation-timing-function: ease;
 
   @media screen and (max-width: 768px) {
     max-width: unset;
+    border-radius: 8px 8px 0 0;
+    animation-name: fadeIn, slideIn;
   }
 
   > * {
     /* applying x-padding to every child, to preserve body scrollbar padding */
-    padding: 0 32px;
+    padding: 0 40px;
 
     @media screen and (max-width: 768px) {
       padding: 0 16px;
@@ -85,12 +130,11 @@
 }
 
 .heading {
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 24px;
-  letter-spacing: 0;
+  @include lightDark(color, #000, rgba(246, 246, 246, 0.9));
 
-  color: #000;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 28.8px;
 
   &Container {
     margin-right: 16px;
@@ -101,14 +145,24 @@
   }
 }
 
+.button svg {
+  width: 20px;
+  height: 20px;
+}
+
+.body,
+.footer {
+  @include lightDark(color, #000, rgba(246, 246, 246, 0.8));
+}
+
 .small {
-  max-width: 460px;
+  --max-width: 460px;
 }
 
 .medium {
-  max-width: 560px;
+  --max-width: 560px;
 }
 
 .large {
-  max-width: 660px;
+  --max-width: 660px;
 }

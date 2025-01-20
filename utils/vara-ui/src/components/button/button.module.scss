@@ -1,43 +1,68 @@
-@keyframes blink {
-  0% {
-    background-position: -100% 0;
+@use '../../utils.scss' as *;
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
   }
 
-  100% {
-    background-position: 100% 0;
+  to {
+    transform: rotate(360deg);
   }
+}
+
+.button,
+.content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 .button {
   border: none;
   cursor: pointer;
-  padding: 0;
+  padding: var(--padding, 0);
   font-family: inherit;
 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 12px;
+  color: var(--color, #000);
 
-  font-weight: 700;
-  line-height: 18px;
-  letter-spacing: 0.03em;
-
-  border-radius: 2px;
+  background-color: var(--background-color, transparent);
+  background-image: var(--background-image);
+  border-radius: 4px;
+  box-shadow: var(--box-shadow);
   transition: all 0.25s;
 
   &:disabled {
     pointer-events: none;
   }
 
-  /* standalone class cuz to omit isLoading */
-  &.disabled {
-    opacity: 0.3;
+  &:not(.loading):disabled {
+    @include lightDark(--background-color, rgba(88, 105, 110, 0.04), rgba(88, 105, 110, 0.1));
+    @include lightDark(--color, rgba(88, 105, 110, 0.5), rgba(156, 172, 177, 0.4));
+
+    --box-shadow: none;
   }
 
   &.loading {
-    animation: blink 1s linear infinite forwards;
-    background-size: 200%;
+    > * {
+      visibility: hidden;
+    }
+
+    &::before {
+      content: '';
+
+      position: absolute;
+
+      width: var(--spinner-size);
+      height: var(--spinner-size);
+
+      background-color: var(--spinner-color, #000);
+      mask: url(./assets/spinner.svg) center/cover no-repeat;
+      animation: spin 1s ease-in-out infinite;
+    }
   }
 }
 
@@ -50,126 +75,153 @@
 }
 
 .primary {
-  color: #000;
-  /* TODO: gradient */
-  background-color: #22ffcc;
+  --background-color: #00ffc4;
+  --box-shadow: 0px 1.6px 3.2px 0px #00ffc466;
 
   &:hover {
-    background-color: #91fcdd;
+    --background-color: #30ffcf;
+    --box-shadow: 0px 1.6px 3.2px 0px #00ffc466, 0px 0.4px 1.2px 0px #00000033 inset;
   }
 
   &.loading {
-    background-image: linear-gradient(
-      to right,
-      rgba(255, 255, 255, 0.25) 8%,
-      rgba(255, 255, 255, 0.75) 38%,
-      rgba(255, 255, 255, 0.25) 54%
-    );
+    --background-color: #0abe92;
+    --box-shadow: 0px 0.4px 1.2px 0px #00000033 inset;
   }
 }
 
+.contrast,
 .dark {
-  color: #fff;
-  background-color: #000;
+  @include lightDark(--background-color, #000, #fff);
+  @include lightDark(--spinner-color, #fff, #000);
+  @include lightDark(--color, #fff, #000);
 
   &:hover {
-    /* TODO: gradient */
     /* TODO: icon color (?) */
-    background-color: #404040;
+    @include lightDark(--background-color, #404040, #d0d1d2);
   }
 
   &.loading {
-    background-image: linear-gradient(
-      to right,
-      rgba(255, 255, 255, 0.1) 8%,
-      rgba(255, 255, 255, 0.25) 38%,
-      rgba(255, 255, 255, 0.1) 54%
-    );
+    @include darkMode() {
+      --background-color: #babdbe;
+    }
   }
 }
 
+.blend,
 .light {
-  color: #000;
-  background-color: #fff;
+  @include lightDark(--spinner-color, #fff, #000);
+
+  @include darkMode {
+    --color: #fff;
+  }
 
   &:hover {
-    background-color: #d4d4d4;
+    @include lightDark(--background-color, rgba(243, 245, 247, 0.8), rgba(88, 105, 110, 0.1));
   }
 
   &.loading {
-    background-image: linear-gradient(
-      to right,
-      rgba(0, 0, 0, 0.01) 8%,
-      rgba(0, 0, 0, 0.075) 38%,
-      rgba(0, 0, 0, 0.01) 54%
-    );
+    @include lightDark(--background-color, #262628, #f0f0f6);
   }
 }
 
 .grey {
-  color: #000;
-  background-color: #e9e9e9;
+  @include lightDark(--background-color, #e5e5e7, rgba(88, 105, 110, 0.1));
+
+  @include darkMode {
+    --color: #fff;
+    --spinner-color: #fff;
+  }
 
   &:hover {
-    background-color: #d4d4d4;
+    @include lightDark(--background-color, #dddde1, rgba(88, 105, 110, 0.3));
   }
 
   &.loading {
-    background-image: linear-gradient(
-      to right,
-      rgba(0, 0, 0, 0.01) 8%,
-      rgba(0, 0, 0, 0.075) 38%,
-      rgba(0, 0, 0, 0.01) 54%
-    );
+    @include lightDark(--background-color, #bdbdc2, rgba(88, 105, 110, 0.8));
   }
 }
 
 .border {
-  color: #000;
-  background-color: transparent;
-  box-shadow: inset 0px 0px 0px 2px #000; /* border without affecting size */
+  --spinner-color: #fff;
+
+  &:not(:hover):not(:disabled) {
+    @include lightDark(--box-shadow, inset 0px 0px 0px 2px #000, inset 0px 0px 0px 2px #fff);
+
+    @include darkMode() {
+      --color: #fff;
+    }
+  }
 
   &:hover {
-    color: #fff;
-    background-color: #000;
+    @include lightDark(--background-color, #2a3133, rgba(88, 105, 110, 0.3));
+    --color: #fff;
   }
 
   &.loading {
-    background-image: linear-gradient(to right, transparent 8%, #ddd 38%, transparent 54%);
+    @include lightDark(--background-color, #000, rgba(88, 105, 110, 0.8));
+  }
+}
+
+.danger {
+  --color: #fff;
+  --background-color: #eb5757;
+  --spinner-color: #fff;
+
+  &:hover {
+    --background-color: #f04949;
+  }
+
+  &.loading {
+    --background-color: #dd3131;
   }
 }
 
 .transparent {
-  background-color: transparent;
+  --spinner-size: 16px;
+
+  @include darkMode() {
+    --color: #fff;
+    --spinner-color: #fff;
+  }
 
   &:hover {
     opacity: 0.5;
   }
-}
 
-:global(.dark-theme) {
-  .primary {
-    /* TODO: customize colors */
-    color: brown;
+  &:not(.loading):disabled {
+    --background-color: transparent;
   }
 }
 
-.default {
-  padding: 16px 32px;
-  font-size: 18px;
-
-  &.noText {
-    /* TODO: icon size */
-    padding: 15px 16px;
-  }
+.x-small {
+  --padding: 10px 16px;
+  --spinner-size: 20px;
 }
 
 .small {
-  padding: 11px 16px;
-  font-size: 16px;
+  --padding: 14px 24px;
+  --spinner-size: 20px;
 
   &.noText {
-    /* TODO: icon size */
-    padding: 12px 16px;
+    --padding: 12px 16px;
   }
+}
+
+.medium {
+  --padding: 16px 24px;
+  --spinner-size: 24px;
+}
+
+.default {
+  --padding: 18px 24px;
+  --spinner-size: 24px;
+
+  &.noText {
+    --padding: 15px 16px;
+  }
+}
+
+.x-large {
+  --padding: 20px 28px;
+  --spinner-size: 24px;
 }

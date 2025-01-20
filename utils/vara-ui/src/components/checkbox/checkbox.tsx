@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, forwardRef } from 'react';
+import { InputHTMLAttributes, ReactNode, forwardRef } from 'react';
 import cx from 'clsx';
 
 import styles from './checkbox.module.scss';
@@ -7,7 +7,7 @@ type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
   label: string;
   type?: 'switch' | 'checkbox';
   size?: 'small' | 'default';
-  error?: string;
+  error?: ReactNode;
 };
 
 const Checkbox = forwardRef<HTMLInputElement, Props>(

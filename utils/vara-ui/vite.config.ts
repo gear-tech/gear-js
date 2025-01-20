@@ -12,7 +12,6 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), svgr(), dts({ outDir })],
-
     build: {
       lib: {
         entry: resolve(__dirname, `src/components/${mode === 'deprecated' ? 'index-deprecated' : 'index'}.ts`),
@@ -20,10 +19,8 @@ export default defineConfig(({ mode }) => {
         outDir,
         emptyOutDir: true,
       },
-
       rollupOptions: {
         external: ['react', 'react-dom'],
-
         output: {
           globals: { react: 'React', 'react-dom': 'ReactDOM' },
           dir: outDir,

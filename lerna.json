@@ -1,0 +1,28 @@
+{
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "version": "independent",
+  "packages": [
+    "apis/gear",
+    "idea/gear/common",
+    "idea/gear/explorer",
+    "idea/gear/faucet",
+    "idea/gear/frontend",
+    "idea/gear/indexer-db",
+    "idea/gear/meta-storage",
+    "idea/gear/squid",
+    "tools/cli",
+    "tools/txwrapper",
+    "utils/gear-hooks",
+    "utils/gear-ui",
+    "utils/vara-ui",
+    "utils/wallet-connect",
+    "utils/gear-logger"
+  ],
+  "npmClient": "yarn",
+  "command": {
+    "publish": {
+      "registry": "https://registry.npmjs.org/",
+      "private": false
+    }
+  }
+}

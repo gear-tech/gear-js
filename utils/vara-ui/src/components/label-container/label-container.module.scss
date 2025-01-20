@@ -1,0 +1,87 @@
+@use '../../utils.scss' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.label {
+  @include lightDark(color, #58696e, #828b8e);
+
+  font-size: var(--label-font-size);
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.inputWrapper {
+  @include lightDark(border, 1px solid #d0d5dd, 1px solid rgba(255, 255, 255, 0.04));
+
+  display: flex;
+  gap: 4px;
+
+  padding: var(--input-y-padding) 14px;
+
+  border-radius: 4px;
+  box-shadow: 0px 1px 2px 0px #1018280d;
+
+  &:focus-within {
+    @include lightDark(border-color, rgba(0, 255, 196, 0.6), rgba(0, 255, 196, 0.6));
+  }
+
+  &:has(:not(:disabled)[aria-invalid='true']) {
+    @include lightDark(border-color, rgba(255, 50, 49, 0.8), #d73b4f);
+  }
+
+  &:has(:disabled) {
+    @include lightDark(background-color, #eceded, rgba(40, 44, 48, 0.1));
+  }
+}
+
+.error {
+  @include lightDark(color, #ff3231, #ff3757);
+
+  padding: 0 14px;
+
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 21.6px;
+
+  :has(:disabled) & {
+    @include lightDark(color, #58696e, #828b8e);
+  }
+}
+
+.block {
+  width: 100%;
+}
+
+.small {
+  --gap: 4px;
+
+  --input-y-padding: 6px;
+  --input-font-size: 12px;
+  --input-line-height: 20px;
+
+  --label-font-size: 12px;
+}
+
+.medium {
+  --gap: 6px;
+
+  --input-y-padding: 10px;
+  --input-font-size: 16px;
+  --input-line-height: 22px;
+
+  --label-font-size: 14px;
+}
+
+.large {
+  --gap: 6px;
+
+  --input-y-padding: 15px;
+  --input-font-size: 16px;
+  --input-line-height: 22px;
+
+  --label-font-size: 14px;
+}
