@@ -1,4 +1,10 @@
-import { DispatchStatus, GearApi, MessagesDispatched, ProgramChanged, UserMessageSent } from '@gear-js/api';
+import {
+  GearApi,
+  GearCommonEventDispatchStatus,
+  MessagesDispatched,
+  ProgramChanged,
+  UserMessageSent,
+} from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 
 export async function isProgramInitialized(
@@ -45,7 +51,7 @@ export async function isMsgDispatchedSuccessfully(
 
     const event = messagesDispatched.event as MessagesDispatched;
 
-    const status: DispatchStatus | undefined = await new Promise((resolve) => {
+    const status: GearCommonEventDispatchStatus | undefined = await new Promise((resolve) => {
       event.data.statuses.forEach((status, id) => {
         if (id.eq(messageId)) {
           resolve(status);

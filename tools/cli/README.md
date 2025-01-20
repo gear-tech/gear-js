@@ -3,6 +3,9 @@
     <img src="https://github.com/gear-tech/gear/blob/master/images/logo-grey.png" width="400" alt="GEAR">
   </a>
 </p>
+<h3 align="center">
+    Gear-JS CLI
+</h3>
 <p align=center>
     <a href="https://github.com/gear-tech/gear-js/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-GPL%203.0-success"></a>
 </p>
@@ -42,7 +45,7 @@ gear-js workflow path/to/wotkflow.yaml --ws wss://rpc-node.gear-tech.io
 There are a few ways to specify an account:
 - Using mnemonic phrase
 - Using seed
-- Using well-known account such as `Alice` and `Bob` 
+- Using well-known account such as `Alice` and `Bob`
 ```yaml
 accounts:
   alice: bottom drive obey lake curtain smoke basket hold race lonely fit walk//Alice
@@ -72,7 +75,7 @@ programs:
     id: 1
     path_to_wasm: ./programs/nft.opt.wasm
     path_to_meta: ./programs/nft.meta.txt
-    payload: 
+    payload:
       name: GNFT
       symbol: GNFT
       base_uri: https://gear-tech.io
@@ -99,7 +102,7 @@ transactions:
     payload:
       Mint:
         transaction_id: 0
-        token_metadata: 
+        token_metadata:
           TokenMetadata:
             name: $cli token_name
             description: $program 1

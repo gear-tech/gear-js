@@ -8,6 +8,7 @@ import { Wallet } from '../components';
 import '@gear-js/vara-ui/dist/style.css';
 import './index.scss';
 
+// TODO: either fix only-export-components or remove rule
 // eslint-disable-next-line react-refresh/only-export-components
 function App() {
   const { isApiReady } = useApi();

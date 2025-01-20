@@ -45,7 +45,7 @@ function useProgram(
 
     const { address, signer } = account;
 
-    // @ts-ignore
+    // @ts-expect-error - TODO: add explanation
     const { programId } = api.program[method](program, metadata, payloadType);
 
     const alertId = alert.loading('SignIn', { title });

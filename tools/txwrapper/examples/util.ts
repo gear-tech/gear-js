@@ -1,7 +1,6 @@
 import { KeyringPair } from '@polkadot/keyring/types';
 import { EXTRINSIC_VERSION } from '@polkadot/types/extrinsic/v4/Extrinsic';
 import { OptionsWithMeta, createMetadata } from '@substrate/txwrapper-core';
-import fetch from 'node-fetch';
 
 /**
  * Send a JSONRPC request to the node at http://0.0.0.0:9933.
@@ -9,8 +8,8 @@ import fetch from 'node-fetch';
  * @param method - The JSONRPC request method.
  * @param params - The JSONRPC request params.
  */
-export function rpcToLocalNode(method: string, params: any[] = []): Promise<any> {
-  return fetch('http://0.0.0.0:9933', {
+export async function rpcToLocalNode(method: string, params: any[] = []): Promise<any> {
+  const response = await fetch('http://0.0.0.0:9933', {
     body: JSON.stringify({
       id: 1,
       jsonrpc: '2.0',
@@ -22,15 +21,12 @@ export function rpcToLocalNode(method: string, params: any[] = []): Promise<any>
       connection: 'keep-alive',
     },
     method: 'POST',
-  })
-    .then((response) => response.json() as any)
-    .then(({ error, result }) => {
-      if (error) {
-        throw new Error(`${method} :: ${error.code} ${error.message}: ${JSON.stringify(error.data)}`);
-      }
-
-      return result;
-    });
+  });
+  const { error, result: result_1 } = response.json() as any;
+  if (error) {
+    throw new Error(`${method} :: ${error.code} ${error.message}: ${JSON.stringify(error.data)}`);
+  }
+  return result_1;
 }
 
 /**

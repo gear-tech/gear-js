@@ -1,7 +1,7 @@
 import { useAccount, useApi, useBalanceFormat, useDeriveBalancesAll } from '@gear-js/react-hooks';
 import cx from 'clsx';
 
-import { ReactComponent as VaraSVG } from '../../assets/vara.svg';
+import VaraSVG from '../../assets/vara.svg?react';
 import styles from './balance.module.scss';
 
 type Props = {
