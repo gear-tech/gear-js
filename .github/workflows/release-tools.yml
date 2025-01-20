@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 20.x
 
-      - name: "@gear-js/txwrapper: Check package version"
+      - name: '@gear-js/txwrapper: Check package version'
         uses: EndBug/version-check@v1
         id: check_txwrapper
         with:
@@ -29,7 +29,7 @@ jobs:
           file-url: https://unpkg.com/@gear-js/txwrapper@latest/package.json
           static-checking: localIsNew
 
-      - name: "@gear-js/cli: Check package version"
+      - name: '@gear-js/cli: Check package version'
         uses: EndBug/version-check@v1
         id: check_cli
         with:
@@ -45,22 +45,22 @@ jobs:
         if: steps.check.outputs.changed == 'true' || steps.check_cli.outputs.changed == 'true'
         run: yarn build:tools
 
-      - name: "@gear-js/txwrapper: Publish"
+      - name: '@gear-js/txwrapper: Publish'
         if: steps.check_txwrapper.outputs.changed == 'true'
         working-directory: tools/txwrapper
         run: |
-          export token=$(printenv $(printenv GITHUB_ACTOR))
+          export token=$(printenv npm_token)
           npm config set //registry.npmjs.org/:_authToken=$token
           npm publish
         env:
-          osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
+          npm_token: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish
         if: steps.check_cli.outputs.changed == 'true'
         working-directory: tools/cli
         run: |
-          export token=$(printenv $(printenv GITHUB_ACTOR))
+          export token=$(printenv npm_token)
           npm config set //registry.npmjs.org/:_authToken=$token
           npm publish
         env:
-          osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
+          npm_token: ${{ secrets.NPM_TOKEN }}

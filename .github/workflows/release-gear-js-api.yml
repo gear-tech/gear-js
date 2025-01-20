@@ -43,8 +43,8 @@ jobs:
         if: steps.check.outputs.changed == 'true'
         working-directory: apis/gear/lib
         run: |
-          export token=$(printenv $(printenv GITHUB_ACTOR))
+          export token=$(printenv npm_token)
           npm config set //registry.npmjs.org/:_authToken=$token
           npm publish
         env:
-          osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
+          npm_token: ${{ secrets.NPM_TOKEN }}
