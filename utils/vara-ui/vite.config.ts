@@ -18,6 +18,10 @@ export default defineConfig(({ mode }) => {
         formats: ['es'],
         outDir,
         emptyOutDir: true,
+
+        // feel free to remove after deprecated font support is no longer needed.
+        // then it will worth to think about importing css in a bundle straightaway (like in wallet-connect)
+        cssFileName: 'style',
       },
       rollupOptions: {
         external: ['react', 'react-dom'],
