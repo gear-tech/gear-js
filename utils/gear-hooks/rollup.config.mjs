@@ -8,9 +8,7 @@ import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 export default [
   {
     input: 'src/index.ts',
-    output: [
-      { file: packageJson.main, format: 'cjs', inlineDynamicImports: true },
-      { file: packageJson.module, format: 'esm', inlineDynamicImports: true },
+    output: [ { file: packageJson.main, format: 'esm', inlineDynamicImports: true },
     ],
     plugins: [peerDepsExternal(), resolve(), commonjs(), typescript(), terser()],
   },

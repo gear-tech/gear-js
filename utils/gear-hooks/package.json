@@ -50,9 +50,8 @@
     "react-dom": "18.2.0",
     "sails-js": "0.3.0"
   },
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.mjs",
-  "types": "dist/esm/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
