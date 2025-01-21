@@ -28,10 +28,7 @@ const writeCssImport = () => ({
 export default [
   {
     input: 'src/index.ts',
-    output: [
-      { file: packageJson.main, format: 'cjs' },
-      { file: packageJson.module, format: 'esm' },
-    ],
+    output: [{ file: packageJson.main, format: 'esm' }],
     plugins: [
       peerDepsExternal(),
       postcss({ extract: true, minimize: true }),
