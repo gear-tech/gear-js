@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import svgr from 'vite-plugin-svgr';
 import dts from 'vite-plugin-dts';
+import checker from 'vite-plugin-checker';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -11,7 +12,7 @@ export default defineConfig(({ mode }) => {
   const outDir = mode === 'deprecated' ? 'dist-temp' : 'dist';
 
   return {
-    plugins: [react(), svgr(), dts({ outDir })],
+    plugins: [react(), svgr(), dts({ outDir }), checker({ typescript: true })],
     build: {
       lib: {
         entry: resolve(__dirname, `src/components/${mode === 'deprecated' ? 'index-deprecated' : 'index'}.ts`),
