@@ -54,7 +54,7 @@ function WalletModal({ theme = 'vara', close }: Props) {
       const { address, meta } = _account;
 
       const isActive = address === account?.address;
-      const color = isActive ? 'primary' : 'light';
+      const color = isActive ? 'primary' : 'plain';
 
       const handleClick = () => {
         if (isActive) return;

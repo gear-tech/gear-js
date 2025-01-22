@@ -10,7 +10,7 @@ type Props<T extends Vara.ButtonProps | Gear.ButtonProps> = {
   address: string;
 } & Pick<T, 'block' | 'color' | 'size' | 'onClick'>;
 
-function VaraAccountButton({ address, name, color = 'dark', size, block, onClick }: Props<Vara.ButtonProps>) {
+function VaraAccountButton({ address, name, color = 'contrast', size, block, onClick }: Props<Vara.ButtonProps>) {
   return (
     <Vara.Button type="button" size={size} color={color} onClick={onClick} block={block}>
       <Identicon value={address} size={16} theme="polkadot" className={styles.icon} />
@@ -40,12 +40,14 @@ function GearAccountButton(props: Props<Gear.ButtonProps>) {
   );
 }
 
-type ModalProps<T extends Gear.ButtonProps | Vara.ButtonProps> = Omit<Props<T>, 'size' | 'block'> & {
-  color: 'primary' | 'light';
+type ModalProps<T extends Gear.ButtonProps | Vara.ButtonProps> = Omit<Props<T>, 'size' | 'block' | 'color'> & {
+  color: 'primary' | 'plain';
 };
 
 VaraAccountButton.Modal = (props: ModalProps<Vara.ButtonProps>) => <VaraAccountButton size="small" block {...props} />;
 
-GearAccountButton.Modal = (props: ModalProps<Gear.ButtonProps>) => <GearAccountButton size="large" block {...props} />;
+GearAccountButton.Modal = ({ color, ...props }: ModalProps<Gear.ButtonProps>) => (
+  <GearAccountButton size="large" color={color === 'plain' ? 'light' : 'primary'} block {...props} />
+);
 
 export { VaraAccountButton, GearAccountButton };

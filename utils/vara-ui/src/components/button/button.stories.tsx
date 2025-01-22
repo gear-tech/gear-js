@@ -39,7 +39,7 @@ const Border: Story = { args: { color: 'border' } };
 const Grey: Story = { args: { color: 'grey' } };
 const Transparent: Story = { args: { color: 'transparent' } };
 const Contrast: Story = { args: { color: 'contrast' } };
-const Blend: Story = { args: { color: 'plain' } };
+const Plain: Story = { args: { color: 'plain' } };
 const Danger: Story = { args: { color: 'danger' } };
 const Icon: Story = { args: { color: 'primary', text: undefined, icon: CrossSVG } };
 const IconAndText: Story = { args: { color: 'primary', icon: CrossSVG } };
@@ -59,4 +59,4 @@ const Children: Story = {
 };
 
 export default meta;
-export { Default, Border, Grey, Transparent, Contrast, Blend, Danger, Icon, IconAndText, Children };
+export { Default, Border, Grey, Transparent, Contrast, Plain, Danger, Icon, IconAndText, Children };
