@@ -74,6 +74,7 @@ function WalletModal({ theme = 'vara', close }: Props) {
 
           <Button
             icon={CopySVG}
+            size="medium"
             color="transparent"
             onClick={handleCopyClick}
             className={cx(styles.copyButton, themeClassName)}
@@ -127,6 +128,7 @@ function WalletModal({ theme = 'vara', close }: Props) {
           <Button
             icon={ExitSVG}
             text="Logout"
+            size="medium"
             color="transparent"
             onClick={handleLogoutButtonClick}
             className={cx(styles.logoutButton, themeClassName)}
