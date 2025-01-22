@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => {
   const outDir = mode === 'deprecated' ? 'dist-temp' : 'dist';
 
   return {
-    plugins: [react(), svgr(), dts({ outDir })],
+    plugins: [react(), svgr(), dts({ outDir, entryRoot: 'src/components' })],
     build: {
       lib: {
         entry: resolve(__dirname, `src/components/${mode === 'deprecated' ? 'index-deprecated' : 'index'}.ts`),

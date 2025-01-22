@@ -1,8 +1,8 @@
-import { ReactNode, useEffect, useState, MouseEvent } from 'react';
-import { createPortal } from 'react-dom';
+import { ReactNode, MouseEvent } from 'react';
 import cx from 'clsx';
 
 import CrossSVG from '../../assets/images/cross.svg?react';
+import { useRootPortal } from '../../hooks';
 import { Button } from '../button';
 import { ScrollArea } from '../scroll-area';
 import styles from './modal.module.scss';
@@ -18,26 +18,14 @@ type Props = {
 };
 
 const Modal = ({ heading, close, children, className, headerAddon, footer, maxWidth = 'small' }: Props) => {
-  const [root, setRoot] = useState<HTMLDivElement>();
-
   const handleOverlayClick = ({ target, currentTarget }: MouseEvent) => {
     if (target === currentTarget) close();
   };
 
-  useEffect(() => {
-    const div = document.createElement('div');
-    div.id = 'modal-root';
-    document.body.appendChild(div);
-    setRoot(div);
-
-    return () => {
-      document.body.removeChild(div);
-    };
-  }, []);
-
   const isCustomMaxWidth = !['small', 'medium', 'large'].includes(maxWidth);
 
-  const component = (
+  return useRootPortal(
+    'modal-root',
     <div className={styles.overlay} onClick={handleOverlayClick}>
       <div
         className={cx(styles.modal, !isCustomMaxWidth && styles[maxWidth])}
@@ -55,10 +43,8 @@ const Modal = ({ heading, close, children, className, headerAddon, footer, maxWi
 
         {footer && <footer className={styles.footer}>{footer}</footer>}
       </div>
-    </div>
+    </div>,
   );
-
-  return root ? createPortal(component, root) : null;
 };
 
 export { Modal };
