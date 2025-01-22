@@ -6,7 +6,7 @@ const api = getApi();
 beforeAll(async () => {
   try {
     await api.isReadyOrError;
-  } catch (error) {
+  } catch (_error) {
     process.exit(1);
   }
 });

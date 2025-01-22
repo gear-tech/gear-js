@@ -8,6 +8,8 @@ import react from 'eslint-plugin-react';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import json from '@eslint/json';
 
+const IGNORES = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/lib/**'];
+
 export default [
   {
     ...json.configs.recommended,
@@ -19,12 +21,12 @@ export default [
   },
   ...[eslint.configs.recommended, ...tseslint.configs.recommended].map((conf) => ({
     ...conf,
-    files: ['apis/**/src/**/*.{ts,js}', 'idea/**/src/**/*.{ts,js}', 'utils/**/src/**/*.{ts,js,tsx,jsx}'],
-    ignores: ['apis/gear/src/types/lookup.ts', 'idea/gear/frontend/**'],
+    files: ['apis/**/*.{ts,js}', 'idea/**/*.{ts,js}'],
+    ignores: ['apis/gear/src/types/lookup.ts', 'idea/gear/frontend/**', ...IGNORES],
   })),
   {
-    files: ['apis/**/src/**/*.{ts,js}', 'idea/**/src/**/*.{ts,js}'],
-    ignores: ['apis/gear/src/types/lookup.ts', 'idea/gear/frontend/**'],
+    files: ['apis/**/*.{ts,js}', 'idea/**/*.{ts,js}'],
+    ignores: ['apis/gear/src/types/lookup.ts', 'idea/gear/frontend/**', ...IGNORES],
     rules: {
       '@typescript-eslint/no-unused-vars': [
         'error',
@@ -42,7 +44,7 @@ export default [
       '@typescript-eslint/no-empty-object-type': ['error', { allowInterfaces: 'with-single-extends' }],
     },
   },
-  ...[reactrefresh.configs.recommended].map((conf) => ({
+  ...[reactrefresh.configs.recommended, ...tseslint.configs.recommended].map((conf) => ({
     ...conf,
     files: ['utils/**/src/**/*.{ts,js,tsx,jsx}'],
   })),

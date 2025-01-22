@@ -1,9 +1,37 @@
 {
   "name": "gearexe",
-  "author": "Gear Technologies",
-  "license": "GPL-3.0",
-  "repository": "git@github.com:gear-tech/gear-js.git",
-  "bugs": {
-    "url": "https://github.com/gear-tech/gear-js/issues"
+  "version": "0.0.1",
+  "description": "Typescript library for interacting with Gear.exe",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "./run-tests.sh",
+    "build": "npx rollup --config rollup.config.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    }
+  },
+  "peerDependencies": {
+    "@gear-js/api": "^0.40.0",
+    "@polkadot/api": "15.3.1",
+    "ethers": "^6.13.5",
+    "kzg-wasm": "^0.5.0"
+  },
+  "devDependencies": {
+    "@gear-js/api": "0.40.0",
+    "ethers": "6.13.5",
+    "kzg-wasm": "^0.5.0",
+    "sails-js": "0.3.1",
+    "sails-js-parser": "0.3.1"
+  },
+  "peerDependenciesMeta": {
+    "@gear-js/api": {
+      "optional": true
+    }
   }
 }

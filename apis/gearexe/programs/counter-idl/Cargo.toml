@@ -1,0 +1,13 @@
+[package]
+name = "counter-idl"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+
+[build-dependencies]
+sails-rs = { workspace = true, features = ["wasm-builder"] }
+sails-idl-gen.workspace = true
+counter = { path = "../counter" }

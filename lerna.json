@@ -3,6 +3,7 @@
   "version": "independent",
   "packages": [
     "apis/gear",
+    "apis/gearexe",
     "idea/gear/common",
     "idea/gear/explorer",
     "idea/gear/faucet",

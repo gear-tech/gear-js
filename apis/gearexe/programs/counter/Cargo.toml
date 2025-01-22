@@ -1,0 +1,14 @@
+[package]
+name = "counter"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+sails-rs.workspace = true
+
+[build-dependencies]
+sails-rs = { workspace = true, features = ["wasm-builder"] }
+sails-idl-gen.workspace = true

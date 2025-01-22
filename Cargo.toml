@@ -1,7 +1,18 @@
+[workspace.package]
+version = "0.0.1"
+authors = ["Gear Technologies"]
+edition = "2021"
+license = "GPL-3.0"
+repository = "https://github.com/gear-tech/gear-js"
+
 [workspace]
 resolver = "2"
-
-members = ["apis/gear/programs/test-meta", 'apis/gear/programs/test']
+members = [
+    "apis/gear/programs/test-meta",
+    'apis/gear/programs/test',
+    "apis/gearexe/programs/counter",
+    "apis/gearexe/programs/counter-idl",
+]
 
 [workspace.dependencies]
 gmeta = { git = "https://github.com/gear-tech/gear.git" }
@@ -16,3 +27,5 @@ codec = { package = "parity-scale-codec", version = "3.6.9", default-features = 
 gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", features = [
     "metawasm",
 ] }
+sails-rs = { version = "0.6", features = ["ethexe"] }
+sails-idl-gen = { version = "0.6" }

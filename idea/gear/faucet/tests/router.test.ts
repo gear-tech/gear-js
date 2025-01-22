@@ -25,8 +25,8 @@ jest.mock('../src/services', () => {
 
 describe('BalanceService', () => {
   let app: express.Application;
-  let gearService: jest.Mocked<GearService> = new GearService() as jest.Mocked<GearService>;
-  let transferService: jest.Mocked<TransferService> = new TransferService(gearService) as jest.Mocked<TransferService>;
+  const gearService: jest.Mocked<GearService> = new GearService() as jest.Mocked<GearService>;
+  const transferService: jest.Mocked<TransferService> = new TransferService(gearService) as jest.Mocked<TransferService>;
 
   beforeEach(async () => {
     app = await initializeApp({ gearService, transferService });
