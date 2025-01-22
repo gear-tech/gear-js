@@ -24,8 +24,8 @@
     "clean": "echo \"clean @gear-js/wallet-connect\" && rm -rf dist"
   },
   "peerDependencies": {
-    "@gear-js/react-hooks": "^0.14.2",
-    "@gear-js/ui": "^0.5.28",
+    "@gear-js/react-hooks": "^0.15.0",
+    "@gear-js/ui": "^0.6.0",
     "@gear-js/vara-ui": "^0.0.11"
   },
   "peerDependenciesMeta": {
