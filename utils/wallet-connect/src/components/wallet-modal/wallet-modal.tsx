@@ -54,7 +54,7 @@ function WalletModal({ theme = 'vara', close }: Props) {
       const { address, meta } = _account;
 
       const isActive = address === account?.address;
-      const color = isActive ? 'primary' : 'light';
+      const color = isActive ? 'primary' : 'plain';
 
       const handleClick = () => {
         if (isActive) return;
@@ -74,6 +74,7 @@ function WalletModal({ theme = 'vara', close }: Props) {
 
           <Button
             icon={CopySVG}
+            size="medium"
             color="transparent"
             onClick={handleCopyClick}
             className={cx(styles.copyButton, themeClassName)}
@@ -127,6 +128,7 @@ function WalletModal({ theme = 'vara', close }: Props) {
           <Button
             icon={ExitSVG}
             text="Logout"
+            size="medium"
             color="transparent"
             onClick={handleLogoutButtonClick}
             className={cx(styles.logoutButton, themeClassName)}

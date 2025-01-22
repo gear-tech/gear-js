@@ -110,11 +110,6 @@
   }
 }
 
-.button svg {
-  width: 20px;
-  height: 20px;
-}
-
 .body,
 .footer {
   @include lightDark(color, #000, rgba(246, 246, 246, 0.8));

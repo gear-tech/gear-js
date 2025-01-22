@@ -10,7 +10,7 @@ const meta: Meta<Type> = {
   title: 'Button',
   component: Button,
   args: {
-    children: 'Click me!',
+    text: 'Click me!',
     color: 'primary',
     size: 'default',
     disabled: false,
@@ -25,11 +25,11 @@ const meta: Meta<Type> = {
     noWrap: { control: 'boolean' },
     size: {
       options: ['x-small', 'small', 'medium', 'default', 'x-large'],
-      control: { type: 'select' },
+      control: { type: 'radio' },
     },
     color: {
-      options: ['primary', 'blend', 'contrast', 'grey', 'border', 'transparent', 'danger'],
-      control: { type: 'select' },
+      options: ['primary', 'plain', 'contrast', 'grey', 'border', 'transparent', 'danger'],
+      control: { type: 'radio' },
     },
   },
 };
@@ -39,12 +39,15 @@ const Border: Story = { args: { color: 'border' } };
 const Grey: Story = { args: { color: 'grey' } };
 const Transparent: Story = { args: { color: 'transparent' } };
 const Contrast: Story = { args: { color: 'contrast' } };
-const Blend: Story = { args: { color: 'blend' } };
+const Plain: Story = { args: { color: 'plain' } };
 const Danger: Story = { args: { color: 'danger' } };
-const NoText: Story = { args: { color: 'primary', children: undefined, icon: CrossSVG } };
-const WithChildrenAndIcons: Story = {
+const Icon: Story = { args: { color: 'primary', text: undefined, icon: CrossSVG } };
+const IconAndText: Story = { args: { color: 'primary', icon: CrossSVG } };
+
+const Children: Story = {
   args: {
     color: 'primary',
+    text: undefined,
     children: (
       <>
         <CrossSVG />
@@ -56,4 +59,4 @@ const WithChildrenAndIcons: Story = {
 };
 
 export default meta;
-export { Default, Border, Grey, Transparent, Contrast, Blend, Danger, NoText, WithChildrenAndIcons };
+export { Default, Border, Grey, Transparent, Contrast, Plain, Danger, Icon, IconAndText, Children };
