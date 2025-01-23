@@ -22,8 +22,6 @@ const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadIt
   const nextLevelName = getNextLevelName(levelName, selected);
 
   useChangeEffect(() => {
-    // TODO: fix any
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const parsedStructure = getPayloadValue(type[selected]);
 
     setValue(levelName, { [selected]: parsedStructure });

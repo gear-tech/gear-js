@@ -23,7 +23,6 @@ const Full = () => {
   const { metadata, isMetadataReady } = useMetadata(program?.metahash);
   const { state, isStateRead, isState, readFullState, resetState } = useStateRead(programId);
 
-  // @ts-expect-error - TODO(#1738): explain why it should be ignored
   const methods = useForm<FormValues>({ defaultValues: INITIAL_VALUES });
   const { control } = methods;
   const payloadValue = useWatch({ control, name: 'payload' });
