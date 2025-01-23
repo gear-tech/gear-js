@@ -19,11 +19,11 @@ export default [
   },
   ...[eslint.configs.recommended, ...tseslint.configs.recommended].map((conf) => ({
     ...conf,
-    files: ['apis/**/src/**/*.{ts,js}', 'idea/**/src/**/*.{ts,js}', 'utils/**/src/**/*.{ts,js,tsx,jsx}'],
+    files: ['apis/**/src/**/*.{ts,js}', 'idea/**/src/**/*.{ts,js}', 'tools/**/src/**/*.{ts,js}'],
     ignores: ['apis/gear/src/types/lookup.ts', 'idea/gear/frontend/**'],
   })),
   {
-    files: ['apis/**/src/**/*.{ts,js}', 'idea/**/src/**/*.{ts,js}'],
+    files: ['apis/**/src/**/*.{ts,js}', 'idea/**/src/**/*.{ts,js}', 'tools/**/src/**/*.{ts,js}'],
     ignores: ['apis/gear/src/types/lookup.ts', 'idea/gear/frontend/**'],
     rules: {
       '@typescript-eslint/no-unused-vars': [
@@ -42,7 +42,7 @@ export default [
       '@typescript-eslint/no-empty-object-type': ['error', { allowInterfaces: 'with-single-extends' }],
     },
   },
-  ...[reactrefresh.configs.recommended].map((conf) => ({
+  ...[reactrefresh.configs.recommended, ...tseslint.configs.recommended].map((conf) => ({
     ...conf,
     files: ['utils/**/src/**/*.{ts,js,tsx,jsx}'],
   })),

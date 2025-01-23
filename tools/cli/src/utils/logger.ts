@@ -13,7 +13,7 @@ const getLvl = (lvl: number, kind: string): [string, string, (msg: string) => st
 };
 
 const myFormat = format.printf(({ level, message, lvl }) => {
-  const [label, tab, _chalk] = getLvl(lvl, level);
+  const [label, tab, _chalk] = getLvl(lvl as number, level);
   return `${tab}${_chalk(`${label}${message}`)}`;
 });
 

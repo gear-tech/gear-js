@@ -31,7 +31,7 @@ export async function runWorkflow(pathToScheme: string, cliArguments: CLIArgumen
   const api = new GearApi({ providerAddress: scheme.wsAddress, noInitWarn: true });
   try {
     await api.isReadyOrError;
-  } catch (err) {
+  } catch (_) {
     throw new Error(`Unable to connect to ${scheme.wsAddress}`);
   }
 
