@@ -16,7 +16,7 @@
     "gear-js"
   ],
   "packageManager": "yarn@4.6.0",
-  "version": "1.2.0",
+  "version": "1.0.0",
   "workspaces": [
     "apis/gear",
     "idea/gear/common",
@@ -57,7 +57,8 @@
     "test": "lerna run test --parallel",
     "lint": "npx eslint",
     "lint:fix": "npx eslint --fix",
-    "bump:polkadot": "node scripts/update-polkadot.mjs",
+    "bump:polkadot": "node scripts/update-deps.mjs polkadot",
+    "bump:gear-api": "node scripts/update-deps.mjs gear-api",
     "bump:gear-idea": "node scripts/update-gear-idea-version.mjs",
     "check:gear-idea-version": "node scripts/check-gear-idea-version.mjs"
   },
