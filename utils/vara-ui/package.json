@@ -36,16 +36,16 @@
     "non.geist": "1.0.4"
   },
   "devDependencies": {
-    "@storybook/addon-essentials": "8.4.3",
-    "@storybook/addon-interactions": "8.4.3",
-    "@storybook/addon-links": "8.4.3",
-    "@storybook/addon-onboarding": "8.4.3",
-    "@storybook/blocks": "8.4.3",
-    "@storybook/react": "8.4.3",
-    "@storybook/react-vite": "8.4.3",
+    "@storybook/addon-essentials": "8.5.1",
+    "@storybook/addon-interactions": "8.5.1",
+    "@storybook/addon-links": "8.5.1",
+    "@storybook/addon-onboarding": "8.5.1",
+    "@storybook/blocks": "8.5.1",
+    "@storybook/react": "8.5.1",
+    "@storybook/react-vite": "8.5.1",
     "@storybook/testing-library": "0.2.2",
     "clsx": "2.1.1",
-    "storybook": "8.4.3",
+    "storybook": "8.5.1",
     "storybook-dark-mode": "4.0.2"
   },
   "files": [
