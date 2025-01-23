@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import isString from 'lodash.isstring';
 import isPlainObject from 'lodash.isplainobject';
 import { toJSON, ProgramMetadata, StateMetadata } from '@gear-js/api';
@@ -11,6 +10,8 @@ const getItemLabel = (name: string, title?: string) => (title ? `${title} (${nam
 const getNextLevelName = (currentLevelName: string, nextLevelName: string | number) =>
   `${currentLevelName}.${nextLevelName}`;
 
+// TODO(#1737): fix any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getSubmitPayload = (payload: PayloadValue): any => {
   if (isString(payload)) {
     const trimmedPayload = payload.trim();
@@ -45,7 +46,7 @@ const getPayloadValue = (typeStructure: TypeStructure | null): PayloadValue => {
         return '[ ]';
       }
 
-      // @ts-ignore
+      // @ts-expect-error - TODO(#1738): explain why it should be ignored
       return getPreformattedText([getPayloadValue(type)]);
     }
 

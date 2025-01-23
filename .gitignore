@@ -18,6 +18,7 @@ tmp/
 .env
 temp/
 *.log
+.npmrc
 
 idea/gear/squid/lib/
 idea/gear/indexer-db/lib/

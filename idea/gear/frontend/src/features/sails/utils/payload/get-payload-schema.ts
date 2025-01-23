@@ -11,7 +11,7 @@ const asJSON = <T extends z.ZodTypeAny>(schema: T) =>
   schema.transform((value, ctx) => {
     try {
       return JSON.parse(value) as AnyJson;
-    } catch (e) {
+    } catch (_) {
       ctx.addIssue({ code: 'custom', message: 'Invalid JSON' });
       return z.NEVER;
     }

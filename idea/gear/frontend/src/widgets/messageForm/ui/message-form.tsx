@@ -36,8 +36,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
   const schema = useValidationSchema();
 
   // TODOFORM:
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
+  // @ts-expect-error - TODO(#1738): explain why it should be ignored
   const methods = useForm<FormValues>({ defaultValues: INITIAL_VALUES, resolver: yupResolver(schema) });
   const { getValues, reset, setValue, register, getFieldState, formState } = methods;
   const { error: payloadTypeError } = getFieldState('payloadType', formState);
