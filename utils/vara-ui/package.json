@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/vara-ui",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "type": "module",
   "description": "React UI components used across Vara applications",
   "author": "Gear Technologies",
@@ -19,8 +19,8 @@
   "homepage": "https://github.com/gear-tech/gear-js/tree/main/utils/vara-ui#readme",
   "scripts": {
     "start": "storybook dev -p 6006",
-    "build-base": "npx tsc && vite build --mode base",
-    "build-deprecated": "npx tsc && vite build --mode deprecated",
+    "build-base": "rm -rf dist && npx tsc && npx vite build --mode base",
+    "build-deprecated": "rm -rf dist-temp && npx tsc && npx vite build --mode deprecated",
     "copy-deprecated-css": "cp dist-temp/style.css dist/style-deprecated.css",
     "rm-deprecated-dts": "rm dist/index-deprecated.d.ts",
     "build": "yarn run build-base && yarn run build-deprecated && yarn run copy-deprecated-css && yarn run rm-deprecated-dts",
@@ -45,13 +45,8 @@
     "@storybook/react-vite": "8.4.3",
     "@storybook/testing-library": "0.2.2",
     "clsx": "2.1.1",
-    "sass": "1.77.2",
     "storybook": "8.4.3",
-    "storybook-dark-mode": "4.0.2",
-    "typescript": "5.7.2",
-    "vite": "5.4.6",
-    "vite-plugin-dts": "4.3.0",
-    "vite-plugin-svgr": "4.3.0"
+    "storybook-dark-mode": "4.0.2"
   },
   "files": [
     "dist"

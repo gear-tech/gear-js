@@ -6,18 +6,7 @@ import styles from './button.module.scss';
 type BaseProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   text?: string;
   icon?: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | undefined }>;
-  color?:
-    | 'primary'
-    | 'blend'
-    | 'contrast'
-    /** @deprecated use 'contrast' instead */
-    | 'dark'
-    /** @deprecated use 'blend' instead */
-    | 'light'
-    | 'grey'
-    | 'border'
-    | 'transparent'
-    | 'danger';
+  color?: 'primary' | 'plain' | 'contrast' | 'grey' | 'border' | 'transparent' | 'danger';
   size?: 'x-small' | 'small' | 'medium' | 'default' | 'x-large';
   isLoading?: boolean;
   block?: boolean;
@@ -64,7 +53,7 @@ const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
       className={cx(
         styles.button,
         styles[color],
-        color !== 'transparent' && styles[size],
+        styles[size],
         isLoading && styles.loading,
         !text && !children && styles.noText,
         block && styles.block,
@@ -74,8 +63,10 @@ const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
       disabled={disabled || isLoading}
       ref={ref}
       {...attrs}>
-      {Icon && <Icon />}
-      {(text || children) && <span className={styles.content}>{text || children}</span>}
+      {Icon && <Icon className={styles.icon} />}
+      {text && <span>{text}</span>}
+
+      {children}
     </button>
   );
 });
