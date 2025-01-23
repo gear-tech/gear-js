@@ -23,9 +23,7 @@ const Full = () => {
   const { metadata, isMetadataReady } = useMetadata(program?.metahash);
   const { state, isStateRead, isState, readFullState, resetState } = useStateRead(programId);
 
-  // TODOFORM:
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
+  // @ts-expect-error - TODO(#1738): explain why it should be ignored
   const methods = useForm<FormValues>({ defaultValues: INITIAL_VALUES });
   const { control } = methods;
   const payloadValue = useWatch({ control, name: 'payload' });

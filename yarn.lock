@@ -1956,7 +1956,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:*, @gear-js/api@npm:^0.41.0, @gear-js/api@workspace:apis/gear":
+"@gear-js/api@npm:*, @gear-js/api@npm:0.41.0, @gear-js/api@npm:^0.41.0, @gear-js/api@workspace:apis/gear":
   version: 0.0.0-use.local
   resolution: "@gear-js/api@workspace:apis/gear"
   dependencies:
@@ -1971,17 +1971,6 @@ __metadata:
     rxjs: 7.8.1
   languageName: unknown
   linkType: soft
-
-"@gear-js/api@npm:0.40.0":
-  version: 0.40.0
-  resolution: "@gear-js/api@npm:0.40.0"
-  peerDependencies:
-    "@polkadot/api": 15.0.1
-    "@polkadot/wasm-crypto": 7.4.1
-    rxjs: 7.8.1
-  checksum: 10c0/6183a7a7f34af52c7ae900cad479b84c7ee7505049a5d86cc6449d8fbe6f3b74603ca162c7af7397a57d224c6db3decd6e1c547eef4e97674f0ef6d4d09978be
-  languageName: node
-  linkType: hard
 
 "@gear-js/cli@workspace:tools/cli":
   version: 0.0.0-use.local
@@ -2021,7 +2010,7 @@ __metadata:
     sails-js: "npm:0.3.0"
     sails-js-parser: "npm:0.0.1"
   peerDependencies:
-    "@gear-js/api": 0.39.0
+    "@gear-js/api": 0.41.0
     "@polkadot/api": 15.4.1
     "@tanstack/react-query": ^5.56.2
     react: ^18.2.0
@@ -13214,7 +13203,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gear-idea-common@workspace:idea/gear/common"
   dependencies:
-    "@gear-js/api": "npm:0.40.0"
+    "@gear-js/api": "npm:0.41.0"
     "@polkadot/api": "npm:15.4.1"
     winston: "npm:3.7.2"
   languageName: unknown
@@ -13268,7 +13257,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gear-idea-frontend@workspace:idea/gear/frontend"
   dependencies:
-    "@gear-js/api": "npm:0.40.0"
+    "@gear-js/api": "npm:0.41.0"
     "@gear-js/react-hooks": "npm:*"
     "@gear-js/ui": "npm:*"
     "@gear-js/wallet-connect": "npm:*"
@@ -13345,7 +13334,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gear-idea-squid@workspace:idea/gear/squid"
   dependencies:
-    "@gear-js/api": "npm:0.40.0"
+    "@gear-js/api": "npm:0.41.0"
     "@polkadot/api": "npm:15.4.1"
     "@subsquid/graphql-server": "npm:4.5.1"
     "@subsquid/ss58": "npm:2.0.2"

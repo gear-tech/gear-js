@@ -8,7 +8,7 @@ function useClearButton<T extends HTMLInputElement | HTMLTextAreaElement>(
 ) {
   const inputRef = useRef<T>(null);
 
-  // @ts-expect-error - TODO: figure out what's wrong
+  // @ts-expect-error - TODO(#1738): figure out what's wrong
   useImperativeHandle(forwardedRef, () => inputRef.current);
 
   const [isVisible, setIsVisible] = useState(false);

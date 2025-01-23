@@ -14,7 +14,7 @@ function useLocalCode(id: HexString) {
 
     try {
       return await api.code.metaHash(id);
-    } catch (error) {
+    } catch (_) {
       return null;
     }
   };

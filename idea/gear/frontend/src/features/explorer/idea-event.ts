@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle */
+ 
 import { Compact, GenericEvent } from '@polkadot/types';
 import { BlockNumber, Event as DotEvent } from '@polkadot/types/interfaces';
 

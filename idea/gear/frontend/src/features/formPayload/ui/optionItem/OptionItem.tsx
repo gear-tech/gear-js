@@ -16,7 +16,7 @@ const OptionItem = ({ title, levelName, typeStructure, renderNextItem }: Payload
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => setSelected(event.target.value);
 
-  // @ts-expect-error - TODO: fix any
+  // @ts-expect-error - TODO(#1737): fix any
   const parsedPayload = useMemo(() => getPayloadValue(type), [type]);
 
   const isNone = selected === DEFAULT_OPTION_VALUE;

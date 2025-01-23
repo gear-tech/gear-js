@@ -22,7 +22,8 @@ const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadIt
   const nextLevelName = getNextLevelName(levelName, selected);
 
   useChangeEffect(() => {
-    // @ts-expect-error - TODO: fix no-explicit-any
+    // TODO: fix any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const parsedStructure = getPayloadValue(type[selected]);
 
     setValue(levelName, { [selected]: parsedStructure });
@@ -33,7 +34,7 @@ const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadIt
       <Select options={options} onChange={handleChange} />
       {renderNextItem({
         levelName: nextLevelName,
-        // @ts-expect-error - TODO: fix any
+        // @ts-expect-error - TODO(#1737): fix any
         typeStructure: type[selected],
       })}
     </Fieldset>
