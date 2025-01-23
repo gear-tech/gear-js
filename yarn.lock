@@ -2001,7 +2001,6 @@ __metadata:
     "@rollup/plugin-node-resolve": "npm:15.2.3"
     "@substrate/connect": "npm:2.1.0"
     "@tanstack/react-query": "npm:5.56.2"
-    "@types/react-transition-group": "npm:4.4.7"
     bignumber.js: "npm:9.1.2"
     nanoid: "npm:5.0.1"
     react: "npm:18.2.0"
@@ -7336,21 +7335,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-transition-group@npm:4.4.7":
-  version: 4.4.7
-  resolution: "@types/react-transition-group@npm:4.4.7"
-  dependencies:
-    "@types/react": "npm:*"
-  checksum: 10c0/25f7ed57f95c67a3ef415981bf7de092c02fe3c156ab4c30b44757bbfe43a1c988d99012d2a33978b1bc338eefa07e6ad4a54c3ddaadbb7d8ac40b79bd48f61e
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:*":
-  version: 19.0.7
-  resolution: "@types/react@npm:19.0.7"
-  dependencies:
-    csstype: "npm:^3.0.2"
-  checksum: 10c0/818e546fa03a2a65ac2652fc472891ac96684211e8967bc25e1da6a8a09e2301ad972b1b038d128f8b4cbbd7691f6f57fee274db568169e9b6b01556abbb5bee
+"@types/react-transition-group@npm:4.4.12":
+  version: 4.4.12
+  resolution: "@types/react-transition-group@npm:4.4.12"
+  peerDependencies:
+    "@types/react": "*"
+  checksum: 10c0/0441b8b47c69312c89ec0760ba477ba1a0808a10ceef8dc1c64b1013ed78517332c30f18681b0ec0b53542731f1ed015169fed1d127cc91222638ed955478ec7
   languageName: node
   linkType: hard
 
@@ -13275,7 +13265,6 @@ __metadata:
     "@types/lodash.isplainobject": "npm:4.0.7"
     "@types/lodash.isstring": "npm:4.0.7"
     "@types/react-gtm-module": "npm:2.0.3"
-    "@types/react-transition-group": "npm:4.4.7"
     bignumber.js: "npm:9.1.2"
     clsx: "npm:2.0.0"
     ky: "npm:1.0.1"
@@ -13380,6 +13369,7 @@ __metadata:
     "@types/node": "npm:^22.10.7"
     "@types/react": "npm:^18.2.0"
     "@types/react-dom": "npm:^18.2.0"
+    "@types/react-transition-group": "npm:4.4.12"
     "@types/rollup-plugin-peer-deps-external": "npm:^2.2.5"
     "@typescript-eslint/eslint-plugin": "npm:^8.20.0"
     "@typescript-eslint/parser": "npm:^8.20.0"

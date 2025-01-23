@@ -22,7 +22,7 @@ const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadIt
   const nextLevelName = getNextLevelName(levelName, selected);
 
   useChangeEffect(() => {
-    const parsedStructure = getPayloadValue(type[selected]);
+    const parsedStructure = getPayloadValue(type[selected as keyof typeof type]);
 
     setValue(levelName, { [selected]: parsedStructure });
   }, [selected]);
