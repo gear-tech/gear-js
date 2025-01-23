@@ -55,7 +55,7 @@ if [[ -n "$GEAR_REPO" ]]; then
     path_to_gear_repo=$GEAR_REPO
 else
     echo "[*]  Cloning gear repo..."
-    git clone --depth 1 -b do-dev-mode https://github.com/gear-tech/gear /tmp/gear
+    git clone --depth 1 https://github.com/gear-tech/gear /tmp/gear
     path_to_gear_repo="/tmp/gear"
 fi
 

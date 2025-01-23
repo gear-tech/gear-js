@@ -1,5 +1,6 @@
 {
   "name": "gearexe",
+  "private": true,
   "version": "0.0.1",
   "description": "Typescript library for interacting with Gear.exe",
   "type": "module",
