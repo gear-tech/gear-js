@@ -35,6 +35,7 @@
   ],
   "scripts": {
     "clean": "lerna run clean --parallel && lerna clean -y && rm -rf node_modules",
+    "build": "lerna run build",
     "build:gear-api": "lerna run build --scope @gear-js/api",
     "build:gear-idea-explorer": "lerna run build --scope @gear-js/api --scope gear-idea-common --scope gear-idea-explorer --scope gear-idea-indexer-db",
     "build:gear-idea-faucet": "lerna run build --scope @gear-js/api --scope gear-idea-faucet",
@@ -49,7 +50,6 @@
     "build:txwrapper": "lerna run build --scope @gear-js/txwrapper",
     "build:cli": "lerna run build --scope @gear-js/cli",
     "build:tools": "lerna run build --scope @gear-js/cli --scope @gear-js/txwrapper",
-    "build:all": "lerna run build",
     "test:gear-api": "lerna run test --scope @gear-js/api",
     "test:gear-idea-backend": "lerna run test --parallel --scope gear-idea-meta-storage --scope gear-idea-faucet",
     "test:txwrapper": "lerna run test --scope @gear-js/txwrapper",
