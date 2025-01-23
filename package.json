@@ -53,7 +53,7 @@
     "build:tools": "lerna run build --scope @gear-js/cli --scope @gear-js/txwrapper",
     "build:all": "lerna run build",
     "test:gear-api": "lerna run test --scope @gear-js/api",
-    "test:gearexe-api": "lerna run test --scope gearexe",
+    "test:gearexe-api": "lerna run build --scope @gear-js/api && lerna run test --scope gearexe",
     "test:gear-idea-backend": "lerna run test --parallel --scope gear-idea-meta-storage --scope gear-idea-faucet",
     "test:txwrapper": "lerna run test --scope @gear-js/txwrapper",
     "test:ui": "lerna run test --scope @gear-js/ui",
