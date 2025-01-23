@@ -32,7 +32,7 @@ jobs:
     if: ${{ github.event.inputs.namespaces == 'All' || github.event.schedule == '0 0 * * *' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: aws-actions/configure-aws-credentials@v1
+      - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.VELERO_ID_PROD }}
           aws-secret-access-key: ${{ secrets.VELERO_KEY_PROD }}
@@ -43,7 +43,7 @@ jobs:
           aws eks --region ${{ secrets.VELERO_REGION_PROD }} update-kubeconfig --kubeconfig $HOME/.kube/config_prod --name k8s-gear
         if: ${{ github.event.inputs.source_cluster == 'prod' || github.event.schedule == '0 0 * * *' }}
 
-      - uses: aws-actions/configure-aws-credentials@v1
+      - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.VELERO_ID_STG }}
           aws-secret-access-key: ${{ secrets.VELERO_KEY_STG }}
@@ -102,7 +102,7 @@ jobs:
     if: ${{ github.event.inputs.namespaces != 'All' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: aws-actions/configure-aws-credentials@v1
+      - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.VELERO_ID_PROD }}
           aws-secret-access-key: ${{ secrets.VELERO_KEY_PROD }}
@@ -113,7 +113,7 @@ jobs:
           aws eks --region ${{ secrets.VELERO_REGION_PROD }} update-kubeconfig --kubeconfig $HOME/.kube/config_prod --name k8s-gear
         if: ${{ github.event.inputs.source_cluster == 'prod' }}
 
-      - uses: aws-actions/configure-aws-credentials@v1
+      - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.VELERO_ID_STG }}
           aws-secret-access-key: ${{ secrets.VELERO_KEY_STG }}
