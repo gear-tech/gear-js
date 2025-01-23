@@ -40,7 +40,7 @@
     "sails-js-parser": "0.0.1"
   },
   "devDependencies": {
-    "@gear-js/api": "^0.41.0",
+    "@gear-js/api": "0.41.0",
     "@polkadot/api": "15.4.1",
     "@polkadot/types": "15.4.1",
     "@rollup/plugin-node-resolve": "15.2.3",

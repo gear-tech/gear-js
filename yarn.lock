@@ -1956,7 +1956,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:*, @gear-js/api@npm:0.41.0, @gear-js/api@npm:^0.41.0, @gear-js/api@workspace:apis/gear":
+"@gear-js/api@npm:*, @gear-js/api@npm:0.41.0, @gear-js/api@workspace:apis/gear":
   version: 0.0.0-use.local
   resolution: "@gear-js/api@workspace:apis/gear"
   dependencies:
@@ -1976,7 +1976,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/cli@workspace:tools/cli"
   dependencies:
-    "@gear-js/api": "npm:^0.41.0"
+    "@gear-js/api": "npm:0.41.0"
     "@polkadot/api": "npm:15.4.1"
     chalk: "npm:4"
     commander: "npm:10.0.1"
@@ -1988,11 +1988,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/react-hooks@npm:*, @gear-js/react-hooks@npm:^0.15.0, @gear-js/react-hooks@workspace:utils/gear-hooks":
+"@gear-js/react-hooks@npm:*, @gear-js/react-hooks@npm:0.15.0, @gear-js/react-hooks@workspace:utils/gear-hooks":
   version: 0.0.0-use.local
   resolution: "@gear-js/react-hooks@workspace:utils/gear-hooks"
   dependencies:
-    "@gear-js/api": "npm:^0.41.0"
+    "@gear-js/api": "npm:0.41.0"
     "@polkadot/api": "npm:15.4.1"
     "@polkadot/api-derive": "npm:15.4.1"
     "@polkadot/extension-inject": "npm:0.58.1"
@@ -2037,7 +2037,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/ui@npm:*, @gear-js/ui@npm:^0.6.0, @gear-js/ui@workspace:utils/gear-ui":
+"@gear-js/ui@npm:*, @gear-js/ui@npm:0.6.0, @gear-js/ui@workspace:utils/gear-ui":
   version: 0.0.0-use.local
   resolution: "@gear-js/ui@workspace:utils/gear-ui"
   dependencies:
@@ -2055,7 +2055,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/vara-ui@npm:^0.2.0, @gear-js/vara-ui@workspace:utils/vara-ui":
+"@gear-js/vara-ui@npm:0.2.0, @gear-js/vara-ui@workspace:utils/vara-ui":
   version: 0.0.0-use.local
   resolution: "@gear-js/vara-ui@workspace:utils/vara-ui"
   dependencies:
@@ -2081,16 +2081,16 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/wallet-connect@workspace:utils/wallet-connect"
   dependencies:
-    "@gear-js/react-hooks": "npm:^0.15.0"
-    "@gear-js/ui": "npm:^0.6.0"
-    "@gear-js/vara-ui": "npm:^0.2.0"
+    "@gear-js/react-hooks": "npm:0.15.0"
+    "@gear-js/ui": "npm:0.6.0"
+    "@gear-js/vara-ui": "npm:0.2.0"
     "@polkadot/react-identicon": "npm:3.12.1"
     "@tanstack/react-query": "npm:5.56.2"
     clsx: "npm:2.1.1"
   peerDependencies:
-    "@gear-js/react-hooks": ^0.15.0
-    "@gear-js/ui": ^0.6.0
-    "@gear-js/vara-ui": ^0.0.11
+    "@gear-js/react-hooks": 0.15.0
+    "@gear-js/ui": 0.6.0
+    "@gear-js/vara-ui": 0.0.11
   peerDependenciesMeta:
     "@gear-js/ui":
       optional: true

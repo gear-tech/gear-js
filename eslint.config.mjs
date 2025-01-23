@@ -8,7 +8,7 @@ import react from 'eslint-plugin-react';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import json from '@eslint/json';
 
-const noUnuseVars = [
+const noUnusedVars = [
   'error',
   {
     args: 'all',
@@ -38,7 +38,7 @@ export default [
     files: ['apis/**/src/**/*.{ts,js}', 'idea/**/src/**/*.{ts,js}', 'tools/**/src/**/*.{ts,js}'],
     ignores: ['apis/gear/src/types/lookup.ts', 'idea/gear/frontend/**'],
     rules: {
-      '@typescript-eslint/no-unused-vars': noUnuseVars,
+      '@typescript-eslint/no-unused-vars': noUnusedVars,
       '@typescript-eslint/no-explicit-any': 'off',
       'prefer-rest-params': 'off',
       '@typescript-eslint/no-empty-object-type': ['error', { allowInterfaces: 'with-single-extends' }],
@@ -107,7 +107,7 @@ export default [
       'no-shadow-restricted-names': 'error',
       '@typescript-eslint/no-unused-vars': 'warn',
       'react-hooks/exhaustive-deps': 'error',
-      '@typescript-eslint/no-unused-vars': noUnuseVars,
+      '@typescript-eslint/no-unused-vars': noUnusedVars,
     },
   },
 ];
