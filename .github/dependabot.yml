@@ -1,60 +1,17 @@
 version: 2
 updates:
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: weekly
+
   - package-ecosystem: 'npm'
-    directory: /
+    directory: '/'
     open-pull-requests-limit: 5
     schedule:
-      interval: 'weekly'
-    commit-message:
-      prefix: 'chore(repo):'
+      interval: daily
     groups:
-      all-dependencies:
-        patterns:
-          - '*'
-  - package-ecosystem: 'npm'
-    directory: '/apis/gear'
-    open-pull-requests-limit: 5
-    schedule:
-      interval: 'weekly'
-    commit-message:
-      prefix: 'chore(api):'
-    groups:
-      all-dependencies:
-        patterns:
-          - '*'
-  - package-ecosystem: 'npm'
-    directories:
-      - '/idea/gear/*'
-    open-pull-requests-limit: 5
-    schedule:
-      interval: 'weekly'
-    commit-message:
-      prefix: 'chore(gear-idea):'
-    groups:
-      all-dependencies:
-        patterns:
-          - '*'
-  - package-ecosystem: 'npm'
-    directories:
-      - '/utils/*'
-    open-pull-requests-limit: 5
-    schedule:
-      interval: 'weekly'
-    commit-message:
-      prefix: 'chore(utils):'
-    groups:
-      all-dependencies:
-        patterns:
-          - '*'
-  - package-ecosystem: 'npm'
-    directories:
-      - '/tools/*'
-    open-pull-requests-limit: 5
-    schedule:
-      interval: 'weekly'
-    commit-message:
-      prefix: 'chore(tools):'
-    groups:
-      all-dependencies:
-        patterns:
-          - '*'
+      development:
+        dependency-type: 'development'
+      production:
+        dependency-type: 'production'

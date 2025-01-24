@@ -1,0 +1,44 @@
+name: 'Release'
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - apis/gear/package.json
+      - tools/cli/package.json
+      - tools/txwrapper/package.json
+      - utils/gear-hooks/package.json
+      - utils/gear-ui/package.json
+      - utils/vara-ui/package.json
+      - utils/wallet-connect/package.json
+  workflow_dispatch:
+
+env:
+  BINARYEN_VERSION: version_111
+
+jobs:
+  publish-to-npm:
+    if: github.event_name == 'push'
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use node 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build
+        run: yarn build
+
+      - name: Authenticate with NPM
+        run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish
+        run: npx lerna publish from-package --no-verify-access --yes

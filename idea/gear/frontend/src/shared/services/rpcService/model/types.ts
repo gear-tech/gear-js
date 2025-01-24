@@ -23,7 +23,7 @@ type RPCSuccessResponse<Result> = PartialBy<RPCServerResponse<Result>, 'error'>;
 type RPCRequest = {
   id?: JsonRpcId;
   method: string;
-  params?: Object;
+  params?: object;
   jsonrpc: typeof RPC_VERSION;
 };
 

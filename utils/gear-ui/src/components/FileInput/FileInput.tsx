@@ -56,7 +56,7 @@ const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInput
 
   const acceptValue = Array.isArray(accept) ? accept.join(',') : accept;
 
-  // @ts-expect-error - TODO: figure out what's wrong
+  // @ts-expect-error - TODO(#1738): figure out what's wrong
   useImperativeHandle(forwardedRef, () => ref.current);
 
   const handleButtonClick = () => ref.current?.click();

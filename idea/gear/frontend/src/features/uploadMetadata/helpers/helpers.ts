@@ -5,7 +5,7 @@ import isPlainObject from 'lodash.isplainobject';
 import { isNullOrUndefined } from '@/shared/helpers';
 import { MetadataTypes, MedatadaTypesValue } from '../model';
 
-const isEmptyObject = (value: unknown) => isPlainObject(value) && !Object.keys(value as {}).length;
+const isEmptyObject = (value: unknown) => isPlainObject(value) && !Object.keys(value as object).length;
 
 // TODO: types
 const getNamedTypes = (metadata: ProgramMetadata, onError: (message: string) => void) => {
@@ -33,11 +33,13 @@ const getNamedTypes = (metadata: ProgramMetadata, onError: (message: string) => 
   return getTypes(metadata.types);
 };
 
-const getFlatNamedTypeEntries = (types: {}, parentKey = ''): any =>
-  Object.entries(types).flatMap(([key, value]): any => {
+// TODO(#1737): change any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getFlatNamedTypeEntries = (types: object, parentKey = ''): any =>
+  Object.entries(types).flatMap(([key, value]) => {
     const nestedKey = parentKey ? `${parentKey}.${key}` : key;
 
-    return isPlainObject(value) ? getFlatNamedTypeEntries(value as {}, nestedKey) : [[nestedKey, value]];
+    return isPlainObject(value) ? getFlatNamedTypeEntries(value as object, nestedKey) : [[nestedKey, value]];
   });
 
 export { getNamedTypes, getFlatNamedTypeEntries };

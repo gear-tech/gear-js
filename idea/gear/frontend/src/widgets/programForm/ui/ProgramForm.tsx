@@ -32,8 +32,7 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
 
   const defaultValues = { ...INITIAL_VALUES, programName: fileName };
   // TODOFORM:
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
+  // @ts-expect-error - TODO(#1738): explain why it should be ignored
   const methods = useForm<FormValues>({ defaultValues, resolver: yupResolver(schema) });
   const { getValues, setValue, reset } = methods;
 
