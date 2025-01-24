@@ -1,0 +1,16 @@
+[package]
+name = "test-meta-state-v1"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+gmeta = { workspace = true, features = ["codegen"] }
+gstd.workspace = true
+test-io = { path = "../io" }
+
+[build-dependencies]
+gear-wasm-builder = { workspace = true, features = ["metawasm"] }
+
+[features]
+default = ["std"]
+std = []

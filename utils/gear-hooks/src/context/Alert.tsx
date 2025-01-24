@@ -159,4 +159,6 @@ const AlertProvider = ({ children, template: Template, containerClassName }: Pro
 
 const useAlert = () => useContext(AlertContext);
 
+// TODO: either fix only-export-components or remove rule
+// eslint-disable-next-line react-refresh/only-export-components
 export { AlertProvider, useAlert };

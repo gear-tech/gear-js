@@ -1,8 +1,0 @@
-constructor {
-  New : ();
-};
-
-service Ping {
-  Ping : (input: str) -> result (str, str);
-};
-

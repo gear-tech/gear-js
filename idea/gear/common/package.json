@@ -1,0 +1,16 @@
+{
+  "name": "gear-idea-common",
+  "private": true,
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "npx tsc",
+    "clean": "echo \"clean gear-idea-common\" && rm -rf dist"
+  },
+  "dependencies": {
+    "@gear-js/api": "0.41.0",
+    "@polkadot/api": "15.4.1",
+    "winston": "3.7.2"
+  }
+}

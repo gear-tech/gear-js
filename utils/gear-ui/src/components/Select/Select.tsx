@@ -60,5 +60,8 @@ const Select = forwardRef((props: Props, ref: ForwardedRef<HTMLSelectElement>) =
   );
 });
 
+
+// TODO: either fix only-export-components or remove rule
+// eslint-disable-next-line react-refresh/only-export-components
 export { Select, styles as selectStyles };
 export type { Props as SelectProps };

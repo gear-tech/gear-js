@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/react-hooks",
-  "version": "0.14.1",
+  "version": "0.15.0",
   "description": "React hooks used across Gear applications",
   "author": "Gear Technologies",
   "license": "GPL-3.0",
@@ -17,21 +17,22 @@
   ],
   "homepage": "https://github.com/gear-tech/gear-js/tree/master/utils/gear-hooks#readme",
   "scripts": {
-    "build": "rm -rf dist && rollup -c",
-    "prepare": "yarn build"
+    "build": "rm -rf dist && npx rollup -c",
+    "prepare": "yarn build",
+    "clean": "echo \"clean @gear-js/react-hooks\" && rm -rf dist"
   },
   "peerDependencies": {
-    "@gear-js/api": "0.39.0",
-    "@polkadot/api": "14.3.1",
+    "@gear-js/api": "0.41.0",
+    "@polkadot/api": "15.4.1",
     "@tanstack/react-query": "^5.56.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sails-js": "0.3.0"
   },
   "dependencies": {
-    "@polkadot/api-derive": "14.3.1",
-    "@polkadot/extension-inject": "0.56.2",
-    "@polkadot/util": "13.2.3",
+    "@polkadot/api-derive": "15.4.1",
+    "@polkadot/extension-inject": "0.58.1",
+    "@polkadot/util": "13.3.1",
     "@substrate/connect": "2.1.0",
     "bignumber.js": "9.1.2",
     "nanoid": "5.0.1",
@@ -39,27 +40,17 @@
     "sails-js-parser": "0.0.1"
   },
   "devDependencies": {
-    "@gear-js/api": "0.39.0",
-    "@polkadot/api": "14.3.1",
-    "@polkadot/types": "14.3.1",
-    "@rollup/plugin-commonjs": "25.0.5",
-    "@rollup/plugin-node-resolve": "15.2.3",
+    "@gear-js/api": "0.41.0",
+    "@polkadot/api": "15.4.1",
+    "@polkadot/types": "15.4.1",
+    "@rollup/plugin-node-resolve": "16.0.0",
     "@tanstack/react-query": "5.56.2",
-    "@types/react": "18.3.3",
-    "@types/react-dom": "18.3.0",
-    "@types/react-transition-group": "4.4.7",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "rollup": "4.0.2",
-    "rollup-plugin-peer-deps-external": "2.2.4",
-    "rollup-plugin-terser": "7.0.2",
-    "rollup-plugin-typescript2": "0.36.0",
-    "sails-js": "0.3.0",
-    "typescript": "5.5.4"
+    "sails-js": "0.3.0"
   },
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.mjs",
-  "types": "dist/esm/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],

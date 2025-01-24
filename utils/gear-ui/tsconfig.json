@@ -9,12 +9,9 @@
     // custom
     "jsx": "react-jsx",
     "module": "esnext",
-    "declaration": true,
-    "declarationDir": "types",
     "outDir": "dist",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "emitDeclarationOnly": true,
     "baseUrl": "src"
   }
 }

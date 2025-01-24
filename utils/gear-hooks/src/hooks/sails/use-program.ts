@@ -30,7 +30,7 @@ function useProgram<TQueryFnData, TData = TQueryFnData>({
 
   return useQuery({
     ...query,
-    queryKey: ['program', id, api?.provider.endpoint],
+    queryKey: ['program', library.toString(), id, api?.provider.endpoint],
     queryFn: getProgram,
     enabled: isApiReady && Boolean(id) && (query?.enabled ?? true),
   });

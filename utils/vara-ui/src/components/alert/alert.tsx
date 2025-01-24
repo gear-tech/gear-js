@@ -1,7 +1,13 @@
 import { CSSProperties, ReactNode } from 'react';
 import cx from 'clsx';
+
 import CrossSVG from '../../assets/images/cross.svg?react';
 import { Button } from '../button';
+import SuccessSVG from './assets/success.svg?react';
+import WarningSVG from './assets/warning.svg?react';
+import InfoSVG from './assets/info.svg?react';
+import LoadingSVG from './assets/loading.svg?react';
+import WarningCircleSVG from './assets/warning-circle.svg?react';
 import styles from './alert.module.scss';
 
 type Options = {
@@ -16,8 +22,8 @@ type Options = {
 type AlertType = {
   id: string;
   content: ReactNode;
-  footer?: ReactNode;
   options: Options;
+  footer?: ReactNode;
 };
 
 type Props = {
@@ -25,17 +31,27 @@ type Props = {
   close: () => void;
 };
 
+const ICONS = {
+  success: SuccessSVG,
+  error: WarningSVG,
+  info: InfoSVG,
+  loading: LoadingSVG,
+} as const;
+
 function Alert({ alert, close }: Props) {
   const { content, options, footer } = alert;
-  const { type, title, style, isClosed, variant } = options;
-  const isNotification = variant === 'notification';
+  const { variant = 'alert', type, title, style, isClosed } = options;
+  const SVG = variant === 'alert' || type === 'loading' ? ICONS[type] : WarningCircleSVG;
 
   return (
-    <div className={cx(styles.alert, isNotification && styles.notification)} style={style}>
-      <header className={cx(styles.header, styles[type])}>
-        {title || type}
+    <div className={cx(styles.container, styles[variant], styles[type])} style={style}>
+      <header className={styles.header}>
+        <SVG className={styles.icon} />
+        <h2 className={styles.title}>{title || type}</h2>
 
-        {isClosed && <Button icon={CrossSVG} color="transparent" className={styles.button} onClick={close} />}
+        {isClosed && (
+          <Button icon={CrossSVG} color="transparent" size="medium" className={styles.button} onClick={close} />
+        )}
       </header>
 
       <div className={styles.body}>{content}</div>

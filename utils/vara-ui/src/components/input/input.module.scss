@@ -1,49 +1,22 @@
-.root {
-  &.disabled {
-    opacity: 0.3;
-    pointer-events: none;
-  }
-}
+@use '../../utils.scss' as *;
 
-.base {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  position: relative;
-
-  &.default {
-    padding: 13px 14px;
-  }
-
-  &.small {
-    padding: 8px 14px;
-  }
-}
-
-.input,
-.label {
-  font-weight: 400;
-  line-height: 24px;
-  letter-spacing: 0.009em;
-  color: #010500;
-
-  &.default {
-    font-size: 16px;
-  }
-
-  &.small {
-    font-size: 14px;
-  }
+.icon {
+  width: var(--input-line-height);
+  height: var(--input-line-height);
 }
 
 .input {
+  @include lightDark(color, #000, rgba(246, 246, 246, 0.9));
+
   padding: 0;
   background: transparent;
   border: none;
   outline: none;
   width: 100%;
-  font: inherit;
+  font-family: inherit;
+  font-size: var(--input-font-size);
+  font-weight: 400;
+  line-height: var(--input-line-height);
 
   &:-webkit-autofill {
     background-clip: text; // transparent background on autocomplete
@@ -61,100 +34,16 @@
     appearance: textfield;
   }
 
-  &:not(:focus) {
-    &::placeholder {
-      color: transparent;
-    }
+  &:not(:disabled)[aria-invalid='true'] {
+    @include lightDark(color, #ff3231, #ff3757);
   }
 
-  &:focus,
-  &:not(:placeholder-shown) {
-    ~ .label {
-      opacity: 0;
-    }
-
-    ~ .fieldset {
-      .legendLabel {
-        opacity: 1;
-        max-width: 100%;
-        padding: 0 4px;
-      }
-    }
+  &:disabled,
+  &:disabled::placeholder {
+    @include lightDark(color, rgba(88, 105, 110, 0.5), rgba(156, 172, 177, 0.4));
   }
 
-  &:focus {
-    ~ .fieldset {
-      border-color: #00b387;
-
-      .legendLabel {
-        color: #00b387;
-      }
-    }
+  &::placeholder {
+    @include lightDark(color, #58696e, #828b8e);
   }
-
-  &.error {
-    ~ .label {
-      color: #fc174d;
-    }
-
-    ~ .fieldset {
-      border-color: #fc174d;
-
-      .legendLabel {
-        color: #fc174d;
-      }
-    }
-  }
-}
-
-.label {
-  pointer-events: none;
-
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.fieldset {
-  min-width: 0;
-  margin: 0;
-  padding: 0 13px;
-  pointer-events: none;
-
-  position: absolute;
-  /* TODO: variables */
-  top: -6px;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
-  border: 1px solid #0000003b;
-  border-radius: 4px;
-}
-
-.legend,
-.message {
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: 0.01em;
-}
-
-.legend {
-  opacity: 0;
-  max-width: 0.01px;
-  height: 1em;
-  padding: 0;
-
-  color: #313635;
-}
-
-.message {
-  margin: 4px 0 0 0;
-
-  color: #fc174d;
-}
-
-.block {
-  width: 100%;
 }

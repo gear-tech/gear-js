@@ -31,7 +31,9 @@ export async function fundAccounts(
   const txs = Object.entries(fundAccounts).map(([name, value]) => api.balance.transfer(accounts[name].address, value));
   return new Promise((resolve) => {
     api.tx.utility.batchAll(txs).signAndSend(accounts[prefunded], (result) => {
-      result.status.isFinalized && resolve('ok');
+      if (result.status.isFinalized) {
+        resolve('ok');
+      }
     });
   });
 }
