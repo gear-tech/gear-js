@@ -25,7 +25,7 @@
     "@polkadot/api": "15.4.1",
     "@substrate/txwrapper-dev": "7.5.3",
     "@types/jest": "29.5.14",
-    "@types/node-fetch": "2.6.11",
+    "@types/node-fetch": "2.6.12",
     "babel-jest": "29.7.0",
     "jest": "29.7.0",
     "node-fetch": "3.3.2",
