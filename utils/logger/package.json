@@ -13,14 +13,6 @@
     "gear",
     "gear-js"
   ],
-  "scripts": {
-    "build": "rm -rf dist && tsc"
-  },
-  "dependencies": {
-    "winston": "3.7.2"
-  },
-  "devDependencies": {
-    "typescript": "4.7.4"
-  },
-  "type": "module"
+  "type": "module",
+  "exports": "./src/index.js"
 }

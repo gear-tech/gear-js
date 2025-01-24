@@ -32,7 +32,7 @@
     "utils/gear-ui",
     "utils/vara-ui",
     "utils/wallet-connect",
-    "utils/gear-logger"
+    "utils/logger"
   ],
   "scripts": {
     "clean": "lerna run clean --parallel && lerna clean -y && rm -rf node_modules",
