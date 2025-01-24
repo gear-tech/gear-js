@@ -41,6 +41,7 @@ const Codes = () => {
       searchParams.delete('owner');
     }
     setSearchParams(searchParams, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, filterValues]);
 
   const filterParams = {

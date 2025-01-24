@@ -25,6 +25,7 @@ function ProgramVouchers({ programId }: Props) {
       searchParams.delete('search');
     }
     setSearchParams(searchParams, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
   const [filterParams, handleFiltersSubmit] = useVoucherFilters();
 

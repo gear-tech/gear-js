@@ -35,6 +35,7 @@ function useProgramFilters(query: string) {
       }
     });
     setSearchParams(searchParams, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterValues]);
 
   const filterParams = useMemo(() => {

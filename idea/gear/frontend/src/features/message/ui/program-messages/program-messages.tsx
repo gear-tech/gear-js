@@ -36,8 +36,8 @@ const FILTER_VALUE = {
   },
 } as const;
 
-type OwnerValue = typeof FILTER_VALUE.OWNER[keyof typeof FILTER_VALUE.OWNER];
-type DirectionValue = typeof FILTER_VALUE.DIRECTION[keyof typeof FILTER_VALUE.DIRECTION];
+type OwnerValue = (typeof FILTER_VALUE.OWNER)[keyof typeof FILTER_VALUE.OWNER];
+type DirectionValue = (typeof FILTER_VALUE.DIRECTION)[keyof typeof FILTER_VALUE.DIRECTION];
 
 const DEFAULT_FILTER_VALUES = {
   [FILTER_NAME.OWNER]: FILTER_VALUE.OWNER.ALL as OwnerValue,
@@ -70,6 +70,7 @@ const ProgramMessages = ({ programId, sails }: Props) => {
       }
     });
     setSearchParams(searchParams, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   const isToDirection = filters[FILTER_NAME.DIRECTION] === FILTER_VALUE.DIRECTION.TO;

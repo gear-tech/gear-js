@@ -26,6 +26,7 @@ const Mailbox = () => {
       searchParams.delete('search');
     }
     setSearchParams(searchParams, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
 
   const list = searchQuery ? mailbox?.filter(([message]) => message.id === searchQuery) : mailbox;

@@ -17,6 +17,7 @@ const ProgramsPage = () => {
       searchParams.delete('search');
     }
     setSearchParams(searchParams, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
   const [defaultFilterValues, handleFiltersSubmit, filterParams] = useProgramFilters(searchQuery);
   const programs = usePrograms(filterParams);

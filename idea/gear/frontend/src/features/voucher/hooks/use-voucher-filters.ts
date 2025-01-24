@@ -24,6 +24,7 @@ function useVoucherFilters() {
       }
     });
     setSearchParams(searchParams, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values]);
 
   const getOwnerParams = () => {
