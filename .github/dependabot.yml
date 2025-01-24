@@ -15,8 +15,3 @@ updates:
         dependency-type: 'development'
       production:
         dependency-type: 'production'
-
-  - package-ecosystem: 'cargo'
-    directory: '/'
-    schedule:
-      interval: weekly
