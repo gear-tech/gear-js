@@ -104,6 +104,7 @@ jobs:
             VITE_INDEXER_API_URL=${{ secrets.VITE_INDEXER_API_URL }}
             VITE_TESTNET_DNS_API_URL=${{ secrets.VITE_TESTNET_DNS_API_URL }}
             VITE_MAINNET_DNS_API_URL=${{ secrets.VITE_MAINNET_DNS_API_URL }}
+            VITE_CODE_VERIFIER_API_URL=${{ secrets.VITE_CODE_VERIFIER_API_URL }}
 
   build-faucet-image:
     runs-on: ubuntu-latest
@@ -210,14 +211,7 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-explorer:${{ env.ENVIRONMENT }}
 
   deploy-to-k8s:
-    needs:
-      [
-        build-frontend-image,
-        build-faucet-image,
-        build-meta-storage,
-        build-squid-image,
-        build-squid-explorer
-      ]
+    needs: [build-frontend-image, build-faucet-image, build-meta-storage, build-squid-image, build-squid-explorer]
     runs-on: ubuntu-latest
 
     steps:
@@ -238,7 +232,6 @@ jobs:
             echo "namespace=dev-1" >> $GITHUB_OUTPUT
             echo "deployments=squid-testnet-v2 explorer frontend-nginx meta-storage faucet"
           fi
-
 
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
