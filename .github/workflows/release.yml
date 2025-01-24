@@ -1,10 +1,16 @@
-name: 'Release @gear-js/api'
+name: 'Release'
 
 on:
   push:
     branches: [main]
     paths:
       - apis/gear/package.json
+      - tools/cli/package.json
+      - tools/txwrapper/package.json
+      - utils/gear-hooks/package.json
+      - utils/gear-ui/package.json
+      - utils/vara-ui/package.json
+      - utils/wallet-connect/package.json
   workflow_dispatch:
 
 env:
@@ -30,9 +36,9 @@ jobs:
         run: yarn build
 
       - name: Authenticate with NPM
-        run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > ~/.npmrc
+        run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish
-        run: npx lerna publish from-package --yes
+        run: npx lerna publish from-package --no-verify-access --yes
