@@ -67,8 +67,20 @@ function VerifyForm() {
             gap={INPUT_GAP}
           />
 
-          <Input name={FIELD_NAME.CODE_ID} label="Code Hash" gap={INPUT_GAP} readOnly={Boolean(defaultCodeId)} />
-          <Input name={FIELD_NAME.REPO_LINK} label="Link to Repository" gap={INPUT_GAP} />
+          <Input
+            name={FIELD_NAME.CODE_ID}
+            label="Code Hash"
+            placeholder="0x01"
+            gap={INPUT_GAP}
+            readOnly={Boolean(defaultCodeId)}
+          />
+
+          <Input
+            name={FIELD_NAME.REPO_LINK}
+            label="Link to Repository"
+            placeholder="https://github.com/name/repo"
+            gap={INPUT_GAP}
+          />
 
           <InputWrapper id="project" label="Project" direction="x" size="normal" gap={INPUT_GAP}>
             <Box className={styles.nestedBox}>
@@ -86,7 +98,6 @@ function VerifyForm() {
               />
             </Box>
           </InputWrapper>
-
           <Select
             name={FIELD_NAME.NETWORK}
             label="Network"
@@ -94,7 +105,6 @@ function VerifyForm() {
             gap={INPUT_GAP}
             disabled={Boolean(readOnlyNetwork)}
           />
-
           <LabeledCheckbox name={FIELD_NAME.BUILD_IDL} label="Build IDL" inputLabel="" gap={INPUT_GAP} />
         </Box>
 

@@ -1,6 +1,8 @@
 import clsx from 'clsx';
-import styles from './verification-status.module.scss';
+
 import { Skeleton } from '@/shared/ui';
+
+import styles from './verification-status.module.scss';
 
 type Props = {
   value: 'verified' | 'failed' | 'pending' | 'in_progress';
@@ -17,8 +19,8 @@ function VerificationStatus({ value }: Props) {
   return <span className={clsx(styles.status, styles[value])}>{TEXT[value]}</span>;
 }
 
-function VerificationStatusSkeleton() {
-  return <Skeleton width="5rem" className={styles.status} />;
+function VerificationStatusSkeleton({ disabled }: { disabled: boolean }) {
+  return <Skeleton width="5rem" className={styles.status} disabled={disabled} />;
 }
 
 VerificationStatus.Skeleton = VerificationStatusSkeleton;

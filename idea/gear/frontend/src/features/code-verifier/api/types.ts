@@ -15,7 +15,7 @@ type VerifyResponse = {
 
 type StatusResponse = {
   status: 'pending' | 'verified' | 'failed' | 'in_progress';
-  failed_reason: string;
+  failed_reason: string | null;
   created_at: number;
 };
 

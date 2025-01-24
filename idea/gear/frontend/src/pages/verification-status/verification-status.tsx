@@ -27,10 +27,16 @@ function VerificationStatus() {
         <div>
           <h1 className={styles.heading}>Verify Code</h1>
 
-          {data && !isFetching ? <Status value={data.status} /> : <Status.Skeleton />}
+          {data && !isFetching ? <Status value={data.status} /> : <Status.Skeleton disabled={!isFetching} />}
         </div>
 
-        <Button icon={RefreshSVG} text="Check Status" color="secondary" onClick={() => refetch()} />
+        <Button
+          icon={RefreshSVG}
+          text="Check Status"
+          color="secondary"
+          onClick={() => refetch()}
+          disabled={isFetching}
+        />
       </header>
 
       <Box className={styles.idBox}>
@@ -40,31 +46,12 @@ function VerificationStatus() {
 
       {data && !isFetching ? (
         <Table>
-          <TableRow name="Created At">{new Date(data.created_at).toLocaleDateString()}</TableRow>
+          <TableRow name="Created At">{new Date(data.created_at).toLocaleString()}</TableRow>
 
           {data.failed_reason && <TableRow name="Failure Reason">{data.failed_reason}</TableRow>}
-
-          {/* <TableRow name="Docker image version">{data.version}</TableRow>
-
-          <TableRow name="Code hash">
-            <IdBlock id={data.code_id} size="big" />
-          </TableRow>
-
-          <TableRow name="Repository link">
-            <a href={data.repo_link} target="_blank" rel="noreferrer" className={styles.link}>
-              test
-            </a>
-          </TableRow>
-
-          <TableRow name="Project">
-            {'Name' in data.project ? data.project.Name : data.project.PathToCargoToml}
-          </TableRow>
-
-          <TableRow name="Network ID">{data.network}</TableRow>
-          <TableRow name="Build IDL">{data.build_idl}</TableRow> */}
         </Table>
       ) : (
-        <Skeleton SVG={TablePlaceholderSVG} />
+        <Skeleton SVG={TablePlaceholderSVG} disabled={!isFetching} />
       )}
     </>
   );
