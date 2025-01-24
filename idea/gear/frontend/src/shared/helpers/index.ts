@@ -2,6 +2,7 @@ import { GearApi, HexString } from '@gear-js/api';
 import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
 import type { Event } from '@polkadot/types/interfaces';
 import { isAndroid, isIOS } from '@react-aria/utils';
+import { STATUS_CODES } from 'http';
 
 import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from '@/shared/config';
 
@@ -105,7 +106,6 @@ const enableScroll = () => document.body.classList.remove('noOverflow');
 const resetFileInput = (target: HTMLInputElement | null) => {
   if (!target) return;
 
-
   target.value = '';
   const changeEvent = new Event('change', { bubbles: true });
   target.dispatchEvent(changeEvent);
@@ -137,7 +137,8 @@ const fetchWithGuard = async <T extends object>(url: URL | string, method: 'GET'
 
   if (!response.ok) {
     const result = await response.json().catch(() => ({}));
-    throw new Error('error' in result ? result.error : response.statusText);
+
+    throw new Error('error' in result ? result.error : response.statusText || STATUS_CODES[response.status]);
   }
 
   return response.json() as T;

@@ -81,7 +81,7 @@ const Program = () => {
       <header className={styles.header}>
         <div className={styles.headingContainer}>
           {program && <h2 className={styles.name}>{getShortName(program.name || 'Program Name')}</h2>}
-          {!isCodeVerified && <VerificationStatus value="verified" />}
+          {isCodeVerified && <VerificationStatus value="verified" />}
         </div>
 
         <div className={styles.links}>
