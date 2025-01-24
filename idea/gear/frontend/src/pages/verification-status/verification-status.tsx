@@ -1,14 +1,12 @@
 import { useAlert } from '@gear-js/react-hooks';
 import { Button, Input } from '@gear-js/ui';
-import { useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import TablePlaceholderSVG from '@/shared/assets/images/placeholders/table.svg?react';
 import CopySVG from '@/shared/assets/images/actions/copyGreen.svg?react';
 import RefreshSVG from '@/features/code-verifier/assets/refresh.svg?react';
-import { getVerificationStatus, VerificationStatus as Status } from '@/features/code-verifier';
-import { Box, IdBlock, Skeleton, Table, TableRow } from '@/shared/ui';
+import { VerificationStatus as Status, useVerificationStatus } from '@/features/code-verifier';
+import { Box, Skeleton, Table, TableRow } from '@/shared/ui';
 import { copyToClipboard } from '@/shared/helpers';
 
 import styles from './verification-status.module.scss';
@@ -21,15 +19,7 @@ function VerificationStatus() {
   const { id } = useParams() as Params;
   const alert = useAlert();
 
-  const { data, isFetching, refetch, error } = useQuery({
-    queryKey: ['verification-status', id],
-    queryFn: () => getVerificationStatus(id),
-  });
-
-  useEffect(() => {
-    if (error) alert.error(error.message);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [error]);
+  const { data, isFetching, refetch } = useVerificationStatus(id);
 
   return (
     <>

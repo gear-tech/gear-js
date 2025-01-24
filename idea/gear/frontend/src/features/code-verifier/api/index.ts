@@ -1,4 +1,3 @@
-import { verifyCode, getVerificationStatus } from './requests';
-import { useIsCodeVerified } from './hooks';
+import { useVerifyCode, useIsCodeVerified, useVerificationStatus } from './hooks';
 
-export { verifyCode, getVerificationStatus, useIsCodeVerified };
+export { useVerifyCode, useIsCodeVerified, useVerificationStatus };

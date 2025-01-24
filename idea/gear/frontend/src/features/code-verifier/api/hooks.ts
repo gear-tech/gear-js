@@ -1,15 +1,53 @@
 import { HexString } from '@gear-js/api';
-import { useQuery } from '@tanstack/react-query';
+import { useAlert } from '@gear-js/react-hooks';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
-import { getVerifiedCode } from './requests';
+import { getVerificationStatus, getVerifiedCode, verifyCode } from './requests';
 
-function useIsCodeVerified(codeId: HexString | null | undefined) {
-  return useQuery({
-    queryKey: ['code-verification-status', codeId],
-    queryFn: () => getVerifiedCode(codeId!),
-    select: ({ code }) => Boolean(code),
-    enabled: Boolean(codeId),
+function useVerifyCode() {
+  return useMutation({
+    mutationKey: ['verify-code'],
+    mutationFn: verifyCode,
   });
 }
 
-export { useIsCodeVerified };
+function useIsCodeVerified(codeId: HexString | null | undefined) {
+  const alert = useAlert();
+
+  const query = useQuery({
+    queryKey: ['code-verification-status', codeId],
+    queryFn: () => getVerifiedCode(codeId!),
+    select: ({ idl_hash }) => Boolean(idl_hash),
+    enabled: Boolean(codeId),
+  });
+
+  const { error } = query;
+
+  useEffect(() => {
+    if (error) alert.error(error.message);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
+
+  return query;
+}
+
+function useVerificationStatus(id: string) {
+  const alert = useAlert();
+
+  const query = useQuery({
+    queryKey: ['verification-status', id],
+    queryFn: () => getVerificationStatus(id),
+  });
+
+  const { error } = query;
+
+  useEffect(() => {
+    if (error) alert.error(error.message);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
+
+  return query;
+}
+
+export { useVerifyCode, useIsCodeVerified, useVerificationStatus };

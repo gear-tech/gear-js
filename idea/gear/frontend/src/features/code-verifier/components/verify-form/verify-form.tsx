@@ -1,7 +1,6 @@
 import { useAlert, useApi } from '@gear-js/react-hooks';
 import { Button, InputWrapper } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
@@ -10,7 +9,7 @@ import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import { getErrorMessage } from '@/shared/helpers';
 import { BackButton, Box, Input, LabeledCheckbox, Radio, Select } from '@/shared/ui';
 
-import { verifyCode } from '../../api';
+import { useVerifyCode } from '../../api';
 import { VERIFY_ROUTES } from '../../consts';
 import { useDefaultCodeId } from '../../hooks';
 import { DEFAULT_VALUES, SCHEMA, NETWORK, FIELD_NAME, PROJECT_ID_TYPE, NETWORK_OPTIONS } from './consts';
@@ -43,10 +42,7 @@ function VerifyForm() {
 
   const projectIdType = form.watch(FIELD_NAME.PROJECT_ID_TYPE);
 
-  const { mutateAsync, isPending } = useMutation({
-    mutationKey: ['verifyCode'],
-    mutationFn: verifyCode,
-  });
+  const { mutateAsync, isPending } = useVerifyCode();
 
   const handleSubmit = ({ version, repoLink, projectId, network, buildIdl, codeId: codeIdValue }: FormattedValues) => {
     const project = projectIdType === PROJECT_ID_TYPE.NAME ? { Name: projectId } : { PathToCargoToml: projectId };

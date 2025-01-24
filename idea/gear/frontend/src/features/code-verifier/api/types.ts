@@ -1,10 +1,16 @@
+import { HexString } from '@gear-js/api';
+
 type VerifyParameters = {
   build_idl: boolean;
-  code_id: string;
+  code_id: HexString;
   network: string;
   project: { Name: string } | { PathToCargoToml: string };
   repo_link: string;
   version: string;
+};
+
+type VerifyResponse = {
+  id: string;
 };
 
 type StatusResponse = {
@@ -13,4 +19,11 @@ type StatusResponse = {
   created_at: number;
 };
 
-export type { VerifyParameters, StatusResponse };
+type CodeResponse = {
+  id: string;
+  idl_hash: string | null;
+  name: string;
+  repo_link: string;
+};
+
+export type { VerifyParameters, VerifyResponse, StatusResponse, CodeResponse };

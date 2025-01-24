@@ -33,14 +33,14 @@ const DEFAULT_VALUES = {
   [FIELD_NAME.DOCKER_IMAGE_VERSION]: '',
   [FIELD_NAME.CODE_ID]: '',
   [FIELD_NAME.REPO_LINK]: '',
-  [FIELD_NAME.PROJECT_ID_TYPE]: PROJECT_ID_TYPE.NAME as typeof PROJECT_ID_TYPE[keyof typeof PROJECT_ID_TYPE],
+  [FIELD_NAME.PROJECT_ID_TYPE]: PROJECT_ID_TYPE.NAME as (typeof PROJECT_ID_TYPE)[keyof typeof PROJECT_ID_TYPE],
   [FIELD_NAME.PROJECT_ID]: '',
-  [FIELD_NAME.NETWORK]: NETWORK_OPTIONS[0].value as typeof NETWORK[keyof typeof NETWORK],
+  [FIELD_NAME.NETWORK]: NETWORK_OPTIONS[0].value as (typeof NETWORK)[keyof typeof NETWORK],
   [FIELD_NAME.BUILD_IDL]: false,
 };
 
 const SEMVER_REGEX = /^\d+\.\d+\.\d+$/;
-const GITHUB_REPO_URL_REGEX = /^(https?:\/\/)?(www\.)?github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(\/)?$/;
+const GITHUB_REPO_URL_REGEX = /^https?:\/\/(www\.)?github\.com\/([\w-]+)\/([\w-]+)(\/.*)?$/;
 const CARGO_TOML_PATH_REGEX = /^(?:\.\/)?(?:[^/]+\/)*Cargo\.toml$/;
 
 const SCHEMA = z

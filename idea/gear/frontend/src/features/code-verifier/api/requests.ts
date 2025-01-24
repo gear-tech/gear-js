@@ -1,10 +1,13 @@
-import { StatusResponse, VerifyParameters } from './types';
+import { fetchWithGuard } from '@/shared/helpers';
+import { CodeResponse, StatusResponse, VerifyParameters, VerifyResponse } from './types';
+import { API_URL } from './consts';
 
-const verifyCode = (parameters: VerifyParameters) => Promise.resolve({ id: '1' });
+const verifyCode = (parameters: VerifyParameters) =>
+  fetchWithGuard<VerifyResponse>(`${API_URL}/verify`, 'POST', parameters);
 
 const getVerificationStatus = (id: string) =>
-  Promise.resolve({ status: 'pending', created_at: 0, failed_reason: null } as unknown as StatusResponse);
+  fetchWithGuard<StatusResponse>(`${API_URL}/verify/status?id=${id}`, 'GET');
 
-const getVerifiedCode = (id: string) => Promise.resolve({ code: null });
+const getVerifiedCode = (id: string) => fetchWithGuard<CodeResponse>(`${API_URL}/code?id=${id}`, 'GET');
 
 export { verifyCode, getVerificationStatus, getVerifiedCode };
