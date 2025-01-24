@@ -43,7 +43,7 @@
     "@gear-js/api": "0.41.0",
     "@polkadot/api": "15.4.1",
     "@polkadot/types": "15.4.1",
-    "@rollup/plugin-node-resolve": "15.2.3",
+    "@rollup/plugin-node-resolve": "16.0.0",
     "@tanstack/react-query": "5.56.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
