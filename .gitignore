@@ -1,17 +1,32 @@
-node_modules/
-**/.DS_Store
-.idea
 **/.yarn/*
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-**/dist/
-.vscode/
-idea/tmp/
 
+node_modules/
+dist/
+dist-temp/
+dist-ssr/
+.rollup.cache
+tmp/
+
+.idea
+.DS_Store
+.vscode/
 .env
-idea/squid/lib/
-idea/indexer-db/lib/
+temp/
+*.log
+.npmrc
+
+idea/gear/squid/lib/
+idea/gear/indexer-db/lib/
 .spec.json
+
+# apis
+apis/gear/lib/
+
+# cargo
+.binpath
+target/

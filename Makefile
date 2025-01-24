@@ -1,10 +1,10 @@
-clear_builds:
-	find . -name "dist" -type d -prune -exec rm -rf '{}' + | xargs du -chs
-	find . -name "build" -type d -prune -exec rm -rf '{}' + | xargs du -chs
+pre-commit:
+	@yarn install
+	@yarn lint:fix
+	@yarn build
+	@yarn test
 
-clear_node_modules:
-	find . -name "node_modules" -type d -prune -exec rm -rf '{}' + | xargs du -chs
-
-clear: clear_builds clear_node_modules
-
-.PHONY: clear clear_builds clear_node_modules
+pre-commit-no-test:
+	@yarn install
+	@yarn lint:fix
+	@yarn build

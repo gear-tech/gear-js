@@ -1,140 +1,42 @@
-.root {
-  &.disabled {
-    pointer-events: none;
-    opacity: 0.3;
-  }
-}
-
-.base {
-  position: relative;
-}
-
-.select,
-.label {
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 24px;
-  letter-spacing: 0.009em;
-  color: #010500;
-
-  &.default {
-    font-size: 16px;
-  }
-
-  &.small {
-    font-size: 14px;
-  }
-}
+@use '../../utils' as *;
 
 .select {
+  @include lightDark(color, #000, rgba(246, 246, 246, 0.9));
+
   appearance: none;
-  background-color: transparent;
-  outline: none;
+  padding: 0 32px 0 0;
   border: none;
-  cursor: pointer;
-  font: inherit;
-
+  outline: none;
   width: 100%;
-  padding: 8px 14px;
-  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.616 5.54a.5.5 0 0 0 .768 0L9.317.82A.5.5 0 0 0 8.932 0H1.068a.5.5 0 0 0-.385.82l3.933 4.72Z' fill='%230C0C0D' fill-opacity='.5'/%3E%3C/svg%3E");
-  background-position: right 14px center;
-  background-repeat: no-repeat;
+  font-family: inherit;
+  font-size: var(--input-font-size);
+  font-weight: 400;
+  line-height: var(--input-line-height);
+  cursor: pointer;
 
-  &:focus,
-  &:not(:placeholder-shown),
-  &.error {
-    ~ .label {
-      opacity: 0;
-    }
+  background: transparent url(./assets/arrow.svg) center right no-repeat;
 
-    ~ .fieldset {
-      .legendLabel {
-        opacity: 1;
-        max-width: 100%;
-        padding: 0 4px;
-      }
-    }
+  &:not(:disabled)[aria-invalid='true'] {
+    @include lightDark(color, #ff3231, #ff3757);
+  }
+
+  &:disabled,
+  &:disabled::placeholder {
+    @include lightDark(color, rgba(88, 105, 110, 0.5), rgba(156, 172, 177, 0.4));
+  }
+
+  &::placeholder {
+    @include lightDark(color, #58696e, #828b8e);
   }
 
   &:focus {
-    ~ .fieldset {
-      border-color: #00b387;
-
-      .legendLabel {
-        color: #00b387;
-      }
-    }
+    // setting background color to override default styles for options container,
+    // otherwise there's some padding in firefox and color difference is visible
+    @include lightDark(background-color, #fff, #1d1d1f);
   }
 
-  &.error {
-    ~ .fieldset {
-      border-color: #fc174d;
-
-      .legendLabel {
-        color: #fc174d;
-      }
-    }
+  option {
+    @include lightDark(color, #000, rgba(246, 246, 246, 0.8));
+    @include lightDark(background-color, #fff, #262628);
   }
-
-  &.default {
-    padding-top: 13px;
-    padding-bottom: 13px;
-  }
-
-  &.small {
-    padding-top: 8px;
-    padding-bottom: 8px;
-  }
-}
-
-.label {
-  pointer-events: none;
-
-  position: absolute;
-  top: 8px;
-  left: 13px;
-}
-
-.fieldset {
-  min-width: 0;
-  margin: 0;
-  padding: 0 13px;
-  pointer-events: none;
-
-  position: absolute;
-  /* TODO: variables */
-  top: -6px;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
-  border: 1px solid #0000003b;
-  border-radius: 4px;
-}
-
-.legend,
-.message {
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: 0.01em;
-}
-
-.legend {
-  opacity: 0;
-  max-width: 0.01px;
-  height: 1em;
-  padding: 0;
-
-  color: #313635;
-}
-
-.message {
-  margin: 4px 0 0 0;
-
-  color: #fc174d;
-}
-
-.block {
-  width: 100%;
 }

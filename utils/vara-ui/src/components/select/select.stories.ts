@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
+
 import { Select } from './select';
 
 type Type = typeof Select;
@@ -13,6 +14,18 @@ const meta: Meta<Type> = {
       { label: 'Option 2', value: 'option-2' },
       { label: 'Option 3', value: 'option-3' },
     ],
+    label: '',
+    size: 'medium',
+    disabled: false,
+    block: false,
+  },
+  argTypes: {
+    disabled: { control: 'boolean' },
+    block: { control: 'boolean' },
+    size: {
+      options: ['small', 'medium', 'large'],
+      control: { type: 'select' },
+    },
   },
 };
 

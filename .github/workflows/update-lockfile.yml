@@ -1,0 +1,35 @@
+# This workflow is needed to update yarn.lock file on dependabot PRs
+# It is needed because dependabot doesn't support yarn v4 yet
+# After https://github.com/dependabot/dependabot-core/issues/8610 is resolved, this workflow should be removed
+
+name: 'Update yarn.lock'
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '**/package.json'
+
+jobs:
+  update-lockfile:
+    if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: 'Install Node.js 20.x'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: 'Update lock file'
+        run: yarn install --mode=update-lockfile
+
+      - name: 'Commit changes'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: update yarn.lock'
+          file_pattern: 'yarn.lock'

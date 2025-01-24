@@ -1,0 +1,38 @@
+@use '../../utils' as *;
+
+.container {
+  @include lightDark(--thumb-color, #e5e5e7, rgba(255, 255, 255, 0.1));
+
+  overflow: auto;
+
+  /* firefox */
+  @-moz-document url-prefix() {
+    scrollbar-color: var(--thumb-color) transparent;
+    scrollbar-width: thin;
+  }
+
+  /* chrome */
+  &::-webkit-scrollbar {
+    height: 16px;
+    width: 16px;
+  }
+
+  &::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    border: 4px solid transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--thumb-color);
+    border-radius: 8px;
+
+    &:hover {
+      @include lightDark(--thumb-color, rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.15));
+    }
+  }
+}

@@ -27,7 +27,7 @@ function Wallet({ SVG, name }: WalletProps) {
 
 function VaraWalletButton({ children, SVG, name, ...props }: Props & WalletProps) {
   return (
-    <Vara.Button className={styles.button} color="light" size="small" block {...props}>
+    <Vara.Button className={styles.button} color="plain" size="small" block {...props}>
       <Wallet SVG={SVG} name={name} />
       {children}
     </Vara.Button>

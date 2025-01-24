@@ -87,7 +87,6 @@ function useProgramQuery<
     return () => {
       unsub.then((unsubCallback) => unsubCallback());
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, programId, watch]);
 
   return useQuery({

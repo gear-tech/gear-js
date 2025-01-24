@@ -2,9 +2,9 @@ import { useAccount, useAlert } from '@gear-js/react-hooks';
 import cx from 'clsx';
 
 import { copyToClipboard } from '../../utils';
-import { ReactComponent as CopySVG } from '../../assets/copy.svg';
-import { ReactComponent as EditSVG } from '../../assets/edit-icon.svg';
-import { ReactComponent as ExitSVG } from '../../assets/exit.svg';
+import CopySVG from '../../assets/copy.svg?react';
+import EditSVG from '../../assets/edit-icon.svg?react';
+import ExitSVG from '../../assets/exit.svg?react';
 import { IS_MOBILE_DEVICE, WALLETS } from '../../consts';
 import { useWallet } from '../../hooks';
 import { UI_CONFIG } from '../ui-config';
@@ -54,7 +54,7 @@ function WalletModal({ theme = 'vara', close }: Props) {
       const { address, meta } = _account;
 
       const isActive = address === account?.address;
-      const color = isActive ? 'primary' : 'light';
+      const color = isActive ? 'primary' : 'plain';
 
       const handleClick = () => {
         if (isActive) return;
@@ -74,6 +74,7 @@ function WalletModal({ theme = 'vara', close }: Props) {
 
           <Button
             icon={CopySVG}
+            size="medium"
             color="transparent"
             onClick={handleCopyClick}
             className={cx(styles.copyButton, themeClassName)}
@@ -97,7 +98,7 @@ function WalletModal({ theme = 'vara', close }: Props) {
       ) : (
         <p className={cx(styles.text, themeClassName)}>
           A compatible wallet was not found or is disabled. Install it following the{' '}
-          <a href="https://wiki.vara-network.io/docs/account/create-account/" target="_blank" rel="noreferrer">
+          <a href="https://wiki.vara.network/docs/account" target="_blank" rel="noreferrer">
             instructions
           </a>
           .
@@ -127,6 +128,7 @@ function WalletModal({ theme = 'vara', close }: Props) {
           <Button
             icon={ExitSVG}
             text="Logout"
+            size="medium"
             color="transparent"
             onClick={handleLogoutButtonClick}
             className={cx(styles.logoutButton, themeClassName)}

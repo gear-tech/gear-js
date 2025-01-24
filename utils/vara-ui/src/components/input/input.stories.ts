@@ -7,6 +7,24 @@ type Story = StoryObj<Type>;
 const meta: Meta<Type> = {
   title: 'Input',
   component: Input,
+  args: {
+    label: '',
+    size: 'medium',
+    icon: undefined,
+    disabled: false,
+    block: false,
+    type: 'text',
+    placeholder: 'Placeholder',
+  },
+  argTypes: {
+    disabled: { control: 'boolean' },
+    block: { control: 'boolean' },
+    size: {
+      options: ['large', 'medium', 'small'],
+      control: { type: 'select' },
+    },
+    type: { control: 'select', options: ['text', 'number', 'password', 'email'] },
+  },
 };
 
 const Default: Story = {

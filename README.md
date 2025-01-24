@@ -3,16 +3,25 @@
     <img src="https://github.com/gear-tech/gear/blob/master/images/logo-grey.png" width="400" alt="GEAR">
   </a>
 </p>
+<h3 align="center">
+    Gear-JS
+</h3>
 <p align=center>
     <a href="https://github.com/gear-tech/gear-js/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-GPL%203.0-success"></a>
 </p>
 <hr>
 
-## [@gear-js/api](https://github.com/gear-tech/gear-js/tree/main/api)
+# Overview
 
-A JavaScript library that enables connection to the Gear node and allows interaction with it.
+This repository features a collection of libraries, tools and services that are used across Gear applications.
 
-Refer to the [api](https://github.com/gear-tech/gear-js/blob/main/api/README.md) docs for details.
+# Packages
+
+## [@gear-js/api](https://github.com/gear-tech/gear-js/tree/main/apis/gear)
+
+A TypeScript library designed to simplify connecting to a Gear node, allowing developers to seamlessly interact with the Gear protocol by sending messages, querying state, and leveraging the full capabilities of the network.
+
+Refer to the [api](https://github.com/gear-tech/gear-js/blob/main/apis/gear/README.md) docs for details.
 
 #### [npm package](https://www.npmjs.com/package/@gear-js/api)
 
@@ -34,20 +43,32 @@ Refer to the [gear-ui](https://github.com/gear-tech/gear-js/blob/main/utils/gear
 
 ## [Gear Idea](https://github.com/gear-tech/gear-js/tree/main/idea)
 
-The source code of the portal for smart-contract developers and backend microservices - [idea.gear-tech.io](https://idea.gear-tech.io/).
+The source code of the Gear Idea portal for smart-contract developers - [idea.gear-tech.io](https://idea.gear-tech.io/).
 
-#### [frontend](https://github.com/gear-tech/gear-js/tree/main/idea/frontend)
+### [gear-idea-frontend](https://github.com/gear-tech/gear-js/tree/main/idea/gear/frontend)
 
-A React application that serves as a get-familiar with Gear to help developers write, test and upload smart contracts to a test network as well as manage accounts, balances, events and more.
+A React application designed to help developers get acquainted with Gear by providing tools to create and interact with programs on the network, manage accounts, monitor balances, track events, and much more.
 
-#### [indexer](https://github.com/gear-tech/gear-js/tree/main/idea/indexer)
+### [gear-idea-explorer](https://github.com/gear-tech/gear-js/tree/main/idea/gear/explorer)
 
-A microservice responsible for blockchain indexing and storing information about programs and their messages as well as for storing programs metadata.
+A Node.js application that provides access to indexed data from the Gear network, enabling developers to query and utilize blockchain information efficiently.
 
-#### [test-balance](https://github.com/gear-tech/gear-js/tree/main/idea/test-balance)
+### [gear-idea-squid](https://github.com/gear-tech/gear-js/tree/main/idea/gear/squid)
 
-A microservice that provides the opportunity to obtain test tokens.
+A service that utilizes the Squid SDK to index and organize data from the Gear network.
 
-#### [api-gateway](https://github.com/gear-tech/gear-js/tree/main/idea/api-gateway)
+### [faucet](https://github.com/gear-tech/gear-js/tree/main/idea/gear/faucet)
 
-A microservice that provides any interaction between data-storage / test-balance services and an external user.
+A simple service that provides test tokens on the Gear network.
+
+### [meta-storage](https://github.com/gear-tech/gear-js/tree/main/idea/gear/meta-storage)
+
+A service that stores and manages metadata of the programs deployed on the Gear network, enabling easy access and retrieval of program details for developers and users.
+
+### [common](https://github.com/gear-tech/gear-js/tree/main/idea/gear/common)
+
+A collection of shared components and utilities used across Gear Idea applications.
+
+### [indexer-db](https://github.com/gear-tech/gear-js/tree/main/idea/gear/indexer-db)
+
+A library that provides database models and types for the Gear Idea indexer.

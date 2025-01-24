@@ -1,0 +1,65 @@
+{
+  "name": "@gear-js/api",
+  "version": "0.41.0",
+  "description": "A JavaScript library that provides functionality to connect GEAR Component APIs.",
+  "main": "lib/cjs/index.js",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "type": "module",
+  "author": "Gear Technologies",
+  "bugs": {
+    "url": "https://github.com/gear-tech/gear-js/issues"
+  },
+  "homepage": "https://github.com/gear-tech/gear-js/tree/master/apis/gear#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gear-tech/gear-js.git",
+    "directory": "apis/gear"
+  },
+  "keywords": [
+    "gear",
+    "gear-js",
+    "gear-api"
+  ],
+  "scripts": {
+    "test": "bash run-tests.sh",
+    "test:only": "npx jest --testPathPattern",
+    "build": "rm -rf lib && npx rollup --config rollup.config.js",
+    "generate:defs": "npx ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package sample-polkadotjs-typegen/interfaces --input ./temp --endpoint ws://127.0.0.1:9944",
+    "generate:meta": "npx ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package sample-polkadotjs-typegen/interfaces --endpoint ws://127.0.0.1:9944 --output ./temp",
+    "clean": "echo \"clean @gear-js/api\" && rm -rf lib"
+  },
+  "exports": {
+    "./cjs/package.json": "./lib/cjs/package.json",
+    "./cjs/*": "./lib/cjs/*.js",
+    ".": {
+      "import": "./lib/index.js",
+      "require": "./lib/cjs/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./types": {
+      "import": "./lib/types/index.d.ts"
+    },
+    "./utils": {
+      "import": "./lib/utils/index.js",
+      "require": "./lib/cjs/utils/index.js",
+      "types": "./lib/utils/index.d.ts"
+    }
+  },
+  "license": "GPL-3.0",
+  "peerDependencies": {
+    "@polkadot/api": "15.4.1",
+    "@polkadot/wasm-crypto": "7.4.1",
+    "rxjs": "7.8.1"
+  },
+  "devDependencies": {
+    "@polkadot/api": "15.4.1",
+    "@polkadot/typegen": "15.4.1",
+    "@polkadot/types": "15.4.1",
+    "@polkadot/wasm-crypto": "7.4.1",
+    "rxjs": "7.8.1"
+  },
+  "files": [
+    "lib"
+  ]
+}

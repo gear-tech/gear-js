@@ -1,17 +1,19 @@
-import { InputHTMLAttributes, forwardRef } from 'react';
+import { InputHTMLAttributes, ReactNode, forwardRef } from 'react';
 import cx from 'clsx';
+
 import styles from './radio.module.scss';
 
-type Props = InputHTMLAttributes<HTMLInputElement> & {
+type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
   label: string;
+  size?: 'small' | 'default';
+  error?: ReactNode;
 };
 
-const Radio = forwardRef<HTMLInputElement, Props>(({ label, className, ...attrs }, ref) => {
-  const { disabled } = attrs;
-
+const Radio = forwardRef<HTMLInputElement, Props>(({ label, className, size = 'default', error, ...attrs }, ref) => {
   return (
-    <label className={cx(styles.label, className, disabled && styles.disabled)}>
-      <input type="radio" className={styles.input} ref={ref} {...attrs} />
+    <label className={cx(styles.label, className, styles[size])}>
+      <input type="radio" className={styles.input} ref={ref} aria-invalid={Boolean(error)} {...attrs} />
+      <span className={styles.box} />
 
       {label}
     </label>

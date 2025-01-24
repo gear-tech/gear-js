@@ -1,4 +1,4 @@
-import { GearApi, getProgramMetadata, MessageQueued, ProgramMetadata } from '@gear-js/api';
+import { GearApi, MessageQueued, ProgramMetadata } from '@gear-js/api';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { u8aToHex } from '@polkadot/util';
 import { HexString } from '@polkadot/util/types';
@@ -6,7 +6,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { IProgram, SchemeProgram } from '../types/index';
-import { isMsgDispatchedSuccessfully, isProgramInitialized } from './findEvents';
+import { isProgramInitialized } from './findEvents';
 import { logger } from '../utils/index';
 
 export async function uploadProgram(
@@ -37,7 +37,7 @@ export async function uploadProgram(
 
   logger.info(`Program id: ${programId}`, { lvl: 1 });
 
-  const [blockHash, msgId]: [HexString, HexString] = await new Promise((resolve) =>
+  const [blockHash, _msgId]: [HexString, HexString] = await new Promise((resolve) =>
     extrinsic.signAndSend(account, ({ events, status }) => {
       const meEvent = events.find(({ event: { method } }) => method === 'MessageQueued');
       if (meEvent) {
@@ -64,7 +64,7 @@ export function getPrograms(programs: Array<SchemeProgram>, basePath: string): R
 
   programs.forEach(({ id, path_to_meta, path_to_wasm, ...rest }) => {
     const meta = path_to_meta
-      ? getProgramMetadata(`0x${fs.readFileSync(path.resolve(basePath, path_to_meta), 'utf-8')}`)
+      ? ProgramMetadata.from(`0x${fs.readFileSync(path.resolve(basePath, path_to_meta), 'utf-8')}`)
       : undefined;
     const wasm = path_to_wasm ? fs.readFileSync(path.resolve(basePath, path_to_wasm)) : undefined;
     result[id] = {

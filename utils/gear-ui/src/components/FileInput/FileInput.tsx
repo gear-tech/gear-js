@@ -56,8 +56,7 @@ const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInput
 
   const acceptValue = Array.isArray(accept) ? accept.join(',') : accept;
 
-  // TODO: figure out what's wrong
-  // @ts-ignore
+  // @ts-expect-error - TODO(#1738): figure out what's wrong
   useImperativeHandle(forwardedRef, () => ref.current);
 
   const handleButtonClick = () => ref.current?.click();
@@ -130,5 +129,7 @@ const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInput
   );
 });
 
+// TODO: either fix only-export-components or remove rule
+// eslint-disable-next-line react-refresh/only-export-components
 export { FileInput, styles as fileInputStyles };
 export type { Props as FileInputProps };
