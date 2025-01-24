@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
+        uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
         uses: actions/checkout@v4
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
+        uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
         uses: actions/checkout@v4
@@ -48,7 +48,7 @@ jobs:
         run: yarn install
 
       - name: 'Build all packages'
-        run: yarn build:all
+        run: yarn build
 
   test-gear-api:
     runs-on: ubuntu-22.04
@@ -56,7 +56,7 @@ jobs:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
+        uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
         uses: actions/checkout@v4
@@ -151,7 +151,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
+        uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
         uses: actions/checkout@v4
@@ -172,7 +172,7 @@ jobs:
 
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
+        uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
         uses: actions/checkout@v4
@@ -198,7 +198,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
+        uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
         uses: actions/checkout@v4
@@ -218,7 +218,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
+        uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
         uses: actions/checkout@v4

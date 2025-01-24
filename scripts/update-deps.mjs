@@ -1,7 +1,18 @@
 import { ROOT_DIR } from './common.mjs';
 import rootPkg from '../package.json' with { type: 'json' };
+import gearJsApi from '../apis/gear/package.json' with { type: 'json' };
 import * as path from 'path';
 import * as fs from 'fs';
+import assert from 'assert';
+
+const dependency = process.args[2];
+
+const dependenciesToUpdate = ['gear-api', 'polkadot'];
+
+assert.ok(
+  dependenciesToUpdate.includes(dependency),
+  `Unknown dependency: ${dependency}. Supported dependencies: ${dependenciesToUpdate.join(', ')}`,
+);
 
 const { workspaces } = rootPkg;
 
@@ -36,14 +47,24 @@ for (const pkg of workspaces) {
 
 async function updateDependencies(deps, versions) {
   for (const dep of Object.keys(deps)) {
-    if (dep.startsWith('@polkadot/')) {
-      if (!versions.has(dep)) {
-        versions.set(dep, await fetchPkgVersionFromUnpkg(dep));
+    if (dependency == 'polkadot') {
+      if (dep.startsWith('@polkadot/')) {
+        if (!versions.has(dep)) {
+          versions.set(dep, await fetchPkgVersionFromUnpkg(dep));
+        }
+        const version = versions.get(dep);
+        if (version !== deps[dep]) {
+          console.log(`  ${dep}: ${deps[dep]} -> ${version}`);
+          deps[dep] = version;
+        }
       }
-      const version = versions.get(dep);
-      if (version !== deps[dep]) {
-        console.log(`  ${dep}: ${deps[dep]} -> ${version}`);
-        deps[dep] = version;
+    } else {
+      if (dep === '@gear-js/api') {
+        const version = gearJsApi.version;
+        if (version !== deps[dep]) {
+          console.log(`  ${dep}: ${deps[dep]} -> ${version}`);
+          deps[dep] = version;
+        }
       }
     }
   }

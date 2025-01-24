@@ -16,7 +16,7 @@
     "gear-js"
   ],
   "packageManager": "yarn@4.6.0",
-  "version": "1.2.0",
+  "version": "1.0.0",
   "workspaces": [
     "apis/gear",
     "apis/gearexe",
@@ -36,6 +36,7 @@
   ],
   "scripts": {
     "clean": "lerna run clean --parallel && lerna clean -y && rm -rf node_modules",
+    "build": "lerna run build",
     "build:gear-api": "lerna run build --scope @gear-js/api",
     "build:gearexe-api": "lerna run build --scope gearexe --scope @gear-js/api",
     "build:gear-idea-explorer": "lerna run build --scope @gear-js/api --scope gear-idea-common --scope gear-idea-explorer --scope gear-idea-indexer-db",
@@ -51,7 +52,6 @@
     "build:txwrapper": "lerna run build --scope @gear-js/txwrapper",
     "build:cli": "lerna run build --scope @gear-js/cli",
     "build:tools": "lerna run build --scope @gear-js/cli --scope @gear-js/txwrapper",
-    "build:all": "lerna run build",
     "test:gear-api": "lerna run test --scope @gear-js/api",
     "test:gearexe-api": "lerna run build --scope @gear-js/api && lerna run test --scope gearexe",
     "test:gear-idea-backend": "lerna run test --parallel --scope gear-idea-meta-storage --scope gear-idea-faucet",
@@ -60,7 +60,8 @@
     "test": "lerna run test --parallel",
     "lint": "npx eslint",
     "lint:fix": "npx eslint --fix",
-    "bump:polkadot": "node scripts/update-polkadot.mjs",
+    "bump:polkadot": "node scripts/update-deps.mjs polkadot",
+    "bump:gear-api": "node scripts/update-deps.mjs gear-api",
     "bump:gear-idea": "node scripts/update-gear-idea-version.mjs",
     "check:gear-idea-version": "node scripts/check-gear-idea-version.mjs"
   },
@@ -71,7 +72,7 @@
     "@babel/preset-typescript": "^7.26.0",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
-    "@eslint/json": "^0.9.1",
+    "@eslint/json": "^0.10.0",
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-image": "^3.0.3",
     "@rollup/plugin-json": "^6.1.0",
@@ -86,6 +87,7 @@
     "@types/node": "^22.10.7",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "@types/react-transition-group": "4.4.12",
     "@types/rollup-plugin-peer-deps-external": "^2.2.5",
     "@typescript-eslint/eslint-plugin": "^8.20.0",
     "@typescript-eslint/parser": "^8.20.0",
@@ -119,7 +121,7 @@
     "typescript-eslint": "^8.20.0",
     "vite": "^6.0.7",
     "vite-plugin-dts": "^4.5.0",
-    "vite-plugin-node-polyfills": "^0.22.0",
+    "vite-plugin-node-polyfills": "^0.23.0",
     "vite-plugin-svgr": "^4.1.0"
   }
 }

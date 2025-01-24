@@ -15,8 +15,8 @@
     "clean": "echo \"clean gear-idea-squid\" && rm -rf lib"
   },
   "dependencies": {
-    "@gear-js/api": "0.40.0",
-    "@polkadot/api": "15.3.1",
+    "@gear-js/api": "0.41.0",
+    "@polkadot/api": "15.4.1",
     "@subsquid/graphql-server": "4.5.1",
     "@subsquid/ss58": "2.0.2",
     "@subsquid/substrate-processor": "8.3.0",
@@ -31,9 +31,9 @@
     "typeorm": "0.3.20"
   },
   "devDependencies": {
-    "@subsquid/substrate-metadata-explorer": "3.1.2",
+    "@subsquid/substrate-metadata-explorer": "3.2.0",
     "@subsquid/substrate-typegen": "8.1.0",
-    "@subsquid/typeorm-codegen": "2.0.0",
+    "@subsquid/typeorm-codegen": "2.0.2",
     "@types/redis": "^4.0.11"
   }
 }

@@ -6,7 +6,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { IProgram, SchemeProgram } from '../types/index';
-import { isMsgDispatchedSuccessfully, isProgramInitialized } from './findEvents';
+import { isProgramInitialized } from './findEvents';
 import { logger } from '../utils/index';
 
 export async function uploadProgram(
@@ -37,7 +37,7 @@ export async function uploadProgram(
 
   logger.info(`Program id: ${programId}`, { lvl: 1 });
 
-  const [blockHash, msgId]: [HexString, HexString] = await new Promise((resolve) =>
+  const [blockHash, _msgId]: [HexString, HexString] = await new Promise((resolve) =>
     extrinsic.signAndSend(account, ({ events, status }) => {
       const meEvent = events.find(({ event: { method } }) => method === 'MessageQueued');
       if (meEvent) {
