@@ -13559,14 +13559,14 @@ __metadata:
   dependencies:
     "@gear-js/api": "npm:0.41.0"
     ethers: "npm:6.13.5"
-    kzg-wasm: "npm:^0.5.0"
+    kzg-wasm: "npm:0.5.0"
     sails-js: "npm:0.3.1"
     sails-js-parser: "npm:0.3.1"
   peerDependencies:
-    "@gear-js/api": ^0.41.0
+    "@gear-js/api": 0.41.0
     "@polkadot/api": 15.4.1
-    ethers: ^6.13.5
-    kzg-wasm: ^0.5.0
+    ethers: 6.13.5
+    kzg-wasm: 0.5.0
   peerDependenciesMeta:
     "@gear-js/api":
       optional: true
@@ -16330,7 +16330,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kzg-wasm@npm:^0.5.0":
+"kzg-wasm@npm:0.5.0":
   version: 0.5.0
   resolution: "kzg-wasm@npm:0.5.0"
   checksum: 10c0/2513d85a1aaabee6800963c6bb7694f22b82cfdd095a7c456051e489927ac57839f6f8bbb4b0814fa0e0c52e77493b02da2f8297497d81019ef300b07749655d
