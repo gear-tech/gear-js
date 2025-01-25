@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { assertEnv, config } from './config';
 
-export const hasProps = (obj: any, props: string[]) => {
+export const hasProps = (obj: object, props: string[]) => {
   expect(Object.keys(obj)).toHaveLength(props.length);
 
   props.forEach((prop) => {

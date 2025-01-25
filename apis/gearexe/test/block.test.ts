@@ -1,11 +1,11 @@
-import { GearexeApi, HttpGearexeProvider } from '../src';
+import { GearExeApi, HttpGearexeProvider } from '../src';
 
 let provider: HttpGearexeProvider;
-let api: GearexeApi;
+let api: GearExeApi;
 
 beforeAll(async () => {
   provider = new HttpGearexeProvider();
-  api = new GearexeApi(provider);
+  api = new GearExeApi(provider);
 });
 
 afterAll(async () => {

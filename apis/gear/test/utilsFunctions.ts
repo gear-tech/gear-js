@@ -1,10 +1,9 @@
 import { SubmittableExtrinsic, UnsubscribePromise } from '@polkadot/api/types';
 import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
-
-import { GearApi, GearTransaction, IGearEvent, IGearVoucherEvent, MessageWaitedData, ProgramChangedData } from '../src';
 import { Keyring } from '@polkadot/keyring';
 import { waitReady } from '@polkadot/wasm-crypto';
+import { GearApi, GearTransaction, IGearEvent, IGearVoucherEvent, MessageWaitedData, ProgramChangedData } from '../src';
 
 export const checkInit = (
   api: GearApi,
@@ -40,7 +39,9 @@ export async function sendTransaction<E extends keyof IGearEvent | keyof IGearVo
   submitted: GearTransaction | SubmittableExtrinsic<'promise'>,
   account: KeyringPair,
   methods: E[],
+   
 ): Promise<any[]> {
+   
   const result: any = new Array(methods.length);
   return new Promise((resolve, reject) => {
     submitted

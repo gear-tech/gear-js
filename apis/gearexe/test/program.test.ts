@@ -2,13 +2,13 @@ import { SailsIdlParser } from 'sails-js-parser';
 import { Sails } from 'sails-js';
 import { ethers } from 'ethers';
 import * as fs from 'fs';
-import { GearexeApi, getMirrorContract, getRouterContract, getWrappedVaraContract, HttpGearexeProvider } from '../src';
+import { GearExeApi, getMirrorContract, getRouterContract, getWrappedVaraContract, HttpGearexeProvider } from '../src';
 import { ethWsProvider, hasProps, waitNBlocks } from './common';
 import { config } from './config';
 
 const { privateKey, codeId, routerId } = config;
 
-const api = new GearexeApi(new HttpGearexeProvider());
+const api = new GearExeApi(new HttpGearexeProvider());
 const wallet = new ethers.Wallet(privateKey, ethWsProvider());
 const sourceId = wallet.address;
 

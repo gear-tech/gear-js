@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import * as fs from 'fs';
-import { CodeState, GearexeApi, getMirrorContract, getRouterContract, HttpGearexeProvider } from '../src';
+import { CodeState, GearExeApi, getMirrorContract, getRouterContract, HttpGearexeProvider } from '../src';
 import { config } from './config';
 import { ethWsProvider, waitNBlocks } from './common';
 import path from 'path';
@@ -8,13 +8,13 @@ import path from 'path';
 const code = fs.readFileSync(path.join(config.targetDir, 'counter.opt.wasm'));
 let codeId: string;
 let wallet: ethers.Wallet;
-let api: GearexeApi;
+let api: GearExeApi;
 let router: ReturnType<typeof getRouterContract>;
 
 let codeValidatedPromise: Promise<boolean>;
 
 beforeAll(async () => {
-  api = new GearexeApi(new HttpGearexeProvider());
+  api = new GearExeApi(new HttpGearexeProvider());
   wallet = new ethers.Wallet(config.privateKey, ethWsProvider());
   router = getRouterContract(config.routerId, wallet);
 });
