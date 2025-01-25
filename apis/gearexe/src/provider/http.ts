@@ -1,10 +1,10 @@
-import { IGearexeProvider, IJsonRpcResponse } from '../types/index.js';
+import { IGearExeProvider, IJsonRpcResponse } from '../types/index.js';
 import { snakeToCamel } from '../util/index.js';
 import { encodeJsonRpc, getErrorMessage, isErrorResponse } from './jsonrpc';
 
 type HttpUrl = `http://${string}` | `https://${string}`;
 
-export class HttpGearexeProvider implements IGearexeProvider {
+export class HttpGearexeProvider implements IGearExeProvider {
   constructor(private _url: HttpUrl = 'http://127.0.0.1:9944') {}
 
   connect(): Promise<void> {

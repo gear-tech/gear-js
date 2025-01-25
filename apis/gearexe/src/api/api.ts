@@ -1,13 +1,13 @@
-import { IGearexeProvider } from '../types/index.js';
+import { IGearExeProvider } from '../types/index.js';
 import { query, Query } from './query/index.js';
 import { call, Call } from './call/index.js';
 
-export class GearexeApi {
-  private _provider: IGearexeProvider;
+export class GearExeApi {
+  private _provider: IGearExeProvider;
   public readonly query: Query;
   public readonly call: Call;
 
-  constructor(provider: IGearexeProvider) {
+  constructor(provider: IGearExeProvider) {
     this._provider = provider;
 
     this._setProps('query', query);

@@ -3,7 +3,7 @@ export type ISubscriptionCallback = <Error = unknown, Result = unknown>(
   result: Result,
 ) => void | Promise<void>;
 
-export interface IGearexeProvider {
+export interface IGearExeProvider {
   connect(): Promise<void>;
   disconnect(): Promise<void>;
   send<Result = unknown>(method: string, parameters: unknown[]): Promise<Result>;

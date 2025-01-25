@@ -1,15 +1,15 @@
-import { IGearexeProvider, ProgramState } from '../../types/index.js';
+import { HexString, IGearExeProvider, ProgramState } from '../../types/index.js';
 import { transformMaybeHashes } from '../../util/maybe-hash.js';
 
 export class ProgramQueries {
-  constructor(private _provider: IGearexeProvider) {}
+  constructor(private _provider: IGearExeProvider) {}
 
-  async getIds(): Promise<`0x${string}`[]> {
-    return this._provider.send<`0x${string}`[]>('program_ids', []);
+  async getIds(): Promise<HexString[]> {
+    return this._provider.send<HexString[]>('program_ids', []);
   }
 
-  async codeId(programId: string): Promise<`0x${string}`> {
-    return this._provider.send<`0x${string}`>('program_codeId', [programId]);
+  async codeId(programId: string): Promise<HexString> {
+    return this._provider.send<HexString>('program_codeId', [programId]);
   }
 
   async readState(hash: string): Promise<ProgramState> {

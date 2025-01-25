@@ -1,5 +1,7 @@
+import { HexString } from '../common.js';
+
 export interface ReplyInfo {
-  readonly payload: `0x${string}`;
+  readonly payload: HexString;
   readonly value: number;
   readonly code: ReplyCode;
 }

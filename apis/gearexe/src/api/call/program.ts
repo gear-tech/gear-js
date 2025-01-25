@@ -1,27 +1,27 @@
-import { IGearexeProvider, ReplyInfo } from '../../types/index.js';
+import { HexString, IGearExeProvider, ReplyInfo } from '../../types/index.js';
 
 export class ProgramCalls {
-  constructor(private _provider: IGearexeProvider) {}
+  constructor(private _provider: IGearExeProvider) {}
 
   async calculateReplyForHandle(
     source: string,
     programId: string,
-    payload: `0x${string}`,
+    payload: HexString,
     value?: bigint,
   ): Promise<ReplyInfo>;
   async calculateReplyForHandle(
     source: string,
     programId: string,
-    payload: `0x${string}`,
+    payload: HexString,
     value: bigint,
-    atBlock?: `0x${string}`,
+    atBlock?: HexString,
   ): Promise<ReplyInfo>;
   async calculateReplyForHandle(
     source: string,
     programId: string,
-    payload: `0x${string}`,
+    payload: HexString,
     value = 0n,
-    atBlock?: `0x${string}`,
+    atBlock?: HexString,
   ): Promise<ReplyInfo> {
     const response = await this._provider.send<ReplyInfo>('program_calculateReplyForHandle', [
       atBlock || null,

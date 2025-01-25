@@ -2,6 +2,7 @@ import { generateCodeHash } from '@gear-js/api';
 import { Provider, BaseContract, Signer, Wallet, ethers, EventLog } from 'ethers';
 import { loadKZG } from 'kzg-wasm';
 import assert from 'node:assert';
+import { HexString } from '../types/index.js';
 
 export enum CodeState {
   Unknown = 'Unknown',
@@ -33,14 +34,14 @@ const abi = [
 ];
 
 export interface IRouterContract {
-  genesisBlockHash(): Promise<`0x${string}`>;
+  genesisBlockHash(): Promise<HexString>;
   genesisTimestamp(): Promise<bigint>;
-  latestCommittedBlockHash(): Promise<`0x${string}`>;
-  mirrorImpl(): Promise<`0x${string}`>;
-  mirrorProxyImpl(): Promise<`0x${string}`>;
-  wrappedVara(): Promise<`0x${string}`>;
-  programCodeId(programId: string): Promise<`0x${string}`>;
-  programCodeIds(programIds: string[]): Promise<`0x${string}`[]>;
+  latestCommittedBlockHash(): Promise<HexString>;
+  mirrorImpl(): Promise<HexString>;
+  mirrorProxyImpl(): Promise<HexString>;
+  wrappedVara(): Promise<HexString>;
+  programCodeId(programId: string): Promise<HexString>;
+  programCodeIds(programIds: string[]): Promise<HexString[]>;
   programsCount(): Promise<number>;
 }
 

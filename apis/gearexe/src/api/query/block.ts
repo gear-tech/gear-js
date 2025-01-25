@@ -1,7 +1,7 @@
-import { BlockHeader, IGearexeProvider } from '../../types/index.js';
+import { BlockHeader, IGearExeProvider } from '../../types/index.js';
 
 export class Block {
-  constructor(private _provider: IGearexeProvider) {}
+  constructor(private _provider: IGearExeProvider) {}
 
   async header(hash?: string): Promise<BlockHeader> {
     const parameters = hash ? [hash] : [];

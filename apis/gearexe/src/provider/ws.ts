@@ -1,8 +1,8 @@
-import { IGearexeProvider, ISubscriptionCallback } from '../types/index.js';
+import { IGearExeProvider, ISubscriptionCallback } from '../types/index.js';
 
 type WsUrl = `ws://${string}` | `wss://${string}`;
 
-export class WsGearexeProvider implements IGearexeProvider {
+export class WsGearexeProvider implements IGearExeProvider {
   private _conn: WebSocket;
   private _isConnected: boolean;
 

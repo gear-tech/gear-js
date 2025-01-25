@@ -1,9 +1,10 @@
 import { Provider, BaseContract, Signer, EventLog, ContractEventPayload } from 'ethers';
 import { convertEventParams as convertEventParameters } from '../util/index.js';
+import { HexString } from '../types/index.js';
 
 export interface MessageQueuingRequestedLog {
-  id: string;
-  source: string;
+  id: HexString;
+  source: HexString;
   payload: string;
   value: bigint;
 }
@@ -13,15 +14,15 @@ export interface ExecutableBalanceTopUpRequestedLog {
 }
 
 export interface ReplyQueueingRequestedLog {
-  repliedTo: string;
-  source: string;
+  repliedTo: HexString;
+  source: HexString;
   payload: string;
   value: bigint;
 }
 
 export interface MessageQueueingRequestedLog {
-  id: string;
-  source: string;
+  id: HexString;
+  source: HexString;
   payload: string;
   value: bigint;
 }
@@ -49,19 +50,19 @@ const mirrorAbi = [
 ];
 
 export interface IMirrorContract {
-  decoder(): Promise<`0x${string}`>;
-  router(): Promise<string>;
-  stateHash(): Promise<string>;
+  decoder(): Promise<HexString>;
+  router(): Promise<HexString>;
+  stateHash(): Promise<HexString>;
   nonce(): Promise<number>;
-  inheritor(): Promise<string>;
+  inheritor(): Promise<HexString>;
 }
 
 export interface Reply {
-  payload: `0x${string}`;
+  payload: HexString;
   value: bigint;
   replyCode: string; // TODO: replace with specific type
   blockNumber: number;
-  txHash: string;
+  txHash: HexString;
 }
 
 function getReplyListener(messageId: string) {
@@ -74,7 +75,7 @@ function getReplyListener(messageId: string) {
   });
 
   const listener = (
-    payload: `0x${string}`,
+    payload: HexString,
     value: bigint,
     replyTo: string,
     replyCode: string,
@@ -86,7 +87,7 @@ function getReplyListener(messageId: string) {
         value,
         replyCode,
         blockNumber: eventPayload.log.blockNumber,
-        txHash: eventPayload.log.transactionHash,
+        txHash: eventPayload.log.transactionHash as HexString,
       });
     }
   };
