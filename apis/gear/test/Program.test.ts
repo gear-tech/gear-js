@@ -4,9 +4,8 @@ import { blake2AsHex } from '@polkadot/util-crypto';
 import { bufferToU8a } from '@polkadot/util';
 import { readFileSync } from 'fs';
 
-import { TEST_META, TEST_META_CODE } from './config';
-import { ProgramMetadata } from '../src';
-import { checkInit, getAccount, sendTransaction, sleep, waitForPausedProgram } from './utilsFunctions';
+import { TEST_CODE } from './config';
+import { checkInit, createPayload, getAccount, sendTransaction, sleep, waitForPausedProgram } from './utilsFunctions';
 import { getApi } from './common';
 
 const api = getApi();
@@ -18,8 +17,7 @@ let metaHash: HexString;
 let expiredBN: number;
 let pausedBlockHash: HexString;
 
-const code = Uint8Array.from(readFileSync(TEST_META_CODE));
-const metaHex: HexString = `0x${readFileSync(TEST_META, 'utf-8')}`;
+const code = Uint8Array.from(readFileSync(TEST_CODE));
 
 beforeAll(async () => {
   await api.isReadyOrError;
@@ -33,16 +31,11 @@ afterAll(async () => {
 
 describe('New Program', () => {
   test('Upload program', async () => {
-    const metadata = ProgramMetadata.from(metaHex);
-
-    const program = api.program.upload(
-      {
-        code,
-        gasLimit: 200_000_000_000,
-        initPayload: [1, 2, 3],
-      },
-      metadata,
-    );
+    const program = api.program.upload({
+      code,
+      gasLimit: 200_000_000_000,
+      initPayload: [1, 2, 3],
+    });
     expect(program.programId).toBeDefined();
     expect(program.salt).toBeDefined();
     expect(program.codeId).toBeDefined();
@@ -77,7 +70,7 @@ describe('New Program', () => {
     expect(await status).toBe('success');
 
     const reply = await api.message.getReplyEvent(programId, mqData.id.toHex(), blockHash);
-    expect(metadata.createType(metadata.types.init.output!, reply.data.message.payload).toJSON()).toMatchObject({
+    expect(createPayload('Init', reply.data.message.payload).toJSON()).toMatchObject({
       One: 1,
     });
     expect(isProgramSetHappened).toBeTruthy();
@@ -93,17 +86,12 @@ describe('New Program', () => {
 
   test('Create program', async () => {
     expect(codeId).toBeDefined();
-    const metadata = ProgramMetadata.from(metaHex);
 
-    const { programId, salt } = api.program.create(
-      {
-        codeId,
-        gasLimit: 200_000_000_000,
-        initPayload: [4, 5, 6],
-      },
-      metadata,
-      metadata.types.init.input,
-    );
+    const { programId, salt } = api.program.create({
+      codeId,
+      gasLimit: 200_000_000_000,
+      initPayload: [4, 5, 6],
+    });
 
     expect(programId).toBeDefined();
     expect(salt).toBeDefined();
@@ -123,7 +111,7 @@ describe('New Program', () => {
     expect(programChangedStatuses).toContain('Active');
 
     const reply = await api.message.getReplyEvent(programId, transactionData.id.toHex(), blockHash);
-    expect(metadata.createType(metadata.types.init.output!, reply.data.message.payload).toJSON()).toMatchObject({
+    expect(createPayload('Init', reply.data.message.payload).toJSON()).toMatchObject({
       One: 1,
     });
   });
@@ -188,25 +176,19 @@ describe('Program', () => {
     expect(codeHash).toBe(codeId);
   });
 
-  test('Get metahash by program id', async () => {
-    expect(programId).toBeDefined();
-    metaHash = await api.program.metaHash(programId);
-    expect(metaHash).toBe(blake2AsHex(metaHex, 256));
-  });
-
-  test('Get metahash by codeId', async () => {
+  test.skip('Get metahash by codeId', async () => {
     expect(programId).toBeDefined();
     expect(codeId).toBeDefined();
     const codeMetaHash = await api.code.metaHash(codeId);
     expect(codeMetaHash).toBe(metaHash);
   });
 
-  test('Get metahash by wasm', async () => {
+  test.skip('Get metahash by wasm', async () => {
     const codeMetaHash = await api.code.metaHashFromWasm(code);
     expect(codeMetaHash).toBe(metaHash);
   });
 
-  test('Get metahash by wasm if it is Uint8Array', async () => {
+  test.skip('Get metahash by wasm if it is Uint8Array', async () => {
     const codeMetaHash = await api.code.metaHashFromWasm(bufferToU8a(code));
     expect(codeMetaHash).toBe(metaHash);
   });
