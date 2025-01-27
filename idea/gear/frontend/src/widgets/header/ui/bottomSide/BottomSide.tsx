@@ -1,10 +1,12 @@
 import { Button } from '@gear-js/ui';
+import clsx from 'clsx';
 
 import { useModal } from '@/hooks';
 import uploadCodeSVG from '@/shared/assets/images/actions/uploadCode.svg?react';
 import uploadFileSVG from '@/shared/assets/images/actions/uploadFile.svg?react';
 import sendMessageSVG from '@/shared/assets/images/actions/send.svg?react';
 import { OnboardingTooltip } from '@/shared/ui/onboardingTooltip';
+import { VerifyLink } from '@/features/code-verifier';
 
 import styles from './BottomSide.module.scss';
 
@@ -39,6 +41,8 @@ const BottomSide = () => {
           onClick={handleSendMessageClick}
         />
       </OnboardingTooltip>
+
+      <VerifyLink className={clsx(styles.fixSize, styles.verifyCode)} />
     </div>
   );
 };

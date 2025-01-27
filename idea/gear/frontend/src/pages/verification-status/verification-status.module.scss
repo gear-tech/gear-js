@@ -1,0 +1,51 @@
+.header {
+  margin-bottom: 32px;
+
+  display: flex;
+  justify-content: space-between;
+
+  > div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+}
+
+.heading {
+  font-family: Kanit;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 31.2px;
+  color: rgba(#fff, 0.8);
+}
+
+.idBox {
+  display: flex;
+  gap: 8px;
+
+  > div:first-child {
+    max-width: 645px;
+  }
+
+  button svg {
+    flex-shrink: 0;
+
+    width: 20px;
+    height: 20px;
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 32px;
+  }
+}
+
+.link {
+  font-weight: 500;
+  color: #2bd071;
+
+  transition: opacity 0.25s;
+
+  &:hover {
+    opacity: 0.75;
+  }
+}

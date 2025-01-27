@@ -4,8 +4,23 @@
 
 .heading {
   @include heading(24px, 130%, 500);
-  margin-bottom: 16px;
   color: $gray800;
+}
+
+.codeHeader,
+.programsHeader {
+  margin-bottom: 16px;
+
+  display: flex;
+  align-items: center;
+}
+
+.codeHeader {
+  gap: 16px;
+}
+
+.programsHeader {
+  justify-content: space-between;
 }
 
 .code {
