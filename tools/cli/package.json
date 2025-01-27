@@ -14,12 +14,12 @@
   },
   "dependencies": {
     "@gear-js/api": "0.41.0",
-    "@polkadot/api": "15.4.1",
-    "chalk": "4",
-    "commander": "10.0.1",
-    "inquirer": "9.2.6",
-    "winston": "3.8.2",
-    "yaml": "2.3.0"
+    "@polkadot/api": "15.5.1",
+    "chalk": "5",
+    "commander": "13.1.0",
+    "inquirer": "12.3.2",
+    "winston": "3.17.0",
+    "yaml": "2.7.0"
   },
   "license": "GPL-3.0",
   "repository": {
