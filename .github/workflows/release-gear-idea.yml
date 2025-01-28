@@ -1,4 +1,4 @@
-name: 'Gear Idea: deploy to k8s stage'
+name: 'Gear Idea Release'
 
 on:
   push:
@@ -26,6 +26,8 @@ env:
 jobs:
   check-version:
     runs-on: ubuntu-latest
+    outputs:
+      skip: ${{ steps.set_skip.outputs.skip }}
     permissions:
       contents: read
       packages: write
@@ -35,22 +37,27 @@ jobs:
 
       - name: Get current version
         id: cur_version
-        run: echo "VERSION=$(jq -r .version idea/gear/common/package.json)" >> $GITHUB_OUTPUT
+        run: echo "version=$(jq -r .version idea/gear/common/package.json)" >> $GITHUB_OUTPUT
 
       - name: Get previous version
         id: prev_version
-        run: echo "VERSION=$(git show HEAD~1:idea/gear/common/package.json | jq -r .version)" >> $GITHUB_OUTPUT
+        run: echo "version=$(git show HEAD~1:idea/gear/common/package.json | jq -r .version)" >> $GITHUB_OUTPUT
 
       - name: Compare versions and set SKIP env
+        id: set_skip
         run: |
-          if [ "${{ steps.cur_version.outputs.VERSION }}" == "${{ steps.prev_version.outputs.VERSION }}" ]; then
-            echo "SKIP=true" >> $GITHUB_ENV
+          if [[ "${{ steps.cur_version.outputs.version }}" != "${{ steps.prev_version.outputs.version }}" || "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "skip=false" >> $GITHUB_OUTPUT
+          else
+            echo "skip=true" >> $GITHUB_OUTPUT
           fi
 
   set-env-tag:
     runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.get_env.outputs.environment }}
     needs: [check-version]
-    if: ${{ env.SKIP != 'true' }}
+    if: ${{ needs.check-version.outputs.skip != 'true' }}
     permissions:
       contents: read
       packages: write
@@ -62,15 +69,15 @@ jobs:
         id: get_env
         run: |
           if [ "${{ github.ref }}" == "refs/heads/stable" ]; then
-            echo "ENVIRONMENT=production" >> $GITHUB_ENV
+            echo "environment=production" >> $GITHUB_OUTPUT
           else
-            echo "ENVIRONMENT=staging" >> $GITHUB_ENV
+            echo "environment=staging" >> $GITHUB_OUTPUT
           fi
 
   build-frontend-image:
     runs-on: ubuntu-latest
     needs: [set-env-tag]
-    environment: ${{ env.ENVIRONMENT }}
+    environment: ${{ needs.set-env-tag.outputs.environment }}
     permissions:
       contents: read
       packages: write
@@ -91,7 +98,7 @@ jobs:
         with:
           file: idea/gear/frontend/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-frontend:${{ env.ENVIRONMENT }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-frontend:${{ needs.set-env-tag.outputs.environment }}
           build-args: |
             VITE_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
             VITE_DEFAULT_TRANSFER_BALANCE_VALUE=${{ secrets.REACT_APP_DEFAULT_TRANSFER_BALANCE_VALUE }}
@@ -109,7 +116,7 @@ jobs:
   build-faucet-image:
     runs-on: ubuntu-latest
     needs: [set-env-tag]
-    environment: ${{ env.ENVIRONMENT }}
+    environment: ${{ needs.set-env-tag.outputs.environment }}
     permissions:
       contents: read
       packages: write
@@ -130,12 +137,12 @@ jobs:
         with:
           file: idea/gear/faucet/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-faucet:${{ env.ENVIRONMENT }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-faucet:${{ needs.set-env-tag.outputs.environment }}
 
   build-meta-storage-image:
     runs-on: ubuntu-latest
     needs: [set-env-tag]
-    environment: ${{ env.ENVIRONMENT }}
+    environment: ${{ needs.set-env-tag.outputs.environment }}
     permissions:
       contents: read
       packages: write
@@ -156,12 +163,12 @@ jobs:
         with:
           file: idea/gear/meta-storage/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-meta-storage:${{ env.ENVIRONMENT }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-meta-storage:${{ needs.set-env-tag.outputs.environment }}
 
   build-squid-image:
     runs-on: ubuntu-latest
     needs: [set-env-tag]
-    environment: ${{ env.ENVIRONMENT }}
+    environment: ${{ needs.set-env-tag.outputs.environment }}
     permissions:
       contents: read
       packages: write
@@ -182,12 +189,12 @@ jobs:
         with:
           file: idea/gear/squid/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-squid:${{ env.ENVIRONMENT }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-squid:${{ needs.set-env-tag.outputs.environment }}
 
   build-explorer-image:
     runs-on: ubuntu-latest
     needs: [set-env-tag]
-    environment: ${{ env.ENVIRONMENT }}
+    environment: ${{ needs.set-env-tag.outputs.environment }}
     permissions:
       contents: read
       packages: write
@@ -208,10 +215,18 @@ jobs:
         with:
           file: idea/gear/explorer/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-explorer:${{ env.ENVIRONMENT }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-explorer:${{ needs.set-env-tag.outputs.environment }}
 
   deploy-to-k8s:
-    needs: [build-frontend-image, build-faucet-image, build-meta-storage, build-squid-image, build-squid-explorer]
+    needs:
+      [
+        set-env-tag,
+        build-frontend-image,
+        build-faucet-image,
+        build-meta-storage-image,
+        build-squid-image,
+        build-explorer-image,
+      ]
     runs-on: ubuntu-latest
 
     steps:
@@ -225,7 +240,7 @@ jobs:
       - name: Get deployment variables
         id: deployment_vars
         run: |
-          if [ "${{ env.ENVIRONMENT }}" == "production" ]; then
+          if [ "${{ needs.set-env-tag.outputs.environment }}" == "production" ]; then
             echo "namespace=prod-idea" >> $GITHUB_OUTPUT
             echo "deployments=squid-testnet-v2 squid-mainnet-v2 explorer faucet frontend-nginx meta-storage-main"
           else
@@ -241,4 +256,4 @@ jobs:
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: get deployment -o name -n ${{ steps.deployment_vars.outputs.namespace }} | xargs -n1 -t kubectl rollout status -n ${{ steps.namespace.outputs.namespace }} --timeout=120s
+          args: get deployment -o name -n ${{ steps.deployment_vars.outputs.namespace }} | xargs -n1 -t kubectl rollout status -n ${{ steps.deployment_vars.outputs.namespace }} --timeout=120s

@@ -14,7 +14,16 @@ v[index] = parseInt(v[index], 10) + 1;
 const newVersion = v.join('.');
 
 Array.from(gearIdeaPkgs.keys()).forEach((k) => {
-  gearIdeaPkgs.get(k).version = newVersion;
+  const pkg = gearIdeaPkgs.get(k);
+  pkg.version = newVersion;
+
+  if (pkg.dependencies) {
+    for (const [dep] of Object.entries(pkg.dependencies)) {
+      if (dep.startsWith('gear-idea-')) {
+        pkg.dependencies[dep] = newVersion;
+      }
+    }
+  }
 });
 
 console.log(`Updated version to ${newVersion}`);
