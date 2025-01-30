@@ -4,7 +4,7 @@ WORKDIR /src
 
 COPY . .
 
-RUN yarn workspaces focus @gear-js/api gear-idea-faucet gear-js
+RUN yarn workspaces focus @gear-js/api gear-idea-faucet gear-js gear-idea-common
 RUN yarn build:gear-idea-faucet
 
 FROM node:20-alpine AS deps

@@ -4,7 +4,7 @@ WORKDIR /src
 
 COPY . .
 
-RUN yarn workspaces focus @gear-js/api gear-idea-meta-storage gear-js
+RUN yarn workspaces focus @gear-js/api gear-idea-meta-storage gear-js gear-idea-common
 RUN yarn build:gear-idea-meta-storage
 
 FROM node:20-alpine AS deps
