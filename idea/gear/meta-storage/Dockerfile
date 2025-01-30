@@ -16,6 +16,7 @@ COPY yarn.lock .
 COPY .yarn .yarn
 COPY .yarnrc.yml .
 COPY apis/gear/package.json apis/gear/package.json
+COPY idea/gear/common/package.json idea/gear/common/package.json
 COPY idea/gear/meta-storage/package.json idea/gear/meta-storage/package.json
 
 RUN yarn workspaces focus --production
@@ -24,6 +25,7 @@ FROM node:20-alpine
 
 COPY --from=deps /deps /src
 COPY --from=builder /src/apis/gear/lib /src/apis/gear/lib
+COPY --from=builder /src/idea/gear/common/dist /src/idea/gear/common/dist
 COPY --from=builder /src/idea/gear/meta-storage/dist /src/idea/gear/meta-storage/dist
 
 WORKDIR /src/idea/meta-storage
