@@ -1,4 +1,6 @@
 import { SubmittableExtrinsic, UnsubscribePromise } from '@polkadot/api/types';
+import { TypeRegistry } from '@polkadot/types';
+import { Codec } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { Keyring } from '@polkadot/keyring';
@@ -39,9 +41,7 @@ export async function sendTransaction<E extends keyof IGearEvent | keyof IGearVo
   submitted: GearTransaction | SubmittableExtrinsic<'promise'>,
   account: KeyringPair,
   methods: E[],
-   
 ): Promise<any[]> {
-   
   const result: any = new Array(methods.length);
   return new Promise((resolve, reject) => {
     submitted
