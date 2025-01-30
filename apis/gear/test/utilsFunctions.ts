@@ -112,3 +112,33 @@ export const waitForPausedProgram = (
     });
   });
 };
+
+const registry = new TypeRegistry();
+
+registry.register({
+  Action: {
+    _enum: {
+      One: 'Option<Text>',
+      Two: '(u8, u16)',
+      Four: null,
+      Input: 'Text',
+      Wait: null,
+    },
+  },
+  Init: 'BTreeMap<String, u8>',
+  ReplyType: {
+    _enum: {
+      TextReply: 'Text',
+    },
+  },
+});
+
+export const createPayload = (type: string, data: unknown): Codec => {
+  const payload = registry.createType(type, data);
+
+  if (!payload) {
+    throw new Error(`Type ${type} is not registered in the registry.`);
+  }
+
+  return payload;
+};

@@ -1571,6 +1571,9 @@ version = "0.1.0"
 dependencies = [
  "gear-wasm-builder 1.7.0",
  "gstd 1.7.0",
+ "gear-wasm-builder",
+ "gstd",
+ "parity-scale-codec",
 ]
 
 [[package]]

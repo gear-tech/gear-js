@@ -36,7 +36,7 @@
   &:global(.enter-done) {
     height: $headerBottomSideHeight;
     opacity: 1;
-    margin-top: $margin;
+    margin-top: 32px;
   }
 
   &:global(.exit) {
@@ -50,4 +50,8 @@
   .fixSize {
     min-width: toRem(225);
   }
+}
+
+.verifyCode {
+  margin-left: auto;
 }

@@ -2016,6 +2016,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@gear-js/logger@workspace:utils/logger":
+  version: 0.0.0-use.local
+  resolution: "@gear-js/logger@workspace:utils/logger"
+  languageName: unknown
+  linkType: soft
+
 "@gear-js/react-hooks@npm:*, @gear-js/react-hooks@npm:0.15.0, @gear-js/react-hooks@workspace:utils/gear-hooks":
   version: 0.0.0-use.local
   resolution: "@gear-js/react-hooks@workspace:utils/gear-hooks"
@@ -4913,10 +4919,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@remix-run/router@npm:1.9.0":
-  version: 1.9.0
-  resolution: "@remix-run/router@npm:1.9.0"
-  checksum: 10c0/560ee341719634d273b8502e00e15b3dc4a0d245cb0a3d9663981a70967cba8675d0ac3ddd94e8f572ae66f6fd2618304130a077faec49bf30347c3241e64b28
+"@remix-run/router@npm:1.21.1":
+  version: 1.21.1
+  resolution: "@remix-run/router@npm:1.21.1"
+  checksum: 10c0/a90e62c6f18e53d8a1f39de8aaebe3abd340ea085a761296f4fddda23bd3ad133f9adf0190392e0b02933761180b484e7fc052447a6a8482c52207fcecbf9a90
   languageName: node
   linkType: hard
 
@@ -13370,7 +13376,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gear-idea-common@npm:1.0.0, gear-idea-common@workspace:idea/gear/common":
+"gear-idea-common@npm:1.1.0, gear-idea-common@workspace:idea/gear/common":
   version: 0.0.0-use.local
   resolution: "gear-idea-common@workspace:idea/gear/common"
   dependencies:
@@ -13389,8 +13395,8 @@ __metadata:
     cron: "npm:^3.1.7"
     dotenv: "npm:^16.4.5"
     express: "npm:4.19.2"
-    gear-idea-common: "npm:1.0.0"
-    gear-idea-indexer-db: "npm:1.0.0"
+    gear-idea-common: "npm:1.1.0"
+    gear-idea-indexer-db: "npm:1.1.0"
     nanoid: "npm:^5.0.7"
     pg: "npm:8.12.0"
     redis: "npm:^4.6.15"
@@ -13411,7 +13417,7 @@ __metadata:
     cron: "npm:^3.1.6"
     dotenv: "npm:10.0.0"
     express: "npm:4.18.1"
-    gear-idea-common: "npm:1.0.0"
+    gear-idea-common: "npm:1.1.0"
     hcaptcha: "npm:0.1.1"
     nodemon: "npm:2.0.16"
     pg: "npm:8.7.1"
@@ -13461,7 +13467,7 @@ __metadata:
     react-gtm-module: "npm:2.0.11"
     react-hook-form: "npm:7.52.2"
     react-number-format: "npm:5.3.1"
-    react-router-dom: "npm:6.16.0"
+    react-router-dom: "npm:6.28.2"
     react-transition-group: "npm:4.4.5"
     sails-js: "npm:0.3.0"
     sails-js-parser: "npm:0.1.0"
@@ -13473,7 +13479,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"gear-idea-indexer-db@npm:1.0.0, gear-idea-indexer-db@workspace:idea/gear/indexer-db":
+"gear-idea-indexer-db@npm:1.1.0, gear-idea-indexer-db@workspace:idea/gear/indexer-db":
   version: 0.0.0-use.local
   resolution: "gear-idea-indexer-db@workspace:idea/gear/indexer-db"
   dependencies:
@@ -13491,7 +13497,7 @@ __metadata:
     "@types/supertest": "npm:^6.0.2"
     dotenv: "npm:^16.3.1"
     express: "npm:4.18.1"
-    gear-idea-common: "npm:1.0.0"
+    gear-idea-common: "npm:1.1.0"
     pg: "npm:8.10.0"
     supertest: "npm:^7.0.0"
     swagger-ui-express: "npm:^5.0.1"
@@ -13517,7 +13523,7 @@ __metadata:
     "@subsquid/typeorm-store": "npm:1.5.1"
     "@types/redis": "npm:^4.0.11"
     dotenv: "npm:16.4.5"
-    gear-idea-indexer-db: "npm:1.0.0"
+    gear-idea-indexer-db: "npm:1.1.0"
     pg: "npm:8.11.5"
     redis: "npm:^4.7.0"
     sails-js: "npm:^0.1.9"
@@ -20290,27 +20296,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:6.16.0":
-  version: 6.16.0
-  resolution: "react-router-dom@npm:6.16.0"
+"react-router-dom@npm:6.28.2":
+  version: 6.28.2
+  resolution: "react-router-dom@npm:6.28.2"
   dependencies:
-    "@remix-run/router": "npm:1.9.0"
-    react-router: "npm:6.16.0"
+    "@remix-run/router": "npm:1.21.1"
+    react-router: "npm:6.28.2"
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 10c0/f1d898115b395038bc44d295412f0ab480ee3057fb2306048bf64c9c4b3a6e4eba756b058a0557e71e86bddb1090d298849fa22c0d8aa5abcecfa3a61204f7a3
+  checksum: 10c0/09757f0f8c63d5b939176825536d2311edac1f32b18410eb2b37900774c8622dbaa340bef78ab46931111e30890c7bc3f83346d809c2664a5dc4866fe0175f41
   languageName: node
   linkType: hard
 
-"react-router@npm:6.16.0":
-  version: 6.16.0
-  resolution: "react-router@npm:6.16.0"
+"react-router@npm:6.28.2":
+  version: 6.28.2
+  resolution: "react-router@npm:6.28.2"
   dependencies:
-    "@remix-run/router": "npm:1.9.0"
+    "@remix-run/router": "npm:1.21.1"
   peerDependencies:
     react: ">=16.8"
-  checksum: 10c0/914e3352f26d9d9e3f859483507d459f2bb01ca65fcd1a3f9c5dba91dd005b45e7aae32dbd0f777ea00ecf453dc0e20463d3bcbbdec6ce13f8235be377f66752
+  checksum: 10c0/07f033a0bfdcfee6cb889d8603b6063c04c7b7fe38567fea5c7e55c45f31cf32115c2615a7962685632df49538bc867368631feb84fd1fec6f709827d492abe8
   languageName: node
   linkType: hard
 

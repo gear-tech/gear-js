@@ -16,7 +16,8 @@
     "utils/gear-hooks",
     "utils/gear-ui",
     "utils/vara-ui",
-    "utils/wallet-connect"
+    "utils/wallet-connect",
+    "utils/logger"
   ],
   "npmClient": "yarn",
   "command": {

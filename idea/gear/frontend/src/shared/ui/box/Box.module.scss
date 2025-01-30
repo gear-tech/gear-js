@@ -2,7 +2,7 @@
 @use '@/shared/assets/styles/variables' as *;
 
 .box {
-  padding: toRem(14) toRem(24) toRem(24);
+  padding: 24px;
   border-radius: $borderRadius;
   background-color: $bgColor4;
 }
