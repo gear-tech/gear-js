@@ -1,6 +1,5 @@
 import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
-import { blake2AsHex } from '@polkadot/util-crypto';
 import { bufferToU8a } from '@polkadot/util';
 import { readFileSync } from 'fs';
 
