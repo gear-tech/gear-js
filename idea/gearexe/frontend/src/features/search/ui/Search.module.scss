@@ -1,0 +1,35 @@
+.wrapper {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px 0 0;
+  transition: all 0.2s;
+
+  &:focus-within {
+    background: rgba(168, 245, 147, 0.1);
+
+    svg {
+      color: rgba(168, 245, 147, 1);
+    }
+  }
+}
+
+.input {
+  padding: 14px 32px 14px 24px;
+  width: 100%;
+  background: transparent;
+  color: rgba(255, 255, 255, 1);
+  border: none;
+  font-size: 12px;
+
+  &:focus {
+    border-color: rgba(41, 41, 41, 1);
+    outline: none;
+    caret-color: rgba(168, 245, 147, 1);
+  }
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+}

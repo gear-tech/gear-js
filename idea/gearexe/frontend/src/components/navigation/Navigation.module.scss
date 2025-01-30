@@ -1,0 +1,29 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid rgba(41, 41, 41, 1);
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+}
+
+.navigation {
+  display: flex;
+  gap: 24px;
+  height: 52px;
+  border-right: 1px solid rgba(41, 41, 41, 1);
+  padding: 17px 24px;
+}
+
+.navigationItem {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration-line: none;
+  text-transform: uppercase;
+
+  &.active {
+    color: rgba(255, 255, 255, 1);
+  }
+
+  &:hover {
+    color: rgba(255, 255, 255, 1);
+  }
+}

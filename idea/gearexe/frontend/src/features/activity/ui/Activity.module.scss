@@ -1,0 +1,36 @@
+.wrapper {
+  max-height: calc(50vh - 38px); // or 412px
+  display: flex;
+  flex-direction: column;
+
+  &.open {
+    flex-grow: 1;
+  }
+}
+
+.header {
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border: 1px solid rgba(41, 41, 41, 1);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  background: rgba(15, 15, 15, 1);
+}
+
+.iconClosed {
+  transform: rotate(180deg);
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.content {
+  flex-grow: 1;
+  padding: 24px 24px 0 24px;
+  border: 1px solid rgba(41, 41, 41, 1);
+}

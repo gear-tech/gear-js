@@ -1,0 +1,11 @@
+.container {
+  border: 1px solid rgba(41, 41, 41, 1);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+}
+
+.codeIdWrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
