@@ -36,6 +36,7 @@
   ],
   "scripts": {
     "clean": "lerna run clean --parallel && lerna clean -y && rm -rf node_modules",
+    "clean:deps-only": "lerna clean -y && rm -rf node_modules",
     "build": "lerna run build",
     "build:gear-api": "lerna run build --scope @gear-js/api",
     "build:gear-idea-explorer": "lerna run build --scope @gear-js/api --scope gear-idea-common --scope gear-idea-explorer --scope gear-idea-indexer-db",
