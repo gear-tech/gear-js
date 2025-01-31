@@ -15494,7 +15494,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gearexe-idea-frontend@workspace:idea/gearexe/frontend"
   dependencies:
-    "@polkadot/types": "npm:14.3.1"
+    "@polkadot/types": "npm:15.4.1"
     "@reown/appkit": "npm:^1.6.0"
     "@reown/appkit-adapter-wagmi": "npm:^1.6.0"
     "@tanstack/react-query": "npm:^5.56.2"

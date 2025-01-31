@@ -7,6 +7,7 @@
     "idea/gear/explorer",
     "idea/gear/faucet",
     "idea/gear/frontend",
+    "idea/gearexe/frontend",
     "idea/gear/indexer-db",
     "idea/gear/meta-storage",
     "idea/gear/squid",

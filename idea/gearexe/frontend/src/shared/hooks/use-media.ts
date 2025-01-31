@@ -23,7 +23,7 @@ export function useMedia(query: string) {
 
       try {
         mqList.addEventListener("change", listener); // Chrome & Firefox
-      } catch (e1) {
+      } catch (_e1) {
         try {
           mqList.addListener(listener); // Safari
         } catch (e2) {
@@ -36,7 +36,7 @@ export function useMedia(query: string) {
       if (mqList) {
         try {
           mqList.removeEventListener("change", listener); // Chrome & Firefox
-        } catch (e1) {
+        } catch (_e1) {
           try {
             mqList.removeListener(listener); // Safari
           } catch (e2) {
