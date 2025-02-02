@@ -230,48 +230,48 @@ jobs:
     runs-on: ubuntu-latest
 
 
-steps:
-  - name: Configure AWS credentials
-    uses: aws-actions/configure-aws-credentials@v4
-    with:
-      aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-      aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-      aws-region: ${{ env.AWS_REGION }}
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-  - name: Get deployment variables
-    id: deployment_vars
-    run: |
-      if [ "${{ needs.set-env-tag.outputs.environment }}" == "production" ]; then
-        echo "namespace=prod-idea" >> $GITHUB_ENV
-        echo "deployments<<EOF" >> $GITHUB_ENV
-        echo "squid-testnet-v2" >> $GITHUB_ENV
-        echo "squid-mainnet-v2" >> $GITHUB_ENV
-        echo "explorer" >> $GITHUB_ENV
-        echo "faucet" >> $GITHUB_ENV
-        echo "frontend-nginx" >> $GITHUB_ENV
-        echo "meta-storage-main" >> $GITHUB_ENV
-        echo "EOF" >> $GITHUB_ENV
-      else
-        echo "namespace=dev-1" >> $GITHUB_ENV
-        echo "deployments<<EOF" >> $GITHUB_ENV
-        echo "squid-testnet-v2" >> $GITHUB_ENV
-        echo "explorer" >> $GITHUB_ENV
-        echo "frontend-nginx" >> $GITHUB_ENV
-        echo "meta-storage" >> $GITHUB_ENV
-        echo "faucet" >> $GITHUB_ENV
-        echo "EOF" >> $GITHUB_ENV
-      fi
+      - name: Get deployment variables
+        id: deployment_vars
+        run: |
+          if [ "${{ needs.set-env-tag.outputs.environment }}" == "production" ]; then
+            echo "namespace=prod-idea" >> $GITHUB_ENV
+            echo "deployments<<EOF" >> $GITHUB_ENV
+            echo "squid-testnet-v2" >> $GITHUB_ENV
+            echo "squid-mainnet-v2" >> $GITHUB_ENV
+            echo "explorer" >> $GITHUB_ENV
+            echo "faucet" >> $GITHUB_ENV
+            echo "frontend-nginx" >> $GITHUB_ENV
+            echo "meta-storage-main" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+          else
+            echo "namespace=dev-1" >> $GITHUB_ENV
+            echo "deployments<<EOF" >> $GITHUB_ENV
+            echo "squid-testnet-v2" >> $GITHUB_ENV
+            echo "explorer" >> $GITHUB_ENV
+            echo "frontend-nginx" >> $GITHUB_ENV
+            echo "meta-storage" >> $GITHUB_ENV
+            echo "faucet" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+          fi
 
-  - name: Deploy to k8s
-    run: |
-      readarray -t deployments <<< "${{ env.deployments }}"
-      for deployment in "${deployments[@]}"; do
-        kubectl rollout restart deployment "$deployment" -n "${{ env.namespace }}"
-      done
+      - name: Deploy to k8s
+        run: |
+          readarray -t deployments <<< "${{ env.deployments }}"
+          for deployment in "${deployments[@]}"; do
+            kubectl rollout restart deployment "$deployment" -n "${{ env.namespace }}"
+          done
 
-  - name: Check k8s deployments
-    run: |
-      readarray -t deployments <<< "${{ env.deployments }}"
-      for deployment in "${deployments[@]}"; do
-        kubectl rollout status deployment "$deployment" -n "${{ env.namespace }}" --timeout=120s
-      done
+      - name: Check k8s deployments
+        run: |
+          readarray -t deployments <<< "${{ env.deployments }}"
+          for deployment in "${deployments[@]}"; do
+            kubectl rollout status deployment "$deployment" -n "${{ env.namespace }}" --timeout=120s
+          done
