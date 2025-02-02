@@ -11500,6 +11500,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:16.3.1":
+  version: 16.3.1
+  resolution: "dotenv@npm:16.3.1"
+  checksum: 10c0/b95ff1bbe624ead85a3cd70dbd827e8e06d5f05f716f2d0cbc476532d54c7c9469c3bc4dd93ea519f6ad711cb522c00ac9a62b6eb340d5affae8008facc3fbd7
+  languageName: node
+  linkType: hard
+
 "dotenv@npm:16.4.5":
   version: 16.4.5
   resolution: "dotenv@npm:16.4.5"
@@ -13399,7 +13406,7 @@ __metadata:
     "@polkadot/api": "npm:15.4.1"
     "@types/express": "npm:4.17.13"
     "@types/supertest": "npm:^6.0.2"
-    dotenv: "npm:^16.3.1"
+    dotenv: "npm:16.3.1"
     express: "npm:4.18.1"
     gear-idea-common: "npm:1.1.0"
     pg: "npm:8.10.0"
