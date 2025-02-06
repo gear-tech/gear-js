@@ -1,8 +1,8 @@
-import { clsx } from "clsx";
-import { PropsWithChildren, ReactNode, useState } from "react";
-import { Button } from "@/components";
-import ArrowDownSVG from "@/assets/icons/arrow-square-down.svg?react";
-import styles from "./ExpandableItem.module.scss";
+import { clsx } from 'clsx';
+import { PropsWithChildren, ReactNode, useState } from 'react';
+import { Button } from '@/components';
+import ArrowDownSVG from '@/assets/icons/arrow-square-down.svg?react';
+import styles from './ExpandableItem.module.scss';
 
 type Props = PropsWithChildren & {
   header: ReactNode;
@@ -10,12 +10,7 @@ type Props = PropsWithChildren & {
   isNested?: boolean;
 };
 
-export const ExpandableItem = ({
-  children,
-  header,
-  headerSlot,
-  isNested,
-}: Props) => {
+const ExpandableItem = ({ children, header, headerSlot, isNested }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>();
 
   return (
@@ -29,11 +24,9 @@ export const ExpandableItem = ({
         </div>
         {headerSlot}
       </div>
-      {isOpen && (
-        <div className={clsx(styles.content, isNested && styles.nested)}>
-          {children}
-        </div>
-      )}
+      {isOpen && <div className={clsx(styles.content, isNested && styles.nested)}>{children}</div>}
     </div>
   );
 };
+
+export { ExpandableItem };

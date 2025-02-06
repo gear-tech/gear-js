@@ -1,13 +1,13 @@
-import { useState } from "react";
-import SearchSVG from "@/assets/icons/search.svg?react";
-import styles from "./Search.module.scss";
-import { Button } from "@/components";
+import { useState } from 'react';
+import SearchSVG from '@/assets/icons/search.svg?react';
+import styles from './Search.module.scss';
+import { Button } from '@/components';
 
-export const Search = () => {
-  const [search, setSearch] = useState("");
+const Search = () => {
+  const [search, setSearch] = useState('');
 
   const onSearch = () => {
-    console.log("Search for:", search);
+    console.log('Search for:', search);
   };
 
   return (
@@ -25,3 +25,5 @@ export const Search = () => {
     </div>
   );
 };
+
+export { Search };

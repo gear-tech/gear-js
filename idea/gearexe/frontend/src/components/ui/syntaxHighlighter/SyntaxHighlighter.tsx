@@ -6,7 +6,7 @@ type Props = {
   language: string;
 };
 
-export const SyntaxHighlighter = ({ code, language }: Props) => {
+const SyntaxHighlighter = ({ code, language }: Props) => {
   return (
     // TODO: Fix the ts-ignore
     // @ts-ignore
@@ -31,3 +31,5 @@ export const SyntaxHighlighter = ({ code, language }: Props) => {
     </Highlighter>
   );
 };
+
+export { SyntaxHighlighter };

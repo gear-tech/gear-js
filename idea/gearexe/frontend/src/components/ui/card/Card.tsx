@@ -1,5 +1,5 @@
-import { clsx } from "clsx";
-import styles from "./Card.module.scss";
+import { clsx } from 'clsx';
+import styles from './Card.module.scss';
 
 type Props = {
   title: string;
@@ -9,13 +9,7 @@ type Props = {
   footer?: React.ReactNode;
 };
 
-export const Card = ({
-  title,
-  headerSlot,
-  canvasSlot,
-  description,
-  footer,
-}: Props) => {
+const Card = ({ title, headerSlot, canvasSlot, description, footer }: Props) => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -36,3 +30,5 @@ export const Card = ({
     </div>
   );
 };
+
+export { Card };

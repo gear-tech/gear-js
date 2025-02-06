@@ -2,7 +2,7 @@ import { ExpandableItem } from "@/features/activity/ui/expandableItem/Expandable
 import { Badge, Button, Input } from "@/components";
 import styles from "./ServiceList.module.scss";
 
-export const ServiceList = () => {
+ const ServiceList = () => {
   const serviceName = "Service 1";
   const functionName = "Function 1";
   const functionsCount = 2 as number;
@@ -41,3 +41,5 @@ export const ServiceList = () => {
     </div>
   );
 };
+
+export { ServiceList };

@@ -1,8 +1,8 @@
-import VaraSVG from "@/assets/icons/vara-coin.svg?react";
-import EthSVG from "@/assets/icons/eth-coin.svg?react";
-import styles from "./HeaderBalance.module.scss";
+import VaraSVG from '@/assets/icons/vara-coin.svg?react';
+import EthSVG from '@/assets/icons/eth-coin.svg?react';
+import styles from './HeaderBalance.module.scss';
 
-export const HeaderBalance = () => {
+const HeaderBalance = () => {
   // ! TODO: get real and transform
   const wvara = 2141249.4578;
   const eth = 123.3445;
@@ -33,3 +33,5 @@ export const HeaderBalance = () => {
     </div>
   );
 };
+
+export { HeaderBalance };

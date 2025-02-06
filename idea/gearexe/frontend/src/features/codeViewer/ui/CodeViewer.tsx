@@ -1,10 +1,10 @@
-import { CopyButton, SyntaxHighlighter, Tabs } from "@/components";
-import styles from "./CodeViewer.module.scss";
-import { useState } from "react";
+import { CopyButton, SyntaxHighlighter, Tabs } from '@/components';
+import styles from './CodeViewer.module.scss';
+import { useState } from 'react';
 
-const tabs = ["RUST", "IDL"];
+const tabs = ['RUST', 'IDL'];
 
-export const CodeViewer = () => {
+const CodeViewer = () => {
   const [tabIndex, setTabIndex] = useState(0);
 
   const currentCode = `pragma solidity 0.6.11;
@@ -46,3 +46,5 @@ contract Toke is ERC20Pausable, Ownable  {
     </div>
   );
 };
+
+export { CodeViewer };

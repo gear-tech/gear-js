@@ -1,10 +1,10 @@
-import styles from "./Balance.module.scss";
+import styles from './Balance.module.scss';
 
 type Props = {
   balances: { value: string; units: string }[];
 };
 
-export const Balance = ({ balances }: Props) => {
+const Balance = ({ balances }: Props) => {
   return (
     <div className={styles.container}>
       {balances.map(({ value, units }, index) => {
@@ -22,3 +22,5 @@ export const Balance = ({ balances }: Props) => {
     </div>
   );
 };
+
+export { Balance };

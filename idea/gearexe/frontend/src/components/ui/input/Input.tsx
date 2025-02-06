@@ -1,24 +1,23 @@
-import clsx from "clsx";
-import styles from "./Input.module.scss";
+import clsx from 'clsx';
+import styles from './Input.module.scss';
 
 type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   error?: string;
   label?: string;
 };
 
-export const Input = ({ label, error, ...props }: Props) => {
+const Input = ({ label, error, ...props }: Props) => {
   return (
     <div className={styles.wrapper}>
       <label className={styles.label} htmlFor={props.name}>
         {label || props.name}:
       </label>
       <div className={styles.errorWrapper}>
-        <input
-          className={clsx(styles.input, error && styles.invalid)}
-          {...props}
-        />
+        <input className={clsx(styles.input, error && styles.invalid)} {...props} />
         {error && <div className={styles.error}>{error}</div>}
       </div>
     </div>
   );
 };
+
+export { Input };

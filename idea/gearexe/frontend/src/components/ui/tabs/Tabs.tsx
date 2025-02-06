@@ -1,5 +1,6 @@
-import { Button } from "../button/Button";
-import styles from "./Tabs.module.scss";
+import exp from 'constants';
+import { Button } from '../button/Button';
+import styles from './Tabs.module.scss';
 
 type Props = {
   tabs: string[];
@@ -7,7 +8,7 @@ type Props = {
   onTabIndexChange: (tabIndex: number) => void;
 };
 
-export const Tabs = ({ tabs, tabIndex, onTabIndexChange }: Props) => {
+const Tabs = ({ tabs, tabIndex, onTabIndexChange }: Props) => {
   return (
     <div className={styles.container}>
       {tabs.map((name, index) => {
@@ -15,11 +16,10 @@ export const Tabs = ({ tabs, tabIndex, onTabIndexChange }: Props) => {
         return (
           <Button
             key={name}
-            variant={isSelected ? "secondary" : "outline"}
+            variant={isSelected ? 'secondary' : 'outline'}
             className={styles.button}
             size="xs"
-            onClick={() => onTabIndexChange(index)}
-          >
+            onClick={() => onTabIndexChange(index)}>
             {name}
           </Button>
         );
@@ -27,3 +27,5 @@ export const Tabs = ({ tabs, tabIndex, onTabIndexChange }: Props) => {
     </div>
   );
 };
+
+export { Tabs };

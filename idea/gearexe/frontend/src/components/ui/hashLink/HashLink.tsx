@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
-import { CopyButton } from "../copyButton/CopyButton";
-import styles from "./HashLink.module.scss";
+import { Link } from 'react-router-dom';
+import { CopyButton } from '../copyButton/CopyButton';
+import styles from './HashLink.module.scss';
 
 type Props = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
   hash: string;
@@ -8,7 +8,7 @@ type Props = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
   to?: string;
 };
 
-export const HashLink = ({ isExternalLink, hash, to, ...restProps }: Props) => {
+const HashLink = ({ isExternalLink, hash, to, ...restProps }: Props) => {
   return (
     <div className={styles.container}>
       {to ? (
@@ -16,12 +16,7 @@ export const HashLink = ({ isExternalLink, hash, to, ...restProps }: Props) => {
           {hash}
         </Link>
       ) : (
-        <a
-          target={"_blank"}
-          rel={"noreferrer"}
-          className={styles.link}
-          {...restProps}
-        >
+        <a target={'_blank'} rel={'noreferrer'} className={styles.link} {...restProps}>
           {hash}
         </a>
       )}
@@ -30,3 +25,5 @@ export const HashLink = ({ isExternalLink, hash, to, ...restProps }: Props) => {
     </div>
   );
 };
+
+export { HashLink };

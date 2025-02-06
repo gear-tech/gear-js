@@ -1,41 +1,41 @@
-import styles from "./Home.module.scss";
-import { Link } from "react-router-dom";
-import { routes } from "@/shared/config";
-import CodeSVG from "@/assets/icons/code.svg?react";
-import MessageSVG from "@/assets/icons/message.svg?react";
-import TransactionSVG from "@/assets/icons/arrange-square.svg?react";
-import UserSVG from "@/assets/icons/user-square.svg?react";
-import { formatNumber } from "@/shared/utils";
+import styles from './Home.module.scss';
+import { Link } from 'react-router-dom';
+import { routes } from '@/shared/config';
+import CodeSVG from '@/assets/icons/code.svg?react';
+import MessageSVG from '@/assets/icons/message.svg?react';
+import TransactionSVG from '@/assets/icons/arrange-square.svg?react';
+import UserSVG from '@/assets/icons/user-square.svg?react';
+import { formatNumber } from '@/shared/utils';
 
 const cards = [
   {
-    title: "Programs",
+    title: 'Programs',
     icon: <CodeSVG />,
-    action: "View All",
+    action: 'View All',
     count: 100000,
     increase: 5000,
   },
   {
-    title: "Messages",
+    title: 'Messages',
     icon: <MessageSVG />,
     count: 100000,
     increase: 5000,
   },
   {
-    title: "Transactions",
+    title: 'Transactions',
     icon: <TransactionSVG />,
     count: 100000,
     increase: 5000,
   },
   {
-    title: "Users",
+    title: 'Users',
     icon: <UserSVG />,
     count: 100000,
     increase: 5000,
   },
 ];
 
-export const Home = () => {
+const Home = () => {
   return (
     <div className={styles.container}>
       <div className={styles.titleContainer}>
@@ -45,8 +45,7 @@ export const Home = () => {
       </div>
       <div className={styles.titleContainer}>
         <h2 className={styles.subtitle}>
-          //_A portal for codes, programs, and events on Vara and Ethereum
-          Networks, powered by Gear.exe
+          //_A portal for codes, programs, and events on Vara and Ethereum Networks, powered by Gear.exe
         </h2>
       </div>
 
@@ -67,10 +66,7 @@ export const Home = () => {
             <span className={styles.cardCount}>{formatNumber(count)}</span>
             {increase && (
               <span>
-                <span className={styles.accent}>
-                  + {formatNumber(increase)}
-                </span>{" "}
-                / last 24h
+                <span className={styles.accent}>+ {formatNumber(increase)}</span> / last 24h
               </span>
             )}
           </div>
@@ -79,3 +75,5 @@ export const Home = () => {
     </div>
   );
 };
+
+export { Home };

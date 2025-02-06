@@ -1,6 +1,6 @@
-import { formatDate, formatNumber } from "@/shared/utils";
-import styles from "./Block.module.scss";
-import { HashLink } from "@/components/ui/hashLink/HashLink";
+import { formatDate, formatNumber } from '@/shared/utils';
+import styles from './Block.module.scss';
+import { HashLink } from '@/components/ui/hashLink/HashLink';
 
 type Props = {
   blockNumber: number;
@@ -8,7 +8,7 @@ type Props = {
   date: number;
 };
 
-export const Block = ({ blockNumber, blockHash, date }: Props) => {
+const Block = ({ blockNumber, blockHash, date }: Props) => {
   return (
     <div className={styles.container}>
       <div className={styles.title}>
@@ -19,3 +19,5 @@ export const Block = ({ blockNumber, blockHash, date }: Props) => {
     </div>
   );
 };
+
+export { Block };

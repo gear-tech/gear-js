@@ -1,22 +1,22 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { Button, HashLink, Tooltip } from "@/components";
-import ArrowLeftSVG from "@/assets/icons/arrow-square-left.svg?react";
-import VerifySvg from "@/assets/icons/verify.svg?react";
-import { routes } from "@/shared/config";
-import { formatDate } from "@/shared/utils";
-import { CodeViewer } from "@/features/codeViewer/ui/CodeViewer";
-import styles from "./Code.module.scss";
+import { useNavigate, useParams } from 'react-router-dom';
+import { Button, HashLink, Tooltip } from '@/components';
+import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
+import VerifySvg from '@/assets/icons/verify.svg?react';
+import { routes } from '@/shared/config';
+import { formatDate } from '@/shared/utils';
+import { CodeViewer } from '@/features/codeViewer/ui/CodeViewer';
+import styles from './Code.module.scss';
 
 type Params = {
   codeId: string;
 };
 
-export const Code = () => {
+const Code = () => {
   const navigate = useNavigate();
   const { codeId } = useParams() as Params;
 
   const isVerify = true;
-  const blockHash = "0xQqC17F958D2ee523a2206206994597C13D831ec7";
+  const blockHash = '0xQqC17F958D2ee523a2206206994597C13D831ec7';
   const blockDateTime = formatDate(Date.now());
 
   return (
@@ -58,3 +58,5 @@ export const Code = () => {
     </div>
   );
 };
+
+export { Code };

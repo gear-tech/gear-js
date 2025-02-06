@@ -1,6 +1,4 @@
-export { isMobileDevice, isMobile } from "./device-detection";
-
-export const copyToClipboard = async ({
+const copyToClipboard = async ({
   value,
   onSuccess,
   onError,
@@ -10,16 +8,16 @@ export const copyToClipboard = async ({
   onError?: () => void;
 }) => {
   function unsecuredCopyToClipboard(text: string) {
-    const textArea = document.createElement("textarea");
+    const textArea = document.createElement('textarea');
     textArea.value = text;
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
     try {
-      document.execCommand("copy");
+      document.execCommand('copy');
       onSuccess?.();
     } catch (err) {
-      console.error("Unable to copy to clipboard", err);
+      console.error('Unable to copy to clipboard', err);
       onError?.();
     }
     document.body.removeChild(textArea);
@@ -35,23 +33,20 @@ export const copyToClipboard = async ({
   }
 };
 
-export function formatNumber(num: number, decimals: number = 0): string {
-  const [integerPart, decimalPart] = num.toFixed(decimals).split(".");
+function formatNumber(num: number, decimals: number = 0): string {
+  const [integerPart, decimalPart] = num.toFixed(decimals).split('.');
 
-  const formattedIntegerPart = integerPart.replace(
-    /\B(?=(\d{3})+(?!\d))/g,
-    ","
-  );
+  const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-  return decimalPart
-    ? `${formattedIntegerPart}.${decimalPart}`
-    : formattedIntegerPart;
+  return decimalPart ? `${formattedIntegerPart}.${decimalPart}` : formattedIntegerPart;
 }
 
-export const formatDate = (rawDate: string | number) => {
+const formatDate = (rawDate: string | number) => {
   const date = new Date(rawDate);
-  const time = date.toLocaleTimeString("en-GB");
-  const formatedDate = date.toLocaleDateString("en-US").replace(/\//g, "-");
+  const time = date.toLocaleTimeString('en-GB');
+  const formatedDate = date.toLocaleDateString('en-US').replace(/\//g, '-');
 
   return `${formatedDate} ${time}`;
 };
+
+export { copyToClipboard, formatNumber, formatDate };
