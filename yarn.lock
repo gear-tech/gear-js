@@ -15494,6 +15494,7 @@ __metadata:
     react-router-dom: "npm:6.16.0"
     react-syntax-highlighter: "npm:^15.6.1"
     sails-js: "npm:^0.3.0"
+    vite-plugin-checker: "npm:0.8.0"
     wagmi: "npm:^2.12.29"
   languageName: unknown
   linkType: soft
