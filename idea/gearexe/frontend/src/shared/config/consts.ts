@@ -5,14 +5,6 @@ const ETH_NODE_ADDRESS = import.meta.env.VITE_ETH_NODE_ADDRESS;
 
 const DIGIT_RECOGNITION_CONTRACT_ADDRESS = import.meta.env.VITE_DIGIT_RECOGNITION_CONTRACT_ADDRESS as `0x${string}`;
 
-enum AnimationTimeout {
-  Tiny = 50,
-  Small = 150,
-  Default = 250,
-  Medium = 400,
-  Big = 1000,
-}
-
 enum LocalStorage {
   Node = 'node',
 }
@@ -25,7 +17,6 @@ export {
   ETH_CHAIN_ID,
   ETH_NODE_ADDRESS,
   DIGIT_RECOGNITION_CONTRACT_ADDRESS,
-  AnimationTimeout,
   LocalStorage,
   NODE_ADRESS_URL_PARAM,
 };
