@@ -10,19 +10,14 @@
     "clean": "echo \"clean gearexe-idea-frontend\" && rm -rf dist"
   },
   "dependencies": {
-    "@polkadot/types": "15.4.1",
     "@reown/appkit": "^1.6.0",
     "@reown/appkit-adapter-wagmi": "^1.6.0",
     "@tanstack/react-query": "^5.56.2",
-    "class-variance-authority": "^0.7.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-error-boundary": "^5.0.0",
     "react-router-dom": "6.16.0",
     "react-syntax-highlighter": "^15.6.1",
-    "react-transition-group": "^4.4.5",
     "sails-js": "^0.3.0",
-    "use-scramble": "2.2.15",
     "wagmi": "^2.12.29"
   },
   "devDependencies": {

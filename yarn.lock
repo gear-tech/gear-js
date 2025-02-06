@@ -11559,15 +11559,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"class-variance-authority@npm:^0.7.1":
-  version: 0.7.1
-  resolution: "class-variance-authority@npm:0.7.1"
-  dependencies:
-    clsx: "npm:^2.1.1"
-  checksum: 10c0/0f438cea22131808b99272de0fa933c2532d5659773bfec0c583de7b3f038378996d3350683426b8e9c74a6286699382106d71fbec52f0dd5fbb191792cccb5b
-  languageName: node
-  linkType: hard
-
 "clean-stack@npm:^2.0.0":
   version: 2.2.0
   resolution: "clean-stack@npm:2.2.0"
@@ -11709,7 +11700,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clsx@npm:2.1.1, clsx@npm:^2.1.1":
+"clsx@npm:2.1.1":
   version: 2.1.1
   resolution: "clsx@npm:2.1.1"
   checksum: 10c0/c4c8eb865f8c82baab07e71bfa8897c73454881c4f99d6bc81585aecd7c441746c1399d08363dc096c550cceaf97bd4ce1e8854e1771e9998d9f94c4fe075839
@@ -15494,20 +15485,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gearexe-idea-frontend@workspace:idea/gearexe/frontend"
   dependencies:
-    "@polkadot/types": "npm:15.4.1"
     "@reown/appkit": "npm:^1.6.0"
     "@reown/appkit-adapter-wagmi": "npm:^1.6.0"
     "@tanstack/react-query": "npm:^5.56.2"
     "@types/react-syntax-highlighter": "npm:^15.5.13"
-    class-variance-authority: "npm:^0.7.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    react-error-boundary: "npm:^5.0.0"
     react-router-dom: "npm:6.16.0"
     react-syntax-highlighter: "npm:^15.6.1"
-    react-transition-group: "npm:^4.4.5"
     sails-js: "npm:^0.3.0"
-    use-scramble: "npm:2.2.15"
     wagmi: "npm:^2.12.29"
   languageName: unknown
   linkType: soft
@@ -22604,17 +22590,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-error-boundary@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "react-error-boundary@npm:5.0.0"
-  dependencies:
-    "@babel/runtime": "npm:^7.12.5"
-  peerDependencies:
-    react: ">=16.13.1"
-  checksum: 10c0/38da5e7e81016a4750d3b090e3c740c2c1125c0bb9de14e1ab92ee3b5190d34517c199935302718a24aa35d3f89081412b3444edc23f63729bde2e862a2fbfec
-  languageName: node
-  linkType: hard
-
 "react-gtm-module@npm:2.0.11":
   version: 2.0.11
   resolution: "react-gtm-module@npm:2.0.11"
@@ -22735,7 +22710,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-transition-group@npm:4.4.5, react-transition-group@npm:^4.4.5":
+"react-transition-group@npm:4.4.5":
   version: 4.4.5
   resolution: "react-transition-group@npm:4.4.5"
   dependencies:
@@ -26335,16 +26310,6 @@ __metadata:
     punycode: "npm:^1.4.1"
     qs: "npm:^6.12.3"
   checksum: 10c0/cc93405ae4a9b97a2aa60ca67f1cb1481c0221cb4725a7341d149be5e2f9cfda26fd432d64dbbec693d16593b68b8a46aad8e5eab21f814932134c9d8620c662
-  languageName: node
-  linkType: hard
-
-"use-scramble@npm:2.2.15":
-  version: 2.2.15
-  resolution: "use-scramble@npm:2.2.15"
-  peerDependencies:
-    react: ">=16"
-    react-dom: ">=16"
-  checksum: 10c0/11ddb1922bb42fc21f45a8c00fc1592f4b784e9c88fe37fe35764af33fd0a2783f4481e32e9a71ef327c1fba36c916a75810b415ad1027717458b250311321c1
   languageName: node
   linkType: hard
 
