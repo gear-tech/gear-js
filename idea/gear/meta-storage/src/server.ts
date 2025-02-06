@@ -20,6 +20,6 @@ AppDataSource.initialize()
     });
   })
   .catch((error) => {
-    logger.error("Can't start the indexer", { error, stack: error.stack });
+    logger.error("Can't start the meta-storage", { error, stack: error.stack });
     process.exit(1);
   });

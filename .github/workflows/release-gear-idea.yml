@@ -228,7 +228,7 @@ jobs:
         build-explorer-image,
       ]
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -242,18 +242,13 @@ jobs:
         run: |
           if [ "${{ needs.set-env-tag.outputs.environment }}" == "production" ]; then
             echo "namespace=prod-idea" >> $GITHUB_OUTPUT
-            echo "deployments=squid-testnet-v2 squid-mainnet-v2 explorer faucet frontend-nginx meta-storage-main"
+            echo "deployments=squid-testnet-v2 squid-mainnet-v2 explorer faucet frontend-nginx meta-storage-main" >> $GITHUB_OUTPUT
           else
             echo "namespace=dev-1" >> $GITHUB_OUTPUT
-            echo "deployments=squid-testnet-v2 explorer frontend-nginx meta-storage faucet"
+            echo "deployments=squid-testnet-v2 explorer frontend-nginx meta-storage faucet" >> $GITHUB_OUTPUT
           fi
 
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: rollout restart deployment ${{ steps.deployment_vars.outputs.deployments }} -n ${{ steps.deployment_vars.outputs.namespace }}
-
-      - name: Check k8s deployments
-        uses: sergeyfilyanin/kubectl-aws-eks@master
-        with:
-          args: get deployment -o name -n ${{ steps.deployment_vars.outputs.namespace }} | xargs -n1 -t kubectl rollout status -n ${{ steps.deployment_vars.outputs.namespace }} --timeout=120s
