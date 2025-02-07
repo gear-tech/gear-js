@@ -1,4 +1,4 @@
-import { NODE_ADRESS_URL_PARAM } from '../nodesSwitch/config';
+import { NODE_ADRESS_URL_PARAM } from './config';
 
 const isString = (value: unknown): value is string => typeof value === 'string';
 

@@ -1,7 +1,7 @@
 import { useAccount } from 'wagmi';
 import { WalletButton } from '../wallet/wallet-button';
 import { HeaderBalance } from '@/components';
-import { NodesSwitch } from '@/features/nodesSwitch';
+import { NodesSwitch } from '@/features/nodes-switch';
 import logo from '@/assets/logo.svg';
 import styles from './header.module.scss';
 
