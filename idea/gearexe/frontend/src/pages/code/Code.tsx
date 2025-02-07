@@ -30,7 +30,7 @@ const Code = () => {
             <HashLink hash={codeId} />
           </div>
           {isVerify && (
-            <Tooltip content="Verified">
+            <Tooltip value="Verified">
               <VerifySvg />
             </Tooltip>
           )}

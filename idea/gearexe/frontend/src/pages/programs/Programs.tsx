@@ -33,8 +33,7 @@ const columns = [
     key: 'programId' as const,
     title: 'PROGRAM ID',
     sortable: true,
-    // ! TODO: add href={routes.program}
-    render: (programId: string) => <HashLink hash={programId} to={generatePath(routes.program, { programId })} />,
+    render: (programId: string) => <HashLink hash={programId} href={generatePath(routes.program, { programId })} />,
   },
   { key: 'balance' as const, title: 'BALANCE', sortable: true },
   { key: 'messages' as const, title: 'MESSAGES', sortable: true },

@@ -31,7 +31,7 @@ const Program = () => {
               <ArrowLeftSVG className={styles.arrowLeft} />
             </Button>
             <HashLink hash={programId} />
-            <Tooltip content="View on Etherscan">
+            <Tooltip value="View on Etherscan">
               {/* TODO: support mainnet */}
               <a
                 href={`https://holesky.etherscan.io/address/${programId}`}
@@ -50,7 +50,7 @@ const Program = () => {
         <div className={styles.properties}>
           <div className={styles.property}>
             CODE ID
-            <Tooltip content="Verified">
+            <Tooltip value="Verified">
               <VerifySvg />
             </Tooltip>
           </div>
