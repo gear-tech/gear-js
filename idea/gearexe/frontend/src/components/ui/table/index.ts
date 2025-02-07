@@ -1,1 +1,1 @@
-export { Table } from './1table';
+export { Table } from './table';
