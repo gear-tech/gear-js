@@ -6,7 +6,7 @@ import { Node as NodeItem } from '../node';
 import { Button } from '@/components';
 import { nodeSections } from '../../config';
 import { NodeSection } from '../../types';
-import styles from './NodesPopup.module.scss';
+import styles from './nodes-popup.module.scss';
 
 type Props = {
   nodeAddress: string | undefined;

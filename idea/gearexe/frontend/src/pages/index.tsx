@@ -1,12 +1,12 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route } from 'react-router-dom';
 
-import { routes } from "@/shared/config";
+import { routes } from '@/shared/config';
 
-import { Home } from "./home/Home";
-import { Programs } from "./programs/Programs";
-import { Codes } from "./codes/Codes";
-import { Program } from "./program/Program";
-import { Code } from "./code/Code";
+import { Home } from './home';
+import { Programs } from './programs';
+import { Codes } from './codes';
+import { Program } from './program';
+import { Code } from './code';
 
 const Routing = () => {
   return (

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { NodesButton } from './nodesButton';
-import { NodesPopup } from './nodesPopup';
+import { NodesButton } from './nodes-button';
+import { NodesPopup } from './nodes-popup';
 import { INITIAL_ENDPOINT, LocalStorage, NODE_ADRESS_URL_PARAM } from '../config';
 
 const NodesSwitch = () => {

@@ -1,3 +1,3 @@
-import { withProviders } from "./withProviders";
+import { withProviders } from "./with-providers";
 
 export { withProviders };

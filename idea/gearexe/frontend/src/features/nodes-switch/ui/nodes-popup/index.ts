@@ -1,3 +1,3 @@
-import { NodesPopup } from './NodesPopup';
+import { NodesPopup } from './nodes-popup';
 
 export { NodesPopup };

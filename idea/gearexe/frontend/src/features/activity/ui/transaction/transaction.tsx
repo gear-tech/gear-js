@@ -1,5 +1,5 @@
 import { CopyButton, ExpandableItem } from '@/components';
-import styles from './Transaction.module.scss';
+import styles from './transaction.module.scss';
 
 type Props = {};
 

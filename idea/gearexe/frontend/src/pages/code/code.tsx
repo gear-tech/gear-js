@@ -4,8 +4,8 @@ import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
 import VerifySvg from '@/assets/icons/verify.svg?react';
 import { routes } from '@/shared/config';
 import { formatDate } from '@/shared/utils';
-import { CodeViewer } from '@/features/codeViewer/ui/CodeViewer';
-import styles from './Code.module.scss';
+import { CodeViewer } from '@/features/codes/ui/code-viewer';
+import styles from './code.module.scss';
 
 type Params = {
   codeId: string;

@@ -4,7 +4,7 @@ import { MouseEvent } from "react";
 import GearIcon from "@/assets/icons/gear.svg?react";
 import ArrowDownIcon from "@/assets/icons/arrow-down.svg?react";
 
-import styles from "./NodesButton.module.scss";
+import styles from "./nodes-button.module.scss";
 
 type Props = {
   name: string;

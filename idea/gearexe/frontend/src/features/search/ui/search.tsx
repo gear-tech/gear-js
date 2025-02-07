@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import SearchSVG from '@/assets/icons/search.svg?react';
-import styles from './Search.module.scss';
 import { Button } from '@/components';
+import styles from './search.module.scss';
 
 const Search = () => {
   const [search, setSearch] = useState('');

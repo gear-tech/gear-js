@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import { NavLink } from 'react-router-dom';
 import { routes } from '@/shared/config';
-import { Search } from '@/features/search/ui/Search';
 import styles from './navigation.module.scss';
 
 const navigation = [
@@ -10,7 +9,11 @@ const navigation = [
   { title: 'Codes', to: routes.codes },
 ];
 
-const Navigation = () => {
+type Props = {
+  search: JSX.Element;
+};
+
+const Navigation = ({ search }: Props) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.navigation}>
@@ -23,7 +26,8 @@ const Navigation = () => {
           </NavLink>
         ))}
       </div>
-      <Search />
+
+      {search}
     </div>
   );
 };

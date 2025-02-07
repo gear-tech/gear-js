@@ -1,7 +1,7 @@
 import { generatePath } from 'react-router-dom';
 import { routes } from '@/shared/config';
 import { HashLink, Table } from '@/components';
-import styles from './Programs.module.scss';
+import styles from './programs.module.scss';
 
 type DataRow = {
   id: string;

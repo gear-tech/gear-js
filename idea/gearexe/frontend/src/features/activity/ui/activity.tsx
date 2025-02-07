@@ -2,9 +2,9 @@ import { clsx } from 'clsx';
 import { useState } from 'react';
 import DoubleDownSVG from '@/assets/icons/double-down.svg?react';
 import { Button, Tabs, ExpandableItem } from '@/components';
-import { Block } from './block/Block';
-import { Transaction } from './transaction/Transaction';
-import styles from './Activity.module.scss';
+import { Block } from './block';
+import { Transaction } from './transaction';
+import styles from './activity.module.scss';
 
 const tabs = ['Latest activity', 'My activity'];
 

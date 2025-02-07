@@ -1,7 +1,7 @@
 import { Node as NodeType } from '../../types';
 import { CopyButton } from '@/components';
 
-import styles from './Node.module.scss';
+import styles from './node.module.scss';
 
 type Props = NodeType & {
   selectedNode: string;

@@ -1,3 +1,3 @@
-import { Node } from './Node';
+import { Node } from './node';
 
 export { Node };

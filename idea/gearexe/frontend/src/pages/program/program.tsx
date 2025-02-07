@@ -6,7 +6,7 @@ import VerifySvg from '@/assets/icons/verify.svg?react';
 import { routes } from '@/shared/config';
 import { formatDate, formatNumber } from '@/shared/utils';
 import styles from './Program.module.scss';
-import { ServiceList } from '@/features/serviceList/ui/ServiceList';
+import { ServiceList } from '@/features/programs/ui/service-list';
 
 type Params = {
   programId: string;

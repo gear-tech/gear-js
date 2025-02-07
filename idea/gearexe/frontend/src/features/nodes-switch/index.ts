@@ -1,3 +1,3 @@
-import { NodesSwitch } from './ui/NodesSwitch';
+import { NodesSwitch } from './ui/nodes-switch';
 
 export { NodesSwitch };

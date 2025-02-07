@@ -1,5 +1,5 @@
 import { Badge, Button, Input, ExpandableItem } from '@/components';
-import styles from './ServiceList.module.scss';
+import styles from './service-list.module.scss';
 
 const ServiceList = () => {
   const serviceName = 'Service 1';
