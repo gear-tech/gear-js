@@ -4,7 +4,7 @@ import { Button } from '@/components';
 import Copy from '@/assets/icons/document-copy.svg?react';
 import { copyToClipboard } from '@/shared/utils';
 import { ButtonProps } from '../button/button';
-import styles from './CopyButton.module.scss';
+import styles from './copy-button.module.scss';
 
 type Props = Omit<ButtonProps, 'children'> & {
   value: string;

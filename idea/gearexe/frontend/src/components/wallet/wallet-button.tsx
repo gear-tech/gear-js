@@ -1,7 +1,7 @@
 import { useAppKit } from '@reown/appkit/react';
 import { useAccount } from 'wagmi';
 import { Button } from '@/components';
-import styles from './WalletButton.module.scss';
+import styles from './wallet-button.module.scss';
 
 const WalletButton = () => {
   const ethAccount = useAccount();

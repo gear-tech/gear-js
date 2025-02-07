@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import styles from './Card.module.scss';
+import styles from './card.module.scss';
 
 type Props = {
   title: string;

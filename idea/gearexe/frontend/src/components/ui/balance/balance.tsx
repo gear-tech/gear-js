@@ -1,4 +1,4 @@
-import styles from './Balance.module.scss';
+import styles from './balance.module.scss';
 
 type Props = {
   balances: { value: string; units: string }[];

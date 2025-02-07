@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import styles from './Input.module.scss';
+import styles from './input.module.scss';
 
 type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   error?: string;

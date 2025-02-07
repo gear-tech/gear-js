@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { NavLink } from 'react-router-dom';
 import { routes } from '@/shared/config';
 import { Search } from '@/features/search/ui/Search';
-import styles from './Navigation.module.scss';
+import styles from './navigation.module.scss';
 
 const navigation = [
   { title: 'Home', to: routes.home },

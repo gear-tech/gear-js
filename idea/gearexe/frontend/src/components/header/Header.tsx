@@ -1,9 +1,9 @@
 import { useAccount } from 'wagmi';
-import { WalletButton } from '../wallet/WalletButton';
+import { WalletButton } from '../wallet/wallet-button';
 import { HeaderBalance } from '@/components';
 import logo from '@/assets/logo.svg';
 import { NodesSwitch } from '@/features/nodesSwitch';
-import styles from './Header.module.scss';
+import styles from './header.module.scss';
 
 const Header = () => {
   const ethAccount = useAccount();

@@ -1,5 +1,5 @@
 :root {
-  font-family: "Roboto Mono", monospace;
+  font-family: 'Roboto Mono', monospace;
   line-height: 1.5;
   font-weight: 400;
   font-size: 12px;
@@ -106,8 +106,9 @@ body {
   }
 }
 
-button, input {
-  font-family: "Roboto Mono", monospace;
+button,
+input {
+  font-family: 'Roboto Mono', monospace;
 }
 
 p,
@@ -154,4 +155,15 @@ h1 {
 w3m-modal {
   background-color: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
+}
+
+.main-layout {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 8px 48px 0px 48px;
+  height: calc(100vh - 78px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
 }

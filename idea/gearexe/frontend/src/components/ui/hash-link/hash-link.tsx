@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { CopyButton } from '../copyButton/CopyButton';
-import styles from './HashLink.module.scss';
+import { CopyButton } from '../copy-button';
+import styles from './hash-link.module.scss';
 
 type Props = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
   hash: string;

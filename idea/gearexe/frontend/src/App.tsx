@@ -1,6 +1,6 @@
 import './index.css';
 
-import { Header, Layout, Loader, Navigation } from '@/components';
+import { Header, Loader, Navigation } from '@/components';
 import { Routing } from '@/pages';
 import { withProviders } from './app/providers';
 import { Activity } from './features/activity/ui/Activity';
@@ -10,9 +10,9 @@ function App() {
   const isAppReady = true;
 
   return (
-    <main className="main">
+    <main>
       <Header />
-      <Layout>
+      <div className="main-layout">
         <ErrorBoundary>
           <div>
             <Navigation />
@@ -20,7 +20,7 @@ function App() {
           </div>
           <Activity />
         </ErrorBoundary>
-      </Layout>
+      </div>
     </main>
   );
 }
