@@ -5,14 +5,13 @@ import styles from './hash-link.module.scss';
 type Props = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
   hash: string;
   isExternalLink?: boolean;
-  to?: string;
 };
 
-const HashLink = ({ isExternalLink, hash, to, ...restProps }: Props) => {
+const HashLink = ({ isExternalLink, hash, href, ...restProps }: Props) => {
   return (
     <div className={styles.container}>
-      {to ? (
-        <Link to={to} className={styles.link} {...restProps}>
+      {!isExternalLink && href ? (
+        <Link to={href} className={styles.link} {...restProps}>
           {hash}
         </Link>
       ) : (

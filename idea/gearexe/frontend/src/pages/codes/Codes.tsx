@@ -30,7 +30,7 @@ const columns = [
     // ! TODO: add href={routes.code}
     render: (codeId: string) => (
       <div className={styles.codeIdWrapper}>
-        <HashLink hash={codeId} to={generatePath(routes.code, { codeId })} />
+        <HashLink hash={codeId} href={generatePath(routes.code, { codeId })} />
         <Tooltip content="Verified">
           <VerifySvg />
         </Tooltip>
