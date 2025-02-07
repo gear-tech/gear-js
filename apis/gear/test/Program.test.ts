@@ -1,6 +1,5 @@
 import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
-import { blake2AsHex } from '@polkadot/util-crypto';
 import { bufferToU8a } from '@polkadot/util';
 import { readFileSync } from 'fs';
 
@@ -12,10 +11,10 @@ const api = getApi();
 let alice: KeyringPair;
 let codeId: HexString;
 let programId: HexString;
-let expiration: number;
 let metaHash: HexString;
 let expiredBN: number;
-let pausedBlockHash: HexString;
+let _expiration: number;
+let _pausedBlockHash: HexString;
 
 const code = Uint8Array.from(readFileSync(TEST_CODE));
 
@@ -42,18 +41,18 @@ describe('New Program', () => {
     programId = program.programId;
     codeId = program.codeId;
 
-    let programSetExpiration: number;
-    let activeExpiration: number;
+    let _programSetExpiration: number;
+    let _activeExpiration: number;
     let isProgramSetHappened = false;
     let isActiveHappened = false;
 
     const status = checkInit(api, program.programId, (st, exp) => {
       if (st === 'ProgramSet') {
         isProgramSetHappened = true;
-        if (exp) programSetExpiration = exp;
+        if (exp) _programSetExpiration = exp;
       } else if (st === 'Active') {
         isActiveHappened = true;
-        if (exp) activeExpiration = exp;
+        if (exp) _activeExpiration = exp;
       }
     });
 
@@ -81,7 +80,7 @@ describe('New Program', () => {
     const [id, blockHash] = await waitForPausedProgram(api, programId, expiredBN);
     expect(id).toBe(programId);
     expect(blockHash).toBeDefined();
-    pausedBlockHash = blockHash;
+    _pausedBlockHash = blockHash;
   });
 
   test('Create program', async () => {
@@ -145,7 +144,7 @@ describe('New Program', () => {
     expect(result.id.toHex()).toBe(programId);
     expect(result.change.isExpirationChanged).toBeTruthy();
     expect(result.change.asExpirationChanged.expiration).toBeDefined();
-    expect(Number(result.change.asExpirationChanged.expiration.toNumber())).toBe(expiration + 10_000);
+    expect(Number(result.change.asExpirationChanged.expiration.toNumber())).toBe(_expiration + 10_000);
   });
 
   test.skip('Calculate pay rent', () => {

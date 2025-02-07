@@ -696,6 +696,7 @@ describe.skip('Decode complicated type', () => {
 
   test('Decode payload', () => {
     const decoded = meta.createType(meta.types.state as number, payload);
+     
     const json = decoded.toJSON() as any;
 
     expect(json).toHaveProperty('config');

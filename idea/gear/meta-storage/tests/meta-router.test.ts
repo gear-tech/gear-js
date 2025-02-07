@@ -48,7 +48,7 @@ describe('Get meta details', () => {
   it('should return status code 400 when meta hash missing', async () => {
     const values = [{ hash: undefined }, {}];
 
-    for (const value of values) {
+    for (const _ of values) {
       const response = await request(app).get('/meta').query(values);
 
       expect(response.status).toBe(400);

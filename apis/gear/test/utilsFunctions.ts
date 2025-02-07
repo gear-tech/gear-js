@@ -1,12 +1,11 @@
 import { SubmittableExtrinsic, UnsubscribePromise } from '@polkadot/api/types';
+import { TypeRegistry } from '@polkadot/types';
+import { Codec } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
-
-import { GearApi, GearTransaction, IGearEvent, IGearVoucherEvent, MessageWaitedData, ProgramChangedData } from '../src';
 import { Keyring } from '@polkadot/keyring';
 import { waitReady } from '@polkadot/wasm-crypto';
-import { TypeRegistry } from '@polkadot/types';
-import { Codec } from '@polkadot/types-codec/types';
+import { GearApi, GearTransaction, IGearEvent, IGearVoucherEvent, MessageWaitedData, ProgramChangedData } from '../src';
 
 export const checkInit = (
   api: GearApi,

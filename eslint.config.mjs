@@ -31,11 +31,11 @@ export default [
   },
   ...[eslint.configs.recommended, ...tseslint.configs.recommended].map((conf) => ({
     ...conf,
-    files: ['apis/**/src/**/*.{ts,js}', 'idea/**/src/**/*.{ts,js}', 'tools/**/src/**/*.{ts,js}'],
+    files: ['apis/**/{src,test}/**/*.{ts,js}', 'idea/**/src/**/*.{ts,js}', 'tools/**/src/**/*.{ts,js}'],
     ignores: ['apis/gear/src/types/lookup.ts', 'idea/gear/frontend/**'],
   })),
   {
-    files: ['apis/**/src/**/*.{ts,js}', 'idea/**/src/**/*.{ts,js}', 'tools/**/src/**/*.{ts,js}'],
+    files: ['apis/**/{src,test}/**/*.{ts,js}', 'idea/**/src/**/*.{ts,js}', 'tools/**/src/**/*.{ts,js}'],
     ignores: ['apis/gear/src/types/lookup.ts', 'idea/gear/frontend/**'],
     rules: {
       '@typescript-eslint/no-unused-vars': noUnusedVars,
