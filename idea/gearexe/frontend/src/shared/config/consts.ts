@@ -5,18 +5,10 @@ const ETH_NODE_ADDRESS = import.meta.env.VITE_ETH_NODE_ADDRESS;
 
 const DIGIT_RECOGNITION_CONTRACT_ADDRESS = import.meta.env.VITE_DIGIT_RECOGNITION_CONTRACT_ADDRESS as `0x${string}`;
 
-enum LocalStorage {
-  Node = 'node',
-}
-
-const NODE_ADRESS_URL_PARAM = 'node';
-
 export {
   PROJECT_ID,
   GEAR_EXE_NODE_ADDRESS,
   ETH_CHAIN_ID,
   ETH_NODE_ADDRESS,
   DIGIT_RECOGNITION_CONTRACT_ADDRESS,
-  LocalStorage,
-  NODE_ADRESS_URL_PARAM,
 };

@@ -1,7 +1,7 @@
-import { Node as NodeType } from "@/entities/node";
-import { CopyButton } from "@/components";
+import { Node as NodeType } from '../../types';
+import { CopyButton } from '@/components';
 
-import styles from "./Node.module.scss";
+import styles from './Node.module.scss';
 
 type Props = NodeType & {
   selectedNode: string;
@@ -28,11 +28,7 @@ const Node = (props: Props) => {
       </label>
 
       <div className={styles.buttons}>
-        <CopyButton
-          value={address}
-          className={styles.actionBtn}
-          aria-label="Copy node address"
-        />
+        <CopyButton value={address} className={styles.actionBtn} aria-label="Copy node address" />
       </div>
     </li>
   );

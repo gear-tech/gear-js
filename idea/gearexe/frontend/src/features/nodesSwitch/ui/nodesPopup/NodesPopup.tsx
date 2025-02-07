@@ -1,12 +1,12 @@
-import clsx from "clsx";
+import clsx from 'clsx';
 
-import CrossIcon from "@/assets/icons/cross.svg?react";
-import { NodeSection } from "@/entities/node";
+import CrossIcon from '@/assets/icons/cross.svg?react';
 
-import { Node as NodeItem } from "../node";
-import { Button } from "@/components";
-import { nodeSections } from "../../config";
-import styles from "./NodesPopup.module.scss";
+import { Node as NodeItem } from '../node';
+import { Button } from '@/components';
+import { nodeSections } from '../../config';
+import { NodeSection } from '../../types';
+import styles from './NodesPopup.module.scss';
 
 type Props = {
   nodeAddress: string | undefined;
@@ -17,13 +17,7 @@ type Props = {
 };
 
 const NodesPopup = (props: Props) => {
-  const {
-    nodeAddress,
-    selectedNode,
-    selectNode,
-    onSwitchButtonClick,
-    onCloseButtonClick,
-  } = props;
+  const { nodeAddress, selectedNode, selectNode, onSwitchButtonClick, onCloseButtonClick } = props;
 
   const isCurrentNode = selectedNode === nodeAddress;
 
@@ -51,21 +45,12 @@ const NodesPopup = (props: Props) => {
       <div className={styles.content}>
         <ul className={styles.list}>{getSections()}</ul>
 
-        <Button
-          className={styles.action}
-          size="sm"
-          disabled={isCurrentNode}
-          onClick={onSwitchButtonClick}
-        >
+        <Button className={styles.action} size="sm" disabled={isCurrentNode} onClick={onSwitchButtonClick}>
           Switch to Vara
         </Button>
       </div>
 
-      <Button
-        variant="icon"
-        className={styles.closeBtn}
-        onClick={onCloseButtonClick}
-      >
+      <Button variant="icon" className={styles.closeBtn} onClick={onCloseButtonClick}>
         <CrossIcon />
       </Button>
     </aside>

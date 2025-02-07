@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { LocalStorage, NODE_ADRESS_URL_PARAM } from '@/shared/config';
 import { INITIAL_ENDPOINT } from '@/features/api';
 
 import { NodesButton } from './nodesButton';
 import { NodesPopup } from './nodesPopup';
+import { LocalStorage, NODE_ADRESS_URL_PARAM } from '../config';
 
 const NodesSwitch = () => {
   const [searchParams, setSearchParams] = useSearchParams();

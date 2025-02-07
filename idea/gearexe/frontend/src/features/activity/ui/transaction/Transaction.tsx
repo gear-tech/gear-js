@@ -1,5 +1,4 @@
-import { CopyButton } from '@/components';
-import { ExpandableItem } from '../expandableItem/ExpandableItem';
+import { CopyButton, ExpandableItem } from '@/components';
 import styles from './Transaction.module.scss';
 
 type Props = {};

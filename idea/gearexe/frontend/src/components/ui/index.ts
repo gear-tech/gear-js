@@ -2,6 +2,7 @@ export { Badge } from './badge';
 export { Balance } from './balance';
 export { Button } from './button';
 export { CopyButton } from './copy-button';
+export { ExpandableItem } from './expandable-item';
 export { HashLink } from './hash-link';
 export { Input } from './input';
 export { Loader } from './loader';

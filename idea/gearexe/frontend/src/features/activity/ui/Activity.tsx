@@ -1,8 +1,7 @@
 import { clsx } from 'clsx';
 import { useState } from 'react';
 import DoubleDownSVG from '@/assets/icons/double-down.svg?react';
-import { Button, Tabs } from '@/components';
-import { ExpandableItem } from './expandableItem/ExpandableItem';
+import { Button, Tabs, ExpandableItem } from '@/components';
 import { Block } from './block/Block';
 import { Transaction } from './transaction/Transaction';
 import styles from './Activity.module.scss';
