@@ -1,6 +1,5 @@
-import exp from 'constants';
 import { Button } from '../button/Button';
-import styles from './Tabs.module.scss';
+import styles from './tabs.module.scss';
 
 type Props = {
   tabs: string[];
