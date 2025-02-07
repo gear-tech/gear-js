@@ -1,3 +1,6 @@
+import { GEAR_EXE_NODE_ADDRESS } from '@/shared/config';
+import { getNodeAddressFromUrl } from './utils';
+
 const nodeSections = [
   {
     caption: 'Gear.EXE',
@@ -15,4 +18,7 @@ const LocalStorage = {
 
 const NODE_ADRESS_URL_PARAM = 'node';
 
-export { nodeSections, LocalStorage, NODE_ADRESS_URL_PARAM };
+const INITIAL_ENDPOINT =
+  getNodeAddressFromUrl() || (localStorage[LocalStorage.Node] as string | null) || GEAR_EXE_NODE_ADDRESS;
+
+export { nodeSections, LocalStorage, NODE_ADRESS_URL_PARAM, INITIAL_ENDPOINT };

@@ -1,6 +1,6 @@
-import { NODE_ADRESS_URL_PARAM } from "@/shared/config";
+import { NODE_ADRESS_URL_PARAM } from '../nodesSwitch/config';
 
-const isString = (value: unknown): value is string => typeof value === "string";
+const isString = (value: unknown): value is string => typeof value === 'string';
 
 const isNodeAddressValid = (address: string) => {
   const nodeRegex = /(ws|wss):\/\/[\w-.]+/;
