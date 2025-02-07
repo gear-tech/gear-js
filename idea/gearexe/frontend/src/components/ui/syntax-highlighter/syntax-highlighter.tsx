@@ -1,5 +1,7 @@
-import Highlighter from 'react-syntax-highlighter';
+import ReactHighlighter, { SyntaxHighlighterProps } from 'react-syntax-highlighter';
 import { stackoverflowDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+
+const Highlighter = ReactHighlighter as any as React.FC<SyntaxHighlighterProps>;
 
 type Props = {
   code: string;
@@ -8,8 +10,6 @@ type Props = {
 
 const SyntaxHighlighter = ({ code, language }: Props) => {
   return (
-    // TODO: Fix the ts-ignore
-    // @ts-ignore
     <Highlighter
       language={language}
       style={stackoverflowDark}

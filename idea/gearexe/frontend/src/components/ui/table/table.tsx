@@ -60,9 +60,7 @@ const Table = <T extends { id: string | number }>({ columns, data, lineHeight = 
           <tr key={row.id}>
             {columns.map((column) => (
               <td key={column.key as string}>
-                {/* // ! TODO */}
-                {/* @ts-ignore */}
-                {column.render ? column.render(row[column.key], row) : row[column.key]}
+                {column.render ? column.render(row[column.key], row) : String(row[column.key])}
               </td>
             ))}
           </tr>
