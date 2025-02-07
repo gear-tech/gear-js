@@ -1,13 +1,11 @@
-.container {
-  display: flex;
-  align-items: center;
-}
 .value {
   color: #fff;
 }
 
 .divider {
-  margin: 0 8px;
-  border-left: 1px solid rgba(255, 255, 255, 0.5);
-  height: 12px;
+  display: inline-block;
+  margin-right: 8px;
+  padding-right: 8px;
+  border-right: 1px solid rgba(255, 255, 255, 0.5);
+  line-height: 12px;
 }

@@ -1,6 +1,6 @@
 import { formatDate, formatNumber } from '@/shared/utils';
+import { HashLink } from '@/components';
 import styles from './Block.module.scss';
-import { HashLink } from '@/components/ui/hashLink/HashLink';
 
 type Props = {
   blockNumber: number;

@@ -55,20 +55,14 @@ const Program = () => {
             </Tooltip>
           </div>
           <HashLink hash={codeId} />
-
           <div>PROGRAM BALANCE</div>
-          <Balance
-            balances={[
-              { value: formatNumber(3020.449, 4), units: 'WVARA' },
-              { value: formatNumber(20, 4), units: 'ETH' },
-            ]}
-          />
-
+          <div>
+            <Balance value={formatNumber(3020.449, 4)} units="WVARA" withDivider />
+            <Balance value={formatNumber(20, 4)} units="ETH" />
+          </div>
           <div>EXECUTABLE BALANCE</div>
-          <Balance balances={[{ value: formatNumber(320.1, 4), units: 'WVARA' }]} />
-
+          <Balance value={formatNumber(3020.449, 4)} units="WVARA" />
           <div>BLOCK HASH</div>
-
           <div className={styles.blockHash}>
             <HashLink hash={blockHash} />
             {blockDateTime}

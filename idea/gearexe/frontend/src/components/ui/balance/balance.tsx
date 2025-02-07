@@ -1,25 +1,17 @@
+import clsx from 'clsx';
 import styles from './balance.module.scss';
 
 type Props = {
-  balances: { value: string; units: string }[];
+  value: string;
+  units: string;
+  withDivider?: boolean;
 };
 
-const Balance = ({ balances }: Props) => {
+const Balance = ({ value, units, withDivider }: Props) => {
   return (
-    <div className={styles.container}>
-      {balances.map(({ value, units }, index) => {
-        const isLast = index === balances.length - 1;
-
-        return (
-          <>
-            <span>
-              <span className={styles.value}>{value}</span> {units}
-            </span>
-            {!isLast && <div className={styles.divider} />}
-          </>
-        );
-      })}
-    </div>
+    <span className={clsx(styles.wrapper, withDivider && styles.divider)}>
+      <span className={styles.value}>{value}</span> {units}
+    </span>
   );
 };
 

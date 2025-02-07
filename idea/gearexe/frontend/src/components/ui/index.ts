@@ -1,7 +1,6 @@
 export { Badge } from './badge';
 export { Balance } from './balance';
 export { Button } from './button';
-export { Card } from './card';
 export { CopyButton } from './copy-button';
 export { HashLink } from './hash-link';
 export { Input } from './input';
