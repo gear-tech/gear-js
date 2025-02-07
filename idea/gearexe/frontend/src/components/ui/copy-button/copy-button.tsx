@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { Button } from '@/components';
 import Copy from '@/assets/icons/document-copy.svg?react';
 import { copyToClipboard } from '@/shared/utils';
-import { ButtonProps } from '../button/Button';
+import { ButtonProps } from '../button/1button';
 import styles from './CopyButton.module.scss';
 
 type Props = Omit<ButtonProps, 'children'> & {
