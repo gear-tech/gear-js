@@ -1,3 +1,3 @@
-import { Loader } from './Loader';
+import { Loader } from './loader';
 
 export { Loader };
