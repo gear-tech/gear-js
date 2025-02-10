@@ -1,0 +1,10 @@
+constructor {
+  New : ();
+};
+
+service Counter {
+  Decrement : () -> u32;
+  Increment : () -> u32;
+  query GetValue : () -> u32;
+};
+

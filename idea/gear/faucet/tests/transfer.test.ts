@@ -120,7 +120,7 @@ describe('TransferService', () => {
       const transferredBalance = '100000';
 
       jest.spyOn(transferService, 'isPossibleToTransfer').mockResolvedValue(true);
-      gearService.requestBalance.mockImplementation((addr, callback) => {
+      gearService.requestBalance.mockImplementation((_addr, callback) => {
         callback(null, transferredBalance);
       });
 
@@ -132,7 +132,7 @@ describe('TransferService', () => {
 
     it('should return error on internal error during transfer', async () => {
       jest.spyOn(transferService, 'isPossibleToTransfer').mockResolvedValue(true);
-      gearService.requestBalance.mockImplementation((addr, callback) => {
+      gearService.requestBalance.mockImplementation((_addr, callback) => {
         callback('Transfer failed', null);
       });
 

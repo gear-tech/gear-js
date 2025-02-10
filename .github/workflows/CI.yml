@@ -50,7 +50,7 @@ jobs:
       - name: 'Build all packages'
         run: yarn build
 
-  test-api:
+  test-gear-api:
     runs-on: ubuntu-22.04
     env:
       RUSTUP_HOME: /tmp/rustup_home
@@ -97,6 +97,56 @@ jobs:
 
       - name: 'Test: run'
         run: yarn test:gear-api
+
+  # TODO: Uncomment when gearexe tests are ready
+  # test-gearexe-api:
+  #   runs-on: ubuntu-22.04
+  #   env:
+  #     RUSTUP_HOME: /tmp/rustup_home
+  #   steps:
+  #     - name: Cancel Previous Runs
+  #       uses: styfle/cancel-workflow-action@0.9.1
+
+  #     - name: 'Checkout'
+  #       uses: actions/checkout@v4
+
+  #     - name: 'Check if gearexe files changed'
+  #       id: changed-gearexe
+  #       uses: tj-actions/changed-files@v45
+  #       with:
+  #         files: |
+  #           apis/gearexe/**
+
+  #     - name: 'Install: NodeJS 20.x'
+  #       if: steps.changed-gearexe.outputs.any_changed == 'true'
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20.x
+
+  #     - name: Set up Rust
+  #       if: steps.changed-gearexe.outputs.any_changed == 'true'
+  #       uses: dtolnay/rust-toolchain@stable
+  #       with:
+  #         targets: wasm32-unknown-unknown
+  #         components: clippy, rustfmt, llvm-tools, rust-src
+
+  #     - name: 'Install: binaryen'
+  #       if: steps.changed-gearexe.outputs.any_changed == 'true'
+  #       run: |
+  #         wget -c https://github.com/WebAssembly/binaryen/releases/download/$BINARYEN_VERSION/binaryen-$BINARYEN_VERSION-x86_64-linux.tar.gz -O - | tar -xz -C .
+  #         sudo cp binaryen-$BINARYEN_VERSION/bin/wasm-opt /usr/bin/
+
+  #     - name: 'Install: Foundry'
+  #       if: steps.changed-gearexe.outputs.any_changed == 'true'
+  #       uses: foundry-rs/foundry-toolchain@v1
+
+  #     - name: 'Install dependencies'
+  #       if: steps.changed-gearexe.outputs.any_changed == 'true'
+  #       run: yarn workspaces focus gear-js @gear-js/api gearexe
+
+  #     - name: 'Test: run'
+  #       if: steps.changed-gearexe.outputs.any_changed == 'true'
+  #       run: yarn test:gearexe-api
 
   check-gear-idea-version:
     runs-on: ubuntu-latest
