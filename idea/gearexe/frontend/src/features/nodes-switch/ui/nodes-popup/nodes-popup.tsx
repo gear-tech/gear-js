@@ -24,7 +24,6 @@ const NodesPopup = (props: Props) => {
   const getNodes = (section: NodeSection) =>
     section.nodes.map((node, index) => (
       <NodeItem
-        // eslint-disable-next-line react/no-array-index-key
         key={`${node.address}-${index}`}
         address={node.address}
         selectedNode={selectedNode}

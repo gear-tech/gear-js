@@ -32,11 +32,11 @@ export default [
   ...[eslint.configs.recommended, ...tseslint.configs.recommended].map((conf) => ({
     ...conf,
     files: ['apis/**/{src,test}/**/*.{ts,js}', 'idea/**/src/**/*.{ts,js}', 'tools/**/src/**/*.{ts,js}'],
-    ignores: ['apis/gear/src/types/lookup.ts', 'idea/gear/frontend/**'],
+    ignores: ['apis/gear/src/types/lookup.ts', 'idea/gear/frontend/**', 'idea/gearexe/frontend/**'],
   })),
   {
     files: ['apis/**/{src,test}/**/*.{ts,js}', 'idea/**/src/**/*.{ts,js}', 'tools/**/src/**/*.{ts,js}'],
-    ignores: ['apis/gear/src/types/lookup.ts', 'idea/gear/frontend/**'],
+    ignores: ['apis/gear/src/types/lookup.ts', 'idea/gear/frontend/**', 'idea/gearexe/frontend/**'],
     rules: {
       '@typescript-eslint/no-unused-vars': noUnusedVars,
       '@typescript-eslint/no-explicit-any': 'off',
@@ -82,9 +82,12 @@ export default [
     react.configs.flat.recommended,
     react.configs.flat['jsx-runtime'],
     jsxA11y.flatConfigs.recommended,
-  ].map((conf) => ({ ...conf, files: ['idea/gear/frontend/src/**/*.{ts,js,tsx,jsx}'] })),
+  ].map((conf) => ({
+    ...conf,
+    files: ['idea/gear/frontend/src/**/*.{ts,js,tsx,jsx}', 'idea/gearexe/frontend/src/**/*.{ts,js,tsx,jsx}'],
+  })),
   {
-    files: ['idea/gear/frontend/src/**/*.{ts,js,tsx,jsx}'],
+    files: ['idea/gear/frontend/src/**/*.{ts,js,tsx,jsx}', 'idea/gearexe/frontend/src/**/*.{ts,js,tsx,jsx}'],
     plugins: {
       'react-hooks': reacthooks,
     },

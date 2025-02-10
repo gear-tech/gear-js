@@ -1,25 +1,25 @@
-import { clsx } from "clsx";
-import LoadingIcon from "@/assets/icons/loading.svg?react";
-import styles from "./button.module.scss";
+import { clsx } from 'clsx';
+import LoadingIcon from '@/assets/icons/loading.svg?react';
+import styles from './button.module.scss';
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "default" | "outline" | "link" | "icon" | "ghost" | "secondary";
-  size?: "default" | "sm" | "xs" | "icon";
+  variant?: 'default' | 'outline' | 'link' | 'icon' | 'ghost' | 'secondary';
+  size?: 'default' | 'sm' | 'xs' | 'icon';
   isLoading?: boolean;
   children: React.ReactNode;
   className?: string;
   onClick?: () => void;
 };
 
-const Button: React.FC<ButtonProps> = ({
-  variant = "default",
-  size = "default",
+const Button = ({
+  variant = 'default',
+  size = 'default',
   isLoading,
   disabled,
   children,
   className,
   onClick,
-}) => {
+}: ButtonProps) => {
   const isDisabled = disabled || isLoading;
   const buttonClass = clsx(
     styles.button,
@@ -29,21 +29,12 @@ const Button: React.FC<ButtonProps> = ({
       [styles[`state-disabled`]]: isDisabled,
       [styles[`state-loading`]]: isLoading,
     },
-    className
+    className,
   );
 
   return (
-    <button
-      className={buttonClass}
-      onClick={onClick}
-      disabled={isDisabled}
-      aria-disabled={isDisabled}
-    >
-      {isLoading ? (
-        <LoadingIcon className={styles["animate-spin"]} />
-      ) : (
-        children
-      )}
+    <button className={buttonClass} onClick={onClick} disabled={isDisabled} aria-disabled={isDisabled}>
+      {isLoading ? <LoadingIcon className={styles['animate-spin']} /> : children}
     </button>
   );
 };

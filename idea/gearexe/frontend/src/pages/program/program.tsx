@@ -5,8 +5,8 @@ import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
 import VerifySvg from '@/assets/icons/verify.svg?react';
 import { routes } from '@/shared/config';
 import { formatDate, formatNumber } from '@/shared/utils';
-import styles from './Program.module.scss';
 import { ServiceList } from '@/features/programs/ui/service-list';
+import styles from './program.module.scss';
 
 type Params = {
   programId: string;

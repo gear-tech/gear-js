@@ -45,7 +45,7 @@ const Home = () => {
       </div>
       <div className={styles.titleContainer}>
         <h2 className={styles.subtitle}>
-          //_A portal for codes, programs, and events on Vara and Ethereum Networks, powered by Gear.exe
+          {'//_A portal for codes, programs, and events on Vara and Ethereum Networks, powered by Gear.exe'}
         </h2>
       </div>
 

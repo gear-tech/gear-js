@@ -41,7 +41,10 @@ const Code = () => {
           <HashLink hash={codeId} />
 
           <div>PROGRAMS</div>
-          <a className={styles.programs}>3 programs</a>
+          {/* TODO: add filtered programs page */}
+          <a className={styles.programs} href={routes.programs}>
+            3 programs
+          </a>
 
           <div>BLOCK HASH</div>
 
