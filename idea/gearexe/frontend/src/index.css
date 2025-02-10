@@ -161,11 +161,17 @@ w3m-modal {
   backdrop-filter: blur(10px);
 }
 
+main {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .layout {
   max-width: 1440px;
+  flex: 1;
   margin: 0 auto;
   padding: 8px 48px 0px 48px;
-  height: calc(100vh - 78px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;

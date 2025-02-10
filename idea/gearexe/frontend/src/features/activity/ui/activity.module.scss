@@ -1,5 +1,5 @@
 .wrapper {
-  max-height: calc(50vh - 38px); // or 412px
+  max-height: calc(50vh);
   display: flex;
   flex-direction: column;
 
@@ -33,4 +33,5 @@
   flex-grow: 1;
   padding: 24px 24px 0 24px;
   border: 1px solid rgba(41, 41, 41, 1);
+  min-height: 60px;
 }
