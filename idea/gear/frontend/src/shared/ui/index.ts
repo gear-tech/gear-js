@@ -16,6 +16,7 @@ import { BackButton } from './backButton';
 import { TimestampBlock } from './timestampBlock';
 import { Table, TableRow } from './table';
 import { ConfirmModal } from './confirm-modal';
+import { CSSTransitionWithRef } from './css-transition-with-ref';
 
 export {
   LabeledCheckbox,
@@ -45,4 +46,5 @@ export {
   Table,
   TableRow,
   ConfirmModal,
+  CSSTransitionWithRef,
 };

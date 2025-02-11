@@ -42,7 +42,8 @@ const DropTarget = ({ onUpload }: Props) => {
   const isActive = canDrop && isOver;
 
   return (
-    <CSSTransition in={isActive} timeout={AnimationTimeout.Default}>
+    // TODO(#1780): remove nodeRef prop
+    <CSSTransition nodeRef={dropRef} in={isActive} timeout={AnimationTimeout.Default}>
       <div ref={dropRef} className={styles.dropTarget}>
         <p className={styles.message}>Or drag and drop your .wasm files here</p>
       </div>
