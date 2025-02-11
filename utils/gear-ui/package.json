@@ -23,8 +23,8 @@
     "clean": "echo \"clean @gear-js/gear-ui\" && rm -rf dist"
   },
   "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "sass": "^1.69.1"
   },
   "devDependencies": {
