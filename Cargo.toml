@@ -23,5 +23,3 @@ codec = { package = "parity-scale-codec", version = "=3.7.4", default-features =
     "full",
 ] }
 gear-wasm-builder = { version = "=1.7.1", features = ["metawasm"] }
-sails-rs = { version = "=0.7.3" }
-sails-idl-gen = { version = "=0.7.3" }
