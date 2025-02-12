@@ -34,8 +34,7 @@ const DropTarget = ({ onUpload }: Props) => {
     [handleFileDrop],
   );
 
-  // TODO: #1779
-  // temporary react 19 patch
+  // TODO(#1779): temporary react 19 patch
   const dropRef = useRef<HTMLDivElement>(null);
   drop(dropRef);
 

@@ -1,5 +1,6 @@
 import { Button } from '@gear-js/ui';
 import clsx from 'clsx';
+import { Ref } from 'react';
 
 import { useModal } from '@/hooks';
 import uploadCodeSVG from '@/shared/assets/images/actions/uploadCode.svg?react';
@@ -9,7 +10,6 @@ import { OnboardingTooltip } from '@/shared/ui/onboardingTooltip';
 import { VerifyLink } from '@/features/code-verifier';
 
 import styles from './BottomSide.module.scss';
-import { Ref } from 'react';
 
 type Props = {
   ref?: Ref<HTMLDivElement>; // TODO(#1780): temporary react 19 patch
