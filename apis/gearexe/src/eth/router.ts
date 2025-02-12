@@ -3,6 +3,7 @@ import { Provider, BaseContract, Signer, Wallet, ethers, EventLog } from 'ethers
 import { loadKZG } from 'kzg-wasm';
 import assert from 'node:assert';
 import { HexString } from '../types/index.js';
+import { GearExeApi } from '../api/api.js';
 
 export enum CodeState {
   Unknown = 'Unknown',
@@ -24,12 +25,12 @@ const abi = [
   'function programsCodeIds(address[] calldata programsIds) external view returns (bytes32[] memory)',
   'function programsCount() external view returns (uint256)',
 
-  'function requestCodeValidation(bytes32 codeId, bytes32 blobTxHash)',
+  'function requestCodeValidation(bytes32 codeId)',
   'function createProgram(bytes32 codeId, bytes32 salt) external returns (address)',
 
   'event ProgramCreated(address actorId, bytes32 indexed codeId)',
   'event CodeGotValidated(bytes32 codeId, bool indexed valid)',
-  'event CodeValidationRequested(bytes32 codeId, bytes32 blobTxHash)',
+  'event CodeValidationRequested(bytes32 codeId)',
   'event BlockCommitted(bytes32 hash)',
 ];
 
@@ -75,36 +76,69 @@ export class RouterContract extends BaseContract {
     return ethers.hexlify(blob);
   }
 
-  async requestCodeValidationNoBlob(codeId: string, txHash: string) {
-    const res = await this.getFunction('requestCodeValidation').send(codeId, txHash);
+  async requestCodeValidationNoBlob(code: Uint8Array, api: GearExeApi) {
+    throw new Error('not supported');
+    const codeId = generateCodeHash(code);
 
-    const validationPromise = new Promise<boolean>((resolve, reject) =>
-      this.on('CodeGotValidated', (_codeId, valid) => {
-        if (_codeId == codeId) {
-          if (valid) {
-            resolve(true);
-          } else {
-            reject(new Error('Code validation failed'));
-          }
-        }
-      }),
-    );
+    const transaction = await this.getFunction('requestCodeValidation').populateTransaction(codeId);
 
-    const receipt = await res.wait();
+    const blob = prepareBlob(code);
+
+    assert(blob.length == 4096 * 32);
+
+    const blobData = ethers.hexlify(blob);
+
+    const kzg = await loadKZG();
+    const commitment = kzg.blobToKZGCommitment(blobData);
+    const proof = kzg.computeBlobKZGProof(blobData, commitment);
+
+    const tx: ethers.TransactionRequest = {
+      type: 3,
+      data: transaction.data,
+      to: transaction.to,
+      gasLimit: 5_000_000n,
+      maxFeePerBlobGas: 400_000_000_000,
+      blobVersionedHashes: [ethers.keccak256(ethers.hexlify(new Uint8Array(code)))],
+      blobs: [
+        {
+          data: blobData,
+          commitment: commitment,
+          proof: proof,
+        },
+      ],
+    };
+
+    const txResponse = await this._wallet.sendTransaction(tx);
+
+    (await api.provider.send('dev_setBlob', [txResponse.hash, ethers.hexlify(new Uint8Array(code))])) as [
+      string,
+      string,
+    ];
+
+    const receipt = (await txResponse.wait())!;
 
     return {
+      codeId,
       receipt,
-      waitForCodeGotValidated: () => validationPromise,
+      waitForCodeGotValidated: () =>
+        new Promise<boolean>((resolve, reject) =>
+          this.on('CodeGotValidated', (_codeId, valid) => {
+            if (_codeId == codeId) {
+              if (valid) {
+                resolve(true);
+              } else {
+                reject(new Error('Code validation failed'));
+              }
+            }
+          }),
+        ),
     };
   }
 
   async requestCodeValidation(code: Uint8Array) {
     const codeId = generateCodeHash(code);
 
-    const transaction = await this.getFunction('requestCodeValidation').populateTransaction(
-      codeId,
-      '0x0000000000000000000000000000000000000000000000000000000000000000',
-    );
+    const transaction = await this.getFunction('requestCodeValidation').populateTransaction(codeId);
 
     const blob = prepareBlob(code);
 
@@ -160,11 +194,11 @@ export class RouterContract extends BaseContract {
 
     const receipt = await response.wait();
 
-    const event = receipt.logs.find((log) => 'fragment' in log && log.fragment.name == 'ProgramCreated') as EventLog;
+    const event = receipt?.logs.find((log) => 'fragment' in log && log.fragment.name == 'ProgramCreated') as EventLog;
 
     return {
-      blockNumber: receipt.blockNumber,
-      id: event.args[0].toLowerCase(),
+      blockNumber: receipt?.blockNumber,
+      id: event?.args[0].toLowerCase(),
     };
   }
 }
