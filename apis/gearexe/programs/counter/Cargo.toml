@@ -10,5 +10,5 @@ repository.workspace = true
 sails-rs.workspace = true
 
 [build-dependencies]
-sails-rs = { workspace = true, features = ["wasm-builder"] }
+sails-rs.workspace = true
 sails-idl-gen.workspace = true
