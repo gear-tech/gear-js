@@ -1,0 +1,25 @@
+.container {
+  position: relative;
+}
+
+.editor {
+  padding-right: 140px;
+  max-height: 304px;
+  overflow: auto;
+
+  overflow: scroll;
+  scrollbar-width: none;
+}
+.editor::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.tabs {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

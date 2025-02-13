@@ -1,0 +1,122 @@
+.button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: bold;
+  user-select: none;
+  transition: all 0.2s;
+  cursor: pointer;
+
+  &[data-focus-visible] {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--ring), 0 0 0 4px var(--background);
+  }
+
+  &.btn--variant-default {
+    background-color: var(--foreground);
+    color: var(--background);
+
+    &:not([aria-disabled="true"]):active {
+      background-color: var(--foreground-50);
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+      background-color: var(--foreground-50);
+      cursor: auto;
+    }
+  }
+
+  &.btn--variant-outline {
+    background-color: transparent;
+    color: var(--foreground);
+    border: 1px solid var(--border);
+
+    &:not([aria-disabled="true"]):active {
+      color: var(--foreground-50);
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+      color: var(--foreground-30);
+      cursor: auto;
+    }
+  }
+
+  &.btn--variant-link {
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    justify-content: flex-start;
+    cursor: auto;
+  }
+
+  &.btn--variant-icon {
+    background-color: transparent;
+    color: var(--foreground);
+    border: none;
+    padding: 0;
+
+    &:enabled:hover,
+    &:enabled:focus-visible {
+      color: var(--primary);
+    }
+
+    &:enabled:active {
+      color: var(--foreground-50);
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+      color: var(--foreground-30);
+      cursor: auto;
+    }
+  }
+
+  &.btn--variant-ghost {
+    &:hover {
+      background-color: var(--accent);
+      color: var(--accent-foreground);
+    }
+  }
+
+  &.btn--variant-secondary {
+    background-color: var(--secondary);
+    color: var(--secondary-foreground);
+    border: 1px solid var(--border);
+  }
+}
+
+.size-default {
+  padding: 15px 23px;
+}
+
+.size-sm {
+  height: 38px;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.size-xs {
+  height: 26px;
+  border-radius: 2px;
+  padding: 4px 16px;
+}
+
+.size-icon {
+  padding: 15px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
