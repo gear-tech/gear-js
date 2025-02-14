@@ -34,7 +34,8 @@
     "utils/gear-ui",
     "utils/vara-ui",
     "utils/wallet-connect",
-    "utils/logger"
+    "utils/logger",
+    "utils/frontend-configs"
   ],
   "scripts": {
     "clean": "lerna run clean --parallel && lerna clean -y && rm -rf node_modules",
@@ -56,6 +57,7 @@
     "build:txwrapper": "lerna run build --scope @gear-js/txwrapper",
     "build:cli": "lerna run build --scope @gear-js/cli",
     "build:tools": "lerna run build --scope @gear-js/cli --scope @gear-js/txwrapper",
+    "build:frontend-configs": "lerna run build --scope @gear-js/frontend-configs",
     "test:gear-api": "lerna run test --scope @gear-js/api",
     "test:gearexe-api": "lerna run build --scope @gear-js/api && lerna run test --scope gearexe",
     "test:gear-idea-backend": "lerna run test --parallel --scope gear-idea-meta-storage --scope gear-idea-faucet",
@@ -96,6 +98,7 @@
     "@typescript-eslint/eslint-plugin": "^8.20.0",
     "@typescript-eslint/parser": "^8.20.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-react-swc": "^3.8.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-jest": "^29.7.0",
@@ -125,7 +128,8 @@
     "typescript-eslint": "^8.20.0",
     "vite": "^6.0.7",
     "vite-plugin-dts": "^4.5.0",
+    "vite-plugin-externalize-deps": "^0.9.0",
     "vite-plugin-node-polyfills": "^0.23.0",
-    "vite-plugin-svgr": "^4.1.0"
+    "vite-plugin-svgr": "^4.3.0"
   }
 }
