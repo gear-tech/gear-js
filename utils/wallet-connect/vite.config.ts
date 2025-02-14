@@ -15,7 +15,7 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      external: ['react', '@gear-js/react-hooks', '@gear-js/ui', '@gear-js/vara-ui'],
+      external: [/^react/, '@gear-js/react-hooks', '@gear-js/ui', '@gear-js/vara-ui', '@polkadot/react-identicon'],
       output: {
         globals: { react: 'React' },
         intro: 'import "./wallet-connect.css";',
