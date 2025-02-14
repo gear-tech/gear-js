@@ -9,11 +9,11 @@
   },
   "dependencies": {
     "@gear-js/api": "*",
-    "@polkadot/api": "15.4.1",
-    "dotenv": "16.3.1",
-    "express": "4.18.1",
+    "@polkadot/api": "15.5.2",
+    "dotenv": "16.4.7",
+    "express": "4.21.2",
     "gear-idea-common": "1.2.0",
-    "pg": "8.10.0",
+    "pg": "8.13.3",
     "swagger-ui-express": "^5.0.1",
     "typeorm": "^0.3.17",
     "yamljs": "^0.3.0"

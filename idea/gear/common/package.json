@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@gear-js/api": "0.41.0",
-    "@polkadot/api": "15.4.1",
-    "winston": "3.7.2"
+    "@polkadot/api": "15.5.2",
+    "winston": "3.17.0"
   }
 }
