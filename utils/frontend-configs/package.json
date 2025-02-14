@@ -17,10 +17,14 @@
     "gear-js"
   ],
   "homepage": "https://github.com/gear-tech/gear-js/tree/master/utils/frontend-configs#readme",
+  "scripts": {
+    "build": "rm -rf dist tsconfig.app.json tsconfig.node.json && npx tsc && cp src/*.json ."
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "src",
+    "dist",
     "tsconfig.app.json",
-    "tsconfig.node.json",
-    "vite.config.ts"
+    "tsconfig.node.json"
   ]
 }
