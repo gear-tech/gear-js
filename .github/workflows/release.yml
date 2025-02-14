@@ -18,7 +18,6 @@ env:
 
 jobs:
   publish-to-npm:
-    if: github.event_name == 'push'
 
     runs-on: ubuntu-latest
     steps:
