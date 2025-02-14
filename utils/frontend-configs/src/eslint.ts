@@ -1,12 +1,12 @@
 import js from '@eslint/js';
 import globals from 'globals';
 import react from 'eslint-plugin-react';
-// @ts-expect-error: figure out what's wrong with the types
+// @ts-expect-error - WiP: https://github.com/facebook/react/issues/30119
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
-// @ts-expect-error: figure out what's wrong with the types
+// @ts-expect-error: WiP: https://github.com/import-js/eslint-plugin-import/issues/3123
 import importPlugin from 'eslint-plugin-import';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 

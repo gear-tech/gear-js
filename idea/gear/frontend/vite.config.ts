@@ -1,3 +1,3 @@
-import { viteAppConfig } from '@gear-js/frontend-configs';
+import { viteConfigs } from '@gear-js/frontend-configs';
 
-export default viteAppConfig;
+export default viteConfigs.app;

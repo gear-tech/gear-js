@@ -30,9 +30,9 @@ const plugins = [
   }),
 ];
 
-const viteAppConfig = defineConfig({ ...options, plugins });
+const app = defineConfig({ ...options, plugins });
 
-const viteLibConfig = ({ injectCss = true }) => {
+const lib = ({ injectCss = true }) => {
   const rollupOptions = injectCss ? { output: { intro: 'import "./style.css";' } } : {};
 
   return defineConfig({
@@ -53,4 +53,6 @@ const viteLibConfig = ({ injectCss = true }) => {
   });
 };
 
-export { viteAppConfig, viteLibConfig };
+const viteConfigs = { app, lib };
+
+export { viteConfigs };

@@ -1,4 +1,4 @@
-import { eslintConfig } from './eslint.config.js';
-import { viteAppConfig, viteLibConfig } from './vite.config.js';
+import { eslintConfig } from './eslint.js';
+import { viteConfigs } from './vite.js';
 
-export { eslintConfig, viteAppConfig, viteLibConfig };
+export { eslintConfig, viteConfigs };
