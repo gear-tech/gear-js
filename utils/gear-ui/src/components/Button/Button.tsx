@@ -1,9 +1,8 @@
-import { forwardRef, ForwardedRef } from 'react';
 import clsx from 'clsx';
 import { Props } from './Button.types';
 import styles from './Button.module.scss';
 
-const Button = forwardRef((props: Props, ref: ForwardedRef<HTMLButtonElement>) => {
+const Button = (props: Props) => {
   const {
     text,
     icon: Icon,
@@ -28,12 +27,12 @@ const Button = forwardRef((props: Props, ref: ForwardedRef<HTMLButtonElement>) =
   );
 
   return (
-    <button type={type} className={buttonClassName} ref={ref} {...attrs}>
+    <button type={type} className={buttonClassName} {...attrs}>
       {Icon && <Icon className={styles.icon} />}
       {text}
     </button>
   );
-});
+};
 
 // TODO: either fix only-export-components or remove rule
 // eslint-disable-next-line react-refresh/only-export-components

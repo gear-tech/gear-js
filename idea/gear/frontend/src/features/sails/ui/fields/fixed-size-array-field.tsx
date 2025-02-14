@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { ISailsTypeDef } from 'sails-js-types';
 
 import { Fieldset } from '@/shared/ui';

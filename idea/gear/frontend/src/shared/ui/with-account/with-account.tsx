@@ -1,5 +1,5 @@
 import { useAccount } from '@gear-js/react-hooks';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, JSX } from 'react';
 
 function withAccount<T>(Component: FunctionComponent<T>) {
   return (props: T & JSX.IntrinsicAttributes) => {

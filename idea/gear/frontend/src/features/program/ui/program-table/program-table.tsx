@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { generatePath } from 'react-router-dom';
 
 import { routes, absoluteRoutes } from '@/shared/config';

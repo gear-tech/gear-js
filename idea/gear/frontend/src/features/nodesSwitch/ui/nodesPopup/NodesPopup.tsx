@@ -1,6 +1,6 @@
 import { Button } from '@gear-js/ui';
 import clsx from 'clsx';
-import { CSSTransition } from 'react-transition-group';
+import { Ref } from 'react';
 import SimpleBar from 'simplebar-react';
 
 import { AnimationTimeout } from '@/shared/config';
@@ -8,6 +8,7 @@ import plusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import closeSVG from '@/shared/assets/images/actions/close.svg?react';
 import switchSVG from '@/shared/assets/images/actions/switch.svg?react';
 import { NodeSection } from '@/entities/node';
+import { CSSTransitionWithRef } from '@/shared/ui';
 
 import { Node as NodeItem } from '../node';
 import styles from './NodesPopup.module.scss';
@@ -18,6 +19,7 @@ type Props = {
   nodeAddress: string | undefined;
   nodeSections: NodeSection[];
   selectedNode: string;
+  ref?: Ref<HTMLDivElement>; // TODO(#1780): temporary react 19 patch
   selectNode: (address: string) => void;
   removeNode: (address: string) => void;
   onSwitchButtonClick: () => void;
@@ -32,6 +34,7 @@ const NodesPopup = (props: Props) => {
     nodeAddress,
     nodeSections,
     selectedNode,
+    ref,
     selectNode,
     removeNode,
     onSwitchButtonClick,
@@ -44,7 +47,6 @@ const NodesPopup = (props: Props) => {
   const getNodes = (section: NodeSection) =>
     section.nodes.map((node, index) => (
       <NodeItem
-         
         key={`${node.address}-${index}`}
         address={node.address}
         isCustom={node.isCustom}
@@ -58,7 +60,6 @@ const NodesPopup = (props: Props) => {
 
   const getSections = () =>
     nodeSections.map((section, index) => (
-       
       <li key={`${section.caption}-${index}`}>
         <h2 className={styles.caption}>{section.caption}</h2>
         <ul className={styles.sectionList}>{getNodes(section)}</ul>
@@ -66,8 +67,8 @@ const NodesPopup = (props: Props) => {
     ));
 
   return (
-    <aside className={clsx(styles.nodesPopup, isLoading && styles.loading)}>
-      <CSSTransition in={!isLoading} timeout={AnimationTimeout.Default} mountOnEnter>
+    <aside ref={ref} className={clsx(styles.nodesPopup, isLoading && styles.loading)}>
+      <CSSTransitionWithRef in={!isLoading} timeout={AnimationTimeout.Default} mountOnEnter>
         <div className={styles.content}>
           <h2 className={styles.chain}>{chain}</h2>
 
@@ -80,7 +81,7 @@ const NodesPopup = (props: Props) => {
             <Button icon={plusSVG} color="secondary" onClick={onAddButtonClick} />
           </div>
         </div>
-      </CSSTransition>
+      </CSSTransitionWithRef>
 
       <Button icon={closeSVG} color="transparent" className={styles.closeBtn} onClick={onCloseButtonClick} />
     </aside>

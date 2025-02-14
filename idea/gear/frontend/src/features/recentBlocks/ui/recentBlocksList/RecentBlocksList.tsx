@@ -1,8 +1,9 @@
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { TransitionGroup } from 'react-transition-group';
 import SimpleBar from 'simplebar-react';
 import clsx from 'clsx';
 
 import { AnimationTimeout } from '@/shared/config';
+import { CSSTransitionWithRef } from '@/shared/ui';
 
 import { RecentBlockItem } from '../recentBlockItem';
 import { RecentBlock } from '../../types';
@@ -17,9 +18,9 @@ const RecentBlocksList = ({ blocks, className }: Props) => (
   <SimpleBar className={clsx(styles.simpleBar, className)}>
     <TransitionGroup component="ul" className={styles.blockList}>
       {blocks.map((item) => (
-        <CSSTransition key={item.number} timeout={AnimationTimeout.Default} exit={false}>
+        <CSSTransitionWithRef key={item.number} timeout={AnimationTimeout.Default} exit={false}>
           <RecentBlockItem block={item} className={styles.listItem} />
-        </CSSTransition>
+        </CSSTransitionWithRef>
       ))}
     </TransitionGroup>
   </SimpleBar>

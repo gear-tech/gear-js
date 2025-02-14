@@ -1,7 +1,7 @@
 import { HexString } from '@polkadot/util/types';
-import { CSSTransition } from 'react-transition-group';
 
 import { MailboxItem } from '@/features/mailbox';
+
 import { Message } from '../message';
 
 type Props = {
@@ -10,12 +10,7 @@ type Props = {
 };
 
 const Messages = ({ list, onClaim }: Props) => {
-  const getMessages = () =>
-    list.map((mail) => (
-      <CSSTransition key={mail[0].id} timeout={300}>
-        <Message value={mail} onClaim={onClaim} />
-      </CSSTransition>
-    ));
+  const getMessages = () => list.map((mail) => <Message key={mail[0].id} value={mail} onClaim={onClaim} />);
 
   return <ul>{getMessages()}</ul>;
 };

@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { Ref } from 'react';
 import { generatePath, Link } from 'react-router-dom';
 
 import TimeSVG from '@/shared/assets/images/indicators/time.svg?react';
@@ -10,11 +11,12 @@ import styles from './RecentBlockItem.module.scss';
 
 type Props = {
   block: RecentBlock;
+  ref?: Ref<HTMLLIElement>; // TODO(#1780): temporary react 19 patch
   className?: string;
 };
 
-const RecentBlockItem = ({ block, className }: Props) => (
-  <li className={clsx(styles.recentBlockItem, className)}>
+const RecentBlockItem = ({ block, ref, className }: Props) => (
+  <li className={clsx(styles.recentBlockItem, className)} ref={ref}>
     <Link to={generatePath(absoluteRoutes.block, { blockId: String(block.number) })}>
       <p className={styles.hash}>{block.hash}</p>
       <div className={styles.content}>

@@ -5,7 +5,9 @@ import { getPosition } from './get-position';
 import styles from './tooltip.module.scss';
 
 type Props = {
-  children: ReactElement;
+  // intended behavior - https://github.com/facebook/react/issues/31824
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  children: ReactElement<any>;
   value?: ReactNode;
   position?:
     | 'top-start'

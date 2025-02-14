@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/vara-ui",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "description": "React UI components used across Vara applications",
   "author": "Gear Technologies",
@@ -29,8 +29,8 @@
     "clean": "echo \"clean @gear-js/vara-ui\" && rm -rf dist dist-temp"
   },
   "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
   },
   "dependencies": {
     "non.geist": "1.0.4"

@@ -36,7 +36,7 @@ const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
   const alert = useAlert();
   const { setValue } = useFormContext();
 
-  const jsonManualPayload = useRef<string>();
+  const jsonManualPayload = useRef<string>(undefined);
 
   const [isManualView, setIsManualView] = useState(!values);
   const [manualPayloadFile, setManualPayloadFile] = useState<File>();
