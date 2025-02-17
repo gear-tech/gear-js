@@ -1,11 +1,11 @@
 import { useAccount, useDeriveBalancesAll, useDeriveStakingAccount } from '@gear-js/react-hooks';
 import { Balance as BalanceType } from '@polkadot/types/interfaces';
-import { useMemo } from 'react';
-import { CSSTransition } from 'react-transition-group';
+import { Ref, useMemo } from 'react';
 
 import { useModalState, useOutsideClick } from '@/hooks';
 import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
 import { AnimationTimeout } from '@/shared/config';
+import { CSSTransitionWithRef } from '@/shared/ui';
 
 import VaraSVG from '../../assets/vara.svg?react';
 import { Balance } from '../balance';
@@ -26,10 +26,11 @@ type Props = {
   total: string;
   transferable: BalanceType;
   lockedBalance: BalanceType;
+  ref?: Ref<HTMLDivElement>; // TODO(#1780): temporary react 19 patch
   onHeaderClick: () => void;
 };
 
-function Dropdown({ total, transferable, lockedBalance, onHeaderClick }: Props) {
+function Dropdown({ ref, total, transferable, lockedBalance, onHeaderClick }: Props) {
   const { account } = useAccount();
   const { data: stakingAccount } = useDeriveStakingAccount({ address: account?.address });
 
@@ -56,7 +57,7 @@ function Dropdown({ total, transferable, lockedBalance, onHeaderClick }: Props) 
   const { bonded, redeemable, unbonding } = stakingBalance;
 
   return (
-    <div className={styles.dropdown}>
+    <div className={styles.dropdown} ref={ref}>
       <button type="button" className={styles.header} onClick={onHeaderClick}>
         <VaraSVG />
         <BalanceContainer heading="Total Balance" value={total} />
@@ -104,14 +105,14 @@ function BalanceDropdown() {
         </span>
       </button>
 
-      <CSSTransition in={isOpen} timeout={AnimationTimeout.Default} mountOnEnter unmountOnExit>
+      <CSSTransitionWithRef in={isOpen} timeout={AnimationTimeout.Default} mountOnEnter unmountOnExit>
         <Dropdown
           total={freeBalance.add(reservedBalance).toString()}
           transferable={transferable || availableBalance}
           lockedBalance={lockedBalance}
           onHeaderClick={close}
         />
-      </CSSTransition>
+      </CSSTransitionWithRef>
     </div>
   );
 }

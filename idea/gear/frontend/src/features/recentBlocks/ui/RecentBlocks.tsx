@@ -75,7 +75,8 @@ const RecentBlocks = () => {
 
   return (
     <div className={styles.recentBlocksWrapper}>
-      <CSSTransition in={isOpen} timeout={AnimationTimeout.Default}>
+      {/* TODO(#1780): remove nodeRef prop */}
+      <CSSTransition nodeRef={sectionRef} in={isOpen} timeout={AnimationTimeout.Default}>
         <section ref={sectionRef} className={blocksClasses}>
           {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
           <div className={styles.content} onClick={toggleList}>
@@ -104,9 +105,8 @@ const RecentBlocks = () => {
 
             <ArrowSVG className={arrowClassName} />
           </div>
-          <CSSTransition in={isOpen} timeout={AnimationTimeout.Default}>
-            <RecentBlocksList blocks={blocks} className={styles.recentBlocksList} />
-          </CSSTransition>
+
+          <RecentBlocksList blocks={blocks} className={styles.recentBlocksList} />
         </section>
       </CSSTransition>
     </div>

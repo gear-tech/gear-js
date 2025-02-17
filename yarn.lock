@@ -2297,7 +2297,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/react-hooks@npm:*, @gear-js/react-hooks@npm:0.15.0, @gear-js/react-hooks@workspace:utils/gear-hooks":
+"@gear-js/react-hooks@npm:*, @gear-js/react-hooks@npm:0.16.0, @gear-js/react-hooks@workspace:utils/gear-hooks":
   version: 0.0.0-use.local
   resolution: "@gear-js/react-hooks@workspace:utils/gear-hooks"
   dependencies:
@@ -2312,8 +2312,8 @@ __metadata:
     "@tanstack/react-query": "npm:5.56.2"
     bignumber.js: "npm:9.1.2"
     nanoid: "npm:5.0.1"
-    react: "npm:18.2.0"
-    react-dom: "npm:18.2.0"
+    react: "npm:19.0.0"
+    react-dom: "npm:19.0.0"
     react-transition-group: "npm:4.4.5"
     sails-js: "npm:0.3.0"
     sails-js-parser: "npm:0.0.1"
@@ -2321,8 +2321,8 @@ __metadata:
     "@gear-js/api": 0.41.0
     "@polkadot/api": 15.4.1
     "@tanstack/react-query": ^5.56.2
-    react: ^18.2.0
-    react-dom: ^18.2.0
+    react: ^18 || ^19
+    react-dom: ^18 || ^19
     sails-js: 0.3.0
   languageName: unknown
   linkType: soft
@@ -2345,7 +2345,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/ui@npm:*, @gear-js/ui@npm:0.6.0, @gear-js/ui@workspace:utils/gear-ui":
+"@gear-js/ui@npm:*, @gear-js/ui@npm:0.7.0, @gear-js/ui@workspace:utils/gear-ui":
   version: 0.0.0-use.local
   resolution: "@gear-js/ui@workspace:utils/gear-ui"
   dependencies:
@@ -2357,13 +2357,13 @@ __metadata:
     identity-obj-proxy: "npm:3.0.0"
     jest-environment-jsdom: "npm:29.7.0"
   peerDependencies:
-    react: ^18.2.0
-    react-dom: ^18.2.0
+    react: ^18 || ^19
+    react-dom: ^18 || ^19
     sass: ^1.69.1
   languageName: unknown
   linkType: soft
 
-"@gear-js/vara-ui@npm:0.2.0, @gear-js/vara-ui@workspace:utils/vara-ui":
+"@gear-js/vara-ui@npm:0.3.0, @gear-js/vara-ui@workspace:utils/vara-ui":
   version: 0.0.0-use.local
   resolution: "@gear-js/vara-ui@workspace:utils/vara-ui"
   dependencies:
@@ -2380,8 +2380,8 @@ __metadata:
     storybook: "npm:8.5.1"
     storybook-dark-mode: "npm:4.0.2"
   peerDependencies:
-    react: ^18.2.0
-    react-dom: ^18.2.0
+    react: ^18 || ^19
+    react-dom: ^18 || ^19
   languageName: unknown
   linkType: soft
 
@@ -2389,16 +2389,16 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/wallet-connect@workspace:utils/wallet-connect"
   dependencies:
-    "@gear-js/react-hooks": "npm:0.15.0"
-    "@gear-js/ui": "npm:0.6.0"
-    "@gear-js/vara-ui": "npm:0.2.0"
+    "@gear-js/react-hooks": "npm:0.16.0"
+    "@gear-js/ui": "npm:0.7.0"
+    "@gear-js/vara-ui": "npm:0.3.0"
     "@polkadot/react-identicon": "npm:3.12.1"
     "@tanstack/react-query": "npm:5.56.2"
     clsx: "npm:2.1.1"
   peerDependencies:
-    "@gear-js/react-hooks": 0.15.0
-    "@gear-js/ui": 0.6.0
-    "@gear-js/vara-ui": 0.0.11
+    "@gear-js/react-hooks": 0.16.0
+    "@gear-js/ui": 0.7.0
+    "@gear-js/vara-ui": 0.3.0
   peerDependenciesMeta:
     "@gear-js/ui":
       optional: true
@@ -8462,13 +8462,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prop-types@npm:*":
-  version: 15.7.14
-  resolution: "@types/prop-types@npm:15.7.14"
-  checksum: 10c0/1ec775160bfab90b67a782d735952158c7e702ca4502968aa82565bd8e452c2de8601c8dfe349733073c31179116cf7340710160d3836aa8a1ef76d1532893b1
-  languageName: node
-  linkType: hard
-
 "@types/qs@npm:*":
   version: 6.9.18
   resolution: "@types/qs@npm:6.9.18"
@@ -8483,12 +8476,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^18.2.0":
-  version: 18.3.5
-  resolution: "@types/react-dom@npm:18.3.5"
+"@types/react-dom@npm:^19.0.3":
+  version: 19.0.3
+  resolution: "@types/react-dom@npm:19.0.3"
   peerDependencies:
-    "@types/react": ^18.0.0
-  checksum: 10c0/b163d35a6b32a79f5782574a7aeb12a31a647e248792bf437e6d596e2676961c394c5e3c6e91d1ce44ae90441dbaf93158efb4f051c0d61e2612f1cb04ce4faa
+    "@types/react": ^19.0.0
+  checksum: 10c0/3867427b333cbe8cbba496d7cc20ec9676d32c25ae44f4d1263a4129d42e57cf4adf0039ad263432f1215b88075c27d326e7eb4ed646128235d01a76e661d48f
   languageName: node
   linkType: hard
 
@@ -8518,21 +8511,20 @@ __metadata:
   linkType: hard
 
 "@types/react@npm:*":
+  version: 19.0.9
+  resolution: "@types/react@npm:19.0.9"
+  dependencies:
+    csstype: "npm:^3.0.2"
+  checksum: 10c0/a0324890a7d9f3bae018b8735c8978cebea35bc00e7e5cdfcead110683a3b95aab550606abb2fe3189215d60dfcf7059335d206a5f20f41868c56daef60f62c1
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:^19.0.8":
   version: 19.0.8
   resolution: "@types/react@npm:19.0.8"
   dependencies:
     csstype: "npm:^3.0.2"
   checksum: 10c0/5fa7236356b1476de03519c66ef65d4fd904826956105619e2ad60cb0b55ae7b251dd5fff02234076225b5e15333d0d936bf9dbe1d461406f8a2ba01c197ddcd
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:^18.2.0":
-  version: 18.3.18
-  resolution: "@types/react@npm:18.3.18"
-  dependencies:
-    "@types/prop-types": "npm:*"
-    csstype: "npm:^3.0.2"
-  checksum: 10c0/8fb2b00672072135d0858dc9db07873ea107cc238b6228aaa2a9afd1ef7a64a7074078250db38afbeb19064be8ea6af5eac32d404efdd5f45e093cc4829d87f8
   languageName: node
   linkType: hard
 
@@ -15366,7 +15358,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gear-idea-common@npm:1.1.0, gear-idea-common@workspace:idea/gear/common":
+"gear-idea-common@npm:1.2.0, gear-idea-common@workspace:idea/gear/common":
   version: 0.0.0-use.local
   resolution: "gear-idea-common@workspace:idea/gear/common"
   dependencies:
@@ -15385,8 +15377,8 @@ __metadata:
     cron: "npm:^3.1.7"
     dotenv: "npm:^16.4.5"
     express: "npm:4.19.2"
-    gear-idea-common: "npm:1.1.0"
-    gear-idea-indexer-db: "npm:1.1.0"
+    gear-idea-common: "npm:1.2.0"
+    gear-idea-indexer-db: "npm:1.2.0"
     nanoid: "npm:^5.0.7"
     pg: "npm:8.12.0"
     redis: "npm:^4.6.15"
@@ -15407,7 +15399,7 @@ __metadata:
     cron: "npm:^3.1.6"
     dotenv: "npm:10.0.0"
     express: "npm:4.18.1"
-    gear-idea-common: "npm:1.1.0"
+    gear-idea-common: "npm:1.2.0"
     hcaptcha: "npm:0.1.1"
     nodemon: "npm:2.0.16"
     pg: "npm:8.7.1"
@@ -15449,10 +15441,10 @@ __metadata:
     lodash.isequal: "npm:4.5.0"
     lodash.isplainobject: "npm:4.0.6"
     lodash.isstring: "npm:4.0.1"
-    react: "npm:18.2.0"
+    react: "npm:19.0.0"
     react-dnd: "npm:16.0.1"
     react-dnd-html5-backend: "npm:16.0.1"
-    react-dom: "npm:18.2.0"
+    react-dom: "npm:19.0.0"
     react-error-boundary: "npm:4.0.11"
     react-gtm-module: "npm:2.0.11"
     react-hook-form: "npm:7.52.2"
@@ -15469,7 +15461,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"gear-idea-indexer-db@npm:1.1.0, gear-idea-indexer-db@workspace:idea/gear/indexer-db":
+"gear-idea-indexer-db@npm:1.2.0, gear-idea-indexer-db@workspace:idea/gear/indexer-db":
   version: 0.0.0-use.local
   resolution: "gear-idea-indexer-db@workspace:idea/gear/indexer-db"
   dependencies:
@@ -15487,7 +15479,7 @@ __metadata:
     "@types/supertest": "npm:^6.0.2"
     dotenv: "npm:16.3.1"
     express: "npm:4.18.1"
-    gear-idea-common: "npm:1.1.0"
+    gear-idea-common: "npm:1.2.0"
     pg: "npm:8.10.0"
     supertest: "npm:^7.0.0"
     swagger-ui-express: "npm:^5.0.1"
@@ -15513,7 +15505,7 @@ __metadata:
     "@subsquid/typeorm-store": "npm:1.5.1"
     "@types/redis": "npm:^4.0.11"
     dotenv: "npm:16.4.5"
-    gear-idea-indexer-db: "npm:1.1.0"
+    gear-idea-indexer-db: "npm:1.2.0"
     pg: "npm:8.11.5"
     redis: "npm:^4.7.0"
     sails-js: "npm:^0.1.9"
@@ -15544,8 +15536,8 @@ __metadata:
     "@types/eslint-plugin-jsx-a11y": "npm:^6"
     "@types/jest": "npm:^29.5.14"
     "@types/node": "npm:^22.10.7"
-    "@types/react": "npm:^18.2.0"
-    "@types/react-dom": "npm:^18.2.0"
+    "@types/react": "npm:^19.0.8"
+    "@types/react-dom": "npm:^19.0.3"
     "@types/react-transition-group": "npm:4.4.12"
     "@types/rollup-plugin-peer-deps-external": "npm:^2.2.5"
     "@typescript-eslint/eslint-plugin": "npm:^8.20.0"
@@ -22712,15 +22704,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:18.2.0":
-  version: 18.2.0
-  resolution: "react-dom@npm:18.2.0"
+"react-dom@npm:19.0.0":
+  version: 19.0.0
+  resolution: "react-dom@npm:19.0.0"
   dependencies:
-    loose-envify: "npm:^1.1.0"
-    scheduler: "npm:^0.23.0"
+    scheduler: "npm:^0.25.0"
   peerDependencies:
-    react: ^18.2.0
-  checksum: 10c0/66dfc5f93e13d0674e78ef41f92ed21dfb80f9c4ac4ac25a4b51046d41d4d2186abc915b897f69d3d0ebbffe6184e7c5876f2af26bfa956f179225d921be713a
+    react: ^19.0.0
+  checksum: 10c0/a36ce7ab507b237ae2759c984cdaad4af4096d8199fb65b3815c16825e5cfeb7293da790a3fc2184b52bfba7ba3ff31c058c01947aff6fd1a3701632aabaa6a9
   languageName: node
   linkType: hard
 
@@ -22882,12 +22873,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:18.2.0":
-  version: 18.2.0
-  resolution: "react@npm:18.2.0"
-  dependencies:
-    loose-envify: "npm:^1.1.0"
-  checksum: 10c0/b562d9b569b0cb315e44b48099f7712283d93df36b19a39a67c254c6686479d3980b7f013dc931f4a5a3ae7645eae6386b4aa5eea933baa54ecd0f9acb0902b8
+"react@npm:19.0.0":
+  version: 19.0.0
+  resolution: "react@npm:19.0.0"
+  checksum: 10c0/9cad8f103e8e3a16d15cb18a0d8115d8bd9f9e1ce3420310aea381eb42aa0a4f812cf047bb5441349257a05fba8a291515691e3cb51267279b2d2c3253f38471
   languageName: node
   linkType: hard
 
@@ -23918,12 +23907,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"scheduler@npm:^0.23.0, scheduler@npm:^0.23.2":
+"scheduler@npm:^0.23.2":
   version: 0.23.2
   resolution: "scheduler@npm:0.23.2"
   dependencies:
     loose-envify: "npm:^1.1.0"
   checksum: 10c0/26383305e249651d4c58e6705d5f8425f153211aef95f15161c151f7b8de885f24751b377e4a0b3dd42cce09aad3f87a61dab7636859c0d89b7daf1a1e2a5c78
+  languageName: node
+  linkType: hard
+
+"scheduler@npm:^0.25.0":
+  version: 0.25.0
+  resolution: "scheduler@npm:0.25.0"
+  checksum: 10c0/a4bb1da406b613ce72c1299db43759526058fdcc413999c3c3e0db8956df7633acf395cb20eb2303b6a65d658d66b6585d344460abaee8080b4aa931f10eaafe
   languageName: node
   linkType: hard
 

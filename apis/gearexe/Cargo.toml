@@ -1,0 +1,17 @@
+[workspace.package]
+version = "0.0.1"
+authors = ["Gear Technologies"]
+edition = "2021"
+license = "GPL-3.0"
+repository = "https://github.com/gear-tech/gear-js"
+
+[workspace]
+resolver = "2"
+members = [
+    "programs/counter",
+    "programs/counter-idl",
+]
+
+[workspace.dependencies]
+sails-rs = { version = "=0.7.3", features = ["ethexe", "wasm-builder"] }
+sails-idl-gen = { version = "=0.7.3" }

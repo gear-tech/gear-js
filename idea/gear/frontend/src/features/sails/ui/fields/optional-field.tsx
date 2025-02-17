@@ -1,5 +1,5 @@
 import { Select } from '@gear-js/ui';
-import { useState } from 'react';
+import { useState, JSX } from 'react';
 import { Sails } from 'sails-js';
 import { ISailsTypeDef } from 'sails-js-types';
 

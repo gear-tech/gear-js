@@ -18,7 +18,7 @@ env:
 
 jobs:
   publish-to-npm:
-    if: github.event_name == 'push'
+  if: github.event_name == 'push'
 
     runs-on: ubuntu-latest
     steps:
@@ -41,4 +41,6 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish
-        run: npx lerna publish from-package --no-verify-access --yes
+        run: npx lerna publish from-package --no-verify-access --yes --loglevel verbose
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

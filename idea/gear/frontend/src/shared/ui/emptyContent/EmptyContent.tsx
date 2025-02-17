@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
-import { CSSTransition } from 'react-transition-group';
 
+import { CSSTransitionWithRef } from '../css-transition-with-ref';
 import { AnimationTimeout } from '../../config';
 import styles from './EmptyContent.module.scss';
 
@@ -12,7 +12,7 @@ type Props = {
 };
 
 const EmptyContent = ({ title, children, isVisible, description }: Props) => (
-  <CSSTransition in={isVisible} timeout={AnimationTimeout.Default} exit={false} mountOnEnter unmountOnExit>
+  <CSSTransitionWithRef in={isVisible} timeout={AnimationTimeout.Default} exit={false} mountOnEnter unmountOnExit>
     <div className={styles.emptyContent}>
       <div className={styles.textContent}>
         {title && <h2 className={styles.title}>{title}</h2>}
@@ -20,7 +20,7 @@ const EmptyContent = ({ title, children, isVisible, description }: Props) => (
         {children}
       </div>
     </div>
-  </CSSTransition>
+  </CSSTransitionWithRef>
 );
 
 export { EmptyContent };

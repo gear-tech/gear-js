@@ -1,5 +1,6 @@
 import { Button } from '@gear-js/ui';
 import clsx from 'clsx';
+import { Ref } from 'react';
 
 import { useModal } from '@/hooks';
 import uploadCodeSVG from '@/shared/assets/images/actions/uploadCode.svg?react';
@@ -10,7 +11,11 @@ import { VerifyLink } from '@/features/code-verifier';
 
 import styles from './BottomSide.module.scss';
 
-const BottomSide = () => {
+type Props = {
+  ref?: Ref<HTMLDivElement>; // TODO(#1780): temporary react 19 patch
+};
+
+const BottomSide = ({ ref }: Props) => {
   const { showModal } = useModal();
 
   const handleUploadCodeClick = () => showModal('uploadFile', { name: 'code' });
@@ -18,7 +23,7 @@ const BottomSide = () => {
   const handleSendMessageClick = () => showModal('message');
 
   return (
-    <div className={styles.bottomSide}>
+    <div className={styles.bottomSide} ref={ref}>
       <OnboardingTooltip index={1}>
         <Button
           icon={uploadFileSVG}

@@ -1,10 +1,10 @@
-import { OptionHTMLAttributes, SelectHTMLAttributes, forwardRef, ForwardedRef, useId, ReactNode } from 'react';
+import { OptionHTMLAttributes, useId, ReactNode, ComponentPropsWithRef } from 'react';
 import clsx from 'clsx';
 import { InputProps } from '../../types';
 import { InputWrapper } from '../utils';
 import styles from './Select.module.scss';
 
-type Props = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size'> &
+type Props = Omit<ComponentPropsWithRef<'select'>, 'size'> &
   InputProps &
   (
     | {
@@ -13,7 +13,7 @@ type Props = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size'> &
     | { children: ReactNode }
   );
 
-const Select = forwardRef((props: Props, ref: ForwardedRef<HTMLSelectElement>) => {
+const Select = (props: Props) => {
   const {
     label,
     className,
@@ -33,7 +33,7 @@ const Select = forwardRef((props: Props, ref: ForwardedRef<HTMLSelectElement>) =
     styles.select,
     styles[color],
     styles[size],
-    error && styles.error,
+    Boolean(error) && styles.error,
     block && styles.block,
   );
 
@@ -53,13 +53,12 @@ const Select = forwardRef((props: Props, ref: ForwardedRef<HTMLSelectElement>) =
       gap={gap}
       disabled={disabled}
       tooltip={tooltip}>
-      <select id={id} className={selectClassName} ref={ref} {...attrs}>
+      <select id={id} className={selectClassName} {...attrs}>
         {getOptions()}
       </select>
     </InputWrapper>
   );
-});
-
+};
 
 // TODO: either fix only-export-components or remove rule
 // eslint-disable-next-line react-refresh/only-export-components

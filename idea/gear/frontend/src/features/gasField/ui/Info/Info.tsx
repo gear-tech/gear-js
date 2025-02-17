@@ -1,10 +1,10 @@
-import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
 
 import { AnimationTimeout } from '@/shared/config';
 import ShareSVG from '@/shared/assets/images/indicators/share.svg?react';
 import ShieldSVG from '@/shared/assets/images/indicators/shield.svg?react';
 import LoadingSVG from '@/shared/assets/images/indicators/loading.svg?react';
+import { CSSTransitionWithRef } from '@/shared/ui';
 
 import styles from './Info.module.scss';
 
@@ -15,7 +15,7 @@ type Props = {
 };
 
 const Info = ({ isAwait, reserved, returned }: Props) => (
-  <CSSTransition in appear timeout={AnimationTimeout.Default}>
+  <CSSTransitionWithRef in appear timeout={AnimationTimeout.Default}>
     <div className={styles.gasInfoCard}>
       {isAwait && (
         <p className={styles.info}>
@@ -34,7 +34,7 @@ const Info = ({ isAwait, reserved, returned }: Props) => (
         <span className={clsx(styles.value, styles.blue)}>{returned}</span>
       </p>
     </div>
-  </CSSTransition>
+  </CSSTransitionWithRef>
 );
 
 export { Info };

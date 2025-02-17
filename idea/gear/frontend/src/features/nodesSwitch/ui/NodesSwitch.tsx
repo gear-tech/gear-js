@@ -1,13 +1,13 @@
 import { useAlert, useApi } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { CSSTransition } from 'react-transition-group';
 
 import { useModal, useOutsideClick } from '@/hooks';
 import { AnimationTimeout, LocalStorage, NODE_ADRESS_URL_PARAM } from '@/shared/config';
 import { useNodes } from '@/widgets/menu/helpers/useNodes';
 import { OnboardingTooltip } from '@/shared/ui/onboardingTooltip';
 import { INITIAL_ENDPOINT } from '@/features/api';
+import { CSSTransitionWithRef } from '@/shared/ui';
 
 import { NodesButton } from './nodesButton';
 import { NodesPopup } from './nodesPopup';
@@ -92,7 +92,7 @@ const NodesSwitch = ({ isButtonFullWidth }: Props) => {
         />
       </OnboardingTooltip>
 
-      <CSSTransition in={isNodesOpen} timeout={AnimationTimeout.Default} mountOnEnter unmountOnExit>
+      <CSSTransitionWithRef in={isNodesOpen} timeout={AnimationTimeout.Default} mountOnEnter unmountOnExit>
         <NodesPopup
           chain={chain}
           isLoading={isNodesLoading}
@@ -105,7 +105,7 @@ const NodesSwitch = ({ isButtonFullWidth }: Props) => {
           onAddButtonClick={showAddNodeModal}
           onCloseButtonClick={close}
         />
-      </CSSTransition>
+      </CSSTransitionWithRef>
     </div>
   );
 };
