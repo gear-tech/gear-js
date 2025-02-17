@@ -26,7 +26,7 @@ const plugins = [
 
   checker({
     typescript: true,
-    eslint: { lintCommand: 'eslint "./src/**/*.{ts,tsx}"', useFlatConfig: true },
+    eslint: { lintCommand: 'eslint .', useFlatConfig: true },
   }),
 ];
 

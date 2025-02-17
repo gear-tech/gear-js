@@ -46,7 +46,10 @@ const eslintConfig = tseslint.config(
 
     settings: {
       react: { version: 'detect' },
-      'import/resolver': { typescript: true },
+
+      // manually specifying references until issue is resolved:
+      // https://github.com/import-js/eslint-import-resolver-typescript/issues/94
+      'import/resolver': { typescript: { project: ['tsconfig.json', 'tsconfig.app.json'] } },
     },
 
     rules: {

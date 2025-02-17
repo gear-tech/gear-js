@@ -1,2 +1,3 @@
 /tsconfig.app.json
 /tsconfig.node.json
+/.prettierrc

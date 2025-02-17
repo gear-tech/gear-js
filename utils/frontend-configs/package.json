@@ -18,13 +18,40 @@
   ],
   "homepage": "https://github.com/gear-tech/gear-js/tree/master/utils/frontend-configs#readme",
   "scripts": {
-    "build": "rm -rf dist tsconfig.app.json tsconfig.node.json && npx tsc && cp src/*.json ."
+    "build": "rm -rf dist tsconfig.app.json tsconfig.node.json .prettierrc && npx tsc && cp src/*.json ../../.prettierrc ."
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist",
     "tsconfig.app.json",
-    "tsconfig.node.json"
-  ]
+    "tsconfig.node.json",
+    ".prettierrc"
+  ],
+  "peerDependencies": {
+    "eslint": "^9",
+    "prettier": "^3",
+    "typescript": "^5.5",
+    "vite": "^6.1.0"
+  },
+  "dependencies": {
+    "@eslint/js": "9.19.0",
+    "@types/eslint-plugin-jsx-a11y": "6.10.0",
+    "@vitejs/plugin-react-swc": "3.7.2",
+    "eslint-config-prettier": "10.0.1",
+    "eslint-import-resolver-typescript": "3.8.0",
+    "eslint-plugin-import": "2.31.0",
+    "eslint-plugin-jsx-a11y": "6.10.2",
+    "eslint-plugin-prettier": "5.2.3",
+    "eslint-plugin-react": "7.37.4",
+    "eslint-plugin-react-hooks": "5.1.0",
+    "eslint-plugin-react-refresh": "0.4.18",
+    "globals": "15.14.0",
+    "typescript-eslint": "8.23.0",
+    "vite-plugin-checker": "0.8.0",
+    "vite-plugin-dts": "4.5.0",
+    "vite-plugin-externalize-deps": "0.9.0",
+    "vite-plugin-node-polyfills": "0.23.0",
+    "vite-plugin-svgr": "4.3.0"
+  }
 }
