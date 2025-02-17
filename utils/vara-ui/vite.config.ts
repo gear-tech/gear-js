@@ -24,7 +24,7 @@ export default defineConfig(({ mode }) => {
         cssFileName: 'style',
       },
       rollupOptions: {
-        external: ['react', 'react-dom'],
+        external: [/^react/],
         output: {
           globals: { react: 'React', 'react-dom': 'ReactDOM' },
           dir: outDir,
