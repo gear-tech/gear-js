@@ -18,15 +18,14 @@
   ],
   "homepage": "https://github.com/gear-tech/gear-js/tree/master/utils/frontend-configs#readme",
   "scripts": {
-    "build": "rm -rf dist tsconfig.app.json tsconfig.node.json .prettierrc && npx tsc && cp src/*.json ../../.prettierrc ."
+    "build": "rm -rf dist tsconfig.app.json tsconfig.node.json && npx tsc && cp src/*.json ."
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist",
     "tsconfig.app.json",
-    "tsconfig.node.json",
-    ".prettierrc"
+    "tsconfig.node.json"
   ],
   "peerDependencies": {
     "eslint": "^9",
