@@ -79,7 +79,6 @@
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
     "@eslint/json": "^0.10.0",
-    "@gear-js/frontend-configs": "workspace:^",
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-image": "^3.0.3",
     "@rollup/plugin-json": "^6.1.0",
@@ -99,7 +98,6 @@
     "@typescript-eslint/eslint-plugin": "^8.20.0",
     "@typescript-eslint/parser": "^8.20.0",
     "@vitejs/plugin-react": "^4.3.4",
-    "@vitejs/plugin-react-swc": "^3.8.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-jest": "^29.7.0",
@@ -129,8 +127,7 @@
     "typescript-eslint": "^8.20.0",
     "vite": "^6.0.7",
     "vite-plugin-dts": "^4.5.0",
-    "vite-plugin-externalize-deps": "^0.9.0",
     "vite-plugin-node-polyfills": "^0.23.0",
-    "vite-plugin-svgr": "^4.3.0"
+    "vite-plugin-svgr": "^4.1.0"
   }
 }
