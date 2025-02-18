@@ -77,7 +77,7 @@ export default viteConfigs.app;
 ## Prettier
 
 ```ts
-import { pretttierConfig } from '@gear-js/frontend-configs';
+import { prettierConfig } from '@gear-js/frontend-configs';
 
-export default pretttierConfig;
+export default prettierConfig;
 ```
