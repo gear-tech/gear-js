@@ -1,11 +1,13 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { Badge, Balance, Button, HashLink, Tooltip } from '@/components';
-import EtherscanSvg from '@/assets/icons/etherscan.svg?react';
+
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
+import EtherscanSvg from '@/assets/icons/etherscan.svg?react';
 import VerifySvg from '@/assets/icons/verify.svg?react';
+import { Badge, Balance, Button, HashLink, Tooltip } from '@/components';
+import { ServiceList } from '@/features/programs/ui/service-list';
 import { routes } from '@/shared/config';
 import { formatDate, formatNumber } from '@/shared/utils';
-import { ServiceList } from '@/features/programs/ui/service-list';
+
 import styles from './program.module.scss';
 
 type Params = {

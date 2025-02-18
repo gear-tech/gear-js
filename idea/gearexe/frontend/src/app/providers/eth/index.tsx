@@ -1,9 +1,10 @@
+import { AppKitNetwork } from '@reown/appkit/networks';
+import * as allNetworks from '@reown/appkit/networks';
+import { createAppKit } from '@reown/appkit/react';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 import { PropsWithChildren } from 'react';
 import { WagmiProvider, http } from 'wagmi';
-import { createAppKit } from '@reown/appkit/react';
-import { AppKitNetwork } from '@reown/appkit/networks';
-import * as allNetworks from '@reown/appkit/networks';
+
 import { ETH_CHAIN_ID, ETH_NODE_ADDRESS, PROJECT_ID } from '@/shared/config';
 
 const metadata = {

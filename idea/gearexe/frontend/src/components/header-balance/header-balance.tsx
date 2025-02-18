@@ -1,5 +1,6 @@
-import VaraSVG from '@/assets/icons/vara-coin.svg?react';
 import EthSVG from '@/assets/icons/eth-coin.svg?react';
+import VaraSVG from '@/assets/icons/vara-coin.svg?react';
+
 import styles from './header-balance.module.scss';
 
 const HeaderBalance = () => {

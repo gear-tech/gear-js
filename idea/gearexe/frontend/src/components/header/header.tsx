@@ -1,8 +1,11 @@
 import { useAccount } from 'wagmi';
-import { WalletButton } from '../wallet/wallet-button';
+
+import logo from '@/assets/logo.svg';
 import { HeaderBalance } from '@/components';
 import { NodesSwitch } from '@/features/nodes-switch';
-import logo from '@/assets/logo.svg';
+
+import { WalletButton } from '../wallet/wallet-button';
+
 import styles from './header.module.scss';
 
 const Header = () => {

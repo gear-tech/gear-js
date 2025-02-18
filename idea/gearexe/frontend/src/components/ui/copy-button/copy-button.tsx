@@ -1,9 +1,12 @@
-import { useState } from 'react';
 import clsx from 'clsx';
-import { Button } from '@/components';
+import { useState } from 'react';
+
 import Copy from '@/assets/icons/document-copy.svg?react';
+import { Button } from '@/components';
 import { copyToClipboard } from '@/shared/utils';
+
 import { ButtonProps } from '../button/button';
+
 import styles from './copy-button.module.scss';
 
 type Props = Omit<ButtonProps, 'children'> & {

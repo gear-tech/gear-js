@@ -1,10 +1,12 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, HashLink, Tooltip } from '@/components';
+
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
 import VerifySvg from '@/assets/icons/verify.svg?react';
+import { Button, HashLink, Tooltip } from '@/components';
+import { CodeViewer } from '@/features/codes/ui/code-viewer';
 import { routes } from '@/shared/config';
 import { formatDate } from '@/shared/utils';
-import { CodeViewer } from '@/features/codes/ui/code-viewer';
+
 import styles from './code.module.scss';
 
 type Params = {

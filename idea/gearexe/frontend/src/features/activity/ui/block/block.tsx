@@ -1,5 +1,6 @@
-import { formatDate, formatNumber } from '@/shared/utils';
 import { HashLink } from '@/components';
+import { formatDate, formatNumber } from '@/shared/utils';
+
 import styles from './block.module.scss';
 
 type Props = {

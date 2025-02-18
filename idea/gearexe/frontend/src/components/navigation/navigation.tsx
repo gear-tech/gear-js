@@ -1,6 +1,8 @@
 import clsx from 'clsx';
 import { NavLink } from 'react-router-dom';
+
 import { routes } from '@/shared/config';
+
 import styles from './navigation.module.scss';
 
 const navigation = [

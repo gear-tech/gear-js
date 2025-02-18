@@ -1,5 +1,7 @@
 import { useState } from 'react';
+
 import { CopyButton, SyntaxHighlighter, Tabs } from '@/components';
+
 import styles from './code-viewer.module.scss';
 
 const tabs = ['RUST', 'IDL'];
