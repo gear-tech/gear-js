@@ -1,0 +1,27 @@
+{
+  "name": "gearexe-idea-frontend",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "start": "npx vite",
+    "build": "rm -rf dist && npx vite build",
+    "preview": "npx vite preview",
+    "clean": "echo \"clean gearexe-idea-frontend\" && rm -rf dist"
+  },
+  "dependencies": {
+    "@reown/appkit": "^1.6.0",
+    "@reown/appkit-adapter-wagmi": "^1.6.0",
+    "@tanstack/react-query": "^5.56.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "6.16.0",
+    "react-syntax-highlighter": "^15.6.1",
+    "sails-js": "^0.3.0",
+    "vite-plugin-checker": "0.8.0",
+    "wagmi": "^2.12.29"
+  },
+  "devDependencies": {
+    "@types/react-syntax-highlighter": "^15.5.13"
+  }
+}

@@ -1,0 +1,28 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.name {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 10px;
+  line-height: 13px;
+}
+
+.value {
+  color: #fff;
+  font-size: 16px;
+  line-height: 16px;
+}
+
+.decimal {
+  font-size: 12px;
+  line-height: 14px;
+}

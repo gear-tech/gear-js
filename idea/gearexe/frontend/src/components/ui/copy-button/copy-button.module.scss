@@ -1,0 +1,15 @@
+.button {
+  position: relative;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: 24px;
+  left: -24px;
+  padding: 8px 12px;
+  background: #000;
+  color: #fff;
+  border: 1px solid #ffffff80;
+  text-transform: capitalize;
+  pointer-events: none;
+}
