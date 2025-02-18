@@ -7,7 +7,7 @@ import { withProviders } from './app/providers';
 import { Activity } from './features/activity';
 import { Search } from './features/search';
 
-function App() {
+function Component() {
   const isAppReady = true;
 
   return (
@@ -26,4 +26,6 @@ function App() {
   );
 }
 
-export default withProviders(App);
+const App = withProviders(Component);
+
+export { App };

@@ -1,4 +1,4 @@
-const copyToClipboard = async ({
+const copyToClipboard = ({
   value,
   onSuccess,
   onError,
