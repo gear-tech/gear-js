@@ -2,12 +2,11 @@ import { useAccount } from '@gear-js/react-hooks';
 import { useState } from 'react';
 
 import { CodeCard, useCodes, Code } from '@/features/code';
-import { LocalCode, useLocalCodes } from '@/features/local-indexer';
 import { Filters, FilterGroup, Radio } from '@/features/filters';
+import { LocalCode, useLocalCodes } from '@/features/local-indexer';
 import { useChain } from '@/hooks';
-import { List, SearchForm, Skeleton } from '@/shared/ui';
-
 import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
+import { List, SearchForm, Skeleton } from '@/shared/ui';
 
 import styles from './Codes.module.scss';
 

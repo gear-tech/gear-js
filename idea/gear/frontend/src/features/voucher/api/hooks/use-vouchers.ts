@@ -1,9 +1,10 @@
 import { HexString } from '@gear-js/api';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { VouchersParameters } from '../types';
-import { getVouchers } from '../requests';
 import { INFINITE_QUERY } from '@/api';
+
+import { getVouchers } from '../requests';
+import { VouchersParameters } from '../types';
 
 type FilterParams = Partial<Pick<VouchersParameters, 'declined' | 'expired' | 'owner' | 'spender'>>;
 

@@ -1,12 +1,12 @@
-import isPlainObject from 'lodash.isplainobject';
 import { ProgramMetadata, GasInfo } from '@gear-js/api';
 import { useApi, useAccount } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
+import isPlainObject from 'lodash.isplainobject';
 
 import { GasMethod } from '@/shared/config';
 
-import { Values, Code, Result } from './types';
 import { preparedGasInfo } from './helpers';
+import { Values, Code, Result } from './types';
 
 const useGasCalculate = () => {
   const { api, isApiReady } = useApi();

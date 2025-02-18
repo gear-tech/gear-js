@@ -5,8 +5,8 @@ import { METADATA_STORAGE_API_URL } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/helpers';
 import { INDEXER_RPC_SERVICE } from '@/shared/services/rpcService';
 
-import { EventType, GetEventsParameters, GetIdlResponse } from './types';
 import { METHOD } from './consts';
+import { EventType, GetEventsParameters, GetIdlResponse } from './types';
 
 const getIdl = (codeId: HexString) => {
   const url = new URL(`${METADATA_STORAGE_API_URL}/sails`);

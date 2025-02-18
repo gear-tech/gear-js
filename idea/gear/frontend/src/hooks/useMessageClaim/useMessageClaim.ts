@@ -1,11 +1,11 @@
-import { useCallback } from 'react';
-import { EventRecord } from '@polkadot/types/interfaces';
 import { UserMessageRead } from '@gear-js/api';
 import { useApi, useAccount, useAlert, DEFAULT_SUCCESS_OPTIONS, DEFAULT_ERROR_OPTIONS } from '@gear-js/react-hooks';
+import { EventRecord } from '@polkadot/types/interfaces';
+import { useCallback } from 'react';
 
-import { useModal } from '@/hooks';
-import { Method } from '@/features/explorer';
 import { OperationCallbacks } from '@/entities/hooks';
+import { Method } from '@/features/explorer';
+import { useModal } from '@/hooks';
 import { PROGRAM_ERRORS, TransactionName, TransactionStatus } from '@/shared/config';
 import { checkWallet, getExtrinsicFailedMessage } from '@/shared/helpers';
 

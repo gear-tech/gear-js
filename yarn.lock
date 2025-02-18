@@ -2298,7 +2298,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/frontend-configs@workspace:utils/frontend-configs":
+"@gear-js/frontend-configs@npm:*, @gear-js/frontend-configs@workspace:utils/frontend-configs":
   version: 0.0.0-use.local
   resolution: "@gear-js/frontend-configs@workspace:utils/frontend-configs"
   dependencies:
@@ -15963,6 +15963,7 @@ __metadata:
     "@eslint/eslintrc": "npm:^3.2.0"
     "@eslint/js": "npm:^9.18.0"
     "@eslint/json": "npm:^0.10.0"
+    "@gear-js/frontend-configs": "npm:*"
     "@rollup/plugin-commonjs": "npm:^28.0.2"
     "@rollup/plugin-image": "npm:^3.0.3"
     "@rollup/plugin-json": "npm:^6.1.0"

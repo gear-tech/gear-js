@@ -1,7 +1,7 @@
 import { HexString } from '@gear-js/api';
 
-import { IBase } from '@/shared/types';
 import { PaginationParameters, PaginationResponse } from '@/api';
+import { IBase } from '@/shared/types';
 
 import { MessageEntryPoint, MessageReadReason } from '../types';
 

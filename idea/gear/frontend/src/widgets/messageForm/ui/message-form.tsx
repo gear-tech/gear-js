@@ -1,25 +1,26 @@
 import { ProgramMetadata } from '@gear-js/api';
-import { Button, Input, Textarea } from '@gear-js/ui';
 import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
-import { HexString } from '@polkadot/util/types';
+import { Button, Input, Textarea } from '@gear-js/ui';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { HexString } from '@polkadot/util/types';
 import { useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import sendSVG from '@/shared/assets/images/actions/send.svg?react';
-import { ValueField } from '@/shared/ui/form';
-import { Box } from '@/shared/ui/box';
-import { BackButton } from '@/shared/ui/backButton';
-import { GasMethod } from '@/shared/config';
-import { GasField } from '@/features/gasField';
 import { FormPayload, getPayloadFormValues, getResetPayloadValue, getSubmitPayload } from '@/features/formPayload';
+import { GasField } from '@/features/gasField';
+import { ProgramVoucherSelect } from '@/features/voucher';
 import { useGasCalculate, useMessageActions, useValidationSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
-import { ProgramVoucherSelect } from '@/features/voucher';
-import { LabeledCheckbox } from '@/shared/ui';
+import sendSVG from '@/shared/assets/images/actions/send.svg?react';
+import { GasMethod } from '@/shared/config';
 import { getErrorMessage } from '@/shared/helpers';
+import { LabeledCheckbox } from '@/shared/ui';
+import { BackButton } from '@/shared/ui/backButton';
+import { Box } from '@/shared/ui/box';
+import { ValueField } from '@/shared/ui/form';
 
 import { FormValues, INITIAL_VALUES } from '../model';
+
 import styles from './message-form.module.scss';
 
 type Props = {

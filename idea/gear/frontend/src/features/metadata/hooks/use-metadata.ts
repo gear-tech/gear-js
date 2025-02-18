@@ -2,13 +2,13 @@ import { HexString, ProgramMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { useEffect, useMemo, useState } from 'react';
 
-import { useChain } from '@/hooks';
 import { getLocalMetadata } from '@/features/local-indexer';
+import { useChain } from '@/hooks';
 
 import { fetchMetadata } from '../api/requests';
 import { errorMessage } from '../consts';
 
-function useMetadata(hash?: HexString | null | undefined) {
+function useMetadata(hash?: HexString | null) {
   const alert = useAlert();
   const { isDevChain } = useChain();
 

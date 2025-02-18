@@ -1,14 +1,15 @@
 import cx from 'clsx';
 import { generatePath, Link } from 'react-router-dom';
 
-import { IdBlock } from '@/shared/ui/idBlock';
-import { TimestampBlock } from '@/shared/ui/timestampBlock';
 import DirectionSVG from '@/shared/assets/images/indicators/messageDirection.svg?react';
 import { routes } from '@/shared/config';
 import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
+import { IdBlock } from '@/shared/ui/idBlock';
+import { TimestampBlock } from '@/shared/ui/timestampBlock';
 
 import { MessageFromProgram, MessageToProgram } from '../../api';
 import { isMessageFromProgramWithError, isMessageWithError } from '../../utils';
+
 import styles from './message-card.module.scss';
 
 type Props = {

@@ -6,6 +6,7 @@ import { ConfirmModal } from '@/shared/ui/confirm-modal';
 
 import { FUNCTION_NAME } from '../../consts';
 import { useSendDnsTransaction } from '../../hooks';
+
 import styles from './delete-dns.module.scss';
 
 type Props = {

@@ -1,4 +1,4 @@
-import { Events } from './events';
 import { Block } from './block';
+import { Events } from './events';
 
 export { Events, Block };

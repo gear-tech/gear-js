@@ -11,6 +11,7 @@ import { FormButtons, Input } from '@/shared/ui';
 
 import { FUNCTION_NAME } from '../../consts';
 import { useSendDnsTransaction } from '../../hooks';
+
 import styles from './add-admin.module.scss';
 
 const FIELD_NAME = {

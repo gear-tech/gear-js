@@ -3,9 +3,9 @@ import { useState, useCallback, useMemo, useEffect, ReactNode } from 'react';
 import { useOnboarding } from '@/hooks';
 import { disableScroll, enableScroll } from '@/shared/helpers';
 
+import { ModalContext } from './Context';
 import { MODALS } from './consts';
 import { ModalName, ModalProperties } from './types';
-import { ModalContext } from './Context';
 
 const { Provider } = ModalContext;
 

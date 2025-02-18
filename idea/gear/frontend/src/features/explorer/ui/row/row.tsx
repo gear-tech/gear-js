@@ -1,13 +1,14 @@
-import clsx from 'clsx';
 import { DispatchInfo, Extrinsic as DotExtrinsic } from '@polkadot/types/interfaces';
+import clsx from 'clsx';
 
 import commonStyles from '@/pages/explorer/explorer.module.scss';
 
-import { FormattedMessageQueuedData } from '../../types';
-import { IdeaEvent } from '../../idea-event';
 import { Method, Section } from '../../consts';
-import { Extrinsic } from '../extrinsic';
+import { IdeaEvent } from '../../idea-event';
+import { FormattedMessageQueuedData } from '../../types';
 import { BlockEvent } from '../block-event';
+import { Extrinsic } from '../extrinsic';
+
 import styles from './row.module.scss';
 
 type Props = {
@@ -16,7 +17,6 @@ type Props = {
 };
 
 const Row = ({ extrinsic, events }: Props) => {
-   
   const getEvents = () => events?.map((event, index) => <BlockEvent key={index} value={event} />);
 
   const getInfoEvent = () =>

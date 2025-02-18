@@ -1,5 +1,5 @@
-import Identicon from '@polkadot/react-identicon';
 import { Modal, Button } from '@gear-js/ui';
+import Identicon from '@polkadot/react-identicon';
 
 import { ModalProps } from '@/entities/modal';
 

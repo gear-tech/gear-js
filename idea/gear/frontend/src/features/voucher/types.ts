@@ -1,6 +1,6 @@
 import { FIELD_NAME, VOUCHER_TYPE } from './consts';
 
-type VoucherType = typeof VOUCHER_TYPE[keyof typeof VOUCHER_TYPE];
+type VoucherType = (typeof VOUCHER_TYPE)[keyof typeof VOUCHER_TYPE];
 
 type Values = {
   [FIELD_NAME.ACCOUNT_ADDRESS]: string;

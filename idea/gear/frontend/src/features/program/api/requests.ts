@@ -1,6 +1,5 @@
-import { INDEXER_RPC_SERVICE } from '@/shared/services/rpcService';
-
 import { PaginationResponse } from '@/api';
+import { INDEXER_RPC_SERVICE } from '@/shared/services/rpcService';
 
 import { METHOD } from './consts';
 import { Program, ProgramsParameters, SetProgramMetaParameters } from './types';

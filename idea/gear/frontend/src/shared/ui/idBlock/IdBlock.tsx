@@ -1,12 +1,13 @@
-import { MouseEvent } from 'react';
-import clsx from 'clsx';
 import { useAlert } from '@gear-js/react-hooks';
 import { buttonStyles } from '@gear-js/ui';
+import clsx from 'clsx';
+import { MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 
-import { getShortName, copyToClipboard } from '../../helpers';
 import CopySVG from '../../assets/images/actions/copyGreen.svg?react';
 import IdSVG from '../../assets/images/indicators/id.svg?react';
+import { getShortName, copyToClipboard } from '../../helpers';
+
 import styles from './IdBlock.module.scss';
 
 type Props = {

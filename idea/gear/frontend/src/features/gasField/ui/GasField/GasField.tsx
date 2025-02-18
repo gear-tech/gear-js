@@ -4,12 +4,13 @@ import clsx from 'clsx';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { NumericFormat, NumericFormatProps } from 'react-number-format';
 
-import { formStyles } from '@/shared/ui/form';
-import calculatorSVG from '@/shared/assets/images/actions/calculator.svg?react';
 import { Result } from '@/hooks/useGasCalculate/types';
+import calculatorSVG from '@/shared/assets/images/actions/calculator.svg?react';
+import { formStyles } from '@/shared/ui/form';
 import { BalanceUnit } from '@/shared/ui/form/balance-unit';
 
 import { Info } from '../Info';
+
 import styles from './GasField.module.scss';
 
 type Props = Omit<NumericFormatProps & InputProps, 'value' | 'onValueChange' | 'onChange'> & {

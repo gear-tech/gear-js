@@ -1,7 +1,7 @@
 import { buttonStyles } from '@gear-js/ui';
-import { Link, LinkProps } from 'react-router-dom';
-import { FunctionComponent, SVGProps } from 'react';
 import clsx from 'clsx';
+import { FunctionComponent, SVGProps } from 'react';
+import { Link, LinkProps } from 'react-router-dom';
 
 import styles from './ActionLink.module.scss';
 

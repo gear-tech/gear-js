@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 
-import { AnimationTimeout } from '@/shared/config';
+import LoadingSVG from '@/shared/assets/images/indicators/loading.svg?react';
 import ShareSVG from '@/shared/assets/images/indicators/share.svg?react';
 import ShieldSVG from '@/shared/assets/images/indicators/shield.svg?react';
-import LoadingSVG from '@/shared/assets/images/indicators/loading.svg?react';
+import { AnimationTimeout } from '@/shared/config';
 import { CSSTransitionWithRef } from '@/shared/ui';
 
 import styles from './Info.module.scss';

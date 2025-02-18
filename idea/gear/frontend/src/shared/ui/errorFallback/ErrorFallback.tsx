@@ -1,7 +1,8 @@
 import { FallbackProps } from 'react-error-boundary';
 
-import { Subheader } from '../subheader';
 import { BackButton } from '../backButton';
+import { Subheader } from '../subheader';
+
 import styles from './ErrorFallback.module.scss';
 
 const ErrorFallback = ({ error }: FallbackProps) => (

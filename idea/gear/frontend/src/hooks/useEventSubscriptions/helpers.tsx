@@ -1,7 +1,7 @@
-import { generatePath } from 'react-router-dom';
 import { UserMessageSent, Transfer, encodeAddress } from '@gear-js/api';
 import { AlertContainerFactory } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
+import { generatePath } from 'react-router-dom';
 
 import { routes } from '@/shared/config';
 import { CustomLink } from '@/shared/ui/customLink';

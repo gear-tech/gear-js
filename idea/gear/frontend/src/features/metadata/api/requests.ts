@@ -2,6 +2,7 @@ import { HexString } from '@polkadot/util/types';
 
 import { METADATA_STORAGE_API_URL } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/helpers';
+
 import { GetMetaResponse } from './types';
 
 const fetchMetadata = (hash: HexString) => {

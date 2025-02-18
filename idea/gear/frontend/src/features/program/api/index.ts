@@ -1,6 +1,6 @@
 import { useProgram, usePrograms } from './hooks';
-import { Program, ProgramsParameters } from './types';
 import { setProgramMeta } from './requests';
+import { Program, ProgramsParameters } from './types';
 
 export { useProgram, usePrograms, setProgramMeta };
 export type { Program, ProgramsParameters };

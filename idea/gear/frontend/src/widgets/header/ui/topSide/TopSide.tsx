@@ -2,13 +2,14 @@ import { useApi } from '@gear-js/react-hooks';
 import { Wallet } from '@gear-js/wallet-connect';
 import { useEffect, useState } from 'react';
 
-import { RecentBlocks } from '@/features/recentBlocks';
 import { BalanceDropdown } from '@/features/balance';
-import { OnboardingTooltip } from '@/shared/ui/onboardingTooltip';
+import { RecentBlocks } from '@/features/recentBlocks';
 import { AnimationTimeout } from '@/shared/config';
 import { CSSTransitionWithRef } from '@/shared/ui';
+import { OnboardingTooltip } from '@/shared/ui/onboardingTooltip';
 
 import { TotalIssuance } from '../totalIssuance';
+
 import styles from './TopSide.module.scss';
 
 const TopSide = () => {

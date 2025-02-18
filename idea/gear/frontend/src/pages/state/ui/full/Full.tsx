@@ -2,18 +2,19 @@ import { Button, Input, Textarea } from '@gear-js/ui';
 import { useEffect, useMemo } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
+import { FormPayload, getPayloadFormValues, getSubmitPayload } from '@/features/formPayload';
+import { isHumanTypesRepr, useMetadata } from '@/features/metadata';
 import { useProgram } from '@/features/program';
 import { useStateRead } from '@/hooks';
+import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import { getPreformattedText, isNullOrUndefined } from '@/shared/helpers';
 import { BackButton } from '@/shared/ui/backButton';
 import { Box } from '@/shared/ui/box';
-import { isHumanTypesRepr, useMetadata } from '@/features/metadata';
-import { FormPayload, getPayloadFormValues, getSubmitPayload } from '@/features/formPayload';
-import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 
-import { FormValues, INITIAL_VALUES } from '../../model';
 import { downloadJson } from '../../helpers';
 import { useProgramId } from '../../hooks';
+import { FormValues, INITIAL_VALUES } from '../../model';
+
 import styles from './Full.module.scss';
 
 const Full = () => {

@@ -1,16 +1,16 @@
 import { Button, FileInput } from '@gear-js/ui';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { FileTypes } from '@/shared/config';
+import { useWasmFile } from '@/features/code';
+import { UploadMetadata } from '@/features/uploadMetadata';
+import { CodeVoucherSelect } from '@/features/voucher';
 import { useChain, useCodeUpload, useContractApiWithFile } from '@/hooks';
+import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
+import { FileTypes } from '@/shared/config';
+import { Input } from '@/shared/ui';
+import { BackButton } from '@/shared/ui/backButton';
 import { Box } from '@/shared/ui/box';
 import { Subheader } from '@/shared/ui/subheader';
-import { BackButton } from '@/shared/ui/backButton';
-import { UploadMetadata } from '@/features/uploadMetadata';
-import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
-import { CodeVoucherSelect } from '@/features/voucher';
-import { useWasmFile } from '@/features/code';
-import { Input } from '@/shared/ui';
 
 import styles from './UploadCode.module.scss';
 

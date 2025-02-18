@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 
 import { WASM_FILE_TYPE } from '../consts';
 import { WasmFileType } from '../types';
+
 import { useWasmFileHandler } from './use-wasm-file-handler';
 
 type Location = {

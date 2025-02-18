@@ -1,12 +1,12 @@
 import { Tooltip } from '@gear-js/ui';
-import { useState } from 'react';
 import clsx from 'clsx';
+import { useState } from 'react';
 
 import { NodesSwitch } from '@/features/nodesSwitch';
-import MenuButtonSVG from '@/shared/assets/images/menu/menuButton.svg?react';
-import GithubLogoSVG from '@/shared/assets/images/menu/github.svg?react';
-import { AnimationTimeout } from '@/shared/config';
 import { useNodeVersion } from '@/hooks';
+import GithubLogoSVG from '@/shared/assets/images/menu/github.svg?react';
+import MenuButtonSVG from '@/shared/assets/images/menu/menuButton.svg?react';
+import { AnimationTimeout } from '@/shared/config';
 import { CSSTransitionWithRef } from '@/shared/ui';
 
 import styles from './Menu.module.scss';

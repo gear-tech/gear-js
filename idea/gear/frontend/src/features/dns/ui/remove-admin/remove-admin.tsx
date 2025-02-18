@@ -4,11 +4,11 @@ import { Button } from '@gear-js/ui';
 
 import { useModalState } from '@/hooks';
 import TrashSVG from '@/shared/assets/images/actions/trashOutlined.svg?react';
+import { getShortName } from '@/shared/helpers';
 import { ConfirmModal } from '@/shared/ui';
 
 import { FUNCTION_NAME } from '../../consts';
 import { useSendDnsTransaction } from '../../hooks';
-import { getShortName } from '@/shared/helpers';
 
 type Props = {
   name: string;

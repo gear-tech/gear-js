@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
 import clsx from 'clsx';
+import { ReactNode } from 'react';
 
 import { EmptyContent } from '@/shared/ui/emptyContent';
 

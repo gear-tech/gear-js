@@ -1,7 +1,7 @@
 import ky, { Options } from 'ky';
 
-import { generateRandomId } from '@/shared/helpers';
 import { INDEXER_API_URL, LocalStorage } from '@/shared/config';
+import { generateRandomId } from '@/shared/helpers';
 
 import { RPCError } from './RPCError';
 import { RPCRequest, RPCResponse, RPCSuccessResponse } from './types';

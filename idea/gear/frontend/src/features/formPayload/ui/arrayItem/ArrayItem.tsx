@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 
 import { Fieldset } from '@/shared/ui';
 
-import { PayloadItemProps } from '../../model';
 import { getItemLabel, getNextLevelName } from '../../helpers';
+import { PayloadItemProps } from '../../model';
 
 const ArrayItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadItemProps) => {
   const { type, len } = typeStructure;

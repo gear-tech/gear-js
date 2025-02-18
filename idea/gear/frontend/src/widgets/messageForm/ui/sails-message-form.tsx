@@ -1,24 +1,24 @@
 import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
 import { Button, Input } from '@gear-js/ui';
-import { HexString } from '@polkadot/util/types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { HexString } from '@polkadot/util/types';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Sails } from 'sails-js';
 import { z } from 'zod';
 
-import sendSVG from '@/shared/assets/images/actions/send.svg?react';
-import { ValueField } from '@/shared/ui/form';
-import { Box } from '@/shared/ui/box';
-import { BackButton } from '@/shared/ui/backButton';
-import { GasMethod } from '@/shared/config';
 import { GasField } from '@/features/gasField';
+import { PayloadForm, getResetPayloadValue, useService, PayloadValue, PayloadValueSchema } from '@/features/sails';
+import { ProgramVoucherSelect } from '@/features/voucher';
 import { useBalanceSchema, useGasCalculate, useGasLimitSchema, useMessageActions } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
-import { ProgramVoucherSelect } from '@/features/voucher';
-import { LabeledCheckbox } from '@/shared/ui';
-import { PayloadForm, getResetPayloadValue, useService, PayloadValue, PayloadValueSchema } from '@/features/sails';
+import sendSVG from '@/shared/assets/images/actions/send.svg?react';
+import { GasMethod } from '@/shared/config';
 import { getErrorMessage } from '@/shared/helpers';
+import { LabeledCheckbox } from '@/shared/ui';
+import { BackButton } from '@/shared/ui/backButton';
+import { Box } from '@/shared/ui/box';
+import { ValueField } from '@/shared/ui/form';
 
 import styles from './message-form.module.scss';
 

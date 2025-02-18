@@ -2,12 +2,12 @@ import { useApi, useAccount } from '@gear-js/react-hooks';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { generatePath } from 'react-router-dom';
 
-import { useAddMetadata, useAddProgramName, useChain, useModal, useSignAndSend } from '@/hooks';
 import { addLocalProgram } from '@/features/local-indexer';
-import { absoluteRoutes } from '@/shared/config';
-import { CustomLink } from '@/shared/ui/customLink';
 import { useProgramStatus } from '@/features/program';
 import { useAddIdl } from '@/features/sails';
+import { useAddMetadata, useAddProgramName, useChain, useModal, useSignAndSend } from '@/hooks';
+import { absoluteRoutes } from '@/shared/config';
+import { CustomLink } from '@/shared/ui/customLink';
 
 import { ContractApi, Program, Values } from './types';
 

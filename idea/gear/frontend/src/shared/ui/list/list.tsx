@@ -4,8 +4,8 @@ import SimpleBar from 'simplebar-react';
 
 import { Placeholder } from '@/entities/placeholder';
 
-import { Observer } from './observer';
 import styles from './list.module.scss';
+import { Observer } from './observer';
 
 type Item<T> = T extends (infer U)[] ? U : never;
 

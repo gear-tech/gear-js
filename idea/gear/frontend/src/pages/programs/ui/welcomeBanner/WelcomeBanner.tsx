@@ -1,11 +1,11 @@
-import clsx from 'clsx';
 import { Button } from '@gear-js/ui';
+import clsx from 'clsx';
 
-import { ExamplesLink } from '@/shared/ui/examplesLink';
+import closeSVG from '@/shared/assets/images/actions/close.svg?react';
 import gear1PNG from '@/shared/assets/images/banners/gear1.png';
 import gear2PNG from '@/shared/assets/images/banners/gear2.png';
 import gear3PNG from '@/shared/assets/images/banners/gear3.png';
-import closeSVG from '@/shared/assets/images/actions/close.svg?react';
+import { ExamplesLink } from '@/shared/ui/examplesLink';
 
 import styles from './WelcomeBanner.module.scss';
 

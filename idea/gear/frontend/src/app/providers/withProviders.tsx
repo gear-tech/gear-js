@@ -1,13 +1,13 @@
+import { AccountProvider as GearAccountProvider, ProviderProps } from '@gear-js/react-hooks';
 import { ComponentType } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { AccountProvider as GearAccountProvider, ProviderProps } from '@gear-js/react-hooks';
 
-import { ApiProvider } from './api';
 import { AlertProvider } from './alert';
+import { ApiProvider } from './api';
 import { BlocksProvider } from './blocks';
-import { ModalProvider } from './modal';
-import { EventsProvider } from './events';
 import { ChainProvider } from './chain';
+import { EventsProvider } from './events';
+import { ModalProvider } from './modal';
 import { OnboardingProvider } from './onboarding';
 import { QueryProvider } from './query';
 

@@ -3,6 +3,7 @@ import { AnyJson } from '@polkadot/types/types';
 import isPlainObject from 'lodash.isplainobject';
 
 import { isNullOrUndefined } from '@/shared/helpers';
+
 import { MetadataTypes, MedatadaTypesValue } from '../model';
 
 const isEmptyObject = (value: unknown) => isPlainObject(value) && !Object.keys(value as object).length;

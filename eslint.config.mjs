@@ -7,6 +7,7 @@ import reactrefresh from 'eslint-plugin-react-refresh';
 import react from 'eslint-plugin-react';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import json from '@eslint/json';
+import { eslintConfig as frontendEslintConfig } from '@gear-js/frontend-configs';
 
 const noUnusedVars = [
   'error',
@@ -76,41 +77,8 @@ export default [
       ],
     },
   },
-  ...[
-    eslint.configs.recommended,
-    ...tseslint.configs.recommended,
-    react.configs.flat.recommended,
-    react.configs.flat['jsx-runtime'],
-    jsxA11y.flatConfigs.recommended,
-  ].map((conf) => ({
+  ...frontendEslintConfig.map((conf) => ({
     ...conf,
     files: ['idea/gear/frontend/src/**/*.{ts,js,tsx,jsx}', 'idea/gearexe/frontend/src/**/*.{ts,js,tsx,jsx}'],
   })),
-  {
-    files: ['idea/gear/frontend/src/**/*.{ts,js,tsx,jsx}', 'idea/gearexe/frontend/src/**/*.{ts,js,tsx,jsx}'],
-    plugins: {
-      'react-hooks': reacthooks,
-    },
-    languageOptions: {
-      ecmaVersion: 'latest',
-    },
-    settings: {
-      react: {
-        version: 'detect',
-      },
-    },
-    rules: {
-      '@typescript-eslint/no-unsafe-enum-comparison': 'off',
-      '@typescript-eslint/no-floating-promises': 'off',
-      'react/display-name': 'off',
-      '@typescript-eslint/no-misused-promises': 'off',
-      '@typescript-eslint/no-unsafe-argument': 'off',
-      '@typescript-eslint/no-unsafe-assignment': 'off',
-      'no-shadow': 'error',
-      'no-shadow-restricted-names': 'error',
-      '@typescript-eslint/no-unused-vars': 'warn',
-      'react-hooks/exhaustive-deps': 'error',
-      '@typescript-eslint/no-unused-vars': noUnusedVars,
-    },
-  },
 ];

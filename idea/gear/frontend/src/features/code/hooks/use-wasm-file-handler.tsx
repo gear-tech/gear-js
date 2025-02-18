@@ -5,8 +5,8 @@ import { generatePath } from 'react-router-dom';
 import { FileTypes, routes } from '@/shared/config';
 import { CustomLink } from '@/shared/ui/customLink';
 
-import { WasmFileType } from '../types';
 import { WASM_FILE_TYPE } from '../consts';
+import { WasmFileType } from '../types';
 
 type OnChange = (value: File | undefined, buffer: Buffer | undefined) => void;
 

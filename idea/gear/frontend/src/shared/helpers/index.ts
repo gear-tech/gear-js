@@ -1,8 +1,9 @@
+import { STATUS_CODES } from 'http';
+
 import { GearApi, HexString } from '@gear-js/api';
 import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
 import type { Event } from '@polkadot/types/interfaces';
 import { isAndroid, isIOS } from '@react-aria/utils';
-import { STATUS_CODES } from 'http';
 
 import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from '@/shared/config';
 

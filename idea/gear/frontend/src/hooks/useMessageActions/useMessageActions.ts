@@ -1,10 +1,10 @@
 import { useApi, useAlert, useAccount } from '@gear-js/react-hooks';
 import { useCallback } from 'react';
 
-import { useModal, useSignAndSend } from '@/hooks';
 import { Method } from '@/features/explorer';
-import { checkWallet } from '@/shared/helpers';
+import { useModal, useSignAndSend } from '@/hooks';
 import { TransactionName } from '@/shared/config';
+import { checkWallet } from '@/shared/helpers';
 
 import { ParamsToSendMessage, ParamsToReplyMessage } from './types';
 

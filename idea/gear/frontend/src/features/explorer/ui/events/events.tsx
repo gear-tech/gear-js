@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import SimpleBar from 'simplebar-react';
 
-import EventPlaceholderSVG from '@/shared/assets/images/placeholders/eventPlaceholder.svg?react';
 import { Placeholder } from '@/entities/placeholder';
+import EventPlaceholderSVG from '@/shared/assets/images/placeholders/eventPlaceholder.svg?react';
 
+import { FILTER_VALUES, LOCAL_STORAGE } from '../../consts';
 import { IdeaEvent } from '../../idea-event';
 import { FilterValues } from '../../types';
-import { FILTER_VALUES, LOCAL_STORAGE } from '../../consts';
-import { Filter } from '../filter';
 import { Event } from '../event';
+import { Filter } from '../filter';
+
 import styles from './events.module.scss';
 
 type Props = {

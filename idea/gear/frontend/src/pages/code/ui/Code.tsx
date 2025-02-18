@@ -2,19 +2,19 @@ import { Button } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
 import { generatePath, useParams } from 'react-router-dom';
 
-import { useChain, useModal } from '@/hooks';
-import { BackButton } from '@/shared/ui/backButton';
-import { absoluteRoutes } from '@/shared/config';
-import { UILink } from '@/shared/ui/uiLink';
-import { Programs, usePrograms } from '@/features/program';
-import { MetadataTable, useMetadata } from '@/features/metadata';
-import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
-import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import { CodeTable, useCode as useStorageCode } from '@/features/code';
-import { SailsPreview, useSails } from '@/features/sails';
-import { useLocalCode } from '@/features/local-indexer';
 import { useIsCodeVerified, VerificationStatus, VerifyLink } from '@/features/code-verifier';
+import { useLocalCode } from '@/features/local-indexer';
+import { MetadataTable, useMetadata } from '@/features/metadata';
+import { Programs, usePrograms } from '@/features/program';
+import { SailsPreview, useSails } from '@/features/sails';
+import { useChain, useModal } from '@/hooks';
+import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
+import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
+import { absoluteRoutes } from '@/shared/config';
 import { Box } from '@/shared/ui';
+import { BackButton } from '@/shared/ui/backButton';
+import { UILink } from '@/shared/ui/uiLink';
 
 import styles from './Code.module.scss';
 

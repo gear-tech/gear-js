@@ -1,6 +1,6 @@
-import { ReactNode, useState, useEffect } from 'react';
 import { useApi } from '@gear-js/react-hooks';
 import { Header } from '@polkadot/types/interfaces';
+import { ReactNode, useState, useEffect } from 'react';
 
 import { RecentBlock } from '@/features/recentBlocks';
 

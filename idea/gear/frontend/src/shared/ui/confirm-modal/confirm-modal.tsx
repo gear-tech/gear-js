@@ -1,5 +1,5 @@
-import { FC, SVGProps } from 'react';
 import { Button, Modal } from '@gear-js/ui';
+import { FC, SVGProps } from 'react';
 
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';

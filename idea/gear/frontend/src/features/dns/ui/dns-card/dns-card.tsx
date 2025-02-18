@@ -2,13 +2,14 @@ import { useAccount } from '@gear-js/react-hooks';
 import { generatePath, Link } from 'react-router-dom';
 
 import { routes } from '@/shared/config';
-import { TimestampBlock } from '@/shared/ui/timestampBlock';
 import { IdBlock, OwnerBlock } from '@/shared/ui';
+import { TimestampBlock } from '@/shared/ui/timestampBlock';
 
 import AdminSVG from '../../assets/admin.svg?react';
 import { Dns } from '../../types';
-import { EditDns } from '../edit-dns';
 import { DeleteDns } from '../delete-dns';
+import { EditDns } from '../edit-dns';
+
 import styles from './dns-card.module.scss';
 
 type Props = {

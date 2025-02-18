@@ -1,17 +1,18 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
+import clsx from 'clsx';
 import { useState } from 'react';
 import { generatePath, Link } from 'react-router-dom';
-import clsx from 'clsx';
 
 import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
-import { PreformattedBlock } from '@/shared/ui/preformattedBlock';
 import { absoluteRoutes } from '@/shared/config';
+import { PreformattedBlock } from '@/shared/ui/preformattedBlock';
 
-import { IdeaEvent } from '../../idea-event';
 import { Method } from '../../consts';
+import { IdeaEvent } from '../../idea-event';
 import { FormattedUserMessageSentData } from '../../types';
 import { DecodedLogBlock } from '../decoded-log-block';
+
 import styles from './event.module.scss';
 
 type Props = {

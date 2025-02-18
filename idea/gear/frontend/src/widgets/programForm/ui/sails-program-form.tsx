@@ -1,21 +1,22 @@
 import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
 import { Input as GearInput } from '@gear-js/ui';
-import { HexString } from '@polkadot/util/types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { HexString } from '@polkadot/util/types';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Sails } from 'sails-js';
 import { z } from 'zod';
 
+import { GasField } from '@/features/gasField';
+import { PayloadForm, useConstructor, PayloadValue, PayloadValueSchema, getResetPayloadValue } from '@/features/sails';
 import { useBalanceSchema, useGasCalculate, useGasLimitSchema } from '@/hooks';
 import { Result } from '@/hooks/useGasCalculate/types';
-import { GasField } from '@/features/gasField';
 import { GasMethod } from '@/shared/config';
-import { Input, ValueField, LabeledCheckbox, Box } from '@/shared/ui';
-import { PayloadForm, useConstructor, PayloadValue, PayloadValueSchema, getResetPayloadValue } from '@/features/sails';
 import { getErrorMessage, isHex } from '@/shared/helpers';
+import { Input, ValueField, LabeledCheckbox, Box } from '@/shared/ui';
 
 import { SubmitHelpers } from '../model';
+
 import styles from './ProgramForm.module.scss';
 
 type Values = {

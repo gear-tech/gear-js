@@ -2,11 +2,11 @@ import { HexString } from '@polkadot/util/types';
 import { useParams } from 'react-router-dom';
 
 import { useMailboxItem } from '@/features/mailbox';
-import { MessageForm, SailsMessageForm } from '@/widgets/messageForm';
 import { useMetadata } from '@/features/metadata';
-import { useSails } from '@/features/sails';
 import { useProgram } from '@/features/program';
+import { useSails } from '@/features/sails';
 import { isAnyKey } from '@/shared/helpers';
+import { MessageForm, SailsMessageForm } from '@/widgets/messageForm';
 
 import styles from './Send.module.scss';
 

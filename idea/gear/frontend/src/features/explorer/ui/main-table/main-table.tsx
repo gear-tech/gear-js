@@ -1,13 +1,14 @@
-import { Extrinsic, EventRecord } from '@polkadot/types/interfaces';
 import { Vec } from '@polkadot/types';
+import { Extrinsic, EventRecord } from '@polkadot/types/interfaces';
 import clsx from 'clsx';
 
 import { Placeholder } from '@/entities/placeholder';
-import MainTablePlaceholderSVG from '@/shared/assets/images/placeholders/blockMainTablePlaceholder.svg?react';
 import commonStyles from '@/pages/explorer/explorer.module.scss';
+import MainTablePlaceholderSVG from '@/shared/assets/images/placeholders/blockMainTablePlaceholder.svg?react';
 
 import { IdeaEvent } from '../../idea-event';
 import { Row } from '../row';
+
 import styles from './main-table.module.scss';
 
 type Props = {
@@ -28,10 +29,7 @@ const MainTable = ({ extrinsics, eventRecords, error }: Props) => {
       .map(({ event }) => new IdeaEvent(event));
 
   const getRows = () =>
-    extrinsics?.map((extrinsic, index) => (
-       
-      <Row key={index} extrinsic={extrinsic} events={getExtrinsicEvents(index)} />
-    ));
+    extrinsics?.map((extrinsic, index) => <Row key={index} extrinsic={extrinsic} events={getExtrinsicEvents(index)} />);
 
   return (
     <div>

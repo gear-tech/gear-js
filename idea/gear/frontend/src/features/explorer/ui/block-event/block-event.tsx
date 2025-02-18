@@ -1,10 +1,10 @@
 import { PreformattedBlock } from '@/shared/ui/preformattedBlock';
 
-import { FormattedUserMessageSentData } from '../../types';
-import { IdeaEvent } from '../../idea-event';
 import { Method } from '../../consts';
-import { ExpansionPanel } from '../expansion-panel';
+import { IdeaEvent } from '../../idea-event';
+import { FormattedUserMessageSentData } from '../../types';
 import { DecodedLogBlock } from '../decoded-log-block';
+import { ExpansionPanel } from '../expansion-panel';
 
 type Props = {
   value: IdeaEvent | IdeaEvent[];

@@ -1,23 +1,23 @@
-import { HexString } from '@polkadot/util/types';
 import { Button } from '@gear-js/ui';
+import { HexString } from '@polkadot/util/types';
 import cx from 'clsx';
 import { useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
 
-import { useModal } from '@/hooks';
-import { ProgramStatus, ProgramTable, useProgram } from '@/features/program';
-import { getShortName, isAnyKey } from '@/shared/helpers';
-import { Box, UILink } from '@/shared/ui';
-import { absoluteRoutes, routes } from '@/shared/config';
-import SendSVG from '@/shared/assets/images/actions/send.svg?react';
-import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
-import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
-import { useMetadata, MetadataTable, isState } from '@/features/metadata';
-import { ProgramVouchers } from '@/features/voucher';
-import { ProgramEvents, SailsPreview, useSails } from '@/features/sails';
-import { ProgramMessages } from '@/features/message';
 import { ProgramBalance } from '@/features/balance';
 import { useIsCodeVerified, VerificationStatus, VerifyLink } from '@/features/code-verifier';
+import { ProgramMessages } from '@/features/message';
+import { useMetadata, MetadataTable, isState } from '@/features/metadata';
+import { ProgramStatus, ProgramTable, useProgram } from '@/features/program';
+import { ProgramEvents, SailsPreview, useSails } from '@/features/sails';
+import { ProgramVouchers } from '@/features/voucher';
+import { useModal } from '@/hooks';
+import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
+import SendSVG from '@/shared/assets/images/actions/send.svg?react';
+import { absoluteRoutes, routes } from '@/shared/config';
+import { getShortName, isAnyKey } from '@/shared/helpers';
+import { Box, UILink } from '@/shared/ui';
+import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 
 import styles from './program.module.scss';
 

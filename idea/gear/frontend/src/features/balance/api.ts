@@ -1,5 +1,6 @@
 import { GENESIS } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/helpers';
+
 import { FAUCET_API_URL } from './consts';
 
 type GetTestBalanceParameters = {

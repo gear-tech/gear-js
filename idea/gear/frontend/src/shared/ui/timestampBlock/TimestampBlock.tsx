@@ -1,8 +1,9 @@
 import clsx from 'clsx';
 
-import styles from './TimestampBlock.module.scss';
-import { formatDate } from '../../helpers';
 import TimeSVG from '../../assets/images/indicators/time.svg?react';
+import { formatDate } from '../../helpers';
+
+import styles from './TimestampBlock.module.scss';
 
 type Props = {
   timestamp: string | number;

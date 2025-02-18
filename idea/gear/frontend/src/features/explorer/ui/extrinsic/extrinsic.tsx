@@ -4,15 +4,15 @@ import { HexString } from '@polkadot/util/types';
 
 import { PreformattedBlock } from '@/shared/ui/preformattedBlock';
 
+import { Method } from '../../consts';
 import {
   FormattedSendReplyData,
   FormattedSendMessageData,
   FormattedUploadProgramData,
   FormattedCreateProgramData,
 } from '../../types';
-import { Method } from '../../consts';
-import { ExpansionPanel } from '../expansion-panel';
 import { DecodedPreformattedBlock } from '../decoded-preformatted-block';
+import { ExpansionPanel } from '../expansion-panel';
 
 type Props = {
   extrinsic: DotExtrinsic;
@@ -31,7 +31,6 @@ const Extrinsic = ({ extrinsic, programId }: Props) => {
     const formattedName = name.toHuman();
     const formattedValue = args[index].toHuman();
 
-     
     dataObject[formattedName] = formattedValue;
 
     return dataObject;

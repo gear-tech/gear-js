@@ -1,11 +1,11 @@
-import { MouseEvent } from 'react';
-import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
+import clsx from 'clsx';
+import { MouseEvent } from 'react';
 
+import { useNetworkIcon } from '@/hooks';
 import { AnimationTimeout } from '@/shared/config';
 import { CSSTransitionWithRef } from '@/shared/ui';
 
-import { useNetworkIcon } from '@/hooks';
 import styles from './NodesButton.module.scss';
 
 type Props = {

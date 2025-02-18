@@ -2,16 +2,17 @@ import { useApi } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 import { useParams } from 'react-router-dom';
 
-import { useContractApiWithFile, useLoading, useProgramActions } from '@/hooks';
-import { Subheader } from '@/shared/ui/subheader';
 import { UploadMetadata } from '@/features/uploadMetadata';
+import { useContractApiWithFile, useLoading, useProgramActions } from '@/hooks';
 import { Values } from '@/hooks/useProgramActions/types';
-import { ProgramForm, SailsProgramForm, SubmitHelpers } from '@/widgets/programForm';
+import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import { GasMethod } from '@/shared/config';
 import { BackButton } from '@/shared/ui';
-import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
+import { Subheader } from '@/shared/ui/subheader';
+import { ProgramForm, SailsProgramForm, SubmitHelpers } from '@/widgets/programForm';
 
 import { PageParams } from '../model';
+
 import styles from './InitializeProgram.module.scss';
 
 const InitializeProgram = () => {

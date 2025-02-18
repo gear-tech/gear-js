@@ -7,6 +7,7 @@ import { withAccount } from '@/shared/ui';
 
 import CouponSVG from '../../assets/coupon.svg?react';
 import { IssueVoucherModal } from '../issue-voucher-modal';
+
 import styles from './issue-voucher.module.scss';
 
 type Props = {
