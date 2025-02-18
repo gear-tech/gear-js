@@ -5,6 +5,7 @@
   justify-content: center;
   border-radius: 12px;
   font-size: 12px;
+  line-height: 1.5;
   text-transform: uppercase;
   font-weight: bold;
   user-select: none;
@@ -20,12 +21,12 @@
     background-color: var(--foreground);
     color: var(--background);
 
-    &:not([aria-disabled="true"]):active {
+    &:not([aria-disabled='true']):active {
       background-color: var(--foreground-50);
     }
 
     &:disabled,
-    &[aria-disabled="true"] {
+    &[aria-disabled='true'] {
       background-color: var(--foreground-50);
       cursor: auto;
     }
@@ -36,12 +37,12 @@
     color: var(--foreground);
     border: 1px solid var(--border);
 
-    &:not([aria-disabled="true"]):active {
+    &:not([aria-disabled='true']):active {
       color: var(--foreground-50);
     }
 
     &:disabled,
-    &[aria-disabled="true"] {
+    &[aria-disabled='true'] {
       color: var(--foreground-30);
       cursor: auto;
     }
@@ -71,7 +72,7 @@
     }
 
     &:disabled,
-    &[aria-disabled="true"] {
+    &[aria-disabled='true'] {
       color: var(--foreground-30);
       cursor: auto;
     }
@@ -92,7 +93,7 @@
 }
 
 .size-default {
-  padding: 15px 23px;
+  padding: 15px 25px;
 }
 
 .size-sm {

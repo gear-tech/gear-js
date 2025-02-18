@@ -111,6 +111,10 @@ input {
   font-family: 'Roboto Mono', monospace;
 }
 
+button {
+  border: none;
+}
+
 p,
 ul,
 ol {
@@ -169,6 +173,7 @@ main {
 
 .layout {
   max-width: 1440px;
+  width: 100%;
   flex: 1;
   margin: 0 auto;
   padding: 8px 48px 0px 48px;

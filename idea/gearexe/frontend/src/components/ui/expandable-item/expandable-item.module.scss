@@ -1,8 +1,6 @@
 .container {
   &.nested {
     margin-left: 28px;
-    border: 1px solid rgba(41, 41, 41, 0.5);
-    border-radius: 4px;
   }
 }
 
@@ -11,16 +9,11 @@
   gap: 12px;
   align-items: center;
   justify-content: space-between;
-
-  &.nested {
-    background: rgba(15, 15, 15, 1);
-    padding: 8px 16px;
-    height: 42px;
-  }
 }
 
 .leftSide {
   display: flex;
+  flex: 1;
   gap: 12px;
   align-items: center;
   color: rgba(255, 255, 255, 1);
@@ -30,12 +23,12 @@
   margin-top: 12px;
 
   &.nested {
-    padding: 12px 16px;
-    border-top: 1px solid rgba(41, 41, 41, 0.5);
-    margin-top: 0;
+    border-radius: 4px;
+    margin-top: 4px;
     display: flex;
     flex-direction: column;
     gap: 8px;
+    margin-left: 28px;
   }
 }
 

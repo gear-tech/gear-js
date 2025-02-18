@@ -5,24 +5,24 @@
   border-radius: 4px;
 
   &.lineHeight-md {
-    tbody tr {
-      height: 32px;
+    td {
+      padding: 6.5px 24px;
     }
   }
 
   &.lineHeight-lg {
-    tbody tr {
-      height: 47px;
+    td {
+      padding: 12.5px 24px;
     }
   }
 
   th,
   td {
-    padding: 5px 24px;
     text-align: left;
   }
 
   th {
+    padding: 5px 24px;
     background: rgba(15, 15, 15, 1);
 
     cursor: pointer;
@@ -36,8 +36,7 @@
   tr {
     &:hover {
       background: rgba(168, 245, 147, 0.1);
-      box-shadow: -1px -1px inset rgba(168, 245, 147, 0.25),
-        1px 1px inset rgba(168, 245, 147, 0.25);
+      box-shadow: -1px -1px inset rgba(168, 245, 147, 0.25), 1px 1px inset rgba(168, 245, 147, 0.25);
     }
 
     &:first-child {

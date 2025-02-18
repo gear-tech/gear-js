@@ -1,8 +1,5 @@
-import ReactHighlighter, { SyntaxHighlighterProps } from 'react-syntax-highlighter';
+import Highlighter from 'react-syntax-highlighter';
 import { stackoverflowDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Highlighter = ReactHighlighter as any as React.FC<SyntaxHighlighterProps>;
 
 type Props = {
   code: string;
