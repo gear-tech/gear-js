@@ -11,7 +11,7 @@ import importPlugin from 'eslint-plugin-import';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
 const eslintConfig = tseslint.config(
-  { ignores: ['dist', 'build'] },
+  { ignores: ['**/dist', '**/build'] },
 
   {
     extends: [
