@@ -10,6 +10,7 @@ on:
       - utils/gear-hooks/package.json
       - utils/gear-ui/package.json
       - utils/vara-ui/package.json
+      - utils/frontend-configs/package.json
       - utils/wallet-connect/package.json
   workflow_dispatch:
 
