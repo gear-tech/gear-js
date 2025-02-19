@@ -11,6 +11,7 @@ import { ModalProvider } from './modal';
 import { OnboardingProvider } from './onboarding';
 import { QueryProvider } from './query';
 
+// eslint-disable-next-line react-refresh/only-export-components -- TODO(#1800): resolve eslint comments
 function AccountProvider({ children }: ProviderProps) {
   return <GearAccountProvider appName="Gear Idea">{children}</GearAccountProvider>;
 }

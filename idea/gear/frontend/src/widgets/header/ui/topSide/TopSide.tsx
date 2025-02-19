@@ -19,6 +19,7 @@ const TopSide = () => {
   useEffect(() => {
     if (!isApiReady) return;
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     api.totalIssuance().then((result) => setTotalIssuance(result.slice(0, 5)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady]);

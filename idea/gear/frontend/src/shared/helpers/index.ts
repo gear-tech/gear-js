@@ -137,8 +137,10 @@ const fetchWithGuard = async <T extends object>(url: URL | string, method: 'GET'
   const response = await fetch(url, request);
 
   if (!response.ok) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
     const result = await response.json().catch(() => ({}));
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access -- TODO(#1800): resolve eslint comments
     throw new Error('error' in result ? result.error : response.statusText || STATUS_CODES[response.status]);
   }
 

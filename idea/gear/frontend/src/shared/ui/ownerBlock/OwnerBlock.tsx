@@ -1,5 +1,6 @@
 import { getVaraAddress, useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
+// eslint-disable-next-line import/no-named-as-default -- TODO(#1800): resolve eslint comments
 import Identicon from '@polkadot/react-identicon';
 
 import CopySVG from '../../assets/images/actions/copyGreen.svg?react';

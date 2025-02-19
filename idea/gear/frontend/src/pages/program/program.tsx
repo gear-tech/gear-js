@@ -12,12 +12,12 @@ import { ProgramStatus, ProgramTable, useProgram } from '@/features/program';
 import { ProgramEvents, SailsPreview, useSails } from '@/features/sails';
 import { ProgramVouchers } from '@/features/voucher';
 import { useModal } from '@/hooks';
+import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import SendSVG from '@/shared/assets/images/actions/send.svg?react';
 import { absoluteRoutes, routes } from '@/shared/config';
 import { getShortName, isAnyKey } from '@/shared/helpers';
 import { Box, UILink } from '@/shared/ui';
-import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 
 import styles from './program.module.scss';
 
@@ -46,6 +46,7 @@ const Program = () => {
     if (!program.codeId) throw new Error('CodeId is not found'); // TODO: take a look at local program
 
     const onSuccess = (name: string, metadataHex?: HexString) => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
       if (name) refetchProgram();
 
       return metadataHex ? setMetadataHex(metadataHex) : refetchSails();
@@ -61,6 +62,7 @@ const Program = () => {
       codeId: program.codeId,
       isNameEditable: isStorageProgram,
       onClose: closeModal,
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises -- TODO(#1800): resolve eslint comments
       onSuccess,
     });
   };

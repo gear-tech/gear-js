@@ -80,6 +80,7 @@ const useGasCalculate = () => {
 
       return preparedGasInfo(estimatedGas);
     } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- TODO(#1800): resolve eslint comments
       return Promise.reject(error);
     }
   };

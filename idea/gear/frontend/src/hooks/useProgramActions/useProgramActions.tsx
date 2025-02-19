@@ -54,7 +54,9 @@ const useProgramActions = () => {
     }
 
     if (!isDevChain) await addProgramName({ id: programId, codeId, name, metaHex: metadata?.hex, idl: sails?.idl });
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     if (metadata && metadata.hash && metadata.hex && !metadata.isFromStorage) addMetadata(metadata.hash, metadata.hex);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     if (sails && sails.idl && !sails.isFromStorage) addIdl(codeId, sails.idl);
   };
 
@@ -75,6 +77,7 @@ const useProgramActions = () => {
     const onFinalized = (result: ISubmittableResult) => handleMetadataUpload(program, contractApi, values, result);
 
     const onConfirm = () =>
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises -- TODO(#1800): resolve eslint comments
       signAndSend(program.extrinsic, 'ProgramChanged', { successAlert, onSuccess, onError, onFinalized });
 
     showModal('transaction', {

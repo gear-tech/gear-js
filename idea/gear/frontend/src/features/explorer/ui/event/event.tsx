@@ -34,6 +34,7 @@ const Event = ({ value }: Props) => {
 
   const counter = isGroup ? value.length : undefined;
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
   const isLog = method === Method.UserMessageSent;
 
   const getContent = ({ id, data }: IdeaEvent = event) => {

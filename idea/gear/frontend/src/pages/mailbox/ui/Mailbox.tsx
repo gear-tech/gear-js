@@ -22,6 +22,7 @@ const Mailbox = () => {
   const isListEmpty = list?.length === 0;
 
   const handleClaimButtonClick = (messageId: HexString, reject: () => void) => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     claimMessage({ messageId, resolve: () => removeMessage(messageId), reject });
   };
 

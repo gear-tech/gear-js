@@ -34,6 +34,7 @@ const BlocksProvider = ({ children }: Props) => {
     );
 
     return () => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
       unsub.then((unsubscribe) => unsubscribe());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

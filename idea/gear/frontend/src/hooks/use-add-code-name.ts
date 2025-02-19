@@ -18,7 +18,8 @@ function useAddCodeName() {
 
     return isDevChain
       ? Promise.resolve()
-      : setCodeMeta({ ...parameters, metaType }).catch((error) => alert.error(error));
+      : // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- TODO(#1800): resolve eslint comments
+        setCodeMeta({ ...parameters, metaType }).catch((error) => alert.error(error));
   };
 }
 

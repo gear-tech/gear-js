@@ -16,6 +16,7 @@ function useBlockNumber(blockHash: HexString | undefined) {
     api.blocks
       .getBlockNumber(blockHash)
       .then((result) => setBlockNumber(result.toString()))
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- TODO(#1800): resolve eslint comments
       .catch(({ message }) => alert.error(message));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady, blockHash]);

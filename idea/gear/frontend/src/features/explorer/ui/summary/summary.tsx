@@ -21,6 +21,7 @@ const Summary = ({ block, isError }: Props) => {
 
   const headerClassName = clsx(commonStyles.header, styles.layout);
   const rowClassName = clsx(commonStyles.row, styles.layout);
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions -- TODO(#1800): resolve eslint comments
   const parentPath = `/explorer/${parentHash}`;
 
   return (

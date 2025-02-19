@@ -16,13 +16,13 @@ import { NotFound } from './notFound';
 import { Program } from './program';
 import { Programs } from './programs';
 import { Send } from './send';
+import { SingleDns } from './single-dns';
 import * as State from './state';
-import { UploadProgram } from './uploadProgram';
 import { UploadCode } from './uploadCode';
+import { UploadProgram } from './uploadProgram';
 import { VerificationStatus } from './verification-status';
 import { Verify } from './verify';
 import { Vouchers } from './vouchers';
-import { SingleDns } from './single-dns';
 
 const Routing = () => {
   const events = useEvents();

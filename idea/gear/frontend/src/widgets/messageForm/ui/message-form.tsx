@@ -78,6 +78,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
 
     const baseValues = {
       value: getChainBalanceValue(values.value).toFixed(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: getSubmitPayload(values.payload),
       gasLimit: getChainGasValue(values.gasLimit).toFixed(),
       keepAlive,
@@ -85,9 +86,11 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
 
     if (isReply) {
       const reply = { ...baseValues, replyToId: id };
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
       replyMessage({ reply, metadata, payloadType, voucherId, reject: enableSubmitButton, resolve: resetForm });
     } else {
       const message = { ...baseValues, destination: id };
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
       sendMessage({ message, metadata, payloadType, voucherId, reject: enableSubmitButton, resolve: resetForm });
     }
   };
@@ -100,6 +103,7 @@ const MessageForm = ({ id, programId, isReply, metadata, isLoading }: Props) => 
     const preparedValues = {
       ...values,
       value: getChainBalanceValue(values.value).toFixed(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: getSubmitPayload(values.payload),
     };
 

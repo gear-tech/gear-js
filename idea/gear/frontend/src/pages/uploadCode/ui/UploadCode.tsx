@@ -36,12 +36,14 @@ const UploadCode = () => {
   const handleWasmFileChange = (value: File | undefined) => {
     form.reset();
     contractApi.reset();
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     file.handleChange(value);
   };
 
   const handleSubmit = form.handleSubmit((data: typeof defaultValues) => {
     if (!file.buffer) return;
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     uploadCode({ optBuffer: file.buffer, metadata, sails, resolve: resetForm, ...data });
   });
 

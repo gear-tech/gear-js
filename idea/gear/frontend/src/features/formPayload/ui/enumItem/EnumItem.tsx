@@ -33,6 +33,7 @@ const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadIt
       {renderNextItem({
         levelName: nextLevelName,
         // @ts-expect-error - TODO(#1737): fix any
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
         typeStructure: type[selected],
       })}
     </Fieldset>

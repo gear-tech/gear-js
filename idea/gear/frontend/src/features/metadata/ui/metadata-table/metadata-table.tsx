@@ -20,19 +20,22 @@ const MetadataTable = ({ metadata, isLoading }: Props) => {
   const isLoaderShowing = isLoading || !metadata;
 
   // useMemo to prevent excessive error alerts
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
   const namedTypeEntries = useMemo(() => {
     if (!metadata) return [];
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
     const namedTypes = getNamedTypes(metadata, (message) => alert.error(message));
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument -- TODO(#1800): resolve eslint comments
     return getFlatNamedTypeEntries(namedTypes);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metadata]);
 
   const renderRows = () =>
-    // TODO: fix any
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any -- TODO(#1800): resolve eslint comments
     namedTypeEntries.map(([key, value]: any) => (
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       <TableRow key={key} name={key}>
         <span className={tableStyles.value}>{String(value)}</span>
       </TableRow>

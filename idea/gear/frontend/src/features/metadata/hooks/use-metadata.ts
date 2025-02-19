@@ -30,6 +30,7 @@ function useMetadata(hash?: HexString | null) {
 
     getMetadata(hash)
       .then(({ result }) => result.hex && setMetadataHex(result.hex))
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- TODO(#1800): resolve eslint comments
       .catch(({ message }) => message !== errorMessage.metadataNotFound && alert.error(message))
       .finally(() => setIsMetadataReady(true));
     // eslint-disable-next-line react-hooks/exhaustive-deps

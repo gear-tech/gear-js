@@ -18,6 +18,7 @@ const BlockEvent = ({ value }: Props) => {
   const event = isGroup ? value[0] : value;
   const { method, heading, description } = event;
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
   const isLog = method === Method.UserMessageSent;
 
   const getContent = ({ id, data }: IdeaEvent = event) => {

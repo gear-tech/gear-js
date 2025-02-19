@@ -23,6 +23,7 @@ const UploadProgram = () => {
 
   const handleWasmFileChange = (value: File | undefined) => {
     contractApi.reset();
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     wasmFile.handleChange(value);
   };
 
@@ -42,6 +43,7 @@ const UploadProgram = () => {
       disableSubmitting();
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     uploadProgram(result, { metadata, sails }, values, onSuccess, disableSubmitting);
   };
 

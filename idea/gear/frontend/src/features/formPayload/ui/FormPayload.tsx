@@ -77,6 +77,7 @@ const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
   useEffect(() => {
     if (!values) return;
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
     const payloadValue = isManualView ? (jsonManualPayload.current ?? values.manualPayload) : values.payload;
 
     setValue(name, payloadValue);

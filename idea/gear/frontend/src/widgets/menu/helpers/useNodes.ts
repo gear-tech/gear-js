@@ -62,6 +62,8 @@ const useNodes = () => {
 
         setNodeSections(allNodes);
       })
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access -- TODO(#1800): resolve eslint comments
       .catch((error) => alert.error(error.message))
       .finally(() => setIsNodesLoading(false));
 

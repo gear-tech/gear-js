@@ -27,6 +27,7 @@ function RemoveAdmin({ name, address, onSuccess }: Props) {
       onSuccess();
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     sendTransaction([name, address], _onSuccess);
   };
 

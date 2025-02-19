@@ -22,6 +22,7 @@ const StatusRadio = <T extends FieldValues>({ name, label, value, status, onSubm
         type="radio"
         value={value}
         className={clsx(radioStyles.input, radioStyles.radio)}
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- TODO(#1800): resolve eslint comments
         {...register(name, { onChange })}
       />
 

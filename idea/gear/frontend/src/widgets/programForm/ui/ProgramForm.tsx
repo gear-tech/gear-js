@@ -58,6 +58,7 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
     const preparedValues = {
       ...values,
       value: getChainBalanceValue(values.value).toFixed(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: getSubmitPayload(values.payload),
     };
 
@@ -81,6 +82,7 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
       value: getChainBalanceValue(value).toFixed(),
       gasLimit: getChainGasValue(gasLimit).toFixed(),
       payloadType: metadata ? undefined : payloadType,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: metadata ? getSubmitPayload(payload) : payload,
       programName,
       keepAlive,

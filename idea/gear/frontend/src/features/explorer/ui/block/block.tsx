@@ -42,6 +42,7 @@ const Block = () => {
     api.blocks
       .get(id)
       .then((result) => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
         api.blocks.getEvents(result.block.hash).then((recordsResult) => setEventRecords(recordsResult));
         setBlock(result.block);
       })

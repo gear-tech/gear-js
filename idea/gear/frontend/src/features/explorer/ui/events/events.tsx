@@ -20,6 +20,7 @@ const Events = ({ events }: Props) => {
   const localFilterValues = localStorage.getItem(LOCAL_STORAGE.EVENT_FILTERS);
 
   const [filterValues, setFilterValues] = useState<FilterValues>(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- TODO(#1800): resolve eslint comments
     localFilterValues ? JSON.parse(localFilterValues) : FILTER_VALUES,
   );
 

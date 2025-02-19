@@ -12,6 +12,7 @@ type Props = Omit<NumericFormatProps & InputProps, 'value' | 'onValueChange' | '
 // TODO: same input as a gas field
 const ValueField = ({ name, label, direction = 'x', gap, block, ...other }: Props) => {
   const { setValue, getFieldState, formState } = useFormContext();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
   const inputValue = useWatch({ name });
 
   const { error } = getFieldState(name, formState);
@@ -33,6 +34,7 @@ const ValueField = ({ name, label, direction = 'x', gap, block, ...other }: Prop
           name={name}
           className={clsx(inputStyles.input, inputStyles.dark)}
           allowNegative={false}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
           value={inputValue}
           onValueChange={({ value }) => setValue(name, value, { shouldValidate: true })}
           thousandSeparator

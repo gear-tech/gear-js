@@ -34,6 +34,7 @@ const OptionItem = ({ title, levelName, typeStructure, renderNextItem }: Payload
       {renderNextItem({
         levelName,
         // @ts-expect-error - TODO: fix Property 'Some' does not exist on type 'string'
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
         typeStructure: isNone ? null : type.Some,
       })}
     </Fieldset>

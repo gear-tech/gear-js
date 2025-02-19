@@ -98,6 +98,7 @@ const SailsMessageForm = ({ id, programId, isReply, sails }: Props) => {
 
     if (isReply) return replyMessage({ reply: { ...values, replyToId: id }, payloadType, voucherId, reject, resolve });
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     sendMessage({ message: { ...values, destination: id }, payloadType, voucherId, reject, resolve });
   });
 

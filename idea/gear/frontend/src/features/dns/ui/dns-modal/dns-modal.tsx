@@ -41,6 +41,7 @@ const DnsModal = ({ heading, submitText, close, onSuccess, initialValues }: Prop
       close();
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     sendTransaction([name, address], _onSuccess);
   });
 

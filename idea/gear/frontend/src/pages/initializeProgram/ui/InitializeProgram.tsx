@@ -37,6 +37,7 @@ const InitializeProgram = () => {
       disableSubmitting();
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     createProgram({ ...result, codeId }, { metadata, sails }, payload, onSuccess, disableSubmitting);
   };
 

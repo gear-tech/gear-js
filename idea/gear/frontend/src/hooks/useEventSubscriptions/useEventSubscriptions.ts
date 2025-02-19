@@ -27,6 +27,7 @@ const useEventSubscriptions = () => {
 
     return () => {
       if (unsubs.length) {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
         Promise.all(unsubs).then((result) => {
           result.forEach((unsubscribe) => unsubscribe());
         });

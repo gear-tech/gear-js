@@ -26,6 +26,7 @@ function useWasmFileHandler(type: WasmFileType, onChange: OnChange = () => {}) {
 
   return async (value: File | undefined) => {
     if (!value) return onChange(undefined, undefined);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
     if (value.type !== FileTypes.Wasm) return alert.error('Invalid file type');
 
     const arrayBuffer = await value.arrayBuffer();

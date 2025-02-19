@@ -40,6 +40,7 @@ const Code = () => {
 
   const showUploadMetadataModal = () => {
     const onSuccess = (_name: string, metadataHex?: HexString) => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
       code.refetch();
 
       return metadataHex ? setMetadataHex(metadataHex) : refetchSails();
@@ -52,6 +53,7 @@ const Code = () => {
       metadataHash: code.data?.metahash,
       isNameEditable,
       onClose: closeModal,
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises -- TODO(#1800): resolve eslint comments
       onSuccess,
     });
   };

@@ -24,6 +24,7 @@ const useMessageClaim = () => {
       const { method, section, data } = event as UserMessageRead;
       const alertOptions = { title: `${section}.${method}` };
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
       if (method === Method.UserMessageRead) {
         const reason = data.reason.toHuman() as { [key: string]: string };
         const reasonKey = Object.keys(reason)[0];
@@ -32,6 +33,7 @@ const useMessageClaim = () => {
         const message = `${data.id.toHuman() as string}\n ${reasonKey}: ${reasonValue}`;
 
         alert.success(message, alertOptions);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
       } else if (method === Method.ExtrinsicFailed) {
         alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
 
@@ -93,6 +95,7 @@ const useMessageClaim = () => {
           addressTo: messageId,
           addressFrom: address,
           onAbort: reject,
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises -- TODO(#1800): resolve eslint comments
           onConfirm: handleConfirm,
         });
       } catch (error) {

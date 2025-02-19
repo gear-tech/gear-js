@@ -25,6 +25,7 @@ const DeleteDns = ({ name, secondary, onSuccess }: Props) => {
       closeModal();
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     sendTransaction([name], _onSuccess);
   };
 
