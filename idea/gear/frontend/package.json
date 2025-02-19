@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "npx vite --open --port 3000",
+    "start": "npx vite",
     "build": "rm -rf dist && npx vite build",
     "preview": "npx vite preview",
     "clean": "echo \"clean gear-idea-frontend\" && rm -rf dist"
