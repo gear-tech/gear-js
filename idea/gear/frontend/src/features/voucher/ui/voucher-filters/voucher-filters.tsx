@@ -6,13 +6,14 @@ import { useAccount } from '@gear-js/react-hooks';
 
 type Props = {
   onSubmit: (values: typeof DEFAULT_FILTER_VALUES) => void;
+  values: typeof DEFAULT_FILTER_VALUES;
 };
 
-function VoucherFilters({ onSubmit }: Props) {
+function VoucherFilters({ onSubmit, values }: Props) {
   const { account } = useAccount();
 
   return (
-    <Filters initialValues={DEFAULT_FILTER_VALUES} onSubmit={onSubmit}>
+    <Filters initialValues={DEFAULT_FILTER_VALUES} values={values} onSubmit={onSubmit}>
       <FilterGroup name="owner" onSubmit={onSubmit}>
         <Radio name="owner" value="all" label="All vouchers" onSubmit={onSubmit} />
 

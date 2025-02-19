@@ -2,7 +2,7 @@ import { HexString } from '@polkadot/util/types';
 import { Button } from '@gear-js/ui';
 import cx from 'clsx';
 import { useState } from 'react';
-import { generatePath, useParams } from 'react-router-dom';
+import { generatePath, useParams, useSearchParams } from 'react-router-dom';
 
 import { useModal } from '@/hooks';
 import { ProgramStatus, ProgramTable, useProgram } from '@/features/program';
@@ -29,6 +29,7 @@ type Params = {
 
 const Program = () => {
   const { programId } = useParams() as Params;
+  const [searchParams, setSearchParams] = useSearchParams({ tab: '0' });
   const { showModal, closeModal } = useModal();
 
   const { data: program, isLoading: isProgramLoading, refetch: refetchProgram } = useProgram(programId);
@@ -39,7 +40,7 @@ const Program = () => {
   const isLoading = !isMetadataReady || isSailsLoading;
   const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => isAnyKey(queries)) : false;
 
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(parseInt(searchParams.get('tab') || '0'));
 
   const openUploadMetadataModal = () => {
     if (!program) throw new Error('Program is not found');
@@ -70,7 +71,13 @@ const Program = () => {
       <button
         key={tab}
         type="button"
-        onClick={() => setTabIndex(index)}
+        onClick={() =>
+          setTabIndex(() => {
+            searchParams.set('tab', index.toString());
+            setSearchParams(searchParams, { replace: true });
+            return index;
+          })
+        }
         className={cx(styles.button, index === tabIndex && styles.active)}>
         {tab}
       </button>

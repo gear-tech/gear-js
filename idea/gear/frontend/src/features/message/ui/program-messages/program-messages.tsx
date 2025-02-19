@@ -10,6 +10,7 @@ import { SailsFilterGroup } from '@/features/sails';
 
 import { useMessagesToProgram, useMessagesFromProgram } from '../../api';
 import { MessageCard } from '../message-card';
+import { useSearchParams } from 'react-router-dom';
 
 type Props = {
   programId: HexString;
@@ -35,8 +36,8 @@ const FILTER_VALUE = {
   },
 } as const;
 
-type OwnerValue = typeof FILTER_VALUE.OWNER[keyof typeof FILTER_VALUE.OWNER];
-type DirectionValue = typeof FILTER_VALUE.DIRECTION[keyof typeof FILTER_VALUE.DIRECTION];
+type OwnerValue = (typeof FILTER_VALUE.OWNER)[keyof typeof FILTER_VALUE.OWNER];
+type DirectionValue = (typeof FILTER_VALUE.DIRECTION)[keyof typeof FILTER_VALUE.DIRECTION];
 
 const DEFAULT_FILTER_VALUES = {
   [FILTER_NAME.OWNER]: FILTER_VALUE.OWNER.ALL as OwnerValue,
@@ -48,7 +49,29 @@ const DEFAULT_FILTER_VALUES = {
 const ProgramMessages = ({ programId, sails }: Props) => {
   const { account } = useAccount();
 
-  const [filters, setFilters] = useState(DEFAULT_FILTER_VALUES);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [filters, setFilters] = useState(() => {
+    const params = Object.fromEntries(searchParams.entries());
+    return {
+      [FILTER_NAME.OWNER]: params[FILTER_NAME.OWNER] || DEFAULT_FILTER_VALUES[FILTER_NAME.OWNER],
+      [FILTER_NAME.DIRECTION]: params[FILTER_NAME.DIRECTION] || DEFAULT_FILTER_VALUES[FILTER_NAME.DIRECTION],
+      [FILTER_NAME.SERVICE_NAME]: params[FILTER_NAME.SERVICE_NAME] || DEFAULT_FILTER_VALUES[FILTER_NAME.SERVICE_NAME],
+      [FILTER_NAME.FUNCTION_NAME]:
+        params[FILTER_NAME.FUNCTION_NAME] || DEFAULT_FILTER_VALUES[FILTER_NAME.FUNCTION_NAME],
+    };
+  });
+
+  useEffect(() => {
+    Object.entries(filters).forEach(([key, value]) => {
+      if (key in DEFAULT_FILTER_VALUES && value) {
+        searchParams.set(key, value);
+      } else {
+        searchParams.delete(key);
+      }
+    });
+    setSearchParams(searchParams, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters]);
 
   const isToDirection = filters[FILTER_NAME.DIRECTION] === FILTER_VALUE.DIRECTION.TO;
   const addressParam = filters[FILTER_NAME.OWNER] === FILTER_VALUE.OWNER.OWNER ? account?.decodedAddress : undefined;
