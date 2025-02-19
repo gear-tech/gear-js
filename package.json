@@ -53,7 +53,7 @@
     "build:ui": "lerna run build --parallel --scope @gear-js/ui --scope @gear-js/vara-ui",
     "build:hooks": "lerna run build --scope @gear-js/react-hooks --scope @gear-js/api",
     "build:wallet-connect": "lerna run build --scope @gear-js/wallet-connect --scope @gear-js/react-hooks --scope @gear-js/ui --scope @gear-js/vara-ui",
-    "build:utils": "lerna run build --scope @gear-js/ui --scope @gear-js/vara-ui --scope @gear-js/react-hooks --scope @gear-js/wallet-connect",
+    "build:utils": "lerna run build --scope @gear-js/ui --scope @gear-js/vara-ui --scope @gear-js/react-hooks --scope @gear-js/wallet-connect --scope @gear-js/frontend-configs",
     "build:txwrapper": "lerna run build --scope @gear-js/txwrapper",
     "build:cli": "lerna run build --scope @gear-js/cli",
     "build:tools": "lerna run build --scope @gear-js/cli --scope @gear-js/txwrapper",

@@ -27,8 +27,8 @@ jobs:
       - name: 'Install dependencies'
         run: yarn install
 
-      - name: 'Build @gear-js/frontend-configs'
-        run: yarn build:frontend-configs
+      - name: 'Build idea/frontend deps'
+        run: yarn build:gear-api && yarn build:utils
 
       - name: 'Run linter'
         run: yarn lint
