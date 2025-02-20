@@ -47,12 +47,11 @@ export default [
   },
   ...[reactrefresh.configs.recommended, ...tseslint.configs.recommended].map((conf) => ({
     ...conf,
-    files: ['utils/**/src/**/*.{ts,js,tsx,jsx}'],
+    files: ['utils/{gear-hooks,gear-ui,wallet-connect}/src/**/*.{ts,js,tsx,jsx}'],
   })),
   {
-    files: ['utils/**/src/**/*.{ts,js,tsx,jsx}'],
+    files: ['utils/{gear-hooks,gear-ui,wallet-connect}/src/**/*.{ts,js,tsx,jsx}'],
     plugins: {
-      storybook,
       'react-hooks': reacthooks,
     },
     languageOptions: {
@@ -77,8 +76,18 @@ export default [
       ],
     },
   },
+
   ...frontendEslintConfig.map((conf) => ({
     ...conf,
-    files: ['idea/gear/frontend/src/**/*.{ts,js,tsx,jsx}', 'idea/gearexe/frontend/src/**/*.{ts,js,tsx,jsx}'],
+    files: [
+      'idea/gear/frontend/src/**/*.{ts,js,tsx,jsx}',
+      'idea/gearexe/frontend/src/**/*.{ts,js,tsx,jsx}',
+      'utils/vara-ui/src/**/*.{ts,js,tsx,jsx}',
+    ],
+  })),
+
+  ...storybook.configs['flat/recommended'].map((conf) => ({
+    ...conf,
+    files: ['utils/vara-ui/src/**/*.stories.{ts,js,tsx,jsx}'],
   })),
 ];

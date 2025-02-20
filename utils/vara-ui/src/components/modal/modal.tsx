@@ -1,10 +1,11 @@
-import { ReactNode, MouseEvent } from 'react';
 import cx from 'clsx';
+import { ReactNode, MouseEvent } from 'react';
 
 import CrossSVG from '../../assets/images/cross.svg?react';
 import { useRootPortal } from '../../hooks';
 import { Button } from '../button';
 import { ScrollArea } from '../scroll-area';
+
 import styles from './modal.module.scss';
 
 type Props = {
@@ -26,6 +27,7 @@ const Modal = ({ heading, close, children, className, headerAddon, footer, maxWi
 
   return useRootPortal(
     'modal-root',
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- TODO(#1810): esolve eslint comments
     <div className={styles.overlay} onClick={handleOverlayClick}>
       <div
         className={cx(styles.modal, !isCustomMaxWidth && styles[maxWidth])}

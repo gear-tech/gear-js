@@ -1,5 +1,5 @@
-import { ComponentPropsWithRef, FunctionComponent, ReactNode, SVGProps } from 'react';
 import cx from 'clsx';
+import { ComponentPropsWithRef, FunctionComponent, ReactNode, SVGProps } from 'react';
 
 import styles from './button.module.scss';
 

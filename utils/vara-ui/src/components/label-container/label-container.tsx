@@ -1,5 +1,5 @@
-import { PropsWithChildren, ReactNode } from 'react';
 import cx from 'clsx';
+import { PropsWithChildren, ReactNode } from 'react';
 
 import styles from './label-container.module.scss';
 

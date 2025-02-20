@@ -1,6 +1,7 @@
 import { FunctionComponent, SVGProps, ComponentPropsWithRef } from 'react';
 
 import { LabelContainer, LabelContainerProps } from '../label-container';
+
 import styles from './input.module.scss';
 
 type Props = Omit<ComponentPropsWithRef<'input'>, 'id' | 'size'> &

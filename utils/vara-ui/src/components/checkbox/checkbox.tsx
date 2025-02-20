@@ -1,5 +1,5 @@
-import { ComponentPropsWithRef, ReactNode } from 'react';
 import cx from 'clsx';
+import { ComponentPropsWithRef, ReactNode } from 'react';
 
 import styles from './checkbox.module.scss';
 
