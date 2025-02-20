@@ -11,40 +11,33 @@ import { externalizeDeps } from 'vite-plugin-externalize-deps';
 const options = {
   server: { port: 3000, open: true },
   preview: { port: 3001, open: true },
-
-  resolve: {
-    alias: {
-      '@': resolve(process.cwd(), 'src'), // process.cwd to resolve to the launch directory
-    },
-  },
+  resolve: { alias: { '@': resolve(process.cwd(), 'src') } },
 };
 
 const plugins = [
   react(),
   svgr(),
   nodePolyfills(),
-
-  checker({
-    typescript: true,
-    eslint: { lintCommand: 'eslint .', useFlatConfig: true },
-  }),
+  checker({ typescript: true, eslint: { lintCommand: 'eslint .', useFlatConfig: true } }),
 ];
 
 const app = defineConfig({ ...options, plugins });
 
-const lib = ({ injectCss = true }) => {
+const lib = ({ injectCss = true, outDir = 'dist', entry = 'src/index.ts' } = {}) => {
   const rollupOptions = injectCss ? { output: { intro: 'import "./style.css";' } } : {};
 
   return defineConfig({
     ...options,
 
-    plugins: [...plugins, dts(), externalizeDeps()],
+    plugins: [...plugins, dts(), externalizeDeps({ deps: false })],
 
     build: {
-      lib: {
-        entry: resolve(__dirname, 'src/index.ts'),
-        formats: ['es'],
+      outDir,
 
+      lib: {
+        entry: resolve(process.cwd(), entry),
+        formats: ['es'],
+        fileName: 'index',
         cssFileName: 'style',
       },
 

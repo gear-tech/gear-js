@@ -10,8 +10,6 @@ import { LabelContainer, LabelContainerProps, labelContainerStyles } from './lab
 import { ScrollArea, ScrollAreaProps, scrollAreaStyles } from './scroll-area';
 import { Tooltip, TooltipProps, tooltipStyles } from './tooltip';
 
-import '../assets/styles/index.css';
-
 export {
   Button,
   buttonStyles,
