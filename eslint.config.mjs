@@ -22,6 +22,7 @@ const noUnusedVars = [
 ];
 
 export default [
+  { ignores: ['**/dist', '**/dist-temp'] },
   {
     ...json.configs.recommended,
     files: ['**/*.json'],
@@ -76,7 +77,6 @@ export default [
       ],
     },
   },
-
   ...frontendEslintConfig.map((conf) => ({
     ...conf,
     files: [
@@ -85,7 +85,6 @@ export default [
       'utils/vara-ui/src/**/*.{ts,js,tsx,jsx}',
     ],
   })),
-
   ...storybook.configs['flat/recommended'].map((conf) => ({
     ...conf,
     files: ['utils/vara-ui/src/**/*.stories.{ts,js,tsx,jsx}'],

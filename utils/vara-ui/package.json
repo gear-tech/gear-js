@@ -37,6 +37,7 @@
     "non.geist": "1.0.4"
   },
   "devDependencies": {
+    "@gear-js/frontend-configs": "*",
     "@storybook/addon-essentials": "8.5.1",
     "@storybook/addon-interactions": "8.5.1",
     "@storybook/addon-links": "8.5.1",
