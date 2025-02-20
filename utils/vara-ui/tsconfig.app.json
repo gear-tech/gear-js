@@ -1,0 +1,4 @@
+{
+  "extends": "@gear-js/frontend-configs/tsconfig.app.json",
+  "exclude": ["src/**/*.stories.ts"]
+}
