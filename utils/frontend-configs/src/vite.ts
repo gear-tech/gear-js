@@ -29,7 +29,11 @@ const lib = ({ injectCss = true, outDir = 'dist', entry = 'src/index.ts' } = {})
   return defineConfig({
     ...options,
 
-    plugins: [...plugins, dts(), externalizeDeps({ deps: false })],
+    plugins: [
+      ...plugins,
+      dts({ tsconfigPath: resolve(process.cwd(), 'tsconfig.app.json') }),
+      externalizeDeps({ deps: false }),
+    ],
 
     build: {
       outDir,
