@@ -1,7 +1,7 @@
-import { DnsCard, CreateDns, DeleteDns, EditDns, AdminCard, AddAdmin } from './ui';
 import DnsCardPlaceholder from './assets/dns-card-placeholder.svg?react';
 import { useDns, useDnsFilters, useSingleDns } from './hooks';
 import { Dns } from './types';
+import { DnsCard, CreateDns, DeleteDns, EditDns, AdminCard, AddAdmin } from './ui';
 
 export {
   DnsCard,

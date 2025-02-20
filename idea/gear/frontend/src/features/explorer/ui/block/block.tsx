@@ -1,13 +1,14 @@
 import { useApi } from '@gear-js/react-hooks';
-import { isHex } from '@polkadot/util';
 import { Block as DotBlock } from '@polkadot/types/interfaces';
+import { isHex } from '@polkadot/util';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { EventRecords } from '../../types';
-import { Summary } from '../summary';
 import { MainTable } from '../main-table';
+import { Summary } from '../summary';
 import { System } from '../system';
+
 import styles from './block.module.scss';
 
 type Params = {
@@ -41,6 +42,7 @@ const Block = () => {
     api.blocks
       .get(id)
       .then((result) => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
         api.blocks.getEvents(result.block.hash).then((recordsResult) => setEventRecords(recordsResult));
         setBlock(result.block);
       })

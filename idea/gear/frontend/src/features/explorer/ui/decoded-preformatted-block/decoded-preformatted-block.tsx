@@ -1,14 +1,15 @@
 import { Checkbox } from '@gear-js/ui';
 import { Codec } from '@polkadot/types/types';
-import { HexString } from '@polkadot/util/types';
 import { isHex } from '@polkadot/util';
+import { HexString } from '@polkadot/util/types';
 import { useEffect, useState } from 'react';
 
-import { useProgram } from '@/features/program';
 import { useMetadata } from '@/features/metadata';
-import { PreformattedBlock } from '@/shared/ui/preformattedBlock';
+import { useProgram } from '@/features/program';
 import { isNullOrUndefined } from '@/shared/helpers';
+import { PreformattedBlock } from '@/shared/ui/preformattedBlock';
 
+import { Method } from '../../consts';
 import {
   FormattedUserMessageSentData,
   FormattedSendMessageData,
@@ -16,7 +17,7 @@ import {
   FormattedUploadProgramData,
   FormattedCreateProgramData,
 } from '../../types';
-import { Method } from '../../consts';
+
 import styles from './decoded-preformatted-block.module.scss';
 
 type ProgramIdProps = { programId: HexString | undefined };

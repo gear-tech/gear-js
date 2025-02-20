@@ -1,4 +1,5 @@
 import { GEAR_EXE_NODE_ADDRESS } from '@/shared/config';
+
 import { getNodeAddressFromUrl } from './utils';
 
 const nodeSections = [

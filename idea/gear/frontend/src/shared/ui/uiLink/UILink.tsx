@@ -1,6 +1,6 @@
-import { Link, LinkProps } from 'react-router-dom';
-import clsx from 'clsx';
 import { ButtonProps, buttonStyles } from '@gear-js/ui';
+import clsx from 'clsx';
+import { Link, LinkProps } from 'react-router-dom';
 
 type Props = LinkProps & Omit<ButtonProps, 'ref'>;
 

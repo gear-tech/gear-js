@@ -9,8 +9,9 @@ import { CSSTransitionWithRef } from '@/shared/ui';
 
 import VaraSVG from '../../assets/vara.svg?react';
 import { Balance } from '../balance';
-import { TransferBalance } from '../transfer-balance';
 import { GetTestBalance } from '../get-test-balance';
+import { TransferBalance } from '../transfer-balance';
+
 import styles from './balance-dropdown.module.scss';
 
 function BalanceContainer({ heading, value }: { heading: string; value: BalanceType | string | bigint }) {

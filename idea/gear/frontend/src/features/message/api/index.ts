@@ -1,3 +1,4 @@
+import { useMessagesToProgram, useMessagesFromProgram, useMessageToProgram, useMessageFromProgram } from './hooks';
 import {
   MessageToProgram,
   MessageFromProgram,
@@ -5,7 +6,6 @@ import {
   MessagesFromProgramParameters,
   PaginationResponse,
 } from './types';
-import { useMessagesToProgram, useMessagesFromProgram, useMessageToProgram, useMessageFromProgram } from './hooks';
 
 export { useMessagesToProgram, useMessagesFromProgram, useMessageToProgram, useMessageFromProgram };
 

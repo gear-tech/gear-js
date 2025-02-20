@@ -2,8 +2,8 @@ import { HexString } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 
 import { setCodeMeta } from '@/features/code';
-import { setProgramMeta } from '@/features/program';
 import { addLocalProgramName } from '@/features/local-indexer';
+import { setProgramMeta } from '@/features/program';
 import { getErrorMessage } from '@/shared/helpers';
 
 import { useChain } from './context';

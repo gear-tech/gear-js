@@ -1,5 +1,7 @@
 import { clsx } from 'clsx';
+
 import LoadingIcon from '@/assets/icons/loading.svg?react';
+
 import styles from './button.module.scss';
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {

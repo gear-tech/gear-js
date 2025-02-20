@@ -1,4 +1,5 @@
 import { HexString } from '@gear-js/api';
+
 import { FIELD_NAME } from './consts';
 
 type Values = {

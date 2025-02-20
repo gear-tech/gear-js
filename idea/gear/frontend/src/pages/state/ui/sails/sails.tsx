@@ -10,15 +10,15 @@ import { Sails as SailsType, ZERO_ADDRESS } from 'sails-js';
 import { z } from 'zod';
 
 import { useProgram } from '@/features/program';
+import { useService, PayloadValue, useSails, PayloadForm } from '@/features/sails';
+import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import { getPreformattedText, isUndefined } from '@/shared/helpers';
 import { BackButton } from '@/shared/ui/backButton';
 import { Box } from '@/shared/ui/box';
-import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
-import { useService, PayloadValue, useSails, PayloadForm } from '@/features/sails';
 
-import { INITIAL_VALUES } from '../../model';
 import { downloadJson } from '../../helpers';
 import { useProgramId } from '../../hooks';
+import { INITIAL_VALUES } from '../../model';
 import styles from '../full/Full.module.scss';
 
 const StateForm = ({ programId, sails }: { programId: HexString; sails: SailsType }) => {

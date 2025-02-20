@@ -1,12 +1,13 @@
 import { getVaraAddress, useAccount, useBalanceFormat } from '@gear-js/react-hooks';
 
-import { BulbBlock } from '@/shared/ui/bulbBlock';
 import { TimestampBlock, IdBlock, BulbStatus, OwnerBlock } from '@/shared/ui';
+import { BulbBlock } from '@/shared/ui/bulbBlock';
 
 import { Voucher } from '../../api';
-import { RevokeVoucher } from '../revoke-voucher';
 import { DeclineVoucher } from '../decline-voucher';
+import { RevokeVoucher } from '../revoke-voucher';
 import { UpdateVoucher } from '../update-voucher';
+
 import styles from './voucher-card.module.scss';
 
 type Props = {

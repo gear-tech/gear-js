@@ -1,4 +1,5 @@
 import { Button } from '../button/button';
+
 import styles from './tabs.module.scss';
 
 type Props = {

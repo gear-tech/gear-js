@@ -25,6 +25,7 @@ const StatusCheckbox = <T extends FieldValues>({ name, label, value, status, onS
         id={id}
         value={value}
         className={clsx(checkboxStyles.input, checkboxStyles.checkbox)}
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- TODO(#1800): resolve eslint comments
         {...register(name, { onChange })}
       />
 

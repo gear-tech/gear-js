@@ -1,7 +1,7 @@
-import { Events, Block } from './ui';
 import { Section, Method } from './consts';
-import { EventRecords } from './types';
 import { IdeaEvent } from './idea-event';
+import { EventRecords } from './types';
+import { Events, Block } from './ui';
 
 export { Section, Method, IdeaEvent, Events, Block };
 export type { EventRecords };

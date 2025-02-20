@@ -1,8 +1,8 @@
 import { useMessageToProgram, useMessageFromProgram } from './api';
-import { isMessageFromProgramWithError, isMessageWithError, getDecodedMessagePayload } from './utils';
-import { ProgramMessages } from './ui';
 import { MESSAGE_TYPE } from './consts';
 import { Message } from './types';
+import { ProgramMessages } from './ui';
+import { isMessageFromProgramWithError, isMessageWithError, getDecodedMessagePayload } from './utils';
 
 export {
   useMessageToProgram,

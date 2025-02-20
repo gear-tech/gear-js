@@ -1,5 +1,6 @@
-import { PaginationParameters } from '@/api';
 import { HexString } from '@gear-js/api';
+
+import { PaginationParameters } from '@/api';
 
 type VouchersParameters = PaginationParameters & {
   id?: string;

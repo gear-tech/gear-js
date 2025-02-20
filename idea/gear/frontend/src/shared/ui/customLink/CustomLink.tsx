@@ -9,7 +9,6 @@ type Props = LinkProps & {
 };
 
 const CustomLink = ({ text, ...other }: Props) => (
-   
   <Link {...other} className={styles.customLink}>
     {getShortName(text)}
   </Link>

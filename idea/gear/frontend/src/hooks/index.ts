@@ -1,27 +1,27 @@
 import { useModal, useBlocks, useEvents, useChain, useOnboarding } from './context';
-import { useLoading } from './useLoading';
-import { useOutsideClick } from './useOutsideClick';
-import { useChangeEffect } from './useChangeEffect';
-import { useMessageActions } from './useMessageActions';
-import { useProgramIdSchema } from './useProgramIdSchema';
-import { useCodeUpload } from './useCodeUpload';
-import { useMessageClaim } from './useMessageClaim';
-import { useProgramActions } from './useProgramActions';
+import { useValidationSchema, useBalanceSchema, useGasLimitSchema } from './schemas';
+import { useAddCodeName } from './use-add-code-name';
 import { useAddMetadata } from './use-add-metadata';
 import { useAddProgramName } from './use-add-program-name';
-import { useAddCodeName } from './use-add-code-name';
+import { useContractApiWithFile } from './use-contract-api-with-file';
+import { useErrorAlert } from './use-error-alert';
+import { useModalState } from './use-modal-state';
+import { useSignAndSend } from './use-sign-and-send';
+import { useChangeEffect } from './useChangeEffect';
+import { useCodeUpload } from './useCodeUpload';
+import { useElementSizes } from './useElementSizes';
 import { useEventSubscriptions } from './useEventSubscriptions';
 import { useGasCalculate } from './useGasCalculate';
-import { useStateRead } from './useStateRead';
-import { useElementSizes } from './useElementSizes';
-import { useNodeVersion } from './useNodeVersion';
+import { useLoading } from './useLoading';
+import { useMessageActions } from './useMessageActions';
+import { useMessageClaim } from './useMessageClaim';
 import { useMobileDisclaimer } from './useMobileDisclaimer';
 import { useNetworkIcon } from './useNetworkIcon';
-import { useValidationSchema, useBalanceSchema, useGasLimitSchema } from './schemas';
-import { useSignAndSend } from './use-sign-and-send';
-import { useContractApiWithFile } from './use-contract-api-with-file';
-import { useModalState } from './use-modal-state';
-import { useErrorAlert } from './use-error-alert';
+import { useNodeVersion } from './useNodeVersion';
+import { useOutsideClick } from './useOutsideClick';
+import { useProgramActions } from './useProgramActions';
+import { useProgramIdSchema } from './useProgramIdSchema';
+import { useStateRead } from './useStateRead';
 
 export {
   useModal,

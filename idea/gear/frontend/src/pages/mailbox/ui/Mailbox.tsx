@@ -1,5 +1,5 @@
-import { HexString } from '@polkadot/util/types';
 import { isHex } from '@polkadot/util';
+import { HexString } from '@polkadot/util/types';
 import { useState } from 'react';
 import SimpleBar from 'simplebar-react';
 
@@ -7,9 +7,9 @@ import { useMailbox } from '@/features/mailbox';
 import { useMessageClaim } from '@/hooks';
 import { SearchForm } from '@/shared/ui';
 
+import styles from './Mailbox.module.scss';
 import { Messages } from './messages';
 import { MessagesPlaceholder } from './messagesPlaceholder';
-import styles from './Mailbox.module.scss';
 
 const Mailbox = () => {
   const claimMessage = useMessageClaim();
@@ -22,6 +22,7 @@ const Mailbox = () => {
   const isListEmpty = list?.length === 0;
 
   const handleClaimButtonClick = (messageId: HexString, reject: () => void) => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     claimMessage({ messageId, resolve: () => removeMessage(messageId), reject });
   };
 

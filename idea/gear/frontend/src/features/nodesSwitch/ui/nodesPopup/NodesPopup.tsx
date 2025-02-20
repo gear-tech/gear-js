@@ -3,14 +3,15 @@ import clsx from 'clsx';
 import { Ref } from 'react';
 import SimpleBar from 'simplebar-react';
 
-import { AnimationTimeout } from '@/shared/config';
-import plusSVG from '@/shared/assets/images/actions/plus.svg?react';
-import closeSVG from '@/shared/assets/images/actions/close.svg?react';
-import switchSVG from '@/shared/assets/images/actions/switch.svg?react';
 import { NodeSection } from '@/entities/node';
+import closeSVG from '@/shared/assets/images/actions/close.svg?react';
+import plusSVG from '@/shared/assets/images/actions/plus.svg?react';
+import switchSVG from '@/shared/assets/images/actions/switch.svg?react';
+import { AnimationTimeout } from '@/shared/config';
 import { CSSTransitionWithRef } from '@/shared/ui';
 
 import { Node as NodeItem } from '../node';
+
 import styles from './NodesPopup.module.scss';
 
 type Props = {

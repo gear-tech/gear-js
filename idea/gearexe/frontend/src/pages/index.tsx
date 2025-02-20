@@ -2,11 +2,11 @@ import { Routes, Route } from 'react-router-dom';
 
 import { routes } from '@/shared/config';
 
-import { Home } from './home';
-import { Programs } from './programs';
-import { Codes } from './codes';
-import { Program } from './program';
 import { Code } from './code';
+import { Codes } from './codes';
+import { Home } from './home';
+import { Program } from './program';
+import { Programs } from './programs';
 
 const Routing = () => {
   return (

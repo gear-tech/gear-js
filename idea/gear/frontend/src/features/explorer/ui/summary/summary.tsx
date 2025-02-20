@@ -1,12 +1,12 @@
-import { Link } from 'react-router-dom';
 import { Block } from '@polkadot/types/interfaces';
 import clsx from 'clsx';
+import { Link } from 'react-router-dom';
 
-import CodeSVG from '@/shared/assets/images/actions/code.svg?react';
-import SummaryPlaceholderSVG from '@/shared/assets/images/placeholders/blockSummaryPlaceholder.svg?react';
-import NumberPlaceholderSVG from '@/shared/assets/images/placeholders/blockNumberPlaceholder.svg?react';
 import { Placeholder } from '@/entities/placeholder';
 import commonStyles from '@/pages/explorer/explorer.module.scss';
+import CodeSVG from '@/shared/assets/images/actions/code.svg?react';
+import NumberPlaceholderSVG from '@/shared/assets/images/placeholders/blockNumberPlaceholder.svg?react';
+import SummaryPlaceholderSVG from '@/shared/assets/images/placeholders/blockSummaryPlaceholder.svg?react';
 
 import styles from './summary.module.scss';
 
@@ -21,6 +21,7 @@ const Summary = ({ block, isError }: Props) => {
 
   const headerClassName = clsx(commonStyles.header, styles.layout);
   const rowClassName = clsx(commonStyles.row, styles.layout);
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions -- TODO(#1800): resolve eslint comments
   const parentPath = `/explorer/${parentHash}`;
 
   return (

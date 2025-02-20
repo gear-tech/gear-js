@@ -16,9 +16,9 @@ import { getErrorMessage } from '@/shared/helpers';
 import { FUNCTION_NAME, Program } from '../consts';
 import { getDnsProgramId } from '../utils';
 
-const SERVICE_NAME = 'dns' as const;
+const SERVICE_NAME = 'dns';
 
-type FunctionName = typeof FUNCTION_NAME[keyof typeof FUNCTION_NAME];
+type FunctionName = (typeof FUNCTION_NAME)[keyof typeof FUNCTION_NAME];
 
 const useSendDnsTransaction = <T extends FunctionName>(functionName: T) => {
   const { api, isApiReady } = useApi();

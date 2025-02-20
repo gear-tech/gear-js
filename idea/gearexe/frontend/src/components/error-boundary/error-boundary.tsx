@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components';
 import { routes } from '@/shared/config';
 import { useChangeEffect } from '@/shared/hooks';
+
 import styles from './error-boundary.module.scss';
 
 type Props = {

@@ -1,7 +1,7 @@
 import { Modal, Input, Button } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
-import { generatePath, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { generatePath, useNavigate } from 'react-router-dom';
 
 import { ModalProps } from '@/entities/modal';
 import { absoluteRoutes } from '@/shared/config';

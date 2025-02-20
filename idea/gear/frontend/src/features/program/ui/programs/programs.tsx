@@ -1,6 +1,6 @@
-import { List, Skeleton } from '@/shared/ui';
-import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
 import { LocalProgram } from '@/features/local-indexer';
+import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
+import { List, Skeleton } from '@/shared/ui';
 
 import { Program } from '../../api';
 import { ProgramCard } from '../program-card';

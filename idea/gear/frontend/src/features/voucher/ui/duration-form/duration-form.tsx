@@ -1,13 +1,14 @@
 import { useApi } from '@gear-js/react-hooks';
 import { Button, Select } from '@gear-js/ui';
+import { INumber } from '@polkadot/types/types';
 import { useMemo } from 'react';
 
 import { Input } from '@/shared/ui';
 
 import { FIELD_NAME } from '../../consts';
 import { getMilliseconds, getPluralizedUnit, getTime } from '../../utils';
+
 import styles from './duration-form.module.scss';
-import { INumber } from '@polkadot/types/types';
 
 type Props = {
   value: string;

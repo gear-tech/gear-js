@@ -1,8 +1,8 @@
 import { Button } from '@gear-js/ui';
 
 import { useModalState } from '@/hooks';
-import { withAccount } from '@/shared/ui';
 import DnsSVG from '@/shared/assets/images/menu/dns.svg?react';
+import { withAccount } from '@/shared/ui';
 
 import { DnsModal } from '../dns-modal';
 
@@ -18,7 +18,9 @@ const CreateDns = withAccount(({ onSuccess, color = 'light' }: Props) => {
     <>
       <Button icon={DnsSVG} text="Create dDNS" size="medium" color={color} onClick={openModal} noWrap />
 
-      {isModalOpen && <DnsModal close={closeModal} onSuccess={onSuccess} heading="Create dDNS" submitText="Create new dDNS" />}
+      {isModalOpen && (
+        <DnsModal close={closeModal} onSuccess={onSuccess} heading="Create dDNS" submitText="Create new dDNS" />
+      )}
     </>
   );
 });

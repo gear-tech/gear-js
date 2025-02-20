@@ -3,6 +3,7 @@ import { useIsAnyAccountVoucherActive } from '@gear-js/react-hooks';
 import clsx from 'clsx';
 
 import BadgeSVG from '../../assets/badge.svg?react';
+
 import styles from './voucher-badge.module.scss';
 
 type Props = {

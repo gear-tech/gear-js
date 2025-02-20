@@ -1,28 +1,28 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import { routes } from '@/shared/config';
-import { useEvents } from '@/hooks';
-import { Events, Block } from '@/features/explorer';
 import { VERIFY_ROUTES } from '@/features/code-verifier';
+import { Events, Block } from '@/features/explorer';
+import { useEvents } from '@/hooks';
+import { routes } from '@/shared/config';
 
-import { Program } from './program';
-import { Programs } from './programs';
-import { Message } from './message';
-import { UploadProgram } from './uploadProgram';
-import { NotFound } from './notFound';
-import { Send } from './send';
+import { Code } from './code';
 import { Codes } from './codes';
+import { Dns } from './dns';
+import { Explorer } from './explorer';
 import { InitializeProgram } from './initializeProgram';
 import { Mailbox } from './mailbox';
-import * as State from './state';
-import { Explorer } from './explorer';
-import { Code } from './code';
-import { UploadCode } from './uploadCode';
-import { Vouchers } from './vouchers';
-import { Dns } from './dns';
+import { Message } from './message';
+import { NotFound } from './notFound';
+import { Program } from './program';
+import { Programs } from './programs';
+import { Send } from './send';
 import { SingleDns } from './single-dns';
-import { Verify } from './verify';
+import * as State from './state';
+import { UploadCode } from './uploadCode';
+import { UploadProgram } from './uploadProgram';
 import { VerificationStatus } from './verification-status';
+import { Verify } from './verify';
+import { Vouchers } from './vouchers';
 
 const Routing = () => {
   const events = useEvents();

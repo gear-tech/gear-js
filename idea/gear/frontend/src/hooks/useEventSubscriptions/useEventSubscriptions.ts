@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
-import { UnsubscribePromise } from '@polkadot/api/types';
 import { useApi, useAccount, useAlert } from '@gear-js/react-hooks';
+import { UnsubscribePromise } from '@polkadot/api/types';
+import { useEffect } from 'react';
 
 import { Method } from '@/features/explorer';
+
 import { transferEventsHandler, messageSentEventsHandler } from './helpers';
 
 const useEventSubscriptions = () => {
@@ -26,6 +27,7 @@ const useEventSubscriptions = () => {
 
     return () => {
       if (unsubs.length) {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
         Promise.all(unsubs).then((result) => {
           result.forEach((unsubscribe) => unsubscribe());
         });

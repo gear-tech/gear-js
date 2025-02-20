@@ -1,7 +1,9 @@
 import { generatePath } from 'react-router-dom';
-import { routes } from '@/shared/config';
+
 import VerifySvg from '@/assets/icons/verify.svg?react';
 import { HashLink, Table, Tooltip } from '@/components';
+import { routes } from '@/shared/config';
+
 import styles from './codes.module.scss';
 
 type DataRow = {

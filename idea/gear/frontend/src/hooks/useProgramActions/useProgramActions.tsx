@@ -2,12 +2,12 @@ import { useApi, useAccount } from '@gear-js/react-hooks';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { generatePath } from 'react-router-dom';
 
-import { useAddMetadata, useAddProgramName, useChain, useModal, useSignAndSend } from '@/hooks';
 import { addLocalProgram } from '@/features/local-indexer';
-import { absoluteRoutes } from '@/shared/config';
-import { CustomLink } from '@/shared/ui/customLink';
 import { useProgramStatus } from '@/features/program';
 import { useAddIdl } from '@/features/sails';
+import { useAddMetadata, useAddProgramName, useChain, useModal, useSignAndSend } from '@/hooks';
+import { absoluteRoutes } from '@/shared/config';
+import { CustomLink } from '@/shared/ui/customLink';
 
 import { ContractApi, Program, Values } from './types';
 
@@ -54,7 +54,9 @@ const useProgramActions = () => {
     }
 
     if (!isDevChain) await addProgramName({ id: programId, codeId, name, metaHex: metadata?.hex, idl: sails?.idl });
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     if (metadata && metadata.hash && metadata.hex && !metadata.isFromStorage) addMetadata(metadata.hash, metadata.hex);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     if (sails && sails.idl && !sails.isFromStorage) addIdl(codeId, sails.idl);
   };
 
@@ -75,6 +77,7 @@ const useProgramActions = () => {
     const onFinalized = (result: ISubmittableResult) => handleMetadataUpload(program, contractApi, values, result);
 
     const onConfirm = () =>
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises -- TODO(#1800): resolve eslint comments
       signAndSend(program.extrinsic, 'ProgramChanged', { successAlert, onSuccess, onError, onFinalized });
 
     showModal('transaction', {

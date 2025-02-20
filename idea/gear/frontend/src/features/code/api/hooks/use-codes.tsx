@@ -3,8 +3,8 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { INFINITE_QUERY } from '@/api';
 import { useChain, useErrorAlert } from '@/hooks';
 
-import { GetCodesParameters } from '../types';
 import { getCodes } from '../requests';
+import { GetCodesParameters } from '../types';
 
 function useCodes(parameters: GetCodesParameters) {
   const { isDevChain } = useChain();

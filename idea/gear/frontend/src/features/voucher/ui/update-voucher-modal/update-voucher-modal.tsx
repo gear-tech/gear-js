@@ -9,9 +9,9 @@ import { z } from 'zod';
 import { useLoading, useBalanceSchema, useSignAndSend } from '@/hooks';
 import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
+import { ACCOUNT_ADDRESS_SCHEMA } from '@/shared/config';
 import { asOptionalField } from '@/shared/helpers';
 import { Input, ValueField } from '@/shared/ui';
-import { ACCOUNT_ADDRESS_SCHEMA } from '@/shared/config';
 
 import { Voucher } from '../../api';
 import { DEFAULT_VALUES, FIELD_NAME } from '../../consts';
@@ -19,6 +19,7 @@ import { useDurationSchema } from '../../hooks';
 import { Values } from '../../types';
 import { DurationForm } from '../duration-form';
 import { ProgramsForm } from '../programs-form';
+
 import styles from './update-voucher-modal.module.scss';
 
 type Props = {

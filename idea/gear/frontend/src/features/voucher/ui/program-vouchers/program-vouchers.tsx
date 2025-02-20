@@ -6,8 +6,8 @@ import { ProgramTabLayout, SearchForm } from '@/shared/ui';
 
 import { useVouchers } from '../../api';
 import { useVoucherFilters } from '../../hooks';
-import { Vouchers } from '../vouchers';
 import { VoucherFilters } from '../voucher-filters';
+import { Vouchers } from '../vouchers';
 
 type Props = {
   programId: HexString;

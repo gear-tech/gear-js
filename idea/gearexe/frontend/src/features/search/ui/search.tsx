@@ -1,6 +1,8 @@
 import { useState } from 'react';
+
 import SearchSVG from '@/assets/icons/search.svg?react';
 import { Button } from '@/components';
+
 import styles from './search.module.scss';
 
 const Search = () => {

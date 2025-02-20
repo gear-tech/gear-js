@@ -2,11 +2,12 @@ import clsx from 'clsx';
 import { Ref } from 'react';
 import { generatePath, Link } from 'react-router-dom';
 
-import TimeSVG from '@/shared/assets/images/indicators/time.svg?react';
 import BlockNumberSVG from '@/shared/assets/images/indicators/blockNumber.svg?react';
+import TimeSVG from '@/shared/assets/images/indicators/time.svg?react';
 import { absoluteRoutes } from '@/shared/config';
 
 import { RecentBlock } from '../../types';
+
 import styles from './RecentBlockItem.module.scss';
 
 type Props = {

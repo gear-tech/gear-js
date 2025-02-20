@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import { LocalStorage } from '@/shared/config';
 import { isMobileDevice } from '@/shared/helpers';
 

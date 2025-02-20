@@ -1,4 +1,5 @@
 import { useApi } from '@gear-js/react-hooks';
+
 import styles from './BalanceUnit.module.scss';
 
 const BalanceUnit = () => {

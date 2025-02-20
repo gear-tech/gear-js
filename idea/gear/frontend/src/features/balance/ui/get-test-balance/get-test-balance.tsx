@@ -7,8 +7,8 @@ import { useRef } from 'react';
 import { useChain, useSignAndSend } from '@/hooks';
 import { GEAR_BALANCE_TRANSFER_VALUE, HCAPTCHA_SITE_KEY } from '@/shared/config';
 
-import GiftSVG from '../../assets/gift.svg?react';
 import { getTestBalance } from '../../api';
+import GiftSVG from '../../assets/gift.svg?react';
 
 function GetTestBalance() {
   const { api, isApiReady } = useApi();

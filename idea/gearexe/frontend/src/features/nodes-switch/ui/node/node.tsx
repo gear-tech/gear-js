@@ -1,5 +1,6 @@
-import { Node as NodeType } from '../../types';
 import { CopyButton } from '@/components';
+
+import { Node as NodeType } from '../../types';
 
 import styles from './node.module.scss';
 

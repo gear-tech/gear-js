@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
-import { routes } from '@/shared/config';
+
+import TransactionSVG from '@/assets/icons/arrange-square.svg?react';
 import CodeSVG from '@/assets/icons/code.svg?react';
 import MessageSVG from '@/assets/icons/message.svg?react';
-import TransactionSVG from '@/assets/icons/arrange-square.svg?react';
 import UserSVG from '@/assets/icons/user-square.svg?react';
+import { routes } from '@/shared/config';
 import { formatNumber } from '@/shared/utils';
+
 import styles from './home.module.scss';
 
 const cards = [

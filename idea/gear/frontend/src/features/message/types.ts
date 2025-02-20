@@ -4,9 +4,9 @@ import { IBase } from '@/shared/types';
 
 import { MESSAGE_ENTRY_POINT, MESSAGE_READ_REASON, MESSAGE_TYPE } from './consts';
 
-type MessageType = typeof MESSAGE_TYPE[keyof typeof MESSAGE_TYPE];
-type MessageReadReason = typeof MESSAGE_READ_REASON[keyof typeof MESSAGE_READ_REASON];
-type MessageEntryPoint = typeof MESSAGE_ENTRY_POINT[keyof typeof MESSAGE_ENTRY_POINT];
+type MessageType = (typeof MESSAGE_TYPE)[keyof typeof MESSAGE_TYPE];
+type MessageReadReason = (typeof MESSAGE_READ_REASON)[keyof typeof MESSAGE_READ_REASON];
+type MessageEntryPoint = (typeof MESSAGE_ENTRY_POINT)[keyof typeof MESSAGE_ENTRY_POINT];
 
 type Message = IBase & {
   id: HexString;

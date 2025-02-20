@@ -4,8 +4,9 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
 import { getIdl } from '../api';
-import { useSailsInit } from './use-sails-init';
 import { errorMessage } from '../api/consts';
+
+import { useSailsInit } from './use-sails-init';
 
 function useSails(codeId: HexString | null | undefined) {
   const sails = useSailsInit();

@@ -1,19 +1,20 @@
 import { useApi } from '@gear-js/react-hooks';
 import { U128 } from '@polkadot/types';
-import { useState, useEffect } from 'react';
-import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { CSSTransition } from 'react-transition-group';
 
 import { useBlocks, useOutsideClick } from '@/hooks';
-import { AnimationTimeout } from '@/shared/config';
 import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
+import { AnimationTimeout } from '@/shared/config';
 
-import { RecentBlock } from '../types';
 import { getMinWidth } from '../helpers';
+import { RecentBlock } from '../types';
+
+import styles from './RecentBlocks.module.scss';
 import { Graph } from './graph';
 import { RecentBlocksList } from './recentBlocksList';
-import styles from './RecentBlocks.module.scss';
 
 const RecentBlocks = () => {
   const { api, isApiReady } = useApi();
@@ -57,6 +58,7 @@ const RecentBlocks = () => {
   useEffect(() => {
     if (!isApiReady) return;
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     api.query.gear.blockNumber((result: U128) => setGearBlock(result.toNumber()));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady]);

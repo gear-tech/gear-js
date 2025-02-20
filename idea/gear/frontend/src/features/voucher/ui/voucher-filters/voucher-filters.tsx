@@ -1,8 +1,9 @@
+import { useAccount } from '@gear-js/react-hooks';
+
 import { FilterGroup, Filters, Radio, StatusRadio } from '@/features/filters';
 import { BulbStatus } from '@/shared/ui/bulbBlock';
 
 import { DEFAULT_FILTER_VALUES } from '../../consts';
-import { useAccount } from '@gear-js/react-hooks';
 
 type Props = {
   onSubmit: (values: typeof DEFAULT_FILTER_VALUES) => void;

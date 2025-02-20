@@ -1,4 +1,5 @@
 import { useVouchers } from './api';
+import { useVoucherFilters } from './hooks';
 import {
   IssueVoucher,
   ProgramVoucherSelect,
@@ -8,7 +9,6 @@ import {
   Vouchers,
   ProgramVouchers,
 } from './ui';
-import { useVoucherFilters } from './hooks';
 
 export {
   IssueVoucher,

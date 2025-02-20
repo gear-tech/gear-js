@@ -12,6 +12,7 @@ import { BackButton, Box, Input, LabeledCheckbox, Radio, Select } from '@/shared
 import { useVerifyCode } from '../../api';
 import { VERIFY_ROUTES } from '../../consts';
 import { useDefaultCodeId } from '../../hooks';
+
 import { DEFAULT_VALUES, SCHEMA, NETWORK, FIELD_NAME, PROJECT_ID_TYPE, NETWORK_OPTIONS } from './consts';
 import styles from './verify-form.module.scss';
 

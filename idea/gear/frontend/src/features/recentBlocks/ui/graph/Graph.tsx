@@ -1,8 +1,9 @@
-import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
+import { useEffect, useRef } from 'react';
 
 import { getRandomPercent } from '../../helpers';
 import { RecentBlock } from '../../types';
+
 import styles from './Graph.module.scss';
 
 type Props = {
@@ -30,7 +31,6 @@ const Graph = ({ blocks, className }: Props) => {
   return (
     <div className={clsx(styles.graph, className)}>
       {percents.current.map((value, index) => (
-         
         <hr key={index} style={{ height: `${value}%` }} className={styles.line} />
       ))}
     </div>

@@ -1,4 +1,5 @@
 import { CopyButton, ExpandableItem } from '@/components';
+
 import styles from './transaction.module.scss';
 
 const Transaction = () => {

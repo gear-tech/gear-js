@@ -1,5 +1,5 @@
 import { ProgramMetadata, TypeKind } from '@gear-js/api';
-import BigNumber from 'bignumber.js';
+import { BigNumber } from 'bignumber.js';
 
 type TypeStructure = {
   name: string;

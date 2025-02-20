@@ -1,14 +1,15 @@
-import { routes } from '@/shared/config';
 import CodesSVG from '@/shared/assets/images/menu/codes.svg?react';
+import DnsSVG from '@/shared/assets/images/menu/dns.svg?react';
+import ExplorerSVG from '@/shared/assets/images/menu/explorer.svg?react';
 import MailboxSVG from '@/shared/assets/images/menu/mailbox.svg?react';
 import ProgramsSVG from '@/shared/assets/images/menu/programs.svg?react';
-import ExplorerSVG from '@/shared/assets/images/menu/explorer.svg?react';
 import VouchersSVG from '@/shared/assets/images/menu/vouchers.svg?react';
-import DnsSVG from '@/shared/assets/images/menu/dns.svg?react';
+import { routes } from '@/shared/config';
 import { OnboardingTooltip } from '@/shared/ui/onboardingTooltip';
 
-import { NavigationItem } from '../navigationItem';
 import { AppExamplesLink } from '../appExamplesLink';
+import { NavigationItem } from '../navigationItem';
+
 import styles from './Navigation.module.scss';
 
 type Props = {

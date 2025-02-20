@@ -4,13 +4,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
-import { Checkbox, Input, ValueField } from '@/shared/ui';
 import { useBalanceSchema, useLoading, useSignAndSend } from '@/hooks';
+import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { ACCOUNT_ADDRESS_SCHEMA } from '@/shared/config';
+import { Checkbox, Input, ValueField } from '@/shared/ui';
 
 import SubmitSVG from '../../assets/submit.svg?react';
 import { Balance } from '../balance';
+
 import styles from './transfer-balance-modal.module.scss';
 
 const FIELD_NAME = {

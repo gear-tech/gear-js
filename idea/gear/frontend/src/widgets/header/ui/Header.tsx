@@ -1,14 +1,15 @@
+import { useAccount, useApi } from '@gear-js/react-hooks';
 import { useMemo, useEffect } from 'react';
 import { useLocation, matchPath } from 'react-router-dom';
-import { useAccount, useApi } from '@gear-js/react-hooks';
 
 import { AnimationTimeout } from '@/shared/config';
 import { CSSTransitionWithRef } from '@/shared/ui';
 
-import styles from './Header.module.scss';
 import { FULL_HEADER_HEIGHT, SHORT_HEADER_HEIGHT, PATHS_WITHOUT_BOTTOM_SIDE } from '../model/consts';
-import { TopSide } from './topSide';
+
+import styles from './Header.module.scss';
 import { BottomSide } from './bottomSide';
+import { TopSide } from './topSide';
 
 const Header = () => {
   const { isApiReady } = useApi();

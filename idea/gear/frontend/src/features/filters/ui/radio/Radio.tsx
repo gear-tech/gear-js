@@ -12,6 +12,7 @@ const Radio = <T extends FieldValues>({ name, value, label, className, onSubmit 
 
   const onChange = () => handleSubmit(onSubmit)();
 
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises -- TODO(#1800): resolve eslint comments
   return <UIRadio label={label} className={className} value={value} {...register(name, { onChange })} />;
 };
 

@@ -1,4 +1,5 @@
 import { INDEXER_RPC_SERVICE } from '@/shared/services/rpcService';
+
 import { METHOD } from './consts';
 import {
   MessagesToProgramParameters,

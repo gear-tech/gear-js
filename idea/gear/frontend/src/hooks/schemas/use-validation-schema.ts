@@ -1,4 +1,5 @@
 import { useApi, useBalanceFormat } from '@gear-js/react-hooks';
+// eslint-disable-next-line import/no-named-as-default -- TODO(#1800): resolve eslint comments
 import BigNumber from 'bignumber.js';
 import * as yup from 'yup';
 

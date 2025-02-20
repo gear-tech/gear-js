@@ -1,7 +1,8 @@
 import { ReactNode } from 'react';
 
-import { CSSTransitionWithRef } from '../css-transition-with-ref';
 import { AnimationTimeout } from '../../config';
+import { CSSTransitionWithRef } from '../css-transition-with-ref';
+
 import styles from './EmptyContent.module.scss';
 
 type Props = {

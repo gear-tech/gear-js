@@ -1,7 +1,9 @@
 import { clsx } from 'clsx';
 import { PropsWithChildren, ReactNode, useState } from 'react';
-import { Button } from '@/components';
+
 import ArrowDownSVG from '@/assets/icons/arrow-square-down.svg?react';
+import { Button } from '@/components';
+
 import styles from './expandable-item.module.scss';
 
 type Props = PropsWithChildren & {

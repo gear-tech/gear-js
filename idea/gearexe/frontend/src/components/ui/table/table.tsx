@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
 import { clsx } from 'clsx';
+import React, { useState } from 'react';
+
 import SortSVG from '@/assets/icons/sort.svg?react';
+
 import styles from './table.module.scss';
 
 type TableColumn<T> = {

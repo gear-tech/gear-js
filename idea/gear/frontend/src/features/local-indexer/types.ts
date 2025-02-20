@@ -1,7 +1,7 @@
 import { HexString } from '@gear-js/api';
 
-import { Program } from '@/features/program';
 import { Code } from '@/features/code';
+import { Program } from '@/features/program';
 import { IBase } from '@/shared/types';
 
 type ChainProgram = Pick<Program, 'id' | 'name' | 'status'> & {

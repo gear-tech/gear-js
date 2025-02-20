@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useSingleDns, EditDns, DeleteDns, AdminCard, AddAdmin } from '@/features/dns';
-import { IdBlock, List, SearchForm, Skeleton, Table, TableRow, TimestampBlock } from '@/shared/ui';
-import { ACCOUNT_ADDRESS_SCHEMA } from '@/shared/config';
 import CardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
+import { ACCOUNT_ADDRESS_SCHEMA } from '@/shared/config';
+import { IdBlock, List, SearchForm, Skeleton, Table, TableRow, TimestampBlock } from '@/shared/ui';
 
 import styles from './single-dns.module.scss';
 

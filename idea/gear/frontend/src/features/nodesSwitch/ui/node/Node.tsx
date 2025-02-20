@@ -3,9 +3,9 @@ import { Button, radioStyles } from '@gear-js/ui';
 import clsx from 'clsx';
 
 import { Node as NodeType } from '@/entities/node';
-import { copyToClipboard } from '@/shared/helpers';
 import CopyGreenSVG from '@/shared/assets/images/actions/copyGreen.svg?react';
 import TrashSVG from '@/shared/assets/images/actions/trash.svg?react';
+import { copyToClipboard } from '@/shared/helpers';
 import { ICON } from '@/widgets/menu/model/consts';
 
 import styles from './Node.module.scss';
@@ -38,7 +38,7 @@ const Node = (props: Props) => {
 
   return (
     <li id={address} className={styles.node}>
-      { }
+      {}
       <label className={clsx(radioStyles.label, styles.radio, isCurrentNode && styles.current)}>
         <input
           type="radio"

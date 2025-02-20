@@ -6,6 +6,7 @@ import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import { UILink } from '@/shared/ui';
 
 import { VERIFY_ROUTES } from '../../consts';
+
 import styles from './verify-link.module.scss';
 
 type Props = {

@@ -14,7 +14,10 @@ export class Program {
   public readonly registry: TypeRegistry;
   public readonly dns: Dns;
 
-  constructor(public api: GearApi, public programId?: `0x${string}`) {
+  constructor(
+    public api: GearApi,
+    public programId?: `0x${string}`,
+  ) {
     const types = {
       ActorId: '([u8; 32])',
       ContractInfo: { admin: 'ActorId', program_id: 'ActorId', registration_time: 'String' },

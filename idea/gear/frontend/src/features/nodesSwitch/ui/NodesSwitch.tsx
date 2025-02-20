@@ -2,12 +2,12 @@ import { useAlert, useApi } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
+import { INITIAL_ENDPOINT } from '@/features/api';
 import { useModal, useOutsideClick } from '@/hooks';
 import { AnimationTimeout, LocalStorage, NODE_ADRESS_URL_PARAM } from '@/shared/config';
-import { useNodes } from '@/widgets/menu/helpers/useNodes';
-import { OnboardingTooltip } from '@/shared/ui/onboardingTooltip';
-import { INITIAL_ENDPOINT } from '@/features/api';
 import { CSSTransitionWithRef } from '@/shared/ui';
+import { OnboardingTooltip } from '@/shared/ui/onboardingTooltip';
+import { useNodes } from '@/widgets/menu/helpers/useNodes';
 
 import { NodesButton } from './nodesButton';
 import { NodesPopup } from './nodesPopup';

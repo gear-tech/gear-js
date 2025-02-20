@@ -3,6 +3,7 @@ import { HexString } from '@gear-js/api';
 import { OwnerBlock } from '@/shared/ui';
 
 import { RemoveAdmin } from '../remove-admin';
+
 import styles from './admin-card.module.scss';
 
 type Props = {

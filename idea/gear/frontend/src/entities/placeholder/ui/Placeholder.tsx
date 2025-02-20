@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
 import clsx from 'clsx';
+import { ReactNode } from 'react';
 
 import { EmptyContent } from '@/shared/ui/emptyContent';
 
@@ -33,7 +33,6 @@ const Placeholder = ({ title, block, isEmpty, children, blocksCount = 1, descrip
   const renderBlocks = () => {
     const result = [];
 
-     
     for (let i = 0; i < blocksCount; i++) {
       result.push(
         <div key={i} className={clsx(styles.block, !isEmpty && styles.loading, styles[getOpacityClassName(i)])}>

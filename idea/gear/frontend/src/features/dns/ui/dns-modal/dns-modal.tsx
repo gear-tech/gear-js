@@ -9,8 +9,9 @@ import CloseSVG from '@/shared/assets/images/actions/close.svg?react';
 import { Input } from '@/shared/ui';
 
 import { DEFAULT_VALUES, FIELD_NAME, FUNCTION_NAME } from '../../consts';
-import { Values } from '../../types';
 import { useDnsSchema, useSendDnsTransaction } from '../../hooks';
+import { Values } from '../../types';
+
 import styles from './dns-modal.module.scss';
 
 type Props = {
@@ -40,6 +41,7 @@ const DnsModal = ({ heading, submitText, close, onSuccess, initialValues }: Prop
       close();
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     sendTransaction([name, address], _onSuccess);
   });
 
