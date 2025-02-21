@@ -19,7 +19,7 @@
   "homepage": "https://github.com/gear-tech/gear-js/tree/master/utils/gear-ui#readme",
   "scripts": {
     "build": "rm -rf dist && rm -rf *.scss || true && rm -rf fonts && cp -R ./src/assets/styles/. . && npx vite build",
-    "test": "npx jest",
+    "test": "npx vitest",
     "prepare": "yarn build",
     "clean": "echo \"clean @gear-js/gear-ui\" && rm -rf dist"
   },
@@ -33,12 +33,10 @@
   },
   "devDependencies": {
     "@gear-js/frontend-configs": "*",
-    "@babel/preset-react": "7.26.3",
-    "@svgr/rollup": "8.1.0",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.2.0",
-    "identity-obj-proxy": "3.0.0",
-    "jest-environment-jsdom": "29.7.0"
+    "happy-dom": "17.1.1",
+    "vitest": "3.0.6"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

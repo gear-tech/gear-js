@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 import { Textarea } from './Textarea';
 import styles from './Textarea.module.scss';
 
@@ -71,9 +72,9 @@ describe('textarea tests', () => {
   });
 
   it('enters text and clicks clear button', () => {
-    const handleChange = jest.fn();
-    const handleFocus = jest.fn();
-    const handleBlur = jest.fn();
+    const handleChange = vi.fn();
+    const handleFocus = vi.fn();
+    const handleBlur = vi.fn();
 
     render(
       <Textarea
@@ -106,9 +107,9 @@ describe('textarea tests', () => {
     fireEvent.blur(textarea);
     expect(inputWrapper).not.toContainElement(clearButton);
 
-    expect(handleChange).toBeCalledTimes(2);
-    expect(handleBlur).toBeCalledTimes(1);
-    expect(handleFocus).toBeCalledTimes(1);
+    expect(handleChange).toHaveBeenCalledTimes(2);
+    expect(handleBlur).toHaveBeenCalledTimes(1);
+    expect(handleFocus).toHaveBeenCalledTimes(1);
   });
 
   it('renders large textarea with light color', () => {

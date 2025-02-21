@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
 import { Checkbox } from './Checkbox';
 import styles from './Checkbox.module.scss';
 
