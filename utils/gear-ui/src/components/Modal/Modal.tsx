@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { ReactNode, useEffect, useState, MouseEvent, useCallback, ReactPortal } from 'react';
 import { createPortal } from 'react-dom';
 import { Button } from '../Button/Button';
-import { ReactComponent as xSVG } from './images/x.svg';
+import xSVG from './images/x.svg?react';
 import styles from './Modal.module.scss';
 
 type Props = {

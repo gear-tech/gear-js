@@ -4,7 +4,7 @@ import { InputProps, SVGComponent } from '../../types';
 import { useClearButton } from '../../hooks';
 import { Button } from '../Button/Button';
 import { InputWrapper } from '../utils';
-import { ReactComponent as SearchSVG } from './images/search.svg';
+import SearchSVG from './images/search.svg?react';
 import styles from './Input.module.scss';
 
 type Props = Omit<ComponentPropsWithRef<'input'>, 'size'> &

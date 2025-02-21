@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { Button } from '../Button/Button';
-import { ReactComponent as xSVG } from './images/x.svg';
+import xSVG from './images/x.svg?react';
 import { Props } from './Alert.types';
 import styles from './Alert.module.scss';
 

@@ -1,6 +1,6 @@
 import { useRef, useState, MouseEvent, Ref, useImperativeHandle } from 'react';
-import { ReactComponent as clear } from '../assets/images/clear.svg';
-import { ReactComponent as clearLight } from '../assets/images/clear-light.svg';
+import clear from '../assets/images/clear.svg?react';
+import clearLight from '../assets/images/clear-light.svg?react';
 
 function useClearButton<T extends HTMLInputElement | HTMLTextAreaElement>(
   forwardedRef: Ref<T> | undefined,

@@ -23,10 +23,8 @@ const plugins = [
 
 const app = defineConfig({ ...options, plugins });
 
-const lib = ({ injectCss = true, outDir = 'dist', entry = 'src/index.ts' } = {}) => {
-  const rollupOptions = injectCss ? { output: { intro: 'import "./style.css";' } } : {};
-
-  return defineConfig({
+const lib = ({ injectCss = true, outDir = 'dist', entry = 'src/index.ts' } = {}) =>
+  defineConfig({
     ...options,
 
     plugins: [
@@ -45,10 +43,11 @@ const lib = ({ injectCss = true, outDir = 'dist', entry = 'src/index.ts' } = {})
         cssFileName: 'style',
       },
 
-      ...rollupOptions,
+      rollupOptions: {
+        output: { intro: injectCss ? 'import "./style.css";' : '' },
+      },
     },
   });
-};
 
 const viteConfigs = { app, lib };
 
