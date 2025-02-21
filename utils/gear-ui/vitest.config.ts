@@ -7,7 +7,7 @@ export default mergeConfig(
   viteConfig,
   defineConfig({
     test: {
-      setupFiles: ['vitest.setup.ts'],
+      setupFiles: ['src/vitest.setup.ts'],
       watch: false,
       environment: 'happy-dom',
       css: { modules: { classNameStrategy: 'non-scoped' } }, // ref: https://github.com/vitest-dev/vitest/issues/1512

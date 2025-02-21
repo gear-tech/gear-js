@@ -29,6 +29,9 @@ const lib = ({ injectCss = true, outDir = 'dist', entry = 'src/index.ts' } = {})
 
     plugins: [
       ...plugins,
+
+      // TODO: - build dts only for index.ts imports
+      //       - take a look at css module resolutions
       dts({ tsconfigPath: resolve(process.cwd(), 'tsconfig.app.json') }),
       externalizeDeps({ deps: false }),
     ],
