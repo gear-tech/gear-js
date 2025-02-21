@@ -44,7 +44,6 @@
     "@gear-js/frontend-configs": "*",
     "@polkadot/api": "15.4.1",
     "@polkadot/types": "15.4.1",
-    "@rollup/plugin-node-resolve": "16.0.0",
     "@tanstack/react-query": "5.56.2",
     "react": "19.0.0",
     "react-dom": "19.0.0",
