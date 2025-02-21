@@ -1,4 +1,3 @@
 {
-  "extends": "@gear-js/frontend-configs/tsconfig.app.json",
-  "include": ["src", "vitest.setup.ts"]
+  "extends": "@gear-js/frontend-configs/tsconfig.app.json"
 }
