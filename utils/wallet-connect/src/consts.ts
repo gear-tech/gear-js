@@ -1,8 +1,8 @@
 import EnkryptSVG from './assets/enkrypt.svg?react';
+import NovaSVG from './assets/nova.svg?react';
 import PolkadotSVG from './assets/polkadot.svg?react';
 import SubWalletSVG from './assets/subwallet.svg?react';
 import TalismanSVG from './assets/talisman.svg?react';
-import NovaSVG from './assets/nova.svg?react';
 import { Wallets } from './types';
 
 const IS_MOBILE_DEVICE = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);

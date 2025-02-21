@@ -46,37 +46,6 @@ export default [
       '@typescript-eslint/no-empty-object-type': ['error', { allowInterfaces: 'with-single-extends' }],
     },
   },
-  ...[reactrefresh.configs.recommended, ...tseslint.configs.recommended].map((conf) => ({
-    ...conf,
-    files: ['utils/{wallet-connect}/src/**/*.{ts,js,tsx,jsx}'],
-  })),
-  {
-    files: ['utils/{wallet-connect}/src/**/*.{ts,js,tsx,jsx}'],
-    plugins: {
-      'react-hooks': reacthooks,
-    },
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.es2020,
-      },
-    },
-    rules: {
-      'react-refresh/only-export-components': [
-        'warn',
-        {
-          allowConstantExport: true,
-        },
-      ],
-      '@typescript-eslint/no-unused-expressions': [
-        'error',
-        {
-          allowShortCircuit: true,
-          allowTernary: true,
-        },
-      ],
-    },
-  },
   ...frontendEslintConfig.map((conf) => ({
     ...conf,
     files: [
@@ -85,6 +54,7 @@ export default [
       'utils/gear-hooks/src/**/*.{ts,js,tsx,jsx}',
       'utils/gear-ui/src/**/*.{ts,js,tsx,jsx}',
       'utils/vara-ui/src/**/*.{ts,js,tsx,jsx}',
+      'utils/wallet-connect/src/**/*.{ts,js,tsx,jsx}',
     ],
   })),
   ...storybook.configs['flat/recommended'].map((conf) => ({

@@ -1,13 +1,14 @@
 import { useAccount, useAlert } from '@gear-js/react-hooks';
 import cx from 'clsx';
 
-import { copyToClipboard } from '../../utils';
 import CopySVG from '../../assets/copy.svg?react';
 import EditSVG from '../../assets/edit-icon.svg?react';
 import ExitSVG from '../../assets/exit.svg?react';
 import { IS_MOBILE_DEVICE, WALLETS } from '../../consts';
 import { useWallet } from '../../hooks';
+import { copyToClipboard } from '../../utils';
 import { UI_CONFIG } from '../ui-config';
+
 import styles from './wallet-modal.module.scss';
 
 type Props = {
