@@ -1,7 +1,7 @@
 import { HexString } from '@gear-js/api';
 import { useState, useEffect, useMemo } from 'react';
 
-import { useAccount, useAlert } from 'context';
+import { useAccount, useAlert } from '@/context';
 
 import { useGetVoucherStatus } from './use-voucher-status';
 import { useVouchers } from './use-vouchers';

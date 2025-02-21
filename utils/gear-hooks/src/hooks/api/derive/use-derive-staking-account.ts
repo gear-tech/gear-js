@@ -2,7 +2,7 @@ import { DeriveStakingAccount } from '@polkadot/api-derive/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
-import { useApi } from 'context';
+import { useApi } from '@/context';
 
 import { QueryParameters } from '../../../types';
 import { useQuery } from '../../use-query';

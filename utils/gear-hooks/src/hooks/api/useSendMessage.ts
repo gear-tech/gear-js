@@ -3,9 +3,9 @@ import { EventRecord } from '@polkadot/types/interfaces';
 import { AnyJson, IKeyringPair, ISubmittableResult } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
-import { useAccount, useAlert, useApi } from 'context';
-import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
-import { getExtrinsicFailedMessage } from 'utils';
+import { useAccount, useAlert, useApi } from '@/context';
+import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@/consts';
+import { getExtrinsicFailedMessage } from '@/utils';
 
 type UseSendMessageOptions = {
   disableAlerts?: boolean;
@@ -141,4 +141,5 @@ function useSendMessage(
   return sendMessage;
 }
 
-export { useSendMessage, SendMessageOptions, UseSendMessageOptions };
+export { useSendMessage };
+export type { SendMessageOptions, UseSendMessageOptions };

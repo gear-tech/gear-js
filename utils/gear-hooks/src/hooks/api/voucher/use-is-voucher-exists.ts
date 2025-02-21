@@ -1,7 +1,7 @@
 import { HexString } from '@gear-js/api';
 import { useState, useEffect } from 'react';
 
-import { useAccount, useAlert, useApi } from 'context';
+import { useAccount, useAlert, useApi } from '@/context';
 
 function useIsVoucherExists(programId: HexString | undefined, accountAddress: HexString | undefined) {
   const { api, isApiReady } = useApi();

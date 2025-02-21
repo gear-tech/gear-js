@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { useAccount } from 'context';
+import { useAccount } from '@/context';
 
 import {
   FunctionName,

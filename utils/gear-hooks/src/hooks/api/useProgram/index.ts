@@ -1,6 +1,6 @@
 import { GasLimit, ProgramMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
-import { useAccount, useAlert, useApi } from 'context';
+import { useAccount, useAlert, useApi } from '@/context';
 import { TransactionName, Options, Code, CodeId, UseProgram } from './types';
 import { useHandlers } from './useHandlers';
 import { waitForProgramInit } from './utils';

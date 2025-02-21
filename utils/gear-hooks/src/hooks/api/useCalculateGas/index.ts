@@ -1,7 +1,7 @@
 import { GasInfo, ProgramMetadata } from '@gear-js/api';
 import { AnyJson, AnyNumber } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
-import { useApi, useAccount } from 'context';
+import { useApi, useAccount } from '@/context';
 import { Options } from './types';
 
 function useUploadCalculateGas(

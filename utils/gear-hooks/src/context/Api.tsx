@@ -50,8 +50,8 @@ const { Provider } = ApiContext;
 
 function ApiProvider({ initialArgs, children }: Props) {
   const [api, setApi] = useState<GearApi>();
-  const providerRef = useRef<WsProvider | ScProvider>();
-  const providerUnsubRef = useRef<() => void>();
+  const providerRef = useRef<WsProvider | ScProvider>(undefined);
+  const providerUnsubRef = useRef<() => void>(undefined);
 
   const switchNetwork = async (args: ProviderArgs) => {
     // disconnect from provider instead of api,
@@ -66,7 +66,8 @@ function ApiProvider({ initialArgs, children }: Props) {
     const isLightClient = 'spec' in args;
 
     const provider = isLightClient
-      ? new ScProvider(Sc, args.spec, args.sharedSandbox)
+      ? // TODO: remove assertion after https://github.com/polkadot-js/api/issues/6065 is resolved
+        new ScProvider(Sc as ConstructorParameters<typeof ScProvider>[0], args.spec, args.sharedSandbox)
       : new WsProvider(args.endpoint, args.autoConnectMs, args.headers, args.timeout);
 
     providerRef.current = provider;

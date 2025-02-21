@@ -1,8 +1,8 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
-import { useAlert } from 'context';
-import { getAutoGasLimit } from 'utils';
+import { useAlert } from '@/context';
+import { getAutoGasLimit } from '@/utils';
 import { Options } from '../api/useProgram/types';
 import { useCreateProgram, useCreateCalculateGas } from '../api';
 

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { useAlert, useApi } from 'context';
+import { useAlert, useApi } from '@/context';
 
 import { useGetApproxBlockTimestamp } from '../block';
 

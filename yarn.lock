@@ -2238,6 +2238,7 @@ __metadata:
   resolution: "@gear-js/react-hooks@workspace:utils/gear-hooks"
   dependencies:
     "@gear-js/api": "npm:0.41.0"
+    "@gear-js/frontend-configs": "npm:*"
     "@polkadot/api": "npm:15.4.1"
     "@polkadot/api-derive": "npm:15.4.1"
     "@polkadot/extension-inject": "npm:0.58.1"
@@ -7517,10 +7518,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@substrate/connect-known-chains@npm:^1.1.4, @substrate/connect-known-chains@npm:^1.1.5, @substrate/connect-known-chains@npm:^1.8.0":
+"@substrate/connect-known-chains@npm:^1.1.4, @substrate/connect-known-chains@npm:^1.1.5":
   version: 1.9.0
   resolution: "@substrate/connect-known-chains@npm:1.9.0"
   checksum: 10c0/ee6635a00292e4507690bc5ecb116f267cb8356c89af7043024d134a8218b18c07bfdc00be59ac9b22c93dbc6e4100b81fd459a0afd8984c29a79273bcb03f28
+  languageName: node
+  linkType: hard
+
+"@substrate/connect-known-chains@npm:^1.8.0":
+  version: 1.9.1
+  resolution: "@substrate/connect-known-chains@npm:1.9.1"
+  checksum: 10c0/d18a95ad48f20e836fe084e724638e119b319241185b45001f4b37947cb67db10213d6d98ed7a1851da129e88183b1f2af9a947927ec887093748c027952ffd1
   languageName: node
   linkType: hard
 

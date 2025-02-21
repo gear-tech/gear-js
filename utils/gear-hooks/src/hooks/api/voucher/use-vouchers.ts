@@ -1,7 +1,7 @@
 import { HexString, IVoucherDetails } from '@gear-js/api';
 import { useState, useEffect } from 'react';
 
-import { useAccount, useAlert, useApi } from 'context';
+import { useAccount, useAlert, useApi } from '@/context';
 
 function useVouchers(accountAddress: string | undefined, programId?: HexString | undefined) {
   const { api, isApiReady } = useApi();

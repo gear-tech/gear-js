@@ -1,7 +1,7 @@
 import { HexString, IVoucherDetails } from '@gear-js/api';
 import { useEffect, useState } from 'react';
 
-import { useAccount, useAlert, useApi } from 'context';
+import { useAccount, useAlert, useApi } from '@/context';
 
 function useVoucher(voucherId: HexString | undefined, accountAddress: string | undefined) {
   const { api } = useApi();

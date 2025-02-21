@@ -1,6 +1,6 @@
 import { Balance } from '@polkadot/types/interfaces';
 import { useEffect, useState } from 'react';
-import { useAlert, useApi } from 'context';
+import { useAlert, useApi } from '@/context';
 
 function useBalance(address: string | undefined) {
   const { api, isApiReady } = useApi();

@@ -12,8 +12,13 @@ import {
 import { createPortal } from 'react-dom';
 import { TransitionGroup } from 'react-transition-group';
 import { nanoid } from 'nanoid/non-secure';
-import { Transition } from 'components';
-import { DEFAULT_INFO_OPTIONS, DEFAULT_ERROR_OPTIONS, DEFAULT_LOADING_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
+import { Transition } from '@/components';
+import {
+  DEFAULT_INFO_OPTIONS,
+  DEFAULT_ERROR_OPTIONS,
+  DEFAULT_LOADING_OPTIONS,
+  DEFAULT_SUCCESS_OPTIONS,
+} from '@/consts';
 
 import {
   ProviderProps,

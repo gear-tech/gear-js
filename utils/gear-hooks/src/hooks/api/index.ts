@@ -64,6 +64,9 @@ export {
   useIssuedVouchers,
   useAccountIssuedVouchers,
   useDeriveStakingAccount,
+};
+
+export type {
   SendMessageOptions,
   UseSendMessageOptions,
   UseDeriveBalancesAllParameters,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useAccount, useAlert, useApi } from 'context';
+import { useAccount, useAlert, useApi } from '@/context';
 
 function useIssuedVouchers(accountAddress: string | undefined) {
   const { api, isApiReady } = useApi();
