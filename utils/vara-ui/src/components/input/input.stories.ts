@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
+
 import { Input } from './input';
 
 type Type = typeof Input;

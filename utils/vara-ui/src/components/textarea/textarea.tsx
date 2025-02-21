@@ -1,6 +1,7 @@
 import { ComponentPropsWithRef } from 'react';
 
 import { LabelContainer, LabelContainerProps } from '../label-container';
+
 import styles from './textarea.module.scss';
 
 type Props = Omit<ComponentPropsWithRef<'textarea'>, 'id' | 'size'> & LabelContainerProps;

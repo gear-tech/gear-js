@@ -33,9 +33,11 @@
     "react-dom": "^18 || ^19"
   },
   "dependencies": {
+    "clsx": "2.1.1",
     "non.geist": "1.0.4"
   },
   "devDependencies": {
+    "@gear-js/frontend-configs": "*",
     "@storybook/addon-essentials": "8.5.1",
     "@storybook/addon-interactions": "8.5.1",
     "@storybook/addon-links": "8.5.1",
@@ -44,13 +46,12 @@
     "@storybook/react": "8.5.1",
     "@storybook/react-vite": "8.5.1",
     "@storybook/testing-library": "0.2.2",
-    "clsx": "2.1.1",
     "storybook": "8.5.1",
     "storybook-dark-mode": "4.0.2"
   },
   "files": [
     "dist"
   ],
-  "main": "dist/vara-ui.js",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts"
 }

@@ -1,6 +1,7 @@
 import { cloneElement, CSSProperties, ReactNode, ReactElement, useState } from 'react';
 
 import { useRootPortal } from '../../hooks';
+
 import { getPosition } from './get-position';
 import styles from './tooltip.module.scss';
 

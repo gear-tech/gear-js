@@ -1,6 +1,7 @@
 import { OptionHTMLAttributes, useMemo, ComponentPropsWithRef } from 'react';
 
 import { LabelContainer, LabelContainerProps } from '../label-container';
+
 import styles from './select.module.scss';
 
 type Props = Omit<ComponentPropsWithRef<'select'>, 'id' | 'size'> &

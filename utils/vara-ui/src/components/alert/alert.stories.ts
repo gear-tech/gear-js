@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
+
 import { Alert } from './alert';
 
 type Type = typeof Alert;

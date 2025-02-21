@@ -48,6 +48,7 @@
     "zod": "3.22.4"
   },
   "devDependencies": {
+    "@gear-js/frontend-configs": "*",
     "@types/lodash.isequal": "4.5.8",
     "@types/lodash.isplainobject": "4.0.9",
     "@types/lodash.isstring": "4.0.9",
