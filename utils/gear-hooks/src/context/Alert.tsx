@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid/non-secure';
 import {
   useState,
   useRef,
@@ -11,7 +12,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { TransitionGroup } from 'react-transition-group';
-import { nanoid } from 'nanoid/non-secure';
+
 import { Transition } from '@/components';
 import {
   DEFAULT_INFO_OPTIONS,
@@ -140,8 +141,11 @@ const AlertProvider = ({ children, template: Template, containerClassName }: Pro
   useEffect(() => {
     root.current = document.createElement('div');
     root.current.id = 'alert-root';
-    containerClassName && root.current.classList.add(containerClassName);
+
+    if (containerClassName) root.current.classList.add(containerClassName);
+
     document.body.appendChild(root.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

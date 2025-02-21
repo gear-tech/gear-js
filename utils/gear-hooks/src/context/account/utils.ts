@@ -4,6 +4,7 @@ import { InjectedAccount, InjectedWindowProvider, InjectedWindow, Unsubcall } fr
 import { Signer } from '@polkadot/types/types';
 
 import { VARA_SS58_FORMAT } from '../../consts';
+
 import { LOCAL_STORAGE_KEY, WALLET_STATUS } from './consts';
 import { Account, Wallet, Wallets } from './types';
 

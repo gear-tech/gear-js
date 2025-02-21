@@ -18,7 +18,8 @@ function useVoucher(voucherId: HexString | undefined, accountAddress: string | u
     api.voucher
       .getDetails(accountAddress, voucherId)
       .then((result) => setVoucher(result))
-      .catch(({ message }) => alert.error(message));
+      .catch((error) => alert.error(error instanceof Error ? error.message : String(error)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, accountAddress, voucherId]);
 
   return { voucher, isVoucherReady };

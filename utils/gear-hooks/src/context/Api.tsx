@@ -77,7 +77,9 @@ function ApiProvider({ initialArgs, children }: Props) {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1816): resolve eslint comments
     switchNetwork(initialArgs);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const value = useMemo(

@@ -1,8 +1,10 @@
 import { EventRecord } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
+
 import { DEFAULT_SUCCESS_OPTIONS, DEFAULT_ERROR_OPTIONS } from '@/consts';
 import { useAlert, useApi } from '@/context';
 import { getExtrinsicFailedMessage } from '@/utils';
+
 import { Callbacks, Method, HandleSignStatusParams, TransactionStatus, ProgramError } from '../types';
 
 function useHandleSignStatus() {
@@ -18,9 +20,11 @@ function useHandleSignStatus() {
       const { method, section } = event;
       const alertOptions = { title: `${section}.${method}` };
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1816): resolve eslint comments
       if (method === Method.ExtrinsicFailed) {
         alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
         if (onError) onError();
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1816): resolve eslint comments
       } else if (method === Method.MessageQueued) {
         alert.success('Success', alertOptions);
         if (onSuccess) onSuccess(programId);

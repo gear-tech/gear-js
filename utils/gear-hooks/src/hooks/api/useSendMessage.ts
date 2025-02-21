@@ -3,8 +3,8 @@ import { EventRecord } from '@polkadot/types/interfaces';
 import { AnyJson, IKeyringPair, ISubmittableResult } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
-import { useAccount, useAlert, useApi } from '@/context';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@/consts';
+import { useAccount, useAlert, useApi } from '@/context';
 import { getExtrinsicFailedMessage } from '@/utils';
 
 type UseSendMessageOptions = {
@@ -50,14 +50,14 @@ function useSendMessage(
 
         const messageId = (event as MessageQueued).data.id.toHex();
 
-        onSuccess && onSuccess(messageId);
+        if (onSuccess) onSuccess(messageId);
       } else if (method === 'ExtrinsicFailed') {
         const message = getExtrinsicFailedMessage(api, event);
 
         console.error(message);
         alert.error(message, { title });
 
-        onError && onError();
+        if (onError) onError();
       }
     });
   };
@@ -87,7 +87,7 @@ function useSendMessage(
         if (event.method === 'MessageQueued') {
           const messageId = (event as MessageQueued).data.id.toHex();
 
-          onInBlock && onInBlock(messageId);
+          if (onInBlock) onInBlock(messageId);
         }
       });
     } else if (isFinalized) {
@@ -124,17 +124,17 @@ function useSendMessage(
         await extrinsic.signAndSend(address, { signer }, callback);
       }
     } catch (error) {
-      const { message } = error as Error;
+      const errorMessage = (error as Error).message;
 
       console.error(error);
 
       if (alertId) {
-        alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
+        alert.update(alertId, errorMessage, DEFAULT_ERROR_OPTIONS);
       } else {
-        alert.error(message);
+        alert.error(errorMessage);
       }
 
-      onError && onError();
+      if (onError) onError();
     }
   };
 

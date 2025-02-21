@@ -40,8 +40,10 @@ function useDeriveStakingAccount<T = DeriveStakingAccount>({
     });
 
     return () => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1816): resolve eslint comments
       unsub.then((unsubCallback) => unsubCallback());
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, address, watch]);
 
   return useQuery({

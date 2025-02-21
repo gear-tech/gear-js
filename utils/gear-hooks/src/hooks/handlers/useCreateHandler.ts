@@ -1,12 +1,14 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
+
 import { useAlert } from '@/context';
 import { getAutoGasLimit } from '@/utils';
-import { Options } from '../api/useProgram/types';
-import { useCreateProgram, useCreateCalculateGas } from '../api';
 
-function useCreateHandler(codeId: HexString | undefined, metadata?: ProgramMetadata | undefined) {
+import { useCreateProgram, useCreateCalculateGas } from '../api';
+import { Options } from '../api/useProgram/types';
+
+function useCreateHandler(codeId: HexString | undefined, metadata?: ProgramMetadata) {
   const alert = useAlert();
 
   const createProgram = useCreateProgram(codeId, metadata);

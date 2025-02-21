@@ -19,6 +19,7 @@ function useIsVoucherExists(programId: HexString | undefined, accountAddress: He
       .exists(accountAddress, programId)
       .then((result) => setIsVoucherExists(result))
       .catch(({ message }: Error) => alert.error(message));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady, accountAddress, programId]);
 
   return { isVoucherExists, isVoucherExistsReady };
