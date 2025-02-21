@@ -9,7 +9,6 @@ import { defineConfig } from 'vite';
 
 export default defineConfig(({ mode }) =>
   viteConfigs.lib({
-    injectCss: false,
     outDir: mode === 'deprecated' ? 'dist-temp' : undefined,
     entry: mode === 'deprecated' ? 'src/index-deprecated.ts' : undefined,
   }),

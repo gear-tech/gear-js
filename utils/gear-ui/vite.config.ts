@@ -1,3 +1,3 @@
 import { viteConfigs } from '@gear-js/frontend-configs';
 
-export default viteConfigs.lib();
+export default viteConfigs.lib({ injectCss: true });
