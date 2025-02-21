@@ -1,11 +1,13 @@
-import { ComponentPropsWithRef, useId } from 'react';
 import clsx from 'clsx';
-import { InputProps, SVGComponent } from '../../types';
+import { ComponentPropsWithRef, useId } from 'react';
+
 import { useClearButton } from '../../hooks';
+import { InputProps, SVGComponent } from '../../types';
 import { Button } from '../Button/Button';
 import { InputWrapper } from '../utils';
-import SearchSVG from './images/search.svg?react';
+
 import styles from './Input.module.scss';
+import SearchSVG from './images/search.svg?react';
 
 type Props = Omit<ComponentPropsWithRef<'input'>, 'size'> &
   InputProps & {

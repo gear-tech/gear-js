@@ -1,4 +1,5 @@
 import { ComponentPropsWithRef } from 'react';
+
 import { SVGComponent } from '../../types';
 
 type BaseProps = ComponentPropsWithRef<'button'> & {

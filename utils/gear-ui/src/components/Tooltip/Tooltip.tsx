@@ -1,4 +1,5 @@
 import { TooltipWrapper } from '../utils/TooltipWrapper';
+
 import styles from './Tooltip.module.scss';
 
 type Props = {

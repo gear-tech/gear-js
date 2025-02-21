@@ -1,5 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { FormEvent } from 'react';
 import { describe, it, expect, vi } from 'vitest';
+
 import { Input } from './Input';
 import styles from './Input.module.scss';
 
@@ -12,7 +14,7 @@ describe('input tests', () => {
     expect(input).toBeInTheDocument();
   });
 
-  it('renders input with label', async () => {
+  it('renders input with label', () => {
     const { rerender } = render(<Input label="label" />);
 
     const input = screen.getByLabelText('label');
@@ -50,7 +52,7 @@ describe('input tests', () => {
   });
 
   it('renders search input', () => {
-    const onSubmitMock = vi.fn((e) => e.preventDefault());
+    const onSubmitMock = vi.fn((e: FormEvent<HTMLFormElement>) => e.preventDefault());
 
     render(
       <form onSubmit={onSubmitMock}>

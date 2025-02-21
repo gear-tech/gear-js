@@ -1,7 +1,9 @@
-import { ReactNode } from 'react';
 import clsx from 'clsx';
+import { ReactNode } from 'react';
+
 import { Gap } from '../../../types';
 import { Tooltip } from '../../Tooltip/Tooltip';
+
 import styles from './InputWrapper.module.scss';
 
 type Props = {
@@ -23,8 +25,8 @@ const InputWrapper = (props: Props) => {
   const wrapperClassName = clsx(styles.wrapper, className, disabled && 'disabled', label && styles[direction]);
   const labelWrapperClassName = clsx(styles.labelWrapper, styles[size], styles[direction]);
 
-  const getLabelGap = (gap: Gap) => {
-    const [labelColumn, inputColumn] = gap.split('/');
+  const getLabelGap = (gapValue: Gap) => {
+    const [labelColumn, inputColumn] = gapValue.split('/');
     const gridTemplateColumns = `${labelColumn}fr ${inputColumn}fr`;
 
     return { gridTemplateColumns };

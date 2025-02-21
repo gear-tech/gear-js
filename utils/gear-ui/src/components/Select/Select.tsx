@@ -1,7 +1,9 @@
-import { OptionHTMLAttributes, useId, ReactNode, ComponentPropsWithRef } from 'react';
 import clsx from 'clsx';
+import { OptionHTMLAttributes, useId, ReactNode, ComponentPropsWithRef } from 'react';
+
 import { InputProps } from '../../types';
 import { InputWrapper } from '../utils';
+
 import styles from './Select.module.scss';
 
 type Props = Omit<ComponentPropsWithRef<'select'>, 'size'> &

@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
+
 import { Select } from './Select';
 import styles from './Select.module.scss';
 

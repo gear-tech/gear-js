@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
+
 import { Button } from './Button';
 import styles from './Button.module.scss';
 
