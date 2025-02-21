@@ -1,11 +1,6 @@
 import tseslint from 'typescript-eslint';
 import eslint from '@eslint/js';
 import storybook from 'eslint-plugin-storybook';
-import reacthooks from 'eslint-plugin-react-hooks';
-import globals from 'globals';
-import reactrefresh from 'eslint-plugin-react-refresh';
-import react from 'eslint-plugin-react';
-import jsxA11y from 'eslint-plugin-jsx-a11y';
 import json from '@eslint/json';
 import { eslintConfig as frontendEslintConfig } from '@gear-js/frontend-configs';
 
@@ -49,12 +44,8 @@ export default [
   ...frontendEslintConfig.map((conf) => ({
     ...conf,
     files: [
-      'idea/gear/frontend/src/**/*.{ts,js,tsx,jsx}',
-      'idea/gearexe/frontend/src/**/*.{ts,js,tsx,jsx}',
-      'utils/gear-hooks/src/**/*.{ts,js,tsx,jsx}',
-      'utils/gear-ui/src/**/*.{ts,js,tsx,jsx}',
-      'utils/vara-ui/src/**/*.{ts,js,tsx,jsx}',
-      'utils/wallet-connect/src/**/*.{ts,js,tsx,jsx}',
+      'idea/{gear,gearexe}/frontend/src/**/*.{ts,js,tsx,jsx}',
+      'utils/{gear-hooks,gear-ui,vara-ui,wallet-connect}/src/**/*.{ts,js,tsx,jsx}',
     ],
   })),
   ...storybook.configs['flat/recommended'].map((conf) => ({
