@@ -20,23 +20,16 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  await new Promise((resolve) => setTimeout(resolve, 3000));
   wallet.provider.destroy();
 });
 
 const uploadCodeTest = () => {
   test('upload code', async () => {
-    const [txHash, _codeId] = (await api.provider.send('dev_setBlob', [ethers.hexlify(new Uint8Array(code))])) as [
-      string,
-      string,
-    ];
-
-    expect(_codeId).toBe(config.codeId);
-
-    codeId = _codeId;
-
-    const { receipt, waitForCodeGotValidated } = await router.requestCodeValidationNoBlob(_codeId, txHash);
+    const { receipt, waitForCodeGotValidated } = await router.requestCodeValidationNoBlob(code, api);
 
     codeValidatedPromise = waitForCodeGotValidated();
+
     expect(receipt.blockHash).toBeDefined();
   });
 

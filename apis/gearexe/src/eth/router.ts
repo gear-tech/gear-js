@@ -77,7 +77,6 @@ export class RouterContract extends BaseContract {
   }
 
   async requestCodeValidationNoBlob(code: Uint8Array, api: GearExeApi) {
-    throw new Error('not supported');
     const codeId = generateCodeHash(code);
 
     const transaction = await this.getFunction('requestCodeValidation').populateTransaction(codeId);
@@ -98,7 +97,6 @@ export class RouterContract extends BaseContract {
       to: transaction.to,
       gasLimit: 5_000_000n,
       maxFeePerBlobGas: 400_000_000_000,
-      blobVersionedHashes: [ethers.keccak256(ethers.hexlify(new Uint8Array(code)))],
       blobs: [
         {
           data: blobData,
