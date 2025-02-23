@@ -146,6 +146,8 @@ jobs:
       - name: 'Test: run'
         if: steps.changed-gearexe.outputs.any_changed == 'true'
         run: yarn test:gearexe-api
+        env:
+          GEAR_BRANCH: ${{ vars.GEAR_BRANCH }}
 
   check-gear-idea-version:
     runs-on: ubuntu-latest
