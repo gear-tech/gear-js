@@ -13,6 +13,7 @@ mkdir -p $ETH_DIR
 mkdir -p $GEAREXE_DIR
 
 cleanup() {
+    exit_code=$?
     echo "[*]  Performing cleanup..."
     if [[ -n "$GEAREXE_PID" ]]; then
         echo "[*]  Stopping Gear node (PID: $GEAREXE_PID)..."
@@ -25,16 +26,13 @@ cleanup() {
     fi
 
     # Print logs if exit code is not 0
-    if [ $? -ne 0 ]; then
+    if [ $exit_code -ne 0 ]; then
         echo '[*]  Logs:'
-        echo "======================================================"
+        echo "===========================GEAREXE==========================="
         cat $GEAREXE_DIR/gearexe.log
-        echo "======================================================"
+        echo "============================RETH============================="
         cat $ETH_DIR/reth.log
     fi
-
-    cp $GEAREXE_DIR/gearexe.log $PROJECT_DIR
-    cp $ETH_DIR/reth.log $PROJECT_DIR
 
     echo "[*]  Removing temporary files..."
     rm -rf $GEAREXE_DIR
@@ -70,11 +68,10 @@ echo "[*]  Checking if path to gear repo is provided..."
 if [[ -n "$GEAR_REPO" ]]; then
     path_to_gear_repo=$GEAR_REPO
 else
-    echo "[*]  Cloning gear repo..."
     if [[ -z $GEAR_BRANCH ]]; then
         GEAR_BRANCH=master
     fi
-
+    echo "[*]  Cloning gear repo (branch $GEAR_BRANCH)..."
     git clone --depth 1 -b $GEAR_BRANCH https://github.com/gear-tech/gear $GEAR_REPO_DIR
     path_to_gear_repo="$GEAR_REPO_DIR"
 fi
@@ -120,7 +117,7 @@ if [[ -z "$RETH_BIN" ]]; then
     esac
 
     RETH_LINK="https://github.com/paradigmxyz/reth/releases/download/v1.2.0/reth-v1.2.0-$platform.tar.gz"
-    echo "[*]  Downloading reth..."
+    echo "[*]  Downloading reth ($RETH_LINK)..."
     curl -L $RETH_LINK -o "$ETH_DIR/reth.tar.gz"
     tar -xvf "$ETH_DIR/reth.tar.gz" -C $ETH_DIR
     ls -al $ETH_DIR
