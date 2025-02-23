@@ -71,7 +71,11 @@ if [[ -n "$GEAR_REPO" ]]; then
     path_to_gear_repo=$GEAR_REPO
 else
     echo "[*]  Cloning gear repo..."
-    git clone --depth 1 https://github.com/gear-tech/gear $GEAR_REPO_DIR
+    if [[ -z $GEAR_BRANCH ]]; then
+        GEAR_BRANCH=master
+    fi
+
+    git clone --depth 1 -b $GEAR_BRANCH https://github.com/gear-tech/gear $GEAR_REPO_DIR
     path_to_gear_repo="$GEAR_REPO_DIR"
 fi
 
