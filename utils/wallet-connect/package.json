@@ -18,7 +18,7 @@
   ],
   "homepage": "https://github.com/gear-tech/gear-js/tree/main/utils/wallet-connect#readme",
   "scripts": {
-    "start": "npx vite --open --port 3000",
+    "start": "npx vite",
     "build": "npx vite build",
     "preview": "npx vite preview",
     "clean": "echo \"clean @gear-js/wallet-connect\" && rm -rf dist"
@@ -27,7 +27,9 @@
     "@gear-js/react-hooks": "0.16.0",
     "@gear-js/ui": "0.7.0",
     "@gear-js/vara-ui": "0.3.1",
-    "@polkadot/react-identicon": "^3"
+    "@polkadot/react-identicon": "^3",
+    "react": "^19",
+    "react-dom": "^19"
   },
   "peerDependenciesMeta": {
     "@gear-js/ui": {
@@ -37,17 +39,22 @@
       "optional": true
     }
   },
+  "dependencies": {
+    "clsx": "2.1.1"
+  },
   "devDependencies": {
+    "@gear-js/frontend-configs": "*",
     "@gear-js/react-hooks": "0.16.0",
     "@gear-js/ui": "0.7.0",
     "@gear-js/vara-ui": "0.3.1",
     "@polkadot/react-identicon": "3.12.1",
     "@tanstack/react-query": "5.56.2",
-    "clsx": "2.1.1"
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
   },
   "files": [
     "dist"
   ],
-  "main": "dist/wallet-connect.js",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts"
 }

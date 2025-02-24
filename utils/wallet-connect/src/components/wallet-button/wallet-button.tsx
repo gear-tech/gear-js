@@ -1,5 +1,5 @@
-import * as Vara from '@gear-js/vara-ui';
 import * as Gear from '@gear-js/ui';
+import * as Vara from '@gear-js/vara-ui';
 import cx from 'clsx';
 import { FunctionComponent, ReactNode, SVGProps } from 'react';
 
@@ -52,18 +52,25 @@ function GearWalletButton({ children, SVG, name, ...props }: Props & WalletProps
   );
 }
 
-VaraWalletButton.Change = ({ SVG, name, children, ...props }: Omit<Props, 'disabled'> & WalletProps) => (
-  <Vara.Button color="transparent" {...props}>
-    <Wallet SVG={SVG} name={name} />
-    {children}
-  </Vara.Button>
-);
+function VaraWalletButtonChange({ SVG, name, children, ...props }: Omit<Props, 'disabled'> & WalletProps) {
+  return (
+    <Vara.Button color="transparent" {...props}>
+      <Wallet SVG={SVG} name={name} />
+      {children}
+    </Vara.Button>
+  );
+}
 
-GearWalletButton.Change = ({ SVG, name, children, ...props }: Omit<Props, 'disabled'> & WalletProps) => (
-  <button type="button" className={cx(Gear.buttonStyles.button, Gear.buttonStyles.transparent)} {...props}>
-    <Wallet SVG={SVG} name={name} />
-    {children}
-  </button>
-);
+function GearWalletButtonChange({ SVG, name, children, ...props }: Omit<Props, 'disabled'> & WalletProps) {
+  return (
+    <button type="button" className={cx(Gear.buttonStyles.button, Gear.buttonStyles.transparent)} {...props}>
+      <Wallet SVG={SVG} name={name} />
+      {children}
+    </button>
+  );
+}
+
+VaraWalletButton.Change = VaraWalletButtonChange;
+GearWalletButton.Change = GearWalletButtonChange;
 
 export { VaraWalletButton, GearWalletButton };

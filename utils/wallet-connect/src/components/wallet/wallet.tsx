@@ -2,8 +2,9 @@ import { useAccount } from '@gear-js/react-hooks';
 import { useState } from 'react';
 
 import { Balance } from '../balance';
-import { WalletModal } from '../wallet-modal';
 import { UI_CONFIG } from '../ui-config';
+import { WalletModal } from '../wallet-modal';
+
 import styles from './wallet.module.scss';
 
 type Props = {

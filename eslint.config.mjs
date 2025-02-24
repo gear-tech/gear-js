@@ -1,11 +1,6 @@
 import tseslint from 'typescript-eslint';
 import eslint from '@eslint/js';
 import storybook from 'eslint-plugin-storybook';
-import reacthooks from 'eslint-plugin-react-hooks';
-import globals from 'globals';
-import reactrefresh from 'eslint-plugin-react-refresh';
-import react from 'eslint-plugin-react';
-import jsxA11y from 'eslint-plugin-jsx-a11y';
 import json from '@eslint/json';
 import { eslintConfig as frontendEslintConfig } from '@gear-js/frontend-configs';
 
@@ -46,45 +41,11 @@ export default [
       '@typescript-eslint/no-empty-object-type': ['error', { allowInterfaces: 'with-single-extends' }],
     },
   },
-  ...[reactrefresh.configs.recommended, ...tseslint.configs.recommended].map((conf) => ({
-    ...conf,
-    files: ['utils/{wallet-connect}/src/**/*.{ts,js,tsx,jsx}'],
-  })),
-  {
-    files: ['utils/{wallet-connect}/src/**/*.{ts,js,tsx,jsx}'],
-    plugins: {
-      'react-hooks': reacthooks,
-    },
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.es2020,
-      },
-    },
-    rules: {
-      'react-refresh/only-export-components': [
-        'warn',
-        {
-          allowConstantExport: true,
-        },
-      ],
-      '@typescript-eslint/no-unused-expressions': [
-        'error',
-        {
-          allowShortCircuit: true,
-          allowTernary: true,
-        },
-      ],
-    },
-  },
   ...frontendEslintConfig.map((conf) => ({
     ...conf,
     files: [
-      'idea/gear/frontend/src/**/*.{ts,js,tsx,jsx}',
-      'idea/gearexe/frontend/src/**/*.{ts,js,tsx,jsx}',
-      'utils/gear-hooks/src/**/*.{ts,js,tsx,jsx}',
-      'utils/gear-ui/src/**/*.{ts,js,tsx,jsx}',
-      'utils/vara-ui/src/**/*.{ts,js,tsx,jsx}',
+      'idea/{gear,gearexe}/frontend/src/**/*.{ts,js,tsx,jsx}',
+      'utils/{gear-hooks,gear-ui,vara-ui,wallet-connect}/src/**/*.{ts,js,tsx,jsx}',
     ],
   })),
   ...storybook.configs['flat/recommended'].map((conf) => ({

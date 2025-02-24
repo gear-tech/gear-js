@@ -1,6 +1,6 @@
 import { AlertContainerFactory } from '@gear-js/react-hooks';
 
-const copyToClipboard = async ({ alert, value }: { alert: AlertContainerFactory; value: string }) => {
+const copyToClipboard = ({ alert, value }: { alert: AlertContainerFactory; value: string }) => {
   const onSuccess = () => alert.success('Copied');
   const onError = () => alert.error('Copy error');
 
