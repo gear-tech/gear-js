@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { useAccount } from 'context';
+import { useAccount } from '@/context';
 
 import {
   FunctionName,
@@ -51,7 +51,7 @@ function usePrepareProgramTransaction<
     if (voucherId) transaction.withVoucher(voucherId);
 
     if (typeof gasLimit === 'bigint') {
-      await transaction.withGas(gasLimit);
+      transaction.withGas(gasLimit);
     } else {
       const { allowOtherPanics, increaseGas } = gasLimit || {};
       await transaction.calculateGas(allowOtherPanics, increaseGas);

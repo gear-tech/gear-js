@@ -23,7 +23,7 @@ const plugins = [
 
 const app = defineConfig({ ...options, plugins });
 
-const lib = ({ injectCss = true, outDir = 'dist', entry = 'src/index.ts' } = {}) =>
+const lib = ({ injectCss = false, outDir = 'dist', entry = 'src/index.ts' } = {}) =>
   defineConfig({
     ...options,
 

@@ -1,6 +1,7 @@
 import { formatBalance } from '@polkadot/util';
 import { BigNumber } from 'bignumber.js';
-import { useApi } from 'context';
+
+import { useApi } from '@/context';
 
 function useBalanceFormat() {
   const { api, isApiReady } = useApi();

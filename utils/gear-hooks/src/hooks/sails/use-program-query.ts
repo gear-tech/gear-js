@@ -2,10 +2,11 @@ import { HexString, ICalculateReplyForHandleOptions } from '@gear-js/api';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 
-import { useAccount, useApi } from 'context';
+import { useAccount, useApi } from '@/context';
 
 import { QueryParameters } from '../../types';
 import { useQuery } from '../use-query';
+
 import { Query, QueryArgs, QueryName, QueryReturn, ServiceName } from './types';
 
 type CalculateReplyOptions = Pick<ICalculateReplyForHandleOptions, 'at' | 'value'>;
@@ -81,12 +82,15 @@ function useProgramQuery<
 
       if (!isAnyChange) return;
 
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1816): resolve eslint comments
       queryClient.invalidateQueries({ queryKey });
     });
 
     return () => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1816): resolve eslint comments
       unsub.then((unsubCallback) => unsubCallback());
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, programId, watch]);
 
   return useQuery({

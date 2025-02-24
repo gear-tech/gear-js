@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { useAlert, useApi } from 'context';
+import { useAlert, useApi } from '@/context';
 
 import { useGetApproxBlockTimestamp } from '../block';
 
@@ -36,6 +36,7 @@ function useVoucherStatus(expirationBlock: number | undefined) {
     getVoucherStatus(expirationBlock)
       .then((result) => setStatus(result))
       .catch(({ message }: Error) => alert.error(message));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady, expirationBlock]);
 
   return status === undefined

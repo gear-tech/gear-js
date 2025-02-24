@@ -4,7 +4,7 @@ import { Signer } from '@polkadot/types/types';
 
 import { WALLET_STATUS } from './consts';
 
-type WalletStatus = typeof WALLET_STATUS[keyof typeof WALLET_STATUS];
+type WalletStatus = (typeof WALLET_STATUS)[keyof typeof WALLET_STATUS];
 
 type Account = InjectedAccountWithMeta & {
   decodedAddress: HexString;

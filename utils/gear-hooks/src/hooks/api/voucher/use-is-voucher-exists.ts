@@ -1,7 +1,7 @@
 import { HexString } from '@gear-js/api';
 import { useState, useEffect } from 'react';
 
-import { useAccount, useAlert, useApi } from 'context';
+import { useAccount, useAlert, useApi } from '@/context';
 
 function useIsVoucherExists(programId: HexString | undefined, accountAddress: HexString | undefined) {
   const { api, isApiReady } = useApi();
@@ -19,6 +19,7 @@ function useIsVoucherExists(programId: HexString | undefined, accountAddress: He
       .exists(accountAddress, programId)
       .then((result) => setIsVoucherExists(result))
       .catch(({ message }: Error) => alert.error(message));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady, accountAddress, programId]);
 
   return { isVoucherExists, isVoucherExistsReady };

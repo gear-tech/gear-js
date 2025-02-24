@@ -1,4 +1,13 @@
 import { BigNumber } from 'bignumber.js';
+
+import {
+  DEFAULT_OPTIONS,
+  DEFAULT_INFO_OPTIONS,
+  DEFAULT_ERROR_OPTIONS,
+  DEFAULT_SUCCESS_OPTIONS,
+  DEFAULT_LOADING_OPTIONS,
+  VARA_SS58_FORMAT,
+} from './consts';
 import {
   AccountProvider,
   useAccount,
@@ -10,7 +19,6 @@ import {
   AlertProvider,
   useAlert,
 } from './context';
-
 import {
   useReadFullState,
   useReadWasmState,
@@ -60,18 +68,6 @@ import {
   useDeriveStakingAccount,
   UseDeriveStakingAccountParameters,
 } from './hooks';
-
-import { withoutCommas, getVaraAddress, getTypedEntries } from './utils';
-
-import {
-  DEFAULT_OPTIONS,
-  DEFAULT_INFO_OPTIONS,
-  DEFAULT_ERROR_OPTIONS,
-  DEFAULT_SUCCESS_OPTIONS,
-  DEFAULT_LOADING_OPTIONS,
-  VARA_SS58_FORMAT,
-} from './consts';
-
 import {
   AlertType,
   AlertOptions,
@@ -84,6 +80,7 @@ import {
   ProviderProps,
   Entries,
 } from './types';
+import { withoutCommas, getVaraAddress, getTypedEntries } from './utils';
 
 export {
   BigNumber,

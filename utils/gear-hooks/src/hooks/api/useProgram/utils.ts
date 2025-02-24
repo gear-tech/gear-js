@@ -1,5 +1,6 @@
 import { GearApi } from '@gear-js/api';
 import { UnsubscribePromise } from '@polkadot/api/types';
+
 import { ProgramStatus } from './types';
 
 const waitForProgramInit = (api: GearApi, programId: string) => {
@@ -17,6 +18,7 @@ const waitForProgramInit = (api: GearApi, programId: string) => {
         }
       }
     });
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- TODO(#1816): resolve eslint comments
   }).finally(unsubscribe);
 };
 
