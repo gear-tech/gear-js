@@ -35,8 +35,8 @@
     "@gear-js/frontend-configs": "*",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.2.0",
-    "happy-dom": "17.1.1",
-    "vitest": "3.0.6"
+    "happy-dom": "17.1.4",
+    "vitest": "3.0.7"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
