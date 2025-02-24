@@ -1,9 +1,11 @@
 import clsx from 'clsx';
 import { ReactNode, useEffect, useState, MouseEvent, useCallback, ReactPortal } from 'react';
 import { createPortal } from 'react-dom';
+
 import { Button } from '../Button/Button';
-import { ReactComponent as xSVG } from './images/x.svg';
+
 import styles from './Modal.module.scss';
+import xSVG from './images/x.svg?react';
 
 type Props = {
   heading: string;
@@ -57,6 +59,7 @@ const Modal = ({ heading, close, children, footer, className, size = 'normal' }:
   }, []);
 
   const component = (
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- TODO(#1810): resolve eslint comments
     <div className={styles.overlay} onClick={handleOverlayClick} data-testid="overlay">
       <div className={modalClassName} data-testid="modal">
         <header className={styles.header} ref={headerRef}>

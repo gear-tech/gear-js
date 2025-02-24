@@ -1,12 +1,14 @@
 import { useRef, MouseEvent, useImperativeHandle, useState, ChangeEvent, useId, ComponentPropsWithRef } from 'react';
+
+import { useChangeEffect } from '../../hooks';
 import { InputProps } from '../../types';
 import { getFileSize } from '../../utils';
 import { Button, ButtonProps } from '../Button/Button';
 import { InputWrapper } from '../utils';
-import { ReactComponent as RemoveSVG } from './images/remove.svg';
-import { ReactComponent as SelectSVG } from './images/select.svg';
+
 import styles from './FileInput.module.scss';
-import { useChangeEffect } from 'hooks';
+import RemoveSVG from './images/remove.svg?react';
+import SelectSVG from './images/select.svg?react';
 
 type Props = Omit<ComponentPropsWithRef<'input'>, 'size' | 'value' | 'onChange' | 'accept'> &
   Omit<InputProps, 'color'> & {

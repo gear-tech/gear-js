@@ -1,5 +1,6 @@
-import { ComponentPropsWithRef } from 'react';
 import clsx from 'clsx';
+import { ComponentPropsWithRef } from 'react';
+
 import styles from './Checkbox.module.scss';
 
 type Props = ComponentPropsWithRef<'input'> & {

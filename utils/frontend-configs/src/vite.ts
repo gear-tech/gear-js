@@ -23,14 +23,15 @@ const plugins = [
 
 const app = defineConfig({ ...options, plugins });
 
-const lib = ({ injectCss = true, outDir = 'dist', entry = 'src/index.ts' } = {}) => {
-  const rollupOptions = injectCss ? { output: { intro: 'import "./style.css";' } } : {};
-
-  return defineConfig({
+const lib = ({ injectCss = true, outDir = 'dist', entry = 'src/index.ts' } = {}) =>
+  defineConfig({
     ...options,
 
     plugins: [
       ...plugins,
+
+      // TODO: - build dts only for index.ts imports
+      //       - take a look at css module resolutions
       dts({ tsconfigPath: resolve(process.cwd(), 'tsconfig.app.json') }),
       externalizeDeps({ deps: false }),
     ],
@@ -45,10 +46,11 @@ const lib = ({ injectCss = true, outDir = 'dist', entry = 'src/index.ts' } = {})
         cssFileName: 'style',
       },
 
-      ...rollupOptions,
+      rollupOptions: {
+        output: { intro: injectCss ? 'import "./style.css";' : '' },
+      },
     },
   });
-};
 
 const viteConfigs = { app, lib };
 

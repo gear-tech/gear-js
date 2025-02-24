@@ -1,9 +1,11 @@
-import { useId, ComponentPropsWithRef } from 'react';
 import clsx from 'clsx';
-import { InputProps } from '../../types';
+import { useId, ComponentPropsWithRef } from 'react';
+
 import { useClearButton } from '../../hooks';
-import { InputWrapper } from '../utils';
+import { InputProps } from '../../types';
 import { Button } from '../Button/Button';
+import { InputWrapper } from '../utils';
+
 import styles from './Textarea.module.scss';
 
 type Props = ComponentPropsWithRef<'textarea'> & InputProps;

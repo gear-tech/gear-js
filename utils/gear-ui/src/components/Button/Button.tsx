@@ -1,6 +1,7 @@
 import clsx from 'clsx';
-import { Props } from './Button.types';
+
 import styles from './Button.module.scss';
+import { Props } from './Button.types';
 
 const Button = (props: Props) => {
   const {

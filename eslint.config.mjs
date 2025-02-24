@@ -48,10 +48,10 @@ export default [
   },
   ...[reactrefresh.configs.recommended, ...tseslint.configs.recommended].map((conf) => ({
     ...conf,
-    files: ['utils/{gear-hooks,gear-ui,wallet-connect}/src/**/*.{ts,js,tsx,jsx}'],
+    files: ['utils/{gear-hooks,wallet-connect}/src/**/*.{ts,js,tsx,jsx}'],
   })),
   {
-    files: ['utils/{gear-hooks,gear-ui,wallet-connect}/src/**/*.{ts,js,tsx,jsx}'],
+    files: ['utils/{gear-hooks,wallet-connect}/src/**/*.{ts,js,tsx,jsx}'],
     plugins: {
       'react-hooks': reacthooks,
     },
@@ -82,6 +82,7 @@ export default [
     files: [
       'idea/gear/frontend/src/**/*.{ts,js,tsx,jsx}',
       'idea/gearexe/frontend/src/**/*.{ts,js,tsx,jsx}',
+      'utils/gear-ui/src/**/*.{ts,js,tsx,jsx}',
       'utils/vara-ui/src/**/*.{ts,js,tsx,jsx}',
     ],
   })),
