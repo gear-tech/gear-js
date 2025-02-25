@@ -28,10 +28,10 @@ cleanup() {
     # Print logs if exit code is not 0
     if [ $exit_code -ne 0 ]; then
         echo '[*]  Logs:'
-        echo "===========================GEAREXE==========================="
-        cat $GEAREXE_DIR/gearexe.log
         echo "============================RETH============================="
-        cat $ETH_DIR/reth.log
+        cat $ETH_DIR/reth.log 2>/dev/null
+        echo "===========================GEAREXE==========================="
+        cat $GEAREXE_DIR/gearexe.log 2>/dev/null
     fi
 
     echo "[*]  Removing temporary files..."
