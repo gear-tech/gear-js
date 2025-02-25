@@ -62,7 +62,11 @@ const handler = async (ctx: ProcessorContext<Store>) => {
       const { handler } = eventHandlers.find(({ pattern }) => pattern(event)) || {};
 
       if (handler) {
-        await handler({ block, common, ctx, event, tempState });
+        try {
+          await handler({ block, common, ctx, event, tempState });
+        } catch (err) {
+          ctx.log.error({ name: event.name, block: block.header.height, stack: err.stack }, err.message);
+        }
       }
     }
   }
