@@ -106,7 +106,7 @@ fi
 if [[ -z "$RETH_BIN" ]]; then
     platform=
     case "$(uname)" in
-        Linux*)   platform="aarch64-unknown-linux-gnu" ;;
+        Linux*)   platform="x86_64-unknown-linux-gnu" ;;
         Darwin*)  platform="aarch64-apple-darwin" ;;
         CYGWIN*|MINGW*|MSYS*)
             platform="x86_64-pc-windows-gnu" ;;
