@@ -20,7 +20,7 @@ const ExpandableItem = ({ children, header, headerSlot, isNested }: Props) => {
       <div className={clsx(styles.header, isNested && styles.nested)}>
         <div className={styles.leftSide}>
           <Button variant="icon" onClick={() => setIsOpen((prev) => !prev)}>
-            <ArrowDownSVG className={clsx(isOpen && styles.iconOpen)} />
+            <ArrowDownSVG className={clsx(styles.icon, isOpen && styles.iconOpen)} />
           </Button>
           {header}
         </div>

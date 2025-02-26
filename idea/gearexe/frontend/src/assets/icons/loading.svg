@@ -1,10 +1,10 @@
 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="1.66667" cy="10" r="1.66667" fill="black" fill-opacity="0.5"/>
-<circle cx="18.3334" cy="10" r="1.66667" fill="black" fill-opacity="0.5"/>
-<circle cx="9.99992" cy="1.66667" r="1.66667" fill="black" fill-opacity="0.5"/>
-<circle cx="9.99992" cy="18.3333" r="1.66667" fill="black"/>
-<circle cx="15.8918" cy="4.10739" r="1.66667" transform="rotate(45 15.8918 4.10739)" fill="black" fill-opacity="0.5"/>
-<circle cx="4.10815" cy="15.8925" r="1.66667" transform="rotate(45 4.10815 15.8925)" fill="black" fill-opacity="0.5"/>
-<circle cx="15.8932" cy="15.8926" r="1.66667" transform="rotate(135 15.8932 15.8926)" fill="black" fill-opacity="0.5"/>
-<circle cx="4.10782" cy="4.10742" r="1.66667" transform="rotate(135 4.10782 4.10742)" fill="black" fill-opacity="0.5"/>
+<circle cx="1.66667" cy="10" r="1.66667" fill="currentColor" fill-opacity="0.5"/>
+<circle cx="18.3334" cy="10" r="1.66667" fill="currentColor" fill-opacity="0.5"/>
+<circle cx="9.99992" cy="1.66667" r="1.66667" fill="currentColor" fill-opacity="0.5"/>
+<circle cx="9.99992" cy="18.3333" r="1.66667" fill="currentColor" fill-opacity="0.5"/>
+<circle cx="15.8918" cy="4.10739" r="1.66667" transform="rotate(45 15.8918 4.10739)" fill="currentColor" fill-opacity="0.5"/>
+<circle cx="4.10815" cy="15.8925" r="1.66667" transform="rotate(45 4.10815 15.8925)" fill="currentColor" fill-opacity="0.5"/>
+<circle cx="15.8932" cy="15.8926" r="1.66667" transform="rotate(135 15.8932 15.8926)" fill="currentColor" fill-opacity="0.5"/>
+<circle cx="4.10782" cy="4.10742" r="1.66667" transform="rotate(135 4.10782 4.10742)" fill="currentColor" fill-opacity="0.5"/>
 </svg>

@@ -1,9 +1,14 @@
 import { clsx } from 'clsx';
+import { useAtomValue } from 'jotai';
 import { useState } from 'react';
 
+import { myActivityAtom } from '@/app/store';
 import DoubleDownSVG from '@/assets/icons/double-down.svg?react';
 import { Button, Tabs, ExpandableItem } from '@/components';
 
+import { useAllActivity } from '../lib';
+
+import { ActivityEvent } from './activity-event';
 import styles from './activity.module.scss';
 import { Block } from './block';
 import { Transaction } from './transaction';
@@ -13,6 +18,9 @@ const tabs = ['Latest activity', 'My activity'];
 const Activity = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(true);
+
+  const myActivity = useAtomValue(myActivityAtom);
+  const allActivity = useAllActivity();
 
   return (
     <div className={clsx(styles.wrapper, isOpen && styles.open)}>
@@ -32,18 +40,42 @@ const Activity = () => {
         </Button>
       </div>
 
-      {isOpen && (
+      {isOpen && tabIndex === 0 && (
         <div className={styles.content}>
-          <ExpandableItem
-            header={
-              <Block
-                blockHash={'0xb5eb85e6e9333f75c798c71ef14fc535d2de5eccff4f5ef91bae691b31618a7e'}
-                blockNumber={4400012300}
-                date={Date.now()}
-              />
-            }>
-            <Transaction />
-          </ExpandableItem>
+          {allActivity.map((activity) => (
+            <ExpandableItem
+              key={activity.blockHash}
+              header={
+                <Block
+                  blockHash={activity.blockHash}
+                  blockNumber={activity.blockNumber}
+                  timestamp={activity.timestamp}
+                />
+              }>
+              {activity.events.map((activityEvent, index) => (
+                <ActivityEvent key={index} item={activityEvent} />
+              ))}
+            </ExpandableItem>
+          ))}
+        </div>
+      )}
+
+      {isOpen && tabIndex === 1 && (
+        <div className={styles.content}>
+          {myActivity.map((activity, index) => (
+            <ExpandableItem
+              key={activity.hash || index}
+              header={
+                <Block
+                  // ! TODO: remove empty string and 0
+                  blockHash={activity.blockHash || ''}
+                  blockNumber={activity.blockNumber || 0}
+                  timestamp={activity.timestamp}
+                />
+              }>
+              <Transaction item={activity} />
+            </ExpandableItem>
+          ))}
         </div>
       )}
     </div>

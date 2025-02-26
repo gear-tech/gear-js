@@ -10,3 +10,4 @@ export { SyntaxHighlighter } from './syntax-highlighter';
 export { Table } from './table';
 export { Tabs } from './tabs';
 export { Tooltip } from './tooltip';
+export { Modal } from './modal';

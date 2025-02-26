@@ -1,0 +1,184 @@
+:root {
+  font-family: 'Roboto Mono', monospace;
+  line-height: 1.5;
+  font-weight: 400;
+  font-size: 12px;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scrollbar-width: thin;
+  scrollbar-color: #ffffff80 transparent;
+  scroll-snap-type: proximity;
+
+  --background: rgb(255, 255, 255);
+  --foreground: rgb(57, 36, 20);
+  --foreground-80: rgba(57, 36, 20, 0.8);
+  --foreground-75: rgba(57, 36, 20, 0.75);
+  --foreground-50: rgba(57, 36, 20, 0.5);
+  --foreground-30: rgba(57, 36, 20, 0.3);
+
+  --muted: rgb(240, 245, 255);
+  --muted-foreground: rgb(110, 115, 125);
+
+  --popover: rgb(255, 255, 255);
+  --popover-foreground: rgb(57, 36, 20);
+
+  --border: rgb(235, 240, 245);
+  --input: rgb(235, 240, 245);
+
+  --card: rgb(255, 255, 255);
+  --card-foreground: rgb(57, 36, 20);
+
+  --primary: rgba(168, 245, 147, 1);
+  --primary-foreground: rgb(240, 245, 255);
+
+  --secondary: rgb(240, 245, 255);
+  --secondary-foreground: rgb(57, 36, 20);
+
+  --accent: rgb(240, 245, 255);
+  --accent-foreground: rgb(57, 36, 20);
+
+  --destructive: rgb(255, 0, 0);
+  --destructive-foreground: rgb(240, 245, 255);
+
+  --ring: rgb(150, 150, 150);
+
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: rgb(0, 0, 0);
+  --foreground: rgb(255, 255, 255);
+  --foreground-80: rgba(255, 255, 255, 0.8);
+  --foreground-75: rgba(255, 255, 255, 0.75);
+  --foreground-50: rgba(255, 255, 255, 0.5);
+  --foreground-30: rgba(255, 255, 255, 0.3);
+
+  --muted: rgb(50, 50, 50);
+  --muted-foreground: rgb(200, 200, 200);
+
+  --popover: rgb(50, 50, 50);
+  --popover-foreground: rgb(255, 255, 255);
+
+  --border: rgba(255, 255, 255, 0.16);
+  --input: rgb(100, 100, 100);
+
+  --card: rgb(50, 50, 50);
+  --card-foreground: rgb(255, 255, 255);
+
+  --primary: rgba(168, 245, 147, 1);
+  --primary-foreground: rgb(0, 0, 0);
+
+  --secondary: rgb(50, 50, 50);
+  --secondary-foreground: rgb(255, 255, 255);
+
+  --accent: rgb(50, 50, 50);
+  --accent-foreground: rgb(255, 255, 255);
+
+  --destructive: rgb(255, 0, 0);
+  --destructive-foreground: rgb(0, 0, 0);
+
+  --ring: rgb(100, 100, 100);
+
+  --radius: 0.5rem;
+}
+
+* {
+  border-color: var(--border);
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground-75);
+  --container-padding: 1.5rem;
+  font-optical-sizing: auto;
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+@media (min-width: 768px) {
+  body {
+    --container-padding: 3rem;
+  }
+}
+
+button,
+input {
+  font-family: 'Roboto Mono', monospace;
+}
+
+button {
+  border: none;
+}
+
+p,
+ul,
+ol {
+  text-transform: none;
+}
+
+p {
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-transform: uppercase;
+  margin: 0;
+}
+
+h1 {
+  font-size: 24px;
+  line-height: 28.8px;
+  font-weight: 400;
+  color: #fff;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar::-webkit-scrollbar {
+  display: block;
+}
+
+.scrollbar {
+  -ms-overflow-style: auto;
+  scrollbar-width: thin;
+}
+
+w3m-modal {
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+main {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.layout {
+  max-width: 1440px;
+  width: 100%;
+  flex: 1;
+  margin: 0 auto;
+  padding: 8px 48px 0px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+}

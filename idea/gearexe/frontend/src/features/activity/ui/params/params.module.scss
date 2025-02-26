@@ -1,0 +1,15 @@
+.params {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.param {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: rgba(15, 15, 15, 1);
+  border-radius: 4px;
+  padding: 4px 16px;
+}
