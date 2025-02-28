@@ -28,7 +28,7 @@ jobs:
         run: yarn install
 
       - name: 'Build idea/frontend deps'
-        run: yarn build:gear-api && yarn build:utils
+        run: yarn build:gear-api && yarn build:utils && yarn build:gearexe-api
 
       - name: 'Run linter'
         run: yarn lint
