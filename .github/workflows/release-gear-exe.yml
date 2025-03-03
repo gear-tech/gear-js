@@ -1,0 +1,104 @@
+name: 'Gear Exe Connect Release'
+
+on:
+  push:
+    branches: ['main', 'stable']
+    paths:
+      - idea/gearexe/frontend/**
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+
+jobs:
+  set-env-tag:
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.get_env.outputs.environment }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get environment
+        id: get_env
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/stable" ]; then
+            echo "environment=production" >> $GITHUB_OUTPUT
+          else
+            echo "environment=staging" >> $GITHUB_OUTPUT
+          fi
+
+  build-gear-exe-connect-image:
+    runs-on: ubuntu-latest
+    needs: [set-env-tag]
+    environment: ${{ needs.set-env-tag.outputs.environment }}
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push "gear-idea-exe-connect" Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: idea/gearexe/frontend/Dockerfile
+          context: idea/gearexe/frontend
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-exe-connect:${{ needs.set-env-tag.outputs.environment }}
+          build-args: |
+            VITE_WALLET_CONNECT_PROJECT_ID=${{ secrets.VITE_WALLET_CONNECT_PROJECT_ID }}
+            VITE_GEAR_EXE_API_NODE=${{ secrets.VITE_GEAR_EXE_API_NODE }}
+            VITE_ETH_NODE_ADDRESS=${{ secrets.VITE_ETH_NODE_ADDRESS }}
+
+  deploy-to-k8s:
+    needs:
+      [
+        set-env-tag,
+        build-gear-exe-connect-image
+      ]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Get deployment variables
+        id: deployment_vars
+        run: |
+          if [ "${{ needs.set-env-tag.outputs.environment }}" == "production" ]; then
+            echo "namespace=prod-idea" >> $GITHUB_OUTPUT
+            echo "deployments=gear-exe-connect" >> $GITHUB_OUTPUT
+          else
+            echo "namespace=dev-1" >> $GITHUB_OUTPUT
+            echo "deployments=gear-exe-connect" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Deploy to k8s
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment ${{ steps.deployment_vars.outputs.deployments }} -n ${{ steps.deployment_vars.outputs.namespace }}
