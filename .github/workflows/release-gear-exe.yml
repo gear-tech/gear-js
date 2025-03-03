@@ -63,7 +63,6 @@ jobs:
         uses: docker/build-push-action@master
         with:
           file: idea/gearexe/frontend/Dockerfile
-          context: idea/gearexe/frontend
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-exe-connect:${{ needs.set-env-tag.outputs.environment }}
           build-args: |
