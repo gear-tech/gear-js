@@ -1,6 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
 
 import CrossSVG from '../../assets/images/cross.svg?react';
+
 import { Button } from './button';
 
 type Type = typeof Button;

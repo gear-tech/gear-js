@@ -1,9 +1,6 @@
- 
-
 import { useMutation } from '@tanstack/react-query';
 import { TransactionBuilder } from 'sails-js';
 
-import { usePrepareProgramTransaction } from './use-prepare-program-transaction';
 import {
   FunctionName,
   GenericTransactionReturn,
@@ -13,6 +10,7 @@ import {
   TransactionReturn,
   UseSendProgramTransactionParameters,
 } from './types';
+import { usePrepareProgramTransaction } from './use-prepare-program-transaction';
 
 // TODO: if there's no parameters - prepared transaction mode
 function useSendProgramTransaction<

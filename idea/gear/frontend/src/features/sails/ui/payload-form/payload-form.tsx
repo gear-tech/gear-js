@@ -1,9 +1,10 @@
 import { InputProps, InputWrapper, Select } from '@gear-js/ui';
 import { Sails } from 'sails-js';
 
-import { Fields } from '../fields';
 import { useConstructor, useService } from '../../hooks';
 import { ISailsFuncArg } from '../../types';
+import { Fields } from '../fields';
+
 import styles from './payload-form.module.scss';
 
 type BaseProps = Pick<InputProps, 'direction' | 'gap'> & {

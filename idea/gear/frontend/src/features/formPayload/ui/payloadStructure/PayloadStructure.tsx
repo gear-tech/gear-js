@@ -1,18 +1,18 @@
-import { VFC, useCallback } from 'react';
+import { FunctionComponent, useCallback } from 'react';
 
 import { PayloadItemProps, PayloadStructureProps } from '../../model';
-import { VecItem } from '../vecItem';
 import { EnumItem } from '../enumItem';
-import { TupleItem } from '../tupleItem';
-import { StructItem } from '../structItem';
-import { PrimitiveItem } from '../primitiveItem';
 import { OptionItem } from '../optionItem';
+import { PrimitiveItem } from '../primitiveItem';
+import { StructItem } from '../structItem';
+import { TupleItem } from '../tupleItem';
+import { VecItem } from '../vecItem';
 
 type Props = Omit<PayloadStructureProps, 'title'>;
 
 const PayloadStructure = (props: Props) => {
   const renderNextItem = useCallback((itemProps: PayloadStructureProps) => {
-    let Component: VFC<PayloadItemProps>;
+    let Component: FunctionComponent<PayloadItemProps>;
 
     const { title, levelName, typeStructure } = itemProps;
 

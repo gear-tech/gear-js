@@ -15,7 +15,7 @@ type SailsServiceFunc = SailsService['functions'][string];
 type SailsServiceQuery = SailsService['queries'][string];
 type SailsServiceEvent = SailsService['events'][string];
 
-type Result = typeof RESULT[keyof typeof RESULT];
+type Result = (typeof RESULT)[keyof typeof RESULT];
 type PayloadValue = string | boolean | null | Array<PayloadValue> | { [key: string]: PayloadValue };
 type PayloadValueSchema = ReturnType<typeof getPayloadSchema>;
 

@@ -53,6 +53,7 @@ const getType = (def: ISailsTypeDef): string => {
 
     const result = def.asEnum.variants.map((variant) => [variant.name, variant.def ? getType(variant.def) : 'Null']);
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
     return JSON.stringify({ _enum: Object.fromEntries(result) });
   }
 

@@ -1,9 +1,10 @@
-import { useRef, useState, MouseEvent, ForwardedRef, useImperativeHandle } from 'react';
-import { ReactComponent as clear } from '../assets/images/clear.svg';
-import { ReactComponent as clearLight } from '../assets/images/clear-light.svg';
+import { useRef, useState, MouseEvent, Ref, useImperativeHandle } from 'react';
+
+import clearLight from '../assets/images/clear-light.svg?react';
+import clear from '../assets/images/clear.svg?react';
 
 function useClearButton<T extends HTMLInputElement | HTMLTextAreaElement>(
-  forwardedRef: ForwardedRef<T>,
+  forwardedRef: Ref<T> | undefined,
   color: string,
 ) {
   const inputRef = useRef<T>(null);
@@ -23,8 +24,7 @@ function useClearButton<T extends HTMLInputElement | HTMLTextAreaElement>(
     const isTextarea = inputRef.current instanceof HTMLTextAreaElement;
     const prototype = isTextarea ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;
 
-    const valueSetter = Object.getOwnPropertyDescriptor(prototype, 'value')?.set;
-    valueSetter?.call(inputRef.current, '');
+    Object.getOwnPropertyDescriptor(prototype, 'value')?.set?.call(inputRef.current, '');
 
     const changeEvent = new Event('change', { bubbles: true });
     inputRef.current.dispatchEvent(changeEvent);

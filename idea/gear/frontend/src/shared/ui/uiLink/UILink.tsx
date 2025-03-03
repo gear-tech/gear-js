@@ -1,8 +1,8 @@
-import { Link, LinkProps } from 'react-router-dom';
-import clsx from 'clsx';
 import { ButtonProps, buttonStyles } from '@gear-js/ui';
+import clsx from 'clsx';
+import { Link, LinkProps } from 'react-router-dom';
 
-type Props = LinkProps & ButtonProps;
+type Props = LinkProps & Omit<ButtonProps, 'ref'>;
 
 const UILink = (props: Props) => {
   const { icon: Icon, size, text, color, className, children, ...otherProps } = props;
@@ -16,7 +16,6 @@ const UILink = (props: Props) => {
   );
 
   return (
-     
     <Link {...otherProps} className={linkClasses}>
       {Icon && <Icon className={buttonStyles.icon} />}
       {text}

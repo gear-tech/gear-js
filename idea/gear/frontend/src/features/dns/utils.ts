@@ -3,8 +3,8 @@ import { HexString } from '@gear-js/api';
 import { DEFAULT_LIMIT } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/helpers';
 
-import { Dns, DnsParams, DnsResponse } from './types';
 import { DNS_API_URL } from './consts';
+import { Dns, DnsParams, DnsResponse } from './types';
 
 type Genesis = {
   genesis: HexString;

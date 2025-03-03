@@ -1,5 +1,5 @@
-import { useApi } from '@gear-js/react-hooks';
 import { HexString, GearCoreProgram } from '@gear-js/api';
+import { useApi } from '@gear-js/react-hooks';
 import { Option } from '@polkadot/types';
 
 import { ProgramStatus } from '../consts';

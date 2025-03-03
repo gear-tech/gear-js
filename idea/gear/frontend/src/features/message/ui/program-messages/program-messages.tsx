@@ -3,10 +3,10 @@ import { useAccount } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 import { Sails } from 'sails-js';
 
-import MessageCardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
 import { FilterGroup, Filters, Radio } from '@/features/filters';
-import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
 import { SailsFilterGroup } from '@/features/sails';
+import MessageCardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
+import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
 
 import { useMessagesToProgram, useMessagesFromProgram } from '../../api';
 import { MessageCard } from '../message-card';
@@ -35,8 +35,8 @@ const FILTER_VALUE = {
   },
 } as const;
 
-type OwnerValue = typeof FILTER_VALUE.OWNER[keyof typeof FILTER_VALUE.OWNER];
-type DirectionValue = typeof FILTER_VALUE.DIRECTION[keyof typeof FILTER_VALUE.DIRECTION];
+type OwnerValue = (typeof FILTER_VALUE.OWNER)[keyof typeof FILTER_VALUE.OWNER];
+type DirectionValue = (typeof FILTER_VALUE.DIRECTION)[keyof typeof FILTER_VALUE.DIRECTION];
 
 const DEFAULT_FILTER_VALUES = {
   [FILTER_NAME.OWNER]: FILTER_VALUE.OWNER.ALL as OwnerValue,

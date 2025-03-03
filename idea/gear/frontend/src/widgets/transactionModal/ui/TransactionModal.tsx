@@ -1,5 +1,6 @@
-import Identicon from '@polkadot/react-identicon';
 import { Modal, Button } from '@gear-js/ui';
+// eslint-disable-next-line import/no-named-as-default -- TODO(#1800): resolve eslint comments
+import Identicon from '@polkadot/react-identicon';
 
 import { ModalProps } from '@/entities/modal';
 

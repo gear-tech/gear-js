@@ -17,4 +17,4 @@ type InputProps = XDirectionProps | YDirectionProps;
 
 type SVGComponent = FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | undefined }>;
 
-export { Gap, InputProps, SVGComponent };
+export type { Gap, InputProps, SVGComponent };

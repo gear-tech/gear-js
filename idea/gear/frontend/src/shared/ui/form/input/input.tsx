@@ -10,6 +10,7 @@ const Input = ({ name, ...props }: Props) => {
   const { register, formState } = useFormContext();
   const { errors } = formState;
 
+  // eslint-disable-next-line @typescript-eslint/no-base-to-string -- TODO(#1800): resolve eslint comments
   const error = errors[name]?.message?.toString();
 
   return <GearInput {...props} {...register(name)} error={error} />;

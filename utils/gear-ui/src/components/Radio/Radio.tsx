@@ -1,23 +1,23 @@
-import { InputHTMLAttributes, forwardRef, ForwardedRef } from 'react';
 import clsx from 'clsx';
+import { ComponentPropsWithRef } from 'react';
+
 import styles from './Radio.module.scss';
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
+type Props = ComponentPropsWithRef<'input'> & {
   label: string;
-}
+};
 
-const Radio = forwardRef(({ label, className, ...attrs }: Props, ref: ForwardedRef<HTMLInputElement>) => {
+const Radio = ({ label, className, ...attrs }: Props) => {
   const { disabled } = attrs;
   const labelClassName = clsx(styles.label, className, disabled && 'disabled');
 
   return (
     <label className={labelClassName}>
-      <input type="radio" className={styles.input} ref={ref} {...attrs} />
+      <input type="radio" className={styles.input} {...attrs} />
       {label}
     </label>
   );
-});
-
+};
 
 // TODO: either fix only-export-components or remove rule
 // eslint-disable-next-line react-refresh/only-export-components

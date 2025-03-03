@@ -5,15 +5,16 @@ import { Fieldset } from '@/shared/ui';
 
 import { ISailsFuncArg } from '../../types';
 import { getNestedName } from '../../utils';
+
 import { EnumField } from './enum-field';
-import { UserDefinedField } from './user-defined-field';
-import { StructField } from './struct-field';
-import { OptionalField } from './optional-field';
-import { ResultField } from './result-field';
-import { VecField } from './vec-field';
-import { MapField } from './map-field';
 import { FixedSizeArrayField } from './fixed-size-array-field';
+import { MapField } from './map-field';
+import { OptionalField } from './optional-field';
 import { PrimitiveField } from './primitive-field';
+import { ResultField } from './result-field';
+import { StructField } from './struct-field';
+import { UserDefinedField } from './user-defined-field';
+import { VecField } from './vec-field';
 
 type Props = {
   sails: Sails;

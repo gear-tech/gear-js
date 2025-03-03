@@ -10,20 +10,16 @@ resolver = "2"
 members = [
     "apis/gear/programs/test-meta",
     'apis/gear/programs/test',
-    "apis/gearexe/programs/counter",
-    "apis/gearexe/programs/counter-idl",
 ]
 
 [workspace.dependencies]
-gmeta = "1.7.0"
-gstd = "1.7.0"
-scale-info = { version = "2.11.0", default-features = false, features = [
+gmeta = "=1.7.1"
+gstd = "=1.7.1"
+scale-info = { version = "=2.11.0", default-features = false, features = [
     "derive",
 ] }
-codec = { package = "parity-scale-codec", version = "3.6.9", default-features = false, features = [
+codec = { package = "parity-scale-codec", version = "=3.7.4", default-features = false, features = [
     "derive",
     "full",
 ] }
-gear-wasm-builder = { version = "1.7.0", features = ["metawasm"] }
-sails-rs = { version = "0.7.1", features = ["ethexe"] }
-sails-idl-gen = { version = "0.7.1" }
+gear-wasm-builder = { version = "=1.7.1", features = ["metawasm"] }

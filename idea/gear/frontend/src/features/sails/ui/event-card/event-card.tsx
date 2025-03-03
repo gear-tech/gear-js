@@ -4,14 +4,15 @@ import { useState } from 'react';
 import { generatePath } from 'react-router-dom';
 import { Sails } from 'sails-js';
 
+import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
+import CodeSVG from '@/shared/assets/images/actions/code.svg?react';
 import { absoluteRoutes } from '@/shared/config';
 import { PreformattedBlock, UILink } from '@/shared/ui';
 import { TimestampBlock } from '@/shared/ui/timestampBlock';
-import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
-import CodeSVG from '@/shared/assets/images/actions/code.svg?react';
 
-import LinkSVG from '../../assets/link.svg?react';
 import { EventType } from '../../api';
+import LinkSVG from '../../assets/link.svg?react';
+
 import styles from './event-card.module.scss';
 
 type Props = {

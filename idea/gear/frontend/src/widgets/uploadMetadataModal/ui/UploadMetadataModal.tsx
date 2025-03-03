@@ -4,10 +4,10 @@ import { HexString } from '@polkadot/util/types';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useAddIdl } from '@/features/sails';
-import { useAddCodeName, useAddMetadata, useAddProgramName, useContractApiWithFile } from '@/hooks';
 import { ModalProps } from '@/entities/modal';
+import { useAddIdl } from '@/features/sails';
 import { UploadMetadata } from '@/features/uploadMetadata';
+import { useAddCodeName, useAddMetadata, useAddProgramName, useContractApiWithFile } from '@/hooks';
 import { Input } from '@/shared/ui';
 
 import styles from './UploadMetadataModal.module.scss';

@@ -1,8 +1,8 @@
 import { isHex } from '@polkadot/util';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-import { SearchForm } from '@/shared/ui';
 import { isNumeric } from '@/shared/helpers';
+import { SearchForm } from '@/shared/ui';
 
 import styles from './explorer.module.scss';
 

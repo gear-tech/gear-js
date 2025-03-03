@@ -1,15 +1,17 @@
 import { InputWrapper, inputStyles, InputProps, Button } from '@gear-js/ui';
+// eslint-disable-next-line import/no-named-as-default -- TODO(#1800): resolve eslint comments
 import BigNumber from 'bignumber.js';
 import clsx from 'clsx';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { NumericFormat, NumericFormatProps } from 'react-number-format';
 
-import { formStyles } from '@/shared/ui/form';
-import calculatorSVG from '@/shared/assets/images/actions/calculator.svg?react';
 import { Result } from '@/hooks/useGasCalculate/types';
+import calculatorSVG from '@/shared/assets/images/actions/calculator.svg?react';
+import { formStyles } from '@/shared/ui/form';
 import { BalanceUnit } from '@/shared/ui/form/balance-unit';
 
 import { Info } from '../Info';
+
 import styles from './GasField.module.scss';
 
 type Props = Omit<NumericFormatProps & InputProps, 'value' | 'onValueChange' | 'onChange'> & {
@@ -22,10 +24,12 @@ const GasField = (props: Props) => {
   const name = 'gasLimit';
 
   const { setValue, getFieldState, formState } = useFormContext();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
   const inputValue = useWatch({ name });
   const { error } = getFieldState(name, formState);
 
   const increaseByTenPercent = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- TODO(#1800): resolve eslint comments
     const bnValue = BigNumber(inputValue);
 
     const bnMultiplier = bnValue.multipliedBy(0.1);
@@ -56,6 +60,7 @@ const GasField = (props: Props) => {
                 className={inputClassName}
                 allowNegative={false}
                 thousandSeparator
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
                 value={inputValue}
                 onValueChange={({ value }) => setValue(name, value, { shouldValidate: true })}
               />

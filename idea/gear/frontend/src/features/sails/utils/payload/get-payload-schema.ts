@@ -10,6 +10,7 @@ import { ISailsFuncArg } from '../../types';
 const asJSON = <T extends z.ZodTypeAny>(schema: T) =>
   schema.transform((value, ctx) => {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- TODO(#1800): resolve eslint comments
       return JSON.parse(value) as AnyJson;
     } catch (_) {
       ctx.addIssue({ code: 'custom', message: 'Invalid JSON' });

@@ -1,10 +1,11 @@
-import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
+import clsx from 'clsx';
+
+import ExternalResourceSVG from '../../assets/images/actions/externalResource.svg?react';
+import AppSVG from '../../assets/images/indicators/app.svg?react';
+import { EXAMPLES_HREF } from '../../config';
 
 import styles from './ExamplesLink.module.scss';
-import { EXAMPLES_HREF } from '../../config';
-import AppSVG from '../../assets/images/indicators/app.svg?react';
-import ExternalResourceSVG from '../../assets/images/actions/externalResource.svg?react';
 
 const ExamplesLink = () => {
   const linkClasses = clsx(buttonStyles.button, buttonStyles.medium, buttonStyles.light, styles.link);

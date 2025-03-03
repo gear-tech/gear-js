@@ -1,6 +1,6 @@
-import { AnyJson, Codec } from '@polkadot/types/types';
 import { ProgramMetadata } from '@gear-js/api';
 import { useApi, useAlert } from '@gear-js/react-hooks';
+import { AnyJson, Codec } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 import { useState } from 'react';
 

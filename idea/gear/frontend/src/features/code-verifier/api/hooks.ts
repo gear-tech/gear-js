@@ -1,7 +1,8 @@
+import { STATUS_CODES } from 'http';
+
 import { HexString } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { STATUS_CODES } from 'http';
 import { useEffect } from 'react';
 
 import { getVerificationStatus, getVerifiedCode, verifyCode } from './requests';

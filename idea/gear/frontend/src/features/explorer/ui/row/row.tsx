@@ -1,13 +1,14 @@
-import clsx from 'clsx';
 import { DispatchInfo, Extrinsic as DotExtrinsic } from '@polkadot/types/interfaces';
+import clsx from 'clsx';
 
 import commonStyles from '@/pages/explorer/explorer.module.scss';
 
-import { FormattedMessageQueuedData } from '../../types';
-import { IdeaEvent } from '../../idea-event';
 import { Method, Section } from '../../consts';
-import { Extrinsic } from '../extrinsic';
+import { IdeaEvent } from '../../idea-event';
+import { FormattedMessageQueuedData } from '../../types';
 import { BlockEvent } from '../block-event';
+import { Extrinsic } from '../extrinsic';
+
 import styles from './row.module.scss';
 
 type Props = {
@@ -16,12 +17,14 @@ type Props = {
 };
 
 const Row = ({ extrinsic, events }: Props) => {
-   
   const getEvents = () => events?.map((event, index) => <BlockEvent key={index} value={event} />);
 
   const getInfoEvent = () =>
     events?.find(({ section, method }) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
       const isSystem = section === Section.System;
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
       const isExtrinsic = method === Method.ExtrinsicFailed || method === Method.ExtrinsicSuccess;
 
       return isSystem && isExtrinsic;
@@ -32,6 +35,7 @@ const Row = ({ extrinsic, events }: Props) => {
 
     if (infoEvent) {
       const { method, data } = infoEvent;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
       const isSuccess = method === Method.ExtrinsicSuccess;
       const index = isSuccess ? 0 : 1;
 
@@ -48,6 +52,7 @@ const Row = ({ extrinsic, events }: Props) => {
   const signerClassName = clsx(commonStyles.alignRight, styles.signer);
 
   // get programId for extrinsics decoding
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
   const messageQueued = events?.find(({ method }) => method === Method.MessageQueued);
   const formattedMessageQueued = messageQueued?.toHuman() as FormattedMessageQueuedData | undefined;
 

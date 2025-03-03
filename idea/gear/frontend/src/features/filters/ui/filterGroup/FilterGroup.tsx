@@ -1,9 +1,9 @@
 import { Button } from '@gear-js/ui';
 import { ReactNode } from 'react';
 import { FieldValues, Path, useFormContext } from 'react-hook-form';
-import { CSSTransition } from 'react-transition-group';
 
 import { AnimationTimeout } from '@/shared/config';
+import { CSSTransitionWithRef } from '@/shared/ui';
 
 import styles from './FilterGroup.module.scss';
 
@@ -21,6 +21,7 @@ const FilterGroup = <T extends FieldValues>({ name, title, withReset = false, on
 
   const handleFilterReset = () => {
     resetField(name);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     handleSubmit(onSubmit)();
   };
 
@@ -30,9 +31,13 @@ const FilterGroup = <T extends FieldValues>({ name, title, withReset = false, on
         <div className={styles.header}>
           <h2 className={styles.title}>{title}</h2>
 
-          <CSSTransition in={withReset ? isDirty : false} timeout={AnimationTimeout.Default} mountOnEnter unmountOnExit>
+          <CSSTransitionWithRef
+            in={withReset ? isDirty : false}
+            timeout={AnimationTimeout.Default}
+            mountOnEnter
+            unmountOnExit>
             <Button text="Clear" color="transparent" className={styles.clearBtn} onClick={handleFilterReset} />
-          </CSSTransition>
+          </CSSTransitionWithRef>
         </div>
       )}
 

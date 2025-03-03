@@ -1,12 +1,13 @@
+import { useAlert } from '@gear-js/react-hooks';
 import { useEffect, useState, useCallback } from 'react';
 
+import { getNodes } from '@/api';
 import { NodeSection } from '@/entities/node';
 import { LocalStorage } from '@/shared/config';
 
-import { getNodes } from '@/api';
-import { useAlert } from '@gear-js/react-hooks';
-import { concatNodes, isDevSection, getLocalNodes, getLocalNodesFromLS } from './helpers';
 import { DEVELOPMENT_SECTION } from '../model/consts';
+
+import { concatNodes, isDevSection, getLocalNodes, getLocalNodesFromLS } from './helpers';
 
 const useNodes = () => {
   const alert = useAlert();
@@ -61,6 +62,8 @@ const useNodes = () => {
 
         setNodeSections(allNodes);
       })
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access -- TODO(#1800): resolve eslint comments
       .catch((error) => alert.error(error.message))
       .finally(() => setIsNodesLoading(false));
 

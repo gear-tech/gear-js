@@ -1,9 +1,9 @@
+import { TransferBalanceModal } from '@/features/balance';
+import { MessageModal } from '@/widgets/messageModal';
 import { NetworkModal } from '@/widgets/networkModal';
 import { TransactionModal } from '@/widgets/transactionModal';
 import { UploadFileModal } from '@/widgets/uploadFileModal';
 import { UploadMetadataModal } from '@/widgets/uploadMetadataModal';
-import { MessageModal } from '@/widgets/messageModal';
-import { TransferBalanceModal } from '@/features/balance';
 
 const MODALS = {
   network: NetworkModal,

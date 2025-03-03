@@ -6,6 +6,7 @@ import { useModal } from '@/hooks';
 
 import PlusSVG from '../../assets/plus.svg?react';
 import { Balance } from '../balance';
+
 import styles from './program-balance.module.scss';
 
 type Props = {

@@ -1,17 +1,17 @@
 import { Button, buttonStyles, Input } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
-import { useState } from 'react';
 import clsx from 'clsx';
-
-import sendSVG from '@/shared/assets/images/actions/send.svg?react';
-import testBalanceSVG from '@/shared/assets/images/actions/testBalance.svg?react';
-import letterSVG from '@/shared/assets/images/actions/letter.svg?react';
-import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
+import { useState } from 'react';
+import { generatePath } from 'react-router-dom';
 
 import { MailboxItem } from '@/features/mailbox';
-import { UILink } from '@/shared/ui/uiLink';
-import { generatePath } from 'react-router-dom';
+import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
+import letterSVG from '@/shared/assets/images/actions/letter.svg?react';
+import sendSVG from '@/shared/assets/images/actions/send.svg?react';
+import testBalanceSVG from '@/shared/assets/images/actions/testBalance.svg?react';
 import { absoluteRoutes, routes } from '@/shared/config';
+import { UILink } from '@/shared/ui/uiLink';
+
 import styles from './Message.module.scss';
 
 type Props = {

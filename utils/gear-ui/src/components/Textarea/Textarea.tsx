@@ -1,14 +1,16 @@
-import { forwardRef, TextareaHTMLAttributes, ForwardedRef, useId } from 'react';
 import clsx from 'clsx';
-import { InputProps } from '../../types';
+import { useId, ComponentPropsWithRef } from 'react';
+
 import { useClearButton } from '../../hooks';
-import { InputWrapper } from '../utils';
+import { InputProps } from '../../types';
 import { Button } from '../Button/Button';
+import { InputWrapper } from '../utils';
+
 import styles from './Textarea.module.scss';
 
-type Props = TextareaHTMLAttributes<HTMLTextAreaElement> & InputProps;
+type Props = ComponentPropsWithRef<'textarea'> & InputProps;
 
-const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAreaElement>) => {
+const Textarea = (props: Props) => {
   const {
     label,
     className,
@@ -22,6 +24,7 @@ const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAr
     direction = 'x',
     onFocus,
     onBlur,
+    ref: forwardedRef,
     ...attrs
   } = props;
 
@@ -32,7 +35,7 @@ const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAr
     readOnly && styles.readOnly,
     styles[color],
     styles[size],
-    error && styles.error,
+    Boolean(error) && styles.error,
     block && styles.block,
   );
 
@@ -81,7 +84,7 @@ const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAr
       </div>
     </InputWrapper>
   );
-});
+};
 
 // TODO: either fix only-export-components or remove rule
 // eslint-disable-next-line react-refresh/only-export-components

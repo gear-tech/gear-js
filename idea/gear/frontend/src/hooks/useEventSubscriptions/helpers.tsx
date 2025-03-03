@@ -1,7 +1,7 @@
-import { generatePath } from 'react-router-dom';
 import { UserMessageSent, Transfer, encodeAddress } from '@gear-js/api';
 import { AlertContainerFactory } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
+import { generatePath } from 'react-router-dom';
 
 import { routes } from '@/shared/config';
 import { CustomLink } from '@/shared/ui/customLink';
@@ -19,6 +19,7 @@ const messageSentEventsHandler = (event: UserMessageSent, address: HexString, al
 
   const isError = details.isSome && !details.unwrap().code.isSuccess;
 
+  // eslint-disable-next-line @typescript-eslint/unbound-method -- TODO(#1800): resolve eslint comments
   const showAlert = isError ? alert.error : alert.success;
 
   showAlert(

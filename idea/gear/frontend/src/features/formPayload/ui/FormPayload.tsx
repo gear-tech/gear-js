@@ -5,13 +5,14 @@ import { useState, useEffect, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { useChangeEffect } from '@/hooks';
-import { checkFileFormat, readFileAsync } from '@/shared/helpers';
 import { FileTypes } from '@/shared/config';
+import { checkFileFormat, readFileAsync } from '@/shared/helpers';
 import { formStyles } from '@/shared/ui/form';
 
 import { FormPayloadValues } from '../model/types';
-import { PayloadStructure } from './payloadStructure';
+
 import styles from './FormPayload.module.scss';
+import { PayloadStructure } from './payloadStructure';
 
 type Props = {
   name: string;
@@ -36,7 +37,7 @@ const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
   const alert = useAlert();
   const { setValue } = useFormContext();
 
-  const jsonManualPayload = useRef<string>();
+  const jsonManualPayload = useRef<string>(undefined);
 
   const [isManualView, setIsManualView] = useState(!values);
   const [manualPayloadFile, setManualPayloadFile] = useState<File>();
@@ -76,7 +77,8 @@ const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
   useEffect(() => {
     if (!values) return;
 
-    const payloadValue = isManualView ? jsonManualPayload.current ?? values.manualPayload : values.payload;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
+    const payloadValue = isManualView ? (jsonManualPayload.current ?? values.manualPayload) : values.payload;
 
     setValue(name, payloadValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,20 +1,21 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { useAlert, useBalanceFormat } from '@gear-js/react-hooks';
 import { Input as GearInput } from '@gear-js/ui';
-import { HexString } from '@polkadot/util/types';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { HexString } from '@polkadot/util/types';
 import { useState, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { useGasCalculate, useChangeEffect, useValidationSchema } from '@/hooks';
-import { Result } from '@/hooks/useGasCalculate/types';
 import { FormPayload, getSubmitPayload, getPayloadFormValues, getResetPayloadValue } from '@/features/formPayload';
 import { GasField } from '@/features/gasField';
+import { useGasCalculate, useChangeEffect, useValidationSchema } from '@/hooks';
+import { Result } from '@/hooks/useGasCalculate/types';
 import { GasMethod } from '@/shared/config';
-import { Input, ValueField, LabeledCheckbox, Box } from '@/shared/ui';
 import { getErrorMessage, isHex } from '@/shared/helpers';
+import { Input, ValueField, LabeledCheckbox, Box } from '@/shared/ui';
 
 import { INITIAL_VALUES, FormValues, SubmitHelpers } from '../model';
+
 import styles from './ProgramForm.module.scss';
 
 type Props = {
@@ -57,6 +58,7 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
     const preparedValues = {
       ...values,
       value: getChainBalanceValue(values.value).toFixed(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: getSubmitPayload(values.payload),
     };
 
@@ -80,6 +82,7 @@ const ProgramForm = ({ gasMethod, metadata, source, fileName = '', onSubmit }: P
       value: getChainBalanceValue(value).toFixed(),
       gasLimit: getChainGasValue(gasLimit).toFixed(),
       payloadType: metadata ? undefined : payloadType,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
       payload: metadata ? getSubmitPayload(payload) : payload,
       programName,
       keepAlive,

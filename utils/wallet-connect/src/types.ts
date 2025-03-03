@@ -1,4 +1,5 @@
 import { FunctionComponent, SVGProps } from 'react';
+
 import { WALLET } from './consts';
 
 export type WalletValue = {

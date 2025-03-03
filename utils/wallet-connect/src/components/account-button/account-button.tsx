@@ -1,6 +1,6 @@
 import * as Gear from '@gear-js/ui';
 import * as Vara from '@gear-js/vara-ui';
-import Identicon from '@polkadot/react-identicon';
+import { Identicon } from '@polkadot/react-identicon';
 import cx from 'clsx';
 
 import styles from './account-button.module.scss';
@@ -44,10 +44,15 @@ type ModalProps<T extends Gear.ButtonProps | Vara.ButtonProps> = Omit<Props<T>, 
   color: 'primary' | 'plain';
 };
 
-VaraAccountButton.Modal = (props: ModalProps<Vara.ButtonProps>) => <VaraAccountButton size="small" block {...props} />;
+function VaraAccountButtonModal(props: ModalProps<Vara.ButtonProps>) {
+  return <VaraAccountButton size="small" block {...props} />;
+}
 
-GearAccountButton.Modal = ({ color, ...props }: ModalProps<Gear.ButtonProps>) => (
-  <GearAccountButton size="large" color={color === 'plain' ? 'light' : 'primary'} block {...props} />
-);
+function GearAccountButtonModal({ color, ...props }: ModalProps<Gear.ButtonProps>) {
+  return <GearAccountButton size="large" color={color === 'plain' ? 'light' : 'primary'} block {...props} />;
+}
+
+VaraAccountButton.Modal = VaraAccountButtonModal;
+GearAccountButton.Modal = GearAccountButtonModal;
 
 export { VaraAccountButton, GearAccountButton };

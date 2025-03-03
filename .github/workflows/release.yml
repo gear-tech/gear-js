@@ -10,6 +10,7 @@ on:
       - utils/gear-hooks/package.json
       - utils/gear-ui/package.json
       - utils/vara-ui/package.json
+      - utils/frontend-configs/package.json
       - utils/wallet-connect/package.json
   workflow_dispatch:
 
@@ -41,4 +42,6 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish
-        run: npx lerna publish from-package --no-verify-access --yes
+        run: npx lerna publish from-package --no-verify-access --yes --loglevel verbose
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,9 +1,9 @@
 import { HexString } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { Input, Textarea, InputWrapper, Button } from '@gear-js/ui';
+import cx from 'clsx';
 import { useMemo } from 'react';
 import { Link, generatePath, useParams } from 'react-router-dom';
-import cx from 'clsx';
 
 import {
   getDecodedMessagePayload,
@@ -12,13 +12,13 @@ import {
   useMessageFromProgram,
   useMessageToProgram,
 } from '@/features/message';
-import { useProgram } from '@/features/program';
 import { useMetadata } from '@/features/metadata';
+import { useProgram } from '@/features/program';
 import { useSails } from '@/features/sails';
+import CopySVG from '@/shared/assets/images/actions/copy.svg?react';
+import TimestampSVG from '@/shared/assets/images/indicators/time.svg?react';
 import { absoluteRoutes, routes } from '@/shared/config';
 import { copyToClipboard, formatDate, getPreformattedText, getShortName } from '@/shared/helpers';
-import TimestampSVG from '@/shared/assets/images/indicators/time.svg?react';
-import CopySVG from '@/shared/assets/images/actions/copy.svg?react';
 
 import styles from './message.module.scss';
 
@@ -47,7 +47,7 @@ const Message = () => {
   const decodedPayload = useMemo(
     () =>
       message && !isPayloadLoading
-        ?
+        ? // eslint-disable-next-line @typescript-eslint/unbound-method -- TODO(#1800): resolve eslint comments
           getDecodedMessagePayload(message, isToDirection, metadata, sails, alert.error)
         : undefined,
     // eslint-disable-next-line react-hooks/exhaustive-deps

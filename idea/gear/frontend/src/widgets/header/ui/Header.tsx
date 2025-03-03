@@ -1,14 +1,15 @@
-import { useMemo, useEffect } from 'react';
-import { CSSTransition } from 'react-transition-group';
-import { useLocation, matchPath } from 'react-router-dom';
 import { useAccount, useApi } from '@gear-js/react-hooks';
+import { useMemo, useEffect } from 'react';
+import { useLocation, matchPath } from 'react-router-dom';
 
 import { AnimationTimeout } from '@/shared/config';
+import { CSSTransitionWithRef } from '@/shared/ui';
+
+import { FULL_HEADER_HEIGHT, SHORT_HEADER_HEIGHT, PATHS_WITHOUT_BOTTOM_SIDE } from '../model/consts';
 
 import styles from './Header.module.scss';
-import { FULL_HEADER_HEIGHT, SHORT_HEADER_HEIGHT, PATHS_WITHOUT_BOTTOM_SIDE } from '../model/consts';
-import { TopSide } from './topSide';
 import { BottomSide } from './bottomSide';
+import { TopSide } from './topSide';
 
 const Header = () => {
   const { isApiReady } = useApi();
@@ -31,14 +32,15 @@ const Header = () => {
   return (
     <header className={styles.header}>
       <TopSide />
-      <CSSTransition
+
+      <CSSTransitionWithRef
         in={isBottomSideVisible}
         exit={withBottomSide}
         timeout={AnimationTimeout.Small}
         mountOnEnter
         unmountOnExit>
         <BottomSide />
-      </CSSTransition>
+      </CSSTransitionWithRef>
     </header>
   );
 };

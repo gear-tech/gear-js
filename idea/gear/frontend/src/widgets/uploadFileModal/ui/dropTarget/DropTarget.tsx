@@ -1,7 +1,7 @@
-import { useCallback } from 'react';
-import { CSSTransition } from 'react-transition-group';
+import { useCallback, useRef } from 'react';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
 import { NativeTypes } from 'react-dnd-html5-backend';
+import { CSSTransition } from 'react-transition-group';
 
 import { AnimationTimeout } from '@/shared/config';
 
@@ -18,7 +18,7 @@ const DropTarget = ({ onUpload }: Props) => {
 
       onUpload(file);
     },
-     
+
     [onUpload],
   );
 
@@ -34,11 +34,16 @@ const DropTarget = ({ onUpload }: Props) => {
     [handleFileDrop],
   );
 
+  // TODO(#1779): temporary react 19 patch
+  const dropRef = useRef<HTMLDivElement>(null);
+  drop(dropRef);
+
   const isActive = canDrop && isOver;
 
   return (
-    <CSSTransition in={isActive} timeout={AnimationTimeout.Default}>
-      <div ref={drop} className={styles.dropTarget}>
+    // TODO(#1780): remove nodeRef prop
+    <CSSTransition nodeRef={dropRef} in={isActive} timeout={AnimationTimeout.Default}>
+      <div ref={dropRef} className={styles.dropTarget}>
         <p className={styles.message}>Or drag and drop your .wasm files here</p>
       </div>
     </CSSTransition>

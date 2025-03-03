@@ -1,13 +1,13 @@
 import { Tooltip } from '@gear-js/ui';
-import { useState } from 'react';
-import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
+import { useState } from 'react';
 
 import { NodesSwitch } from '@/features/nodesSwitch';
-import MenuButtonSVG from '@/shared/assets/images/menu/menuButton.svg?react';
-import GithubLogoSVG from '@/shared/assets/images/menu/github.svg?react';
-import { AnimationTimeout } from '@/shared/config';
 import { useNodeVersion } from '@/hooks';
+import GithubLogoSVG from '@/shared/assets/images/menu/github.svg?react';
+import MenuButtonSVG from '@/shared/assets/images/menu/menuButton.svg?react';
+import { AnimationTimeout } from '@/shared/config';
+import { CSSTransitionWithRef } from '@/shared/ui';
 
 import styles from './Menu.module.scss';
 import { Logo } from './logo';
@@ -37,14 +37,12 @@ const Menu = () => {
               className={styles.versionLink}>
               <GithubLogoSVG />
 
-              <CSSTransition in={isOpen} timeout={AnimationTimeout.Tiny} unmountOnExit mountOnEnter>
+              <CSSTransitionWithRef in={isOpen} timeout={AnimationTimeout.Tiny} unmountOnExit mountOnEnter>
                 <span className={styles.text}>{nodeVersion}</span>
-              </CSSTransition>
+              </CSSTransitionWithRef>
             </a>
 
-            <CSSTransition in={isOpen} timeout={AnimationTimeout.Tiny} unmountOnExit mountOnEnter>
-              <Tooltip text="Node version" className={styles.tooltip} />
-            </CSSTransition>
+            <Tooltip text="Node version" className={styles.tooltip} />
           </div>
         )}
 

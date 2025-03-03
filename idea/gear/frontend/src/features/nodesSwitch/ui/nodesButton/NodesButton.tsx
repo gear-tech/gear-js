@@ -1,11 +1,11 @@
-import { CSSTransition } from 'react-transition-group';
-import { MouseEvent } from 'react';
-import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
-
-import { AnimationTimeout } from '@/shared/config';
+import clsx from 'clsx';
+import { MouseEvent } from 'react';
 
 import { useNetworkIcon } from '@/hooks';
+import { AnimationTimeout } from '@/shared/config';
+import { CSSTransitionWithRef } from '@/shared/ui';
+
 import styles from './NodesButton.module.scss';
 
 type Props = {
@@ -28,7 +28,7 @@ const NodesButton = ({ name, chain, version, isApiReady, isOpen, isFullWidth, on
       {/* TODO: NetworkIcon component, same as in ./Node */}
       <NetworkSVG className={styles.icon} />
 
-      <CSSTransition in={isFullWidth} timeout={AnimationTimeout.Tiny} className={styles.nodeInfo} unmountOnExit>
+      <CSSTransitionWithRef in={isFullWidth} timeout={AnimationTimeout.Tiny} className={styles.nodeInfo} unmountOnExit>
         <p>
           {isApiReady ? (
             <>
@@ -41,7 +41,7 @@ const NodesButton = ({ name, chain, version, isApiReady, isOpen, isFullWidth, on
             'Loading...'
           )}
         </p>
-      </CSSTransition>
+      </CSSTransitionWithRef>
     </button>
   );
 };

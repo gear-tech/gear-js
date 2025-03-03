@@ -2,6 +2,7 @@ import { useAccount, useApi, useBalanceFormat, useDeriveBalancesAll } from '@gea
 import cx from 'clsx';
 
 import VaraSVG from '../../assets/vara.svg?react';
+
 import styles from './balance.module.scss';
 
 type Props = {

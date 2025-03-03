@@ -1,4 +1,4 @@
-const DEFAULT_INJECT_TIMEOUT_MS = 200 as const;
+const DEFAULT_INJECT_TIMEOUT_MS = 200;
 
 const WALLET_STATUS = {
   INJECTED: 'injected',

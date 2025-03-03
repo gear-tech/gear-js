@@ -1,8 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+
 import { Modal } from './Modal';
 import styles from './Modal.module.scss';
 
-const close = jest.fn();
+const close = vi.fn();
 
 describe('modal tests', () => {
   it('renders modal', () => {
@@ -79,7 +81,7 @@ describe('modal tests', () => {
     const button = screen.getByRole('button');
     fireEvent.click(button);
 
-    expect(close).toBeCalledTimes(1);
+    expect(close).toHaveBeenCalledTimes(1);
   });
 
   it('clicks overlay', () => {
@@ -88,7 +90,7 @@ describe('modal tests', () => {
     const overlay = screen.getByTestId('overlay');
     fireEvent.click(overlay);
 
-    expect(close).toBeCalledTimes(1);
+    expect(close).toHaveBeenCalledTimes(1);
   });
 
   it('clicks modal', () => {
@@ -97,7 +99,7 @@ describe('modal tests', () => {
     const modal = screen.getByTestId('modal');
     fireEvent.click(modal);
 
-    expect(close).not.toBeCalled();
+    expect(close).not.toHaveBeenCalled();
   });
 
   it('closes modal', () => {

@@ -6,6 +6,7 @@ import { ConfirmModal } from '@/shared/ui/confirm-modal';
 
 import { FUNCTION_NAME } from '../../consts';
 import { useSendDnsTransaction } from '../../hooks';
+
 import styles from './delete-dns.module.scss';
 
 type Props = {
@@ -24,6 +25,7 @@ const DeleteDns = ({ name, secondary, onSuccess }: Props) => {
       closeModal();
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     sendTransaction([name], _onSuccess);
   };
 

@@ -1,5 +1,5 @@
-import { AnyJson } from '@polkadot/types/types';
 import { CreateType, ProgramMetadata } from '@gear-js/api';
+import { AnyJson } from '@polkadot/types/types';
 import { Sails, getServiceNamePrefix, getFnNamePrefix } from 'sails-js';
 
 import { isNullOrUndefined } from '@/shared/helpers';

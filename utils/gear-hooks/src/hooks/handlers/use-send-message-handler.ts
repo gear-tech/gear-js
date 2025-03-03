@@ -1,8 +1,8 @@
 import { ProgramMetadata } from '@gear-js/api';
 import { HexString } from '@polkadot/util/types';
 
-import { useAlert, useApi } from 'context';
-import { getAutoGasLimit } from 'utils';
+import { useAlert, useApi } from '@/context';
+import { getAutoGasLimit } from '@/utils';
 
 import { SendMessageOptions, UseSendMessageOptions, useHandleCalculateGas, useSendMessage } from '../api';
 

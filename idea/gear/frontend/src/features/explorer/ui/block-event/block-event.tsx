@@ -1,10 +1,10 @@
 import { PreformattedBlock } from '@/shared/ui/preformattedBlock';
 
-import { FormattedUserMessageSentData } from '../../types';
-import { IdeaEvent } from '../../idea-event';
 import { Method } from '../../consts';
-import { ExpansionPanel } from '../expansion-panel';
+import { IdeaEvent } from '../../idea-event';
+import { FormattedUserMessageSentData } from '../../types';
 import { DecodedLogBlock } from '../decoded-log-block';
+import { ExpansionPanel } from '../expansion-panel';
 
 type Props = {
   value: IdeaEvent | IdeaEvent[];
@@ -18,6 +18,7 @@ const BlockEvent = ({ value }: Props) => {
   const event = isGroup ? value[0] : value;
   const { method, heading, description } = event;
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
   const isLog = method === Method.UserMessageSent;
 
   const getContent = ({ id, data }: IdeaEvent = event) => {

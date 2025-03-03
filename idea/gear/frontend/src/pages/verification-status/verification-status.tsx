@@ -2,12 +2,12 @@ import { useAlert } from '@gear-js/react-hooks';
 import { Button, Input } from '@gear-js/ui';
 import { useParams } from 'react-router-dom';
 
-import TablePlaceholderSVG from '@/shared/assets/images/placeholders/table.svg?react';
-import CopySVG from '@/shared/assets/images/actions/copyGreen.svg?react';
-import RefreshSVG from '@/features/code-verifier/assets/refresh.svg?react';
 import { VerificationStatus as Status, useVerificationStatus } from '@/features/code-verifier';
-import { Box, Skeleton, Table, TableRow } from '@/shared/ui';
+import RefreshSVG from '@/features/code-verifier/assets/refresh.svg?react';
+import CopySVG from '@/shared/assets/images/actions/copyGreen.svg?react';
+import TablePlaceholderSVG from '@/shared/assets/images/placeholders/table.svg?react';
 import { copyToClipboard } from '@/shared/helpers';
+import { Box, Skeleton, Table, TableRow } from '@/shared/ui';
 
 import styles from './verification-status.module.scss';
 

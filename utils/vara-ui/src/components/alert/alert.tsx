@@ -1,14 +1,15 @@
-import { CSSProperties, ReactNode } from 'react';
 import cx from 'clsx';
+import { CSSProperties, ReactNode } from 'react';
 
 import CrossSVG from '../../assets/images/cross.svg?react';
 import { Button } from '../button';
-import SuccessSVG from './assets/success.svg?react';
-import WarningSVG from './assets/warning.svg?react';
+
+import styles from './alert.module.scss';
 import InfoSVG from './assets/info.svg?react';
 import LoadingSVG from './assets/loading.svg?react';
+import SuccessSVG from './assets/success.svg?react';
 import WarningCircleSVG from './assets/warning-circle.svg?react';
-import styles from './alert.module.scss';
+import WarningSVG from './assets/warning.svg?react';
 
 type Options = {
   type: 'info' | 'error' | 'loading' | 'success';

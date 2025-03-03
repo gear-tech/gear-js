@@ -1,7 +1,7 @@
 import { buttonStyles } from '@gear-js/ui';
-import { Link, LinkProps } from 'react-router-dom';
-import { FunctionComponent, SVGProps } from 'react';
 import clsx from 'clsx';
+import { FunctionComponent, SVGProps } from 'react';
+import { Link, LinkProps } from 'react-router-dom';
 
 import styles from './ActionLink.module.scss';
 
@@ -21,6 +21,7 @@ const ActionLink = ({ to, icon: Icon, text, state }: Props) => {
   );
 
   return (
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
     <Link to={to} className={linkClasses} state={state}>
       <Icon className={buttonStyles.icon} />
 

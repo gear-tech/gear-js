@@ -30,7 +30,7 @@ function App() {
   );
 }
 
-const apiArgs = { endpoint: import.meta.env.VITE_NODE_ADDRESS };
+const apiArgs = { endpoint: import.meta.env.VITE_NODE_ADDRESS as string };
 const queryClient = new QueryClient();
 
 const container = document.getElementById('root');

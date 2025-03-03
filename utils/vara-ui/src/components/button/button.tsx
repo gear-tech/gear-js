@@ -1,9 +1,9 @@
-import { ButtonHTMLAttributes, FunctionComponent, ReactNode, SVGProps, forwardRef } from 'react';
 import cx from 'clsx';
+import { ComponentPropsWithRef, FunctionComponent, ReactNode, SVGProps } from 'react';
 
 import styles from './button.module.scss';
 
-type BaseProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+type BaseProps = ComponentPropsWithRef<'button'> & {
   text?: string;
   icon?: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | undefined }>;
   color?: 'primary' | 'plain' | 'contrast' | 'grey' | 'border' | 'transparent' | 'danger';
@@ -31,7 +31,7 @@ type ChildrenProps = BaseProps & {
 
 type Props = TextProps | IconProps | ChildrenProps;
 
-const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
+const Button = (props: Props) => {
   const {
     className,
     text,
@@ -61,7 +61,6 @@ const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
         className,
       )}
       disabled={disabled || isLoading}
-      ref={ref}
       {...attrs}>
       {Icon && <Icon className={styles.icon} />}
       {text && <span>{text}</span>}
@@ -69,7 +68,7 @@ const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
       {children}
     </button>
   );
-});
+};
 
 export { Button };
 export type { Props as ButtonProps };

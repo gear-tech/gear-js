@@ -1,11 +1,11 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { INFINITE_QUERY } from '@/api';
+import { useLocalPrograms } from '@/features/local-indexer';
+import { useChain, useErrorAlert } from '@/hooks';
 
 import { getPrograms } from '../requests';
 import { ProgramsParameters } from '../types';
-import { useChain, useErrorAlert } from '@/hooks';
-import { useLocalPrograms } from '@/features/local-indexer';
 
 function usePrograms(parameters: ProgramsParameters) {
   const { isDevChain } = useChain();

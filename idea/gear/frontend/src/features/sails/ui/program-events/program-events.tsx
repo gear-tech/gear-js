@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { Sails } from 'sails-js';
 
 import { Filters } from '@/features/filters';
-import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
 import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
+import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
 
 import { useEvents, EventType } from '../../api';
 import { EventCard } from '../event-card';

@@ -1,6 +1,7 @@
 import { fetchWithGuard } from '@/shared/helpers';
-import { CodeResponse, StatusResponse, VerifyParameters, VerifyResponse } from './types';
+
 import { API_URL } from './consts';
+import { CodeResponse, StatusResponse, VerifyParameters, VerifyResponse } from './types';
 
 const verifyCode = (parameters: VerifyParameters) =>
   fetchWithGuard<VerifyResponse>(`${API_URL}/verify`, 'POST', parameters);

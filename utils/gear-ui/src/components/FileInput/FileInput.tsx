@@ -1,24 +1,16 @@
-import {
-  useRef,
-  MouseEvent,
-  forwardRef,
-  ForwardedRef,
-  useImperativeHandle,
-  useState,
-  ChangeEvent,
-  useId,
-  InputHTMLAttributes,
-} from 'react';
+import { useRef, MouseEvent, useImperativeHandle, useState, ChangeEvent, useId, ComponentPropsWithRef } from 'react';
+
+import { useChangeEffect } from '../../hooks';
 import { InputProps } from '../../types';
 import { getFileSize } from '../../utils';
 import { Button, ButtonProps } from '../Button/Button';
 import { InputWrapper } from '../utils';
-import { ReactComponent as RemoveSVG } from './images/remove.svg';
-import { ReactComponent as SelectSVG } from './images/select.svg';
-import styles from './FileInput.module.scss';
-import { useChangeEffect } from 'hooks';
 
-type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'onChange' | 'accept'> &
+import styles from './FileInput.module.scss';
+import RemoveSVG from './images/remove.svg?react';
+import SelectSVG from './images/select.svg?react';
+
+type Props = Omit<ComponentPropsWithRef<'input'>, 'size' | 'value' | 'onChange' | 'accept'> &
   Omit<InputProps, 'color'> & {
     value?: File | undefined;
     label?: string;
@@ -28,7 +20,7 @@ type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'onC
     onChange?: (value: File | undefined) => void;
   };
 
-const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElement>) => {
+const FileInput = (props: Props) => {
   const {
     value,
     label,
@@ -41,6 +33,7 @@ const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInput
     direction = 'x',
     size = 'normal',
     color = 'light',
+    ref: forwardedRef,
     ...attrs
   } = props;
 
@@ -127,7 +120,7 @@ const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInput
       )}
     </InputWrapper>
   );
-});
+};
 
 // TODO: either fix only-export-components or remove rule
 // eslint-disable-next-line react-refresh/only-export-components

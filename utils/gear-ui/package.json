@@ -1,9 +1,10 @@
 {
   "name": "@gear-js/ui",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "React UI components used across Gear applications",
   "author": "Gear Technologies",
   "license": "GPL-3.0",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/gear-tech/gear-js/issues"
   },
@@ -17,24 +18,25 @@
   ],
   "homepage": "https://github.com/gear-tech/gear-js/tree/master/utils/gear-ui#readme",
   "scripts": {
-    "build": "rm -rf dist && rm -rf *.scss || true && rm -rf fonts && cp -R ./src/assets/styles/. . && npx rollup -c",
-    "test": "npx jest",
+    "build": "rm -rf dist && rm -rf *.scss || true && rm -rf fonts && cp -R ./src/assets/styles/. . && npx vite build",
+    "test": "npx vitest",
     "prepare": "yarn build",
     "clean": "echo \"clean @gear-js/gear-ui\" && rm -rf dist"
   },
   "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "sass": "^1.69.1"
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19",
+    "sass": "^1.69"
+  },
+  "dependencies": {
+    "clsx": "1.2.1"
   },
   "devDependencies": {
-    "@babel/preset-react": "7.26.3",
-    "@svgr/rollup": "8.1.0",
+    "@gear-js/frontend-configs": "*",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.2.0",
-    "clsx": "1.2.1",
-    "identity-obj-proxy": "3.0.0",
-    "jest-environment-jsdom": "29.7.0"
+    "happy-dom": "17.1.1",
+    "vitest": "3.0.6"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

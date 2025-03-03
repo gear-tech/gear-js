@@ -1,6 +1,8 @@
 import { GasLimit, ProgramMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
-import { useAccount, useAlert, useApi } from 'context';
+
+import { useAccount, useAlert, useApi } from '@/context';
+
 import { TransactionName, Options, Code, CodeId, UseProgram } from './types';
 import { useHandlers } from './useHandlers';
 import { waitForProgramInit } from './utils';
@@ -8,20 +10,20 @@ import { waitForProgramInit } from './utils';
 function useProgram(
   method: 'upload',
   code: Code | undefined,
-  metadata?: ProgramMetadata | undefined,
-  payloadType?: string | undefined,
+  metadata?: ProgramMetadata,
+  payloadType?: string,
 ): UseProgram;
 function useProgram(
   method: 'create',
   codeId: CodeId | undefined,
-  metadata?: ProgramMetadata | undefined,
-  payloadType?: string | undefined,
+  metadata?: ProgramMetadata,
+  payloadType?: string,
 ): UseProgram;
 function useProgram(
   method: 'upload' | 'create',
-  codeOrCodeId: Code | CodeId | undefined,
-  metadata?: ProgramMetadata | undefined,
-  payloadType?: string | undefined,
+  codeOrCodeId: Code | undefined,
+  metadata?: ProgramMetadata,
+  payloadType?: string,
 ): UseProgram {
   const alert = useAlert();
   const { api, isApiReady } = useApi();
@@ -46,34 +48,33 @@ function useProgram(
     const { address, signer } = account;
 
     // @ts-expect-error - TODO(#1738): explain why it should be ignored
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1816): resolve eslint comments
     const { programId } = api.program[method](program, metadata, payloadType);
 
     const alertId = alert.loading('SignIn', { title });
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- TODO(#1816): resolve eslint comments
     const initialization = waitForProgramInit(api, programId);
 
-    return api.program
-      .signAndSend(address, { signer }, (result) => handleSignStatus({ result, callbacks, alertId, programId }))
-      .then(() => initialization)
-      .then((status) => handleInitStatus({ status, programId, onError }))
-      .catch(({ message }: Error) => handleError({ message, alertId, onError }));
+    return (
+      api.program
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1816): resolve eslint comments
+        .signAndSend(address, { signer }, (result) => handleSignStatus({ result, callbacks, alertId, programId }))
+        .then(() => initialization)
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1816): resolve eslint comments
+        .then((status) => handleInitStatus({ status, programId, onError }))
+        .catch(({ message }: Error) => handleError({ message, alertId, onError }))
+    );
   };
 
   return action;
 }
 
-function useUploadProgram(
-  code: Code | undefined,
-  metadata?: ProgramMetadata | undefined,
-  payloadType?: string | undefined,
-) {
+function useUploadProgram(code: Code | undefined, metadata?: ProgramMetadata, payloadType?: string) {
   return useProgram('upload', code, metadata, payloadType);
 }
 
-function useCreateProgram(
-  codeId: CodeId | undefined,
-  metadata?: ProgramMetadata | undefined,
-  payloadType?: string | undefined,
-) {
+function useCreateProgram(codeId: CodeId | undefined, metadata?: ProgramMetadata, payloadType?: string) {
   return useProgram('create', codeId, metadata, payloadType);
 }
 

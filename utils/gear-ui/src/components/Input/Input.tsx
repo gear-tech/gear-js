@@ -1,18 +1,20 @@
-import { InputHTMLAttributes, forwardRef, ForwardedRef, useId } from 'react';
 import clsx from 'clsx';
-import { InputProps, SVGComponent } from '../../types';
+import { ComponentPropsWithRef, useId } from 'react';
+
 import { useClearButton } from '../../hooks';
+import { InputProps, SVGComponent } from '../../types';
 import { Button } from '../Button/Button';
 import { InputWrapper } from '../utils';
-import { ReactComponent as SearchSVG } from './images/search.svg';
-import styles from './Input.module.scss';
 
-type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> &
+import styles from './Input.module.scss';
+import SearchSVG from './images/search.svg?react';
+
+type Props = Omit<ComponentPropsWithRef<'input'>, 'size'> &
   InputProps & {
     icon?: SVGComponent;
   };
 
-const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElement>) => {
+const Input = (props: Props) => {
   const {
     label,
     icon: Icon,
@@ -27,6 +29,7 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
     direction = 'x',
     onBlur,
     onFocus,
+    ref: forwardedRef,
     ...attrs
   } = props;
 
@@ -39,7 +42,7 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
     readOnly && styles.readOnly,
     styles[size],
     styles[color],
-    error && styles.error,
+    Boolean(error) && styles.error,
     block && styles.block,
   );
 
@@ -101,7 +104,7 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
       </div>
     </InputWrapper>
   );
-});
+};
 
 // TODO: either fix only-export-components or remove rule
 // eslint-disable-next-line react-refresh/only-export-components

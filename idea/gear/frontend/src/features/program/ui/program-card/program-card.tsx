@@ -1,18 +1,19 @@
 import clsx from 'clsx';
 import { Link, generatePath } from 'react-router-dom';
 
-import { IssueVoucher, VoucherBadge } from '@/features/voucher';
-import { absoluteRoutes } from '@/shared/config';
-import sendSVG from '@/shared/assets/images/actions/send.svg?react';
-import { IdBlock } from '@/shared/ui/idBlock';
-import { BulbBlock } from '@/shared/ui/bulbBlock';
-import { TimestampBlock } from '@/shared/ui/timestampBlock';
-import { ActionLink } from '@/shared/ui/ActionLink';
 import { LocalProgram } from '@/features/local-indexer';
+import { IssueVoucher, VoucherBadge } from '@/features/voucher';
+import sendSVG from '@/shared/assets/images/actions/send.svg?react';
+import { absoluteRoutes } from '@/shared/config';
+import { ActionLink } from '@/shared/ui/ActionLink';
+import { BulbBlock } from '@/shared/ui/bulbBlock';
+import { IdBlock } from '@/shared/ui/idBlock';
+import { TimestampBlock } from '@/shared/ui/timestampBlock';
 
 import { Program } from '../../api';
-import { getBulbStatus } from '../../utils';
 import { PROGRAM_STATUS_NAME, ProgramStatus } from '../../consts';
+import { getBulbStatus } from '../../utils';
+
 import styles from './program-card.module.scss';
 
 type Props = {

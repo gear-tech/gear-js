@@ -3,9 +3,8 @@ import { Keyring } from '@polkadot/api';
 import { Event } from '@polkadot/types/interfaces';
 import { BigNumber } from 'bignumber.js';
 
-import { VARA_SS58_FORMAT } from 'consts';
-
-import { Entries } from '../types';
+import { VARA_SS58_FORMAT } from '@/consts';
+import { Entries } from '@/types';
 
 const getAutoGasLimit = ({ waited, min_limit }: GasInfo, _multiplier?: number) => {
   const limit = new BigNumber(min_limit.toString());

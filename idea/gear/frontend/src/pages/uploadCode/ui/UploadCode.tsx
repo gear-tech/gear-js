@@ -1,16 +1,16 @@
 import { Button, FileInput } from '@gear-js/ui';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { FileTypes } from '@/shared/config';
+import { useWasmFile } from '@/features/code';
+import { UploadMetadata } from '@/features/uploadMetadata';
+import { CodeVoucherSelect } from '@/features/voucher';
 import { useChain, useCodeUpload, useContractApiWithFile } from '@/hooks';
+import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
+import { FileTypes } from '@/shared/config';
+import { Input } from '@/shared/ui';
+import { BackButton } from '@/shared/ui/backButton';
 import { Box } from '@/shared/ui/box';
 import { Subheader } from '@/shared/ui/subheader';
-import { BackButton } from '@/shared/ui/backButton';
-import { UploadMetadata } from '@/features/uploadMetadata';
-import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
-import { CodeVoucherSelect } from '@/features/voucher';
-import { useWasmFile } from '@/features/code';
-import { Input } from '@/shared/ui';
 
 import styles from './UploadCode.module.scss';
 
@@ -36,12 +36,14 @@ const UploadCode = () => {
   const handleWasmFileChange = (value: File | undefined) => {
     form.reset();
     contractApi.reset();
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     file.handleChange(value);
   };
 
   const handleSubmit = form.handleSubmit((data: typeof defaultValues) => {
     if (!file.buffer) return;
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     uploadCode({ optBuffer: file.buffer, metadata, sails, resolve: resetForm, ...data });
   });
 

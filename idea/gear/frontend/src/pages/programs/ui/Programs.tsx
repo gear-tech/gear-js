@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
 import { useAccount } from '@gear-js/react-hooks';
+import { useEffect, useState } from 'react';
 
 import { LocalStorage } from '@/shared/config';
 
-import { WelcomeBanner } from './welcomeBanner';
 import { ProgramsPage } from './programsPage';
+import { WelcomeBanner } from './welcomeBanner';
 
 const Programs = () => {
   const { account } = useAccount();

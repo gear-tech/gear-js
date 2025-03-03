@@ -1,0 +1,44 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.label {
+  color: rgba(255, 255, 255, 0.75);
+  flex: 115px 0 0;
+}
+
+.errorWrapper {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 4px;
+}
+
+.input {
+  background: rgba(15, 15, 15, 1);
+  color: rgba(255, 255, 255);
+  border: 1px solid rgba(41, 41, 41, 0.5);
+  border-radius: 4px;
+  padding: 4px 16px;
+  font-size: 12px;
+  &:focus {
+    border-color: rgba(41, 41, 41, 1);
+    outline: none;
+    caret-color: rgba(168, 245, 147, 1);
+  }
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+.input.invalid {
+  border-color: rgba(247, 58, 61, 0.16);
+  color: rgba(247, 58, 61, 1);
+}
+
+.error {
+  color: rgba(247, 58, 61, 0.75);
+  font-size: 12px;
+}

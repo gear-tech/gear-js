@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useAccount, useAlert, useApi } from 'context';
+import { useAccount, useAlert, useApi } from '@/context';
 
 function useIssuedVouchers(accountAddress: string | undefined) {
   const { api, isApiReady } = useApi();
@@ -18,6 +18,7 @@ function useIssuedVouchers(accountAddress: string | undefined) {
       .getAllIssuedByAccount(accountAddress)
       .then((result) => setVouchers(result))
       .catch(({ message }: Error) => alert.error(message));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountAddress, api, isApiReady]);
 
   return { vouchers, isEachVoucherReady };

@@ -1,7 +1,8 @@
-import { ButtonHTMLAttributes } from 'react';
+import { ComponentPropsWithRef } from 'react';
+
 import { SVGComponent } from '../../types';
 
-interface BaseProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+type BaseProps = ComponentPropsWithRef<'button'> & {
   text?: string;
   icon?: SVGComponent;
   color?: 'primary' | 'secondary' | 'light' | 'lightGreen' | 'gradient' | 'grey' | 'transparent';
@@ -10,15 +11,15 @@ interface BaseProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   noWrap?: boolean;
   tooltip?: string;
   noLetterSpacing?: boolean;
-}
+};
 
-interface TextProps extends BaseProps {
+type TextProps = BaseProps & {
   text: string;
-}
+};
 
-interface IconProps extends BaseProps {
+type IconProps = BaseProps & {
   icon: SVGComponent;
-}
+};
 
 type Props = TextProps | IconProps;
 

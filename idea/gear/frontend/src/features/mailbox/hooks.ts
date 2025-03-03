@@ -17,6 +17,7 @@ function useMailbox() {
 
     if (!isApiReady || !decodedAddress) return;
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     api.mailbox
       .read(decodedAddress)
       .then((items) => items.map((item) => item.toHuman() as MailboxItem))
@@ -45,6 +46,7 @@ function useMailboxItem(messageId: HexString | undefined) {
     if (!isApiReady || !decodedAddress || !messageId) return;
 
     // TODO: error should be thrown in @gear-js/api
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1800): resolve eslint comments
     api.mailbox
       .read(decodedAddress, messageId)
       .then((item) =>

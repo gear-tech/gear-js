@@ -2,6 +2,7 @@ import { Unsubcall } from '@polkadot/extension-inject/types';
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { ProviderProps } from '../../types';
+
 import { LOCAL_STORAGE_KEY, DEFAULT_INJECT_TIMEOUT_MS } from './consts';
 import { Account, Wallet, Wallets } from './types';
 import { getLoggedInAccount, getWallets } from './utils';
@@ -71,6 +72,7 @@ function AccountProvider({ appName, children }: Props) {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1816): resolve eslint comments
       getWallets(appName, handleAccountsChange, handleWalletChange, registerUnsub).then((result) => {
         setWallets(result);
         setAccount(getLoggedInAccount(result));
@@ -83,6 +85,7 @@ function AccountProvider({ appName, children }: Props) {
       unsubsRef.current.forEach((unsub) => unsub());
       unsubsRef.current = [];
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const value = useMemo(

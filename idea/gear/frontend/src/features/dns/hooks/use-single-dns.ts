@@ -1,5 +1,5 @@
-import { useApi } from '@gear-js/react-hooks';
 import { HexString } from '@gear-js/api';
+import { useApi } from '@gear-js/react-hooks';
 import { useQuery } from '@tanstack/react-query';
 
 import { getSingleDns } from '../utils';

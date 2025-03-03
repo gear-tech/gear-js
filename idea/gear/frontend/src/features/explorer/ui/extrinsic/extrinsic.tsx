@@ -4,15 +4,15 @@ import { HexString } from '@polkadot/util/types';
 
 import { PreformattedBlock } from '@/shared/ui/preformattedBlock';
 
+import { Method } from '../../consts';
 import {
   FormattedSendReplyData,
   FormattedSendMessageData,
   FormattedUploadProgramData,
   FormattedCreateProgramData,
 } from '../../types';
-import { Method } from '../../consts';
-import { ExpansionPanel } from '../expansion-panel';
 import { DecodedPreformattedBlock } from '../decoded-preformatted-block';
+import { ExpansionPanel } from '../expansion-panel';
 
 type Props = {
   extrinsic: DotExtrinsic;
@@ -31,7 +31,6 @@ const Extrinsic = ({ extrinsic, programId }: Props) => {
     const formattedName = name.toHuman();
     const formattedValue = args[index].toHuman();
 
-     
     dataObject[formattedName] = formattedValue;
 
     return dataObject;
@@ -39,6 +38,7 @@ const Extrinsic = ({ extrinsic, programId }: Props) => {
 
   const getBody = () => {
     switch (method) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
       case Method.SendMessage:
         return (
           <DecodedPreformattedBlock
@@ -48,6 +48,7 @@ const Extrinsic = ({ extrinsic, programId }: Props) => {
           />
         );
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
       case Method.SendReply:
         return (
           <DecodedPreformattedBlock
@@ -57,6 +58,7 @@ const Extrinsic = ({ extrinsic, programId }: Props) => {
           />
         );
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
       case Method.UploadProgram:
         return (
           <DecodedPreformattedBlock
@@ -66,6 +68,7 @@ const Extrinsic = ({ extrinsic, programId }: Props) => {
           />
         );
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison -- TODO(#1800): resolve eslint comments
       case Method.CreateProgram:
         return (
           <DecodedPreformattedBlock
