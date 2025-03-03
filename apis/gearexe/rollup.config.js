@@ -29,8 +29,9 @@ export default [
       }),
       nodeResolve({
         preferBuiltins: true,
+        browser: true,
         resolveOnly: (module) =>
-          !module.includes('polkadot') && !module.includes('gear-js/api') && !module.includes('ethers'),
+          !module.includes('polkadot') && !module.includes('gear-js/api') && !module.includes('ethers') && !module.includes('kzg-wasm'),
       }),
     ],
   },
