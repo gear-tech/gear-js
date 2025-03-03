@@ -92,8 +92,9 @@ if [[ -z "$SKIP_BUILD" ]]; then
 
     # Build contracts
     echo "[*]  Building contracts..."
-    cd $ROOT_DIR
+    cd $PROJECT_DIR
     cargo build --release
+    ls -al target/wasm32-unknown-unknown/release
 
     # Deploy necessary contracts
     echo "[*]  Install forge dependencies ..."
@@ -143,7 +144,7 @@ forge script script/Deployment.s.sol:DeploymentScript --rpc-url $RPC --broadcast
 # Get router address
 echo "[*]  Getting router address..."
 cd $path_to_gear_repo
-BROADCAST_PATH="ethexe/contracts/broadcast/Deployment.s.sol/31337/run-latest.json"
+BROADCAST_PATH="ethexe/contracts/broadcast/Deployment.s.sol/1337/run-latest.json"
 ROUTER=`cat ${BROADCAST_PATH} | jq '.transactions[] | select(.contractName == "Router") | .contractAddress' | tr -d '"'`
 export ROUTER_ADDRESS=`cat ${BROADCAST_PATH} | jq ".transactions[] | \
   select(.contractName == \"TransparentUpgradeableProxy\") | \
