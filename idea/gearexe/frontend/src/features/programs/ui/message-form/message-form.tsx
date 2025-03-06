@@ -19,55 +19,52 @@ type Props = {
   isQuery: boolean;
   sails: Sails;
   args: ISailsFuncArg[];
-  encodePayload: (...args: unknown[]) => HexString;
 };
 
 type Values = {
   [k: string]: PayloadValue;
 };
 
-const MessageForm = ({ programId, isQuery, sails, serviceName, messageName, args, encodePayload }: Props) => {
+const MessageForm = ({ programId, isQuery, sails, serviceName, messageName, args }: Props) => {
   const { sendMessage, isPending } = useSendProgramMessage(programId);
 
   const defaultValues = useMemo(() => getDefaultPayloadValue(sails, args), [sails, args]);
 
-  const schema = useMemo(() => getPayloadSchema(sails, args, encodePayload), [sails, args, encodePayload]);
+  const schema = useMemo(() => getPayloadSchema(sails, args), [sails, args]);
 
-  const form = useForm<Values, unknown, typeof schema>({ values: defaultValues, resolver: zodResolver(schema) });
+  const form = useForm<Values, unknown, unknown[]>({ values: defaultValues, resolver: zodResolver(schema) });
 
   const resetForm = () => {
     form.reset(defaultValues);
   };
 
-  const handleSubmitForm = form.handleSubmit(({ ...formValues }) => {
-    // TODO: Check arguments order
-    const formValuesArray = Object.values(formValues);
-    sendMessage({ serviceName, functionName: messageName, args: formValuesArray }, { onSuccess: resetForm });
+  const handleSubmitForm = form.handleSubmit((formValues) => {
+    sendMessage({ serviceName, functionName: messageName, args: formValues }, { onSuccess: resetForm });
   });
 
   const formName = `${serviceName}-${messageName}-form`;
 
   return (
-    <ExpandableItem
-      key={messageName}
-      header={messageName}
-      isNested
-      headerSlot={
-        <Button variant="default" form={formName} size="xs" isLoading={isPending} className={styles.button}>
-          {isQuery ? 'Read' : 'Write'}
-        </Button>
-      }>
-      {args.map((param) => {
-        return (
-          <FormProvider {...form} key={param.name}>
-            <form onSubmit={handleSubmitForm} id={formName}>
-              {/* // TODO: use fields from idea\gear\frontend\src\features\sails\ui\fields */}
-              <Input name={param.name} placeholder="0x" />
-            </form>
-          </FormProvider>
-        );
-      })}
-    </ExpandableItem>
+    <FormProvider {...form}>
+      <form onSubmit={handleSubmitForm} id={formName}>
+        <ExpandableItem
+          key={messageName}
+          header={messageName}
+          isNested
+          headerSlot={
+            <Button variant="default" form={formName} size="xs" isLoading={isPending} className={styles.button}>
+              {isQuery ? 'Read' : 'Write'}
+            </Button>
+          }>
+          {args.map((param) => {
+            return (
+              // TODO: use fields from idea\gear\frontend\src\features\sails\ui\fields
+              <Input key={param.name} name={param.name} placeholder="0x" />
+            );
+          })}
+        </ExpandableItem>
+      </form>
+    </FormProvider>
   );
 };
 

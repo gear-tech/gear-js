@@ -9,15 +9,20 @@ import counterIdl from '../../../../../../../apis/gearexe/programs/counter-idl/c
 
 import { useSails } from './use-sails';
 
+type InitProgramParams = {
+  ctorName: string;
+  args: unknown[];
+};
+
 const useInitProgram = (programId: HexString) => {
   const { data: sails } = useSails(counterIdl);
   const { mirrorContract } = useMirrorContract(programId);
   const addMyActivity = useAddMyActivity();
 
-  const initProgram = async (ctorName: string) => {
+  const initProgram = async ({ ctorName, args }: InitProgramParams) => {
     if (!mirrorContract || !sails) return;
 
-    const payload = sails.ctors[ctorName]?.encodePayload();
+    const payload = sails.ctors[ctorName]?.encodePayload(...args);
 
     if (!payload) return;
 

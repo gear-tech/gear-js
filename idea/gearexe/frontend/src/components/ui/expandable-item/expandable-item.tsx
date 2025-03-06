@@ -10,18 +10,28 @@ type Props = PropsWithChildren & {
   header: ReactNode;
   headerSlot?: ReactNode;
   isNested?: boolean;
+  isOpen?: boolean;
 };
 
-const ExpandableItem = ({ children, header, headerSlot, isNested }: Props) => {
-  const [isOpen, setIsOpen] = useState<boolean>();
+const ExpandableItem = ({ children, header, headerSlot, isNested, isOpen: isDefaultOpen = false }: Props) => {
+  const [isOpen, setIsOpen] = useState<boolean>(isDefaultOpen);
+
+  const isEmptyChildren =
+    children === undefined ||
+    children === null ||
+    (typeof children === 'object' && 'length' in children && children.length === 0);
 
   return (
     <div className={clsx(styles.container, isNested && styles.nested)}>
       <div className={clsx(styles.header, isNested && styles.nested)}>
         <div className={styles.leftSide}>
-          <Button variant="icon" onClick={() => setIsOpen((prev) => !prev)}>
-            <ArrowDownSVG className={clsx(styles.icon, isOpen && styles.iconOpen)} />
-          </Button>
+          {isEmptyChildren ? (
+            <div className={clsx(styles.empty, styles.icon)} />
+          ) : (
+            <Button variant="icon" onClick={() => setIsOpen((prev) => !prev)}>
+              <ArrowDownSVG className={clsx(styles.icon, isOpen && styles.iconOpen)} />
+            </Button>
+          )}
           {header}
         </div>
         {headerSlot}
