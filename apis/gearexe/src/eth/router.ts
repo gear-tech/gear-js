@@ -1,7 +1,6 @@
 import { generateCodeHash } from '@gear-js/api';
 import { Provider, BaseContract, Signer, Wallet, ethers, EventLog } from 'ethers';
 import { loadKZG } from 'kzg-wasm';
-import assert from 'node:assert';
 import { HexString } from '../types/index.js';
 
 export enum CodeState {
@@ -108,7 +107,9 @@ export class RouterContract extends BaseContract {
 
     const blob = prepareBlob(code);
 
-    assert(blob.length == 4096 * 32);
+    if (blob.length != 4096 * 32) {
+      throw new Error('Invalid blob length');
+    }
 
     const blobData = ethers.hexlify(blob);
 
