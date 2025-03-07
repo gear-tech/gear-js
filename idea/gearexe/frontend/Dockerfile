@@ -8,8 +8,6 @@ RUN corepack enable && corepack prepare yarn@stable --activate
 
 RUN yarn set version stable
 
-RUN yarn install --immutable
-
 RUN yarn workspaces focus gearexe-idea-frontend gearexe
 
 ARG VITE_WALLET_CONNECT_PROJECT_ID \
