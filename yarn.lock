@@ -15572,6 +15572,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gearexe-idea-frontend@workspace:idea/gearexe/frontend"
   dependencies:
+    "@gear-js/api": "npm:0.41.0"
     "@gear-js/frontend-configs": "npm:*"
     "@reown/appkit": "npm:1.6.8"
     "@reown/appkit-adapter-wagmi": "npm:1.6.8"
