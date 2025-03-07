@@ -15578,7 +15578,7 @@ __metadata:
     "@tanstack/react-query": "npm:5.56.2"
     "@types/react-syntax-highlighter": "npm:15.5.13"
     ethers: "npm:6.13.5"
-    gearexe: "npm:*"
+    gearexe: "workspace:*"
     jotai: "npm:2.12.0"
     kzg-wasm: "npm:0.5.0"
     react: "npm:19.0.0"
@@ -15593,7 +15593,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"gearexe@npm:*, gearexe@workspace:apis/gearexe":
+"gearexe@workspace:*, gearexe@workspace:apis/gearexe":
   version: 0.0.0-use.local
   resolution: "gearexe@workspace:apis/gearexe"
   dependencies:
