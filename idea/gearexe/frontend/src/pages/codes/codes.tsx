@@ -1,7 +1,9 @@
 import { generatePath } from 'react-router-dom';
 
 import VerifySvg from '@/assets/icons/verify.svg?react';
-import { HashLink, Table, Tooltip } from '@/components';
+import { HashLink, Navigation, Table, Tooltip } from '@/components';
+import { UploadCodeButton } from '@/features/codes';
+import { Search } from '@/features/search';
 import { routes } from '@/shared/config';
 
 import styles from './codes.module.scss';
@@ -17,7 +19,7 @@ type DataRow = {
 const data: DataRow[] = [
   {
     id: '1',
-    codeId: '0xdWC17F958D2ee523a2206206994597C13D831ec7',
+    codeId: '0x3ac96b57f932fc274c93b621ec65659548fc63f6e41e37760f9875feaed799f8',
     programsCount: '123',
     services: 'Service 1',
     createdAt: '12-19-2024 10:30:24',
@@ -46,9 +48,13 @@ const columns = [
 
 const Codes = () => {
   return (
-    <div className={styles.container}>
-      <Table columns={columns} data={data} />
-    </div>
+    <>
+      <Navigation search={<Search />} action={<UploadCodeButton />} />
+
+      <div className={styles.container}>
+        <Table columns={columns} data={data} />
+      </div>
+    </>
   );
 };
 

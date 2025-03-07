@@ -4,12 +4,11 @@ WORKDIR /src
 
 COPY . .
 
-RUN yarn workspaces focus gearexe-idea-frontend gear-js
+RUN yarn workspaces focus gearexe-idea-frontend gearexe @gear-js/api gear-js
 
 ARG VITE_WALLET_CONNECT_PROJECT_ID \
     VITE_GEAR_EXE_NODE_ADDRESS \
     VITE_ETH_NODE_ADDRESS
-
 
 ENV VITE_WALLET_CONNECT_PROJECT_ID=${VITE_WALLET_CONNECT_PROJECT_ID} \
     VITE_GEAR_EXE_NODE_ADDRESS=${VITE_GEAR_EXE_NODE_ADDRESS} \

@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { routes } from '@/shared/config';
@@ -12,21 +13,25 @@ const navigation = [
 ];
 
 type Props = {
-  search: JSX.Element;
+  search: ReactNode;
+  action?: ReactNode;
 };
 
-const Navigation = ({ search }: Props) => {
+const Navigation = ({ search, action }: Props) => {
   return (
     <div className={styles.wrapper}>
-      <div className={styles.navigation}>
-        {navigation.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            className={({ isActive }) => clsx(styles.navigationItem, isActive && styles.active)}>
-            [{item.title}]
-          </NavLink>
-        ))}
+      <div className={styles.leftSide}>
+        <div className={styles.navigation}>
+          {navigation.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) => clsx(styles.navigationItem, isActive && styles.active)}>
+              [{item.title}]
+            </NavLink>
+          ))}
+        </div>
+        {action}
       </div>
 
       {search}
