@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@gear-js/api": "0.41.0",
+    "@hookform/resolvers": "3.3.2",
     "@reown/appkit": "1.6.8",
     "@reown/appkit-adapter-wagmi": "1.6.8",
     "@tanstack/react-query": "5.56.2",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@gear-js/frontend-configs": "*",
-    "@types/react-syntax-highlighter": "15.5.13"
+    "@types/react-syntax-highlighter": "15.5.13",
+    "sails-js-types": "0.3.1"
   }
 }

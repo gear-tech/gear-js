@@ -15574,6 +15574,7 @@ __metadata:
   dependencies:
     "@gear-js/api": "npm:0.41.0"
     "@gear-js/frontend-configs": "npm:*"
+    "@hookform/resolvers": "npm:3.3.2"
     "@reown/appkit": "npm:1.6.8"
     "@reown/appkit-adapter-wagmi": "npm:1.6.8"
     "@tanstack/react-query": "npm:5.56.2"
@@ -15589,6 +15590,7 @@ __metadata:
     react-syntax-highlighter: "npm:15.6.1"
     sails-js: "npm:0.3.1"
     sails-js-parser: "npm:0.3.1"
+    sails-js-types: "npm:0.3.1"
     wagmi: "npm:2.14.11"
     zod: "npm:3.22.4"
   languageName: unknown
