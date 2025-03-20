@@ -54,7 +54,7 @@ const eslintConfig = tseslint.config(
       // https://github.com/oxc-project/oxc-resolver/issues/416
       // on top of this, everything is okay within the directory, but not in monorepo - issue is unknown
       'import/resolver': {
-        typescript: { project: ['**/tsconfig.json', '**/tsconfig.app.json'], noWarnOnMultipleProjects: true },
+        typescript: { project: ['**/tsconfig.json', '**/tsconfig.app.json'] },
       },
     },
 
