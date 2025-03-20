@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@substrate/txwrapper-core": "7.4.0"
+    "@substrate/txwrapper-core": "7.5.3"
   },
   "bugs": {
     "url": "https://github.com/gear-tech/gear-js/issues"
@@ -22,7 +22,7 @@
   "license": "GPL-3.0",
   "author": "Gear Technologies",
   "devDependencies": {
-    "@polkadot/api": "15.4.1",
+    "@polkadot/api": "15.8.1",
     "@substrate/txwrapper-dev": "7.5.3",
     "@types/jest": "29.5.14",
     "@types/node-fetch": "2.6.12",
