@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { JSX } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { routes } from '@/shared/config';
