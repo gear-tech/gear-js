@@ -27,7 +27,7 @@
     "@gear-js/react-hooks": "0.16.0",
     "@gear-js/ui": "0.7.0",
     "@gear-js/vara-ui": "0.3.1",
-    "@polkadot/react-identicon": "3.12.2",
+    "@polkadot/react-identicon": "^3",
     "react": "^19",
     "react-dom": "^19"
   },

@@ -61,7 +61,7 @@ async function updateDependencies(deps, versions) {
     } else {
       if (dep === '@gear-js/api') {
         const version = gearJsApi.version;
-        if (version !== deps[dep] && version !== '*') {
+        if (version !== deps[dep] && deps[dep] !== '*') {
           console.log(`  ${dep}: ${deps[dep]} -> ${version}`);
           deps[dep] = version;
         }
