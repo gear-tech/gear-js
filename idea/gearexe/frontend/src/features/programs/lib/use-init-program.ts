@@ -33,6 +33,7 @@ const useInitProgram = (programId: HexString) => {
     addMyActivity({
       type: TransactionTypes.initProgram,
       programId,
+      params: { ctorName, ...args },
       ...unpackReceipt(),
     });
   };

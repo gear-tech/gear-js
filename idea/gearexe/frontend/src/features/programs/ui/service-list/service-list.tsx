@@ -15,13 +15,20 @@ type Props = {
 };
 
 const ServiceList = ({ programId }: Props) => {
-  const { data: programState } = useReadContractState(programId);
-
+  const { data: programState, refetch, isPending } = useReadContractState(programId);
   const { data: sails } = useSails(counterIdl);
 
   const isInitialized = programState && 'Active' in programState.program && programState.program.Active.initialized;
 
   if (!sails) return null;
+
+  if (isPending) {
+    return (
+      <Badge color="secondary" className={styles.badge}>
+        Loading...
+      </Badge>
+    );
+  }
 
   const ctors = Object.entries(sails.ctors);
 
@@ -76,7 +83,14 @@ const ServiceList = ({ programId }: Props) => {
             </Badge>
           }>
           {ctors.map(([ctorName, { args }]) => (
-            <InitForm key={ctorName} programId={programId} sails={sails} ctorName={ctorName} args={args} />
+            <InitForm
+              key={ctorName}
+              programId={programId}
+              sails={sails}
+              ctorName={ctorName}
+              args={args}
+              onInit={refetch}
+            />
           ))}
         </ExpandableItem>
       )}

@@ -11,7 +11,8 @@ import { useSails } from './use-sails';
 
 type SendMessageParams = {
   serviceName: string;
-  functionName: string;
+  messageName: string;
+  isQuery: boolean;
   args: unknown[];
 };
 
@@ -20,30 +21,34 @@ const useSendProgramMessage = (programId: HexString) => {
   const { mirrorContract } = useMirrorContract(programId);
   const addMyActivity = useAddMyActivity();
 
-  const sendMessage = async ({ serviceName, functionName, args }: SendMessageParams) => {
+  const sendMessage = async ({ serviceName, messageName, isQuery, args }: SendMessageParams) => {
     if (!mirrorContract || !sails) return;
 
-    const _payload = sails?.services[serviceName].functions[functionName].encodePayload(...args);
+    const messageKey = isQuery ? 'queries' : 'functions';
+    const sailsMessage = sails?.services[serviceName][messageKey][messageName];
+    const _payload = sailsMessage.encodePayload(...args);
 
     const { waitForReply } = await mirrorContract.sendMessage(_payload, 0n);
 
     const { payload, replyCode, value, blockNumber, txHash } = await waitForReply;
 
-    const result: Record<string, unknown> = sails.services[serviceName].functions[functionName].decodeResult(payload);
+    const result: Record<string, unknown> = sailsMessage.decodeResult(payload);
 
-    const params =
-      typeof result === 'object'
-        ? Object.fromEntries(Object.entries(result).map(([key, _value]) => [key, String(_value)]))
-        : { result };
+    const params = args.map((_value, index) => {
+      const key = sailsMessage.args[index].name;
+      return `${key}: ${String(_value)}`;
+    });
 
     addMyActivity({
       type: TransactionTypes.programMessage,
       serviceName,
-      functionName,
+      messageName,
       ...unpackReceipt(),
       blockNumber,
+      to: programId,
       hash: txHash,
-      params,
+      params: { payload: `${messageName} (${params.join(', ')})` },
+      value: String(value),
     });
 
     return { result, replyCode, value } as const;

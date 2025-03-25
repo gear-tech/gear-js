@@ -26,7 +26,6 @@ const Program = () => {
   const { data: programState, refetch } = useReadContractState(programId);
 
   const { value, decimals } = useWrappedVaraBalance(programId);
-
   const isActive = true;
   const programName = 'Program name';
   const codeId = '0xdAC17F958D2ee523a2206206994597C13D831ec7';

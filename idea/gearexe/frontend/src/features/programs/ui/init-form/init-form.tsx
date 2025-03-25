@@ -16,13 +16,14 @@ type Props = {
   ctorName: string;
   sails: Sails;
   args: ISailsFuncArg[];
+  onInit: () => void;
 };
 
 type Values = {
   [k: string]: PayloadValue;
 };
 
-const InitForm = ({ programId, sails, ctorName, args }: Props) => {
+const InitForm = ({ programId, sails, ctorName, args, onInit }: Props) => {
   const { initProgram, isPending: isInitPending } = useInitProgram(programId);
 
   const defaultValues = useMemo(() => getDefaultPayloadValue(sails, args), [sails, args]);
@@ -34,14 +35,13 @@ const InitForm = ({ programId, sails, ctorName, args }: Props) => {
     resolver: zodResolver(schema),
   });
 
-  const isDisabled = isInitPending;
-
-  const resetForm = () => {
+  const onSuccess = () => {
     form.reset(defaultValues);
+    onInit();
   };
 
   const handleSubmitForm = form.handleSubmit((formValues) => {
-    initProgram({ ctorName, args: formValues }, { onSuccess: resetForm });
+    initProgram({ ctorName, args: formValues }, { onSuccess });
   });
 
   return (
@@ -52,7 +52,7 @@ const InitForm = ({ programId, sails, ctorName, args }: Props) => {
           header={ctorName}
           isNested
           headerSlot={
-            <Button variant="default" size="xs" disabled={isDisabled} type="submit">
+            <Button variant="default" size="xs" isLoading={isInitPending} type="submit">
               Initialize
             </Button>
           }>

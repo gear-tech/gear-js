@@ -3,6 +3,8 @@ import { MyActivity, TransactionTypes } from '@/app/store';
 import { Badge, Balance, CopyButton, ExpandableItem, HashLink } from '@/components';
 import { formatBalance } from '@/shared/utils';
 
+import { Params } from '../params';
+
 import styles from './transaction.module.scss';
 
 type Props = {
@@ -67,12 +69,12 @@ const Transaction = ({ item }: Props) => {
     );
   }
 
-  if (item.type === TransactionTypes.programMessage) {
+  if (item.type === TransactionTypes.initProgram) {
     return (
       <ExpandableItem
         header={
           <div className={styles.transaction}>
-            Message {item.hash && <HashLink hash={item.hash} />} to <HashLink hash={item.to || '-'} />
+            Init Message {item.hash && <HashLink hash={item.hash} />} to <HashLink hash={item.to || '-'} />
           </div>
         }>
         <div className={styles.params}>
@@ -83,6 +85,21 @@ const Transaction = ({ item }: Props) => {
               </div>
             ))}
         </div>
+      </ExpandableItem>
+    );
+  }
+
+  if (item.type === TransactionTypes.programMessage) {
+    const params = item.params || item.value ? { ...item.params, value: `${item.value} ${item.units || ''}` } : null;
+
+    return (
+      <ExpandableItem
+        header={
+          <div className={styles.transaction}>
+            Message {item.hash && <HashLink hash={item.hash} />} to <HashLink hash={item.to || '-'} />
+          </div>
+        }>
+        <div className={styles.params}>{params && <Params params={params} />}</div>
       </ExpandableItem>
     );
   }

@@ -39,7 +39,7 @@ const MessageForm = ({ programId, isQuery, sails, serviceName, messageName, args
   };
 
   const handleSubmitForm = form.handleSubmit((formValues) => {
-    sendMessage({ serviceName, functionName: messageName, args: formValues }, { onSuccess: resetForm });
+    sendMessage({ serviceName, messageName, args: formValues, isQuery }, { onSuccess: resetForm });
   });
 
   const formName = `${serviceName}-${messageName}-form`;
@@ -52,7 +52,13 @@ const MessageForm = ({ programId, isQuery, sails, serviceName, messageName, args
           header={messageName}
           isNested
           headerSlot={
-            <Button variant="default" form={formName} size="xs" isLoading={isPending} className={styles.button}>
+            <Button
+              type="submit"
+              variant="default"
+              form={formName}
+              size="xs"
+              isLoading={isPending}
+              className={styles.button}>
               {isQuery ? 'Read' : 'Write'}
             </Button>
           }>

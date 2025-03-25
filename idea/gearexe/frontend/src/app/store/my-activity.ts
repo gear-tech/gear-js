@@ -32,10 +32,18 @@ type Activity =
   | {
       type: typeof TransactionTypes.programMessage;
       serviceName: string;
-      functionName: string;
+      messageName: string;
       params?: Record<string, unknown>;
+      value?: string;
+      units?: string;
     }
-  | { type: typeof TransactionTypes.initProgram; programId: string };
+  | {
+      type: typeof TransactionTypes.initProgram;
+      programId: string;
+      params?: Record<string, unknown>;
+      value?: string;
+      units?: string;
+    };
 
 type MyActivity = Activity & BaseActivity;
 
