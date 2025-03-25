@@ -18,7 +18,7 @@ const plugins = [
   react(),
   svgr(),
   nodePolyfills(),
-  checker({ typescript: true, eslint: { lintCommand: 'eslint .', useFlatConfig: true } }),
+  checker({ typescript: { buildMode: true }, eslint: { lintCommand: 'eslint .', useFlatConfig: true } }),
 ];
 
 const app = defineConfig({ ...options, plugins });

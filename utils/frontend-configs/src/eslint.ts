@@ -1,7 +1,6 @@
 import js from '@eslint/js';
 import globals from 'globals';
 import react from 'eslint-plugin-react';
-// @ts-expect-error - WiP: https://github.com/facebook/react/issues/30119
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
@@ -47,9 +46,16 @@ const eslintConfig = tseslint.config(
     settings: {
       react: { version: 'detect' },
 
-      // manually specifying references until issue is resolved:
-      // https://github.com/import-js/eslint-import-resolver-typescript/issues/94
-      'import/resolver': { typescript: { project: ['**/tsconfig.json', '**/tsconfig.app.json'] } },
+      // while https://github.com/import-js/eslint-import-resolver-typescript/issues/94 is resolved in 4.x,
+      // extended config specified in references is ignored:
+      // https://github.com/import-js/eslint-import-resolver-typescript/issues/400
+      // also, baseUrl is not available because of regression related to:
+      // https://github.com/import-js/eslint-import-resolver-typescript/pull/368
+      // https://github.com/oxc-project/oxc-resolver/issues/416
+      // on top of this, everything is okay within the directory, but not in monorepo - issue is unknown
+      'import/resolver': {
+        typescript: { project: ['**/tsconfig.json', '**/tsconfig.app.json'] },
+      },
     },
 
     rules: {
