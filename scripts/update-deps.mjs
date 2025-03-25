@@ -5,7 +5,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import assert from 'assert';
 
-const dependency = process.args[2];
+const dependency = process.argv[2];
 
 const dependenciesToUpdate = ['gear-api', 'polkadot'];
 
@@ -61,7 +61,7 @@ async function updateDependencies(deps, versions) {
     } else {
       if (dep === '@gear-js/api') {
         const version = gearJsApi.version;
-        if (version !== deps[dep]) {
+        if (version !== deps[dep] && deps[dep] !== '*') {
           console.log(`  ${dep}: ${deps[dep]} -> ${version}`);
           deps[dep] = version;
         }
