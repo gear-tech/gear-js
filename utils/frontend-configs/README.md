@@ -63,7 +63,7 @@ yarn add @gear-js/frontend-configs
 ```ts
 import { eslintConfig } from '@gear-js/frontend-configs';
 
-export default eslingConfig;
+export default eslintConfig;
 ```
 
 ## Vite
