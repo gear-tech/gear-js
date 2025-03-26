@@ -48,6 +48,12 @@
   color: rgba(168, 245, 147, 1);
 }
 
+.services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .blockHash {
   display: flex;
   flex-direction: column;

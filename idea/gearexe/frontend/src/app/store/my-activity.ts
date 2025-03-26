@@ -21,6 +21,7 @@ type BaseActivity = {
   to?: string | null;
   hash?: string;
   timestamp: number;
+  error?: string;
 };
 
 type Activity =

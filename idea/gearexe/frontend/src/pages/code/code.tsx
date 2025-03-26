@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
 import VerifySvg from '@/assets/icons/verify.svg?react';
-import { Button, HashLink, Navigation, Tooltip } from '@/components';
+import { Badge, Button, HashLink, Navigation, Tooltip } from '@/components';
 import { CodeViewer } from '@/features/codes/ui/code-viewer';
 import { CreateProgramButton } from '@/features/programs';
 import { Search } from '@/features/search';
@@ -44,7 +44,14 @@ const Code = () => {
 
           <div className={styles.properties}>
             <div>SERVICES</div>
-            <HashLink hash={codeId} />
+            <div className={styles.services}>
+              <Badge color={1} size="sm">
+                SERVICE 1
+              </Badge>
+              <Badge color={2} size="sm">
+                SERVICE 2
+              </Badge>
+            </div>
 
             <div>PROGRAMS</div>
             {/* TODO: add filtered programs page */}

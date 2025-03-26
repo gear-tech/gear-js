@@ -27,6 +27,7 @@ export const useUploadCode = () => {
       type: TransactionTypes.codeValidation,
       codeId,
       resultStatus: isValidated ? 'success' : 'error',
+      error: isValidated ? undefined : 'validation error',
       ...unpackReceipt(receipt),
     });
 
@@ -37,6 +38,7 @@ export const useUploadCode = () => {
     console.error(error);
     addMyActivity({
       type: TransactionTypes.codeValidation,
+      error: error.name,
       resultStatus: 'error',
       codeId: '',
       ...unpackReceipt(),

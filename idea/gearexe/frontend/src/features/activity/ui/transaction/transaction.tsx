@@ -16,8 +16,6 @@ const Transaction = ({ item }: Props) => {
 
   if (item.type === TransactionTypes.codeValidation) {
     const isSucces = item.resultStatus === 'success';
-    // TODO: add error message
-    const error = 'Code id can not be found';
 
     return (
       <div className={styles.row}>
@@ -32,7 +30,8 @@ const Transaction = ({ item }: Props) => {
           <>
             <Badge color="danger">Code rejected</Badge>
             <div className={styles.transaction}>
-              <span className={styles.error}>{error}</span> <HashLink hash={item.codeId} isDisabled />
+              <span className={styles.error}>{item.error || 'unknown error'}</span>{' '}
+              <HashLink hash={item.codeId} isDisabled />
             </div>
           </>
         )}
