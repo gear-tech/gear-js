@@ -14,6 +14,7 @@ export const useCreateProgram = () => {
   const { routerContract } = useRouterContract();
 
   const createProgram = async (codeId: string) => {
+    console.log('createProgram', codeId, api, routerContract);
     if (!api || !routerContract) return;
 
     const result: { id: string; blockNumber: number } = await routerContract.createProgram(codeId);

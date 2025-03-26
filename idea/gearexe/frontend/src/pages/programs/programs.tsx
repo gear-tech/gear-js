@@ -17,7 +17,7 @@ type DataRow = {
 const data: DataRow[] = [
   {
     id: '1',
-    programId: '0xe189e481b26241ad656c73375cf88d6daddf91a2',
+    programId: '0x1391884dbc831065d2981105428771f305e22fcc',
     balance: '200,000,000,000.000 WARA',
     messages: '123',
     createdAt: '12-19-2024 10:30:24',
