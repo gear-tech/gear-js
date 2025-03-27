@@ -67,7 +67,7 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-exe-connect:${{ needs.set-env-tag.outputs.environment }}
           build-args: |
             VITE_WALLET_CONNECT_PROJECT_ID=${{ secrets.VITE_WALLET_CONNECT_PROJECT_ID }}
-            VITE_GEAR_EXE_API_NODE=${{ secrets.VITE_GEAR_EXE_API_NODE }}
+            VITE_GEAR_EXE_NODE_ADDRESS=${{ secrets.VITE_GEAR_EXE_NODE_ADDRESS }}
             VITE_ETH_NODE_ADDRESS=${{ secrets.VITE_ETH_NODE_ADDRESS }}
             VITE_ROUTER_CONTRACT_ADDRESS=${{ secrets.VITE_ROUTER_CONTRACT_ADDRESS }}
             VITE_WVARA_CONTRACT_ADDRESS=${{ secrets.VITE_WVARA_CONTRACT_ADDRESS }}
