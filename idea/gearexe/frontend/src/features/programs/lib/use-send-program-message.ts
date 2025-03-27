@@ -28,11 +28,8 @@ const useSendProgramMessage = (programId: HexString) => {
     const sailsMessage = sails?.services[serviceName][messageKey][messageName];
     const _payload = sailsMessage.encodePayload(...args);
 
-    const { waitForReply } = await mirrorContract.sendMessage(_payload, 0n);
-
-    const { payload, replyCode, value, blockNumber, txHash } = await waitForReply;
-
-    const result: Record<string, unknown> = sailsMessage.decodeResult(payload);
+    const value = 0n;
+    const message = await mirrorContract.sendMessage(_payload, value);
 
     const params = args.map((_value, index) => {
       const key = sailsMessage.args[index].name;
@@ -44,11 +41,29 @@ const useSendProgramMessage = (programId: HexString) => {
       serviceName,
       messageName,
       ...unpackReceipt(),
-      blockNumber,
+      blockNumber: message.blockNumber,
       to: programId,
-      hash: txHash,
+      hash: message.txHash,
       params: { payload: `${messageName} (${params.join(', ')})` },
       value: String(value),
+    });
+
+    const reply = await message.waitForReply;
+
+    const { payload, replyCode, blockNumber, txHash } = reply;
+
+    const result: Record<string, unknown> = sailsMessage.decodeResult(payload);
+
+    addMyActivity({
+      type: TransactionTypes.programReply,
+      serviceName,
+      messageName,
+      ...unpackReceipt(),
+      blockNumber,
+      from: programId,
+      hash: txHash,
+      params: { payload: JSON.stringify(result) },
+      value: String(reply.value),
     });
 
     return { result, replyCode, value } as const;

@@ -102,6 +102,21 @@ const Transaction = ({ item }: Props) => {
       </ExpandableItem>
     );
   }
+
+  if (item.type === TransactionTypes.programReply) {
+    const params = item.params || item.value ? { ...item.params, value: `${item.value} ${item.units || ''}` } : null;
+
+    return (
+      <ExpandableItem
+        header={
+          <div className={styles.transaction}>
+            Reply {item.hash && <HashLink hash={item.hash} />} from <HashLink hash={item.from || '-'} />
+          </div>
+        }>
+        <div className={styles.params}>{params && <Params params={params} />}</div>
+      </ExpandableItem>
+    );
+  }
 };
 
 export { Transaction };

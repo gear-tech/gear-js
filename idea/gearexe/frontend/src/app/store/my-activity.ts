@@ -8,6 +8,7 @@ const TransactionTypes = {
   executableBalanceTopUp: 'executable-balance-top-up',
   approve: 'approve',
   programMessage: 'program-message',
+  programReply: 'program-reply',
   initProgram: 'init-program',
 } as const;
 
@@ -32,6 +33,14 @@ type Activity =
   | { type: typeof TransactionTypes.approve; owner: string; spender: string; value: string }
   | {
       type: typeof TransactionTypes.programMessage;
+      serviceName: string;
+      messageName: string;
+      params?: Record<string, unknown>;
+      value?: string;
+      units?: string;
+    }
+  | {
+      type: typeof TransactionTypes.programReply;
       serviceName: string;
       messageName: string;
       params?: Record<string, unknown>;

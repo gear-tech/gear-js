@@ -34,6 +34,7 @@ const useInitProgram = (programId: HexString) => {
       type: TransactionTypes.initProgram,
       programId,
       params: { ctorName, ...args },
+      to: programId,
       ...unpackReceipt(),
     });
   };
