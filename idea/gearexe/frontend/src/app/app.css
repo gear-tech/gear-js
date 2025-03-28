@@ -173,6 +173,7 @@ main {
 
 .layout {
   max-width: 1440px;
+  min-width: 940px;
   width: 100%;
   flex: 1;
   margin: 0 auto;
