@@ -38,15 +38,15 @@
   },
   "devDependencies": {
     "@gear-js/frontend-configs": "*",
-    "@storybook/addon-essentials": "8.6.9",
-    "@storybook/addon-interactions": "8.6.9",
-    "@storybook/addon-links": "8.6.9",
-    "@storybook/addon-onboarding": "8.6.9",
-    "@storybook/blocks": "8.6.9",
-    "@storybook/react": "8.6.9",
-    "@storybook/react-vite": "8.6.9",
+    "@storybook/addon-essentials": "8.6.11",
+    "@storybook/addon-interactions": "8.6.11",
+    "@storybook/addon-links": "8.6.11",
+    "@storybook/addon-onboarding": "8.6.11",
+    "@storybook/blocks": "8.6.11",
+    "@storybook/react": "8.6.11",
+    "@storybook/react-vite": "8.6.11",
     "@storybook/testing-library": "0.2.2",
-    "storybook": "8.6.9",
+    "storybook": "8.6.11",
     "storybook-dark-mode": "4.0.2"
   },
   "files": [
