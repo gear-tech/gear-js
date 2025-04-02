@@ -99,6 +99,7 @@ function VerifyForm() {
               />
             </Box>
           </InputWrapper>
+
           <Select
             name={FIELD_NAME.NETWORK}
             label="Network"
@@ -106,7 +107,18 @@ function VerifyForm() {
             gap={INPUT_GAP}
             disabled={Boolean(readOnlyNetwork)}
           />
+
           <LabeledCheckbox name={FIELD_NAME.BUILD_IDL} label="Build IDL" inputLabel="" gap={INPUT_GAP} />
+
+          <p className={styles.guideText}>
+            How to build your program for verification.
+            <a
+              href="https://github.com/gear-tech/sails-program-verifier/blob/master/README.md"
+              target="_blank"
+              rel="noreferrer">
+              Read the guide
+            </a>
+          </p>
         </Box>
 
         <footer className={styles.buttons}>
