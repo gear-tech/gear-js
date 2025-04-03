@@ -13,5 +13,5 @@ members = [
 ]
 
 [workspace.dependencies]
-sails-rs = { version = "=0.7.3", features = ["ethexe", "wasm-builder"] }
+sails-rs = { version = "=0.7.3", features = ["ethexe", "wasm-builder"]}
 sails-idl-gen = { version = "=0.7.3" }
