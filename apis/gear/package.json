@@ -48,14 +48,14 @@
   },
   "license": "GPL-3.0",
   "peerDependencies": {
-    "@polkadot/api": "15.8.1",
+    "@polkadot/api": "15.9.1",
     "@polkadot/wasm-crypto": "7.4.1",
     "rxjs": "7.8.2"
   },
   "devDependencies": {
-    "@polkadot/api": "15.8.1",
+    "@polkadot/api": "15.9.1",
     "@polkadot/typegen": "15.8.1",
-    "@polkadot/types": "15.8.1",
+    "@polkadot/types": "15.9.1",
     "@polkadot/wasm-crypto": "7.4.1",
     "rxjs": "7.8.2"
   },
