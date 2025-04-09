@@ -1,5 +1,6 @@
 import { Events, MessageStatus } from '../../common';
 import { Event } from '../../processor';
+import { IReplyCode } from './reply-code';
 
 export interface AMessageQueued {
   id: string;
@@ -25,10 +26,7 @@ export interface AUserMessageSent {
     value: string;
     details?: {
       to: string;
-      code: {
-        __kind: 'Success' | 'Error';
-        value: any;
-      };
+      code: IReplyCode;
     };
   };
   expirtaion?: number;
