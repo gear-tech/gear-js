@@ -4,7 +4,7 @@ import { GEAR_IDEA_VERSION, gearIdeaPkgs } from './check-gear-idea-version.mjs';
 
 const bump = process.argv[2];
 
-const strategies = ['patch', 'minor', 'major'];
+const strategies = ['major', 'minor', 'patch'];
 
 assert.ok(strategies.includes(bump), `Invalid update strategy. Use one of these: ${strategies.join(', ')}`);
 
