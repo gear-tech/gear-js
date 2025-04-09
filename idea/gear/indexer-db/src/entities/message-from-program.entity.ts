@@ -47,4 +47,7 @@ export class MessageFromProgram extends BaseEntity {
 
   @Column({ nullable: true })
   public fn?: string | null;
+
+  @Column({ nullable: true, name: 'reply_code' })
+  public replyCode?: string | null;
 }

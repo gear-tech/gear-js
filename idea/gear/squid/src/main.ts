@@ -56,6 +56,7 @@ const handler = async (ctx: ProcessorContext<Store>) => {
       timestamp: new Date(block.header.timestamp!),
       blockHash: block.header.hash,
       blockNumber: block.header.height.toString(),
+      specVersion: block.header._runtime.specVersion,
     };
 
     for (const event of block.events) {
