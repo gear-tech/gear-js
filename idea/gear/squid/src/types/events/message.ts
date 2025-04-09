@@ -29,7 +29,7 @@ export interface AUserMessageSent {
       code: IReplyCode;
     };
   };
-  expirtaion?: number;
+  expiration?: number;
 }
 
 export type EUserMessageSent = { args: AUserMessageSent } & Omit<Event, 'args'>;
