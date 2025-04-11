@@ -22,3 +22,22 @@
   display: flex;
   gap: 16px;
 }
+
+.guideText {
+  margin-top: 10px;
+
+  display: flex;
+  gap: 8px;
+
+  font-family: Kanit;
+
+  a {
+    color: #2bd071;
+
+    transition: opacity 0.25s;
+
+    &:hover {
+      opacity: 0.75;
+    }
+  }
+}
