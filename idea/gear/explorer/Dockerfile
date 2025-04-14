@@ -20,7 +20,7 @@ COPY idea/gear/common/package.json idea/gear/common/package.json
 COPY idea/gear/explorer/package.json idea/gear/explorer/package.json
 COPY idea/gear/indexer-db/package.json idea/gear/indexer-db/package.json
 
-RUN yarn workspaces focus --production
+RUN yarn workspaces focus @gear-js/api gear-idea-explorer gear-idea-common gear-idea-indexer-db gear-js --production
 
 FROM node:20-alpine
 
@@ -31,6 +31,5 @@ COPY --from=builder /src/idea/gear/explorer/dist /src/idea/gear/explorer/dist
 COPY --from=builder /src/idea/gear/indexer-db/lib /src/idea/gear/indexer-db/lib
 
 WORKDIR /src/idea/gear/explorer
-
 
 CMD ["node", "dist/main.js"]
