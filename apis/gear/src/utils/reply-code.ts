@@ -212,7 +212,7 @@ export class ExecutionErrorReason implements IReplyCodeReason {
   private _bytes: Uint8Array;
 
   constructor(bytes: Uint8Array) {
-    checkAndGetCodeBytes(bytes, EErrorReplyReason.Execution, 1);
+    this._bytes = checkAndGetCodeBytes(bytes, EErrorReplyReason.Execution, 1);
   }
 
   get explanation(): string {
@@ -278,7 +278,7 @@ export class UnavailableActorErrorReason implements IReplyCodeReason {
   private _bytes: Uint8Array;
 
   constructor(bytes: Uint8Array) {
-    checkAndGetCodeBytes(bytes, EErrorReplyReason.UnavailableActor, 1);
+    this._bytes = checkAndGetCodeBytes(bytes, EErrorReplyReason.UnavailableActor, 1);
   }
 
   private _throwUnsupported() {
