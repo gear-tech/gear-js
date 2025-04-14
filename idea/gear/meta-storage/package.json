@@ -16,7 +16,8 @@
     "pg": "8.10.0",
     "swagger-ui-express": "^5.0.1",
     "typeorm": "^0.3.17",
-    "yamljs": "^0.3.0"
+    "yamljs": "^0.3.0",
+    "reflect-metadata": "^0.1.13"
   },
   "scripts": {
     "build": "rm -rf dist && npx tsc",
