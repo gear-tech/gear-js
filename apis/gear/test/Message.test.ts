@@ -4,7 +4,7 @@ import { readFileSync } from 'fs';
 
 import { TEST_CODE } from './config';
 import { checkInit, createPayload, getAccount, sendTransaction, sleep } from './utilsFunctions';
-import { decodeAddress } from '../src/utils';
+import { decodeAddress, ReplyCode } from '../src/utils';
 import { getApi } from './common';
 
 const api = getApi();
@@ -63,6 +63,9 @@ describe('Gear Message', () => {
       const reply = await api.message.getReplyEvent(programId, txData.id.toHex(), blockHash);
       expect(reply.data.message.details.isSome).toBeTruthy();
       expect(reply.data.message.details.unwrap().code.isSuccess).toBeTruthy();
+      const replyCode = new ReplyCode(reply.data.message.details.unwrap().code.toU8a(), api.specVersion);
+      expect(replyCode.isSuccess);
+      expect(replyCode.successReason.isManual);
       expect(reply.data.message.payload.toHex()).toBe(message.reply);
     }
   });
@@ -99,7 +102,7 @@ describe('Gear Message', () => {
   });
 
   test('Send message with specifying payload type instead of metadata', async () => {
-    const tx = await api.message.send({ destination: '0x', gasLimit: 1000, payload: 'PING' }, undefined, 'String');
+    const tx = api.message.send({ destination: '0x', gasLimit: 1000, payload: 'PING' }, undefined, 'String');
     expect(tx.args[1].toJSON()).toBe('0x1050494e47');
   });
 
