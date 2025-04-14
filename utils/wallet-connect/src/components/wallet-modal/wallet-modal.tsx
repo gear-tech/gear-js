@@ -7,7 +7,7 @@ import ExitSVG from '../../assets/exit.svg?react';
 import { IS_MOBILE_DEVICE, WALLETS } from '../../consts';
 import { useWallet } from '../../hooks';
 import { copyToClipboard } from '../../utils';
-import { UI_CONFIG } from '../ui-config';
+import { useUiKit } from '../use-ui-kit';
 
 import styles from './wallet-modal.module.scss';
 
@@ -22,7 +22,11 @@ function WalletModal({ theme = 'vara', close }: Props) {
   const { wallet, walletAccounts, setWalletId, resetWalletId } = useWallet();
 
   const themeClassName = styles[theme];
-  const { WalletButton, AccountButton, Button, Modal } = UI_CONFIG[theme];
+  const { components } = useUiKit(theme);
+
+  if (!components) return null;
+
+  const { WalletButton, AccountButton, Button, Modal } = components;
 
   const getWallets = () =>
     WALLETS.map(([id, { SVG, name }]) => {
