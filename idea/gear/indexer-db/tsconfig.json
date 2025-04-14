@@ -5,8 +5,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "strict": false,
-    "declaration": true
+    "strict": false
   },
   "include": ["src"]
 }
