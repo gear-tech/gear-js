@@ -23,7 +23,7 @@ export type VSimpleUnavailableActorError =
   | { __kind: 'ProgramExited' }
   | { __kind: 'InitializationFailure' }
   | { __kind: 'Uninitialized' }
-  | { __kind: 'CodeNotExists' }
+  | { __kind: 'ProgramNotCreated' }
   | { __kind: 'ReinstrumentationFailure' };
 
 export type VSimpleExecutionReason =
@@ -193,7 +193,7 @@ export class ReplyCode {
         this._bytes[2] = 2;
         break;
       }
-      case 'CodeNotExists': {
+      case 'ProgramNotCreated': {
         this._bytes[2] = 3;
         break;
       }
