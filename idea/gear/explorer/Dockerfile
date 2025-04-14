@@ -14,6 +14,8 @@ COPY package.json .
 COPY yarn.lock .
 COPY .yarn .yarn
 COPY .yarnrc.yml .
+#Disable PnP
+RUN echo "nodeLinker: node-modules" > .yarnrc.yml
 COPY apis/gear/package.json apis/gear/package.json
 COPY idea/gear/common/package.json idea/gear/common/package.json
 COPY idea/gear/explorer/package.json idea/gear/explorer/package.json
