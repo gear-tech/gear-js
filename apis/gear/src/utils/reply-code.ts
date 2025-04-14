@@ -7,14 +7,24 @@ interface IReplyCodeReason {
 
 const REPLY_CODE_LENGTH = 4;
 
-function checkCodeBytes(code: Uint8Array, prevByteValue?: number, prevBytePosition?: number) {
-  if (code.length !== REPLY_CODE_LENGTH) {
-    throw new Error('Invalid reply code length');
+function padTo4Bytes(input: Uint8Array) {
+  const res = new Uint8Array(4);
+  res.set(input, 0);
+  return res;
+}
+
+function checkAndGetCodeBytes(code: Uint8Array, prevByteValue?: number, prevBytePosition?: number) {
+  if (code.length < 4) {
+    code = padTo4Bytes(code);
+  } else if (code.length > REPLY_CODE_LENGTH) {
+    code = code.slice(0, 4);
   }
 
   if (prevByteValue != null && code[prevBytePosition] !== prevByteValue) {
     throw new Error('Invalid byte sequence');
   }
+
+  return code;
 }
 
 export const enum EReplyCode {
@@ -34,9 +44,7 @@ export class ReplyCode {
     codeBytes: Uint8Array | HexString,
     private _specVersion: number,
   ) {
-    this._bytes = u8aToU8a(codeBytes);
-
-    checkCodeBytes(this._bytes);
+    this._bytes = checkAndGetCodeBytes(u8aToU8a(codeBytes));
 
     if (this._bytes.length != 4) {
       throw new Error('Invalid message reply code length');
@@ -73,8 +81,10 @@ export const enum ESuccessReply {
  * # Success reply reason.
  */
 export class SuccessReplyReason implements IReplyCodeReason {
-  constructor(private _bytes: Uint8Array) {
-    checkCodeBytes(this._bytes, EReplyCode.Success, 0);
+  private _bytes: Uint8Array;
+
+  constructor(bytes: Uint8Array) {
+    this._bytes = checkAndGetCodeBytes(bytes, EReplyCode.Success, 0);
   }
 
   get explanation(): string {
@@ -112,11 +122,13 @@ const enum EErrorReplyReason {
  * # Error reply reason
  */
 export class ErrorReplyReason implements IReplyCodeReason {
+  private _bytes: Uint8Array;
+
   constructor(
-    private _bytes: Uint8Array,
+    bytes: Uint8Array,
     private _specVersion: number,
   ) {
-    checkCodeBytes(this._bytes, EReplyCode.Error, 0);
+    this._bytes = checkAndGetCodeBytes(bytes, EReplyCode.Error, 0);
   }
 
   private _throwUnsupported() {
@@ -197,8 +209,10 @@ export const enum ESimpleExecutionError {
  * # Execution error reason
  */
 export class ExecutionErrorReason implements IReplyCodeReason {
-  constructor(private _bytes: Uint8Array) {
-    checkCodeBytes(this._bytes, EErrorReplyReason.Execution, 1);
+  private _bytes: Uint8Array;
+
+  constructor(bytes: Uint8Array) {
+    checkAndGetCodeBytes(bytes, EErrorReplyReason.Execution, 1);
   }
 
   get explanation(): string {
@@ -261,8 +275,10 @@ export const enum ESimpleUnavailableActorError {
 }
 
 export class UnavailableActorErrorReason implements IReplyCodeReason {
-  constructor(private _bytes: Uint8Array) {
-    checkCodeBytes(this._bytes, EErrorReplyReason.UnavailableActor, 1);
+  private _bytes: Uint8Array;
+
+  constructor(bytes: Uint8Array) {
+    checkAndGetCodeBytes(bytes, EErrorReplyReason.UnavailableActor, 1);
   }
 
   private _throwUnsupported() {

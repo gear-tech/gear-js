@@ -213,7 +213,6 @@ export class ReplyCode {
   }
 
   toHex(): string {
-    console.log(this._bytes, this.value);
     return u8aToHex(this._bytes);
   }
 }

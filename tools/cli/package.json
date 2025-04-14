@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@gear-js/api": "0.41.1",
-    "@polkadot/api": "15.8.1",
+    "@polkadot/api": "15.9.1",
     "chalk": "4",
     "commander": "10.0.1",
     "inquirer": "9.2.6",

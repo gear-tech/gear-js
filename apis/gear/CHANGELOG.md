@@ -1,13 +1,8 @@
-## 0.42.0
+## 0.41.1
 _14/04/2025_
 
 - Introduce the `ReplyCode` class to simplify reply code decoding in https://github.com/gear-tech/gear-js/pull/1874
 - Bump polkadot-js to `15.9.1`
-
-## 0.41.1
-_23/01/2025_
-
-- Bump `@polkadot/*` dependencies to `15.4.1` in https://github.com/gear-tech/gear-js/pull/1736
 
 ## 0.40.0
 _28/11/2024_
