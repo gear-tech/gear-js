@@ -10,5 +10,5 @@
     "clean": "echo \"clean gear-idea-indexer-db\" && rm -rf lib"
   },
   "main": "lib/index.js",
-  "types": "src/index.ts"
+  "types": "lib/index.d.ts"
 }
