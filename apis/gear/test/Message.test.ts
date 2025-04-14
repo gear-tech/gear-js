@@ -65,7 +65,6 @@ describe('Gear Message', () => {
       expect(reply.data.message.details.unwrap().code.isSuccess).toBeTruthy();
       const replyCode = new ReplyCode(reply.data.message.details.unwrap().code.toU8a(), api.specVersion);
       expect(replyCode.isSuccess);
-      expect(replyCode.successReason.isManual);
       expect(reply.data.message.payload.toHex()).toBe(message.reply);
     }
   });
