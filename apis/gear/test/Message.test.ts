@@ -63,7 +63,6 @@ describe('Gear Message', () => {
       const reply = await api.message.getReplyEvent(programId, txData.id.toHex(), blockHash);
       expect(reply.data.message.details.isSome).toBeTruthy();
       expect(reply.data.message.details.unwrap().code.isSuccess).toBeTruthy();
-      console.log(reply.data.message.details.unwrap().code.toU8a());
       const replyCode = new ReplyCode(reply.data.message.details.unwrap().code.toU8a(), api.specVersion);
       expect(replyCode.isSuccess);
       expect(reply.data.message.payload.toHex()).toBe(message.reply);
