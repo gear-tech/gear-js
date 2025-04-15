@@ -28,7 +28,7 @@ describe('ReplyCode', () => {
     expect(replyCode.errorReason.isUnavailableActor).toBeFalsy();
     expect(replyCode.errorReason.executionReason.isRanOutOfGas).toBeTruthy();
     expect(() => replyCode.successReason).toThrow('Invalid byte sequence');
-    expect(() => replyCode.errorReason.unabailableActorReason).toThrow('Invalid byte sequence');
+    expect(() => replyCode.errorReason.unavailableActorReason).toThrow('Invalid byte sequence');
 
     replyCode = new ReplyCode(new Uint8Array([1, 0, 1, 0]), SPEC_VERSION);
 
@@ -44,7 +44,7 @@ describe('ReplyCode', () => {
     expect(replyCode.isError).toBeTruthy();
     expect(replyCode.isSuccess).toBeFalsy();
     expect(replyCode.errorReason.isUnavailableActor).toBeTruthy();
-    expect(replyCode.errorReason.unabailableActorReason.isProgramExited).toBeTruthy();
+    expect(replyCode.errorReason.unavailableActorReason.isProgramExited).toBeTruthy();
     expect(() => replyCode.errorReason.executionReason).toThrow('Invalid byte sequence');
   });
 });
