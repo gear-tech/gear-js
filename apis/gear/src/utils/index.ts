@@ -9,3 +9,4 @@ export * from './signature';
 export * from './regexp';
 export * from './create-payload';
 export * from './getExtrinsic';
+export * from './reply-code';

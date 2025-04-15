@@ -1,4 +1,3 @@
- 
 import '@polkadot/api-base/types/storage';
 
 import type { ApiTypes, AugmentedQuery, QueryableStorageEntry } from '@polkadot/api-base/types';
@@ -10,7 +9,6 @@ import {
   GearCommonCodeMetadata,
   GearCommonGasProviderNodeGasNode,
   GearCommonGasProviderNodeGasNodeId,
-  GearCommonSchedulerTaskScheduledTask,
   GearCommonStorageComplicatedDequeueLinkedNode,
   GearCommonStoragePrimitivesInterval,
   GearCoreCodeInstrumentedInstrumentedCode,
@@ -18,6 +16,7 @@ import {
   GearCoreMessageStoredStoredDispatch,
   GearCoreMessageUserUserStoredMessage,
   GearCoreProgram,
+  GearCoreTasksScheduledTask,
   GprimitivesActorId,
   GprimitivesCodeId,
   GprimitivesMessageId,
@@ -67,6 +66,7 @@ declare module '@polkadot/api-base/types/storage' {
         [AccountId32]
       > &
         QueryableStorageEntry<ApiType, [AccountId32]>;
+      bankAddress: AugmentedQuery<ApiType, () => Observable<AccountId32>, []> & QueryableStorageEntry<ApiType, []>;
       onFinalizeTransfers: AugmentedQuery<
         ApiType,
         (arg: AccountId32 | string | Uint8Array) => Observable<Option<u128>>,
@@ -163,6 +163,12 @@ declare module '@polkadot/api-base/types/storage' {
        * when it becomes `SessionPerEra - 1`.
        **/
       sessionsTimer: AugmentedQuery<ApiType, () => Observable<u32>, []> & QueryableStorageEntry<ApiType, []>;
+      /**
+       * Operational storage.
+       *
+       * Defines the amount of fee to be paid for the transport of messages.
+       **/
+      transportFee: AugmentedQuery<ApiType, () => Observable<u128>, []> & QueryableStorageEntry<ApiType, []>;
       /**
        * Generic query
        **/
@@ -295,7 +301,7 @@ declare module '@polkadot/api-base/types/storage' {
         (
           arg1: u32 | AnyNumber | Uint8Array,
           arg2:
-            | GearCommonSchedulerTaskScheduledTask
+            | GearCoreTasksScheduledTask
             | { PauseProgram: any }
             | { RemoveCode: any }
             | { RemoveFromMailbox: any }
@@ -309,9 +315,9 @@ declare module '@polkadot/api-base/types/storage' {
             | string
             | Uint8Array,
         ) => Observable<Option<Null>>,
-        [u32, GearCommonSchedulerTaskScheduledTask]
+        [u32, GearCoreTasksScheduledTask]
       > &
-        QueryableStorageEntry<ApiType, [u32, GearCommonSchedulerTaskScheduledTask]>;
+        QueryableStorageEntry<ApiType, [u32, GearCoreTasksScheduledTask]>;
       /**
        * Generic query
        **/
