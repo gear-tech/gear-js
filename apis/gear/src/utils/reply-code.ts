@@ -8,16 +8,16 @@ interface IReplyCodeReason {
 const REPLY_CODE_LENGTH = 4;
 
 function padTo4Bytes(input: Uint8Array) {
-  const res = new Uint8Array(4);
+  const res = new Uint8Array(REPLY_CODE_LENGTH);
   res.set(input, 0);
   return res;
 }
 
 function checkAndGetCodeBytes(code: Uint8Array, prevByteValue?: number, prevBytePosition?: number) {
-  if (code.length < 4) {
+  if (code.length < REPLY_CODE_LENGTH) {
     code = padTo4Bytes(code);
   } else if (code.length > REPLY_CODE_LENGTH) {
-    code = code.slice(0, 4);
+    code = code.slice(0, REPLY_CODE_LENGTH);
   }
 
   if (prevByteValue != null && code[prevBytePosition] !== prevByteValue) {
@@ -182,7 +182,7 @@ export class ErrorReplyReason implements IReplyCodeReason {
     return this._bytes[1] === EErrorReplyReason.UnavailableActor;
   }
 
-  get unabailableActorReason(): UnavailableActorErrorReason {
+  get unavailableActorReason(): UnavailableActorErrorReason {
     return new UnavailableActorErrorReason(this._bytes);
   }
 
