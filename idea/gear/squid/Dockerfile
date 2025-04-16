@@ -25,6 +25,7 @@ FROM deps
 COPY --from=builder /src/apis/gear/lib /src/apis/gear/lib
 COPY --from=builder /src/idea/gear/squid/lib /src/idea/gear/squid/lib
 COPY --from=builder /src/idea/gear/indexer-db/lib /src/idea/gear/indexer-db/lib
+COPY --from=builder /src/idea/gear/squid/db /src/idea/gear/squid/db
 
 WORKDIR /src/idea/gear/squid
 

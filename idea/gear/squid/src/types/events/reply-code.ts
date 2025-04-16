@@ -209,7 +209,7 @@ export class ReplyCode {
 
   private _unsupportedByte(position: 0 | 1 | 2 | 3) {
     this._bytes[position] = 255;
-    console.error(`Unsupported byte at position ${position}. Value: ${JSON.stringify(this.value)}`);
+    console.error(`Unsupported byte at position ${position}. Value: ${JSON.stringify(this.value)}.`);
   }
 
   toHex(): string {
