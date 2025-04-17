@@ -23,31 +23,31 @@
   },
   "peerDependencies": {
     "@gear-js/api": "0.41.1",
-    "@polkadot/api": "15.9.1",
+    "@polkadot/api": "15.9.2",
     "@tanstack/react-query": "^5.56.2",
     "react": "^18 || ^19",
     "react-dom": "^18 || ^19",
-    "sails-js": "0.3.0"
+    "sails-js": "0.4.0"
   },
   "dependencies": {
-    "@polkadot/api-derive": "15.9.1",
-    "@polkadot/extension-inject": "0.58.7",
-    "@polkadot/util": "13.4.3",
-    "@substrate/connect": "2.1.0",
-    "bignumber.js": "9.1.2",
-    "nanoid": "5.0.1",
+    "@polkadot/api-derive": "15.9.2",
+    "@polkadot/extension-inject": "0.58.8",
+    "@polkadot/util": "13.4.4",
+    "@substrate/connect": "2.1.6",
+    "bignumber.js": "9.2.1",
+    "nanoid": "5.1.5",
     "react-transition-group": "4.4.5",
-    "sails-js-parser": "0.0.1"
+    "sails-js-parser": "0.4.0"
   },
   "devDependencies": {
     "@gear-js/api": "0.41.1",
     "@gear-js/frontend-configs": "*",
-    "@polkadot/api": "15.9.1",
-    "@polkadot/types": "15.9.1",
-    "@tanstack/react-query": "5.56.2",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "sails-js": "0.3.0"
+    "@polkadot/api": "15.9.2",
+    "@polkadot/types": "15.9.2",
+    "@tanstack/react-query": "5.74.4",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "sails-js": "0.4.0"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
