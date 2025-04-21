@@ -17,7 +17,7 @@
     "react-dom": "19.0.0",
     "react-router-dom": "6.28.2",
     "react-syntax-highlighter": "15.6.1",
-    "sails-js": "0.3.0",
+    "sails-js": "0.4.0",
     "wagmi": "2.12.29"
   },
   "devDependencies": {

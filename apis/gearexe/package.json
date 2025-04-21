@@ -27,8 +27,8 @@
     "@gear-js/api": "0.41.1",
     "ethers": "6.13.5",
     "kzg-wasm": "0.5.0",
-    "sails-js": "0.3.1",
-    "sails-js-parser": "0.3.1"
+    "sails-js": "0.4.0",
+    "sails-js-parser": "0.4.0"
   },
   "peerDependenciesMeta": {
     "@gear-js/api": {
