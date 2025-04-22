@@ -26,6 +26,7 @@ type BaseMessage = IBase & {
   source: HexString;
   value: string;
   payload: HexString | null;
+  replyCode?: HexString | null;
   replyToMessageId?: HexString | null;
   service?: string | null;
   fn?: string | null;

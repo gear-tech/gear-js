@@ -1,16 +1,17 @@
-import { UserMessageSent, Transfer, encodeAddress, ReplyCode, GearApi } from '@gear-js/api';
+import { UserMessageSent, Transfer, encodeAddress } from '@gear-js/api';
 import { AlertContainerFactory } from '@gear-js/react-hooks';
 import { HexString } from '@polkadot/util/types';
 import { generatePath } from 'react-router-dom';
 
 import { routes } from '@/shared/config';
+import { getErrorReason } from '@/shared/helpers';
 import { CustomLink } from '@/shared/ui/customLink';
 
 const messageSentEventsHandler = (
   event: UserMessageSent,
   address: HexString,
   alert: AlertContainerFactory,
-  api: GearApi,
+  specVersion: number,
 ) => {
   const { message, method, section } = event.data;
   const { payload, destination, details, id } = message;
@@ -24,27 +25,16 @@ const messageSentEventsHandler = (
 
   const code = details.unwrap().code;
   const isError = details.isSome && !code.isSuccess;
-  const replyCode = new ReplyCode(code.toU8a(), api.specVersion);
 
   // eslint-disable-next-line @typescript-eslint/unbound-method -- TODO(#1800): resolve eslint comments
   const showAlert = isError ? alert.error : alert.success;
-
-  const getErrorReason = () => {
-    if (replyCode.errorReason.executionReason.isUserspacePanic) {
-      return payload.toHuman() as string;
-    }
-    if (replyCode.errorReason.isExecution) {
-      return replyCode.errorReason.executionReason.explanation;
-    }
-    return replyCode.errorReason.explanation;
-  };
 
   showAlert(
     <>
       <p>
         ID: <CustomLink to={generatePath(routes.message, { messageId })} text={messageId} />
       </p>
-      {isError && <p>{getErrorReason()}</p>}
+      {isError && <p>{getErrorReason(code.toU8a(), specVersion, payload.toHuman() as string)}</p>}
     </>,
     alertOptions,
   );

@@ -1,5 +1,5 @@
 import { HexString } from '@gear-js/api';
-import { useAlert } from '@gear-js/react-hooks';
+import { useAlert, useApi } from '@gear-js/react-hooks';
 import { Input, Textarea, InputWrapper, Button } from '@gear-js/ui';
 import cx from 'clsx';
 import { useMemo } from 'react';
@@ -29,7 +29,7 @@ type Params = {
 const Message = () => {
   const { messageId } = useParams() as Params;
   const alert = useAlert();
-
+  const { api } = useApi();
   const messageToProgram = useMessageToProgram(messageId);
   const messageFromProgram = useMessageFromProgram(messageId);
 
@@ -46,12 +46,12 @@ const Message = () => {
 
   const decodedPayload = useMemo(
     () =>
-      message && !isPayloadLoading
+      message && !isPayloadLoading && api
         ? // eslint-disable-next-line @typescript-eslint/unbound-method -- TODO(#1800): resolve eslint comments
-          getDecodedMessagePayload(message, isToDirection, metadata, sails, alert.error)
+          getDecodedMessagePayload(message, isToDirection, metadata, sails, alert.error, api.specVersion)
         : undefined,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [message, metadata, sails, isPayloadLoading],
+    [message, metadata, sails, isPayloadLoading, api],
   );
 
   const inputClassName = cx(isLoading && styles.loading);

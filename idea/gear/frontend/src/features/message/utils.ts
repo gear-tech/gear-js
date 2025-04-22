@@ -2,7 +2,7 @@ import { CreateType, ProgramMetadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { Sails, getServiceNamePrefix, getFnNamePrefix } from 'sails-js';
 
-import { isNullOrUndefined } from '@/shared/helpers';
+import { getErrorReason, isNullOrUndefined } from '@/shared/helpers';
 
 import { MessageToProgram, MessageFromProgram } from './api';
 import { MESSAGE_ENTRY_POINT } from './consts';
@@ -94,11 +94,17 @@ const getDecodedMessagePayload = (
   metadata: ProgramMetadata | undefined,
   sails: Sails | undefined,
   onError: (value: string) => void,
+  specVersion: number,
 ) => {
   const payload = getPayload(message);
 
   try {
-    if (!isMessageQueued && isMessageWithError(message)) return CreateType.create('String', payload).toHuman();
+    if (!isMessageQueued && isMessageWithError(message)) {
+      const payloadString = CreateType.create('String', payload).toHuman() as string;
+      const { replyCode } = message;
+      return replyCode ? getErrorReason(replyCode, specVersion, payloadString) : payloadString;
+    }
+
     if (metadata) return { value: getMetadataDecodedMessagePayload(message, isMessageQueued, metadata) };
     if (sails) return getSailsDecodedMessagePayload(message, isMessageQueued, sails);
 
