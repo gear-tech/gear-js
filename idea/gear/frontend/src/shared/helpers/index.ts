@@ -7,7 +7,7 @@ import { isAndroid, isIOS } from '@react-aria/utils';
 
 import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from '@/shared/config';
 
-import { getErrorReason } from './error';
+import { getReplyErrorReason } from './error';
 import { isHexValid, isExists, isAccountAddressValid, isNumeric, asOptionalField } from './form';
 
 const checkWallet = (account?: Account) => {
@@ -180,5 +180,5 @@ export {
   fetchWithGuard,
   getErrorMessage,
   isAnyKey,
-  getErrorReason,
+  getReplyErrorReason,
 };

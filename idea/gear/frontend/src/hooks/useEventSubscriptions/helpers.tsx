@@ -4,7 +4,7 @@ import { HexString } from '@polkadot/util/types';
 import { generatePath } from 'react-router-dom';
 
 import { routes } from '@/shared/config';
-import { getErrorReason } from '@/shared/helpers';
+import { getReplyErrorReason } from '@/shared/helpers';
 import { CustomLink } from '@/shared/ui/customLink';
 
 const messageSentEventsHandler = (
@@ -34,7 +34,7 @@ const messageSentEventsHandler = (
       <p>
         ID: <CustomLink to={generatePath(routes.message, { messageId })} text={messageId} />
       </p>
-      {isError && <p>{getErrorReason(code.toU8a(), specVersion, payload.toHuman() as string)}</p>}
+      {isError && <p>{getReplyErrorReason(code.toU8a(), specVersion, payload.toHuman() as string)}</p>}
     </>,
     alertOptions,
   );
