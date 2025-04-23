@@ -36,7 +36,7 @@
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.3.0",
     "happy-dom": "17.4.4",
-    "vitest": "3.1.1"
+    "vitest": "3.1.2"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
