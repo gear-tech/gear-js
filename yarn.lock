@@ -2293,10 +2293,10 @@ __metadata:
     react: "npm:19.0.0"
     react-dom: "npm:19.0.0"
   peerDependencies:
-    "@gear-js/react-hooks": 0.16.1
-    "@gear-js/ui": 0.7.0
-    "@gear-js/vara-ui": 0.3.1
-    "@polkadot/react-identicon": 3.12.2
+    "@gear-js/react-hooks": ^0.16.0
+    "@gear-js/ui": ^0.7.0
+    "@gear-js/vara-ui": ^0.3.1
+    "@polkadot/react-identicon": ^3.12.2
     react: ^19
     react-dom: ^19
   peerDependenciesMeta:
