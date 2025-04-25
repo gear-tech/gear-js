@@ -32,7 +32,7 @@
   "dependencies": {
     "@polkadot/api-derive": "15.9.1",
     "@polkadot/extension-inject": "0.58.7",
-    "@polkadot/util": "13.4.3",
+    "@polkadot/util": "13.4.4",
     "@substrate/connect": "2.1.0",
     "bignumber.js": "9.1.2",
     "nanoid": "5.0.1",
