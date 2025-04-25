@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@gear-js/frontend-configs": "*",
-    "@gear-js/react-hooks": "0.16.1",
+    "@gear-js/react-hooks": "0.16.2",
     "@gear-js/ui": "0.7.0",
     "@gear-js/vara-ui": "0.3.1",
     "@polkadot/react-identicon": "3.12.2",
