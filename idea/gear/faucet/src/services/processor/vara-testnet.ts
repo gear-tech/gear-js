@@ -1,20 +1,14 @@
 import { KeyringPair } from '@polkadot/keyring/types';
 import { BN } from '@polkadot/util';
+import { GearApi, GearKeyring, TransferData } from '@gear-js/api';
 import { logger } from 'gear-idea-common';
-import { GearApi, TransferData } from '@gear-js/api';
-import { CronJob } from 'cron';
 
-import { createAccount } from '../utils';
-import config from '../config';
-import { changeStatus } from '../healthcheck.router';
+import { FaucetType, FaucetRequest } from '../../database';
+import { FaucetProcessor } from './abstract';
+import config from '../../config';
 
 const MAX_RECONNECTIONS = 10;
 let reconnectionsCounter = 0;
-
-interface TBRequestParams {
-  addr: string;
-  cb: (error: string, result: string) => void;
-}
 
 enum TransferEvent {
   TRANSFER = 'Transfer',
@@ -22,37 +16,70 @@ enum TransferEvent {
   EXTRINSIC_FAILED = 'ExtrinsicFailed',
 }
 
-export class GearService {
+function createAccount(seed: string): Promise<KeyringPair> {
+  if (seed.startsWith('//')) {
+    return GearKeyring.fromSuri(seed);
+  }
+  if (seed.startsWith('0x')) {
+    return GearKeyring.fromSeed(seed);
+  }
+
+  return GearKeyring.fromMnemonic(seed);
+}
+
+export class VaraTestnetProcessor extends FaucetProcessor {
   private account: KeyringPair;
+  private providerAddress: string;
   private balanceToTransfer: BN;
   private api: GearApi;
   private genesis: string;
-  private providerAddress: string;
-  private queue: Array<TBRequestParams>;
 
-  constructor() {
-    this.providerAddress = config.gear.providerAddresses[0];
-    this.queue = [];
-  }
-
-  async init() {
-    this.account = await createAccount(config.gear.accountSeed);
-    this.balanceToTransfer = new BN(config.gear.balanceToTransfer);
+  public async init() {
+    this.account = await createAccount(config.varaTestnet.accountSeed);
+    logger.info('Account created', { addr: this.account.address });
+    this.balanceToTransfer = new BN(config.varaTestnet.balanceToTransfer);
+    this.providerAddress = config.varaTestnet.providerAddresses[0];
     await this.connect();
-    this.processQueue();
   }
 
-  get genesisHash() {
+  protected get cronInterval(): string {
+    return '*/6 * * * * *';
+  }
+
+  protected get type(): FaucetType {
+    return FaucetType.VaraTestnet;
+  }
+
+  public get genesisHash() {
     return this.genesis;
   }
 
-  async connect() {
+  protected async handleRequests(requests: FaucetRequest[]): Promise<number[]> {
+    logger.info('Processing requests', { length: requests.length, target: 'vara_testnet' });
+
+    const success = [];
+
+    const [transferred, blockHash] = await this.sendBatch(requests.map((req) => req.address));
+
+    requests.forEach((req) => {
+      if (transferred.includes(req.address)) {
+        success.push(req.id);
+        logger.info(`Request ${req.id} succeeded`, { blockHash });
+      } else {
+        logger.error(`Request ${req.id} failed`, { blockHash, address: req.address });
+      }
+    });
+
+    return success;
+  }
+
+  private async connect() {
     if (!this.providerAddress) {
       logger.error('There are no node addresses to connect to');
       process.exit(1);
     }
 
-    this.api = new GearApi({ providerAddress: this.providerAddress });
+    this.api = new GearApi({ providerAddress: this.providerAddress, noInitWarn: true });
 
     try {
       await this.api.isReadyOrError;
@@ -67,7 +94,6 @@ export class GearService {
     });
     this.genesis = this.api.genesisHash.toHex();
     logger.info(`Connected to ${await this.api.chain()} with genesis ${this.genesis}`);
-    changeStatus('ws');
   }
 
   async reconnect(): Promise<void> {
@@ -79,12 +105,13 @@ export class GearService {
 
     reconnectionsCounter++;
     if (reconnectionsCounter > MAX_RECONNECTIONS) {
-      this.providerAddress = config.gear.providerAddresses.filter((address) => address !== this.providerAddress)[0];
+      this.providerAddress = config.varaTestnet.providerAddresses.filter(
+        (address) => address !== this.providerAddress,
+      )[0];
       reconnectionsCounter = 0;
     }
 
     logger.info('Attempting to reconnect');
-    changeStatus('ws');
     return this.connect();
   }
 
@@ -130,37 +157,5 @@ export class GearService {
     }
 
     return [transferred, blockHash];
-  }
-
-  requestBalance(addr: string, cb: (error: string, result: string) => void) {
-    this.queue.push({ addr, cb });
-  }
-
-  async processQueue() {
-    new CronJob(
-      '*/3 * * * * *',
-      async () => {
-        if (this.queue.length === 0) {
-          return;
-        }
-        const requests = this.queue;
-        logger.info('Processing queue', { q: this.queue.map(({ addr }) => addr) });
-        this.queue = [];
-
-        const [transferred, blockHash] = await this.sendBatch(requests.map((req) => req.addr));
-
-        requests.forEach((req) => {
-          if (transferred.includes(req.addr)) {
-            logger.info(`Balance transferred to ${req.addr}`, { blockHash });
-            req.cb(null, this.balanceToTransfer.toString());
-          } else {
-            logger.error(`Transfer balance to ${req.addr} failed`, { blockHash });
-            req.cb(`Transfer balance to ${req.addr} failed`, null);
-          }
-        });
-      },
-      null,
-      true,
-    );
   }
 }

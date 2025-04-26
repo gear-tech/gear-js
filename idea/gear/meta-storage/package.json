@@ -21,7 +21,7 @@
   },
   "scripts": {
     "build": "rm -rf dist && npx tsc",
-    "test": "npx jest --clearCache && npx jest --runInBand --silent",
+    "test": "npx nx jest:test --clearCache && npx nx jest:test --runInBand --silent",
     "start": "node dist/server.js",
     "watch": "clear && npx ts-node-dev src/server.ts",
     "clean": "echo \"clean gear-idea-meta-storage\" && rm -rf dist"

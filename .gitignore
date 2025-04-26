@@ -31,3 +31,8 @@ apis/gearexe/lib/
 # cargo
 .binpath
 target/
+
+
+
+.nx/cache
+.nx/workspace-data

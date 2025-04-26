@@ -27,5 +27,6 @@
       "registry": "https://registry.npmjs.org/",
       "private": false
     }
-  }
+  },
+  "useNx": true
 }

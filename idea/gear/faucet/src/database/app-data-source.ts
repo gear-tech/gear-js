@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
 
+import { FaucetRequest, UserLastSeen } from './model';
 import config from '../config';
-import { TransferBalance } from './transfer.entity';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -11,10 +11,6 @@ export const AppDataSource = new DataSource({
   password: config.db.password,
   database: config.db.name,
   synchronize: true,
-  entities: [TransferBalance],
+  entities: [UserLastSeen, FaucetRequest],
   migrations: [],
 });
-
-export async function connectToDB(): Promise<DataSource> {
-  return AppDataSource.initialize();
-}
