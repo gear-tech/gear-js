@@ -43,41 +43,35 @@ components:
 paths:
   /balance:
     post:
-      summary: Add test balance
-      description: Add currency to balance. It's limited to 1 addition per day.
+      summary: Request test balance on Vara Testnet
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Balance'
+              $ref: '#/components/schemas/VaraTestnetRequest'
             example:
               payload:
-                address: 'public wallet seed'
-                genesis: 'node genesis'
+                address: 'account address'
+                genesis: 'network genesis'
               token: 'hCaptcha token'
       responses:
         '200':
-          description: Currency added successfully
-          content:
-            application/json:
-              example: { 'status': 'ok', 'transferredBalance': '1000000' }
+          description: Request submitted succesfully
         '400':
           description: Bad request, missing or invalid parameters
           content:
             application/json:
-              example: { error: 'Address and genesis are required' }
+              examples:
+                MissingParameters: { error: 'Address and genesis are required' }
+                InvalidAddress: { error: 'Invalid account address' }
+                UnsupportedNetwork: { error: '0x<genesis> is not supported' }
+
         '403':
-          description: Forbidden, transfer limit reached or invalid address
+          description: Forbidden, transfer limit reached
           content:
             application/json:
-              examples:
-                invalidAddress:
-                  summary: Invalid Address
-                  value: { error: 'InvalidAddress' }
-                transferLimitReached:
-                  summary: Transfer Limit Reached
-                  value: { error: 'TransferLimitReached' }
+              example: { error: 'The limit for requesting test balance has been reached.' }
         '500':
           description: A server internal error
           content:
@@ -98,4 +92,23 @@ paths:
               token: 'hCaptcha token'
       responses:
         '200':
-          description: Request successfully submitted
+          description: Request submitted succesfully
+        '400':
+          description: Bad request, missing or invalid parameters
+          content:
+            application/json:
+              examples:
+                MissingParameters: { error: 'Address and genesis are required' }
+                InvalidAddress: { error: 'Invalid account address' }
+                UnsupportedContract: { error: '0x<contract_address> is not supported' }
+
+        '403':
+          description: Forbidden, transfer limit reached
+          content:
+            application/json:
+              example: { error: 'The limit for requesting test balance has been reached.' }
+        '500':
+          description: A server internal error
+          content:
+            application/json:
+              example: { error: 'InternalError' }
