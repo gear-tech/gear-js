@@ -14,7 +14,7 @@ const getEnv = (envName: string, defaultValue?: string) => {
 
 export default {
   db: {
-    port: parseInt(getEnv(process.env.DB_PORT, '5432')),
+    port: parseInt(getEnv('DB_PORT', '5432')),
     user: getEnv('DB_USER', 'postgres'),
     password: getEnv('DB_PASSWORD', 'postgres'),
     name: getEnv('DB_NAME', 'faucet'),
@@ -36,7 +36,7 @@ export default {
     cronTime: getEnv('ETH_PROCESSOR_CRON_TIME', '*/24 * * * * *'),
   },
   server: {
-    port: parseInt(getEnv(process.env.PORT, '3010')),
+    port: parseInt(getEnv('PORT', '3010')),
     captchaSecret: getEnv('CAPTCHA_SECRET', '0x234567898765432'),
   },
 };

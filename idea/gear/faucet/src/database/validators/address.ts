@@ -3,7 +3,7 @@ import { isEthereumAddress, registerDecorator, ValidationArguments, ValidationOp
 import { FaucetType } from '../model/enums';
 
 export function isValidAddress(validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       name: 'isValidAddress',
       target: object.constructor,
@@ -18,7 +18,7 @@ export function isValidAddress(validationOptions?: ValidationOptions) {
               if (decodeAddress(value).length === 32) {
                 return true;
               }
-            } catch (error) {
+            } catch (_) {
               return false;
             }
           } else {

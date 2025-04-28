@@ -38,7 +38,7 @@ export class RequestService {
 
     try {
       await validateOrReject(req);
-    } catch (error) {
+    } catch (_) {
       throw new InvalidAddress();
     }
 

@@ -22,7 +22,7 @@ export class FaucetRequest {
   @Column()
   public target: string;
 
-  @Column({ type: 'time without time zone', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   public timestamp: Date;
 
   @Column({ type: 'enum', enum: RequestStatus, default: RequestStatus.Pending })

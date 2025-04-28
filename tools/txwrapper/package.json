@@ -34,7 +34,7 @@
     "typescript": "5.8.3"
   },
   "scripts": {
-    "test": "nx jest:test",
+    "test": "npx jest",
     "build": "rm -rf dist && npx tsc",
     "sendMessageExample": "npx ts-node examples/send-message.ts",
     "clean": "echo \"clean @gear-js/txwrapper\" && rm -rf dist"
