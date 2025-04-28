@@ -67,8 +67,11 @@ function usePrepareProgramTransaction<
     return { transaction, awaited };
   };
 
+  // depends on useProgram/program implementation, programId may not be available
+  const programId = program && typeof program === 'object' && 'programId' in program ? program.programId : undefined;
+
   const mutation = useMutation({
-    mutationKey: ['prepareTransaction'],
+    mutationKey: ['prepareTransaction', programId, serviceName, functionName],
     mutationFn: prepareTransaction,
   });
 

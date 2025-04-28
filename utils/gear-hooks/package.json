@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/react-hooks",
-  "version": "0.16.0",
+  "version": "0.16.2",
   "description": "React hooks used across Gear applications",
   "author": "Gear Technologies",
   "license": "GPL-3.0",
@@ -27,17 +27,17 @@
     "@tanstack/react-query": "^5.56.2",
     "react": "^18 || ^19",
     "react-dom": "^18 || ^19",
-    "sails-js": "0.4.0"
+    "sails-js": "0.4.1"
   },
   "dependencies": {
     "@polkadot/api-derive": "15.9.1",
     "@polkadot/extension-inject": "0.58.7",
-    "@polkadot/util": "13.4.3",
+    "@polkadot/util": "13.4.4",
     "@substrate/connect": "2.1.0",
     "bignumber.js": "9.1.2",
     "nanoid": "5.0.1",
     "react-transition-group": "4.4.5",
-    "sails-js-parser": "0.0.1"
+    "sails-js-parser": "0.4.1"
   },
   "devDependencies": {
     "@gear-js/api": "0.41.1",
@@ -47,7 +47,7 @@
     "@tanstack/react-query": "5.56.2",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "sails-js": "0.4.0"
+    "sails-js": "0.4.1"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
