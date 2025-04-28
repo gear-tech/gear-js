@@ -37,7 +37,7 @@ export class VaraTestnetProcessor extends FaucetProcessor {
   public async init() {
     this.account = await createAccount(config.varaTestnet.accountSeed);
     logger.info('Account created', { addr: this.account.address });
-    this.balanceToTransfer = new BN(config.varaTestnet.balanceToTransfer);
+    this.balanceToTransfer = new BN(config.varaTestnet.balanceToTransfer * 1e12);
     this.providerAddress = config.varaTestnet.providerAddresses[0];
     await this.connect();
   }

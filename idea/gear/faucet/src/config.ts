@@ -23,7 +23,7 @@ export default {
   varaTestnet: {
     providerAddresses: getEnv('VARA_PROVIDER', 'ws://127.0.0.1:9944').split(','),
     accountSeed: getEnv('VARA_ACCOUNT_SEED', '//Alice'),
-    balanceToTransfer: getEnv('VARA_TRANSFER_VALUE', '1000000'),
+    balanceToTransfer: Number(getEnv('VARA_TRANSFER_VALUE', '1000')),
     genesis: getEnv('VARA_GENESIS', '0x<vara_genesis>'),
     cronTime: getEnv('VARA_PROCESSOR_CRON_TIME', '*/6 * * * * *'),
   },
