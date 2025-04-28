@@ -43,7 +43,7 @@ export class VaraTestnetProcessor extends FaucetProcessor {
   }
 
   protected get cronInterval(): string {
-    return '*/6 * * * * *';
+    return config.varaTestnet.cronTime;
   }
 
   protected get type(): FaucetType {

@@ -1,30 +1,24 @@
-export const UserLastSeen = class {
-  id: string;
-  timestamp: Date;
+import { FaucetRequest, UserLastSeen } from '../../src/database';
+import { repos } from './db';
 
-  constructor(id: string) {
-    this.id = id;
-    this.timestamp = new Date();
+jest.mock('typeorm', () => {
+  const actual = jest.requireActual('typeorm');
+
+  class FakeDataSource {
+    initialize = jest.fn(async () => this);
+    getRepository = jest.fn((entity: any) => {
+      if (entity == FaucetRequest) {
+        return repos.FaucetRequest;
+      }
+      if (entity == UserLastSeen) {
+        return repos.UserLastSeen;
+      }
+      throw new Error('Unknown entity');
+    });
   }
-};
 
-const saveMock = jest.fn().mockImplementation((data) => {});
-const findOneMock = jest.fn();
-const findMock = jest.fn();
-const updateMock = jest.fn();
-
-export const AppDataSource = {
-  getRepository: jest.fn().mockReturnValue({
-    save: saveMock,
-    findOne: findOneMock,
-    find: findMock,
-    update: updateMock,
-  }),
-};
-
-export const __mocks__ = {
-  saveMock,
-  findOneMock,
-  findMock,
-  updateMock,
-};
+  return {
+    ...actual,
+    DataSource: FakeDataSource,
+  };
+});

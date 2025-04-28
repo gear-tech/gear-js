@@ -1,10 +1,13 @@
 jest.mock('ethers', () => {
   const actual = jest.requireActual('ethers'); // подтягиваем всё остальное
 
-  const waitMock = jest.fn().mockResolvedValue({
-    status: 1,
-    hash: '0xmockhash',
-    blockNumber: 123,
+  const waitMock = jest.fn().mockImplementation(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    return {
+      status: 1,
+      hash: '0xmockhash',
+      blockNumber: 123,
+    };
   });
 
   const transferMock = jest.fn().mockResolvedValue({

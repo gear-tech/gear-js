@@ -33,6 +33,7 @@ export class RequestService {
       address,
       target,
       type: target === this._varaTestnetGenesis ? FaucetType.VaraTestnet : FaucetType.VaraBridge,
+      status: RequestStatus.Pending,
     });
 
     try {

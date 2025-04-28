@@ -24,17 +24,19 @@ export default {
     providerAddresses: getEnv('VARA_PROVIDER', 'ws://127.0.0.1:9944').split(','),
     accountSeed: getEnv('VARA_ACCOUNT_SEED', '//Alice'),
     balanceToTransfer: getEnv('VARA_TRANSFER_VALUE', '1000000'),
-    genesis: getEnv('VARA_GENESIS'),
+    genesis: getEnv('VARA_GENESIS', '0x<vara_genesis>'),
+    cronTime: getEnv('VARA_PROCESSOR_CRON_TIME', '*/6 * * * * *'),
   },
   eth: {
-    providerAddress: getEnv('ETH_PROVIDER'),
+    providerAddress: getEnv('ETH_PROVIDER', 'https://<eth_provider>'),
     privateKey: getEnv('ETH_PRIVATE_KEY'),
     erc20Contracts: getEnv('ETH_ERC20_CONTRACTS')
       .split(',')
       .map((data) => data.split(':')),
+    cronTime: getEnv('ETH_PROCESSOR_CRON_TIME', '*/24 * * * * *'),
   },
   server: {
     port: parseInt(getEnv(process.env.PORT, '3010')),
-    captchaSecret: getEnv('CAPTCH_SECRET', '0x234567898765432'),
+    captchaSecret: getEnv('CAPTCHA_SECRET', '0x234567898765432'),
   },
 };

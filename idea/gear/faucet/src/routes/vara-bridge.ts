@@ -20,7 +20,7 @@ export class VaraBridgeRouter {
 
   private async _handler({ body: { address, contract } }: Request, res: Response) {
     if (!address || !contract) {
-      res.status(400).json({ error: 'User address and contract address are required' });
+      res.status(400).send('User address and contract address are required');
       return;
     }
 
@@ -31,13 +31,13 @@ export class VaraBridgeRouter {
     } catch (error) {
       if (error.code) {
         logger.error(error.message, { address, target: contract });
-        return res.status(error.code).json({ error: error.message });
+        return res.status(error.code).send(error.message);
       }
 
       logger.error(error.message, { stack: error.stack, address, contract });
 
       // TODO: adjust status code
-      return res.status(500).json({ error: error.message });
+      return res.status(500).json(error.message);
     }
 
     res.sendStatus(200);

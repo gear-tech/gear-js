@@ -4,16 +4,17 @@ import { FaucetProcessor } from './abstract';
 import { BaseContract, ethers, TransactionResponse, Wallet } from 'ethers';
 import config from '../../config';
 
-const IFACE = new ethers.Interface([
-  'function transfer(address to, uint256 amount)',
-  'function decimals() external view returns (uint8)',
-  'error InsufficientBalance(address sender, uint256 balance, uint256 needed)',
-  'error InvalidSender(address sender)',
-  'error InvalidReceiver(address receiver)',
-  'error InsufficientAllowance(address spender, uint256 allowance, uint256 needed)',
-  'error InvalidApprover(address approver)',
-  'error InvalidSpender(address spender)',
-]);
+const IFACE = () =>
+  new ethers.Interface([
+    'function transfer(address to, uint256 amount)',
+    'function decimals() external view returns (uint8)',
+    'error InsufficientBalance(address sender, uint256 balance, uint256 needed)',
+    'error InvalidSender(address sender)',
+    'error InvalidReceiver(address receiver)',
+    'error InsufficientAllowance(address spender, uint256 allowance, uint256 needed)',
+    'error InvalidApprover(address approver)',
+    'error InvalidSpender(address spender)',
+  ]);
 
 interface IERC20 {
   transfer(to: string, amount: bigint): Promise<TransactionResponse>;
@@ -37,7 +38,7 @@ export class VaraBridgeProcessor extends FaucetProcessor {
   }
 
   protected get cronInterval(): string {
-    return '*/10 * * * * *';
+    return config.eth.cronTime;
   }
 
   protected get type(): FaucetType {
@@ -61,10 +62,8 @@ export class VaraBridgeProcessor extends FaucetProcessor {
           logger.info(`Request ${id} succeeded`, { hash: receipt.hash, block: receipt.blockNumber });
         }
       } catch (error) {
-        console.log(error.data);
-        const reason = IFACE.parseError(error.data);
-        console.log(reason);
-        logger.info(`Request ${id} failed`, { error: error.message, stack: error.stack });
+        const reason = IFACE().parseError(error.data);
+        logger.info(`Request ${id} failed`, { error: error.message, stack: error.stack, reason });
       }
     }
 
@@ -76,6 +75,6 @@ export class VaraBridgeProcessor extends FaucetProcessor {
   }
 
   private _getContract(id: string) {
-    return BaseContract.from<IERC20>(id, IFACE, this._wallet);
+    return BaseContract.from<IERC20>(id, IFACE(), this._wallet);
   }
 }

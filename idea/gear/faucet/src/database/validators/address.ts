@@ -13,9 +13,11 @@ export function isValidAddress(validationOptions?: ValidationOptions) {
         validate(value: any, args: ValidationArguments) {
           const obj = args.object as any;
           if (obj.type === FaucetType.VaraTestnet) {
-            if (typeof value === 'string' || value.startsWith('0x')) return false;
+            if (typeof value !== 'string' || !value.startsWith('0x')) return false;
             try {
-              decodeAddress(value).length === 32;
+              if (decodeAddress(value).length === 32) {
+                return true;
+              }
             } catch (error) {
               return false;
             }

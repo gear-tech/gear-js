@@ -5,6 +5,7 @@ import { LastSeenService, RequestService } from '../db';
 import { FaucetRequest, FaucetType } from '../../database';
 
 export abstract class FaucetProcessor {
+  private _job: CronJob<any, this>;
   constructor(
     private _lastSeenService: LastSeenService,
     private _requestService: RequestService,
@@ -15,8 +16,12 @@ export abstract class FaucetProcessor {
   protected abstract get type(): FaucetType;
   protected abstract handleRequests(requests: FaucetRequest[]): Promise<number[]>;
 
+  stop() {
+    this._job.stop();
+  }
+
   run() {
-    new CronJob(
+    this._job = new CronJob(
       this.cronInterval,
       async () => {
         const requests = await this._requestService.getRequestsToProcess(this.type);

@@ -6,10 +6,10 @@ import { logger } from 'gear-idea-common';
 
 const $24_HOURS = 24 * 60 * 60 * 1000;
 
-function hash(addres: string, target: string) {
+export function hash(address: string, target: string) {
   return crypto
     .createHash('sha256')
-    .update(addres + target)
+    .update(address + target)
     .digest('hex');
 }
 
