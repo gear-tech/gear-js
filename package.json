@@ -43,6 +43,7 @@
     "build": "lerna run build",
     "build:gear-api": "lerna run build --scope @gear-js/api",
     "build:gearexe-api": "lerna run build --scope gearexe --scope @gear-js/api",
+    "build:gear-idea-common": "lerna run build --scope @gear-js/api --scope gear-idea-common",
     "build:gear-idea-explorer": "lerna run build --scope @gear-js/api --scope gear-idea-common --scope gear-idea-explorer --scope gear-idea-indexer-db",
     "build:gear-idea-faucet": "lerna run build --scope @gear-js/api --scope gear-idea-faucet --scope gear-idea-common",
     "build:gear-idea-meta-storage": "lerna run build --scope @gear-js/api --scope gear-idea-meta-storage --scope gear-idea-common",

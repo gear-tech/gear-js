@@ -1,0 +1,11 @@
+process.env.LOG_LEVEL = 'emerg';
+process.env.NODE_ENV = 'test';
+
+process.env.VARA_GENESIS = '0x0000000000000000000000000000000000000000000000000000000000000000';
+
+process.env.ETH_PROVIDER = 'https://<ethereum_node>';
+process.env.ETH_PRIVATE_KEY = '0c6c8781564e1f53b5c9814522f4e2ae12e5426491e0f16a6e84f4e520a86253';
+process.env.ETH_ERC20_CONTRACTS = '0x0000000000000000000000000000000000000002:10';
+
+process.env.ETH_PROCESSOR_CRON_TIME = '*/1 * * * * *';
+process.env.VARA_PROCESSOR_CRON_TIME = '*/1 * * * * *';

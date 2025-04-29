@@ -11,4 +11,5 @@ export const logger = createLogger({
     format.json({ bigint: true, deterministic: false }),
   ),
   transports: [new transports.Console()],
+  level: process.env.LOG_LEVEL || 'info',
 });

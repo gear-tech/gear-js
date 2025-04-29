@@ -1,2 +1,2 @@
-export * from './transfer.entity';
+export * from './model';
 export * from './app-data-source';
