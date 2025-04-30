@@ -67,7 +67,7 @@ if (require.main === module) {
 
   app
     .init()
-    .then(app.run)
+    .then(() => app.run())
     .catch((error) => {
       console.error(error);
       process.exit(1);

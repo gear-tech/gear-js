@@ -68,9 +68,9 @@
     "test": "lerna run test --parallel",
     "lint": "npx eslint",
     "lint:fix": "npx eslint --fix",
-    "bump:polkadot": "node scripts/update-deps.mjs polkadot",
-    "bump:gear-api": "node scripts/update-deps.mjs gear-api",
-    "bump:gear-idea": "node scripts/update-gear-idea-version.mjs",
+    "bump:polkadot": "node scripts/update-deps.mjs polkadot && yarn install",
+    "bump:gear-api": "node scripts/update-deps.mjs gear-api && yarn install",
+    "bump:gear-idea": "node scripts/update-gear-idea-version.mjs && yarn install",
     "check:gear-idea-version": "node scripts/check-gear-idea-version.mjs"
   },
   "devDependencies": {
