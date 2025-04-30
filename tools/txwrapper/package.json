@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@substrate/txwrapper-core": "7.4.0"
+    "@substrate/txwrapper-core": "7.5.3"
   },
   "bugs": {
     "url": "https://github.com/gear-tech/gear-js/issues"
