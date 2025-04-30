@@ -6,6 +6,7 @@ import { AppDataSource, FaucetRequest, FaucetType, RequestStatus } from '../../d
 import config from '../../config';
 import { LastSeenService } from './last-seen';
 import { validateOrReject } from 'class-validator';
+import { decodeAddress } from '@gear-js/api';
 
 export class RequestService {
   private _repo: Repository<FaucetRequest>;
@@ -25,10 +26,6 @@ export class RequestService {
       throw new UnsupportedTargetError(target);
     }
 
-    if (!(await this._lastSeenService.isLastSeenMoreThan24Hours(address, target))) {
-      throw new FaucetLimitError();
-    }
-
     const req = new FaucetRequest({
       address,
       target,
@@ -40,6 +37,12 @@ export class RequestService {
       await validateOrReject(req);
     } catch (_) {
       throw new InvalidAddress();
+    }
+
+    req.address = decodeAddress(address);
+
+    if (!(await this._lastSeenService.isLastSeenMoreThan24Hours(req.address, target))) {
+      throw new FaucetLimitError();
     }
 
     await this._repo.save(req);
