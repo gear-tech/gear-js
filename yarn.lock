@@ -2132,7 +2132,7 @@ __metadata:
     "@polkadot/wasm-crypto": "npm:7.4.1"
     rxjs: "npm:7.8.2"
   peerDependencies:
-    "@polkadot/api": 15.9.2
+    "@polkadot/api": 15.9.1
     "@polkadot/wasm-crypto": 7.4.1
     rxjs: 7.8.2
   languageName: unknown
@@ -2213,7 +2213,7 @@ __metadata:
     sails-js-parser: "npm:0.4.1"
   peerDependencies:
     "@gear-js/api": 0.41.1
-    "@polkadot/api": 15.9.2
+    "@polkadot/api": 15.9.1
     "@tanstack/react-query": ^5.56.2
     react: ^18 || ^19
     react-dom: ^18 || ^19
@@ -2296,7 +2296,7 @@ __metadata:
     "@gear-js/react-hooks": ^0.16.0
     "@gear-js/ui": ^0.7.0
     "@gear-js/vara-ui": ^0.3.1
-    "@polkadot/react-identicon": 3.13.1
+    "@polkadot/react-identicon": ^3.12.2
     react: ^19
     react-dom: ^19
   peerDependenciesMeta:
@@ -15578,7 +15578,7 @@ __metadata:
     sails-js-parser: "npm:0.3.1"
   peerDependencies:
     "@gear-js/api": 0.41.1
-    "@polkadot/api": 15.9.2
+    "@polkadot/api": 15.9.1
     ethers: 6.13.5
     kzg-wasm: 0.5.0
   peerDependenciesMeta:
