@@ -27,7 +27,7 @@ export class VaraBridgeProcessor extends FaucetProcessor {
 
   public async init(): Promise<void> {
     const provider = new ethers.JsonRpcProvider(config.eth.providerAddress);
-    this._wallet = new Wallet('', provider);
+    this._wallet = new Wallet(config.eth.privateKey, provider);
     logger.info('Account created', { addr: this._wallet.address });
 
     this._contracts = new Map();
