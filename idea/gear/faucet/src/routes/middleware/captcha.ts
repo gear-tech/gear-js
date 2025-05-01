@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
 import { verify } from 'hcaptcha';
 
-import config from '../config';
+import config from '../../config';
 
 const SECRET = config.server.captchaSecret;
 

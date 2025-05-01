@@ -18,14 +18,14 @@
     }
   },
   "peerDependencies": {
-    "@gear-js/api": "0.41.0",
-    "@polkadot/api": "15.4.1",
+    "@gear-js/api": "0.41.1",
+    "@polkadot/api": "15.9.1",
     "ethers": "6.13.5",
     "kzg-wasm": "0.5.0"
   },
   "devDependencies": {
-    "@gear-js/api": "0.41.0",
-    "@polkadot/api": "15.4.1",
+    "@gear-js/api": "0.41.1",
+    "@polkadot/api": "15.9.2",
     "ethers": "6.13.5",
     "kzg-wasm": "0.5.0",
     "sails-js": "0.3.1",

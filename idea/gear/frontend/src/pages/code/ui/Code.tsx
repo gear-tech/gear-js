@@ -3,7 +3,7 @@ import { HexString } from '@polkadot/util/types';
 import { generatePath, useParams } from 'react-router-dom';
 
 import { CodeTable, useCode as useStorageCode } from '@/features/code';
-import { useIsCodeVerified, VerificationStatus, VerifyLink } from '@/features/code-verifier';
+import { useIsCodeVerified, VerificationStatus } from '@/features/code-verifier';
 import { useLocalCode } from '@/features/local-indexer';
 import { MetadataTable, useMetadata } from '@/features/metadata';
 import { Programs, usePrograms } from '@/features/program';
@@ -89,7 +89,8 @@ const Code = () => {
           <header className={styles.programsHeader}>
             <h2 className={styles.heading}>Programs</h2>
 
-            {typeof isCodeVerified === 'boolean' && !isCodeVerified && <VerifyLink codeId={codeId} />}
+            {/* commented out till next release */}
+            {/* {typeof isCodeVerified === 'boolean' && !isCodeVerified && <VerifyLink codeId={codeId} />} */}
           </header>
 
           <Programs

@@ -31,4 +31,4 @@ COPY --from=builder /src/idea/gear/faucet/swagger.yaml /src/idea/gear/faucet/swa
 
 WORKDIR /src/idea/gear/faucet
 
-CMD ["node", "dist/server.js"]
+CMD ["node", "dist/main.js"]

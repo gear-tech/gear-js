@@ -6,21 +6,29 @@ import { HexString } from '../types/index.js';
 import { GearExeApi } from '../api/api.js';
 
 export enum CodeState {
-  Unknown = 'Unknown',
-  ValidationRequested = 'ValidationRequested',
-  Validated = 'Validated',
+  Unknown,
+  ValidationRequested,
+  Validated,
 }
 
 const abi = [
+  'event BlockCommitted(bytes32 hash)',
+  'event CodeGotValidated(bytes32 codeId, bool indexed valid)',
+  'event CodeValidationRequested(bytes32 codeId)',
+  'event NextEraValidatorsCommitted(uint256 startTimestamp)',
+  'event ComputationSettingsChanged(uint64 threshold, uint128 wvaraPerSecond)',
+  'event ProgramCreated(address actorId, bytes32 indexed codeId)',
+  'event StorageSlotChanged()',
+
   'function genesisBlockHash() external view returns (bytes32)',
   'function genesisTimestamp() external view returns (uint48)',
   'function latestCommittedBlockHash() external view returns (bytes32)',
 
   'function mirrorImpl() external view returns (address)',
-  'function mirrorProxyImpl() external view returns (address)',
   'function wrappedVara() external view returns (address)',
 
   'function codeState(bytes32 codeId) external view returns (uint8)',
+  'function codesStates(bytes32[] calldata codesIds) external view returns (uint8[] memory)',
   'function programCodeId(address program) external view returns (bytes32)',
   'function programsCodeIds(address[] calldata programsIds) external view returns (bytes32[] memory)',
   'function programsCount() external view returns (uint256)',

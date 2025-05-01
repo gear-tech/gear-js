@@ -40,6 +40,7 @@ import {
   EMessagesDispatched,
   EUserMessageRead,
   EUserMessageSent,
+  ReplyCode,
 } from './types';
 import {
   EBalanceTransfer,
@@ -56,6 +57,7 @@ export interface IHandleEventProps<E = Event> {
     timestamp: Date;
     blockHash: string;
     blockNumber: string;
+    specVersion: number;
   };
   tempState: TempState;
   block: Block<Fields>;
@@ -107,8 +109,11 @@ export async function handleUserMessageSent({ event, common, tempState }: IHandl
     payload: event.args.message.payload,
     value: event.args.message.value,
     replyToMessageId: event.args.message.details?.to || null,
-    expiration: event.args.expirtaion || null,
+    expiration: event.args.expiration || null,
     exitCode: !event.args.message.details?.code ? null : event.args.message.details.code.__kind === 'Success' ? 0 : 1,
+    replyCode: event.args.message.details
+      ? new ReplyCode(event.args.message.details.code, common.specVersion).toHex()
+      : null,
   });
 
   msg.parentId = msg.replyToMessageId ? msg.replyToMessageId : await tempState.getMessageId(msg.id);

@@ -37,11 +37,17 @@ jobs:
 
       - name: Get current version
         id: cur_version
-        run: echo "version=$(jq -r .version idea/gear/common/package.json)" >> $GITHUB_OUTPUT
+        run: |
+          version=$(jq -r .version idea/gear/common/package.json)
+          echo "Current version: $version"
+          echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: Get previous version
         id: prev_version
-        run: echo "version=$(git show HEAD~1:idea/gear/common/package.json | jq -r .version)" >> $GITHUB_OUTPUT
+        run: |
+          version=$(git show HEAD~1:idea/gear/common/package.json | jq -r .version)
+          echo "Previous version: $version"
+          echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: Compare versions and set SKIP env
         id: set_skip
@@ -228,7 +234,7 @@ jobs:
         build-explorer-image,
       ]
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
