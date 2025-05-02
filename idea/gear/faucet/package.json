@@ -1,7 +1,7 @@
 {
   "name": "gear-idea-faucet",
   "private": true,
-  "version": "1.3.7",
+  "version": "1.3.8",
   "main": "server.js",
   "scripts": {
     "build": "rm -rf dist && npx tsc",
@@ -22,7 +22,7 @@
     "dotenv": "10.0.0",
     "ethers": "6.13.5",
     "express": "4.18.1",
-    "gear-idea-common": "1.3.7",
+    "gear-idea-common": "1.3.8",
     "hcaptcha": "0.1.1",
     "nodemon": "2.0.16",
     "pg": "8.7.1",
