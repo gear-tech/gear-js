@@ -1,6 +1,6 @@
-import { LastSeenService, RequestService, VaraBridgeProcessor, VaraTestnetProcessor } from './services';
 import { logger } from 'gear-idea-common';
 
+import { LastSeenService, RequestService, VaraBridgeProcessor, VaraTestnetProcessor } from './services';
 import { AppDataSource } from './database';
 import { Server } from './server';
 import config from './config';

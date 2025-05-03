@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class UserLastSeen {
@@ -9,6 +9,6 @@ export class UserLastSeen {
   @PrimaryColumn()
   public id: string;
 
-  @Column({ name: 'timestamp', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   public timestamp: Date;
 }

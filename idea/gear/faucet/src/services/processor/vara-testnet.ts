@@ -151,7 +151,7 @@ export class VaraTestnetProcessor extends FaucetProcessor {
             reject({ error: error.message });
           }),
       );
-      logger.info(`Batch success`, { blockHash });
+      logger.info(`Batch success`, { blockHash, transferred });
     } catch (err) {
       logger.error(`Batch error`, { ...err });
     }

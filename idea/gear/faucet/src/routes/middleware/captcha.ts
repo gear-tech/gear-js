@@ -9,16 +9,17 @@ async function verifyCaptcha(token: string): Promise<boolean> {
   if (!token) {
     return false;
   }
+
   if (process.env.NODE_ENV === 'test') {
     return true;
   }
+
   const verfied = await verify(SECRET, token);
+
   return verfied.success;
 }
 
-export function captchaMiddleware(req: Request, res: Response, next: NextFunction) {
-  const { token } = req.body;
-
+export function captchaMiddleware({ body: { token } }: Request, res: Response, next: NextFunction) {
   verifyCaptcha(token).then((result) => {
     if (result) {
       next();

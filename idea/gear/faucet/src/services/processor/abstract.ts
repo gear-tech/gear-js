@@ -37,8 +37,10 @@ export abstract class FaucetProcessor {
           return;
         }
 
-        await this._requestService.setCompleted(completed);
-        await this._lastSeenService.updateLastSeen(requests.filter(({ id }) => completed.includes(id)));
+        await Promise.all([
+          this._requestService.setCompleted(completed),
+          this._lastSeenService.updateLastSeen(requests.filter(({ id }) => completed.includes(id))),
+        ]);
       },
       null,
       true,
