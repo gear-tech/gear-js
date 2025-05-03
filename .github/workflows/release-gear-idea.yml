@@ -10,6 +10,19 @@ on:
       - idea/gear/squid/package.json
       - idea/gear/explorer/package.json
   workflow_dispatch:
+    inputs:
+      service:
+        type: choice
+        description: Service to release
+        options:
+          - frontend
+          - faucet
+          - squid
+          - meta-storage
+          - explorer
+          - all
+          - backend
+        required: true
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -35,7 +48,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set skip=false on workflow_dispatch
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: echo "skip=false" >> $GITHUB_OUTPUT
+
       - name: Get current version
+        if: ${{ github.event_name != 'workflow_dispatch' }}
         id: cur_version
         run: |
           version=$(jq -r .version idea/gear/common/package.json)
@@ -43,6 +61,7 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: Get previous version
+        if: ${{ github.event_name != 'workflow_dispatch' }}
         id: prev_version
         run: |
           version=$(git show HEAD~1:idea/gear/common/package.json | jq -r .version)
@@ -50,9 +69,10 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: Compare versions and set SKIP env
+        if: ${{ github.event_name != 'workflow_dispatch' }}
         id: set_skip
         run: |
-          if [[ "${{ steps.cur_version.outputs.version }}" != "${{ steps.prev_version.outputs.version }}" || "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          if [[ "${{ steps.cur_version.outputs.version }}" != "${{ steps.prev_version.outputs.version }}" ]]; then
             echo "skip=false" >> $GITHUB_OUTPUT
           else
             echo "skip=true" >> $GITHUB_OUTPUT
@@ -92,7 +112,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Check if should be built
+        id: check
+        uses: './.github/actions/should-be-built'
+        with:
+          patterns: 'frontend,all'
+          input: ${{ github.event.inputs.service }}
+          event_name: ${{ github.event_name }}
+
       - name: Log in to the github container registry
+        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/login-action@master
         with:
           registry: ${{ env.REGISTRY }}
@@ -100,6 +129,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push "gear-idea-frontend" Docker image
+        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/build-push-action@master
         with:
           file: idea/gear/frontend/Dockerfile
@@ -109,9 +139,9 @@ jobs:
             VITE_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
             VITE_DEFAULT_TRANSFER_BALANCE_VALUE=${{ secrets.REACT_APP_DEFAULT_TRANSFER_BALANCE_VALUE }}
             VITE_HCAPTCHA_SITE_KEY=${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
-            VITE_NODES_API_URL= ${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
-            VITE_FAUCET_API_URL= ${{ secrets.VITE_FAUCET_API_URL }}
-            VITE_METADATA_STORAGE_API_URL= ${{ secrets.VITE_METADATA_STORAGE_API_URL }}
+            VITE_NODES_API_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
+            VITE_FAUCET_API_URL=${{ secrets.VITE_FAUCET_API_URL }}
+            VITE_METADATA_STORAGE_API_URL=${{ secrets.VITE_METADATA_STORAGE_API_URL }}
             VITE_MAINNET_VOUCHERS_API_URL=${{ secrets.VITE_MAINNET_VOUCHERS_API_URL }}
             VITE_TESTNET_VOUCHERS_API_URL=${{ secrets.VITE_TESTNET_VOUCHERS_API_URL }}
             VITE_INDEXER_API_URL=${{ secrets.VITE_INDEXER_API_URL }}
@@ -131,7 +161,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Check if should be built
+        id: check
+        uses: './.github/actions/should-be-built'
+        with:
+          patterns: 'faucet,all,backend'
+          input: ${{ github.event.inputs.service }}
+          event_name: ${{ github.event_name }}
+
       - name: Log in to the github container registry
+        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/login-action@master
         with:
           registry: ${{ env.REGISTRY }}
@@ -139,6 +178,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push "gear-idea-faucet" Docker image
+        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/build-push-action@master
         with:
           file: idea/gear/faucet/Dockerfile
@@ -157,7 +197,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Check if should be built
+        id: check
+        uses: './.github/actions/should-be-built'
+        with:
+          patterns: 'meta-storage,all,backend'
+          input: ${{ github.event.inputs.service }}
+          event_name: ${{ github.event_name }}
+
       - name: Log in to the github container registry
+        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/login-action@master
         with:
           registry: ${{ env.REGISTRY }}
@@ -165,6 +214,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push "gear-idea-meta-storage" image
+        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/build-push-action@master
         with:
           file: idea/gear/meta-storage/Dockerfile
@@ -183,7 +233,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Check if should be built
+        id: check
+        uses: './.github/actions/should-be-built'
+        with:
+          patterns: 'squid,all,backend'
+          input: ${{ github.event.inputs.service }}
+          event_name: ${{ github.event_name }}
+
       - name: Log in to the github container registry
+        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/login-action@master
         with:
           registry: ${{ env.REGISTRY }}
@@ -191,6 +250,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push "gear-idea-squid" image
+        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/build-push-action@master
         with:
           file: idea/gear/squid/Dockerfile
@@ -209,7 +269,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Check if should be built
+        id: check
+        uses: './.github/actions/should-be-built'
+        with:
+          patterns: 'explorer,all,backend'
+          input: ${{ github.event.inputs.service }}
+          event_name: ${{ github.event_name }}
+
       - name: Log in to the github container registry
+        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/login-action@master
         with:
           registry: ${{ env.REGISTRY }}
@@ -217,6 +286,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push "gear-idea-explorer" image
+        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/build-push-action@master
         with:
           file: idea/gear/explorer/Dockerfile
@@ -251,7 +321,23 @@ jobs:
             echo "deployments=squid-testnet-v2 squid-mainnet-v2 explorer faucet frontend-nginx meta-storage-main" >> $GITHUB_OUTPUT
           else
             echo "namespace=dev-1" >> $GITHUB_OUTPUT
-            echo "deployments=squid-testnet-v2 explorer frontend-nginx meta-storage faucet" >> $GITHUB_OUTPUT
+            if [ "${{ github.event_name }}" != "workflow_dispatch" || "${{ github.event.inputs.service }}" == "all" ]; then
+              echo "deployments=squid-testnet-v2 explorer frontend-nginx meta-storage faucet" >> $GITHUB_OUTPUT
+            elif [ "${{ github.event.inputs.service }}" == "backend" ]; then
+              echo "deployments=squid-testnet-v2 explorer meta-storage faucet" >> $GITHUB_OUTPUT
+            elif [ "${{ github.event.inputs.service }}" == "frontend" ]; then
+              echo "deployments=frontend-nginx" >> $GITHUB_OUTPUT
+            elif [ "${{ github.event.inputs.service }}" == "faucet" ]; then
+              echo "deployments=faucet" >> $GITHUB_OUTPUT
+            elif [ "${{ github.event.inputs.service }}" == "meta-storage" ]; then
+              echo "deployments=meta-storage" >> $GITHUB_OUTPUT
+            elif [ "${{ github.event.inputs.service }}" == "explorer" ]; then
+              echo "deployments=explorer" >> $GITHUB_OUTPUT
+            elif [ "${{ github.event.inputs.service }}" == "squid" ]; then
+              echo "deployments=squid-testnet-v2" >> $GITHUB_OUTPUT
+            else
+              echo "deployments=" >> $GITHUB_OUTPUT
+            fi
           fi
 
       - name: Deploy to k8s
