@@ -9,6 +9,6 @@ export class UserLastSeen {
   @PrimaryColumn()
   public id: string;
 
-  @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({ type: 'timestamptz' })
   public timestamp: Date;
 }
