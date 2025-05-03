@@ -3,13 +3,12 @@ description: 'Checks if a docker image should be built'
 inputs:
   patterns:
     description: 'Comma-seprated patterns'
-    type:
     required: true
   input:
     description: 'Input value to test against the patterns'
     required: true
   event_name:
-    descriptoin: 'Github event name'
+    description: 'Github event name'
     required: true
 outputs:
   ok:
