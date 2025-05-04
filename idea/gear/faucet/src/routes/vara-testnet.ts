@@ -1,14 +1,15 @@
 import { Request, Response } from 'express';
 import { logger } from 'gear-idea-common';
 
+import { captchaMiddleware } from './middleware';
 import { RequestService } from '../services';
 import { BaseRouter } from './base';
 
 export class VaraTestnetRouter extends BaseRouter {
   constructor(private _requestService: RequestService) {
     super();
-    this.router.post('/balance', this._oldRequest.bind(this));
-    this.router.post('/vara-testnet/request', this._newRequest.bind(this));
+    this.router.post('/balance', captchaMiddleware, this._oldRequest.bind(this));
+    this.router.post('/vara-testnet/request', captchaMiddleware, this._newRequest.bind(this));
   }
 
   private _newRequest({ body: { address, genesis } }: Request, res: Response) {
