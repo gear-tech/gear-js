@@ -1,14 +1,15 @@
-import { Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class UserLastSeen {
   constructor(id: string) {
-    Object.assign(this, { id });
+    this.id = id;
+    this.timestamp = new Date();
   }
 
   @PrimaryColumn()
   public id: string;
 
-  @UpdateDateColumn({ type: 'timestamptz' })
+  @Column({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   public timestamp: Date;
 }
