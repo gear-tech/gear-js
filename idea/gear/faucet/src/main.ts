@@ -22,7 +22,7 @@ export class FaucetApp {
     logger.info('Database connected');
 
     this._lastSeenService = new LastSeenService();
-    this._requestService = new RequestService(config.varaTestnet.genesis);
+    this._requestService = new RequestService(config.varaTestnet.genesis, this._lastSeenService);
 
     if (this._runVaraTestnetFaucet) {
       this._varaTestnetProcessor = new VaraTestnetProcessor(this._lastSeenService, this._requestService);

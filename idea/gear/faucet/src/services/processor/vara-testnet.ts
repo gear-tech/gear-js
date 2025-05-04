@@ -1,7 +1,7 @@
 import { KeyringPair } from '@polkadot/keyring/types';
 import { BN } from '@polkadot/util';
 import { GearApi, GearKeyring, TransferData } from '@gear-js/api';
-import { logger } from 'gear-idea-common';
+import { createLogger } from 'gear-idea-common';
 
 import { FaucetType, FaucetRequest } from '../../database';
 import { FaucetProcessor } from './abstract';
@@ -27,6 +27,8 @@ function createAccount(seed: string): Promise<KeyringPair> {
   return GearKeyring.fromMnemonic(seed);
 }
 
+const logger = createLogger('vara');
+
 export class VaraTestnetProcessor extends FaucetProcessor {
   private account: KeyringPair;
   private providerAddress: string;
@@ -35,6 +37,7 @@ export class VaraTestnetProcessor extends FaucetProcessor {
   private genesis: string;
 
   public async init() {
+    this.setLogger(logger);
     this.account = await createAccount(config.varaTestnet.accountSeed);
     logger.info('Account created', { addr: this.account.address });
     this.balanceToTransfer = new BN(config.varaTestnet.balanceToTransfer * 1e12);
@@ -93,7 +96,7 @@ export class VaraTestnetProcessor extends FaucetProcessor {
       this.reconnect();
     });
     this.genesis = this.api.genesisHash.toHex();
-    logger.info(`Connected to ${await this.api.chain()} with genesis ${this.genesis}`);
+    logger.info(`Connected to ${await this.api.chain()}`, { genesis: this.genesis });
   }
 
   async reconnect(): Promise<void> {

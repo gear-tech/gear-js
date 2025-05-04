@@ -1,4 +1,4 @@
-import { logger } from 'gear-idea-common';
+import { createLogger } from 'gear-idea-common';
 import { FaucetType, FaucetRequest } from '../../database';
 import { FaucetProcessor } from './abstract';
 import { BaseContract, ethers, TransactionResponse, Wallet } from 'ethers';
@@ -21,12 +21,17 @@ interface IERC20 {
   decimals(): Promise<number>;
 }
 
+const logger = createLogger('bridge');
+
 export class VaraBridgeProcessor extends FaucetProcessor {
   private _wallet: Wallet;
   private _contracts: Map<string, bigint>;
 
   public async init(): Promise<void> {
+    this.setLogger(logger);
     const provider = new ethers.JsonRpcProvider(config.eth.providerAddress);
+    const network = await provider.getNetwork();
+    logger.info(`Connected to ${network.name}`);
     this._wallet = new Wallet(config.eth.privateKey, provider);
     logger.info('Account created', { addr: this._wallet.address });
 

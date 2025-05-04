@@ -10,12 +10,13 @@ import config from '../../config';
 
 export class RequestService {
   private _repo: Repository<FaucetRequest>;
-  private _lastSeenService: LastSeenService;
   private _targets: string[];
 
-  constructor(private _varaTestnetGenesis: string) {
+  constructor(
+    private _varaTestnetGenesis: string,
+    private _lastSeenService: LastSeenService,
+  ) {
     this._repo = AppDataSource.getRepository(FaucetRequest);
-    this._lastSeenService = new LastSeenService();
     this._targets = config.eth.erc20Contracts.map(([contract]) => contract.toLowerCase());
     this._targets.push(_varaTestnetGenesis.toLowerCase());
     logger.info('Request service initialized');

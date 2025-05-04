@@ -1,11 +1,13 @@
 import { CronJob } from 'cron';
-import { logger } from 'gear-idea-common';
 
 import { LastSeenService, RequestService } from '../db';
 import { FaucetRequest, FaucetType } from '../../database';
+import { Logger } from 'winston';
 
 export abstract class FaucetProcessor {
   private _job: CronJob<any, this>;
+  private logger: Logger;
+
   constructor(
     private _lastSeenService: LastSeenService,
     private _requestService: RequestService,
@@ -15,6 +17,9 @@ export abstract class FaucetProcessor {
   protected abstract get cronInterval(): string;
   protected abstract get type(): FaucetType;
   protected abstract handleRequests(requests: FaucetRequest[]): Promise<number[]>;
+  protected setLogger(logger: Logger) {
+    this.logger = logger;
+  }
 
   stop() {
     this._job.stop();
@@ -33,7 +38,7 @@ export abstract class FaucetProcessor {
         try {
           completed.push(...(await this.handleRequests(requests)));
         } catch (error) {
-          logger.error('Failed to handle requests', { reason: error.message, stack: error.stack });
+          this.logger.error('Failed to handle requests', { reason: error.message, stack: error.stack });
           return;
         }
 
@@ -51,7 +56,7 @@ export abstract class FaucetProcessor {
       null,
       true,
       (error) => {
-        logger.error('Cron job failed', { error });
+        this.logger.error('Cron job failed', { error });
       },
     );
   }

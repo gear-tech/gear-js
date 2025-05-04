@@ -1,9 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
-import { logger } from 'gear-idea-common';
+import { createLogger } from 'gear-idea-common';
+
+const logger = createLogger('request');
 
 export function requestLoggerMiddleware(req: Request, _: Response, next: NextFunction) {
-  if (req.body) {
-    logger.info(`${req.path}`, { token: req.body.token?.slice(0, 10), ...req.body });
+  if (Object.keys(req.body).length > 0) {
+    const { token, ...body } = req.body;
+    logger.debug(`method: ${req.method}, url: ${req.originalUrl}`, { token: token?.slice(0, 10), ...body });
   }
   return next();
 }
