@@ -1,4 +1,5 @@
 import express, { Router } from 'express';
+
 import { requestLoggerMiddleware } from './middleware';
 
 export class BaseRouter {

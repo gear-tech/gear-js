@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
-import { logger } from 'gear-idea-common';
+import { createLogger } from 'gear-idea-common';
 
 import { captchaMiddleware } from './middleware';
 import { RequestService } from '../services';
 import { BaseRouter } from './base';
+
+const logger = createLogger('bridge-router');
 
 export class VaraBridgeRouter extends BaseRouter {
   constructor(private _requestService: RequestService) {
@@ -22,13 +24,13 @@ export class VaraBridgeRouter extends BaseRouter {
     } catch (error) {
       if (error.code) {
         logger.error(error.message, { address, target: contract });
-        return res.status(error.code).send(error.message);
+        return res.status(error.code).json({ error: error.message });
       }
 
       logger.error(error.message, { stack: error.stack, address, contract });
 
       // TODO: adjust status code
-      return res.status(500).json(error.message);
+      return res.status(500).json({ error: error.message });
     }
 
     res.sendStatus(200);

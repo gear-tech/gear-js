@@ -1,9 +1,11 @@
+import { createLogger } from 'gear-idea-common';
 import { Request, Response } from 'express';
-import { logger } from 'gear-idea-common';
 
 import { captchaMiddleware } from './middleware';
 import { RequestService } from '../services';
 import { BaseRouter } from './base';
+
+const logger = createLogger('vara-router');
 
 export class VaraTestnetRouter extends BaseRouter {
   constructor(private _requestService: RequestService) {
@@ -30,7 +32,7 @@ export class VaraTestnetRouter extends BaseRouter {
       await this._requestService.newRequest(address, genesis);
     } catch (error) {
       if (error.code) {
-        logger.error(error.message, { address, target: 'vara_testnet' });
+        logger.error(error.message, { address, target: genesis });
         return res.status(error.code).json({ error: error.message });
       }
 
