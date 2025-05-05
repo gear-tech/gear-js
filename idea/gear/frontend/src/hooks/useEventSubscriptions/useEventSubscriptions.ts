@@ -20,7 +20,7 @@ const useEventSubscriptions = () => {
 
     unsubs.push(
       api.gearEvents.subscribeToGearEvent(Method.UserMessageSent, (event) =>
-        messageSentEventsHandler(event, decodedAddress, alert),
+        messageSentEventsHandler(event, decodedAddress, alert, api.specVersion),
       ),
       api.gearEvents.subscribeToTransferEvents((event) => transferEventsHandler(event, decodedAddress, alert)),
     );

@@ -1,28 +1,41 @@
+import swaggerUi from 'swagger-ui-express';
 import { logger } from 'gear-idea-common';
+import express, { Express } from 'express';
+import YAML from 'yamljs';
+import http from 'node:http';
+
+import { VaraBridgeRouter, VaraTestnetRouter } from './routes';
+import { RequestService } from './services';
 import config from './config';
-import { connectToDB } from './database';
-import { changeStatus } from './healthcheck.router';
-import { initializeApp } from './app';
-import { GearService, TransferService } from './services';
 
-const port = config.server.port;
+const swaggerDocument = YAML.load('./swagger.yaml');
 
-const initializeServices = async () => {
-  const gearService = new GearService();
-  await gearService.init();
+export class Server {
+  private _app: Express;
+  private _server: http.Server;
 
-  const transferService = new TransferService(gearService);
-  return { gearService, transferService };
-};
+  constructor(requestService: RequestService, runBridgeFaucet = true, runVaraTestnetFaucet = true) {
+    this._app = express();
+    this._app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    if (runVaraTestnetFaucet) {
+      this._app.use('/', new VaraTestnetRouter(requestService).router);
+    }
+    if (runBridgeFaucet) {
+      this._app.use('/bridge', new VaraBridgeRouter(requestService).router);
+    }
+  }
 
-connectToDB()
-  .then(() => {
-    changeStatus('database');
-    return initializeServices();
-  })
-  .then(initializeApp)
-  .then((app) => {
-    app.listen(port, () => {
-      logger.info(`Server is running on port ${port}`);
+  run() {
+    this._server = this._app.listen(config.server.port, () => {
+      logger.info(`Server is running in port ${config.server.port}`);
     });
-  });
+  }
+
+  close() {
+    this._server.close();
+  }
+
+  get app() {
+    return this._app;
+  }
+}

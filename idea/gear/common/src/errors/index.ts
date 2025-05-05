@@ -6,3 +6,4 @@ export * from './state';
 export * from './jsonrpc-errors';
 export * from './meta-storage';
 export * from './base';
+export * from './faucet';

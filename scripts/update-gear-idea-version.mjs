@@ -6,7 +6,7 @@ const bump = process.argv[2];
 
 const strategies = ['major', 'minor', 'patch'];
 
-assert.ok(strategies.includes(bump), `Invalid update strategy. Use one of these: ${strategies.join(', ')}`);
+assert.ok(strategies.includes(bump), `Invalid update strategy ${bump}. Use one of these: ${strategies.join(', ')}`);
 
 const index = strategies.indexOf(bump);
 const v = GEAR_IDEA_VERSION.split('.');

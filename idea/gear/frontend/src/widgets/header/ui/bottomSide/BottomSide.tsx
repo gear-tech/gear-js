@@ -1,8 +1,6 @@
 import { Button } from '@gear-js/ui';
-import clsx from 'clsx';
 import { Ref } from 'react';
 
-import { VerifyLink } from '@/features/code-verifier';
 import { useModal } from '@/hooks';
 import sendMessageSVG from '@/shared/assets/images/actions/send.svg?react';
 import uploadCodeSVG from '@/shared/assets/images/actions/uploadCode.svg?react';
@@ -47,7 +45,8 @@ const BottomSide = ({ ref }: Props) => {
         />
       </OnboardingTooltip>
 
-      <VerifyLink className={clsx(styles.fixSize, styles.verifyCode)} />
+      {/* commented out till next release */}
+      {/* <VerifyLink className={clsx(styles.fixSize, styles.verifyCode)} /> */}
     </div>
   );
 };

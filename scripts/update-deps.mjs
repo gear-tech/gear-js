@@ -25,7 +25,6 @@ for (const pkg of workspaces) {
 
   const dependencies = pkgJson.dependencies || null;
   const devDependencies = pkgJson.devDependencies || null;
-  const peerDependencies = pkgJson.peerDependencies || null;
 
   if (dependencies) {
     await updateDependencies(dependencies, versions);
@@ -35,11 +34,6 @@ for (const pkg of workspaces) {
   if (devDependencies) {
     await updateDependencies(devDependencies, versions);
     pkgJson.devDependencies = devDependencies;
-  }
-
-  if (peerDependencies) {
-    await updateDependencies(peerDependencies, versions);
-    pkgJson.peerDependencies = peerDependencies;
   }
 
   fs.writeFileSync(pkgPath, JSON.stringify(pkgJson, null, 2));

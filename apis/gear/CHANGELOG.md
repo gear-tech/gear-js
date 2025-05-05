@@ -1,8 +1,8 @@
-## 0.40.0
-_23/01/2024_
+## 0.41.1
+_14/04/2025_
 
-- Bump `@polkadot/*` dependencies to `15.4.1` in https://github.com/gear-tech/gear-js/pull/1736
-
+- Introduce the `ReplyCode` class to simplify reply code decoding in https://github.com/gear-tech/gear-js/pull/1874
+- Bump polkadot-js to `15.9.1`
 
 ## 0.40.0
 _28/11/2024_
@@ -15,7 +15,6 @@ _28/11/2024_
 
 _27/11/2024_
 
-
 ### Changes
 - Support `Builtin` pallet in https://github.com/gear-tech/gear-js/pull/1659
 - Support `gearEthBridge` pallet in https://github.com/gear-tech/gear-js/pull/1658
@@ -25,7 +24,6 @@ _27/11/2024_
 ## 0.38.3
 
 _07/10/2024_
-
 
 ### Changes
 https://github.com/gear-tech/gear-js/pull/1649

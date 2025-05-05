@@ -12,11 +12,15 @@ const getIdl = (codeId: HexString) => {
   const url = new URL(`${METADATA_STORAGE_API_URL}/sails`);
   url.searchParams.append('codeId', codeId);
 
-  return fetchWithGuard<GetIdlResponse>(url, 'GET');
+  return fetchWithGuard<GetIdlResponse>({ url });
 };
 
 const addIdl = (codeId: HexString, data: string) =>
-  fetchWithGuard(`${METADATA_STORAGE_API_URL}/sails`, 'POST', { codeId, data });
+  fetchWithGuard({
+    url: `${METADATA_STORAGE_API_URL}/sails`,
+    method: 'POST',
+    parameters: { codeId, data },
+  });
 
 const getEvents = (parameters: GetEventsParameters) =>
   INDEXER_RPC_SERVICE.callRPC<PaginationResponse<EventType>>(METHOD.GET_EVENTS, parameters);

@@ -4,9 +4,15 @@ import { HexString } from '@polkadot/util/types';
 import { generatePath } from 'react-router-dom';
 
 import { routes } from '@/shared/config';
+import { getReplyErrorReason } from '@/shared/helpers';
 import { CustomLink } from '@/shared/ui/customLink';
 
-const messageSentEventsHandler = (event: UserMessageSent, address: HexString, alert: AlertContainerFactory) => {
+const messageSentEventsHandler = (
+  event: UserMessageSent,
+  address: HexString,
+  alert: AlertContainerFactory,
+  specVersion: number,
+) => {
   const { message, method, section } = event.data;
   const { payload, destination, details, id } = message;
 
@@ -17,7 +23,8 @@ const messageSentEventsHandler = (event: UserMessageSent, address: HexString, al
   const messageId = id.toHex();
   const alertOptions = { title: `${section}.${method}` };
 
-  const isError = details.isSome && !details.unwrap().code.isSuccess;
+  const code = details.unwrap().code;
+  const isError = details.isSome && !code.isSuccess;
 
   // eslint-disable-next-line @typescript-eslint/unbound-method -- TODO(#1800): resolve eslint comments
   const showAlert = isError ? alert.error : alert.success;
@@ -27,7 +34,7 @@ const messageSentEventsHandler = (event: UserMessageSent, address: HexString, al
       <p>
         ID: <CustomLink to={generatePath(routes.message, { messageId })} text={messageId} />
       </p>
-      {isError && <p>{payload.toHuman() as string}</p>}
+      {isError && <p>{getReplyErrorReason(code.toU8a(), specVersion, payload.toHuman() as string)}</p>}
     </>,
     alertOptions,
   );

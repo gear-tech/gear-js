@@ -13,7 +13,7 @@ type Genesis = {
 const getUrl = (genesis: HexString, path: string) => `${DNS_API_URL[genesis as keyof typeof DNS_API_URL]}/${path}`;
 
 const getDnsProgramId = async ({ genesis }: Genesis) => {
-  return (await fetchWithGuard<{ contract: HexString }>(getUrl(genesis, 'dns/contract'), 'GET')).contract;
+  return (await fetchWithGuard<{ contract: HexString }>({ url: getUrl(genesis, 'dns/contract') })).contract;
 };
 
 const getDns = ({ genesis, ...params }: DnsParams & Genesis) => {
@@ -21,14 +21,14 @@ const getDns = ({ genesis, ...params }: DnsParams & Genesis) => {
 
   Object.entries(params).forEach(([key, value]) => url.searchParams.append(key, String(value)));
 
-  return fetchWithGuard<DnsResponse>(url, 'GET');
+  return fetchWithGuard<DnsResponse>({ url });
 };
 
 const getSingleDns = ({ genesis, ...params }: ({ address: HexString } | { name: string }) & Genesis) => {
   const [key, value] = Object.entries(params)[0];
   const url = new URL(getUrl(genesis, `dns/by_${key}/${value}`));
 
-  return fetchWithGuard<Dns>(url, 'GET');
+  return fetchWithGuard<Dns>({ url });
 };
 
 const getNextPageParam = (lastPage: DnsResponse, allPages: DnsResponse[]) => {

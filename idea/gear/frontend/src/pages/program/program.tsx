@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
 
 import { ProgramBalance } from '@/features/balance';
-import { useIsCodeVerified, VerificationStatus, VerifyLink } from '@/features/code-verifier';
+import { useIsCodeVerified, VerificationStatus } from '@/features/code-verifier';
 import { ProgramMessages } from '@/features/message';
 import { useMetadata, MetadataTable, isState } from '@/features/metadata';
 import { ProgramStatus, ProgramTable, useProgram } from '@/features/program';
@@ -113,9 +113,10 @@ const Program = () => {
             </>
           )}
 
-          {program?.codeId && typeof isCodeVerified === 'boolean' && !isCodeVerified && (
+          {/* commented out till next release */}
+          {/* {program?.codeId && typeof isCodeVerified === 'boolean' && !isCodeVerified && (
             <VerifyLink codeId={program.codeId} className={styles.fixWidth} />
-          )}
+          )} */}
         </div>
       </header>
 
