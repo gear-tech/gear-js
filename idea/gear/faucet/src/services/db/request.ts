@@ -65,8 +65,17 @@ export class RequestService {
   }
 
   public async setCompleted(ids: number[]) {
-    await this._repo.update({ id: In(ids) }, { status: RequestStatus.Completed });
-    logger.debug(`Requests ${ids} marked as completed`);
+    if (ids.length > 0) {
+      await this._repo.update({ id: In(ids) }, { status: RequestStatus.Completed });
+      logger.debug(`Requests ${ids} marked as completed`);
+    }
+  }
+
+  public async setFailed(ids: number[]) {
+    if (ids.length > 0) {
+      await this._repo.update({ id: In(ids) }, { status: RequestStatus.Failed });
+      logger.debug(`Requests ${ids} marked as failed`);
+    }
   }
 
   public async resetProcessing() {

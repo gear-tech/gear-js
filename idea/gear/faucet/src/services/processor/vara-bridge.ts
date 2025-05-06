@@ -50,10 +50,11 @@ export class VaraBridgeProcessor extends FaucetProcessor {
     return FaucetType.VaraBridge;
   }
 
-  protected async handleRequests(requests: FaucetRequest[]): Promise<number[]> {
+  protected async handleRequests(requests: FaucetRequest[]): Promise<{ success: number[]; fail: number[] }> {
     logger.info('Processing requests', { length: requests.length, target: 'vara_bridge' });
 
     const success = [];
+    const fail = [];
 
     for (const { id, target, address } of requests) {
       const contract = this._getContract(target);
@@ -61,18 +62,19 @@ export class VaraBridgeProcessor extends FaucetProcessor {
         const tx = await contract.transfer(address, this._contracts.get(target));
         const receipt = await tx.wait();
         if (receipt.status === 0) {
-          logger.info(`Request ${id} failed`, { hash: receipt.hash, block: receipt.blockNumber });
+          logger.error(`Request ${id} failed`, { hash: receipt.hash, block: receipt.blockNumber });
+          fail.push(id);
         } else {
           success.push(id);
           logger.info(`Request ${id} succeeded`, { hash: receipt.hash, block: receipt.blockNumber });
         }
       } catch (error) {
-        const reason = IFACE().parseError(error.data);
-        logger.info(`Request ${id} failed`, { error: error.message, stack: error.stack, reason });
+        this._onFailedRequest(error, id);
+        fail.push(id);
       }
     }
 
-    return success;
+    return { success, fail };
   }
 
   private _getDecimals(contract: string) {
@@ -81,5 +83,14 @@ export class VaraBridgeProcessor extends FaucetProcessor {
 
   private _getContract(id: string) {
     return BaseContract.from<IERC20>(id, IFACE(), this._wallet);
+  }
+
+  private _onFailedRequest(error: any, id: number) {
+    try {
+      const reason = IFACE().parseError(error.data);
+      logger.error(`Request ${id} failed`, { error: error.message, stack: error.stack, reason });
+    } catch (_error) {
+      logger.error(`Request ${id} failed`, { error, stack: error.stack, _error });
+    }
   }
 }
