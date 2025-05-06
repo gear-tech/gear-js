@@ -44,14 +44,14 @@ describe('Bridge requests', () => {
     const res = await req(ETH_USER_ADDRESS, '0x1234');
 
     expect(res.statusCode).toBe(400);
-    expect(res.text).toBe('0x1234 is not supported');
+    expect(res.body).toEqual({ error: '0x1234 is not supported' });
   });
 
   it('should return InvalidAddress error', async () => {
     const res = await req('0x1234', ETH_CONTRACT_ADDRESS);
 
     expect(res.statusCode).toBe(400);
-    expect(res.text).toBe('Invalid account address');
+    expect(res.body).toEqual({ error: 'Invalid account address' });
   });
 
   it('should return ok', async () => {
@@ -84,6 +84,6 @@ describe('Bridge requests', () => {
     const res = await req(ETH_USER_ADDRESS, ETH_CONTRACT_ADDRESS);
 
     expect(res.statusCode).toBe(403);
-    expect(res.text).toBe('The limit for requesting test balance has been reached.');
+    expect(res.body).toEqual({ error: 'The limit for requesting test balance has been reached.' });
   });
 });

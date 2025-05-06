@@ -1,21 +1,22 @@
 import 'reflect-metadata';
-import { In, Repository } from 'typeorm';
 import { FaucetLimitError, InvalidAddress, logger, UnsupportedTargetError } from 'gear-idea-common';
-
-import { AppDataSource, FaucetRequest, FaucetType, RequestStatus } from '../../database';
-import config from '../../config';
-import { LastSeenService } from './last-seen';
 import { validateOrReject } from 'class-validator';
 import { decodeAddress } from '@gear-js/api';
+import { In, Repository } from 'typeorm';
+
+import { AppDataSource, FaucetRequest, FaucetType, RequestStatus } from '../../database';
+import { LastSeenService } from './last-seen';
+import config from '../../config';
 
 export class RequestService {
   private _repo: Repository<FaucetRequest>;
-  private _lastSeenService: LastSeenService;
   private _targets: string[];
 
-  constructor(private _varaTestnetGenesis: string) {
+  constructor(
+    private _varaTestnetGenesis: string,
+    private _lastSeenService: LastSeenService,
+  ) {
     this._repo = AppDataSource.getRepository(FaucetRequest);
-    this._lastSeenService = new LastSeenService();
     this._targets = config.eth.erc20Contracts.map(([contract]) => contract.toLowerCase());
     this._targets.push(_varaTestnetGenesis.toLowerCase());
     logger.info('Request service initialized');
@@ -39,9 +40,13 @@ export class RequestService {
       throw new InvalidAddress();
     }
 
-    req.address = decodeAddress(address);
+    if (req.type === FaucetType.VaraTestnet) {
+      req.address = decodeAddress(address);
+    }
 
-    if (!(await this._lastSeenService.isLastSeenMoreThan24Hours(req.address, target))) {
+    const isAllowed = await this._lastSeenService.isLastSeenMoreThan24Hours(req.address, target);
+
+    if (!isAllowed) {
       throw new FaucetLimitError();
     }
 
@@ -59,8 +64,9 @@ export class RequestService {
     return requests;
   }
 
-  public async setCompleted(id: number | number[]) {
-    await this._repo.update({ id: In(Array.isArray(id) ? id : [id]) }, { status: RequestStatus.Completed });
+  public async setCompleted(ids: number[]) {
+    await this._repo.update({ id: In(ids) }, { status: RequestStatus.Completed });
+    logger.debug(`Requests ${ids} marked as completed`);
   }
 
   public async resetProcessing() {

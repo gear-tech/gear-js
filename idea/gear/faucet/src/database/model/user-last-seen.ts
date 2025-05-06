@@ -3,12 +3,13 @@ import { Column, Entity, PrimaryColumn } from 'typeorm';
 @Entity()
 export class UserLastSeen {
   constructor(id: string) {
-    Object.assign(this, { id });
+    this.id = id;
+    this.timestamp = new Date();
   }
 
   @PrimaryColumn()
   public id: string;
 
-  @Column({ name: 'timestamp', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   public timestamp: Date;
 }
