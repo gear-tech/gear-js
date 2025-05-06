@@ -23,7 +23,9 @@ export class RequestService {
   }
 
   public async newRequest(address: string, target: string) {
-    if (!this._targets.includes(target.toLowerCase())) {
+    target = target.toLowerCase();
+    address = address.toLowerCase();
+    if (!this._targets.includes(target)) {
       throw new UnsupportedTargetError(target);
     }
 
