@@ -23,7 +23,7 @@ export class VaraBridgeRouter extends BaseRouter {
       await this._requestService.newRequest(address, contract);
     } catch (error) {
       if (error.code) {
-        logger.error(error.message, { address, target: contract });
+        logger.warn(error.message, { address, target: contract });
         return res.status(error.code).json({ error: error.message });
       }
 
