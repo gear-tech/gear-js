@@ -37,14 +37,11 @@ interface UseUiKitResult {
 const resolvedComponentsCache: Partial<Record<ThemeName, UiComponentSet>> = {};
 
 export function useUiKit(theme: ThemeName): UseUiKitResult {
-  const [components, setComponents] = useState<UiComponentSet | null>(resolvedComponentsCache[theme] ?? null);
+  const components = resolvedComponentsCache[theme] || null;
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (resolvedComponentsCache[theme]) {
-      if (components === null) {
-        setComponents(resolvedComponentsCache[theme]);
-      }
+    if (components) {
       setIsLoading(false);
       return;
     }
@@ -53,11 +50,9 @@ export function useUiKit(theme: ThemeName): UseUiKitResult {
     loadUiKit(theme)
       .then((loadedComponents) => {
         resolvedComponentsCache[theme] = loadedComponents;
-        setComponents(loadedComponents);
       })
       .catch((loadError) => {
         console.error(`Error loading UI kit "${theme}":`, loadError);
-        setComponents(null);
       })
       .finally(() => {
         setIsLoading(false);
