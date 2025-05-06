@@ -24,13 +24,17 @@ export class RequestService {
     logger.info('Request service initialized');
   }
 
-  public async newRequest(address: string, target: string) {
-    target = target.toLowerCase();
+  private _validateTarget(value: string): string {
+    const target = value.toLowerCase();
 
     if (!this._targets.includes(target)) {
       throw new UnsupportedTargetError(target);
     }
 
+    return target;
+  }
+
+  private async _createAndValidateRequest(address, target): Promise<FaucetRequest> {
     const req = new FaucetRequest({
       address,
       target,
@@ -52,28 +56,54 @@ export class RequestService {
       req.address = decodeAddress(address);
     }
 
-    const rhash = hash(req.address, target);
+    return req;
+  }
 
+  private _checkLimits(req: FaucetRequest, rhash: string) {
     if (this._requesting.has(rhash)) {
       throw new FaucetLimitError();
     }
 
     this._requesting.add(rhash);
 
-    const [isLastSeenMoreThan24Hours, requestsQueue] = await Promise.all([
-      this._lastSeenService.isLastSeenMoreThan24Hours(req.address, target),
-      this._repo.findBy({ address, target, status: In([RequestStatus.Pending, RequestStatus.Processing]) }),
-    ]);
+    const isLastSeenMoreThan24Hours = this._lastSeenService.isLastSeenMoreThan24Hours(req.address, req.target);
+    const requestsQueue = this._repo.findBy({
+      address: req.address,
+      target: req.target,
+      status: In([RequestStatus.Pending, RequestStatus.Processing]),
+    });
 
-    const isAllowed = isLastSeenMoreThan24Hours && requestsQueue.length === 0;
+    return Promise.all([isLastSeenMoreThan24Hours, requestsQueue]);
+  }
 
-    if (!isAllowed) {
-      this._requesting.delete(rhash);
+  public async newRequest(address: string, target: string) {
+    target = this._validateTarget(target);
+
+    const req = await this._createAndValidateRequest(address, target);
+
+    const rhash = hash(req.address, target);
+
+    if (this._requesting.has(rhash)) {
       throw new FaucetLimitError();
     }
+    this._requesting.add(rhash);
 
-    await this._repo.save(req);
-    this._requesting.delete(rhash);
+    try {
+      const [isLastSeenMoreThan24Hours, requestsQueue] = await Promise.all([
+        this._lastSeenService.isLastSeenMoreThan24Hours(req.address, target),
+        this._repo.findBy({ address, target, status: In([RequestStatus.Pending, RequestStatus.Processing]) }),
+      ]);
+
+      const isAllowed = isLastSeenMoreThan24Hours && requestsQueue.length === 0;
+
+      if (!isAllowed) {
+        throw new FaucetLimitError();
+      }
+
+      await this._repo.save(req);
+    } finally {
+      this._requesting.delete(rhash);
+    }
   }
 
   public async getRequestsToProcess(type: FaucetType) {
