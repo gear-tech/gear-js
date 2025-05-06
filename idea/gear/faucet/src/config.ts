@@ -34,7 +34,7 @@ export default {
       .split(',')
       .map((data) => {
         const [addr, value] = data.split(':');
-        assert.notStrictEqual(Number(value), NaN, `Invalid value for ${addr}`);
+        assert.ok(!isNaN(Number(value)), `Invalid value for ${addr}`);
         return [addr.toLowerCase(), value];
       }),
     cronTime: getEnv('ETH_PROCESSOR_CRON_TIME', '*/24 * * * * *'),
