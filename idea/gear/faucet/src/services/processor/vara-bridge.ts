@@ -57,9 +57,11 @@ export class VaraBridgeProcessor extends FaucetProcessor {
     const fail = [];
 
     for (const { id, target, address } of requests) {
+      const value = this._contracts.get(target);
       const contract = this._getContract(target);
+      logger.info(`Processing ${id}`, { target, address, value });
       try {
-        const tx = await contract.transfer(address, this._contracts.get(target));
+        const tx = await contract.transfer(address, value);
         const receipt = await tx.wait();
         if (receipt.status === 0) {
           logger.error(`Request ${id} failed`, { hash: receipt.hash, block: receipt.blockNumber });
