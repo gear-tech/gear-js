@@ -24,7 +24,7 @@ export class RequestService {
 
   public async newRequest(address: string, target: string) {
     target = target.toLowerCase();
-    address = address.toLowerCase();
+
     if (!this._targets.includes(target)) {
       throw new UnsupportedTargetError(target);
     }
@@ -35,6 +35,10 @@ export class RequestService {
       type: target === this._varaTestnetGenesis ? FaucetType.VaraTestnet : FaucetType.VaraBridge,
       status: RequestStatus.Pending,
     });
+
+    if (req.type === FaucetType.VaraBridge) {
+      req.address = req.address.toLowerCase();
+    }
 
     try {
       await validateOrReject(req);
