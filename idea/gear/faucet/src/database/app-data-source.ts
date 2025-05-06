@@ -10,7 +10,9 @@ export const AppDataSource = new DataSource({
   username: config.db.user,
   password: config.db.password,
   database: config.db.name,
-  synchronize: true,
+  synchronize: false,
+  migrationsRun: true,
   entities: [UserLastSeen, FaucetRequest],
-  migrations: [],
+  migrations: ['dist/database/migrations/*.js'],
+  logging: ['migration', 'error'],
 });

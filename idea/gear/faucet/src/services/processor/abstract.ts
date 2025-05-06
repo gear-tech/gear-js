@@ -16,7 +16,7 @@ export abstract class FaucetProcessor {
   public abstract init(): Promise<void>;
   protected abstract get cronInterval(): string;
   protected abstract get type(): FaucetType;
-  protected abstract handleRequests(requests: FaucetRequest[]): Promise<number[]>;
+  protected abstract handleRequests(requests: FaucetRequest[]): Promise<{ success: number[]; fail: number[] }>;
   protected setLogger(logger: Logger) {
     this.logger = logger;
   }
@@ -35,8 +35,11 @@ export abstract class FaucetProcessor {
         }
 
         const completed = [];
+        const failed = [];
         try {
-          completed.push(...(await this.handleRequests(requests)));
+          const { success, fail } = await this.handleRequests(requests);
+          completed.push(...success);
+          failed.push(...fail);
         } catch (error) {
           this.logger.error('Failed to handle requests', { reason: error.message, stack: error.stack });
           return;
@@ -44,6 +47,7 @@ export abstract class FaucetProcessor {
 
         await Promise.all([
           this._requestService.setCompleted(completed),
+          this._requestService.setFailed(failed),
           this._lastSeenService.updateLastSeen(requests.filter(({ id }) => completed.includes(id))),
         ]);
       },

@@ -7,7 +7,6 @@ import { logger } from 'gear-idea-common';
 const SECRET = config.server.captchaSecret;
 
 async function verifyCaptcha(token: string): Promise<boolean> {
-  logger.debug('verify captcha', { token });
   if (!token) {
     return false;
   }

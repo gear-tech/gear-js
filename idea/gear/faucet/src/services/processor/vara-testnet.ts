@@ -57,10 +57,11 @@ export class VaraTestnetProcessor extends FaucetProcessor {
     return this.genesis;
   }
 
-  protected async handleRequests(requests: FaucetRequest[]): Promise<number[]> {
+  protected async handleRequests(requests: FaucetRequest[]) {
     logger.info('Processing requests', { length: requests.length, target: 'vara_testnet' });
 
     const success = [];
+    const fail = [];
 
     const [transferred, blockHash] = await this.sendBatch(requests.map((req) => req.address));
 
@@ -69,11 +70,12 @@ export class VaraTestnetProcessor extends FaucetProcessor {
         success.push(req.id);
         logger.info(`Request ${req.id} succeeded`, { blockHash });
       } else {
+        fail.push(req.id);
         logger.error(`Request ${req.id} failed`, { blockHash, address: req.address });
       }
     });
 
-    return success;
+    return { success, fail };
   }
 
   private async connect() {

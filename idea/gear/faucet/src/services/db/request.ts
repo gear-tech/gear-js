@@ -23,7 +23,9 @@ export class RequestService {
   }
 
   public async newRequest(address: string, target: string) {
-    if (!this._targets.includes(target.toLowerCase())) {
+    target = target.toLowerCase();
+
+    if (!this._targets.includes(target)) {
       throw new UnsupportedTargetError(target);
     }
 
@@ -33,6 +35,10 @@ export class RequestService {
       type: target === this._varaTestnetGenesis ? FaucetType.VaraTestnet : FaucetType.VaraBridge,
       status: RequestStatus.Pending,
     });
+
+    if (req.type === FaucetType.VaraBridge) {
+      req.address = req.address.toLowerCase();
+    }
 
     try {
       await validateOrReject(req);
@@ -44,7 +50,12 @@ export class RequestService {
       req.address = decodeAddress(address);
     }
 
-    const isAllowed = await this._lastSeenService.isLastSeenMoreThan24Hours(req.address, target);
+    const [isLastSeenMoreThan24Hours, requestsQueue] = await Promise.all([
+      this._lastSeenService.isLastSeenMoreThan24Hours(req.address, target),
+      this._repo.findBy({ address, target, status: In([RequestStatus.Pending, RequestStatus.Processing]) }),
+    ]);
+
+    const isAllowed = isLastSeenMoreThan24Hours && requestsQueue.length === 0;
 
     if (!isAllowed) {
       throw new FaucetLimitError();
@@ -65,11 +76,20 @@ export class RequestService {
   }
 
   public async setCompleted(ids: number[]) {
-    await this._repo.update({ id: In(ids) }, { status: RequestStatus.Completed });
-    logger.debug(`Requests ${ids} marked as completed`);
+    if (ids.length > 0) {
+      await this._repo.update({ id: In(ids) }, { status: RequestStatus.Completed });
+      logger.debug(`Requests ${ids} marked as completed`);
+    }
+  }
+
+  public async setFailed(ids: number[]) {
+    if (ids.length > 0) {
+      await this._repo.update({ id: In(ids) }, { status: RequestStatus.Failed });
+      logger.debug(`Requests ${ids} marked as failed`);
+    }
   }
 
   public async resetProcessing() {
-    await this._repo.update({ status: RequestStatus.Processing }, { status: RequestStatus.Pending });
+    await this._repo.update({ status: RequestStatus.Processing }, { status: RequestStatus.Failed });
   }
 }

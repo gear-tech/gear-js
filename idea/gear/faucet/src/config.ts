@@ -32,7 +32,11 @@ export default {
     privateKey: getEnv('ETH_PRIVATE_KEY'),
     erc20Contracts: getEnv('ETH_ERC20_CONTRACTS')
       .split(',')
-      .map((data) => data.split(':')),
+      .map((data) => {
+        const [addr, value] = data.split(':');
+        assert.ok(!isNaN(Number(value)), `Invalid value for ${addr}`);
+        return [addr.toLowerCase(), value];
+      }),
     cronTime: getEnv('ETH_PROCESSOR_CRON_TIME', '*/24 * * * * *'),
   },
   server: {

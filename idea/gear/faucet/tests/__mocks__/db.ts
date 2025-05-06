@@ -29,6 +29,14 @@ export function createFakeRepository<T extends { id: any; timestamp: Date; [key:
         return Object.values(data).find((item) => keys.every((key) => item[key] == where[key]));
       }
     }),
+    findBy: jest.fn(async (criteria) => {
+      const keys = Object.keys(criteria);
+      return Object.values(data).filter((item) =>
+        keys.every((key) =>
+          Array.isArray(criteria[key]) ? criteria[key].includes(item[key]) : criteria[key] == item[key],
+        ),
+      );
+    }),
     update: jest.fn(async (criteria, partialEntity) => {
       const keys = Object.keys(criteria);
       const records = Object.values(data).filter((item) =>
