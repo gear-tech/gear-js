@@ -3,7 +3,7 @@ import xxhash from 'xxhashjs';
 import config from '../../config';
 
 export const rateLimitMiddleware = rateLimit({
-  windowMs: config.server.rateLimitSec,
+  windowMs: config.server.rateLimitMs,
   max: 1,
   standardHeaders: true,
   legacyHeaders: false,

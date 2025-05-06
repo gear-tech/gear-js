@@ -34,7 +34,7 @@ export class RequestService {
     return target;
   }
 
-  private async _createAndValidateRequest(address, target): Promise<FaucetRequest> {
+  private async _createAndValidateRequest(address: string, target: string): Promise<FaucetRequest> {
     const req = new FaucetRequest({
       address,
       target,
@@ -57,23 +57,6 @@ export class RequestService {
     }
 
     return req;
-  }
-
-  private _checkLimits(req: FaucetRequest, rhash: string) {
-    if (this._requesting.has(rhash)) {
-      throw new FaucetLimitError();
-    }
-
-    this._requesting.add(rhash);
-
-    const isLastSeenMoreThan24Hours = this._lastSeenService.isLastSeenMoreThan24Hours(req.address, req.target);
-    const requestsQueue = this._repo.findBy({
-      address: req.address,
-      target: req.target,
-      status: In([RequestStatus.Pending, RequestStatus.Processing]),
-    });
-
-    return Promise.all([isLastSeenMoreThan24Hours, requestsQueue]);
   }
 
   public async newRequest(address: string, target: string) {
