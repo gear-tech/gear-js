@@ -15348,7 +15348,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gear-idea-common@npm:1.3.8, gear-idea-common@workspace:idea/gear/common":
+"gear-idea-common@npm:1.3.9, gear-idea-common@workspace:idea/gear/common":
   version: 0.0.0-use.local
   resolution: "gear-idea-common@workspace:idea/gear/common"
   dependencies:
@@ -15367,8 +15367,8 @@ __metadata:
     cron: "npm:^3.1.7"
     dotenv: "npm:^16.4.5"
     express: "npm:4.19.2"
-    gear-idea-common: "npm:1.3.8"
-    gear-idea-indexer-db: "npm:1.3.8"
+    gear-idea-common: "npm:1.3.9"
+    gear-idea-indexer-db: "npm:1.3.9"
     nanoid: "npm:^5.0.7"
     pg: "npm:8.12.0"
     redis: "npm:^4.6.15"
@@ -15391,7 +15391,7 @@ __metadata:
     dotenv: "npm:10.0.0"
     ethers: "npm:6.13.5"
     express: "npm:4.18.1"
-    gear-idea-common: "npm:1.3.8"
+    gear-idea-common: "npm:1.3.9"
     hcaptcha: "npm:0.1.1"
     nodemon: "npm:2.0.16"
     pg: "npm:8.7.1"
@@ -15453,7 +15453,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"gear-idea-indexer-db@npm:1.3.8, gear-idea-indexer-db@workspace:idea/gear/indexer-db":
+"gear-idea-indexer-db@npm:1.3.9, gear-idea-indexer-db@workspace:idea/gear/indexer-db":
   version: 0.0.0-use.local
   resolution: "gear-idea-indexer-db@workspace:idea/gear/indexer-db"
   dependencies:
@@ -15471,7 +15471,7 @@ __metadata:
     "@types/supertest": "npm:^6.0.2"
     dotenv: "npm:16.3.1"
     express: "npm:4.18.1"
-    gear-idea-common: "npm:1.3.8"
+    gear-idea-common: "npm:1.3.9"
     pg: "npm:8.10.0"
     reflect-metadata: "npm:^0.2.2"
     supertest: "npm:^7.0.0"
@@ -15498,7 +15498,7 @@ __metadata:
     "@subsquid/typeorm-store": "npm:1.5.1"
     "@types/redis": "npm:^4.0.11"
     dotenv: "npm:16.4.5"
-    gear-idea-indexer-db: "npm:1.3.8"
+    gear-idea-indexer-db: "npm:1.3.9"
     pg: "npm:8.11.5"
     redis: "npm:^4.7.0"
     sails-js: "npm:^0.1.9"
