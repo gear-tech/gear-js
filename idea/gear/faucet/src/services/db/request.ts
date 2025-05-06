@@ -46,7 +46,12 @@ export class RequestService {
       req.address = decodeAddress(address);
     }
 
-    const isAllowed = await this._lastSeenService.isLastSeenMoreThan24Hours(req.address, target);
+    const [isLastSeenMoreThan24Hours, requestsQueue] = await Promise.all([
+      this._lastSeenService.isLastSeenMoreThan24Hours(req.address, target),
+      this._repo.findBy({ address, target, status: In([RequestStatus.Pending, RequestStatus.Processing]) }),
+    ]);
+
+    const isAllowed = isLastSeenMoreThan24Hours && requestsQueue.length === 0;
 
     if (!isAllowed) {
       throw new FaucetLimitError();
@@ -81,6 +86,6 @@ export class RequestService {
   }
 
   public async resetProcessing() {
-    await this._repo.update({ status: RequestStatus.Processing }, { status: RequestStatus.Pending });
+    await this._repo.update({ status: RequestStatus.Processing }, { status: RequestStatus.Failed });
   }
 }

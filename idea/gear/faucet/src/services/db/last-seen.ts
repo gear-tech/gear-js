@@ -22,7 +22,14 @@ export class LastSeenService {
   }
 
   public async updateLastSeen(items: { address: string; target: string }[]) {
-    await this._repo.save(items.map(({ address, target }) => new UserLastSeen(hash(address, target))));
+    const records = items.map(({ address, target }) => new UserLastSeen(hash(address, target)));
+    const uniqueRecords = new Map();
+    records.forEach((record) => {
+      if (!uniqueRecords.has(record.id)) {
+        uniqueRecords.set(record.id, record);
+      }
+    });
+    await this._repo.save(Array.from(uniqueRecords.values()));
   }
 
   public async isLastSeenMoreThan24Hours(address: string, target: string) {

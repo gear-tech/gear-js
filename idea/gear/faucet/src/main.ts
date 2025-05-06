@@ -24,6 +24,8 @@ export class FaucetApp {
     this._lastSeenService = new LastSeenService();
     this._requestService = new RequestService(config.varaTestnet.genesis, this._lastSeenService);
 
+    await this._requestService.resetProcessing();
+
     if (this._runVaraTestnetFaucet) {
       this._varaTestnetProcessor = new VaraTestnetProcessor(this._lastSeenService, this._requestService);
       await this._varaTestnetProcessor.init();
