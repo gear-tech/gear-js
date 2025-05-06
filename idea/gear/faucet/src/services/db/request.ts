@@ -5,12 +5,13 @@ import { decodeAddress } from '@gear-js/api';
 import { In, Repository } from 'typeorm';
 
 import { AppDataSource, FaucetRequest, FaucetType, RequestStatus } from '../../database';
-import { LastSeenService } from './last-seen';
+import { hash, LastSeenService } from './last-seen';
 import config from '../../config';
 
 export class RequestService {
   private _repo: Repository<FaucetRequest>;
   private _targets: string[];
+  private _requesting: Set<string>;
 
   constructor(
     private _varaTestnetGenesis: string,
@@ -19,6 +20,7 @@ export class RequestService {
     this._repo = AppDataSource.getRepository(FaucetRequest);
     this._targets = config.eth.erc20Contracts.map(([contract]) => contract.toLowerCase());
     this._targets.push(_varaTestnetGenesis.toLowerCase());
+    this._requesting = new Set<string>();
     logger.info('Request service initialized');
   }
 
@@ -50,6 +52,14 @@ export class RequestService {
       req.address = decodeAddress(address);
     }
 
+    const rhash = hash(req.address, target);
+
+    if (this._requesting.has(rhash)) {
+      throw new FaucetLimitError();
+    }
+
+    this._requesting.add(rhash);
+
     const [isLastSeenMoreThan24Hours, requestsQueue] = await Promise.all([
       this._lastSeenService.isLastSeenMoreThan24Hours(req.address, target),
       this._repo.findBy({ address, target, status: In([RequestStatus.Pending, RequestStatus.Processing]) }),
@@ -58,10 +68,12 @@ export class RequestService {
     const isAllowed = isLastSeenMoreThan24Hours && requestsQueue.length === 0;
 
     if (!isAllowed) {
+      this._requesting.delete(rhash);
       throw new FaucetLimitError();
     }
 
     await this._repo.save(req);
+    this._requesting.delete(rhash);
   }
 
   public async getRequestsToProcess(type: FaucetType) {

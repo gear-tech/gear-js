@@ -42,5 +42,6 @@ export default {
   server: {
     port: parseInt(getEnv('PORT', '3010')),
     captchaSecret: getEnv('CAPTCHA_SECRET', '0x234567898765432'),
+    rateLimitSec: Number(getEnv('RATE_LIMIT_SEC', '60000')),
   },
 };

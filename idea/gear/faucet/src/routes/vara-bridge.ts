@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { createLogger } from 'gear-idea-common';
 
-import { captchaMiddleware } from './middleware';
+import { captchaMiddleware, rateLimitMiddleware } from './middleware';
 import { RequestService } from '../services';
 import { BaseRouter } from './base';
 
@@ -10,7 +10,7 @@ const logger = createLogger('bridge-router');
 export class VaraBridgeRouter extends BaseRouter {
   constructor(private _requestService: RequestService) {
     super();
-    this.router.post('/request', captchaMiddleware, this._handler.bind(this));
+    this.router.post('/request', rateLimitMiddleware, captchaMiddleware, this._handler.bind(this));
   }
 
   private async _handler({ body: { address, contract } }: Request, res: Response) {
