@@ -1,7 +1,7 @@
-import { logger } from 'gear-idea-common';
+import { createLogger } from 'gear-idea-common';
 import { FaucetType, FaucetRequest } from '../../database';
 import { FaucetProcessor } from './abstract';
-import { BaseContract, ethers, TransactionResponse, Wallet } from 'ethers';
+import { BaseContract, ethers, JsonRpcProvider, TransactionResponse, Wallet } from 'ethers';
 import config from '../../config';
 
 const IFACE = () =>
@@ -21,12 +21,17 @@ interface IERC20 {
   decimals(): Promise<number>;
 }
 
+const logger = createLogger('bridge');
+
 export class VaraBridgeProcessor extends FaucetProcessor {
   private _wallet: Wallet;
   private _contracts: Map<string, bigint>;
 
   public async init(): Promise<void> {
-    const provider = new ethers.JsonRpcProvider(config.eth.providerAddress);
+    this.setLogger(logger);
+    const provider = new JsonRpcProvider(config.eth.providerAddress);
+    const network = await provider.getNetwork();
+    logger.info(`Connected to ${network.name}`);
     this._wallet = new Wallet(config.eth.privateKey, provider);
     logger.info('Account created', { addr: this._wallet.address });
 
@@ -45,29 +50,33 @@ export class VaraBridgeProcessor extends FaucetProcessor {
     return FaucetType.VaraBridge;
   }
 
-  protected async handleRequests(requests: FaucetRequest[]): Promise<number[]> {
+  protected async handleRequests(requests: FaucetRequest[]): Promise<{ success: number[]; fail: number[] }> {
     logger.info('Processing requests', { length: requests.length, target: 'vara_bridge' });
 
     const success = [];
+    const fail = [];
 
     for (const { id, target, address } of requests) {
+      const value = this._contracts.get(target);
       const contract = this._getContract(target);
+      logger.info(`Processing ${id}`, { target, address, value });
       try {
-        const tx = await contract.transfer(address, this._contracts.get(target));
+        const tx = await contract.transfer(address, value);
         const receipt = await tx.wait();
         if (receipt.status === 0) {
-          logger.info(`Request ${id} failed`, { hash: receipt.hash, block: receipt.blockNumber });
+          logger.error(`Request ${id} failed`, { hash: receipt.hash, block: receipt.blockNumber });
+          fail.push(id);
         } else {
           success.push(id);
           logger.info(`Request ${id} succeeded`, { hash: receipt.hash, block: receipt.blockNumber });
         }
       } catch (error) {
-        const reason = IFACE().parseError(error.data);
-        logger.info(`Request ${id} failed`, { error: error.message, stack: error.stack, reason });
+        this._onFailedRequest(error, id);
+        fail.push(id);
       }
     }
 
-    return success;
+    return { success, fail };
   }
 
   private _getDecimals(contract: string) {
@@ -76,5 +85,14 @@ export class VaraBridgeProcessor extends FaucetProcessor {
 
   private _getContract(id: string) {
     return BaseContract.from<IERC20>(id, IFACE(), this._wallet);
+  }
+
+  private _onFailedRequest(error: any, id: number) {
+    try {
+      const reason = IFACE().parseError(error.data);
+      logger.error(`Request ${id} failed`, { error: error.message, stack: error.stack, reason });
+    } catch (_error) {
+      logger.error(`Request ${id} failed`, { error, stack: error.stack, _error });
+    }
   }
 }

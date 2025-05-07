@@ -1,5 +1,3 @@
-import { STATUS_CODES } from 'http';
-
 import { GearApi, HexString } from '@gear-js/api';
 import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
 import type { Event } from '@polkadot/types/interfaces';
@@ -8,6 +6,7 @@ import { isAndroid, isIOS } from '@react-aria/utils';
 import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from '@/shared/config';
 
 import { getReplyErrorReason } from './error';
+import { fetchWithGuard } from './fetch-with-guard';
 import { isHexValid, isExists, isAccountAddressValid, isNumeric, asOptionalField } from './form';
 
 const checkWallet = (account?: Account) => {
@@ -125,27 +124,6 @@ const isHex = (value: unknown): value is HexString => {
   const HEX_REGEX = /^0x[\da-fA-F]+$/;
 
   return isString(value) && (value === '0x' || (HEX_REGEX.test(value) && value.length % 2 === 0));
-};
-
-const fetchWithGuard = async <T extends object>(url: URL | string, method: 'GET' | 'POST', params?: object) => {
-  const request = { method } as RequestInit;
-
-  if (method === 'POST') {
-    request.headers = { 'Content-Type': 'application/json;charset=utf-8' };
-    request.body = JSON.stringify(params);
-  }
-
-  const response = await fetch(url, request);
-
-  if (!response.ok) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- TODO(#1800): resolve eslint comments
-    const result = await response.json().catch(() => ({}));
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access -- TODO(#1800): resolve eslint comments
-    throw new Error('error' in result ? result.error : response.statusText || STATUS_CODES[response.status]);
-  }
-
-  return response.json() as T;
 };
 
 const getErrorMessage = (error: unknown) => (error instanceof Error ? error.message : String(error));

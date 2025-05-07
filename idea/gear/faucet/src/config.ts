@@ -32,11 +32,16 @@ export default {
     privateKey: getEnv('ETH_PRIVATE_KEY'),
     erc20Contracts: getEnv('ETH_ERC20_CONTRACTS')
       .split(',')
-      .map((data) => data.split(':')),
+      .map((data) => {
+        const [addr, value] = data.split(':');
+        assert.ok(!isNaN(Number(value)), `Invalid value for ${addr}`);
+        return [addr.toLowerCase(), value];
+      }),
     cronTime: getEnv('ETH_PROCESSOR_CRON_TIME', '*/24 * * * * *'),
   },
   server: {
     port: parseInt(getEnv('PORT', '3010')),
     captchaSecret: getEnv('CAPTCHA_SECRET', '0x234567898765432'),
+    rateLimitMs: Number(getEnv('RATE_LIMIT_SEC', '60000')),
   },
 };

@@ -25,6 +25,10 @@ jest.mock('ethers', () => {
       })),
     },
     Wallet: jest.fn().mockImplementation(() => ({})),
-    JsonRpcProvider: jest.fn(),
+    JsonRpcProvider: jest.fn().mockImplementation(() => ({
+      getNetwork: jest.fn().mockResolvedValue({
+        name: 'test',
+      }),
+    })),
   };
 });

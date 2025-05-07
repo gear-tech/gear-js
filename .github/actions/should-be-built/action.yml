@@ -1,0 +1,37 @@
+name: 'Should be built'
+description: 'Checks if a docker image should be built'
+inputs:
+  patterns:
+    description: 'Comma-seprated patterns'
+    required: true
+  input:
+    description: 'Input value to test against the patterns'
+    required: true
+  event_name:
+    description: 'Github event name'
+    required: true
+outputs:
+  ok:
+    description: 'Whether the image should be built'
+    value: ${{ steps.result.outputs.ok }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Check if the input matches the pattern
+      id: result
+      shell: bash
+      run: |
+        if [[ "${{ inputs.event_name }}" == "workflow_dispatch" ]]; then
+          IFS=',' read -ra PTRNS <<< "${{ inputs.patterns }}"
+          OK=false
+          for PAT in "${PTRNS[@]}"; do
+            if [[ "${{ inputs.input }}" == $PAT ]]; then
+              OK=true
+              break
+            fi
+          done
+          echo "ok=$OK" >> "$GITHUB_OUTPUT"
+        else
+          echo "ok=true" >> "$GITHUB_OUTPUT"
+        fi

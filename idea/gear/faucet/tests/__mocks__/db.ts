@@ -1,3 +1,4 @@
+import { randomInt } from 'node:crypto';
 import { FaucetRequest, UserLastSeen } from '../../src/database';
 
 export function createFakeRepository<T extends { id: any; timestamp: Date; [key: string]: any }>() {
@@ -5,6 +6,7 @@ export function createFakeRepository<T extends { id: any; timestamp: Date; [key:
 
   return {
     save: jest.fn(async (entity: T | T[]) => {
+      await new Promise((resolve) => setTimeout(resolve, randomInt(70, 200)));
       const entities = Array.isArray(entity) ? entity : [entity];
       for (const item of entities) {
         if (!item.id) {
@@ -28,6 +30,14 @@ export function createFakeRepository<T extends { id: any; timestamp: Date; [key:
       } else {
         return Object.values(data).find((item) => keys.every((key) => item[key] == where[key]));
       }
+    }),
+    findBy: jest.fn(async (criteria) => {
+      const keys = Object.keys(criteria);
+      return Object.values(data).filter((item) =>
+        keys.every((key) =>
+          Array.isArray(criteria[key]) ? criteria[key].includes(item[key]) : criteria[key] == item[key],
+        ),
+      );
     }),
     update: jest.fn(async (criteria, partialEntity) => {
       const keys = Object.keys(criteria);

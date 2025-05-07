@@ -4,11 +4,15 @@ import { API_URL } from './consts';
 import { CodeResponse, StatusResponse, VerifyParameters, VerifyResponse } from './types';
 
 const verifyCode = (parameters: VerifyParameters) =>
-  fetchWithGuard<VerifyResponse>(`${API_URL}/verify`, 'POST', parameters);
+  fetchWithGuard<VerifyResponse>({
+    url: `${API_URL}/verify`,
+    method: 'POST',
+    parameters,
+  });
 
 const getVerificationStatus = (id: string) =>
-  fetchWithGuard<StatusResponse>(`${API_URL}/verify/status?id=${id}`, 'GET');
+  fetchWithGuard<StatusResponse>({ url: `${API_URL}/verify/status?id=${id}` });
 
-const getVerifiedCode = (id: string) => fetchWithGuard<CodeResponse>(`${API_URL}/code?id=${id}`, 'GET');
+const getVerifiedCode = (id: string) => fetchWithGuard<CodeResponse>({ url: `${API_URL}/code?id=${id}` });
 
 export { verifyCode, getVerificationStatus, getVerifiedCode };

@@ -9,3 +9,5 @@ process.env.ETH_ERC20_CONTRACTS = '0x0000000000000000000000000000000000000002:10
 
 process.env.ETH_PROCESSOR_CRON_TIME = '*/1 * * * * *';
 process.env.VARA_PROCESSOR_CRON_TIME = '*/1 * * * * *';
+
+process.env.RATE_LIMIT_SEC = '100';

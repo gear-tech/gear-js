@@ -9,10 +9,14 @@ const fetchMetadata = (hash: HexString) => {
   const url = new URL(`${METADATA_STORAGE_API_URL}/meta`);
   url.searchParams.append('hash', hash);
 
-  return fetchWithGuard<GetMetaResponse>(url, 'GET').then(({ hex }) => ({ result: { hex } }));
+  return fetchWithGuard<GetMetaResponse>({ url }).then(({ hex }) => ({ result: { hex } }));
 };
 
 const addMetadata = (hash: HexString, hex: HexString) =>
-  fetchWithGuard(`${METADATA_STORAGE_API_URL}/meta`, 'POST', { hash, hex });
+  fetchWithGuard({
+    url: `${METADATA_STORAGE_API_URL}/meta`,
+    method: 'POST',
+    parameters: { hash, hex },
+  });
 
 export { addMetadata, fetchMetadata };

@@ -7,4 +7,5 @@ export enum RequestStatus {
   Pending,
   Processing,
   Completed,
+  Failed,
 }

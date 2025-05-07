@@ -2,6 +2,7 @@ import { Response, Request, NextFunction } from 'express';
 import { verify } from 'hcaptcha';
 
 import config from '../../config';
+import { logger } from 'gear-idea-common';
 
 const SECRET = config.server.captchaSecret;
 
@@ -9,16 +10,19 @@ async function verifyCaptcha(token: string): Promise<boolean> {
   if (!token) {
     return false;
   }
+
   if (process.env.NODE_ENV === 'test') {
     return true;
   }
-  const verfied = await verify(SECRET, token);
-  return verfied.success;
+
+  const verifResponse = await verify(SECRET, token);
+  logger.debug('verify captcha', { verifResponse });
+
+  return verifResponse.success;
 }
 
-export function captchaMiddleware(req: Request, res: Response, next: NextFunction) {
-  const { token } = req.body;
-
+export function captchaMiddleware({ body: { token } }: Request, res: Response, next: NextFunction) {
+  logger.debug('captcha', { token });
   verifyCaptcha(token).then((result) => {
     if (result) {
       next();
