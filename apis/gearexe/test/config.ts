@@ -14,5 +14,5 @@ export const config = {
   routerId: assertEnv('ROUTER_ADDRESS').toLowerCase(),
   skipUpload: process.env.SKIP_UPLOAD === 'true',
   blockTime: parseInt(assertEnv('BLOCK_TIME'), 12),
-  targetDir: path.resolve('target/wasm32-unknown-unknown/release'),
+  targetDir: path.resolve('target/wasm32-gear/release'),
 };

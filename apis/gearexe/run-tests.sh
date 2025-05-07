@@ -2,6 +2,7 @@
 set -e
 
 RETH_VERSION="1.3.12"
+RETH_BIN_DIR=/tmp/gearexe-js/reth/bin
 ETH_DIR=/tmp/gearexe-js/eth
 GEAREXE_DIR=/tmp/gearexe-js/gearexe
 GEAR_REPO_DIR=/tmp/gearexe-js/gear
@@ -13,6 +14,7 @@ ROOT_DIR=$(pwd)
 mkdir -p $ETH_DIR
 mkdir -p $GEAREXE_DIR
 mkdir -p $LOGS_DIR
+mkdir -p $RETH_BIN_DIR
 
 assert() {
     if [ -z "$1" ]; then
@@ -36,11 +38,8 @@ cleanup() {
 
     # Print logs if exit code is not 0
     if [ $exit_code -ne 0 ]; then
-        echo '[*]  Logs:'
-        echo "============================RETH============================="
-        cat $LOGS_DIR/reth.log 2>/dev/null
-        echo "===========================GEAREXE==========================="
-        cat $LOGS_DIR/gearexe.log 2>/dev/null
+        echo "[*] You can find reth logs here: $LOGS_DIR/reth.log"
+        echo "[*] You can find gearexe logs here: $LOGS_DIR/gearexe.log"
     else
         rm -rf $LOGS_DIR
     fi
@@ -109,7 +108,7 @@ if [[ -z "$SKIP_BUILD" ]]; then
     echo "[*]  Building contracts..."
     cd $PROJECT_DIR
     cargo build --release
-    ls -al target/wasm32-unknown-unknown/release
+    ls -al target/wasm32-gear/release
 
     # Deploy necessary contracts
     echo "[*]  Install forge dependencies ..."
@@ -119,7 +118,7 @@ if [[ -z "$SKIP_BUILD" ]]; then
     forge compile
 fi
 
-if [[ -z "$RETH_BIN" ]]; then
+if [[ ! -f "$RETH_BIN_DIR/reth" ]]; then
     platform=
     case "$(uname)" in
         Linux*)   platform="x86_64-unknown-linux-gnu" ;;
@@ -134,16 +133,14 @@ if [[ -z "$RETH_BIN" ]]; then
 
     RETH_LINK="https://github.com/paradigmxyz/reth/releases/download/v$RETH_VERSION/reth-v$RETH_VERSION-$platform.tar.gz"
     echo "[*]  Downloading reth ($RETH_LINK)..."
-    curl -L $RETH_LINK -o "$ETH_DIR/reth.tar.gz"
-    tar -xvf "$ETH_DIR/reth.tar.gz" -C $ETH_DIR
-    ls -al $ETH_DIR
-    RETH_BIN=$ETH_DIR/reth
-    chmod +x $RETH_BIN
+    curl -L $RETH_LINK -o "$RETH_BIN_DIR/reth.tar.gz"
+    tar -xvf "$RETH_BIN_DIR/reth.tar.gz" -C $RETH_BIN_DIR
+    chmod +x $RETH_BIN_DIR/reth
 fi
 
 
 echo "[*]  Running reth node..."
-nohup $RETH_BIN node --dev.block-time 5sec --dev \
+nohup $RETH_BIN_DIR/reth node --dev.block-time 5sec --dev \
     --datadir $ETH_DIR --ws --ws.port 8546 \
     > $LOGS_DIR/reth.log 2>&1 &
 RETH_PID=$!
