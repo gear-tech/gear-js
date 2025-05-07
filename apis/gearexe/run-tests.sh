@@ -1,19 +1,28 @@
 #!/bin/bash
 set -e
 
-RETH_VERSION="1.2.0"
-ETH_DIR=/tmp/eth
-GEAREXE_DIR=/tmp/gearexe
-GEAR_REPO_DIR=/tmp/gear
+RETH_VERSION="1.3.12"
+ETH_DIR=/tmp/gearexe-js/eth
+GEAREXE_DIR=/tmp/gearexe-js/gearexe
+GEAR_REPO_DIR=/tmp/gearexe-js/gear
+LOGS_DIR=/tmp/gearexe-js/logs
 PROJECT_DIR=$(pwd)
 cd ../../
 ROOT_DIR=$(pwd)
 
 mkdir -p $ETH_DIR
 mkdir -p $GEAREXE_DIR
+mkdir -p $LOGS_DIR
+
+assert() {
+    if [ -z "$1" ]; then
+        echo "[AssertionFailed]  $2"
+        exit 1
+    fi
+}
 
 cleanup() {
-    exit_code=$?
+    exit_code="$?"
     echo "[*]  Performing cleanup..."
     if [[ -n "$GEAREXE_PID" ]]; then
         echo "[*]  Stopping Gear node (PID: $GEAREXE_PID)..."
@@ -29,9 +38,11 @@ cleanup() {
     if [ $exit_code -ne 0 ]; then
         echo '[*]  Logs:'
         echo "============================RETH============================="
-        cat $ETH_DIR/reth.log 2>/dev/null
+        cat $LOGS_DIR/reth.log 2>/dev/null
         echo "===========================GEAREXE==========================="
-        cat $GEAREXE_DIR/gearexe.log 2>/dev/null
+        cat $LOGS_DIR/gearexe.log 2>/dev/null
+    else
+        rm -rf $LOGS_DIR
     fi
 
     echo "[*]  Removing temporary files..."
@@ -40,9 +51,8 @@ cleanup() {
 }
 trap cleanup EXIT
 
-# Take environment variables from .env file if it exists
 if [ -f .env ]; then
-    export $(grep -v '^#' .env | xargs)
+    source .env
 fi
 
 export VALIDATOR_PRIVATE_KEY="0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
@@ -59,14 +69,19 @@ export ROUTER_VERIFIABLE_SECRET_SHARING_COMMITMENT="0x"
 export RPC="http://127.0.0.1:8545"
 export WS_RPC="ws://127.0.0.1:8546"
 export ETHERSCAN_API_KEY=
-export BLOCK_TIME=5
+export BLOCK_TIME=1
+export ROUTER_VALIDATORS_LIST=$VALIDATOR_PUBLIC_KEY_ETH
+
+PROJECT_PATH=$(pwd)
+cd ../../
+ROOT_PATH=$(pwd)
 
 path_to_gear_repo=
 
 # Set path to gear repo
 echo "[*]  Checking if path to gear repo is provided..."
-if [[ -n "$GEAR_REPO" ]]; then
-    path_to_gear_repo=$GEAR_REPO
+if [[ -n "$PATH_TO_GEAR_REPO" ]]; then
+    path_to_gear_repo=$PATH_TO_GEAR_REPO
 else
     if [[ -z $GEAR_BRANCH ]]; then
         GEAR_BRANCH=master
@@ -117,7 +132,7 @@ if [[ -z "$RETH_BIN" ]]; then
             ;;
     esac
 
-    RETH_LINK="https://github.com/paradigmxyz/reth/releases/download/v1.2.0/reth-v1.2.0-$platform.tar.gz"
+    RETH_LINK="https://github.com/paradigmxyz/reth/releases/download/v$RETH_VERSION/reth-v$RETH_VERSION-$platform.tar.gz"
     echo "[*]  Downloading reth ($RETH_LINK)..."
     curl -L $RETH_LINK -o "$ETH_DIR/reth.tar.gz"
     tar -xvf "$ETH_DIR/reth.tar.gz" -C $ETH_DIR
@@ -130,16 +145,15 @@ fi
 echo "[*]  Running reth node..."
 nohup $RETH_BIN node --dev.block-time 5sec --dev \
     --datadir $ETH_DIR --ws --ws.port 8546 \
-    > $ETH_DIR/reth.log 2>&1 &
+    > $LOGS_DIR/reth.log 2>&1 &
 RETH_PID=$!
 sleep 10
-
 
 # Deploy contracts
 echo "[*]  Deploying contracts..."
 cd $path_to_contracts
-export ROUTER_VALIDATORS_LIST=$VALIDATOR_PUBLIC_KEY_ETH
-forge script script/Deployment.s.sol:DeploymentScript --rpc-url $RPC --broadcast --slow
+forge clean
+forge script script/Deployment.s.sol:DeploymentScript --rpc-url $RPC --broadcast --slow > $LOGS_DIR/deploy_contracts.log
 
 # Get router address
 echo "[*]  Getting router address..."
@@ -165,7 +179,6 @@ echo "[*]  Running gearexe..."
 export RUST_LOG=debug
 export RUST_BACKTRACE=1
 nohup ./target/release/ethexe --cfg none run --dev --base "$GEAREXE_DIR" \
-    --sequencer $SEQUENCER_PUBLIC_KEY \
     --validator $VALIDATOR_PUBLIC_KEY \
     --validator-session $VALIDATOR_PUBLIC_KEY \
     --ethereum-rpc $WS_RPC \
@@ -173,7 +186,7 @@ nohup ./target/release/ethexe --cfg none run --dev --base "$GEAREXE_DIR" \
     --eth-block-time $BLOCK_TIME \
     --network-listen-addr "/ip4/0.0.0.0/udp/20333/quic-v1" \
     --rpc-port 9944 \
-    --rpc-cors "all" > $GEAREXE_DIR/gearexe.log 2>&1 &
+    --rpc-cors "all" > $LOGS_DIR/gearexe.log 2>&1 &
 GEAREXE_PID=$!
 
 (
@@ -185,7 +198,7 @@ GEAREXE_PID=$!
 
   if [[ $exit_code -ne 0 ]]; then
     echo "Gearexe exited with code $exit_code"
-    tail -n 50 $GEAREXE_DIR/gearexe.log
+    tail -n 50 $LOGS_DIR/gearexe.log
     kill $$
   fi
 ) &
