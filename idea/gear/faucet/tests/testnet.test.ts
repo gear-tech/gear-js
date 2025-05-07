@@ -8,6 +8,7 @@ import { RequestStatus } from '../src/database';
 import { hash } from '../src/services/db/last-seen';
 import { Keyring } from '@polkadot/api';
 import { decodeAddress } from '@gear-js/api';
+import { mnemonicGenerate } from '@polkadot/util-crypto';
 
 const ALICE = '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d';
 const BOB = 'kGim5ByTuPokQf21odiQskRXcVEwaunk5PwC4dmGz8M6zuwkq';
@@ -17,8 +18,8 @@ describe('Testnet requests', () => {
   let app: FaucetApp;
   const req = (address?: string, genesis?: string) =>
     request(app.server.app)
-      .post('/balance')
-      .send({ token: '1234', payload: { address, genesis } })
+      .post('/vara-testnet/request')
+      .send({ token: '1234', address, genesis })
       .set('Accept', 'application/json');
 
   beforeAll(async () => {
@@ -133,5 +134,17 @@ describe('Testnet requests', () => {
 
     expect(res.statusCode).toBe(403);
     expect(res.body).toEqual({ error: 'The limit for requesting test balance has been reached.' });
+  });
+
+  it('should return error on the second request', async () => {
+    const addr = new Keyring({ ss58Format: 137, type: 'sr25519' });
+    const mnemonic = mnemonicGenerate();
+    const pair = addr.addFromMnemonic(mnemonic);
+
+    const [res1, res2] = await Promise.all([req(pair.address, VARA_GENESIS), req(pair.address, VARA_GENESIS)]);
+
+    expect(res1.statusCode).toBe(200);
+    expect(res2.body).toEqual({ error: 'Too many requests, please try again later.' });
+    expect(res2.statusCode).toBe(429);
   });
 });
