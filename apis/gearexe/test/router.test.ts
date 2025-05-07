@@ -6,7 +6,7 @@ import { ethWsProvider, waitNBlocks } from './common';
 import path from 'path';
 
 const code = fs.readFileSync(path.join(config.targetDir, 'counter.opt.wasm'));
-let codeId: string;
+let _codeId: string;
 let wallet: ethers.Wallet;
 let api: GearExeApi;
 let router: ReturnType<typeof getRouterContract>;
@@ -26,7 +26,8 @@ afterAll(async () => {
 
 const uploadCodeTest = () => {
   test('upload code', async () => {
-    const { receipt, waitForCodeGotValidated } = await router.requestCodeValidationNoBlob(code, api);
+    const { codeId, receipt, waitForCodeGotValidated } = await router.requestCodeValidationNoBlob(code, api);
+    _codeId = codeId;
 
     codeValidatedPromise = waitForCodeGotValidated();
 
@@ -42,16 +43,16 @@ const uploadCodeTest = () => {
 if (!config.skipUpload) {
   describe('upload code', uploadCodeTest);
 } else {
-  codeId = config.codeId;
+  _codeId = config.codeId;
 }
 
 describe('router', () => {
   test('check code state', async () => {
-    expect(await router.codeState(codeId)).toBe(CodeState.Validated);
+    expect(await router.codeState(_codeId)).toBe(CodeState.Validated);
   });
 
   test('create program', async () => {
-    const { id } = await router.createProgram(codeId);
+    const { id } = await router.createProgram(_codeId);
 
     const mirror = getMirrorContract(id, wallet);
 

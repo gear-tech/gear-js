@@ -16,13 +16,6 @@ mkdir -p $GEAREXE_DIR
 mkdir -p $LOGS_DIR
 mkdir -p $RETH_BIN_DIR
 
-assert() {
-    if [ -z "$1" ]; then
-        echo "[AssertionFailed]  $2"
-        exit 1
-    fi
-}
-
 cleanup() {
     exit_code="$?"
     echo "[*]  Performing cleanup..."

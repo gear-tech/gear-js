@@ -63,7 +63,11 @@ export class RouterContract extends BaseContract {
   }
 
   async codeState(codeId: string): Promise<CodeState> {
-    switch (await this.getFunction('codeState').staticCall(codeId)) {
+    const fn = this.getFunction('codeState');
+    console.log(fn);
+    console.log(codeId);
+    const _state = await fn.staticCall(codeId);
+    switch (_state) {
       case 0n: {
         return CodeState.Unknown;
       }
