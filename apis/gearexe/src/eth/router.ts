@@ -34,7 +34,8 @@ const abi = [
   'function programsCount() external view returns (uint256)',
 
   'function requestCodeValidation(bytes32 codeId)',
-  'function createProgram(bytes32 codeId, bytes32 salt) external returns (address)',
+  'function createProgram(bytes32 codeId, bytes32 salt, address overrideInitializer) external returns (address)',
+  'function createProgramWithAbiInterface(bytes32 codeId, bytes32 salt, address overrideInitializer, address abiInterface) external returns (address)',
 
   'event ProgramCreated(address actorId, bytes32 indexed codeId)',
   'event CodeGotValidated(bytes32 codeId, bool indexed valid)',
@@ -64,8 +65,6 @@ export class RouterContract extends BaseContract {
 
   async codeState(codeId: string): Promise<CodeState> {
     const fn = this.getFunction('codeState');
-    console.log(fn);
-    console.log(codeId);
     const _state = await fn.staticCall(codeId);
     switch (_state) {
       case 0n: {
@@ -197,10 +196,14 @@ export class RouterContract extends BaseContract {
     };
   }
 
-  async createProgram(codeId: string, salt?: string) {
+  async createProgram(codeId: string, overrideInitializer?: string, salt?: string) {
     const _salt = salt || ethers.hexlify(ethers.randomBytes(32));
 
-    const response = await this.getFunction('createProgram').send(codeId, _salt);
+    const response = await this.getFunction('createProgram').send(
+      codeId,
+      _salt,
+      overrideInitializer || ethers.ZeroAddress,
+    );
 
     const receipt = await response.wait();
 
