@@ -7,7 +7,7 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-sails-rs = { workspace = true, features = ["ethexe"] }
+sails-rs = { git = "https://github.com/gear-tech/sails", features = ["ethexe"] }
 
 [build-dependencies]
-sails-rs = { workspace = true, features = ["ethexe", "wasm-builder"] }
+sails-rs = { git = "https://github.com/gear-tech/sails", features = ["ethexe", "wasm-builder"] }

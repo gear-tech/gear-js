@@ -2,11 +2,9 @@
 
 use sails_rs::{cell::RefCell, prelude::*};
 
-mod counter;
-
 #[derive(Default)]
 pub struct CounterProgram {
-    counter_state: RefCell<counter::CounterState>,
+    counter_state: RefCell<CounterState>,
 }
 
 #[program]
@@ -16,7 +14,41 @@ impl CounterProgram {
     }
 
     #[route]
-    pub fn counter(&self) -> counter::Counter {
-        counter::Counter::new(&self.counter_state)
+    pub fn counter(&self) -> Counter {
+        Counter::new(&self.counter_state)
+    }
+}
+
+#[derive(Default)]
+pub struct CounterState {
+    value: u32,
+}
+
+pub struct Counter<'a> {
+    state: &'a RefCell<CounterState>,
+}
+
+impl<'a> Counter<'a> {
+    pub fn new(state: &'a RefCell<CounterState>) -> Self {
+        Self { state }
+    }
+}
+
+#[service]
+impl<'a> Counter<'a> {
+    pub fn increment(&mut self) -> u32 {
+        let mut state = self.state.borrow_mut();
+        state.value = state.value + 1;
+        state.value.clone()
+    }
+
+    pub fn decrement(&mut self) -> u32 {
+        let mut state = self.state.borrow_mut();
+        state.value = state.value - 1;
+        state.value
+    }
+
+    pub fn get_value(&self) -> u32 {
+        self.state.borrow().value
     }
 }
