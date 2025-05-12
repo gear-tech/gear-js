@@ -10,8 +10,4 @@ resolver = "3"
 members = ["programs/counter", "programs/counter-idl"]
 
 [workspace.dependencies]
-sails-rs = { version = "0.8.0", features = [
-    "ethexe",
-    "wasm-builder",
-    "idl-gen",
-] }
+sails-rs = "0.8.0"

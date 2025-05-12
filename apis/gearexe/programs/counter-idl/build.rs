@@ -1,5 +1,4 @@
 use counter::CounterProgram;
-// use sails_idl_gen;
 use sails_rs;
 use std::{env, path::PathBuf};
 

@@ -200,4 +200,4 @@ echo "[*]  Running tests..."
 cd $ROOT_DIR
 jest_bin=$(yarn bin jest)
 cd $PROJECT_DIR
-yarn node --no-warnings --experimental-vm-modules $jest_bin --runInBand router
+yarn node --no-warnings --experimental-vm-modules $jest_bin --runInBand

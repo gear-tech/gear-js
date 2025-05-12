@@ -84,7 +84,7 @@ describe('Create program', () => {
 
 describe('Send messages', () => {
   test('send init message', async () => {
-    const payload = sails.ctors.New.encodePayload();
+    const payload = sails.ctors.CreatePrg.encodePayload();
 
     const { message, waitForReply } = await mirror.sendMessage(payload, 0n);
 

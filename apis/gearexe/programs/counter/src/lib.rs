@@ -7,13 +7,13 @@ pub struct CounterProgram {
     counter_state: RefCell<CounterState>,
 }
 
-#[program]
+#[sails_rs::program]
 impl CounterProgram {
-    pub fn new() -> Self {
+    pub fn create_prg() -> Self {
         Self::default()
     }
 
-    #[route]
+    #[export(route = "counter")]
     pub fn counter(&self) -> Counter {
         Counter::new(&self.counter_state)
     }
@@ -34,7 +34,7 @@ impl<'a> Counter<'a> {
     }
 }
 
-#[service]
+#[sails_rs::service]
 impl<'a> Counter<'a> {
     pub fn increment(&mut self) -> u32 {
         let mut state = self.state.borrow_mut();

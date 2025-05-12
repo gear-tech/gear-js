@@ -4,14 +4,14 @@ version = 4
 
 [[package]]
 name = "ahash"
-version = "0.8.11"
+version = "0.8.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e89da841a80418a9b391ebaea17f5c112ffaaa96f621d2c285b5174da76b9011"
+checksum = "5a15f179cd60c4584b8a8c596927aadc462e27f2ca70c04e0071964a73ba7a75"
 dependencies = [
  "cfg-if",
  "once_cell",
  "version_check",
- "zerocopy 0.7.35",
+ "zerocopy",
 ]
 
 [[package]]
@@ -235,9 +235,9 @@ dependencies = [
 
 [[package]]
 name = "cc"
-version = "1.2.21"
+version = "1.2.22"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8691782945451c1c383942c4874dbe63814f61cb57ef773cda2972682b7bb3c0"
+checksum = "32db95edf998450acc7881c932f94cd9b05c87b4b2599e8bab064753da4acfd1"
 dependencies = [
  "shlex",
 ]
@@ -330,7 +330,7 @@ checksum = "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b"
 name = "counter"
 version = "0.0.1"
 dependencies = [
- "sails-rs 0.8.0 (git+https://github.com/gear-tech/sails)",
+ "sails-rs",
 ]
 
 [[package]]
@@ -338,7 +338,7 @@ name = "counter-idl"
 version = "0.0.1"
 dependencies = [
  "counter",
- "sails-rs 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sails-rs",
 ]
 
 [[package]]
@@ -1108,7 +1108,7 @@ version = "0.2.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "85eae3c4ed2f50dcfe72643da4befc30deadb458a9b590d720cde2f2b1e97da9"
 dependencies = [
- "zerocopy 0.8.25",
+ "zerocopy",
 ]
 
 [[package]]
@@ -1359,7 +1359,7 @@ dependencies = [
  "convert_case 0.6.0",
  "gprimitives",
  "handlebars",
- "sails-idl-meta 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sails-idl-meta",
  "scale-info",
  "serde",
  "serde_json",
@@ -1376,30 +1376,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "sails-idl-meta"
-version = "0.8.0"
-source = "git+https://github.com/gear-tech/sails#2f12fd51438d3ac16b8df22f5d027bf27fbe2f00"
-dependencies = [
- "scale-info",
-]
-
-[[package]]
 name = "sails-macros"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "067b50c969df6b00bd6969479df2afe9e83b982be2862a0dd94b24c278a1e8c2"
 dependencies = [
  "proc-macro-error",
- "sails-macros-core 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "sails-macros"
-version = "0.8.0"
-source = "git+https://github.com/gear-tech/sails#2f12fd51438d3ac16b8df22f5d027bf27fbe2f00"
-dependencies = [
- "proc-macro-error",
- "sails-macros-core 0.8.0 (git+https://github.com/gear-tech/sails)",
+ "sails-macros-core",
 ]
 
 [[package]]
@@ -1407,19 +1390,6 @@ name = "sails-macros-core"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "330dc4de329d57cc76cc8f22404eae596b3ff5ab6e4439147966a401929ebcae"
-dependencies = [
- "convert_case 0.6.0",
- "parity-scale-codec",
- "proc-macro-error",
- "proc-macro2",
- "quote",
- "syn 2.0.101",
-]
-
-[[package]]
-name = "sails-macros-core"
-version = "0.8.0"
-source = "git+https://github.com/gear-tech/sails#2f12fd51438d3ac16b8df22f5d027bf27fbe2f00"
 dependencies = [
  "convert_case 0.6.0",
  "parity-scale-codec",
@@ -1449,33 +1419,8 @@ dependencies = [
  "keccak-const",
  "parity-scale-codec",
  "sails-idl-gen",
- "sails-idl-meta 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "sails-macros 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "scale-info",
- "spin",
- "thiserror-no-std",
-]
-
-[[package]]
-name = "sails-rs"
-version = "0.8.0"
-source = "git+https://github.com/gear-tech/sails#2f12fd51438d3ac16b8df22f5d027bf27fbe2f00"
-dependencies = [
- "alloy-primitives",
- "alloy-sol-types",
- "futures",
- "gcore",
- "gear-core",
- "gear-core-errors",
- "gear-wasm-builder",
- "gprimitives",
- "gstd",
- "hashbrown 0.15.3",
- "hex",
- "keccak-const",
- "parity-scale-codec",
- "sails-idl-meta 0.8.0 (git+https://github.com/gear-tech/sails)",
- "sails-macros 0.8.0 (git+https://github.com/gear-tech/sails)",
+ "sails-idl-meta",
+ "sails-macros",
  "scale-info",
  "spin",
  "thiserror-no-std",
@@ -2062,31 +2007,11 @@ dependencies = [
 
 [[package]]
 name = "zerocopy"
-version = "0.7.35"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1b9b4fd18abc82b8136838da5d50bae7bdea537c574d8dc1a34ed098d6c166f0"
-dependencies = [
- "zerocopy-derive 0.7.35",
-]
-
-[[package]]
-name = "zerocopy"
 version = "0.8.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a1702d9583232ddb9174e01bb7c15a2ab8fb1bc6f227aa1233858c351a3ba0cb"
 dependencies = [
- "zerocopy-derive 0.8.25",
-]
-
-[[package]]
-name = "zerocopy-derive"
-version = "0.7.35"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fa4f8080344d4671fb4e831a13ad1e68092748387dfc4f55e356242fae12ce3e"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 2.0.101",
+ "zerocopy-derive",
 ]
 
 [[package]]
