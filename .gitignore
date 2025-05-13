@@ -27,6 +27,7 @@ idea/gear/indexer-db/lib/
 # apis
 apis/gear/lib/
 apis/gearexe/lib/
+utils/util/lib/
 
 # cargo
 .binpath

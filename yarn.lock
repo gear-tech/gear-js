@@ -11254,6 +11254,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"blakejs@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "blakejs@npm:1.2.1"
+  checksum: 10c0/c284557ce55b9c70203f59d381f1b85372ef08ee616a90162174d1291a45d3e5e809fdf9edab6e998740012538515152471dc4f1f9dbfa974ba2b9c1f7b9aad7
+  languageName: node
+  linkType: hard
+
 "bn.js@npm:^4.0.0, bn.js@npm:^4.1.0, bn.js@npm:^4.11.9":
   version: 4.12.1
   resolution: "bn.js@npm:4.12.1"
@@ -15713,6 +15720,15 @@ __metadata:
     redis: "npm:^4.7.0"
     sails-js: "npm:^0.4.1"
     typeorm: "npm:0.3.20"
+  languageName: unknown
+  linkType: soft
+
+"gear-js-util@workspace:utils/util":
+  version: 0.0.0-use.local
+  resolution: "gear-js-util@workspace:utils/util"
+  dependencies:
+    blakejs: "npm:^1.2.1"
+    jest: "npm:^29.7.0"
   languageName: unknown
   linkType: soft
 
