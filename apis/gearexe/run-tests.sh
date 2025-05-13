@@ -18,14 +18,16 @@ mkdir -p $RETH_BIN_DIR
 
 cleanup() {
     exit_code="$?"
-    echo "[*]  Performing cleanup..."
+    echo "[*] Script exited with code $exit_code"
+    echo "[*] Performing cleanup..."
+
     if [[ -n "$GEAREXE_PID" ]]; then
-        echo "[*]  Stopping Gear node (PID: $GEAREXE_PID)..."
+        echo "[*] Stopping Gear node (PID: $GEAREXE_PID)..."
         kill $GEAREXE_PID 2>/dev/null || true
     fi
 
     if [[ -n "$RETH_PID" ]]; then
-        echo "[*]  Stopping Reth node (PID: $RETH_PID)..."
+        echo "[*] Stopping Reth node (PID: $RETH_PID)..."
         kill $RETH_PID 2>/dev/null || true
     fi
 
@@ -34,10 +36,11 @@ cleanup() {
         echo "[*] You can find reth logs here: $LOGS_DIR/reth.log"
         echo "[*] You can find gearexe logs here: $LOGS_DIR/gearexe.log"
     else
+        echo "[*] Removing logs..."
         rm -rf $LOGS_DIR
     fi
 
-    echo "[*]  Removing temporary files..."
+    echo "[*] Removing temporary files..."
     rm -rf $GEAREXE_DIR
     rm -rf $ETH_DIR
 }
@@ -71,14 +74,14 @@ ROOT_PATH=$(pwd)
 path_to_gear_repo=
 
 # Set path to gear repo
-echo "[*]  Checking if path to gear repo is provided..."
+echo "[*] Checking if path to gear repo is provided..."
 if [[ -n "$PATH_TO_GEAR_REPO" ]]; then
     path_to_gear_repo=$PATH_TO_GEAR_REPO
 else
     if [[ -z $GEAR_BRANCH ]]; then
         GEAR_BRANCH=master
     fi
-    echo "[*]  Cloning gear repo (branch $GEAR_BRANCH)..."
+    echo "[*] Cloning gear repo (branch $GEAR_BRANCH)..."
     git clone --depth 1 -b $GEAR_BRANCH https://github.com/gear-tech/gear $GEAR_REPO_DIR
     path_to_gear_repo="$GEAR_REPO_DIR"
 fi
@@ -87,24 +90,24 @@ path_to_contracts=$path_to_gear_repo/ethexe/contracts
 
 # Check if foundryup is installed and install it if not
 if ! command -v foundryup &> /dev/null; then
-    echo "[*]  Installing foundryup..."
+    echo "[*] Installing foundryup..."
     curl -L https://foundry.paradigm.xyz | bash
 fi
 
 if [[ -z "$SKIP_BUILD" ]]; then
     # Build gearexe
-    echo "[*]  Building gearexe..."
+    echo "[*] Building gearexe..."
     cd $path_to_gear_repo
     cargo build -p ethexe-cli --release
 
     # Build contracts
-    echo "[*]  Building contracts..."
+    echo "[*] Building contracts..."
     cd $PROJECT_DIR
     cargo build --release
     ls -al target/wasm32-gear/release
 
     # Deploy necessary contracts
-    echo "[*]  Install forge dependencies ..."
+    echo "[*] Install forge dependencies ..."
     cd $path_to_contracts
     forge install
     forge clean
@@ -125,14 +128,14 @@ if [[ ! -f "$RETH_BIN_DIR/reth" ]]; then
     esac
 
     RETH_LINK="https://github.com/paradigmxyz/reth/releases/download/v$RETH_VERSION/reth-v$RETH_VERSION-$platform.tar.gz"
-    echo "[*]  Downloading reth ($RETH_LINK)..."
+    echo "[*] Downloading reth ($RETH_LINK)..."
     curl -L $RETH_LINK -o "$RETH_BIN_DIR/reth.tar.gz"
     tar -xvf "$RETH_BIN_DIR/reth.tar.gz" -C $RETH_BIN_DIR
     chmod +x $RETH_BIN_DIR/reth
 fi
 
 
-echo "[*]  Running reth node..."
+echo "[*] Running reth node..."
 nohup $RETH_BIN_DIR/reth node --dev.block-time 5sec --dev \
     --datadir $ETH_DIR --ws --ws.port 8546 \
     > $LOGS_DIR/reth.log 2>&1 &
@@ -140,15 +143,17 @@ RETH_PID=$!
 sleep 10
 
 # Deploy contracts
-echo "[*]  Deploying contracts..."
+echo "[*] Deploying contracts..."
+cp $PROJECT_DIR/test/solidity/RouterDeployment.s.sol $path_to_contracts/script/RouterDeployment.s.sol
 cd $path_to_contracts
 forge clean
-forge script script/Deployment.s.sol:DeploymentScript --rpc-url $RPC --broadcast --slow > $LOGS_DIR/deploy_contracts.log
+forge script script/RouterDeployment.s.sol:DeploymentScript --rpc-url $RPC --broadcast --slow > $LOGS_DIR/deploy_contracts.log
+rm $path_to_contracts/script/RouterDeployment.s.sol
 
 # Get router address
-echo "[*]  Getting router address..."
+echo "[*] Getting router address..."
 cd $path_to_gear_repo
-BROADCAST_PATH="ethexe/contracts/broadcast/Deployment.s.sol/1337/run-latest.json"
+BROADCAST_PATH="ethexe/contracts/broadcast/RouterDeployment.s.sol/1337/run-latest.json"
 ROUTER=`cat ${BROADCAST_PATH} | jq '.transactions[] | select(.contractName == "Router") | .contractAddress' | tr -d '"'`
 export ROUTER_ADDRESS=`cat ${BROADCAST_PATH} | jq ".transactions[] | \
   select(.contractName == \"TransparentUpgradeableProxy\") | \
@@ -156,16 +161,16 @@ export ROUTER_ADDRESS=`cat ${BROADCAST_PATH} | jq ".transactions[] | \
   select(.arguments[] | ascii_downcase | contains(\"${ROUTER}\")) | \
   .contractAddress" |
   tr -d '"'`
-echo "[*]  Router address is ${ROUTER_ADDRESS}"
+echo "[*] Router address is ${ROUTER_ADDRESS}"
 
 # Set keys
-echo "[*]  Setting keys..."
+echo "[*] Setting keys..."
 cd $path_to_gear_repo
 ./target/release/ethexe key -k $GEAREXE_DIR/keys insert $SEQUENCER_PRIVATE_KEY
 ./target/release/ethexe key -k $GEAREXE_DIR/keys insert $VALIDATOR_PRIVATE_KEY
 
 # Run gearexe
-echo "[*]  Running gearexe..."
+echo "[*] Running gearexe..."
 export RUST_LOG=debug
 export RUST_BACKTRACE=1
 nohup ./target/release/ethexe --cfg none run --dev --base "$GEAREXE_DIR" \
@@ -188,7 +193,6 @@ GEAREXE_PID=$!
 
   if [[ $exit_code -ne 0 ]]; then
     echo "Gearexe exited with code $exit_code"
-    tail -n 50 $LOGS_DIR/gearexe.log
     kill $$
   fi
 ) &
@@ -196,7 +200,7 @@ GEAREXE_PID=$!
 sleep 15
 
 # Run tests
-echo "[*]  Running tests..."
+echo "[*] Running tests..."
 cd $ROOT_DIR
 jest_bin=$(yarn bin jest)
 cd $PROJECT_DIR

@@ -153,11 +153,7 @@ export class RouterContract extends BaseContract {
 
     assert(blob.length == 4096 * 32);
 
-    const blobData = ethers.hexlify(blob);
-
     const kzg = await loadKZG();
-    const commitment = kzg.blobToKZGCommitment(blobData);
-    const proof = kzg.computeBlobKZGProof(blobData, commitment);
 
     const tx: ethers.TransactionRequest = {
       type: 3,
@@ -165,13 +161,8 @@ export class RouterContract extends BaseContract {
       to: transaction.to,
       gasLimit: 5_000_000n,
       maxFeePerBlobGas: 400_000_000_000,
-      blobs: [
-        {
-          data: blobData,
-          commitment: commitment,
-          proof: proof,
-        },
-      ],
+      blobs: [blob],
+      kzg,
     };
 
     const txResponse = await this._wallet.sendTransaction(tx);
