@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@gear-js/api": "0.41.1",
-    "@polkadot/api": "15.9.2",
+    "@polkadot/api": "15.9.3",
     "dotenv": "16.3.1",
     "express": "4.18.1",
     "gear-idea-common": "1.3.10",
