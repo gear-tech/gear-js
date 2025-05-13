@@ -14,12 +14,13 @@
     "idea/gear/squid",
     "tools/cli",
     "tools/txwrapper",
+    "utils/frontend-configs",
     "utils/gear-hooks",
     "utils/gear-ui",
-    "utils/vara-ui",
-    "utils/wallet-connect",
     "utils/logger",
-    "utils/frontend-configs"
+    "utils/util",
+    "utils/vara-ui",
+    "utils/wallet-connect"
   ],
   "npmClient": "yarn",
   "command": {

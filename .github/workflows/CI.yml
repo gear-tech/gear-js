@@ -241,3 +241,22 @@ jobs:
 
       - name: 'Test: run'
         run: yarn test:txwrapper
+
+  test-util:
+    runs-on: ubuntu-22.04
+    env:
+      RUSTUP_HOME: /tmp/rustup_home
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Install: NodeJS 20.x'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: 'Install dependencies'
+        run: yarn workspaces focus gear-js-util
+
+      - name: 'Test: run'
+        run: yarn test:gear-js-util

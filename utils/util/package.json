@@ -1,22 +1,23 @@
 {
   "name": "gear-js-util",
+  "private": true,
   "version": "0.0.1",
+  "type": "module",
   "exports": {
     ".": {
       "import": "./lib/index.js",
       "types": "./lib/index.d.ts"
     }
   },
-  "type": "module",
   "dependencies": {
     "blakejs": "^1.2.1"
   },
-  "scripts": {
-    "test": "yarn node --no-warnings --experimental-vm-modules $(yarn bin jest)",
-    "pretest": "yarn build",
-    "build": "rm -rf lib && npx tsc"
-  },
   "devDependencies": {
     "jest": "^29.7.0"
+  },
+  "scripts": {
+    "test": "yarn node --no-warnings --experimental-vm-modules $(yarn bin jest)",
+    "build": "rm -rf lib && npx tsc",
+    "clean": "rm -rf lib"
   }
 }
