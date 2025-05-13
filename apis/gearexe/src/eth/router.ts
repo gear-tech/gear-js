@@ -1,7 +1,6 @@
 import { generateCodeHash } from '@gear-js/api';
 import { Provider, BaseContract, Signer, Wallet, ethers, EventLog } from 'ethers';
 import { loadKZG } from 'kzg-wasm';
-import assert from 'node:assert';
 import { HexString } from '../types/index.js';
 import { GearExeApi } from '../api/api.js';
 
@@ -94,7 +93,9 @@ export class RouterContract extends BaseContract {
 
     const blob = prepareBlob(code);
 
-    assert(blob.length == 4096 * 32);
+    if (blob.length != 4096 * 32) {
+      throw new Error('Invalid blob size');
+    }
 
     const blobData = ethers.hexlify(blob);
 
@@ -151,7 +152,9 @@ export class RouterContract extends BaseContract {
 
     const blob = prepareBlob(code);
 
-    assert(blob.length == 4096 * 32);
+    if (blob.length != 4096 * 32) {
+      throw new Error('Invalid blob size');
+    }
 
     const kzg = await loadKZG();
 
