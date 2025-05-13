@@ -1,5 +1,5 @@
 constructor {
-  New : ();
+  CreatePrg : ();
 };
 
 service Counter {
