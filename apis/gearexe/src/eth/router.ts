@@ -1,8 +1,8 @@
 import { generateCodeHash } from '@gear-js/api';
 import { Provider, BaseContract, Signer, Wallet, ethers, EventLog } from 'ethers';
 import { loadKZG } from 'kzg-wasm';
-import assert from 'node:assert';
 import { HexString } from '../types/index.js';
+import { GearExeApi } from '../api/api.js';
 
 export enum CodeState {
   Unknown,
@@ -32,8 +32,14 @@ const abi = [
   'function programsCodeIds(address[] calldata programsIds) external view returns (bytes32[] memory)',
   'function programsCount() external view returns (uint256)',
 
-  'function requestCodeValidation(bytes32 codeId, bytes32 blobTxHash)',
-  'function createProgram(bytes32 codeId, bytes32 salt) external returns (address)',
+  'function requestCodeValidation(bytes32 codeId)',
+  'function createProgram(bytes32 codeId, bytes32 salt, address overrideInitializer) external returns (address)',
+  'function createProgramWithAbiInterface(bytes32 codeId, bytes32 salt, address overrideInitializer, address abiInterface) external returns (address)',
+
+  'event ProgramCreated(address actorId, bytes32 indexed codeId)',
+  'event CodeGotValidated(bytes32 codeId, bool indexed valid)',
+  'event CodeValidationRequested(bytes32 codeId)',
+  'event BlockCommitted(bytes32 hash)',
 ];
 
 export interface IRouterContract {
@@ -57,7 +63,9 @@ export class RouterContract extends BaseContract {
   }
 
   async codeState(codeId: string): Promise<CodeState> {
-    switch (await this.getFunction('codeState').staticCall(codeId)) {
+    const fn = this.getFunction('codeState');
+    const _state = await fn.staticCall(codeId);
+    switch (_state) {
       case 0n: {
         return CodeState.Unknown;
       }
@@ -78,40 +86,16 @@ export class RouterContract extends BaseContract {
     return ethers.hexlify(blob);
   }
 
-  async requestCodeValidationNoBlob(codeId: string, txHash: string) {
-    const res = await this.getFunction('requestCodeValidation').send(codeId, txHash);
-
-    const validationPromise = new Promise<boolean>((resolve, reject) =>
-      this.on('CodeGotValidated', (_codeId, valid) => {
-        if (_codeId == codeId) {
-          if (valid) {
-            resolve(true);
-          } else {
-            reject(new Error('Code validation failed'));
-          }
-        }
-      }),
-    );
-
-    const receipt = await res.wait();
-
-    return {
-      receipt,
-      waitForCodeGotValidated: () => validationPromise,
-    };
-  }
-
-  async requestCodeValidation(code: Uint8Array) {
+  async requestCodeValidationNoBlob(code: Uint8Array, api: GearExeApi) {
     const codeId = generateCodeHash(code);
 
-    const transaction = await this.getFunction('requestCodeValidation').populateTransaction(
-      codeId,
-      '0x0000000000000000000000000000000000000000000000000000000000000000',
-    );
+    const transaction = await this.getFunction('requestCodeValidation').populateTransaction(codeId);
 
     const blob = prepareBlob(code);
 
-    assert(blob.length == 4096 * 32);
+    if (blob.length != 4096 * 32) {
+      throw new Error('Invalid blob size');
+    }
 
     const blobData = ethers.hexlify(blob);
 
@@ -136,6 +120,56 @@ export class RouterContract extends BaseContract {
 
     const txResponse = await this._wallet.sendTransaction(tx);
 
+    (await api.provider.send('dev_setBlob', [txResponse.hash, ethers.hexlify(new Uint8Array(code))])) as [
+      string,
+      string,
+    ];
+
+    const receipt = (await txResponse.wait())!;
+
+    return {
+      codeId,
+      receipt,
+      waitForCodeGotValidated: () =>
+        new Promise<boolean>((resolve, reject) =>
+          this.on('CodeGotValidated', (_codeId, valid) => {
+            if (_codeId == codeId) {
+              if (valid) {
+                resolve(true);
+              } else {
+                reject(new Error('Code validation failed'));
+              }
+            }
+          }),
+        ),
+    };
+  }
+
+  async requestCodeValidation(code: Uint8Array) {
+    const codeId = generateCodeHash(code);
+
+    const transaction = await this.getFunction('requestCodeValidation').populateTransaction(codeId);
+
+    const blob = prepareBlob(code);
+
+    if (blob.length != 4096 * 32) {
+      throw new Error('Invalid blob size');
+    }
+
+    const kzg = await loadKZG();
+
+    const tx: ethers.TransactionRequest = {
+      type: 3,
+      data: transaction.data,
+      to: transaction.to,
+      gasLimit: 5_000_000n,
+      maxFeePerBlobGas: 400_000_000_000,
+      blobs: [blob],
+      kzg,
+    };
+
+    const txResponse = await this._wallet.sendTransaction(tx);
+
     const receipt = await txResponse.wait();
 
     return {
@@ -156,18 +190,22 @@ export class RouterContract extends BaseContract {
     };
   }
 
-  async createProgram(codeId: string, salt?: string) {
+  async createProgram(codeId: string, overrideInitializer?: string, salt?: string) {
     const _salt = salt || ethers.hexlify(ethers.randomBytes(32));
 
-    const response = await this.getFunction('createProgram').send(codeId, _salt);
+    const response = await this.getFunction('createProgram').send(
+      codeId,
+      _salt,
+      overrideInitializer || ethers.ZeroAddress,
+    );
 
     const receipt = await response.wait();
 
-    const event = receipt.logs.find((log) => 'fragment' in log && log.fragment.name == 'ProgramCreated') as EventLog;
+    const event = receipt?.logs.find((log) => 'fragment' in log && log.fragment.name == 'ProgramCreated') as EventLog;
 
     return {
-      blockNumber: receipt.blockNumber,
-      id: event.args[0].toLowerCase(),
+      blockNumber: receipt?.blockNumber,
+      id: event?.args[0].toLowerCase(),
     };
   }
 }
