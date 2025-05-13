@@ -114,7 +114,7 @@ jobs:
 
       - name: 'Check if gearexe files changed'
         id: changed-gearexe
-        uses: tj-actions/changed-files@v45
+        uses: tj-actions/changed-files@v46
         with:
           files: |
             apis/gearexe/**
