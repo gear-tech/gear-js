@@ -15821,7 +15821,6 @@ __metadata:
     sails-js-parser: "npm:0.4.1"
   peerDependencies:
     ethers: ^6.14
-    kzg-wasm: ^0.5
   languageName: unknown
   linkType: soft
 
