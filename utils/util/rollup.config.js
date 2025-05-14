@@ -25,15 +25,13 @@ export default [
     ],
     plugins: [
       cleanOldBuild(),
-      nodeResolve({
-        preferBuiltins: true,
-      }),
+      nodeResolve(),
       commonjs(),
       typescript({
         tsconfig: './tsconfig.json',
       }),
     ],
-    external: ['ethers', 'tslib'],
+    external: ['blakejs'],
   },
   {
     input: ['src/index.ts'],
@@ -46,15 +44,13 @@ export default [
       },
     ],
     plugins: [
-      nodeResolve({
-        preferBuiltins: true,
-      }),
+      nodeResolve(),
       commonjs(),
       typescript({
         outDir: 'lib/cjs',
         declaration: false,
       }),
     ],
-    external: ['ethers', 'tslib'],
+    external: ['blakejs'],
   },
 ];

@@ -2,14 +2,19 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "lib": ["ES2020", "DOM"],
+    "baseUrl": "./src",
+    "outDir": "./lib",
+    "allowJs": true,
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": false,
-    "noImplicitAny": false,
+    "strict": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true,
-    "outDir": "lib",
-    "baseUrl": "./src"
-  }
+    "noUnusedLocals": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

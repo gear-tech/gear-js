@@ -1,5 +1,5 @@
 import { BaseContract, EventLog, Provider, Signer } from 'ethers';
-import { convertEventParams as convertEventParameters } from '../util';
+import { convertEventParams as convertEventParameters } from '../util/index.js';
 
 interface ApprovalLog {
   owner: string;

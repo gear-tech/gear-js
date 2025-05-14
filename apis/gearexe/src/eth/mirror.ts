@@ -1,6 +1,6 @@
 import { Provider, BaseContract, Signer, EventLog, ContractEventPayload } from 'ethers';
+import { HexString } from 'gear-js-util';
 import { convertEventParams as convertEventParameters } from '../util/index.js';
-import { HexString } from '../types/index.js';
 
 export interface MessageQueuingRequestedLog {
   id: HexString;

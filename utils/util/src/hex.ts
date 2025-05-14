@@ -1,5 +1,5 @@
-import { assert } from './assert';
-import { HexString } from './types';
+import { assert } from './assert.js';
+import { HexString } from './types/index.js';
 
 export function isHex(value: string): value is HexString {
   return /^(0x)?[0-9a-fA-F]+$/.test(value);

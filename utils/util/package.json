@@ -3,9 +3,11 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "description": "Typescript library with util functions",
   "exports": {
     ".": {
       "import": "./lib/index.js",
+      "require": "./lib/cjs/index.js",
       "types": "./lib/index.d.ts"
     }
   },
@@ -17,7 +19,10 @@
   },
   "scripts": {
     "test": "yarn node --no-warnings --experimental-vm-modules $(yarn bin jest)",
-    "build": "rm -rf lib && npx tsc",
+    "build": "rollup -c",
     "clean": "rm -rf lib"
-  }
+  },
+  "files": [
+    "lib"
+  ]
 }
