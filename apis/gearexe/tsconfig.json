@@ -13,7 +13,6 @@
     "forceConsistentCasingInFileNames": true,
     "strict": false,
     "skipLibCheck": true,
-    "noUnusedLocals": true,
     "strictPropertyInitialization": false
   },
   "exclude": ["node_modules", "dist"]
