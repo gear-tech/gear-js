@@ -32,7 +32,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await api.provider.disconnect();
-  wallet.provider.destroy();
+  wallet.provider!.destroy();
 });
 
 describe('Create program', () => {

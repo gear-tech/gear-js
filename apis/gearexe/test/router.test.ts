@@ -21,7 +21,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await new Promise((resolve) => setTimeout(resolve, 3000));
-  wallet.provider.destroy();
+  wallet.provider!.destroy();
 });
 
 const uploadCodeTest = () => {
