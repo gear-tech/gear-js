@@ -31,7 +31,6 @@ export default [
         tsconfig: './tsconfig.json',
       }),
     ],
-    external: ['blakejs'],
   },
   {
     input: ['src/index.ts'],
@@ -51,6 +50,5 @@ export default [
         declaration: false,
       }),
     ],
-    external: ['blakejs'],
   },
 ];

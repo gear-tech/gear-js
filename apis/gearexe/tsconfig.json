@@ -3,7 +3,7 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "lib": ["ES2020", "DOM"],
+    "lib": ["ESNext", "DOM"],
     "baseUrl": "./src",
     "outDir": "./lib",
     "allowJs": true,

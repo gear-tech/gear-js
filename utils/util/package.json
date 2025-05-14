@@ -11,10 +11,8 @@
       "types": "./lib/index.d.ts"
     }
   },
-  "dependencies": {
-    "blakejs": "^1.2.1"
-  },
   "devDependencies": {
+    "blakejs": "^1.2.1",
     "jest": "^29.7.0"
   },
   "scripts": {
