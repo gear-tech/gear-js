@@ -67,7 +67,7 @@ describe('Bridge requests', () => {
     expect(faucetRequestData[1]).toHaveProperty('target', ETH_CONTRACT_ADDRESS);
     expect(faucetRequestData[1]).toHaveProperty('status', RequestStatus.Pending);
 
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     faucetRequestData = repos.FaucetRequest._data();
     expect(faucetRequestData[1].status).toBe(RequestStatus.Processing);
