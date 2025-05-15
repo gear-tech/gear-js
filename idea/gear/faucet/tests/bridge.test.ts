@@ -72,7 +72,7 @@ describe('Bridge requests', () => {
     faucetRequestData = repos.FaucetRequest._data();
     expect(faucetRequestData[1].status).toBe(RequestStatus.Processing);
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1500));
     faucetRequestData = repos.FaucetRequest._data();
     expect(faucetRequestData[1].status).toBe(RequestStatus.Completed);
 

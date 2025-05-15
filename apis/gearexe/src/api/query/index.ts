@@ -1,5 +1,5 @@
-import { Block } from './block';
-import { ProgramQueries } from './program';
+import { Block } from './block.js';
+import { ProgramQueries } from './program.js';
 
 export const query = { block: Block, program: ProgramQueries } as const;
 

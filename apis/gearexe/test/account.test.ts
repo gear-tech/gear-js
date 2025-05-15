@@ -9,7 +9,7 @@ const wallet = new Wallet(privateKey, ethWsProvider());
 const router = getRouterContract(routerId, wallet);
 
 afterAll(() => {
-  wallet.provider.destroy();
+  wallet.provider!.destroy();
 });
 
 describe('Account', () => {

@@ -1,7 +1,6 @@
-import { generateCodeHash } from '@gear-js/api';
+import { HexString, generateCodeHash } from 'gear-js-util';
 import { Provider, BaseContract, Signer, Wallet, ethers, EventLog } from 'ethers';
 import { loadKZG } from 'kzg-wasm';
-import { HexString } from '../types/index.js';
 import { GearExeApi } from '../api/api.js';
 
 export enum CodeState {

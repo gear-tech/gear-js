@@ -25,16 +25,12 @@ export default [
     ],
     plugins: [
       cleanOldBuild(),
-      nodeResolve({
-        preferBuiltins: true,
-      }),
+      nodeResolve(),
       commonjs(),
       typescript({
         tsconfig: './tsconfig.json',
-        include: ['src/**/*.ts'],
       }),
     ],
-    external: ['ethers', 'tslib'],
   },
   {
     input: ['src/index.ts'],
@@ -47,16 +43,12 @@ export default [
       },
     ],
     plugins: [
-      nodeResolve({
-        preferBuiltins: true,
-      }),
+      nodeResolve(),
       commonjs(),
       typescript({
         outDir: 'lib/cjs',
         declaration: false,
-        include: ['src/**/*.ts'],
       }),
     ],
-    external: ['ethers', 'tslib'],
   },
 ];
