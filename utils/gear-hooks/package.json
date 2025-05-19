@@ -31,8 +31,8 @@
   },
   "dependencies": {
     "@polkadot/api-derive": "15.10.2",
-    "@polkadot/extension-inject": "0.58.9",
-    "@polkadot/util": "13.4.4",
+    "@polkadot/extension-inject": "0.58.10",
+    "@polkadot/util": "13.5.1",
     "@substrate/connect": "2.1.0",
     "bignumber.js": "9.1.2",
     "nanoid": "5.0.1",
