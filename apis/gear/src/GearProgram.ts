@@ -75,7 +75,7 @@ interface ISendMessageResult extends ITxResultBase {
 }
 
 interface ISubmitTxResult extends ITxResultBase {
-  events?: Event[];
+  eventsToReturn?: Event[];
 }
 
 export class Program {
