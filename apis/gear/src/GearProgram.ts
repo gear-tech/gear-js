@@ -207,7 +207,7 @@ export class Program {
     return {
       txHash: tx.hash.toHex(),
       success,
-      events: _events,
+      eventsToReturn: _events,
       error: txError,
       blockHash,
       blockNumber: blockHash ? (await this._api.blocks.getBlockNumber(blockHash)).toNumber() : undefined,
@@ -308,13 +308,15 @@ export class Program {
 
     const tx = this._api.tx.gear.sendMessage(this._id, payload, gasLimit, value, keepAlive);
 
-    const { success, blockHash, blockNumber, events, txHash, error } = await this._submitTx(tx, ['MessageQueued']);
+    const { success, blockHash, blockNumber, eventsToReturn, txHash, error } = await this._submitTx(tx, [
+      'MessageQueued',
+    ]);
 
     let msgId: HexString;
     let response: () => Promise<any>;
 
     if (success) {
-      const messageQueuedEvent = events.find((e) => e.method === 'MessageQueued');
+      const messageQueuedEvent = eventsToReturn.find((e) => e.method === 'MessageQueued');
       if (messageQueuedEvent) {
         msgId = messageQueuedEvent.data[0].toHex();
       }
