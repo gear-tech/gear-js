@@ -8,9 +8,9 @@ import { HexString } from '@polkadot/util/types';
 import { Observable } from 'rxjs';
 import { PromiseResult } from '@polkadot/api/types';
 
-import { CreateType } from './metadata';
-import { GearApi } from './GearApi';
-import { GetBlockError } from './errors';
+import { CreateType } from '../metadata';
+import { GearApi } from '../GearApi';
+import { GetBlockError } from '../errors';
 
 export class GearBlock {
   subscribeNewHeads: PromiseResult<() => Observable<HeaderExtended>>;
@@ -40,7 +40,7 @@ export class GearBlock {
    * @param hashOrNumber
    * @returns
    */
-  async get(hashOrNumber: HexString | Uint8Array | number): Promise<SignedBlock>;
+  async get(hashOrNumber: string | Uint8Array | number): Promise<SignedBlock>;
 
   /**
    * Get data of particular block by blockNumber or blockHash
@@ -70,7 +70,7 @@ export class GearBlock {
    * @param hash
    * @returns Compact<BlockNumber>
    */
-  async getBlockNumber(hash: `0x${string}` | Uint8Array): Promise<Compact<BlockNumber>> {
+  async getBlockNumber(hash: string | Uint8Array): Promise<Compact<BlockNumber>> {
     const block = await this.get(hash);
     return block.block.header.number;
   }

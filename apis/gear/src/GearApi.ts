@@ -4,23 +4,26 @@ import { u128, u64 } from '@polkadot/types';
 
 import { ExtrinsicFailedData, GearApiOptions, GearCommonGasMultiplier, InflationInfo } from './types';
 import { gearRpc, gearTypes } from './default';
-import { GearBalance } from './Balance';
-import { GearBlock } from './Blocks';
-import { GearClaimValue } from './Claim';
-import { GearCode } from './Code';
 import { GearEvents } from './events';
-import { GearMailbox } from './Mailbox';
-import { GearMessage } from './Message';
-import { GearProgram } from './Program';
-import { GearProgramState } from './State';
-import { GearProgramStorage } from './Storage';
-import { GearVoucher } from './Voucher';
-import { GearWaitlist } from './Waitlist';
-import { GearEthBridge } from './EthBridge';
-import { GearBuiltin } from './Builtin';
+import {
+  GearBalance,
+  GearBlock,
+  GearBuiltin,
+  GearClaimValue,
+  GearCode,
+  GearEthBridge,
+  GearMailbox,
+  GearMessage,
+  GearProgram,
+  GearProgramState,
+  GearProgramStorage,
+  GearVoucher,
+  GearWaitlist,
+} from './api';
 
 export class GearApi extends ApiPromise {
   public program: GearProgram;
+  /** @deprecated */
   public programState: GearProgramState;
   public programStorage: GearProgramStorage;
   public message: GearMessage;

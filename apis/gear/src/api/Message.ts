@@ -3,9 +3,9 @@ import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { ReplaySubject } from 'rxjs';
 
-import { ICalculateReplyForHandleOptions, MessageSendOptions, MessageSendReplyOptions, ReplyInfo } from './types';
-import { SendMessageError, SendReplyError } from './errors';
-import { UserMessageSent, UserMessageSentData } from './events';
+import { ICalculateReplyForHandleOptions, MessageSendOptions, MessageSendReplyOptions, ReplyInfo } from '../types';
+import { SendMessageError, SendReplyError } from '../errors';
+import { UserMessageSent, UserMessageSentData } from '../events';
 import {
   decodeAddress,
   encodePayload,
@@ -13,9 +13,9 @@ import {
   validateGasLimit,
   validateMailboxItem,
   validateValue,
-} from './utils';
+} from '../utils';
 import { GearTransaction } from './Transaction';
-import { ProgramMetadata } from './metadata';
+import { ProgramMetadata } from '../metadata';
 
 export class GearMessage extends GearTransaction {
   /**
@@ -290,7 +290,9 @@ export class GearMessage extends GearTransaction {
     return replyEvent;
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated Use `getReplyEvent` instead
+   */
   listenToReplies(programId: HexString, bufferSize = 5) {
     let unsub: VoidFn;
     const subject = new ReplaySubject<[HexString, UserMessageSentData]>(bufferSize);

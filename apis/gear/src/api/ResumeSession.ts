@@ -2,10 +2,10 @@ import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { u8aToHex } from '@polkadot/util';
 
-import { IResumeSessionCommitArgs, IResumeSessionInitArgs, IResumeSessionPushArgs } from './types';
-import { ResumeSessionCommitError, ResumeSessionInitError, ResumeSessionPushError } from './errors';
-import { CreateType } from './metadata';
-import { GearApi } from './GearApi';
+import { IResumeSessionCommitArgs, IResumeSessionInitArgs, IResumeSessionPushArgs } from '../types';
+import { ResumeSessionCommitError, ResumeSessionInitError, ResumeSessionPushError } from '../errors';
+import { CreateType } from '../metadata';
+import { GearApi } from '../GearApi';
 import { GearTransaction } from './Transaction';
 
 const SIXTEEN_KB = 0x4000;

@@ -3,9 +3,9 @@ import { Hash, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { isFunction } from '@polkadot/util';
 
-import { GearApi } from './GearApi';
-import { TransactionError } from './errors';
-import { TransactionStatusCb } from './types';
+import { GearApi } from '../GearApi';
+import { TransactionError } from '../errors';
+import { TransactionStatusCb } from '../types';
 
 export class GearTransaction {
   extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;

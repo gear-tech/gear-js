@@ -2,11 +2,11 @@ import { Bytes, Option } from '@polkadot/types';
 import { HexString } from '@polkadot/util/types';
 import { u8aToHex } from '@polkadot/util';
 
-import { CodeUploadResult, GearCommonCodeMetadata, GearCoreCodeInstrumentedInstrumentedCode } from './types';
-import { generateCodeHash, getIdsFromKeys, validateCodeId } from './utils';
-import { CodeDoesNotExistError } from './errors';
+import { CodeUploadResult, GearCommonCodeMetadata, GearCoreCodeInstrumentedInstrumentedCode } from '../types';
+import { generateCodeHash, getIdsFromKeys, validateCodeId } from '../utils';
+import { CodeDoesNotExistError } from '../errors';
 import { GearTransaction } from './Transaction';
-import { getGrReply } from './wasm';
+import { getGrReply } from '../wasm';
 
 export class GearCode extends GearTransaction {
   /**
