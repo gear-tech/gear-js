@@ -67,11 +67,11 @@ interface ISendMessageResult extends ITxResultBase {
   /**
    * The id of the message
    */
-  msgId: HexString;
+  msgId?: HexString;
   /**
    * A function to get the response from the program
    */
-  response: () => Promise<IMessageResponse>;
+  response?: () => Promise<IMessageResponse>;
 }
 
 interface ISubmitTxResult extends ITxResultBase {
