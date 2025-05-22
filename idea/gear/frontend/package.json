@@ -10,7 +10,7 @@
     "clean": "echo \"clean gear-idea-frontend\" && rm -rf dist"
   },
   "dependencies": {
-    "@gear-js/api": "0.41.1",
+    "@gear-js/api": "0.42.0",
     "@gear-js/react-hooks": "*",
     "@gear-js/ui": "*",
     "@gear-js/wallet-connect": "*",

@@ -2122,7 +2122,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.41.1, @gear-js/api@workspace:apis/gear":
+"@gear-js/api@npm:0.42.0, @gear-js/api@workspace:apis/gear":
   version: 0.0.0-use.local
   resolution: "@gear-js/api@workspace:apis/gear"
   dependencies:
@@ -2142,7 +2142,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/cli@workspace:tools/cli"
   dependencies:
-    "@gear-js/api": "npm:0.41.1"
+    "@gear-js/api": "npm:0.42.0"
     "@polkadot/api": "npm:15.10.2"
     chalk: "npm:4"
     commander: "npm:10.0.1"
@@ -2195,7 +2195,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/react-hooks@workspace:utils/gear-hooks"
   dependencies:
-    "@gear-js/api": "npm:0.41.1"
+    "@gear-js/api": "npm:0.42.0"
     "@gear-js/frontend-configs": "npm:*"
     "@polkadot/api": "npm:15.10.2"
     "@polkadot/api-derive": "npm:15.10.2"
@@ -2212,7 +2212,7 @@ __metadata:
     sails-js: "npm:0.4.1"
     sails-js-parser: "npm:0.4.1"
   peerDependencies:
-    "@gear-js/api": 0.41.1
+    "@gear-js/api": 0.42.0
     "@polkadot/api": 15.9.1
     "@tanstack/react-query": ^5.56.2
     react: ^18 || ^19
@@ -15577,11 +15577,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gear-idea-common@npm:1.3.10, gear-idea-common@workspace:idea/gear/common":
+"gear-idea-common@workspace:*, gear-idea-common@workspace:idea/gear/common":
   version: 0.0.0-use.local
   resolution: "gear-idea-common@workspace:idea/gear/common"
   dependencies:
-    "@gear-js/api": "npm:0.41.1"
+    "@gear-js/api": "npm:0.42.0"
     "@polkadot/api": "npm:15.10.2"
     winston: "npm:3.7.2"
   languageName: unknown
@@ -15596,8 +15596,8 @@ __metadata:
     cron: "npm:^3.1.7"
     dotenv: "npm:^16.4.5"
     express: "npm:4.19.2"
-    gear-idea-common: "npm:1.3.10"
-    gear-idea-indexer-db: "npm:1.3.10"
+    gear-idea-common: "workspace:*"
+    gear-idea-indexer-db: "workspace:*"
     nanoid: "npm:^5.0.7"
     pg: "npm:8.12.0"
     redis: "npm:^4.6.15"
@@ -15609,7 +15609,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gear-idea-faucet@workspace:idea/gear/faucet"
   dependencies:
-    "@gear-js/api": "npm:0.41.1"
+    "@gear-js/api": "npm:0.42.0"
     "@polkadot/api": "npm:15.10.2"
     "@types/express": "npm:4.17.13"
     "@types/supertest": "npm:^6.0.2"
@@ -15622,7 +15622,7 @@ __metadata:
     ethers: "npm:6.13.5"
     express: "npm:4.18.1"
     express-rate-limit: "npm:^7.5.0"
-    gear-idea-common: "npm:1.3.10"
+    gear-idea-common: "workspace:*"
     hcaptcha: "npm:0.1.1"
     nodemon: "npm:2.0.16"
     pg: "npm:8.7.1"
@@ -15640,7 +15640,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gear-idea-frontend@workspace:idea/gear/frontend"
   dependencies:
-    "@gear-js/api": "npm:0.41.1"
+    "@gear-js/api": "npm:0.42.0"
     "@gear-js/frontend-configs": "npm:*"
     "@gear-js/react-hooks": "npm:*"
     "@gear-js/ui": "npm:*"
@@ -15685,7 +15685,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"gear-idea-indexer-db@npm:1.3.10, gear-idea-indexer-db@workspace:idea/gear/indexer-db":
+"gear-idea-indexer-db@workspace:*, gear-idea-indexer-db@workspace:idea/gear/indexer-db":
   version: 0.0.0-use.local
   resolution: "gear-idea-indexer-db@workspace:idea/gear/indexer-db"
   dependencies:
@@ -15697,13 +15697,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gear-idea-meta-storage@workspace:idea/gear/meta-storage"
   dependencies:
-    "@gear-js/api": "npm:0.41.1"
+    "@gear-js/api": "npm:0.42.0"
     "@polkadot/api": "npm:15.10.2"
     "@types/express": "npm:4.17.13"
     "@types/supertest": "npm:^6.0.2"
     dotenv: "npm:16.3.1"
     express: "npm:4.18.1"
-    gear-idea-common: "npm:1.3.10"
+    gear-idea-common: "workspace:*"
     pg: "npm:8.10.0"
     reflect-metadata: "npm:^0.2.2"
     supertest: "npm:^7.0.0"
@@ -15717,7 +15717,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gear-idea-squid@workspace:idea/gear/squid"
   dependencies:
-    "@gear-js/api": "npm:0.41.1"
+    "@gear-js/api": "npm:0.42.0"
     "@polkadot/api": "npm:15.10.2"
     "@subsquid/graphql-server": "npm:4.5.1"
     "@subsquid/ss58": "npm:2.0.2"
@@ -15730,7 +15730,7 @@ __metadata:
     "@subsquid/typeorm-store": "npm:1.5.1"
     "@types/redis": "npm:^4.0.11"
     dotenv: "npm:16.4.5"
-    gear-idea-indexer-db: "npm:1.3.10"
+    gear-idea-indexer-db: "workspace:*"
     pg: "npm:8.11.5"
     redis: "npm:^4.7.0"
     sails-js: "npm:^0.4.1"
@@ -15812,7 +15812,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gearexe@workspace:apis/gearexe"
   dependencies:
-    "@gear-js/api": "npm:0.41.1"
+    "@gear-js/api": "npm:0.42.0"
     "@polkadot/api": "npm:15.10.2"
     ethers: "npm:6.14.0"
     gear-js-util: "workspace:^"

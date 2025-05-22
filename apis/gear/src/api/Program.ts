@@ -11,8 +11,8 @@ import {
   IProgramUploadResult,
   ProgramCreateOptions,
   ProgramUploadOptions,
-} from './types';
-import { ProgramDoesNotExistError, ProgramHasNoMetahash, SubmitProgramError } from './errors';
+} from '../types';
+import { ProgramDoesNotExistError, ProgramHasNoMetahash, SubmitProgramError } from '../errors';
 import {
   encodePayload,
   generateCodeHash,
@@ -22,11 +22,11 @@ import {
   validateGasLimit,
   validateProgramId,
   validateValue,
-} from './utils';
-import { GearApi } from './GearApi';
+} from '../utils';
+import { GearApi } from '../GearApi';
 import { GearGas } from './Gas';
 import { GearTransaction } from './Transaction';
-import { ProgramMetadata } from './metadata';
+import { ProgramMetadata } from '../metadata';
 
 export class GearProgram extends GearTransaction {
   public calculateGas: GearGas;

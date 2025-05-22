@@ -1,3 +1,7 @@
+## 0.42.0
+_21/05/2025_
+- Introduce the `Program` class to keep track of program updates and facilitate interaction with programs in https://github.com/gear-tech/gear-js/pull/1932
+
 ## 0.41.1
 _14/04/2025_
 

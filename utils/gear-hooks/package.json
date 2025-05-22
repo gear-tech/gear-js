@@ -22,7 +22,7 @@
     "clean": "echo \"clean @gear-js/react-hooks\" && rm -rf dist"
   },
   "peerDependencies": {
-    "@gear-js/api": "0.41.1",
+    "@gear-js/api": "0.42.0",
     "@polkadot/api": "15.9.1",
     "@tanstack/react-query": "^5.56.2",
     "react": "^18 || ^19",
@@ -40,7 +40,7 @@
     "sails-js-parser": "0.4.1"
   },
   "devDependencies": {
-    "@gear-js/api": "0.41.1",
+    "@gear-js/api": "0.42.0",
     "@gear-js/frontend-configs": "*",
     "@polkadot/api": "15.10.2",
     "@polkadot/types": "15.10.2",

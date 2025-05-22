@@ -42,7 +42,7 @@ export class ReplyCode {
 
   constructor(
     codeBytes: Uint8Array | HexString,
-    private _specVersion: number,
+    private _specVersion?: number,
   ) {
     this._bytes = checkAndGetCodeBytes(u8aToU8a(codeBytes));
 
@@ -126,7 +126,7 @@ export class ErrorReplyReason implements IReplyCodeReason {
 
   constructor(
     bytes: Uint8Array,
-    private _specVersion: number,
+    private _specVersion?: number,
   ) {
     this._bytes = checkAndGetCodeBytes(bytes, EReplyCode.Error, 0);
   }
@@ -141,7 +141,7 @@ export class ErrorReplyReason implements IReplyCodeReason {
         return 'Error reply was created due to underlying execution error.';
       }
       case EErrorReplyReason.FailedToCreateProgram: {
-        if (this._specVersion < 1800) {
+        if (this._specVersion && this._specVersion < 1800) {
           return 'Failed to create program.';
         }
         this._throwUnsupported();
@@ -154,7 +154,7 @@ export class ErrorReplyReason implements IReplyCodeReason {
         return 'Message has died in Waitlist as out of rent one.';
       }
       case EErrorReplyReason.ReinstrumentationFailure: {
-        if (this._specVersion < 1800) {
+        if (this._specVersion && this._specVersion < 1800) {
           return 'Reinstrumentation failed.';
         }
       }
@@ -175,7 +175,7 @@ export class ErrorReplyReason implements IReplyCodeReason {
 
   /** This option is available only for spec versions before 1800 */
   get isFailedToCreateProgram(): boolean {
-    return this._specVersion < 1800 && this._bytes[1] === EErrorReplyReason.FailedToCreateProgram;
+    return this._specVersion && this._specVersion < 1800 && this._bytes[1] === EErrorReplyReason.FailedToCreateProgram;
   }
 
   get isUnavailableActor(): boolean {
@@ -192,7 +192,9 @@ export class ErrorReplyReason implements IReplyCodeReason {
 
   /** This option is available only for spec versions before 1800 */
   get isReinstrumentationFailure(): boolean {
-    return this._specVersion < 1800 && this._bytes[1] === EErrorReplyReason.ReinstrumentationFailure;
+    return (
+      this._specVersion && this._specVersion < 1800 && this._bytes[1] === EErrorReplyReason.ReinstrumentationFailure
+    );
   }
 }
 

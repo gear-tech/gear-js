@@ -1,8 +1,8 @@
 import { HexString } from '@polkadot/util/types';
 import { Option } from '@polkadot/types';
 
-import { GearApi } from './GearApi';
-import { WaitlistItem } from 'types';
+import { GearApi } from '../GearApi';
+import { WaitlistItem } from '../types';
 
 export class GearWaitlist {
   constructor(private _api: GearApi) {}

@@ -1,8 +1,9 @@
 import { SubmittableExtrinsic } from '@polkadot/api/types';
-import { GearApi } from './GearApi';
 import { ISubmittableResult } from '@polkadot/types/types';
-import { HexString, Proof } from './types';
-import { AuthoritySetHashError, ClearTimerError, GetQueueMerkleRootError } from './errors';
+
+import { AuthoritySetHashError, ClearTimerError, GetQueueMerkleRootError } from '../errors';
+import { GearApi } from '../GearApi';
+import { HexString, Proof } from '../types';
 
 export class GearEthBridge {
   constructor(private api: GearApi) {}

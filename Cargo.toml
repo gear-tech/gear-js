@@ -9,17 +9,12 @@ repository = "https://github.com/gear-tech/gear-js"
 resolver = "2"
 members = [
     "apis/gear/programs/test-meta",
-    'apis/gear/programs/test',
+    "apis/gear/programs/test",
 ]
 
 [workspace.dependencies]
 gmeta = "=1.7.1"
 gstd = "=1.7.1"
-scale-info = { version = "=2.11.0", default-features = false, features = [
-    "derive",
-] }
-codec = { package = "parity-scale-codec", version = "=3.7.4", default-features = false, features = [
-    "derive",
-    "full",
-] }
+scale-info = { version = "=2.11.0", default-features = false, features = ["derive"] }
+codec = { package = "parity-scale-codec", version = "=3.7.4", default-features = false, features = ["derive", "full"] }
 gear-wasm-builder = { version = "=1.7.1", features = ["metawasm"] }
