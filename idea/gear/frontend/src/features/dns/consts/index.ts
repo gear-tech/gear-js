@@ -4,7 +4,7 @@ import { GENESIS } from '@/shared/config';
 
 import { Values } from '../types';
 
-import { Program } from './sails';
+import { SailsProgram } from './sails';
 
 const DNS_API_URL = {
   [GENESIS.MAINNET]: import.meta.env.VITE_MAINNET_DNS_API_URL as string,
@@ -32,4 +32,4 @@ const FUNCTION_NAME = {
   REMOVE_ADMIN: 'removeAdminFromProgram',
 } as const;
 
-export { DNS_API_URL, FIELD_NAME, DEFAULT_VALUES, NAME_SCHEMA, FUNCTION_NAME, Program };
+export { DNS_API_URL, FIELD_NAME, DEFAULT_VALUES, NAME_SCHEMA, FUNCTION_NAME, SailsProgram };
