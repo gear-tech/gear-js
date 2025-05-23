@@ -23,16 +23,16 @@
   },
   "peerDependencies": {
     "@gear-js/api": "0.42.0",
-    "@polkadot/api": "15.10.2",
+    "@polkadot/api": "16.0.1",
     "@tanstack/react-query": "^5.56.2",
     "react": "^18 || ^19",
     "react-dom": "^18 || ^19",
     "sails-js": "0.4.2"
   },
   "dependencies": {
-    "@polkadot/api-derive": "15.10.2",
-    "@polkadot/extension-inject": "0.58.9",
-    "@polkadot/util": "13.4.4",
+    "@polkadot/api-derive": "16.0.1",
+    "@polkadot/extension-inject": "0.58.10",
+    "@polkadot/util": "13.5.1",
     "@substrate/connect": "2.1.0",
     "bignumber.js": "9.1.2",
     "nanoid": "5.0.1",
@@ -42,8 +42,8 @@
   "devDependencies": {
     "@gear-js/api": "0.42.0",
     "@gear-js/frontend-configs": "*",
-    "@polkadot/api": "15.10.2",
-    "@polkadot/types": "15.10.2",
+    "@polkadot/api": "16.0.1",
+    "@polkadot/types": "16.0.1",
     "@tanstack/react-query": "5.56.2",
     "react": "19.0.0",
     "react-dom": "19.0.0",
