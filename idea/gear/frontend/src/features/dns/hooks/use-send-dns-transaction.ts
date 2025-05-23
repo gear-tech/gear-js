@@ -13,7 +13,7 @@ import { useLoading, useModal, useSignAndSend } from '@/hooks';
 import { TransactionName } from '@/shared/config';
 import { getErrorMessage } from '@/shared/helpers';
 
-import { FUNCTION_NAME, Program } from '../consts';
+import { FUNCTION_NAME, SailsProgram } from '../consts';
 import { getDnsProgramId } from '../utils';
 
 const SERVICE_NAME = 'dns';
@@ -39,7 +39,7 @@ const useSendDnsTransaction = <T extends FunctionName>(functionName: T) => {
   };
 
   const { data: id } = useQuery({ queryKey: ['dnsProgramId'], queryFn: getQuery, enabled: isApiReady });
-  const { data: program } = useProgram({ library: Program, id });
+  const { data: program } = useProgram({ library: SailsProgram, id });
 
   const { prepareTransactionAsync } = usePrepareProgramTransaction({
     program,
