@@ -47,6 +47,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Set skip=false on workflow_dispatch
         if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -318,7 +320,7 @@ jobs:
         run: |
           if [ "${{ needs.set-env-tag.outputs.environment }}" == "production" ]; then
             echo "namespace=prod-idea" >> $GITHUB_OUTPUT
-            echo "deployments=squid-testnet-v2 squid-mainnet-v2 explorer faucet frontend-nginx meta-storage-main" >> $GITHUB_OUTPUT
+            echo "deployments=squid-mainnet-prod squid-testnet-prod explorer faucet frontend-nginx meta-storage-main" >> $GITHUB_OUTPUT
           else
             echo "namespace=dev-1" >> $GITHUB_OUTPUT
             if [ "${{ github.event_name }}" != "workflow_dispatch" || "${{ github.event.inputs.service }}" == "all" ]; then
