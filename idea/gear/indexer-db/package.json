@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.3.11",
   "dependencies": {
-    "typeorm": "0.3.20"
+    "typeorm": "0.3.24"
   },
   "scripts": {
     "build": "rm -rf lib && npx tsc",

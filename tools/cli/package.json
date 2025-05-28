@@ -15,11 +15,11 @@
   "dependencies": {
     "@gear-js/api": "0.42.0",
     "@polkadot/api": "16.0.1",
-    "chalk": "4",
-    "commander": "10.0.1",
-    "inquirer": "9.2.6",
-    "winston": "3.8.2",
-    "yaml": "2.3.0"
+    "chalk": "5",
+    "commander": "14.0.0",
+    "inquirer": "12.6.3",
+    "winston": "3.17.0",
+    "yaml": "2.8.0"
   },
   "license": "GPL-3.0",
   "repository": {
