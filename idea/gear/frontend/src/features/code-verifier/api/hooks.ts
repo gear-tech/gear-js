@@ -5,6 +5,7 @@ import { useAlert } from '@gear-js/react-hooks';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
+import { API_URL } from './consts';
 import { getVerificationStatus, getVerifiedCode, verifyCode } from './requests';
 
 function useVerifyCode() {
@@ -21,7 +22,7 @@ function useIsCodeVerified(codeId: HexString | null | undefined) {
     queryKey: ['code-verification-status', codeId],
     queryFn: () => getVerifiedCode(codeId!),
     select: (response) => Boolean(response),
-    enabled: Boolean(codeId),
+    enabled: !!API_URL && Boolean(codeId),
   });
 
   const { error } = query;
