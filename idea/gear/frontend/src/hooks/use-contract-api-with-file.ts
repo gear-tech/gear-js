@@ -21,7 +21,10 @@ function useContractApiWithFile(codeIdOrBuffer: HexString | Buffer | undefined) 
   const metadataHash = useMetadataHash(codeIdOrBuffer);
   const metadata = useMetadataWithFile(metadataHash);
 
-  const codeId = Buffer.isBuffer(codeIdOrBuffer) ? generateCodeHash(codeIdOrBuffer) : undefined;
+  const codeId =
+    codeIdOrBuffer instanceof Uint8Array || Buffer.isBuffer(codeIdOrBuffer)
+      ? generateCodeHash(codeIdOrBuffer)
+      : undefined;
   const sails = useSailsWithFile(isHex(codeIdOrBuffer) ? codeIdOrBuffer : codeId);
 
   const isFromStorage = metadata.isFromStorage || sails.isFromStorage;
