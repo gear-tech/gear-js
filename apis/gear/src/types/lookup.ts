@@ -20,8 +20,9 @@ import type {
 } from '@polkadot/types-codec';
 import type { ITuple } from '@polkadot/types-codec/types';
 import { SpWeightsWeightV2Weight } from '@polkadot/types/lookup';
+import { Null } from '@polkadot/types';
 
-/** @name PalletGearCall (271) */
+/** @name FrameSystemAccountInfo (3) */
 export interface PalletGearCall extends Enum {
   readonly isUploadCode: boolean;
   readonly asUploadCode: {
@@ -89,17 +90,12 @@ export interface PalletGearCall extends Enum {
     | 'SetExecuteInherent'
     | 'ClaimValueToInheritor';
 }
-
-/** @name GprimitivesCodeId (272) */
 export interface GprimitivesCodeId extends U8aFixed {}
 
-/** @name GprimitivesActorId (273) */
 export interface GprimitivesActorId extends U8aFixed {}
 
-/** @name GprimitivesMessageId (274) */
 export interface GprimitivesMessageId extends U8aFixed {}
 
-/** @name PalletGearStakingRewardsCall (277) */
 export interface PalletGearStakingRewardsCall extends Enum {
   readonly isRefill: boolean;
   readonly asRefill: {
@@ -121,8 +117,6 @@ export interface PalletGearStakingRewardsCall extends Enum {
   } & Struct;
   readonly type: 'Refill' | 'ForceRefill' | 'Withdraw' | 'AlignSupply';
 }
-
-/** @name PalletGearVoucherCall (278) */
 export interface PalletGearVoucherCall extends Enum {
   readonly isIssue: boolean;
   readonly asIssue: {
@@ -158,11 +152,8 @@ export interface PalletGearVoucherCall extends Enum {
   } & Struct;
   readonly type: 'Issue' | 'Call' | 'Revoke' | 'Update' | 'Decline';
 }
-
-/** @name PalletGearVoucherInternalVoucherId (282) */
 export interface PalletGearVoucherInternalVoucherId extends U8aFixed {}
 
-/** @name PalletGearVoucherInternalPrepaidCall (283) */
 export interface PalletGearVoucherInternalPrepaidCall extends Enum {
   readonly isSendMessage: boolean;
   readonly asSendMessage: {
@@ -187,8 +178,6 @@ export interface PalletGearVoucherInternalPrepaidCall extends Enum {
   readonly isDeclineVoucher: boolean;
   readonly type: 'SendMessage' | 'SendReply' | 'UploadCode' | 'DeclineVoucher';
 }
-
-/** @name PalletGearEthBridgeCall (286) */
 export interface PalletGearEthBridgeCall extends Enum {
   readonly isPause: boolean;
   readonly isUnpause: boolean;
@@ -203,8 +192,6 @@ export interface PalletGearEthBridgeCall extends Enum {
   } & Struct;
   readonly type: 'Pause' | 'Unpause' | 'SendEthMessage' | 'SetFee';
 }
-
-/** @name PalletGearDebugCall (288) */
 export interface PalletGearDebugCall extends Enum {
   readonly isEnableDebugMode: boolean;
   readonly asEnableDebugMode: {
@@ -216,8 +203,6 @@ export interface PalletGearDebugCall extends Enum {
   } & Struct;
   readonly type: 'EnableDebugMode' | 'ExhaustBlockResources';
 }
-
-/** @name PalletGearEvent (316) */
 export interface PalletGearEvent extends Enum {
   readonly isMessageQueued: boolean;
   readonly asMessageQueued: {
@@ -276,8 +261,6 @@ export interface PalletGearEvent extends Enum {
     | 'ProgramChanged'
     | 'QueueNotProcessed';
 }
-
-/** @name GearCommonEventMessageEntry (317) */
 export interface GearCommonEventMessageEntry extends Enum {
   readonly isInit: boolean;
   readonly isHandle: boolean;
@@ -286,8 +269,6 @@ export interface GearCommonEventMessageEntry extends Enum {
   readonly isSignal: boolean;
   readonly type: 'Init' | 'Handle' | 'Reply' | 'Signal';
 }
-
-/** @name GearCoreMessageUserUserMessage (318) */
 export interface GearCoreMessageUserUserMessage extends Struct {
   readonly id: GprimitivesMessageId;
   readonly source: GprimitivesActorId;
@@ -296,14 +277,11 @@ export interface GearCoreMessageUserUserMessage extends Struct {
   readonly value: Compact<u128>;
   readonly details: Option<GearCoreMessageCommonReplyDetails>;
 }
-
-/** @name GearCoreMessageCommonReplyDetails (322) */
+export type GearCoreMessagePayloadSizeError = Null;
 export interface GearCoreMessageCommonReplyDetails extends Struct {
   readonly to: GprimitivesMessageId;
   readonly code: GearCoreErrorsSimpleReplyCode;
 }
-
-/** @name GearCoreErrorsSimpleReplyCode (323) */
 export interface GearCoreErrorsSimpleReplyCode extends Enum {
   readonly isSuccess: boolean;
   readonly asSuccess: GearCoreErrorsSimpleSuccessReplyReason;
@@ -312,16 +290,12 @@ export interface GearCoreErrorsSimpleReplyCode extends Enum {
   readonly isUnsupported: boolean;
   readonly type: 'Success' | 'Error' | 'Unsupported';
 }
-
-/** @name GearCoreErrorsSimpleSuccessReplyReason (324) */
 export interface GearCoreErrorsSimpleSuccessReplyReason extends Enum {
   readonly isAuto: boolean;
   readonly isManual: boolean;
   readonly isUnsupported: boolean;
   readonly type: 'Auto' | 'Manual' | 'Unsupported';
 }
-
-/** @name GearCoreErrorsSimpleErrorReplyReason (325) */
 export interface GearCoreErrorsSimpleErrorReplyReason extends Enum {
   readonly isExecution: boolean;
   readonly asExecution: GearCoreErrorsSimpleSimpleExecutionError;
@@ -331,8 +305,6 @@ export interface GearCoreErrorsSimpleErrorReplyReason extends Enum {
   readonly isUnsupported: boolean;
   readonly type: 'Execution' | 'UnavailableActor' | 'RemovedFromWaitlist' | 'Unsupported';
 }
-
-/** @name GearCoreErrorsSimpleSimpleExecutionError (326) */
 export interface GearCoreErrorsSimpleSimpleExecutionError extends Enum {
   readonly isRanOutOfGas: boolean;
   readonly isMemoryOverflow: boolean;
@@ -350,8 +322,6 @@ export interface GearCoreErrorsSimpleSimpleExecutionError extends Enum {
     | 'StackLimitExceeded'
     | 'Unsupported';
 }
-
-/** @name GearCoreErrorsSimpleSimpleUnavailableActorError (327) */
 export interface GearCoreErrorsSimpleSimpleUnavailableActorError extends Enum {
   readonly isProgramExited: boolean;
   readonly isInitializationFailure: boolean;
@@ -367,8 +337,6 @@ export interface GearCoreErrorsSimpleSimpleUnavailableActorError extends Enum {
     | 'ReinstrumentationFailure'
     | 'Unsupported';
 }
-
-/** @name GearCommonEventReasonUserMessageReadRuntimeReason (328) */
 export interface GearCommonEventReasonUserMessageReadRuntimeReason extends Enum {
   readonly isRuntime: boolean;
   readonly asRuntime: GearCommonEventUserMessageReadRuntimeReason;
@@ -376,29 +344,21 @@ export interface GearCommonEventReasonUserMessageReadRuntimeReason extends Enum 
   readonly asSystem: GearCommonEventUserMessageReadSystemReason;
   readonly type: 'Runtime' | 'System';
 }
-
-/** @name GearCommonEventUserMessageReadRuntimeReason (329) */
 export interface GearCommonEventUserMessageReadRuntimeReason extends Enum {
   readonly isMessageReplied: boolean;
   readonly isMessageClaimed: boolean;
   readonly type: 'MessageReplied' | 'MessageClaimed';
 }
-
-/** @name GearCommonEventUserMessageReadSystemReason (330) */
 export interface GearCommonEventUserMessageReadSystemReason extends Enum {
   readonly isOutOfRent: boolean;
   readonly type: 'OutOfRent';
 }
-
-/** @name GearCommonEventDispatchStatus (332) */
 export interface GearCommonEventDispatchStatus extends Enum {
   readonly isSuccess: boolean;
   readonly isFailed: boolean;
   readonly isNotExecuted: boolean;
   readonly type: 'Success' | 'Failed' | 'NotExecuted';
 }
-
-/** @name GearCommonGasProviderNodeGasNodeId (336) */
 export interface GearCommonGasProviderNodeGasNodeId extends Enum {
   readonly isNode: boolean;
   readonly asNode: GprimitivesMessageId;
@@ -406,19 +366,14 @@ export interface GearCommonGasProviderNodeGasNodeId extends Enum {
   readonly asReservation: GprimitivesReservationId;
   readonly type: 'Node' | 'Reservation';
 }
-
-/** @name GprimitivesReservationId (337) */
 export interface GprimitivesReservationId extends U8aFixed {}
 
-/** @name GearCommonEventReasonMessageWaitedRuntimeReason (338) */
 export interface GearCommonEventReasonMessageWaitedRuntimeReason extends Enum {
   readonly isRuntime: boolean;
   readonly asRuntime: GearCommonEventMessageWaitedRuntimeReason;
   readonly isSystem: boolean;
   readonly type: 'Runtime' | 'System';
 }
-
-/** @name GearCommonEventMessageWaitedRuntimeReason (339) */
 export interface GearCommonEventMessageWaitedRuntimeReason extends Enum {
   readonly isWaitCalled: boolean;
   readonly isWaitForCalled: boolean;
@@ -426,8 +381,7 @@ export interface GearCommonEventMessageWaitedRuntimeReason extends Enum {
   readonly isWaitUpToCalledFull: boolean;
   readonly type: 'WaitCalled' | 'WaitForCalled' | 'WaitUpToCalled' | 'WaitUpToCalledFull';
 }
-
-/** @name GearCommonEventReasonMessageWokenRuntimeReason (341) */
+export type GearCommonEventMessageWaitedSystemReason = Null;
 export interface GearCommonEventReasonMessageWokenRuntimeReason extends Enum {
   readonly isRuntime: boolean;
   readonly asRuntime: GearCommonEventMessageWokenRuntimeReason;
@@ -435,22 +389,16 @@ export interface GearCommonEventReasonMessageWokenRuntimeReason extends Enum {
   readonly asSystem: GearCommonEventMessageWokenSystemReason;
   readonly type: 'Runtime' | 'System';
 }
-
-/** @name GearCommonEventMessageWokenRuntimeReason (342) */
 export interface GearCommonEventMessageWokenRuntimeReason extends Enum {
   readonly isWakeCalled: boolean;
   readonly type: 'WakeCalled';
 }
-
-/** @name GearCommonEventMessageWokenSystemReason (343) */
 export interface GearCommonEventMessageWokenSystemReason extends Enum {
   readonly isProgramGotInitialized: boolean;
   readonly isTimeoutHasCome: boolean;
   readonly isOutOfRent: boolean;
   readonly type: 'ProgramGotInitialized' | 'TimeoutHasCome' | 'OutOfRent';
 }
-
-/** @name GearCommonEventCodeChangeKind (344) */
 export interface GearCommonEventCodeChangeKind extends Enum {
   readonly isActive: boolean;
   readonly asActive: {
@@ -460,8 +408,6 @@ export interface GearCommonEventCodeChangeKind extends Enum {
   readonly isReinstrumented: boolean;
   readonly type: 'Active' | 'Inactive' | 'Reinstrumented';
 }
-
-/** @name GearCommonEventProgramChangeKind (345) */
 export interface GearCommonEventProgramChangeKind extends Enum {
   readonly isActive: boolean;
   readonly asActive: {
@@ -480,8 +426,6 @@ export interface GearCommonEventProgramChangeKind extends Enum {
   } & Struct;
   readonly type: 'Active' | 'Inactive' | 'Paused' | 'Terminated' | 'ExpirationChanged' | 'ProgramSet';
 }
-
-/** @name PalletGearStakingRewardsEvent (346) */
 export interface PalletGearStakingRewardsEvent extends Enum {
   readonly isDeposited: boolean;
   readonly asDeposited: {
@@ -501,8 +445,6 @@ export interface PalletGearStakingRewardsEvent extends Enum {
   } & Struct;
   readonly type: 'Deposited' | 'Withdrawn' | 'Burned' | 'Minted';
 }
-
-/** @name PalletGearVoucherEvent (347) */
 export interface PalletGearVoucherEvent extends Enum {
   readonly isVoucherIssued: boolean;
   readonly asVoucherIssued: {
@@ -528,8 +470,6 @@ export interface PalletGearVoucherEvent extends Enum {
   } & Struct;
   readonly type: 'VoucherIssued' | 'VoucherRevoked' | 'VoucherUpdated' | 'VoucherDeclined';
 }
-
-/** @name PalletGearEthBridgeEvent (348) */
 export interface PalletGearEthBridgeEvent extends Enum {
   readonly isAuthoritySetHashChanged: boolean;
   readonly asAuthoritySetHashChanged: H256;
@@ -553,16 +493,12 @@ export interface PalletGearEthBridgeEvent extends Enum {
     | 'MessageQueued'
     | 'QueueMerkleRootChanged';
 }
-
-/** @name PalletGearEthBridgeInternalEthMessage (349) */
 export interface PalletGearEthBridgeInternalEthMessage extends Struct {
   readonly nonce: U256;
   readonly source: H256;
   readonly destination: H160;
   readonly payload: Bytes;
 }
-
-/** @name PalletGearDebugEvent (352) */
 export interface PalletGearDebugEvent extends Enum {
   readonly isDebugMode: boolean;
   readonly asDebugMode: bool;
@@ -570,21 +506,15 @@ export interface PalletGearDebugEvent extends Enum {
   readonly asDebugDataSnapshot: PalletGearDebugDebugData;
   readonly type: 'DebugMode' | 'DebugDataSnapshot';
 }
-
-/** @name PalletGearDebugDebugData (353) */
 export interface PalletGearDebugDebugData extends Struct {
   readonly dispatchQueue: Vec<GearCoreMessageStoredStoredDispatch>;
   readonly programs: BTreeSet<PalletGearDebugProgramDetails>;
 }
-
-/** @name GearCoreMessageStoredStoredDispatch (355) */
 export interface GearCoreMessageStoredStoredDispatch extends Struct {
   readonly kind: GearCoreMessageDispatchKind;
   readonly message: GearCoreMessageStoredStoredMessage;
   readonly context: Option<GearCoreMessageContextContextStore>;
 }
-
-/** @name GearCoreMessageDispatchKind (356) */
 export interface GearCoreMessageDispatchKind extends Enum {
   readonly isInit: boolean;
   readonly isHandle: boolean;
@@ -592,8 +522,6 @@ export interface GearCoreMessageDispatchKind extends Enum {
   readonly isSignal: boolean;
   readonly type: 'Init' | 'Handle' | 'Reply' | 'Signal';
 }
-
-/** @name GearCoreMessageStoredStoredMessage (357) */
 export interface GearCoreMessageStoredStoredMessage extends Struct {
   readonly id: GprimitivesMessageId;
   readonly source: GprimitivesActorId;
@@ -602,8 +530,6 @@ export interface GearCoreMessageStoredStoredMessage extends Struct {
   readonly value: Compact<u128>;
   readonly details: Option<GearCoreMessageCommonMessageDetails>;
 }
-
-/** @name GearCoreMessageCommonMessageDetails (359) */
 export interface GearCoreMessageCommonMessageDetails extends Enum {
   readonly isReply: boolean;
   readonly asReply: GearCoreMessageCommonReplyDetails;
@@ -611,51 +537,38 @@ export interface GearCoreMessageCommonMessageDetails extends Enum {
   readonly asSignal: GearCoreMessageCommonSignalDetails;
   readonly type: 'Reply' | 'Signal';
 }
-
-/** @name GearCoreMessageCommonSignalDetails (360) */
 export interface GearCoreMessageCommonSignalDetails extends Struct {
   readonly to: GprimitivesMessageId;
   readonly code: GearCoreErrorsSimpleSignalCode;
 }
-
-/** @name GearCoreErrorsSimpleSignalCode (361) */
 export interface GearCoreErrorsSimpleSignalCode extends Enum {
   readonly isExecution: boolean;
   readonly asExecution: GearCoreErrorsSimpleSimpleExecutionError;
   readonly isRemovedFromWaitlist: boolean;
   readonly type: 'Execution' | 'RemovedFromWaitlist';
 }
-
-/** @name GearCoreMessageContextContextStore (363) */
 export interface GearCoreMessageContextContextStore extends Struct {
   readonly initialized: BTreeSet<GprimitivesActorId>;
   readonly reservationNonce: u64;
   readonly systemReservation: Option<u64>;
   readonly localNonce: u32;
 }
-
-/** @name PalletGearDebugProgramDetails (366) */
 export interface PalletGearDebugProgramDetails extends Struct {
   readonly id: GprimitivesActorId;
   readonly state: PalletGearDebugProgramState;
 }
-
-/** @name PalletGearDebugProgramState (367) */
 export interface PalletGearDebugProgramState extends Enum {
   readonly isActive: boolean;
   readonly asActive: PalletGearDebugProgramInfo;
   readonly isTerminated: boolean;
   readonly type: 'Active' | 'Terminated';
 }
-
-/** @name PalletGearDebugProgramInfo (368) */
 export interface PalletGearDebugProgramInfo extends Struct {
   readonly staticPages: u32;
   readonly persistentPages: BTreeMap<u32, Bytes>;
   readonly codeHash: H256;
 }
-
-/** @name GearCoreCodeInstrumentedInstrumentedCode (602) */
+export type GearCoreMemoryIntoPageBufError = Null;
 export interface GearCoreCodeInstrumentedInstrumentedCode extends Struct {
   readonly code: Bytes;
   readonly originalCodeLen: u32;
@@ -665,8 +578,6 @@ export interface GearCoreCodeInstrumentedInstrumentedCode extends Struct {
   readonly instantiatedSectionSizes: GearCoreCodeInstrumentedInstantiatedSectionSizes;
   readonly version: u32;
 }
-
-/** @name GearCoreCodeInstrumentedInstantiatedSectionSizes (607) */
 export interface GearCoreCodeInstrumentedInstantiatedSectionSizes extends Struct {
   readonly codeSection: u32;
   readonly dataSection: u32;
@@ -675,19 +586,13 @@ export interface GearCoreCodeInstrumentedInstantiatedSectionSizes extends Struct
   readonly elementSection: u32;
   readonly typeSection: u32;
 }
-
-/** @name GearCommonCodeMetadata (608) */
 export interface GearCommonCodeMetadata extends Struct {
   readonly author: H256;
   readonly blockNumber: Compact<u32>;
 }
-
-/** @name NumeratedTreeIntervalsTree (609) */
 export interface NumeratedTreeIntervalsTree extends Struct {
   readonly inner: BTreeMap<u32, u32>;
 }
-
-/** @name GearCoreProgram (613) */
 export interface GearCoreProgram extends Enum {
   readonly isActive: boolean;
   readonly asActive: GearCoreProgramActiveProgram;
@@ -697,8 +602,6 @@ export interface GearCoreProgram extends Enum {
   readonly asTerminated: GprimitivesActorId;
   readonly type: 'Active' | 'Exited' | 'Terminated';
 }
-
-/** @name GearCoreProgramActiveProgram (614) */
 export interface GearCoreProgramActiveProgram extends Struct {
   readonly allocationsTreeLen: u32;
   readonly memoryInfix: u32;
@@ -709,15 +612,11 @@ export interface GearCoreProgramActiveProgram extends Struct {
   readonly state: GearCoreProgramProgramState;
   readonly expirationBlock: u32;
 }
-
-/** @name GearCoreReservationGasReservationSlot (617) */
 export interface GearCoreReservationGasReservationSlot extends Struct {
   readonly amount: u64;
   readonly start: u32;
   readonly finish: u32;
 }
-
-/** @name GearCoreProgramProgramState (620) */
 export interface GearCoreProgramProgramState extends Enum {
   readonly isUninitialized: boolean;
   readonly asUninitialized: {
@@ -726,8 +625,6 @@ export interface GearCoreProgramProgramState extends Enum {
   readonly isInitialized: boolean;
   readonly type: 'Uninitialized' | 'Initialized';
 }
-
-/** @name PalletGearProgramError (622) */
 export interface PalletGearProgramError extends Enum {
   readonly isDuplicateItem: boolean;
   readonly isProgramNotFound: boolean;
@@ -741,14 +638,10 @@ export interface PalletGearProgramError extends Enum {
     | 'CannotFindDataForPage'
     | 'ProgramCodeNotFound';
 }
-
-/** @name GearCommonStorageComplicatedDequeueLinkedNode (623) */
 export interface GearCommonStorageComplicatedDequeueLinkedNode extends Struct {
   readonly next: Option<GprimitivesMessageId>;
   readonly value: GearCoreMessageStoredStoredDispatch;
 }
-
-/** @name GearCoreMessageUserUserStoredMessage (627) */
 export interface GearCoreMessageUserUserStoredMessage extends Struct {
   readonly id: GprimitivesMessageId;
   readonly source: GprimitivesActorId;
@@ -756,20 +649,14 @@ export interface GearCoreMessageUserUserStoredMessage extends Struct {
   readonly payload: Bytes;
   readonly value: Compact<u128>;
 }
-
-/** @name GearCommonStoragePrimitivesInterval (628) */
 export interface GearCommonStoragePrimitivesInterval extends Struct {
   readonly start: u32;
   readonly finish: u32;
 }
-
-/** @name GearCoreMessageStoredStoredDelayedDispatch (632) */
 export interface GearCoreMessageStoredStoredDelayedDispatch extends Struct {
   readonly kind: GearCoreMessageDispatchKind;
   readonly message: GearCoreMessageStoredStoredMessage;
 }
-
-/** @name PalletGearMessengerError (633) */
 export interface PalletGearMessengerError extends Enum {
   readonly isQueueDuplicateKey: boolean;
   readonly isQueueElementNotFound: boolean;
@@ -797,8 +684,6 @@ export interface PalletGearMessengerError extends Enum {
     | 'WaitlistDuplicateKey'
     | 'WaitlistElementNotFound';
 }
-
-/** @name GearCoreTasksScheduledTask (635) */
 export interface GearCoreTasksScheduledTask extends Enum {
   readonly isPauseProgram: boolean;
   readonly asPauseProgram: GprimitivesActorId;
@@ -835,15 +720,11 @@ export interface GearCoreTasksScheduledTask extends Enum {
     | 'RemoveGasReservation'
     | 'RemoveResumeSession';
 }
-
-/** @name PalletGearSchedulerError (636) */
 export interface PalletGearSchedulerError extends Enum {
   readonly isDuplicateTask: boolean;
   readonly isTaskNotFound: boolean;
   readonly type: 'DuplicateTask' | 'TaskNotFound';
 }
-
-/** @name GearCommonGasProviderNodeGasNode (637) */
 export interface GearCommonGasProviderNodeGasNode extends Enum {
   readonly isExternal: boolean;
   readonly asExternal: {
@@ -891,8 +772,6 @@ export interface GearCommonGasProviderNodeGasNode extends Enum {
   } & Struct;
   readonly type: 'External' | 'Cut' | 'Reserved' | 'SpecifiedLocal' | 'UnspecifiedLocal';
 }
-
-/** @name GearCommonGasMultiplier (638) */
 export interface GearCommonGasMultiplier extends Enum {
   readonly isValuePerGas: boolean;
   readonly asValuePerGas: u128;
@@ -900,17 +779,12 @@ export interface GearCommonGasMultiplier extends Enum {
   readonly asGasPerValue: u64;
   readonly type: 'ValuePerGas' | 'GasPerValue';
 }
-
-/** @name GearCommonGasProviderNodeNodeLock (639) */
 export interface GearCommonGasProviderNodeNodeLock extends Vec<u64> {}
 
-/** @name GearCommonGasProviderNodeChildrenRefs (640) */
 export interface GearCommonGasProviderNodeChildrenRefs extends Struct {
   readonly specRefs: u32;
   readonly unspecRefs: u32;
 }
-
-/** @name PalletGearGasError (641) */
 export interface PalletGearGasError extends Enum {
   readonly isForbidden: boolean;
   readonly isNodeAlreadyExists: boolean;
@@ -946,8 +820,6 @@ export interface PalletGearGasError extends Enum {
     | 'TotalValueIsOverflowed'
     | 'TotalValueIsUnderflowed';
 }
-
-/** @name PalletGearSchedule (642) */
 export interface PalletGearSchedule extends Struct {
   readonly limits: PalletGearScheduleLimits;
   readonly instructionWeights: PalletGearScheduleInstructionWeights;
@@ -961,8 +833,6 @@ export interface PalletGearSchedule extends Struct {
   readonly codeInstrumentationByteCost: SpWeightsWeightV2Weight;
   readonly loadAllocationsWeight: SpWeightsWeightV2Weight;
 }
-
-/** @name PalletGearScheduleLimits (643) */
 export interface PalletGearScheduleLimits extends Struct {
   readonly stackHeight: Option<u32>;
   readonly globals: u32;
@@ -977,8 +847,6 @@ export interface PalletGearScheduleLimits extends Struct {
   readonly codeLen: u32;
   readonly dataSegmentsAmount: u32;
 }
-
-/** @name PalletGearScheduleInstructionWeights (644) */
 export interface PalletGearScheduleInstructionWeights extends Struct {
   readonly version: u32;
   readonly i64const: u32;
@@ -1069,8 +937,6 @@ export interface PalletGearScheduleInstructionWeights extends Struct {
   readonly i64rotr: u32;
   readonly i32rotr: u32;
 }
-
-/** @name PalletGearScheduleSyscallWeights (645) */
 export interface PalletGearScheduleSyscallWeights extends Struct {
   readonly alloc: SpWeightsWeightV2Weight;
   readonly free: SpWeightsWeightV2Weight;
@@ -1143,8 +1009,6 @@ export interface PalletGearScheduleSyscallWeights extends Struct {
   readonly grCreateProgramWgasPayloadPerByte: SpWeightsWeightV2Weight;
   readonly grCreateProgramWgasSaltPerByte: SpWeightsWeightV2Weight;
 }
-
-/** @name PalletGearScheduleMemoryWeights (646) */
 export interface PalletGearScheduleMemoryWeights extends Struct {
   readonly lazyPagesSignalRead: SpWeightsWeightV2Weight;
   readonly lazyPagesSignalWrite: SpWeightsWeightV2Weight;
@@ -1158,8 +1022,6 @@ export interface PalletGearScheduleMemoryWeights extends Struct {
   readonly memGrowPerPage: SpWeightsWeightV2Weight;
   readonly parachainReadHeuristic: SpWeightsWeightV2Weight;
 }
-
-/** @name PalletGearScheduleRentWeights (647) */
 export interface PalletGearScheduleRentWeights extends Struct {
   readonly waitlist: SpWeightsWeightV2Weight;
   readonly dispatchStash: SpWeightsWeightV2Weight;
@@ -1167,16 +1029,12 @@ export interface PalletGearScheduleRentWeights extends Struct {
   readonly mailbox: SpWeightsWeightV2Weight;
   readonly mailboxThreshold: SpWeightsWeightV2Weight;
 }
-
-/** @name PalletGearScheduleDbWeights (648) */
 export interface PalletGearScheduleDbWeights extends Struct {
   readonly read: SpWeightsWeightV2Weight;
   readonly readPerByte: SpWeightsWeightV2Weight;
   readonly write: SpWeightsWeightV2Weight;
   readonly writePerByte: SpWeightsWeightV2Weight;
 }
-
-/** @name PalletGearScheduleTaskWeights (649) */
 export interface PalletGearScheduleTaskWeights extends Struct {
   readonly removeGasReservation: SpWeightsWeightV2Weight;
   readonly sendUserMessageToMailbox: SpWeightsWeightV2Weight;
@@ -1187,8 +1045,6 @@ export interface PalletGearScheduleTaskWeights extends Struct {
   readonly removeFromWaitlist: SpWeightsWeightV2Weight;
   readonly removeFromMailbox: SpWeightsWeightV2Weight;
 }
-
-/** @name PalletGearScheduleInstantiationWeights (650) */
 export interface PalletGearScheduleInstantiationWeights extends Struct {
   readonly codeSectionPerByte: SpWeightsWeightV2Weight;
   readonly dataSectionPerByte: SpWeightsWeightV2Weight;
@@ -1197,8 +1053,6 @@ export interface PalletGearScheduleInstantiationWeights extends Struct {
   readonly elementSectionPerByte: SpWeightsWeightV2Weight;
   readonly typeSectionPerByte: SpWeightsWeightV2Weight;
 }
-
-/** @name PalletGearError (652) */
 export interface PalletGearError extends Enum {
   readonly isMessageNotFound: boolean;
   readonly isInsufficientBalance: boolean;
@@ -1234,23 +1088,17 @@ export interface PalletGearError extends Enum {
     | 'ProgramRentDisabled'
     | 'ActiveProgram';
 }
-
-/** @name PalletGearStakingRewardsError (655) */
 export interface PalletGearStakingRewardsError extends Enum {
   readonly isFailureToRefillPool: boolean;
   readonly isFailureToWithdrawFromPool: boolean;
   readonly type: 'FailureToRefillPool' | 'FailureToWithdrawFromPool';
 }
-
-/** @name PalletGearVoucherInternalVoucherInfo (657) */
 export interface PalletGearVoucherInternalVoucherInfo extends Struct {
   readonly owner: AccountId32;
   readonly programs: Option<BTreeSet<GprimitivesActorId>>;
   readonly codeUploading: bool;
   readonly expiry: u32;
 }
-
-/** @name PalletGearVoucherError (658) */
 export interface PalletGearVoucherError extends Enum {
   readonly isBadOrigin: boolean;
   readonly isBalanceTransfer: boolean;
@@ -1276,14 +1124,10 @@ export interface PalletGearVoucherError extends Enum {
     | 'CodeUploadingEnabled'
     | 'CodeUploadingDisabled';
 }
-
-/** @name PalletGearBankBankAccount (659) */
 export interface PalletGearBankBankAccount extends Struct {
   readonly gas: u128;
   readonly value: u128;
 }
-
-/** @name PalletGearBankError (660) */
 export interface PalletGearBankError extends Enum {
   readonly isInsufficientBalance: boolean;
   readonly isInsufficientGasBalance: boolean;
@@ -1299,8 +1143,6 @@ export interface PalletGearBankError extends Enum {
     | 'InsufficientDeposit'
     | 'Overflow';
 }
-
-/** @name PalletGearEthBridgeError (662) */
 export interface PalletGearEthBridgeError extends Enum {
   readonly isBridgeIsNotYetInitialized: boolean;
   readonly isBridgeIsPaused: boolean;

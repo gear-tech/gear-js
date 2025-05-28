@@ -93,4 +93,24 @@ describe('GearProgram', () => {
 
     expect(result.success).toBeTruthy();
   });
+
+  test('send messages in batch', async () => {
+    const payload1 = createPayload('Action', { Input: 'Handle' }).toHex();
+    const payload2 = createPayload('Action', { Input: 'Handle' }).toHex();
+
+    const result = await program.sendBatchMessages([{ payload: payload1 }, { payload: payload2 }]);
+
+    expect(result.success).toBeTruthy();
+    if (result.success == true) {
+      expect(result.sentMessages).toHaveLength(2);
+      expect(result.sentMessages[0].success).toBeTruthy();
+      if (result.sentMessages[0].success == true) {
+        expect(result.sentMessages[0].id).toMatch(/^0x[0-9a-fA-F]{64}$/);
+      }
+      expect(result.sentMessages[1].success).toBeTruthy();
+      if (result.sentMessages[1].success == true) {
+        expect(result.sentMessages![1].id).toMatch(/^0x[0-9a-fA-F]{64}$/);
+      }
+    }
+  });
 });

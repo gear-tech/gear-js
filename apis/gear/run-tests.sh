@@ -58,11 +58,13 @@ if [ -z "$GEAR_NODE_BIN" ]; then
 fi
 
 # Step 3: Run Gear node
-echo "Running Gear node..."
-nohup "$node_bin" --dev --execution=wasm --tmp --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all > "$TMP_DIR"/gear.log 2>&1 &
-GEAR_PID=$!
-# Wait for Gear node to start
-sleep 30
+if [ -z "$SKIP_RUN_NODE" ]; then
+    echo "Running Gear node..."
+    nohup "$node_bin" --dev --execution=wasm --tmp --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all > "$TMP_DIR"/gear.log 2>&1 &
+    GEAR_PID=$!
+    # Wait for Gear node to start
+    sleep 30
+fi
 
 # Step 4: Run tests
 if [ -z "$test_case" ]; then

@@ -8,4 +8,4 @@ export * from './utils';
 export * from './events';
 export * from './types';
 export * from './metadata';
-export { Program } from './GearProgram';
+export { BaseGearProgram, Program } from './GearProgram';
