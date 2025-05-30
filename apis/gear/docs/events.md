@@ -83,5 +83,3 @@ Available Gear Events:
 - `ProgramChanged`: Triggered when a program state is modified
 - `CodeChanged`: Triggered when program code state is modified
 - `UserMessageRead`: Triggered when a user sends reply or claims value sent from a program
-
----

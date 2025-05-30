@@ -112,5 +112,3 @@ const account = createType.create('AccountInfo', {
   balance: '1000000000000'
 });
 ```
-
----

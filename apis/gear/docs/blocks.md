@@ -105,5 +105,3 @@ extrinsics.forEach((extrinsic, index) => {
   console.log(`Extrinsic ${index + 1}:`, extrinsic.toHuman());
 });
 ```
-
----

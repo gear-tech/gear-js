@@ -47,5 +47,3 @@ const varaApi = await VaraApiV1010.create({
   providerAddress: 'wss://testnet.vara.network'
 });
 ```
-
----

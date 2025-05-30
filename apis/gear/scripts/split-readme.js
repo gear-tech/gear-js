@@ -17,24 +17,24 @@ if (!fs.existsSync(DOCS_DIR)) {
 
 function splitReadme() {
   console.log('Splitting README.md into sections...');
-  
+
   const content = fs.readFileSync(README_PATH, 'utf8');
   const lines = content.split('\n');
-  
+
   let currentSection = '';
   let currentContent = '';
   let inHeader = true;
-  
+
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    
+
     // Detect main sections (# followed by space)
     if (line.match(/^# [A-Z]/)) {
       // Save previous section if exists
       if (currentSection && currentContent.trim()) {
         saveSection(currentSection, currentContent.trim());
       }
-      
+
       // Start new section
       inHeader = false;
       currentSection = getSectionFileName(line);
@@ -65,39 +65,45 @@ function splitReadme() {
       }
     }
   }
-  
+
   // Save last section
   if (currentSection && currentContent.trim()) {
     saveSection(currentSection, currentContent.trim());
   }
-  
+
   console.log('✓ README.md split successfully!');
 }
 
 function getSectionFileName(headerLine) {
   const title = headerLine.replace(/^# /, '').trim();
-  
+
   const mapping = {
-    'Description': 'description',
-    'Installation': 'installation', 
+    Description: 'description',
+    Installation: 'installation',
     'Getting started': 'getting-started',
-    'Payloads and metadata': 'payloads-and-metadata',
+    'Payload encoding': 'payload-encoding',
     'Getting metadata': 'getting-metadata',
     'Gear extrinsics': 'extrinsics',
-    'Work with programs and blockchain state': 'programs-and-state',
-    'Events': 'events',
-    'Blocks': 'blocks',
-    'Keyring': 'keyring',
-    'Working with BaseGearProgram': 'base-gear-program'
+    'Program state': 'program-state',
+    Events: 'events',
+    Blocks: 'blocks',
+    Keyring: 'keyring',
+    'Working with BaseGearProgram': 'base-gear-program',
   };
-  
-  return mapping[title] || title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+
+  return (
+    mapping[title] ||
+    title
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w-]/g, '')
+  );
 }
 
 function saveSection(sectionName, content) {
   const fileName = sectionName.endsWith('.md') ? sectionName : `${sectionName}.md`;
   const filePath = path.join(DOCS_DIR, fileName);
-  
+
   fs.writeFileSync(filePath, content);
   console.log(`✓ Created ${fileName}`);
 }

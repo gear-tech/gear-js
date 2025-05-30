@@ -102,13 +102,13 @@ import { GearKeyring } from '@gear-js/api';
 
 try {
   const { keyring, json } = await GearKeyring.create('myKeyring', 'passphrase');
-  
+
   // Backup keyring
   await writeFile('keyring-backup.json', JSON.stringify(json, null, 2));
-  
+
   // Sign data
   const signature = GearKeyring.sign(keyring, 'message');
-  
+
   // Verify signature
   const isValid = signatureIsValid(keyring.address, signature, 'message');
   if (!isValid) {
@@ -119,5 +119,3 @@ try {
   // Handle error appropriately
 }
 ```
-
----
