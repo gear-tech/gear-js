@@ -1,0 +1,11 @@
+# Table of Contents
+- [Description](#description)
+- [Installation](#installation)
+- [Getting Started](#getting-started)
+- [Payload Encoding](#payload-encoding)
+- [Gear Extrinsics](#gear-extrinsics)
+- [Program State](#program-state)
+- [Events](#events)
+- [Block Operations](#block-operations)
+- [Keyring Management](#keyring-management)
+- [Base Gear Program](#base-gear-program)

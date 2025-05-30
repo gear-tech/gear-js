@@ -70,6 +70,10 @@ export class ReplyCode {
   get errorReason(): ErrorReplyReason {
     return new ErrorReplyReason(this._bytes, this._specVersion);
   }
+
+  get asString(): string {
+    return this.isSuccess ? this.successReason.explanation : this.errorReason.explanation;
+  }
 }
 
 export const enum ESuccessReply {
@@ -138,7 +142,7 @@ export class ErrorReplyReason implements IReplyCodeReason {
   get explanation(): string {
     switch (this._bytes[1]) {
       case EErrorReplyReason.Execution: {
-        return 'Error reply was created due to underlying execution error.';
+        return `Error reply was created due to underlying execution error. Reason: ${this.executionReason.explanation}`;
       }
       case EErrorReplyReason.FailedToCreateProgram: {
         if (this._specVersion && this._specVersion < 1800) {
@@ -148,7 +152,7 @@ export class ErrorReplyReason implements IReplyCodeReason {
         break;
       }
       case EErrorReplyReason.UnavailableActor: {
-        return `Destination actor is unavailable, so it can't process the message.`;
+        return `Destination actor is unavailable, so it can't process the message. Reason: ${this.unavailableActorReason.explanation}`;
       }
       case EErrorReplyReason.RemovedFromWaitlist: {
         return 'Message has died in Waitlist as out of rent one.';

@@ -27,7 +27,10 @@
     "build": "rm -rf lib && npx rollup --config rollup.config.js",
     "generate:defs": "npx ts-node --skip-project ../../node_modules/.bin/polkadot-types-from-defs --package sample-polkadotjs-typegen/interfaces --input ./temp --endpoint ws://127.0.0.1:9944",
     "generate:meta": "npx ts-node --skip-project ../../node_modules/.bin/polkadot-types-from-chain --package sample-polkadotjs-typegen/interfaces --endpoint ws://127.0.0.1:9944 --output ./temp",
-    "clean": "echo \"clean @gear-js/api\" && rm -rf lib"
+    "clean": "echo \"clean @gear-js/api\" && rm -rf lib",
+    "docs:build": "node scripts/build-readme.js",
+    "docs:split": "node scripts/split-readme.js",
+    "pack": "mkdir -p ../../artifacts && yarn pack --out ../../artifacts/gear-js-api.tgz"
   },
   "exports": {
     "./cjs/package.json": "./lib/cjs/package.json",
