@@ -1,3 +1,14 @@
+## 0.42.1 (draft)
+
+- Renamed `Program` class to `BaseGearProgram`
+- Added `sendBatchMessages` method for sending multiple messages in a batch
+- Updated documentation
+- Added `ss58Format` option to `GearKeyring` class methods
+- Added `asString` method to `ReplyCode` class that returns string explanation of the reply code
+- Added ability to register custom types in `CreateType` class
+
+---
+
 ## 0.42.0
 _21/05/2025_
 - Introduce the `Program` class to keep track of program updates and facilitate interaction with programs in https://github.com/gear-tech/gear-js/pull/1932
