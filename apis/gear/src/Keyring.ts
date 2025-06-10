@@ -6,8 +6,7 @@ import { Keyring } from '@polkadot/api';
 import { waitReady } from '@polkadot/wasm-crypto';
 
 import { decodeAddress } from './utils';
-
-const VARA_SS58_FORMAT = 137;
+import { VARA_SS58_FORMAT } from './consts';
 
 export class GearKeyring {
   private static unlock(keyring: KeyringPair, passphrase?: string) {
@@ -29,13 +28,21 @@ export class GearKeyring {
     return GearKeyring.unlock(keyring.addFromPair(pair, { name }));
   }
 
-  static fromJson(keypairJson: KeyringPair$Json | string, passphrase?: string, ss58Format: number = VARA_SS58_FORMAT): KeyringPair {
+  static fromJson(
+    keypairJson: KeyringPair$Json | string,
+    passphrase?: string,
+    ss58Format: number = VARA_SS58_FORMAT,
+  ): KeyringPair {
     const json: KeyringPair$Json = isString(keypairJson) ? JSON.parse(keypairJson) : keypairJson;
     const keyring = new Keyring({ type: 'sr25519', ss58Format }).addFromJson(json);
     return GearKeyring.unlock(keyring, passphrase);
   }
 
-  static async fromSeed(seed: Uint8Array | string, name?: string, ss58Format: number = VARA_SS58_FORMAT): Promise<KeyringPair> {
+  static async fromSeed(
+    seed: Uint8Array | string,
+    name?: string,
+    ss58Format: number = VARA_SS58_FORMAT,
+  ): Promise<KeyringPair> {
     const keyring = new Keyring({ type: 'sr25519', ss58Format });
     await waitReady();
 
@@ -43,7 +50,11 @@ export class GearKeyring {
     return keypair;
   }
 
-  static async fromMnemonic(mnemonic: string, name?: string, ss58Format: number = VARA_SS58_FORMAT): Promise<KeyringPair> {
+  static async fromMnemonic(
+    mnemonic: string,
+    name?: string,
+    ss58Format: number = VARA_SS58_FORMAT,
+  ): Promise<KeyringPair> {
     return await GearKeyring.fromSuri(mnemonic, name, ss58Format);
   }
 
@@ -54,7 +65,7 @@ export class GearKeyring {
   static async create(
     name: string,
     passphrase?: string,
-    ss58Format: number = VARA_SS58_FORMAT
+    ss58Format: number = VARA_SS58_FORMAT,
   ): Promise<{
     keyring: KeyringPair;
     mnemonic: string;
