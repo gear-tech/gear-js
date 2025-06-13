@@ -29,7 +29,7 @@
     "sass": "^1.69"
   },
   "dependencies": {
-    "clsx": "1.2.1"
+    "clsx": "2.1.1"
   },
   "devDependencies": {
     "@gear-js/frontend-configs": "*",
