@@ -16208,7 +16208,7 @@ __metadata:
     react-dom: "npm:19.0.0"
     react-router-dom: "npm:6.28.2"
     react-syntax-highlighter: "npm:15.6.1"
-    sails-js: "npm:0.4.1"
+    sails-js: "npm:0.4.2"
     wagmi: "npm:2.12.29"
   languageName: unknown
   linkType: soft
@@ -16222,8 +16222,8 @@ __metadata:
     ethers: "npm:6.14.3"
     gear-js-util: "workspace:^"
     kzg-wasm: "npm:0.5.0"
-    sails-js: "npm:0.4.1"
-    sails-js-parser: "npm:0.4.1"
+    sails-js: "npm:0.4.2"
+    sails-js-parser: "npm:0.4.2"
   peerDependencies:
     ethers: ^6.14
   languageName: unknown
@@ -23687,20 +23687,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sails-js-parser@npm:0.4.1":
-  version: 0.4.1
-  resolution: "sails-js-parser@npm:0.4.1"
-  dependencies:
-    sails-js-types: "npm:0.4.1"
-  peerDependencies:
-    sails-js-types: 0.4.1
-  dependenciesMeta:
-    sails-js-types:
-      optional: true
-  checksum: 10c0/2a69f82659aec1e51e06ce5855c0351ad7aedf7567224591eb760c28e87db07ea2c8ad3010052f5cf6b218875671ec0d6c34552c0f2b13e90ef42ffbf679fa10
-  languageName: node
-  linkType: hard
-
 "sails-js-parser@npm:0.4.2":
   version: 0.4.2
   resolution: "sails-js-parser@npm:0.4.2"
@@ -23743,22 +23729,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sails-js@npm:0.4.1, sails-js@npm:^0.4.1":
-  version: 0.4.1
-  resolution: "sails-js@npm:0.4.1"
-  dependencies:
-    sails-js-types: "npm:0.4.1"
-    sails-js-util: "npm:0.4.1"
-  peerDependencies:
-    "@gear-js/api": ^0.41.1
-    "@polkadot/api": ^15.9.1
-  dependenciesMeta:
-    sails-js-types:
-      optional: true
-  checksum: 10c0/830bed074d430748197ea8b6f8b9aba5be9f6344873c5d6099d8dca60d1da592d092c23442179e37d86f9fe17e5af176e033028953e3b9e733b3e6defa85389f
-  languageName: node
-  linkType: hard
-
 "sails-js@npm:0.4.2":
   version: 0.4.2
   resolution: "sails-js@npm:0.4.2"
@@ -23772,6 +23742,22 @@ __metadata:
     sails-js-types:
       optional: true
   checksum: 10c0/8ef03d6ddac68aa61db06a1c5065b9d7ff4576647828d45d20beeff64085dad2f78a0601646fe708546b3ce992a4c06555a8bfff1e28b1e699389dfe0fd1b473
+  languageName: node
+  linkType: hard
+
+"sails-js@npm:^0.4.1":
+  version: 0.4.1
+  resolution: "sails-js@npm:0.4.1"
+  dependencies:
+    sails-js-types: "npm:0.4.1"
+    sails-js-util: "npm:0.4.1"
+  peerDependencies:
+    "@gear-js/api": ^0.41.1
+    "@polkadot/api": ^15.9.1
+  dependenciesMeta:
+    sails-js-types:
+      optional: true
+  checksum: 10c0/830bed074d430748197ea8b6f8b9aba5be9f6344873c5d6099d8dca60d1da592d092c23442179e37d86f9fe17e5af176e033028953e3b9e733b3e6defa85389f
   languageName: node
   linkType: hard
 
