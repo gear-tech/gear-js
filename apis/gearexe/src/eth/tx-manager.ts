@@ -17,9 +17,6 @@ export class TxManager<T extends Record<string, any> = object, U extends Record<
   private _receipt: TransactionReceipt;
   private _response: Promise<TransactionResponse>;
 
-  // Dynamically added properties from T and U will be available at runtime
-  [key: string]: any;
-
   /**
    * Creates a new transaction manager.
    *

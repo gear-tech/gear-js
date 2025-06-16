@@ -1,4 +1,4 @@
-import { BaseContract, Signer, ContractEventPayload, Wallet } from 'ethers';
+import { BaseContract, ContractEventPayload, Wallet } from 'ethers';
 import { HexString } from 'gear-js-util';
 import { convertEventParams as convertEventParameters } from '../util/index.js';
 import { TxManager, TxManagerWithHelpers } from './tx-manager.js';
@@ -43,7 +43,7 @@ function getReplyListener(messageId: string) {
  * Provides methods for sending messages, replies, claiming values, and managing balance.
  */
 export class MirrorContract extends BaseContract implements IMirrorContract {
-  private _wallet: Wallet | Signer;
+  private _wallet: Wallet;
 
   declare decoder: () => Promise<HexString>;
   declare router: () => Promise<HexString>;
@@ -58,7 +58,7 @@ export class MirrorContract extends BaseContract implements IMirrorContract {
    * @param address - The address of the Mirror contract
    * @param wallet - The wallet or signer to use for transactions
    */
-  constructor(address: string, wallet: Wallet | Signer) {
+  constructor(address: string, wallet: Wallet) {
     super(address, IMIRROR_INTERFACE, wallet);
     this._wallet = wallet;
   }
@@ -75,7 +75,7 @@ export class MirrorContract extends BaseContract implements IMirrorContract {
     // Set `callReply` to false since it's only used for calling sendMessage from contracts
     const tx = await fn.populateTransaction(payload, value, false);
 
-    const txManager: ITxManager = new TxManager(this._wallet as Wallet, tx, IMIRROR_INTERFACE, {
+    const txManager: ITxManager = new TxManager(this._wallet, tx, IMIRROR_INTERFACE, {
       getMessage: (manager) => async () => {
         const event = await manager.findEvent('MessageQueueingRequested');
 
@@ -169,6 +169,6 @@ export class MirrorContract extends BaseContract implements IMirrorContract {
  * @param provider - Optional wallet or signer to use for transactions
  * @returns A new MirrorContract instance that implements the IMirrorContract interface
  */
-export function getMirrorContract(id: string, provider?: Wallet | Signer): MirrorContract {
+export function getMirrorContract(id: string, provider?: Wallet): MirrorContract {
   return new MirrorContract(id, provider);
 }
