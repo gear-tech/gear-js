@@ -31,5 +31,8 @@
     "kzg-wasm": "0.5.0",
     "sails-js": "0.4.1",
     "sails-js-parser": "0.4.1"
-  }
+  },
+  "files": [
+    "README.md"
+  ]
 }

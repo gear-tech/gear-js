@@ -146,9 +146,11 @@ jobs:
         if: steps.changed-gearexe.outputs.any_changed == 'true'
         run: yarn workspaces focus gear-js @gear-js/api gearexe gear-js-util
 
-      - name: 'Build @gear-js/api'
+      - name: 'Build prerequirements'
         if: steps.changed-gearexe.outputs.any_changed == 'true'
-        run: yarn build:gear-api
+        run: |
+          yarn build:gear-api
+          yarn build:gear-js-util
 
       - name: 'Test: run'
         if: steps.changed-gearexe.outputs.any_changed == 'true'
