@@ -15026,9 +15026,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethers@npm:6.14.0":
-  version: 6.14.0
-  resolution: "ethers@npm:6.14.0"
+"ethers@npm:6.14.3":
+  version: 6.14.3
+  resolution: "ethers@npm:6.14.3"
   dependencies:
     "@adraffy/ens-normalize": "npm:1.10.1"
     "@noble/curves": "npm:1.2.0"
@@ -15037,7 +15037,7 @@ __metadata:
     aes-js: "npm:4.0.0-beta.5"
     tslib: "npm:2.7.0"
     ws: "npm:8.17.1"
-  checksum: 10c0/7da443719a21c0b071dbd7d47e50faa8fcacc746e2b5487a394992215457903b1d187279e7134b48414d2626d0dbbf58b20c3bb8d246c359aa0a7453b608d582
+  checksum: 10c0/8e28174e9293d53c8e3597f5cdb77ace1da696a9d4a4694260fc3f0c8193c80f61fb36762b449003d73e7708f1e2aeaecf6a5e00afdc27e5d5cc4bdd95d16bcd
   languageName: node
   linkType: hard
 
@@ -16219,7 +16219,7 @@ __metadata:
   dependencies:
     "@gear-js/api": "npm:0.42.0"
     "@polkadot/api": "npm:16.0.1"
-    ethers: "npm:6.14.0"
+    ethers: "npm:6.14.3"
     gear-js-util: "workspace:^"
     kzg-wasm: "npm:0.5.0"
     sails-js: "npm:0.4.1"

@@ -1,66 +1,59 @@
-import { HexString, generateCodeHash } from 'gear-js-util';
-import { Provider, BaseContract, Signer, Wallet, ethers, EventLog } from 'ethers';
+import { generateCodeHash } from 'gear-js-util';
+import { BaseContract, Signer, Wallet, ethers } from 'ethers';
 import { loadKZG } from 'kzg-wasm';
 import { GearExeApi } from '../api/api.js';
+import { IROUTER_INTERFACE, IRouterContract } from './abi/index.js';
+import { TxManager, TxManagerWithHelpers } from './tx-manager.js';
+import { DevBlobHelpers, CodeValidationHelpers, CreateProgramHelpers, CodeState } from './interfaces/router.js';
+import { ITxManager } from './interfaces/tx-manager.js';
 
-export enum CodeState {
-  Unknown,
-  ValidationRequested,
-  Validated,
-}
+// Interfaces moved to ./interfaces/router.js
 
-const abi = [
-  'event BlockCommitted(bytes32 hash)',
-  'event CodeGotValidated(bytes32 codeId, bool indexed valid)',
-  'event CodeValidationRequested(bytes32 codeId)',
-  'event NextEraValidatorsCommitted(uint256 startTimestamp)',
-  'event ComputationSettingsChanged(uint64 threshold, uint128 wvaraPerSecond)',
-  'event ProgramCreated(address actorId, bytes32 indexed codeId)',
-  'event StorageSlotChanged()',
+/**
+ * A contract wrapper for interacting with a Router contract on the Gear.Exe network.
+ * Provides methods for code validation, program creation, and other router-related operations.
+ */
+export class RouterContract extends BaseContract implements IRouterContract {
+  private _wallet: Wallet | Signer;
 
-  'function genesisBlockHash() external view returns (bytes32)',
-  'function genesisTimestamp() external view returns (uint48)',
-  'function latestCommittedBlockHash() external view returns (bytes32)',
-
-  'function mirrorImpl() external view returns (address)',
-  'function wrappedVara() external view returns (address)',
-
-  'function codeState(bytes32 codeId) external view returns (uint8)',
-  'function codesStates(bytes32[] calldata codesIds) external view returns (uint8[] memory)',
-  'function programCodeId(address program) external view returns (bytes32)',
-  'function programsCodeIds(address[] calldata programsIds) external view returns (bytes32[] memory)',
-  'function programsCount() external view returns (uint256)',
-
-  'function requestCodeValidation(bytes32 codeId)',
-  'function createProgram(bytes32 codeId, bytes32 salt, address overrideInitializer) external returns (address)',
-  'function createProgramWithAbiInterface(bytes32 codeId, bytes32 salt, address overrideInitializer, address abiInterface) external returns (address)',
-
-  'event ProgramCreated(address actorId, bytes32 indexed codeId)',
-  'event CodeGotValidated(bytes32 codeId, bool indexed valid)',
-  'event CodeValidationRequested(bytes32 codeId)',
-  'event BlockCommitted(bytes32 hash)',
-];
-
-export interface IRouterContract {
-  genesisBlockHash(): Promise<HexString>;
-  genesisTimestamp(): Promise<bigint>;
-  latestCommittedBlockHash(): Promise<HexString>;
-  mirrorImpl(): Promise<HexString>;
-  mirrorProxyImpl(): Promise<HexString>;
-  wrappedVara(): Promise<HexString>;
-  programCodeId(programId: string): Promise<HexString>;
-  programCodeIds(programIds: string[]): Promise<HexString[]>;
-  programsCount(): Promise<number>;
-}
-
-export class RouterContract extends BaseContract {
-  private _wallet: Wallet;
-
-  constructor(address: string, abi: string[], wallet: Wallet) {
-    super(address, abi, wallet);
+  /**
+   * Creates a new RouterContract instance.
+   *
+   * @param address - The address of the Router contract
+   * @param wallet - The wallet or signer to use for transactions
+   */
+  constructor(address: string, wallet: Wallet | Signer) {
+    super(address, IROUTER_INTERFACE, wallet);
     this._wallet = wallet;
   }
 
+  declare areValidators: (validators: string[]) => Promise<boolean>;
+  declare codesStates: (codesIds: string[]) => Promise<bigint[]>;
+  declare computeSettings: () => Promise<any>;
+  declare genesisBlockHash: () => Promise<string>;
+  declare genesisTimestamp: () => Promise<bigint>;
+  declare isValidator: (validator: string) => Promise<boolean>;
+  declare latestCommittedBlockHash: () => Promise<string>;
+  declare mirrorImpl: () => Promise<string>;
+  declare programCodeId: (programId: string) => Promise<string>;
+  declare programsCodeIds: (programsIds: string[]) => Promise<string[]>;
+  declare programsCount: () => Promise<bigint>;
+  declare signingThresholdPercentage: () => Promise<bigint>;
+  declare validatedCodesCount: () => Promise<bigint>;
+  declare validators: () => Promise<string[]>;
+  declare validatorsAggregatedPublicKey: () => Promise<any>;
+  declare validatorsCount: () => Promise<bigint>;
+  declare validatorsThreshold: () => Promise<bigint>;
+  declare validatorsVerifiableSecretSharingCommitment: () => Promise<string>;
+  declare wrappedVara: () => Promise<string>;
+
+  /**
+   * Gets the validation state of a code.
+   *
+   * @param codeId - The ID of the code to check
+   * @returns Promise resolving to the code state
+   * @throws Error if the code state is invalid
+   */
   async codeState(codeId: string): Promise<CodeState> {
     const fn = this.getFunction('codeState');
     const _state = await fn.staticCall(codeId);
@@ -80,71 +73,27 @@ export class RouterContract extends BaseContract {
     }
   }
 
+  /**
+   * Creates a blob from the provided code for on-chain submission.
+   *
+   * @param code - The code to convert to a blob
+   * @returns The hexadecimal representation of the blob
+   */
   createBlob(code: Uint8Array): string {
     const blob = prepareBlob(code);
     return ethers.hexlify(blob);
   }
 
-  async requestCodeValidationNoBlob(code: Uint8Array, api: GearExeApi) {
-    const codeId = generateCodeHash(code);
-
-    const transaction = await this.getFunction('requestCodeValidation').populateTransaction(codeId);
-
-    const blob = prepareBlob(code);
-
-    if (blob.length != 4096 * 32) {
-      throw new Error('Invalid blob size');
-    }
-
-    const blobData = ethers.hexlify(blob);
-
-    const kzg = await loadKZG();
-    const commitment = kzg.blobToKZGCommitment(blobData);
-    const proof = kzg.computeBlobKZGProof(blobData, commitment);
-
-    const tx: ethers.TransactionRequest = {
-      type: 3,
-      data: transaction.data,
-      to: transaction.to,
-      gasLimit: 5_000_000n,
-      maxFeePerBlobGas: 400_000_000_000,
-      blobs: [
-        {
-          data: blobData,
-          commitment: commitment,
-          proof: proof,
-        },
-      ],
-    };
-
-    const txResponse = await this._wallet.sendTransaction(tx);
-
-    (await api.provider.send('dev_setBlob', [txResponse.hash, ethers.hexlify(new Uint8Array(code))])) as [
-      string,
-      string,
-    ];
-
-    const receipt = (await txResponse.wait())!;
-
-    return {
-      codeId,
-      receipt,
-      waitForCodeGotValidated: () =>
-        new Promise<boolean>((resolve, reject) =>
-          this.on('CodeGotValidated', (_codeId, valid) => {
-            if (_codeId == codeId) {
-              if (valid) {
-                resolve(true);
-              } else {
-                reject(new Error('Code validation failed'));
-              }
-            }
-          }),
-        ),
-    };
-  }
-
-  async requestCodeValidation(code: Uint8Array) {
+  /**
+   * Requests code validation in development mode without including the blob in the transaction.
+   * This method can be used when Gear.Exe node is running in "dev" mode.
+   *
+   * @param code - The code to be validated
+   * @param api - The Gear.Exe API instance
+   * @returns A transaction manager with blob-specific helper functions, including the code ID and
+   *          a function to wait for the code to be validated
+   */
+  async requestCodeValidationNoBlob(code: Uint8Array, api: GearExeApi): Promise<TxManagerWithHelpers<DevBlobHelpers>> {
     const codeId = generateCodeHash(code);
 
     const transaction = await this.getFunction('requestCodeValidation').populateTransaction(codeId);
@@ -167,13 +116,71 @@ export class RouterContract extends BaseContract {
       kzg,
     };
 
-    const txResponse = await this._wallet.sendTransaction(tx);
+    const txManager: ITxManager = new TxManager(
+      this._wallet,
+      tx,
+      IROUTER_INTERFACE,
+      {
+        processDevBlob: (manager) => async () => {
+          const txResponse = await manager.send();
+          return (await api.provider.send('dev_setBlob', [txResponse.hash, ethers.hexlify(new Uint8Array(code))])) as [
+            string,
+            string,
+          ];
+        },
+      },
+      {
+        codeId,
+        waitForCodeGotValidated: () =>
+          new Promise<boolean>((resolve, reject) =>
+            this.on('CodeGotValidated', (_codeId, valid) => {
+              if (_codeId == codeId) {
+                if (valid) {
+                  resolve(true);
+                } else {
+                  reject(new Error('Code validation failed'));
+                }
+              }
+            }),
+          ),
+      },
+    );
 
-    const receipt = await txResponse.wait();
+    return txManager as TxManagerWithHelpers<DevBlobHelpers>;
+  }
 
-    return {
-      codeId,
-      receipt,
+  /**
+   * Requests code validation by submitting the code as a blob in the transaction.
+   *
+   * @param code - The code to be validated
+   * @returns A transaction manager with validation-specific helper functions, including
+   *          the code ID and a function to wait for the code to be validated
+   */
+  async requestCodeValidation(code: Uint8Array): Promise<TxManagerWithHelpers<CodeValidationHelpers>> {
+    const codeId = generateCodeHash(code);
+
+    const transaction = await this.getFunction('requestCodeValidation').populateTransaction(codeId);
+
+    const blob = prepareBlob(code);
+
+    if (blob.length != 4096 * 32) {
+      throw new Error('Invalid blob size');
+    }
+
+    const kzg = await loadKZG();
+
+    const tx: ethers.TransactionRequest = {
+      type: 3,
+      data: transaction.data,
+      to: transaction.to,
+      gasLimit: 5_000_000n,
+      maxFeePerBlobGas: 400_000_000_000,
+      blobs: [blob],
+      kzg,
+    };
+
+    const txManager: ITxManager = new TxManager(this._wallet, tx, undefined, {
+      codeId: () => codeId,
       waitForCodeGotValidated: () =>
         new Promise<boolean>((resolve, reject) =>
           this.on('CodeGotValidated', (_codeId, valid) => {
@@ -186,33 +193,60 @@ export class RouterContract extends BaseContract {
             }
           }),
         ),
-    };
+    });
+
+    return txManager as TxManagerWithHelpers<CodeValidationHelpers>;
   }
 
-  async createProgram(codeId: string, overrideInitializer?: string, salt?: string) {
+  /**
+   * Creates a new program from validated code.
+   *
+   * @param codeId - The ID of the validated code to use
+   * @param overrideInitializer - Optional address to override the initializer
+   * @param salt - Optional salt for deterministic program address generation
+   * @returns A transaction manager with program creation helper functions
+   */
+  async createProgram(
+    codeId: string,
+    overrideInitializer?: string,
+    salt?: string,
+  ): Promise<TxManagerWithHelpers<CreateProgramHelpers>> {
     const _salt = salt || ethers.hexlify(ethers.randomBytes(32));
 
-    const response = await this.getFunction('createProgram').send(
+    const tx = await this.getFunction('createProgram').populateTransaction(
       codeId,
       _salt,
       overrideInitializer || ethers.ZeroAddress,
     );
 
-    const receipt = await response.wait();
+    const txManager: ITxManager = new TxManager(this._wallet, tx, IROUTER_INTERFACE, {
+      getProgramId: (manager) => async () => {
+        const event = await manager.findEvent('ProgramCreated');
+        return event.args[0].toLowerCase();
+      },
+    });
 
-    const event = receipt?.logs.find((log) => 'fragment' in log && log.fragment.name == 'ProgramCreated') as EventLog;
-
-    return {
-      blockNumber: receipt?.blockNumber,
-      id: event?.args[0].toLowerCase(),
-    };
+    return txManager as TxManagerWithHelpers<CreateProgramHelpers>;
   }
 }
 
-export function getRouterContract(id: string, provider?: Provider | Signer): RouterContract & IRouterContract {
-  return RouterContract.from<IRouterContract>(id, abi, provider) as RouterContract & IRouterContract;
+/**
+ * Creates a new RouterContract instance.
+ *
+ * @param id - The address of the Router contract
+ * @param provider - Optional wallet or signer to use for transactions
+ * @returns A new RouterContract instance that implements the IRouterContract interface
+ */
+export function getRouterContract(id: string, provider?: Wallet | Signer): RouterContract {
+  return new RouterContract(id, provider);
 }
 
+/**
+ * Prepares a blob from the provided data according to the Gear.Exe blob format.
+ *
+ * @param data - The data to prepare as a blob
+ * @returns The prepared blob
+ */
 function prepareBlob(data: Uint8Array) {
   // https://docs.rs/alloy/latest/alloy/consensus/struct.SimpleCoder.html#behavior
   const BLOB_SIZE = 131_072;

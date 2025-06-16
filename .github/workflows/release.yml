@@ -95,7 +95,7 @@ jobs:
         run: yarn install
 
       - name: Build
-        run: yarn build
+        run: yarn build:gear-api
 
       - name: Prepare artifact
         working-directory: apis/gear
@@ -127,7 +127,7 @@ jobs:
           name: ${{ needs.check-changes.outputs.version-changed == 'true' && format('@gear-js/api v{0}', steps.get-version.outputs.version) || '@gear-js/api Draft Release' }}
           body: |
             # ${{ needs.check-changes.outputs.version-changed == 'true' && format('@gear-js/api v{0}', steps.get-version.outputs.version) || '@gear-js/api Draft Release' }}
-            
+
             ${{ steps.changelog.outputs.changelog }}
           draft: ${{ needs.check-changes.outputs.version-changed != 'true' }}
           prerelease: ${{ needs.check-changes.outputs.version-changed != 'true' }}
