@@ -26,17 +26,20 @@ afterAll(async () => {
 
 const uploadCodeTest = () => {
   test('upload code', async () => {
-    const { codeId, receipt, waitForCodeGotValidated } = await router.requestCodeValidationNoBlob(code, api);
-    _codeId = codeId;
+    const tx = await router.requestCodeValidationNoBlob(code, api);
+    _codeId = tx.codeId;
 
-    codeValidatedPromise = waitForCodeGotValidated();
+    codeValidatedPromise = tx.waitForCodeGotValidated();
+    await tx.processDevBlob();
+
+    const receipt = await tx.getReceipt();
 
     expect(receipt.blockHash).toBeDefined();
   });
 
   test('wait for code got validated', async () => {
     expect(await codeValidatedPromise).toBeTruthy();
-    await waitNBlocks(3);
+    await waitNBlocks(5);
   });
 };
 
@@ -52,7 +55,11 @@ describe('router', () => {
   });
 
   test('create program', async () => {
-    const { id } = await router.createProgram(_codeId);
+    const tx = await router.createProgram(_codeId);
+
+    await tx.send();
+
+    const id = await tx.getProgramId();
 
     const mirror = getMirrorContract(id, wallet);
 

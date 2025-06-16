@@ -8,8 +8,10 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "./run-tests.sh",
-    "build": "npx rollup -c"
+    "test": "./scripts/run-tests.sh",
+    "build": "npx rollup -c",
+    "clean": "rm -rf lib",
+    "abi": "node scripts/convert-abi.mjs"
   },
   "exports": {
     ".": {
@@ -24,10 +26,13 @@
   "devDependencies": {
     "@gear-js/api": "0.42.0",
     "@polkadot/api": "16.0.1",
-    "ethers": "6.14.0",
+    "ethers": "6.14.3",
     "gear-js-util": "workspace:^",
     "kzg-wasm": "0.5.0",
     "sails-js": "0.4.1",
     "sails-js-parser": "0.4.1"
-  }
+  },
+  "files": [
+    "README.md"
+  ]
 }
