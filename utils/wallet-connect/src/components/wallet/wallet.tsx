@@ -2,7 +2,7 @@ import { useAccount } from '@gear-js/react-hooks';
 import { useState } from 'react';
 
 import { Balance } from '../balance';
-import { UI_CONFIG } from '../ui-config';
+import { useUiKit } from '../use-ui-kit';
 import { WalletModal } from '../wallet-modal';
 
 import styles from './wallet.module.scss';
@@ -17,13 +17,15 @@ type Props = {
 
 function Wallet({ theme = 'vara', displayBalance = true, accountButtonClassName }: Props) {
   const { account, isAccountReady } = useAccount();
+  const { components, isLoading } = useUiKit(theme);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  if (!isAccountReady) return null;
-  const { Button, AccountButton } = UI_CONFIG[theme];
+  if (!isAccountReady || isLoading || !components) return null;
+
+  const { Button, AccountButton } = components;
 
   return (
     <>
