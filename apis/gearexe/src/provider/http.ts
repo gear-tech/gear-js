@@ -1,6 +1,6 @@
 import { IGearExeProvider, IJsonRpcResponse } from '../types/index.js';
 import { snakeToCamel } from '../util/index.js';
-import { encodeJsonRpc, getErrorMessage, isErrorResponse } from './jsonrpc';
+import { encodeJsonRpc, getErrorMessage, isErrorResponse } from './jsonrpc.js';
 
 type HttpUrl = `http://${string}` | `https://${string}`;
 

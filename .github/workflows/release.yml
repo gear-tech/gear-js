@@ -18,6 +18,35 @@ env:
   BINARYEN_VERSION: version_111
 
 jobs:
+  check-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      gear-api-changed: ${{ steps.filter.outputs.gear-api }}
+      version-changed: ${{ steps.check-version.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            gear-api:
+              - 'apis/gear/**'
+
+      - name: Check if version changed
+        id: check-version
+        if: steps.filter.outputs.gear-api == 'true'
+        run: |
+          OLD_VERSION=$(git show HEAD~1:apis/gear/package.json | jq -r .version)
+          NEW_VERSION=$(jq -r .version apis/gear/package.json)
+          if [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
   publish-to-npm:
     if: github.event_name == 'push'
 
@@ -45,3 +74,63 @@ jobs:
         run: npx lerna publish from-package --no-verify-access --yes --loglevel verbose
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  create-github-release:
+    needs: [publish-to-npm, check-changes]
+    if: needs.check-changes.outputs.gear-api-changed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use node 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build
+        run: yarn build:gear-api
+
+      - name: Prepare artifact
+        working-directory: apis/gear
+        run: yarn run pack
+
+      - name: Get @gear-js/api version
+        id: get-version
+        run: |
+          VERSION=$(node -p "require('./apis/gear/package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Extract Changelog
+        id: changelog
+        run: |
+          if [[ "${{ needs.check-changes.outputs.version-changed }}" == "true" ]]; then
+            VERSION="${{ steps.get-version.outputs.version }}"
+            CHANGELOG=$(awk '/## \['$VERSION'\]/{flag=1;next}/## \[/{flag=0}flag{print}' apis/gear/CHANGELOG.md)
+          else
+            CHANGELOG=$(awk '/## \[draft\]/{flag=1;next}/## \[/{flag=0}flag{print}' apis/gear/CHANGELOG.md)
+          fi
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.check-changes.outputs.version-changed == 'true' && format('gear-js-api-v{0}', steps.get-version.outputs.version) || 'gear-js-api-draft' }}
+          name: ${{ needs.check-changes.outputs.version-changed == 'true' && format('@gear-js/api v{0}', steps.get-version.outputs.version) || '@gear-js/api Draft Release' }}
+          body: |
+            # ${{ needs.check-changes.outputs.version-changed == 'true' && format('@gear-js/api v{0}', steps.get-version.outputs.version) || '@gear-js/api Draft Release' }}
+
+            ${{ steps.changelog.outputs.changelog }}
+          draft: ${{ needs.check-changes.outputs.version-changed != 'true' }}
+          prerelease: ${{ needs.check-changes.outputs.version-changed != 'true' }}
+          files: artifacts/gear-js-api.tgz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

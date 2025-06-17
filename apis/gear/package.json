@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/api",
-  "version": "0.41.1",
+  "version": "0.42.0",
   "description": "A JavaScript library that provides functionality to connect GEAR Component APIs.",
   "main": "lib/cjs/index.js",
   "module": "lib/index.js",
@@ -25,9 +25,12 @@
     "test": "bash run-tests.sh",
     "test:only": "npx jest --testPathPattern",
     "build": "rm -rf lib && npx rollup --config rollup.config.js",
-    "generate:defs": "npx ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package sample-polkadotjs-typegen/interfaces --input ./temp --endpoint ws://127.0.0.1:9944",
-    "generate:meta": "npx ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package sample-polkadotjs-typegen/interfaces --endpoint ws://127.0.0.1:9944 --output ./temp",
-    "clean": "echo \"clean @gear-js/api\" && rm -rf lib"
+    "generate:defs": "npx ts-node --skip-project ../../node_modules/.bin/polkadot-types-from-defs --package sample-polkadotjs-typegen/interfaces --input ./temp --endpoint ws://127.0.0.1:9944",
+    "generate:meta": "npx ts-node --skip-project ../../node_modules/.bin/polkadot-types-from-chain --package sample-polkadotjs-typegen/interfaces --endpoint ws://127.0.0.1:9944 --output ./temp",
+    "clean": "echo \"clean @gear-js/api\" && rm -rf lib",
+    "docs:build": "node scripts/build-readme.js",
+    "docs:split": "node scripts/split-readme.js",
+    "pack": "mkdir -p ../../artifacts && yarn pack --out ../../artifacts/gear-js-api.tgz"
   },
   "exports": {
     "./cjs/package.json": "./lib/cjs/package.json",
@@ -48,14 +51,14 @@
   },
   "license": "GPL-3.0",
   "peerDependencies": {
-    "@polkadot/api": "15.8.1",
-    "@polkadot/wasm-crypto": "7.4.1",
-    "rxjs": "7.8.2"
+    "@polkadot/api": "^15.9.1",
+    "@polkadot/wasm-crypto": "^7.4.1",
+    "rxjs": "^7.8.2"
   },
   "devDependencies": {
-    "@polkadot/api": "15.8.1",
-    "@polkadot/typegen": "15.8.1",
-    "@polkadot/types": "15.8.1",
+    "@polkadot/api": "16.0.1",
+    "@polkadot/typegen": "16.0.1",
+    "@polkadot/types": "16.0.1",
     "@polkadot/wasm-crypto": "7.4.1",
     "rxjs": "7.8.2"
   },

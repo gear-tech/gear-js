@@ -1,69 +1,12 @@
-import { Provider, BaseContract, Signer, EventLog, ContractEventPayload } from 'ethers';
+import { BaseContract, ContractEventPayload, Wallet } from 'ethers';
+import { HexString } from 'gear-js-util';
 import { convertEventParams as convertEventParameters } from '../util/index.js';
-import { HexString } from '../types/index.js';
+import { TxManager, TxManagerWithHelpers } from './tx-manager.js';
+import { IMIRROR_INTERFACE, IMirrorContract } from './abi/IMirror.js';
+import { MessageHelpers, ReplyHelpers, MessageQueuingRequestedLog, Reply } from './interfaces/mirror.js';
+import { ITxManager } from './interfaces/index.js';
 
-export interface MessageQueuingRequestedLog {
-  id: HexString;
-  source: HexString;
-  payload: string;
-  value: bigint;
-}
-
-export interface ExecutableBalanceTopUpRequestedLog {
-  value: bigint;
-}
-
-export interface ReplyQueueingRequestedLog {
-  repliedTo: HexString;
-  source: HexString;
-  payload: string;
-  value: bigint;
-}
-
-export interface MessageQueueingRequestedLog {
-  id: HexString;
-  source: HexString;
-  payload: string;
-  value: bigint;
-}
-
-const mirrorAbi = [
-  'function decoder() external view returns (address)',
-  'function router() external view returns (address)',
-  'function stateHash() external view returns (bytes32)',
-  'function nonce() external view returns (uint256)',
-  'function inheritor() external view returns (address)',
-
-  'function sendMessage(bytes calldata payload, uint128 value) external returns (bytes32)',
-  'function sendReply(bytes32 repliedTo, bytes calldata payload, uint128 value)',
-  'function claimValue(bytes32 claimedId)',
-  'function executableBalanceTopUp(uint128 value)',
-
-  'event ValueClaimed(bytes32 claimedId, uint128 value)',
-  'event Reply(bytes payload, uint128 value, bytes32 replyTo, bytes4 indexed replyCode)',
-  'event Message(bytes32 id, address indexed destination, bytes payload, uint128 value)',
-  'event StateChanged(bytes32 stateHash)',
-  'event MessageQueueingRequested(bytes32 id, address indexed source, bytes payload, uint128 value)',
-  'event ReplyQueueingRequested(bytes32 repliedTo, address indexed source, bytes payload, uint128 value)',
-  'event ValueClaimingRequested(bytes32 claimedId, address indexed source)',
-  'event ExecutableBalanceTopUpRequested(uint128 value)',
-];
-
-export interface IMirrorContract {
-  decoder(): Promise<HexString>;
-  router(): Promise<HexString>;
-  stateHash(): Promise<HexString>;
-  nonce(): Promise<number>;
-  inheritor(): Promise<HexString>;
-}
-
-export interface Reply {
-  payload: HexString;
-  value: bigint;
-  replyCode: string; // TODO: replace with specific type
-  blockNumber: number;
-  txHash: HexString;
-}
+// Interfaces moved to ./interfaces/mirror.js
 
 function getReplyListener(messageId: string) {
   let _resolve: (value: Reply) => void | Promise<void>;
@@ -95,82 +38,137 @@ function getReplyListener(messageId: string) {
   return { listener, promise };
 }
 
-export class MirrorContract extends BaseContract {
-  constructor(address: string, wallet: Provider | Signer) {
-    super(address, mirrorAbi, wallet);
+/**
+ * A contract wrapper for interacting with a Mirror contract on the Gear.Exe network.
+ * Provides methods for sending messages, replies, claiming values, and managing balance.
+ */
+export class MirrorContract extends BaseContract implements IMirrorContract {
+  private _wallet: Wallet;
+
+  declare decoder: () => Promise<HexString>;
+  declare router: () => Promise<HexString>;
+  declare stateHash: () => Promise<HexString>;
+  declare nonce: () => Promise<bigint>;
+  declare inheritor: () => Promise<HexString>;
+  declare initializer: () => Promise<HexString>;
+
+  /**
+   * Creates a new MirrorContract instance.
+   *
+   * @param address - The address of the Mirror contract
+   * @param wallet - The wallet or signer to use for transactions
+   */
+  constructor(address: string, wallet: Wallet) {
+    super(address, IMIRROR_INTERFACE, wallet);
+    this._wallet = wallet;
   }
 
-  async sendMessage(payload: string, value: bigint | number) {
-    const function_ = this.getFunction('sendMessage');
+  /**
+   * Sends a message to the Mirror contract.
+   *
+   * @param payload - The message payload
+   * @param value - The value to send with the message (in wei)
+   * @returns A transaction manager with message-specific helper functions
+   */
+  async sendMessage(payload: string, value: bigint | number): Promise<TxManagerWithHelpers<MessageHelpers>> {
+    const fn = this.getFunction('sendMessage');
+    // Set `callReply` to false since it's only used for calling sendMessage from contracts
+    const tx = await fn.populateTransaction(payload, value, false);
 
-    const response = await function_.send(payload, value);
+    const txManager: ITxManager = new TxManager(this._wallet, tx, IMIRROR_INTERFACE, {
+      getMessage: (manager) => async () => {
+        const event = await manager.findEvent('MessageQueueingRequested');
 
-    const receipt = await response.wait();
+        return convertEventParameters<MessageQueuingRequestedLog>(event);
+      },
+      setupReplyListener: (manager) => async () => {
+        const [receipt, event] = await Promise.all([
+          manager.getReceipt(),
+          manager.findEvent('MessageQueueingRequested'),
+        ]);
 
-    const event = receipt.logs?.find(
-      (log) => 'fragment' in log && log.fragment.name == 'MessageQueueingRequested',
-    ) as EventLog;
+        const message = convertEventParameters<MessageQueuingRequestedLog>(event);
 
-    const message = convertEventParameters<MessageQueuingRequestedLog>(event);
+        const { listener, promise } = getReplyListener(message.id);
+        this.on('Reply', listener);
 
-    const { listener, promise } = getReplyListener(message.id);
+        return {
+          txHash: receipt.hash,
+          blockNumber: receipt.blockNumber,
+          message: message,
+          waitForReply: promise.then((result) => {
+            this.off('Reply', listener);
+            return result;
+          }),
+        };
+      },
+    });
 
-    this.on('Reply', listener);
-
-    return {
-      txHash: receipt.hash,
-      blockNumber: receipt.blockNumber,
-      message: message,
-      waitForReply: promise.then((result) => {
-        this.off('Reply', listener);
-        return result;
-      }),
-    };
+    return txManager as TxManagerWithHelpers<MessageHelpers>;
   }
 
-  async sendReply(payload: string, value: bigint) {
-    const function_ = this.getFunction('sendReply');
+  /**
+   * Sends a reply to a previously received message.
+   *
+   * @param payload - The reply payload
+   * @param value - The value to send with the reply (in wei)
+   * @returns A transaction manager with reply-specific helper functions
+   */
+  async sendReply(payload: string, value: bigint): Promise<TxManagerWithHelpers<ReplyHelpers>> {
+    const fn = this.getFunction('sendReply');
+    const tx = await fn.populateTransaction(payload, value);
 
-    const response = await function_.send(payload, value);
+    const txManager: ITxManager = new TxManager(this._wallet, tx, IMIRROR_INTERFACE, {
+      getEvent: (manager) => async () => {
+        return manager.findEvent('ReplyQueueingRequested');
+      },
+    });
 
-    const receipt = await response.wait();
-
-    const event = receipt.logs?.find((log) => 'fragment' in log && log.fragment.name == 'ReplyQueueingRequested');
-
-    // TODO: type
-    return event;
+    return txManager as TxManagerWithHelpers<ReplyHelpers>;
   }
 
-  async claimValue(claimedId: string) {
-    const function_ = this.getFunction('claimValue');
+  /**
+   * Claims a value associated with the given ID.
+   *
+   * @param claimedId - The ID of the value to claim
+   * @returns A transaction manager with claim-specific helper functions
+   */
+  async claimValue(claimedId: string): Promise<TxManager> {
+    const fn = this.getFunction('claimValue');
+    const tx = await fn.populateTransaction(claimedId);
 
-    const response = await function_.send(claimedId);
+    const txManager = new TxManager(this._wallet, tx, IMIRROR_INTERFACE, {
+      getValueClaimingRequestedEvent: (manager) => async () => {
+        const event = await manager.findEvent('ValueClaimingRequested');
+        return convertEventParameters<MessageQueuingRequestedLog>(event);
+      },
+    });
 
-    const receipt = await response.wait();
-
-    const event = receipt.logs?.find(
-      (log) => 'fragment' in log && log.fragment.name == 'ValueClaimingRequested',
-    ) as EventLog;
-
-    return convertEventParameters<MessageQueuingRequestedLog>(event);
+    return txManager;
   }
 
-  async executableBalanceTopUp(value: bigint) {
-    const function_ = this.getFunction('executableBalanceTopUp');
+  /**
+   * Tops up the executable balance of the program.
+   *
+   * @param value - The amount to top up
+   */
+  async executableBalanceTopUp(value: bigint): Promise<TxManager> {
+    const fn = this.getFunction('executableBalanceTopUp');
+    const tx = await fn.populateTransaction(value);
 
-    const response = await function_.send(value);
+    const txManager = new TxManager(this._wallet, tx, IMIRROR_INTERFACE);
 
-    const receipt = await response.wait();
-
-    const event = receipt.logs?.find(
-      (log) => 'fragment' in log && log.fragment.name == 'ExecutableBalanceTopUpRequested',
-    ) as EventLog;
-
-    return convertEventParameters<ExecutableBalanceTopUpRequestedLog>(event);
-    // TODO: return waitForResult fn
+    return txManager;
   }
 }
 
-export function getMirrorContract(id: string, provider?: Provider | Signer): MirrorContract & IMirrorContract {
-  return new MirrorContract(id, provider) as MirrorContract & IMirrorContract;
+/**
+ * Creates a new MirrorContract instance.
+ *
+ * @param id - The address of the Mirror contract
+ * @param provider - Optional wallet or signer to use for transactions
+ * @returns A new MirrorContract instance that implements the IMirrorContract interface
+ */
+export function getMirrorContract(id: string, provider?: Wallet): MirrorContract {
+  return new MirrorContract(id, provider);
 }

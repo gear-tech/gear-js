@@ -1,4 +1,5 @@
-import { HexString, IGearExeProvider, ProgramState } from '../../types/index.js';
+import { HexString } from 'gear-js-util';
+import { IGearExeProvider, ProgramState } from '../../types/index.js';
 import { transformMaybeHashes } from '../../util/maybe-hash.js';
 
 export class ProgramQueries {

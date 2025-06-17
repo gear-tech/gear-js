@@ -11,11 +11,12 @@ const config: Config.InitialOptions = {
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
+  bail: true,
   transform: {
     '^.+\\.ts?$': ['ts-jest', { useESM: true }],
   },
   testSequencer: './test/testSequencer.js',
-  testTimeout: 36_000,
+  testTimeout: 15_000,
   forceExit: true,
 };
 

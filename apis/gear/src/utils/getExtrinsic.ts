@@ -1,5 +1,5 @@
-import { GearApi } from 'GearApi';
+import { ApiPromise } from '@polkadot/api';
 
-export function getExtrinsic(api: GearApi, section: string, method: string, args: any[]) {
+export function getExtrinsic(api: ApiPromise, section: string, method: string, args: any[]) {
   return api.tx[section][method](...args);
 }

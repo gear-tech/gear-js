@@ -1,4 +1,5 @@
-import { HexString, IGearExeProvider, ReplyInfo } from '../../types/index.js';
+import { HexString } from 'gear-js-util';
+import { IGearExeProvider, ReplyInfo } from '../../types/index.js';
 
 export class ProgramCalls {
   constructor(private _provider: IGearExeProvider) {}

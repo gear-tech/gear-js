@@ -5,7 +5,8 @@ import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { Keyring } from '@polkadot/keyring';
 import { waitReady } from '@polkadot/wasm-crypto';
-import { GearApi, GearTransaction, IGearEvent, IGearVoucherEvent, MessageWaitedData, ProgramChangedData } from '../src';
+import { GearApi, IGearEvent, IGearVoucherEvent, MessageWaitedData, ProgramChangedData } from '../src';
+import { GearTransaction } from '../src/api/Transaction';
 
 export const checkInit = (
   api: GearApi,
@@ -116,6 +117,7 @@ export const waitForPausedProgram = (
 const registry = new TypeRegistry();
 
 registry.register({
+  ActorId: '[u8;32]',
   Action: {
     _enum: {
       One: 'Option<Text>',
@@ -123,6 +125,7 @@ registry.register({
       Four: null,
       Input: 'Text',
       Wait: null,
+      Exit: 'ActorId',
     },
   },
   Init: 'BTreeMap<String, u8>',

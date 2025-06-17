@@ -6,7 +6,7 @@ import { ethWsProvider, waitNBlocks } from './common';
 import path from 'path';
 
 const code = fs.readFileSync(path.join(config.targetDir, 'counter.opt.wasm'));
-let codeId: string;
+let _codeId: string;
 let wallet: ethers.Wallet;
 let api: GearExeApi;
 let router: ReturnType<typeof getRouterContract>;
@@ -20,45 +20,46 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  wallet.provider.destroy();
+  await new Promise((resolve) => setTimeout(resolve, 3000));
+  wallet.provider!.destroy();
 });
 
 const uploadCodeTest = () => {
   test('upload code', async () => {
-    const [txHash, _codeId] = (await api.provider.send('dev_setBlob', [ethers.hexlify(new Uint8Array(code))])) as [
-      string,
-      string,
-    ];
+    const tx = await router.requestCodeValidationNoBlob(code, api);
+    _codeId = tx.codeId;
 
-    expect(_codeId).toBe(config.codeId);
+    codeValidatedPromise = tx.waitForCodeGotValidated();
+    await tx.processDevBlob();
 
-    codeId = _codeId;
+    const receipt = await tx.getReceipt();
 
-    const { receipt, waitForCodeGotValidated } = await router.requestCodeValidationNoBlob(_codeId, txHash);
-
-    codeValidatedPromise = waitForCodeGotValidated();
     expect(receipt.blockHash).toBeDefined();
   });
 
   test('wait for code got validated', async () => {
     expect(await codeValidatedPromise).toBeTruthy();
-    await waitNBlocks(3);
+    await waitNBlocks(5);
   });
 };
 
 if (!config.skipUpload) {
   describe('upload code', uploadCodeTest);
 } else {
-  codeId = config.codeId;
+  _codeId = config.codeId;
 }
 
 describe('router', () => {
   test('check code state', async () => {
-    expect(await router.codeState(codeId)).toBe(CodeState.Validated);
+    expect(await router.codeState(_codeId)).toBe(CodeState.Validated);
   });
 
   test('create program', async () => {
-    const { id } = await router.createProgram(codeId);
+    const tx = await router.createProgram(_codeId);
+
+    await tx.send();
+
+    const id = await tx.getProgramId();
 
     const mirror = getMirrorContract(id, wallet);
 

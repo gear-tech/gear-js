@@ -101,55 +101,62 @@ jobs:
       - name: 'Test: run'
         run: yarn test:gear-api
 
-  # TODO: Uncomment when gearexe tests are ready
-  # test-gearexe-api:
-  #   runs-on: ubuntu-22.04
-  #   env:
-  #     RUSTUP_HOME: /tmp/rustup_home
-  #   steps:
-  #     - name: Cancel Previous Runs
-  #       uses: styfle/cancel-workflow-action@0.9.1
+  test-gearexe-api:
+    runs-on: ubuntu-22.04
+    env:
+      RUSTUP_HOME: /tmp/rustup_home
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.1
 
-  #     - name: 'Checkout'
-  #       uses: actions/checkout@v4
+      - name: 'Checkout'
+        uses: actions/checkout@v4
 
-  #     - name: 'Check if gearexe files changed'
-  #       id: changed-gearexe
-  #       uses: tj-actions/changed-files@v45
-  #       with:
-  #         files: |
-  #           apis/gearexe/**
+      - name: 'Check if gearexe files changed'
+        id: changed-gearexe
+        uses: tj-actions/changed-files@v46
+        with:
+          files: |
+            apis/gearexe/**
 
-  #     - name: 'Install: NodeJS 20.x'
-  #       if: steps.changed-gearexe.outputs.any_changed == 'true'
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: 20.x
+      - name: 'Install: NodeJS 20.x'
+        if: steps.changed-gearexe.outputs.any_changed == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
 
-  #     - name: Set up Rust
-  #       if: steps.changed-gearexe.outputs.any_changed == 'true'
-  #       uses: dtolnay/rust-toolchain@stable
-  #       with:
-  #         targets: wasm32-unknown-unknown
-  #         components: clippy, rustfmt, llvm-tools, rust-src
+      - name: Set up Rust
+        if: steps.changed-gearexe.outputs.any_changed == 'true'
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+          components: clippy, rustfmt, llvm-tools, rust-src
 
-  #     - name: 'Install: binaryen'
-  #       if: steps.changed-gearexe.outputs.any_changed == 'true'
-  #       run: |
-  #         wget -c https://github.com/WebAssembly/binaryen/releases/download/$BINARYEN_VERSION/binaryen-$BINARYEN_VERSION-x86_64-linux.tar.gz -O - | tar -xz -C .
-  #         sudo cp binaryen-$BINARYEN_VERSION/bin/wasm-opt /usr/bin/
+      - name: 'Install: binaryen'
+        if: steps.changed-gearexe.outputs.any_changed == 'true'
+        run: |
+          wget -c https://github.com/WebAssembly/binaryen/releases/download/$BINARYEN_VERSION/binaryen-$BINARYEN_VERSION-x86_64-linux.tar.gz -O - | tar -xz -C .
+          sudo cp binaryen-$BINARYEN_VERSION/bin/wasm-opt /usr/bin/
 
-  #     - name: 'Install: Foundry'
-  #       if: steps.changed-gearexe.outputs.any_changed == 'true'
-  #       uses: foundry-rs/foundry-toolchain@v1
+      - name: 'Install: Foundry'
+        if: steps.changed-gearexe.outputs.any_changed == 'true'
+        uses: foundry-rs/foundry-toolchain@v1
 
-  #     - name: 'Install dependencies'
-  #       if: steps.changed-gearexe.outputs.any_changed == 'true'
-  #       run: yarn workspaces focus gear-js @gear-js/api gearexe
+      - name: 'Install dependencies'
+        if: steps.changed-gearexe.outputs.any_changed == 'true'
+        run: yarn workspaces focus gear-js @gear-js/api gearexe gear-js-util
 
-  #     - name: 'Test: run'
-  #       if: steps.changed-gearexe.outputs.any_changed == 'true'
-  #       run: yarn test:gearexe-api
+      - name: 'Build prerequirements'
+        if: steps.changed-gearexe.outputs.any_changed == 'true'
+        run: |
+          yarn build:gear-api
+          yarn build:gear-js-util
+
+      - name: 'Test: run'
+        if: steps.changed-gearexe.outputs.any_changed == 'true'
+        run: yarn test:gearexe-api
+        env:
+          GEAR_BRANCH: ${{ vars.GEAR_BRANCH }}
 
   check-gear-idea-version:
     runs-on: ubuntu-latest
@@ -240,3 +247,22 @@ jobs:
 
       - name: 'Test: run'
         run: yarn test:txwrapper
+
+  test-util:
+    runs-on: ubuntu-22.04
+    env:
+      RUSTUP_HOME: /tmp/rustup_home
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Install: NodeJS 20.x'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: 'Install dependencies'
+        run: yarn workspaces focus gear-js-util gear-js
+
+      - name: 'Test: run'
+        run: yarn test:gear-js-util

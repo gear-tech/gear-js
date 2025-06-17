@@ -32,14 +32,15 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await api.provider.disconnect();
-  wallet.provider.destroy();
+  wallet.provider!.destroy();
 });
 
 describe('Create program', () => {
   test('create program', async () => {
-    const { id } = await router.createProgram(codeId);
+    const tx = await router.createProgram(codeId);
+    await tx.send();
 
-    programId = id;
+    programId = await tx.getProgramId();
 
     mirror = getMirrorContract(programId, wallet);
 
@@ -57,11 +58,15 @@ describe('Create program', () => {
   });
 
   test('approve wvara', async () => {
-    const result = await wvara.approve(programId, BigInt(10 * 1e12));
+    const tx = await wvara.approve(programId, BigInt(10 * 1e12));
 
-    hasProps(result, ['owner', 'spender', 'value']);
+    await tx.send();
 
-    expect(result.value).toEqual(BigInt(10 * 1e12));
+    const approvalData = await tx.getApprovalLog();
+
+    hasProps(approvalData, ['owner', 'spender', 'value']);
+
+    expect(approvalData.value).toEqual(BigInt(10 * 1e12));
 
     const allowance = await wvara.allowance(wallet.address, programId);
     expect(allowance).toEqual(BigInt(10 * 1e12));
@@ -76,21 +81,31 @@ describe('Create program', () => {
   });
 
   test('top up executable balance', async () => {
-    const { value } = await mirror.executableBalanceTopUp(BigInt(10 * 1e12));
+    const tx = await mirror.executableBalanceTopUp(BigInt(10 * 1e12));
 
-    expect(value).toBe(BigInt(10 * 1e12));
+    const { status } = await tx.sendAndWaitForReceipt();
+
+    expect(status).toBe(1);
   });
 });
 
 describe('Send messages', () => {
   test('send init message', async () => {
-    const payload = sails.ctors.New.encodePayload();
+    const payload = sails.ctors.CreatePrg.encodePayload();
 
-    const { message, waitForReply } = await mirror.sendMessage(payload, 0n);
+    const tx = await mirror.sendMessage(payload, 0n);
 
-    hasProps(message, ['id', 'source', 'payload', 'value']);
+    await tx.send();
 
-    await waitForReply;
+    const message = await tx.getMessage();
+
+    hasProps(message, ['id', 'source', 'payload', 'value', 'callReply']);
+
+    const { waitForReply } = await tx.setupReplyListener();
+
+    const reply = await waitForReply;
+
+    console.log(reply);
   });
 
   test('check program is active', async () => {
@@ -104,9 +119,15 @@ describe('Send messages', () => {
   test('send message (increment)', async () => {
     const _payload = sails.services.Counter.functions.Increment.encodePayload();
 
-    const { message, waitForReply } = await mirror.sendMessage(_payload, 0);
+    const tx = await mirror.sendMessage(_payload, 0);
 
-    hasProps(message, ['id', 'source', 'payload', 'value']);
+    await tx.send();
+
+    const message = await tx.getMessage();
+
+    hasProps(message, ['id', 'source', 'payload', 'value', 'callReply']);
+
+    const { waitForReply } = await tx.setupReplyListener();
 
     const { payload, replyCode, value } = await waitForReply;
 

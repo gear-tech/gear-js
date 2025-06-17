@@ -5,6 +5,7 @@ use gstd::{
     collections::{BTreeMap, BTreeSet},
     msg,
     prelude::*,
+    ActorId,
 };
 
 #[derive(Decode, Encode)]
@@ -14,6 +15,7 @@ pub enum Action {
     Four(),
     Input(String),
     Wait(),
+    Exit(ActorId),
 }
 
 #[derive(Decode, Encode)]
@@ -74,6 +76,7 @@ async fn main() {
         Action::Wait() => {
             gstd::exec::wait();
         }
+        Action::Exit(inheritor) => gstd::exec::exit(inheritor),
         _ => msg::reply("ok", 0).unwrap(),
     };
 }

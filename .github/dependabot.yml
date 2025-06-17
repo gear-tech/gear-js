@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
-      interval: weekly
+      interval: daily
 
   - package-ecosystem: 'npm'
     directory: '/'
@@ -13,5 +13,17 @@ updates:
     groups:
       development:
         dependency-type: 'development'
+        exclude-patterns:
+          - '@polkadot/*'
+          - 'sails-js*'
       production:
         dependency-type: 'production'
+        exclude-patterns:
+          - '@polkadot/*'
+          - 'sails-js*'
+      polkadot:
+        patterns:
+          - '@polkadot/*'
+      sails:
+        patterns:
+          - 'sails-js*'
