@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@gear-js/api": "0.42.0",
-    "@polkadot/api": "16.2.1",
+    "@polkadot/api": "16.2.2",
     "ethers": "6.14.3",
     "gear-js-util": "workspace:^",
     "kzg-wasm": "0.5.0",
