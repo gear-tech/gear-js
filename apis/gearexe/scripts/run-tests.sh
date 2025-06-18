@@ -65,7 +65,7 @@ cd $PROJECT_DIR
 rm -f /tmp/gearexe-js/environment-ready
 
 # Start environment setup in background
-./scripts/setup-env.sh &
+RUNNING_TESTS=true ./scripts/setup-env.sh &
 ENV_PID=$!
 
 # Wait for environment to be ready
