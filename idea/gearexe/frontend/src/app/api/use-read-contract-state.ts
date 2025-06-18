@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { isAddress } from 'ethers';
-import { HexString } from 'gearexe';
+import { HexString } from 'gear-js-util';
 
 import { useGearExeApi } from '../providers';
 

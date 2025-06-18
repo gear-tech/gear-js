@@ -17,11 +17,11 @@ export const useUploadCode = () => {
   const uploadCode = async (code: Uint8Array) => {
     if (!api || !routerContract) return;
 
-    const result = await routerContract.requestCodeValidation(code);
-
-    if (!result) return;
-    const { codeId, receipt, waitForCodeGotValidated } = result;
-    const isValidated = await waitForCodeGotValidated();
+    const tx = await routerContract.requestCodeValidation(code);
+    await tx.send();
+    const isValidated = await tx.waitForCodeGotValidated();
+    const codeId = tx.codeId;
+    const receipt = await tx.getReceipt();
 
     addMyActivity({
       type: TransactionTypes.codeValidation,
@@ -31,7 +31,7 @@ export const useUploadCode = () => {
       ...unpackReceipt(receipt),
     });
 
-    navigate(generatePath(routes.code, { codeId: result.codeId }));
+    navigate(generatePath(routes.code, { codeId }));
   };
 
   const onError = (error: Error) => {

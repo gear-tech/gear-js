@@ -43,6 +43,7 @@ type Activity =
       type: typeof TransactionTypes.programReply;
       serviceName: string;
       messageName: string;
+      replyCode: string;
       params?: Record<string, unknown>;
       value?: string;
       units?: string;

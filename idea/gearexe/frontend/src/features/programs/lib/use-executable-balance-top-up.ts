@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { HexString } from 'gearexe';
+import { HexString } from 'gear-js-util';
 import { useAccount } from 'wagmi';
 
 import { useMirrorContract } from '@/app/api';
@@ -14,7 +14,8 @@ export const useExecutableBalanceTopUp = (programId: HexString) => {
 
   const executableBalanceTopUp = async (value: bigint) => {
     if (!api || !mirrorContract || !ethAccount.address) return;
-    const result = await mirrorContract.executableBalanceTopUp(value);
+    const tx = await mirrorContract.executableBalanceTopUp(value);
+    const result = await tx.send();
 
     addMyActivity({
       type: TransactionTypes.executableBalanceTopUp,

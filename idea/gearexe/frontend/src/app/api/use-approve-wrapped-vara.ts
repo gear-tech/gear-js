@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { HexString } from 'gearexe';
+import { HexString } from 'gear-js-util';
 
 import { TransactionTypes, unpackReceipt, useAddMyActivity } from '../store';
 
@@ -13,13 +13,16 @@ const useApproveWrappedVara = (address: HexString) => {
   const approveWrappedVara = async (value: bigint) => {
     if (!wrappedVaraContract) return;
 
-    const result = await wrappedVaraContract.approve(address, value);
+    const tx = await wrappedVaraContract.approve(address, value);
+    const result = await tx.send();
+    const receipt = await tx.getReceipt();
 
     addMyActivity({
       type: TransactionTypes.approve,
-      ...result,
       value: String(result.value),
-      ...unpackReceipt(),
+      owner: result.from,
+      spender: address,
+      ...unpackReceipt(receipt),
     });
 
     return result;

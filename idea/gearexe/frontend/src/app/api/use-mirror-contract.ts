@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { Wallet } from 'ethers';
 import { getMirrorContract } from 'gearexe';
 import { useAccount } from 'wagmi';
 
@@ -12,7 +13,8 @@ const useMirrorContract = (mirrorAddress = MIRROR_CONTRACT_ADDRESS) => {
 
   const { data: mirrorContract, isLoading } = useQuery({
     queryKey: ['getMirrorContract', mirrorAddress, signer],
-    queryFn: () => getMirrorContract(mirrorAddress, signer),
+    // ! TODO: fix api types
+    queryFn: () => getMirrorContract(mirrorAddress, signer as unknown as Wallet),
     enabled: Boolean(signer),
   });
 

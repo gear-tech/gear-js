@@ -52,7 +52,7 @@
     "build:gear-idea-squid": "lerna run build --scope @gear-js/api --scope gear-idea-indexer-db --scope gear-idea-squid",
     "build:gear-idea-backend": "lerna run build --scope @gear-js/api --scope gear-idea-common --scope gear-idea-explorer --scope gear-idea-faucet --scope gear-idea-indexer-db --scope gear-idea-meta-storage --scope gear-idea-squid",
     "build:gear-idea-frontend": "lerna run build --scope gear-idea-frontend --scope @gear-js/frontend-configs --scope @gear-js/ui --scope @gear-js/vara-ui --scope @gear-js/react-hooks --scope @gear-js/wallet-connect --scope @gear-js/api",
-    "build:gearexe-idea-frontend": "lerna run build --scope gearexe-idea-frontend --scope @gear-js/frontend-configs --scope gearexe --scope @gear-js/api",
+    "build:gearexe-idea-frontend": "lerna run build --scope gearexe-idea-frontend --scope @gear-js/frontend-configs --scope gearexe --scope @gear-js/api --scope gear-js-util",
     "build:ui": "lerna run build --scope @gear-js/ui --scope @gear-js/frontend-configs",
     "build:vara-ui": "lerna run build --scope @gear-js/vara-ui --scope @gear-js/frontend-configs",
     "build:hooks": "lerna run build --scope @gear-js/react-hooks --scope @gear-js/frontend-configs --scope @gear-js/api",

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { HexString } from 'gearexe';
+import { HexString } from 'gear-js-util';
 import { useAccount } from 'wagmi';
 
 import { useWrappedVaraContract } from './use-wrapped-vara-contract';

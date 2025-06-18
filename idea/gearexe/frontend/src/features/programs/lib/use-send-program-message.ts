@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { HexString } from 'gearexe';
+import { HexString } from 'gear-js-util';
 
 import { useMirrorContract } from '@/app/api';
 import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
@@ -29,8 +29,8 @@ const useSendProgramMessage = (programId: HexString) => {
     const _payload = sailsMessage.encodePayload(...args);
 
     const value = 0n;
-    const message = await mirrorContract.sendMessage(_payload, value);
-
+    const tx = await mirrorContract.sendMessage(_payload, value);
+    const response = await tx.send();
     const params = args.map((_value, index) => {
       const key = sailsMessage.args[index].name;
       return `${key}: ${String(_value)}`;
@@ -41,14 +41,15 @@ const useSendProgramMessage = (programId: HexString) => {
       serviceName,
       messageName,
       ...unpackReceipt(),
-      blockNumber: message.blockNumber,
+      blockNumber: response.blockNumber ?? 0,
       to: programId,
-      hash: message.txHash,
+      hash: response.hash,
       params: { payload: `${messageName} (${params.join(', ')})` },
       value: String(value),
     });
 
-    const reply = await message.waitForReply;
+    const { waitForReply } = await tx.setupReplyListener();
+    const reply = await waitForReply;
 
     const { payload, replyCode, blockNumber, txHash } = reply;
 
@@ -58,6 +59,7 @@ const useSendProgramMessage = (programId: HexString) => {
       type: TransactionTypes.programReply,
       serviceName,
       messageName,
+      replyCode,
       ...unpackReceipt(),
       blockNumber,
       from: programId,
@@ -65,8 +67,7 @@ const useSendProgramMessage = (programId: HexString) => {
       params: { payload: JSON.stringify(result) },
       value: String(reply.value),
     });
-
-    return { result, replyCode, value } as const;
+    return response;
   };
 
   const { mutate: sendMessageMutation, isPending } = useMutation({

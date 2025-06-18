@@ -2486,17 +2486,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.41.0":
-  version: 0.41.0
-  resolution: "@gear-js/api@npm:0.41.0"
-  peerDependencies:
-    "@polkadot/api": 15.4.1
-    "@polkadot/wasm-crypto": 7.4.1
-    rxjs: 7.8.1
-  checksum: 10c0/884d1b369d68d3b38203f81206b76be9782f2af504795050636ede7fd3b750fb49cc12f49c276745d37f77ba221e07f9044d32089c88615ff3041fe34babf5c0
-  languageName: node
-  linkType: hard
-
 "@gear-js/api@npm:0.42.0, @gear-js/api@workspace:apis/gear":
   version: 0.0.0-use.local
   resolution: "@gear-js/api@workspace:apis/gear"
@@ -16747,14 +16736,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gearexe-idea-frontend@workspace:idea/gearexe/frontend"
   dependencies:
-    "@gear-js/api": "npm:0.41.0"
+    "@gear-js/api": "npm:0.42.0"
     "@gear-js/frontend-configs": "npm:*"
     "@hookform/resolvers": "npm:3.3.2"
     "@reown/appkit": "npm:1.6.8"
     "@reown/appkit-adapter-wagmi": "npm:1.6.8"
     "@tanstack/react-query": "npm:5.56.2"
     "@types/react-syntax-highlighter": "npm:15.5.13"
-    ethers: "npm:6.13.5"
+    ethers: "npm:6.14.3"
     gearexe: "workspace:*"
     jotai: "npm:2.12.0"
     kzg-wasm: "npm:0.5.0"

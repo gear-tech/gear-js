@@ -1,4 +1,4 @@
-import { HexString } from 'gearexe';
+import { HexString } from 'gear-js-util';
 
 import { useReadContractState } from '@/app/api';
 import { Badge, ExpandableItem } from '@/components';

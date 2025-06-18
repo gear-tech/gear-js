@@ -1,4 +1,4 @@
-import { HexString } from 'gearexe';
+import { HexString } from 'gear-js-util';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useApproveWrappedVara, useReadContractState, useWrappedVaraBalance } from '@/app/api';

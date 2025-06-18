@@ -17,13 +17,14 @@ export const useCreateProgram = () => {
     console.log('createProgram', codeId, api, routerContract);
     if (!api || !routerContract) return;
 
-    const result: { id: string; blockNumber: number } = await routerContract.createProgram(codeId);
-    const { id, blockNumber } = result;
+    const tx = await routerContract.createProgram(codeId);
+    const result = await tx.send();
+    const id = await tx.getProgramId();
 
     addMyActivity({
       type: TransactionTypes.createProgram,
       programId: id,
-      blockNumber: blockNumber,
+      blockNumber: result.blockNumber ?? 0,
       ...unpackReceipt(),
     });
 

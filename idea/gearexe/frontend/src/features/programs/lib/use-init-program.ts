@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { HexString } from 'gearexe';
+import { HexString } from 'gear-js-util';
 
 import { useMirrorContract } from '@/app/api';
 import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
