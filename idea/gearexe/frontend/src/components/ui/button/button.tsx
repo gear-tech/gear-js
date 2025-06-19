@@ -21,6 +21,7 @@ const Button = ({
   children,
   className,
   onClick,
+  type = 'button',
 }: ButtonProps) => {
   const isDisabled = disabled || isLoading;
   const buttonClass = clsx(
@@ -35,7 +36,7 @@ const Button = ({
   );
 
   return (
-    <button className={buttonClass} onClick={onClick} disabled={isDisabled} aria-disabled={isDisabled}>
+    <button className={buttonClass} onClick={onClick} disabled={isDisabled} aria-disabled={isDisabled} type={type}>
       {isLoading ? <LoadingIcon className={styles['animate-spin']} /> : children}
     </button>
   );
