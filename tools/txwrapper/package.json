@@ -24,12 +24,12 @@
   "devDependencies": {
     "@polkadot/api": "16.2.2",
     "@substrate/txwrapper-dev": "7.5.3",
-    "@types/jest": "29.5.14",
+    "@types/jest": "30.0.0",
     "@types/node-fetch": "2.6.12",
-    "babel-jest": "29.7.0",
-    "jest": "29.7.0",
+    "babel-jest": "30.0.2",
+    "jest": "30.0.2",
     "node-fetch": "3.3.2",
-    "ts-jest": "29.3.4",
+    "ts-jest": "29.4.0",
     "ts-node": "10.9.2",
     "typescript": "5.8.3"
   },
