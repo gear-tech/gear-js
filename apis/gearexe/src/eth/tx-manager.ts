@@ -53,9 +53,16 @@ export class TxManager<T extends Record<string, any> = object, U extends Record<
    * @returns The estimated gas limit as a bigint
    */
   async estimateGas(): Promise<bigint> {
-    this._tx.gasLimit = await this._wallet.estimateGas(this._tx);
+    try {
+      this._tx.gasLimit = await this._wallet.estimateGas(this._tx);
 
-    return this._tx.gasLimit;
+      return this._tx.gasLimit;
+    } catch (error) {
+      console.log(error);
+      console.log(error.data);
+      // console.log(this._iface.decodeErrorResult(fragment, data))
+      throw error;
+    }
   }
 
   /**

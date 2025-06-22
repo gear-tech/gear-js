@@ -1,0 +1,3 @@
+[submodule "apis/gearexe/solidity_lib/forge-std"]
+	path = apis/gearexe/solidity_lib/forge-std
+	url = https://github.com/foundry-rs/forge-std

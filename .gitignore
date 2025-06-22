@@ -39,3 +39,11 @@ target/
 .nx/workspace-data
 
 artifacts/
+
+
+# Compiler files
+apis/gearexe/cache/
+apis/gearexe/out/
+
+# Ignores development broadcast logs
+apis/gearexe/broadcast

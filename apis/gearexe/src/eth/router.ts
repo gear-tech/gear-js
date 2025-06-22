@@ -228,6 +228,42 @@ export class RouterContract extends BaseContract implements IRouterContract {
 
     return txManager as TxManagerWithHelpers<CreateProgramHelpers>;
   }
+
+  /**
+   * Facilitates the creation of a program within the co-processor by associating it
+   * with both a WASM code implementation and an ABI interface.
+   * @param codeId - A unique identifier for the WASM implementation of the program.
+   * @param abiInterfaceAddress - An address representing the ABI interface to be associated with the program.
+   * @param overrideInitializer - (optional) An address that can override the program's initialization routine.
+   * @param salt - (optional) A value used to ensure the uniqueness of the deployment address.
+   * @returns
+   */
+  async createProgramWithAbiInterface(
+    codeId: string,
+    abiInterfaceAddress: string,
+    overrideInitializer?: string,
+    salt?: string,
+  ): Promise<TxManagerWithHelpers<CreateProgramHelpers>> {
+    const _salt = salt || ethers.hexlify(ethers.randomBytes(32));
+    const fn = this.getFunction('createProgramWithAbiInterface');
+    const tx = await fn.populateTransaction(
+      codeId,
+      _salt,
+      overrideInitializer || ethers.ZeroAddress,
+      abiInterfaceAddress,
+    );
+
+    const txManager: ITxManager = new TxManager(this._wallet, tx, IROUTER_INTERFACE, {
+      getProgramId: (manager) => async () => {
+        const event = await manager.findEvent('ProgramCreated');
+        return event.args[0].toLowerCase();
+      },
+    });
+
+    await txManager.estimateGas();
+
+    return txManager as TxManagerWithHelpers<CreateProgramHelpers>;
+  }
 }
 
 /**

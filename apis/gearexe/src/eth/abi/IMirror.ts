@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 
+// GENERATED_ABI_START
 export const IMIRROR_ABI = [
   'function claimValue(bytes32 claimedId)',
   'function executableBalanceTopUp(uint128 value)',
@@ -26,7 +27,9 @@ export const IMIRROR_ABI = [
 ];
 
 export const IMIRROR_INTERFACE = new ethers.Interface(IMIRROR_ABI);
+// GENERATED_ABI_END
 
+// GENERATED_INTERFACE_START
 /**
  * Interface for IMirror contract methods
  * Mirror contract manages program state and message passing on Gear.Exe
@@ -62,3 +65,4 @@ export interface IMirrorContract {
    */
   stateHash(): Promise<string>;
 }
+// GENERATED_INTERFACE_END
