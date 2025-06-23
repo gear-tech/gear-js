@@ -36,13 +36,13 @@ function VerifyForm() {
 
   const { api, isApiReady } = useApi();
   const genesisHash = isApiReady ? api.genesisHash.toHex() : undefined;
-  const readOnlyNetwork = defaultCodeId && genesisHash ? NETWORK[genesisHash as keyof typeof NETWORK] : undefined;
+  const defaultNetwork = genesisHash ? NETWORK[genesisHash as keyof typeof NETWORK] : undefined;
 
   const form = useForm<Values, unknown, FormattedValues>({
     defaultValues: {
       ...DEFAULT_VALUES,
       [FIELD_NAME.CODE_ID]: defaultCodeId || '',
-      [FIELD_NAME.NETWORK]: readOnlyNetwork || DEFAULT_VALUES[FIELD_NAME.NETWORK],
+      [FIELD_NAME.NETWORK]: defaultNetwork || DEFAULT_VALUES[FIELD_NAME.NETWORK],
     },
 
     resolver: zodResolver(SCHEMA),
@@ -111,7 +111,7 @@ function VerifyForm() {
             label="Network"
             options={NETWORK_OPTIONS}
             gap={INPUT_GAP}
-            disabled={Boolean(readOnlyNetwork)}
+            disabled={Boolean(defaultCodeId)}
           />
 
           <LabeledCheckbox name={FIELD_NAME.BUILD_IDL} label="Build IDL" inputLabel="" gap={INPUT_GAP} />

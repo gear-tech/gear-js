@@ -45,6 +45,7 @@ const CARGO_TOML_PATH_REGEX = /^(?:\.\/)?(?:[^/]+\/)*Cargo\.toml$/;
 const SCHEMA = z
   .object({
     [FIELD_NAME.DOCKER_IMAGE_VERSION]: z.string(),
+
     [FIELD_NAME.CODE_ID]: z
       .string()
       .trim()
