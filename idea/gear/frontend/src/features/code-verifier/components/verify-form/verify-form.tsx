@@ -45,10 +45,8 @@ function VerifyForm() {
 
   const { mutateAsync, isPending } = useVerifyCode();
 
-  const handleSubmit = ({ version, repoLink, projectId, network, buildIdl, codeId: codeIdValue }: FormattedValues) => {
-    const project = projectIdType === PROJECT_ID_TYPE.NAME ? { Name: projectId } : { PathToCargoToml: projectId };
-
-    mutateAsync({ version, network, project, code_id: codeIdValue, repo_link: repoLink, build_idl: buildIdl })
+  const handleSubmit = (values: FormattedValues) => {
+    mutateAsync(values)
       .then(({ id }) => {
         navigate(generatePath(VERIFY_ROUTES.STATUS, { id }));
 

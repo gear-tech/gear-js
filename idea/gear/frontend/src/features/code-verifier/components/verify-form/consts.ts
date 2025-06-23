@@ -72,6 +72,14 @@ const SCHEMA = z
       message: 'Invalid path to Cargo.toml',
       path: [FIELD_NAME.PROJECT_ID],
     },
-  );
+  )
+  .transform(({ version, repoLink, projectId, network, buildIdl, projectIdType, codeId }) => ({
+    version,
+    network,
+    project: projectIdType === PROJECT_ID_TYPE.NAME ? { Name: projectId } : { ManifestPath: projectId },
+    code_id: codeId,
+    repo_link: repoLink,
+    build_idl: buildIdl,
+  }));
 
 export { DEFAULT_VALUES, SCHEMA, NETWORK, FIELD_NAME, PROJECT_ID_TYPE, NETWORK_OPTIONS };
