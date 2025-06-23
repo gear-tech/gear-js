@@ -39,17 +39,12 @@ const DEFAULT_VALUES = {
   [FIELD_NAME.BUILD_IDL]: false,
 };
 
-const SEMVER_REGEX = /^\d+\.\d+\.\d+$/;
 const GITHUB_REPO_URL_REGEX = /^https?:\/\/(www\.)?github\.com\/([\w-]+)\/([\w-]+)(\/.*)?$/;
 const CARGO_TOML_PATH_REGEX = /^(?:\.\/)?(?:[^/]+\/)*Cargo\.toml$/;
 
 const SCHEMA = z
   .object({
-    [FIELD_NAME.DOCKER_IMAGE_VERSION]: z
-      .string()
-      .trim()
-      .refine((value) => SEMVER_REGEX.test(value), { message: 'Invalid version format' }),
-
+    [FIELD_NAME.DOCKER_IMAGE_VERSION]: z.string(),
     [FIELD_NAME.CODE_ID]: z
       .string()
       .trim()

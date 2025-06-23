@@ -1,6 +1,7 @@
 import { useAlert, useApi } from '@gear-js/react-hooks';
 import { Button, InputWrapper } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
@@ -9,7 +10,7 @@ import ApplySVG from '@/shared/assets/images/actions/apply.svg?react';
 import { getErrorMessage } from '@/shared/helpers';
 import { BackButton, Box, Input, LabeledCheckbox, Radio, Select } from '@/shared/ui';
 
-import { useVerifyCode } from '../../api';
+import { useDockerImageVersions, useVerifyCode } from '../../api';
 import { VERIFY_ROUTES } from '../../consts';
 import { useDefaultCodeId } from '../../hooks';
 
@@ -24,12 +25,18 @@ const INPUT_GAP = '1.5/8.5';
 function VerifyForm() {
   const defaultCodeId = useDefaultCodeId();
   const navigate = useNavigate();
+  const alert = useAlert();
+
+  const { data: dockerImageVersions } = useDockerImageVersions();
+
+  const versionOptions = useMemo(
+    () => dockerImageVersions?.map((version) => ({ label: version, value: version })) || [],
+    [dockerImageVersions],
+  );
 
   const { api, isApiReady } = useApi();
   const genesisHash = isApiReady ? api.genesisHash.toHex() : undefined;
   const readOnlyNetwork = defaultCodeId && genesisHash ? NETWORK[genesisHash as keyof typeof NETWORK] : undefined;
-
-  const alert = useAlert();
 
   const form = useForm<Values, unknown, FormattedValues>({
     defaultValues: {
@@ -59,11 +66,12 @@ function VerifyForm() {
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <Box className={styles.box}>
-          <Input
+          <Select
             name={FIELD_NAME.DOCKER_IMAGE_VERSION}
-            placeholder="0.1.0"
+            options={versionOptions}
             label="Docker Image Version"
             gap={INPUT_GAP}
+            disabled={!dockerImageVersions}
           />
 
           <Input
