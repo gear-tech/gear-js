@@ -126,6 +126,8 @@ const isHex = (value: unknown): value is HexString => {
   return isString(value) && (value === '0x' || (HEX_REGEX.test(value) && value.length % 2 === 0));
 };
 
+const isBoolean = (value: unknown): value is boolean => typeof value === 'boolean';
+
 const getErrorMessage = (error: unknown) => (error instanceof Error ? error.message : String(error));
 
 const isAnyKey = (value: Record<string, unknown>) => Object.keys(value).length > 0;
@@ -155,6 +157,7 @@ export {
   isString,
   isUndefined,
   isHex,
+  isBoolean,
   fetchWithGuard,
   getErrorMessage,
   isAnyKey,
