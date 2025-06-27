@@ -50,6 +50,97 @@ This package requires several peer dependencies to be installed in your project:
 
 ## Getting started
 
+To use the hooks, wrap your application with the required providers. Each provider is described below.
+
+### QueryClientProvider (TanStack Query)
+
+Wrap your app with [`QueryClientProvider`](https://tanstack.com/query/latest/docs/framework/react/reference/QueryClientProvider) from TanStack Query to enable query and mutation management.
+
+For more details on setting up the TanStack Query, see the [TanStack Query documentation](https://tanstack.com/query/latest/docs/framework/react/quick-start).
+
+**Props:**
+
+- `client` (**required**): An instance of `QueryClient`.
+
+Example:
+
+```jsx
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
+
+<QueryClientProvider client={queryClient}>{/* ... */}</QueryClientProvider>;
+```
+
+### ApiProvider
+
+Provides Gear API context to the app.
+
+**Props:**
+
+- `initialArgs` (**required**): `ProviderArgs` — Arguments for the API provider. Determines how the API connection is established.
+  - `WsProviderArgs`: `{ endpoint: string | string[]; autoConnectMs?: number | false; headers?: Record<string, string>; timeout?: number; }` — Connects via JSON-RPC. `endpoint` is the node address or addresses. `autoConnectMs` sets auto-reconnect interval. `headers` and `timeout` are optional connection options.
+  - `ScProviderArgs`: `{ spec: string; sharedSandbox?: ScProvider; }` — Connects via Light Client. `spec` is the specification string. `sharedSandbox` allows sharing a sandbox instance.
+
+Example:
+
+```jsx
+import { ApiProvider } from '@gear-js/react-hooks';
+
+<ApiProvider initialArgs={{ endpoint: 'wss://testnet.vara.network' }}>{/* ... */}</ApiProvider>;
+```
+
+### AccountProvider
+
+Provides account and wallet context to the app.
+
+**Props:**
+
+- `appName` (**required**): `string` — The name of your application. Value provided here will be displayed at wallet app or extension.
+
+Example:
+
+```jsx
+import { AccountProvider } from '@gear-js/react-hooks';
+
+<AccountProvider appName="MyApp">{/* ... */}</AccountProvider>;
+```
+
+### AlertProvider
+
+Provides alert context for notifications and messages.
+
+**Props:**
+
+- `template` (**required**): `ComponentType<AlertTemplateProps>` — The component to use as the alert template. Defines how alerts are rendered in your app.
+- `containerClassName` (optional): `string` — Custom class name for the alert container. Use this to style or position the alert area.
+
+Example:
+
+```jsx
+import { AlertProvider } from '@gear-js/react-hooks';
+
+import { AlertTemplate } from './alert-template';
+
+<AlertProvider template={AlertTemplate}>{/* ... */}</AlertProvider>;
+```
+
+### Combine all providers at the root of your app:
+
+```jsx
+<QueryClientProvider client={queryClient}>
+  <ApiProvider initialArgs={{ endpoint: 'wss://testnet.vara.network' }}>
+    <AccountProvider appName="MyApp">
+      <AlertProvider template={AlertTemplate}>
+        <App />
+      </AlertProvider>
+    </AccountProvider>
+  </ApiProvider>
+</QueryClientProvider>
+```
+
+### Usage
+
 Simple as it is, here's quick example:
 
 ```jsx
