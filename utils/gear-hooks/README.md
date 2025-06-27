@@ -17,15 +17,36 @@ A React library that provides hooks that are used across Gear applications.
 
 ## Installation
 
+### npm
+
 ```sh
 npm install @gear-js/react-hooks
 ```
 
-or
+### yarn
 
 ```sh
 yarn add @gear-js/react-hooks
 ```
+
+### pnpm
+
+```sh
+pnpm add @gear-js/react-hooks
+```
+
+### Peer Dependencies
+
+This package requires several peer dependencies to be installed in your project:
+
+- @gear-js/api
+- @polkadot/api
+- @tanstack/react-query
+- sails-js
+
+> **Note:**
+> We recommend not installing peer dependencies explicitly if your package manager can resolve them automatically. However, if you have to fix version conflicts, or if you want to use functionality from these libraries directly in your project, you should install them explicitly.
+> Please refer to the `peerDependencies` section in the `package.json` for the required versions.
 
 ## Getting started
 
