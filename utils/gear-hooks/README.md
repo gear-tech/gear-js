@@ -8,12 +8,23 @@
 </h3>
 <p align=center>
     <a href="https://github.com/gear-tech/gear-js/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-GPL%203.0-success"></a>
+    <a href="https://www.npmjs.com/package/@gear-js/react-hooks"><img src="https://img.shields.io/npm/v/@gear-js/react-hooks.svg" alt="npm version"></a>
+    <a href="https://www.npmjs.com/package/@gear-js/react-hooks"><img src="https://img.shields.io/npm/dm/@gear-js/react-hooks.svg" alt="Downloads"></a>
+    <a href="https://github.com/gear-tech/gear-js/tree/master/apis/gear"><img src="https://img.shields.io/badge/Gear-TypeScript-blue?logo=typescript" alt="Gear TypeScript"></a>
+</p>
+<p align="center">
+    <a href="https://wiki.gear-tech.io"><img src="https://img.shields.io/badge/Gear-Wiki-orange?logo=bookstack" alt="Gear Wiki"></a>
+    <a href="https://idea.gear-tech.io"><img src="https://img.shields.io/badge/Gear-IDEA-blue?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADFSURBVHgBrVLLDYMwDH0OG7ABG5QNYIOwQRmhI3QERmCDMAIjsEFHgA2SDZyk5lRU1LQvQXLi2M+fDUQkLPpKz7MjNS/eN3VHGthSe0SHw2kN8bkwR4Rd9I3JGzWvkxXkQFD0z6Qs+6O0IQ9BlvXZVPDQYr9aNBglXmVUBqHLpCwqD6FTqhYHkfJkODmIpBMdEJVGh7pBZPmk+1rKL3lRfgeTxGrVY2T6z1TbUTKBhLrB1l4DkT+pMoBRzA5k4gCSzQP6wQlxwzh5ZgAAAABJRU5ErkJggg==" alt="Gear IDEA"></a>
 </p>
 <hr>
 
 ## Description
 
-A React library that provides hooks used across Gear applications. This package provides ready-to-use hooks for interacting with the Gear API, managing accounts and wallets, displaying alerts, formatting balances, querying on-chain state, handling program transactions, and working with vouchers and staking. Designed to simplify dApp development, these hooks abstract away low-level details and provide a consistent, declarative interface for common blockchain operations, including real-time subscriptions, state management, and user notifications.
+A React library that provides hooks used across Gear applications.
+
+This package provides ready-to-use hooks for interacting with the [@gear-js/api](https://github.com/gear-tech/gear-js/tree/main/apis/gear), managing accounts and wallets, formatting balances, querying on-chain state, handling program transactions, and working with vouchers and staking.
+
+Designed to simplify dApp development, these hooks abstract away low-level details and provide a consistent, declarative interface for common blockchain operations, including real-time subscriptions, state management, and user notifications.
 
 ## Installation
 
@@ -45,7 +56,7 @@ This package requires several peer dependencies to be installed in your project:
 - sails-js
 
 > **Note:**
-> We recommend not installing peer dependencies explicitly if your package manager can resolve them automatically. However, if you have to fix version conflicts, or if you want to use functionality from these libraries directly in your project, you should install them explicitly.
+> We recommend to not install peer dependencies explicitly if your package manager can resolve them automatically. However, if you have to fix version conflicts, or if you want to use functionality from these libraries directly in your project, you should install them explicitly.
 > Please refer to the `peerDependencies` section in the `package.json` for the required versions.
 
 ## Getting started
