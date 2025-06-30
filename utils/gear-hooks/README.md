@@ -162,6 +162,39 @@ export { State };
 
 ## Hooks
 
+## useApi
+
+Provides access to the Gear API instance, allowing you to interact with the blockchain, check if the API is ready, and switch networks programmatically.
+
+### Parameters
+
+None.
+
+### Returns
+
+- `api` (`GearApi | undefined`): The current Gear API instance, or `undefined` if not yet connected.
+- `isApiReady` (`boolean`): Indicates whether the API is fully initialized and ready to use.
+- `switchNetwork` (`(args: ProviderArgs) => Promise<void>`): Function to switch the network provider.
+
+### Usage Example
+
+```jsx
+import { useApi } from '@gear-js/react-hooks';
+
+function ApiStatus() {
+  const { api, isApiReady, switchNetwork } = useApi();
+
+  if (!isApiReady) return <div>Connecting to network...</div>;
+
+  return (
+    <div>
+      <div>API connected: {String(!!api)}</div>
+      <div>Spec Version: {api?.specVersion}</div>
+    </div>
+  );
+}
+```
+
 ## useBalance
 
 Retrieves and subscribes to the total balance of a given account address, allowing you to display or react to the overall balance in your application. This hook is based on `api.balance.findOut` and `api.gearEvents.subscribeToBalanceChanges`.
