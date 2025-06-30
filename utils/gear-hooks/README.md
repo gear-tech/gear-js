@@ -538,43 +538,92 @@ React hooks abstraction over [sails-js](https://github.com/gear-tech/sails/tree/
 
 ## useSails
 
-Returns Sails instance.
+Returns a Sails instance for interacting with a program using its interface for a given program ID and IDL.
 
-```js
+### Parameters
+
+- `programId` (`string`): The program ID to connect to.
+- `idl` (`string`): The program's interface definition language (IDL) as a string.
+- `query` (`QueryParameters`, optional): Additional query options for TanStack Query.
+
+### Returns
+
+- TanStack Query `UseQueryResult` with `Sails` instance data.
+
+### Usage Example
+
+```jsx
 import { useSails } from '@gear-js/react-hooks';
 
-const prorgramId = '0x...';
-const idl = '...';
+const PROGRAM_ID = '0x...';
+const IDL = '...';
 
-const { data } = useSails({
-  programId,
-  idl,
-});
+function SailsInfo() {
+  const { data: sails } = useSails({
+    programId: PROGRAM_ID,
+    idl: IDL,
+  });
 
-console.log(data);
+  if (!sails) return <div>Loading...</div>;
+
+  return <div>Sails instance ready: {String(!!sails)}</div>;
+}
 ```
 
 ## useProgram
 
-Returns a generated library instance.
+Returns a generated program library instance for interacting with a specific program. Use this hook to access the program's methods and services as defined in your generated library.
 
-```js
+### Parameters
+
+- `library` (`Program`): The generated program library (e.g., `Program` from your codegen output).
+- `id` (`string`): The program ID to connect to.
+- `query` (`QueryParameters`, optional): Additional query options for TanStack Query.
+
+### Returns
+
+- TanStack Query `UseQueryResult` with `Program` instance data.
+
+### Usage Example
+
+```jsx
 import { useProgram } from '@gear-js/react-hooks';
 import { Program } from './lib';
 
-const { data } = useProgram({
-  library: Program,
-  id: '0x...',
-});
+function ProgramInfo() {
+  const { data: program } = useProgram({
+    library: Program,
+    id: '0x...',
+  });
 
-console.log(data);
+  if (!program) return <div>Loading...</div>;
+
+  return <div>Program instance ready: {String(!!program)}</div>;
+}
+
+export { ProgramInfo };
 ```
 
 ## useSendProgramTransaction
 
-Returns a mutation to sign and send the transaction with minimum efforts.
+Returns a mutation to sign and send a transaction to a program with minimal effort. Use this hook to interact with a program's service and function, to handle signing, sending, and response management.
 
-Can be used as a direct shortcut to [Transaction Builder](https://github.com/gear-tech/sails/blob/master/js/README.md#transaction-builder) `signAndSend` method:
+### Parameters
+
+- `program` (`Program`): The program instance returned by `useProgram`.
+- `serviceName` (`string`): The name of the service to call.
+- `functionName` (`string`): The name of the function to call within the service.
+
+### Returns
+
+- `sendTransactionAsync` (`function`): A function to sign and send the transaction. Accepts an object with:
+  - `args` (`TFunctionArgs[]`): Arguments for the function call.
+  - `account` (`AccountParameters`, optional): Account options to sign the transaction. Defaults to the connected account.
+  - `value` (`bigint`, optional): Value to send with the transaction. Defaults to 0.
+  - `gasLimit` (`bigint | CalculateGasParameters`, optional): Gas limit for the transaction. If not provided, calculated automatically.
+  - `voucherId` (`HexString`, optional): Voucher ID to use for the transaction. If not provided, transaction will be sent without voucher
+
+### Usage Example
 
 ```jsx
 import { useProgram, useSendProgramTransaction } from '@gear-js/react-hooks';
@@ -593,19 +642,11 @@ function SendTransaction() {
   });
 
   const handleClick = async () => {
-    const result = await sendTransactionAsync({
+    const { awaited } = await sendTransactionAsync({
       args: ['arg', 'anotherArg'],
-
-      // additional options:
-      account: { addressOrPair: '0x...' }, // if not provided, connected account from extension will be used by default
-      value: 1000000n, // if not provided, 0 is sent by default
-      gasLimit: 1000000000n, // if not provided, gas will be calculated automatically
-      voucherId: '0x...', // if not provided, transaction will be sent without voucher
     });
 
-    const response = await result.response;
-
-    console.log('response: ', response);
+    console.log('response: ', awaited.response);
   };
 
   return (
@@ -630,7 +671,7 @@ function SendPreparedTransaction() {
     id: '0x...',
   });
 
-  const { sendTransactionAsync } = usePrepareProgramTransaction({
+  const { prepareTransactionAsync } = usePrepareProgramTransaction({
     program,
     serviceName: 'service',
     functionName: 'function',
@@ -643,24 +684,16 @@ function SendPreparedTransaction() {
   });
 
   const handleClick = async () => {
-    const transaction = await prepareTransactionAsync({
+    const preparedTx = await prepareTransactionAsync({
       args: ['arg', 'anotherArg'],
-
-      // additional options:
-      account: { addressOrPair: '0x...' }, // if not provided, connected account from extension will be used by default
-      value: 1000000n, // if not provided, 0 is sent by default
-      gasLimit: 1000000000n, // if not provided, gas will be calculated automatically
-      voucherId: '0x...', // if not provided, transaction will be sent without voucher
     });
 
-    const fee = await transaction.transactionFee();
-
+    const { fee } = preparedTx.awaited;
     console.log('fee: ', fee);
 
-    const result = await sendTransactionAsync(transaction);
-    const response = await result.response;
+    const { awaited } = await sendTransactionAsync(preparedTx.transaction);
 
-    console.log('response: ', response);
+    console.log('response: ', awaited.response);
   };
 
   return (
@@ -675,11 +708,25 @@ export { SendPreparedTransaction };
 
 ## usePrepareProgramTransaction
 
-Returns a mutation that retrieves the intermediate transaction state.
-
-This can be useful for eagerly obtaining values such as `gasLimit`, `extrinsic`, and `transactionFee`, which are essential for providing a better UX.
-
+Returns a mutation that retrieves the intermediate transaction state. This can be useful for eagerly obtaining values such as `gasLimit`, `extrinsic`, and `transactionFee`, which are essential for providing a better UX.
 For example, it can be used to perform validation checks before sending the transaction.
+
+### Parameters
+
+- `program` (`Program`): The program instance returned by `useProgram`.
+- `serviceName` (`string`): The name of the service to call.
+- `functionName` (`string`): The name of the function to call within the service.
+
+### Returns
+
+- `prepareTransactionAsync` (`function`): A function to prepare the transaction. Accepts an object with:
+  - `args` (`TFunctionArgs[]`): Arguments for the function call.
+  - `account` (`AccountParameters`, optional): Account options to sign the transaction. Defaults to the connected account.
+  - `value` (`bigint`, optional): Value to send with the transaction. Defaults to 0.
+  - `gasLimit` (`bigint | CalculateGasParameters`, optional): Gas limit for the transaction. If not provided, calculated automatically.
+  - `voucherId` (`HexString`, optional): Voucher ID to use for the transaction.
+
+### Usage Example
 
 ```jsx
 import { useProgram, usePrepareProgramTransaction } from '@gear-js/react-hooks';
@@ -691,24 +738,18 @@ function LogTransactionFeeButton() {
     id: '0x...',
   });
 
-  const { data, prepareTransactionAsync } = usePrepareProgramTransaction({
+  const { prepareTransactionAsync } = usePrepareProgramTransaction({
     program,
     serviceName: 'service',
     functionName: 'function',
   });
 
   const handleClick = async () => {
-    const transaction = await prepareTransactionAsync({
+    const preparedTx = await prepareTransactionAsync({
       args: ['arg', 'anotherArg'],
-
-      // additional options:
-      account: { addressOrPair: '0x...' }, // if not provided, connected account from extension will be used by default
-      value: 1000000n, // if not provided, 0 is sent by default
-      gasLimit: 1000000000n, // if not provided, gas will be calculated automatically
-      voucherId: '0x...', // if not provided, transaction will be sent without voucher
     });
 
-    const fee = await transaction.transactionFee();
+    const { fee } = preparedTx.awaited;
 
     console.log('fee: ', fee);
   };
@@ -725,7 +766,22 @@ export { LogTransactionFeeButton };
 
 ## useProgramQuery
 
-Returns a query with readed program's state.
+Returns a query with the program's state for a given service and function. Use this hook to read state from a program, optionally subscribing to state changes.
+
+### Parameters
+
+- `program` (`Program`): The program instance returned by `useProgram`.
+- `serviceName` (`string`): The name of the service to query.
+- `functionName` (`string`): The name of the function to query.
+- `args` (`TFunctionArgs[]`): Arguments for the function call.
+- `watch` (`boolean`, optional): If true, subscribes to state changes. Default is false.
+- `query` (`QueryParameters`, optional): Additional query options for TanStack Query.
+
+### Returns
+
+- TanStack Query `UseQueryResult` with the function's return data.
+
+### Usage Example
 
 ```jsx
 import { useProgram, useProgramQuery } from '@gear-js/react-hooks';
@@ -742,11 +798,6 @@ function State() {
     serviceName: 'service',
     functionName: 'function',
     args: ['arg', 'anotherArg'],
-
-    // additional options:
-    // if true, subscription to a program's stateChanges in Gear MessagesDispatched event will be initialized.
-    // network traffic heavy, proceed with caution
-    watch: false,
   });
 
   return <div>{JSON.stringify(data)}</div>;
@@ -755,7 +806,20 @@ function State() {
 
 ## useProgramEvent
 
-Initialized subscription to a particular program event.
+Initializes a subscription to a particular program event. Use this hook to listen for events emitted by a program's service and function.
+
+### Parameters
+
+- `program` (`Program`): The program instance returned by `useProgram`.
+- `serviceName` (`string`): The name of the service to subscribe to.
+- `functionName` (`string`): The name of the function to subscribe to.
+- `onData` (`function`): Callback function to handle event data.
+
+### Returns
+
+None.
+
+### Usage Example
 
 ```jsx
 import { useProgram, useProgramEvent } from '@gear-js/react-hooks';
