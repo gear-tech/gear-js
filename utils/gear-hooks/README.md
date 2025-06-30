@@ -310,6 +310,42 @@ function Balance({ address }: Props) {
 }
 ```
 
+## useDeriveBalancesAll
+
+Retrieves and subscribes to all balance components (transferable, reserved, misc frozen, etc.) for a given account address, providing a full breakdown of the account's balance as returned by Substrate's derive API. Use this hook when you need to display or react to specific balance fields, such as transferable or reserved balance, rather than the total. This hook is based on `api.derive.balances.all`.
+
+### Parameters
+
+- `address` (`string | undefined`): The account address to fetch and subscribe to the balance breakdown for.
+- `watch` (`boolean`, optional): If true, subscribes to balance changes and updates automatically. Default is false.
+- `query` (`QueryParameters`, optional): Additional query options for TanStack Query.
+
+### Returns
+
+- TanStack Query `UseQueryReturn` with `DeriveBalancesAll` data.
+
+### Usage Example
+
+```jsx
+import { useDeriveBalancesAll } from '@gear-js/react-hooks';
+
+function BalanceBreakdown({ address }) {
+  const { data, isLoading } = useDeriveBalancesAll({ address });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (!data) return <div>No data</div>;
+
+  return (
+    <div>
+      <div>Transferable: {data.transferable.toString()}</div>
+      <div>Reserved: {data.reservedBalance.toString()}</div>
+      <div>Frozen Misc: {data.frozenMisc.toString()}</div>
+      <div>Frozen Fee: {data.frozenFee.toString()}</div>
+    </div>
+  );
+}
+```
+
 ## Sails Hooks
 
 React hooks abstraction over [sails-js](https://github.com/gear-tech/sails/tree/master/js) and it's generated program library.
