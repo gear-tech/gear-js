@@ -1,5 +1,7 @@
 import { ethers } from 'ethers';
 
+
+// GENERATED_ABI_START
 export const IWRAPPEDVARA_ABI = [
   'function allowance(address owner, address spender) view returns (uint256)',
   'function approve(address spender, uint256 value) returns (bool)',
@@ -15,7 +17,9 @@ export const IWRAPPEDVARA_ABI = [
 ];
 
 export const IWRAPPEDVARA_INTERFACE = new ethers.Interface(IWRAPPEDVARA_ABI);
+// GENERATED_ABI_END
 
+// GENERATED_INTERFACE_START
 /**
  * Interface for IWrappedVara contract methods
  * Standard ERC20 token interface for wrapped VARA tokens
@@ -60,3 +64,4 @@ export interface IWrappedVaraContract {
    */
   totalSupply(): Promise<bigint>;
 }
+// GENERATED_INTERFACE_END

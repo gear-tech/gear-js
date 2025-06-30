@@ -1,6 +1,7 @@
 import { CodeState } from '../interfaces';
 import { ethers } from 'ethers';
 
+// GENERATED_ABI_START
 export const IROUTER_ABI = [
   'function areValidators(address[] validators) view returns (bool)',
   'function codeState(bytes32 codeId) view returns (uint8)',
@@ -36,13 +37,16 @@ export const IROUTER_ABI = [
   'event NextEraValidatorsCommitted(uint256 startTimestamp)',
   'event ProgramCreated(address actorId, bytes32 indexed codeId)',
   'event StorageSlotChanged()',
+  'error CodeIsNotValidated()',
+  'error RouterGenesisHashIsZero()',
 ];
 
 export const IROUTER_INTERFACE = new ethers.Interface(IROUTER_ABI);
+// GENERATED_ABI_END
 
+// GENERATED_INTERFACE_START
 /**
  * Interface for IRouter contract methods
- * Router contract manages validators, programs, and blockchain state on Gear.Exe
  */
 export interface IRouterContract {
   /**
@@ -51,123 +55,105 @@ export interface IRouterContract {
    * @returns Promise resolving to true if all addresses are validators
    */
   areValidators(validators: string[]): Promise<boolean>;
-
   /**
    * Gets the validation state of a specific code
    * @param codeId - The ID of the code to check
    * @returns Promise resolving to the code state enum value
    */
   codeState(codeId: string): Promise<CodeState>;
-
   /**
    * Gets the validation states of multiple codes
    * @param codesIds - Array of code IDs to check
    * @returns Promise resolving to array of code state enum values
    */
   codesStates(codesIds: string[]): Promise<bigint[]>;
-
   /**
    * Gets the current computation settings
    * @returns Promise resolving to computation settings with threshold and wVARA per second
    */
   computeSettings(): Promise<any>;
-
   /**
    * Gets the genesis block hash
    * @returns Promise resolving to the genesis block hash
    */
   genesisBlockHash(): Promise<string>;
-
   /**
    * Gets the genesis timestamp
    * @returns Promise resolving to the genesis timestamp
    */
   genesisTimestamp(): Promise<bigint>;
-
   /**
    * Checks if an address is a validator
    * @param validator - The address to check
    * @returns Promise resolving to true if the address is a validator
    */
   isValidator(validator: string): Promise<boolean>;
-
   /**
    * Gets the hash of the latest committed block
    * @returns Promise resolving to the latest committed block hash
    */
   latestCommittedBlockHash(): Promise<string>;
-
   /**
    * Gets the mirror implementation address
    * @returns Promise resolving to the mirror implementation address
    */
   mirrorImpl(): Promise<string>;
-
   /**
    * Gets the code ID for a specific program
    * @param programId - The program address to query
    * @returns Promise resolving to the code ID of the program
    */
   programCodeId(programId: string): Promise<string>;
-
   /**
    * Gets code IDs for multiple programs
    * @param programsIds - Array of program addresses to query
    * @returns Promise resolving to array of code IDs
    */
   programsCodeIds(programsIds: string[]): Promise<string[]>;
-
   /**
    * Gets the total number of created programs
    * @returns Promise resolving to the programs count
    */
   programsCount(): Promise<bigint>;
-
   /**
    * Gets the signing threshold percentage for validators
    * @returns Promise resolving to the threshold percentage
    */
   signingThresholdPercentage(): Promise<bigint>;
-
   /**
    * Gets the count of validated codes
    * @returns Promise resolving to the number of validated codes
    */
   validatedCodesCount(): Promise<bigint>;
-
   /**
    * Gets the list of current validators
    * @returns Promise resolving to array of validator addresses
    */
   validators(): Promise<string[]>;
-
   /**
    * Gets the aggregated public key of current validators
    * @returns Promise resolving to the aggregated public key structure
    */
   validatorsAggregatedPublicKey(): Promise<any>;
-
   /**
    * Gets the total number of validators
    * @returns Promise resolving to the validators count
    */
   validatorsCount(): Promise<bigint>;
-
   /**
    * Gets the minimum number of validators required for consensus
    * @returns Promise resolving to the validators threshold
    */
   validatorsThreshold(): Promise<bigint>;
-
   /**
    * Gets the verifiable secret sharing commitment for validators
    * @returns Promise resolving to the VSS commitment bytes
    */
   validatorsVerifiableSecretSharingCommitment(): Promise<string>;
-
   /**
    * Gets the wrapped VARA token address
    * @returns Promise resolving to the wVARA token address
    */
   wrappedVara(): Promise<string>;
 }
+// GENERATED_INTERFACE_END

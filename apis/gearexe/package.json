@@ -9,6 +9,7 @@
   },
   "scripts": {
     "test": "./scripts/run-tests.sh",
+    "test:only": "yarn node --no-warnings --experimental-vm-modules $(../../node_modules/.bin/jest) --runInBand",
     "build": "npx rollup -c",
     "clean": "rm -rf lib",
     "abi": "node scripts/convert-abi.mjs"
