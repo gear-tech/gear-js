@@ -134,7 +134,7 @@ function VerifyForm() {
             text="Verify"
             color="secondary"
             size="large"
-            disabled={!isApiReady || isPending}
+            disabled={!isApiReady || isPending || !dockerImageVersions}
           />
 
           <BackButton />
