@@ -160,7 +160,43 @@ function State() {
 export { State };
 ```
 
-## Sails
+## Hooks
+
+## useBalance
+
+Retrieves and subscribes to the total balance of a given account address, allowing you to display or react to the overall balance in your application. This hook is based on `api.balance.findOut` and `api.gearEvents.subscribeToBalanceChanges`.
+
+> **Note:**  
+> This hook returns the account's total balance as a single value, not its individual components (such as free, reserved, or misc frozen balances). On Substrate-based chains, the balance type is a composite structure; to access specific fields like free balance, use the [useDeriveBalancesAll](#useDeriveBalancesAll).
+
+### Parameters
+
+- `address` (`string | undefined`): The account address to fetch and subscribe to the balance for.
+
+### Returns
+
+- `balance` (`Balance | undefined`): The current total balance of the account, or `undefined` if not yet loaded.
+- `isBalanceReady` (`boolean`): Indicates whether the balance has been successfully loaded.
+
+### Usage Example
+
+```jsx
+import { useBalance } from '@gear-js/react-hooks';
+
+type Props = {
+  address: string | undefined;
+}
+
+function Balance({ address }: Props) {
+  const { balance, isBalanceReady } = useBalance(address);
+
+  if (!isBalanceReady) return <div>Loading...</div>;
+
+  return <div>Total Balance: {balance?.toString()}</div>;
+}
+```
+
+## Sails Hooks
 
 React hooks abstraction over [sails-js](https://github.com/gear-tech/sails/tree/master/js) and it's generated program library.
 
