@@ -233,6 +233,49 @@ function AccountInfo() {
 }
 ```
 
+## useAlert
+
+Provides access to alert and notification methods, allowing you to show, update, and remove alerts or notifications in your application.
+
+### Parameters
+
+None.
+
+### Returns
+
+- `info` (`(content: ReactNode, options?: TemplateAlertOptions) => string`): Show an info alert.
+- `error` (`(content: ReactNode, options?: TemplateAlertOptions) => string`): Show an error alert.
+- `success` (`(content: ReactNode, options?: TemplateAlertOptions) => string`): Show a success alert.
+- `loading` (`(content: ReactNode, options?: TemplateAlertOptions) => string`): Show a loading alert.
+- `update` (`(alertId: string, content: ReactNode, options?: Partial<AlertOptions>) => void`): Update an existing alert by its ID.
+- `remove` (`(alertId: string) => void`): Remove an alert by its ID.
+
+### Usage Example
+
+```jsx
+import { useAccount, useAlert } from '@gear-js/react-hooks';
+
+function AlertButtons() {
+  const alert = useAlert();
+
+  const handleSuccessClick = () => {
+    alert.success('Success alert!');
+  };
+
+  const handleErrorClick = () => {
+    alert.error('Error alert!');
+  };
+
+  return (
+    <div>
+      <button onClick={handleSuccessClick}>Show Success Alert</button>
+
+      <button onClick={handleErrorClick}>Show Error Alert</button>
+    </div>
+  );
+}
+```
+
 ## useBalance
 
 Retrieves and subscribes to the total balance of a given account address, allowing you to display or react to the overall balance in your application. This hook is based on `api.balance.findOut` and `api.gearEvents.subscribeToBalanceChanges`.
