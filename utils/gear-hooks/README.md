@@ -18,6 +18,17 @@
 </p>
 <hr>
 
+# Table of Content
+
+- [Description](#description)
+- [Installation](#installation)
+- [Getting started](#getting-started)
+- [Context Hooks](#context-hooks)
+- [Balance Hooks](#balance-hooks)
+- [Derive Hooks](#derive-hooks)
+- [Voucher Hooks](#voucher-hooks)
+- [Sails Hooks](#sails-hooks)
+
 # Description
 
 A React library that provides hooks used across Gear applications.
@@ -69,11 +80,11 @@ Wrap your app with [`QueryClientProvider`](https://tanstack.com/query/latest/doc
 
 For more details on setting up the TanStack Query, see the [TanStack Query documentation](https://tanstack.com/query/latest/docs/framework/react/quick-start).
 
-**Props:**
+### Props
 
 - `client` (**required**): An instance of `QueryClient`.
 
-Example:
+### Example:
 
 ```jsx
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -87,13 +98,13 @@ const queryClient = new QueryClient();
 
 Provides Gear API context to the app.
 
-**Props:**
+### Props
 
 - `initialArgs` (**required**): `ProviderArgs` — Arguments for the API provider. Determines how the API connection is established.
   - `WsProviderArgs`: `{ endpoint: string | string[]; autoConnectMs?: number | false; headers?: Record<string, string>; timeout?: number; }` — Connects via JSON-RPC. `endpoint` is the node address or addresses. `autoConnectMs` sets auto-reconnect interval. `headers` and `timeout` are optional connection options.
   - `ScProviderArgs`: `{ spec: string; sharedSandbox?: ScProvider; }` — Connects via Light Client. `spec` is the specification string. `sharedSandbox` allows sharing a sandbox instance.
 
-Example:
+### Example:
 
 ```jsx
 import { ApiProvider } from '@gear-js/react-hooks';
@@ -105,11 +116,11 @@ import { ApiProvider } from '@gear-js/react-hooks';
 
 Provides account and wallet context to the app.
 
-**Props:**
+### Props
 
 - `appName` (**required**): `string` — The name of your application. Value provided here will be displayed at wallet app or extension.
 
-Example:
+### Example:
 
 ```jsx
 import { AccountProvider } from '@gear-js/react-hooks';
@@ -121,12 +132,12 @@ import { AccountProvider } from '@gear-js/react-hooks';
 
 Provides alert context for notifications and messages.
 
-**Props:**
+### Props
 
 - `template` (**required**): `ComponentType<AlertTemplateProps>` — The component to use as the alert template. Defines how alerts are rendered in your app.
 - `containerClassName` (optional): `string` — Custom class name for the alert container. Use this to style or position the alert area.
 
-Example:
+### Example:
 
 ```jsx
 import { AlertProvider } from '@gear-js/react-hooks';
@@ -367,7 +378,7 @@ function Balance({ address }: Props) {
 }
 ```
 
-# Derive API Hooks
+# Derive Hooks
 
 ## useDeriveBalancesAll
 
