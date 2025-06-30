@@ -276,6 +276,50 @@ function AlertButtons() {
 }
 ```
 
+## useBalanceFormat
+
+Provides utilities for formatting and converting balances and gas values according to the current chain's decimals and token unit. Use this hook when you need to display user-friendly balances, convert between raw and formatted values, or transform gas calculation values. This hook is based on `api.registry.chainDecimals`, `api.registry.chainTokens`, and `api.valuePerGas`.
+
+> **Note:**
+> This hook uses the BigNumber.js library under the hood. If you are not sure, all values returned as BigNumber instances should be converted or used in calculations only with BigNumber methods — using them as regular JavaScript numbers is not safe and may lead to precision errors.
+
+### Parameters
+
+None.
+
+### Returns
+
+- `balanceMultiplier` (`BigNumber`): Multiplier for converting between raw and formatted balances.
+- `decimals` (`number`): Number of decimals for the current chain.
+- `getChainBalanceValue` (`(value: string | number) => BigNumber`): Converts a formatted value to the raw chain balance.
+- `getFormattedBalanceValue` (`(value: string | number) => BigNumber`): Converts a raw chain balance to a formatted value.
+- `getFormattedBalance` (`(balance: BN | string | number) => { value: string, unit: string }`): Formats a balance for display, returning the value and unit.
+- `getChainGasValue` (`(value: string | number) => BigNumber`): Converts a formatted gas value to the raw chain gas value.
+- `getFormattedGasValue` (`(value: string | number) => BigNumber`): Converts a raw chain gas value to a formatted value.
+
+### Usage Example
+
+```jsx
+import { useApi, useBalanceFormat } from '@gear-js/react-hooks';
+
+const RAW_BALANCE = 1_000_000_000_000n;
+
+function BalanceDisplay({ balance }) {
+  const { isApiReady } = useApi();
+
+  const { getFormattedBalance } = useBalanceFormat();
+  const formattedBalance = isApiReady ? getFormattedBalance(RAW_BALANCE) : undefined;
+
+  if (!formattedBalance) return <span>Loading...</span>;
+
+  return (
+    <span>
+      {formattedBalance.value} {formattedBalance.unit}
+    </span>
+  );
+}
+```
+
 ## useBalance
 
 Retrieves and subscribes to the total balance of a given account address, allowing you to display or react to the overall balance in your application. This hook is based on `api.balance.findOut` and `api.gearEvents.subscribeToBalanceChanges`.
