@@ -195,6 +195,44 @@ function ApiStatus() {
 }
 ```
 
+## useAccount
+
+Provides access to the current wallet and account context, allowing you to manage user wallet connection, retrieve available wallets, and handle login/logout actions in your application. This hook interacts with browser wallet extensions.
+
+### Parameters
+
+None.
+
+### Returns
+
+- `wallets` (`Wallets | undefined`): An object containing all detected wallets and their accounts, or `undefined` if not yet loaded.
+- `account` (`Account | undefined`): The currently selected account, or `undefined` if not logged in.
+- `isAnyWallet` (`boolean`): Indicates whether any wallet extension is available.
+- `isAccountReady` (`boolean`): Indicates whether wallet and account information has been loaded.
+- `login` (`(account: Account) => void`): Function to log in with a specific account.
+- `logout` (`() => void`): Function to log out the current account.
+
+### Usage Example
+
+```jsx
+import { useAccount } from '@gear-js/react-hooks';
+
+function AccountInfo() {
+  const { wallets, account, isAnyWallet, isAccountReady, login, logout } = useAccount();
+
+  if (!isAccountReady) return <div>Loading wallets...</div>;
+  if (!isAnyWallet) return <div>No wallet extension found</div>;
+
+  return (
+    <div>
+      <div>Current account: {account?.address || 'None'}</div>
+
+      {account && <button onClick={logout}>Logout</button>}
+    </div>
+  );
+}
+```
+
 ## useBalance
 
 Retrieves and subscribes to the total balance of a given account address, allowing you to display or react to the overall balance in your application. This hook is based on `api.balance.findOut` and `api.gearEvents.subscribeToBalanceChanges`.
