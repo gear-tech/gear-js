@@ -13,7 +13,7 @@
 
 ## Description
 
-A React library that provides hooks that are used across Gear applications.
+A React library that provides hooks used across Gear applications. This package provides ready-to-use hooks for interacting with the Gear API, managing accounts and wallets, displaying alerts, formatting balances, querying on-chain state, handling program transactions, and working with vouchers and staking. Designed to simplify dApp development, these hooks abstract away low-level details and provide a consistent, declarative interface for common blockchain operations, including real-time subscriptions, state management, and user notifications.
 
 ## Installation
 
