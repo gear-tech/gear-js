@@ -426,6 +426,40 @@ function StakingInfo({ address }) {
 }
 ```
 
+## useVoucher
+
+Retrieves details for a specific voucher associated with a given account address. Use this hook when you need to display or react to voucher information for a user. This hook is based on `api.voucher.getDetails`.
+
+### Parameters
+
+- `voucherId` (`HexString | undefined`): The voucher ID to fetch details for.
+- `accountAddress` (`string | undefined`): The account address to fetch the voucher for.
+
+### Returns
+
+- `voucher` (`IVoucherDetails | undefined`): The voucher details, or `undefined` if not yet loaded.
+- `isVoucherReady` (`boolean`): Indicates whether the voucher details have been successfully loaded.
+
+### Usage Example
+
+```jsx
+import { useVoucher } from '@gear-js/react-hooks';
+
+function VoucherInfo({ voucherId, accountAddress }) {
+  const { voucher, isVoucherReady } = useVoucher(voucherId, accountAddress);
+
+  if (!isVoucherReady) return <div>Loading...</div>;
+  if (!voucher) return <div>No voucher found</div>;
+
+  return (
+    <div>
+      <div>Owner: {voucher.owner}</div>
+      <div>Expiry: {voucher.expiry}</div>
+    </div>
+  );
+}
+```
+
 ## Sails Hooks
 
 React hooks abstraction over [sails-js](https://github.com/gear-tech/sails/tree/master/js) and it's generated program library.
