@@ -39,16 +39,12 @@ const DEFAULT_VALUES = {
   [FIELD_NAME.BUILD_IDL]: false,
 };
 
-const SEMVER_REGEX = /^\d+\.\d+\.\d+$/;
 const GITHUB_REPO_URL_REGEX = /^https?:\/\/(www\.)?github\.com\/([\w-]+)\/([\w-]+)(\/.*)?$/;
 const CARGO_TOML_PATH_REGEX = /^(?:\.\/)?(?:[^/]+\/)*Cargo\.toml$/;
 
 const SCHEMA = z
   .object({
-    [FIELD_NAME.DOCKER_IMAGE_VERSION]: z
-      .string()
-      .trim()
-      .refine((value) => SEMVER_REGEX.test(value), { message: 'Invalid version format' }),
+    [FIELD_NAME.DOCKER_IMAGE_VERSION]: z.string(),
 
     [FIELD_NAME.CODE_ID]: z
       .string()
@@ -72,6 +68,14 @@ const SCHEMA = z
       message: 'Invalid path to Cargo.toml',
       path: [FIELD_NAME.PROJECT_ID],
     },
-  );
+  )
+  .transform(({ version, repoLink, projectId, network, buildIdl, projectIdType, codeId }) => ({
+    version,
+    network,
+    project: projectIdType === PROJECT_ID_TYPE.NAME ? { Name: projectId } : { ManifestPath: projectId },
+    code_id: codeId,
+    repo_link: repoLink,
+    build_idl: buildIdl,
+  }));
 
 export { DEFAULT_VALUES, SCHEMA, NETWORK, FIELD_NAME, PROJECT_ID_TYPE, NETWORK_OPTIONS };

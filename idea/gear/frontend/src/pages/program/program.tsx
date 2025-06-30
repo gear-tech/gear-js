@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
 
 import { ProgramBalance } from '@/features/balance';
-import { useIsCodeVerified, VerificationStatus } from '@/features/code-verifier';
+import { useIsCodeVerified, VerificationStatus, VerifyLink } from '@/features/code-verifier';
 import { ProgramMessages } from '@/features/message';
 import { useMetadata, MetadataTable, isState } from '@/features/metadata';
 import { ProgramStatus, ProgramTable, useProgram } from '@/features/program';
@@ -16,7 +16,7 @@ import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import SendSVG from '@/shared/assets/images/actions/send.svg?react';
 import { absoluteRoutes, routes } from '@/shared/config';
-import { getShortName, isAnyKey } from '@/shared/helpers';
+import { getShortName, isAnyKey, isBoolean } from '@/shared/helpers';
 import { Box, UILink } from '@/shared/ui';
 
 import styles from './program.module.scss';
@@ -113,10 +113,9 @@ const Program = () => {
             </>
           )}
 
-          {/* commented out till next release */}
-          {/* {program?.codeId && typeof isCodeVerified === 'boolean' && !isCodeVerified && (
+          {program?.codeId && isBoolean(isCodeVerified) && !isCodeVerified && (
             <VerifyLink codeId={program.codeId} className={styles.fixWidth} />
-          )} */}
+          )}
         </div>
       </header>
 

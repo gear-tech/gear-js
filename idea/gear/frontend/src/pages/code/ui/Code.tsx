@@ -3,7 +3,7 @@ import { HexString } from '@polkadot/util/types';
 import { generatePath, useParams } from 'react-router-dom';
 
 import { CodeTable, useCode as useStorageCode } from '@/features/code';
-import { useIsCodeVerified, VerificationStatus } from '@/features/code-verifier';
+import { useIsCodeVerified, VerificationStatus, VerifyLink } from '@/features/code-verifier';
 import { useLocalCode } from '@/features/local-indexer';
 import { MetadataTable, useMetadata } from '@/features/metadata';
 import { Programs, usePrograms } from '@/features/program';
@@ -12,6 +12,7 @@ import { useChain, useModal } from '@/hooks';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import { absoluteRoutes } from '@/shared/config';
+import { isBoolean } from '@/shared/helpers';
 import { Box } from '@/shared/ui';
 import { BackButton } from '@/shared/ui/backButton';
 import { UILink } from '@/shared/ui/uiLink';
@@ -89,8 +90,7 @@ const Code = () => {
           <header className={styles.programsHeader}>
             <h2 className={styles.heading}>Programs</h2>
 
-            {/* commented out till next release */}
-            {/* {typeof isCodeVerified === 'boolean' && !isCodeVerified && <VerifyLink codeId={codeId} />} */}
+            {isBoolean(isCodeVerified) && !isCodeVerified && <VerifyLink codeId={codeId} />}
           </header>
 
           <Programs

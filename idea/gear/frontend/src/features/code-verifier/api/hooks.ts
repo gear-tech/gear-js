@@ -6,7 +6,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
 import { API_URL } from './consts';
-import { getVerificationStatus, getVerifiedCode, verifyCode } from './requests';
+import { getDockerImageVersions, getVerificationStatus, getVerifiedCode, verifyCode } from './requests';
 
 function useVerifyCode() {
   return useMutation({
@@ -53,4 +53,22 @@ function useVerificationStatus(id: string) {
   return query;
 }
 
-export { useVerifyCode, useIsCodeVerified, useVerificationStatus };
+function useDockerImageVersions() {
+  const alert = useAlert();
+
+  const query = useQuery({
+    queryKey: ['docker-image-versions'],
+    queryFn: getDockerImageVersions,
+  });
+
+  const { error } = query;
+
+  useEffect(() => {
+    if (error) alert.error(error.message);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
+
+  return query;
+}
+
+export { useVerifyCode, useIsCodeVerified, useVerificationStatus, useDockerImageVersions };
