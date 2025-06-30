@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@polkadot/api-derive": "16.2.2",
-    "@polkadot/extension-inject": "0.60.1",
+    "@polkadot/extension-inject": "0.61.1",
     "@polkadot/util": "13.5.2",
     "@substrate/connect": "2.1.0",
     "bignumber.js": "9.1.2",

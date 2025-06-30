@@ -2435,7 +2435,7 @@ __metadata:
     "@gear-js/frontend-configs": "npm:*"
     "@polkadot/api": "npm:16.2.2"
     "@polkadot/api-derive": "npm:16.2.2"
-    "@polkadot/extension-inject": "npm:0.60.1"
+    "@polkadot/extension-inject": "npm:0.61.1"
     "@polkadot/types": "npm:16.2.2"
     "@polkadot/util": "npm:13.5.2"
     "@substrate/connect": "npm:2.1.0"
@@ -4685,9 +4685,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/extension-inject@npm:0.60.1":
-  version: 0.60.1
-  resolution: "@polkadot/extension-inject@npm:0.60.1"
+"@polkadot/extension-inject@npm:0.61.1":
+  version: 0.61.1
+  resolution: "@polkadot/extension-inject@npm:0.61.1"
   dependencies:
     "@polkadot/api": "npm:^16.2.2"
     "@polkadot/rpc-provider": "npm:^16.2.2"
@@ -4699,7 +4699,7 @@ __metadata:
   peerDependencies:
     "@polkadot/api": "*"
     "@polkadot/util": "*"
-  checksum: 10c0/caff508526fe157a85fe886f706b6c305d456e6be6e7c9376c47544d497c7b90f63b909c49d1ae945d3b0344b0ca58886c786ec1a39098ce7fcb1e58b3cfaf04
+  checksum: 10c0/ba043d32b6237dbbf2b1986e27be3b611b07c206342dd0c334a86f9fd960053bef079a10656ff90203b443a8a8f53c1517fbc57661c18d03f7b4164a995ac0fb
   languageName: node
   linkType: hard
 
