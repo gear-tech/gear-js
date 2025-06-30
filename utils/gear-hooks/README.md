@@ -366,7 +366,7 @@ Retrieves and subscribes to all balance components (transferable, reserved, misc
 
 ### Returns
 
-- TanStack Query `UseQueryReturn` with `DeriveBalancesAll` data.
+- TanStack Query `UseQueryResult` with `DeriveBalancesAll` data.
 
 ### Usage Example
 
@@ -385,6 +385,42 @@ function BalanceBreakdown({ address }) {
       <div>Reserved: {data.reservedBalance.toString()}</div>
       <div>Frozen Misc: {data.frozenMisc.toString()}</div>
       <div>Frozen Fee: {data.frozenFee.toString()}</div>
+    </div>
+  );
+}
+```
+
+## useDeriveStakingAccount
+
+Retrieves and subscribes to staking information for a given account address, including staking ledger, nominations, rewards, and more, as provided by Substrate's derive API. Use this hook when you need to display or react to staking-related data for an account. This hook is based on `api.derive.staking.account`.
+
+### Parameters
+
+- `address` (`string | undefined`): The account address to fetch and subscribe to staking information for.
+- `watch` (`boolean`, optional): If true, subscribes to staking changes and updates automatically. Default is false.
+- `query` (`QueryParameters`, optional): Additional query options for TanStack Query.
+
+### Returns
+
+- TanStack Query `UseQueryResult` with `DeriveStakingAccount` data.
+
+### Usage Example
+
+```jsx
+import { useDeriveStakingAccount } from '@gear-js/react-hooks';
+
+function StakingInfo({ address }) {
+  const { data, isLoading } = useDeriveStakingAccount({ address });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (!data) return <div>No staking data</div>;
+
+  return (
+    <div>
+      <div>Stash: {data.stashId.toHex()}</div>
+      <div>Controller: {data.controllerId.toHex()}</div>
+      <div>Ledger: {JSON.stringify(data.stakingLedger)}</div>
+      <div>Nominations: {JSON.stringify(data.nominations)}</div>
     </div>
   );
 }
