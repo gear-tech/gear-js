@@ -15,6 +15,6 @@ const getVerificationStatus = (id: string) =>
 
 const getVerifiedCode = (id: string) => fetchWithGuard<CodeResponse>({ url: `${API_URL}/code?id=${id}` });
 
-const getDockerImageVersions = () => fetchWithGuard<string[]>({ url: `${API_URL}/supported-versions` });
+const getDockerImageVersions = () => fetchWithGuard<string[]>({ url: `${API_URL}/supported_versions` });
 
 export { verifyCode, getVerificationStatus, getVerifiedCode, getDockerImageVersions };
