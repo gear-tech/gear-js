@@ -18,7 +18,7 @@
 </p>
 <hr>
 
-## Description
+# Description
 
 A React library that provides hooks used across Gear applications.
 
@@ -26,7 +26,7 @@ This package provides ready-to-use hooks for interacting with the [@gear-js/api]
 
 Designed to simplify dApp development, these hooks abstract away low-level details and provide a consistent, declarative interface for common blockchain operations, including real-time subscriptions, state management, and user notifications.
 
-## Installation
+# Installation
 
 ### npm
 
@@ -46,7 +46,7 @@ yarn add @gear-js/react-hooks
 pnpm add @gear-js/react-hooks
 ```
 
-### Peer Dependencies
+## Peer Dependencies
 
 This package requires several peer dependencies to be installed in your project:
 
@@ -59,11 +59,11 @@ This package requires several peer dependencies to be installed in your project:
 > We recommend to not install peer dependencies explicitly if your package manager can resolve them automatically. However, if you have to fix version conflicts, or if you want to use functionality from these libraries directly in your project, you should install them explicitly.
 > Please refer to the `peerDependencies` section in the `package.json` for the required versions.
 
-## Getting started
+# Getting started
 
 To use the hooks, wrap your application with the required providers. Each provider is described below.
 
-### QueryClientProvider (TanStack Query)
+## QueryClientProvider (TanStack Query)
 
 Wrap your app with [`QueryClientProvider`](https://tanstack.com/query/latest/docs/framework/react/reference/QueryClientProvider) from TanStack Query to enable query and mutation management.
 
@@ -83,7 +83,7 @@ const queryClient = new QueryClient();
 <QueryClientProvider client={queryClient}>{/* ... */}</QueryClientProvider>;
 ```
 
-### ApiProvider
+## ApiProvider
 
 Provides Gear API context to the app.
 
@@ -101,7 +101,7 @@ import { ApiProvider } from '@gear-js/react-hooks';
 <ApiProvider initialArgs={{ endpoint: 'wss://testnet.vara.network' }}>{/* ... */}</ApiProvider>;
 ```
 
-### AccountProvider
+## AccountProvider
 
 Provides account and wallet context to the app.
 
@@ -117,7 +117,7 @@ import { AccountProvider } from '@gear-js/react-hooks';
 <AccountProvider appName="MyApp">{/* ... */}</AccountProvider>;
 ```
 
-### AlertProvider
+## AlertProvider
 
 Provides alert context for notifications and messages.
 
@@ -136,7 +136,7 @@ import { AlertTemplate } from './alert-template';
 <AlertProvider template={AlertTemplate}>{/* ... */}</AlertProvider>;
 ```
 
-### Combine all providers at the root of your app:
+## Combine all providers at the root of your app:
 
 ```jsx
 <QueryClientProvider client={queryClient}>
@@ -150,7 +150,7 @@ import { AlertTemplate } from './alert-template';
 </QueryClientProvider>
 ```
 
-### Usage
+## Usage Example
 
 Simple as it is, here's quick example:
 
@@ -171,7 +171,7 @@ function State() {
 export { State };
 ```
 
-## Hooks
+# Context Hooks
 
 ## useApi
 
@@ -287,6 +287,8 @@ function AlertButtons() {
 }
 ```
 
+# Balance Hooks
+
 ## useBalanceFormat
 
 Provides utilities for formatting and converting balances and gas values according to the current chain's decimals and token unit. Use this hook when you need to display user-friendly balances, convert between raw and formatted values, or transform gas calculation values. This hook is based on `api.registry.chainDecimals`, `api.registry.chainTokens`, and `api.valuePerGas`.
@@ -365,6 +367,8 @@ function Balance({ address }: Props) {
 }
 ```
 
+# Derive API Hooks
+
 ## useDeriveBalancesAll
 
 Retrieves and subscribes to all balance components (transferable, reserved, misc frozen, etc.) for a given account address, providing a full breakdown of the account's balance as returned by Substrate's derive API. Use this hook when you need to display or react to specific balance fields, such as transferable or reserved balance, rather than the total. This hook is based on `api.derive.balances.all`.
@@ -436,6 +440,8 @@ function StakingInfo({ address }) {
   );
 }
 ```
+
+# Voucher Hooks
 
 ## useVoucher
 
@@ -513,13 +519,13 @@ function VouchersList({ accountAddress, programId }) {
 }
 ```
 
-## Sails Hooks
+# Sails Hooks
 
 React hooks abstraction over [sails-js](https://github.com/gear-tech/sails/tree/master/js) and it's generated program library.
 
 [TanStack Query](https://tanstack.com/query) is used as an async state manager to handle queries and mutations. Therefore, most hooks' parameters and return data correspond to the library's conventions.
 
-### useSails
+## useSails
 
 Returns Sails instance.
 
@@ -537,7 +543,7 @@ const { data } = useSails({
 console.log(data);
 ```
 
-### useProgram
+## useProgram
 
 Returns a generated library instance.
 
@@ -553,7 +559,7 @@ const { data } = useProgram({
 console.log(data);
 ```
 
-### useSendProgramTransaction
+## useSendProgramTransaction
 
 Returns a mutation to sign and send the transaction with minimum efforts.
 
@@ -656,7 +662,7 @@ function SendPreparedTransaction() {
 export { SendPreparedTransaction };
 ```
 
-### usePrepareProgramTransaction
+## usePrepareProgramTransaction
 
 Returns a mutation that retrieves the intermediate transaction state.
 
@@ -706,7 +712,7 @@ function LogTransactionFeeButton() {
 export { LogTransactionFeeButton };
 ```
 
-### useProgramQuery
+## useProgramQuery
 
 Returns a query with readed program's state.
 
@@ -736,7 +742,7 @@ function State() {
 }
 ```
 
-### useProgramEvent
+## useProgramEvent
 
 Initialized subscription to a particular program event.
 
