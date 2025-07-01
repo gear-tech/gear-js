@@ -18,7 +18,7 @@
 </p>
 <hr>
 
-# Table of Content
+# Table of Contents
 
 - [Description](#description)
 - [Installation](#installation)
@@ -67,7 +67,7 @@ This package requires several peer dependencies to be installed in your project:
 - sails-js
 
 > **Note:**
-> We recommend to not install peer dependencies explicitly if your package manager can resolve them automatically. However, if you have to fix version conflicts, or if you want to use functionality from these libraries directly in your project, you should install them explicitly.
+> We recommend not installing peer dependencies explicitly if your package manager can resolve them automatically. However, if you have to fix version conflicts, or if you want to use functionality from these libraries directly in your project, you should install them explicitly.
 > Please refer to the `peerDependencies` section in the `package.json` for the required versions.
 
 # Getting started
@@ -78,7 +78,7 @@ To use the hooks, wrap your application with the required providers. Each provid
 
 Wrap your app with [`QueryClientProvider`](https://tanstack.com/query/latest/docs/framework/react/reference/QueryClientProvider) from TanStack Query to enable query and mutation management.
 
-For more details on setting up the TanStack Query, see the [TanStack Query documentation](https://tanstack.com/query/latest/docs/framework/react/quick-start).
+For more details on setting up TanStack Query, see the [TanStack Query documentation](https://tanstack.com/query/latest/docs/framework/react/quick-start).
 
 ### Props
 
@@ -101,7 +101,7 @@ Provides Gear API context to the app.
 ### Props
 
 - `initialArgs` (**required**): `ProviderArgs` — Arguments for the API provider. Determines how the API connection is established.
-  - `WsProviderArgs`: `{ endpoint: string | string[]; autoConnectMs?: number | false; headers?: Record<string, string>; timeout?: number; }` — Connects via JSON-RPC. `endpoint` is the node address or addresses. `autoConnectMs` sets auto-reconnect interval. `headers` and `timeout` are optional connection options.
+  - `WsProviderArgs`: `{ endpoint: string | string[]; autoConnectMs?: number | false; headers?: Record<string, string>; timeout?: number; }` — Connects via JSON-RPC. `endpoint` is the node address or addresses. `autoConnectMs` sets the auto-reconnect interval. `headers` and `timeout` are optional connection options.
   - `ScProviderArgs`: `{ spec: string; sharedSandbox?: ScProvider; }` — Connects via Light Client. `spec` is the specification string. `sharedSandbox` allows sharing a sandbox instance.
 
 ### Example:
@@ -118,7 +118,7 @@ Provides account and wallet context to the app.
 
 ### Props
 
-- `appName` (**required**): `string` — The name of your application. Value provided here will be displayed at wallet app or extension.
+- `appName` (**required**): `string` — The name of your application. The value provided here will be displayed in the wallet app or extension.
 
 ### Example:
 
@@ -163,7 +163,7 @@ import { AlertTemplate } from './alert-template';
 
 ## Usage Example
 
-Simple as it is, here's quick example:
+As simple as it is, here's a quick example:
 
 ```jsx
 import { ProgramMetadata } from '@gear-js/api';
@@ -532,7 +532,7 @@ function VouchersList({ accountAddress, programId }) {
 
 # Sails Hooks
 
-React hooks abstraction over [sails-js](https://github.com/gear-tech/sails/tree/master/js) and it's generated program library.
+React hooks abstraction over [sails-js](https://github.com/gear-tech/sails/tree/master/js) and its generated program library.
 
 [TanStack Query](https://tanstack.com/query) is used as an async state manager to handle queries and mutations. Therefore, most hooks' parameters and return data correspond to the library's conventions.
 
@@ -621,7 +621,7 @@ Returns a mutation to sign and send a transaction to a program with minimal effo
   - `account` (`AccountParameters`, optional): Account options to sign the transaction. Defaults to the connected account.
   - `value` (`bigint`, optional): Value to send with the transaction. Defaults to 0.
   - `gasLimit` (`bigint | CalculateGasParameters`, optional): Gas limit for the transaction. If not provided, calculated automatically.
-  - `voucherId` (`HexString`, optional): Voucher ID to use for the transaction. If not provided, transaction will be sent without voucher
+  - `voucherId` (`HexString`, optional): Voucher ID to use for the transaction. If not provided, the transaction will be sent without a voucher.
 
 ### Usage Example
 
@@ -659,7 +659,7 @@ function SendTransaction() {
 export { SendTransaction };
 ```
 
-Or in pair with [usePrepareProgramTransaction](#usePrepareProgramTransaction):
+Or in combination with [usePrepareProgramTransaction](#usePrepareProgramTransaction):
 
 ```jsx
 import { useProgram, usePrepareProgramTransaction, useSendProgramTransaction } from '@gear-js/react-hooks';
