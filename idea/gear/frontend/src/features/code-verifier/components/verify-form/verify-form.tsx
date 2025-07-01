@@ -39,8 +39,9 @@ function VerifyForm() {
   const defaultNetwork = genesisHash ? NETWORK[genesisHash as keyof typeof NETWORK] : undefined;
 
   const form = useForm<Values, unknown, FormattedValues>({
-    defaultValues: {
+    values: {
       ...DEFAULT_VALUES,
+      [FIELD_NAME.DOCKER_IMAGE_VERSION]: dockerImageVersions?.[0] || '',
       [FIELD_NAME.CODE_ID]: defaultCodeId || '',
       [FIELD_NAME.NETWORK]: defaultNetwork || DEFAULT_VALUES[FIELD_NAME.NETWORK],
     },
