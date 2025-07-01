@@ -18,11 +18,11 @@
 </p>
 <hr>
 
-## Description
+# Description
 
 A React library to connect supported Substrate-based wallets in a standardized and consistent way across decentralized applications.
 
-## Installation
+# Installation
 
 Install package:
 
@@ -36,7 +36,7 @@ or
 yarn add @gear-js/wallet-connect
 ```
 
-## Getting started
+# Getting started
 
 Simple as it is, here's quick example:
 
@@ -60,7 +60,7 @@ function Header() {
 export { Header };
 ```
 
-## Vara UI Theme
+# Vara UI Theme
 
 Be aware that in order for `vara` theme to work as expected, `@gear-js/vara-ui` package should be installed with configured global styles:
 
@@ -75,7 +75,7 @@ function VaraWallet() {
 export { VaraWallet };
 ```
 
-## Gear UI Theme
+# Gear UI Theme
 
 In order for `gear` theme to work as expected, `@gear-js/ui` package should be installed with configured global `index.scss`:
 
