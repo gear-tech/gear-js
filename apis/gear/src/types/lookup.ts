@@ -19,10 +19,9 @@ import type {
   Vec,
 } from '@polkadot/types-codec';
 import type { ITuple } from '@polkadot/types-codec/types';
-import { SpWeightsWeightV2Weight } from '@polkadot/types/lookup';
+import { PalletTransactionPaymentChargeTransactionPayment, SpWeightsWeightV2Weight } from '@polkadot/types/lookup';
 import { Null } from '@polkadot/types';
 
-/** @name FrameSystemAccountInfo (3) */
 export interface PalletGearCall extends Enum {
   readonly isUploadCode: boolean;
   readonly asUploadCode: {
@@ -277,7 +276,7 @@ export interface GearCoreMessageUserUserMessage extends Struct {
   readonly value: Compact<u128>;
   readonly details: Option<GearCoreMessageCommonReplyDetails>;
 }
-export type GearCoreMessagePayloadSizeError = Null;
+export type GearCoreBufferPayloadSizeError = Null;
 export interface GearCoreMessageCommonReplyDetails extends Struct {
   readonly to: GprimitivesMessageId;
   readonly code: GearCoreErrorsSimpleReplyCode;
@@ -479,7 +478,7 @@ export interface PalletGearEthBridgeEvent extends Enum {
   readonly isBridgeUnpaused: boolean;
   readonly isMessageQueued: boolean;
   readonly asMessageQueued: {
-    readonly message: PalletGearEthBridgeInternalEthMessage;
+    readonly message: PalletGearEthBridgePrimitivesEthMessage;
     readonly hash_: H256;
   } & Struct;
   readonly isQueueMerkleRootChanged: boolean;
@@ -493,7 +492,7 @@ export interface PalletGearEthBridgeEvent extends Enum {
     | 'MessageQueued'
     | 'QueueMerkleRootChanged';
 }
-export interface PalletGearEthBridgeInternalEthMessage extends Struct {
+export interface PalletGearEthBridgePrimitivesEthMessage extends Struct {
   readonly nonce: U256;
   readonly source: H256;
   readonly destination: H160;
@@ -566,17 +565,12 @@ export interface PalletGearDebugProgramState extends Enum {
 export interface PalletGearDebugProgramInfo extends Struct {
   readonly staticPages: u32;
   readonly persistentPages: BTreeMap<u32, Bytes>;
-  readonly codeHash: H256;
+  readonly codeHash: GprimitivesCodeId;
 }
 export type GearCoreMemoryIntoPageBufError = Null;
 export interface GearCoreCodeInstrumentedInstrumentedCode extends Struct {
-  readonly code: Bytes;
-  readonly originalCodeLen: u32;
-  readonly exports: BTreeSet<GearCoreMessageDispatchKind>;
-  readonly staticPages: u32;
-  readonly stackEnd: Option<u32>;
+  readonly bytes: Bytes;
   readonly instantiatedSectionSizes: GearCoreCodeInstrumentedInstantiatedSectionSizes;
-  readonly version: u32;
 }
 export interface GearCoreCodeInstrumentedInstantiatedSectionSizes extends Struct {
   readonly codeSection: u32;
@@ -586,12 +580,25 @@ export interface GearCoreCodeInstrumentedInstantiatedSectionSizes extends Struct
   readonly elementSection: u32;
   readonly typeSection: u32;
 }
-export interface GearCommonCodeMetadata extends Struct {
-  readonly author: H256;
-  readonly blockNumber: Compact<u32>;
+export interface GearCoreCodeMetadataCodeMetadata extends Struct {
+  readonly originalCodeLen: u32;
+  readonly exports: BTreeSet<GearCoreMessageDispatchKind>;
+  readonly staticPages: u32;
+  readonly stackEnd: Option<u32>;
+  readonly instrumentationStatus: GearCoreCodeMetadataInstrumentationStatus;
 }
-export interface NumeratedTreeIntervalsTree extends Struct {
-  readonly inner: BTreeMap<u32, u32>;
+export interface GearCoreCodeMetadataInstrumentationStatus extends Enum {
+  readonly isNotInstrumented: boolean;
+  readonly isInstrumented: boolean;
+  readonly asInstrumented: {
+    readonly version: u32;
+    readonly codeLen: u32;
+  } & Struct;
+  readonly isInstrumentationFailed: boolean;
+  readonly asInstrumentationFailed: {
+    readonly version: u32;
+  } & Struct;
+  readonly type: 'NotInstrumented' | 'Instrumented' | 'InstrumentationFailed';
 }
 export interface GearCoreProgram extends Enum {
   readonly isActive: boolean;
@@ -606,9 +613,7 @@ export interface GearCoreProgramActiveProgram extends Struct {
   readonly allocationsTreeLen: u32;
   readonly memoryInfix: u32;
   readonly gasReservationMap: BTreeMap<GprimitivesReservationId, GearCoreReservationGasReservationSlot>;
-  readonly codeHash: H256;
-  readonly codeExports: BTreeSet<GearCoreMessageDispatchKind>;
-  readonly staticPages: u32;
+  readonly codeId: GprimitivesCodeId;
   readonly state: GearCoreProgramProgramState;
   readonly expirationBlock: u32;
 }
@@ -1155,4 +1160,12 @@ export interface PalletGearEthBridgeError extends Enum {
     | 'MaxPayloadSizeExceeded'
     | 'QueueCapacityExceeded'
     | 'IncorrectValueApplied';
+}
+export type PalletGearDebugError = Null;
+export type PalletGearStakingRewardsExtensionStakingBlackList = Null;
+export interface PalletGearPaymentCustomChargeTransactionPayment
+  extends PalletTransactionPaymentChargeTransactionPayment {}
+
+export interface NumeratedTreeIntervalsTree extends Struct {
+  readonly inner: BTreeMap<u32, u32>;
 }

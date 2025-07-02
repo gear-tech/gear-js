@@ -6,6 +6,8 @@
 - Added `ss58Format` option to `GearKeyring` class methods
 - Added `asString` method to `ReplyCode` class that returns string explanation of the reply code
 - Added ability to register custom types in `CreateType` class
+- Deprecated `api.program.codeHash` method in favor of `api.program.codeId` method
+- Updated Gear queries and types
 
 ## [0.42.0]
 _21/05/2025_

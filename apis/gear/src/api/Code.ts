@@ -2,7 +2,7 @@ import { Bytes, Option } from '@polkadot/types';
 import { HexString } from '@polkadot/util/types';
 import { u8aToHex } from '@polkadot/util';
 
-import { CodeUploadResult, GearCommonCodeMetadata, GearCoreCodeInstrumentedInstrumentedCode } from '../types';
+import { CodeUploadResult, GearCoreCodeMetadataCodeMetadata } from '../types';
 import { generateCodeHash, getIdsFromKeys, validateCodeId } from '../utils';
 import { CodeDoesNotExistError } from '../errors';
 import { GearTransaction } from './Transaction';
@@ -28,7 +28,7 @@ export class GearCode extends GearTransaction {
    * @param codeId
    */
   async exists(codeId: string) {
-    const codeMetadata = (await this._api.query.gearProgram.metadataStorage(codeId)) as Option<GearCommonCodeMetadata>;
+    const codeMetadata = await this._api.query.gearProgram.codeMetadataStorage(codeId);
     return codeMetadata.isSome;
   }
 
@@ -36,8 +36,8 @@ export class GearCode extends GearTransaction {
    * ### Get code storage
    * @param codeId
    */
-  async storage(codeId: HexString): Promise<Option<GearCoreCodeInstrumentedInstrumentedCode>> {
-    return this._api.query.gearProgram.codeStorage(codeId);
+  async storage(codeId: HexString): Promise<Option<GearCoreCodeMetadataCodeMetadata>> {
+    return this._api.query.gearProgram.codeMetadataStorage(codeId);
   }
 
   /**
@@ -53,12 +53,21 @@ export class GearCode extends GearTransaction {
    * ### Get all ids of codes uploaded on connected chain
    * @returns array of code ids uploaded on chain
    */
-  async all(): Promise<HexString[]> {
-    const prefix = this._api.query.gearProgram.metadataStorage.keyPrefix();
-    const keys = await this._api.rpc.state.getKeys(prefix);
-    const codeIds = getIdsFromKeys(keys, prefix);
+  async all(count?: number): Promise<HexString[]> {
+    const prefix = this._api.query.gearProgram.codeMetadataStorage.keyPrefix();
+    const keys = await this._api.rpc.state.getKeysPaged(prefix, count || 1000);
 
-    return codeIds;
+    if (count === undefined) {
+      let nextKeysBatch = 1000;
+
+      while (nextKeysBatch === 1000) {
+        const _endKeys = await this._api.rpc.state.getKeysPaged(prefix, nextKeysBatch, keys[keys.length - 1]);
+        keys.push(..._endKeys);
+        nextKeysBatch = _endKeys.length;
+      }
+    }
+
+    return getIdsFromKeys(keys, prefix);
   }
 
   async metaHash(codeId: HexString): Promise<HexString> {
