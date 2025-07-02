@@ -6,12 +6,12 @@ import type { AnyNumber, ITuple } from '@polkadot/types-codec/types';
 import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
 import type { Observable } from '@polkadot/types/types';
 import {
-  GearCommonCodeMetadata,
   GearCommonGasProviderNodeGasNode,
   GearCommonGasProviderNodeGasNodeId,
   GearCommonStorageComplicatedDequeueLinkedNode,
   GearCommonStoragePrimitivesInterval,
   GearCoreCodeInstrumentedInstrumentedCode,
+  GearCoreCodeMetadataCodeMetadata,
   GearCoreMessageStoredStoredDelayedDispatch,
   GearCoreMessageStoredStoredDispatch,
   GearCoreMessageUserUserStoredMessage,
@@ -248,13 +248,13 @@ declare module '@polkadot/api-base/types/storage' {
         [GprimitivesActorId]
       > &
         QueryableStorageEntry<ApiType, [GprimitivesActorId]>;
-      codeLenStorage: AugmentedQuery<
+      codeMetadataStorage: AugmentedQuery<
         ApiType,
-        (arg: GprimitivesCodeId | string | Uint8Array) => Observable<Option<u32>>,
+        (arg: GprimitivesCodeId | string | Uint8Array) => Observable<Option<GearCoreCodeMetadataCodeMetadata>>,
         [GprimitivesCodeId]
       > &
         QueryableStorageEntry<ApiType, [GprimitivesCodeId]>;
-      codeStorage: AugmentedQuery<
+      instrumentedCodeStorage: AugmentedQuery<
         ApiType,
         (arg: GprimitivesCodeId | string | Uint8Array) => Observable<Option<GearCoreCodeInstrumentedInstrumentedCode>>,
         [GprimitivesCodeId]
@@ -270,12 +270,6 @@ declare module '@polkadot/api-base/types/storage' {
         [GprimitivesActorId, u32, u32]
       > &
         QueryableStorageEntry<ApiType, [GprimitivesActorId, u32, u32]>;
-      metadataStorage: AugmentedQuery<
-        ApiType,
-        (arg: GprimitivesCodeId | string | Uint8Array) => Observable<Option<GearCommonCodeMetadata>>,
-        [GprimitivesCodeId]
-      > &
-        QueryableStorageEntry<ApiType, [GprimitivesCodeId]>;
       originalCodeStorage: AugmentedQuery<
         ApiType,
         (arg: GprimitivesCodeId | string | Uint8Array) => Observable<Option<Bytes>>,
