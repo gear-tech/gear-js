@@ -1,12 +1,13 @@
 import { HexString } from 'gear-js-util';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useApproveWrappedVara, useReadContractState, useWrappedVaraBalance } from '@/app/api';
+import { useApproveWrappedVara, useWrappedVaraBalance } from '@/app/api';
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
 import EtherscanSvg from '@/assets/icons/etherscan.svg?react';
 import VerifySvg from '@/assets/icons/verify.svg?react';
 import { Badge, Balance, Button, HashLink, Navigation, Tooltip } from '@/components';
 import { ServiceList, useExecutableBalanceTopUp } from '@/features/programs';
+import { useReadContractState } from '@/features/programs/lib';
 import { Search } from '@/features/search';
 import { routes } from '@/shared/config';
 import { formatBalance, formatDate, formatNumber } from '@/shared/utils';

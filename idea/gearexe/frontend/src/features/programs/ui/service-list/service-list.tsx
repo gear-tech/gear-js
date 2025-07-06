@@ -1,10 +1,9 @@
 import { HexString } from 'gear-js-util';
 
-import { useReadContractState } from '@/app/api';
 import { Badge, ExpandableItem } from '@/components';
 
 import counterIdl from '../../../../../../../../apis/gearexe/programs/counter-idl/counter.idl?raw';
-import { useSails } from '../../lib/use-sails';
+import { useReadContractState, useSails } from '../../lib';
 import { InitForm } from '../init-form';
 import { MessageForm } from '../message-form';
 

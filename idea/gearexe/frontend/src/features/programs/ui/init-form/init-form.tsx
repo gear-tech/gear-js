@@ -6,9 +6,8 @@ import { Sails } from 'sails-js';
 
 import { Button, Input, ExpandableItem } from '@/components';
 
-import { PayloadValue } from '../../lib';
+import { PayloadValue, useInitProgram } from '../../lib';
 import { ISailsFuncArg } from '../../lib/types';
-import { useInitProgram } from '../../lib/use-init-program';
 import { getDefaultPayloadValue, getPayloadSchema } from '../../lib/utils';
 
 type Props = {
