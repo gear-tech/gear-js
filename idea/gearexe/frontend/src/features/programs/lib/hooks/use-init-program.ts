@@ -5,7 +5,7 @@ import { useMirrorContract } from '@/app/api';
 import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
 
 // TODO: use idl from the program
-import counterIdl from '../../../../../../../apis/gearexe/programs/counter-idl/counter.idl?raw';
+import counterIdl from '../../../../../../../../apis/gearexe/programs/counter-idl/counter.idl?raw';
 
 import { useSails } from './use-sails';
 
