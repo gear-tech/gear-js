@@ -244,14 +244,21 @@ export class GearProgram extends GearTransaction {
   }
 
   /**
-   * Get codeHash of program on-chain
-   * @param programId
-   * @returns codeHash of the program
+   * @deprecated use `api.program.codeId` instead
    */
   async codeHash(id: HexString): Promise<HexString> {
+    return this.codeId(id);
+  }
+
+  /**
+   * Get code's id of the program uploaded on chain
+   * @param programId
+   * @returns codeId of the program code
+   */
+  async codeId(id: string): Promise<HexString> {
     const program = await this._api.programStorage.getProgram(id);
 
-    return program.codeHash.toHex();
+    return program.codeId.toHex();
   }
 
   /**

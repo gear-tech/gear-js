@@ -83,6 +83,10 @@ echo "[*] Environment is ready, proceeding with tests..."
 
 source "$PROJECT_DIR/scripts/test.env"
 
+# Compile contracts
+cd $PROJECT_DIR
+forge build
+
 # Run tests
 echo "[*] Running test suite..."
 cd $ROOT_DIR

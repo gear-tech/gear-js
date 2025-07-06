@@ -2,7 +2,7 @@ import '@polkadot/api-base/types/consts';
 
 import { GearCommonGasMultiplier, PalletGearSchedule } from '../lookup';
 import type { bool, Option, u128, u32, u64, u8 } from '@polkadot/types-codec';
-import type { AccountId32 } from '@polkadot/types/interfaces/runtime';
+import type { AccountId32, Percent } from '@polkadot/types/interfaces/runtime';
 import type { ApiTypes } from '@polkadot/api-base/types';
 import type { Codec } from '@polkadot/types-codec/types';
 import { FrameSupportPalletId } from '@polkadot/types/lookup';
@@ -76,13 +76,16 @@ declare module '@polkadot/api-base/types/consts' {
     };
     gearBank: {
       /**
-       * Bank account address, that will keep all reserved funds.
-       **/
-      bankAddress: AccountId32 & AugmentedConst<ApiType>;
-      /**
        * Gas price converter.
        **/
       gasMultiplier: GearCommonGasMultiplier & AugmentedConst<ApiType>;
+      /**
+       * The gear bank's pallet id, used for deriving its sovereign account ID.
+       **/
+      palletId: FrameSupportPalletId & AugmentedConst<ApiType>;
+      treasuryAddress: AccountId32 & AugmentedConst<ApiType>;
+      treasuryGasFeeShare: Percent & AugmentedConst<ApiType>;
+      treasuryTxFeeShare: Percent & AugmentedConst<ApiType>;
       /**
        * Generic const
        **/
@@ -90,9 +93,25 @@ declare module '@polkadot/api-base/types/consts' {
     };
     gearEthBridge: {
       /**
+       * The AccountId of the bridge admin.
+       **/
+      bridgeAdmin: AccountId32 & AugmentedConst<ApiType>;
+      /**
+       * The AccountId of the bridge pauser.
+       **/
+      bridgePauser: AccountId32 & AugmentedConst<ApiType>;
+      /**
+       * Account ID of the bridge builtin.
+       **/
+      builtinAddress: AccountId32 & AugmentedConst<ApiType>;
+      /**
        * Constant defining maximal payload size in bytes of message for bridging.
        **/
       maxPayloadSize: u32 & AugmentedConst<ApiType>;
+      /**
+       * The bridge' pallet id, used for deriving its sovereign account ID.
+       **/
+      palletId: FrameSupportPalletId & AugmentedConst<ApiType>;
       /**
        * Constant defining maximal amount of messages that are able to be
        * bridged within the single staking era.
@@ -166,5 +185,5 @@ declare module '@polkadot/api-base/types/consts' {
        **/
       [key: string]: Codec;
     };
-  }
-}
+  } // AugmentedConsts
+} // declare module

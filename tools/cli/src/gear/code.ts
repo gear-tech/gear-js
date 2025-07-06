@@ -1,6 +1,5 @@
-import { CodeChangedData, GearApi, GearCommonCodeMetadata, generateCodeHash } from '@gear-js/api';
+import { CodeChangedData, GearApi, generateCodeHash } from '@gear-js/api';
 import { KeyringPair } from '@polkadot/keyring/types';
-import { Option } from '@polkadot/types-codec';
 import { HexString } from '@polkadot/util/types';
 import fs from 'fs';
 
@@ -13,12 +12,11 @@ export async function uploadCode(api: GearApi, account: KeyringPair, pathToProgr
   const codeHash = generateCodeHash(code);
   logger.info(`Code hash: ${codeHash}`, { lvl: 1 });
 
-  const uploadedCode = (await api.query.gearProgram.metadataStorage(codeHash)) as Option<GearCommonCodeMetadata>;
+  const uploadedCode = await api.code.storage(codeHash);
 
   if (uploadedCode.isSome) {
-    const blockHash = await api.blocks.getBlockHash(uploadedCode.unwrap().blockNumber.toNumber());
-    logger.warn(`Code is already uploaded in block ${blockHash}`, { lvl: 1 });
-    return { codeHash, blockHash: blockHash.toHex() };
+    logger.warn(`Code is already uploaded`, { lvl: 1 });
+    return { codeHash };
   }
 
   await api.code.upload(code);

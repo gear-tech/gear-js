@@ -6,6 +6,10 @@ declare module '@polkadot/api-base/types/errors' {
   interface AugmentedErrors<ApiType extends ApiTypes> {
     gear: {
       /**
+       * Program is active.
+       **/
+      ActiveProgram: AugmentedError<ApiType>;
+      /**
        * Code already exists.
        *
        * Occurs when trying to save to storage a program code that has been saved there.

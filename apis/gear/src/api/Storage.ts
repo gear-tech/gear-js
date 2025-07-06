@@ -22,7 +22,7 @@ export class GearProgramStorage {
    * @param at _(optional)_ Hash of block to query at
    * @returns
    */
-  async getProgram(id: HexString, at?: HexString): Promise<GearCoreProgramActiveProgram> {
+  async getProgram(id: string, at?: HexString): Promise<GearCoreProgramActiveProgram> {
     const api = at ? await this._api.at(at) : this._api;
     const programOption = (await api.query.gearProgram.programStorage(id)) as Option<GearCoreProgram>;
 

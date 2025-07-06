@@ -103,9 +103,7 @@ describe('Send messages', () => {
 
     const { waitForReply } = await tx.setupReplyListener();
 
-    const reply = await waitForReply;
-
-    console.log(reply);
+    await waitForReply;
   });
 
   test('check program is active', async () => {

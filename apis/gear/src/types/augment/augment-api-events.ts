@@ -15,7 +15,7 @@ import {
   GprimitivesCodeId,
   GprimitivesMessageId,
   PalletGearDebugDebugData,
-  PalletGearEthBridgeInternalEthMessage,
+  PalletGearEthBridgePrimitivesEthMessage,
   PalletGearVoucherInternalVoucherId,
 } from '../lookup';
 import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
@@ -170,8 +170,8 @@ declare module '@polkadot/api-base/types/events' {
        **/
       MessageQueued: AugmentedEvent<
         ApiType,
-        [message: PalletGearEthBridgeInternalEthMessage, hash_: H256],
-        { message: PalletGearEthBridgeInternalEthMessage; hash_: H256 }
+        [message: PalletGearEthBridgePrimitivesEthMessage, hash_: H256],
+        { message: PalletGearEthBridgePrimitivesEthMessage; hash_: H256 }
       >;
       /**
        * Merkle root of the queue changed: new messages queued within the block.

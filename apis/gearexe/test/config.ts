@@ -15,4 +15,5 @@ export const config = {
   skipUpload: process.env.SKIP_UPLOAD === 'true',
   blockTime: parseInt(assertEnv('BLOCK_TIME'), 12),
   targetDir: path.resolve('target/wasm32-gear/release'),
+  solOut: path.resolve('out'),
 };

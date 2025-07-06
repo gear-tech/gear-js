@@ -9,10 +9,45 @@ GEAR_REPO_DIR=/tmp/gearexe-js/gear
 LOGS_DIR=/tmp/gearexe-js/logs
 PROJECT_DIR=$(pwd)
 
+if [ -f .env ]; then
+    source .env
+fi
+
 source scripts/test.env
 
 cd ../../
 ROOT_DIR=$(pwd)
+if [ -f .env ]; then
+    source .env
+fi
+
+if [ -n "$DEPLOY_ON_HOLESKY" ]; then
+    if [ -z "$HOLESKY_PRIVATE_KEY" ]; then
+        echo "HOLESKY_PRIVATE_KEY is not set"
+        exit 1
+    fi
+    if [ -z "$HOLESKY_RPC_URL" ]; then
+        echo "HOLESKY_RPC_URL is not set"
+        exit 1
+    fi
+    if [ -z "$HOLESKY_WS_RPC_URL" ]; then
+        echo "HOLESKY_WS_RPC_URL is not set"
+        exit 1
+    fi
+    if [ -z "$HOLESKY_PUBLIC_KEY" ]; then
+        echo "HOLESKY_PUBLIC_KEY is not set"
+        exit 1
+    fi
+    export PRIVATE_KEY="$HOLESKY_PRIVATE_KEY_ETH"
+    export RPC="$HOLESKY_RPC_URL"
+    export WS_RPC="$HOLESKY_WS_RPC_URL"
+    export ARTIFACTS_DIR="17000"
+    export BLOCK_TIME="12"
+    export VALIDATOR_PRIVATE_KEY="$HOLESKY_PRIVATE_KEY"
+    export VALIDATOR_PUBLIC_KEY="$HOLESKY_PUBLIC_KEY_ETH"
+fi
+
+export ROUTER_VALIDATORS_LIST="$VALIDATOR_PUBLIC_KEY_ETH"
 
 mkdir -p $ETH_DIR
 mkdir -p $GEAREXE_DIR
@@ -46,10 +81,6 @@ cleanup() {
         echo "    - Router deployment logs: $LOGS_DIR/deploy_contracts.log"
         echo "    - Reth node logs: $LOGS_DIR/reth.log"
         echo "    - Gearexe node logs: $LOGS_DIR/gearexe.log"
-
-        # Print the last few lines of error logs to help with debugging
-        echo "[*] Last 10 lines of gearexe logs:"
-        tail -n 10 $LOGS_DIR/gearexe.log
     else
         echo "[*] Tests completed successfully. Removing logs..."
         rm -rf $LOGS_DIR
@@ -62,10 +93,6 @@ cleanup() {
     echo "[*] Cleanup completed"
 }
 trap cleanup EXIT
-
-if [ -f .env ]; then
-    source .env
-fi
 
 PROJECT_PATH=$(pwd)
 cd ../../
@@ -186,52 +213,52 @@ if [[ ! -f "$RETH_BIN_DIR/reth" ]]; then
 fi
 
 
-echo "[*] Starting Reth Ethereum node..."
-echo "[*] Running with parameters: --dev.block-time 5sec --dev --datadir $ETH_DIR --ws --ws.port 8546"
-nohup $RETH_BIN_DIR/reth node --dev.block-time 5sec --dev \
-    --datadir $ETH_DIR --ws --ws.port 8546 \
-    > $LOGS_DIR/reth.log 2>&1 &
-RETH_PID=$!
+if [ -z "$DEPLOY_ON_HOLESKY" ]; then
+    echo "[*] Starting Reth Ethereum node..."
+    echo "[*] Running with parameters: --dev.block-time $BLOCK_TIME sec --dev --datadir $ETH_DIR --ws --ws.port 8546"
+    nohup $RETH_BIN_DIR/reth node --dev.block-time "$BLOCK_TIME"sec --dev \
+        --datadir $ETH_DIR --ws --ws.port 8546 \
+        > $LOGS_DIR/reth.log 2>&1 &
+        RETH_PID=$!
+    echo "[*] Reth node started with PID: $RETH_PID"
+    echo "[*] Waiting for Reth node to initialize (10 seconds)..."
 
-echo "[*] Reth node started with PID: $RETH_PID"
-echo "[*] Waiting for Reth node to initialize (10 seconds)..."
-sleep 5
-# Check if the process is still running after 5 seconds
-if ! kill -0 $RETH_PID 2>/dev/null; then
-    echo "[!] Reth node failed to start. Check logs at: $LOGS_DIR/reth.log"
-    echo "[!] Last 10 lines of Reth logs:"
-    tail -n 10 $LOGS_DIR/reth.log
-    exit 1
+    if ! kill -0 $RETH_PID 2>/dev/null; then
+        echo "[!] Reth node failed to start. Check logs at: $LOGS_DIR/reth.log"
+        echo "[!] Last 10 lines of Reth logs:"
+        tail -n 10 $LOGS_DIR/reth.log
+        exit 1
+    fi
+    echo "[*] Continuing initialization..."
+    sleep 5
+    echo "[*] Reth node is ready"
+    sleep 5
 fi
-echo "[*] Continuing initialization..."
-sleep 5
-echo "[*] Reth node is ready"
 
 # Deploy contracts
 echo "[*] Deploying Ethereum contracts..."
-# TODO: remove once skipping middleware deployment works properly in gear (https://github.com/gear-tech/gear/pull/4718)
-# cp $PROJECT_DIR/test/solidity/RouterDeployment.s.sol $path_to_contracts/script/RouterDeployment.s.sol
 cd $path_to_contracts
 echo "[*] Cleaning previous build artifacts..."
 forge clean
 
-echo "[*] Deploying contracts to Reth node at $RPC..."
+echo "[*] Deploying contracts to Eth node at $RPC..."
 echo "[*] Deployment logs will be saved to: $LOGS_DIR/deploy_contracts.log"
-# TODO: change script name to Deployment.s.sol once it's ready (https://github.com/gear-tech/gear/pull/4718)
-forge script script/Deployment.s.sol:DeploymentScript --rpc-url $RPC --broadcast --slow > $LOGS_DIR/deploy_contracts.log 2>&1
-if [ $? -ne 0 ]; then
+forge script script/Deployment.s.sol:DeploymentScript \
+    --rpc-url $RPC --broadcast --slow -vvvv > \
+    $LOGS_DIR/deploy_contracts.log 2>&1 || {
     echo "[!] Contract deployment failed. Check logs at: $LOGS_DIR/deploy_contracts.log"
     echo "[!] Last 10 lines of deployment logs:"
-    tail -n 10 $LOGS_DIR/deploy_contracts.log
+    echo "=========================="
+    tail -n 20 $LOGS_DIR/deploy_contracts.log
+    echo "=========================="
     exit 1
-fi
+}
 echo "[*] Contracts deployed successfully"
 
 # Get router address
 echo "[*] Extracting router contract address from deployment artifacts..."
 cd $path_to_gear_repo
-# TODO: change script name to Deployment.s.sol once it's ready (https://github.com/gear-tech/gear/pull/4718)
-BROADCAST_PATH="ethexe/contracts/broadcast/Deployment.s.sol/1337/run-latest.json"
+BROADCAST_PATH="ethexe/contracts/broadcast/Deployment.s.sol/$ARTIFACTS_DIR/run-latest.json"
 
 if [ ! -f ${BROADCAST_PATH} ]; then
     echo "[!] Deployment artifact not found at: ${BROADCAST_PATH}"
@@ -264,7 +291,9 @@ echo "[*] Router proxy address: ${ROUTER_ADDRESS}"
 echo "[*] Updating ROUTER_ADDRESS in $PROJECT_DIR/scripts/test.env..."
 if grep -q '^export ROUTER_ADDRESS=' "$PROJECT_DIR/scripts/test.env"; then
     # Replace existing ROUTER_ADDRESS
-    sed -i.bak "s|^export ROUTER_ADDRESS=.*$|export ROUTER_ADDRESS=\"$ROUTER_ADDRESS\"|" "$PROJECT_DIR/scripts/test.env"
+    sed "s|^export ROUTER_ADDRESS=.*$|export ROUTER_ADDRESS=\"$ROUTER_ADDRESS\"|" "$PROJECT_DIR/scripts/test.env" \
+        > "$PROJECT_DIR/scripts/test.env.tmp"
+    mv "$PROJECT_DIR/scripts/test.env.tmp" "$PROJECT_DIR/scripts/test.env"
 else
     # Append if not present
     echo "export ROUTER_ADDRESS=\"$ROUTER_ADDRESS\"" >> "$PROJECT_DIR/scripts/test.env"
@@ -274,20 +303,16 @@ echo "[*] ROUTER_ADDRESS updated in $PROJECT_DIR/scripts/test.env"
 # Set keys
 echo "[*] Setting up Gear node keys..."
 cd $path_to_gear_repo
-echo "[*] Inserting sequencer key..."
-./target/release/ethexe key -k $GEAREXE_DIR/keys insert $SEQUENCER_PRIVATE_KEY
-if [ $? -ne 0 ]; then
-    echo "[!] Failed to insert sequencer key"
-    exit 1
-fi
-
 echo "[*] Inserting validator key..."
-./target/release/ethexe key -k $GEAREXE_DIR/keys insert $VALIDATOR_PRIVATE_KEY
+inserted_validator=$(./target/release/ethexe key -k $GEAREXE_DIR/keys insert $VALIDATOR_PRIVATE_KEY)
+echo $inserted_validator
+validator_pubkey=$(echo $inserted_validator | grep -o "Public key: 0x[0-9a-fA-F]\+" | awk '{print $3}' | sed 's/^0x//')
+echo $validator_pubkey
 if [ $? -ne 0 ]; then
     echo "[!] Failed to insert validator key"
     exit 1
 fi
-echo "[*] Keys successfully configured"
+echo "[*] Validator key successfully configured: $validator_pubkey"
 
 # Run gearexe
 echo "[*] Starting Gear execution layer node (gearexe)..."
@@ -296,7 +321,7 @@ export RUST_BACKTRACE=1
 
 echo "[*] Gearexe configuration:"
 echo "    - Base directory: $GEAREXE_DIR"
-echo "    - Validator key: $VALIDATOR_PUBLIC_KEY"
+echo "    - Validator key: $validator_pubkey"
 echo "    - Ethereum RPC: $WS_RPC"
 echo "    - Router address: $ROUTER_ADDRESS"
 echo "    - Block time: $BLOCK_TIME"
@@ -304,8 +329,8 @@ echo "    - RPC port: 9944"
 
 echo "[*] Launching gearexe node..."
 nohup ./target/release/ethexe --cfg none run --dev --tmp --base "$GEAREXE_DIR" \
-    --validator $VALIDATOR_PUBLIC_KEY \
-    --validator-session $VALIDATOR_PUBLIC_KEY \
+    --validator $validator_pubkey \
+    --validator-session $validator_pubkey \
     --ethereum-rpc $WS_RPC \
     --ethereum-router $ROUTER_ADDRESS \
     --eth-block-time $BLOCK_TIME \
@@ -342,7 +367,7 @@ if ! kill -0 $GEAREXE_PID 2>/dev/null; then
     exit 1
 fi
 echo "[*] Gearexe initialization in progress..."
-sleep 10
+sleep 20
 echo "[*] Gearexe node is ready"
 
 # Signal that environment is ready

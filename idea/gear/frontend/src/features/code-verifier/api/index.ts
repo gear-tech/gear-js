@@ -1,3 +1,3 @@
-import { useVerifyCode, useIsCodeVerified, useVerificationStatus } from './hooks';
+import { useVerifyCode, useIsCodeVerified, useVerificationStatus, useDockerImageVersions } from './hooks';
 
-export { useVerifyCode, useIsCodeVerified, useVerificationStatus };
+export { useVerifyCode, useIsCodeVerified, useVerificationStatus, useDockerImageVersions };

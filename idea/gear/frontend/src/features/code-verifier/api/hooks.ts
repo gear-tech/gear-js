@@ -5,8 +5,7 @@ import { useAlert } from '@gear-js/react-hooks';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
-import { API_URL } from './consts';
-import { getVerificationStatus, getVerifiedCode, verifyCode } from './requests';
+import { getDockerImageVersions, getVerificationStatus, getVerifiedCode, verifyCode } from './requests';
 
 function useVerifyCode() {
   return useMutation({
@@ -20,15 +19,23 @@ function useIsCodeVerified(codeId: HexString | null | undefined) {
 
   const query = useQuery({
     queryKey: ['code-verification-status', codeId],
-    queryFn: () => getVerifiedCode(codeId!),
-    select: (response) => Boolean(response),
-    enabled: !!API_URL && Boolean(codeId),
+
+    queryFn: () =>
+      getVerifiedCode(codeId!)
+        .then((result) => Boolean(result))
+        .catch((error: Error) => {
+          if (error.message === STATUS_CODES[404]) return false;
+
+          throw error;
+        }),
+
+    enabled: Boolean(codeId),
   });
 
   const { error } = query;
 
   useEffect(() => {
-    if (error && error.message !== STATUS_CODES[404]) alert.error(error.message);
+    if (error) alert.error(error.message);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
@@ -53,4 +60,22 @@ function useVerificationStatus(id: string) {
   return query;
 }
 
-export { useVerifyCode, useIsCodeVerified, useVerificationStatus };
+function useDockerImageVersions() {
+  const alert = useAlert();
+
+  const query = useQuery({
+    queryKey: ['docker-image-versions'],
+    queryFn: getDockerImageVersions,
+  });
+
+  const { error } = query;
+
+  useEffect(() => {
+    if (error) alert.error(error.message);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
+
+  return query;
+}
+
+export { useVerifyCode, useIsCodeVerified, useVerificationStatus, useDockerImageVersions };
