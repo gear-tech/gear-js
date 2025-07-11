@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 24px;
+  min-height: 340px;
+}
+
+.prefix {
+  color: rgba(255, 255, 255, 0.5);
+}
+.text {
+  color: rgba(255, 255, 255, 1);
+}
+
+.button {
+  width: 180px;
+}
