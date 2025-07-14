@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import { TransactionBuilder } from 'sails-js';
 
 import {
   FunctionName,
   GenericTransactionReturn,
+  SendTransactionParameters,
   ServiceName,
   SignAndSendOptions,
   Transaction,
@@ -22,12 +22,14 @@ function useSendProgramTransaction<
 >({ program, serviceName, functionName }: UseSendProgramTransactionParameters<TProgram, TServiceName, TFunctionName>) {
   const { prepareTransactionAsync } = usePrepareProgramTransaction({ program, serviceName, functionName });
 
-  const sendTransaction = async (
-    transactionOrOptions: TTransactionReturn | SignAndSendOptions<Parameters<TTransaction>>,
-  ) => {
+  const sendTransaction = async ({
+    awaitFinalization,
+    ...transactionOrOptions
+  }: ({ transaction: TTransactionReturn } | SignAndSendOptions<Parameters<TTransaction>>) &
+    SendTransactionParameters) => {
     const { transaction } =
-      transactionOrOptions instanceof TransactionBuilder
-        ? { transaction: transactionOrOptions }
+      'transaction' in transactionOrOptions
+        ? transactionOrOptions
         : await prepareTransactionAsync(transactionOrOptions);
 
     const result = await transaction.signAndSend();
@@ -37,8 +39,9 @@ function useSendProgramTransaction<
     // so for now it's fine
     const awaited = {
       response: await result.response(),
-      isFinalized: await result.isFinalized,
     };
+
+    if (awaitFinalization) await result.isFinalized;
 
     return { result, awaited };
   };
