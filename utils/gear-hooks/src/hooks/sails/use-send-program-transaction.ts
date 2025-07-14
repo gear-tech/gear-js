@@ -24,13 +24,11 @@ function useSendProgramTransaction<
 
   const sendTransaction = async ({
     awaitFinalization,
-    ...transactionOrOptions
+    ...transactionOptions
   }: ({ transaction: TTransactionReturn } | SignAndSendOptions<Parameters<TTransaction>>) &
     SendTransactionParameters) => {
     const { transaction } =
-      'transaction' in transactionOrOptions
-        ? transactionOrOptions
-        : await prepareTransactionAsync(transactionOrOptions);
+      'transaction' in transactionOptions ? transactionOptions : await prepareTransactionAsync(transactionOptions);
 
     const result = await transaction.signAndSend();
 
