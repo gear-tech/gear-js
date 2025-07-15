@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import { TransactionBuilder } from 'sails-js';
 
 import {
   FunctionName,
   GenericTransactionReturn,
+  SendTransactionParameters,
   ServiceName,
   SignAndSendOptions,
   Transaction,
@@ -22,25 +22,24 @@ function useSendProgramTransaction<
 >({ program, serviceName, functionName }: UseSendProgramTransactionParameters<TProgram, TServiceName, TFunctionName>) {
   const { prepareTransactionAsync } = usePrepareProgramTransaction({ program, serviceName, functionName });
 
-  const sendTransaction = async (
-    transactionOrOptions: TTransactionReturn | SignAndSendOptions<Parameters<TTransaction>>,
-  ) => {
+  const sendTransaction = async ({
+    awaitFinalization,
+    ...transactionOptions
+  }: ({ transaction: TTransactionReturn } | SignAndSendOptions<Parameters<TTransaction>>) &
+    SendTransactionParameters) => {
     const { transaction } =
-      transactionOrOptions instanceof TransactionBuilder
-        ? { transaction: transactionOrOptions }
-        : await prepareTransactionAsync(transactionOrOptions);
+      'transaction' in transactionOptions ? transactionOptions : await prepareTransactionAsync(transactionOptions);
 
-    const result = await transaction.signAndSend();
+    const { blockHash, msgId, isFinalized, txHash, response } = await transaction.signAndSend();
 
     // maybe worth to make it optional via parameters.
     // would require function overload with some generics magic to return correct types only for specified values,
     // so for now it's fine
-    const awaited = {
-      response: await result.response(),
-      isFinalized: await result.isFinalized,
-    };
+    const responseResult = await response();
 
-    return { result, awaited };
+    if (awaitFinalization) await isFinalized;
+
+    return { response: responseResult, blockHash, msgId, txHash };
   };
 
   // depends on useProgram/program implementation, programId may not be available
