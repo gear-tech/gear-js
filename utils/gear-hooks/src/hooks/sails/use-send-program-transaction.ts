@@ -30,18 +30,16 @@ function useSendProgramTransaction<
     const { transaction } =
       'transaction' in transactionOptions ? transactionOptions : await prepareTransactionAsync(transactionOptions);
 
-    const result = await transaction.signAndSend();
+    const { blockHash, msgId, isFinalized, txHash, response } = await transaction.signAndSend();
 
     // maybe worth to make it optional via parameters.
     // would require function overload with some generics magic to return correct types only for specified values,
     // so for now it's fine
-    const awaited = {
-      response: await result.response(),
-    };
+    const responseResult = await response();
 
-    if (awaitFinalization) await result.isFinalized;
+    if (awaitFinalization) await isFinalized;
 
-    return { result, awaited };
+    return { response: responseResult, blockHash, msgId, txHash };
   };
 
   // depends on useProgram/program implementation, programId may not be available

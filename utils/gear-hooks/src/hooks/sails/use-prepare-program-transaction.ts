@@ -60,11 +60,9 @@ function usePrepareProgramTransaction<
     // maybe worth to make it optional via parameters.
     // would require function overload with some generics magic to return correct types only for specified values,
     // so for now it's fine
-    const awaited = {
-      fee: await transaction.transactionFee(),
-    };
+    const fee = await transaction.transactionFee();
 
-    return { transaction, awaited };
+    return { transaction, fee };
   };
 
   // depends on useProgram/program implementation, programId may not be available
