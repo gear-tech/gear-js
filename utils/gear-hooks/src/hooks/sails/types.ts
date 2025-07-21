@@ -51,6 +51,10 @@ type SignAndSendOptions<T> = {
   account?: AccountParameters;
 };
 
+type SendTransactionParameters = {
+  awaitFinalization?: boolean;
+};
+
 // events
 type EventReturn = Promise<() => void>;
 type Event<T> = T extends (...args: infer P) => EventReturn ? (...args: P) => EventReturn : never;
@@ -81,6 +85,7 @@ export type {
   UseSendProgramTransactionParameters,
   UsePrepareProgramTransactionParameters,
   SignAndSendOptions,
+  SendTransactionParameters,
   EventReturn,
   Event,
   EventCallbackArgs,

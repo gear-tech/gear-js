@@ -59,8 +59,8 @@ const useSendDnsTransaction = <T extends FunctionName>(functionName: T) => {
     const onFinally = disableLoading;
 
     try {
-      const { transaction, awaited } = await prepareTransactionAsync({ args });
-      const formattedFee = getFormattedBalance(awaited.fee.toString());
+      const { transaction, fee } = await prepareTransactionAsync({ args });
+      const formattedFee = getFormattedBalance(fee);
 
       showModal('transaction', {
         fee: `${formattedFee.value} ${formattedFee.unit}`,
