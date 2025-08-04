@@ -15,8 +15,8 @@
     "clean": "echo \"clean gear-idea-squid\" && rm -rf lib"
   },
   "dependencies": {
-    "@gear-js/api": "0.42.0",
-    "@polkadot/api": "16.4.1",
+    "@gear-js/api": "0.43.0",
+    "@polkadot/api": "16.4.3",
     "@subsquid/graphql-server": "4.5.1",
     "@subsquid/ss58": "2.0.2",
     "@subsquid/substrate-processor": "8.3.0",

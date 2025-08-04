@@ -9,8 +9,8 @@
     "clean": "echo \"clean gear-idea-common\" && rm -rf dist"
   },
   "dependencies": {
-    "@gear-js/api": "0.42.0",
-    "@polkadot/api": "16.4.1",
+    "@gear-js/api": "0.43.0",
+    "@polkadot/api": "16.4.3",
     "winston": "3.7.2"
   }
 }
