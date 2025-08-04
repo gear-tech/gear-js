@@ -36,7 +36,7 @@ for (const pkg of workspaces) {
     pkgJson.devDependencies = devDependencies;
   }
 
-  fs.writeFileSync(pkgPath, JSON.stringify(pkgJson, null, 2));
+  fs.writeFileSync(pkgPath, JSON.stringify(pkgJson, null, 2) + '\n');
 }
 
 async function updateDependencies(deps, versions) {

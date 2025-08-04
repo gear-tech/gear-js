@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - apis/gear/package.json
+      - apis/gear/**
       - tools/cli/package.json
       - tools/txwrapper/package.json
       - utils/gear-hooks/package.json
@@ -33,7 +33,7 @@ jobs:
         with:
           filters: |
             gear-api:
-              - 'apis/gear/**'
+              - 'apis/gear/src/**'
 
       - name: Check if version changed
         id: check-version
