@@ -23,7 +23,7 @@
   },
   "peerDependencies": {
     "@gear-js/api": "0.43.0",
-    "@polkadot/api": "16.2.2",
+    "@polkadot/api": "16.4.1",
     "@tanstack/react-query": "^5.56.2",
     "react": "^18 || ^19",
     "react-dom": "^18 || ^19",
