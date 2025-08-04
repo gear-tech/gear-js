@@ -132,5 +132,6 @@ jobs:
           draft: ${{ needs.check-changes.outputs.version-changed != 'true' }}
           prerelease: ${{ needs.check-changes.outputs.version-changed != 'true' }}
           files: artifacts/gear-js-api.tgz
+          make_latest: ${{ needs.check-changes.outputs.version-changed == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
