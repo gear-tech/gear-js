@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/api",
-  "version": "0.42.0",
+  "version": "0.43.0",
   "description": "A JavaScript library that provides functionality to connect GEAR Component APIs.",
   "main": "lib/cjs/index.js",
   "module": "lib/index.js",
@@ -51,7 +51,7 @@
   },
   "license": "GPL-3.0",
   "peerDependencies": {
-    "@polkadot/api": "^15.9.1",
+    "@polkadot/api": "^16.4.1",
     "@polkadot/wasm-crypto": "^7.4.1",
     "rxjs": "^7.8.2"
   },

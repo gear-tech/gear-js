@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gear-js/api": "0.42.0",
+    "@gear-js/api": "0.43.0",
     "@polkadot/api": "16.4.3",
     "chalk": "4.1.2",
     "class-transformer": "0.5.1",

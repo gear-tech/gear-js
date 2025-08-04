@@ -1,4 +1,4 @@
-## [draft]
+## [0.43.0]
 
 - Renamed `Program` class to `BaseGearProgram`
 - Added `sendBatchMessages` method for sending multiple messages in a batch
@@ -8,6 +8,7 @@
 - Added ability to register custom types in `CreateType` class
 - Deprecated `api.program.codeHash` method in favor of `api.program.codeId` method
 - Updated Gear queries and types
+- Bump `@polkadot/api` to `^16.4.1`
 
 ## [0.42.0]
 _21/05/2025_
