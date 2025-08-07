@@ -10,6 +10,7 @@ const FIELD_NAME = {
   REPO_LINK: 'repoLink',
   PROJECT_ID_TYPE: 'projectIdType',
   PROJECT_ID: 'projectId',
+  BASE_PATH: 'basePath',
   NETWORK: 'network',
   BUILD_IDL: 'buildIdl',
 } as const;
@@ -35,12 +36,14 @@ const DEFAULT_VALUES = {
   [FIELD_NAME.REPO_LINK]: '',
   [FIELD_NAME.PROJECT_ID_TYPE]: PROJECT_ID_TYPE.NAME as (typeof PROJECT_ID_TYPE)[keyof typeof PROJECT_ID_TYPE],
   [FIELD_NAME.PROJECT_ID]: '',
+  [FIELD_NAME.BASE_PATH]: '/',
   [FIELD_NAME.NETWORK]: NETWORK_OPTIONS[0].value as (typeof NETWORK)[keyof typeof NETWORK],
   [FIELD_NAME.BUILD_IDL]: false,
 };
 
 const GITHUB_REPO_URL_REGEX = /^https?:\/\/(www\.)?github\.com\/([\w-]+)\/([\w-]+)(\/.*)?$/;
 const CARGO_TOML_PATH_REGEX = /^(?:\.\/)?(?:[^/]+\/)*Cargo\.toml$/;
+const ABSOLUTE_PATH_REGEX = /^\/(?:[^/\0]+\/)*[^/\0]*$/;
 
 const SCHEMA = z
   .object({
@@ -58,6 +61,12 @@ const SCHEMA = z
 
     [FIELD_NAME.PROJECT_ID_TYPE]: z.string(),
     [FIELD_NAME.PROJECT_ID]: z.string().trim().min(1),
+
+    [FIELD_NAME.BASE_PATH]: z
+      .string()
+      .trim()
+      .refine((value) => ABSOLUTE_PATH_REGEX.test(value), { message: 'Invalid absolute path' }),
+
     [FIELD_NAME.NETWORK]: z.string(),
     [FIELD_NAME.BUILD_IDL]: z.boolean(),
   })
@@ -69,12 +78,13 @@ const SCHEMA = z
       path: [FIELD_NAME.PROJECT_ID],
     },
   )
-  .transform(({ version, repoLink, projectId, network, buildIdl, projectIdType, codeId }) => ({
+  .transform(({ version, repoLink, projectId, network, buildIdl, projectIdType, codeId, basePath }) => ({
     version,
     network,
     project: projectIdType === PROJECT_ID_TYPE.NAME ? { Name: projectId } : { ManifestPath: projectId },
     code_id: codeId,
     repo_link: repoLink,
+    base_path: basePath,
     build_idl: buildIdl,
   }));
 

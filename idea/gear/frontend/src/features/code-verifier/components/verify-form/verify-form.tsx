@@ -107,6 +107,8 @@ function VerifyForm() {
             </Box>
           </InputWrapper>
 
+          <Input name={FIELD_NAME.BASE_PATH} label="Base Path" placeholder="/" gap={INPUT_GAP} />
+
           <Select
             name={FIELD_NAME.NETWORK}
             label="Network"
