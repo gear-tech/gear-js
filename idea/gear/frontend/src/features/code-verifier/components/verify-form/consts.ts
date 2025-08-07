@@ -81,7 +81,7 @@ const SCHEMA = z
   .transform(({ version, repoLink, projectId, network, buildIdl, projectIdType, codeId, basePath }) => ({
     version,
     network,
-    project: projectIdType === PROJECT_ID_TYPE.NAME ? { Name: projectId } : { ManifestPath: projectId },
+    project: projectIdType === PROJECT_ID_TYPE.NAME ? { Package: projectId } : { ManifestPath: projectId },
     code_id: codeId,
     repo_link: repoLink,
     base_path: basePath,
