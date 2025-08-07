@@ -5,7 +5,7 @@ type VerifyParameters = {
   build_idl: boolean;
   code_id: HexString;
   network: string;
-  project: { Package: string } | { ManifestPath: string };
+  project: { Root: null } | { Package: string } | { ManifestPath: string };
   repo_link: string;
   version: string;
 };

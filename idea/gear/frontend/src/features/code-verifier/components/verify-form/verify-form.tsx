@@ -1,7 +1,7 @@
 import { useAlert, useApi } from '@gear-js/react-hooks';
 import { Button, InputWrapper } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
@@ -49,7 +49,13 @@ function VerifyForm() {
     resolver: zodResolver(SCHEMA),
   });
 
+  console.log(form.formState.errors);
+
   const projectIdType = form.watch(FIELD_NAME.PROJECT_ID_TYPE);
+
+  useEffect(() => {
+    form.resetField(FIELD_NAME.PROJECT_ID);
+  }, [form, projectIdType]);
 
   const { mutateAsync, isPending } = useVerifyCode();
 
@@ -92,6 +98,8 @@ function VerifyForm() {
 
           <InputWrapper id="project" label="Project" direction="x" size="normal" gap={INPUT_GAP}>
             <Box className={styles.nestedBox}>
+              <Radio name={FIELD_NAME.PROJECT_ID_TYPE} value={PROJECT_ID_TYPE.ROOT} label="Root" />
+
               <Radio name={FIELD_NAME.PROJECT_ID_TYPE} value={PROJECT_ID_TYPE.NAME} label="Name of the Project" />
 
               <Radio
@@ -100,10 +108,12 @@ function VerifyForm() {
                 label="Path to Cargo.toml"
               />
 
-              <Input
-                name={FIELD_NAME.PROJECT_ID}
-                placeholder={projectIdType === PROJECT_ID_TYPE.NAME ? 'Name' : 'folder/Cargo.toml'}
-              />
+              {projectIdType !== PROJECT_ID_TYPE.ROOT && (
+                <Input
+                  name={FIELD_NAME.PROJECT_ID}
+                  placeholder={projectIdType === PROJECT_ID_TYPE.NAME ? 'Name' : 'folder/Cargo.toml'}
+                />
+              )}
             </Box>
           </InputWrapper>
 
