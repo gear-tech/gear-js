@@ -49,8 +49,6 @@ function VerifyForm() {
     resolver: zodResolver(SCHEMA),
   });
 
-  console.log(form.formState.errors);
-
   const projectIdType = form.watch(FIELD_NAME.PROJECT_ID_TYPE);
 
   useEffect(() => {
