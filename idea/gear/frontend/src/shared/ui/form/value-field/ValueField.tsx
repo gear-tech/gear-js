@@ -1,5 +1,5 @@
 import { inputStyles, InputProps, InputWrapper } from '@gear-js/ui';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { NumericFormat, NumericFormatProps } from 'react-number-format';
 

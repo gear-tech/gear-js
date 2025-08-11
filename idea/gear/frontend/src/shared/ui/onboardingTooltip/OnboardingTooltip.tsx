@@ -1,6 +1,6 @@
 import { useAccount } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { ReactNode } from 'react';
 
 import { useOnboarding } from '@/hooks';

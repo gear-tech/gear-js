@@ -1,14 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-import { GearApi, Program } from '@gear-js/api';
+import { GearApi, BaseGearProgram } from '@gear-js/api';
 import { TypeRegistry } from '@polkadot/types';
 import { TransactionBuilder, ActorId } from 'sails-js';
+
+export interface ContractInfo {
+  admins: Array<ActorId>;
+  program_id: ActorId;
+  registration_time: string;
+}
 
 export class SailsProgram {
   public readonly registry: TypeRegistry;
   public readonly dns: Dns;
-  // @ts-expect-error silence the error
-  private _program: Program;
+  private _program!: BaseGearProgram;
 
   constructor(
     public api: GearApi,
@@ -22,7 +26,7 @@ export class SailsProgram {
     this.registry.setKnownTypes({ types });
     this.registry.register(types);
     if (programId) {
-      this._program = new Program(programId, api);
+      this._program = new BaseGearProgram(programId, api);
     }
 
     this.dns = new Dns(this);
@@ -43,8 +47,10 @@ export class Dns {
       this._program.api,
       this._program.registry,
       'send_message',
-      ['Dns', 'AddAdminToProgram', name, new_admin],
-      '(String, String, String, [u8;32])',
+      'Dns',
+      'AddAdminToProgram',
+      [name, new_admin],
+      '(String, [u8;32])',
       'Null',
       this._program.programId,
     );
@@ -56,8 +62,10 @@ export class Dns {
       this._program.api,
       this._program.registry,
       'send_message',
-      ['Dns', 'AddNewProgram', name, program_id],
-      '(String, String, String, [u8;32])',
+      'Dns',
+      'AddNewProgram',
+      [name, program_id],
+      '(String, [u8;32])',
       'Null',
       this._program.programId,
     );
@@ -69,8 +77,10 @@ export class Dns {
       this._program.api,
       this._program.registry,
       'send_message',
-      ['Dns', 'ChangeProgramId', name, new_program_id],
-      '(String, String, String, [u8;32])',
+      'Dns',
+      'ChangeProgramId',
+      [name, new_program_id],
+      '(String, [u8;32])',
       'Null',
       this._program.programId,
     );
@@ -82,8 +92,10 @@ export class Dns {
       this._program.api,
       this._program.registry,
       'send_message',
-      ['Dns', 'DeleteProgram', name],
-      '(String, String, String)',
+      'Dns',
+      'DeleteProgram',
+      name,
+      'String',
       'Null',
       this._program.programId,
     );
@@ -95,8 +107,10 @@ export class Dns {
       this._program.api,
       this._program.registry,
       'send_message',
-      ['Dns', 'RemoveAdminFromProgram', name, admin_to_remove],
-      '(String, String, String, [u8;32])',
+      'Dns',
+      'RemoveAdminFromProgram',
+      [name, admin_to_remove],
+      '(String, [u8;32])',
       'Null',
       this._program.programId,
     );

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { ReactNode, useState } from 'react';
 
 import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';

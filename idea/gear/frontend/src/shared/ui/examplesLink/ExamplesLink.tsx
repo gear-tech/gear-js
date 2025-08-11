@@ -1,5 +1,5 @@
 import { buttonStyles } from '@gear-js/ui';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 
 import ExternalResourceSVG from '../../assets/images/actions/externalResource.svg?react';
 import AppSVG from '../../assets/images/indicators/app.svg?react';

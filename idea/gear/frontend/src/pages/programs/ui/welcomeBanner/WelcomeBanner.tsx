@@ -1,5 +1,5 @@
 import { Button } from '@gear-js/ui';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 
 import closeSVG from '@/shared/assets/images/actions/close.svg?react';
 import gear1PNG from '@/shared/assets/images/banners/gear1.png';

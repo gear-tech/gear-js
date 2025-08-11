@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useEffect, useRef } from 'react';
 
 import { getRandomPercent } from '../../helpers';

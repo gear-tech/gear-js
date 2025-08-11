@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 
 import LoadingSVG from '@/shared/assets/images/indicators/loading.svg?react';
 import ShareSVG from '@/shared/assets/images/indicators/share.svg?react';
