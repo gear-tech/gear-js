@@ -18,7 +18,7 @@
     "chalk": "4",
     "commander": "10.0.1",
     "inquirer": "9.2.6",
-    "winston": "3.8.2",
+    "winston": "3.17.0",
     "yaml": "2.3.0"
   },
   "license": "GPL-3.0",

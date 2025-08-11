@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import SimpleBar from 'simplebar-react';
 
 import { getPreformattedText } from '@/shared/helpers';

@@ -1,5 +1,5 @@
 import { Button } from '@gear-js/ui';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { Ref } from 'react';
 
 import { VerifyLink } from '@/features/code-verifier';

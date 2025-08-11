@@ -1,5 +1,5 @@
 import { AnyJson } from '@polkadot/types/types';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useState } from 'react';
 import { generatePath } from 'react-router-dom';
 import { Sails } from 'sails-js';

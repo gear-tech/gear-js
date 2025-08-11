@@ -1,5 +1,5 @@
 import { buttonStyles } from '@gear-js/ui';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { MouseEvent } from 'react';
 
 import { useNetworkIcon } from '@/hooks';

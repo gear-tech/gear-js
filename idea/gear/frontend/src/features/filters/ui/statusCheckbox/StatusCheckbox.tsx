@@ -1,5 +1,5 @@
 import { CheckboxProps, checkboxStyles } from '@gear-js/ui';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useId } from 'react';
 import { FieldValues, Path, PathValue, useFormContext } from 'react-hook-form';
 

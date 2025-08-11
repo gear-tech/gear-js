@@ -35,9 +35,9 @@
     "@polkadot/util": "13.5.4",
     "@substrate/connect": "2.1.0",
     "bignumber.js": "9.1.2",
-    "nanoid": "5.0.1",
+    "nanoid": "5.1.5",
     "react-transition-group": "4.4.5",
-    "sails-js-parser": "0.4.2"
+    "sails-js-parser": "0.4.3"
   },
   "devDependencies": {
     "@gear-js/api": "0.43.0",
@@ -47,7 +47,7 @@
     "@tanstack/react-query": "5.56.2",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "sails-js": "0.4.2"
+    "sails-js": "0.4.3"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

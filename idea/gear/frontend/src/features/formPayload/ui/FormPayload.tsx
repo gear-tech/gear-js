@@ -1,6 +1,6 @@
 import { useAlert } from '@gear-js/react-hooks';
 import { Checkbox, FileInput, Textarea, InputWrapper, InputProps } from '@gear-js/ui';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useState, useEffect, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 

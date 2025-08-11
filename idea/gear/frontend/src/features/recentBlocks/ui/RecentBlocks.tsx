@@ -1,6 +1,6 @@
 import { useApi } from '@gear-js/react-hooks';
 import { U128 } from '@polkadot/types';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';

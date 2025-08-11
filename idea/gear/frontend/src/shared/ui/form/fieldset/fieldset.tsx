@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { HTMLAttributes } from 'react';
 
 import styles from './fieldset.module.scss';

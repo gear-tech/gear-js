@@ -1,5 +1,5 @@
 import { DispatchInfo, Extrinsic as DotExtrinsic } from '@polkadot/types/interfaces';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 
 import commonStyles from '@/pages/explorer/explorer.module.scss';
 

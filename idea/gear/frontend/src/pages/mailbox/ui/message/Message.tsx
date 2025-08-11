@@ -1,6 +1,6 @@
 import { Button, buttonStyles, Input } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useState } from 'react';
 import { generatePath } from 'react-router-dom';
 

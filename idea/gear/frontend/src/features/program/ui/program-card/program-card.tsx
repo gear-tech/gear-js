@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { Link, generatePath } from 'react-router-dom';
 
 import { LocalProgram } from '@/features/local-indexer';
