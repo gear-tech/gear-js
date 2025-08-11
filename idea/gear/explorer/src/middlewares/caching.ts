@@ -16,7 +16,7 @@ export function Cache(ttl: number) {
 
       const cached = await client.get(key);
 
-      if (cached) {
+      if (cached && typeof cached === 'string') {
         return JSON.parse(cached);
       }
 

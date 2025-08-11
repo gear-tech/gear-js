@@ -19,7 +19,7 @@ import {
 import { Block, ProcessorContext } from './processor';
 import { MessageStatus } from './common';
 import { In } from 'typeorm';
-import { RedisClientType } from '@redis/client';
+import { RedisClientType } from 'redis';
 import { findChildMessageId } from './util';
 
 const gearProgramModule = xxhashAsHex('GearProgram', 128);
