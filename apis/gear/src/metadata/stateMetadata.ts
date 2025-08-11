@@ -24,12 +24,12 @@ export async function getStateMetadata(wasmBytes: Uint8Array): Promise<StateMeta
     resolveMetadataPromise = resolve;
   });
 
-  const { instance } = await WebAssembly.instantiate(
+  const { instance } = (await WebAssembly.instantiate(
     wasmBytes,
     importObj(memory, undefined, undefined, undefined, undefined, (payload: number, len: number) => {
       resolveMetadataPromise(new Uint8Array(memory.buffer.slice(payload, payload + len)));
     }),
-  );
+  )) as any;
 
   const { exports } = instance;
 
