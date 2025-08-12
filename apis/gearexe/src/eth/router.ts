@@ -179,7 +179,7 @@ export class RouterContract extends BaseContract implements IRouterContract {
       kzg,
     };
 
-    const txManager: ITxManager = new TxManager(this._wallet, tx, IROUTER_INTERFACE, {
+    const txManager: ITxManager = new TxManager(this._wallet, tx, IROUTER_INTERFACE, undefined, {
       codeId: () => codeId,
       waitForCodeGotValidated: () =>
         new Promise<boolean>((resolve, reject) =>

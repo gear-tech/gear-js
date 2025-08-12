@@ -34,7 +34,7 @@ export default [
         include: ['src/**/*.ts'],
       }),
     ],
-    external: ['ethers', 'tslib'],
+    external: ['ethers', 'tslib', 'kzg-wasm'],
   },
   {
     input: ['src/index.ts'],
@@ -57,6 +57,6 @@ export default [
         include: ['src/**/*.ts'],
       }),
     ],
-    external: ['ethers', 'tslib'],
+    external: ['ethers', 'tslib', 'kzg-wasm'],
   },
 ];
