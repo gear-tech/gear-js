@@ -2195,7 +2195,7 @@ __metadata:
     "@polkadot/api-derive": "npm:16.4.3"
     "@polkadot/extension-inject": "npm:0.61.5"
     "@polkadot/types": "npm:16.4.3"
-    "@polkadot/util": "npm:13.5.4"
+    "@polkadot/util": "npm:13.5.5"
     "@substrate/connect": "npm:2.1.0"
     "@tanstack/react-query": "npm:5.56.2"
     bignumber.js: "npm:9.1.2"
@@ -5350,6 +5350,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@polkadot/util@npm:13.5.5":
+  version: 13.5.5
+  resolution: "@polkadot/util@npm:13.5.5"
+  dependencies:
+    "@polkadot/x-bigint": "npm:13.5.5"
+    "@polkadot/x-global": "npm:13.5.5"
+    "@polkadot/x-textdecoder": "npm:13.5.5"
+    "@polkadot/x-textencoder": "npm:13.5.5"
+    "@types/bn.js": "npm:^5.1.6"
+    bn.js: "npm:^5.2.1"
+    tslib: "npm:^2.8.0"
+  checksum: 10c0/9e4a743577a0c58cd0a9add46b0d86efeaeae085a1fa651747d8b5e6ac2487cb0257f35b3c6a8d741cd9e97663e4dce06b9e01017d30166212c6b42f3c7b9778
+  languageName: node
+  linkType: hard
+
 "@polkadot/wasm-bridge@npm:7.4.1":
   version: 7.4.1
   resolution: "@polkadot/wasm-bridge@npm:7.4.1"
@@ -5460,6 +5475,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@polkadot/x-bigint@npm:13.5.5":
+  version: 13.5.5
+  resolution: "@polkadot/x-bigint@npm:13.5.5"
+  dependencies:
+    "@polkadot/x-global": "npm:13.5.5"
+    tslib: "npm:^2.8.0"
+  checksum: 10c0/922152140c3ae6e8497aa784640b4d5980b3126c3589a3f1223d47255c7f4033b078d256f1d601ed34ab895266eac6759f79341557f980e941363664b223f463
+  languageName: node
+  linkType: hard
+
 "@polkadot/x-fetch@npm:^12.6.2":
   version: 12.6.2
   resolution: "@polkadot/x-fetch@npm:12.6.2"
@@ -5506,6 +5531,15 @@ __metadata:
   dependencies:
     tslib: "npm:^2.8.0"
   checksum: 10c0/5c3a58a143201217e29bc067195bff8695ce93ba662fac444688d2cc5f717464405c24edbded187927119dd1cf98f29974180579bc80a864e561b1b87a37d5ba
+  languageName: node
+  linkType: hard
+
+"@polkadot/x-global@npm:13.5.5":
+  version: 13.5.5
+  resolution: "@polkadot/x-global@npm:13.5.5"
+  dependencies:
+    tslib: "npm:^2.8.0"
+  checksum: 10c0/00b68b9bc5a23cd51f998b45400b04be4371fa3d66768893a2aadaf63001955536aec068a3e0fb4f7e2a659b7158bdf21f5fb9e67c3858e634ab0630dc0a86db
   languageName: node
   linkType: hard
 
@@ -5565,6 +5599,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@polkadot/x-textdecoder@npm:13.5.5":
+  version: 13.5.5
+  resolution: "@polkadot/x-textdecoder@npm:13.5.5"
+  dependencies:
+    "@polkadot/x-global": "npm:13.5.5"
+    tslib: "npm:^2.8.0"
+  checksum: 10c0/ad76d481358e85817e2d6c5dbb91a6ebc11dc478d03e2b448807280e66f7cac27586f686c576eb636738bf1296bf9fd87a497917e2c4058bae54c4789544b430
+  languageName: node
+  linkType: hard
+
 "@polkadot/x-textencoder@npm:12.6.2":
   version: 12.6.2
   resolution: "@polkadot/x-textencoder@npm:12.6.2"
@@ -5592,6 +5636,16 @@ __metadata:
     "@polkadot/x-global": "npm:13.5.4"
     tslib: "npm:^2.8.0"
   checksum: 10c0/14fdf11b6bc77b1ecd7f72002a4c80bcdeea3296059e1f017e41731e41fd8d5dd22cf524120aec26ee9d6357bb7bd5ec3fcb00e40b7863f8da55770b787ca127
+  languageName: node
+  linkType: hard
+
+"@polkadot/x-textencoder@npm:13.5.5":
+  version: 13.5.5
+  resolution: "@polkadot/x-textencoder@npm:13.5.5"
+  dependencies:
+    "@polkadot/x-global": "npm:13.5.5"
+    tslib: "npm:^2.8.0"
+  checksum: 10c0/949ae16b7ffd824b9a6c3a78a632e221c228dcb458df2adc1f5c696c8fe424d8c377be25544640af8e8f548d1d898e469891defefa1cb2a094852a56b32cf9b3
   languageName: node
   linkType: hard
 
@@ -15287,7 +15341,7 @@ __metadata:
     "@polkadot/react-identicon": "npm:3.15.3"
     "@polkadot/types": "npm:16.4.3"
     "@polkadot/types-codec": "npm:16.4.3"
-    "@polkadot/util": "npm:13.5.4"
+    "@polkadot/util": "npm:13.5.5"
     "@react-aria/utils": "npm:3.21.0"
     "@tanstack/react-query": "npm:5.56.2"
     "@types/lodash.isequal": "npm:4.5.8"
