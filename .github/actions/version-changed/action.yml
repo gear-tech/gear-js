@@ -1,0 +1,42 @@
+name: 'check if package version changed'
+description: 'Get the latest version of a package from npm registry'
+inputs:
+  package-name:
+    description: 'Package name'
+    required: true
+  path:
+    description: 'Path to package.json'
+    required: true
+outputs:
+  changed:
+    description: 'Whether the package should be released'
+    value: ${{ steps.result.outputs.ok }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Get latest version from npm registry
+      id: latest-version
+      shell: bash
+      run: |
+        LATEST_VERSION=$(npm show ${{ inputs.package-name }} version || echo "0.0.0")
+        echo "value=$LATEST_VERSION" >> $GITHUB_OUTPUT
+
+    - name: Get current version from package.json
+      id: current-version
+      shell: bash
+      run: |
+        CURRENT_VERSION=$(jq -r '.version' ${{ inputs.path }})
+        echo "value=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+    - name: Compare versions and set output
+      id: result
+      shell: bash
+      run: |
+        if [ "${{ steps.latest-version.outputs.value }}" == "${{ steps.current-version.outputs.value }}" ]; then
+          echo "Version has not changed"
+          echo "changed=false" >> $GITHUB_OUTPUT
+        else
+          echo "Version has changed"
+          echo "changed=true" >> $GITHUB_OUTPUT
+        fi
