@@ -10,8 +10,8 @@ import {
 import { generateCodeHash, getIdsFromKeys, validateCodeId } from '../utils';
 import { CodeDoesNotExistError } from '../errors';
 import { GearTransaction } from './Transaction';
+import { SPEC_VERSION } from '../consts';
 import { getGrReply } from '../wasm';
-import { SPEC_VERSION } from 'consts';
 
 export class GearCode extends GearTransaction {
   /**
