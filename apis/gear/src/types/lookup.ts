@@ -568,9 +568,18 @@ export interface PalletGearDebugProgramInfo extends Struct {
   readonly codeHash: GprimitivesCodeId;
 }
 export type GearCoreMemoryIntoPageBufError = Null;
-export interface GearCoreCodeInstrumentedInstrumentedCode extends Struct {
+export interface GearCoreCodeInstrumentedInstrumentedCodeV1900 extends Struct {
   readonly bytes: Bytes;
   readonly instantiatedSectionSizes: GearCoreCodeInstrumentedInstantiatedSectionSizes;
+}
+export interface GearCoreCodeInstrumentedInstrumentedCodeBeforeV1900 extends Struct {
+  readonly code: Bytes;
+  readonly originalCodeLen: u32;
+  readonly exports: BTreeSet<GearCoreMessageDispatchKind>;
+  readonly staticPages: u32;
+  readonly stackEnd: Option<u32>;
+  readonly instantiatedSectionSizes: GearCoreCodeInstrumentedInstantiatedSectionSizes;
+  readonly version: u32;
 }
 export interface GearCoreCodeInstrumentedInstantiatedSectionSizes extends Struct {
   readonly codeSection: u32;
