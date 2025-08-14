@@ -61,8 +61,8 @@ export class GearCode extends GearTransaction {
   /**
    * ### Get code storage
    * @param codeId
-   * @returns [CodeMetadata](https://github.com/gear-tech/gear/blob/master/core/src/code/metadata.rs#L52) if connected to the node with version >= 1900,
-   * otherwise [InstrumentedCode](https://github.com/gear-tech/gear/blob/290c4953a2fd54270ec34333d8cd3f7b97591635/core/src/code/instrumented.rs#L67)
+   * @returns ___[CodeMetadata](https://github.com/gear-tech/gear/blob/master/core/src/code/metadata.rs#L52)___ if connected to the node with version >= 1900,
+   * otherwise ___[InstrumentedCode](https://github.com/gear-tech/gear/blob/290c4953a2fd54270ec34333d8cd3f7b97591635/core/src/code/instrumented.rs#L67)___
    */
   async storage(
     codeId: HexString,

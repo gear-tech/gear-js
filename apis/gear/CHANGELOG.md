@@ -1,3 +1,7 @@
+## [0.44.0]
+
+- Support old version of code storage (https://github.com/gear-tech/gear-js/pull/2013)
+
 ## [0.43.0]
 
 - Renamed `Program` class to `BaseGearProgram` (https://github.com/gear-tech/gear-js/pull/1943)
