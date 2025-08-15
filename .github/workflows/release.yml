@@ -101,52 +101,38 @@ jobs:
       - name: Build
         run: yarn build
 
-      - name: Authenticate with NPM
-        run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: "Configure npm auth"
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
       - name: Publish gear-api
         if: ${{ needs.check-changes.outputs.gear-api == 'true' }}
         run: npm publish --access=public
         working-directory: apis/gear
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish gear-hooks
         if: ${{ needs.check-changes.outputs.gear-hooks == 'true' }}
         run: npm publish --access=public
         working-directory: utils/gear-hooks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish gear-ui
         if: ${{ needs.check-changes.outputs.gear-ui == 'true' }}
         run: npm publish --access=public
         working-directory: utils/gear-ui
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish vara-ui
         if: ${{ needs.check-changes.outputs.vara-ui == 'true' }}
         run: npm publish --access=public
         working-directory: utils/vara-ui
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish frontend-configs
         if: ${{ needs.check-changes.outputs.frontend-configs == 'true' }}
         run: npm publish --access=public
         working-directory: utils/frontend-configs
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish wallet-connect
         if: ${{ needs.check-changes.outputs.wallet-connect == 'true' }}
         run: npm publish --access=public
         working-directory: utils/wallet-connect
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 
   create-github-release:
