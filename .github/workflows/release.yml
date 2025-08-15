@@ -84,7 +84,6 @@ jobs:
               - 'apis/gear/src/**'
 
   publish-to-npm:
-    if: github.event_name == 'push'
     needs: check-changes
     runs-on: ubuntu-latest
 
