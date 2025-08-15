@@ -26,6 +26,7 @@ jobs:
       vara-ui: ${{ steps.vara-ui.outputs.changed }}
       frontend-configs: ${{ steps.frontend-configs.outputs.changed }}
       wallet-connect: ${{ steps.wallet-connect.outputs.changed }}
+      gear-api-code-modified: ${{ steps.gear-api-code-modified.outputs.code-changed }}
 
     steps:
       - uses: actions/checkout@v4
@@ -73,6 +74,14 @@ jobs:
         with:
           package-name: "@gear-js/wallet-connect"
           path: "utils/wallet-connect/package.json"
+
+      - name: Check if gear-api-code has been modified
+        id: gear-api-code-modified
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            code-changed:
+              - 'apis/gear/src/**'
 
   publish-to-npm:
     if: github.event_name == 'push'
@@ -143,7 +152,7 @@ jobs:
 
   create-github-release:
     needs: [publish-to-npm, check-changes]
-    if: needs.check-changes.outputs.gear-api == 'true'
+    if: ${{ needs.check-changes.outputs.gear-api == 'true' || needs.check-changes.outputs.gear-api-code-modified == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -176,7 +185,7 @@ jobs:
       - name: Extract Changelog
         id: changelog
         run: |
-          if [[ "${{ needs.check-changes.outputs.version-changed }}" == "true" ]]; then
+          if [[ "${{ needs.check-changes.outputs.gear-api }}" == "true" ]]; then
             VERSION="${{ steps.get-version.outputs.version }}"
             CHANGELOG=$(awk '/## \['$VERSION'\]/{flag=1;next}/## \[/{flag=0}flag{print}' apis/gear/CHANGELOG.md)
           else
@@ -189,15 +198,15 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ needs.check-changes.outputs.version-changed == 'true' && format('gear-js-api-v{0}', steps.get-version.outputs.version) || 'gear-js-api-draft' }}
-          name: ${{ needs.check-changes.outputs.version-changed == 'true' && format('@gear-js/api v{0}', steps.get-version.outputs.version) || '@gear-js/api Draft Release' }}
+          tag_name: ${{ needs.check-changes.outputs.gear-api == 'true' && format('gear-js-api-v{0}', steps.get-version.outputs.version) || 'gear-js-api-draft' }}
+          name: ${{ needs.check-changes.outputs.gear-api == 'true' && format('@gear-js/api v{0}', steps.get-version.outputs.version) || '@gear-js/api Draft Release' }}
           body: |
             # ${{ needs.check-changes.outputs.version-changed == 'true' && format('@gear-js/api v{0}', steps.get-version.outputs.version) || '@gear-js/api Draft Release' }}
 
             ${{ steps.changelog.outputs.changelog }}
-          draft: ${{ needs.check-changes.outputs.version-changed != 'true' }}
-          prerelease: ${{ needs.check-changes.outputs.version-changed != 'true' }}
+          draft: ${{ needs.check-changes.outputs.gear-api != 'true' }}
+          prerelease: ${{ needs.check-changes.outputs.gear-api != 'true' }}
           files: artifacts/gear-js-api.tgz
-          make_latest: ${{ needs.check-changes.outputs.version-changed == 'true' }}
+          make_latest: ${{ needs.check-changes.outputs.gear-api == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

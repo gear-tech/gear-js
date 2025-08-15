@@ -10,7 +10,7 @@ inputs:
 outputs:
   changed:
     description: 'Whether the package should be released'
-    value: ${{ steps.result.outputs.ok }}
+    value: ${{ steps.result.outputs.changed }}
 
 runs:
   using: 'composite'
