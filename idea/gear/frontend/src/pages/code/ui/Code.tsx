@@ -3,7 +3,6 @@ import { HexString } from '@polkadot/util/types';
 import { generatePath, useParams } from 'react-router-dom';
 
 import { CodeTable, useCode as useStorageCode } from '@/features/code';
-import { useIsCodeVerified, VerificationStatus, VerifyLink } from '@/features/code-verifier';
 import { useLocalCode } from '@/features/local-indexer';
 import { MetadataTable, useMetadata } from '@/features/metadata';
 import { Programs, usePrograms } from '@/features/program';
@@ -12,7 +11,6 @@ import { useChain, useModal } from '@/hooks';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import PlusSVG from '@/shared/assets/images/actions/plus.svg?react';
 import { absoluteRoutes } from '@/shared/config';
-import { isBoolean } from '@/shared/helpers';
 import { Box } from '@/shared/ui';
 import { BackButton } from '@/shared/ui/backButton';
 import { UILink } from '@/shared/ui/uiLink';
@@ -32,7 +30,8 @@ const Code = () => {
   const localCode = useLocalCode(codeId);
   const code = isDevChain ? localCode : storageCode;
 
-  const { data: isCodeVerified } = useIsCodeVerified(codeId);
+  // commented out till code verified is fixed
+  // const { data: isCodeVerified } = useIsCodeVerified(codeId);
   const programs = usePrograms({ codeId });
 
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(code.data?.metahash);
@@ -67,7 +66,8 @@ const Code = () => {
             <header className={styles.codeHeader}>
               <h2 className={styles.heading}>Code Parameters</h2>
 
-              {isCodeVerified && <VerificationStatus value="verified" />}
+              {/* commented out till code verified is fixed */}
+              {/* {isCodeVerified && <VerificationStatus value="verified" />} */}
             </header>
 
             <CodeTable code={code.data} isCodeReady={!code.isPending} />
@@ -90,7 +90,8 @@ const Code = () => {
           <header className={styles.programsHeader}>
             <h2 className={styles.heading}>Programs</h2>
 
-            {isBoolean(isCodeVerified) && !isCodeVerified && <VerifyLink codeId={codeId} />}
+            {/* commented out till code verified is fixed */}
+            {/* {isBoolean(isCodeVerified) && !isCodeVerified && <VerifyLink codeId={codeId} />} */}
           </header>
 
           <Programs
