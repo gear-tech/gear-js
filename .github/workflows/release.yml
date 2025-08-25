@@ -77,7 +77,7 @@ jobs:
 
       - name: Check if gear-api-code has been modified
         id: gear-api-code-modified
-        uses: dorny/paths-filter@v2
+        uses: dorny/paths-filter@v3
         with:
           filters: |
             code-changed:
