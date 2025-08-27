@@ -33,8 +33,8 @@
     "@polkadot/api-derive": "16.4.5",
     "@polkadot/extension-inject": "0.61.6",
     "@polkadot/util": "13.5.5",
-    "@substrate/connect": "2.1.0",
-    "bignumber.js": "9.1.2",
+    "@substrate/connect": "2.1.8",
+    "bignumber.js": "9.3.1",
     "nanoid": "5.1.5",
     "react-transition-group": "4.4.5",
     "sails-js-parser": "0.4.3"
@@ -44,9 +44,9 @@
     "@gear-js/frontend-configs": "*",
     "@polkadot/api": "16.4.5",
     "@polkadot/types": "16.4.5",
-    "@tanstack/react-query": "5.56.2",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "@tanstack/react-query": "5.85.5",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
     "sails-js": "0.4.3"
   },
   "main": "dist/index.js",
