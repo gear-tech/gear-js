@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { MouseEvent } from 'react';
 
 import ArrowDownIcon from '@/assets/icons/arrow-down.svg?react';
