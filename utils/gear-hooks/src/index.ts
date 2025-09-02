@@ -1,3 +1,5 @@
+import { BigNumber } from 'bignumber.js';
+
 import {
   DEFAULT_OPTIONS,
   DEFAULT_INFO_OPTIONS,
@@ -81,6 +83,7 @@ import {
 import { withoutCommas, getVaraAddress, getTypedEntries } from './utils';
 
 export {
+  BigNumber,
   useReadFullState,
   useReadWasmState,
   useSendMessage,
