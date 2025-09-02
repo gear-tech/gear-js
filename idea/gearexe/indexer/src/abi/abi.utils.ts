@@ -90,7 +90,7 @@ export function decodeTransactionData(abi: ethers.Interface, inputData: string):
       args: Array.from(decodedArgs),
       namedArgs,
     };
-  } catch (error) {
+  } catch (_error) {
     // Decoding failed, return null
     return null;
   }

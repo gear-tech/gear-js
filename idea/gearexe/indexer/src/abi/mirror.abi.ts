@@ -2,8 +2,9 @@ import { LogEvent } from './abi.support';
 import * as ethers from 'ethers';
 import * as fs from 'fs';
 import { config } from '../config';
+import path from 'path';
 
-const ABI_JSON = JSON.parse(fs.readFileSync(`${config.apiPath}IMirror.json`, 'utf-8'));
+const ABI_JSON = JSON.parse(fs.readFileSync(path.join(config.apiPath, 'IMirror.json'), 'utf-8'));
 
 export const abi = new ethers.Interface(ABI_JSON.abi);
 

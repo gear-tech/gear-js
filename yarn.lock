@@ -15721,7 +15721,6 @@ __metadata:
     express: "npm:^5.1.0"
     pg: "npm:8.12.0"
     postgraphile: "npm:^4.14.1"
-    postgraphile-plugin-connection-filter: "npm:^2.3.0"
     reflect-metadata: "npm:^0.2.2"
     typeorm: "npm:^0.3.20"
     typescript: "npm:^5.5.2"
@@ -21535,15 +21534,6 @@ __metadata:
     graphql: ">=0.9 <0.14 || ^14.0.2 || ^15.4.0"
     pg: ">=6.1.0 <9"
   checksum: 10c0/8b4074414dafa1d975dac83248187d19887bc486eb53043db603c22fe559a37ccfce97995c2ea857cb991b453b75e5af0d87eef3c1f26f8066ee6e59c0c45624
-  languageName: node
-  linkType: hard
-
-"postgraphile-plugin-connection-filter@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "postgraphile-plugin-connection-filter@npm:2.3.0"
-  dependencies:
-    tslib: "npm:^2.3.0"
-  checksum: 10c0/5ea519dd5107f8056b825c086c8193d653a9a9e01482a3f6b7913193b02e0a105f440595caf2437bfdf0a527732ef0788601b6bfdac5f5bb3d53b6ef43ce6ba0
   languageName: node
   linkType: hard
 

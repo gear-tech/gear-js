@@ -1,17 +1,13 @@
 import express from 'express';
 import { postgraphile, PostGraphileOptions } from 'postgraphile';
 import dotenv from 'dotenv';
-import ConnectionFilterPlugin from 'postgraphile-plugin-connection-filter';
 import { createServer } from 'node:http';
-import { Pool } from 'pg';
 
 dotenv.config();
 
 const isDev = process.env.NODE_ENV === 'development';
 
 async function main() {
-  const dbPool = new Pool({ connectionString: process.env.DATABASE_URL || 'postgres://indexer' });
-
   const database = process.env.DATABASE_URL || 'indexer';
 
   const options: PostGraphileOptions = {
@@ -29,7 +25,6 @@ async function main() {
     legacyRelations: 'omit',
     exportGqlSchemaPath: `${__dirname}/schema.graphql`,
     sortExport: true,
-    appendPlugins: [ConnectionFilterPlugin],
   };
 
   const middleware = postgraphile(database, 'public', options);
