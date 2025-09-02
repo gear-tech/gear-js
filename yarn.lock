@@ -15289,7 +15289,7 @@ __metadata:
     "@types/lodash.isplainobject": "npm:4.0.9"
     "@types/lodash.isstring": "npm:4.0.9"
     "@types/react-gtm-module": "npm:2.0.4"
-    bignumber.js: "npm:9.1.2"
+    bignumber.js: "npm:9.3.1"
     clsx: "npm:2.0.0"
     ky: "npm:1.0.1"
     localforage: "npm:1.10.0"
