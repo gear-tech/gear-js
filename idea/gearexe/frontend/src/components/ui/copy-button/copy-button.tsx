@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useState } from 'react';
 
 import Copy from '@/assets/icons/document-copy.svg?react';
