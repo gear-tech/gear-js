@@ -1,7 +1,7 @@
-import { decodeAddress } from '@gear-js/api';
 import { Keyring } from '@polkadot/api';
 import { InjectedAccount, InjectedWindowProvider, InjectedWindow, Unsubcall } from '@polkadot/extension-inject/types';
 import { Signer } from '@polkadot/types/types';
+import { u8aToHex } from '@polkadot/util';
 
 import { VARA_SS58_FORMAT } from '../../consts';
 
@@ -9,17 +9,20 @@ import { LOCAL_STORAGE_KEY, WALLET_STATUS } from './consts';
 import { Account, Wallet, Wallets } from './types';
 
 const getAccounts = (source: string, signer: Signer, accounts: InjectedAccount[]): Account[] =>
-  accounts.map(({ address, name, genesisHash, type }) => {
-    const decodedAddress = decodeAddress(address);
+  accounts
+    .filter(({ type }) => type !== 'ethereum')
+    .map(({ address, name, genesisHash, type }) => {
+      const keyring = new Keyring({ type });
+      const decodedAddress = u8aToHex(keyring.decodeAddress(address));
 
-    return {
-      address: new Keyring().encodeAddress(decodedAddress, VARA_SS58_FORMAT),
-      decodedAddress,
-      meta: { source, name, genesisHash },
-      type,
-      signer,
-    };
-  });
+      return {
+        address: keyring.encodeAddress(decodedAddress, VARA_SS58_FORMAT),
+        decodedAddress,
+        meta: { source, name, genesisHash },
+        type,
+        signer,
+      };
+    });
 
 const getLoggedInAccount = (_wallets: Wallets) => {
   const localStorageAccountAddress = localStorage.getItem(LOCAL_STORAGE_KEY.ACCOUNT_ADDRESS);
@@ -59,13 +62,10 @@ const getConnectedWallet = async (
     const { version } = wallet;
     const status = WALLET_STATUS.CONNECTED;
 
-    // if auth popup closed/rejected,
-    // polkadot-js extension will not resolve promise at all
+    // if auth popup closed/rejected, extension will throw an error
     const connectedWallet = await connect(origin);
     const { signer } = connectedWallet;
 
-    // every other extension will throw error there
-    // it is hacky, but works for right now. worth to consider better solution to handle loading state
     const accounts = getAccounts(id, signer, await connectedWallet.accounts.get());
 
     // probably it instantly writes to state on a first call. need to investigate
@@ -116,6 +116,7 @@ const getWallets = async (
   registerUnsub: (unsub: Unsubcall) => void,
 ) => {
   const { injectedWeb3 } = window as unknown as InjectedWindow;
+
   if (!injectedWeb3) return {};
 
   const promiseEntries = Object.entries(injectedWeb3).map(

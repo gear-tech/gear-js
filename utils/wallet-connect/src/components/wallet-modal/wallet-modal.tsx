@@ -33,13 +33,15 @@ function WalletModal({ theme = 'vara', close }: Props) {
       const accountsCount = accounts?.length || 0;
       const accountsStatus = `${accountsCount} ${accountsCount === 1 ? 'account' : 'accounts'}`;
 
+      const handleClick = () => {
+        if (isConnected) return setWalletId(id);
+
+        connect?.().catch(({ message }: Error) => alert.error(message));
+      };
+
       return (
         <li key={id}>
-          <WalletButton
-            SVG={SVG}
-            name={name}
-            onClick={() => (isConnected ? setWalletId(id) : connect?.())}
-            disabled={!isEnabled}>
+          <WalletButton SVG={SVG} name={name} onClick={handleClick} disabled={!isEnabled}>
             <span className={styles.status}>
               <span className={cx(styles.statusText, themeClassName)}>{isConnected ? 'Enabled' : 'Disabled'}</span>
 
