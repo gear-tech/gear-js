@@ -38,7 +38,7 @@ afterAll(async () => {
 });
 
 describe('Calculate gas', () => {
-  test('Get init gas spent (upload)', async () => {
+  test('[calculateGas] init on upload', async () => {
     const gas: GasInfo = await api.program.calculateGas.initUpload(aliceRaw, code, [1, 2, 3], 0, true, meta);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
@@ -50,7 +50,7 @@ describe('Calculate gas', () => {
     expect(gas.toHuman()).toHaveProperty('waited');
   });
 
-  test('Upload program', async () => {
+  test('[tx] upload program', async () => {
     expect(gasLimits.init).toBeDefined();
     const program = api.program.upload({ code, gasLimit: gasLimits.init as u64, initPayload: [1, 2, 3] }, meta);
     programId = program.programId;
@@ -60,7 +60,7 @@ describe('Calculate gas', () => {
     expect(await initStatus).toBe('success');
   });
 
-  test('Get init gas spent (create)', async () => {
+  test('[calculateGas] init on create', async () => {
     const gas: GasInfo = await api.program.calculateGas.initCreate(aliceRaw, codeId, [1, 2, 3], 0, true, meta);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
@@ -72,7 +72,7 @@ describe('Calculate gas', () => {
     expect(gasLimits.init.toHuman()).toBe(gas.min_limit.toHuman());
   });
 
-  test('Create program', async () => {
+  test('[tx] create program', async () => {
     expect(gasLimits.init).toBeDefined();
     const program = api.program.create({ codeId, gasLimit: gasLimits.init as u64, initPayload: [1, 2, 3] }, meta);
     programId = program.programId;
@@ -81,7 +81,7 @@ describe('Calculate gas', () => {
     expect(await initStatus).toBe('success');
   });
 
-  test('Get handle gas spent', async () => {
+  test('[calculateGas] handle', async () => {
     expect(programId).toBeDefined();
     const gas = await api.program.calculateGas.handle(
       aliceRaw,
@@ -101,7 +101,21 @@ describe('Calculate gas', () => {
     expect(gas.toHuman()).toHaveProperty('waited');
   });
 
-  test('Send message', async () => {
+  test('[calculateGas] handle with big value', async () => {
+    expect(programId).toBeDefined();
+    const gas = await api.program.calculateGas.handle(
+      aliceRaw,
+      programId,
+      { input: 'Handle' },
+      BigInt(10_000 * 1e12),
+      true,
+      meta,
+    );
+
+    expect(gas).toBeDefined();
+  });
+
+  test('[tx] send message', async () => {
     expect(gasLimits.handle).toBeDefined();
     const tx = await api.message.send(
       {
@@ -124,7 +138,7 @@ describe('Calculate gas', () => {
     expect(message.details.isNone).toBeTruthy();
   });
 
-  test('Calculate reply gas', async () => {
+  test('[calculateGas] reply', async () => {
     expect(messageId).toBeDefined();
     const gas = await api.program.calculateGas.reply(
       aliceRaw,
@@ -143,7 +157,7 @@ describe('Calculate gas', () => {
     expect(gas.toHuman()).toHaveProperty('waited');
   });
 
-  test('Send reply', async () => {
+  test('[tx] reply', async () => {
     expect(gasLimits.reply).toBeDefined();
     const tx = await api.message.sendReply(
       {

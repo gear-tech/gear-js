@@ -23,7 +23,7 @@ export class GearEvents {
   ) {
     const handler = (events: Vec<FrameSystemEventRecord>) => {
       events
-        .filter(({ event }) => event.method === method)
+        .filter(({ event }) => event.section === 'gear' && event.method === method)
         .forEach(({ event }) => {
           callback(event as IGearEvent[M]);
         });
