@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { OptionHTMLAttributes, useId, ReactNode, ComponentPropsWithRef } from 'react';
 
 import { InputProps } from '../../types';

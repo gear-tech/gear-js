@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { ComponentPropsWithRef } from 'react';
 
 import styles from './Radio.module.scss';
