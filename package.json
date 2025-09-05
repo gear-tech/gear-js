@@ -15,7 +15,7 @@
     "gear",
     "gear-js"
   ],
-  "packageManager": "yarn@4.6.0",
+  "packageManager": "yarn@4.9.4",
   "version": "1.0.0",
   "workspaces": [
     "apis/gear",
@@ -28,6 +28,7 @@
     "idea/gear/meta-storage",
     "idea/gear/squid",
     "idea/gearexe/frontend",
+    "idea/gearexe/indexer",
     "tools/cli",
     "tools/txwrapper",
     "utils/frontend-configs",
