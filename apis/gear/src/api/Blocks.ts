@@ -149,29 +149,54 @@ export class GearBlock {
 
     let unsubscribed = false;
 
-    const unsub = await this.api.rpc.chain[blocks === 'finalized' ? 'subscribeFinalizedHeads' : 'subscribeNewHeads'](
-      (header) => {
-        lastHeadNumber = header.number.toNumber();
-        if (blockNumber >= lastHeadNumber) {
-          cb(header);
-        }
-      },
-    );
+    const blockQueue: Header[] = [];
 
-    let oldBlocksSub = async () => {
+    let newBlockResolver: (() => void) | null = null;
+
+    const processQueue = async () => {
+      while (!unsubscribed) {
+        if (blockQueue.length > 0) {
+          const header = blockQueue.shift();
+          await cb(header);
+        } else {
+          await new Promise<void>((resolve) => {
+            newBlockResolver = resolve;
+          });
+        }
+      }
+    };
+
+    const oldBlocksSub = async () => {
       while (!unsubscribed && lastHeadNumber > blockNumber) {
         const hash = await this.api.rpc.chain.getBlockHash(blockNumber);
         const header = await this.api.rpc.chain.getHeader(hash);
-        await cb(header);
+        blockQueue.push(header);
         blockNumber++;
       }
     };
 
+    const unsub = await this.api.rpc.chain[blocks === 'finalized' ? 'subscribeFinalizedHeads' : 'subscribeNewHeads'](
+      async (header) => {
+        lastHeadNumber = header.number.toNumber();
+        if (blockNumber >= lastHeadNumber) {
+          blockQueue.push(header);
+          if (newBlockResolver) {
+            newBlockResolver();
+            newBlockResolver = null;
+          }
+        }
+      },
+    );
+
     oldBlocksSub();
+
+    processQueue();
 
     return () => {
       unsubscribed = true;
-      oldBlocksSub = null;
+      if (newBlockResolver) {
+        newBlockResolver();
+      }
       unsub();
     };
   }
