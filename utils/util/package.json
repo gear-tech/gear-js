@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "blakejs": "1.2.1",
-    "jest": "30.0.5"
+    "jest": "30.1.3"
   },
   "scripts": {
     "test": "yarn node --no-warnings --experimental-vm-modules $(yarn bin jest)",
