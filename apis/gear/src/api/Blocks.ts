@@ -138,7 +138,10 @@ export class GearBlock {
     cb: (header: Header) => Promise<void> | void,
     blocks: 'finalized' | 'latest' = 'latest',
   ): Promise<() => void> {
-    let blockNumber = typeof from === 'string' ? (await this.getBlockNumber(from)).toNumber() : from;
+    const fromBlockHash = isHex(from) ? from : await this.api.rpc.chain.getBlockHash(from);
+    const fromHeader = await this.api.rpc.chain.getHeader(fromBlockHash);
+
+    let blockNumber = fromHeader.number.toNumber();
 
     const lastHeader =
       blocks === 'finalized'
@@ -149,7 +152,8 @@ export class GearBlock {
 
     let unsubscribed = false;
 
-    const blockQueue: Header[] = [];
+    const blockQueue: Header[] = [fromHeader];
+    blockNumber++;
 
     let newBlockResolver: (() => void) | null = null;
 
@@ -166,19 +170,25 @@ export class GearBlock {
       }
     };
 
+    processQueue();
+
     const oldBlocksSub = async () => {
-      while (!unsubscribed && lastHeadNumber > blockNumber) {
+      while (!unsubscribed && lastHeadNumber >= blockNumber) {
         const hash = await this.api.rpc.chain.getBlockHash(blockNumber);
         const header = await this.api.rpc.chain.getHeader(hash);
         blockQueue.push(header);
         blockNumber++;
+        if (newBlockResolver) {
+          newBlockResolver();
+          newBlockResolver = null;
+        }
       }
     };
 
     const unsub = await this.api.rpc.chain[blocks === 'finalized' ? 'subscribeFinalizedHeads' : 'subscribeNewHeads'](
       async (header) => {
         lastHeadNumber = header.number.toNumber();
-        if (blockNumber >= lastHeadNumber) {
+        if (blockNumber > lastHeadNumber) {
           blockQueue.push(header);
           if (newBlockResolver) {
             newBlockResolver();
@@ -189,8 +199,6 @@ export class GearBlock {
     );
 
     oldBlocksSub();
-
-    processQueue();
 
     return () => {
       unsubscribed = true;
