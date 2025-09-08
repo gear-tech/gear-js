@@ -48,17 +48,16 @@ if [ -z "$SKIP_BUILD" ]; then
     cargo build --release
 fi
 
-# Step 2: Download Gear node
-if [ -z "$GEAR_NODE_BIN" ]; then
-    node_bin="$TMP_DIR/gear"
-    echo "Downloading Gear node..."
-    curl -o "$TMP_DIR"/gear.tar "$node_download"
-    tar -xvf "$TMP_DIR"/gear.tar -C "$TMP_DIR"
-    chmod +x "$node_bin"
-fi
-
 # Step 3: Run Gear node
 if [ -z "$SKIP_RUN_NODE" ]; then
+    if [ -z "$GEAR_NODE_BIN" ]; then
+        node_bin="$TMP_DIR/gear"
+        echo "Downloading Gear node..."
+        curl -o "$TMP_DIR"/gear.tar "$node_download"
+        tar -xvf "$TMP_DIR"/gear.tar -C "$TMP_DIR"
+        chmod +x "$node_bin"
+    fi
+
     echo "Running Gear node..."
     nohup "$node_bin" --dev --execution=wasm --tmp --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all > "$TMP_DIR"/gear.log 2>&1 &
     GEAR_PID=$!

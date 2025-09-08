@@ -103,6 +103,9 @@ jobs:
 
       - name: 'Test: run'
         run: yarn test:gear-api
+        env:
+          SKIP_RUN_NODE: true
+          SKIP_BUILD: true
 
   test-gearexe-api:
     runs-on: ubuntu-22.04
