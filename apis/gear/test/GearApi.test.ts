@@ -103,7 +103,7 @@ describe('Blocks', () => {
   test('subscribe heads from', async () => {
     const blocks: number[] = [];
 
-    const unsub = await api.blocks.subscribeToHeadsFrom(1, (header) => {
+    const unsub = await api.blocks.subscribeToHeadsFrom(0, (header) => {
       if (blocks.includes(header.number.toNumber())) throw new Error('Block already exists in the array');
       blocks.push(header.number.toNumber());
     });
@@ -112,8 +112,8 @@ describe('Blocks', () => {
 
     unsub();
 
-    for (let i = 1; i < Math.max(...blocks); i++) {
-      expect(blocks).toContain(i);
+    for (let i = 0; i < blocks.length; i++) {
+      expect(blocks[i]).toBe(i);
     }
   });
 });

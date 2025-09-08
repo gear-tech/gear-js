@@ -1,3 +1,9 @@
+## [draft]
+
+- Refactored `GearEthBridge` API into modular structure with separate `tx`, `events`, and query methods (https://github.com/gear-tech/gear-js/pull/2043)
+- Improved block subscription handling in `GearBlock` class with sequential processing and proper queue management (https://github.com/gear-tech/gear-js/pull/2043)
+- Fixed event filtering in `GearEvents` to only process events from the `gear` section (https://github.com/gear-tech/gear-js/pull/2043)
+
 ## [0.44.0]
 
 - Support old version of code storage (https://github.com/gear-tech/gear-js/pull/2013)
