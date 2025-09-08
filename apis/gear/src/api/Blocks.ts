@@ -170,8 +170,6 @@ export class GearBlock {
       }
     };
 
-    processQueue();
-
     const oldBlocksSub = async () => {
       while (!unsubscribed && lastHeadNumber >= blockNumber) {
         const hash = await this.api.rpc.chain.getBlockHash(blockNumber);
@@ -199,6 +197,8 @@ export class GearBlock {
     );
 
     oldBlocksSub();
+
+    processQueue();
 
     return () => {
       unsubscribed = true;
