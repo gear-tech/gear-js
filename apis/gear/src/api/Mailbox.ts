@@ -53,7 +53,10 @@ export class GearMailbox {
         : [undefined, messageIdOrNumberOfMessages || 1000];
     if (messageId) {
       const mailbox = await this.api.query.gearMessenger.mailbox(accountId, messageId);
-      const typedMailbox = this.api.createType('Option<(UserStoredMessage, Interval)>', mailbox) as Option<MailboxItem>;
+      const typedMailbox = this.api.createType(
+        'Option<(UserStoredMessage, GearCommonStoragePrimitivesInterval)>',
+        mailbox,
+      ) as Option<MailboxItem>;
       return typedMailbox.unwrapOr(null);
     } else {
       const keyPrefixes = this.api.query.gearMessenger.mailbox.keyPrefix(accountId);
@@ -63,7 +66,10 @@ export class GearMailbox {
       }
       const mailbox = (await this.api.rpc.state.queryStorageAt(keysPaged)) as Option<MailboxItem>[];
       return mailbox.map((item) => {
-        const typedItem = this.api.createType('Option<(UserStoredMessage, Interval)>', item) as Option<MailboxItem>;
+        const typedItem = this.api.createType(
+          'Option<(UserStoredMessage, GearCommonStoragePrimitivesInterval)>',
+          item,
+        ) as Option<MailboxItem>;
         return typedItem.unwrapOr(null);
       });
     }
