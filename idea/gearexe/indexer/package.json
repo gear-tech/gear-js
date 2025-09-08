@@ -1,0 +1,29 @@
+{
+  "name": "gearexe-indexer",
+  "private": true,
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "rm -rf lib && tsc",
+    "start": "node lib/main.js",
+    "migration:generate": "yarn build && npx typeorm migration:generate -d lib/model/dataSource.js -o db/migrations/$NAME",
+    "migration:run": "typeorm migration:run -d lib/model/dataSource.js",
+    "serve": "node lib/api.js"
+  },
+  "dependencies": {
+    "@subsquid/evm-processor": "^1.27.3",
+    "@subsquid/typeorm-store": "^1.5.1",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "pg": "8.12.0",
+    "postgraphile": "^4.14.1",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.20"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.1",
+    "typescript": "^5.5.2"
+  }
+}
