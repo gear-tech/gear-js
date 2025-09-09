@@ -332,7 +332,6 @@ export class TempState {
     const decoded = this._registry.createType<any>(this._programStorageTy, storage);
 
     if (decoded.isActive) {
-      console.log(block._runtime.specVersion);
       if (block._runtime.specVersion >= SPEC_VERSION['1.9.0']) return decoded.asActive.codeId.toHex();
       else return decoded.asActive.codeHash.toHex();
     } else {
