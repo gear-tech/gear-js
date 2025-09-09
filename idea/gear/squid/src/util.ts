@@ -42,3 +42,7 @@ export async function findChildMessageId(parentId: string, idToFind: string, sta
 
   throw Error('Child id not found');
 }
+
+export const SPEC_VERSION = {
+  '1.9.0': 1900,
+} as const;

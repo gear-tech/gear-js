@@ -20,7 +20,7 @@ import { Block, ProcessorContext } from './processor';
 import { MessageStatus } from './common';
 import { In } from 'typeorm';
 import { RedisClientType } from 'redis';
-import { findChildMessageId } from './util';
+import { findChildMessageId, SPEC_VERSION } from './util';
 
 const gearProgramModule = xxhashAsHex('GearProgram', 128);
 const programStorageMethod = xxhashAsHex('ProgramStorage', 128);
@@ -71,6 +71,14 @@ export class TempState {
 
   constructor(redisClient: RedisClientType, genesisHash: string) {
     this._redis = redisClient;
+    this._redis.on('error', (error) => {
+      if (this._ctx) {
+        this._ctx.log.error(error);
+      } else {
+        console.error(error);
+      }
+    });
+
     this.genesisHash = genesisHash;
     this.programs = new Map();
     this.codes = new Map();
@@ -95,8 +103,6 @@ export class TempState {
     this.vouchers.clear();
     this.revokedVouchers.clear();
     this.transfers.clear();
-
-    this._redis.on('error', (error) => this._ctx.log.error(error));
 
     const temp = Object.entries(await this._redis.hGetAll(this.genesisHash));
     this.cachedMessages = {};
@@ -325,7 +331,13 @@ export class TempState {
 
     const decoded = this._registry.createType<any>(this._programStorageTy, storage);
 
-    return decoded.isActive ? decoded.asActive.codeHash.toHex() : '0x';
+    if (decoded.isActive) {
+      console.log(block._runtime.specVersion);
+      if (block._runtime.specVersion >= SPEC_VERSION['1.9.0']) return decoded.asActive.codeId.toHex();
+      else return decoded.asActive.codeHash.toHex();
+    } else {
+      return '0x';
+    }
   }
 
   async saveVouchers() {
