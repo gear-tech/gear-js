@@ -30,4 +30,10 @@ const copyToClipboard = ({ alert, value }: { alert: AlertContainerFactory; value
   }
 };
 
-export { copyToClipboard };
+function isTelegramMiniApp() {
+  const params = new URLSearchParams(window.location.hash.slice(1));
+
+  return params.has('tgWebAppPlatform') && params.has('tgWebAppVersion');
+}
+
+export { copyToClipboard, isTelegramMiniApp };
