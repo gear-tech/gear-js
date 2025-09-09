@@ -2274,6 +2274,8 @@ __metadata:
     "@polkadot/util": "npm:13.5.6"
     "@substrate/connect": "npm:2.1.8"
     "@tanstack/react-query": "npm:5.85.6"
+    "@twa-dev/sdk": "npm:8.0.2"
+    "@varan-wallet/varan-connect": "npm:1.0.4"
     bignumber.js: "npm:9.3.1"
     nanoid: "npm:5.1.5"
     react: "npm:19.0.0"
@@ -8115,6 +8117,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@twa-dev/sdk@npm:8.0.2, @twa-dev/sdk@npm:^8.0.2":
+  version: 8.0.2
+  resolution: "@twa-dev/sdk@npm:8.0.2"
+  dependencies:
+    "@twa-dev/types": "npm:^8.0.1"
+  peerDependencies:
+    react: ^18.0.0 || ^19.0.0
+  checksum: 10c0/32f1ae0ebf0e73061608d1feac38aa55cfcfdcac2325035d549752a04f2145ee725d6772fd38769a242c5600238961715adc58c1b41ce7b93c5750b4240c01a6
+  languageName: node
+  linkType: hard
+
+"@twa-dev/types@npm:^8.0.1":
+  version: 8.0.2
+  resolution: "@twa-dev/types@npm:8.0.2"
+  checksum: 10c0/7e3750373d466dcd5279cf7121920dee89be6f64111002ade82e2ef5564d03e751341a4edcc1e145ede1c488c3bfc4a9c91af6d53321908bc8b514c3ec62db1d
+  languageName: node
+  linkType: hard
+
 "@tybys/wasm-util@npm:^0.10.0":
   version: 0.10.0
   resolution: "@tybys/wasm-util@npm:0.10.0"
@@ -9380,6 +9400,15 @@ __metadata:
   version: 1.3.0
   resolution: "@unrs/rspack-resolver-binding-win32-x64-msvc@npm:1.3.0"
   conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@varan-wallet/varan-connect@npm:1.0.4":
+  version: 1.0.4
+  resolution: "@varan-wallet/varan-connect@npm:1.0.4"
+  dependencies:
+    "@twa-dev/sdk": "npm:^8.0.2"
+  checksum: 10c0/5081ef839e2123e3cdb9694b318f8846879148721e36f62020cd4d615baa4219ae779e7a2811edd15d1b75b5ede314035bbc113e23d67b98cdc1f9d52cbd3147
   languageName: node
   linkType: hard
 
