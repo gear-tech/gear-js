@@ -108,6 +108,7 @@ jobs:
           SKIP_BUILD: true
 
   test-gearexe-api:
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'S0-skip-gearexe-tests') }}
     runs-on: ubuntu-22.04
     env:
       RUSTUP_HOME: /tmp/rustup_home

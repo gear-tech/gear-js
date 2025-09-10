@@ -1,6 +1,8 @@
 version: 2
 updates:
   - package-ecosystem: 'github-actions'
+    labels:
+      - D4-dependencies
     directory: '/'
     schedule:
       interval: daily
@@ -8,6 +10,8 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/'
     open-pull-requests-limit: 5
+    labels:
+      - D4-dependencies
     schedule:
       interval: daily
     groups:
