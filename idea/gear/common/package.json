@@ -9,7 +9,7 @@
     "clean": "echo \"clean gear-idea-common\" && rm -rf dist"
   },
   "dependencies": {
-    "@gear-js/api": "0.44.0",
+    "@gear-js/api": "0.44.1",
     "@polkadot/api": "16.4.6",
     "winston": "3.17.0"
   }

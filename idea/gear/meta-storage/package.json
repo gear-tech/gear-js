@@ -8,7 +8,7 @@
     "supertest": "^7.0.0"
   },
   "dependencies": {
-    "@gear-js/api": "0.44.0",
+    "@gear-js/api": "0.44.1",
     "@polkadot/api": "16.4.6",
     "dotenv": "17.2.1",
     "express": "5.1.0",
