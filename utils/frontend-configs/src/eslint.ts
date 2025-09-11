@@ -45,15 +45,10 @@ const eslintConfig = defineConfig(
     settings: {
       react: { version: 'detect' },
 
-      // while https://github.com/import-js/eslint-import-resolver-typescript/issues/94 is resolved in 4.x,
-      // extended config specified in references is ignored:
-      // https://github.com/import-js/eslint-import-resolver-typescript/issues/400
-      // also, baseUrl is not available because of regression related to:
-      // https://github.com/import-js/eslint-import-resolver-typescript/pull/368
-      // https://github.com/oxc-project/oxc-resolver/issues/416
-      // on top of this, everything is okay within the directory, but not in monorepo - issue is unknown
+      // project property breaks on each release for monorepos,
+      // waiting for https://github.com/import-js/eslint-import-resolver-typescript/issues/282
       'import/resolver': {
-        typescript: { project: ['**/tsconfig.json', '**/tsconfig.app.json'] },
+        typescript: { alwaysTryTypes: true, project: '**/tsconfig.json' },
       },
     },
 
