@@ -9,10 +9,10 @@ import jsxA11y from 'eslint-plugin-jsx-a11y';
 import importPlugin from 'eslint-plugin-import';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
-const eslintConfig = defineConfig(
-  { ignores: ['**/dist', '**/build'] },
+const eslintConfig = ({ tsConfigs }: { tsConfigs?: string[] } = {}) =>
+  defineConfig({
+    ignores: ['**/dist', '**/build'],
 
-  {
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommendedTypeChecked,
@@ -48,7 +48,7 @@ const eslintConfig = defineConfig(
       // project property breaks on each release for monorepos,
       // waiting for https://github.com/import-js/eslint-import-resolver-typescript/issues/282
       'import/resolver': {
-        typescript: { alwaysTryTypes: true, project: '**/tsconfig.json' },
+        typescript: { alwaysTryTypes: true, project: tsConfigs },
       },
     },
 
@@ -82,7 +82,6 @@ const eslintConfig = defineConfig(
       // we're using typescript
       'react/prop-types': 'off',
     },
-  },
-);
+  });
 
 export { eslintConfig };
