@@ -330,7 +330,7 @@ jobs:
         run: |
           if [ "${{ needs.set-env-tag.outputs.environment }}" == "production" ]; then
             echo "namespace=prod-idea" >> $GITHUB_OUTPUT
-            echo "deployments=squid-testnet-v2 squid-mainnet-v2 explorer faucet frontend-nginx meta-storage-main" >> $GITHUB_OUTPUT
+            echo "deployments=squid-testnet-prod squid-mainnet-prod explorer faucet frontend-nginx meta-storage-main" >> $GITHUB_OUTPUT
           else
             echo "namespace=dev-1" >> $GITHUB_OUTPUT
             if [ "${{ github.event_name }}" != "workflow_dispatch" || "${{ github.event.inputs.service }}" == "all" ]; then
