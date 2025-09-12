@@ -136,7 +136,9 @@ jobs:
         with:
           file: idea/gear/frontend/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-frontend:${{ needs.set-env-tag.outputs.environment }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-frontend:${{ needs.set-env-tag.outputs.environment }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-frontend:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
           build-args: |
             VITE_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
             VITE_DEFAULT_TRANSFER_BALANCE_VALUE=${{ secrets.REACT_APP_DEFAULT_TRANSFER_BALANCE_VALUE }}
@@ -185,7 +187,9 @@ jobs:
         with:
           file: idea/gear/faucet/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-faucet:${{ needs.set-env-tag.outputs.environment }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-faucet:${{ needs.set-env-tag.outputs.environment }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-faucet:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
 
   build-meta-storage-image:
     runs-on: ubuntu-latest
@@ -221,7 +225,9 @@ jobs:
         with:
           file: idea/gear/meta-storage/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-meta-storage:${{ needs.set-env-tag.outputs.environment }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-meta-storage:${{ needs.set-env-tag.outputs.environment }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-meta-storage:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
 
   build-squid-image:
     runs-on: ubuntu-latest
@@ -257,7 +263,9 @@ jobs:
         with:
           file: idea/gear/squid/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-squid:${{ needs.set-env-tag.outputs.environment }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-squid:${{ needs.set-env-tag.outputs.environment }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-squid:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
 
   build-explorer-image:
     runs-on: ubuntu-latest
@@ -293,7 +301,9 @@ jobs:
         with:
           file: idea/gear/explorer/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-explorer:${{ needs.set-env-tag.outputs.environment }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-explorer:${{ needs.set-env-tag.outputs.environment }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-idea-explorer:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
 
   deploy-to-k8s:
     needs:
