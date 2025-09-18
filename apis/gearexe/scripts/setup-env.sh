@@ -133,18 +133,6 @@ fi
 
 path_to_contracts=$path_to_gear_repo/ethexe/contracts
 
-# Check if foundryup is installed and install it if not
-if ! command -v foundryup &> /dev/null; then
-    log_info "Installing foundryup..."
-    curl -L https://foundry.paradigm.xyz | bash
-fi
-
-if [[ -z "$SKIP_BUILD" || "$SKIP_BUILD" != "true" ]]; then
-    build_gearexe
-    build_wasm_contracts
-    setup_forge
-fi
-
 # Function to determine platform for downloads
 get_platform() {
     case "$(uname)" in
@@ -244,6 +232,18 @@ setup_forge() {
     fi
     log_success "Successfully compiled contracts"
 }
+
+# Check if foundryup is installed and install it if not
+if ! command -v foundryup &> /dev/null; then
+    log_info "Installing foundryup..."
+    curl -L https://foundry.paradigm.xyz | bash
+fi
+
+if [[ -z "$SKIP_BUILD" || "$SKIP_BUILD" != "true" ]]; then
+    build_gearexe
+    build_wasm_contracts
+    setup_forge
+fi
 
 # Check and install/update Reth
 log_info "Checking Reth installation..."
