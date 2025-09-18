@@ -1,6 +1,6 @@
-import * as Sequencer from '@jest/test-sequencer';
+import Sequencer from '@jest/test-sequencer';
 
-export default class CustomSequencer extends Sequencer.default.default {
+export default class CustomSequencer extends Sequencer {
   sort(tests) {
     const copyTests = Array.from(tests);
     const result = new Array(copyTests.length);
