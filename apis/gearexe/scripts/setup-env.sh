@@ -240,9 +240,9 @@ if ! command -v foundryup &> /dev/null; then
 fi
 
 if [[ -z "$SKIP_BUILD" || "$SKIP_BUILD" != "true" ]]; then
-    build_gearexe
-    build_wasm_contracts
     setup_forge
+    build_wasm_contracts
+    build_gearexe
 fi
 
 # Check and install/update Reth
