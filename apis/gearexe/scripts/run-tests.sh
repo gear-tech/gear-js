@@ -1,20 +1,12 @@
 #!/bin/bash
 set -e
 
-RETH_VERSION="1.3.12"
-RETH_BIN_DIR=/tmp/gearexe-js/reth/bin
-ETH_DIR=/tmp/gearexe-js/eth
-GEAREXE_DIR=/tmp/gearexe-js/gearexe
-GEAR_REPO_DIR=/tmp/gearexe-js/gear
 LOGS_DIR=/tmp/gearexe-js/logs
 PROJECT_DIR=$(pwd)
 cd ../../
 ROOT_DIR=$(pwd)
 
-mkdir -p $ETH_DIR
-mkdir -p $GEAREXE_DIR
 mkdir -p $LOGS_DIR
-mkdir -p $RETH_BIN_DIR
 
 # Logging functions
 log_info() {
