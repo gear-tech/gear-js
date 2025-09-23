@@ -1,11 +1,11 @@
 import { IJsonRpcRequest, IJsonRpcResponse, IJsonRpcResponseError } from '../types/index.js';
 
-function id(): number {
+function generateId(): number {
   return Math.floor(Math.random() * 1_000_000);
 }
 
-export function encodeJsonRpc(method: string, parameters: unknown[]): IJsonRpcRequest {
-  return { method, params: parameters.map(transformBigint), id: id(), jsonrpc: '2.0' };
+export function createJsonRpcRequest(method: string, parameters: unknown[], id?: number): IJsonRpcRequest {
+  return { method, params: parameters.map(transformBigint), id: id ?? generateId(), jsonrpc: '2.0' };
 }
 
 export function isErrorResponse(response: IJsonRpcResponse): response is IJsonRpcResponseError {

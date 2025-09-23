@@ -2229,7 +2229,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.44.1, @gear-js/api@workspace:apis/gear":
+"@gear-js/api@npm:0.44.1, @gear-js/api@workspace:*, @gear-js/api@workspace:apis/gear":
   version: 0.0.0-use.local
   resolution: "@gear-js/api@workspace:apis/gear"
   dependencies:
@@ -15426,7 +15426,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"gear-js-util@workspace:^, gear-js-util@workspace:utils/util":
+"gear-js-util@workspace:*, gear-js-util@workspace:utils/util":
   version: 0.0.0-use.local
   resolution: "gear-js-util@workspace:utils/util"
   dependencies:
@@ -15517,13 +15517,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gearexe@workspace:apis/gearexe"
   dependencies:
-    "@gear-js/api": "npm:0.44.1"
+    "@gear-js/api": "workspace:*"
     "@polkadot/api": "npm:16.4.6"
     ethers: "npm:6.14.3"
-    gear-js-util: "workspace:^"
+    gear-js-util: "workspace:*"
     kzg-wasm: "npm:0.5.0"
-    sails-js: "npm:0.4.3"
-    sails-js-parser: "npm:0.4.3"
+    sails-js: "npm:0.5.0"
+    sails-js-parser: "npm:0.5.0"
   peerDependencies:
     ethers: ^6.14
   languageName: unknown
@@ -22923,10 +22923,38 @@ __metadata:
   languageName: node
   linkType: hard
 
+"sails-js-parser@npm:0.5.0":
+  version: 0.5.0
+  resolution: "sails-js-parser@npm:0.5.0"
+  dependencies:
+    sails-js-types: "npm:0.5.0"
+  peerDependencies:
+    sails-js-types: 0.5.0
+  dependenciesMeta:
+    sails-js-types:
+      optional: true
+  checksum: 10c0/0af72c37791451cf67c34b4c44bed767818be1faa12e8eb6eff82a099dd66f943600f554db9b63ad2388e7ee1dcbcef822d297369ebc00a8d305e39e6286218b
+  languageName: node
+  linkType: hard
+
 "sails-js-types@npm:0.4.3, sails-js-types@npm:^0.4.2":
   version: 0.4.3
   resolution: "sails-js-types@npm:0.4.3"
   checksum: 10c0/e86b20f4da9885a0ad117097a340ae1a6a14040a8e25cc2b9706403ca26ec8d621a0d3b27ab21be4563df985a36f2d38a813c22f257bed89e0723e285bf42c92
+  languageName: node
+  linkType: hard
+
+"sails-js-types@npm:0.5.0":
+  version: 0.5.0
+  resolution: "sails-js-types@npm:0.5.0"
+  checksum: 10c0/50bb09d144b0612780e7115ad359393c2187294e910b7856747b11a8ebaa54d4c9903cf931f123be63c31fef7be6b129d0268b040aa289b58316a9f13c869f2d
+  languageName: node
+  linkType: hard
+
+"sails-js-util@npm:0.5.0":
+  version: 0.5.0
+  resolution: "sails-js-util@npm:0.5.0"
+  checksum: 10c0/121bbcf9089f50f3ab66a5dc34e7e66e86af601187aee43d3d06a646e211ca13d9e7061a4d2922649860ae3b412d0e41b8a827a1bc1c8d9308a8af9c3215d2c7
   languageName: node
   linkType: hard
 
@@ -22950,6 +22978,22 @@ __metadata:
     sails-js-types:
       optional: true
   checksum: 10c0/62068d7e94fb1ab8ca42b5c84f41506d22129c2e879dc59bb47a45297196d1a040d97a05640a1975505afe93d98c7b1aef3c3115fc60a8bbc1df6c2d53393b86
+  languageName: node
+  linkType: hard
+
+"sails-js@npm:0.5.0":
+  version: 0.5.0
+  resolution: "sails-js@npm:0.5.0"
+  dependencies:
+    sails-js-types: "npm:0.5.0"
+    sails-js-util: "npm:0.5.0"
+  peerDependencies:
+    "@gear-js/api": ^0.44.1
+    "@polkadot/api": ^16.4.1
+  dependenciesMeta:
+    sails-js-types:
+      optional: true
+  checksum: 10c0/db20cac74f539e81ddc6c10a44c0b01adb5c5fe1151b15e2a55119c0c5388740e5d28bf58d996375426071bf44bceecaa2927825b6e0960caeefb7b65961e3a4
   languageName: node
   linkType: hard
 

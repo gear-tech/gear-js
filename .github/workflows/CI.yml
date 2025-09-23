@@ -126,11 +126,11 @@ jobs:
           files: |
             apis/gearexe/**
 
-      - name: 'Install: NodeJS 20.x'
+      - name: 'Install: NodeJS 22.x'
         if: steps.changed-gearexe.outputs.any_changed == 'true'
         uses: actions/setup-node@v5
         with:
-          node-version: 20.x
+          node-version: 22.x
 
       - name: Set up Rust
         if: steps.changed-gearexe.outputs.any_changed == 'true'

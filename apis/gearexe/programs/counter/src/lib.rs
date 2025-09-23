@@ -36,18 +36,21 @@ impl<'a> Counter<'a> {
 
 #[sails_rs::service]
 impl<'a> Counter<'a> {
+    #[export]
     pub fn increment(&mut self) -> u32 {
         let mut state = self.state.borrow_mut();
         state.value = state.value + 1;
         state.value.clone()
     }
 
+    #[export]
     pub fn decrement(&mut self) -> u32 {
         let mut state = self.state.borrow_mut();
         state.value = state.value - 1;
         state.value
     }
 
+    #[export]
     pub fn get_value(&self) -> u32 {
         self.state.borrow().value
     }
