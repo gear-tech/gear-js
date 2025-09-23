@@ -17,7 +17,7 @@ const noUnusedVars = [
 ];
 
 export default [
-  { ignores: ['**/dist', '**/dist-temp'] },
+  { ignores: ['**/dist', '**/dist-temp', '.yarn'] },
   {
     ...json.configs.recommended,
     files: ['**/*.json'],

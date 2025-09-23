@@ -351,7 +351,7 @@ export class WsGearexeProvider implements IGearExeProvider {
     parameters: unknown[],
     options?: { timeout?: number },
   ): Promise<Result> {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const request = this._createRequest(method, parameters);
 
       const executeRequest = () => {
