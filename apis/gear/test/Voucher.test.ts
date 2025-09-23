@@ -37,7 +37,7 @@ afterAll(async () => {
 });
 
 describe('Voucher', () => {
-  test('Upload test_meta program', async () => {
+  test('Upload test program', async () => {
     programId = api.program.upload({
       code,
       initPayload: [1, 2, 3],
