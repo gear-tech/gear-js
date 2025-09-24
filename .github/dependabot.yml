@@ -1,6 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: 'github-actions'
+    open-pull-requests-limit: 5
     labels:
       - D4-dependencies
     directory: '/'
@@ -8,33 +9,30 @@ updates:
       interval: weekly
       day: monday
       time: "09:00"
-      timezone: Etc/GMT
     commit-message:
       prefix: "chore(ci)"
 
   - package-ecosystem: 'cargo'
     directory: '/'
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
     labels:
       - D4-dependencies
     schedule:
       interval: weekly
       day: monday
       time: "09:00"
-      timezone: Etc/GMT
     commit-message:
       prefix: "chore(deps)"
 
   - package-ecosystem: 'cargo'
     directory: '/apis/gearexe'
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
     labels:
       - D4-dependencies
     schedule:
       interval: weekly
       day: monday
       time: "09:00"
-      timezone: Etc/GMT
     commit-message:
       prefix: "chore(deps)"
 
@@ -47,7 +45,6 @@ updates:
       interval: weekly
       day: monday
       time: "09:00"
-      timezone: Etc/GMT
     commit-message:
       prefix: "chore(deps)"
       prefix-development: "chore(deps-dev)"
@@ -60,19 +57,20 @@ updates:
         update-types:
           - "minor"
           - "patch"
-      production-patch:
+      development-major:
+        dependency-type: 'development'
+        exclude-patterns:
+          - '@polkadot/*'
+          - 'sails-js*'
+        update-types:
+          - "major"
+      production:
         dependency-type: 'production'
         exclude-patterns:
           - '@polkadot/*'
           - 'sails-js*'
         update-types:
           - "patch"
-      production-minor:
-        dependency-type: 'production'
-        exclude-patterns:
-          - '@polkadot/*'
-          - 'sails-js*'
-        update-types:
           - "minor"
       production-major:
         dependency-type: 'production'
@@ -87,6 +85,3 @@ updates:
       sails:
         patterns:
           - 'sails-js*'
-      major-updates:
-        update-types:
-          - "major"
