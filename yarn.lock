@@ -2076,7 +2076,7 @@ __metadata:
     bignumber.js: "npm:9.3.1"
     nanoid: "npm:5.1.6"
     react: "npm:19.0.0"
-    react-dom: "npm:19.0.0"
+    react-dom: "npm:19.1.1"
     react-transition-group: "npm:4.4.5"
     sails-js: "npm:0.4.3"
     sails-js-parser: "npm:0.4.3"
@@ -2157,7 +2157,7 @@ __metadata:
     "@tanstack/react-query": "npm:5.85.6"
     clsx: "npm:2.1.1"
     react: "npm:19.0.0"
-    react-dom: "npm:19.0.0"
+    react-dom: "npm:19.1.1"
   peerDependencies:
     "@gear-js/react-hooks": ^0.16.0
     "@gear-js/ui": ^0.7.0
@@ -14961,7 +14961,7 @@ __metadata:
     react: "npm:19.0.0"
     react-dnd: "npm:16.0.1"
     react-dnd-html5-backend: "npm:16.0.1"
-    react-dom: "npm:19.0.0"
+    react-dom: "npm:19.1.1"
     react-error-boundary: "npm:4.0.11"
     react-gtm-module: "npm:2.0.11"
     react-hook-form: "npm:7.52.2"
@@ -15091,7 +15091,7 @@ __metadata:
     "@tanstack/react-query": "npm:5.85.6"
     "@types/react-syntax-highlighter": "npm:15.5.13"
     react: "npm:19.0.0"
-    react-dom: "npm:19.0.0"
+    react-dom: "npm:19.1.1"
     react-router-dom: "npm:6.28.2"
     react-syntax-highlighter: "npm:15.6.6"
     sails-js: "npm:0.4.3"
@@ -20946,14 +20946,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:19.0.0":
-  version: 19.0.0
-  resolution: "react-dom@npm:19.0.0"
+"react-dom@npm:19.1.1":
+  version: 19.1.1
+  resolution: "react-dom@npm:19.1.1"
   dependencies:
-    scheduler: "npm:^0.25.0"
+    scheduler: "npm:^0.26.0"
   peerDependencies:
-    react: ^19.0.0
-  checksum: 10c0/a36ce7ab507b237ae2759c984cdaad4af4096d8199fb65b3815c16825e5cfeb7293da790a3fc2184b52bfba7ba3ff31c058c01947aff6fd1a3701632aabaa6a9
+    react: ^19.1.1
+  checksum: 10c0/8c91198510521299c56e4e8d5e3a4508b2734fb5e52f29eeac33811de64e76fe586ad32c32182e2e84e070d98df67125da346c3360013357228172dbcd20bcdd
   languageName: node
   linkType: hard
 
@@ -21864,10 +21864,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"scheduler@npm:^0.25.0":
-  version: 0.25.0
-  resolution: "scheduler@npm:0.25.0"
-  checksum: 10c0/a4bb1da406b613ce72c1299db43759526058fdcc413999c3c3e0db8956df7633acf395cb20eb2303b6a65d658d66b6585d344460abaee8080b4aa931f10eaafe
+"scheduler@npm:^0.26.0":
+  version: 0.26.0
+  resolution: "scheduler@npm:0.26.0"
+  checksum: 10c0/5b8d5bfddaae3513410eda54f2268e98a376a429931921a81b5c3a2873aab7ca4d775a8caac5498f8cbc7d0daeab947cf923dbd8e215d61671f9f4e392d34356
   languageName: node
   linkType: hard
 
