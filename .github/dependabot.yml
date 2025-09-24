@@ -5,29 +5,88 @@ updates:
       - D4-dependencies
     directory: '/'
     schedule:
-      interval: daily
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Etc/GMT
+    commit-message:
+      prefix: "chore(ci)"
 
-  - package-ecosystem: 'npm'
+  - package-ecosystem: 'cargo'
     directory: '/'
     open-pull-requests-limit: 5
     labels:
       - D4-dependencies
     schedule:
-      interval: daily
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Etc/GMT
+    commit-message:
+      prefix: "chore(deps)"
+
+  - package-ecosystem: 'cargo'
+    directory: '/apis/gearexe'
+    open-pull-requests-limit: 5
+    labels:
+      - D4-dependencies
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Etc/GMT
+    commit-message:
+      prefix: "chore(deps)"
+
+  - package-ecosystem: 'npm'
+    directory: '/'
+    open-pull-requests-limit: 10
+    labels:
+      - D4-dependencies
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Etc/GMT
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
     groups:
       development:
         dependency-type: 'development'
         exclude-patterns:
           - '@polkadot/*'
           - 'sails-js*'
-      production:
+        update-types:
+          - "minor"
+          - "patch"
+      production-patch:
         dependency-type: 'production'
         exclude-patterns:
           - '@polkadot/*'
           - 'sails-js*'
+        update-types:
+          - "patch"
+      production-minor:
+        dependency-type: 'production'
+        exclude-patterns:
+          - '@polkadot/*'
+          - 'sails-js*'
+        update-types:
+          - "minor"
+      production-major:
+        dependency-type: 'production'
+        exclude-patterns:
+          - '@polkadot/*'
+          - 'sails-js*'
+        update-types:
+          - "major"
       polkadot:
         patterns:
           - '@polkadot/*'
       sails:
         patterns:
           - 'sails-js*'
+      major-updates:
+        update-types:
+          - "major"

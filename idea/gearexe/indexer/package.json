@@ -21,9 +21,5 @@
     "postgraphile": "^4.14.1",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.20"
-  },
-  "devDependencies": {
-    "@types/node": "^24.3.1",
-    "typescript": "^5.5.2"
   }
 }
