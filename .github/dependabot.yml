@@ -12,6 +12,32 @@ updates:
     commit-message:
       prefix: "chore(ci)"
 
+  - package-ecosystem: 'cargo'
+    directory: '/'
+    open-pull-requests-limit: 5
+    labels:
+      - D4-dependencies
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Etc/GMT
+    commit-message:
+      prefix: "chore(deps)"
+
+  - package-ecosystem: 'cargo'
+    directory: '/apis/gearexe'
+    open-pull-requests-limit: 5
+    labels:
+      - D4-dependencies
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Etc/GMT
+    commit-message:
+      prefix: "chore(deps)"
+
   - package-ecosystem: 'npm'
     directory: '/'
     open-pull-requests-limit: 10
