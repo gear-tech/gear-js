@@ -2116,7 +2116,7 @@ __metadata:
     "@gear-js/frontend-configs": "npm:*"
     "@testing-library/jest-dom": "npm:6.8.0"
     "@testing-library/react": "npm:16.3.0"
-    clsx: "npm:1.2.1"
+    clsx: "npm:2.1.1"
     happy-dom: "npm:18.0.1"
     vitest: "npm:3.2.4"
   peerDependencies:
@@ -11855,13 +11855,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clsx@npm:2.0.0":
-  version: 2.0.0
-  resolution: "clsx@npm:2.0.0"
-  checksum: 10c0/c09f43b3144a0b7826b6b11b6a111b2c7440831004eecc02d333533c5e58ef0aa5f2dce071d3b25fbb8c8ea97b45df96c74bcc1d51c8c2027eb981931107b0cd
-  languageName: node
-  linkType: hard
-
 "clsx@npm:2.1.1":
   version: 2.1.1
   resolution: "clsx@npm:2.1.1"
@@ -15011,7 +15004,7 @@ __metadata:
     "@types/lodash.isstring": "npm:4.0.9"
     "@types/react-gtm-module": "npm:2.0.4"
     bignumber.js: "npm:9.3.1"
-    clsx: "npm:2.0.0"
+    clsx: "npm:2.1.1"
     ky: "npm:1.0.1"
     localforage: "npm:1.10.0"
     lodash.isequal: "npm:4.5.0"
