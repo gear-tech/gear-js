@@ -2038,7 +2038,7 @@ __metadata:
     eslint-plugin-prettier: "npm:5.5.4"
     eslint-plugin-react: "npm:7.37.5"
     eslint-plugin-react-hooks: "npm:5.2.0"
-    eslint-plugin-react-refresh: "npm:0.4.20"
+    eslint-plugin-react-refresh: "npm:0.4.21"
     globals: "npm:16.4.0"
     typescript-eslint: "npm:8.43.0"
     vite-plugin-checker: "npm:0.10.3"
@@ -2074,7 +2074,7 @@ __metadata:
     "@substrate/connect": "npm:2.1.8"
     "@tanstack/react-query": "npm:5.85.6"
     bignumber.js: "npm:9.3.1"
-    nanoid: "npm:5.1.5"
+    nanoid: "npm:5.1.6"
     react: "npm:19.0.0"
     react-dom: "npm:19.0.0"
     react-transition-group: "npm:4.4.5"
@@ -5800,30 +5800,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@redis/bloom@npm:5.8.0":
-  version: 5.8.0
-  resolution: "@redis/bloom@npm:5.8.0"
-  peerDependencies:
-    "@redis/client": ^5.8.0
-  checksum: 10c0/3f4f54b827225c393481d5da58c6fb252590376f8f1ff8819f98c41e2d9ae577f4adb68435854f78a29a3ca81f8cf58b2a5b2d9c74cc081e1e895739bfbbdf23
-  languageName: node
-  linkType: hard
-
 "@redis/bloom@npm:5.8.2":
   version: 5.8.2
   resolution: "@redis/bloom@npm:5.8.2"
   peerDependencies:
     "@redis/client": ^5.8.2
   checksum: 10c0/12757ef13059e1c844432ef30f02c675b35b62b3894b57514264ce097db03867c216e4d37e8812fcf8039692211207242b753bf0187a8068b8d91a90560eb8cd
-  languageName: node
-  linkType: hard
-
-"@redis/client@npm:5.8.0":
-  version: 5.8.0
-  resolution: "@redis/client@npm:5.8.0"
-  dependencies:
-    cluster-key-slot: "npm:1.1.2"
-  checksum: 10c0/ae28efb7cd7899784ebc41b21b547a256d597a7e8661c25146156be1cfa80ab0ffb838553a5702d0e42caa17ae9cc3d0aa7ae188483222440477233e7a46be3e
   languageName: node
   linkType: hard
 
@@ -5836,15 +5818,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@redis/json@npm:5.8.0":
-  version: 5.8.0
-  resolution: "@redis/json@npm:5.8.0"
-  peerDependencies:
-    "@redis/client": ^5.8.0
-  checksum: 10c0/47fe778d9c6a979a735bcdba39141eaa08f7d8678039771a00c1904117da7e5264666438c72c31deae2ab36168582b8f1c75ae2050a11756d2df6d0ed5f5eca9
-  languageName: node
-  linkType: hard
-
 "@redis/json@npm:5.8.2":
   version: 5.8.2
   resolution: "@redis/json@npm:5.8.2"
@@ -5854,30 +5827,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@redis/search@npm:5.8.0":
-  version: 5.8.0
-  resolution: "@redis/search@npm:5.8.0"
-  peerDependencies:
-    "@redis/client": ^5.8.0
-  checksum: 10c0/81a61e2796cc4d90bca56ee946f4885dbf9181aadcfc8719ce457af2c7ac97ce349e52456df96765364d0bbfd7a13744fcfb12e88e837baa58b56b96ab6a312e
-  languageName: node
-  linkType: hard
-
 "@redis/search@npm:5.8.2":
   version: 5.8.2
   resolution: "@redis/search@npm:5.8.2"
   peerDependencies:
     "@redis/client": ^5.8.2
   checksum: 10c0/d558d9d78905543cc7121a3da388e3e1e43afd66a67843fbc3fdfbad1354fc180651eec251dd03399785de19af23cb64cfa799a428f1c4201053598098d51c12
-  languageName: node
-  linkType: hard
-
-"@redis/time-series@npm:5.8.0":
-  version: 5.8.0
-  resolution: "@redis/time-series@npm:5.8.0"
-  peerDependencies:
-    "@redis/client": ^5.8.0
-  checksum: 10c0/054325b643e8109bcff4ab26c2592279e3d3da25c5d19a5e9bb42d9c42011e487bf7edc94d34731ab36f0e082a4a612d85347763c9ad4da73df8c34faaca0b28
   languageName: node
   linkType: hard
 
@@ -11760,14 +11715,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"class-validator@npm:0.14.1":
-  version: 0.14.1
-  resolution: "class-validator@npm:0.14.1"
+"class-validator@npm:0.14.2":
+  version: 0.14.2
+  resolution: "class-validator@npm:0.14.2"
   dependencies:
     "@types/validator": "npm:^13.11.8"
-    libphonenumber-js: "npm:^1.10.53"
+    libphonenumber-js: "npm:^1.11.1"
     validator: "npm:^13.9.0"
-  checksum: 10c0/946e914e47548b5081449c720ea6a4877bac63dc960e14fca4b990b56e64efe3802d12f07ec22d6420c290245b72ea2d646939239f2a3b597794e6c4c2a4f2ae
+  checksum: 10c0/5bb67389d38fa23d342dffdd8e2dcee8235e1906e59799df5b2050278a6d89292fcaa88167f0215e3ddd684f47dcd51b004efa7be32d8aded91ee06cb317b3b8
   languageName: node
   linkType: hard
 
@@ -13079,10 +13034,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:17.2.1":
-  version: 17.2.1
-  resolution: "dotenv@npm:17.2.1"
-  checksum: 10c0/918dd2f9d8b8f86b0afabad9534793d51de3718c437f9e7b6525628cf68c1d4ae768cc37a5afff38c066f58a8ecf549f4ac6cd5617485bd328e826112cc2650a
+"dotenv@npm:17.2.2, dotenv@npm:^17.2.1":
+  version: 17.2.2
+  resolution: "dotenv@npm:17.2.2"
+  checksum: 10c0/be66513504590aff6eccb14167625aed9bd42ce80547f4fe5d195860211971a7060949b57108dfaeaf90658f79e40edccd3f233f0a978bff507b5b1565ae162b
   languageName: node
   linkType: hard
 
@@ -13090,13 +13045,6 @@ __metadata:
   version: 16.6.1
   resolution: "dotenv@npm:16.6.1"
   checksum: 10c0/15ce56608326ea0d1d9414a5c8ee6dcf0fffc79d2c16422b4ac2268e7e2d76ff5a572d37ffe747c377de12005f14b3cc22361e79fc7f1061cce81f77d2c973dc
-  languageName: node
-  linkType: hard
-
-"dotenv@npm:^17.2.1":
-  version: 17.2.2
-  resolution: "dotenv@npm:17.2.2"
-  checksum: 10c0/be66513504590aff6eccb14167625aed9bd42ce80547f4fe5d195860211971a7060949b57108dfaeaf90658f79e40edccd3f233f0a978bff507b5b1565ae162b
   languageName: node
   linkType: hard
 
@@ -13869,12 +13817,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-refresh@npm:0.4.20":
-  version: 0.4.20
-  resolution: "eslint-plugin-react-refresh@npm:0.4.20"
+"eslint-plugin-react-refresh@npm:0.4.21":
+  version: 0.4.21
+  resolution: "eslint-plugin-react-refresh@npm:0.4.21"
   peerDependencies:
     eslint: ">=8.40"
-  checksum: 10c0/2ccf4ba28f1dcbcb9e773e46eae1e61e568bba69281a700eb26fd762152e4e90a78c991f9c8173342a7cd2a82f3f52fedb40a1e81360cef9c40ea5b814fa3613
+  checksum: 10c0/327f09c10ff8f73610170697ac4e82768fb68af3a469db627109fd0f5c9bfd985a5510bada5a0489d09c5149d7bbc2f5cb4f30693d6ee1140d8638344e501aca
   languageName: node
   linkType: hard
 
@@ -14936,15 +14884,15 @@ __metadata:
   resolution: "gear-idea-explorer@workspace:idea/gear/explorer"
   dependencies:
     "@types/express": "npm:5.0.3"
-    class-validator: "npm:0.14.1"
+    class-validator: "npm:0.14.2"
     cron: "npm:4.3.3"
-    dotenv: "npm:17.2.1"
+    dotenv: "npm:17.2.2"
     express: "npm:5.1.0"
     gear-idea-common: "npm:1.3.19"
     gear-idea-indexer-db: "npm:1.3.19"
-    nanoid: "npm:5.1.5"
+    nanoid: "npm:5.1.6"
     pg: "npm:8.16.3"
-    redis: "npm:5.8.0"
+    redis: "npm:5.8.2"
     reflect-metadata: "npm:0.2.2"
   languageName: unknown
   linkType: soft
@@ -14959,9 +14907,9 @@ __metadata:
     "@types/supertest": "npm:^6.0.2"
     "@types/xxhashjs": "npm:^0"
     class-transformer: "npm:0.5.1"
-    class-validator: "npm:0.14.1"
+    class-validator: "npm:0.14.2"
     cron: "npm:4.3.3"
-    dotenv: "npm:17.2.1"
+    dotenv: "npm:17.2.2"
     ethers: "npm:6.13.5"
     express: "npm:5.1.0"
     express-rate-limit: "npm:8.0.1"
@@ -14973,7 +14921,7 @@ __metadata:
     reflect-metadata: "npm:0.2.2"
     supertest: "npm:^7.0.0"
     swagger-ui-express: "npm:5.0.1"
-    typeorm: "npm:0.3.25"
+    typeorm: "npm:0.3.27"
     winston: "npm:3.17.0"
     xxhashjs: "npm:0.2.2"
     yamljs: "npm:0.3.0"
@@ -15033,7 +14981,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gear-idea-indexer-db@workspace:idea/gear/indexer-db"
   dependencies:
-    typeorm: "npm:0.3.25"
+    typeorm: "npm:0.3.27"
   languageName: unknown
   linkType: soft
 
@@ -15045,14 +14993,14 @@ __metadata:
     "@polkadot/api": "npm:16.4.6"
     "@types/express": "npm:5.0.3"
     "@types/supertest": "npm:^6.0.2"
-    dotenv: "npm:17.2.1"
+    dotenv: "npm:17.2.2"
     express: "npm:5.1.0"
     gear-idea-common: "npm:1.3.19"
     pg: "npm:8.16.3"
     reflect-metadata: "npm:0.2.2"
     supertest: "npm:^7.0.0"
     swagger-ui-express: "npm:5.0.1"
-    typeorm: "npm:0.3.25"
+    typeorm: "npm:0.3.27"
     yamljs: "npm:0.3.0"
   languageName: unknown
   linkType: soft
@@ -15073,13 +15021,13 @@ __metadata:
     "@subsquid/typeorm-migration": "npm:1.3.0"
     "@subsquid/typeorm-store": "npm:1.5.1"
     "@types/redis": "npm:^4.0.11"
-    dotenv: "npm:17.2.1"
+    dotenv: "npm:17.2.2"
     gear-idea-indexer-db: "npm:1.3.19"
     pg: "npm:8.16.3"
-    redis: "npm:5.8.0"
+    redis: "npm:5.8.2"
     reflect-metadata: "npm:0.2.2"
     sails-js: "npm:0.4.3"
-    typeorm: "npm:0.3.25"
+    typeorm: "npm:0.3.27"
   languageName: unknown
   linkType: soft
 
@@ -17720,7 +17668,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"libphonenumber-js@npm:^1.10.53":
+"libphonenumber-js@npm:^1.11.1":
   version: 1.12.22
   resolution: "libphonenumber-js@npm:1.12.22"
   checksum: 10c0/e7b126f11cec4b68c909b2907cbdf53324e718cddf916a5e9ccb47de3d82678d26af03da7e95e4525425ee11747d540e608f80a92b4d54f9150d71cc820ee5ef
@@ -18784,12 +18732,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:5.1.5":
-  version: 5.1.5
-  resolution: "nanoid@npm:5.1.5"
+"nanoid@npm:5.1.6":
+  version: 5.1.6
+  resolution: "nanoid@npm:5.1.6"
   bin:
     nanoid: bin/nanoid.js
-  checksum: 10c0/e6004f1ad6c7123eeb037062c4441d44982037dc043aabb162457ef6986e99964ba98c63c975f96c547403beb0bf95bc537bd7bf9a09baf381656acdc2975c3c
+  checksum: 10c0/27b5b055ad8332cf4f0f9f6e2a494aa7e5ded89df4cab8c8490d4eabefe72c4423971d2745d22002868b1d50576a5e42b7b05214733b19f576382323282dd26e
   languageName: node
   linkType: hard
 
@@ -21309,7 +21257,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redis@npm:*":
+"redis@npm:*, redis@npm:5.8.2":
   version: 5.8.2
   resolution: "redis@npm:5.8.2"
   dependencies:
@@ -21319,19 +21267,6 @@ __metadata:
     "@redis/search": "npm:5.8.2"
     "@redis/time-series": "npm:5.8.2"
   checksum: 10c0/95fe63a50cc5a9fb8d01bb91b8d02cc0f19aa9199204dd50c1f68af88ad44da4c65a67391aa6410880a25dc279b1821ecc6c81e2e1cb240ac16817094b5a293f
-  languageName: node
-  linkType: hard
-
-"redis@npm:5.8.0":
-  version: 5.8.0
-  resolution: "redis@npm:5.8.0"
-  dependencies:
-    "@redis/bloom": "npm:5.8.0"
-    "@redis/client": "npm:5.8.0"
-    "@redis/json": "npm:5.8.0"
-    "@redis/search": "npm:5.8.0"
-    "@redis/time-series": "npm:5.8.0"
-  checksum: 10c0/b695f5f672dd5769fb0c2ba0df5d009aa65503dc62d882269ec860cef5907779647f4e84e900f8a20cc78d107e91b1f41afbc712329ea70fa56c62c152595371
   languageName: node
   linkType: hard
 
@@ -23717,87 +23652,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typeorm@npm:0.3.25":
-  version: 0.3.25
-  resolution: "typeorm@npm:0.3.25"
-  dependencies:
-    "@sqltools/formatter": "npm:^1.2.5"
-    ansis: "npm:^3.17.0"
-    app-root-path: "npm:^3.1.0"
-    buffer: "npm:^6.0.3"
-    dayjs: "npm:^1.11.13"
-    debug: "npm:^4.4.0"
-    dedent: "npm:^1.6.0"
-    dotenv: "npm:^16.4.7"
-    glob: "npm:^10.4.5"
-    sha.js: "npm:^2.4.11"
-    sql-highlight: "npm:^6.0.0"
-    tslib: "npm:^2.8.1"
-    uuid: "npm:^11.1.0"
-    yargs: "npm:^17.7.2"
-  peerDependencies:
-    "@google-cloud/spanner": ^5.18.0 || ^6.0.0 || ^7.0.0
-    "@sap/hana-client": ^2.12.25
-    better-sqlite3: ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0
-    hdb-pool: ^0.1.6
-    ioredis: ^5.0.4
-    mongodb: ^5.8.0 || ^6.0.0
-    mssql: ^9.1.1 || ^10.0.1 || ^11.0.1
-    mysql2: ^2.2.5 || ^3.0.1
-    oracledb: ^6.3.0
-    pg: ^8.5.1
-    pg-native: ^3.0.0
-    pg-query-stream: ^4.0.0
-    redis: ^3.1.1 || ^4.0.0
-    reflect-metadata: ^0.1.14 || ^0.2.0
-    sql.js: ^1.4.0
-    sqlite3: ^5.0.3
-    ts-node: ^10.7.0
-    typeorm-aurora-data-api-driver: ^2.0.0 || ^3.0.0
-  peerDependenciesMeta:
-    "@google-cloud/spanner":
-      optional: true
-    "@sap/hana-client":
-      optional: true
-    better-sqlite3:
-      optional: true
-    hdb-pool:
-      optional: true
-    ioredis:
-      optional: true
-    mongodb:
-      optional: true
-    mssql:
-      optional: true
-    mysql2:
-      optional: true
-    oracledb:
-      optional: true
-    pg:
-      optional: true
-    pg-native:
-      optional: true
-    pg-query-stream:
-      optional: true
-    redis:
-      optional: true
-    sql.js:
-      optional: true
-    sqlite3:
-      optional: true
-    ts-node:
-      optional: true
-    typeorm-aurora-data-api-driver:
-      optional: true
-  bin:
-    typeorm: cli.js
-    typeorm-ts-node-commonjs: cli-ts-node-commonjs.js
-    typeorm-ts-node-esm: cli-ts-node-esm.js
-  checksum: 10c0/f0b52e451003713aba83a96bce5ee942c7f3ae236ee2e241b7872a19a3e3ac7ac24c91f3c279606678838c360de3c25a8156239b047f7980b0ba2b7ba6f73152
-  languageName: node
-  linkType: hard
-
-"typeorm@npm:^0.3.20":
+"typeorm@npm:0.3.27, typeorm@npm:^0.3.20":
   version: 0.3.27
   resolution: "typeorm@npm:0.3.27"
   dependencies:
