@@ -14,7 +14,7 @@
     "@gear-js/react-hooks": "*",
     "@gear-js/ui": "*",
     "@gear-js/wallet-connect": "*",
-    "@hcaptcha/react-hcaptcha": "1.8.1",
+    "@hcaptcha/react-hcaptcha": "1.12.1",
     "@hookform/resolvers": "3.3.2",
     "@polkadot/api": "16.4.6",
     "@polkadot/api-augment": "16.4.6",

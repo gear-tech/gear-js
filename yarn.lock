@@ -2332,15 +2332,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hcaptcha/react-hcaptcha@npm:1.8.1":
-  version: 1.8.1
-  resolution: "@hcaptcha/react-hcaptcha@npm:1.8.1"
+"@hcaptcha/loader@npm:^2.0.1":
+  version: 2.1.0
+  resolution: "@hcaptcha/loader@npm:2.1.0"
+  checksum: 10c0/8c3f990ab93a25e2b8b9e26ecadc6c595c27a0cc58c80c0105830bd5d13a2623e42ea18a59a5b3effa1acec11e455dd667bdc856fe4e33d10c8fba724928d858
+  languageName: node
+  linkType: hard
+
+"@hcaptcha/react-hcaptcha@npm:1.12.1":
+  version: 1.12.1
+  resolution: "@hcaptcha/react-hcaptcha@npm:1.12.1"
   dependencies:
     "@babel/runtime": "npm:^7.17.9"
+    "@hcaptcha/loader": "npm:^2.0.1"
   peerDependencies:
     react: ">= 16.3.0"
     react-dom: ">= 16.3.0"
-  checksum: 10c0/24ae51814ddaf3e51850df96ba04a26246dacfc435c9beb014d5212b2dc76007b9b904e71c7ec6bc364e887224b9b62629b23489ebfcde30a84ff0503e08c231
+  checksum: 10c0/033eb10278e7389ac959dffc3f332bc894f8af55e0f236c5676f93d4eb755b1ac9d7c89594b53871a68e22c62e6556e906ca4ebf513fda7d08c3fa287611eacd
   languageName: node
   linkType: hard
 
@@ -14989,7 +14997,7 @@ __metadata:
     "@gear-js/react-hooks": "npm:*"
     "@gear-js/ui": "npm:*"
     "@gear-js/wallet-connect": "npm:*"
-    "@hcaptcha/react-hcaptcha": "npm:1.8.1"
+    "@hcaptcha/react-hcaptcha": "npm:1.12.1"
     "@hookform/resolvers": "npm:3.3.2"
     "@polkadot/api": "npm:16.4.6"
     "@polkadot/api-augment": "npm:16.4.6"
