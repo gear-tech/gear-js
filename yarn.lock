@@ -15005,7 +15005,7 @@ __metadata:
     "@types/react-gtm-module": "npm:2.0.4"
     bignumber.js: "npm:9.3.1"
     clsx: "npm:2.1.1"
-    ky: "npm:1.0.1"
+    ky: "npm:1.10.0"
     localforage: "npm:1.10.0"
     lodash.isequal: "npm:4.5.0"
     lodash.isplainobject: "npm:4.0.6"
@@ -17559,10 +17559,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ky@npm:1.0.1":
-  version: 1.0.1
-  resolution: "ky@npm:1.0.1"
-  checksum: 10c0/652ac69baf79ace82657f83e64dfe433a35bd0efde02dd1cb37fb0ea9098d5a9e2b5bc6470b84f1a727ac3a47e2613db7fa5786910638296e3ba07838e0a50d2
+"ky@npm:1.10.0":
+  version: 1.10.0
+  resolution: "ky@npm:1.10.0"
+  checksum: 10c0/089b74886b6eb45c3929ac1769f08cd85f40fbf7d24dfd87bbe091e990aee8063eafc7575527ada0a51074f3973db218a85c1f00561fbebd61b8c70176bf3607
   languageName: node
   linkType: hard
 
