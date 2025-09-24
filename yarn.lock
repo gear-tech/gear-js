@@ -1899,13 +1899,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/js@npm:9.35.0":
-  version: 9.35.0
-  resolution: "@eslint/js@npm:9.35.0"
-  checksum: 10c0/d40fe38724bc76c085c0b753cdf937fa35c0d6807ae76b2632e3f5f66c3040c91adcf1aff2ce70b4f45752e60629fadc415eeec9af3be3c274bae1cac54b9840
-  languageName: node
-  linkType: hard
-
 "@eslint/js@npm:9.36.0":
   version: 9.36.0
   resolution: "@eslint/js@npm:9.36.0"
@@ -2027,7 +2020,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/frontend-configs@workspace:utils/frontend-configs"
   dependencies:
-    "@eslint/js": "npm:9.35.0"
+    "@eslint/js": "npm:9.36.0"
     "@types/eslint-plugin-jsx-a11y": "npm:6.10.0"
     "@typescript-eslint/parser": "npm:8.43.0"
     "@vitejs/plugin-react-swc": "npm:4.0.1"
@@ -15102,7 +15095,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.28.3"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@eslint/eslintrc": "npm:^3.3.1"
-    "@eslint/js": "npm:9.35.0"
+    "@eslint/js": "npm:9.36.0"
     "@eslint/json": "npm:0.13.2"
     "@rollup/plugin-commonjs": "npm:^28.0.6"
     "@rollup/plugin-json": "npm:^6.1.0"
