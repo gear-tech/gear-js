@@ -2072,7 +2072,7 @@ __metadata:
     "@polkadot/types": "npm:16.4.6"
     "@polkadot/util": "npm:13.5.6"
     "@substrate/connect": "npm:2.1.8"
-    "@tanstack/react-query": "npm:5.85.6"
+    "@tanstack/react-query": "npm:5.90.2"
     bignumber.js: "npm:9.3.1"
     nanoid: "npm:5.1.6"
     react: "npm:19.0.0"
@@ -2154,7 +2154,7 @@ __metadata:
     "@gear-js/ui": "npm:0.7.0"
     "@gear-js/vara-ui": "npm:0.3.1"
     "@polkadot/react-identicon": "npm:3.16.1"
-    "@tanstack/react-query": "npm:5.85.6"
+    "@tanstack/react-query": "npm:5.90.2"
     clsx: "npm:2.1.1"
     react: "npm:19.0.0"
     react-dom: "npm:19.0.0"
@@ -8060,21 +8060,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.85.6":
-  version: 5.85.6
-  resolution: "@tanstack/query-core@npm:5.85.6"
-  checksum: 10c0/a7b2141094185f8ad8e168e57cf20cec07a93dcfad95e6e71f1154e40d3753230bd0851fd19cc8e221f61a6cd6d7e9dba8853ada304da29dc1b3f866dbe2b090
+"@tanstack/query-core@npm:5.90.2":
+  version: 5.90.2
+  resolution: "@tanstack/query-core@npm:5.90.2"
+  checksum: 10c0/695a7450b0bb9f6dd21bebeacfc962dfc886631a3b3a13c33a842ef719b4c3dd30c15febe8c1ade6902a85e0f387c51a97570f430cc8f5c7032ff737d6410597
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:5.85.6":
-  version: 5.85.6
-  resolution: "@tanstack/react-query@npm:5.85.6"
+"@tanstack/react-query@npm:5.90.2":
+  version: 5.90.2
+  resolution: "@tanstack/react-query@npm:5.90.2"
   dependencies:
-    "@tanstack/query-core": "npm:5.85.6"
+    "@tanstack/query-core": "npm:5.90.2"
   peerDependencies:
     react: ^18 || ^19
-  checksum: 10c0/058564eea1805cf50d80ba2ddc3040df4564563802faf5e4a1282d859ab6d6d1bc50aa8a7924a5c060d57813dbe63dec4076e75e1988af4dbc60da0a743969aa
+  checksum: 10c0/22e76626a59890409858521b0e42b49219126a4ea5ed79eaa48a267959175dfdd28b30b9b03a415dccf703d95c18100a9d8917679818f6d2adc26d6c5f96a4d6
   languageName: node
   linkType: hard
 
@@ -14946,7 +14946,7 @@ __metadata:
     "@polkadot/types-codec": "npm:16.4.6"
     "@polkadot/util": "npm:13.5.6"
     "@react-aria/utils": "npm:3.21.0"
-    "@tanstack/react-query": "npm:5.85.6"
+    "@tanstack/react-query": "npm:5.90.2"
     "@types/lodash.isequal": "npm:4.5.8"
     "@types/lodash.isplainobject": "npm:4.0.9"
     "@types/lodash.isstring": "npm:4.0.9"
@@ -15088,7 +15088,7 @@ __metadata:
     "@gear-js/frontend-configs": "npm:*"
     "@reown/appkit": "npm:1.6.0"
     "@reown/appkit-adapter-wagmi": "npm:1.6.0"
-    "@tanstack/react-query": "npm:5.85.6"
+    "@tanstack/react-query": "npm:5.90.2"
     "@types/react-syntax-highlighter": "npm:15.5.13"
     react: "npm:19.0.0"
     react-dom: "npm:19.0.0"
