@@ -19,7 +19,7 @@
     "commander": "14.0.1",
     "inquirer": "12.9.6",
     "winston": "3.17.0",
-    "yaml": "2.3.0"
+    "yaml": "2.8.1"
   },
   "license": "GPL-3.0",
   "repository": {

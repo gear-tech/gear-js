@@ -45,10 +45,10 @@
     "@polkadot/api": "16.4.8",
     "@polkadot/api-derive": "16.4.8",
     "@polkadot/types": "16.4.8",
-    "@tanstack/react-query": "5.85.6",
+    "@tanstack/react-query": "5.90.2",
     "bignumber.js": "9.3.1",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
     "react-transition-group": "4.4.5",
     "sails-js": "0.4.3"
   },
