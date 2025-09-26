@@ -39,7 +39,7 @@ function useSendProgramTransaction<
 
     if (awaitFinalization) await isFinalized;
 
-    return { response: responseResult, blockHash, msgId, txHash };
+    return { response: responseResult, isFinalized, blockHash, msgId, txHash };
   };
 
   // depends on useProgram/program implementation, programId may not be available
