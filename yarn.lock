@@ -1991,7 +1991,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.44.1, @gear-js/api@workspace:*, @gear-js/api@workspace:apis/gear":
+"@gear-js/api@npm:0.44.2, @gear-js/api@workspace:*, @gear-js/api@workspace:apis/gear":
   version: 0.0.0-use.local
   resolution: "@gear-js/api@workspace:apis/gear"
   dependencies:
@@ -2011,7 +2011,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/cli@workspace:tools/cli"
   dependencies:
-    "@gear-js/api": "npm:0.44.1"
+    "@gear-js/api": "npm:0.44.2"
     "@polkadot/api": "npm:16.4.8"
     chalk: "npm:4"
     commander: "npm:14.0.1"
@@ -2064,7 +2064,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/react-hooks@workspace:utils/gear-hooks"
   dependencies:
-    "@gear-js/api": "npm:0.44.1"
+    "@gear-js/api": "npm:0.44.2"
     "@gear-js/frontend-configs": "npm:*"
     "@polkadot/api": "npm:16.4.8"
     "@polkadot/api-derive": "npm:16.4.8"
@@ -2081,7 +2081,7 @@ __metadata:
     sails-js: "npm:0.4.3"
     sails-js-parser: "npm:0.4.3"
   peerDependencies:
-    "@gear-js/api": ^0.44.1
+    "@gear-js/api": ^0.44.2
     "@polkadot/api": ^16.4.6
     "@polkadot/api-derive": ^16.4.6
     "@tanstack/react-query": ^5.56.2
@@ -14620,7 +14620,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gear-idea-common@workspace:idea/gear/common"
   dependencies:
-    "@gear-js/api": "npm:0.44.1"
+    "@gear-js/api": "npm:0.44.2"
     "@polkadot/api": "npm:16.4.8"
     winston: "npm:3.17.0"
   languageName: unknown
@@ -14648,7 +14648,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gear-idea-faucet@workspace:idea/gear/faucet"
   dependencies:
-    "@gear-js/api": "npm:0.44.1"
+    "@gear-js/api": "npm:0.44.2"
     "@polkadot/api": "npm:16.4.8"
     "@types/express": "npm:5.0.3"
     "@types/supertest": "npm:^6.0.2"
@@ -14679,7 +14679,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gear-idea-frontend@workspace:idea/gear/frontend"
   dependencies:
-    "@gear-js/api": "npm:0.44.1"
+    "@gear-js/api": "npm:0.44.2"
     "@gear-js/frontend-configs": "npm:*"
     "@gear-js/react-hooks": "npm:*"
     "@gear-js/ui": "npm:*"
@@ -14736,7 +14736,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gear-idea-meta-storage@workspace:idea/gear/meta-storage"
   dependencies:
-    "@gear-js/api": "npm:0.44.1"
+    "@gear-js/api": "npm:0.44.2"
     "@polkadot/api": "npm:16.4.8"
     "@types/express": "npm:5.0.3"
     "@types/supertest": "npm:^6.0.2"
@@ -14756,7 +14756,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gear-idea-squid@workspace:idea/gear/squid"
   dependencies:
-    "@gear-js/api": "npm:0.44.1"
+    "@gear-js/api": "npm:0.44.2"
     "@polkadot/api": "npm:16.4.8"
     "@subsquid/graphql-server": "npm:4.11.0"
     "@subsquid/ss58": "npm:2.0.2"
