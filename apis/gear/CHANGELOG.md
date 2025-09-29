@@ -1,3 +1,7 @@
+## [0.44.2]
+
+- Updated `GearEthBridge` events (https://github.com/gear-tech/gear-js/pull/2103)
+
 ## [0.44.1]
 
 - Refactored `GearEthBridge` API into modular structure with separate `tx`, `events`, and query methods (https://github.com/gear-tech/gear-js/pull/2043)

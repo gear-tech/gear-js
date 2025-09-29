@@ -43,20 +43,32 @@ interface GearEthBridgeMessageQueuedMessageCodec extends Struct {
  * Each event type maps to an array of its parameter types for type safety.
  */
 interface GearEthBridgeEventNames {
-  /** Emitted when the authority set hash changes */
+  /** Grandpa validator's keys set was hashed and set in storage at first block of the last session in the era. */
   AuthoritySetHashChanged: [HexString];
-  /** Emitted when the bridge message queue is cleared */
-  BridgeCleared: [];
-  /** Emitted when the bridge is first initialized */
+  /** Authority set hash was reset. */
+  AuthoritySetReset: [];
+  /** Optimistically, single-time called event defining that pallet got initialized */
   BridgeInitialized: [];
-  /** Emitted when the bridge is paused */
+  /** Bridge was paused and temporary doesn't process any incoming requests. */
   BridgePaused: [];
-  /** Emitted when the bridge is unpaused */
+  /** Bridge was unpaused and from now on processes any incoming requests. */
   BridgeUnpaused: [];
-  /** Emitted when a new message is queued for processing */
-  MessageQueued: [message: GearEthBridgeMessage, hash: HexString];
-  /** Emitted when the queue merkle root changes */
-  QueueMerkleRootChanged: [HexString];
+  /** A new message was queued for bridging. */
+  MessageQueued: {
+    /** Enqueued message. */
+    message: GearEthBridgeMessage;
+    /** Hash of the enqueued message. */
+    hash: HexString;
+  };
+  /** Merkle root of the queue changed: new messages queued within the block. */
+  QueueMerkleRootChanged: {
+    /** Queue identifier. */
+    queueId: bigint;
+    /** Merkle root of the queue. */
+    root: HexString;
+  };
+  /** Queue was reset. */
+  QueueReset: [];
 }
 
 /**
