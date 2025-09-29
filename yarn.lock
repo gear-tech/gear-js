@@ -2078,8 +2078,8 @@ __metadata:
     react: "npm:19.0.0"
     react-dom: "npm:19.0.0"
     react-transition-group: "npm:4.4.5"
-    sails-js: "npm:0.4.3"
-    sails-js-parser: "npm:0.4.3"
+    sails-js: "npm:0.5.0"
+    sails-js-parser: "npm:0.5.0"
   peerDependencies:
     "@gear-js/api": ^0.44.2
     "@polkadot/api": ^16.4.6
@@ -2087,7 +2087,7 @@ __metadata:
     "@tanstack/react-query": ^5.56.2
     react: ^18 || ^19
     react-dom: ^18 || ^19
-    sails-js: ^0.4.3
+    sails-js: ^0.5.0
   languageName: unknown
   linkType: soft
 
