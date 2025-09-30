@@ -1,4 +1,4 @@
-import { HexString, ICalculateReplyForHandleOptions } from '@gear-js/api';
+import { HexString } from '@gear-js/api';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 
@@ -7,9 +7,7 @@ import { useAccount, useApi } from '@/context';
 import { QueryParameters } from '../../types';
 import { useQuery } from '../use-query';
 
-import { Query, QueryArgs, QueryName, QueryReturn, ServiceName } from './types';
-
-type CalculateReplyOptions = Pick<ICalculateReplyForHandleOptions, 'at' | 'value'>;
+import { FunctionName, GenericQueryReturn, Query, QueryArgs, QueryReturn, ServiceName } from './types';
 
 type UseProgramQueryParameters<TProgram, TServiceName, TQueryName, TArgs, TQueryReturn, TData> = QueryParameters<
   TQueryReturn,
@@ -20,15 +18,17 @@ type UseProgramQueryParameters<TProgram, TServiceName, TQueryName, TArgs, TQuery
   functionName: TQueryName;
   args: TArgs;
   originAddress?: string;
-  calculateReply?: CalculateReplyOptions;
+  value?: bigint;
+  gasLimit?: bigint;
+  atBlock?: HexString;
   watch?: boolean;
 };
 
 function useProgramQuery<
   TProgram,
   TServiceName extends ServiceName<TProgram>,
-  TQueryName extends QueryName<TProgram[TServiceName]>,
-  TQuery extends Query<TProgram[TServiceName][TQueryName]>,
+  TFunctionName extends FunctionName<TProgram[TServiceName], GenericQueryReturn>,
+  TQuery extends Query<TProgram[TServiceName][TFunctionName]>,
   TArgs extends QueryArgs<TQuery>,
   TQueryReturn extends QueryReturn<TQuery>,
   TData = TQueryReturn,
@@ -37,23 +37,32 @@ function useProgramQuery<
   serviceName,
   functionName,
   args,
-  calculateReply,
+  originAddress,
+  value,
+  gasLimit,
+  atBlock,
   query,
   watch,
-  ...params
-}: UseProgramQueryParameters<TProgram, TServiceName, TQueryName, TArgs, TQueryReturn, TData>) {
+}: UseProgramQueryParameters<TProgram, TServiceName, TFunctionName, TArgs, TQueryReturn, TData>) {
   const { api, isApiReady } = useApi();
   const queryClient = useQueryClient();
 
   const { account } = useAccount();
-  const originAddress = 'originAddress' in params ? params.originAddress : account?.decodedAddress;
+  const address = originAddress || account?.decodedAddress;
 
   const getQuery = () => {
     if (!program) throw new Error('Program is not found');
 
-    return (program[serviceName][functionName] as TQuery)(
-      ...[...args, originAddress, calculateReply?.value, calculateReply?.at],
-    ) as TQueryReturn;
+    const programQuery = (program[serviceName][functionName] as TQuery)(
+      ...[...args],
+    ) as GenericQueryReturn<TQueryReturn>;
+
+    if (address) programQuery.withAddress(address);
+    if (value) programQuery.withValue(value);
+    if (gasLimit) programQuery.withGasLimit(gasLimit);
+    if (atBlock) programQuery.atBlock(atBlock);
+
+    return programQuery.call();
   };
 
   // depends on useProgram/program implementation, programId may not be available
@@ -64,13 +73,15 @@ function useProgramQuery<
     () => [
       'query',
       programId,
-      originAddress,
+      address,
       serviceName as string, // TODO: can we remove this cast by giving TProgram some type to extend?
       functionName as string,
       JSON.stringify(args), // stringify for types consistency, is it a good practice?
-      JSON.stringify(calculateReply),
+      value?.toString(),
+      gasLimit?.toString(),
+      atBlock,
     ],
-    [programId, originAddress, serviceName, functionName, args, calculateReply],
+    [programId, address, serviceName, functionName, args, value, gasLimit, atBlock],
   );
 
   useEffect(() => {
@@ -82,13 +93,11 @@ function useProgramQuery<
 
       if (!isAnyChange) return;
 
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1816): resolve eslint comments
-      queryClient.invalidateQueries({ queryKey });
+      void queryClient.invalidateQueries({ queryKey });
     });
 
     return () => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1816): resolve eslint comments
-      unsub.then((unsubCallback) => unsubCallback());
+      void unsub.then((unsubCallback) => unsubCallback());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, programId, watch]);
