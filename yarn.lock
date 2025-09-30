@@ -14715,9 +14715,9 @@ __metadata:
     react-number-format: "npm:5.3.1"
     react-router-dom: "npm:6.28.2"
     react-transition-group: "npm:4.4.5"
-    sails-js: "npm:0.4.3"
-    sails-js-parser: "npm:0.4.3"
-    sails-js-types: "npm:0.4.3"
+    sails-js: "npm:0.5.0"
+    sails-js-parser: "npm:0.5.0"
+    sails-js-types: "npm:0.5.0"
     simplebar-react: "npm:3.2.4"
     yup: "npm:1.3.2"
     zod: "npm:3.22.4"
@@ -21431,20 +21431,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sails-js-parser@npm:0.4.3":
-  version: 0.4.3
-  resolution: "sails-js-parser@npm:0.4.3"
-  dependencies:
-    sails-js-types: "npm:^0.4.2"
-  peerDependencies:
-    sails-js-types: 0.4.1
-  dependenciesMeta:
-    sails-js-types:
-      optional: true
-  checksum: 10c0/98b7de019509ff4fc2f1bb22d1584cc77dcaee799af75f4c68da2812ac3fd5b077d18c390c7eb9dbbb420631c66e2e67bd836bdcfba5392a1ff2a269681fd5f5
-  languageName: node
-  linkType: hard
-
 "sails-js-parser@npm:0.5.0":
   version: 0.5.0
   resolution: "sails-js-parser@npm:0.5.0"
@@ -21459,17 +21445,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sails-js-types@npm:0.4.3, sails-js-types@npm:^0.4.2":
-  version: 0.4.3
-  resolution: "sails-js-types@npm:0.4.3"
-  checksum: 10c0/e86b20f4da9885a0ad117097a340ae1a6a14040a8e25cc2b9706403ca26ec8d621a0d3b27ab21be4563df985a36f2d38a813c22f257bed89e0723e285bf42c92
-  languageName: node
-  linkType: hard
-
 "sails-js-types@npm:0.5.0":
   version: 0.5.0
   resolution: "sails-js-types@npm:0.5.0"
   checksum: 10c0/50bb09d144b0612780e7115ad359393c2187294e910b7856747b11a8ebaa54d4c9903cf931f123be63c31fef7be6b129d0268b040aa289b58316a9f13c869f2d
+  languageName: node
+  linkType: hard
+
+"sails-js-types@npm:^0.4.2":
+  version: 0.4.3
+  resolution: "sails-js-types@npm:0.4.3"
+  checksum: 10c0/e86b20f4da9885a0ad117097a340ae1a6a14040a8e25cc2b9706403ca26ec8d621a0d3b27ab21be4563df985a36f2d38a813c22f257bed89e0723e285bf42c92
   languageName: node
   linkType: hard
 
