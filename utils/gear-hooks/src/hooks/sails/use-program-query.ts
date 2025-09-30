@@ -17,7 +17,7 @@ type UseProgramQueryParameters<TProgram, TServiceName, TQueryName, TArgs, TQuery
   serviceName: TServiceName;
   functionName: TQueryName;
   args: TArgs;
-  originAddress?: string;
+  originAddress?: HexString;
   value?: bigint;
   gasLimit?: bigint;
   atBlock?: HexString;
