@@ -772,6 +772,10 @@ Returns a query with the program's state for a given service and function. Use t
 - `serviceName` (`string`): The name of the service to query.
 - `functionName` (`string`): The name of the function to query.
 - `args` (`TFunctionArgs[]`): Arguments for the function call.
+- `originAddress` (`HexString`, optional): Account address of the query. Defaults to the connected account.
+- `value` (`bigint`, optional): Value of the query.
+- `gasLimit` (`bigint`, optional): Gas limit of the query. Defaults to block maximum gas limit.
+- `atBlock` (`HexString`, optional): The block hash to query at. Defaults to the latest block.
 - `watch` (`boolean`, optional): If true, subscribes to state changes. Default is false.
 - `query` (`QueryParameters`, optional): Additional query options for TanStack Query.
 
