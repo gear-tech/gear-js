@@ -14994,7 +14994,7 @@ __metadata:
     sails-js-types: "npm:0.5.0"
     simplebar-react: "npm:3.2.4"
     yup: "npm:1.3.2"
-    zod: "npm:3.22.4"
+    zod: "npm:4.1.11"
   languageName: unknown
   linkType: soft
 
@@ -25612,6 +25612,13 @@ __metadata:
   version: 3.22.4
   resolution: "zod@npm:3.22.4"
   checksum: 10c0/7578ab283dac0eee66a0ad0fc4a7f28c43e6745aadb3a529f59a4b851aa10872b3890398b3160f257f4b6817b4ce643debdda4fb21a2c040adda7862cab0a587
+  languageName: node
+  linkType: hard
+
+"zod@npm:4.1.11":
+  version: 4.1.11
+  resolution: "zod@npm:4.1.11"
+  checksum: 10c0/ce6a4c4acfbf51d7dd0f2669c82f207d62a1f00264eef608994b94eb99d86a74c99f59b0dd3e61ef82909ee136631378b709e0908f0a02a2d5c21d0c497de5db
   languageName: node
   linkType: hard
 
