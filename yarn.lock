@@ -2068,7 +2068,7 @@ __metadata:
     "@gear-js/frontend-configs": "npm:*"
     "@polkadot/api": "npm:16.4.8"
     "@polkadot/api-derive": "npm:16.4.8"
-    "@polkadot/extension-inject": "npm:0.61.7"
+    "@polkadot/extension-inject": "npm:0.62.1"
     "@polkadot/types": "npm:16.4.8"
     "@polkadot/util": "npm:13.5.6"
     "@substrate/connect": "npm:2.1.8"
@@ -4835,7 +4835,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/api@npm:16.4.8, @polkadot/api@npm:^16.4.6":
+"@polkadot/api@npm:16.4.8, @polkadot/api@npm:^16.4.8":
   version: 16.4.8
   resolution: "@polkadot/api@npm:16.4.8"
   dependencies:
@@ -4860,13 +4860,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/extension-inject@npm:0.61.7":
-  version: 0.61.7
-  resolution: "@polkadot/extension-inject@npm:0.61.7"
+"@polkadot/extension-inject@npm:0.62.1":
+  version: 0.62.1
+  resolution: "@polkadot/extension-inject@npm:0.62.1"
   dependencies:
-    "@polkadot/api": "npm:^16.4.6"
-    "@polkadot/rpc-provider": "npm:^16.4.6"
-    "@polkadot/types": "npm:^16.4.6"
+    "@polkadot/api": "npm:^16.4.8"
+    "@polkadot/rpc-provider": "npm:^16.4.8"
+    "@polkadot/types": "npm:^16.4.8"
     "@polkadot/util": "npm:^13.5.6"
     "@polkadot/util-crypto": "npm:^13.5.6"
     "@polkadot/x-global": "npm:^13.5.6"
@@ -4874,7 +4874,7 @@ __metadata:
   peerDependencies:
     "@polkadot/api": "*"
     "@polkadot/util": "*"
-  checksum: 10c0/1ac565a9e78aa19ae62b16fe604c91effeb0e51797227632c261ba2ac1b6fdc41cb585d98528f21ba2737704f807f49d4dfae8d33e2f144ff7a3da272391e434
+  checksum: 10c0/81e769499d22c82b2a89da42b1aab979a89b212b68d1528cea35e1a07aba83bacb233aba9e36b2c0dcd8b3909d20558cff5d4e370d435888bc9918253e9c9354
   languageName: node
   linkType: hard
 
@@ -5082,7 +5082,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/rpc-provider@npm:16.4.8, @polkadot/rpc-provider@npm:^16.4.6":
+"@polkadot/rpc-provider@npm:16.4.8, @polkadot/rpc-provider@npm:^16.4.8":
   version: 16.4.8
   resolution: "@polkadot/rpc-provider@npm:16.4.8"
   dependencies:
@@ -5343,7 +5343,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/types@npm:16.4.8, @polkadot/types@npm:^16.4.6":
+"@polkadot/types@npm:16.4.8, @polkadot/types@npm:^16.4.8":
   version: 16.4.8
   resolution: "@polkadot/types@npm:16.4.8"
   dependencies:
