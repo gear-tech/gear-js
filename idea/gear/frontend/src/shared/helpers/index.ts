@@ -112,7 +112,7 @@ const resetFileInput = (target: HTMLInputElement | null) => {
   target.dispatchEvent(changeEvent);
 };
 
-const isMobileDevice = () => isIOS() || (isAndroid() as boolean); // asserting cuz isAndroid somehow any
+const isMobileDevice = () => isIOS() || isAndroid();
 
 const isUndefined = (value: unknown): value is undefined => value === undefined;
 
