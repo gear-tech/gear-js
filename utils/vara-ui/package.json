@@ -38,12 +38,12 @@
   },
   "devDependencies": {
     "@gear-js/frontend-configs": "*",
-    "@storybook/addon-links": "9.1.8",
-    "@storybook/addon-onboarding": "9.1.8",
-    "@storybook/react-vite": "9.1.8",
+    "@storybook/addon-links": "9.1.10",
+    "@storybook/addon-onboarding": "9.1.10",
+    "@storybook/react-vite": "9.1.10",
     "@storybook/testing-library": "0.2.2",
-    "@vueless/storybook-dark-mode": "9.0.8",
-    "storybook": "9.1.8"
+    "@vueless/storybook-dark-mode": "9.0.9",
+    "storybook": "9.1.10"
   },
   "files": [
     "dist"
