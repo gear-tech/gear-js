@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/frontend-configs",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "description": "Configs used across Gear frontend applications",
   "author": "Gear Technologies",
