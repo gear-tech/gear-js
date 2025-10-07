@@ -11,11 +11,13 @@ type Props = PropsWithChildren & {
 function DefaultDialog({ children, isOpen, close }: Props) {
   return (
     <Dialog.Root open={isOpen} onOpenChange={(open) => !open && close()}>
-      <Dialog.Trigger className={styles.Button}>View notifications</Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Backdrop className={styles.Backdrop} />
-        <Dialog.Popup className={styles.Popup}>
-          <Dialog.Title className={styles.Title}>Notifications</Dialog.Title>
+        <Dialog.Backdrop className={styles.backdrop} />
+        <Dialog.Popup className={styles.popup}>
+          <header className={styles.header}>
+            <Dialog.Title className={styles.title}>Connect Wallet</Dialog.Title>
+            <Dialog.Close>Close</Dialog.Close>
+          </header>
 
           <div>{children}</div>
         </Dialog.Popup>
