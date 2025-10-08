@@ -1,23 +1,22 @@
 import { createContext, useContext } from 'react';
 
-export type WalletContextValue = {
-  isModalOpen: boolean;
-  openModal: () => void;
-  closeModal: () => void;
+type WalletContextValue = {
+  dialog: {
+    isOpen: boolean;
+    open: () => void;
+    close: () => void;
+  };
 };
 
 const WalletContext = createContext<WalletContextValue | undefined>(undefined);
+const WalletProvider = WalletContext.Provider;
 
-const { Provider: WalletProvider } = WalletContext;
-
-export function useWalletContext() {
+function useWalletContext() {
   const context = useContext(WalletContext);
 
-  if (!context) {
-    throw new Error('Wallet context is missing. Place wallet parts inside <Wallet.Root>.');
-  }
+  if (!context) throw new Error('Wallet context is missing. Place wallet parts inside <Wallet.Root>.');
 
   return context;
 }
 
-export { WalletProvider };
+export { WalletProvider, useWalletContext };

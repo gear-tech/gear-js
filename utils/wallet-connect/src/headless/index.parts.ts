@@ -8,3 +8,4 @@ export * from './trigger';
 export * from './wallet-item';
 export * from './wallet-list';
 export * from './balance';
+export * from './connected-account';

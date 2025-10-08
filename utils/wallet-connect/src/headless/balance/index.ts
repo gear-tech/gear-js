@@ -1,2 +1,3 @@
-export { Balance, BalanceSymbol, BalanceValue } from './balance';
-export { useBalanceContext } from './context';
+export { Balance } from './balance';
+export { BalanceSymbol } from './balance-symbol';
+export { BalanceValue } from './balance-value';
