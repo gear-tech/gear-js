@@ -60,6 +60,7 @@ export class RequestService {
   }
 
   public async newRequest(address: string, target: string) {
+    logger.info(`New request`, { address, target });
     target = this._validateTarget(target);
 
     const req = await this._createAndValidateRequest(address, target);
