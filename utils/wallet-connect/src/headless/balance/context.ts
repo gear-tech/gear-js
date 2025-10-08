@@ -1,22 +1,19 @@
 import { createContext, useContext } from 'react';
 
-export type BalanceContextValue = {
+type BalanceContextValue = {
   value: string;
   unit: string;
 };
 
 const BalanceContext = createContext<BalanceContextValue | undefined>(undefined);
+const BalanceProvider = BalanceContext.Provider;
 
-const { Provider: BalanceProvider } = BalanceContext;
-
-export function useBalanceContext() {
+function useBalanceContext() {
   const context = useContext(BalanceContext);
 
-  if (!context) {
-    throw new Error('Balance context is missing. Place balance parts inside <Wallet.Balance>.');
-  }
+  if (!context) throw new Error('Balance context is missing. Place balance parts inside <Wallet.Balance>.');
 
   return context;
 }
 
-export { BalanceProvider };
+export { BalanceProvider, useBalanceContext };

@@ -1,28 +1,28 @@
-import { mergeProps, useRender } from '@base-ui-components/react';
-import { PropsWithChildren, useCallback, useMemo, useState } from 'react';
+import { useRender } from '@base-ui-components/react';
+import { useMemo, useState } from 'react';
 
 import { WalletProvider } from './context';
 
-type RootProps = PropsWithChildren & useRender.ComponentProps<'div'>;
+type Props = useRender.ComponentProps<'div'>;
 
-type RootElementProps = useRender.ElementProps<'div'>;
+function Root({ render, ...props }: Props) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-function Root({ render, ...props }: RootProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = useCallback(() => setIsModalOpen(true), []);
-  const closeModal = useCallback(() => setIsModalOpen(false), []);
-
-  const contextValue = useMemo(() => ({ isModalOpen, openModal, closeModal }), [closeModal, isModalOpen, openModal]);
-
-  const defaultProps: RootElementProps = {
-    children: props.children,
-  };
+  const contextValue = useMemo(
+    () => ({
+      dialog: {
+        isOpen: isDialogOpen,
+        open: () => setIsDialogOpen(true),
+        close: () => setIsDialogOpen(false),
+      },
+    }),
+    [isDialogOpen],
+  );
 
   const element = useRender({
     defaultTagName: 'div',
     render,
-    props: mergeProps<'div'>(defaultProps, props),
+    props,
   });
 
   return <WalletProvider value={contextValue}>{element}</WalletProvider>;
