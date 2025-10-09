@@ -5,15 +5,12 @@ import { useWallet } from '../../hooks';
 export type DialogContextValue = ReturnType<typeof useWallet>;
 
 const DialogContext = createContext<DialogContextValue | undefined>(undefined);
-
-const { Provider: DialogProvider } = DialogContext;
+const DialogProvider = DialogContext.Provider;
 
 export function useDialogContext() {
   const context = useContext(DialogContext);
 
-  if (!context) {
-    throw new Error('Dialog context is missing. Place dialog parts inside <Wallet.Dialog>.');
-  }
+  if (!context) throw new Error('Dialog context is missing. Place dialog parts inside <Wallet.Dialog>.');
 
   return context;
 }

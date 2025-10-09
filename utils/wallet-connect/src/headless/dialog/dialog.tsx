@@ -1,53 +1,27 @@
-import { mergeProps, useRender } from '@base-ui-components/react';
-import { PropsWithChildren, useMemo } from 'react';
+import { useRender } from '@base-ui-components/react';
 
 import { useWallet } from '../../hooks';
+import { DefaultDialog } from '../default-dialog';
 import { useWalletContext } from '../root';
 
 import { DialogProvider } from './context';
-import { DefaultDialog } from './default-dialog';
 
-type DialogProps = PropsWithChildren & useRender.ComponentProps<'div'>;
-type DialogState = {
-  isOpen: boolean;
-  open: () => void;
-  close: () => void;
-};
+type DialogProps = useRender.ComponentProps<'div'>;
 
-function Dialog({ render: renderProp, children, ...props }: DialogProps) {
-  const { isModalOpen, openModal, closeModal } = useWalletContext();
-  const { wallet, walletId, walletAccounts, setWalletId, resetWalletId } = useWallet();
+function Dialog({ render, ...props }: DialogProps) {
+  const { dialog } = useWalletContext();
+  const wallet = useWallet();
 
-  const contextValue = useMemo(
-    () => ({ wallet, walletId, walletAccounts, setWalletId, resetWalletId }),
-    [resetWalletId, setWalletId, wallet, walletAccounts, walletId],
-  );
-
-  const defaultProps: useRender.ElementProps<'div'> = {
-    children,
-  };
-
-  const defaultRender: useRender.RenderProp<DialogState> = (renderProps, state) => (
-    <DefaultDialog isOpen={state.isOpen} close={state.close}>
-      {renderProps.children}
-    </DefaultDialog>
-  );
-
-  const render = renderProp ?? defaultRender;
-
-  const body = useRender<DialogState, HTMLDivElement, boolean>({
+  const element = useRender({
     defaultTagName: 'div',
-    render,
-    props: mergeProps<'div'>(defaultProps, props),
-    state: { isOpen: isModalOpen, open: openModal, close: closeModal },
-    enabled: isModalOpen,
+    render: render ?? <DefaultDialog isOpen={dialog.isOpen} close={dialog.close} />,
+    enabled: dialog.isOpen,
+    props,
   });
 
-  if (!isModalOpen || !body) {
-    return null;
-  }
+  if (!dialog.isOpen) return;
 
-  return <DialogProvider value={contextValue}>{body}</DialogProvider>;
+  return <DialogProvider value={wallet}>{element}</DialogProvider>;
 }
 
 export { Dialog };

@@ -4,19 +4,16 @@ import { createContext, useContext } from 'react';
 export type AccountItemContextValue = {
   account: InjectedAccountWithMeta;
   isActive: boolean;
-  onSelect: () => void;
+  onClick: () => void;
 };
 
 const AccountItemContext = createContext<AccountItemContextValue | undefined>(undefined);
-
-const { Provider: AccountItemProvider } = AccountItemContext;
+const AccountItemProvider = AccountItemContext.Provider;
 
 export function useAccountItemContext() {
   const context = useContext(AccountItemContext);
 
-  if (!context) {
-    throw new Error('Account item context is missing. Place parts inside <Wallet.AccountItem>.');
-  }
+  if (!context) throw new Error('Account item context is missing. Place parts inside <Wallet.AccountItem>.');
 
   return context;
 }

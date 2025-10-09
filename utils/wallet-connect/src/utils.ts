@@ -1,9 +1,12 @@
-import { AlertContainerFactory } from '@gear-js/react-hooks';
-
-const copyToClipboard = ({ alert, value }: { alert: AlertContainerFactory; value: string }) => {
-  const onSuccess = () => alert.success('Copied');
-  const onError = () => alert.error('Copy error');
-
+const copyToClipboard = ({
+  onSuccess,
+  onError,
+  value,
+}: {
+  onSuccess: () => void;
+  onError: () => void;
+  value: string;
+}) => {
   function unsecuredCopyToClipboard(text: string) {
     const textArea = document.createElement('textarea');
     textArea.value = text;
@@ -30,4 +33,10 @@ const copyToClipboard = ({ alert, value }: { alert: AlertContainerFactory; value
   }
 };
 
-export { copyToClipboard };
+const getTruncatedText = (value: string, prefixLength = 6) => {
+  if (value.length <= prefixLength) return value;
+
+  return `${value.substring(0, prefixLength)}...${value.slice(-prefixLength)}`;
+};
+
+export { copyToClipboard, getTruncatedText };
