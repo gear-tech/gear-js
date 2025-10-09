@@ -1,4 +1,4 @@
-import { useRender } from '@base-ui-components/react';
+import { mergeProps, useRender } from '@base-ui-components/react';
 
 import { useWallet } from '../../hooks';
 import { DefaultDialog } from '../default-dialog';
@@ -8,15 +8,23 @@ import { DialogProvider } from './context';
 
 type DialogProps = useRender.ComponentProps<'div'>;
 
+// TODO: types
 function Dialog({ render, ...props }: DialogProps) {
   const { dialog } = useWalletContext();
   const wallet = useWallet();
 
+  // TODO: types
+  const defaultProps = {
+    heading: 'Connect Wallet',
+    isOpen: dialog.isOpen,
+    close: dialog.close,
+  };
+
   const element = useRender({
-    defaultTagName: 'div',
-    render: render ?? <DefaultDialog isOpen={dialog.isOpen} close={dialog.close} />,
+    // @ts-expect-error -- no props
+    render: render ?? <DefaultDialog />,
     enabled: dialog.isOpen,
-    props,
+    props: mergeProps(defaultProps, props),
   });
 
   if (!dialog.isOpen) return;

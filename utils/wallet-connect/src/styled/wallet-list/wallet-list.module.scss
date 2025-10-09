@@ -1,0 +1,55 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.button {
+  /* overriding @gear-js/ui and @gear-js/vara-ui */
+  justify-content: space-between !important;
+}
+
+.wallet {
+  display: flex;
+  align-items: center;
+
+  &Icon {
+    margin-right: 8px;
+    background-color: #fff;
+    border-radius: 50%;
+    border: 1px solid #ebeeee;
+  }
+}
+
+.status {
+  display: flex;
+  flex-direction: column;
+
+  font-size: 12px;
+  line-height: 1;
+  text-align: right;
+}
+
+.statusText {
+  font-weight: 600;
+
+  &.gear {
+    color: #fff;
+  }
+
+  &.vara {
+    color: #a2a2a2;
+  }
+}
+
+.statusAccounts {
+  font-weight: 800;
+
+  &.gear {
+    color: #2bd071;
+  }
+
+  &.vara {
+    color: #02f8bf;
+  }
+}

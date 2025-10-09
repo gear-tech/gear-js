@@ -1,16 +1,23 @@
-import { useRender } from '@base-ui-components/react';
+import { mergeProps, useRender } from '@base-ui-components/react';
 import { Identicon } from '@polkadot/react-identicon';
 
 import { useAccountItemContext } from './context';
 
-type AccountIconProps = useRender.ComponentProps<'span'>;
+type IdenticonType = typeof Identicon;
+type AccountIconProps = useRender.ComponentProps<IdenticonType>;
+type ElementProps = useRender.ElementProps<IdenticonType>;
 
 function AccountIcon({ render, ...props }: AccountIconProps) {
   const { account } = useAccountItemContext();
 
+  const defaultProps: ElementProps = {
+    value: account.address,
+    size: 20,
+  };
+
   return useRender({
-    render: render ?? <Identicon value={account.address} size={20} />,
-    props,
+    render: render ?? <Identicon />,
+    props: mergeProps<IdenticonType>(defaultProps, props),
   });
 }
 

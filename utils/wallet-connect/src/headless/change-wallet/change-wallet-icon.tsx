@@ -1,23 +1,19 @@
-import { useRender, mergeProps } from '@base-ui-components/react';
+import { useRender } from '@base-ui-components/react';
+
+import { SVGComponent } from '@/types';
 
 import { useDialogContext } from '../dialog';
 
-type Props = useRender.ComponentProps<'span'>;
-type ElementProps = useRender.ElementProps<'span'>;
+type Props = useRender.ComponentProps<SVGComponent>;
 
 function ChangeWalletIcon({ render, ...props }: Props) {
   const { wallet } = useDialogContext();
   const { SVG } = wallet || {};
 
-  const defaultProps: ElementProps = {
-    children: SVG ? <SVG /> : undefined,
-  };
-
   return useRender({
-    defaultTagName: 'span',
-    render,
-    props: mergeProps<'span'>(defaultProps, props),
+    render: render ?? (SVG && <SVG />),
     enabled: Boolean(wallet),
+    props,
   });
 }
 

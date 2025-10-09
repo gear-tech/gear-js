@@ -10,7 +10,7 @@ type ElementProps = useRender.ElementProps<'button'>;
 function LogoutTrigger({ render, ...props }: Props) {
   const { account, logout } = useAccount();
   const { dialog } = useWalletContext();
-  const { resetWalletId } = useDialogContext();
+  const { wallet, resetWalletId } = useDialogContext();
 
   const handleClick = () => {
     logout();
@@ -27,7 +27,7 @@ function LogoutTrigger({ render, ...props }: Props) {
   return useRender({
     defaultTagName: 'button',
     props: mergeProps<'button'>(defaultProps, props),
-    enabled: Boolean(account),
+    enabled: Boolean(wallet && account),
     render,
   });
 }
