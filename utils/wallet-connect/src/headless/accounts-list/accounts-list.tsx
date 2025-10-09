@@ -1,57 +1,49 @@
 import { mergeProps, useRender } from '@base-ui-components/react';
 import { useAccount } from '@gear-js/react-hooks';
-import { Children, PropsWithChildren, cloneElement, isValidElement, useMemo } from 'react';
+import { useMemo } from 'react';
 
-import { AccountItemProvider } from '../account-item/context';
-import { useDialogContext } from '../dialog/context';
+import { AccountItemProvider } from '../account-item';
+import { useDialogContext } from '../dialog';
+import { useWalletContext } from '../root';
 
-import { AccountsListProvider } from './context';
+type Props = useRender.ComponentProps<'ul'>;
+type ElementProps = useRender.ElementProps<'ul'>;
 
-type AccountsListProps = PropsWithChildren & useRender.ComponentProps<'ul'>;
-
-type AccountsListState = {
-  isEmpty: boolean;
-};
-
-function AccountsList({ render, children, ...props }: AccountsListProps) {
+function AccountsList({ render, children, ...props }: Props) {
   const { account, login } = useAccount();
+  const { dialog } = useWalletContext();
   const { walletAccounts } = useDialogContext();
 
-  const accounts = useMemo(() => walletAccounts ?? [], [walletAccounts]);
+  const elements = useMemo(
+    () =>
+      walletAccounts?.map((item) => {
+        const isActive = item.address === account?.address;
 
-  const state: AccountsListState = useMemo(() => ({ isEmpty: accounts.length === 0 }), [accounts.length]);
+        const onClick = () => {
+          if (isActive) return;
 
-  const renderTemplate = () =>
-    Children.map(children, (child) => (isValidElement(child) ? cloneElement(child) : child)) ?? null;
+          login(item);
+          dialog.close();
+        };
 
-  const renderedItems = accounts.map((item) => {
-    const isActive = item.address === account?.address;
+        return (
+          <AccountItemProvider key={item.address} value={{ account: item, isActive, onClick }}>
+            {children}
+          </AccountItemProvider>
+        );
+      }),
+    [account?.address, walletAccounts, children, dialog, login],
+  );
 
-    const handleSelect = () => {
-      if (isActive) return;
-
-      login(item);
-    };
-
-    return (
-      <AccountItemProvider key={item.address} value={{ account: item, isActive, onSelect: handleSelect }}>
-        {renderTemplate()}
-      </AccountItemProvider>
-    );
-  });
-
-  const defaultProps: useRender.ElementProps<'ul'> = {
-    children: renderedItems,
+  const defaultProps: ElementProps = {
+    children: elements,
   };
 
-  const element = useRender<AccountsListState, HTMLUListElement>({
+  return useRender({
     defaultTagName: 'ul',
-    render,
     props: mergeProps<'ul'>(defaultProps, props),
-    state,
+    render,
   });
-
-  return <AccountsListProvider value={{ accounts }}>{element}</AccountsListProvider>;
 }
 
 export { AccountsList };

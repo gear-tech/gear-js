@@ -67,8 +67,16 @@ function WalletModal({ theme = 'vara', close }: Props) {
       };
 
       const handleCopyClick = () => {
-        copyToClipboard({ value: address, alert });
-        close();
+        copyToClipboard({
+          value: address,
+
+          onSuccess: () => {
+            alert.success('Address copied');
+            close();
+          },
+
+          onError: () => alert.error('Copy error'),
+        });
       };
 
       return (

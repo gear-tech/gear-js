@@ -1,101 +1,55 @@
 import { mergeProps, useRender } from '@base-ui-components/react';
 import { useAccount } from '@gear-js/react-hooks';
-import { Children, PropsWithChildren, cloneElement, isValidElement, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { WALLETS } from '../../consts';
 import { useDialogContext } from '../dialog';
 import { WalletItemProvider } from '../wallet-item';
 
-import { WalletListContextValue, WalletListProvider } from './context';
+type Props = useRender.ComponentProps<'ul'>;
+type ElementProps = useRender.ElementProps<'ul'>;
 
-type WalletListProps = PropsWithChildren & useRender.ComponentProps<'ul'>;
-
-type WalletListState = {
-  isEmpty: boolean;
-};
-
-function WalletList({ render, children, ...props }: WalletListProps) {
+function WalletList({ render, children, ...props }: Props) {
   const { wallets } = useAccount();
   const { setWalletId } = useDialogContext();
 
-  const items: WalletListContextValue['items'] = useMemo(() => {
-    return WALLETS.map(([id, wallet]) => {
-      const walletState = wallets?.[id];
-      const { status, accounts, connect } = walletState || {};
+  const elements = useMemo(
+    () =>
+      WALLETS.map(([id, wallet]) => {
+        const { status, accounts, connect } = wallets?.[id] || {};
 
-      const accountsCount = accounts?.length ?? 0;
-      const accountsLabel = `${accountsCount} ${accountsCount === 1 ? 'account' : 'accounts'}`;
+        const isEnabled = Boolean(status);
+        const isConnected = status === 'connected';
 
-      const isConnected = status === 'connected';
-      const isEnabled = Boolean(status);
+        const accountsCount = accounts?.length ?? 0;
+        const accountsLabel = `${accountsCount} ${accountsCount === 1 ? 'account' : 'accounts'}`;
 
-      const normalizedStatus = (() => {
-        switch (status as string | undefined) {
-          case 'connected':
-            return 'connected';
-          case 'connecting':
-            return 'connecting';
-          case 'disconnected':
-            return 'disconnected';
-          default:
-            return 'unknown';
-        }
-      })();
+        const onClick = () => {
+          if (isConnected) return setWalletId(id);
 
-      const handleConnect = () => {
-        if (isConnected) {
-          setWalletId(id);
-          return;
-        }
+          connect?.().catch((error: Error) => console.error(error.message));
+        };
 
-        return connect?.().catch((error: Error) => {
-          console.error(error.message);
-        });
-      };
+        const contextValue = { id, wallet, isEnabled, isConnected, accountsLabel, onClick };
 
-      return {
-        id,
-        wallet,
-        status: normalizedStatus,
-        isEnabled,
-        isConnected,
-        accountsCount,
-        accountsLabel,
-        connect: handleConnect,
-      };
-    });
-  }, [setWalletId, wallets]);
+        return (
+          <WalletItemProvider key={id} value={contextValue}>
+            {children}
+          </WalletItemProvider>
+        );
+      }),
+    [children, setWalletId, wallets],
+  );
 
-  const contextValue = useMemo<WalletListContextValue>(() => ({ items, onSelect: setWalletId }), [items, setWalletId]);
-
-  const state: WalletListState = useMemo(() => ({ isEmpty: items.length === 0 }), [items.length]);
-
-  const createTemplate = () =>
-    Children.map(children, (child) => (isValidElement(child) ? cloneElement(child) : child)) ?? null;
-
-  const renderedItems = items.map((item) => (
-    <WalletItemProvider
-      key={item.id}
-      value={{
-        ...item,
-        select: () => setWalletId(item.id),
-      }}>
-      {createTemplate()}
-    </WalletItemProvider>
-  ));
-
-  const defaultProps: useRender.ElementProps<'ul'> = {
-    children: renderedItems,
+  const defaultProps: ElementProps = {
+    children: elements,
   };
 
-  const element = useRender<WalletListState, HTMLUListElement>({
+  return useRender({
     defaultTagName: 'ul',
-    render,
     props: mergeProps<'ul'>(defaultProps, props),
-    state,
+    render,
   });
-
-  return <WalletListProvider value={contextValue}>{element}</WalletListProvider>;
 }
 
 export { WalletList };
