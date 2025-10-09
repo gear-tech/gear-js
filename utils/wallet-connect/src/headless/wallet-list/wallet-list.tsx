@@ -10,8 +10,8 @@ type Props = useRender.ComponentProps<'ul'>;
 type ElementProps = useRender.ElementProps<'ul'>;
 
 function WalletList({ render, children, ...props }: Props) {
-  const { wallets } = useAccount();
-  const { setWalletId } = useDialogContext();
+  const { isAnyWallet, wallets } = useAccount();
+  const { walletAccounts, setWalletId } = useDialogContext();
 
   const elements = useMemo(
     () =>
@@ -48,6 +48,7 @@ function WalletList({ render, children, ...props }: Props) {
   return useRender({
     defaultTagName: 'ul',
     props: mergeProps<'ul'>(defaultProps, props),
+    enabled: isAnyWallet && !walletAccounts,
     render,
   });
 }

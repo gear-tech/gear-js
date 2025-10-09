@@ -29,6 +29,7 @@ function CopyAccountAddressTrigger({ render, ...props }: Props) {
 
   const defaultProps: ElementProps = {
     type: 'button',
+    children: 'Copy',
     onClick: handleClick,
   };
 

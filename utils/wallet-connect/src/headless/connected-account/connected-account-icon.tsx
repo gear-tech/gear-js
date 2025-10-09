@@ -8,7 +8,7 @@ function ConnectedAccountIcon({ render, ...props }: Props) {
   const { account } = useAccount();
 
   return useRender({
-    render: render ?? <Identicon value={account?.decodedAddress} />,
+    render: render ?? <Identicon value={account?.decodedAddress} size={20} />,
     enabled: Boolean(account),
     props,
   });

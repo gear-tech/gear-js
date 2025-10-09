@@ -1,5 +1,5 @@
 export * from './account-item';
-export * from './actions';
+export * from './change-wallet';
 export * from './empty-states';
 export * from './root';
 export * from './accounts-list';
@@ -9,3 +9,4 @@ export * from './wallet-item';
 export * from './wallet-list';
 export * from './balance';
 export * from './connected-account';
+export * from './logout-trigger';
