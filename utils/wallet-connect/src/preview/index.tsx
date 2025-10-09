@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client';
 
 import { Wallet as StyledWallet } from '../components';
 import { Wallet } from '../headless';
+import { StyledWallet as StyledVaraWallet } from '../styled';
 
 import '@gear-js/vara-ui/dist/style.css';
 import './index.scss';
@@ -29,10 +30,16 @@ function App() {
       </div>
 
       <div>
+        <h1>Headless Vara</h1>
+        <StyledVaraWallet />
+      </div>
+
+      <div>
         <h1>Headless</h1>
 
         <Wallet.Root>
           <Wallet.Balance>
+            <Wallet.BalanceIcon />
             <Wallet.BalanceValue />
             <Wallet.BalanceSymbol />
           </Wallet.Balance>
@@ -74,7 +81,6 @@ function App() {
             <Wallet.ChangeWalletTrigger>
               <Wallet.ChangeWalletIcon />
               <Wallet.ChangeWalletName />
-              <Wallet.ChangeWalletLabel />
             </Wallet.ChangeWalletTrigger>
 
             <Wallet.LogoutTrigger />

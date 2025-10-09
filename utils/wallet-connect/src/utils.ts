@@ -1,3 +1,7 @@
+import { clsx } from 'clsx';
+
+const cx = clsx;
+
 const copyToClipboard = ({
   onSuccess,
   onError,
@@ -39,4 +43,4 @@ const getTruncatedText = (value: string, prefixLength = 6) => {
   return `${value.substring(0, prefixLength)}...${value.slice(-prefixLength)}`;
 };
 
-export { copyToClipboard, getTruncatedText };
+export { cx, copyToClipboard, getTruncatedText };

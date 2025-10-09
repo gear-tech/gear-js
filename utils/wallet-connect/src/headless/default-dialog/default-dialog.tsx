@@ -4,18 +4,19 @@ import { PropsWithChildren } from 'react';
 import styles from './default-dialog.module.scss';
 
 type Props = PropsWithChildren & {
+  heading: string;
   isOpen: boolean;
   close: () => void;
 };
 
-function DefaultDialog({ children, isOpen, close }: Props) {
+function DefaultDialog({ children, heading, isOpen, close }: Props) {
   return (
     <Dialog.Root open={isOpen} onOpenChange={(open) => !open && close()}>
       <Dialog.Portal>
         <Dialog.Backdrop className={styles.backdrop} />
         <Dialog.Popup className={styles.popup}>
           <header className={styles.header}>
-            <Dialog.Title className={styles.title}>Connect Wallet</Dialog.Title>
+            <Dialog.Title className={styles.title}>{heading}</Dialog.Title>
             <Dialog.Close>Close</Dialog.Close>
           </header>
 
