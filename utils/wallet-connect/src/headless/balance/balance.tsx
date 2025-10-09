@@ -21,7 +21,7 @@ function Balance({ render, ...props }: Props) {
     props,
   });
 
-  return <BalanceProvider value={data}>{element}</BalanceProvider>;
+  return <BalanceProvider value={data || { value: '', unit: '' }}>{element}</BalanceProvider>;
 }
 
 export { Balance };

@@ -51,7 +51,7 @@ function App() {
                   <Wallet.WalletIcon />
                   <Wallet.WalletName />
                   <Wallet.WalletStatus />
-                  <Wallet.WalletAccounts />
+                  <Wallet.WalletAccountsLabel />
                 </Wallet.WalletTrigger>
               </Wallet.WalletItem>
             </Wallet.WalletList>
