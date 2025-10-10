@@ -2026,17 +2026,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.42.0":
-  version: 0.42.0
-  resolution: "@gear-js/api@npm:0.42.0"
-  peerDependencies:
-    "@polkadot/api": ^15.9.1
-    "@polkadot/wasm-crypto": ^7.4.1
-    rxjs: ^7.8.2
-  checksum: 10c0/33288f9db711a5c981fb6e3343039c5e27e2db9f711efcfefdbcf7f044f8a97735cdfc3ecf46dbc701b0abc989665a03e6367466f884de7c04525569d5ed8650
-  languageName: node
-  linkType: hard
-
 "@gear-js/api@npm:0.44.2, @gear-js/api@workspace:*, @gear-js/api@workspace:apis/gear":
   version: 0.0.0-use.local
   resolution: "@gear-js/api@workspace:apis/gear"
@@ -2395,15 +2384,6 @@ __metadata:
     react: ">= 16.3.0"
     react-dom: ">= 16.3.0"
   checksum: 10c0/033eb10278e7389ac959dffc3f332bc894f8af55e0f236c5676f93d4eb755b1ac9d7c89594b53871a68e22c62e6556e906ca4ebf513fda7d08c3fa287611eacd
-  languageName: node
-  linkType: hard
-
-"@hookform/resolvers@npm:3.3.2":
-  version: 3.3.2
-  resolution: "@hookform/resolvers@npm:3.3.2"
-  peerDependencies:
-    react-hook-form: ^7.0.0
-  checksum: 10c0/538c86a744c71735a5c3be7b450c704111fe53a52634463ed3c801681d57504d3717ab5f7bd20e99ee87d81a9da0aca640af0837eb807486d9d5c927269a9b37
   languageName: node
   linkType: hard
 
@@ -5976,13 +5956,6 @@ __metadata:
   peerDependencies:
     "@redis/client": ^5.8.2
   checksum: 10c0/f606913c7f14f6b36a06ce78c91b65c3833e4b9893b912e9af5023217b490e478c4c674b6736d2c5306d7849cfdd6ce0876b1fffc1c65ee020feaba8a90aa208
-  languageName: node
-  linkType: hard
-
-"@remix-run/router@npm:1.21.1":
-  version: 1.21.1
-  resolution: "@remix-run/router@npm:1.21.1"
-  checksum: 10c0/a90e62c6f18e53d8a1f39de8aaebe3abd340ea085a761296f4fddda23bd3ad133f9adf0190392e0b02933761180b484e7fc052447a6a8482c52207fcecbf9a90
   languageName: node
   linkType: hard
 
@@ -15135,9 +15108,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gearexe-idea-frontend@workspace:idea/gearexe/frontend"
   dependencies:
-    "@gear-js/api": "npm:0.42.0"
+    "@gear-js/api": "npm:0.44.2"
     "@gear-js/frontend-configs": "npm:*"
-    "@hookform/resolvers": "npm:3.3.2"
+    "@hookform/resolvers": "npm:4.0.0"
     "@reown/appkit": "npm:1.8.8"
     "@reown/appkit-adapter-wagmi": "npm:1.8.8"
     "@tanstack/react-query": "npm:5.90.2"
@@ -15148,13 +15121,13 @@ __metadata:
     kzg-wasm: "npm:0.5.0"
     react: "npm:19.2.0"
     react-dom: "npm:19.2.0"
-    react-hook-form: "npm:7.52.2"
-    react-router-dom: "npm:6.28.2"
+    react-hook-form: "npm:7.54.2"
+    react-router-dom: "npm:7.9.3"
     react-syntax-highlighter: "npm:15.6.6"
     sails-js: "npm:0.5.0"
-    sails-js-parser: "npm:0.4.2"
+    sails-js-parser: "npm:0.5.0"
     wagmi: "npm:2.17.5"
-    zod: "npm:3.22.4"
+    zod: "npm:3.25.76"
   languageName: unknown
   linkType: soft
 
@@ -21499,15 +21472,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:7.52.2":
-  version: 7.52.2
-  resolution: "react-hook-form@npm:7.52.2"
-  peerDependencies:
-    react: ^16.8.0 || ^17 || ^18 || ^19
-  checksum: 10c0/2b8d37239d40f4326a24609c1bf5b4ba2cf66bc4a988213ccd7eb92a254dd5bf9c4b94caa353bce4b1d6d8a9ecd2ea3103e25c6d2d72d53f7be26f09053a8b2f
-  languageName: node
-  linkType: hard
-
 "react-hook-form@npm:7.54.2":
   version: 7.54.2
   resolution: "react-hook-form@npm:7.54.2"
@@ -21548,19 +21512,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:6.28.2":
-  version: 6.28.2
-  resolution: "react-router-dom@npm:6.28.2"
-  dependencies:
-    "@remix-run/router": "npm:1.21.1"
-    react-router: "npm:6.28.2"
-  peerDependencies:
-    react: ">=16.8"
-    react-dom: ">=16.8"
-  checksum: 10c0/09757f0f8c63d5b939176825536d2311edac1f32b18410eb2b37900774c8622dbaa340bef78ab46931111e30890c7bc3f83346d809c2664a5dc4866fe0175f41
-  languageName: node
-  linkType: hard
-
 "react-router-dom@npm:7.9.3":
   version: 7.9.3
   resolution: "react-router-dom@npm:7.9.3"
@@ -21570,17 +21521,6 @@ __metadata:
     react: ">=18"
     react-dom: ">=18"
   checksum: 10c0/85ab89f5ef517299ef4dd534db656f8b04ccd0c9f80121d8ddeadc5bf192fefa89f77be06d81ee38694a6a56354539521b7cf941088b696ca79785378aa5615b
-  languageName: node
-  linkType: hard
-
-"react-router@npm:6.28.2":
-  version: 6.28.2
-  resolution: "react-router@npm:6.28.2"
-  dependencies:
-    "@remix-run/router": "npm:1.21.1"
-  peerDependencies:
-    react: ">=16.8"
-  checksum: 10c0/07f033a0bfdcfee6cb889d8603b6063c04c7b7fe38567fea5c7e55c45f31cf32115c2615a7962685632df49538bc867368631feb84fd1fec6f709827d492abe8
   languageName: node
   linkType: hard
 
@@ -22304,20 +22244,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sails-js-parser@npm:0.4.2":
-  version: 0.4.2
-  resolution: "sails-js-parser@npm:0.4.2"
-  dependencies:
-    sails-js-types: "npm:^0.4.2"
-  peerDependencies:
-    sails-js-types: 0.4.1
-  dependenciesMeta:
-    sails-js-types:
-      optional: true
-  checksum: 10c0/c677d3d8d09f137bdcbfe6bbd35c3c84940cc3fd120aa0f60be7a5b78ac8d905d61e89fb8fd0ebdb757028a6317d6b0291fe271229a7934994d12c9329124693
-  languageName: node
-  linkType: hard
-
 "sails-js-parser@npm:0.5.0":
   version: 0.5.0
   resolution: "sails-js-parser@npm:0.5.0"
@@ -22336,13 +22262,6 @@ __metadata:
   version: 0.5.0
   resolution: "sails-js-types@npm:0.5.0"
   checksum: 10c0/50bb09d144b0612780e7115ad359393c2187294e910b7856747b11a8ebaa54d4c9903cf931f123be63c31fef7be6b129d0268b040aa289b58316a9f13c869f2d
-  languageName: node
-  linkType: hard
-
-"sails-js-types@npm:^0.4.2":
-  version: 0.4.3
-  resolution: "sails-js-types@npm:0.4.3"
-  checksum: 10c0/e86b20f4da9885a0ad117097a340ae1a6a14040a8e25cc2b9706403ca26ec8d621a0d3b27ab21be4563df985a36f2d38a813c22f257bed89e0723e285bf42c92
   languageName: node
   linkType: hard
 

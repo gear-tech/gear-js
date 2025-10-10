@@ -10,8 +10,8 @@
     "clean": "echo \"clean gearexe-idea-frontend\" && rm -rf dist"
   },
   "dependencies": {
-    "@gear-js/api": "0.42.0",
-    "@hookform/resolvers": "3.3.2",
+    "@gear-js/api": "0.44.2",
+    "@hookform/resolvers": "4.0.0",
     "@reown/appkit": "1.8.8",
     "@reown/appkit-adapter-wagmi": "1.8.8",
     "@tanstack/react-query": "5.90.2",
@@ -21,13 +21,13 @@
     "kzg-wasm": "0.5.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "react-hook-form": "7.52.2",
-    "react-router-dom": "6.28.2",
+    "react-hook-form": "7.54.2",
+    "react-router-dom": "7.9.3",
     "react-syntax-highlighter": "15.6.6",
     "sails-js": "0.5.0",
-    "sails-js-parser": "0.4.2",
+    "sails-js-parser": "0.5.0",
     "wagmi": "2.17.5",
-    "zod": "3.22.4"
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "@gear-js/frontend-configs": "*",
