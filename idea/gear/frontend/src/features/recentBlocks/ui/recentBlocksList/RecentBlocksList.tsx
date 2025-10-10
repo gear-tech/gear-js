@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { TransitionGroup } from 'react-transition-group';
 import SimpleBar from 'simplebar-react';
 

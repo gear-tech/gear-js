@@ -110,7 +110,7 @@ describe('Gear Message', () => {
 
     const origin = decodeAddress(alice.address);
 
-    await api.program.calculateGas.handle(origin, programId, payload, 0, false);
+    await api.program.calculateGas.handle(origin, programId, payload, BigInt(10_000) * BigInt(1e12), false);
 
     const result = await api.message.calculateReply({
       origin,

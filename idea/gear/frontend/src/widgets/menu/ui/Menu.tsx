@@ -1,5 +1,5 @@
 import { Tooltip } from '@gear-js/ui';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useState } from 'react';
 
 import { NodesSwitch } from '@/features/nodesSwitch';

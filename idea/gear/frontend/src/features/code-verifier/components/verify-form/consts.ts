@@ -10,6 +10,7 @@ const FIELD_NAME = {
   REPO_LINK: 'repoLink',
   PROJECT_ID_TYPE: 'projectIdType',
   PROJECT_ID: 'projectId',
+  BASE_PATH: 'basePath',
   NETWORK: 'network',
   BUILD_IDL: 'buildIdl',
 } as const;
@@ -25,6 +26,7 @@ const NETWORK_OPTIONS = [
 ] as const;
 
 const PROJECT_ID_TYPE = {
+  ROOT: 'root',
   NAME: 'name',
   CARGO_TOML_PATH: 'cargoTomlPath',
 } as const;
@@ -33,14 +35,16 @@ const DEFAULT_VALUES = {
   [FIELD_NAME.DOCKER_IMAGE_VERSION]: '',
   [FIELD_NAME.CODE_ID]: '',
   [FIELD_NAME.REPO_LINK]: '',
-  [FIELD_NAME.PROJECT_ID_TYPE]: PROJECT_ID_TYPE.NAME as (typeof PROJECT_ID_TYPE)[keyof typeof PROJECT_ID_TYPE],
+  [FIELD_NAME.PROJECT_ID_TYPE]: PROJECT_ID_TYPE.ROOT as (typeof PROJECT_ID_TYPE)[keyof typeof PROJECT_ID_TYPE],
   [FIELD_NAME.PROJECT_ID]: '',
+  [FIELD_NAME.BASE_PATH]: '/',
   [FIELD_NAME.NETWORK]: NETWORK_OPTIONS[0].value as (typeof NETWORK)[keyof typeof NETWORK],
   [FIELD_NAME.BUILD_IDL]: false,
 };
 
 const GITHUB_REPO_URL_REGEX = /^https?:\/\/(www\.)?github\.com\/([\w-]+)\/([\w-]+)(\/.*)?$/;
 const CARGO_TOML_PATH_REGEX = /^(?:\.\/)?(?:[^/]+\/)*Cargo\.toml$/;
+const ABSOLUTE_PATH_REGEX = /^\/(?:[^/\0]+\/)*[^/\0]*$/;
 
 const SCHEMA = z
   .object({
@@ -57,25 +61,52 @@ const SCHEMA = z
       .refine((value) => GITHUB_REPO_URL_REGEX.test(value), { message: 'Invalid GitHub repository URL' }),
 
     [FIELD_NAME.PROJECT_ID_TYPE]: z.string(),
-    [FIELD_NAME.PROJECT_ID]: z.string().trim().min(1),
+    [FIELD_NAME.PROJECT_ID]: z.string().trim(),
+
+    [FIELD_NAME.BASE_PATH]: z
+      .string()
+      .trim()
+      .refine((value) => ABSOLUTE_PATH_REGEX.test(value), { message: 'Invalid absolute path' }),
+
     [FIELD_NAME.NETWORK]: z.string(),
     [FIELD_NAME.BUILD_IDL]: z.boolean(),
   })
+  .refine(({ projectIdType, projectId }) => projectIdType === PROJECT_ID_TYPE.ROOT || projectId.length > 0, {
+    message: 'String must contain at least 1 character',
+    path: [FIELD_NAME.PROJECT_ID],
+  })
   .refine(
     ({ projectIdType, projectId }) =>
-      projectIdType === PROJECT_ID_TYPE.CARGO_TOML_PATH ? CARGO_TOML_PATH_REGEX.test(projectId) : true,
+      projectIdType === PROJECT_ID_TYPE.ROOT ||
+      (projectIdType === PROJECT_ID_TYPE.CARGO_TOML_PATH ? CARGO_TOML_PATH_REGEX.test(projectId) : true),
     {
       message: 'Invalid path to Cargo.toml',
       path: [FIELD_NAME.PROJECT_ID],
     },
   )
-  .transform(({ version, repoLink, projectId, network, buildIdl, projectIdType, codeId }) => ({
-    version,
-    network,
-    project: projectIdType === PROJECT_ID_TYPE.NAME ? { Name: projectId } : { ManifestPath: projectId },
-    code_id: codeId,
-    repo_link: repoLink,
-    build_idl: buildIdl,
-  }));
+  .transform(({ version, repoLink, projectId, network, buildIdl, projectIdType, codeId, basePath }) => {
+    const getProject = () => {
+      switch (projectIdType) {
+        case PROJECT_ID_TYPE.CARGO_TOML_PATH:
+          return { ManifestPath: projectId };
+
+        case PROJECT_ID_TYPE.NAME:
+          return { Package: projectId };
+
+        default:
+          return { Root: null };
+      }
+    };
+
+    return {
+      version,
+      network,
+      project: getProject(),
+      code_id: codeId,
+      repo_link: repoLink,
+      base_path: basePath,
+      build_idl: buildIdl,
+    };
+  });
 
 export { DEFAULT_VALUES, SCHEMA, NETWORK, FIELD_NAME, PROJECT_ID_TYPE, NETWORK_OPTIONS };

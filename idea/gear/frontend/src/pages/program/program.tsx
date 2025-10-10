@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
 
 import { ProgramBalance } from '@/features/balance';
-import { useIsCodeVerified, VerificationStatus, VerifyLink } from '@/features/code-verifier';
 import { ProgramMessages } from '@/features/message';
 import { useMetadata, MetadataTable, isState } from '@/features/metadata';
 import { ProgramStatus, ProgramTable, useProgram } from '@/features/program';
@@ -16,7 +15,7 @@ import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import SendSVG from '@/shared/assets/images/actions/send.svg?react';
 import { absoluteRoutes, routes } from '@/shared/config';
-import { getShortName, isAnyKey, isBoolean } from '@/shared/helpers';
+import { getShortName, isAnyKey } from '@/shared/helpers';
 import { Box, UILink } from '@/shared/ui';
 
 import styles from './program.module.scss';
@@ -34,7 +33,8 @@ const Program = () => {
   const { data: program, isLoading: isProgramLoading, refetch: refetchProgram } = useProgram(programId);
   const { metadata, isMetadataReady, setMetadataHex } = useMetadata(program?.metahash);
   const { sails, isLoading: isSailsLoading, refetch: refetchSails } = useSails(program?.codeId);
-  const { data: isCodeVerified } = useIsCodeVerified(program?.codeId);
+  // commented out till code verified is fixed
+  // const { data: isCodeVerified } = useIsCodeVerified(program?.codeId);
 
   const isLoading = !isMetadataReady || isSailsLoading;
   const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => isAnyKey(queries)) : false;
@@ -83,7 +83,9 @@ const Program = () => {
       <header className={styles.header}>
         <div className={styles.headingContainer}>
           {program && <h2 className={styles.name}>{getShortName(program.name || 'Program Name')}</h2>}
-          {isCodeVerified && <VerificationStatus value="verified" />}
+
+          {/* commented out till code verified is fixed */}
+          {/* {isCodeVerified && <VerificationStatus value="verified" />} */}
         </div>
 
         <div className={styles.links}>
@@ -113,9 +115,10 @@ const Program = () => {
             </>
           )}
 
-          {program?.codeId && isBoolean(isCodeVerified) && !isCodeVerified && (
+          {/* commented out till code verified is fixed */}
+          {/* {program?.codeId && isBoolean(isCodeVerified) && !isCodeVerified && (
             <VerifyLink codeId={program.codeId} className={styles.fixWidth} />
-          )}
+          )} */}
         </div>
       </header>
 

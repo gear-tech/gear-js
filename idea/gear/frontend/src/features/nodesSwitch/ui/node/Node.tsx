@@ -1,6 +1,6 @@
 import { useAlert } from '@gear-js/react-hooks';
 import { Button, radioStyles } from '@gear-js/ui';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 
 import { Node as NodeType } from '@/entities/node';
 import CopyGreenSVG from '@/shared/assets/images/actions/copyGreen.svg?react';

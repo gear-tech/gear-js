@@ -138,7 +138,10 @@ export class GearBlock {
     cb: (header: Header) => Promise<void> | void,
     blocks: 'finalized' | 'latest' = 'latest',
   ): Promise<() => void> {
-    let blockNumber = typeof from === 'string' ? (await this.getBlockNumber(from)).toNumber() : from;
+    const fromBlockHash = isHex(from) ? from : await this.api.rpc.chain.getBlockHash(from);
+    const fromHeader = await this.api.rpc.chain.getHeader(fromBlockHash);
+
+    let blockNumber = fromHeader.number.toNumber();
 
     const lastHeader =
       blocks === 'finalized'
@@ -149,29 +152,59 @@ export class GearBlock {
 
     let unsubscribed = false;
 
+    const blockQueue: Header[] = [fromHeader];
+    blockNumber++;
+
+    let newBlockResolver: (() => void) | null = null;
+
+    const processQueue = async () => {
+      while (!unsubscribed) {
+        if (blockQueue.length > 0) {
+          const header = blockQueue.shift();
+          await cb(header);
+        } else {
+          await new Promise<void>((resolve) => {
+            newBlockResolver = resolve;
+          });
+        }
+      }
+    };
+
+    const oldBlocksSub = async () => {
+      while (!unsubscribed && lastHeadNumber >= blockNumber) {
+        const hash = await this.api.rpc.chain.getBlockHash(blockNumber);
+        const header = await this.api.rpc.chain.getHeader(hash);
+        blockQueue.push(header);
+        blockNumber++;
+        if (newBlockResolver) {
+          newBlockResolver();
+          newBlockResolver = null;
+        }
+      }
+    };
+
     const unsub = await this.api.rpc.chain[blocks === 'finalized' ? 'subscribeFinalizedHeads' : 'subscribeNewHeads'](
-      (header) => {
+      async (header) => {
         lastHeadNumber = header.number.toNumber();
-        if (blockNumber >= lastHeadNumber) {
-          cb(header);
+        if (blockNumber > lastHeadNumber) {
+          blockQueue.push(header);
+          if (newBlockResolver) {
+            newBlockResolver();
+            newBlockResolver = null;
+          }
         }
       },
     );
 
-    let oldBlocksSub = async () => {
-      while (!unsubscribed && lastHeadNumber > blockNumber) {
-        const hash = await this.api.rpc.chain.getBlockHash(blockNumber);
-        const header = await this.api.rpc.chain.getHeader(hash);
-        await cb(header);
-        blockNumber++;
-      }
-    };
-
     oldBlocksSub();
+
+    processQueue();
 
     return () => {
       unsubscribed = true;
-      oldBlocksSub = null;
+      if (newBlockResolver) {
+        newBlockResolver();
+      }
       unsub();
     };
   }

@@ -36,10 +36,9 @@ function useSendProgramTransaction<
     // would require function overload with some generics magic to return correct types only for specified values,
     // so for now it's fine
     const responseResult = await response();
+    const finalizedResult = awaitFinalization ? await isFinalized : isFinalized;
 
-    if (awaitFinalization) await isFinalized;
-
-    return { response: responseResult, blockHash, msgId, txHash };
+    return { response: responseResult, isFinalized: finalizedResult, blockHash, msgId, txHash };
   };
 
   // depends on useProgram/program implementation, programId may not be available

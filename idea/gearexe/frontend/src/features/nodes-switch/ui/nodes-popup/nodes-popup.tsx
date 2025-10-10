@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 
 import CrossIcon from '@/assets/icons/cross.svg?react';
 import { Button } from '@/components';

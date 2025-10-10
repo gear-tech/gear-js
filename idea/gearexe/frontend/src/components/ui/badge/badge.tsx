@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { PropsWithChildren } from 'react';
 
 import styles from './badge.module.scss';

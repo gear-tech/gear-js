@@ -1,7 +1,7 @@
 import { InputWrapper, inputStyles, InputProps, Button } from '@gear-js/ui';
 // eslint-disable-next-line import/no-named-as-default -- TODO(#1800): resolve eslint comments
 import BigNumber from 'bignumber.js';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { NumericFormat, NumericFormatProps } from 'react-number-format';
 

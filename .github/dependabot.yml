@@ -1,26 +1,84 @@
 version: 2
 updates:
   - package-ecosystem: 'github-actions'
+    open-pull-requests-limit: 5
+    labels:
+      - D4-dependencies
     directory: '/'
     schedule:
-      interval: daily
+      interval: weekly
+      day: monday
+      time: "09:00"
+    commit-message:
+      prefix: "chore(ci)"
+
+  - package-ecosystem: 'cargo'
+    directory: '/'
+    open-pull-requests-limit: 3
+    labels:
+      - D4-dependencies
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+    commit-message:
+      prefix: "chore(deps)"
+
+  - package-ecosystem: 'cargo'
+    directory: '/apis/gearexe'
+    open-pull-requests-limit: 3
+    labels:
+      - D4-dependencies
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+    commit-message:
+      prefix: "chore(deps)"
 
   - package-ecosystem: 'npm'
     directory: '/'
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
+    labels:
+      - D4-dependencies
     schedule:
-      interval: daily
+      interval: weekly
+      day: monday
+      time: "09:00"
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
     groups:
       development:
         dependency-type: 'development'
         exclude-patterns:
           - '@polkadot/*'
           - 'sails-js*'
+        update-types:
+          - "minor"
+          - "patch"
+      development-major:
+        dependency-type: 'development'
+        exclude-patterns:
+          - '@polkadot/*'
+          - 'sails-js*'
+        update-types:
+          - "major"
       production:
         dependency-type: 'production'
         exclude-patterns:
           - '@polkadot/*'
           - 'sails-js*'
+        update-types:
+          - "patch"
+          - "minor"
+      production-major:
+        dependency-type: 'production'
+        exclude-patterns:
+          - '@polkadot/*'
+          - 'sails-js*'
+        update-types:
+          - "major"
       polkadot:
         patterns:
           - '@polkadot/*'

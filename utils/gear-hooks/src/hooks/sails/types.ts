@@ -2,7 +2,7 @@
 import { HexString } from '@gear-js/api';
 import { SignerOptions } from '@polkadot/api/types';
 import { IKeyringPair } from '@polkadot/types/types';
-import { TransactionBuilder } from 'sails-js';
+import { QueryBuilder, TransactionBuilder } from 'sails-js';
 
 type NonServiceKeys = 'api' | 'registry' | 'programId' | 'newCtorFromCode' | 'newCtorFromCodeId';
 
@@ -62,19 +62,14 @@ type EventCallbackArgs<T> = Parameters<Event<T>>[0] extends (...args: infer P) =
 
 // queries
 
-type PromiseReturn<T> = T extends (...args: any[]) => Promise<infer R> ? R : never;
+type GenericQueryReturn<T = any> = QueryBuilder<T>;
 
-// is it possible to combine with FunctionName?
-type QueryName<T> = {
-  [K in keyof T]: PromiseReturn<T[K]> extends Awaited<EventReturn> ? never : K;
-}[keyof T];
+type Query<T> = T extends (...args: infer P) => GenericQueryReturn<infer R>
+  ? (...args: P) => GenericQueryReturn<R>
+  : never;
 
-type ExcludeConfigArgs<T> = T extends [...infer U, any?, any?, any?] ? U : T;
-type NonConfigArgs<T> = T extends (...args: infer P) => Promise<any> ? ExcludeConfigArgs<P> : never;
-
-type Query<T> = T extends (...args: infer P) => Promise<infer R> ? (...args: P) => Promise<R> : never;
-type QueryArgs<T> = NonConfigArgs<T>;
-type QueryReturn<T> = Awaited<ReturnType<Query<T>>>;
+type QueryArgs<T> = Parameters<Query<T>>;
+type QueryReturn<T> = Query<T> extends (...args: any[]) => GenericQueryReturn<infer R> ? R : never;
 
 export type {
   ServiceName,
@@ -89,7 +84,7 @@ export type {
   EventReturn,
   Event,
   EventCallbackArgs,
-  QueryName,
+  GenericQueryReturn,
   Query,
   QueryArgs,
   QueryReturn,

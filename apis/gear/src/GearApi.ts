@@ -41,7 +41,7 @@ export class GearApi extends ApiPromise {
   public provider: WsProvider;
 
   constructor(options: GearApiOptions = {}) {
-    const { types, providerAddress, ...restOptions } = options;
+    const { types, providerAddress, noInitWarn, ...restOptions } = options;
     const provider = restOptions?.provider || new WsProvider(providerAddress ?? 'ws://127.0.0.1:9944');
     const defaultTypes = types ? { ...types, ...gearTypes } : gearTypes;
 
@@ -77,6 +77,7 @@ export class GearApi extends ApiPromise {
         VoucherLegitimate: { extrinsic: {}, payload: {} },
         StakingBlackList: { extrinsic: {}, payload: {} },
       },
+      noInitWarn: noInitWarn ?? true,
       ...restOptions,
     });
     this.provider = provider as WsProvider;

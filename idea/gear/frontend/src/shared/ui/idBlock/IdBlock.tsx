@@ -1,6 +1,6 @@
 import { useAlert } from '@gear-js/react-hooks';
 import { buttonStyles } from '@gear-js/ui';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 

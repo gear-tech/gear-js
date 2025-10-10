@@ -1,5 +1,5 @@
 import { Block } from '@polkadot/types/interfaces';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { Link } from 'react-router-dom';
 
 import { Placeholder } from '@/entities/placeholder';

@@ -32,7 +32,7 @@ describe('New Program', () => {
   test('Upload program', async () => {
     const program = api.program.upload({
       code,
-      gasLimit: 200_000_000_000,
+      gasLimit: api.blockGasLimit,
       initPayload: [1, 2, 3],
     });
     expect(program.programId).toBeDefined();
@@ -53,6 +53,8 @@ describe('New Program', () => {
       } else if (st === 'Active') {
         isActiveHappened = true;
         if (exp) _activeExpiration = exp;
+      } else {
+        throw new Error(`Unexpected status: ${st}`);
       }
     });
 
@@ -144,7 +146,7 @@ describe('New Program', () => {
     expect(result.id.toHex()).toBe(programId);
     expect(result.change.isExpirationChanged).toBeTruthy();
     expect(result.change.asExpirationChanged.expiration).toBeDefined();
-    expect(Number(result.change.asExpirationChanged.expiration.toNumber())).toBe(_expiration + 10_000);
+    expect(Number(result.change.asExpirationChanged.expiration.toNumber())).toBe(_expiration! + 10_000);
   });
 
   test.skip('Calculate pay rent', () => {
@@ -179,17 +181,17 @@ describe('Program', () => {
     expect(programId).toBeDefined();
     expect(codeId).toBeDefined();
     const codeMetaHash = await api.code.metaHash(codeId);
-    expect(codeMetaHash).toBe(metaHash);
+    expect(codeMetaHash).toBe(metaHash!);
   });
 
   test.skip('Get metahash by wasm', async () => {
     const codeMetaHash = await api.code.metaHashFromWasm(code);
-    expect(codeMetaHash).toBe(metaHash);
+    expect(codeMetaHash).toBe(metaHash!);
   });
 
   test.skip('Get metahash by wasm if it is Uint8Array', async () => {
     const codeMetaHash = await api.code.metaHashFromWasm(bufferToU8a(code));
-    expect(codeMetaHash).toBe(metaHash);
+    expect(codeMetaHash).toBe(metaHash!);
   });
 
   test('Get program storage', async () => {

@@ -1,18 +1,18 @@
 import js from '@eslint/js';
 import globals from 'globals';
 import react from 'eslint-plugin-react';
+import { defineConfig } from 'eslint/config';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
-// @ts-expect-error: WiP: https://github.com/import-js/eslint-plugin-import/issues/3123
 import importPlugin from 'eslint-plugin-import';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
-const eslintConfig = tseslint.config(
-  { ignores: ['**/dist', '**/build'] },
+const eslintConfig = ({ tsConfigs }: { tsConfigs?: string[] } = {}) =>
+  defineConfig({
+    ignores: ['**/dist', '**/build'],
 
-  {
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommendedTypeChecked,
@@ -37,7 +37,6 @@ const eslintConfig = tseslint.config(
       },
     },
 
-    // TODO: simplify after updates?
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
@@ -46,15 +45,10 @@ const eslintConfig = tseslint.config(
     settings: {
       react: { version: 'detect' },
 
-      // while https://github.com/import-js/eslint-import-resolver-typescript/issues/94 is resolved in 4.x,
-      // extended config specified in references is ignored:
-      // https://github.com/import-js/eslint-import-resolver-typescript/issues/400
-      // also, baseUrl is not available because of regression related to:
-      // https://github.com/import-js/eslint-import-resolver-typescript/pull/368
-      // https://github.com/oxc-project/oxc-resolver/issues/416
-      // on top of this, everything is okay within the directory, but not in monorepo - issue is unknown
+      // project property breaks on each release for monorepos,
+      // waiting for https://github.com/import-js/eslint-import-resolver-typescript/issues/282
       'import/resolver': {
-        typescript: { project: ['**/tsconfig.json', '**/tsconfig.app.json'] },
+        typescript: { alwaysTryTypes: true, project: tsConfigs },
       },
     },
 
@@ -88,7 +82,6 @@ const eslintConfig = tseslint.config(
       // we're using typescript
       'react/prop-types': 'off',
     },
-  },
-);
+  });
 
 export { eslintConfig };

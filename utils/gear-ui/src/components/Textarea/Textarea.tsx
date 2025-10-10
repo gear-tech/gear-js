@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useId, ComponentPropsWithRef } from 'react';
 
 import { useClearButton } from '../../hooks';

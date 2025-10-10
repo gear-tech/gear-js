@@ -10,7 +10,8 @@ import {
   GearCommonGasProviderNodeGasNodeId,
   GearCommonStorageComplicatedDequeueLinkedNode,
   GearCommonStoragePrimitivesInterval,
-  GearCoreCodeInstrumentedInstrumentedCode,
+  GearCoreCodeInstrumentedInstrumentedCodeBeforeV1900,
+  GearCoreCodeInstrumentedInstrumentedCodeV1900,
   GearCoreCodeMetadataCodeMetadata,
   GearCoreMessageStoredStoredDelayedDispatch,
   GearCoreMessageStoredStoredDispatch,
@@ -254,9 +255,19 @@ declare module '@polkadot/api-base/types/storage' {
         [GprimitivesCodeId]
       > &
         QueryableStorageEntry<ApiType, [GprimitivesCodeId]>;
+      codeStorage: AugmentedQuery<
+        ApiType,
+        (
+          arg: GprimitivesCodeId | string | Uint8Array,
+        ) => Observable<Option<GearCoreCodeInstrumentedInstrumentedCodeBeforeV1900>>,
+        [GprimitivesCodeId]
+      > &
+        QueryableStorageEntry<ApiType, [GprimitivesCodeId]>;
       instrumentedCodeStorage: AugmentedQuery<
         ApiType,
-        (arg: GprimitivesCodeId | string | Uint8Array) => Observable<Option<GearCoreCodeInstrumentedInstrumentedCode>>,
+        (
+          arg: GprimitivesCodeId | string | Uint8Array,
+        ) => Observable<Option<GearCoreCodeInstrumentedInstrumentedCodeV1900>>,
         [GprimitivesCodeId]
       > &
         QueryableStorageEntry<ApiType, [GprimitivesCodeId]>;

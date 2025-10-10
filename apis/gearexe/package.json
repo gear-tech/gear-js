@@ -5,7 +5,7 @@
   "description": "Typescript library for interacting with Gear.exe",
   "type": "module",
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "scripts": {
     "test": "./scripts/run-tests.sh",
@@ -22,16 +22,17 @@
     }
   },
   "peerDependencies": {
-    "ethers": "^6.14"
+    "ethers": "^6.14",
+    "kzg-wasm": "^0.5.0"
   },
   "devDependencies": {
-    "@gear-js/api": "0.42.0",
-    "@polkadot/api": "16.4.1",
-    "ethers": "6.14.3",
-    "gear-js-util": "workspace:^",
+    "@gear-js/api": "workspace:*",
+    "@polkadot/api": "16.4.8",
+    "ethers": "6.15.0",
+    "gear-js-util": "workspace:*",
     "kzg-wasm": "0.5.0",
-    "sails-js": "0.4.2",
-    "sails-js-parser": "0.4.2"
+    "sails-js": "0.5.0",
+    "sails-js-parser": "0.5.0"
   },
   "files": [
     "README.md"

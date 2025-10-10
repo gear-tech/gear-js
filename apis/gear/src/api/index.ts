@@ -3,7 +3,7 @@ export * from './Blocks';
 export * from './Builtin';
 export * from './Claim';
 export * from './Code';
-export * from './EthBridge';
+export * from './eth-bridge';
 export * from './Gas';
 export * from './Mailbox';
 export * from './Message';

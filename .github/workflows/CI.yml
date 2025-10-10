@@ -1,5 +1,8 @@
 name: 'CI'
 
+permissions:
+  contents: read
+
 on:
   pull_request:
     types: [opened, synchronize, reopened, labeled]
@@ -17,10 +20,10 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: 'Install Node.js 20.x'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20.x
 
@@ -40,10 +43,10 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: 'Install Node.js 20.x'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20.x
 
@@ -62,10 +65,10 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: 'Install: NodeJS 20.x'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20.x
 
@@ -103,8 +106,12 @@ jobs:
 
       - name: 'Test: run'
         run: yarn test:gear-api
+        env:
+          SKIP_RUN_NODE: true
+          SKIP_BUILD: true
 
   test-gearexe-api:
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'S0-skip-gearexe-tests') }}
     runs-on: ubuntu-22.04
     env:
       RUSTUP_HOME: /tmp/rustup_home
@@ -113,20 +120,20 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: 'Check if gearexe files changed'
         id: changed-gearexe
-        uses: tj-actions/changed-files@v46
+        uses: tj-actions/changed-files@v47
         with:
           files: |
             apis/gearexe/**
 
-      - name: 'Install: NodeJS 20.x'
+      - name: 'Install: NodeJS 22.x'
         if: steps.changed-gearexe.outputs.any_changed == 'true'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: 20.x
+          node-version: 22.x
 
       - name: Set up Rust
         if: steps.changed-gearexe.outputs.any_changed == 'true'
@@ -168,10 +175,10 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: 'Install: NodeJS 20.x'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20.x
 
@@ -189,10 +196,10 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install NodeJS 20.x
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20.x
 
@@ -215,10 +222,10 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install NodeJS 20.x
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20.x
 
@@ -238,10 +245,10 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: 'Install: NodeJS 20.x'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20.x
 
@@ -257,10 +264,10 @@ jobs:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: 'Install: NodeJS 20.x'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20.x
 

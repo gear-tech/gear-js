@@ -17,7 +17,7 @@ const noUnusedVars = [
 ];
 
 export default [
-  { ignores: ['**/dist', '**/dist-temp'] },
+  { ignores: ['**/dist', '**/dist-temp', '.yarn'] },
   {
     ...json.configs.recommended,
     files: ['**/*.json'],
@@ -41,7 +41,12 @@ export default [
       '@typescript-eslint/no-empty-object-type': ['error', { allowInterfaces: 'with-single-extends' }],
     },
   },
-  ...frontendEslintConfig.map((conf) => ({
+  ...frontendEslintConfig({
+    tsConfigs: [
+      'idea/{gear,gearexe}/frontend/tsconfig.json',
+      'utils/{gear-hooks,gear-ui,vara-ui,wallet-connect}/tsconfig.json',
+    ],
+  }).map((conf) => ({
     ...conf,
     files: [
       'idea/{gear,gearexe}/frontend/src/**/*.{ts,js,tsx,jsx}',

@@ -1,6 +1,6 @@
 import { Button, Modal } from '@gear-js/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 

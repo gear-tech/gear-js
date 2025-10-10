@@ -4,8 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - apis/gear/package.json
-      - tools/cli/package.json
+      - apis/gear/**
       - tools/txwrapper/package.json
       - utils/gear-hooks/package.json
       - utils/gear-ui/package.json
@@ -21,41 +20,78 @@ jobs:
   check-changes:
     runs-on: ubuntu-latest
     outputs:
-      gear-api-changed: ${{ steps.filter.outputs.gear-api }}
-      version-changed: ${{ steps.check-version.outputs.changed }}
+      gear-api: ${{ steps.gear-api.outputs.changed }}
+      gear-hooks: ${{ steps.gear-hooks.outputs.changed }}
+      gear-ui: ${{ steps.gear-ui.outputs.changed }}
+      vara-ui: ${{ steps.vara-ui.outputs.changed }}
+      frontend-configs: ${{ steps.frontend-configs.outputs.changed }}
+      wallet-connect: ${{ steps.wallet-connect.outputs.changed }}
+      gear-api-code-modified: ${{ steps.gear-api-code-modified.outputs.code-changed }}
+
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 2
 
-      - uses: dorny/paths-filter@v3
-        id: filter
+      - name: Check gear-api version
+        id: gear-api
+        uses: ./.github/actions/version-changed
+        with:
+          package-name: "@gear-js/api"
+          path: "apis/gear/package.json"
+
+      - name: Check gear-hooks version
+        id: gear-hooks
+        uses: ./.github/actions/version-changed
+        with:
+          package-name: "@gear-js/react-hooks"
+          path: "utils/gear-hooks/package.json"
+
+      - name: Check gear-ui version
+        id: gear-ui
+        uses: ./.github/actions/version-changed
+        with:
+          package-name: "@gear-js/ui"
+          path: "utils/gear-ui/package.json"
+
+      - name: Check vara-ui version
+        id: vara-ui
+        uses: ./.github/actions/version-changed
+        with:
+          package-name: "@gear-js/vara-ui"
+          path: "utils/vara-ui/package.json"
+
+      - name: Check frontend-configs version
+        id: frontend-configs
+        uses: ./.github/actions/version-changed
+        with:
+          package-name: "@gear-js/frontend-configs"
+          path: "utils/frontend-configs/package.json"
+
+      - name: Check wallet-connect version
+        id: wallet-connect
+        uses: ./.github/actions/version-changed
+        with:
+          package-name: "@gear-js/wallet-connect"
+          path: "utils/wallet-connect/package.json"
+
+      - name: Check if gear-api-code has been modified
+        id: gear-api-code-modified
+        uses: dorny/paths-filter@v3
         with:
           filters: |
-            gear-api:
-              - 'apis/gear/**'
-
-      - name: Check if version changed
-        id: check-version
-        if: steps.filter.outputs.gear-api == 'true'
-        run: |
-          OLD_VERSION=$(git show HEAD~1:apis/gear/package.json | jq -r .version)
-          NEW_VERSION=$(jq -r .version apis/gear/package.json)
-          if [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
-            echo "changed=true" >> $GITHUB_OUTPUT
-          else
-            echo "changed=false" >> $GITHUB_OUTPUT
-          fi
+            code-changed:
+              - 'apis/gear/src/**'
 
   publish-to-npm:
-    if: github.event_name == 'push'
-
+    needs: check-changes
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Use node 20.x
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20.x
 
@@ -65,29 +101,53 @@ jobs:
       - name: Build
         run: yarn build
 
-      - name: Authenticate with NPM
-        run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: "Configure npm auth"
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
-      - name: Publish
-        run: npx lerna publish from-package --no-verify-access --yes --loglevel verbose
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish gear-api
+        if: ${{ needs.check-changes.outputs.gear-api == 'true' }}
+        run: npm publish --access=public
+        working-directory: apis/gear
+
+      - name: Publish gear-hooks
+        if: ${{ needs.check-changes.outputs.gear-hooks == 'true' }}
+        run: npm publish --access=public
+        working-directory: utils/gear-hooks
+
+      - name: Publish gear-ui
+        if: ${{ needs.check-changes.outputs.gear-ui == 'true' }}
+        run: npm publish --access=public
+        working-directory: utils/gear-ui
+
+      - name: Publish vara-ui
+        if: ${{ needs.check-changes.outputs.vara-ui == 'true' }}
+        run: npm publish --access=public
+        working-directory: utils/vara-ui
+
+      - name: Publish frontend-configs
+        if: ${{ needs.check-changes.outputs.frontend-configs == 'true' }}
+        run: npm publish --access=public
+        working-directory: utils/frontend-configs
+
+      - name: Publish wallet-connect
+        if: ${{ needs.check-changes.outputs.wallet-connect == 'true' }}
+        run: npm publish --access=public
+        working-directory: utils/wallet-connect
+
 
   create-github-release:
     needs: [publish-to-npm, check-changes]
-    if: needs.check-changes.outputs.gear-api-changed == 'true'
+    if: ${{ needs.check-changes.outputs.gear-api == 'true' || needs.check-changes.outputs.gear-api-code-modified == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Use node 20.x
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20.x
 
@@ -110,7 +170,7 @@ jobs:
       - name: Extract Changelog
         id: changelog
         run: |
-          if [[ "${{ needs.check-changes.outputs.version-changed }}" == "true" ]]; then
+          if [[ "${{ needs.check-changes.outputs.gear-api }}" == "true" ]]; then
             VERSION="${{ steps.get-version.outputs.version }}"
             CHANGELOG=$(awk '/## \['$VERSION'\]/{flag=1;next}/## \[/{flag=0}flag{print}' apis/gear/CHANGELOG.md)
           else
@@ -123,14 +183,13 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ needs.check-changes.outputs.version-changed == 'true' && format('gear-js-api-v{0}', steps.get-version.outputs.version) || 'gear-js-api-draft' }}
-          name: ${{ needs.check-changes.outputs.version-changed == 'true' && format('@gear-js/api v{0}', steps.get-version.outputs.version) || '@gear-js/api Draft Release' }}
+          tag_name: ${{ needs.check-changes.outputs.gear-api == 'true' && format('gear-js-api-v{0}', steps.get-version.outputs.version) || 'gear-js-api-draft' }}
+          name: ${{ needs.check-changes.outputs.gear-api == 'true' && format('@gear-js/api v{0}', steps.get-version.outputs.version) || '@gear-js/api Draft Release' }}
           body: |
-            # ${{ needs.check-changes.outputs.version-changed == 'true' && format('@gear-js/api v{0}', steps.get-version.outputs.version) || '@gear-js/api Draft Release' }}
-
             ${{ steps.changelog.outputs.changelog }}
-          draft: ${{ needs.check-changes.outputs.version-changed != 'true' }}
-          prerelease: ${{ needs.check-changes.outputs.version-changed != 'true' }}
+          draft: ${{ needs.check-changes.outputs.gear-api != 'true' }}
+          prerelease: ${{ needs.check-changes.outputs.gear-api != 'true' }}
           files: artifacts/gear-js-api.tgz
+          make_latest: ${{ needs.check-changes.outputs.gear-api == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

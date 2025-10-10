@@ -6,7 +6,6 @@ export type ISubscriptionCallback = <Error = unknown, Result = unknown>(
 export interface IGearExeProvider {
   connect(): Promise<void>;
   disconnect(): Promise<void>;
-  send<Result = unknown>(method: string, parameters: unknown[]): Promise<Result>;
-  subscribe(method: string, parameters: unknown[], callback: ISubscriptionCallback): number;
-  unsubscribe(id: number): void;
+  send<Result = unknown>(method: string, parameters: unknown[], options?: { timeout?: number }): Promise<Result>;
+  subscribe(method: string, parameters: unknown[], callback: ISubscriptionCallback): Promise<() => void>;
 }

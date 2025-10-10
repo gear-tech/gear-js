@@ -1,6 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import { VERIFY_ROUTES } from '@/features/code-verifier';
 import { Events, Block } from '@/features/explorer';
 import { useEvents } from '@/hooks';
 import { routes } from '@/shared/config';
@@ -20,8 +19,6 @@ import { SingleDns } from './single-dns';
 import * as State from './state';
 import { UploadCode } from './uploadCode';
 import { UploadProgram } from './uploadProgram';
-import { VerificationStatus } from './verification-status';
-import { Verify } from './verify';
 import { Vouchers } from './vouchers';
 
 const Routing = () => {
@@ -67,8 +64,9 @@ const Routing = () => {
         <Route path={routes.singleDns} element={<SingleDns />} />
       </Route>
 
-      <Route path={VERIFY_ROUTES.CODE} element={<Verify />} />
-      <Route path={VERIFY_ROUTES.STATUS} element={<VerificationStatus />} />
+      {/* commented out till code verified is fixed */}
+      {/* <Route path={VERIFY_ROUTES.CODE} element={<Verify />} />
+      <Route path={VERIFY_ROUTES.STATUS} element={<VerificationStatus />} /> */}
 
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Navigate to={routes.programs} replace />} />

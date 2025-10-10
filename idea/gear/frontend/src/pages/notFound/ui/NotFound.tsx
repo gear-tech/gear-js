@@ -1,5 +1,5 @@
 import { buttonStyles } from '@gear-js/ui';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { Link } from 'react-router-dom';
 
 import notFoundImg from '@/shared/assets/images/placeholders/404.png';

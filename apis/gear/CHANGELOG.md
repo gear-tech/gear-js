@@ -1,13 +1,29 @@
-## [draft]
+## [0.44.2]
 
-- Renamed `Program` class to `BaseGearProgram`
-- Added `sendBatchMessages` method for sending multiple messages in a batch
-- Updated documentation
-- Added `ss58Format` option to `GearKeyring` class methods
-- Added `asString` method to `ReplyCode` class that returns string explanation of the reply code
-- Added ability to register custom types in `CreateType` class
-- Deprecated `api.program.codeHash` method in favor of `api.program.codeId` method
-- Updated Gear queries and types
+- Updated `GearEthBridge` events (https://github.com/gear-tech/gear-js/pull/2103)
+
+## [0.44.1]
+
+- Refactored `GearEthBridge` API into modular structure with separate `tx`, `events`, and query methods (https://github.com/gear-tech/gear-js/pull/2043)
+- Improved block subscription handling in `GearBlock` class with sequential processing and proper queue management (https://github.com/gear-tech/gear-js/pull/2043)
+- Fixed event filtering in `GearEvents` to only process events from the `gear` section (https://github.com/gear-tech/gear-js/pull/2043)
+- Removed old and redundant gear types (https://github.com/gear-tech/gear-js/pull/2051)
+
+## [0.44.0]
+
+- Support old version of code storage (https://github.com/gear-tech/gear-js/pull/2013)
+
+## [0.43.0]
+
+- Renamed `Program` class to `BaseGearProgram` (https://github.com/gear-tech/gear-js/pull/1943)
+- Added `sendBatchMessages` method for sending multiple messages in a batch (https://github.com/gear-tech/gear-js/pull/1943)
+- Updated documentation (https://github.com/gear-tech/gear-js/pull/1943)
+- Added `ss58Format` option to `GearKeyring` class methods (https://github.com/gear-tech/gear-js/pull/1943)
+- Added `asString` method to `ReplyCode` class that returns string explanation of the reply code (https://github.com/gear-tech/gear-js/pull/1943)
+- Added ability to register custom types in `CreateType` class (https://github.com/gear-tech/gear-js/pull/1943)
+- Deprecated `api.program.codeHash` method in favor of `api.program.codeId` method  in https://github.com/gear-tech/gear-js/pull/1979
+- Updated Gear queries and types in https://github.com/gear-tech/gear-js/pull/1979
+- Bumped `@polkadot/api` to `^16.4.1` (https://github.com/gear-tech/gear-js/pull/1998)
 
 ## [0.42.0]
 _21/05/2025_

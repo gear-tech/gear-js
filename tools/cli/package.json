@@ -13,12 +13,12 @@
     "clean": "echo \"clean @gear-js/cli\" && rm -rf dist"
   },
   "dependencies": {
-    "@gear-js/api": "0.42.0",
-    "@polkadot/api": "16.4.1",
+    "@gear-js/api": "0.44.2",
+    "@polkadot/api": "16.4.8",
     "chalk": "4",
-    "commander": "10.0.1",
-    "inquirer": "9.2.6",
-    "winston": "3.8.2",
+    "commander": "14.0.1",
+    "inquirer": "12.9.6",
+    "winston": "3.17.0",
     "yaml": "2.3.0"
   },
   "license": "GPL-3.0",

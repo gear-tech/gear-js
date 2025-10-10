@@ -75,10 +75,8 @@ const handler = async (ctx: ProcessorContext<Store>) => {
   await tempState.save();
 };
 
-interface RedisClient extends RedisClientType<any, any, any> {}
-
 const main = async (api: GearApi) => {
-  const redisClient: RedisClient = createClient({
+  const redisClient: RedisClientType = createClient({
     username: config.redis.user,
     password: config.redis.password,
     socket: {

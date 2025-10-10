@@ -1,6 +1,6 @@
 import { Vec } from '@polkadot/types';
 import { Extrinsic, EventRecord } from '@polkadot/types/interfaces';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 
 import { Placeholder } from '@/entities/placeholder';
 import commonStyles from '@/pages/explorer/explorer.module.scss';

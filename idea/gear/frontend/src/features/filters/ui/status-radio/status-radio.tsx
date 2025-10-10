@@ -1,5 +1,5 @@
 import { RadioProps, radioStyles } from '@gear-js/ui';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { FieldValues, Path, PathValue, useFormContext } from 'react-hook-form';
 
 import { BulbBlock, BulbStatus } from '@/shared/ui/bulbBlock';
