@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { ReactNode, useEffect, useState, ReactPortal, MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
 

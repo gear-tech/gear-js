@@ -28,7 +28,7 @@ export const useCreateProgram = () => {
       ...unpackReceipt(),
     });
 
-    navigate(generatePath(routes.program, { programId: id }));
+    void navigate(generatePath(routes.program, { programId: id }));
   };
 
   const mutation = useMutation({ mutationFn: createProgram });

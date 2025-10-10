@@ -31,7 +31,7 @@ export const useUploadCode = () => {
       ...unpackReceipt(receipt),
     });
 
-    navigate(generatePath(routes.code, { codeId }));
+    void navigate(generatePath(routes.code, { codeId }));
   };
 
   const onError = (error: Error) => {

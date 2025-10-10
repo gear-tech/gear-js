@@ -9,7 +9,7 @@ import styles from './not-found.module.scss';
 export const NotFound = () => {
   const navigate = useNavigate();
   const onClick = () => {
-    navigate(routes.home);
+    void navigate(routes.home);
   };
 
   return (

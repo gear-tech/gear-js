@@ -20,11 +20,11 @@ const Search = () => {
     }
 
     if (isAddress(search)) {
-      navigate(generatePath(routes.user, { userId: search }));
+      void navigate(generatePath(routes.user, { userId: search }));
       return;
     }
 
-    navigate(generatePath(routes.notFound));
+    void navigate(generatePath(routes.notFound));
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
