@@ -2152,7 +2152,7 @@ __metadata:
     "@testing-library/jest-dom": "npm:6.9.1"
     "@testing-library/react": "npm:16.3.0"
     clsx: "npm:2.1.1"
-    happy-dom: "npm:19.0.2"
+    happy-dom: "npm:20.0.0"
     vitest: "npm:3.2.4"
   peerDependencies:
     react: ^18 || ^19
@@ -15540,14 +15540,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"happy-dom@npm:19.0.2":
-  version: 19.0.2
-  resolution: "happy-dom@npm:19.0.2"
+"happy-dom@npm:20.0.0":
+  version: 20.0.0
+  resolution: "happy-dom@npm:20.0.0"
   dependencies:
     "@types/node": "npm:^20.0.0"
     "@types/whatwg-mimetype": "npm:^3.0.2"
     whatwg-mimetype: "npm:^3.0.0"
-  checksum: 10c0/7980fb0b11b548903585a7430fef435af9cbc5473d3c40c692dd6c41af0acddc9c45fa14b8f23389294c1fc495ac0804ba6e43b3907008e23599c79ad0544031
+  checksum: 10c0/a205da48f3c98ae2b2bcb73c8f673fea66296cd2fc081065fcd5fa42b4411546c1b8f7c26ef2ca5adf0bdd1ced9aff4f429a3a4f5e6bce7724eec2747bef1a49
   languageName: node
   linkType: hard
 
