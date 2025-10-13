@@ -114,8 +114,8 @@ cleanup() {
         echo "    - Gearexe node logs: $LOGS_DIR/gearexe.log"
 
         # Print the last few lines of error logs to help with debugging
-        log_info "Last 10 lines of gearexe logs:"
-        tail -n 10 $LOGS_DIR/gearexe.log
+        log_info "Last 50 lines of gearexe logs:"
+        tail -n 50 $LOGS_DIR/gearexe.log
     else
         log_success "Tests completed successfully. Removing logs..."
         rm -rf $LOGS_DIR
