@@ -2292,7 +2292,7 @@ __metadata:
     "@substrate/connect": "npm:2.1.8"
     "@tanstack/react-query": "npm:5.90.2"
     "@twa-dev/sdk": "npm:8.0.2"
-    "@varan-wallet/varan-connect": "npm:1.0.4"
+    "@varan-wallet/varan-connect": "npm:1.0.8"
     bignumber.js: "npm:9.3.1"
     nanoid: "npm:5.1.6"
     react: "npm:19.2.0"
@@ -9614,12 +9614,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@varan-wallet/varan-connect@npm:1.0.4":
-  version: 1.0.4
-  resolution: "@varan-wallet/varan-connect@npm:1.0.4"
+"@varan-wallet/varan-connect@npm:1.0.8":
+  version: 1.0.8
+  resolution: "@varan-wallet/varan-connect@npm:1.0.8"
   dependencies:
     "@twa-dev/sdk": "npm:^8.0.2"
-  checksum: 10c0/5081ef839e2123e3cdb9694b318f8846879148721e36f62020cd4d615baa4219ae779e7a2811edd15d1b75b5ede314035bbc113e23d67b98cdc1f9d52cbd3147
+  checksum: 10c0/1c649a7a4dbde1c84867183b912b7941d1a4c3d8d40d7a23523fba417fdf81911da2989d976aec52c7a47da1ecdb9b80aab7c8953c5f4b792aaaf3e96b57739d
   languageName: node
   linkType: hard
 

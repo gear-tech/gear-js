@@ -19,7 +19,14 @@ function Wallet({ theme = 'vara', displayBalance = true, accountButtonClassName 
   const { account, isAccountReady } = useAccount();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = () => setIsModalOpen(true);
+  const openModal = () => {
+    // console.log(window.injectedWeb3);
+
+    // const accs: unknown[] = await window.injectedWeb3?.['varan'].extensionAccounts.get();
+    // console.log('accs: ', accs);
+
+    setIsModalOpen(true);
+  };
   const closeModal = () => setIsModalOpen(false);
 
   if (!isAccountReady) return null;
