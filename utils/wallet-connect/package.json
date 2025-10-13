@@ -49,6 +49,7 @@
     "@gear-js/vara-ui": "0.3.1",
     "@polkadot/react-identicon": "3.16.1",
     "@tanstack/react-query": "5.56.2",
+    "@vitejs/plugin-basic-ssl": "2.1.0",
     "react": "19.0.0",
     "react-dom": "19.0.0"
   },

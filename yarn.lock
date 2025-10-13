@@ -2275,7 +2275,7 @@ __metadata:
     "@substrate/connect": "npm:2.1.8"
     "@tanstack/react-query": "npm:5.85.6"
     "@twa-dev/sdk": "npm:8.0.2"
-    "@varan-wallet/varan-connect": "npm:1.0.4"
+    "@varan-wallet/varan-connect": "npm:1.0.8"
     bignumber.js: "npm:9.3.1"
     nanoid: "npm:5.1.5"
     react: "npm:19.0.0"
@@ -2358,6 +2358,7 @@ __metadata:
     "@gear-js/vara-ui": "npm:0.3.1"
     "@polkadot/react-identicon": "npm:3.16.1"
     "@tanstack/react-query": "npm:5.56.2"
+    "@vitejs/plugin-basic-ssl": "npm:2.1.0"
     clsx: "npm:2.1.1"
     react: "npm:19.0.0"
     react-dom: "npm:19.0.0"
@@ -9403,12 +9404,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@varan-wallet/varan-connect@npm:1.0.4":
-  version: 1.0.4
-  resolution: "@varan-wallet/varan-connect@npm:1.0.4"
+"@varan-wallet/varan-connect@npm:1.0.8":
+  version: 1.0.8
+  resolution: "@varan-wallet/varan-connect@npm:1.0.8"
   dependencies:
     "@twa-dev/sdk": "npm:^8.0.2"
-  checksum: 10c0/5081ef839e2123e3cdb9694b318f8846879148721e36f62020cd4d615baa4219ae779e7a2811edd15d1b75b5ede314035bbc113e23d67b98cdc1f9d52cbd3147
+  checksum: 10c0/1c649a7a4dbde1c84867183b912b7941d1a4c3d8d40d7a23523fba417fdf81911da2989d976aec52c7a47da1ecdb9b80aab7c8953c5f4b792aaaf3e96b57739d
+  languageName: node
+  linkType: hard
+
+"@vitejs/plugin-basic-ssl@npm:2.1.0":
+  version: 2.1.0
+  resolution: "@vitejs/plugin-basic-ssl@npm:2.1.0"
+  peerDependencies:
+    vite: ^6.0.0 || ^7.0.0
+  checksum: 10c0/aa618be6bd915163aba27b2db780eab2f0e5d800fea48795f638fb6c1d098db8008ba7f84c708dc191159efecf6ec4e0191ebc5bb7a1a31779c01d0252bf56b0
   languageName: node
   linkType: hard
 
