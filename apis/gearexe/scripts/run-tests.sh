@@ -83,7 +83,8 @@ run_tests() {
     log_info "Starting test execution in sequential mode (--runInBand)..."
     log_info "Test output follows:"
     echo "--------------------------------------------------------"
-    yarn node --no-warnings --experimental-vm-modules $jest_bin --runInBand
+    # yarn node --no-warnings --experimental-vm-modules $jest_bin --runInBand
+    npx jest --runInBand
     test_result=$?
     echo "--------------------------------------------------------"
 
