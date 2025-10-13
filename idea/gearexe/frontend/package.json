@@ -10,15 +10,15 @@
     "clean": "echo \"clean gearexe-idea-frontend\" && rm -rf dist"
   },
   "dependencies": {
-    "@reown/appkit": "1.8.8",
-    "@reown/appkit-adapter-wagmi": "1.8.8",
+    "@reown/appkit": "1.8.9",
+    "@reown/appkit-adapter-wagmi": "1.8.9",
     "@tanstack/react-query": "5.90.2",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "react-router-dom": "7.9.3",
+    "react-router-dom": "7.9.4",
     "react-syntax-highlighter": "15.6.6",
     "sails-js": "0.5.0",
-    "wagmi": "2.17.5"
+    "wagmi": "2.18.0"
   },
   "devDependencies": {
     "@gear-js/frontend-configs": "*",
