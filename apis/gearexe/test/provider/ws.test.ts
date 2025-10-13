@@ -99,12 +99,15 @@ describe('WsGearexeProvider - Connection Management', () => {
       const promise1 = provider.connect();
       const promise2 = provider.connect();
 
-      expect(promise1).toStrictEqual(promise2);
+      expect(mock.getAllInstances()).toHaveLength(1);
 
       const ws = mock.getLastInstance()!;
       ws.simulateOpen();
 
-      await promise1;
+      await Promise.all([promise1, promise2]);
+
+      expect(mock.getAllInstances()).toHaveLength(1);
+
       await provider.disconnect();
     });
 
