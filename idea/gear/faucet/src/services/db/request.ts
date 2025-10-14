@@ -18,7 +18,7 @@ export class RequestService {
     private _lastSeenService: LastSeenService,
   ) {
     this._repo = AppDataSource.getRepository(FaucetRequest);
-    this._targets = config.eth.erc20Contracts.map(([contract]) => contract.toLowerCase());
+    this._targets = config.bridge.erc20Contracts.map(([contract]) => contract.toLowerCase());
     this._targets.push(_varaTestnetGenesis.toLowerCase());
     this._requesting = new Set<string>();
     logger.info('Request service initialized');
@@ -34,15 +34,15 @@ export class RequestService {
     return target;
   }
 
-  private async _createAndValidateRequest(address: string, target: string): Promise<FaucetRequest> {
+  private async _createAndValidateRequest(address: string, target: string, type: FaucetType): Promise<FaucetRequest> {
     const req = new FaucetRequest({
       address,
       target,
-      type: target === this._varaTestnetGenesis ? FaucetType.VaraTestnet : FaucetType.VaraBridge,
+      type,
       status: RequestStatus.Pending,
     });
 
-    if (req.type === FaucetType.VaraBridge) {
+    if (req.type === FaucetType.BridgeErc20) {
       req.address = req.address.toLowerCase();
     }
 
@@ -52,18 +52,18 @@ export class RequestService {
       throw new InvalidAddress();
     }
 
-    if (req.type === FaucetType.VaraTestnet) {
+    if (req.type === FaucetType.VaraTestnet || req.type === FaucetType.BridgeVaraTestnet) {
       req.address = decodeAddress(address);
     }
 
     return req;
   }
 
-  public async newRequest(address: string, target: string) {
-    logger.info(`New request`, { address, target });
+  public async newRequest(address: string, target: string, type: FaucetType) {
+    logger.info(`New request`, { address, target, type });
     target = this._validateTarget(target);
 
-    const req = await this._createAndValidateRequest(address, target);
+    const req = await this._createAndValidateRequest(address, target, type);
 
     const rhash = hash(req.address, target);
 
@@ -90,9 +90,9 @@ export class RequestService {
     }
   }
 
-  public async getRequestsToProcess(type: FaucetType) {
+  public async getRequestsToProcess(type: FaucetType[]) {
     const requests = await this._repo.find({
-      where: { type, status: RequestStatus.Pending },
+      where: { type: In(type), status: RequestStatus.Pending },
       order: { timestamp: 'DESC' },
     });
 

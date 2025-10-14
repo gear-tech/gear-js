@@ -1,6 +1,7 @@
 export enum FaucetType {
   VaraTestnet,
-  VaraBridge,
+  BridgeErc20,
+  BridgeVaraTestnet,
 }
 
 export enum RequestStatus {

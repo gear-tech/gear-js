@@ -27,9 +27,10 @@ export default {
     genesis: getEnv('VARA_GENESIS', '0x<vara_genesis>'),
     cronTime: getEnv('VARA_PROCESSOR_CRON_TIME', '*/6 * * * * *'),
   },
-  eth: {
-    providerAddress: getEnv('ETH_PROVIDER', 'https://<eth_provider>'),
-    privateKey: getEnv('ETH_PRIVATE_KEY'),
+  bridge: {
+    tvaraAmount: Number(getEnv('BRIDGE_TVARA_AMOUNT', '1000')),
+    ethProvider: getEnv('ETH_PROVIDER', 'https://<eth_provider>'),
+    ethPrivateKey: getEnv('ETH_PRIVATE_KEY'),
     erc20Contracts: getEnv('ETH_ERC20_CONTRACTS')
       .split(',')
       .map((data) => {

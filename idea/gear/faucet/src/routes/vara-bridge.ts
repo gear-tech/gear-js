@@ -4,6 +4,7 @@ import { createLogger } from 'gear-idea-common';
 import { captchaMiddleware, rateLimitMiddleware } from './middleware';
 import { RequestService } from '../services';
 import { BaseRouter } from './base';
+import { FaucetType } from '../database';
 
 const logger = createLogger('bridge-router');
 
@@ -13,14 +14,23 @@ export class VaraBridgeRouter extends BaseRouter {
     this.router.post('/request', rateLimitMiddleware, captchaMiddleware, this._handler.bind(this));
   }
 
-  private async _handler({ body: { address, contract } }: Request, res: Response) {
-    if (!address || !contract) {
-      res.status(400).send('User address and contract address are required');
-      return;
+  private async _handler({ body: { address, contract, genesis } }: Request, res: Response) {
+    if (!address) {
+      return res.status(400).send('User address is required');
+    }
+
+    const target = contract || genesis;
+
+    if (!target) {
+      return res.status(400).send('Either contract or genesis must be provided, but not both');
     }
 
     try {
-      await this._requestService.newRequest(address, contract);
+      await this._requestService.newRequest(
+        address,
+        target,
+        contract ? FaucetType.BridgeErc20 : FaucetType.BridgeVaraTestnet,
+      );
     } catch (error) {
       if (error.code) {
         logger.warn(error.message, { address, target: contract });
@@ -29,7 +39,6 @@ export class VaraBridgeRouter extends BaseRouter {
 
       logger.error(error.message, { stack: error.stack, address, contract });
 
-      // TODO: adjust status code
       return res.status(500).json({ error: error.message });
     }
 
