@@ -12339,7 +12339,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4, debug@npm:>=3 <5, debug@npm:^4, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.4, debug@npm:^4.3.5, debug@npm:^4.3.7, debug@npm:^4.4.0, debug@npm:^4.4.1":
+"debug@npm:4, debug@npm:>=3 <5, debug@npm:^4, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.4, debug@npm:^4.3.5, debug@npm:^4.4.0, debug@npm:^4.4.1":
   version: 4.4.3
   resolution: "debug@npm:4.4.3"
   dependencies:
@@ -12369,6 +12369,18 @@ __metadata:
   dependencies:
     ms: "npm:^2.1.1"
   checksum: 10c0/37d96ae42cbc71c14844d2ae3ba55adf462ec89fd3a999459dec3833944cd999af6007ff29c780f1c61153bcaaf2c842d1e4ce1ec621e4fc4923244942e4a02a
+  languageName: node
+  linkType: hard
+
+"debug@npm:^4.3.7":
+  version: 4.4.1
+  resolution: "debug@npm:4.4.1"
+  dependencies:
+    ms: "npm:^2.1.3"
+  peerDependenciesMeta:
+    supports-color:
+      optional: true
+  checksum: 10c0/d2b44bc1afd912b49bb7ebb0d50a860dc93a4dd7d946e8de94abc957bb63726b7dd5aa48c18c2386c379ec024c46692e15ed3ed97d481729f929201e671fcd55
   languageName: node
   linkType: hard
 
@@ -14779,17 +14791,26 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gearexe-idea-frontend@workspace:idea/gearexe/frontend"
   dependencies:
+    "@gear-js/api": "npm:0.44.2"
     "@gear-js/frontend-configs": "npm:*"
+    "@hookform/resolvers": "npm:4.0.0"
     "@reown/appkit": "npm:1.8.8"
     "@reown/appkit-adapter-wagmi": "npm:1.8.8"
     "@tanstack/react-query": "npm:5.90.2"
     "@types/react-syntax-highlighter": "npm:15.5.13"
+    ethers: "npm:6.15.0"
+    gearexe: "workspace:*"
+    jotai: "npm:2.12.0"
+    kzg-wasm: "npm:0.5.0"
     react: "npm:19.2.0"
     react-dom: "npm:19.2.0"
+    react-hook-form: "npm:7.54.2"
     react-router-dom: "npm:7.9.3"
     react-syntax-highlighter: "npm:15.6.6"
     sails-js: "npm:0.5.0"
+    sails-js-parser: "npm:0.5.0"
     wagmi: "npm:2.17.5"
+    zod: "npm:3.25.76"
   languageName: unknown
   linkType: soft
 
@@ -14808,7 +14829,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"gearexe@workspace:apis/gearexe":
+"gearexe@workspace:*, gearexe@workspace:apis/gearexe":
   version: 0.0.0-use.local
   resolution: "gearexe@workspace:apis/gearexe"
   dependencies:
@@ -16948,6 +16969,21 @@ __metadata:
   version: 1.4.0
   resolution: "jju@npm:1.4.0"
   checksum: 10c0/f3f444557e4364cfc06b1abf8331bf3778b26c0c8552ca54429bc0092652172fdea26cbffe33e1017b303d5aa506f7ede8571857400efe459cb7439180e2acad
+  languageName: node
+  linkType: hard
+
+"jotai@npm:2.12.0":
+  version: 2.12.0
+  resolution: "jotai@npm:2.12.0"
+  peerDependencies:
+    "@types/react": ">=17.0.0"
+    react: ">=17.0.0"
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    react:
+      optional: true
+  checksum: 10c0/8a66bcb15183ed4e8ce35d84fd32f72d239092f0c5226cf652f37757489cd1b635183105c3c23ea7e21eb646074a91a4585a3cdaa12d72dfce79e7397b0ed623
   languageName: node
   linkType: hard
 

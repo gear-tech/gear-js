@@ -27,6 +27,7 @@ export default [
       cleanOldBuild(),
       nodeResolve({
         preferBuiltins: true,
+        browser: true,
       }),
       commonjs(),
       typescript({
