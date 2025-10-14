@@ -1,5 +1,6 @@
 import './__mocks__/ethers';
 import './__mocks__/typeorm';
+import './__mocks__/gear-js';
 
 import request from 'supertest';
 import { hash } from '../src/services/db/last-seen';
