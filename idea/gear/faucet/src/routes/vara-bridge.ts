@@ -19,11 +19,11 @@ export class VaraBridgeRouter extends BaseRouter {
       return res.status(400).send('User address is required');
     }
 
-    const target = contract || genesis;
-
-    if (!target) {
+    if ((contract && genesis) || (!contract && !genesis)) {
       return res.status(400).send('Either contract or genesis must be provided, but not both');
     }
+
+    const target = contract || genesis;
 
     try {
       await this._requestService.newRequest(
