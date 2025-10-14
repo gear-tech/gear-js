@@ -69,21 +69,12 @@ compile_contracts() {
 # Function to run tests
 run_tests() {
     log_info "Running test suite..."
-    cd $ROOT_DIR
-
-    log_info "Locating Jest binary..."
-    jest_bin=$(yarn bin jest)
-    if [ $? -ne 0 ]; then
-        log_error "Failed to locate Jest binary"
-        exit 1
-    fi
-    log_success "Jest binary found at: $jest_bin"
 
     cd $PROJECT_DIR
     log_info "Starting test execution in sequential mode (--runInBand)..."
     log_info "Test output follows:"
     echo "--------------------------------------------------------"
-    yarn node --no-warnings --experimental-vm-modules $jest_bin --runInBand
+    npx jest --runInBand
     test_result=$?
     echo "--------------------------------------------------------"
 
@@ -114,8 +105,8 @@ cleanup() {
         echo "    - Gearexe node logs: $LOGS_DIR/gearexe.log"
 
         # Print the last few lines of error logs to help with debugging
-        log_info "Last 10 lines of gearexe logs:"
-        tail -n 10 $LOGS_DIR/gearexe.log
+        log_info "Last 50 lines of gearexe logs:"
+        tail -n 50 $LOGS_DIR/gearexe.log
     else
         log_success "Tests completed successfully. Removing logs..."
         rm -rf $LOGS_DIR
