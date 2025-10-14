@@ -32,12 +32,12 @@ describe('Bridge requests', () => {
     let res = await req(ETH_USER_ADDRESS);
 
     expect(res.statusCode).toBe(400);
-    expect(res.text).toBe('User address and contract address are required');
+    expect(res.text).toBe('Either contract or genesis must be provided, but not both');
 
     res = await req(undefined, ETH_CONTRACT_ADDRESS);
 
     expect(res.statusCode).toBe(400);
-    expect(res.text).toBe('User address and contract address are required');
+    expect(res.text).toBe('User address is required');
   });
 
   it('should return UnsupportedTarget error', async () => {
