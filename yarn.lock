@@ -2099,8 +2099,8 @@ __metadata:
     react: "npm:19.2.0"
     react-dom: "npm:19.2.0"
     react-transition-group: "npm:4.4.5"
-    sails-js: "npm:0.5.0"
-    sails-js-parser: "npm:0.5.0"
+    sails-js: "npm:0.5.1"
+    sails-js-parser: "npm:0.5.1"
   peerDependencies:
     "@gear-js/api": ^0.44.2
     "@polkadot/api": ^16.4.6
@@ -14992,9 +14992,9 @@ __metadata:
     react-number-format: "npm:5.4.4"
     react-router-dom: "npm:7.9.3"
     react-transition-group: "npm:4.4.5"
-    sails-js: "npm:0.5.0"
-    sails-js-parser: "npm:0.5.0"
-    sails-js-types: "npm:0.5.0"
+    sails-js: "npm:0.5.1"
+    sails-js-parser: "npm:0.5.1"
+    sails-js-types: "npm:0.5.1"
     simplebar-react: "npm:3.3.2"
     yup: "npm:1.7.1"
     zod: "npm:3.25.76"
@@ -15050,7 +15050,7 @@ __metadata:
     pg: "npm:8.16.3"
     redis: "npm:5.8.2"
     reflect-metadata: "npm:0.2.2"
-    sails-js: "npm:0.5.0"
+    sails-js: "npm:0.5.1"
     typeorm: "npm:0.3.27"
   languageName: unknown
   linkType: soft
@@ -15118,7 +15118,7 @@ __metadata:
     react-dom: "npm:19.2.0"
     react-router-dom: "npm:7.9.3"
     react-syntax-highlighter: "npm:15.6.6"
-    sails-js: "npm:0.5.0"
+    sails-js: "npm:0.5.1"
     wagmi: "npm:2.17.5"
   languageName: unknown
   linkType: soft
@@ -15147,8 +15147,8 @@ __metadata:
     ethers: "npm:6.15.0"
     gear-js-util: "workspace:*"
     kzg-wasm: "npm:0.5.0"
-    sails-js: "npm:0.5.0"
-    sails-js-parser: "npm:0.5.0"
+    sails-js: "npm:0.5.1"
+    sails-js-parser: "npm:0.5.1"
   peerDependencies:
     ethers: ^6.14
     kzg-wasm: ^0.5.0
@@ -21868,47 +21868,48 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sails-js-parser@npm:0.5.0":
-  version: 0.5.0
-  resolution: "sails-js-parser@npm:0.5.0"
+"sails-js-parser@npm:0.5.1":
+  version: 0.5.1
+  resolution: "sails-js-parser@npm:0.5.1"
   dependencies:
-    sails-js-types: "npm:0.5.0"
+    sails-js-types: "npm:0.5.1"
   peerDependencies:
-    sails-js-types: 0.5.0
+    sails-js-types: 0.5.1
   dependenciesMeta:
     sails-js-types:
       optional: true
-  checksum: 10c0/0af72c37791451cf67c34b4c44bed767818be1faa12e8eb6eff82a099dd66f943600f554db9b63ad2388e7ee1dcbcef822d297369ebc00a8d305e39e6286218b
+  checksum: 10c0/5c6b2457dc3be24dc0017a453ff09a7e2fee8621d17c7dc48cd40768a691b7f97df2e72fb84ebbc43893571984d9db04087e786b69262701d07027d743b9e66a
   languageName: node
   linkType: hard
 
-"sails-js-types@npm:0.5.0":
-  version: 0.5.0
-  resolution: "sails-js-types@npm:0.5.0"
-  checksum: 10c0/50bb09d144b0612780e7115ad359393c2187294e910b7856747b11a8ebaa54d4c9903cf931f123be63c31fef7be6b129d0268b040aa289b58316a9f13c869f2d
+"sails-js-types@npm:0.5.1":
+  version: 0.5.1
+  resolution: "sails-js-types@npm:0.5.1"
+  checksum: 10c0/945d99c74c3dfaa5ec9e3d7803750b1ad844a7653ec3667e7ef3e49e8739e9f487876c2c957ed5319a5ba57612220adb304dd22ce2c7b184b9ea8bd94ad5045f
   languageName: node
   linkType: hard
 
-"sails-js-util@npm:0.5.0":
-  version: 0.5.0
-  resolution: "sails-js-util@npm:0.5.0"
-  checksum: 10c0/121bbcf9089f50f3ab66a5dc34e7e66e86af601187aee43d3d06a646e211ca13d9e7061a4d2922649860ae3b412d0e41b8a827a1bc1c8d9308a8af9c3215d2c7
+"sails-js-util@npm:0.5.1":
+  version: 0.5.1
+  resolution: "sails-js-util@npm:0.5.1"
+  checksum: 10c0/95f794a97a4c24a8172f5ee5f539ffed2f5a047f63ee05c3ef2aaaf141d6c92f9a216f8d19394e13e8ceca1eb8de8280d10f306ec33a57dba6e11df6c5a4635f
   languageName: node
   linkType: hard
 
-"sails-js@npm:0.5.0":
-  version: 0.5.0
-  resolution: "sails-js@npm:0.5.0"
+"sails-js@npm:0.5.1":
+  version: 0.5.1
+  resolution: "sails-js@npm:0.5.1"
   dependencies:
-    sails-js-types: "npm:0.5.0"
-    sails-js-util: "npm:0.5.0"
+    sails-js-types: "npm:0.5.1"
+    sails-js-util: "npm:0.5.1"
   peerDependencies:
     "@gear-js/api": ^0.44.1
     "@polkadot/api": ^16.4.1
+    "@polkadot/util": ^13.5.1
   dependenciesMeta:
     sails-js-types:
       optional: true
-  checksum: 10c0/db20cac74f539e81ddc6c10a44c0b01adb5c5fe1151b15e2a55119c0c5388740e5d28bf58d996375426071bf44bceecaa2927825b6e0960caeefb7b65961e3a4
+  checksum: 10c0/164761939feeed3fa411057d8b59e7ab09a470f7e5b8224de1a87cc8af11a24f98c81da969cd482c62e2da631e6f7e0eb05ea419278256f4a30913fee59476cc
   languageName: node
   linkType: hard
 
