@@ -56,9 +56,9 @@
     "rxjs": "^7.8.2"
   },
   "devDependencies": {
-    "@polkadot/api": "16.4.8",
-    "@polkadot/typegen": "16.4.8",
-    "@polkadot/types": "16.4.8",
+    "@polkadot/api": "16.4.9",
+    "@polkadot/typegen": "16.4.9",
+    "@polkadot/types": "16.4.9",
     "@polkadot/wasm-crypto": "7.5.1",
     "rxjs": "7.8.2"
   },
