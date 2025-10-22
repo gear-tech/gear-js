@@ -15,7 +15,7 @@
     "@gear-js/ui": "*",
     "@gear-js/wallet-connect": "*",
     "@hcaptcha/react-hcaptcha": "1.12.1",
-    "@hookform/resolvers": "4.0.0",
+    "@hookform/resolvers": "5.2.2",
     "@polkadot/api": "16.4.9",
     "@polkadot/api-augment": "16.4.9",
     "@polkadot/react-identicon": "3.16.1",
@@ -45,7 +45,7 @@
     "sails-js-parser": "0.5.1",
     "simplebar-react": "3.3.2",
     "yup": "1.7.1",
-    "zod": "3.25.76"
+    "zod": "4.1.12"
   },
   "devDependencies": {
     "@gear-js/frontend-configs": "*",
