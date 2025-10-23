@@ -1,7 +1,7 @@
 import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 
-import { HexString } from '../../index';
+import { HexString } from '../../common';
 
 export interface CodeUploadResult {
   /**

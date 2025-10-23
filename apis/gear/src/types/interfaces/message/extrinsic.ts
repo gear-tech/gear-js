@@ -1,6 +1,4 @@
-import { HexString } from '@polkadot/util/types';
-
-import { GasLimit, Value } from '../../common';
+import { GasLimit, HexString, Value } from '../../common';
 import { PayloadType } from '../../payload';
 
 export interface V1010MessageSendOptions {

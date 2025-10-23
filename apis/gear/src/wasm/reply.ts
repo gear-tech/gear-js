@@ -1,5 +1,6 @@
 import { hexToU8a, isHex, isU8a } from '@polkadot/util';
-import { HexString } from '@polkadot/util/types';
+
+import { HexString } from '../types';
 import importObj from './importObj';
 
 export function getGrReply(wasm: HexString | ArrayBuffer | Uint8Array, fn: string): Promise<Uint8Array> {

@@ -1,18 +1,23 @@
 import { Option, u128, u32 } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
-import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { randomAsHex } from '@polkadot/util-crypto';
 
 import {
   GearCoreProgram,
+  HexString,
   IProgramCreateResult,
   IProgramUploadResult,
   ProgramCreateOptions,
   ProgramUploadOptions,
 } from '../types';
-import { ProgramDoesNotExistError, ProgramHasNoMetahash, SubmitProgramError } from '../errors';
+import {
+  ProgramDoesNotExistError,
+  ProgramHasNoMetahash,
+  RpcMethodNotSupportedError,
+  SubmitProgramError,
+} from '../errors';
 import {
   encodePayload,
   generateCodeHash,
@@ -27,6 +32,8 @@ import { GearApi } from '../GearApi';
 import { GearGas } from './Gas';
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from '../metadata';
+
+const PROGRAM_STATE_CHANGES_SUB = 'gear_subscribeProgramStateChanges';
 
 export class GearProgram extends GearTransaction {
   public calculateGas: GearGas;
@@ -294,5 +301,28 @@ export class GearProgram extends GearTransaction {
 
   get rentFreePeriod(): u32 {
     return this._api.consts.gear.programRentFreePeriod as u32;
+  }
+
+  /**
+   * ### Subscribe to program state changes
+   * @param programIds - list of program ids
+   * @param callback - function to be called when program state changes
+   * @returns - unsubscribe function
+   */
+  public subscribeToStateChanges(
+    programIds: HexString[] | null = null,
+    callback: (blockHash: HexString, programIds: HexString[]) => void | Promise<void>,
+  ) {
+    if (!this._api.rpcMethods.includes(PROGRAM_STATE_CHANGES_SUB)) {
+      throw new RpcMethodNotSupportedError(PROGRAM_STATE_CHANGES_SUB);
+    }
+
+    return this._api.rpc.gear.subscribeProgramStateChanges(programIds, (result) => {
+      if (result.isEmpty || !result.block_hash || result.block_hash.isEmpty) return;
+      callback(
+        result.block_hash.toHex(),
+        result.program_ids.toArray().map((item) => item.toHex()),
+      );
+    });
   }
 }

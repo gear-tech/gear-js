@@ -1,10 +1,17 @@
 import { SubmittableExtrinsic, UnsubscribePromise, VoidFn } from '@polkadot/api/types';
-import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { ReplaySubject } from 'rxjs';
 
-import { ICalculateReplyForHandleOptions, MessageSendOptions, MessageSendReplyOptions, ReplyInfo } from '../types';
-import { SendMessageError, SendReplyError } from '../errors';
+import {
+  ICalculateReplyForHandleOptions,
+  MessageSendOptions,
+  MessageSendReplyOptions,
+  ReplyInfo,
+  HexString,
+  UserMessageSentSubscriptionFilter,
+  UserMessageSentSubscriptionItem,
+} from '../types';
+import { SendMessageError, SendReplyError, RpcMethodNotSupportedError } from '../errors';
 import { UserMessageSent, UserMessageSentData } from '../events';
 import {
   decodeAddress,
@@ -366,5 +373,53 @@ export class GearMessage extends GearTransaction {
       value || 0,
       at || null,
     );
+  }
+
+  subscribeUserMessageSent(
+    filter: UserMessageSentSubscriptionFilter,
+    callback: (item: Readonly<UserMessageSentSubscriptionItem>) => void | Promise<void>,
+  ) {
+    const methodName = 'gear_subscribeUserMessageSent';
+
+    if (!this._api.rpcMethods.includes(methodName)) {
+      throw new RpcMethodNotSupportedError(methodName);
+    }
+
+    const rpcFilter = {
+      source: filter.source || null,
+      destination: filter.destination || null,
+      payload_filters: filter.payloadFilters || null,
+      from_block: filter.fromBlock || null,
+      finalized_only: filter.finalizedOnly || false,
+    };
+
+    console.log(`Subscribing with filter:`, rpcFilter);
+
+    return this._api.rpc.gear.subscribeUserMessageSent(rpcFilter, (result) => {
+      if (result.ack && result.ack.isSome && result.ack.unwrap().isTrue) return;
+
+      const event: UserMessageSentSubscriptionItem = {
+        id: result.id.toHex(),
+        block: result.block.toHex(),
+        index: result.index.toNumber(),
+        source: result.source.toHex(),
+        destination: result.destination.toHex(),
+        payload: result.payload.toHex(),
+        value: BigInt(result.value.toString()),
+      };
+
+      if (result.reply && result.reply.isSome) {
+        const reply = result.reply.unwrap();
+        event.reply = {
+          to: reply.to.toHex(),
+          codeRaw: reply.codeRaw.toHex(),
+          code: reply.code.toString(),
+        };
+      }
+
+      console.log(`Received message event:`, event);
+
+      callback(event);
+    });
   }
 }

@@ -1,8 +1,8 @@
 import { Struct, u128, u8, Vec } from '@polkadot/types-codec';
 import { AnyNumber } from '@polkadot/types-codec/types';
-import { HexString } from '@polkadot/util/types';
 
 import { GearCoreErrorsSimpleReplyCode } from '../../lookup';
+import { HexString } from '../../common';
 
 export interface ICalculateReplyForHandleOptions {
   /** Origin of the message */

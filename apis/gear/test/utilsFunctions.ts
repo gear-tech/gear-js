@@ -126,6 +126,7 @@ registry.register({
       Input: 'Text',
       Wait: null,
       Exit: 'ActorId',
+      ChangeState: null,
     },
   },
   Init: 'BTreeMap<String, u8>',
