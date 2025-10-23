@@ -4,7 +4,7 @@ on:
   push:
     branches: ['main', 'stable']
     paths:
-      - idea/gearexe/frontend/package.json
+      - idea/gearexe/frontend/**
   workflow_dispatch:
 
 concurrency:
