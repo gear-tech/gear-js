@@ -1,10 +1,4 @@
-FROM node:20-alpine AS builder
-
-RUN apk add --no-cache \
-    python3 \
-    make \
-    g++ \
-    libc6-compat
+FROM node:20-bookworm AS builder
 
 WORKDIR /src
 
