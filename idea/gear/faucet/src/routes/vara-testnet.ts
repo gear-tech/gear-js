@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 
 import { captchaMiddleware, rateLimitMiddleware } from './middleware';
 import { RequestService } from '../services';
+import { FaucetType } from '../database';
 import { BaseRouter } from './base';
 
 const logger = createLogger('vara-router');
@@ -29,7 +30,7 @@ export class VaraTestnetRouter extends BaseRouter {
     }
 
     try {
-      await this._requestService.newRequest(address, genesis);
+      await this._requestService.newRequest(address, genesis, FaucetType.VaraTestnet);
     } catch (error) {
       if (error.code) {
         logger.error(error.message, { address, target: genesis });
@@ -38,7 +39,6 @@ export class VaraTestnetRouter extends BaseRouter {
 
       logger.error(error.message, { stack: error.stack, address, genesis });
 
-      // TODO: adjust status code
       return res.status(500).json({ error: error.message });
     }
     res.sendStatus(200);

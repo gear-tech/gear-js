@@ -365,6 +365,15 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 log_success "Validator key successfully configured: $validator_pubkey"
+log_info "Inserting network key..."
+inserted_network=$(./target/release/ethexe key -k $GEAREXE_DIR/keys insert $PRIVATE_KEY)
+echo $inserted_network
+network_pubkey=$(echo $inserted_network | grep -o "Public key: 0x[0-9a-fA-F]\+" | awk '{print $3}' | sed 's/^0x//')
+echo $network_pubkey
+if [ $? -ne 0 ]; then
+    log_error "Failed to insert network key"
+    exit 1
+fi
 
 # Run gearexe
 log_info "Starting Gear execution layer node (gearexe)..."
@@ -374,6 +383,7 @@ export RUST_BACKTRACE=1
 log_info "Gearexe configuration:"
 echo "    - Base directory: $GEAREXE_DIR"
 echo "    - Validator key: $validator_pubkey"
+echo "    - Network key: $network_pubkey"
 echo "    - Ethereum RPC: $WS_RPC"
 echo "    - Router address: $ROUTER_ADDRESS"
 echo "    - Block time: $BLOCK_TIME"
@@ -383,6 +393,7 @@ log_info "Launching gearexe node..."
 nohup ./target/release/ethexe --cfg none run --dev --tmp --base "$GEAREXE_DIR" \
     --validator $validator_pubkey \
     --validator-session $validator_pubkey \
+    --network-key $network_pubkey \
     --ethereum-rpc $WS_RPC \
     --ethereum-router $ROUTER_ADDRESS \
     --eth-block-time $BLOCK_TIME \

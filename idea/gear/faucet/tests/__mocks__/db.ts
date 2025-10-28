@@ -21,7 +21,15 @@ export function createFakeRepository<T extends { id: any; timestamp: Date; [key:
     }),
     find: jest.fn(async ({ where }) => {
       const keys = Object.keys(where);
-      return Object.values(data).filter((item) => keys.every((key) => (item[key] as any) == where[key]));
+      return Object.values(data).filter((item) =>
+        keys.every((key) => {
+          const whereValue = where[key];
+          if (whereValue && typeof whereValue === 'object' && '_type' in whereValue && whereValue._type === 'in') {
+            return whereValue._value.includes(item[key]);
+          }
+          return (item[key] as any) == whereValue;
+        }),
+      );
     }),
     findOne: jest.fn(async ({ where }) => {
       const keys = Object.keys(where);

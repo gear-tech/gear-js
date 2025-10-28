@@ -12,7 +12,7 @@ export function isValidAddress(validationOptions?: ValidationOptions) {
       validator: {
         validate(value: any, args: ValidationArguments) {
           const obj = args.object as any;
-          if (obj.type === FaucetType.VaraTestnet) {
+          if (obj.type === FaucetType.VaraTestnet || obj.type === FaucetType.BridgeVaraTestnet) {
             if (typeof value !== 'string') return false;
             try {
               if (decodeAddress(value).length === 32) {

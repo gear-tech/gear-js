@@ -33,6 +33,7 @@ export class VaraTestnetProcessor extends FaucetProcessor {
   private account: KeyringPair;
   private providerAddress: string;
   private balanceToTransfer: BN;
+  private bridgeAmount: BN;
   private api: GearApi;
   private genesis: string;
 
@@ -41,6 +42,7 @@ export class VaraTestnetProcessor extends FaucetProcessor {
     this.account = await createAccount(config.varaTestnet.accountSeed);
     logger.info('Account created', { addr: this.account.address });
     this.balanceToTransfer = new BN(config.varaTestnet.balanceToTransfer * 1e12);
+    this.bridgeAmount = new BN(BigInt(config.bridge.tvaraAmount) * BigInt(1e12));
     this.providerAddress = config.varaTestnet.providerAddresses[0];
     await this.connect();
   }
@@ -49,8 +51,8 @@ export class VaraTestnetProcessor extends FaucetProcessor {
     return config.varaTestnet.cronTime;
   }
 
-  protected get type(): FaucetType {
-    return FaucetType.VaraTestnet;
+  protected get type(): FaucetType[] {
+    return [FaucetType.VaraTestnet, FaucetType.BridgeVaraTestnet];
   }
 
   public get genesisHash() {
@@ -63,7 +65,12 @@ export class VaraTestnetProcessor extends FaucetProcessor {
     const success = [];
     const fail = [];
 
-    const [transferred, blockHash] = await this.sendBatch(requests.map((req) => req.address));
+    const [transferred, blockHash] = await this._sendBatch(
+      requests.map((req) => [
+        req.address,
+        req.type === FaucetType.BridgeVaraTestnet ? this.bridgeAmount : this.balanceToTransfer,
+      ]),
+    );
 
     requests.forEach((req) => {
       if (transferred.includes(req.address)) {
@@ -120,13 +127,13 @@ export class VaraTestnetProcessor extends FaucetProcessor {
     return this.connect();
   }
 
-  async sendBatch(addresses: string[]): Promise<[string[], string]> {
-    const txs = addresses.map((address) => this.api.tx.balances.transferKeepAlive(address, this.balanceToTransfer));
+  private async _sendBatch(requests: [address: string, value: BN][]): Promise<[string[], string]> {
+    const txs = requests.map(([address, value]) => this.api.tx.balances.transferKeepAlive(address, value));
     const batch = this.api.tx.utility.forceBatch(txs);
     const transferred = [];
     let blockHash: string;
 
-    logger.info(`Sending batch with ${addresses.length} transfers`, { addresses });
+    logger.info(`Sending batch with ${requests.length} transfers`, { requests });
 
     try {
       await new Promise<any>((resolve, reject) =>

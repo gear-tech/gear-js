@@ -29,25 +29,25 @@ export class VaraBridgeProcessor extends FaucetProcessor {
 
   public async init(): Promise<void> {
     this.setLogger(logger);
-    const provider = new JsonRpcProvider(config.eth.providerAddress);
+    const provider = new JsonRpcProvider(config.bridge.ethProvider);
     const network = await provider.getNetwork();
     logger.info(`Connected to ${network.name}`);
-    this._wallet = new Wallet(config.eth.privateKey, provider);
+    this._wallet = new Wallet(config.bridge.ethPrivateKey, provider);
     logger.info('Account created', { addr: this._wallet.address });
 
     this._contracts = new Map();
-    for (const [id, value] of config.eth.erc20Contracts) {
+    for (const [id, value] of config.bridge.erc20Contracts) {
       this._contracts.set(id, ethers.parseUnits(value, await this._getDecimals(id)));
       logger.info(`Contract added`, { id, value: this._contracts.get(id) });
     }
   }
 
   protected get cronInterval(): string {
-    return config.eth.cronTime;
+    return config.bridge.cronTime;
   }
 
-  protected get type(): FaucetType {
-    return FaucetType.VaraBridge;
+  protected get type(): FaucetType[] {
+    return [FaucetType.BridgeErc20];
   }
 
   protected async handleRequests(requests: FaucetRequest[]): Promise<{ success: number[]; fail: number[] }> {

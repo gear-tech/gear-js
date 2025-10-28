@@ -4,6 +4,7 @@ const config: Config.InitialOptions = {
   globalSetup: './test/setup.js',
   clearMocks: true,
   coverageProvider: 'v8',
+  coveragePathIgnorePatterns: ['<rootDir>/test'],
   testEnvironment: 'node',
   verbose: true,
   preset: 'ts-jest/presets/js-with-babel',
