@@ -1,11 +1,16 @@
 import { Option, Vec } from '@polkadot/types';
 import { BalanceOf } from '@polkadot/types/interfaces';
-import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { blake2AsHex } from '@polkadot/util-crypto';
 
-import { ICallOptions, IUpdateVoucherParams, IVoucherDetails, PalletGearVoucherInternalVoucherInfo } from '../types';
+import {
+  ICallOptions,
+  IUpdateVoucherParams,
+  IVoucherDetails,
+  PalletGearVoucherInternalVoucherInfo,
+  HexString,
+} from '../types';
 import { GearTransaction } from './Transaction';
 import { generateVoucherId } from '../utils';
 

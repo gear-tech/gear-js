@@ -8,7 +8,7 @@ const config: Config.InitialOptions = {
   verbose: true,
   testSequencer: './test/testSequencer.js',
   preset: 'ts-jest/presets/js-with-babel',
-  testTimeout: 30000,
+  testTimeout: 10000,
   forceExit: true,
 };
 

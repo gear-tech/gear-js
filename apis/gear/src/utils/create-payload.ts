@@ -1,9 +1,8 @@
 import { hexToU8a, isHex, isU8a } from '@polkadot/util';
 import { Codec } from '@polkadot/types/types';
-import { HexString } from '@polkadot/util/types';
 
-import { GearMetadata, isProgramMeta, ProgramMetadata } from '../metadata';
-import { CreateType } from '../metadata';
+import { CreateType, GearMetadata, isProgramMeta, ProgramMetadata } from '../metadata';
+import { HexString } from '../types';
 
 export function getRegistry(metaOrHexRegistry: HexString): HexString {
   if (!metaOrHexRegistry) {

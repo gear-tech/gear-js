@@ -1,6 +1,6 @@
-import { HexString, U8aLike } from '@polkadot/util/types';
+import { U8aLike } from '@polkadot/util/types';
 
-import { Value, GasInfo, PayloadType } from '../types';
+import { Value, GasInfo, PayloadType, HexString } from '../types';
 import { ProgramMetadata } from '../metadata';
 import { SPEC_VERSION } from '../consts';
 import { encodePayload } from '../utils';

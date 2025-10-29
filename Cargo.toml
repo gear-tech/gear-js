@@ -9,6 +9,7 @@ repository = "https://github.com/gear-tech/gear-js"
 resolver = "2"
 members = [
     "apis/gear/programs/test",
+    "apis/gear/programs/message",
 ]
 
 [workspace.dependencies]

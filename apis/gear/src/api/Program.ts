@@ -1,18 +1,23 @@
 import { Option, u128, u32 } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
-import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { randomAsHex } from '@polkadot/util-crypto';
 
 import {
   GearCoreProgram,
+  HexString,
   IProgramCreateResult,
   IProgramUploadResult,
   ProgramCreateOptions,
   ProgramUploadOptions,
 } from '../types';
-import { ProgramDoesNotExistError, ProgramHasNoMetahash, SubmitProgramError } from '../errors';
+import {
+  ProgramDoesNotExistError,
+  ProgramHasNoMetahash,
+  RpcMethodNotSupportedError,
+  SubmitProgramError,
+} from '../errors';
 import {
   encodePayload,
   generateCodeHash,
@@ -27,6 +32,8 @@ import { GearApi } from '../GearApi';
 import { GearGas } from './Gas';
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from '../metadata';
+
+const PROGRAM_STATE_CHANGES_SUB = 'gear_subscribeProgramStateChanges';
 
 export class GearProgram extends GearTransaction {
   public calculateGas: GearGas;
@@ -294,5 +301,87 @@ export class GearProgram extends GearTransaction {
 
   get rentFreePeriod(): u32 {
     return this._api.consts.gear.programRentFreePeriod as u32;
+  }
+
+  /**
+   * ## Subscribe to Program State Changes
+   *
+   * Subscribe to real-time notifications when program state changes on the blockchain.
+   * This method uses server-side filtering to efficiently track specific programs without polling.
+   *
+   * The subscription notifies whenever one or more programs undergo state modifications, such as:
+   * - Program code updates
+   * - Program creation or termination
+   * - Program status changes
+   *
+   * @param programIds - List of program IDs to monitor, or null to listen to all programs.
+   *                     When null, the callback will be triggered for any program state change on the blockchain.
+   *                     Pass a specific array of HexStrings to filter notifications to only those programs.
+   *
+   * @param callback - Async or sync function called when monitored program state changes.
+   *                   Parameters:
+   *                   - blockHash (HexString): Hash of the block where the state change occurred
+   *                   - programIds (HexString[]): Array of program IDs that changed state in this block
+   *
+   *                   The callback can perform async operations (e.g., fetching updated program state).
+   *
+   * @returns Unsubscribe function. Call this to stop receiving state change notifications.
+   *
+   * @throws RpcMethodNotSupportedError - If the connected node does not support the subscription method.
+   *
+   * @example
+   * ```typescript
+   * // Monitor all program state changes
+   * const unsubscribe = await api.program.subscribeToStateChanges(
+   *   null, // listen to all programs
+   *   (blockHash, programIds) => {
+   *     console.log(`Block: ${blockHash}`);
+   *     console.log(`Updated programs: ${programIds.join(', ')}`);
+   *   }
+   * );
+   *
+   * // Later, stop listening
+   * unsubscribe();
+   * ```
+   *
+   * @example
+   * ```typescript
+   * // Monitor specific programs
+   * const myPrograms = ['0x...', '0x...'];
+   *
+   * const unsubscribe = await api.program.subscribeToStateChanges(
+   *   myPrograms,
+   *   async (blockHash, changedProgramIds) => {
+   *     console.log(`Programs changed in block: ${blockHash}`);
+   *
+   *     // Perform async operations on updated programs
+   *     for (const programId of changedProgramIds) {
+   *       // Check if program still exists
+   *       const exists = await api.program.exists(programId);
+   *       // Get updated code ID
+   *       const codeId = await api.program.codeId(programId);
+   *       console.log(`Program ${programId} - Exists: ${exists}, Code: ${codeId}`);
+   *     }
+   *   }
+   * );
+   * ```
+   *
+   * @see https://github.com/gear-tech/gear/pull/4895 for implementation details
+   */
+  public subscribeToStateChanges(
+    programIds: HexString[] | null = null,
+    callback: (blockHash: HexString, programIds: HexString[]) => void | Promise<void>,
+  ) {
+    if (!this._api.rpcMethods.includes(PROGRAM_STATE_CHANGES_SUB)) {
+      throw new RpcMethodNotSupportedError(PROGRAM_STATE_CHANGES_SUB);
+    }
+
+    return this._api.rpc.gear.subscribeProgramStateChanges(programIds, (result) => {
+      if (result.isEmpty || !result.block_hash || result.block_hash.isEmpty) return;
+      callback(
+        result.block_hash.toHex(),
+        result.program_ids.toArray().map((item) => item.toHex()),
+      );
+    });
   }
 }

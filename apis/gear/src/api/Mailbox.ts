@@ -1,9 +1,8 @@
 import { AccountId32 } from '@polkadot/types/interfaces';
-import { HexString } from '@polkadot/util/types';
 import { Option } from '@polkadot/types';
 
+import { MailboxItem, HexString } from '../types';
 import { GearClaimValue } from './Claim';
-import { MailboxItem } from '../types';
 import { GearApi } from '../GearApi';
 
 export class GearMailbox {

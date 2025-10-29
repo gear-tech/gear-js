@@ -1,20 +1,15 @@
 import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
-import { bufferToU8a } from '@polkadot/util';
 import { readFileSync } from 'fs';
 
 import { TEST_CODE } from './config';
-import { checkInit, createPayload, getAccount, sendTransaction, sleep, waitForPausedProgram } from './utilsFunctions';
+import { checkInit, createPayload, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { getApi } from './common';
 
 const api = getApi();
 let alice: KeyringPair;
 let codeId: HexString;
 let programId: HexString;
-let metaHash: HexString;
-let expiredBN: number;
-let _expiration: number;
-let _pausedBlockHash: HexString;
 
 const code = Uint8Array.from(readFileSync(TEST_CODE));
 
@@ -41,18 +36,14 @@ describe('New Program', () => {
     programId = program.programId;
     codeId = program.codeId;
 
-    let _programSetExpiration: number;
-    let _activeExpiration: number;
     let isProgramSetHappened = false;
     let isActiveHappened = false;
 
-    const status = checkInit(api, program.programId, (st, exp) => {
+    const status = checkInit(api, program.programId, (st) => {
       if (st === 'ProgramSet') {
         isProgramSetHappened = true;
-        if (exp) _programSetExpiration = exp;
       } else if (st === 'Active') {
         isActiveHappened = true;
-        if (exp) _activeExpiration = exp;
       } else {
         throw new Error(`Unexpected status: ${st}`);
       }
@@ -66,7 +57,6 @@ describe('New Program', () => {
     expect(pcData.id.toHex()).toBe(programId);
     expect(pcData.change.isProgramSet).toBeTruthy();
     expect(pcData.change.asProgramSet.expiration.toNumber()).toBeGreaterThan(0);
-    expiredBN = pcData.change.asProgramSet.expiration.toNumber();
 
     expect(await status).toBe('success');
 
@@ -76,13 +66,6 @@ describe('New Program', () => {
     });
     expect(isProgramSetHappened).toBeTruthy();
     expect(isActiveHappened).toBeTruthy();
-  });
-
-  test.skip('Wait when program will be paused', async () => {
-    const [id, blockHash] = await waitForPausedProgram(api, programId, expiredBN);
-    expect(id).toBe(programId);
-    expect(blockHash).toBeDefined();
-    _pausedBlockHash = blockHash;
   });
 
   test('Create program', async () => {
@@ -138,25 +121,9 @@ describe('New Program', () => {
   test('Not to throw error if gasLimit is correct', () => {
     expect(() => api.program.upload({ code: Uint8Array.from([0]), gasLimit: api.blockGasLimit })).not.toThrow();
   });
-
-  test.skip('Pay program rent', async () => {
-    const tx = await api.program.payRent(programId, 10_000);
-    const [result] = await sendTransaction(tx, alice, ['ProgramChanged']);
-    expect(result).toHaveProperty('id');
-    expect(result.id.toHex()).toBe(programId);
-    expect(result.change.isExpirationChanged).toBeTruthy();
-    expect(result.change.asExpirationChanged.expiration).toBeDefined();
-    expect(Number(result.change.asExpirationChanged.expiration.toNumber())).toBe(_expiration! + 10_000);
-  });
-
-  test.skip('Calculate pay rent', () => {
-    const costPerBlock = api.program.costPerBlock;
-    const pay = api.program.calcualtePayRent(10_000);
-    expect(pay.toString()).toBe(costPerBlock.muln(10_000).toString());
-  });
 });
 
-describe('Program', () => {
+describe('Program Storage', () => {
   test('Get all uploaded programs', async () => {
     expect(programId).toBeDefined();
     const programs = await api.program.allUploadedPrograms();
@@ -177,23 +144,6 @@ describe('Program', () => {
     expect(codeHash).toBe(codeId);
   });
 
-  test.skip('Get metahash by codeId', async () => {
-    expect(programId).toBeDefined();
-    expect(codeId).toBeDefined();
-    const codeMetaHash = await api.code.metaHash(codeId);
-    expect(codeMetaHash).toBe(metaHash!);
-  });
-
-  test.skip('Get metahash by wasm', async () => {
-    const codeMetaHash = await api.code.metaHashFromWasm(code);
-    expect(codeMetaHash).toBe(metaHash!);
-  });
-
-  test.skip('Get metahash by wasm if it is Uint8Array', async () => {
-    const codeMetaHash = await api.code.metaHashFromWasm(bufferToU8a(code));
-    expect(codeMetaHash).toBe(metaHash!);
-  });
-
   test('Get program storage', async () => {
     expect(programId).toBeDefined();
     const program = await api.programStorage.getProgram(programId);
@@ -206,58 +156,44 @@ describe('Program', () => {
     const pages = await api.programStorage.getProgramPages(programId, program);
     expect(Object.keys(pages)).toHaveLength(2);
   });
+});
 
-  // test.skip('Resume program', async () => {
-  //   expect(programId).toBeDefined();
-  //   expect(pausedBlockHash).toBeDefined();
+describe('Subscriptions', () => {
+  test('subscribe to program state changes', async () => {
+    const subResults: { blockHash: string; programIds: string[] }[] = [];
 
-  //   const parentBlock = (await api.blocks.get(pausedBlockHash)).block.header.parentHash.toHex();
+    const unsub = await api.program.subscribeToStateChanges(null, (blockHash, programIds) => {
+      subResults.push({ blockHash, programIds });
+    });
 
-  //   const program = await api.programStorage.getProgram(programId, parentBlock);
+    const { programId, extrinsic } = api.program.create({
+      codeId,
+      gasLimit: api.blockGasLimit,
+      initPayload: [4, 5, 6],
+    });
 
-  //   const initTx = api.program.resumeSession.init({
-  //     programId,
-  //     allocations: program.allocations,
-  //     codeHash: program.codeHash.toHex(),
-  //   });
+    const blockHash = await new Promise((resolve, reject) =>
+      extrinsic.signAndSend(alice, ({ status, events }) => {
+        if (status.isInBlock) {
+          const success = events.find(({ event: { method } }) => method === 'ExtrinsicSuccess');
 
-  //   const [txData] = await sendTransaction(initTx, alice, ['ProgramResumeSessionStarted']);
+          if (success) {
+            resolve(status.asInBlock.toHex());
+          } else {
+            const failed = events.find(({ event: { method } }) => method === 'ExtrinsicFailed');
+            if (failed) {
+              reject(api.getExtrinsicFailedError(failed.event));
+            }
+          }
+        }
+      }),
+    );
 
-  //   expect(txData.sessionId).toBeDefined();
-  //   expect(txData.accountId).toBeDefined();
-  //   expect(txData.accountId.toHex()).toBe(decodeAddress(alice.address));
-  //   expect(txData.programId).toBeDefined();
-  //   expect(txData.programId.toHex()).toBe(programId);
-  //   expect(txData.sessionEndBlock).toBeDefined();
+    expect(subResults).toHaveLength(1);
 
-  //   const sessionId = txData.sessionId.toNumber();
+    expect(subResults[0].blockHash).toBe(blockHash);
+    expect(subResults[0].programIds[0]).toBe(programId);
 
-  //   const pages = await api.programStorage.getProgramPages(programId, program, parentBlock);
-
-  //   const memoryPages = Object.entries(pages);
-
-  //   const txs: any = [];
-
-  //   for (const memPage of memoryPages) {
-  //     txs.push(api.program.resumeSession.push({ sessionId, memoryPages: [memPage] }));
-  //   }
-
-  //   await new Promise((resolve) =>
-  //     api.tx.utility.batchAll(txs).signAndSend(alice, ({ events }) => {
-  //       events.forEach(({ event: { method } }) => {
-  //         if (method === 'BatchCompleted') {
-  //           resolve(true);
-  //         }
-  //       });
-  //     }),
-  //   );
-
-  //   await new Promise((resolve) =>
-  //     api.program.resumeSession.commit({ sessionId, blockCount: 20_000 }).signAndSend(alice, ({ status }) => {
-  //       if (status.isFinalized) {
-  //         resolve(true);
-  //       }
-  //     }),
-  //   );
-  // });
+    unsub();
+  });
 });
