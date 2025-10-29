@@ -4,7 +4,7 @@ import { TypeRegistry } from '@polkadot/types';
 import { readFileSync } from 'fs';
 
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
-import { decodeAddress, ReplyCode } from '../src/utils';
+import { decodeAddress } from '../src/utils';
 import { MESSAGE_TEST_CODE } from './config';
 import { PayloadFilter } from '../src';
 import { getApi } from './common';
@@ -114,7 +114,7 @@ describe('Message Transactions', () => {
       keepAlive: true,
     });
 
-    const [msg] = await sendTransaction(tx, alice, ['MessageQueued']);
+    await sendTransaction(tx, alice, ['MessageQueued']);
 
     await sleep(1000);
 
