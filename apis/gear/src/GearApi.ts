@@ -216,7 +216,7 @@ export class GearApi extends ApiPromise {
 
   public get rpcMethods(): string[] {
     if (!this._rpcMethods) {
-      throw new Error('RPC methods not initialized');
+      throw new Error('RPC methods not available. Ensure API is ready by awaiting api.isReady before accessing rpcMethods.');
     }
     return this._rpcMethods;
   }
