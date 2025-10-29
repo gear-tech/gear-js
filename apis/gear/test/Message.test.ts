@@ -115,7 +115,6 @@ describe('Message Transactions', () => {
     });
 
     const [msg] = await sendTransaction(tx, alice, ['MessageQueued']);
-    const msgId = msg.id.toHex() as HexString;
 
     await sleep(1000);
 
