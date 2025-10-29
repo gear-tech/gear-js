@@ -10,4 +10,4 @@ resolver = "3"
 members = ["programs/counter", "programs/counter-idl"]
 
 [workspace.dependencies]
-sails-rs = "0.9.1"
+sails-rs = "0.9.2"

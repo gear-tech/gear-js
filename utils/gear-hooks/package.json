@@ -31,26 +31,26 @@
     "sails-js": "^0.5.0"
   },
   "dependencies": {
-    "@polkadot/extension-inject": "0.62.1",
-    "@polkadot/util": "13.5.6",
+    "@polkadot/extension-inject": "0.62.2",
+    "@polkadot/util": "13.5.7",
     "@substrate/connect": "2.1.8",
     "bignumber.js": "9.3.1",
     "nanoid": "5.1.6",
     "react-transition-group": "4.4.5",
-    "sails-js-parser": "0.5.0"
+    "sails-js-parser": "0.5.1"
   },
   "devDependencies": {
     "@gear-js/api": "0.44.2",
     "@gear-js/frontend-configs": "*",
-    "@polkadot/api": "16.4.8",
-    "@polkadot/api-derive": "16.4.8",
-    "@polkadot/types": "16.4.8",
+    "@polkadot/api": "16.4.9",
+    "@polkadot/api-derive": "16.4.9",
+    "@polkadot/types": "16.4.9",
     "@tanstack/react-query": "5.90.2",
     "bignumber.js": "9.3.1",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-transition-group": "4.4.5",
-    "sails-js": "0.5.0"
+    "sails-js": "0.5.1"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

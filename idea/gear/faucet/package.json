@@ -14,7 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@gear-js/api": "0.44.2",
-    "@polkadot/api": "16.4.8",
+    "@polkadot/api": "16.4.9",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.2",
     "cron": "4.3.3",
@@ -35,7 +35,7 @@
     "yamljs": "0.3.0"
   },
   "devDependencies": {
-    "@types/express": "5.0.3",
+    "@types/express": "5.0.4",
     "@types/supertest": "^6.0.2",
     "@types/xxhashjs": "^0",
     "supertest": "^7.0.0"

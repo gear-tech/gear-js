@@ -116,7 +116,7 @@ jobs:
     needs:
       [
         set-env-tag,
-        build-gear-exe-connect-image
+        build-gearexe-frontend-image
       ]
     runs-on: ubuntu-latest
 
