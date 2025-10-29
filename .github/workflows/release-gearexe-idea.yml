@@ -1,10 +1,6 @@
 name: 'Gear.Exe Idea Release'
 
 on:
-  push:
-    branches: ['main', 'stable']
-    paths:
-      - idea/gearexe/frontend/package.json
   workflow_dispatch:
 
 concurrency:
