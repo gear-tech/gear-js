@@ -1,7 +1,7 @@
 import { getApi } from './common';
 import { sleep } from './utilsFunctions';
 
-const api = getApi();
+const api = getApi(false);
 
 beforeAll(async () => {
   try {
