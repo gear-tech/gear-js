@@ -59,7 +59,7 @@ export const GEAR_TYPES: RegistryTypes = {
   },
   UserMsgFilter: {
     source: 'Option<H256>',
-    dest: 'Option<H256>',
+    destination: 'Option<H256>',
     payload_filters: 'Vec<PayloadFilter>',
     from_block: 'Option<u64>',
     finalized_only: 'Option<bool>',

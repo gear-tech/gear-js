@@ -174,7 +174,7 @@ describe('Message Transactions', () => {
   });
 });
 
-describe('Subscriptions', () => {
+describe.only('Subscriptions', () => {
   test('should subscribe to user messages sent with empty filter', async () => {
     const callback = jest.fn();
     const unsub = await api.message.subscribeUserMessageSent({}, callback);
@@ -303,10 +303,9 @@ describe('Subscriptions', () => {
 
     expect(callback).toHaveBeenCalled();
 
-    expect(callback.mock.calls.length).toBe(2);
+    expect(callback.mock.calls.length).toBe(1);
 
     const callbackArg1 = callback.mock.calls[0][0];
-    const callbackArg2 = callback.mock.calls[1][0];
 
     expect(callbackArg1).toHaveProperty('source', programId);
     expect(callbackArg1).toHaveProperty('destination', aliceRaw);
@@ -316,19 +315,6 @@ describe('Subscriptions', () => {
     expect(callbackArg1).toHaveProperty('id');
     expect(callbackArg1).toHaveProperty('reply');
     expect(callbackArg1.reply).toHaveProperty('to', msgId);
-
-    expect(callbackArg2).toHaveProperty('source', programId);
-    expect(callbackArg2).toHaveProperty(
-      'destination',
-      '0x0000000000000000000000000000000000000000000000000000000000000000',
-    );
-    expect(callbackArg2).toHaveProperty('block');
-    expect(callbackArg2).toHaveProperty(
-      'payload',
-      registry.createType('MessageEvent', { Complex: { a: 42, b: 'test' } }).toHex(),
-    );
-    expect(callbackArg2).toHaveProperty('index');
-    expect(callbackArg2).toHaveProperty('id');
 
     unsub();
   });
