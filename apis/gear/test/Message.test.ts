@@ -174,7 +174,7 @@ describe('Message Transactions', () => {
   });
 });
 
-describe.only('Subscriptions', () => {
+describe('Subscriptions', () => {
   test('should subscribe to user messages sent with empty filter', async () => {
     const callback = jest.fn();
     const unsub = await api.message.subscribeUserMessageSent({}, callback);
@@ -486,7 +486,7 @@ describe.only('Subscriptions', () => {
     const callback2 = jest.fn();
 
     const unsub1 = await api.message.subscribeUserMessageSent({}, callback1);
-    const unsub2 = await api.message.subscribeUserMessageSent({ destination: programId }, callback2);
+    const unsub2 = await api.message.subscribeUserMessageSent({ source: programId }, callback2);
 
     const tx = api.message.send({
       destination: programId,
