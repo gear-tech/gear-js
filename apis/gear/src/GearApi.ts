@@ -8,7 +8,6 @@ import {
   GearBalance,
   GearBlock,
   GearBuiltin,
-  GearClaimValue,
   GearCode,
   GearEthBridge,
   GearMailbox,
@@ -38,7 +37,6 @@ export class GearApi extends ApiPromise {
   public readonly gearEvents: GearEvents;
   public readonly blocks: GearBlock;
   public readonly mailbox: GearMailbox;
-  public readonly claimValueFromMailbox: GearClaimValue;
   public readonly code: GearCode;
   public readonly waitlist: GearWaitlist;
   public readonly voucher: GearVoucher;
@@ -100,7 +98,6 @@ export class GearApi extends ApiPromise {
     this.programState = new GearProgramState(this);
     this.blocks = new GearBlock(this);
     this.programStorage = new GearProgramStorage(this);
-    this.claimValueFromMailbox = new GearClaimValue(this);
     this.mailbox = new GearMailbox(this);
     this.code = new GearCode(this);
     this.waitlist = new GearWaitlist(this);
@@ -216,7 +213,9 @@ export class GearApi extends ApiPromise {
 
   public get rpcMethods(): string[] {
     if (!this._rpcMethods) {
-      throw new Error('RPC methods not available. Ensure API is ready by awaiting api.isReady before accessing rpcMethods.');
+      throw new Error(
+        'RPC methods not available. Ensure API is ready by awaiting api.isReady before accessing rpcMethods.',
+      );
     }
     return this._rpcMethods;
   }

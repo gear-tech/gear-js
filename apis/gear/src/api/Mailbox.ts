@@ -2,16 +2,12 @@ import { AccountId32 } from '@polkadot/types/interfaces';
 import { Option } from '@polkadot/types';
 
 import { MailboxItem, HexString } from '../types';
-import { GearClaimValue } from './Claim';
-import { GearApi } from '../GearApi';
+import { GearTransaction } from './Transaction';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { ISubmittableResult } from '@polkadot/types/types';
+import { ClaimValueError } from 'errors';
 
-export class GearMailbox {
-  public claimValue: GearClaimValue;
-
-  constructor(private api: GearApi) {
-    this.claimValue = api.claimValueFromMailbox;
-  }
-
+export class GearMailbox extends GearTransaction {
   /**
    * ## Read mailbox connected with account
    * @param accountId
@@ -51,26 +47,39 @@ export class GearMailbox {
         ? [messageIdOrNumberOfMessages, undefined]
         : [undefined, messageIdOrNumberOfMessages || 1000];
     if (messageId) {
-      const mailbox = await this.api.query.gearMessenger.mailbox(accountId, messageId);
-      const typedMailbox = this.api.createType(
+      const mailbox = await this._api.query.gearMessenger.mailbox(accountId, messageId);
+      const typedMailbox = this._api.createType(
         'Option<(UserStoredMessage, GearCommonStoragePrimitivesInterval)>',
         mailbox,
       ) as Option<MailboxItem>;
       return typedMailbox.unwrapOr(null);
     } else {
-      const keyPrefixes = this.api.query.gearMessenger.mailbox.keyPrefix(accountId);
-      const keysPaged = await this.api.rpc.state.getKeysPaged(keyPrefixes, numberOfMessages, keyPrefixes);
+      const keyPrefixes = this._api.query.gearMessenger.mailbox.keyPrefix(accountId);
+      const keysPaged = await this._api.rpc.state.getKeysPaged(keyPrefixes, numberOfMessages, keyPrefixes);
       if (keysPaged.length === 0) {
         return [];
       }
-      const mailbox = (await this.api.rpc.state.queryStorageAt(keysPaged)) as Option<MailboxItem>[];
+      const mailbox = (await this._api.rpc.state.queryStorageAt(keysPaged)) as Option<MailboxItem>[];
       return mailbox.map((item) => {
-        const typedItem = this.api.createType(
+        const typedItem = this._api.createType(
           'Option<(UserStoredMessage, GearCommonStoragePrimitivesInterval)>',
           item,
         ) as Option<MailboxItem>;
         return typedItem.unwrapOr(null);
       });
+    }
+  }
+
+  /**
+   * ## Create `claimValue` extrinsic
+   * @param messageId MessageId with value to be claimed
+   */
+  claimValue(messageId: HexString): SubmittableExtrinsic<'promise', ISubmittableResult> {
+    try {
+      this.extrinsic = this._api.tx.gear.claimValue(messageId);
+      return this.extrinsic;
+    } catch (_) {
+      throw new ClaimValueError();
     }
   }
 }

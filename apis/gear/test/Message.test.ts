@@ -139,7 +139,7 @@ describe('Message Transactions', () => {
     expect(messageInMailbox).toHaveProperty('payload');
     expect(messageInMailbox).toHaveProperty('value');
 
-    const claimTx = api.mailbox.claimValue.submit(messageInMailbox.id);
+    const claimTx = api.mailbox.claimValue(messageInMailbox.id);
     const [userMessageReadEvent] = await sendTransaction(claimTx, alice, ['UserMessageRead']);
     expect(userMessageReadEvent.id.toHex()).toBe(messageInMailbox.id);
 
