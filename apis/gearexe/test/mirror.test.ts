@@ -48,7 +48,7 @@ describe('Create program', () => {
 
     // TODO: replace with waitForBlock once it's implemented in ethers.js
     // wallet.provider.waitForBlock();
-    await waitNBlocks(1);
+    await waitNBlocks(10);
     const mirrorRouter = (await mirror.router()).toLowerCase();
 
     expect(mirrorRouter).toBe(routerId);
@@ -93,7 +93,7 @@ describe('Send messages', () => {
   test('send init message', async () => {
     const payload = sails.ctors.CreatePrg.encodePayload();
 
-    const tx = await mirror.sendMessage(payload, 0n);
+    const tx = await mirror.sendMessage(payload);
 
     await tx.send();
 
@@ -117,7 +117,7 @@ describe('Send messages', () => {
   test('send message (increment)', async () => {
     const _payload = sails.services.Counter.functions.Increment.encodePayload();
 
-    const tx = await mirror.sendMessage(_payload, 0);
+    const tx = await mirror.sendMessage(_payload);
 
     await tx.send();
 
