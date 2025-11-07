@@ -1,7 +1,4 @@
-import { SailsIdlParser } from 'sails-js-parser';
-import { Sails } from 'sails-js';
 import { ethers } from 'ethers';
-import * as fs from 'fs';
 import { GearExeApi, getMirrorContract, getRouterContract, getWrappedVaraContract, HttpGearexeProvider } from '../src';
 import { ethWsProvider, hasProps, waitNBlocks } from './common';
 import { config } from './config';
@@ -18,14 +15,7 @@ let mirror: ReturnType<typeof getMirrorContract>;
 
 let wvara: ReturnType<typeof getWrappedVaraContract>;
 
-const parser = new SailsIdlParser();
-const sails = new Sails(parser);
-const idl = fs.readFileSync('programs/counter-idl/counter.idl', 'utf-8');
-
 beforeAll(async () => {
-  await parser.init();
-  sails.parseIdl(idl);
-
   const wvaraAddr = await router.wrappedVara();
   wvara = getWrappedVaraContract(wvaraAddr, wallet);
 });
@@ -48,7 +38,7 @@ describe('Create program', () => {
 
     // TODO: replace with waitForBlock once it's implemented in ethers.js
     // wallet.provider.waitForBlock();
-    await waitNBlocks(10);
+    await waitNBlocks(5);
     const mirrorRouter = (await mirror.router()).toLowerCase();
 
     expect(mirrorRouter).toBe(routerId);
@@ -91,7 +81,7 @@ describe('Create program', () => {
 
 describe('Send messages', () => {
   test('send init message', async () => {
-    const payload = sails.ctors.CreatePrg.encodePayload();
+    const payload = '0x24437265617465507267';
 
     const tx = await mirror.sendMessage(payload);
 
@@ -115,7 +105,7 @@ describe('Send messages', () => {
   });
 
   test('send message (increment)', async () => {
-    const _payload = sails.services.Counter.functions.Increment.encodePayload();
+    const _payload = '0x1c436f756e74657224496e6372656d656e74';
 
     const tx = await mirror.sendMessage(_payload);
 
@@ -129,8 +119,7 @@ describe('Send messages', () => {
 
     const { payload, replyCode, value } = await waitForReply;
 
-    const result = sails.services.Counter.functions.Increment.decodeResult(payload);
-    expect(result).toEqual(1);
+    expect(payload).toEqual('0x1c436f756e74657224496e6372656d656e7401000000');
     expect(replyCode).toBe('0x00010000');
     expect(value).toBe(0n);
 
@@ -149,11 +138,11 @@ describe('Program state', () => {
   });
 
   test('calculateReplyForHandle call', async () => {
-    const payload = sails.services.Counter.queries.GetValue.encodePayload();
+    const payload = '0x1c436f756e7465722047657456616c7565';
 
     const reply = await api.call.program.calculateReplyForHandle(sourceId, programId, payload);
 
-    expect(sails.services.Counter.queries.GetValue.decodeResult(reply.payload)).toBe(1);
+    expect(reply.payload).toBe('0x1c436f756e7465722047657456616c756501000000');
   });
 
   test('calculateReplyForHandle call failed on incorect program id', async () => {

@@ -122,6 +122,7 @@ path_to_gear_repo=
 log_info "Checking if path to gear repo is provided..."
 if [[ -n "$PATH_TO_GEAR_REPO" ]]; then
     path_to_gear_repo=$PATH_TO_GEAR_REPO
+    log_info "Gear repo found in $path_to_gear_repo"
 else
     if [[ -z $GEAR_BRANCH ]]; then
         GEAR_BRANCH=master
