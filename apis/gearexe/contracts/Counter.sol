@@ -2,23 +2,23 @@
 pragma solidity ^0.8.28;
 
 interface ICounter {
-    function createPrg(uint128 _value, bool _encodeReply) external returns (bytes32 messageId);
+    function createPrg(uint128 _value, bool _callReply) external returns (bytes32 messageId);
 
-    function counterDecrement(uint128 _value, bool _encodeReply) external returns (bytes32 messageId);
+    function counterDecrement(uint128 _value, bool _callReply) external returns (bytes32 messageId);
 
-    function counterIncrement(uint128 _value, bool _encodeReply) external returns (bytes32 messageId);
+    function counterIncrement(uint128 _value, bool _callReply) external returns (bytes32 messageId);
 
-    function counterGetValue(uint128 _value, bool _encodeReply) external returns (bytes32 messageId);
+    function counterGetValue(uint128 _value, bool _callReply) external returns (bytes32 messageId);
 }
 
 contract CounterAbi is ICounter {
-    function createPrg(uint128 _value, bool _encodeReply) external returns (bytes32 messageId) {}
+    function createPrg(uint128 _value, bool _callReply) external returns (bytes32 messageId) {}
 
-    function counterDecrement(uint128 _value, bool _encodeReply) external returns (bytes32 messageId) {}
+    function counterDecrement(uint128 _value, bool _callReply) external returns (bytes32 messageId) {}
 
-    function counterIncrement(uint128 _value, bool _encodeReply) external returns (bytes32 messageId) {}
+    function counterIncrement(uint128 _value, bool _callReply) external returns (bytes32 messageId) {}
 
-    function counterGetValue(uint128 _value, bool _encodeReply) external returns (bytes32 messageId) {}
+    function counterGetValue(uint128 _value, bool _callReply) external returns (bytes32 messageId) {}
 }
 
 interface ICounterCallbacks {

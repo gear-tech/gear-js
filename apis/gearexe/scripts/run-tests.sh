@@ -5,6 +5,7 @@ LOGS_DIR=/tmp/gearexe-js/logs
 PROJECT_DIR=$(pwd)
 cd ../../
 ROOT_DIR=$(pwd)
+TEST_FAILED=0
 
 mkdir -p $LOGS_DIR
 
@@ -79,16 +80,17 @@ run_tests() {
     echo "--------------------------------------------------------"
 
     if [ $test_result -ne 0 ]; then
+        TEST_FAILED=1
         log_error "Tests failed with exit code: $test_result"
-        exit $test_result
+        return $test_result
     else
+        TEST_FAILED=0
         log_success "All tests passed successfully"
+        return 0
     fi
 }
 
 cleanup() {
-    exit_code="$?"
-    log_info "Script exited with code $exit_code"
     log_info "Performing cleanup..."
 
     if [[ -n "$ENV_PID" ]]; then
@@ -97,8 +99,8 @@ cleanup() {
         log_info "Gear.Exe environment stopped"
     fi
 
-    # Print logs if exit code is not 0
-    if [ $exit_code -ne 0 ]; then
+    # Print logs if tests failed
+    if [ $TEST_FAILED -ne 0 ]; then
         log_error "Test execution failed. Log files preserved for debugging:"
         echo "    - Router deployment logs: $LOGS_DIR/deploy_contracts.log"
         echo "    - Reth node logs: $LOGS_DIR/reth.log"
@@ -106,7 +108,9 @@ cleanup() {
 
         # Print the last few lines of error logs to help with debugging
         log_info "Last 50 lines of gearexe logs:"
-        tail -n 50 $LOGS_DIR/gearexe.log
+        echo "====================================================="
+        tail -n 50 $LOGS_DIR/gearexe.log 2>/dev/null || echo "Log file not found"
+        echo "====================================================="
     else
         log_success "Tests completed successfully. Removing logs..."
         rm -rf $LOGS_DIR
@@ -128,3 +132,7 @@ setup_environment
 source "$PROJECT_DIR/scripts/test.env"
 compile_contracts
 run_tests
+exit_code=$?
+if [ $exit_code -ne 0 ]; then
+    exit $exit_code
+fi

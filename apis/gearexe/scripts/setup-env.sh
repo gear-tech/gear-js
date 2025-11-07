@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-RETH_VERSION="1.7.0"
+RETH_VERSION="1.9.0"
 RETH_BIN_DIR=/tmp/gearexe-js/reth/bin
 ETH_DIR=/tmp/gearexe-js/eth
 GEAREXE_DIR=/tmp/gearexe-js/gearexe
@@ -105,7 +105,7 @@ cleanup() {
     fi
 
     log_info "Removing temporary files..."
-    rm -rf $GEAREXE_DIR
+    # rm -rf $GEAREXE_DIR
     rm -rf $ETH_DIR
     rm -f /tmp/gearexe-js/environment-ready
     log_success "Cleanup completed"
@@ -122,6 +122,7 @@ path_to_gear_repo=
 log_info "Checking if path to gear repo is provided..."
 if [[ -n "$PATH_TO_GEAR_REPO" ]]; then
     path_to_gear_repo=$PATH_TO_GEAR_REPO
+    log_info "Gear repo found in $path_to_gear_repo"
 else
     if [[ -z $GEAR_BRANCH ]]; then
         GEAR_BRANCH=master
@@ -366,7 +367,7 @@ if [ $? -ne 0 ]; then
 fi
 log_success "Validator key successfully configured: $validator_pubkey"
 log_info "Inserting network key..."
-inserted_network=$(./target/release/ethexe key -k $GEAREXE_DIR/keys insert $PRIVATE_KEY)
+inserted_network=$(./target/release/ethexe key -k $GEAREXE_DIR/net insert $PRIVATE_KEY)
 echo $inserted_network
 network_pubkey=$(echo $inserted_network | grep -o "Public key: 0x[0-9a-fA-F]\+" | awk '{print $3}' | sed 's/^0x//')
 echo $network_pubkey
@@ -415,7 +416,9 @@ log_success "Gearexe node started with PID: $GEAREXE_PID"
   if [[ $exit_code -ne 0 ]]; then
     log_error "Gearexe exited unexpectedly with code $exit_code"
     log_error "Last 20 lines of gearexe logs:"
+    echo "====================================================="
     tail -n 20 $LOGS_DIR/gearexe.log
+    echo "====================================================="
     kill $$
   fi
 ) &
