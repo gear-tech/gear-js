@@ -6,16 +6,17 @@ export const IROUTER_ABI = [
   'function areValidators(address[] validators) view returns (bool)',
   'function codeState(bytes32 codeId) view returns (uint8)',
   'function codesStates(bytes32[] codesIds) view returns (uint8[])',
-  'function commitBatch(((bytes32 id, uint48 timestamp, bool valid)[] codeCommitments, (bytes32 hash, uint48 timestamp, bytes32 previousCommittedBlock, bytes32 predecessorBlock, (address actorId, bytes32 newStateHash, bool exited, address inheritor, uint128 valueToReceive, (bytes32 messageId, address destination, uint128 value)[] valueClaims, (bytes32 id, address destination, bytes payload, uint128 value, (bytes32 to, bytes4 code) replyDetails, bool call)[] messages)[] transitions)[] blockCommitments, ((uint256 amount, bytes32 root) operators, ((address vault, uint256 amount)[] distribution, uint256 totalAmount, address token) stakers, uint48 timestamp)[] rewardCommitments) batchCommitment, uint8 signatureType, bytes[] signatures)',
-  'function commitValidators(((uint256 x, uint256 y) aggregatedPublicKey, bytes verifiableSecretSharingCommitment, address[] validators, uint256 eraIndex) validatorsCommitment, uint8 signatureType, bytes[] signatures)',
+  'function commitBatch((bytes32 blockHash, uint48 blockTimestamp, bytes32 previousCommittedBatchHash, ((address actorId, bytes32 newStateHash, bool exited, address inheritor, uint128 valueToReceive, (bytes32 messageId, address destination, uint128 value)[] valueClaims, (bytes32 id, address destination, bytes payload, uint128 value, (bytes32 to, bytes4 code) replyDetails, bool call)[] messages)[] transitions, bytes32 head)[] chainCommitment, (bytes32 id, bool valid)[] codeCommitments, ((uint256 amount, bytes32 root) operators, ((address vault, uint256 amount)[] distribution, uint256 totalAmount, address token) stakers, uint48 timestamp)[] rewardsCommitment, ((uint256 x, uint256 y) aggregatedPublicKey, bytes verifiableSecretSharingCommitment, address[] validators, uint256 eraIndex)[] validatorsCommitment) batchCommitment, uint8 signatureType, bytes[] signatures)',
   'function computeSettings() view returns ((uint64 threshold, uint128 wvaraPerSecond))',
   'function createProgram(bytes32 codeId, bytes32 salt, address overrideInitializer) returns (address)',
   'function createProgramWithAbiInterface(bytes32 codeId, bytes32 salt, address overrideInitializer, address abiInterface) returns (address)',
   'function genesisBlockHash() view returns (bytes32)',
   'function genesisTimestamp() view returns (uint48)',
   'function isValidator(address validator) view returns (bool)',
-  'function latestCommittedBlockHash() view returns (bytes32)',
+  'function latestCommittedBatchHash() view returns (bytes32)',
+  'function latestCommittedBatchTimestamp() view returns (uint48)',
   'function lookupGenesisHash()',
+  'function middleware() view returns (address)',
   'function mirrorImpl() view returns (address)',
   'function programCodeId(address programId) view returns (bytes32)',
   'function programsCodeIds(address[] programsIds) view returns (bytes32[])',
@@ -23,6 +24,7 @@ export const IROUTER_ABI = [
   'function requestCodeValidation(bytes32 codeId)',
   'function setMirror(address newMirror)',
   'function signingThresholdPercentage() view returns (uint16)',
+  'function timelines() view returns ((uint256 era, uint256 election, uint256 validationDelay))',
   'function validatedCodesCount() view returns (uint256)',
   'function validators() view returns (address[])',
   'function validatorsAggregatedPublicKey() view returns ((uint256 x, uint256 y))',
@@ -30,15 +32,14 @@ export const IROUTER_ABI = [
   'function validatorsThreshold() view returns (uint256)',
   'function validatorsVerifiableSecretSharingCommitment() view returns (bytes)',
   'function wrappedVara() view returns (address)',
-  'event BlockCommitted(bytes32 hash)',
+  'event AnnouncesCommitted(bytes32 head)',
+  'event BatchCommitted(bytes32 hash)',
   'event CodeGotValidated(bytes32 codeId, bool indexed valid)',
   'event CodeValidationRequested(bytes32 codeId)',
   'event ComputationSettingsChanged(uint64 threshold, uint128 wvaraPerSecond)',
-  'event NextEraValidatorsCommitted(uint256 startTimestamp)',
   'event ProgramCreated(address actorId, bytes32 indexed codeId)',
   'event StorageSlotChanged()',
-  'error CodeIsNotValidated()',
-  'error RouterGenesisHashIsZero()',
+  'event ValidatorsCommittedForEra(uint256 eraIndex)',
 ];
 
 export const IROUTER_INTERFACE = new ethers.Interface(IROUTER_ABI);
@@ -88,11 +89,6 @@ export interface IRouterContract {
    * @returns Promise resolving to true if the address is a validator
    */
   isValidator(validator: string): Promise<boolean>;
-  /**
-   * Gets the hash of the latest committed block
-   * @returns Promise resolving to the latest committed block hash
-   */
-  latestCommittedBlockHash(): Promise<string>;
   /**
    * Gets the mirror implementation address
    * @returns Promise resolving to the mirror implementation address
