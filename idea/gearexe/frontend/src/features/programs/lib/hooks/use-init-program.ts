@@ -26,7 +26,7 @@ const useInitProgram = (programId: HexString) => {
 
     if (!payload) return;
 
-    const { waitForReply } = await mirrorContract.sendMessage(payload, 0n);
+    const { waitForReply } = await mirrorContract.sendMessage(payload);
 
     await waitForReply;
 

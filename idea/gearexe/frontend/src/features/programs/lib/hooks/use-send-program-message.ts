@@ -28,8 +28,7 @@ const useSendProgramMessage = (programId: HexString) => {
     const sailsMessage = sails?.services[serviceName][messageKey][messageName];
     const _payload = sailsMessage.encodePayload(...args);
 
-    const value = 0n;
-    const tx = await mirrorContract.sendMessage(_payload, value);
+    const tx = await mirrorContract.sendMessage(_payload);
     const response = await tx.send();
     const params = args.map((_value, index) => {
       const key = sailsMessage.args[index].name;
@@ -45,7 +44,6 @@ const useSendProgramMessage = (programId: HexString) => {
       to: programId,
       hash: response.hash,
       params: { payload: `${messageName} (${params.join(', ')})` },
-      value: String(value),
     });
 
     const { waitForReply } = await tx.setupReplyListener();
