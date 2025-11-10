@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import { config } from 'dotenv';
-import { generateCodeHash } from '@gear-js/api';
+import { generateCodeHash } from 'gear-js-util';
 
 config();
 
