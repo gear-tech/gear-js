@@ -44,7 +44,7 @@ export class ViemAdapter implements ISigner {
       // Viem expects message in specific format
       // For strings, pass directly
       // For Uint8Array, wrap in { raw: ... } object
-      const messageArg = typeof message === 'string' ? message : ({ raw: message } as any);
+      const messageArg = typeof message === 'string' ? message : { raw: message };
 
       const signature = await this.client.signMessage({
         message: messageArg,

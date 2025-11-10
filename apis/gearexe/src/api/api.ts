@@ -41,6 +41,11 @@ export class GearExeApi {
   }
 
   sendInjectedTransaction(tx: InjectedTransaction, signer?: ISigner) {
+    if (!this._ethProvider) {
+      // TODO: consider checking tx.referenceBlock
+      // for now there is no necessity in provider if it's set
+      throw new Error('Eth provider is not set');
+    }
     const injectedTx = new Injected(this.provider, this._ethProvider, tx, this._signer || signer);
 
     return injectedTx;

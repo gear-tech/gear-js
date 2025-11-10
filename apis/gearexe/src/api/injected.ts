@@ -25,6 +25,10 @@ export class Injected {
   }
 
   public async send() {
+    if (!this._signer) {
+      throw new Error('Signer is required to send transaction');
+    }
+
     if (!this.tx.referenceBlock) {
       await this.setReferenceBlock();
     }

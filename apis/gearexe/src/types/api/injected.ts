@@ -30,9 +30,7 @@ export class InjectedTransaction {
     if (tx.referenceBlock) {
       this._referenceBlock = tx.referenceBlock;
     }
-    if (tx.salt) {
-      this._salt = hexToBytes(tx.salt);
-    }
+    this._salt = tx.salt ? hexToBytes(tx.salt) : randomBytes(32);
     if (tx.recipient) {
       this._recipient = tx.recipient;
     }
@@ -73,6 +71,11 @@ export class InjectedTransaction {
   }
 
   public get recipientU8a(): Uint8Array {
+    if (!this.recipient) {
+      // TODO: probably it should be a part of the Injected Transaction.
+      // figure it out when https://github.com/gear-tech/gear/pull/4938 is ready
+      throw new Error('Recipient is not defined');
+    }
     return this._recipient ? hexToBytes(this._recipient) : new Uint8Array(20).fill(0);
   }
 
@@ -93,13 +96,13 @@ export class InjectedTransaction {
   }
 
   public get referenceBlockU8a(): Uint8Array {
-    return this._referenceBlock ? hexToBytes(this._referenceBlock) : new Uint8Array(32).fill(0);
+    if (!this._referenceBlock) {
+      throw new Error('Reference block is not defined');
+    }
+    return hexToBytes(this._referenceBlock);
   }
 
   public get salt(): Uint8Array {
-    if (!this._salt) {
-      this._salt = randomBytes(32);
-    }
     return this._salt;
   }
 
@@ -115,6 +118,7 @@ export class InjectedTransaction {
 
     const hash = keccak256(bytes);
 
+    // TODO: consider caching the result if necessary
     return bytesToHex(hash);
   }
 
