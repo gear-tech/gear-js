@@ -15880,9 +15880,9 @@ __metadata:
   linkType: hard
 
 "hono@npm:^4.9.6":
-  version: 4.10.2
-  resolution: "hono@npm:4.10.2"
-  checksum: 10c0/783ec7f879c8a0a389b65a92e43e15a3d60e9e67da749b88a84e763d4625c22493461d4c2c6c40068c554e27abfcf94db06a861ce94f871dd7ada2c751ad7a3b
+  version: 4.10.3
+  resolution: "hono@npm:4.10.3"
+  checksum: 10c0/bdcc4c7066c74ba7cfa63ed6550768a0f43a420286c8f8f74b7012ea4901b8b06778fa8e98264b46f1a86920f056b7ede1f07814da4934912f9945def4977c29
   languageName: node
   linkType: hard
 
@@ -24474,9 +24474,9 @@ __metadata:
   linkType: hard
 
 "validator@npm:^13.9.0":
-  version: 13.15.15
-  resolution: "validator@npm:13.15.15"
-  checksum: 10c0/f5349d1fbb9cc36f9f6c5dab1880764ddad1d0d2b084e2a71e5964f7de1635d20e406611559df9a3db24828ce775cbee5e3b6dd52f0d555a61939ed7ea5990bd
+  version: 13.15.20
+  resolution: "validator@npm:13.15.20"
+  checksum: 10c0/65453f0c91ef154ae2da4d5ff3c22acff239d2c15216335ba83895b6f79914708709c641119aa9fba0ec9dd69229c1cf8196aff0081584bdda8a7f50ea97b789
   languageName: node
   linkType: hard
 

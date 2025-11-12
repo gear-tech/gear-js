@@ -70,10 +70,10 @@ export class MirrorContract extends BaseContract implements IMirrorContract {
    * @param value - The value to send with the message (in wei)
    * @returns A transaction manager with message-specific helper functions
    */
-  async sendMessage(payload: string, value: bigint | number): Promise<TxManagerWithHelpers<MessageHelpers>> {
+  async sendMessage(payload: string): Promise<TxManagerWithHelpers<MessageHelpers>> {
     const fn = this.getFunction('sendMessage');
     // Set `callReply` to false since it's only used for calling sendMessage from contracts
-    const tx = await fn.populateTransaction(payload, value, false);
+    const tx = await fn.populateTransaction(payload, false);
 
     const txManager: ITxManager = new TxManager(this._wallet, tx, IMIRROR_INTERFACE, {
       getMessage: (manager) => async () => {
@@ -114,9 +114,9 @@ export class MirrorContract extends BaseContract implements IMirrorContract {
    * @param value - The value to send with the reply (in wei)
    * @returns A transaction manager with reply-specific helper functions
    */
-  async sendReply(payload: string, value: bigint): Promise<TxManagerWithHelpers<ReplyHelpers>> {
+  async sendReply(repliedTo: string, payload: string): Promise<TxManagerWithHelpers<ReplyHelpers>> {
     const fn = this.getFunction('sendReply');
-    const tx = await fn.populateTransaction(payload, value);
+    const tx = await fn.populateTransaction(repliedTo, payload);
 
     const txManager: ITxManager = new TxManager(this._wallet, tx, IMIRROR_INTERFACE, {
       getEvent: (manager) => async () => {
