@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { GearApi, BaseGearProgram, HexString, decodeAddress } from '@gear-js/api';
 import { TypeRegistry } from '@polkadot/types';
 import {
@@ -85,6 +86,7 @@ export class SailsProgram {
   }
 
   newCtorFromCode(code: Uint8Array | Buffer | HexString, config: Config): TransactionBuilder<null> {
+    // @ts-ignore
     const builder = new TransactionBuilder<null>(
       this.api,
       this.registry,
@@ -103,6 +105,7 @@ export class SailsProgram {
   }
 
   newCtorFromCodeId(codeId: `0x${string}`, config: Config) {
+    // @ts-ignore
     const builder = new TransactionBuilder<null>(
       this.api,
       this.registry,
@@ -316,6 +319,7 @@ export class Starship {
     });
     throwOnErrorReply(reply.code, reply.payload.toU8a(), this._program.api.specVersion, this._program.registry);
     const result = this._program.registry.createType('(String, String, u16)', reply.payload);
+    // @ts-ignore
     return result[2].toNumber() as unknown as number;
   }
 

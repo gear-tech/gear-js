@@ -73,11 +73,7 @@ function AccountProvider({ appName, children }: Props) {
   const registerUnsub = (unsub: Unsubcall) => unsubsRef.current.push(unsub);
 
   useEffect(() => {
-    if (isTelegramMiniApp())
-      injectVaranWallet(TWA, {
-        callbackUrl: 'starshipstaging_bot/starshipstaging?startapp=',
-        closeAppOnActions: false,
-      });
+    if (isTelegramMiniApp()) injectVaranWallet(TWA);
 
     const timeoutId = setTimeout(() => {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1816): resolve eslint comments
