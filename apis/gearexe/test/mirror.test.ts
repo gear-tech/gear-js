@@ -29,15 +29,12 @@ describe('Create program', () => {
   test('create program', async () => {
     const tx = await router.createProgram(codeId);
     const receipt = await tx.sendAndWaitForReceipt();
-    console.log(receipt.hash);
-    console.log(receipt.blockHash);
 
     programId = await tx.getProgramId();
 
     mirror = getMirrorContract(programId, wallet);
 
     expect(await mirror.getAddress()).toBe(programId);
-    router.subscribeToAnounceCommitedEvent();
 
     // TODO: replace with waitForBlock once it's implemented in ethers.js
     // wallet.provider.waitForBlock();
