@@ -8,12 +8,12 @@ export class GearExeApi {
   private _provider: IGearExeProvider;
   public readonly query: Query;
   public readonly call: Call;
-  private _signer?: ISigner;
 
   constructor(
     provider: IGearExeProvider,
     // TODO: should be replaced with abstract class
     private _ethProvider?: Provider,
+    private _signer?: ISigner,
   ) {
     this._provider = provider;
 
