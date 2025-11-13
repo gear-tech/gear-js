@@ -28,7 +28,7 @@ afterAll(async () => {
 describe('Create program', () => {
   test('create program', async () => {
     const tx = await router.createProgram(codeId);
-    const receipt = await tx.sendAndWaitForReceipt();
+    await tx.sendAndWaitForReceipt();
 
     programId = await tx.getProgramId();
 
