@@ -35,7 +35,7 @@
     "yamljs": "0.3.0"
   },
   "devDependencies": {
-    "@types/express": "5.0.4",
+    "@types/express": "5.0.5",
     "@types/supertest": "^6.0.2",
     "@types/xxhashjs": "^0",
     "supertest": "^7.0.0"

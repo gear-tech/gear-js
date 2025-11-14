@@ -15,7 +15,7 @@
     "reflect-metadata": "0.2.2"
   },
   "devDependencies": {
-    "@types/express": "5.0.4"
+    "@types/express": "5.0.5"
   },
   "scripts": {
     "build": "rm -rf dist && npx tsc",
