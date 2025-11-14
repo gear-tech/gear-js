@@ -2170,6 +2170,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ethereumjs/rlp@npm:^10.1.0":
+  version: 10.1.0
+  resolution: "@ethereumjs/rlp@npm:10.1.0"
+  bin:
+    rlp: bin/rlp.cjs
+  checksum: 10c0/a66023aec0c7c05ca4a445b80343583892e393aa00f1efccdc7bb5fa70e58041b0351e858fb4b6c87d47c53c32128d7c124ff8a9f3367b7e684d278af71d9917
+  languageName: node
+  linkType: hard
+
 "@ethereumjs/rlp@npm:^4.0.1":
   version: 4.0.1
   resolution: "@ethereumjs/rlp@npm:4.0.1"
@@ -2191,6 +2200,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ethereumjs/util@npm:^10.1.0":
+  version: 10.1.0
+  resolution: "@ethereumjs/util@npm:10.1.0"
+  dependencies:
+    "@ethereumjs/rlp": "npm:^10.1.0"
+    ethereum-cryptography: "npm:^3.2.0"
+  checksum: 10c0/1eec82607ba1b94da805917547ea476e92205a5f1576583a75b1dcdfb986e0ffeb73d5b0070773712e70384b1bc9c81866f447029b06f0ee2490b619b3c2a203
+  languageName: node
+  linkType: hard
+
 "@ethereumjs/util@npm:^8.1.0":
   version: 8.1.0
   resolution: "@ethereumjs/util@npm:8.1.0"
@@ -2209,7 +2228,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.44.2, @gear-js/api@workspace:*, @gear-js/api@workspace:apis/gear":
+"@gear-js/api@npm:0.44.2, @gear-js/api@workspace:apis/gear":
   version: 0.0.0-use.local
   resolution: "@gear-js/api@workspace:apis/gear"
   dependencies:
@@ -3816,6 +3835,15 @@ __metadata:
   dependencies:
     "@noble/hashes": "npm:1.7.1"
   checksum: 10c0/84902c7af93338373a95d833f77981113e81c48d4bec78f22f63f1f7fdd893bc1d3d7a3ee78f01b9a8ad3dec812a1232866bf2ccbeb2b1560492e5e7d690ab1f
+  languageName: node
+  linkType: hard
+
+"@noble/curves@npm:1.9.0":
+  version: 1.9.0
+  resolution: "@noble/curves@npm:1.9.0"
+  dependencies:
+    "@noble/hashes": "npm:1.8.0"
+  checksum: 10c0/a76d57444b4d136f43363eb19229d990df15a00fb0e2efbf08a7a4cbaee655f73e46eb29b6ad07b8749be5f7b890c0a7a06a19f4324a4b149b06b3da1def8593
   languageName: node
   linkType: hard
 
@@ -9173,6 +9201,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/ws@npm:^8":
+  version: 8.18.1
+  resolution: "@types/ws@npm:8.18.1"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/61aff1129143fcc4312f083bc9e9e168aa3026b7dd6e70796276dcfb2c8211c4292603f9c4864fae702f2ed86e4abd4d38aa421831c2fd7f856c931a481afbab
+  languageName: node
+  linkType: hard
+
 "@types/xxhashjs@npm:^0":
   version: 0.2.4
   resolution: "@types/xxhashjs@npm:0.2.4"
@@ -14436,7 +14473,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethers@npm:6.15.0":
+"ethereum-cryptography@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "ethereum-cryptography@npm:3.2.0"
+  dependencies:
+    "@noble/ciphers": "npm:1.3.0"
+    "@noble/curves": "npm:1.9.0"
+    "@noble/hashes": "npm:1.8.0"
+    "@scure/bip32": "npm:1.7.0"
+    "@scure/bip39": "npm:1.6.0"
+  checksum: 10c0/55e9d7378f6660045a5f0f659eab2d92b232f4288b8415ed243f23c5b65ee1ad868124b20bb4a7c45d99b212316f746423b0cf4cac946590e5ae91a4ac45d7b0
+  languageName: node
+  linkType: hard
+
+"ethers@npm:6.15.0, ethers@npm:^6.15.0":
   version: 6.15.0
   resolution: "ethers@npm:6.15.0"
   dependencies:
@@ -15351,7 +15401,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"gear-js-util@workspace:*, gear-js-util@workspace:utils/util":
+"gear-js-util@workspace:utils/util":
   version: 0.0.0-use.local
   resolution: "gear-js-util@workspace:utils/util"
   dependencies:
@@ -15438,15 +15488,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gearexe@workspace:apis/gearexe"
   dependencies:
-    "@gear-js/api": "workspace:*"
-    "@polkadot/api": "npm:16.4.9"
-    ethers: "npm:6.15.0"
-    gear-js-util: "workspace:*"
-    kzg-wasm: "npm:0.5.0"
-    sails-js: "npm:0.5.1"
-    sails-js-parser: "npm:0.5.1"
+    "@ethereumjs/util": "npm:^10.1.0"
+    "@noble/hashes": "npm:1.8.0"
+    "@types/ws": "npm:^8"
+    ethers: "npm:^6.15.0"
+    kzg-wasm: "npm:1.0.0"
+    viem: "npm:^2.38.6"
+    ws: "npm:^8.18.3"
   peerDependencies:
-    ethers: ^6.14
+    ethers: ^6.15
     kzg-wasm: ^0.5.0
   languageName: unknown
   linkType: soft
@@ -17878,10 +17928,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kzg-wasm@npm:0.5.0":
-  version: 0.5.0
-  resolution: "kzg-wasm@npm:0.5.0"
-  checksum: 10c0/2513d85a1aaabee6800963c6bb7694f22b82cfdd095a7c456051e489927ac57839f6f8bbb4b0814fa0e0c52e77493b02da2f8297497d81019ef300b07749655d
+"kzg-wasm@npm:1.0.0":
+  version: 1.0.0
+  resolution: "kzg-wasm@npm:1.0.0"
+  checksum: 10c0/1cf34b9230d4a80a5ce04d6c0970ea6c0e57c76478d788581d1a0ca43fdab298bd74ce70ad0b23c71385d4864def97516a450bbf16fcd5d4ec53814eb855433a
   languageName: node
   linkType: hard
 
@@ -24894,6 +24944,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"viem@npm:^2.38.6":
+  version: 2.38.6
+  resolution: "viem@npm:2.38.6"
+  dependencies:
+    "@noble/curves": "npm:1.9.1"
+    "@noble/hashes": "npm:1.8.0"
+    "@scure/bip32": "npm:1.7.0"
+    "@scure/bip39": "npm:1.6.0"
+    abitype: "npm:1.1.0"
+    isows: "npm:1.0.7"
+    ox: "npm:0.9.6"
+    ws: "npm:8.18.3"
+  peerDependencies:
+    typescript: ">=5.0.4"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 10c0/9b8571bc9d7dfc414eb72700275ac71b9402cbf4fe3e447501d252cbc43cb7ddf9ce01a16c183fac265d071873d209efc2a459462c724624ef855d941d3447f0
+  languageName: node
+  linkType: hard
+
 "vite-node@npm:3.2.4":
   version: 3.2.4
   resolution: "vite-node@npm:3.2.4"
@@ -25546,7 +25617,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:8.18.3, ws@npm:^8.14.2, ws@npm:^8.15.1, ws@npm:^8.18.0, ws@npm:^8.8.1":
+"ws@npm:8.18.3, ws@npm:^8.14.2, ws@npm:^8.15.1, ws@npm:^8.18.0, ws@npm:^8.18.3, ws@npm:^8.8.1":
   version: 8.18.3
   resolution: "ws@npm:8.18.3"
   peerDependencies:

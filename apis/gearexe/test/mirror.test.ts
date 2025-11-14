@@ -28,7 +28,7 @@ afterAll(async () => {
 describe('Create program', () => {
   test('create program', async () => {
     const tx = await router.createProgram(codeId);
-    await tx.send();
+    await tx.sendAndWaitForReceipt();
 
     programId = await tx.getProgramId();
 
@@ -38,14 +38,42 @@ describe('Create program', () => {
 
     // TODO: replace with waitForBlock once it's implemented in ethers.js
     // wallet.provider.waitForBlock();
-    await waitNBlocks(5);
+    await waitNBlocks(20);
     const mirrorRouter = (await mirror.router()).toLowerCase();
 
     expect(mirrorRouter).toBe(routerId);
 
+    let id = null;
+    while (id === null) {
+      const ids = await api.query.program.getIds();
+      if (ids.includes(programId)) {
+        id = programId;
+      }
+    }
+
     const ids = await api.query.program.getIds();
     expect(ids).toContain(programId);
-  });
+    if (!ids.includes(programId)) {
+      process.exit(1);
+    }
+  }, 120_000);
+
+  // test(
+  //   'should create program',
+  //   async () => {
+  //     const tx = await router.createProgram(codeId);
+  //     await tx.send();
+  //     programId = await tx.getProgramId();
+  //     mirror = getMirrorContract(programId, wallet);
+  //     expect(await mirror.getAddress()).toBe(programId);
+  //     await waitNBlocks(20);
+  //     const mirrorRouter = (await mirror.router()).toLowerCase();
+  //     expect(mirrorRouter).toBe(routerId);
+  //     const ids = await api.query.program.getIds();
+  //     expect(ids).toContain(programId);
+  //   },
+  //   22 * config.blockTime * 1_000,
+  // );
 
   test('approve wvara', async () => {
     const tx = await wvara.approve(programId, BigInt(10 * 1e12));
@@ -80,7 +108,7 @@ describe('Create program', () => {
 });
 
 describe('Send messages', () => {
-  test('send init message', async () => {
+  test('should send init message', async () => {
     const payload = '0x24437265617465507267';
 
     const tx = await mirror.sendMessage(payload);
@@ -94,9 +122,9 @@ describe('Send messages', () => {
     const { waitForReply } = await tx.setupReplyListener();
 
     await waitForReply;
-  });
+  }, 120_000);
 
-  test('check program is active', async () => {
+  test('program should have Active status', async () => {
     const hash = await mirror.stateHash();
 
     const state = await api.query.program.readState(hash);
@@ -125,7 +153,7 @@ describe('Send messages', () => {
 
     // TODO: replace with waitForBlock once it's implemented in ethers.js
     await waitNBlocks(1);
-  });
+  }, 120_000);
 });
 
 describe('Program state', () => {

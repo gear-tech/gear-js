@@ -1,6 +1,12 @@
 import * as fs from 'fs';
 import { config } from 'dotenv';
-import { generateCodeHash } from '@gear-js/api';
+import { generateCodeHash } from '../src/util/hash';
+
+if (typeof WebSocket === 'undefined') {
+  import('ws').then((module) => {
+    global.WebSocket = module.default as any;
+  });
+}
 
 config();
 

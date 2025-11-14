@@ -1,11 +1,11 @@
-import { generateCodeHash } from 'gear-js-util';
 import { BaseContract, Signer, Wallet, ethers } from 'ethers';
 import { loadKZG } from 'kzg-wasm';
-import { GearExeApi } from '../api/api.js';
+import { DevBlobHelpers, CodeValidationHelpers, CreateProgramHelpers, CodeState } from './interfaces/router.js';
 import { IROUTER_INTERFACE, IRouterContract } from './abi/index.js';
 import { TxManager, TxManagerWithHelpers } from './tx-manager.js';
-import { DevBlobHelpers, CodeValidationHelpers, CreateProgramHelpers, CodeState } from './interfaces/router.js';
 import { ITxManager } from './interfaces/tx-manager.js';
+import { GearExeApi } from '../api/api.js';
+import { generateCodeHash } from '../util';
 
 // Interfaces moved to ./interfaces/router.js
 
@@ -92,6 +92,7 @@ export class RouterContract extends BaseContract implements IRouterContract {
    * @param api - The Gear.Exe API instance
    * @returns A transaction manager with blob-specific helper functions, including the code ID and
    *          a function to wait for the code to be validated
+   * @deprecated
    */
   async requestCodeValidationNoBlob(code: Uint8Array, api: GearExeApi): Promise<TxManagerWithHelpers<DevBlobHelpers>> {
     const codeId = generateCodeHash(code);
@@ -180,7 +181,7 @@ export class RouterContract extends BaseContract implements IRouterContract {
     };
 
     const txManager: ITxManager = new TxManager(this._wallet, tx, IROUTER_INTERFACE, undefined, {
-      codeId: () => codeId,
+      codeId,
       waitForCodeGotValidated: () =>
         new Promise<boolean>((resolve, reject) =>
           this.on('CodeGotValidated', (_codeId, valid) => {

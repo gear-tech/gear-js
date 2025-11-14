@@ -12,6 +12,8 @@ function cleanOldBuild() {
   };
 }
 
+const externalPackages = ['ethers', 'tslib', 'kzg-wasm', '@ethereumjs/util', '@noble/hashes'];
+
 export default [
   {
     input: ['src/index.ts'],
@@ -27,6 +29,7 @@ export default [
       cleanOldBuild(),
       nodeResolve({
         preferBuiltins: true,
+        resolveOnly: (id) => !externalPackages.some((pkg) => id.includes(pkg)),
       }),
       commonjs(),
       typescript({
@@ -34,7 +37,7 @@ export default [
         include: ['src/**/*.ts'],
       }),
     ],
-    external: ['ethers', 'tslib', 'kzg-wasm'],
+    external: externalPackages,
   },
   {
     input: ['src/index.ts'],
@@ -49,6 +52,7 @@ export default [
     plugins: [
       nodeResolve({
         preferBuiltins: true,
+        resolveOnly: (id) => !externalPackages.some((pkg) => id.includes(pkg)),
       }),
       commonjs(),
       typescript({
@@ -57,6 +61,6 @@ export default [
         include: ['src/**/*.ts'],
       }),
     ],
-    external: ['ethers', 'tslib', 'kzg-wasm'],
+    external: externalPackages,
   },
 ];
