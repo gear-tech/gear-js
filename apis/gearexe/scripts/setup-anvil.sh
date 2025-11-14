@@ -1,9 +1,7 @@
 #!/bin/bash
 set -e
 
-RETH_VERSION="1.9.0"
-RETH_BIN_DIR=/tmp/gearexe-js/reth/bin
-ETH_DIR=/tmp/gearexe-js/eth
+ANVIL_DIR=/tmp/gearexe-js/anvil
 GEAREXE_DIR=/tmp/gearexe-js/gearexe
 GEAR_REPO_DIR=/tmp/gearexe-js/gear
 LOGS_DIR=/tmp/gearexe-js/logs
@@ -40,10 +38,9 @@ fi
 
 export ROUTER_VALIDATORS_LIST="$VALIDATOR_PUBLIC_KEY_ETH"
 
-mkdir -p $ETH_DIR
+mkdir -p $ANVIL_DIR
 mkdir -p $GEAREXE_DIR
 mkdir -p $LOGS_DIR
-mkdir -p $RETH_BIN_DIR
 
 # Clean old logs
 log_info "Cleaning previous log files..."
@@ -87,26 +84,24 @@ cleanup() {
         log_info "Gear node stopped"
     fi
 
-    if [[ -n "$RETH_PID" ]]; then
-        log_info "Stopping Reth node (PID: $RETH_PID)..."
-        kill $RETH_PID 2>/dev/null || true
-        log_info "Reth node stopped"
+    if [[ -n "$ANVIL_PID" ]]; then
+        log_info "Stopping Anvil node (PID: $ANVIL_PID)..."
+        kill $ANVIL_PID 2>/dev/null || true
+        log_info "Anvil node stopped"
     fi
 
-    # Print logs if exit code is not 0
+    # Only clean logs if this setup script itself failed
+    # Logs cleanup is handled by the test runner (run-tests.sh)
     if [ $exit_code -ne 0 ]; then
-        log_error "Test execution failed. Log files preserved for debugging:"
+        log_error "Environment setup failed. Log files preserved for debugging:"
         echo "    - Router deployment logs: $LOGS_DIR/deploy_contracts.log"
-        echo "    - Reth node logs: $LOGS_DIR/reth.log"
+        echo "    - Anvil node logs: $LOGS_DIR/anvil.log"
         echo "    - Gearexe node logs: $LOGS_DIR/gearexe.log"
-    else
-        log_success "Tests completed successfully. Removing logs..."
-        rm -rf $LOGS_DIR
     fi
 
     log_info "Removing temporary files..."
     # rm -rf $GEAREXE_DIR
-    rm -rf $ETH_DIR
+    rm -rf $ANVIL_DIR
     rm -f /tmp/gearexe-js/environment-ready
     log_success "Cleanup completed"
 }
@@ -133,58 +128,6 @@ else
 fi
 
 path_to_contracts=$path_to_gear_repo/ethexe/contracts
-
-# Function to determine platform for downloads
-get_platform() {
-    case "$(uname)" in
-        Linux*)
-            echo "x86_64-unknown-linux-gnu" ;;
-        Darwin*)
-            echo "aarch64-apple-darwin" ;;
-        CYGWIN*|MINGW*|MSYS*)
-            echo "x86_64-pc-windows-gnu" ;;
-        *)
-            log_error "Unknown operating system. Cannot determine platform for Reth download."
-            exit 1
-            ;;
-    esac
-}
-
-# Function to download and install Reth
-download_reth() {
-    local version=$1
-    local platform=$2
-
-    log_info "Downloading Reth v$version for $platform..."
-    local reth_link="https://github.com/paradigmxyz/reth/releases/download/v$version/reth-v$version-$platform.tar.gz"
-    log_info "Download URL: $reth_link"
-
-    log_info "Fetching archive..."
-    if ! curl -L "$reth_link" -o "$RETH_BIN_DIR/reth.tar.gz"; then
-        log_error "Failed to download Reth"
-        exit 1
-    fi
-
-    log_info "Extracting Reth binary..."
-    if ! tar -xf "$RETH_BIN_DIR/reth.tar.gz" -C "$RETH_BIN_DIR"; then
-        log_error "Failed to extract Reth archive"
-        exit 1
-    fi
-
-    log_info "Setting executable permissions..."
-    chmod +x "$RETH_BIN_DIR/reth"
-    rm -f "$RETH_BIN_DIR/reth.tar.gz"
-    log_success "Reth binary successfully installed at: $RETH_BIN_DIR/reth"
-}
-
-# Function to get current Reth version
-get_reth_version() {
-    if [[ -f "$RETH_BIN_DIR/reth" && -x "$RETH_BIN_DIR/reth" ]]; then
-        "$RETH_BIN_DIR/reth" --version 2>/dev/null | head -1 | grep -o 'Version: [0-9.]*' | cut -d' ' -f2 || echo ""
-    else
-        echo ""
-    fi
-}
 
 # Function to build gearexe
 build_gearexe() {
@@ -240,52 +183,37 @@ if ! command -v foundryup &> /dev/null; then
     curl -L https://foundry.paradigm.xyz | bash
 fi
 
+# Check if anvil is installed
+if ! command -v anvil &> /dev/null; then
+    log_error "Anvil is not installed. Please install Foundry (https://getfoundry.sh)"
+    exit 1
+fi
+
 if [[ -z "$SKIP_BUILD" || "$SKIP_BUILD" != "true" ]]; then
     setup_forge
     build_wasm_contracts
     build_gearexe
 fi
 
-# Check and install/update Reth
-log_info "Checking Reth installation..."
-current_version=$(get_reth_version)
-
-if [[ -z "$current_version" ]]; then
-    log_info "Reth binary not found at $RETH_BIN_DIR/reth"
-    platform=$(get_platform)
-    log_info "Detected platform: $platform"
-    download_reth "$RETH_VERSION" "$platform"
-elif [[ "$current_version" != "$RETH_VERSION" ]]; then
-    log_info "Reth version mismatch: found v$current_version, required v$RETH_VERSION"
-    log_info "Updating Reth to version $RETH_VERSION..."
-    platform=$(get_platform)
-    log_info "Detected platform: $platform"
-    download_reth "$RETH_VERSION" "$platform"
-else
-    log_success "Reth v$current_version is already installed and up to date"
-fi
-
-
 if [ "$DEPLOY_ON_HOLESKY" != "true" ]; then
-    log_info "Starting Reth Ethereum node..."
-    log_info "Running with parameters: --dev.block-time $BLOCK_TIME sec --dev --datadir $ETH_DIR --ws --ws.port 8546"
-    nohup $RETH_BIN_DIR/reth node --dev.block-time "$BLOCK_TIME"sec --dev \
-        --datadir $ETH_DIR --ws --ws.port 8546 \
-        > $LOGS_DIR/reth.log 2>&1 &
-        RETH_PID=$!
-    log_success "Reth node started with PID: $RETH_PID"
-    log_info "Waiting for Reth node to initialize (10 seconds)..."
+    log_info "Starting Anvil Ethereum node..."
+    log_info "Running with parameters: --block-time $BLOCK_TIME --chain-id 31337"
+    nohup anvil --block-time "$BLOCK_TIME" --chain-id 31337 \
+        > $LOGS_DIR/anvil.log 2>&1 &
+        ANVIL_PID=$!
+    log_success "Anvil node started with PID: $ANVIL_PID"
+    log_info "Waiting for Anvil node to initialize (5 seconds)..."
 
-    if ! kill -0 $RETH_PID 2>/dev/null; then
-        log_error "Reth node failed to start. Check logs at: $LOGS_DIR/reth.log"
-        log_error "Last 10 lines of Reth logs:"
-        tail -n 10 $LOGS_DIR/reth.log
+    if ! kill -0 $ANVIL_PID 2>/dev/null; then
+        log_error "Anvil node failed to start. Check logs at: $LOGS_DIR/anvil.log"
+        log_error "Last 10 lines of Anvil logs:"
+        tail -n 10 $LOGS_DIR/anvil.log
         exit 1
     fi
     log_info "Continuing initialization..."
-    sleep 5
-    log_success "Reth node is ready"
-    sleep 5
+    sleep 2
+    log_success "Anvil node is ready"
+    sleep 3
 fi
 
 # Deploy contracts
@@ -391,12 +319,13 @@ echo "    - Block time: $BLOCK_TIME"
 echo "    - RPC port: 9944"
 
 log_info "Launching gearexe node..."
-nohup ./target/release/ethexe --cfg none run --dev --tmp --base "$GEAREXE_DIR" \
+nohup ./target/release/ethexe --cfg none run --tmp --base "$GEAREXE_DIR" \
     --validator $validator_pubkey \
     --validator-session $validator_pubkey \
     --network-key $network_pubkey \
     --ethereum-rpc $WS_RPC \
     --ethereum-router $ROUTER_ADDRESS \
+    --eth-beacon-rpc $RPC \
     --eth-block-time $BLOCK_TIME \
     --network-listen-addr "/ip4/0.0.0.0/udp/20333/quic-v1" \
     --rpc-port 9944 \

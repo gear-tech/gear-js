@@ -1,7 +1,6 @@
 import { Provider } from 'ethers';
 
-import { ISigner, IGearExeProvider, InjectedTransaction } from '../types/index.js';
-import { HexString } from 'gear-js-util';
+import { HexString, ISigner, IGearExeProvider, InjectedTransaction } from '../types/index.js';
 
 export class Injected {
   constructor(

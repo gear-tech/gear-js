@@ -58,6 +58,23 @@ describe('Create program', () => {
     }
   }, 120_000);
 
+  // test(
+  //   'should create program',
+  //   async () => {
+  //     const tx = await router.createProgram(codeId);
+  //     await tx.send();
+  //     programId = await tx.getProgramId();
+  //     mirror = getMirrorContract(programId, wallet);
+  //     expect(await mirror.getAddress()).toBe(programId);
+  //     await waitNBlocks(20);
+  //     const mirrorRouter = (await mirror.router()).toLowerCase();
+  //     expect(mirrorRouter).toBe(routerId);
+  //     const ids = await api.query.program.getIds();
+  //     expect(ids).toContain(programId);
+  //   },
+  //   22 * config.blockTime * 1_000,
+  // );
+
   test('approve wvara', async () => {
     const tx = await wvara.approve(programId, BigInt(10 * 1e12));
 

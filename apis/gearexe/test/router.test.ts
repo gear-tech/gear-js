@@ -2,10 +2,10 @@ import { ethers } from 'ethers';
 import * as fs from 'fs';
 import {
   CodeState,
-  GearExeApi,
+  // GearExeApi,
   getMirrorContract,
   getRouterContract,
-  HttpGearexeProvider,
+  // HttpGearexeProvider,
   uploadContract,
 } from '../src';
 import { config } from './config';
@@ -15,13 +15,13 @@ import path from 'path';
 const code = fs.readFileSync(path.join(config.targetDir, 'counter.opt.wasm'));
 let codeId: string;
 let wallet: ethers.Wallet;
-let api: GearExeApi;
+// let api: GearExeApi;
 let router: ReturnType<typeof getRouterContract>;
 
 let codeValidatedPromise: Promise<boolean>;
 
 beforeAll(async () => {
-  api = new GearExeApi(new HttpGearexeProvider());
+  // api = new GearExeApi(new HttpGearexeProvider());
   wallet = new ethers.Wallet(config.privateKey, ethWsProvider());
   router = getRouterContract(config.routerId, wallet);
 });
@@ -45,16 +45,26 @@ describe('router', () => {
 });
 
 uploadCodeDescribe('upload code', () => {
+  // test('upload code', async () => {
+  //   const tx = await router.requestCodeValidationNoBlob(code, api);
+  //   codeId = tx.codeId;
+
+  //   codeValidatedPromise = tx.waitForCodeGotValidated();
+  //   await tx.processDevBlob();
+
+  //   const receipt = await tx.getReceipt();
+
+  //   expect(receipt.blockHash).toBeDefined();
+  // });
+
   test('upload code', async () => {
-    const tx = await router.requestCodeValidationNoBlob(code, api);
+    const tx = await router.requestCodeValidation(code);
     codeId = tx.codeId;
-
-    codeValidatedPromise = tx.waitForCodeGotValidated();
-    await tx.processDevBlob();
-
-    const receipt = await tx.getReceipt();
-
+    const receipt = await tx.sendAndWaitForReceipt();
+    // await tx.processDevBlob();
+    // const receipt = await tx.getReceipt();
     expect(receipt.blockHash).toBeDefined();
+    codeValidatedPromise = tx.waitForCodeGotValidated();
   });
 
   test('wait for code got validated', async () => {

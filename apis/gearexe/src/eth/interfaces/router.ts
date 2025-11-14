@@ -1,4 +1,4 @@
-import { HexString } from 'gear-js-util';
+import { HexString } from '../../types/index.js';
 
 /**
  * Helper functions for validating code blobs in development mode.

@@ -1,10 +1,10 @@
 import { BaseContract, ContractEventPayload, Wallet } from 'ethers';
-import { HexString } from 'gear-js-util';
+
+import { MessageHelpers, ReplyHelpers, MessageQueuingRequestedLog, Reply, ITxManager } from './interfaces/index.js';
 import { convertEventParams as convertEventParameters } from '../util/index.js';
-import { TxManager, TxManagerWithHelpers } from './tx-manager.js';
 import { IMIRROR_INTERFACE, IMirrorContract } from './abi/IMirror.js';
-import { MessageHelpers, ReplyHelpers, MessageQueuingRequestedLog, Reply } from './interfaces/mirror.js';
-import { ITxManager } from './interfaces/index.js';
+import { TxManager, TxManagerWithHelpers } from './tx-manager.js';
+import { HexString } from '../types/index.js';
 
 // Interfaces moved to ./interfaces/mirror.js
 

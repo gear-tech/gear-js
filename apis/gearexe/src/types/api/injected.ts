@@ -1,8 +1,8 @@
-import { bytesToHex, concatBytes, randomBytes } from '@ethereumjs/util';
-import { keccak256 } from 'ethereum-cryptography/keccak';
-import { hexToBytes } from 'ethereum-cryptography/utils';
-import { HexString } from 'gear-js-util';
+import { bytesToHex, concatBytes, randomBytes, hexToBytes } from '@ethereumjs/util';
+import { keccak_256 } from '@noble/hashes/sha3.js';
+
 import { bigint128ToBytes } from '../../util/index.js';
+import { HexString } from '../../types/index.js';
 
 // TODO: add JSDocs
 export interface IInjectedTransaction {
@@ -115,8 +115,7 @@ export class InjectedTransaction {
       this.referenceBlockU8a,
       this._salt,
     );
-
-    const hash = keccak256(bytes);
+    const hash = keccak_256(bytes);
 
     // TODO: consider caching the result if necessary
     return bytesToHex(hash);

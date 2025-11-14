@@ -9085,6 +9085,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/ws@npm:^8":
+  version: 8.18.1
+  resolution: "@types/ws@npm:8.18.1"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/61aff1129143fcc4312f083bc9e9e168aa3026b7dd6e70796276dcfb2c8211c4292603f9c4864fae702f2ed86e4abd4d38aa421831c2fd7f856c931a481afbab
+  languageName: node
+  linkType: hard
+
 "@types/xxhashjs@npm:^0":
   version: 0.2.4
   resolution: "@types/xxhashjs@npm:0.2.4"
@@ -15216,7 +15225,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"gear-js-util@workspace:*, gear-js-util@workspace:utils/util":
+"gear-js-util@workspace:utils/util":
   version: 0.0.0-use.local
   resolution: "gear-js-util@workspace:utils/util"
   dependencies:
@@ -15304,11 +15313,12 @@ __metadata:
   resolution: "gearexe@workspace:apis/gearexe"
   dependencies:
     "@ethereumjs/util": "npm:^10.1.0"
-    ethereum-cryptography: "npm:^3.2.0"
+    "@noble/hashes": "npm:1.8.0"
+    "@types/ws": "npm:^8"
     ethers: "npm:^6.15.0"
-    gear-js-util: "workspace:*"
-    kzg-wasm: "npm:0.5.0"
+    kzg-wasm: "npm:1.0.0"
     viem: "npm:^2.38.6"
+    ws: "npm:^8.18.3"
   peerDependencies:
     ethers: ^6.15
     kzg-wasm: ^0.5.0
@@ -17742,10 +17752,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kzg-wasm@npm:0.5.0":
-  version: 0.5.0
-  resolution: "kzg-wasm@npm:0.5.0"
-  checksum: 10c0/2513d85a1aaabee6800963c6bb7694f22b82cfdd095a7c456051e489927ac57839f6f8bbb4b0814fa0e0c52e77493b02da2f8297497d81019ef300b07749655d
+"kzg-wasm@npm:1.0.0":
+  version: 1.0.0
+  resolution: "kzg-wasm@npm:1.0.0"
+  checksum: 10c0/1cf34b9230d4a80a5ce04d6c0970ea6c0e57c76478d788581d1a0ca43fdab298bd74ce70ad0b23c71385d4864def97516a450bbf16fcd5d4ec53814eb855433a
   languageName: node
   linkType: hard
 
@@ -25334,7 +25344,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:8.18.3, ws@npm:^8.14.2, ws@npm:^8.15.1, ws@npm:^8.18.0, ws@npm:^8.8.1":
+"ws@npm:8.18.3, ws@npm:^8.14.2, ws@npm:^8.15.1, ws@npm:^8.18.0, ws@npm:^8.18.3, ws@npm:^8.8.1":
   version: 8.18.3
   resolution: "ws@npm:8.18.3"
   peerDependencies:
