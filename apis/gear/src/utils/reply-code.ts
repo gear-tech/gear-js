@@ -1,5 +1,6 @@
 import { u8aToU8a } from '@polkadot/util';
-import { HexString } from '../types/index.js';
+
+import { HexString } from '../types';
 
 interface IReplyCodeReason {
   readonly explanation: string;

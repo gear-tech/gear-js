@@ -1,7 +1,6 @@
 export * from './Balance';
 export * from './Blocks';
 export * from './Builtin';
-export * from './Claim';
 export * from './Code';
 export * from './eth-bridge';
 export * from './Gas';

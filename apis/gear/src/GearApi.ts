@@ -3,13 +3,11 @@ import { DispatchError, Event } from '@polkadot/types/interfaces';
 import { u128, u64 } from '@polkadot/types';
 
 import { ExtrinsicFailedData, GearApiOptions, GearCommonGasMultiplier, InflationInfo } from './types';
-import { gearRpc, gearTypes } from './default';
 import { GearEvents } from './events';
 import {
   GearBalance,
   GearBlock,
   GearBuiltin,
-  GearClaimValue,
   GearCode,
   GearEthBridge,
   GearMailbox,
@@ -20,39 +18,50 @@ import {
   GearVoucher,
   GearWaitlist,
 } from './api';
+import {
+  GEAR_BUILTIN_RPC_METHODS,
+  GEAR_ETH_BRIDGE_RPC_METHODS,
+  GEAR_RPC_METHODS,
+  GEAR_TYPES,
+  RUNTIME_METHODS,
+  STAKING_REWARDS_METHODS,
+} from './default';
 
 export class GearApi extends ApiPromise {
-  public program: GearProgram;
+  public readonly program: GearProgram;
   /** @deprecated */
-  public programState: GearProgramState;
-  public programStorage: GearProgramStorage;
-  public message: GearMessage;
-  public balance: GearBalance;
-  public gearEvents: GearEvents;
-  public defaultTypes: Record<string, unknown>;
-  public blocks: GearBlock;
-  public mailbox: GearMailbox;
-  public claimValueFromMailbox: GearClaimValue;
-  public code: GearCode;
-  public waitlist: GearWaitlist;
-  public voucher: GearVoucher;
-  public ethBridge: GearEthBridge;
-  public builtin: GearBuiltin;
-  public provider: WsProvider;
+  public readonly programState: GearProgramState;
+  public readonly programStorage: GearProgramStorage;
+  public readonly message: GearMessage;
+  public readonly balance: GearBalance;
+  public readonly gearEvents: GearEvents;
+  public readonly blocks: GearBlock;
+  public readonly mailbox: GearMailbox;
+  public readonly code: GearCode;
+  public readonly waitlist: GearWaitlist;
+  public readonly voucher: GearVoucher;
+  public readonly ethBridge: GearEthBridge;
+  public readonly builtin: GearBuiltin;
+  public readonly provider: WsProvider;
+  private _rpcMethods: string[];
 
   constructor(options: GearApiOptions = {}) {
-    const { types, providerAddress, noInitWarn, ...restOptions } = options;
+    const { types = {}, derives = {}, providerAddress, noInitWarn, ...restOptions } = options;
     const provider = restOptions?.provider || new WsProvider(providerAddress ?? 'ws://127.0.0.1:9944');
-    const defaultTypes = types ? { ...types, ...gearTypes } : gearTypes;
 
     super({
       provider,
-      derives: {},
+      derives,
       types: {
-        ...defaultTypes,
+        ...types,
+        ...GEAR_TYPES,
       },
       rpc: {
-        ...gearRpc,
+        gear: GEAR_RPC_METHODS,
+        gearBuiltin: GEAR_BUILTIN_RPC_METHODS,
+        gearEthBridge: GEAR_ETH_BRIDGE_RPC_METHODS,
+        stakingRewards: STAKING_REWARDS_METHODS,
+        runtime: RUNTIME_METHODS,
       },
       runtime: {
         GearApi: [
@@ -74,7 +83,6 @@ export class GearApi extends ApiPromise {
         GearBuiltinApi: [{ methods: {}, version: 1 }],
       },
       signedExtensions: {
-        VoucherLegitimate: { extrinsic: {}, payload: {} },
         StakingBlackList: { extrinsic: {}, payload: {} },
       },
       noInitWarn: noInitWarn ?? true,
@@ -87,16 +95,20 @@ export class GearApi extends ApiPromise {
     this.message = new GearMessage(this);
     this.balance = new GearBalance(this);
     this.gearEvents = new GearEvents(this);
-    this.defaultTypes = defaultTypes;
     this.programState = new GearProgramState(this);
     this.blocks = new GearBlock(this);
     this.programStorage = new GearProgramStorage(this);
-    this.claimValueFromMailbox = new GearClaimValue(this);
     this.mailbox = new GearMailbox(this);
     this.code = new GearCode(this);
     this.waitlist = new GearWaitlist(this);
     this.ethBridge = new GearEthBridge(this);
     this.builtin = new GearBuiltin(this);
+
+    this.isReady
+      .then(() => this.rpc.rpc.methods())
+      .then((rpc) => {
+        this._rpcMethods = rpc.methods.toArray().map((item) => item.toString());
+      });
   }
 
   static async create(options?: GearApiOptions): Promise<GearApi> {
@@ -197,5 +209,14 @@ export class GearApi extends ApiPromise {
       method: 'Unknown error',
       name: 'Unknown error',
     };
+  }
+
+  public get rpcMethods(): string[] {
+    if (!this._rpcMethods) {
+      throw new Error(
+        'RPC methods not available. Ensure API is ready by awaiting api.isReady before accessing rpcMethods.',
+      );
+    }
+    return this._rpcMethods;
   }
 }

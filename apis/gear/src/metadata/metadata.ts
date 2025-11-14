@@ -1,11 +1,10 @@
 import { Codec, Registry } from '@polkadot/types/types';
 import { PortableRegistry, TypeRegistry } from '@polkadot/types';
 import { Si1LookupTypeId, Si1TypeDef } from '@polkadot/types/interfaces';
-import { HexString } from '@polkadot/util/types';
 import assert from 'assert';
 import { hexToU8a } from '@polkadot/util';
 
-import { TypeStructure } from '../types';
+import { TypeStructure, HexString } from '../types';
 
 const LOOKUP_REGEXP = /\bLookup\d+\b/g;
 const DIGITS_REGEXP = /\d+/;

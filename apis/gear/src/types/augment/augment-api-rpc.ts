@@ -7,8 +7,10 @@ import type { Bytes, u64 } from '@polkadot/types-codec';
 import type { H256 } from '@polkadot/types/interfaces/runtime';
 import type { Observable } from '@polkadot/types/types';
 
-import { GasInfo, ReplyInfo } from '../interfaces';
+import { GasInfo, ReplyInfo, UserMessageSentSubscriptionFilter } from '../interfaces';
+import { ProgramStateChange } from '../interfaces/program/rpc';
 import { InflationInfo, Proof } from '../common';
+import { UserMessageSentSubItem } from '../interfaces/message/rpc';
 
 export type __AugmentedRpc = AugmentedRpc<() => unknown>;
 
@@ -158,6 +160,10 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
           value: AnyNumber,
           at: string | BlockHash | null,
         ) => Observable<ReplyInfo>
+      >;
+      subscribeProgramStateChanges: AugmentedRpc<(programIds: string[] | null) => Observable<ProgramStateChange>>;
+      subscribeUserMessageSent: AugmentedRpc<
+        (filter: UserMessageSentSubscriptionFilter) => Observable<UserMessageSentSubItem>
       >;
     };
     stakingRewards: {

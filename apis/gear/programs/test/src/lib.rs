@@ -16,6 +16,7 @@ pub enum Action {
     Input(String),
     Wait(),
     Exit(ActorId),
+    ChangeState,
 }
 
 #[derive(Decode, Encode)]
@@ -27,6 +28,8 @@ pub struct InputStruct {
 pub struct EmptyStruct {
     pub empty: (),
 }
+
+static mut STATE: Option<u8> = None;
 
 #[no_mangle]
 unsafe extern "C" fn init() {
@@ -77,6 +80,11 @@ async fn main() {
             gstd::exec::wait();
         }
         Action::Exit(inheritor) => gstd::exec::exit(inheritor),
+        Action::ChangeState => unsafe {
+            let mut state = STATE.unwrap_or_default();
+            state = state + 1;
+            msg::reply(state, 0).unwrap()
+        },
         _ => msg::reply("ok", 0).unwrap(),
     };
 }

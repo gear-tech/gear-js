@@ -1,7 +1,7 @@
 import { GenericEventData, Struct, U256, u8, Vec } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
 
-import { HexString } from '../../types/index.js';
+import { HexString } from '../../types';
 import { GearApi } from '../../GearApi';
 
 /**
