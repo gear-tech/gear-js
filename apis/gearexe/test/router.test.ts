@@ -1,13 +1,6 @@
 import { ethers } from 'ethers';
 import * as fs from 'fs';
-import {
-  CodeState,
-  // GearExeApi,
-  getMirrorContract,
-  getRouterContract,
-  // HttpGearexeProvider,
-  uploadContract,
-} from '../src';
+import { CodeState, getMirrorContract, getRouterContract, uploadContract } from '../src';
 import { config } from './config';
 import { ethWsProvider, waitNBlocks } from './common';
 import path from 'path';
@@ -15,13 +8,11 @@ import path from 'path';
 const code = fs.readFileSync(path.join(config.targetDir, 'counter.opt.wasm'));
 let codeId: string;
 let wallet: ethers.Wallet;
-// let api: GearExeApi;
 let router: ReturnType<typeof getRouterContract>;
 
 let codeValidatedPromise: Promise<boolean>;
 
 beforeAll(async () => {
-  // api = new GearExeApi(new HttpGearexeProvider());
   wallet = new ethers.Wallet(config.privateKey, ethWsProvider());
   router = getRouterContract(config.routerId, wallet);
 });
@@ -31,84 +22,66 @@ afterAll(async () => {
   wallet.provider!.destroy();
 });
 
-const uploadCodeDescribe = config.skipUpload ? describe.skip : describe;
-
-if (config.skipUpload) {
-  codeId = config.codeId;
-}
-
 describe('router', () => {
-  test('check router initialized', async () => {
-    const blockhash = await router.genesisBlockHash();
-    expect(blockhash).toBeDefined();
-  });
-});
-
-uploadCodeDescribe('upload code', () => {
-  // test('upload code', async () => {
-  //   const tx = await router.requestCodeValidationNoBlob(code, api);
-  //   codeId = tx.codeId;
-
-  //   codeValidatedPromise = tx.waitForCodeGotValidated();
-  //   await tx.processDevBlob();
-
-  //   const receipt = await tx.getReceipt();
-
-  //   expect(receipt.blockHash).toBeDefined();
-  // });
-
-  test('upload code', async () => {
-    const tx = await router.requestCodeValidation(code);
-    codeId = tx.codeId;
-    const receipt = await tx.sendAndWaitForReceipt();
-    // await tx.processDevBlob();
-    // const receipt = await tx.getReceipt();
-    expect(receipt.blockHash).toBeDefined();
-    codeValidatedPromise = tx.waitForCodeGotValidated();
+  describe('base', () => {
+    test('should get genesisBlockHash', async () => {
+      const blockhash = await router.genesisBlockHash();
+      expect(blockhash).toBeDefined();
+    });
   });
 
-  test('wait for code got validated', async () => {
-    expect(await codeValidatedPromise).toBeTruthy();
-    await waitNBlocks(5);
+  describe('upload code', () => {
+    test('should request code validation', async () => {
+      const tx = await router.requestCodeValidation(code);
+      codeId = tx.codeId;
+      const receipt = await tx.sendAndWaitForReceipt();
+      expect(receipt.blockHash).toBeDefined();
+      codeValidatedPromise = tx.waitForCodeGotValidated();
+    });
 
-    console.log(codeId);
-  });
-});
+    test('should wait when code got validated', async () => {
+      expect(await codeValidatedPromise).toBeTruthy();
+      await waitNBlocks(5);
 
-describe('router', () => {
-  test('check code state', async () => {
-    expect(await router.codeState(codeId)).toBe(CodeState.Validated);
-  });
+      console.log(codeId);
+    }, 30_000);
 
-  test('create program', async () => {
-    const tx = await router.createProgram(codeId);
-
-    await tx.send();
-
-    const id = await tx.getProgramId();
-
-    const mirror = getMirrorContract(id, wallet);
-
-    const mirrorRouter = (await mirror.router()).toLowerCase();
-
-    expect(mirrorRouter).toBe(config.routerId);
+    test('should check that code state is Validated', async () => {
+      expect(await router.codeState(codeId)).toBe(CodeState.Validated);
+    });
   });
 
-  test('create program with abi interface', async () => {
-    const {
-      bytecode: { object: bytecode },
-    } = JSON.parse(fs.readFileSync(path.join(config.solOut, 'Counter.sol', 'CounterAbi.json'), 'utf-8'));
+  describe('create program', () => {
+    test('should create program', async () => {
+      const tx = await router.createProgram(codeId);
 
-    const u8aByteCode = Uint8Array.from(bytecode);
+      await tx.send();
 
-    const contractAddr = await uploadContract(u8aByteCode, wallet);
+      const id = await tx.getProgramId();
 
-    expect(contractAddr).toBeDefined();
+      const mirror = getMirrorContract(id, wallet);
 
-    const tx = await router.createProgramWithAbiInterface(codeId, contractAddr);
+      const mirrorRouter = (await mirror.router()).toLowerCase();
 
-    const receipt = await tx.sendAndWaitForReceipt();
+      expect(mirrorRouter).toBe(config.routerId);
+    });
 
-    expect(receipt.blockHash).toBeDefined();
+    test('should create program with abi interface', async () => {
+      const {
+        bytecode: { object: bytecode },
+      } = JSON.parse(fs.readFileSync(path.join(config.solOut, 'Counter.sol', 'CounterAbi.json'), 'utf-8'));
+
+      const u8aByteCode = Uint8Array.from(bytecode);
+
+      const contractAddr = await uploadContract(u8aByteCode, wallet);
+
+      expect(contractAddr).toBeDefined();
+
+      const tx = await router.createProgramWithAbiInterface(codeId, contractAddr);
+
+      const receipt = await tx.sendAndWaitForReceipt();
+
+      expect(receipt.blockHash).toBeDefined();
+    });
   });
 });
