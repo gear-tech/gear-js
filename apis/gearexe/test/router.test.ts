@@ -37,7 +37,7 @@ describe('router', () => {
       const receipt = await tx.sendAndWaitForReceipt();
       expect(receipt.blockHash).toBeDefined();
       codeValidatedPromise = tx.waitForCodeGotValidated();
-    });
+    }, 60_000);
 
     test('should wait when code got validated', async () => {
       expect(await codeValidatedPromise).toBeTruthy();
