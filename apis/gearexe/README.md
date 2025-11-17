@@ -3,464 +3,449 @@
     <img src="https://github.com/gear-tech/gear/blob/master/images/logo-grey.png" width="400" alt="GEAR">
   </a>
 </p>
-<h3 align="center">
-    Gear.exe TypeScript API
-</h3>
-<p align="center">
-    <a href="https://wiki.gear-tech.io"><img src="https://img.shields.io/badge/Gear-Wiki-orange?logo=bookstack" alt="Gear Wiki"></a>
-    <a href="https://idea.gear-tech.io"><img src="https://img.shields.io/badge/Gear-IDEA-blue?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADFSURBVHgBrVLLDYMwDH0OG7ABG5QNYIOwQRmhI3QERmCDMAIjsEFHgA2SDZyk5lRU1LQvQXLi2M+fDUQkLPpKz7MjNS/eN3VHGthSe0SHw2kN8bkwR4Rd9I3JGzWvkxXkQFD0z6Qs+6O0IQ9BlvXZVPDQYr9aNBglXmVUBqHLpCwqD6FTqhYHkfJkODmIpBMdEJVGh7pBZPmk+1rKL3lRfgeTxGrVY2T6z1TbUTKBhLrB1l4DkT+pMoBRzA5k4gCSzQP6wQlxwzh5ZgAAAABJRU5ErkJggg==" alt="Gear IDEA"></a>
-    <a href="https://gear-tech.io/gear-exe/whitepaper/"><img src="https://img.shields.io/badge/Gear.exe-Whitepaper-blue" alt="Gear.exe Whitepaper"></a>
-</p>
-<hr>
 
-# Gear.exe TypeScript API
+# Vara.Eth TypeScript API
 
-A comprehensive TypeScript library for interacting with [Gear.exe](https://gear-tech.io/gear-exe), a revolutionary decentralized compute network that enhances Ethereum's computational capabilities without requiring bridges or fragmented liquidity.
+TypeScript client library for [Vara.Eth](https://gear-tech.io/gear-exe/whitepaper/introduction) - a decentralized compute network that extends Ethereum with high-performance parallel execution, near-zero gas fees, and instant finalization without requiring asset bridging.
 
-## What is Gear.exe?
+## Table of Contents
 
-Gear.exe is a groundbreaking decentralized compute network designed to significantly enhance the computational capabilities of Ethereum. Unlike conventional Layer-2 solutions, Gear.exe provides:
-
-- **Real-time, high-performance, parallel execution** environment
-- **Near-zero gas fees** for intensive computations
-- **Instant finalization** and seamless Ethereum integration
-- **Up to 2GB memory per program** for resource-heavy computations
-- **Multi-threaded execution** supporting parallel processing
-- **Rust-based programming** for performance and safety
-- **No asset bridging required** - full Ethereum integration
-
-Each program in Gear.exe operates as its own individual rollup, collectively forming a "swarm of rollups" that delivers unparalleled flexibility and scalability.
+- [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+- [High-Level API](#high-level-api)
+  - [VaraEthApi](#varaethapi)
+  - [EthereumClient](#ethereumclient)
+  - [RouterClient](#routerclient)
+  - [MirrorClient](#mirrorclient)
+  - [WrappedVaraClient](#wrappedvaraclient)
+- [Ethereum Side Operations](#ethereum-side-operations)
+  - [1. Program Creation](#1-program-creation)
+  - [2. Sending Messages to Programs](#2-sending-messages-to-programs)
+  - [3. Managing Executable Balance](#3-managing-executable-balance)
+  - [4. Checking Program State](#4-checking-program-state)
+  - [5. Working with TxManager](#5-working-with-txmanager)
+- [Vara.Eth Side Operations](#varaeth-side-operations)
+  - [1. Instantiating VaraEthApi](#1-instantiating-varaethapi)
+  - [2. Injected Transactions](#2-injected-transactions)
+  - [3. Querying Program Data](#3-querying-program-data)
+  - [4. Reading Program State via calculateReplyForHandle](#4-reading-program-state-via-calculatereplyforhandle)
+- [Additional Resources](#additional-resources)
+- [License](#license)
 
 ## Installation
 
-Install the package using npm or yarn:
-
 ```bash
-npm install gearexe
+npm install @vara-eth/api
 ```
 
-```bash
-yarn add gearexe
-```
+### Prerequisites
 
-### Peer Dependencies
-
-The library requires `ethers` v6.14+ as a peer dependency:
+Install required peer dependencies:
 
 ```bash
-npm install ethers@^6.14
+npm install viem@^2.39.0 kzg-wasm@1.0.0
 ```
-
-## Key Features
-
-- **🔗 Ethereum Integration**: Seamless interaction with Ethereum smart contracts
-- **⚡ High Performance**: Multi-threaded execution with near-zero gas fees
-- **🔒 Type Safety**: Full TypeScript support with strict typing
-- **🛠️ Developer Tools**: Comprehensive APIs for program management
-- **💰 Cost Efficient**: Reverse gas model and reduced computation costs
-- **🚀 Real-time**: Instant pre-confirmations with blockchain security
-
-## Core Concepts
-
-### Programs
-WebAssembly (WASM) programs running on Gear.exe that handle computationally intensive logic extracted from Solidity contracts.
-
-### Router Contract
-The main entry point for creating programs and managing code validation on the Ethereum side.
-
-Ref: [Router Contract](https://github.com/gear-tech/gear/blob/master/ethexe/contracts/src/Router.sol)
-
-### Mirror Contract
-Represents a deployed program on Ethereum, enabling message sending and state management.
-
-Ref: [Mirror Contract](https://github.com/gear-tech/gear/blob/master/ethexe/contracts/src/Mirror.sol)
-
-### Wrapped VARA (wVARA)
-ERC20 representation of VARA tokens used for gas payments and program interactions.
-
-Ref: [Wrapped VARA](https://github.com/gear-tech/gear/blob/master/ethexe/contracts/src/WrappedVara.sol)
 
 ## Quick Start
 
 ```typescript
-import {
-  GearExeApi,
-  HttpGearexeProvider,
-  getRouterContract,
-  getMirrorContract,
-  getWrappedVaraContract
-} from 'gearexe';
-import { ethers } from 'ethers';
+import { VaraEthApi, HttpVaraEthProvider, EthereumClient, getRouterClient } from '@vara-eth/api';
+import { createPublicClient, createWalletClient, http } from 'viem';
+import { privateKeyToAccount } from 'viem/accounts';
 
-// Initialize API and wallet
-const api = new GearExeApi(new HttpGearexeProvider('http://localhost:9944'));
-const wallet = new ethers.Wallet(privateKey, provider);
+// Initialize Ethereum clients
+const publicClient = createPublicClient({ transport: http('https://eth-rpc-url') });
+const account = privateKeyToAccount('0x...');
+const walletClient = createWalletClient({ account, transport: http('https://eth-rpc-url') });
 
-// Get contract instances
-const router = getRouterContract(routerAddress, wallet);
-const wvara = getWrappedVaraContract(wvaraAddress, wallet);
+// Create EthereumClient wrapper
+const ethereumClient = new EthereumClient(publicClient, walletClient);
+
+// Initialize Vara.Eth API (connects to Vara.Eth node)
+const api = new VaraEthApi(
+  new HttpVaraEthProvider('http://localhost:9944'),
+  ethereumClient,
+  routerAddress
+);
+
+// Get Router contract client
+const router = getRouterClient(routerAddress, ethereumClient);
 ```
 
-## Main Functionality
+## High-Level API
 
-### 1. Code Upload and Validation
+### VaraEthApi
 
-Upload and validate WebAssembly code before creating programs:
+Main API class for interacting with the Vara.Eth network. Provides methods for querying program state and performing read-only operations.
 
 ```typescript
-import * as fs from 'fs';
+const api = new VaraEthApi(provider, ethereumClient, routerAddress);
 
-// Upload code for validation
-const code = fs.readFileSync('path/to/program.wasm');
-const txManager = await router.requestCodeValidation(code);
+// Query methods
+await api.query.program.getIds();           // List all program IDs
+await api.query.program.readState(hash);    // Read program state
+await api.query.program.codeId(programId);  // Get program's code ID
 
-await txManager.sendAndWaitForReceipt();
-
-// Wait for validation
-const isValidated = await tx.waitForCodeGotValidated();
-console.log('Code validated:', isValidated);
+// Call methods (read-only)
+await api.call.program.calculateReplyForHandle(source, programId, payload);
 ```
 
-### 2. Program Creation
+### EthereumClient
+
+Wrapper around viem's `PublicClient` and `WalletClient` that provides unified interface for contract interactions.
+
+```typescript
+const ethereumClient = new EthereumClient(publicClient, walletClient);
+
+// Access underlying clients
+ethereumClient.publicClient;
+ethereumClient.walletClient;
+ethereumClient.accountAddress;
+```
+
+### RouterClient
+
+Interface for interacting with the Router contract - the main entry point for code validation and program creation on Ethereum.
+
+**Source:** [Router.sol](https://github.com/gear-tech/gear/blob/master/ethexe/contracts/src/Router.sol)
+
+```typescript
+const router = getRouterClient(routerAddress, ethereumClient);
+
+await router.createProgram(codeId);                 // Create program from validated code
+await router.createProgramWithAbiInterface(codeId, abiAddress); // Create with Solidity ABI
+```
+
+### MirrorClient
+
+Interface for interacting with Mirror contracts - deployed programs on Ethereum. Each program has its own Mirror contract.
+
+**Source:** [Mirror.sol](https://github.com/gear-tech/gear/blob/master/ethexe/contracts/src/Mirror.sol)
+
+```typescript
+const mirror = getMirrorClient(programId, ethereumClient);
+
+await mirror.sendMessage(payload, value);          // Send message to program
+await mirror.executableBalanceTopUp(amount);       // Top up program's balance
+await mirror.stateHash();                          // Get current state hash
+```
+
+### WrappedVaraClient
+
+Interface for managing wVARA tokens (ERC20 wrapper for VARA) used for gas payments.
+
+**Source:** [WrappedVara.sol](https://github.com/gear-tech/gear/blob/master/ethexe/contracts/src/WrappedVara.sol)
+
+```typescript
+const wvara = getWrappedVaraClient(wvaraAddress, ethereumClient);
+
+await wvara.approve(spender, amount);              // Approve spending
+await wvara.balanceOf(address);                    // Check balance
+await wvara.allowance(owner, spender);             // Check allowance
+```
+
+## Ethereum Side Operations
+
+### 1. Program Creation
 
 Create programs from validated code:
 
+> **Note**: Code must be uploaded and validated before creating programs. Use the [Vara.Eth CLI](https://github.com/gear-tech/gear/tree/master/ethexe/cli) to upload and validate WASM code. The CLI will provide you with a `codeId` after successful validation.
+
 ```typescript
-// Create a new program
-const createTx = await router.createProgram(codeId);
-await createTx.send();
+// Create program from validated code
+const codeId = '0x...'; // Code ID from vara-eth CLI
+
+const tx = await router.createProgram(codeId);
+await tx.sendAndWaitForReceipt();
 
 // Get the program ID
-const programId = await createTx.getProgramId();
+const programId = await tx.getProgramId();
+console.log('Program created:', programId);
 
-// Get mirror contract for program interaction
-const mirror = getMirrorContract(programId, wallet);
+// Get Mirror contract for program interaction
+const mirror = getMirrorClient(programId, ethereumClient);
 ```
 
-### 3. Program State Management
-
-Query and manage program state:
+#### Creating Program with Solidity ABI Interface
 
 ```typescript
-// Check if program is active
-const stateHash = await mirror.stateHash();
-const state = await api.query.program.readState(stateHash);
-console.log('Program active:', 'Active' in state.program);
+const codeId = '0x...'; // Code ID from vara-eth CLI
 
-// Get program code ID
-const codeId = await api.query.program.codeId(programId);
+// Deploy Solidity ABI contract
+const deployHash = await walletClient.deployContract({
+  abi: counterAbi,
+  bytecode: counterBytecode,
+});
 
-// List all program IDs
-const programIds = await api.query.program.getIds();
+const receipt = await publicClient.waitForTransactionReceipt({ hash: deployHash });
+const abiAddress = receipt.contractAddress;
+
+// Create program with ABI interface
+const tx = await router.createProgramWithAbiInterface(codeId, abiAddress);
+await tx.sendAndWaitForReceipt();
 ```
 
-### 4. Message Sending
+### 2. Sending Messages to Programs
 
-Send messages to programs with payload encoding.
+Send messages and wait for replies:
 
-_Most likely program is written with [Sails](https://github.com/gear-tech/sails) framework so [sails-js](https://github.com/gear-tech/sails/tree/master/js/README.md) library can be used to encode payloads._
+> **Note**: Programs are typically built with [Sails framework](https://github.com/gear-tech/sails). Use [sails-js](https://github.com/gear-tech/sails/tree/master/js) library to encode payloads and decode replies.
 
 ```typescript
-const payload = `<payload encoded by sails-js library>`;
+// Encode payload using sails-js
+const sails = await Sails.new(); // Initialize from IDL
+const payload = sails.services.Counter.functions.Increment.encodePayload();
+
+// Send message
 const tx = await mirror.sendMessage(payload, 0n);
 await tx.send();
 
-// Handle reply
-const { waitForReply: waitIncrement } = await tx.setupReplyListener();
-const { payload: replyPayload, replyCode, value } = await waitIncrement;
+// Get message details
+const message = await tx.getMessage();
+console.log('Message ID:', message.id);
+
+// Setup listener and wait for reply
+const { waitForReply } = await tx.setupReplyListener();
+const { payload: replyPayload, replyCode, value } = await waitForReply;
+
+// Decode reply using sails-js
 const result = sails.services.Counter.functions.Increment.decodeResult(replyPayload);
+console.log('Result:', result);
 ```
 
-### 5. Balance Management
+### 3. Managing Executable Balance
 
-Manage wrapped VARA tokens for program operations:
+Programs require wVARA balance to execute. Top up using wVARA tokens:
 
 ```typescript
-// Check balance
-const balance = await wvara.balanceOf(wallet.address);
-console.log('wVARA balance:', balance.toString());
+// Check wVARA balance
+const balance = await wvara.balanceOf(ethereumClient.accountAddress);
+console.log('wVARA balance:', balance);
 
-// Approve spending
+// Approve program to spend wVARA
 const approveTx = await wvara.approve(programId, BigInt(10 * 1e12));
-await approveTx.send();
+await approveTx.sendAndWaitForReceipt();
 
-// Check allowance
-const allowance = await wvara.allowance(wallet.address, programId);
-console.log('Allowance:', allowance.toString());
+const approvalData = await approveTx.getApprovalLog();
+console.log('Approved amount:', approvalData.value);
 
-// Top up executable balance
+// Top up program's executable balance
 const topUpTx = await mirror.executableBalanceTopUp(BigInt(10 * 1e12));
 const { status } = await topUpTx.sendAndWaitForReceipt();
+console.log('Top-up status:', status);
 ```
 
-### 6. State Queries
+### 4. Checking Program State
 
-Perform read-only operations on program state:
+Query program information from Router and Mirror contracts:
 
 ```typescript
-// Calculate reply for handle call
-const queryPayload = sails.services.Counter.queries.GetValue.encodePayload();
-const reply = await api.call.program.calculateReplyForHandle(
-  sourceAddress,
-  programId,
-  queryPayload
+// Check code validation status
+const codeState = await router.codeState(codeId);
+console.log('Code state:', codeState); // 'Validated' | 'Rejected' | 'Unknown'
+
+// Get program's code ID
+const programCodeId = await router.programCodeId(programId);
+
+// Get program's state hash
+const stateHash = await mirror.stateHash();
+
+// Read full program state from Vara.Eth
+const state = await api.query.program.readState(stateHash);
+console.log('Program active:', 'Active' in state.program);
+
+// Get program nonce
+const nonce = await mirror.nonce();
+```
+
+### 5. Working with TxManager
+
+Contract write methods return a `TxManager` instance that handles transaction lifecycle:
+
+```typescript
+const tx = await router.createProgram(codeId);
+
+// Send transaction and get response
+const response = await tx.send();
+console.log('Transaction hash:', response.hash);
+
+// Send and wait for receipt
+const receipt = await tx.sendAndWaitForReceipt();
+console.log('Status:', receipt.status);
+console.log('Block number:', receipt.blockNumber);
+
+// Estimate gas before sending
+const gasEstimate = await tx.estimateGas();
+console.log('Estimated gas:', gasEstimate);
+
+// Access transaction request
+const txRequest = tx.getTx();
+console.log('Gas limit:', txRequest.gasLimit);
+
+// Find specific events in receipt
+await tx.send();
+const event = await tx.findEvent('ProgramCreated');
+console.log('Event args:', event.args);
+
+// Use transaction-specific helper functions
+const programId = await tx.getProgramId(); // Available on createProgram transactions
+```
+
+**TxManager Helper Functions:**
+
+Each transaction type can have specific helper methods:
+
+- `createProgram`: `getProgramId()` - extracts program ID from event
+- `requestCodeValidation`: `waitForCodeGotValidated()` - waits for validation completion
+- `approve`: `getApprovalLog()` - gets approval event data
+- `sendMessage`: `getMessage()`, `setupReplyListener()` - message handling
+
+## Vara.Eth Side Operations
+
+### 1. Instantiating VaraEthApi
+
+Connect to Vara.Eth node using HTTP or WebSocket provider:
+
+```typescript
+// HTTP Provider (for queries and calls)
+import { VaraEthApi, HttpVaraEthProvider } from '@vara-eth/api';
+
+const api = new VaraEthApi(
+  new HttpVaraEthProvider('http://localhost:9944'),
+  ethereumClient,
+  routerAddress
 );
 
-// Decode result
+// WebSocket Provider (for subscriptions and real-time updates)
+import { WsVaraEthProvider } from '@vara-eth/api';
+
+const wsApi = new VaraEthApi(
+  new WsVaraEthProvider('ws://localhost:9944'),
+  ethereumClient,
+  routerAddress
+);
+
+// Don't forget to disconnect when done
+await api.provider.disconnect();
+```
+
+**HTTP vs WebSocket Providers:**
+
+- **HttpVaraEthProvider**: Best for one-time queries and calls. Simpler, no persistent connection.
+- **WsVaraEthProvider**: Required for subscriptions and real-time event listening. Maintains persistent connection.
+
+### 2. Injected Transactions
+
+Injected transactions are Vara.Eth-native transactions sent directly to the network, bypassing Ethereum. They provide faster execution and lower costs for operations that don't require Ethereum settlement.
+
+**What are Injected Transactions?**
+
+Unlike regular messages sent through Mirror contracts on Ethereum, injected transactions are:
+- Sent directly to Vara.Eth validators
+- Signed with Ethereum private key but submitted off-chain
+- Cheaper and faster (no Ethereum gas costs)
+- Reference an Ethereum block for security
+
+**Creating and Sending Injected Transactions:**
+
+```typescript
+import { InjectedTransaction } from '@vara-eth/api';
+
+// Create injected transaction
+const tx = new InjectedTransaction({
+  destination: programId,              // Program to send message to
+  payload: '0x1c436f756e74657224496e6372656d656e74', // Encoded message payload
+  value: 0n,                           // Optional value to send
+  // These are auto-populated if not provided:
+  // recipient: validator address (auto-selected)
+  // referenceBlock: recent Ethereum block hash
+  // salt: random salt for uniqueness
+});
+
+// Send via VaraEthApi
+const result = await api.sendInjectedTransaction(tx).send();
+console.log('Transaction result:', result); // 'Accept' or 'Reject'
+```
+
+**Manual Transaction Configuration:**
+
+```typescript
+// Manually set all parameters
+const tx = new InjectedTransaction({
+  recipient: validatorAddress,         // Specific validator
+  destination: programId,
+  payload: encodedPayload,
+  value: 1000n,
+  referenceBlock: blockHash,          // Specific Ethereum block
+  salt: '0x030405',                   // Custom salt
+});
+
+// Transaction hash (for signing)
+console.log('TX hash:', tx.hash);
+
+// Send with auto-populated fields
+const injectedTx = api.sendInjectedTransaction(tx);
+await injectedTx.send();
+```
+
+### 3. Querying Program Data
+
+Query program information from Vara.Eth network:
+
+```typescript
+// List all program IDs
+const programIds = await api.query.program.getIds();
+console.log('Total programs:', programIds.length);
+
+// Get program's code ID
+const codeId = await api.query.program.codeId(programId);
+
+// Read program state by state hash
+const stateHash = await mirror.stateHash(); // Get from Mirror contract
+const state = await api.query.program.readState(stateHash);
+
+if ('Active' in state.program) {
+  console.log('Program is active');
+  console.log('Balance:', state.balance);
+}
+```
+
+### 4. Reading Program State via `calculateReplyForHandle`
+
+Perform read-only queries on program state without sending transactions:
+
+> **Note**: Use sails-js to encode query payloads and decode results.
+
+```typescript
+// Encode query payload using sails-js
+const queryPayload = sails.services.Counter.queries.GetValue.encodePayload();
+
+// Calculate what the program would reply (read-only)
+const reply = await api.call.program.calculateReplyForHandle(
+  ethereumClient.accountAddress,  // Source address
+  programId,                      // Program to query
+  queryPayload                    // Encoded query
+);
+
+// Decode result using sails-js
 const value = sails.services.Counter.queries.GetValue.decodeResult(reply.payload);
 console.log('Current counter value:', value);
 ```
 
-### 7. Transaction Management
+This method is useful for:
+- Reading program state without modifying it
+- Testing message payloads before sending
+- Querying computed values from programs
 
-Advanced transaction handling with the TxManager (see section 8 for detailed TxManager functionality):
+## Additional Resources
 
-```typescript
-// Create transaction with custom options
-const tx = await router.createProgram(codeId);
-
-// Send and get receipt
-const receipt = await tx.sendAndWaitForReceipt();
-console.log('Transaction status:', receipt.status);
-
-// Get transaction response
-const response = await tx.send();
-console.log('Transaction hash:', response.hash);
-
-// Access transaction events using TxManager
-const event = await tx.findEvent('ProgramCreated');
-console.log('Program created:', event.args);
-
-// Use contract-specific helper functions
-const programId = await tx.getProgramId(); // Custom helper function
-```
-
-### 8. Transaction Manager (TxManager)
-
-The `TxManager` is a core component that handles all Ethereum transactions in the gearexe library. It provides a unified interface for transaction lifecycle management with TypeScript generics support for extensibility.
-
-#### Key Features
-
-- **Generic Type Support**: Allows custom helper functions for transaction-specific operations
-- **Transaction Lifecycle Management**: From gas estimation to receipt handling
-- **Event Processing**: Automatic event parsing and retrieval from transaction receipts
-- **Type Safety**: Full TypeScript support with interface definitions
-
-#### Core Methods
-
-```typescript
-class TxManager<T = object, U = object> {
-  // Send transaction to network
-  async send(): Promise<TransactionResponse>;
-
-  // Send and wait for confirmation
-  async sendAndWaitForReceipt(): Promise<TransactionReceipt>;
-
-  // Get transaction receipt
-  async getReceipt(): Promise<TransactionReceipt>;
-
-  // Estimate gas for transaction
-  async estimateGas(): Promise<bigint>;
-
-  // Find specific events in receipt
-  async findEvent(eventName: string): Promise<EventLog>;
-
-  // Get transaction request details
-  getTx(): TransactionRequest;
-}
-```
-
-#### Usage Examples
-
-```typescript
-// Basic transaction handling
-const tx = await router.createProgram(codeId);
-await tx.send();
-const receipt = await tx.getReceipt();
-
-// With gas estimation
-await tx.estimateGas();
-const gasLimit = tx.getTx().gasLimit;
-
-// Event handling
-const transferEvent = await tx.findEvent('Transfer');
-console.log('Transfer event:', transferEvent.args);
-
-// Custom helper functions (transaction-dependent)
-const txWithHelpers = new TxManager(
-  wallet,
-  transactionRequest,
-  contractInterface,
-  {
-    // Helper function that depends on this transaction
-    getProgramId: (manager) => async () => {
-      const event = await manager.findEvent('ProgramCreated');
-      return event.args.programId;
-    }
-  }
-);
-
-// Use the helper function
-const programId = await txWithHelpers.getProgramId();
-```
-
-#### Helper Functions
-
-The TxManager supports two types of helper functions:
-
-1. **Transaction-Dependent Helpers**: Functions that need access to the transaction manager instance
-2. **Transaction-Independent Helpers**: Static utility functions
-
-```typescript
-// Example from router contract
-const createTx = new TxManager(
-  wallet,
-  request,
-  interface,
-  {
-    // Transaction-dependent: needs access to transaction events
-    getProgramId: (manager) => async () => {
-      const event = await manager.findEvent('ProgramCreated');
-      return event.args.programId;
-    },
-    waitForCodeGotValidated: (manager) => async () => {
-      // Custom logic for waiting for validation
-      return new Promise(resolve => {
-        // Implementation details...
-      });
-    }
-  },
-  {
-    // Transaction-independent: utility functions
-    processDevBlob: async () => {
-      // Development-specific processing
-    }
-  }
-);
-```
-
-This design pattern ensures type safety while providing flexibility for contract-specific operations.
-
-## API Reference
-
-### GearExeApi
-
-Main API class for interacting with Gear.exe:
-
-```typescript
-class GearExeApi {
-  constructor(provider: IGearExeProvider);
-
-  // Query methods (read-only)
-  query: {
-    program: {
-      getIds(): Promise<string[]>;
-      readState(hash: string): Promise<ProgramState>;
-      codeId(programId: string): Promise<string>;
-    };
-  };
-
-  // Call methods (transactions)
-  call: {
-    program: {
-      calculateReplyForHandle(
-        source: string,
-        program: string,
-        payload: string
-      ): Promise<ReplyInfo>;
-    };
-  };
-}
-```
-
-### Contract Utilities
-
-Helper functions for contract interaction:
-
-```typescript
-// Get contract instances
-function getRouterContract(address: string, signer: Signer): RouterContract;
-function getMirrorContract(address: string, signer: Signer): MirrorContract;
-function getWrappedVaraContract(address: string, signer: Signer): WrappedVaraContract;
-```
-
-### Providers
-
-Network communication providers:
-
-```typescript
-// HTTP provider for standard requests
-class HttpGearexeProvider implements IGearExeProvider {
-  constructor(url?: string); // defaults to 'http://127.0.0.1:9944'
-}
-
-// WebSocket provider for real-time subscriptions
-class WsGearexeProvider implements IGearExeProvider {
-  constructor(url?: string); // defaults to 'ws://127.0.0.1:9944'
-}
-```
-
-## Development
-
-### Building
-
-```bash
-yarn build
-```
-
-### Testing
-
-```bash
-yarn test
-```
-
-## TypeScript Support
-
-The library is built with strict TypeScript support, providing:
-
-- **Full type safety** for all API interactions
-- **Interface definitions** for contracts and responses
-- **Generic type support** for transaction management
-- **JSDoc documentation** for all public APIs
-
-## Error Handling
-
-The library provides comprehensive error handling:
-
-```typescript
-try {
-  const result = await api.call.program.calculateReplyForHandle(
-    sourceId,
-    invalidProgramId,
-    payload
-  );
-} catch (error) {
-  console.error('Program call failed:', error.message);
-}
-```
-
-## Contributing
-
-Contributions are welcome! Please check the [contributing guidelines](../../CONTRIBUTING.md) for details.
+- [Vara.Eth Whitepaper](https://gear-tech.io/gear-exe/whitepaper/)
+- [Sails Framework](https://github.com/gear-tech/sails) - Build Vara.Eth programs
+- [Sails-JS](https://github.com/gear-tech/sails/tree/master/js) - Encode/decode payloads
+- [Viem Documentation](https://viem.sh/) - Ethereum client library
 
 ## License
 
-This project is licensed under the GPL 3.0 License - see the [LICENSE](../../LICENSE) file for details.
-
-## Resources
-
-- **[Gear.exe Whitepaper](https://gear-tech.io/gear-exe/whitepaper/)** - Comprehensive technical documentation
-- **[Gear Wiki](https://wiki.gear-tech.io)** - Developer documentation and guides
-- **[Gear IDEA](https://idea.gear-tech.io)** - Online IDE for Gear program development
-- **[Vara Network](https://vara.network)** - The Gear Protocol mainnet
-
-## Questions or Issues?
-
-If you have questions about the gearexe library functionality, need clarification on any features, or encounter issues:
-
-1. **Check the [Gear Wiki](https://wiki.gear-tech.io)** for comprehensive documentation
-2. **Review the [test examples](./test/)** in this repository for practical usage patterns
-3. **Open an issue** in this repository for bug reports or feature requests
-4. **Join the [Gear Discord](https://discord.gg/7BQznC9uD9)** for community support
-
-**Is anything unclear in this documentation?** Please let us know what needs better explanation!
+GPL 3.0 - see [LICENSE](../../LICENSE)
