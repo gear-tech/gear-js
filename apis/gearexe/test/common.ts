@@ -9,4 +9,4 @@ export const hasProps = (obj: object, props: string[]) => {
 };
 
 export const waitNBlocks = async (count: number) =>
-  new Promise((resolve) => setTimeout(resolve, count * config.blockTime + 1_000));
+  new Promise((resolve) => setTimeout(resolve, count * config.blockTime * 1_000));

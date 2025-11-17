@@ -308,7 +308,7 @@ fi
 
 # Run gearexe
 log_info "Starting Gear execution layer node (gearexe)..."
-export RUST_LOG=debug
+export RUST_LOG=trace
 export RUST_BACKTRACE=1
 
 log_info "Gearexe configuration:"

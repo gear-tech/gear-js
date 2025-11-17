@@ -1,11 +1,12 @@
 import { IGearExeProvider, InjectedTransaction } from '../types/index.js';
-import { EthereumClient } from '../eth/index.js';
+import { EthereumClient, RouterContract } from '../eth/index.js';
 
 export class Injected {
   constructor(
     private _gearExeProvider: IGearExeProvider,
     private _ethClient: EthereumClient,
     private tx: InjectedTransaction,
+    private router: RouterContract,
   ) {}
 
   private async setReferenceBlock() {
@@ -16,9 +17,19 @@ export class Injected {
     this.tx.setReferenceBlock(block.hash);
   }
 
+  public async setRecipient() {
+    const validators = await this.router.validators();
+    // TODO: pick the right validator
+    this.tx.setRecipient(validators[0]);
+  }
+
   public async send() {
     if (!this.tx.referenceBlock) {
       await this.setReferenceBlock();
+    }
+
+    if (!this.tx.recipient) {
+      await this.setRecipient();
     }
 
     const pubKey = this._ethClient.accountAddress;
@@ -26,9 +37,12 @@ export class Injected {
 
     const result = await this._gearExeProvider.send('injected_sendTransaction', [
       {
-        data: this.tx.data,
-        signature,
-        public_key: pubKey,
+        recipient: this.tx.recipient,
+        tx: {
+          data: this.tx.data,
+          signature,
+          public_key: pubKey,
+        },
       },
     ]);
 

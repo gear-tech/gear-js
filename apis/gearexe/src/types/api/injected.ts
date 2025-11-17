@@ -7,7 +7,7 @@ import { HexString } from '../../types/index.js';
 // TODO: add JSDocs
 export interface IInjectedTransaction {
   readonly destination: HexString;
-  readonly payload: HexString | Uint8Array;
+  readonly payload: HexString;
   recipient?: HexString;
   value?: bigint;
   referenceBlock?: HexString;
@@ -17,20 +17,20 @@ export interface IInjectedTransaction {
 // TODO: add validation of all fields
 export class InjectedTransaction {
   private _destination: HexString;
-  private _payload: Uint8Array;
+  private _payload: HexString;
   private _value: bigint;
   private _referenceBlock: HexString;
-  private _salt: Uint8Array;
+  private _salt: HexString;
   private _recipient: HexString;
 
   constructor(tx: IInjectedTransaction) {
     this._destination = tx.destination;
-    this._payload = typeof tx.payload === 'string' ? hexToBytes(tx.payload) : tx.payload;
+    this._payload = tx.payload;
     this._value = tx.value || 0n;
     if (tx.referenceBlock) {
       this._referenceBlock = tx.referenceBlock;
     }
-    this._salt = tx.salt ? hexToBytes(tx.salt) : randomBytes(32);
+    this._salt = tx.salt ? tx.salt : bytesToHex(randomBytes(32));
     if (tx.recipient) {
       this._recipient = tx.recipient;
     }
@@ -52,7 +52,7 @@ export class InjectedTransaction {
   }
 
   public setSalt(value: HexString): this {
-    this._salt = hexToBytes(value);
+    this._salt = value;
     return this;
   }
 
@@ -79,8 +79,12 @@ export class InjectedTransaction {
     return this._recipient ? hexToBytes(this._recipient) : new Uint8Array(20).fill(0);
   }
 
-  public get payload(): Uint8Array {
+  public get payload(): HexString {
     return this._payload;
+  }
+
+  public get payloadU8a(): Uint8Array {
+    return hexToBytes(this._payload);
   }
 
   public get value(): bigint {
@@ -102,18 +106,21 @@ export class InjectedTransaction {
     return hexToBytes(this._referenceBlock);
   }
 
-  public get salt(): Uint8Array {
+  public get salt(): HexString {
     return this._salt;
+  }
+
+  public get saltU8a(): Uint8Array {
+    return hexToBytes(this._salt);
   }
 
   public get hash(): HexString {
     const bytes = concatBytes(
-      this.recipientU8a,
       this.destinationU8a,
-      this._payload,
+      this.payloadU8a,
       this.valueU8a,
       this.referenceBlockU8a,
-      this._salt,
+      this.saltU8a,
     );
     const hash = keccak_256(bytes);
 
@@ -123,10 +130,9 @@ export class InjectedTransaction {
 
   public get data() {
     return {
-      recipient: this._recipient,
       destination: this.destination,
       payload: this.payload,
-      value: this.value.toString(),
+      value: Number(this.value),
       reference_block: this.referenceBlock,
       salt: this.salt,
     };

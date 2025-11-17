@@ -6,7 +6,7 @@ import {
   EthereumClient,
   GearExeApi,
   getMirrorContract,
-  getRouterContract,
+  getRouterClient,
   getWrappedVaraContract,
   HttpGearexeProvider,
 } from '../src';
@@ -18,7 +18,7 @@ let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
 let walletClient: WalletClient<WebSocketTransport>;
 let ethereumClient: EthereumClient;
 
-let router: ReturnType<typeof getRouterContract>;
+let router: ReturnType<typeof getRouterClient>;
 let mirror: ReturnType<typeof getMirrorContract>;
 let wvara: ReturnType<typeof getWrappedVaraContract>;
 
@@ -35,10 +35,9 @@ beforeAll(async () => {
   walletClient = createWalletClient<WebSocketTransport>({
     account,
     transport,
-    chain: null,
   });
   ethereumClient = new EthereumClient<WebSocketTransport>(publicClient, walletClient);
-  router = getRouterContract(config.routerId, ethereumClient);
+  router = getRouterClient(config.routerId, ethereumClient);
   wvara = getWrappedVaraContract(await router.wrappedVara(), ethereumClient);
 
   api = new GearExeApi(new HttpGearexeProvider(), ethereumClient);
