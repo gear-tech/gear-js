@@ -10,6 +10,7 @@
   "scripts": {
     "test": "./scripts/run-tests-anvil.sh",
     "test:only": "yarn node --no-warnings --experimental-vm-modules $(../../node_modules/.bin/jest) --runInBand",
+    "test:no-setup": "npx jest",
     "build": "npx rollup -c",
     "clean": "rm -rf lib",
     "abi": "node scripts/convert-abi.mjs"
@@ -22,14 +23,13 @@
     }
   },
   "peerDependencies": {
-    "ethers": "^6.15",
-    "kzg-wasm": "^0.5.0"
+    "kzg-wasm": "1.0.0",
+    "viem": "^2.39.0"
   },
   "devDependencies": {
     "@types/ws": "^8",
-    "ethers": "^6.15.0",
     "kzg-wasm": "1.0.0",
-    "viem": "^2.38.6",
+    "viem": "^2.39.0",
     "ws": "^8.18.3"
   },
   "files": [

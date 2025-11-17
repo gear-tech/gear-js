@@ -1,3 +1,4 @@
+import { Address, Hex } from 'viem';
 import { HexString } from '../../types/index.js';
 
 /**
@@ -30,7 +31,7 @@ export interface ReplyHelpers {
    * Gets the reply event from the transaction.
    * @returns Promise resolving to the event log
    */
-  readonly getEvent: () => Promise<import('ethers').EventLog>;
+  readonly getEvent: () => Promise<any>; // TODO: Replace with viem event log type in Phase 2
 }
 
 /**
@@ -118,4 +119,9 @@ export interface Reply {
    * The transaction hash of the reply.
    */
   txHash: HexString;
+}
+
+export interface ValueClaimingRequestedLog {
+  claimedId: Hex;
+  source: Address;
 }

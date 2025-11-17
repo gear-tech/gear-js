@@ -1,51 +1,425 @@
-import { CodeState } from '../interfaces';
-import { ethers } from 'ethers';
+import { Hex } from 'viem';
+import { CodeState } from '../interfaces/index.js';
 
-// GENERATED_ABI_START
 export const IROUTER_ABI = [
-  'function areValidators(address[] validators) view returns (bool)',
-  'function codeState(bytes32 codeId) view returns (uint8)',
-  'function codesStates(bytes32[] codesIds) view returns (uint8[])',
-  'function commitBatch((bytes32 blockHash, uint48 blockTimestamp, bytes32 previousCommittedBatchHash, ((address actorId, bytes32 newStateHash, bool exited, address inheritor, uint128 valueToReceive, (bytes32 messageId, address destination, uint128 value)[] valueClaims, (bytes32 id, address destination, bytes payload, uint128 value, (bytes32 to, bytes4 code) replyDetails, bool call)[] messages)[] transitions, bytes32 head)[] chainCommitment, (bytes32 id, bool valid)[] codeCommitments, ((uint256 amount, bytes32 root) operators, ((address vault, uint256 amount)[] distribution, uint256 totalAmount, address token) stakers, uint48 timestamp)[] rewardsCommitment, ((uint256 x, uint256 y) aggregatedPublicKey, bytes verifiableSecretSharingCommitment, address[] validators, uint256 eraIndex)[] validatorsCommitment) batchCommitment, uint8 signatureType, bytes[] signatures)',
-  'function computeSettings() view returns ((uint64 threshold, uint128 wvaraPerSecond))',
-  'function createProgram(bytes32 codeId, bytes32 salt, address overrideInitializer) returns (address)',
-  'function createProgramWithAbiInterface(bytes32 codeId, bytes32 salt, address overrideInitializer, address abiInterface) returns (address)',
-  'function genesisBlockHash() view returns (bytes32)',
-  'function genesisTimestamp() view returns (uint48)',
-  'function isValidator(address validator) view returns (bool)',
-  'function latestCommittedBatchHash() view returns (bytes32)',
-  'function latestCommittedBatchTimestamp() view returns (uint48)',
-  'function lookupGenesisHash()',
-  'function middleware() view returns (address)',
-  'function mirrorImpl() view returns (address)',
-  'function programCodeId(address programId) view returns (bytes32)',
-  'function programsCodeIds(address[] programsIds) view returns (bytes32[])',
-  'function programsCount() view returns (uint256)',
-  'function requestCodeValidation(bytes32 codeId)',
-  'function setMirror(address newMirror)',
-  'function signingThresholdPercentage() view returns (uint16)',
-  'function timelines() view returns ((uint256 era, uint256 election, uint256 validationDelay))',
-  'function validatedCodesCount() view returns (uint256)',
-  'function validators() view returns (address[])',
-  'function validatorsAggregatedPublicKey() view returns ((uint256 x, uint256 y))',
-  'function validatorsCount() view returns (uint256)',
-  'function validatorsThreshold() view returns (uint256)',
-  'function validatorsVerifiableSecretSharingCommitment() view returns (bytes)',
-  'function wrappedVara() view returns (address)',
-  'event AnnouncesCommitted(bytes32 head)',
-  'event BatchCommitted(bytes32 hash)',
-  'event CodeGotValidated(bytes32 codeId, bool indexed valid)',
-  'event CodeValidationRequested(bytes32 codeId)',
-  'event ComputationSettingsChanged(uint64 threshold, uint128 wvaraPerSecond)',
-  'event ProgramCreated(address actorId, bytes32 indexed codeId)',
-  'event StorageSlotChanged()',
-  'event ValidatorsCommittedForEra(uint256 eraIndex)',
-];
+  {
+    type: 'function',
+    name: 'areValidators',
+    inputs: [{ name: 'validators', type: 'address[]', internalType: 'address[]' }],
+    outputs: [{ name: '', type: 'bool', internalType: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'codeState',
+    inputs: [{ name: 'codeId', type: 'bytes32', internalType: 'bytes32' }],
+    outputs: [{ name: '', type: 'uint8', internalType: 'enum Gear.CodeState' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'codesStates',
+    inputs: [{ name: 'codesIds', type: 'bytes32[]', internalType: 'bytes32[]' }],
+    outputs: [{ name: '', type: 'uint8[]', internalType: 'enum Gear.CodeState[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'commitBatch',
+    inputs: [
+      {
+        name: 'batchCommitment',
+        type: 'tuple',
+        internalType: 'struct Gear.BatchCommitment',
+        components: [
+          { name: 'blockHash', type: 'bytes32', internalType: 'bytes32' },
+          { name: 'blockTimestamp', type: 'uint48', internalType: 'uint48' },
+          { name: 'previousCommittedBatchHash', type: 'bytes32', internalType: 'bytes32' },
+          {
+            name: 'chainCommitment',
+            type: 'tuple[]',
+            internalType: 'struct Gear.ChainCommitment[]',
+            components: [
+              {
+                name: 'transitions',
+                type: 'tuple[]',
+                internalType: 'struct Gear.StateTransition[]',
+                components: [
+                  { name: 'actorId', type: 'address', internalType: 'address' },
+                  { name: 'newStateHash', type: 'bytes32', internalType: 'bytes32' },
+                  { name: 'exited', type: 'bool', internalType: 'bool' },
+                  { name: 'inheritor', type: 'address', internalType: 'address' },
+                  { name: 'valueToReceive', type: 'uint128', internalType: 'uint128' },
+                  {
+                    name: 'valueClaims',
+                    type: 'tuple[]',
+                    internalType: 'struct Gear.ValueClaim[]',
+                    components: [
+                      { name: 'messageId', type: 'bytes32', internalType: 'bytes32' },
+                      { name: 'destination', type: 'address', internalType: 'address' },
+                      { name: 'value', type: 'uint128', internalType: 'uint128' },
+                    ],
+                  },
+                  {
+                    name: 'messages',
+                    type: 'tuple[]',
+                    internalType: 'struct Gear.Message[]',
+                    components: [
+                      { name: 'id', type: 'bytes32', internalType: 'bytes32' },
+                      { name: 'destination', type: 'address', internalType: 'address' },
+                      { name: 'payload', type: 'bytes', internalType: 'bytes' },
+                      { name: 'value', type: 'uint128', internalType: 'uint128' },
+                      {
+                        name: 'replyDetails',
+                        type: 'tuple',
+                        internalType: 'struct Gear.ReplyDetails',
+                        components: [
+                          { name: 'to', type: 'bytes32', internalType: 'bytes32' },
+                          { name: 'code', type: 'bytes4', internalType: 'bytes4' },
+                        ],
+                      },
+                      { name: 'call', type: 'bool', internalType: 'bool' },
+                    ],
+                  },
+                ],
+              },
+              { name: 'head', type: 'bytes32', internalType: 'bytes32' },
+            ],
+          },
+          {
+            name: 'codeCommitments',
+            type: 'tuple[]',
+            internalType: 'struct Gear.CodeCommitment[]',
+            components: [
+              { name: 'id', type: 'bytes32', internalType: 'bytes32' },
+              { name: 'valid', type: 'bool', internalType: 'bool' },
+            ],
+          },
+          {
+            name: 'rewardsCommitment',
+            type: 'tuple[]',
+            internalType: 'struct Gear.RewardsCommitment[]',
+            components: [
+              {
+                name: 'operators',
+                type: 'tuple',
+                internalType: 'struct Gear.OperatorRewardsCommitment',
+                components: [
+                  { name: 'amount', type: 'uint256', internalType: 'uint256' },
+                  { name: 'root', type: 'bytes32', internalType: 'bytes32' },
+                ],
+              },
+              {
+                name: 'stakers',
+                type: 'tuple',
+                internalType: 'struct Gear.StakerRewardsCommitment',
+                components: [
+                  {
+                    name: 'distribution',
+                    type: 'tuple[]',
+                    internalType: 'struct Gear.StakerRewards[]',
+                    components: [
+                      { name: 'vault', type: 'address', internalType: 'address' },
+                      { name: 'amount', type: 'uint256', internalType: 'uint256' },
+                    ],
+                  },
+                  { name: 'totalAmount', type: 'uint256', internalType: 'uint256' },
+                  { name: 'token', type: 'address', internalType: 'address' },
+                ],
+              },
+              { name: 'timestamp', type: 'uint48', internalType: 'uint48' },
+            ],
+          },
+          {
+            name: 'validatorsCommitment',
+            type: 'tuple[]',
+            internalType: 'struct Gear.ValidatorsCommitment[]',
+            components: [
+              {
+                name: 'aggregatedPublicKey',
+                type: 'tuple',
+                internalType: 'struct Gear.AggregatedPublicKey',
+                components: [
+                  { name: 'x', type: 'uint256', internalType: 'uint256' },
+                  { name: 'y', type: 'uint256', internalType: 'uint256' },
+                ],
+              },
+              { name: 'verifiableSecretSharingCommitment', type: 'bytes', internalType: 'bytes' },
+              { name: 'validators', type: 'address[]', internalType: 'address[]' },
+              { name: 'eraIndex', type: 'uint256', internalType: 'uint256' },
+            ],
+          },
+        ],
+      },
+      { name: 'signatureType', type: 'uint8', internalType: 'enum Gear.SignatureType' },
+      { name: 'signatures', type: 'bytes[]', internalType: 'bytes[]' },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'computeSettings',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'tuple',
+        internalType: 'struct Gear.ComputationSettings',
+        components: [
+          { name: 'threshold', type: 'uint64', internalType: 'uint64' },
+          { name: 'wvaraPerSecond', type: 'uint128', internalType: 'uint128' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'createProgram',
+    inputs: [
+      { name: 'codeId', type: 'bytes32', internalType: 'bytes32' },
+      { name: 'salt', type: 'bytes32', internalType: 'bytes32' },
+      { name: 'overrideInitializer', type: 'address', internalType: 'address' },
+    ],
+    outputs: [{ name: '', type: 'address', internalType: 'address' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'createProgramWithAbiInterface',
+    inputs: [
+      { name: 'codeId', type: 'bytes32', internalType: 'bytes32' },
+      { name: 'salt', type: 'bytes32', internalType: 'bytes32' },
+      { name: 'overrideInitializer', type: 'address', internalType: 'address' },
+      { name: 'abiInterface', type: 'address', internalType: 'address' },
+    ],
+    outputs: [{ name: '', type: 'address', internalType: 'address' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'genesisBlockHash',
+    inputs: [],
+    outputs: [{ name: '', type: 'bytes32', internalType: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'genesisTimestamp',
+    inputs: [],
+    outputs: [{ name: '', type: 'uint48', internalType: 'uint48' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'isValidator',
+    inputs: [{ name: 'validator', type: 'address', internalType: 'address' }],
+    outputs: [{ name: '', type: 'bool', internalType: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'latestCommittedBatchHash',
+    inputs: [],
+    outputs: [{ name: '', type: 'bytes32', internalType: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'latestCommittedBatchTimestamp',
+    inputs: [],
+    outputs: [{ name: '', type: 'uint48', internalType: 'uint48' }],
+    stateMutability: 'view',
+  },
+  { type: 'function', name: 'lookupGenesisHash', inputs: [], outputs: [], stateMutability: 'nonpayable' },
+  {
+    type: 'function',
+    name: 'middleware',
+    inputs: [],
+    outputs: [{ name: '', type: 'address', internalType: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'mirrorImpl',
+    inputs: [],
+    outputs: [{ name: '', type: 'address', internalType: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'programCodeId',
+    inputs: [{ name: 'programId', type: 'address', internalType: 'address' }],
+    outputs: [{ name: '', type: 'bytes32', internalType: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'programsCodeIds',
+    inputs: [{ name: 'programsIds', type: 'address[]', internalType: 'address[]' }],
+    outputs: [{ name: '', type: 'bytes32[]', internalType: 'bytes32[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'programsCount',
+    inputs: [],
+    outputs: [{ name: '', type: 'uint256', internalType: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'requestCodeValidation',
+    inputs: [{ name: 'codeId', type: 'bytes32', internalType: 'bytes32' }],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'setMirror',
+    inputs: [{ name: 'newMirror', type: 'address', internalType: 'address' }],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'signingThresholdPercentage',
+    inputs: [],
+    outputs: [{ name: '', type: 'uint16', internalType: 'uint16' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'timelines',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'tuple',
+        internalType: 'struct Gear.Timelines',
+        components: [
+          { name: 'era', type: 'uint256', internalType: 'uint256' },
+          { name: 'election', type: 'uint256', internalType: 'uint256' },
+          { name: 'validationDelay', type: 'uint256', internalType: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'validatedCodesCount',
+    inputs: [],
+    outputs: [{ name: '', type: 'uint256', internalType: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'validators',
+    inputs: [],
+    outputs: [{ name: '', type: 'address[]', internalType: 'address[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'validatorsAggregatedPublicKey',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'tuple',
+        internalType: 'struct Gear.AggregatedPublicKey',
+        components: [
+          { name: 'x', type: 'uint256', internalType: 'uint256' },
+          { name: 'y', type: 'uint256', internalType: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'validatorsCount',
+    inputs: [],
+    outputs: [{ name: '', type: 'uint256', internalType: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'validatorsThreshold',
+    inputs: [],
+    outputs: [{ name: '', type: 'uint256', internalType: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'validatorsVerifiableSecretSharingCommitment',
+    inputs: [],
+    outputs: [{ name: '', type: 'bytes', internalType: 'bytes' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'wrappedVara',
+    inputs: [],
+    outputs: [{ name: '', type: 'address', internalType: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'event',
+    name: 'AnnouncesCommitted',
+    inputs: [{ name: 'head', type: 'bytes32', indexed: false, internalType: 'bytes32' }],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'BatchCommitted',
+    inputs: [{ name: 'hash', type: 'bytes32', indexed: false, internalType: 'bytes32' }],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'CodeGotValidated',
+    inputs: [
+      { name: 'codeId', type: 'bytes32', indexed: false, internalType: 'bytes32' },
+      { name: 'valid', type: 'bool', indexed: true, internalType: 'bool' },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'CodeValidationRequested',
+    inputs: [{ name: 'codeId', type: 'bytes32', indexed: false, internalType: 'bytes32' }],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'ComputationSettingsChanged',
+    inputs: [
+      { name: 'threshold', type: 'uint64', indexed: false, internalType: 'uint64' },
+      { name: 'wvaraPerSecond', type: 'uint128', indexed: false, internalType: 'uint128' },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'ProgramCreated',
+    inputs: [
+      { name: 'actorId', type: 'address', indexed: false, internalType: 'address' },
+      { name: 'codeId', type: 'bytes32', indexed: true, internalType: 'bytes32' },
+    ],
+    anonymous: false,
+  },
+  { type: 'event', name: 'StorageSlotChanged', inputs: [], anonymous: false },
+  {
+    type: 'event',
+    name: 'ValidatorsCommittedForEra',
+    inputs: [{ name: 'eraIndex', type: 'uint256', indexed: false, internalType: 'uint256' }],
+    anonymous: false,
+  },
+] as const;
 
-export const IROUTER_INTERFACE = new ethers.Interface(IROUTER_ABI);
-// GENERATED_ABI_END
-
-// GENERATED_INTERFACE_START
 /**
  * Interface for IRouter contract methods
  */
@@ -67,12 +441,15 @@ export interface IRouterContract {
    * @param codesIds - Array of code IDs to check
    * @returns Promise resolving to array of code state enum values
    */
-  codesStates(codesIds: string[]): Promise<bigint[]>;
+  codesStates(codesIds: string[]): Promise<CodeState[]>;
   /**
    * Gets the current computation settings
    * @returns Promise resolving to computation settings with threshold and wVARA per second
    */
-  computeSettings(): Promise<any>;
+  computeSettings(): Promise<{
+    threshold: bigint;
+    wvaraPerSecond: bigint;
+  }>;
   /**
    * Gets the genesis block hash
    * @returns Promise resolving to the genesis block hash
@@ -82,7 +459,7 @@ export interface IRouterContract {
    * Gets the genesis timestamp
    * @returns Promise resolving to the genesis timestamp
    */
-  genesisTimestamp(): Promise<bigint>;
+  genesisTimestamp(): Promise<number>;
   /**
    * Checks if an address is a validator
    * @param validator - The address to check
@@ -105,7 +482,7 @@ export interface IRouterContract {
    * @param programsIds - Array of program addresses to query
    * @returns Promise resolving to array of code IDs
    */
-  programsCodeIds(programsIds: string[]): Promise<string[]>;
+  programsCodeIds(programsIds: Hex[]): Promise<readonly Hex[]>;
   /**
    * Gets the total number of created programs
    * @returns Promise resolving to the programs count
@@ -115,7 +492,7 @@ export interface IRouterContract {
    * Gets the signing threshold percentage for validators
    * @returns Promise resolving to the threshold percentage
    */
-  signingThresholdPercentage(): Promise<bigint>;
+  signingThresholdPercentage(): Promise<number>;
   /**
    * Gets the count of validated codes
    * @returns Promise resolving to the number of validated codes
@@ -125,7 +502,7 @@ export interface IRouterContract {
    * Gets the list of current validators
    * @returns Promise resolving to array of validator addresses
    */
-  validators(): Promise<string[]>;
+  validators(): Promise<readonly Hex[]>;
   /**
    * Gets the aggregated public key of current validators
    * @returns Promise resolving to the aggregated public key structure
@@ -152,4 +529,3 @@ export interface IRouterContract {
    */
   wrappedVara(): Promise<string>;
 }
-// GENERATED_INTERFACE_END
