@@ -1,66 +1,54 @@
-import { BaseContract, ContractEventPayload, Wallet } from 'ethers';
+import type { Address, Hex } from 'viem';
+import { encodeFunctionData } from 'viem';
 
-import { MessageHelpers, ReplyHelpers, MessageQueuingRequestedLog, Reply, ITxManager } from './interfaces/index.js';
+import {
+  MessageHelpers,
+  ReplyHelpers,
+  MessageQueuingRequestedLog,
+  Reply,
+  ITxManager,
+  ValueClaimingRequestedLog,
+} from './interfaces/index.js';
 import { convertEventParams as convertEventParameters } from '../util/index.js';
-import { IMIRROR_INTERFACE, IMirrorContract } from './abi/IMirror.js';
+import { IMIRROR_ABI, IMirrorContract } from './abi/IMirror.js';
 import { TxManager, TxManagerWithHelpers } from './tx-manager.js';
 import { HexString } from '../types/index.js';
-
-// Interfaces moved to ./interfaces/mirror.js
-
-function getReplyListener(messageId: string) {
-  let _resolve: (value: Reply) => void | Promise<void>;
-  let _reject;
-
-  const promise = new Promise<Reply>((resolve, reject) => {
-    _resolve = resolve;
-    _reject = reject;
-  });
-
-  const listener = (
-    payload: HexString,
-    value: bigint,
-    replyTo: string,
-    replyCode: string,
-    eventPayload: ContractEventPayload,
-  ) => {
-    if (replyTo.toLowerCase() === messageId.toLowerCase()) {
-      _resolve({
-        payload,
-        value,
-        replyCode,
-        blockNumber: eventPayload.log.blockNumber,
-        txHash: eventPayload.log.transactionHash as HexString,
-      });
-    }
-  };
-
-  return { listener, promise };
-}
+import { EthereumClient } from './ethereumClient.js';
 
 /**
  * A contract wrapper for interacting with a Mirror contract on the Gear.Exe network.
  * Provides methods for sending messages, replies, claiming values, and managing balance.
  */
-export class MirrorContract extends BaseContract implements IMirrorContract {
-  private _wallet: Wallet;
-
-  declare decoder: () => Promise<HexString>;
-  declare router: () => Promise<HexString>;
-  declare stateHash: () => Promise<HexString>;
-  declare nonce: () => Promise<bigint>;
-  declare inheritor: () => Promise<HexString>;
-  declare initializer: () => Promise<HexString>;
-
+export class MirrorContract implements IMirrorContract {
   /**
    * Creates a new MirrorContract instance.
    *
    * @param address - The address of the Mirror contract
-   * @param wallet - The wallet or signer to use for transactions
+   * @param ethereumClient - The Ethereum client instance
    */
-  constructor(address: string, wallet: Wallet) {
-    super(address, IMIRROR_INTERFACE, wallet);
-    this._wallet = wallet;
+  constructor(
+    private address: Address,
+    private ethereumClient: EthereumClient,
+  ) {}
+
+  router(): Promise<HexString> {
+    return this.ethereumClient.readContract(this.address, IMIRROR_ABI, 'router');
+  }
+
+  stateHash(): Promise<HexString> {
+    return this.ethereumClient.readContract(this.address, IMIRROR_ABI, 'stateHash');
+  }
+
+  nonce(): Promise<bigint> {
+    return this.ethereumClient.readContract(this.address, IMIRROR_ABI, 'nonce');
+  }
+
+  async inheritor(): Promise<HexString> {
+    return this.ethereumClient.readContract(this.address, IMIRROR_ABI, 'inheritor');
+  }
+
+  async initializer(): Promise<HexString> {
+    return this.ethereumClient.readContract(this.address, IMIRROR_ABI, 'initializer');
   }
 
   /**
@@ -71,14 +59,27 @@ export class MirrorContract extends BaseContract implements IMirrorContract {
    * @returns A transaction manager with message-specific helper functions
    */
   async sendMessage(payload: string): Promise<TxManagerWithHelpers<MessageHelpers>> {
-    const fn = this.getFunction('sendMessage');
     // Set `callReply` to false since it's only used for calling sendMessage from contracts
-    const tx = await fn.populateTransaction(payload, false);
+    await this.ethereumClient.simulateContract({
+      address: this.address,
+      abi: IMIRROR_ABI,
+      functionName: 'sendMessage',
+      args: [payload as Hex, false],
+      account: this.ethereumClient.account,
+    });
 
-    const txManager: ITxManager = new TxManager(this._wallet, tx, IMIRROR_INTERFACE, {
+    const tx = {
+      to: this.address,
+      data: encodeFunctionData({
+        abi: IMIRROR_ABI,
+        functionName: 'sendMessage',
+        args: [payload as Hex, false],
+      }),
+    };
+
+    const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IMIRROR_ABI, {
       getMessage: (manager) => async () => {
         const event = await manager.findEvent('MessageQueueingRequested');
-
         return convertEventParameters<MessageQueuingRequestedLog>(event);
       },
       setupReplyListener: (manager) => async () => {
@@ -89,17 +90,48 @@ export class MirrorContract extends BaseContract implements IMirrorContract {
 
         const message = convertEventParameters<MessageQueuingRequestedLog>(event);
 
-        const { listener, promise } = getReplyListener(message.id);
-        this.on('Reply', listener);
+        let _resolve: (value: Reply) => void | Promise<void>;
+        let _reject: (error: Error) => void | Promise<void>;
+        let settled = false;
+
+        const waitForReply = new Promise<Reply>((resolve, reject) => {
+          _resolve = resolve;
+          _reject = reject;
+        });
+
+        const unwatch = this.ethereumClient.watchEvent({
+          address: this.address,
+          abi: IMIRROR_ABI,
+          eventName: 'Reply',
+          onLogs: (logs) => {
+            if (settled) return;
+
+            for (const log of logs) {
+              if (log.args.replyTo?.toLowerCase() === message.id.toLowerCase()) {
+                settled = true;
+                const { payload, value, replyCode } = log.args;
+                if (payload === undefined || value === undefined || replyCode === undefined) {
+                  _reject(new Error('Invalid reply event'));
+                } else {
+                  _resolve({
+                    payload,
+                    value,
+                    replyCode,
+                    blockNumber: Number(log.blockNumber),
+                    txHash: log.transactionHash,
+                  });
+                }
+                unwatch();
+              }
+            }
+          },
+        });
 
         return {
-          txHash: receipt.hash,
-          blockNumber: receipt.blockNumber,
+          txHash: receipt.transactionHash,
+          blockNumber: Number(receipt.blockNumber),
           message: message,
-          waitForReply: promise.then((result) => {
-            this.off('Reply', listener);
-            return result;
-          }),
+          waitForReply,
         };
       },
     });
@@ -115,10 +147,24 @@ export class MirrorContract extends BaseContract implements IMirrorContract {
    * @returns A transaction manager with reply-specific helper functions
    */
   async sendReply(repliedTo: string, payload: string): Promise<TxManagerWithHelpers<ReplyHelpers>> {
-    const fn = this.getFunction('sendReply');
-    const tx = await fn.populateTransaction(repliedTo, payload);
+    await this.ethereumClient.simulateContract({
+      address: this.address,
+      abi: IMIRROR_ABI,
+      functionName: 'sendReply',
+      args: [repliedTo as Hex, payload as Hex],
+      account: this.ethereumClient.account,
+    });
 
-    const txManager: ITxManager = new TxManager(this._wallet, tx, IMIRROR_INTERFACE, {
+    const tx = {
+      to: this.address,
+      data: encodeFunctionData({
+        abi: IMIRROR_ABI,
+        functionName: 'sendReply',
+        args: [repliedTo as Hex, payload as Hex],
+      }),
+    };
+
+    const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IMIRROR_ABI, {
       getEvent: (manager) => async () => {
         return manager.findEvent('ReplyQueueingRequested');
       },
@@ -133,18 +179,38 @@ export class MirrorContract extends BaseContract implements IMirrorContract {
    * @param claimedId - The ID of the value to claim
    * @returns A transaction manager with claim-specific helper functions
    */
-  async claimValue(claimedId: string): Promise<TxManager> {
-    const fn = this.getFunction('claimValue');
-    const tx = await fn.populateTransaction(claimedId);
+  async claimValue(claimedId: string): Promise<
+    TxManagerWithHelpers<{
+      getValueClaimingRequestedEvent: () => Promise<ValueClaimingRequestedLog>;
+    }>
+  > {
+    await this.ethereumClient.simulateContract({
+      address: this.address,
+      abi: IMIRROR_ABI,
+      functionName: 'claimValue',
+      args: [claimedId as Hex],
+      account: this.ethereumClient.account,
+    });
 
-    const txManager = new TxManager(this._wallet, tx, IMIRROR_INTERFACE, {
+    const tx = {
+      to: this.address,
+      data: encodeFunctionData({
+        abi: IMIRROR_ABI,
+        functionName: 'claimValue',
+        args: [claimedId as Hex],
+      }),
+    };
+
+    const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IMIRROR_ABI, {
       getValueClaimingRequestedEvent: (manager) => async () => {
         const event = await manager.findEvent('ValueClaimingRequested');
-        return convertEventParameters<MessageQueuingRequestedLog>(event);
+        return convertEventParameters<ValueClaimingRequestedLog>(event);
       },
     });
 
-    return txManager;
+    return txManager as TxManagerWithHelpers<{
+      getValueClaimingRequestedEvent: () => Promise<ValueClaimingRequestedLog>;
+    }>;
   }
 
   /**
@@ -152,11 +218,25 @@ export class MirrorContract extends BaseContract implements IMirrorContract {
    *
    * @param value - The amount to top up
    */
-  async executableBalanceTopUp(value: bigint): Promise<TxManager> {
-    const fn = this.getFunction('executableBalanceTopUp');
-    const tx = await fn.populateTransaction(value);
+  async executableBalanceTopUp(value: bigint): Promise<ITxManager> {
+    await this.ethereumClient.simulateContract({
+      address: this.address,
+      abi: IMIRROR_ABI,
+      functionName: 'executableBalanceTopUp',
+      args: [value],
+      account: this.ethereumClient.account,
+    });
 
-    const txManager = new TxManager(this._wallet, tx, IMIRROR_INTERFACE);
+    const tx = {
+      to: this.address,
+      data: encodeFunctionData({
+        abi: IMIRROR_ABI,
+        functionName: 'executableBalanceTopUp',
+        args: [value],
+      }),
+    };
+
+    const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IMIRROR_ABI);
 
     return txManager;
   }
@@ -165,10 +245,11 @@ export class MirrorContract extends BaseContract implements IMirrorContract {
 /**
  * Creates a new MirrorContract instance.
  *
- * @param id - The address of the Mirror contract
- * @param provider - Optional wallet or signer to use for transactions
+ * @param address - The address of the Mirror contract
+ * @param walletClient - The wallet client for sending transactions
+ * @param publicClient - The public client for reading data
  * @returns A new MirrorContract instance that implements the IMirrorContract interface
  */
-export function getMirrorContract(id: string, provider?: Wallet): MirrorContract {
-  return new MirrorContract(id, provider);
+export function getMirrorContract(address: Address, ethereumClient: EthereumClient): MirrorContract {
+  return new MirrorContract(address, ethereumClient);
 }

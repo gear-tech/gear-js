@@ -111,28 +111,26 @@ PROJECT_PATH=$(pwd)
 cd ../../
 ROOT_PATH=$(pwd)
 
-path_to_gear_repo=
-
 # Set path to gear repo
 log_info "Checking if path to gear repo is provided..."
 if [[ -n "$PATH_TO_GEAR_REPO" ]]; then
-    path_to_gear_repo=$PATH_TO_GEAR_REPO
-    log_info "Gear repo found in $path_to_gear_repo"
+    GEAR_REPO_DIR=$PATH_TO_GEAR_REPO
+    log_info "Gear repo found in $GEAR_REPO_DIR"
 else
     if [[ -z $GEAR_BRANCH ]]; then
         GEAR_BRANCH=master
     fi
     log_info "Cloning gear repo (branch $GEAR_BRANCH)..."
     git clone --depth 1 -b $GEAR_BRANCH https://github.com/gear-tech/gear $GEAR_REPO_DIR
-    path_to_gear_repo="$GEAR_REPO_DIR"
+    GEAR_REPO_DIR="$GEAR_REPO_DIR"
 fi
 
-path_to_contracts=$path_to_gear_repo/ethexe/contracts
+path_to_contracts=$GEAR_REPO_DIR/ethexe/contracts
 
 # Function to build gearexe
 build_gearexe() {
     log_info "Building gearexe..."
-    cd "$path_to_gear_repo"
+    cd "$GEAR_REPO_DIR"
     log_info "Running cargo build for ethexe-cli..."
     if ! cargo build -p ethexe-cli --release; then
         log_error "Failed to build gearexe"
@@ -198,7 +196,11 @@ fi
 if [ "$DEPLOY_ON_HOLESKY" != "true" ]; then
     log_info "Starting Anvil Ethereum node..."
     log_info "Running with parameters: --block-time $BLOCK_TIME --chain-id 31337"
-    nohup anvil --block-time "$BLOCK_TIME" --chain-id 31337 \
+    nohup anvil --block-time "$BLOCK_TIME" \
+        --chain-id 31337 \
+        --accounts 5 \
+        --mnemonic "test test test test test test test test test test test junk" \
+        --balance 5000000000000000000 \
         > $LOGS_DIR/anvil.log 2>&1 &
         ANVIL_PID=$!
     log_success "Anvil node started with PID: $ANVIL_PID"
@@ -238,7 +240,7 @@ log_success "Contracts deployed successfully"
 
 # Get router address
 log_info "Extracting router contract address from deployment artifacts..."
-cd $path_to_gear_repo
+cd $GEAR_REPO_DIR
 BROADCAST_PATH="ethexe/contracts/broadcast/Deployment.s.sol/$ARTIFACTS_DIR/run-latest.json"
 
 if [ ! -f ${BROADCAST_PATH} ]; then
@@ -283,7 +285,7 @@ log_success "ROUTER_ADDRESS updated in $PROJECT_DIR/scripts/test.env"
 
 # Set keys
 log_info "Setting up Gear node keys..."
-cd $path_to_gear_repo
+cd $GEAR_REPO_DIR
 log_info "Inserting validator key..."
 inserted_validator=$(./target/release/ethexe key -k $GEAREXE_DIR/keys insert $VALIDATOR_PRIVATE_KEY)
 echo $inserted_validator
@@ -334,6 +336,15 @@ GEAREXE_PID=$!
 
 log_success "Gearexe node started with PID: $GEAREXE_PID"
 
+
+log_info "Uploading code using parameters: $WS_RPC, $ROUTER_ADDRESS, $SENDER_PUBLIC_KEY"
+$GEAR_REPO_DIR/target/release/ethexe --cfg none tx \
+--ethereum-rpc "$WS_RPC" \
+--ethereum-router "$ROUTER_ADDRESS" \
+--key-store "$GEAREXE_DIR/keys" \
+--sender "$SENDER_PUBLIC_KEY" \
+upload -l $PROJECT_DIR/target/wasm32-gear/release/counter.opt.wasm
+
 # Monitor gearexe process and handle unexpected termination
 (
   while kill -0 $GEAREXE_PID 2>/dev/null; do
@@ -352,8 +363,6 @@ log_success "Gearexe node started with PID: $GEAREXE_PID"
   fi
 ) &
 
-log_info "Waiting for gearexe node to initialize (5 seconds)..."
-sleep 5
 # Check if the process is still running after 5 seconds
 if ! kill -0 $GEAREXE_PID 2>/dev/null; then
     log_error "Gearexe node failed to start. Check logs at: $LOGS_DIR/gearexe.log"
@@ -361,9 +370,8 @@ if ! kill -0 $GEAREXE_PID 2>/dev/null; then
     tail -n 20 $LOGS_DIR/gearexe.log
     exit 1
 fi
-log_info "Gearexe initialization in progress..."
+
 sleep 20
-log_success "Gearexe node is ready"
 
 # Signal that environment is ready
 log_success "Environment setup complete. Creating ready signal..."

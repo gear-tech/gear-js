@@ -1,7 +1,23 @@
-import { Interface } from 'ethers';
-import { EventLog, Signer } from 'ethers';
-import { TransactionReceipt, TransactionRequest, TransactionResponse, Wallet } from 'ethers';
+import type {
+  Abi,
+  TransactionReceipt,
+  Hash,
+  ContractEventName,
+  DecodeEventLogReturnType,
+  SendTransactionParameters,
+  Chain,
+  Account,
+  SendTransactionRequest,
+  EstimateGasParameters,
+  TransactionRequest,
+  Log,
+  Hex,
+  Transport,
+} from 'viem';
+import { decodeEventLog } from 'viem';
+
 import { ITxManager, TxManagerWithHelpers } from './interfaces/tx-manager.js';
+import { EthereumClient } from './ethereumClient.js';
 
 /**
  * Manages Ethereum transactions with support for helper functions.
@@ -11,39 +27,51 @@ import { ITxManager, TxManagerWithHelpers } from './interfaces/tx-manager.js';
  * @template T - Type for transaction-dependent helper functions
  * @template U - Type for transaction-independent helper functions
  */
-export class TxManager<T extends Record<string, any> = object, U extends Record<string, any> = object>
-  implements ITxManager
+export class TxManager<
+  T extends Record<string, any> = object,
+  U extends Record<string, any> = object,
+  const abi extends Abi = Abi,
+  TTransport extends Transport = Transport,
+  TChain extends Chain = Chain,
+  TAccount extends Account = Account,
+  TRequest extends SendTransactionRequest<TChain, undefined, TChain> = SendTransactionRequest<
+    TChain,
+    undefined,
+    TChain
+  >,
+> implements ITxManager
 {
-  private _receipt: TransactionReceipt;
-  private _response: Promise<TransactionResponse>;
+  private _receipt: TransactionReceipt | null = null;
+  private _hash: Hash | null = null;
 
   /**
    * Creates a new transaction manager.
    *
-   * @param _wallet - The wallet or signer to use for transactions
+   * @param ethereumClient - The Ethereum client for sending transactions and reading data
    * @param _tx - The transaction request to manage
-   * @param _iface - The interface to use for parsing events
+   * @param _abi - The ABI to use for parsing events
    * @param txDependentHelperFns - Helper functions that depend on the transaction
    * @param txIndependentHelperFns - Helper functions that do not depend on the transaction
    */
   constructor(
-    private _wallet: Wallet | Signer,
+    private ethereumClient: EthereumClient<TTransport, TChain, TAccount>,
+    // private _tx: SendTransactionParameters<chain, account, undefined, request>,
     private _tx: TransactionRequest,
-    private _iface: Interface,
-    txDependentHelperFns?: { [k in keyof T]: (manager: TxManager) => any },
+    private _abi: abi,
+    txDependentHelperFns?: {
+      [k in keyof T]: (manager: TxManager<T, U, abi, TTransport, TChain, TAccount, TRequest>) => any;
+    },
     txIndependentHelperFns?: Record<keyof U, any>,
   ) {
     if (txDependentHelperFns) {
       const entries = Object.entries(txDependentHelperFns);
       entries.forEach(([name, fn]) => {
-        this[name] = fn(this);
+        Object.assign(this, { [name]: fn(this) });
       });
     }
 
     if (txIndependentHelperFns) {
-      Object.entries(txIndependentHelperFns).forEach(([name, fn]) => {
-        this[name] = fn;
-      });
+      Object.assign(this, txIndependentHelperFns);
     }
   }
 
@@ -54,13 +82,13 @@ export class TxManager<T extends Record<string, any> = object, U extends Record<
    */
   async estimateGas(): Promise<bigint> {
     try {
-      this._tx.gasLimit = await this._wallet.estimateGas(this._tx);
+      const gasParams: EstimateGasParameters<TChain> = this._tx as EstimateGasParameters<TChain>;
 
-      return this._tx.gasLimit;
+      this._tx.gas = await this.ethereumClient.publicClient.estimateGas(gasParams);
+
+      return this._tx.gas;
     } catch (error) {
       console.log(error);
-      console.log(error.data);
-      // console.log(this._iface.decodeErrorResult(fragment, data))
       throw error;
     }
   }
@@ -68,11 +96,14 @@ export class TxManager<T extends Record<string, any> = object, U extends Record<
   /**
    * Sends the transaction to the network.
    *
-   * @returns The transaction response
+   * @returns The transaction hash
    */
-  async send(): Promise<TransactionResponse> {
-    this._response = this._wallet.sendTransaction(this._tx);
-    return this._response;
+  async send(): Promise<Hash> {
+    const hash = await this.ethereumClient.walletClient.sendTransaction(
+      this._tx as SendTransactionParameters<TChain, TAccount, undefined, TRequest>,
+    );
+    this._hash = hash;
+    return hash;
   }
 
   /**
@@ -81,8 +112,11 @@ export class TxManager<T extends Record<string, any> = object, U extends Record<
    * @returns The transaction receipt
    */
   async sendAndWaitForReceipt(): Promise<TransactionReceipt> {
-    const response = await this.send();
-    this._receipt = await response.wait();
+    const hash = await this.send();
+    this._receipt = await this.ethereumClient.publicClient.waitForTransactionReceipt({ hash });
+    if (!this._receipt) {
+      throw new Error('Transaction receipt not found');
+    }
     return this._receipt;
   }
 
@@ -92,32 +126,50 @@ export class TxManager<T extends Record<string, any> = object, U extends Record<
    * @returns The transaction receipt
    */
   async getReceipt(): Promise<TransactionReceipt> {
-    return this._receipt || (await this._response).wait();
+    if (this._receipt) {
+      return this._receipt;
+    }
+    if (this._hash) {
+      this._receipt = await this.ethereumClient.publicClient.waitForTransactionReceipt({ hash: this._hash });
+      if (!this._receipt) {
+        throw new Error('Transaction receipt not found');
+      }
+      return this._receipt;
+    }
+    throw new Error('No transaction hash available. Call send() first.');
   }
 
   /**
    * Finds a specific event in the transaction receipt.
    *
    * @param eventName - The name of the event to find
-   * @returns The event log
+   * @returns The decoded event log with args
    * @throws Error if the event is not found in the transaction receipt
    */
-  async findEvent(eventName: string): Promise<EventLog> {
+  async findEvent<eventName extends ContractEventName<abi>>(
+    eventName: eventName,
+  ): Promise<DecodeEventLogReturnType<abi, eventName>> {
     const receipt = await this.getReceipt();
 
-    const event = receipt?.logs.find((log) => {
-      if (log instanceof EventLog && log.fragment !== null) {
-        return log.fragment.name === eventName;
+    const logs = receipt.logs as (Log & { topics: [Hex, ...Hex[]] })[]; // TODO: fixme
+
+    for (const log of logs) {
+      try {
+        const decoded = decodeEventLog({
+          abi: this._abi,
+          data: log.data,
+          topics: log.topics,
+        });
+
+        if (decoded.eventName === eventName) {
+          return decoded as DecodeEventLogReturnType<abi, eventName>;
+        }
+      } catch {
+        continue;
       }
-
-      return this._iface.getEventName(log.topics[0]) === eventName;
-    });
-
-    if (!event) {
-      throw new Error(`${eventName} event not found in transaction receipt`);
     }
 
-    return new EventLog(event, this._iface, this._iface.getEvent(eventName));
+    throw new Error(`${eventName} event not found in transaction receipt`);
   }
 
   /**

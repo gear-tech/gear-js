@@ -26,6 +26,7 @@ log_success() {
 log_info "Cleaning previous log files..."
 rm -rf $LOGS_DIR/*
 
+source "$PROJECT_DIR/scripts/test.env"
 
 # Function to wait for environment to be ready
 wait_for_environment() {
@@ -130,7 +131,6 @@ fi
 
 # Main execution flow
 setup_environment
-source "$PROJECT_DIR/scripts/test.env"
 compile_contracts
 run_tests
 exit_code=$?

@@ -1,64 +1,276 @@
-import { ethers } from 'ethers';
-
-// GENERATED_ABI_START
 export const IMIRROR_ABI = [
-  'function claimValue(bytes32 claimedId)',
-  'function executableBalanceTopUp(uint128 value)',
-  'function inheritor() view returns (address)',
-  'function initialize(address initializer, address abiInterface, bool isSmall)',
-  'function initializer() view returns (address)',
-  'function nonce() view returns (uint256)',
-  'function performStateTransition((address actorId, bytes32 newStateHash, bool exited, address inheritor, uint128 valueToReceive, (bytes32 messageId, address destination, uint128 value)[] valueClaims, (bytes32 id, address destination, bytes payload, uint128 value, (bytes32 to, bytes4 code) replyDetails, bool call)[] messages) transition) returns (bytes32)',
-  'function router() view returns (address)',
-  'function sendMessage(bytes payload, bool callReply) payable returns (bytes32)',
-  'function sendReply(bytes32 repliedTo, bytes payload) payable',
-  'function stateHash() view returns (bytes32)',
-  'function transferLockedValueToInheritor()',
-  'event ExecutableBalanceTopUpRequested(uint128 value)',
-  'event Message(bytes32 id, address indexed destination, bytes payload, uint128 value)',
-  'event MessageCallFailed(bytes32 id, address indexed destination, uint128 value)',
-  'event MessageQueueingRequested(bytes32 id, address indexed source, bytes payload, uint128 value, bool callReply)',
-  'event OwnedBalanceTopUpRequested(uint128 value)',
-  'event Reply(bytes payload, uint128 value, bytes32 replyTo, bytes4 indexed replyCode)',
-  'event ReplyCallFailed(uint128 value, bytes32 replyTo, bytes4 indexed replyCode)',
-  'event ReplyQueueingRequested(bytes32 repliedTo, address indexed source, bytes payload, uint128 value)',
-  'event StateChanged(bytes32 stateHash)',
-  'event ValueClaimed(bytes32 claimedId, uint128 value)',
-  'event ValueClaimingRequested(bytes32 claimedId, address indexed source)',
-];
+  {
+    type: 'function',
+    name: 'claimValue',
+    inputs: [{ name: 'claimedId', type: 'bytes32', internalType: 'bytes32' }],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'executableBalanceTopUp',
+    inputs: [{ name: 'value', type: 'uint128', internalType: 'uint128' }],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'inheritor',
+    inputs: [],
+    outputs: [{ name: '', type: 'address', internalType: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'initialize',
+    inputs: [
+      { name: 'initializer', type: 'address', internalType: 'address' },
+      { name: 'abiInterface', type: 'address', internalType: 'address' },
+      { name: 'isSmall', type: 'bool', internalType: 'bool' },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'initializer',
+    inputs: [],
+    outputs: [{ name: '', type: 'address', internalType: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'nonce',
+    inputs: [],
+    outputs: [{ name: '', type: 'uint256', internalType: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'performStateTransition',
+    inputs: [
+      {
+        name: 'transition',
+        type: 'tuple',
+        internalType: 'struct Gear.StateTransition',
+        components: [
+          { name: 'actorId', type: 'address', internalType: 'address' },
+          { name: 'newStateHash', type: 'bytes32', internalType: 'bytes32' },
+          { name: 'exited', type: 'bool', internalType: 'bool' },
+          { name: 'inheritor', type: 'address', internalType: 'address' },
+          { name: 'valueToReceive', type: 'uint128', internalType: 'uint128' },
+          {
+            name: 'valueClaims',
+            type: 'tuple[]',
+            internalType: 'struct Gear.ValueClaim[]',
+            components: [
+              { name: 'messageId', type: 'bytes32', internalType: 'bytes32' },
+              { name: 'destination', type: 'address', internalType: 'address' },
+              { name: 'value', type: 'uint128', internalType: 'uint128' },
+            ],
+          },
+          {
+            name: 'messages',
+            type: 'tuple[]',
+            internalType: 'struct Gear.Message[]',
+            components: [
+              { name: 'id', type: 'bytes32', internalType: 'bytes32' },
+              { name: 'destination', type: 'address', internalType: 'address' },
+              { name: 'payload', type: 'bytes', internalType: 'bytes' },
+              { name: 'value', type: 'uint128', internalType: 'uint128' },
+              {
+                name: 'replyDetails',
+                type: 'tuple',
+                internalType: 'struct Gear.ReplyDetails',
+                components: [
+                  { name: 'to', type: 'bytes32', internalType: 'bytes32' },
+                  { name: 'code', type: 'bytes4', internalType: 'bytes4' },
+                ],
+              },
+              { name: 'call', type: 'bool', internalType: 'bool' },
+            ],
+          },
+        ],
+      },
+    ],
+    outputs: [{ name: '', type: 'bytes32', internalType: 'bytes32' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'router',
+    inputs: [],
+    outputs: [{ name: '', type: 'address', internalType: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'sendMessage',
+    inputs: [
+      { name: 'payload', type: 'bytes', internalType: 'bytes' },
+      { name: 'callReply', type: 'bool', internalType: 'bool' },
+    ],
+    outputs: [{ name: '', type: 'bytes32', internalType: 'bytes32' }],
+    stateMutability: 'payable',
+  },
+  {
+    type: 'function',
+    name: 'sendReply',
+    inputs: [
+      { name: 'repliedTo', type: 'bytes32', internalType: 'bytes32' },
+      { name: 'payload', type: 'bytes', internalType: 'bytes' },
+    ],
+    outputs: [],
+    stateMutability: 'payable',
+  },
+  {
+    type: 'function',
+    name: 'stateHash',
+    inputs: [],
+    outputs: [{ name: '', type: 'bytes32', internalType: 'bytes32' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'transferLockedValueToInheritor',
+    inputs: [],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'event',
+    name: 'ExecutableBalanceTopUpRequested',
+    inputs: [{ name: 'value', type: 'uint128', indexed: false, internalType: 'uint128' }],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'Message',
+    inputs: [
+      { name: 'id', type: 'bytes32', indexed: false, internalType: 'bytes32' },
+      { name: 'destination', type: 'address', indexed: true, internalType: 'address' },
+      { name: 'payload', type: 'bytes', indexed: false, internalType: 'bytes' },
+      { name: 'value', type: 'uint128', indexed: false, internalType: 'uint128' },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'MessageCallFailed',
+    inputs: [
+      { name: 'id', type: 'bytes32', indexed: false, internalType: 'bytes32' },
+      { name: 'destination', type: 'address', indexed: true, internalType: 'address' },
+      { name: 'value', type: 'uint128', indexed: false, internalType: 'uint128' },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'MessageQueueingRequested',
+    inputs: [
+      { name: 'id', type: 'bytes32', indexed: false, internalType: 'bytes32' },
+      { name: 'source', type: 'address', indexed: true, internalType: 'address' },
+      { name: 'payload', type: 'bytes', indexed: false, internalType: 'bytes' },
+      { name: 'value', type: 'uint128', indexed: false, internalType: 'uint128' },
+      { name: 'callReply', type: 'bool', indexed: false, internalType: 'bool' },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'OwnedBalanceTopUpRequested',
+    inputs: [{ name: 'value', type: 'uint128', indexed: false, internalType: 'uint128' }],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'Reply',
+    inputs: [
+      { name: 'payload', type: 'bytes', indexed: false, internalType: 'bytes' },
+      { name: 'value', type: 'uint128', indexed: false, internalType: 'uint128' },
+      { name: 'replyTo', type: 'bytes32', indexed: false, internalType: 'bytes32' },
+      { name: 'replyCode', type: 'bytes4', indexed: true, internalType: 'bytes4' },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'ReplyCallFailed',
+    inputs: [
+      { name: 'value', type: 'uint128', indexed: false, internalType: 'uint128' },
+      { name: 'replyTo', type: 'bytes32', indexed: false, internalType: 'bytes32' },
+      { name: 'replyCode', type: 'bytes4', indexed: true, internalType: 'bytes4' },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'ReplyQueueingRequested',
+    inputs: [
+      { name: 'repliedTo', type: 'bytes32', indexed: false, internalType: 'bytes32' },
+      { name: 'source', type: 'address', indexed: true, internalType: 'address' },
+      { name: 'payload', type: 'bytes', indexed: false, internalType: 'bytes' },
+      { name: 'value', type: 'uint128', indexed: false, internalType: 'uint128' },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'StateChanged',
+    inputs: [{ name: 'stateHash', type: 'bytes32', indexed: false, internalType: 'bytes32' }],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'ValueClaimed',
+    inputs: [
+      { name: 'claimedId', type: 'bytes32', indexed: false, internalType: 'bytes32' },
+      { name: 'value', type: 'uint128', indexed: false, internalType: 'uint128' },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'ValueClaimingRequested',
+    inputs: [
+      { name: 'claimedId', type: 'bytes32', indexed: false, internalType: 'bytes32' },
+      { name: 'source', type: 'address', indexed: true, internalType: 'address' },
+    ],
+    anonymous: false,
+  },
+] as const;
 
-export const IMIRROR_INTERFACE = new ethers.Interface(IMIRROR_ABI);
-// GENERATED_ABI_END
-
-// GENERATED_INTERFACE_START
 /**
  * Interface for IMirror contract methods
  */
 export interface IMirrorContract {
   /**
-   * Gets the inheritor address of the mirror
-   * @returns Promise resolving to the inheritor address
-   */
-  inheritor(): Promise<string>;
-  /**
-   * Gets the initializer address of the mirror
-   * @returns Promise resolving to the initializer address
-   */
-  initializer(): Promise<string>;
-  /**
-   * Gets the current nonce of the mirror
-   * @returns Promise resolving to the nonce
-   */
-  nonce(): Promise<bigint>;
-  /**
-   * Gets the router address associated with this mirror
+   * Gets the router address
    * @returns Promise resolving to the router address
    */
   router(): Promise<string>;
+
   /**
-   * Gets the current state hash of the mirror
+   * Gets the current state hash
    * @returns Promise resolving to the state hash
    */
   stateHash(): Promise<string>;
+
+  /**
+   * Gets the current nonce
+   * @returns Promise resolving to the nonce
+   */
+  nonce(): Promise<bigint>;
+
+  /**
+   * Gets the inheritor address
+   * @returns Promise resolving to the inheritor address
+   */
+  inheritor(): Promise<string>;
+
+  /**
+   * Gets the initializer address
+   * @returns Promise resolving to the initializer address
+   */
+  initializer(): Promise<string>;
 }
-// GENERATED_INTERFACE_END

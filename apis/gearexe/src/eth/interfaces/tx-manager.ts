@@ -1,5 +1,4 @@
-import { EventLog } from 'ethers';
-import { TransactionReceipt, TransactionRequest, TransactionResponse } from 'ethers';
+import type { TransactionReceipt, Hash } from 'viem';
 
 /**
  * A type that combines a TxManager with helper functions.
@@ -24,9 +23,9 @@ export interface ITxManager {
   /**
    * Sends the transaction to the network.
    *
-   * @returns The transaction response
+   * @returns The transaction hash
    */
-  send(): Promise<TransactionResponse>;
+  send(): Promise<Hash>;
 
   /**
    * Sends the transaction and waits for the receipt.
@@ -46,15 +45,15 @@ export interface ITxManager {
    * Finds a specific event in the transaction receipt.
    *
    * @param eventName - The name of the event to find
-   * @returns The event log
+   * @returns The decoded event log
    * @throws Error if the event is not found in the transaction receipt
    */
-  findEvent(eventName: string): Promise<EventLog>;
+  findEvent(eventName: string): Promise<any>;
 
   /**
    * Gets the transaction request.
    *
-   * @returns The transaction request
+   * @returns The transaction parameters
    */
-  getTx(): TransactionRequest;
+  getTx(): any;
 }
