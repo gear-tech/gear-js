@@ -1,4 +1,4 @@
-import { HexString } from 'gear-js-util';
+import { HexString } from '../../types/index.js';
 
 export interface ReplyInfo {
   readonly payload: HexString;

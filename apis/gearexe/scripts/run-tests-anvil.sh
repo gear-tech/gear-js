@@ -43,14 +43,14 @@ wait_for_environment() {
 
 # Function to setup test environment
 setup_environment() {
-    log_info "Setting up Gear.Exe environment..."
+    log_info "Setting up Gear.Exe environment with Anvil..."
     cd $PROJECT_DIR
 
     # Remove any existing ready signal
     rm -f /tmp/gearexe-js/environment-ready
 
     # Start environment setup in background
-    RUNNING_TESTS=true ./scripts/setup-env.sh &
+    RUNNING_TESTS=true ./scripts/setup-anvil.sh &
     ENV_PID=$!
 
     wait_for_environment
@@ -75,8 +75,10 @@ run_tests() {
     log_info "Starting test execution in sequential mode (--runInBand)..."
     log_info "Test output follows:"
     echo "--------------------------------------------------------"
+    set +e
     npx jest --runInBand
     test_result=$?
+    set -e
     echo "--------------------------------------------------------"
 
     if [ $test_result -ne 0 ]; then
@@ -103,7 +105,7 @@ cleanup() {
     if [ $TEST_FAILED -ne 0 ]; then
         log_error "Test execution failed. Log files preserved for debugging:"
         echo "    - Router deployment logs: $LOGS_DIR/deploy_contracts.log"
-        echo "    - Reth node logs: $LOGS_DIR/reth.log"
+        echo "    - Anvil node logs: $LOGS_DIR/anvil.log"
         echo "    - Gearexe node logs: $LOGS_DIR/gearexe.log"
 
         # Print the last few lines of error logs to help with debugging
@@ -112,8 +114,7 @@ cleanup() {
         tail -n 50 $LOGS_DIR/gearexe.log 2>/dev/null || echo "Log file not found"
         echo "====================================================="
     else
-        log_success "Tests completed successfully. Removing logs..."
-        rm -rf $LOGS_DIR
+        log_success "Tests completed successfully."
     fi
 
     # Clean up ready signal file
@@ -133,6 +134,4 @@ source "$PROJECT_DIR/scripts/test.env"
 compile_contracts
 run_tests
 exit_code=$?
-if [ $exit_code -ne 0 ]; then
-    exit $exit_code
-fi
+exit $exit_code
