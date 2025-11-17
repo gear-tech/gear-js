@@ -1,19 +1,19 @@
 import { createPublicClient, createWalletClient, webSocket } from 'viem';
-import type { Abi, Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
+import type { Abi, Account, Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import * as fs from 'fs';
 import path from 'path';
 
-import { CodeState, EthereumClient, getMirrorContract, getRouterContract } from '../src';
+import { CodeState, EthereumClient, getMirrorClient, getRouterClient } from '../src';
 import { waitNBlocks } from './common';
 import { config } from './config';
 
 const code = fs.readFileSync(path.join(config.targetDir, 'counter.opt.wasm'));
 let codeId: `0x${string}`;
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
-let walletClient: WalletClient<WebSocketTransport>;
+let walletClient: WalletClient<WebSocketTransport, Chain, Account>;
 let ethereumClient: EthereumClient;
-let router: ReturnType<typeof getRouterContract>;
+let router: ReturnType<typeof getRouterClient>;
 
 let codeValidatedPromise: Promise<boolean>;
 
@@ -25,13 +25,12 @@ beforeAll(async () => {
   }) as PublicClient<WebSocketTransport, Chain, undefined>;
   const account = privateKeyToAccount(config.privateKey);
 
-  walletClient = createWalletClient<WebSocketTransport>({
+  walletClient = createWalletClient<WebSocketTransport, Chain, Account>({
     account,
     transport,
-    chain: null,
   });
   ethereumClient = new EthereumClient<WebSocketTransport>(publicClient, walletClient);
-  router = getRouterContract(config.routerId, ethereumClient);
+  router = getRouterClient(config.routerId, ethereumClient);
   codeId = config.codeId;
 });
 
@@ -73,7 +72,7 @@ describe('router', () => {
 
       const id = await tx.getProgramId();
 
-      const mirror = getMirrorContract(id, ethereumClient);
+      const mirror = getMirrorClient(id, ethereumClient);
 
       const mirrorRouter = (await mirror.router()).toLowerCase();
 
@@ -92,7 +91,6 @@ describe('router', () => {
       const deployHash = await walletClient.deployContract({
         abi,
         bytecode,
-        chain: null,
       });
 
       const receipt = await ethereumClient.publicClient.waitForTransactionReceipt({ hash: deployHash });

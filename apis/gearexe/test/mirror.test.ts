@@ -5,9 +5,9 @@ import { privateKeyToAccount } from 'viem/accounts';
 import {
   EthereumClient,
   GearExeApi,
-  getMirrorContract,
+  getMirrorClient,
   getRouterClient,
-  getWrappedVaraContract,
+  getWrappedVaraClient,
   HttpGearexeProvider,
 } from '../src';
 import { hasProps, waitNBlocks } from './common';
@@ -19,8 +19,8 @@ let walletClient: WalletClient<WebSocketTransport>;
 let ethereumClient: EthereumClient;
 
 let router: ReturnType<typeof getRouterClient>;
-let mirror: ReturnType<typeof getMirrorContract>;
-let wvara: ReturnType<typeof getWrappedVaraContract>;
+let mirror: ReturnType<typeof getMirrorClient>;
+let wvara: ReturnType<typeof getWrappedVaraClient>;
 
 let programId: `0x${string}`;
 
@@ -38,7 +38,7 @@ beforeAll(async () => {
   });
   ethereumClient = new EthereumClient<WebSocketTransport>(publicClient, walletClient);
   router = getRouterClient(config.routerId, ethereumClient);
-  wvara = getWrappedVaraContract(await router.wrappedVara(), ethereumClient);
+  wvara = getWrappedVaraClient(await router.wrappedVara(), ethereumClient);
 
   api = new GearExeApi(new HttpGearexeProvider(), ethereumClient);
 });
@@ -56,7 +56,7 @@ describe('setup', () => {
 
     expect(programId).toBeDefined();
 
-    mirror = getMirrorContract(programId, ethereumClient);
+    mirror = getMirrorClient(programId, ethereumClient);
   });
 
   test(

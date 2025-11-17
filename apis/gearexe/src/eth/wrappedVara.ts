@@ -91,6 +91,6 @@ export class WrappedVaraContract implements IWrappedVaraContract {
  * @param ethereumClient - The Ethereum client for interacting with the contract
  * @returns A new WrappedVaraContract instance that implements the IWrappedVaraContract interface
  */
-export function getWrappedVaraContract(address: Address, ethereumClient: EthereumClient): WrappedVaraContract {
+export function getWrappedVaraClient(address: Address, ethereumClient: EthereumClient): WrappedVaraContract {
   return new WrappedVaraContract(address, ethereumClient);
 }

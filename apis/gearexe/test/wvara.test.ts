@@ -2,16 +2,16 @@ import { createPublicClient, createWalletClient, webSocket } from 'viem';
 import type { Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
-import { EthereumClient, getRouterContract, getWrappedVaraContract } from '../src';
+import { EthereumClient, getRouterClient, getWrappedVaraClient } from '../src';
 import { config } from './config';
 
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
 let walletClient: WalletClient<WebSocketTransport>;
 let ethereumClient: EthereumClient;
-let router: ReturnType<typeof getRouterContract>;
+let router: ReturnType<typeof getRouterClient>;
 
 let wrappedVaraAddr: Hex;
-let wvara: ReturnType<typeof getWrappedVaraContract>;
+let wvara: ReturnType<typeof getWrappedVaraClient>;
 
 beforeAll(async () => {
   const transport = webSocket(config.wsRpc);
@@ -24,10 +24,9 @@ beforeAll(async () => {
   walletClient = createWalletClient<WebSocketTransport>({
     account,
     transport,
-    chain: null,
   });
   ethereumClient = new EthereumClient<WebSocketTransport>(publicClient, walletClient);
-  router = getRouterContract(config.routerId, ethereumClient);
+  router = getRouterClient(config.routerId, ethereumClient);
 });
 
 describe('view functions', () => {
@@ -35,7 +34,7 @@ describe('view functions', () => {
     wrappedVaraAddr = await router.wrappedVara();
     expect(wrappedVaraAddr).toBeDefined();
     expect(typeof wrappedVaraAddr).toBe('string');
-    wvara = getWrappedVaraContract(wrappedVaraAddr, ethereumClient);
+    wvara = getWrappedVaraClient(wrappedVaraAddr, ethereumClient);
   });
 
   test('should get name', async () => {

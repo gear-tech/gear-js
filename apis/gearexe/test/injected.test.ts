@@ -6,9 +6,9 @@ import { execSync } from 'node:child_process';
 import {
   EthereumClient,
   GearExeApi,
-  getMirrorContract,
+  getMirrorClient,
   getRouterClient,
-  getWrappedVaraContract,
+  getWrappedVaraClient,
   HttpGearexeProvider,
 } from '../src';
 import { InjectedTransaction } from '../src/types';
@@ -21,8 +21,8 @@ let walletClient: WalletClient<WebSocketTransport>;
 let ethereumClient: EthereumClient;
 
 let router: ReturnType<typeof getRouterClient>;
-let mirror: ReturnType<typeof getMirrorContract>;
-let wvara: ReturnType<typeof getWrappedVaraContract>;
+let mirror: ReturnType<typeof getMirrorClient>;
+let wvara: ReturnType<typeof getWrappedVaraClient>;
 
 let programId: `0x${string}`;
 
@@ -40,7 +40,7 @@ beforeAll(async () => {
   });
   ethereumClient = new EthereumClient<WebSocketTransport>(publicClient, walletClient);
   router = getRouterClient(config.routerId, ethereumClient);
-  wvara = getWrappedVaraContract(await router.wrappedVara(), ethereumClient);
+  wvara = getWrappedVaraClient(await router.wrappedVara(), ethereumClient);
 
   api = new GearExeApi(new HttpGearexeProvider(), ethereumClient, config.routerId);
 });
@@ -50,7 +50,7 @@ afterAll(async () => {
 });
 
 describe('Injected Transactions', () => {
-  describe.skip('signature', () => {
+  describe('signature', () => {
     let injectedTxHash: string;
     let injectedTxSignature: string;
     const INJECTED_TEST_PROGRAM_MANIFEST_PATH = 'programs/injected/Cargo.toml';
@@ -107,7 +107,7 @@ describe('Injected Transactions', () => {
 
       expect(programId).toBeDefined();
 
-      mirror = getMirrorContract(programId, ethereumClient);
+      mirror = getMirrorClient(programId, ethereumClient);
     });
 
     test(

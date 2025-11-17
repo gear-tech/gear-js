@@ -250,6 +250,6 @@ export class MirrorContract implements IMirrorContract {
  * @param publicClient - The public client for reading data
  * @returns A new MirrorContract instance that implements the IMirrorContract interface
  */
-export function getMirrorContract(address: Address, ethereumClient: EthereumClient): MirrorContract {
+export function getMirrorClient(address: Address, ethereumClient: EthereumClient): MirrorContract {
   return new MirrorContract(address, ethereumClient);
 }
