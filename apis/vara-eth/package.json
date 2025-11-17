@@ -1,0 +1,42 @@
+{
+  "name": "@vara-eth/api",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Typescript library for interacting with Vara.Eth network",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "./scripts/run-tests-anvil.sh",
+    "test:only": "yarn node --no-warnings --experimental-vm-modules $(../../node_modules/.bin/jest) --runInBand",
+    "test:no-setup": "npx jest",
+    "build": "npx rollup -c",
+    "clean": "rm -rf lib",
+    "abi": "node scripts/convert-abi.mjs"
+  },
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "require": "./lib/cjs/index.js",
+      "types": "./lib/index.d.ts"
+    }
+  },
+  "peerDependencies": {
+    "kzg-wasm": "1.0.0",
+    "viem": "^2.39.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8",
+    "kzg-wasm": "1.0.0",
+    "viem": "^2.39.0",
+    "ws": "^8.18.3"
+  },
+  "files": [
+    "README.md"
+  ],
+  "dependencies": {
+    "@ethereumjs/util": "^10.1.0",
+    "@noble/hashes": "1.8.0"
+  }
+}

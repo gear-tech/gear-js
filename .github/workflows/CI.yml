@@ -110,8 +110,8 @@ jobs:
           SKIP_RUN_NODE: true
           SKIP_BUILD: true
 
-  test-gearexe-api:
-    if: ${{ !contains(github.event.pull_request.labels.*.name, 'S0-skip-gearexe-tests') }}
+  test-varaeth-api:
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'S0-skip-varaeth-tests') }}
     runs-on: ubuntu-22.04
     env:
       RUSTUP_HOME: /tmp/rustup_home
@@ -122,51 +122,51 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@v5
 
-      - name: 'Check if gearexe files changed'
-        id: changed-gearexe
+      - name: 'Check if vara-eth files changed'
+        id: changed-vara-eth
         uses: tj-actions/changed-files@v47
         with:
           files: |
-            apis/gearexe/**
+            apis/vara-eth/**
 
       - name: 'Install: NodeJS 22.x'
-        if: steps.changed-gearexe.outputs.any_changed == 'true'
+        if: steps.changed-vara-eth.outputs.any_changed == 'true'
         uses: actions/setup-node@v6
         with:
           node-version: 22.x
 
       - name: Set up Rust
-        if: steps.changed-gearexe.outputs.any_changed == 'true'
+        if: steps.changed-vara-eth.outputs.any_changed == 'true'
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
           components: clippy, rustfmt, llvm-tools, rust-src
 
       - name: 'Install: binaryen'
-        if: steps.changed-gearexe.outputs.any_changed == 'true'
+        if: steps.changed-vara-eth.outputs.any_changed == 'true'
         run: |
           wget -c https://github.com/WebAssembly/binaryen/releases/download/$BINARYEN_VERSION/binaryen-$BINARYEN_VERSION-x86_64-linux.tar.gz -O - | tar -xz -C .
           sudo cp binaryen-$BINARYEN_VERSION/bin/wasm-opt /usr/bin/
 
       - name: 'Install: Foundry'
-        if: steps.changed-gearexe.outputs.any_changed == 'true'
+        if: steps.changed-vara-eth.outputs.any_changed == 'true'
         uses: foundry-rs/foundry-toolchain@v1
         with:
           version: nightly-7418317dee96a56ae61fd6327565aca36591b0dd
 
       - name: 'Install dependencies'
-        if: steps.changed-gearexe.outputs.any_changed == 'true'
-        run: yarn workspaces focus gear-js @gear-js/api gearexe gear-js-util
+        if: steps.changed-vara-eth.outputs.any_changed == 'true'
+        run: yarn workspaces focus gear-js @vara-eth/api
 
       - name: 'Build prerequirements'
-        if: steps.changed-gearexe.outputs.any_changed == 'true'
+        if: steps.changed-vara-eth.outputs.any_changed == 'true'
         run: |
           yarn build:gear-api
           yarn build:gear-js-util
 
       - name: 'Test: run'
-        if: steps.changed-gearexe.outputs.any_changed == 'true'
-        run: yarn test:gearexe-api
+        if: steps.changed-vara-eth.outputs.any_changed == 'true'
+        run: yarn test:vara-eth-api
         env:
           GEAR_BRANCH: ${{ vars.GEAR_BRANCH }}
 
