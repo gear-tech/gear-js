@@ -70,15 +70,6 @@ export class InjectedTransaction {
     return this._recipient || null;
   }
 
-  public get recipientU8a(): Uint8Array {
-    if (!this.recipient) {
-      // TODO: probably it should be a part of the Injected Transaction.
-      // figure it out when https://github.com/gear-tech/gear/pull/4938 is ready
-      throw new Error('Recipient is not defined');
-    }
-    return this._recipient ? hexToBytes(this._recipient) : new Uint8Array(20).fill(0);
-  }
-
   public get payload(): HexString {
     return this._payload;
   }

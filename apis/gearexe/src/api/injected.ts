@@ -23,7 +23,7 @@ export class Injected {
     this.tx.setRecipient(validators[0]);
   }
 
-  public async send() {
+  public async send(): Promise<string> {
     if (!this.tx.referenceBlock) {
       await this.setReferenceBlock();
     }
@@ -35,7 +35,7 @@ export class Injected {
     const pubKey = this._ethClient.accountAddress;
     const signature = await this._ethClient.signMessage(this.tx.hash);
 
-    const result = await this._gearExeProvider.send('injected_sendTransaction', [
+    const result = await this._gearExeProvider.send<string>('injected_sendTransaction', [
       {
         recipient: this.tx.recipient,
         tx: {
@@ -46,7 +46,6 @@ export class Injected {
       },
     ]);
 
-    // TODO: figure out what should be returned here
     return result;
   }
 

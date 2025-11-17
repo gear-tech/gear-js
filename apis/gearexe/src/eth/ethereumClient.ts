@@ -54,7 +54,6 @@ export class EthereumClient<
       abi,
       functionName: fn,
       args,
-      authorizationList: undefined, // TODO: get rid of this parameter if possible
     });
 
     return result;
