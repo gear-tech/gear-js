@@ -158,12 +158,6 @@ jobs:
         if: steps.changed-vara-eth.outputs.any_changed == 'true'
         run: yarn workspaces focus gear-js @vara-eth/api
 
-      - name: 'Build prerequirements'
-        if: steps.changed-vara-eth.outputs.any_changed == 'true'
-        run: |
-          yarn build:gear-api
-          yarn build:gear-js-util
-
       - name: 'Test: run'
         if: steps.changed-vara-eth.outputs.any_changed == 'true'
         run: yarn test:vara-eth-api
