@@ -11,12 +11,16 @@ export const assertEnv = (name: string) => {
   return process.env[name];
 };
 
+const blockTime = parseInt(process.env.BLOCK_TIME || '12');
+
 export const config = {
   privateKey: assertEnv('PRIVATE_KEY').toLowerCase() as `0x${string}`,
-  codeId: assertEnv('CODE_ID').toLowerCase(),
-  routerId: assertEnv('ROUTER_ADDRESS').toLowerCase(),
+  codeId: assertEnv('CODE_ID').toLowerCase() as `0x${string}`,
+  routerId: assertEnv('ROUTER_ADDRESS').toLowerCase() as `0x${string}`,
   skipUpload: process.env.SKIP_UPLOAD === 'true',
-  blockTime: parseInt(process.env.BLOCK_TIME || '12'),
+  blockTime,
   targetDir: path.resolve('target/wasm32-gear/release'),
   solOut: path.resolve('out'),
+  wsRpc: assertEnv('WS_RPC'),
+  longRunningTestTimeout: blockTime * 20_000,
 };

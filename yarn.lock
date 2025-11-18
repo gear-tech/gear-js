@@ -14498,7 +14498,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethers@npm:6.15.0, ethers@npm:^6.15.0":
+"ethers@npm:6.15.0":
   version: 6.15.0
   resolution: "ethers@npm:6.15.0"
   dependencies:
@@ -15512,13 +15512,12 @@ __metadata:
     "@ethereumjs/util": "npm:^10.1.0"
     "@noble/hashes": "npm:1.8.0"
     "@types/ws": "npm:^8"
-    ethers: "npm:^6.15.0"
     kzg-wasm: "npm:1.0.0"
-    viem: "npm:^2.38.6"
+    viem: "npm:^2.39.0"
     ws: "npm:^8.18.3"
   peerDependencies:
-    ethers: ^6.15
-    kzg-wasm: ^0.5.0
+    kzg-wasm: 1.0.0
+    viem: ^2.39.0
   languageName: unknown
   linkType: soft
 
@@ -24980,9 +24979,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:^2.38.6":
-  version: 2.38.6
-  resolution: "viem@npm:2.38.6"
+"viem@npm:^2.39.0":
+  version: 2.39.0
+  resolution: "viem@npm:2.39.0"
   dependencies:
     "@noble/curves": "npm:1.9.1"
     "@noble/hashes": "npm:1.8.0"
@@ -24997,7 +24996,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/9b8571bc9d7dfc414eb72700275ac71b9402cbf4fe3e447501d252cbc43cb7ddf9ce01a16c183fac265d071873d209efc2a459462c724624ef855d941d3447f0
+  checksum: 10c0/51512f329335244a97d2051030fc2aef9042f78b5d7d11012adde5f50d03fd3f5fec58bba69cc3129f2ebf48fa58dd600589cd5403dbd01c080a82b12ef83b66
   languageName: node
   linkType: hard
 

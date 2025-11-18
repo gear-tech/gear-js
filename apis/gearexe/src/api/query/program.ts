@@ -5,7 +5,9 @@ export class ProgramQueries {
   constructor(private _provider: IGearExeProvider) {}
 
   async getIds(): Promise<HexString[]> {
-    return this._provider.send<HexString[]>('program_ids', []);
+    const ids = await this._provider.send<HexString[]>('program_ids', []);
+
+    return ids.map((id) => id.toLowerCase() as HexString);
   }
 
   async codeId(programId: string): Promise<HexString> {

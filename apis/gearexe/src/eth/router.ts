@@ -1,51 +1,129 @@
-import { BaseContract, Signer, Wallet, ethers } from 'ethers';
+import type { Address, Hex } from 'viem';
+import { toHex, zeroAddress, numberToBytes, hexToBytes, bytesToHex, encodeFunctionData } from 'viem';
+import { randomBytes } from '@noble/hashes/utils';
 import { loadKZG } from 'kzg-wasm';
-import { DevBlobHelpers, CodeValidationHelpers, CreateProgramHelpers, CodeState } from './interfaces/router.js';
-import { IROUTER_INTERFACE, IRouterContract } from './abi/index.js';
+
+import { CodeValidationHelpers, CreateProgramHelpers, CodeState } from './interfaces/router.js';
+import { IROUTER_ABI, IRouterContract } from './abi/index.js';
 import { TxManager, TxManagerWithHelpers } from './tx-manager.js';
 import { ITxManager } from './interfaces/tx-manager.js';
-import { GearExeApi } from '../api/api.js';
 import { generateCodeHash } from '../util';
+import { EthereumClient } from './ethereumClient.js';
+import { HexString } from '../types/index.js';
 
-// Interfaces moved to ./interfaces/router.js
+const getCodeState = (value: number): CodeState => {
+  switch (value) {
+    case 0: {
+      return CodeState.Unknown;
+    }
+    case 1: {
+      return CodeState.ValidationRequested;
+    }
+    case 2: {
+      return CodeState.Validated;
+    }
+    default: {
+      throw new Error('Invalid code state');
+    }
+  }
+};
 
 /**
  * A contract wrapper for interacting with a Router contract on the Gear.Exe network.
  * Provides methods for code validation, program creation, and other router-related operations.
  */
-export class RouterContract extends BaseContract implements IRouterContract {
-  private _wallet: Wallet | Signer;
-
+export class RouterContract implements IRouterContract {
   /**
    * Creates a new RouterContract instance.
    *
    * @param address - The address of the Router contract
-   * @param wallet - The wallet or signer to use for transactions
+   * @param ethereumClient - The Ethereum client for sending transactions and reading data
    */
-  constructor(address: string, wallet: Wallet | Signer) {
-    super(address, IROUTER_INTERFACE, wallet);
-    this._wallet = wallet;
+  constructor(
+    private address: Address,
+    private ethereumClient: EthereumClient,
+  ) {}
+
+  areValidators(validators: Address[]): Promise<boolean> {
+    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'areValidators', [validators]);
   }
 
-  declare areValidators: (validators: string[]) => Promise<boolean>;
-  declare codesStates: (codesIds: string[]) => Promise<bigint[]>;
-  declare computeSettings: () => Promise<any>;
-  declare genesisBlockHash: () => Promise<string>;
-  declare genesisTimestamp: () => Promise<bigint>;
-  declare isValidator: (validator: string) => Promise<boolean>;
-  declare latestCommittedBlockHash: () => Promise<string>;
-  declare mirrorImpl: () => Promise<string>;
-  declare programCodeId: (programId: string) => Promise<string>;
-  declare programsCodeIds: (programsIds: string[]) => Promise<string[]>;
-  declare programsCount: () => Promise<bigint>;
-  declare signingThresholdPercentage: () => Promise<bigint>;
-  declare validatedCodesCount: () => Promise<bigint>;
-  declare validators: () => Promise<string[]>;
-  declare validatorsAggregatedPublicKey: () => Promise<any>;
-  declare validatorsCount: () => Promise<bigint>;
-  declare validatorsThreshold: () => Promise<bigint>;
-  declare validatorsVerifiableSecretSharingCommitment: () => Promise<string>;
-  declare wrappedVara: () => Promise<string>;
+  async codesStates(codeIds: HexString[]): Promise<CodeState[]> {
+    const states = await this.ethereumClient.readContract(this.address, IROUTER_ABI, 'codesStates', [codeIds]);
+
+    return states.map((value) => getCodeState(value));
+  }
+
+  computeSettings(): Promise<{
+    threshold: bigint;
+    wvaraPerSecond: bigint;
+  }> {
+    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'computeSettings');
+  }
+
+  genesisBlockHash(): Promise<HexString> {
+    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'genesisBlockHash');
+  }
+
+  genesisTimestamp(): Promise<number> {
+    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'genesisTimestamp');
+  }
+
+  isValidator(validator: string): Promise<boolean> {
+    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'isValidator', [validator as Address]);
+  }
+
+  latestCommittedBlockHash(): Promise<string> {
+    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'latestCommittedBatchHash');
+  }
+
+  mirrorImpl(): Promise<string> {
+    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'mirrorImpl');
+  }
+
+  programCodeId(programId: HexString): Promise<string> {
+    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'programCodeId', [programId]);
+  }
+
+  programsCodeIds(programsIds: HexString[]): Promise<readonly HexString[]> {
+    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'programsCodeIds', [programsIds]);
+  }
+
+  programsCount(): Promise<bigint> {
+    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'programsCount');
+  }
+
+  signingThresholdPercentage(): Promise<number> {
+    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'signingThresholdPercentage');
+  }
+
+  validatedCodesCount(): Promise<bigint> {
+    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'validatedCodesCount');
+  }
+
+  validators(): Promise<readonly HexString[]> {
+    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'validators');
+  }
+
+  async validatorsAggregatedPublicKey(): Promise<any> {
+    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'validatorsAggregatedPublicKey');
+  }
+
+  async validatorsCount(): Promise<bigint> {
+    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'validatorsCount');
+  }
+
+  async validatorsThreshold(): Promise<bigint> {
+    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'validatorsThreshold');
+  }
+
+  async validatorsVerifiableSecretSharingCommitment(): Promise<string> {
+    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'validatorsVerifiableSecretSharingCommitment');
+  }
+
+  async wrappedVara(): Promise<Hex> {
+    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'wrappedVara');
+  }
 
   /**
    * Gets the validation state of a code.
@@ -54,100 +132,10 @@ export class RouterContract extends BaseContract implements IRouterContract {
    * @returns Promise resolving to the code state
    * @throws Error if the code state is invalid
    */
-  async codeState(codeId: string): Promise<CodeState> {
-    const fn = this.getFunction('codeState');
-    const _state = await fn.staticCall(codeId);
-    switch (_state) {
-      case 0n: {
-        return CodeState.Unknown;
-      }
-      case 1n: {
-        return CodeState.ValidationRequested;
-      }
-      case 2n: {
-        return CodeState.Validated;
-      }
-      default: {
-        throw new Error('Invalid code state');
-      }
-    }
-  }
+  async codeState(codeId: HexString): Promise<CodeState> {
+    const _state = await this.ethereumClient.readContract(this.address, IROUTER_ABI, 'codeState', [codeId]);
 
-  /**
-   * Creates a blob from the provided code for on-chain submission.
-   *
-   * @param code - The code to convert to a blob
-   * @returns The hexadecimal representation of the blob
-   */
-  createBlob(code: Uint8Array): string {
-    const blob = prepareBlob(code);
-    return ethers.hexlify(blob);
-  }
-
-  /**
-   * Requests code validation in development mode without including the blob in the transaction.
-   * This method can be used when Gear.Exe node is running in "dev" mode.
-   *
-   * @param code - The code to be validated
-   * @param api - The Gear.Exe API instance
-   * @returns A transaction manager with blob-specific helper functions, including the code ID and
-   *          a function to wait for the code to be validated
-   * @deprecated
-   */
-  async requestCodeValidationNoBlob(code: Uint8Array, api: GearExeApi): Promise<TxManagerWithHelpers<DevBlobHelpers>> {
-    const codeId = generateCodeHash(code);
-
-    const transaction = await this.getFunction('requestCodeValidation').populateTransaction(codeId);
-
-    const blob = prepareBlob(code);
-
-    if (blob.length != 4096 * 32) {
-      throw new Error('Invalid blob size');
-    }
-
-    const kzg = await loadKZG();
-
-    const tx: ethers.TransactionRequest = {
-      type: 3,
-      data: transaction.data,
-      to: transaction.to,
-      gasLimit: 5_000_000n,
-      maxFeePerBlobGas: 400_000_000_000,
-      blobs: [blob],
-      kzg,
-    };
-
-    const txManager: ITxManager = new TxManager(
-      this._wallet,
-      tx,
-      IROUTER_INTERFACE,
-      {
-        processDevBlob: (manager) => async () => {
-          const txResponse = await manager.send();
-          return (await api.provider.send('dev_setBlob', [txResponse.hash, ethers.hexlify(new Uint8Array(code))])) as [
-            string,
-            string,
-          ];
-        },
-      },
-      {
-        codeId,
-        waitForCodeGotValidated: () =>
-          new Promise<boolean>((resolve, reject) =>
-            this.on('CodeGotValidated', (_codeId, valid) => {
-              if (_codeId == codeId) {
-                if (valid) {
-                  resolve(true);
-                } else {
-                  reject(new Error('Code validation failed'));
-                }
-              }
-            }),
-          ),
-      },
-    );
-
-    return txManager as TxManagerWithHelpers<DevBlobHelpers>;
+    return getCodeState(_state);
   }
 
   /**
@@ -160,7 +148,11 @@ export class RouterContract extends BaseContract implements IRouterContract {
   async requestCodeValidation(code: Uint8Array): Promise<TxManagerWithHelpers<CodeValidationHelpers>> {
     const codeId = generateCodeHash(code);
 
-    const transaction = await this.getFunction('requestCodeValidation').populateTransaction(codeId);
+    const data = encodeFunctionData({
+      abi: IROUTER_ABI,
+      functionName: 'requestCodeValidation',
+      args: [codeId],
+    });
 
     const blob = prepareBlob(code);
 
@@ -170,28 +162,50 @@ export class RouterContract extends BaseContract implements IRouterContract {
 
     const kzg = await loadKZG();
 
-    const tx: ethers.TransactionRequest = {
-      type: 3,
-      data: transaction.data,
-      to: transaction.to,
-      gasLimit: 5_000_000n,
-      maxFeePerBlobGas: 400_000_000_000,
+    const tx = {
+      type: 'eip4844' as const,
+      data,
+      to: this.address,
+      gas: 5_000_000n,
+      maxFeePerBlobGas: 400_000_000_000n,
       blobs: [blob],
-      kzg,
+      kzg: {
+        blobToKzgCommitment: (blob: Uint8Array) => {
+          const result = kzg.blobToKZGCommitment(bytesToHex(blob)) as Hex;
+          return hexToBytes(result);
+        },
+        computeBlobKzgProof: (blob: Uint8Array, commitment: Uint8Array) => {
+          const result = kzg.computeBlobKZGProof(bytesToHex(blob), bytesToHex(commitment)) as Hex;
+          return hexToBytes(result);
+        },
+      },
+      chain: null,
     };
 
-    const txManager: ITxManager = new TxManager(this._wallet, tx, IROUTER_INTERFACE, undefined, {
+    const request = await this.ethereumClient.publicClient.prepareTransactionRequest(tx);
+
+    console.log(request);
+
+    const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IROUTER_ABI, undefined, {
       codeId,
       waitForCodeGotValidated: () =>
         new Promise<boolean>((resolve, reject) =>
-          this.on('CodeGotValidated', (_codeId, valid) => {
-            if (_codeId == codeId) {
-              if (valid) {
-                resolve(true);
-              } else {
-                reject(new Error('Code validation failed'));
+          // TODO: consider listening from block where transaction was included
+          this.ethereumClient.watchEvent({
+            address: this.address,
+            abi: IROUTER_ABI,
+            eventName: 'CodeGotValidated',
+            onLogs: (logs) => {
+              for (const log of logs) {
+                if (log.args.codeId == codeId) {
+                  if (log.args.valid) {
+                    resolve(true);
+                  } else {
+                    reject(new Error('Code validation failed'));
+                  }
+                }
               }
-            }
+            },
           }),
         ),
     });
@@ -208,22 +222,35 @@ export class RouterContract extends BaseContract implements IRouterContract {
    * @returns A transaction manager with program creation helper functions
    */
   async createProgram(
-    codeId: string,
-    overrideInitializer?: string,
-    salt?: string,
+    codeId: HexString,
+    overrideInitializer?: HexString,
+    salt?: HexString,
   ): Promise<TxManagerWithHelpers<CreateProgramHelpers>> {
-    const _salt = salt || ethers.hexlify(ethers.randomBytes(32));
+    const _salt = salt || toHex(randomBytes(32));
 
-    const tx = await this.getFunction('createProgram').populateTransaction(
-      codeId,
-      _salt,
-      overrideInitializer || ethers.ZeroAddress,
-    );
+    const encodedData = encodeFunctionData({
+      functionName: 'createProgram',
+      args: [codeId, _salt, overrideInitializer || zeroAddress],
+      abi: IROUTER_ABI,
+    });
 
-    const txManager: ITxManager = new TxManager(this._wallet, tx, IROUTER_INTERFACE, {
+    // const { request } = await this.ethereumClient.simulateContract({
+    //   address: this.address,
+    //   abi: IROUTER_ABI,
+    //   functionName: 'createProgram',
+    //   args: [codeId, _salt, overrideInitializer || zeroAddress],
+    //   account: this.ethereumClient.account!,
+    // });
+
+    const tx = {
+      to: this.address,
+      data: encodedData,
+    };
+
+    const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IROUTER_ABI, {
       getProgramId: (manager) => async () => {
         const event = await manager.findEvent('ProgramCreated');
-        return event.args[0].toLowerCase();
+        return event.args.actorId.toLowerCase();
       },
     });
 
@@ -240,24 +267,28 @@ export class RouterContract extends BaseContract implements IRouterContract {
    * @returns
    */
   async createProgramWithAbiInterface(
-    codeId: string,
-    abiInterfaceAddress: string,
-    overrideInitializer?: string,
-    salt?: string,
+    codeId: HexString,
+    abiInterfaceAddress: HexString,
+    overrideInitializer?: HexString,
+    salt?: HexString,
   ): Promise<TxManagerWithHelpers<CreateProgramHelpers>> {
-    const _salt = salt || ethers.hexlify(ethers.randomBytes(32));
-    const fn = this.getFunction('createProgramWithAbiInterface');
-    const tx = await fn.populateTransaction(
-      codeId,
-      _salt,
-      overrideInitializer || ethers.ZeroAddress,
-      abiInterfaceAddress,
-    );
+    const _salt = salt || toHex(randomBytes(32));
 
-    const txManager: ITxManager = new TxManager(this._wallet, tx, IROUTER_INTERFACE, {
+    const encodedData = encodeFunctionData({
+      abi: IROUTER_ABI,
+      functionName: 'createProgramWithAbiInterface',
+      args: [codeId, _salt, overrideInitializer || zeroAddress, abiInterfaceAddress],
+    });
+
+    const tx = {
+      to: this.address,
+      data: encodedData,
+    };
+
+    const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IROUTER_ABI, {
       getProgramId: (manager) => async () => {
         const event = await manager.findEvent('ProgramCreated');
-        return event.args[0].toLowerCase();
+        return event.args.actorId.toLowerCase();
       },
     });
 
@@ -270,12 +301,13 @@ export class RouterContract extends BaseContract implements IRouterContract {
 /**
  * Creates a new RouterContract instance.
  *
- * @param id - The address of the Router contract
- * @param provider - Optional wallet or signer to use for transactions
+ * @param address - The address of the Router contract
+ * @param walletClient - The wallet client for sending transactions
+ * @param publicClient - The public client for reading data
  * @returns A new RouterContract instance that implements the IRouterContract interface
  */
-export function getRouterContract(id: string, provider?: Wallet | Signer): RouterContract {
-  return new RouterContract(id, provider);
+export function getRouterContract(address: Address, ethereumClient: EthereumClient): RouterContract {
+  return new RouterContract(address, ethereumClient);
 }
 
 /**
@@ -289,9 +321,9 @@ function prepareBlob(data: Uint8Array) {
   const BLOB_SIZE = 131_072;
   const paddedData = new Uint8Array(BLOB_SIZE);
 
-  const dataLength = ethers.toBeArray(data.length);
+  const dataLength = numberToBytes(data.length, { size: 32 });
   const length = new Uint8Array(32);
-  length.set(dataLength, 1 + 8 - dataLength.length);
+  length.set(dataLength, 0);
 
   paddedData.set(length, 0);
 

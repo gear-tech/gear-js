@@ -1,67 +1,142 @@
-import { ethers } from 'ethers';
-
-
-// GENERATED_ABI_START
 export const IWRAPPEDVARA_ABI = [
-  'function allowance(address owner, address spender) view returns (uint256)',
-  'function approve(address spender, uint256 value) returns (bool)',
-  'function balanceOf(address account) view returns (uint256)',
-  'function decimals() view returns (uint8)',
-  'function name() view returns (string)',
-  'function symbol() view returns (string)',
-  'function totalSupply() view returns (uint256)',
-  'function transfer(address to, uint256 value) returns (bool)',
-  'function transferFrom(address from, address to, uint256 value) returns (bool)',
-  'event Approval(address indexed owner, address indexed spender, uint256 value)',
-  'event Transfer(address indexed from, address indexed to, uint256 value)',
-];
+  {
+    type: 'function',
+    name: 'allowance',
+    inputs: [
+      { name: 'owner', type: 'address', internalType: 'address' },
+      { name: 'spender', type: 'address', internalType: 'address' },
+    ],
+    outputs: [{ name: '', type: 'uint256', internalType: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'approve',
+    inputs: [
+      { name: 'spender', type: 'address', internalType: 'address' },
+      { name: 'value', type: 'uint256', internalType: 'uint256' },
+    ],
+    outputs: [{ name: '', type: 'bool', internalType: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'balanceOf',
+    inputs: [{ name: 'account', type: 'address', internalType: 'address' }],
+    outputs: [{ name: '', type: 'uint256', internalType: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'decimals',
+    inputs: [],
+    outputs: [{ name: '', type: 'uint8', internalType: 'uint8' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'name',
+    inputs: [],
+    outputs: [{ name: '', type: 'string', internalType: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'symbol',
+    inputs: [],
+    outputs: [{ name: '', type: 'string', internalType: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'totalSupply',
+    inputs: [],
+    outputs: [{ name: '', type: 'uint256', internalType: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'transfer',
+    inputs: [
+      { name: 'to', type: 'address', internalType: 'address' },
+      { name: 'value', type: 'uint256', internalType: 'uint256' },
+    ],
+    outputs: [{ name: '', type: 'bool', internalType: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'transferFrom',
+    inputs: [
+      { name: 'from', type: 'address', internalType: 'address' },
+      { name: 'to', type: 'address', internalType: 'address' },
+      { name: 'value', type: 'uint256', internalType: 'uint256' },
+    ],
+    outputs: [{ name: '', type: 'bool', internalType: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'event',
+    name: 'Approval',
+    inputs: [
+      { name: 'owner', type: 'address', indexed: true, internalType: 'address' },
+      { name: 'spender', type: 'address', indexed: true, internalType: 'address' },
+      { name: 'value', type: 'uint256', indexed: false, internalType: 'uint256' },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'Transfer',
+    inputs: [
+      { name: 'from', type: 'address', indexed: true, internalType: 'address' },
+      { name: 'to', type: 'address', indexed: true, internalType: 'address' },
+      { name: 'value', type: 'uint256', indexed: false, internalType: 'uint256' },
+    ],
+    anonymous: false,
+  },
+] as const;
 
-export const IWRAPPEDVARA_INTERFACE = new ethers.Interface(IWRAPPEDVARA_ABI);
-// GENERATED_ABI_END
-
-// GENERATED_INTERFACE_START
 /**
- * Interface for IWrappedVara contract methods
- * Standard ERC20 token interface for wrapped VARA tokens
+ * Interface for IWrappedVara (ERC20) contract methods
  */
 export interface IWrappedVaraContract {
   /**
-   * Returns the amount which spender is still allowed to withdraw from owner
-   * @param owner - The address of the account owning tokens
-   * @param spender - The address of the account able to transfer the tokens
-   * @returns Promise resolving to the remaining number of tokens allowed to spent
-   */
-  allowance(owner: string, spender: string): Promise<bigint>;
-
-  /**
-   * Gets the balance of the specified address
-   * @param account - The address to query the balance of
-   * @returns Promise resolving to the amount owned by the passed address
-   */
-  balanceOf(account: string): Promise<bigint>;
-
-  /**
-   * Returns the number of decimals used to get its user representation
-   * @returns Promise resolving to the number of decimals
-   */
-  decimals(): Promise<bigint>;
-
-  /**
-   * Returns the name of the token
+   * Gets the name of the token
    * @returns Promise resolving to the token name
    */
   name(): Promise<string>;
 
   /**
-   * Returns the symbol of the token
+   * Gets the symbol of the token
    * @returns Promise resolving to the token symbol
    */
   symbol(): Promise<string>;
 
   /**
-   * Returns the total token supply
-   * @returns Promise resolving to the total amount of tokens
+   * Gets the number of decimals the token uses
+   * @returns Promise resolving to the number of decimals
+   */
+  decimals(): Promise<number>;
+
+  /**
+   * Gets the total token supply
+   * @returns Promise resolving to the total supply
    */
   totalSupply(): Promise<bigint>;
+
+  /**
+   * Gets the balance of a specific account
+   * @param account - The account address to query
+   * @returns Promise resolving to the account balance
+   */
+  balanceOf(account: string): Promise<bigint>;
+
+  /**
+   * Gets the amount which spender is still allowed to withdraw from owner
+   * @param owner - The owner address
+   * @param spender - The spender address
+   * @returns Promise resolving to the remaining allowance
+   */
+  allowance(owner: string, spender: string): Promise<bigint>;
 }
-// GENERATED_INTERFACE_END
