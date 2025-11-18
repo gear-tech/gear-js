@@ -2,14 +2,13 @@ import { mergeProps, useRender } from '@base-ui-components/react';
 
 import { useAccountItemContext } from './context';
 
-type Props = useRender.ComponentProps<'button'>;
+type Props = useRender.ComponentProps<'button', { isActive: boolean }>;
 
 function AccountTrigger({ render, children, ...props }: Props) {
   const { onClick, isActive } = useAccountItemContext();
 
   const defaultProps: useRender.ElementProps<'button'> = {
     type: 'button',
-    disabled: isActive,
     onClick,
     children,
   };
@@ -18,6 +17,7 @@ function AccountTrigger({ render, children, ...props }: Props) {
     defaultTagName: 'button',
     render,
     props: mergeProps<'button'>(defaultProps, props),
+    state: { isActive },
   });
 }
 

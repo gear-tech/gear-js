@@ -8,17 +8,19 @@ import styles from './wallet-list.module.scss';
 function WalletList() {
   return (
     <Wallet.WalletList className={styles.list}>
-      <Wallet.WalletTrigger render={<Button text="" color="plain" size="small" />} className={styles.button}>
-        <span className={styles.wallet}>
-          <Wallet.WalletIcon className={styles.walletIcon} />
-          <Wallet.WalletName />
-        </span>
+      <Wallet.WalletItem>
+        <Wallet.WalletTrigger render={<Button text="" color="plain" size="small" block />} className={styles.button}>
+          <span className={styles.wallet}>
+            <Wallet.WalletIcon className={styles.walletIcon} />
+            <Wallet.WalletName />
+          </span>
 
-        <span className={styles.status}>
-          <Wallet.WalletStatus className={cx(styles.statusText, styles.vara)} />
-          <Wallet.WalletAccountsLabel className={cx(styles.statusAccounts, styles.vara)} />
-        </span>
-      </Wallet.WalletTrigger>
+          <span className={styles.status}>
+            <Wallet.WalletStatus className={cx(styles.statusText, styles.vara)} />
+            <Wallet.WalletAccountsLabel className={cx(styles.statusAccounts, styles.vara)} />
+          </span>
+        </Wallet.WalletTrigger>
+      </Wallet.WalletItem>
     </Wallet.WalletList>
   );
 }

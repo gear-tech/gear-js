@@ -22,14 +22,11 @@ function StyledWallet() {
         <Wallet.ConnectedAccountLabel />
       </Wallet.TriggerConnected>
 
-      {/* TODO: remove global dialog context */}
-      {/* @ts-expect-error -- no props */}
-      <Wallet.Dialog render={<Modal footer={<ModalFooter />} />}>
+      <Wallet.Dialog
+        render={(props, state) => (state.isOpen ? <Modal footer={<ModalFooter />} {...props} {...state} /> : <></>)}>
         <WalletList />
         <AccountList />
 
-        {/* TODO: if consumer would like to wrap all of empty texts into single container, how to control it's conditional rendering? */}
-        {/* is it valid case? */}
         <Wallet.NoWallets className={cx(styles.text, styles.vara)} />
         <Wallet.NoMobileWallets className={cx(styles.text, styles.vara)} />
         <Wallet.NoAccounts className={cx(styles.text, styles.vara)} />

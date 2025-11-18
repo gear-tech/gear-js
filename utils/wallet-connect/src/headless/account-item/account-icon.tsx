@@ -4,7 +4,7 @@ import { Identicon } from '@polkadot/react-identicon';
 import { useAccountItemContext } from './context';
 
 type IdenticonType = typeof Identicon;
-type AccountIconProps = useRender.ComponentProps<IdenticonType>;
+type AccountIconProps = useRender.ComponentProps<IdenticonType, { address: string }>;
 type ElementProps = useRender.ElementProps<IdenticonType>;
 
 function AccountIcon({ render, ...props }: AccountIconProps) {
@@ -18,6 +18,7 @@ function AccountIcon({ render, ...props }: AccountIconProps) {
   return useRender({
     render: render ?? <Identicon />,
     props: mergeProps<IdenticonType>(defaultProps, props),
+    state: { address: account.address },
   });
 }
 

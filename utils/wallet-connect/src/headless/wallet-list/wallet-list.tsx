@@ -22,7 +22,6 @@ function WalletList({ render, children, ...props }: Props) {
         const isConnected = status === 'connected';
 
         const accountsCount = accounts?.length ?? 0;
-        const accountsLabel = `${accountsCount} ${accountsCount === 1 ? 'account' : 'accounts'}`;
 
         const onClick = () => {
           if (isConnected) return setWalletId(id);
@@ -30,7 +29,7 @@ function WalletList({ render, children, ...props }: Props) {
           connect?.().catch((error: Error) => console.error(error.message));
         };
 
-        const contextValue = { id, wallet, isEnabled, isConnected, accountsLabel, onClick };
+        const contextValue = { id, wallet, isEnabled, isConnected, accountsCount, onClick };
 
         return (
           <WalletItemProvider key={id} value={contextValue}>

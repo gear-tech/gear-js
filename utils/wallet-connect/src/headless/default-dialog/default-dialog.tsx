@@ -6,12 +6,12 @@ import styles from './default-dialog.module.scss';
 type Props = PropsWithChildren & {
   heading: string;
   isOpen: boolean;
-  close: () => void;
+  toggle: (value: boolean) => void;
 };
 
-function DefaultDialog({ children, heading, isOpen, close }: Props) {
+function DefaultDialog({ children, heading, isOpen, toggle }: Props) {
   return (
-    <Dialog.Root open={isOpen} onOpenChange={(open) => !open && close()}>
+    <Dialog.Root open={isOpen} onOpenChange={toggle}>
       <Dialog.Portal>
         <Dialog.Backdrop className={styles.backdrop} />
         <Dialog.Popup className={styles.popup}>

@@ -1,10 +1,11 @@
-import { createContext, useContext } from 'react';
+import { createContext, Dispatch, SetStateAction, useContext } from 'react';
 
 type WalletContextValue = {
   dialog: {
     isOpen: boolean;
     open: () => void;
     close: () => void;
+    toggle: Dispatch<SetStateAction<boolean>>;
   };
 };
 

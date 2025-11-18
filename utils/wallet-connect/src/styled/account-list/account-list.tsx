@@ -10,8 +10,12 @@ function AccountList() {
   return (
     <Wallet.AccountsList className={styles.list}>
       <Wallet.AccountItem className={styles.account}>
-        {/* TODO: if active - primary color. props or context? */}
-        <Wallet.AccountTrigger render={<Button text="" color="plain" size="small" block />}>
+        <Wallet.AccountTrigger
+          render={({ color: _color, children, ...props }, state) => (
+            <Button color={state.isActive ? 'primary' : 'plain'} size="small" block {...props}>
+              {children}
+            </Button>
+          )}>
           <Wallet.AccountIcon theme="polkadot" size={16} />
           <Wallet.AccountLabel />
         </Wallet.AccountTrigger>

@@ -8,7 +8,7 @@ function WalletIcon({ render, ...props }: Props) {
   const { wallet } = useWalletItemContext();
 
   const defaultProps: useRender.ElementProps<'span'> = {
-    children: <wallet.SVG aria-hidden />,
+    children: <wallet.SVG />,
   };
 
   return useRender({

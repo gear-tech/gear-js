@@ -2,7 +2,6 @@ import { mergeProps, useRender } from '@base-ui-components/react';
 import { useAccount } from '@gear-js/react-hooks';
 
 type Props = useRender.ComponentProps<'span'>;
-
 type ElementProps = useRender.ElementProps<'span'>;
 
 function ConnectedAccountLabel({ render, ...props }: Props) {

@@ -7,7 +7,7 @@ export type WalletItemContextValue = {
   wallet: WalletValue;
   isEnabled: boolean;
   isConnected: boolean;
-  accountsLabel: string;
+  accountsCount: number;
   onClick: () => void;
 };
 

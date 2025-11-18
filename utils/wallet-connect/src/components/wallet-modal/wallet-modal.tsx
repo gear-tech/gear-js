@@ -19,7 +19,7 @@ type Props = {
 function WalletModal({ theme = 'vara', close }: Props) {
   const alert = useAlert();
   const { wallets, isAnyWallet, account, login, logout } = useAccount();
-  const { wallet, walletAccounts, setWalletId, resetWalletId } = useWallet();
+  const { wallet, walletAccounts, setWalletId, resetWalletId } = useWallet(true);
 
   const themeClassName = styles[theme];
   const { WalletButton, AccountButton, Button, Modal } = UI_CONFIG[theme];
