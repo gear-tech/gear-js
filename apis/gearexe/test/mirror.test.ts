@@ -80,7 +80,7 @@ describe('setup', () => {
   );
 
   test('should approve wvara', async () => {
-    const tx = await wvara.approve(programId, BigInt(10 * 1e12));
+    const tx = await wvara.approve(programId, BigInt(100 * 1e12));
 
     await tx.send();
 
@@ -88,10 +88,10 @@ describe('setup', () => {
 
     hasProps(approvalData, ['owner', 'spender', 'value']);
 
-    expect(approvalData.value).toEqual(BigInt(10 * 1e12));
+    expect(approvalData.value).toEqual(BigInt(100 * 1e12));
 
     const allowance = await wvara.allowance(ethereumClient.accountAddress, programId);
-    expect(allowance).toEqual(BigInt(10 * 1e12));
+    expect(allowance).toEqual(BigInt(100 * 1e12));
   });
 
   test('should check that program is active', async () => {

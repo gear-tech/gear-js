@@ -30,6 +30,11 @@ export class EthereumClient<
     return this._walletClient;
   }
 
+  public setWalletClient(client: WalletClient) {
+    this._walletClient = client as WalletClient<TTransport, TChain, TAccount>;
+    return this;
+  }
+
   get accountAddress() {
     if (!this.walletClient || !this.walletClient.account) {
       throw new Error('Wallet client not connected');

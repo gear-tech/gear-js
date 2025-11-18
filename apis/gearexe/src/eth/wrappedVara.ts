@@ -2,7 +2,7 @@ import type { Address, Hex } from 'viem';
 import { encodeFunctionData } from 'viem';
 
 import { convertEventParams as convertEventParameters } from '../util/index.js';
-import { WrappedVaraTxHelpers, ApprovalLog } from './interfaces/wrappedVara.js';
+import { WrappedVaraTxHelpers, ApprovalLog, TransferLog, WVaraTransferHelpers } from './interfaces/wrappedVara.js';
 import { IWRAPPEDVARA_ABI, IWrappedVaraContract } from './abi/IWrappedVara.js';
 import { TxManager, TxManagerWithHelpers } from './tx-manager.js';
 import { ITxManager } from './interfaces/tx-manager.js';
@@ -56,20 +56,12 @@ export class WrappedVaraContract implements IWrappedVaraContract {
    * @returns A transaction manager with approval-specific helper functions
    */
   async approve(spender: Address, value: bigint): Promise<TxManagerWithHelpers<WrappedVaraTxHelpers>> {
-    await this.ethereumClient.simulateContract({
-      address: this.address,
-      abi: IWRAPPEDVARA_ABI,
-      functionName: 'approve',
-      args: [spender, value],
-      account: this.ethereumClient.account,
-    });
-
     const tx = {
       to: this.address,
       data: encodeFunctionData({
         abi: IWRAPPEDVARA_ABI,
         functionName: 'approve',
-        args: [spender as Address, value],
+        args: [spender, value],
       }),
     };
 
@@ -81,6 +73,26 @@ export class WrappedVaraContract implements IWrappedVaraContract {
     });
 
     return txManager as TxManagerWithHelpers<WrappedVaraTxHelpers>;
+  }
+
+  async transfer(to: Address, value: bigint): Promise<TxManagerWithHelpers<WVaraTransferHelpers>> {
+    const tx = {
+      to: this.address,
+      data: encodeFunctionData({
+        abi: IWRAPPEDVARA_ABI,
+        functionName: 'transfer',
+        args: [to, value],
+      }),
+    };
+
+    const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IWRAPPEDVARA_ABI, {
+      getTransferLog: (manager) => async () => {
+        const event = await manager.findEvent('Transfer');
+        return convertEventParameters<TransferLog>(event);
+      },
+    });
+
+    return txManager as TxManagerWithHelpers<WVaraTransferHelpers>;
   }
 }
 

@@ -19,7 +19,7 @@ beforeAll(async () => {
   publicClient = createPublicClient<WebSocketTransport, Chain, undefined>({
     transport,
   }) as PublicClient<WebSocketTransport, Chain, undefined>;
-  const account = privateKeyToAccount(config.privateKey);
+  const account = privateKeyToAccount(config.wvaraPrefundedPrivateKey);
 
   walletClient = createWalletClient<WebSocketTransport>({
     account,
@@ -97,5 +97,19 @@ describe('transactions', () => {
   test('should verify allowance after approval', async () => {
     const allowance = await wvara.allowance(ethereumClient.accountAddress, ethereumClient.accountAddress);
     expect(allowance).toBeGreaterThanOrEqual(BigInt(1000));
+  });
+
+  test('should transfer tokens', async () => {
+    const amount = BigInt(2000 * 1e12);
+    const tx = await wvara.transfer(config.accountAddress, amount);
+
+    await tx.send();
+
+    const transferLog = await tx.getTransferLog();
+
+    expect(transferLog).toBeDefined();
+    expect(transferLog.from).toBeDefined();
+    expect(transferLog.to).toBeDefined();
+    expect(transferLog.value).toBe(amount);
   });
 });

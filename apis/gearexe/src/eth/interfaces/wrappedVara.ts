@@ -9,6 +9,14 @@ export interface WrappedVaraTxHelpers {
   getApprovalLog: () => Promise<ApprovalLog>;
 }
 
+export interface WVaraTransferHelpers {
+  /**
+   * Gets the transfer event log from the transaction.
+   * @returns Promise resolving to the transfer log
+   */
+  getTransferLog: () => Promise<TransferLog>;
+}
+
 /**
  * Represents an approval event log.
  */
@@ -25,6 +33,23 @@ export interface ApprovalLog {
 
   /**
    * The approved value.
+   */
+  value: bigint;
+}
+
+export interface TransferLog {
+  /**
+   * The address of the token owner.
+   */
+  from: string;
+
+  /**
+   * The address of the recipient.
+   */
+  to: string;
+
+  /**
+   * The transferred value.
    */
   value: bigint;
 }

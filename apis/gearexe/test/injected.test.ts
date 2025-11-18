@@ -32,7 +32,7 @@ beforeAll(async () => {
   publicClient = createPublicClient<WebSocketTransport, Chain, undefined>({
     transport,
   }) as PublicClient<WebSocketTransport, Chain, undefined>;
-  const account = privateKeyToAccount(config.privateKey);
+  const account = privateKeyToAccount(config.privateKey, {});
 
   walletClient = createWalletClient<WebSocketTransport>({
     account,

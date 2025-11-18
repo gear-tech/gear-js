@@ -2,25 +2,17 @@ import Sequencer from '@jest/test-sequencer';
 
 export default class CustomSequencer extends Sequencer {
   sort(tests) {
-    const copyTests = Array.from(tests);
-    const result = new Array(copyTests.length);
+    return Array.from(tests).sort((testA, testB) => {
+      const getPriority = (test) => {
+        if (test.path.includes('wvara')) return 0;
+        if (test.path.includes('router')) return 1;
+        return 2;
+      };
 
-    const routerTest = tests.find(({ path }) => path.includes('router'));
+      const priorityA = getPriority(testA);
+      const priorityB = getPriority(testB);
 
-    let counter = 0;
-
-    if (routerTest && tests.length > 1) counter++;
-
-    for (const test of copyTests) {
-      if (test.path.includes('router') && tests.length > 1) {
-        result[0] = test;
-        continue;
-      } else {
-        result[counter] = test;
-        counter++;
-      }
-    }
-
-    return result;
+      return priorityA - priorityB;
+    });
   }
 }

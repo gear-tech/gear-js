@@ -842,8 +842,8 @@ describe('WsGearexeProvider - Error Handling', () => {
   test('should reject pending requests on connection close', async () => {
     const { provider, ws } = await createConnectedProvider(mock);
 
-    const request1 = provider.send(TEST_METHODS.METHOD1, []).catch((e) => e);
-    const request2 = provider.send(TEST_METHODS.METHOD2, []).catch((e) => e);
+    const request1 = provider.send(TEST_METHODS.METHOD1, []).catch((e: any) => e);
+    const request2 = provider.send(TEST_METHODS.METHOD2, []).catch((e: any) => e);
 
     ws.simulateClose(1006, '', false);
     await delay(10);
