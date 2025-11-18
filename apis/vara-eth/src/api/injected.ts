@@ -1,0 +1,40 @@
+import { IVaraEthProvider, InjectedTransaction } from '../types/index.js';
+import { EthereumClient } from '../eth/index.js';
+
+export class Injected {
+  constructor(
+    private _varaethProvider: IVaraEthProvider,
+    private _ethClient: EthereumClient,
+    private tx: InjectedTransaction,
+  ) {}
+
+  private async setReferenceBlock() {
+    const latestBlockNumber = await this._ethClient.getBlockNumber();
+    const blockNumber = latestBlockNumber - 3; // TODO: move to consts, explain why such value
+
+    const block = await this._ethClient.getBlock(blockNumber);
+    this.tx.setReferenceBlock(block.hash);
+  }
+
+  public async send() {
+    if (!this.tx.referenceBlock) {
+      await this.setReferenceBlock();
+    }
+
+    const pubKey = this._ethClient.accountAddress;
+    const signature = await this._ethClient.signMessage(this.tx.hash);
+
+    const result = await this._varaethProvider.send('injected_sendTransaction', [
+      {
+        data: this.tx.data,
+        signature,
+        public_key: pubKey,
+      },
+    ]);
+
+    // TODO: figure out what should be returned here
+    return result;
+  }
+
+  // TODO: method to send and subscribe to transaction updataes
+}
