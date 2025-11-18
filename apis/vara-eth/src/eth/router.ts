@@ -306,7 +306,7 @@ export class RouterContract implements IRouterContract {
  * @param publicClient - The public client for reading data
  * @returns A new RouterContract instance that implements the IRouterContract interface
  */
-export function getRouterContract(address: Address, ethereumClient: EthereumClient): RouterContract {
+export function getRouterClient(address: Address, ethereumClient: EthereumClient): RouterContract {
   return new RouterContract(address, ethereumClient);
 }
 

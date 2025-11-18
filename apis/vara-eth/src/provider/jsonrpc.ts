@@ -22,11 +22,11 @@ export function getErrorMessage(response: IJsonRpcResponseError) {
   return error;
 }
 
-function transformBigint(object: unknown) {
+function transformBigint(object: unknown): unknown {
   if (typeof object === 'bigint') {
     return Number(object);
   } else if (Array.isArray(object)) {
-    return object.map(transformBigint(object));
+    return object.map((item) => transformBigint(item));
   } else if (object !== null && typeof object === 'object') {
     return Object.fromEntries(Object.entries(object).map(([key, value]) => [key, transformBigint(value)]));
   }

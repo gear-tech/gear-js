@@ -31,7 +31,7 @@ export interface ReplyHelpers {
    * Gets the reply event from the transaction.
    * @returns Promise resolving to the event log
    */
-  readonly getEvent: () => Promise<any>; // TODO: Replace with viem event log type in Phase 2
+  readonly getEvent: () => Promise<any>;
 }
 
 /**
@@ -106,7 +106,6 @@ export interface Reply {
 
   /**
    * The reply code.
-   * @todo Replace with specific type
    */
   replyCode: string;
 

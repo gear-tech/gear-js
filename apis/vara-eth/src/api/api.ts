@@ -1,18 +1,22 @@
-import { EthereumClient } from '../eth/index.js';
+import { EthereumClient, getRouterClient, RouterContract } from '../eth/index.js';
 
 import { IVaraEthProvider, InjectedTransaction } from '../types/index.js';
 import { query, Query } from './query/index.js';
 import { call, Call } from './call/index.js';
 import { Injected } from './injected.js';
+import { Hex } from 'viem';
 
 export class VaraEthApi {
   private _provider: IVaraEthProvider;
   public readonly query!: Query;
   public readonly call!: Call;
+  // TODO: consider moving it to EthereumClient class
+  private router?: RouterContract;
 
   constructor(
     provider: IVaraEthProvider,
     private _ethClient?: EthereumClient,
+    routerAddress?: Hex,
   ) {
     this._provider = provider;
 
@@ -22,6 +26,17 @@ export class VaraEthApi {
     }
 
     delete this._setProps;
+
+    if (_ethClient && routerAddress) {
+      this.router = getRouterClient(routerAddress, _ethClient);
+    }
+  }
+
+  public get routerClient(): RouterContract {
+    if (!this.router) {
+      throw new Error('Router client is not set');
+    }
+    return this.router;
   }
 
   private _setProps?(thisProperty: string, modules: Record<string, any>) {
@@ -40,7 +55,10 @@ export class VaraEthApi {
     if (!this._ethClient) {
       throw new Error('Eth client is not set');
     }
-    const injectedTx = new Injected(this.provider, this._ethClient, tx);
+    if (!this.router) {
+      throw new Error('Router client is not set');
+    }
+    const injectedTx = new Injected(this.provider, this._ethClient, tx, this.router);
 
     return injectedTx;
   }

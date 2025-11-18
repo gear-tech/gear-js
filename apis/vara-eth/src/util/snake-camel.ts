@@ -9,7 +9,7 @@ export function snakeToCamel<T>(object: unknown): T {
 
   return Object.keys(object).reduce((accumulator, key) => {
     const camelKey = key.replaceAll(/_([a-z])/g, (_, letter) => letter.toUpperCase());
-    accumulator[camelKey] = snakeToCamel(object[key]);
+    Object.assign(accumulator, { [camelKey]: snakeToCamel((object as any)[key]) });
     return accumulator;
   }, {}) as T;
 }

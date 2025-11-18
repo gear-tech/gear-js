@@ -1,11 +1,12 @@
 import { IVaraEthProvider, InjectedTransaction } from '../types/index.js';
-import { EthereumClient } from '../eth/index.js';
+import { EthereumClient, RouterContract } from '../eth/index.js';
 
 export class Injected {
   constructor(
     private _varaethProvider: IVaraEthProvider,
     private _ethClient: EthereumClient,
     private tx: InjectedTransaction,
+    private router: RouterContract,
   ) {}
 
   private async setReferenceBlock() {
@@ -16,23 +17,35 @@ export class Injected {
     this.tx.setReferenceBlock(block.hash);
   }
 
-  public async send() {
+  public async setRecipient() {
+    const validators = await this.router.validators();
+    // TODO: pick the right validator
+    this.tx.setRecipient(validators[0]);
+  }
+
+  public async send(): Promise<string> {
     if (!this.tx.referenceBlock) {
       await this.setReferenceBlock();
+    }
+
+    if (!this.tx.recipient) {
+      await this.setRecipient();
     }
 
     const pubKey = this._ethClient.accountAddress;
     const signature = await this._ethClient.signMessage(this.tx.hash);
 
-    const result = await this._varaethProvider.send('injected_sendTransaction', [
+    const result = await this._varaethProvider.send<string>('injected_sendTransaction', [
       {
-        data: this.tx.data,
-        signature,
-        public_key: pubKey,
+        recipient: this.tx.recipient,
+        tx: {
+          data: this.tx.data,
+          signature,
+          public_key: pubKey,
+        },
       },
     ]);
 
-    // TODO: figure out what should be returned here
     return result;
   }
 

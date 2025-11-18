@@ -14,7 +14,7 @@ impl CounterProgram {
     }
 
     #[export(route = "counter")]
-    pub fn counter(&self) -> Counter {
+    pub fn counter(&self) -> Counter<'_> {
         Counter::new(&self.counter_state)
     }
 }

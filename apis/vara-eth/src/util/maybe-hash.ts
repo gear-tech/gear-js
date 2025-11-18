@@ -20,6 +20,6 @@ export function transformMaybeHashes(object: unknown, paths: Array<string>) {
   }
 
   for (const path of paths) {
-    object[path] = transformMaybeHash(object[path]);
+    Object.assign(object as any, { [path]: transformMaybeHash((object as any)[path]) });
   }
 }
