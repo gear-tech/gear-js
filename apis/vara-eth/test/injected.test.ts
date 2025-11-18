@@ -5,17 +5,17 @@ import { execSync } from 'node:child_process';
 
 import {
   EthereumClient,
-  GearExeApi,
+  VaraEthApi,
   getMirrorClient,
   getRouterClient,
   getWrappedVaraClient,
-  HttpGearexeProvider,
+  HttpVaraEthProvider,
 } from '../src';
 import { InjectedTransaction } from '../src/types';
 import { hasProps, waitNBlocks } from './common';
 import { config } from './config';
 
-let api: GearExeApi;
+let api: VaraEthApi;
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
 let walletClient: WalletClient<WebSocketTransport>;
 let ethereumClient: EthereumClient;
@@ -42,7 +42,7 @@ beforeAll(async () => {
   router = getRouterClient(config.routerId, ethereumClient);
   wvara = getWrappedVaraClient(await router.wrappedVara(), ethereumClient);
 
-  api = new GearExeApi(new HttpGearexeProvider(), ethereumClient, config.routerId);
+  api = new VaraEthApi(new HttpVaraEthProvider(), ethereumClient, config.routerId);
 });
 
 afterAll(async () => {
