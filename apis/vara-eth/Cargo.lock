@@ -1363,7 +1363,7 @@ dependencies = [
 [[package]]
 name = "ethexe-common"
 version = "1.9.2"
-source = "git+https://github.com/gear-tech/gear#67dd02fad04125d2c70da84866941f607f945d96"
+source = "git+https://github.com/gear-tech/gear#ad4fee340e92e02e3de67cd6cf16a61db7d6189b"
 dependencies = [
  "alloy-primitives 1.4.1",
  "anyhow",
@@ -1700,7 +1700,7 @@ dependencies = [
 [[package]]
 name = "gear-core"
 version = "1.9.2"
-source = "git+https://github.com/gear-tech/gear#67dd02fad04125d2c70da84866941f607f945d96"
+source = "git+https://github.com/gear-tech/gear#ad4fee340e92e02e3de67cd6cf16a61db7d6189b"
 dependencies = [
  "blake2",
  "byteorder",
@@ -1740,7 +1740,7 @@ dependencies = [
 [[package]]
 name = "gear-core-errors"
 version = "1.9.2"
-source = "git+https://github.com/gear-tech/gear#67dd02fad04125d2c70da84866941f607f945d96"
+source = "git+https://github.com/gear-tech/gear#ad4fee340e92e02e3de67cd6cf16a61db7d6189b"
 dependencies = [
  "enum-iterator",
  "parity-scale-codec",
@@ -1778,7 +1778,7 @@ dependencies = [
 [[package]]
 name = "gear-ss58"
 version = "1.9.2"
-source = "git+https://github.com/gear-tech/gear#67dd02fad04125d2c70da84866941f607f945d96"
+source = "git+https://github.com/gear-tech/gear#ad4fee340e92e02e3de67cd6cf16a61db7d6189b"
 dependencies = [
  "blake2",
  "bs58",
@@ -1829,7 +1829,7 @@ dependencies = [
 [[package]]
 name = "gear-wasm-instrument"
 version = "1.9.2"
-source = "git+https://github.com/gear-tech/gear#67dd02fad04125d2c70da84866941f607f945d96"
+source = "git+https://github.com/gear-tech/gear#ad4fee340e92e02e3de67cd6cf16a61db7d6189b"
 dependencies = [
  "derive_more 2.0.1",
  "enum-iterator",
@@ -1917,7 +1917,7 @@ dependencies = [
 [[package]]
 name = "gprimitives"
 version = "1.9.2"
-source = "git+https://github.com/gear-tech/gear#67dd02fad04125d2c70da84866941f607f945d96"
+source = "git+https://github.com/gear-tech/gear#ad4fee340e92e02e3de67cd6cf16a61db7d6189b"
 dependencies = [
  "bytemuck",
  "derive_more 2.0.1",
@@ -1985,7 +1985,7 @@ checksum = "37987f7b28fa66eff25c5b093f1789770ec23c646592311ed9549827d7487b01"
 [[package]]
 name = "gsys"
 version = "1.9.2"
-source = "git+https://github.com/gear-tech/gear#67dd02fad04125d2c70da84866941f607f945d96"
+source = "git+https://github.com/gear-tech/gear#ad4fee340e92e02e3de67cd6cf16a61db7d6189b"
 dependencies = [
  "bytemuck",
 ]
@@ -2647,7 +2647,7 @@ dependencies = [
 [[package]]
 name = "numerated"
 version = "1.9.2"
-source = "git+https://github.com/gear-tech/gear#67dd02fad04125d2c70da84866941f607f945d96"
+source = "git+https://github.com/gear-tech/gear#ad4fee340e92e02e3de67cd6cf16a61db7d6189b"
 dependencies = [
  "derive_more 2.0.1",
  "num-traits",

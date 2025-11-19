@@ -242,14 +242,19 @@ export class MirrorContract implements IMirrorContract {
     return txManager;
   }
 
-  listenToStateChangedEvent(cb: (newStateHash: Hex) => void) {
+  /**
+   * Listens to StateChanged event on the mirror contract.
+   * @param callback - a function that will be invoked with the new state hash when a StateChanged event occurs
+   * @returns An unwatch function that can be called to stop listening to events
+   */
+  watchStateChangedEvent(callback: (newStateHash: Hex) => void) {
     return this.ethereumClient.publicClient.watchContractEvent({
       address: this.address,
       abi: IMIRROR_ABI,
       eventName: 'StateChanged',
       onLogs: (logs) => {
         for (const log of logs) {
-          cb(log.args.stateHash!);
+          callback(log.args.stateHash!);
         }
       },
     });

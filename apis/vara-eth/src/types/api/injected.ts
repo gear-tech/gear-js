@@ -83,8 +83,8 @@ export class InjectedTransaction {
     return this._value;
   }
 
-  public valueU8a(isLe = false): Uint8Array {
-    return bigint128ToBytes(this._value, isLe);
+  public get valueU8a(): Uint8Array {
+    return bigint128ToBytes(this._value);
   }
 
   public get referenceBlock(): HexString | null {
@@ -106,35 +106,18 @@ export class InjectedTransaction {
     return hexToBytes(this._salt);
   }
 
-  public encode(): HexString {
-    return bytesToHex(
-      concatBytes(this.destinationU8a, this.payloadU8a, this.valueU8a(), this.referenceBlockU8a, this.saltU8a),
-    );
+  private get _bytes() {
+    return concatBytes(this.destinationU8a, this.payloadU8a, this.valueU8a, this.referenceBlockU8a, this.saltU8a);
   }
 
   public get hash(): HexString {
-    const bytes = concatBytes(
-      this.destinationU8a,
-      this.payloadU8a,
-      this.valueU8a(),
-      this.referenceBlockU8a,
-      this.saltU8a,
-    );
-    const hash = keccak_256(bytes);
+    const hash = keccak_256(this._bytes);
 
-    // TODO: consider caching the result if necessary
     return bytesToHex(hash);
   }
 
   public get messageId(): HexString {
-    const bytes = concatBytes(
-      this.destinationU8a,
-      this.payloadU8a,
-      this.valueU8a(true),
-      this.referenceBlockU8a,
-      this.saltU8a,
-    );
-    const id = blake2b(bytes, { dkLen: 32 });
+    const id = blake2b(this._bytes, { dkLen: 32 });
 
     return bytesToHex(id);
   }

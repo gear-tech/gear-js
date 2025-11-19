@@ -61,7 +61,7 @@ afterAll(async () => {
 });
 
 describe('Injected Transactions', () => {
-  describe('signature', () => {
+  describe.only('signature', () => {
     let injectedTxHash: string;
     let injectedTxSignature: string;
     let injectedMessageId: string;
@@ -107,7 +107,7 @@ describe('Injected Transactions', () => {
       expect(TX.hash).toBe(injectedTxHash);
     });
 
-    test.skip('should create a correct message id', () => {
+    test('should create a correct message id', () => {
       expect(TX.messageId).toBe(injectedMessageId);
     });
 
@@ -216,7 +216,7 @@ describe('Injected Transactions', () => {
     });
 
     test('should subscribe to StateChanged event', async () => {
-      unwatch = mirror.listenToStateChangedEvent((stateHash) => {
+      unwatch = mirror.watchStateChangedEvent((stateHash) => {
         newStateHash = stateHash;
       });
     });
@@ -245,8 +245,10 @@ describe('Injected Transactions', () => {
       expect(newStateHash).not.toEqual(currentStateHash);
     });
 
-    test('should unsubsribe from StateChanged event', () => {
+    test('should unsubscribe from StateChanged event', () => {
       unwatch();
     });
+
+    test.todo('listen to reply on the mirror contract');
   });
 });
