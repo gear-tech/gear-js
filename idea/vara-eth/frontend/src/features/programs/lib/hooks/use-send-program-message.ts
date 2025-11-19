@@ -46,7 +46,7 @@ const useSendProgramMessage = (programId: HexString) => {
     });
 
     const { waitForReply } = await tx.setupReplyListener();
-    const reply = await waitForReply;
+    const reply = await waitForReply();
 
     const { payload, replyCode, blockNumber, txHash } = reply;
 
