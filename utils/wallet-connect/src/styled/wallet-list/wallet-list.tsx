@@ -1,25 +1,18 @@
-import { Button } from '@gear-js/vara-ui';
-
 import { Wallet } from '@/headless';
 import { cx } from '@/utils';
 
-import { GearButton } from '../gear-button';
+import { UI_CONFIG } from '../consts';
 import { ThemeProps } from '../types';
 
 import styles from './wallet-list.module.scss';
 
 function WalletList({ theme }: ThemeProps) {
-  const renderWalletTrigger = () =>
-    theme === 'vara' ? (
-      <Button text="" color="plain" size="small" block />
-    ) : (
-      <GearButton text="" size="large" color="light" block />
-    );
+  const { WalletTrigger } = UI_CONFIG[theme];
 
   return (
     <Wallet.WalletList className={styles.list}>
       <Wallet.WalletItem>
-        <Wallet.WalletTrigger render={renderWalletTrigger()} className={styles.button}>
+        <Wallet.WalletTrigger render={WalletTrigger} className={styles.button}>
           <span className={styles.wallet}>
             <Wallet.WalletIcon className={styles.walletIcon} />
             <Wallet.WalletName />

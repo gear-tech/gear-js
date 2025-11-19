@@ -1,12 +1,11 @@
-import { Modal as GearModal, buttonStyles } from '@gear-js/ui';
-import { Button as VaraButton, Modal as VaraModal } from '@gear-js/vara-ui';
+import { buttonStyles } from '@gear-js/ui';
 
 import { cx } from '@/utils';
 
 import { Wallet } from '../../headless';
 import { AccountList } from '../account-list';
 import { Balance } from '../balance';
-import { GearButton } from '../gear-button';
+import { UI_CONFIG } from '../consts';
 import { ModalFooter } from '../modal-footer';
 import { ThemeProps } from '../types';
 import { WalletList } from '../wallet-list';
@@ -21,20 +20,15 @@ type Props = Partial<ThemeProps> & {
 };
 
 function StyledWallet({ theme = 'vara', displayBalance = true, accountButtonClassName }: Props) {
-  const renderTriggerConnect = () => (theme === 'vara' ? <VaraButton text="" /> : <GearButton text="" />);
-
-  const renderTriggerConnected = () =>
-    theme === 'vara' ? <VaraButton text="" color="contrast" /> : <GearButton text="" color="light" />;
-
-  const Modal = theme === 'vara' ? VaraModal : GearModal;
+  const { TriggerConnect, TriggerConnected, Dialog } = UI_CONFIG[theme];
 
   return (
     <Wallet.Root className={styles.wallet}>
       {displayBalance && <Balance theme={theme} />}
 
-      <Wallet.TriggerConnect render={renderTriggerConnect()} />
+      <Wallet.TriggerConnect render={TriggerConnect} />
 
-      <Wallet.TriggerConnected render={renderTriggerConnected()} className={accountButtonClassName}>
+      <Wallet.TriggerConnected render={TriggerConnected} className={accountButtonClassName}>
         <Wallet.ConnectedAccountIcon
           theme="polkadot"
           size={16}
@@ -47,7 +41,7 @@ function StyledWallet({ theme = 'vara', displayBalance = true, accountButtonClas
       <Wallet.Dialog
         render={(props, state) =>
           state.isOpen ? (
-            <Modal footer={state.isWalletSelected && <ModalFooter theme={theme} />} {...props} {...state} />
+            <Dialog footer={state.isWalletSelected && <ModalFooter theme={theme} />} {...props} {...state} />
           ) : (
             <></>
           )

@@ -10,6 +10,11 @@
   gap: 10px;
 }
 
+.accountIcon {
+  /* overriding Identicon */
+  cursor: pointer !important;
+}
+
 .copyButton {
   &.gear svg path {
     fill: #fff;
