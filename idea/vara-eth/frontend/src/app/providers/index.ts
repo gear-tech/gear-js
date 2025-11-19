@@ -1,3 +1,4 @@
+import { useVaraEthApi } from './vara-eth-api';
 import { withProviders } from './with-providers';
 
-export { withProviders };
+export { withProviders, useVaraEthApi };

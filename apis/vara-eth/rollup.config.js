@@ -29,6 +29,7 @@ export default [
       cleanOldBuild(),
       nodeResolve({
         preferBuiltins: true,
+        browser: true,
         resolveOnly: (id) => !externalPackages.some((pkg) => id.includes(pkg)),
       }),
       commonjs(),

@@ -1,4 +1,4 @@
-import { GEAR_EXE_NODE_ADDRESS } from '@/shared/config';
+import { VARA_ETH_NODE_ADDRESS } from '@/shared/config';
 
 import { getNodeAddressFromUrl } from './utils';
 
@@ -20,6 +20,6 @@ const LocalStorage = {
 const NODE_ADRESS_URL_PARAM = 'node';
 
 const INITIAL_ENDPOINT =
-  getNodeAddressFromUrl() || (localStorage[LocalStorage.Node] as string | null) || GEAR_EXE_NODE_ADDRESS;
+  getNodeAddressFromUrl() || (localStorage[LocalStorage.Node] as string | null) || VARA_ETH_NODE_ADDRESS;
 
 export { nodeSections, LocalStorage, NODE_ADRESS_URL_PARAM, INITIAL_ENDPOINT };
