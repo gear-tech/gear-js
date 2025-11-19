@@ -46,7 +46,11 @@ function StyledWallet({ theme = 'vara', displayBalance = true, accountButtonClas
 
       <Wallet.Dialog
         render={(props, state) =>
-          state.isOpen ? <Modal footer={<ModalFooter theme={theme} />} {...props} {...state} /> : <></>
+          state.isOpen ? (
+            <Modal footer={state.isWalletSelected && <ModalFooter theme={theme} />} {...props} {...state} />
+          ) : (
+            <></>
+          )
         }>
         <WalletList theme={theme} />
         <AccountList theme={theme} />

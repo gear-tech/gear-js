@@ -20,7 +20,7 @@ function useWallet(isDialogOpen: boolean) {
 
   const resetWalletId = () => setWalletId(undefined);
 
-  return { wallet, walletId, walletAccounts, setWalletId, resetWalletId };
+  return { wallet, walletAccounts, setWalletId, resetWalletId };
 }
 
 export { useWallet };

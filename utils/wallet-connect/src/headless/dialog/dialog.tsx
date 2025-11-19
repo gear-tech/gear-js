@@ -11,6 +11,7 @@ type DialogState = ReturnType<typeof useWalletContext>['dialog'] & {
   // probably should be passed as a props and not state,
   // but useRender's render doesn't use useRender.ComponentProps 3rd generic (RenderFunctionProps)
   heading: string;
+  isWalletSelected: boolean;
 };
 
 type Props = PropsWithChildren & {
@@ -25,7 +26,7 @@ function Dialog({ render, ...props }: Props) {
 
   const element = useRender({
     render: render ?? ((renderProps, state) => <DefaultDialog {...renderProps} {...state} />),
-    state: { heading: 'Connect Wallet', ...dialog },
+    state: { heading: 'Connect Wallet', isWalletSelected: Boolean(wallet.wallet), ...dialog },
     props,
   });
 
