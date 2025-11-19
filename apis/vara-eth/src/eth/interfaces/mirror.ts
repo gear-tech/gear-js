@@ -19,7 +19,7 @@ export interface MessageHelpers extends Record<string, any> {
     readonly txHash: string;
     readonly blockNumber: number;
     readonly message: MessageQueuingRequestedLog;
-    readonly waitForReply: Promise<Reply>;
+    readonly waitForReply: () => Promise<Reply>;
   }>;
 }
 

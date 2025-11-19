@@ -91,48 +91,11 @@ export class MirrorContract implements IMirrorContract {
 
         const message = convertEventParams<MessageQueuingRequestedLog>(event);
 
-        let _resolve: (value: Reply) => void | Promise<void>;
-        let _reject: (error: Error) => void | Promise<void>;
-        let settled = false;
-
-        const waitForReply = new Promise<Reply>((resolve, reject) => {
-          _resolve = resolve;
-          _reject = reject;
-        });
-
-        const unwatch = this.ethereumClient.watchEvent({
-          address: this.address,
-          abi: IMIRROR_ABI,
-          eventName: 'Reply',
-          onLogs: (logs) => {
-            if (settled) return;
-
-            for (const log of logs) {
-              if (log.args.replyTo?.toLowerCase() === message.id.toLowerCase()) {
-                settled = true;
-                const { payload, value, replyCode } = log.args;
-                if (payload === undefined || value === undefined || replyCode === undefined) {
-                  _reject(new Error('Invalid reply event'));
-                } else {
-                  _resolve({
-                    payload,
-                    value,
-                    replyCode,
-                    blockNumber: Number(log.blockNumber),
-                    txHash: log.transactionHash,
-                  });
-                }
-                unwatch();
-              }
-            }
-          },
-        });
-
         return {
           txHash: receipt.transactionHash,
           blockNumber: Number(receipt.blockNumber),
           message: message,
-          waitForReply,
+          waitForReply: () => this.waitForReply(message.id),
         };
       },
     });
@@ -258,6 +221,53 @@ export class MirrorContract implements IMirrorContract {
         }
       },
     });
+  }
+
+  async waitForReply(messageId: Hex) {
+    const id = messageId.toLowerCase();
+
+    let _resolve: (value: Reply) => void | Promise<void>;
+    let _reject: (error: Error) => void | Promise<void>;
+    let settled = false;
+
+    const promise = new Promise<Reply>((resolve, reject) => {
+      _resolve = resolve;
+      _reject = reject;
+    });
+
+    const unwatch = this.ethereumClient.publicClient.watchContractEvent({
+      address: this.address,
+      abi: IMIRROR_ABI,
+      eventName: 'Reply',
+      onLogs: (logs) => {
+        if (settled) return;
+
+        for (const log of logs) {
+          if (log.args.replyTo?.toLowerCase() === id) {
+            settled = true;
+            const { payload, value, replyCode } = log.args;
+            if (payload === undefined || value === undefined || replyCode === undefined) {
+              _reject(new Error('Invalid reply event'));
+            } else {
+              _resolve({
+                payload,
+                value,
+                replyCode,
+                blockNumber: Number(log.blockNumber),
+                txHash: log.transactionHash,
+              });
+            }
+            unwatch();
+          }
+        }
+      },
+    });
+
+    try {
+      return await promise;
+    } finally {
+      unwatch();
+    }
   }
 }
 

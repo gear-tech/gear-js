@@ -167,7 +167,7 @@ describe('messages', () => {
 
       const { waitForReply } = await tx.setupReplyListener();
 
-      const reply = await waitForReply;
+      const reply = await waitForReply();
 
       expect(reply.payload).toBe('0x');
       expect(reply.replyCode).toBe('0x00000000');
@@ -198,7 +198,7 @@ describe('messages', () => {
 
       const { waitForReply } = await tx.setupReplyListener();
 
-      const { payload, replyCode, value } = await waitForReply;
+      const { payload, replyCode, value } = await waitForReply();
 
       expect(payload).toEqual('0x1c436f756e74657224496e6372656d656e7401000000');
       expect(replyCode).toBe('0x00010000');

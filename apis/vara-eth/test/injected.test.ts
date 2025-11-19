@@ -61,7 +61,7 @@ afterAll(async () => {
 });
 
 describe('Injected Transactions', () => {
-  describe.only('signature', () => {
+  describe('signature', () => {
     let injectedTxHash: string;
     let injectedTxSignature: string;
     let injectedMessageId: string;
@@ -224,12 +224,11 @@ describe('Injected Transactions', () => {
     test('should send increment message', async () => {
       const payload = '0x1c436f756e74657224496e6372656d656e74';
 
-      const tx = api.sendInjectedTransaction(
-        new InjectedTransaction({
-          destination: programId,
-          payload,
-        }),
-      );
+      const injected = new InjectedTransaction({
+        destination: programId,
+        payload,
+      });
+      const tx = await api.sendInjectedTransaction(injected);
 
       const result = await tx.send();
 
@@ -249,6 +248,6 @@ describe('Injected Transactions', () => {
       unwatch();
     });
 
-    test.todo('listen to reply on the mirror contract');
+    test.todo('should receive reply');
   });
 });
