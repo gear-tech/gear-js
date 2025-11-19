@@ -1,3 +1,4 @@
+import { useAlert } from '@gear-js/react-hooks';
 import { buttonStyles } from '@gear-js/ui';
 
 import { Wallet } from '@/headless';
@@ -10,6 +11,8 @@ import styles from './account-list.module.scss';
 
 function AccountList({ theme }: ThemeProps) {
   const { AccountTrigger, CopyAccountAddressTrigger } = UI_CONFIG[theme];
+
+  const alert = useAlert();
 
   return (
     <Wallet.AccountsList className={styles.list}>
@@ -26,6 +29,7 @@ function AccountList({ theme }: ThemeProps) {
 
         <Wallet.CopyAccountAddressTrigger
           render={CopyAccountAddressTrigger}
+          onCopy={() => alert.success('Copied')}
           className={cx(styles.copyButton, styles[theme])}
         />
       </Wallet.AccountItem>

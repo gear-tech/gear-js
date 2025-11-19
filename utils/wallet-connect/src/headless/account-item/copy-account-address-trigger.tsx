@@ -1,5 +1,4 @@
 import { useRender, mergeProps } from '@base-ui-components/react';
-import { useCallback } from 'react';
 
 import { copyToClipboard } from '@/utils';
 
@@ -7,25 +6,27 @@ import { useWalletContext } from '../root';
 
 import { useAccountItemContext } from './context';
 
-type Props = useRender.ComponentProps<'button'>;
+type Props = useRender.ComponentProps<'button'> & {
+  onCopy?: () => void;
+};
+
 type ElementProps = useRender.ElementProps<'button'>;
 
-function CopyAccountAddressTrigger({ render, ...props }: Props) {
+function CopyAccountAddressTrigger({ render, onCopy, ...props }: Props) {
   const { dialog } = useWalletContext();
   const { account } = useAccountItemContext();
 
-  const handleClick = useCallback(() => {
+  const handleClick = () =>
     copyToClipboard({
       value: account.address,
 
       onSuccess: () => {
-        console.log('Copied');
+        onCopy?.();
         dialog.close();
       },
 
-      onError: () => console.error('Copy error'),
+      onError: (error) => console.error('Copy error', error),
     });
-  }, [account.address, dialog]);
 
   const defaultProps: ElementProps = {
     type: 'button',

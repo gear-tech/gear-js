@@ -8,7 +8,7 @@ const copyToClipboard = ({
   value,
 }: {
   onSuccess: () => void;
-  onError: () => void;
+  onError: (error: Error) => void;
   value: string;
 }) => {
   function unsecuredCopyToClipboard(text: string) {
@@ -22,7 +22,7 @@ const copyToClipboard = ({
       onSuccess();
     } catch (err) {
       console.error('Unable to copy to clipboard', err);
-      onError();
+      onError(err as Error);
     }
     document.body.removeChild(textArea);
   }
@@ -31,7 +31,7 @@ const copyToClipboard = ({
     navigator.clipboard
       .writeText(value)
       .then(() => onSuccess())
-      .catch(() => onError());
+      .catch((error: Error) => onError(error));
   } else {
     unsecuredCopyToClipboard(value);
   }
