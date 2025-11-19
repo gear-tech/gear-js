@@ -8,10 +8,11 @@ import {
   Reply,
   ITxManager,
   ValueClaimingRequestedLog,
+  type TxManagerWithHelpers,
 } from './interfaces/index.js';
-import { convertEventParams as convertEventParameters } from '../util/index.js';
+import { convertEventParams } from '../util/index.js';
 import { IMIRROR_ABI, IMirrorContract } from './abi/IMirror.js';
-import { TxManager, TxManagerWithHelpers } from './tx-manager.js';
+import { TxManager } from './tx-manager.js';
 import { HexString } from '../types/index.js';
 import { EthereumClient } from './ethereumClient.js';
 
@@ -80,7 +81,7 @@ export class MirrorContract implements IMirrorContract {
     const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IMIRROR_ABI, {
       getMessage: (manager) => async () => {
         const event = await manager.findEvent('MessageQueueingRequested');
-        return convertEventParameters<MessageQueuingRequestedLog>(event);
+        return convertEventParams<MessageQueuingRequestedLog>(event);
       },
       setupReplyListener: (manager) => async () => {
         const [receipt, event] = await Promise.all([
@@ -88,50 +89,13 @@ export class MirrorContract implements IMirrorContract {
           manager.findEvent('MessageQueueingRequested'),
         ]);
 
-        const message = convertEventParameters<MessageQueuingRequestedLog>(event);
-
-        let _resolve: (value: Reply) => void | Promise<void>;
-        let _reject: (error: Error) => void | Promise<void>;
-        let settled = false;
-
-        const waitForReply = new Promise<Reply>((resolve, reject) => {
-          _resolve = resolve;
-          _reject = reject;
-        });
-
-        const unwatch = this.ethereumClient.watchEvent({
-          address: this.address,
-          abi: IMIRROR_ABI,
-          eventName: 'Reply',
-          onLogs: (logs) => {
-            if (settled) return;
-
-            for (const log of logs) {
-              if (log.args.replyTo?.toLowerCase() === message.id.toLowerCase()) {
-                settled = true;
-                const { payload, value, replyCode } = log.args;
-                if (payload === undefined || value === undefined || replyCode === undefined) {
-                  _reject(new Error('Invalid reply event'));
-                } else {
-                  _resolve({
-                    payload,
-                    value,
-                    replyCode,
-                    blockNumber: Number(log.blockNumber),
-                    txHash: log.transactionHash,
-                  });
-                }
-                unwatch();
-              }
-            }
-          },
-        });
+        const message = convertEventParams<MessageQueuingRequestedLog>(event);
 
         return {
           txHash: receipt.transactionHash,
           blockNumber: Number(receipt.blockNumber),
           message: message,
-          waitForReply,
+          waitForReply: () => this.waitForReply(message.id),
         };
       },
     });
@@ -204,7 +168,7 @@ export class MirrorContract implements IMirrorContract {
     const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IMIRROR_ABI, {
       getValueClaimingRequestedEvent: (manager) => async () => {
         const event = await manager.findEvent('ValueClaimingRequested');
-        return convertEventParameters<ValueClaimingRequestedLog>(event);
+        return convertEventParams<ValueClaimingRequestedLog>(event);
       },
     });
 
@@ -239,6 +203,71 @@ export class MirrorContract implements IMirrorContract {
     const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IMIRROR_ABI);
 
     return txManager;
+  }
+
+  /**
+   * Listens to StateChanged event on the mirror contract.
+   * @param callback - a function that will be invoked with the new state hash when a StateChanged event occurs
+   * @returns An unwatch function that can be called to stop listening to events
+   */
+  watchStateChangedEvent(callback: (newStateHash: Hex) => void) {
+    return this.ethereumClient.publicClient.watchContractEvent({
+      address: this.address,
+      abi: IMIRROR_ABI,
+      eventName: 'StateChanged',
+      onLogs: (logs) => {
+        for (const log of logs) {
+          callback(log.args.stateHash!);
+        }
+      },
+    });
+  }
+
+  async waitForReply(messageId: Hex) {
+    const id = messageId.toLowerCase();
+
+    let _resolve: (value: Reply) => void | Promise<void>;
+    let _reject: (error: Error) => void | Promise<void>;
+    let settled = false;
+
+    const promise = new Promise<Reply>((resolve, reject) => {
+      _resolve = resolve;
+      _reject = reject;
+    });
+
+    const unwatch = this.ethereumClient.publicClient.watchContractEvent({
+      address: this.address,
+      abi: IMIRROR_ABI,
+      eventName: 'Reply',
+      onLogs: (logs) => {
+        if (settled) return;
+
+        for (const log of logs) {
+          if (log.args.replyTo?.toLowerCase() === id) {
+            settled = true;
+            const { payload, value, replyCode } = log.args;
+            if (payload === undefined || value === undefined || replyCode === undefined) {
+              _reject(new Error('Invalid reply event'));
+            } else {
+              _resolve({
+                payload,
+                value,
+                replyCode,
+                blockNumber: Number(log.blockNumber),
+                txHash: log.transactionHash,
+              });
+            }
+            unwatch();
+          }
+        }
+      },
+    });
+
+    try {
+      return await promise;
+    } finally {
+      unwatch();
+    }
   }
 }
 

@@ -1,5 +1,5 @@
 import { createPublicClient, createWalletClient, webSocket } from 'viem';
-import type { Chain, PublicClient, WalletClient, WebSocketTransport } from 'viem';
+import type { Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { execSync } from 'node:child_process';
 
@@ -32,15 +32,26 @@ beforeAll(async () => {
   publicClient = createPublicClient<WebSocketTransport, Chain, undefined>({
     transport,
   }) as PublicClient<WebSocketTransport, Chain, undefined>;
-  const account = privateKeyToAccount(config.privateKey, {});
+  const prefundedAccount = privateKeyToAccount(config.wvaraPrefundedPrivateKey);
+  const account = privateKeyToAccount(config.privateKey);
 
   walletClient = createWalletClient<WebSocketTransport>({
-    account,
+    account: prefundedAccount,
     transport,
   });
   ethereumClient = new EthereumClient<WebSocketTransport>(publicClient, walletClient);
   router = getRouterClient(config.routerId, ethereumClient);
   wvara = getWrappedVaraClient(await router.wrappedVara(), ethereumClient);
+
+  const transferTx = await wvara.transfer(config.accountAddress, BigInt(50 * 1e12));
+  await transferTx.sendAndWaitForReceipt();
+
+  walletClient = createWalletClient({
+    account,
+    transport,
+  });
+
+  ethereumClient.setWalletClient(walletClient);
 
   api = new VaraEthApi(new HttpVaraEthProvider(), ethereumClient, config.routerId);
 });
@@ -53,6 +64,8 @@ describe('Injected Transactions', () => {
   describe('signature', () => {
     let injectedTxHash: string;
     let injectedTxSignature: string;
+    let injectedMessageId: string;
+
     const INJECTED_TEST_PROGRAM_MANIFEST_PATH = 'programs/injected/Cargo.toml';
 
     const TX: InjectedTransaction = new InjectedTransaction({
@@ -75,18 +88,27 @@ describe('Injected Transactions', () => {
 
       const hash = resultStr.match('hash: <(0x[0-9a-f]{64})>')?.[1];
       if (!hash) {
-        throw new Error('Hash not found in `signature` stdout');
+        throw new Error('Hash not found in `injected` stdout');
       }
       const signature = resultStr.match('signature: <(0x[0-9a-f]*)>')?.[1];
       if (!signature) {
-        throw new Error('Signature not found in `signature` stdout');
+        throw new Error('Signature not found in `injected` stdout');
+      }
+      const messageId = resultStr.match('message_id: <(0x[0-9a-f]{64})>')?.[1];
+      if (!messageId) {
+        throw new Error('Message id not found in `injected` stdout');
       }
       injectedTxHash = hash;
       injectedTxSignature = signature;
+      injectedMessageId = messageId;
     }, 5 * 60_000);
 
     test('should create a correct hash', () => {
       expect(TX.hash).toBe(injectedTxHash);
+    });
+
+    test('should create a correct message id', () => {
+      expect(TX.messageId).toBe(injectedMessageId);
     });
 
     test('should create a correct signature', async () => {
@@ -104,6 +126,7 @@ describe('Injected Transactions', () => {
       await tx.sendAndWaitForReceipt();
 
       programId = await tx.getProgramId();
+      console.log(`Program id: ${programId}`);
 
       expect(programId).toBeDefined();
 
@@ -153,6 +176,14 @@ describe('Injected Transactions', () => {
       expect('Active' in state.program).toBeTruthy();
     });
 
+    test('should top up executable balance', async () => {
+      const tx = await mirror.executableBalanceTopUp(BigInt(10 * 1e12));
+
+      const { status } = await tx.sendAndWaitForReceipt();
+
+      expect(status).toBe('success');
+    });
+
     test(
       'should send init message',
       async () => {
@@ -175,25 +206,48 @@ describe('Injected Transactions', () => {
   });
 
   describe('transactions', () => {
-    test(
-      'should send increment message',
-      async () => {
-        const payload = '0x1c436f756e74657224496e6372656d656e74';
+    let unwatch: () => void;
 
-        const tx = api.sendInjectedTransaction(
-          new InjectedTransaction({
-            destination: programId,
-            payload,
-          }),
-        );
+    let currentStateHash: Hex;
+    let newStateHash: Hex;
 
-        const result = await tx.send();
+    test('should read current state hash', async () => {
+      currentStateHash = await mirror.stateHash();
+    });
 
-        expect(result).toBe('Accept');
+    test('should subscribe to StateChanged event', async () => {
+      unwatch = mirror.watchStateChangedEvent((stateHash) => {
+        newStateHash = stateHash;
+      });
+    });
 
-        await waitNBlocks(15);
-      },
-      config.longRunningTestTimeout,
-    );
+    test('should send increment message', async () => {
+      const payload = '0x1c436f756e74657224496e6372656d656e74';
+
+      const injected = new InjectedTransaction({
+        destination: programId,
+        payload,
+      });
+      const tx = await api.sendInjectedTransaction(injected);
+
+      const result = await tx.send();
+
+      expect(result).toBe('Accept');
+    });
+
+    test('should wait for a new state hash', async () => {
+      while (!newStateHash) {
+        await waitNBlocks(1);
+      }
+
+      expect(newStateHash).toBeDefined();
+      expect(newStateHash).not.toEqual(currentStateHash);
+    });
+
+    test('should unsubscribe from StateChanged event', () => {
+      unwatch();
+    });
+
+    test.todo('should receive reply');
   });
 });

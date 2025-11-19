@@ -16,7 +16,7 @@ import type {
 } from 'viem';
 import { decodeEventLog } from 'viem';
 
-import { ITxManager, TxManagerWithHelpers } from './interfaces/tx-manager.js';
+import { ITxManager } from './interfaces/tx-manager.js';
 import { EthereumClient } from './ethereumClient.js';
 
 /**
@@ -181,5 +181,3 @@ export class TxManager<
     return this._tx;
   }
 }
-
-export { TxManagerWithHelpers };

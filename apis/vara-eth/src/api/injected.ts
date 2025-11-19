@@ -9,7 +9,7 @@ export class Injected {
     private router: RouterContract,
   ) {}
 
-  private async setReferenceBlock() {
+  async setReferenceBlock() {
     const latestBlockNumber = await this._ethClient.getBlockNumber();
     const blockNumber = latestBlockNumber - 3; // TODO: move to consts, explain why such value
 

@@ -1,11 +1,10 @@
-use std::str::FromStr;
-
 use ethexe_common::{
+    ToDigest,
     ecdsa::{PrivateKey, Signature},
     gprimitives::{ActorId, H256},
     injected::InjectedTransaction,
-    ToDigest,
 };
+use std::str::FromStr;
 
 const PRIVATE_KEY: &str = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
@@ -22,7 +21,11 @@ pub fn main() {
 
     println!("hash: <{:?}>", tx.to_digest());
 
-    let sig = Signature::create(private_key, tx);
+    let sig = Signature::create(private_key, tx.clone());
 
     println!("signature: <{:?}>", sig.unwrap());
+
+    let msg_id = tx.to_message_id();
+
+    println!("message_id: <{:?}>", msg_id);
 }

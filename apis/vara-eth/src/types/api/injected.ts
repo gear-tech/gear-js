@@ -1,5 +1,6 @@
 import { bytesToHex, concatBytes, randomBytes, hexToBytes } from '@ethereumjs/util';
 import { keccak_256 } from '@noble/hashes/sha3.js';
+import { blake2b } from '@noble/hashes/blake2';
 
 import { bigint128ToBytes } from '../../util/index.js';
 import { HexString } from '../../types/index.js';
@@ -105,18 +106,20 @@ export class InjectedTransaction {
     return hexToBytes(this._salt);
   }
 
-  public get hash(): HexString {
-    const bytes = concatBytes(
-      this.destinationU8a,
-      this.payloadU8a,
-      this.valueU8a,
-      this.referenceBlockU8a,
-      this.saltU8a,
-    );
-    const hash = keccak_256(bytes);
+  private get _bytes() {
+    return concatBytes(this.destinationU8a, this.payloadU8a, this.valueU8a, this.referenceBlockU8a, this.saltU8a);
+  }
 
-    // TODO: consider caching the result if necessary
+  public get hash(): HexString {
+    const hash = keccak_256(this._bytes);
+
     return bytesToHex(hash);
+  }
+
+  public get messageId(): HexString {
+    const id = blake2b(this._bytes, { dkLen: 32 });
+
+    return bytesToHex(id);
   }
 
   public get data() {

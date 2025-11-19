@@ -51,7 +51,7 @@ export class VaraEthApi {
     return this._provider;
   }
 
-  sendInjectedTransaction(tx: InjectedTransaction) {
+  async sendInjectedTransaction(tx: InjectedTransaction) {
     if (!this._ethClient) {
       throw new Error('Eth client is not set');
     }
@@ -59,6 +59,10 @@ export class VaraEthApi {
       throw new Error('Router client is not set');
     }
     const injectedTx = new Injected(this.provider, this._ethClient, tx, this.router);
+
+    if (!tx.referenceBlock) {
+      await injectedTx.setReferenceBlock();
+    }
 
     return injectedTx;
   }

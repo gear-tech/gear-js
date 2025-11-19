@@ -1,11 +1,11 @@
 import type { Address, Hex } from 'viem';
 import { encodeFunctionData } from 'viem';
 
-import { convertEventParams as convertEventParameters } from '../util/index.js';
+import { convertEventParams } from '../util/index.js';
 import { WrappedVaraTxHelpers, ApprovalLog, TransferLog, WVaraTransferHelpers } from './interfaces/wrappedVara.js';
 import { IWRAPPEDVARA_ABI, IWrappedVaraContract } from './abi/IWrappedVara.js';
-import { TxManager, TxManagerWithHelpers } from './tx-manager.js';
-import { ITxManager } from './interfaces/tx-manager.js';
+import { TxManager } from './tx-manager.js';
+import { ITxManager, type TxManagerWithHelpers } from './interfaces/tx-manager.js';
 import { EthereumClient } from './ethereumClient.js';
 
 /**
@@ -68,7 +68,7 @@ export class WrappedVaraContract implements IWrappedVaraContract {
     const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IWRAPPEDVARA_ABI, {
       getApprovalLog: (manager) => async () => {
         const event = await manager.findEvent('Approval');
-        return convertEventParameters<ApprovalLog>(event);
+        return convertEventParams<ApprovalLog>(event);
       },
     });
 
@@ -88,7 +88,7 @@ export class WrappedVaraContract implements IWrappedVaraContract {
     const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IWRAPPEDVARA_ABI, {
       getTransferLog: (manager) => async () => {
         const event = await manager.findEvent('Transfer');
-        return convertEventParameters<TransferLog>(event);
+        return convertEventParams<TransferLog>(event);
       },
     });
 
