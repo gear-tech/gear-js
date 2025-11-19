@@ -9651,6 +9651,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vara-eth/api@workspace:*, @vara-eth/api@workspace:apis/vara-eth":
+  version: 0.0.0-use.local
+  resolution: "@vara-eth/api@workspace:apis/vara-eth"
+  dependencies:
+    "@ethereumjs/util": "npm:^10.1.0"
+    "@noble/hashes": "npm:1.8.0"
+    "@types/ws": "npm:^8"
+    kzg-wasm: "npm:1.0.0"
+    viem: "npm:^2.39.0"
+    ws: "npm:^8.18.3"
+  peerDependencies:
+    kzg-wasm: 1.0.0
+    viem: ^2.39.0
+  languageName: unknown
+  linkType: soft
+
 "@varan-wallet/varan-connect@npm:1.1.0":
   version: 1.1.0
   resolution: "@varan-wallet/varan-connect@npm:1.1.0"
@@ -15460,64 +15476,6 @@ __metadata:
     typescript: "npm:^5.9.2"
     typescript-eslint: "npm:^8.39.0"
     vite: "npm:^7.1.4"
-  languageName: unknown
-  linkType: soft
-
-"gearexe-idea-frontend@workspace:idea/gearexe/frontend":
-  version: 0.0.0-use.local
-  resolution: "gearexe-idea-frontend@workspace:idea/gearexe/frontend"
-  dependencies:
-    "@gear-js/api": "npm:0.44.2"
-    "@gear-js/frontend-configs": "npm:*"
-    "@hookform/resolvers": "npm:4.0.0"
-    "@reown/appkit": "npm:1.8.8"
-    "@reown/appkit-adapter-wagmi": "npm:1.8.8"
-    "@tanstack/react-query": "npm:5.90.2"
-    "@types/react-syntax-highlighter": "npm:15.5.13"
-    ethers: "npm:6.15.0"
-    gearexe: "workspace:*"
-    jotai: "npm:2.12.0"
-    kzg-wasm: "npm:0.5.0"
-    react: "npm:19.2.0"
-    react-dom: "npm:19.2.0"
-    react-hook-form: "npm:7.54.2"
-    react-router-dom: "npm:7.9.3"
-    react-syntax-highlighter: "npm:15.6.6"
-    sails-js: "npm:0.5.1"
-    sails-js-parser: "npm:0.5.1"
-    wagmi: "npm:2.17.5"
-    zod: "npm:3.25.76"
-  languageName: unknown
-  linkType: soft
-
-"gearexe-indexer@workspace:idea/gearexe/indexer":
-  version: 0.0.0-use.local
-  resolution: "gearexe-indexer@workspace:idea/gearexe/indexer"
-  dependencies:
-    "@subsquid/evm-processor": "npm:^1.27.3"
-    "@subsquid/typeorm-store": "npm:^1.5.1"
-    dotenv: "npm:^17.2.1"
-    express: "npm:^5.1.0"
-    pg: "npm:8.12.0"
-    postgraphile: "npm:^4.14.1"
-    reflect-metadata: "npm:^0.2.2"
-    typeorm: "npm:^0.3.20"
-  languageName: unknown
-  linkType: soft
-
-"gearexe@workspace:*, gearexe@workspace:apis/gearexe":
-  version: 0.0.0-use.local
-  resolution: "gearexe@workspace:apis/gearexe"
-  dependencies:
-    "@ethereumjs/util": "npm:^10.1.0"
-    "@noble/hashes": "npm:1.8.0"
-    "@types/ws": "npm:^8"
-    kzg-wasm: "npm:1.0.0"
-    viem: "npm:^2.39.0"
-    ws: "npm:^8.18.3"
-  peerDependencies:
-    kzg-wasm: 1.0.0
-    viem: ^2.39.0
   languageName: unknown
   linkType: soft
 
@@ -24894,6 +24852,48 @@ __metadata:
   checksum: 10c0/b75657b74e4d17552bd88e0c2857020fbab34a4d091dc058db18c470e7da0336067e72c130b3358e3321ac0a6ff11c0b92b67a382318a3705ad5d57de7ff3262
   languageName: node
   linkType: hard
+
+"varaeth-idea-frontend@workspace:idea/vara-eth/frontend":
+  version: 0.0.0-use.local
+  resolution: "varaeth-idea-frontend@workspace:idea/vara-eth/frontend"
+  dependencies:
+    "@gear-js/api": "npm:0.44.2"
+    "@gear-js/frontend-configs": "npm:*"
+    "@hookform/resolvers": "npm:4.0.0"
+    "@reown/appkit": "npm:1.8.8"
+    "@reown/appkit-adapter-wagmi": "npm:1.8.8"
+    "@tanstack/react-query": "npm:5.90.2"
+    "@types/react-syntax-highlighter": "npm:15.5.13"
+    "@vara-eth/api": "workspace:*"
+    ethers: "npm:6.15.0"
+    jotai: "npm:2.12.0"
+    kzg-wasm: "npm:0.5.0"
+    react: "npm:19.2.0"
+    react-dom: "npm:19.2.0"
+    react-hook-form: "npm:7.54.2"
+    react-router-dom: "npm:7.9.3"
+    react-syntax-highlighter: "npm:15.6.6"
+    sails-js: "npm:0.5.1"
+    sails-js-parser: "npm:0.5.1"
+    wagmi: "npm:2.17.5"
+    zod: "npm:3.25.76"
+  languageName: unknown
+  linkType: soft
+
+"varaeth-idea-indexer@workspace:idea/vara-eth/indexer":
+  version: 0.0.0-use.local
+  resolution: "varaeth-idea-indexer@workspace:idea/vara-eth/indexer"
+  dependencies:
+    "@subsquid/evm-processor": "npm:^1.27.3"
+    "@subsquid/typeorm-store": "npm:^1.5.1"
+    dotenv: "npm:^17.2.1"
+    express: "npm:^5.1.0"
+    pg: "npm:8.12.0"
+    postgraphile: "npm:^4.14.1"
+    reflect-metadata: "npm:^0.2.2"
+    typeorm: "npm:^0.3.20"
+  languageName: unknown
+  linkType: soft
 
 "vary@npm:^1, vary@npm:^1.1.2, vary@npm:~1.1.2":
   version: 1.1.2
