@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 
 import { Wallet as StyledWallet } from '../components';
 import { Wallet } from '../headless';
-import { StyledWallet as StyledVaraWallet } from '../styled';
+import { StyledWallet as StyledHeadlessWallet } from '../styled';
 
 import '@gear-js/vara-ui/dist/style.css';
 import './index.scss';
@@ -31,7 +31,12 @@ function App() {
 
       <div>
         <h1>Headless Vara</h1>
-        <StyledVaraWallet />
+        <StyledHeadlessWallet theme="vara" />
+      </div>
+
+      <div>
+        <h1>Headless Gear</h1>
+        <StyledHeadlessWallet theme="gear" />
       </div>
 
       <div>

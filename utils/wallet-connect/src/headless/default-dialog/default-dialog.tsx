@@ -14,6 +14,7 @@ function DefaultDialog({ children, heading, isOpen, toggle }: Props) {
     <Dialog.Root open={isOpen} onOpenChange={toggle}>
       <Dialog.Portal>
         <Dialog.Backdrop className={styles.backdrop} />
+
         <Dialog.Popup className={styles.popup}>
           <header className={styles.header}>
             <Dialog.Title className={styles.title}>{heading}</Dialog.Title>
