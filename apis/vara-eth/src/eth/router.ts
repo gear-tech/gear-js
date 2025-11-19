@@ -4,12 +4,12 @@ import { randomBytes } from '@noble/hashes/utils';
 import { loadKZG } from 'kzg-wasm';
 
 import { CodeValidationHelpers, CreateProgramHelpers, CodeState } from './interfaces/router.js';
+import { ITxManager, type TxManagerWithHelpers } from './interfaces/tx-manager.js';
 import { IROUTER_ABI, IRouterContract } from './abi/index.js';
-import { TxManager, TxManagerWithHelpers } from './tx-manager.js';
-import { ITxManager } from './interfaces/tx-manager.js';
-import { generateCodeHash } from '../util';
 import { EthereumClient } from './ethereumClient.js';
 import { HexString } from '../types/index.js';
+import { TxManager } from './tx-manager.js';
+import { generateCodeHash } from '../util';
 
 const getCodeState = (value: number): CodeState => {
   switch (value) {

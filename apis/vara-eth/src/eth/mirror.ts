@@ -8,10 +8,11 @@ import {
   Reply,
   ITxManager,
   ValueClaimingRequestedLog,
+  type TxManagerWithHelpers,
 } from './interfaces/index.js';
-import { convertEventParams as convertEventParameters } from '../util/index.js';
+import { convertEventParams } from '../util/index.js';
 import { IMIRROR_ABI, IMirrorContract } from './abi/IMirror.js';
-import { TxManager, TxManagerWithHelpers } from './tx-manager.js';
+import { TxManager } from './tx-manager.js';
 import { HexString } from '../types/index.js';
 import { EthereumClient } from './ethereumClient.js';
 
@@ -80,7 +81,7 @@ export class MirrorContract implements IMirrorContract {
     const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IMIRROR_ABI, {
       getMessage: (manager) => async () => {
         const event = await manager.findEvent('MessageQueueingRequested');
-        return convertEventParameters<MessageQueuingRequestedLog>(event);
+        return convertEventParams<MessageQueuingRequestedLog>(event);
       },
       setupReplyListener: (manager) => async () => {
         const [receipt, event] = await Promise.all([
@@ -88,7 +89,7 @@ export class MirrorContract implements IMirrorContract {
           manager.findEvent('MessageQueueingRequested'),
         ]);
 
-        const message = convertEventParameters<MessageQueuingRequestedLog>(event);
+        const message = convertEventParams<MessageQueuingRequestedLog>(event);
 
         let _resolve: (value: Reply) => void | Promise<void>;
         let _reject: (error: Error) => void | Promise<void>;
@@ -204,7 +205,7 @@ export class MirrorContract implements IMirrorContract {
     const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IMIRROR_ABI, {
       getValueClaimingRequestedEvent: (manager) => async () => {
         const event = await manager.findEvent('ValueClaimingRequested');
-        return convertEventParameters<ValueClaimingRequestedLog>(event);
+        return convertEventParams<ValueClaimingRequestedLog>(event);
       },
     });
 
@@ -239,6 +240,19 @@ export class MirrorContract implements IMirrorContract {
     const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IMIRROR_ABI);
 
     return txManager;
+  }
+
+  listenToStateChangedEvent(cb: (newStateHash: Hex) => void) {
+    return this.ethereumClient.publicClient.watchContractEvent({
+      address: this.address,
+      abi: IMIRROR_ABI,
+      eventName: 'StateChanged',
+      onLogs: (logs) => {
+        for (const log of logs) {
+          cb(log.args.stateHash!);
+        }
+      },
+    });
   }
 }
 

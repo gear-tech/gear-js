@@ -167,7 +167,10 @@ describe('messages', () => {
 
       const { waitForReply } = await tx.setupReplyListener();
 
-      await waitForReply;
+      const reply = await waitForReply;
+
+      expect(reply.payload).toBe('0x');
+      expect(reply.replyCode).toBe('0x00000000');
     },
     config.longRunningTestTimeout,
   );
