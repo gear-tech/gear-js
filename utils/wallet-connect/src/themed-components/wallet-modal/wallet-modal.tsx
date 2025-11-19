@@ -13,7 +13,7 @@ function WalletModal({ theme }: ThemeProps) {
   const { Dialog } = UI_CONFIG[theme];
 
   return (
-    <Wallet.Root>
+    <Wallet.Root render={<></>}>
       <Wallet.Dialog
         render={(props, state) => (
           <Dialog footer={state.isWalletSelected && <ModalFooter theme={theme} />} {...props} {...state} />

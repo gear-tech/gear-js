@@ -1,5 +1,5 @@
 import { useApi } from '@gear-js/react-hooks';
-import { Wallet } from '@gear-js/wallet-connect';
+import { Wallet } from '@gear-js/wallet-connect/themed';
 import { useEffect, useState } from 'react';
 
 import { BalanceDropdown } from '@/features/balance';

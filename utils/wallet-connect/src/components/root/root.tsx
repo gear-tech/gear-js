@@ -1,8 +1,11 @@
-import { ComponentPropsWithRef, useMemo, useState } from 'react';
+import { useRender } from '@base-ui-components/react';
+import { useMemo, useState } from 'react';
 
 import { WalletProvider } from './context';
 
-function Root(props: ComponentPropsWithRef<'div'>) {
+type Props = useRender.ComponentProps<'div'>;
+
+function Root({ render, ...props }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const contextValue = useMemo(
@@ -17,11 +20,9 @@ function Root(props: ComponentPropsWithRef<'div'>) {
     [isDialogOpen],
   );
 
-  return (
-    <WalletProvider value={contextValue}>
-      <div {...props} />
-    </WalletProvider>
-  );
+  const element = useRender({ render, props });
+
+  return <WalletProvider value={contextValue}>{element}</WalletProvider>;
 }
 
 export { Root };
