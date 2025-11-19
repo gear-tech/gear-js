@@ -1,3 +1,5 @@
+import { formatBalance as polkadotFormatBalance } from '@polkadot/util';
+
 const copyToClipboard = ({
   value,
   onSuccess,
@@ -33,13 +35,15 @@ const copyToClipboard = ({
   }
 };
 
-function formatNumber(num: number, decimals: number = 0): string {
-  const [integerPart, decimalPart] = num.toFixed(decimals).split('.');
-
+function formatNumber(num: number, displayedDecimals: number = 0): string {
+  const [integerPart, decimalPart] = num.toFixed(displayedDecimals).split('.');
   const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
-  return decimalPart ? `${formattedIntegerPart}.${decimalPart}` : formattedIntegerPart;
+  return displayedDecimals > 0 ? `${formattedIntegerPart}.${decimalPart}` : formattedIntegerPart;
 }
+
+const formatBalance = (value: bigint, decimals: number) => {
+  return polkadotFormatBalance(value, { decimals, forceUnit: '-', withSi: false, withUnit: false });
+};
 
 const formatDate = (rawDate: string | number) => {
   const date = new Date(rawDate);
@@ -49,4 +53,7 @@ const formatDate = (rawDate: string | number) => {
   return `${formatedDate} ${time}`;
 };
 
-export { copyToClipboard, formatNumber, formatDate };
+const isString = (value: unknown): value is string => typeof value === 'string';
+const getPreformattedText = (data: unknown) => JSON.stringify(data, null, 4);
+
+export { copyToClipboard, formatBalance, formatNumber, formatDate, isString, getPreformattedText };
