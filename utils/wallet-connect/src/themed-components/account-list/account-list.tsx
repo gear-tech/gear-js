@@ -1,7 +1,7 @@
 import { useAlert } from '@gear-js/react-hooks';
 import { buttonStyles } from '@gear-js/ui';
 
-import { Wallet } from '@/headless';
+import { Wallet } from '@/components';
 import { cx } from '@/utils';
 
 import { UI_CONFIG } from '../consts';

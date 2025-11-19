@@ -1,4 +1,4 @@
-import { Wallet } from '@/headless';
+import { Wallet } from '@/components';
 import { cx } from '@/utils';
 
 import { UI_CONFIG } from '../consts';

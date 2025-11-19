@@ -2,7 +2,7 @@ import { buttonStyles } from '@gear-js/ui';
 
 import { cx } from '@/utils';
 
-import { Wallet } from '../../headless';
+import { Wallet as HeadlessWallet } from '../../components';
 import { AccountList } from '../account-list';
 import { Balance } from '../balance';
 import { UI_CONFIG } from '../consts';
@@ -10,7 +10,7 @@ import { ModalFooter } from '../modal-footer';
 import { ThemeProps } from '../types';
 import { WalletList } from '../wallet-list';
 
-import styles from './styled-wallet.module.scss';
+import styles from './wallet.module.scss';
 
 type Props = Partial<ThemeProps> & {
   displayBalance?: boolean;
@@ -19,26 +19,26 @@ type Props = Partial<ThemeProps> & {
   accountButtonClassName?: string;
 };
 
-function StyledWallet({ theme = 'vara', displayBalance = true, accountButtonClassName }: Props) {
+function Wallet({ theme = 'vara', displayBalance = true, accountButtonClassName }: Props) {
   const { TriggerConnect, TriggerConnected, Dialog } = UI_CONFIG[theme];
 
   return (
-    <Wallet.Root className={styles.wallet}>
+    <HeadlessWallet.Root className={styles.wallet}>
       {displayBalance && <Balance theme={theme} />}
 
-      <Wallet.TriggerConnect render={TriggerConnect} />
+      <HeadlessWallet.TriggerConnect render={TriggerConnect} />
 
-      <Wallet.TriggerConnected render={TriggerConnected} className={accountButtonClassName}>
-        <Wallet.ConnectedAccountIcon
+      <HeadlessWallet.TriggerConnected render={TriggerConnected} className={accountButtonClassName}>
+        <HeadlessWallet.ConnectedAccountIcon
           theme="polkadot"
           size={16}
           className={theme === 'gear' ? cx(buttonStyles.icon, styles.accountIcon) : undefined}
         />
 
-        <Wallet.ConnectedAccountLabel />
-      </Wallet.TriggerConnected>
+        <HeadlessWallet.ConnectedAccountLabel />
+      </HeadlessWallet.TriggerConnected>
 
-      <Wallet.Dialog
+      <HeadlessWallet.Dialog
         render={(props, state) =>
           state.isOpen ? (
             <Dialog footer={state.isWalletSelected && <ModalFooter theme={theme} />} {...props} {...state} />
@@ -49,12 +49,12 @@ function StyledWallet({ theme = 'vara', displayBalance = true, accountButtonClas
         <WalletList theme={theme} />
         <AccountList theme={theme} />
 
-        <Wallet.NoWallets className={cx(styles.text, styles[theme])} />
-        <Wallet.NoMobileWallets className={cx(styles.text, styles[theme])} />
-        <Wallet.NoAccounts className={cx(styles.text, styles[theme])} />
-      </Wallet.Dialog>
-    </Wallet.Root>
+        <HeadlessWallet.NoWallets className={cx(styles.text, styles[theme])} />
+        <HeadlessWallet.NoMobileWallets className={cx(styles.text, styles[theme])} />
+        <HeadlessWallet.NoAccounts className={cx(styles.text, styles[theme])} />
+      </HeadlessWallet.Dialog>
+    </HeadlessWallet.Root>
   );
 }
 
-export { StyledWallet };
+export { Wallet };
