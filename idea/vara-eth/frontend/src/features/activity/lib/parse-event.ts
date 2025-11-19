@@ -2,6 +2,7 @@ import { EventLog } from 'ethers';
 
 import { AllEvents, RouterEvents, WrappedVaraEvents } from '@/app/store';
 
+// @deprecated
 function parseEvent(eventLog: EventLog): AllEvents | null {
   const { args } = eventLog;
   const event = eventLog.fragment.name;

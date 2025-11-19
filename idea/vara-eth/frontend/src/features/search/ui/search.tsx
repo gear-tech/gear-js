@@ -1,6 +1,6 @@
-import { isAddress } from 'ethers';
 import { useState } from 'react';
 import { generatePath, useLocation, useNavigate } from 'react-router-dom';
+import { isAddress } from 'viem';
 
 import SearchSVG from '@/assets/icons/search.svg?react';
 import { Button } from '@/components';

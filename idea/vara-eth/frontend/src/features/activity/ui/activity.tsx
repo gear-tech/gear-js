@@ -69,7 +69,7 @@ const Activity = () => {
                 <Block
                   // ! TODO: remove empty string and 0
                   blockHash={activity.blockHash || ''}
-                  blockNumber={activity.blockNumber || 0}
+                  blockNumber={Number(activity.blockNumber || 0)}
                   timestamp={activity.timestamp}
                 />
               }>

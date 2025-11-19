@@ -1,13 +1,13 @@
 import { useMutation } from '@tanstack/react-query';
-import { HexString } from 'gear-js-util';
+import { HexString } from '@vara-eth/api';
 import { useAccount } from 'wagmi';
 
 import { useMirrorContract } from '@/app/api';
-import { useGearExeApi } from '@/app/providers';
+import { useVaraEthApi } from '@/app/providers';
 import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
 
 export const useExecutableBalanceTopUp = (programId: HexString) => {
-  const { api } = useGearExeApi();
+  const { api } = useVaraEthApi();
   const addMyActivity = useAddMyActivity();
   const ethAccount = useAccount();
   const { mirrorContract } = useMirrorContract(programId);
@@ -15,13 +15,14 @@ export const useExecutableBalanceTopUp = (programId: HexString) => {
   const executableBalanceTopUp = async (value: bigint) => {
     if (!api || !mirrorContract || !ethAccount.address) return;
     const tx = await mirrorContract.executableBalanceTopUp(value);
-    const result = await tx.send();
+    await tx.send();
+    const receipt = await tx.getReceipt();
 
     addMyActivity({
       type: TransactionTypes.executableBalanceTopUp,
-      value: String(result.value),
+      value: String(value),
       programId,
-      ...unpackReceipt(),
+      ...unpackReceipt(receipt),
     });
 
     return value;

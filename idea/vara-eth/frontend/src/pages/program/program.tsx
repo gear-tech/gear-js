@@ -1,4 +1,4 @@
-import { HexString } from 'gear-js-util';
+import { HexString } from '@vara-eth/api';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useApproveWrappedVara, useWrappedVaraBalance } from '@/app/api';

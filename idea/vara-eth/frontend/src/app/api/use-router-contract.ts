@@ -1,28 +1,28 @@
 import { useQuery } from '@tanstack/react-query';
-import { getRouterContract } from '@vara-eth/api';
+import { getRouterClient } from '@vara-eth/api';
 import { useAccount } from 'wagmi';
 
 import { ROUTER_CONTRACT_ADDRESS } from '@/shared/config';
 
-import { useEthersSigner } from './ethers/signer';
+import { useEthereumClient } from './use-ethereum-client';
 
 const useRouterContract = () => {
   const ethAccount = useAccount();
-  const signer = useEthersSigner({ chainId: ethAccount.chain?.id });
+  const ethereumClient = useEthereumClient({ chainId: ethAccount.chain?.id });
 
   const { data: routerContract, isLoading } = useQuery({
-    queryKey: ['getRouterContract', signer],
-    queryFn: () => getRouterContract(ROUTER_CONTRACT_ADDRESS, signer),
+    queryKey: ['getRouterClient', ethereumClient],
+    queryFn: () => getRouterClient(ROUTER_CONTRACT_ADDRESS, ethereumClient!),
     // TODO: Temporary solution. MetaMask doesn't support blob transactions. Used for testing.
     // queryFn: () =>
-    //   getRouterContract(
+    //   getRouterClient(
     //     ROUTER_CONTRACT_ADDRESS,
     //     new ethers.Wallet(
     //       import.meta.env.VITE_SEQUENCER_PRIVATE_KEY as string,
     //       new ethers.WebSocketProvider(ETH_NODE_ADDRESS),
     //     ),
     //   ),
-    enabled: Boolean(signer),
+    enabled: Boolean(ethereumClient),
   });
 
   return { routerContract, isLoading };

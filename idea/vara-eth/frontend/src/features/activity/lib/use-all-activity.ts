@@ -1,11 +1,9 @@
-import { EventLog } from 'ethers';
+import { RouterContract, WrappedVaraContract } from '@vara-eth/api';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect } from 'react';
 
 import { useRouterContract, useWrappedVaraContract } from '@/app/api';
-import { allActivityAtom, EventsBlock, RouterEvents, WrappedVaraEvents } from '@/app/store';
-
-import { parseEvent } from './parse-event';
+import { allActivityAtom, RouterEvents, WrappedVaraEvents } from '@/app/store';
 
 const useAllActivity = () => {
   const { routerContract } = useRouterContract();
@@ -16,48 +14,48 @@ const useAllActivity = () => {
   useEffect(() => {
     if (!routerContract || !wrappedVaraContract) return;
 
-    const addActivity = (eventLog: EventLog) => {
-      const event = parseEvent(eventLog);
-      if (!event) return;
+    // const addActivity = (eventLog: EventLog) => {
+    //   const event = parseEvent(eventLog);
+    //   if (!event) return;
 
-      const isEmptyEvent = event.type === RouterEvents.blockCommitted;
-      const { blockNumber, blockHash } = eventLog;
+    //   const isEmptyEvent = event.type === RouterEvents.blockCommitted;
+    //   const { blockNumber, blockHash } = eventLog;
 
-      setAllActivity((prev) => {
-        const sameBlockIndex = prev.findIndex((block) => block.blockHash === blockHash);
+    //   setAllActivity((prev) => {
+    //     const sameBlockIndex = prev.findIndex((block) => block.blockHash === blockHash);
 
-        if (sameBlockIndex !== -1) {
-          // Add event to existing block
-          const next = [...prev];
-          if (!isEmptyEvent) {
-            next[sameBlockIndex].events.push(event);
-          }
-          return next;
-        }
+    //     if (sameBlockIndex !== -1) {
+    //       // Add event to existing block
+    //       const next = [...prev];
+    //       if (!isEmptyEvent) {
+    //         next[sameBlockIndex].events.push(event);
+    //       }
+    //       return next;
+    //     }
 
-        // Create a new block
-        const newActivityBlock: EventsBlock = {
-          blockHash,
-          blockNumber,
-          timestamp: Date.now(),
-          events: isEmptyEvent ? [] : [event],
-        };
-        return [newActivityBlock, ...prev];
+    //     // Create a new block
+    //     const newActivityBlock: EventsBlock = {
+    //       blockHash,
+    //       blockNumber,
+    //       timestamp: Date.now(),
+    //       events: isEmptyEvent ? [] : [event],
+    //     };
+    //     return [newActivityBlock, ...prev];
+    //   });
+    // };
+
+    const subscribeToEvents = (_contract: RouterContract | WrappedVaraContract, events: string[]) => {
+      events.forEach((_event) => {
+        // void contract.on(event, (...args: unknown[]) => {
+        //   const lastArg = args[args.length - 1] as { log: EventLog };
+        //   addActivity(lastArg.log);
+        // });
       });
     };
 
-    const subscribeToEvents = (contract: typeof routerContract | typeof wrappedVaraContract, events: string[]) => {
-      events.forEach((event) => {
-        void contract.on(event, (...args: unknown[]) => {
-          const lastArg = args[args.length - 1] as { log: EventLog };
-          addActivity(lastArg.log);
-        });
-      });
-    };
-
-    const unsubscribeFromEvents = (contract: typeof routerContract | typeof wrappedVaraContract, events: string[]) => {
-      events.forEach((event) => {
-        void contract.off(event);
+    const unsubscribeFromEvents = (_contract: RouterContract | WrappedVaraContract, events: string[]) => {
+      events.forEach((_event) => {
+        // void contract.off(event);
       });
     };
 

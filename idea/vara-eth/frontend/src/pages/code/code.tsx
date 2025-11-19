@@ -1,3 +1,4 @@
+import { HexString } from '@vara-eth/api';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
@@ -12,7 +13,7 @@ import { formatDate } from '@/shared/utils';
 import styles from './code.module.scss';
 
 type Params = {
-  codeId: string;
+  codeId: HexString;
 };
 
 const Code = () => {

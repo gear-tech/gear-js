@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { isAddress } from 'ethers';
-import { HexString } from 'gear-js-util';
+import { HexString } from '@vara-eth/api';
+import { isAddress } from 'viem';
 
 import { useMirrorContract } from '@/app/api';
-import { useGearExeApi } from '@/app/providers';
+import { useVaraEthApi } from '@/app/providers';
 
 const useReadContractState = (programId: HexString) => {
-  const { api } = useGearExeApi();
+  const { api } = useVaraEthApi();
 
   const { mirrorContract } = useMirrorContract(programId);
 

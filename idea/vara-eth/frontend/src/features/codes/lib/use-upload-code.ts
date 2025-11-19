@@ -2,13 +2,13 @@ import { useMutation } from '@tanstack/react-query';
 import { generatePath, useNavigate } from 'react-router-dom';
 
 import { useRouterContract } from '@/app/api/use-router-contract';
-import { useGearExeApi } from '@/app/providers';
+import { useVaraEthApi } from '@/app/providers';
 import { useAddMyActivity } from '@/app/store';
 import { TransactionTypes, unpackReceipt } from '@/app/store/my-activity';
 import { routes } from '@/shared/config';
 
 export const useUploadCode = () => {
-  const { api } = useGearExeApi();
+  const { api } = useVaraEthApi();
   const navigate = useNavigate();
   const addMyActivity = useAddMyActivity();
 

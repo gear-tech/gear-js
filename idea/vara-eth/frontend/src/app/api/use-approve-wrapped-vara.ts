@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { HexString } from 'gear-js-util';
+import { HexString } from '@vara-eth/api';
 
 import { TransactionTypes, unpackReceipt, useAddMyActivity } from '../store';
 
@@ -19,8 +19,8 @@ const useApproveWrappedVara = (address: HexString) => {
 
     addMyActivity({
       type: TransactionTypes.approve,
-      value: String(result.value),
-      owner: result.from,
+      value: value.toString(),
+      owner: receipt.from,
       spender: address,
       ...unpackReceipt(receipt),
     });

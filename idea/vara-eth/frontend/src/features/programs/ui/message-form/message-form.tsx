@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { HexString } from 'gear-js-util';
+import { HexString } from '@vara-eth/api';
 import { useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Sails } from 'sails-js';

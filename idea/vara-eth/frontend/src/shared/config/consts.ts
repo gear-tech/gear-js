@@ -1,7 +1,7 @@
-import { HexString } from 'gear-js-util';
+import { HexString } from '@vara-eth/api';
 
 const PROJECT_ID = import.meta.env.VITE_WALLET_CONNECT_PROJECT_ID as string;
-const GEAR_EXE_NODE_ADDRESS = import.meta.env.VITE_GEAR_EXE_NODE_ADDRESS as `https://${string}`;
+const VARA_ETH_NODE_ADDRESS = import.meta.env.VITE_VARA_ETH_NODE_ADDRESS as `https://${string}`;
 const ETH_CHAIN_ID = 17000; // (0x4268) Holesky
 const ETH_NODE_ADDRESS = import.meta.env.VITE_ETH_NODE_ADDRESS as string;
 
@@ -11,7 +11,7 @@ const MIRROR_CONTRACT_ADDRESS = import.meta.env.VITE_MIRROR_CONTRACT_ADDRESS as 
 
 console.log('envs', {
   PROJECT_ID,
-  GEAR_EXE_NODE_ADDRESS,
+  VARA_ETH_NODE_ADDRESS,
   ETH_CHAIN_ID,
   ETH_NODE_ADDRESS,
   ROUTER_CONTRACT_ADDRESS,
@@ -21,7 +21,7 @@ console.log('envs', {
 
 export {
   PROJECT_ID,
-  GEAR_EXE_NODE_ADDRESS,
+  VARA_ETH_NODE_ADDRESS,
   ETH_CHAIN_ID,
   ETH_NODE_ADDRESS,
   ROUTER_CONTRACT_ADDRESS,

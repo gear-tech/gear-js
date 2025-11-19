@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { HexString } from 'gear-js-util';
+import { HexString } from '@vara-eth/api';
 
 import { useMirrorContract } from '@/app/api';
 import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
@@ -30,6 +30,7 @@ const useSendProgramMessage = (programId: HexString) => {
 
     const tx = await mirrorContract.sendMessage(_payload);
     const response = await tx.send();
+    const receipt = await tx.getReceipt();
     const params = args.map((_value, index) => {
       const key = sailsMessage.args[index].name;
       return `${key}: ${String(_value)}`;
@@ -39,10 +40,8 @@ const useSendProgramMessage = (programId: HexString) => {
       type: TransactionTypes.programMessage,
       serviceName,
       messageName,
-      ...unpackReceipt(),
-      blockNumber: response.blockNumber ?? 0,
+      ...unpackReceipt(receipt),
       to: programId,
-      hash: response.hash,
       params: { payload: `${messageName} (${params.join(', ')})` },
     });
 
@@ -59,7 +58,7 @@ const useSendProgramMessage = (programId: HexString) => {
       messageName,
       replyCode,
       ...unpackReceipt(),
-      blockNumber,
+      blockNumber: BigInt(blockNumber),
       from: programId,
       hash: txHash,
       params: { payload: JSON.stringify(result) },

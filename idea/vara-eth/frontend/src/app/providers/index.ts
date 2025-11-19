@@ -1,4 +1,4 @@
-import { useGearExeApi } from './gear-exe-api';
+import { useVaraEthApi } from './vara-eth-api';
 import { withProviders } from './with-providers';
 
-export { withProviders, useGearExeApi };
+export { withProviders, useVaraEthApi };

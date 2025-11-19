@@ -1,4 +1,4 @@
-import { GearExeApi } from '@vara-eth/api';
+import { VaraEthApi } from '@vara-eth/api';
 import { createContext } from 'react';
 
 type Value =
@@ -7,7 +7,7 @@ type Value =
       isApiReady: false;
     }
   | {
-      api: GearExeApi;
+      api: VaraEthApi;
       isApiReady: true;
     };
 
