@@ -20,7 +20,11 @@ function Root({ render, ...props }: Props) {
     [isDialogOpen],
   );
 
-  const element = useRender({ render, props });
+  const element = useRender({
+    defaultTagName: 'div',
+    render,
+    props,
+  });
 
   return <WalletProvider value={contextValue}>{element}</WalletProvider>;
 }
