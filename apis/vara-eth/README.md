@@ -133,7 +133,7 @@ await mirror.stateHash();                          // Get current state hash
 
 ### WrappedVaraClient
 
-Interface for managing wVARA tokens (ERC20 wrapper for VARA) used for gas payments.
+Interface for managing WVARA tokens (ERC20 wrapper for VARA) used for gas payments.
 
 **Source:** [WrappedVara.sol](https://github.com/gear-tech/gear/blob/master/ethexe/contracts/src/WrappedVara.sol)
 
@@ -220,9 +220,9 @@ console.log('Result:', result);
 Programs require wVARA balance to execute. Top up using wVARA tokens:
 
 ```typescript
-// Check wVARA balance
+// Check WVARA balance
 const balance = await wvara.balanceOf(ethereumClient.accountAddress);
-console.log('wVARA balance:', balance);
+console.log('WVARA balance:', balance);
 
 // Approve program to spend wVARA
 const approveTx = await wvara.approve(programId, BigInt(10 * 1e12));
