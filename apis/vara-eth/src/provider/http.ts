@@ -71,6 +71,8 @@ export class HttpVaraEthProvider implements IVaraEthProvider {
       } else if (isResultMessage(json)) {
         return snakeToCamel(json.result);
       } else {
+        // This should never happen if type guards are correct
+        const _exhaustiveCheck: never = json;
         console.error('Unexpected JSON-RPC message:', json);
         throw new Error('Unexpected JSON-RPC message');
       }
