@@ -1,9 +1,16 @@
-import { AlertContainerFactory } from '@gear-js/react-hooks';
+import { clsx } from 'clsx';
 
-const copyToClipboard = ({ alert, value }: { alert: AlertContainerFactory; value: string }) => {
-  const onSuccess = () => alert.success('Copied');
-  const onError = () => alert.error('Copy error');
+const cx = clsx;
 
+const copyToClipboard = ({
+  onSuccess,
+  onError,
+  value,
+}: {
+  onSuccess: () => void;
+  onError: (error: Error) => void;
+  value: string;
+}) => {
   function unsecuredCopyToClipboard(text: string) {
     const textArea = document.createElement('textarea');
     textArea.value = text;
@@ -15,7 +22,7 @@ const copyToClipboard = ({ alert, value }: { alert: AlertContainerFactory; value
       onSuccess();
     } catch (err) {
       console.error('Unable to copy to clipboard', err);
-      onError();
+      onError(err as Error);
     }
     document.body.removeChild(textArea);
   }
@@ -24,7 +31,7 @@ const copyToClipboard = ({ alert, value }: { alert: AlertContainerFactory; value
     navigator.clipboard
       .writeText(value)
       .then(() => onSuccess())
-      .catch(() => onError());
+      .catch((error: Error) => onError(error));
   } else {
     unsecuredCopyToClipboard(value);
   }
@@ -36,4 +43,10 @@ function isTelegramMiniApp() {
   return params.has('tgWebAppPlatform') && params.has('tgWebAppVersion');
 }
 
-export { copyToClipboard, isTelegramMiniApp };
+const getTruncatedText = (value: string, prefixLength = 6) => {
+  if (value.length <= prefixLength) return value;
+
+  return `${value.substring(0, prefixLength)}...${value.slice(-prefixLength)}`;
+};
+
+export { cx, copyToClipboard, isTelegramMiniApp, getTruncatedText };
