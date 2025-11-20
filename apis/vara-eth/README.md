@@ -145,6 +145,44 @@ await wvara.balanceOf(address);                    // Check balance
 await wvara.allowance(owner, spender);             // Check allowance
 ```
 
+## Uploading Program Code
+
+Before creating a program, you must upload and validate your WASM code using the vara-eth CLI.
+
+### Getting the CLI
+
+**Download from releases** (recommended):
+- Visit [Gear repository releases](https://github.com/gear-tech/gear/releases)
+- Download the `ethexe-cli` binary for your platform
+
+**Build from source**:
+```bash
+cargo build -p ethexe-cli -r
+```
+
+### Uploading Your Program
+
+Insert your private key:
+```bash
+./target/release/ethexe key insert $SENDER_PRIVATE_KEY
+```
+
+Upload your compiled WASM:
+```bash
+./target/release/ethexe --cfg none tx \
+  --ethereum-rpc "$ETH_RPC" \           # Ethereum node RPC
+  --ethereum-router "$ROUTER_ADDRESS" \ # Router contract address
+  --sender "$SENDER_ADDRESS" \         # Your account address
+  upload -l path/to/program.opt.wasm
+```
+
+The CLI will submit code via EIP-4844 blob transactions, request validation, and return a `codeId` once validators confirm it. Use this `codeId` with the API:
+
+```typescript
+const codeId = '0x...'; // From CLI output
+const tx = await router.createProgram(codeId);
+```
+
 ## Ethereum Side Operations
 
 ### 1. Program Creation
@@ -364,9 +402,16 @@ const tx = new InjectedTransaction({
   // salt: random salt for uniqueness
 });
 
-// Send via VaraEthApi
-const result = await api.sendInjectedTransaction(tx).send();
-console.log('Transaction result:', result); // 'Accept' or 'Reject'
+// Send transaction
+const injected = api.sendInjectedTransaction(tx);
+const result = await injected.send();
+console.log('Result:', result);
+
+// Wait for full transaction promise (includes reply)
+const promise = await injected.sendAndWaitForPromise();
+console.log('TX hash:', promise.txHash);
+console.log('Reply:', promise.reply); // { payload, value, code }
+console.log('Signature:', promise.signature);
 ```
 
 **Manual Transaction Configuration:**
