@@ -20,42 +20,59 @@
 
 # Description
 
-A React library to connect supported Substrate-based wallets in a standardized and consistent way across decentralized applications.
+A React library to connect supported Substrate-based wallets in a standardized and consistent way across decentralized applications. It is built on a headless component architecture that separates logic from presentation, giving you full control over styling and structure.
+
+It provides a set of unstyled, headless components that give you complete control over the UI while handling all wallet connection logic internally.
+
+For quick integration, the library also includes pre-defined themed components that implement common wallet connection patterns using the headless components under the hood, with support for Gear and Vara themes out of the box.
 
 # Installation
 
 ### npm
 
 ```sh
-npm install @gear-js/wallet-connect @gear-js/react-hooks @gear-js/ui @gear-js/vara-ui
+npm install @gear-js/wallet-connect @gear-js/react-hooks
 ```
 
 ### yarn
 
 ```sh
-yarn add @gear-js/wallet-connect @gear-js/react-hooks @gear-js/ui @gear-js/vara-ui
+yarn add @gear-js/wallet-connect @gear-js/react-hooks
 ```
 
 ### pnpm
 
 ```sh
-pnpm add @gear-js/wallet-connect @gear-js/react-hooks @gear-js/ui @gear-js/vara-ui
+pnpm add @gear-js/wallet-connect @gear-js/react-hooks
 ```
-
-# Getting started
 
 ## Configure API
 
 Before using `@gear-js/wallet-connect`, make sure to configure [`@gear-js/react-hooks`](https://github.com/gear-tech/gear-js/tree/main/utils/gear-hooks#readme) in your project according to its documentation. This setup is required for API connection and account management.
 
-## Configure UI
+# Components
+
+## Getting Started
+
+Headless components the library provides are built using [Base UI](https://base-ui.com/) methodology and techniques.
+
+To understand how to work with them, refer to the Base UI documentation:
+
+- **[Styling](https://base-ui.com/react/handbook/styling)** - Learn different approaches to styling headless components
+- **[Composition](https://base-ui.com/react/handbook/composition)** - Understand how to compose components and pass props
+- **[Customization](https://base-ui.com/react/handbook/customization)** - Explore patterns for replacing elements and customizing behavior
+- **[TypeScript](https://base-ui.com/react/handbook/typescript)** - TypeScript usage patterns and type safety
+
+Under the hood, nearly all primitives use the [`useRender`](https://base-ui.com/react/utils/use-render) hook from Base UI, which provides a flexible rendering API that supports both element replacement and render prop patterns.
+
+# Themed Components
+
+## Getting Started
 
 Depending on your chosen theme, you must also install and configure the corresponding UI library styles:
 
 - For the **`vara`** theme (default), follow the [`@gear-js/vara-ui`](https://github.com/gear-tech/gear-js/tree/main/utils/vara-ui#readme) documentation to set up global styles.
 - For the **`gear`** theme, follow the [`@gear-js/ui`](https://github.com/gear-tech/gear-js/tree/main/utils/gear-ui#readme) documentation to set up global styles (typically via your `index.scss`).
-
-# Components
 
 ## Wallet
 
