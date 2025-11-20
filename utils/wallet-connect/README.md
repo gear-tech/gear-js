@@ -25,40 +25,39 @@
   - [Configure API](#configure-api)
 - [Components](#components)
   - [Getting Started](#getting-started)
-  - [Wallet](#wallet)
-    - [Anatomy](#anatomy)
-    - [Usage Example](#usage-example)
-    - [API Reference](#api-reference)
-      - [Root](#root)
-      - [Balance](#balance)
-      - [BalanceIcon](#balanceicon)
-      - [BalanceValue](#balancevalue)
-      - [BalanceSymbol](#balancesymbol)
-      - [TriggerConnect](#triggerconnect)
-      - [TriggerConnected](#triggerconnected)
-      - [ConnectedAccountIcon](#connectedaccounticon)
-      - [ConnectedAccountLabel](#connectedaccountlabel)
-      - [Dialog](#dialog)
-      - [WalletList](#walletlist)
-      - [WalletItem](#walletitem)
-      - [WalletTrigger](#wallettrigger)
-      - [WalletIcon](#walleticon)
-      - [WalletName](#walletname)
-      - [WalletStatus](#walletstatus)
-      - [WalletAccountsLabel](#walletaccountslabel)
-      - [AccountsList](#accountslist)
-      - [AccountItem](#accountitem)
-      - [AccountTrigger](#accounttrigger)
-      - [AccountIcon](#accounticon)
-      - [AccountLabel](#accountlabel)
-      - [CopyAccountAddressTrigger](#copyaccountaddresstrigger)
-      - [ChangeWalletTrigger](#changewallettrigger)
-      - [ChangeWalletIcon](#changewalleticon)
-      - [ChangeWalletName](#changewalletname)
-      - [LogoutTrigger](#logouttrigger)
-      - [NoWallets](#nowallets)
-      - [NoMobileWallets](#nomobilewallets)
-      - [NoAccounts](#noaccounts)
+  - [Anatomy](#anatomy)
+  - [Usage Example](#usage-example)
+  - [API Reference](#api-reference)
+    - [Root](#root)
+    - [Balance](#balance)
+    - [BalanceIcon](#balanceicon)
+    - [BalanceValue](#balancevalue)
+    - [BalanceSymbol](#balancesymbol)
+    - [TriggerConnect](#triggerconnect)
+    - [TriggerConnected](#triggerconnected)
+    - [ConnectedAccountIcon](#connectedaccounticon)
+    - [ConnectedAccountLabel](#connectedaccountlabel)
+    - [Dialog](#dialog)
+    - [WalletList](#walletlist)
+    - [WalletItem](#walletitem)
+    - [WalletTrigger](#wallettrigger)
+    - [WalletIcon](#walleticon)
+    - [WalletName](#walletname)
+    - [WalletStatus](#walletstatus)
+    - [WalletAccountsLabel](#walletaccountslabel)
+    - [AccountsList](#accountslist)
+    - [AccountItem](#accountitem)
+    - [AccountTrigger](#accounttrigger)
+    - [AccountIcon](#accounticon)
+    - [AccountLabel](#accountlabel)
+    - [CopyAccountAddressTrigger](#copyaccountaddresstrigger)
+    - [ChangeWalletTrigger](#changewallettrigger)
+    - [ChangeWalletIcon](#changewalleticon)
+    - [ChangeWalletName](#changewalletname)
+    - [LogoutTrigger](#logouttrigger)
+    - [NoWallets](#nowallets)
+    - [NoMobileWallets](#nomobilewallets)
+    - [NoAccounts](#noaccounts)
 - [Themed Components](#themed-components)
   - [Getting Started](#getting-started-1)
   - [API Reference](#api-reference-1)
@@ -99,6 +98,8 @@ Before using `@gear-js/wallet-connect`, make sure to configure [`@gear-js/react-
 
 # Components
 
+A wallet connection interface that displays account balance, connection triggers, and a modal dialog for wallet selection and account management. It's accessible via `Wallet` namespace.
+
 ## Getting Started
 
 Headless components the library provides are built using [Base UI](https://base-ui.com/) methodology and techniques.
@@ -112,11 +113,7 @@ To understand how to work with them, refer to the Base UI documentation:
 
 Under the hood, nearly all primitives use the [`useRender`](https://base-ui.com/react/utils/use-render) hook from Base UI, which provides a flexible rendering API that supports both element replacement and render prop patterns.
 
-## Wallet
-
-A wallet connection interface that displays account balance, connection triggers, and a modal dialog for wallet selection and account management.
-
-### Anatomy
+## Anatomy
 
 Import the component and assemble its parts:
 
@@ -174,338 +171,338 @@ import { Wallet } from '@gear-js/wallet-connect';
 </Wallet.Root>;
 ```
 
-### Usage Example
+## Usage Example
 
 For a complete implementation example with styling and theme integration, see the [themed Wallet component](https://github.com/gear-tech/gear-js/blob/main/utils/wallet-connect/src/themed-components/wallet/wallet.tsx) in the repository.
 
-### API Reference
+## API Reference
 
-#### Root
+### Root
 
 Groups all parts of the wallet component and manages dialog state.
 Renders a `<div>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<div>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### Balance
+### Balance
 
 A container component that displays the connected account's balance information.
 Renders a `<div>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<div>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### BalanceIcon
+### BalanceIcon
 
 Displays an icon representing the token or network.
 Renders an SVG element (Vara icon by default).
 
-##### Props:
+#### Props:
 
 Accepts SVG element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the default icon with a custom element or component.
 
-#### BalanceValue
+### BalanceValue
 
 Displays the numeric value of the account balance.
 Renders a `<span>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<span>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### BalanceSymbol
+### BalanceSymbol
 
 Displays the token symbol or unit (e.g., "VARA", "ETH").
 Renders a `<span>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<span>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### TriggerConnect
+### TriggerConnect
 
 A button that opens the wallet connection dialog. Only rendered when no account is connected.
 Renders a `<button>` element with default text "Connect Wallet".
 
-##### Props:
+#### Props:
 
 Accepts `<button>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### TriggerConnected
+### TriggerConnected
 
 A button that opens the account management dialog. Only rendered when an account is connected.
 Renders a `<button>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<button>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### ConnectedAccountIcon
+### ConnectedAccountIcon
 
 Displays a visual icon (identicon) for the connected account.
 Renders a Polkadot `Identicon` component.
 
-##### Props:
+#### Props:
 
 Accepts Identicon component props and:
 
 - `render` (`ReactElement | ((props: HTMLProps, state: { address: HexString }) => ReactElement)`): Allows you to replace the default identicon with a custom element or component.
 
-#### ConnectedAccountLabel
+### ConnectedAccountLabel
 
 Displays the name or address of the connected account.
 Renders a `<span>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<span>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### Dialog
+### Dialog
 
 A modal dialog for wallet selection and account management.
 Doesn't render its own HTML element by default.
 
-##### Props:
+#### Props:
 
 - `render` (`ReactElement | ((props: PropsWithChildren, state: DialogState) => ReactElement)`): Allows you to provide a custom dialog implementation. State includes `isOpen`, `open`, `close`, `toggle`, `heading`, and `isWalletSelected`.
 - `children` (`ReactNode`): The content of the dialog (wallet lists, account lists, etc.).
 
-#### WalletList
+### WalletList
 
 A list container that renders available wallet extensions. Only shown when no wallet is selected. Renders a `<ul>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<ul>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 - `children` (`ReactNode`): The template for each wallet item (should be `WalletItem` with its children).
 
-#### WalletItem
+### WalletItem
 
 A container for individual wallet information. Automatically rendered by `WalletList` for each available wallet.
 Renders a `<li>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<li>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### WalletTrigger
+### WalletTrigger
 
 A button to connect or select a wallet.
 Renders a `<button>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<button>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### WalletIcon
+### WalletIcon
 
 Displays the wallet's logo/icon.
 Renders a `<span>` element containing the wallet's SVG.
 
-##### Props:
+#### Props:
 
 Accepts `<span>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### WalletName
+### WalletName
 
 Displays the wallet's name (e.g., "SubWallet", "Talisman").
 Renders a `<span>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<span>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### WalletStatus
+### WalletStatus
 
 Displays the wallet's connection status ("Enabled" or "Disabled").
 Renders a `<span>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<span>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps, state: { isConnected: boolean }) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### WalletAccountsLabel
+### WalletAccountsLabel
 
 Displays the number of accounts in the wallet. Only shown for connected wallets.
 Renders a `<span>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<span>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps, state: { accountsCount: number }) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### AccountsList
+### AccountsList
 
 A list container that renders accounts from the selected wallet.
 Renders a `<ul>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<ul>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 - `children` (`ReactNode`): The template for each account item (should be `AccountItem` with its children).
 
-#### AccountItem
+### AccountItem
 
 A container for individual account information. Automatically rendered by `AccountsList` for each account.
 Renders a `<li>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<li>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### AccountTrigger
+### AccountTrigger
 
 A button to select an account.
 Renders a `<button>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<button>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps, state: { isActive: boolean }) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### AccountIcon
+### AccountIcon
 
 Displays a visual icon (identicon) for an account.
 Renders a Polkadot `Identicon` component.
 
-##### Props:
+#### Props:
 
 Accepts Identicon component props and:
 
 - `render` (`ReactElement | ((props: HTMLProps, state: { address: string }) => ReactElement)`): Allows you to replace the default identicon with a custom element or component.
 
-#### AccountLabel
+### AccountLabel
 
 Displays the account's name or truncated address.
 Renders a `<span>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<span>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### CopyAccountAddressTrigger
+### CopyAccountAddressTrigger
 
 A button to copy the account address to clipboard.
 Renders a `<button>` element with default text "Copy".
 
-##### Props:
+#### Props:
 
 Accepts `<button>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 - `onCopy` (`() => void`): Optional callback invoked after successfully copying the address.
 
-#### ChangeWalletTrigger
+### ChangeWalletTrigger
 
 A button to return to wallet selection from the accounts list. Only shown when a wallet is selected.
 Renders a `<button>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<button>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### ChangeWalletIcon
+### ChangeWalletIcon
 
 Displays the currently selected wallet's icon. Only shown when a wallet is selected.
 Renders an SVG element.
 
-##### Props:
+#### Props:
 
 Accepts SVG element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the default icon with a custom element or component.
 
-#### ChangeWalletName
+### ChangeWalletName
 
 Displays the currently selected wallet's name. Only shown when a wallet is selected.
 Renders a `<span>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<span>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### LogoutTrigger
+### LogoutTrigger
 
 A button to disconnect the current account. Only shown when an account is connected and a wallet is selected.
 Renders a `<button>` element with default text "Logout".
 
-##### Props:
+#### Props:
 
 Accepts `<button>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### NoWallets
+### NoWallets
 
 An empty state message shown when no wallet extensions are detected on desktop.
 Renders a `<p>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<p>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### NoMobileWallets
+### NoMobileWallets
 
 An empty state message shown when no wallet extensions are detected on mobile devices.
 Renders a `<p>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<p>` element props and:
 
 - `render` (`ReactElement | ((props: HTMLProps) => ReactElement)`): Allows you to replace the component's HTML element with a different tag, or compose it with another component.
 
-#### NoAccounts
+### NoAccounts
 
 An empty state message shown when the selected wallet has no accounts.
 Renders a `<p>` element.
 
-##### Props:
+#### Props:
 
 Accepts `<p>` element props and:
 
