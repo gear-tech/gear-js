@@ -51,6 +51,15 @@ impl<'a> Counter<'a> {
     }
 
     #[export]
+    pub fn increment_with_value(&mut self) -> u32 {
+        let value = Syscall::message_value();
+
+        let mut state = self.state.borrow_mut();
+        state.value = state.value + value as u32;
+        state.value
+    }
+
+    #[export]
     pub fn get_value(&self) -> u32 {
         self.state.borrow().value
     }

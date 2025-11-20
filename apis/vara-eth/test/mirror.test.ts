@@ -10,7 +10,7 @@ import {
   VaraEthApi,
   HttpVaraEthProvider,
 } from '../src';
-import { hasProps, waitNBlocks } from './common';
+import { hasProps, topupBalance, waitNBlocks } from './common';
 import { config } from './config';
 
 let api: VaraEthApi;
@@ -38,7 +38,10 @@ beforeAll(async () => {
   });
   ethereumClient = new EthereumClient<WebSocketTransport>(publicClient, walletClient);
   router = getRouterClient(config.routerId, ethereumClient);
-  wvara = getWrappedVaraClient(await router.wrappedVara(), ethereumClient);
+  const wvaraAddr = await router.wrappedVara();
+  wvara = getWrappedVaraClient(wvaraAddr, ethereumClient);
+
+  await topupBalance(wvaraAddr);
 
   api = new VaraEthApi(new HttpVaraEthProvider(), ethereumClient);
 });
@@ -208,6 +211,33 @@ describe('messages', () => {
     },
     config.longRunningTestTimeout,
   );
+
+  test(
+    'should send message with value',
+    async () => {
+      // IncrementWithValue
+      const _payload = '0x1c436f756e74657248496e6372656d656e745769746856616c7565';
+
+      const tx = await mirror.sendMessage(_payload, 100n);
+
+      await tx.send();
+
+      const message = await tx.getMessage();
+
+      hasProps(message, ['id', 'source', 'payload', 'value', 'callReply']);
+
+      const { waitForReply } = await tx.setupReplyListener();
+
+      const { payload, replyCode, value } = await waitForReply();
+
+      expect(payload).toEqual('0x1c436f756e74657248496e6372656d656e745769746856616c756565000000');
+      expect(replyCode).toBe('0x00010000');
+      expect(value).toBe(0n);
+
+      await waitNBlocks(1);
+    },
+    config.longRunningTestTimeout,
+  );
 });
 
 describe('program state', () => {
@@ -224,7 +254,7 @@ describe('program state', () => {
 
     const reply = await api.call.program.calculateReplyForHandle(ethereumClient.accountAddress, programId, payload);
 
-    expect(reply.payload).toBe('0x1c436f756e7465722047657456616c756501000000');
+    expect(reply.payload).toBe('0x1c436f756e7465722047657456616c756565000000');
   });
 
   test('should fail calculateReplyForHandle for incorrect program id', async () => {
