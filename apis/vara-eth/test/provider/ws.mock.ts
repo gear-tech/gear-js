@@ -157,6 +157,16 @@ export function createJsonRpcError(id: number, code: number, message: string) {
   };
 }
 
+export function createSubscriptionMessage(subscriptionId: number, result: any) {
+  return {
+    jsonrpc: '2.0',
+    params: {
+      subscription: subscriptionId,
+      result,
+    },
+  };
+}
+
 export async function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
