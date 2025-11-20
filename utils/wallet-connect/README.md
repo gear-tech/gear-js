@@ -65,6 +65,72 @@ To understand how to work with them, refer to the Base UI documentation:
 
 Under the hood, nearly all primitives use the [`useRender`](https://base-ui.com/react/utils/use-render) hook from Base UI, which provides a flexible rendering API that supports both element replacement and render prop patterns.
 
+## Wallet
+
+A wallet connection interface that displays account balance, connection triggers, and a modal dialog for wallet selection and account management.
+
+### Anatomy
+
+Import the component and assemble its parts:
+
+```jsx
+import { Wallet } from '@gear-js/wallet-connect';
+
+<Wallet.Root>
+  <Wallet.Balance>
+    <Wallet.BalanceIcon />
+    <Wallet.BalanceValue />
+    <Wallet.BalanceSymbol />
+  </Wallet.Balance>
+
+  <Wallet.TriggerConnect />
+
+  <Wallet.TriggerConnected>
+    <Wallet.ConnectedAccountIcon />
+    <Wallet.ConnectedAccountLabel />
+  </Wallet.TriggerConnected>
+
+  <Wallet.Dialog>
+    <Wallet.WalletList>
+      <Wallet.WalletItem>
+        <Wallet.WalletTrigger>
+          <Wallet.WalletIcon />
+          <Wallet.WalletName />
+          <Wallet.WalletStatus />
+          <Wallet.WalletAccountsLabel />
+        </Wallet.WalletTrigger>
+      </Wallet.WalletItem>
+    </Wallet.WalletList>
+
+    <Wallet.AccountsList>
+      <Wallet.AccountItem>
+        <Wallet.AccountTrigger>
+          <Wallet.AccountIcon />
+          <Wallet.AccountLabel />
+        </Wallet.AccountTrigger>
+
+        <Wallet.CopyAccountAddressTrigger />
+      </Wallet.AccountItem>
+    </Wallet.AccountsList>
+
+    <Wallet.NoWallets />
+    <Wallet.NoMobileWallets />
+    <Wallet.NoAccounts />
+
+    <Wallet.ChangeWalletTrigger>
+      <Wallet.ChangeWalletIcon />
+      <Wallet.ChangeWalletName />
+    </Wallet.ChangeWalletTrigger>
+
+    <Wallet.LogoutTrigger />
+  </Wallet.Dialog>
+</Wallet.Root>;
+```
+
+### Examples
+
+For a complete implementation example with styling and theme integration, see the [themed Wallet component](https://github.com/gear-tech/gear-js/blob/main/utils/wallet-connect/src/themed-components/wallet/wallet.tsx) in the repository.
+
 # Themed Components
 
 ## Getting Started
