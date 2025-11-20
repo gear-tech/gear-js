@@ -1,4 +1,10 @@
-import { IJsonRpcRequest, IJsonRpcResponse, IJsonRpcResponseError } from '../types/index.js';
+import {
+  IJsonRpcRequest,
+  IJsonRpcMessage,
+  IJsonRpcResponseError,
+  IJsonRpcSubscriptionMessage,
+  IJsonRpcResult,
+} from '../types/index.js';
 
 function generateId(): number {
   return Math.floor(Math.random() * 1_000_000);
@@ -8,8 +14,19 @@ export function createJsonRpcRequest(method: string, parameters: unknown[], id?:
   return { method, params: parameters.map(transformBigint), id: id ?? generateId(), jsonrpc: '2.0' };
 }
 
-export function isErrorResponse(response: IJsonRpcResponse): response is IJsonRpcResponseError {
+export function isErrorMessage(response: IJsonRpcMessage): response is IJsonRpcResponseError {
   return 'error' in response;
+}
+
+export function isResultMessage(response: IJsonRpcMessage): response is IJsonRpcResult {
+  return 'result' in response;
+}
+
+export function isSubscriptionMessage(response: IJsonRpcMessage): response is IJsonRpcSubscriptionMessage {
+  if ('params' in response && 'subscription' in response.params) {
+    return true;
+  }
+  return false;
 }
 
 export function getErrorMessage(response: IJsonRpcResponseError) {

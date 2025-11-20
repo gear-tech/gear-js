@@ -1,6 +1,6 @@
-import { IVaraEthProvider, IJsonRpcResponse } from '../types/index.js';
+import { IVaraEthProvider, IJsonRpcMessage } from '../types/index.js';
 import { snakeToCamel } from '../util/index.js';
-import { createJsonRpcRequest, getErrorMessage, isErrorResponse } from './jsonrpc.js';
+import { createJsonRpcRequest, getErrorMessage, isErrorMessage, isResultMessage } from './jsonrpc.js';
 
 type HttpUrl = `http://${string}` | `https://${string}`;
 
@@ -64,13 +64,16 @@ export class HttpVaraEthProvider implements IVaraEthProvider {
         throw new Error('Request failed. ' + response.statusText);
       }
 
-      const json: IJsonRpcResponse<Result> = await response.json();
+      const json: IJsonRpcMessage<Result> = await response.json();
 
-      if (isErrorResponse(json)) {
+      if (isErrorMessage(json)) {
         throw new Error(getErrorMessage(json));
+      } else if (isResultMessage(json)) {
+        return snakeToCamel(json.result);
+      } else {
+        console.error('Unexpected JSON-RPC message:', json);
+        throw new Error('Unexpected JSON-RPC message');
       }
-
-      return snakeToCamel(json.result);
     } catch (error) {
       if (timeoutId) {
         clearTimeout(timeoutId);

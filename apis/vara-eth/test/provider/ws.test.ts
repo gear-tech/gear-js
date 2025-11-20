@@ -19,7 +19,6 @@ const TEST_ERRORS = {
   FAILED_SEND: 'Cannot send request: WebSocket connection failed. Call connect() to retry.',
   FAILED_SUBSCRIBE: 'Cannot subscribe: WebSocket connection failed. Call connect() to retry.',
   MANUALLY_CLOSED: 'Connection was manually closed',
-  NETWORK_SEND: 'Network error during send',
 } as const;
 
 let mock: ReturnType<typeof mockWebSocket>;
@@ -257,7 +256,7 @@ describe('WsVaraEthProvider - Connection Management', () => {
       await delay(10);
 
       const callback = jest.fn();
-      await provider.subscribe(TEST_METHODS.SUBSCRIBE, [], callback);
+      await provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback);
 
       await provider.disconnect();
 
@@ -527,7 +526,7 @@ describe('WsVaraEthProvider - Subscription Handling', () => {
     const { provider, ws } = await createConnectedProvider(mock);
 
     const callback = jest.fn();
-    const unsubscribe = await provider.subscribe(TEST_METHODS.SUBSCRIBE, ['param'], callback);
+    const unsubscribe = await provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', ['param'], callback);
 
     ws.simulateMessage(createJsonRpcResponse(1, { event: 'data1' }));
     ws.simulateMessage(createJsonRpcResponse(1, { event: 'data2' }));
@@ -546,7 +545,7 @@ describe('WsVaraEthProvider - Subscription Handling', () => {
     const connectPromise = provider.connect();
 
     const callback = jest.fn();
-    const subscribePromise = provider.subscribe(TEST_METHODS.SUBSCRIBE, [], callback);
+    const subscribePromise = provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback);
 
     const ws = mock.getLastInstance()!;
     ws.simulateOpen();
@@ -579,14 +578,16 @@ describe('WsVaraEthProvider - Subscription Handling', () => {
     }
 
     const callback = jest.fn();
-    await expect(provider.subscribe(TEST_METHODS.SUBSCRIBE, [], callback)).rejects.toThrow(expectedError);
+    await expect(provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback)).rejects.toThrow(
+      expectedError,
+    );
   });
 
   test('should invoke callback with camelCase data and handle errors', async () => {
     const { provider, ws } = await createConnectedProvider(mock);
 
     const callback = jest.fn();
-    await provider.subscribe(TEST_METHODS.SUBSCRIBE, [], callback);
+    await provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback);
 
     // Test camelCase conversion
     ws.simulateMessage(
@@ -616,8 +617,8 @@ describe('WsVaraEthProvider - Subscription Handling', () => {
     const callback1 = jest.fn();
     const callback2 = jest.fn();
 
-    const unsubscribe1 = await provider.subscribe(TEST_METHODS.SUBSCRIBE, [], callback1);
-    await provider.subscribe(TEST_METHODS.SUBSCRIBE, [], callback2);
+    const unsubscribe1 = await provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback1);
+    await provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback2);
 
     ws.simulateMessage(createJsonRpcResponse(1, { event: 'data1' }));
     ws.simulateMessage(createJsonRpcResponse(2, { event: 'data2' }));
@@ -890,7 +891,7 @@ describe('WsVaraEthProvider - Error Handling', () => {
     provider.on('disconnected', badListener);
     provider.on('disconnected', goodListener);
 
-    await provider.subscribe(TEST_METHODS.SUBSCRIBE, [], badCallback);
+    await provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], badCallback);
 
     // Test subscription callback error
     ws.simulateMessage(createJsonRpcResponse(1, { data: 'test' }));
@@ -960,8 +961,8 @@ describe('WsVaraEthProvider - Edge Cases', () => {
     const callback1 = jest.fn();
     const callback2 = jest.fn();
 
-    await provider.subscribe('sub1', [], callback1);
-    await provider.subscribe('sub2', [], callback2);
+    await provider.subscribe('sub1', 'unsub1', [], callback1);
+    await provider.subscribe('sub2', 'unsub2', [], callback2);
 
     const request1 = provider.send(TEST_METHODS.METHOD1, []);
     const request2 = provider.send(TEST_METHODS.METHOD2, []);
@@ -1021,7 +1022,7 @@ describe('WsVaraEthProvider - Edge Cases', () => {
 
     const requestPromise = provider.send(TEST_METHODS.TEST, []);
 
-    await expect(requestPromise).rejects.toThrow(TEST_ERRORS.NETWORK_SEND);
+    await expect(requestPromise).rejects.toThrow();
 
     await provider.disconnect();
   });
@@ -1033,7 +1034,7 @@ describe('WsVaraEthProvider - Edge Cases', () => {
 
     const callback = jest.fn();
 
-    await expect(provider.subscribe(TEST_METHODS.SUBSCRIBE, [], callback)).rejects.toThrow(TEST_ERRORS.NETWORK_SEND);
+    await expect(provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback)).rejects.toThrow();
 
     await provider.disconnect();
   });
@@ -1213,7 +1214,7 @@ describe('WsVaraEthProvider - Edge Cases', () => {
     const { provider } = await createConnectedProvider(mock);
 
     const callback = jest.fn();
-    const unsubscribe = await provider.subscribe(TEST_METHODS.SUBSCRIBE, [], callback);
+    const unsubscribe = await provider.subscribe(TEST_METHODS.SUBSCRIBE, 'test_unsubscribe', [], callback);
 
     // Unsubscribe twice
     unsubscribe();

@@ -1,6 +1,6 @@
 import { snakeToCamel } from '../util/index.js';
-import { IVaraEthProvider, IJsonRpcRequest, IJsonRpcResponse, ISubscriptionCallback } from '../types/index.js';
-import { createJsonRpcRequest, getErrorMessage, isErrorResponse } from './jsonrpc.js';
+import { IVaraEthProvider, IJsonRpcRequest, ISubscriptionCallback, IJsonRpcMessage } from '../types/index.js';
+import { createJsonRpcRequest, getErrorMessage, isErrorMessage, isSubscriptionMessage } from './jsonrpc.js';
 
 type WsUrl = `ws://${string}` | `wss://${string}`;
 type ConnectionState = 'disconnected' | 'connecting' | 'connected' | 'failed';
@@ -41,6 +41,11 @@ interface ConnectionOptions {
   requestTimeout?: number;
 }
 
+interface ISubscriptionParameters<Error = unknown, Result = unknown> {
+  isInitialized: boolean;
+  callback: ISubscriptionCallback<Error, Result>;
+}
+
 export { type ConnectionEventListener, type ConnectionEventType };
 
 export class WsVaraEthProvider implements IVaraEthProvider {
@@ -55,7 +60,8 @@ export class WsVaraEthProvider implements IVaraEthProvider {
       timeoutId?: ReturnType<typeof setTimeout>;
     }
   > = new Map();
-  private _subscriptions: Map<number, ISubscriptionCallback> = new Map();
+  private _subscriptions: Map<number, ISubscriptionParameters<any, any>> = new Map();
+  private _subscriptionIds: Map<number, number> = new Map();
   private _requestQueue: QueuedRequest[] = [];
   private _connectionPromise?: Promise<void>;
   private _options: Required<ConnectionOptions>;
@@ -154,8 +160,8 @@ export class WsVaraEthProvider implements IVaraEthProvider {
     }
     this._requestQueue.length = 0;
 
-    for (const callback of this._subscriptions.values()) {
-      callback(error, null);
+    for (const subscription of this._subscriptions.values()) {
+      subscription.callback(error, null);
     }
   }
 
@@ -180,38 +186,58 @@ export class WsVaraEthProvider implements IVaraEthProvider {
 
   private _onMessage = (event: MessageEvent) => {
     try {
-      const response: IJsonRpcResponse = JSON.parse(event.data);
+      const msg: IJsonRpcMessage = JSON.parse(event.data);
 
-      if (isErrorResponse(response)) {
-        const errorMessage = getErrorMessage(response);
+      if (isErrorMessage(msg)) {
+        const errorMessage = getErrorMessage(msg);
         const error = new Error(errorMessage);
 
-        const pending = this._pendingRequests.get(response.id);
+        const pending = this._pendingRequests.get(msg.id);
         if (pending) {
           if (pending.timeoutId) {
             clearTimeout(pending.timeoutId);
           }
-          this._pendingRequests.delete(response.id);
+          this._pendingRequests.delete(msg.id);
           pending.reject(error);
         }
 
-        const subscription = this._subscriptions.get(response.id);
+        const subscription = this._subscriptions.get(msg.id);
         if (subscription) {
-          subscription(error, null);
+          subscription.callback(error, null);
+        }
+      } else if (isSubscriptionMessage(msg)) {
+        const id = msg.params.subscription;
+        const subscription = this._subscriptions.get(id);
+
+        if (subscription) {
+          if (!subscription.isInitialized) {
+            // TODO: figure out if this possible
+            console.error('Got subscription message before initialization');
+          } else {
+            subscription.callback(null, snakeToCamel(msg.params.result));
+          }
         }
       } else {
-        const pending = this._pendingRequests.get(response.id);
+        const pending = this._pendingRequests.get(msg.id);
         if (pending) {
           if (pending.timeoutId) {
             clearTimeout(pending.timeoutId);
           }
-          this._pendingRequests.delete(response.id);
-          pending.resolve(snakeToCamel(response.result));
+          this._pendingRequests.delete(msg.id);
+          pending.resolve(snakeToCamel(msg.result));
         }
 
-        const subscription = this._subscriptions.get(response.id);
+        const subscription = this._subscriptions.get(msg.id);
         if (subscription) {
-          subscription(null, snakeToCamel(response.result));
+          const id = msg.result as number;
+          const callback = subscription.callback;
+
+          this._subscriptions.set(id, {
+            isInitialized: true,
+            callback,
+          });
+          this._subscriptionIds.set(msg.id, id);
+          this._subscriptions.delete(msg.id);
         }
       }
     } catch (error) {
@@ -249,7 +275,6 @@ export class WsVaraEthProvider implements IVaraEthProvider {
 
   public off(event: ConnectionEventType, listener?: ConnectionEventListener): void {
     if (!listener) {
-      // Remove all listeners for this event
       this._eventListeners.delete(event);
       return;
     }
@@ -380,13 +405,20 @@ export class WsVaraEthProvider implements IVaraEthProvider {
     });
   }
 
-  public async subscribe(method: string, parameters: unknown[], callback: ISubscriptionCallback): Promise<() => void> {
+  public async subscribe<Error = unknown, Result = unknown>(
+    method: string,
+    unsubscribeMethod: string,
+    parameters: unknown[],
+    callback: ISubscriptionCallback<Error, Result>,
+  ): Promise<() => void> {
     const request = this._createRequest(method, parameters);
 
-    // TODO: check if subscription's id is sent in the first message
-    // TODO: if so than change the unsubscribe method to send that id to unsubscribe
     const executeSubscription = () => {
-      this._subscriptions.set(request.id, callback);
+      const subscription: ISubscriptionParameters<Error, Result> = {
+        isInitialized: false,
+        callback,
+      };
+      this._subscriptions.set(request.id, subscription);
       try {
         this._conn!.send(JSON.stringify(request));
       } catch (error) {
@@ -414,10 +446,22 @@ export class WsVaraEthProvider implements IVaraEthProvider {
       });
     }
 
-    return () => this.unsubscribe(request.id);
+    return () => this.unsubscribe(request.id, unsubscribeMethod);
   }
 
-  private unsubscribe(id: number): void {
-    this._subscriptions.delete(id);
+  private unsubscribe(requestId: number, unsubscribeMethod: string): void {
+    const subscriptionId = this._subscriptionIds.get(requestId);
+
+    if (!subscriptionId) {
+      return;
+    }
+
+    // TODO: how to unsubscribe properly?
+    const request = this._createRequest(unsubscribeMethod, [{ id: subscriptionId }]);
+
+    this._conn!.send(JSON.stringify(request));
+
+    this._subscriptions.delete(subscriptionId);
+    this._subscriptionIds.delete(requestId);
   }
 }
