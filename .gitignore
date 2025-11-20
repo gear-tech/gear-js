@@ -22,12 +22,12 @@ temp/
 
 idea/gear/squid/lib/
 idea/gear/indexer-db/lib/
-idea/gearexe/indexer/lib/
+idea/vara-eth/indexer/lib/
 .spec.json
 
 # apis
 apis/gear/lib/
-apis/gearexe/lib/
+apis/vara-eth/lib/
 utils/util/lib/
 
 # cargo
@@ -43,8 +43,8 @@ artifacts/
 
 
 # Compiler files
-apis/gearexe/cache/
-apis/gearexe/out/
+apis/vara-eth/cache/
+apis/vara-eth/out/
 
 # Ignores development broadcast logs
-apis/gearexe/broadcast
+apis/vara-eth/broadcast
