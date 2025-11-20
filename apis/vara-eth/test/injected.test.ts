@@ -9,7 +9,7 @@ import {
   getMirrorClient,
   getRouterClient,
   getWrappedVaraClient,
-  HttpVaraEthProvider,
+  WsVaraEthProvider,
 } from '../src';
 import { InjectedTransaction } from '../src/types';
 import { hasProps, waitNBlocks } from './common';
@@ -53,7 +53,7 @@ beforeAll(async () => {
 
   ethereumClient.setWalletClient(walletClient);
 
-  api = new VaraEthApi(new HttpVaraEthProvider(), ethereumClient, config.routerId);
+  api = new VaraEthApi(new WsVaraEthProvider(), ethereumClient, config.routerId);
 });
 
 afterAll(async () => {
@@ -199,7 +199,7 @@ describe('Injected Transactions', () => {
 
         const { waitForReply } = await tx.setupReplyListener();
 
-        await waitForReply;
+        await waitForReply();
       },
       config.longRunningTestTimeout,
     );
@@ -228,7 +228,7 @@ describe('Injected Transactions', () => {
         destination: programId,
         payload,
       });
-      const tx = await api.sendInjectedTransaction(injected);
+      const tx = await api.createInjectedTransaction(injected);
 
       const result = await tx.send();
 
@@ -249,5 +249,23 @@ describe('Injected Transactions', () => {
     });
 
     test.todo('should receive reply');
+
+    test('should send a message and wait for the promise', async () => {
+      const payload = '0x1c436f756e74657224496e6372656d656e74';
+
+      const injected = new InjectedTransaction({
+        destination: programId,
+        payload,
+      });
+      const tx = await api.createInjectedTransaction(injected);
+
+      const result = await tx.sendAndWaitForPromise();
+
+      expect(result).toHaveProperty('txHash');
+      expect(result).toHaveProperty(['reply', 'code', 'Success'], 'Manual');
+      expect(result).toHaveProperty(['reply', 'payload'], '0x1c436f756e74657224496e6372656d656e7402000000');
+      expect(result).toHaveProperty(['reply', 'value'], 0);
+      expect(result).toHaveProperty('signature');
+    });
   });
 });

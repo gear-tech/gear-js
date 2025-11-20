@@ -51,7 +51,7 @@ export class VaraEthApi {
     return this._provider;
   }
 
-  async sendInjectedTransaction(tx: InjectedTransaction) {
+  async createInjectedTransaction(tx: InjectedTransaction) {
     if (!this._ethClient) {
       throw new Error('Eth client is not set');
     }
