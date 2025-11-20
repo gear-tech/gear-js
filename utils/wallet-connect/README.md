@@ -18,6 +18,53 @@
 </p>
 <hr>
 
+# Table of Contents
+
+- [Description](#description)
+- [Installation](#installation)
+  - [Configure API](#configure-api)
+- [Components](#components)
+  - [Getting Started](#getting-started)
+  - [Wallet](#wallet)
+    - [Anatomy](#anatomy)
+    - [Usage Example](#usage-example)
+    - [API Reference](#api-reference)
+      - [Root](#root)
+      - [Balance](#balance)
+      - [BalanceIcon](#balanceicon)
+      - [BalanceValue](#balancevalue)
+      - [BalanceSymbol](#balancesymbol)
+      - [TriggerConnect](#triggerconnect)
+      - [TriggerConnected](#triggerconnected)
+      - [ConnectedAccountIcon](#connectedaccounticon)
+      - [ConnectedAccountLabel](#connectedaccountlabel)
+      - [Dialog](#dialog)
+      - [WalletList](#walletlist)
+      - [WalletItem](#walletitem)
+      - [WalletTrigger](#wallettrigger)
+      - [WalletIcon](#walleticon)
+      - [WalletName](#walletname)
+      - [WalletStatus](#walletstatus)
+      - [WalletAccountsLabel](#walletaccountslabel)
+      - [AccountsList](#accountslist)
+      - [AccountItem](#accountitem)
+      - [AccountTrigger](#accounttrigger)
+      - [AccountIcon](#accounticon)
+      - [AccountLabel](#accountlabel)
+      - [CopyAccountAddressTrigger](#copyaccountaddresstrigger)
+      - [ChangeWalletTrigger](#changewallettrigger)
+      - [ChangeWalletIcon](#changewalleticon)
+      - [ChangeWalletName](#changewalletname)
+      - [LogoutTrigger](#logouttrigger)
+      - [NoWallets](#nowallets)
+      - [NoMobileWallets](#nomobilewallets)
+      - [NoAccounts](#noaccounts)
+- [Themed Components](#themed-components)
+  - [Getting Started](#getting-started-1)
+  - [API Reference](#api-reference-1)
+    - [Wallet](#wallet-1)
+    - [WalletModal](#walletmodal)
+
 # Description
 
 A React library to connect supported Substrate-based wallets in a standardized and consistent way across decentralized applications. It is built on a headless component architecture that separates logic from presentation, giving you full control over styling and structure.
