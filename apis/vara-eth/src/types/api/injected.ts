@@ -140,7 +140,7 @@ export interface IInjectedTransactionPromise {
     readonly value: number;
     // TODO: define an interface for this field
     // TODO: consider moving it to a `common` package to reuse in both @gear-js/api and @vara-eth/api
-    readonly code: object;
+    readonly code: { Success: string } | { Error: string };
   };
   readonly signature: HexString;
 }

@@ -420,6 +420,7 @@ export class WsVaraEthProvider implements IVaraEthProvider {
       };
       this._subscriptions.set(request.id, subscription);
       try {
+        // TODO: check for connection before sending request
         this._conn!.send(JSON.stringify(request));
       } catch (error) {
         this._subscriptions.delete(request.id);

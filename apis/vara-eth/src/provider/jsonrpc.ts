@@ -23,7 +23,12 @@ export function isResultMessage(response: IJsonRpcMessage): response is IJsonRpc
 }
 
 export function isSubscriptionMessage(response: IJsonRpcMessage): response is IJsonRpcSubscriptionMessage {
-  if ('params' in response && 'subscription' in response.params) {
+  if (
+    'params' in response &&
+    typeof response.params === 'object' &&
+    response.params !== null &&
+    'subscription' in response.params
+  ) {
     return true;
   }
   return false;
