@@ -12,7 +12,7 @@ import {
   WsVaraEthProvider,
 } from '../src';
 import { InjectedTransaction } from '../src/types';
-import { hasProps, waitNBlocks } from './common';
+import { hasProps, waitNBlocks, topupBalance } from './common';
 import { config } from './config';
 
 let api: VaraEthApi;
@@ -32,26 +32,18 @@ beforeAll(async () => {
   publicClient = createPublicClient<WebSocketTransport, Chain, undefined>({
     transport,
   }) as PublicClient<WebSocketTransport, Chain, undefined>;
-  const prefundedAccount = privateKeyToAccount(config.wvaraPrefundedPrivateKey);
   const account = privateKeyToAccount(config.privateKey);
 
   walletClient = createWalletClient<WebSocketTransport>({
-    account: prefundedAccount,
+    account,
     transport,
   });
   ethereumClient = new EthereumClient<WebSocketTransport>(publicClient, walletClient);
   router = getRouterClient(config.routerId, ethereumClient);
-  wvara = getWrappedVaraClient(await router.wrappedVara(), ethereumClient);
+  const wvaraAddr = await router.wrappedVara();
+  wvara = getWrappedVaraClient(wvaraAddr, ethereumClient);
 
-  const transferTx = await wvara.transfer(config.accountAddress, BigInt(50 * 1e12));
-  await transferTx.sendAndWaitForReceipt();
-
-  walletClient = createWalletClient({
-    account,
-    transport,
-  });
-
-  ethereumClient.setWalletClient(walletClient);
+  await topupBalance(wvaraAddr);
 
   api = new VaraEthApi(new WsVaraEthProvider(), ethereumClient, config.routerId);
 });

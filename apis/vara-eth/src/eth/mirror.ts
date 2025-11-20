@@ -1,4 +1,4 @@
-import type { Address, Hex } from 'viem';
+import type { Address, Hex, TransactionRequest } from 'viem';
 import { encodeFunctionData } from 'viem';
 
 import {
@@ -59,7 +59,7 @@ export class MirrorContract implements IMirrorContract {
    * @param value - The value to send with the message (in wei)
    * @returns A transaction manager with message-specific helper functions
    */
-  async sendMessage(payload: string): Promise<TxManagerWithHelpers<MessageHelpers>> {
+  async sendMessage(payload: string, value?: bigint): Promise<TxManagerWithHelpers<MessageHelpers>> {
     // Set `callReply` to false since it's only used for calling sendMessage from contracts
     await this.ethereumClient.simulateContract({
       address: this.address,
@@ -69,13 +69,14 @@ export class MirrorContract implements IMirrorContract {
       account: this.ethereumClient.account,
     });
 
-    const tx = {
+    const tx: TransactionRequest = {
       to: this.address,
       data: encodeFunctionData({
         abi: IMIRROR_ABI,
         functionName: 'sendMessage',
         args: [payload as Hex, false],
       }),
+      value,
     };
 
     const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IMIRROR_ABI, {
@@ -106,26 +107,29 @@ export class MirrorContract implements IMirrorContract {
   /**
    * Sends a reply to a previously received message.
    *
+   * @param repliedTo - The ID of the message being replied to
    * @param payload - The reply payload
    * @param value - The value to send with the reply (in wei)
    * @returns A transaction manager with reply-specific helper functions
    */
-  async sendReply(repliedTo: string, payload: string): Promise<TxManagerWithHelpers<ReplyHelpers>> {
+  async sendReply(repliedTo: string, payload: string, value?: bigint): Promise<TxManagerWithHelpers<ReplyHelpers>> {
     await this.ethereumClient.simulateContract({
       address: this.address,
       abi: IMIRROR_ABI,
       functionName: 'sendReply',
       args: [repliedTo as Hex, payload as Hex],
       account: this.ethereumClient.account,
+      value,
     });
 
-    const tx = {
+    const tx: TransactionRequest = {
       to: this.address,
       data: encodeFunctionData({
         abi: IMIRROR_ABI,
         functionName: 'sendReply',
         args: [repliedTo as Hex, payload as Hex],
       }),
+      value,
     };
 
     const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IMIRROR_ABI, {
