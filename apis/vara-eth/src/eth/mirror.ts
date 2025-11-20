@@ -119,6 +119,7 @@ export class MirrorContract implements IMirrorContract {
       functionName: 'sendReply',
       args: [repliedTo as Hex, payload as Hex],
       account: this.ethereumClient.account,
+      value,
     });
 
     const tx: TransactionRequest = {
