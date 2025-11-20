@@ -1,0 +1,32 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.wallet {
+  display: flex;
+  align-items: center;
+
+  &Icon {
+    margin-right: 8px;
+    background-color: #fff;
+    border-radius: 50%;
+    border: 1px solid #ebeeee;
+  }
+}
+
+.editIcon {
+  &.gear {
+    margin-left: 10px;
+
+    path {
+      fill: #fff;
+    }
+  }
+}
+
+.logoutButton {
+  &.gear svg path {
+    fill: #fff;
+  }
+}
