@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { Wallet as ThemedWallet, WalletModal } from '../themed-components';
+import { Wallet as ThemedWallet } from '../themed-components';
 
 import { HeadlessWallet } from './headless-wallet';
 
@@ -19,8 +19,6 @@ function App() {
 
   return (
     <main>
-      <WalletModal theme="vara" />
-
       <div>
         <h1>Vara</h1>
         <ThemedWallet />
