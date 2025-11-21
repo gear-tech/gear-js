@@ -23,46 +23,14 @@
 - [Description](#description)
 - [Installation](#installation)
   - [Configure API](#configure-api)
-- [Components](#components)
+- [Headless Components](#headless-components)
   - [Getting Started](#getting-started)
   - [Anatomy](#anatomy)
   - [Usage Example](#usage-example)
   - [API Reference](#api-reference)
-    - [Root](#root)
-    - [Balance](#balance)
-    - [BalanceIcon](#balanceicon)
-    - [BalanceValue](#balancevalue)
-    - [BalanceSymbol](#balancesymbol)
-    - [TriggerConnect](#triggerconnect)
-    - [TriggerConnected](#triggerconnected)
-    - [ConnectedAccountIcon](#connectedaccounticon)
-    - [ConnectedAccountLabel](#connectedaccountlabel)
-    - [Dialog](#dialog)
-    - [WalletList](#walletlist)
-    - [WalletItem](#walletitem)
-    - [WalletTrigger](#wallettrigger)
-    - [WalletIcon](#walleticon)
-    - [WalletName](#walletname)
-    - [WalletStatus](#walletstatus)
-    - [WalletAccountsLabel](#walletaccountslabel)
-    - [AccountsList](#accountslist)
-    - [AccountItem](#accountitem)
-    - [AccountTrigger](#accounttrigger)
-    - [AccountIcon](#accounticon)
-    - [AccountLabel](#accountlabel)
-    - [CopyAccountAddressTrigger](#copyaccountaddresstrigger)
-    - [ChangeWalletTrigger](#changewallettrigger)
-    - [ChangeWalletIcon](#changewalleticon)
-    - [ChangeWalletName](#changewalletname)
-    - [LogoutTrigger](#logouttrigger)
-    - [NoWallets](#nowallets)
-    - [NoMobileWallets](#nomobilewallets)
-    - [NoAccounts](#noaccounts)
 - [Themed Components](#themed-components)
   - [Getting Started](#getting-started-1)
   - [API Reference](#api-reference-1)
-    - [Wallet](#wallet-1)
-    - [WalletModal](#walletmodal)
 
 # Description
 
@@ -96,7 +64,7 @@ pnpm add @gear-js/wallet-connect @gear-js/react-hooks
 
 Before using `@gear-js/wallet-connect`, make sure to configure [`@gear-js/react-hooks`](https://github.com/gear-tech/gear-js/tree/main/utils/gear-hooks#readme) in your project according to its documentation. This setup is required for API connection and account management.
 
-# Components
+# Headless Components
 
 A wallet connection interface that displays account balance, connection triggers, and a modal dialog for wallet selection and account management. It's accessible via `Wallet` namespace.
 
