@@ -1,46 +1,58 @@
-import { LogEvent, FunctionCall } from './abi.support';
-import * as ethers from 'ethers';
-import * as fs from 'fs';
-import { config } from '../config';
-import path from 'path';
+import { encodeEventTopics, decodeEventLog, decodeFunctionData, toFunctionSelector, getAbiItem } from 'viem/utils';
+import type {
+  ContractEventName,
+  Hex,
+  DecodeEventLogReturnType,
+  ContractFunctionName,
+  DecodeFunctionDataReturnType,
+} from 'viem';
+import { IROUTER_ABI } from '@vara-eth/api/abi';
 
-const ABI_JSON = JSON.parse(fs.readFileSync(path.join(config.apiPath, 'IRouter.json'), 'utf-8'));
+import { Log, Transaction } from '../processor';
 
-export const abi = new ethers.Interface(ABI_JSON.abi);
+function getRouterEventTopic(name: ContractEventName<typeof IROUTER_ABI>) {
+  return encodeEventTopics({ abi: IROUTER_ABI, eventName: name })[0];
+}
 
-export const events = {
-  BatchCommitted: new LogEvent<[hash: string] & { hash: string }>(abi, abi.getEvent('BatchCommitted')!.topicHash),
-  HeadCommitted: new LogEvent<[head: string] & { head: string }>(abi, abi.getEvent('HeadCommitted')!.topicHash),
-  CodeGotValidated: new LogEvent<[codeId: string, valid: boolean] & { codeId: string; valid: boolean }>(
-    abi,
-    abi.getEvent('CodeGotValidated')!.topicHash,
-  ),
-  CodeValidationRequested: new LogEvent<[codeId: string] & { codeId: string }>(
-    abi,
-    abi.getEvent('CodeValidationRequested')!.topicHash,
-  ),
-  NextEraValidatorsCommitted: new LogEvent<[startTimestamp: string] & { startTimestamp: string }>(
-    abi,
-    abi.getEvent('NextEraValidatorsCommitted')!.topicHash,
-  ),
-  ComputationSettingsChanged: new LogEvent<
-    [threshold: string, wvaraPerSecond: string] & { threshold: string; wvaraPerSecond: string }
-  >(abi, abi.getEvent('ComputationSettingsChanged')!.topicHash),
-  ProgramCreated: new LogEvent<[actorId: string, codeId: string] & { actorId: string; codeId: string }>(
-    abi,
-    abi.getEvent('ProgramCreated')!.topicHash,
-  ),
-  StorageSlotChanged: new LogEvent<[] & {}>(abi, abi.getEvent('StorageSlotChanged')!.topicHash),
-};
+function getEventDecoder<TEventName extends ContractEventName<typeof IROUTER_ABI>>(eventName: TEventName) {
+  return function (log: Log): DecodeEventLogReturnType<typeof IROUTER_ABI, TEventName> {
+    return decodeEventLog({
+      abi: IROUTER_ABI,
+      data: log.data as Hex,
+      eventName,
+      topics: log.topics as [Hex, ...Hex[]],
+    });
+  };
+}
 
-export const functions = {
-  createProgramWithAbiInterface: new FunctionCall<
-    [codeId: string, salt: string, overrideInitializer: string, abiInterface: string] & {
-      codeId: string;
-      salt: string;
-      overrideInitializer: string;
-      abiInterface: string;
-    }
-  >(abi, abi.getFunction('createProgramWithAbiInterface')!.selector),
-  setMirror: new FunctionCall<[newMirror: string] & { newMirror: string }>(abi, abi.getFunction('setMirror')!.selector),
-};
+function getFnDecoder<const TFnName extends ContractFunctionName<typeof IROUTER_ABI>>(_fnName: TFnName) {
+  return function (transaction: Transaction): DecodeFunctionDataReturnType<typeof IROUTER_ABI, TFnName> {
+    return decodeFunctionData({
+      abi: IROUTER_ABI,
+      data: transaction.input as Hex,
+    }) as DecodeFunctionDataReturnType<typeof IROUTER_ABI, TFnName>;
+  };
+}
+
+export const RouterAbi = {
+  events: {
+    CodeValidationRequested: {
+      topic: getRouterEventTopic('CodeValidationRequested'),
+      decode: getEventDecoder('CodeValidationRequested'),
+    },
+    CodeGotValidated: {
+      topic: getRouterEventTopic('CodeGotValidated'),
+      decode: getEventDecoder('CodeGotValidated'),
+    },
+    ProgramCreated: {
+      topic: getRouterEventTopic('ProgramCreated'),
+      decode: getEventDecoder('ProgramCreated'),
+    },
+  },
+  functions: {
+    createProgramWithAbiInterface: {
+      selector: toFunctionSelector(getAbiItem({ abi: IROUTER_ABI, name: 'createProgramWithAbiInterface' })),
+      decode: getFnDecoder('createProgramWithAbiInterface'),
+    },
+  },
+} as const;

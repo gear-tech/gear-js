@@ -2460,7 +2460,6 @@ __metadata:
     node-fetch: "npm:3.3.2"
     ts-jest: "npm:29.4.5"
     ts-node: "npm:10.9.2"
-    typescript: "npm:5.9.3"
   languageName: unknown
   linkType: soft
 
@@ -16656,7 +16655,7 @@ __metadata:
     ts-jest: "npm:^29.4.1"
     ts-node: "npm:^10.9.2"
     ts-node-dev: "npm:^2.0.0"
-    typescript: "npm:^5.9.2"
+    typescript: "npm:^5.9.3"
     typescript-eslint: "npm:^8.39.0"
     vite: "npm:^7.1.4"
   languageName: unknown
@@ -26093,7 +26092,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.9.3, typescript@npm:>=3 < 6, typescript@npm:^5.9.2":
+"typescript@npm:>=3 < 6, typescript@npm:^5.9.3":
   version: 5.9.3
   resolution: "typescript@npm:5.9.3"
   bin:
@@ -26113,7 +26112,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A>=3 < 6#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.9.2#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A>=3 < 6#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.9.3#optional!builtin<compat/typescript>":
   version: 5.9.3
   resolution: "typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"
   bin:
@@ -26695,13 +26694,16 @@ __metadata:
   resolution: "varaeth-idea-indexer@workspace:idea/vara-eth/indexer"
   dependencies:
     "@subsquid/evm-processor": "npm:^1.27.3"
+    "@subsquid/logger": "npm:^1.4.0"
     "@subsquid/typeorm-store": "npm:^1.5.1"
+    "@vara-eth/api": "workspace:*"
     dotenv: "npm:^17.2.1"
     express: "npm:^5.1.0"
     pg: "npm:8.12.0"
     postgraphile: "npm:^4.14.1"
     reflect-metadata: "npm:^0.2.2"
     typeorm: "npm:^0.3.20"
+    viem: "npm:^2.40.0"
   languageName: unknown
   linkType: soft
 
@@ -26793,6 +26795,27 @@ __metadata:
     typescript:
       optional: true
   checksum: 10c0/4fe197e74ff14553998c8f833711a10ec5df218f6d78ed2cf8849cfd6a1ac5a54d43dc89d3d4f13f84394d1c14f22c8c3f3e04e668c015e62962359ad54f7028
+  languageName: node
+  linkType: hard
+
+"viem@npm:^2.40.0":
+  version: 2.40.0
+  resolution: "viem@npm:2.40.0"
+  dependencies:
+    "@noble/curves": "npm:1.9.1"
+    "@noble/hashes": "npm:1.8.0"
+    "@scure/bip32": "npm:1.7.0"
+    "@scure/bip39": "npm:1.6.0"
+    abitype: "npm:1.1.0"
+    isows: "npm:1.0.7"
+    ox: "npm:0.9.6"
+    ws: "npm:8.18.3"
+  peerDependencies:
+    typescript: ">=5.0.4"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 10c0/0318bec903c4e0904429aa214bba3049a2b33da38e55c2f744de9ed4f1e12768a8000c9e8af68ec53325837403fb546778b8d01bb04ef4727fc25d2c12d9e309
   languageName: node
   linkType: hard
 

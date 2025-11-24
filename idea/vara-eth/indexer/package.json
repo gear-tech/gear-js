@@ -6,20 +6,23 @@
     "node": ">=20"
   },
   "scripts": {
-    "build": "rm -rf lib && tsc",
+    "build": "rm -rf lib && npx tsc",
     "start": "node lib/main.js",
     "migration:generate": "yarn build && npx typeorm migration:generate -d lib/model/dataSource.js -o db/migrations/$NAME",
-    "migration:run": "typeorm migration:run -d lib/model/dataSource.js",
+    "migration:run": "npx typeorm migration:run -d lib/model/dataSource.js",
     "serve": "node lib/api.js"
   },
   "dependencies": {
     "@subsquid/evm-processor": "^1.27.3",
+    "@subsquid/logger": "^1.4.0",
     "@subsquid/typeorm-store": "^1.5.1",
+    "@vara-eth/api": "workspace:*",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "pg": "8.12.0",
     "postgraphile": "^4.14.1",
     "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.20"
+    "typeorm": "^0.3.20",
+    "viem": "^2.40.0"
   }
 }

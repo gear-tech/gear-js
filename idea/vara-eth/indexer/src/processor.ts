@@ -43,5 +43,5 @@ export const processor = new EvmBatchProcessor()
 export type Fields = EvmBatchProcessorFields<typeof processor>;
 export type Context = DataHandlerContext<Store, Fields>;
 export type Block = BlockHeader<Fields>;
-export type Log = _Log<Fields & { transaction: { input: string } }>;
+export type Log = _Log<Fields> & { transaction: { input: string } };
 export type Transaction = _Transaction<Fields>;
