@@ -19,7 +19,7 @@
     "@vara-eth/api": "workspace:*",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
-    "pg": "8.12.0",
+    "pg": "8.16.3",
     "postgraphile": "^4.14.1",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.20",
