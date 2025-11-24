@@ -117,8 +117,10 @@ export class RouterHandler extends BaseHandler {
     });
 
     if (log.transaction.input.startsWith(RouterAbi.functions.createProgramWithAbiInterface.selector)) {
-      const { args } = RouterAbi.functions.createProgramWithAbiInterface.decode(log.transaction);
-      program.abiInterfaceAddress = args[3];
+      const {
+        args: [_codeId, _salt, _overrideInitializer, abiInterface],
+      } = RouterAbi.functions.createProgramWithAbiInterface.decode(log.transaction);
+      program.abiInterfaceAddress = abiInterface;
     }
 
     this._programs.set(program.id, program);
