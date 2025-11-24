@@ -1,6 +1,5 @@
 {
   "name": "@vara-eth/api",
-  "private": true,
   "version": "0.0.1",
   "description": "Typescript library for interacting with Vara.Eth network",
   "type": "module",
@@ -20,6 +19,11 @@
       "import": "./lib/index.js",
       "require": "./lib/cjs/index.js",
       "types": "./lib/index.d.ts"
+    },
+    "./abi": {
+      "import": "./lib/eth/abi/index.js",
+      "require": "./lib/eth/abi/index.cjs",
+      "types": "./lib/eth/abi/index.d.ts"
     }
   },
   "peerDependencies": {
@@ -33,7 +37,7 @@
     "ws": "^8.18.3"
   },
   "files": [
-    "README.md"
+    "lib"
   ],
   "dependencies": {
     "@ethereumjs/util": "^10.1.0",
