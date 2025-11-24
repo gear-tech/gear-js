@@ -4,7 +4,7 @@ WORKDIR /src
 
 COPY . .
 
-RUN yarn workspaces focus @vara-eth/api varaeth-indexer gear-js
+RUN yarn workspaces focus @vara-eth/api varaeth-idea-indexer gear-js
 RUN yarn build:vara-eth-api
 RUN yarn build:varaeth-idea-indexer
 
