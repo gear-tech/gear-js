@@ -20,7 +20,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: 'Install Node.js 20.x'
         uses: actions/setup-node@v6
@@ -43,7 +43,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: 'Install Node.js 20.x'
         uses: actions/setup-node@v6
@@ -66,7 +66,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: 'Install: NodeJS 20.x'
         uses: actions/setup-node@v6
@@ -121,7 +121,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: 'Check if vara-eth files changed'
         id: changed-vara-eth
@@ -172,7 +172,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: 'Install: NodeJS 20.x'
         uses: actions/setup-node@v6
@@ -193,7 +193,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install NodeJS 20.x
         uses: actions/setup-node@v6
@@ -219,7 +219,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install NodeJS 20.x
         uses: actions/setup-node@v6
@@ -242,7 +242,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
 
       - name: 'Checkout'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: 'Install: NodeJS 20.x'
         uses: actions/setup-node@v6
@@ -261,7 +261,7 @@ jobs:
       RUSTUP_HOME: /tmp/rustup_home
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: 'Install: NodeJS 20.x'
         uses: actions/setup-node@v6
