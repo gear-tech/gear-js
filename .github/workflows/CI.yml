@@ -295,6 +295,5 @@ jobs:
         run: |
           for dockerfile in ${{ steps.changed-dockerfiles.outputs.all_changed_files }}; do
             echo "Building $dockerfile"
-            context_dir=$(dirname "$dockerfile")
-            docker build -f "$dockerfile" "$context_dir"
+            docker build -f "$dockerfile" .
           done
