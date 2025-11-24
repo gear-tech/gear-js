@@ -1357,13 +1357,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb"
 dependencies = [
  "libc",
- "windows-sys 0.61.2",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
 name = "ethexe-common"
 version = "1.9.9"
-source = "git+https://github.com/gear-tech/gear#057f10f7174d01f651281f814f98558b3958f505"
+source = "git+https://github.com/gear-tech/gear#5969f20721cdb4ee9108a6f664759f8786ee971f"
 dependencies = [
  "alloy-primitives 1.4.1",
  "anyhow",
@@ -1371,7 +1371,6 @@ dependencies = [
  "derive_more 2.0.1",
  "gear-core 1.9.9",
  "gprimitives 1.9.9",
- "hashbrown 0.14.5",
  "hex",
  "k256",
  "nonempty",
@@ -1700,9 +1699,10 @@ dependencies = [
 [[package]]
 name = "gear-core"
 version = "1.9.9"
-source = "git+https://github.com/gear-tech/gear#057f10f7174d01f651281f814f98558b3958f505"
+source = "git+https://github.com/gear-tech/gear#5969f20721cdb4ee9108a6f664759f8786ee971f"
 dependencies = [
  "blake2",
+ "bytemuck",
  "byteorder",
  "derive_more 2.0.1",
  "enum-iterator",
@@ -1740,7 +1740,7 @@ dependencies = [
 [[package]]
 name = "gear-core-errors"
 version = "1.9.9"
-source = "git+https://github.com/gear-tech/gear#057f10f7174d01f651281f814f98558b3958f505"
+source = "git+https://github.com/gear-tech/gear#5969f20721cdb4ee9108a6f664759f8786ee971f"
 dependencies = [
  "enum-iterator",
  "parity-scale-codec",
@@ -1778,7 +1778,7 @@ dependencies = [
 [[package]]
 name = "gear-ss58"
 version = "1.9.9"
-source = "git+https://github.com/gear-tech/gear#057f10f7174d01f651281f814f98558b3958f505"
+source = "git+https://github.com/gear-tech/gear#5969f20721cdb4ee9108a6f664759f8786ee971f"
 dependencies = [
  "blake2",
  "bs58",
@@ -1829,7 +1829,7 @@ dependencies = [
 [[package]]
 name = "gear-wasm-instrument"
 version = "1.9.9"
-source = "git+https://github.com/gear-tech/gear#057f10f7174d01f651281f814f98558b3958f505"
+source = "git+https://github.com/gear-tech/gear#5969f20721cdb4ee9108a6f664759f8786ee971f"
 dependencies = [
  "derive_more 2.0.1",
  "enum-iterator",
@@ -1917,7 +1917,7 @@ dependencies = [
 [[package]]
 name = "gprimitives"
 version = "1.9.9"
-source = "git+https://github.com/gear-tech/gear#057f10f7174d01f651281f814f98558b3958f505"
+source = "git+https://github.com/gear-tech/gear#5969f20721cdb4ee9108a6f664759f8786ee971f"
 dependencies = [
  "bytemuck",
  "derive_more 2.0.1",
@@ -1985,7 +1985,7 @@ checksum = "37987f7b28fa66eff25c5b093f1789770ec23c646592311ed9549827d7487b01"
 [[package]]
 name = "gsys"
 version = "1.9.9"
-source = "git+https://github.com/gear-tech/gear#057f10f7174d01f651281f814f98558b3958f505"
+source = "git+https://github.com/gear-tech/gear#5969f20721cdb4ee9108a6f664759f8786ee971f"
 dependencies = [
  "bytemuck",
 ]
@@ -2575,7 +2575,7 @@ version = "0.50.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7957b9740744892f114936ab4a57b3f487491bbeafaf8083688b16841a4240e5"
 dependencies = [
- "windows-sys 0.61.2",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -2647,7 +2647,7 @@ dependencies = [
 [[package]]
 name = "numerated"
 version = "1.9.9"
-source = "git+https://github.com/gear-tech/gear#057f10f7174d01f651281f814f98558b3958f505"
+source = "git+https://github.com/gear-tech/gear#5969f20721cdb4ee9108a6f664759f8786ee971f"
 dependencies = [
  "derive_more 2.0.1",
  "num-traits",
@@ -3341,7 +3341,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys 0.11.0",
- "windows-sys 0.61.2",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -4136,7 +4136,7 @@ dependencies = [
  "getrandom 0.3.4",
  "once_cell",
  "rustix 1.1.2",
- "windows-sys 0.61.2",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
