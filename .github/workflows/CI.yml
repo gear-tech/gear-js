@@ -273,3 +273,27 @@ jobs:
 
       - name: 'Test: run'
         run: yarn test:gear-js-util
+
+  check-dockerfiles:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.1
+
+      - name: 'Checkout'
+        uses: actions/checkout@v5
+
+      - name: 'Check for changed Dockerfiles'
+        id: changed-dockerfiles
+        uses: tj-actions/changed-files@v47
+        with:
+          files: |
+            **/Dockerfile
+
+      - name: 'Build changed Dockerfiles'
+        if: steps.changed-dockerfiles.outputs.any_changed == 'true'
+        run: |
+          for dockerfile in ${{ steps.changed-dockerfiles.outputs.all_changed_files }}; do
+            echo "Building $dockerfile"
+            docker build -f "$dockerfile" .
+          done

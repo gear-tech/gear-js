@@ -1,10 +1,11 @@
-import { Context, Log } from '../processor';
-import * as RouterAbi from '../abi/router.abi';
-import { BaseHandler } from './base';
+import { In } from 'typeorm';
+
 import { Code, CodeStatus, Program } from '../model';
 import { mapKeys, mapValues } from '../util';
-import { In } from 'typeorm';
+import { Context, Log } from '../processor';
+import { BaseHandler } from './base';
 import { config } from '../config';
+import { RouterAbi } from '../abi/router.abi';
 
 export class RouterHandler extends BaseHandler {
   private _codes: Map<string, Code>;
@@ -93,30 +94,32 @@ export class RouterHandler extends BaseHandler {
 
   private _handleCodeValidationRequested(log: Log) {
     const data = RouterAbi.events.CodeValidationRequested.decode(log);
-    this._codes.set(data.codeId, new Code({ id: data.codeId, status: CodeStatus.ValidationRequested }));
-    this._logger.info({ codeId: data.codeId }, `Code validation requested`);
+    this._codes.set(data.args.codeId, new Code({ id: data.args.codeId, status: CodeStatus.ValidationRequested }));
+    this._logger.info({ codeId: data.args.codeId }, `Code validation requested`);
   }
 
   private _handleCodeGotValidated(log: Log) {
     const data = RouterAbi.events.CodeGotValidated.decode(log);
-    const status = data.valid ? CodeStatus.Validated : CodeStatus.ValidationFailed;
+    const status = data.args.valid ? CodeStatus.Validated : CodeStatus.ValidationFailed;
 
-    this._codeStatuses.set(data.codeId, status);
-    this._logger.info({ codeId: data.codeId, status }, `Code validation completed`);
+    this._codeStatuses.set(data.args.codeId, status);
+    this._logger.info({ codeId: data.args.codeId, status }, `Code validation completed`);
   }
 
   private _handleProgramCreated(log: Log) {
     const data = RouterAbi.events.ProgramCreated.decode(log);
 
     const program = new Program({
-      id: data.actorId,
-      codeId: data.codeId,
+      id: data.args.actorId,
+      codeId: data.args.codeId,
       blockNumber: BigInt(log.block.height),
       txHash: log.transaction.hash,
     });
 
     if (log.transaction.input.startsWith(RouterAbi.functions.createProgramWithAbiInterface.selector)) {
-      const { abiInterface } = RouterAbi.functions.createProgramWithAbiInterface.decode(log.transaction);
+      const {
+        args: [_codeId, _salt, _overrideInitializer, abiInterface],
+      } = RouterAbi.functions.createProgramWithAbiInterface.decode(log.transaction);
       program.abiInterfaceAddress = abiInterface;
     }
 

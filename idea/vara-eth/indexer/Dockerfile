@@ -1,13 +1,14 @@
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /src
 
 COPY . .
 
-RUN yarn workspaces focus varaeth-indexer gear-js
-RUN yarn build:varaeth-indexer
+RUN yarn workspaces focus @vara-eth/api varaeth-idea-indexer gear-js
+RUN yarn build:vara-eth-api
+RUN yarn build:varaeth-idea-indexer
 
-FROM node:20-alpine AS deps
+FROM node:22-alpine AS deps
 WORKDIR /src
 
 COPY package.json .
@@ -15,12 +16,14 @@ COPY yarn.lock .
 COPY .yarn .yarn
 COPY .yarnrc.yml .
 COPY idea/vara-eth/indexer/package.json idea/vara-eth/indexer/package.json
+COPY apis/vara-eth/package.json apis/vara-eth/package.json
 
-RUN yarn workspaces focus varaeth-indexer gear-js --production
+RUN yarn workspaces focus @vara-eth/api varaeth-idea-indexer gear-js --production
 
 FROM deps
 
 COPY --from=builder /src/idea/vara-eth/indexer/lib /src/idea/vara-eth/indexer/lib
+COPY --from=builder /src/apis/vara-eth/lib /src/apis/vara-eth/lib
 
 WORKDIR /src/idea/vara-eth/indexer
 

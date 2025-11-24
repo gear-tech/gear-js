@@ -1,5 +1,6 @@
-import { Logger } from '@subsquid/logger';
-import { Context } from '../processor';
+import type { Logger } from '@subsquid/logger';
+
+import { Context } from '../processor.js';
 
 type LogSettings = { addr: string; topic0: string[] };
 type TransactionSettings = { addr: string; sighash: string[] };
