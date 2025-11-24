@@ -16,14 +16,14 @@ COPY yarn.lock .
 COPY .yarn .yarn
 COPY .yarnrc.yml .
 COPY idea/vara-eth/indexer/package.json idea/vara-eth/indexer/package.json
-COPY api/vara-eth/package.json api/vara-eth/package.json
+COPY apis/vara-eth/package.json apis/vara-eth/package.json
 
 RUN yarn workspaces focus @vara-eth/api varaeth-idea-indexer gear-js --production
 
 FROM deps
 
 COPY --from=builder /src/idea/vara-eth/indexer/lib /src/idea/vara-eth/indexer/lib
-COPY --from=builder /src/api/vara-eth/lib /src/api/vara-eth/lib
+COPY --from=builder /src/apis/vara-eth/lib /src/apis/vara-eth/lib
 
 WORKDIR /src/idea/vara-eth/indexer
 
