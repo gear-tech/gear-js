@@ -13,7 +13,7 @@ export abstract class FaucetProcessor {
     private _requestService: RequestService,
   ) {}
 
-  public abstract init(): Promise<void>;
+  public abstract init(...args: unknown[]): Promise<void>;
   protected abstract get cronInterval(): string;
   protected abstract get type(): FaucetType[];
   protected abstract handleRequests(requests: FaucetRequest[]): Promise<{ success: number[]; fail: number[] }>;

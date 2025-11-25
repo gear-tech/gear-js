@@ -47,6 +47,12 @@ export default {
       }),
     cronTime: getEnv('ETH_PROCESSOR_CRON_TIME', '*/24 * * * * *'),
   },
+  wvara: {
+    address: getEnv('WVARA_ADDRESS', '0x<address>') as Hex,
+    amount: getEnv('WVARA_AMOUNT', '1000'),
+    privateKey: getEnv('WVARA_PRIVATE_KEY') as Hex,
+    cronTime: getEnv('WVARA_PROCESSOR_CRON_TIME', '*/24 * * * * *'),
+  },
   server: {
     port: parseInt(getEnv('PORT', '3010')),
     captchaSecret: getEnv('CAPTCHA_SECRET', '0x234567898765432'),

@@ -1,4 +1,4 @@
-import { createPublicClient, createWalletClient, PublicClient, WalletClient, WebSocketTransport } from 'viem';
+import { createPublicClient, createWalletClient, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
 import { Account, privateKeyToAccount } from 'viem/accounts';
 import { parseAbi, parseUnits } from 'viem/utils';
 import { createLogger } from 'gear-idea-common';
@@ -8,24 +8,19 @@ import { FaucetType, FaucetRequest } from '../../database';
 import { FaucetProcessor } from './abstract';
 import config from '../../config';
 
-const ERC20_ABI = parseAbi([
-  'function transfer(address to, uint256 amount)',
+const WVARA_ABI = parseAbi([
   'function decimals() external view returns (uint8)',
-  'error InsufficientBalance(address sender, uint256 balance, uint256 needed)',
-  'error InvalidSender(address sender)',
-  'error InvalidReceiver(address receiver)',
-  'error InsufficientAllowance(address spender, uint256 allowance, uint256 needed)',
-  'error InvalidApprover(address approver)',
-  'error InvalidSpender(address spender)',
+  'function mint(address to, uint256 amount)',
 ]);
 
-const logger = createLogger('bridge');
+const logger = createLogger('wvara');
 
-export class VaraBridgeProcessor extends FaucetProcessor {
+export class WvaraProcessor extends FaucetProcessor {
   private _walletClient: WalletClient<WebSocketTransport, typeof hoodi, Account>;
   private _publicClient: PublicClient;
   private _account: Account;
-  private _contracts: Map<string, bigint>;
+  private _address: Hex;
+  private _amount: bigint;
 
   public async init(transport: WebSocketTransport): Promise<void> {
     this.setLogger(logger);
@@ -35,53 +30,44 @@ export class VaraBridgeProcessor extends FaucetProcessor {
     const chainId = await this._publicClient.getChainId();
     logger.info(`Public client created. Chain ID: ${chainId}`);
 
-    this._account = privateKeyToAccount(config.bridge.ethPrivateKey);
+    this._account = privateKeyToAccount(config.wvara.privateKey);
     logger.info('Account created', { addr: this._account.address });
 
     this._walletClient = createWalletClient({ account: this._account, transport, chain: hoodi });
     logger.info('Wallet client created');
 
-    this._contracts = new Map();
-    for (const [address, value] of config.bridge.erc20Contracts) {
-      const decimals = await this._publicClient.readContract({
-        address,
-        abi: ERC20_ABI,
-        functionName: 'decimals',
-      });
-      this._contracts.set(address, parseUnits(value, decimals));
-      logger.info(`Contract added`, { address, value: this._contracts.get(address) });
-    }
+    this._address = config.wvara.address;
+    const decimals = await this._publicClient.readContract({
+      address: this._address,
+      abi: WVARA_ABI,
+      functionName: 'decimals',
+    });
+    this._amount = parseUnits(config.wvara.amount, decimals);
+
+    logger.info('Initialized', { address: this._address, amount: this._amount });
   }
 
   protected get cronInterval(): string {
-    return config.bridge.cronTime;
+    return config.wvara.cronTime;
   }
 
   protected get type(): FaucetType[] {
-    return [FaucetType.BridgeErc20];
+    return [FaucetType.WVara];
   }
 
   protected async handleRequests(requests: FaucetRequest[]): Promise<{ success: number[]; fail: number[] }> {
-    logger.info('Processing requests', { length: requests.length, target: 'vara_bridge' });
+    logger.info('Handling requests', { count: requests.length });
 
     const success = [];
     const fail = [];
 
-    for (const { id, target, address } of requests) {
-      const value = this._contracts.get(target);
-      if (!value) {
-        logger.error(`Contract not found for target ${target}. Skipping request ${id}`);
-        continue;
-      }
-
-      logger.info(`Processing ${id}`, { target, address, value });
-
+    for (const { id, address } of requests) {
       try {
         const { request } = await this._publicClient.simulateContract({
-          address: target,
-          abi: ERC20_ABI,
-          functionName: 'transfer',
-          args: [address, value],
+          address: this._address,
+          abi: WVARA_ABI,
+          functionName: 'mint',
+          args: [address, this._amount],
           account: this._account,
         });
 
