@@ -7,6 +7,7 @@ import { In, Repository } from 'typeorm';
 import { AppDataSource, FaucetRequest, FaucetType, RequestStatus } from '../../database';
 import { hash, LastSeenService } from './last-seen';
 import config from '../../config';
+import { Hex } from 'viem';
 
 export class RequestService {
   private _repo: Repository<FaucetRequest>;
@@ -24,17 +25,17 @@ export class RequestService {
     logger.info('Request service initialized');
   }
 
-  private _validateTarget(value: string): string {
+  private _validateTarget(value: Hex): Hex {
     const target = value.toLowerCase();
 
     if (!this._targets.includes(target)) {
       throw new UnsupportedTargetError(target);
     }
 
-    return target;
+    return target as Hex;
   }
 
-  private async _createAndValidateRequest(address: string, target: string, type: FaucetType): Promise<FaucetRequest> {
+  private async _createAndValidateRequest(address: Hex, target: Hex, type: FaucetType): Promise<FaucetRequest> {
     const req = new FaucetRequest({
       address,
       target,
@@ -43,7 +44,7 @@ export class RequestService {
     });
 
     if (req.type === FaucetType.BridgeErc20) {
-      req.address = req.address.toLowerCase();
+      req.address = req.address.toLowerCase() as Hex;
     }
 
     try {
@@ -59,7 +60,7 @@ export class RequestService {
     return req;
   }
 
-  public async newRequest(address: string, target: string, type: FaucetType) {
+  public async newRequest(address: Hex, target: Hex, type: FaucetType) {
     logger.info(`New request`, { address, target, type });
     target = this._validateTarget(target);
 

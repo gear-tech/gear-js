@@ -34,13 +34,13 @@ export abstract class FaucetProcessor {
           return;
         }
 
-        const completed = [];
-        const failed = [];
+        const completed: number[] = [];
+        const failed: number[] = [];
         try {
           const { success, fail } = await this.handleRequests(requests);
           completed.push(...success);
           failed.push(...fail);
-        } catch (error) {
+        } catch (error: any) {
           this.logger.error('Failed to handle requests', { reason: error.message, stack: error.stack });
           return;
         }

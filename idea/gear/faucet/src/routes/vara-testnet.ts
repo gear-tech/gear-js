@@ -5,6 +5,7 @@ import { captchaMiddleware, rateLimitMiddleware } from './middleware';
 import { RequestService } from '../services';
 import { FaucetType } from '../database';
 import { BaseRouter } from './base';
+import { Hex } from 'viem';
 
 const logger = createLogger('vara-router');
 
@@ -23,7 +24,7 @@ export class VaraTestnetRouter extends BaseRouter {
     return this._handler(payload?.address, payload?.genesis, res);
   }
 
-  private async _handler(address: string, genesis: string, res: Response) {
+  private async _handler(address: Hex, genesis: Hex, res: Response) {
     if (!address || !genesis) {
       res.status(400).json({ error: 'Address and genesis are required' });
       return;
@@ -31,7 +32,7 @@ export class VaraTestnetRouter extends BaseRouter {
 
     try {
       await this._requestService.newRequest(address, genesis, FaucetType.VaraTestnet);
-    } catch (error) {
+    } catch (error: any) {
       if (error.code) {
         logger.error(error.message, { address, target: genesis });
         return res.status(error.code).json({ error: error.message });

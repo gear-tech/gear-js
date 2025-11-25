@@ -17,10 +17,10 @@ export class FaucetRequest {
 
   @Column()
   @isValidAddress({ message: 'Invalid account address' })
-  public address: string;
+  public address: `0x${string}`;
 
   @Column()
-  public target: string;
+  public target: `0x${string}`;
 
   @Column({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   public timestamp: Date;

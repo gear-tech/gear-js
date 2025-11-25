@@ -1,7 +1,8 @@
-import { KeyringPair } from '@polkadot/keyring/types';
-import { BN } from '@polkadot/util';
 import { GearApi, GearKeyring, TransferData } from '@gear-js/api';
+import { KeyringPair } from '@polkadot/keyring/types';
 import { createLogger } from 'gear-idea-common';
+import { BN } from '@polkadot/util';
+import { Hex } from 'viem';
 
 import { FaucetType, FaucetRequest } from '../../database';
 import { FaucetProcessor } from './abstract';
@@ -34,8 +35,8 @@ export class VaraTestnetProcessor extends FaucetProcessor {
   private providerAddress: string;
   private balanceToTransfer: BN;
   private bridgeAmount: BN;
-  private api: GearApi;
-  private genesis: string;
+  private api?: GearApi;
+  private genesis?: string;
 
   public async init() {
     this.setLogger(logger);
@@ -62,8 +63,8 @@ export class VaraTestnetProcessor extends FaucetProcessor {
   protected async handleRequests(requests: FaucetRequest[]) {
     logger.info('Processing requests', { length: requests.length, target: 'vara_testnet' });
 
-    const success = [];
-    const fail = [];
+    const success: number[] = [];
+    const fail: number[] = [];
 
     const [transferred, blockHash] = await this._sendBatch(
       requests.map((req) => [
@@ -95,7 +96,7 @@ export class VaraTestnetProcessor extends FaucetProcessor {
 
     try {
       await this.api.isReadyOrError;
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Failed to connect to ${this.providerAddress}`, { error: error.message });
       await this.reconnect();
     }
@@ -109,10 +110,10 @@ export class VaraTestnetProcessor extends FaucetProcessor {
   }
 
   async reconnect(): Promise<void> {
-    this.genesis = null;
+    this.genesis = undefined;
     if (this.api) {
       await this.api.disconnect();
-      this.api = null;
+      this.api = undefined;
     }
 
     reconnectionsCounter++;
@@ -127,11 +128,17 @@ export class VaraTestnetProcessor extends FaucetProcessor {
     return this.connect();
   }
 
-  private async _sendBatch(requests: [address: string, value: BN][]): Promise<[string[], string]> {
-    const txs = requests.map(([address, value]) => this.api.tx.balances.transferKeepAlive(address, value));
+  private async _sendBatch(
+    requests: [address: string, value: BN][],
+  ): Promise<[transferred: Hex[], blockHash: string | undefined]> {
+    if (!this.api) {
+      throw new Error('GearApi is not initialized');
+    }
+
+    const txs = requests.map(([address, value]) => this.api!.tx.balances.transferKeepAlive(address, value));
     const batch = this.api.tx.utility.forceBatch(txs);
-    const transferred = [];
-    let blockHash: string;
+    const transferred: Hex[] = [];
+    let blockHash: string | undefined;
 
     logger.info(`Sending batch with ${requests.length} transfers`, { requests });
 
@@ -154,7 +161,7 @@ export class VaraTestnetProcessor extends FaucetProcessor {
                   resolve(null);
                   break;
                 case TransferEvent.EXTRINSIC_FAILED:
-                  reject({ blockHash, error: this.api.getExtrinsicFailedError(event).docs });
+                  reject({ blockHash, error: this.api!.getExtrinsicFailedError(event).docs });
                   break;
               }
             }
@@ -164,8 +171,8 @@ export class VaraTestnetProcessor extends FaucetProcessor {
           }),
       );
       logger.info(`Batch success`, { blockHash, transferred });
-    } catch (err) {
-      logger.error(`Batch error`, { ...err });
+    } catch (error: any) {
+      logger.error(`Batch error`, { ...error });
     }
 
     return [transferred, blockHash];
