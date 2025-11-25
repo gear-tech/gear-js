@@ -13,15 +13,6 @@ const useRouterContract = () => {
   const { data: routerContract, isLoading } = useQuery({
     queryKey: ['getRouterClient', ethereumClient],
     queryFn: () => getRouterClient(ROUTER_CONTRACT_ADDRESS, ethereumClient!),
-    // TODO: Temporary solution. MetaMask doesn't support blob transactions. Used for testing.
-    // queryFn: () =>
-    //   getRouterClient(
-    //     ROUTER_CONTRACT_ADDRESS,
-    //     new ethers.Wallet(
-    //       import.meta.env.VITE_SEQUENCER_PRIVATE_KEY as string,
-    //       new ethers.WebSocketProvider(ETH_NODE_ADDRESS),
-    //     ),
-    //   ),
     enabled: Boolean(ethereumClient),
   });
 
