@@ -15,6 +15,5 @@ export const config = {
   rpcUrl: getEnv('RPC_URL'),
   rateLimit: Number(getEnv('RPC_RATE_LIMIT', '20')),
   fromBlock: Number(getEnv('FROM_BLOCK', '0')),
-  apiPath: getEnv('API_PATH', './assets'),
-  routerAddr: getEnv('ROUTER_ADDR', '0x0000000000000000000000000000000000000000'),
+  routerAddr: getEnv('ROUTER_ADDR'),
 };

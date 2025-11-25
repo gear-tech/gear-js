@@ -25,7 +25,7 @@
     "react-syntax-highlighter": "15.6.6",
     "sails-js": "0.5.1",
     "sails-js-parser": "0.5.1",
-    "viem": "2.39.0",
+    "viem": "2.40.0",
     "wagmi": "2.19.4",
     "zod": "3.25.76"
   },

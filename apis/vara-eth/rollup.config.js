@@ -12,7 +12,7 @@ function cleanOldBuild() {
   };
 }
 
-const externalPackages = ['ethers', 'tslib', 'kzg-wasm', '@ethereumjs/util', '@noble/hashes'];
+const externalPackages = ['viem', 'tslib', 'kzg-wasm', '@ethereumjs/util', '@noble/hashes'];
 
 export default [
   {

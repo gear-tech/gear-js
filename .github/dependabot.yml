@@ -35,6 +35,12 @@ updates:
       time: "09:00"
     commit-message:
       prefix: "chore(deps)"
+    groups:
+      cargo-updates:
+        update-types:
+          - minor
+          - patch
+          - 'major'
 
   - package-ecosystem: 'npm'
     directory: '/'
