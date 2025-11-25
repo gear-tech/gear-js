@@ -4,7 +4,7 @@ import express, { Express } from 'express';
 import YAML from 'yamljs';
 import http from 'node:http';
 
-import { WVARARouter, VaraBridgeRouter, VaraTestnetRouter } from './routes';
+import { WvaraRouter, VaraBridgeRouter, VaraTestnetRouter } from './routes';
 import { RequestService } from './services';
 import config from './config';
 
@@ -29,7 +29,7 @@ export class Server {
       this._app.use('/bridge', new VaraBridgeRouter(requestService).router);
     }
     if (runWvaraFaucet) {
-      this._app.use('/wvara', new WVARARouter(requestService).router);
+      this._app.use('/wvara', new WvaraRouter(requestService).router);
     }
   }
 

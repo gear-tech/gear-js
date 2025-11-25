@@ -9,7 +9,7 @@ import config from '../config';
 
 const logger = createLogger('wvara-router');
 
-export class WVARARouter extends BaseRouter {
+export class WvaraRouter extends BaseRouter {
   constructor(private _requestService: RequestService) {
     super();
     this.router.post('/request', rateLimitMiddleware, this._handler.bind(this));

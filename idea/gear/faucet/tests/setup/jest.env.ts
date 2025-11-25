@@ -11,3 +11,5 @@ process.env.ETH_PROCESSOR_CRON_TIME = '*/1 * * * * *';
 process.env.VARA_PROCESSOR_CRON_TIME = '*/1 * * * * *';
 
 process.env.RATE_LIMIT_SEC = '100';
+
+process.env.WVARA_PRIVATE_KEY = '0x0c6c8781564e1f53b5c9814522f4e2ae12e5426491e0f16a6e84f4e520a86253';
