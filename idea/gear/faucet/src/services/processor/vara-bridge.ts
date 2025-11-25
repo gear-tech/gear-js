@@ -1,44 +1,63 @@
 import { createLogger } from 'gear-idea-common';
+import {
+  createPublicClient,
+  createWalletClient,
+  PublicClient,
+  WalletClient,
+  webSocket,
+  WebSocketTransport,
+} from 'viem';
+import { Account, privateKeyToAccount } from 'viem/accounts';
+import { parseAbi, parseUnits } from 'viem/utils';
+import { hoodi } from 'viem/chains';
+
 import { FaucetType, FaucetRequest } from '../../database';
 import { FaucetProcessor } from './abstract';
-import { BaseContract, ethers, JsonRpcProvider, TransactionResponse, Wallet } from 'ethers';
 import config from '../../config';
 
-const IFACE = () =>
-  new ethers.Interface([
-    'function transfer(address to, uint256 amount)',
-    'function decimals() external view returns (uint8)',
-    'error InsufficientBalance(address sender, uint256 balance, uint256 needed)',
-    'error InvalidSender(address sender)',
-    'error InvalidReceiver(address receiver)',
-    'error InsufficientAllowance(address spender, uint256 allowance, uint256 needed)',
-    'error InvalidApprover(address approver)',
-    'error InvalidSpender(address spender)',
-  ]);
-
-interface IERC20 {
-  transfer(to: string, amount: bigint): Promise<TransactionResponse>;
-  decimals(): Promise<number>;
-}
+const ERC20_ABI = parseAbi([
+  'function transfer(address to, uint256 amount)',
+  'function decimals() external view returns (uint8)',
+  'error InsufficientBalance(address sender, uint256 balance, uint256 needed)',
+  'error InvalidSender(address sender)',
+  'error InvalidReceiver(address receiver)',
+  'error InsufficientAllowance(address spender, uint256 allowance, uint256 needed)',
+  'error InvalidApprover(address approver)',
+  'error InvalidSpender(address spender)',
+]);
 
 const logger = createLogger('bridge');
 
 export class VaraBridgeProcessor extends FaucetProcessor {
-  private _wallet: Wallet;
+  private _walletClient: WalletClient<WebSocketTransport, typeof hoodi, Account>;
+  private _publicClient: PublicClient;
+  private _account: Account;
   private _contracts: Map<string, bigint>;
 
   public async init(): Promise<void> {
     this.setLogger(logger);
-    const provider = new JsonRpcProvider(config.bridge.ethProvider);
-    const network = await provider.getNetwork();
-    logger.info(`Connected to ${network.name}`);
-    this._wallet = new Wallet(config.bridge.ethPrivateKey, provider);
-    logger.info('Account created', { addr: this._wallet.address });
+
+    const transport = webSocket(config.bridge.ethProvider);
+    this._publicClient = createPublicClient({ transport, chain: hoodi });
+
+    const chainId = await this._publicClient.getChainId();
+    logger.info(`Public client created. Chain ID: ${chainId}`);
+
+    this._account = privateKeyToAccount(config.bridge.ethPrivateKey);
+    logger.info('Account created', { addr: this._account.address });
+
+    this._walletClient = createWalletClient({ account: this._account, transport, chain: hoodi });
+    logger.info('Wallet client created');
 
     this._contracts = new Map();
-    for (const [id, value] of config.bridge.erc20Contracts) {
-      this._contracts.set(id, ethers.parseUnits(value, await this._getDecimals(id)));
-      logger.info(`Contract added`, { id, value: this._contracts.get(id) });
+    for (const [address, value] of config.bridge.erc20Contracts) {
+      const decimals = await this._publicClient.readContract({
+        address,
+        abi: ERC20_ABI,
+        functionName: 'decimals',
+      });
+      this._contracts.set(address, parseUnits(value, decimals));
+      logger.info(`Contract added`, { address, value: this._contracts.get(address) });
     }
   }
 
@@ -58,41 +77,39 @@ export class VaraBridgeProcessor extends FaucetProcessor {
 
     for (const { id, target, address } of requests) {
       const value = this._contracts.get(target);
-      const contract = this._getContract(target);
+      if (!value) {
+        logger.error(`Contract not found for target ${target}. Skipping request ${id}`);
+        continue;
+      }
+
       logger.info(`Processing ${id}`, { target, address, value });
+
       try {
-        const tx = await contract.transfer(address, value);
-        const receipt = await tx.wait();
-        if (receipt.status === 0) {
-          logger.error(`Request ${id} failed`, { hash: receipt.hash, block: receipt.blockNumber });
+        const { request } = await this._publicClient.simulateContract({
+          address: target,
+          abi: ERC20_ABI,
+          functionName: 'transfer',
+          args: [address, value],
+          account: this._account,
+        });
+
+        const txHash = await this._walletClient.writeContract(request);
+
+        const receipt = await this._publicClient.waitForTransactionReceipt({ hash: txHash });
+
+        if (receipt.status === 'reverted') {
           fail.push(id);
+          logger.error(`Request ${id} failed`, { hash: receipt.transactionHash, block: receipt.blockNumber });
         } else {
           success.push(id);
-          logger.info(`Request ${id} succeeded`, { hash: receipt.hash, block: receipt.blockNumber });
+          logger.info(`Request ${id} succeeded`, { hash: receipt.transactionHash, block: receipt.blockNumber });
         }
-      } catch (error) {
-        this._onFailedRequest(error, id);
+      } catch (error: any) {
+        logger.error(`Request ${id} failed`, { error, stack: error?.stack });
         fail.push(id);
       }
     }
 
     return { success, fail };
-  }
-
-  private _getDecimals(contract: string) {
-    return this._getContract(contract).decimals();
-  }
-
-  private _getContract(id: string) {
-    return BaseContract.from<IERC20>(id, IFACE(), this._wallet);
-  }
-
-  private _onFailedRequest(error: any, id: number) {
-    try {
-      const reason = IFACE().parseError(error.data);
-      logger.error(`Request ${id} failed`, { error: error.message, stack: error.stack, reason });
-    } catch (_error) {
-      logger.error(`Request ${id} failed`, { error, stack: error.stack, _error });
-    }
   }
 }

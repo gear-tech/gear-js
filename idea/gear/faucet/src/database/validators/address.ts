@@ -17,6 +17,8 @@ export function isValidAddress(validationOptions?: ValidationOptions) {
             try {
               if (decodeAddress(value).length === 32) {
                 return true;
+              } else {
+                return false;
               }
             } catch (_) {
               return false;

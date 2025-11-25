@@ -1,15 +1,16 @@
 import { config } from 'dotenv';
 import { strict as assert } from 'assert';
+import { Hex } from 'viem';
 config();
 
-const getEnv = (envName: string, defaultValue?: string) => {
+const getEnv = (envName: string, defaultValue?: string): string => {
   const env = process.env[envName];
   if (!env && defaultValue) {
     return defaultValue;
   }
 
   assert.notStrictEqual(env, undefined, `${envName} is not specified`);
-  return env;
+  return env as string;
 };
 
 export default {
@@ -29,14 +30,20 @@ export default {
   },
   bridge: {
     tvaraAmount: Number(getEnv('BRIDGE_TVARA_AMOUNT', '1000')),
-    ethProvider: getEnv('ETH_PROVIDER', 'https://<eth_provider>'),
-    ethPrivateKey: getEnv('ETH_PRIVATE_KEY'),
+    ethProvider: getEnv('ETH_PROVIDER', 'wss://<eth_provider>'),
+    ethPrivateKey: (() => {
+      const key = getEnv('ETH_PRIVATE_KEY');
+      if (!key.startsWith('0x')) {
+        throw new Error('ETH_PRIVATE_KEY must start with 0x');
+      }
+      return key as Hex;
+    })(),
     erc20Contracts: getEnv('ETH_ERC20_CONTRACTS')
       .split(',')
       .map((data) => {
         const [addr, value] = data.split(':');
         assert.ok(!isNaN(Number(value)), `Invalid value for ${addr}`);
-        return [addr.toLowerCase(), value];
+        return [addr.toLowerCase(), value] as [Hex, string];
       }),
     cronTime: getEnv('ETH_PROCESSOR_CRON_TIME', '*/24 * * * * *'),
   },

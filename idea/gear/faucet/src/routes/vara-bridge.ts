@@ -31,7 +31,7 @@ export class VaraBridgeRouter extends BaseRouter {
         target,
         contract ? FaucetType.BridgeErc20 : FaucetType.BridgeVaraTestnet,
       );
-    } catch (error) {
+    } catch (error: any) {
       if (error.code) {
         logger.warn(error.message, { address, target: contract });
         return res.status(error.code).json({ error: error.message });
