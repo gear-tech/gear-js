@@ -17,12 +17,12 @@
     "@subsquid/logger": "^1.4.0",
     "@subsquid/typeorm-store": "^1.5.1",
     "@vara-eth/api": "workspace:*",
-    "dotenv": "^17.2.1",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
-    "pg": "8.12.0",
+    "pg": "8.16.3",
     "postgraphile": "^4.14.1",
     "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.20",
-    "viem": "^2.40.0"
+    "typeorm": "0.3.27",
+    "viem": "2.40.0"
   }
 }

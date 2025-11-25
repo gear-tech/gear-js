@@ -31,10 +31,10 @@
     "viem": "^2.39.0"
   },
   "devDependencies": {
-    "@types/ws": "^8",
+    "@types/ws": "8.18.1",
     "kzg-wasm": "1.0.0",
-    "viem": "^2.39.0",
-    "ws": "^8.18.3"
+    "viem": "2.40.0",
+    "ws": "8.18.3"
   },
   "files": [
     "lib"
