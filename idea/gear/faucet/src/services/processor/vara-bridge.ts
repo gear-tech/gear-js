@@ -38,7 +38,7 @@ export class VaraBridgeProcessor extends FaucetProcessor {
     this.setLogger(logger);
 
     const transport = webSocket(config.bridge.ethProvider);
-    this._publicClient = createPublicClient({ transport });
+    this._publicClient = createPublicClient({ transport, chain: hoodi });
 
     const chainId = await this._publicClient.getChainId();
     logger.info(`Public client created. Chain ID: ${chainId}`);
@@ -47,7 +47,7 @@ export class VaraBridgeProcessor extends FaucetProcessor {
     logger.info('Account created', { addr: this._account.address });
 
     this._walletClient = createWalletClient({ account: this._account, transport, chain: hoodi });
-    console.log('Wallet client created');
+    logger.info('Wallet client created');
 
     this._contracts = new Map();
     for (const [address, value] of config.bridge.erc20Contracts) {
@@ -90,6 +90,7 @@ export class VaraBridgeProcessor extends FaucetProcessor {
           abi: ERC20_ABI,
           functionName: 'transfer',
           args: [address, value],
+          account: this._account,
         });
 
         const txHash = await this._walletClient.writeContract(request);

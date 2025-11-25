@@ -31,7 +31,13 @@ export default {
   bridge: {
     tvaraAmount: Number(getEnv('BRIDGE_TVARA_AMOUNT', '1000')),
     ethProvider: getEnv('ETH_PROVIDER', 'wss://<eth_provider>'),
-    ethPrivateKey: getEnv('ETH_PRIVATE_KEY') as Hex,
+    ethPrivateKey: (() => {
+      const key = getEnv('ETH_PRIVATE_KEY');
+      if (!key.startsWith('0x')) {
+        throw new Error('ETH_PRIVATE_KEY must start with 0x');
+      }
+      return key as Hex;
+    })(),
     erc20Contracts: getEnv('ETH_ERC20_CONTRACTS')
       .split(',')
       .map((data) => {
