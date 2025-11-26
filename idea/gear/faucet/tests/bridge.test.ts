@@ -23,7 +23,7 @@ describe('Bridge requests', () => {
       .set('Accept', 'application/json');
 
   beforeAll(async () => {
-    app = new FaucetApp(true, true);
+    app = new FaucetApp(true, true, false);
     await app.init();
     app.run();
   });

@@ -21,6 +21,7 @@ export class RequestService {
     this._repo = AppDataSource.getRepository(FaucetRequest);
     this._targets = config.bridge.erc20Contracts.map(([contract]) => contract.toLowerCase());
     this._targets.push(_varaTestnetGenesis.toLowerCase());
+    this._targets.push(config.wvara.address.toLowerCase());
     this._requesting = new Set<string>();
     logger.info('Request service initialized');
   }
@@ -43,7 +44,7 @@ export class RequestService {
       status: RequestStatus.Pending,
     });
 
-    if (req.type === FaucetType.BridgeErc20) {
+    if (req.type === FaucetType.BridgeErc20 || req.type === FaucetType.WVara) {
       req.address = req.address.toLowerCase() as Hex;
     }
 

@@ -4,7 +4,7 @@ import express, { Express } from 'express';
 import YAML from 'yamljs';
 import http from 'node:http';
 
-import { VaraBridgeRouter, VaraTestnetRouter } from './routes';
+import { WvaraRouter, VaraBridgeRouter, VaraTestnetRouter } from './routes';
 import { RequestService } from './services';
 import config from './config';
 
@@ -14,7 +14,12 @@ export class Server {
   private _app: Express;
   private _server: http.Server;
 
-  constructor(requestService: RequestService, runBridgeFaucet = true, runVaraTestnetFaucet = true) {
+  constructor(
+    requestService: RequestService,
+    runBridgeFaucet = true,
+    runVaraTestnetFaucet = true,
+    runWvaraFaucet = true,
+  ) {
     this._app = express();
     this._app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     if (runVaraTestnetFaucet) {
@@ -22,6 +27,9 @@ export class Server {
     }
     if (runBridgeFaucet) {
       this._app.use('/bridge', new VaraBridgeRouter(requestService).router);
+    }
+    if (runWvaraFaucet) {
+      this._app.use('/wvara', new WvaraRouter(requestService).router);
     }
   }
 

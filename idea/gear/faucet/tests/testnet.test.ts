@@ -23,7 +23,7 @@ describe('Testnet requests', () => {
       .set('Accept', 'application/json');
 
   beforeAll(async () => {
-    app = new FaucetApp(false, true);
+    app = new FaucetApp(false, true, false);
     await app.init();
     app.run();
   });

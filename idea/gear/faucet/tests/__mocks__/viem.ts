@@ -1,40 +1,35 @@
 jest.mock('viem', () => {
   const actual = jest.requireActual('viem');
 
-  const waitForTransactionReceiptMock = jest.fn().mockImplementation(async () => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    return {
-      status: 'success',
-      transactionHash: '0xmockhash',
-      blockNumber: 123n,
-    };
-  });
-
-  const writeContractMock = jest.fn().mockResolvedValue('0xmockhash');
-
-  const simulateContractMock = jest.fn().mockResolvedValue({
-    request: {
-      address: '0x0000000000000000000000000000000000000002',
-      abi: actual.parseAbi(['function transfer(address to, uint256 amount)']),
-      functionName: 'transfer',
-      args: ['0x0000000000000000000000000000000000000001', 1000000000000000000n],
-    },
-  });
-
-  const readContractMock = jest.fn().mockResolvedValue(18);
-
-  const getChainIdMock = jest.fn().mockResolvedValue(1);
-
   return {
     ...actual,
     createPublicClient: jest.fn().mockImplementation(() => ({
-      getChainId: getChainIdMock,
-      readContract: readContractMock,
-      simulateContract: simulateContractMock,
-      waitForTransactionReceipt: waitForTransactionReceiptMock,
+      getChainId: jest.fn().mockResolvedValue(1),
+      readContract: jest.fn().mockResolvedValue(18),
+      simulateContract: jest.fn().mockImplementation(async ({ functionName, args, address }) => {
+        return {
+          request: {
+            address,
+            abi:
+              functionName === 'mint'
+                ? actual.parseAbi(['function mint(address to, uint256 amount)'])
+                : actual.parseAbi(['function transfer(address to, uint256 amount)']),
+            functionName,
+            args,
+          },
+        };
+      }),
+      waitForTransactionReceipt: jest.fn().mockImplementation(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        return {
+          status: 'success',
+          transactionHash: '0xmockhash',
+          blockNumber: 123n,
+        };
+      }),
     })),
     createWalletClient: jest.fn().mockImplementation(() => ({
-      writeContract: writeContractMock,
+      writeContract: jest.fn().mockResolvedValue('0xmockhash'),
     })),
     webSocket: jest.fn().mockImplementation(() => ({})),
   };

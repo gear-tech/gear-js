@@ -1,20 +1,23 @@
 import { logger } from 'gear-idea-common';
 
-import { LastSeenService, RequestService, VaraBridgeProcessor, VaraTestnetProcessor } from './services';
+import { LastSeenService, RequestService, VaraBridgeProcessor, VaraTestnetProcessor, WvaraProcessor } from './services';
 import { AppDataSource } from './database';
 import { Server } from './server';
 import config from './config';
+import { webSocket } from 'viem';
 
 export class FaucetApp {
   private _lastSeenService: LastSeenService;
   private _requestService: RequestService;
   private _varaTestnetProcessor: VaraTestnetProcessor;
   private _varaBridgeProcessor: VaraBridgeProcessor;
+  private _wvaraProcessor: WvaraProcessor;
   private _server: Server;
 
   constructor(
     private _runBridgeFaucet = true,
     private _runVaraTestnetFaucet = true,
+    private _runWvaraFaucet = true,
   ) {}
 
   async init() {
@@ -30,12 +33,27 @@ export class FaucetApp {
       this._varaTestnetProcessor = new VaraTestnetProcessor(this._lastSeenService, this._requestService);
       await this._varaTestnetProcessor.init();
     }
-    if (this._runBridgeFaucet) {
-      this._varaBridgeProcessor = new VaraBridgeProcessor(this._lastSeenService, this._requestService);
-      await this._varaBridgeProcessor.init();
+
+    if (this._runBridgeFaucet || this._runWvaraFaucet) {
+      const viemTransport = webSocket(config.bridge.ethProvider);
+
+      if (this._runBridgeFaucet) {
+        this._varaBridgeProcessor = new VaraBridgeProcessor(this._lastSeenService, this._requestService);
+        await this._varaBridgeProcessor.init(viemTransport);
+      }
+
+      if (this._runWvaraFaucet) {
+        this._wvaraProcessor = new WvaraProcessor(this._lastSeenService, this._requestService);
+        await this._wvaraProcessor.init(viemTransport);
+      }
     }
 
-    this._server = new Server(this._requestService);
+    this._server = new Server(
+      this._requestService,
+      this._runBridgeFaucet,
+      this._runVaraTestnetFaucet,
+      this._runWvaraFaucet,
+    );
   }
 
   run() {
@@ -44,6 +62,9 @@ export class FaucetApp {
     }
     if (this._runBridgeFaucet) {
       this._varaBridgeProcessor.run();
+    }
+    if (this._runWvaraFaucet) {
+      this._wvaraProcessor.run();
     }
 
     this._server.run();
@@ -56,6 +77,9 @@ export class FaucetApp {
     }
     if (this._runBridgeFaucet) {
       this._varaBridgeProcessor.stop();
+    }
+    if (this._runWvaraFaucet) {
+      this._wvaraProcessor.stop();
     }
   }
 
