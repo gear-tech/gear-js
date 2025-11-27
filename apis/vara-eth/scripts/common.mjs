@@ -119,6 +119,7 @@ export class CommandRunner {
         if (code === 0) {
           resolve(stdout);
         } else {
+          console.log(stdout);
           reject(new ScriptError(`Command failed: ${cmd}\n${stderr}`));
         }
       });

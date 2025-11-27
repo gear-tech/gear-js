@@ -402,7 +402,6 @@ async function deployContracts(config, gearRepoPath, state) {
       ['script', 'script/Deployment.s.sol:DeploymentScript', '--rpc-url', rpc, '--broadcast', '--slow', '-vvvv'],
       {
         cwd: pathToContracts,
-        stdio: 'ignore',
         env: {
           ...process.env,
           ROUTER_VALIDATORS_LIST: config.get('VALIDATOR_KEY_ADDRESS'),
