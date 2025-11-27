@@ -67,7 +67,7 @@ async function setupEnvironment() {
   logger.info('Waiting for environment to be ready...');
 
   let waited = 0;
-  const maxWait = 300_000; // 5 minutes
+  const maxWait = 20 * 60 * 1000; // 20 minutes
   const pollInterval = 1_000; // 1 second
 
   while (!(await fileExists(READY_FILE))) {
