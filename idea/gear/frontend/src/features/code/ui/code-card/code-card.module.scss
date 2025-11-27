@@ -37,9 +37,25 @@
     background: radial-gradient(50% 50% at 50% 50%, rgba($successColor, 0.23) 0%, rgba(24, 24, 27, 0) 100%);
   }
 
-  .name {
+  .link {
     @include transition;
-    display: block;
+
+    margin-right: $margin;
+    margin-bottom: 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    position: relative;
+    z-index: 1;
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+
+  .name {
     max-width: 60%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -47,14 +63,6 @@
     font-family: 'Kanit';
     font-weight: 600;
     line-height: 1.3;
-    margin-right: $margin;
-    margin-bottom: 10px;
-    position: relative;
-    z-index: 1;
-
-    &:hover {
-      opacity: 0.5;
-    }
   }
 
   .otherInfo {

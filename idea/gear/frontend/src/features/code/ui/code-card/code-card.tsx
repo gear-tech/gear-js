@@ -1,6 +1,7 @@
 import { Link, generatePath } from 'react-router-dom';
 
 import { LocalCode } from '@/features/local-indexer';
+import { isVftCode, VftTag } from '@/features/vft-standard';
 import CreateProgramSVG from '@/shared/assets/images/actions/create-program.svg?react';
 import RelatedrelatedProgramsSVG from '@/shared/assets/images/actions/related-programs.svg?react';
 import { absoluteRoutes, routes } from '@/shared/config';
@@ -24,8 +25,9 @@ function CodeCard({ code }: Props) {
   return (
     <div className={styles.horizontalCodeCard}>
       <div className={styles.content}>
-        <Link to={to} className={styles.name}>
-          {name || 'Code'}
+        <Link to={to} className={styles.link}>
+          <span className={styles.name}>{name || 'Code'}</span>
+          {isVftCode(code.id) && <VftTag />}
         </Link>
 
         {'timestamp' in code && (

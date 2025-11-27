@@ -2,6 +2,7 @@ import { clsx } from 'clsx';
 import { Link, generatePath } from 'react-router-dom';
 
 import { LocalProgram } from '@/features/local-indexer';
+import { isVftCode, VftTag } from '@/features/vft-standard';
 import { IssueVoucher, VoucherBadge } from '@/features/voucher';
 import sendSVG from '@/shared/assets/images/actions/send.svg?react';
 import { absoluteRoutes } from '@/shared/config';
@@ -32,6 +33,7 @@ const ProgramCard = ({ program, vertical }: Props) => {
       <div className={styles.content}>
         <Link to={generatePath(absoluteRoutes.program, { programId })} className={styles.link}>
           <h2 className={styles.name}>{name}</h2>
+          {program.codeId && isVftCode(program.codeId) && <VftTag />}
         </Link>
 
         <div className={styles.otherInfo}>
