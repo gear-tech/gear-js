@@ -2,12 +2,15 @@ import { GearApi, HexString } from '@gear-js/api';
 import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
 import type { Event } from '@polkadot/types/interfaces';
 import { isAndroid, isIOS } from '@react-aria/utils';
+import { clsx } from 'clsx';
 
 import { ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes } from '@/shared/config';
 
 import { getReplyErrorReason } from './error';
 import { fetchWithGuard } from './fetch-with-guard';
 import { isHexValid, isExists, isAccountAddressValid, isNumeric, asOptionalField } from './form';
+
+const cx = clsx;
 
 const checkWallet = (account?: Account) => {
   if (!account) {
@@ -133,6 +136,7 @@ const getErrorMessage = (error: unknown) => (error instanceof Error ? error.mess
 const isAnyKey = (value: Record<string, unknown>) => Object.keys(value).length > 0;
 
 export {
+  cx,
   checkWallet,
   formatDate,
   readFileAsync,
