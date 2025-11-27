@@ -85,7 +85,7 @@ jobs:
           sudo cp binaryen-$BINARYEN_VERSION/bin/wasm-opt /usr/bin/
 
       - name: "Install: Foundry"
-        uses: foundry-rs/foundry-toolchain@v1
+        uses: foundry-rs/foundry-toolchain@v1.5
 
       - name: 'Install dependencies'
         run: yarn workspaces focus gear-js @gear-js/api
