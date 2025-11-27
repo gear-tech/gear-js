@@ -10,7 +10,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_DIR = path.join(__dirname, '..');
 const ROOT_DIR = path.resolve(__dirname, '../../..');
 
-const FOUNDRY_VERSION = '1.4.4';
+const FOUNDRY_VERSION = '1.5.0';
 const GITHUB_ETHEXE_RELEASE_URL = 'https://github.com/gear-tech/gear/releases/download/build/ethexe';
 
 class Config {
