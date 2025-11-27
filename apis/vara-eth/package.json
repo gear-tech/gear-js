@@ -7,12 +7,13 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "./scripts/run-tests-anvil.sh",
+    "test": "node scripts/run-tests.mjs",
     "test:only": "yarn node --no-warnings --experimental-vm-modules $(../../node_modules/.bin/jest) --runInBand",
     "test:no-setup": "npx jest",
     "build": "npx rollup -c",
     "clean": "rm -rf lib",
-    "abi": "node scripts/convert-abi.mjs"
+    "abi": "node scripts/convert-abi.mjs",
+    "setup-local-env": "node scripts/setup-local-env.mjs"
   },
   "exports": {
     ".": {
