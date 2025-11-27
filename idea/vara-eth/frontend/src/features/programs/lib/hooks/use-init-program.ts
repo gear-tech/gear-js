@@ -26,16 +26,18 @@ const useInitProgram = (programId: HexString) => {
 
     if (!payload) return;
 
-    const { waitForReply } = await mirrorContract.sendMessage(payload);
+    const tx = await mirrorContract.sendMessage(payload);
 
-    await waitForReply;
+    await tx.send();
+
+    const receipt = await tx.getReceipt();
 
     addMyActivity({
       type: TransactionTypes.initProgram,
       programId,
       params: { ctorName, ...args },
       to: programId,
-      ...unpackReceipt(),
+      ...unpackReceipt(receipt),
     });
   };
 
