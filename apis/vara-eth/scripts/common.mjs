@@ -39,7 +39,7 @@ export const logger = {
 
 export class CommandRunner {
   static async exec(cmd, options = {}) {
-    const { cwd = process.cwd(), stdio = 'inherit', timeout = 600_000, shell = false, env = process.env } = options;
+    const { cwd = process.cwd(), stdio = 'inherit', timeout = 600_000, shell = false, env = {} } = options;
 
     logger.debug(`Running: ${cmd} in ${cwd}`);
 
@@ -50,7 +50,10 @@ export class CommandRunner {
           stdio,
           shell: true,
           timeout,
-          env,
+          env: {
+            ...process.env,
+            ...env,
+          },
         });
         resolve(result);
       } catch (error) {
@@ -60,14 +63,14 @@ export class CommandRunner {
   }
 
   static spawn(cmd, args, options = {}) {
-    const { cwd = process.cwd(), logFile = null, timeout = null } = options;
+    const { cwd = process.cwd(), logFile = null, timeout = null, env = {} } = options;
 
     logger.debug(`Spawning: ${cmd} ${args.join(' ')} in ${cwd}`);
 
     const child = spawn(cmd, args, {
       cwd,
       stdio: logFile ? ['ignore', 'pipe', 'pipe'] : 'inherit',
-      env: process.env,
+      env: { ...process.env, ...env },
     });
 
     if (logFile) {
@@ -88,13 +91,13 @@ export class CommandRunner {
   }
 
   static async command(cmd, args, options = {}) {
-    const { cwd = process.cwd(), timeout = 30_000 } = options;
+    const { cwd = process.cwd(), timeout = 30_000, env = {} } = options;
 
     return new Promise((resolve, reject) => {
       let stdout = '';
       let stderr = '';
 
-      const child = spawn(cmd, args, { cwd, env: process.env });
+      const child = spawn(cmd, args, { cwd, env: { ...process.env, ...env } });
 
       child.stdout.on('data', (data) => {
         stdout += data.toString();
