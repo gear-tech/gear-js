@@ -164,6 +164,7 @@ jobs:
         run: yarn test:vara-eth-api
         env:
           GEAR_BRANCH: ${{ vars.GEAR_BRANCH }}
+          TAKE_CLI_FROM_BUILD_RELEASE: true
 
   check-gear-idea-version:
     runs-on: ubuntu-latest

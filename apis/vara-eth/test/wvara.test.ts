@@ -19,7 +19,7 @@ beforeAll(async () => {
   publicClient = createPublicClient<WebSocketTransport, Chain, undefined>({
     transport,
   }) as PublicClient<WebSocketTransport, Chain, undefined>;
-  const account = privateKeyToAccount(config.wvaraPrefundedPrivateKey);
+  const account = privateKeyToAccount(config.privateKey);
 
   walletClient = createWalletClient<WebSocketTransport>({
     account,
@@ -101,7 +101,7 @@ describe('transactions', () => {
 
   test('should transfer tokens', async () => {
     const amount = BigInt(2000 * 1e12);
-    const tx = await wvara.transfer(config.accountAddress, amount);
+    const tx = await wvara.transfer('0xBcd4042DE499D14e55001CcbB24a551F3b954096', amount);
 
     await tx.send();
 

@@ -10,7 +10,7 @@ import {
   VaraEthApi,
   HttpVaraEthProvider,
 } from '../src';
-import { hasProps, topupBalance, waitNBlocks } from './common';
+import { hasProps, waitNBlocks } from './common';
 import { config } from './config';
 
 let api: VaraEthApi;
@@ -40,8 +40,6 @@ beforeAll(async () => {
   router = getRouterClient(config.routerId, ethereumClient);
   const wvaraAddr = await router.wrappedVara();
   wvara = getWrappedVaraClient(wvaraAddr, ethereumClient);
-
-  await topupBalance(wvaraAddr);
 
   api = new VaraEthApi(new HttpVaraEthProvider(), ethereumClient);
 });
