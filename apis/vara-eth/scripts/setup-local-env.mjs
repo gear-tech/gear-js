@@ -208,7 +208,15 @@ async function setupGearRepo(config) {
 
   logger.info(`Cloning gear repo (branch ${branch})...`);
   try {
-    await CommandRunner.exec(`git clone --depth 1 -b ${branch} https://github.com/gear-tech/gear ${gearRepoPath}`);
+    await CommandRunner.command('git', [
+      'clone',
+      '--depth',
+      '1',
+      '-b',
+      branch,
+      'https://github.com/gear-tech/gear',
+      gearRepoPath,
+    ]);
     logger.success('Gear repo cloned successfully');
   } catch (error) {
     throw new ScriptError(`Failed to clone gear repo: ${error.message}`);
@@ -289,7 +297,7 @@ async function buildVaraEth(config, gearRepoPath) {
 
     // Make the binary executable
     try {
-      await CommandRunner.exec(`chmod +x ${ethexePath}`);
+      await CommandRunner.command('chmod', ['+x', ethexePath]);
       logger.success('Ethexe binary is ready');
     } catch (error) {
       throw new ScriptError(`Failed to make ethexe executable: ${error.message}`);
@@ -312,7 +320,16 @@ async function killProcessOnPort(port) {
   try {
     logger.info(`Attempting to free port ${port}...`);
     // Kill any process using the port (works on macOS and Linux)
-    await CommandRunner.exec(`lsof -ti:${port} | xargs kill -9 2>/dev/null || true`);
+    // Use proper number validation for port
+    const portNum = parseInt(port, 10);
+    if (Number.isNaN(portNum) || portNum < 1 || portNum > 65535) {
+      logger.debug(`Invalid port number: ${port}`);
+      return;
+    }
+    // Use shell with explicit validation
+    await CommandRunner.exec(`lsof -ti:${portNum} | xargs kill -9 2>/dev/null || true`, {
+      shell: '/bin/sh',
+    });
     // Wait a bit for the port to be released
     await new Promise((resolve) => setTimeout(resolve, 500));
   } catch (error) {
@@ -380,8 +397,9 @@ async function deployContracts(config, gearRepoPath, state) {
   logger.info(`Deployment logs will be saved to: ${logFile}`);
 
   try {
-    await CommandRunner.exec(
-      `forge script script/Deployment.s.sol:DeploymentScript --rpc-url ${rpc} --broadcast --slow -vvvv`,
+    await CommandRunner.command(
+      'forge',
+      ['script', 'script/Deployment.s.sol:DeploymentScript', '--rpc-url', rpc, '--broadcast', '--slow', '-vvvv'],
       {
         cwd: pathToContracts,
         stdio: 'ignore',
@@ -625,8 +643,25 @@ async function uploadCode(config, gearRepoPath) {
   const ethexePath = path.join(gearRepoPath, 'target/release/ethexe');
 
   try {
-    await CommandRunner.exec(
-      `${ethexePath} --cfg none tx --ethereum-rpc "${wsRpc}" --ethereum-router "${routerAddress}" --key-store "${keyStore}" --sender "${senderPublicKey}" upload -l ${wasmFile} -w`,
+    await CommandRunner.command(
+      ethexePath,
+      [
+        '--cfg',
+        'none',
+        'tx',
+        '--ethereum-rpc',
+        wsRpc,
+        '--ethereum-router',
+        routerAddress,
+        '--key-store',
+        keyStore,
+        '--sender',
+        senderPublicKey,
+        'upload',
+        '-l',
+        wasmFile,
+        '-w',
+      ],
       { cwd: gearRepoPath },
     );
     logger.success('Code uploaded successfully');
