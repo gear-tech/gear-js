@@ -16370,7 +16370,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-request@npm:^7.3.5":
+"graphql-request@npm:7.3.5":
   version: 7.3.5
   resolution: "graphql-request@npm:7.3.5"
   dependencies:
@@ -25494,7 +25494,7 @@ __metadata:
     "@tanstack/react-query": "npm:5.90.2"
     "@types/react-syntax-highlighter": "npm:15.5.13"
     "@vara-eth/api": "workspace:*"
-    graphql-request: "npm:^7.3.5"
+    graphql-request: "npm:7.3.5"
     jotai: "npm:2.12.0"
     kzg-wasm: "npm:1.0.0"
     react: "npm:19.2.0"
