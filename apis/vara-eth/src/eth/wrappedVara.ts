@@ -20,7 +20,7 @@ export class WrappedVaraContract implements IWrappedVaraContract {
    * @param ethereumClient - The Ethereum client for sending transactions
    */
   constructor(
-    private address: Address,
+    public readonly address: Address,
     private ethereumClient: EthereumClient,
   ) {}
 

@@ -1,5 +1,5 @@
 import { createPublicClient, createWalletClient, webSocket } from 'viem';
-import type { Chain, PublicClient, WalletClient, WebSocketTransport } from 'viem';
+import type { Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import {
@@ -142,13 +142,42 @@ describe('view functions', () => {
   });
 });
 
-describe('transactions', () => {
-  test('should top up executable balance', async () => {
-    const tx = await mirror.executableBalanceTopUp(BigInt(10 * 1e12));
+describe('balance', () => {
+  test(
+    'should top up executable balance',
+    async () => {
+      const tx = await mirror.executableBalanceTopUp(BigInt(10 * 1e12));
 
-    const { status } = await tx.sendAndWaitForReceipt();
+      const { status } = await tx.sendAndWaitForReceipt();
 
-    expect(status).toBe('success');
+      expect(status).toBe('success');
+
+      let newStateHash: Hex | undefined = undefined;
+
+      const currentStateHash = await mirror.stateHash();
+
+      const unwatch = mirror.watchStateChangedEvent((stateHash) => {
+        newStateHash = stateHash;
+      });
+
+      while (!newStateHash) {
+        await waitNBlocks(1);
+      }
+
+      expect(newStateHash).toBeDefined();
+      expect(newStateHash).not.toEqual(currentStateHash);
+
+      unwatch();
+    },
+    config.longRunningTestTimeout,
+  );
+
+  test('should check executable balance', async () => {
+    const hash = await mirror.stateHash();
+
+    const state = await api.query.program.readState(hash);
+
+    expect(state).toHaveProperty(['executableBalance'], 10 * 1e12);
   });
 });
 

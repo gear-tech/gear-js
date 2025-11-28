@@ -28,7 +28,7 @@ export class MirrorContract implements IMirrorContract {
    * @param ethereumClient - The Ethereum client instance
    */
   constructor(
-    private address: Address,
+    public readonly address: Address,
     private ethereumClient: EthereumClient,
   ) {}
 
