@@ -1,4 +1,4 @@
-import { Hex } from 'viem';
+import { Address, Hex } from 'viem';
 import { IInjectedTransactionPromise, IVaraEthProvider, InjectedTransaction } from '../types/index.js';
 import { EthereumClient, RouterContract } from '../eth/index.js';
 
@@ -37,10 +37,22 @@ export class Injected {
     this.tx.setReferenceBlock(block.hash);
   }
 
-  public async setRecipient(index = 0) {
+  public async setRecipient(address?: Address) {
     const validators = await this.router.validators();
-    // TODO: pick the right validator
-    this.tx.setRecipient(validators[index]);
+
+    if (address) {
+      if (validators.includes(address)) {
+        this.tx.setRecipient(address);
+        return;
+      }
+      throw new Error('Address is not a validator');
+    }
+
+    const slot = Date.now() / this._ethClient.blockDuration;
+
+    const validatorIndex = slot % validators.length;
+
+    this.tx.setRecipient(validators[validatorIndex]);
   }
 
   private async _sign() {
@@ -65,11 +77,11 @@ export class Injected {
       await this.setReferenceBlock();
     }
 
+    await this._sign();
+
     if (!this.tx.recipient) {
       await this.setRecipient();
     }
-
-    await this._sign();
 
     const result = await this._varaethProvider.send<string>('injected_sendTransaction', this._rpcData);
 
@@ -81,11 +93,11 @@ export class Injected {
       await this.setReferenceBlock();
     }
 
+    await this._sign();
+
     if (!this.tx.recipient) {
       await this.setRecipient();
     }
-
-    await this._sign();
 
     let unsub: (() => void) | undefined;
 

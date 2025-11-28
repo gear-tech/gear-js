@@ -261,7 +261,6 @@ export class MirrorContract implements IMirrorContract {
                 txHash: log.transactionHash,
               });
             }
-            unwatch();
           }
         }
       },

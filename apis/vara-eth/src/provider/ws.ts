@@ -457,7 +457,6 @@ export class WsVaraEthProvider implements IVaraEthProvider {
       return;
     }
 
-    // TODO: how to unsubscribe properly?
     const request = this._createRequest(unsubscribeMethod, [{ id: subscriptionId }]);
 
     this._conn!.send(JSON.stringify(request));

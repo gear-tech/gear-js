@@ -10,6 +10,12 @@ import {
   WalletClient,
 } from 'viem';
 
+const TARGET_BLOCK_TIMES: Record<number, number> = {
+  1: 12,
+  560048: 12,
+  31337: 1,
+};
+
 export class EthereumClient<
   TTransport extends Transport = Transport,
   TChain extends Chain = Chain,
@@ -17,10 +23,17 @@ export class EthereumClient<
 > {
   public readonly publicClient: PublicClient<TTransport, TChain, undefined>;
   private _walletClient: WalletClient<TTransport, TChain, TAccount>;
+  private _chainId: number;
 
   constructor(publicClient: PublicClient, walletClient: WalletClient) {
     this.publicClient = publicClient as PublicClient<TTransport, TChain, undefined>;
     this._walletClient = walletClient as WalletClient<TTransport, TChain, TAccount>;
+
+    this._init();
+  }
+
+  private async _init() {
+    this._chainId = await this.publicClient.getChainId();
   }
 
   public get walletClient() {
@@ -85,5 +98,12 @@ export class EthereumClient<
   async signMessage(data: string) {
     const sig = await this.walletClient.signMessage({ message: data, account: this.account });
     return sig;
+  }
+
+  get blockDuration(): number {
+    if (this._chainId in TARGET_BLOCK_TIMES) {
+      return TARGET_BLOCK_TIMES[this._chainId];
+    }
+    throw new Error(`Unsupported chain ID: ${this._chainId}`);
   }
 }
