@@ -37,10 +37,10 @@ export class Injected {
     this.tx.setReferenceBlock(block.hash);
   }
 
-  public async setRecipient() {
+  public async setRecipient(index = 0) {
     const validators = await this.router.validators();
     // TODO: pick the right validator
-    this.tx.setRecipient(validators[0]);
+    this.tx.setRecipient(validators[index]);
   }
 
   private async _sign() {
