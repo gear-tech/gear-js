@@ -1,2 +1,2 @@
 export { CodeViewer, UploadCodeButton } from './ui';
-export { useGetAllCodesQuery, type CodeStatus } from './lib';
+export { useGetAllCodesQuery, CODE_STATUS } from './lib';

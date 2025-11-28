@@ -7,7 +7,8 @@
     "start": "npx vite",
     "build": "rm -rf dist && npx vite build",
     "preview": "npx vite preview",
-    "clean": "echo \"clean varaeth-idea-frontend\" && rm -rf dist"
+    "clean": "echo \"clean varaeth-idea-frontend\" && rm -rf dist",
+    "codegen": "graphql-codegen --require dotenv/config"
   },
   "dependencies": {
     "@gear-js/api": "0.44.2",
@@ -32,6 +33,9 @@
   },
   "devDependencies": {
     "@gear-js/frontend-configs": "*",
+    "@graphql-codegen/cli": "6.0.0",
+    "@graphql-codegen/client-preset": "5.0.0",
+    "@graphql-typed-document-node/core": "3.2.0",
     "@types/react-syntax-highlighter": "15.5.13"
   }
 }

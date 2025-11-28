@@ -1,25 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
+import { request } from 'graphql-request';
 
-import { graphqlClient } from '@/shared/utils';
+import { EXPLORER_URL } from '@/shared/config';
+import { graphql } from '@/shared/graphql';
 
-export type CodeStatus = 'validation_requested' | 'validation_failed' | 'validated';
-
-export type Code = {
-  id: string;
-  status: CodeStatus;
+export const CODE_STATUS = {
+  VALIDATION_REQUESTED: 'validation_requested',
+  VALIDATION_FAILED: 'validation_failed',
+  VALIDATED: 'validated',
 };
 
-export type AllCodes = {
-  nodes: Code[];
-  totalCount: number;
-};
-
-type GetCodesVariables = {
-  first: number;
-  offset: number;
-};
-
-const GET_CODES_QUERY = `
+const GET_CODES_QUERY = graphql(`
   query GetCodes($first: Int!, $offset: Int!) {
     allCodes(first: $first, offset: $offset) {
       nodes {
@@ -29,7 +20,7 @@ const GET_CODES_QUERY = `
       totalCount
     }
   }
-`;
+`);
 
 export const useGetAllCodesQuery = (page: number, pageSize: number) => {
   const first = pageSize;
@@ -37,7 +28,7 @@ export const useGetAllCodesQuery = (page: number, pageSize: number) => {
 
   return useQuery({
     queryKey: ['allCodes', first, offset],
-    queryFn: () => graphqlClient.request<{ allCodes: AllCodes }, GetCodesVariables>(GET_CODES_QUERY, { first, offset }),
+    queryFn: () => request(EXPLORER_URL, GET_CODES_QUERY, { first, offset }),
     select: (data) => data.allCodes,
     placeholderData: (previousData) => previousData,
   });

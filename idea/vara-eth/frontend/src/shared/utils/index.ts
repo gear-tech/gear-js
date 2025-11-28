@@ -1,7 +1,5 @@
 import { formatBalance as polkadotFormatBalance } from '@polkadot/util';
 
-import { graphqlClient } from './graphql-client';
-
 const copyToClipboard = ({
   value,
   onSuccess,
@@ -58,4 +56,4 @@ const formatDate = (rawDate: string | number) => {
 const isString = (value: unknown): value is string => typeof value === 'string';
 const getPreformattedText = (data: unknown) => JSON.stringify(data, null, 4);
 
-export { copyToClipboard, formatBalance, formatNumber, formatDate, isString, getPreformattedText, graphqlClient };
+export { copyToClipboard, formatBalance, formatNumber, formatDate, isString, getPreformattedText };

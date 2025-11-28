@@ -3,7 +3,7 @@ import { generatePath } from 'react-router-dom';
 
 import VerifySvg from '@/assets/icons/verify.svg?react';
 import { HashLink, Navigation, Pagination, Table, Tooltip } from '@/components';
-import { useGetAllCodesQuery, UploadCodeButton, CodeStatus } from '@/features/codes';
+import { useGetAllCodesQuery, UploadCodeButton, CODE_STATUS } from '@/features/codes';
 import { Search } from '@/features/search';
 import { routes } from '@/shared/config';
 
@@ -12,7 +12,7 @@ import styles from './codes.module.scss';
 type DataRow = {
   id: string;
   codeId: string;
-  status: CodeStatus;
+  status: string;
   programsCount: string;
   services: string;
   createdAt: string;
@@ -28,7 +28,7 @@ const columns = [
     render: (codeId: string, { status }: DataRow) => (
       <div className={styles.codeIdWrapper}>
         <HashLink hash={codeId} href={generatePath(routes.code, { codeId })} />
-        {status === 'validated' && (
+        {status === CODE_STATUS.VALIDATED && (
           <Tooltip value="Verified">
             <VerifySvg />
           </Tooltip>
