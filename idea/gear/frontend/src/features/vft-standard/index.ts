@@ -1,4 +1,4 @@
-import { VftTag } from './ui';
+import { VftTag, Vft } from './ui';
 import { isVftCode } from './utils';
 
-export { VftTag, isVftCode };
+export { VftTag, isVftCode, Vft };
