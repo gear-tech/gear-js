@@ -201,6 +201,8 @@ describe('Injected Transactions', () => {
     let currentStateHash: Hex;
     let newStateHash: Hex;
 
+    let messageId: Hex;
+
     test('should read current state hash', async () => {
       currentStateHash = await mirror.stateHash();
     });
@@ -222,8 +224,24 @@ describe('Injected Transactions', () => {
 
       const result = await tx.send();
 
+      messageId = injected.messageId;
+
       expect(result).toBe('Accept');
     });
+
+    test(
+      'should wait for reply on Etherum',
+      async () => {
+        const reply = await mirror.waitForReply(messageId);
+
+        expect(reply).toHaveProperty('payload', '0x1c436f756e74657224496e6372656d656e7401000000');
+        expect(reply).toHaveProperty('value', 0n);
+        expect(reply).toHaveProperty('replyCode', '0x00010000');
+        expect(reply).toHaveProperty('blockNumber');
+        expect(reply).toHaveProperty('txHash');
+      },
+      config.longRunningTestTimeout,
+    );
 
     test('should wait for a new state hash', async () => {
       while (!newStateHash) {
@@ -237,8 +255,6 @@ describe('Injected Transactions', () => {
     test('should unsubscribe from StateChanged event', () => {
       unwatch();
     });
-
-    test.todo('should receive reply');
 
     test('should send a message and wait for the promise', async () => {
       const payload = '0x1c436f756e74657224496e6372656d656e74';
