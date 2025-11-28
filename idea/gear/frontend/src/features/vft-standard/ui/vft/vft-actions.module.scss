@@ -1,0 +1,185 @@
+:root {
+  --color-blue: oklch(45% 50% 264deg);
+  --color-red: oklch(50% 55% 31deg);
+
+  --color-gray-50: oklch(98% 0.25% 264deg);
+  --color-gray-100: oklch(12% 9.5% 264deg / 5%);
+  --color-gray-200: oklch(12% 9% 264deg / 7%);
+  --color-gray-300: oklch(12% 8.5% 264deg / 17%);
+  --color-gray-400: oklch(12% 8% 264deg / 38%);
+  --color-gray-500: oklch(12% 7.5% 264deg / 50%);
+  --color-gray-600: oklch(12% 7% 264deg / 67%);
+  --color-gray-700: oklch(12% 6% 264deg / 77%);
+  --color-gray-800: oklch(12% 5% 264deg / 85%);
+  --color-gray-900: oklch(12% 5% 264deg / 90%);
+  --color-gray-950: oklch(12% 5% 264deg / 95%);
+
+  @media (prefers-color-scheme: dark) {
+    --color-blue: oklch(69% 50% 264deg);
+    --color-red: oklch(80% 55% 31deg);
+
+    --color-gray-50: oklch(17% 0.25% 264deg);
+    --color-gray-100: oklch(28% 0.75% 264deg / 65%);
+    --color-gray-200: oklch(29% 0.75% 264deg / 80%);
+    --color-gray-300: oklch(35% 0.75% 264deg / 80%);
+    --color-gray-400: oklch(47% 0.875% 264deg / 80%);
+    --color-gray-500: oklch(64% 1% 264deg / 80%);
+    --color-gray-600: oklch(82% 1% 264deg / 80%);
+    --color-gray-700: oklch(92% 1.125% 264deg / 80%);
+    --color-gray-800: oklch(93% 0.875% 264deg / 85%);
+    --color-gray-900: oklch(95% 0.5% 264deg / 90%);
+    --color-gray-950: oklch(94% 0.375% 264deg / 95%);
+  }
+}
+
+.Button {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  height: 2.5rem;
+  padding: 0 0.875rem;
+  margin: 0;
+  outline: 0;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 0.375rem;
+  background-color: var(--color-gray-50);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5rem;
+  color: var(--color-gray-900);
+  user-select: none;
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--color-gray-100);
+    }
+  }
+
+  &:active {
+    background-color: var(--color-gray-100);
+  }
+
+  &[data-popup-open] {
+    background-color: var(--color-gray-100);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: -1px;
+  }
+}
+
+.ButtonIcon {
+  margin-right: -0.25rem;
+}
+
+.Positioner {
+  outline: 0;
+}
+
+.Popup {
+  box-sizing: border-box;
+  padding-block: 0.25rem;
+  border-radius: 0.375rem;
+  background-color: canvas;
+  color: var(--color-gray-900);
+  transform-origin: var(--transform-origin);
+  transition:
+    transform 150ms,
+    opacity 150ms;
+
+  &[data-starting-style],
+  &[data-ending-style] {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  @media (prefers-color-scheme: light) {
+    outline: 1px solid var(--color-gray-200);
+    box-shadow:
+      0 10px 15px -3px var(--color-gray-200),
+      0 4px 6px -4px var(--color-gray-200);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    outline: 1px solid var(--color-gray-300);
+    outline-offset: -1px;
+  }
+}
+
+.Arrow {
+  display: flex;
+
+  &[data-side='top'] {
+    bottom: -8px;
+    rotate: 180deg;
+  }
+
+  &[data-side='bottom'] {
+    top: -8px;
+    rotate: 0deg;
+  }
+
+  &[data-side='left'] {
+    right: -13px;
+    rotate: 90deg;
+  }
+
+  &[data-side='right'] {
+    left: -13px;
+    rotate: -90deg;
+  }
+}
+
+.ArrowFill {
+  fill: canvas;
+}
+
+.ArrowOuterStroke {
+  @media (prefers-color-scheme: light) {
+    fill: var(--color-gray-200);
+  }
+}
+
+.ArrowInnerStroke {
+  @media (prefers-color-scheme: dark) {
+    fill: var(--color-gray-300);
+  }
+}
+
+.Item {
+  outline: 0;
+  cursor: default;
+  user-select: none;
+  padding-block: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 2rem;
+  display: flex;
+  font-size: 0.875rem;
+  line-height: 1rem;
+
+  &[data-highlighted] {
+    z-index: 0;
+    position: relative;
+    color: var(--color-gray-50);
+  }
+
+  &[data-highlighted]::before {
+    content: '';
+    z-index: -1;
+    position: absolute;
+    inset-block: 0;
+    inset-inline: 0.25rem;
+    border-radius: 0.25rem;
+    background-color: var(--color-gray-900);
+  }
+}
+
+.Separator {
+  margin: 0.375rem 1rem;
+  height: 1px;
+  background-color: var(--color-gray-200);
+}

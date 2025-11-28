@@ -9,7 +9,7 @@ import { ProgramMessages } from '@/features/message';
 import { useMetadata, MetadataTable, isState } from '@/features/metadata';
 import { ProgramStatus, ProgramTable, useProgram } from '@/features/program';
 import { ProgramEvents, SailsPreview, useSails } from '@/features/sails';
-import { isVftCode, VftTag } from '@/features/vft-standard';
+import { isVftCode, Vft, VftTag } from '@/features/vft-standard';
 import { ProgramVouchers } from '@/features/voucher';
 import { useModal } from '@/hooks';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
@@ -22,6 +22,7 @@ import { Box, UILink } from '@/shared/ui';
 import styles from './program.module.scss';
 
 const TABS = ['Metadata/Sails', 'Messages', 'Events', 'Vouchers'];
+const VFT_TABS = ['VFT Studio', 'Metadata/Sails', 'Messages', 'Events', 'Vouchers'];
 
 type Params = {
   programId: HexString;
@@ -69,8 +70,9 @@ const Program = () => {
     });
   };
 
-  const renderTabs = () =>
-    TABS.map((tab, index) => (
+  const renderTabs = () => {
+    const tabs = isVft ? VFT_TABS : TABS;
+    return tabs.map((tab, index) => (
       <button
         key={tab}
         type="button"
@@ -79,6 +81,7 @@ const Program = () => {
         {tab}
       </button>
     ));
+  };
 
   return (
     <div className={styles.container}>
@@ -134,18 +137,36 @@ const Program = () => {
       <div className={styles.body}>
         <header className={styles.tabs}>{renderTabs()}</header>
 
-        {tabIndex === 0 &&
-          (sails ? (
-            <Box>
-              <SailsPreview value={sails} />
-            </Box>
-          ) : (
-            <MetadataTable metadata={metadata} isLoading={isLoading} />
-          ))}
-
-        {tabIndex === 1 && <ProgramMessages programId={programId} sails={sails} />}
-        {tabIndex === 2 && !isSailsLoading && <ProgramEvents programId={programId} sails={sails} />}
-        {tabIndex === 3 && <ProgramVouchers programId={programId} />}
+        {isVft ? (
+          <>
+            {tabIndex === 0 && <Vft id={programId} sails={sails} />}
+            {tabIndex === 1 &&
+              (sails ? (
+                <Box>
+                  <SailsPreview value={sails} />
+                </Box>
+              ) : (
+                <MetadataTable metadata={metadata} isLoading={isLoading} />
+              ))}
+            {tabIndex === 2 && <ProgramMessages programId={programId} sails={sails} />}
+            {tabIndex === 3 && !isSailsLoading && <ProgramEvents programId={programId} sails={sails} />}
+            {tabIndex === 4 && <ProgramVouchers programId={programId} />}
+          </>
+        ) : (
+          <>
+            {tabIndex === 0 &&
+              (sails ? (
+                <Box>
+                  <SailsPreview value={sails} />
+                </Box>
+              ) : (
+                <MetadataTable metadata={metadata} isLoading={isLoading} />
+              ))}
+            {tabIndex === 1 && <ProgramMessages programId={programId} sails={sails} />}
+            {tabIndex === 2 && !isSailsLoading && <ProgramEvents programId={programId} sails={sails} />}
+            {tabIndex === 3 && <ProgramVouchers programId={programId} />}
+          </>
+        )}
       </div>
     </div>
   );
