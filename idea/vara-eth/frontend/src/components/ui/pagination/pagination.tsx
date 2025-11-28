@@ -6,22 +6,18 @@ import styles from './pagination.module.scss';
 type PaginationProps = {
   currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
+  onPageChange: (page: (prevPage: number) => number) => void;
 };
 
 const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
-  if (!totalPages || totalPages <= 1) return null;
+  if (totalPages <= 1) return null;
 
   const handlePrev = () => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1);
-    }
+    onPageChange((prevPage) => prevPage - 1);
   };
 
   const handleNext = () => {
-    if (currentPage < totalPages) {
-      onPageChange(currentPage + 1);
-    }
+    onPageChange((prevPage) => prevPage + 1);
   };
 
   return (
