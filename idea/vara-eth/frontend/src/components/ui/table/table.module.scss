@@ -3,6 +3,11 @@
   border-collapse: collapse;
   background-color: #000;
   border-radius: 4px;
+  transition: opacity 0.2s ease-in-out;
+
+  &.fetching {
+    opacity: 0.7;
+  }
 
   &.lineHeight-md {
     td {
@@ -36,7 +41,9 @@
   tr {
     &:hover {
       background: rgba(168, 245, 147, 0.1);
-      box-shadow: -1px -1px inset rgba(168, 245, 147, 0.25), 1px 1px inset rgba(168, 245, 147, 0.25);
+      box-shadow:
+        -1px -1px inset rgba(168, 245, 147, 0.25),
+        1px 1px inset rgba(168, 245, 147, 0.25);
     }
 
     &:first-child {
@@ -52,10 +59,14 @@
     }
   }
 
-  .pagination {
+  .headerRightCell {
+    padding: 0;
+    background: rgba(15, 15, 15, 1);
+  }
+
+  .headerRight {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     padding: 5px 24px;
-    background-color: #111;
   }
 }
