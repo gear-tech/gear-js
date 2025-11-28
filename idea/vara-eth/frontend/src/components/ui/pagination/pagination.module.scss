@@ -1,0 +1,18 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  color: var(--foreground-75);
+}
+
+.nextButton {
+  transform: rotate(180deg);
+}
+
+.info {
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  white-space: nowrap;
+}

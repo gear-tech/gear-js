@@ -1,4 +1,4 @@
-import { VaraEthApi, HttpVaraEthProvider } from '@vara-eth/api';
+import { VaraEthApi, WsVaraEthProvider } from '@vara-eth/api';
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react';
 
 import { VARA_ETH_NODE_ADDRESS } from '@/shared/config';
@@ -9,7 +9,7 @@ const VaraEthApiProvider = ({ children }: PropsWithChildren) => {
   const [api, setApi] = useState<VaraEthApi>();
 
   useEffect(() => {
-    const instance = new VaraEthApi(new HttpVaraEthProvider(VARA_ETH_NODE_ADDRESS));
+    const instance = new VaraEthApi(new WsVaraEthProvider(VARA_ETH_NODE_ADDRESS));
     setApi(instance);
 
     return () => {

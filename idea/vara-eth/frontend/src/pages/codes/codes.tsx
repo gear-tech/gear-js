@@ -1,8 +1,9 @@
+import { useState } from 'react';
 import { generatePath } from 'react-router-dom';
 
 import VerifySvg from '@/assets/icons/verify.svg?react';
-import { HashLink, Navigation, Table, Tooltip } from '@/components';
-import { UploadCodeButton } from '@/features/codes';
+import { HashLink, Navigation, Pagination, Table, Tooltip } from '@/components';
+import { useGetAllCodesQuery, UploadCodeButton, CODE_STATUS } from '@/features/codes';
 import { Search } from '@/features/search';
 import { routes } from '@/shared/config';
 
@@ -11,32 +12,27 @@ import styles from './codes.module.scss';
 type DataRow = {
   id: string;
   codeId: string;
+  status: string;
   programsCount: string;
   services: string;
   createdAt: string;
 };
 
-const data: DataRow[] = [
-  {
-    id: '1',
-    codeId: '0x3ac96b57f932fc274c93b621ec65659548fc63f6e41e37760f9875feaed799f8',
-    programsCount: '123',
-    services: 'Service 1',
-    createdAt: '12-19-2024 10:30:24',
-  },
-];
+const PAGE_SIZE = 10;
 
 const columns = [
   {
     key: 'codeId' as const,
     title: 'CODE ID',
     sortable: true,
-    render: (codeId: string) => (
+    render: (codeId: string, { status }: DataRow) => (
       <div className={styles.codeIdWrapper}>
         <HashLink hash={codeId} href={generatePath(routes.code, { codeId })} />
-        <Tooltip value="Verified">
-          <VerifySvg />
-        </Tooltip>
+        {status === CODE_STATUS.VALIDATED && (
+          <Tooltip value="Verified">
+            <VerifySvg />
+          </Tooltip>
+        )}
       </div>
     ),
   },
@@ -47,12 +43,34 @@ const columns = [
 ];
 
 const Codes = () => {
+  const [page, setPage] = useState(1);
+  const { data: allCodes, isFetching } = useGetAllCodesQuery(page, PAGE_SIZE);
+
+  const data: DataRow[] =
+    allCodes?.nodes.map((code) => ({
+      id: code.id,
+      codeId: code.id,
+      status: code.status,
+      // ! TODO: get programs count and services
+      programsCount: '1',
+      services: 'Service 1',
+      createdAt: '12-19-2024 10:30:24',
+    })) || [];
+
+  const totalItems = allCodes?.totalCount ?? 0;
+  const totalPages = totalItems ? Math.ceil(totalItems / PAGE_SIZE) : 1;
+
   return (
     <>
       <Navigation search={<Search />} action={<UploadCodeButton />} />
 
       <div className={styles.container}>
-        <Table columns={columns} data={data} />
+        <Table
+          columns={columns}
+          data={data}
+          isFetching={isFetching}
+          headerRight={<Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />}
+        />
       </div>
     </>
   );
