@@ -16,10 +16,17 @@ type TableProps<T> = {
   columns: TableColumn<T>[];
   data: T[];
   lineHeight?: 'md' | 'lg';
+  headerRight?: React.ReactNode;
+  isFetching?: boolean;
 };
 
-// ! TODO: add pagination
-const Table = <T extends { id: string | number }>({ columns, data, lineHeight = 'md' }: TableProps<T>) => {
+const Table = <T extends { id: string | number }>({
+  columns,
+  data,
+  lineHeight = 'md',
+  headerRight,
+  isFetching = false,
+}: TableProps<T>) => {
   const [sortKey, setSortKey] = useState<keyof T | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
@@ -43,11 +50,13 @@ const Table = <T extends { id: string | number }>({ columns, data, lineHeight = 
     });
   }, [data, sortKey, sortOrder]);
 
+  const hasExtraColumn = Boolean(headerRight);
+
   return (
-    <table className={clsx(styles.table, styles[`lineHeight-${lineHeight}`])}>
+    <table className={clsx(styles.table, styles[`lineHeight-${lineHeight}`], isFetching && styles.fetching)}>
       <thead>
         <tr>
-          {columns.map((column) => (
+          {columns.map((column: TableColumn<T>) => (
             <th
               key={column.key as string}
               onClick={() => column.sortable && handleSort(column.key)}
@@ -55,6 +64,11 @@ const Table = <T extends { id: string | number }>({ columns, data, lineHeight = 
               {column.title} <SortSVG />
             </th>
           ))}
+          {hasExtraColumn && (
+            <th className={styles.headerRightCell}>
+              <div className={styles.headerRight}>{headerRight}</div>
+            </th>
+          )}
         </tr>
       </thead>
       <tbody>
@@ -65,6 +79,7 @@ const Table = <T extends { id: string | number }>({ columns, data, lineHeight = 
                 {column.render ? column.render(row[column.key], row) : String(row[column.key])}
               </td>
             ))}
+            {hasExtraColumn && <td />}
           </tr>
         ))}
       </tbody>

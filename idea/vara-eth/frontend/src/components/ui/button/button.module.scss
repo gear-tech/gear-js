@@ -75,6 +75,10 @@
     &[aria-disabled='true'] {
       color: var(--foreground-30);
       cursor: auto;
+
+      path {
+        stroke: var(--border);
+      }
     }
   }
 

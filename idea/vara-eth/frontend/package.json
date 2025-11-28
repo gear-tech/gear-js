@@ -16,6 +16,7 @@
     "@reown/appkit-adapter-wagmi": "1.8.14",
     "@tanstack/react-query": "5.90.2",
     "@vara-eth/api": "workspace:*",
+    "graphql-request": "7.3.5",
     "jotai": "2.12.0",
     "kzg-wasm": "1.0.0",
     "react": "19.2.0",
