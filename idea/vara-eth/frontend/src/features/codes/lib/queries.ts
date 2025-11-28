@@ -35,23 +35,10 @@ export const useGetAllCodesQuery = (page: number, pageSize: number) => {
   const first = pageSize;
   const offset = (page - 1) * pageSize;
 
-  return useQuery<AllCodes>({
+  return useQuery({
     queryKey: ['allCodes', first, offset],
-    queryFn: async () => {
-      try {
-        const data = await graphqlClient.request<{ allCodes: AllCodes }, GetCodesVariables>(GET_CODES_QUERY, {
-          first,
-          offset,
-        });
-        return data.allCodes;
-      } catch (error) {
-        console.error(error);
-        return {
-          nodes: [],
-          totalCount: 0,
-        } as AllCodes;
-      }
-    },
+    queryFn: () => graphqlClient.request<{ allCodes: AllCodes }, GetCodesVariables>(GET_CODES_QUERY, { first, offset }),
+    select: (data) => data.allCodes,
     placeholderData: (previousData) => previousData,
   });
 };
