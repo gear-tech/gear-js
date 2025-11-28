@@ -9078,6 +9078,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/dotenv@npm:^8.2.3":
+  version: 8.2.3
+  resolution: "@types/dotenv@npm:8.2.3"
+  dependencies:
+    dotenv: "npm:*"
+  checksum: 10c0/af9178da617959cddc8259aaa3f16c474523ead469f4a03490de2f2d1cafc8615c5d0d1ed3fad837096218126421c38cd46b4065548bb5aee3cc002c518b69f7
+  languageName: node
+  linkType: hard
+
 "@types/eslint-plugin-jsx-a11y@npm:6.10.1":
   version: 6.10.1
   resolution: "@types/eslint-plugin-jsx-a11y@npm:6.10.1"
@@ -13928,7 +13937,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:17.2.3, dotenv@npm:^17.2.3":
+"dotenv@npm:*, dotenv@npm:17.2.3, dotenv@npm:^17.2.3":
   version: 17.2.3
   resolution: "dotenv@npm:17.2.3"
   checksum: 10c0/c884403209f713214a1b64d4d1defa4934c2aa5b0002f5a670ae298a51e3c3ad3ba79dfee2f8df49f01ae74290fcd9acdb1ab1d09c7bfb42b539036108bb2ba0
@@ -15966,6 +15975,7 @@ __metadata:
     "@rollup/plugin-typescript": "npm:^12.3.0"
     "@types/babel__core": "npm:^7.20.5"
     "@types/babel__preset-env": "npm:^7.10.0"
+    "@types/dotenv": "npm:^8.2.3"
     "@types/express": "npm:^5.0.5"
     "@types/jest": "npm:^30.0.0"
     "@types/node": "npm:^24.10.1"
@@ -15973,6 +15983,7 @@ __metadata:
     "@types/react-dom": "npm:^19.2.3"
     "@types/react-transition-group": "npm:4.4.12"
     babel-jest: "npm:^30.2.0"
+    dotenv: "npm:^17.2.3"
     eslint: "npm:^9.39.1"
     eslint-plugin-storybook: "npm:^10.0.8"
     jest: "npm:^30.2.0"

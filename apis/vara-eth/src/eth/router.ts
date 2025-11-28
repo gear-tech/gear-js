@@ -40,7 +40,7 @@ export class RouterContract implements IRouterContract {
    * @param ethereumClient - The Ethereum client for sending transactions and reading data
    */
   constructor(
-    private address: Address,
+    public readonly address: Address,
     private ethereumClient: EthereumClient,
   ) {}
 
