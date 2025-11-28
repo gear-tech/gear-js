@@ -9,14 +9,23 @@ import { WalletList } from '../wallet-list';
 
 import styles from './wallet-modal.module.scss';
 
-function WalletModal({ theme }: ThemeProps) {
+type Props = Partial<ThemeProps> & {
+  close: () => void;
+};
+
+function WalletModal({ theme = 'vara', close }: Props) {
   const { Dialog } = UI_CONFIG[theme];
 
   return (
     <Wallet.Root render={<></>}>
       <Wallet.Dialog
         render={(props, state) => (
-          <Dialog footer={state.isWalletSelected && <ModalFooter theme={theme} />} {...props} {...state} />
+          <Dialog
+            heading={state.heading}
+            footer={state.isWalletSelected && <ModalFooter theme={theme} />}
+            close={close}
+            {...props}
+          />
         )}>
         <WalletList theme={theme} />
         <AccountList theme={theme} />
