@@ -21,26 +21,28 @@ function VftOverview({ id }: Props) {
   const decimals = useProgramQuery({ program, serviceName: 'vft', functionName: 'decimals', args: [] });
 
   return (
-    <Box>
-      <h2>VFT Overview</h2>
-
-      <header>
-        <h3>{name.data}</h3>
-        <span>{symbol.data}</span>
-
-        <VftActions />
-        <VftReads />
-      </header>
-
-      <div>
-        <div>
-          <span>Total Supply:</span>
-          <span>{totalSupply.data}</span>
+    <Box className={styles.overview}>
+      <header className={styles.header}>
+        <div className={styles.titleRow}>
+          <h3 className={styles.title}>{name.data}</h3>
+          <span className={styles.symbol}>{symbol.data}</span>
         </div>
 
-        <div>
-          <span>Decimals:</span>
-          <span>{decimals.data}</span>
+        <div className={styles.actions}>
+          <VftActions />
+          <VftReads />
+        </div>
+      </header>
+
+      <div className={styles.info}>
+        <div className={styles.infoItem}>
+          <span className={styles.label}>Total Supply:</span>
+          <span className={styles.value}>{totalSupply.data}</span>
+        </div>
+
+        <div className={styles.infoItem}>
+          <span className={styles.label}>Decimals:</span>
+          <span className={styles.value}>{decimals.data}</span>
         </div>
       </div>
     </Box>
