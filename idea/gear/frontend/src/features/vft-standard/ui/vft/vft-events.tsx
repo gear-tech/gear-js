@@ -1,4 +1,5 @@
 import { HexString } from '@gear-js/api';
+import { Identicon } from '@polkadot/react-identicon';
 import { JSX } from 'react';
 import { Sails } from 'sails-js';
 
@@ -57,28 +58,35 @@ function EventList<T>({ title, events, eventName, sails, renderPayload }: EventL
     return sails.services['Vft'].events[eventName].decode(payload) as T;
   };
 
-  const renderEvents = () =>
-    events.map(({ payload, ...event }) => {
+  const renderEvents = () => {
+    if (events.length === 0) {
+      return <li className={styles.emptyState}>No events yet</li>;
+    }
+
+    return events.map(({ payload, ...event }) => {
       const decodedPayload = getDecodedPayload(payload!);
 
       return (
-        <li key={event.id}>
-          <header>
-            <h4>{eventName.charAt(0).toUpperCase() + eventName.slice(1)}</h4>
+        <li key={event.id} className={styles.eventItem}>
+          <header className={styles.eventHeader}>
+            <h4 className={styles.eventName}>{eventName.charAt(0).toUpperCase() + eventName.slice(1)}</h4>
 
-            <span>{new Date(event.timestamp).toLocaleString()}</span>
-            <span>{event.blockNumber}</span>
+            <p className={styles.eventMeta}>
+              <span className={styles.timestamp}>{new Date(event.timestamp).toLocaleString()}</span>
+              <span className={styles.blockNumber}>#{event.blockNumber}</span>
+            </p>
           </header>
 
-          <div>{renderPayload(decodedPayload)}</div>
+          <div className={styles.eventPayload}>{renderPayload(decodedPayload)}</div>
         </li>
       );
     });
+  };
 
   return (
-    <Box>
-      <h3>{title}</h3>
-      <ul>{renderEvents()}</ul>
+    <Box className={styles.eventCard}>
+      <h3 className={styles.eventTitle}>{title}</h3>
+      <ul className={styles.eventList}>{renderEvents()}</ul>
     </Box>
   );
 }
@@ -96,19 +104,27 @@ function VftEvents({ id, sails }: Props) {
   const renderTransferPayload = (payload: TransferPayload) => {
     return (
       <>
-        <div>
-          <span>From:</span>
-          <span>{getShortName(payload.from)}</span>
+        <div className={styles.payloadRow}>
+          <span className={styles.payloadLabel}>From:</span>
+
+          <span className={styles.payloadValue}>
+            <Identicon value={payload.from} theme="polkadot" size={16} />
+            {getShortName(payload.from, 12)}
+          </span>
         </div>
 
-        <div>
-          <span>To:</span>
-          <span>{getShortName(payload.to)}</span>
+        <div className={styles.payloadRow}>
+          <span className={styles.payloadLabel}>To:</span>
+
+          <span className={styles.payloadValue}>
+            <Identicon value={payload.to} theme="polkadot" size={16} />
+            {getShortName(payload.to, 12)}
+          </span>
         </div>
 
-        <div>
-          <span>Value:</span>
-          <span>{formatUnits(BigInt(payload.value), decimals)}</span>
+        <div className={styles.payloadRow}>
+          <span className={styles.payloadLabel}>Value:</span>
+          <span className={styles.payloadValue}>{formatUnits(BigInt(payload.value), decimals)}</span>
         </div>
       </>
     );
@@ -117,19 +133,27 @@ function VftEvents({ id, sails }: Props) {
   const renderApprovePayload = (payload: ApprovePayload) => {
     return (
       <>
-        <div>
-          <span>Owner:</span>
-          <span>{getShortName(payload.owner)}</span>
+        <div className={styles.payloadRow}>
+          <span className={styles.payloadLabel}>Owner:</span>
+
+          <span className={styles.payloadValue}>
+            <Identicon value={payload.owner} theme="polkadot" size={16} />
+            {getShortName(payload.owner, 12)}
+          </span>
         </div>
 
-        <div>
-          <span>Spender:</span>
-          <span>{getShortName(payload.spender)}</span>
+        <div className={styles.payloadRow}>
+          <span className={styles.payloadLabel}>Spender:</span>
+
+          <span className={styles.payloadValue}>
+            <Identicon value={payload.spender} theme="polkadot" size={16} />
+            {getShortName(payload.spender, 12)}
+          </span>
         </div>
 
-        <div>
-          <span>Value:</span>
-          <span>{formatUnits(BigInt(payload.value), decimals)}</span>
+        <div className={styles.payloadRow}>
+          <span className={styles.payloadLabel}>Value:</span>
+          <span className={styles.payloadValue}>{formatUnits(BigInt(payload.value), decimals)}</span>
         </div>
       </>
     );
@@ -138,14 +162,18 @@ function VftEvents({ id, sails }: Props) {
   const renderMintPayload = (payload: MintPayload) => {
     return (
       <>
-        <div>
-          <span>To:</span>
-          <span>{getShortName(payload.to)}</span>
+        <div className={styles.payloadRow}>
+          <span className={styles.payloadLabel}>To:</span>
+
+          <span className={styles.payloadValue}>
+            <Identicon value={payload.to} theme="polkadot" size={16} />
+            {getShortName(payload.to, 12)}
+          </span>
         </div>
 
-        <div>
-          <span>Value:</span>
-          <span>{formatUnits(BigInt(payload.value), decimals)}</span>
+        <div className={styles.payloadRow}>
+          <span className={styles.payloadLabel}>Value:</span>
+          <span className={styles.payloadValue}>{formatUnits(BigInt(payload.value), decimals)}</span>
         </div>
       </>
     );
@@ -154,56 +182,56 @@ function VftEvents({ id, sails }: Props) {
   const renderBurnPayload = (payload: BurnPayload) => {
     return (
       <>
-        <div>
-          <span>From:</span>
-          <span>{getShortName(payload.from)}</span>
+        <div className={styles.payloadRow}>
+          <span className={styles.payloadLabel}>From:</span>
+
+          <span className={styles.payloadValue}>
+            <Identicon value={payload.from} theme="polkadot" size={16} />
+            {getShortName(payload.from, 12)}
+          </span>
         </div>
 
-        <div>
-          <span>Value:</span>
-          <span>{formatUnits(BigInt(payload.value), decimals)}</span>
+        <div className={styles.payloadRow}>
+          <span className={styles.payloadLabel}>Value:</span>
+          <span className={styles.payloadValue}>{formatUnits(BigInt(payload.value), decimals)}</span>
         </div>
       </>
     );
   };
 
   return (
-    <div>
-      <h2>VFT Events</h2>
+    <div className={styles.container}>
+      <EventList<TransferPayload>
+        title="Transfers"
+        events={transfers.data?.result}
+        eventName="Transfer"
+        sails={sails}
+        renderPayload={renderTransferPayload}
+      />
 
-      <div className={styles.eventsContainer}>
-        <EventList<TransferPayload>
-          title="Transfers"
-          events={transfers.data?.result}
-          eventName="Transfer"
-          sails={sails}
-          renderPayload={renderTransferPayload}
-        />
+      <EventList<ApprovePayload>
+        title="Approvals"
+        events={approvals.data?.result}
+        eventName="Approval"
+        sails={sails}
+        renderPayload={renderApprovePayload}
+      />
 
-        <EventList<ApprovePayload>
-          title="Approvals"
-          events={approvals.data?.result}
-          eventName="Approval"
-          sails={sails}
-          renderPayload={renderApprovePayload}
-        />
+      <EventList<MintPayload>
+        title="Mints"
+        events={mints.data?.result}
+        eventName="Minted"
+        sails={sails}
+        renderPayload={renderMintPayload}
+      />
 
-        <EventList<MintPayload>
-          title="Mints"
-          events={mints.data?.result}
-          eventName="Minted"
-          sails={sails}
-          renderPayload={renderMintPayload}
-        />
-
-        <EventList<BurnPayload>
-          title="Burns"
-          events={burns.data?.result}
-          eventName="Burned"
-          sails={sails}
-          renderPayload={renderBurnPayload}
-        />
-      </div>
+      <EventList<BurnPayload>
+        title="Burns"
+        events={burns.data?.result}
+        eventName="Burned"
+        sails={sails}
+        renderPayload={renderBurnPayload}
+      />
     </div>
   );
 }

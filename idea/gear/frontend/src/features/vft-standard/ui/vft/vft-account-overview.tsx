@@ -5,7 +5,7 @@ import { Box } from '@/shared/ui';
 
 import { useAccountRole, useVftProgram } from '../../hooks';
 
-import styles from './vft-account-overview.tsx.module.scss';
+import styles from './vft-account-overview.module.scss';
 
 type Props = {
   id: HexString | undefined;
@@ -28,26 +28,41 @@ function VftAccountOverview({ id }: Props) {
   const renderRoles = () => {
     const roles = [];
 
-    if (isAdmin) roles.push('Admin');
-    if (isMinter) roles.push('Minter');
-    if (isBurner) roles.push('Burner');
+    if (isAdmin)
+      roles.push(
+        <span key="admin" className={styles.roleBadge}>
+          Admin
+        </span>,
+      );
+    if (isMinter)
+      roles.push(
+        <span key="minter" className={styles.roleBadge}>
+          Minter
+        </span>,
+      );
+    if (isBurner)
+      roles.push(
+        <span key="burner" className={styles.roleBadge}>
+          Burner
+        </span>,
+      );
 
-    return roles.join(', ');
+    return roles.length > 0 ? roles : <span className={styles.noRoles}>No roles</span>;
   };
 
   return (
-    <Box>
-      <h2>VFT Account Overview</h2>
+    <Box className={styles.accountOverview}>
+      <h3 className={styles.title}>Account Overview</h3>
 
-      <div>
-        <div>
-          <span>Balance:</span>
-          <span>{balance.data}</span>
+      <div className={styles.info}>
+        <div className={styles.infoItem}>
+          <span className={styles.label}>Your Balance:</span>
+          <span className={styles.value}>{balance.data || '0'}</span>
         </div>
 
-        <div>
-          <span>Roles:</span>
-          <span>{renderRoles()}</span>
+        <div className={styles.infoItem}>
+          <span className={styles.label}>Your Roles:</span>
+          <div className={styles.roles}>{renderRoles()}</div>
         </div>
       </div>
     </Box>

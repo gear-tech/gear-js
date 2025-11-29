@@ -80,10 +80,13 @@ function ChevronDownIcon(props: React.ComponentProps<'svg'>) {
 
 function PlaceholderModal({ close }: { close: () => void }) {
   return (
-    <Modal heading="VFT Action" close={close}>
-      <Input label="From" />
-      <Input label="To" />
-      <Input label="Value" />
+    <Modal heading="VFT Action" close={close} className={styles.modal}>
+      <div>
+        <Input label="From" gap="1/5" />
+        <Input label="To" gap="1/5" />
+        <Input label="Value" gap="1/5" />
+      </div>
+
       <Button text="Submit" block />
     </Modal>
   );

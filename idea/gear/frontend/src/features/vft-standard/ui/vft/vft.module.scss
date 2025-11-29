@@ -1,7 +1,9 @@
+@use '@/shared/assets/styles/variables' as *;
+
 .container {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px;
 }
 
 .header {

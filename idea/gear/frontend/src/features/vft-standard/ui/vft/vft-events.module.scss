@@ -1,5 +1,118 @@
-.eventsContainer {
+@use '@gear-js/ui/headings' as *;
+@use '@/shared/assets/styles/variables' as *;
+
+.container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.eventCard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 500px;
+  overflow: hidden;
+}
+
+.eventTitle {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: $textColor;
+  margin: 0;
+}
+
+.eventList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  max-height: 420px;
+}
+
+.eventItem {
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.25s;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.eventHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.eventName {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: $textColor;
+  margin: 0;
+}
+
+.eventMeta {
+  display: flex;
+  gap: 8px;
+}
+
+.timestamp {
+  font-size: 12px;
+  color: $gray600;
+}
+
+.blockNumber {
+  font-size: 11px;
+  color: $gray600;
+}
+
+.eventPayload {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+.payloadRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.payloadLabel {
+  font-size: 12px;
+  color: $gray700;
+  flex-shrink: 0;
+}
+
+.payloadValue {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  font-size: 12px;
+  font-weight: 500;
+  color: $textColor;
+  word-break: break-all;
+  text-align: right;
+}
+
+.emptyState {
+  padding: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: $gray600;
+  font-style: italic;
 }
