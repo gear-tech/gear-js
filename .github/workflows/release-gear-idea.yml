@@ -94,7 +94,7 @@ jobs:
       - name: Get deployment variables
         id: deployment_vars
         run: |
-          echo "namespace=dev-1" >> $GITHUB_OUTPUT
+          echo "namespace=prod-idea" >> $GITHUB_OUTPUT
           echo "deployments=frontend-temp" >> $GITHUB_OUTPUT
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
