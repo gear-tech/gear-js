@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { generatePath } from 'react-router-dom';
 
-import { HashLink, Navigation, Table } from '@/components';
+import { HashLink, Navigation, Pagination, Table } from '@/components';
+import { useGetAllProgramsQuery } from '@/features/programs';
 import { Search } from '@/features/search';
 import { routes } from '@/shared/config';
 
@@ -14,22 +16,7 @@ type DataRow = {
   createdAt: string;
 };
 
-const data: DataRow[] = [
-  {
-    id: '1',
-    programId: '0x1391884dbc831065d2981105428771f305e22fcc',
-    balance: '200,000,000,000.000 WARA',
-    messages: '123',
-    createdAt: '12-19-2024 10:30:24',
-  },
-  {
-    id: '2',
-    programId: '0xe189e481b26241ad656c73375cf88d6daddf91a2',
-    balance: '100,000,000,000.000 WARA',
-    messages: '323',
-    createdAt: '14-19-2024 10:30:24',
-  },
-];
+const PAGE_SIZE = 7;
 
 const columns = [
   {
@@ -44,11 +31,35 @@ const columns = [
 ];
 
 const Programs = () => {
+  const [page, setPage] = useState(1);
+  const { data: allPrograms, isFetching } = useGetAllProgramsQuery(page, PAGE_SIZE);
+
+  const data: DataRow[] =
+    allPrograms?.nodes.map((program) => ({
+      id: program.id,
+      programId: program.id,
+      // ! TODO: get balance from API
+      balance: '0 WARA',
+      // ! TODO: get messages count
+      messages: '0',
+      // ! TODO: format createdAtBlock to date
+      createdAt: program.createdAtBlock.toString(), // createdAt: '14-19-2024 10:30:24',
+    })) ?? [];
+
+  const totalItems = allPrograms?.totalCount ?? 0;
+  const totalPages = totalItems ? Math.ceil(totalItems / PAGE_SIZE) : 1;
+
   return (
     <>
       <Navigation search={<Search />} />
       <div className={styles.container}>
-        <Table columns={columns} data={data} lineHeight="lg" />
+        <Table
+          columns={columns}
+          data={data}
+          isFetching={isFetching}
+          lineHeight="lg"
+          headerRight={<Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />}
+        />
       </div>
     </>
   );
