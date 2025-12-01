@@ -3,7 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
 import VerifySvg from '@/assets/icons/verify.svg?react';
-import { Badge, Button, HashLink, Navigation, Tooltip } from '@/components';
+import { Badge, Button, HashLink, Navigation, NotFound, Tooltip } from '@/components';
+import { CODE_STATUS, useGetCodeByIdQuery } from '@/features/codes/lib/queries';
 import { CodeViewer } from '@/features/codes/ui/code-viewer';
 import { CreateProgramButton } from '@/features/programs';
 import { Search } from '@/features/search';
@@ -18,9 +19,34 @@ type Params = {
 
 const Code = () => {
   const navigate = useNavigate();
-  const { codeId } = useParams() as Params;
+  const params = useParams<Params>();
+  const codeId = params?.codeId;
 
-  const isVerify = true;
+  const { data: code, isLoading } = useGetCodeByIdQuery(codeId || '');
+
+  if (isLoading) {
+    return (
+      <>
+        <Navigation search={<Search />} />
+        <div className={styles.container}>
+          <div className={styles.card}>
+            <div>Loading...</div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (!code || !codeId) {
+    return (
+      <>
+        <Navigation search={<Search />} />
+        <NotFound entity="code" id={codeId} />
+      </>
+    );
+  }
+
+  const isVerify = code?.status === CODE_STATUS.VALIDATED;
   const blockHash = '0xQqC17F958D2ee523a2206206994597C13D831ec7';
   const blockDateTime = formatDate(Date.now());
 

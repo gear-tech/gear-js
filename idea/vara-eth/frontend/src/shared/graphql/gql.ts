@@ -15,9 +15,11 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 type Documents = {
     "\n  query GetCodes($first: Int!, $offset: Int!) {\n    allCodes(first: $first, offset: $offset) {\n      nodes {\n        id\n        status\n      }\n      totalCount\n    }\n  }\n": typeof types.GetCodesDocument,
+    "\n  query GetCodeById($id: String!) {\n    codeById(id: $id) {\n      id\n      status\n    }\n  }\n": typeof types.GetCodeByIdDocument,
 };
 const documents: Documents = {
     "\n  query GetCodes($first: Int!, $offset: Int!) {\n    allCodes(first: $first, offset: $offset) {\n      nodes {\n        id\n        status\n      }\n      totalCount\n    }\n  }\n": types.GetCodesDocument,
+    "\n  query GetCodeById($id: String!) {\n    codeById(id: $id) {\n      id\n      status\n    }\n  }\n": types.GetCodeByIdDocument,
 };
 
 /**
@@ -38,6 +40,10 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query GetCodes($first: Int!, $offset: Int!) {\n    allCodes(first: $first, offset: $offset) {\n      nodes {\n        id\n        status\n      }\n      totalCount\n    }\n  }\n"): (typeof documents)["\n  query GetCodes($first: Int!, $offset: Int!) {\n    allCodes(first: $first, offset: $offset) {\n      nodes {\n        id\n        status\n      }\n      totalCount\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetCodeById($id: String!) {\n    codeById(id: $id) {\n      id\n      status\n    }\n  }\n"): (typeof documents)["\n  query GetCodeById($id: String!) {\n    codeById(id: $id) {\n      id\n      status\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
