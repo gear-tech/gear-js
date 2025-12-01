@@ -389,50 +389,54 @@ Unlike regular messages sent through Mirror contracts on Ethereum, injected tran
 **Creating and Sending Injected Transactions:**
 
 ```typescript
-import { InjectedTransaction } from '@vara-eth/api';
-
-// Create injected transaction
-const tx = new InjectedTransaction({
+// Create injected transaction using API
+const injected = await api.createInjectedTransaction({
   destination: programId,              // Program to send message to
   payload: '0x1c436f756e74657224496e6372656d656e74', // Encoded message payload
   value: 0n,                           // Optional value to send
   // These are auto-populated if not provided:
   // recipient: validator address (auto-selected)
-  // referenceBlock: recent Ethereum block hash
+  // referenceBlock: recent Ethereum block hash (auto-fetched)
   // salt: random salt for uniqueness
 });
 
 // Send transaction
-const injected = api.sendInjectedTransaction(tx);
 const result = await injected.send();
-console.log('Result:', result);
 
 // Wait for full transaction promise (includes reply)
 const promise = await injected.sendAndWaitForPromise();
-console.log('TX hash:', promise.txHash);
-console.log('Reply:', promise.reply); // { payload, value, code }
-console.log('Signature:', promise.signature);
 ```
 
-**Manual Transaction Configuration:**
+**Configuring Transaction Properties:**
 
 ```typescript
-// Manually set all parameters
-const tx = new InjectedTransaction({
-  recipient: validatorAddress,         // Specific validator
+// Create injected transaction with all properties
+const injected = await api.createInjectedTransaction({
   destination: programId,
   payload: encodedPayload,
   value: 1000n,
   referenceBlock: blockHash,          // Specific Ethereum block
   salt: '0x030405',                   // Custom salt
+  recipient: validatorAddress,        // Specific validator
 });
 
-// Transaction hash (for signing)
-console.log('TX hash:', tx.hash);
+// Modify transaction using fluent API
+injected
+  .setValue(2000n)                    // Update value
+  .setSalt('0x060708');               // Update salt
 
-// Send with auto-populated fields
-const injectedTx = api.sendInjectedTransaction(tx);
-await injectedTx.send();
+// Access transaction properties
+const txHash = injected.hash;         // For signing
+const messageId = injected.messageId; // Vara.Eth message ID
+
+// Update transaction fields
+await injected.setReferenceBlock();   // Fetch latest Ethereum block
+await injected.setRecipient();        // Auto-select next validator
+// or specify a validator
+await injected.setRecipient(validatorAddress);
+
+// Send transaction
+await injected.send();
 ```
 
 ### 3. Querying Program Data

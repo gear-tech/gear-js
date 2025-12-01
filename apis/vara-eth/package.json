@@ -13,7 +13,8 @@
     "build": "npx rollup -c",
     "clean": "rm -rf lib",
     "abi": "node scripts/convert-abi.mjs",
-    "setup-local-env": "node scripts/setup-local-env.mjs"
+    "setup-local-env": "node scripts/setup-local-env.mjs",
+    "pack": "mkdir -p ../../artifacts && yarn pack --out ../../artifacts/vara-eth-api.tgz"
   },
   "exports": {
     ".": {

@@ -10,8 +10,9 @@ import {
   getRouterClient,
   getWrappedVaraClient,
   WsVaraEthProvider,
+  Injected,
+  IInjectedTransaction,
 } from '../src';
-import { InjectedTransaction } from '../src/types';
 import { hasProps, waitNBlocks } from './common';
 import { config } from './config';
 
@@ -58,14 +59,14 @@ describe('Injected Transactions', () => {
 
     const INJECTED_TEST_PROGRAM_MANIFEST_PATH = 'programs/injected/Cargo.toml';
 
-    const TX: InjectedTransaction = new InjectedTransaction({
+    const TX: IInjectedTransaction = {
       recipient: '0x0000000000000000000000000000000000000000',
       destination: '0x0000000000000000000000000000000000000000',
       payload: '0x000102',
       value: 256n,
       referenceBlock: '0x0000000000000000000000000000000000000000000000000000000000000000',
       salt: '0x030405',
-    });
+    };
 
     const PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
 
@@ -94,17 +95,21 @@ describe('Injected Transactions', () => {
     }, 5 * 60_000);
 
     test('should create a correct hash', () => {
-      expect(TX.hash).toBe(injectedTxHash);
+      const injected = new Injected(api.provider, ethereumClient, TX, router);
+      expect(injected.hash).toBe(injectedTxHash);
     });
 
     test('should create a correct message id', () => {
-      expect(TX.messageId).toBe(injectedMessageId);
+      const injected = new Injected(api.provider, ethereumClient, TX, router);
+      expect(injected.messageId).toBe(injectedMessageId);
     });
 
     test('should create a correct signature', async () => {
       const account = privateKeyToAccount(PRIVATE_KEY);
 
-      const signature = await account.sign({ hash: TX.hash });
+      const injected = new Injected(api.provider, ethereumClient, TX, router);
+
+      const signature = await account.sign({ hash: injected.hash });
 
       expect(signature).toBe(injectedTxSignature);
     });
@@ -216,15 +221,15 @@ describe('Injected Transactions', () => {
     test('should send increment message', async () => {
       const payload = '0x1c436f756e74657224496e6372656d656e74';
 
-      const injected = new InjectedTransaction({
+      const injected: IInjectedTransaction = {
         destination: programId,
         payload,
-      });
+      };
       const tx = await api.createInjectedTransaction(injected);
 
       const result = await tx.send();
 
-      messageId = injected.messageId;
+      messageId = tx.messageId;
 
       expect(result).toBe('Accept');
     });
@@ -259,10 +264,10 @@ describe('Injected Transactions', () => {
     test('should send a message and wait for the promise', async () => {
       const payload = '0x1c436f756e74657224496e6372656d656e74';
 
-      const injected = new InjectedTransaction({
+      const injected: IInjectedTransaction = {
         destination: programId,
         payload,
-      });
+      };
       const tx = await api.createInjectedTransaction(injected);
 
       const result = await tx.sendAndWaitForPromise();

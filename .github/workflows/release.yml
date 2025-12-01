@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - apis/gear/**
+      - apis/vara-eth/**
       - tools/txwrapper/package.json
       - utils/gear-hooks/package.json
       - utils/gear-ui/package.json
@@ -21,12 +22,14 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       gear-api: ${{ steps.gear-api.outputs.changed }}
+      vara-eth-api: ${{ steps.vara-eth-api.outputs.changed }}
       gear-hooks: ${{ steps.gear-hooks.outputs.changed }}
       gear-ui: ${{ steps.gear-ui.outputs.changed }}
       vara-ui: ${{ steps.vara-ui.outputs.changed }}
       frontend-configs: ${{ steps.frontend-configs.outputs.changed }}
       wallet-connect: ${{ steps.wallet-connect.outputs.changed }}
       gear-api-code-modified: ${{ steps.gear-api-code-modified.outputs.code-changed }}
+      vara-eth-api-code-modified: ${{ steps.vara-eth-api-code-modified.outputs.code-changed }}
 
     steps:
       - uses: actions/checkout@v6
@@ -39,6 +42,13 @@ jobs:
         with:
           package-name: "@gear-js/api"
           path: "apis/gear/package.json"
+
+      - name: Check vara-eth-api version
+        id: vara-eth-api
+        uses: ./.github/actions/version-changed
+        with:
+          package-name: "@vara-eth/api"
+          path: "apis/vara-eth/package.json"
 
       - name: Check gear-hooks version
         id: gear-hooks
@@ -83,6 +93,14 @@ jobs:
             code-changed:
               - 'apis/gear/src/**'
 
+      - name: Check if vara-eth-api-code has been modified
+        id: vara-eth-api-code-modified
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            code-changed:
+              - 'apis/vara-eth/src/**'
+
   publish-to-npm:
     needs: check-changes
     runs-on: ubuntu-latest
@@ -108,6 +126,11 @@ jobs:
         if: ${{ needs.check-changes.outputs.gear-api == 'true' }}
         run: npm publish --access=public
         working-directory: apis/gear
+
+      - name: Publish vara-eth-api
+        if: ${{ needs.check-changes.outputs.vara-eth-api == 'true' }}
+        run: npm publish --access=public
+        working-directory: apis/vara-eth
 
       - name: Publish gear-hooks
         if: ${{ needs.check-changes.outputs.gear-hooks == 'true' }}
@@ -135,7 +158,7 @@ jobs:
         working-directory: utils/wallet-connect
 
 
-  create-github-release:
+  create-github-release-gear-api:
     needs: [publish-to-npm, check-changes]
     if: ${{ needs.check-changes.outputs.gear-api == 'true' || needs.check-changes.outputs.gear-api-code-modified == 'true' }}
     runs-on: ubuntu-latest
@@ -191,5 +214,64 @@ jobs:
           prerelease: ${{ needs.check-changes.outputs.gear-api != 'true' }}
           files: artifacts/gear-js-api.tgz
           make_latest: ${{ needs.check-changes.outputs.gear-api == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  create-github-release-vara-eth-api:
+    needs: [publish-to-npm, check-changes]
+    if: ${{ needs.check-changes.outputs.vara-eth-api == 'true' || needs.check-changes.outputs.vara-eth-api-code-modified == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Use node 20.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build
+        run: yarn build:vara-eth-api
+
+      - name: Prepare artifact
+        working-directory: apis/vara-eth
+        run: yarn run pack
+
+      - name: Get @vara-eth/api version
+        id: get-version
+        run: |
+          VERSION=$(node -p "require('./apis/vara-eth/package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Extract Changelog
+        id: changelog
+        run: |
+          if [[ "${{ needs.check-changes.outputs.vara-eth-api }}" == "true" ]]; then
+            VERSION="${{ steps.get-version.outputs.version }}"
+            CHANGELOG=$(awk '/## \['$VERSION'\]/{flag=1;next}/## \[/{flag=0}flag{print}' apis/vara-eth/CHANGELOG.md)
+          else
+            CHANGELOG=$(awk '/## \[Unreleased\]/{flag=1;next}/## \[/{flag=0}flag{print}' apis/vara-eth/CHANGELOG.md)
+          fi
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.check-changes.outputs.vara-eth-api == 'true' && format('vara-eth-api-v{0}', steps.get-version.outputs.version) || 'vara-eth-api-draft' }}
+          name: ${{ needs.check-changes.outputs.vara-eth-api == 'true' && format('@vara-eth/api v{0}', steps.get-version.outputs.version) || '@vara-eth/api Draft Release' }}
+          body: |
+            ${{ steps.changelog.outputs.changelog }}
+          draft: ${{ needs.check-changes.outputs.vara-eth-api != 'true' }}
+          prerelease: ${{ needs.check-changes.outputs.vara-eth-api != 'true' }}
+          files: artifacts/vara-eth-api.tgz
+          make_latest: ${{ needs.check-changes.outputs.vara-eth-api == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
