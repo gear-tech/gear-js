@@ -35,7 +35,7 @@ export const User = () => {
               <Tooltip value="View on Etherscan">
                 {/* TODO: support mainnet */}
                 <a
-                  href={`https://holesky.etherscan.io/address/${userId}`}
+                  href={`https://hoodi.etherscan.io/address/${userId}`}
                   target={'_blank'}
                   rel={'noreferrer'}
                   className={styles.link}>
