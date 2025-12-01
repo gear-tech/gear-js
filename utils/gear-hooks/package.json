@@ -31,7 +31,7 @@
     "sails-js": "^0.5.0"
   },
   "dependencies": {
-    "@polkadot/extension-inject": "0.62.5",
+    "@polkadot/extension-inject": "0.62.6",
     "@polkadot/util": "13.5.9",
     "@substrate/connect": "2.1.8",
     "@twa-dev/sdk": "8.0.2",
