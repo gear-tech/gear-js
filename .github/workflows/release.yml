@@ -224,7 +224,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -256,7 +256,7 @@ jobs:
             VERSION="${{ steps.get-version.outputs.version }}"
             CHANGELOG=$(awk '/## \['$VERSION'\]/{flag=1;next}/## \[/{flag=0}flag{print}' apis/vara-eth/CHANGELOG.md)
           else
-            CHANGELOG=$(awk '/## \[draft\]/{flag=1;next}/## \[/{flag=0}flag{print}' apis/vara-eth/CHANGELOG.md)
+            CHANGELOG=$(awk '/## \[Unreleased\]/{flag=1;next}/## \[/{flag=0}flag{print}' apis/vara-eth/CHANGELOG.md)
           fi
           echo "changelog<<EOF" >> $GITHUB_OUTPUT
           echo "$CHANGELOG" >> $GITHUB_OUTPUT
