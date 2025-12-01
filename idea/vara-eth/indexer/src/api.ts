@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { postgraphile, PostGraphileOptions } from 'postgraphile';
 import dotenv from 'dotenv';
 import { createServer } from 'node:http';
@@ -31,6 +32,7 @@ async function main() {
 
   const app = express();
 
+  app.use(cors());
   app.use(middleware);
 
   const server = createServer(app);
