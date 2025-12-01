@@ -1,10 +1,10 @@
-import { EthereumClient, getRouterClient, RouterContract } from '../eth/index.js';
+import { Hex } from 'viem';
 
-import { IVaraEthProvider, InjectedTransaction } from '../types/index.js';
+import { EthereumClient, getRouterClient, RouterContract } from '../eth/index.js';
+import { IInjectedTransaction, IVaraEthProvider } from '../types/index.js';
 import { query, Query } from './query/index.js';
 import { call, Call } from './call/index.js';
 import { Injected } from './injected.js';
-import { Hex } from 'viem';
 
 export class VaraEthApi {
   private _provider: IVaraEthProvider;
@@ -51,7 +51,7 @@ export class VaraEthApi {
     return this._provider;
   }
 
-  async createInjectedTransaction(tx: InjectedTransaction) {
+  async createInjectedTransaction(tx: IInjectedTransaction) {
     if (!this._ethClient) {
       throw new Error('Eth client is not set');
     }
