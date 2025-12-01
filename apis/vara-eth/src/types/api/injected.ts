@@ -25,7 +25,7 @@ export interface IInjectedTransaction {
    */
   salt?: HexString;
   /**
-   * Address of validator the transaction intended for
+   * Address of validator the transaction is intended for
    */
   recipient?: HexString;
 }

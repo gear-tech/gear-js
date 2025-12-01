@@ -197,13 +197,13 @@ export class Injected {
   }
 
   public async sendAndWaitForPromise(): Promise<IInjectedTransactionPromise> {
-    if (!this.referenceBlock) {
+    if (!this._referenceBlock) {
       await this.setReferenceBlock();
     }
 
     await this._sign();
 
-    if (!this.recipient) {
+    if (!this._recipient) {
       await this.setRecipient();
     }
 
