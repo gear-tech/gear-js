@@ -45,6 +45,20 @@
   }
 }
 
+.input {
+  margin-bottom: 24px;
+}
+
+.revokeButton {
+  margin-left: auto;
+}
+
+.grantButton {
+  padding: 4px 8px;
+
+  margin-top: auto;
+}
+
 .address {
   font-size: 14px;
   color: $gray700;

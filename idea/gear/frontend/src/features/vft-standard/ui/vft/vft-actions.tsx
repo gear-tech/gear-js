@@ -11,8 +11,6 @@ const ACTIONS = [
   { label: 'Transfer' },
   { label: 'Transfer From' },
   { label: 'Approve' },
-  { label: 'Grant Role' },
-  { label: 'Revoke Role' },
 ];
 
 const READS = [{ label: 'Balance Of' }, { label: 'Allowance' }];
