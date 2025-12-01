@@ -1,5 +1,6 @@
 import { HexString } from '@gear-js/api';
 import { useAccount, useProgramQuery } from '@gear-js/react-hooks';
+import { ZERO_ADDRESS } from 'sails-js';
 
 import { Box } from '@/shared/ui';
 
@@ -19,7 +20,7 @@ function VftAccountOverview({ id }: Props) {
     program,
     serviceName: 'vft',
     functionName: 'balanceOf',
-    args: [account!.decodedAddress],
+    args: [account?.decodedAddress || ZERO_ADDRESS],
     query: { enabled: Boolean(account) },
   });
 
