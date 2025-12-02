@@ -1,5 +1,5 @@
 import { HexString } from '@vara-eth/api';
-import { useNavigate, useParams } from 'react-router-dom';
+import { generatePath, useNavigate, useParams } from 'react-router-dom';
 
 import { useApproveWrappedVara, useWrappedVaraBalance } from '@/app/api';
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
@@ -28,7 +28,7 @@ const Program = () => {
   const { data: programState, refetch } = useReadContractState(programId);
 
   const { value, decimals } = useWrappedVaraBalance(programId);
-  const isActive = true;
+  const isActive = programState && 'Active' in programState.program;
   const programName = 'Program name';
   const codeId = program?.codeId || '';
   const blockHash = program?.createdAtTx || '';
@@ -103,7 +103,7 @@ const Program = () => {
                 <VerifySvg />
               </Tooltip>
             </div>
-            <HashLink hash={codeId} />
+            <HashLink hash={codeId} href={generatePath(routes.code, { codeId })} />
             <div>PROGRAM BALANCE</div>
             <div>
               <Balance value={wvaraBalance} units="WVARA" withDivider />
