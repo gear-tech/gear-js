@@ -32,3 +32,27 @@ export const useGetAllProgramsQuery = (page: number, pageSize: number) => {
     placeholderData: (previousData) => previousData,
   });
 };
+
+const GET_PROGRAM_BY_ID_QUERY = graphql(`
+  query GetProgramById($id: String!) {
+    programById(id: $id) {
+      id
+      codeId
+      createdAtBlock
+      createdAtTx
+      abiInterfaceAddress
+    }
+  }
+`);
+
+export const useGetProgramByIdQuery = (id: string) => {
+  return useQuery({
+    queryKey: ['programById', id],
+    queryFn: async () => {
+      const result = await request(EXPLORER_URL, GET_PROGRAM_BY_ID_QUERY, { id });
+      return result;
+    },
+    select: (data) => data.programById,
+    enabled: !!id,
+  });
+};

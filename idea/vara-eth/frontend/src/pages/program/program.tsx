@@ -5,12 +5,12 @@ import { useApproveWrappedVara, useWrappedVaraBalance } from '@/app/api';
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
 import EtherscanSvg from '@/assets/icons/etherscan.svg?react';
 import VerifySvg from '@/assets/icons/verify.svg?react';
-import { Badge, Balance, Button, HashLink, Navigation, Tooltip } from '@/components';
+import { Badge, Balance, Button, HashLink, Navigation, NotFound, Tooltip } from '@/components';
 import { ServiceList, useExecutableBalanceTopUp } from '@/features/programs';
-import { useReadContractState } from '@/features/programs/lib';
+import { useReadContractState, useGetProgramByIdQuery } from '@/features/programs/lib';
 import { Search } from '@/features/search';
 import { routes } from '@/shared/config';
-import { formatBalance, formatDate, formatNumber } from '@/shared/utils';
+import { formatBalance, formatNumber } from '@/shared/utils';
 
 import styles from './program.module.scss';
 
@@ -24,14 +24,15 @@ const Program = () => {
   const approveWrappedVara = useApproveWrappedVara(programId);
   const executableBalanceTopUp = useExecutableBalanceTopUp(programId);
 
+  const { data: program, isLoading } = useGetProgramByIdQuery(programId || '');
   const { data: programState, refetch } = useReadContractState(programId);
 
   const { value, decimals } = useWrappedVaraBalance(programId);
   const isActive = true;
   const programName = 'Program name';
-  const codeId = '0xdAC17F958D2ee523a2206206994597C13D831ec7';
-  const blockHash = '0xQqC17F958D2ee523a2206206994597C13D831ec7';
-  const blockDateTime = formatDate(Date.now());
+  const codeId = program?.codeId || '';
+  const blockHash = program?.createdAtTx || '';
+  const blockDateTime = program?.createdAtBlock ? `Block ${program.createdAtBlock}` : '';
 
   const wvaraBalance = value !== undefined && decimals ? formatBalance(value, decimals) : null;
 
@@ -45,6 +46,28 @@ const Program = () => {
     // TODO: updated after couple of seconds after the transaction
     await refetch();
   };
+
+  if (isLoading) {
+    return (
+      <>
+        <Navigation search={<Search />} />
+        <div className={styles.container}>
+          <div className={styles.card}>
+            <div>Loading...</div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (!program || !programId) {
+    return (
+      <>
+        <Navigation search={<Search />} />
+        <NotFound entity="program" id={programId} />
+      </>
+    );
+  }
 
   return (
     <>
@@ -60,7 +83,7 @@ const Program = () => {
               <Tooltip value="View on Etherscan">
                 {/* TODO: support mainnet */}
                 <a
-                  href={`https://holesky.etherscan.io/address/${programId}`}
+                  href={`https://hoodi.etherscan.io/address/${programId}`}
                   target={'_blank'}
                   rel={'noreferrer'}
                   className={styles.link}>
