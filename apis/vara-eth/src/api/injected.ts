@@ -4,7 +4,7 @@ import { blake2b } from '@noble/hashes/blake2';
 import { Address, Hex } from 'viem';
 
 import { IInjectedTransaction, IInjectedTransactionPromise, IVaraEthProvider } from '../types/index.js';
-import { EthereumClient, RouterContract } from '../eth/index.js';
+import { EthereumClient } from '../eth/index.js';
 import { bigint128ToBytes } from '../util/index.js';
 
 type InjectedTransactionPromiseRaw = {
@@ -38,7 +38,6 @@ export class Injected {
     private _varaethProvider: IVaraEthProvider,
     private _ethClient: EthereumClient,
     tx: IInjectedTransaction,
-    private router: RouterContract,
   ) {
     this._destination = tx.destination;
     this._payload = tx.payload;
@@ -146,7 +145,7 @@ export class Injected {
   }
 
   public async setRecipient(address?: Address) {
-    const validators = await this.router.validators();
+    const validators = await this._ethClient.router.validators();
 
     if (address) {
       if (validators.includes(address)) {

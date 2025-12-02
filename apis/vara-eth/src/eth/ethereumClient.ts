@@ -1,14 +1,7 @@
-import {
-  Abi,
-  Account,
-  Chain,
-  ContractFunctionArgs,
-  ContractFunctionName,
-  Hex,
-  PublicClient,
-  Transport,
-  WalletClient,
-} from 'viem';
+import { Account, Address, Chain, PublicClient, Transport, WalletClient } from 'viem';
+
+import { getRouterClient, RouterClient } from './router';
+import { getWrappedVaraClient, WrappedVaraClient } from './wrappedVara';
 
 const TARGET_BLOCK_TIMES: Record<number, number> = {
   1: 12,
@@ -24,16 +17,32 @@ export class EthereumClient<
   public readonly publicClient: PublicClient<TTransport, TChain, undefined>;
   private _walletClient: WalletClient<TTransport, TChain, TAccount>;
   private _chainId: number;
+  private _routerClient: RouterClient<TTransport, TChain, TAccount>;
+  private _wvaraClient: WrappedVaraClient<TTransport, TChain, TAccount>;
+  private _initPromise: Promise<boolean>;
 
-  constructor(publicClient: PublicClient, walletClient: WalletClient) {
-    this.publicClient = publicClient as PublicClient<TTransport, TChain, undefined>;
+  constructor(publicClient: PublicClient, walletClient: WalletClient, routerAddress: Address) {
+    this.publicClient = publicClient as PublicClient<TTransport, TChain>;
     this._walletClient = walletClient as WalletClient<TTransport, TChain, TAccount>;
 
-    this._init();
+    this._routerClient = getRouterClient(routerAddress, this._walletClient, this.publicClient);
+
+    this._initPromise = this._init();
   }
 
   private async _init() {
-    this._chainId = await this.publicClient.getChainId();
+    const [chainId, wvaraAddress] = await Promise.all([
+      this.publicClient.getChainId(),
+      this._routerClient.wrappedVara(),
+    ]);
+    this._chainId = chainId;
+    this._wvaraClient = getWrappedVaraClient(wvaraAddress, this.walletClient, this.publicClient);
+
+    return true;
+  }
+
+  public get isInitialized(): Promise<boolean> {
+    return this._initPromise;
   }
 
   public get walletClient() {
@@ -41,6 +50,18 @@ export class EthereumClient<
       throw new Error('Wallet client not connected');
     }
     return this._walletClient;
+  }
+
+  public get router() {
+    return this._routerClient;
+  }
+
+  public get wvara() {
+    if (!this._wvaraClient) {
+      throw new Error('Not yet initialized');
+    }
+
+    return this._wvaraClient;
   }
 
   public setWalletClient(client: WalletClient) {
@@ -60,29 +81,6 @@ export class EthereumClient<
       throw new Error('Wallet client not connected');
     }
     return this.walletClient.account;
-  }
-
-  async readContract<
-    const abi extends Abi,
-    functionName extends ContractFunctionName<abi, 'pure' | 'view'>,
-    const args extends ContractFunctionArgs<abi, 'pure' | 'view', functionName>,
-  >(address: Hex, abi: abi, fn: functionName, args?: args) {
-    const result = await this.publicClient.readContract({
-      address,
-      abi,
-      functionName: fn,
-      args,
-    });
-
-    return result;
-  }
-
-  get simulateContract() {
-    return this.publicClient.simulateContract;
-  }
-
-  get watchEvent() {
-    return this.publicClient.watchContractEvent;
   }
 
   async getBlockNumber() {

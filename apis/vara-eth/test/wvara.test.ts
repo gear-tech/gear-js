@@ -1,79 +1,78 @@
+import type { Chain, PublicClient, WalletClient, WebSocketTransport } from 'viem';
 import { createPublicClient, createWalletClient, webSocket } from 'viem';
-import type { Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
-import { EthereumClient, getRouterClient, getWrappedVaraClient } from '../src';
+import { EthereumClient } from '../src';
 import { config } from './config';
 
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
 let walletClient: WalletClient<WebSocketTransport>;
 let ethereumClient: EthereumClient;
-let router: ReturnType<typeof getRouterClient>;
-
-let wrappedVaraAddr: Hex;
-let wvara: ReturnType<typeof getWrappedVaraClient>;
 
 beforeAll(async () => {
   const transport = webSocket(config.wsRpc);
 
-  publicClient = createPublicClient<WebSocketTransport, Chain, undefined>({
+  publicClient = createPublicClient({
     transport,
   }) as PublicClient<WebSocketTransport, Chain, undefined>;
   const account = privateKeyToAccount(config.privateKey);
 
-  walletClient = createWalletClient<WebSocketTransport>({
+  walletClient = createWalletClient({
     account,
     transport,
   });
-  ethereumClient = new EthereumClient<WebSocketTransport>(publicClient, walletClient);
-  router = getRouterClient(config.routerId, ethereumClient);
+  ethereumClient = new EthereumClient(publicClient, walletClient, config.routerId);
+  await ethereumClient.isInitialized;
 });
 
 describe('view functions', () => {
   test('should get wrapped Vara address from router', async () => {
-    wrappedVaraAddr = await router.wrappedVara();
+    const wrappedVaraAddr = await ethereumClient.router.wrappedVara();
     expect(wrappedVaraAddr).toBeDefined();
     expect(typeof wrappedVaraAddr).toBe('string');
-    wvara = getWrappedVaraClient(wrappedVaraAddr, ethereumClient);
+    expect(wrappedVaraAddr).toBe(ethereumClient.wvara.address);
   });
 
   test('should get name', async () => {
-    const name = await wvara.name();
+    const name = await ethereumClient.wvara.name();
     expect(name).toBeDefined();
     expect(typeof name).toBe('string');
     expect(name.length).toBeGreaterThan(0);
   });
 
   test('should get symbol', async () => {
-    const symbol = await wvara.symbol();
+    const symbol = await ethereumClient.wvara.symbol();
     expect(symbol).toBeDefined();
     expect(typeof symbol).toBe('string');
     expect(symbol.length).toBeGreaterThan(0);
   });
 
   test('should get decimals', async () => {
-    const decimals = await wvara.decimals();
+    const decimals = await ethereumClient.wvara.decimals();
     expect(decimals).toBeDefined();
     expect(typeof decimals).toBe('number');
     expect(decimals).toBeGreaterThanOrEqual(0);
   });
 
   test('should get total supply', async () => {
-    const totalSupply = await wvara.totalSupply();
+    const totalSupply = await ethereumClient.wvara.totalSupply();
     expect(totalSupply).toBeDefined();
     expect(typeof totalSupply).toBe('bigint');
     expect(totalSupply).toBeGreaterThanOrEqual(0n);
   });
 
   test('should get account balance', async () => {
-    const balance = await wvara.balanceOf(ethereumClient.accountAddress);
+    const balance = await ethereumClient.wvara.balanceOf(ethereumClient.accountAddress);
     expect(balance).toBeDefined();
     expect(typeof balance).toBe('bigint');
     expect(balance).toBeGreaterThan(0n);
   });
 
   test('should get allowance', async () => {
-    const allowance = await wvara.allowance(ethereumClient.accountAddress, ethereumClient.accountAddress);
+    const allowance = await ethereumClient.wvara.allowance(
+      ethereumClient.accountAddress,
+      ethereumClient.accountAddress,
+    );
     expect(allowance).toBeDefined();
     expect(typeof allowance).toBe('bigint');
     expect(allowance).toBeGreaterThanOrEqual(0n);
@@ -82,7 +81,7 @@ describe('view functions', () => {
 
 describe('transactions', () => {
   test('should approve token spending', async () => {
-    const tx = await wvara.approve(ethereumClient.accountAddress, BigInt(1000));
+    const tx = await ethereumClient.wvara.approve(ethereumClient.accountAddress, BigInt(1000));
 
     await tx.send();
 
@@ -95,13 +94,16 @@ describe('transactions', () => {
   });
 
   test('should verify allowance after approval', async () => {
-    const allowance = await wvara.allowance(ethereumClient.accountAddress, ethereumClient.accountAddress);
+    const allowance = await ethereumClient.wvara.allowance(
+      ethereumClient.accountAddress,
+      ethereumClient.accountAddress,
+    );
     expect(allowance).toBeGreaterThanOrEqual(BigInt(1000));
   });
 
   test('should transfer tokens', async () => {
     const amount = BigInt(2000 * 1e12);
-    const tx = await wvara.transfer('0xBcd4042DE499D14e55001CcbB24a551F3b954096', amount);
+    const tx = await ethereumClient.wvara.transfer('0xBcd4042DE499D14e55001CcbB24a551F3b954096', amount);
 
     await tx.send();
 

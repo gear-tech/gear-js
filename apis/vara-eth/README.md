@@ -50,7 +50,7 @@ npm install viem@^2.39.0 kzg-wasm@1.0.0
 ## Quick Start
 
 ```typescript
-import { VaraEthApi, HttpVaraEthProvider, EthereumClient, getRouterClient } from '@vara-eth/api';
+import { VaraEthApi, WsVaraEthProvider, EthereumClient } from '@vara-eth/api';
 import { createPublicClient, createWalletClient, http } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
@@ -59,18 +59,18 @@ const publicClient = createPublicClient({ transport: http('https://eth-rpc-url')
 const account = privateKeyToAccount('0x...');
 const walletClient = createWalletClient({ account, transport: http('https://eth-rpc-url') });
 
-// Create EthereumClient wrapper
-const ethereumClient = new EthereumClient(publicClient, walletClient);
+// Create EthereumClient wrapper (now requires routerAddress)
+const ethereumClient = new EthereumClient(publicClient, walletClient, routerAddress);
 
 // Initialize Vara.Eth API (connects to Vara.Eth node)
 const api = new VaraEthApi(
-  new HttpVaraEthProvider('http://localhost:9944'),
-  ethereumClient,
-  routerAddress
+  new WsVaraEthProvider('ws://localhost:9944'),
+  ethereumClient
 );
 
-// Get Router contract client
-const router = getRouterClient(routerAddress, ethereumClient);
+// Access Router and WVARA clients through EthereumClient
+const router = ethereumClient.router;
+const wvara = ethereumClient.wvara;
 ```
 
 ## High-Level API
@@ -80,7 +80,7 @@ const router = getRouterClient(routerAddress, ethereumClient);
 Main API class for interacting with the Vara.Eth network. Provides methods for querying program state and performing read-only operations.
 
 ```typescript
-const api = new VaraEthApi(provider, ethereumClient, routerAddress);
+const api = new VaraEthApi(provider, ethereumClient);
 
 // Query methods
 await api.query.program.getIds();           // List all program IDs
@@ -89,19 +89,34 @@ await api.query.program.codeId(programId);  // Get program's code ID
 
 // Call methods (read-only)
 await api.call.program.calculateReplyForHandle(source, programId, payload);
+
+// Create and send injected transactions
+const injected = await api.createInjectedTransaction({
+  destination: programId,
+  payload: encodedPayload,
+  value: 0n,
+});
+await injected.send();
 ```
 
 ### EthereumClient
 
-Wrapper around viem's `PublicClient` and `WalletClient` that provides unified interface for contract interactions.
+Wrapper around viem's `PublicClient` and `WalletClient` that provides unified interface for contract interactions. Automatically initializes Router and WrappedVara contract clients.
 
 ```typescript
-const ethereumClient = new EthereumClient(publicClient, walletClient);
+const ethereumClient = new EthereumClient(publicClient, walletClient, routerAddress);
 
 // Access underlying clients
 ethereumClient.publicClient;
 ethereumClient.walletClient;
 ethereumClient.accountAddress;
+
+// Access contract clients
+ethereumClient.router;      // RouterClient instance
+ethereumClient.wvara;       // WrappedVaraClient instance
+
+// Wait for initialization if needed
+await ethereumClient.isInitialized;
 ```
 
 ### RouterClient
@@ -352,8 +367,7 @@ import { VaraEthApi, HttpVaraEthProvider } from '@vara-eth/api';
 
 const api = new VaraEthApi(
   new HttpVaraEthProvider('http://localhost:9944'),
-  ethereumClient,
-  routerAddress
+  ethereumClient
 );
 
 // WebSocket Provider (for subscriptions and real-time updates)
@@ -361,8 +375,7 @@ import { WsVaraEthProvider } from '@vara-eth/api';
 
 const wsApi = new VaraEthApi(
   new WsVaraEthProvider('ws://localhost:9944'),
-  ethereumClient,
-  routerAddress
+  ethereumClient
 );
 
 // Don't forget to disconnect when done
