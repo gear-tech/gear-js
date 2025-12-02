@@ -38,7 +38,7 @@ export class RouterClient<
 > implements IRouterContract
 {
   /**
-   * Creates a new RouterContract instance.
+   * Creates a new RouterClient instance.
    *
    * @param address - The address of the Router contract
    * @param walletClient - The wallet client for sending transactions and signing messages
@@ -206,7 +206,7 @@ export class RouterClient<
 
   /**
    *
-   * @returns The address of WrapperVara contract
+   * @returns The address of WrappedVara contract
    */
   wrappedVara(): Promise<Hex> {
     return this._pc.readContract({

@@ -25,10 +25,11 @@ export class MirrorClient<
 > implements IMirrorContract
 {
   /**
-   * Creates a new MirrorContract instance.
+   * Creates a new MirrorClient instance.
    *
    * @param address - The address of the Mirror contract
-   * @param ethereumClient - The Ethereum client instance
+   * @param walletClient - The wallet client for sending transactions and signing messages
+   * @param publicClient - The public client for reading contract data
    */
   constructor(
     public readonly address: Address,

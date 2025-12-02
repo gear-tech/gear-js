@@ -14,7 +14,7 @@ export class EthereumClient<
   TChain extends Chain = Chain,
   TAccount extends Account = Account,
 > {
-  public readonly publicClient: PublicClient<TTransport, TChain, undefined>;
+  public readonly publicClient: PublicClient<TTransport, TChain>;
   private _walletClient: WalletClient<TTransport, TChain, TAccount>;
   private _chainId: number;
   private _routerClient: RouterClient<TTransport, TChain, TAccount>;
@@ -58,7 +58,7 @@ export class EthereumClient<
 
   public get wvara() {
     if (!this._wvaraClient) {
-      throw new Error('Not yet initialized');
+      throw new Error('EthereumClient not yet initialized. Await ethereumClient.isInitialized before accessing wvara.');
     }
 
     return this._wvaraClient;

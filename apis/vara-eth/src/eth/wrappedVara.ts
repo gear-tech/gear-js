@@ -18,7 +18,7 @@ export class WrappedVaraClient<
 > implements IWrappedVaraContract
 {
   /**
-   * Creates a new WrappedVaraContract instance.
+   * Creates a new WrappedVaraClient instance.
    *
    * @param address - The address of the WrappedVara contract
    * @param walletClient - The wallet client for sending transactions and signing messages

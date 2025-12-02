@@ -29,6 +29,8 @@ beforeAll(async () => {
   });
   ethereumClient = new EthereumClient(publicClient, walletClient, config.routerId);
 
+  await ethereumClient.isInitialized;
+
   api = new VaraEthApi(new HttpVaraEthProvider(), ethereumClient);
 });
 

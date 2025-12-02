@@ -62,6 +62,8 @@ const walletClient = createWalletClient({ account, transport: http('https://eth-
 // Create EthereumClient wrapper (now requires routerAddress)
 const ethereumClient = new EthereumClient(publicClient, walletClient, routerAddress);
 
+await ethereumClient.isInitialized;
+
 // Initialize Vara.Eth API (connects to Vara.Eth node)
 const api = new VaraEthApi(
   new WsVaraEthProvider('ws://localhost:9944'),
