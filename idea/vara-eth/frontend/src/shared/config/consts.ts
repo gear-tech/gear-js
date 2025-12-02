@@ -1,13 +1,13 @@
-import { HexString } from '@vara-eth/api';
+import { Hex } from 'viem';
 
 const PROJECT_ID = import.meta.env.VITE_WALLET_CONNECT_PROJECT_ID as string;
 const VARA_ETH_NODE_ADDRESS = import.meta.env.VITE_VARA_ETH_NODE_ADDRESS as `https://${string}`;
 const ETH_CHAIN_ID = 17000; // (0x4268) Holesky
 const ETH_NODE_ADDRESS = import.meta.env.VITE_ETH_NODE_ADDRESS as string;
 
-const ROUTER_CONTRACT_ADDRESS = import.meta.env.VITE_ROUTER_CONTRACT_ADDRESS as HexString;
-const WVARA_CONTRACT_ADDRESS = import.meta.env.VITE_WVARA_CONTRACT_ADDRESS as HexString;
-const MIRROR_CONTRACT_ADDRESS = import.meta.env.VITE_MIRROR_CONTRACT_ADDRESS as HexString;
+const ROUTER_CONTRACT_ADDRESS = import.meta.env.VITE_ROUTER_CONTRACT_ADDRESS as Hex;
+const WVARA_CONTRACT_ADDRESS = import.meta.env.VITE_WVARA_CONTRACT_ADDRESS as Hex;
+const MIRROR_CONTRACT_ADDRESS = import.meta.env.VITE_MIRROR_CONTRACT_ADDRESS as Hex;
 
 console.log('envs', {
   PROJECT_ID,

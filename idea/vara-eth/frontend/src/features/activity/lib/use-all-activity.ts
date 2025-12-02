@@ -1,4 +1,4 @@
-import { RouterContract, WrappedVaraContract } from '@vara-eth/api';
+import { RouterClient, WrappedVaraClient } from '@vara-eth/api';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect } from 'react';
 
@@ -44,7 +44,7 @@ const useAllActivity = () => {
     //   });
     // };
 
-    const subscribeToEvents = (_contract: RouterContract | WrappedVaraContract, events: string[]) => {
+    const subscribeToEvents = (_contract: RouterClient | WrappedVaraClient, events: string[]) => {
       events.forEach((_event) => {
         // void contract.on(event, (...args: unknown[]) => {
         //   const lastArg = args[args.length - 1] as { log: EventLog };
@@ -53,7 +53,7 @@ const useAllActivity = () => {
       });
     };
 
-    const unsubscribeFromEvents = (_contract: RouterContract | WrappedVaraContract, events: string[]) => {
+    const unsubscribeFromEvents = (_contract: RouterClient | WrappedVaraClient, events: string[]) => {
       events.forEach((_event) => {
         // void contract.off(event);
       });
