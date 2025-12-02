@@ -13,11 +13,12 @@ import type {
   Log,
   Hex,
   Transport,
+  PublicClient,
+  WalletClient,
 } from 'viem';
 import { decodeEventLog } from 'viem';
 
 import { ITxManager } from './interfaces/tx-manager.js';
-import { EthereumClient } from './ethereumClient.js';
 
 /**
  * Manages Ethereum transactions with support for helper functions.
@@ -54,8 +55,8 @@ export class TxManager<
    * @param txIndependentHelperFns - Helper functions that do not depend on the transaction
    */
   constructor(
-    private ethereumClient: EthereumClient<TTransport, TChain, TAccount>,
-    // private _tx: SendTransactionParameters<chain, account, undefined, request>,
+    private _pc: PublicClient<TTransport, TChain>,
+    private _wc: WalletClient<TTransport, TChain, TAccount>,
     private _tx: TransactionRequest,
     private _abi: abi,
     txDependentHelperFns?: {
@@ -84,7 +85,7 @@ export class TxManager<
     try {
       const gasParams: EstimateGasParameters<TChain> = this._tx as EstimateGasParameters<TChain>;
 
-      this._tx.gas = await this.ethereumClient.publicClient.estimateGas(gasParams);
+      this._tx.gas = await this._pc.estimateGas(gasParams);
 
       return this._tx.gas;
     } catch (error) {
@@ -99,7 +100,7 @@ export class TxManager<
    * @returns The transaction hash
    */
   async send(): Promise<Hash> {
-    const hash = await this.ethereumClient.walletClient.sendTransaction(
+    const hash = await this._wc.sendTransaction(
       this._tx as SendTransactionParameters<TChain, TAccount, undefined, TRequest>,
     );
     this._hash = hash;
@@ -113,7 +114,7 @@ export class TxManager<
    */
   async sendAndWaitForReceipt(): Promise<TransactionReceipt> {
     const hash = await this.send();
-    this._receipt = await this.ethereumClient.publicClient.waitForTransactionReceipt({ hash });
+    this._receipt = await this._pc.waitForTransactionReceipt({ hash });
     if (!this._receipt) {
       throw new Error('Transaction receipt not found');
     }
@@ -130,7 +131,7 @@ export class TxManager<
       return this._receipt;
     }
     if (this._hash) {
-      this._receipt = await this.ethereumClient.publicClient.waitForTransactionReceipt({ hash: this._hash });
+      this._receipt = await this._pc.waitForTransactionReceipt({ hash: this._hash });
       if (!this._receipt) {
         throw new Error('Transaction receipt not found');
       }

@@ -1,51 +1,83 @@
-import type { Address, Hex } from 'viem';
+import type { Account, Address, Chain, Hex, PublicClient, Transport, WalletClient } from 'viem';
 import { encodeFunctionData } from 'viem';
 
-import { convertEventParams } from '../util/index.js';
 import { WrappedVaraTxHelpers, ApprovalLog, TransferLog, WVaraTransferHelpers } from './interfaces/wrappedVara.js';
-import { IWRAPPEDVARA_ABI, IWrappedVaraContract } from './abi/IWrappedVara.js';
-import { TxManager } from './tx-manager.js';
 import { ITxManager, type TxManagerWithHelpers } from './interfaces/tx-manager.js';
-import { EthereumClient } from './ethereumClient.js';
+import { IWRAPPEDVARA_ABI, IWrappedVaraContract } from './abi/IWrappedVara.js';
+import { convertEventParams } from '../util/index.js';
+import { TxManager } from './tx-manager.js';
 
 /**
  * A contract wrapper for interacting with the WrappedVara token.
  * Provides methods for approving token spending and other ERC20 operations.
  */
-export class WrappedVaraContract implements IWrappedVaraContract {
+export class WrappedVaraClient<
+  TTransport extends Transport = Transport,
+  TChain extends Chain = Chain,
+  TAccount extends Account = Account,
+> implements IWrappedVaraContract
+{
   /**
-   * Creates a new WrappedVaraContract instance.
+   * Creates a new WrappedVaraClient instance.
    *
    * @param address - The address of the WrappedVara contract
-   * @param ethereumClient - The Ethereum client for sending transactions
+   * @param walletClient - The wallet client for sending transactions and signing messages
+   * @param publicClient - The public client for reading data from the blockchain
    */
   constructor(
     public readonly address: Address,
-    private ethereumClient: EthereumClient,
+    private _wc: WalletClient<TTransport, TChain, TAccount>,
+    private _pc: PublicClient<TTransport, TChain>,
   ) {}
 
   allowance(owner: Hex, spender: Hex): Promise<bigint> {
-    return this.ethereumClient.readContract(this.address, IWRAPPEDVARA_ABI, 'allowance', [owner, spender]);
+    return this._pc.readContract({
+      address: this.address,
+      abi: IWRAPPEDVARA_ABI,
+      functionName: 'allowance',
+      args: [owner, spender],
+    });
   }
 
   balanceOf(account: string): Promise<bigint> {
-    return this.ethereumClient.readContract(this.address, IWRAPPEDVARA_ABI, 'balanceOf', [account as Address]);
+    return this._pc.readContract({
+      address: this.address,
+      abi: IWRAPPEDVARA_ABI,
+      functionName: 'balanceOf',
+      args: [account as Address],
+    });
   }
 
   decimals(): Promise<number> {
-    return this.ethereumClient.readContract(this.address, IWRAPPEDVARA_ABI, 'decimals');
+    return this._pc.readContract({
+      address: this.address,
+      abi: IWRAPPEDVARA_ABI,
+      functionName: 'decimals',
+    });
   }
 
   name(): Promise<string> {
-    return this.ethereumClient.readContract(this.address, IWRAPPEDVARA_ABI, 'name');
+    return this._pc.readContract({
+      address: this.address,
+      abi: IWRAPPEDVARA_ABI,
+      functionName: 'name',
+    });
   }
 
   symbol(): Promise<string> {
-    return this.ethereumClient.readContract(this.address, IWRAPPEDVARA_ABI, 'symbol');
+    return this._pc.readContract({
+      address: this.address,
+      abi: IWRAPPEDVARA_ABI,
+      functionName: 'symbol',
+    });
   }
 
   totalSupply(): Promise<bigint> {
-    return this.ethereumClient.readContract(this.address, IWRAPPEDVARA_ABI, 'totalSupply');
+    return this._pc.readContract({
+      address: this.address,
+      abi: IWRAPPEDVARA_ABI,
+      functionName: 'totalSupply',
+    });
   }
 
   /**
@@ -65,7 +97,7 @@ export class WrappedVaraContract implements IWrappedVaraContract {
       }),
     };
 
-    const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IWRAPPEDVARA_ABI, {
+    const txManager: ITxManager = new TxManager(this._pc, this._wc, tx, IWRAPPEDVARA_ABI, {
       getApprovalLog: (manager) => async () => {
         const event = await manager.findEvent('Approval');
         return convertEventParams<ApprovalLog>(event);
@@ -85,7 +117,7 @@ export class WrappedVaraContract implements IWrappedVaraContract {
       }),
     };
 
-    const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IWRAPPEDVARA_ABI, {
+    const txManager: ITxManager = new TxManager(this._pc, this._wc, tx, IWRAPPEDVARA_ABI, {
       getTransferLog: (manager) => async () => {
         const event = await manager.findEvent('Transfer');
         return convertEventParams<TransferLog>(event);
@@ -103,6 +135,14 @@ export class WrappedVaraContract implements IWrappedVaraContract {
  * @param ethereumClient - The Ethereum client for interacting with the contract
  * @returns A new WrappedVaraContract instance that implements the IWrappedVaraContract interface
  */
-export function getWrappedVaraClient(address: Address, ethereumClient: EthereumClient): WrappedVaraContract {
-  return new WrappedVaraContract(address, ethereumClient);
+export function getWrappedVaraClient<
+  TTransport extends Transport = Transport,
+  TChain extends Chain = Chain,
+  TAccount extends Account = Account,
+>(
+  address: Address,
+  walletClient: WalletClient<TTransport, TChain, TAccount>,
+  publicClient: PublicClient<TTransport, TChain>,
+): WrappedVaraClient<TTransport, TChain, TAccount> {
+  return new WrappedVaraClient(address, walletClient, publicClient);
 }

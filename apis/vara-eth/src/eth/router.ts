@@ -1,4 +1,4 @@
-import type { Address, Hex } from 'viem';
+import type { Account, Address, Chain, Hex, PublicClient, Transport, WalletClient } from 'viem';
 import { toHex, zeroAddress, numberToBytes, hexToBytes, bytesToHex, encodeFunctionData } from 'viem';
 import { randomBytes } from '@noble/hashes/utils';
 import { loadKZG } from 'kzg-wasm';
@@ -6,7 +6,6 @@ import { loadKZG } from 'kzg-wasm';
 import { CodeValidationHelpers, CreateProgramHelpers, CodeState } from './interfaces/router.js';
 import { ITxManager, type TxManagerWithHelpers } from './interfaces/tx-manager.js';
 import { IROUTER_ABI, IRouterContract } from './abi/index.js';
-import { EthereumClient } from './ethereumClient.js';
 import { HexString } from '../types/index.js';
 import { TxManager } from './tx-manager.js';
 import { generateCodeHash } from '../util';
@@ -32,24 +31,41 @@ const getCodeState = (value: number): CodeState => {
  * A contract wrapper for interacting with a Router contract.
  * Provides methods for code validation, program creation, and other router-related operations.
  */
-export class RouterContract implements IRouterContract {
+export class RouterClient<
+  TTransport extends Transport = Transport,
+  TChain extends Chain = Chain,
+  TAccount extends Account = Account,
+> implements IRouterContract
+{
   /**
-   * Creates a new RouterContract instance.
+   * Creates a new RouterClient instance.
    *
    * @param address - The address of the Router contract
-   * @param ethereumClient - The Ethereum client for sending transactions and reading data
+   * @param walletClient - The wallet client for sending transactions and signing messages
+   * @param publicClient - The public client for reading data from the blockchain
    */
   constructor(
     public readonly address: Address,
-    private ethereumClient: EthereumClient,
+    private _wc: WalletClient<TTransport, TChain, TAccount>,
+    private _pc: PublicClient<TTransport, TChain>,
   ) {}
 
   areValidators(validators: Address[]): Promise<boolean> {
-    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'areValidators', [validators]);
+    return this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'areValidators',
+      args: [validators],
+    });
   }
 
   async codesStates(codeIds: HexString[]): Promise<CodeState[]> {
-    const states = await this.ethereumClient.readContract(this.address, IROUTER_ABI, 'codesStates', [codeIds]);
+    const states = await this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'codesStates',
+      args: [codeIds],
+    });
 
     return states.map((value) => getCodeState(value));
   }
@@ -58,71 +74,146 @@ export class RouterContract implements IRouterContract {
     threshold: bigint;
     wvaraPerSecond: bigint;
   }> {
-    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'computeSettings');
+    return this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'computeSettings',
+    });
   }
 
   genesisBlockHash(): Promise<HexString> {
-    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'genesisBlockHash');
+    return this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'genesisBlockHash',
+    });
   }
 
   genesisTimestamp(): Promise<number> {
-    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'genesisTimestamp');
+    return this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'genesisTimestamp',
+    });
   }
 
   isValidator(validator: string): Promise<boolean> {
-    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'isValidator', [validator as Address]);
+    return this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'isValidator',
+      args: [validator as Address],
+    });
   }
 
   latestCommittedBlockHash(): Promise<string> {
-    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'latestCommittedBatchHash');
+    return this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'latestCommittedBatchHash',
+    });
   }
 
   mirrorImpl(): Promise<string> {
-    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'mirrorImpl');
+    return this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'mirrorImpl',
+    });
   }
 
   programCodeId(programId: HexString): Promise<string> {
-    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'programCodeId', [programId]);
+    return this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'programCodeId',
+      args: [programId],
+    });
   }
 
   programsCodeIds(programsIds: HexString[]): Promise<readonly HexString[]> {
-    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'programsCodeIds', [programsIds]);
+    return this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'programsCodeIds',
+      args: [programsIds],
+    });
   }
 
   programsCount(): Promise<bigint> {
-    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'programsCount');
+    return this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'programsCount',
+    });
   }
 
   signingThresholdPercentage(): Promise<number> {
-    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'signingThresholdPercentage');
+    return this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'signingThresholdPercentage',
+    });
   }
 
   validatedCodesCount(): Promise<bigint> {
-    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'validatedCodesCount');
+    return this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'validatedCodesCount',
+    });
   }
 
   validators(): Promise<readonly HexString[]> {
-    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'validators');
+    return this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'validators',
+    });
   }
 
   async validatorsAggregatedPublicKey(): Promise<any> {
-    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'validatorsAggregatedPublicKey');
+    return this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'validatorsAggregatedPublicKey',
+    });
   }
 
   async validatorsCount(): Promise<bigint> {
-    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'validatorsCount');
+    return this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'validatorsCount',
+    });
   }
 
   async validatorsThreshold(): Promise<bigint> {
-    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'validatorsThreshold');
+    return this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'validatorsThreshold',
+    });
   }
 
-  async validatorsVerifiableSecretSharingCommitment(): Promise<string> {
-    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'validatorsVerifiableSecretSharingCommitment');
+  validatorsVerifiableSecretSharingCommitment(): Promise<string> {
+    return this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'validatorsVerifiableSecretSharingCommitment',
+    });
   }
 
-  async wrappedVara(): Promise<Hex> {
-    return this.ethereumClient.readContract(this.address, IROUTER_ABI, 'wrappedVara');
+  /**
+   *
+   * @returns The address of WrappedVara contract
+   */
+  wrappedVara(): Promise<Hex> {
+    return this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'wrappedVara',
+    });
   }
 
   /**
@@ -133,7 +224,12 @@ export class RouterContract implements IRouterContract {
    * @throws Error if the code state is invalid
    */
   async codeState(codeId: HexString): Promise<CodeState> {
-    const _state = await this.ethereumClient.readContract(this.address, IROUTER_ABI, 'codeState', [codeId]);
+    const _state = await this._pc.readContract({
+      address: this.address,
+      abi: IROUTER_ABI,
+      functionName: 'codeState',
+      args: [codeId],
+    });
 
     return getCodeState(_state);
   }
@@ -182,16 +278,16 @@ export class RouterContract implements IRouterContract {
       chain: null,
     };
 
-    const request = await this.ethereumClient.publicClient.prepareTransactionRequest(tx);
+    const request = await this._pc.prepareTransactionRequest(tx);
 
     console.log(request);
 
-    const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IROUTER_ABI, undefined, {
+    const txManager: ITxManager = new TxManager(this._pc, this._wc, tx, IROUTER_ABI, undefined, {
       codeId,
       waitForCodeGotValidated: () =>
         new Promise<boolean>((resolve, reject) =>
           // TODO: consider listening from block where transaction was included
-          this.ethereumClient.watchEvent({
+          this._pc.watchContractEvent({
             address: this.address,
             abi: IROUTER_ABI,
             eventName: 'CodeGotValidated',
@@ -247,7 +343,7 @@ export class RouterContract implements IRouterContract {
       data: encodedData,
     };
 
-    const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IROUTER_ABI, {
+    const txManager: ITxManager = new TxManager(this._pc, this._wc, tx, IROUTER_ABI, {
       getProgramId: (manager) => async () => {
         const event = await manager.findEvent('ProgramCreated');
         return event.args.actorId.toLowerCase();
@@ -285,7 +381,7 @@ export class RouterContract implements IRouterContract {
       data: encodedData,
     };
 
-    const txManager: ITxManager = new TxManager(this.ethereumClient, tx, IROUTER_ABI, {
+    const txManager: ITxManager = new TxManager(this._pc, this._wc, tx, IROUTER_ABI, {
       getProgramId: (manager) => async () => {
         const event = await manager.findEvent('ProgramCreated');
         return event.args.actorId.toLowerCase();
@@ -306,8 +402,16 @@ export class RouterContract implements IRouterContract {
  * @param publicClient - The public client for reading data
  * @returns A new RouterContract instance that implements the IRouterContract interface
  */
-export function getRouterClient(address: Address, ethereumClient: EthereumClient): RouterContract {
-  return new RouterContract(address, ethereumClient);
+export function getRouterClient<
+  TTransport extends Transport = Transport,
+  TChain extends Chain = Chain,
+  TAccount extends Account = Account,
+>(
+  address: Address,
+  walletClient: WalletClient<TTransport, TChain, TAccount>,
+  publicClient: PublicClient<TTransport, TChain>,
+): RouterClient<TTransport, TChain, TAccount> {
+  return new RouterClient(address, walletClient, publicClient);
 }
 
 function prepareBlob(data: Uint8Array) {

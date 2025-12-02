@@ -1,19 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
-import { getWrappedVaraClient } from '@vara-eth/api';
-
 import { useEthereumClient } from '@/app/api/use-ethereum-client';
-import { WVARA_CONTRACT_ADDRESS } from '@/shared/config';
 
 const useWrappedVaraContract = () => {
   const ethereumClient = useEthereumClient();
 
-  const { data: wrappedVaraContract, isLoading } = useQuery({
-    queryKey: ['getWrappedVaraClient', ethereumClient],
-    queryFn: () => getWrappedVaraClient(WVARA_CONTRACT_ADDRESS, ethereumClient!),
-    enabled: Boolean(ethereumClient),
-  });
+  if (!ethereumClient) {
+    return { wrappedVaraContract: null, isLoading: true };
+  }
 
-  return { wrappedVaraContract, isLoading };
+  return { wrappedVaraContract: ethereumClient.wvara, isLoading: false };
 };
 
 export { useWrappedVaraContract };

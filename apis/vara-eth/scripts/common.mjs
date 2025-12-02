@@ -91,7 +91,7 @@ export class CommandRunner {
   }
 
   static async command(cmd, args, options = {}) {
-    const { cwd = process.cwd(), timeout = 30_000, env = {} } = options;
+    const { cwd = process.cwd(), timeout = 120_000, env = {} } = options;
 
     return new Promise((resolve, reject) => {
       let stdout = '';

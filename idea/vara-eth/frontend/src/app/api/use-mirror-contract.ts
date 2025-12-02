@@ -1,22 +1,20 @@
-import { useQuery } from '@tanstack/react-query';
 import { getMirrorClient } from '@vara-eth/api';
 import { useAccount } from 'wagmi';
+import { useWalletClient, usePublicClient } from 'wagmi';
 
 import { MIRROR_CONTRACT_ADDRESS } from '@/shared/config';
 
-import { useEthereumClient } from './use-ethereum-client';
-
 const useMirrorContract = (mirrorAddress = MIRROR_CONTRACT_ADDRESS) => {
   const ethAccount = useAccount();
-  const ethereumClient = useEthereumClient({ chainId: ethAccount.chain?.id });
+  const { data: walletClient } = useWalletClient({ chainId: ethAccount.chain?.id });
+  const publicClient = usePublicClient({ chainId: ethAccount.chain?.id });
 
-  const { data: mirrorContract, isLoading } = useQuery({
-    queryKey: ['getMirrorClient', mirrorAddress, ethereumClient],
-    queryFn: () => getMirrorClient(mirrorAddress, ethereumClient!),
-    enabled: Boolean(ethereumClient),
-  });
+  if (!walletClient || !publicClient) {
+    return { mirrorContract: null, isLoading: true };
+  }
 
-  return { mirrorContract, isLoading };
+  const mirrorContract = getMirrorClient(mirrorAddress, walletClient, publicClient);
+  return { mirrorContract, isLoading: false };
 };
 
 export { useMirrorContract };
