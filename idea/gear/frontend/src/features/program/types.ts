@@ -1,10 +1,12 @@
 import { OwnerFilter } from '@/api/consts';
 
-import { ProgramStatus } from './consts';
+import { PROGRAM_TABS, ProgramStatus } from './consts';
 
 type FiltersValues = {
   owner: OwnerFilter;
   status: ProgramStatus[];
 };
 
-export type { FiltersValues };
+type ProgramTabId = (typeof PROGRAM_TABS)[number]['id'];
+
+export type { FiltersValues, ProgramTabId };

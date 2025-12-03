@@ -1,13 +1,11 @@
 import { Button } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
-import cx from 'clsx';
-import { useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
 
 import { ProgramBalance } from '@/features/balance';
 import { ProgramMessages } from '@/features/message';
 import { useMetadata, MetadataTable, isState } from '@/features/metadata';
-import { ProgramStatus, ProgramTable, useProgram } from '@/features/program';
+import { ProgramStatus, ProgramTable, ProgramTabs, useProgram, useProgramTabId } from '@/features/program';
 import { ProgramEvents, SailsPreview, useSails } from '@/features/sails';
 import { ProgramVouchers } from '@/features/voucher';
 import { useModal } from '@/hooks';
@@ -19,8 +17,6 @@ import { getShortName, isAnyKey } from '@/shared/helpers';
 import { Box, UILink } from '@/shared/ui';
 
 import styles from './program.module.scss';
-
-const TABS = ['Messages', 'Events', 'Vouchers', 'Metadata/Sails'];
 
 type Params = {
   programId: HexString;
@@ -39,7 +35,7 @@ const Program = () => {
   const isLoading = !isMetadataReady || isSailsLoading;
   const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => isAnyKey(queries)) : false;
 
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabId, setTabId] = useProgramTabId();
 
   const openUploadMetadataModal = () => {
     if (!program) throw new Error('Program is not found');
@@ -66,17 +62,6 @@ const Program = () => {
       onSuccess,
     });
   };
-
-  const renderTabs = () =>
-    TABS.map((tab, index) => (
-      <button
-        key={tab}
-        type="button"
-        onClick={() => setTabIndex(index)}
-        className={cx(styles.button, index === tabIndex && styles.active)}>
-        {tab}
-      </button>
-    ));
 
   return (
     <div className={styles.container}>
@@ -129,12 +114,12 @@ const Program = () => {
       />
 
       <div className={styles.body}>
-        <header className={styles.tabs}>{renderTabs()}</header>
+        <ProgramTabs value={tabId} onChange={setTabId} />
 
-        {tabIndex === 0 && <ProgramMessages programId={programId} sails={sails} />}
-        {tabIndex === 1 && !isSailsLoading && <ProgramEvents programId={programId} sails={sails} />}
-        {tabIndex === 2 && <ProgramVouchers programId={programId} />}
-        {tabIndex === 3 &&
+        {tabId === 'messages' && <ProgramMessages programId={programId} sails={sails} />}
+        {tabId === 'events' && !isSailsLoading && <ProgramEvents programId={programId} sails={sails} />}
+        {tabId === 'vouchers' && <ProgramVouchers programId={programId} />}
+        {tabId === 'metadata' &&
           (sails ? (
             <Box>
               <SailsPreview value={sails} />

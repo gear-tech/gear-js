@@ -23,4 +23,15 @@ const DEFAULT_FILTER_VALUES = {
   status: [] as ProgramStatus[],
 };
 
-export { ProgramStatus, PROGRAM_STATUS_NAME, DEFAULT_FILTER_VALUES };
+// tabs
+
+const PROGRAM_TAB_SEARCH_PARAM = 'tab';
+
+const PROGRAM_TABS = [
+  { id: 'messages', label: 'Messages' },
+  { id: 'events', label: 'Events' },
+  { id: 'vouchers', label: 'Vouchers' },
+  { id: 'metadata', label: 'Metadata/Sails' },
+] as const;
+
+export { ProgramStatus, PROGRAM_STATUS_NAME, DEFAULT_FILTER_VALUES, PROGRAM_TAB_SEARCH_PARAM, PROGRAM_TABS };
