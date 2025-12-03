@@ -129,7 +129,7 @@ jobs:
 
       - name: Publish vara-eth-api
         if: ${{ needs.check-changes.outputs.vara-eth-api == 'true' }}
-        run: npm publish --access=public
+        run: npm publish --access=public --provenance
         working-directory: apis/vara-eth
 
       - name: Publish gear-hooks
