@@ -1,4 +1,4 @@
-import { useEthereumClient } from '@/app/api/use-ethereum-client';
+import { useEthereumClient } from '@/app/providers/ethereum-client';
 
 const useWrappedVaraContract = () => {
   const ethereumClient = useEthereumClient();

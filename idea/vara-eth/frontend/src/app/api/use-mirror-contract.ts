@@ -1,6 +1,5 @@
 import { getMirrorClient } from '@vara-eth/api';
-import { useAccount } from 'wagmi';
-import { useWalletClient, usePublicClient } from 'wagmi';
+import { useAccount, useWalletClient, usePublicClient } from 'wagmi';
 
 import { MIRROR_CONTRACT_ADDRESS } from '@/shared/config';
 

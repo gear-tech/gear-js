@@ -1,4 +1,4 @@
-import { useEthereumClient } from './use-ethereum-client';
+import { useEthereumClient } from '@/app/providers/ethereum-client';
 
 const useRouterContract = () => {
   const ethereumClient = useEthereumClient();
