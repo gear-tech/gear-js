@@ -1,45 +1,35 @@
 import { createPublicClient, createWalletClient, webSocket } from 'viem';
-import type { Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
+import type { Account, Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
-import {
-  EthereumClient,
-  getMirrorClient,
-  getRouterClient,
-  getWrappedVaraClient,
-  VaraEthApi,
-  HttpVaraEthProvider,
-} from '../src';
+import { EthereumClient, getMirrorClient, VaraEthApi, HttpVaraEthProvider } from '../src';
 import { hasProps, waitNBlocks } from './common';
 import { config } from './config';
 
 let api: VaraEthApi;
 let publicClient: PublicClient<WebSocketTransport, Chain, undefined>;
-let walletClient: WalletClient<WebSocketTransport>;
+let walletClient: WalletClient<WebSocketTransport, Chain, Account>;
 let ethereumClient: EthereumClient;
 
-let router: ReturnType<typeof getRouterClient>;
 let mirror: ReturnType<typeof getMirrorClient>;
-let wvara: ReturnType<typeof getWrappedVaraClient>;
 
 let programId: `0x${string}`;
 
 beforeAll(async () => {
   const transport = webSocket(config.wsRpc);
 
-  publicClient = createPublicClient<WebSocketTransport, Chain, undefined>({
+  publicClient = createPublicClient({
     transport,
   }) as PublicClient<WebSocketTransport, Chain, undefined>;
   const account = privateKeyToAccount(config.privateKey);
 
-  walletClient = createWalletClient<WebSocketTransport>({
+  walletClient = createWalletClient({
     account,
     transport,
   });
-  ethereumClient = new EthereumClient<WebSocketTransport>(publicClient, walletClient);
-  router = getRouterClient(config.routerId, ethereumClient);
-  const wvaraAddr = await router.wrappedVara();
-  wvara = getWrappedVaraClient(wvaraAddr, ethereumClient);
+  ethereumClient = new EthereumClient(publicClient, walletClient, config.routerId);
+
+  await ethereumClient.isInitialized;
 
   api = new VaraEthApi(new HttpVaraEthProvider(), ethereumClient);
 });
@@ -50,14 +40,14 @@ afterAll(async () => {
 
 describe('setup', () => {
   test('should create program', async () => {
-    const tx = await router.createProgram(config.codeId);
+    const tx = await ethereumClient.router.createProgram(config.codeId);
     await tx.sendAndWaitForReceipt();
 
     programId = await tx.getProgramId();
 
     expect(programId).toBeDefined();
 
-    mirror = getMirrorClient(programId, ethereumClient);
+    mirror = getMirrorClient(programId, walletClient, publicClient);
   });
 
   test(
@@ -81,7 +71,7 @@ describe('setup', () => {
   );
 
   test('should approve wvara', async () => {
-    const tx = await wvara.approve(programId, BigInt(100 * 1e12));
+    const tx = await ethereumClient.wvara.approve(programId, BigInt(100 * 1e12));
 
     await tx.send();
 
@@ -91,7 +81,7 @@ describe('setup', () => {
 
     expect(approvalData.value).toEqual(BigInt(100 * 1e12));
 
-    const allowance = await wvara.allowance(ethereumClient.accountAddress, programId);
+    const allowance = await ethereumClient.wvara.allowance(ethereumClient.accountAddress, programId);
     expect(allowance).toEqual(BigInt(100 * 1e12));
   });
 
