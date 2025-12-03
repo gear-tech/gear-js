@@ -104,6 +104,9 @@ jobs:
   publish-to-npm:
     needs: check-changes
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
       - uses: actions/checkout@v6
@@ -118,9 +121,6 @@ jobs:
 
       - name: Build
         run: yarn build
-
-      - name: "Configure npm auth"
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
       - name: Publish gear-api
         if: ${{ needs.check-changes.outputs.gear-api == 'true' }}
