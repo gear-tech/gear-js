@@ -1,5 +1,5 @@
 import { useProgramFilters } from './use-program-filters';
 import { useProgramStatus } from './use-program-status';
-import { useProgramTabId } from './use-program-tab-id';
+import { useProgramTab } from './use-program-tab';
 
-export { useProgramStatus, useProgramFilters, useProgramTabId };
+export { useProgramStatus, useProgramFilters, useProgramTab };

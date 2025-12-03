@@ -5,7 +5,7 @@ import { generatePath, useParams } from 'react-router-dom';
 import { ProgramBalance } from '@/features/balance';
 import { ProgramMessages } from '@/features/message';
 import { useMetadata, MetadataTable, isState } from '@/features/metadata';
-import { ProgramStatus, ProgramTable, ProgramTabs, useProgram, useProgramTabId } from '@/features/program';
+import { ProgramStatus, ProgramTable, ProgramTabs, useProgram, useProgramTab } from '@/features/program';
 import { ProgramEvents, SailsPreview, useSails } from '@/features/sails';
 import { ProgramVouchers } from '@/features/voucher';
 import { useModal } from '@/hooks';
@@ -35,7 +35,7 @@ const Program = () => {
   const isLoading = !isMetadataReady || isSailsLoading;
   const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => isAnyKey(queries)) : false;
 
-  const [tabId, setTabId] = useProgramTabId();
+  const tab = useProgramTab();
 
   const openUploadMetadataModal = () => {
     if (!program) throw new Error('Program is not found');
@@ -114,12 +114,12 @@ const Program = () => {
       />
 
       <div className={styles.body}>
-        <ProgramTabs value={tabId} onChange={setTabId} />
+        <ProgramTabs value={tab.id} onChange={tab.handleChange} />
 
-        {tabId === 'messages' && <ProgramMessages programId={programId} sails={sails} />}
-        {tabId === 'events' && !isSailsLoading && <ProgramEvents programId={programId} sails={sails} />}
-        {tabId === 'vouchers' && <ProgramVouchers programId={programId} />}
-        {tabId === 'metadata' &&
+        {tab.isMessages && <ProgramMessages programId={programId} sails={sails} />}
+        {tab.isEvents && !isSailsLoading && <ProgramEvents programId={programId} sails={sails} />}
+        {tab.isVouchers && <ProgramVouchers programId={programId} />}
+        {tab.isMetadata &&
           (sails ? (
             <Box>
               <SailsPreview value={sails} />

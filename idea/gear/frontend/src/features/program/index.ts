@@ -1,6 +1,6 @@
 import { useProgram, usePrograms, Program, ProgramsParameters, setProgramMeta } from './api';
 import { ProgramStatus } from './consts';
-import { useProgramStatus, useProgramFilters, useProgramTabId } from './hooks';
+import { useProgramStatus, useProgramFilters, useProgramTab } from './hooks';
 import { ProgramTable, Programs, ProgramFilters, ProgramFileInput, ProgramTabs } from './ui';
 
 export {
@@ -14,7 +14,7 @@ export {
   usePrograms,
   setProgramMeta,
   ProgramFileInput,
-  useProgramTabId,
+  useProgramTab,
   ProgramTabs,
 };
 
