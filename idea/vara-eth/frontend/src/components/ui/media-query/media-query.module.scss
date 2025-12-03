@@ -1,0 +1,29 @@
+@use '../../../shared/utils' as *;
+
+.desktop {
+  @include md {
+    display: none;
+  }
+}
+
+.mobile {
+  display: none;
+
+  @include md {
+    display: block;
+  }
+}
+
+.showBelowXl {
+  @include xl {
+    display: none;
+  }
+}
+
+.showFromXl {
+  display: none;
+
+  @include xl {
+    display: block;
+  }
+}
