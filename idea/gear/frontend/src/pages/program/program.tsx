@@ -20,7 +20,7 @@ import { Box, UILink } from '@/shared/ui';
 
 import styles from './program.module.scss';
 
-const TABS = ['Metadata/Sails', 'Messages', 'Events', 'Vouchers'];
+const TABS = ['Messages', 'Events', 'Vouchers', 'Metadata/Sails'];
 
 type Params = {
   programId: HexString;
@@ -131,7 +131,10 @@ const Program = () => {
       <div className={styles.body}>
         <header className={styles.tabs}>{renderTabs()}</header>
 
-        {tabIndex === 0 &&
+        {tabIndex === 0 && <ProgramMessages programId={programId} sails={sails} />}
+        {tabIndex === 1 && !isSailsLoading && <ProgramEvents programId={programId} sails={sails} />}
+        {tabIndex === 2 && <ProgramVouchers programId={programId} />}
+        {tabIndex === 3 &&
           (sails ? (
             <Box>
               <SailsPreview value={sails} />
@@ -139,10 +142,6 @@ const Program = () => {
           ) : (
             <MetadataTable metadata={metadata} isLoading={isLoading} />
           ))}
-
-        {tabIndex === 1 && <ProgramMessages programId={programId} sails={sails} />}
-        {tabIndex === 2 && !isSailsLoading && <ProgramEvents programId={programId} sails={sails} />}
-        {tabIndex === 3 && <ProgramVouchers programId={programId} />}
       </div>
     </div>
   );
