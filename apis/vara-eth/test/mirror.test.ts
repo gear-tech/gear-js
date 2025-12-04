@@ -137,7 +137,7 @@ describe('setup', () => {
       while (id === null) {
         const ids = await api.query.program.getIds();
         if (ids.includes(programWithAbiInterfaceId)) {
-          id = programId;
+          id = programWithAbiInterfaceId;
         }
       }
 
