@@ -69,7 +69,7 @@ export class CommandRunner {
 
     const child = spawn(cmd, args, {
       cwd,
-      stdio: logFile ? ['ignore', 'pipe', 'pipe'] : 'inherit',
+      stdio: logFile ? ['ignore', 'pipe'] : 'inherit',
       env: { ...process.env, ...env },
     });
 

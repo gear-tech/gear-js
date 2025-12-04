@@ -1,4 +1,4 @@
-import type { Account, Address, Chain, Hex, PublicClient, Transport, WalletClient } from 'viem';
+import type { Account, Address, Chain, Hex, PublicClient, TransactionRequest, Transport, WalletClient } from 'viem';
 import { toHex, zeroAddress, numberToBytes, hexToBytes, bytesToHex, encodeFunctionData } from 'viem';
 import { randomBytes } from '@noble/hashes/utils';
 import { loadKZG } from 'kzg-wasm';
@@ -330,15 +330,7 @@ export class RouterClient<
       abi: IROUTER_ABI,
     });
 
-    // const { request } = await this.ethereumClient.simulateContract({
-    //   address: this.address,
-    //   abi: IROUTER_ABI,
-    //   functionName: 'createProgram',
-    //   args: [codeId, _salt, overrideInitializer || zeroAddress],
-    //   account: this.ethereumClient.account!,
-    // });
-
-    const tx = {
+    const tx: TransactionRequest = {
       to: this.address,
       data: encodedData,
     };
@@ -373,10 +365,10 @@ export class RouterClient<
     const encodedData = encodeFunctionData({
       abi: IROUTER_ABI,
       functionName: 'createProgramWithAbiInterface',
-      args: [codeId, _salt, overrideInitializer || zeroAddress, abiInterfaceAddress],
+      args: [codeId, _salt, overrideInitializer || zeroAddress, abiInterfaceAddress.toLowerCase() as HexString],
     });
 
-    const tx = {
+    const tx: TransactionRequest = {
       to: this.address,
       data: encodedData,
     };
@@ -387,8 +379,6 @@ export class RouterClient<
         return event.args.actorId.toLowerCase();
       },
     });
-
-    await txManager.estimateGas();
 
     return txManager as TxManagerWithHelpers<CreateProgramHelpers>;
   }

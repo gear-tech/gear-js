@@ -2,66 +2,84 @@
 pragma solidity ^0.8.28;
 
 interface ICounter {
-    function createPrg(uint128 _value, bool _callReply) external returns (bytes32 messageId);
+    function createPrg(bool _callReply) external payable returns (bytes32 messageId);
 
-    function counterDecrement(uint128 _value, bool _callReply) external returns (bytes32 messageId);
+    function counterDecrement(bool _callReply) external payable returns (bytes32 messageId);
 
-    function counterIncrement(uint128 _value, bool _callReply) external returns (bytes32 messageId);
+    function counterIncrement(bool _callReply) external payable returns (bytes32 messageId);
 
-    function counterGetValue(uint128 _value, bool _callReply) external returns (bytes32 messageId);
+    function counterIncrementWithValue(bool _callReply) external payable returns (bytes32 messageId);
+
+    function counterGetValue(bool _callReply) external payable returns (bytes32 messageId);
 }
 
 contract CounterAbi is ICounter {
-    function createPrg(uint128 _value, bool _callReply) external returns (bytes32 messageId) {}
+    function createPrg(bool _callReply) external payable returns (bytes32 messageId) {}
 
-    function counterDecrement(uint128 _value, bool _callReply) external returns (bytes32 messageId) {}
+    function counterDecrement(bool _callReply) external payable returns (bytes32 messageId) {}
 
-    function counterIncrement(uint128 _value, bool _callReply) external returns (bytes32 messageId) {}
+    function counterIncrement(bool _callReply) external payable returns (bytes32 messageId) {}
 
-    function counterGetValue(uint128 _value, bool _callReply) external returns (bytes32 messageId) {}
+    function counterIncrementWithValue(bool _callReply) external payable returns (bytes32 messageId) {}
+
+    function counterGetValue(bool _callReply) external payable returns (bytes32 messageId) {}
 }
 
 interface ICounterCallbacks {
-    function replyOn_createPrg(bytes32 messageId) external;
+    function replyOn_createPrg(bytes32 messageId) external payable;
 
-    function replyOn_counterDecrement(bytes32 messageId, uint32 reply) external;
+    function replyOn_counterDecrement(bytes32 messageId, uint32 reply) external payable;
 
-    function replyOn_counterIncrement(bytes32 messageId, uint32 reply) external;
+    function replyOn_counterIncrement(bytes32 messageId, uint32 reply) external payable;
 
-    function replyOn_counterGetValue(bytes32 messageId, uint32 reply) external;
+    function replyOn_counterIncrementWithValue(bytes32 messageId, uint32 reply) external payable;
 
-    function onErrorReply(bytes32 messageId, bytes calldata payload, bytes4 replyCode) external;
+    function replyOn_counterGetValue(bytes32 messageId, uint32 reply) external payable;
+
+    function onErrorReply(bytes32 messageId, bytes calldata payload, bytes4 replyCode) external payable;
 }
 
 contract CounterCaller is ICounterCallbacks {
-    ICounter public immutable gearExeProgram;
+    ICounter public immutable VAR_ETH_PROGRAM;
 
-    constructor(ICounter _gearExeProgram) {
-        gearExeProgram = _gearExeProgram;
+    error UnauthorizedCaller();
+
+    constructor(ICounter _varaEthProgram) {
+        VAR_ETH_PROGRAM = _varaEthProgram;
     }
 
-    modifier onlyGearExeProgram() {
-        require(msg.sender == address(gearExeProgram), "Only Gear.exe program can call this function");
+    modifier onlyVaraEthProgram() {
+        _onlyVaraEthProgram();
         _;
     }
 
-    function replyOn_createPrg(bytes32 messageId) external onlyGearExeProgram {
+    function _onlyVaraEthProgram() internal {
+        if (msg.sender != address(VAR_ETH_PROGRAM)) {
+            revert UnauthorizedCaller();
+        }
+    }
+
+    function replyOn_createPrg(bytes32 messageId) external payable onlyVaraEthProgram {
         // TODO: implement this
     }
 
-    function replyOn_counterDecrement(bytes32 messageId, uint32 reply) external onlyGearExeProgram {
+    function replyOn_counterDecrement(bytes32 messageId, uint32 reply) external payable onlyVaraEthProgram {
         // TODO: implement this
     }
 
-    function replyOn_counterIncrement(bytes32 messageId, uint32 reply) external onlyGearExeProgram {
+    function replyOn_counterIncrement(bytes32 messageId, uint32 reply) external payable onlyVaraEthProgram {
         // TODO: implement this
     }
 
-    function replyOn_counterGetValue(bytes32 messageId, uint32 reply) external onlyGearExeProgram {
+    function replyOn_counterIncrementWithValue(bytes32 messageId, uint32 reply) external payable onlyVaraEthProgram {
         // TODO: implement this
     }
 
-    function onErrorReply(bytes32 messageId, bytes calldata payload, bytes4 replyCode) external onlyGearExeProgram {
+    function replyOn_counterGetValue(bytes32 messageId, uint32 reply) external payable onlyVaraEthProgram {
+        // TODO: implement this
+    }
+
+    function onErrorReply(bytes32 messageId, bytes calldata payload, bytes4 replyCode) external payable onlyVaraEthProgram {
         // TODO: implement this
     }
 }
