@@ -115,8 +115,6 @@ jobs:
             VITE_VARA_ETH_NODE_ADDRESS=${{ secrets.VITE_VARA_ETH_NODE_ADDRESS }}
             VITE_ETH_NODE_ADDRESS=${{ secrets.VITE_ETH_NODE_ADDRESS }}
             VITE_ROUTER_CONTRACT_ADDRESS=${{ secrets.VITE_ROUTER_CONTRACT_ADDRESS }}
-            VITE_WVARA_CONTRACT_ADDRESS=${{ secrets.VITE_WVARA_CONTRACT_ADDRESS }}
-            VITE_MIRROR_CONTRACT_ADDRESS=${{ secrets.VITE_MIRROR_CONTRACT_ADDRESS }}
 
   build-indexer-image:
     runs-on: ubuntu-latest
