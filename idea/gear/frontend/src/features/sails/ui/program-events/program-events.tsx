@@ -1,8 +1,10 @@
 import { HexString } from '@gear-js/api';
-import { useState } from 'react';
+import { parseAsStringEnum } from 'nuqs';
+import { useEffect } from 'react';
 import { Sails } from 'sails-js';
 
 import { Filters } from '@/features/filters';
+import { useSearchParamsState } from '@/hooks';
 import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
 import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
 
@@ -25,8 +27,39 @@ const DEFAULT_FILTER_VALUES = {
   [FILTER_NAME.EVENT_NAME]: '',
 };
 
+function useFilters(sails: Sails | undefined) {
+  const [serviceName, setServiceName] = useSearchParamsState(
+    FILTER_NAME.SERVICE_NAME,
+    parseAsStringEnum(Object.keys(sails?.services || {})).withDefault(DEFAULT_FILTER_VALUES[FILTER_NAME.SERVICE_NAME]),
+  );
+
+  const [eventName, setEventName] = useSearchParamsState(
+    FILTER_NAME.EVENT_NAME,
+    parseAsStringEnum(Object.keys(sails?.services?.[serviceName]?.events || {})).withDefault(
+      DEFAULT_FILTER_VALUES[FILTER_NAME.EVENT_NAME],
+    ),
+  );
+
+  const filters = { [FILTER_NAME.SERVICE_NAME]: serviceName, [FILTER_NAME.EVENT_NAME]: eventName };
+
+  const setFilters = (values: typeof filters) => {
+    void setServiceName(values.serviceName);
+    void setEventName(values.eventName);
+  };
+
+  useEffect(() => {
+    return () => {
+      void setServiceName(DEFAULT_FILTER_VALUES[FILTER_NAME.SERVICE_NAME]);
+      void setEventName(DEFAULT_FILTER_VALUES[FILTER_NAME.EVENT_NAME]);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return [filters, setFilters] as const;
+}
+
 function ProgramEvents({ programId, sails }: Props) {
-  const [filterValues, setFilterValues] = useState(DEFAULT_FILTER_VALUES);
+  const [filterValues, setFilterValues] = useFilters(sails);
 
   const events = useEvents({
     source: programId,
