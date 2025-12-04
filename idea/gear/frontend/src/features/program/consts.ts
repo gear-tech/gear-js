@@ -34,6 +34,8 @@ const PROGRAM_TAB_ID = {
   METADATA: 'metadata',
 } as const;
 
+const PROGRAM_TAB_IDS = Object.values(PROGRAM_TAB_ID);
+
 const PROGRAM_TABS = [
   { id: PROGRAM_TAB_ID.MESSAGES, label: 'Messages' },
   { id: PROGRAM_TAB_ID.EVENTS, label: 'Events' },
@@ -47,5 +49,6 @@ export {
   DEFAULT_FILTER_VALUES,
   PROGRAM_TAB_SEARCH_PARAM,
   PROGRAM_TABS,
+  PROGRAM_TAB_IDS,
   PROGRAM_TAB_ID,
 };

@@ -114,7 +114,7 @@ const Program = () => {
       />
 
       <div className={styles.body}>
-        <ProgramTabs value={tab.id} onChange={tab.handleChange} />
+        <ProgramTabs value={tab.id} onChange={tab.setId} />
 
         {tab.isMessages && <ProgramMessages programId={programId} sails={sails} />}
         {tab.isEvents && !isSailsLoading && <ProgramEvents programId={programId} sails={sails} />}
