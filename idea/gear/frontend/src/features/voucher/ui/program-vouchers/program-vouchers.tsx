@@ -40,7 +40,7 @@ function ProgramVouchers({ programId }: Props) {
     />
   );
 
-  const renderFilters = () => <VoucherFilters defaultValues={filters} onSubmit={handleFiltersSubmit} />;
+  const renderFilters = () => <VoucherFilters values={filters} onSubmit={handleFiltersSubmit} />;
 
   return (
     <ProgramTabLayout

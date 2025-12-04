@@ -21,22 +21,29 @@ const FILTER_NAME = {
   EVENT_NAME: 'eventName',
 } as const;
 
+const DEFAULT_VALUE = {
+  SERVICE_NAME: '' as string,
+  EVENT_NAME: '' as string,
+} as const;
+
 const DEFAULT_FILTER_VALUES = {
-  [FILTER_NAME.SERVICE_NAME]: '',
-  [FILTER_NAME.EVENT_NAME]: '',
-};
+  [FILTER_NAME.SERVICE_NAME]: DEFAULT_VALUE.SERVICE_NAME,
+  [FILTER_NAME.EVENT_NAME]: DEFAULT_VALUE.EVENT_NAME,
+} as const;
 
 function useFilters(sails: Sails | undefined) {
+  const serviceNames = Object.keys(sails?.services || {});
+
   const [serviceName, setServiceName] = useSearchParamsState(
     FILTER_NAME.SERVICE_NAME,
-    parseAsStringEnum(Object.keys(sails?.services || {})).withDefault(DEFAULT_FILTER_VALUES[FILTER_NAME.SERVICE_NAME]),
+    parseAsStringEnum(serviceNames).withDefault(DEFAULT_VALUE.SERVICE_NAME),
   );
+
+  const eventNames = Object.keys(sails?.services?.[serviceName]?.events || {});
 
   const [eventName, setEventName] = useSearchParamsState(
     FILTER_NAME.EVENT_NAME,
-    parseAsStringEnum(Object.keys(sails?.services?.[serviceName]?.events || {})).withDefault(
-      DEFAULT_FILTER_VALUES[FILTER_NAME.EVENT_NAME],
-    ),
+    parseAsStringEnum(eventNames).withDefault(DEFAULT_VALUE.EVENT_NAME),
   );
 
   const filters = { [FILTER_NAME.SERVICE_NAME]: serviceName, [FILTER_NAME.EVENT_NAME]: eventName };

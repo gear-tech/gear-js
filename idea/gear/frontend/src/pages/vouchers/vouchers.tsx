@@ -40,7 +40,7 @@ const Vouchers = () => {
         fetchMore={fetchMore}
       />
 
-      <VoucherFilters defaultValues={filters} onSubmit={handleFiltersSubmit} />
+      <VoucherFilters values={filters} onSubmit={handleFiltersSubmit} />
     </div>
   );
 };

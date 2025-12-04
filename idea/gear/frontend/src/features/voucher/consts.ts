@@ -19,9 +19,50 @@ const DEFAULT_VALUES: Values = {
   [FIELD_NAME.DURATION]: '',
 };
 
-const DEFAULT_FILTER_VALUES = {
-  owner: 'all' as 'all' | 'by' | 'to',
-  status: '' as '' | 'active' | 'declined' | 'expired',
+// filters
+
+const FILTER_NAME = {
+  OWNER: 'owner',
+  STATUS: 'status',
 } as const;
 
-export { FIELD_NAME, VOUCHER_TYPE, DEFAULT_VALUES, DEFAULT_FILTER_VALUES };
+const FILTER_VALUE = {
+  OWNER: {
+    ALL: 'all',
+    BY: 'by',
+    TO: 'to',
+  },
+
+  STATUS: {
+    NONE: '',
+    ACTIVE: 'active',
+    DECLINED: 'declined',
+    EXPIRED: 'expired',
+  },
+} as const;
+
+const FILTER_VALUES = {
+  OWNER: Object.values(FILTER_VALUE.OWNER),
+  STATUS: Object.values(FILTER_VALUE.STATUS),
+} as const;
+
+const DEFAULT_FILTER_VALUE = {
+  OWNER: FILTER_VALUE.OWNER.ALL as (typeof FILTER_VALUE.OWNER)[keyof typeof FILTER_VALUE.OWNER],
+  STATUS: FILTER_VALUE.STATUS.NONE as (typeof FILTER_VALUE.STATUS)[keyof typeof FILTER_VALUE.STATUS],
+} as const;
+
+const DEFAULT_FILTER_VALUES = {
+  [FILTER_NAME.OWNER]: DEFAULT_FILTER_VALUE.OWNER,
+  [FILTER_NAME.STATUS]: DEFAULT_FILTER_VALUE.STATUS,
+} as const;
+
+export {
+  FIELD_NAME,
+  VOUCHER_TYPE,
+  DEFAULT_VALUES,
+  FILTER_NAME,
+  FILTER_VALUE,
+  FILTER_VALUES,
+  DEFAULT_FILTER_VALUE,
+  DEFAULT_FILTER_VALUES,
+};

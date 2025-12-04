@@ -3,33 +3,53 @@ import { useAccount } from '@gear-js/react-hooks';
 import { FilterGroup, Filters, Radio, StatusRadio } from '@/features/filters';
 import { BulbStatus } from '@/shared/ui/bulbBlock';
 
-import { DEFAULT_FILTER_VALUES } from '../../consts';
+import { DEFAULT_FILTER_VALUES, FILTER_NAME, FILTER_VALUE } from '../../consts';
 
 type Props = {
-  defaultValues: typeof DEFAULT_FILTER_VALUES;
+  values: typeof DEFAULT_FILTER_VALUES;
   onSubmit: (values: typeof DEFAULT_FILTER_VALUES) => void;
 };
 
-function VoucherFilters({ defaultValues, onSubmit }: Props) {
+function VoucherFilters({ values, onSubmit }: Props) {
   const { account } = useAccount();
 
   return (
-    <Filters initialValues={defaultValues} onSubmit={onSubmit}>
-      <FilterGroup name="owner" onSubmit={onSubmit}>
-        <Radio name="owner" value="all" label="All vouchers" onSubmit={onSubmit} />
+    <Filters initialValues={DEFAULT_FILTER_VALUES} values={values} onSubmit={onSubmit}>
+      <FilterGroup name={FILTER_NAME.OWNER} onSubmit={onSubmit}>
+        <Radio name={FILTER_NAME.OWNER} value={FILTER_VALUE.OWNER.ALL} label="All vouchers" onSubmit={onSubmit} />
 
         {account && (
           <>
-            <Radio name="owner" value="by" label="Issued by you" onSubmit={onSubmit} />
-            <Radio name="owner" value="to" label="Issued to you" onSubmit={onSubmit} />
+            <Radio name={FILTER_NAME.OWNER} value={FILTER_VALUE.OWNER.BY} label="Issued by you" onSubmit={onSubmit} />
+            <Radio name={FILTER_NAME.OWNER} value={FILTER_VALUE.OWNER.TO} label="Issued to you" onSubmit={onSubmit} />
           </>
         )}
       </FilterGroup>
 
-      <FilterGroup name="status" title="Status" onSubmit={onSubmit} withReset>
-        <StatusRadio name="status" value="active" label="Active" status={BulbStatus.Success} onSubmit={onSubmit} />
-        <StatusRadio name="status" value="declined" label="Declined" status={BulbStatus.Error} onSubmit={onSubmit} />
-        <StatusRadio name="status" value="expired" label="Expired" status={BulbStatus.Exited} onSubmit={onSubmit} />
+      <FilterGroup name={FILTER_NAME.STATUS} title="Status" onSubmit={onSubmit} withReset>
+        <StatusRadio
+          name={FILTER_NAME.STATUS}
+          value={FILTER_VALUE.STATUS.ACTIVE}
+          label="Active"
+          status={BulbStatus.Success}
+          onSubmit={onSubmit}
+        />
+
+        <StatusRadio
+          name={FILTER_NAME.STATUS}
+          value={FILTER_VALUE.STATUS.DECLINED}
+          label="Declined"
+          status={BulbStatus.Error}
+          onSubmit={onSubmit}
+        />
+
+        <StatusRadio
+          name={FILTER_NAME.STATUS}
+          value={FILTER_VALUE.STATUS.EXPIRED}
+          label="Expired"
+          status={BulbStatus.Exited}
+          onSubmit={onSubmit}
+        />
       </FilterGroup>
     </Filters>
   );

@@ -39,36 +39,44 @@ const FILTER_VALUE = {
 type OwnerValue = (typeof FILTER_VALUE.OWNER)[keyof typeof FILTER_VALUE.OWNER];
 type DirectionValue = (typeof FILTER_VALUE.DIRECTION)[keyof typeof FILTER_VALUE.DIRECTION];
 
+const VALUES = {
+  OWNER: Object.values(FILTER_VALUE.OWNER),
+  DIRECTION: Object.values(FILTER_VALUE.DIRECTION),
+} as const;
+
+const DEFAULT_VALUE = {
+  OWNER: FILTER_VALUE.OWNER.ALL as OwnerValue,
+  DIRECTION: FILTER_VALUE.DIRECTION.TO as DirectionValue,
+  SERVICE_NAME: '' as string,
+  FUNCTION_NAME: '' as string,
+} as const;
+
 const DEFAULT_FILTER_VALUES = {
-  [FILTER_NAME.OWNER]: FILTER_VALUE.OWNER.ALL as OwnerValue,
-  [FILTER_NAME.DIRECTION]: FILTER_VALUE.DIRECTION.TO as DirectionValue,
-  [FILTER_NAME.SERVICE_NAME]: '',
-  [FILTER_NAME.FUNCTION_NAME]: '',
-};
+  [FILTER_NAME.OWNER]: DEFAULT_VALUE.OWNER,
+  [FILTER_NAME.DIRECTION]: DEFAULT_VALUE.DIRECTION,
+  [FILTER_NAME.SERVICE_NAME]: DEFAULT_VALUE.SERVICE_NAME,
+  [FILTER_NAME.FUNCTION_NAME]: DEFAULT_VALUE.FUNCTION_NAME,
+} as const;
 
 function useFilters(sails: Sails | undefined) {
   const { account } = useAccount();
 
+  // fallback to default value on no account
+  const ownerValues = account ? VALUES.OWNER : [DEFAULT_VALUE.OWNER];
+  const serviceNames = Object.keys(sails?.services ?? {});
+
   const [baseFilters, setBaseFilters] = useSearchParamsStates({
-    [FILTER_NAME.OWNER]: parseAsStringEnum(
-      account ? Object.values(FILTER_VALUE.OWNER) : [DEFAULT_FILTER_VALUES[FILTER_NAME.OWNER]],
-    ).withDefault(DEFAULT_FILTER_VALUES[FILTER_NAME.OWNER]),
-
-    [FILTER_NAME.DIRECTION]: parseAsStringEnum(Object.values(FILTER_VALUE.DIRECTION)).withDefault(
-      DEFAULT_FILTER_VALUES[FILTER_NAME.DIRECTION],
-    ),
-
-    [FILTER_NAME.SERVICE_NAME]: parseAsStringEnum(['', ...Object.keys(sails?.services ?? {})]).withDefault(
-      DEFAULT_FILTER_VALUES[FILTER_NAME.SERVICE_NAME],
-    ),
+    [FILTER_NAME.OWNER]: parseAsStringEnum(ownerValues).withDefault(DEFAULT_VALUE.OWNER),
+    [FILTER_NAME.DIRECTION]: parseAsStringEnum(VALUES.DIRECTION).withDefault(DEFAULT_VALUE.DIRECTION),
+    [FILTER_NAME.SERVICE_NAME]: parseAsStringEnum(serviceNames).withDefault(DEFAULT_VALUE.SERVICE_NAME),
   });
+
+  const serviceName = baseFilters[FILTER_NAME.SERVICE_NAME];
+  const functionNames = Object.keys(sails?.services?.[serviceName]?.functions ?? {});
 
   const [functionName, setFunctionName] = useSearchParamsState(
     FILTER_NAME.FUNCTION_NAME,
-    parseAsStringEnum([
-      '',
-      ...Object.keys(sails?.services?.[baseFilters[FILTER_NAME.SERVICE_NAME]]?.functions ?? {}),
-    ]).withDefault(DEFAULT_FILTER_VALUES[FILTER_NAME.FUNCTION_NAME]),
+    parseAsStringEnum(functionNames).withDefault(DEFAULT_VALUE.FUNCTION_NAME),
   );
 
   const filters = { ...baseFilters, functionName };
@@ -79,11 +87,7 @@ function useFilters(sails: Sails | undefined) {
   };
 
   useChangeEffect(() => {
-    if (!account)
-      void setBaseFilters((prevValues) => ({
-        ...prevValues,
-        [FILTER_NAME.OWNER]: DEFAULT_FILTER_VALUES[FILTER_NAME.OWNER],
-      }));
+    if (!account) void setBaseFilters((prevValues) => ({ ...prevValues, [FILTER_NAME.OWNER]: DEFAULT_VALUE.OWNER }));
   }, [account]);
 
   return [filters, setFilters] as const;
