@@ -6,14 +6,15 @@ import { BulbStatus } from '@/shared/ui/bulbBlock';
 import { DEFAULT_FILTER_VALUES } from '../../consts';
 
 type Props = {
+  defaultValues: typeof DEFAULT_FILTER_VALUES;
   onSubmit: (values: typeof DEFAULT_FILTER_VALUES) => void;
 };
 
-function VoucherFilters({ onSubmit }: Props) {
+function VoucherFilters({ defaultValues, onSubmit }: Props) {
   const { account } = useAccount();
 
   return (
-    <Filters initialValues={DEFAULT_FILTER_VALUES} onSubmit={onSubmit}>
+    <Filters initialValues={defaultValues} onSubmit={onSubmit}>
       <FilterGroup name="owner" onSubmit={onSubmit}>
         <Radio name="owner" value="all" label="All vouchers" onSubmit={onSubmit} />
 
@@ -27,9 +28,7 @@ function VoucherFilters({ onSubmit }: Props) {
 
       <FilterGroup name="status" title="Status" onSubmit={onSubmit} withReset>
         <StatusRadio name="status" value="active" label="Active" status={BulbStatus.Success} onSubmit={onSubmit} />
-
         <StatusRadio name="status" value="declined" label="Declined" status={BulbStatus.Error} onSubmit={onSubmit} />
-
         <StatusRadio name="status" value="expired" label="Expired" status={BulbStatus.Exited} onSubmit={onSubmit} />
       </FilterGroup>
     </Filters>

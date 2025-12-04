@@ -1,11 +1,18 @@
 import { useAccount } from '@gear-js/react-hooks';
-import { useMemo, useState } from 'react';
+import { parseAsStringEnum } from 'nuqs';
+import { useMemo } from 'react';
 
-import { DEFAULT_FILTER_VALUES } from '../consts';
+import { useSearchParamsStates } from '@/hooks';
+
+// import { DEFAULT_FILTER_VALUES } from '../consts';
 
 function useVoucherFilters() {
   const { account } = useAccount();
-  const [values, setValues] = useState(DEFAULT_FILTER_VALUES);
+
+  const [values, setValues] = useSearchParamsStates({
+    owner: parseAsStringEnum(['all', 'by', 'to']).withDefault('all'),
+    status: parseAsStringEnum(['', 'active', 'declined', 'expired']).withDefault(''),
+  });
 
   const getOwnerParams = () => {
     if (!account) return {};
@@ -34,7 +41,7 @@ function useVoucherFilters() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const params = useMemo(() => ({ ...getOwnerParams(), ...getStatusParams() }), [values, account]);
 
-  return [params, setValues] as const;
+  return [values, params, setValues] as const;
 }
 
 export { useVoucherFilters };

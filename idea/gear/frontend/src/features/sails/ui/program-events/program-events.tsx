@@ -1,6 +1,5 @@
 import { HexString } from '@gear-js/api';
 import { parseAsStringEnum } from 'nuqs';
-import { useEffect } from 'react';
 import { Sails } from 'sails-js';
 
 import { Filters } from '@/features/filters';
@@ -46,14 +45,6 @@ function useFilters(sails: Sails | undefined) {
     void setServiceName(values.serviceName);
     void setEventName(values.eventName);
   };
-
-  useEffect(() => {
-    return () => {
-      void setServiceName(DEFAULT_FILTER_VALUES[FILTER_NAME.SERVICE_NAME]);
-      void setEventName(DEFAULT_FILTER_VALUES[FILTER_NAME.EVENT_NAME]);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return [filters, setFilters] as const;
 }

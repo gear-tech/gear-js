@@ -14,7 +14,7 @@ import styles from './vouchers.module.scss';
 
 const Vouchers = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterParams, handleFiltersSubmit] = useVoucherFilters();
+  const [filters, filterParams, handleFiltersSubmit] = useVoucherFilters();
   const [vouchers, count, isLoading, hasMore, fetchMore, refetch] = useVouchers(searchQuery, filterParams);
 
   return (
@@ -40,7 +40,7 @@ const Vouchers = () => {
         fetchMore={fetchMore}
       />
 
-      <VoucherFilters onSubmit={handleFiltersSubmit} />
+      <VoucherFilters defaultValues={filters} onSubmit={handleFiltersSubmit} />
     </div>
   );
 };

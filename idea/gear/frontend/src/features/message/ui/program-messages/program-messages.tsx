@@ -75,26 +75,19 @@ function useFilters(sails: Sails | undefined) {
   const filters = { ...baseFilters, functionName };
 
   const setFilters = ({ functionName: _functionName, ...values }: typeof DEFAULT_FILTER_VALUES) => {
-    Promise.all([setBaseFilters(values), setFunctionName(_functionName)]).catch((error) => console.log(error));
+    void setBaseFilters(values);
+    void setFunctionName(_functionName);
   };
 
   useEffect(() => {
     if (!account)
-      setBaseFilters((prevValues) => ({
+      void setBaseFilters((prevValues) => ({
         ...prevValues,
         [FILTER_NAME.OWNER]: DEFAULT_FILTER_VALUES[FILTER_NAME.OWNER],
-      })).catch((error) => console.log(error));
+      }));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account]);
-
-  useEffect(() => {
-    return () => {
-      setBaseFilters(DEFAULT_FILTER_VALUES).catch((error) => console.log(error));
-      setFunctionName(DEFAULT_FILTER_VALUES[FILTER_NAME.FUNCTION_NAME]).catch((error) => console.log(error));
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return [filters, setFilters] as const;
 }

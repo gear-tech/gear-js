@@ -1,6 +1,7 @@
 import { HexString } from '@gear-js/api';
-import { useState } from 'react';
+import { parseAsString } from 'nuqs';
 
+import { useSearchParamsState } from '@/hooks';
 import { isHex } from '@/shared/helpers';
 import { ProgramTabLayout, SearchForm } from '@/shared/ui';
 
@@ -14,8 +15,8 @@ type Props = {
 };
 
 function ProgramVouchers({ programId }: Props) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterParams, handleFiltersSubmit] = useVoucherFilters();
+  const [searchQuery, setSearchQuery] = useSearchParamsState('search', parseAsString.withDefault(''));
+  const [filters, filterParams, handleFiltersSubmit] = useVoucherFilters();
 
   const [vouchers, count, isLoading, hasMore, fetchMore, refetch] = useVouchers(searchQuery, filterParams, programId);
 
@@ -33,12 +34,13 @@ function ProgramVouchers({ programId }: Props) {
   const renderSearch = () => (
     <SearchForm
       placeholder="Search by id..."
+      defaultValue={searchQuery}
       getSchema={(schema) => schema.refine((value) => isHex(value), 'Value should be hex')}
       onSubmit={(query) => setSearchQuery(query)}
     />
   );
 
-  const renderFilters = () => <VoucherFilters onSubmit={handleFiltersSubmit} />;
+  const renderFilters = () => <VoucherFilters defaultValues={filters} onSubmit={handleFiltersSubmit} />;
 
   return (
     <ProgramTabLayout

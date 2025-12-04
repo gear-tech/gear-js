@@ -20,8 +20,8 @@ const DEFAULT_VALUES: Values = {
 };
 
 const DEFAULT_FILTER_VALUES = {
-  owner: 'all',
-  status: '',
-};
+  owner: 'all' as 'all' | 'by' | 'to',
+  status: '' as '' | 'active' | 'declined' | 'expired',
+} as const;
 
 export { FIELD_NAME, VOUCHER_TYPE, DEFAULT_VALUES, DEFAULT_FILTER_VALUES };
