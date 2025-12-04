@@ -1,4 +1,4 @@
-import {Script, console} from "../solidity_lib/forge-std/src/Script.sol";
+import {Script, console} from "forge-std/Script.sol";
 import {CounterAbi} from "../contracts/Counter.sol";
 
 contract CounterDeploy is Script {
@@ -7,7 +7,7 @@ contract CounterDeploy is Script {
     bytes32 codeId;
 
     function setUp() public {
-        privateKey = vm.envUint("PRIVATE_KEY");
+        privateKey = vm.envUint("CLIENT_KEY_PRIVATE");
         router = vm.envAddress("ROUTER_ADDRESS");
         console.log("Router address:", router);
         codeId = vm.envBytes32("CODE_ID");
@@ -18,7 +18,7 @@ contract CounterDeploy is Script {
 
         CounterAbi counter = new CounterAbi();
 
-        bytes memory payload = abi.encodeWithSignature("createProgramWithAbiInterface(bytes32,bytes32,address,address)", codeId, bytes32(0), address(0), address(counter));
+        bytes memory payload = abi.encodeWithSignature("createProgramWithAbiInterface(bytes32,bytes32,address,address)", codeId, bytes32(vm.randomUint()), address(0), address(counter));
 
         (bool success, bytes memory data) = router.call(payload);
 

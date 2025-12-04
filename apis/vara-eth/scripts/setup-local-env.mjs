@@ -362,6 +362,7 @@ async function startAnvil(config, state) {
       'test test test test test test test test test test test junk',
       '--balance',
       '5000000000000000000',
+      '-vvvv',
     ],
     { logFile },
   );
