@@ -1,10 +1,12 @@
 import { HexString } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
-import { useEffect, useState } from 'react';
+import { parseAsStringEnum } from 'nuqs';
+import { useEffect } from 'react';
 import { Sails } from 'sails-js';
 
 import { FilterGroup, Filters, Radio } from '@/features/filters';
 import { SailsFilterGroup } from '@/features/sails';
+import { useSearchParamsState, useSearchParamsStates } from '@/hooks';
 import MessageCardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
 import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
 
@@ -45,10 +47,61 @@ const DEFAULT_FILTER_VALUES = {
   [FILTER_NAME.FUNCTION_NAME]: '',
 };
 
-const ProgramMessages = ({ programId, sails }: Props) => {
+function useFilters(sails: Sails | undefined) {
   const { account } = useAccount();
 
-  const [filters, setFilters] = useState(DEFAULT_FILTER_VALUES);
+  const [baseFilters, setBaseFilters] = useSearchParamsStates({
+    [FILTER_NAME.OWNER]: parseAsStringEnum(Object.values(FILTER_VALUE.OWNER)).withDefault(
+      DEFAULT_FILTER_VALUES[FILTER_NAME.OWNER],
+    ),
+
+    [FILTER_NAME.DIRECTION]: parseAsStringEnum(Object.values(FILTER_VALUE.DIRECTION)).withDefault(
+      DEFAULT_FILTER_VALUES[FILTER_NAME.DIRECTION],
+    ),
+
+    [FILTER_NAME.SERVICE_NAME]: parseAsStringEnum(['', ...Object.keys(sails?.services ?? {})]).withDefault(
+      DEFAULT_FILTER_VALUES[FILTER_NAME.SERVICE_NAME],
+    ),
+  });
+
+  const [functionName, setFunctionName] = useSearchParamsState(
+    FILTER_NAME.FUNCTION_NAME,
+    parseAsStringEnum([
+      '',
+      ...Object.keys(sails?.services?.[baseFilters[FILTER_NAME.SERVICE_NAME]]?.functions ?? {}),
+    ]).withDefault(DEFAULT_FILTER_VALUES[FILTER_NAME.FUNCTION_NAME]),
+  );
+
+  const filters = { ...baseFilters, functionName };
+
+  const setFilters = ({ functionName: _functionName, ...values }: typeof DEFAULT_FILTER_VALUES) => {
+    Promise.all([setBaseFilters(values), setFunctionName(_functionName)]).catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    if (!account)
+      setBaseFilters((prevValues) => ({
+        ...prevValues,
+        [FILTER_NAME.OWNER]: DEFAULT_FILTER_VALUES[FILTER_NAME.OWNER],
+      })).catch((error) => console.log(error));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [account]);
+
+  useEffect(() => {
+    return () => {
+      setBaseFilters(DEFAULT_FILTER_VALUES).catch((error) => console.log(error));
+      setFunctionName(DEFAULT_FILTER_VALUES[FILTER_NAME.FUNCTION_NAME]).catch((error) => console.log(error));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return [filters, setFilters] as const;
+}
+
+const ProgramMessages = ({ programId, sails }: Props) => {
+  const { account } = useAccount();
+  const [filters, setFilters] = useFilters(sails);
 
   const isToDirection = filters[FILTER_NAME.DIRECTION] === FILTER_VALUE.DIRECTION.TO;
   const addressParam = filters[FILTER_NAME.OWNER] === FILTER_VALUE.OWNER.OWNER ? account?.decodedAddress : undefined;
@@ -105,10 +158,6 @@ const ProgramMessages = ({ programId, sails }: Props) => {
       </>
     );
   };
-
-  useEffect(() => {
-    if (!account) setFilters((prevValues) => ({ ...prevValues, [FILTER_NAME.OWNER]: FILTER_VALUE.OWNER.ALL }));
-  }, [account]);
 
   const renderFilters = () => (
     <Filters initialValues={DEFAULT_FILTER_VALUES} values={filters} onSubmit={setFilters}>
