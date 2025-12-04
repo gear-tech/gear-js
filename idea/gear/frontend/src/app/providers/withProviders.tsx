@@ -1,4 +1,5 @@
 import { AccountProvider as GearAccountProvider, ProviderProps } from '@gear-js/react-hooks';
+import { NuqsAdapter } from 'nuqs/adapters/react-router/v7';
 import { ComponentType } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -27,6 +28,7 @@ const providers = [
   BlocksProvider,
   QueryProvider,
   ModalProvider,
+  NuqsAdapter,
 ];
 
 const withProviders = (Component: ComponentType) => () =>
