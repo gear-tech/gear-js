@@ -1,12 +1,11 @@
 import { HexString } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
 import { parseAsStringEnum } from 'nuqs';
-import { useEffect } from 'react';
 import { Sails } from 'sails-js';
 
 import { FilterGroup, Filters, Radio } from '@/features/filters';
 import { SailsFilterGroup } from '@/features/sails';
-import { useSearchParamsState, useSearchParamsStates } from '@/hooks';
+import { useChangeEffect, useSearchParamsState, useSearchParamsStates } from '@/hooks';
 import MessageCardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
 import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
 
@@ -51,9 +50,9 @@ function useFilters(sails: Sails | undefined) {
   const { account } = useAccount();
 
   const [baseFilters, setBaseFilters] = useSearchParamsStates({
-    [FILTER_NAME.OWNER]: parseAsStringEnum(Object.values(FILTER_VALUE.OWNER)).withDefault(
-      DEFAULT_FILTER_VALUES[FILTER_NAME.OWNER],
-    ),
+    [FILTER_NAME.OWNER]: parseAsStringEnum(
+      account ? Object.values(FILTER_VALUE.OWNER) : [DEFAULT_FILTER_VALUES[FILTER_NAME.OWNER]],
+    ).withDefault(DEFAULT_FILTER_VALUES[FILTER_NAME.OWNER]),
 
     [FILTER_NAME.DIRECTION]: parseAsStringEnum(Object.values(FILTER_VALUE.DIRECTION)).withDefault(
       DEFAULT_FILTER_VALUES[FILTER_NAME.DIRECTION],
@@ -79,14 +78,12 @@ function useFilters(sails: Sails | undefined) {
     void setFunctionName(_functionName);
   };
 
-  useEffect(() => {
+  useChangeEffect(() => {
     if (!account)
       void setBaseFilters((prevValues) => ({
         ...prevValues,
         [FILTER_NAME.OWNER]: DEFAULT_FILTER_VALUES[FILTER_NAME.OWNER],
       }));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account]);
 
   return [filters, setFilters] as const;

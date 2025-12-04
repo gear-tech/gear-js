@@ -2,7 +2,7 @@ import { useAccount } from '@gear-js/react-hooks';
 import { parseAsStringEnum } from 'nuqs';
 import { useMemo } from 'react';
 
-import { useSearchParamsStates } from '@/hooks';
+import { useChangeEffect, useSearchParamsStates } from '@/hooks';
 
 // import { DEFAULT_FILTER_VALUES } from '../consts';
 
@@ -10,7 +10,7 @@ function useVoucherFilters() {
   const { account } = useAccount();
 
   const [values, setValues] = useSearchParamsStates({
-    owner: parseAsStringEnum(['all', 'by', 'to']).withDefault('all'),
+    owner: parseAsStringEnum(account ? ['all', 'by', 'to'] : ['all']).withDefault('all'),
     status: parseAsStringEnum(['', 'active', 'declined', 'expired']).withDefault(''),
   });
 
@@ -40,6 +40,10 @@ function useVoucherFilters() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const params = useMemo(() => ({ ...getOwnerParams(), ...getStatusParams() }), [values, account]);
+
+  useChangeEffect(() => {
+    if (!account) void setValues((prevValues) => ({ ...prevValues, owner: 'all' }));
+  }, [account]);
 
   return [values, params, setValues] as const;
 }
