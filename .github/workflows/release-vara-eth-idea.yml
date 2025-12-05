@@ -13,6 +13,7 @@ on:
         options:
           - frontend
           - indexer
+          - all
         required: true
 
 concurrency:
@@ -37,7 +38,7 @@ jobs:
       frontend: ${{ steps.frontend.outputs.changed }}
       indexer: ${{ steps.indexer.outputs.changed }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Check frontend
         id: frontend
@@ -115,6 +116,8 @@ jobs:
             VITE_VARA_ETH_NODE_ADDRESS=${{ secrets.VITE_VARA_ETH_NODE_ADDRESS }}
             VITE_ETH_NODE_ADDRESS=${{ secrets.VITE_ETH_NODE_ADDRESS }}
             VITE_ROUTER_CONTRACT_ADDRESS=${{ secrets.VITE_ROUTER_CONTRACT_ADDRESS }}
+            VITE_ETH_CHAIN_ID=${{ secrets.VITE_ETH_CHAIN_ID }}
+            VITE_EXPLORER_URL=${{ secrets.VITE_EXPLORER_URL }}
 
   build-indexer-image:
     runs-on: ubuntu-latest
@@ -133,7 +136,7 @@ jobs:
         id: check
         uses: './.github/actions/should-be-built'
         with:
-          patterns: 'squid,all,backend'
+          patterns: 'indexer,all'
           input: ${{ github.event.inputs.service }}
           event_name: ${{ github.event_name }}
 
@@ -145,15 +148,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push "vara-eth-idea-squid" image
+      - name: Build and push "vara-eth-idea-indexer" image
         if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/build-push-action@master
         with:
           file: idea/vara-eth/indexer/Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-squid:${{ needs.set-env-tag.outputs.environment }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-squid:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-indexer:${{ needs.set-env-tag.outputs.environment }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-indexer:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
 
   deploy-to-k8s:
     needs:
