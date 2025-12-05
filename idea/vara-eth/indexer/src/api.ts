@@ -8,13 +8,13 @@ dotenv.config();
 
 const isDev = process.env.NODE_ENV === 'development';
 
-async function main() {
+export async function runServer() {
   const database = process.env.DATABASE_URL || 'indexer';
 
   const options: PostGraphileOptions = {
     watchPg: isDev,
     graphiql: true,
-    enhanceGraphiql: isDev,
+    enhanceGraphiql: true,
     subscriptions: true,
     dynamicJson: true,
     setofFunctionsContainNulls: false,
@@ -50,7 +50,9 @@ async function main() {
   });
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+if (require.main === module) {
+  runServer().catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+}
