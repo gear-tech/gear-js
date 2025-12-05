@@ -16,7 +16,7 @@ type InitProgramParams = {
 
 const useInitProgram = (programId: HexString) => {
   const { data: sails } = useSails(counterIdl);
-  const { mirrorContract } = useMirrorContract(programId);
+  const { data: mirrorContract } = useMirrorContract(programId);
   const addMyActivity = useAddMyActivity();
 
   const initProgram = async ({ ctorName, args }: InitProgramParams) => {

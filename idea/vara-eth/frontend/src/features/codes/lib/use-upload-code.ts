@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { generatePath, useNavigate } from 'react-router-dom';
 
-import { useRouterContract } from '@/app/api/use-router-contract';
+import { useEthereumClient } from '@/app/api';
 import { useVaraEthApi } from '@/app/providers';
 import { useAddMyActivity } from '@/app/store';
 import { TransactionTypes, unpackReceipt } from '@/app/store/my-activity';
@@ -12,12 +12,12 @@ export const useUploadCode = () => {
   const navigate = useNavigate();
   const addMyActivity = useAddMyActivity();
 
-  const { routerContract } = useRouterContract();
+  const { data: ethereumClient } = useEthereumClient();
 
   const uploadCode = async (code: Uint8Array) => {
-    if (!api || !routerContract) return;
+    if (!api || !ethereumClient) return;
 
-    const tx = await routerContract.requestCodeValidation(code);
+    const tx = await ethereumClient.router.requestCodeValidation(code);
     await tx.send();
     const isValidated = await tx.waitForCodeGotValidated();
     const codeId = tx.codeId;

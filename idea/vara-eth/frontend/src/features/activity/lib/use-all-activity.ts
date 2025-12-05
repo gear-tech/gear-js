@@ -2,17 +2,16 @@ import { RouterClient, WrappedVaraClient } from '@vara-eth/api';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect } from 'react';
 
-import { useRouterContract, useWrappedVaraContract } from '@/app/api';
+import { useEthereumClient } from '@/app/api';
 import { allActivityAtom, RouterEvents, WrappedVaraEvents } from '@/app/store';
 
 const useAllActivity = () => {
-  const { routerContract } = useRouterContract();
-  const { wrappedVaraContract } = useWrappedVaraContract();
+  const { data: ethereumClient } = useEthereumClient();
   const allActivity = useAtomValue(allActivityAtom);
 
   const setAllActivity = useSetAtom(allActivityAtom);
   useEffect(() => {
-    if (!routerContract || !wrappedVaraContract) return;
+    if (!ethereumClient) return;
 
     // const addActivity = (eventLog: EventLog) => {
     //   const event = parseEvent(eventLog);
@@ -62,14 +61,14 @@ const useAllActivity = () => {
     const routerEvents = Object.values(RouterEvents);
     const wrappedVaraEvents = Object.values(WrappedVaraEvents);
 
-    subscribeToEvents(routerContract, routerEvents);
-    subscribeToEvents(wrappedVaraContract, wrappedVaraEvents);
+    subscribeToEvents(ethereumClient.router, routerEvents);
+    subscribeToEvents(ethereumClient.wvara, wrappedVaraEvents);
 
     return () => {
-      unsubscribeFromEvents(routerContract, routerEvents);
-      unsubscribeFromEvents(wrappedVaraContract, wrappedVaraEvents);
+      unsubscribeFromEvents(ethereumClient.router, routerEvents);
+      unsubscribeFromEvents(ethereumClient.wvara, wrappedVaraEvents);
     };
-  }, [routerContract, wrappedVaraContract, setAllActivity]);
+  }, [ethereumClient, setAllActivity]);
 
   return allActivity;
 };
