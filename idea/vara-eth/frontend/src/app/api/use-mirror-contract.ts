@@ -1,9 +1,8 @@
 import { getMirrorClient } from '@vara-eth/api';
+import type { Address } from 'viem';
 import { useAccount, useWalletClient, usePublicClient } from 'wagmi';
 
-import { MIRROR_CONTRACT_ADDRESS } from '@/shared/config';
-
-const useMirrorContract = (mirrorAddress = MIRROR_CONTRACT_ADDRESS) => {
+const useMirrorContract = (mirrorAddress: Address) => {
   const ethAccount = useAccount();
   const { data: walletClient } = useWalletClient({ chainId: ethAccount.chain?.id });
   const publicClient = usePublicClient({ chainId: ethAccount.chain?.id });

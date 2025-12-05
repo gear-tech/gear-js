@@ -3,18 +3,22 @@ import cors from 'cors';
 import { postgraphile, PostGraphileOptions } from 'postgraphile';
 import dotenv from 'dotenv';
 import { createServer } from 'node:http';
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
 
 dotenv.config();
 
 const isDev = process.env.NODE_ENV === 'development';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-async function main() {
+export async function runServer() {
   const database = process.env.DATABASE_URL || 'indexer';
 
   const options: PostGraphileOptions = {
     watchPg: isDev,
     graphiql: true,
-    enhanceGraphiql: isDev,
+    enhanceGraphiql: true,
     subscriptions: true,
     dynamicJson: true,
     setofFunctionsContainNulls: false,
@@ -50,7 +54,9 @@ async function main() {
   });
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+if (import.meta.url === `file://${process.argv[1]}`) {
+  runServer().catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+}
