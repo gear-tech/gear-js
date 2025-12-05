@@ -1,5 +1,4 @@
 import './app.css';
-import '@/shared/utils/styles/_index.scss';
 
 import { ErrorBoundary, Header, Loader } from '@/components';
 import { Routing } from '@/pages';

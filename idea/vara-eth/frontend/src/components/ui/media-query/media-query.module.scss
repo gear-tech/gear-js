@@ -1,5 +1,3 @@
-@use '../../../shared/utils' as *;
-
 .desktop {
   @include md {
     display: none;
