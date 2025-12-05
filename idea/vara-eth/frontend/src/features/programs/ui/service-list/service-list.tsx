@@ -48,6 +48,7 @@ const ServiceList = ({ programId }: Props) => {
               <ExpandableItem
                 key={serviceName}
                 header={serviceName}
+                isOpen={services.length === 1}
                 headerSlot={
                   <Badge color="secondary" className={styles.badge}>
                     {messages.length} {getFunctionsTitle(messages.length)}
