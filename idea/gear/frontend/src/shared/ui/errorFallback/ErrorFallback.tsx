@@ -29,7 +29,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
 
   return (
     <>
-      <Subheader title="An unexpected error occured:" />
+      <Subheader title="An unexpected error occurred:" />
       <p className={styles.error}>{getErrorMessage(error)}</p>
       <BackButton />
     </>
