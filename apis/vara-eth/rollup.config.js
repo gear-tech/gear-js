@@ -16,7 +16,7 @@ const externalPackages = ['viem', 'tslib', 'kzg-wasm', '@ethereumjs/util', '@nob
 
 export default [
   {
-    input: ['src/index.ts'],
+    input: ['src/index.ts', 'src/eth/abi/index.ts'],
     output: [
       {
         dir: 'lib',
@@ -41,7 +41,7 @@ export default [
     external: externalPackages,
   },
   {
-    input: ['src/index.ts'],
+    input: ['src/index.ts', 'src/eth/abi/index.ts'],
     output: [
       {
         dir: 'lib/cjs',

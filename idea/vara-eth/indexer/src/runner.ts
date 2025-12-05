@@ -1,8 +1,8 @@
 import { TypeormDatabase } from '@subsquid/typeorm-store';
 
-import { BaseHandler } from './handlers/base';
-import * as handlers from './handlers';
-import { processor } from './processor';
+import { BaseHandler } from './handlers/base.js';
+import * as handlers from './handlers/index.js';
+import { processor } from './processor.js';
 
 export class VaraEthProcessor {
   private _handlers: BaseHandler[] = [];
@@ -81,7 +81,7 @@ export async function runProcessor() {
   await processor.run();
 }
 
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   runProcessor().catch((error) => {
     console.error(error);
     process.exit(1);

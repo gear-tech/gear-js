@@ -9,7 +9,7 @@ import {
 } from '@subsquid/evm-processor';
 import { hostname } from 'node:os';
 
-import { config } from './config';
+import { config } from './config.js';
 
 export const processor = new EvmBatchProcessor()
   .setGateway(config.archiveUrl)

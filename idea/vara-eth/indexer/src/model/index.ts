@@ -1,1 +1,1 @@
-export * from './entities';
+export * from './entities/index.js';
