@@ -11,7 +11,7 @@ export function useEthereumClient() {
 
   return useQuery({
     queryKey: ['ethereumClient', walletClient, publicClient],
-    queryFn: async (): Promise<EthereumClient<WebSocketTransport> | null> => {
+    queryFn: async () => {
       const instance = new EthereumClient<WebSocketTransport>(publicClient!, walletClient!, ROUTER_CONTRACT_ADDRESS);
       const isInitialized = await instance.isInitialized;
 
