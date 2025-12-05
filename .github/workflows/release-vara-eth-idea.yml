@@ -37,7 +37,7 @@ jobs:
       frontend: ${{ steps.frontend.outputs.changed }}
       indexer: ${{ steps.indexer.outputs.changed }}
     steps:
-      - uses: action/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Check frontend
         id: frontend
