@@ -1,5 +1,5 @@
-import { runServer } from './api';
-import { runProcessor } from './runner';
+import { runServer } from './api.js';
+import { runProcessor } from './runner.js';
 
 async function run() {
   await runProcessor();

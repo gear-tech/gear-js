@@ -8,7 +8,7 @@ import type {
 } from 'viem';
 import { IROUTER_ABI } from '@vara-eth/api/abi';
 
-import { Log, Transaction } from '../processor';
+import { Log, Transaction } from '../processor.js';
 
 function getRouterEventTopic(name: ContractEventName<typeof IROUTER_ABI>) {
   return encodeEventTopics({ abi: IROUTER_ABI, eventName: name })[0];
@@ -48,11 +48,39 @@ export const RouterAbi = {
       topic: getRouterEventTopic('ProgramCreated'),
       decode: getEventDecoder('ProgramCreated'),
     },
+    BatchCommited: {
+      topic: getRouterEventTopic('BatchCommitted'),
+      decode: getEventDecoder('BatchCommitted'),
+    },
+    AnnouncesCommitted: {
+      topic: getRouterEventTopic('AnnouncesCommitted'),
+      decode: getEventDecoder('AnnouncesCommitted'),
+    },
+    ValidatorsCommittedForEra: {
+      topic: getRouterEventTopic('ValidatorsCommittedForEra'),
+      decode: getEventDecoder('ValidatorsCommittedForEra'),
+    },
+    ComputationSettingsChanged: {
+      topic: getRouterEventTopic('ComputationSettingsChanged'),
+      decode: getEventDecoder('ComputationSettingsChanged'),
+    },
   },
   functions: {
+    requestCodeValidation: {
+      selector: toFunctionSelector(getAbiItem({ abi: IROUTER_ABI, name: 'requestCodeValidation' })),
+      decode: getFnDecoder('requestCodeValidation'),
+    },
+    createProgram: {
+      selector: toFunctionSelector(getAbiItem({ abi: IROUTER_ABI, name: 'createProgram' })),
+      decode: getFnDecoder('createProgram'),
+    },
     createProgramWithAbiInterface: {
       selector: toFunctionSelector(getAbiItem({ abi: IROUTER_ABI, name: 'createProgramWithAbiInterface' })),
       decode: getFnDecoder('createProgramWithAbiInterface'),
+    },
+    commitBatch: {
+      selector: toFunctionSelector(getAbiItem({ abi: IROUTER_ABI, name: 'commitBatch' })),
+      decode: getFnDecoder('commitBatch'),
     },
   },
 } as const;
