@@ -1,5 +1,5 @@
 import { HexString } from '@gear-js/api';
-import { parseAsStringEnum } from 'nuqs';
+import { parseAsString } from 'nuqs';
 import { Sails } from 'sails-js';
 
 import { Filters } from '@/features/filters';
@@ -37,7 +37,7 @@ function useFilters(sails: Sails | undefined) {
 
   const [serviceName, setServiceName] = useSearchParamsState(
     FILTER_NAME.SERVICE_NAME,
-    parseAsStringEnum(serviceNameValues).withDefault(DEFAULT_VALUE.SERVICE_NAME),
+    parseAsString.withDefault(DEFAULT_VALUE.SERVICE_NAME),
   );
 
   const eventNames = Object.keys(sails?.services?.[serviceName]?.events || {});
@@ -45,10 +45,14 @@ function useFilters(sails: Sails | undefined) {
 
   const [eventName, setEventName] = useSearchParamsState(
     FILTER_NAME.EVENT_NAME,
-    parseAsStringEnum(eventNameValues).withDefault(DEFAULT_VALUE.EVENT_NAME),
+    parseAsString.withDefault(DEFAULT_VALUE.EVENT_NAME),
   );
 
-  const filters = { [FILTER_NAME.SERVICE_NAME]: serviceName, [FILTER_NAME.EVENT_NAME]: eventName };
+  // validating service and function names because nuqs parsers don't support dynamic values
+  const filters = {
+    [FILTER_NAME.SERVICE_NAME]: serviceNameValues.includes(serviceName) ? serviceName : DEFAULT_VALUE.SERVICE_NAME,
+    [FILTER_NAME.EVENT_NAME]: eventNameValues.includes(eventName) ? eventName : DEFAULT_VALUE.EVENT_NAME,
+  };
 
   const setFilters = (values: typeof filters) => {
     void setServiceName(values.serviceName);

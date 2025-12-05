@@ -9,7 +9,8 @@ import { DEFAULT_FILTER_VALUE, FILTER_NAME, FILTER_VALUE, FILTER_VALUES } from '
 function useVoucherFilters() {
   const { account } = useAccount();
 
-  // fallback to default value on no account
+  // fallback to default value on no account,
+  // nuqs parser doesn't support dynamic values - it works because there's app level loader for account
   const ownerValues = account ? FILTER_VALUES.OWNER : [DEFAULT_FILTER_VALUE.OWNER];
 
   const [values, setValues] = useSearchParamsStates({

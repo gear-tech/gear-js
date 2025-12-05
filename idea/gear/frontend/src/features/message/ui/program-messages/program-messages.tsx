@@ -1,6 +1,6 @@
 import { HexString } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
-import { parseAsStringEnum } from 'nuqs';
+import { parseAsString, parseAsStringEnum } from 'nuqs';
 import { Sails } from 'sails-js';
 
 import { FilterGroup, Filters, Radio } from '@/features/filters';
@@ -69,7 +69,7 @@ function useFilters(sails: Sails | undefined) {
   const [baseFilters, setBaseFilters] = useSearchParamsStates({
     [FILTER_NAME.OWNER]: parseAsStringEnum(ownerValues).withDefault(DEFAULT_VALUE.OWNER),
     [FILTER_NAME.DIRECTION]: parseAsStringEnum(VALUES.DIRECTION).withDefault(DEFAULT_VALUE.DIRECTION),
-    [FILTER_NAME.SERVICE_NAME]: parseAsStringEnum(serviceNameValues).withDefault(DEFAULT_VALUE.SERVICE_NAME),
+    [FILTER_NAME.SERVICE_NAME]: parseAsString.withDefault(DEFAULT_VALUE.SERVICE_NAME),
   });
 
   const serviceName = baseFilters[FILTER_NAME.SERVICE_NAME];
@@ -78,10 +78,15 @@ function useFilters(sails: Sails | undefined) {
 
   const [functionName, setFunctionName] = useSearchParamsState(
     FILTER_NAME.FUNCTION_NAME,
-    parseAsStringEnum(functionNameValues).withDefault(DEFAULT_VALUE.FUNCTION_NAME),
+    parseAsString.withDefault(DEFAULT_VALUE.FUNCTION_NAME),
   );
 
-  const filters = { ...baseFilters, functionName };
+  // validating service and function names because nuqs parsers don't support dynamic values
+  const filters = {
+    ...baseFilters,
+    [FILTER_NAME.SERVICE_NAME]: serviceNameValues.includes(serviceName) ? serviceName : DEFAULT_VALUE.SERVICE_NAME,
+    [FILTER_NAME.FUNCTION_NAME]: functionNameValues.includes(functionName) ? functionName : DEFAULT_VALUE.FUNCTION_NAME,
+  };
 
   const setFilters = ({ functionName: _functionName, ...values }: typeof DEFAULT_FILTER_VALUES) => {
     void setBaseFilters(values);
