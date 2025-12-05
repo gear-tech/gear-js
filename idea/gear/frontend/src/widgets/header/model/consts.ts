@@ -6,7 +6,7 @@ const FULL_HEADER_HEIGHT = '10.28125rem';
 
 const PATHS_WITHOUT_BOTTOM_SIDE = [
   absoluteRoutes.program,
-  `${absoluteRoutes.program}/:tab`,
+  absoluteRoutes.programTabs,
   absoluteRoutes.sendMessage,
   absoluteRoutes.reply,
   absoluteRoutes.initializeProgram,

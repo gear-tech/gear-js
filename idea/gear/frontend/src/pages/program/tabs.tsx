@@ -8,33 +8,36 @@ import { ProgramEvents, SailsPreview } from '@/features/sails';
 import { ProgramVouchers } from '@/features/voucher';
 import { Box } from '@/shared/ui';
 
-type ProgramTabContext = {
+type TabsContext = {
   programId: HexString;
   sails: Sails | undefined;
   metadata: ProgramMetadata | undefined;
+  isSailsLoading: boolean;
   isLoading: boolean;
 };
 
-function Messages() {
-  const { programId, sails } = useOutletContext<ProgramTabContext>();
+function MessagesTab() {
+  const { programId, sails } = useOutletContext<TabsContext>();
 
   return <ProgramMessages programId={programId} sails={sails} />;
 }
 
-function Events() {
-  const { programId, sails } = useOutletContext<ProgramTabContext>();
+function EventsTab() {
+  const { programId, sails, isSailsLoading } = useOutletContext<TabsContext>();
+
+  if (isSailsLoading) return;
 
   return <ProgramEvents programId={programId} sails={sails} />;
 }
 
-function Vouchers() {
-  const { programId } = useOutletContext<ProgramTabContext>();
+function VouchersTab() {
+  const { programId } = useOutletContext<TabsContext>();
 
   return <ProgramVouchers programId={programId} />;
 }
 
-function Metadata() {
-  const { sails, metadata, isLoading } = useOutletContext<ProgramTabContext>();
+function MetadataTab() {
+  const { sails, metadata, isLoading } = useOutletContext<TabsContext>();
 
   if (!sails) return <MetadataTable metadata={metadata} isLoading={isLoading} />;
 
@@ -45,7 +48,5 @@ function Metadata() {
   );
 }
 
-const ProgramTab = { Messages, Events, Vouchers, Metadata };
-
-export { ProgramTab };
-export type { ProgramTabContext };
+export { MessagesTab, EventsTab, VouchersTab, MetadataTab };
+export type { TabsContext };

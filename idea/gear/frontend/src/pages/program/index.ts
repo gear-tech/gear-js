@@ -1,4 +1,12 @@
-import { Program } from './program';
-import { ProgramTab } from './program-tab';
+import { Program as Page } from './program';
+import { MessagesTab, EventsTab, VouchersTab, MetadataTab } from './tabs';
 
-export { Program, ProgramTab };
+const Program = {
+  Page,
+  MessagesTab,
+  EventsTab,
+  VouchersTab,
+  MetadataTab,
+};
+
+export { Program };

@@ -15,8 +15,8 @@ import { absoluteRoutes, routes } from '@/shared/config';
 import { getShortName, isAnyKey } from '@/shared/helpers';
 import { UILink } from '@/shared/ui';
 
-import { ProgramTabContext } from './program-tab';
 import styles from './program.module.scss';
+import { TabsContext } from './tabs';
 
 type Params = {
   programId: HexString;
@@ -35,9 +35,9 @@ function Program() {
   const isLoading = !isMetadataReady || isSailsLoading;
   const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => isAnyKey(queries)) : false;
 
-  const outletContext: ProgramTabContext = useMemo(
-    () => ({ programId, sails, metadata, isLoading }),
-    [programId, sails, metadata, isLoading],
+  const outletContext: TabsContext = useMemo(
+    () => ({ programId, sails, metadata, isSailsLoading, isLoading }),
+    [programId, sails, metadata, isSailsLoading, isLoading],
   );
 
   const openUploadMetadataModal = () => {
