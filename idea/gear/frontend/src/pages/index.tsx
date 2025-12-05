@@ -29,7 +29,13 @@ const Routing = () => {
       <Route path={routes.programs}>
         <Route index element={<Programs />} />
         <Route path={routes.uploadProgram} element={<UploadProgram />} />
-        <Route path={routes.program} element={<Program />} />
+
+        <Route path={routes.program} element={<Program.Page />}>
+          <Route index element={<Program.MessagesTab />} />
+          <Route path={routes.programEventsTab} element={<Program.EventsTab />} />
+          <Route path={routes.programVouchersTab} element={<Program.VouchersTab />} />
+          <Route path={routes.programMetadataTab} element={<Program.MetadataTab />} />
+        </Route>
       </Route>
 
       <Route path={routes.message} element={<Message />} />

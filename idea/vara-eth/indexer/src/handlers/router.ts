@@ -1,11 +1,11 @@
 import { In } from 'typeorm';
 
-import { Code, CodeStatus, Program } from '../model';
-import { mapKeys, mapValues } from '../util';
-import { Context, Log } from '../processor';
-import { BaseHandler } from './base';
-import { config } from '../config';
-import { RouterAbi } from '../abi/router.abi';
+import { Code, CodeStatus, Program } from '../model/index.js';
+import { mapKeys, mapValues } from '../util/index.js';
+import { Context, Log } from '../processor.js';
+import { BaseHandler } from './base.js';
+import { config } from '../config.js';
+import { RouterAbi } from '../abi/router.abi.js';
 
 export class RouterHandler extends BaseHandler {
   private _codes: Map<string, Code>;

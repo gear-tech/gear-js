@@ -1,6 +1,8 @@
-import { createPublicClient, createWalletClient, webSocket } from 'viem';
 import type { Account, Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
+import { createPublicClient, createWalletClient, webSocket } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
+import { deployContract } from 'viem/actions';
+import fs from 'node:fs';
 
 import { EthereumClient, getMirrorClient, VaraEthApi, HttpVaraEthProvider } from '../src';
 import { hasProps, waitNBlocks } from './common';
@@ -39,6 +41,9 @@ afterAll(async () => {
 });
 
 describe('setup', () => {
+  let counterAbiContractAddress: Hex;
+  let programWithAbiInterfaceId: Hex;
+
   test('should create program', async () => {
     const tx = await ethereumClient.router.createProgram(config.codeId);
     await tx.sendAndWaitForReceipt();
@@ -53,6 +58,7 @@ describe('setup', () => {
   test(
     'should wait for programId appeared on Vara.Eth',
     async () => {
+      expect(programId).toBeDefined();
       let id = null;
       while (id === null) {
         const ids = await api.query.program.getIds();
@@ -67,7 +73,7 @@ describe('setup', () => {
       }
       expect(ids).toContain(programId);
     },
-    config.blockTime * 20_000,
+    config.longRunningTestTimeout,
   );
 
   test('should approve wvara', async () => {
@@ -92,6 +98,57 @@ describe('setup', () => {
 
     expect('Active' in state.program).toBeTruthy();
   });
+
+  test('should deploy abi contract', async () => {
+    const counter = JSON.parse(fs.readFileSync('./out/Counter.sol/CounterAbi.json', 'utf-8'));
+    const txHash = await deployContract(walletClient, {
+      abi: [],
+      bytecode: counter.bytecode.object as Hex,
+    });
+
+    expect(txHash).toBeDefined();
+    const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
+
+    expect(receipt.status).toBe('success');
+    const contractAddress = receipt.contractAddress;
+
+    expect(contractAddress).toBeDefined();
+    counterAbiContractAddress = contractAddress as Hex;
+  });
+
+  test('should create program with abi interface', async () => {
+    const tx = await ethereumClient.router.createProgramWithAbiInterface(config.codeId, counterAbiContractAddress);
+
+    const receipt = await tx.sendAndWaitForReceipt();
+
+    expect(receipt.status).toBe('success');
+
+    const programId = await tx.getProgramId();
+    expect(programId).toBeDefined();
+
+    programWithAbiInterfaceId = programId;
+  });
+
+  test(
+    'should wait for program with abi interface appeared on Vara.Eth',
+    async () => {
+      expect(programWithAbiInterfaceId).toBeDefined();
+      let id = null;
+      while (id === null) {
+        const ids = await api.query.program.getIds();
+        if (ids.includes(programWithAbiInterfaceId)) {
+          id = programWithAbiInterfaceId;
+        }
+      }
+
+      const ids = await api.query.program.getIds();
+      if (!ids.includes(programWithAbiInterfaceId)) {
+        process.exit(1);
+      }
+      expect(ids).toContain(programWithAbiInterfaceId);
+    },
+    config.longRunningTestTimeout,
+  );
 });
 
 describe('view functions', () => {

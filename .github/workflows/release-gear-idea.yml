@@ -43,7 +43,6 @@ jobs:
       skip: ${{ steps.set_skip.outputs.skip }}
     permissions:
       contents: read
-      packages: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6

@@ -1,7 +1,7 @@
 import { useAccount, useApi } from '@gear-js/react-hooks';
 import { useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import 'simplebar-react/dist/simplebar.min.css';
 
 import { INITIAL_ENDPOINT } from '@/features/api';
@@ -19,7 +19,6 @@ import { withProviders } from './providers';
 import './App.scss';
 
 const App = withProviders(() => {
-  const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { api, isApiReady } = useApi();
@@ -54,11 +53,7 @@ const App = withProviders(() => {
         <Menu />
         <div className="content">
           <Header />
-
-          {/* key to reset on route change */}
-          <ErrorBoundary key={pathname} fallbackRender={ErrorFallback}>
-            {isAppReady ? <Routing /> : <Loader />}
-          </ErrorBoundary>
+          <ErrorBoundary FallbackComponent={ErrorFallback}>{isAppReady ? <Routing /> : <Loader />}</ErrorBoundary>
         </div>
 
         {isMobileDisclaimerVisible && <MobileDisclaimer onCloseButtonClick={closeMobileDisclaimer} />}

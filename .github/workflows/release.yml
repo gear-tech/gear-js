@@ -17,6 +17,11 @@ on:
 env:
   BINARYEN_VERSION: version_111
 
+permissions:
+  id-token: write
+  contents: read
+
+
 jobs:
   check-changes:
     runs-on: ubuntu-latest
@@ -112,15 +117,16 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Update npm
+        run: npm install -g npm@latest
 
       - name: Install dependencies
         run: yarn install
 
       - name: Build
         run: yarn build
-
-      - name: "Configure npm auth"
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
       - name: Publish gear-api
         if: ${{ needs.check-changes.outputs.gear-api == 'true' }}
@@ -129,7 +135,7 @@ jobs:
 
       - name: Publish vara-eth-api
         if: ${{ needs.check-changes.outputs.vara-eth-api == 'true' }}
-        run: npm publish --access=public
+        run: npm publish --access=public --provenance
         working-directory: apis/vara-eth
 
       - name: Publish gear-hooks

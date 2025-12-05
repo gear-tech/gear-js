@@ -10,6 +10,7 @@ dist/
 lib/
 temp/
 target/
+solidity_lib/
 
 .env
 .gitignore
@@ -20,7 +21,6 @@ target/
 
 Cargo.toml
 Cargo.lock
-eslint*
 HEADER_GPL3
 LICENSE
 Makefile

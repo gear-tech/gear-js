@@ -1,7 +1,11 @@
 {
   "name": "@vara-eth/api",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Typescript library for interacting with Vara.Eth network",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gear-tech/gear-js"
+  },
   "type": "module",
   "engines": {
     "node": ">=22"
