@@ -18,7 +18,7 @@ type SendMessageParams = {
 
 const useSendProgramMessage = (programId: HexString) => {
   const { data: sails } = useSails(counterIdl);
-  const { mirrorContract } = useMirrorContract(programId);
+  const { data: mirrorContract } = useMirrorContract(programId);
   const addMyActivity = useAddMyActivity();
 
   const sendMessage = async ({ serviceName, messageName, isQuery, args }: SendMessageParams) => {

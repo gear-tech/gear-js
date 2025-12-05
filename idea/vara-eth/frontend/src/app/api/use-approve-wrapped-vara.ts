@@ -3,17 +3,17 @@ import { HexString } from '@vara-eth/api';
 
 import { TransactionTypes, unpackReceipt, useAddMyActivity } from '../store';
 
-import { useWrappedVaraContract } from './use-wrapped-vara-contract';
+import { useEthereumClient } from './use-ethereum-client';
 
 const useApproveWrappedVara = (address: HexString) => {
-  const { wrappedVaraContract } = useWrappedVaraContract();
+  const { data: ethereumClient } = useEthereumClient();
 
   const addMyActivity = useAddMyActivity();
 
   const approveWrappedVara = async (value: bigint) => {
-    if (!wrappedVaraContract) return;
+    if (!ethereumClient) return;
 
-    const tx = await wrappedVaraContract.approve(address, value);
+    const tx = await ethereumClient.wvara.approve(address, value);
     const result = await tx.send();
     const receipt = await tx.getReceipt();
 

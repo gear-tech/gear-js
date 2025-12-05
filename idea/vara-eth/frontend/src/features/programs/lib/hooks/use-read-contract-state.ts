@@ -8,7 +8,7 @@ import { useVaraEthApi } from '@/app/providers';
 const useReadContractState = (programId: HexString) => {
   const { api } = useVaraEthApi();
 
-  const { mirrorContract } = useMirrorContract(programId);
+  const { data: mirrorContract } = useMirrorContract(programId);
 
   return useQuery({
     queryKey: ['program', programId, mirrorContract],

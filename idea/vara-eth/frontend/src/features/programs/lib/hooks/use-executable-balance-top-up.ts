@@ -10,7 +10,7 @@ export const useExecutableBalanceTopUp = (programId: HexString) => {
   const { api } = useVaraEthApi();
   const addMyActivity = useAddMyActivity();
   const ethAccount = useAccount();
-  const { mirrorContract } = useMirrorContract(programId);
+  const { data: mirrorContract } = useMirrorContract(programId);
 
   const executableBalanceTopUp = async (value: bigint) => {
     if (!api || !mirrorContract || !ethAccount.address) return;
