@@ -36,8 +36,8 @@ function Program() {
   const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => isAnyKey(queries)) : false;
 
   const outletContext: TabsContext = useMemo(
-    () => ({ programId, sails, metadata, isSailsLoading, isLoading }),
-    [programId, sails, metadata, isSailsLoading, isLoading],
+    () => ({ programId, sails, metadata, isLoading }),
+    [programId, sails, metadata, isLoading],
   );
 
   const openUploadMetadataModal = () => {

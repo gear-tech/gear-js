@@ -1,10 +1,11 @@
 import { HexString } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
-import { useEffect, useState } from 'react';
+import { parseAsString, parseAsStringEnum } from 'nuqs';
 import { Sails } from 'sails-js';
 
 import { FilterGroup, Filters, Radio } from '@/features/filters';
 import { SailsFilterGroup } from '@/features/sails';
+import { useChangeEffect, useSearchParamsState, useSearchParamsStates } from '@/hooks';
 import MessageCardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
 import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
 
@@ -38,17 +39,70 @@ const FILTER_VALUE = {
 type OwnerValue = (typeof FILTER_VALUE.OWNER)[keyof typeof FILTER_VALUE.OWNER];
 type DirectionValue = (typeof FILTER_VALUE.DIRECTION)[keyof typeof FILTER_VALUE.DIRECTION];
 
+const VALUES = {
+  OWNER: Object.values(FILTER_VALUE.OWNER),
+  DIRECTION: Object.values(FILTER_VALUE.DIRECTION),
+} as const;
+
+const DEFAULT_VALUE = {
+  OWNER: FILTER_VALUE.OWNER.ALL as OwnerValue,
+  DIRECTION: FILTER_VALUE.DIRECTION.TO as DirectionValue,
+  SERVICE_NAME: '' as string,
+  FUNCTION_NAME: '' as string,
+} as const;
+
 const DEFAULT_FILTER_VALUES = {
-  [FILTER_NAME.OWNER]: FILTER_VALUE.OWNER.ALL as OwnerValue,
-  [FILTER_NAME.DIRECTION]: FILTER_VALUE.DIRECTION.TO as DirectionValue,
-  [FILTER_NAME.SERVICE_NAME]: '',
-  [FILTER_NAME.FUNCTION_NAME]: '',
-};
+  [FILTER_NAME.OWNER]: DEFAULT_VALUE.OWNER,
+  [FILTER_NAME.DIRECTION]: DEFAULT_VALUE.DIRECTION,
+  [FILTER_NAME.SERVICE_NAME]: DEFAULT_VALUE.SERVICE_NAME,
+  [FILTER_NAME.FUNCTION_NAME]: DEFAULT_VALUE.FUNCTION_NAME,
+} as const;
+
+function useFilters(sails: Sails | undefined) {
+  const { account } = useAccount();
+
+  // fallback to default value on no account
+  const ownerValues = account ? VALUES.OWNER : [DEFAULT_VALUE.OWNER];
+  const serviceNames = Object.keys(sails?.services ?? {});
+  const serviceNameValues = [DEFAULT_VALUE.SERVICE_NAME, ...serviceNames];
+
+  const [baseFilters, setBaseFilters] = useSearchParamsStates({
+    [FILTER_NAME.OWNER]: parseAsStringEnum(ownerValues).withDefault(DEFAULT_VALUE.OWNER),
+    [FILTER_NAME.DIRECTION]: parseAsStringEnum(VALUES.DIRECTION).withDefault(DEFAULT_VALUE.DIRECTION),
+    [FILTER_NAME.SERVICE_NAME]: parseAsString.withDefault(DEFAULT_VALUE.SERVICE_NAME),
+  });
+
+  const serviceName = baseFilters[FILTER_NAME.SERVICE_NAME];
+  const functionNames = Object.keys(sails?.services?.[serviceName]?.functions ?? {});
+  const functionNameValues = [DEFAULT_VALUE.FUNCTION_NAME, ...functionNames];
+
+  const [functionName, setFunctionName] = useSearchParamsState(
+    FILTER_NAME.FUNCTION_NAME,
+    parseAsString.withDefault(DEFAULT_VALUE.FUNCTION_NAME),
+  );
+
+  // validating service and function names because nuqs parsers don't support dynamic values
+  const filters = {
+    ...baseFilters,
+    [FILTER_NAME.SERVICE_NAME]: serviceNameValues.includes(serviceName) ? serviceName : DEFAULT_VALUE.SERVICE_NAME,
+    [FILTER_NAME.FUNCTION_NAME]: functionNameValues.includes(functionName) ? functionName : DEFAULT_VALUE.FUNCTION_NAME,
+  };
+
+  const setFilters = ({ functionName: _functionName, ...values }: typeof DEFAULT_FILTER_VALUES) => {
+    void setBaseFilters(values);
+    void setFunctionName(_functionName);
+  };
+
+  useChangeEffect(() => {
+    if (!account) void setBaseFilters((prevValues) => ({ ...prevValues, [FILTER_NAME.OWNER]: DEFAULT_VALUE.OWNER }));
+  }, [account]);
+
+  return [filters, setFilters] as const;
+}
 
 const ProgramMessages = ({ programId, sails }: Props) => {
   const { account } = useAccount();
-
-  const [filters, setFilters] = useState(DEFAULT_FILTER_VALUES);
+  const [filters, setFilters] = useFilters(sails);
 
   const isToDirection = filters[FILTER_NAME.DIRECTION] === FILTER_VALUE.DIRECTION.TO;
   const addressParam = filters[FILTER_NAME.OWNER] === FILTER_VALUE.OWNER.OWNER ? account?.decodedAddress : undefined;
@@ -105,10 +159,6 @@ const ProgramMessages = ({ programId, sails }: Props) => {
       </>
     );
   };
-
-  useEffect(() => {
-    if (!account) setFilters((prevValues) => ({ ...prevValues, [FILTER_NAME.OWNER]: FILTER_VALUE.OWNER.ALL }));
-  }, [account]);
 
   const renderFilters = () => (
     <Filters initialValues={DEFAULT_FILTER_VALUES} values={filters} onSubmit={setFilters}>

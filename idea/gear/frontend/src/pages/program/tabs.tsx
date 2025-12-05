@@ -12,7 +12,6 @@ type TabsContext = {
   programId: HexString;
   sails: Sails | undefined;
   metadata: ProgramMetadata | undefined;
-  isSailsLoading: boolean;
   isLoading: boolean;
 };
 
@@ -23,9 +22,7 @@ function MessagesTab() {
 }
 
 function EventsTab() {
-  const { programId, sails, isSailsLoading } = useOutletContext<TabsContext>();
-
-  if (isSailsLoading) return;
+  const { programId, sails } = useOutletContext<TabsContext>();
 
   return <ProgramEvents programId={programId} sails={sails} />;
 }
