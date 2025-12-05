@@ -17185,7 +17185,7 @@ __metadata:
     lodash.isequal: "npm:4.5.0"
     lodash.isplainobject: "npm:4.0.6"
     lodash.isstring: "npm:4.0.1"
-    nuqs: "npm:^2.8.2"
+    nuqs: "npm:2.8.2"
     react: "npm:19.2.0"
     react-dnd: "npm:16.0.1"
     react-dnd-html5-backend: "npm:16.0.1"
@@ -21819,7 +21819,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nuqs@npm:^2.8.2":
+"nuqs@npm:2.8.2":
   version: 2.8.2
   resolution: "nuqs@npm:2.8.2"
   dependencies:

@@ -33,17 +33,19 @@ const DEFAULT_FILTER_VALUES = {
 
 function useFilters(sails: Sails | undefined) {
   const serviceNames = Object.keys(sails?.services || {});
+  const serviceNameValues = [DEFAULT_VALUE.SERVICE_NAME, ...serviceNames];
 
   const [serviceName, setServiceName] = useSearchParamsState(
     FILTER_NAME.SERVICE_NAME,
-    parseAsStringEnum(serviceNames).withDefault(DEFAULT_VALUE.SERVICE_NAME),
+    parseAsStringEnum(serviceNameValues).withDefault(DEFAULT_VALUE.SERVICE_NAME),
   );
 
   const eventNames = Object.keys(sails?.services?.[serviceName]?.events || {});
+  const eventNameValues = [DEFAULT_VALUE.EVENT_NAME, ...eventNames];
 
   const [eventName, setEventName] = useSearchParamsState(
     FILTER_NAME.EVENT_NAME,
-    parseAsStringEnum(eventNames).withDefault(DEFAULT_VALUE.EVENT_NAME),
+    parseAsStringEnum(eventNameValues).withDefault(DEFAULT_VALUE.EVENT_NAME),
   );
 
   const filters = { [FILTER_NAME.SERVICE_NAME]: serviceName, [FILTER_NAME.EVENT_NAME]: eventName };
