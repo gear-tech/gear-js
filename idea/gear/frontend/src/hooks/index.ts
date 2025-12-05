@@ -1,5 +1,3 @@
-import { useQueryState as useSearchParamsState, useQueryStates as useSearchParamsStates } from 'nuqs';
-
 import { useModal, useBlocks, useEvents, useChain, useOnboarding } from './context';
 import { useValidationSchema, useBalanceSchema, useGasLimitSchema } from './schemas';
 import { useAddCodeName } from './use-add-code-name';
@@ -56,6 +54,4 @@ export {
   useGasLimitSchema,
   useModalState,
   useErrorAlert,
-  useSearchParamsState,
-  useSearchParamsStates,
 };

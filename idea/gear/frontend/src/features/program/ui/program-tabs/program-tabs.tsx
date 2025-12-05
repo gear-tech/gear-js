@@ -1,25 +1,21 @@
+import { NavLink } from 'react-router-dom';
+
 import { cx } from '@/shared/helpers';
 
 import { PROGRAM_TABS } from '../../consts';
-import { ProgramTabId } from '../../types';
 
 import styles from './program-tabs.module.scss';
 
-type Props = {
-  value: string;
-  onChange: (id: ProgramTabId) => void;
-};
-
-function ProgramTabs({ value, onChange }: Props) {
+function ProgramTabs() {
   const render = () =>
-    PROGRAM_TABS.map(({ id, label }) => (
-      <button
+    PROGRAM_TABS.map(({ id, label }, index) => (
+      <NavLink
         key={id}
-        type="button"
-        onClick={() => onChange(id)}
-        className={cx(styles.button, id === value && styles.active)}>
+        to={index ? id : ''}
+        className={({ isActive }) => cx(styles.button, isActive && styles.active)}
+        end>
         {label}
-      </button>
+      </NavLink>
     ));
 
   return <header className={styles.tabs}>{render()}</header>;

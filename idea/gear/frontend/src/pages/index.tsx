@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 import { Events, Block } from '@/features/explorer';
+import { PROGRAM_TAB_ID } from '@/features/program';
 import { useEvents } from '@/hooks';
 import { routes } from '@/shared/config';
 
@@ -12,7 +13,7 @@ import { InitializeProgram } from './initializeProgram';
 import { Mailbox } from './mailbox';
 import { Message } from './message';
 import { NotFound } from './notFound';
-import { Program } from './program';
+import { Program, ProgramTab } from './program';
 import { Programs } from './programs';
 import { Send } from './send';
 import { SingleDns } from './single-dns';
@@ -29,7 +30,13 @@ const Routing = () => {
       <Route path={routes.programs}>
         <Route index element={<Programs />} />
         <Route path={routes.uploadProgram} element={<UploadProgram />} />
-        <Route path={routes.program} element={<Program />} />
+
+        <Route path={routes.program} element={<Program />}>
+          <Route index element={<ProgramTab.Messages />} />
+          <Route path={PROGRAM_TAB_ID.EVENTS} element={<ProgramTab.Events />} />
+          <Route path={PROGRAM_TAB_ID.VOUCHERS} element={<ProgramTab.Vouchers />} />
+          <Route path={PROGRAM_TAB_ID.METADATA} element={<ProgramTab.Metadata />} />
+        </Route>
       </Route>
 
       <Route path={routes.message} element={<Message />} />

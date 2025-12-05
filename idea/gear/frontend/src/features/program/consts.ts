@@ -25,16 +25,12 @@ const DEFAULT_FILTER_VALUES = {
 
 // tabs
 
-const PROGRAM_TAB_SEARCH_PARAM = 'tab';
-
 const PROGRAM_TAB_ID = {
   MESSAGES: 'messages',
   EVENTS: 'events',
   VOUCHERS: 'vouchers',
   METADATA: 'metadata',
 } as const;
-
-const PROGRAM_TAB_IDS = Object.values(PROGRAM_TAB_ID);
 
 const PROGRAM_TABS = [
   { id: PROGRAM_TAB_ID.MESSAGES, label: 'Messages' },
@@ -43,12 +39,4 @@ const PROGRAM_TABS = [
   { id: PROGRAM_TAB_ID.METADATA, label: 'Metadata/Sails' },
 ] as const;
 
-export {
-  ProgramStatus,
-  PROGRAM_STATUS_NAME,
-  DEFAULT_FILTER_VALUES,
-  PROGRAM_TAB_SEARCH_PARAM,
-  PROGRAM_TABS,
-  PROGRAM_TAB_IDS,
-  PROGRAM_TAB_ID,
-};
+export { ProgramStatus, PROGRAM_STATUS_NAME, DEFAULT_FILTER_VALUES, PROGRAM_TABS, PROGRAM_TAB_ID };
