@@ -7,7 +7,7 @@ type Props = useRender.ComponentProps<'button'>;
 type ElementProps = useRender.ElementProps<'button'>;
 
 function TriggerConnected({ render, ...props }: Props) {
-  const { account } = useAccount();
+  const { account, isAccountReady } = useAccount();
   const { dialog } = useWalletContext();
 
   const defaultProps: ElementProps = {
@@ -18,7 +18,7 @@ function TriggerConnected({ render, ...props }: Props) {
   return useRender({
     defaultTagName: 'button',
     props: mergeProps<'button'>(defaultProps, props),
-    enabled: Boolean(account),
+    enabled: isAccountReady && Boolean(account),
     render,
   });
 }
