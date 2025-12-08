@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { HexString } from '@vara-eth/api';
 import { generatePath, useNavigate } from 'react-router-dom';
 
-import { useRouterContract } from '@/app/api/use-router-contract';
+import { useEthereumClient } from '@/app/api';
 import { useVaraEthApi } from '@/app/providers';
 import { useAddMyActivity, TransactionTypes, unpackReceipt } from '@/app/store';
 import { routes } from '@/shared/config';
@@ -12,13 +12,13 @@ export const useCreateProgram = () => {
   const navigate = useNavigate();
   const addMyActivity = useAddMyActivity();
 
-  const { routerContract } = useRouterContract();
+  const { data: ethereumClient } = useEthereumClient();
 
   const createProgram = async (codeId: HexString) => {
-    console.log('createProgram', codeId, api, routerContract);
-    if (!api || !routerContract) return;
+    console.log('createProgram', codeId, api);
+    if (!api || !ethereumClient) return;
 
-    const tx = await routerContract.createProgram(codeId);
+    const tx = await ethereumClient.router.createProgram(codeId);
     await tx.send();
     const id = await tx.getProgramId();
     const receipt = await tx.getReceipt();
