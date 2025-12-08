@@ -5,7 +5,7 @@ type Props = useRender.ComponentProps<'span'>;
 type ElementProps = useRender.ElementProps<'span'>;
 
 function ConnectedAccountLabel({ render, ...props }: Props) {
-  const { account } = useAccount();
+  const { account, isAccountReady } = useAccount();
 
   const defaultProps: ElementProps = {
     children: account?.meta.name ?? account?.address,
@@ -14,6 +14,7 @@ function ConnectedAccountLabel({ render, ...props }: Props) {
   return useRender({
     defaultTagName: 'span',
     props: mergeProps<'span'>(defaultProps, props),
+    enabled: isAccountReady && Boolean(account),
     render,
   });
 }
