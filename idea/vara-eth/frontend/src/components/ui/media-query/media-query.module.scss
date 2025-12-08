@@ -8,20 +8,40 @@
   display: none;
 
   @include md {
-    display: block;
+    display: contents;
   }
 }
 
-.showBelowXl {
-  @include xl {
+$mq-sizes: (
+  Sm: $sm,
+  Md: $md,
+  Lg: $lg,
+  Xl: $xl,
+  Xxl: $xxl
+);
+
+@mixin show-below($width) {
+  display: none;
+
+  @include breakpoint($width) {
+    display: contents;
+  }
+}
+
+@mixin show-above($width) {
+  display: contents;
+
+  @include breakpoint($width) {
     display: none;
   }
 }
 
-.showFromXl {
-  display: none;
+@each $name, $width in $mq-sizes {
+  .below#{$name} {
+    @include show-below($width);
+  }
 
-  @include xl {
-    display: block;
+  .above#{$name} {
+    @include show-above($width);
   }
 }

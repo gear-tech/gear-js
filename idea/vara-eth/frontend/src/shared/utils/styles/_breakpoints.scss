@@ -1,3 +1,4 @@
+$xxl: 1536px;
 $xl: 1200px;
 $lg: 992px;
 $md: 768px;
@@ -9,6 +10,12 @@ $sm: 576px;
 
 @mixin breakpoint($width) {
   @media screen and (getMaxWidth($width)) {
+    @content;
+  }
+}
+
+@mixin xxl {
+  @include breakpoint($xxl) {
     @content;
   }
 }
