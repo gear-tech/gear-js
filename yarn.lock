@@ -8658,7 +8658,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@standard-schema/spec@npm:^1.0.0":
+"@standard-schema/spec@npm:1.0.0, @standard-schema/spec@npm:^1.0.0":
   version: 1.0.0
   resolution: "@standard-schema/spec@npm:1.0.0"
   checksum: 10c0/a1ab9a8bdc09b5b47aa8365d0e0ec40cc2df6437be02853696a0e377321653b0d3ac6f079a8c67d5ddbe9821025584b1fb71d9cc041a6666a96f1fadf2ece15f
@@ -17185,6 +17185,7 @@ __metadata:
     lodash.isequal: "npm:4.5.0"
     lodash.isplainobject: "npm:4.0.6"
     lodash.isstring: "npm:4.0.1"
+    nuqs: "npm:2.8.2"
     react: "npm:19.2.0"
     react-dnd: "npm:16.0.1"
     react-dnd-html5-backend: "npm:16.0.1"
@@ -21815,6 +21816,33 @@ __metadata:
   version: 1.1.1
   resolution: "nullthrows@npm:1.1.1"
   checksum: 10c0/56f34bd7c3dcb3bd23481a277fa22918120459d3e9d95ca72976c72e9cac33a97483f0b95fc420e2eb546b9fe6db398273aba9a938650cdb8c98ee8f159dcb30
+  languageName: node
+  linkType: hard
+
+"nuqs@npm:2.8.2":
+  version: 2.8.2
+  resolution: "nuqs@npm:2.8.2"
+  dependencies:
+    "@standard-schema/spec": "npm:1.0.0"
+  peerDependencies:
+    "@remix-run/react": ">=2"
+    "@tanstack/react-router": ^1
+    next: ">=14.2.0"
+    react: ">=18.2.0 || ^19.0.0-0"
+    react-router: ^5 || ^6 || ^7
+    react-router-dom: ^5 || ^6 || ^7
+  peerDependenciesMeta:
+    "@remix-run/react":
+      optional: true
+    "@tanstack/react-router":
+      optional: true
+    next:
+      optional: true
+    react-router:
+      optional: true
+    react-router-dom:
+      optional: true
+  checksum: 10c0/b343d03ed14582a86b1a706547b58d9fe7297d094419efad8f055fd427caade075548d4584a9f1ff4c3fa8dd539f455bd76c989a31f0d4fac58210dc01643d7b
   languageName: node
   linkType: hard
 

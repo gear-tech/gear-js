@@ -1,8 +1,9 @@
 import { HexString } from '@gear-js/api';
-import { useState } from 'react';
+import { parseAsString } from 'nuqs';
 import { Sails } from 'sails-js';
 
 import { Filters } from '@/features/filters';
+import { useSearchParamsState } from '@/hooks';
 import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
 import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
 
@@ -20,13 +21,49 @@ const FILTER_NAME = {
   EVENT_NAME: 'eventName',
 } as const;
 
+const DEFAULT_VALUE = {
+  SERVICE_NAME: '' as string,
+  EVENT_NAME: '' as string,
+} as const;
+
 const DEFAULT_FILTER_VALUES = {
-  [FILTER_NAME.SERVICE_NAME]: '',
-  [FILTER_NAME.EVENT_NAME]: '',
-};
+  [FILTER_NAME.SERVICE_NAME]: DEFAULT_VALUE.SERVICE_NAME,
+  [FILTER_NAME.EVENT_NAME]: DEFAULT_VALUE.EVENT_NAME,
+} as const;
+
+function useFilters(sails: Sails | undefined) {
+  const serviceNames = Object.keys(sails?.services || {});
+  const serviceNameValues = [DEFAULT_VALUE.SERVICE_NAME, ...serviceNames];
+
+  const [serviceName, setServiceName] = useSearchParamsState(
+    FILTER_NAME.SERVICE_NAME,
+    parseAsString.withDefault(DEFAULT_VALUE.SERVICE_NAME),
+  );
+
+  const eventNames = Object.keys(sails?.services?.[serviceName]?.events || {});
+  const eventNameValues = [DEFAULT_VALUE.EVENT_NAME, ...eventNames];
+
+  const [eventName, setEventName] = useSearchParamsState(
+    FILTER_NAME.EVENT_NAME,
+    parseAsString.withDefault(DEFAULT_VALUE.EVENT_NAME),
+  );
+
+  // validating service and function names because nuqs parsers don't support dynamic values
+  const filters = {
+    [FILTER_NAME.SERVICE_NAME]: serviceNameValues.includes(serviceName) ? serviceName : DEFAULT_VALUE.SERVICE_NAME,
+    [FILTER_NAME.EVENT_NAME]: eventNameValues.includes(eventName) ? eventName : DEFAULT_VALUE.EVENT_NAME,
+  };
+
+  const setFilters = (values: typeof filters) => {
+    void setServiceName(values.serviceName);
+    void setEventName(values.eventName);
+  };
+
+  return [filters, setFilters] as const;
+}
 
 function ProgramEvents({ programId, sails }: Props) {
-  const [filterValues, setFilterValues] = useState(DEFAULT_FILTER_VALUES);
+  const [filterValues, setFilterValues] = useFilters(sails);
 
   const events = useEvents({
     source: programId,
