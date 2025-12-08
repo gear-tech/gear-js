@@ -22,7 +22,7 @@ const HashLink = ({ isExternalLink, hash, href, isDisabled, truncateSize = 'Xl',
   const displayHash = <MediaQuerySize above={hash} below={getTruncatedText(hash)} />;
 
   return (
-    <div className={styles.container}>
+    <span className={styles.container}>
       {!isExternalLink && href ? (
         <Link to={href} className={className} {...restProps}>
           {displayHash}
@@ -34,7 +34,7 @@ const HashLink = ({ isExternalLink, hash, href, isDisabled, truncateSize = 'Xl',
       )}
 
       <CopyButton value={hash}></CopyButton>
-    </div>
+    </span>
   );
 };
 
