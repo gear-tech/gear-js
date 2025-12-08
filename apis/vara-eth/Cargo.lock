@@ -1357,21 +1357,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb"
 dependencies = [
  "libc",
- "windows-sys 0.61.2",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
 name = "ethexe-common"
-version = "1.9.9"
-source = "git+https://github.com/gear-tech/gear#057f10f7174d01f651281f814f98558b3958f505"
+version = "1.10.0"
+source = "git+https://github.com/gear-tech/gear#95c85d04e4dfc2adc7379636e6d7dd988105a683"
 dependencies = [
  "alloy-primitives 1.4.1",
  "anyhow",
  "auto_impl",
  "derive_more 2.0.1",
- "gear-core 1.9.9",
- "gprimitives 1.9.9",
- "hashbrown 0.14.5",
+ "gear-core 1.10.0",
+ "gprimitives 1.10.0",
  "hex",
  "k256",
  "nonempty",
@@ -1699,22 +1698,23 @@ dependencies = [
 
 [[package]]
 name = "gear-core"
-version = "1.9.9"
-source = "git+https://github.com/gear-tech/gear#057f10f7174d01f651281f814f98558b3958f505"
+version = "1.10.0"
+source = "git+https://github.com/gear-tech/gear#95c85d04e4dfc2adc7379636e6d7dd988105a683"
 dependencies = [
  "blake2",
+ "bytemuck",
  "byteorder",
  "derive_more 2.0.1",
  "enum-iterator",
- "gear-core-errors 1.9.9",
- "gear-wasm-instrument 1.9.9",
- "gprimitives 1.9.9",
- "gsys 1.9.9",
+ "gear-core-errors 1.10.0",
+ "gear-wasm-instrument 1.10.0",
+ "gprimitives 1.10.0",
+ "gsys 1.10.0",
  "hex",
  "impl-serde",
  "log",
  "num-traits",
- "numerated 1.9.9",
+ "numerated 1.10.0",
  "parity-scale-codec",
  "paste",
  "scale-decode",
@@ -1739,8 +1739,8 @@ dependencies = [
 
 [[package]]
 name = "gear-core-errors"
-version = "1.9.9"
-source = "git+https://github.com/gear-tech/gear#057f10f7174d01f651281f814f98558b3958f505"
+version = "1.10.0"
+source = "git+https://github.com/gear-tech/gear#95c85d04e4dfc2adc7379636e6d7dd988105a683"
 dependencies = [
  "enum-iterator",
  "parity-scale-codec",
@@ -1777,8 +1777,8 @@ dependencies = [
 
 [[package]]
 name = "gear-ss58"
-version = "1.9.9"
-source = "git+https://github.com/gear-tech/gear#057f10f7174d01f651281f814f98558b3958f505"
+version = "1.10.0"
+source = "git+https://github.com/gear-tech/gear#95c85d04e4dfc2adc7379636e6d7dd988105a683"
 dependencies = [
  "blake2",
  "bs58",
@@ -1828,8 +1828,8 @@ dependencies = [
 
 [[package]]
 name = "gear-wasm-instrument"
-version = "1.9.9"
-source = "git+https://github.com/gear-tech/gear#057f10f7174d01f651281f814f98558b3958f505"
+version = "1.10.0"
+source = "git+https://github.com/gear-tech/gear#95c85d04e4dfc2adc7379636e6d7dd988105a683"
 dependencies = [
  "derive_more 2.0.1",
  "enum-iterator",
@@ -1916,12 +1916,12 @@ dependencies = [
 
 [[package]]
 name = "gprimitives"
-version = "1.9.9"
-source = "git+https://github.com/gear-tech/gear#057f10f7174d01f651281f814f98558b3958f505"
+version = "1.10.0"
+source = "git+https://github.com/gear-tech/gear#95c85d04e4dfc2adc7379636e6d7dd988105a683"
 dependencies = [
  "bytemuck",
  "derive_more 2.0.1",
- "gear-ss58 1.9.9",
+ "gear-ss58 1.10.0",
  "hex",
  "primitive-types 0.12.2",
  "scale-decode",
@@ -1984,8 +1984,8 @@ checksum = "37987f7b28fa66eff25c5b093f1789770ec23c646592311ed9549827d7487b01"
 
 [[package]]
 name = "gsys"
-version = "1.9.9"
-source = "git+https://github.com/gear-tech/gear#057f10f7174d01f651281f814f98558b3958f505"
+version = "1.10.0"
+source = "git+https://github.com/gear-tech/gear#95c85d04e4dfc2adc7379636e6d7dd988105a683"
 dependencies = [
  "bytemuck",
 ]
@@ -2575,7 +2575,7 @@ version = "0.50.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7957b9740744892f114936ab4a57b3f487491bbeafaf8083688b16841a4240e5"
 dependencies = [
- "windows-sys 0.61.2",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -2646,8 +2646,8 @@ dependencies = [
 
 [[package]]
 name = "numerated"
-version = "1.9.9"
-source = "git+https://github.com/gear-tech/gear#057f10f7174d01f651281f814f98558b3958f505"
+version = "1.10.0"
+source = "git+https://github.com/gear-tech/gear#95c85d04e4dfc2adc7379636e6d7dd988105a683"
 dependencies = [
  "derive_more 2.0.1",
  "num-traits",
@@ -3341,7 +3341,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys 0.11.0",
- "windows-sys 0.61.2",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -4136,7 +4136,7 @@ dependencies = [
  "getrandom 0.3.4",
  "once_cell",
  "rustix 1.1.2",
- "windows-sys 0.61.2",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
