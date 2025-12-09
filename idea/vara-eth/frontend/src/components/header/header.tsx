@@ -2,7 +2,6 @@ import { useAccount } from 'wagmi';
 
 import logo from '@/assets/logo.svg';
 import { HeaderBalance } from '@/components';
-import { NodesSwitch } from '@/features/nodes-switch';
 
 import { WalletButton } from '../wallet/wallet-button';
 
@@ -16,7 +15,7 @@ const Header = () => {
     <header className={styles.container}>
       <div className={styles.leftGroup}>
         <img src={logo} alt="Gear logo" />
-        <NodesSwitch />
+        {/* <NodesSwitch /> */}
       </div>
 
       <div className={styles.rightGroup}>
