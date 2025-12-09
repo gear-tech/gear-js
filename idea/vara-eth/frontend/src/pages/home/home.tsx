@@ -46,12 +46,12 @@ const Home = () => {
       <div className={styles.container}>
         <div className={styles.titleContainer}>
           <h1 className={styles.title}>
-            Welcome to <span className={styles.accent}>Idea Gear.exe</span>
+            Welcome to <span className={styles.accent}>Idea Vara.eth</span>
           </h1>
         </div>
         <div className={styles.titleContainer}>
           <h2 className={styles.subtitle}>
-            {'//_A portal for codes, programs, and events on Vara and Ethereum Networks, powered by Gear.exe'}
+            {'//_A portal for codes, programs, and events on Vara and Ethereum Networks, powered by Vara.eth'}
           </h2>
         </div>
 

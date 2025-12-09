@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { generatePath } from 'react-router-dom';
 
-import VerifySvg from '@/assets/icons/verify.svg?react';
-import { HashLink, Navigation, Pagination, Table, Tooltip } from '@/components';
-import { useGetAllCodesQuery, UploadCodeButton, CODE_STATUS } from '@/features/codes';
+import { HashLink, Navigation, Pagination, Table } from '@/components';
+import { useGetAllCodesQuery, UploadCodeButton } from '@/features/codes';
 import { Search } from '@/features/search';
 import { routes } from '@/shared/config';
 
@@ -25,14 +24,12 @@ const columns = [
     key: 'codeId' as const,
     title: 'CODE ID',
     sortable: true,
-    render: (codeId: string, { status }: DataRow) => (
+    render: (codeId: string) => (
       <div className={styles.codeIdWrapper}>
         <HashLink hash={codeId} href={generatePath(routes.code, { codeId })} />
-        {status === CODE_STATUS.VALIDATED && (
-          <Tooltip value="Verified">
-            <VerifySvg />
-          </Tooltip>
-        )}
+        {/* <Tooltip value="Verified">
+          <VerifySvg />
+        </Tooltip> */}
       </div>
     ),
   },

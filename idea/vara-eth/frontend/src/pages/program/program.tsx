@@ -27,14 +27,12 @@ const Program = () => {
   const { data: program, isLoading } = useGetProgramByIdQuery(programId || '');
   const { data: programState, refetch } = useReadContractState(programId);
 
-  const { value, decimals } = useWrappedVaraBalance(programId);
+  const { decimals } = useWrappedVaraBalance(programId);
   const isActive = true;
   const programName = 'Program name';
   const codeId = program?.codeId || '';
   const blockHash = program?.createdAtTx || '';
   const blockDateTime = program?.createdAtBlock ? `Block ${program.createdAtBlock}` : '';
-
-  const wvaraBalance = value !== undefined && decimals ? formatBalance(value, decimals) : null;
 
   const executableBalance =
     programState && decimals ? formatBalance(BigInt(programState.executableBalance), decimals) : null;
@@ -106,7 +104,6 @@ const Program = () => {
             <HashLink hash={codeId} />
             <div>PROGRAM BALANCE</div>
             <div>
-              <Balance value={wvaraBalance} units="WVARA" withDivider />
               <Balance value={formatNumber(programState?.balance || 0, 4)} units="ETH" />
             </div>
             <div>EXECUTABLE BALANCE</div>
