@@ -32,32 +32,6 @@ permissions:
   contents: read
 
 jobs:
-  check-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      frontend: ${{ steps.frontend.outputs.changed }}
-      indexer: ${{ steps.indexer.outputs.changed }}
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Check frontend
-        id: frontend
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            changed:
-              - idea/vara-eth/frontend/src/**
-              - idea/vara-eth/frontend/package.json
-
-      - name: Check indexer
-        id: indexer
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            changed:
-              - idea/vara-eth/indexer/src/**
-              - idea/vara-eth/indexer/package.json
-
   set-env-tag:
     runs-on: ubuntu-latest
     outputs:
@@ -73,6 +47,52 @@ jobs:
         id: get_env
         run: echo "environment=vara-eth-idea-staging" >> $GITHUB_OUTPUT
 
+  check-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.should-build.outputs.frontend }}
+      indexer: ${{ steps.should-build.outputs.indexer }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check frontend changes
+        id: frontend
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            changed:
+              - idea/vara-eth/frontend/**
+
+      - name: Check indexer changes
+        id: indexer
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            changed:
+              - idea/vara-eth/indexer/**
+
+      - name: Determine what should be built
+        id: should-build
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            # For manual trigger, check the input
+            if [[ "${{ github.event.inputs.service }}" == "frontend" || "${{ github.event.inputs.service }}" == "all" ]]; then
+              echo "frontend=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "frontend=false" >> "$GITHUB_OUTPUT"
+            fi
+            
+            if [[ "${{ github.event.inputs.service }}" == "indexer" || "${{ github.event.inputs.service }}" == "all" ]]; then
+              echo "indexer=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "indexer=false" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            # For push events, use the file change detection
+            echo "frontend=${{ steps.frontend.outputs.changed }}" >> "$GITHUB_OUTPUT"
+            echo "indexer=${{ steps.indexer.outputs.changed }}" >> "$GITHUB_OUTPUT"
+          fi
+
   build-frontend-image:
     runs-on: ubuntu-latest
     needs: [set-env-tag, check-changes]
@@ -86,16 +106,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Check if should be built
-        id: check
-        uses: './.github/actions/should-be-built'
-        with:
-          patterns: 'frontend,all'
-          input: ${{ github.event.inputs.service }}
-          event_name: ${{ github.event_name }}
-
       - name: Log in to the github container registry
-        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/login-action@master
         with:
           registry: ${{ env.REGISTRY }}
@@ -103,7 +114,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push "vara-eth-idea-frontend" Docker image
-        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/build-push-action@master
         with:
           file: idea/vara-eth/frontend/Dockerfile
@@ -132,16 +142,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Check if should be built
-        id: check
-        uses: './.github/actions/should-be-built'
-        with:
-          patterns: 'indexer,all'
-          input: ${{ github.event.inputs.service }}
-          event_name: ${{ github.event_name }}
-
       - name: Log in to the github container registry
-        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/login-action@master
         with:
           registry: ${{ env.REGISTRY }}
@@ -149,7 +150,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push "vara-eth-idea-indexer" image
-        if: ${{ steps.check.outputs.ok == 'true' }}
         uses: docker/build-push-action@master
         with:
           file: idea/vara-eth/indexer/Dockerfile
@@ -158,12 +158,8 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-indexer:${{ needs.set-env-tag.outputs.environment }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-indexer:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
 
-  deploy-to-k8s:
-    needs:
-      [
-        build-frontend-image,
-        build-indexer-image,
-      ]
+  deploy-indexer:
+    needs: [build-indexer-image]
     runs-on: ubuntu-latest
 
     steps:
@@ -174,21 +170,24 @@ jobs:
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Get deployment variables
-        id: deployment_vars
-        run: |
-          echo "namespace=dev-1" >> $GITHUB_OUTPUT
-          if [ "${{ github.event_name }}" != "workflow_dispatch" || "${{ github.event.inputs.service }}" == "all" ]; then
-            echo "deployments=vara-eth-indexer vara-eth-frontend" >> $GITHUB_OUTPUT
-          elif [ "${{ github.event.inputs.service }}" == "frontend" ]; then
-            echo "deployments=vara-eth-frontend" >> $GITHUB_OUTPUT
-          elif [ "${{ github.event.inputs.service }}" == "indexer" ]; then
-            echo "deployments=vara-eth-indexer" >> $GITHUB_OUTPUT
-          else
-            echo "deployments=" >> $GITHUB_OUTPUT
-          fi
+      - name: Deploy to k8s
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment vara-eth-indexer -n dev-1
+
+  deploy-frontend:
+    needs: [build-frontend-image]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment ${{ steps.deployment_vars.outputs.deployments }} -n ${{ steps.deployment_vars.outputs.namespace }}
+          args: rollout restart deployment vara-eth-frontend -n dev-1

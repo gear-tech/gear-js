@@ -14,7 +14,7 @@ const NodesSwitch = () => {
 
   const close = () => setIsNodesOpen(false);
 
-  const chain = 'Gear.EXE';
+  const chain = 'Vara.eth';
 
   const toggleNodesPopup = () => setIsNodesOpen((prevState) => !prevState);
   const closeNodesPopup = () => setIsNodesOpen(false);

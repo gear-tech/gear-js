@@ -23,6 +23,7 @@ RUN yarn workspaces focus @vara-eth/api varaeth-idea-indexer gear-js --productio
 FROM deps
 
 COPY --from=builder /src/idea/vara-eth/indexer/lib /src/idea/vara-eth/indexer/lib
+COPY --from=builder /src/idea/vara-eth/indexer/db /src/idea/vara-eth/indexer/db
 COPY --from=builder /src/apis/vara-eth/lib /src/apis/vara-eth/lib
 
 WORKDIR /src/idea/vara-eth/indexer

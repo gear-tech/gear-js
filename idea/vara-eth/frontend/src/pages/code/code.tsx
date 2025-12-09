@@ -2,9 +2,8 @@ import { HexString } from '@vara-eth/api';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
-import VerifySvg from '@/assets/icons/verify.svg?react';
-import { Badge, Button, HashLink, Navigation, NotFound, Tooltip } from '@/components';
-import { CODE_STATUS, useGetCodeByIdQuery } from '@/features/codes/lib/queries';
+import { Badge, Button, HashLink, Navigation, NotFound } from '@/components';
+import { useGetCodeByIdQuery } from '@/features/codes/lib/queries';
 import { CodeViewer } from '@/features/codes/ui/code-viewer';
 import { CreateProgramButton } from '@/features/programs';
 import { Search } from '@/features/search';
@@ -46,7 +45,6 @@ const Code = () => {
     );
   }
 
-  const isVerify = code?.status === CODE_STATUS.VALIDATED;
   const blockHash = '0xQqC17F958D2ee523a2206206994597C13D831ec7';
   const blockDateTime = formatDate(Date.now());
 
@@ -62,11 +60,12 @@ const Code = () => {
               </Button>
               <HashLink hash={codeId} truncateSize="xxl" />
             </div>
-            {isVerify && (
+            {/* TODO: add after code verifier is implemented */}
+            {/* {isVerify && (
               <Tooltip value="Verified">
                 <VerifySvg />
               </Tooltip>
-            )}
+            )} */}
           </div>
 
           <div className={styles.properties}>

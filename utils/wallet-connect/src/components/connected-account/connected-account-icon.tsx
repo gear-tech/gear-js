@@ -8,7 +8,7 @@ type Props = useRender.ComponentProps<IdenticonType, { address: HexString }>;
 type ElementProps = useRender.ElementProps<IdenticonType>;
 
 function ConnectedAccountIcon({ render, ...props }: Props) {
-  const { account } = useAccount();
+  const { account, isAccountReady } = useAccount();
 
   const defaultProps: ElementProps = {
     value: account?.decodedAddress,
@@ -17,7 +17,7 @@ function ConnectedAccountIcon({ render, ...props }: Props) {
 
   return useRender({
     render: render ?? <Identicon />,
-    enabled: Boolean(account),
+    enabled: isAccountReady && Boolean(account),
     state: { address: account!.decodedAddress },
     props: mergeProps<IdenticonType>(defaultProps, props),
   });
