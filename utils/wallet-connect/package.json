@@ -38,9 +38,9 @@
   "devDependencies": {
     "@gear-js/frontend-configs": "*",
     "@gear-js/react-hooks": "*",
-    "@tanstack/react-query": "5.90.2",
-    "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "@tanstack/react-query": "5.90.12",
+    "react": "19.2.1",
+    "react-dom": "19.2.1"
   },
   "files": [
     "dist"
