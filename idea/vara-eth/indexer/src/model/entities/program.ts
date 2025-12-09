@@ -20,4 +20,7 @@ export class Program {
 
   @Column({ name: 'abi_interface_address', nullable: true, type: 'varchar', length: 42 })
   abiInterfaceAddress?: string | null;
+
+  @Column({ name: 'created_at', type: 'timestamp without time zone' })
+  createdAt: Date;
 }
