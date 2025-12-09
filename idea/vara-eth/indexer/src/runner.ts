@@ -78,9 +78,9 @@ export async function runProcessor() {
   for (const [name, Handler] of Object.entries(handlers)) {
     if (Handler.prototype instanceof BaseHandler) {
       const handler = new Handler();
-      logger.info(`[*] Initializing handler: ${name}`);
+      logger.info(`Initializing handler: ${name}`);
       await handler.init();
-      logger.info(`[*] Registering new handler: ${name}`);
+      logger.info(`Registering new handler: ${name}`);
       processor.registerHandler(handler);
     }
   }

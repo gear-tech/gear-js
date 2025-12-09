@@ -33,12 +33,14 @@ export async function runServer() {
     sortExport: true,
     handleErrors: (errors) => {
       errors.forEach((error) => {
+        // TODO: replace any
         const errorData: any = {
           message: error.message,
           locations: error.locations,
           path: error.path,
         };
 
+        // TODO: replace any
         const originalError = error.originalError as any;
         if (originalError) {
           if (originalError.hint) errorData.hint = originalError.hint;
