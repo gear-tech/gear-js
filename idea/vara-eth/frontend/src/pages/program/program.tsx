@@ -106,7 +106,6 @@ const Program = () => {
             <HashLink hash={codeId} />
             <div>PROGRAM BALANCE</div>
             <div>
-              <Balance value={wvaraBalance} units="WVARA" withDivider />
               <Balance value={formatNumber(programState?.balance || 0, 4)} units="ETH" />
             </div>
             <div>EXECUTABLE BALANCE</div>
