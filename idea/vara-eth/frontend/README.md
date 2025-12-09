@@ -1,8 +1,8 @@
-# Gear.exe Idea
+# Vara.Eth Idea
 
 ## Description
 
-React application of Gear.exe Idea.
+React application of Vara.Eth Idea.
 
 ## Getting started
 
