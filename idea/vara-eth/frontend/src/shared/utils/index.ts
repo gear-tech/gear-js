@@ -56,4 +56,9 @@ const formatDate = (rawDate: string | number) => {
 const isString = (value: unknown): value is string => typeof value === 'string';
 const getPreformattedText = (data: unknown) => JSON.stringify(data, null, 4);
 
-export { copyToClipboard, formatBalance, formatNumber, formatDate, isString, getPreformattedText };
+const getTruncatedText = (value: string, prefixLength = 8): string => {
+  if (value.length <= (prefixLength + 2) * 2) return value;
+  return `${value.slice(0, prefixLength + 2)}...${value.slice(-prefixLength)}`;
+};
+
+export { copyToClipboard, formatBalance, formatNumber, formatDate, isString, getPreformattedText, getTruncatedText };

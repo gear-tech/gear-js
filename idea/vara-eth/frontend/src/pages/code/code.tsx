@@ -58,7 +58,7 @@ const Code = () => {
               <Button variant="icon" onClick={() => navigate(routes.programs)}>
                 <ArrowLeftSVG className={styles.arrowLeft} />
               </Button>
-              <HashLink hash={codeId} />
+              <HashLink hash={codeId} truncateSize="xxl" />
             </div>
             {/* TODO: add after code verifier is implemented */}
             {/* {isVerify && (
