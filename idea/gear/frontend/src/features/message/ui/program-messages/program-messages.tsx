@@ -4,7 +4,7 @@ import { parseAsString, parseAsStringEnum } from 'nuqs';
 import { Sails } from 'sails-js';
 
 import { FilterGroup, Filters, Radio } from '@/features/filters';
-import { SailsFilter } from '@/features/sails/ui/sails-filter-group/sails-filter';
+import { Dropdown } from '@/features/sails/ui/sails-filter-group/dropdown';
 import { useChangeEffect, useSearchParamsStates } from '@/hooks';
 import MessageCardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
 import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
@@ -71,8 +71,7 @@ function useFilters(sails: Sails | undefined) {
     [FILTER_NAME.SAILS_FUNCTION]: parseAsString.withDefault(DEFAULT_VALUE.SAILS_FUNCTION),
   });
 
-  const sailsFunction = filters[FILTER_NAME.SAILS_FUNCTION];
-  const [serviceName, functionName] = sailsFunction ? sailsFunction.split('.') : ['', ''];
+  const [serviceName, functionName = ''] = filters[FILTER_NAME.SAILS_FUNCTION].split('.');
 
   const functionNames = Object.keys(sails?.services?.[serviceName]?.functions ?? {});
   const functionNameValues = [DEFAULT_VALUE.SAILS_FUNCTION, ...functionNames];
@@ -127,7 +126,7 @@ const ProgramMessages = ({ programId, sails }: Props) => {
     if (!sails) return null;
 
     return (
-      <SailsFilter
+      <Dropdown
         heading="Sails Functions"
         services={sails.services}
         type="functions"

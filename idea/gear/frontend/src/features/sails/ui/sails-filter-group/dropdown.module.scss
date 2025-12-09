@@ -187,6 +187,10 @@
     border-radius: 0.25rem;
     background-color: var(--color-gray-900);
   }
+
+  &.selectedGroup {
+    background-color: #ccc;
+  }
 }
 
 .ItemText {
@@ -222,9 +226,28 @@
   padding-inline: 1rem;
   font-size: 0.75rem;
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--color-gray-500);
   user-select: none;
   line-height: 1rem;
+}
+
+.GroupLabelButton {
+  margin-left: 0.5rem;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 0.25rem;
+  background: none;
+  color: var(--color-gray-600);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-gray-100);
+  }
+
+  &:focus {
+    outline: 2px solid var(--color-blue);
+    outline-offset: -1px;
+  }
 }

@@ -1,44 +1,104 @@
 import { Combobox } from '@base-ui-components/react/combobox';
-import { Ref, useId } from 'react';
+import { useId, useState } from 'react';
+import { useController, useFormContext, Path } from 'react-hook-form';
+
+import { cx } from '@/shared/helpers';
+
+import { Services } from '../../types';
 
 import styles from './dropdown.module.scss';
 
-type Props = {
-  heading: string;
-  groups: { value: string; items: string[] }[];
-  ref: Ref<HTMLInputElement>;
-  value: string | null;
-  onChange: (value: string | null) => void;
-  onBlur: Combobox.Input.Props['onBlur'];
+type FieldValues<T> = T & {
+  sailsFunction: string;
 };
 
-function Dropdown({ heading, groups, ref, value, onChange, onBlur }: Props) {
+type Props<T> = {
+  heading: string;
+  services: Services;
+  type: 'functions' | 'events';
+  name: Path<FieldValues<T>>;
+  onSubmit: (values: FieldValues<T>) => void;
+};
+
+const getGroups = (services: Services, type: 'functions' | 'events') =>
+  Object.entries(services).map(([serviceName, service]) => ({
+    value: serviceName,
+    items: [serviceName, ...Object.keys(service[type]).map((item) => `${serviceName}.${item}`)],
+  }));
+
+const getParsedValue = (value: string) => {
+  const [serviceName, functionName = ''] = value.split('.');
+
+  return { serviceName, functionName };
+};
+
+function Dropdown<T>({ heading, services, type, name, onSubmit }: Props<T>) {
   const id = useId();
 
-  const renderItem = (item: string) => (
-    <Combobox.Item key={item} value={item} className={styles.Item}>
-      <Combobox.ItemIndicator className={styles.ItemIndicator}>
-        <CheckIcon className={styles.ItemIndicatorIcon} />
-      </Combobox.ItemIndicator>
+  const { handleSubmit } = useFormContext<FieldValues<T>>();
+  const { field } = useController<FieldValues<T>>({ name });
+  const { serviceName, functionName } = getParsedValue(field.value as string);
 
-      <div className={styles.ItemText}>{item}</div>
-    </Combobox.Item>
-  );
+  const [isOpen, setIsOpen] = useState(false);
 
-  const renderGroup = (group: (typeof groups)[number]) => (
-    <Combobox.Group key={group.value} items={group.items} className={styles.Group}>
-      <Combobox.GroupLabel className={styles.GroupLabel}>{group.value}</Combobox.GroupLabel>
-      <Combobox.Collection>{renderItem}</Combobox.Collection>
-    </Combobox.Group>
-  );
+  const groups = getGroups(services, type);
+
+  const handleChange = (value: string | null) => {
+    field.onChange(value);
+    void handleSubmit(onSubmit)();
+  };
+
+  const renderItem = (item: string) => {
+    const parsed = getParsedValue(item);
+
+    const isSelectedGroup = serviceName === parsed.serviceName && !functionName;
+
+    if (!parsed.functionName) return;
+
+    return (
+      <Combobox.Item key={item} value={item} className={cx(styles.Item, isSelectedGroup && styles.selectedGroup)}>
+        <Combobox.ItemIndicator className={styles.ItemIndicator}>
+          <CheckIcon className={styles.ItemIndicatorIcon} />
+        </Combobox.ItemIndicator>
+
+        <div className={styles.ItemText}>{item}</div>
+      </Combobox.Item>
+    );
+  };
+
+  const renderGroup = (group: (typeof groups)[number]) => {
+    const handleClick = () => {
+      handleChange(group.value);
+      setIsOpen(false);
+    };
+
+    return (
+      <Combobox.Group key={group.value} items={group.items} className={styles.Group}>
+        <Combobox.GroupLabel className={styles.GroupLabel}>
+          {group.value}
+
+          <button type="button" className={styles.GroupLabelButton} onClick={handleClick}>
+            Select All
+          </button>
+        </Combobox.GroupLabel>
+
+        <Combobox.Collection>{renderItem}</Combobox.Collection>
+      </Combobox.Group>
+    );
+  };
 
   return (
-    <Combobox.Root items={groups} value={value} onValueChange={onChange}>
+    <Combobox.Root
+      items={groups}
+      value={field.value as string}
+      onValueChange={(value) => handleChange(value || '')}
+      open={isOpen}
+      onOpenChange={setIsOpen}>
       <div className={styles.Label}>
         <label htmlFor={id}>{heading}</label>
 
         <div className={styles.InputWrapper}>
-          <Combobox.Input placeholder="Select" id={id} className={styles.Input} ref={ref} onBlur={onBlur} />
+          <Combobox.Input placeholder="Select" id={id} className={styles.Input} ref={field.ref} onBlur={field.onBlur} />
 
           <div className={styles.ActionButtons}>
             <Combobox.Clear className={styles.Clear}>
