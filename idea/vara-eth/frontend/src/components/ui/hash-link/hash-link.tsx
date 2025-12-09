@@ -15,7 +15,7 @@ type Props = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
   truncateSize?: BreakpointSize;
 };
 
-const HashLink = ({ isExternalLink, hash, href, isDisabled, truncateSize = 'Xl', ...restProps }: Props) => {
+const HashLink = ({ isExternalLink, hash, href, isDisabled, truncateSize = 'xl', ...restProps }: Props) => {
   const className = clsx(styles.link, isDisabled && styles.disabled);
 
   const MediaQuerySize = MediaQuery[truncateSize];

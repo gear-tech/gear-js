@@ -13,11 +13,11 @@
 }
 
 $mq-sizes: (
-  Sm: $sm,
-  Md: $md,
-  Lg: $lg,
-  Xl: $xl,
-  Xxl: $xxl
+  sm: $sm,
+  md: $md,
+  lg: $lg,
+  xl: $xl,
+  xxl: $xxl
 );
 
 @mixin show-below($width) {

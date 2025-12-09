@@ -60,7 +60,7 @@ const Code = () => {
               <Button variant="icon" onClick={() => navigate(routes.programs)}>
                 <ArrowLeftSVG className={styles.arrowLeft} />
               </Button>
-              <HashLink hash={codeId} truncateSize="Xxl" />
+              <HashLink hash={codeId} truncateSize="xxl" />
             </div>
             {isVerify && (
               <Tooltip value="Verified">

@@ -1,16 +1,6 @@
-import { PropsWithChildren } from 'react';
-
 import styles from './media-query.module.scss';
 
-function Desktop({ children }: PropsWithChildren) {
-  return <span className={styles.desktop}>{children}</span>;
-}
-
-function Mobile({ children }: PropsWithChildren) {
-  return <span className={styles.mobile}>{children}</span>;
-}
-
-type BreakpointSize = 'Sm' | 'Md' | 'Lg' | 'Xl' | 'Xxl';
+type BreakpointSize = 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 
 interface SizeProps {
   above?: React.ReactNode;
@@ -30,12 +20,12 @@ const createSizeComponent = (size: BreakpointSize) =>
     );
   };
 
-const Sm = createSizeComponent('Sm');
-const Md = createSizeComponent('Md');
-const Lg = createSizeComponent('Lg');
-const Xl = createSizeComponent('Xl');
-const Xxl = createSizeComponent('Xxl');
-
-const MediaQuery = { Desktop, Mobile, Sm, Md, Lg, Xl, Xxl };
+const MediaQuery = {
+  sm: createSizeComponent('sm'),
+  md: createSizeComponent('md'),
+  lg: createSizeComponent('lg'),
+  xl: createSizeComponent('xl'),
+  xxl: createSizeComponent('xxl'),
+};
 
 export { MediaQuery, type BreakpointSize };
