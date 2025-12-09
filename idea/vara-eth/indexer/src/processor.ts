@@ -24,6 +24,7 @@ export const processor = new EvmBatchProcessor()
   .setBlockRange({ from: config.fromBlock })
   .setFields({
     log: {
+      topics: true,
       transactionHash: true,
       data: true,
       transaction: true,
