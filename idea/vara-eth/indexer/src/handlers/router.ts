@@ -1,7 +1,7 @@
 import { Address } from 'viem';
 import { In } from 'typeorm';
 
-import { Code, CodeStatus, Program } from '../model/index.js';
+import { Code, CodeStatus, EntityType, HashRegistry, Program } from '../model/index.js';
 import { mapKeys, mapValues } from '../util/index.js';
 import { RouterAbi } from '../abi/router.abi.js';
 import { Context, Log } from '../processor.js';
@@ -48,31 +48,46 @@ export class RouterHandler extends BaseHandler {
   private async _saveCodes(): Promise<void> {
     if (this._codes.size === 0 && this._codeStatuses.size === 0) return;
 
-    for (const [codeId, code] of this._codes.entries()) {
-      if (this._codeStatuses.has(codeId)) {
-        code.status = this._codeStatuses.get(codeId)!;
-        this._codeStatuses.delete(codeId);
+    const codes = mapValues(this._codes);
+
+    for (const code of codes) {
+      if (this._codeStatuses.has(code.id)) {
+        code.status = this._codeStatuses.get(code.id)!;
+        this._codeStatuses.delete(code.id);
       }
     }
+
+    const hashes = codes.map(
+      (code) => new HashRegistry({ id: code.id, type: EntityType.Code, createdAt: code.createdAt }),
+    );
 
     if (this._codeStatuses.size > 0) {
-      const codes = await this._ctx.store.find(Code, { where: { id: In(mapKeys(this._codeStatuses)) } });
+      const _codes = await this._ctx.store.find(Code, { where: { id: In(mapKeys(this._codeStatuses)) } });
 
-      for (const code of codes) {
+      for (const code of _codes) {
         code.status = this._codeStatuses.get(code.id)!;
-        this._codes.set(code.id, code);
+        codes.push(code);
       }
     }
 
-    await this._ctx.store.save(mapValues(this._codes));
+    await this._ctx.store.save(codes);
     this._logger.info(`${this._codes.size} codes saved`);
+
+    await this._ctx.store.save(hashes);
   }
 
   private async _savePrograms(): Promise<void> {
     if (this._programs.size === 0) return;
 
-    await this._ctx.store.save(mapValues(this._programs));
+    const programs = mapValues(this._programs);
+    await this._ctx.store.save(programs);
     this._logger.info(`${this._programs.size} programs saved`);
+
+    const hashes = programs.map(
+      (program) => new HashRegistry({ id: program.id, type: EntityType.Program, createdAt: program.createdAt }),
+    );
+
+    await this._ctx.store.save(hashes);
   }
 
   public async process(_ctx: Context): Promise<void> {
@@ -103,7 +118,14 @@ export class RouterHandler extends BaseHandler {
 
   private _handleCodeValidationRequested(log: Log) {
     const data = RouterAbi.events.CodeValidationRequested.decode(log);
-    this._codes.set(data.args.codeId, new Code({ id: data.args.codeId, status: CodeStatus.ValidationRequested }));
+    this._codes.set(
+      data.args.codeId,
+      new Code({
+        id: data.args.codeId,
+        status: CodeStatus.ValidationRequested,
+        createdAt: new Date(log.block.timestamp),
+      }),
+    );
     this._logger.info({ codeId: data.args.codeId }, `Code validation requested`);
   }
 
@@ -123,6 +145,7 @@ export class RouterHandler extends BaseHandler {
       codeId: data.args.codeId,
       blockNumber: BigInt(log.block.height),
       txHash: log.transaction.hash,
+      createdAt: new Date(log.block.timestamp),
     });
 
     if (log.transaction.input.startsWith(RouterAbi.functions.createProgramWithAbiInterface.selector)) {

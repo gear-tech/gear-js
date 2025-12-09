@@ -17,4 +17,7 @@ export class Code {
 
   @Column('varchar')
   status: CodeStatus;
+
+  @Column({ name: 'created_at', type: 'timestamp without time zone' })
+  createdAt: Date;
 }
