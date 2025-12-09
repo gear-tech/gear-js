@@ -1,16 +1,18 @@
+import { Address } from 'viem';
 import { In } from 'typeorm';
 
 import { Code, CodeStatus, Program } from '../model/index.js';
 import { mapKeys, mapValues } from '../util/index.js';
+import { RouterAbi } from '../abi/router.abi.js';
 import { Context, Log } from '../processor.js';
 import { BaseHandler } from './base.js';
 import { config } from '../config.js';
-import { RouterAbi } from '../abi/router.abi.js';
 
 export class RouterHandler extends BaseHandler {
   private _codes: Map<string, Code>;
   private _codeStatuses: Map<string, CodeStatus>;
   private _programs: Map<string, Program>;
+  private _address: Address;
 
   protected _logs: { addr: string; topic0: string[] }[] = [
     {
@@ -22,6 +24,11 @@ export class RouterHandler extends BaseHandler {
       ],
     },
   ];
+
+  constructor() {
+    super();
+    this._address = config.routerAddr.toLowerCase() as Address;
+  }
 
   public async init(): Promise<void> {
     this._codes = new Map();
@@ -68,11 +75,13 @@ export class RouterHandler extends BaseHandler {
     this._logger.info(`${this._programs.size} programs saved`);
   }
 
-  public async process(ctx: Context): Promise<void> {
-    await super.process(ctx);
+  public async process(_ctx: Context): Promise<void> {
+    await super.process(_ctx);
 
-    for (const block of ctx.blocks) {
+    for (const block of this._ctx.blocks) {
       for (const log of block.logs as Log[]) {
+        if (log.address.toLowerCase() !== this._address) continue;
+
         const topic = log.topics[0].toLowerCase();
         switch (topic) {
           case RouterAbi.events.CodeValidationRequested.topic: {

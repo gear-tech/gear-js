@@ -1,17 +1,29 @@
-import { createLogger, format, transports } from 'winston';
+import pino from 'pino';
 
-const TIMESTAMP_FORMAT = 'YY-MM-DD HH:mm:ss';
+const DEV_ENV = ['development', 'dev', 'test'];
 
-const logger = createLogger({
-  format: format.combine(
-    format.timestamp({ format: TIMESTAMP_FORMAT }),
-    format(({ timestamp, level, message, ...rest }) => {
-      return { ts: timestamp, level, message, ...rest };
-    })(),
-    format.json({ bigint: true, deterministic: false }),
-  ),
-  transports: [new transports.Console()],
-  exitOnError: false,
-});
+export function createLogger(label) {
+  const isDev = DEV_ENV.includes(process.env.NODE_ENV);
 
-export { logger };
+  const options = {
+    name: label,
+    timestamp: pino.stdTimeFunctions.isoTime,
+    level: process.env.LOG_LEVEL || 'info',
+  };
+
+  if (isDev) {
+    return pino(
+      options,
+      pino.transport({
+        target: 'pino-pretty',
+        options: {
+          colorize: true,
+          translateTime: 'HH:MM:ss',
+          ignore: 'pid,hostname',
+        },
+      }),
+    );
+  }
+
+  return pino(options);
+}

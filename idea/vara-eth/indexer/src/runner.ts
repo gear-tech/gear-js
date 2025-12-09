@@ -1,24 +1,31 @@
 import { TypeormDatabase } from '@subsquid/typeorm-store';
+import { createLogger } from '@gear-js/logger';
 
 import { BaseHandler } from './handlers/base.js';
 import * as handlers from './handlers/index.js';
 import { processor } from './processor.js';
 
+const logger = createLogger('vara-eth-proc');
+
 export class VaraEthProcessor {
   private _handlers: BaseHandler[] = [];
 
-  public addLogs(addr: string, topic0: string[]) {
-    console.log(`[*] Adding logs ${topic0.join(',')} for ${addr}`);
-    processor.addLog({ address: [addr], topic0, transaction: true });
+  public addLogs(addr: string, topics: string[]) {
+    logger.info(`Adding logs ${topics.join(',')} for ${addr}`);
+    processor.addLog({
+      address: [addr],
+      topic0: topics,
+      transaction: true,
+    });
   }
 
   public addTransactions(addr: string, sighash: string[]) {
-    console.log(`[*] Adding transactions ${sighash.join(',')} for ${addr}`);
+    logger.info(`Adding transactions ${sighash.join(',')} for ${addr}`);
     processor.addTransaction({ to: [addr], sighash });
   }
 
   public registerHandler(handler: BaseHandler) {
-    console.log('Handler', `Registering ${handler.constructor.name}`);
+    logger.info(`Registering ${handler.constructor.name}`);
     this._handlers.push(handler);
 
     const logs = handler.getLogs();
@@ -35,7 +42,7 @@ export class VaraEthProcessor {
   public async run() {
     const db = new TypeormDatabase({
       supportHotBlocks: true,
-      stateSchema: 'gear_processor',
+      stateSchema: 'vara_eth_processor',
     });
 
     processor.run(db, async (ctx) => {
@@ -71,9 +78,9 @@ export async function runProcessor() {
   for (const [name, Handler] of Object.entries(handlers)) {
     if (Handler.prototype instanceof BaseHandler) {
       const handler = new Handler();
-      console.log(`[*] Initializing handler: ${name}`);
+      logger.info(`[*] Initializing handler: ${name}`);
       await handler.init();
-      console.log(`[*] Registering new handler: ${name}`);
+      logger.info(`[*] Registering new handler: ${name}`);
       processor.registerHandler(handler);
     }
   }
@@ -83,7 +90,7 @@ export async function runProcessor() {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   runProcessor().catch((error) => {
-    console.error(error);
+    logger.error(error);
     process.exit(1);
   });
 }

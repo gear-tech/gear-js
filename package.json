@@ -105,7 +105,7 @@
     "eslint": "^9.39.1",
     "eslint-plugin-storybook": "^10.0.8",
     "jest": "^30.2.0",
-    "lerna": "^9.0.1",
+    "lerna": "^9.0.3",
     "prettier": "^3.6.2",
     "rollup": "^4.53.3",
     "rollup-plugin-typescript2": "^0.36.0",

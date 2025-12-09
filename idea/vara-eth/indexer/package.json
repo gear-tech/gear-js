@@ -13,6 +13,7 @@
     "serve": "node lib/api.js"
   },
   "dependencies": {
+    "@gear-js/logger": "workspace:*",
     "@subsquid/evm-processor": "^1.27.3",
     "@subsquid/logger": "^1.4.0",
     "@subsquid/typeorm-store": "^1.5.1",

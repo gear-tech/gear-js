@@ -14,5 +14,16 @@
     "gear-js"
   ],
   "type": "module",
-  "exports": "./src/index.js"
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "types": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "pino": "10.1.0"
+  },
+  "devDependencies": {
+    "pino-pretty": "^13.1.3"
+  }
 }
