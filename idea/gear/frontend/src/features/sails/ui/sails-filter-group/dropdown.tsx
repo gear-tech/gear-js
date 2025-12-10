@@ -61,7 +61,7 @@ function Dropdown<T>({ heading, services, type, name, onSubmit }: Props<T>) {
           <CheckIcon className={styles.ItemIndicatorIcon} />
         </Combobox.ItemIndicator>
 
-        <div className={styles.ItemText}>{item}</div>
+        <div className={styles.ItemText}>{parsed.functionName}</div>
       </Combobox.Item>
     );
   };
@@ -93,7 +93,8 @@ function Dropdown<T>({ heading, services, type, name, onSubmit }: Props<T>) {
       value={field.value as string}
       onValueChange={(value) => handleChange(value || '')}
       open={isOpen}
-      onOpenChange={setIsOpen}>
+      onOpenChange={setIsOpen}
+      itemToStringLabel={(value) => getParsedValue(value).functionName || value}>
       <div className={styles.Label}>
         <label htmlFor={id}>{heading}</label>
 
