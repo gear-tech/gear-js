@@ -155,7 +155,7 @@ export class Injected {
       throw new Error('Address is not a validator');
     }
 
-    const slot = Date.now() / this._ethClient.blockDuration;
+    const slot = Math.floor(Date.now() / this._ethClient.blockDuration);
 
     const validatorIndex = slot % validators.length;
 
