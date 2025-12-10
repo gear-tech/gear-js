@@ -4,7 +4,7 @@ import { parseAsString, parseAsStringEnum } from 'nuqs';
 import { Sails } from 'sails-js';
 
 import { FilterGroup, Filters, Radio } from '@/features/filters';
-import { Dropdown } from '@/features/sails/ui/sails-filter-group/dropdown';
+import { SailsFilter } from '@/features/sails/ui/sails-filter-group/sails-filter';
 import { useChangeEffect, useSearchParamsStates } from '@/hooks';
 import MessageCardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
 import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
@@ -126,8 +126,8 @@ const ProgramMessages = ({ programId, sails }: Props) => {
     if (!sails) return null;
 
     return (
-      <Dropdown
-        heading="Sails Functions"
+      <SailsFilter
+        label="Sails Functions"
         services={sails.services}
         type="functions"
         name={FILTER_NAME.SAILS_FUNCTION}

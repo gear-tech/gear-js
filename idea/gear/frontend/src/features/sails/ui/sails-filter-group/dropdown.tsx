@@ -1,74 +1,50 @@
-import { Combobox } from '@base-ui-components/react/combobox';
-import { useId, useState } from 'react';
-import { useController, useFormContext, Path } from 'react-hook-form';
+import { Combobox } from '@base-ui-components/react';
+import { Ref, useId, useState } from 'react';
 
 import { cx } from '@/shared/helpers';
 
-import { Services } from '../../types';
-
 import styles from './dropdown.module.scss';
 
-type FieldValues<T> = T & {
-  sailsFunction: string;
+type Props = {
+  label: string;
+  groups: { value: string; items: string[] }[];
+  value: string;
+  inputProps: { ref: Ref<HTMLInputElement>; onBlur: Combobox.Input.Props['onBlur'] };
+  onChange: (value: string) => void;
 };
-
-type Props<T> = {
-  heading: string;
-  services: Services;
-  type: 'functions' | 'events';
-  name: Path<FieldValues<T>>;
-  onSubmit: (values: FieldValues<T>) => void;
-};
-
-const getGroups = (services: Services, type: 'functions' | 'events') =>
-  Object.entries(services).map(([serviceName, service]) => ({
-    value: serviceName,
-    items: [serviceName, ...Object.keys(service[type]).map((item) => `${serviceName}.${item}`)],
-  }));
 
 const getParsedValue = (value: string) => {
-  const [serviceName, functionName = ''] = value.split('.');
+  const [group, item = ''] = value.split('.');
 
-  return { serviceName, functionName };
+  return { group, item };
 };
 
-function Dropdown<T>({ heading, services, type, name, onSubmit }: Props<T>) {
+function Dropdown({ label, groups, value, inputProps, onChange }: Props) {
   const id = useId();
-
-  const { handleSubmit } = useFormContext<FieldValues<T>>();
-  const { field } = useController<FieldValues<T>>({ name });
-  const { serviceName, functionName } = getParsedValue(field.value as string);
-
   const [isOpen, setIsOpen] = useState(false);
 
-  const groups = getGroups(services, type);
+  const current = getParsedValue(value);
 
-  const handleChange = (value: string | null) => {
-    field.onChange(value);
-    void handleSubmit(onSubmit)();
-  };
+  const renderItem = (_item: string) => {
+    const { group, item } = getParsedValue(_item);
+    const isGroupSelected = group === current.group && !current.item;
 
-  const renderItem = (item: string) => {
-    const parsed = getParsedValue(item);
-
-    const isSelectedGroup = serviceName === parsed.serviceName && !functionName;
-
-    if (!parsed.functionName) return;
+    if (!item) return;
 
     return (
-      <Combobox.Item key={item} value={item} className={cx(styles.Item, isSelectedGroup && styles.selectedGroup)}>
+      <Combobox.Item key={_item} value={_item} className={cx(styles.Item, isGroupSelected && styles.selectedGroup)}>
         <Combobox.ItemIndicator className={styles.ItemIndicator}>
           <CheckIcon className={styles.ItemIndicatorIcon} />
         </Combobox.ItemIndicator>
 
-        <div className={styles.ItemText}>{parsed.functionName}</div>
+        <div className={styles.ItemText}>{item}</div>
       </Combobox.Item>
     );
   };
 
   const renderGroup = (group: (typeof groups)[number]) => {
     const handleClick = () => {
-      handleChange(group.value);
+      onChange(group.value);
       setIsOpen(false);
     };
 
@@ -90,16 +66,16 @@ function Dropdown<T>({ heading, services, type, name, onSubmit }: Props<T>) {
   return (
     <Combobox.Root
       items={groups}
-      value={field.value as string}
-      onValueChange={(value) => handleChange(value || '')}
+      value={value}
+      onValueChange={(_value) => onChange(_value || '')}
       open={isOpen}
       onOpenChange={setIsOpen}
-      itemToStringLabel={(value) => getParsedValue(value).functionName || value}>
+      itemToStringLabel={(_value) => getParsedValue(value).item || value}>
       <div className={styles.Label}>
-        <label htmlFor={id}>{heading}</label>
+        <label htmlFor={id}>{label}</label>
 
         <div className={styles.InputWrapper}>
-          <Combobox.Input placeholder="Select" id={id} className={styles.Input} ref={field.ref} onBlur={field.onBlur} />
+          <Combobox.Input placeholder="Select" id={id} className={styles.Input} {...inputProps} />
 
           <div className={styles.ActionButtons}>
             <Combobox.Clear className={styles.Clear}>
@@ -116,7 +92,7 @@ function Dropdown<T>({ heading, services, type, name, onSubmit }: Props<T>) {
       <Combobox.Portal>
         <Combobox.Positioner className={styles.Positioner} sideOffset={4}>
           <Combobox.Popup className={styles.Popup}>
-            <Combobox.Empty className={styles.Empty}>No {heading.toLowerCase()} found.</Combobox.Empty>
+            <Combobox.Empty className={styles.Empty}>No {label.toLowerCase()} found.</Combobox.Empty>
             <Combobox.List className={styles.List}>{renderGroup}</Combobox.List>
           </Combobox.Popup>
         </Combobox.Positioner>
