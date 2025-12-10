@@ -59,6 +59,8 @@
       color: $successColor;
 
       background-color: $green100;
+
+      pointer-events: none;
     }
 
     .item {
@@ -72,6 +74,9 @@
 }
 
 .groupLabel {
+  position: sticky;
+  top: 0;
+
   padding: 4px 8px;
   margin-bottom: 4px;
 

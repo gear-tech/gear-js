@@ -41,7 +41,7 @@ function Dropdown({ label, groups, value, inputProps, onChange }: Props) {
     const isSelected = current.group === group.value && !current.item;
 
     const handleClick = () => {
-      onChange(isSelected ? '' : group.value);
+      onChange(group.value);
       setIsOpen(false);
     };
 
@@ -65,6 +65,14 @@ function Dropdown({ label, groups, value, inputProps, onChange }: Props) {
     );
   };
 
+  const getDisplayInputValue = (_value: string) => {
+    if (!_value) return '';
+
+    const { group, item } = getParsedValue(_value);
+
+    return item ? `${item} (${group})` : `${group} (all)`;
+  };
+
   return (
     <Combobox.Root
       items={groups}
@@ -72,7 +80,7 @@ function Dropdown({ label, groups, value, inputProps, onChange }: Props) {
       onValueChange={(_value) => onChange(_value || '')}
       open={isOpen}
       onOpenChange={setIsOpen}
-      itemToStringLabel={(_value) => getParsedValue(value).item || value}>
+      itemToStringLabel={getDisplayInputValue}>
       <Combobox.Input
         placeholder="Select"
         render={<Input direction="y" label={label} />}
