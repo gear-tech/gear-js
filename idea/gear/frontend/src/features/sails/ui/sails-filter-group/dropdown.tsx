@@ -1,7 +1,8 @@
 import { Combobox } from '@base-ui-components/react';
-import { Button, Input } from '@gear-js/ui';
-import { Ref, useState } from 'react';
+import { Button } from '@gear-js/ui';
+import { Ref, useId, useState } from 'react';
 
+import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
 import { cx } from '@/shared/helpers';
 
 import styles from './dropdown.module.scss';
@@ -20,7 +21,16 @@ const getParsedValue = (value: string) => {
   return { group, item };
 };
 
+const getDisplayInputValue = (_value: string) => {
+  if (!_value) return '';
+
+  const { group, item } = getParsedValue(_value);
+
+  return item ? `${item} (${group})` : `${group} (all)`;
+};
+
 function Dropdown({ label, groups, value, inputProps, onChange }: Props) {
+  const id = useId();
   const [isOpen, setIsOpen] = useState(false);
 
   const current = getParsedValue(value);
@@ -65,14 +75,6 @@ function Dropdown({ label, groups, value, inputProps, onChange }: Props) {
     );
   };
 
-  const getDisplayInputValue = (_value: string) => {
-    if (!_value) return '';
-
-    const { group, item } = getParsedValue(_value);
-
-    return item ? `${item} (${group})` : `${group} (all)`;
-  };
-
   return (
     <Combobox.Root
       items={groups}
@@ -81,18 +83,30 @@ function Dropdown({ label, groups, value, inputProps, onChange }: Props) {
       open={isOpen}
       onOpenChange={setIsOpen}
       itemToStringLabel={getDisplayInputValue}>
-      <Combobox.Input
-        placeholder="Select"
-        render={<Input direction="y" label={label} />}
-        className={styles.input}
-        {...inputProps}
-      />
+      <div>
+        <label htmlFor={id} className={styles.label}>
+          {label}
+        </label>
+
+        <Combobox.Trigger id={id} className={cx(styles.trigger, styles.normal, styles.dark)}>
+          <Combobox.Value>
+            {value ? getDisplayInputValue(value) : <span className={styles.placeholder}>Select</span>}
+          </Combobox.Value>
+
+          <Combobox.Icon render={<ArrowSVG />} className={styles.icon} />
+        </Combobox.Trigger>
+      </div>
 
       <Combobox.Portal>
-        <Combobox.Positioner sideOffset={4} className={styles.positioner}>
+        <Combobox.Positioner sideOffset={8} className={styles.positioner}>
           <Combobox.Popup className={styles.popup}>
-            <Combobox.Empty>No {label.toLowerCase()} found.</Combobox.Empty>
+            <Combobox.Empty className={styles.empty}>No {label.toLowerCase()} found.</Combobox.Empty>
             <Combobox.List className={styles.list}>{renderGroup}</Combobox.List>
+
+            <footer className={styles.inputContainer}>
+              {/* TODO: @gear-js/ui input has some problems with refs */}
+              <Combobox.Input placeholder="Search..." className={styles.input} {...inputProps} />
+            </footer>
           </Combobox.Popup>
         </Combobox.Positioner>
       </Combobox.Portal>
