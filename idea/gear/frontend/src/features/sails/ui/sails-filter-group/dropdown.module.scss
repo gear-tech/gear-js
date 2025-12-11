@@ -113,6 +113,8 @@
 }
 
 .list {
+  @include customSimplebar;
+
   max-height: min(24rem, var(--available-height));
 
   display: flex;
@@ -121,7 +123,6 @@
 
   border-width: 0 2px;
 
-  overflow-y: auto;
   overscroll-behavior: contain;
 }
 

@@ -1,6 +1,7 @@
 import { Combobox } from '@base-ui-components/react';
 import { Button } from '@gear-js/ui';
 import { Ref, useId, useState } from 'react';
+import SimpleBar from 'simplebar-react';
 
 import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
 import { cx } from '@/shared/helpers';
@@ -101,7 +102,9 @@ function Dropdown({ label, groups, value, inputProps, onChange }: Props) {
         <Combobox.Positioner sideOffset={8} className={styles.positioner}>
           <Combobox.Popup className={styles.popup}>
             <Combobox.Empty className={styles.empty}>No {label.toLowerCase()} found.</Combobox.Empty>
-            <Combobox.List className={styles.list}>{renderGroup}</Combobox.List>
+            <Combobox.List className={styles.list} render={<SimpleBar />}>
+              {renderGroup}
+            </Combobox.List>
 
             <footer className={styles.inputContainer}>
               {/* TODO: @gear-js/ui input has some problems with refs */}
