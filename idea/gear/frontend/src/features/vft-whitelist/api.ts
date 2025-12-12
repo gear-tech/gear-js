@@ -27,6 +27,12 @@ function useVftWhitelistNetwork() {
   if (genesis) return GENESIS_TO_WHITELIST_KEY[genesis as keyof typeof GENESIS_TO_WHITELIST_KEY];
 }
 
+function useIsVftWhitelistAvailable() {
+  const network = useVftWhitelistNetwork();
+
+  return Boolean(network);
+}
+
 function useVftWhitelist<T = HexString[]>(onSelect: (data: HexString[]) => T = (data) => data as T) {
   const network = useVftWhitelistNetwork();
 
@@ -53,4 +59,4 @@ function useIsVftProgram(programId: HexString) {
   return useVftWhitelist(isVft);
 }
 
-export { useIsVftProgram };
+export { useIsVftWhitelistAvailable, useVftWhitelist, useIsVftProgram };
