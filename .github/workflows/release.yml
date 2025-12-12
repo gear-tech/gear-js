@@ -106,10 +106,10 @@ jobs:
             code-changed:
               - 'apis/vara-eth/src/**'
 
-  publish-to-npm:
+  publish-gear-api:
     needs: check-changes
     runs-on: ubuntu-latest
-
+    if: ${{ needs.check-changes.outputs.gear-api == 'true' }}
     steps:
       - uses: actions/checkout@v6
 
@@ -123,49 +123,174 @@ jobs:
         run: npm install -g npm@latest
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn workspaces focus gear-js @gear-js/api
 
       - name: Build
-        run: yarn build
+        run: yarn build:gear-api
 
       - name: Publish gear-api
-        if: ${{ needs.check-changes.outputs.gear-api == 'true' }}
-        run: npm publish --access=public
+        run: npm publish --access=public --provenance
         working-directory: apis/gear
 
+  publish-vara-eth-api:
+    needs: check-changes
+    runs-on: ubuntu-latest
+    if: ${{ needs.check-changes.outputs.vara-eth-api == 'true' }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Use node 20.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: yarn workspaces focus gear-js @vara-eth/api
+
+      - name: Build
+        run: yarn build:vara-eth-api
+
       - name: Publish vara-eth-api
-        if: ${{ needs.check-changes.outputs.vara-eth-api == 'true' }}
         run: npm publish --access=public --provenance
         working-directory: apis/vara-eth
 
-      - name: Publish gear-hooks
-        if: ${{ needs.check-changes.outputs.gear-hooks == 'true' }}
-        run: npm publish --access=public
-        working-directory: utils/gear-hooks
+  publish-frontend-configs:
+    needs: check-changes
+    runs-on: ubuntu-latest
+    if: ${{ needs.check-changes.outputs.frontend-configs == 'true' }}
+    steps:
+      - uses: actions/checkout@v6
 
-      - name: Publish gear-ui
-        if: ${{ needs.check-changes.outputs.gear-ui == 'true' }}
-        run: npm publish --access=public
-        working-directory: utils/gear-ui
+      - name: Use node 20.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
 
-      - name: Publish vara-ui
-        if: ${{ needs.check-changes.outputs.vara-ui == 'true' }}
-        run: npm publish --access=public
-        working-directory: utils/vara-ui
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: yarn workspaces focus gear-js @gear-js/frontend-configs
+
+      - name: Build
+        run: yarn build:frontend-configs
 
       - name: Publish frontend-configs
-        if: ${{ needs.check-changes.outputs.frontend-configs == 'true' }}
-        run: npm publish --access=public
+        run: npm publish --access=public --provenance
         working-directory: utils/frontend-configs
 
+  publish-gear-hooks:
+    needs: [check-changes, publish-gear-api]
+    runs-on: ubuntu-latest
+    if: ${{ needs.check-changes.outputs.gear-hooks == 'true' && !cancelled() }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Use node 20.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: yarn workspaces focus gear-js @gear-js/react-hooks
+
+      - name: Build
+        run: yarn build:gear-hooks
+
+      - name: Publish gear-hooks
+        run: npm publish --access=public --provenance
+        working-directory: utils/gear-hooks
+
+  publish-gear-ui:
+    needs: check-changes
+    runs-on: ubuntu-latest
+    if: ${{ needs.check-changes.outputs.gear-ui == 'true' }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Use node 20.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: yarn workspaces focus gear-js @gear-js/ui
+
+      - name: Build
+        run: yarn build:gear-ui
+
+      - name: Publish gear-ui
+        run: npm publish --access=public --provenance
+        working-directory: utils/gear-ui
+
+  publish-vara-ui:
+    needs: check-changes
+    runs-on: ubuntu-latest
+    if: ${{ needs.check-changes.outputs.vara-ui == 'true' }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Use node 20.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: yarn workspaces focus gear-js @gear-js/vara-ui
+
+      - name: Build
+        run: yarn build:vara-ui
+
+      - name: Publish vara-ui
+        run: npm publish --access=public --provenance
+        working-directory: utils/vara-ui
+
+  publish-wallet-connect:
+    needs: [check-changes, publish-gear-hooks, publish-gear-ui, publish-vara-ui]
+    runs-on: ubuntu-latest
+    if: ${{ needs.check-changes.outputs.wallet-connect == 'true' && !cancelled() }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Use node 20.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: yarn workspaces focus gear-js @gear-js/wallet-connect
+
+      - name: Build
+        run: yarn build:wallet-connect
+
       - name: Publish wallet-connect
-        if: ${{ needs.check-changes.outputs.wallet-connect == 'true' }}
-        run: npm publish --access=public
+        run: npm publish --access=public --provenance
         working-directory: utils/wallet-connect
 
 
   create-github-release-gear-api:
-    needs: [publish-to-npm, check-changes]
+    needs: [publish-gear-api, check-changes]
     if: ${{ needs.check-changes.outputs.gear-api == 'true' || needs.check-changes.outputs.gear-api-code-modified == 'true' }}
     runs-on: ubuntu-latest
     permissions:
@@ -224,7 +349,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   create-github-release-vara-eth-api:
-    needs: [publish-to-npm, check-changes]
+    needs: [publish-vara-eth-api, check-changes]
     if: ${{ needs.check-changes.outputs.vara-eth-api == 'true' || needs.check-changes.outputs.vara-eth-api-code-modified == 'true' }}
     runs-on: ubuntu-latest
     permissions:
