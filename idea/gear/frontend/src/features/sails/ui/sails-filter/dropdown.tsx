@@ -1,4 +1,4 @@
-import { Combobox } from '@base-ui-components/react';
+import { Combobox } from '@base-ui/react';
 import { Button } from '@gear-js/ui';
 import { Ref, useId, useState } from 'react';
 import SimpleBar from 'simplebar-react';
@@ -18,10 +18,10 @@ type Props = {
   onChange: (value: string) => void;
 };
 
-const getDisplayInputValue = (_value: string) => {
-  if (!_value) return '';
+const getDisplayInputValue = (value: string) => {
+  if (!value) return '';
 
-  const { group, item } = getParsedFilterValue(_value);
+  const { group, item } = getParsedFilterValue(value);
 
   return item ? `${item} (${group})` : `${group} (all)`;
 };

@@ -22,7 +22,7 @@ function SailsFilter<T extends FieldValues>({ label, services, type, name, onSub
   const { handleSubmit } = useFormContext<T>();
   const { field } = useController<T>({ name });
 
-  const handleChange = (value: string | null) => {
+  const handleChange = (value: string) => {
     field.onChange(value);
     void handleSubmit(onSubmit)();
   };
