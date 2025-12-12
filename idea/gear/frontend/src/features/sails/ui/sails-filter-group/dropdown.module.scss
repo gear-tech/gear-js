@@ -112,18 +112,22 @@
   border-color: #242529;
 }
 
-.list {
+.simplebar {
   @include customSimplebar;
 
   max-height: min(24rem, var(--available-height));
 
+  :global(.simplebar-content-wrapper) {
+    scroll-behavior: contain;
+  }
+}
+
+.list {
   display: flex;
   flex-direction: column;
   gap: 16px;
 
   border-width: 0 2px;
-
-  overscroll-behavior: contain;
 }
 
 .empty {

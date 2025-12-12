@@ -102,7 +102,15 @@ function Dropdown({ label, groups, value, inputProps, onChange }: Props) {
         <Combobox.Positioner sideOffset={8} className={styles.positioner}>
           <Combobox.Popup className={styles.popup}>
             <Combobox.Empty className={styles.empty}>No {label.toLowerCase()} found.</Combobox.Empty>
-            <Combobox.List className={styles.list} render={<SimpleBar />}>
+
+            <Combobox.List
+              className={styles.list}
+              render={({ children, ...props }) => (
+                // without div wrapper simplebar errors
+                <div {...props}>
+                  <SimpleBar className={styles.simplebar}>{children}</SimpleBar>
+                </div>
+              )}>
               {renderGroup}
             </Combobox.List>
 
