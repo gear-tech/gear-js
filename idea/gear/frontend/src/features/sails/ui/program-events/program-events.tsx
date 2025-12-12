@@ -3,13 +3,13 @@ import { parseAsString } from 'nuqs';
 import { Sails } from 'sails-js';
 
 import { Filters } from '@/features/filters';
-import { useSearchParamsState } from '@/hooks';
+import { useSearchParamsStates } from '@/hooks';
 import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
 import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
 
 import { useEvents, EventType } from '../../api';
 import { EventCard } from '../event-card';
-import { SailsFilterGroup } from '../sails-filter-group';
+import { SailsFilter } from '../sails-filter';
 
 type Props = {
   programId: HexString;
@@ -17,59 +17,46 @@ type Props = {
 };
 
 const FILTER_NAME = {
-  SERVICE_NAME: 'serviceName',
-  EVENT_NAME: 'eventName',
+  SAILS: 'sails',
 } as const;
 
 const DEFAULT_VALUE = {
-  SERVICE_NAME: '' as string,
-  EVENT_NAME: '' as string,
+  SAILS: '' as string,
 } as const;
 
 const DEFAULT_FILTER_VALUES = {
-  [FILTER_NAME.SERVICE_NAME]: DEFAULT_VALUE.SERVICE_NAME,
-  [FILTER_NAME.EVENT_NAME]: DEFAULT_VALUE.EVENT_NAME,
+  [FILTER_NAME.SAILS]: DEFAULT_VALUE.SAILS,
 } as const;
 
 function useFilters(sails: Sails | undefined) {
   const serviceNames = Object.keys(sails?.services || {});
-  const serviceNameValues = [DEFAULT_VALUE.SERVICE_NAME, ...serviceNames];
+  const serviceNameValues = [DEFAULT_VALUE.SAILS, ...serviceNames];
 
-  const [serviceName, setServiceName] = useSearchParamsState(
-    FILTER_NAME.SERVICE_NAME,
-    parseAsString.withDefault(DEFAULT_VALUE.SERVICE_NAME),
-  );
+  const [filters, setFilters] = useSearchParamsStates({
+    [FILTER_NAME.SAILS]: parseAsString.withDefault(DEFAULT_VALUE.SAILS),
+  });
+
+  const [serviceName, functionName = ''] = filters[FILTER_NAME.SAILS].split('.');
 
   const eventNames = Object.keys(sails?.services?.[serviceName]?.events || {});
-  const eventNameValues = [DEFAULT_VALUE.EVENT_NAME, ...eventNames];
-
-  const [eventName, setEventName] = useSearchParamsState(
-    FILTER_NAME.EVENT_NAME,
-    parseAsString.withDefault(DEFAULT_VALUE.EVENT_NAME),
-  );
+  const eventNameValues = [DEFAULT_VALUE.SAILS, ...eventNames];
 
   // validating service and function names because nuqs parsers don't support dynamic values
-  const filters = {
-    [FILTER_NAME.SERVICE_NAME]: serviceNameValues.includes(serviceName) ? serviceName : DEFAULT_VALUE.SERVICE_NAME,
-    [FILTER_NAME.EVENT_NAME]: eventNameValues.includes(eventName) ? eventName : DEFAULT_VALUE.EVENT_NAME,
+  const validFilters = {
+    [FILTER_NAME.SAILS]:
+      serviceNameValues.includes(serviceName) && eventNameValues.includes(functionName)
+        ? filters[FILTER_NAME.SAILS]
+        : DEFAULT_VALUE.SAILS,
   };
 
-  const setFilters = (values: typeof filters) => {
-    void setServiceName(values.serviceName);
-    void setEventName(values.eventName);
-  };
-
-  return [filters, setFilters] as const;
+  return [validFilters, setFilters] as const;
 }
 
 function ProgramEvents({ programId, sails }: Props) {
   const [filterValues, setFilterValues] = useFilters(sails);
+  const [service, name] = filterValues[FILTER_NAME.SAILS].split('.');
 
-  const events = useEvents({
-    source: programId,
-    service: filterValues[FILTER_NAME.SERVICE_NAME],
-    name: filterValues[FILTER_NAME.EVENT_NAME],
-  });
+  const events = useEvents({ source: programId, service, name });
 
   const renderList = () => (
     <List
@@ -85,31 +72,17 @@ function ProgramEvents({ programId, sails }: Props) {
   );
 
   const renderFilters = () => {
-    if (!sails) return null;
-
-    const { services } = sails;
-    const serviceName = filterValues[FILTER_NAME.SERVICE_NAME];
-
-    const handleServiceNameChange = (values: typeof filterValues) =>
-      setFilterValues({ ...values, [FILTER_NAME.EVENT_NAME]: '' });
+    if (!sails) return;
 
     return (
       <Filters initialValues={DEFAULT_FILTER_VALUES} values={filterValues} onSubmit={setFilterValues}>
-        <SailsFilterGroup
-          heading="Service"
-          name={FILTER_NAME.SERVICE_NAME}
-          functions={services}
-          onSubmit={handleServiceNameChange}
+        <SailsFilter
+          label="Sails Events"
+          services={sails.services}
+          type="events"
+          name={FILTER_NAME.SAILS}
+          onSubmit={setFilterValues}
         />
-
-        {serviceName && (
-          <SailsFilterGroup
-            heading="Event"
-            name={FILTER_NAME.EVENT_NAME}
-            functions={serviceName ? services[serviceName].events : undefined}
-            onSubmit={setFilterValues}
-          />
-        )}
       </Filters>
     );
   };
