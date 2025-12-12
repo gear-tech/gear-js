@@ -4,7 +4,7 @@ import { parseAsString, parseAsStringEnum } from 'nuqs';
 import { Sails } from 'sails-js';
 
 import { FilterGroup, Filters, Radio } from '@/features/filters';
-import { SailsFilter } from '@/features/sails';
+import { SailsFilter, getValidSailsFilterValue } from '@/features/sails';
 import { useChangeEffect, useSearchParamsStates } from '@/hooks';
 import MessageCardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
 import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
@@ -20,7 +20,7 @@ type Props = {
 const FILTER_NAME = {
   OWNER: 'owner',
   DIRECTION: 'direction',
-  SAILS_FUNCTION: 'sailsFunction',
+  SAILS: 'sails',
 } as const;
 
 const FILTER_VALUE = {
@@ -46,13 +46,13 @@ const VALUES = {
 const DEFAULT_VALUE = {
   OWNER: FILTER_VALUE.OWNER.ALL as OwnerValue,
   DIRECTION: FILTER_VALUE.DIRECTION.TO as DirectionValue,
-  SAILS_FUNCTION: '' as string,
+  SAILS: '' as string,
 } as const;
 
 const DEFAULT_FILTER_VALUES = {
   [FILTER_NAME.OWNER]: DEFAULT_VALUE.OWNER,
   [FILTER_NAME.DIRECTION]: DEFAULT_VALUE.DIRECTION,
-  [FILTER_NAME.SAILS_FUNCTION]: DEFAULT_VALUE.SAILS_FUNCTION,
+  [FILTER_NAME.SAILS]: DEFAULT_VALUE.SAILS,
 } as const;
 
 function useFilters(sails: Sails | undefined) {
@@ -62,28 +62,16 @@ function useFilters(sails: Sails | undefined) {
   // nuqs parser doesn't support dynamic values - it works because there's app level loader for account
   const ownerValues = account ? VALUES.OWNER : [DEFAULT_VALUE.OWNER];
 
-  const serviceNames = Object.keys(sails?.services ?? {});
-  const serviceNameValues = [DEFAULT_VALUE.SAILS_FUNCTION, ...serviceNames];
-
   const [filters, setFilters] = useSearchParamsStates({
     [FILTER_NAME.OWNER]: parseAsStringEnum(ownerValues).withDefault(DEFAULT_VALUE.OWNER),
     [FILTER_NAME.DIRECTION]: parseAsStringEnum(VALUES.DIRECTION).withDefault(DEFAULT_VALUE.DIRECTION),
-    [FILTER_NAME.SAILS_FUNCTION]: parseAsString.withDefault(DEFAULT_VALUE.SAILS_FUNCTION),
+    [FILTER_NAME.SAILS]: parseAsString.withDefault(DEFAULT_VALUE.SAILS),
   });
 
-  const [serviceName, functionName = ''] = filters[FILTER_NAME.SAILS_FUNCTION].split('.');
-
-  const functionNames = Object.keys(sails?.services?.[serviceName]?.functions ?? {});
-  const functionNameValues = [DEFAULT_VALUE.SAILS_FUNCTION, ...functionNames];
-
-  // validating service and function names because nuqs parsers don't support dynamic values
   const validFilters = {
     ...filters,
 
-    [FILTER_NAME.SAILS_FUNCTION]:
-      serviceNameValues.includes(serviceName) && functionNameValues.includes(functionName)
-        ? filters[FILTER_NAME.SAILS_FUNCTION]
-        : DEFAULT_VALUE.SAILS_FUNCTION,
+    [FILTER_NAME.SAILS]: getValidSailsFilterValue(sails, 'functions', filters[FILTER_NAME.SAILS], DEFAULT_VALUE.SAILS),
   };
 
   useChangeEffect(() => {
@@ -99,7 +87,7 @@ const ProgramMessages = ({ programId, sails }: Props) => {
 
   const isToDirection = filters[FILTER_NAME.DIRECTION] === FILTER_VALUE.DIRECTION.TO;
   const addressParam = filters[FILTER_NAME.OWNER] === FILTER_VALUE.OWNER.OWNER ? account?.decodedAddress : undefined;
-  const [service, fn] = filters[FILTER_NAME.SAILS_FUNCTION].split('.');
+  const [service, fn] = filters[FILTER_NAME.SAILS].split('.');
 
   const toMessages = useMessagesToProgram({ destination: programId, source: addressParam, service, fn }, isToDirection);
   const fromMessages = useMessagesFromProgram(
@@ -130,8 +118,8 @@ const ProgramMessages = ({ programId, sails }: Props) => {
         label="Sails Functions"
         services={sails.services}
         type="functions"
-        name={FILTER_NAME.SAILS_FUNCTION}
-        onSubmit={(values: typeof filters) => setFilters(values)}
+        name={FILTER_NAME.SAILS}
+        onSubmit={setFilters}
       />
     );
   };

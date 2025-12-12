@@ -8,6 +8,7 @@ import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?rea
 import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
 
 import { useEvents, EventType } from '../../api';
+import { getValidSailsFilterValue } from '../../utils';
 import { EventCard } from '../event-card';
 import { SailsFilter } from '../sails-filter';
 
@@ -29,24 +30,12 @@ const DEFAULT_FILTER_VALUES = {
 } as const;
 
 function useFilters(sails: Sails | undefined) {
-  const serviceNames = Object.keys(sails?.services || {});
-  const serviceNameValues = [DEFAULT_VALUE.SAILS, ...serviceNames];
-
   const [filters, setFilters] = useSearchParamsStates({
     [FILTER_NAME.SAILS]: parseAsString.withDefault(DEFAULT_VALUE.SAILS),
   });
 
-  const [serviceName, functionName = ''] = filters[FILTER_NAME.SAILS].split('.');
-
-  const eventNames = Object.keys(sails?.services?.[serviceName]?.events || {});
-  const eventNameValues = [DEFAULT_VALUE.SAILS, ...eventNames];
-
-  // validating service and function names because nuqs parsers don't support dynamic values
   const validFilters = {
-    [FILTER_NAME.SAILS]:
-      serviceNameValues.includes(serviceName) && eventNameValues.includes(functionName)
-        ? filters[FILTER_NAME.SAILS]
-        : DEFAULT_VALUE.SAILS,
+    [FILTER_NAME.SAILS]: getValidSailsFilterValue(sails, 'events', filters[FILTER_NAME.SAILS], DEFAULT_VALUE.SAILS),
   };
 
   return [validFilters, setFilters] as const;
