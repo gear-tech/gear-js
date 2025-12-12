@@ -171,6 +171,11 @@ jobs:
         working-directory: apis/vara-eth
         run: cargo b -r
 
+      - name: 'Compile contracts'
+        if: steps.changed-vara-eth.outputs.any_changed == 'true'
+        working-directory: apis/vara-eth
+        run: forge compile
+
       - name: 'Test: run'
         if: steps.changed-vara-eth.outputs.any_changed == 'true'
         working-directory: apis/vara-eth
