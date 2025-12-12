@@ -42,7 +42,7 @@ function Dropdown({ label, groups, value, inputProps, onChange }: Props) {
     if (!item) return;
 
     return (
-      <Combobox.Item key={_item} value={_item} className={styles.item}>
+      <Combobox.Item key={_item} value={_item} title={item} className={styles.item}>
         {item}
       </Combobox.Item>
     );

@@ -200,6 +200,9 @@
   transition: background-color 0.25s;
   cursor: pointer;
 
+  overflow: hidden;
+  text-overflow: ellipsis;
+
   &:hover {
     background-color: $gray005;
   }
