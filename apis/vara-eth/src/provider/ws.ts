@@ -457,7 +457,7 @@ export class WsVaraEthProvider implements IVaraEthProvider {
       return;
     }
 
-    const request = this._createRequest(unsubscribeMethod, [{ id: subscriptionId }]);
+    const request = this._createRequest(unsubscribeMethod, [subscriptionId]);
 
     this._conn!.send(JSON.stringify(request));
 

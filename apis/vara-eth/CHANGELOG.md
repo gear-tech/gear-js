@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Changed
+
+- Fix unsubscribe method on Websocket provider in https://github.com/gear-tech/gear-js/pull/2242
+
 ## [0.0.4]
 
 ### Changed

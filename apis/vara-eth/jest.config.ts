@@ -1,7 +1,8 @@
 import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
-  globalSetup: './test/setup.ts',
+  globalSetup: './test/setup/setup.ts',
+  globalTeardown: './test/setup/teardown.ts',
   clearMocks: true,
   coverageProvider: 'v8',
   coveragePathIgnorePatterns: ['<rootDir>/test'],

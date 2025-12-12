@@ -242,6 +242,7 @@ export class RouterClient<
    *          the code ID and a function to wait for the code to be validated
    */
   async requestCodeValidation(code: Uint8Array): Promise<TxManagerWithHelpers<CodeValidationHelpers>> {
+    throw new Error('Not implemented');
     const codeId = generateCodeHash(code);
 
     const data = encodeFunctionData({

@@ -12,7 +12,7 @@ export const assertEnv = (name: string, _default?: string) => {
   return env;
 };
 
-const blockTime = parseInt(process.env.BLOCK_TIME || '12');
+const blockTime = parseInt(process.env.BLOCK_TIME || '1');
 
 export const config = {
   codeId: assertEnv('CODE_ID').toLowerCase() as `0x${string}`,
@@ -21,7 +21,9 @@ export const config = {
   blockTime,
   targetDir: path.resolve('target/wasm32-gear/release'),
   solOut: path.resolve('out'),
-  wsRpc: assertEnv('ETHEREUM_WS_RPC'),
+  wsRpc: process.env.WS_RPC || 'ws://127.0.0.1:8545',
   longRunningTestTimeout: blockTime * 20_000,
-  privateKey: '0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d' as const,
+  // Anvil default account #1 address, derived from the default mnemonic:
+  // "test test test test test test test test test test test junk"
+  privateKey: '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80' as const,
 };
