@@ -291,7 +291,7 @@ jobs:
 
   create-github-release-gear-api:
     needs: [publish-gear-api, check-changes]
-    if: ${{ needs.check-changes.outputs.gear-api == 'true' || needs.check-changes.outputs.gear-api-code-modified == 'true' }}
+    if: ${{ !cancelled() && (needs.check-changes.outputs.gear-api == 'true' || needs.check-changes.outputs.gear-api-code-modified == 'true') }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -350,7 +350,7 @@ jobs:
 
   create-github-release-vara-eth-api:
     needs: [publish-vara-eth-api, check-changes]
-    if: ${{ needs.check-changes.outputs.vara-eth-api == 'true' || needs.check-changes.outputs.vara-eth-api-code-modified == 'true' }}
+    if: ${{ !cancelled() && (needs.check-changes.outputs.vara-eth-api == 'true' || needs.check-changes.outputs.vara-eth-api-code-modified == 'true') }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
