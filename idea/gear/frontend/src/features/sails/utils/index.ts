@@ -1,10 +1,12 @@
 import { getLabel, getNestedName } from './field';
-import { getValidSailsFilterValue } from './filter';
+import { getParsedFilterValue, getParsedSailsFilterValue, getValidSailsFilterValue } from './filter';
 import { getDefaultValue, getDefaultPayloadValue, getPayloadSchema, getResetPayloadValue } from './payload';
 
 export {
   getLabel,
   getNestedName,
+  getParsedFilterValue,
+  getParsedSailsFilterValue,
   getValidSailsFilterValue,
   getDefaultValue,
   getDefaultPayloadValue,

@@ -4,7 +4,7 @@ import { parseAsString, parseAsStringEnum } from 'nuqs';
 import { Sails } from 'sails-js';
 
 import { FilterGroup, Filters, Radio } from '@/features/filters';
-import { SailsFilter, getValidSailsFilterValue } from '@/features/sails';
+import { SailsFilter, getParsedSailsFilterValue, getValidSailsFilterValue } from '@/features/sails';
 import { useChangeEffect, useSearchParamsStates } from '@/hooks';
 import MessageCardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
 import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
@@ -87,11 +87,15 @@ const ProgramMessages = ({ programId, sails }: Props) => {
 
   const isToDirection = filters[FILTER_NAME.DIRECTION] === FILTER_VALUE.DIRECTION.TO;
   const addressParam = filters[FILTER_NAME.OWNER] === FILTER_VALUE.OWNER.OWNER ? account?.decodedAddress : undefined;
-  const [service, fn] = filters[FILTER_NAME.SAILS].split('.');
+  const { serviceName, functionName } = getParsedSailsFilterValue(filters[FILTER_NAME.SAILS]);
 
-  const toMessages = useMessagesToProgram({ destination: programId, source: addressParam, service, fn }, isToDirection);
+  const toMessages = useMessagesToProgram(
+    { destination: programId, source: addressParam, service: serviceName, fn: functionName },
+    isToDirection,
+  );
+
   const fromMessages = useMessagesFromProgram(
-    { source: programId, destination: addressParam, service, fn },
+    { source: programId, destination: addressParam, service: serviceName, fn: functionName },
     !isToDirection,
   );
 

@@ -6,6 +6,8 @@ import SimpleBar from 'simplebar-react';
 import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
 import { cx } from '@/shared/helpers';
 
+import { getParsedFilterValue } from '../../utils';
+
 import styles from './dropdown.module.scss';
 
 type Props = {
@@ -16,16 +18,10 @@ type Props = {
   onChange: (value: string) => void;
 };
 
-const getParsedValue = (value: string) => {
-  const [group, item = ''] = value.split('.');
-
-  return { group, item };
-};
-
 const getDisplayInputValue = (_value: string) => {
   if (!_value) return '';
 
-  const { group, item } = getParsedValue(_value);
+  const { group, item } = getParsedFilterValue(_value);
 
   return item ? `${item} (${group})` : `${group} (all)`;
 };
@@ -33,7 +29,7 @@ const getDisplayInputValue = (_value: string) => {
 const getShortestItems = (groups: { value: string; items: string[] }[]) =>
   groups
     .flatMap((group) => group.items)
-    .map((item) => getParsedValue(item).item)
+    .map((item) => getParsedFilterValue(item).item)
     .filter((item) => Boolean(item))
     .sort((a, b) => a.length - b.length)
     .slice(0, 3)
@@ -43,10 +39,10 @@ function Dropdown({ label, groups, value, inputProps, onChange }: Props) {
   const id = useId();
   const [isOpen, setIsOpen] = useState(false);
 
-  const current = getParsedValue(value);
+  const current = getParsedFilterValue(value);
 
   const renderItem = (_item: string) => {
-    const { item } = getParsedValue(_item);
+    const { item } = getParsedFilterValue(_item);
 
     if (!item) return;
 

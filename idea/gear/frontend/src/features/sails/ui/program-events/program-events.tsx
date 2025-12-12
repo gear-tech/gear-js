@@ -8,7 +8,7 @@ import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?rea
 import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
 
 import { useEvents, EventType } from '../../api';
-import { getValidSailsFilterValue } from '../../utils';
+import { getParsedSailsFilterValue, getValidSailsFilterValue } from '../../utils';
 import { EventCard } from '../event-card';
 import { SailsFilter } from '../sails-filter';
 
@@ -43,9 +43,9 @@ function useFilters(sails: Sails | undefined) {
 
 function ProgramEvents({ programId, sails }: Props) {
   const [filterValues, setFilterValues] = useFilters(sails);
-  const [service, name] = filterValues[FILTER_NAME.SAILS].split('.');
+  const { serviceName, functionName } = getParsedSailsFilterValue(filterValues[FILTER_NAME.SAILS]);
 
-  const events = useEvents({ source: programId, service, name });
+  const events = useEvents({ source: programId, service: serviceName, name: functionName });
 
   const renderList = () => (
     <List
