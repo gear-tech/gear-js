@@ -30,6 +30,15 @@ const getDisplayInputValue = (_value: string) => {
   return item ? `${item} (${group})` : `${group} (all)`;
 };
 
+const getShortestItems = (groups: { value: string; items: string[] }[]) =>
+  groups
+    .flatMap((group) => group.items)
+    .map((item) => getParsedValue(item).item)
+    .filter((item) => Boolean(item))
+    .sort((a, b) => a.length - b.length)
+    .slice(0, 3)
+    .join(', ');
+
 function Dropdown({ label, groups, value, inputProps, onChange }: Props) {
   const id = useId();
   const [isOpen, setIsOpen] = useState(false);
@@ -91,7 +100,11 @@ function Dropdown({ label, groups, value, inputProps, onChange }: Props) {
 
         <Combobox.Trigger id={id} className={cx(styles.trigger, styles.normal, styles.dark)}>
           <Combobox.Value>
-            {value ? getDisplayInputValue(value) : <span className={styles.placeholder}>Select</span>}
+            {value ? (
+              getDisplayInputValue(value)
+            ) : (
+              <span className={styles.placeholder}>{getShortestItems(groups)}...</span>
+            )}
           </Combobox.Value>
 
           <Combobox.Icon render={<ArrowSVG />} className={styles.icon} />
