@@ -64,6 +64,8 @@ describe('setup', () => {
         const ids = await api.query.program.getIds();
         if (ids.includes(programId)) {
           id = programId;
+        } else {
+          await waitNBlocks(1);
         }
       }
 
@@ -138,6 +140,8 @@ describe('setup', () => {
         const ids = await api.query.program.getIds();
         if (ids.includes(programWithAbiInterfaceId)) {
           id = programWithAbiInterfaceId;
+        } else {
+          await waitNBlocks(1);
         }
       }
 

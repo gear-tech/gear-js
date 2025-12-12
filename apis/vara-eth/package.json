@@ -11,7 +11,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node scripts/run-tests.mjs",
+    "test": "npx jest",
     "test:only": "yarn node --no-warnings --experimental-vm-modules $(../../node_modules/.bin/jest) --runInBand",
     "test:no-setup": "npx jest",
     "build": "npx rollup -c",

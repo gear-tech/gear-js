@@ -159,12 +159,19 @@ jobs:
         if: steps.changed-vara-eth.outputs.any_changed == 'true'
         run: yarn workspaces focus gear-js @vara-eth/api
 
+      - name: 'Download ethexe bin from gear releases'
+        if: steps.changed-vara-eth.outputs.any_changed == 'true'
+        working-directory: apis/vara-eth
+        run: |
+          wget -O ./ethexe https://github.com/gear-tech/gear/releases/download/build/ethexe
+          chmod +x ethexe
+
       - name: 'Test: run'
         if: steps.changed-vara-eth.outputs.any_changed == 'true'
-        run: yarn test:vara-eth-api
+        working-directory: apis/vara-eth
+        run: yarn test
         env:
-          GEAR_BRANCH: ${{ vars.GEAR_BRANCH }}
-          TAKE_CLI_FROM_BUILD_RELEASE: true
+          PATH_TO_ETHEXE: ./ethexe
 
   check-gear-idea-version:
     runs-on: ubuntu-latest
