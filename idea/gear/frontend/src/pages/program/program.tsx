@@ -7,6 +7,7 @@ import { ProgramBalance } from '@/features/balance';
 import { useMetadata, isState } from '@/features/metadata';
 import { ProgramStatus, ProgramTable, ProgramTabs, useProgram } from '@/features/program';
 import { useSails } from '@/features/sails';
+import { useIsVftProgram, VftTag } from '@/features/vft-whitelist';
 import { useModal } from '@/hooks';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
@@ -31,6 +32,7 @@ function Program() {
   const { sails, isLoading: isSailsLoading, refetch: refetchSails } = useSails(program?.codeId);
   // commented out till code verified is fixed
   // const { data: isCodeVerified } = useIsCodeVerified(program?.codeId);
+  const { data: isVft } = useIsVftProgram(programId);
 
   const isLoading = !isMetadataReady || isSailsLoading;
   const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => isAnyKey(queries)) : false;
@@ -71,6 +73,7 @@ function Program() {
       <header className={styles.header}>
         <div className={styles.headingContainer}>
           {program && <h2 className={styles.name}>{getShortName(program.name || 'Program Name')}</h2>}
+          {isVft && <VftTag size="medium" />}
 
           {/* commented out till code verified is fixed */}
           {/* {isCodeVerified && <VerificationStatus value="verified" />} */}
