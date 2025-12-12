@@ -166,6 +166,11 @@ jobs:
           wget -O ./ethexe https://github.com/gear-tech/gear/releases/download/build/ethexe
           chmod +x ethexe
 
+      - name: 'Build programs'
+        if: steps.changed-vara-eth.outputs.any_changed == 'true'
+        working-directory: apis/vara-eth
+        run: cargo b -r
+
       - name: 'Test: run'
         if: steps.changed-vara-eth.outputs.any_changed == 'true'
         working-directory: apis/vara-eth

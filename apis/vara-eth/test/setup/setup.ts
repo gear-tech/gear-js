@@ -15,6 +15,8 @@ const BLOCK_TIME = 1;
 const COUNTER_CODE = 'target/wasm32-gear/release/counter.opt.wasm';
 const ANVIL_RPC = 'ws://127.0.0.1:8545';
 let routerAddress: string;
+// Anvil default account #2 address, derived from the default mnemonic:
+// "test test test test test test test test test test test junk"
 const SENDER_ADDRESS = '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc';
 let keyStore: string;
 
@@ -81,11 +83,24 @@ async function setupVaraEth() {
     varaEth.stderr.on('data', (data) => {
       logFile.write(data.toString());
     });
+
+    varaEth.on('error', (err) => {
+      reject(new Error(`Failed to start vara-eth process: ${err.message}`));
+    });
+
+    varaEth.on('exit', (code, signal) => {
+      if (code !== null && code !== 0) {
+        reject(new Error(`vara-eth process exited with code ${code}`));
+      } else if (signal !== null) {
+        reject(new Error(`vara-eth process was killed with signal ${signal}`));
+      }
+    });
   });
 
   process.env.ROUTER_ADDRESS = routerAddress;
 }
-async function uploadCode() {
+
+function uploadCode() {
   execSync(
     `${pathToEthexeBin} tx --ethereum-rpc ${ANVIL_RPC} --ethereum-router ${routerAddress} --sender ${SENDER_ADDRESS} --key-store "${keyStore}" upload ${COUNTER_CODE} -w`,
     { stdio: 'inherit' },
