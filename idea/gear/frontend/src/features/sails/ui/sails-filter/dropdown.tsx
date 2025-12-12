@@ -104,7 +104,6 @@ function Dropdown({ label, groups, value, inputProps, onChange }: Props) {
             <Combobox.Empty className={styles.empty}>No {label.toLowerCase()} found.</Combobox.Empty>
 
             <Combobox.List
-              className={styles.list}
               render={({ children, ...props }) => (
                 // without div wrapper simplebar errors
                 <div {...props}>
