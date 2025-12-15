@@ -27,12 +27,12 @@ type InjectedTransactionPromiseRaw = {
 };
 
 export class Injected {
-  private _destination: Hex;
+  private _destination: Address;
   private _payload: Hex;
   private _value: bigint;
   private _referenceBlock: Hex;
   private _salt: Hex;
-  private _recipient: Hex;
+  private _recipient: Address;
   private _signature: Hex;
 
   constructor(
@@ -48,7 +48,7 @@ export class Injected {
     }
     this._salt = tx.salt ? tx.salt : bytesToHex(randomBytes(32));
     if (tx.recipient) {
-      this._recipient = tx.recipient;
+      this._recipient = tx.recipient.toLowerCase() as Address;
     } else {
       this._recipient = zeroAddress;
     }
@@ -156,10 +156,11 @@ export class Injected {
     const validators = await this._ethClient.router.validators();
 
     if (address) {
-      if (!validators.includes(address)) {
+      const lcAddr = address.toLowerCase() as Address;
+      if (!validators.includes(lcAddr)) {
         throw new Error('Address is not a validator');
       }
-      this._recipient = address;
+      this._recipient = lcAddr;
     } else {
       this._recipient = zeroAddress;
     }
