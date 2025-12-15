@@ -8,7 +8,8 @@
     "start": "node dist/main.js",
     "dev": "npx ts-node-dev src/main.ts",
     "clean": "echo \"clean gear-idea-faucet\" && rm -rf dist",
-    "migration:generate": "npx typeorm-ts-node-commonjs migration:generate -d src/database/app-data-source.ts"
+    "migration:generate": "npx typeorm-ts-node-commonjs migration:generate -d src/database/app-data-source.ts",
+    "migration:run": "npx typeorm migration:run -d dist/database/app-data-source.js"
   },
   "author": "",
   "license": "ISC",
