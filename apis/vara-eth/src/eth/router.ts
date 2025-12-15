@@ -6,9 +6,8 @@ import { loadKZG } from 'kzg-wasm';
 import { CodeValidationHelpers, CreateProgramHelpers, CodeState } from './interfaces/router.js';
 import { ITxManager, type TxManagerWithHelpers } from './interfaces/tx-manager.js';
 import { IROUTER_ABI, IRouterContract } from './abi/index.js';
-import { HexString } from '../types/index.js';
+import { generateCodeHash } from '../util/index.js';
 import { TxManager } from './tx-manager.js';
-import { generateCodeHash } from '../util';
 
 const getCodeState = (value: number): CodeState => {
   switch (value) {
@@ -59,7 +58,7 @@ export class RouterClient<
     });
   }
 
-  async codesStates(codeIds: HexString[]): Promise<CodeState[]> {
+  async codesStates(codeIds: Hex[]): Promise<CodeState[]> {
     const states = await this._pc.readContract({
       address: this.address,
       abi: IROUTER_ABI,
@@ -81,7 +80,7 @@ export class RouterClient<
     });
   }
 
-  genesisBlockHash(): Promise<HexString> {
+  genesisBlockHash(): Promise<Hex> {
     return this._pc.readContract({
       address: this.address,
       abi: IROUTER_ABI,
@@ -122,7 +121,7 @@ export class RouterClient<
     });
   }
 
-  programCodeId(programId: HexString): Promise<string> {
+  programCodeId(programId: Address): Promise<string> {
     return this._pc.readContract({
       address: this.address,
       abi: IROUTER_ABI,
@@ -131,7 +130,7 @@ export class RouterClient<
     });
   }
 
-  programsCodeIds(programsIds: HexString[]): Promise<readonly HexString[]> {
+  programsCodeIds(programsIds: Address[]): Promise<readonly Hex[]> {
     return this._pc.readContract({
       address: this.address,
       abi: IROUTER_ABI,
@@ -164,12 +163,14 @@ export class RouterClient<
     });
   }
 
-  validators(): Promise<readonly HexString[]> {
-    return this._pc.readContract({
+  async validators(): Promise<readonly Hex[]> {
+    const validators = await this._pc.readContract({
       address: this.address,
       abi: IROUTER_ABI,
       functionName: 'validators',
     });
+
+    return validators.map((addr) => addr.toLowerCase() as Hex);
   }
 
   async validatorsAggregatedPublicKey(): Promise<any> {
@@ -223,7 +224,7 @@ export class RouterClient<
    * @returns Promise resolving to the code state
    * @throws Error if the code state is invalid
    */
-  async codeState(codeId: HexString): Promise<CodeState> {
+  async codeState(codeId: Hex): Promise<CodeState> {
     const _state = await this._pc.readContract({
       address: this.address,
       abi: IROUTER_ABI,
@@ -319,9 +320,9 @@ export class RouterClient<
    * @returns A transaction manager with program creation helper functions
    */
   async createProgram(
-    codeId: HexString,
-    overrideInitializer?: HexString,
-    salt?: HexString,
+    codeId: Hex,
+    overrideInitializer?: Address,
+    salt?: Hex,
   ): Promise<TxManagerWithHelpers<CreateProgramHelpers>> {
     const _salt = salt || toHex(randomBytes(32));
 
@@ -356,17 +357,17 @@ export class RouterClient<
    * @returns
    */
   async createProgramWithAbiInterface(
-    codeId: HexString,
-    abiInterfaceAddress: HexString,
-    overrideInitializer?: HexString,
-    salt?: HexString,
+    codeId: Hex,
+    abiInterfaceAddress: Address,
+    overrideInitializer?: Address,
+    salt?: Hex,
   ): Promise<TxManagerWithHelpers<CreateProgramHelpers>> {
     const _salt = salt || toHex(randomBytes(32));
 
     const encodedData = encodeFunctionData({
       abi: IROUTER_ABI,
       functionName: 'createProgramWithAbiInterface',
-      args: [codeId, _salt, overrideInitializer || zeroAddress, abiInterfaceAddress.toLowerCase() as HexString],
+      args: [codeId, _salt, overrideInitializer || zeroAddress, abiInterfaceAddress],
     });
 
     const tx: TransactionRequest = {

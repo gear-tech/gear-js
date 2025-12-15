@@ -1,7 +1,8 @@
 import { bytesToHex, concatBytes, randomBytes, hexToBytes } from '@ethereumjs/util';
 import { keccak_256 } from '@noble/hashes/sha3.js';
 import { blake2b } from '@noble/hashes/blake2';
-import { Address, Hex } from 'viem';
+import type { Address, Hex } from 'viem';
+import { zeroAddress } from 'viem';
 
 import { IInjectedTransaction, IInjectedTransactionPromise, IVaraEthProvider } from '../types/index.js';
 import { EthereumClient } from '../eth/index.js';
@@ -26,12 +27,12 @@ type InjectedTransactionPromiseRaw = {
 };
 
 export class Injected {
-  private _destination: Hex;
+  private _destination: Address;
   private _payload: Hex;
   private _value: bigint;
   private _referenceBlock: Hex;
   private _salt: Hex;
-  private _recipient: Hex;
+  private _recipient: Address;
   private _signature: Hex;
 
   constructor(
@@ -47,7 +48,9 @@ export class Injected {
     }
     this._salt = tx.salt ? tx.salt : bytesToHex(randomBytes(32));
     if (tx.recipient) {
-      this._recipient = tx.recipient;
+      this._recipient = tx.recipient.toLowerCase() as Address;
+    } else {
+      this._recipient = zeroAddress;
     }
   }
 
@@ -61,8 +64,8 @@ export class Injected {
     return bytes;
   }
 
-  public get recipient(): Hex | null {
-    return this._recipient || null;
+  public get recipient(): Hex {
+    return this._recipient;
   }
 
   public get payload(): Hex {
@@ -144,22 +147,25 @@ export class Injected {
     this._referenceBlock = block.hash;
   }
 
-  public async setRecipient(address?: Address) {
+  /**
+   * ## Specify validator address the transaction is intended for
+   * @param address - (optional) the validator address. Default: zero address
+   * @returns the validator address
+   */
+  public async setRecipient(address?: Address): Promise<Address> {
     const validators = await this._ethClient.router.validators();
 
     if (address) {
-      if (validators.includes(address)) {
-        this._recipient = address;
-        return;
+      const lcAddr = address.toLowerCase() as Address;
+      if (!validators.includes(lcAddr)) {
+        throw new Error('Address is not a validator');
       }
-      throw new Error('Address is not a validator');
+      this._recipient = lcAddr;
+    } else {
+      this._recipient = zeroAddress;
     }
 
-    const slot = Math.floor(Date.now() / this._ethClient.blockDuration);
-
-    const validatorIndex = slot % validators.length;
-
-    this._recipient = validators[validatorIndex];
+    return this._recipient;
   }
 
   private get _rpcData() {
@@ -169,7 +175,6 @@ export class Injected {
         tx: {
           data: this._data,
           signature: this._signature,
-          public_key: this._ethClient.accountAddress,
         },
       },
     ];
