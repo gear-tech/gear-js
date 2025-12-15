@@ -1,21 +1,20 @@
 import { useAccount } from '@gear-js/react-hooks';
 
 import { OwnerFilter } from '@/api/consts';
-import { Filters, FilterGroup, Radio, StatusCheckbox } from '@/features/filters';
+import { Filters, FilterGroup, Radio, StatusCheckbox, Checkbox } from '@/features/filters';
 import { BulbStatus } from '@/shared/ui';
 
 import { ProgramStatus, PROGRAM_STATUS_NAME, DEFAULT_FILTER_VALUES } from '../../consts';
 
 type Props = {
-  defaultValues: typeof DEFAULT_FILTER_VALUES;
   onSubmit: (values: typeof DEFAULT_FILTER_VALUES) => void;
 };
 
-const ProgramFilters = ({ defaultValues, onSubmit }: Props) => {
+const ProgramFilters = ({ onSubmit }: Props) => {
   const { account } = useAccount();
 
   return (
-    <Filters initialValues={defaultValues} onSubmit={onSubmit}>
+    <Filters initialValues={DEFAULT_FILTER_VALUES} onSubmit={onSubmit}>
       <FilterGroup name="owner" onSubmit={onSubmit}>
         <Radio name="owner" value={OwnerFilter.All} label="All programs" onSubmit={onSubmit} />
 
@@ -58,6 +57,10 @@ const ProgramFilters = ({ defaultValues, onSubmit }: Props) => {
           status={BulbStatus.Exited}
           onSubmit={onSubmit}
         />
+      </FilterGroup>
+
+      <FilterGroup title="Whitelist" name="whitelist" onSubmit={onSubmit} withReset>
+        <Checkbox label="VFT" name="whitelist" onSubmit={onSubmit} value="vft" />
       </FilterGroup>
     </Filters>
   );

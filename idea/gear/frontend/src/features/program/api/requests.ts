@@ -6,11 +6,17 @@ import { Program, ProgramsParameters, SetProgramMetaParameters } from './types';
 
 const getProgram = (id: string) => INDEXER_RPC_SERVICE.callRPC<Program>(METHOD.DATA, { id });
 
-const getPrograms = (parameters?: ProgramsParameters) =>
+const getPrograms = (parameters: ProgramsParameters) =>
   INDEXER_RPC_SERVICE.callRPC<PaginationResponse<Program>>(METHOD.ALL, parameters);
+
+const getProgramsBatch = (parameters: ProgramsParameters[]) =>
+  INDEXER_RPC_SERVICE.callRPCBatch<PaginationResponse<Program>>(
+    parameters.map(() => METHOD.ALL),
+    parameters,
+  );
 
 // figure out return type
 const setProgramMeta = (parameters: SetProgramMetaParameters) =>
   INDEXER_RPC_SERVICE.callRPC(METHOD.SET_META, parameters);
 
-export { getProgram, getPrograms, setProgramMeta };
+export { getProgram, getPrograms, getProgramsBatch, setProgramMeta };

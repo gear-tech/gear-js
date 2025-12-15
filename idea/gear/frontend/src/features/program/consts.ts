@@ -21,6 +21,7 @@ const PROGRAM_STATUS_NAME = {
 const DEFAULT_FILTER_VALUES = {
   owner: OwnerFilter.All,
   status: [] as ProgramStatus[],
+  whitelist: [] as string[],
 };
 
 // tabs
