@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### [0.0.5]
 
-- Use zero address as default recipient address in https://github.com/gear-tech/gear-js/pull/2250clear
+- Use zero address as default recipient address in https://github.com/gear-tech/gear-js/pull/2250
 - Remove `public_key` field from the injected tx body in https://github.com/gear-tech/gear-js/pull/2250
 - Fix unsubscribe method on Websocket provider in https://github.com/gear-tech/gear-js/pull/2242
 

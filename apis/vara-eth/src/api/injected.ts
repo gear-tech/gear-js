@@ -148,7 +148,7 @@ export class Injected {
   }
 
   /**
-   * ## Specify validator address the transaction is intendet for
+   * ## Specify validator address the transaction is intended for
    * @param address - (optional) the validator address. Default: zero address
    * @returns the validator address
    */

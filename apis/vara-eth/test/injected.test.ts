@@ -1,4 +1,4 @@
-import { createPublicClient, createWalletClient, webSocket } from 'viem';
+import { createPublicClient, createWalletClient, webSocket, zeroAddress } from 'viem';
 import type { Account, Chain, Hex, PublicClient, WalletClient, WebSocketTransport } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { execSync } from 'node:child_process';
@@ -194,6 +194,31 @@ describe('Injected Transactions', () => {
 
     let messageId: Hex;
 
+    let testTx: Injected;
+
+    test('should set zero address by default', async () => {
+      testTx = await api.createInjectedTransaction({
+        destination: programId,
+        payload: '0x',
+      });
+
+      expect(testTx.recipient).toBe(zeroAddress);
+    });
+
+    test('should set specific recipient address using setRecipient', async () => {
+      const recipient = await testTx.setRecipient('0x70997970c51812dc3a010c7d01b50e0d17dc79c8');
+
+      expect(recipient).toBe('0x70997970c51812dc3a010c7d01b50e0d17dc79c8');
+      expect(testTx.recipient).toBe('0x70997970c51812dc3a010c7d01b50e0d17dc79c8');
+    });
+
+    test('should set zero address as default in setRecipient', async () => {
+      const recipient = await testTx.setRecipient();
+
+      expect(recipient).toBe(zeroAddress);
+      expect(testTx.recipient).toBe(zeroAddress);
+    });
+
     test('should read current state hash', async () => {
       currentStateHash = await mirror.stateHash();
     });
@@ -212,6 +237,8 @@ describe('Injected Transactions', () => {
         payload,
       };
       const tx = await api.createInjectedTransaction(injected);
+
+      expect(tx.recipient).toBe(zeroAddress);
 
       const result = await tx.send();
 
@@ -254,6 +281,7 @@ describe('Injected Transactions', () => {
         destination: programId,
         payload,
       };
+
       const tx = await api.createInjectedTransaction(injected);
 
       const result = await tx.sendAndWaitForPromise();
