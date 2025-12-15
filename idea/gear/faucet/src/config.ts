@@ -5,7 +5,7 @@ config();
 
 const getEnv = (envName: string, defaultValue?: string): string => {
   const env = process.env[envName];
-  if (!env && defaultValue) {
+  if (!env && defaultValue !== undefined) {
     return defaultValue;
   }
 
@@ -40,13 +40,11 @@ export default {
     tvaraAmount: Number(getEnv('BRIDGE_TVARA_AMOUNT', '1000')),
     ethProvider: getEnv('ETH_PROVIDER', 'wss://<eth_provider>'),
     ethPrivateKey: getPrivateKey('ETH_PRIVATE_KEY'),
-    erc20Contracts: getEnv('ETH_ERC20_CONTRACTS')
-      .split(',')
-      .map((data) => {
-        const [addr, value] = data.split(':');
-        assert.ok(!isNaN(Number(value)), `Invalid value for ${addr}`);
-        return [addr.toLowerCase(), value] as [Hex, string];
-      }),
+    erc20Contracts: ((process.env.ETH_ERC20_CONTRACTS || undefined)?.split(',') || []).map((data) => {
+      const [addr, value] = data.split(':');
+      assert.ok(!isNaN(Number(value)), `Invalid value for ${addr}`);
+      return [addr.toLowerCase(), value] as [Hex, string];
+    }),
     cronTime: getEnv('ETH_PROCESSOR_CRON_TIME', '*/24 * * * * *'),
   },
   wvara: {
