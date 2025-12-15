@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { ProgramFilters, Programs, useProgramFilters, usePrograms, useProgramsBatch } from '@/features/program';
+import { noop } from '@/shared/helpers';
 import { SearchForm } from '@/shared/ui';
 
 import styles from './ProgramsPage.module.scss';
@@ -18,14 +19,15 @@ const ProgramsPage = () => {
     <div className={styles.container}>
       <h2 className={styles.heading}>Programs: {programs.data?.count}</h2>
 
-      {isBatch ? <span /> : <SearchForm placeholder="Search by name, code hash, id..." onSubmit={setSearchQuery} />}
+      {/* keep container to preserve grid layout */}
+      <div>{isBatch && <SearchForm placeholder="Search by name, code hash, id..." onSubmit={setSearchQuery} />}</div>
 
       <Programs
         items={programs.data?.result}
         isLoading={programs.isLoading}
         hasMore={'hasNextPage' in programs ? programs.hasNextPage : false}
         noItemsSubheading="You can start experimenting right now or try to build from examples. Let's Rock!"
-        fetchMore={'fetchNextPage' in programs ? programs.fetchNextPage : () => {}}
+        fetchMore={'fetchNextPage' in programs ? programs.fetchNextPage : noop}
       />
 
       <ProgramFilters onSubmit={handleFiltersSubmit} />

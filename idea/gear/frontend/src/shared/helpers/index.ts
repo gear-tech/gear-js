@@ -11,6 +11,7 @@ import { fetchWithGuard } from './fetch-with-guard';
 import { isHexValid, isExists, isAccountAddressValid, isNumeric, asOptionalField } from './form';
 
 const cx = clsx;
+const noop = () => {};
 
 const checkWallet = (account?: Account) => {
   if (!account) {
@@ -137,6 +138,7 @@ const isAnyKey = (value: Record<string, unknown>) => Object.keys(value).length >
 
 export {
   cx,
+  noop,
   checkWallet,
   formatDate,
   readFileAsync,

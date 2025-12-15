@@ -32,10 +32,12 @@ function useProgramsBatch(parameters: ProgramsParameters[], enabled: boolean) {
   const selectBatch = useCallback(
     (data: Awaited<ReturnType<typeof getProgramsBatch>>) =>
       data.reduce(
-        (acc, { result }) => ({
-          result: [...acc.result, ...result.result],
-          count: acc.count + result.count,
-        }),
+        (acc, { result }) => {
+          acc.result.push(...result.result);
+          acc.count += result.count;
+
+          return acc;
+        },
         { result: [] as Program[], count: 0 },
       ),
     [],
