@@ -20,7 +20,7 @@ const ProgramsPage = () => {
       <h2 className={styles.heading}>Programs: {programs.data?.count}</h2>
 
       {/* keep container to preserve grid layout */}
-      <div>{isBatch && <SearchForm placeholder="Search by name, code hash, id..." onSubmit={setSearchQuery} />}</div>
+      <div>{!isBatch && <SearchForm placeholder="Search by name, code hash, id..." onSubmit={setSearchQuery} />}</div>
 
       <Programs
         items={programs.data?.result}
