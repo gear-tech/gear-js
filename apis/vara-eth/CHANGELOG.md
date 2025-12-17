@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Use raw data in `signMessage` method in https://github.com/gear-tech/gear-js/pull/2254
 - Use blake2 for both messageId and tx hash in https://github.com/gear-tech/gear-js/pull/2254
+- Update Router and Mirror abi in https://github.com/gear-tech/gear-js/pull/2254
 
 ### Added
 

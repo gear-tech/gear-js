@@ -1,4 +1,5 @@
 import { bytesToHex, concatBytes, randomBytes, hexToBytes } from '@ethereumjs/util';
+import { keccak_256 } from '@noble/hashes/sha3.js';
 import { blake2b } from '@noble/hashes/blake2';
 import type { Address, Hex } from 'viem';
 import { zeroAddress } from 'viem';
@@ -106,14 +107,20 @@ export class Injected {
     return concatBytes(this._destinationU8a, this._payloadU8a, this._valueU8a, this._referenceBlockU8a, this._saltU8a);
   }
 
-  public get hash(): Hex {
-    const hash = blake2b(this._bytes, { dkLen: 32 });
+  private get _hash(): Hex {
+    const hash = keccak_256(this._bytes);
 
     return bytesToHex(hash);
   }
 
   public get messageId(): Hex {
-    return this.hash;
+    const hash = blake2b(this._bytes, { dkLen: 32 });
+
+    return bytesToHex(hash);
+  }
+
+  public get txHash(): Hex {
+    return this.messageId;
   }
 
   private get _data() {
@@ -179,7 +186,7 @@ export class Injected {
   }
 
   public async sign() {
-    this._signature = await this._ethClient.signMessage(this.messageId);
+    this._signature = await this._ethClient.signMessage(this._hash);
 
     return this._signature;
   }
