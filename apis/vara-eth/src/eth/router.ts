@@ -147,11 +147,11 @@ export class RouterClient<
     });
   }
 
-  signingThresholdPercentage(): Promise<number> {
+  signingThresholdFraction(): Promise<readonly [bigint, bigint]> {
     return this._pc.readContract({
       address: this.address,
       abi: IROUTER_ABI,
-      functionName: 'signingThresholdPercentage',
+      functionName: 'signingThresholdFraction',
     });
   }
 

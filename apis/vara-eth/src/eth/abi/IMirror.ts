@@ -15,6 +15,13 @@ export const IMIRROR_ABI = [
   },
   {
     type: 'function',
+    name: 'exited',
+    inputs: [],
+    outputs: [{ name: '', type: 'bool', internalType: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'inheritor',
     inputs: [],
     outputs: [{ name: '', type: 'address', internalType: 'address' }],
@@ -59,6 +66,7 @@ export const IMIRROR_ABI = [
           { name: 'exited', type: 'bool', internalType: 'bool' },
           { name: 'inheritor', type: 'address', internalType: 'address' },
           { name: 'valueToReceive', type: 'uint128', internalType: 'uint128' },
+          { name: 'valueToReceiveNegativeSign', type: 'bool', internalType: 'bool' },
           {
             name: 'valueClaims',
             type: 'tuple[]',
@@ -94,7 +102,7 @@ export const IMIRROR_ABI = [
       },
     ],
     outputs: [{ name: '', type: 'bytes32', internalType: 'bytes32' }],
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
   },
   {
     type: 'function',
