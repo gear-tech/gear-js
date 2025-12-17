@@ -180,10 +180,12 @@ describe('router', () => {
     });
 
     test('should get signingThresholdPercentage', async () => {
-      const percentage = await ethereumClient.router.signingThresholdPercentage();
-      expect(percentage).toBeDefined();
-      expect(typeof percentage).toBe('number');
-      expect(percentage).toBeGreaterThan(0);
+      const fraction = await ethereumClient.router.signingThresholdFraction();
+      expect(fraction).toBeDefined();
+      expect(Array.isArray(fraction)).toBeTruthy();
+      expect(fraction.length).toBe(2);
+      expect(fraction[0]).toBeGreaterThan(0);
+      expect(fraction[1]).toBeGreaterThan(0);
     });
 
     test('should get validatorsAggregatedPublicKey', async () => {

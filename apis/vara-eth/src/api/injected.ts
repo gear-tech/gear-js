@@ -107,7 +107,7 @@ export class Injected {
     return concatBytes(this._destinationU8a, this._payloadU8a, this._valueU8a, this._referenceBlockU8a, this._saltU8a);
   }
 
-  private get _hash(): Hex {
+  public get hash(): Hex {
     const hash = keccak_256(this._bytes);
 
     return bytesToHex(hash);
@@ -186,7 +186,7 @@ export class Injected {
   }
 
   public async sign() {
-    this._signature = await this._ethClient.signMessage(this._hash);
+    this._signature = await this._ethClient.signMessage(this.hash);
 
     return this._signature;
   }
