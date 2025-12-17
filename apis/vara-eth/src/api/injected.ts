@@ -175,13 +175,16 @@ export class Injected {
         tx: {
           data: this._data,
           signature: this._signature,
+          address: this._ethClient.accountAddress,
         },
       },
     ];
   }
 
-  private async _sign() {
+  public async sign() {
     this._signature = await this._ethClient.signMessage(this.hash);
+
+    return this._signature;
   }
 
   public async send(): Promise<string> {
@@ -189,7 +192,7 @@ export class Injected {
       await this.setReferenceBlock();
     }
 
-    await this._sign();
+    await this.sign();
 
     if (!this._recipient) {
       await this.setRecipient();
@@ -205,7 +208,7 @@ export class Injected {
       await this.setReferenceBlock();
     }
 
-    await this._sign();
+    await this.sign();
 
     if (!this._recipient) {
       await this.setRecipient();
