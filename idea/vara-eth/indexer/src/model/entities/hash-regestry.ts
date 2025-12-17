@@ -1,8 +1,14 @@
 import { Entity, PrimaryColumn, Column } from 'typeorm';
 
 export enum EntityType {
-  Program = 'prog',
-  Code = 'code',
+  Announces,
+  Batch,
+  Code,
+  MessageRequest,
+  MessageSent,
+  Program,
+  StateTransition,
+  Tx,
 }
 
 @Entity('hash_registry')
@@ -11,10 +17,10 @@ export class HashRegistry {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'bytea' })
   id: string;
 
-  @Column('varchar')
+  @Column({ type: 'enum', enum: EntityType })
   type: EntityType;
 
   @Column('timestamp', { name: 'created_at' })
