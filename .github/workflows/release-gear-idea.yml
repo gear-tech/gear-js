@@ -151,6 +151,7 @@ jobs:
             VITE_TESTNET_DNS_API_URL=${{ secrets.VITE_TESTNET_DNS_API_URL }}
             VITE_MAINNET_DNS_API_URL=${{ secrets.VITE_MAINNET_DNS_API_URL }}
             VITE_CODE_VERIFIER_API_URL=${{ secrets.VITE_CODE_VERIFIER_API_URL }}
+            VITE_VFT_WHITELIST_API_URL=${{ secrets.VITE_VFT_WHITELIST_API_URL }}
 
   build-faucet-image:
     runs-on: ubuntu-latest
