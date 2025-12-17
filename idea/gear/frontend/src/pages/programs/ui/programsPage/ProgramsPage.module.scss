@@ -9,6 +9,6 @@
 }
 
 .heading {
-  @include heading(24px, 1.3, 500);
+  @include heading(24px, 40px, 500);
   color: $gray800;
 }

@@ -1,4 +1,4 @@
 import { useProgram } from './use-program';
-import { usePrograms } from './use-programs';
+import { usePrograms, useProgramsBatch } from './use-programs';
 
-export { useProgram, usePrograms };
+export { useProgram, usePrograms, useProgramsBatch };
