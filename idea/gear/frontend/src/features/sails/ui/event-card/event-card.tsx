@@ -64,8 +64,8 @@ function EventCard({ programId, event, sails }: Props) {
       </header>
 
       {isOpen &&
-        (isVft ? (
-          <VftEventPayload programId={programId} decodedPayload={getDecodedPayload()} />
+        (isVft && service?.toLowerCase() === 'vft' && name ? (
+          <VftEventPayload name={name.toLowerCase()} programId={programId} decoded={getDecodedPayload()} />
         ) : (
           <PreformattedBlock text={getDecodedPayload()} />
         ))}

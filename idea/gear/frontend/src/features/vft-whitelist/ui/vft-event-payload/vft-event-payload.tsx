@@ -1,8 +1,9 @@
 import { HexString } from '@gear-js/api';
 import { getVaraAddress, useProgram, useProgramQuery } from '@gear-js/react-hooks';
 import { Checkbox } from '@gear-js/ui';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
+import { useErrorAlert } from '@/hooks';
 import { isUndefined } from '@/shared/helpers';
 import { PreformattedBlock } from '@/shared/ui';
 
@@ -27,81 +28,66 @@ function formatUnits(value: bigint, decimals: number) {
   return `${negative ? '-' : ''}${integer || '0'}${fraction ? `.${fraction}` : ''}`;
 }
 
-const getVftEvent = (payload: unknown) => {
-  if (
-    typeof payload !== 'object' ||
-    payload === null ||
-    !('value' in payload) ||
-    (typeof payload.value !== 'string' && typeof payload.value !== 'bigint' && typeof payload.value !== 'number')
-  ) {
-    return { type: 'unknown' as const, payload };
-  }
-
-  if (
-    'owner' in payload &&
-    typeof payload.owner === 'string' &&
-    'spender' in payload &&
-    typeof payload.spender === 'string'
-  ) {
-    return { type: 'approve' as const, payload: payload as ApproveEvent };
-  }
-
-  if ('from' in payload && typeof payload.from === 'string' && 'to' in payload && typeof payload.to === 'string') {
-    return { type: 'transfer' as const, payload: payload as TransferEvent };
-  }
-
-  if ('from' in payload && typeof payload.from === 'string') {
-    return { type: 'burn' as const, payload: payload as BurnEvent };
-  }
-
-  if ('to' in payload && typeof payload.to === 'string') {
-    return { type: 'mint' as const, payload: payload as MintEvent };
-  }
-
-  return { type: 'unknown' as const, payload };
+type Props = {
+  name: string;
+  decoded: unknown;
+  programId: HexString;
 };
 
-function VftEventPayload({ decodedPayload, programId }: { decodedPayload: unknown; programId: HexString }) {
-  const [isRaw, setIsRaw] = useState(false);
-
+function VftEventPayload({ name, decoded, programId }: Props) {
   const { data: program } = useProgram({ library: SailsProgram, id: programId });
 
-  const { data: decimals } = useProgramQuery({
+  const { data: decimals, error } = useProgramQuery({
     program,
     serviceName: 'vft',
     functionName: 'decimals',
     args: [],
   });
 
-  const parsedPayload = useMemo(() => {
-    const { type, payload } = getVftEvent(decodedPayload);
+  useErrorAlert(error);
 
-    if (isUndefined(decimals) || type === 'unknown') return payload;
+  const [isRaw, setIsRaw] = useState(false);
 
-    const value = formatUnits(BigInt(payload.value), decimals);
+  const parse = useCallback(
+    (payload: { value: bigint | string | number }) => ({
+      ...payload, // destructure to preserve potential new fields
+      value: isUndefined(decimals) ? '...' : formatUnits(BigInt(payload.value), decimals),
+    }),
+    [decimals],
+  );
 
-    switch (type) {
-      case 'approve':
-        return { ...payload, owner: getVaraAddress(payload.owner), spender: getVaraAddress(payload.spender), value };
+  const parsed = useMemo(() => {
+    switch (name) {
+      case 'transfer': {
+        const payload = decoded as TransferEvent;
 
-      case 'transfer':
-        return { ...payload, from: getVaraAddress(payload.from), to: getVaraAddress(payload.to), value };
+        return { ...parse(payload), from: getVaraAddress(payload.from), to: getVaraAddress(payload.to) };
+      }
 
-      case 'burn':
-        return { ...payload, from: getVaraAddress(payload.from), value };
+      case 'approval': {
+        const payload = decoded as ApproveEvent;
 
-      case 'mint':
-        return { ...payload, to: getVaraAddress(payload.to), value };
+        return { ...parse(payload), owner: getVaraAddress(payload.owner), spender: getVaraAddress(payload.spender) };
+      }
 
-      default:
-        return payload;
+      case 'minted': {
+        const payload = decoded as MintEvent;
+
+        return { ...parse(payload), to: getVaraAddress(payload.to) };
+      }
+
+      case 'burned': {
+        const payload = decoded as BurnEvent;
+
+        return { ...parse(payload), from: getVaraAddress(payload.from) };
+      }
     }
-  }, [decimals, decodedPayload]);
+  }, [name, decoded, parse]);
 
   return (
     <>
-      <Checkbox label="Raw" checked={isRaw} onChange={() => setIsRaw((prevValue) => !prevValue)} />
-      <PreformattedBlock text={isRaw ? decodedPayload : parsedPayload} />
+      {parsed && <Checkbox label="Raw" checked={isRaw} onChange={() => setIsRaw((prevValue) => !prevValue)} />}
+      <PreformattedBlock text={isRaw ? decoded : (parsed ?? decoded)} />
     </>
   );
 }
