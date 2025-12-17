@@ -4,9 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [0.1.0]
 
-### [0.0.5]
+### Changed
+
+- Use raw data in `signMessage` method in https://github.com/gear-tech/gear-js/pull/2254
+
+### Added
+
+- `address` field to injected transaction in https://github.com/gear-tech/gear-js/pull/2254
+
+## [0.0.5]
 
 - Use zero address as default recipient address in https://github.com/gear-tech/gear-js/pull/2250
 - Remove `public_key` field from the injected tx body in https://github.com/gear-tech/gear-js/pull/2250
