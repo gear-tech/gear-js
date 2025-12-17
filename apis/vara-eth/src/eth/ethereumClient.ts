@@ -1,4 +1,4 @@
-import { Account, Address, Chain, PublicClient, Transport, WalletClient } from 'viem';
+import { Account, Address, Chain, Hex, PublicClient, Transport, WalletClient } from 'viem';
 
 import { getRouterClient, RouterClient } from './router';
 import { getWrappedVaraClient, WrappedVaraClient } from './wrappedVara';
@@ -93,9 +93,8 @@ export class EthereumClient<
     return this.publicClient.getBlock({ blockNumber: BigInt(blockNumber) });
   }
 
-  async signMessage(data: string) {
-    const sig = await this.walletClient.signMessage({ message: data, account: this.account });
-    return sig;
+  async signMessage(data: Hex) {
+    return this.walletClient.signMessage({ message: { raw: data }, account: this.account });
   }
 
   get blockDuration(): number {

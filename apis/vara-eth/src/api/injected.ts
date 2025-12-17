@@ -114,9 +114,13 @@ export class Injected {
   }
 
   public get messageId(): Hex {
-    const id = blake2b(this._bytes, { dkLen: 32 });
+    const hash = blake2b(this._bytes, { dkLen: 32 });
 
-    return bytesToHex(id);
+    return bytesToHex(hash);
+  }
+
+  public get txHash(): Hex {
+    return this.messageId;
   }
 
   private get _data() {
@@ -168,20 +172,23 @@ export class Injected {
     return this._recipient;
   }
 
-  private get _rpcData() {
+  public get _rpcData() {
     return [
       {
         recipient: this._recipient,
         tx: {
           data: this._data,
           signature: this._signature,
+          address: this._ethClient.accountAddress,
         },
       },
     ];
   }
 
-  private async _sign() {
+  public async sign() {
     this._signature = await this._ethClient.signMessage(this.hash);
+
+    return this._signature;
   }
 
   public async send(): Promise<string> {
@@ -189,7 +196,7 @@ export class Injected {
       await this.setReferenceBlock();
     }
 
-    await this._sign();
+    await this.sign();
 
     if (!this._recipient) {
       await this.setRecipient();
@@ -205,7 +212,7 @@ export class Injected {
       await this.setReferenceBlock();
     }
 
-    await this._sign();
+    await this.sign();
 
     if (!this._recipient) {
       await this.setRecipient();

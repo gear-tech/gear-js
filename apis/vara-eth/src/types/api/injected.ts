@@ -1,14 +1,14 @@
-import { HexString } from '../../types/index.js';
+import { Address, Hex } from 'viem';
 
 export interface IInjectedTransaction {
   /**
    * The address of the destination program
    */
-  readonly destination: HexString;
+  readonly destination: Address;
   /**
    * Payload of the message
    */
-  readonly payload: HexString;
+  readonly payload: Hex;
   /**
    * Value attached to the message
    * Default: 0n
@@ -17,27 +17,27 @@ export interface IInjectedTransaction {
   /**
    * Reference block hash
    */
-  referenceBlock?: HexString;
+  referenceBlock?: Hex;
   /**
    * Arbitrary bytes to allow multiple synonymous transactions
    * to be sent simultaneously.
    * Default value is randomly generated
    */
-  salt?: HexString;
+  salt?: Hex;
   /**
    * Address of validator the transaction is intended for
    */
-  recipient?: HexString;
+  recipient?: Address;
 }
 
 export interface IInjectedTransactionPromise {
-  readonly txHash: HexString;
+  readonly txHash: Hex;
   readonly reply: {
-    readonly payload: HexString;
+    readonly payload: Hex;
     readonly value: number;
     // TODO: define an interface for this field
     // TODO: consider moving it to a `common` package to reuse in both @gear-js/api and @vara-eth/api
     readonly code: { Success: string } | { Error: string };
   };
-  readonly signature: HexString;
+  readonly signature: Hex;
 }

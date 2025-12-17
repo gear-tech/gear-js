@@ -441,7 +441,6 @@ injected
   .setSalt('0x060708');               // Update salt
 
 // Access transaction properties
-const txHash = injected.hash;         // For signing
 const messageId = injected.messageId; // Vara.Eth message ID
 
 // Update transaction fields
