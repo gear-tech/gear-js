@@ -1,0 +1,17 @@
+@use '@gear-js/ui/variables' as *;
+
+.link {
+  display: block;
+  margin-top: 8px;
+
+  font-size: 12px;
+  color: rgba(#fff, 0.5);
+  text-decoration: underline;
+  text-align: center;
+
+  transition: opacity 0.25s;
+
+  &:hover {
+    opacity: 0.75;
+  }
+}
