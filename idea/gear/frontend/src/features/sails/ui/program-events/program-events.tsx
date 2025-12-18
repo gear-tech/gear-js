@@ -55,7 +55,7 @@ function ProgramEvents({ programId, sails }: Props) {
       noItems={{ heading: 'There are no events yet.' }}
       size="small"
       fetchMore={events.fetchNextPage}
-      renderItem={(event: EventType) => <EventCard event={event} sails={sails} />}
+      renderItem={(event: EventType) => <EventCard programId={programId} event={event} sails={sails} />}
       renderSkeleton={() => <Skeleton SVG={CardPlaceholderSVG} disabled />}
     />
   );
