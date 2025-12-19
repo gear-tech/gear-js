@@ -1,20 +1,27 @@
+import type {
+  IJsonRpcMessage,
+  IJsonRpcRequest,
+  ISubscriptionCallback,
+  IVaraEthProvider,
+  WsUrl,
+} from '../types/index.js';
 import { snakeToCamel } from '../util/index.js';
-import { IVaraEthProvider, IJsonRpcRequest, ISubscriptionCallback, IJsonRpcMessage } from '../types/index.js';
 import { createJsonRpcRequest, getErrorMessage, isErrorMessage, isSubscriptionMessage } from './jsonrpc.js';
+import { isWsUrl } from './util.js';
 
-type WsUrl = `ws://${string}` | `wss://${string}`;
 type ConnectionState = 'disconnected' | 'connecting' | 'connected' | 'failed';
 
-type ConnectionEventType = 'connecting' | 'connected' | 'disconnected' | 'error' | 'retry';
-type ConnectionEventListener = (event: {
+export type ConnectionEventType = 'connecting' | 'connected' | 'disconnected' | 'error' | 'retry';
+export type ConnectionEventListener = (event: {
   type: ConnectionEventType;
   error?: Error;
   attempt?: number;
   state?: ConnectionState;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 }) => void;
 
 const ERRORS = {
+  INVALID_URL: (url: string) => `Invalid URL: ${url}`,
   DISCONNECTED_SEND: 'Cannot send request: WebSocket is disconnected. Call connect() first.',
   DISCONNECTED_SUBSCRIBE: 'Cannot subscribe: WebSocket is disconnected. Call connect() first.',
   FAILED_SEND: 'Cannot send request: WebSocket connection failed. Call connect() to retry.',
@@ -34,7 +41,7 @@ interface QueuedRequest {
   request: () => void;
 }
 
-interface ConnectionOptions {
+export interface ConnectionOptions {
   autoConnect?: boolean;
   reconnectAttempts?: number;
   reconnectDelay?: number;
@@ -45,8 +52,6 @@ interface ISubscriptionParameters<Error = unknown, Result = unknown> {
   isInitialized: boolean;
   callback: ISubscriptionCallback<Error, Result>;
 }
-
-export { type ConnectionEventListener, type ConnectionEventType };
 
 export class WsVaraEthProvider implements IVaraEthProvider {
   private _conn?: WebSocket;
@@ -69,11 +74,15 @@ export class WsVaraEthProvider implements IVaraEthProvider {
   private _onError?: (event: Event) => void;
   private _eventListeners: Map<ConnectionEventType, ConnectionEventListener[]> = new Map();
   private _connectionStartTime?: number;
+  private _url: WsUrl;
 
-  constructor(
-    private _url: WsUrl = 'ws://127.0.0.1:9944',
-    options: ConnectionOptions = {},
-  ) {
+  constructor(url: string = 'ws://127.0.0.1:9944', options: ConnectionOptions = {}) {
+    if (!isWsUrl(url)) {
+      throw new Error(ERRORS.INVALID_URL(url));
+    }
+
+    this._url = url;
+
     this._options = {
       autoConnect: true,
       reconnectAttempts: 3,
@@ -105,7 +114,7 @@ export class WsVaraEthProvider implements IVaraEthProvider {
 
   private _emitEvent(
     type: ConnectionEventType,
-    data?: { error?: Error; attempt?: number; state?: ConnectionState; details?: Record<string, any> },
+    data?: { error?: Error; attempt?: number; state?: ConnectionState; details?: Record<string, unknown> },
   ): void {
     const listeners = this._eventListeners.get(type) || [];
     const event = { type, ...data };
@@ -141,7 +150,8 @@ export class WsVaraEthProvider implements IVaraEthProvider {
 
   private _processQueue(): void {
     while (this._requestQueue.length > 0 && this._state === 'connected') {
-      const queuedRequest = this._requestQueue.shift()!;
+      const queuedRequest = this._requestQueue.shift();
+      if (!queuedRequest) continue;
       queuedRequest.request();
     }
   }
@@ -230,6 +240,7 @@ export class WsVaraEthProvider implements IVaraEthProvider {
         const subscription = this._subscriptions.get(msg.id);
         if (subscription) {
           const id = msg.result as number;
+          console.log(`Subscription accepted. ${new Date().toISOString()}`);
           const callback = subscription.callback;
 
           this._subscriptions.set(id, {
@@ -270,7 +281,12 @@ export class WsVaraEthProvider implements IVaraEthProvider {
     if (!this._eventListeners.has(event)) {
       this._eventListeners.set(event, []);
     }
-    this._eventListeners.get(event)!.push(listener);
+    const listeners = this._eventListeners.get(event);
+    if (!listeners) {
+      console.error('Event listeners not found for event:', event);
+      return;
+    }
+    listeners.push(listener);
   }
 
   public off(event: ConnectionEventType, listener?: ConnectionEventListener): void {

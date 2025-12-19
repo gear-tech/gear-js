@@ -1,7 +1,7 @@
-import { Account, Address, Chain, Hex, PublicClient, Transport, WalletClient } from 'viem';
+import type { Account, Address, Chain, Hex, PublicClient, Transport, WalletClient } from 'viem';
 
-import { getRouterClient, RouterClient } from './router';
-import { getWrappedVaraClient, WrappedVaraClient } from './wrappedVara';
+import { getRouterClient, type RouterClient } from './router';
+import { getWrappedVaraClient, type WrappedVaraClient } from './wrappedVara';
 
 const TARGET_BLOCK_TIMES: Record<number, number> = {
   1: 12,
@@ -91,6 +91,11 @@ export class EthereumClient<
 
   getBlock(blockNumber: number) {
     return this.publicClient.getBlock({ blockNumber: BigInt(blockNumber) });
+  }
+
+  async getLatestBlockTimestamp() {
+    const block = await this.publicClient.getBlock({ blockTag: 'latest' });
+    return Number(block.timestamp);
   }
 
   async signMessage(data: Hex) {

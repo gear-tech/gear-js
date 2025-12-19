@@ -1,11 +1,17 @@
-import { bytesToHex, concatBytes, randomBytes, hexToBytes } from '@ethereumjs/util';
-import { keccak_256 } from '@noble/hashes/sha3.js';
+import { bytesToHex, concatBytes, hexToBytes, randomBytes } from '@ethereumjs/util';
 import { blake2b } from '@noble/hashes/blake2';
+import { keccak_256 } from '@noble/hashes/sha3.js';
 import type { Address, Hex } from 'viem';
 import { zeroAddress } from 'viem';
 
-import { IInjectedTransaction, IInjectedTransactionPromise, IVaraEthProvider } from '../types/index.js';
-import { EthereumClient } from '../eth/index.js';
+import type { EthereumClient } from '../eth/index.js';
+import { isPoolProvider } from '../provider/util.js';
+import type {
+  IInjectedTransaction,
+  IInjectedTransactionPromise,
+  IVaraEthProvider,
+  IVaraEthValidatorPoolProvider,
+} from '../types/index.js';
 import { bigint128ToBytes } from '../util/index.js';
 
 type InjectedTransactionPromiseRaw = {
@@ -36,7 +42,7 @@ export class Injected {
   private _signature: Hex;
 
   constructor(
-    private _varaethProvider: IVaraEthProvider,
+    private _varaethProvider: IVaraEthProvider | IVaraEthValidatorPoolProvider,
     private _ethClient: EthereumClient,
     tx: IInjectedTransaction,
   ) {
@@ -49,8 +55,9 @@ export class Injected {
     this._salt = tx.salt ? tx.salt : bytesToHex(randomBytes(32));
     if (tx.recipient) {
       this._recipient = tx.recipient.toLowerCase() as Address;
-    } else {
-      this._recipient = zeroAddress;
+      if (isPoolProvider(this._varaethProvider)) {
+        this._varaethProvider.setActiveValidator(this._recipient);
+      }
     }
   }
 
@@ -157,6 +164,13 @@ export class Injected {
    * @returns the validator address
    */
   public async setRecipient(address?: Address): Promise<Address> {
+    if (isPoolProvider(this._varaethProvider)) {
+      if (!address) {
+        return this.setNextValidator();
+      }
+      this._varaethProvider.setActiveValidator(address);
+    }
+
     const validators = await this._ethClient.router.validators();
 
     if (address) {
@@ -169,6 +183,24 @@ export class Injected {
       this._recipient = zeroAddress;
     }
 
+    return this._recipient;
+  }
+
+  public async setNextValidator() {
+    if (!isPoolProvider(this._varaethProvider)) {
+      throw new Error('Next validator can only be set for pool providers');
+    }
+
+    const validators = await this._ethClient.router.validators();
+
+    const latestBlockTimestamp = await this._ethClient.getLatestBlockTimestamp();
+    const timestamp = latestBlockTimestamp + this._ethClient.blockDuration * 2;
+    const slot = Math.ceil(timestamp / this._ethClient.blockDuration);
+
+    const validatorIndex = slot % validators.length;
+
+    this._varaethProvider.setActiveValidator(validators[validatorIndex]);
+    this._recipient = validators[validatorIndex].toLowerCase() as Address;
     return this._recipient;
   }
 
@@ -215,7 +247,9 @@ export class Injected {
     await this.sign();
 
     if (!this._recipient) {
-      await this.setRecipient();
+      const recipient = await this.setRecipient();
+
+      console.log(`Recipient set to \`${recipient}\``);
     }
 
     let unsub: (() => void) | undefined;
