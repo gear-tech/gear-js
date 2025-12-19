@@ -62,8 +62,8 @@ const ProgramFilters = ({ onSubmit }: Props) => {
       </FilterGroup>
 
       {isVftWhitelistAvailable && (
-        <FilterGroup title="Whitelist" name="whitelist" onSubmit={onSubmit} withReset>
-          <Checkbox label="VFT" name="whitelist" onSubmit={onSubmit} value="vft" />
+        <FilterGroup title="Program Type" name="whitelist" onSubmit={onSubmit} withReset>
+          <Checkbox label="Vara Fungible Token" name="whitelist" onSubmit={onSubmit} value="vft" />
         </FilterGroup>
       )}
     </Filters>
