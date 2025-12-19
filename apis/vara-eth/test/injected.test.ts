@@ -196,13 +196,13 @@ describe('Injected Transactions', () => {
 
     let testTx: Injected;
 
-    test('should set zero address by default', async () => {
+    test('should set recipient to null by default', async () => {
       testTx = await api.createInjectedTransaction({
         destination: programId,
         payload: '0x',
       });
 
-      expect(testTx.recipient).toBe(zeroAddress);
+      expect(testTx.recipient).toBeNull();
     });
 
     test('should set specific recipient address using setRecipient', async () => {
@@ -238,9 +238,11 @@ describe('Injected Transactions', () => {
       };
       const tx = await api.createInjectedTransaction(injected);
 
-      expect(tx.recipient).toBe(zeroAddress);
+      expect(tx.recipient).toBeNull();
 
       const result = await tx.send();
+
+      expect(tx.recipient).toBe(zeroAddress);
 
       messageId = tx.messageId;
 
