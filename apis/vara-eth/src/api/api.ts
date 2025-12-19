@@ -1,16 +1,16 @@
-import { IInjectedTransaction, IVaraEthProvider } from '../types/index.js';
-import { EthereumClient } from '../eth/index.js';
-import { query, Query } from './query/index.js';
-import { call, Call } from './call/index.js';
+import type { EthereumClient } from '../eth/index.js';
+import type { IInjectedTransaction, IVaraEthProvider, IVaraEthValidatorPoolProvider } from '../types/index.js';
+import { call, type Call } from './call/index.js';
 import { Injected } from './injected.js';
+import { query, type Query } from './query/index.js';
 
 export class VaraEthApi {
-  private _provider: IVaraEthProvider;
+  private _provider: IVaraEthProvider | IVaraEthValidatorPoolProvider;
   public readonly query!: Query;
   public readonly call!: Call;
 
   constructor(
-    provider: IVaraEthProvider,
+    provider: IVaraEthProvider | IVaraEthValidatorPoolProvider,
     private _ethClient?: EthereumClient,
   ) {
     this._provider = provider;

@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+
+- Validator pool provider (`VaraEthValidatorWsPool` class) in https://github.com/gear-tech/gear-js/pull/2262
+- Selection of the next validator in the pool in https://github.com/gear-tech/gear-js/pull/2262
+
+
 ## [0.1.0]
 
 ### Changed
