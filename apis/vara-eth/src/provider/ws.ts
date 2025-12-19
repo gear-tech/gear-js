@@ -280,11 +280,7 @@ export class WsVaraEthProvider implements IVaraEthProvider {
     if (!this._eventListeners.has(event)) {
       this._eventListeners.set(event, []);
     }
-    const listeners = this._eventListeners.get(event);
-    if (!listeners) {
-      console.error('Event listeners not found for event:', event);
-      return;
-    }
+    const listeners = this._eventListeners.get(event)!;
     listeners.push(listener);
   }
 

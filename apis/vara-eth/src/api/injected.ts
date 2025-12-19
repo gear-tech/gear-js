@@ -38,7 +38,7 @@ export class Injected {
   private _value: bigint;
   private _referenceBlock: Hex;
   private _salt: Hex;
-  private _recipient: Address;
+  private _recipient?: Address;
   private _signature: Hex;
 
   constructor(
@@ -71,8 +71,8 @@ export class Injected {
     return bytes;
   }
 
-  public get recipient(): Hex {
-    return this._recipient;
+  public get recipient(): Hex | null {
+    return this._recipient || null;
   }
 
   public get payload(): Hex {
@@ -195,7 +195,7 @@ export class Injected {
 
     const latestBlockTimestamp = await this._ethClient.getLatestBlockTimestamp();
     const timestamp = latestBlockTimestamp + this._ethClient.blockDuration * 2;
-    const slot = Math.ceil(timestamp / this._ethClient.blockDuration);
+    const slot = Math.floor(timestamp / this._ethClient.blockDuration);
 
     const validatorIndex = slot % validators.length;
 

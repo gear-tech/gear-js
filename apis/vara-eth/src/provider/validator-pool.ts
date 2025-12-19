@@ -34,11 +34,8 @@ export class VaraEthValidatorWsPool implements IVaraEthValidatorPoolProvider {
     }
 
     const validator = this._validators.keys().next();
-    if (!validator || !validator.value) {
-      throw new Error('Validator not found');
-    }
 
-    this._activeValidator = validator.value;
+    this._activeValidator = validator.value!;
   }
 
   get validatorAddresses(): Address[] {
@@ -55,10 +52,14 @@ export class VaraEthValidatorWsPool implements IVaraEthValidatorPoolProvider {
   }
 
   async removeValidator(address: Address): Promise<void> {
-    const validator = this._validators.get(address.toLowerCase());
+    const _address = address.toLowerCase();
+    if (_address === this._activeValidator) {
+      throw new Error('Cannot remove active validator');
+    }
+    const validator = this._validators.get(_address);
 
     if (validator) {
-      this._validators.delete(address);
+      this._validators.delete(_address);
       await validator.disconnect();
     }
   }
