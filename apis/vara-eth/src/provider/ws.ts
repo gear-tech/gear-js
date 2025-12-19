@@ -240,7 +240,6 @@ export class WsVaraEthProvider implements IVaraEthProvider {
         const subscription = this._subscriptions.get(msg.id);
         if (subscription) {
           const id = msg.result as number;
-          console.log(`Subscription accepted. ${new Date().toISOString()}`);
           const callback = subscription.callback;
 
           this._subscriptions.set(id, {

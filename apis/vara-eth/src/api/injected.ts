@@ -247,9 +247,7 @@ export class Injected {
     await this.sign();
 
     if (!this._recipient) {
-      const recipient = await this.setRecipient();
-
-      console.log(`Recipient set to \`${recipient}\``);
+      await this.setRecipient();
     }
 
     let unsub: (() => void) | undefined;

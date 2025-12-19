@@ -97,8 +97,6 @@ export class VaraEthValidatorWsPool implements IVaraEthValidatorPoolProvider {
       throw new Error('Active validator not found');
     }
 
-    console.log(`Sending tx to ${connection.url} (${this._activeValidator})`);
-
     return connection.subscribe<Error, Result>(method, unsubscribeMethod, parameters, callback);
   }
 }
