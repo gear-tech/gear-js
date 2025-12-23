@@ -102,9 +102,10 @@ export class RouterHandler extends BaseHandler {
     const codes = mapValues(this._codes);
 
     for (const code of codes) {
-      if (this._codeStatuses.has(code.id)) {
-        code.status = this._codeStatuses.get(code.id)!;
-        this._codeStatuses.delete(code.id);
+      const id = fromPgBytea(code.id);
+      if (this._codeStatuses.has(id)) {
+        code.status = this._codeStatuses.get(id)!;
+        this._codeStatuses.delete(id);
       }
     }
 
@@ -151,6 +152,8 @@ export class RouterHandler extends BaseHandler {
             createdAt: common.timestamp,
           }),
         );
+
+        this._logger.info({ txId: id, sender: tx.from, selector }, 'Transaction processed');
 
         this._addHashEntry(EntityType.Tx, id, common.timestamp);
       }
@@ -200,7 +203,7 @@ export class RouterHandler extends BaseHandler {
     const data = RouterAbi.events.CodeGotValidated.decode(log);
     const status = data.args.valid ? CodeStatus.Validated : CodeStatus.ValidationFailed;
 
-    this._codeStatuses.set(data.args.codeId, status);
+    this._codeStatuses.set(data.args.codeId.toLowerCase(), status);
     this._logger.info({ codeId: data.args.codeId, status }, `Code validation completed`);
   }
 
@@ -247,6 +250,7 @@ export class RouterHandler extends BaseHandler {
     });
 
     this._batches.set(batch.id, batch);
+    this._addHashEntry(EntityType.Batch, batch.id, batch.commitedAt);
 
     const { chainCommitment } = txData.args[0];
 
@@ -270,6 +274,7 @@ export class RouterHandler extends BaseHandler {
         { id: stateTransition.id, hash: trans.newStateHash, block: common.blockNumber },
         `State transition created`,
       );
+      this._addHashEntry(EntityType.StateTransition, stateTransition.id, stateTransition.timestamp);
 
       for (const message of trans.messages) {
         this._processMessageFromTransition(message, trans.actorId, common, toPgBytea(fromPgBytea(transitionId)));
@@ -306,6 +311,7 @@ export class RouterHandler extends BaseHandler {
         { replyId: message.id, repliedToId: message.replyDetails.to, sourceProgramId, transition: stateTransitionId },
         'Reply sent from program',
       );
+      this._addHashEntry(EntityType.MessageRequest, id, common.timestamp);
     } else {
       const messageSent = new MessageSent({
         id,
@@ -319,11 +325,11 @@ export class RouterHandler extends BaseHandler {
       });
 
       this._messagesSent.set(id, messageSent);
-      this._addHashEntry(EntityType.MessageSent, id, common.timestamp);
       this._logger.info(
         { messageId: message.id, sourceProgramId, transition: stateTransitionId },
         'Message sent from program',
       );
+      this._addHashEntry(EntityType.MessageSent, id, common.timestamp);
     }
   }
 }
