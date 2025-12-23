@@ -40,7 +40,7 @@ export const RouterAbi = {
       topic: getRouterEventTopic('AnnouncesCommitted'),
       decode: getEventDecoder('AnnouncesCommitted'),
     },
-    BatchCommited: {
+    BatchCommitted: {
       topic: getRouterEventTopic('BatchCommitted'),
       decode: getEventDecoder('BatchCommitted'),
     },

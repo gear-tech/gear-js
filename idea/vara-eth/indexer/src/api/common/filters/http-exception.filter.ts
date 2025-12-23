@@ -22,7 +22,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       message,
     };
 
-    // Log errors
     if (status >= 500) {
       logger.error(
         {

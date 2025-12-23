@@ -19,11 +19,11 @@ export class BatchesService {
     const where: FindOptionsWhere<Batch> = {};
 
     if (fromBlock !== undefined && toBlock !== undefined) {
-      where.commitedAtBlock = Between(BigInt(fromBlock), BigInt(toBlock));
+      where.committedAtBlock = Between(BigInt(fromBlock), BigInt(toBlock));
     } else if (fromBlock !== undefined) {
-      where.commitedAtBlock = Between(BigInt(fromBlock), BigInt(Number.MAX_SAFE_INTEGER));
+      where.committedAtBlock = Between(BigInt(fromBlock), BigInt(Number.MAX_SAFE_INTEGER));
     } else if (toBlock !== undefined) {
-      where.commitedAtBlock = Between(BigInt(0), BigInt(toBlock));
+      where.committedAtBlock = Between(BigInt(0), BigInt(toBlock));
     }
 
     const [data, total] = await this.batchRepository.findAndCount({

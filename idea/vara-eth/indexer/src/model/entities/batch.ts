@@ -21,9 +21,9 @@ export class Batch {
   @Column()
   expiry: number;
 
-  @Column({ type: 'bigint', name: 'commited_at_block' })
-  commitedAtBlock: bigint;
+  @Column({ type: 'bigint', name: 'committed_at_block' })
+  committedAtBlock: bigint;
 
-  @Column({ type: 'timestamp without time zone', name: 'commited_at' })
-  commitedAt: Date;
+  @Column({ type: 'timestamp without time zone', name: 'committed_at' })
+  committedAt: Date;
 }

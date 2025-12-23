@@ -17,7 +17,7 @@ export class TransactionsService {
   ) {}
 
   async findAll(query: QueryTransactionsDto): Promise<PaginatedResponse<TransactionListResponseDto>> {
-    const { limit, offset, sortBy, order, selector, sender, fromBlock, toBlock } = query;
+    const { limit, offset, selector, sender, fromBlock, toBlock } = query;
 
     const where: FindOptionsWhere<EthereumTx> = {};
 
@@ -37,12 +37,15 @@ export class TransactionsService {
       where.blockNumber = Between(BigInt(0), BigInt(toBlock));
     }
 
+    const sortby = query.sortBy || 'createdAt';
+    const order = query.order || 'desc';
+
     const [data, total] = await this.transactionRepository.findAndCount({
       where,
       take: limit,
       skip: offset,
       order: {
-        [sortBy!]: order,
+        [sortby!]: order,
       },
     });
 

@@ -1,4 +1,4 @@
-import { Address, zeroAddress } from 'viem';
+import { Address, zeroAddress, zeroHash } from 'viem';
 import { In } from 'typeorm';
 
 import {
@@ -39,7 +39,7 @@ export class RouterHandler extends BaseHandler {
         addr: config.routerAddr,
         topic0: [
           RouterAbi.events.AnnouncesCommitted.topic,
-          RouterAbi.events.BatchCommited.topic,
+          RouterAbi.events.BatchCommitted.topic,
           RouterAbi.events.CodeGotValidated.topic,
           RouterAbi.events.CodeValidationRequested.topic,
           RouterAbi.events.ProgramCreated.topic,
@@ -175,8 +175,8 @@ export class RouterHandler extends BaseHandler {
             this._handleProgramCreated(log, common);
             continue;
           }
-          case RouterAbi.events.BatchCommited.topic: {
-            this._handleBatchCommited(log, common);
+          case RouterAbi.events.BatchCommitted.topic: {
+            this._handleBatchCommitted(log, common);
             continue;
           }
         }
@@ -232,17 +232,17 @@ export class RouterHandler extends BaseHandler {
     this._logger.info(program, `Program created`);
   }
 
-  private _handleBatchCommited(log: Log, common: BlockDataCommon) {
+  private _handleBatchCommitted(log: Log, common: BlockDataCommon) {
     const {
       args: { hash },
-    } = RouterAbi.events.BatchCommited.decode(log);
+    } = RouterAbi.events.BatchCommitted.decode(log);
 
     const txData = RouterAbi.functions.commitBatch.decode(log.transaction);
 
     const batch = new Batch({
       id: toPgByteaString(hash),
-      commitedAt: common.timestamp,
-      commitedAtBlock: common.blockNumber,
+      committedAt: common.timestamp,
+      committedAtBlock: common.blockNumber,
       blockHash: toPgBytea(txData.args[0].blockHash),
       blockTimestamp: BigInt(txData.args[0].blockTimestamp),
       previousCommittedBatchHash: toPgBytea(txData.args[0].previousCommittedBatchHash),
@@ -250,7 +250,7 @@ export class RouterHandler extends BaseHandler {
     });
 
     this._batches.set(batch.id, batch);
-    this._addHashEntry(EntityType.Batch, batch.id, batch.commitedAt);
+    this._addHashEntry(EntityType.Batch, batch.id, batch.committedAt);
 
     const { chainCommitment } = txData.args[0];
 
@@ -290,7 +290,7 @@ export class RouterHandler extends BaseHandler {
   ): void {
     const id = toPgByteaString(message.id);
 
-    const isReply = message.replyDetails.to !== '0x0000000000000000000000000000000000000000000000000000000000000000';
+    const isReply = message.replyDetails.to !== zeroHash;
 
     if (isReply) {
       const replySent = new ReplySent({
@@ -311,7 +311,6 @@ export class RouterHandler extends BaseHandler {
         { replyId: message.id, repliedToId: message.replyDetails.to, sourceProgramId, transition: stateTransitionId },
         'Reply sent from program',
       );
-      this._addHashEntry(EntityType.MessageRequest, id, common.timestamp);
     } else {
       const messageSent = new MessageSent({
         id,

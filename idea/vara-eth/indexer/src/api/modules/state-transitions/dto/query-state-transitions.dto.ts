@@ -34,5 +34,5 @@ export class QueryStateTransitionsDto extends PaginationDto {
   })
   @IsOptional()
   @IsIn(['timestamp'])
-  sortBy?: 'timestamp' = 'timestamp';
+  sortBy?: 'timestamp' = 'timestamp' as const;
 }

@@ -5,12 +5,12 @@ import { PaginationDto } from '../../../common/dto/pagination.dto.js';
 export class QueryBatchesDto extends PaginationDto {
   @ApiPropertyOptional({
     description: 'Sort field',
-    enum: ['commitedAt', 'commitedAtBlock'],
-    default: 'commitedAt',
+    enum: ['committedAt', 'committedAtBlock'],
+    default: 'committedAt',
   })
   @IsOptional()
-  @IsIn(['commitedAt', 'commitedAtBlock'])
-  sortBy?: 'commitedAt' | 'commitedAtBlock' = 'commitedAt';
+  @IsIn(['committedAt', 'committedAtBlock'])
+  sortBy?: 'committedAt' | 'committedAtBlock' = 'committedAt';
 
   @ApiPropertyOptional({
     description: 'Start block number (inclusive)',
