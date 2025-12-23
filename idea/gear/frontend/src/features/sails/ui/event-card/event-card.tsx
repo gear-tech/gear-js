@@ -1,9 +1,11 @@
+import { HexString } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { clsx } from 'clsx';
 import { useState } from 'react';
 import { generatePath } from 'react-router-dom';
 import { Sails } from 'sails-js';
 
+import { useIsVftProgram, VftEventPayload } from '@/features/vft-whitelist';
 import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
 import CodeSVG from '@/shared/assets/images/actions/code.svg?react';
 import { absoluteRoutes } from '@/shared/config';
@@ -16,13 +18,15 @@ import LinkSVG from '../../assets/link.svg?react';
 import styles from './event-card.module.scss';
 
 type Props = {
+  programId: HexString;
   event: EventType;
   sails: Sails | undefined;
 };
 
-function EventCard({ event, sails }: Props) {
+function EventCard({ programId, event, sails }: Props) {
   const { service, name, blockNumber, blockHash, payload } = event;
 
+  const { data: isVft } = useIsVftProgram(programId);
   const [isOpen, setIsOpen] = useState(false);
 
   const getDecodedPayload = () => {
@@ -59,7 +63,12 @@ function EventCard({ event, sails }: Props) {
         </div>
       </header>
 
-      {isOpen && <PreformattedBlock text={getDecodedPayload()} />}
+      {isOpen &&
+        (isVft && service?.toLowerCase() === 'vft' && name ? (
+          <VftEventPayload name={name.toLowerCase()} programId={programId} decoded={getDecodedPayload()} />
+        ) : (
+          <PreformattedBlock text={getDecodedPayload()} />
+        ))}
     </div>
   );
 }

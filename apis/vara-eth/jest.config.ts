@@ -13,7 +13,6 @@ const config: Config.InitialOptions = {
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
-  bail: true,
   transform: {
     '^.+\\.ts?$': [
       'ts-jest',

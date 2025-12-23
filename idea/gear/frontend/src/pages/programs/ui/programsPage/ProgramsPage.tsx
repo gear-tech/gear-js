@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { ProgramFilters, Programs, useProgramFilters, usePrograms, useProgramsBatch } from '@/features/program';
+import { VftApplicationLink } from '@/features/vft-whitelist';
 import { noop } from '@/shared/helpers';
 import { SearchForm } from '@/shared/ui';
 
@@ -30,7 +31,10 @@ const ProgramsPage = () => {
         fetchMore={'fetchNextPage' in programs ? programs.fetchNextPage : noop}
       />
 
-      <ProgramFilters onSubmit={handleFiltersSubmit} />
+      <div>
+        <ProgramFilters onSubmit={handleFiltersSubmit} />
+        {isBatch && <VftApplicationLink />}
+      </div>
     </div>
   );
 };

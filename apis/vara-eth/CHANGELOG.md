@@ -6,7 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-### [0.0.5]
+### Added
+
+- Validator pool provider (`VaraEthValidatorWsPool` class) in https://github.com/gear-tech/gear-js/pull/2262
+- Selection of the next validator in the pool in https://github.com/gear-tech/gear-js/pull/2262
+
+
+## [0.1.0]
+
+### Changed
+
+- Use raw data in `signMessage` method in https://github.com/gear-tech/gear-js/pull/2254
+- Use blake2 for both messageId and tx hash in https://github.com/gear-tech/gear-js/pull/2254
+- Update Router and Mirror abi in https://github.com/gear-tech/gear-js/pull/2254
+
+### Added
+
+- `address` field to injected transaction in https://github.com/gear-tech/gear-js/pull/2254
+
+## [0.0.5]
 
 - Use zero address as default recipient address in https://github.com/gear-tech/gear-js/pull/2250
 - Remove `public_key` field from the injected tx body in https://github.com/gear-tech/gear-js/pull/2250

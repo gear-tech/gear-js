@@ -450,9 +450,12 @@ export const IROUTER_ABI = [
   },
   {
     type: 'function',
-    name: 'signingThresholdPercentage',
+    name: 'signingThresholdFraction',
     inputs: [],
-    outputs: [{ name: '', type: 'uint16', internalType: 'uint16' }],
+    outputs: [
+      { name: '', type: 'uint128', internalType: 'uint128' },
+      { name: '', type: 'uint128', internalType: 'uint128' },
+    ],
     stateMutability: 'view',
   },
   {
@@ -726,10 +729,10 @@ export interface IRouterContract {
    */
   programsCount(): Promise<bigint>;
   /**
-   * Gets the signing threshold percentage for validators
+   * Gets the signing threshold fraction
    * @returns Promise resolving to the threshold percentage
    */
-  signingThresholdPercentage(): Promise<number>;
+  signingThresholdFraction(): Promise<readonly [bigint, bigint]>;
   /**
    * Gets the count of validated codes
    * @returns Promise resolving to the number of validated codes
