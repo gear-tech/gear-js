@@ -289,7 +289,7 @@ describe('Injected Transactions', () => {
       const result = await tx.sendAndWaitForPromise();
 
       expect(result).toHaveProperty('txHash');
-      expect(result).toHaveProperty(['reply', 'code', 'Success'], 'Manual');
+      expect(result).toHaveProperty(['reply', 'code'], '0x00010000');
       expect(result).toHaveProperty(['reply', 'payload'], '0x1c436f756e74657224496e6372656d656e7402000000');
       expect(result).toHaveProperty(['reply', 'value'], 0);
       expect(result).toHaveProperty('signature');
