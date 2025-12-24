@@ -19,6 +19,8 @@ export class ParamGetMsgsToProgram extends ParamPagination {
   readonly service?: string;
   readonly fn?: string;
   readonly query?: string;
+  readonly from?: string;
+  readonly to?: string;
 }
 
 export class ParamGetMsgsFromProgram extends ParamPagination {
@@ -29,4 +31,6 @@ export class ParamGetMsgsFromProgram extends ParamPagination {
   readonly service?: string;
   readonly fn?: string;
   readonly query?: string;
+  readonly from?: string;
+  readonly to?: string;
 }
