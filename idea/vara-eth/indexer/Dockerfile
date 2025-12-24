@@ -2,6 +2,8 @@ FROM node:22-alpine AS builder
 
 WORKDIR /src
 
+RUN apk add --no-cache python3 make g++
+
 COPY . .
 
 RUN yarn workspaces focus @vara-eth/api varaeth-idea-indexer @gear-js/logger gear-js
@@ -10,6 +12,8 @@ RUN yarn build:varaeth-idea-indexer
 
 FROM node:22-alpine AS deps
 WORKDIR /src
+
+RUN apk add --no-cache python3 make g++
 
 COPY package.json .
 COPY yarn.lock .
