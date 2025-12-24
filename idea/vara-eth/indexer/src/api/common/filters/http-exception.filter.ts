@@ -31,7 +31,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         'Internal server error',
       );
     } else {
-      logger.warn(errorResponse, 'Client error');
+      logger.debug(errorResponse, 'Client error');
     }
 
     response.status(status).send(errorResponse);
