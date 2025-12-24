@@ -64,11 +64,11 @@ export class MirrorHandler extends BaseHandler {
         const topic = log.topics[0].toLowerCase();
         switch (topic) {
           case MirrorAbi.events.MessageQueueingRequested.topic: {
-            this._handleMessageQueueingRequested(log, common, toPgBytea(programId));
+            this._handleMessageQueueingRequested(log, common, programId);
             break;
           }
           case MirrorAbi.events.ReplyQueueingRequested.topic: {
-            this._handleReplyQueueingRequested(log, common, toPgBytea(programId));
+            this._handleReplyQueueingRequested(log, common, programId);
             break;
           }
         }
@@ -80,7 +80,7 @@ export class MirrorHandler extends BaseHandler {
     const programs = await this._ctx.store.find(Program);
 
     for (const program of programs) {
-      this._programAddresses.add(fromPgBytea(program.id));
+      this._programAddresses.add(program.id);
     }
 
     this._logger.info(`Loaded ${this._programAddresses.size} program addresses`);
@@ -108,10 +108,10 @@ export class MirrorHandler extends BaseHandler {
     }
   }
 
-  private _handleMessageQueueingRequested(log: Log, common: BlockDataCommon, programId: Buffer): void {
+  private _handleMessageQueueingRequested(log: Log, common: BlockDataCommon, programId: string): void {
     const data = MirrorAbi.events.MessageQueueingRequested.decode(log);
 
-    const id = toPgByteaString(data.args.id);
+    const id = data.args.id.toLowerCase();
 
     const messageRequest = new MessageRequest({
       id,
@@ -130,10 +130,10 @@ export class MirrorHandler extends BaseHandler {
     this._logger.info({ messageId: data.args.id, programId }, 'Message queuing requested');
   }
 
-  private _handleReplyQueueingRequested(log: Log, common: BlockDataCommon, programId: Buffer): void {
+  private _handleReplyQueueingRequested(log: Log, common: BlockDataCommon, programId: string): void {
     const data = MirrorAbi.events.ReplyQueueingRequested.decode(log);
 
-    const id = toPgByteaString(data.args.repliedTo);
+    const id = data.args.repliedTo.toLowerCase();
 
     const replyRequest = new ReplyRequest({
       id,

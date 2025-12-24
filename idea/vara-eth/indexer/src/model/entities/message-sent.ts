@@ -9,11 +9,11 @@ export class MessageSent {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn({ type: 'bytea' })
+  @PrimaryColumn()
   id: string;
 
-  @Column({ type: 'bytea', name: 'source_program_id' })
-  sourceProgramId: Buffer;
+  @Column({ name: 'source_program_id' })
+  sourceProgramId: string;
 
   @ManyToOne(() => Program)
   @JoinColumn({ name: 'source_program_id' })
@@ -31,8 +31,8 @@ export class MessageSent {
   @Column({ name: 'is_call', default: false })
   isCall: boolean; // TODO: figure out if it is possible that not reply message is call
 
-  @Column({ type: 'bytea', name: 'state_transition_id' })
-  stateTransitionId: Buffer;
+  @Column({ name: 'state_transition_id' })
+  stateTransitionId: string;
 
   @ManyToOne(() => StateTransition)
   @JoinColumn({ name: 'state_transition_id' })

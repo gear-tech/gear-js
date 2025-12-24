@@ -21,7 +21,7 @@ export class ProgramsService {
     const where: FindOptionsWhere<Program> = {};
 
     if (codeId) {
-      where.codeId = toByteaBuffer(codeId);
+      where.codeId = codeId.toLowerCase();
     }
 
     if (fromBlock !== undefined && toBlock !== undefined) {

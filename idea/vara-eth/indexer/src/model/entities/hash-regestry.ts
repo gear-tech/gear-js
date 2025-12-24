@@ -17,7 +17,7 @@ export class HashRegistry {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn({ type: 'bytea' })
+  @PrimaryColumn()
   id: string;
 
   @Column({ type: 'enum', enum: EntityType })

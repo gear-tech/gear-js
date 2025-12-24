@@ -21,7 +21,7 @@ export class MessagesService {
     const where: FindOptionsWhere<MessageRequest> = {};
 
     if (programId) {
-      where.programId = toByteaBuffer(programId);
+      where.programId = programId.toLowerCase();
     }
 
     if (sourceAddress) {
@@ -59,7 +59,7 @@ export class MessagesService {
     const where: FindOptionsWhere<MessageSent> = {};
 
     if (programId) {
-      where.sourceProgramId = toByteaBuffer(programId);
+      where.sourceProgramId = programId.toLowerCase();
     }
 
     const [data, total] = await this.messageSentRepository.findAndCount({

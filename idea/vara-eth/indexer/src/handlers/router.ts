@@ -186,7 +186,7 @@ export class RouterHandler extends BaseHandler {
 
   private _handleCodeValidationRequested(log: Log, common: BlockDataCommon) {
     const data = RouterAbi.events.CodeValidationRequested.decode(log);
-    const id = toPgByteaString(data.args.codeId);
+    const id = data.args.codeId.toLowerCase();
     this._codes.set(
       id,
       new Code({
@@ -210,11 +210,11 @@ export class RouterHandler extends BaseHandler {
   private _handleProgramCreated(log: Log, common: BlockDataCommon) {
     const data = RouterAbi.events.ProgramCreated.decode(log);
 
-    const id = toPgByteaString(data.args.actorId);
+    const id = data.args.actorId.toLowerCase();
 
     const program = new Program({
       id,
-      codeId: toPgBytea(data.args.codeId),
+      codeId: data.args.codeId.toLowerCase(),
       blockNumber: BigInt(log.block.height),
       txHash: toPgBytea(log.transaction.hash),
       createdAt: common.timestamp,
@@ -240,7 +240,7 @@ export class RouterHandler extends BaseHandler {
     const txData = RouterAbi.functions.commitBatch.decode(log.transaction);
 
     const batch = new Batch({
-      id: toPgByteaString(hash),
+      id: hash.toLowerCase(),
       committedAt: common.timestamp,
       committedAtBlock: common.blockNumber,
       blockHash: toPgBytea(txData.args[0].blockHash),
@@ -264,7 +264,7 @@ export class RouterHandler extends BaseHandler {
         hash: toPgBytea(trans.newStateHash),
         batch: batch,
         timestamp: common.timestamp,
-        programId: toPgBytea(trans.actorId),
+        programId: trans.actorId.toLowerCase(),
         exited: trans.exited,
         inheritor: trans.inheritor === zeroAddress ? null : toPgBytea(trans.inheritor),
         valueToReceive: trans.valueToReceive * (trans.valueToReceiveNegativeSign ? -1n : 1n),
@@ -277,7 +277,7 @@ export class RouterHandler extends BaseHandler {
       this._addHashEntry(EntityType.StateTransition, stateTransition.id, stateTransition.timestamp);
 
       for (const message of trans.messages) {
-        this._processMessageFromTransition(message, trans.actorId, common, toPgBytea(fromPgBytea(transitionId)));
+        this._processMessageFromTransition(message, trans.actorId.toLowerCase(), common, stateTransition.id);
       }
     }
   }
@@ -286,9 +286,9 @@ export class RouterHandler extends BaseHandler {
     message: any,
     sourceProgramId: string,
     common: BlockDataCommon,
-    stateTransitionId: Buffer,
+    stateTransitionId: string,
   ): void {
-    const id = toPgByteaString(message.id);
+    const id = message.id.toLowerCase();
 
     const isReply = message.replyDetails.to !== zeroHash;
 
@@ -297,7 +297,7 @@ export class RouterHandler extends BaseHandler {
         id,
         repliedToId: toPgBytea(message.replyDetails.to),
         replyCode: message.replyDetails.code,
-        sourceProgramId: toPgBytea(sourceProgramId),
+        sourceProgramId,
         destination: toPgBytea(message.destination),
         payload: Buffer.from(message.payload.slice(2), 'hex'),
         value: message.value,
@@ -314,7 +314,7 @@ export class RouterHandler extends BaseHandler {
     } else {
       const messageSent = new MessageSent({
         id,
-        sourceProgramId: toPgBytea(sourceProgramId),
+        sourceProgramId: sourceProgramId,
         destination: toPgBytea(message.destination),
         payload: Buffer.from(message.payload.slice(2), 'hex'),
         value: message.value,

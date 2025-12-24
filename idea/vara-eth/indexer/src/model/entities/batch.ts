@@ -6,7 +6,7 @@ export class Batch {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn({ type: 'bytea' })
+  @PrimaryColumn()
   id: string;
 
   @Column({ type: 'bytea', name: 'block_hash' })

@@ -19,7 +19,7 @@ export class StateTransitionsService {
     const where: FindOptionsWhere<StateTransition> = {};
 
     if (programId) {
-      where.programId = toByteaBuffer(programId);
+      where.programId = programId.toLowerCase();
     }
 
     if (exited !== undefined) {

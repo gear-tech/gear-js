@@ -21,7 +21,7 @@ export class RepliesService {
     const where: FindOptionsWhere<ReplyRequest> = {};
 
     if (programId) {
-      where.programId = toByteaBuffer(programId);
+      where.programId = programId.toLowerCase();
     }
 
     const [data, total] = await this.replyRequestRepository.findAndCount({
@@ -47,7 +47,7 @@ export class RepliesService {
     const where: FindOptionsWhere<ReplySent> = {};
 
     if (programId) {
-      where.sourceProgramId = toByteaBuffer(programId);
+      where.sourceProgramId = programId.toLowerCase();
     }
 
     if (repliedToId) {
