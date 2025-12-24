@@ -45,7 +45,7 @@ export class StateTransitionsService {
 
   async findOne(id: string): Promise<StateTransition> {
     const stateTransition = await this.stateTransitionRepository.findOne({
-      where: { id: toBytea(id) },
+      where: { id: id.toLowerCase() },
       relations: ['program', 'batch'],
     });
 

@@ -40,7 +40,7 @@ export class LookupService {
   async lookupByHash(hash: string): Promise<EntityResult> {
     // Step 1: Look up the hash in the registry
     const registry = await this.hashRegistryRepository.findOne({
-      where: { id: toBytea(hash) },
+      where: { id: hash.toLowerCase() },
     });
 
     if (!registry) {

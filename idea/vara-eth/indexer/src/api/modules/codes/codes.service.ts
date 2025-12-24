@@ -48,7 +48,7 @@ export class CodesService {
 
   async findOne(id: string): Promise<CodeResponseDto> {
     const code = await this.codeRepository.findOne({
-      where: { id: toBytea(id)! },
+      where: { id: id.toLowerCase() },
     });
 
     if (!code) {

@@ -45,7 +45,7 @@ export class BatchesService {
 
   async findOne(id: string): Promise<Batch> {
     const batch = await this.batchRepository.findOne({
-      where: { id: toBytea(id)! },
+      where: { id: id.toLowerCase() },
     });
 
     if (!batch) {

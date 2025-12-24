@@ -81,7 +81,7 @@ export class MessagesService {
 
   async findOneRequest(id: string): Promise<MessageRequest> {
     const message = await this.messageRequestRepository.findOne({
-      where: { id: toBytea(id) },
+      where: { id: id.toLowerCase() },
       relations: ['program'],
     });
 
@@ -94,7 +94,7 @@ export class MessagesService {
 
   async findOneSent(id: string): Promise<MessageSent> {
     const message = await this.messageSentRepository.findOne({
-      where: { id: toBytea(id) },
+      where: { id: id.toLowerCase() },
       relations: ['sourceProgram', 'stateTransition'],
     });
 

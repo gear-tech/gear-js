@@ -73,7 +73,7 @@ export class RepliesService {
 
   async findOneRequest(id: string): Promise<ReplyRequest> {
     const reply = await this.replyRequestRepository.findOne({
-      where: { id: toBytea(id) },
+      where: { id: id.toLowerCase() },
       relations: ['program'],
     });
 
@@ -86,7 +86,7 @@ export class RepliesService {
 
   async findOneSent(id: string): Promise<ReplySent> {
     const reply = await this.replySentRepository.findOne({
-      where: { id: toBytea(id) },
+      where: { id: id.toLowerCase() },
       relations: ['sourceProgram', 'stateTransition'],
     });
 

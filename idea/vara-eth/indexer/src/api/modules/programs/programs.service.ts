@@ -55,7 +55,7 @@ export class ProgramsService {
 
   async findOne(id: string): Promise<ProgramResponseDto> {
     const program = await this.programRepository.findOne({
-      where: { id: toBytea(id) },
+      where: { id: id.toLowerCase() },
       relations: ['code'],
     });
 
