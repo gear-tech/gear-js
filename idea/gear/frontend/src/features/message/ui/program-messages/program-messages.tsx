@@ -85,7 +85,7 @@ function useFilters(sails: Sails | undefined) {
 const ProgramMessages = ({ programId, sails }: Props) => {
   const { account } = useAccount();
 
-  const [searchQuery, setSearchQuery] = useSearchParamsState('search', parseAsString.withDefault(''));
+  const [searchQuery, setSearchQuery] = useSearchParamsState('query', parseAsString.withDefault(''));
 
   const [filters, setFilters] = useFilters(sails);
   const isToDirection = filters[FILTER_NAME.DIRECTION] === FILTER_VALUE.DIRECTION.TO;
