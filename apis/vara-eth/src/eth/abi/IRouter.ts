@@ -289,7 +289,11 @@ export const IROUTER_ABI = [
           },
         ],
       },
-      { name: 'signatureType', type: 'uint8', internalType: 'enum Gear.SignatureType' },
+      {
+        name: 'signatureType',
+        type: 'uint8',
+        internalType: 'enum Gear.SignatureType',
+      },
       { name: 'signatures', type: 'bytes[]', internalType: 'bytes[]' },
     ],
     outputs: [],
@@ -306,7 +310,11 @@ export const IROUTER_ABI = [
         internalType: 'struct Gear.ComputationSettings',
         components: [
           { name: 'threshold', type: 'uint64', internalType: 'uint64' },
-          { name: 'wvaraPerSecond', type: 'uint128', internalType: 'uint128' },
+          {
+            name: 'wvaraPerSecond',
+            type: 'uint128',
+            internalType: 'uint128',
+          },
         ],
       },
     ],

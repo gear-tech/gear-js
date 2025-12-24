@@ -1,5 +1,5 @@
-export interface BlockCommonData {
+export interface BlockDataCommon {
   blockNumber: bigint;
-  blockHash: string;
-  blockTimestamp: Date;
+  blockHash: Buffer;
+  timestamp: Date;
 }

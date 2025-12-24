@@ -1,10 +1,10 @@
 import { parentPort } from 'node:worker_threads';
-import { runServer } from '../api.js';
+import { bootstrap } from '../api/main.js';
 import { createLogger } from '@gear-js/logger';
 
 const logger = createLogger('server-worker');
 
-runServer()
+bootstrap()
   .then(() => {
     logger.info('Server worker started successfully');
     parentPort?.postMessage({ type: 'ready' });

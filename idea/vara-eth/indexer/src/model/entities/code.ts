@@ -1,9 +1,9 @@
 import { Entity, PrimaryColumn, Column } from 'typeorm';
 
 export enum CodeStatus {
-  ValidationRequested = 'validation_requested',
-  ValidationFailed = 'validation_failed',
-  Validated = 'validated',
+  ValidationRequested,
+  ValidationFailed,
+  Validated,
 }
 
 @Entity()
@@ -12,11 +12,11 @@ export class Code {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn({ type: 'varchar', length: 66 })
+  @PrimaryColumn({ type: 'bytea' })
   id: string;
 
-  @Column('varchar')
-  status: CodeStatus;
+  @Column({ default: CodeStatus.ValidationRequested, enum: CodeStatus, type: 'enum' })
+  status: number;
 
   @Column({ name: 'created_at', type: 'timestamp without time zone' })
   createdAt: Date;

@@ -13,19 +13,31 @@
     "serve": "node lib/api.js"
   },
   "dependencies": {
+    "@fastify/cors": "^11.2.0",
+    "@fastify/static": "^8.3.0",
     "@gear-js/logger": "workspace:*",
+    "@nestjs/common": "^11.1.9",
+    "@nestjs/config": "^4.0.2",
+    "@nestjs/core": "^11.1.9",
+    "@nestjs/platform-fastify": "^11.1.9",
+    "@nestjs/swagger": "^11.2.3",
+    "@nestjs/throttler": "^6.5.0",
+    "@nestjs/typeorm": "^11.0.0",
     "@subsquid/evm-processor": "^1.27.3",
     "@subsquid/logger": "^1.4.0",
     "@subsquid/typeorm-store": "^1.5.1",
     "@vara-eth/api": "workspace:*",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^5.1.0",
+    "fastify": "^5.6.2",
     "pg": "8.16.3",
-    "postgraphile": "^4.14.1",
     "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
     "typeorm": "0.3.27",
-    "viem": "2.40.0"
+    "viem": "2.40.0",
+    "xxhash-addon": "^2.0.3"
   },
   "devDependencies": {
     "@types/cors": "^2"
