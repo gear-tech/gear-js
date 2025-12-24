@@ -19,7 +19,9 @@ export class ParamGetMsgsToProgram extends ParamPagination {
   readonly service?: string;
   readonly fn?: string;
   readonly query?: string;
+  @IsDateString()
   readonly from?: string;
+  @IsDateString()
   readonly to?: string;
 }
 
