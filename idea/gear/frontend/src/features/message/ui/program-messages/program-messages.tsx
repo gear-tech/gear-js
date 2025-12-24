@@ -5,9 +5,10 @@ import { Sails } from 'sails-js';
 
 import { FilterGroup, Filters, Radio } from '@/features/filters';
 import { SailsFilter, getParsedSailsFilterValue, getValidSailsFilterValue } from '@/features/sails';
-import { useChangeEffect, useSearchParamsStates } from '@/hooks';
+import { useChangeEffect, useSearchParamsState, useSearchParamsStates } from '@/hooks';
 import MessageCardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
-import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
+import { isHex } from '@/shared/helpers';
+import { List, ProgramTabLayout, SearchForm, Skeleton } from '@/shared/ui';
 
 import { useMessagesToProgram, useMessagesFromProgram } from '../../api';
 import { MessageCard } from '../message-card';
@@ -83,23 +84,34 @@ function useFilters(sails: Sails | undefined) {
 
 const ProgramMessages = ({ programId, sails }: Props) => {
   const { account } = useAccount();
-  const [filters, setFilters] = useFilters(sails);
 
+  const [searchQuery, setSearchQuery] = useSearchParamsState('search', parseAsString.withDefault(''));
+
+  const [filters, setFilters] = useFilters(sails);
   const isToDirection = filters[FILTER_NAME.DIRECTION] === FILTER_VALUE.DIRECTION.TO;
   const addressParam = filters[FILTER_NAME.OWNER] === FILTER_VALUE.OWNER.OWNER ? account?.decodedAddress : undefined;
   const { serviceName, functionName } = getParsedSailsFilterValue(filters[FILTER_NAME.SAILS]);
 
   const toMessages = useMessagesToProgram(
-    { destination: programId, source: addressParam, service: serviceName, fn: functionName },
+    { destination: programId, source: addressParam, service: serviceName, fn: functionName, query: searchQuery },
     isToDirection,
   );
 
   const fromMessages = useMessagesFromProgram(
-    { source: programId, destination: addressParam, service: serviceName, fn: functionName },
+    { source: programId, destination: addressParam, service: serviceName, fn: functionName, query: searchQuery },
     !isToDirection,
   );
 
   const messages = isToDirection ? toMessages : fromMessages;
+
+  const renderSearch = () => (
+    <SearchForm
+      placeholder="Search by id..."
+      defaultValue={searchQuery}
+      getSchema={(schema) => schema.refine((value) => isHex(value), 'Value should be hex')}
+      onSubmit={(query) => setSearchQuery(query)}
+    />
+  );
 
   const renderList = () => (
     <List
@@ -162,6 +174,7 @@ const ProgramMessages = ({ programId, sails }: Props) => {
       heading="Messages"
       count={messages.data?.count}
       renderList={renderList}
+      renderSearch={renderSearch}
       renderFilters={renderFilters}
     />
   );
