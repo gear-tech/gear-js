@@ -1,5 +1,5 @@
 import { EntityType, MessageRequest, Program, ReplyRequest } from '../model/index.js';
-import { fromPgBytea, toPgBytea, toPgByteaString } from '../util/index.js';
+import { toPgBytea } from '../util/index.js';
 import { BlockDataCommon } from '../types/index.js';
 import { MirrorAbi } from '../abi/mirror.abi.js';
 import { RouterAbi } from '../abi/router.abi.js';

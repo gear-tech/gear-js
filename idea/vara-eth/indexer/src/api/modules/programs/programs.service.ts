@@ -6,7 +6,6 @@ import { Program } from '../../../model/index.js';
 import { QueryProgramsWithBlockRangeDto } from './dto/query-programs.dto.js';
 import { ProgramResponseDto } from './dto/program-response.dto.js';
 import { PaginatedResponse } from '../../common/dto/pagination.dto.js';
-import { toBytea, toByteaBuffer } from '../../common/utils/hex.util.js';
 
 @Injectable()
 export class ProgramsService {

@@ -4,7 +4,6 @@ import { Repository, FindOptionsWhere } from 'typeorm';
 import { StateTransition } from '../../../model/index.js';
 import { QueryStateTransitionsDto } from './dto/query-state-transitions.dto.js';
 import { PaginatedResponse } from '../../common/dto/pagination.dto.js';
-import { toBytea, toByteaBuffer } from '../../common/utils/hex.util.js';
 
 @Injectable()
 export class StateTransitionsService {
