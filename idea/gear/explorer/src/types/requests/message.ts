@@ -1,4 +1,4 @@
-import { IsString, Contains } from 'class-validator';
+import { IsString, Contains, IsDateString } from 'class-validator';
 import { MessageEntryPoint } from 'gear-idea-indexer-db';
 import { ParamGenesis, ParamPagination } from './common';
 import { IsOneOf } from '../../decorators';
@@ -31,6 +31,8 @@ export class ParamGetMsgsFromProgram extends ParamPagination {
   readonly service?: string;
   readonly fn?: string;
   readonly query?: string;
+  @IsDateString()
   readonly from?: string;
+  @IsDateString()
   readonly to?: string;
 }
