@@ -36,33 +36,29 @@ function getFnDecoder<const TFnName extends ContractFunctionName<typeof IROUTER_
 
 export const RouterAbi = {
   events: {
-    CodeValidationRequested: {
-      topic: getRouterEventTopic('CodeValidationRequested'),
-      decode: getEventDecoder('CodeValidationRequested'),
+    AnnouncesCommitted: {
+      topic: getRouterEventTopic('AnnouncesCommitted'),
+      decode: getEventDecoder('AnnouncesCommitted'),
+    },
+    BatchCommitted: {
+      topic: getRouterEventTopic('BatchCommitted'),
+      decode: getEventDecoder('BatchCommitted'),
     },
     CodeGotValidated: {
       topic: getRouterEventTopic('CodeGotValidated'),
       decode: getEventDecoder('CodeGotValidated'),
     },
+    CodeValidationRequested: {
+      topic: getRouterEventTopic('CodeValidationRequested'),
+      decode: getEventDecoder('CodeValidationRequested'),
+    },
     ProgramCreated: {
       topic: getRouterEventTopic('ProgramCreated'),
       decode: getEventDecoder('ProgramCreated'),
     },
-    BatchCommited: {
-      topic: getRouterEventTopic('BatchCommitted'),
-      decode: getEventDecoder('BatchCommitted'),
-    },
-    AnnouncesCommitted: {
-      topic: getRouterEventTopic('AnnouncesCommitted'),
-      decode: getEventDecoder('AnnouncesCommitted'),
-    },
     ValidatorsCommittedForEra: {
       topic: getRouterEventTopic('ValidatorsCommittedForEra'),
       decode: getEventDecoder('ValidatorsCommittedForEra'),
-    },
-    ComputationSettingsChanged: {
-      topic: getRouterEventTopic('ComputationSettingsChanged'),
-      decode: getEventDecoder('ComputationSettingsChanged'),
     },
   },
   functions: {

@@ -1,7 +1,18 @@
 import { DataSource } from 'typeorm';
 import dotenv from 'dotenv';
 
-import { Code, HashRegistry, Program } from './entities/index.js';
+import {
+  Batch,
+  Code,
+  EthereumTx,
+  HashRegistry,
+  MessageRequest,
+  MessageSent,
+  Program,
+  ReplyRequest,
+  ReplySent,
+  StateTransition,
+} from './entities/index.js';
 
 dotenv.config({ quiet: true });
 
@@ -11,7 +22,18 @@ const AppDataSource = new DataSource({
   synchronize: process.env.NODE_ENV === 'development',
   migrationsRun: true,
   logging: process.env.NODE_ENV === 'development',
-  entities: [Program, Code, HashRegistry],
+  entities: [
+    Code,
+    Batch,
+    HashRegistry,
+    Program,
+    StateTransition,
+    EthereumTx,
+    MessageRequest,
+    MessageSent,
+    ReplyRequest,
+    ReplySent,
+  ],
   migrations: ['db/migrations/*.js'],
 });
 

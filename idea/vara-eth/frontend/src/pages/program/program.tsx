@@ -2,9 +2,9 @@ import { HexString } from '@vara-eth/api';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 
 import { useApproveWrappedVara, useWrappedVaraBalance } from '@/app/api';
+import { useVaraEthApi } from '@/app/providers';
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
 import EtherscanSvg from '@/assets/icons/etherscan.svg?react';
-import VerifySvg from '@/assets/icons/verify.svg?react';
 import { Badge, Balance, Button, HashLink, Navigation, NotFound, Tooltip } from '@/components';
 import { ServiceList, useExecutableBalanceTopUp } from '@/features/programs';
 import { useReadContractState, useGetProgramByIdQuery } from '@/features/programs/lib';
@@ -23,13 +23,15 @@ const Program = () => {
   const { programId } = useParams() as Params;
   const approveWrappedVara = useApproveWrappedVara(programId);
   const executableBalanceTopUp = useExecutableBalanceTopUp(programId);
+  const { isApiReady } = useVaraEthApi();
 
   const { data: program, isLoading } = useGetProgramByIdQuery(programId || '');
-  const { data: programState, refetch } = useReadContractState(programId);
+  const { data: programState, refetch, isLoading: isProgramStateLoading } = useReadContractState(programId);
 
   const { decimals } = useWrappedVaraBalance(programId);
   const isActive = programState && 'Active' in programState.program;
-  const programName = 'Program name';
+  const isInitialized = isActive && programState.program.Active.initialized;
+  const programName = ''; // TODO: get program name when it's implemented
   const codeId = program?.codeId || '';
   const blockHash = program?.createdAtTx || '';
   const blockDateTime = program?.createdAtBlock ? `Block ${program.createdAtBlock}` : '';
@@ -45,7 +47,7 @@ const Program = () => {
     await refetch();
   };
 
-  if (isLoading) {
+  if (isLoading || (isProgramStateLoading && !program) || !isApiReady) {
     return (
       <>
         <Navigation search={<Search />} />
@@ -58,11 +60,11 @@ const Program = () => {
     );
   }
 
-  if (!program || !programId) {
+  if (!programState || !programId) {
     return (
       <>
         <Navigation search={<Search />} />
-        <NotFound entity="program" id={programId} />
+        <NotFound entity="program" id={programId || '0x'} />
       </>
     );
   }
@@ -89,19 +91,18 @@ const Program = () => {
                 </a>
               </Tooltip>
             </div>
-            {isActive && <Badge>Active</Badge>}
+            {isActive && (isInitialized ? <Badge>Active</Badge> : <Badge color="secondary">Uninitialized</Badge>)}
           </div>
 
           {programName && <div className={styles.name}>{programName}</div>}
 
           <div className={styles.properties}>
-            <div className={styles.property}>
-              CODE ID
-              <Tooltip value="Verified">
-                <VerifySvg />
-              </Tooltip>
-            </div>
-            <HashLink hash={codeId} href={generatePath(routes.code, { codeId })} />
+            {codeId && (
+              <>
+                <div className={styles.property}>CODE ID</div>
+                <HashLink hash={codeId} href={generatePath(routes.code, { codeId })} />
+              </>
+            )}
             <div>PROGRAM BALANCE</div>
             <div>
               <Balance value={formatNumber(programState?.balance || 0, 4)} units="ETH" />
@@ -113,15 +114,19 @@ const Program = () => {
                 size="xs"
                 onClick={onTopUp}
                 isLoading={executableBalanceTopUp.isPending || approveWrappedVara.isPending}
-                variant="outline">
+                variant="secondary">
                 Top up
               </Button>
             </div>
-            <div>BLOCK HASH</div>
-            <div className={styles.blockHash}>
-              <HashLink hash={blockHash} />
-              {blockDateTime}
-            </div>
+            {blockHash && (
+              <>
+                <div>BLOCK HASH</div>
+                <div className={styles.blockHash}>
+                  <HashLink hash={blockHash} />
+                  {blockDateTime}
+                </div>
+              </>
+            )}
           </div>
         </div>
 
