@@ -5,6 +5,7 @@ import { HashLink, Navigation, Pagination, Table } from '@/components';
 import { useGetAllCodesQuery, UploadCodeButton } from '@/features/codes';
 import { Search } from '@/features/search';
 import { routes } from '@/shared/config';
+import { formatDate } from '@/shared/utils';
 
 import styles from './codes.module.scss';
 
@@ -44,17 +45,17 @@ const Codes = () => {
   const { data: allCodes, isFetching } = useGetAllCodesQuery(page, PAGE_SIZE);
 
   const data: DataRow[] =
-    allCodes?.nodes.map((code) => ({
+    allCodes?.data.map((code) => ({
       id: code.id,
       codeId: code.id,
       status: code.status,
       // ! TODO: get programs count and services
       programsCount: '1',
       services: 'Service 1',
-      createdAt: '12-19-2024 10:30:24',
+      createdAt: formatDate(code.createdAt),
     })) || [];
 
-  const totalItems = allCodes?.totalCount ?? 0;
+  const totalItems = allCodes?.total ?? 0;
   const totalPages = totalItems ? Math.ceil(totalItems / PAGE_SIZE) : 1;
 
   return (

@@ -5,6 +5,7 @@ import { HashLink, Navigation, Pagination, Table } from '@/components';
 import { useGetAllProgramsQuery } from '@/features/programs';
 import { Search } from '@/features/search';
 import { routes } from '@/shared/config';
+import { formatDate } from '@/shared/utils';
 
 import styles from './programs.module.scss';
 
@@ -30,19 +31,18 @@ const columns = [
 
 const Programs = () => {
   const [page, setPage] = useState(1);
-  const { data: allPrograms, isFetching } = useGetAllProgramsQuery(page, PAGE_SIZE);
+  const { data: programsResponse, isFetching } = useGetAllProgramsQuery(page, PAGE_SIZE);
 
   const data: DataRow[] =
-    allPrograms?.nodes.map((program) => ({
+    programsResponse?.data?.map((program) => ({
       id: program.id,
       programId: program.id,
       // ! TODO: get messages count
       messages: '0',
-      // ! TODO: format createdAtBlock to date
-      createdAt: program.createdAtBlock.toString(), // createdAt: '14-19-2024 10:30:24',
+      createdAt: formatDate(program.createdAt),
     })) ?? [];
 
-  const totalItems = allPrograms?.totalCount ?? 0;
+  const totalItems = programsResponse?.total ?? 0;
   const totalPages = totalItems ? Math.ceil(totalItems / PAGE_SIZE) : 1;
 
   return (

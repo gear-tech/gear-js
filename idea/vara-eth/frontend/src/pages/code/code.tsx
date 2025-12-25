@@ -21,7 +21,7 @@ const Code = () => {
   const params = useParams<Params>();
   const codeId = params?.codeId;
 
-  const { data: code, isLoading } = useGetCodeByIdQuery(codeId || '');
+  const { data: code, isLoading, error } = useGetCodeByIdQuery(codeId || '');
 
   if (isLoading) {
     return (
@@ -36,7 +36,7 @@ const Code = () => {
     );
   }
 
-  if (!code || !codeId) {
+  if (error || !code || !codeId) {
     return (
       <>
         <Navigation search={<Search />} />
@@ -45,8 +45,7 @@ const Code = () => {
     );
   }
 
-  const blockHash = '0xQqC17F958D2ee523a2206206994597C13D831ec7';
-  const blockDateTime = formatDate(Date.now());
+  const createdDateTime = formatDate(code.createdAt);
 
   return (
     <>
@@ -85,12 +84,8 @@ const Code = () => {
               3 programs
             </a>
 
-            <div>BLOCK HASH</div>
-
-            <div className={styles.blockHash}>
-              <HashLink hash={blockHash} />
-              {blockDateTime}
-            </div>
+            <div>CREATED AT</div>
+            <div>{createdDateTime}</div>
           </div>
         </div>
 

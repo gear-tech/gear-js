@@ -10,7 +10,7 @@ import { ServiceList, useExecutableBalanceTopUp } from '@/features/programs';
 import { useReadContractState, useGetProgramByIdQuery } from '@/features/programs/lib';
 import { Search } from '@/features/search';
 import { routes } from '@/shared/config';
-import { formatBalance, formatNumber } from '@/shared/utils';
+import { formatBalance, formatDate, formatNumber } from '@/shared/utils';
 
 import styles from './program.module.scss';
 
@@ -25,16 +25,16 @@ const Program = () => {
   const executableBalanceTopUp = useExecutableBalanceTopUp(programId);
   const { isApiReady } = useVaraEthApi();
 
-  const { data: program, isLoading } = useGetProgramByIdQuery(programId || '');
+  const { data: program, isLoading, error } = useGetProgramByIdQuery(programId || '');
   const { data: programState, refetch, isLoading: isProgramStateLoading } = useReadContractState(programId);
 
   const { decimals } = useWrappedVaraBalance(programId);
   const isActive = programState && 'Active' in programState.program;
   const isInitialized = isActive && programState.program.Active.initialized;
   const programName = ''; // TODO: get program name when it's implemented
-  const codeId = program?.codeId || '';
-  const blockHash = program?.createdAtTx || '';
-  const blockDateTime = program?.createdAtBlock ? `Block ${program.createdAtBlock}` : '';
+  const codeId = program?.code?.id || '';
+  const blockHash = program?.txHash || '';
+  const formattedCreatedAt = program?.createdAt ? formatDate(program.createdAt) : '';
 
   const executableBalance =
     programState && decimals ? formatBalance(BigInt(programState.executableBalance), decimals) : null;
@@ -60,7 +60,7 @@ const Program = () => {
     );
   }
 
-  if (!programState || !programId) {
+  if (error || !programState || !programId) {
     return (
       <>
         <Navigation search={<Search />} />
@@ -123,7 +123,7 @@ const Program = () => {
                 <div>BLOCK HASH</div>
                 <div className={styles.blockHash}>
                   <HashLink hash={blockHash} />
-                  {blockDateTime}
+                  {formattedCreatedAt}
                 </div>
               </>
             )}
