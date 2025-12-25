@@ -1,0 +1,35 @@
+.positioner {
+  z-index: 2;
+}
+
+.popup {
+  max-width: 230px;
+  padding: 16px;
+
+  background-color: #2b2b2e;
+  border-radius: 20px;
+
+  transform-origin: var(--transform-origin);
+  transition:
+    transform 0.25s,
+    opacity 0.25s;
+
+  &[data-starting-style],
+  &[data-ending-style] {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+.input {
+  // TODO: fix in ui kit
+  > div > div:first-child {
+    align-items: center;
+  }
+
+  input {
+    cursor: pointer;
+  }
+
+  cursor: pointer;
+}
