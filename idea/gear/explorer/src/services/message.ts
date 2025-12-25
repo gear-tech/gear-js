@@ -52,6 +52,9 @@ export class MessageService {
     offset,
     service,
     fn,
+    query,
+    from,
+    to,
   }: ParamGetMsgsToProgram): Promise<ResManyResult<MessageToProgram>> {
     const qb = this._repoTo.createQueryBuilder('msg');
 
@@ -75,6 +78,18 @@ export class MessageService {
       qb.andWhere('msg.fn ILIKE :fn', { fn: `%${fn.toLowerCase()}%` });
     }
 
+    if (query) {
+      qb.andWhere('msg.id ILIKE :query', { query: `%${query.toLowerCase()}%` });
+    }
+
+    if (from) {
+      qb.andWhere('msg.timestamp >= :from', { from });
+    }
+
+    if (to) {
+      qb.andWhere('msg.timestamp <= :to', { to });
+    }
+
     qb.orderBy('msg.timestamp', 'DESC').limit(limit).offset(offset);
 
     const [result, count] = await Promise.all([qb.getMany(), qb.getCount()]);
@@ -95,6 +110,9 @@ export class MessageService {
     offset,
     service,
     fn,
+    query,
+    from,
+    to,
   }: ParamGetMsgsFromProgram): Promise<ResManyResult<MessageFromProgram>> {
     const qb = this._repoFrom.createQueryBuilder('msg');
 
@@ -120,6 +138,18 @@ export class MessageService {
 
     if (fn) {
       qb.andWhere('msg.fn ILIKE :fn', { fn: `%${fn.toLowerCase()}%` });
+    }
+
+    if (query) {
+      qb.andWhere('msg.id ILIKE :query', { query: `%${query.toLowerCase()}%` });
+    }
+
+    if (from) {
+      qb.andWhere('msg.timestamp >= :from', { from });
+    }
+
+    if (to) {
+      qb.andWhere('msg.timestamp <= :to', { to });
     }
 
     qb.orderBy('msg.timestamp', 'DESC').limit(limit).offset(offset);

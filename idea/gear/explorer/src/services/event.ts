@@ -24,7 +24,16 @@ export class EventService {
   }
 
   @Pagination()
-  async getEvents({ source, parentId, service, name, limit, offset }: ParamGetEvents): Promise<ResManyResult<Event>> {
+  async getEvents({
+    source,
+    parentId,
+    service,
+    name,
+    limit,
+    offset,
+    from,
+    to,
+  }: ParamGetEvents): Promise<ResManyResult<Event>> {
     const builder = this._repo.createQueryBuilder('event');
 
     if (source) {
@@ -41,6 +50,14 @@ export class EventService {
 
     if (name) {
       builder.andWhere('event.name ILIKE :name', { name: `%${name.toLowerCase()}%` });
+    }
+
+    if (from) {
+      builder.andWhere('event.timestamp >= :from', { from });
+    }
+
+    if (to) {
+      builder.andWhere('event.timestamp <= :to', { to });
     }
 
     builder.orderBy('event.timestamp', 'DESC').take(limit).skip(offset);
