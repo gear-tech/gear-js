@@ -6,7 +6,6 @@ import { Code, CodeStatus } from '../../../model/index.js';
 import { QueryCodesDto } from './dto/query-codes.dto.js';
 import { CodeResponseDto } from './dto/code-response.dto.js';
 import { PaginatedResponse } from '../../common/dto/pagination.dto.js';
-import { toBytea } from '../../common/utils/hex.util.js';
 
 @Injectable()
 export class CodesService {

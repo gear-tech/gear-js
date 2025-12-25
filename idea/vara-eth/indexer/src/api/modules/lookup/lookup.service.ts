@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { HashRegistry, EntityType } from '../../../model/index.js';
-import { toBytea } from '../../common/utils/hex.util.js';
 import { BatchesService } from '../batches/batches.service.js';
 import { CodesService } from '../codes/codes.service.js';
 import { MessagesService } from '../messages/messages.service.js';

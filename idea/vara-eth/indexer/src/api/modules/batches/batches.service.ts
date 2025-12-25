@@ -4,7 +4,6 @@ import { Repository, Between, FindOptionsWhere } from 'typeorm';
 import { Batch } from '../../../model/index.js';
 import { QueryBatchesDto } from './dto/query-batches.dto.js';
 import { PaginatedResponse } from '../../common/dto/pagination.dto.js';
-import { toBytea } from '../../common/utils/hex.util.js';
 
 @Injectable()
 export class BatchesService {

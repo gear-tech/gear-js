@@ -4,7 +4,7 @@ import { Repository, FindOptionsWhere } from 'typeorm';
 import { ReplyRequest, ReplySent } from '../../../model/index.js';
 import { QueryRepliesDto } from './dto/query-replies.dto.js';
 import { PaginatedResponse } from '../../common/dto/pagination.dto.js';
-import { toBytea, toByteaBuffer } from '../../common/utils/hex.util.js';
+import { toByteaBuffer } from '../../common/utils/hex.util.js';
 
 @Injectable()
 export class RepliesService {

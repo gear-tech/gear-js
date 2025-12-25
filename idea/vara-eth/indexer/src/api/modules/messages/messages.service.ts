@@ -4,7 +4,7 @@ import { Repository, FindOptionsWhere, Between } from 'typeorm';
 import { MessageRequest, MessageSent } from '../../../model/index.js';
 import { QueryMessagesDto } from './dto/query-messages.dto.js';
 import { PaginatedResponse } from '../../common/dto/pagination.dto.js';
-import { toBytea, toByteaBuffer } from '../../common/utils/hex.util.js';
+import { toByteaBuffer } from '../../common/utils/hex.util.js';
 
 @Injectable()
 export class MessagesService {
