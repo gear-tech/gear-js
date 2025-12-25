@@ -8,14 +8,14 @@ export class ReplyRequest {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn({ type: 'bytea' })
+  @PrimaryColumn()
   id: string;
 
   @Column({ type: 'bytea', name: 'source_address' })
   sourceAddress: Buffer;
 
-  @Column({ type: 'bytea', name: 'program_id' })
-  programId: Buffer;
+  @Column({ name: 'program_id' })
+  programId: string;
 
   @ManyToOne(() => Program)
   @JoinColumn({ name: 'program_id' })

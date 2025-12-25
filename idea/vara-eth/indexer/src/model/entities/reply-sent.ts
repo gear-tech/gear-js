@@ -9,7 +9,7 @@ export class ReplySent {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn({ type: 'bytea' })
+  @PrimaryColumn()
   id: string;
 
   @Column({ type: 'bytea', name: 'replied_to_id' })
@@ -18,8 +18,8 @@ export class ReplySent {
   @Column({ type: 'varchar', length: 10, name: 'reply_code' })
   replyCode: string;
 
-  @Column({ type: 'bytea', name: 'source_program_id' })
-  sourceProgramId: Buffer;
+  @Column({ name: 'source_program_id' })
+  sourceProgramId: string;
 
   @ManyToOne(() => Program)
   @JoinColumn({ name: 'source_program_id' })
@@ -37,8 +37,8 @@ export class ReplySent {
   @Column({ name: 'is_call', default: false })
   isCall: boolean;
 
-  @Column({ type: 'bytea', name: 'state_transition_id' })
-  stateTransitionId: Buffer;
+  @Column({ name: 'state_transition_id' })
+  stateTransitionId: string;
 
   @ManyToOne(() => StateTransition)
   @JoinColumn({ name: 'state_transition_id' })

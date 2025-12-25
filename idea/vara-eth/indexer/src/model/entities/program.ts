@@ -8,11 +8,11 @@ export class Program {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn({ type: 'bytea' })
+  @PrimaryColumn()
   id: string;
 
-  @Column({ type: 'bytea', name: 'code_id' })
-  codeId: Buffer;
+  @Column({ name: 'code_id' })
+  codeId: string;
 
   @ManyToOne(() => Code)
   @JoinColumn({ name: 'code_id' })

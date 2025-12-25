@@ -12,7 +12,7 @@ export class Code {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn({ type: 'bytea' })
+  @PrimaryColumn()
   id: string;
 
   @Column({ default: CodeStatus.ValidationRequested, enum: CodeStatus, type: 'enum' })

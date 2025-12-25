@@ -6,7 +6,6 @@ import { Program } from '../../../model/index.js';
 import { QueryProgramsWithBlockRangeDto } from './dto/query-programs.dto.js';
 import { ProgramResponseDto } from './dto/program-response.dto.js';
 import { PaginatedResponse } from '../../common/dto/pagination.dto.js';
-import { toBytea, toByteaBuffer } from '../../common/utils/hex.util.js';
 
 @Injectable()
 export class ProgramsService {
@@ -21,7 +20,7 @@ export class ProgramsService {
     const where: FindOptionsWhere<Program> = {};
 
     if (codeId) {
-      where.codeId = toByteaBuffer(codeId);
+      where.codeId = codeId.toLowerCase();
     }
 
     if (fromBlock !== undefined && toBlock !== undefined) {
@@ -55,7 +54,7 @@ export class ProgramsService {
 
   async findOne(id: string): Promise<ProgramResponseDto> {
     const program = await this.programRepository.findOne({
-      where: { id: toBytea(id) },
+      where: { id: id.toLowerCase() },
       relations: ['code'],
     });
 

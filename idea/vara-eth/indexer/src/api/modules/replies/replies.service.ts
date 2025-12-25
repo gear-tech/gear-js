@@ -4,7 +4,7 @@ import { Repository, FindOptionsWhere } from 'typeorm';
 import { ReplyRequest, ReplySent } from '../../../model/index.js';
 import { QueryRepliesDto } from './dto/query-replies.dto.js';
 import { PaginatedResponse } from '../../common/dto/pagination.dto.js';
-import { toBytea, toByteaBuffer } from '../../common/utils/hex.util.js';
+import { toByteaBuffer } from '../../common/utils/hex.util.js';
 
 @Injectable()
 export class RepliesService {
@@ -21,7 +21,7 @@ export class RepliesService {
     const where: FindOptionsWhere<ReplyRequest> = {};
 
     if (programId) {
-      where.programId = toByteaBuffer(programId);
+      where.programId = programId.toLowerCase();
     }
 
     const [data, total] = await this.replyRequestRepository.findAndCount({
@@ -47,7 +47,7 @@ export class RepliesService {
     const where: FindOptionsWhere<ReplySent> = {};
 
     if (programId) {
-      where.sourceProgramId = toByteaBuffer(programId);
+      where.sourceProgramId = programId.toLowerCase();
     }
 
     if (repliedToId) {
@@ -73,7 +73,7 @@ export class RepliesService {
 
   async findOneRequest(id: string): Promise<ReplyRequest> {
     const reply = await this.replyRequestRepository.findOne({
-      where: { id: toBytea(id) },
+      where: { id: id.toLowerCase() },
       relations: ['program'],
     });
 
@@ -86,7 +86,7 @@ export class RepliesService {
 
   async findOneSent(id: string): Promise<ReplySent> {
     const reply = await this.replySentRepository.findOne({
-      where: { id: toBytea(id) },
+      where: { id: id.toLowerCase() },
       relations: ['sourceProgram', 'stateTransition'],
     });
 

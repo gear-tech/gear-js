@@ -4,7 +4,7 @@ import { Repository, FindOptionsWhere, Between } from 'typeorm';
 import { MessageRequest, MessageSent } from '../../../model/index.js';
 import { QueryMessagesDto } from './dto/query-messages.dto.js';
 import { PaginatedResponse } from '../../common/dto/pagination.dto.js';
-import { toBytea, toByteaBuffer } from '../../common/utils/hex.util.js';
+import { toByteaBuffer } from '../../common/utils/hex.util.js';
 
 @Injectable()
 export class MessagesService {
@@ -21,7 +21,7 @@ export class MessagesService {
     const where: FindOptionsWhere<MessageRequest> = {};
 
     if (programId) {
-      where.programId = toByteaBuffer(programId);
+      where.programId = programId.toLowerCase();
     }
 
     if (sourceAddress) {
@@ -59,7 +59,7 @@ export class MessagesService {
     const where: FindOptionsWhere<MessageSent> = {};
 
     if (programId) {
-      where.sourceProgramId = toByteaBuffer(programId);
+      where.sourceProgramId = programId.toLowerCase();
     }
 
     const [data, total] = await this.messageSentRepository.findAndCount({
@@ -81,7 +81,7 @@ export class MessagesService {
 
   async findOneRequest(id: string): Promise<MessageRequest> {
     const message = await this.messageRequestRepository.findOne({
-      where: { id: toBytea(id) },
+      where: { id: id.toLowerCase() },
       relations: ['program'],
     });
 
@@ -94,7 +94,7 @@ export class MessagesService {
 
   async findOneSent(id: string): Promise<MessageSent> {
     const message = await this.messageSentRepository.findOne({
-      where: { id: toBytea(id) },
+      where: { id: id.toLowerCase() },
       relations: ['sourceProgram', 'stateTransition'],
     });
 

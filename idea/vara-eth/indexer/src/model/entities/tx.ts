@@ -6,7 +6,7 @@ export class EthereumTx {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn({ type: 'bytea' })
+  @PrimaryColumn()
   id: string;
 
   @Column({ name: 'contract_address', type: 'bytea' })

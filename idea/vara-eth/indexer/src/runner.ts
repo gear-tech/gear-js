@@ -56,7 +56,7 @@ export class VaraEthProcessor {
     processor.run(db, async (ctx) => {
       for (const handler of this._handlers) {
         try {
-          ctx.log.info(`Processing handler: ${handler.constructor.name}`);
+          ctx.log.debug(`Processing handler: ${handler.constructor.name}`);
           await handler.process(ctx);
         } catch (error) {
           ctx.log.error(

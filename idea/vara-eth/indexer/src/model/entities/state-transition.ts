@@ -9,7 +9,7 @@ export class StateTransition {
     Object.assign(this, props);
   }
 
-  @PrimaryColumn({ type: 'bytea' })
+  @PrimaryColumn()
   id: string;
 
   @Column({ type: 'bytea' })
@@ -22,8 +22,8 @@ export class StateTransition {
   @Column({ type: 'timestamp without time zone' })
   timestamp: Date;
 
-  @Column({ type: 'bytea', name: 'program_id' })
-  programId: Buffer;
+  @Column({ name: 'program_id' })
+  programId: string;
 
   @ManyToOne(() => Program)
   @JoinColumn({ name: 'program_id' })

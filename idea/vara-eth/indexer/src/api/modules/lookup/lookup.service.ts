@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { HashRegistry, EntityType } from '../../../model/index.js';
-import { toBytea } from '../../common/utils/hex.util.js';
 import { BatchesService } from '../batches/batches.service.js';
 import { CodesService } from '../codes/codes.service.js';
 import { MessagesService } from '../messages/messages.service.js';
@@ -40,7 +39,7 @@ export class LookupService {
   async lookupByHash(hash: string): Promise<EntityResult> {
     // Step 1: Look up the hash in the registry
     const registry = await this.hashRegistryRepository.findOne({
-      where: { id: toBytea(hash) },
+      where: { id: hash.toLowerCase() },
     });
 
     if (!registry) {

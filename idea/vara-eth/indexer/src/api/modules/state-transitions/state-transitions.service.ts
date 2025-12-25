@@ -4,7 +4,6 @@ import { Repository, FindOptionsWhere } from 'typeorm';
 import { StateTransition } from '../../../model/index.js';
 import { QueryStateTransitionsDto } from './dto/query-state-transitions.dto.js';
 import { PaginatedResponse } from '../../common/dto/pagination.dto.js';
-import { toBytea, toByteaBuffer } from '../../common/utils/hex.util.js';
 
 @Injectable()
 export class StateTransitionsService {
@@ -19,7 +18,7 @@ export class StateTransitionsService {
     const where: FindOptionsWhere<StateTransition> = {};
 
     if (programId) {
-      where.programId = toByteaBuffer(programId);
+      where.programId = programId.toLowerCase();
     }
 
     if (exited !== undefined) {
@@ -45,7 +44,7 @@ export class StateTransitionsService {
 
   async findOne(id: string): Promise<StateTransition> {
     const stateTransition = await this.stateTransitionRepository.findOne({
-      where: { id: toBytea(id) },
+      where: { id: id.toLowerCase() },
       relations: ['program', 'batch'],
     });
 
