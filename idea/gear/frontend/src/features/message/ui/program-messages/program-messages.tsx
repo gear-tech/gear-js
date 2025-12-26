@@ -3,7 +3,7 @@ import { useAccount } from '@gear-js/react-hooks';
 import { parseAsString, parseAsStringEnum } from 'nuqs';
 import { Sails } from 'sails-js';
 
-import { FilterGroup, Filters, Radio } from '@/features/filters';
+import { DateRangeInput, FilterGroup, Filters, Radio } from '@/features/filters';
 import { SailsFilter, getParsedSailsFilterValue, getValidSailsFilterValue } from '@/features/sails';
 import { useChangeEffect, useSearchParamsState, useSearchParamsStates } from '@/hooks';
 import MessageCardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
@@ -22,6 +22,8 @@ const FILTER_NAME = {
   OWNER: 'owner',
   DIRECTION: 'direction',
   SAILS: 'sails',
+  FROM_DATE: 'from',
+  TO_DATE: 'to',
 } as const;
 
 const FILTER_VALUE = {
@@ -48,12 +50,16 @@ const DEFAULT_VALUE = {
   OWNER: FILTER_VALUE.OWNER.ALL as OwnerValue,
   DIRECTION: FILTER_VALUE.DIRECTION.TO as DirectionValue,
   SAILS: '' as string,
+  FROM_DATE: '' as string,
+  TO_DATE: '' as string,
 } as const;
 
 const DEFAULT_FILTER_VALUES = {
   [FILTER_NAME.OWNER]: DEFAULT_VALUE.OWNER,
   [FILTER_NAME.DIRECTION]: DEFAULT_VALUE.DIRECTION,
   [FILTER_NAME.SAILS]: DEFAULT_VALUE.SAILS,
+  [FILTER_NAME.FROM_DATE]: DEFAULT_VALUE.FROM_DATE,
+  [FILTER_NAME.TO_DATE]: DEFAULT_VALUE.TO_DATE,
 } as const;
 
 function useFilters(sails: Sails | undefined) {
@@ -67,6 +73,10 @@ function useFilters(sails: Sails | undefined) {
     [FILTER_NAME.OWNER]: parseAsStringEnum(ownerValues).withDefault(DEFAULT_VALUE.OWNER),
     [FILTER_NAME.DIRECTION]: parseAsStringEnum(VALUES.DIRECTION).withDefault(DEFAULT_VALUE.DIRECTION),
     [FILTER_NAME.SAILS]: parseAsString.withDefault(DEFAULT_VALUE.SAILS),
+
+    // TODO: validate date strings
+    [FILTER_NAME.FROM_DATE]: parseAsString.withDefault(DEFAULT_VALUE.FROM_DATE),
+    [FILTER_NAME.TO_DATE]: parseAsString.withDefault(DEFAULT_VALUE.TO_DATE),
   });
 
   const validFilters = {
@@ -84,21 +94,38 @@ function useFilters(sails: Sails | undefined) {
 
 const ProgramMessages = ({ programId, sails }: Props) => {
   const { account } = useAccount();
+  const [filters, setFilters] = useFilters(sails);
+  const { from, to } = filters;
 
   const [searchQuery, setSearchQuery] = useSearchParamsState('query', parseAsString.withDefault(''));
 
-  const [filters, setFilters] = useFilters(sails);
   const isToDirection = filters[FILTER_NAME.DIRECTION] === FILTER_VALUE.DIRECTION.TO;
   const addressParam = filters[FILTER_NAME.OWNER] === FILTER_VALUE.OWNER.OWNER ? account?.decodedAddress : undefined;
   const { serviceName, functionName } = getParsedSailsFilterValue(filters[FILTER_NAME.SAILS]);
 
   const toMessages = useMessagesToProgram(
-    { destination: programId, source: addressParam, service: serviceName, fn: functionName, query: searchQuery },
+    {
+      destination: programId,
+      source: addressParam,
+      service: serviceName,
+      fn: functionName,
+      query: searchQuery,
+      from,
+      to,
+    },
     isToDirection,
   );
 
   const fromMessages = useMessagesFromProgram(
-    { source: programId, destination: addressParam, service: serviceName, fn: functionName, query: searchQuery },
+    {
+      source: programId,
+      destination: addressParam,
+      service: serviceName,
+      fn: functionName,
+      query: searchQuery,
+      from,
+      to,
+    },
     !isToDirection,
   );
 
@@ -148,6 +175,8 @@ const ProgramMessages = ({ programId, sails }: Props) => {
           <Radio name={FILTER_NAME.OWNER} value={FILTER_VALUE.OWNER.OWNER} label="My messages" onSubmit={setFilters} />
         </FilterGroup>
       )}
+
+      <DateRangeInput fromName={FILTER_NAME.FROM_DATE} toName={FILTER_NAME.TO_DATE} onSubmit={setFilters} />
 
       <FilterGroup title="Direction" name={FILTER_NAME.DIRECTION} onSubmit={setFilters}>
         <Radio

@@ -1,3 +1,5 @@
+@use '@/shared/assets/styles/variables' as *;
+
 .positioner {
   z-index: 2;
 }
@@ -21,6 +23,15 @@
 }
 
 .input {
+  // same as FilterGroup title
+  label {
+    font-family: Kanit;
+    font-size: $fontSizeSmall;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: $gray600;
+  }
+
   // TODO: fix in ui kit
   > div > div:first-child {
     align-items: center;
