@@ -2,7 +2,7 @@ import { HexString } from '@gear-js/api';
 import { parseAsString } from 'nuqs';
 import { Sails } from 'sails-js';
 
-import { DateRangeInput, Filters } from '@/features/filters';
+import { DateFilter, Filters } from '@/features/filters';
 import { useSearchParamsStates } from '@/hooks';
 import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
 import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
@@ -78,7 +78,7 @@ function ProgramEvents({ programId, sails }: Props) {
 
     return (
       <Filters initialValues={DEFAULT_FILTER_VALUES} values={filterValues} onSubmit={setFilterValues}>
-        <DateRangeInput fromName={FILTER_NAME.DATE_FROM} toName={FILTER_NAME.DATE_TO} onSubmit={setFilterValues} />
+        <DateFilter fromName={FILTER_NAME.DATE_FROM} toName={FILTER_NAME.DATE_TO} onSubmit={setFilterValues} />
 
         <SailsFilter
           label="Sails Events"

@@ -3,7 +3,7 @@ import { useAccount } from '@gear-js/react-hooks';
 import { parseAsString, parseAsStringEnum } from 'nuqs';
 import { Sails } from 'sails-js';
 
-import { DateRangeInput, FilterGroup, Filters, Radio } from '@/features/filters';
+import { DateFilter, FilterGroup, Filters, Radio } from '@/features/filters';
 import { SailsFilter, getParsedSailsFilterValue, getValidSailsFilterValue } from '@/features/sails';
 import { useChangeEffect, useSearchParamsState, useSearchParamsStates } from '@/hooks';
 import MessageCardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
@@ -176,7 +176,7 @@ const ProgramMessages = ({ programId, sails }: Props) => {
         </FilterGroup>
       )}
 
-      <DateRangeInput fromName={FILTER_NAME.FROM_DATE} toName={FILTER_NAME.TO_DATE} onSubmit={setFilters} />
+      <DateFilter fromName={FILTER_NAME.FROM_DATE} toName={FILTER_NAME.TO_DATE} onSubmit={setFilters} />
 
       <FilterGroup title="Direction" name={FILTER_NAME.DIRECTION} onSubmit={setFilters}>
         <Radio

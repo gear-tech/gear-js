@@ -1,7 +1,6 @@
 import { Popover as BasePopover } from '@base-ui/react';
 import { Input } from '@gear-js/ui';
 import { DateRange, DayFlag, DayPicker, SelectionState, UI } from 'react-day-picker';
-import { FieldValues, Path, useController, useFormContext } from 'react-hook-form';
 
 import CalendarSVG from '../../assets/calendar.svg?react';
 
@@ -29,7 +28,7 @@ type Props = {
   onChange: (value: { from: string; to: string }) => void;
 };
 
-function UIDateRangeInput({ value, onChange }: Props) {
+function DateRangeInput({ value, onChange }: Props) {
   const parsedValue = {
     from: value.from ? new Date(value.from) : undefined,
     to: value.to ? new Date(value.to) : undefined,
@@ -90,29 +89,6 @@ function UIDateRangeInput({ value, onChange }: Props) {
       </BasePopover.Portal>
     </BasePopover.Root>
   );
-}
-
-type DateRangeInputProps<T> = {
-  fromName: Path<T>;
-  toName: Path<T>;
-  onSubmit: (values: T) => void;
-};
-
-function DateRangeInput<T extends FieldValues>({ fromName, toName, onSubmit }: DateRangeInputProps<T>) {
-  const { handleSubmit } = useFormContext<T>();
-
-  const { field: fromField } = useController<T>({ name: fromName });
-  const { field: toField } = useController<T>({ name: toName });
-  const value = { from: fromField.value, to: toField.value };
-
-  const handleChange = ({ from, to }: { from: string; to: string }) => {
-    fromField.onChange(from);
-    toField.onChange(to);
-
-    void handleSubmit(onSubmit)();
-  };
-
-  return <UIDateRangeInput value={value} onChange={handleChange} />;
 }
 
 export { DateRangeInput };
