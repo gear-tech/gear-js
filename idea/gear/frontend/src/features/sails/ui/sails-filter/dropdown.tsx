@@ -64,7 +64,9 @@ function Dropdown({ label, groups, value, inputProps, onChange }: Props) {
     return (
       <Combobox.Group key={group.value} items={group.items} className={cx(styles.group, isSelected && styles.selected)}>
         <Combobox.GroupLabel className={styles.groupLabel}>
-          {group.value}
+          <span className={styles.heading} title={group.value}>
+            {group.value}
+          </span>
 
           <Button
             text={isSelected ? 'Selected' : 'Select All'}

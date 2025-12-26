@@ -177,6 +177,11 @@
   border-radius: 6px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 
+  .heading {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .selectAllButton {
     padding: 4px 8px;
     font-size: 10px;
