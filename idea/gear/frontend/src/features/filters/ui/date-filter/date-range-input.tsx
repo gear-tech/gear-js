@@ -65,8 +65,8 @@ function DateRangeInput({ value, onChange }: Props) {
               placeholder="Select date range..."
               icon={CalendarSVG}
               className={styles.input}
-              readOnly
               value={getInputValue()}
+              readOnly
             />
           </div>
         }
