@@ -34,6 +34,7 @@
     "lodash.isstring": "4.0.1",
     "nuqs": "2.8.2",
     "react": "19.2.0",
+    "react-day-picker": "^9.13.0",
     "react-dnd": "16.0.1",
     "react-dnd-html5-backend": "16.0.1",
     "react-dom": "19.2.0",

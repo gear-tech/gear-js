@@ -10,6 +10,8 @@ type BaseMessagesParameters = PaginationParameters & {
   source?: string;
   service?: string;
   fn?: string;
+  from?: string;
+  to?: string;
 };
 
 type MessagesToProgramParameters = BaseMessagesParameters & {

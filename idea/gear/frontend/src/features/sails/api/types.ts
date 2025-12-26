@@ -7,6 +7,8 @@ type GetEventsParameters = PaginationParameters & {
   service?: string;
   name?: string;
   source?: string;
+  from?: string;
+  to?: string;
 };
 
 type EventType = IBase & {
