@@ -1,0 +1,32 @@
+@use '@/shared/assets/styles/variables' as *;
+
+.input {
+  // same as FilterGroup title
+  label {
+    font-family: Kanit;
+    font-size: $fontSizeSmall;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: $gray600;
+  }
+
+  // TODO: fix in ui kit
+  > div > div:first-child {
+    align-items: center;
+
+    // override read only styles
+    background-color: #222225;
+    border: 1px solid #3a3d4d;
+  }
+
+  input {
+    cursor: pointer;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  cursor: pointer;
+}
