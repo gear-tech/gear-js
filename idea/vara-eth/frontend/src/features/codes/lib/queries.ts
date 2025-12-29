@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { EXPLORER_URL } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/helpers';
+import { PaginatedResponse } from '@/shared/types';
 
 export const CODE_STATUS = {
   VALIDATION_REQUESTED: 'ValidationRequested',
@@ -15,12 +16,7 @@ export type Code = {
   createdAt: string;
 };
 
-type CodesResponse = {
-  data: Code[];
-  total: number;
-  limit: number;
-  offset: number;
-};
+type CodesResponse = PaginatedResponse<Code>;
 
 export const useGetAllCodesQuery = (page: number, pageSize: number) => {
   const limit = pageSize;

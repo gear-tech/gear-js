@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { type Code } from '@/features/codes/lib/queries';
 import { EXPLORER_URL } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/helpers';
+import { PaginatedResponse } from '@/shared/types';
 
 export type Program = {
   id: string;
@@ -13,12 +14,7 @@ export type Program = {
   abiInterfaceAddress: string | null;
 };
 
-export type ProgramsResponse = {
-  data: Program[];
-  total: number;
-  limit: number;
-  offset: number;
-};
+export type ProgramsResponse = PaginatedResponse<Program>;
 
 export const useGetAllProgramsQuery = (page: number, pageSize: number) => {
   const limit = pageSize;
