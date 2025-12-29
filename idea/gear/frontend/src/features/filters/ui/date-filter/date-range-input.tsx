@@ -1,5 +1,5 @@
 import { Popover } from '@base-ui/react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { DateRange as DateRangeType } from 'react-day-picker';
 
 import { DateInput } from './date-input';
@@ -13,6 +13,7 @@ type Props = {
 
 function DateRangeInput({ value, onChange }: Props) {
   const [isOpen, setIsOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const parsedValue = {
     from: value.from ? new Date(value.from) : undefined,
@@ -31,10 +32,10 @@ function DateRangeInput({ value, onChange }: Props) {
 
   return (
     <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
-      <Popover.Trigger nativeButton={false} render={<DateInput value={parsedValue} />} />
+      <Popover.Trigger nativeButton={false} render={<DateInput value={parsedValue} inputRef={inputRef} />} />
 
       <Popover.Portal>
-        <Popover.Positioner sideOffset={8} className={styles.positioner}>
+        <Popover.Positioner alignOffset={-12} sideOffset={16} anchor={inputRef} className={styles.positioner}>
           <Popover.Popup className={styles.popup}>
             <DateRange
               defaultValue={parsedValue}
