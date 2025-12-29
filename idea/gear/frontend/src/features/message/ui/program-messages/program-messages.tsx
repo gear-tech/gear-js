@@ -3,7 +3,7 @@ import { useAccount } from '@gear-js/react-hooks';
 import { parseAsString, parseAsStringEnum } from 'nuqs';
 import { Sails } from 'sails-js';
 
-import { DateFilter, FilterGroup, Filters, Radio } from '@/features/filters';
+import { DateFilter, FilterGroup, Filters, parseAsIsoString, Radio } from '@/features/filters';
 import { SailsFilter, getParsedSailsFilterValue, getValidSailsFilterValue } from '@/features/sails';
 import { useChangeEffect, useSearchParamsState, useSearchParamsStates } from '@/hooks';
 import MessageCardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
@@ -73,10 +73,8 @@ function useFilters(sails: Sails | undefined) {
     [FILTER_NAME.OWNER]: parseAsStringEnum(ownerValues).withDefault(DEFAULT_VALUE.OWNER),
     [FILTER_NAME.DIRECTION]: parseAsStringEnum(VALUES.DIRECTION).withDefault(DEFAULT_VALUE.DIRECTION),
     [FILTER_NAME.SAILS]: parseAsString.withDefault(DEFAULT_VALUE.SAILS),
-
-    // TODO: validate date strings
-    [FILTER_NAME.FROM_DATE]: parseAsString.withDefault(DEFAULT_VALUE.FROM_DATE),
-    [FILTER_NAME.TO_DATE]: parseAsString.withDefault(DEFAULT_VALUE.TO_DATE),
+    [FILTER_NAME.FROM_DATE]: parseAsIsoString.withDefault(DEFAULT_VALUE.FROM_DATE),
+    [FILTER_NAME.TO_DATE]: parseAsIsoString.withDefault(DEFAULT_VALUE.TO_DATE),
   });
 
   const validFilters = {

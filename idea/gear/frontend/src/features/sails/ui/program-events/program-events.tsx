@@ -2,7 +2,7 @@ import { HexString } from '@gear-js/api';
 import { parseAsString } from 'nuqs';
 import { Sails } from 'sails-js';
 
-import { DateFilter, Filters } from '@/features/filters';
+import { DateFilter, Filters, parseAsIsoString } from '@/features/filters';
 import { useSearchParamsStates } from '@/hooks';
 import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
 import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
@@ -19,29 +19,27 @@ type Props = {
 
 const FILTER_NAME = {
   SAILS: 'sails',
-  DATE_FROM: 'from',
-  DATE_TO: 'to',
+  FROM_DATE: 'from',
+  TO_DATE: 'to',
 } as const;
 
 const DEFAULT_VALUE = {
   SAILS: '' as string,
-  DATE_FROM: '' as string,
-  DATE_TO: '' as string,
+  FROM_DATE: '' as string,
+  TO_DATE: '' as string,
 } as const;
 
 const DEFAULT_FILTER_VALUES = {
   [FILTER_NAME.SAILS]: DEFAULT_VALUE.SAILS,
-  [FILTER_NAME.DATE_FROM]: DEFAULT_VALUE.DATE_FROM,
-  [FILTER_NAME.DATE_TO]: DEFAULT_VALUE.DATE_TO,
+  [FILTER_NAME.FROM_DATE]: DEFAULT_VALUE.FROM_DATE,
+  [FILTER_NAME.TO_DATE]: DEFAULT_VALUE.TO_DATE,
 } as const;
 
 function useFilters(sails: Sails | undefined) {
   const [filters, setFilters] = useSearchParamsStates({
     [FILTER_NAME.SAILS]: parseAsString.withDefault(DEFAULT_VALUE.SAILS),
-
-    // TODO: validate date strings
-    [FILTER_NAME.DATE_FROM]: parseAsString.withDefault(DEFAULT_VALUE.DATE_FROM),
-    [FILTER_NAME.DATE_TO]: parseAsString.withDefault(DEFAULT_VALUE.DATE_TO),
+    [FILTER_NAME.FROM_DATE]: parseAsIsoString.withDefault(DEFAULT_VALUE.FROM_DATE),
+    [FILTER_NAME.TO_DATE]: parseAsIsoString.withDefault(DEFAULT_VALUE.TO_DATE),
   });
 
   const validFilters = {
@@ -78,7 +76,7 @@ function ProgramEvents({ programId, sails }: Props) {
 
     return (
       <Filters initialValues={DEFAULT_FILTER_VALUES} values={filterValues} onSubmit={setFilterValues}>
-        <DateFilter fromName={FILTER_NAME.DATE_FROM} toName={FILTER_NAME.DATE_TO} onSubmit={setFilterValues} />
+        <DateFilter fromName={FILTER_NAME.FROM_DATE} toName={FILTER_NAME.TO_DATE} onSubmit={setFilterValues} />
 
         <SailsFilter
           label="Sails Events"
