@@ -1,0 +1,66 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.header {
+  font-family: Kanit;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+
+  position: relative;
+}
+
+.headerButton {
+  font-size: 16px;
+}
+
+.prevButton,
+.nextButton {
+  position: absolute;
+  top: 2px;
+
+  svg {
+    width: 16px;
+    height: 16px;
+
+    fill: #fff;
+  }
+}
+
+.prevButton {
+  left: 0;
+
+  svg {
+    transform: scale(-1, 1);
+  }
+}
+
+.nextButton {
+  right: 0;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.button {
+  padding: 6px 8px;
+
+  font-family: Kanit;
+  color: #fff;
+  text-align: center;
+
+  background-color: transparent;
+  border-radius: 4px;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #2bd07133;
+    color: #2bd071;
+  }
+}

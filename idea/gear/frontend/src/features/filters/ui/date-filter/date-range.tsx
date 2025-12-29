@@ -1,15 +1,22 @@
 import { Button } from '@gear-js/ui';
 import { useState } from 'react';
-import { DateRange as DateRangeType, DayFlag, DayPicker, SelectionState, UI } from 'react-day-picker';
+import {
+  DateRange as DateRangeType,
+  DayFlag,
+  DayPicker,
+  SelectionState,
+  UI,
+  CaptionLabelProps,
+} from 'react-day-picker';
+
+import { isString } from '@/shared/helpers';
 
 import styles from './date-range.module.scss';
+import { HeaderButton, MonthPicker, NextButton, PrevButton, YearPicker } from './picker';
 
 const CLASS_NAMES = {
-  [UI.Months]: styles.container,
   [UI.MonthCaption]: styles.heading,
-  [UI.PreviousMonthButton]: styles.buttonPrev,
-  [UI.NextMonthButton]: styles.buttonNext,
-  [UI.Chevron]: styles.buttonIcon,
+  [UI.Months]: styles.container,
   [UI.Weekdays]: styles.weekdays,
   [UI.MonthGrid]: styles.month,
   [UI.Day]: styles.day,
@@ -29,28 +36,68 @@ type Props = {
 
 function DateRange({ defaultValue, onSubmit, onClose }: Props) {
   const [value, setValue] = useState(defaultValue);
+  const [month, setMonth] = useState(defaultValue?.from || defaultValue?.to || new Date());
+  const [view, setView] = useState<'days' | 'months' | 'years'>('days');
+
+  const handleNavigateYearClick = (delta: number) =>
+    setMonth((prevMonth) => new Date(prevMonth.getFullYear() + delta, prevMonth.getMonth()));
+
+  const handleMonthClick = (monthIndex: number) => {
+    setMonth((prevMonth) => new Date(prevMonth.getFullYear(), monthIndex));
+    setView('days');
+  };
+
+  const handleYearClick = (year: number) => {
+    setMonth((prevMonth) => new Date(year, prevMonth.getMonth()));
+    setView('months');
+  };
 
   const handleApplyClick = () => {
     onSubmit(value);
     onClose();
   };
 
+  const renderHeader = ({ children }: CaptionLabelProps) => {
+    if (!isString(children)) throw new Error('Invalid caption label children');
+
+    return <HeaderButton text={children} onClick={() => setView('months')} />;
+  };
+
   return (
     <>
-      <DayPicker
-        mode="range"
-        navLayout="around"
-        classNames={CLASS_NAMES}
-        selected={value}
-        onSelect={(_value) => setValue(_value)}
-        showOutsideDays
-        ISOWeek
-      />
+      {view === 'days' && (
+        <DayPicker
+          mode="range"
+          navLayout="around"
+          components={{ CaptionLabel: renderHeader, PreviousMonthButton: PrevButton, NextMonthButton: NextButton }}
+          classNames={CLASS_NAMES}
+          selected={value}
+          onSelect={(_value) => setValue(_value)}
+          showOutsideDays
+          ISOWeek
+          month={month}
+          onMonthChange={setMonth}
+        />
+      )}
 
-      <footer className={styles.footer}>
-        <Button text="Cancel" size="small" color="light" onClick={onClose} />
-        <Button text="Apply" size="small" onClick={handleApplyClick} />
-      </footer>
+      {view === 'months' && (
+        <MonthPicker
+          currentYear={month.getFullYear()}
+          onClick={handleMonthClick}
+          onNavigateYearClick={handleNavigateYearClick}
+          onYearClick={() => setView('years')}
+          onBackClick={() => setView('days')}
+        />
+      )}
+
+      {view === 'years' && <YearPicker onClick={handleYearClick} onBackClick={() => setView('months')} />}
+
+      {view === 'days' && (
+        <footer className={styles.footer}>
+          <Button text="Cancel" size="small" color="light" onClick={onClose} />
+          <Button text="Apply" size="small" onClick={handleApplyClick} />
+        </footer>
+      )}
     </>
   );
 }

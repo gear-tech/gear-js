@@ -1,41 +1,16 @@
+.heading {
+  margin-bottom: 16px;
+}
+
 .container {
   text-align: center;
   position: relative;
 }
 
-.heading {
-  display: inline-block;
-
+.headingButton {
   margin-bottom: 16px;
 
-  font-family: Kanit;
   font-size: 16px;
-  font-weight: 600;
-}
-
-.button {
-  &Prev,
-  &Next {
-    position: absolute;
-    top: 4px;
-
-    background-color: transparent;
-  }
-
-  &Prev {
-    left: 0;
-  }
-
-  &Next {
-    right: 0;
-  }
-
-  &Icon {
-    width: 16px;
-    height: 16px;
-
-    fill: #fff;
-  }
 }
 
 .weekdays {
