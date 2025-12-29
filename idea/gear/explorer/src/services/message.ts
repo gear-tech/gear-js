@@ -79,7 +79,7 @@ export class MessageService {
     }
 
     if (query) {
-      qb.andWhere('msg.id ILIKE :query', { query: `%${query.toLowerCase()}%` });
+      qb.andWhere('msg.id = :query', { query: query.toLowerCase() });
     }
 
     if (from) {
@@ -141,7 +141,7 @@ export class MessageService {
     }
 
     if (query) {
-      qb.andWhere('msg.id ILIKE :query', { query: `%${query.toLowerCase()}%` });
+      qb.andWhere('msg.id = :query', { query: query.toLowerCase() });
     }
 
     if (from) {
