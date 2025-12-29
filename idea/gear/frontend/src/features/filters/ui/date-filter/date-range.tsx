@@ -35,7 +35,11 @@ type Props = {
 };
 
 function DateRange({ defaultValue, onSubmit, onClose }: Props) {
+  // if only 'from' or only 'to' is set (possible when one search param is invalid),
+  // displayed ui will be empty, while everything works and its a valid state.
+  // not a big issue right now, ground for future improvements
   const [value, setValue] = useState(defaultValue);
+
   const [month, setMonth] = useState(defaultValue?.from || defaultValue?.to || new Date());
   const [view, setView] = useState<'days' | 'months' | 'years'>('days');
 

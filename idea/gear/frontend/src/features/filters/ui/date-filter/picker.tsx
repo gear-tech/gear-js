@@ -8,7 +8,13 @@ import styles from './picker.module.scss';
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 const CURRENT_YEAR = new Date().getFullYear();
+
+// there's no built-in years selection in react-day-picker, therefore providing our own solution.
+// for the sake of simplicity START_YEAR equals to network launch year.
+// however we're not limiting DayPicker input by itself, cuz otherwise url params have to be extra validated as well.
+// subject to future improvements
 const START_YEAR = 2023;
+
 const YEARS = Array.from({ length: CURRENT_YEAR - START_YEAR + 1 }, (_, i) => START_YEAR + i);
 
 function HeaderButton({ text, onClick }: { text: string; onClick: () => void }) {
