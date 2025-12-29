@@ -9,8 +9,9 @@ import {
   ParamMsgFromProgram,
   ParamMsgToProgram,
 } from '../types';
-import { MessageNotFound } from '../errors';
+import { InvalidParams, MessageNotFound } from '../errors';
 import { RequiredParams } from '../decorators/required';
+import { isHex } from '../utils';
 
 export class MessageService {
   private _repoTo: Repository<MessageToProgram>;
@@ -79,6 +80,8 @@ export class MessageService {
     }
 
     if (query) {
+      if (!isHex(query)) throw new InvalidParams('Message ID must be a hex string');
+
       qb.andWhere('msg.id = :query', { query: query.toLowerCase() });
     }
 
@@ -141,6 +144,8 @@ export class MessageService {
     }
 
     if (query) {
+      if (!isHex(query)) throw new InvalidParams('Message ID must be a hex string');
+
       qb.andWhere('msg.id = :query', { query: query.toLowerCase() });
     }
 
