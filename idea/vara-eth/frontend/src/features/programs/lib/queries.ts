@@ -2,8 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 
 import { type Code } from '@/features/codes/lib/queries';
 import { EXPLORER_URL } from '@/shared/config';
-import { fetchWithGuard } from '@/shared/helpers';
 import { PaginatedResponse } from '@/shared/types';
+import { fetchWithGuard } from '@/shared/utils';
 
 export type Program = {
   id: string;

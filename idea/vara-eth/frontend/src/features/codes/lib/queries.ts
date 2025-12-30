@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { EXPLORER_URL } from '@/shared/config';
-import { fetchWithGuard } from '@/shared/helpers';
 import { PaginatedResponse } from '@/shared/types';
+import { fetchWithGuard } from '@/shared/utils';
 
 export const CODE_STATUS = {
   VALIDATION_REQUESTED: 'ValidationRequested',
@@ -38,10 +38,7 @@ export const useGetAllCodesQuery = (page: number, pageSize: number) => {
 export const useGetCodeByIdQuery = (id: string) => {
   return useQuery({
     queryKey: ['codeById', id],
-    queryFn: async () => {
-      const url = new URL(`${EXPLORER_URL}/codes/${id}`);
-      return fetchWithGuard<Code>({ url });
-    },
+    queryFn: () => fetchWithGuard<Code>({ url: `${EXPLORER_URL}/codes/${id}` }),
     enabled: !!id,
   });
 };

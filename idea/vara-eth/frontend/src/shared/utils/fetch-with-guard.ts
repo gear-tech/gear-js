@@ -22,8 +22,8 @@ const fetchWithGuard: FetchWithGuard = async <T>({ url, method = 'GET', paramete
     const result = (await response.json().catch(() => ({}))) as unknown;
 
     throw new Error(
-      result !== null && typeof result === 'object' && 'error' in result && typeof result.error === 'string'
-        ? result.error
+      result !== null && typeof result === 'object' && 'message' in result && typeof result.message === 'string'
+        ? result.message
         : response.statusText || STATUS_CODES[response.status],
     );
   }
