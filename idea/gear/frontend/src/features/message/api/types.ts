@@ -11,6 +11,8 @@ type MessagesParameters = PaginationParameters & {
   service?: string;
   fn?: string;
   query?: string;
+  from?: string;
+  to?: string;
 };
 
 type MessagesToProgramParameters = MessagesParameters & {
