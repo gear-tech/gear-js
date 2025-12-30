@@ -15,7 +15,7 @@ type Props = {
 };
 
 function ProgramVouchers({ programId }: Props) {
-  const [searchQuery, setSearchQuery] = useSearchParamsState('search', parseAsString.withDefault(''));
+  const [searchQuery, setSearchQuery] = useSearchParamsState('query', parseAsString.withDefault(''));
   const [filters, filterParams, handleFiltersSubmit] = useVoucherFilters();
 
   const [vouchers, count, isLoading, hasMore, fetchMore, refetch] = useVouchers(searchQuery, filterParams, programId);
