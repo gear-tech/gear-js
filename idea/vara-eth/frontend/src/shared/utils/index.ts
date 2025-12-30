@@ -1,4 +1,5 @@
 import { formatBalance as polkadotFormatBalance } from '@polkadot/util';
+export { fetchWithGuard } from './fetch-with-guard';
 
 const copyToClipboard = ({
   value,
