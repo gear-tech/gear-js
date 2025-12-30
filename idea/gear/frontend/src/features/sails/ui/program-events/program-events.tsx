@@ -71,13 +71,11 @@ function ProgramEvents({ programId, sails }: Props) {
     />
   );
 
-  const renderFilters = () => {
-    if (!sails) return;
+  const renderFilters = () => (
+    <Filters initialValues={DEFAULT_FILTER_VALUES} values={filterValues} onSubmit={setFilterValues}>
+      <DateFilter fromName={FILTER_NAME.FROM_DATE} toName={FILTER_NAME.TO_DATE} onSubmit={setFilterValues} />
 
-    return (
-      <Filters initialValues={DEFAULT_FILTER_VALUES} values={filterValues} onSubmit={setFilterValues}>
-        <DateFilter fromName={FILTER_NAME.FROM_DATE} toName={FILTER_NAME.TO_DATE} onSubmit={setFilterValues} />
-
+      {sails && (
         <SailsFilter
           label="Sails Events"
           services={sails.services}
@@ -85,9 +83,9 @@ function ProgramEvents({ programId, sails }: Props) {
           name={FILTER_NAME.SAILS}
           onSubmit={setFilterValues}
         />
-      </Filters>
-    );
-  };
+      )}
+    </Filters>
+  );
 
   return (
     <ProgramTabLayout

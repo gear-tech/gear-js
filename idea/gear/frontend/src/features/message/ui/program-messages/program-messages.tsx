@@ -151,20 +151,6 @@ const ProgramMessages = ({ programId, sails }: Props) => {
     />
   );
 
-  const renderSailsFilters = () => {
-    if (!sails) return;
-
-    return (
-      <SailsFilter
-        label="Sails Functions"
-        services={sails.services}
-        type="functions"
-        name={FILTER_NAME.SAILS}
-        onSubmit={setFilters}
-      />
-    );
-  };
-
   const renderFilters = () => (
     <Filters initialValues={DEFAULT_FILTER_VALUES} values={filters} onSubmit={setFilters}>
       {account && (
@@ -192,7 +178,15 @@ const ProgramMessages = ({ programId, sails }: Props) => {
         />
       </FilterGroup>
 
-      {renderSailsFilters()}
+      {sails && (
+        <SailsFilter
+          label="Sails Functions"
+          services={sails.services}
+          type="functions"
+          name={FILTER_NAME.SAILS}
+          onSubmit={setFilters}
+        />
+      )}
     </Filters>
   );
 
