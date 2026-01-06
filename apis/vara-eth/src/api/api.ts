@@ -1,7 +1,7 @@
 import type { EthereumClient } from '../eth/index.js';
 import type { IInjectedTransaction, IVaraEthProvider, IVaraEthValidatorPoolProvider } from '../types/index.js';
 import { call, type Call } from './call/index.js';
-import { Injected } from './injected.js';
+import { InjectedTx } from './injected/index.js';
 import { query, type Query } from './query/index.js';
 
 export class VaraEthApi {
@@ -35,12 +35,12 @@ export class VaraEthApi {
     return this._provider;
   }
 
-  async createInjectedTransaction(tx: IInjectedTransaction): Promise<Injected> {
+  async createInjectedTransaction(tx: IInjectedTransaction): Promise<InjectedTx> {
     if (!this._ethClient) {
       throw new Error('Eth client is not set');
     }
 
-    const injectedTx = new Injected(this.provider, this._ethClient, tx);
+    const injectedTx = new InjectedTx(this.provider, this._ethClient, tx);
 
     if (!tx.referenceBlock) {
       await injectedTx.setReferenceBlock();

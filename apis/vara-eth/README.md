@@ -420,7 +420,12 @@ const result = await injected.send();
 
 // Wait for full transaction promise (includes reply)
 const promise = await injected.sendAndWaitForPromise();
+
+// Validate the promise signature
+await promise.validateSignature(); // Throws if signature is invalid
 ```
+
+> **Note**: The `Injected` class has been renamed to `InjectedTx`. For backward compatibility, `Injected` is still available as an alias.
 
 **Configuring Transaction Properties:**
 
