@@ -81,7 +81,7 @@ function EventCard({ programId, event, sails }: Props) {
       </header>
 
       {decoded && (
-        <div>
+        <>
           {isVftPayload && !decoded.error ? (
             <VftEventPayload name={name.toLowerCase()} programId={programId} decoded={decoded.payload} />
           ) : (
@@ -89,7 +89,7 @@ function EventCard({ programId, event, sails }: Props) {
           )}
 
           {decoded.error && <p className={styles.error}>Can&apos;t decode payload. {decoded.error}</p>}
-        </div>
+        </>
       )}
     </div>
   );
