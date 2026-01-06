@@ -4,35 +4,13 @@ import { keccak_256 } from '@noble/hashes/sha3.js';
 import type { Address, Hex } from 'viem';
 import { zeroAddress } from 'viem';
 
-import type { EthereumClient } from '../eth/index.js';
-import { isPoolProvider } from '../provider/util.js';
-import type {
-  IInjectedTransaction,
-  IInjectedTransactionPromise,
-  IVaraEthProvider,
-  IVaraEthValidatorPoolProvider,
-} from '../types/index.js';
-import { bigint128ToBytes } from '../util/index.js';
+import type { IInjectedTransaction, IVaraEthProvider, IVaraEthValidatorPoolProvider } from '../../types/index.js';
+import { InjectedTransactionPromiseRaw, InjectedTxPromise } from './promise.js';
+import type { EthereumClient } from '../../eth/index.js';
+import { isPoolProvider } from '../../provider/util.js';
+import { bigint128ToBytes } from '../../util/index.js';
 
-type InjectedTransactionPromiseRaw = {
-  data: {
-    txHash: {
-      hash: Hex;
-    };
-    reply: {
-      payload: Hex;
-      value: number;
-      code:
-        | {
-            Success: string;
-          }
-        | { Error: string };
-    };
-  };
-  signature: Hex;
-};
-
-export class Injected {
+export class InjectedTx {
   private _destination: Address;
   private _payload: Hex;
   private _value: bigint;
@@ -71,7 +49,7 @@ export class Injected {
     return bytes;
   }
 
-  public get recipient(): Hex | null {
+  public get recipient(): Address | null {
     return this._recipient || null;
   }
 
@@ -239,7 +217,7 @@ export class Injected {
     return result;
   }
 
-  public async sendAndWaitForPromise(): Promise<IInjectedTransactionPromise> {
+  public async sendAndWaitForPromise(): Promise<InjectedTxPromise> {
     if (!this._referenceBlock) {
       await this.setReferenceBlock();
     }
@@ -252,21 +230,17 @@ export class Injected {
 
     let unsub: (() => void) | undefined;
 
-    const promise = new Promise<IInjectedTransactionPromise>((resolve, reject) => {
+    const promise = new Promise<InjectedTxPromise>((resolve, reject) => {
       this._varaethProvider
         .subscribe<unknown, InjectedTransactionPromiseRaw>(
-          'injected_subscribeTransactionPromise',
-          'injected_unsubscribeTransactionPromise',
+          'injected_sendTransactionAndWatch',
+          'injected_sendTransactionAndWatchUnsubscribe',
           this._rpcData,
           (error, result) => {
             if (error) {
               reject(error);
             } else {
-              resolve({
-                txHash: result.data.txHash.hash,
-                reply: result.data.reply,
-                signature: result.signature,
-              });
+              resolve(new InjectedTxPromise(result, this._ethClient));
             }
           },
         )

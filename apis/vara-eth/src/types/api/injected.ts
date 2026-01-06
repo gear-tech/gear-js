@@ -32,12 +32,10 @@ export interface IInjectedTransaction {
 
 export interface IInjectedTransactionPromise {
   readonly txHash: Hex;
-  readonly reply: {
-    readonly payload: Hex;
-    readonly value: number;
-    // TODO: define an interface for this field
-    // TODO: consider moving it to a `common` package to reuse in both @gear-js/api and @vara-eth/api
-    readonly code: { Success: string } | { Error: string };
-  };
+  readonly payload: Hex;
+  readonly value: bigint;
+  // TODO: define an interface for this field
+  // TODO: consider moving it to a `common` package to reuse in both @gear-js/api and @vara-eth/api
+  readonly code: Hex;
   readonly signature: Hex;
 }
