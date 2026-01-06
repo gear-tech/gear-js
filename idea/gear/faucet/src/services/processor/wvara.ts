@@ -63,6 +63,7 @@ export class WvaraProcessor extends FaucetProcessor {
 
     for (const { id, address } of requests) {
       try {
+        logger.info(`Request ${id}`, { args: [address, this._amount], address: this._address });
         const { request } = await this._publicClient.simulateContract({
           address: this._address,
           abi: WVARA_ABI,

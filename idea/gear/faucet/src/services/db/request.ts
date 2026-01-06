@@ -98,21 +98,31 @@ export class RequestService {
       order: { timestamp: 'DESC' },
     });
 
-    await this._repo.update({ id: In(requests.map(({ id }) => id)) }, { status: RequestStatus.Processing });
+    for (let i = 0; i < requests.length; i += 1000) {
+      const _requests = requests.slice(i, i + 1000);
+      const ids = _requests.map(({ id }) => id);
+      await this._repo.update({ id: In(ids) }, { status: RequestStatus.Processing });
+    }
 
     return requests;
   }
 
   public async setCompleted(ids: number[]) {
     if (ids.length > 0) {
-      await this._repo.update({ id: In(ids) }, { status: RequestStatus.Completed });
+      for (let i = 0; i < ids.length; i += 1000) {
+        const _ids = ids.slice(i, i + 1000);
+        await this._repo.update({ id: In(_ids) }, { status: RequestStatus.Completed });
+      }
       logger.debug(`Requests ${ids} marked as completed`);
     }
   }
 
   public async setFailed(ids: number[]) {
     if (ids.length > 0) {
-      await this._repo.update({ id: In(ids) }, { status: RequestStatus.Failed });
+      for (let i = 0; i < ids.length; i += 1000) {
+        const _ids = ids.slice(i, i + 1000);
+        await this._repo.update({ id: In(_ids) }, { status: RequestStatus.Failed });
+      }
       logger.debug(`Requests ${ids} marked as failed`);
     }
   }
