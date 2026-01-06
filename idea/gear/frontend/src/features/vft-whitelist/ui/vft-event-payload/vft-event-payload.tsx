@@ -9,6 +9,8 @@ import { PreformattedBlock } from '@/shared/ui';
 
 import { SailsProgram, Vft } from '../../sails';
 
+import styles from './vft-event-payload.module.scss';
+
 type ApproveEvent = Parameters<Parameters<Vft['subscribeToApprovalEvent']>[0]>[0];
 type MintEvent = Parameters<Parameters<Vft['subscribeToMintedEvent']>[0]>[0];
 type BurnEvent = Parameters<Parameters<Vft['subscribeToBurnedEvent']>[0]>[0];
@@ -46,7 +48,7 @@ function VftEventPayload({ name, decoded, programId }: Props) {
 
   useErrorAlert(error);
 
-  const [isRaw, setIsRaw] = useState(false);
+  const [isParsed, setIsParsed] = useState(true);
 
   const parse = useCallback(
     (payload: { value: bigint | string | number }) => ({
@@ -86,8 +88,16 @@ function VftEventPayload({ name, decoded, programId }: Props) {
 
   return (
     <>
-      {parsed && <Checkbox label="Raw" checked={isRaw} onChange={() => setIsRaw((prevValue) => !prevValue)} />}
-      <PreformattedBlock text={isRaw ? decoded : (parsed ?? decoded)} />
+      {parsed && (
+        <Checkbox
+          label="Parsed payload"
+          checked={isParsed}
+          onChange={() => setIsParsed((prevValue) => !prevValue)}
+          className={styles.checkbox}
+        />
+      )}
+
+      <PreformattedBlock text={isParsed ? (parsed ?? decoded) : decoded} />
     </>
   );
 }
