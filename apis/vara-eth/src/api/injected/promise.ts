@@ -41,7 +41,7 @@ export class InjectedTxPromise implements IInjectedTransactionPromise {
    */
   public readonly signature: Hex;
 
-  private _validatorAddress: Address;
+  private _validatorAddress?: Address;
 
   constructor(
     promise: InjectedTransactionPromiseRaw,
@@ -69,7 +69,9 @@ export class InjectedTxPromise implements IInjectedTransactionPromise {
     const validators = await this._ethClient.router.validators();
 
     if (!validators.includes(lcAddress)) {
-      throw new Error('Invalid signature');
+      throw new Error(
+        `Promise signature validation failed: recovered address ${lcAddress} is not a registered validator`,
+      );
     }
 
     this._validatorAddress = lcAddress;
