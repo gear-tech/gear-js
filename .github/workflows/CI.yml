@@ -130,11 +130,11 @@ jobs:
           files: |
             apis/vara-eth/**
 
-      - name: 'Install: NodeJS 22.x'
+      - name: 'Install: NodeJS 24.x'
         if: steps.changed-vara-eth.outputs.any_changed == 'true'
         uses: actions/setup-node@v6
         with:
-          node-version: 22.x
+          node-version: 24.x
 
       - name: Set up Rust
         if: steps.changed-vara-eth.outputs.any_changed == 'true'
