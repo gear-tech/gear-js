@@ -88,7 +88,7 @@ function EventCard({ programId, event, sails }: Props) {
             <PreformattedBlock text={decoded.payload} />
           )}
 
-          {decoded.error && <p className={styles.error}>Can&apos;t decode payload: {decoded.error}</p>}
+          {decoded.error && <p className={styles.error}>Can&apos;t decode payload. {decoded.error}</p>}
         </div>
       )}
     </div>
