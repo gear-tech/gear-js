@@ -1,7 +1,7 @@
 import { formatBalance as polkadotFormatBalance } from '@polkadot/util';
 
 export { fetchWithGuard } from './fetch-with-guard';
-import { isUndefined } from './is';
+export { isUndefined } from './is';
 
 const copyToClipboard = ({
   value,
@@ -64,13 +64,4 @@ const getTruncatedText = (value: string, prefixLength = 8): string => {
   return `${value.slice(0, prefixLength + 2)}...${value.slice(-prefixLength)}`;
 };
 
-export {
-  copyToClipboard,
-  formatBalance,
-  formatNumber,
-  formatDate,
-  isString,
-  getPreformattedText,
-  getTruncatedText,
-  isUndefined,
-};
+export { copyToClipboard, formatBalance, formatNumber, formatDate, isString, getPreformattedText, getTruncatedText };

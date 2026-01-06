@@ -26,7 +26,7 @@ type CardProps = {
 
 const Card = ({ title, icon, link, count, increase }: CardProps) => {
   return (
-    <div className={styles.card} key={title}>
+    <div className={styles.card}>
       <div className={styles.row}>
         <span className={styles.cardTitle}>
           {icon}
@@ -77,7 +77,7 @@ const Home = () => {
 
         <div className={styles.titleContainer}>
           <h2 className={styles.subtitle}>
-            {'//'}_A portal for codes, programs, and events on Vara and Ethereum Networks, powered by Vara.eth
+            {'//_A portal for codes, programs, and events on Vara and Ethereum Networks, powered by Vara.eth'}
           </h2>
         </div>
 
