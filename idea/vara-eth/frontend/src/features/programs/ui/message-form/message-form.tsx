@@ -6,7 +6,7 @@ import { Sails } from 'sails-js';
 
 import { Button, Input, ExpandableItem } from '@/components';
 
-import { PayloadValue, useSendProgramMessage } from '../../lib';
+import { PayloadValue, useSendInjectedTransaction, useSendProgramMessage } from '../../lib';
 import { ISailsFuncArg } from '../../lib/types';
 import { getDefaultPayloadValue, getPayloadSchema } from '../../lib/utils';
 
@@ -19,14 +19,17 @@ type Props = {
   isQuery: boolean;
   sails: Sails;
   args: ISailsFuncArg[];
+  isOffchain: boolean;
 };
 
 type Values = {
   [k: string]: PayloadValue;
 };
 
-const MessageForm = ({ programId, isQuery, sails, serviceName, messageName, args }: Props) => {
-  const { sendMessage, isPending } = useSendProgramMessage(programId);
+const MessageForm = ({ programId, isQuery, sails, serviceName, messageName, args, isOffchain }: Props) => {
+  // TODO: add IDL
+  const { sendInjectedTransaction, isPending: isPendingInjectedTransaction } = useSendInjectedTransaction(programId);
+  const { sendMessage, isPending: isPendingMessage } = useSendProgramMessage(programId);
 
   const defaultValues = useMemo(() => getDefaultPayloadValue(sails, args), [sails, args]);
 
@@ -39,7 +42,8 @@ const MessageForm = ({ programId, isQuery, sails, serviceName, messageName, args
   };
 
   const handleSubmitForm = form.handleSubmit((formValues) => {
-    sendMessage({ serviceName, messageName, args: formValues, isQuery }, { onSuccess: resetForm });
+    const send = isOffchain ? sendInjectedTransaction : sendMessage;
+    send({ serviceName, messageName, args: formValues, isQuery }, { onSuccess: resetForm });
   });
 
   const formName = `${serviceName}-${messageName}-form`;
@@ -57,7 +61,7 @@ const MessageForm = ({ programId, isQuery, sails, serviceName, messageName, args
               variant="default"
               form={formName}
               size="xs"
-              isLoading={isPending}
+              isLoading={isPendingInjectedTransaction || isPendingMessage}
               className={styles.button}>
               {isQuery ? 'Read' : 'Write'}
             </Button>
