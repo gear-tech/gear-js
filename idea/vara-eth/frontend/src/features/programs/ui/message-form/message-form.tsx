@@ -19,14 +19,15 @@ type Props = {
   isQuery: boolean;
   sails: Sails;
   args: ISailsFuncArg[];
+  idl: string;
 };
 
 type Values = {
   [k: string]: PayloadValue;
 };
 
-const MessageForm = ({ programId, isQuery, sails, serviceName, messageName, args }: Props) => {
-  const { sendMessage, isPending } = useSendProgramMessage(programId);
+const MessageForm = ({ programId, isQuery, sails, serviceName, messageName, args, idl }: Props) => {
+  const { sendMessage, isPending } = useSendProgramMessage(programId, idl);
 
   const defaultValues = useMemo(() => getDefaultPayloadValue(sails, args), [sails, args]);
 

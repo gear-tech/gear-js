@@ -2,12 +2,12 @@ import { HexString } from '@vara-eth/api';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
-import { Badge, Button, HashLink, Navigation, NotFound } from '@/components';
+import { Badge, Button, HashLink, IdlUploadButton, Navigation, NotFound, SyntaxHighlighter } from '@/components';
 import { useGetCodeByIdQuery } from '@/features/codes/lib/queries';
-import { CodeViewer } from '@/features/codes/ui/code-viewer';
 import { CreateProgramButton } from '@/features/programs';
 import { Search } from '@/features/search';
 import { routes } from '@/shared/config';
+import { useIdlStorage } from '@/shared/hooks';
 import { formatDate } from '@/shared/utils';
 
 import styles from './code.module.scss';
@@ -21,9 +21,10 @@ const Code = () => {
   const params = useParams<Params>();
   const codeId = params?.codeId;
 
-  const { data: code, isLoading, error } = useGetCodeByIdQuery(codeId || '');
+  const { data: code, isLoading, error } = useGetCodeByIdQuery(codeId);
+  const { idl, isLoading: isIdlLoading } = useIdlStorage(codeId);
 
-  if (isLoading) {
+  if (isLoading || isIdlLoading) {
     return (
       <>
         <Navigation search={<Search />} />
@@ -40,7 +41,7 @@ const Code = () => {
     return (
       <>
         <Navigation search={<Search />} />
-        <NotFound entity="code" id={codeId} />
+        <NotFound entity="code" id={params?.codeId} />
       </>
     );
   }
@@ -90,7 +91,14 @@ const Code = () => {
         </div>
 
         <div className={styles.card}>
-          <CodeViewer />
+          {idl ? (
+            <SyntaxHighlighter language="rust" code={idl} />
+          ) : (
+            <div className={styles.emptyState}>
+              <p>No IDL uploaded. Please upload an IDL file to view it here.</p>
+              <IdlUploadButton id={codeId} />
+            </div>
+          )}
         </div>
       </div>
     </>

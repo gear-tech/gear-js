@@ -4,6 +4,7 @@ export { Button } from './button';
 export { CopyButton } from './copy-button';
 export { ExpandableItem } from './expandable-item';
 export { HashLink } from './hash-link';
+export { IdlUploadButton } from './idl-upload-button';
 export { Input } from './input';
 export { Loader } from './loader';
 export { NotFound } from './not-found';
