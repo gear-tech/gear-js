@@ -15,7 +15,7 @@ function Component() {
       <Header />
       <div className="layout">
         <ErrorBoundary>
-          <div>{isAppReady ? <Routing /> : <Loader />}</div>
+          <div className="page">{isAppReady ? <Routing /> : <Loader />}</div>
           <Activity />
         </ErrorBoundary>
       </div>
