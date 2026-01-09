@@ -14,4 +14,5 @@ export { Tabs } from './tabs';
 export { Tooltip } from './tooltip';
 export { Modal } from './modal';
 export { LinkButton } from './link-button';
+export { BackButton } from './back-button';
 export { ExplorerLink } from './explorer-link';
