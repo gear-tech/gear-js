@@ -5,17 +5,13 @@ import { EXPLORER_URL } from '@/shared/config';
 import { PaginatedResponse } from '@/shared/types';
 import { fetchWithGuard } from '@/shared/utils';
 
+import { Code, getCode } from './requests';
+
 export const CODE_STATUS = {
   VALIDATION_REQUESTED: 'ValidationRequested',
   VALIDATION_FAILED: 'ValidationFailed',
   VALIDATED: 'Validated',
 } as const;
-
-export type Code = {
-  id: HexString;
-  status: string;
-  createdAt: string;
-};
 
 type CodesResponse = PaginatedResponse<Code>;
 
@@ -36,10 +32,10 @@ export const useGetAllCodesQuery = (page: number, pageSize: number) => {
   });
 };
 
-export const useGetCodeByIdQuery = (id?: string) => {
+export const useGetCodeByIdQuery = (id: HexString | undefined) => {
   return useQuery({
     queryKey: ['codeById', id],
-    queryFn: () => fetchWithGuard<Code>({ url: `${EXPLORER_URL}/codes/${id}` }),
-    enabled: !!id,
+    queryFn: () => getCode(id!),
+    enabled: Boolean(id),
   });
 };
