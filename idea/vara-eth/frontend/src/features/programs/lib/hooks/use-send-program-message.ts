@@ -67,12 +67,10 @@ const useSendProgramMessage = (programId: HexString) => {
     return response;
   };
 
-  const { mutate: sendMessageMutation, isPending } = useMutation({
+  return useMutation({
     mutationKey: ['sendMessage', programId],
     mutationFn: sendMessage,
   });
-
-  return { sendMessage: sendMessageMutation, isPending };
 };
 
 export { useSendProgramMessage };
