@@ -23,6 +23,10 @@
   .backButton {
     margin-right: 4px;
   }
+
+  .arrow.from {
+    transform: rotate(180deg);
+  }
 }
 
 .body {
@@ -32,5 +36,43 @@
 
   .title {
     font-size: 12px;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+
+  .withExplorerLink {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .value {
+    color: #fff;
+  }
+
+  .blockNumber {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    > div:first-child {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      color: #fff;
+    }
+  }
+}
+
+.payload {
+  word-break: break-all;
+
+  &Title {
+    margin-bottom: 24px;
+
+    font-size: 16px;
+    font-weight: 400;
+    color: #a8f593;
   }
 }

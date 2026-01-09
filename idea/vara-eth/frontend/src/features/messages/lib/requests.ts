@@ -17,6 +17,17 @@ export type MessageRequests = {
   program?: Program;
 };
 
+type StateTransition = {
+  id: HexString;
+  hash: HexString;
+  timestamp: string;
+  programId: HexString;
+  exited: boolean;
+  valueToReceive: string | null;
+  inheritor?: HexString | null;
+  program?: Program;
+};
+
 export type MessageSent = {
   id: HexString;
   sourceProgramId: HexString;
@@ -27,7 +38,7 @@ export type MessageSent = {
   stateTransitionId: HexString;
   createdAt: string;
   sourceProgram?: Program;
-  stateTransition?: unknown;
+  stateTransition?: StateTransition;
 };
 
 export const getMessageRequests = (id: HexString) =>

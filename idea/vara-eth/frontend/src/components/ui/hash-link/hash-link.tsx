@@ -28,12 +28,12 @@ const HashLink = ({ isExternalLink, hash, href, isDisabled, truncateSize = 'xl',
           {displayHash}
         </Link>
       ) : (
-        <a target={'_blank'} rel={'noreferrer'} className={className} {...restProps}>
+        <a target="_blank" rel="noreferrer" className={className} {...restProps}>
           {displayHash}
         </a>
       )}
 
-      <CopyButton value={hash}></CopyButton>
+      <CopyButton value={hash} />
     </span>
   );
 };
