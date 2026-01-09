@@ -4,10 +4,8 @@ import TransactionSVG from '@/assets/icons/arrange-square.svg?react';
 import CodeSVG from '@/assets/icons/code.svg?react';
 import MessageSVG from '@/assets/icons/message.svg?react';
 import UserSVG from '@/assets/icons/user-square.svg?react';
-import { Navigation } from '@/components';
 import { useGetAllMessagesRequestsQuery, useGetAllMessagesSentQuery } from '@/features/messages';
 import { useGetAllProgramsQuery } from '@/features/programs';
-import { Search } from '@/features/search';
 import { useGetAllTransactionsQuery } from '@/features/transactions';
 import { routes } from '@/shared/config';
 import { formatNumber, isUndefined } from '@/shared/utils';
@@ -65,28 +63,24 @@ const Home = () => {
       : undefined;
 
   return (
-    <>
-      <Navigation search={<Search />} />
-
-      <div className={styles.container}>
-        <div className={styles.titleContainer}>
-          <h1 className={styles.title}>
-            Welcome to <span className={styles.accent}>Idea Vara.Eth</span>
-          </h1>
-        </div>
-
-        <div className={styles.titleContainer}>
-          <h2 className={styles.subtitle}>
-            {'//_A portal for codes, programs, and events on Vara and Ethereum Networks, powered by Vara.eth'}
-          </h2>
-        </div>
-
-        <Card title="Programs" icon={<CodeSVG />} link={PROGRAMS_LINK} count={programs?.total} increase={5000} />
-        <Card title="Messages" icon={<MessageSVG />} count={messagesCount} increase={5000} />
-        <Card title="Transactions" icon={<TransactionSVG />} count={transactions?.total} increase={5000} />
-        <Card title="Users" icon={<UserSVG />} count={100000} increase={5000} />
+    <div className={styles.container}>
+      <div className={styles.titleContainer}>
+        <h1 className={styles.title}>
+          Welcome to <span className={styles.accent}>Idea Vara.Eth</span>
+        </h1>
       </div>
-    </>
+
+      <div className={styles.titleContainer}>
+        <h2 className={styles.subtitle}>
+          {'//_A portal for codes, programs, and events on Vara and Ethereum Networks, powered by Vara.eth'}
+        </h2>
+      </div>
+
+      <Card title="Programs" icon={<CodeSVG />} link={PROGRAMS_LINK} count={programs?.total} increase={5000} />
+      <Card title="Messages" icon={<MessageSVG />} count={messagesCount} increase={5000} />
+      <Card title="Transactions" icon={<TransactionSVG />} count={transactions?.total} increase={5000} />
+      <Card title="Users" icon={<UserSVG />} count={100000} increase={5000} />
+    </div>
   );
 };
 
