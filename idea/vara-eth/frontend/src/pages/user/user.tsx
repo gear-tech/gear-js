@@ -1,22 +1,22 @@
+import { HexString } from '@vara-eth/api';
 import { useParams } from 'react-router-dom';
 import { useBalance } from 'wagmi';
 
 import { useWrappedVaraBalance } from '@/app/api';
-import EtherscanSvg from '@/assets/icons/etherscan.svg?react';
-import { Balance, HashLink, Navigation, Tooltip } from '@/components';
+import { Balance, ExplorerLink, HashLink, Navigation } from '@/components';
 import { Search } from '@/features/search';
 import { formatBalance } from '@/shared/utils';
 
 import styles from './user.module.scss';
 
 type Params = {
-  userId: string;
+  userId: HexString;
 };
 
 export const User = () => {
   const { userId } = useParams() as Params;
 
-  const address = userId.startsWith('0x') ? (userId as `0x${string}`) : undefined;
+  const address = userId.startsWith('0x') ? userId : undefined;
 
   const { data: ethBalance } = useBalance({ address });
   const { value, decimals } = useWrappedVaraBalance(address);
@@ -32,16 +32,7 @@ export const User = () => {
           <div className={styles.header}>
             <div className={styles.leftSide}>
               <HashLink hash={userId} />
-              <Tooltip value="View on Etherscan">
-                {/* TODO: support mainnet */}
-                <a
-                  href={`https://hoodi.etherscan.io/address/${userId}`}
-                  target={'_blank'}
-                  rel={'noreferrer'}
-                  className={styles.link}>
-                  <EtherscanSvg />
-                </a>
-              </Tooltip>
+              <ExplorerLink path="address" id={userId} />
             </div>
           </div>
 

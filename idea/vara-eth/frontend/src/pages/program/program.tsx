@@ -4,8 +4,7 @@ import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import { useApproveWrappedVara, useWrappedVaraBalance } from '@/app/api';
 import { useVaraEthApi } from '@/app/providers';
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
-import EtherscanSvg from '@/assets/icons/etherscan.svg?react';
-import { Badge, Balance, Button, HashLink, Navigation, NotFound, Tooltip } from '@/components';
+import { Badge, Balance, Button, ExplorerLink, HashLink, Navigation, NotFound } from '@/components';
 import { ServiceList, useExecutableBalanceTopUp } from '@/features/programs';
 import { useReadContractState, useGetProgramByIdQuery } from '@/features/programs/lib';
 import { Search } from '@/features/search';
@@ -80,16 +79,7 @@ const Program = () => {
                 <ArrowLeftSVG className={styles.arrowLeft} />
               </Button>
               <HashLink hash={programId} />
-              <Tooltip value="View on Etherscan">
-                {/* TODO: support mainnet */}
-                <a
-                  href={`https://hoodi.etherscan.io/address/${programId}`}
-                  target={'_blank'}
-                  rel={'noreferrer'}
-                  className={styles.link}>
-                  <EtherscanSvg />
-                </a>
-              </Tooltip>
+              <ExplorerLink path="address" id={programId} />
             </div>
             {isActive && (isInitialized ? <Badge>Active</Badge> : <Badge color="secondary">Uninitialized</Badge>)}
           </div>
