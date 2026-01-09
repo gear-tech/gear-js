@@ -1,40 +1,46 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { HexString } from '@vara-eth/api';
+import { useSyncExternalStore, useCallback } from 'react';
 
 const IDL_STORAGE_PREFIX = 'vara-eth-idl';
 
 const getIdlStorageKey = (codeId: HexString) => `${IDL_STORAGE_PREFIX}-${codeId}`;
 
-const getIdlQueryKey = (codeId?: HexString) => ['idl', codeId];
-
 type UseIdlStorageReturn = {
   idl: string | null;
   saveIdl: (idlContent: string) => void;
-  isLoading: boolean;
+};
+
+// Storage event listeners to sync across components
+const listeners = new Set<() => void>();
+
+const emitChange = () => {
+  listeners.forEach((listener) => listener());
+};
+
+const subscribe = (listener: () => void) => {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
 };
 
 export const useIdlStorage = (codeId?: HexString): UseIdlStorageReturn => {
-  const queryClient = useQueryClient();
+  const getSnapshot = useCallback(() => {
+    if (!codeId) return null;
 
-  const { data: idl = null, isLoading } = useQuery({
-    queryKey: getIdlQueryKey(codeId),
-    queryFn: () => localStorage.getItem(getIdlStorageKey(codeId!)),
-    enabled: !!codeId,
-  });
+    return localStorage.getItem(getIdlStorageKey(codeId));
+  }, [codeId]);
 
-  const { mutate: saveIdl } = useMutation({
-    mutationFn: (idlContent: string) => {
-      if (!codeId) throw new Error('Code ID is not found');
+  const idl = useSyncExternalStore(subscribe, getSnapshot);
+  const saveIdl = useCallback(
+    (idlContent: string) => {
+      if (!codeId) {
+        console.error('Code ID is not found');
+        return;
+      }
       localStorage.setItem(getIdlStorageKey(codeId), idlContent);
-      return Promise.resolve(idlContent);
+      emitChange();
     },
-    onSuccess: (idlContent) => {
-      queryClient.setQueryData(getIdlQueryKey(codeId), idlContent);
-    },
-    onError: (error) => {
-      console.error('Failed to save IDL to localStorage:', error);
-    },
-  });
+    [codeId],
+  );
 
-  return { idl, saveIdl, isLoading };
+  return { idl, saveIdl };
 };

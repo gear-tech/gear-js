@@ -2,7 +2,7 @@ import { HexString } from '@vara-eth/api';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
-import { Badge, Button, HashLink, IdlUploadButton, Navigation, NotFound, SyntaxHighlighter } from '@/components';
+import { Badge, Button, HashLink, UploadIdlButton, Navigation, NotFound, SyntaxHighlighter } from '@/components';
 import { useGetCodeByIdQuery } from '@/features/codes/lib/queries';
 import { CreateProgramButton } from '@/features/programs';
 import { Search } from '@/features/search';
@@ -22,9 +22,9 @@ const Code = () => {
   const codeId = params?.codeId;
 
   const { data: code, isLoading, error } = useGetCodeByIdQuery(codeId);
-  const { idl, isLoading: isIdlLoading } = useIdlStorage(codeId);
+  const { idl } = useIdlStorage(codeId);
 
-  if (isLoading || isIdlLoading) {
+  if (isLoading) {
     return (
       <>
         <Navigation search={<Search />} />
@@ -96,7 +96,7 @@ const Code = () => {
           ) : (
             <div className={styles.emptyState}>
               <p>No IDL uploaded. Please upload an IDL file to view it here.</p>
-              <IdlUploadButton id={codeId} />
+              <UploadIdlButton id={codeId} />
             </div>
           )}
         </div>

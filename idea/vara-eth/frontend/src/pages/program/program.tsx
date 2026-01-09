@@ -5,7 +5,7 @@ import { useApproveWrappedVara, useWrappedVaraBalance } from '@/app/api';
 import { useVaraEthApi } from '@/app/providers';
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
 import EtherscanSvg from '@/assets/icons/etherscan.svg?react';
-import { Badge, Balance, Button, HashLink, IdlUploadButton, Navigation, NotFound, Tooltip } from '@/components';
+import { Badge, Balance, Button, HashLink, UploadIdlButton, Navigation, NotFound, Tooltip } from '@/components';
 import { ServiceList, useExecutableBalanceTopUp } from '@/features/programs';
 import { useReadContractState, useGetProgramByIdQuery } from '@/features/programs/lib';
 import { Search } from '@/features/search';
@@ -37,7 +37,7 @@ const Program = () => {
   const codeId = program?.code?.id;
   const blockHash = program?.txHash || '';
   const formattedCreatedAt = program?.createdAt ? formatDate(program.createdAt) : '';
-  const { idl, isLoading: isIdlLoading } = useIdlStorage(codeId);
+  const { idl } = useIdlStorage(codeId);
 
   const executableBalance =
     programState && decimals ? formatBalance(BigInt(programState.executableBalance), decimals) : null;
@@ -73,12 +73,12 @@ const Program = () => {
   }
 
   const serviceListContent = () => {
-    if (isIdlLoading) return <div>Loading...</div>;
     if (idl) return <ServiceList programId={programId} idl={idl} />;
+    if (!codeId) return null;
     return (
       <div className={styles.emptyState}>
         <p>No IDL uploaded. Please upload an IDL file to initialize and interact with the program.</p>
-        <IdlUploadButton id={programId} />
+        <UploadIdlButton id={codeId} />
       </div>
     );
   };
