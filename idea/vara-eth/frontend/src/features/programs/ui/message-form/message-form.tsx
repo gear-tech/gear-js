@@ -28,7 +28,8 @@ type Values = {
 
 const MessageForm = ({ programId, isQuery, sails, serviceName, messageName, args, isOffchain }: Props) => {
   // TODO: add IDL
-  const { sendInjectedTransaction, isPending: isPendingInjectedTransaction } = useSendInjectedTransaction(programId);
+  const { mutate: sendInjectedTransaction, isPending: isPendingInjectedTransaction } =
+    useSendInjectedTransaction(programId);
   const { sendMessage, isPending: isPendingMessage } = useSendProgramMessage(programId);
 
   const defaultValues = useMemo(() => getDefaultPayloadValue(sails, args), [sails, args]);

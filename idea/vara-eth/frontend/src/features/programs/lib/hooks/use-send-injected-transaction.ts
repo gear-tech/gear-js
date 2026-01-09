@@ -21,7 +21,7 @@ const useSendInjectedTransaction = (programId: HexString) => {
   const { api } = useVaraEthApi();
   const addMyActivity = useAddMyActivity();
 
-  const sendMessage = async ({ serviceName, messageName, isQuery, args }: SendMessageParams) => {
+  const sendInjectedTransaction = async ({ serviceName, messageName, isQuery, args }: SendMessageParams) => {
     if (!sails || !api) return;
 
     const messageKey = isQuery ? 'queries' : 'functions';
@@ -68,12 +68,10 @@ const useSendInjectedTransaction = (programId: HexString) => {
     return response;
   };
 
-  const { mutate: sendMessageMutation, isPending } = useMutation({
-    mutationKey: ['sendMessage', programId],
-    mutationFn: sendMessage,
+  return useMutation({
+    mutationKey: ['sendInjectedTransaction', programId],
+    mutationFn: sendInjectedTransaction,
   });
-
-  return { sendInjectedTransaction: sendMessageMutation, isPending };
 };
 
 export { useSendInjectedTransaction };
