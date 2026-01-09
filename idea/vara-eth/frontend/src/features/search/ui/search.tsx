@@ -1,54 +1,69 @@
-import { useState } from 'react';
-import { generatePath, useLocation, useNavigate } from 'react-router-dom';
-import { isAddress } from 'viem';
+import { getBytecode } from '@wagmi/core';
+import { FormEvent } from 'react';
+import { generatePath, useNavigate } from 'react-router-dom';
+import { isAddress, isHash } from 'viem';
+import { useConfig } from 'wagmi';
 
 import SearchSVG from '@/assets/icons/search.svg?react';
 import { Button } from '@/components';
+import { getCode } from '@/features/codes/lib/requests';
+import { getMessageRequests, getMessageSent } from '@/features/messages/lib/requests';
 import { routes } from '@/shared/config';
+import { noop } from '@/shared/utils';
 
 import styles from './search.module.scss';
 
 const Search = () => {
-  const [search, setSearch] = useState('');
   const navigate = useNavigate();
-  const location = useLocation();
-  const isHomePage = location.pathname === routes.home;
+  const config = useConfig();
 
-  const onSearch = () => {
-    if (!search) {
-      return;
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const value = (formData.get('search') as string).trim();
+
+    if (!value) return;
+
+    if (isAddress(value)) {
+      const bytecode = await getBytecode(config, { address: value });
+
+      return bytecode
+        ? navigate(generatePath(routes.program, { programId: value }))
+        : navigate(generatePath(routes.user, { userId: value }));
     }
 
-    if (isAddress(search)) {
-      void navigate(generatePath(routes.user, { userId: search }));
-      return;
+    if (isHash(value)) {
+      const code = await getCode(value).catch(noop);
+
+      // TODO: pass state to avoid double fetch
+      if (code) return navigate(generatePath(routes.code, { codeId: value }));
+
+      const messageRequests = await getMessageRequests(value).catch(noop);
+
+      if (messageRequests) return navigate(generatePath(routes.message.requests, { messageId: value }));
+
+      const messageSent = await getMessageSent(value).catch(noop);
+
+      if (messageSent) return navigate(generatePath(routes.message.sent, { messageId: value }));
     }
 
-    void navigate(generatePath(routes.notFound));
-  };
-
-  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      onSearch();
-    }
+    navigate(generatePath(routes.notFound));
   };
 
   return (
-    <div className={styles.wrapper}>
+    <form className={styles.wrapper} onSubmit={handleSubmit}>
       <input
-        className={styles.input}
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
         type="text"
-        placeholder="Search by block number, code id, program id, wallet address..."
-        onKeyDown={onKeyDown}
-        // eslint-disable-next-line jsx-a11y/no-autofocus
-        autoFocus={isHomePage}
+        placeholder="Search by code id, program id, message id, wallet address..."
+        name="search"
+        className={styles.input}
       />
-      <Button variant="icon" onClick={onSearch}>
+
+      <Button type="submit" variant="icon">
         <SearchSVG />
       </Button>
-    </div>
+    </form>
   );
 };
 

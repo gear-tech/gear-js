@@ -19,7 +19,7 @@ const Code = () => {
   const params = useParams<Params>();
   const codeId = params?.codeId;
 
-  const { data: code, isLoading, error } = useGetCodeByIdQuery(codeId || '');
+  const { data: code, isLoading, error } = useGetCodeByIdQuery(codeId);
 
   if (isLoading) {
     return (

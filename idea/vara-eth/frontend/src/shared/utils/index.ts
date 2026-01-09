@@ -1,7 +1,11 @@
 import { formatBalance as polkadotFormatBalance } from '@polkadot/util';
 
+export { clsx as cx } from 'clsx';
+
 export { fetchWithGuard } from './fetch-with-guard';
 export { isUndefined } from './is';
+
+const noop = () => {};
 
 const copyToClipboard = ({
   value,
@@ -64,4 +68,13 @@ const getTruncatedText = (value: string, prefixLength = 8): string => {
   return `${value.slice(0, prefixLength + 2)}...${value.slice(-prefixLength)}`;
 };
 
-export { copyToClipboard, formatBalance, formatNumber, formatDate, isString, getPreformattedText, getTruncatedText };
+export {
+  noop,
+  copyToClipboard,
+  formatBalance,
+  formatNumber,
+  formatDate,
+  isString,
+  getPreformattedText,
+  getTruncatedText,
+};
