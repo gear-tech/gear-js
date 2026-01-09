@@ -1,0 +1,36 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.column {
+  padding: 24px;
+
+  &:not(:last-child) {
+    border-right: 1px solid #292929;
+  }
+}
+
+.header {
+  margin-bottom: 24px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 16px;
+
+  .backButton {
+    margin-right: 4px;
+  }
+}
+
+.body {
+  display: grid;
+  grid-template-columns: 136px 1fr;
+  gap: 20px 24px;
+
+  .title {
+    font-size: 12px;
+  }
+}

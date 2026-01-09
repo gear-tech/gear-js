@@ -1,3 +1,13 @@
-import { useGetAllMessagesRequestsQuery, useGetAllMessagesSentQuery } from './lib';
+import {
+  useGetMessageRequestsByIdQuery,
+  useGetMessageSentByIdQuery,
+  useGetAllMessagesRequestsQuery,
+  useGetAllMessagesSentQuery,
+} from './lib';
 
-export { useGetAllMessagesRequestsQuery, useGetAllMessagesSentQuery };
+export {
+  useGetMessageRequestsByIdQuery,
+  useGetMessageSentByIdQuery,
+  useGetAllMessagesRequestsQuery,
+  useGetAllMessagesSentQuery,
+};

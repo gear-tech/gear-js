@@ -4,6 +4,7 @@ const routes = {
   program: '/programs/:programId',
   codes: '/codes',
   code: '/codes/:codeId',
+  message: '/messages/:messageId',
   user: '/user/:userId',
   notFound: '/404',
 };
