@@ -16,14 +16,15 @@ type Props = {
   sails: Sails;
   args: ISailsFuncArg[];
   onInit: () => void;
+  idl: string;
 };
 
 type Values = {
   [k: string]: PayloadValue;
 };
 
-const InitForm = ({ programId, sails, ctorName, args, onInit }: Props) => {
-  const { initProgram, isPending: isInitPending } = useInitProgram(programId);
+const InitForm = ({ programId, sails, ctorName, args, onInit, idl }: Props) => {
+  const { initProgram, isPending: isInitPending } = useInitProgram(programId, idl);
 
   const defaultValues = useMemo(() => getDefaultPayloadValue(sails, args), [sails, args]);
 

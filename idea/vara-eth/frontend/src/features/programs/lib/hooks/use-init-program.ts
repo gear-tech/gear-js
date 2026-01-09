@@ -4,9 +4,6 @@ import { HexString } from '@vara-eth/api';
 import { useMirrorContract } from '@/app/api';
 import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
 
-// TODO: use idl from the program
-import counterIdl from '../../../../../../../../apis/vara-eth/programs/counter-idl/counter.idl?raw';
-
 import { useSails } from './use-sails';
 
 type InitProgramParams = {
@@ -14,8 +11,8 @@ type InitProgramParams = {
   args: unknown[];
 };
 
-const useInitProgram = (programId: HexString) => {
-  const { data: sails } = useSails(counterIdl);
+const useInitProgram = (programId: HexString, idl: string) => {
+  const { data: sails } = useSails(idl);
   const { data: mirrorContract } = useMirrorContract(programId);
   const addMyActivity = useAddMyActivity();
 

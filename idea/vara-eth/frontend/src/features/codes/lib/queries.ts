@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { HexString } from '@vara-eth/api';
 
 import { EXPLORER_URL } from '@/shared/config';
 import { PaginatedResponse } from '@/shared/types';
@@ -11,7 +12,7 @@ export const CODE_STATUS = {
 } as const;
 
 export type Code = {
-  id: string;
+  id: HexString;
   status: string;
   createdAt: string;
 };
@@ -35,7 +36,7 @@ export const useGetAllCodesQuery = (page: number, pageSize: number) => {
   });
 };
 
-export const useGetCodeByIdQuery = (id: string) => {
+export const useGetCodeByIdQuery = (id?: string) => {
   return useQuery({
     queryKey: ['codeById', id],
     queryFn: () => fetchWithGuard<Code>({ url: `${EXPLORER_URL}/codes/${id}` }),

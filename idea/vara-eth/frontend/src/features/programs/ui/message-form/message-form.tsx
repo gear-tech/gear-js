@@ -19,6 +19,7 @@ type Props = {
   isQuery: boolean;
   sails: Sails;
   args: ISailsFuncArg[];
+  idl: string;
   isOffchain: boolean;
 };
 
@@ -26,11 +27,12 @@ type Values = {
   [k: string]: PayloadValue;
 };
 
-const MessageForm = ({ programId, isQuery, sails, serviceName, messageName, args, isOffchain }: Props) => {
-  // TODO: add IDL
-  const { mutate: sendInjectedTransaction, isPending: isPendingInjectedTransaction } =
-    useSendInjectedTransaction(programId);
-  const { mutate: sendMessage, isPending: isPendingMessage } = useSendProgramMessage(programId);
+const MessageForm = ({ programId, isQuery, sails, serviceName, messageName, args, idl, isOffchain }: Props) => {
+  const { mutate: sendInjectedTransaction, isPending: isPendingInjectedTransaction } = useSendInjectedTransaction(
+    programId,
+    idl,
+  );
+  const { mutate: sendMessage, isPending: isPendingMessage } = useSendProgramMessage(programId, idl);
 
   const defaultValues = useMemo(() => getDefaultPayloadValue(sails, args), [sails, args]);
 
