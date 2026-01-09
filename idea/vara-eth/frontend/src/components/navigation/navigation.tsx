@@ -1,40 +1,41 @@
+import { HexString } from '@vara-eth/api';
 import { clsx } from 'clsx';
-import { ReactNode } from 'react';
-import { NavLink } from 'react-router-dom';
+import { matchPath, NavLink, useLocation } from 'react-router-dom';
 
+import { UploadCodeButton } from '@/features/codes';
+import { CreateProgramButton } from '@/features/programs';
+import { Search } from '@/features/search';
 import { routes } from '@/shared/config';
 
 import styles from './navigation.module.scss';
 
-const navigation = [
+const LINKS = [
   { title: 'Home', to: routes.home },
   { title: 'Programs', to: routes.programs },
   { title: 'Codes', to: routes.codes },
-];
+] as const;
 
-type Props = {
-  search: ReactNode;
-  action?: ReactNode;
-};
+const Navigation = () => {
+  const { pathname } = useLocation();
+  const codePath = matchPath(routes.code, pathname);
 
-const Navigation = ({ search, action }: Props) => {
+  const renderLinks = () =>
+    LINKS.map(({ to, title }) => (
+      <NavLink key={to} to={to} className={({ isActive }) => clsx(styles.navigationItem, isActive && styles.active)}>
+        [{title}]
+      </NavLink>
+    ));
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.leftSide}>
-        <div className={styles.navigation}>
-          {navigation.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className={({ isActive }) => clsx(styles.navigationItem, isActive && styles.active)}>
-              [{item.title}]
-            </NavLink>
-          ))}
-        </div>
-        {action}
+        <div className={styles.navigation}>{renderLinks()}</div>
+
+        {codePath && <CreateProgramButton codeId={codePath.params.codeId as HexString} />}
+        {matchPath(routes.codes, pathname) && <UploadCodeButton />}
       </div>
 
-      {search}
+      <Search />
     </div>
   );
 };

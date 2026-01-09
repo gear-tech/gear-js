@@ -1,21 +1,23 @@
 import './app.css';
 
-import { ErrorBoundary, Header, Loader } from '@/components';
+import { ErrorBoundary, Header, Navigation } from '@/components';
+import { Activity } from '@/features/activity';
 import { Routing } from '@/pages';
-
-import { Activity } from '../features/activity';
 
 import { withProviders } from './providers';
 
 function Component() {
-  const isAppReady = true;
-
   return (
     <main>
       <Header />
+
       <div className="layout">
         <ErrorBoundary>
-          <div>{isAppReady ? <Routing /> : <Loader />}</div>
+          <div>
+            <Navigation />
+            <Routing />
+          </div>
+
           <Activity />
         </ErrorBoundary>
       </div>

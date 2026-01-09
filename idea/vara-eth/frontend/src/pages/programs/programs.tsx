@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { generatePath } from 'react-router-dom';
 
-import { HashLink, Navigation, Pagination, Table } from '@/components';
+import { HashLink, Pagination, Table } from '@/components';
 import { useGetAllProgramsQuery } from '@/features/programs';
-import { Search } from '@/features/search';
 import { routes } from '@/shared/config';
 import { formatDate } from '@/shared/utils';
 
@@ -46,18 +45,15 @@ const Programs = () => {
   const totalPages = totalItems ? Math.ceil(totalItems / PAGE_SIZE) : 1;
 
   return (
-    <>
-      <Navigation search={<Search />} />
-      <div className={styles.container}>
-        <Table
-          columns={columns}
-          data={data}
-          isFetching={isFetching}
-          lineHeight="lg"
-          headerRight={<Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />}
-        />
-      </div>
-    </>
+    <div className={styles.container}>
+      <Table
+        columns={columns}
+        data={data}
+        isFetching={isFetching}
+        lineHeight="lg"
+        headerRight={<Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />}
+      />
+    </div>
   );
 };
 

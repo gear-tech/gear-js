@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { generatePath } from 'react-router-dom';
 
-import { HashLink, Navigation, Pagination, Table } from '@/components';
-import { useGetAllCodesQuery, UploadCodeButton } from '@/features/codes';
-import { Search } from '@/features/search';
+import { HashLink, Pagination, Table } from '@/components';
+import { useGetAllCodesQuery } from '@/features/codes';
 import { routes } from '@/shared/config';
 import { formatDate } from '@/shared/utils';
 
@@ -59,18 +58,14 @@ const Codes = () => {
   const totalPages = totalItems ? Math.ceil(totalItems / PAGE_SIZE) : 1;
 
   return (
-    <>
-      <Navigation search={<Search />} action={<UploadCodeButton />} />
-
-      <div className={styles.container}>
-        <Table
-          columns={columns}
-          data={data}
-          isFetching={isFetching}
-          headerRight={<Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />}
-        />
-      </div>
-    </>
+    <div className={styles.container}>
+      <Table
+        columns={columns}
+        data={data}
+        isFetching={isFetching}
+        headerRight={<Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />}
+      />
+    </div>
   );
 };
 
