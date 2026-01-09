@@ -1,36 +1,24 @@
+import { HexString } from '@gear-js/api';
 import { useQuery } from '@tanstack/react-query';
-import { HexString } from '@vara-eth/api';
 
 import { EXPLORER_URL } from '@/shared/config';
 import { PaginatedResponse } from '@/shared/types';
 import { fetchWithGuard } from '@/shared/utils';
 
-import { Program } from '../../programs/lib/queries';
+import { getMessageRequests, getMessageSent, MessageRequests, MessageSent } from './requests';
 
-type MessageRequest = {
-  id: HexString;
-  sourceAddress: HexString;
-  programId: HexString;
-  payload: HexString;
-  value: string;
-  callReply: boolean;
-  txHash: HexString;
-  blockNumber: string;
-  createdAt: string;
-  program?: Program;
+export const useGetMessageRequestsByIdQuery = (id: HexString) => {
+  return useQuery({
+    queryKey: ['messageRequests', id],
+    queryFn: () => getMessageRequests(id),
+  });
 };
 
-type MessageSent = {
-  id: HexString;
-  sourceProgramId: HexString;
-  destination: HexString;
-  payload: HexString;
-  value: string;
-  isCall: boolean;
-  stateTransitionId: HexString;
-  createdAt: string;
-  sourceProgram?: Program;
-  stateTransition?: unknown;
+export const useGetMessageSentByIdQuery = (id: HexString) => {
+  return useQuery({
+    queryKey: ['messageSent', id],
+    queryFn: () => getMessageSent(id),
+  });
 };
 
 export const useGetAllMessagesRequestsQuery = (page: number, pageSize: number) => {
@@ -46,7 +34,7 @@ export const useGetAllMessagesRequestsQuery = (page: number, pageSize: number) =
       url.searchParams.set('limit', String(limit));
       url.searchParams.set('offset', String(offset));
 
-      return fetchWithGuard<PaginatedResponse<MessageRequest>>({ url });
+      return fetchWithGuard<PaginatedResponse<MessageRequests>>({ url });
     },
 
     placeholderData: (previousData) => previousData,

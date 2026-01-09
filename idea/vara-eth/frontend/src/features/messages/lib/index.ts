@@ -1,3 +1,13 @@
-import { useGetAllMessagesRequestsQuery, useGetAllMessagesSentQuery } from './queries';
+import {
+  useGetMessageRequestsByIdQuery,
+  useGetMessageSentByIdQuery,
+  useGetAllMessagesRequestsQuery,
+  useGetAllMessagesSentQuery,
+} from './queries';
 
-export { useGetAllMessagesRequestsQuery, useGetAllMessagesSentQuery };
+export {
+  useGetMessageRequestsByIdQuery,
+  useGetMessageSentByIdQuery,
+  useGetAllMessagesRequestsQuery,
+  useGetAllMessagesSentQuery,
+};
