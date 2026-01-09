@@ -13,4 +13,6 @@ export { Table } from './table';
 export { Tabs } from './tabs';
 export { Tooltip } from './tooltip';
 export { Modal } from './modal';
+export { PageContainer } from './page-container';
+export { BackButton } from './back-button';
 export { ExplorerLink } from './explorer-link';
