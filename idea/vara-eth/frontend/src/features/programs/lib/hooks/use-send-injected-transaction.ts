@@ -1,10 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 import { HexString } from '@vara-eth/api';
 
-import { useMirrorContract } from '@/app/api';
+import { useVaraEthApi } from '@/app/providers';
 import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
 
-// TODO: use idl from the program
+// TODO: use idl of the program
 import counterIdl from '../../../../../../../../apis/vara-eth/programs/counter-idl/counter.idl?raw';
 
 import { useSails } from './use-sails';
@@ -16,21 +16,26 @@ type SendMessageParams = {
   args: unknown[];
 };
 
-const useSendProgramMessage = (programId: HexString) => {
+const useSendInjectedTransaction = (programId: HexString) => {
   const { data: sails } = useSails(counterIdl);
-  const { data: mirrorContract } = useMirrorContract(programId);
+  const { api } = useVaraEthApi();
   const addMyActivity = useAddMyActivity();
 
-  const sendMessage = async ({ serviceName, messageName, isQuery, args }: SendMessageParams) => {
-    if (!mirrorContract || !sails) return;
+  const sendInjectedTransaction = async ({ serviceName, messageName, isQuery, args }: SendMessageParams) => {
+    if (!sails || !api) return;
 
     const messageKey = isQuery ? 'queries' : 'functions';
     const sailsMessage = sails?.services[serviceName][messageKey][messageName];
     const _payload = sailsMessage.encodePayload(...args);
 
-    const tx = await mirrorContract.sendMessage(_payload);
-    const response = await tx.send();
-    const receipt = await tx.getReceipt();
+    const tx = await api.createInjectedTransaction({
+      destination: programId,
+      payload: _payload,
+      value: 0n,
+    });
+
+    const response = await tx.sendAndWaitForPromise();
+    const { reply, txHash } = response;
     const params = args.map((_value, index) => {
       const key = sailsMessage.args[index].name;
       return `${key}: ${String(_value)}`;
@@ -40,15 +45,13 @@ const useSendProgramMessage = (programId: HexString) => {
       type: TransactionTypes.programMessage,
       serviceName,
       messageName,
-      ...unpackReceipt(receipt),
+      ...unpackReceipt(),
+      hash: txHash,
       to: programId,
       params: { payload: `${messageName} (${params.join(', ')})` },
     });
 
-    const { waitForReply } = await tx.setupReplyListener();
-    const reply = await waitForReply();
-
-    const { payload, replyCode, blockNumber, txHash } = reply;
+    const { payload, value, code } = reply;
 
     const result: Record<string, unknown> = sailsMessage.decodeResult(payload);
 
@@ -56,21 +59,19 @@ const useSendProgramMessage = (programId: HexString) => {
       type: TransactionTypes.programReply,
       serviceName,
       messageName,
-      replyCode,
+      replyCode: 'Success' in code ? 'Success' : 'Error',
       ...unpackReceipt(),
-      blockNumber: BigInt(blockNumber),
       from: programId,
-      hash: txHash,
       params: { payload: JSON.stringify(result) },
-      value: String(reply.value),
+      value: String(value),
     });
     return response;
   };
 
   return useMutation({
-    mutationKey: ['sendMessage', programId],
-    mutationFn: sendMessage,
+    mutationKey: ['sendInjectedTransaction', programId],
+    mutationFn: sendInjectedTransaction,
   });
 };
 
-export { useSendProgramMessage };
+export { useSendInjectedTransaction };
