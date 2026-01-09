@@ -1,5 +1,3 @@
-import { HexString } from '@vara-eth/api';
-
 import EtherscanSvg from '@/assets/icons/etherscan.svg?react';
 
 import { Tooltip } from '../tooltip';
@@ -8,7 +6,7 @@ import styles from './explorer-link.module.scss';
 
 type Props = {
   path: string;
-  id: HexString;
+  id: string;
 };
 
 const ExplorerLink = ({ path, id }: Props) => {
