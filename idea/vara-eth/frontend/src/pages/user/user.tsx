@@ -1,3 +1,4 @@
+import { HexString } from '@vara-eth/api';
 import { useParams } from 'react-router-dom';
 import { useBalance } from 'wagmi';
 
@@ -9,13 +10,13 @@ import { formatBalance } from '@/shared/utils';
 import styles from './user.module.scss';
 
 type Params = {
-  userId: string;
+  userId: HexString;
 };
 
 export const User = () => {
   const { userId } = useParams() as Params;
 
-  const address = userId.startsWith('0x') ? (userId as `0x${string}`) : undefined;
+  const address = userId.startsWith('0x') ? userId : undefined;
 
   const { data: ethBalance } = useBalance({ address });
   const { value, decimals } = useWrappedVaraBalance(address);
