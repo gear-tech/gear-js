@@ -1,5 +1,5 @@
 import { HexString } from '@vara-eth/api';
-import { useSyncExternalStore, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 const IDL_STORAGE_PREFIX = 'vara-eth-idl';
 
@@ -10,37 +10,21 @@ type UseIdlStorageReturn = {
   saveIdl: (idlContent: string) => void;
 };
 
-// Storage event listeners to sync across components
-const listeners = new Set<() => void>();
-
-const emitChange = () => {
-  listeners.forEach((listener) => listener());
-};
-
-const subscribe = (listener: () => void) => {
-  listeners.add(listener);
-  return () => listeners.delete(listener);
-};
-
 export const useIdlStorage = (codeId?: HexString): UseIdlStorageReturn => {
-  const getSnapshot = useCallback(() => {
-    if (!codeId) return null;
+  const [idl, setIdl] = useState<string | null>(codeId ? localStorage.getItem(getIdlStorageKey(codeId)) : null);
 
-    return localStorage.getItem(getIdlStorageKey(codeId));
+  useEffect(() => {
+    setIdl(codeId ? localStorage.getItem(getIdlStorageKey(codeId)) : null);
   }, [codeId]);
 
-  const idl = useSyncExternalStore(subscribe, getSnapshot);
-  const saveIdl = useCallback(
-    (idlContent: string) => {
-      if (!codeId) {
-        console.error('Code ID is not found');
-        return;
-      }
-      localStorage.setItem(getIdlStorageKey(codeId), idlContent);
-      emitChange();
-    },
-    [codeId],
-  );
+  const saveIdl = (idlContent: string) => {
+    if (!codeId) {
+      console.error('Code ID is not found');
+      return;
+    }
+    localStorage.setItem(getIdlStorageKey(codeId), idlContent);
+    setIdl(idlContent);
+  };
 
   return { idl, saveIdl };
 };

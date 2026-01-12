@@ -22,7 +22,7 @@ const Code = () => {
   const codeId = params?.codeId;
 
   const { data: code, isLoading, error } = useGetCodeByIdQuery(codeId);
-  const { idl } = useIdlStorage(codeId);
+  const { idl, saveIdl } = useIdlStorage(codeId);
 
   if (isLoading) {
     return (
@@ -96,7 +96,7 @@ const Code = () => {
           ) : (
             <div className={styles.emptyState}>
               <p>No IDL uploaded. Please upload an IDL file to view it here.</p>
-              <UploadIdlButton id={codeId} />
+              <UploadIdlButton onSaveIdl={saveIdl} />
             </div>
           )}
         </div>

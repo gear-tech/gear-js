@@ -37,7 +37,7 @@ const Program = () => {
   const codeId = program?.code?.id;
   const blockHash = program?.txHash || '';
   const formattedCreatedAt = program?.createdAt ? formatDate(program.createdAt) : '';
-  const { idl } = useIdlStorage(codeId);
+  const { idl, saveIdl } = useIdlStorage(codeId);
 
   const executableBalance =
     programState && decimals ? formatBalance(BigInt(programState.executableBalance), decimals) : null;
@@ -78,7 +78,7 @@ const Program = () => {
     return (
       <div className={styles.emptyState}>
         <p>No IDL uploaded. Please upload an IDL file to initialize and interact with the program.</p>
-        <UploadIdlButton id={codeId} />
+        <UploadIdlButton onSaveIdl={saveIdl} />
       </div>
     );
   };

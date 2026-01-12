@@ -1,18 +1,14 @@
-import { HexString } from '@vara-eth/api';
 import { ChangeEvent, useRef, useState } from 'react';
-
-import { useIdlStorage } from '@/shared/hooks/use-idl-storage';
 
 import { Button } from '../button';
 
 import styles from './upload-idl-button.module.scss';
 
 type Props = {
-  id: HexString;
+  onSaveIdl: (idlContent: string) => void;
 };
 
-const UploadIdlButton = ({ id }: Props) => {
-  const { saveIdl } = useIdlStorage(id);
+const UploadIdlButton = ({ onSaveIdl }: Props) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,7 +33,7 @@ const UploadIdlButton = ({ id }: Props) => {
     reader.onload = (e) => {
       const content = e.target?.result as string;
       if (content) {
-        saveIdl(content);
+        onSaveIdl(content);
         setError(null);
       }
     };
