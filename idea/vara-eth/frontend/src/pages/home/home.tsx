@@ -54,9 +54,7 @@ const Card = ({ title, icon, link, count, increase }: CardProps) => {
 const Home = () => {
   const { data: programs } = useGetAllProgramsQuery(1, 1);
   const { data: messagesRequests } = useGetAllMessagesRequestsQuery(1, 1);
-  console.log('messagesRequests: ', messagesRequests);
   const { data: messagesSent } = useGetAllMessagesSentQuery(1, 1);
-  console.log('messagesSent: ', messagesSent);
   const { data: transactions } = useGetAllTransactionsQuery(1, 1);
 
   const messagesCount =
