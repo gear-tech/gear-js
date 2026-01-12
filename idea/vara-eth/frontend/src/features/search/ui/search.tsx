@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { Config, getBytecode } from '@wagmi/core';
 import { useForm } from 'react-hook-form';
 import { generatePath, useNavigate } from 'react-router-dom';
@@ -18,7 +19,7 @@ const FIELD_NAME = 'value';
 const DEFAULT_VALUES = { [FIELD_NAME]: '' };
 const CHAIN_ENTITY = { PROGRAM: 'program', USER: 'user', CODE: 'code', UNKNOWN: 'unknown' } as const;
 
-const getChainEntity = async (wagmiConfig: Config, id: string) => {
+const getChainEntity = async (wagmiConfig: Config, queryClient: QueryClient, id: string) => {
   if (isAddress(id)) {
     const bytecode = await getBytecode(wagmiConfig, { address: id });
 
@@ -26,15 +27,17 @@ const getChainEntity = async (wagmiConfig: Config, id: string) => {
   }
 
   if (isHash(id)) {
-    const code = await getCode(id).catch(noop);
+    // TODO: figure out tanstack query settings. it's supposed (?) to prevent extra fetches:
+    // - while mounting the page; - if data is already in cache;
+    const code = await queryClient.fetchQuery({ queryKey: ['codeById', id], queryFn: () => getCode(id) }).catch(noop);
 
-    if (code) return { kind: CHAIN_ENTITY.CODE, state: code, id };
+    if (code) return { kind: CHAIN_ENTITY.CODE, id };
   }
 
   return { kind: CHAIN_ENTITY.UNKNOWN };
 };
 
-const getSchema = (wagmiConfig: Config) =>
+const getSchema = (wagmiConfig: Config, queryClient: QueryClient) =>
   z
     .object({
       [FIELD_NAME]: z
@@ -43,16 +46,17 @@ const getSchema = (wagmiConfig: Config) =>
         .toLowerCase()
         .refine((value) => isAddress(value) || isHash(value), { message: 'Invalid address or hash' }),
     })
-    .transform(({ value }) => getChainEntity(wagmiConfig, value));
+    .transform(({ value }) => getChainEntity(wagmiConfig, queryClient, value));
 
 type Values = typeof DEFAULT_VALUES;
 type FormattedValues = z.infer<ReturnType<typeof getSchema>>;
 
 const Search = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const config = useConfig();
-  const schema = getSchema(config);
+  const schema = getSchema(config, queryClient);
 
   const { register, formState, ...form } = useForm<Values, unknown, FormattedValues>({
     defaultValues: DEFAULT_VALUES,
@@ -61,15 +65,15 @@ const Search = () => {
 
   const error = formState.errors[FIELD_NAME]?.message;
 
-  const handleSubmit = ({ kind, id, state }: FormattedValues) => {
+  const handleSubmit = ({ kind, id }: FormattedValues) => {
     switch (kind) {
       case CHAIN_ENTITY.PROGRAM:
         return navigate(generatePath(routes.program, { programId: id }));
       case CHAIN_ENTITY.USER:
         return navigate(generatePath(routes.user, { userId: id }));
-      case CHAIN_ENTITY.CODE:
-        // TODO: support state at code page
-        return navigate(generatePath(routes.code, { state, codeId: id }));
+      case CHAIN_ENTITY.CODE: {
+        return navigate(generatePath(routes.code, { codeId: id }));
+      }
       default:
         navigate(generatePath(routes.notFound));
     }
