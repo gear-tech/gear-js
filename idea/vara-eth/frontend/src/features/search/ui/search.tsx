@@ -54,10 +54,12 @@ const Search = () => {
   const config = useConfig();
   const schema = getSchema(config);
 
-  const { register, ...form } = useForm<Values, unknown, FormattedValues>({
+  const { register, formState, ...form } = useForm<Values, unknown, FormattedValues>({
     defaultValues: DEFAULT_VALUES,
     resolver: zodResolver(schema),
   });
+
+  const error = formState.errors[FIELD_NAME]?.message;
 
   const handleSubmit = ({ kind, id, state }: FormattedValues) => {
     switch (kind) {
@@ -79,8 +81,11 @@ const Search = () => {
         type="text"
         placeholder="Search by code id, program id, wallet address..."
         className={styles.input}
+        aria-invalid={Boolean(error)}
         {...register(FIELD_NAME)}
       />
+
+      {error && <span className={styles.error}>{error}</span>}
 
       <Button type="submit" variant="icon">
         <SearchSVG />

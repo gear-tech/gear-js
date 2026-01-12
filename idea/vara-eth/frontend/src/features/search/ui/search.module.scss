@@ -1,16 +1,31 @@
 .wrapper {
-  display: flex;
+  padding: 0 24px 0 0;
 
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 24px 0 0;
+
   transition: all 0.2s;
+
+  position: relative;
 
   &:focus-within {
     background: rgba(168, 245, 147, 0.1);
 
     svg {
       color: rgba(168, 245, 147, 1);
+    }
+  }
+
+  &:has([aria-invalid='true']) {
+    background: rgba(#f73a3d, 0.15);
+
+    svg {
+      color: revert;
+    }
+
+    .input {
+      caret-color: revert;
     }
   }
 }
@@ -22,9 +37,10 @@
   color: rgba(255, 255, 255, 1);
   border: none;
   font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   &:focus {
-    border-color: rgba(41, 41, 41, 1);
     outline: none;
     caret-color: rgba(168, 245, 147, 1);
   }
@@ -32,4 +48,12 @@
   &::placeholder {
     color: rgba(255, 255, 255, 0.5);
   }
+}
+
+.error {
+  margin-right: 24px;
+
+  font-size: 10px;
+  color: rgba(#f73a3d, 0.75);
+  white-space: nowrap;
 }
