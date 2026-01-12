@@ -58,7 +58,7 @@ const Search = () => {
   const config = useConfig();
   const schema = getSchema(config, queryClient);
 
-  const { register, formState, ...form } = useForm<Values, unknown, FormattedValues>({
+  const { formState, register, ...form } = useForm<Values, unknown, FormattedValues>({
     defaultValues: DEFAULT_VALUES,
     resolver: zodResolver(schema),
   });

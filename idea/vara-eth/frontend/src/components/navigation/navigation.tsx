@@ -35,7 +35,7 @@ const Navigation = () => {
         {matchPath(routes.codes, pathname) && <UploadCodeButton />}
       </div>
 
-      <Search />
+      <Search key={pathname} />
     </div>
   );
 };
