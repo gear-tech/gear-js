@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { QueryClient, useQueryClient } from '@tanstack/react-query';
-import { Config, getBytecode } from '@wagmi/core';
+import { useQueryClient } from '@tanstack/react-query';
+import { getBytecode } from '@wagmi/core';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { isAddress, isHash } from 'viem';
@@ -19,44 +20,50 @@ const FIELD_NAME = 'value';
 const DEFAULT_VALUES = { [FIELD_NAME]: '' };
 const CHAIN_ENTITY = { PROGRAM: 'program', USER: 'user', CODE: 'code', UNKNOWN: 'unknown' } as const;
 
-const getChainEntity = async (wagmiConfig: Config, queryClient: QueryClient, id: string) => {
-  if (isAddress(id)) {
-    const bytecode = await getBytecode(wagmiConfig, { address: id });
+function useSchema() {
+  const queryClient = useQueryClient();
+  const wagmiConfig = useConfig();
 
-    return bytecode ? { kind: CHAIN_ENTITY.PROGRAM, id } : { kind: CHAIN_ENTITY.USER, id };
-  }
+  const getChainEntity = async (id: string) => {
+    if (isAddress(id)) {
+      const bytecode = await getBytecode(wagmiConfig, { address: id });
 
-  if (isHash(id)) {
-    // TODO: figure out tanstack query settings. it's supposed (?) to prevent extra fetches:
-    // - while mounting the page; - if data is already in cache;
-    const code = await queryClient.fetchQuery({ queryKey: ['codeById', id], queryFn: () => getCode(id) }).catch(noop);
+      return bytecode ? { kind: CHAIN_ENTITY.PROGRAM, id } : { kind: CHAIN_ENTITY.USER, id };
+    }
 
-    if (code) return { kind: CHAIN_ENTITY.CODE, id };
-  }
+    if (isHash(id)) {
+      // TODO: figure out tanstack query settings. it's supposed (?) to prevent extra fetches:
+      // - while mounting the page; - if data is already in cache;
+      const code = await queryClient.fetchQuery({ queryKey: ['codeById', id], queryFn: () => getCode(id) }).catch(noop);
 
-  return { kind: CHAIN_ENTITY.UNKNOWN };
-};
+      if (code) return { kind: CHAIN_ENTITY.CODE, id };
+    }
 
-const getSchema = (wagmiConfig: Config, queryClient: QueryClient) =>
-  z
-    .object({
-      [FIELD_NAME]: z
-        .string()
-        .trim()
-        .toLowerCase()
-        .refine((value) => isAddress(value) || isHash(value), { message: 'Invalid address or hash' }),
-    })
-    .transform(({ value }) => getChainEntity(wagmiConfig, queryClient, value));
+    return { kind: CHAIN_ENTITY.UNKNOWN };
+  };
+
+  return useMemo(
+    () =>
+      z
+        .object({
+          [FIELD_NAME]: z
+            .string()
+            .trim()
+            .toLowerCase()
+            .refine((value) => isAddress(value) || isHash(value), { message: 'Invalid address or hash' }),
+        })
+        .transform(({ value }) => getChainEntity(value)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [queryClient, wagmiConfig],
+  );
+}
 
 type Values = typeof DEFAULT_VALUES;
-type FormattedValues = z.infer<ReturnType<typeof getSchema>>;
+type FormattedValues = z.infer<ReturnType<typeof useSchema>>;
 
 const Search = () => {
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
-
-  const config = useConfig();
-  const schema = getSchema(config, queryClient);
+  const schema = useSchema();
 
   const { formState, register, ...form } = useForm<Values, unknown, FormattedValues>({
     defaultValues: DEFAULT_VALUES,
@@ -75,7 +82,7 @@ const Search = () => {
         return navigate(generatePath(routes.code, { codeId: id }));
       }
       default:
-        navigate(generatePath(routes.notFound));
+        return navigate(generatePath(routes.notFound));
     }
   };
 

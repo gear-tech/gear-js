@@ -17,7 +17,7 @@ const LINKS = [
 
 const Navigation = () => {
   const { pathname } = useLocation();
-  const codePath = matchPath(routes.code, pathname);
+  const codeId = matchPath(routes.code, pathname)?.params.codeId as HexString | undefined;
 
   const renderLinks = () =>
     LINKS.map(({ to, title }) => (
@@ -31,7 +31,7 @@ const Navigation = () => {
       <div className={styles.leftSide}>
         <div className={styles.navigation}>{renderLinks()}</div>
 
-        {codePath && <CreateProgramButton codeId={codePath.params.codeId as HexString} />}
+        {codeId && <CreateProgramButton codeId={codeId} />}
         {matchPath(routes.codes, pathname) && <UploadCodeButton />}
       </div>
 
