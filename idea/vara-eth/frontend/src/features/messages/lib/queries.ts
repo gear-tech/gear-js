@@ -1,10 +1,37 @@
 import { useQuery } from '@tanstack/react-query';
+import { HexString } from '@vara-eth/api';
 
 import { EXPLORER_URL } from '@/shared/config';
 import { PaginatedResponse } from '@/shared/types';
 import { fetchWithGuard } from '@/shared/utils';
 
-import { MessageRequests, MessageSent } from './requests';
+import { Program } from '../../programs/lib/queries';
+
+type MessageRequest = {
+  id: HexString;
+  sourceAddress: HexString;
+  programId: HexString;
+  payload: HexString;
+  value: string;
+  callReply: boolean;
+  txHash: HexString;
+  blockNumber: string;
+  createdAt: string;
+  program?: Program;
+};
+
+type MessageSent = {
+  id: HexString;
+  sourceProgramId: HexString;
+  destination: HexString;
+  payload: HexString;
+  value: string;
+  isCall: boolean;
+  stateTransitionId: HexString;
+  createdAt: string;
+  sourceProgram?: Program;
+  stateTransition?: unknown;
+};
 
 export const useGetAllMessagesRequestsQuery = (page: number, pageSize: number) => {
   const limit = pageSize;
@@ -19,7 +46,7 @@ export const useGetAllMessagesRequestsQuery = (page: number, pageSize: number) =
       url.searchParams.set('limit', String(limit));
       url.searchParams.set('offset', String(offset));
 
-      return fetchWithGuard<PaginatedResponse<MessageRequests>>({ url });
+      return fetchWithGuard<PaginatedResponse<MessageRequest>>({ url });
     },
 
     placeholderData: (previousData) => previousData,
