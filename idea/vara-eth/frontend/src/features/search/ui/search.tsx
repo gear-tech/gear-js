@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useQueryClient } from '@tanstack/react-query';
 import { getBytecode } from '@wagmi/core';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
@@ -21,7 +20,6 @@ const DEFAULT_VALUES = { [FIELD_NAME]: '' };
 const CHAIN_ENTITY = { PROGRAM: 'program', USER: 'user', CODE: 'code', UNKNOWN: 'unknown' } as const;
 
 function useSchema() {
-  const queryClient = useQueryClient();
   const wagmiConfig = useConfig();
 
   const getChainEntity = async (id: string) => {
@@ -32,9 +30,10 @@ function useSchema() {
     }
 
     if (isHash(id)) {
-      // TODO: figure out tanstack query settings. it's supposed (?) to prevent extra fetches:
-      // - while mounting the page; - if data is already in cache;
-      const code = await queryClient.fetchQuery({ queryKey: ['codeById', id], queryFn: () => getCode(id) }).catch(noop);
+      // TODO: figure out tanstack query settings.
+      // queryClient.fetchQuery(...) is supposed (?) to prevent extra fetches:
+      // while mounting the page; if data is already in cache.
+      const code = await getCode(id).catch(noop);
 
       if (code) return { kind: CHAIN_ENTITY.CODE, id };
     }
@@ -54,7 +53,7 @@ function useSchema() {
         })
         .transform(({ value }) => getChainEntity(value)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [queryClient, wagmiConfig],
+    [wagmiConfig],
   );
 }
 
@@ -70,7 +69,8 @@ const Search = () => {
     resolver: zodResolver(schema),
   });
 
-  const error = formState.errors[FIELD_NAME]?.message;
+  const { errors, isSubmitting } = formState;
+  const error = errors[FIELD_NAME]?.message;
 
   const handleSubmit = ({ kind, id }: FormattedValues) => {
     switch (kind) {
@@ -98,7 +98,7 @@ const Search = () => {
 
       {error && <span className={styles.error}>{error}</span>}
 
-      <Button type="submit" variant="icon">
+      <Button type="submit" variant="icon" isLoading={isSubmitting}>
         <SearchSVG />
       </Button>
     </form>

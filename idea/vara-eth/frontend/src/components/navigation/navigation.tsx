@@ -35,6 +35,7 @@ const Navigation = () => {
         {matchPath(routes.codes, pathname) && <UploadCodeButton />}
       </div>
 
+      {/* key to reset search on route change */}
       <Search key={pathname} />
     </div>
   );

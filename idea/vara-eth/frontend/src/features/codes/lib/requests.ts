@@ -4,7 +4,7 @@ import { EXPLORER_URL } from '@/shared/config';
 import { fetchWithGuard } from '@/shared/utils';
 
 export type Code = {
-  id: string;
+  id: HexString;
   status: string;
   createdAt: string;
 };
