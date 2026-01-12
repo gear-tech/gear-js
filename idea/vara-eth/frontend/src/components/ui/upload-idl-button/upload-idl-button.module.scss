@@ -1,0 +1,14 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.input {
+  display: none;
+}
+
+.error {
+  color: rgba(247, 58, 61, 0.75);
+  font-size: 12px;
+}

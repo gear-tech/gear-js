@@ -3,7 +3,6 @@ import { useState } from 'react';
 
 import { Badge, ExpandableItem, Tabs } from '@/components';
 
-import counterIdl from '../../../../../../../../apis/vara-eth/programs/counter-idl/counter.idl?raw';
 import { useReadContractState, useSails } from '../../lib';
 import { InitForm } from '../init-form';
 import { MessageForm } from '../message-form';
@@ -14,11 +13,12 @@ const tabs = ['Call offchain', 'Call onchain'];
 
 type Props = {
   programId: HexString;
+  idl: string;
 };
 
-const ServiceList = ({ programId }: Props) => {
+const ServiceList = ({ programId, idl }: Props) => {
   const { data: programState, refetch, isPending } = useReadContractState(programId);
-  const { data: sails } = useSails(counterIdl);
+  const { data: sails } = useSails(idl);
   const [tabIndex, setTabIndex] = useState(0);
 
   const isInitialized = programState && 'Active' in programState.program && programState.program.Active.initialized;
@@ -77,6 +77,7 @@ const ServiceList = ({ programId }: Props) => {
                       sails={sails}
                       args={args}
                       isQuery={isQuery}
+                      idl={idl}
                       isOffchain={tabIndex === 0}
                     />
                   );
@@ -102,6 +103,7 @@ const ServiceList = ({ programId }: Props) => {
               ctorName={ctorName}
               args={args}
               onInit={refetch}
+              idl={idl}
             />
           ))}
         </ExpandableItem>

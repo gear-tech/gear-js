@@ -4,9 +4,6 @@ import { HexString } from '@vara-eth/api';
 import { useVaraEthApi } from '@/app/providers';
 import { TransactionTypes, unpackReceipt, useAddMyActivity } from '@/app/store';
 
-// TODO: use idl of the program
-import counterIdl from '../../../../../../../../apis/vara-eth/programs/counter-idl/counter.idl?raw';
-
 import { useSails } from './use-sails';
 
 type SendMessageParams = {
@@ -16,8 +13,8 @@ type SendMessageParams = {
   args: unknown[];
 };
 
-const useSendInjectedTransaction = (programId: HexString) => {
-  const { data: sails } = useSails(counterIdl);
+const useSendInjectedTransaction = (programId: HexString, idl: string) => {
+  const { data: sails } = useSails(idl);
   const { api } = useVaraEthApi();
   const addMyActivity = useAddMyActivity();
 
