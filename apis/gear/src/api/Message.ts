@@ -1,10 +1,17 @@
 import { SubmittableExtrinsic, UnsubscribePromise, VoidFn } from '@polkadot/api/types';
-import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { ReplaySubject } from 'rxjs';
 
-import { ICalculateReplyForHandleOptions, MessageSendOptions, MessageSendReplyOptions, ReplyInfo } from '../types';
-import { SendMessageError, SendReplyError } from '../errors';
+import {
+  ICalculateReplyForHandleOptions,
+  MessageSendOptions,
+  MessageSendReplyOptions,
+  ReplyInfo,
+  HexString,
+  UserMessageSentSubscriptionFilter,
+  UserMessageSentSubscriptionItem,
+} from '../types';
+import { SendMessageError, SendReplyError, RpcMethodNotSupportedError } from '../errors';
 import { UserMessageSent, UserMessageSentData } from '../events';
 import {
   decodeAddress,
@@ -16,6 +23,7 @@ import {
 } from '../utils';
 import { GearTransaction } from './Transaction';
 import { ProgramMetadata } from '../metadata';
+import { UserMessageSentSubItem } from '../types/interfaces/message/rpc';
 
 export class GearMessage extends GearTransaction {
   /**
@@ -366,5 +374,134 @@ export class GearMessage extends GearTransaction {
       value || 0,
       at || null,
     );
+  }
+
+  /**
+   * ## Subscribe to User Message Sent Events
+   *
+   * Subscribe to real-time notifications of messages sent from programs to users.
+   * Provides server-side filtering capabilities for efficient event tracking without client-side processing.
+   *
+   * The subscription automatically filters out acknowledgment messages and only returns actual message events.
+   *
+   * @param filter - Filter criteria for subscribed messages
+   * @param filter.source - Optional: Program ID to filter messages from. If not specified, all programs are tracked.
+   * @param filter.destination - Optional: User address to filter messages sent to. If not specified, all destinations are tracked.
+   * @param filter.payloadFilters - Optional: Array of PayloadFilter objects to filter messages by their payload content.
+   * @param filter.fromBlock - Optional: Block number to start listening from. Defaults to current block.
+   * @param filter.finalizedOnly - Optional: If true, only process finalized blocks. Defaults to false.
+   *
+   * @param callback - Function called when a matching message is detected.
+   * The callback receives a readonly UserMessageSentSubscriptionItem containing:
+   *   - id: Unique message identifier (HexString)
+   *   - source: Program ID that sent the message (HexString)
+   *   - destination: User address that received the message (HexString)
+   *   - payload: Message payload in hex format (HexString)
+   *   - value: Value transferred with the message (bigint)
+   *   - block: Block hash where the message was processed (HexString)
+   *   - index: Index of the message within the block (number)
+   *   - reply: Optional reply details if the message is a reply:
+   *     - to: Original message ID being replied to (HexString)
+   *     - code: Human-readable reply code/status (string)
+   *     - codeRaw: Raw reply code in hex format (HexString)
+   *
+   * @returns Unsubscribe function. Call this to stop receiving message notifications.
+   *
+   * @throws RpcMethodNotSupportedError - If the connected node does not support the subscription method.
+   *
+   * @example
+   * ```typescript
+   * // Subscribe to all messages from a specific program
+   * const unsubscribe = await api.message.subscribeUserMessageSent(
+   *   { source: '0x...' },
+   *   (item) => {
+   *     console.log('Message ID:', item.id);
+   *     console.log('From program:', item.source);
+   *     console.log('To user:', item.destination);
+   *     console.log('Payload:', item.payload);
+   *   }
+   * );
+   *
+   * // Later, stop listening
+   * unsubscribe();
+   * ```
+   *
+   * @example
+   * ```typescript
+   * // Subscribe with comprehensive filtering
+   * const payloadFilter = new PayloadFilter();
+   * payloadFilter.setBytes('0xdeadbeef');
+   *
+   * const unsubscribe = await api.message.subscribeUserMessageSent(
+   *   {
+   *     source: '0x...',
+   *     destination: '0x...',
+   *     payloadFilters: [payloadFilter],
+   *     fromBlock: 12345,
+   *     finalizedOnly: true
+   *   },
+   *   async (item) => {
+   *     console.log(`Block: ${item.block}, Message: ${item.id}`);
+   *     if (item.reply) {
+   *       console.log(`This is a reply with code: ${item.reply.code}`);
+   *     }
+   *   }
+   * );
+   * ```
+   */
+  async subscribeUserMessageSent(
+    filter: UserMessageSentSubscriptionFilter,
+    callback: (item: Readonly<UserMessageSentSubscriptionItem>) => void | Promise<void>,
+  ) {
+    const methodName = 'gear_subscribeUserMessageSent';
+
+    if (!this._api.rpcMethods.includes(methodName)) {
+      throw new RpcMethodNotSupportedError(methodName);
+    }
+
+    const rpcFilter = {
+      source: filter.source || null,
+      destination: filter.destination || null,
+      payload_filters: filter.payloadFilters?.map((filter) => filter.toJSON()) || null,
+      from_block: filter.fromBlock ?? null,
+      finalized_only: filter.finalizedOnly ?? false,
+    };
+
+    let isUnsubscribed = false;
+
+    const wrappedCallback = (result: UserMessageSentSubItem) => {
+      if (result.ack && result.ack.isSome && result.ack.unwrap().isTrue) return;
+      if (isUnsubscribed) return;
+
+      const event: UserMessageSentSubscriptionItem = {
+        id: result.id.toHex(),
+        block: result.block.toHex(),
+        index: result.index.toNumber(),
+        source: result.source.toHex(),
+        destination: result.destination.toHex(),
+        payload: result.payload.toHex(),
+        value: BigInt(result.value.toString()),
+      };
+
+      if (result.reply && result.reply.isSome) {
+        const reply = result.reply.unwrap();
+        event.reply = {
+          to: reply.to.toHex(),
+          codeDescription: reply.codeDescription.toString(),
+          code: reply.code.toHex(),
+        };
+      }
+
+      callback(event);
+    };
+
+    const unsubscribePromise = this._api.rpc.gear.subscribeUserMessageSent(rpcFilter, wrappedCallback);
+
+    const unsubscribe = await unsubscribePromise;
+
+    return () => {
+      isUnsubscribed = true;
+      unsubscribe();
+    };
   }
 }

@@ -1,9 +1,8 @@
 import { BTreeSet, u32 } from '@polkadot/types';
-import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 
-import { GasLimit, Value } from '../../common';
+import { GasLimit, Value, HexString } from '../../common';
 import { PayloadType } from 'types/payload';
 
 export interface V1010ProgramUploadOptions {

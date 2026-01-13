@@ -5,13 +5,13 @@ import { readFileSync } from 'fs';
 import { TEST_CODE } from './config';
 import { checkInit, createPayload, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { getApi } from './common';
-import { Program } from '../src';
+import { BaseGearProgram } from '../src';
 
 const api = getApi();
 let alice: KeyringPair;
 let programId: HexString;
 let inheritor: HexString;
-let program: Program;
+let program: BaseGearProgram;
 
 const code = Uint8Array.from(readFileSync(TEST_CODE));
 
@@ -25,7 +25,7 @@ afterAll(async () => {
   await sleep(1000);
 });
 
-describe('GearProgram', () => {
+describe('BaseGearProgram', () => {
   test('upload test_meta', async () => {
     programId = api.program.upload({
       code,
@@ -36,11 +36,11 @@ describe('GearProgram', () => {
     const [txData] = await sendTransaction(api.program, alice, ['MessageQueued']);
     expect(txData.destination.toHex()).toBe(programId);
     expect(await status).toBe('success');
-    program = await Program.new(programId, api, alice);
+    program = await BaseGearProgram.new(programId, api, alice);
   });
 
   test('send message', async () => {
-    const result = await program.sendMessage(createPayload('Action', { Two: [8, 16] }).toHex());
+    const result = await program.sendMessage({ payload: createPayload('Action', { Two: [8, 16] }).toHex() });
 
     expect(result.success).toBeTruthy();
     expect(result.blockHash).toBeDefined();
@@ -77,7 +77,7 @@ describe('GearProgram', () => {
 
     const newProgramId = new Promise((resolve) => program.on('programExited', resolve));
 
-    await program.sendMessage(payload);
+    await program.sendMessage({ payload });
 
     expect(await newProgramId).toBe(inheritor);
   });
@@ -89,7 +89,7 @@ describe('GearProgram', () => {
   test('send msg after exit', async () => {
     const payload = createPayload('Action', { Two: [8, 16] }).toHex();
 
-    const result = await program.sendMessage(payload);
+    const result = await program.sendMessage({ payload });
 
     expect(result.success).toBeTruthy();
   });

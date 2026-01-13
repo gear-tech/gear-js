@@ -1,11 +1,11 @@
 import { Bytes, Option } from '@polkadot/types';
-import { HexString } from '@polkadot/util/types';
 import { u8aToHex } from '@polkadot/util';
 
 import {
   CodeUploadResult,
   GearCoreCodeInstrumentedInstrumentedCodeBeforeV1900,
   GearCoreCodeMetadataCodeMetadata,
+  HexString,
 } from '../types';
 import { generateCodeHash, getIdsFromKeys, validateCodeId } from '../utils';
 import { CodeDoesNotExistError } from '../errors';
