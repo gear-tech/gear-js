@@ -1,25 +1,45 @@
-import { useNavigate } from 'react-router-dom';
+import { HexString } from '@vara-eth/api';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { Button } from '@/components';
+import { Button, LinkButton } from '@/components';
 import { routes } from '@/shared/config';
 
 import styles from './not-found.module.scss';
 
 export const NotFound = () => {
   const navigate = useNavigate();
-  const onClick = () => {
-    void navigate(routes.home);
-  };
+
+  const location = useLocation();
+  const searchQuery = location.state as HexString | null;
 
   return (
     <div className={styles.container}>
       <div>
         <span className={styles.prefix}>{'//_'}</span>
-        <span className={styles.text}>Nothing found</span>
+        <span className={styles.title}>Nothing found</span>
       </div>
-      <Button variant="outline" className={styles.button} onClick={onClick}>
-        Try again
-      </Button>
+
+      {searchQuery && (
+        <div className={styles.text}>
+          <p>We couldn&apos;t find a match for your search request.</p>
+          <p>Try a different query or check Etherscan instead.</p>
+        </div>
+      )}
+
+      <div className={styles.buttons}>
+        <Button variant="outline" className={styles.button} onClick={() => navigate(routes.home)}>
+          Try again
+        </Button>
+
+        {searchQuery && (
+          <LinkButton
+            variant="outline"
+            className={styles.button}
+            href={`https://hoodi.etherscan.io/search?f=0&q=${searchQuery}`}>
+            Search on Etherscan
+          </LinkButton>
+        )}
+      </div>
     </div>
   );
 };

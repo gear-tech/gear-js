@@ -71,7 +71,7 @@ const Search = () => {
         return navigate(generatePath(routes.code, { codeId: value }));
 
       default:
-        return navigate(generatePath(routes.notFound));
+        return navigate(generatePath(routes.notFound), { state: value });
     }
   };
 

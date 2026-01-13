@@ -1,14 +1,15 @@
 import { clsx } from 'clsx';
+import { ButtonHTMLAttributes, ReactNode } from 'react';
 
 import LoadingIcon from '@/assets/icons/loading.svg?react';
 
 import styles from './button.module.scss';
 
-export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  children: ReactNode;
   variant?: 'default' | 'outline' | 'link' | 'icon' | 'ghost' | 'secondary';
   size?: 'default' | 'sm' | 'xs' | 'icon';
   isLoading?: boolean;
-  children: React.ReactNode;
   className?: string;
   onClick?: () => void;
 };

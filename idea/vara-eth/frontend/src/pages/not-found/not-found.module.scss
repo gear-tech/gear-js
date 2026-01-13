@@ -1,19 +1,32 @@
 .container {
+  min-height: 340px;
+
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
   gap: 24px;
-  min-height: 340px;
+
+  text-align: center;
 }
 
 .prefix {
   color: rgba(255, 255, 255, 0.5);
 }
-.text {
+
+.title {
   color: rgba(255, 255, 255, 1);
 }
 
+.text {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.buttons {
+  display: flex;
+  gap: 16px;
+}
+
 .button {
-  width: 180px;
+  min-width: 180px;
 }
