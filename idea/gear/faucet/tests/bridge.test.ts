@@ -1,4 +1,4 @@
-import './__mocks__/ethers';
+import './__mocks__/viem';
 import './__mocks__/typeorm';
 import './__mocks__/gear-js';
 
@@ -23,7 +23,7 @@ describe('Bridge requests', () => {
       .set('Accept', 'application/json');
 
   beforeAll(async () => {
-    app = new FaucetApp(true, true);
+    app = new FaucetApp(true, true, false);
     await app.init();
     app.run();
   });

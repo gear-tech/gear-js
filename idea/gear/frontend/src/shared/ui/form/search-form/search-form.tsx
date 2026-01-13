@@ -11,6 +11,7 @@ type Props<T extends z.ZodTypeAny> = {
   placeholder?: string;
   className?: string;
   disabled?: boolean;
+  defaultValue?: string;
   getSchema?: (defaultSchema: z.ZodString) => T;
 };
 
@@ -18,19 +19,22 @@ const FIELD_NAME = {
   QUERY: 'query',
 } as const;
 
-const DEFAULT_VALUES = {
-  [FIELD_NAME.QUERY]: '',
-} as const;
-
 const QUERY_SCHEMA = z.string().trim();
 
-const SearchForm = <T extends z.ZodTypeAny>({ placeholder, className, disabled, onSubmit, getSchema }: Props<T>) => {
+const SearchForm = <T extends z.ZodTypeAny>({
+  placeholder,
+  className,
+  disabled,
+  defaultValue = '',
+  onSubmit,
+  getSchema,
+}: Props<T>) => {
   const schema = z.object({
     [FIELD_NAME.QUERY]: asOptionalField(getSchema ? getSchema(QUERY_SCHEMA) : QUERY_SCHEMA),
   });
 
   const form = useForm({
-    defaultValues: DEFAULT_VALUES,
+    defaultValues: { [FIELD_NAME.QUERY]: defaultValue },
     resolver: zodResolver(schema),
   });
 

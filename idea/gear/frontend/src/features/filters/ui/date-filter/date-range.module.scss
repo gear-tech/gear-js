@@ -1,0 +1,89 @@
+.heading {
+  margin-bottom: 16px;
+}
+
+.container {
+  text-align: center;
+  position: relative;
+}
+
+.headingButton {
+  margin-bottom: 16px;
+
+  font-size: 16px;
+}
+
+.weekdays {
+  font-family: Kanit;
+  font-size: 12px;
+  font-weight: 600;
+  color: #bcbcbcb2;
+}
+
+.month {
+  margin: 0 auto;
+
+  border-collapse: separate;
+  border-spacing: 0 2px;
+}
+
+.day {
+  width: 32px;
+  height: 32px;
+
+  &Button {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    font-family: Kanit;
+    color: #fff;
+
+    background-color: transparent;
+    border-radius: 50%;
+  }
+
+  &Outside {
+    .dayButton {
+      color: #bcbcbcb2;
+    }
+  }
+
+  &Start,
+  &End {
+    border-radius: 50%;
+
+    .dayButton {
+      background-color: #2bd07180;
+    }
+  }
+
+  &Start,
+  &Middle,
+  &End {
+    background-color: #2bd07133;
+  }
+
+  &Start:not(:last-child),
+  &Selected:first-child:not(&End) {
+    border-radius: 50% 0 0 50%;
+  }
+
+  &End:not(:first-child),
+  &Selected:last-child:not(&Start) {
+    border-radius: 0 50% 50% 0;
+  }
+}
+
+.dayStart.dayEnd {
+  background-color: transparent;
+}
+
+.footer {
+  margin-top: 16px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}

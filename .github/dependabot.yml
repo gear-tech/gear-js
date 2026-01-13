@@ -25,7 +25,7 @@ updates:
       prefix: "chore(deps)"
 
   - package-ecosystem: 'cargo'
-    directory: '/apis/gearexe'
+    directory: '/apis/vara-eth'
     open-pull-requests-limit: 3
     labels:
       - D4-dependencies
@@ -35,6 +35,12 @@ updates:
       time: "09:00"
     commit-message:
       prefix: "chore(deps)"
+    groups:
+      cargo-updates:
+        update-types:
+          - minor
+          - patch
+          - 'major'
 
   - package-ecosystem: 'npm'
     directory: '/'

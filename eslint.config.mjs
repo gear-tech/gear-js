@@ -29,11 +29,11 @@ export default [
   ...[eslint.configs.recommended, ...tseslint.configs.recommended].map((conf) => ({
     ...conf,
     files: ['apis/**/{src,test}/**/*.{ts,js}', 'idea/**/src/**/*.{ts,js}', 'tools/**/src/**/*.{ts,js}'],
-    ignores: ['apis/gear/src/types/lookup.ts', 'idea/gear/frontend/**', 'idea/gearexe/frontend/**'],
+    ignores: ['apis/gear/src/types/lookup.ts', 'idea/gear/frontend/**', 'idea/vara-eth/frontend/**'],
   })),
   {
     files: ['apis/**/{src,test}/**/*.{ts,js}', 'idea/**/src/**/*.{ts,js}', 'tools/**/src/**/*.{ts,js}'],
-    ignores: ['apis/gear/src/types/lookup.ts', 'idea/gear/frontend/**', 'idea/gearexe/frontend/**'],
+    ignores: ['apis/gear/src/types/lookup.ts', 'idea/gear/frontend/**', 'idea/vara-eth/frontend/**'],
     rules: {
       '@typescript-eslint/no-unused-vars': noUnusedVars,
       '@typescript-eslint/no-explicit-any': 'off',
@@ -43,13 +43,13 @@ export default [
   },
   ...frontendEslintConfig({
     tsConfigs: [
-      'idea/{gear,gearexe}/frontend/tsconfig.json',
+      'idea/{gear,vara-eth}/frontend/tsconfig.json',
       'utils/{gear-hooks,gear-ui,vara-ui,wallet-connect}/tsconfig.json',
     ],
   }).map((conf) => ({
     ...conf,
     files: [
-      'idea/{gear,gearexe}/frontend/src/**/*.{ts,js,tsx,jsx}',
+      'idea/{gear,vara-eth}/frontend/src/**/*.{ts,js,tsx,jsx}',
       'utils/{gear-hooks,gear-ui,vara-ui,wallet-connect}/src/**/*.{ts,js,tsx,jsx}',
     ],
   })),

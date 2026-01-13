@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - apis/gear/**
+      - apis/vara-eth/**
       - tools/txwrapper/package.json
       - utils/gear-hooks/package.json
       - utils/gear-ui/package.json
@@ -16,20 +17,27 @@ on:
 env:
   BINARYEN_VERSION: version_111
 
+permissions:
+  id-token: write
+  contents: read
+
+
 jobs:
   check-changes:
     runs-on: ubuntu-latest
     outputs:
       gear-api: ${{ steps.gear-api.outputs.changed }}
+      vara-eth-api: ${{ steps.vara-eth-api.outputs.changed }}
       gear-hooks: ${{ steps.gear-hooks.outputs.changed }}
       gear-ui: ${{ steps.gear-ui.outputs.changed }}
       vara-ui: ${{ steps.vara-ui.outputs.changed }}
       frontend-configs: ${{ steps.frontend-configs.outputs.changed }}
       wallet-connect: ${{ steps.wallet-connect.outputs.changed }}
       gear-api-code-modified: ${{ steps.gear-api-code-modified.outputs.code-changed }}
+      vara-eth-api-code-modified: ${{ steps.vara-eth-api-code-modified.outputs.code-changed }}
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 2
 
@@ -39,6 +47,13 @@ jobs:
         with:
           package-name: "@gear-js/api"
           path: "apis/gear/package.json"
+
+      - name: Check vara-eth-api version
+        id: vara-eth-api
+        uses: ./.github/actions/version-changed
+        with:
+          package-name: "@vara-eth/api"
+          path: "apis/vara-eth/package.json"
 
       - name: Check gear-hooks version
         id: gear-hooks
@@ -83,66 +98,205 @@ jobs:
             code-changed:
               - 'apis/gear/src/**'
 
-  publish-to-npm:
+      - name: Check if vara-eth-api-code has been modified
+        id: vara-eth-api-code-modified
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            code-changed:
+              - 'apis/vara-eth/src/**'
+
+  publish-gear-api:
     needs: check-changes
     runs-on: ubuntu-latest
-
+    if: ${{ needs.check-changes.outputs.gear-api == 'true' }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Use node 20.x
         uses: actions/setup-node@v6
         with:
           node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Update npm
+        run: npm install -g npm@latest
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn workspaces focus gear-js @gear-js/api
 
       - name: Build
-        run: yarn build
-
-      - name: "Configure npm auth"
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+        run: yarn build:gear-api
 
       - name: Publish gear-api
-        if: ${{ needs.check-changes.outputs.gear-api == 'true' }}
-        run: npm publish --access=public
+        run: npm publish --access=public --provenance
         working-directory: apis/gear
 
-      - name: Publish gear-hooks
-        if: ${{ needs.check-changes.outputs.gear-hooks == 'true' }}
-        run: npm publish --access=public
-        working-directory: utils/gear-hooks
+  publish-vara-eth-api:
+    needs: check-changes
+    runs-on: ubuntu-latest
+    if: ${{ needs.check-changes.outputs.vara-eth-api == 'true' }}
+    steps:
+      - uses: actions/checkout@v6
 
-      - name: Publish gear-ui
-        if: ${{ needs.check-changes.outputs.gear-ui == 'true' }}
-        run: npm publish --access=public
-        working-directory: utils/gear-ui
+      - name: Use node 20.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
 
-      - name: Publish vara-ui
-        if: ${{ needs.check-changes.outputs.vara-ui == 'true' }}
-        run: npm publish --access=public
-        working-directory: utils/vara-ui
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: yarn workspaces focus gear-js @vara-eth/api
+
+      - name: Build
+        run: yarn build:vara-eth-api
+
+      - name: Publish vara-eth-api
+        run: npm publish --access=public --provenance
+        working-directory: apis/vara-eth
+
+  publish-frontend-configs:
+    needs: check-changes
+    runs-on: ubuntu-latest
+    if: ${{ needs.check-changes.outputs.frontend-configs == 'true' }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Use node 20.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: yarn workspaces focus gear-js @gear-js/frontend-configs
+
+      - name: Build
+        run: yarn build:frontend-configs
 
       - name: Publish frontend-configs
-        if: ${{ needs.check-changes.outputs.frontend-configs == 'true' }}
-        run: npm publish --access=public
+        run: npm publish --access=public --provenance
         working-directory: utils/frontend-configs
 
+  publish-gear-hooks:
+    needs: [check-changes, publish-gear-api]
+    runs-on: ubuntu-latest
+    if: ${{ needs.check-changes.outputs.gear-hooks == 'true' && !cancelled() }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Use node 20.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: yarn workspaces focus gear-js @gear-js/react-hooks
+
+      - name: Build
+        run: yarn build:gear-hooks
+
+      - name: Publish gear-hooks
+        run: npm publish --access=public --provenance
+        working-directory: utils/gear-hooks
+
+  publish-gear-ui:
+    needs: check-changes
+    runs-on: ubuntu-latest
+    if: ${{ needs.check-changes.outputs.gear-ui == 'true' }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Use node 20.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: yarn workspaces focus gear-js @gear-js/ui
+
+      - name: Build
+        run: yarn build:gear-ui
+
+      - name: Publish gear-ui
+        run: npm publish --access=public --provenance
+        working-directory: utils/gear-ui
+
+  publish-vara-ui:
+    needs: check-changes
+    runs-on: ubuntu-latest
+    if: ${{ needs.check-changes.outputs.vara-ui == 'true' }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Use node 20.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: yarn workspaces focus gear-js @gear-js/vara-ui
+
+      - name: Build
+        run: yarn build:vara-ui
+
+      - name: Publish vara-ui
+        run: npm publish --access=public --provenance
+        working-directory: utils/vara-ui
+
+  publish-wallet-connect:
+    needs: [check-changes, publish-gear-hooks, publish-gear-ui, publish-vara-ui]
+    runs-on: ubuntu-latest
+    if: ${{ needs.check-changes.outputs.wallet-connect == 'true' && !cancelled() }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Use node 20.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: yarn workspaces focus gear-js @gear-js/wallet-connect
+
+      - name: Build
+        run: yarn build:wallet-connect
+
       - name: Publish wallet-connect
-        if: ${{ needs.check-changes.outputs.wallet-connect == 'true' }}
-        run: npm publish --access=public
+        run: npm publish --access=public --provenance
         working-directory: utils/wallet-connect
 
 
-  create-github-release:
-    needs: [publish-to-npm, check-changes]
-    if: ${{ needs.check-changes.outputs.gear-api == 'true' || needs.check-changes.outputs.gear-api-code-modified == 'true' }}
+  create-github-release-gear-api:
+    needs: [publish-gear-api, check-changes]
+    if: ${{ !cancelled() && (needs.check-changes.outputs.gear-api == 'true' || needs.check-changes.outputs.gear-api-code-modified == 'true') }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -191,5 +345,64 @@ jobs:
           prerelease: ${{ needs.check-changes.outputs.gear-api != 'true' }}
           files: artifacts/gear-js-api.tgz
           make_latest: ${{ needs.check-changes.outputs.gear-api == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  create-github-release-vara-eth-api:
+    needs: [publish-vara-eth-api, check-changes]
+    if: ${{ !cancelled() && (needs.check-changes.outputs.vara-eth-api == 'true' || needs.check-changes.outputs.vara-eth-api-code-modified == 'true') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Use node 20.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20.x
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build
+        run: yarn build:vara-eth-api
+
+      - name: Prepare artifact
+        working-directory: apis/vara-eth
+        run: yarn run pack
+
+      - name: Get @vara-eth/api version
+        id: get-version
+        run: |
+          VERSION=$(node -p "require('./apis/vara-eth/package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Extract Changelog
+        id: changelog
+        run: |
+          if [[ "${{ needs.check-changes.outputs.vara-eth-api }}" == "true" ]]; then
+            VERSION="${{ steps.get-version.outputs.version }}"
+            CHANGELOG=$(awk '/## \['$VERSION'\]/{flag=1;next}/## \[/{flag=0}flag{print}' apis/vara-eth/CHANGELOG.md)
+          else
+            CHANGELOG=$(awk '/## \[Unreleased\]/{flag=1;next}/## \[/{flag=0}flag{print}' apis/vara-eth/CHANGELOG.md)
+          fi
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.check-changes.outputs.vara-eth-api == 'true' && format('vara-eth-api-v{0}', steps.get-version.outputs.version) || 'vara-eth-api-draft' }}
+          name: ${{ needs.check-changes.outputs.vara-eth-api == 'true' && format('@vara-eth/api v{0}', steps.get-version.outputs.version) || '@vara-eth/api Draft Release' }}
+          body: |
+            ${{ steps.changelog.outputs.changelog }}
+          draft: ${{ needs.check-changes.outputs.vara-eth-api != 'true' }}
+          prerelease: ${{ needs.check-changes.outputs.vara-eth-api != 'true' }}
+          files: artifacts/vara-eth-api.tgz
+          make_latest: ${{ needs.check-changes.outputs.vara-eth-api == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

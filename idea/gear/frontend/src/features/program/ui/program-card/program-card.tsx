@@ -2,6 +2,7 @@ import { clsx } from 'clsx';
 import { Link, generatePath } from 'react-router-dom';
 
 import { LocalProgram } from '@/features/local-indexer';
+import { useIsVftProgram, VftTag } from '@/features/vft-whitelist';
 import { IssueVoucher, VoucherBadge } from '@/features/voucher';
 import sendSVG from '@/shared/assets/images/actions/send.svg?react';
 import { absoluteRoutes } from '@/shared/config';
@@ -25,6 +26,8 @@ const ProgramCard = ({ program, vertical }: Props) => {
   const { id: programId, name, status } = program;
   const statusName = PROGRAM_STATUS_NAME[status];
 
+  const { data: isVft } = useIsVftProgram(program.id);
+
   return (
     <article className={clsx(styles.programCard, vertical && styles.vertical)}>
       <VoucherBadge programId={programId} />
@@ -32,6 +35,7 @@ const ProgramCard = ({ program, vertical }: Props) => {
       <div className={styles.content}>
         <Link to={generatePath(absoluteRoutes.program, { programId })} className={styles.link}>
           <h2 className={styles.name}>{name}</h2>
+          {isVft && <VftTag />}
         </Link>
 
         <div className={styles.otherInfo}>

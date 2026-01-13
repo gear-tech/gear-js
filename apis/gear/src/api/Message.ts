@@ -134,7 +134,7 @@ export class GearMessage extends GearTransaction {
     const _payload = encodePayload(payload, metaOrHexRegistry, 'handle', typeIndexOrTypeName);
 
     try {
-      const txArgs: any[] = [destination, _payload, gasLimit, value || 0, keepAlive || true];
+      const txArgs: any[] = [destination, _payload, gasLimit, value || 0, keepAlive ?? true];
 
       this.extrinsic = getExtrinsic(this._api, 'gear', 'sendMessage', txArgs);
       return this.extrinsic;

@@ -1,12 +1,14 @@
 import { HexString } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
-import { useEffect, useState } from 'react';
+import { parseAsString, parseAsStringEnum } from 'nuqs';
 import { Sails } from 'sails-js';
 
-import { FilterGroup, Filters, Radio } from '@/features/filters';
-import { SailsFilterGroup } from '@/features/sails';
+import { DateFilter, FilterGroup, Filters, parseAsIsoString, Radio } from '@/features/filters';
+import { SailsFilter, getParsedSailsFilterValue, getValidSailsFilterValue } from '@/features/sails';
+import { useChangeEffect, useSearchParamsState, useSearchParamsStates } from '@/hooks';
 import MessageCardPlaceholderSVG from '@/shared/assets/images/placeholders/horizontalMessageCard.svg?react';
-import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
+import { isHex } from '@/shared/helpers';
+import { List, ProgramTabLayout, SearchForm, Skeleton } from '@/shared/ui';
 
 import { useMessagesToProgram, useMessagesFromProgram } from '../../api';
 import { MessageCard } from '../message-card';
@@ -19,8 +21,9 @@ type Props = {
 const FILTER_NAME = {
   OWNER: 'owner',
   DIRECTION: 'direction',
-  SERVICE_NAME: 'serviceName',
-  FUNCTION_NAME: 'functionName',
+  SAILS: 'sails',
+  FROM_DATE: 'from',
+  TO_DATE: 'to',
 } as const;
 
 const FILTER_VALUE = {
@@ -38,30 +41,102 @@ const FILTER_VALUE = {
 type OwnerValue = (typeof FILTER_VALUE.OWNER)[keyof typeof FILTER_VALUE.OWNER];
 type DirectionValue = (typeof FILTER_VALUE.DIRECTION)[keyof typeof FILTER_VALUE.DIRECTION];
 
+const VALUES = {
+  OWNER: Object.values(FILTER_VALUE.OWNER),
+  DIRECTION: Object.values(FILTER_VALUE.DIRECTION),
+} as const;
+
+const DEFAULT_VALUE = {
+  OWNER: FILTER_VALUE.OWNER.ALL as OwnerValue,
+  DIRECTION: FILTER_VALUE.DIRECTION.TO as DirectionValue,
+  SAILS: '' as string,
+  FROM_DATE: '' as string,
+  TO_DATE: '' as string,
+} as const;
+
 const DEFAULT_FILTER_VALUES = {
-  [FILTER_NAME.OWNER]: FILTER_VALUE.OWNER.ALL as OwnerValue,
-  [FILTER_NAME.DIRECTION]: FILTER_VALUE.DIRECTION.TO as DirectionValue,
-  [FILTER_NAME.SERVICE_NAME]: '',
-  [FILTER_NAME.FUNCTION_NAME]: '',
-};
+  [FILTER_NAME.OWNER]: DEFAULT_VALUE.OWNER,
+  [FILTER_NAME.DIRECTION]: DEFAULT_VALUE.DIRECTION,
+  [FILTER_NAME.SAILS]: DEFAULT_VALUE.SAILS,
+  [FILTER_NAME.FROM_DATE]: DEFAULT_VALUE.FROM_DATE,
+  [FILTER_NAME.TO_DATE]: DEFAULT_VALUE.TO_DATE,
+} as const;
+
+function useFilters(sails: Sails | undefined) {
+  const { account } = useAccount();
+
+  // fallback to default value on no account,
+  // nuqs parser doesn't support dynamic values - it works because there's app level loader for account
+  const ownerValues = account ? VALUES.OWNER : [DEFAULT_VALUE.OWNER];
+
+  const [filters, setFilters] = useSearchParamsStates({
+    [FILTER_NAME.OWNER]: parseAsStringEnum(ownerValues).withDefault(DEFAULT_VALUE.OWNER),
+    [FILTER_NAME.DIRECTION]: parseAsStringEnum(VALUES.DIRECTION).withDefault(DEFAULT_VALUE.DIRECTION),
+    [FILTER_NAME.SAILS]: parseAsString.withDefault(DEFAULT_VALUE.SAILS),
+    [FILTER_NAME.FROM_DATE]: parseAsIsoString.withDefault(DEFAULT_VALUE.FROM_DATE),
+    [FILTER_NAME.TO_DATE]: parseAsIsoString.withDefault(DEFAULT_VALUE.TO_DATE),
+  });
+
+  const validFilters = {
+    ...filters,
+
+    [FILTER_NAME.SAILS]: getValidSailsFilterValue(sails, 'functions', filters[FILTER_NAME.SAILS], DEFAULT_VALUE.SAILS),
+  };
+
+  useChangeEffect(() => {
+    if (!account) void setFilters((prevValues) => ({ ...prevValues, [FILTER_NAME.OWNER]: DEFAULT_VALUE.OWNER }));
+  }, [account]);
+
+  return [validFilters, setFilters] as const;
+}
 
 const ProgramMessages = ({ programId, sails }: Props) => {
   const { account } = useAccount();
+  const [filters, setFilters] = useFilters(sails);
+  const { from, to } = filters;
 
-  const [filters, setFilters] = useState(DEFAULT_FILTER_VALUES);
+  const [searchQuery, setSearchQuery] = useSearchParamsState('query', parseAsString.withDefault(''));
 
   const isToDirection = filters[FILTER_NAME.DIRECTION] === FILTER_VALUE.DIRECTION.TO;
   const addressParam = filters[FILTER_NAME.OWNER] === FILTER_VALUE.OWNER.OWNER ? account?.decodedAddress : undefined;
-  const service = filters[FILTER_NAME.SERVICE_NAME];
-  const fn = filters[FILTER_NAME.FUNCTION_NAME];
+  const { serviceName, functionName } = getParsedSailsFilterValue(filters[FILTER_NAME.SAILS]);
 
-  const toMessages = useMessagesToProgram({ destination: programId, source: addressParam, service, fn }, isToDirection);
+  const toMessages = useMessagesToProgram(
+    {
+      destination: programId,
+      source: addressParam,
+      service: serviceName,
+      fn: functionName,
+      query: searchQuery,
+      from,
+      to,
+    },
+    isToDirection,
+  );
+
   const fromMessages = useMessagesFromProgram(
-    { source: programId, destination: addressParam, service, fn },
+    {
+      source: programId,
+      destination: addressParam,
+      service: serviceName,
+      fn: functionName,
+      query: searchQuery,
+      from,
+      to,
+    },
     !isToDirection,
   );
 
   const messages = isToDirection ? toMessages : fromMessages;
+
+  const renderSearch = () => (
+    <SearchForm
+      placeholder="Search by id..."
+      defaultValue={searchQuery}
+      getSchema={(schema) => schema.refine((value) => isHex(value), 'Value should be hex')}
+      onSubmit={(query) => setSearchQuery(query)}
+    />
+  );
 
   const renderList = () => (
     <List
@@ -76,40 +151,6 @@ const ProgramMessages = ({ programId, sails }: Props) => {
     />
   );
 
-  const renderSailsFilters = () => {
-    if (!sails) return null;
-
-    const { services } = sails;
-    const serviceName = filters[FILTER_NAME.SERVICE_NAME];
-
-    const handleServiceNameChange = (values: typeof filters) =>
-      setFilters({ ...values, [FILTER_NAME.FUNCTION_NAME]: '' });
-
-    return (
-      <>
-        <SailsFilterGroup
-          heading="Service"
-          name={FILTER_NAME.SERVICE_NAME}
-          functions={services}
-          onSubmit={handleServiceNameChange}
-        />
-
-        {serviceName && (
-          <SailsFilterGroup
-            heading="Function"
-            name={FILTER_NAME.FUNCTION_NAME}
-            functions={services[serviceName].functions}
-            onSubmit={setFilters}
-          />
-        )}
-      </>
-    );
-  };
-
-  useEffect(() => {
-    if (!account) setFilters((prevValues) => ({ ...prevValues, [FILTER_NAME.OWNER]: FILTER_VALUE.OWNER.ALL }));
-  }, [account]);
-
   const renderFilters = () => (
     <Filters initialValues={DEFAULT_FILTER_VALUES} values={filters} onSubmit={setFilters}>
       {account && (
@@ -118,6 +159,8 @@ const ProgramMessages = ({ programId, sails }: Props) => {
           <Radio name={FILTER_NAME.OWNER} value={FILTER_VALUE.OWNER.OWNER} label="My messages" onSubmit={setFilters} />
         </FilterGroup>
       )}
+
+      <DateFilter fromName={FILTER_NAME.FROM_DATE} toName={FILTER_NAME.TO_DATE} onSubmit={setFilters} />
 
       <FilterGroup title="Direction" name={FILTER_NAME.DIRECTION} onSubmit={setFilters}>
         <Radio
@@ -135,7 +178,15 @@ const ProgramMessages = ({ programId, sails }: Props) => {
         />
       </FilterGroup>
 
-      {renderSailsFilters()}
+      {sails && (
+        <SailsFilter
+          label="Sails Functions"
+          services={sails.services}
+          type="functions"
+          name={FILTER_NAME.SAILS}
+          onSubmit={setFilters}
+        />
+      )}
     </Filters>
   );
 
@@ -144,6 +195,7 @@ const ProgramMessages = ({ programId, sails }: Props) => {
       heading="Messages"
       count={messages.data?.count}
       renderList={renderList}
+      renderSearch={renderSearch}
       renderFilters={renderFilters}
     />
   );

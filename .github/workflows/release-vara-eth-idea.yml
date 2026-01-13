@@ -1,0 +1,193 @@
+name: 'Vara.Eth Idea Release'
+
+on:
+  push:
+    branches: ['main']
+    paths:
+      - idea/vara-eth/**
+  workflow_dispatch:
+    inputs:
+      service:
+        type: choice
+        description: Service to release
+        options:
+          - frontend
+          - indexer
+          - all
+        required: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+
+permissions:
+  contents: read
+
+jobs:
+  set-env-tag:
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.get_env.outputs.environment }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Get environment
+        id: get_env
+        run: echo "environment=vara-eth-idea-staging" >> $GITHUB_OUTPUT
+
+  check-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.should-build.outputs.frontend }}
+      indexer: ${{ steps.should-build.outputs.indexer }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check frontend changes
+        id: frontend
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            changed:
+              - idea/vara-eth/frontend/**
+
+      - name: Check indexer changes
+        id: indexer
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            changed:
+              - idea/vara-eth/indexer/**
+
+      - name: Determine what should be built
+        id: should-build
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            # For manual trigger, check the input
+            if [[ "${{ github.event.inputs.service }}" == "frontend" || "${{ github.event.inputs.service }}" == "all" ]]; then
+              echo "frontend=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "frontend=false" >> "$GITHUB_OUTPUT"
+            fi
+            
+            if [[ "${{ github.event.inputs.service }}" == "indexer" || "${{ github.event.inputs.service }}" == "all" ]]; then
+              echo "indexer=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "indexer=false" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            # For push events, use the file change detection
+            echo "frontend=${{ steps.frontend.outputs.changed }}" >> "$GITHUB_OUTPUT"
+            echo "indexer=${{ steps.indexer.outputs.changed }}" >> "$GITHUB_OUTPUT"
+          fi
+
+  build-frontend-image:
+    runs-on: ubuntu-latest
+    needs: [set-env-tag, check-changes]
+    if: ${{ needs.check-changes.outputs.frontend == 'true' }}
+    environment: ${{ needs.set-env-tag.outputs.environment }}
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push "vara-eth-idea-frontend" Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: idea/vara-eth/frontend/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-frontend:${{ needs.set-env-tag.outputs.environment }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-frontend:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
+          build-args: |
+            VITE_WALLET_CONNECT_PROJECT_ID=${{ secrets.VITE_WALLET_CONNECT_PROJECT_ID }}
+            VITE_VARA_ETH_NODE_ADDRESS=${{ secrets.VITE_VARA_ETH_NODE_ADDRESS }}
+            VITE_ETH_NODE_ADDRESS=${{ secrets.VITE_ETH_NODE_ADDRESS }}
+            VITE_ROUTER_CONTRACT_ADDRESS=${{ secrets.VITE_ROUTER_CONTRACT_ADDRESS }}
+            VITE_ETH_CHAIN_ID=${{ secrets.VITE_ETH_CHAIN_ID }}
+            VITE_EXPLORER_URL=${{ secrets.VITE_EXPLORER_URL }}
+
+  build-indexer-image:
+    runs-on: ubuntu-latest
+    needs: [set-env-tag, check-changes]
+    if: ${{ needs.check-changes.outputs.indexer == 'true' }}
+    environment: ${{ needs.set-env-tag.outputs.environment }}
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push "vara-eth-idea-indexer" image
+        uses: docker/build-push-action@master
+        with:
+          file: idea/vara-eth/indexer/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-indexer:${{ needs.set-env-tag.outputs.environment }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-vara-eth-idea-indexer:${{ needs.set-env-tag.outputs.environment }}-${{ github.sha }}
+
+  deploy-indexer:
+    needs: [build-indexer-image]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy to k8s
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment vara-eth-indexer -n dev-1
+
+  deploy-frontend:
+    needs: [build-frontend-image]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy to k8s
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment vara-eth-frontend -n dev-1

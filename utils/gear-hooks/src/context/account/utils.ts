@@ -63,7 +63,7 @@ const getConnectedWallet = async (
     const status = WALLET_STATUS.CONNECTED;
 
     // if auth popup closed/rejected, extension will throw an error
-    const connectedWallet = await connect(origin);
+    const connectedWallet = await connect.bind(wallet)(origin);
     const { signer } = connectedWallet;
 
     const accounts = getAccounts(id, signer, await connectedWallet.accounts.get());
@@ -135,4 +135,10 @@ const getWallets = async (
   return Object.fromEntries(await Promise.all(promiseEntries));
 };
 
-export { getWallets, getLoggedInAccount };
+function isTelegramMiniApp() {
+  const params = new URLSearchParams(window.location.hash.slice(1));
+
+  return params.has('tgWebAppPlatform') && params.has('tgWebAppVersion');
+}
+
+export { getWallets, getLoggedInAccount, isTelegramMiniApp };

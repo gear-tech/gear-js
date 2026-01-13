@@ -1,0 +1,52 @@
+{
+  "name": "@vara-eth/api",
+  "version": "0.1.0",
+  "description": "Typescript library for interacting with Vara.Eth network",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gear-tech/gear-js"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "npx jest",
+    "test:only": "yarn node --no-warnings --experimental-vm-modules $(../../node_modules/.bin/jest) --runInBand",
+    "test:no-setup": "npx jest",
+    "build": "npx rollup -c",
+    "clean": "rm -rf lib",
+    "abi": "node scripts/convert-abi.mjs",
+    "setup-local-env": "node scripts/setup-local-env.mjs",
+    "pack": "mkdir -p ../../artifacts && yarn pack --out ../../artifacts/vara-eth-api.tgz"
+  },
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "require": "./lib/cjs/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./abi": {
+      "import": "./lib/eth/abi/index.js",
+      "require": "./lib/eth/abi/index.cjs",
+      "types": "./lib/eth/abi/index.d.ts"
+    }
+  },
+  "peerDependencies": {
+    "kzg-wasm": "1.0.0",
+    "viem": "^2.39.0"
+  },
+  "devDependencies": {
+    "@types/ws": "8.18.1",
+    "kzg-wasm": "1.0.0",
+    "viem": "2.40.0",
+    "ws": "8.18.3"
+  },
+  "files": [
+    "lib"
+  ],
+  "dependencies": {
+    "@ethereumjs/util": "^10.1.0",
+    "@noble/hashes": "1.8.0"
+  }
+}

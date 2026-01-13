@@ -21,6 +21,23 @@ const PROGRAM_STATUS_NAME = {
 const DEFAULT_FILTER_VALUES = {
   owner: OwnerFilter.All,
   status: [] as ProgramStatus[],
+  whitelist: [] as string[],
 };
 
-export { ProgramStatus, PROGRAM_STATUS_NAME, DEFAULT_FILTER_VALUES };
+// tabs
+
+const PROGRAM_TAB_ID = {
+  MESSAGES: 'messages',
+  EVENTS: 'events',
+  VOUCHERS: 'vouchers',
+  METADATA: 'metadata',
+} as const;
+
+const PROGRAM_TABS = [
+  { id: PROGRAM_TAB_ID.MESSAGES, label: 'Messages' },
+  { id: PROGRAM_TAB_ID.EVENTS, label: 'Events' },
+  { id: PROGRAM_TAB_ID.VOUCHERS, label: 'Vouchers' },
+  { id: PROGRAM_TAB_ID.METADATA, label: 'Metadata/Sails' },
+] as const;
+
+export { ProgramStatus, PROGRAM_STATUS_NAME, DEFAULT_FILTER_VALUES, PROGRAM_TABS, PROGRAM_TAB_ID };

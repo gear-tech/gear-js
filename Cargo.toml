@@ -13,8 +13,8 @@ members = [
 ]
 
 [workspace.dependencies]
-gstd = "=1.9.1"
+gstd = "=1.9.2"
 scale-info = { version = "=2.11", default-features = false, features = ["derive"] }
 codec = { package = "parity-scale-codec", version = "=3.7.5", default-features = false, features = ["derive", "full"] }
-gear-wasm-builder = { version = "=1.9.1" }
+gear-wasm-builder = { version = "=1.9.2" }
 primitive-types = { version = "0.12.2", default-features = false }

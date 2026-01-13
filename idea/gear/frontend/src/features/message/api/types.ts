@@ -5,22 +5,25 @@ import { IBase } from '@/shared/types';
 
 import { MessageEntryPoint, MessageReadReason } from '../types';
 
-type BaseMessagesParameters = PaginationParameters & {
+type MessagesParameters = PaginationParameters & {
   destination?: string;
   source?: string;
   service?: string;
   fn?: string;
+  query?: string;
+  from?: string;
+  to?: string;
 };
 
-type MessagesToProgramParameters = BaseMessagesParameters & {
+type MessagesToProgramParameters = MessagesParameters & {
   entry?: MessageEntryPoint;
 };
 
-type MessagesFromProgramParameters = BaseMessagesParameters & {
+type MessagesFromProgramParameters = MessagesParameters & {
   isInMailbox?: boolean;
 };
 
-type BaseMessage = IBase & {
+type Message = IBase & {
   id: HexString;
   destination: HexString;
   source: HexString;
@@ -32,12 +35,12 @@ type BaseMessage = IBase & {
   fn?: string | null;
 };
 
-type MessageToProgram = BaseMessage & {
+type MessageToProgram = Message & {
   entry: MessageEntryPoint | null;
   processedWithPanic?: boolean | null;
 };
 
-type MessageFromProgram = BaseMessage & {
+type MessageFromProgram = Message & {
   exitCode?: number | null;
   expiration?: number | null;
   readReason?: MessageReadReason | null;

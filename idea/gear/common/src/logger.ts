@@ -5,7 +5,7 @@ const TIMESTAMP_FORMAT = 'YY-MM-DD HH:mm:ss';
 const DEV_NODE_ENV = ['dev', 'test', 'development'];
 
 export const createLogger = (ctx?: string) => {
-  const logFormat = DEV_NODE_ENV.includes(process.env.NODE_ENV)
+  const logFormat = DEV_NODE_ENV.includes(process.env.NODE_ENV as string)
     ? format.combine(
         format.colorize(),
         format.timestamp({ format: TIMESTAMP_FORMAT }),

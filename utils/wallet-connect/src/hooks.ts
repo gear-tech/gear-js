@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { WALLET } from './consts';
 import { WalletId } from './types';
 
-function useWallet() {
+// isDialogOpen is needed to reset walletId when dialog is opened
+function useWallet(isDialogOpen: boolean) {
   const { wallets, account } = useAccount();
 
   const defaultWalletId = account?.meta.source as WalletId | undefined;
@@ -15,11 +16,11 @@ function useWallet() {
 
   useEffect(() => {
     setWalletId(defaultWalletId);
-  }, [defaultWalletId]);
+  }, [defaultWalletId, isDialogOpen]);
 
   const resetWalletId = () => setWalletId(undefined);
 
-  return { wallet, walletId, walletAccounts, setWalletId, resetWalletId };
+  return { wallet, walletAccounts, setWalletId, resetWalletId };
 }
 
 export { useWallet };

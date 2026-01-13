@@ -1,0 +1,21 @@
+.tag {
+  text-align: center;
+
+  font-weight: 500;
+  color: rgba(#fff, 0.6);
+
+  border: 1px solid rgba(#fff, 0.6);
+  border-radius: 4px;
+
+  &.small {
+    padding: 0 4px;
+
+    font-size: 10px;
+  }
+
+  &.medium {
+    padding: 0 6px;
+
+    font-size: 12px;
+  }
+}

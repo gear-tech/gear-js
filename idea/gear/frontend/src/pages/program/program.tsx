@@ -1,32 +1,29 @@
 import { Button } from '@gear-js/ui';
 import { HexString } from '@polkadot/util/types';
-import cx from 'clsx';
-import { useState } from 'react';
-import { generatePath, useParams } from 'react-router-dom';
+import { useMemo } from 'react';
+import { generatePath, Outlet, useParams } from 'react-router-dom';
 
 import { ProgramBalance } from '@/features/balance';
-import { ProgramMessages } from '@/features/message';
-import { useMetadata, MetadataTable, isState } from '@/features/metadata';
-import { ProgramStatus, ProgramTable, useProgram } from '@/features/program';
-import { ProgramEvents, SailsPreview, useSails } from '@/features/sails';
-import { ProgramVouchers } from '@/features/voucher';
+import { useMetadata, isState } from '@/features/metadata';
+import { ProgramStatus, ProgramTable, ProgramTabs, useProgram } from '@/features/program';
+import { useSails } from '@/features/sails';
+import { useIsVftProgram, VftTag } from '@/features/vft-whitelist';
 import { useModal } from '@/hooks';
 import AddMetaSVG from '@/shared/assets/images/actions/addMeta.svg?react';
 import ReadSVG from '@/shared/assets/images/actions/read.svg?react';
 import SendSVG from '@/shared/assets/images/actions/send.svg?react';
 import { absoluteRoutes, routes } from '@/shared/config';
 import { getShortName, isAnyKey } from '@/shared/helpers';
-import { Box, UILink } from '@/shared/ui';
+import { UILink } from '@/shared/ui';
 
 import styles from './program.module.scss';
-
-const TABS = ['Metadata/Sails', 'Messages', 'Events', 'Vouchers'];
+import { TabsContext } from './tabs';
 
 type Params = {
   programId: HexString;
 };
 
-const Program = () => {
+function Program() {
   const { programId } = useParams() as Params;
   const { showModal, closeModal } = useModal();
 
@@ -35,11 +32,15 @@ const Program = () => {
   const { sails, isLoading: isSailsLoading, refetch: refetchSails } = useSails(program?.codeId);
   // commented out till code verified is fixed
   // const { data: isCodeVerified } = useIsCodeVerified(program?.codeId);
+  const { data: isVft } = useIsVftProgram(programId);
 
   const isLoading = !isMetadataReady || isSailsLoading;
   const isAnyQuery = sails ? Object.values(sails.services).some(({ queries }) => isAnyKey(queries)) : false;
 
-  const [tabIndex, setTabIndex] = useState(0);
+  const outletContext: TabsContext = useMemo(
+    () => ({ programId, sails, metadata, isLoading }),
+    [programId, sails, metadata, isLoading],
+  );
 
   const openUploadMetadataModal = () => {
     if (!program) throw new Error('Program is not found');
@@ -67,22 +68,12 @@ const Program = () => {
     });
   };
 
-  const renderTabs = () =>
-    TABS.map((tab, index) => (
-      <button
-        key={tab}
-        type="button"
-        onClick={() => setTabIndex(index)}
-        className={cx(styles.button, index === tabIndex && styles.active)}>
-        {tab}
-      </button>
-    ));
-
   return (
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.headingContainer}>
           {program && <h2 className={styles.name}>{getShortName(program.name || 'Program Name')}</h2>}
+          {isVft && <VftTag size="medium" />}
 
           {/* commented out till code verified is fixed */}
           {/* {isCodeVerified && <VerificationStatus value="verified" />} */}
@@ -129,23 +120,11 @@ const Program = () => {
       />
 
       <div className={styles.body}>
-        <header className={styles.tabs}>{renderTabs()}</header>
-
-        {tabIndex === 0 &&
-          (sails ? (
-            <Box>
-              <SailsPreview value={sails} />
-            </Box>
-          ) : (
-            <MetadataTable metadata={metadata} isLoading={isLoading} />
-          ))}
-
-        {tabIndex === 1 && <ProgramMessages programId={programId} sails={sails} />}
-        {tabIndex === 2 && !isSailsLoading && <ProgramEvents programId={programId} sails={sails} />}
-        {tabIndex === 3 && <ProgramVouchers programId={programId} />}
+        <ProgramTabs />
+        <Outlet context={outletContext} />
       </div>
     </div>
   );
-};
+}
 
 export { Program };

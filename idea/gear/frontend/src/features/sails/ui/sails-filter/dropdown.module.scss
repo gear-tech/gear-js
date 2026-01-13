@@ -1,0 +1,249 @@
+@use '@/shared/assets/styles/variables' as *;
+@use '@/shared/assets/styles/mixins' as *;
+
+%input {
+  width: 100%;
+  height: 40px;
+  padding: 10px 16px;
+
+  color: #fff;
+
+  background-color: #222225;
+  border: 1px solid #3a3d4d;
+  border-radius: 20px;
+
+  outline: none;
+
+  &:focus-within {
+    border-color: #898b94;
+  }
+
+  &::placeholder {
+    color: #ffffff99;
+  }
+}
+
+.input {
+  @extend %input;
+}
+
+// same as FilterGroup title
+.label {
+  display: block;
+  margin-bottom: 8px;
+
+  font-family: Kanit;
+  font-size: $fontSizeSmall;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: $gray600;
+}
+
+.trigger {
+  @extend %input;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  font-family: Kanit;
+  font-size: 14px;
+
+  text-align: left;
+
+  .placeholder {
+    color: #ffffff99;
+  }
+
+  .icon {
+    transition: rotate 0.25s;
+    rotate: 90deg;
+  }
+
+  &[data-popup-open] {
+    .icon {
+      rotate: 270deg;
+    }
+  }
+}
+
+.positioner {
+  z-index: 2;
+}
+
+.inputContainer {
+  padding: 12px 16px;
+
+  background-image: linear-gradient(180deg, #1f2024 0%, #242529 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.popup {
+  max-width: var(--available-width);
+  min-width: var(--anchor-width);
+
+  background: linear-gradient(135deg, #131416 0%, #1a1a1e 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+    0 20px 76px 0 rgba(0, 0, 0, 0.6),
+    0 4px 24px rgba(0, 0, 0, 0.4);
+
+  transform-origin: var(--transform-origin);
+  transition:
+    opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  overflow: hidden;
+
+  &[data-starting-style],
+  &[data-ending-style] {
+    opacity: 0;
+    transform: scale(0.9) translateY(-8px);
+  }
+
+  &:not([data-empty]) {
+    .empty {
+      display: none;
+    }
+  }
+}
+
+.simplebar {
+  @include customSimplebar;
+
+  max-height: min(24rem, var(--available-height));
+
+  :global(.simplebar-content-wrapper) {
+    scroll-behavior: contain;
+  }
+}
+
+.empty {
+  padding: 24px 16px;
+  text-align: center;
+
+  font-size: 14px;
+  color: rgba(#fff, 0.5);
+  font-style: italic;
+
+  border-radius: 16px 16px 0 0;
+
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 100%);
+}
+
+.group {
+  border-radius: 10px;
+  transition: all 0.3s ease;
+
+  &.selected {
+    .groupLabel {
+      color: $successColor;
+
+      background: linear-gradient(135deg, #233632 0%, #1f3f38 100%);
+      box-shadow: 0 2px 8px rgba(35, 54, 50, 0.3);
+
+      pointer-events: none;
+    }
+
+    .item {
+      color: $successColor;
+    }
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 12px;
+  }
+}
+
+.groupLabel {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+
+  padding: 10px 12px;
+  margin-bottom: 6px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  font-family: Kanit;
+  font-size: $fontSizeSmall;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: $gray800;
+
+  background: linear-gradient(180deg, #242529 0%, #1f2024 100%);
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  .heading {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .selectAllButton {
+    padding: 4px 8px;
+    font-size: 10px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.item {
+  padding: 8px 12px;
+
+  font-size: 14px;
+  color: rgba(#fff, 0.9);
+
+  border-radius: 6px;
+
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, $successColor 0%, rgba($successColor, 0.5) 100%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  &:hover {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
+    transform: translateX(4px);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+    &::before {
+      opacity: 0.6;
+    }
+  }
+
+  &[data-selected] {
+    background: linear-gradient(135deg, $green100 0%, rgba($green100, 0.7) 100%);
+    color: $successColor;
+    font-weight: 500;
+    box-shadow: 0 2px 6px rgba($successColor, 0.2);
+
+    pointer-events: none;
+
+    &::before {
+      opacity: 1;
+    }
+  }
+}

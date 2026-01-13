@@ -7,6 +7,7 @@ import { In, Repository } from 'typeorm';
 import { AppDataSource, FaucetRequest, FaucetType, RequestStatus } from '../../database';
 import { hash, LastSeenService } from './last-seen';
 import config from '../../config';
+import { Hex } from 'viem';
 
 export class RequestService {
   private _repo: Repository<FaucetRequest>;
@@ -20,21 +21,22 @@ export class RequestService {
     this._repo = AppDataSource.getRepository(FaucetRequest);
     this._targets = config.bridge.erc20Contracts.map(([contract]) => contract.toLowerCase());
     this._targets.push(_varaTestnetGenesis.toLowerCase());
+    this._targets.push(config.wvara.address.toLowerCase());
     this._requesting = new Set<string>();
     logger.info('Request service initialized');
   }
 
-  private _validateTarget(value: string): string {
+  private _validateTarget(value: Hex): Hex {
     const target = value.toLowerCase();
 
     if (!this._targets.includes(target)) {
       throw new UnsupportedTargetError(target);
     }
 
-    return target;
+    return target as Hex;
   }
 
-  private async _createAndValidateRequest(address: string, target: string, type: FaucetType): Promise<FaucetRequest> {
+  private async _createAndValidateRequest(address: Hex, target: Hex, type: FaucetType): Promise<FaucetRequest> {
     const req = new FaucetRequest({
       address,
       target,
@@ -42,8 +44,8 @@ export class RequestService {
       status: RequestStatus.Pending,
     });
 
-    if (req.type === FaucetType.BridgeErc20) {
-      req.address = req.address.toLowerCase();
+    if (req.type === FaucetType.BridgeErc20 || req.type === FaucetType.WVara) {
+      req.address = req.address.toLowerCase() as Hex;
     }
 
     try {
@@ -59,7 +61,7 @@ export class RequestService {
     return req;
   }
 
-  public async newRequest(address: string, target: string, type: FaucetType) {
+  public async newRequest(address: Hex, target: Hex, type: FaucetType) {
     logger.info(`New request`, { address, target, type });
     target = this._validateTarget(target);
 
@@ -96,21 +98,31 @@ export class RequestService {
       order: { timestamp: 'DESC' },
     });
 
-    await this._repo.update({ id: In(requests.map(({ id }) => id)) }, { status: RequestStatus.Processing });
+    for (let i = 0; i < requests.length; i += 1000) {
+      const _requests = requests.slice(i, i + 1000);
+      const ids = _requests.map(({ id }) => id);
+      await this._repo.update({ id: In(ids) }, { status: RequestStatus.Processing });
+    }
 
     return requests;
   }
 
   public async setCompleted(ids: number[]) {
     if (ids.length > 0) {
-      await this._repo.update({ id: In(ids) }, { status: RequestStatus.Completed });
+      for (let i = 0; i < ids.length; i += 1000) {
+        const _ids = ids.slice(i, i + 1000);
+        await this._repo.update({ id: In(_ids) }, { status: RequestStatus.Completed });
+      }
       logger.debug(`Requests ${ids} marked as completed`);
     }
   }
 
   public async setFailed(ids: number[]) {
     if (ids.length > 0) {
-      await this._repo.update({ id: In(ids) }, { status: RequestStatus.Failed });
+      for (let i = 0; i < ids.length; i += 1000) {
+        const _ids = ids.slice(i, i + 1000);
+        await this._repo.update({ id: In(_ids) }, { status: RequestStatus.Failed });
+      }
       logger.debug(`Requests ${ids} marked as failed`);
     }
   }

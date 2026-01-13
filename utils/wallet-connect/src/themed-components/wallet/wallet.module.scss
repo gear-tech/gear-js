@@ -1,0 +1,31 @@
+.wallet {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.accountIcon {
+  /* overriding Identicon */
+  cursor: pointer !important;
+}
+
+// TODO: fix vara dark mode colors
+.text {
+  &.gear {
+    color: #fff;
+  }
+
+  &.vara {
+    color: #000;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+    transition: opacity 0.25s;
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+}

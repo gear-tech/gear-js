@@ -13,7 +13,7 @@ export abstract class FaucetProcessor {
     private _requestService: RequestService,
   ) {}
 
-  public abstract init(): Promise<void>;
+  public abstract init(...args: unknown[]): Promise<void>;
   protected abstract get cronInterval(): string;
   protected abstract get type(): FaucetType[];
   protected abstract handleRequests(requests: FaucetRequest[]): Promise<{ success: number[]; fail: number[] }>;
@@ -34,13 +34,13 @@ export abstract class FaucetProcessor {
           return;
         }
 
-        const completed = [];
-        const failed = [];
+        const completed: number[] = [];
+        const failed: number[] = [];
         try {
           const { success, fail } = await this.handleRequests(requests);
           completed.push(...success);
           failed.push(...fail);
-        } catch (error) {
+        } catch (error: any) {
           this.logger.error('Failed to handle requests', { reason: error.message, stack: error.stack });
           return;
         }

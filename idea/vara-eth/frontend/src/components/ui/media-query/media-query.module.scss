@@ -1,0 +1,47 @@
+.desktop {
+  @include md {
+    display: none;
+  }
+}
+
+.mobile {
+  display: none;
+
+  @include md {
+    display: contents;
+  }
+}
+
+$mq-sizes: (
+  sm: $sm,
+  md: $md,
+  lg: $lg,
+  xl: $xl,
+  xxl: $xxl
+);
+
+@mixin show-below($width) {
+  display: none;
+
+  @include breakpoint($width) {
+    display: contents;
+  }
+}
+
+@mixin show-above($width) {
+  display: contents;
+
+  @include breakpoint($width) {
+    display: none;
+  }
+}
+
+@each $name, $width in $mq-sizes {
+  .below#{$name} {
+    @include show-below($width);
+  }
+
+  .above#{$name} {
+    @include show-above($width);
+  }
+}

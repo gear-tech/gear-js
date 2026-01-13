@@ -6,7 +6,7 @@ export function FormResponse(_target: unknown, _propertyKey: string, descriptor:
   descriptor.value = async function SafeWrapper() {
     try {
       return { result: await originalMethod.apply(this, arguments) };
-    } catch (error) {
+    } catch (error: any) {
       if (error.name) {
         const { name, ...err } = error;
         if (name === JSONRPC_ERRORS.InternalError.name) {

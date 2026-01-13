@@ -1,11 +1,13 @@
 import { Unsubcall } from '@polkadot/extension-inject/types';
+import TWA from '@twa-dev/sdk';
+import { injectVaranWallet } from '@varan-wallet/varan-connect';
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { ProviderProps } from '../../types';
 
 import { LOCAL_STORAGE_KEY, DEFAULT_INJECT_TIMEOUT_MS } from './consts';
 import { Account, Wallet, Wallets } from './types';
-import { getLoggedInAccount, getWallets } from './utils';
+import { getLoggedInAccount, getWallets, isTelegramMiniApp } from './utils';
 
 type Value = {
   wallets: Wallets | undefined;
@@ -71,6 +73,8 @@ function AccountProvider({ appName, children }: Props) {
   const registerUnsub = (unsub: Unsubcall) => unsubsRef.current.push(unsub);
 
   useEffect(() => {
+    if (isTelegramMiniApp()) injectVaranWallet(TWA);
+
     const timeoutId = setTimeout(() => {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises -- TODO(#1816): resolve eslint comments
       getWallets(appName, handleAccountsChange, handleWalletChange, registerUnsub).then((result) => {

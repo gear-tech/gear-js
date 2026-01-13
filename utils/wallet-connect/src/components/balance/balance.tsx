@@ -1,36 +1,29 @@
-import { useAccount, useApi, useBalanceFormat, useDeriveBalancesAll } from '@gear-js/react-hooks';
-import cx from 'clsx';
+import { useRender } from '@base-ui-components/react';
+import { useAccount, useBalanceFormat, useDeriveBalancesAll } from '@gear-js/react-hooks';
 
-import VaraSVG from '../../assets/vara.svg?react';
+import { BalanceProvider } from './context';
 
-import styles from './balance.module.scss';
+type Props = useRender.ComponentProps<'div'>;
 
-type Props = {
-  theme: 'gear' | 'vara';
-};
-
-function Balance({ theme }: Props) {
-  const { isApiReady } = useApi();
+function Balance({ render, ...props }: Props) {
   const { account } = useAccount();
   const { getFormattedBalance } = useBalanceFormat();
 
-  const { data: balances } = useDeriveBalancesAll({ address: account?.decodedAddress, watch: true });
+  const { data } = useDeriveBalancesAll({
+    address: account?.decodedAddress,
+    watch: true,
+    query: { select: (value) => getFormattedBalance(value.transferable || value.availableBalance) },
+  });
 
-  const balance =
-    isApiReady && balances ? getFormattedBalance(balances.transferable || balances.availableBalance) : undefined;
+  const element = useRender({
+    defaultTagName: 'div',
+    render,
+    props,
+  });
 
-  if (!balance) return null;
+  if (!data) return;
 
-  return (
-    <div className={styles.balance}>
-      <VaraSVG />
-
-      <p className={cx(styles.text, styles[theme])}>
-        <span className={styles.value}>{balance.value}</span>
-        <span className={styles.unit}>{balance.unit}</span>
-      </p>
-    </div>
-  );
+  return <BalanceProvider value={data}>{element}</BalanceProvider>;
 }
 
 export { Balance };
