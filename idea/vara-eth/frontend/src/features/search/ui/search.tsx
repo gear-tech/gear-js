@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Config, getBytecode } from '@wagmi/core';
+import { HexString } from '@vara-eth/api';
+import { getBytecode } from '@wagmi/core';
 import { useForm } from 'react-hook-form';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { isAddress, isHash } from 'viem';
@@ -8,9 +9,10 @@ import { z } from 'zod';
 
 import SearchSVG from '@/assets/icons/search.svg?react';
 import { Button } from '@/components';
-import { getCode } from '@/features/codes/lib/requests';
 import { routes } from '@/shared/config';
 import { noop } from '@/shared/utils';
+
+import { getIndexerEntity, INDEXER_ENTITY } from '../lib';
 
 import styles from './search.module.scss';
 
@@ -24,27 +26,6 @@ const SCHEMA = z.object({
     .toLowerCase()
     .refine((value) => isAddress(value) || isHash(value), { message: 'Invalid address or hash' }),
 });
-
-const CHAIN_ENTITY = { PROGRAM: 'program', USER: 'user', CODE: 'code', UNKNOWN: 'unknown' } as const;
-
-const getChainEntity = async (wagmiConfig: Config, id: string) => {
-  if (isAddress(id)) {
-    const bytecode = await getBytecode(wagmiConfig, { address: id });
-
-    return bytecode ? { kind: CHAIN_ENTITY.PROGRAM, id } : { kind: CHAIN_ENTITY.USER, id };
-  }
-
-  if (isHash(id)) {
-    // TODO: figure out tanstack query settings.
-    // queryClient.fetchQuery(...) is supposed (?) to prevent extra fetches:
-    // while mounting the page; if data is already in cache.
-    const code = await getCode(id).catch(noop);
-
-    if (code) return { kind: CHAIN_ENTITY.CODE, id };
-  }
-
-  return { kind: CHAIN_ENTITY.UNKNOWN };
-};
 
 type Values = typeof DEFAULT_VALUES;
 type FormattedValues = z.infer<typeof SCHEMA>;
@@ -61,16 +42,34 @@ const Search = () => {
   const { errors, isSubmitting } = formState;
   const error = errors[FIELD_NAME]?.message;
 
-  const handleSubmit = async ({ value }: FormattedValues) => {
-    const { kind, id } = await getChainEntity(config, value);
+  const isWalletAddress = async (value: HexString) => {
+    if (!isAddress(value)) return false;
 
-    switch (kind) {
-      case CHAIN_ENTITY.PROGRAM:
-        return navigate(generatePath(routes.program, { programId: id }));
-      case CHAIN_ENTITY.USER:
-        return navigate(generatePath(routes.user, { userId: id }));
-      case CHAIN_ENTITY.CODE:
-        return navigate(generatePath(routes.code, { codeId: id }));
+    return getBytecode(config, { address: value })
+      .then((result) => !result)
+      .catch((_error) => {
+        console.error(
+          "Can't determine whether address is a contract during search request. Assuming it might be.",
+          _error,
+        );
+
+        return false;
+      });
+  };
+
+  const handleSubmit = async ({ value }: FormattedValues) => {
+    if (await isWalletAddress(value)) return navigate(generatePath(routes.user, { userId: value }));
+
+    // TODO: implement indexer error type and noop only 404 to handle other errors
+    const { type } = (await getIndexerEntity(value).catch(noop)) || {};
+
+    switch (type) {
+      case INDEXER_ENTITY.PROGRAM:
+        return navigate(generatePath(routes.program, { programId: value }));
+
+      case INDEXER_ENTITY.CODE:
+        return navigate(generatePath(routes.code, { codeId: value }));
+
       default:
         return navigate(generatePath(routes.notFound));
     }
