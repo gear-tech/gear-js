@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { generatePath } from 'react-router-dom';
 import { Sails } from 'sails-js';
 
-import { useIsVftProgram, VftEventPayload } from '@/features/vft-whitelist';
+import { VftEventPayload } from '@/features/vft-whitelist';
 import ArrowSVG from '@/shared/assets/images/actions/arrowRight.svg?react';
 import CodeSVG from '@/shared/assets/images/actions/code.svg?react';
 import { absoluteRoutes } from '@/shared/config';
@@ -22,12 +22,11 @@ type Props = {
   programId: HexString;
   event: EventType;
   sails: Sails | undefined;
+  isVft: boolean | undefined;
 };
 
-function EventCard({ programId, event, sails }: Props) {
+function EventCard({ programId, event, sails, isVft }: Props) {
   const { service: serviceName, name, blockNumber, blockHash, payload } = event;
-
-  const { data: isVft } = useIsVftProgram(programId);
   const isVftPayload = isVft && serviceName?.toLowerCase() === 'vft' && name;
 
   const [isOpen, setIsOpen] = useState(false);
@@ -37,12 +36,12 @@ function EventCard({ programId, event, sails }: Props) {
 
     const service = sails.services[serviceName];
 
-    if (!service) return { payload, error: `Sails Service '${serviceName}' is not found` };
+    if (!service)
+      return { payload, error: `No '${serviceName}' Sails service found: the program's IDL likely lacks it.` };
 
     const serviceEvent = service.events[name];
 
-    if (!serviceEvent) return { payload, error: `Sails Event '${name}' is not found` };
-
+    if (!serviceEvent) return { payload, error: `No '${name}' Sails event found: the program's IDL likely lacks it.` };
     try {
       return { payload: serviceEvent.decode(payload) as AnyJson };
     } catch (error) {
