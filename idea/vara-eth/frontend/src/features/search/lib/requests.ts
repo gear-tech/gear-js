@@ -16,17 +16,7 @@ export const INDEXER_ENTITY = {
   ANNOUNCES: 'Announces',
 } as const;
 
-type IndexerEntityResponse =
-  | { type: typeof INDEXER_ENTITY.BATCH; data: unknown }
-  | { type: typeof INDEXER_ENTITY.CODE; data: unknown }
-  | { type: typeof INDEXER_ENTITY.MESSAGE_REQUEST; data: unknown }
-  | { type: typeof INDEXER_ENTITY.MESSAGE_SENT; data: unknown }
-  | { type: typeof INDEXER_ENTITY.PROGRAM; data: unknown }
-  | { type: typeof INDEXER_ENTITY.STATE_TRANSITION; data: unknown }
-  | { type: typeof INDEXER_ENTITY.TX; data: unknown }
-  | { type: typeof INDEXER_ENTITY.REPLY_REQUEST; data: unknown }
-  | { type: typeof INDEXER_ENTITY.REPLY_SENT; data: unknown }
-  | { type: typeof INDEXER_ENTITY.ANNOUNCES; data: null };
+type IndexerEntityResponse = { type: (typeof INDEXER_ENTITY)[keyof typeof INDEXER_ENTITY]; data: unknown };
 
 export const getIndexerEntity = (hash: HexString) =>
   fetchWithGuard<IndexerEntityResponse>({ url: `${EXPLORER_URL}/lookup/${hash}` });
