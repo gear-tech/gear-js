@@ -1,11 +1,11 @@
 import { AccountId32 } from '@polkadot/types/interfaces';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { ISubmittableResult } from '@polkadot/types/types';
 import { Option } from '@polkadot/types';
 
 import { MailboxItem, HexString } from '../types';
 import { GearTransaction } from './Transaction';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
-import { ISubmittableResult } from '@polkadot/types/types';
-import { ClaimValueError } from 'errors';
+import { ClaimValueError } from '../errors';
 
 export class GearMailbox extends GearTransaction {
   /**
