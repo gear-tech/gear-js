@@ -1,6 +1,6 @@
 import { Bool, Bytes, Option, Struct, u32, Text } from '@polkadot/types';
-import { H256 } from '@polkadot/types/interfaces';
 import { hexToU8a, isHex, isU8a } from '@polkadot/util';
+import { H256 } from '@polkadot/types/interfaces';
 
 import { HexString } from '../../common';
 

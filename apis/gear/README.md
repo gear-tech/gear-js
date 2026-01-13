@@ -617,8 +617,7 @@ import { GearApi, PayloadFilter } from '@gear-js/api';
 const api = await GearApi.create();
 
 // Create payload filters
-const filter1 = new PayloadFilter();
-filter1.setBytes('0xdeadbeef'); // Match payload by exact bytes
+const filter1 = new PayloadFilter('0xdeadbeef');
 
 const unsubscribe = await api.message.subscribeUserMessageSent(
   {
@@ -657,8 +656,7 @@ import { GearApi, PayloadFilter } from '@gear-js/api';
 
 const api = await GearApi.create();
 
-const payloadFilter = new PayloadFilter();
-payloadFilter.setBytes('0xcafebabe');
+const payloadFilter = new PayloadFilter('0xcafebabe');
 
 const unsubscribe = await api.message.subscribeUserMessageSent(
   {
@@ -1264,4 +1262,3 @@ const unsubscribe = await program.on('programExited', (inheritorId) => {
 // Later, when you want to stop listening
 unsubscribe();
 ```
-
