@@ -49,14 +49,14 @@ export interface UserMessageSentSubscriptionItem {
 
 export interface UserMessageSentSubscriptionReplyDetails {
   readonly to: HexString;
-  readonly codeRaw: HexString;
-  readonly code: string;
+  readonly code: HexString;
+  readonly codeDescription: string;
 }
 
 export interface UserMessageReplyJson extends Struct {
   readonly to: H256;
-  readonly codeRaw: Bytes;
-  readonly code: Text;
+  readonly code: Bytes;
+  readonly codeDescription: Text;
 }
 
 export interface UserMessageSentSubItem extends Struct {

@@ -487,8 +487,8 @@ export class GearMessage extends GearTransaction {
         const reply = result.reply.unwrap();
         event.reply = {
           to: reply.to.toHex(),
-          codeRaw: reply.codeRaw.toHex(),
-          code: reply.code.toString(),
+          codeDescription: reply.codeDescription.toString(),
+          code: reply.code.toHex(),
         };
       }
 

@@ -206,8 +206,8 @@ describe('Subscriptions', () => {
     expect(callbackArg).toHaveProperty('value', 0n);
     expect(callbackArg).toHaveProperty('reply');
     expect(callbackArg.reply).toHaveProperty('to', msgId);
-    expect(callbackArg.reply).toHaveProperty('codeRaw', '0x00000000');
-    expect(callbackArg.reply).toHaveProperty('code');
+    expect(callbackArg.reply).toHaveProperty('code', '0x00000000');
+    expect(callbackArg.reply).toHaveProperty('codeDescription', 'Success reply sent due to automatic sending');
 
     unsub();
   });
@@ -249,8 +249,8 @@ describe('Subscriptions', () => {
     expect(callbackArg).toHaveProperty('destination', aliceRaw);
     expect(callbackArg).toHaveProperty('payload', registry.createType('String', 'ok').toHex());
     expect(callbackArg.reply).toHaveProperty('to', msgId);
-    expect(callbackArg.reply).toHaveProperty('codeRaw', '0x00010000');
-    expect(callbackArg.reply).toHaveProperty('code');
+    expect(callbackArg.reply).toHaveProperty('code', '0x00010000');
+    expect(callbackArg.reply).toHaveProperty('codeDescription', 'Success reply sent due to manual sending');
 
     unsub();
   });
@@ -402,7 +402,6 @@ describe('Subscriptions', () => {
       destination: programId2,
       payload: registry.createType('MessageAction', 'Plain').toHex(),
       gasLimit: 20_000_000_000,
-      keepAlive: true,
     });
 
     const [msg, blockHash] = await sendTransaction(tx1, alice, ['MessageQueued']);
@@ -418,6 +417,7 @@ describe('Subscriptions', () => {
       if (finBlockNumber > blockNumber) {
         isFinalized = true;
       }
+      await sleep(1000);
     }
 
     const reply = callback.mock.calls.find(([call]) => call.reply?.to === msg.id.toHex())?.[0];
@@ -456,8 +456,8 @@ describe('Subscriptions', () => {
     const callbackArg = callback.mock.calls[0][0];
     expect(callbackArg).toHaveProperty('reply');
     expect(callbackArg.reply).toHaveProperty('to', msgId);
-    expect(callbackArg.reply).toHaveProperty('codeRaw', '0x00010000');
-    expect(callbackArg.reply).toHaveProperty('code');
+    expect(callbackArg.reply).toHaveProperty('code', '0x00010000');
+    expect(callbackArg.reply).toHaveProperty('codeDescription', 'Success reply sent due to manual sending');
 
     unsub();
   });

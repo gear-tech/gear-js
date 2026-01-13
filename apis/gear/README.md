@@ -679,7 +679,7 @@ const unsubscribe = await api.message.subscribeUserMessageSent(
       reply: item.reply ? {
         to: item.reply.to,
         code: item.reply.code,
-        codeRaw: item.reply.codeRaw,
+        codeDescription: item.reply.codeDescription,
       } : undefined,
     });
 

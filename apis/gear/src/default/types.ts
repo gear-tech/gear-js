@@ -70,8 +70,8 @@ export const GEAR_TYPES: RegistryTypes = {
   },
   UserMessageReplyJson: {
     to: 'H256',
-    codeRaw: 'Bytes',
-    code: 'String',
+    code: 'Bytes',
+    codeDescription: 'String',
   },
   UserMessageSentJson: {
     block: 'Hash',
