@@ -3,6 +3,7 @@ import { parseAsString } from 'nuqs';
 import { Sails } from 'sails-js';
 
 import { DateFilter, Filters, parseAsIsoString } from '@/features/filters';
+import { useIsVftProgram } from '@/features/vft-whitelist';
 import { useSearchParamsStates } from '@/hooks';
 import CardPlaceholderSVG from '@/shared/assets/images/placeholders/card.svg?react';
 import { List, ProgramTabLayout, Skeleton } from '@/shared/ui';
@@ -52,21 +53,24 @@ function useFilters(sails: Sails | undefined) {
 
 function ProgramEvents({ programId, sails }: Props) {
   const [filterValues, setFilterValues] = useFilters(sails);
-
   const { from, to } = filterValues;
   const { serviceName, functionName } = getParsedSailsFilterValue(filterValues[FILTER_NAME.SAILS]);
 
   const events = useEvents({ source: programId, service: serviceName, name: functionName, from, to });
+  const { data: isVft } = useIsVftProgram(programId);
+
+  // temporary workaround to hide duplicate events from service that bridge vft program idl lacks
+  const getNonUtilityVftEvents = () => events.data?.result.filter((event) => event.service?.toLowerCase() !== 'vft2');
 
   const renderList = () => (
     <List
-      items={events.data?.result}
+      items={isVft ? getNonUtilityVftEvents() : events.data?.result}
       hasMore={events.hasNextPage}
       isLoading={events.isLoading}
       noItems={{ heading: 'There are no events yet.' }}
       size="small"
       fetchMore={events.fetchNextPage}
-      renderItem={(event: EventType) => <EventCard programId={programId} event={event} sails={sails} />}
+      renderItem={(event: EventType) => <EventCard programId={programId} event={event} sails={sails} isVft={isVft} />}
       renderSkeleton={() => <Skeleton SVG={CardPlaceholderSVG} disabled />}
     />
   );
