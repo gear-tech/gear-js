@@ -4,7 +4,12 @@ import { formatEther } from 'viem';
 
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
 import { BackButton, Balance, ExplorerLink, HashLink, PageContainer } from '@/components';
-import { useGetMessageRequestsByIdQuery, useGetMessageSentByIdQuery } from '@/features/messages';
+import {
+  useGetMessageRequestByIdQuery,
+  useGetMessageSentByIdQuery,
+  useGetReplyRequestByIdQuery,
+  useGetReplySentByIdQuery,
+} from '@/features/messages';
 import { routes } from '@/shared/config';
 import { cx } from '@/shared/utils';
 
@@ -18,8 +23,10 @@ type Params = {
 const Message = () => {
   const { messageId } = useParams() as Params;
 
-  const messageRequest = useGetMessageRequestsByIdQuery(messageId);
+  const messageRequest = useGetMessageRequestByIdQuery(messageId);
   const messageSent = useGetMessageSentByIdQuery(messageId);
+  const replyRequest = useGetReplyRequestByIdQuery(messageId);
+  const replySent = useGetReplySentByIdQuery(messageId);
 
   return (
     <PageContainer className={styles.container}>
@@ -114,6 +121,92 @@ const Message = () => {
             <div>{new Date(messageSent.data.createdAt).toLocaleString()}</div>
           </div>
         )}
+
+        {replyRequest.data && (
+          <div className={styles.body}>
+            <h2 className={styles.title}>Source Address</h2>
+
+            <div className={styles.withExplorerLink}>
+              <HashLink hash={replyRequest.data.sourceAddress} />
+              <ExplorerLink path="address" id={replyRequest.data.sourceAddress} />
+            </div>
+
+            <h2 className={styles.title}>Program ID</h2>
+
+            <div className={styles.withExplorerLink}>
+              <HashLink
+                hash={replyRequest.data.programId}
+                href={generatePath(routes.program, { programId: replyRequest.data.programId })}
+              />
+
+              <ExplorerLink path="address" id={replyRequest.data.programId} />
+            </div>
+
+            <h2 className={styles.title}>Value</h2>
+            <Balance value={formatEther(BigInt(replyRequest.data.value))} units="ETH" />
+
+            <h2 className={styles.title}>Transaction Hash</h2>
+
+            <div className={styles.withExplorerLink}>
+              <HashLink hash={replyRequest.data.txHash} truncateSize="xxl" />
+              <ExplorerLink path="tx" id={replyRequest.data.txHash} />
+            </div>
+
+            <h2 className={styles.title}>Block Number</h2>
+
+            <div className={styles.blockNumber}>
+              <div>
+                #{replyRequest.data.blockNumber} <ExplorerLink path="block" id={replyRequest.data.blockNumber} />
+              </div>
+
+              <div>{new Date(replyRequest.data.createdAt).toLocaleString()}</div>
+            </div>
+          </div>
+        )}
+
+        {replySent.data && (
+          <div className={styles.body}>
+            <h2 className={styles.title}>Replied To ID</h2>
+            <HashLink hash={replySent.data.repliedToId} truncateSize="xxl" />
+
+            <h2 className={styles.title}>Reply Code</h2>
+            <div>{replySent.data.replyCode}</div>
+
+            <h2 className={styles.title}>Source Program ID</h2>
+
+            <div className={styles.withExplorerLink}>
+              <HashLink
+                hash={replySent.data.sourceProgramId}
+                href={generatePath(routes.program, { programId: replySent.data.sourceProgramId })}
+              />
+
+              <ExplorerLink path="address" id={replySent.data.sourceProgramId} />
+            </div>
+
+            <h2 className={styles.title}>Destination</h2>
+
+            <div className={styles.withExplorerLink}>
+              <HashLink hash={replySent.data.destination} />
+              <ExplorerLink path="address" id={replySent.data.destination} />
+            </div>
+
+            <h2 className={styles.title}>Value</h2>
+            <Balance value={formatEther(BigInt(replySent.data.value))} units="ETH" />
+
+            <h2 className={styles.title}>Is Call</h2>
+            <div>{String(replySent.data.isCall)}</div>
+
+            {replySent.data.stateTransition && (
+              <>
+                <h2 className={styles.title}>State Transition Hash</h2>
+                <HashLink hash={replySent.data.stateTransition.hash} truncateSize="xxl" />
+              </>
+            )}
+
+            <h2 className={styles.title}>Created At</h2>
+            <div>{new Date(replySent.data.createdAt).toLocaleString()}</div>
+          </div>
+        )}
       </div>
 
       <div className={styles.column}>
@@ -121,6 +214,8 @@ const Message = () => {
 
         {messageRequest.data && <div className={styles.payload}>{messageRequest.data.payload}</div>}
         {messageSent.data && <div className={styles.payload}>{messageSent.data.payload}</div>}
+        {replyRequest.data && <div className={styles.payload}>{replyRequest.data.payload}</div>}
+        {replySent.data && <div className={styles.payload}>{replySent.data.payload}</div>}
       </div>
     </PageContainer>
   );

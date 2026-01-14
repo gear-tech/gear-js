@@ -3,7 +3,7 @@ import { HexString } from '@vara-eth/api';
 import { Program } from '@/features/programs/lib/queries';
 import { EXPLORER_URL } from '@/shared/config';
 import { PaginatedResponse } from '@/shared/types';
-import { fetchWithGuard } from '@/shared/utils';
+import { fetchWithGuard, isUndefined } from '@/shared/utils';
 
 type MessageRequests = {
   id: HexString;
@@ -57,7 +57,7 @@ type ReplyRequest = {
 type ReplySent = {
   id: HexString;
   repliedToId: HexString;
-  replyCode: string;
+  replyCode: HexString;
   sourceProgramId: HexString;
   destination: HexString;
   payload: HexString;
@@ -69,40 +69,42 @@ type ReplySent = {
   stateTransition?: StateTransition;
 };
 
+// TODO: merge with fetchWithGuard
+const getIndexerUrl = (url: string, page?: number, pageSize?: number) => {
+  const indexerUrl = new URL(`${EXPLORER_URL}/${url}`);
+
+  if (!isUndefined(page) && !isUndefined(pageSize)) {
+    const limit = pageSize;
+    const offset = (page - 1) * pageSize;
+
+    indexerUrl.searchParams.set('limit', String(limit));
+    indexerUrl.searchParams.set('offset', String(offset));
+  }
+
+  return indexerUrl;
+};
+
 export const getMessageRequest = (id: HexString) =>
-  fetchWithGuard<MessageRequests>({ url: `${EXPLORER_URL}/messages/requests/${id}` });
+  fetchWithGuard<MessageRequests>({ url: getIndexerUrl(`messages/requests/${id}`) });
 
 export const getMessageSent = (id: HexString) =>
-  fetchWithGuard<MessageSent>({ url: `${EXPLORER_URL}/messages/sent/${id}` });
+  fetchWithGuard<MessageSent>({ url: getIndexerUrl(`messages/sent/${id}`) });
 
 export const getReplyRequest = (id: HexString) =>
-  fetchWithGuard<ReplyRequest>({ url: `${EXPLORER_URL}/replies/requests/${id}` });
+  fetchWithGuard<ReplyRequest>({ url: getIndexerUrl(`replies/requests/${id}`) });
 
-export const getReplySent = (id: HexString) => fetchWithGuard<ReplySent>({ url: `${EXPLORER_URL}/replies/sent/${id}` });
-
-// TODO: merge with fetchWithGuard
-const getPaginationUrl = (url: string, page: number, pageSize: number) => {
-  const limit = pageSize;
-  const offset = (page - 1) * pageSize;
-
-  const paginationUrl = new URL(`${EXPLORER_URL}/${url}`);
-
-  paginationUrl.searchParams.set('limit', String(limit));
-  paginationUrl.searchParams.set('offset', String(offset));
-
-  return paginationUrl;
-};
+export const getReplySent = (id: HexString) => fetchWithGuard<ReplySent>({ url: getIndexerUrl(`replies/sent/${id}`) });
 
 export const getMessageRequests = (page: number, pageSize: number) =>
   fetchWithGuard<PaginatedResponse<MessageRequests>>({
-    url: getPaginationUrl('messages/requests', page, pageSize),
+    url: getIndexerUrl('messages/requests', page, pageSize),
   });
 
 export const getMessageSents = (limit: number, offset: number) =>
-  fetchWithGuard<PaginatedResponse<MessageSent>>({ url: getPaginationUrl('messages/sent', limit, offset) });
+  fetchWithGuard<PaginatedResponse<MessageSent>>({ url: getIndexerUrl('messages/sent', limit, offset) });
 
 export const getReplyRequests = (limit: number, offset: number) =>
-  fetchWithGuard<PaginatedResponse<ReplyRequest>>({ url: getPaginationUrl('replies/requests', limit, offset) });
+  fetchWithGuard<PaginatedResponse<ReplyRequest>>({ url: getIndexerUrl('replies/requests', limit, offset) });
 
 export const getReplySents = (limit: number, offset: number) =>
-  fetchWithGuard<PaginatedResponse<ReplySent>>({ url: getPaginationUrl('replies/sent', limit, offset) });
+  fetchWithGuard<PaginatedResponse<ReplySent>>({ url: getIndexerUrl('replies/sent', limit, offset) });
