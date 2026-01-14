@@ -1,13 +1,21 @@
 import {
-  useGetMessageRequestsByIdQuery,
+  useGetMessageRequestByIdQuery,
   useGetMessageSentByIdQuery,
-  useGetAllMessagesRequestsQuery,
-  useGetAllMessagesSentQuery,
+  useGetReplyRequestByIdQuery,
+  useGetReplySentByIdQuery,
+  useGetAllMessageRequestsQuery,
+  useGetAllMessageSentsQuery,
+  useGetAllReplyRequestsQuery,
+  useGetAllReplySentsQuery,
 } from './lib';
 
 export {
-  useGetMessageRequestsByIdQuery,
+  useGetMessageRequestByIdQuery,
   useGetMessageSentByIdQuery,
-  useGetAllMessagesRequestsQuery,
-  useGetAllMessagesSentQuery,
+  useGetReplyRequestByIdQuery,
+  useGetReplySentByIdQuery,
+  useGetAllMessageRequestsQuery,
+  useGetAllMessageSentsQuery,
+  useGetAllReplyRequestsQuery,
+  useGetAllReplySentsQuery,
 };

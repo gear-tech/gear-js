@@ -1,13 +1,21 @@
 import {
-  useGetMessageRequestsByIdQuery,
+  useGetMessageRequestByIdQuery,
   useGetMessageSentByIdQuery,
-  useGetAllMessagesRequestsQuery,
-  useGetAllMessagesSentQuery,
+  useGetReplyRequestByIdQuery,
+  useGetReplySentByIdQuery,
+  useGetAllMessageRequestsQuery,
+  useGetAllMessageSentsQuery,
+  useGetAllReplyRequestsQuery,
+  useGetAllReplySentsQuery,
 } from './queries';
 
 export {
-  useGetMessageRequestsByIdQuery,
+  useGetMessageRequestByIdQuery,
   useGetMessageSentByIdQuery,
-  useGetAllMessagesRequestsQuery,
-  useGetAllMessagesSentQuery,
+  useGetReplyRequestByIdQuery,
+  useGetReplySentByIdQuery,
+  useGetAllMessageRequestsQuery,
+  useGetAllMessageSentsQuery,
+  useGetAllReplyRequestsQuery,
+  useGetAllReplySentsQuery,
 };

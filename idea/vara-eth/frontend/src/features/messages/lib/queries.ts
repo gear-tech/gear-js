@@ -1,16 +1,21 @@
 import { HexString } from '@gear-js/api';
 import { useQuery } from '@tanstack/react-query';
 
-import { EXPLORER_URL } from '@/shared/config';
-import { PaginatedResponse } from '@/shared/types';
-import { fetchWithGuard } from '@/shared/utils';
+import {
+  getMessageRequest,
+  getMessageRequests,
+  getMessageSent,
+  getMessageSents,
+  getReplyRequest,
+  getReplyRequests,
+  getReplySent,
+  getReplySents,
+} from './requests';
 
-import { getMessageRequests, getMessageSent, MessageRequests, MessageSent } from './requests';
-
-export const useGetMessageRequestsByIdQuery = (id: HexString) => {
+export const useGetMessageRequestByIdQuery = (id: HexString) => {
   return useQuery({
-    queryKey: ['messageRequests', id],
-    queryFn: () => getMessageRequests(id),
+    queryKey: ['messageRequest', id],
+    queryFn: () => getMessageRequest(id),
   });
 };
 
@@ -21,42 +26,48 @@ export const useGetMessageSentByIdQuery = (id: HexString) => {
   });
 };
 
-export const useGetAllMessagesRequestsQuery = (page: number, pageSize: number) => {
-  const limit = pageSize;
-  const offset = (page - 1) * pageSize;
-
+export const useGetReplyRequestByIdQuery = (id: HexString) => {
   return useQuery({
-    queryKey: ['allRequestMessages', limit, offset],
+    queryKey: ['replyRequest', id],
+    queryFn: () => getReplyRequest(id),
+  });
+};
 
-    queryFn: () => {
-      const url = new URL(`${EXPLORER_URL}/messages/requests`);
+export const useGetReplySentByIdQuery = (id: HexString) => {
+  return useQuery({
+    queryKey: ['replySent', id],
+    queryFn: () => getReplySent(id),
+  });
+};
 
-      url.searchParams.set('limit', String(limit));
-      url.searchParams.set('offset', String(offset));
-
-      return fetchWithGuard<PaginatedResponse<MessageRequests>>({ url });
-    },
-
+export const useGetAllMessageRequestsQuery = (page: number, pageSize: number) => {
+  return useQuery({
+    queryKey: ['allRequestMessages', page, pageSize],
+    queryFn: () => getMessageRequests(page, pageSize),
     placeholderData: (previousData) => previousData,
   });
 };
 
-export const useGetAllMessagesSentQuery = (page: number, pageSize: number) => {
-  const limit = pageSize;
-  const offset = (page - 1) * pageSize;
-
+export const useGetAllMessageSentsQuery = (page: number, pageSize: number) => {
   return useQuery({
-    queryKey: ['allSentMessages', limit, offset],
+    queryKey: ['allSentMessages', page, pageSize],
+    queryFn: () => getMessageSents(page, pageSize),
+    placeholderData: (previousData) => previousData,
+  });
+};
 
-    queryFn: () => {
-      const url = new URL(`${EXPLORER_URL}/messages/sent`);
+export const useGetAllReplyRequestsQuery = (page: number, pageSize: number) => {
+  return useQuery({
+    queryKey: ['allRequestReplies', page, pageSize],
+    queryFn: () => getReplyRequests(page, pageSize),
+    placeholderData: (previousData) => previousData,
+  });
+};
 
-      url.searchParams.set('limit', String(limit));
-      url.searchParams.set('offset', String(offset));
-
-      return fetchWithGuard<PaginatedResponse<MessageSent>>({ url });
-    },
-
+export const useGetAllReplySentsQuery = (page: number, pageSize: number) => {
+  return useQuery({
+    queryKey: ['allSentReplies', page, pageSize],
+    queryFn: () => getReplySents(page, pageSize),
     placeholderData: (previousData) => previousData,
   });
 };

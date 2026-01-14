@@ -4,7 +4,12 @@ import TransactionSVG from '@/assets/icons/arrange-square.svg?react';
 import CodeSVG from '@/assets/icons/code.svg?react';
 import MessageSVG from '@/assets/icons/message.svg?react';
 import UserSVG from '@/assets/icons/user-square.svg?react';
-import { useGetAllMessagesRequestsQuery, useGetAllMessagesSentQuery } from '@/features/messages';
+import {
+  useGetAllMessageRequestsQuery,
+  useGetAllMessageSentsQuery,
+  useGetAllReplyRequestsQuery,
+  useGetAllReplySentsQuery,
+} from '@/features/messages';
 import { useGetAllProgramsQuery } from '@/features/programs';
 import { useGetAllTransactionsQuery } from '@/features/transactions';
 import { routes } from '@/shared/config';
@@ -53,13 +58,18 @@ const Card = ({ title, icon, link, count, increase }: CardProps) => {
 
 const Home = () => {
   const { data: programs } = useGetAllProgramsQuery(1, 1);
-  const { data: messagesRequests } = useGetAllMessagesRequestsQuery(1, 1);
-  const { data: messagesSent } = useGetAllMessagesSentQuery(1, 1);
+  const { data: messagesRequests } = useGetAllMessageRequestsQuery(1, 1);
+  const { data: messagesSent } = useGetAllMessageSentsQuery(1, 1);
+  const { data: replyRequests } = useGetAllReplyRequestsQuery(1, 1);
+  const { data: replySents } = useGetAllReplySentsQuery(1, 1);
   const { data: transactions } = useGetAllTransactionsQuery(1, 1);
 
   const messagesCount =
-    !isUndefined(messagesRequests?.total) && !isUndefined(messagesSent?.total)
-      ? messagesRequests.total + messagesSent.total
+    !isUndefined(messagesRequests?.total) &&
+    !isUndefined(messagesSent?.total) &&
+    !isUndefined(replyRequests?.total) &&
+    !isUndefined(replySents?.total)
+      ? messagesRequests.total + messagesSent.total + replyRequests.total + replySents.total
       : undefined;
 
   return (
