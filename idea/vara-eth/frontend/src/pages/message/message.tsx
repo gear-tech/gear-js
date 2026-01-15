@@ -2,8 +2,7 @@ import { HexString } from '@vara-eth/api';
 import { generatePath, useParams } from 'react-router-dom';
 import { formatEther } from 'viem';
 
-import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
-import { BackButton, Balance, ExplorerLink, HashLink, PageContainer } from '@/components';
+import { Balance, ChainEntity, ExplorerLink, HashLink, PageContainer } from '@/components';
 import {
   useGetMessageRequestByIdQuery,
   useGetMessageSentByIdQuery,
@@ -31,14 +30,14 @@ const Message = () => {
   return (
     <PageContainer className={styles.container}>
       <div className={styles.column}>
-        <header className={styles.header}>
-          <BackButton variant="icon" className={styles.backButton}>
-            <ArrowLeftSVG />
-          </BackButton>
+        <ChainEntity.Header>
+          <ChainEntity.BackButton />
 
-          <ArrowSVG className={cx(styles.arrow, messageSent.data && styles.from)} />
-          <HashLink hash={messageId} truncateSize="xxl" />
-        </header>
+          <div className={styles.title}>
+            <ArrowSVG className={cx(styles.arrow, messageSent.data && styles.from)} />
+            <ChainEntity.Title id={messageId} />
+          </div>
+        </ChainEntity.Header>
 
         {messageRequest.data && (
           <div className={styles.body}>

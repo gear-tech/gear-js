@@ -11,18 +11,10 @@
   }
 }
 
-.header {
-  margin-bottom: 24px;
-
+.title {
   display: flex;
   align-items: center;
   gap: 8px;
-
-  font-size: 16px;
-
-  .backButton {
-    margin-right: 4px;
-  }
 
   .arrow.from {
     transform: rotate(180deg);
@@ -31,14 +23,13 @@
 
 .body {
   display: grid;
-  grid-template-columns: 136px 1fr;
+  grid-template-columns: auto 1fr;
   gap: 20px 24px;
 
   .title {
     font-size: 12px;
     font-weight: 400;
     text-transform: uppercase;
-    white-space: nowrap;
   }
 
   .withExplorerLink {

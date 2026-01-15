@@ -1,0 +1,17 @@
+.header {
+  margin-bottom: 24px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  // TODO: remove after default heading capitalize is gone
+  text-transform: none;
+  font-size: 16px;
+}
