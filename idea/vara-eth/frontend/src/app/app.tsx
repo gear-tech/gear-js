@@ -1,6 +1,6 @@
 import './app.css';
 
-import { ErrorBoundary, Header } from '@/components';
+import { ErrorBoundary, Header, Navigation } from '@/components';
 import { Activity } from '@/features/activity';
 import { Routing } from '@/pages';
 
@@ -14,8 +14,10 @@ function Component() {
       <div className="layout">
         <ErrorBoundary>
           <div className="page">
+            <Navigation />
             <Routing />
           </div>
+
           <Activity />
         </ErrorBoundary>
       </div>

@@ -1,5 +1,5 @@
-import { HexString } from '@gear-js/api';
 import { useQuery } from '@tanstack/react-query';
+import { HexString } from '@vara-eth/api';
 
 import {
   getMessageRequest,

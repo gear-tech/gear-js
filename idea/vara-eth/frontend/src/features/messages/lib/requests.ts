@@ -100,11 +100,11 @@ export const getMessageRequests = (page: number, pageSize: number) =>
     url: getIndexerUrl('messages/requests', page, pageSize),
   });
 
-export const getMessageSents = (limit: number, offset: number) =>
-  fetchWithGuard<PaginatedResponse<MessageSent>>({ url: getIndexerUrl('messages/sent', limit, offset) });
+export const getMessageSents = (page: number, pageSize: number) =>
+  fetchWithGuard<PaginatedResponse<MessageSent>>({ url: getIndexerUrl('messages/sent', page, pageSize) });
 
-export const getReplyRequests = (limit: number, offset: number) =>
-  fetchWithGuard<PaginatedResponse<ReplyRequest>>({ url: getIndexerUrl('replies/requests', limit, offset) });
+export const getReplyRequests = (page: number, pageSize: number) =>
+  fetchWithGuard<PaginatedResponse<ReplyRequest>>({ url: getIndexerUrl('replies/requests', page, pageSize) });
 
-export const getReplySents = (limit: number, offset: number) =>
-  fetchWithGuard<PaginatedResponse<ReplySent>>({ url: getIndexerUrl('replies/sent', limit, offset) });
+export const getReplySents = (page: number, pageSize: number) =>
+  fetchWithGuard<PaginatedResponse<ReplySent>>({ url: getIndexerUrl('replies/sent', page, pageSize) });
