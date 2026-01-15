@@ -5,7 +5,7 @@ import { EXPLORER_URL } from '@/shared/config';
 import { PaginatedResponse } from '@/shared/types';
 import { fetchWithGuard, isUndefined } from '@/shared/utils';
 
-type MessageRequests = {
+export type MessageRequest = {
   id: HexString;
   sourceAddress: HexString;
   programId: HexString;
@@ -29,7 +29,7 @@ type StateTransition = {
   program?: Program;
 };
 
-type MessageSent = {
+export type MessageSent = {
   id: HexString;
   sourceProgramId: HexString;
   destination: HexString;
@@ -42,7 +42,7 @@ type MessageSent = {
   stateTransition?: StateTransition;
 };
 
-type ReplyRequest = {
+export type ReplyRequest = {
   id: HexString;
   sourceAddress: HexString;
   programId: HexString;
@@ -54,7 +54,7 @@ type ReplyRequest = {
   program?: Program;
 };
 
-type ReplySent = {
+export type ReplySent = {
   id: HexString;
   repliedToId: HexString;
   replyCode: HexString;
@@ -85,7 +85,7 @@ const getIndexerUrl = (url: string, page?: number, pageSize?: number) => {
 };
 
 export const getMessageRequest = (id: HexString) =>
-  fetchWithGuard<MessageRequests>({ url: getIndexerUrl(`messages/requests/${id}`) });
+  fetchWithGuard<MessageRequest>({ url: getIndexerUrl(`messages/requests/${id}`) });
 
 export const getMessageSent = (id: HexString) =>
   fetchWithGuard<MessageSent>({ url: getIndexerUrl(`messages/sent/${id}`) });
@@ -96,7 +96,7 @@ export const getReplyRequest = (id: HexString) =>
 export const getReplySent = (id: HexString) => fetchWithGuard<ReplySent>({ url: getIndexerUrl(`replies/sent/${id}`) });
 
 export const getMessageRequests = (page: number, pageSize: number) =>
-  fetchWithGuard<PaginatedResponse<MessageRequests>>({
+  fetchWithGuard<PaginatedResponse<MessageRequest>>({
     url: getIndexerUrl('messages/requests', page, pageSize),
   });
 

@@ -1,3 +1,4 @@
+import { MessageData } from './components';
 import {
   useGetMessageRequestByIdQuery,
   useGetMessageSentByIdQuery,
@@ -10,6 +11,7 @@ import {
 } from './lib';
 
 export {
+  MessageData,
   useGetMessageRequestByIdQuery,
   useGetMessageSentByIdQuery,
   useGetReplyRequestByIdQuery,

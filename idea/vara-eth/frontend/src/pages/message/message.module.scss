@@ -21,26 +21,6 @@
   }
 }
 
-.withExplorerLink {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.blockNumber {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-
-  > div:first-child {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    color: #fff;
-  }
-}
-
 .payload {
   word-break: break-all;
 

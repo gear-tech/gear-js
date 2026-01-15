@@ -51,6 +51,39 @@ const Value = ({ children, className }: PropsWithClassName & PropsWithChildren) 
   return <div className={className}>{children}</div>;
 };
 
+type HashProps = {
+  value: HexString;
+  linkTo?: string;
+  truncateSize?: 'xxl';
+  explorerLinkPath?: 'address' | 'tx';
+};
+
+const Hash = ({ value, linkTo, truncateSize, explorerLinkPath }: HashProps) => {
+  return (
+    <ChainEntity.Value className={styles.hash}>
+      <HashLink hash={value} href={linkTo} truncateSize={truncateSize} />
+      {explorerLinkPath && <ExplorerLink path={explorerLinkPath} id={value} />}
+    </ChainEntity.Value>
+  );
+};
+
+type BlockProps = {
+  number: string;
+  date: string;
+};
+
+const Block = ({ number, date }: BlockProps) => {
+  return (
+    <ChainEntity.Value className={styles.block}>
+      <div>
+        #{number} <ExplorerLink path="block" id={number} />
+      </div>
+
+      <div>{new Date(date).toLocaleString()}</div>
+    </ChainEntity.Value>
+  );
+};
+
 const ChainEntity = {
   Header,
   BackButton,
@@ -58,6 +91,8 @@ const ChainEntity = {
   Data,
   Key,
   Value,
+  Hash,
+  Block,
 };
 
 export { ChainEntity };

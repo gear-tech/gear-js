@@ -8,6 +8,7 @@ import {
   useGetAllReplyRequestsQuery,
   useGetAllReplySentsQuery,
 } from './queries';
+import { MessageRequest, MessageSent, ReplyRequest, ReplySent } from './requests';
 
 export {
   useGetMessageRequestByIdQuery,
@@ -19,3 +20,4 @@ export {
   useGetAllReplyRequestsQuery,
   useGetAllReplySentsQuery,
 };
+export type { MessageRequest, MessageSent, ReplyRequest, ReplySent };

@@ -27,3 +27,23 @@
   font-weight: 400;
   text-transform: uppercase;
 }
+
+.hash {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  > div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    color: #fff;
+  }
+}
