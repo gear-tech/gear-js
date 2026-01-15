@@ -28,12 +28,6 @@
   text-transform: uppercase;
 }
 
-.hash {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .block {
   display: flex;
   flex-direction: column;
@@ -46,8 +40,4 @@
 
     color: #fff;
   }
-}
-
-.link {
-  display: flex;
 }

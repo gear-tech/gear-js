@@ -12,11 +12,10 @@ const MessageRequestData = (props: MessageRequest) => {
   return (
     <ChainEntity.Data>
       <ChainEntity.Key>Source Address</ChainEntity.Key>
-      <ChainEntity.Hash value={sourceAddress} explorerLinkPath="address" />
+      <HashLink hash={sourceAddress} explorerLinkPath="address" />
 
       <ChainEntity.Key>Program ID</ChainEntity.Key>
-
-      <ChainEntity.Hash value={programId} linkTo={routes.program} explorerLinkPath="address" />
+      <HashLink hash={programId} href={generatePath(routes.program, { programId })} explorerLinkPath="address" />
 
       <ChainEntity.Key>Value</ChainEntity.Key>
       <Balance value={formatEther(BigInt(value))} units="ETH" />
@@ -25,7 +24,7 @@ const MessageRequestData = (props: MessageRequest) => {
       <ChainEntity.Value>{String(callReply)}</ChainEntity.Value>
 
       <ChainEntity.Key>Transaction Hash</ChainEntity.Key>
-      <ChainEntity.Hash value={txHash} truncateSize="xxl" explorerLinkPath="tx" />
+      <HashLink hash={txHash} truncateSize="xxl" explorerLinkPath="tx" />
 
       <ChainEntity.Key>Block Number</ChainEntity.Key>
       <ChainEntity.Block number={blockNumber} date={createdAt} />
@@ -38,14 +37,14 @@ const MessageSentData = ({ sourceProgramId, destination, value, isCall, stateTra
     <ChainEntity.Data>
       <ChainEntity.Key>Source Program ID</ChainEntity.Key>
 
-      <ChainEntity.Hash
-        value={sourceProgramId}
-        linkTo={generatePath(routes.program, { programId: sourceProgramId })}
+      <HashLink
+        hash={sourceProgramId}
+        href={generatePath(routes.program, { programId: sourceProgramId })}
         explorerLinkPath="address"
       />
 
       <ChainEntity.Key>Destination</ChainEntity.Key>
-      <ChainEntity.Hash value={destination} explorerLinkPath="address" />
+      <HashLink hash={destination} explorerLinkPath="address" />
 
       <ChainEntity.Key>Value</ChainEntity.Key>
       <Balance value={formatEther(BigInt(value))} units="ETH" />
@@ -70,13 +69,13 @@ const ReplyRequestData = ({ sourceAddress, programId, value, txHash, blockNumber
   return (
     <ChainEntity.Data>
       <ChainEntity.Key>Source Address</ChainEntity.Key>
-      <ChainEntity.Hash value={sourceAddress} explorerLinkPath="address" />
+      <HashLink hash={sourceAddress} explorerLinkPath="address" />
 
       <ChainEntity.Key>Program ID</ChainEntity.Key>
 
-      <ChainEntity.Hash
-        value={programId}
-        linkTo={generatePath(routes.program, { programId: programId })}
+      <HashLink
+        hash={programId}
+        href={generatePath(routes.program, { programId: programId })}
         explorerLinkPath="address"
       />
 
@@ -84,7 +83,7 @@ const ReplyRequestData = ({ sourceAddress, programId, value, txHash, blockNumber
       <Balance value={formatEther(BigInt(value))} units="ETH" />
 
       <ChainEntity.Key>Transaction Hash</ChainEntity.Key>
-      <ChainEntity.Hash value={txHash} truncateSize="xxl" explorerLinkPath="tx" />
+      <HashLink hash={txHash} truncateSize="xxl" explorerLinkPath="tx" />
 
       <ChainEntity.Key>Block Number</ChainEntity.Key>
       <ChainEntity.Block number={blockNumber} date={createdAt} />
@@ -105,14 +104,14 @@ const ReplySentData = (props: ReplySent) => {
 
       <ChainEntity.Key>Source Program ID</ChainEntity.Key>
 
-      <ChainEntity.Hash
-        value={sourceProgramId}
-        linkTo={generatePath(routes.program, { programId: sourceProgramId })}
+      <HashLink
+        hash={sourceProgramId}
+        href={generatePath(routes.program, { programId: sourceProgramId })}
         explorerLinkPath="address"
       />
 
       <ChainEntity.Key>Destination</ChainEntity.Key>
-      <ChainEntity.Hash value={destination} explorerLinkPath="address" />
+      <HashLink hash={destination} explorerLinkPath="address" />
 
       <ChainEntity.Key>Value</ChainEntity.Key>
       <Balance value={formatEther(BigInt(value))} units="ETH" />
