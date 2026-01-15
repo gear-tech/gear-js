@@ -21,7 +21,7 @@ const MessageRequestData = (props: MessageRequest) => {
       <Balance value={formatEther(BigInt(value))} units="ETH" />
 
       <ChainEntity.Key>Call Reply</ChainEntity.Key>
-      <ChainEntity.Value>{String(callReply)}</ChainEntity.Value>
+      <div>{String(callReply)}</div>
 
       <ChainEntity.Key>Transaction Hash</ChainEntity.Key>
       <HashLink hash={txHash} truncateSize="xxl" explorerLinkPath="tx" />
@@ -50,7 +50,7 @@ const MessageSentData = ({ sourceProgramId, destination, value, isCall, stateTra
       <Balance value={formatEther(BigInt(value))} units="ETH" />
 
       <ChainEntity.Key>Is Call</ChainEntity.Key>
-      <ChainEntity.Value>{String(isCall)}</ChainEntity.Value>
+      <div>{String(isCall)}</div>
 
       {stateTransition && (
         <>
@@ -60,7 +60,7 @@ const MessageSentData = ({ sourceProgramId, destination, value, isCall, stateTra
       )}
 
       <ChainEntity.Key>Created At</ChainEntity.Key>
-      <ChainEntity.Value>{new Date(createdAt).toLocaleString()}</ChainEntity.Value>
+      <div>{new Date(createdAt).toLocaleString()}</div>
     </ChainEntity.Data>
   );
 };
@@ -100,7 +100,7 @@ const ReplySentData = (props: ReplySent) => {
       <HashLink hash={repliedToId} truncateSize="xxl" />
 
       <ChainEntity.Key>Reply Code</ChainEntity.Key>
-      <ChainEntity.Value>{replyCode}</ChainEntity.Value>
+      <div>{replyCode}</div>
 
       <ChainEntity.Key>Source Program ID</ChainEntity.Key>
 
@@ -117,7 +117,7 @@ const ReplySentData = (props: ReplySent) => {
       <Balance value={formatEther(BigInt(value))} units="ETH" />
 
       <ChainEntity.Key>Is Call</ChainEntity.Key>
-      <ChainEntity.Value>{String(isCall)}</ChainEntity.Value>
+      <div>{String(isCall)}</div>
 
       {stateTransition && (
         <>
@@ -127,7 +127,7 @@ const ReplySentData = (props: ReplySent) => {
       )}
 
       <ChainEntity.Key>Created At</ChainEntity.Key>
-      <ChainEntity.Value>{new Date(createdAt).toLocaleString()}</ChainEntity.Value>
+      <div>{new Date(createdAt).toLocaleString()}</div>
     </ChainEntity.Data>
   );
 };
