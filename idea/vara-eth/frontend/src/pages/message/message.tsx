@@ -40,181 +40,181 @@ const Message = () => {
         </ChainEntity.Header>
 
         {messageRequest.data && (
-          <div className={styles.body}>
-            <h2 className={styles.title}>Source Address</h2>
+          <ChainEntity.Data>
+            <ChainEntity.Key>Source Address</ChainEntity.Key>
 
-            <div className={styles.withExplorerLink}>
+            <ChainEntity.Value className={styles.withExplorerLink}>
               <HashLink hash={messageRequest.data.sourceAddress} />
               <ExplorerLink path="address" id={messageRequest.data.sourceAddress} />
-            </div>
+            </ChainEntity.Value>
 
-            <h2 className={styles.title}>Program ID</h2>
+            <ChainEntity.Key>Program ID</ChainEntity.Key>
 
-            <div className={styles.withExplorerLink}>
+            <ChainEntity.Value className={styles.withExplorerLink}>
               <HashLink
                 hash={messageRequest.data.programId}
                 href={generatePath(routes.program, { programId: messageRequest.data.programId })}
               />
               <ExplorerLink path="address" id={messageRequest.data.programId} />
-            </div>
+            </ChainEntity.Value>
 
-            <h2 className={styles.title}>Value</h2>
+            <ChainEntity.Key>Value</ChainEntity.Key>
             <Balance value={formatEther(BigInt(messageRequest.data.value))} units="ETH" />
 
-            <h2 className={styles.title}>Call Reply</h2>
-            <div>{String(messageRequest.data.callReply)}</div>
+            <ChainEntity.Key>Call Reply</ChainEntity.Key>
+            <ChainEntity.Value>{String(messageRequest.data.callReply)}</ChainEntity.Value>
 
-            <h2 className={styles.title}>Transaction Hash</h2>
+            <ChainEntity.Key>Transaction Hash</ChainEntity.Key>
 
-            <div className={styles.withExplorerLink}>
+            <ChainEntity.Value className={styles.withExplorerLink}>
               <HashLink hash={messageRequest.data.txHash} truncateSize="xxl" />
               <ExplorerLink path="tx" id={messageRequest.data.txHash} />
-            </div>
+            </ChainEntity.Value>
 
-            <h2 className={styles.title}>Block Number</h2>
+            <ChainEntity.Key>Block Number</ChainEntity.Key>
 
-            <div className={styles.blockNumber}>
+            <ChainEntity.Value className={styles.blockNumber}>
               <div>
                 #{messageRequest.data.blockNumber} <ExplorerLink path="block" id={messageRequest.data.blockNumber} />
               </div>
 
               <div>{new Date(messageRequest.data.createdAt).toLocaleString()}</div>
-            </div>
-          </div>
+            </ChainEntity.Value>
+          </ChainEntity.Data>
         )}
 
         {messageSent.data && (
-          <div className={styles.body}>
-            <h2 className={styles.title}>Source Program ID</h2>
+          <ChainEntity.Data>
+            <ChainEntity.Key>Source Program ID</ChainEntity.Key>
 
-            <div className={styles.withExplorerLink}>
+            <ChainEntity.Value className={styles.withExplorerLink}>
               <HashLink
                 hash={messageSent.data.sourceProgramId}
                 href={generatePath(routes.program, { programId: messageSent.data.sourceProgramId })}
               />
 
               <ExplorerLink path="address" id={messageSent.data.sourceProgramId} />
-            </div>
+            </ChainEntity.Value>
 
-            <h2 className={styles.title}>Destination</h2>
-
-            <div className={styles.withExplorerLink}>
+            <ChainEntity.Key>Destination</ChainEntity.Key>
+            <ChainEntity.Value className={styles.withExplorerLink}>
               <HashLink hash={messageSent.data.destination} />
               <ExplorerLink path="address" id={messageSent.data.destination} />
-            </div>
+            </ChainEntity.Value>
 
-            <h2 className={styles.title}>Value</h2>
+            <ChainEntity.Key>Value</ChainEntity.Key>
             <Balance value={formatEther(BigInt(messageSent.data.value))} units="ETH" />
 
-            <h2 className={styles.title}>Is Call</h2>
-            <div>{String(messageSent.data.isCall)}</div>
+            <ChainEntity.Key>Is Call</ChainEntity.Key>
+            <ChainEntity.Value>{String(messageSent.data.isCall)}</ChainEntity.Value>
 
             {messageSent.data.stateTransition && (
               <>
-                <h2 className={styles.title}>State Transition Hash</h2>
+                <ChainEntity.Key>State Transition Hash</ChainEntity.Key>
                 <HashLink hash={messageSent.data.stateTransition.hash} truncateSize="xxl" />
               </>
             )}
 
-            <h2 className={styles.title}>Created At</h2>
-            <div>{new Date(messageSent.data.createdAt).toLocaleString()}</div>
-          </div>
+            <ChainEntity.Key>Created At</ChainEntity.Key>
+            <ChainEntity.Value>{new Date(messageSent.data.createdAt).toLocaleString()}</ChainEntity.Value>
+          </ChainEntity.Data>
         )}
 
         {replyRequest.data && (
-          <div className={styles.body}>
-            <h2 className={styles.title}>Source Address</h2>
+          <ChainEntity.Data>
+            <ChainEntity.Key>Source Address</ChainEntity.Key>
 
-            <div className={styles.withExplorerLink}>
+            <ChainEntity.Value className={styles.withExplorerLink}>
               <HashLink hash={replyRequest.data.sourceAddress} />
               <ExplorerLink path="address" id={replyRequest.data.sourceAddress} />
-            </div>
+            </ChainEntity.Value>
 
-            <h2 className={styles.title}>Program ID</h2>
+            <ChainEntity.Key>Program ID</ChainEntity.Key>
 
-            <div className={styles.withExplorerLink}>
+            <ChainEntity.Value className={styles.withExplorerLink}>
               <HashLink
                 hash={replyRequest.data.programId}
                 href={generatePath(routes.program, { programId: replyRequest.data.programId })}
               />
 
               <ExplorerLink path="address" id={replyRequest.data.programId} />
-            </div>
+            </ChainEntity.Value>
 
-            <h2 className={styles.title}>Value</h2>
+            <ChainEntity.Key>Value</ChainEntity.Key>
             <Balance value={formatEther(BigInt(replyRequest.data.value))} units="ETH" />
 
-            <h2 className={styles.title}>Transaction Hash</h2>
+            <ChainEntity.Key>Transaction Hash</ChainEntity.Key>
 
-            <div className={styles.withExplorerLink}>
+            <ChainEntity.Value className={styles.withExplorerLink}>
               <HashLink hash={replyRequest.data.txHash} truncateSize="xxl" />
               <ExplorerLink path="tx" id={replyRequest.data.txHash} />
-            </div>
+            </ChainEntity.Value>
 
-            <h2 className={styles.title}>Block Number</h2>
+            <ChainEntity.Key>Block Number</ChainEntity.Key>
 
-            <div className={styles.blockNumber}>
+            <ChainEntity.Value className={styles.blockNumber}>
               <div>
                 #{replyRequest.data.blockNumber} <ExplorerLink path="block" id={replyRequest.data.blockNumber} />
               </div>
 
               <div>{new Date(replyRequest.data.createdAt).toLocaleString()}</div>
-            </div>
-          </div>
+            </ChainEntity.Value>
+          </ChainEntity.Data>
         )}
 
         {replySent.data && (
-          <div className={styles.body}>
-            <h2 className={styles.title}>Replied To ID</h2>
+          <ChainEntity.Data>
+            <ChainEntity.Key>Replied To ID</ChainEntity.Key>
             <HashLink hash={replySent.data.repliedToId} truncateSize="xxl" />
 
-            <h2 className={styles.title}>Reply Code</h2>
-            <div>{replySent.data.replyCode}</div>
+            <ChainEntity.Key>Reply Code</ChainEntity.Key>
+            <ChainEntity.Value>{replySent.data.replyCode}</ChainEntity.Value>
 
-            <h2 className={styles.title}>Source Program ID</h2>
+            <ChainEntity.Key>Source Program ID</ChainEntity.Key>
 
-            <div className={styles.withExplorerLink}>
+            <ChainEntity.Value className={styles.withExplorerLink}>
               <HashLink
                 hash={replySent.data.sourceProgramId}
                 href={generatePath(routes.program, { programId: replySent.data.sourceProgramId })}
               />
 
               <ExplorerLink path="address" id={replySent.data.sourceProgramId} />
-            </div>
+            </ChainEntity.Value>
 
-            <h2 className={styles.title}>Destination</h2>
-
-            <div className={styles.withExplorerLink}>
+            <ChainEntity.Key>Destination</ChainEntity.Key>
+            <ChainEntity.Value className={styles.withExplorerLink}>
               <HashLink hash={replySent.data.destination} />
               <ExplorerLink path="address" id={replySent.data.destination} />
-            </div>
+            </ChainEntity.Value>
 
-            <h2 className={styles.title}>Value</h2>
+            <ChainEntity.Key>Value</ChainEntity.Key>
             <Balance value={formatEther(BigInt(replySent.data.value))} units="ETH" />
 
-            <h2 className={styles.title}>Is Call</h2>
-            <div>{String(replySent.data.isCall)}</div>
+            <ChainEntity.Key>Is Call</ChainEntity.Key>
+            <ChainEntity.Value>{String(replySent.data.isCall)}</ChainEntity.Value>
 
             {replySent.data.stateTransition && (
               <>
-                <h2 className={styles.title}>State Transition Hash</h2>
+                <ChainEntity.Key>State Transition Hash</ChainEntity.Key>
                 <HashLink hash={replySent.data.stateTransition.hash} truncateSize="xxl" />
               </>
             )}
 
-            <h2 className={styles.title}>Created At</h2>
-            <div>{new Date(replySent.data.createdAt).toLocaleString()}</div>
-          </div>
+            <ChainEntity.Key>Created At</ChainEntity.Key>
+            <ChainEntity.Value>{new Date(replySent.data.createdAt).toLocaleString()}</ChainEntity.Value>
+          </ChainEntity.Data>
         )}
       </div>
 
       <div className={styles.column}>
         <h2 className={styles.payloadTitle}>Payload</h2>
 
-        {messageRequest.data && <div className={styles.payload}>{messageRequest.data.payload}</div>}
-        {messageSent.data && <div className={styles.payload}>{messageSent.data.payload}</div>}
-        {replyRequest.data && <div className={styles.payload}>{replyRequest.data.payload}</div>}
-        {replySent.data && <div className={styles.payload}>{replySent.data.payload}</div>}
+        <div className={styles.payload}>
+          {messageRequest.data?.payload ||
+            messageSent.data?.payload ||
+            replyRequest.data?.payload ||
+            replySent.data?.payload}
+        </div>
       </div>
     </PageContainer>
   );

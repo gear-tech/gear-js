@@ -3,6 +3,7 @@ import { PropsWithChildren } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
+import { PropsWithClassName } from '@/shared/types';
 
 import { Button } from '../button';
 import { ExplorerLink } from '../explorer-link';
@@ -38,10 +39,25 @@ const Title = ({ id, explorerLink }: TitleProps) => {
   );
 };
 
+const Data = ({ children }: PropsWithChildren) => {
+  return <div className={styles.data}>{children}</div>;
+};
+
+const Key = ({ children }: PropsWithChildren) => {
+  return <h2 className={styles.key}>{children}</h2>;
+};
+
+const Value = ({ children, className }: PropsWithClassName & PropsWithChildren) => {
+  return <div className={className}>{children}</div>;
+};
+
 const ChainEntity = {
   Header,
   BackButton,
   Title,
+  Data,
+  Key,
+  Value,
 };
 
 export { ChainEntity };

@@ -15,3 +15,15 @@
   text-transform: none;
   font-size: 16px;
 }
+
+.data {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px 24px;
+}
+
+.key {
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: uppercase;
+}

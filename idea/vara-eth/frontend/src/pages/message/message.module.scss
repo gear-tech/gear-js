@@ -21,39 +21,23 @@
   }
 }
 
-.body {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 20px 24px;
+.withExplorerLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-  .title {
-    font-size: 12px;
-    font-weight: 400;
-    text-transform: uppercase;
-  }
+.blockNumber {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 
-  .withExplorerLink {
+  > div:first-child {
     display: flex;
     align-items: center;
     gap: 8px;
-  }
 
-  .value {
     color: #fff;
-  }
-
-  .blockNumber {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-
-    > div:first-child {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-
-      color: #fff;
-    }
   }
 }
 
