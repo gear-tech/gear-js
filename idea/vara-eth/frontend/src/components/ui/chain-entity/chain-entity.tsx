@@ -63,6 +63,23 @@ const Block = ({ number, date }: BlockProps) => {
   );
 };
 
+type NotFoundProps = {
+  entity: string;
+  id: HexString;
+};
+
+const NotFound = ({ entity, id }: NotFoundProps) => {
+  return (
+    <div className={styles.notFound}>
+      <h2>{entity} not found</h2>
+
+      <p>
+        The {entity} with ID <HashLink hash={id} /> does not exist.
+      </p>
+    </div>
+  );
+};
+
 const ChainEntity = {
   Header,
   BackButton,
@@ -70,6 +87,7 @@ const ChainEntity = {
   Data,
   Key,
   Block,
+  NotFound,
 };
 
 export { ChainEntity };

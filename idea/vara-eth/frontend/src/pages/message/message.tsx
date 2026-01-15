@@ -26,6 +26,17 @@ const Message = () => {
   const replyRequest = useGetReplyRequestByIdQuery(messageId);
   const replySent = useGetReplySentByIdQuery(messageId);
 
+  if (messageRequest.isLoading || messageSent.isLoading || replyRequest.isLoading || replySent.isLoading) {
+    return (
+      <PageContainer className={styles.container}>
+        <div className={styles.column}>Loading...</div>
+      </PageContainer>
+    );
+  }
+
+  if (!messageRequest.data && !messageSent.data && !replyRequest.data && !replySent.data)
+    return <ChainEntity.NotFound entity="message" id={messageId} />;
+
   return (
     <PageContainer className={styles.container}>
       <div className={styles.column}>
