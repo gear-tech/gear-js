@@ -1,8 +1,7 @@
 import { HexString } from '@vara-eth/api';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
-import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
-import { Badge, Button, HashLink, UploadIdlButton, NotFound, SyntaxHighlighter } from '@/components';
+import { Badge, UploadIdlButton, SyntaxHighlighter, ChainEntity } from '@/components';
 import { useGetCodeByIdQuery } from '@/features/codes/lib/queries';
 import { routes } from '@/shared/config';
 import { useIdlStorage } from '@/shared/hooks';
@@ -15,67 +14,53 @@ type Params = {
 };
 
 const Code = () => {
-  const navigate = useNavigate();
-  const params = useParams<Params>();
-  const codeId = params?.codeId;
+  const { codeId } = useParams() as Params;
 
-  const { data: code, isLoading, error } = useGetCodeByIdQuery(codeId);
+  const { data: code, isLoading } = useGetCodeByIdQuery(codeId);
   const { idl, saveIdl } = useIdlStorage(codeId);
 
   if (isLoading) {
     return (
       <div className={styles.container}>
-        <div className={styles.card}>
-          <div>Loading...</div>
-        </div>
+        <div className={styles.card}>Loading...</div>
       </div>
     );
   }
 
-  if (error || !code || !codeId) {
-    return <NotFound entity="code" id={params?.codeId} />;
+  if (!code) {
+    return <ChainEntity.NotFound entity="code" id={codeId} />;
   }
-
-  const createdDateTime = formatDate(code.createdAt);
 
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <div className={styles.header}>
-          <div className={styles.leftSide}>
-            <Button variant="icon" onClick={() => navigate(routes.programs)}>
-              <ArrowLeftSVG className={styles.arrowLeft} />
-            </Button>
-            <HashLink hash={codeId} truncateSize="xxl" />
-          </div>
-          {/* TODO: add after code verifier is implemented */}
-          {/* {isVerify && (
-              <Tooltip value="Verified">
-                <VerifySvg />
-              </Tooltip>
-            )} */}
-        </div>
+        <ChainEntity.Header>
+          <ChainEntity.BackButton />
+          <ChainEntity.Title id={codeId} />
+        </ChainEntity.Header>
 
-        <div className={styles.properties}>
-          <div>SERVICES</div>
+        <ChainEntity.Data>
+          <ChainEntity.Key>Services</ChainEntity.Key>
+
           <div className={styles.services}>
             <Badge color={1} size="sm">
               SERVICE 1
             </Badge>
+
             <Badge color={2} size="sm">
               SERVICE 2
             </Badge>
           </div>
 
-          <div>PROGRAMS</div>
-          {/* TODO: add filtered programs page */}
-          <a className={styles.programs} href={routes.programs}>
-            3 programs
-          </a>
+          <ChainEntity.Key>Programs</ChainEntity.Key>
 
-          <div>CREATED AT</div>
-          <div>{createdDateTime}</div>
-        </div>
+          <Link to={routes.programs} className={styles.programs}>
+            3 programs
+          </Link>
+
+          <ChainEntity.Key>Created at</ChainEntity.Key>
+          <div>{formatDate(code.createdAt)}</div>
+        </ChainEntity.Data>
       </div>
 
       <div className={styles.card}>

@@ -27,7 +27,7 @@ const MessageRequestData = (props: MessageRequest) => {
       <HashLink hash={txHash} truncateSize="xxl" explorerLinkPath="tx" />
 
       <ChainEntity.Key>Block Number</ChainEntity.Key>
-      <ChainEntity.Block number={blockNumber} date={createdAt} />
+      <ChainEntity.BlockNumber value={blockNumber} date={createdAt} />
     </ChainEntity.Data>
   );
 };
@@ -86,7 +86,7 @@ const ReplyRequestData = ({ sourceAddress, programId, value, txHash, blockNumber
       <HashLink hash={txHash} truncateSize="xxl" explorerLinkPath="tx" />
 
       <ChainEntity.Key>Block Number</ChainEntity.Key>
-      <ChainEntity.Block number={blockNumber} date={createdAt} />
+      <ChainEntity.BlockNumber value={blockNumber} date={createdAt} />
     </ChainEntity.Data>
   );
 };

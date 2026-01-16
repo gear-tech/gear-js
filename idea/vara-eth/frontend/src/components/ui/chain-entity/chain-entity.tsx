@@ -47,15 +47,15 @@ const Key = ({ children }: PropsWithChildren) => {
 };
 
 type BlockProps = {
-  number: string;
+  value: string;
   date: string;
 };
 
-const Block = ({ number, date }: BlockProps) => {
+const BlockNumber = ({ value, date }: BlockProps) => {
   return (
     <div className={styles.block}>
       <div>
-        #{number} <ExplorerLink path="block" id={number} />
+        #{value} <ExplorerLink path="block" id={value} />
       </div>
 
       <div>{new Date(date).toLocaleString()}</div>
@@ -86,7 +86,7 @@ const ChainEntity = {
   Title,
   Data,
   Key,
-  Block,
+  BlockNumber,
   NotFound,
 };
 

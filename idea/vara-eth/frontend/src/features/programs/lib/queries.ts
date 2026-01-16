@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { HexString } from '@vara-eth/api';
 
 import { type Code } from '@/features/codes/lib/requests';
 import { EXPLORER_URL } from '@/shared/config';
@@ -6,12 +7,12 @@ import { PaginatedResponse } from '@/shared/types';
 import { fetchWithGuard } from '@/shared/utils';
 
 export type Program = {
-  id: string;
+  id: HexString;
   blockNumber: string;
-  code: Code;
-  createdAt: number;
-  txHash: string;
-  abiInterfaceAddress: string | null;
+  createdAt: string;
+  txHash: HexString;
+  abiInterfaceAddress?: string | null;
+  code?: Code;
 };
 
 export type ProgramsResponse = PaginatedResponse<Program>;

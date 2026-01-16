@@ -6,7 +6,6 @@ export { ExpandableItem } from './expandable-item';
 export { HashLink } from './hash-link';
 export { UploadIdlButton } from './upload-idl-button';
 export { Loader } from './loader';
-export { NotFound } from './not-found';
 export { Pagination } from './pagination';
 export { SyntaxHighlighter } from './syntax-highlighter';
 export { Table } from './table';
