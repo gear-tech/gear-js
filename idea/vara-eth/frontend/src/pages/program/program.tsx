@@ -70,6 +70,9 @@ const Program = () => {
           <ChainEntity.Key>Code ID</ChainEntity.Key>
           <HashLink hash={codeId} href={generatePath(routes.code, { codeId })} truncateSize="xxl" />
 
+          <ChainEntity.Key>Transaction Hash</ChainEntity.Key>
+          <HashLink hash={program.txHash} truncateSize="xxl" explorerLinkPath="tx" />
+
           <ChainEntity.Key>Program Balance</ChainEntity.Key>
           <Balance value={formatEther(BigInt(programState.balance))} units="ETH" />
 
