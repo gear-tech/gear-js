@@ -3,6 +3,7 @@ import { PropsWithChildren } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import ArrowLeftSVG from '@/assets/icons/arrow-square-left.svg?react';
+import { formatDate } from '@/shared/utils';
 
 import { Button } from '../button';
 import { ExplorerLink } from '../explorer-link';
@@ -46,6 +47,14 @@ const Key = ({ children }: PropsWithChildren) => {
   return <h2 className={styles.key}>{children}</h2>;
 };
 
+type DateProps = {
+  value: string;
+};
+
+const Date = ({ value }: DateProps) => {
+  return <div className={styles.date}>{formatDate(value)}</div>;
+};
+
 type BlockProps = {
   value: string;
   date: string;
@@ -58,7 +67,7 @@ const BlockNumber = ({ value, date }: BlockProps) => {
         #{value} <ExplorerLink path="block" id={value} />
       </div>
 
-      <div>{new Date(date).toLocaleString()}</div>
+      <Date value={date} />
     </div>
   );
 };
@@ -86,6 +95,7 @@ const ChainEntity = {
   Title,
   Data,
   Key,
+  Date,
   BlockNumber,
   NotFound,
 };

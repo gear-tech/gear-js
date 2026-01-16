@@ -60,7 +60,7 @@ const MessageSentData = ({ sourceProgramId, destination, value, isCall, stateTra
       )}
 
       <ChainEntity.Key>Created At</ChainEntity.Key>
-      <div>{new Date(createdAt).toLocaleString()}</div>
+      <ChainEntity.Date value={createdAt} />
     </ChainEntity.Data>
   );
 };
@@ -127,7 +127,7 @@ const ReplySentData = (props: ReplySent) => {
       )}
 
       <ChainEntity.Key>Created At</ChainEntity.Key>
-      <div>{new Date(createdAt).toLocaleString()}</div>
+      <ChainEntity.Date value={createdAt} />
     </ChainEntity.Data>
   );
 };

@@ -5,7 +5,6 @@ import { Badge, UploadIdlButton, SyntaxHighlighter, ChainEntity } from '@/compon
 import { useGetCodeByIdQuery } from '@/features/codes/lib/queries';
 import { routes } from '@/shared/config';
 import { useIdlStorage } from '@/shared/hooks';
-import { formatDate } from '@/shared/utils';
 
 import styles from './code.module.scss';
 
@@ -59,7 +58,7 @@ const Code = () => {
           </Link>
 
           <ChainEntity.Key>Created at</ChainEntity.Key>
-          <div>{formatDate(code.createdAt)}</div>
+          <ChainEntity.Date value={code.createdAt} />
         </ChainEntity.Data>
       </div>
 
