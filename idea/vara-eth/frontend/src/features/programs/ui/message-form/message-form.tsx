@@ -4,7 +4,8 @@ import { useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Sails } from 'sails-js';
 
-import { Button, Input, ExpandableItem } from '@/components';
+import { Button, ExpandableItem } from '@/components';
+import { Fields } from '@/features/sails';
 
 import { PayloadValue, useSendInjectedTransaction, useSendProgramMessage } from '../../lib';
 import { ISailsFuncArg } from '../../lib/types';
@@ -69,12 +70,7 @@ const MessageForm = ({ programId, isQuery, sails, serviceName, messageName, args
               {isQuery ? 'Read' : 'Write'}
             </Button>
           }>
-          {args.map((param) => {
-            return (
-              // TODO: use fields from idea\gear\frontend\src\features\sails\ui\fields
-              <Input key={param.name} name={param.name} placeholder="0x" />
-            );
-          })}
+          <Fields sails={sails} args={args} />
         </ExpandableItem>
       </form>
     </FormProvider>

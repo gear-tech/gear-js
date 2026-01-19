@@ -4,7 +4,8 @@ import { useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Sails } from 'sails-js';
 
-import { Button, Input, ExpandableItem } from '@/components';
+import { Button, ExpandableItem } from '@/components';
+import { Fields } from '@/features/sails';
 
 import { PayloadValue, useInitProgram } from '../../lib';
 import { ISailsFuncArg } from '../../lib/types';
@@ -56,10 +57,7 @@ const InitForm = ({ programId, sails, ctorName, args, onInit, idl }: Props) => {
               Initialize
             </Button>
           }>
-          {args.map((param) => (
-            // TODO: use fields from idea\gear\frontend\src\features\sails\ui\fields
-            <Input key={param.name} placeholder="0x" {...form.register(param.name)} />
-          ))}
+          <Fields sails={sails} args={args} />
         </ExpandableItem>
       </form>
     </FormProvider>
